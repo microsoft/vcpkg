@@ -1,17 +1,40 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 99e2975..fccd290 100644
+index 634f242..eaf9b9a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -223,7 +223,7 @@ endif()
- add_library(Usrsctp::Usrsctp ALIAS usrsctp)
+@@ -28,7 +28,6 @@ endif()
  
- if(BUILD_SHARED_LIBS)
+ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+-set(BUILD_SHARED_LIBS OFF) # to force usrsctp to be built static
+ 
+ if(WIN32)
+ 	add_definitions(-DWIN32_LEAN_AND_MEAN)
+@@ -202,9 +201,10 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+ find_package(Threads REQUIRED)
+ 
+-set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
+-add_subdirectory(deps/plog EXCLUDE_FROM_ALL)
++find_library(USRSCTP_LIBRARY usrsctp REQUIRED)	
++find_path(PLOG_INCLUDE_DIRS "plog/Appenders/AndroidAppender.h")
+ 
++if(0)
+ if(SCTP_DEBUG)
+ 	add_definitions(-DSCTP_DEBUG)
+ endif()
+@@ -221,8 +221,9 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+     target_compile_options(usrsctp PRIVATE -Wno-error=format-truncation)
+ endif()
+ add_library(Usrsctp::Usrsctp ALIAS usrsctp)
++endif()
+ 
 -add_library(datachannel SHARED
 +add_library(datachannel
  	${LIBDATACHANNEL_SOURCES}
  	${LIBDATACHANNEL_HEADERS}
  	${LIBDATACHANNEL_IMPL_SOURCES}
-@@ -254,8 +254,9 @@ target_include_directories(datachannel PUBLIC
+@@ -250,16 +251,18 @@ target_include_directories(datachannel PUBLIC
      $<INSTALL_INTERFACE:include>)
  target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
  target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -20,9 +43,8 @@ index 99e2975..fccd290 100644
 -target_link_libraries(datachannel PRIVATE Usrsctp::Usrsctp plog::plog)
 +target_link_libraries(datachannel PRIVATE ${USRSCTP_LIBRARY})
  
- elseif(BUILD_STATIC_LIBS)
  target_include_directories(datachannel-static PUBLIC
-@@ -263,8 +264,9 @@ target_include_directories(datachannel-static PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
      $<INSTALL_INTERFACE:include>)
  target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
  target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -30,6 +52,6 @@ index 99e2975..fccd290 100644
  target_link_libraries(datachannel-static PRIVATE Threads::Threads)
 -target_link_libraries(datachannel-static PRIVATE Usrsctp::Usrsctp plog::plog)
 +target_link_libraries(datachannel-static PRIVATE ${USRSCTP_LIBRARY})
- endif()
  
  if(WIN32)
+ 	target_link_libraries(datachannel PUBLIC ws2_32) # winsock2

@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fccd290..931e1f9 100644
+index 426148e..12e4175 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -482,6 +482,12 @@ if(WARNINGS_AS_ERRORS)
- 	endif()
+@@ -496,6 +496,12 @@ install(TARGETS datachannel-static EXPORT LibDataChannelTargets
+ )
  endif()
  
 +if(BUILD_SHARED_LIBS)
@@ -12,6 +12,6 @@ index fccd290..931e1f9 100644
 +    target_compile_options(datachannel-static PRIVATE /wd4996)
 +endif()
 +
- if(BUILD_SHARED_LIBS)
- install(TARGETS datachannel EXPORT LibDataChannelTargets
- 	RUNTIME DESTINATION bin
+ install(FILES ${LIBDATACHANNEL_HEADERS}
+ 	DESTINATION include/rtc
+ )
