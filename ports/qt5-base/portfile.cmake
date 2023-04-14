@@ -1,7 +1,11 @@
 vcpkg_buildpath_length_warning(37)
 
 if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING "qt5-base currently requires some packages from the system package manager. Them can be installed on Ubuntu systems via sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev.")
+    message(WARNING "qt5-base currently requires some packages from the system package manager. "
+    "They can be installed on Ubuntu systems via "
+    "sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev "
+    "libxi-dev libxkbcommon-dev libxkbcommon-x11-dev. For more information, see "
+    "https://doc.qt.io/qt-5/linux-requirements.html")
 elseif(VCPKG_TARGET_IS_MINGW AND CMAKE_HOST_WIN32)
     find_program(MINGW32_MAKE mingw32-make PATHS ENV PATH NO_DEFAULT_PATH REQUIRED)
 endif()

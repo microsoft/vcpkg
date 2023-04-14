@@ -34,7 +34,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_TARGET_IS_LINUX)
-    message(WARNING "qtbase currently requires some packages from the system package manager. Them can be installed on Ubuntu systems via sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev.")
+    message(WARNING "qtbase currently requires packages from the system package manager. "
+    "They can be installed on Ubuntu systems via sudo apt-get install " 
+    "'^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev "
+    "libxkbcommon-x11-dev.")
 endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
