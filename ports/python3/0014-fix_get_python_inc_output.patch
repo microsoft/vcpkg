@@ -1,0 +1,31 @@
+diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
+index 3414a76..930f7af 100644
+--- a/Lib/distutils/sysconfig.py
++++ b/Lib/distutils/sysconfig.py
+@@ -45,7 +45,7 @@
+     get_makefile_filename,
+     get_python_version,
+ )
+-
++from os.path import dirname
+ # This is better than
+ # from sysconfig import _CONFIG_VARS as _config_vars
+ # because it makes sure that the global dictionary is initialized
+@@ -292,6 +292,7 @@ def get_python_inc(plat_specific=0, prefix=None):
+                 incdir = os.path.join(get_config_var('srcdir'), 'Include')
+                 return os.path.normpath(incdir)
+         python_dir = 'python' + get_python_version() + build_flags
++        prefix = dirname(dirname(BASE_PREFIX))
+         return os.path.join(prefix, "include", python_dir)
+     elif os.name == "nt":
+         if python_build:
+@@ -299,7 +300,8 @@ def get_python_inc(plat_specific=0, prefix=None):
+             # pyconfig.h
+             return (os.path.join(prefix, "include") + os.path.pathsep +
+                     os.path.join(prefix, "PC"))
+-        return os.path.join(prefix, "include")
++        prefix = dirname(dirname(BASE_PREFIX))
++        return os.path.join(prefix, "include", "python3")
+     else:
+         raise DistutilsPlatformError(
+             "I don't know where Python installs its C header files "

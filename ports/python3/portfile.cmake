@@ -18,6 +18,7 @@ set(PATCHES
     0010-dont-skip-rpath.patch
     0012-force-disable-curses.patch
     0013-configure-no-libcrypt.patch  # https://github.com/python/cpython/pull/28881
+    0014-fix_get_python_inc_output.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -169,8 +170,6 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         FILES_MATCHING PATTERN *.h
     )
     file(COPY "${SOURCE_PATH}/Lib" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(COPY "${SOURCE_PATH}/Lib/distutils" DESTINATION "${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Lib/distutils")
 
     # Remove any extension libraries and other unversioned binaries that could conflict with the python2 port.
     # You don't need to link against these anyway.
