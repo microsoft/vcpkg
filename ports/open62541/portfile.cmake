@@ -15,6 +15,11 @@ vcpkg_check_features(
 
 if("openssl" IN_LIST FEATURES)
     set(OPEN62541_ENCRYPTION_OPTIONS -DUA_ENABLE_ENCRYPTION=OPENSSL)
+    if("mbedtls" IN_LIST FEATURES)
+        message(WARNING "Only one encryption method can be used. When both [openssl] and [mbedtls] "
+            "are on, openssl is used. To use [mbedtls], don't enable [openssl]. To suppress this "
+            "message, don't enable [mbedtls]")
+    endif()
 elseif("mbedtls" IN_LIST FEATURES)
     set(OPEN62541_ENCRYPTION_OPTIONS -DUA_ENABLE_ENCRYPTION=MBEDTLS)
 endif()
