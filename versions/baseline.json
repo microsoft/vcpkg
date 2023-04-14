@@ -2513,8 +2513,8 @@
       "port-version": 5
     },
     "fluidlite": {
-      "baseline": "2020-08-27",
-      "port-version": 3
+      "baseline": "2023-04-18",
+      "port-version": 0
     },
     "fluidsynth": {
       "baseline": "2.3.1",
