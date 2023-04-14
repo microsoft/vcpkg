@@ -23,4 +23,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
