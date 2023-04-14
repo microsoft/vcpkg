@@ -2950,11 +2950,11 @@
     },
     "gst-rtsp-server": {
       "baseline": "1.20.5",
-      "port-version": 0
+      "port-version": 1
     },
     "gstreamer": {
       "baseline": "1.20.5",
-      "port-version": 4
+      "port-version": 5
     },
     "gtest": {
       "baseline": "1.13.0",
@@ -4246,7 +4246,7 @@
     },
     "libnice-gst": {
       "baseline": "0.1.21",
-      "port-version": 0
+      "port-version": 1
     },
     "libnoise": {
       "baseline": "1.0.0",
