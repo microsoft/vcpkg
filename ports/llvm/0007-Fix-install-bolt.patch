@@ -1,11 +1,11 @@
- bolt/tools/driver/CMakeLists.txt | 8 --------
- 1 file changed, 8 deletions(-)
+ bolt/tools/driver/CMakeLists.txt | 7 -------
+ 1 file changed, 7 deletions(-)
 
 diff --git a/bolt/tools/driver/CMakeLists.txt b/bolt/tools/driver/CMakeLists.txt
-index d50781615663..df06604c724c 100644
+index e56be15dbcff..85b078e2e761 100644
 --- a/bolt/tools/driver/CMakeLists.txt
 +++ b/bolt/tools/driver/CMakeLists.txt
-@@ -33,14 +33,6 @@ set(BOLT_DEPENDS
+@@ -35,13 +35,6 @@ set(BOLT_DEPENDS
    )
  
  add_custom_target(bolt DEPENDS ${BOLT_DEPENDS})
@@ -13,7 +13,6 @@ index d50781615663..df06604c724c 100644
 -  ${CMAKE_BINARY_DIR}/bin/llvm-bolt
 -  ${CMAKE_BINARY_DIR}/bin/perf2bolt
 -  ${CMAKE_BINARY_DIR}/bin/llvm-boltdiff
--  ${CMAKE_BINARY_DIR}/bin/llvm-bolt-heatmap
 -  DESTINATION ${CMAKE_INSTALL_BINDIR}
 -  COMPONENT bolt
 -  )

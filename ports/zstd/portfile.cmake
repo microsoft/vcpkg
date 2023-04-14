@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF dev
     PATCHES
         no-static-suffix.patch
-        emscripten.patch
+        fix-emscripten-and-clang-cl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZSTD_BUILD_STATIC)

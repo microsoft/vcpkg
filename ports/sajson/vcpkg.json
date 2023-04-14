@@ -1,7 +1,7 @@
 {
   "name": "sajson",
-  "version-string": "2018-09-21",
-  "port-version": 2,
+  "version-date": "2018-09-21",
+  "port-version": 3,
   "description": "Lightweight, extremely high-performance JSON parser for C++11",
   "dependencies": [
     {
