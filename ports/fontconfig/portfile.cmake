@@ -12,6 +12,7 @@ vcpkg_from_gitlab(
         libgetopt.patch
         fix-mingw-gperf-fallback.patch
         fix-preprocessor-clang-cl.patch
+        fix-disable-test-for-VS2022.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
