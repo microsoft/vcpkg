@@ -1,7 +1,7 @@
 {
   "name": "gperftools",
   "version-date": "2019-09-02",
-  "port-version": 3,
+  "port-version": 4,
   "description": "A set of tools for performance profiling and memory checking",
   "homepage": "https://github.com/gperftools/gperftools",
   "supports": "!(arm | arm64 | uwp)",

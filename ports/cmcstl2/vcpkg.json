@@ -1,7 +1,7 @@
 {
   "name": "cmcstl2",
-  "version-string": "2019-07-20",
-  "port-version": 2,
+  "version-date": "2019-07-20",
+  "port-version": 3,
   "description": "An implementation of C++ Extensions for Ranges",
   "homepage": "https://github.com/CaseyCarter/cmcstl2",
   "dependencies": [
