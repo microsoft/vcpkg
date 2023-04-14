@@ -12,7 +12,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         ${PATCHES}
+        fix-export-static.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -30,6 +34,8 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_JUICE=ON
         -DNO_EXAMPLES=ON
         -DNO_TESTS=ON
+        -DBUILD_STATIC_LIBS=${BUILD_STATIC}
+        -DBUILD_SHARED_LIBS=${BUILD_SHARED}
 )
 
 vcpkg_cmake_install()
