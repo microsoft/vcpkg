@@ -1,5 +1,5 @@
 diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
-index 3414a76..930f7af 100644
+index 3414a76..e6ae456 100644
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
 @@ -45,7 +45,7 @@
@@ -19,13 +19,14 @@ index 3414a76..930f7af 100644
          return os.path.join(prefix, "include", python_dir)
      elif os.name == "nt":
          if python_build:
-@@ -299,7 +300,8 @@ def get_python_inc(plat_specific=0, prefix=None):
+@@ -299,7 +300,9 @@ def get_python_inc(plat_specific=0, prefix=None):
              # pyconfig.h
              return (os.path.join(prefix, "include") + os.path.pathsep +
                      os.path.join(prefix, "PC"))
 -        return os.path.join(prefix, "include")
++        python_dir = 'python' + get_python_version() + build_flags
 +        prefix = dirname(dirname(BASE_PREFIX))
-+        return os.path.join(prefix, "include", "python3")
++        return os.path.join(prefix, "include", python_dir)
      else:
          raise DistutilsPlatformError(
              "I don't know where Python installs its C header files "
