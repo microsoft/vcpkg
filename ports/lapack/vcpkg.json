@@ -1,7 +1,7 @@
 {
   "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
   "name": "lapack",
-  "version-string": "default",
+  "version-date": "2023-04-14",
   "description": "Metapackage for packages which provide LAPACK",
   "license": null,
   "dependencies": [

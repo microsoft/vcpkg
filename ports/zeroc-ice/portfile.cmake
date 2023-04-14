@@ -4,7 +4,7 @@ vcpkg_from_github(
     REPO zeroc-ice/ice
     REF v3.7.7
     SHA512 73c3a2bb14c9e145383e4026206edd3e03b29c60a33af628611bfdab71d69a3aed108ce4e6cbfd67eb852560110e3495b4bd238c8cdf0de9d1f8e2f1088513ee
-    PATCHES md5i_fix.patch slice2swift.patch mcppd_fix.patch
+    PATCHES md5i_fix.patch slice2swift.patch mcppd_fix.patch no-werror.patch
 )
 
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)

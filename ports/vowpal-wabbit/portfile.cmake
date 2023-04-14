@@ -22,6 +22,7 @@ vcpkg_cmake_configure(
         -DVW_BUILD_VW_C_WRAPPER=OFF
         -DBUILD_TESTING=OFF
         -DVW_STRING_VIEW_LITE_SYS_DEP=ON
+        -DVW_SSE2NEON_SYS_DEP=ON
 )
 vcpkg_cmake_install()
 
