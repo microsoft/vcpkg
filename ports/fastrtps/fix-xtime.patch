@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7ca47ae..1e54249 100644
+index 7ca47ae..632c38b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -42,6 +42,18 @@ message(STATUS "Version: ${PROJECT_VERSION}")
@@ -7,10 +7,10 @@ index 7ca47ae..1e54249 100644
  option(EPROSIMA_BUILD "Activate internal building" OFF)
  
 +###############################################################################
-+# As a workround of the unreleased version of msvc, it will be deleted after release.
++# Replace xtime with _timespec64. As a workround of the unreleased version of 
++# MSVC, it will be deleted after release.
 +###############################################################################
 +if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-+	message(STATUS "CMAKE_CXX_COMPILER_VERSION: ${CMAKE_CXX_COMPILER_VERSION}")
 +    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.36.32528.95")
 +        file(READ "${PROJECT_SOURCE_DIR}/include/fastrtps/utils/TimedMutex.hpp" _contents)
 +        string(REPLACE "xtime*" "_timespec64*" _contents "${_contents}")
