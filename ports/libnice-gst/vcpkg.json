@@ -1,0 +1,11 @@
+{
+  "name": "libnice-gst",
+  "version": "0.1.21",
+  "description": "Gstreamer Libnice plugins.",
+  "homepage": "https://nice.freedesktop.org",
+  "license": "LGPL-2.1-only AND MPL-1.1",
+  "dependencies": [
+    "gstreamer",
+    "libnice"
+  ]
+}

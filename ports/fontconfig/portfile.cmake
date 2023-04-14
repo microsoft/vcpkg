@@ -23,6 +23,20 @@ vcpkg_configure_meson(
         -Dcache-build=disabled
         -Dtests=disabled
 )
+#https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
+# Adding OPTIONS for e.g. baseconfig-dir etc. won't work since meson will try to install into those dirs!
+# Since adding OPTIONS does not work use a replacement in the generated config.h instead
+set(replacement "")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(replacement "**invalid-fontconfig-dir-do-not-use**")
+endif()
+set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.h")
+vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}" "${replacement}")
+if(NOT VCPKG_BUILD_TYPE)
+    set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/config.h")
+    vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}/debug" "${replacement}")
+endif()
+
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
