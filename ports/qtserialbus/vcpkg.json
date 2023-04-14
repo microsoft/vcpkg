@@ -1,6 +1,6 @@
 {
   "name": "qtserialbus",
-  "version": "6.4.2",
+  "version": "6.4.3",
   "description": "Support for CAN and potentially other serial buses.",
   "homepage": "https://www.qt.io/",
   "license": null,

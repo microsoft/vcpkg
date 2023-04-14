@@ -34,9 +34,8 @@ vcpkg_check_features(
 )
 
 # Build and install
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
         ${FL_DEFAULT_VCPKG_CMAKE_FLAGS} 
         ${FEATURE_OPTIONS}
@@ -45,9 +44,9 @@ vcpkg_configure_cmake(
     OPTIONS_RELEASE        
         -DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/flashlight
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/flashlight TARGET_PATH share/flashlight)
+vcpkg_cmake_config_fixup(PACKAGE_NAME flashlight)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

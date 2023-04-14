@@ -1,6 +1,6 @@
 {
   "name": "nayuki-qr-code-generator",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "High-quality QR Code generator library in C++",
   "homepage": "https://github.com/nayuki/QR-Code-generator",
   "dependencies": [
