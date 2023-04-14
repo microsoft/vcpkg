@@ -11,8 +11,8 @@ vcpkg_from_github(
     SHA512 ede45221b8fb4ebc2a812f187372bc65da2a495311058e3b486ba7a2a584817ecdef286d956386a8635752786aebd5d0507bd84a84e484b9bf73ecd2dd92f918
     HEAD_REF master
     PATCHES
-        ${PATCHES}
         fix-export-static.patch
+        ${PATCHES}
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
