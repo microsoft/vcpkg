@@ -1,13 +1,18 @@
 ﻿diff --git a/cdk/cmake/DepFindCompression.cmake b/cdk/cmake/DepFindCompression.cmake
-index f9fe519f..d3a1c832 100644
+index f9fe519f..0f893da8 100644
 --- a/cdk/cmake/DepFindCompression.cmake
 +++ b/cdk/cmake/DepFindCompression.cmake
-@@ -48,7 +48,7 @@ message(STATUS "Setting up compression libraries.")
+@@ -48,7 +48,12 @@ message(STATUS "Setting up compression libraries.")
  #######
  # ZLIB
  #
 -add_ext(zlib zlib.h z ext_zlib)
-+add_ext(zlib zlib.h zlib ext_zlib)
++if (WIN32)
++  set(ZLIB_NAME zlib)
++else()
++  set(ZLIB_NAME z)
++endif()
++add_ext(zlib zlib.h ${ZLIB_NAME} ext_zlib)
  if(NOT ZLIB_FOUND)
    message(FATAL_ERROR "Can't build without zlib support")
  endif()
@@ -51,15 +56,21 @@ index e928e711..30d34fef 100644
      )
  
 diff --git a/cdk/protocol/mysqlx/CMakeLists.txt b/cdk/protocol/mysqlx/CMakeLists.txt
-index 97a4b005..4616fc87 100644
+index 97a4b005..cfc81daf 100644
 --- a/cdk/protocol/mysqlx/CMakeLists.txt
 +++ b/cdk/protocol/mysqlx/CMakeLists.txt
-@@ -136,7 +136,7 @@ else()
+@@ -135,8 +135,13 @@ else()
+   target_link_libraries(cdk_proto_mysqlx PRIVATE ext::protobuf-lite)
  endif()
  
++if (WIN32)
++  set(EXT_ZLIB_NAME ext::zlib)
++else()
++  set(EXT_ZLIB_NAME ext::z)
++endif()
  target_link_libraries(cdk_proto_mysqlx
 -  PRIVATE cdk_foundation ext::z ext::lz4 ext::zstd
-+  PRIVATE cdk_foundation ext::zlib ext::lz4 ext::zstd
++  PRIVATE cdk_foundation ${EXT_ZLIB_NAME} ext::lz4 ext::zstd
  )
  
  ADD_COVERAGE(cdk_proto_mysqlx)
