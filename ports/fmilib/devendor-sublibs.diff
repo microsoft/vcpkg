@@ -7,7 +7,7 @@ index b01aba5..583e15b 100644
    ) 
  
 -set(FMILIB_SHARED_SUBLIBS ${FMIXML_LIBRARIES} ${FMIZIP_LIBRARIES} ${FMICAPI_LIBRARIES} expat minizip zlib c99snprintf)
-+set(FMILIB_SHARED_SUBLIBS ${FMIXML_LIBRARIES} ${FMIZIP_LIBRARIES} ${FMICAPI_LIBRARIES} c99snprintf)
++set(FMILIB_SHARED_SUBLIBS ${FMIXML_LIBRARIES} ${FMIZIP_LIBRARIES} ${FMICAPI_LIBRARIES} minizip zlib c99snprintf)
  set(FMILIB_SUBLIBS ${FMIIMPORT_LIBRARIES} ${JMUTIL_LIBRARIES} ${FMILIB_SHARED_SUBLIBS})
  set(FMILIB_SHARED_SRC ${FMIIMPORTSOURCE} ${JMUTILSOURCE} ${FMIIMPORTHEADERS})
  
@@ -33,18 +33,4 @@ index ddd3c1f..3bafac3 100644
 +add_library(expat ALIAS expat::expat)
  
  include_directories("${EXPAT_INCLUDE_DIRS}" "${FMILIB_THIRDPARTYLIBS}/FMI/" "${FMIXMLGENDIR}/FMI1" "${FMIXMLGENDIR}/FMI2")
- 
-diff --git a/Config.cmake/fmizip.cmake b/Config.cmake/fmizip.cmake
-index 091fc4d..c53555f 100644
---- a/Config.cmake/fmizip.cmake
-+++ b/Config.cmake/fmizip.cmake
-@@ -20,7 +20,8 @@ if(NOT FMIZIPDIR)
- 
-     set(FMIZIP_LIBRARIES fmizip)
- 	
--    add_subdirectory(Config.cmake/Minizip)
-+    find_package(minizip CONFIG REQUIRED)
-+    add_library(minizip ALIAS minizip::minizip)
- 	
- 	include_directories("${FMIZIPDIR}/include" "${FMILIB_THIRDPARTYLIBS}/Minizip/minizip" "${FMILIB_THIRDPARTYLIBS}/FMI" "${FMILIB_THIRDPARTYLIBS}/Zlib/zlib-1.2.6" "${FMILibrary_BINARY_DIR}/zlib")
  
