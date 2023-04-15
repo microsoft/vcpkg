@@ -40,7 +40,7 @@ index 84f10ac03..3b5a60b87 100644
  CXXLINKOPTIONS += $(patsubst %,-L%,$(PYLIBDIR))
  else
 -PYLIB     := python$(subst .,,$(PYVERSION)).lib
-+PYLIB     = python$(subst .,,$(PYVERSION)).lib Advapi32.lib
++PYLIB     = python$(subst .,,$(PYVERSION)).lib zlib.lib Advapi32.lib
  CXXLINKOPTIONS += $(patsubst %,-libpath:%,$(PYLIBDIR))
  endif
  

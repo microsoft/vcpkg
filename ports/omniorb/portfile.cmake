@@ -98,11 +98,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/mk/platforms/vcpkg.mk" "replace-with-per-config-text" "NoReleaseBuild=1\nBuildDebugBinary=1")
     vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tool/omniidl/cxx/dir.mk" "python$(subst .,,$(PYVERSION)).lib" "python$(subst .,,$(PYVERSION))_d.lib")
+    vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tool/omniidl/cxx/dir.mk" "zlib.lib" "zlibd.lib")
   endif()
 endif()
 
 vcpkg_install_make(
-  MAKEFILE "GNUMakefile"
+  MAKEFILE "GNUmakefile"
   ADD_BIN_TO_PATH
 )
 
@@ -205,10 +206,14 @@ endif()
 set(del_files "")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   file(GLOB del_files "${CURRENT_PACKAGES_DIR}/lib/*.a" "${CURRENT_PACKAGES_DIR}/debug/lib/*.a")
-  file(REMOVE ${del_files})
+  if(del_files)
+    file(REMOVE ${del_files})
+  endif()
 else()
   file(GLOB del_files "${CURRENT_PACKAGES_DIR}/lib/*.so*" "${CURRENT_PACKAGES_DIR}/debug/lib/*.so*")
-  file(REMOVE ${del_files})
+  if(del_files)
+    file(REMOVE ${del_files})
+  endif()
 endif()
 
 
