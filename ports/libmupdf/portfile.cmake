@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArtifexSoftware/mupdf
-    REF f39eee48564274635e231e2ab652221cce2ec1bd # 1.21.1
-    SHA512 aa16d0939739f96c66ee802032c321adcebc86c9fa5bfe7ec64f20614377a4f61c358270216b57a1e4b1929337c4cc856d9ec4666ed8f0edaeaa7f2336a84ac3
+    REF "${VERSION}"
+    SHA512 756bdc6911fe64c5e07d4c5c7e5e9497e384c2c9d60d6b9edd6f419723c69719e25accd7a999bdd8093691fd5d91821d8ba7a35b9a1ce02f6394c3ca96e62f53
     HEAD_REF master
     PATCHES
         dont-generate-extract-3rd-party-things.patch
