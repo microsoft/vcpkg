@@ -21,12 +21,14 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic"  MEDFILE_BUILD_SHARED_
 
 # If there are problems with the cmake build try switching to autotools for !windows
 vcpkg_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE # Writes into the source dir
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
       -DMEDFILE_BUILD_SHARED_LIBS=${MEDFILE_BUILD_SHARED_LIBS}
       -DMEDFILE_BUILD_STATIC_LIBS=${MEDFILE_BUILD_STATIC_LIBS}
       -DMEDFILE_INSTALL_DOC=OFF
       -DMEDFILE_BUILD_TESTS=OFF
+      -DCMAKE_Fortran_COMPILER=NOTFOUND # Disable Fortran
     )
 
 vcpkg_cmake_install()
@@ -68,5 +70,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS) #dynamic builds on windows
     file(WRITE "${file}" "${contents}")
   endif()
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LESSER") # GPL seems to be mentioned due to autotools stuff
