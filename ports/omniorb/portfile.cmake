@@ -33,10 +33,10 @@ vcpkg_extract_source_archive(
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/python3") # port ask python distutils for info.
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   set(pythonpathbase "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/Lib")
+  set(ENV{PYTHONPATH} "${pythonpathbase}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
 else()
   set(pythonpathbase "${CURRENT_HOST_INSTALLED_DIR}/lib/python3.10")
 endif()
-set(ENV{PYTHONPATH} "${pythonpathbase}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
 
 vcpkg_find_acquire_program(FLEX)
 cmake_path(GET FLEX PARENT_PATH FLEX_DIR)
