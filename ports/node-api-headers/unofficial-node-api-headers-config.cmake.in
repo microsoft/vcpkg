@@ -12,7 +12,7 @@ if(NOT TARGET unofficial::node-api-headers::node-api-headers)
   )
 
   if(APPLE)
-    # setting link/compile flags like cmake-js does
+    # setting those properties like cmake-js does
     # https://github.com/cmake-js/cmake-js/blob/272ec1883bc1207205abae948022eecdea02e225/lib/toolset.js#L126
     set_target_properties(unofficial::node-api-headers::node-api-headers PROPERTIES
       INTERFACE_LINK_OPTIONS "LINKER:SHELL:-undefined dynamic_lookup"
