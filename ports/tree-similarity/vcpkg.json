@@ -1,6 +1,6 @@
 {
   "name": "tree-similarity",
-  "version-string": "v0.1",
+  "version-string": "v0.2",
   "description": "Tree edit distance (TED) and similarity measurement library, offering multiple algorithm implementation such as APTED and LGM.",
   "homepage": "https://github.com/DatabaseGroup/tree-similarity",
   "license": "MIT",
