@@ -101,7 +101,7 @@
       <AdditionalIncludeDirectories>..\timidity;..\native_midi;@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="mikmod.dll";OGG_MUSIC;OGG_DYNAMIC="vorbisfile.dll";FLAC_MUSIC;FLAC_DYNAMIC="FLAC.dll";MP3_MUSIC;MPG123_DYNAMIC="mpg123.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
-      <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
+      <RuntimeLibrary>@CRT_TYPE_DBG@</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/SDL_mixer.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -139,7 +139,7 @@
       <AdditionalIncludeDirectories>..\timidity;..\native_midi;@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="mikmod.dll";OGG_MUSIC;OGG_DYNAMIC="vorbisfile.dll";FLAC_MUSIC;FLAC_DYNAMIC="FLAC.dll";MP3_MUSIC;MPG123_DYNAMIC="mpg123.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
-      <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
+      <RuntimeLibrary>@CRT_TYPE_DBG@</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/SDL_mixer.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>

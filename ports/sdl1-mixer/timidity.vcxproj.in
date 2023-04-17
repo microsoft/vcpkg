@@ -106,7 +106,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
+      <RuntimeLibrary>@CRT_TYPE_DBG@</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/timidity.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -151,7 +151,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
+      <RuntimeLibrary>@CRT_TYPE_DBG@</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/timidity.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
