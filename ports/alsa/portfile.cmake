@@ -1,7 +1,3 @@
-if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message(FATAL_ERROR "Package only supports Linux platform.")
-endif()
-
 message(
 "alsa currently requires the following programs from the system package manager:
     autoconf autoheader aclocal automake libtoolize
