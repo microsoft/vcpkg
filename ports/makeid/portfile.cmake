@@ -14,4 +14,4 @@ actually works or fits any particular purpose. It has been unit-tested and bench
 what it was designed to do, and seems pretty quick at it too."
 )
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/makeid/copyright "${license_text}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/makeid/copyright" "${license_text}")
