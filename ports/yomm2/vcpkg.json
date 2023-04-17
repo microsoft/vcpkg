@@ -1,7 +1,7 @@
 {
   "name": "yomm2",
-  "version-string": "1.1.2",
-  "port-version": 1,
+  "version": "1.1.2",
+  "port-version": 2,
   "description": "YOMM2 is an implementation of open multi-methods.",
   "homepage": "https://github.com/jll63/yomm2",
   "dependencies": [

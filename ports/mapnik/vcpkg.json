@@ -1,6 +1,7 @@
 {
   "name": "mapnik",
   "version-date": "2023-01-17",
+  "port-version": 1,
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "license": "LGPL-2.1-only",
@@ -210,7 +211,7 @@
     "viewer": {
       "description": "Make demo viewer application",
       "dependencies": [
-        "qt5-base"
+        "qtbase"
       ]
     },
     "webp": {
