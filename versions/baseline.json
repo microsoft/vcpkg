@@ -5842,7 +5842,7 @@
     },
     "openmama": {
       "baseline": "6.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "openmesh": {
       "baseline": "9.0",
