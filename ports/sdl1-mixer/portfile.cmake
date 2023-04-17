@@ -48,6 +48,15 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x64/libvorbis-0.dll")
     file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x64/libvorbisfile-3.dll")
     
+    file(WRITE "${SOURCE_PATH}/Directory.Build.props" "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                                                     <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
+                                                     <ItemDefinitionGroup>
+                                                     <ClCompile>
+                                                     <AdditionalIncludeDirectories>${CURRENT_PACKAGES_DIR}/include;${CURRENT_PACKAGES_DIR}/include/SDL;${CURRENT_INSTALLED_DIR}/include;${CURRENT_INSTALLED_DIR}/include/SDL</AdditionalIncludeDirectories>
+                                                     </ClCompile>
+                                                     </ItemDefinitionGroup>
+                                                     </Project>")
+
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH VisualC/SDL_mixer_2017.sln
