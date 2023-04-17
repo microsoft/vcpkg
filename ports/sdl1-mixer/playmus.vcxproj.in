@@ -103,7 +103,7 @@
       <PrecompiledHeaderOutputFile>.\Debug/playmus.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <AdditionalIncludeDirectories>@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
@@ -140,7 +140,7 @@
       <PrecompiledHeaderOutputFile>.\Debug/playmus.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <AdditionalIncludeDirectories>@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
