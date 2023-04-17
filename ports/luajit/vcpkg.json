@@ -11,17 +11,17 @@
       "name": "luajit",
       "host": true,
       "features": [
-        "buildvm-x64"
+        "buildvm-64"
       ],
-      "platform": "x64 & (!windows | mingw) & !native"
+      "platform": "!native & (arm64 | x64) & (!windows | mingw)"
     },
     {
       "name": "luajit",
       "host": true,
       "features": [
-        "buildvm-arm64"
+        "buildvm-32"
       ],
-      "platform": "arm64 & (!windows | mingw) & !native"
+      "platform": "!native & ((arm & !arm64) | x86) & (!windows | mingw)"
     },
     {
       "name": "vcpkg-cmake",
@@ -37,13 +37,13 @@
     }
   ],
   "features": {
-    "buildvm-arm64": {
-      "description": "Install host tools for arm64 targets",
-      "supports": "native & (!windows | mingw)"
+    "buildvm-32": {
+      "description": "Install host tools for 32 bit targets",
+      "supports": "native & ((arm & !arm64) | x86) & (!windows | mingw)"
     },
-    "buildvm-x64": {
-      "description": "Install host tools for x64 targets",
-      "supports": "native & (!windows | mingw)"
+    "buildvm-64": {
+      "description": "Install host tools for 64 bit targets",
+      "supports": "native & (arm64 | x64) & (!windows | mingw)"
     }
   }
 }
