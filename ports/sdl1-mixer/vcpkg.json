@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "An audio mixer that supports various file formats for Simple Directmedia Layer.",
   "homepage": "https://www.libsdl.org",
-  "license": "zlib",
+  "license": "Zlib",
   "supports": "!osx & !uwp & !arm",
   "dependencies": [
     "libflac",
