@@ -1,0 +1,73 @@
+diff --git a/tools/cmgen/src/cmgen.cpp b/tools/cmgen/src/cmgen.cpp
+index ed8e7f14a..5277b2d98 100644
+--- a/tools/cmgen/src/cmgen.cpp
++++ b/tools/cmgen/src/cmgen.cpp
+@@ -90,6 +90,7 @@ static std::unique_ptr<filament::math::float3[]> g_sh_coefficients;
+ 
+ static bool g_is_mipmap = false;
+ static utils::Path g_is_mipmap_dir;
++static bool g_no_lighting = false;
+ static bool g_prefilter = false;
+ static utils::Path g_prefilter_dir;
+ static bool g_dfg = false;
+@@ -217,6 +218,8 @@ static void printUsage(char* name) {
+             "       SH output format. The filename extension determines the output format\n\n"
+             "   --sh-irradiance, -i\n"
+             "       Irradiance SH coefficients\n\n"
++            "   --no-lighting, -N\n"
++            "       Don\'t generate any ligthing information\n\n"
+             "   --sh-window=cutoff|no|auto (default), -w cutoff|no|auto (default)\n"
+             "       SH windowing to reduce ringing\n\n"
+             "   --debug, -d\n"
+@@ -267,6 +270,7 @@ static int handleCommandLineArgments(int argc, char* argv[]) {
+             { "ibl-no-prefilter",           no_argument, nullptr, 'n' },
+             { "ibl-min-lod-size",     required_argument, nullptr, 'S' },
+             { "ibl-samples",          required_argument, nullptr, 'k' },
++            { "no-lighting",                no_argument, nullptr, 'N' },
+             { "deploy",               required_argument, nullptr, 'x' },
+             { "no-mirror",                  no_argument, nullptr, 'm' },
+             { "debug",                      no_argument, nullptr, 'd' },
+@@ -424,6 +428,9 @@ static int handleCommandLineArgments(int argc, char* argv[]) {
+             case 'n':
+                 g_ibl_no_prefilter = true;
+                 break;
++            case 'N':
++                g_no_lighting = true;
++                break;
+             case 'a':
+                 g_dfg = true;
+                 g_dfg_filename = arg;
+@@ -631,7 +638,7 @@ int main(int argc, char* argv[]) {
+     // Now generate all the mipmap levels
+     generateMipmaps(js, levels, images);
+ 
+-    if (g_sh_compute) {
++    if (g_sh_compute && !g_no_lighting) {
+         if (!g_quiet) {
+             std::cout << "Spherical harmonics..." << std::endl;
+         }
+@@ -639,21 +646,21 @@ int main(int argc, char* argv[]) {
+         sphericalHarmonics(js, iname, cm);
+     }
+ 
+-    if (g_is_mipmap) {
++    if (g_is_mipmap && !g_no_lighting) {
+         if (!g_quiet) {
+             std::cout << "IBL mipmaps for prefiltered importance sampling..." << std::endl;
+         }
+         iblMipmapPrefilter(js, iname, images, levels, g_is_mipmap_dir);
+     }
+ 
+-    if (g_prefilter) {
++    if (g_prefilter && !g_no_lighting) {
+         if (!g_quiet) {
+             std::cout << "IBL prefiltering..." << std::endl;
+         }
+         iblRoughnessPrefilter(js, iname, levels, !g_ibl_no_prefilter, g_prefilter_dir);
+     }
+ 
+-    if (g_ibl_irradiance) {
++    if (g_ibl_irradiance && !g_no_lighting) {
+         if (!g_quiet) {
+             std::cout << "IBL diffuse irradiance..." << std::endl;
+         }
