@@ -21,6 +21,23 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+if ("compat" IN_LIST FEATURES)
+   vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-DZLIB_FULL_VERSION=${ZLIB_FULL_VERSION}"
+        -DZLIB_ENABLE_TESTS=OFF
+        -DWITH_NEW_STRATEGIES=ON
+       -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+       -DZLIB_COMPAT=ON
+    OPTIONS_RELEASE
+        -DWITH_OPTIM=ON
+)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/include"
 )
