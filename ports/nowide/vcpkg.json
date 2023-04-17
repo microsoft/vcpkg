@@ -1,6 +1,7 @@
 {
   "name": "nowide",
   "version": "11.2.0",
+  "port-version": 1,
   "description": "Boost nowide module (standalone)",
   "homepage": "https://github.com/boostorg/nowide",
   "dependencies": [
