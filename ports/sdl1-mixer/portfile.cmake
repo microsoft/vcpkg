@@ -3,14 +3,7 @@ vcpkg_from_github(
     REPO libsdl-org/SDL_mixer
     REF 7804621c533dddfe970e97c94c4ea72d48ed7f48
     SHA512 5b15bf81b868968a09f82b160e371355e40a29c95a3e79c3cffa49ab5cc7c3212034d12301c21c8a44aef5c981a7a8fec3cb76e9dfe55619159a613b8dec6557
-    #HEAD_REF master
-)
-
-set(ARCHIVE "${CURRENT_PORT_DIR}/SDL-1.2.zip")
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-    #NO_REMOVE_ONE_LEVEL
+    HEAD_REF SDL-1.2
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
