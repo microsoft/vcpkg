@@ -5,5 +5,13 @@
   "description": "An audio mixer that supports various file formats for Simple Directmedia Layer.",
   "homepage": "https://www.libsdl.org",
   "license": "zlib",
-  "supports": "!osx & !uwp & !arm"
+  "supports": "!osx & !uwp & !arm",
+  "dependencies": [
+    "libflac",
+    "libmikmod",
+    "libogg",
+    "libvorbis",
+    "mpg123",
+    "sdl1"
+  ]
 }

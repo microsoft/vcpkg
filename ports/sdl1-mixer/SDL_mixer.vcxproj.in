@@ -96,10 +96,10 @@
       <HeaderFileName />
     </Midl>
     <ClCompile>
-      <AdditionalOptions>/D OGG_DYNAMIC=\"libvorbisfile-3.dll\" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/D OGG_DYNAMIC=\"vorbisfile.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\timidity;..\native_midi;external\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="libmikmod-2.dll";OGG_MUSIC;OGG_DYNAMIC="libvorbisfile-3.dll";FLAC_MUSIC;FLAC_DYNAMIC="libFLAC-8.dll";MP3_MUSIC;MPG123_DYNAMIC="libmpg123-0.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="mikmod.dll";OGG_MUSIC;OGG_DYNAMIC="vorbisfile.dll";FLAC_MUSIC;FLAC_DYNAMIC="FLAC.dll";MP3_MUSIC;MPG123_DYNAMIC="mpg123.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/SDL_mixer.pch</PrecompiledHeaderOutputFile>
@@ -134,10 +134,10 @@
       <HeaderFileName />
     </Midl>
     <ClCompile>
-      <AdditionalOptions>/D OGG_DYNAMIC=\"libvorbisfile-3.dll\" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/D OGG_DYNAMIC=\"vorbisfile.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\timidity;..\native_midi;external\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="libmikmod-2.dll";OGG_MUSIC;OGG_DYNAMIC="libvorbisfile-3.dll";FLAC_MUSIC;FLAC_DYNAMIC="libFLAC-8.dll";MP3_MUSIC;MPG123_DYNAMIC="libmpg123-0.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="mikmod.dll";OGG_MUSIC;OGG_DYNAMIC="vorbisfile.dll";FLAC_MUSIC;FLAC_DYNAMIC="FLAC.dll";MP3_MUSIC;MPG123_DYNAMIC="mpg123.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/SDL_mixer.pch</PrecompiledHeaderOutputFile>
@@ -172,11 +172,11 @@
       <HeaderFileName />
     </Midl>
     <ClCompile>
-      <AdditionalOptions>/D OGG_DYNAMIC=\"libvorbisfile-3.dll\" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/D OGG_DYNAMIC=\"vorbisfile.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\timidity;..\native_midi;external\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="libmikmod-2.dll";OGG_MUSIC;OGG_DYNAMIC="libvorbisfile-3.dll";FLAC_MUSIC;FLAC_DYNAMIC="libFLAC-8.dll";MP3_MUSIC;MPG123_DYNAMIC="libmpg123-0.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="mikmod.dll";OGG_MUSIC;OGG_DYNAMIC="vorbisfile.dll";FLAC_MUSIC;FLAC_DYNAMIC="FLAC.dll";MP3_MUSIC;MPG123_DYNAMIC="mpg123.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -209,11 +209,11 @@
       <HeaderFileName />
     </Midl>
     <ClCompile>
-      <AdditionalOptions>/D OGG_DYNAMIC=\"libvorbisfile-3.dll\" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/D OGG_DYNAMIC=\"vorbisfile.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\timidity;..\native_midi;external\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="libmikmod-2.dll";OGG_MUSIC;OGG_DYNAMIC="libvorbisfile-3.dll";FLAC_MUSIC;FLAC_DYNAMIC="libFLAC-8.dll";MP3_MUSIC;MPG123_DYNAMIC="libmpg123-0.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="mikmod.dll";OGG_MUSIC;OGG_DYNAMIC="vorbisfile.dll";FLAC_MUSIC;FLAC_DYNAMIC="FLAC.dll";MP3_MUSIC;MPG123_DYNAMIC="mpg123.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

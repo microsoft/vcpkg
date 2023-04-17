@@ -33,6 +33,20 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     
     # This text file gets copied as a library, and included as one in the package 
     file(REMOVE "${SOURCE_PATH}/external/libmikmod/COPYING.LIB")
+
+    # Remove unused external dlls
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x86/libFLAC-8.dll")
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x86/libmikmod-2.dll")
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x86/libmpg123-0.dll")
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x86/libogg-0.dll")
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x86/libvorbis-0.dll")
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x86/libvorbisfile-3.dll")
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x64/libFLAC-8.dll")
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x64/libmikmod-2.dll")
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x64/libmpg123-0.dll")
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x64/libogg-0.dll")
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x64/libvorbis-0.dll")
+    file(REMOVE "${SOURCE_PATH}/VisualC/external/lib/x64/libvorbisfile-3.dll")
     
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
