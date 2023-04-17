@@ -22,7 +22,7 @@
   "features": {
     "fips": {
       "description": "Enable fips",
-	  "supports": "windows"
+      "supports": "windows"
     },
     "tools": {
       "description": "Install openssl executable and scripts",
