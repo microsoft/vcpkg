@@ -1,5 +1,5 @@
 diff --git a/wangle/CMakeLists.txt b/wangle/CMakeLists.txt
-index 977bbe4..831090b 100644
+index 977bbe4..9009572 100644
 --- a/wangle/CMakeLists.txt
 +++ b/wangle/CMakeLists.txt
 @@ -64,18 +64,17 @@ set(CMAKE_INSTALL_DIR lib/cmake/wangle CACHE STRING
@@ -25,7 +25,7 @@ index 977bbe4..831090b 100644
  find_package(Threads REQUIRED)
  if (UNIX AND NOT APPLE)
    find_package(Librt)
-@@ -152,6 +151,14 @@ if (BUILD_SHARED_LIBS)
+@@ -152,6 +151,13 @@ if (BUILD_SHARED_LIBS)
      PROPERTIES VERSION ${PACKAGE_VERSION})
  endif()
  
@@ -36,11 +36,10 @@ index 977bbe4..831090b 100644
 +set(GFLAGS_INCLUDE_DIRS "")
 +set(LIBEVENT_INCLUDE_DIR "")
 +set(DOUBLE_CONVERSION_INCLUDE_DIRS "")
-+set(OPENSSL_INCLUDE_DIR "")
  target_include_directories(
    wangle
    PUBLIC
-@@ -166,6 +173,13 @@ target_include_directories(
+@@ -166,6 +172,13 @@ target_include_directories(
      ${LIBEVENT_INCLUDE_DIR}
      ${DOUBLE_CONVERSION_INCLUDE_DIRS}
  )
