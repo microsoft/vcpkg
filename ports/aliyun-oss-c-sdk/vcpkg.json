@@ -1,11 +1,19 @@
 {
   "name": "aliyun-oss-c-sdk",
-  "version-string": "3.10.0",
-  "port-version": 1,
+  "version": "3.10.0",
+  "port-version": 3,
   "description": "Alibaba Cloud Object Storage Service (OSS) is a cloud storage service provided by Alibaba Cloud, featuring massive capacity, security, a low cost, and high reliability.",
   "supports": "!(uwp | linux | osx)",
   "dependencies": [
     "apr-util",
-    "curl"
+    "curl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

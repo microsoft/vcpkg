@@ -1,7 +1,7 @@
 {
   "name": "yajl",
-  "version-string": "2.1.0",
-  "port-version": 3,
+  "version": "2.1.0",
+  "port-version": 4,
   "description": "Yet Another JSON Library",
   "homepage": "https://github.com/lloyd/yajl",
   "license": "ISC",

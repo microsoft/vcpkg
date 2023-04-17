@@ -13,21 +13,20 @@ if(VCPKG_TARGET_IS_UWP)
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DINSTALL_HAYAI=ON
         -DBUILD_HAYAI_TESTS=OFF
         -DBUILD_HAYAI_SAMPLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/CMake/${PORT})
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/CMake/${PORT})
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/CMake/${PORT})
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

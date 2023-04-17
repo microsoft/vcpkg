@@ -28,8 +28,11 @@ function(unit_test_pkgconfig_check_key build_types field value)
         set(expected "${field}${value}")
         list(FILTER ${listname} INCLUDE REGEX "^${field}")
         if(NOT "${${listname}}" STREQUAL "${expected}" AND NOT "${${listname}}_is_empty" STREQUAL "${value}_is_empty")
+            string(REPLACE "\$" "\\\$" pc_strings_INPUT "${pc_strings_INPUT}")
+            string(REPLACE "\$" "\\\$" expected "${expected}")
+            string(REPLACE "\$" "\\\$" "${listname}" "${${listname}}")
             message(SEND_ERROR "vcpkg_fixup_pkgconfig() resulted in a wrong value for ${build_type} builds;
-    input:    [[${pc_strings_INPUT}]]
+    input   : [[${pc_strings_INPUT}]]
     expected: [[${expected}]]
     actual  : [[${${listname}}]]")
             set_has_error()
@@ -157,3 +160,8 @@ unit_test_pkgconfig_check_key("debug" "datadir=" [[${datarootdir}/unit-test-cmak
 write_pkgconfig([[blah_libs=-L${blah}/lib64 -l${blah}/libblah.a -I${blah}/include]])
 unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
 unit_test_pkgconfig_check_key("debug;release" "blah_libs=" [["-L${blah}/lib64" "-l${blah}/libblah.a" "-I${blah}/include"]])
+
+# plain vs. quoted items
+write_pkgconfig([[Libs: ${blah} "${quoted}" plain "C:/Program Files/blah.lib"]])
+unit_test_ensure_success([[ vcpkg_fixup_pkgconfig(SKIP_CHECK) ]])
+unit_test_pkgconfig_check_key("debug;release" "Libs:" [[ ${blah} "${quoted}" plain "C:/Program Files/blah.lib"]])
