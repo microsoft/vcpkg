@@ -1088,10 +1088,6 @@ workflow:arm-uwp=fail
 dimcli:x64-windows-static-md=fail
 dimcli:x64-windows-static=fail
 
-zeroc-ice:x86-windows=fail
-zeroc-ice:x64-windows=fail
-zeroc-ice:x64-windows-static-md=fail
-
 # Ports which needs to pass in CI
 cmake:x64-windows=pass
 cmake:x64-windows-static=pass
