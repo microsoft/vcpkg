@@ -1,0 +1,14 @@
+{
+  "name": "zlib-ng-compat",
+  "version": "2.0.6",
+  "port-version": 1,
+  "description": "zlib replacement with optimizations for 'next generation' systems.\nThis port will be compiled in zlib-compat mode, suitable for zlib-replacement through an overlay port with no changes to the application code.\nSee https://github.com/zlib-ng/zlib-ng/blob/develop/PORTING.md for more info.",
+  "homepage": "https://github.com/zlib-ng/zlib-ng",
+  "license": "Zlib",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
