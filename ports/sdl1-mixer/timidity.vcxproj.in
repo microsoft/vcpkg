@@ -92,7 +92,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeaderOutputFile>.\Release/timidity.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -111,7 +111,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <AdditionalIncludeDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -134,7 +134,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeaderOutputFile>.\Release/timidity.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -156,7 +156,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <AdditionalIncludeDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <Culture>0x0409</Culture>

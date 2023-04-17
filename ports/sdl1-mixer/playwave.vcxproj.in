@@ -104,7 +104,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeaderOutputFile>.\Release/playwave.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>$(VcpkgInstalledDir)\$(VcpkgTriplet)\include\SDL</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -115,7 +115,7 @@
       <ProgramDatabaseFile>.\Release/playwave.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>@CURRENT_INSTALLED_DIR@/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -140,7 +140,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeaderOutputFile>.\Release/playwave.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>$(VcpkgInstalledDir)\$(VcpkgTriplet)\include\SDL</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -151,7 +151,7 @@
       <ProgramDatabaseFile>.\Release/playwave.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
-      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>@CURRENT_INSTALLED_DIR@/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -176,7 +176,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(VcpkgInstalledDir)\$(VcpkgTriplet)\include\SDL</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -188,7 +188,7 @@
       <ProgramDatabaseFile>.\Debug/playwave.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>@CURRENT_INSTALLED_DIR@/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -213,7 +213,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(VcpkgInstalledDir)\$(VcpkgTriplet)\include\SDL</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -225,7 +225,7 @@
       <ProgramDatabaseFile>.\Debug/playwave.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
-      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>@CURRENT_INSTALLED_DIR@/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>

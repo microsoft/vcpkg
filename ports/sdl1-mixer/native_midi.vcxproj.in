@@ -85,7 +85,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..;..\..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..;..\..\native_midi;@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
@@ -104,7 +104,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..;..\..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..;..\..\native_midi;@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/native_midi.pch</PrecompiledHeaderOutputFile>
@@ -127,7 +127,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..;..\..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..;..\..\native_midi;@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
@@ -149,7 +149,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..;..\..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..;..\..\native_midi;@CURRENT_PACKAGES_DIR@/include/SDL;@CURRENT_INSTALLED_DIR@/include/SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/native_midi.pch</PrecompiledHeaderOutputFile>
