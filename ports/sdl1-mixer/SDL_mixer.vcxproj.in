@@ -98,7 +98,7 @@
     <ClCompile>
       <AdditionalOptions>/D OGG_DYNAMIC=\"vorbisfile.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\include;@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="mikmod.dll";OGG_MUSIC;OGG_DYNAMIC="vorbisfile.dll";FLAC_MUSIC;FLAC_DYNAMIC="FLAC.dll";MP3_MUSIC;MPG123_DYNAMIC="mpg123.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
@@ -117,7 +117,7 @@
       <ProgramDatabaseFile>.\Debug/SDL_mixer.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -136,7 +136,7 @@
     <ClCompile>
       <AdditionalOptions>/D OGG_DYNAMIC=\"vorbisfile.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\include;@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="mikmod.dll";OGG_MUSIC;OGG_DYNAMIC="vorbisfile.dll";FLAC_MUSIC;FLAC_DYNAMIC="FLAC.dll";MP3_MUSIC;MPG123_DYNAMIC="mpg123.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
@@ -155,7 +155,7 @@
       <ProgramDatabaseFile>.\Debug/SDL_mixer.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
-      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -175,7 +175,7 @@
       <AdditionalOptions>/D OGG_DYNAMIC=\"vorbisfile.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\include;@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="mikmod.dll";OGG_MUSIC;OGG_DYNAMIC="vorbisfile.dll";FLAC_MUSIC;FLAC_DYNAMIC="FLAC.dll";MP3_MUSIC;MPG123_DYNAMIC="mpg123.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
@@ -192,7 +192,7 @@
       <ProgramDatabaseFile>.\Release/SDL_mixer.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -212,7 +212,7 @@
       <AdditionalOptions>/D OGG_DYNAMIC=\"vorbisfile.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include;@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\timidity;..\native_midi;@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\include;@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MOD_MUSIC;MOD_DYNAMIC="mikmod.dll";OGG_MUSIC;OGG_DYNAMIC="vorbisfile.dll";FLAC_MUSIC;FLAC_DYNAMIC="FLAC.dll";MP3_MUSIC;MPG123_DYNAMIC="mpg123.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>@CRT_TYPE_REL@</RuntimeLibrary>
@@ -229,7 +229,7 @@
       <ProgramDatabaseFile>.\Release/SDL_mixer.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
-      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\$(VcpkgTriplet)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>@VCPKG_ROOT_DIR@\installed\@TARGET_TRIPLET@\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
