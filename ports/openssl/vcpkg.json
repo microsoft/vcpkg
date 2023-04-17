@@ -19,5 +19,10 @@
       "host": true,
       "platform": "windows & !mingw"
     }
-  ]
+  ],
+  "features": {
+    "fips": {
+      "description": "Enable fips"
+    }
+  }
 }
