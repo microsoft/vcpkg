@@ -1,4 +1,4 @@
-set(PATCHES 0001-fix-for-vcpkg.patch fix-export-static.patch)
+set(PATCHES fix-for-vcpkg.patch)
 
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND PATCHES uwp-warnings.patch)
