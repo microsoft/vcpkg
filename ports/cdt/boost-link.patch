@@ -7,7 +7,7 @@ index 555fb4e..86be850 100644
  
  if(CDT_USE_BOOST)
 -    target_link_libraries(${PROJECT_NAME} INTERFACE Boost::boost)
-+    target_link_libraries(${PROJECT_NAME} PUBLIC Boost::boost)
++    target_link_libraries(${PROJECT_NAME} ${cdt_scope} Boost::boost)
  endif()
  
  
