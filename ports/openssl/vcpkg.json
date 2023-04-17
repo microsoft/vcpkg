@@ -22,7 +22,8 @@
   ],
   "features": {
     "fips": {
-      "description": "Enable fips"
-    }
+      "description": "Enable fips",
+	  "supports": "windows"
+	}
   }
 }
