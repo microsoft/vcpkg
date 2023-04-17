@@ -1,7 +1,7 @@
 {
   "name": "miniupnpc",
-  "version-string": "2.1",
-  "port-version": 3,
+  "version": "2.1",
+  "port-version": 4,
   "description": "UPnP client library/tool to access Internet Gateway Devices",
   "dependencies": [
     {

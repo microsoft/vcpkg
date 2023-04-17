@@ -1,6 +1,6 @@
 {
   "name": "glibmm",
-  "version": "2.74.0",
+  "version": "2.76.0",
   "description": "This is glibmm, a C++ API for parts of glib that are useful for C++.",
   "homepage": "https://www.gtkmm.org.",
   "license": "LGPL-2.1-or-later",

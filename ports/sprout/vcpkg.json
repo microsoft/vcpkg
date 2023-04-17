@@ -1,7 +1,7 @@
 {
   "name": "sprout",
-  "version-string": "2019-06-20",
-  "port-version": 1,
+  "version-date": "2019-06-20",
+  "port-version": 2,
   "description": "C++11/14 constexpr based Containers, Algorithms, Random numbers, Parsing, Ray tracing, Synthesizer, and others",
   "homepage": "https://github.com/bolero-MURAKAMI/Sprout",
   "dependencies": [
