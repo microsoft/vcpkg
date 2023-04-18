@@ -504,6 +504,15 @@ libwandio:arm-uwp=fail
 libxaw:x64-windows-static=skip
 # clang-cl ICEd
 libxt:arm64-windows=fail
+# Conflict with libxmp
+libxml-lite::arm64-windows      = skip
+libxml-lite::arm-uwp            = skip
+libxml-lite::x64-linux          = skip
+libxml-lite::x64-uwp            = skip
+libxml-lite::x64-windows        = skip
+libxml-lite::x64-windows-static = skip
+libxml-lite::x64-windows-static-md=skip
+libxml-lite::x86-windows        = skip
 licensepp:arm-uwp=fail
 licensepp:x64-uwp=fail
 linenoise-ng:arm-uwp=fail
