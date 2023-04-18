@@ -122,7 +122,6 @@ if("tools" IN_LIST FEATURES)
     file(COPY ${RTABMAP_REL_LIBS} DESTINATION  "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tmp")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/translations")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/plugins" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins")
     #qt.conf
     file(COPY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qt.conf" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "./../../../" "./../../")
@@ -134,7 +133,6 @@ if("tools" IN_LIST FEATURES)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tmp")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/plugins")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/translations")
-    
   endif()
 endif()
 
