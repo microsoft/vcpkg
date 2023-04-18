@@ -20,12 +20,6 @@
     },
     "as-compiled-library": {
       "description": "Templates for float and double will be instantiated and compiled into a library"
-    },
-    "boost": {
-      "description": "Boost is only required for C++98 support as a fall-back for missing features",
-      "dependencies": [
-        "boost-container"
-      ]
     }
   }
 }

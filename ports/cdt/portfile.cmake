@@ -10,7 +10,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "64-bit-index-type"     CDT_USE_64_BIT_INDEX_TYPE
         "as-compiled-library"   CDT_USE_AS_COMPILED_LIBRARY
-        "boost"                 CDT_USE_BOOST
 )
 
 if (NOT CDT_USE_AS_COMPILED_LIBRARY)
