@@ -8297,8 +8297,8 @@
       "port-version": 1
     },
     "visit-struct": {
-      "baseline": "1.0",
-      "port-version": 4
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "vk-bootstrap": {
       "baseline": "0.5",
