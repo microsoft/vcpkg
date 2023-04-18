@@ -1,0 +1,26 @@
+diff --git a/src/depackers/ptpopen.c b/src/depackers/ptpopen.c
+index 421faf08c6bf83e38fbb795595f1a8cf79691b16..a11ade9d81267346a0a3970723de2dc12f62c189 100644
+--- a/src/depackers/ptpopen.c
++++ b/src/depackers/ptpopen.c
+@@ -12,7 +12,7 @@
+  * useful. -- Kurt Keller, Aug 2013
+  */
+ 
+-#ifdef _WIN32
++#if defined(_WIN32 ) && !(defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP))
+ 
+ #include "ptpopen.h"
+ 
+diff --git a/src/depackers/depacker.c b/src/depackers/depacker.c
+index 7ff76513781d7daf79135ddf578db94f826f6e19..429a421e29fe1c17ed1d79a5e0d376dbfe04e7b9 100644
+--- a/src/depackers/depacker.c
++++ b/src/depackers/depacker.c
+@@ -28,7 +28,7 @@
+ #include "../tempfile.h"
+ #include "xfnmatch.h"
+ 
+-#ifdef _WIN32
++#if defined(_WIN32 ) && !(defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP))
+ /* Note: The _popen function returns an invalid file opaque, if
+  * used in a Windows program, that will cause the program to hang
+  * indefinitely. _popen works properly in a Console application.

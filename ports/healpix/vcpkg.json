@@ -1,7 +1,7 @@
 {
   "name": "healpix",
-  "version-string": "1.12.10",
-  "port-version": 8,
+  "version": "1.12.10",
+  "port-version": 9,
   "description": "HEALPix is an acronym for Hierarchical Equal Area isoLatitude Pixelation of a sphere.",
   "homepage": "http://healpix.sourceforge.net/",
   "supports": "linux",

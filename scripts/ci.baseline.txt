@@ -210,8 +210,6 @@ duktape:arm64-osx=skip
 eastl:arm-uwp=fail
 easyloggingpp:arm-uwp=fail
 easyloggingpp:x64-uwp=fail
-ebml:arm-uwp=fail
-ebml:x64-uwp=fail
 # Checks for gnu extension so only works with gcc.
 elfutils:x64-osx=fail
 elfutils:arm64-osx=fail
@@ -479,7 +477,6 @@ libtomcrypt:arm64-windows=fail
 libtomcrypt:arm-uwp=fail
 libusb:arm-uwp=fail
 libusb:x64-uwp=fail
-libusb:arm64-windows=fail
 libusb-win32:arm-uwp=fail
 libusb-win32:x64-linux=fail
 libusb-win32:x64-osx=fail
@@ -773,7 +770,6 @@ qt5-webengine:x86-windows=skip
 # Missing system libraries
 qt5-x11extras:x64-osx=fail
 qt5-x11extras:arm64-osx=fail
-qwt:x64-osx=fail
 qwt:arm64-osx=fail
 qwt-qt6:x64-osx=fail
 rabit:arm64-osx=fail
@@ -856,11 +852,6 @@ rtlsdr:arm64-windows=fail
 rtlsdr:arm-uwp=fail
 rtlsdr:x64-linux=fail
 rtlsdr:x64-osx=fail
-
-# ryu does not support VS2022 yet
-ryu:x64-windows=fail
-ryu:x64-windows-static=fail
-ryu:x64-windows-static-md=fail
 
 sciter:arm64-windows=skip
 sciter:arm-uwp=skip
@@ -1099,11 +1090,6 @@ dimcli:x64-windows-static=fail
 
 zeroc-ice:x86-windows=fail
 zeroc-ice:x64-windows=fail
-zeroc-ice:x64-windows-static-md=fail
-# ZeroC doesn't provide ARM tagets in project files.
-zeroc-ice:arm64-windows=fail
-zeroc-ice:arm-uwp=fail
-zeroc-ice:x64-uwp=fail
 
 # Ports which needs to pass in CI
 cmake:x64-windows=pass

@@ -5,10 +5,10 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ada6406efb096cd8a2daf8f9217fe9111a96dcae87e29d1c31f58ddd2ad2aa7bac03f23c7205dc9360f3b62d259461759330c7189ef0c2fe559704b1ea9d40dd
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF "szip-${SZIP_VERSION}"
+    SOURCE_BASE "szip-${SZIP_VERSION}"
     PATCHES
         fix-linkage-config.patch
         mingw-lib-names.patch

@@ -20,14 +20,6 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
-if ("cuda" IN_LIST FEATURES AND VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-    message(FATAL_ERROR "Feature cuda only supports 64-bit compilation.")
-endif()
-
-if ("tools" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "Feature tools only supports dynamic build")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         openni2         WITH_OPENNI2
