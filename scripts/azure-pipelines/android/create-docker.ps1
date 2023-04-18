@@ -1,19 +1,13 @@
 # Create Docker image for Android
 
-[CmdLetBinding()]
-Param(
-  # Create a new resource group/container registry
-  [parameter(Mandatory=$false)]
-  [switch]$newRegistry
-)
-
 $Location = 'eastasia'
 $Date = (Get-Date -Format 'yyyy-MM-dd')
 $ResourceGroupName = "And-Registry"
 $ContainerRegistryName = "AndContainerRegistry"
 $ErrorActionPreference = 'Stop'
 
-if ($newRegistry) {
+Get-AzResourceGroup -Name $ResourceGroupName -ErrorVariable error -ErrorAction SilentlyContinue
+if ($error) {
     New-AzResourceGroup -Name $ResourceGroupName -Location $Location
     New-AzContainerRegistry -ResourceGroupName $ResourceGroupName -Name $ContainerRegistryName -EnableAdminUser -Sku Basic
 }
