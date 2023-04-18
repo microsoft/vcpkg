@@ -66,21 +66,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
     file(COPY "${SOURCE_PATH}/SDL_mixer.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/SDL")
 else()
-    if(VCPKG_TARGET_IS_LINUX)
-        message("libgles2-mesa-dev must be installed before sdl1 can build. Install it with \"apt install libgles2-mesa-dev\".")
-    endif()
-
-    find_program(WHICH_COMMAND NAMES which)
-    if(NOT WHICH_COMMAND)
-        set(polyfill_scripts "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-bin")
-        file(REMOVE_RECURSE "${polyfill_scripts}")
-        file(MAKE_DIRECTORY "${polyfill_scripts}")
-        vcpkg_host_path_list(APPEND ENV{PATH} "${polyfill_scripts}")
-        # sdl's autoreconf.sh needs `which`, but our msys root doesn't have it.
-        file(WRITE "${polyfill_scripts}/which" "#!/bin/sh\nif test -f \"/usr/bin/\$1\"; then echo \"/usr/bin/\$1\"; else false; fi\n")
-        file(CHMOD "${polyfill_scripts}/which" PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
-    endif()
-
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
     )
@@ -88,11 +73,7 @@ else()
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
     
-    file(REMOVE_RECURSE
-        "${CURRENT_PACKAGES_DIR}/debug/share"
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}/man3"
-    )
-
     file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
