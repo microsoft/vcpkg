@@ -3393,8 +3393,8 @@
       "port-version": 2
     },
     "joltphysics": {
-      "baseline": "2.0.1",
-      "port-version": 2
+      "baseline": "3.0.1",
+      "port-version": 0
     },
     "josuttis-jthread": {
       "baseline": "2020-07-21",
