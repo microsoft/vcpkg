@@ -5,7 +5,7 @@ variables:
   windows-pool: 'PrWin-2023-03-15'
   linux-pool: 'PrLin-2023-03-15'
   osx-pool: 'PrOsx-2022-02-04'
-  android-pool: 'PrAnd-2023-02-02'
+  android-pool: 'PrAnd-2023-04-17'
   linux-docker-image: 'andcontainerregistry.azurecr.io/vcpkg-android:2023-03-23'
 
 parameters:
