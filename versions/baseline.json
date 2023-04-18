@@ -8589,8 +8589,8 @@
       "port-version": 4
     },
     "xlsxio": {
-      "baseline": "2021-03-24",
-      "port-version": 1
+      "baseline": "0.2.34",
+      "port-version": 0
     },
     "xmlsec": {
       "baseline": "1.2.37",
