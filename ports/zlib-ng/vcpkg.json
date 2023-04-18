@@ -13,7 +13,7 @@
   ],
   "features": {
     "compat": {
-      "description": "Create an additional zlib-ng build that runs in compatibility mode.\nPackages that depends on the old zlib can then reference this build and take advantage of next gen instructions with no change to source code."
+      "description": "Create an additional zlib-ng build that runs in compatibility mode (ZLIB_COMPAT). With an overlay port, packages that depends on the old zlib can directly reference zlib-ng and take advantage of next gen instructions with no change to the source code."
     }
   }
 }
