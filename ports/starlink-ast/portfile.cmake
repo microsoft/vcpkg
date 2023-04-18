@@ -38,6 +38,15 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 
+# libast_pass2 is a hyperlink / symbol link
+if (EXISTS "{CURRENT_PACKAGES_DIR}/lib/libast_pass2${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    file(REMOVE "{CURRENT_PACKAGES_DIR}/lib/libast_pass2${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+endif()
+
+if (EXISTS "{CURRENT_PACKAGES_DIR}/debug/lib/libast_pass2${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    file(REMOVE "{CURRENT_PACKAGES_DIR}/debug/lib/libast_pass2${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share")
 
