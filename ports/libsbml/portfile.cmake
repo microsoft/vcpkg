@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 118ffbf11f1a5245cc544c1eac71019d979ecb20 #libSBML-5.19.0
     SHA512 7fe8b4d594876c6408e01c646187cb1587d0b4e12707a43286150d4e4646841e547bde971de917de1cdfbbb9365172aeac43c8e02f7d354400f9166f0f1c2c3d
     HEAD_REF development
+    PATCHES
+        Include_functional.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
@@ -84,5 +86,5 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/README.md")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/README.md")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 vcpkg_fixup_pkgconfig()
