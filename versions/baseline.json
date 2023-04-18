@@ -3486,7 +3486,7 @@
     },
     "kenlm": {
       "baseline": "20200924",
-      "port-version": 2
+      "port-version": 3
     },
     "keystone": {
       "baseline": "0.9.2",
@@ -4434,7 +4434,7 @@
     },
     "libsbml": {
       "baseline": "5.19.0",
-      "port-version": 2
+      "port-version": 3
     },
     "libsbsms": {
       "baseline": "2.3.0",
@@ -5050,7 +5050,7 @@
     },
     "mathgl": {
       "baseline": "8.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "matio": {
       "baseline": "1.5.23",
@@ -5250,7 +5250,7 @@
     },
     "moos-core": {
       "baseline": "10.4.0",
-      "port-version": 7
+      "port-version": 8
     },
     "moos-essential": {
       "baseline": "10.0.1",
@@ -6870,7 +6870,7 @@
     },
     "rappture": {
       "baseline": "1.9",
-      "port-version": 3
+      "port-version": 4
     },
     "raygui": {
       "baseline": "3.2",
@@ -7482,7 +7482,7 @@
     },
     "spaceland": {
       "baseline": "7.8.2",
-      "port-version": 7
+      "port-version": 8
     },
     "span-lite": {
       "baseline": "0.10.3",
