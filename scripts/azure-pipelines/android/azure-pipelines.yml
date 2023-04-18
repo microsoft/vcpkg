@@ -84,7 +84,7 @@ jobs:
         docker run --init -i \
         -a stderr \
         -a stdout \
-        --user $(USER) \
+        --user $USER \
         --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
         --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs \
         --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci \
