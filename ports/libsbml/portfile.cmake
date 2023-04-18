@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 7fe8b4d594876c6408e01c646187cb1587d0b4e12707a43286150d4e4646841e547bde971de917de1cdfbbb9365172aeac43c8e02f7d354400f9166f0f1c2c3d
     HEAD_REF development
     PATCHES
-        Include_functional.patch
+        include_functional.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)

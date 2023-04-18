@@ -9,7 +9,7 @@ vcpkg_from_github(
     PATCHES 
         fix-boost.patch
         fix-const-overloaded.patch
-        Include_functional.patch
+        include_functional.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindEigen3.cmake")

@@ -9,7 +9,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES Include_functional.patch
+    PATCHES include_functional.patch
 )
 
 vcpkg_cmake_configure(
