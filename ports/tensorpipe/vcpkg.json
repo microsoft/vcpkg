@@ -1,7 +1,7 @@
 {
   "name": "tensorpipe",
   "version-date": "2022-03-16",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A tensor-aware point-to-point communication primitive for machine learning",
   "homepage": "https://github.com/pytorch/tensorpipe",
   "license": "BSD-3-Clause",
