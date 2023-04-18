@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sbmlteam/libsbml
-    REF 118ffbf11f1a5245cc544c1eac71019d979ecb20 #libSBML-5.19.0
-    SHA512 7fe8b4d594876c6408e01c646187cb1587d0b4e12707a43286150d4e4646841e547bde971de917de1cdfbbb9365172aeac43c8e02f7d354400f9166f0f1c2c3d
+    REF "v${VERSION}"
+    SHA512 c40f164ebd05a36f140ce2684dedb4bbccc51a2732383d3935fca1258738a9b9ba5bc1be2061f3b113b213e5cbb7fe22e9dca43ff78d91964c79cad093e55466
     HEAD_REF development
-    PATCHES
-        include_functional.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
