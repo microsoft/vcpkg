@@ -9,12 +9,11 @@ vcpkg_from_github(
         Fix-link-error-C1128.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS -DBUILD_STATIC_LIBS=off -DJSON_SPIRIT_DEMOS=off -DJSON_SPIRIT_TESTS=off)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/json-spirit RENAME copyright)

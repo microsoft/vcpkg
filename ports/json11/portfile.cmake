@@ -9,14 +9,13 @@ vcpkg_from_github(
     PATCHES destination.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DJSON11_BUILD_TESTS:BOOL=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(INSTALL ${CURRENT_PORT_DIR}/json11-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/json11)

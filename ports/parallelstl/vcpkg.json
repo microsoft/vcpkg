@@ -1,7 +1,7 @@
 {
   "name": "parallelstl",
-  "version-string": "20200330",
-  "port-version": 2,
+  "version": "20200330",
+  "port-version": 3,
   "description": "Parallel STL is an implementation of the C++ standard library algorithms with support for execution policies, as specified in ISO/IEC 14882:2017 standard, commonly called C++17.",
   "homepage": "https://github.com/intel/parallelstl",
   "dependencies": [
