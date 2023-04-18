@@ -123,7 +123,7 @@ if("tools" IN_LIST FEATURES)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tmp")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/translations")
     #qt.conf
-    file(COPY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qt.conf" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(COPY "${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/qt.conf" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "./../../../" "./../../")
 
     # Debug
