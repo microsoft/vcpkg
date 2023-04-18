@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneTBB
     REF "v${VERSION}"
-    SHA512 d314e3d88b85c96607a9eda15e3d808bf361eb562a534c59101929236e90c187883e7718e5435b5e7f01f4ee652c9765af95f5f173368b83997e4666b7403a49
+    SHA512 72f68730dfd89409796f9548d3c302111787712089688a7c77092ed1b3a7bf4e7444fe4b58015d2c78b7b71259852526789b2483bf1e71bea8146c4b4676e7b4
     HEAD_REF onetbb_2021
 )
 
@@ -21,6 +21,16 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/TBB")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+
+set(arch_suffix "")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+  set(arch_suffix "32")
+endif()
+
+
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tbb${arch_suffix}.pc" "-ltbb12" "-ltbb12_debug")
+endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/doc"

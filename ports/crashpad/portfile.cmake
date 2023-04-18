@@ -90,13 +90,14 @@ if(CMAKE_HOST_WIN32)
     set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
 endif()
 
-vcpkg_configure_gn(
+vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
 
-vcpkg_install_gn(
+vcpkg_gn_install(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS client client:common util third_party/mini_chromium/mini_chromium/base handler:crashpad_handler
 )
@@ -118,6 +119,10 @@ if(VCPKG_TARGET_IS_OSX)
     file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 endif()
 
+vcpkg_copy_tools(
+    TOOL_NAMES crashpad_handler
+    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools")
+
 # remove empty directories
 file(REMOVE_RECURSE
     "${PACKAGES_INCLUDE_DIR}/util/net/testdata"
@@ -130,6 +135,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${PORT}/build/config")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${PORT}/util/mach/__pycache__")
 
 vcpkg_copy_pdbs()
-file(INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

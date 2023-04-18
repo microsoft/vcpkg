@@ -64,7 +64,6 @@ file(REMOVE_RECURSE
 )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-file(COPY "${SOURCE_PATH}/cmake/FindZSTD.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES

@@ -3,9 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jrouwe/JoltPhysics
-    REF v2.0.1
+    REF "v${VERSION}"
     SHA512 c5848fe7a28de1b34259d3d21e4cd35bec4002eee926445e05d902934c43ab4cafcfa24ceb037c59cc66c3dcea5f3a737546f88c20be594dafe6ce6d1f637abb
     HEAD_REF master
+    PATCHES
+        disable-warningC5266.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_CRT)
@@ -43,4 +45,4 @@ else()
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

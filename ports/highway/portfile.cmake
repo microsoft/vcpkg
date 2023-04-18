@@ -1,11 +1,8 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/highway
-    REF ${VERSION}
-    SHA512 d4c57b297f073dd83535c60151bbc7e7960262990d89bc78882adeb457ed7cf6d54ec852ecb1847c7760de3992267b66538971d20a2c2935828d95d99ddb3a3f
+    REF "${VERSION}"
+    SHA512 fc419c862e1686b6278081e8e10da41dc2bdfbd386a29b59e21a57375a47d3eeb5c7297e3078c78007b212121d936640b192a26a16c941e73cf599f24e081021
     HEAD_REF master
 )
 
@@ -16,19 +13,24 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DHWY_ENABLE_EXAMPLES=OFF
         -DHWY_ENABLE_TESTS=OFF
 )
 
 vcpkg_cmake_install()
 
-# remove test-related pkg-config files that break vcpkg_fixup_pkgconfig
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libhwy-test.pc")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libhwy-test.pc")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/hwy/highway_export.h" "defined(HWY_SHARED_DEFINE)" "1")
+endif()
 
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    # remove test-related pkg-config files that break vcpkg_fixup_pkgconfig
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libhwy-test.pc"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libhwy-test.pc"
+)
 vcpkg_fixup_pkgconfig()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

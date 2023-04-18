@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
-    REF boost-1.81.0
-    SHA512 553fe135656dfd4e1dd797396964508a3a9807c9a04233a86e340402eaf1913f8d89eff6e1c3fe9415258d541af877839d2d7b5616f40df892cbbdb2dfcbdb97
+    REF boost-1.82.0
+    SHA512 40c96316016f5fbc7f83061ffc236ac751293db7fc56507dbf160fcfb1388bd8cd7133bf80881ad9893aec95dfab32ad73d00d047d07a32ca24f10e068cc988c
     HEAD_REF master
     PATCHES fix-dependencies.patch
 )

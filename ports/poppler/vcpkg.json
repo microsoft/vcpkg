@@ -1,7 +1,7 @@
 {
   "name": "poppler",
-  "version": "22.8.0",
-  "port-version": 1,
+  "version": "23.1.0",
+  "port-version": 2,
   "description": "A PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
   "license": "GPL-2.0-or-later",
@@ -85,6 +85,15 @@
     },
     "private-api": {
       "description": "Install headers for private API (aka unstable API/ABI headers)"
+    },
+    "qt": {
+      "description": "Enable the Qt API",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false
+        }
+      ]
     },
     "splash": {
       "description": "The splash backend is always enabled. This option is kept for compatibility."

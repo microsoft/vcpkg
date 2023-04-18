@@ -14,10 +14,19 @@ vcpkg_from_github(
         001-fix-vcxproj-vcpkg.patch
         002-fix-capstone-5.patch
         003-fix-imgui-path.patch
+        004-fix-crash-handler.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+        FEATURES
+            on-demand TRACY_ON_DEMAND
+        INVERTED_FEATURES
+            crash-handler TRACY_NO_CRASH_HANDLER
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 

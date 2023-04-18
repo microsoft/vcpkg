@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO team-charls/charls
-    REF 662d4f2a0238357ccc4d89cd14b1fa67d2597ff1 #v2.3.4
-    SHA512 f022d025ae1d5ff624982ceb61ee88c5a42ee958afcff39fbc3e698030092b6667c3a685b66b7fd16ab7c3d3af1d44b773f761e2eefd7f026432b80176b6894b
+    REF dd9e90d2d2be86194cc3bd164b5cce35abcf2024 #v2.4.1
+    SHA512 33690d1647e57dedb22ad5cb75e4b41de41d0c603e0ec8e4b27dc2fa2ce71a97ab07deaa1aa42154369efb609b3954f7db51317f1dafd83d6cf882f2bade59a9
     HEAD_REF master
 )
 

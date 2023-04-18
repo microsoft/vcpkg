@@ -9,9 +9,9 @@ vcpkg_download_distfile(ARCHIVE
     HEAD_REF master
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-boost-headers.patch
         fix-cmake-config.patch
@@ -42,6 +42,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libLAS)
 endif()
+
+vcpkg_replace_string ("${CURRENT_PACKAGES_DIR}/share/liblas/liblas-config.cmake" "_DIR}/.." "_DIR}/../..")
+vcpkg_replace_string ("${CURRENT_PACKAGES_DIR}/share/liblas/liblas-config.cmake" "/lib" "$<$<CONFIG:DEBUG>:/debug>/lib")
+vcpkg_replace_string ("${CURRENT_PACKAGES_DIR}/share/liblas/liblas-config.cmake" "/bin" "/tools/${PORT}")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

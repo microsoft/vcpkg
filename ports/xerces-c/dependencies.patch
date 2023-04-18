@@ -1,0 +1,16 @@
+diff --git a/src/XercesCConfig.cmake.in b/src/XercesCConfig.cmake.in
+index aa8fc2e..07ec56d 100644
+--- a/src/XercesCConfig.cmake.in
++++ b/src/XercesCConfig.cmake.in
+@@ -1,5 +1,11 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(Threads)
++if("@CMAKE_REQUIRE_FIND_PACKAGE_ICU@")
++    find_dependency(ICU COMPONENTS uc data)
++endif()
++
+ include(${CMAKE_CURRENT_LIST_DIR}/XercesCConfigInternal.cmake)
+ 
+ add_library(XercesC::XercesC INTERFACE IMPORTED)

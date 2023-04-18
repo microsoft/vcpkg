@@ -8,26 +8,26 @@ vcpkg_from_github(
         fix.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/MOOS)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/MOOS")
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/pAntler")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/pAntler ${CURRENT_PACKAGES_DIR}/tools/MOOS/pAntler)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/pLogger ${CURRENT_PACKAGES_DIR}/tools/MOOS/pLoggers)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/pMOOSBridge ${CURRENT_PACKAGES_DIR}/tools/MOOS/pMOOSBridge)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/pScheduler ${CURRENT_PACKAGES_DIR}/tools/MOOS/pScheduler)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/pShare ${CURRENT_PACKAGES_DIR}/tools/MOOS/pShare)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/pAntler" "${CURRENT_PACKAGES_DIR}/tools/MOOS/pAntler")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/pLogger" "${CURRENT_PACKAGES_DIR}/tools/MOOS/pLoggers")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/pMOOSBridge" "${CURRENT_PACKAGES_DIR}/tools/MOOS/pMOOSBridge")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/pScheduler" "${CURRENT_PACKAGES_DIR}/tools/MOOS/pScheduler")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/pShare" "${CURRENT_PACKAGES_DIR}/tools/MOOS/pShare")
 endif()
 
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/fake_header.h "// fake header to pass vcpkg post install check \n")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "see moos-core for copyright\n" )
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/fake_header.h" "// fake header to pass vcpkg post install check \n")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "see moos-core for copyright\n" )

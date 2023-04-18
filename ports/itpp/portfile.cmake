@@ -14,16 +14,15 @@ vcpkg_from_sourceforge(
 )
 file(RENAME "${SOURCE_PATH}/VERSION" "${SOURCE_PATH}/VERSION.txt")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_LAPACK=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_FFT=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_BLAS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

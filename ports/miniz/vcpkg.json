@@ -1,9 +1,9 @@
 {
   "name": "miniz",
-  "version": "2.2.0",
-  "port-version": 1,
+  "version": "3.0.2",
   "description": "Single C source file zlib-replacement library",
   "homepage": "https://github.com/richgel999/miniz",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

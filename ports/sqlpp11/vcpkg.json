@@ -1,7 +1,7 @@
 {
   "name": "sqlpp11",
   "version": "0.61",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A type safe embedded domain specific language for SQL queries and results in C++.",
   "homepage": "https://github.com/rbock/sqlpp11",
   "license": "BSD-2-Clause",
@@ -27,6 +27,12 @@
       "description": "Use MySQL connector",
       "dependencies": [
         "libmysql"
+      ]
+    },
+    "postgresql": {
+      "description": "Use PostgreSQL connector",
+      "dependencies": [
+        "libpq"
       ]
     },
     "sqlite3": {

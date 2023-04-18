@@ -57,7 +57,7 @@ index 5ff96f6..c3de6f9 100644
    if(OpenVDB_USES_ZLIB)
      list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES ZLIB::ZLIB)
 diff --git a/openvdb/openvdb/CMakeLists.txt b/openvdb/openvdb/CMakeLists.txt
-index 1b48e84..46eeea4 100644
+index 1b48e84..5d055ac 100644
 --- a/openvdb/openvdb/CMakeLists.txt
 +++ b/openvdb/openvdb/CMakeLists.txt
 @@ -130,9 +130,9 @@ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_BOOST_VERSION)
@@ -109,12 +109,16 @@ index 1b48e84..46eeea4 100644
  else()
    message(WARNING "Blosc support is disabled. It is strongly recommended to "
      "enable blosc for optimal builds of OpenVDB and to support compatible "
-@@ -237,7 +218,7 @@ endif()
+@@ -237,7 +218,11 @@ endif()
  # /usr/local
  
  if(USE_BLOSC)
 -  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS Blosc::blosc)
-+  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS blosc)
++    if(BUILD_SHARED_LIBS)
++    list(APPEND OPENVDB_CORE_DEPENDENT_LIBS blosc_shared)
++  else()
++    list(APPEND OPENVDB_CORE_DEPENDENT_LIBS blosc_static)
++  endif()
  endif()
  
  if(USE_BLOSC OR USE_ZLIB)

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO owent/libcopp
-    REF 1.4.1
-    SHA512 eba06bd2de7c9ee557cdd0bf79e0c53e37722b671347436322c14c99e94d955477bfc0980a4f59a5c31051e108f952ec96791024c45fa8eeaa5f7a49099dd8ae
+    REF "v${VERSION}"
+    SHA512 b2a944d826521dbbf481da3e8d072bb024a0894207b5d9759636959d98b75c1fb37db24f6651d108832bbb4379008d17b0cb4bfc3b6c6ba1c1fdcfbc96f68b82
     HEAD_REF v2
     PATCHES fix-x86-windows.patch
 )
@@ -11,8 +11,8 @@ vcpkg_from_github(
 vcpkg_from_github(
   OUT_SOURCE_PATH ATFRAMEWORK_CMAKE_TOOLSET
   REPO atframework/cmake-toolset
-  REF v1.3.5
-  SHA512 5048c204eb6358547d99712a06866836e1a6dc20dee44cc33fae77181bdf9ece5686f30062eff6a231e1ec898d5a37ebaddb243e7e3484c002bb96240aa496a5
+  REF v1.10.1
+  SHA512 7ea18e41fabd35af5fd72fb954a1c60480ba85a9ff820104785d263e719751ba699eeca801ce5155041d8bf51fb2c37ea53f6ed404e4a4e7e810f1eb9bacead4
   HEAD_REF main
   )
 
@@ -24,9 +24,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/BOOST_LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/BOOST_LICENSE_1_0.txt" "${SOURCE_PATH}/LICENSE")
 
 vcpkg_copy_pdbs()
 

@@ -12,17 +12,25 @@ vcpkg_from_github(
     REF 006020c1df76d0d7dc6118dacc22da64da2e35c4
     SHA512 05dd7cc81a6347d4528654c19617af16de8d7352ad9e38d5f1cd296d88527377ecbfed9dbe722362d64369cd792d1ae0410319854b546ce0b6081ac560a40c0f
     HEAD_REF master
+    PATCHES
+        remove-windows-tests.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH vs2019/vs2019.sln
-        INCLUDES_SUBPATH include
+        PROJECT_SUBPATH "vs2019/vs2019.sln"
         LICENSE_SUBPATH COPYING.md
-        PLATFORM ${TRIPLET_SYSTEM_ARCH}
+        PLATFORM "${TRIPLET_SYSTEM_ARCH}"
         ALLOW_ROOT_INCLUDES
     )
+
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/marisa")
+    file(INSTALL "${SOURCE_PATH}/include/marisa.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+    file(GLOB MARISA_DIR_HEADERS "${SOURCE_PATH}/include/marisa/*.h")
+    file(INSTALL ${MARISA_DIR_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/marisa")
+
     vcpkg_clean_msbuild()
     set(prefix "${CURRENT_INSTALLED_DIR}")
     set(exec_prefix "\${prefix}")

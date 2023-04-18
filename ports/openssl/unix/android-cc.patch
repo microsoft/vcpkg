@@ -1,0 +1,20 @@
+diff --git a/Configurations/15-android.conf b/Configurations/15-android.conf
+index 41ad922..d15e34c 100644
+--- a/Configurations/15-android.conf
++++ b/Configurations/15-android.conf
+@@ -102,6 +102,7 @@
+             my $cflags;
+             my $cppflags;
+ 
++if (0) {
+             # see if there is NDK clang on $PATH, "universal" or "standalone"
+             if (which("clang") =~ m|^$ndk/.*/prebuilt/([^/]+)/|) {
+                 my $host=$1;
+@@ -158,6 +159,7 @@
+                 $sysroot =~ s|^$ndk/||;
+                 $sysroot = " --sysroot=\$($ndk_var)/$sysroot";
+             }
++}
+             $android_ndk = {
+                 cflags   => $cflags . $sysroot,
+                 cppflags => $cppflags,

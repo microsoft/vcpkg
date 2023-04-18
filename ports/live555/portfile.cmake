@@ -1,14 +1,14 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.live555.com/liveMedia/public/live.2022.12.01.tar.gz"
-    FILENAME "live.2022.12.01.tar.gz"
-    SHA512 bb5dc80b5b1621e04fb8a100bd3deff190efb757da10e6cfc652d6eaa878f6a3e063b2f2219d5d83d6fb6892b55be55eafe2dd43f42a559e1f931130b45584b1
+    URLS "http://live555.com/liveMedia/public/live.2023.03.30.tar.gz"
+    FILENAME "live.2023.03.30.tar.gz"
+    SHA512 84dcc9af7fcfd565342b913e8420e2cca9b45e9a8ff74c04ef8e32449f6bbf35eb594ba48ae06d93efe6ec4c3d7c6812ce5989d02676398cdbd63f2ec0042b68
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE "${ARCHIVE}" 
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-RTSPClient.patch
 )
@@ -33,4 +33,3 @@ file(GLOB HEADERS
 
 file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-

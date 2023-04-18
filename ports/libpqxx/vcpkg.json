@@ -1,7 +1,6 @@
 {
   "name": "libpqxx",
-  "version": "7.7.3",
-  "port-version": 1,
+  "version": "7.7.4",
   "description": "The official C++ client API for PostgreSQL",
   "homepage": "https://www.postgresql.org/",
   "license": "BSD-3-Clause",
