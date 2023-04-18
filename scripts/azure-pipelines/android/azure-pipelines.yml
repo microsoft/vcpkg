@@ -57,7 +57,11 @@ jobs:
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
       exit 0
     displayName: 'Create working directories'
-  - bash: ./bootstrap-vcpkg.sh
+  - bash: |
+      docker run --rm \
+      --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
+      ${{ parameters.dockerImage }} \
+      ./bootstrap-vcpkg.sh
     displayName: 'Bootstrap vcpkg'
     condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
   - bash: |

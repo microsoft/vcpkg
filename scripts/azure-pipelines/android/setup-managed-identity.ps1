@@ -1,7 +1,7 @@
 # Create a system managed identity
 # Adding to existing Scale set
-$scaleSetResourceGroup = "PrAnd-2023-02-02"
-$scaleSetName = "PrAnd-2023-02-02Vmss"
+$scaleSetResourceGroup = "PrAnd-2023-04-17"
+$scaleSetName = "PrAnd-2023-04-17Vmss"
 
 $vm = Get-AzVMss -ResourceGroupName $scaleSetResourceGroup -Name $scaleSetName
 Update-AzVMss -ResourceGroupName $scaleSetResourceGroup -VMScaleSetName $scaleSetName -IdentityType SystemAssigned
