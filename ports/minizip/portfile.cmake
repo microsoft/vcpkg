@@ -23,7 +23,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
-          "${CMAKE_CURRENT_LIST_DIR}/minizipConfig.cmake.in"
+          "${CMAKE_CURRENT_LIST_DIR}/unofficial-minizipConfig.cmake.in"
     DESTINATION "${SOURCE_PATH}/contrib/minizip"
 )
 
@@ -39,7 +39,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-minizip)
 vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
@@ -53,5 +53,6 @@ if ("bzip2" IN_LIST FEATURES)
     endforeach()
 endif()
 
+configure_file("${CMAKE_CURRENT_LIST_DIR}/minizipConfig.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/minizipConfig.cmake" @ONLY)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/contrib/minizip/MiniZip64_info.txt")

@@ -63,32 +63,32 @@ endif()
 
 install(
   TARGETS minizip
-  EXPORT minizipTargets
+  EXPORT unofficial-minizipTargets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 
 include(CMakePackageConfigHelpers)
-write_basic_package_version_file("${PROJECT_BINARY_DIR}/minizipConfigVersion.cmake"
+write_basic_package_version_file("${PROJECT_BINARY_DIR}/unofficial-minizipConfigVersion.cmake"
   VERSION "${PACKAGE_VERSION}"
   COMPATIBILITY SameMajorVersion
 )
 
-configure_package_config_file(minizipConfig.cmake.in
-  minizipConfig.cmake
-  INSTALL_DESTINATION share/minizip
+configure_package_config_file(unofficial-minizipConfig.cmake.in
+  unofficial-minizipConfig.cmake
+  INSTALL_DESTINATION share/unofficial-minizip
 )
 
 install(FILES
-        "${PROJECT_BINARY_DIR}/minizipConfig.cmake"
-        "${PROJECT_BINARY_DIR}/minizipConfigVersion.cmake"
-        DESTINATION share/minizip
+        "${PROJECT_BINARY_DIR}/unofficial-minizipConfig.cmake"
+        "${PROJECT_BINARY_DIR}/unofficial-minizipConfigVersion.cmake"
+        DESTINATION share/unofficial-minizip
 )
 
-install(EXPORT minizipTargets
-        NAMESPACE minizip::
-        DESTINATION share/minizip
+install(EXPORT unofficial-minizipTargets
+        NAMESPACE unofficial::minizip::
+        DESTINATION share/unofficial-minizip
 )
 
 if(NOT DISABLE_INSTALL_HEADERS)
