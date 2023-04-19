@@ -8260,6 +8260,10 @@
       "baseline": "1.10.0",
       "port-version": 1
     },
+    "vcpkg-tool-llvm": {
+      "baseline": "15.0.6",
+      "port-version": 0
+    },
     "vcpkg-tool-meson": {
       "baseline": "0.63",
       "port-version": 0
