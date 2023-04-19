@@ -304,6 +304,7 @@ set(empty_dirs)
 
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/misc/ConfusableTable")
 endif()
 
 if("pstl" IN_LIST FEATURES)

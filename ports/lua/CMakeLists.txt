@@ -7,10 +7,9 @@
 #     - This is a source-incompatible change because extern "C" is chosen by the including application.
 # - The lua.hpp header will not be available.
 
-PROJECT ( lua )
-
-
 CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
+
+PROJECT(lua)
 
 # Build Libraries
 FILE(GLOB HDR_LIBLUA "${CMAKE_SOURCE_DIR}/src/*.h")
