@@ -445,6 +445,7 @@ vcpkg_cmake_configure(
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
         -DBUILD_IPP_IW=${WITH_IPP}
+        -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
 )
 
 vcpkg_cmake_install()
