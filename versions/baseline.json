@@ -8162,7 +8162,7 @@
     },
     "vcpkg-rust": {
       "baseline": "1.68.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",
