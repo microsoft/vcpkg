@@ -758,7 +758,7 @@ endif()
 option(VCPKG_TRACE_FIND_PACKAGE "Trace calls to find_package()" OFF)
 if(NOT DEFINED VCPKG_OVERRIDE_FIND_PACKAGE_NAME)
     set(VCPKG_OVERRIDE_FIND_PACKAGE_NAME find_package)
-endif
+endif()
 
 # Helper to be used in vcpkg-cmake-wrapper.cmake instead of _find_package
 macro(z_vcpkg_underlying_find_package z_vcpkg_underlying_find_package_name)
