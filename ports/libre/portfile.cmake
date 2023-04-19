@@ -8,7 +8,9 @@ vcpkg_from_github(
     REF v3.0.0
     SHA512 c37e49cca0d7ff591a3d178cbf58511d27e08be2c9b210353d9f65bb2cd76d135e0e023702140623630440ffdcc7b4c51ac29495bd85df4424627a5a69adba52
     HEAD_REF main
-    PATCHES 766.diff
+    PATCHES
+        766.diff
+        openssl.diff
 )
 
 

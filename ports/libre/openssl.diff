@@ -1,0 +1,13 @@
+diff --git a/cmake/re-config.cmake b/cmake/re-config.cmake
+index 6443bcd..a0f9897 100644
+--- a/cmake/re-config.cmake
++++ b/cmake/re-config.cmake
+@@ -5,7 +5,7 @@ include(CheckSymbolExists)
+ find_package(Backtrace)
+ find_package(Threads REQUIRED)
+ find_package(ZLIB)
+-find_package(OpenSSL "1.1.0")
++find_package(OpenSSL "1.1.0" REQUIRED)
+ 
+ option(USE_OPENSSL "Enable OpenSSL" ${OPENSSL_FOUND})
+ option(USE_UNIXSOCK "Enable Unix Domain Sockets" ON)
