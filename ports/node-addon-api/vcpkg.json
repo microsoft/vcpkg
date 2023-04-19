@@ -1,12 +1,13 @@
 {
   "name": "node-addon-api",
   "version": "6.0.0",
+  "port-version": 1,
   "description": "Module for using Node-API from C++",
   "homepage": "https://github.com/nodejs/node-addon-api",
   "license": "MIT",
   "supports": "((windows & !arm) | linux | osx) & !uwp",
   "dependencies": [
-    "node-api",
+    "node-api-headers",
     {
       "name": "vcpkg-cmake",
       "host": true

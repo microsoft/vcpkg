@@ -19,7 +19,6 @@ if (NOT VCPKG_USE_HEAD_VERSION)
 else()
   vcpkg_cmake_configure(
       SOURCE_PATH "${SOURCE_PATH}"
-      PREFER_NINJA
       OPTIONS
           -DBUILD_EXAMPLES=OFF
           -DBUILD_TESTS=OFF

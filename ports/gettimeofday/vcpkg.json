@@ -1,15 +1,11 @@
 {
   "name": "gettimeofday",
-  "version-string": "2017-10-14",
-  "port-version": 5,
+  "version-date": "2017-10-14",
+  "port-version": 6,
   "description": "An implementation of gettimeofday for WIN32",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]

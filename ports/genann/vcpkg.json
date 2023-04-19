@@ -1,16 +1,12 @@
 {
   "name": "genann",
-  "version-string": "2019-07-10",
-  "port-version": 2,
+  "version-date": "2019-07-10",
+  "port-version": 3,
   "description": "Genann is a minimal, well-tested library for training and using feedforward artificial neural networks (ANN) in C.",
   "homepage": "https://github.com/codeplea/genann",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]

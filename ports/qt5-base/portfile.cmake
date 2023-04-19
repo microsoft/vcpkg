@@ -1,14 +1,11 @@
 vcpkg_buildpath_length_warning(37)
 
 if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING "qt5-base currently requires some packages from the system package manager, see https://doc.qt.io/qt-5/linux-requirements.html")
-    message(WARNING 
-[[
-qt5-base for qt5-x11extras requires several libraries from the system package manager. Please refer to
-  https://github.com/microsoft/vcpkg/blob/master/scripts/azure-pipelines/linux/provision-image.sh
-  for a complete list of them.
-]]
-    )
+    message(WARNING "qt5-base currently requires some packages from the system package manager. "
+    "They can be installed on Ubuntu systems via "
+    "sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev "
+    "libxi-dev libxkbcommon-dev libxkbcommon-x11-dev. For more information, see "
+    "https://doc.qt.io/qt-5/linux-requirements.html")
 elseif(VCPKG_TARGET_IS_MINGW AND CMAKE_HOST_WIN32)
     find_program(MINGW32_MAKE mingw32-make PATHS ENV PATH NO_DEFAULT_PATH REQUIRED)
 endif()
@@ -102,7 +99,6 @@ list(APPEND CORE_OPTIONS
     -system-doubleconversion
     -system-sqlite
     -system-harfbuzz
-    -icu
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
     -openssl-linked
@@ -207,8 +203,7 @@ set(RELEASE_OPTIONS
             "PCRE2_LIBS=${PCRE2_RELEASE}"
             "FREETYPE_LIBS=${FREETYPE_RELEASE_ALL}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_RELEASE}"
             )
 set(DEBUG_OPTIONS
@@ -218,20 +213,28 @@ set(DEBUG_OPTIONS
             "PCRE2_LIBS=${PCRE2_DEBUG}"
             "FREETYPE_LIBS=${FREETYPE_DEBUG_ALL}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
 
-# This if/else corresponds to icu setup in src/corelib/configure.json.
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND CORE_OPTIONS
-        "ICU_LIBS_RELEASE=${ICU_RELEASE}"
-        "ICU_LIBS_DEBUG=${ICU_DEBUG}"
-    )
+if("icu" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS -icu)
+
+    # This if/else corresponds to icu setup in src/corelib/configure.json.
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        list(APPEND CORE_OPTIONS
+            "ICU_LIBS_RELEASE=${ICU_RELEASE}"
+            "ICU_LIBS_DEBUG=${ICU_DEBUG}"
+        )
+    else()
+        list(APPEND RELEASE_OPTIONS "ICU_LIBS=${ICU_RELEASE}")
+        list(APPEND DEBUG_OPTIONS "ICU_LIBS=${ICU_DEBUG}")
+    endif()
+
+    list(APPEND RELEASE_OPTIONS "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}")
+    list(APPEND DEBUG_OPTIONS "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}")
 else()
-    list(APPEND RELEASE_OPTIONS "ICU_LIBS=${ICU_RELEASE}")
-    list(APPEND DEBUG_OPTIONS "ICU_LIBS=${ICU_DEBUG}")
+    list(APPEND CORE_OPTIONS -no-icu)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)

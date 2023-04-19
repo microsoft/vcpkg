@@ -1,7 +1,17 @@
 {
   "name": "argumentum",
-  "version-string": "0.3.1",
-  "port-version": 1,
+  "version": "0.3.2",
   "description": "A C++17 command line argument parser inspired by Python argparse",
-  "homepage": "https://github.com/mmahnic/argumentum"
+  "homepage": "https://github.com/mmahnic/argumentum",
+  "license": "MPL-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

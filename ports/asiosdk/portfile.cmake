@@ -6,10 +6,10 @@ vcpkg_download_distfile(ARCHIVE
 	SHA512 eac6c1a57829b7f722a681c54b2f6469d54695523f08f727d0dd6744dcd7fce4f3249c57689bb15ed7a8bcb912833b226439d800913e122e0ef9ab73672f6542
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF ${VERSION}
+    SOURCE_BASE ${VERSION}
 )
 
 file(INSTALL ${SOURCE_PATH}/asio/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/asiosdk/asio)

@@ -20,7 +20,7 @@ vcpkg_from_github(
 
 file(COPY "${COMP_SOURCE_PATH}/comp_base.cmake" DESTINATION "${SOURCE_PATH}/cmake/comp")
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
     tool FOONATHAN_MEMORY_BUILD_TOOLS
 )
 

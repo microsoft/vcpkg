@@ -13,7 +13,7 @@ vcpkg_from_github(
 
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindEigen3.cmake")
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
     interpolate ENABLE_INTERPOLATE
 )
 

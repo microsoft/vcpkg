@@ -1,0 +1,4 @@
+hnswlib is header-only and can be used from CMake via:
+
+    find_path(HNSWLIB_INCLUDE_DIRS "hnswlib/hnswlib.h")
+    target_include_directories(main PRIVATE ${HNSWLIB_INCLUDE_DIRS})

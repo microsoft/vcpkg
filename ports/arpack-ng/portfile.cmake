@@ -1,5 +1,6 @@
 include(vcpkg_find_fortran)
 vcpkg_find_fortran(FORTRAN_CMAKE)
+set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

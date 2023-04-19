@@ -4,8 +4,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 af716b0385cf4ea18b20dcd5880c69c43cfc195eec4ff196a8e438833306489c39ab06a494e5d60cd08ba0d94caa05bd07e5f3fa836d835bad15c8a2ad7de306
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
 )
 file(REMOVE "${SOURCE_PATH}/version")
@@ -15,14 +15,13 @@ file(COPY
   "${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in"
   DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 if(NOT VCPKG_BUILD_TYPE)

@@ -1,7 +1,7 @@
 {
   "name": "functions-framework-cpp",
   "version": "1.1.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Functions Framework for C++.",
   "homepage": "https://github.com/GoogleCloudPlatform/functions-framework-cpp/",
   "license": "Apache-2.0",

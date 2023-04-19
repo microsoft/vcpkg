@@ -1,7 +1,7 @@
 The package arg-router is a header-only library and so is typically used like this:
 
     find_package(arg_router REQUIRED)
-    include_directories(SYSTEM "${arg_router_INCLUDE_DIRS}")
+    target_link_libraries(my_exe PUBLIC arg_router::arg_router)
     
 For more information, see the docs here:
 
