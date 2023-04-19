@@ -32,12 +32,6 @@ vcpkg_from_github(
         unix/no-static-libs-for-shared.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
-FEATURES
-    "fips"    FEATURE_fips
-    )
-
-
 vcpkg_list(SET CONFIGURE_OPTIONS
     enable-static-engine
     enable-capieng
@@ -46,6 +40,7 @@ vcpkg_list(SET CONFIGURE_OPTIONS
     no-tests
 )
 
+set(INSTALL_FIPS "")
 if("fips" IN_LIST FEATURES)
     vcpkg_list(APPEND INSTALL_FIPS install_fips)
     vcpkg_list(APPEND CONFIGURE_OPTIONS enable-fips)
