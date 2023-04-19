@@ -63,7 +63,13 @@
       "description": "Whether to include the OpenTelemetry Protocol over HTTP in the SDK",
       "dependencies": [
         "curl",
-        "protobuf"
+        {
+          "name": "opentelemetry-cpp",
+          "default-features": false,
+          "features": [
+            "otlp"
+          ]
+        }
       ]
     },
     "prometheus": {
