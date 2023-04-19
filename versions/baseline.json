@@ -618,7 +618,7 @@
     },
     "boost": {
       "baseline": "1.82.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-accumulators": {
       "baseline": "1.82.0",
