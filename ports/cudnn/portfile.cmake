@@ -1,6 +1,5 @@
 set(MINIMUM_CUDNN_VERSION "7.6.5")
 
-include("${CURRENT_INSTALLED_DIR}/share/cuda/vcpkg_find_cuda.cmake")
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT OUT_CUDA_VERSION CUDA_VERSION)
 
 # Try to find CUDNN if it exists; only download if it doesn't exist

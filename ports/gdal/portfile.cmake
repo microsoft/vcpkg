@@ -1,12 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF v3.5.2
-    SHA512 fece50709090e21200298cf0d5c0dd10418bb800a3c92fb77eedab42c3942169bf69abcad9a6d61d3368ac5265e053e8c2aeb361d297ed0ace92ffba3b21dbca
+    REF "v${VERSION}"
+    SHA512 1bbaf3a6731a105241cc666afe9c9a0b82e9d46245435d597a7372f928e6966c0e746e94fdd86a8f24c3277912a8c19e76906ee88e5d946ac1c25dd7dd38fdf2
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        libkml.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -19,37 +20,37 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cfitsio          GDAL_USE_CFITSIO
         curl             GDAL_USE_CURL
-        recommended-features GDAL_USE_EXPAT
+        expat            GDAL_USE_EXPAT
         freexl           GDAL_USE_FREEXL
         geos             GDAL_USE_GEOS
         core             GDAL_USE_GEOTIFF
-        default-features GDAL_USE_GIF
+        gif              GDAL_USE_GIF
         hdf5             GDAL_USE_HDF5
-        default-features GDAL_USE_ICONV
-        default-features GDAL_USE_JPEG
+        iconv            GDAL_USE_ICONV
+        jpeg             GDAL_USE_JPEG
         core             GDAL_USE_JSONC
         lerc             GDAL_USE_LERC
-        libkml           GDAL_USE_LIBKML  # TODO, needs policy patches to FindLibKML.cmake
-        default-features GDAL_USE_LIBLZMA
-        default-features GDAL_USE_LIBXML2
+        libkml           GDAL_USE_LIBKML
+        lzma             GDAL_USE_LIBLZMA
+        libxml2          GDAL_USE_LIBXML2
         mysql-libmariadb GDAL_USE_MYSQL 
         netcdf           GDAL_USE_NETCDF
         odbc             GDAL_USE_ODBC
-        default-features GDAL_USE_OPENJPEG
-        default-features GDAL_USE_OPENSSL
-        default-features GDAL_USE_PCRE2
-        default-features GDAL_USE_PNG
+        openjpeg         GDAL_USE_OPENJPEG
+        openssl          GDAL_USE_OPENSSL
+        pcre2            GDAL_USE_PCRE2
+        png              GDAL_USE_PNG
         poppler          GDAL_USE_POPPLER
         postgresql       GDAL_USE_POSTGRESQL
-        default-features GDAL_USE_QHULL
+        qhull            GDAL_USE_QHULL
         #core             GDAL_USE_SHAPELIB  # https://github.com/OSGeo/gdal/issues/5711, https://github.com/microsoft/vcpkg/issues/16041
         core             GDAL_USE_SHAPELIB_INTERNAL
         libspatialite    GDAL_USE_SPATIALITE
-        recommended-features GDAL_USE_SQLITE3
+        sqlite3          GDAL_USE_SQLITE3
         core             GDAL_USE_TIFF
-        default-features GDAL_USE_WEBP
+        webp             GDAL_USE_WEBP
         core             GDAL_USE_ZLIB
-        default-features GDAL_USE_ZSTD
+        zstd             GDAL_USE_ZSTD
         tools            BUILD_APPS
 )
 if(GDAL_USE_ICONV AND VCPKG_TARGET_IS_WINDOWS)
@@ -74,7 +75,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_CSharp=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
         -DGDAL_USE_INTERNAL_LIBS=OFF
         -DGDAL_USE_EXTERNAL_LIBS=OFF
@@ -88,8 +88,11 @@ vcpkg_cmake_configure(
         -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
         "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
         "-DQHULL_LIBRARY=${qhull_target}"
+        -DCMAKE_PROJECT_INCLUDE="${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
+    MAYBE_UNUSED_VARIABLES
+        QHULL_LIBRARY
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

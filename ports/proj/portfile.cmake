@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 9.1.0
-    SHA512 0a0c887e14dc4dddc8ea3d1de01683cd81d9d6cc5788601aa224e1fecf46af10fb289e7260547431b35e4b771b020feccf04101135b86c6343221c8f446a766b
+    REF "${VERSION}"
+    SHA512 a48980b94b6c68738dd5ab70a1de6aa42f325fd612155623195a14774caadcaceff08035c01696458d3dd706b2277d89ea093949a1855fafa9951c59821cb1cb
     HEAD_REF master
     PATCHES
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
-        tools-cmake.patch
         remove-doc.patch
 )
 
@@ -32,9 +31,10 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DNLOHMANN_JSON=external
-        -DPROJ_DATA_SUBDIR=share/${PORT}/data
         -DBUILD_TESTING=OFF
         "-DEXE_SQLITE3=${EXE_SQLITE3}"
+    OPTIONS_DEBUG
+        -DBUILD_APPS=OFF
 )
 
 vcpkg_cmake_install()

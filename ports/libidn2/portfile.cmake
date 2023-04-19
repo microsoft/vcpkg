@@ -1,73 +1,79 @@
-set(IDN2_VERSION 2.3.1)
-set(IDN2_FILENAME libidn2-${IDN2_VERSION}.tar.gz)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
+set(IDN2_FILENAME "libidn2-${VERSION}.tar.gz")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
     FILENAME "${IDN2_FILENAME}"
-    SHA512 4d77a4a79e08a05e46fc14827f987b9e7645ebf5d0c0869eb96f9902c2f6b73ea69fd6f9f97b80a9f07cce84f7aa299834df91485d4e7c16500d31a4b9865fe4
+    SHA512 a6e90ccef56cfd0b37e3333ab3594bb3cec7ca42a138ca8c4f4ce142da208fa792f6c78ca00c01001c2bc02831abcbaf1cf9bcc346a5290fd7b30708f5a462f3
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-    REF ${IDN2_VERSION}
-)
-
-if (VCPKG_TARGET_IS_WINDOWS)
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/string.h" DESTINATION "${SOURCE_PATH}/gl")
-    
-    set(HAVE_ALLOCA_H 0)
-    
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/config.h" "${SOURCE_PATH}")
-    configure_file("${SOURCE_PATH}/gl/alloca.in.h" "${SOURCE_PATH}/gl/alloca.h")
-    
-    function(simple_copy_template_header FILE_PATH BASE_NAME)
-        if(NOT EXISTS "${FILE_PATH}/${BASE_NAME}.h" AND EXISTS "${FILE_PATH}/${BASE_NAME}.in.h")
-            configure_file("${FILE_PATH}/${BASE_NAME}.in.h" "${FILE_PATH}/${BASE_NAME}.h" @ONLY)
-        endif()
-    endfunction()
-    
-    # There seems to be no difference between source and destination files after 'configure'
-    # apart from auto-generated notification at the top. So why not just do a simple copy.
-    simple_copy_template_header("${SOURCE_PATH}/unistring" uniconv)
-    simple_copy_template_header("${SOURCE_PATH}/unistring" unictype)
-    simple_copy_template_header("${SOURCE_PATH}/unistring" uninorm)
-    simple_copy_template_header("${SOURCE_PATH}/unistring" unistr)
-    simple_copy_template_header("${SOURCE_PATH}/unistring" unitypes)
-    simple_copy_template_header("${SOURCE_PATH}/unistring" alloca)
-    
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
-            "-DPACKAGE_VERSION=${IDN2_VERSION}"
-    )
-    
-    vcpkg_cmake_install()
-    
-    vcpkg_copy_pdbs()
-    
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-else()
-    set(ENV{GTKDOCIZE} true)
-    vcpkg_configure_make(
-        SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
-        COPY_SOURCE
-        OPTIONS
-            "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
-            --disable-gtk-doc
-            --disable-doc
-    )
-    
-    vcpkg_install_make()
-    
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+vcpkg_list(SET patches)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Fix linking static libidn2 into shared library
+    # https://gitlab.com/libidn/libidn2/-/issues/80
+    vcpkg_list(APPEND patches "fix-static-into-shared-linking.patch")
 endif()
 
-vcpkg_fixup_pkgconfig()
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    SOURCE_BASE "v${VERSION}"
+    PATCHES
+        ${patches}
+        disable-subdirs.patch
+        fix-msvc.patch
+        fix-uwp.patch
+)
 
-# License and man
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libidn2" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/doc/libidn2.pdf" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libidn2")
+vcpkg_list(SET options)
+if("nls" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "--enable-nls")
+else()
+    set(ENV{AUTOPOINT} true) # true, the program
+    vcpkg_list(APPEND options "--disable-nls")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_list(APPEND options "CPPFLAGS=\$CPPFLAGS -DIDN2_STATIC")
+endif()
+
+set(ENV{GTKDOCIZE} true)
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
+    COPY_SOURCE # include dir order problem
+    USE_WRAPPERS
+    OPTIONS
+        ${options}
+        --disable-gtk-doc
+        --disable-doc
+        --disable-gcc-warnings
+    OPTIONS_RELEASE
+        "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
+        "--with-libunistring-prefix=${CURRENT_INSTALLED_DIR}"
+    OPTIONS_DEBUG
+        "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}/debug"
+        "--with-libunistring-prefix=${CURRENT_INSTALLED_DIR}/debug"
+        "CFLAGS=\$CFLAGS -I${CURRENT_INSTALLED_DIR}/include"
+)
+
+vcpkg_install_make()
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/idn2.h" "defined IDN2_STATIC" "1")
+endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug"
+)
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/COPYING.LESSERv3"
+        "${SOURCE_PATH}/COPYINGv2"
+        "${SOURCE_PATH}/COPYING.unicode"
+)

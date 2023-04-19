@@ -4,6 +4,12 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 40eff8a37c0634f7fdddd6ca5e596b38de15fd10767a34c30bbe49c632816e8f3e1e230678034f578dd5816a94f246fb5dfdf48d644829af13bf28de3225205d
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+FEATURES
+    crypto APU_HAVE_CRYPTO
+    crypto CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL
+)
+
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_extract_source_archive(
         SOURCE_PATH
@@ -16,6 +22,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_cmake_configure(
       SOURCE_PATH "${SOURCE_PATH}"
+      OPTIONS
+        ${FEATURE_OPTIONS}
       OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
     )
@@ -54,6 +62,14 @@ else()
         ARCHIVE "${ARCHIVE}"
     )
 
+    if ("crypto" IN_LIST FEATURES)
+        set(CRYPTO_OPTIONS 
+            "--with-crypto=yes"
+            "--with-openssl=${CURRENT_INSTALLED_DIR}")
+    else()
+        set(CRYPTO_OPTIONS "--with-crypto=no")
+    endif()
+
     # To cross-compile you will need a triplet file that locates the tool chain and sets --host and --cache parameters of "./configure".
     # The ${VCPKG_PLATFORM_TOOLSET}.cache file must have been generated on the targeted host using "./configure -C".
     # For example, to target aarch64-linux-gnu, triplets/aarch64-linux-gnu.cmake should contain (beyond the standard content):
@@ -71,9 +87,9 @@ else()
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             "--prefix=${CURRENT_INSTALLED_DIR}"
+            ${CRYPTO_OPTIONS}
             "--with-apr=${CURRENT_INSTALLED_DIR}/tools/apr"
-            "--with-openssl=${CURRENT_INSTALLED_DIR}"
-            "-with-expat=${CURRENT_INSTALLED_DIR}"
+            "--with-expat=${CURRENT_INSTALLED_DIR}"
             "${CONFIGURE_PARAMETER_1}"
             "${CONFIGURE_PARAMETER_2}"
             "${CONFIGURE_PARAMETER_3}"

@@ -1,7 +1,6 @@
 {
   "name": "libxpm",
-  "version": "3.5.11",
-  "port-version": 1,
+  "version": "3.5.14",
   "description": "XPM format pixmap library",
   "homepage": "https://github.com/freedesktop/libXpm",
   "license": "MIT",

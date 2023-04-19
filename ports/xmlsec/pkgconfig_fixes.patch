@@ -15,7 +15,7 @@ index 2d5a3ad..0f72d68 100644
 @@ -7,5 +7,5 @@ Name: xmlsec1
  Version: @VERSION@
  Description: XML Security Library implements XML Signature and XML Encryption standards
- Requires: libxml-2.0 >= @LIBXML_MIN_VERSION@ @LIBXSLT_PC_FILE_COND@ 
+ Requires: libxml-2.0 >= @LIBXML_MIN_VERSION@ @LIBXSLT_PC_FILE_COND@
 -Cflags: -DXMLSEC_CRYPTO_DYNAMIC_LOADING=1 @XMLSEC_CORE_CFLAGS@
 +Cflags: @XMLSEC_CORE_CFLAGS@
- Libs: -L${libdir} @XMLSEC_CORE_LIBS@ 
+ Libs: -L${libdir} @XMLSEC_CORE_LIBS@

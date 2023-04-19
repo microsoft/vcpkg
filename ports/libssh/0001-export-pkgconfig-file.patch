@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7bc3331..5c7275d 100644
+index 741dc61..42f0e8f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -124,8 +124,28 @@ add_subdirectory(include)
@@ -7,7 +7,7 @@ index 7bc3331..5c7275d 100644
  
  # pkg-config file
 -if (UNIX OR MINGW)
- configure_file(libssh.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc)
+ configure_file(libssh.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc @ONLY)
 +  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "Requires:")
 +  if (WITH_ZLIB)
 +    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " zlib")

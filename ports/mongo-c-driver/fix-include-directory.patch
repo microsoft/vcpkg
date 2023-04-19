@@ -1,8 +1,8 @@
 diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index a5767ac..3656efa 100644
+index 86f59ae..d108e5d 100644
 --- a/src/libmongoc/CMakeLists.txt
 +++ b/src/libmongoc/CMakeLists.txt
-@@ -998,7 +998,7 @@ else ()
+@@ -1172,7 +1172,7 @@ else ()
  endif ()
  
  set (MONGOC_HEADER_INSTALL_DIR
@@ -11,3 +11,23 @@ index a5767ac..3656efa 100644
  )
  
  install (
+diff --git a/src/libmongoc/src/libmongoc-1.0.pc.in b/src/libmongoc/src/libmongoc-1.0.pc.in
+index 1b489d8..991603e 100644
+--- a/src/libmongoc/src/libmongoc-1.0.pc.in
++++ b/src/libmongoc/src/libmongoc-1.0.pc.in
+@@ -8,4 +8,4 @@ Description: The libmongoc MongoDB client library.
+ Version: @VERSION@
+ Requires: libbson-1.0
+ Libs: -L${libdir} -lmongoc-1.0
+-Cflags: -I${includedir}/libmongoc-@MONGOC_API_VERSION@
++Cflags: -I${includedir}
+diff --git a/src/libmongoc/src/libmongoc-static-1.0.pc.in b/src/libmongoc/src/libmongoc-static-1.0.pc.in
+index d59ee64..c23bb62 100644
+--- a/src/libmongoc/src/libmongoc-static-1.0.pc.in
++++ b/src/libmongoc/src/libmongoc-static-1.0.pc.in
+@@ -8,4 +8,4 @@ Description: The libmongoc MongoDB client library.
+ Version: @VERSION@
+ Requires: libbson-static-1.0
+ Libs: -L${libdir} -lmongoc-static-1.0 @MONGOC_LIBRARIES@
+-Cflags: -I${includedir}/libmongoc-@MONGOC_API_VERSION@ -DMONGOC_STATIC
++Cflags: -I${includedir}/libmongoc -DMONGOC_STATIC
