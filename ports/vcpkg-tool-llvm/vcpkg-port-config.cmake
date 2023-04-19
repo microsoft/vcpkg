@@ -30,14 +30,13 @@ cmake_path(GET LLVM_BIN_DIR PARENT_PATH LLVM_ROOT)
 
 if(NOT CLANG OR NOT CLANG_CL)
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-        include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-tool-7zip/vcpkg-port-config.cmake") # make sure 7zip is available
+        vcpkg_find_acquire_program(7Z)
         vcpkg_download_distfile(archive_path
             URLS "${url}"
             FILENAME "${name}"
             SHA512 "${hash}"
         )
         file(MAKE_DIRECTORY "${output_path}")
-        vcpkg_find_acquire_program(7Z)
         vcpkg_execute_in_download_mode(
                                 COMMAND "${7Z}" x "${archive_path}" "-o${output_path}" "-y" "-bso0" "-bsp0"
                                 WORKING_DIRECTORY "${output_path}"
