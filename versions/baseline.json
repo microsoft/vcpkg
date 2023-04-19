@@ -8514,7 +8514,7 @@
     },
     "x264": {
       "baseline": "0.164.3095",
-      "port-version": 3
+      "port-version": 4
     },
     "x265": {
       "baseline": "3.4",
