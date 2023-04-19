@@ -9,10 +9,6 @@
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true
-    },
-    {
-      "name": "vcpkg-tool-7zip",
-      "host": true
     }
   ]
 }
