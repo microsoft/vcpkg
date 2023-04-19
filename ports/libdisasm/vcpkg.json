@@ -1,7 +1,7 @@
 {
   "name": "libdisasm",
-  "version-string": "0.23",
-  "port-version": 9,
+  "version": "0.23",
+  "port-version": 10,
   "description": "x86 Disassembler Library.",
   "homepage": "https://sourceforge.net/projects/bastard",
   "dependencies": [
