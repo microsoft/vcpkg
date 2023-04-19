@@ -2,7 +2,7 @@ cmake_policy(PUSH)
 cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0054 NEW)
 
-_find_package(${ARGS})
+z_vcpkg_underlying_find_package(${ARGS})
 
 if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     if("@FT_REQUIRE_ZLIB@")

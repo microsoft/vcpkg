@@ -7,7 +7,7 @@ cmake_policy(SET CMP0057 NEW)
 # stomping on FindPython's default functionality.
 list(REMOVE_ITEM CMAKE_PROGRAM_PATH "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/python3")
 if(@PythonFinder_NO_OVERRIDE@)
-    _find_package(${ARGS})
+    z_vcpkg_underlying_find_package(${ARGS})
     return()
 endif()
 
@@ -64,7 +64,7 @@ if(_PythonFinder_WantLibs)
         )
     endif()
 
-    _find_package(${ARGS})
+    z_vcpkg_underlying_find_package(${ARGS})
 
     if(@VCPKG_LIBRARY_LINKAGE@ STREQUAL static)
         include(CMakeFindDependencyMacro)
@@ -119,7 +119,7 @@ if(_PythonFinder_WantLibs)
         endif()
     endif()
 else()
-    _find_package(${ARGS})
+    z_vcpkg_underlying_find_package(${ARGS})
 endif()
 
 unset(_PythonFinder_WantInterp)

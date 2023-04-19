@@ -1,4 +1,4 @@
-_find_package(${ARGS})
+z_vcpkg_underlying_find_package(${ARGS})
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)

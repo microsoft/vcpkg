@@ -1,7 +1,7 @@
 {
   "name": "gflags",
   "version": "2.2.2",
-  "port-version": 6,
+  "port-version": 7,
   "description": "A C++ library that implements commandline flags processing",
   "homepage": "https://github.com/gflags/gflags",
   "supports": "!uwp",

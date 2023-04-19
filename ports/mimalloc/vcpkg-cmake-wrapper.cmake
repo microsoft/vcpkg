@@ -1,4 +1,4 @@
-_find_package(${ARGS})
+z_vcpkg_underlying_find_package(${ARGS})
 
 if(TARGET mimalloc AND NOT TARGET mimalloc-static)
     add_library(mimalloc-static INTERFACE IMPORTED)

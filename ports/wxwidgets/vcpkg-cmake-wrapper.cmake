@@ -48,7 +48,7 @@ else()
 endif()
 set(WX_LIB_DIR "${wxWidgets_LIB_DIR}" CACHE INTERNAL "")
 
-_find_package(${ARGS})
+z_vcpkg_underlying_find_package(${ARGS})
 
 if(DEFINED _vcpkg_wxwidgets_backup_crosscompiling)
     set(CMAKE_CROSSCOMPILING "${_vcpkg_wxwidgets_backup_crosscompiling}")

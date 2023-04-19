@@ -1,4 +1,4 @@
-_find_package(${ARGS})
+z_vcpkg_underlying_find_package(${ARGS})
 
 if(Intl_FOUND AND Intl_LIBRARIES)
     include(SelectLibraryConfigurations)
