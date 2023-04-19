@@ -1,7 +1,8 @@
 {
   "name": "vcpkg-rust",
   "version": "1.68.0",
+  "port-version": 1,
   "documentation": "https://vcpkg.io/en/docs/maintainers/ports/vcpkg-rust.html",
   "license": "MIT",
-  "supports": "native"
+  "supports": "native & ((windows & (x86 | x64)) | (linux & (x86 | x64)))"
 }
