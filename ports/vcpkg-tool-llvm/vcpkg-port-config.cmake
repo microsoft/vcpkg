@@ -1,13 +1,13 @@
 include_guard(GLOBAL)
 include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake-get-vars/vcpkg-port-config.cmake")
-set(version @version@)
+set(version @VERSION@)
 set(arch "")
 if("@VCPKG_TARGET_ARCHITECTURE@" STREQUAL "x86")
     set(arch win32)
-    set(hash 82bebd0c0912fd000602f5961492ada913e3b6cb63001b63e2de3e070a168c65a628ebb1a443403b272210af131240f3a3032e03478037b5a8200cc243f27b74)
+    set(hash 90225D650EADB0E590A9912B479B46A575D41A19EB5F2DA03C4DC8B032DC0790222F0E3706DFE2A35C0E7747941972AC26CB47D3EB13730DB76168931F37E5F1)
 elseif("@VCPKG_TARGET_ARCHITECTURE@" STREQUAL "x64")
     set(arch win64)
-    set(hash 96916ef4838e2b43debbf6e92c3b3b1a862051348771df9de6c7c1b0d839ef04c057bddde7e59c2f08e1483d7609dd7a5e77616ed1072047404caa974841a668)
+    set(hash 2dd6f3eea106f2b905e6658ea5ea12856d17285adbfba055edc2d6b6389c4c2f7aa001df5cb0d8fb84fa7fa47d5035a7fddf276523b472dd55f150ae25938768)
 endif()
 set(name "LLVM-${version}-${arch}.exe")
 set(url "https://github.com/llvm/llvm-project/releases/download/llvmorg-${version}/${name}")
@@ -37,6 +37,7 @@ if(NOT CLANG OR NOT CLANG_CL)
             SHA512 "${hash}"
         )
         file(MAKE_DIRECTORY "${output_path}")
+        vcpkg_find_acquire_program(7Z)
         vcpkg_execute_in_download_mode(
                                 COMMAND "${7Z}" x "${archive_path}" "-o${output_path}" "-y" "-bso0" "-bsp0"
                                 WORKING_DIRECTORY "${output_path}"
