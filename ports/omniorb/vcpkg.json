@@ -3,6 +3,7 @@
   "version": "4.3.0",
   "description": "omniORB is a robust high performance CORBA ORB for C++",
   "license": "LGPL-2.1-or-later",
+  "homepage": "https://omniorb.sourceforge.io/",
   "supports": "!uwp & !((arm | x86) & windows) & !osx",
   "dependencies": [
     "openssl",
