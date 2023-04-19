@@ -4978,7 +4978,7 @@
     },
     "magnum-integration": {
       "baseline": "2020.06",
-      "port-version": 2
+      "port-version": 3
     },
     "magnum-plugins": {
       "baseline": "2020.06",
