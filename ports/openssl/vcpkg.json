@@ -21,7 +21,8 @@
   ],
   "features": {
     "fips": {
-      "description": "Enable fips"
+      "description": "Enable fips",
+      "supports": "!static"
     },
     "tools": {
       "description": "Install openssl executable and scripts",
