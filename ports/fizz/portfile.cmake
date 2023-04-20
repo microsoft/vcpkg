@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0001-fix-libsodium.patch
         0002-fix-libevent.patch
+        0003-fix-deps.patch
 )
 
 # Prefer installed config files

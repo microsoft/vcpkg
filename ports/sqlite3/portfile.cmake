@@ -27,6 +27,7 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS Unused
     FEATURES
+        dbstat              SQLITE_ENABLE_DBSTAT_VTAB
         fts3                SQLITE_ENABLE_FTS3
         fts4                SQLITE_ENABLE_FTS4
         fts5                SQLITE_ENABLE_FTS5

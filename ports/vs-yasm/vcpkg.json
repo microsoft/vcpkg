@@ -1,7 +1,7 @@
 {
   "name": "vs-yasm",
-  "version-string": "0.5.0",
-  "port-version": 1,
+  "version": "0.5.0",
+  "port-version": 2,
   "description": "Provides Visual Studio integration for the YASM assembler.",
   "homepage": "https://github.com/ShiftMediaProject/VSYASM",
   "supports": "windows & !arm"

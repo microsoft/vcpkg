@@ -4,6 +4,9 @@ vcpkg_from_github(
     REF v0.9.0-rc3
     SHA512 5de94277d57b862d4ab99266c2608cd37d7ca9eb89ef753ddddf47e4cebffab54b2cfb9c28d0c3bb7721f0d24c1310377c4b42adab477568e6965bd7ebc55b17
     HEAD_REF master
+    PATCHES
+        avif.patch
+        webp.patch
 )
 
 # Enable selected codecs
