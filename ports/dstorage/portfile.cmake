@@ -1,5 +1,5 @@
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.DirectStorage/${VERSION}"
