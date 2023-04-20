@@ -3,12 +3,12 @@ vcpkg_from_github(
     REPO stephenberry/glaze
     REF "v${VERSION}"
     SHA512 7943056d02711fbabddeaa84918171d552b9d17fdfb19e44e3a21cced565ba5ba04cc69257720228f6fd3daff2d7fd4455b0b20165642ae23b6eaafb068102e7
-    PATCHES
-      disable-dev-mode.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+      -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
