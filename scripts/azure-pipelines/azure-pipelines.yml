@@ -6,7 +6,7 @@ variables:
   linux-pool: 'PrLin-2023-04-12'
   osx-pool: 'PrOsx-2022-02-04'
   android-pool: 'PrAnd-2023-04-17'
-  linux-docker-image: 'andcontainerregistry.azurecr.io/vcpkg-android:2023-04-19'
+  linux-docker-image: 'andcontainerregistry.azurecr.io/vcpkg-android:2023-04-20'
 
 parameters:
   - name: vcpkgToolSha
