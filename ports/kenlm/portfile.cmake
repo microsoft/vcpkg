@@ -9,7 +9,7 @@ vcpkg_from_github(
     PATCHES 
         fix-boost.patch
         fix-const-overloaded.patch
-        include_functional.patch
+        include_functional.patch # Upstream PR https://github.com/kpu/kenlm/pull/428, please remove this patch when updating this port.
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindEigen3.cmake")
@@ -43,5 +43,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Copyright and License
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME license)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/LICENSE")
