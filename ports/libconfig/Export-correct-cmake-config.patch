@@ -1,30 +1,18 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 709a1b5..f4d59a4 100644
+index 709a1b5..bd3085f 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -141,7 +141,8 @@ install(TARGETS ${libname}++
- 
- 
- include(CMakePackageConfigHelpers)
--foreach(target_name libconfig libconfig++)
-+set(name_list "libconfig" "libconfig++")
-+foreach(target_name IN LISTS name_list)
-   write_basic_package_version_file("${target_name}ConfigVersion.cmake"
-     VERSION ${PACKAGE_VERSION}
-     COMPATIBILITY SameMajorVersion
-@@ -149,12 +150,12 @@ foreach(target_name libconfig libconfig++)
- 
+@@ -150,11 +150,11 @@ foreach(target_name libconfig libconfig++)
    install(EXPORT ${target_name}Targets
      FILE "${target_name}Config.cmake"
--    NAMESPACE libconfig::
+     NAMESPACE libconfig::
 -    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libconfig
-+    NAMESPACE ${target_name}::
 +    DESTINATION share/${target_name}
      )
  
    install(FILES
      "${CMAKE_CURRENT_BINARY_DIR}/${target_name}ConfigVersion.cmake"
 -    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libconfig"
-+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/share/${target_name}"
++    DESTINATION share/${target_name}
      )
  endforeach()
