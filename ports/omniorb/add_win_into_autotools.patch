@@ -119,30 +119,16 @@ diff --git a/mk/win32.mk b/mk/win32.mk
 index 6d320a2bd..3983eba5c 100644
 --- a/mk/win32.mk
 +++ b/mk/win32.mk
-@@ -8,7 +8,7 @@ Win32Platform = 1
- # Define macro for path of wrapper executables
- #
- ifndef EmbeddedSystem
--WRAPPER_FPATH = $(BINDIR)
-+WRAPPER_FPATH = bin
- else
- WRAPPER_FPATH = $(HOSTBINDIR)
- endif
-@@ -40,12 +40,12 @@ SORT = sort
+@@ -40,12 +40,7 @@ SORT = sort
  endif
  
  
 -AR = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/libwrapper $(XLN)
 -CXX = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/clwrapper $(XLN)
 -CXXLINK	= $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/linkwrapper $(XLN)
-+#AR = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/libwrapper $(XLN)
-+#CXX = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/clwrapper $(XLN)
-+#CXXLINK	= $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/linkwrapper $(XLN)
  CXXMAKEDEPEND = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/omkdepend $(MKDEPOPT) -D__cplusplus -D_MSC_VER
 -CC = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/clwrapper $(XLN)
 -CLINK = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/linkwrapper $(XLN)
-+#CC = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/clwrapper $(XLN)
-+#CLINK = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/linkwrapper $(XLN)
  CMAKEDEPEND = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/omkdepend $(MKDEPOPT) -D_MSC_VER
  
  RCTOOL          = rc.exe
@@ -254,14 +240,9 @@ diff --git a/mk/win32.mk b/mk/win32.mk
 index 83f1b1687..741835b4b 100644
 --- a/mk/win32.mk
 +++ b/mk/win32.mk
-@@ -43,10 +43,10 @@ endif
- #AR = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/libwrapper $(XLN)
- #CXX = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/clwrapper $(XLN)
- #CXXLINK	= $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/linkwrapper $(XLN)
+@@ -43,5 +43,5 @@ endif
 -CXXMAKEDEPEND = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/omkdepend $(MKDEPOPT) -D__cplusplus -D_MSC_VER
 +CXXMAKEDEPEND = $(OMKDEPEND) -D__cplusplus -D_MSC_VER
- #CC = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/clwrapper $(XLN)
- #CLINK = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/linkwrapper $(XLN)
 -CMAKEDEPEND = $(BASE_OMNI_TREE)/$(WRAPPER_FPATH)/omkdepend $(MKDEPOPT) -D_MSC_VER
 +CMAKEDEPEND = $(OMKDEPEND) $(MKDEPOPT) -D_MSC_VER
  

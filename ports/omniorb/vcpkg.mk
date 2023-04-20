@@ -1,6 +1,5 @@
 #
-# vcpkg.mk - make variables and rules specific to
-#                     Visual Studio 16 / 2019
+# vcpkg.mk - make variables and rules specific to Visual Studio
 #
 
 WindowsNT=1

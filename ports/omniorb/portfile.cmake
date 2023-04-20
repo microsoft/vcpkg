@@ -29,7 +29,6 @@ vcpkg_extract_source_archive(
       ${PATCHES}
 )
 
-
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/python3") # port ask python distutils for info.
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   set(ENV{PYTHONPATH} "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/Lib${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
@@ -42,9 +41,6 @@ vcpkg_add_to_path("${FLEX_DIR}")
 vcpkg_find_acquire_program(BISON)
 cmake_path(GET BISON PARENT_PATH BISON_DIR)
 vcpkg_add_to_path("${BISON_DIR}")
-
-#string(APPEND VCPKG_C_FLAGS_DEBUG " -D_DEBUG") # for python to autolink the correct lib
-#string(APPEND VCPKG_CXX_FLAGS_DEBUG " -D_DEBUG")
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   set(z_vcpkg_org_linkage "${VCPKG_LIBRARY_LINKAGE}") 
@@ -116,12 +112,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   else()
     list(REMOVE_ITEM all_libs ${import_libs})
     file(REMOVE ${all_libs}) # remove installed static libs
-    set(to_copy_and_rename ${import_libs})
+    set(to_copy_and_rename "${import_libs}")
     list(FILTER to_copy_and_rename INCLUDE REGEX "3(0)?_rt.lib")
     foreach(cp IN LISTS to_copy_and_rename)
       string(REGEX REPLACE "3(0)?_rt" "" new_name "${cp}")
       string(REGEX REPLACE "thread4" "thread" new_name "${new_name}")
-      configure_file("${cp}" "${new_name}" COPYONLY)
+      file(COPY_FILE "${cp}" "${new_name}")
     endforeach()
     file(GLOB dll_files "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/*.dll")
     file(COPY ${dll_files} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
@@ -143,13 +139,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
       list(FILTER install_libs EXCLUDE REGEX "(_rtd.lib$|msvcstub)")
     else() # dynamic lib
       list(FILTER install_libs INCLUDE REGEX "(_rtd.lib$|msvcstub)")
-      set(to_copy_and_rename ${install_libs})
+      set(to_copy_and_rename "${install_libs}")
       list(FILTER to_copy_and_rename INCLUDE REGEX "3(0)?_rtd.lib")
-      #list(REMOVE_ITEM install_libs ${to_copy_and_rename})
       foreach(cp IN LISTS to_copy_and_rename)
         string(REGEX REPLACE "3(0)?_rt" "" new_name "${cp}")
         string(REGEX REPLACE "thread4" "thread" new_name "${new_name}")
-        configure_file("${cp}" "${new_name}" COPYONLY)
+        file(COPY_FILE "${cp}" "${new_name}")
         list(APPEND install_libs "${new_name}")
       endforeach()
       file(GLOB dll_files "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/*.dll")
@@ -193,7 +188,7 @@ vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
 # Restore old linkage info. 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-   set(VCPKG_LIBRARY_LINKAGE ${z_vcpkg_org_linkage})
+   set(VCPKG_LIBRARY_LINKAGE "${z_vcpkg_org_linkage}")
 endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -212,7 +207,6 @@ else()
     file(REMOVE ${del_files})
   endif()
 endif()
-
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
