@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephenberry/glaze
-    REF "v{VERSION}"
-    SHA512 c71313fb5106ac01f5f9c8251d5853f612900ce0103b494c5a915a56fbd9d643a05894beab633efda24677f6bb195631c8922b8e5c936c2b0d6d90a28fb5d14e
+    REF "v${VERSION}"
+    SHA512 7943056d02711fbabddeaa84918171d552b9d17fdfb19e44e3a21cced565ba5ba04cc69257720228f6fd3daff2d7fd4455b0b20165642ae23b6eaafb068102e7
     PATCHES
       disable-dev-mode.patch
 )
