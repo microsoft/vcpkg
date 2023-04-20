@@ -14,7 +14,13 @@ vcpkg_from_github(
 )
 
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_Backtrace=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_OpenSSL=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+)
 
 vcpkg_cmake_install()
 
