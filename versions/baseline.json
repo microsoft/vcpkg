@@ -8658,7 +8658,7 @@
     },
     "xxhash": {
       "baseline": "0.8.1",
-      "port-version": 1
+      "port-version": 2
     },
     "yajl": {
       "baseline": "2.1.0",
