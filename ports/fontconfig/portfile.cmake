@@ -1,16 +1,13 @@
-set(FONTCONFIG_VERSION 2.14.1)
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fontconfig/fontconfig
-    REF ${FONTCONFIG_VERSION}
-    SHA512 39d25e2fde5085cf66230e18621c1b7ab33935c78771dcc9d6b9e514ddd39af53fcdb0d89a8c7f582d476f431ccf61adde427509256c49cd9d09d249d2d736f7
+    REF ${VERSION}
+    SHA512 b6cbb4ad7db224dabfb8a96c1d0743bab5bbe8f403e49d9b9a44effd161fd97062a2f7205a700308a1f805655038538ba2fb1b65169faa2d69ea88e477230849
     HEAD_REF master
     PATCHES
         no-etc-symlinks.patch
         libgetopt.patch
-        fix-mingw-gperf-fallback.patch
         fix-preprocessor-clang-cl.patch
 )
 

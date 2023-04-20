@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 d7382cda95ac215fafe52d6fc0361affe3d9569a0faa178a553547a5baa168a42550a5918a0bbe30630559200c155839078ae26e7fca8bf32fa45c90ed79248f
+    SHA512 aaef6801c73492624f19dececd956c03fda82a441b81553dfcd0bd47e5120b1d61acfef422a6cd0ded490d16ee4ee9088abdc0faba2a84884905e7cd63fe59d6
     HEAD_REF master
-    PATCHES
-        fix-linux-error.patch
 )
 
 if("icu" IN_LIST FEATURES)

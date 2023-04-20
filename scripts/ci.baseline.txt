@@ -376,6 +376,7 @@ fdk-aac:arm64-android=fail
 fdk-aac:x64-android=fail
 flashlight-cpu:x64-linux=fail
 flashlight-cuda:x64-linux=fail
+
 flint:arm-neon-android=fail
 flint:arm64-android=fail
 flint:x64-android=fail
@@ -1733,7 +1734,6 @@ dimcli:x64-windows-static=fail
 
 zeroc-ice:x86-windows=fail
 zeroc-ice:x64-windows=fail
-zeroc-ice:x64-windows-static-md=fail
 
 # Ports which needs to pass in CI
 cmake:x64-windows=pass

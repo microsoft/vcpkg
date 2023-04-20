@@ -48,6 +48,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
+        -DOIIO_BUILD_TESTS=OFF
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
         -DUSE_OpenVDB=OFF

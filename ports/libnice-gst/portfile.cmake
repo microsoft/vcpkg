@@ -59,28 +59,33 @@ file(WRITE "${USAGE_FILE}" "${PORT} usage:\n\n")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
-    file(APPEND "${USAGE_FILE}" "\tIf the plugin isn't found by the default paths add one of the following paths to the 'GST_PLUGIN_PATH' environment variable\n")
+    file(APPEND "${USAGE_FILE}" "\tMake sure one of the following paths is added to the 'GST_PLUGIN_PATH' environment variable\n")
     file(APPEND "${USAGE_FILE}" "\tFor more information on GStreamer environment variables see https://gstreamer.freedesktop.org/documentation/gstreamer/running.html?gi-language=c#environment-variables\n")
-
-    if(VCPKG_TARGET_IS_WINDOWS)
-
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/gstnice.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/gstnice.dll")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/gstnice.pdb" "${CURRENT_PACKAGES_DIR}/debug/bin/gstnice.pdb")
-
-            file(APPEND "${USAGE_FILE}" "\t\t* '${CURRENT_PACKAGES_DIR}/debug/bin/'\n")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}"
+                    "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/gstnice.pdb"
+                        "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer/gstnice.pdb")
+        else()
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
         endif()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/gstnice.dll" "${CURRENT_PACKAGES_DIR}/bin/gstnice.dll")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/gstnice.pdb" "${CURRENT_PACKAGES_DIR}/bin/gstnice.pdb")
 
-            file(APPEND "${USAGE_FILE}" "\t\t* '${CURRENT_PACKAGES_DIR}/bin/'\n")
+        file(APPEND "${USAGE_FILE}" "\t\t* '${CURRENT_INSTALLED_DIR}/debug/plugins/gstreamer/'\n")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/plugins/gstreamer")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}"
+                    "${CURRENT_PACKAGES_DIR}/plugins/gstreamer/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/gstnice.pdb"
+                        "${CURRENT_PACKAGES_DIR}/plugins/gstreamer/gstnice.pdb")
+        else()
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
         endif()
-    else()
-        file(APPEND "${USAGE_FILE}" "\t\t* '${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/'\n")
-        file(APPEND "${USAGE_FILE}" "\t\t* '${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/'\n")
+
+        file(APPEND "${USAGE_FILE}" "\t\t* '${CURRENT_INSTALLED_DIR}/plugins/gstreamer/'\n")
     endif()
 else()
     file(APPEND "${USAGE_FILE}" "\tRegister static plugin with gst_plugin_register_static()\n")
