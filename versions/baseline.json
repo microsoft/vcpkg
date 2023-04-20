@@ -1846,7 +1846,7 @@
     },
     "crashpad": {
       "baseline": "2022-09-05",
-      "port-version": 3
+      "port-version": 4
     },
     "crashrpt": {
       "baseline": "1.4.3",

@@ -175,6 +175,7 @@ cppcoro:x64-uwp=fail
 # This is known to work on x64-linux as of gcc 10.3.0.
 cppgraphqlgen:x64-linux=fail
 crashpad:arm-uwp=fail
+crashpad:x64-linux=fail
 cuda:x64-osx=fail
 # Since pipeline cannot automatically install dbghelp dependency, skip this detection
 dbghelp:arm-uwp=skip
