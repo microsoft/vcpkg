@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 c40f164ebd05a36f140ce2684dedb4bbccc51a2732383d3935fca1258738a9b9ba5bc1be2061f3b113b213e5cbb7fe22e9dca43ff78d91964c79cad093e55466
     HEAD_REF development
     PATCHES
-        fix-static-build.patch
+        fix-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
@@ -61,11 +61,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(BUILD_SHARED_LIBS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
-else()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME libsbml-static CONFIG_PATH lib/cmake)
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
 vcpkg_copy_pdbs()
 
