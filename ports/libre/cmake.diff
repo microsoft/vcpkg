@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3bd5dd7..1317593 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -660,19 +660,6 @@ target_include_directories(re-objs PRIVATE include
+   ${OPENSSL_INCLUDE_DIR} ${ZLIB_INCLUDE_DIRS})
+ 
+ 
+-##############################################################################
+-#
+-# Shared target libre.[so|dll|dylib]
+-#
+-
+-add_library(re-shared SHARED $<TARGET_OBJECTS:re-objs>)
+-target_link_libraries(re-shared PRIVATE ${LINKLIBS})
+-set_target_properties(re-shared PROPERTIES VERSION
+-  ${PROJECT_SOVERSION}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+-set_target_properties(re-shared PROPERTIES SOVERSION ${PROJECT_SOVERSION})
+-set_target_properties(re-shared PROPERTIES OUTPUT_NAME "re")
+-
+-
+ ##############################################################################
+ #
+ # Static target libre.a
+@@ -705,7 +692,7 @@ configure_file(packaging/libre.pc.in libre.pc @ONLY)
+ # Install section
+ #
+ 
+-install(TARGETS re-shared re
++install(TARGETS re
+   LIBRARY
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     COMPONENT Libraries
+@@ -718,13 +705,6 @@ install(TARGETS re-shared re
+     COMPONENT Development
+ )
+ 
+-install(TARGETS re-shared
+-  LIBRARY
+-    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    NAMELINK_ONLY
+-    COMPONENT Development
+-)
+-
+ install(FILES cmake/re-config.cmake
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/re
+   COMPONENT Development
