@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF v1.51.1
-    SHA512 1bc8e7a5a15b2dca88527d111cde398b0dc1921bbc945c6df8225b4225b8ac0b43155bcf743230ce7b5962d1ab948e9363229c98a879b1befc7a939a290fb888
+    REF "v${VERSION}"
+    SHA512 19ce4718e23b3cc245091ae5b8face1c871f55c54a6eefb8d4f3264b3e16e2129e5c8e4fcb22bc994e0864d7a454e4ed03de1bc0817a8380ca34be849a7d4c90
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -17,7 +17,7 @@ vcpkg_from_github(
         00009-use-system-upb.patch
         snprintf.patch
         00012-fix-use-cxx17.patch
-        00014-pkgconfig-upbdefs.patch
+        # 00014-pkgconfig-upbdefs.patch
         00015-disable-download-archive.patch
 )
 
