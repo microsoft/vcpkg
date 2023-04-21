@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         gentables.patch
-        alsa-libdl.patch
 )
 
 vcpkg_check_features(
