@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a653e38628..76d6067646 100644
+index 3d1f35c4ef..3063abf718 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -142,7 +142,6 @@ else()
- endif()
+@@ -150,7 +150,6 @@ if (LEGACY_BUILD)
+     endif ()
  
- # Add Linker search paths to RPATH so as to fix the problem where some linkers can't find cross-compiled dependent libraries in customer paths when linking executables.
--set(CMAKE_INSTALL_RPATH_USE_LINK_PATH true)
+     # Add Linker search paths to RPATH so as to fix the problem where some linkers can't find cross-compiled dependent libraries in customer paths when linking executables.
+-    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH true)
  
- # build the sdk targets
- project("aws-cpp-sdk-all" VERSION "${PROJECT_VERSION}" LANGUAGES CXX)
+     # build the sdk targets
+     project("aws-cpp-sdk-all" VERSION "${PROJECT_VERSION}" LANGUAGES CXX)
