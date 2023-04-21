@@ -1,3 +1,5 @@
+# Set VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY instead of using `vcpkg_check_linkage` because
+# these DLLs don't link with a CRT.
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
 vcpkg_download_distfile(ARCHIVE
