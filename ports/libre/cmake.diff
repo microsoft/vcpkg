@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3bd5dd7..19ebfbc 100644
+index 3bd5dd7..ca4169c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -665,12 +665,14 @@ target_include_directories(re-objs PRIVATE include
@@ -17,30 +17,33 @@ index 3bd5dd7..19ebfbc 100644
  
  
  ##############################################################################
-@@ -705,6 +707,7 @@ configure_file(packaging/libre.pc.in libre.pc @ONLY)
+@@ -705,11 +707,18 @@ configure_file(packaging/libre.pc.in libre.pc @ONLY)
  # Install section
  #
  
+-install(TARGETS re-shared re
 +if(BUILD_SHARED_LIBS)
- install(TARGETS re-shared re
++install(TARGETS re-shared
    LIBRARY
      DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -717,13 +720,26 @@ install(TARGETS re-shared re
-     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/re
-     COMPONENT Development
- )
-+else()
-+install(TARGETS re
-+  ARCHIVE
-+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+    COMPONENT Development
+     COMPONENT Libraries
+     NAMELINK_SKIP
 +  PUBLIC_HEADER
 +    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/re
 +    COMPONENT Development
 +)
++else()
++install(TARGETS re
+   ARCHIVE
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     COMPONENT Development
+@@ -717,13 +726,17 @@ install(TARGETS re-shared re
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/re
+     COMPONENT Development
+ )
 +endif()
-+
  
++
 +if(BUILD_SHARED_LIBS)
  install(TARGETS re-shared
    LIBRARY
