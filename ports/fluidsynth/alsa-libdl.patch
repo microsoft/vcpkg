@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 114fa163..2ea55ddc 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -365,7 +365,7 @@ if ( PULSE_SUPPORT )
+ endif()
+ 
+ if ( TARGET ALSA::ALSA AND ALSA_SUPPORT )
+-    target_link_libraries ( libfluidsynth-OBJ PUBLIC ALSA::ALSA )
++    target_link_libraries ( libfluidsynth-OBJ PUBLIC ALSA::ALSA ${CMAKE_DL_LIBS} )
+ endif()
+ 
+ if ( TARGET PortAudio::PortAudio AND PORTAUDIO_SUPPORT )

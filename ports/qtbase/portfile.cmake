@@ -309,6 +309,8 @@ file(COPY
         "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     )
 
+file(CONFIGURE OUTPUT "${CURRENT_PACKAGES_DIR}/share/${PORT}/port_status.cmake" CONTENT "set(qtbase_with_icu ${FEATURE_icu})\n")
+
 set(other_files qt-cmake
                  qt-cmake-private
                  qt-cmake-standalone-test

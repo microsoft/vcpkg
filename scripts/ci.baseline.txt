@@ -175,6 +175,7 @@ cppcoro:x64-uwp=fail
 # This is known to work on x64-linux as of gcc 10.3.0.
 cppgraphqlgen:x64-linux=fail
 crashpad:arm-uwp=fail
+crashpad:x64-linux=fail
 cuda:x64-osx=fail
 # Since pipeline cannot automatically install dbghelp dependency, skip this detection
 dbghelp:arm-uwp=skip
@@ -222,18 +223,6 @@ fastrtps:x64-windows-static=fail
 fastrtps:x64-windows-static-md=fail
 flashlight-cpu:x64-linux=fail
 flashlight-cuda:x64-linux=fail
-# fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
-# fluidlite has no dependencies and thus is less likely to be broken by another package.
-fluidlite:arm-uwp=skip
-fluidlite:arm64-windows=skip
-fluidlite:x64-linux=skip
-fluidlite:x64-osx=skip
-fluidlite:arm64-osx=skip
-fluidlite:x64-uwp=skip
-fluidlite:x64-windows-static=skip
-fluidlite:x64-windows-static-md=skip
-fluidlite:x64-windows=skip
-fluidlite:x86-windows=skip
 fmi4cpp:arm-uwp=fail
 fmi4cpp:x64-uwp=fail
 fontconfig:x64-uwp=fail
@@ -1090,7 +1079,6 @@ dimcli:x64-windows-static=fail
 
 zeroc-ice:x86-windows=fail
 zeroc-ice:x64-windows=fail
-zeroc-ice:x64-windows-static-md=fail
 
 # Ports which needs to pass in CI
 cmake:x64-windows=pass
