@@ -762,8 +762,7 @@ endif()
 
 # Helper to be used in vcpkg-cmake-wrapper.cmake instead of _find_package
 macro(z_vcpkg_underlying_find_package z_vcpkg_underlying_find_package_name)
-    set(z_vcpkg_underlying_find_package_name_ARGN "${ARGN}")
-    _find_package("${z_vcpkg_underlying_find_package_name}" ${z_vcpkg_underlying_find_package_name_ARGN})
+    _find_package("${z_vcpkg_underlying_find_package_name}" ${ARGN})
 endmacro()
 
 # NOTE: this is not a function, which means that arguments _are not_ perfectly forwarded
