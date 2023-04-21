@@ -26,9 +26,7 @@ vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
-                    "${CURRENT_PACKAGES_DIR}/lib/cmake")
+vcpkg_cmake_config_fixup(PACKAGE_NAME libre CONFIG_PATH lib/cmake/re)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
