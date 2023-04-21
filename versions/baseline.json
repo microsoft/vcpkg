@@ -5565,8 +5565,8 @@
       "port-version": 3
     },
     "node-addon-api": {
-      "baseline": "6.0.0",
-      "port-version": 1
+      "baseline": "6.1.0",
+      "port-version": 0
     },
     "node-api-headers": {
       "baseline": "1.0.0",
