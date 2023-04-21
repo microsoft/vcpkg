@@ -3326,7 +3326,7 @@
     },
     "intelrdfpmathlib": {
       "baseline": "20U2",
-      "port-version": 5
+      "port-version": 6
     },
     "io2d": {
       "baseline": "2020-09-14",
