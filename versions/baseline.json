@@ -1825,7 +1825,7 @@
       "port-version": 0
     },
     "cpr": {
-      "baseline": "1.9.3",
+      "baseline": "1.10.2+3",
       "port-version": 0
     },
     "cpu-features": {
@@ -7386,7 +7386,7 @@
     },
     "sleepy-discord": {
       "baseline": "2022-02-05",
-      "port-version": 0
+      "port-version": 1
     },
     "slikenet": {
       "baseline": "2021-06-07",
