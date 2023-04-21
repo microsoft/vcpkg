@@ -5565,8 +5565,8 @@
       "port-version": 1
     },
     "node-api-headers": {
-      "baseline": "0.0.5",
-      "port-version": 1
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "nonius": {
       "baseline": "2019-04-20",
