@@ -17,8 +17,9 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         set(_vcpkg_clangcl_arch "--target=arm64-pc-windows-msvc")
     endif()
 
-    string(APPEND VCPKG_C_FLAGS ${_vcpkg_clangcl_arch})
-    string(APPEND VCPKG_CXX_FLAGS ${_vcpkg_clangcl_arch})
+    string(APPEND VCPKG_C_FLAGS " ${_vcpkg_clangcl_arch}")
+    string(APPEND VCPKG_CXX_FLAGS " ${_vcpkg_clangcl_arch}")
+
 endif()
 
 if(DEFINED XBOX_CONSOLE_TARGET)
