@@ -1,47 +1,54 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3bd5dd7..1317593 100644
+index 3bd5dd7..19ebfbc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -660,19 +660,6 @@ target_include_directories(re-objs PRIVATE include
-   ${OPENSSL_INCLUDE_DIR} ${ZLIB_INCLUDE_DIRS})
- 
- 
--##############################################################################
--#
--# Shared target libre.[so|dll|dylib]
--#
--
--add_library(re-shared SHARED $<TARGET_OBJECTS:re-objs>)
--target_link_libraries(re-shared PRIVATE ${LINKLIBS})
--set_target_properties(re-shared PROPERTIES VERSION
--  ${PROJECT_SOVERSION}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
--set_target_properties(re-shared PROPERTIES SOVERSION ${PROJECT_SOVERSION})
--set_target_properties(re-shared PROPERTIES OUTPUT_NAME "re")
--
--
- ##############################################################################
+@@ -665,12 +665,14 @@ target_include_directories(re-objs PRIVATE include
+ # Shared target libre.[so|dll|dylib]
  #
- # Static target libre.a
-@@ -705,7 +692,7 @@ configure_file(packaging/libre.pc.in libre.pc @ONLY)
+ 
++if(BUILD_SHARED_LIBS)
+ add_library(re-shared SHARED $<TARGET_OBJECTS:re-objs>)
+ target_link_libraries(re-shared PRIVATE ${LINKLIBS})
+ set_target_properties(re-shared PROPERTIES VERSION
+   ${PROJECT_SOVERSION}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+ set_target_properties(re-shared PROPERTIES SOVERSION ${PROJECT_SOVERSION})
+ set_target_properties(re-shared PROPERTIES OUTPUT_NAME "re")
++endif()
+ 
+ 
+ ##############################################################################
+@@ -705,6 +707,7 @@ configure_file(packaging/libre.pc.in libre.pc @ONLY)
  # Install section
  #
  
--install(TARGETS re-shared re
-+install(TARGETS re
++if(BUILD_SHARED_LIBS)
+ install(TARGETS re-shared re
    LIBRARY
      DESTINATION ${CMAKE_INSTALL_LIBDIR}
-     COMPONENT Libraries
-@@ -718,13 +705,6 @@ install(TARGETS re-shared re
+@@ -717,13 +720,26 @@ install(TARGETS re-shared re
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/re
      COMPONENT Development
  )
++else()
++install(TARGETS re
++  ARCHIVE
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    COMPONENT Development
++  PUBLIC_HEADER
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/re
++    COMPONENT Development
++)
++endif()
++
  
--install(TARGETS re-shared
--  LIBRARY
--    DESTINATION ${CMAKE_INSTALL_LIBDIR}
--    NAMELINK_ONLY
--    COMPONENT Development
--)
--
++if(BUILD_SHARED_LIBS)
+ install(TARGETS re-shared
+   LIBRARY
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     NAMELINK_ONLY
+     COMPONENT Development
+ )
++endif()
+ 
  install(FILES cmake/re-config.cmake
    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/re
-   COMPONENT Development
