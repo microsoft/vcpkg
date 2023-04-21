@@ -2570,7 +2570,7 @@
     },
     "forge": {
       "baseline": "1.0.8",
-      "port-version": 2
+      "port-version": 3
     },
     "foxi": {
       "baseline": "2021-12-01",
