@@ -130,7 +130,7 @@ if(CMD STREQUAL "BUILD")
     include("${CMAKE_TRIPLET_FILE}")
 
     set(HOST_TRIPLET "${_HOST_TRIPLET}")
-    set(CURRENT_HOST_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}" CACHE PATH "Location of packages installed for the host")
+    set(CURRENT_HOST_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}" CACHE PATH "Location to install final packages for the host")
 
     set(TRIPLET_SYSTEM_ARCH "${VCPKG_TARGET_ARCHITECTURE}")
     include("${SCRIPTS}/cmake/vcpkg_common_definitions.cmake")
