@@ -90,7 +90,7 @@
     },
     "alsa": {
       "baseline": "1.2.8",
-      "port-version": 0
+      "port-version": 1
     },
     "amd-amf": {
       "baseline": "1.4.29",
@@ -1413,8 +1413,8 @@
       "port-version": 5
     },
     "cdt": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.3.0",
+      "port-version": 0
     },
     "celero": {
       "baseline": "2.8.5",
@@ -1846,7 +1846,7 @@
     },
     "crashpad": {
       "baseline": "2022-09-05",
-      "port-version": 3
+      "port-version": 4
     },
     "crashrpt": {
       "baseline": "1.4.3",
@@ -2542,7 +2542,7 @@
     },
     "folly": {
       "baseline": "2022.10.31.00",
-      "port-version": 4
+      "port-version": 5
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -2965,8 +2965,8 @@
       "port-version": 0
     },
     "gtk": {
-      "baseline": "4.6.8",
-      "port-version": 2
+      "baseline": "4.10.1",
+      "port-version": 0
     },
     "gtk3": {
       "baseline": "3.24.34",
@@ -3129,7 +3129,7 @@
       "port-version": 0
     },
     "hyperscan": {
-      "baseline": "5.4.0",
+      "baseline": "5.4.2",
       "port-version": 0
     },
     "hypodermic": {
@@ -4978,7 +4978,7 @@
     },
     "magnum-integration": {
       "baseline": "2020.06",
-      "port-version": 2
+      "port-version": 3
     },
     "magnum-plugins": {
       "baseline": "2020.06",
@@ -5898,7 +5898,7 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.8.3",
-      "port-version": 4
+      "port-version": 5
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -6797,7 +6797,7 @@
       "port-version": 8
     },
     "quill": {
-      "baseline": "2.7.0",
+      "baseline": "2.8.0",
       "port-version": 0
     },
     "quirc": {
@@ -6874,7 +6874,7 @@
     },
     "raylib": {
       "baseline": "4.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "rbdl": {
       "baseline": "3.2.0",
@@ -7620,6 +7620,10 @@
       "baseline": "1.5.1",
       "port-version": 1
     },
+    "stackwalker": {
+      "baseline": "1.20",
+      "port-version": 0
+    },
     "starlink-ast": {
       "baseline": "9.2.7",
       "port-version": 3
@@ -7838,7 +7842,7 @@
     },
     "tiff": {
       "baseline": "4.5.0",
-      "port-version": 2
+      "port-version": 3
     },
     "tinkerforge": {
       "baseline": "2.1.25",
@@ -8658,7 +8662,7 @@
     },
     "xxhash": {
       "baseline": "0.8.1",
-      "port-version": 1
+      "port-version": 2
     },
     "yajl": {
       "baseline": "2.1.0",
