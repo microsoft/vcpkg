@@ -77,28 +77,28 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+# fix paths in target files
+list(APPEND TARGET_FILES 
+	"${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEApplicationFrameworkTargets-debug.cmake"
+	"${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADECompileDefinitionsAndFlags-debug.cmake"
+	"${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEDataExchangeTargets-debug.cmake"
+	"${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEFoundationClassesTargets-debug.cmake"
+	"${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingAlgorithmsTargets-debug.cmake"
+	"${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingDataTargets-debug.cmake"
+	"${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEVisualizationTargets-debug.cmake"
+)
+
+foreach(TARGET_FILE IN LISTS TARGET_FILES)
+	file(READ "${TARGET_FILE}" filedata)
+	string(REGEX REPLACE "libd" "lib" filedata "${filedata}")
+	string(REGEX REPLACE "bind" "bin" filedata "${filedata}")
+	file(WRITE "${TARGET_FILE}" "${filedata}")
+endforeach()
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     # debug creates libd and bind directories that need moving
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bind" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    
-    # fix paths in target files
-    list(APPEND TARGET_FILES 
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEApplicationFrameworkTargets-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADECompileDefinitionsAndFlags-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEDataExchangeTargets-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEFoundationClassesTargets-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingAlgorithmsTargets-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingDataTargets-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEVisualizationTargets-debug.cmake"
-    )
-    
-    foreach(TARGET_FILE IN LISTS TARGET_FILES)
-        file(READ "${TARGET_FILE}" filedata)
-        string(REGEX REPLACE "libd" "lib" filedata "${filedata}")
-        string(REGEX REPLACE "bind" "bin" filedata "${filedata}")
-        file(WRITE "${TARGET_FILE}" "${filedata}")
-    endforeach()
 
     # the bin directory ends up with bat files that are noise, let's clean that up
     file(GLOB BATS "${CURRENT_PACKAGES_DIR}/bin/*.bat")
