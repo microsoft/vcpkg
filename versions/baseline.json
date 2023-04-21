@@ -5138,7 +5138,7 @@
     },
     "microsoft-signalr": {
       "baseline": "0.1.0-alpha4",
-      "port-version": 2
+      "port-version": 3
     },
     "mikktspace": {
       "baseline": "2020-10-06",
