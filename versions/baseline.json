@@ -7620,6 +7620,10 @@
       "baseline": "1.5.1",
       "port-version": 1
     },
+    "stackwalker": {
+      "baseline": "1.20",
+      "port-version": 0
+    },
     "starlink-ast": {
       "baseline": "9.2.7",
       "port-version": 3
