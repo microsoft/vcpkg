@@ -1,8 +1,8 @@
 diff --git a/surface/include/pcl/surface/3rdparty/opennurbs/opennurbs_zlib.h b/surface/include/pcl/surface/3rdparty/opennurbs/opennurbs_zlib.h
-index 12787e1..f3fdf94 100644
+index 12787e1..b500233 100644
 --- a/surface/include/pcl/surface/3rdparty/opennurbs/opennurbs_zlib.h
 +++ b/surface/include/pcl/surface/3rdparty/opennurbs/opennurbs_zlib.h
-@@ -31,12 +31,13 @@
+@@ -31,13 +31,16 @@
  
  #if !defined(Z_PREFIX)
  /* decorates zlib functions with a "z_" prefix to prevent symbol collision. */
@@ -16,8 +16,11 @@ index 12787e1..f3fdf94 100644
  /* have zlib use oncalloc() and onfree() for memory managment*/
 -#define MY_ZCALLOC
  #endif
++#define zcalloc pcl_zcalloc
++#define zcfree pcl_zcfree
  
  #include "zlib.h"
+ 
 diff --git a/surface/src/3rdparty/opennurbs/openNURBS.cmake b/surface/src/3rdparty/opennurbs/openNURBS.cmake
 index 51ca678..4ee5192 100644
 --- a/surface/src/3rdparty/opennurbs/openNURBS.cmake
