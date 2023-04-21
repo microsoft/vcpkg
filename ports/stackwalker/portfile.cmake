@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 ce4004f114400ff66e25d7403c52ed4798a0e94d529335995df525f37d4238c750c8b1ee5801f71bd7128d39baa9af18e546a49da8587976720df6e9b372b851
     HEAD_REF master
     PATCHES
-        fix-build.patch
+        fix-build.patch # https://github.com/JochenKalmbach/StackWalker/commit/97965daed94f1d859fff691e6ba28759db0f179f
         fix-exports.patch
 )
 
