@@ -16,6 +16,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         disable-gnulib-fetch.patch
         disable-subdirs.patch
+        parallelize-symbol-collection.patch
 )
 
 vcpkg_configure_make(

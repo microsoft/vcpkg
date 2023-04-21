@@ -1,0 +1,7 @@
+{
+  "name": "raygui",
+  "version": "3.2",
+  "description": "A simple and easy-to-use immediate-mode gui library",
+  "homepage": "https://github.com/raysan5/raylib",
+  "license": "Zlib"
+}

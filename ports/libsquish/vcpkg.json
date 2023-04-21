@@ -1,7 +1,7 @@
 {
   "name": "libsquish",
   "version": "1.15",
-  "port-version": 12,
+  "port-version": 13,
   "description": "Open source DXT compression library.",
   "homepage": "https://sourceforge.net/projects/libsquish",
   "license": "MIT",
@@ -18,7 +18,7 @@
   "features": {
     "sse2": {
       "description": "Build with SSE2",
-      "supports": "osx"
+      "supports": "osx & x64"
     }
   }
 }

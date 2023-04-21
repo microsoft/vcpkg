@@ -1,0 +1,42 @@
+diff --git a/configure b/configure
+index 15c7c54b0953..70f28b0c7064 100755
+--- a/configure
++++ b/configure
+@@ -13227,6 +13227,8 @@ done
+ 
+ # We search for both crypt and crypt_r as one or the other may be defined
+ # This gets us our -lcrypt in LIBS when required on the target platform.
++# Save/restore LIBS to avoid linking libpython with libcrypt.
++LIBS_SAVE=$LIBS
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing crypt" >&5
+ $as_echo_n "checking for library containing crypt... " >&6; }
+ if ${ac_cv_search_crypt+:} false; then :
+@@ -13368,6 +13370,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+ 
+ fi
+ 
++LIBS=$LIBS_SAVE
+ 
+ for ac_func in clock_gettime
+ do :
+diff --git a/configure.ac b/configure.ac
+index 6c65b2914bf6..afdc68363cea 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -4085,6 +4085,8 @@ AC_CHECK_FUNCS(setpgrp,
+ 
+ # We search for both crypt and crypt_r as one or the other may be defined
+ # This gets us our -lcrypt in LIBS when required on the target platform.
++# Save/restore LIBS to avoid linking libpython with libcrypt.
++LIBS_SAVE=$LIBS
+ AC_SEARCH_LIBS(crypt, crypt)
+ AC_SEARCH_LIBS(crypt_r, crypt)
+ 
+@@ -4099,6 +4101,7 @@ char *r = crypt_r("", "", &d);
+     [AC_DEFINE(HAVE_CRYPT_R, 1, [Define if you have the crypt_r() function.])],
+     [])
+ )
++LIBS=$LIBS_SAVE
+ 
+ AC_CHECK_FUNCS(clock_gettime, [], [
+     AC_CHECK_LIB(rt, clock_gettime, [

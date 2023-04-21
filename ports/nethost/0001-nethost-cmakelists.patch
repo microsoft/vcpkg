@@ -1,5 +1,5 @@
 diff --git a/src/native/corehost/nethost/CMakeLists.txt b/src/native/corehost/nethost/CMakeLists.txt
-index a9f44e720..0f24d4458 100644
+index 5ae3f76e8fe..9c0209ba9bc 100644
 --- a/src/native/corehost/nethost/CMakeLists.txt
 +++ b/src/native/corehost/nethost/CMakeLists.txt
 @@ -1,11 +1,14 @@
@@ -41,7 +41,7 @@ index a9f44e720..0f24d4458 100644
  # Copy static lib PDB to the project output directory
  if (WIN32)
      set_target_properties(libnethost PROPERTIES
-@@ -32,15 +46,18 @@ if (WIN32)
+@@ -32,12 +46,17 @@ if (WIN32)
          COMPILE_PDB_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
      )
  endif(WIN32)
@@ -59,13 +59,22 @@ index a9f44e720..0f24d4458 100644
 +    RUNTIME DESTINATION bin
 +)
  
++if(NOT BUILD_SHARED_LIBS)
+ if (MSVC)
+     # We ship libnethost.lib as a static library for external consumption, so
+     # LTCG must be disabled to ensure that non-MSVC toolchains can work with it.
+@@ -47,10 +66,10 @@ if (MSVC)
+     string(REPLACE "/LTCG" "" CMAKE_STATIC_LINKER_FLAGS_RELEASE ${CMAKE_STATIC_LINKER_FLAGS_RELEASE})
+     string(REPLACE "/LTCG" "" CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO ${CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO})
+ endif()
++endif()
+ 
 -# Only Windows creates a symbols file for static libs.
 -if (WIN32)
 -    install_with_stripped_symbols(libnethost TARGETS corehost)
 -else()
 -    install(TARGETS libnethost DESTINATION corehost)
 -endif(WIN32)
-\ No newline at end of file
 +install(EXPORT unofficial-nethost-config
 +    DESTINATION share/unofficial-nethost
 +    FILE unofficial-nethost-config.cmake

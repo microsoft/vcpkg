@@ -1,9 +1,8 @@
-vcpkg_list(SET patches)
+vcpkg_list(SET extra_patches)
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_list(SET patches
+    vcpkg_list(APPEND extra_patches
         yasm.patch # the asm changes are a downgrade to an older version
-        compile.patch
-        libname-windows.patch # Apply common libtool rules for lib naming. 
+        libname-windows.patch # libtool rules for lib naming, exports
     )
 endif()
 
@@ -11,19 +10,39 @@ vcpkg_from_gitlab(
     GITLAB_URL https://git.lysator.liu.se/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nettle/nettle
-    REF 52bacacaf4339fd78289f58919732f1f35bea1c1 #v3.7.3
-    SHA512 0130d14195274eeec11e8299793e3037f4b84d8fb4b5c5c9392b63ee693ed5713434070744b1a44e14a6a5090d655917c1dd296e2011cd99e3c316ef5d8ee395
+    REF nettle_3.8.1_release_20220727
+    SHA512 ed1fa1b77afd61fafa15b63f4324809fa69569691d16b93f403c83794672859a1760d102902349f93b1632de568c36e06a0e2b5b61877082b1982dfcf2c52172
     HEAD_REF master
     PATCHES 
-        fix-InstallLibPath.patch
-        flags.patch
-        ${patches}
+        subdirs.patch
+        fix-libdir.patch
+        compile.patch
+        host-tools.patch
+        ccas.patch
+        install-dll.patch
+        ${extra_patches}
 )
 
+# Temporarily set to 1 to re-generate the lists of exported symbols.
+# This is needed when the version is bumped.
+set(GENERATE_SYMBOLS 0)
+if(GENERATE_SYMBOLS)
+    if(VCPKG_TARGET_IS_MINGW OR NOT VCPKG_TARGET_IS_WINDOWS)
+        set(GENERATE_SYMBOLS 0)
+    else()
+        vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    endif()
+endif()
+
+vcpkg_list(SET OPTIONS)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_list(SET OPTIONS --disable-static)
+    vcpkg_list(APPEND OPTIONS --disable-static)
 else()
-    vcpkg_list(SET OPTIONS --disable-shared)
+    vcpkg_list(APPEND OPTIONS --disable-shared)
+endif()
+
+if("tools" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS --enable-tools)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -39,33 +58,26 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         nettle_cv_asm_type_percent_function=no
         nettle_cv_asm_align_log=no
     )
+else()
+    vcpkg_list(APPEND OPTIONS "CCAS=") # configure will use CC
 endif()
 
 if(VCPKG_CROSSCOMPILING)
-    # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated. 
-    set(ENV{CC_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
+    set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
 vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
+        ${OPTIONS}
         --disable-documentation
         --disable-openssl
-        ${OPTIONS}
+        "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    OPTIONS_DEBUG
+        --disable-tools
 )
 
-set(tool_names des ecc) # aes gcm sha twofish?
-list(TRANSFORM tool_names APPEND "data")
-list(TRANSFORM tool_names APPEND "${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-
-if(VCPKG_CROSSCOMPILING)
-    list(TRANSFORM tool_names PREPEND "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/")
-    file(COPY ${tool_names} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
-    if(NOT VCPKG_BUILD_TYPE)
-        file(COPY ${tool_names} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/")
-    endif()
-endif()
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         # def files are created by running 'llvm-nm <libname> | findstr /R /C:"[RT] _*nettle_"' on the static build and replacing '00[0-9abcdef]+ [RT]' with spaces
@@ -97,20 +109,25 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 vcpkg_install_make()
 
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+
 if(NOT VCPKG_CROSSCOMPILING)
+    set(tool_names desdata eccdata) # aes gcm sha twofish?
     list(TRANSFORM tool_names PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
+    list(TRANSFORM tool_names APPEND "${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     file(COPY ${tool_names} DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
 endif()
 
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/COPYINGv3"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYINGv3")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+if(GENERATE_SYMBOLS)
+    include("${CMAKE_CURRENT_LIST_DIR}/lib-to-def.cmake")
+    lib_to_def(BASENAME nettle REGEX "_*nettle_")
+    lib_to_def(BASENAME hogweed REGEX "_*nettle_")
 endif()

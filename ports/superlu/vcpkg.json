@@ -1,11 +1,10 @@
 {
   "name": "superlu",
-  "version-date": "2020-01-07",
-  "port-version": 6,
+  "version": "5.3.0",
+  "port-version": 1,
   "description": "Supernodal sparse direct solver.",
   "homepage": "https://github.com/xiaoyeli/superlu",
-  "license": "BSD-4-Clause-UC",
-  "supports": "!(uwp | arm)",
+  "license": "BSD-3-Clause-LBNL",
   "dependencies": [
     "blas",
     {

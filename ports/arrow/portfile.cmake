@@ -1,18 +1,16 @@
 vcpkg_download_distfile(
     ARCHIVE_PATH
-    URLS "https://www.apache.org/dyn/closer.lua?action=download&filename=arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
+    URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 0856cfda98af8ae75d7011b4b2cb7305592dc16edeb27be8a845ee762cd1c4484997634e9bfe3fdc2a359fcfe0cbe036e0747ee0ea49677979920b95d1b4ced3
+    SHA512 46df4fb5a703d38d0a74fde9838e9f9702b24b442cb225517516c335a5ab18955699000bf0b2fc7d1698ada6d2e890ba3860933b6280f5160b0fce8a07484d0e
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE_PATH}
     PATCHES
-        brotli.patch
         msvc-static-name.patch
-        processor-type.patch
-        thrift.patch
         utf8proc.patch
+        thrift.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -22,6 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dataset     ARROW_DATASET
         filesystem  ARROW_FILESYSTEM
         flight      ARROW_FLIGHT
+        gcs         ARROW_GCS
         jemalloc    ARROW_JEMALLOC
         json        ARROW_JSON
         mimalloc    ARROW_MIMALLOC
@@ -70,6 +69,14 @@ vcpkg_fixup_pkgconfig()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib")
     message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
+endif()
+
+if("dataset" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME arrowdataset
+        CONFIG_PATH lib/cmake/ArrowDataset
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
 endif()
 
 if("parquet" IN_LIST FEATURES)

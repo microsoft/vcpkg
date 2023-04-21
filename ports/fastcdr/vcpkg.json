@@ -1,7 +1,17 @@
 {
   "name": "fastcdr",
-  "version-semver": "1.0.15",
-  "port-version": 1,
+  "version-semver": "1.0.26",
   "description": "eProsima FastCDR is a C++ library that provides two serialization mechanisms. One is the standard CDR serialization mechanism, while the other is a faster implementation that modifies the standard.",
-  "homepage": "https://github.com/eProsima/Fast-CDR"
+  "homepage": "https://github.com/eProsima/Fast-CDR",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

@@ -1,0 +1,46 @@
+vcpkg usa material de terceiros dos projetos listados abaixo.
+O aviso de direitos autorais original e a licença sob a qual a Microsoft
+recebido tal material de terceiros são descritos abaixo. Microsoft
+reserva-se todos os outros direitos não concedidos expressamente, seja por
+implicação, preclusão ou de outra forma.
+
+No caso de falhamos acidentalmente em listar um aviso necessário, por favor
+chame nossa atenção postando um problema.
+
+AVISOS E INFORMAÇÕES DE SOFTWARE DE TERCEIROS
+Não traduza ou localize
+
+vcpkg incorpora material de terceiros dos projetos listados abaixo.
+O aviso de direitos autorais original e a licença sob a qual a Microsoft recebeu
+tais materiais de terceiros são apresentados abaixo. A Microsoft reservou todos os outros
+direitos não concedidos expressamente, seja por implicação, preclusão ou de outra forma.
+
+1. Catch2
+
+%% Catch2 AVISOS, INFORMAÇÕES E LICENÇA COMEÇAM AQUI
+===========================================
+Boost Software License - Versão 1.0 - 17 de agosto de 2003
+
+A permissão é concedida, gratuitamente, a qualquer pessoa ou organização
+obter uma cópia do software e da documentação que o acompanha coberta por
+esta licença (o "Software") para usar, reproduzir, exibir, distribuir,
+executar e transmitir o Software e preparar trabalhos derivados do
+Software, e para permitir que terceiros a quem o Software é fornecido
+fazê-lo, tudo sujeito ao seguinte:
+
+Os avisos de direitos autorais no Software e toda esta declaração, incluindo
+a concessão de licença acima, esta restrição e a seguinte isenção de responsabilidade,
+devem ser incluídos em todas as cópias do Software, no todo ou em parte, e
+todos os trabalhos derivados do Software, a menos que tais cópias ou derivados
+as obras são exclusivamente na forma de código de objeto executável por máquina gerado por
+um processador de linguagem de origem.
+
+O SOFTWARE É FORNECIDO "COMO ESTÁ", SEM GARANTIA DE QUALQUER TIPO, EXPRESSA OU
+IMPLÍCITAS, INCLUINDO, SEM LIMITAÇÃO, AS GARANTIAS DE COMERCIALIZAÇÃO,
+ADEQUAÇÃO A UM DETERMINADO FIM, TÍTULO E NÃO VIOLAÇÃO. EM NENHUM CASO
+OS DETENTORES DOS DIREITOS AUTORAIS OU QUALQUER DISTRIBUIDOR DO SOFTWARE SERÃO RESPONSÁVEIS
+POR QUAISQUER DANOS OU OUTRA RESPONSABILIDADE, SEJA EM CONTRATO, ILÍCITO OU DE OUTRA FORMA,
+DECORRENTE DE OU EM CONEXÃO COM O SOFTWARE OU O USO OU OUTRO
+NEGÓCIOS NO SOFTWARE.
+===========================================
+FIM DOS AVISOS, INFORMAÇÕES E LICENÇA DE Catch2

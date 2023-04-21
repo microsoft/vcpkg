@@ -1,7 +1,7 @@
 {
   "name": "lest",
-  "version-string": "1.35.1",
-  "port-version": 2,
+  "version": "1.35.1",
+  "port-version": 3,
   "description": "A modern, C++11-native, single-file header-only, tiny framework for unit-tests, TDD and BDD (includes C++98 variant)",
   "homepage": "https://github.com/martinmoene/lest"
 }

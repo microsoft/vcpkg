@@ -1,0 +1,50 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b01aba5..583e15b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -230,7 +230,7 @@ configure_file (
+   "${FMILibrary_BINARY_DIR}/fmilib_config.h"
+   ) 
+ 
+-set(FMILIB_SHARED_SUBLIBS ${FMIXML_LIBRARIES} ${FMIZIP_LIBRARIES} ${FMICAPI_LIBRARIES} expat minizip zlib c99snprintf)
++set(FMILIB_SHARED_SUBLIBS ${FMIXML_LIBRARIES} ${FMIZIP_LIBRARIES} ${FMICAPI_LIBRARIES} c99snprintf)
+ set(FMILIB_SUBLIBS ${FMIIMPORT_LIBRARIES} ${JMUTIL_LIBRARIES} ${FMILIB_SHARED_SUBLIBS})
+ set(FMILIB_SHARED_SRC ${FMIIMPORTSOURCE} ${JMUTILSOURCE} ${FMIIMPORTHEADERS})
+ 
+diff --git a/Config.cmake/fmixml.cmake b/Config.cmake/fmixml.cmake
+index ddd3c1f..3bafac3 100644
+--- a/Config.cmake/fmixml.cmake
++++ b/Config.cmake/fmixml.cmake
+@@ -137,6 +137,7 @@ set(FMIXMLSOURCE
+ 	src/FMI2/fmi2_xml_variable.c
+ )
+ 
++if(0)
+ include(ExternalProject)
+ 
+ # The *_POSTFIX variables are set because it makes it easier to determine the name of
+@@ -211,7 +212,10 @@ if(FMILIB_INSTALL_SUBLIBS)
+ 	DESTINATION lib)
+ endif()
+ 
++endif(0)
+ set(EXPAT_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/ExpatEx/install/include)
++find_package(expat CONFIG REQUIRED)
++add_library(expat ALIAS expat::expat)
+ 
+ include_directories("${EXPAT_INCLUDE_DIRS}" "${FMILIB_THIRDPARTYLIBS}/FMI/" "${FMIXMLGENDIR}/FMI1" "${FMIXMLGENDIR}/FMI2")
+ 
+diff --git a/Config.cmake/fmizip.cmake b/Config.cmake/fmizip.cmake
+index 091fc4d..c53555f 100644
+--- a/Config.cmake/fmizip.cmake
++++ b/Config.cmake/fmizip.cmake
+@@ -20,7 +20,8 @@ if(NOT FMIZIPDIR)
+ 
+     set(FMIZIP_LIBRARIES fmizip)
+ 	
+-    add_subdirectory(Config.cmake/Minizip)
++    find_package(minizip CONFIG REQUIRED)
++    add_library(minizip ALIAS minizip::minizip)
+ 	
+ 	include_directories("${FMIZIPDIR}/include" "${FMILIB_THIRDPARTYLIBS}/Minizip/minizip" "${FMILIB_THIRDPARTYLIBS}/FMI" "${FMILIB_THIRDPARTYLIBS}/Zlib/zlib-1.2.6" "${FMILibrary_BINARY_DIR}/zlib")
+ 

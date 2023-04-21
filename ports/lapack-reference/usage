@@ -1,0 +1,9 @@
+lapack-reference provides CMake targets:
+
+    find_package(lapack CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE lapack)
+
+lapack-reference is compatible with built-in CMake targets:
+
+    find_package(LAPACK REQUIRED)
+    target_link_libraries(main PRIVATE LAPACK::LAPACK)

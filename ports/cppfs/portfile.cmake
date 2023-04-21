@@ -9,32 +9,24 @@ vcpkg_from_github(
         cmake-export-fix.patch
 )
 
-if(${TARGET_TRIPLET} MATCHES "uwp")
-    message(FATAL_ERROR "cppfs does not support uwp")
-endif()
-
-set(SSH_BACKEND OFF)
-if("ssh" IN_LIST FEATURES)
-    set(SSH_BACKEND ON)
-    if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-        message(FATAL_ERROR "SSH backend of cppfs does not support arm64.")
-    endif()
-endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DOPTION_BUILD_SSH_BACKEND=${SSH_BACKEND}
-        -DOPTION_BUILD_TESTS=Off
-        -DOPTION_FORCE_SYSTEM_DIR_INSTALL=On
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        ssh       OPTION_BUILD_SSH_BACKEND
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DOPTION_BUILD_TESTS=Off
+        -DOPTION_FORCE_SYSTEM_DIR_INSTALL=On
+        ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cppfs RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/cppfs" RENAME copyright)
