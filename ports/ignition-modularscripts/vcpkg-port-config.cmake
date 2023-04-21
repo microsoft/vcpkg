@@ -53,8 +53,8 @@ function(ignition_modular_build_library)
         endif()
         vcpkg_fixup_pkgconfig(${SYSTEM_LIBRARIES})
     else()
-        file(REMOVE_RECURSE "{CURRENT_PACKAGES_DIR}/lib/pkgconfig"
-                            "{CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
+                            "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     endif()
 
     # Find the relevant license file and install it
