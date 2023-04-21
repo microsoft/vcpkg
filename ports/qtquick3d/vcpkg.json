@@ -1,6 +1,7 @@
 {
   "name": "qtquick3d",
   "version": "6.4.3",
+  "port-version": 1,
   "description": "A new module and API for defining 3D content in Qt Quick.",
   "homepage": "https://www.qt.io/",
   "license": null,

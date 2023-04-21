@@ -6698,7 +6698,7 @@
     },
     "qtquick3d": {
       "baseline": "6.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtquick3dphysics": {
       "baseline": "6.4.3",
