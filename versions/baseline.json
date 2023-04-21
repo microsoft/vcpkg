@@ -7192,6 +7192,10 @@
       "baseline": "1.2.15",
       "port-version": 17
     },
+    "sdl1-mixer": {
+      "baseline": "2023-03-25",
+      "port-version": 1
+    },
     "sdl1-net": {
       "baseline": "1.2.8",
       "port-version": 6
