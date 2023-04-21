@@ -22,6 +22,9 @@ vcpkg_cmake_configure(
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
 )
 
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
+
 vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
