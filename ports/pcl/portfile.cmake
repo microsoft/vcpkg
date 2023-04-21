@@ -16,6 +16,7 @@ vcpkg_from_github(
         outofcore_viewer_remove_include.patch
         fix_opennurbs_win32.patch
         disable_kinfu_for_cuda12.patch
+        devendor-zlib.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
@@ -28,6 +29,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cuda            WITH_CUDA
         cuda            BUILD_CUDA
         cuda            BUILD_GPU
+        surface-on-nurbs BUILD_surface_on_nurbs
         tools           BUILD_tools
         opengl          WITH_OPENGL
         libusb          WITH_LIBUSB
@@ -44,8 +46,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        # BUILD
-        -DBUILD_surface_on_nurbs=ON
+        -DVCPKG_TRACE_FIND_PACKAGE=ON
         # PCL
         -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
