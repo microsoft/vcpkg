@@ -114,8 +114,10 @@ if(BUILD_tools OR BUILD_apps OR BUILD_examples)
         RELATIVE "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
     )
-    string(REPLACE "." "[.]" suffix "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    list(TRANSFORM tool_names REPLACE "${suffix}\$" "")
+    if(VCPKG_TARGET_EXECUTABLE_SUFFIX)
+        string(REPLACE "." "[.]" suffix "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        list(TRANSFORM tool_names REPLACE "${suffix}\$" "")
+    endif()
     vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 endif()
 
