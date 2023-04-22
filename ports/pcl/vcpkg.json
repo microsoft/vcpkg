@@ -36,11 +36,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "examples",
-    "surface-on-nurbs",
-    "visualization"
-  ],
   "features": {
     "apps": {
       "description": "Build application examples/samples that show how PCL works",
