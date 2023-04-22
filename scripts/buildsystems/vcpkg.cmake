@@ -204,10 +204,6 @@ endfunction()
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(Z_VCPKG_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
 
-if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-endif()
-
 if(VCPKG_TOOLCHAIN)
     cmake_policy(POP)
     return()
