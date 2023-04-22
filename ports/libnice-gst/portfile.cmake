@@ -65,7 +65,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}"
                     "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        if(VCPKG_TARGET_IS_WINDOWS)
+        if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/gstnice.pdb")
             file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/gstnice.pdb"
                         "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer/gstnice.pdb")
         else()
@@ -78,7 +78,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/plugins/gstreamer")
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}"
                     "${CURRENT_PACKAGES_DIR}/plugins/gstreamer/${CMAKE_SHARED_LIBRARY_PREFIX}gstnice${CMAKE_SHARED_LIBRARY_SUFFIX}")
-        if(VCPKG_TARGET_IS_WINDOWS)
+        if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/gstnice.pdb")
             file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/gstnice.pdb"
                         "${CURRENT_PACKAGES_DIR}/plugins/gstreamer/gstnice.pdb")
         else()
