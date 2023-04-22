@@ -1,0 +1,8 @@
+{
+  "name": "vcpkg-tool-go",
+  "version-semver": "1.20.3",
+  "description": "Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.",
+  "homepage": "https://go.dev/",
+  "license": "BSD-3-Clause",
+  "supports": "native"
+}

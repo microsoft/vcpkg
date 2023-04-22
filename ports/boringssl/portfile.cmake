@@ -3,16 +3,15 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
 endif()
 
 vcpkg_find_acquire_program(PERL)
-get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-vcpkg_add_to_path(${PERL_EXE_PATH})
+get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
+vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-vcpkg_add_to_path(${NASM_EXE_PATH})
+get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
+vcpkg_add_to_path("${NASM_EXE_PATH}")
 
-vcpkg_find_acquire_program(GO)
-get_filename_component(GO_EXE_PATH ${GO} DIRECTORY)
-vcpkg_add_to_path(${GO_EXE_PATH})
+set(GO_EXE_PATH "${CURRENT_HOST_INSTALLED_DIR}/tools/go/bin")
+vcpkg_add_to_path("${GO_EXE_PATH}")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
