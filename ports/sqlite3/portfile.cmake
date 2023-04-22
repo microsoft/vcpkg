@@ -74,6 +74,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/sqlite3-config.in.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-sqlite3-config.cmake"
+    @ONLY
+)
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT} CONFIG_PATH share/unofficial-${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
@@ -82,11 +87,6 @@ if(NOT SQLITE3_SKIP_TOOLS AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/sqlite3-bin$
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/sqlite3-bin${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/sqlite3${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
-configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/sqlite3-config.in.cmake"
-    "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-sqlite3-config.cmake"
-    @ONLY
-)
 
 vcpkg_fixup_pkgconfig()
 
