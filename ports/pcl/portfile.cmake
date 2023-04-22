@@ -23,24 +23,24 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        openni2         WITH_OPENNI2
-        qt              WITH_QT
-        pcap            WITH_PCAP
+        apps            BUILD_apps
         cuda            WITH_CUDA
         cuda            BUILD_CUDA
         cuda            BUILD_GPU
+        examples        BUILD_examples
+        libusb          WITH_LIBUSB
+        opengl          WITH_OPENGL
+        openni2         WITH_OPENNI2
+        pcap            WITH_PCAP
+        qt              WITH_QT
+        simulation      BUILD_simulation
         surface-on-nurbs BUILD_surface_on_nurbs
         tools           BUILD_tools
-        opengl          WITH_OPENGL
-        libusb          WITH_LIBUSB
         visualization   WITH_VTK
         visualization   BUILD_visualization
-        examples        BUILD_examples
-        apps            BUILD_apps
         # These 2 apps need openni1
         #apps            BUILD_apps_in_hand_scanner
         #apps            BUILD_apps_3d_rec_framework
-        simulation      BUILD_simulation
 )
 
 vcpkg_cmake_configure(
@@ -48,21 +48,22 @@ vcpkg_cmake_configure(
     OPTIONS
         -DVCPKG_TRACE_FIND_PACKAGE=ON
         # PCL
+        -DPCL_ALLOW_BOTH_SHARED_AND_STATIC_DEPENDENCIES=ON
         -DPCL_BUILD_WITH_BOOST_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
-        -DPCL_ALLOW_BOTH_SHARED_AND_STATIC_DEPENDENCIES=ON
         # WITH
+        -DWITH_DAVIDSDK=OFF
+        -DWITH_DOCS=OFF
+        -DWITH_DSSDK=OFF
+        -DWITH_ENSENSO=OFF
+        -DWITH_OPENMP=OFF
+        -DWITH_OPENNI=OFF
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
-        -DWITH_OPENNI=OFF
-        -DWITH_ENSENSO=OFF
-        -DWITH_DAVIDSDK=OFF
-        -DWITH_DSSDK=OFF
         -DWITH_RSSDK=OFF
         -DWITH_RSSDK2=OFF
-        -DWITH_OPENMP=OFF
         # FEATURES
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
