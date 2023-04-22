@@ -1,0 +1,17 @@
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4bf4b3d..0ac07fb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -85,7 +85,7 @@ target_include_directories(samurai INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_
+   "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
+ # Find dependencies:
+-set(DEPENDENCIES_CONFIGURED xtensor HighFive pugixml fmt)
++set(DEPENDENCIES_CONFIGURED xtensor hdf5 HighFive pugixml fmt)
+
+ if(${ENABLE_VCPKG})
+   list(APPEND DEPENDENCIES_CONFIGURED hdf5)
+

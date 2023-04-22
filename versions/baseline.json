@@ -7128,6 +7128,10 @@
       "baseline": "2018-09-21",
       "port-version": 3
     },
+    "samurai": {
+      "baseline": "0.2.0",
+      "port-version": 0
+    },
     "sassc": {
       "baseline": "3.6.2",
       "port-version": 0
