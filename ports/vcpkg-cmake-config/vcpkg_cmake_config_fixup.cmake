@@ -1,21 +1,32 @@
 include_guard(GLOBAL)
 
 function(vcpkg_cmake_config_fixup)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "DO_NOT_DELETE_PARENT_CONFIG_PATH;NO_PREFIX_CORRECTION" "PACKAGE_NAME;CONFIG_PATH;TOOLS_PATH" "")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg"
+        "DO_NOT_DELETE_PARENT_CONFIG_PATH;NO_PREFIX_CORRECTION;DISABLE_NAME_CHECK"
+        "PACKAGE_NAME;CONFIG_PATH;TOOLS_PATH"
+        ""
+    )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_cmake_config_fixup was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-    if(NOT arg_PACKAGE_NAME)
-        set(arg_PACKAGE_NAME "${PORT}")
-    endif()
-    if(NOT arg_CONFIG_PATH)
-        set(arg_CONFIG_PATH "share/${arg_PACKAGE_NAME}")
-    endif()
     if(NOT arg_TOOLS_PATH)
         set(arg_TOOLS_PATH "tools/${PORT}")
     endif()
+
+    if(NOT arg_CONFIG_PATH AND NOT arg_PACKAGE_NAME)
+        set(arg_PACKAGE_NAME "${PORT}")
+        z_vcpkg_cmake_config_fixup_find_config_path(arg_CONFIG_PATH "${arg_PACKAGE_NAME}")
+    elseif(NOT arg_CONFIG_PATH)
+        z_vcpkg_cmake_config_fixup_find_config_path(arg_CONFIG_PATH "${arg_PACKAGE_NAME}")
+    elseif(NOT arg_PACKAGE_NAME)
+        z_vcpkg_cmake_config_fixup_find_package_name(arg_PACKAGE_NAME "${arg_CONFIG_PATH}")
+    endif()
+
     set(target_path "share/${arg_PACKAGE_NAME}")
+    if(NOT arg_DISABLE_NAME_CHECK)
+        z_vcpkg_cmake_config_fixup_check_name("${arg_PACKAGE_NAME}" "${arg_CONFIG_PATH}")
+    endif()
 
     string(REPLACE "." "\\." EXECUTABLE_SUFFIX "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
 
@@ -255,4 +266,67 @@ function(z_vcpkg_cmake_config_fixup_merge out_var release_var debug_var)
         endif()
     endforeach()
     set("${out_var}" "${merged_libs}" PARENT_SCOPE)
+endfunction()
+
+function(z_vcpkg_cmake_config_fixup_find_config_path out_path name)
+    set("${out_path}" "share/${name}" PARENT_SCOPE)
+endfunction()
+
+function(z_vcpkg_cmake_config_fixup_find_package_name out_name path)
+    set("${out_name}" "${PORT}" PARENT_SCOPE)
+endfunction()
+
+# name : The target dir name (i.e. without 'share/`)
+# path : The cmake config source dir path
+function(z_vcpkg_cmake_config_fixup_check_name name path)
+    # Using GLOB
+    # - to collect files in pristine case, regardless of filesystem,
+    # - to collect non-matching config files
+    file(GLOB file_list
+        LIST_DIRECTORIES false
+        RELATIVE "${CURRENT_PACKAGES_DIR}/${path}"
+        "${CURRENT_PACKAGES_DIR}/${path}/*onfig.cmake"
+    )
+    set(matching_files "")
+    set(breaking_files "")
+    string(TOLOWER "${name}" name_lower)
+    foreach(file IN LISTS file_list)
+        # trivial cases
+        if(file STREQUAL "${name}Config.cmake")
+            list(APPEND matching_files "${file}")
+            continue()
+        elseif(file STREQUAL "${name_lower}-config.cmake")
+            list(APPEND matching_files "${file}")
+            continue()
+        elseif(NOT file MATCHES "^(.+)(-c|C)onfig[.]cmake\$")
+            continue()
+        endif()
+
+        # non-trivial cases
+        # The actual package name comes from the config file name.
+        # Candidate config locations can match '<package_name>*', case-insensitively.
+        set(package_name "${CMAKE_MATCH_1}")
+        string(TOLOWER "${package_name}" package_name_lower)
+        string(LENGTH "${package_name_lower}" len)
+        string(SUBSTRING "${name}" "0" "${len}" stem)
+        if(stem STREQUAL package_name_lower)
+            list(APPEND matching_files "${file}")
+        else()
+            list(APPEND breaking_files "${file}")
+        endif()
+    endforeach()
+
+    if(matching_files)
+        list(JOIN matching_files " " matching_files)
+        message(STATUS "CMake config for package ${name}: ${matching_files}")
+        set(hint "You may use 'DISABLE_NAME_CHECK' to disable this check.")
+    else()
+        set(hint "Supply a matching 'PACKAGE_NAME' to resolve this issue.")
+    endif()
+    if(breaking_files)
+        list(JOIN breaking_files " " breaking_files)
+        message(FATAL_ERROR "With 'PACKAGE_NAME ${name}', this CMake config will not be accessible: ${breaking_files}. ${hint}")
+    elseif(NOT matching_files)
+        message(FATAL_ERROR "No CMake config found in ${path}. ${hint}")
+    endif()
 endfunction()
