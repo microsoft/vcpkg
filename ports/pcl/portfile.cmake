@@ -65,6 +65,10 @@ vcpkg_cmake_configure(
         -DWITH_OPENMP=OFF
         # FEATURES
         ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DBUILD_apps=OFF
+        -DBUILD_examples=OFF
+        -DBUILD_tools=OFF
     MAYBE_UNUSED_VARIABLES
         PCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32
         PCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32
@@ -104,11 +108,14 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(BUILD_tools OR BUILD_apps OR BUILD_examples)
-    file(GLOB EXEFILES_RELEASE "${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    file(GLOB EXEFILES_DEBUG "${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    file(COPY ${EXEFILES_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/pcl")
-    file(REMOVE ${EXEFILES_RELEASE} ${EXEFILES_DEBUG})
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/pcl")
+    file(GLOB tool_names
+        LIST_DIRECTORIES false
+        RELATIVE "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+    )
+    string(REPLACE "." "[.]" suffix "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    list(TRANSFORM tool_names REPLACE "${suffix}\$" "")
+    vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
