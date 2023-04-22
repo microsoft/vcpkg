@@ -18,6 +18,8 @@ vcpkg_check_features(
         openexr ENABLE_OPENEXR_SUPPORT
         spectre ENABLE_SPECTRE_MITIGATION
         tools BUILD_TOOLS
+    INVERTED_FEATURES
+        no-omp BC_USE_OPENMP
 )
 
 if(VCPKG_TARGET_IS_MINGW AND ("dx11" IN_LIST FEATURES))
@@ -30,7 +32,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS} -DBUILD_SAMPLE=OFF -DBUILD_TESTING=OFF -DBC_USE_OPENMP=ON
+    OPTIONS ${FEATURE_OPTIONS} -DBUILD_SAMPLE=OFF -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()

@@ -40,6 +40,12 @@ vcpkg_list(SET CONFIGURE_OPTIONS
     no-tests
 )
 
+set(INSTALL_FIPS "")
+if("fips" IN_LIST FEATURES)
+    vcpkg_list(APPEND INSTALL_FIPS install_fips)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-fips)
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_list(APPEND CONFIGURE_OPTIONS shared)
 else()
