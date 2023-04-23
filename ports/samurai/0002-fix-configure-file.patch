@@ -1,0 +1,18 @@
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0784b46..4b14325 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,8 +11,8 @@ else()
+ endif()
+
+ configure_file(
+-  ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
+-  ${CMAKE_CURRENT_SOURCE_DIR}/include/samurai/version.hpp
++  "${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in"
++  "${CMAKE_CURRENT_SOURCE_DIR}/include/samurai/version.hpp"
+   @ONLY
+ )
+
