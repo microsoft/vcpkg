@@ -280,7 +280,20 @@ endfunction()
 #        (TODO: Distinguish target dir name and package name.)
 # path : The cmake config source dir path
 function(z_vcpkg_cmake_config_fixup_check_name name path)
-    if(name MATCHES "^unofficial" AND NOT name STREQUAL "unofficial-${PORT}")
+    string(TOLOWER "${name}" name_lower)
+    if(NOT name STREQUAL name_lower)
+        set(hint "You can pass 'PACKAGE_NAME ${name_lower}' to vcpkg_cmake_config_fixup.")
+        if(name_lower STREQUAL PORT)
+            set(hint "You can remove 'PACKAGE_NAME ${name}' from vcpkg_cmake_config_fixup.")
+        endif()
+        message(STATUS "Warning from vcpkg_cmake_config_fixup:
+
+   CMake config directory names should use lower case only.
+   actual:   ${name}
+   expected: ${name_lower}
+   ${hint}
+ ")
+    elseif(name MATCHES "^unofficial" AND NOT name STREQUAL "unofficial-${PORT}")
         message(STATUS "Warning from vcpkg_cmake_config_fixup:
 
    The name of the unofficial CMake package doesn't match the guidelines.
