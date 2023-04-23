@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH QUIC_SOURCE_PATH
     REPO microsoft/msquic
     REF "v${VERSION}"
-    SHA512 23ef4cc3794180b06d0ed138d6e96e37ef5f15ea0ccbf405f95f13c9fbd5aedc8a9c5c403b38b2381801796c50907ee36ebed1161da687bacd82cdea6880475a
+    SHA512 bbe73fcb69f067accd0f8f2a6ac73d030971d70de1f3b3d1ab1bbc43a885639d414b20cbd202d89de145e3bba40a91466ac6709b53bc6d7d0788e52d8865b50c
     HEAD_REF master
     PATCHES
         fix-warnings.patch  # Remove /WX, -Werror
