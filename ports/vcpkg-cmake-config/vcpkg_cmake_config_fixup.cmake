@@ -319,14 +319,26 @@ function(z_vcpkg_cmake_config_fixup_check_name name path)
     if(matching_files)
         list(JOIN matching_files " " matching_files)
         message(STATUS "CMake config for package ${name}: ${matching_files}")
-        set(hint "You may use 'DISABLE_NAME_CHECK' to disable this check.")
+        set(hint "You may pass 'DISABLE_NAME_CHECK' to vcpkg_cmake_config_fixup
+   in order to disable this check.")
     else()
-        set(hint "Supply a matching 'PACKAGE_NAME' to resolve this issue.")
+        set(hint "Ensure that the config file is installed before calling
+   vcpkg_cmake_config_fixup, and/or supply a matching 'PACKAGE_NAME'
+   to resolve this issue.")
     endif()
     if(breaking_files)
-        list(JOIN breaking_files " " breaking_files)
-        message(FATAL_ERROR "With 'PACKAGE_NAME ${name}', this CMake config will not be accessible: ${breaking_files}. ${hint}")
+        list(JOIN breaking_files "\n   " breaking_files)
+        message(STATUS "Warning from vcpkg_cmake_config_fixup:
+
+   With 'PACKAGE_NAME ${name}', some CMake config will not be accessible:
+   ${breaking_files}
+   ${hint}
+")
     elseif(NOT matching_files)
-        message(FATAL_ERROR "No CMake config found in ${path}. ${hint}")
+        message(STATUS "Warning from vcpkg_cmake_config_fixup:
+
+   No CMake config found in ${path}.
+   ${hint}
+")
     endif()
 endfunction()
