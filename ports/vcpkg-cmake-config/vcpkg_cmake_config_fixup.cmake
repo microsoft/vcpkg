@@ -277,8 +277,18 @@ function(z_vcpkg_cmake_config_fixup_find_package_name out_name path)
 endfunction()
 
 # name : The target dir name (i.e. without 'share/`)
+#        (TODO: Distinguish target dir name and package name.)
 # path : The cmake config source dir path
 function(z_vcpkg_cmake_config_fixup_check_name name path)
+    if(name MATCHES "^unofficial" AND NOT name STREQUAL "unofficial-${PORT}")
+        message(STATUS "Warning from vcpkg_cmake_config_fixup:
+
+   The name of the unofficial CMake package doesn't match the guidelines.
+   actual:   ${name}
+   expected: unofficial-${PORT}
+")
+    endif()
+
     # Using GLOB
     # - to collect files in pristine case, regardless of filesystem,
     # - to collect non-matching config files
