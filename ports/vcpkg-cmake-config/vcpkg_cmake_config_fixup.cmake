@@ -21,6 +21,12 @@ function(vcpkg_cmake_config_fixup)
         z_vcpkg_cmake_config_fixup_find_config_path(arg_CONFIG_PATH "${arg_PACKAGE_NAME}")
     elseif(NOT arg_PACKAGE_NAME)
         z_vcpkg_cmake_config_fixup_find_package_name(arg_PACKAGE_NAME "${arg_CONFIG_PATH}")
+    elseif(arg_CONFIG_PATH STREQUAL "share/${arg_PACKAGE_NAME}")
+        message(STATUS "Warning from vcpkg_cmake_config_fixup:
+
+   When passing 'PACKAGE_NAME ${arg_PACKAGE_NAME}' to vcpkg_cmake_config_fixup,
+   it is not necessary to pass 'CONFIG_PATH share/${arg_PACKAGE_NAME}'.
+ ")
     endif()
 
     set(target_path "share/${arg_PACKAGE_NAME}")
