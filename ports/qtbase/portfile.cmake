@@ -33,6 +33,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
     message(FATAL_ERROR "${PORT} requires feature doubleconversion on windows!" )
 endif()
 
+if(VCPKG_TARGET_IS_LINUX)
+    message(WARNING "qtbase currently requires packages from the system package manager. "
+    "They can be installed on Ubuntu systems via sudo apt-get install " 
+    "'^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev "
+    "libxkbcommon-x11-dev.")
+endif()
+
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
 # The files also contain information about the Platform for which it is searched
 # Always use FEATURE_<feature> in vcpkg_cmake_configure
@@ -301,6 +308,8 @@ file(COPY
     DESTINATION
         "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     )
+
+file(CONFIGURE OUTPUT "${CURRENT_PACKAGES_DIR}/share/${PORT}/port_status.cmake" CONTENT "set(qtbase_with_icu ${FEATURE_icu})\n")
 
 set(other_files qt-cmake
                  qt-cmake-private

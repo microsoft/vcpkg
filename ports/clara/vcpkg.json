@@ -1,7 +1,7 @@
 {
   "name": "clara",
-  "version-string": "1.1.5",
-  "port-version": 1,
+  "version": "1.1.5",
+  "port-version": 2,
   "description": "A simple to use command line parser for C++",
   "homepage": "https://github.com/philsquared/Clara"
 }

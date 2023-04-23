@@ -1,10 +1,11 @@
 {
   "name": "microsoft-signalr",
   "version": "0.1.0-alpha4",
-  "port-version": 2,
+  "port-version": 3,
   "description": "C++ Client for ASP.NET Core SignalR.",
   "homepage": "https://github.com/aspnet/SignalR-Client-Cpp",
   "dependencies": [
+    "jsoncpp",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -33,7 +34,6 @@
     "default-features": {
       "description": "Features installed by default",
       "dependencies": [
-        "jsoncpp",
         {
           "name": "microsoft-signalr",
           "features": [

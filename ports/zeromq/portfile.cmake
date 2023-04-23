@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 e204db3e40d99df2206f9537bf7dbc9bb8994174f4f9c4770dcc7a92622e6ff0e2b1be537d7fff96cfbdb0cdd0174bfd11ba60d08c4bab0ccb4db3ec25c06593
     PATCHES 
         fix-arm.patch
+        include-dir-gnutls.patch # from https://github.com/zeromq/libzmq/pull/4533
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -15,7 +16,8 @@ vcpkg_check_features(
     FEATURES
         sodium          WITH_LIBSODIUM
         draft           ENABLE_DRAFTS
-        websockets-sha1 ENABLE_WS
+        websockets      ENABLE_WS
+        websockets-secure WITH_TLS
 )
 
 set(PLATFORM_OPTIONS "")
@@ -32,6 +34,7 @@ vcpkg_cmake_configure(
         -DWITH_PERF_TOOL=OFF
         -DWITH_DOCS=OFF
         -DWITH_NSS=OFF
+        -DCMAKE_FIND_PACKAGE_REQUIRE_GnuTLS=ON
         -DWITH_LIBSODIUM_STATIC=${BUILD_STATIC}
         ${FEATURE_OPTIONS}
         ${PLATFORM_OPTIONS}

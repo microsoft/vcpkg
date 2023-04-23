@@ -1,6 +1,6 @@
 {
   "name": "quill",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "C++14 Asynchronous Low Latency Logging Library",
   "homepage": "https://github.com/odygrd/quill/",
   "license": "MIT",

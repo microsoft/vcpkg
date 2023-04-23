@@ -513,7 +513,7 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libmfx")
 endif()
 
-set(OPTIONS_CROSS " --enable-cross-compile")
+set(OPTIONS_CROSS "--enable-cross-compile")
 
 # ffmpeg needs --cross-prefix option to use appropriate tools for cross-compiling.
 if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*-)gcc$")
