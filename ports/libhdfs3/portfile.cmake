@@ -4,25 +4,16 @@ vcpkg_from_github(
     REF 9a60d79812d6dee72455f61bff57a93c3c7d56f5
     SHA512 2b635ab979230c251243f01717105872245d7948f75832e58f50a09b0b06d1b366b3c5f3a3253fa538076e9f199003f28d10b9958293144dbc301276073a0633
     HEAD_REF apache-rpc-9
+    PATCHES
+        fix_dependency_uuid.patch
 )
 
-if(VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     message(WARNING [[
 Port libhdfs3 currently requires the following packages from the system package manager:
-    libuuid
     libgsasl
 These development packages can be installed on the system via
     git clone https://gitlab.com/gsasl/gsasl.git
-    wget http://sourceforge.net/projects/libuuid/files/libuuid-1.0.3.tar.gz
-]])
-elseif(VCPKG_TARGET_IS_OSX)
-    message(WARNING [[
-Port libhdfs3 currently requires the following packages from the system package manager:
-    libuuid
-    libgsasl
-These development packages can be installed on the system via
-    git clone https://gitlab.com/gsasl/gsasl.git
-    brew install util-linux
 ]])
 endif()
 
