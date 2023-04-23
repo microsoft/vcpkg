@@ -47,6 +47,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-pcre/unofficial-pcre-config.cmake" @ONLY)
 vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-${PORT}" CONFIG_PATH "share/unofficial-${PORT}")
 
 foreach(FILE "${CURRENT_PACKAGES_DIR}/include/pcre.h" "${CURRENT_PACKAGES_DIR}/include/pcreposix.h")
@@ -74,6 +75,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_copy_pdbs()
-configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-pcre/unofficial-pcre-config.cmake" @ONLY)
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
