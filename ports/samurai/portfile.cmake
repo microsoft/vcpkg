@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DFETCHCONTENT_FULLY_DISCONNECTED=OFF
+        -DENABLE_VCPKG=ON
 )
 
 vcpkg_cmake_install()
