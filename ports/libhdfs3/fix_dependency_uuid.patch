@@ -1,80 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1a8b109..6ff5384 100644
+index 1a8b109..6ea24f8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -21,7 +21,7 @@ FIND_PACKAGE(KERBEROS REQUIRED)
+@@ -21,7 +21,9 @@ FIND_PACKAGE(KERBEROS REQUIRED)
  FIND_PACKAGE(GSasl REQUIRED)
  
  IF(OS_LINUX)
 -    FIND_PACKAGE(LibUUID REQUIRED)
 +    find_package(unofficial-libuuid CONFIG REQUIRED)
++    set(LIBUUID_LIBRARIES unofficial::UUID::uuid) 
++    add_library(uuid ALIAS unofficial::UUID::uuid)
  ENDIF(OS_LINUX)
  
  ADD_SUBDIRECTORY(mock)
-diff --git a/hdfs_benchmark/CMakeLists.txt b/hdfs_benchmark/CMakeLists.txt
-index c71de9e..53191d2 100644
---- a/hdfs_benchmark/CMakeLists.txt
-+++ b/hdfs_benchmark/CMakeLists.txt
-@@ -10,4 +10,4 @@ set(SOURCE_FILES main.cpp)
- add_executable(hdfs_benchmark ${SOURCE_FILES})
- add_dependencies(hdfs_benchmark libhdfs3-shared)
- 
--target_link_libraries(hdfs_benchmark uuid pthread libhdfs3-shared)
-+target_link_libraries(hdfs_benchmark unofficial::UUID::uuid pthread libhdfs3-shared)
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index ed6fcb6..c159303 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -78,9 +78,8 @@ IF(NEED_GCCEH)
- ENDIF(NEED_GCCEH)
- 
- IF(OS_LINUX)
--    TARGET_LINK_LIBRARIES(libhdfs3-static ${LIBUUID_LIBRARIES})
--    TARGET_LINK_LIBRARIES(libhdfs3-shared ${LIBUUID_LIBRARIES})
--    INCLUDE_DIRECTORIES(${LIBUUID_INCLUDE_DIRS})
-+    TARGET_LINK_LIBRARIES(libhdfs3-static unofficial::UUID::uuid)
-+    TARGET_LINK_LIBRARIES(libhdfs3-shared unofficial::UUID::uuid)
- ENDIF(OS_LINUX)
- 
- INCLUDE_DIRECTORIES(${libhdfs3_ROOT_SOURCES_DIR})
-diff --git a/test/function/CMakeLists.txt b/test/function/CMakeLists.txt
-index 9746e88..a8ad785 100644
---- a/test/function/CMakeLists.txt
-+++ b/test/function/CMakeLists.txt
-@@ -57,8 +57,7 @@ IF(NEED_GCCEH)
- ENDIF(NEED_GCCEH)
- 
- IF(OS_LINUX)
--    TARGET_LINK_LIBRARIES(function ${LIBUUID_LIBRARIES})
--    INCLUDE_DIRECTORIES(${LIBUUID_INCLUDE_DIRS})
-+    TARGET_LINK_LIBRARIES(function PRIVATE unofficial::UUID::uuid)
- ENDIF(OS_LINUX)
- 
- TARGET_LINK_LIBRARIES(function ${PROTOBUF_LIBRARIES})
-diff --git a/test/secure/CMakeLists.txt b/test/secure/CMakeLists.txt
-index 1452adc..7101fd9 100644
---- a/test/secure/CMakeLists.txt
-+++ b/test/secure/CMakeLists.txt
-@@ -57,7 +57,7 @@ IF(NEED_GCCEH)
- ENDIF(NEED_GCCEH)
- 
- IF(OS_LINUX)
--	TARGET_LINK_LIBRARIES(secure uuid)
-+	TARGET_LINK_LIBRARIES(secure PRIVATE unofficial::UUID::uuid)
- ENDIF(OS_LINUX)
- 
- TARGET_LINK_LIBRARIES(secure ${PROTOBUF_LIBRARIES})
-diff --git a/test/unit/CMakeLists.txt b/test/unit/CMakeLists.txt
-index 80066c7..53c089b 100644
---- a/test/unit/CMakeLists.txt
-+++ b/test/unit/CMakeLists.txt
-@@ -51,8 +51,7 @@ IF(NEED_GCCEH)
- ENDIF(NEED_GCCEH)
- 
- IF(OS_LINUX)
--    TARGET_LINK_LIBRARIES(unit ${LIBUUID_LIBRARIES})
--    INCLUDE_DIRECTORIES(${LIBUUID_INCLUDE_DIRS})
-+    TARGET_LINK_LIBRARIES(unit PRIVATE unofficial::UUID::uuid)
- ENDIF(OS_LINUX)
- 
- TARGET_LINK_LIBRARIES(unit ${PROTOBUF_LIBRARIES})

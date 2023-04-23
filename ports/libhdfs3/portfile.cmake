@@ -9,11 +9,11 @@ vcpkg_from_github(
 )
 
 if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-    message(WARNING [[
-Port libhdfs3 currently requires the following packages from the system package manager:
+    message(STATUS [[
+To build libhdfs3, the following libraries are needed.
     libgsasl
-These development packages can be installed on the system via
-    git clone https://gitlab.com/gsasl/gsasl.git
+This development package can be installed on the system by
+    apt install libgsasl-dev
 ]])
 endif()
 
