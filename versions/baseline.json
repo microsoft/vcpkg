@@ -2802,7 +2802,7 @@
     },
     "glew": {
       "baseline": "2.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "glfw3": {
       "baseline": "3.3.8",
@@ -5862,7 +5862,7 @@
     },
     "openmvg": {
       "baseline": "2.0",
-      "port-version": 6
+      "port-version": 7
     },
     "openmvs": {
       "baseline": "2.1.0",
@@ -6058,7 +6058,7 @@
     },
     "pcl": {
       "baseline": "1.13.0",
-      "port-version": 2
+      "port-version": 3
     },
     "pcre": {
       "baseline": "8.45",
