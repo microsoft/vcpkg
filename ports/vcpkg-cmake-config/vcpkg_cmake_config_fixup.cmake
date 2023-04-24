@@ -294,9 +294,9 @@ function(z_vcpkg_cmake_config_fixup_check_name name path)
         endif()
         message(STATUS "Warning from vcpkg_cmake_config_fixup:
 
-   CMake config directory names should use lower case only.
-   actual:   ${name}
-   expected: ${name_lower}
+   CMake config directory names should use lower case.
+   actual:    ${name}
+   suggested: ${name_lower}
    ${hint}
  ")
     elseif(name MATCHES "^unofficial" AND NOT name STREQUAL "unofficial-${PORT}")
