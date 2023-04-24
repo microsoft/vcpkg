@@ -594,7 +594,7 @@
     },
     "blend2d": {
       "baseline": "2022-12-31",
-      "port-version": 3
+      "port-version": 4
     },
     "blitz": {
       "baseline": "2020-03-25",
@@ -2802,7 +2802,7 @@
     },
     "glew": {
       "baseline": "2.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "glfw3": {
       "baseline": "3.3.8",
@@ -5966,7 +5966,7 @@
     },
     "osgearth": {
       "baseline": "3.3",
-      "port-version": 5
+      "port-version": 6
     },
     "osi": {
       "baseline": "0.108.6",

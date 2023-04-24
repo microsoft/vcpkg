@@ -5,7 +5,7 @@
    target_compile_definitions (glew PRIVATE "GLEW_BUILD;VC_EXTRALEAN")
    target_compile_definitions (glew_s PRIVATE "GLEW_STATIC;VC_EXTRALEAN")
 -  target_link_libraries (glew LINK_PRIVATE -BASE:0x62AA0000)
-+  if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(i?86|x86|x86_32)$")
++  if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i?86|x86|x86_32)$")
 +	target_link_libraries (glew LINK_PRIVATE -BASE:0x62AA0000)
 +  endif()
    # kill security checks which are dependent on stdlib
