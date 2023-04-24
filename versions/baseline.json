@@ -4202,7 +4202,7 @@
     },
     "libmicrohttpd": {
       "baseline": "0.9.75",
-      "port-version": 1
+      "port-version": 2
     },
     "libmikmod": {
       "baseline": "3.3.11.1",
