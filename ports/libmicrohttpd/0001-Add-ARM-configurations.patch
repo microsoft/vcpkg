@@ -1,0 +1,391 @@
+From 25a7e3f62739f2243b940bf0e344d2c3cdc6accc Mon Sep 17 00:00:00 2001
+From: Antonios Matakos <anmatako@microsoft.com>
+Date: Sun, 23 Apr 2023 16:52:00 -0700
+Subject: [PATCH] Update microhttpd for ARM
+
+---
+ .../src/include/autoinit_funcs.h              |   4 +-
+ .../w32/VS2015/hellobrowser.vcxproj           |  32 ++++++
+ .../w32/VS2015/libmicrohttpd.sln              | 104 +++++++-----------
+ .../w32/VS2015/libmicrohttpd.vcxproj          |  32 ++++++
+ .../w32/common/common-build-settings.vcxproj  |  24 ++++
+ 5 files changed, 236 insertions(+), 110 deletions(-)
+
+diff --git a/src/include/autoinit_funcs.h b/src/include/autoinit_funcs.h
+index a289b0bcf..eaa9a2e86 100644
+--- a/src/include/autoinit_funcs.h
++++ b/src/include/autoinit_funcs.h
+@@ -123,11 +123,11 @@
+ #endif
+ 
+ /* How variable is decorated by compiler */
+-#if defined(_M_X64) || defined(_M_AMD64)
++#if defined(_M_X64) || defined(_M_AMD64) || defined(_M_ARM64)
+ #define W32_VARDECORPREFIX
+ #define W32_DECORVARNAME(v) v
+ #define W32_VARDECORPEFIXSTR ""
+-#elif defined(_M_IX86) || defined(_X86_)
++#elif defined(_M_IX86) || defined(_X86_) || defined(_M_ARM)
+ #define W32_VARDECORPREFIX _
+ #define W32_DECORVARNAME(v) _ ## v
+ #define W32_VARDECORPEFIXSTR "_"
+diff --git a/w32/VS2015/hellobrowser.vcxproj b/w32/VS2015/hellobrowser.vcxproj
+index d546c5de9..7b71e70df 100644
+--- a/w32/VS2015/hellobrowser.vcxproj
++++ b/w32/VS2015/hellobrowser.vcxproj
+@@ -2,6 +2,14 @@
+ <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Project="$(SolutionDir)..\common\vs_dirs.props" />
+   <ItemGroup Label="ProjectConfigurations">
++    <ProjectConfiguration Include="Debug-dll|ARM">
++      <Configuration>Debug-dll</Configuration>
++      <Platform>ARM</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug-dll|ARM64">
++      <Configuration>Debug-dll</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Debug-dll|Win32">
+       <Configuration>Debug-dll</Configuration>
+       <Platform>Win32</Platform>
+@@ -10,6 +18,14 @@
+       <Configuration>Debug-dll</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug-static|ARM">
++      <Configuration>Debug-static</Configuration>
++      <Platform>ARM</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug-static|ARM64">
++      <Configuration>Debug-static</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Debug-static|Win32">
+       <Configuration>Debug-static</Configuration>
+       <Platform>Win32</Platform>
+@@ -18,6 +34,14 @@
+       <Configuration>Debug-static</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Release-dll|ARM">
++      <Configuration>Release-dll</Configuration>
++      <Platform>ARM</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Release-dll|ARM64">
++      <Configuration>Release-dll</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release-dll|Win32">
+       <Configuration>Release-dll</Configuration>
+       <Platform>Win32</Platform>
+@@ -26,6 +50,14 @@
+       <Configuration>Release-dll</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Release-static|ARM">
++      <Configuration>Release-static</Configuration>
++      <Platform>ARM</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Release-static|ARM64">
++      <Configuration>Release-static</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release-static|Win32">
+       <Configuration>Release-static</Configuration>
+       <Platform>Win32</Platform>
+diff --git a/w32/VS2015/libmicrohttpd.sln b/w32/VS2015/libmicrohttpd.sln
+index 70a7bebfe..20ec11599 100644
+--- a/w32/VS2015/libmicrohttpd.sln
++++ b/w32/VS2015/libmicrohttpd.sln
+@@ -22,24 +22,36 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "largepost", "largepost.vcxp
+ EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
++		Debug-dll|ARM = Debug-dll|ARM
++		Debug-dll|ARM64 = Debug-dll|ARM64
+ 		Debug-dll|Win32 = Debug-dll|Win32
+ 		Debug-dll|x64 = Debug-dll|x64
+ 		Debug-dll-xp|Win32 = Debug-dll-xp|Win32
+ 		Debug-dll-xp|x64 = Debug-dll-xp|x64
++		Debug-static|ARM = Debug-static|ARM
++		Debug-static|ARM64 = Debug-static|ARM64
+ 		Debug-static|Win32 = Debug-static|Win32
+ 		Debug-static|x64 = Debug-static|x64
+ 		Debug-static-xp|Win32 = Debug-static-xp|Win32
+ 		Debug-static-xp|x64 = Debug-static-xp|x64
++		Release-dll|ARM = Release-dll|ARM
++		Release-dll|ARM64 = Release-dll|ARM64
+ 		Release-dll|Win32 = Release-dll|Win32
+ 		Release-dll|x64 = Release-dll|x64
+ 		Release-dll-xp|Win32 = Release-dll-xp|Win32
+ 		Release-dll-xp|x64 = Release-dll-xp|x64
++		Release-static|ARM = Release-static|ARM
++		Release-static|ARM64 = Release-static|ARM64
+ 		Release-static|Win32 = Release-static|Win32
+ 		Release-static|x64 = Release-static|x64
+ 		Release-static-xp|Win32 = Release-static-xp|Win32
+ 		Release-static-xp|x64 = Release-static-xp|x64
+ 	EndGlobalSection
+ 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-dll|ARM.ActiveCfg = Debug-dll|ARM
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-dll|ARM.Build.0 = Debug-dll|ARM
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-dll|ARM64.ActiveCfg = Debug-dll|ARM64
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-dll|ARM64.Build.0 = Debug-dll|ARM64
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-dll|Win32.ActiveCfg = Debug-dll|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-dll|Win32.Build.0 = Debug-dll|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-dll|x64.ActiveCfg = Debug-dll|x64
+@@ -48,6 +60,10 @@ Global
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-dll-xp|Win32.Build.0 = Debug-dll-xp|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-dll-xp|x64.ActiveCfg = Debug-dll-xp|x64
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-dll-xp|x64.Build.0 = Debug-dll-xp|x64
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-static|ARM.ActiveCfg = Debug-static|ARM
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-static|ARM.Build.0 = Debug-static|ARM
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-static|ARM64.ActiveCfg = Debug-static|ARM64
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-static|ARM64.Build.0 = Debug-static|ARM64
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-static|Win32.ActiveCfg = Debug-static|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-static|Win32.Build.0 = Debug-static|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-static|x64.ActiveCfg = Debug-static|x64
+@@ -56,6 +72,10 @@ Global
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-static-xp|Win32.Build.0 = Debug-static-xp|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-static-xp|x64.ActiveCfg = Debug-static-xp|x64
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Debug-static-xp|x64.Build.0 = Debug-static-xp|x64
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-dll|ARM.ActiveCfg = Release-dll|ARM
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-dll|ARM.Build.0 = Release-dll|ARM
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-dll|ARM64.ActiveCfg = Release-dll|ARM64
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-dll|ARM64.Build.0 = Release-dll|ARM64
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-dll|Win32.ActiveCfg = Release-dll|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-dll|Win32.Build.0 = Release-dll|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-dll|x64.ActiveCfg = Release-dll|x64
+@@ -64,6 +84,10 @@ Global
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-dll-xp|Win32.Build.0 = Release-dll-xp|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-dll-xp|x64.ActiveCfg = Release-dll-xp|x64
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-dll-xp|x64.Build.0 = Release-dll-xp|x64
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-static|ARM.ActiveCfg = Release-static|ARM
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-static|ARM.Build.0 = Release-static|ARM
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-static|ARM64.ActiveCfg = Release-static|ARM64
++		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-static|ARM64.Build.0 = Release-static|ARM64
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-static|Win32.ActiveCfg = Release-static|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-static|Win32.Build.0 = Release-static|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-static|x64.ActiveCfg = Release-static|x64
+@@ -72,6 +96,10 @@ Global
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-static-xp|Win32.Build.0 = Release-static-xp|Win32
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-static-xp|x64.ActiveCfg = Release-static-xp|x64
+ 		{9CFB0342-A9E7-483E-BEE5-A1DE22584C5A}.Release-static-xp|x64.Build.0 = Release-static-xp|x64
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-dll|ARM.ActiveCfg = Debug-dll|ARM
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-dll|ARM.Build.0 = Debug-dll|ARM
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-dll|ARM64.ActiveCfg = Debug-dll|ARM64
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-dll|ARM64.Build.0 = Debug-dll|ARM64
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-dll|Win32.ActiveCfg = Debug-dll|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-dll|Win32.Build.0 = Debug-dll|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-dll|x64.ActiveCfg = Debug-dll|x64
+@@ -80,6 +108,10 @@ Global
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-dll-xp|Win32.Build.0 = Debug-dll|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-dll-xp|x64.ActiveCfg = Debug-dll|x64
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-dll-xp|x64.Build.0 = Debug-dll|x64
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-static|ARM.ActiveCfg = Debug-static|ARM
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-static|ARM.Build.0 = Debug-static|ARM
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-static|ARM64.ActiveCfg = Debug-static|ARM64
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-static|ARM64.Build.0 = Debug-static|ARM64
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-static|Win32.ActiveCfg = Debug-static|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-static|Win32.Build.0 = Debug-static|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-static|x64.ActiveCfg = Debug-static|x64
+@@ -88,6 +120,10 @@ Global
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-static-xp|Win32.Build.0 = Debug-static|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-static-xp|x64.ActiveCfg = Debug-static|x64
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Debug-static-xp|x64.Build.0 = Debug-static|x64
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-dll|ARM.ActiveCfg = Release-dll|ARM
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-dll|ARM.Build.0 = Release-dll|ARM
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-dll|ARM64.ActiveCfg = Release-dll|ARM64
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-dll|ARM64.Build.0 = Release-dll|ARM64
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-dll|Win32.ActiveCfg = Release-dll|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-dll|Win32.Build.0 = Release-dll|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-dll|x64.ActiveCfg = Release-dll|x64
+@@ -96,6 +132,10 @@ Global
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-dll-xp|Win32.Build.0 = Release-dll|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-dll-xp|x64.ActiveCfg = Release-dll|x64
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-dll-xp|x64.Build.0 = Release-dll|x64
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-static|ARM.ActiveCfg = Release-static|ARM
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-static|ARM.Build.0 = Release-static|ARM
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-static|ARM64.ActiveCfg = Release-static|ARM64
++		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-static|ARM64.Build.0 = Release-static|ARM64
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-static|Win32.ActiveCfg = Release-static|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-static|Win32.Build.0 = Release-static|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-static|x64.ActiveCfg = Release-static|x64
+@@ -104,70 +144,6 @@ Global
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-static-xp|Win32.Build.0 = Release-static|Win32
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-static-xp|x64.ActiveCfg = Release-static|x64
+ 		{310F39BD-A2D6-44FF-8344-37ADD0524CBD}.Release-static-xp|x64.Build.0 = Release-static|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-dll|Win32.ActiveCfg = Debug-dll|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-dll|Win32.Build.0 = Debug-dll|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-dll|x64.ActiveCfg = Debug-dll|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-dll|x64.Build.0 = Debug-dll|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-dll-xp|Win32.ActiveCfg = Debug-dll|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-dll-xp|Win32.Build.0 = Debug-dll|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-dll-xp|x64.ActiveCfg = Debug-dll|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-dll-xp|x64.Build.0 = Debug-dll|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-static|Win32.ActiveCfg = Debug-static|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-static|Win32.Build.0 = Debug-static|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-static|x64.ActiveCfg = Debug-static|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-static|x64.Build.0 = Debug-static|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-static-xp|Win32.ActiveCfg = Debug-static|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-static-xp|Win32.Build.0 = Debug-static|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-static-xp|x64.ActiveCfg = Debug-static|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Debug-static-xp|x64.Build.0 = Debug-static|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-dll|Win32.ActiveCfg = Release-dll|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-dll|Win32.Build.0 = Release-dll|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-dll|x64.ActiveCfg = Release-dll|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-dll|x64.Build.0 = Release-dll|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-dll-xp|Win32.ActiveCfg = Release-dll|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-dll-xp|Win32.Build.0 = Release-dll|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-dll-xp|x64.ActiveCfg = Release-dll|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-dll-xp|x64.Build.0 = Release-dll|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-static|Win32.ActiveCfg = Release-static|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-static|Win32.Build.0 = Release-static|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-static|x64.ActiveCfg = Release-static|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-static|x64.Build.0 = Release-static|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-static-xp|Win32.ActiveCfg = Release-static|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-static-xp|Win32.Build.0 = Release-static|Win32
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-static-xp|x64.ActiveCfg = Release-static|x64
+-		{294D5317-E983-4682-8DB5-678EA4645E11}.Release-static-xp|x64.Build.0 = Release-static|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-dll|Win32.ActiveCfg = Debug-dll|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-dll|Win32.Build.0 = Debug-dll|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-dll|x64.ActiveCfg = Debug-dll|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-dll|x64.Build.0 = Debug-dll|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-dll-xp|Win32.ActiveCfg = Debug-dll|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-dll-xp|Win32.Build.0 = Debug-dll|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-dll-xp|x64.ActiveCfg = Debug-dll|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-dll-xp|x64.Build.0 = Debug-dll|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-static|Win32.ActiveCfg = Debug-static|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-static|Win32.Build.0 = Debug-static|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-static|x64.ActiveCfg = Debug-static|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-static|x64.Build.0 = Debug-static|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-static-xp|Win32.ActiveCfg = Debug-static|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-static-xp|Win32.Build.0 = Debug-static|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-static-xp|x64.ActiveCfg = Debug-static|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Debug-static-xp|x64.Build.0 = Debug-static|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-dll|Win32.ActiveCfg = Release-dll|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-dll|Win32.Build.0 = Release-dll|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-dll|x64.ActiveCfg = Release-dll|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-dll|x64.Build.0 = Release-dll|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-dll-xp|Win32.ActiveCfg = Release-dll|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-dll-xp|Win32.Build.0 = Release-dll|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-dll-xp|x64.ActiveCfg = Release-dll|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-dll-xp|x64.Build.0 = Release-dll|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-static|Win32.ActiveCfg = Release-static|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-static|Win32.Build.0 = Release-static|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-static|x64.ActiveCfg = Release-static|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-static|x64.Build.0 = Release-static|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-static-xp|Win32.ActiveCfg = Release-static|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-static-xp|Win32.Build.0 = Release-static|Win32
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-static-xp|x64.ActiveCfg = Release-static|x64
+-		{77A27E6D-9A39-40B8-961B-40E63DB7FA65}.Release-static-xp|x64.Build.0 = Release-static|x64
+ 	EndGlobalSection
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+diff --git a/w32/VS2015/libmicrohttpd.vcxproj b/w32/VS2015/libmicrohttpd.vcxproj
+index 75d42337d..92f02e168 100644
+--- a/w32/VS2015/libmicrohttpd.vcxproj
++++ b/w32/VS2015/libmicrohttpd.vcxproj
+@@ -10,6 +10,14 @@
+       <Configuration>Debug-dll-xp</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug-dll|ARM">
++      <Configuration>Debug-dll</Configuration>
++      <Platform>ARM</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug-dll|ARM64">
++      <Configuration>Debug-dll</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Debug-dll|Win32">
+       <Configuration>Debug-dll</Configuration>
+       <Platform>Win32</Platform>
+@@ -26,6 +34,14 @@
+       <Configuration>Debug-static-xp</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug-static|ARM">
++      <Configuration>Debug-static</Configuration>
++      <Platform>ARM</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug-static|ARM64">
++      <Configuration>Debug-static</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Debug-static|Win32">
+       <Configuration>Debug-static</Configuration>
+       <Platform>Win32</Platform>
+@@ -42,6 +58,14 @@
+       <Configuration>Release-dll-xp</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Release-dll|ARM">
++      <Configuration>Release-dll</Configuration>
++      <Platform>ARM</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Release-dll|ARM64">
++      <Configuration>Release-dll</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release-dll|Win32">
+       <Configuration>Release-dll</Configuration>
+       <Platform>Win32</Platform>
+@@ -58,6 +82,14 @@
+       <Configuration>Release-static-xp</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Release-static|ARM">
++      <Configuration>Release-static</Configuration>
++      <Platform>ARM</Platform>
++    </ProjectConfiguration>
++    <ProjectConfiguration Include="Release-static|ARM64">
++      <Configuration>Release-static</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release-static|Win32">
+       <Configuration>Release-static</Configuration>
+       <Platform>Win32</Platform>
+diff --git a/w32/common/common-build-settings.vcxproj b/w32/common/common-build-settings.vcxproj
+index a4393a0e3..921b1969c 100644
+--- a/w32/common/common-build-settings.vcxproj
++++ b/w32/common/common-build-settings.vcxproj
+@@ -17,6 +17,14 @@
+     <IntDir>$(SolutionDir)$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+     <OutDir>$(SolutionDir)Output\$(Platform)\</OutDir>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Platform)'=='ARM'">
++    <IntDir>$(SolutionDir)$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
++    <OutDir>$(SolutionDir)Output\$(Platform)\</OutDir>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Platform)'=='ARM64'">
++    <IntDir>$(SolutionDir)$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
++    <OutDir>$(SolutionDir)Output\$(Platform)\</OutDir>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(UseDebugLibraries)'=='true'">
+     <LinkIncremental>true</LinkIncremental>
+   </PropertyGroup>
+@@ -116,4 +124,20 @@
+       <TargetMachine>MachineX64</TargetMachine>
+     </Lib>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Platform)'=='ARM'">
++    <Link>
++      <TargetMachine>MachineARM</TargetMachine>
++    </Link>
++    <Lib>
++      <TargetMachine>MachineARM</TargetMachine>
++    </Lib>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Platform)'=='ARM64'">
++    <Link>
++      <TargetMachine>MachineARM64</TargetMachine>
++    </Link>
++    <Lib>
++      <TargetMachine>MachineARM64</TargetMachine>
++    </Lib>
++  </ItemDefinitionGroup>
+ </Project>
+-- 
+2.40.0.windows.1
+
