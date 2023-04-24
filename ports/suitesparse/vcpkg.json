@@ -1,11 +1,19 @@
 {
   "name": "suitesparse",
   "version-semver": "5.8.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A suite of sparse matrix algorithms. Also provides libcxsparse.",
   "homepage": "http://suitesparse.com",
   "dependencies": [
     "lapack",
-    "metis"
+    "metis",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

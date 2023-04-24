@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version": "6.4.2",
+  "version": "6.4.3",
   "port-version": 1,
   "description": "Qt",
   "homepage": "https://www.qt.io/",
@@ -183,10 +183,7 @@
     },
     {
       "name": "qtwebview",
-      "default-features": false,
-      "features": [
-        "qml"
-      ]
+      "default-features": false
     },
     {
       "name": "qtwebview",

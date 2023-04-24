@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://code.videolan.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO videolan/dav1d
-    REF 99172b11470776177939c3d2bc366fe8d904eab7  #v1.0.0
-    SHA512 8ab32d7f1e7ec0fb2aae9ae19e199f7a6b17f88af2287c13a9ca577f80f02351e601fb6c6f03c9505d6cecd047b823007ffef83a5ca3703e4d2a4dd5ff6d5d3b
+    REF "${VERSION}"
+    SHA512 53b3fc0363504d4b9dd29bc88d3c8510ae65ac69b04e97d650e78c9fb5e2b95816d5c29dbc454aa5c2e539401c4be88ae88d7a7a8224007a05183fd249677f31
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -37,4 +37,5 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
