@@ -1,8 +1,8 @@
 if(NOT _VCPKG_CLANGCL_TOOLCHAIN)
 set(_VCPKG_CLANGCL_TOOLCHAIN 1)
 
-find_program(CMAKE_C_COMPILER "clang-cl.exe" REQUIRED)
-find_program(CMAKE_CXX_COMPILER "clang-cl.exe" REQUIRED) 
+set(CMAKE_C_COMPILER "clang-cl.exe")
+set(CMAKE_CXX_COMPILER "clang-cl.exe") 
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(_vcpkg_clangcl_arch "-m32")
