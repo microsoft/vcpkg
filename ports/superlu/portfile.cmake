@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         remove-make.inc.patch
+        superfluous-configure.patch
 )
 
 vcpkg_cmake_configure(
