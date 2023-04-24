@@ -22,10 +22,6 @@ else()
     list(APPEND FEATURE_OPTIONS -DINPUT_open62541=no)
 endif()
 
-if(NOT "open62541" IN_LIST FEATURES AND NOT "gds" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL=ON)
-endif()
-
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS
                         ${FEATURE_OPTIONS}

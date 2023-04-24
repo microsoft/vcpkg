@@ -1,7 +1,7 @@
 {
   "name": "freeopcua",
   "version": "20190125",
-  "port-version": 6,
+  "port-version": 7,
   "description": "OPC-UA server and client library written in C++ and with a lot of code auto-generated from xml specification using python.",
   "dependencies": [
     "boost-asio",
