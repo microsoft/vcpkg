@@ -43,4 +43,6 @@ function(vcpkg_qmake_install)
     file(GLOB_RECURSE prl_files "${CURRENT_PACKAGES_DIR}/**.prl")
     debug_message(STATUS "prl_files:${prl_files}")
     z_vcpkg_qmake_fix_prl("${CURRENT_PACKAGES_DIR}" "${prl_files}")
+
+    vcpkg_copy_pdbs()
 endfunction()

@@ -4,4 +4,6 @@ function(vcpkg_install_make)
         LOGFILE_ROOT
         ENABLE_INSTALL
     )
+
+    vcpkg_copy_pdbs()
 endfunction()

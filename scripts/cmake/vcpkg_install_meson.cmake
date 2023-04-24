@@ -68,4 +68,6 @@ function(vcpkg_install_meson)
     if(VCPKG_TARGET_IS_OSX)
         vcpkg_restore_env_variables(VARS SDKROOT MACOSX_DEPLOYMENT_TARGET)
     endif()
+
+    vcpkg_copy_pdbs()
 endfunction()
