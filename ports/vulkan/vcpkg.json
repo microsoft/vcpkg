@@ -1,6 +1,6 @@
 {
   "name": "vulkan",
-  "version": "1.1.82.1",
+  "version": "1.2",
   "port-version": 6,
   "description": "A stub package that ensures that the Vulkan SDK is installed.",
   "license": null,
