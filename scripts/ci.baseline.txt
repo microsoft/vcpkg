@@ -914,6 +914,7 @@ minifb:arm-neon-android=fail
 minifb:arm64-android=fail
 minifb:x64-android=fail
 minio-cpp:arm-neon-android=fail
+miniply:arm-neon-android=fail
 miniupnpc:arm-uwp=fail
 miniupnpc:x64-uwp=fail
 minizip:arm-uwp=fail
