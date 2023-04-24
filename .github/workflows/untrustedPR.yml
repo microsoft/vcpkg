@@ -105,7 +105,7 @@ jobs:
                   vcpkg_build_msbuild: 'vcpkg_install_msbuild https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_install_msbuild',
                   vcpkg_apply_patches: 'the PATCHES arguments to the \"extract\" helpers (for example, vcpkg_from_github() (https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_from_github))',
               };
-              for (let line of cmake) {
+              for (let line of deprecated_function) {
                 // line has the format: <path>:<line_number>:<matched_string
                 // For example: ports/rtlsdr/portfile.cmake:42:    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
                 [file, line_number, match] = line.split(':');
@@ -136,7 +136,7 @@ jobs:
                   vcpkg_configure_cmake: 'vcpkg_cmake_configure (Please remove the option PREFER_NINJA) (from port vcpkg-cmake)',
                   vcpkg_fixup_cmake_targets: 'vcpkg_cmake_config_fixup (from port vcpkg-cmake-config)',
               };
-              for (let line of cmake) {
+              for (let line of deprecated_cmake) {
                 // line has the format: <path>:<line_number>:<matched_string
                 // For example: ports/rtlsdr/portfile.cmake:42:    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
                 [file, line_number, match] = line.split(':');
