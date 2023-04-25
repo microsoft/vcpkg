@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            abedra/libvault
-    REF             0.52.0
-    SHA512          f8cc47a65b6b509f5546b3c0911bf5a2946d50d9374d32ea2fa49a3d4aee0766a47d717f1d8736906747381f941bef9ff2f730d46f59ae8ba18af773db2b2ced
+    REF             0.56.0
+    SHA512          6a8d14a755ea3d39c2912ee6d33cec9c6f30a498c57efc40603cecbbd90d400dba52be7b42287c87cd425694c89edbae86218021b2beaa5edca748c3d5dd7c77
     PATCHES
         0001-fix-dependencies.patch
 )

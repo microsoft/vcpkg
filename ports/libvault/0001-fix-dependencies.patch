@@ -1,22 +1,23 @@
-diff -r -Naur a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt    2022-11-23 01:06:28.000000000 +0100
-+++ b/CMakeLists.txt    2022-12-09 14:28:24.975100700 +0100
-@@ -13,7 +13,7 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cd4482b..197b478 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,7 +17,7 @@ option(LINK_CURL "Link curl library for vault" OFF)
  option(BUILD_SHARED_LIBS "Build vault as a shared library" ON)
  option(INSTALL "Run install targets" ON)
-
+ 
 -find_package(CURL)
 +find_package(CURL CONFIG REQUIRED)
- if (CURL_FOUND)
+ if(CURL_FOUND)
    include_directories(${CURL_INCLUDE_DIR})
- else (CURL_FOUND)
-@@ -120,7 +120,7 @@
+ else(CURL_FOUND)
+@@ -126,7 +126,7 @@ set_target_properties(
  target_include_directories(vault PRIVATE src)
-
+ 
  if(LINK_CURL)
 -  target_link_libraries(vault curl)
 +  target_link_libraries(vault CURL::libcurl)
  endif(LINK_CURL)
-
- if (ENABLE_COVERAGE)
+ 
+ if(ENABLE_COVERAGE)
 
