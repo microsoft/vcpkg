@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         gdk-pixbuf.patch
-        fix-error-with-system-package.patch
 )
 
 vcpkg_cmake_configure(
@@ -14,6 +13,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DWITH_EXAMPLES=OFF
         -DWITH_DAV1D=OFF
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
