@@ -10,6 +10,11 @@ if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
+if(VCPKG_TARGET_IS_OSX)
+    set(PATCHLIB fix_override.patch fix-dependencies.patch cfg-rel-paths.patch swig-python-polyfill.patch pkgconfig.patch same-install-rules-all-platforms.patch)
+else()
+    set(PATCHLIB fix-dependencies.patch cfg-rel-paths.patch swig-python-polyfill.patch pkgconfig.patch same-install-rules-all-platforms.patch)
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
@@ -17,11 +22,7 @@ vcpkg_from_github(
     SHA512 d4022a454e0649a01182545f24094ba1f72127099a9b096e1b438238659629e93b1d79277d02acc0aceebdc3969aab0031de7f86390077bafc66ccfd86755430
     HEAD_REF master
     PATCHES
-        fix-dependencies.patch
-        cfg-rel-paths.patch
-        swig-python-polyfill.patch
-        pkgconfig.patch
-        same-install-rules-all-platforms.patch
+        ${PATCHLIB}       
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
