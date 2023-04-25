@@ -178,7 +178,7 @@
     },
     "argon2": {
       "baseline": "20190702",
-      "port-version": 0
+      "port-version": 1
     },
     "argparse": {
       "baseline": "2.9",
