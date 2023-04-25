@@ -35,6 +35,7 @@ vcpkg_cmake_configure(
         -DWITH_DOCS=OFF
         -DWITH_NSS=OFF
         -DCMAKE_REQUIRE_FIND_PACKAKE_GnuTLS=ON
+        -DWITH_LIBBSD=OFF
         -DWITH_LIBSODIUM_STATIC=${BUILD_STATIC}
         ${FEATURE_OPTIONS}
         ${PLATFORM_OPTIONS}
