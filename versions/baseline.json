@@ -4629,7 +4629,7 @@
       "port-version": 4
     },
     "libvault": {
-      "baseline": "0.52.0",
+      "baseline": "0.56.0",
       "port-version": 0
     },
     "libvmdk": {
