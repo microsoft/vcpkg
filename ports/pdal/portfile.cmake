@@ -35,10 +35,6 @@ file(APPEND "${SOURCE_PATH}/pdal/JsonFwd.hpp" "namespace NL = nlohmann;\n")
 
 unset(ENV{OSGEO4W_HOME})
 
-if("laszip" IN_LIST FEATURES)
-    message(WARNING "The 'laszip' feature is obsolete and will be removed in the future.")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         draco       BUILD_PLUGIN_DRACO
@@ -49,10 +45,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         pgpointcloud BUILD_PLUGIN_PGPOINTCLOUD
         zstd        WITH_ZSTD
 )
-if(BUILD_PLUGIN_DRACO)
-    vcpkg_find_acquire_program(PKGCONFIG)
-endif()
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS

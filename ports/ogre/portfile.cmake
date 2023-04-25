@@ -21,6 +21,7 @@ vcpkg_from_github(
         cfg-rel-paths.patch
         swig-python-polyfill.patch
         pkgconfig.patch
+        same-install-rules-all-platforms.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")

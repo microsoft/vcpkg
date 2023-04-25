@@ -1,7 +1,7 @@
 {
   "name": "globjects",
   "version": "1.1.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "C++ library strictly wrapping OpenGL objects",
   "homepage": "https://github.com/cginternals/globjects",
   "dependencies": [
