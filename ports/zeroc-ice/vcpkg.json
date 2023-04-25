@@ -1,12 +1,12 @@
 {
   "name": "zeroc-ice",
-  "version": "3.7.7",
-  "port-version": 4,
+  "version": "3.7.9",
+  "port-version": 0,
   "maintainers": "Benjamin Oldenburg <benjamin.oldenburg@ordis.co.th>",
   "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
   "homepage": "https://github.com/zeroc-ice/ice",
   "license": null,
-  "supports": "!uwp & !(windows & arm) & !(windows & static-crt) & !wasm32",
+  "supports": "!uwp & !(windows & arm) & !wasm32",
   "dependencies": [
     "bzip2",
     "expat",
@@ -18,6 +18,7 @@
     },
     "zlib"
   ],
+  "default-features": [ "glacier2lib", "icegridlib", "icestormlib" ],
   "features": {
     "glacier2lib": {
       "description": "Glacier2 libraries"
@@ -32,13 +33,16 @@
             "icessl"
           ]
         }
-      ]
+      ],
+	  "supports": "!(windows & static)"
     },
     "iceboxlib": {
-      "description": "IceBox libraries and runtime"
+      "description": "IceBox libraries and runtime",
+	  "supports": "!(windows & static)"
     },
     "iceboxtools": {
-      "description": "IceBox tools"
+      "description": "IceBox tools",
+	  "supports": "!(windows & static)"
     },
     "icebridge": {
       "description": "IceBridge",
@@ -49,7 +53,8 @@
             "iceboxlib"
           ]
         }
-      ]
+      ],
+	  "supports": "!(windows & static)"
     },
     "icediscovery": {
       "description": "IceDiscovery",
@@ -89,7 +94,8 @@
             "icessl"
           ]
         }
-      ]
+      ],
+	  "supports": "!(windows & static)"
     },
     "icessl": {
       "description": "IceSSL",
@@ -116,7 +122,8 @@
             "icestormlib"
           ]
         }
-      ]
+      ],
+	  "supports": "!(windows & static)"
     }
   }
 }
