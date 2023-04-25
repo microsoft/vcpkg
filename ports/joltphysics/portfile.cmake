@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jrouwe/JoltPhysics
     REF "v${VERSION}"
-    SHA512 c5848fe7a28de1b34259d3d21e4cd35bec4002eee926445e05d902934c43ab4cafcfa24ceb037c59cc66c3dcea5f3a737546f88c20be594dafe6ce6d1f637abb
+    SHA512 367e5b945e8f91a0c0c9eb699db6f49351aa39b0af9b8fd0be5f474d65b28a7244880eedad10cbd2db0e031daa28bbabb5f9fb8bf9af653dd1f86904bfde44a2
     HEAD_REF master
-    PATCHES
-        disable-warningC5266.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_CRT)
@@ -22,6 +20,7 @@ vcpkg_cmake_configure(
         -DTARGET_VIEWER=OFF
         -DCROSS_PLATFORM_DETERMINISTIC=OFF
         -DUSE_STATIC_MSVC_RUNTIME_LIBRARY=${USE_STATIC_CRT}
+        -DENABLE_ALL_WARNINGS=OFF
     OPTIONS_RELEASE
         -DCMAKE_BUILD_TYPE=Distribution
 )

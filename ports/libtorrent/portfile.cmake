@@ -33,6 +33,8 @@ vcpkg_from_github(
         REF 64817e0e8793d0875fc10245de52ffb2540a223d # v2.0.8
         SHA512 607172e6a806d78bb34443101bd384ac7a42e0edc3e7c4a2cf5c3ab5f2be64f84557726dce16c2fbaaa2ba254529a8871b3123b0e79fe87cd5bf26021ecb59da
         HEAD_REF RC_2_0
+        PATCHES
+            0001-fix-build-error-on-Windows-ARM64-by-add-new-define.patch
 )
 
 vcpkg_from_github(

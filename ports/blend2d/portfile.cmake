@@ -20,40 +20,39 @@ if(NOT BLEND2D_NO_JIT)
   vcpkg_from_github(
     OUT_SOURCE_PATH ASMJIT_SOURCE_PATH
     REPO asmjit/asmjit
-    REF a9ac13536e08041296010645551b2cdcd615d512
-    SHA512 64e7649208889f0c96890d3904c2f8e716a72b1edf2dfd07af0114565e03681e503c062af8b4fea4ed70122bd7eab2f966038f7b29058f60f6f3f609508422b6
+    REF 51b10b19b6631434d3f9ad536a6fb140944a36d2 # commited on 2023-03-25
+    SHA512 1fba5159d2adad64e9a2b07a1f90de6988d1da47b9802ca8b57c61a89d8a90924525f6d0d6607279994bdbadcf693b2cc96cd7e4bf7f018ad64127b640dc38fb
     HEAD_REF master
   )
 
-  file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/asmjit)
+  file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/asmjit")
 
-  get_filename_component(ASMJIT_SOURCE_DIR_NAME ${ASMJIT_SOURCE_PATH} NAME)
-  file(COPY ${ASMJIT_SOURCE_PATH} DESTINATION ${SOURCE_PATH}/3rdparty)
-  file(RENAME ${SOURCE_PATH}/3rdparty/${ASMJIT_SOURCE_DIR_NAME} ${SOURCE_PATH}/3rdparty/asmjit)
+  get_filename_component(ASMJIT_SOURCE_DIR_NAME "${ASMJIT_SOURCE_PATH}" NAME)
+  file(COPY "${ASMJIT_SOURCE_PATH}" DESTINATION "${SOURCE_PATH}/3rdparty")
+  file(RENAME "${SOURCE_PATH}/3rdparty/${ASMJIT_SOURCE_DIR_NAME}" "${SOURCE_PATH}/3rdparty/asmjit")
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBLEND2D_STATIC=${BLEND2D_STATIC}
+        "-DBLEND2D_STATIC=${BLEND2D_STATIC}"
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if(BLEND2D_STATIC)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 
 if(BLEND2D_STATIC)
-  # Install usage
-  configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage_static.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME usage)
+else()
+  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()

@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.81.0",
+    $version = "1.82.0",
     $portsDir = $null
 )
 
@@ -25,8 +25,6 @@ else {
 $defaultPortVersion = 1
 $portVersions = @{
     #e.g. "boost-asio" = 1;
-    "boost-locale" = 2;
-    "boost-vcpkg-helpers" = 2;
 }
 
 function Get-PortVersion {
@@ -92,11 +90,8 @@ $portData = @{
         };
     };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
-    "boost-stacktrace"       = @{ "supports" = "!uwp" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-coroutine2"       = @{ "supports" = "!emscripten" };
-    "boost-test"             = @{ "supports" = "!uwp" };
-    "boost-wave"             = @{ "supports" = "!uwp" };
     "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
     "boost-locale"           = @{
         "dependencies" = @(@{ "name" = "libiconv"; "platform" = "!uwp & !windows & !mingw" });
@@ -148,6 +143,7 @@ $portData = @{
             }
         }
     };
+    "boost-random"           = @{ "supports" = "!uwp" };
     "boost-regex"            = @{
         "features" = @{
             "icu" = @{
@@ -156,6 +152,9 @@ $portData = @{
             }
         }
     }
+    "boost-stacktrace"       = @{ "supports" = "!uwp" };
+    "boost-test"             = @{ "supports" = "!uwp" };
+    "boost-wave"             = @{ "supports" = "!uwp" };
 }
 
 function GeneratePortName() {

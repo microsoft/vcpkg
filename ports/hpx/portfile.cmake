@@ -6,13 +6,11 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" HPX_WITH_STATIC_LINKING
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
-    REF f48c81865800ae72618b40b4e79d4168cfb0bd56
-    SHA512 06d1384615b327194d871145c1899317bd350c43a072be2cbfdc773f7869b71aafce3e9cabf835a8fe902a13d7050d5e0400a76f74023985575347a645196b1d
+    REF "${VERSION}"
+    SHA512 af2471a04dd0a3c414907ed06661ab1c6f6a49cc09d1ed3ae5d5587ca365270797a1d2ce9d0320dc7d7f9ff2c6d29037c7fbb84fa6d9c0033628ba7036f12986
     HEAD_REF stable
     PATCHES
         fix-dependency-hwloc.patch
-        format.patch
-        fix-export.patch
         fix-debug.patch
         fix_output_name_clash.patch
 )

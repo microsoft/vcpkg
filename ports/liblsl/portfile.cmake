@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sccn/liblsl
-    REF v1.16.0 # NOTE: when updating version, also change it in the parameter to vcpkg_cmake_configure
-    SHA512 bfd54c6cca944ed33622da74dc1417ab75b542002c02c83bb86c917fd5968936c4b56ec734bd6d757e9fa67364f9dc85fd15ed28697ed410305df4928cf6790b
+    REF v${VERSION}
+    SHA512 d3af9be687c11272f0122585c8ba48c5d7482af6e6f0cecf640e674682da319246b490b536a890407c7511fcc07a59749ed43134bf7683d30304ac4e3989a73c
     HEAD_REF master
     PATCHES
         use-find-package-asio.patch
@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
         -DLSL_BUILD_STATIC=${LSL_BUILD_STATIC}
         -DLSL_BUNDLED_BOOST=OFF # we use the boost vcpkg packages instead
         -DLSL_BUNDLED_PUGIXML=OFF # we use the pugixml vcpkg package instead
-        -Dlslgitrevision=v1.16.0
+        -Dlslgitrevision=v${VERSION}
         -Dlslgitbranch=master
 )
 

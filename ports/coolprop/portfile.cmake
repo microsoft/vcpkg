@@ -1,10 +1,9 @@
-set(PORT_VERSION 6.1.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CoolProp/CoolProp
-    REF f5ebb4e655add4c23bb327ab5209f3dbf919bc6d # v6.4.1
-    SHA512 916d00777fe56035171ed0a6cbe09b8d4487317772802e4fe9b43f5965f3212dcb3754e18fe1db9c748a4d17facbbe6cb2244451cf5cf66334465760fc1701b7
+    REF "v${VERSION}"
+    SHA512 ccd868cb297d86f054318acec4c3bf9f8ec07b54c320d5e887853c4190adefbd3b2d188e7453896656b5ad0e81b32d133fd0ce67bf58e647d58c96918bc993eb
     HEAD_REF master
     PATCHES
         fmt-fix.patch
@@ -45,7 +44,6 @@ file(COPY
 )
 
 file(COPY
-    ${CURRENT_INSTALLED_DIR}/include/msgpack.h
     ${CURRENT_INSTALLED_DIR}/include/msgpack.hpp
     ${CURRENT_INSTALLED_DIR}/include/msgpack
     DESTINATION ${SOURCE_PATH}/externals/msgpack-c/include
@@ -98,4 +96,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,6 +1,8 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
+set(${PORT}_PATCHES open62541_v1.3_support.patch)
+
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -18,10 +20,6 @@ if("open62541" IN_LIST FEATURES)
                                 -DHAVE_open62541=true)
 else()
     list(APPEND FEATURE_OPTIONS -DINPUT_open62541=no)
-endif()
-
-if(NOT "open62541" IN_LIST FEATURES AND NOT "gds" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL=ON)
 endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
