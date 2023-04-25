@@ -6021,7 +6021,7 @@
       "port-version": 2
     },
     "parallel-hashmap": {
-      "baseline": "1.3.8",
+      "baseline": "1.3.11",
       "port-version": 0
     },
     "parallelstl": {
