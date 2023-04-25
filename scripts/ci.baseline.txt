@@ -271,7 +271,6 @@ gherkin-c:x64-windows           = skip
 gherkin-c:x64-windows-static    = skip
 gherkin-c:x64-windows-static-md = skip
 gherkin-c:x86-windows           = skip
-glew:arm64-windows=fail
 glfw3:arm-uwp=fail
 glfw3:x64-uwp=fail
 glibmm:x64-windows-static-md=fail
