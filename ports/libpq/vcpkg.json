@@ -1,7 +1,7 @@
 {
   "name": "libpq",
   "version": "15.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "license": "PostgreSQL",
@@ -48,6 +48,7 @@
     },
     "nls": {
       "description": "Native Language Support (--enable-nls[=LANGUAGES])",
+      "supports": "!osx",
       "dependencies": [
         "gettext",
         {
