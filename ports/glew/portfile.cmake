@@ -15,7 +15,7 @@ vcpkg_extract_source_archive(
     ARCHIVE ${ARCHIVE}
     SOURCE_BASE glew
     PATCHES
-	    fix-LNK2019.patch
+        fix-LNK2019.patch
         base_address.patch
 )
 
