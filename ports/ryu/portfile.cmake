@@ -1,3 +1,19 @@
+function(prepare_bazel_opts flags opts switch)
+    string(STRIP ${${flags}} ${flags})
+    if (${flags})
+        string(REGEX REPLACE "[ ]+-" ";-" ${flags} ${${flags}})
+        foreach (OPT IN LISTS ${flags})
+            if (${opts})
+                string(REGEX REPLACE "^([^ ]+)[ ]+\"?([^\"]+)\"?$" \\1\\2 OPT ${OPT})
+                set(${opts} ${${opts}};${switch}=${OPT})
+            else ()
+                set(${opts} ${switch}=${OPT})
+            endif ()
+        endforeach ()
+        set(${opts} ${${opts}} PARENT_SCOPE)
+    endif ()
+endfunction()
+
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ulfjack/ryu
@@ -15,39 +31,27 @@ vcpkg_cmake_get_vars(cmake_vars_file)
 include(${cmake_vars_file})
 
 if (CMAKE_HOST_WIN32)
-    set(ENV{BAZEL_VS} $ENV{VSInstallDir})
     set(ENV{BAZEL_VC} $ENV{VCInstallDir})
+    if (VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR STREQUAL x86)
+        set(BAZEL_CPU --cpu=x64_x86_windows)
+    elseif (VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR STREQUAL ARM)
+        set(BAZEL_CPU --cpu=x64_arm_windows)
+    elseif (VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR STREQUAL ARM64)
+        set(BAZEL_CPU --cpu=x64_arm64_windows)
+    endif ()
 endif ()
 
 if (VCPKG_DETECTED_CMAKE_HOST_SYSTEM_NAME STREQUAL Darwin)
     set(ENV{SDKROOT} ${VCPKG_DETECTED_CMAKE_OSX_SYSROOT})
 endif ()
 
-function(prepare_bazel_opts flags opts switch)
-    string(STRIP ${${flags}} ${flags})
-    if (${flags})
-        string(REGEX REPLACE "[ ]+-" ";-" ${flags} ${${flags}})
-        foreach (OPT IN LISTS ${flags})
-            if (${opts})
-                string(REGEX REPLACE "^([^ ]+)[ ]+\"?([^\"]+)\"?$" \\1\\2 OPT ${OPT})
-                set(${opts} ${${opts}};${switch}=${OPT})
-            else ()
-                set(${opts} ${switch}=${OPT})
-            endif ()
-        endforeach ()
-        set(${opts} ${${opts}} PARENT_SCOPE)
-    endif ()
-endfunction()
-
 prepare_bazel_opts(VCPKG_COMBINED_C_FLAGS_RELEASE CONLY_OPTS_RELEASE --conlyopt)
 prepare_bazel_opts(VCPKG_COMBINED_C_FLAGS_DEBUG CONLY_OPTS_DEBUG --conlyopt)
-prepare_bazel_opts(VCPKG_COMBINED_CXX_FLAGS_RELEASE CXX_OPTS_RELEASE --cxxopt)
-prepare_bazel_opts(VCPKG_COMBINED_CXX_FLAGS_DEBUG CXX_OPTS_DEBUG --cxxopt)
 prepare_bazel_opts(VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE LINK_OPTS_RELEASE --linkopt)
 prepare_bazel_opts(VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG LINK_OPTS_DEBUG --linkopt)
 
 vcpkg_execute_build_process(
-        COMMAND ${BAZEL} --batch build ${CONLY_OPTS_RELEASE} ${CXX_OPTS_RELEASE} ${LINK_OPTS_RELEASE} --verbose_failures --strategy=CppCompile=standalone //ryu //ryu:ryu_printf
+        COMMAND ${BAZEL} --batch build ${BAZEL_CPU} ${CONLY_OPTS_RELEASE} ${LINK_OPTS_RELEASE} --verbose_failures --strategy=CppCompile=standalone //ryu //ryu:ryu_printf
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME build-${TARGET_TRIPLET}-rel
 )
@@ -61,7 +65,7 @@ else ()
 endif ()
 
 vcpkg_execute_build_process(
-        COMMAND ${BAZEL} --batch build ${CONLY_OPTS_DEBUG} ${CXX_OPTS_DEBUG} ${LINK_OPTS_DEBUG} --verbose_failures --strategy=CppCompile=standalone //ryu //ryu:ryu_printf
+        COMMAND ${BAZEL} --batch build ${BAZEL_CPU} ${CONLY_OPTS_DEBUG} ${LINK_OPTS_DEBUG} --verbose_failures --strategy=CppCompile=standalone //ryu //ryu:ryu_printf
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME build-${TARGET_TRIPLET}-dbg
 )

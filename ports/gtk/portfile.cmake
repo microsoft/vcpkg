@@ -2,13 +2,11 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  73bea05c3386075528542c2714790199f2bb5861 #v4.6.8
-    SHA512 5e7b994d1e26a4d97bd5788b61ca3a43a04c96c10161d29e185d5854b925e07b1bba5f1e35509d4df078f918bb6cc7149bcb720aaec8c04e5d8254280c0076ed
+    REF  74677018183b7b815c54b236841447132c0141e3 #v4.10.1
+    SHA512 7611c09c1b259c1e079b84abae603920b27403c0900b3265a07e540166bd468603ee2eb77e68e820921d979c345e69c62447fcead6fe38bb21d32bde8ece1e26
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
-        0002-windows-build.patch
-        0004-macos-build.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -55,9 +53,9 @@ vcpkg_configure_meson(
     OPTIONS
         ${OPTIONS}
         -Ddemos=false
+        -Dbuild-testsuite=false
         -Dbuild-examples=false
         -Dbuild-tests=false
-        -Dinstall-tests=false
         -Dgtk_doc=false
         -Dman-pages=false
         -Dmedia-ffmpeg=disabled     # Build the ffmpeg media backend
@@ -68,20 +66,12 @@ vcpkg_configure_meson(
         -Dsysprof=disabled          # include tracing support for sysprof
         -Dtracker=disabled          # Enable Tracker3 filechooser search
         -Dcolord=disabled           # Build colord support for the CUPS printing backend
+        -Df16c=disabled             # Enable F16C fast paths (requires F16C)
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
-    ADDITIONAL_NATIVE_BINARIES
-        glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-        glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
-        glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        sassc='${CURRENT_HOST_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
-    ADDITIONAL_CROSS_BINARIES
+    ADDITIONAL_BINARIES
         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
         glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
@@ -93,40 +83,6 @@ vcpkg_configure_meson(
 )
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
-
-# If somebody finds out how to access and forward env variables to
-# the meson install script be my guest. Nevertheless the script still
-# needs manual execution in the crosscompiling case.
-vcpkg_find_acquire_program(PYTHON3)
-foreach(_config release debug)
-    if(_config STREQUAL "release")
-        set(_short rel)
-        set(_path_suffix)
-    else()
-        set(_short dbg)
-        set(_path_suffix /debug)
-    endif()
-    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib")
-        continue()
-    endif()
-    message(STATUS "Running post install script: ${TARGET_TRIPLET}-${_short}")
-
-    set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}${_path_suffix}/lib/pkgconfig/")
-    set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/media")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/immodules")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/printbackends")
-    vcpkg_execute_required_process(
-        COMMAND "${PYTHON3}" "${SOURCE_PATH}/build-aux/meson/post-install.py" 4.0 4.0.0 "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib" "${CURRENT_PACKAGES_DIR}${_path_suffix}/share" "${CURRENT_PACKAGES_DIR}${_path_suffix}/bin"
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME post-install-${TARGET_TRIPLET}-${_short}
-    )
-    unset(ENV{PKG_CONFIG_PATH})
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/bin/gtk-4.0")
-    #file(RENAME "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/" "${CURRENT_PACKAGES_DIR}${_path_suffix}/bin/gtk-4.0")
-    message(STATUS "Post install ${TARGET_TRIPLET}-${_short} done")
-endforeach()
 
 vcpkg_copy_pdbs()
 
