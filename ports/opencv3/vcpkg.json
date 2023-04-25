@@ -229,6 +229,13 @@
     "python": {
       "description": "Python wrapper support for opencv",
       "dependencies": [
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "flann"
+          ]
+        },
         "python3"
       ]
     },
