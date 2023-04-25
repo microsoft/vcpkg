@@ -1,11 +1,11 @@
 {
   "name": "osgearth",
   "version": "3.3",
-  "port-version": 6,
+  "port-version": 5,
   "description": "osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2021 Pelican Mapping.",
   "homepage": "https://github.com/gwaldron/osgearth",
   "license": "LGPL-3.0-or-later",
-  "supports": "!(((arm | arm64) & windows) | x86 | wasm32)",
+  "supports": "!(x86 | wasm32)",
   "dependencies": [
     "basisu",
     "cfitsio",

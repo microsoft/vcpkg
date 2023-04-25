@@ -594,7 +594,7 @@
     },
     "blend2d": {
       "baseline": "2022-12-31",
-      "port-version": 4
+      "port-version": 3
     },
     "blitz": {
       "baseline": "2020-03-25",
@@ -5966,7 +5966,7 @@
     },
     "osgearth": {
       "baseline": "3.3",
-      "port-version": 6
+      "port-version": 5
     },
     "osi": {
       "baseline": "0.108.6",
