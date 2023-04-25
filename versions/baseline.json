@@ -8729,8 +8729,8 @@
       "port-version": 2
     },
     "zeroc-ice": {
-      "baseline": "3.7.7",
-      "port-version": 4
+      "baseline": "3.7.9",
+      "port-version": 0
     },
     "zeromq": {
       "baseline": "2023-01-31",
