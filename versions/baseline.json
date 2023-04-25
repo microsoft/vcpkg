@@ -5185,8 +5185,8 @@
       "port-version": 0
     },
     "minitrace": {
-      "baseline": "2019.02.06",
-      "port-version": 2
+      "baseline": "2023-04-23",
+      "port-version": 0
     },
     "miniupnpc": {
       "baseline": "2.1",
