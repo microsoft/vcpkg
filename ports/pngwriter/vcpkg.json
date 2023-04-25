@@ -1,7 +1,7 @@
 {
   "name": "pngwriter",
-  "version-string": "0.7.0",
-  "port-version": 4,
+  "version": "0.7.0",
+  "port-version": 5,
   "description": "PNGwriter is a very easy to use open source graphics library that uses PNG as its output format",
   "dependencies": [
     "freetype",

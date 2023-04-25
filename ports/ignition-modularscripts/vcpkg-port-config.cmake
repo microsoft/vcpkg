@@ -1,3 +1,5 @@
+include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake/vcpkg-port-config.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake-config/vcpkg-port-config.cmake")
 
 function(ignition_modular_build_library)
     set(options DISABLE_PKGCONFIG_INSTALL)
@@ -5,30 +7,29 @@ function(ignition_modular_build_library)
     set(multiValueArgs OPTIONS)
     cmake_parse_arguments(IML "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     vcpkg_find_acquire_program(PKGCONFIG)
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${IML_SOURCE_PATH}
-        PREFER_NINJA
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${IML_SOURCE_PATH}"
         DISABLE_PARALLEL_CONFIGURE
         OPTIONS
-            -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
+            "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
             -DBUILD_TESTING=OFF
             ${IML_OPTIONS}
     )
 
-    vcpkg_install_cmake(ADD_BIN_TO_PATH)
+    vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
     # If necessary, move the CMake config files
     if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake")
         # Some ignition libraries install library subcomponents, that are effectively additional cmake packages
-        # with name ${IML_CMAKE_PACKAGE_NAME}-${COMPONENT_NAME}, so it is needed to call vcpkg_fixup_cmake_targets for them as well
+        # with name ${IML_CMAKE_PACKAGE_NAME}-${COMPONENT_NAME}, so it is needed to call vcpkg_cmake_config_fixup for them as well
         file(GLOB COMPONENTS_CMAKE_PACKAGE_NAMES
              LIST_DIRECTORIES TRUE
              RELATIVE "${CURRENT_PACKAGES_DIR}/lib/cmake/"
              "${CURRENT_PACKAGES_DIR}/lib/cmake/*")
 
         foreach(COMPONENT_CMAKE_PACKAGE_NAME IN LISTS COMPONENTS_CMAKE_PACKAGE_NAMES)
-            vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/${COMPONENT_CMAKE_PACKAGE_NAME}"
-                                      TARGET_PATH "share/${COMPONENT_CMAKE_PACKAGE_NAME}"
+            vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${COMPONENT_CMAKE_PACKAGE_NAME}"
+                                      PACKAGE_NAME ${COMPONENT_CMAKE_PACKAGE_NAME}
                                       DO_NOT_DELETE_PARENT_CONFIG_PATH)
         endforeach()
 
@@ -40,10 +41,10 @@ function(ignition_modular_build_library)
     endif()
 
     # Remove unused files files
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake
-                        ${CURRENT_PACKAGES_DIR}/debug/include
-                        ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
-                        ${CURRENT_PACKAGES_DIR}/debug/share)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
+                        "${CURRENT_PACKAGES_DIR}/debug/include"
+                        "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
+                        "${CURRENT_PACKAGES_DIR}/debug/share")
 
     # Make pkg-config files relocatable
     if(NOT IML_DISABLE_PKGCONFIG_INSTALL)
@@ -52,8 +53,8 @@ function(ignition_modular_build_library)
         endif()
         vcpkg_fixup_pkgconfig(${SYSTEM_LIBRARIES})
     else()
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-                            ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
+                            "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     endif()
 
     # Find the relevant license file and install it
@@ -62,7 +63,7 @@ function(ignition_modular_build_library)
     elseif(EXISTS "${SOURCE_PATH}/README.md")
         set(LICENSE_PATH "${SOURCE_PATH}/README.md")
     endif()
-    file(INSTALL ${LICENSE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+    file(INSTALL "${LICENSE_PATH}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endfunction()
 
 ## # ignition_modular_library
