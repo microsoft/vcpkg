@@ -1,7 +1,7 @@
 {
   "name": "http-parser",
   "version": "2.9.4",
-  "port-version": 2,
+  "port-version": 3,
   "description": "HTTP Parser.",
   "homepage": "https://github.com/nodejs/http-parser",
   "dependencies": [
