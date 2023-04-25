@@ -46,7 +46,10 @@ endif()
 
 if(NOT SQLITE3_SKIP_TOOLS)
     add_executable(sqlite3-bin shell.c)
-    set_target_properties(sqlite3-bin PROPERTIES OUTPUT_NAME sqlite3)
+    set_target_properties(sqlite3-bin PROPERTIES
+        OUTPUT_NAME sqlite3
+        PDB_NAME "sqlite3${CMAKE_EXECUTABLE_SUFFIX}.pdb"
+    )
 
     target_link_libraries(sqlite3-bin PRIVATE sqlite3)
     if (WITH_ZLIB)
