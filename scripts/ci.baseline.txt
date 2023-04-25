@@ -869,6 +869,7 @@ llgl:x64-android=fail
 llvm:arm-neon-android=fail
 llvm:arm64-android=fail
 llvm:x64-android=fail
+llvm:x64-osx=fail
 log4cplus:arm-uwp=fail
 log4cplus:x64-uwp=fail
 log4cxx:arm-uwp=fail
