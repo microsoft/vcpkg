@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_LINUX)
+    message("Warning: `glaze` requires Clang or GCC 10+ on Linux")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephenberry/glaze
