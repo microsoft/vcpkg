@@ -11,6 +11,17 @@ vcpkg_from_github(
         fix_dependency.patch
 )
 
+file(REMOVE
+  "${SOURCE_PATH}/wangle/cmake/FindDoubleConversion.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake"
+)
+
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/wangle"
     OPTIONS
