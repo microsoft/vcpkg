@@ -43,6 +43,10 @@
           ]
         }
       ]
+    },
+    "pulseaudio": {
+      "description": "Build with PulseAudio support",
+      "supports": "linux"
     }
   }
 }
