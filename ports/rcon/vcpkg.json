@@ -1,10 +1,10 @@
 {
-    "name": "rcon",
-    "version": "1.0.0",
-    "description": "implementation in valve source rcon protocal",
-    "homepage": "https://github.com/luckyweNda/rcon",
-    "license": "MIT",
-    "dependencies": [
-      "asio"
-    ]
-}  
+  "name": "rcon",
+  "version": "1.0.0",
+  "description": "implementation in valve source rcon protocal",
+  "homepage": "https://github.com/luckyweNda/rcon",
+  "license": "MIT",
+  "dependencies": [
+    "asio"
+  ]
+}
