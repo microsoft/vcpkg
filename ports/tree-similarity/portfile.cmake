@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO remz1337/tree-similarity
-    REF 6de059939ae27fbe68a5809b21bac7c5dfe5f0ee
-    SHA512 beae8c0d12964d13623575a9599e17fd3ef849737e4fc6396d64288c74782b89580b8d2643432c6c3d5768e1042c6af9b824a3457883833b942a8faf451b4048
-    HEAD_REF vcpkg
+    REPO DatabaseGroup/tree-similarity
+    REF 76e62627438ea603c9881221f7444c7cb5407b6d
+    SHA512 0
+    HEAD_REF master
 )
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
