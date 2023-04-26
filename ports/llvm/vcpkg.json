@@ -1,7 +1,7 @@
 {
   "name": "llvm",
-  "version": "14.0.6",
-  "port-version": 1,
+  "version": "15.0.7",
+  "port-version": 2,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -47,7 +47,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "compiler-rt",
             "tools"
           ]
         }
@@ -66,7 +65,16 @@
       ]
     },
     "compiler-rt": {
-      "description": "Include compiler's runtime libraries."
+      "description": "Include compiler's runtime libraries.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang"
+          ]
+        }
+      ]
     },
     "default-options": {
       "description": "Build with default options.",
@@ -80,7 +88,8 @@
             "enable-bindings",
             "enable-terminfo",
             "enable-threads",
-            "enable-zlib"
+            "enable-zlib",
+            "enable-zstd"
           ]
         }
       ]
@@ -162,6 +171,18 @@
         "libffi"
       ]
     },
+    "enable-ios": {
+      "description": "Build compiler-rt for iOS SDK.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-arm"
+          ]
+        }
+      ]
+    },
     "enable-libxml2": {
       "description": "Build with LibXml2.",
       "dependencies": [
@@ -181,6 +202,12 @@
       "description": "Build with ZLib.",
       "dependencies": [
         "zlib"
+      ]
+    },
+    "enable-zstd": {
+      "description": "Build with zstd.",
+      "dependencies": [
+        "zstd"
       ]
     },
     "flang": {
@@ -213,10 +240,28 @@
       ]
     },
     "libcxxabi": {
-      "description": "Include libcxxabi library."
+      "description": "Include libcxxabi library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     },
     "libunwind": {
-      "description": "Include libunwind library."
+      "description": "Include libunwind library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     },
     "lld": {
       "description": "Include LLVM linker.",
@@ -237,6 +282,8 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "clang",
+            "enable-terminfo",
             "tools"
           ]
         }
@@ -261,6 +308,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "clang",
             "utils"
           ]
         }
