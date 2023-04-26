@@ -282,6 +282,7 @@ if("ffmpeg" IN_LIST FEATURES)
 endif()
 
 if("halide" IN_LIST FEATURES)
+  set(ENABLE_CXX11 OFF)
   list(APPEND ADDITIONAL_BUILD_FLAGS
     # Halide 13 requires C++17
     "-DCMAKE_CXX_STANDARD=17"
@@ -290,6 +291,8 @@ if("halide" IN_LIST FEATURES)
     "-DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
     "-DENABLE_CXX11=OFF"
   )
+else()
+  set(ENABLE_CXX11 ON)
 endif()
 
 if("qt" IN_LIST FEATURES)
@@ -370,7 +373,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         # ENABLE
-        -DENABLE_CXX11=ON
+        -DENABLE_CXX11=${ENABLE_CXX11}
         ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
