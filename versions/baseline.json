@@ -2542,7 +2542,7 @@
     },
     "folly": {
       "baseline": "2022.10.31.00",
-      "port-version": 5
+      "port-version": 6
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -8382,7 +8382,7 @@
     },
     "wangle": {
       "baseline": "2022.03.21.00",
-      "port-version": 0
+      "port-version": 1
     },
     "wasmedge": {
       "baseline": "0.12.0-alpha.1",
