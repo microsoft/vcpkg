@@ -1,6 +1,6 @@
 {
   "name": "ms-quic",
-  "version": "2.1.8",
+  "version": "2.2.0",
   "description": "Cross-platform, C implementation of the IETF QUIC protocol",
   "homepage": "https://github.com/microsoft/msquic",
   "license": "MIT",

@@ -4,12 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH QUIC_SOURCE_PATH
     REPO microsoft/msquic
     REF "v${VERSION}"
-    SHA512 bbe73fcb69f067accd0f8f2a6ac73d030971d70de1f3b3d1ab1bbc43a885639d414b20cbd202d89de145e3bba40a91466ac6709b53bc6d7d0788e52d8865b50c
+    SHA512 6590a18ec698cffc1c9639a2bd25f38d8786f46395dc217ddcb60b08ccf22da759df9bc4833fc621b97cf5418898f8b5125a409bac05d9bec8560722e7935c03
     HEAD_REF master
     PATCHES
         fix-warnings.patch  # Remove /WX, -Werror
         fix-platform.patch  # Make OpenSSL build use VCPKG_TARGET_ARCHITECTURE
-        fix-install.patch   # Adjust install path of build outputs
 )
 
 vcpkg_from_github(
@@ -66,8 +65,7 @@ endif()
 
 #vcpkg_cmake_build(TARGET OpenSSL_Build) # separate build log for quictls/openssl
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME msquic CONFIG_PATH "lib/cmake/msquic")
+vcpkg_cmake_config_fixup(PACKAGE_NAME msquic CONFIG_PATH "share/msquic")
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES quicattack quicinterop quicinteropserver quicipclient quicipserver
@@ -77,6 +75,16 @@ if("tools" IN_LIST FEATURES)
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${QUIC_SOURCE_PATH}/LICENSE") 
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/msquic.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/msquic.dll" "${CURRENT_PACKAGES_DIR}/bin/msquic.dll") 
+endif()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/msquic.dll")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/msquic.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/msquic.dll") 
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/include"
