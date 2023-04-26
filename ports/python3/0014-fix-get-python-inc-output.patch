@@ -1,5 +1,14 @@
+From b6ffa6e7a0f7a013fb111e618a7f7e2c58e9d548 Mon Sep 17 00:00:00 2001
+From: Billy Robert O'Neal III <bion@microsoft.com>
+Date: Wed, 26 Apr 2023 05:17:44 +0000
+Subject: [PATCH 14/14] fix get python inc output
+
+---
+ Lib/distutils/sysconfig.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
 diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
-index 3414a76..e6ae456 100644
+index 3414a761e7..e6ae456ee9 100644
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
 @@ -45,7 +45,7 @@
@@ -30,3 +39,6 @@ index 3414a76..e6ae456 100644
      else:
          raise DistutilsPlatformError(
              "I don't know where Python installs its C header files "
+-- 
+2.25.1
+
