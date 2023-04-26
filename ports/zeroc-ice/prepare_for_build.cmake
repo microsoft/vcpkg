@@ -51,7 +51,7 @@ function(prepare_for_build ICE_SOURCE_DIR)
         )
     endforeach()
 
-	set(ICE_BUILDER_VERSION "5.0.9")
+    set(ICE_BUILDER_VERSION "5.0.9")
     set(ICE_CPP_MSBUILD_PACKAGES_DIR "${ICE_SOURCE_DIR}/cpp/msbuild/packages")
     set(ICE_BUILDER_DEST_DIRECTORY "${ICE_CPP_MSBUILD_PACKAGES_DIR}/zeroc.icebuilder.msbuild.${ICE_BUILDER_VERSION}")
     if(NOT EXISTS "${ICE_BUILDER_DEST_DIRECTORY}")
