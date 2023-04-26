@@ -35,6 +35,9 @@
       "host": true
     }
   ],
+  "default-features": [
+    "default-features"
+  ],
   "features": {
     "blend2d": {
       "description": "Enable Blend2D support",
