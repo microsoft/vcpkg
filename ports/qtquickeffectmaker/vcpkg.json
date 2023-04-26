@@ -1,17 +1,16 @@
 {
-  "name": "qtspeech",
+  "name": "qtquickeffectmaker",
   "version": "6.5.0",
-  "description": "Qt Speech support",
+  "description": "Qt Quick Effect Maker (QQEM) for creating and editing custom shader effects.",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "!(windows & x86)",
+  "supports": "native",
   "dependencies": [
     {
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "gui",
-        "widgets"
+        "gui"
       ]
     },
     {
@@ -19,7 +18,11 @@
       "default-features": false
     },
     {
-      "name": "qtmultimedia",
+      "name": "qtquick3d",
+      "default-features": false
+    },
+    {
+      "name": "qtshadertools",
       "default-features": false
     }
   ]

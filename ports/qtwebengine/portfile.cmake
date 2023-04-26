@@ -1,8 +1,7 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES
-   )
+set(${PORT}_PATCHES "")
 
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
 
@@ -106,6 +105,7 @@ qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
                         -DBISON_EXECUTABLE=${BISON}
                         -DFLEX_EXECUTABLE=${FLEX}
                         -DNodejs_EXECUTABLE=${NODEJS}
+                        -DQT_FEATURE_webengine_jumbo_build=0
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
 
