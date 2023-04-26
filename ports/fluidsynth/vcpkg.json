@@ -32,6 +32,10 @@
     "buildtools": {
       "description": "Build tools gentables"
     },
+    "pulseaudio": {
+      "description": "Build with PulseAudio support",
+      "supports": "linux"
+    },
     "sndfile": {
       "description": "Enable rendering to file and SF3 support",
       "dependencies": [
@@ -43,10 +47,6 @@
           ]
         }
       ]
-    },
-    "pulseaudio": {
-      "description": "Build with PulseAudio support",
-      "supports": "linux"
     }
   }
 }
