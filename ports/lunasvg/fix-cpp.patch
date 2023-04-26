@@ -1,0 +1,14 @@
+diff -ur v1.4.2-f7d2429511.clean/CMakeLists.txt new/CMakeLists.txt
+--- v1.4.2-f7d2429511.clean/CMakeLists.txt	2023-04-26 21:34:03.487253300 +0300
++++ new/CMakeLists.txt	2023-04-26 19:21:54.764305500 +0300
+@@ -2,8 +2,8 @@
+ 
+ project(lunasvg VERSION 1.4.1 LANGUAGES CXX C)
+ 
+-set(CMAKE_CXX_STANDARD 11)
+-set(CMAKE_C_STANDARD 11)
++set(CMAKE_CXX_STANDARD 17)
++set(CMAKE_C_STANDARD 17)
+ 
+ option(LUNASVG_BUILD_EXAMPLES "Builds examples" OFF)
+ 

@@ -5,6 +5,7 @@ vcpkg_from_github(
   SHA512 2a958cf21672627a7a963c58c277364f45aea2590f5795ffdd28e35c90743c35e3043d0019884528b126197dd3be034b17c2d8347fbd55c7a5b0c021099d6c8a
   HEAD_REF master
   PATCHES
+    fix-cpp.patch
     fix-install.patch
     fix-text_and_saving.patch
 )
