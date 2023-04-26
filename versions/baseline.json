@@ -8594,7 +8594,7 @@
     },
     "xeus": {
       "baseline": "0.24.3",
-      "port-version": 2
+      "port-version": 3
     },
     "xframe": {
       "baseline": "0.3.0",
