@@ -5970,7 +5970,7 @@
     },
     "osgearth": {
       "baseline": "3.3",
-      "port-version": 6
+      "port-version": 7
     },
     "osi": {
       "baseline": "0.108.6",
