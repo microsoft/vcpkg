@@ -10,10 +10,9 @@ if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
+set(PATCHLIB fix-dependencies.patch cfg-rel-paths.patch swig-python-polyfill.patch pkgconfig.patch same-install-rules-all-platforms.patch)
 if(VCPKG_TARGET_IS_OSX)
-    set(PATCHLIB fix_override.patch fix-dependencies.patch cfg-rel-paths.patch swig-python-polyfill.patch pkgconfig.patch same-install-rules-all-platforms.patch)
-else()
-    set(PATCHLIB fix-dependencies.patch cfg-rel-paths.patch swig-python-polyfill.patch pkgconfig.patch same-install-rules-all-platforms.patch)
+    set(APPEND PATCHLIB fix_override.patch) # upstream PR:https://github.com/OGRECave/ogre/pull/2831
 endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
