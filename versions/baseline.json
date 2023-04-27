@@ -4189,8 +4189,8 @@
       "port-version": 3
     },
     "libmediainfo": {
-      "baseline": "21.03",
-      "port-version": 2
+      "baseline": "23.3",
+      "port-version": 0
     },
     "libmesh": {
       "baseline": "1.5.0",
