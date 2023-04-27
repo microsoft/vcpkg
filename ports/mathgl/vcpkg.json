@@ -99,7 +99,14 @@
     "png": {
       "description": "png module",
       "dependencies": [
-        "libpng"
+        "libpng",
+        {
+          "name": "mathgl",
+          "default-features": false,
+          "features": [
+            "zlib"
+          ]
+        }
       ]
     },
     "qt5": {
