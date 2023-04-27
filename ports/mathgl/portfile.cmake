@@ -15,6 +15,7 @@ vcpkg_from_sourceforge(
         fix-format-specifiers.patch
         fix-glut.patch
         fix-mgllab.patch
+        fix-include-property.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/addons/getopt")
 
