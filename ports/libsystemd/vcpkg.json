@@ -3,6 +3,7 @@
   "version": "253",
   "description": "Libsystemd",
   "homepage": "https://github.com/systemd/systemd",
+  "license": "GPL-2.0-only",
   "supports": "linux",
   "dependencies": [
     "libcap",

@@ -3,5 +3,6 @@
   "version": "2.68",
   "description": "capability library: includes libcap2 file caps, setcap, getcap and capsh",
   "homepage": "https://git.kernel.org/pub/scm/libs/libcap/libcap.git",
+  "license": "BSD-3-Clause",
   "supports": "linux"
 }
