@@ -9,20 +9,18 @@ vcpkg_from_github(
     PATCHES 
         fix-boost.patch
         fix-const-overloaded.patch
+        include_functional.patch # Upstream PR https://github.com/kpu/kenlm/pull/428, please remove this patch when updating this port.
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/modules/FindEigen3.cmake)
+file(REMOVE "${SOURCE_PATH}/cmake/modules/FindEigen3.cmake")
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
-    interpolate ENABLE_INTERPOLATE
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        interpolate ENABLE_INTERPOLATE
 )
-
-if ("interpolate" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "The interpolate feature does not support Windows.")
-endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DFORCE_STATIC=OFF #already handled by vcpkg
@@ -45,5 +43,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Copyright and License
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME license)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/LICENSE")

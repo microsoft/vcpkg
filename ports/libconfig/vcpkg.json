@@ -1,7 +1,7 @@
 {
   "name": "libconfig",
   "version": "1.7.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "C/C++ library for processing configuration files",
   "homepage": "https://github.com/hyperrealm/libconfig",
   "dependencies": [
