@@ -1,7 +1,7 @@
 file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
 string(JSON OPENCV_VERSION GET "${_contents}" version)
 
-set(USE_QT_VERSION "5"
+set(USE_QT_VERSION "5")
 set(ENABLE_CXX11 ON)
 
 vcpkg_from_github(
