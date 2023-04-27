@@ -1,3 +1,5 @@
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO besser82/libxcrypt
