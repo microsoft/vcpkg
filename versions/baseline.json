@@ -8029,7 +8029,7 @@
       "port-version": 5
     },
     "tree-similarity": {
-      "baseline": "v0.1",
+      "baseline": "v0.1.0",
       "port-version": 0
     },
     "tree-sitter": {
