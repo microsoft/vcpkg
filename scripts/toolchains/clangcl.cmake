@@ -1,8 +1,9 @@
 if(NOT _VCPKG_CLANGCL_TOOLCHAIN)
 set(_VCPKG_CLANGCL_TOOLCHAIN 1)
 
-set(CMAKE_C_COMPILER "clang-cl.exe")
-set(CMAKE_CXX_COMPILER "clang-cl.exe") 
+find_program(CMAKE_C_COMPILER "clang-cl.exe" PATHS ENV LLVMInstallDir REQUIRED)
+find_program(CMAKE_CXX_COMPILER "clang-cl.exe" PATHS ENV LLVMInstallDir REQUIRED)
+find_program(CMAKE_AR "llvm-lib.exe" PATHS ENV LLVMInstallDir REQUIRED)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(_vcpkg_clangcl_arch "-m32")
