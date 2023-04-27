@@ -1,0 +1,19 @@
+{
+  "name": "libsystemd",
+  "version": "253",
+  "description": "Libsystemd",
+  "homepage": "https://github.com/systemd/systemd",
+  "supports": "linux",
+  "dependencies": [
+    "libcap",
+    "liblzma",
+    "libmount",
+    "libxcrypt",
+    "lz4",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    "zstd"
+  ]
+}

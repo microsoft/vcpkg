@@ -1,0 +1,57 @@
+
+get_filename_component(_systemd_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_systemd_root "${_systemd_root}" PATH)
+get_filename_component(_systemd_root "${_systemd_root}" PATH)
+
+if (EXISTS "${_systemd_root}/include/systemd")
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(MOUNT REQUIRED IMPORTED_TARGET GLOBAL mount)
+    pkg_check_modules(CAP REQUIRED IMPORTED_TARGET GLOBAL libcap)
+    find_library(RT_LIBRARY rt)
+    find_package(lz4 CONFIG REQUIRED)
+    find_package(liblzma CONFIG REQUIRED)
+    find_package(zstd CONFIG REQUIRED)
+
+    add_library(unofficial::systemd::libsystemd INTERFACE IMPORTED)
+    if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+        set_target_properties(unofficial::systemd::libsystemd PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES   "${_systemd_root}/include"
+            IMPORTED_LOCATION_DEBUG         "${_systemd_root}/debug/lib/libsystemd.a"
+            IMPORTED_LOCATION_RELEASE       "${_systemd_root}/lib/libsystemd.a"
+            IMPORTED_CONFIGURATIONS         "Debug;Release")
+        target_link_libraries(unofficial::systemd::libsystemd
+            INTERFACE
+                zstd::libzstd_static
+        )
+    else()
+        set_target_properties(unofficial::systemd::libsystemd PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES   "${_systemd_root}/include"
+            IMPORTED_LOCATION_DEBUG         "${_systemd_root}/debug/lib/libsystemd.so"
+            IMPORTED_LOCATION_RELEASE       "${_systemd_root}/lib/libsystemd.so"
+            IMPORTED_CONFIGURATIONS         "Debug;Release")
+        target_link_libraries(unofficial::systemd::libsystemd
+            INTERFACE
+                zstd::libzstd_shared
+        )
+    endif()
+
+
+    target_link_libraries(unofficial::systemd::libsystemd
+        INTERFACE
+            lz4::lz4
+            LibLZMA::LibLZMA
+            PkgConfig::MOUNT
+            PkgConfig::CAP
+            ${RT_LIBRARY}
+    )
+
+    set(systemd_FOUND TRUE)
+
+else()
+    message(WARNING "DID not FiND SYSTEMD")
+
+    set(systemd_FOUND FALSE)
+
+endif()
+
+unset(_systemd_root)
