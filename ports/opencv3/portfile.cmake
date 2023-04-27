@@ -1,7 +1,8 @@
 file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
 string(JSON OPENCV_VERSION GET "${_contents}" version)
 
-set(USE_QT_VERSION "5")
+set(USE_QT_VERSION "5"
+set(ENABLE_CXX11 ON)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -290,8 +291,6 @@ if("halide" IN_LIST FEATURES)
     "-DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON"
     "-DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
   )
-else()
-  set(ENABLE_CXX11 ON)
 endif()
 
 if("qt" IN_LIST FEATURES)
