@@ -12,7 +12,7 @@ endif()
 
 set(PATCHLIB fix-dependencies.patch cfg-rel-paths.patch swig-python-polyfill.patch pkgconfig.patch same-install-rules-all-platforms.patch)
 if(VCPKG_TARGET_IS_OSX)
-    set(APPEND PATCHLIB fix_override.patch) # upstream PR:https://github.com/OGRECave/ogre/pull/2831
+    list(APPEND PATCHLIB fix_override.patch) # upstream PR:https://github.com/OGRECave/ogre/pull/2831
 endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
