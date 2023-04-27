@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Dav1dde/glad
     REF 2348b07c1ab4504d60398713781d8a57880234fa # 2.0.4
-    SHA512 0
+    SHA512 333db06eface91db0239e2072f405c0cdc4ba36fd98ee3d7738165270b62392238453885f784f2879edceffb9a93b9d51e97265c761622f0f483ab16d7ce61eb
     HEAD_REF glad2
     PATCHES
         encoding.patch
