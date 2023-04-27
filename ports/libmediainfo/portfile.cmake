@@ -7,6 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         msvc-arm.diff
+        dependencies.diff
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
