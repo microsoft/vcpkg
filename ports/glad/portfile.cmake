@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Dav1dde/glad
-    REF 2348b07c1ab4504d60398713781d8a57880234fa # 0.1.36
+    REF 2348b07c1ab4504d60398713781d8a57880234fa # 2.0.4
     SHA512 0
     HEAD_REF glad2
     PATCHES
