@@ -1,7 +1,7 @@
 {
   "name": "fdlibm",
   "version": "5.3",
-  "port-version": 6,
+  "port-version": 7,
   "description": "FDLIBM (Freely Distributable LIBM) is a C math library for machines that support IEEE 754 floating-point arithmetic",
   "dependencies": [
     {

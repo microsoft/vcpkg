@@ -1,6 +1,7 @@
 {
   "name": "directxtex",
   "version-date": "2023-03-30",
+  "port-version": 1,
   "description": "DirectXTex texture processing library",
   "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",
@@ -34,6 +35,9 @@
     },
     "dx12": {
       "description": "Build with DirectX12 support for Windows 10/Windows 11"
+    },
+    "no-omp": {
+      "description": "Build without using OpenMP support for the BC6H/BC7 software codec"
     },
     "openexr": {
       "description": "Enable OpenEXR support",

@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 676cde2..4562873 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -45,8 +45,8 @@ set(JSONCPP_LIB "jsoncpp_static" CACHE STRING "jsoncpp target name")
+ endif()
+ 
+ if(USE_MSGPACK)
+-  find_package(msgpack CONFIG REQUIRED)
+-  set(MSGPACK_LIB "msgpackc-cxx")
++  find_package(msgpack-cxx CONFIG REQUIRED)
++  set(MSGPACK_LIB "msgpack-cxx")
+ endif()
+ 
+ include_directories (include)

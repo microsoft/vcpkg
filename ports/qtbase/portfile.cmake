@@ -10,15 +10,15 @@ include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
         allow_outside_prefix.patch
-        clang-cl_source_location.patch
         config_install.patch
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
         fix_egl_2.patch
-        clang-cl_QGADGET_fix.diff # Upstream is still figuring out if this is a compiler bug or not.
         installed_dir.patch
         GLIB2-static.patch # alternative is to force pkg-config
+        clang-cl_source_location.patch
+        clang-cl_QGADGET_fix.diff
         )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -273,7 +273,12 @@ set(TOOL_NAMES
         qtpaths
         qtpaths6
         windeployqt
+        windeployqt6
         macdeployqt
+        macdeployqt6
+        androiddeployqt6
+        syncqt
+        tracepointgen
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -332,6 +337,7 @@ list(APPEND other_files
                 target_qt.conf
                 qt-cmake-private-install.cmake
                 qt-testrunner.py
+                sanitizer-testrunner.py
                 )
 
 foreach(_config debug release)
@@ -436,6 +442,12 @@ file(READ "${hostinfofile}" _contents)
 string(REPLACE [[set(QT6_HOST_INFO_LIBEXECDIR "bin")]] [[set(QT6_HOST_INFO_LIBEXECDIR "tools/Qt6/bin")]] _contents "${_contents}")
 string(REPLACE [[set(QT6_HOST_INFO_BINDIR "bin")]] [[set(QT6_HOST_INFO_BINDIR "tools/Qt6/bin")]] _contents "${_contents}")
 file(WRITE "${hostinfofile}" "${_contents}")
+
+if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake"
+                         "PACKAGE_PREFIX_DIR}/bin/syncqt"
+                         "PACKAGE_PREFIX_DIR}/tools/Qt6/bin/syncqt")
+endif()
 
 set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsTargets-debug.cmake")
 if(EXISTS "${configfile}")
