@@ -1,0 +1,81 @@
+diff --git a/cmake/modules/FindLZ4.cmake b/cmake/modules/FindLZ4.cmake
+index 221775a10..3ad09a70d 100644
+--- a/cmake/modules/FindLZ4.cmake
++++ b/cmake/modules/FindLZ4.cmake
+@@ -36,7 +36,7 @@
+ find_path(LZ4_INCLUDE_DIR NAME lz4.h PATH_SUFFIXES include)
+ 
+ if(NOT LZ4_LIBRARY)
+-  find_library(LZ4_LIBRARY NAMES lz4 PATH_SUFFIXES lib)
++  find_library(LZ4_LIBRARY NAMES lz4 lz4d PATH_SUFFIXES lib NAMES_PER_DIR)
+ endif()
+ 
+ mark_as_advanced(LZ4_INCLUDE_DIR)
+diff --git a/cmake/modules/FindPCRE.cmake b/cmake/modules/FindPCRE.cmake
+index a0d72ed05..75fcb96c9 100644
+--- a/cmake/modules/FindPCRE.cmake
++++ b/cmake/modules/FindPCRE.cmake
+@@ -58,7 +58,7 @@ endif()
+ 
+ if(NOT PCRE_PCRE_LIBRARY)
+   find_library(PCRE_PCRE_LIBRARY_RELEASE NAMES pcre)
+-  find_library(PCRE_PCRE_LIBRARY_DEBUG NAMES pcre${CMAKE_DEBUG_POSTFIX} pcred)
++  find_library(PCRE_PCRE_LIBRARY_DEBUG NAMES pcred pcre${CMAKE_DEBUG_POSTFIX})
+   include(SelectLibraryConfigurations)
+   select_library_configurations(PCRE_PCRE)
+ endif()
+diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
+index 3ea0b6aca..368a7f3e9 100644
+--- a/cmake/modules/SearchInstalledSoftware.cmake
++++ b/cmake/modules/SearchInstalledSoftware.cmake
+@@ -1330,6 +1330,9 @@ int main() { return 0; }" tbb_exception_result)
+   endif()
+ 
+   set(TBB_CXXFLAGS "-DTBB_SUPPRESS_DEPRECATED_MESSAGES=1")
++  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++    string(APPEND TBB_CXXFLAGS " -D_DEBUG=1")
++  endif()
+   set(TBB_TARGET TBB::tbb)
+   set(TBB_INCLUDE_DIRS "${VCPKG_INSTALLED_DIR}/include")
+   set(TBB_LIBRARIES "${TBB_TARGET}")
+diff --git a/roofit/jsoninterface/CMakeLists.txt b/roofit/jsoninterface/CMakeLists.txt
+index ae4b3430f..2e6a02d68 100644
+--- a/roofit/jsoninterface/CMakeLists.txt
++++ b/roofit/jsoninterface/CMakeLists.txt
+@@ -13,8 +13,8 @@
+ # nlohmann-json backend. Like this we can also convert to yaml.
+ 
+ message(STATUS "Looking for RapidYAML (used by RooFit)")
+-find_package(ryml)
+-if(${RYML_FOUND})
++find_package(ryml CONFIG)
++if(ryml_FOUND)
+   message(STATUS "RapidYAML found, compiling also RooFit JSON Interface with RapidYAML parser")
+   set(ParserSources src/JSONParser.cxx src/RYMLParser.cxx)
+   add_compile_definitions(ROOFIT_WITH_RYML)
+@@ -35,10 +35,8 @@ ROOT_STANDARD_LIBRARY_PACKAGE(RooFitJSONInterface
+     Core
+ )
+ 
+-if(${RYML_FOUND})
+-  target_include_directories(RooFitJSONInterface PRIVATE ${RYML_INCLUDE_DIRS})
+-  target_link_libraries(RooFitJSONInterface PRIVATE -lc4core -lryml)
+-  target_link_directories(RooFitJSONInterface PRIVATE ${RYML_LIB_DIR})
++if(ryml_FOUND)
++  target_link_libraries(RooFitJSONInterface PRIVATE ryml::ryml)
+ endif()
+ 
+ if(builtin_nlohmannjson)
+diff --git a/roofit/jsoninterface/src/RYMLParser.cxx b/roofit/jsoninterface/src/RYMLParser.cxx
+index f2e98bb58..89f283171 100644
+--- a/roofit/jsoninterface/src/RYMLParser.cxx
++++ b/roofit/jsoninterface/src/RYMLParser.cxx
+@@ -13,7 +13,7 @@
+ #include <sstream>
+ #include <stdexcept>
+ 
+-#include <ryml.hpp>
++#include <ryml/ryml.hpp>
+ #include <c4/yml/std/map.hpp>
+ #include <c4/yml/std/string.hpp>
+ #include <c4/yml/common.hpp>

@@ -17,6 +17,7 @@ vcpkg_from_github(
         build-fixes.patch
         ryml.patch
         fix-curl-linkage.patch
+        fix-debug.patch
 )
 
 message(WARNING "Cling vendors llvm as such there might be similar exported symbols as llvm. If you use both with the MSBuild integration you are on your own!")
