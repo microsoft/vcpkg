@@ -1,0 +1,15 @@
+{
+  "name": "libafterimage",
+  "version-date": "2020-11-13",
+  "description": "libAfterImage is a generic image manipulation library",
+  "homepage": "www.afterstep.org",
+  "license": null,
+  "dependencies": [
+    "libjpeg-turbo",
+    "libpng",
+    "tiff",
+    "giflib",
+    "zlib",
+    "dirent"
+  ]
+}
