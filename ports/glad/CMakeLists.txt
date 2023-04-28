@@ -1,7 +1,5 @@
-cmake_minimum_required(VERSION 3.20)
-project(glad)
+cmake_minimum_required(VERSION 3.8)
+project(glad C CXX)
 
 add_subdirectory(cmake)
-glad_add_library(glad STATIC REPRODUCIBLE API gl:core=4.6)
-target_link_libraries(${PROJECT_NAME} glad)
-target_include_directories(${PROJECT_NAME} PRIVATE "gladsources/glad/include")
+glad_add_library(glad_gl_core_46 STATIC REPRODUCIBLE API gl:core=4.6)
