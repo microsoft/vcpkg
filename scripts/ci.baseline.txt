@@ -1741,12 +1741,12 @@ z3:x64-uwp=fail
 zeroc-ice:arm-neon-android=fail
 zeroc-ice:arm64-android=fail
 zeroc-ice:x64-android=fail
+zeroc-ice:x64-windows=fail
+zeroc-ice:x86-windows=fail
 ztd-text:arm-neon-android=fail
 ztd-text:arm64-android=fail
 ztd-text:x64-android=fail
 zyre:x64-windows-static-md=fail
-zeroc-ice:x86-windows=fail
-zeroc-ice:x64-windows=fail
 
 # Ports which needs to pass in CI
 cmake:x64-windows=pass
