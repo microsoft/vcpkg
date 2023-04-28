@@ -8,6 +8,8 @@ vcpkg_from_github(
     HEAD_REF glad2
 )
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+
 if(NOT GLAD_PROFILE)
     set(GLAD_PROFILE "compatibility")
 endif()
