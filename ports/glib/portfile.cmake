@@ -37,6 +37,7 @@ endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    LANGUAGES C CXX OBJC OBJCXX
     ADDITIONAL_BINARIES
         ${ADDITIONAL_BINARIES}
     OPTIONS
