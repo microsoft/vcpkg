@@ -31,14 +31,14 @@
         "rapidjson"
       ]
     },
+    "samples": {
+      "description": "Enable optional samples"
+    },
     "tbb": {
       "description": "Enable optional usage of tbb",
       "dependencies": [
         "tbb"
       ]
-    },
-    "samples":{
-      "description": "Enable optional samples"    
     }
   }
 }
