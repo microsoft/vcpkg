@@ -4,7 +4,7 @@
   "description": "The ROOT system provides a set of OO frameworks with all the functionality needed to handle and analyze large amounts of data in a very efficient way.",
   "homepage": "https://root.cern/",
   "license": "LGPL-2.1-or-later",
-  "supports": "windows & !uwp"
+  "supports": "windows & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
