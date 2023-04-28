@@ -17,7 +17,6 @@ vcpkg_from_github(
         00009-use-system-upb.patch
         snprintf.patch
         00012-fix-use-cxx17.patch
-        # 00014-pkgconfig-upbdefs.patch
         00015-disable-download-archive.patch
 )
 
