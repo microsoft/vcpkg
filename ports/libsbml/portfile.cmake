@@ -61,7 +61,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(BUILD_SHARED_LIBS)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 else()
     vcpkg_cmake_config_fixup(PACKAGE_NAME libsbml-static CONFIG_PATH lib/cmake)
