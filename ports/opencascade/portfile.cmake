@@ -11,7 +11,7 @@ vcpkg_from_github(
         fix-depend-freetype.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(BUILD_TYPE "Shared")
 else()
     set(BUILD_TYPE "Static")
