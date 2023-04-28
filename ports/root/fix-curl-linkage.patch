@@ -1,0 +1,22 @@
+diff --git a/cmake/modules/FindCFITSIO.cmake b/cmake/modules/FindCFITSIO.cmake
+index d766a8c9f..119473875 100644
+--- a/cmake/modules/FindCFITSIO.cmake
++++ b/cmake/modules/FindCFITSIO.cmake
+@@ -62,7 +62,7 @@ if(CFITSIO_FOUND)
+     if(${CFITSIO_VERSION} VERSION_GREATER_EQUAL 3.42)
+       find_package(CURL QUIET)
+       if(CURL_FOUND)
+-        set(CFITSIO_LIBRARIES ${CFITSIO_LIBRARIES} ${CURL_LIBRARIES})
++        set(CFITSIO_LIBRARIES ${CFITSIO_LIBRARIES} CURL::libcurl)
+       endif()
+     endif()
+   endif()
+@@ -72,7 +72,7 @@ if(CFITSIO_FOUND)
+     set_target_properties(CFITSIO::CFITSIO PROPERTIES
+       IMPORTED_LOCATION "${CFITSIO_LIBRARY}"
+       INTERFACE_INCLUDE_DIRECTORIES "${CFITSIO_INCLUDE_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${CURL_LIBRARIES}"
++      INTERFACE_LINK_LIBRARIES "CURL::libcurl"
+     )
+   endif()
+ endif()
