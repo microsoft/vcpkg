@@ -32,6 +32,7 @@ vcpkg_add_to_path("${GIT_DIR}")
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/python3")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    WINDOWS_USE_MSBUILD
     OPTIONS
         -DBUILD_TESTING=OFF
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
