@@ -8,6 +8,7 @@ vcpkg_from_github(
     PATCHES
         msvc-arm.diff
         dependencies.diff
+        no-windows-namespace.diff
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
