@@ -77,6 +77,7 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+if (NOT VCPKG_BUILD_TYPE)
 # fix paths in target files
 list(APPEND TARGET_FILES 
 	"${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEApplicationFrameworkTargets-debug.cmake"
@@ -94,6 +95,8 @@ foreach(TARGET_FILE IN LISTS TARGET_FILES)
 	string(REGEX REPLACE "bind" "bin" filedata "${filedata}")
 	file(WRITE "${TARGET_FILE}" "${filedata}")
 endforeach()
+
+endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     # debug creates libd and bind directories that need moving
