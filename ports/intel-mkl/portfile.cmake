@@ -77,11 +77,11 @@ if(sha)
 
   if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(7Z)
-    vcpkg_execute_in_download_mode(
-                            COMMAND "${7Z}" x "${archive_path}" "-o${CURRENT_PACKAGES_DIR}/intel-extract" "-y" "-bso0" "-bsp0"
-                            WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
-                        )
-                        
+    vcpkg_execute_required_process(
+        COMMAND "${7Z}" x "${archive_path}" "-o${CURRENT_PACKAGES_DIR}/intel-extract" "-y" "-bso0" "-bsp0"
+        WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
+        LOGNAME "extract-${TARGET_TRIPLET}-0"
+    )
 
     set(packages 
         "intel.oneapi.win.mkl.devel,v=2023.0.0-25930/oneapi-mkl-devel-for-installer_p_2023.0.0.25930.msi" # has the required libs. 
@@ -97,13 +97,11 @@ if(sha)
         set(archive_path "${CURRENT_PACKAGES_DIR}/intel-extract/packages/${pack}")
         cmake_path(GET pack STEM LAST_ONLY packstem)
         cmake_path(NATIVE_PATH archive_path archive_path_native)
-            vcpkg_execute_in_download_mode(
-                            COMMAND "${LESSMSI}" x "${archive_path_native}" # Using output_path here does not work in bash
-                            WORKING_DIRECTORY "${output_path}" 
-                            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-${TARGET_TRIPLET}-out.log"
-                            ERROR_FILE "${CURRENT_BUILDTREES_DIR}/lessmsi-${TARGET_TRIPLET}-err.log"
-                            RESULT_VARIABLE error_code
-                        )
+            vcpkg_execute_required_process(
+                COMMAND "${LESSMSI}" x "${archive_path_native}" # Using output_path here does not work in bash
+                WORKING_DIRECTORY "${output_path}" 
+                LOGNAME "extract-${TARGET_TRIPLET}-${pack}"
+            )
         file(COPY "${output_path}/${packstem}/SourceDir/" DESTINATION "${output_path}")
         file(REMOVE_RECURSE "${output_path}/${packstem}")
     endforeach()
@@ -182,12 +180,11 @@ if(sha)
     set(output_path "${CURRENT_PACKAGES_DIR}/intel-extract")
     file(MAKE_DIRECTORY "${output_path}")
     if(VCPKG_TARGET_IS_LINUX)
-      vcpkg_execute_in_download_mode(
-                            COMMAND "bash" "--verbose" "--noprofile" "${archive_path}" "--extract-only" "--extract-folder" "${output_path}"
-                            WORKING_DIRECTORY "${output_path}"
-                            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/extract-${TARGET_TRIPLET}-out.log"
-                            ERROR_FILE "${CURRENT_BUILDTREES_DIR}/extract-${TARGET_TRIPLET}-err.log"
-                        )
+      vcpkg_execute_required_process(
+          COMMAND "bash" "--verbose" "--noprofile" "${archive_path}" "--extract-only" "--extract-folder" "${output_path}"
+          WORKING_DIRECTORY "${output_path}"
+          LOGNAME "extract-${TARGET_TRIPLET}-0"
+      )
       set(package_dir "${output_path}/l_onemkl_p_2023.0.0.25398_offline/packages")
       set(package_infix "lin")
       set(package_libdir "lib/intel64")
@@ -196,40 +193,49 @@ if(sha)
       find_program(HDIUTIL NAMES hdiutil REQUIRED)
       set(mount_point "${CURRENT_BUILDTREES_DIR}/mount-osx")
       file(MAKE_DIRECTORY "${mount_point}")
-      vcpkg_execute_in_download_mode(
+      vcpkg_execute_required_process(
           COMMAND "${HDIUTIL}" attach "${archive_path}" -mountpoint "${mount_point}"
-          OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/hdiutil-attach-${TARGET_TRIPLET}-out.log"
-          ERROR_FILE "${CURRENT_BUILDTREES_DIR}/hdiutil-attach-${TARGET_TRIPLET}-err.log"
+          WORKING_DIRECTORY "${output_path}"
+          LOGNAME "hdiutil-attach-${TARGET_TRIPLET}"
       )
       set(package_dir "${mount_point}/bootstrapper.app/Contents/Resources/packages")
       set(package_infix "mac")
       set(package_libdir "lib")
       set(compiler_libdir "mac/compiler/lib")
     endif()
-    file(GLOB packages RELATIVE "${package_dir}"
-        "${package_dir}/intel.oneapi.${package_infix}.mkl.devel,v=2023.0.0-*"   # has the required static libs. 
-        "${package_dir}/intel.oneapi.${package_infix}.mkl.runtime,v=2023.0.0-*" # has the required dynamic libs.
-        "${package_dir}/intel.oneapi.${package_infix}.openmp,v=2023.0.0-*"      # OpenMP
+
+    file(GLOB mkl_runtime "${package_dir}/intel.oneapi.${package_infix}.mkl.runtime,v=2023.0.0-*")
+    message(STATUS "Extracting ${mkl_runtime}")
+    vcpkg_execute_required_process(
+        COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${mkl_runtime}/cupPayload.cup"
+            "_installdir/mkl/2023.0.0/lib"
+            "_installdir/mkl/2023.0.0/licensing"
+        WORKING_DIRECTORY "${output_path}"
+        LOGNAME "extract-${TARGET_TRIPLET}-mkl.runtime"
     )
-    foreach(pack IN LISTS packages)
-      message(STATUS "${pack}")
-      vcpkg_execute_in_download_mode(
-          COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${package_dir}/${pack}/cupPayload.cup"
-              "_installdir/compiler/2023.0.0"
-              "_installdir/mkl/2023.0.0/bin"
-              "_installdir/mkl/2023.0.0/include"
-              "_installdir/mkl/2023.0.0/lib"
-              "_installdir/mkl/2023.0.0/licensing"
-          WORKING_DIRECTORY "${output_path}"
-          OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/extract-${pack}-${TARGET_TRIPLET}-out.log"
-          ERROR_FILE "${CURRENT_BUILDTREES_DIR}/extract-${pack}-${TARGET_TRIPLET}-err.log"
-      )
-    endforeach()
+    file(GLOB mkl_devel "${package_dir}/intel.oneapi.${package_infix}.mkl.devel,v=2023.0.0-*")
+    message(STATUS "Extracting ${mkl_devel}")
+    vcpkg_execute_required_process(
+        COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${mkl_devel}/cupPayload.cup"
+            "_installdir/mkl/2023.0.0/bin"
+            "_installdir/mkl/2023.0.0/include"
+            "_installdir/mkl/2023.0.0/lib"
+        WORKING_DIRECTORY "${output_path}"
+        LOGNAME "extract-${TARGET_TRIPLET}-mkl.devel"
+    )
+    file(GLOB openmp "${package_dir}/intel.oneapi.${package_infix}.openmp,v=2023.0.0-*")
+    message(STATUS "Extracting ${openmp}")
+    vcpkg_execute_required_process(
+        COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${openmp}/cupPayload.cup"
+            "_installdir/compiler/2023.0.0"
+        WORKING_DIRECTORY "${output_path}"
+        LOGNAME "extract-${TARGET_TRIPLET}-openmp"
+    )
     if(VCPKG_TARGET_IS_OSX)
-      vcpkg_execute_in_download_mode(
+      vcpkg_execute_required_process(
           COMMAND "${HDIUTIL}" detach "${mount_point}"
-          OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/hdiutil-detach-${TARGET_TRIPLET}-out.log"
-          ERROR_FILE "${CURRENT_BUILDTREES_DIR}/hdiutil-detach-${TARGET_TRIPLET}-err.log"
+          WORKING_DIRECTORY "${output_path}"
+          LOGNAME "hdiutil-detach-${TARGET_TRIPLET}"
       )
     endif()
 
