@@ -29,12 +29,6 @@ if(GENERATE_SYMBOLS)
 endif()
 
 vcpkg_list(SET OPTIONS)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_list(APPEND OPTIONS --disable-static)
-else()
-    vcpkg_list(APPEND OPTIONS --disable-shared)
-endif()
-
 if("tools" IN_LIST FEATURES)
     vcpkg_list(APPEND OPTIONS --enable-tools)
 endif()
@@ -95,6 +89,7 @@ vcpkg_configure_make(
         --disable-tools
 )
 vcpkg_install_make()
+vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_CROSSCOMPILING)
     set(tool_names desdata eccdata) # aes gcm sha twofish?
@@ -108,9 +103,10 @@ if("tools" IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 endif()
 
-vcpkg_fixup_pkgconfig()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYINGv3")
 
