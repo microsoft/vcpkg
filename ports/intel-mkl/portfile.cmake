@@ -97,11 +97,11 @@ if(sha)
         set(archive_path "${CURRENT_PACKAGES_DIR}/intel-extract/packages/${pack}")
         cmake_path(GET pack STEM LAST_ONLY packstem)
         cmake_path(NATIVE_PATH archive_path archive_path_native)
-            vcpkg_execute_required_process(
-                COMMAND "${LESSMSI}" x "${archive_path_native}" # Using output_path here does not work in bash
-                WORKING_DIRECTORY "${output_path}" 
-                LOGNAME "extract-${TARGET_TRIPLET}-${pack}"
-            )
+        vcpkg_execute_required_process(
+            COMMAND "${LESSMSI}" x "${archive_path_native}" # Using output_path here does not work in bash
+            WORKING_DIRECTORY "${output_path}" 
+            LOGNAME "extract-${TARGET_TRIPLET}-${packstem}"
+        )
         file(COPY "${output_path}/${packstem}/SourceDir/" DESTINATION "${output_path}")
         file(REMOVE_RECURSE "${output_path}/${packstem}")
     endforeach()
@@ -208,7 +208,7 @@ if(sha)
                                      "-DHDIUTIL=${HDIUTIL}"
                                      -P "${CMAKE_CURRENT_LIST_DIR}/copy-from-dmg.cmake"
           WORKING_DIRECTORY "${output_path}"
-          LOGNAME "extract-${TARGET_TRIPLET}"
+          LOGNAME "extract-${TARGET_TRIPLET}-0"
       )
       set(package_infix "mac")
       set(package_libdir "lib")
