@@ -178,6 +178,7 @@ if(sha)
     # cmake -E tar -xf <payload>
     
     set(output_path "${CURRENT_PACKAGES_DIR}/intel-extract")
+    file(REMOVE_RECURSE "${output_path}")
     file(MAKE_DIRECTORY "${output_path}")
     if(VCPKG_TARGET_IS_LINUX)
       vcpkg_execute_required_process(
@@ -191,14 +192,20 @@ if(sha)
       set(compiler_libdir "linux/compiler/lib/intel64_lin")
     elseif(VCPKG_TARGET_IS_OSX)
       find_program(HDIUTIL NAMES hdiutil REQUIRED)
-      set(mount_point "${CURRENT_BUILDTREES_DIR}/mount-osx")
+      set(mount_point "${output_path}/mount-intel-mkl")
       file(MAKE_DIRECTORY "${mount_point}")
+      set(package_dir "${output_path}/packages")
+      file(MAKE_DIRECTORY "${package_dir}")
+      message(STATUS "Copying packages from DMG")
       vcpkg_execute_required_process(
-          COMMAND "${HDIUTIL}" attach "${archive_path}" -mountpoint "${mount_point}"
+          COMMAND "${CMAKE_COMMAND}" "-Darchive_path=${archive_path}"
+                                     "-Dmount_point=${mount_point}"
+                                     "-Dpackage_dir=${package_dir}"
+                                     "-DHDIUTIL=${HDIUTIL}"
+                                     -P "${CMAKE_CURRENT_LIST_DIR}/copy-from-dmg.cmake"
           WORKING_DIRECTORY "${output_path}"
-          LOGNAME "hdiutil-attach-${TARGET_TRIPLET}"
+          LOGNAME "extract-${TARGET_TRIPLET}"
       )
-      set(package_dir "${mount_point}/bootstrapper.app/Contents/Resources/packages")
       set(package_infix "mac")
       set(package_libdir "lib")
       set(compiler_libdir "mac/compiler/lib")
@@ -231,13 +238,6 @@ if(sha)
         WORKING_DIRECTORY "${output_path}"
         LOGNAME "extract-${TARGET_TRIPLET}-openmp"
     )
-    if(VCPKG_TARGET_IS_OSX)
-      vcpkg_execute_required_process(
-          COMMAND "${HDIUTIL}" detach "${mount_point}"
-          WORKING_DIRECTORY "${output_path}"
-          LOGNAME "hdiutil-detach-${TARGET_TRIPLET}"
-      )
-    endif()
 
     set(basepath "${output_path}/_installdir/mkl/2023.0.0/")
     set(basepath2 "${output_path}/_installdir/compiler/2023.0.0/")
