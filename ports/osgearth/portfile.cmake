@@ -33,11 +33,12 @@ if("tools" IN_LIST FEATURES)
 endif()
 
 file(REMOVE
-    "${SOURCE_PATH}/CMakeModule/FindGEOS.cmake"
-    "${SOURCE_PATH}/CMakeModule/FindLibZip.cmake"
-    "${SOURCE_PATH}/CMakeModule/FindOSG.cmake"
-    "${SOURCE_PATH}/CMakeModule/FindSqlite3.cmake"
-    "${SOURCE_PATH}/CMakeModule/FindWEBP.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindBlend2D.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindGEOS.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindLibZip.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindOSG.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindSqlite3.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindWEBP.cmake"
     "${SOURCE_PATH}/src/osgEarth/tinyxml.h" # https://github.com/gwaldron/osgearth/issues/1002
 )
 
@@ -46,7 +47,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools       OSGEARTH_BUILD_TOOLS
-        blend2d     CMAKE_REQUIRE_FIND_PACKAGE_BLEND2D
+        blend2d     WITH_BLEND2D
 )
 
 vcpkg_cmake_configure(
@@ -54,6 +55,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLIB_POSTFIX=
+        -DCMAKE_CXX_STANDARD=11
         -DOSGEARTH_BUILD_SHARED_LIBS=${BUILD_SHARED}
         -DOSGEARTH_BUILD_EXAMPLES=OFF
         -DOSGEARTH_BUILD_TESTS=OFF
