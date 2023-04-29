@@ -17,8 +17,8 @@ vcpkg_from_gitlab(
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
-# Temporarily set to 1 to re-generate the lists of exported symbols.
-# This is needed when the version is bumped.
+# Maintainer switch: Temporarily set this to 1 to re-generate the lists
+# of exported symbols. This is needed when the version is bumped.
 set(GENERATE_SYMBOLS 0)
 if(GENERATE_SYMBOLS)
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
