@@ -173,7 +173,11 @@ if(sha)
     file(INSTALL "${CURRENT_PACKAGES_DIR}/intel-extract/packages/intel.oneapi.win.mkl.product,v=2023.0.0-25930/licenses/license.htm" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
     file(INSTALL "${basepath}licensing" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
   else()
-    message(WARNING "This port is still a work on progress. E.g. it is not correctly filtering the libraries in accordance with VCPKG_LIBRARY_LINKAGE. Furthermore it is using the default threading which is Intel OpenMP which is known to segfault if GNU OpenMP is also used elsewhere!")
+    message(STATUS "Warning: This port is still a work on progress. 
+   E.g. it is not correctly filtering the libraries in accordance with
+   VCPKG_LIBRARY_LINKAGE. It is using the default threading (Intel OpenMP)
+   which is known to segfault when used together with GNU OpenMP.
+")
     #./l_onemkl_p_2023.0.0.25398_offline.sh --extract-only -a -s
     # cmake -E tar -xf <payload>
     
