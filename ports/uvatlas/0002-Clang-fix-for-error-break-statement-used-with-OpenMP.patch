@@ -1,0 +1,27 @@
+diff --git a/UVAtlas/isochart/isochartengine.cpp b/UVAtlas/isochart/isochartengine.cpp
+index 8ed7f54..c0687be 100644
+--- a/UVAtlas/isochart/isochartengine.cpp
++++ b/UVAtlas/isochart/isochartengine.cpp
+@@ -311,9 +311,9 @@ HRESULT CIsochartEngine::ParameterizeChartsInHeapParallelized(
+             for (int n = 0; n < static_cast<int>(parent.size()); ++n)
+             {
+                 if (FAILED(hrOut)) // for the other threads
+-                    break;
++                    continue;
+ 
+-                auto pChart = parent[n];
++                auto pChart = parent[static_cast<size_t>(n)];
+                 assert(pChart != nullptr);
+                 _Analysis_assume_(pChart != nullptr);
+ 
+@@ -323,7 +323,7 @@ HRESULT CIsochartEngine::ParameterizeChartsInHeapParallelized(
+                 if (FAILED(hr))
+                 {
+                     hrOut = hr; // doesn't need pragma atomic as all changes to hrOut are to set it to FAILED
+-                    break;
++                    continue;
+                 }
+ 
+                 // If current chart has been partitoned, just children add to heap to be
+-- 
+2.39.2.windows.1

@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b77c045..b006330 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -133,6 +133,15 @@ target_include_directories(${PROJECT_NAME} PUBLIC
+ 
+ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+ 
++if(UVATLAS_USE_OPENMP)
++  find_package(OpenMP)
++  if(OpenMP_CXX_FOUND)
++    target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_CXX)
++  else()
++    set(UVATLAS_USE_OPENMP OFF)
++  endif()
++endif()
++
+ target_include_directories(${PROJECT_NAME} PRIVATE UVAtlas UVAtlas/geodesics UVAtlas/isochart)
+ 
+ if(NOT MINGW)
+@@ -251,6 +260,10 @@ if(BUILD_TOOLS AND WIN32)
+         Microsoft::DirectXMesh::Utilities)
+     source_group(uvatlastool REGULAR_EXPRESSION UVAtlasTool/*.*)
+ 
++    if(UVATLAS_USE_OPENMP)
++      target_link_libraries(uvatlastool OpenMP::OpenMP_CXX)
++    endif()
++
+     if(directxmath_FOUND)
+       target_link_libraries(uvatlastool Microsoft::DirectXMath)
+     endif()
+@@ -367,8 +380,9 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+     endif()
+ 
+     if(UVATLAS_USE_OPENMP)
++        # OpenMP in MSVC is not compatible with /permissive- unless you disable two-phase lookup
+         foreach(t IN LISTS TOOL_EXES ITEMS ${PROJECT_NAME})
+-          target_compile_options(${t} PRIVATE /openmp /Zc:twoPhase-)
++          target_compile_options(${t} PRIVATE /Zc:twoPhase-)
+         endforeach()
+     endif()
+ 
+-- 
+2.39.2.windows.1
