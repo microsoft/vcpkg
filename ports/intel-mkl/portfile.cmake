@@ -59,7 +59,7 @@ endif()
 set(main_pc_file "mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc")
 
 # First extraction level: packages (from offline installer)
-set(extract_0_dir "${CURRENT_BUILDTREES_DIR}/intel-extract/${TARGET_TRIPLET}")
+set(extract_0_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-extract")
 file(REMOVE_RECURSE "${extract_0_dir}")
 file(MAKE_DIRECTORY "${extract_0_dir}")
 
