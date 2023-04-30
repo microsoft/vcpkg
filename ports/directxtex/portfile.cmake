@@ -18,8 +18,6 @@ vcpkg_check_features(
         openexr ENABLE_OPENEXR_SUPPORT
         spectre ENABLE_SPECTRE_MITIGATION
         tools BUILD_TOOLS
-    INVERTED_FEATURES
-        no-omp BC_USE_OPENMP
 )
 
 if(VCPKG_TARGET_IS_MINGW AND ("dx11" IN_LIST FEATURES))
