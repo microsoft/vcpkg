@@ -127,7 +127,7 @@ if(sha)
     else()
       set(files "mkl_core.lib" "mkl_${threading}.lib" "mkl_intel_${interface}.lib" "mkl_blas95_${interface}.lib" "mkl_lapack95_${interface}.lib")
     endif()
-    foreach(file IN LIST files)
+    foreach(file IN LISTS files)
       file(COPY "${mkl_dir}/lib/intel64/${file}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64") # instead of manual-link keep normal structure
       if(NOT VCPKG_BUILD_TYPE)
         file(COPY "${mkl_dir}/lib/intel64/${file}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/intel64")
