@@ -59,8 +59,6 @@ if(sha)
       SHA512 ${sha}
   )
 
-  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
-
   # Note: intel_thread and lp64 are the defaults.
   set(interface "ilp64") # or ilp64; ilp == 64 bit int api
   #https://www.intel.com/content/www/us/en/develop/documentation/onemkl-linux-developer-guide/top/linking-your-application-with-onemkl/linking-in-detail/linking-with-interface-libraries/using-the-ilp64-interface-vs-lp64-interface.html
@@ -75,11 +73,21 @@ if(sha)
       string(SUBSTRING "${threading}" "0" "3" short_thread)
   endif()
 
+  # First extraction level: packages (from offline installer)
+  set(extract_0_dir "${CURRENT_BUILDTREES_DIR}/intel-extract/${TARGET_TRIPLET}")
+  file(REMOVE_RECURSE "${extract_0_dir}")
+  file(MAKE_DIRECTORY "${extract_0_dir}")
+
+  # Second extraction level: actual files (from packages)
+  set(extract_1_dir "${CURRENT_PACKAGES_DIR}/intel-extract")
+  file(REMOVE_RECURSE "${extract_1_dir}")
+  file(MAKE_DIRECTORY "${extract_1_dir}")
+
   if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(7Z)
     vcpkg_execute_required_process(
-        COMMAND "${7Z}" x "${archive_path}" "-o${CURRENT_PACKAGES_DIR}/intel-extract" "-y" "-bso0" "-bsp0"
-        WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
+        COMMAND "${7Z}" x "${archive_path}" "-o${extract_0_dir}" "-y" "-bso0" "-bsp0"
+        WORKING_DIRECTORY "${extract_0_dir}"
         LOGNAME "extract-${TARGET_TRIPLET}-0"
     )
 
@@ -91,123 +99,105 @@ if(sha)
         #"intel.oneapi.win.tbb.runtime,v=2021.8.0-25874" #TBB
         )
 
-    set(output_path "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}") # vcpkg.cmake adds everything in /tools to CMAKE_PROGRAM_PATH. That is not desired 
-    file(MAKE_DIRECTORY "${output_path}")
     foreach(pack IN LISTS packages)
-        set(archive_path "${CURRENT_PACKAGES_DIR}/intel-extract/packages/${pack}")
+        set(archive_path "${extract_0_dir}/packages/${pack}")
         cmake_path(GET pack STEM LAST_ONLY packstem)
         cmake_path(NATIVE_PATH archive_path archive_path_native)
         vcpkg_execute_required_process(
-            COMMAND "${LESSMSI}" x "${archive_path_native}" # Using output_path here does not work in bash
-            WORKING_DIRECTORY "${output_path}" 
+            COMMAND "${LESSMSI}" x "${archive_path_native}"
+            WORKING_DIRECTORY "${extract_1_dir}" 
             LOGNAME "extract-${TARGET_TRIPLET}-${packstem}"
         )
-        file(COPY "${output_path}/${packstem}/SourceDir/" DESTINATION "${output_path}")
-        file(REMOVE_RECURSE "${output_path}/${packstem}")
+        file(COPY "${extract_1_dir}/${packstem}/SourceDir/" DESTINATION "${extract_1_dir}")
+        file(REMOVE_RECURSE "${extract_1_dir}/${packstem}")
     endforeach()
 
-    set(basepath "${output_path}/Intel/Compiler/12.0/mkl/2023.0.0/")
-    set(basepath2 "${output_path}/Intel/Compiler/12.0/compiler/2023.0.0/")
-    file(REMOVE_RECURSE "${output_path}/Intel/shared files"
-                        "${output_path}/Intel/Compiler/12.0/conda_channel"
-                        "${basepath}tools"
-                        "${basepath}interfaces"
-                        "${basepath}examples"
-                        "${basepath}bin"
-                        "${basepath}benchmarks"
-                        )
+    set(mkl_dir "${extract_1_dir}/Intel/Compiler/12.0/mkl/2023.0.0")
+    set(compiler_dir "${extract_1_dir}/Intel/Compiler/12.0/compiler/2023.0.0")
 
-    file(COPY "${basepath}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+    file(COPY "${mkl_dir}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
     # see https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-link-line-advisor.html for linking
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
       set(files "mkl_core_dll.lib" "mkl_${threading}_dll.lib" "mkl_intel_${interface}_dll.lib" "mkl_blas95_${interface}.lib" "mkl_lapack95_${interface}.lib") # "mkl_rt.lib" single dynamic lib with dynamic dispatch
-      file(COPY "${basepath}redist/intel64/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin") # Could probably be reduced instead of copying all
+      file(COPY "${mkl_dir}/redist/intel64/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin") # Could probably be reduced instead of copying all
       if(NOT VCPKG_BUILD_TYPE)
-        file(COPY "${basepath}redist/intel64/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(COPY "${mkl_dir}/redist/intel64/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
       endif()
     else()
       set(files "mkl_core.lib" "mkl_${threading}.lib" "mkl_intel_${interface}.lib" "mkl_blas95_${interface}.lib" "mkl_lapack95_${interface}.lib")
     endif()
-    foreach(file ${files})
-      file(COPY "${basepath}lib/intel64/${file}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64") # instead of manual-link keep normal structure
+    foreach(file IN LIST files)
+      file(COPY "${mkl_dir}/lib/intel64/${file}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64") # instead of manual-link keep normal structure
       if(NOT VCPKG_BUILD_TYPE)
-        file(COPY "${basepath}lib/intel64/${file}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/intel64")
+        file(COPY "${mkl_dir}/lib/intel64/${file}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/intel64")
       endif()
     endforeach()
 
-    configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" @ONLY)
+    configure_file("${mkl_dir}/lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" @ONLY)
     if(NOT VCPKG_BUILD_TYPE)
-      configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" @ONLY)
+      configure_file("${mkl_dir}/lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" @ONLY)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" "/include" "/../include")
     endif()
 
     if(threading STREQUAL "intel_thread")
-      file(COPY "${basepath2}windows/redist/intel64_win/compiler/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-      file(COPY "${basepath2}windows/compiler/lib/intel64_win/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
-      configure_file("${basepath2}lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" @ONLY)
+      file(COPY "${compiler_dir}/windows/redist/intel64_win/compiler/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+      file(COPY "${compiler_dir}/windows/compiler/lib/intel64_win/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
+      configure_file("${compiler_dir}/lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" @ONLY)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" "/windows/compiler/lib/intel64_win/" "/lib/intel64/")
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" "Cflags: -I \${includedir}" "")
       if(NOT VCPKG_BUILD_TYPE)
-          file(COPY "${basepath2}windows/redist/intel64_win/compiler/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-          file(COPY "${basepath2}windows/compiler/lib/intel64_win/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/intel64")
-          configure_file("${basepath2}lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libiomp5.pc" @ONLY)
+          file(COPY "${compiler_dir}/windows/redist/intel64_win/compiler/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+          file(COPY "${compiler_dir}/windows/compiler/lib/intel64_win/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/intel64")
+          configure_file("${compiler_dir}/lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libiomp5.pc" @ONLY)
           vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libiomp5.pc" "/windows/compiler/lib/intel64_win/" "/lib/intel64/")
           vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libiomp5.pc" "Cflags: -I \${includedir}" "")
       endif()
-      configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" @ONLY)
+      configure_file("${mkl_dir}/lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" @ONLY)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" "openmp" "libiomp5")
       if(NOT VCPKG_BUILD_TYPE)
-        configure_file("${basepath}lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" @ONLY)
+        configure_file("${mkl_dir}/lib/pkgconfig/mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" @ONLY)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" "openmp" "libiomp5")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mkl.pc" "/include" "/../include")
       endif()
     endif()
 
-
-    file(COPY "${basepath}lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
+    file(COPY "${mkl_dir}/lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "MKL_CMAKE_PATH}/../../../" "MKL_CMAKE_PATH}/../../")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "redist/\${MKL_ARCH}/" "bin")
     #TODO: Hardcode settings from portfile in config.cmake
     #TODO. Give lapack/blas information about the correct BLA_VENDOR depending on settings. 
 
     file(INSTALL "${CURRENT_PACKAGES_DIR}/intel-extract/packages/intel.oneapi.win.mkl.product,v=2023.0.0-25930/licenses/license.htm" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-    file(INSTALL "${basepath}licensing" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    file(INSTALL "${mkl_dir}/licensing" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
   else()
     message(STATUS "Warning: This port is still a work on progress. 
    E.g. it is not correctly filtering the libraries in accordance with
    VCPKG_LIBRARY_LINKAGE. It is using the default threading (Intel OpenMP)
    which is known to segfault when used together with GNU OpenMP.
 ")
-    #./l_onemkl_p_2023.0.0.25398_offline.sh --extract-only -a -s
-    # cmake -E tar -xf <payload>
     
-    set(output_path "${CURRENT_PACKAGES_DIR}/intel-extract")
-    file(REMOVE_RECURSE "${output_path}")
-    file(MAKE_DIRECTORY "${output_path}")
     message(STATUS "Extracting packages")
     if(VCPKG_TARGET_IS_LINUX)
       vcpkg_execute_required_process(
-          COMMAND "bash" "--verbose" "--noprofile" "${archive_path}" "--extract-only" "--extract-folder" "${output_path}"
-          WORKING_DIRECTORY "${output_path}"
+          COMMAND "bash" "--verbose" "--noprofile" "${archive_path}" "--extract-only" "--extract-folder" "${extract_0_dir}"
+          WORKING_DIRECTORY "${extract_0_dir}"
           LOGNAME "extract-${TARGET_TRIPLET}-0"
       )
-      set(package_dir "${output_path}/l_onemkl_p_2023.0.0.25398_offline/packages")
+      file(RENAME "${extract_0_dir}/l_onemkl_p_2023.0.0.25398_offline/packages" "${extract_0_dir}/packages")
       set(package_infix "lin")
       set(package_libdir "lib/intel64")
       set(compiler_libdir "linux/compiler/lib/intel64_lin")
     elseif(VCPKG_TARGET_IS_OSX)
       find_program(HDIUTIL NAMES hdiutil REQUIRED)
-      set(mount_point "${output_path}/mount-intel-mkl")
-      file(MAKE_DIRECTORY "${mount_point}")
-      set(package_dir "${output_path}/packages")
-      file(MAKE_DIRECTORY "${package_dir}")
+      file(MAKE_DIRECTORY "${extract_0_dir}/mount-intel-mkl")
+      file(MAKE_DIRECTORY "${extract_0_dir}/packages")
       vcpkg_execute_required_process(
           COMMAND "${CMAKE_COMMAND}" "-Darchive_path=${archive_path}"
-                                     "-Dmount_point=${mount_point}"
-                                     "-Dpackage_dir=${package_dir}"
+                                     "-Dmount_point=${extract_0_dir}/mount-intel-mkl"
+                                     "-Dpackage_dir=${extract_0_dir}/packages"
                                      "-DHDIUTIL=${HDIUTIL}"
                                      -P "${CMAKE_CURRENT_LIST_DIR}/copy-from-dmg.cmake"
-          WORKING_DIRECTORY "${output_path}"
+          WORKING_DIRECTORY "${extract_0_dir}"
           LOGNAME "extract-${TARGET_TRIPLET}-0"
       )
       set(package_infix "mac")
@@ -215,39 +205,39 @@ if(sha)
       set(compiler_libdir "mac/compiler/lib")
     endif()
 
-    file(GLOB mkl_runtime "${package_dir}/intel.oneapi.${package_infix}.mkl.runtime,v=2023.0.0-*")
+    file(GLOB mkl_runtime "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.runtime,v=2023.0.0-*")
     message(STATUS "Extracting ${mkl_runtime}")
     vcpkg_execute_required_process(
         COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${mkl_runtime}/cupPayload.cup"
             "_installdir/mkl/2023.0.0/lib"
             "_installdir/mkl/2023.0.0/licensing"
-        WORKING_DIRECTORY "${output_path}"
+        WORKING_DIRECTORY "${extract_1_dir}"
         LOGNAME "extract-${TARGET_TRIPLET}-mkl.runtime"
     )
-    file(GLOB mkl_devel "${package_dir}/intel.oneapi.${package_infix}.mkl.devel,v=2023.0.0-*")
+    file(GLOB mkl_devel "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.devel,v=2023.0.0-*")
     message(STATUS "Extracting ${mkl_devel}")
     vcpkg_execute_required_process(
         COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${mkl_devel}/cupPayload.cup"
             "_installdir/mkl/2023.0.0/bin"
             "_installdir/mkl/2023.0.0/include"
             "_installdir/mkl/2023.0.0/lib"
-        WORKING_DIRECTORY "${output_path}"
+        WORKING_DIRECTORY "${extract_1_dir}"
         LOGNAME "extract-${TARGET_TRIPLET}-mkl.devel"
     )
-    file(GLOB openmp "${package_dir}/intel.oneapi.${package_infix}.openmp,v=2023.0.0-*")
+    file(GLOB openmp "${extract_0_dir}/packages/intel.oneapi.${package_infix}.openmp,v=2023.0.0-*")
     message(STATUS "Extracting ${openmp}")
     vcpkg_execute_required_process(
         COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${openmp}/cupPayload.cup"
             "_installdir/compiler/2023.0.0"
-        WORKING_DIRECTORY "${output_path}"
+        WORKING_DIRECTORY "${extract_1_dir}"
         LOGNAME "extract-${TARGET_TRIPLET}-openmp"
     )
 
-    set(basepath "${output_path}/_installdir/mkl/2023.0.0/")
-    set(basepath2 "${output_path}/_installdir/compiler/2023.0.0/")
+    set(mkl_dir "${extract_1_dir}/_installdir/mkl/2023.0.0")
+    set(compiler_dir "${extract_1_dir}/_installdir/compiler/2023.0.0")
 
-    file(COPY "${basepath}include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-    file(COPY "${basepath}${package_libdir}/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
+    file(COPY "${mkl_dir}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+    file(COPY "${mkl_dir}/${package_libdir}/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
       set(to_remove_suffix .a)
@@ -266,13 +256,13 @@ if(sha)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
     set(main_pc_file "mkl-${VCPKG_LIBRARY_LINKAGE}-${interface}-${short_thread}.pc")
     set(pc_files "mkl.pc" "${main_pc_file}")
-    configure_file("${basepath}lib/pkgconfig/${main_pc_file}" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" @ONLY)
+    configure_file("${mkl_dir}/lib/pkgconfig/${main_pc_file}" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" @ONLY)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" "\${exec_prefix}/${package_libdir}" "\${exec_prefix}/lib/intel64")
     if(threading STREQUAL "intel_thread")
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mkl.pc" "openmp" "libiomp5")
-      file(COPY "${basepath2}${compiler_libdir}/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
+      file(COPY "${compiler_dir}/${compiler_libdir}/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
       list(APPEND pc_files "libiomp5.pc")
-      configure_file("${basepath2}lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" @ONLY)
+      configure_file("${compiler_dir}/lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" @ONLY)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" "/linux/compiler/lib/intel64/" "/lib/intel64/")
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" "/mac/compiler/lib/" "/lib/intel64/")
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc" "Cflags:" "# Cflags:")
@@ -287,33 +277,35 @@ if(sha)
       endforeach()
     endif()
 
-    file(COPY "${basepath}lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
+    file(COPY "${mkl_dir}/lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "MKL_CMAKE_PATH}/../../../" "MKL_CMAKE_PATH}/../../")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "redist/\${MKL_ARCH}/" "bin")
     #TODO: Hardcode settings from portfile in config.cmake
-    file(REMOVE_RECURSE "${basepath}lib/cmake")
 
     vcpkg_list(SET license_file_list)
-    file(MAKE_DIRECTORY "${output_path}/copyright")
-    file(GLOB license_files RELATIVE "${basepath}licensing" "${basepath}licensing/*")
+    file(MAKE_DIRECTORY "${extract_1_dir}/copyright")
+    file(GLOB license_files RELATIVE "${mkl_dir}/licensing" "${mkl_dir}/licensing/*")
     list(REMOVE_ITEM license_files "license.txt" "license_installer.txt" "third-party-programs.txt")
     foreach(file IN ITEMS "license.txt" "third-party-programs.txt" LISTS license_files)
-        set(file_path "${output_path}/copyright/# ${file}")
-        file(COPY_FILE "${basepath}licensing/${file}" "${file_path}")
+        set(file_path "${extract_1_dir}/copyright/# ${file}")
+        file(COPY_FILE "${mkl_dir}/licensing/${file}" "${file_path}")
         vcpkg_list(APPEND license_file_list "${file_path}")
     endforeach()
-    file(GLOB license_files RELATIVE "${basepath2}licensing/openmp" "${basepath2}licensing/openmp/*")
+    file(GLOB license_files RELATIVE "${compiler_dir}/licensing/openmp" "${compiler_dir}/licensing/openmp/*")
     foreach(file IN LISTS license_files)
-        set(file_path "${output_path}/copyright/# openmp ${file}")
-        file(COPY_FILE "${basepath2}licensing/openmp/${file}" "${file_path}")
+        set(file_path "${extract_1_dir}/copyright/# openmp ${file}")
+        file(COPY_FILE "${compiler_dir}/licensing/openmp/${file}" "${file_path}")
         vcpkg_list(APPEND license_file_list "${file_path}")
     endforeach()
     vcpkg_install_copyright(FILE_LIST ${license_file_list})
   endif()
 
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/intel-extract"
-                      "${CURRENT_PACKAGES_DIR}/manual-tools"
-                      )
+  file(REMOVE_RECURSE
+      "${extract_0_dir}"
+      "${extract_1_dir}"
+      "${CURRENT_PACKAGES_DIR}/lib/intel64/cmake"
+      "${CURRENT_PACKAGES_DIR}/lib/intel64/pkgconfig"
+  )
 endif()
 
 if(NOT sha)
