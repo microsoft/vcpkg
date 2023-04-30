@@ -1,0 +1,99 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a415de5e..0cc5298d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,6 +51,11 @@ option(USE_JBUF "Enable JBUF" ON)
+ option(USE_PCP "Enable PCP" ON)
+ option(USE_RTMP "Enable RTMP" ON)
+ option(USE_SIP "Enable SIP" ON)
++if(WIN32)
++  option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
++else()
++  option(BUILD_SHARED_LIBS "Build shared libraries" ON)
++endif()
+ 
+ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+ 
+@@ -651,46 +656,20 @@ endif()
+ 
+ ##############################################################################
+ #
+-# Main target object
+-#
+-
+-add_library(re-objs OBJECT ${SRCS} ${HEADERS})
+-
+-set_target_properties(re-objs PROPERTIES POSITION_INDEPENDENT_CODE ON)
+-
+-target_compile_definitions(re-objs PRIVATE ${RE_DEFINITIONS})
+-
+-target_include_directories(re-objs PRIVATE .)
+-target_include_directories(re-objs PRIVATE include
+-  ${OPENSSL_INCLUDE_DIR} ${ZLIB_INCLUDE_DIRS})
+-
+-
+-##############################################################################
+-#
+-# Shared target libre.[so|dll|dylib]
++# Target library
+ #
+ 
+-add_library(re-shared SHARED $<TARGET_OBJECTS:re-objs>)
+-target_link_libraries(re-shared PRIVATE ${LINKLIBS})
+-set_target_properties(re-shared PROPERTIES VERSION
+-  ${PROJECT_SOVERSION}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+-set_target_properties(re-shared PROPERTIES SOVERSION ${PROJECT_SOVERSION})
+-set_target_properties(re-shared PROPERTIES OUTPUT_NAME "re")
+-
+-
+-##############################################################################
+-#
+-# Static target libre.a
+-#
+-
+-add_library(re STATIC $<TARGET_OBJECTS:re-objs>)
++add_library(re ${SRCS} ${HEADERS})
+ target_link_libraries(re PUBLIC ${LINKLIBS})
+ target_include_directories(re PUBLIC include)
+ set_target_properties(re PROPERTIES PUBLIC_HEADER "${HEADERS}")
+ 
+-if(MSVC)
+-set_target_properties(re PROPERTIES OUTPUT_NAME "re-static")
+-endif()
++set_target_properties(re PROPERTIES POSITION_INDEPENDENT_CODE ON)
++set_target_properties(re PROPERTIES OUTPUT_NAME "re")
++target_compile_definitions(re PRIVATE ${RE_DEFINITIONS})
++target_include_directories(re PRIVATE .)
++target_include_directories(re PRIVATE include
++  ${OPENSSL_INCLUDE_DIR} ${ZLIB_INCLUDE_DIRS})
+ 
+ 
+ ##############################################################################
+@@ -710,11 +689,11 @@ configure_file(packaging/libre.pc.in libre.pc @ONLY)
+ # Install section
+ #
+ 
+-install(TARGETS re-shared re
++install(TARGETS re
+   LIBRARY
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     COMPONENT Libraries
+-    NAMELINK_SKIP
++    NAMELINK_COMPONENT Development
+   ARCHIVE
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     COMPONENT Development
+@@ -723,13 +702,6 @@ install(TARGETS re-shared re
+     COMPONENT Development
+ )
+ 
+-install(TARGETS re-shared
+-  LIBRARY
+-    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    NAMELINK_ONLY
+-    COMPONENT Development
+-)
+-
+ install(FILES cmake/re-config.cmake
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/re
+   COMPONENT Development

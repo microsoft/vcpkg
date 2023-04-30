@@ -1,4 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,7 +6,7 @@ vcpkg_from_github(
     SHA512 139243a2d999c5c58ad34ddc7693b93f90b981f807e85607532721a2014d963c0c5d810bee4626d39abcb968f40b5415b1675450f162d1a4c26417f02b7d9b34
     HEAD_REF main
     PATCHES
-        cmake.diff
+        776.diff
 )
 
 
@@ -28,8 +27,8 @@ vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME libre CONFIG_PATH lib/cmake/re)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
