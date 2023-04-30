@@ -12,10 +12,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
         SHA512 e5b5d387cff693a7f5ee98c2d2df75f421129b006e4324ae30ace0cbaac58867f048868ddfacdb3224c7165c8f27219c4273f3c778be3330d39ef95260d4186b
     )
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE "${ARCHIVE_FILE}"
-        REF 7.0.0
+        SOURCE_BASE 7.0.0
     )
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -39,10 +39,10 @@ elseif(VCPKG_TARGET_IS_OSX)
         SHA512 fd46ac45e8906854ededb9e30ee3ba8bdd05588e6ca7c9fdf140254ee637d32565417d799da33b23228f1ade8111fcae037eed4cf978a11d35e70ab8861214a2
     )
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE "${ARCHIVE_FILE}"
-        REF 7.0.0
+        SOURCE_BASE 7.0.0
     )
 
     file(COPY "${SOURCE_PATH}/lib/libchartdir.7.dylib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
@@ -70,10 +70,10 @@ elseif(VCPKG_TARGET_IS_LINUX)
 
     endif()
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE "${ARCHIVE_FILE}"
-        REF 7.0.0
+        SOURCE_BASE 7.0.0
     )
 
     file(COPY "${SOURCE_PATH}/lib/libchartdir.so.7.0.0" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")

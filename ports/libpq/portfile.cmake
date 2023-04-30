@@ -11,7 +11,7 @@ vcpkg_download_distfile(ARCHIVE
 set(PATCHES
         patches/windows/install.patch
         patches/windows/win_bison_flex.patch
-        patches/windows/openssl_exe_path.patch
+        patches/windows/openssl-version.patch
         patches/windows/Solution.patch
         patches/windows/MSBuildProject_fix_gendef_perl.patch
         patches/windows/msgfmt.patch
@@ -31,7 +31,6 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
 endif()
 if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
     list(APPEND PATCHES patches/windows/arm.patch)
-    list(APPEND PATCHES patches/windows/host_skip_openssl.patch) # Skip openssl.exe version check since it cannot be executed by the host
 endif()
 if(NOT "${FEATURES}" MATCHES "client")
     list(APPEND PATCHES patches/windows/minimize_install.patch)
@@ -88,6 +87,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_cmake_get_vars(vars_file)
     include("${vars_file}")
 
+    if("openssl" IN_LIST FEATURES)
+        file(STRINGS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/openssl.pc" OPENSSL_VERSION REGEX "Version:")
+        if(OPENSSL_VERSION)
+            set(ENV{VCPKG_OPENSSL_VERSION} "${OPENSSL_VERSION}")
+        endif()
+    endif()
+
     file(GLOB SOURCE_FILES ${SOURCE_PATH}/*)
     foreach(_buildtype ${port_config_list})
         # Copy libpq sources.
@@ -140,8 +146,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
            vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
         endif()
         if("${FEATURES}" MATCHES "openssl")
-            set(buildenv_contents "${buildenv_contents}\n\$ENV{'PATH'}=\$ENV{'PATH'} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
-            #set(_contents "${_contents}\n\$ENV{PATH}=\$ENV{PATH} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
             string(REPLACE "openssl   => undef" "openssl   => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
         if("${FEATURES}" MATCHES "python")

@@ -1,6 +1,6 @@
 {
   "name": "linalg",
-  "version-string": "2.1",
-  "port-version": 1,
+  "version": "2.1",
+  "port-version": 2,
   "description": "linalg.h is a single header public domain linear algebra library for C++11"
 }

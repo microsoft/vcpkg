@@ -4,8 +4,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 4778658fe6b08af29b51807e2d988f8425d99d630a14d8fef9ca4ea43016d676df419a93c4b2fdecc0549c28c0665f61e366bd4e7aa896ebb8e47f56d5af1887
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
 )
 
@@ -37,6 +37,15 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+
+# libast_pass2 is a hyperlink / symbol link
+if (EXISTS "{CURRENT_PACKAGES_DIR}/lib/libast_pass2${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    file(REMOVE "{CURRENT_PACKAGES_DIR}/lib/libast_pass2${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+endif()
+
+if (EXISTS "{CURRENT_PACKAGES_DIR}/debug/lib/libast_pass2${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    file(REMOVE "{CURRENT_PACKAGES_DIR}/debug/lib/libast_pass2${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share")

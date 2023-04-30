@@ -1,7 +1,6 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/gnu/libtasn1/libtasn1-${VERSION}.tar.gz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libtasn1/libtasn1-${VERSION}.tar.gz"
     FILENAME "libtasn1-${VERSION}.tar.gz"
     SHA512 287f5eddfb5e21762d9f14d11997e56b953b980b2b03a97ed4cd6d37909bda1ed7d2cdff9da5d270a21d863ab7e54be6b85c05f1075ac5d8f0198997cf335ef4
 )
@@ -11,6 +10,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     SOURCE_BASE "v${VERSION}"
     PATCHES
         msvc_fixes.patch
+        clang-fortify.patch # ported from https://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=522aea1093a598246346b3e1c426505c344fe19a
 )
 
 vcpkg_find_acquire_program(BISON)
@@ -31,7 +31,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND EXTRA_OPTS "CFLAGS=\$CFLAGS -DASN1_STATIC")
 endif()
 
-set(ENV{GTKDOCIZE} true)
+set(ENV{GTKDOCIZE} true) # true, the program
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG

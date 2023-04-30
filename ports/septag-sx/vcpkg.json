@@ -1,7 +1,7 @@
 {
   "name": "septag-sx",
-  "version-string": "2019-05-07",
-  "port-version": 4,
+  "version-date": "2019-05-07",
+  "port-version": 5,
   "description": "Portable base library for C programmers, designed for performance and simplicity.",
   "supports": "!(uwp | arm)",
   "dependencies": [

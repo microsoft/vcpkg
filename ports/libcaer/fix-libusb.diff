@@ -1,0 +1,17 @@
+diff --git a/cmakemod/libcaerConfig.cmake.in b/cmakemod/libcaerConfig.cmake.in
+index cdf9f88..475d543 100644
+--- a/cmakemod/libcaerConfig.cmake.in
++++ b/cmakemod/libcaerConfig.cmake.in
+@@ -21,6 +21,12 @@
+ CMAKE_POLICY(PUSH)
+ CMAKE_POLICY(VERSION 3.10)
+ 
++include(CMakeFindDependencyMacro)
++if(NOT "@CC_MSVC@")
++    find_dependency(PkgConfig)
++    pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
++endif()
++
+ INCLUDE(@PACKAGE_export_destination@/libcaer-exports.cmake)
+ SET(libcaer_INCLUDE_DIRS @PACKAGE_include_dirs@)
+ 
