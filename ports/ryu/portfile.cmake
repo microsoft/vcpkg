@@ -1,13 +1,40 @@
-function(prepare_bazel_opts flags opts switch)
-    separate_arguments(${flags} NATIVE_COMMAND ${${flags}})
-    list(TRANSFORM ${flags} PREPEND ${switch}=)
-    set(${opts} "${${flags}}" PARENT_SCOPE)
-endfunction()
+function(bazel_build build_type)
+    set(c_flags "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
+    set(linker_flags "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}")
+    set(log_suffix "rel")
+    if (${build_type} STREQUAL "debug")
+        set(c_flags "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+        set(linker_flags "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
+        set(log_suffix "dbg")
+        set(destination_modifier "/debug")
+    endif ()
 
-function(prepare_bazel_env_opts flags env_name)
-    separate_arguments(${flags} NATIVE_COMMAND ${${flags}})
-    list(JOIN ${flags} : ${flags})
-    set(ENV{${env_name}} "${${flags}}")
+    separate_arguments(conly_opts NATIVE_COMMAND "${c_flags}")
+    separate_arguments(link_opts NATIVE_COMMAND "${linker_flags}")
+
+    if (DEFINED ENV{CC})
+        list(JOIN conly_opts ":" joined_opts)
+        set(ENV{BAZEL_CXXOPTS} "${joined_opts}")
+        list(JOIN link_opts ":" joined_opts)
+        set(ENV{BAZEL_LINKOPTS} "${joined_opts}")
+    endif ()
+
+    list(TRANSFORM conly_opts PREPEND "--conlyopt=")
+    list(TRANSFORM link_opts PREPEND "--linkopt=")
+
+    vcpkg_execute_build_process(
+            COMMAND "${BAZEL}" --batch ${BAZEL_OUTPUT} build ${BAZEL_COMPILER} ${BAZEL_CPU} ${conly_opts} ${link_opts} --verbose_failures --strategy=CppCompile=standalone //ryu //ryu:ryu_printf
+            WORKING_DIRECTORY "${SOURCE_PATH}"
+            LOGNAME "build-${TARGET_TRIPLET}-${log_suffix}"
+    )
+
+    if ("${CMAKE_STATIC_LIBRARY_SUFFIX}" STREQUAL ".lib")
+        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/ryu.lib" DESTINATION "${CURRENT_PACKAGES_DIR}${destination_modifier}/lib")
+        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/ryu_printf.lib" DESTINATION "${CURRENT_PACKAGES_DIR}${destination_modifier}/lib")
+    else ()
+        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/libryu.a" DESTINATION "${CURRENT_PACKAGES_DIR}${destination_modifier}/lib")
+        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/libryu_printf.a" DESTINATION "${CURRENT_PACKAGES_DIR}${destination_modifier}/lib")
+    endif ()
 endfunction()
 
 vcpkg_from_github(
@@ -69,58 +96,15 @@ else ()
 endif ()
 
 if ("${VCPKG_BUILD_TYPE}" STREQUAL "" OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
-
-    prepare_bazel_opts(VCPKG_COMBINED_C_FLAGS_RELEASE CONLY_OPTS_RELEASE "--conlyopt")
-    prepare_bazel_opts(VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE LINK_OPTS_RELEASE "--linkopt")
-    if (DEFINED ENV{CC})
-        prepare_bazel_env_opts(VCPKG_COMBINED_C_FLAGS_RELEASE BAZEL_CXXOPTS)
-        prepare_bazel_env_opts(VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE BAZEL_LINKOPTS)
-    endif ()
-
-    vcpkg_execute_build_process(
-            COMMAND "${BAZEL}" --batch ${BAZEL_OUTPUT} build ${BAZEL_COMPILER} ${BAZEL_CPU} ${CONLY_OPTS_RELEASE} ${LINK_OPTS_RELEASE} --verbose_failures --strategy=CppCompile=standalone //ryu //ryu:ryu_printf
-            WORKING_DIRECTORY "${SOURCE_PATH}"
-            LOGNAME "build-${TARGET_TRIPLET}-rel"
-    )
-
-    if ("${CMAKE_STATIC_LIBRARY_SUFFIX}" STREQUAL ".lib")
-        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/ryu.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/")
-        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/ryu_printf.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/")
-    else ()
-        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/libryu.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/")
-        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/libryu_printf.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/")
-    endif ()
-
+    bazel_build("release")
 endif ()
 
 if ("${VCPKG_BUILD_TYPE}" STREQUAL "" OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
-
-    prepare_bazel_opts(VCPKG_COMBINED_C_FLAGS_DEBUG CONLY_OPTS_DEBUG "--conlyopt")
-    prepare_bazel_opts(VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG LINK_OPTS_DEBUG "--linkopt")
-
-    if (DEFINED ENV{CC})
-        prepare_bazel_env_opts(VCPKG_COMBINED_C_FLAGS_DEBUG BAZEL_CXXOPTS)
-        prepare_bazel_env_opts(VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG BAZEL_LINKOPTS)
-    endif ()
-
-    vcpkg_execute_build_process(
-            COMMAND "${BAZEL}" --batch ${BAZEL_OUTPUT} build ${BAZEL_COMPILER} ${BAZEL_CPU} ${CONLY_OPTS_DEBUG} ${LINK_OPTS_DEBUG} --verbose_failures --strategy=CppCompile=standalone //ryu //ryu:ryu_printf
-            WORKING_DIRECTORY "${SOURCE_PATH}"
-            LOGNAME "build-${TARGET_TRIPLET}-dbg"
-    )
-
-    if ("${CMAKE_STATIC_LIBRARY_SUFFIX}" STREQUAL ".lib")
-        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/ryu.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/")
-        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/ryu_printf.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/")
-    else ()
-        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/libryu.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/")
-        file(INSTALL "${SOURCE_PATH}/bazel-bin/ryu/libryu_printf.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/")
-    endif ()
-
+    bazel_build("debug")
 endif ()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE-Boost" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/ryu/ryu.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/ryu/")
-file(INSTALL "${SOURCE_PATH}/ryu/ryu2.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/ryu/")
+file(INSTALL "${SOURCE_PATH}/ryu/ryu.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/ryu")
+file(INSTALL "${SOURCE_PATH}/ryu/ryu2.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/ryu")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/ryuConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
