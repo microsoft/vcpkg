@@ -8,6 +8,10 @@
     {
       "name": "libiconv",
       "platform": "!linux"
+    },
+    {
+      "name": "vcpkg-autoconf-cache",
+      "host": true
     }
   ]
 }

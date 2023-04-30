@@ -10,13 +10,24 @@
   ],
   "features": {
     "runtime-tools": {
-      "description": "Build runtime tools for internationalization of scripts"
+      "description": "Build runtime tools for internationalization of scripts",
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "vcpkg-autoconf-cache",
+          "host": true
+        }
+      ]
     },
     "tools": {
       "description": "Build gettext tools",
       "supports": "!uwp",
       "dependencies": [
-        "libiconv"
+        "libiconv",
+        {
+          "name": "vcpkg-autoconf-cache",
+          "host": true
+        }
       ]
     }
   }

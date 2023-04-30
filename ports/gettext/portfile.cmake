@@ -89,6 +89,7 @@ if(subdirs)
             # Faster, but not for export
             --disable-namespacing
             # Avoid unnecessary tests.
+            am_cv_func_iconv_works=yes
             "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
             "--with-libintl-prefix=${CURRENT_INSTALLED_DIR}"
             # This is required. For some reason these do not get correctly identified for release builds.
@@ -126,16 +127,18 @@ if(subdirs)
         endif()
     endif()
 
-    if(NOT DEFINED VCPKG_AUTOTOOLS_CONFIG_CACHE)
-        set(VCPKG_AUTOTOOLS_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/${TARGET_TRIPLET}.sh")
+    if(NOT DEFINED VCPKG_AUTOCONF_CONFIG_CACHE)
+        set(VCPKG_AUTOCONF_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/${TARGET_TRIPLET}.sh")
         if(VCPKG_TARGET_IS_MINGW)
-            set(VCPKG_AUTOTOOLS_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/mingw.sh")
+            set(VCPKG_AUTOCONF_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/mingw.sh")
         elseif(VCPKG_TARGET_IS_WINDOWS)
-            set(VCPKG_AUTOTOOLS_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/windows.sh")
+            set(VCPKG_AUTOCONF_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/windows.sh")
         endif()
     endif()
-    include("${CMAKE_CURRENT_LIST_DIR}/config-cache-support.cmake")
-    config_cache_setup(config_cache_release config_cache_debug_unused)
+    x_vcpkg_autoconf_cache_setup(
+        CACHE_FILE "${VCPKG_AUTOCONF_CONFIG_CACHE}"
+        OUT_OPTIONS_RELEASE config_cache_release
+    )
     vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
         DETERMINE_BUILD_TRIPLET
         USE_WRAPPERS
@@ -145,7 +148,7 @@ if(subdirs)
         OPTIONS_RELEASE
             ${config_cache_release}
     )
-    config_cache_teardown()
+    x_vcpkg_autoconf_cache_teardown()
 
     # This helps with Windows build times, but should work everywhere in vcpkg.
     # - Avoid an extra command to move a temporary file, we are building out of source.

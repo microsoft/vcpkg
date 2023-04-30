@@ -1,0 +1,7 @@
+{
+  "name": "vcpkg-autoconf-cache",
+  "version-date": "2023-04-30",
+  "description": "Maintain cache files for autoconf-generated configure scripts",
+  "license": "MIT",
+  "supports": "native"
+}
