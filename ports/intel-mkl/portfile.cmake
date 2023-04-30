@@ -184,6 +184,7 @@ if(sha)
     set(output_path "${CURRENT_PACKAGES_DIR}/intel-extract")
     file(REMOVE_RECURSE "${output_path}")
     file(MAKE_DIRECTORY "${output_path}")
+    message(STATUS "Extracting packages")
     if(VCPKG_TARGET_IS_LINUX)
       vcpkg_execute_required_process(
           COMMAND "bash" "--verbose" "--noprofile" "${archive_path}" "--extract-only" "--extract-folder" "${output_path}"
@@ -200,7 +201,6 @@ if(sha)
       file(MAKE_DIRECTORY "${mount_point}")
       set(package_dir "${output_path}/packages")
       file(MAKE_DIRECTORY "${package_dir}")
-      message(STATUS "Copying packages from DMG")
       vcpkg_execute_required_process(
           COMMAND "${CMAKE_COMMAND}" "-Darchive_path=${archive_path}"
                                      "-Dmount_point=${mount_point}"
@@ -256,9 +256,11 @@ if(sha)
     else()
       set(to_remove_suffix .so)
     endif()
-    file(GLOB_RECURSE files_to_remove "${CURRENT_PACKAGES_DIR}/${package_libdir}/*${to_remove_suffix}" "${CURRENT_PACKAGES_DIR}/lib/intel64/*${to_remove_suffix}.?")
+    file(GLOB_RECURSE files_to_remove
+        "${CURRENT_PACKAGES_DIR}/lib/intel64/*${to_remove_suffix}"
+        "${CURRENT_PACKAGES_DIR}/lib/intel64/*${to_remove_suffix}.?"
+    )
     file(REMOVE ${files_to_remove})
-    
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
@@ -289,6 +291,7 @@ if(sha)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "MKL_CMAKE_PATH}/../../../" "MKL_CMAKE_PATH}/../../")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "redist/\${MKL_ARCH}/" "bin")
     #TODO: Hardcode settings from portfile in config.cmake
+    file(REMOVE_RECURSE "${basepath}lib/cmake")
 
     vcpkg_list(SET license_file_list)
     file(MAKE_DIRECTORY "${output_path}/copyright")
