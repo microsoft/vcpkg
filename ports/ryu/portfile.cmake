@@ -95,11 +95,8 @@ else ()
     set(ENV{CC} "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 endif ()
 
-if ("${VCPKG_BUILD_TYPE}" STREQUAL "" OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
-    bazel_build("release")
-endif ()
-
-if ("${VCPKG_BUILD_TYPE}" STREQUAL "" OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
+bazel_build("release")
+if (NOT VCPKG_BUILD_TYPE)
     bazel_build("debug")
 endif ()
 
