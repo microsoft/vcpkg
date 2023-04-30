@@ -85,6 +85,7 @@ if(sha)
 
   if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(7Z)
+    message(STATUS "Extracting offline installer")
     vcpkg_execute_required_process(
         COMMAND "${7Z}" x "${archive_path}" "-o${extract_0_dir}" "-y" "-bso0" "-bsp0"
         WORKING_DIRECTORY "${extract_0_dir}"
@@ -176,7 +177,7 @@ if(sha)
    which is known to segfault when used together with GNU OpenMP.
 ")
     
-    message(STATUS "Extracting packages")
+    message(STATUS "Extracting offline installer")
     if(VCPKG_TARGET_IS_LINUX)
       vcpkg_execute_required_process(
           COMMAND "bash" "--verbose" "--noprofile" "${archive_path}" "--extract-only" "--extract-folder" "${extract_0_dir}"
@@ -191,6 +192,7 @@ if(sha)
       find_program(HDIUTIL NAMES hdiutil REQUIRED)
       file(MAKE_DIRECTORY "${extract_0_dir}/mount-intel-mkl")
       file(MAKE_DIRECTORY "${extract_0_dir}/packages")
+      message(STATUS "... Don't interrupt.")
       vcpkg_execute_required_process(
           COMMAND "${CMAKE_COMMAND}" "-Darchive_path=${archive_path}"
                                      "-Dmount_point=${extract_0_dir}/mount-intel-mkl"
@@ -200,13 +202,14 @@ if(sha)
           WORKING_DIRECTORY "${extract_0_dir}"
           LOGNAME "extract-${TARGET_TRIPLET}-0"
       )
+      message(STATUS "... Done.")
       set(package_infix "mac")
       set(package_libdir "lib")
       set(compiler_libdir "mac/compiler/lib")
     endif()
 
     file(GLOB mkl_runtime "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.runtime,v=2023.0.0-*")
-    message(STATUS "Extracting ${mkl_runtime}")
+    message(STATUS "Extracting mkl runtime")
     vcpkg_execute_required_process(
         COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${mkl_runtime}/cupPayload.cup"
             "_installdir/mkl/2023.0.0/lib"
@@ -215,7 +218,7 @@ if(sha)
         LOGNAME "extract-${TARGET_TRIPLET}-mkl.runtime"
     )
     file(GLOB mkl_devel "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.devel,v=2023.0.0-*")
-    message(STATUS "Extracting ${mkl_devel}")
+    message(STATUS "Extracting mkl devel")
     vcpkg_execute_required_process(
         COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${mkl_devel}/cupPayload.cup"
             "_installdir/mkl/2023.0.0/bin"
@@ -225,7 +228,7 @@ if(sha)
         LOGNAME "extract-${TARGET_TRIPLET}-mkl.devel"
     )
     file(GLOB openmp "${extract_0_dir}/packages/intel.oneapi.${package_infix}.openmp,v=2023.0.0-*")
-    message(STATUS "Extracting ${openmp}")
+    message(STATUS "Extracting openmp")
     vcpkg_execute_required_process(
         COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${openmp}/cupPayload.cup"
             "_installdir/compiler/2023.0.0"
