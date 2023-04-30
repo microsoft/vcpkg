@@ -19,25 +19,17 @@ execute_process(
 )
 if(mount_result STREQUAL "0")
     set(dmg_packages_dir "${mount_point}/bootstrapper.app/Contents/Resources/packages")
-    file(GLOB packages RELATIVE "${dmg_packages_dir}"
+    file(GLOB packages
         "${dmg_packages_dir}/intel.oneapi.mac.mkl.devel,*"
         "${dmg_packages_dir}/intel.oneapi.mac.mkl.runtime,*"
+        "${dmg_packages_dir}/intel.oneapi.mac.mkl.product,*"
         "${dmg_packages_dir}/intel.oneapi.mac.openmp,*"
     )
-    foreach(pack IN LISTS packages)
-        # Using execute_process to avoid direct errors
-        execute_process(COMMAND mkdir "${output_dir}/${pack}"
-            RESULT_VARIABLE copy_result
-        )
-        if(copy_result STREQUAL "0")
-            execute_process(COMMAND cp "${dmg_packages_dir}/${pack}/cupPayload.cup" "${output_dir}/${pack}/"
-                RESULT_VARIABLE copy_result
-            )
-        endif()
-        if(NOT copy_result STREQUAL "0")
-            break()
-        endif()
-    endforeach()
+    # Using execute_process to avoid direct errors
+    execute_process(
+        COMMAND cp -R ${packages} "${output_dir}/"
+        RESULT_VARIABLE copy_result
+    )
 endif()
 execute_process(
     COMMAND "${HDIUTIL}" detach "${mount_point}"
