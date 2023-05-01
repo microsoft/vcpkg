@@ -1,0 +1,22 @@
+ build/DirectXTex-config.cmake.in | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/build/DirectXTex-config.cmake.in b/build/DirectXTex-config.cmake.in
+index 2538e16..28a34ee 100644
+--- a/build/DirectXTex-config.cmake.in
++++ b/build/DirectXTex-config.cmake.in
+@@ -3,6 +3,11 @@
+ include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
+ include(CMakeFindDependencyMacro)
+ 
++set(BC_USE_OPENMP @BC_USE_OPENMP@)
++if(BC_USE_OPENMP)
++    find_dependency(OpenMP)
++endif()
++
+ set(ENABLE_OPENEXR_SUPPORT @ENABLE_OPENEXR_SUPPORT@)
+ if(ENABLE_OPENEXR_SUPPORT)
+     find_dependency(OpenEXR)
+-- 
+2.39.2.windows.1
+

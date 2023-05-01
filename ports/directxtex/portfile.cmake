@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF ${DIRECTXTEX_TAG}
     SHA512 038def9514958329d30abb519ff3cb113831eefadc8b1d215c0e1d42539f9928a5b89234ed9d0e2cd72b584f6d657faf182c9d76bd3e5b05cbf2d28c6bf04bab
     HEAD_REF main
+    PATCHES 0001-Update-CMake-config-file-to-include-OpenMP.patch
     )
 
 vcpkg_check_features(

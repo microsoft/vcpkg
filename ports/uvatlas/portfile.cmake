@@ -12,6 +12,7 @@ vcpkg_from_github(
     openexr.patch
     0001-Update-CMake-to-use-OpenMP-via-built-in-support.patch
     0002-Clang-fix-for-error-break-statement-used-with-OpenMP.patch
+    0003-Update-CMake-config-file-to-include-OpenMP.patch
 )
 
 vcpkg_check_features(

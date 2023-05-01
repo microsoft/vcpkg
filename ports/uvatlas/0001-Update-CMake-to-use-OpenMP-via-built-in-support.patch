@@ -1,3 +1,6 @@
+ CMakeLists.txt | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index b77c045..b006330 100644
 --- a/CMakeLists.txt
@@ -42,3 +45,4 @@ index b77c045..b006330 100644
  
 -- 
 2.39.2.windows.1
+

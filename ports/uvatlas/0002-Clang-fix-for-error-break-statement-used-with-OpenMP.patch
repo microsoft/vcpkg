@@ -1,3 +1,6 @@
+ UVAtlas/isochart/isochartengine.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
 diff --git a/UVAtlas/isochart/isochartengine.cpp b/UVAtlas/isochart/isochartengine.cpp
 index 8ed7f54..c0687be 100644
 --- a/UVAtlas/isochart/isochartengine.cpp
@@ -25,3 +28,4 @@ index 8ed7f54..c0687be 100644
                  // If current chart has been partitoned, just children add to heap to be
 -- 
 2.39.2.windows.1
+
