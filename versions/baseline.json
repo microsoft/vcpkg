@@ -2234,7 +2234,7 @@
     },
     "ebml": {
       "baseline": "1.4.4",
-      "port-version": 0
+      "port-version": 1
     },
     "ecm": {
       "baseline": "5.98.0",
@@ -5082,7 +5082,7 @@
     },
     "matroska": {
       "baseline": "1.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "mbedtls": {
       "baseline": "2.28.1",
