@@ -7649,8 +7649,8 @@
       "port-version": 0
     },
     "starlink-ast": {
-      "baseline": "9.2.7",
-      "port-version": 3
+      "baseline": "9.2.10",
+      "port-version": 0
     },
     "staticjson": {
       "baseline": "1.0.0",
