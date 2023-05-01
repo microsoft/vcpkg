@@ -6,9 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
     REF ${DIRECTXTEX_TAG}
-    SHA512 038def9514958329d30abb519ff3cb113831eefadc8b1d215c0e1d42539f9928a5b89234ed9d0e2cd72b584f6d657faf182c9d76bd3e5b05cbf2d28c6bf04bab
+    SHA512 112e25a61ff04dea82e0e6c695df8bf6a480008a2f6f68239b7393696f960b5fa5e42b93ba2043c652c34565f9b0ac9b3ac855204a0dc5f9b62e147ad5bacfbc
     HEAD_REF main
-    PATCHES 0001-Update-CMake-config-file-to-include-OpenMP.patch
     )
 
 vcpkg_check_features(

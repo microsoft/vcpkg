@@ -6,13 +6,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
     REF ${UVATLAS_TAG}
-    SHA512 3836ccde6d43482c70a2c1909edf8034e04316d0e4afaeb137cd5cfc377345213d5c159688f9d0adf306030f4f9d9d83ce754026e3dc656c363bfb9d21a80dc3
+    SHA512 e65eb32d80460ec6a679929dcb6d4518000e6697dd055616f59b564a87bb63a7696e0d78407a6e820d12e71ac0680d1aa382bf0408d7b2f5c3768db0bc867098
     HEAD_REF main
-    PATCHES
-    openexr.patch
-    0001-Update-CMake-to-use-OpenMP-via-built-in-support.patch
-    0002-Clang-fix-for-error-break-statement-used-with-OpenMP.patch
-    0003-Update-CMake-config-file-to-include-OpenMP.patch
+    PATCHES openexr.patch
 )
 
 vcpkg_check_features(
