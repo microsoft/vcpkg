@@ -1,7 +1,7 @@
 {
   "name": "tiny-bignum-c",
-  "version-string": "2019-07-31",
-  "port-version": 2,
+  "version-date": "2019-07-31",
+  "port-version": 3,
   "description": "Small portable multiple-precision unsigned integer arithmetic in C",
   "homepage": "https://github.com/kokke/tiny-bignum-c",
   "dependencies": [

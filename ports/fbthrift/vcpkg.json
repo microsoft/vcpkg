@@ -1,7 +1,7 @@
 {
   "name": "fbthrift",
   "version-string": "2022.03.21.00",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Facebook's branch of Apache Thrift, including a new C++ server.",
   "homepage": "https://github.com/facebook/fbthrift",
   "license": "Apache-2.0",

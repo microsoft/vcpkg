@@ -32,6 +32,7 @@ vcpkg_cmake_configure(
         -DSLEEPY_VCPKG=ON 
         -DAUTO_DOWNLOAD_LIBRARY=OFF 
         -DUSE_BOOST_ASIO=ON
+        -DCMAKE_CXX_STANDARD=17
         ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
@@ -40,4 +41,4 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sleepy-discord)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
