@@ -1,0 +1,11 @@
+{
+  "name": "axcioma",
+  "version-date": "2023-04-26",
+  "description": "AXCIOMA - Component Framework for Smart Information Systems",
+  "homepage": "https://www.axcioma.org/",
+  "dependencies": [
+    "openssl",
+    "xerces-c",
+    "zlib"
+  ]
+}

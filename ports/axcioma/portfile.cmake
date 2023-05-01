@@ -1,6 +1,8 @@
-include(vcpkg_common_definitions)
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/ace")
+    message(FATAL_ERROR "FATAL ERROR: ace and axcioma are incompatible.")
+endif()
 
-
+#include(vcpkg_common_definitions)
 
 set(INSTALLED_PATH ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET})
 if(${CMAKE_BUILD_TYPE} MATCHES "^Debug$")
@@ -14,7 +16,6 @@ endif()
 #
 ###################################################
 
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RemedyIT/axcioma
@@ -22,9 +23,6 @@ vcpkg_from_github(
     SHA512 38cd56de659daa203fadc939e8f13c3b22b93585086ef4da3c32cd4ff2ace6ece7eee7c14e30014520e5ef9fe2b8e82c9810e41787ca46f3043dfc4155dec164
     HEAD_REF master
 )
-
-
-
 
 set(ACE_ROOT ${SOURCE_PATH}/ACE/ACE)
 set(TAO_ROOT ${SOURCE_PATH}/ACE/TAO)
@@ -42,7 +40,6 @@ set(DANCEX11_SOURCE_PATH ${DANCEX11_BASE_PATH}/dancex11)
 
 set(CIAOX11_BASE_PATH ${SOURCE_PATH}/taox11/ciaox11)
 set(CIAOX11_SOURCE_PATH CIAOX11_BASE_PATH/dancex11)
-
 
 
 
@@ -69,6 +66,54 @@ get_filename_component(GIT_PATH ${GIT} DIRECTORY)
 vcpkg_add_to_path(${GIT_PATH})
 
 
+function(get_git_tag_sha REPO_URL TAG_NAME OUTPUT_VARIABLE)
+	set(REF "refs/tags/")
+	if(${TAG_NAME} STREQUAL "master")
+		set(REF "")
+	endif()
+  execute_process(
+    COMMAND ${GIT} ls-remote ${REPO_URL} ${REF}${TAG_NAME}
+    OUTPUT_VARIABLE SHA_VALUE
+    RESULT_VARIABLE RESULT
+    ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  if(NOT ${RESULT} EQUAL 0)
+    message(FATAL_ERROR "Failed to get the SHA for the tag '${TAG_NAME}' from the repository '${REPO_URL}'.")
+  endif()
+  string(REGEX REPLACE "^([0-9a-f]+)\t.*" "\\1" SHA_VALUE ${SHA_VALUE})
+  set(${OUTPUT_VARIABLE} ${SHA_VALUE} PARENT_SCOPE)
+endfunction()
+
+
+file(READ ${SOURCE_PATH}/etc/brix11rc BRIX11RC_CONTENT)
+string(JSON BRIX11RC_BOOTSTRAP GET ${BRIX11RC_CONTENT} bootstrap)
+string(JSON BRIX11RC_BOOTSTRAP_LENGTH LENGTH ${BRIX11RC_BOOTSTRAP})
+math(EXPR BRIX11RC_BOOTSTRAP_LENGTH "${BRIX11RC_BOOTSTRAP_LENGTH} - 1")
+
+foreach(IDX RANGE ${BRIX11RC_BOOTSTRAP_LENGTH})
+	string(JSON BRIX11RC_DIR GET ${BRIX11RC_BOOTSTRAP} ${IDX} dir)
+	string(JSON BRIX11RC_REPO GET ${BRIX11RC_BOOTSTRAP} ${IDX} repo)
+	string(JSON BRIX11RC_TAG GET ${BRIX11RC_BOOTSTRAP} ${IDX} tag)
+	string(JSON BRIX11RC_COL_LENGTH LENGTH ${BRIX11RC_BOOTSTRAP} ${IDX} collections)
+	
+	if(${BRIX11RC_COL_LENGTH} EQUAL 2) # exclude dance and ciao for now (only build taox11)
+		if(NOT EXISTS "${SOURCE_PATH}/${BRIX11RC_DIR}")
+		
+			get_git_tag_sha(${BRIX11RC_REPO} ${BRIX11RC_TAG} TAG_SHA)
+			
+			vcpkg_from_git(
+				OUT_SOURCE_PATH SUB_SOURCE_PATH
+				URL ${BRIX11RC_REPO}
+				REF ${TAG_SHA}
+			)
+			
+			file(RENAME "${SUB_SOURCE_PATH}" "${SOURCE_PATH}/${BRIX11RC_DIR}")
+			
+		endif()
+	endif()
+endforeach()
+
+
 set(BRIX11 "${SOURCE_PATH}/bin/brix11")
 if(VCPKG_TARGET_IS_WINDOWS)
   string(APPEND BRIX11 ".bat")
@@ -79,14 +124,15 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 
-vcpkg_execute_required_process(
-  COMMAND ${BRIX11} bootstrap taox11
-  WORKING_DIRECTORY ${SOURCE_PATH}
-  LOGNAME brix11-bootstrap-${TARGET_TRIPLET}
-)
+
+#vcpkg_execute_required_process(
+#  COMMAND ${BRIX11} bootstrap taox11
+#  WORKING_DIRECTORY ${SOURCE_PATH}
+#  LOGNAME brix11-bootstrap-${TARGET_TRIPLET}
+#)
 
 vcpkg_execute_required_process(
-  COMMAND ${BRIX11} configure -b 0 --with=versioned_so=0
+  COMMAND ${BRIX11} configure # -b 0 --with=versioned_so=0
   WORKING_DIRECTORY ${SOURCE_PATH}
   LOGNAME brix11-configure-${TARGET_TRIPLET}
 )
@@ -94,7 +140,7 @@ vcpkg_execute_required_process(
 vcpkg_execute_required_process(
   COMMAND ${BRIX11} gen build workspace.mwc ${BRIX11_STATIC_FLAG}
   WORKING_DIRECTORY ${SOURCE_PATH}
-  LOGNAME brix11-gen_build_workspace-${TARGET_TRIPLET} 
+  LOGNAME brix11-gen_build_workspace-${TARGET_TRIPLET}
 )
 
 ###################################################
@@ -107,21 +153,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_build_msbuild(
     PROJECT_PATH "${SOURCE_PATH}/workspace.sln" 
     PLATFORM ${MSBUILD_PLATFORM} 
-    OPTIONS /maxcpucount 
+    # OPTIONS /maxcpucount 
     USE_VCPKG_INTEGRATION
   )
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-  FIND_PROGRAM(MAKE make)
-  IF (NOT MAKE)
-    MESSAGE(FATAL_ERROR "MAKE not found")
-  ENDIF ()
+  find_program(MAKE make)
+  if(NOT MAKE)
+    message(FATAL_ERROR "MAKE not found")
+  endif()
   vcpkg_execute_build_process(
     COMMAND ${BRIX11} make --${VCPKG_BUILD_TYPE}
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME brix11-make-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET}
   )
 endif()
-
 
 ###################################################
 #
@@ -145,7 +190,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
   set(DLL_RELEASE_SUFFIX .so)
   set(DLL_DEBUG_SUFFIX .so)
   set(LIB_PREFIX lib)
-elseif(VCPKG_TARGET_IS_LINUX_OSX)
+elseif(VCPKG_TARGET_IS_OSX)
   set(DLL_DECORATOR)
   set(LIB_RELEASE_SUFFIX .a)
   set(LIB_DEBUG_SUFFIX .a)
@@ -239,9 +284,6 @@ if(BUILD_TAOX11)
   
 endif()
 
-
-
-
 set(ACE_TAO_LIBRARIES "ACE" "ACE_Compression" "ACE_ETCL" "ACE_ETCL_Parser" "ACE_HTBP" "ACE_INet" "ACE_INet_SSL"
                       "ACE_Monitor_Control" "ACE_QoS" "ACE_QtReactor" "ACE_RLECompression" "ACE_RMCast" "ACE_SSL" 
                       "ACE_TMCast" "ACEXML" "ACEXML_Parser" "Kokyu" "TAO" "TAO_AnyTypeCode" "TAO_Async_ImR_Client_IDL"
@@ -277,10 +319,7 @@ install_libraries(${SOURCE_PATH} "${TAOX11_LIBRARIES}")
 
 
 
-
-
 # install idl compiler(s)
-
 
 if(BUILD_TAO) 
   if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
