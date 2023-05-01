@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO root-project/root
-    REF 6438fdb78a7d0cc06e2f3dd2dd5bf057b00fa7ea # 55e26c43341d2175e9703311bef455f3bcf6bf44 04/25/2023
-    SHA512 7424924b2b01fc6cea33b0081ebe7913686a0a6bcb06d71b8ca59d1fd907643c0dd9f5190e835e99c014ab04282a369f798cf81baba261e0c592ddf8db47f071 # e56026de02bdca275933e0dd2131e2d527224c1956cdf1afb0b6d12090e5e90e7e2c3277040f388417b7becc58d4a659540271fe168d864a7f568ed6278164f7
+    REF 360c0c7c545fe5f8924e0dcbaeea314777595a60 # 55e26c43341d2175e9703311bef455f3bcf6bf44 04/25/2023
+    SHA512 8d1f586bb2fe599d157e17b67e4fd219ac551b1420bb04a8d0351dde5d3cb794be9fbef7f21f46cb4933000c432495a4588511a8ab08f761d532703f0ad7627f # e56026de02bdca275933e0dd2131e2d527224c1956cdf1afb0b6d12090e5e90e7e2c3277040f388417b7becc58d4a659540271fe168d864a7f568ed6278164f7
     HEAD_REF master
     PATCHES
         fix_find_package.patch
@@ -32,7 +32,7 @@ vcpkg_add_to_path("${GIT_DIR}")
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/python3")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    WINDOWS_USE_MSBUILD
+    #WINDOWS_USE_MSBUILD
     OPTIONS
         -DBUILD_TESTING=OFF
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
@@ -48,7 +48,7 @@ vcpkg_cmake_configure(
         "-Dasan=off"
         "-Dasimage=on"
         "-Dasserts=off"
-        "-Dbuiltin_afterimage=on"
+        "-Dbuiltin_afterimage=off"
         "-Dbuiltin_cppzmq=off"
         "-Dbuiltin_davix=off"
         "-Dbuiltin_fftw3=off"
