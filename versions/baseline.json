@@ -5606,7 +5606,7 @@
     },
     "nu-book-zxing-cpp": {
       "baseline": "2.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nuklear": {
       "baseline": "2022-05-12",
