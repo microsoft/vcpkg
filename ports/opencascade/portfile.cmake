@@ -22,6 +22,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "freeimage"  USE_FREEIMAGE
         "tbb"        USE_TBB
         "rapidjson"  USE_RAPIDJSON
+        "samples"    INSTALL_SAMPLES 
 )
 
 # VTK option in opencascade not currently supported because only 6.1.0 is supported but vcpkg has >= 9.0
@@ -40,7 +41,6 @@ vcpkg_cmake_configure(
         -DBUILD_SAMPLES_QT=OFF
         -DBUILD_DOC_Overview=OFF
         -DINSTALL_TEST_CASES=OFF
-        -DINSTALL_SAMPLES=OFF
 )
 
 vcpkg_cmake_install()

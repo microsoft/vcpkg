@@ -1,4 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12)
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mathgl/mathgl
@@ -15,6 +14,8 @@ vcpkg_from_sourceforge(
         fix-format-specifiers.patch
         fix-glut.patch
         fix-mgllab.patch
+        include_functional.patch
+        fix-include-property.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/addons/getopt")
 
@@ -104,4 +105,4 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/config.h" "#define MG
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/config.h" "#define MGL_FONT_PATH\t\"${CURRENT_PACKAGES_DIR}/share/mathgl/fonts\"" "")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

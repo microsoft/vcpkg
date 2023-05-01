@@ -10,7 +10,7 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_TESTING=OFF
@@ -18,13 +18,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake PACKAGE_NAME share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(
-    INSTALL ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    INSTALL "${SOURCE_PATH}/LICENSE"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright)
 
 vcpkg_copy_pdbs()
