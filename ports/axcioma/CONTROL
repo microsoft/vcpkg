@@ -1,0 +1,11 @@
+Source: axcioma
+Version: 2022-04-26
+Description: AXCIOMA - Component Framework for Smart Information Systems
+Homepage: https://www.axcioma.org/
+Build-Depends: openssl, xerces-c, zlib
+
+
+
+
+
+
