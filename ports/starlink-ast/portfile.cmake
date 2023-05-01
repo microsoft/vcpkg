@@ -57,7 +57,6 @@ vcpkg_install_make()
 # Avoid vcpkg artifact issues with symlinks
 foreach(ast_lib IN ITEMS "${CURRENT_PACKAGES_DIR}/lib/libast" "${CURRENT_PACKAGES_DIR}/debug/lib/libast")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND EXISTS "${ast_lib}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
-        message(STATUS "${ast_lib}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
         file(REMOVE "${ast_lib}_pass2${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
         file(COPY_FILE "${ast_lib}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "${ast_lib}_pass2${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
     endif()
