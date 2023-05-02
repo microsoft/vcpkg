@@ -2969,7 +2969,7 @@
       "port-version": 0
     },
     "gtk3": {
-      "baseline": "3.24.36",
+      "baseline": "3.24.37",
       "port-version": 0
     },
     "gtkmm": {
