@@ -46,12 +46,8 @@ if (EXISTS "${_systemd_root}/include/systemd")
     )
 
     set(systemd_FOUND TRUE)
-
 else()
-    message(WARNING "DID not FiND SYSTEMD")
-
     set(systemd_FOUND FALSE)
-
 endif()
 
 unset(_systemd_root)
