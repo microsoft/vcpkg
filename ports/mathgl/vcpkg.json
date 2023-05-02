@@ -1,6 +1,7 @@
 {
   "name": "mathgl",
   "version": "8.0.1",
+  "port-version": 2,
   "description": "MathGL is a free library of fast C++ routines for the plotting of the data varied in one or more dimensions",
   "license": "GPL-3.0-only",
   "supports": "!uwp",
@@ -98,7 +99,14 @@
     "png": {
       "description": "png module",
       "dependencies": [
-        "libpng"
+        "libpng",
+        {
+          "name": "mathgl",
+          "default-features": false,
+          "features": [
+            "zlib"
+          ]
+        }
       ]
     },
     "qt5": {

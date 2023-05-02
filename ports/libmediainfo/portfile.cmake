@@ -1,31 +1,34 @@
+string(REGEX REPLACE "^([0-9]+)[.]([1-9])\$" "\\1.0\\2" MEDIAINFO_VERSION "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MediaArea/MediaInfoLib
-    REF v21.03
-    SHA512 1317b27dc3ac1ad224ef9b7ca7c08a8f55983ac6984b5e8daf6309fa33094fbad8a0a5fbe0cff086b7a5c9233b3e24e26995b037d16adf83f63877f2c753f811
+    REF "v${MEDIAINFO_VERSION}"
+    SHA512 6bc58f98ac1fc9637db0e8dd3a2e15b62036a2d33763e148cde425fceea798324f7c5f53cd51fc698d5b5b05fe1fc0fbfc4f391d2ec135eba6763eedfa5bd101
     HEAD_REF master
-    PATCHES vcpkg_support_in_cmakelists.patch
+    PATCHES
+        msvc-arm.diff
+        dependencies.diff
+        no-windows-namespace.diff
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Project/CMake"
     OPTIONS
         -DBUILD_ZENLIB=0
         -DBUILD_ZLIB=0
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        -DCMAKE_REQUIRE_FIND_PACKAGE_PkgConfig=1
+        -DCMAKE_REQUIRE_FIND_PACKAGE_TinyXML=1
 )
-
 vcpkg_cmake_install()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/mediainfolib")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/mediainfolib" "${CURRENT_PACKAGES_DIR}/share/MediaInfoLib")
-endif()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/mediainfolib")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/mediainfolib" "${CURRENT_PACKAGES_DIR}/debug/share/MediaInfoLib")
-endif()
-vcpkg_cmake_config_fixup(PACKAGE_NAME MediaInfoLib CONFIG_PATH share/MediaInfoLib)
+vcpkg_cmake_config_fixup(PACKAGE_NAME mediainfolib)
 vcpkg_fixup_pkgconfig()
+if(NOT VCPKG_BUILD_TYPE AND VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libmediainfo.pc" " -lmediainfo" " -lmediainfod")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
