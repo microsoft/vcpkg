@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-compile-error-uwp.patch
         fix-uwperror.patch
+        fix-pkgconfig.patch
         disable-symlinks.patch
 )
 
