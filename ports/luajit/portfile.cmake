@@ -18,16 +18,8 @@ vcpkg_from_github(
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
-vcpkg_list(SET options)
-if(VCPKG_CROSSCOMPILING)
-    set(host_path "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
-    list(APPEND options
-        "LJARCH=${VCPKG_TARGET_ARCHITECTURE}"
-        "BUILDVM_X=${host_path}/buildvm-${VCPKG_TARGET_ARCHITECTURE}${VCPKG_HOST_EXECUTABLE_SUFFIX}"
-    )
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+if(VCPKG_DETECTED_MSVC)
+    vcpkg_list(SET options "LJARCH=${VCPKG_TARGET_ARCHITECTURE}")
     set(PKGCONFIG_CFLAGS "")
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND options "MSVCBUILD_OPTIONS=static")
@@ -44,7 +36,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     configure_file("${CMAKE_CURRENT_LIST_DIR}/luajit.pc.win.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/luajit.pc" @ONLY)
     if(NOT VCPKG_BUILD_TYPE)
         configure_file("${CMAKE_CURRENT_LIST_DIR}/luajit.pc.win.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/luajit.pc" @ONLY)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/manual-tools")
     endif()
 
     vcpkg_copy_pdbs()
@@ -56,6 +47,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(INSTALL "${SOURCE_PATH}/src/lauxlib.h"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
     file(INSTALL "${SOURCE_PATH}/src/lua.hpp"    DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 else()
+    vcpkg_list(SET options)
+    if(VCPKG_CROSSCOMPILING)
+        list(APPEND options
+            "LJARCH=${VCPKG_TARGET_ARCHITECTURE}"
+            "BUILDVM_X=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/buildvm-${VCPKG_TARGET_ARCHITECTURE}${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        )
+    endif()
+
     vcpkg_list(SET make_options "EXECUTABLE_SUFFIX=${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     if(VCPKG_TARGET_IS_OSX)
         vcpkg_list(APPEND make_options "TARGET_SYS=Darwin")

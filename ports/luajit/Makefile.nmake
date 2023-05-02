@@ -10,8 +10,3 @@ install: src/luajit.exe
 	if exist src\lua51.dll copy src\lua51.dll "$(INSTALLDIR)\bin\"
 	-mkdir "$(INSTALLDIR)\lib"
 	copy src\lua51.lib "$(INSTALLDIR)\lib\"
-!IF "$(LJARCH)" == ""
-	-mkdir "$(INSTALLDIR)\manual-tools"
-	-mkdir "$(INSTALLDIR)\manual-tools\luajit"
-	copy buildvm.exe "$(INSTALLDIR)\manual-tools\luajit\$(SIZE_TAG)\"
-!ENDIF
