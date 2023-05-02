@@ -3,7 +3,7 @@
   "version-date": "2023-04-26",
   "description": "AXCIOMA - Component Framework for Smart Information Systems",
   "homepage": "https://www.axcioma.org/",
-  "supports": "!(wasm32 & osx & uwp & ios & android & (windows & arm))",
+  "supports": "!(wasm32 & osx & uwp & ios & android & (windows & (arm | staticcrt)))",
   "dependencies": [
     "openssl",
     "xerces-c",
