@@ -19,20 +19,12 @@ if (EXISTS "${_systemd_root}/include/systemd")
             IMPORTED_LOCATION_DEBUG         "${_systemd_root}/debug/lib/libsystemd.a"
             IMPORTED_LOCATION_RELEASE       "${_systemd_root}/lib/libsystemd.a"
             IMPORTED_CONFIGURATIONS         "Debug;Release")
-        target_link_libraries(unofficial::systemd::libsystemd
-            INTERFACE
-                zstd::libzstd_static
-        )
     else()
         set_target_properties(unofficial::systemd::libsystemd PROPERTIES
             INTERFACE_INCLUDE_DIRECTORIES   "${_systemd_root}/include"
             IMPORTED_LOCATION_DEBUG         "${_systemd_root}/debug/lib/libsystemd.so"
             IMPORTED_LOCATION_RELEASE       "${_systemd_root}/lib/libsystemd.so"
             IMPORTED_CONFIGURATIONS         "Debug;Release")
-        target_link_libraries(unofficial::systemd::libsystemd
-            INTERFACE
-                zstd::libzstd_shared
-        )
     endif()
 
 
@@ -40,6 +32,7 @@ if (EXISTS "${_systemd_root}/include/systemd")
         INTERFACE
             lz4::lz4
             LibLZMA::LibLZMA
+            $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
             PkgConfig::MOUNT
             PkgConfig::CAP
             ${RT_LIBRARY}
