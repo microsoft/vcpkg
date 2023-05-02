@@ -1,6 +1,7 @@
 {
   "name": "qtopcua",
-  "version": "6.4.3",
+  "version": "6.5.0",
+  "port-version": 1,
   "description": "Qt wrapper for existing OPC UA stacks",
   "homepage": "https://www.qt.io/",
   "license": null,

@@ -1,6 +1,6 @@
 {
   "name": "qtwebview",
-  "version": "6.4.3",
+  "version": "6.5.0",
   "description": "Qt Web View",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -11,18 +11,13 @@
       "features": [
         "gui"
       ]
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
     }
   ],
   "features": {
-    "qml": {
-      "description": "Build QML imports",
-      "dependencies": [
-        {
-          "name": "qtdeclarative",
-          "default-features": false
-        }
-      ]
-    },
     "webengine": {
       "description": "Build with Webengine",
       "supports": "!static",

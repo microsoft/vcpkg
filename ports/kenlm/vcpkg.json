@@ -1,7 +1,7 @@
 {
   "name": "kenlm",
-  "version-string": "20200924",
-  "port-version": 1,
+  "version": "20200924",
+  "port-version": 4,
   "description": "KenLM: Faster and Smaller Language Model Queries",
   "supports": "!(arm64 & windows)",
   "dependencies": [
@@ -17,11 +17,16 @@
       "platform": "!windows"
     },
     "liblzma",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
     "interpolate": {
       "description": "Build interpolation program",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "eigen3",

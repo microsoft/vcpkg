@@ -1,6 +1,6 @@
 {
   "name": "qtlocation",
-  "version": "6.4.3",
+  "version": "6.5.0",
   "description": "Qt Location",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -17,6 +17,16 @@
       ],
       "platform": "linux"
     },
-    "qtpositioning"
+    {
+      "name": "qtpositioning",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
+      "name": "qtshadertools",
+      "default-features": false
+    }
   ]
 }
