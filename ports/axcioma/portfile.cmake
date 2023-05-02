@@ -123,16 +123,13 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
   set(BRIX11_STATIC_FLAG -static)
 endif()
 
-
-
-#vcpkg_execute_required_process(
-#  COMMAND ${BRIX11} bootstrap taox11
-#  WORKING_DIRECTORY ${SOURCE_PATH}
-#  LOGNAME brix11-bootstrap-${TARGET_TRIPLET}
-#)
+set(BITSIZE "64")
+if(${VCPKG_TARGET_ARCHITECTURE} MATCHES "x86")
+  set(BITSIZE "32")
+endif()
 
 vcpkg_execute_required_process(
-  COMMAND ${BRIX11} configure # -b 0 --with=versioned_so=0
+  COMMAND ${BRIX11} configure -b ${BITSIZE} --with=versioned_so=0
   WORKING_DIRECTORY ${SOURCE_PATH}
   LOGNAME brix11-configure-${TARGET_TRIPLET}
 )
@@ -150,9 +147,15 @@ vcpkg_execute_required_process(
 ###################################################
 
 if(VCPKG_TARGET_IS_WINDOWS)
+
+	set(TARGET_PLATFORM ${VCPKG_TARGET_ARCHITECTURE})
+	if(${VCPKG_TARGET_ARCHITECTURE} MATCHES "x86")
+  	set(TARGET_PLATFORM "Win32")
+	endif()
+
   vcpkg_build_msbuild(
     PROJECT_PATH "${SOURCE_PATH}/workspace.sln" 
-    PLATFORM ${MSBUILD_PLATFORM} 
+    PLATFORM ${TARGET_PLATFORM} 
     # OPTIONS /maxcpucount 
     USE_VCPKG_INTEGRATION
   )
