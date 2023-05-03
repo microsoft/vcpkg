@@ -68,7 +68,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/gstnice.pdb")
             file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/gstnice.pdb"
                         "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer/gstnice.pdb")
-        else()
+        endif()
+        if(NOT VCPKG_TARGET_IS_WINDOWS)
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
         endif()
 
@@ -81,7 +82,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/gstnice.pdb")
             file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/gstnice.pdb"
                         "${CURRENT_PACKAGES_DIR}/plugins/gstreamer/gstnice.pdb")
-        else()
+        endif()
+        if(NOT VCPKG_TARGET_IS_WINDOWS)
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
         endif()
 
