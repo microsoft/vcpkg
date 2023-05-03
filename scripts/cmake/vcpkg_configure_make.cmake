@@ -164,7 +164,10 @@ function(vcpkg_configure_make)
     if(EXISTS "${src_dir}/configure" AND EXISTS "${src_dir}/configure.ac" AND arg_AUTOCONFIG) # remove configure; rerun autoconf
         set(requires_autoconfig ON)
         file(REMOVE "${SRC_DIR}/configure") # remove possible outdated configure scripts
-    elseif(EXISTS "${src_dir}/configure" AND NOT arg_SKIP_CONFIGURE) # run normally; no autoconf or autogen required
+    elseif(arg_SKIP_CONFIGURE)
+        # no action requested
+    elseif(EXISTS "${src_dir}/configure")
+        # run normally; no autoconf or autogen required
     elseif(EXISTS "${src_dir}/configure.ac") # Run autoconfig
         set(requires_autoconfig ON)
         set(arg_AUTOCONFIG ON)
