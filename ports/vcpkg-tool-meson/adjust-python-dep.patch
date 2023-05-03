@@ -1,0 +1,16 @@
+diff --git a/mesonbuild/dependencies/python.py b/mesonbuild/dependencies/python.py
+index 14386f9..1b8dd36 100644
+--- a/mesonbuild/dependencies/python.py	
++++ b/mesonbuild/dependencies/python.py
+@@ -369,10 +369,7 @@ def python_factory(env: 'Environment', for_machine: 'MachineChoice',
+                     set_env('PKG_CONFIG_PATH', old_pkg_path)
+ 
+             candidates.append(functools.partial(wrap_in_pythons_pc_dir, pkg_name, env, kwargs, installation))
+-            # We only need to check both, if a python install has a LIBPC. It might point to the wrong location,
+-            # e.g. relocated / cross compilation, but the presence of LIBPC indicates we should definitely look for something.
+-            if pkg_libdir is not None:
+-                candidates.append(functools.partial(PythonPkgConfigDependency, pkg_name, env, kwargs, installation))
++            candidates.append(functools.partial(PythonPkgConfigDependency, pkg_name, env, kwargs, installation))
+         else:
+             candidates.append(functools.partial(PkgConfigDependency, 'python3', env, kwargs))
+ 
