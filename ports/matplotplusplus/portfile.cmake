@@ -15,6 +15,7 @@ vcpkg_from_github(
     PATCHES
         install-3rd-libraries.patch # Remove this patch when nodesoup is added in vcpkg
         fix-dependencies.patch
+        fix-install-matplot_opengl-in-CMake.patch
 )
 
 vcpkg_check_features(
