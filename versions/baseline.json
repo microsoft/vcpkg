@@ -6098,7 +6098,7 @@
     },
     "pdal": {
       "baseline": "2.4.3",
-      "port-version": 3
+      "port-version": 4
     },
     "pdal-c": {
       "baseline": "2.1",
