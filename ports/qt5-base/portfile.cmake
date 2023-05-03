@@ -1,11 +1,12 @@
 vcpkg_buildpath_length_warning(37)
 
-if (VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_IS_LINUX)
     message(WARNING "qt5-base currently requires some packages from the system package manager. "
     "They can be installed on Ubuntu systems via "
-    "sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev "
+    "sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libgl1-mesa-dev libxrender-dev "
     "libxi-dev libxkbcommon-dev libxkbcommon-x11-dev. For more information, see "
-    "https://doc.qt.io/qt-5/linux-requirements.html")
+    "https://doc.qt.io/qt-5/linux.html and https://doc.qt.io/qt-5/linux-requirements.html"
+    )
 elseif(VCPKG_TARGET_IS_MINGW AND CMAKE_HOST_WIN32)
     find_program(MINGW32_MAKE mingw32-make PATHS ENV PATH NO_DEFAULT_PATH REQUIRED)
 endif()
@@ -264,9 +265,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
     list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -xcb -linuxfb)
-    if (NOT EXISTS "/usr/include/GL/glu.h")
-        message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
-    endif()
     list(APPEND RELEASE_OPTIONS
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"

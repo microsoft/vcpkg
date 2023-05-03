@@ -25,11 +25,12 @@ The name of the image to deploy into the scale set.
 [CmdLetBinding()]
 Param(
   [parameter(Mandatory=$true)]
-  [string]$ImageName
+  [string]$ImageName,
+  [parameter(Mandatory=$false)]
+  [string]$Prefix = "PrLin-"
 )
 
 $Location = 'eastasia'
-$Prefix = 'PrLin-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
 $VMSize = 'Standard_D32a_v4'
 $LiveVMPrefix = 'BUILD'
