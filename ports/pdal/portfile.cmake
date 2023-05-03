@@ -13,6 +13,7 @@ vcpkg_from_github(
         no-pkgconfig-requires.patch
         no-rpath.patch
         fix-gcc8-compatibility.patch #Upstream PR: https://github.com/PDAL/PDAL/pull/3864
+        fix-gcc-13-build.patch
 )
 
 # Prefer pristine CMake find modules + wrappers and config files from vcpkg.

@@ -1,0 +1,24 @@
+diff --git a/plugins/e57/libE57Format/include/E57Format.h b/plugins/e57/libE57Format/include/E57Format.h
+index 267d8c77b..66b5a62d1 100644
+--- a/plugins/e57/libE57Format/include/E57Format.h
++++ b/plugins/e57/libE57Format/include/E57Format.h
+@@ -34,6 +34,7 @@
+ #include <cfloat>
+ #include <memory>
+ #include <vector>
++#include <cstdint>
+ 
+ #include "E57Exception.h"
+ 
+diff --git a/vendor/lazperf/Extractor.hpp b/vendor/lazperf/Extractor.hpp
+index 02c7d2cef..3b26dc310 100644
+--- a/vendor/lazperf/Extractor.hpp
++++ b/vendor/lazperf/Extractor.hpp
+@@ -36,6 +36,7 @@
+ 
+ #include <cstring>
+ #include <vector>
++#include <cstdint>
+ 
+ #include "portable_endian.hpp"
+ 
