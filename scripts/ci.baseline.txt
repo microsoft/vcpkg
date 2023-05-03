@@ -913,6 +913,7 @@ log4cxx:x64-uwp=fail
 loguru:arm-neon-android=fail
 loguru:arm64-android=fail
 loguru:x64-android=fail
+luajit:arm64-windows=fail
 luafilesystem:arm-uwp=fail
 luafilesystem:x64-uwp=fail
 luasec:x64-windows-static=fail
