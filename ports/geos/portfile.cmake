@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         disable-warning-4996.patch
         fix-exported-config.patch
         fix-dll-builds.patch
+        gcc-13-fix-backport.patch
 )
 
 vcpkg_cmake_configure(
