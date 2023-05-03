@@ -9,13 +9,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alandefreitas/matplotplusplus
-    REF 2a8eada7d508a5ed158598888d38a54fe311c934
-    SHA512 5f59aaf1ac33eb6c63ff55bb8ea269a188f9005342dee0e67c32e0e958063158d389452b2c7fac7b15929df042d6ce3d2ac5fb0fd7fe8556ec5a7d56edc3695a
+    REF ff829d2a8aef134baff6f206994d77e7d26435f8
+    SHA512 5134adcb74c36d4de8f221e71c70b8d99d1ede2eb19783cdae119a208369714585ece237fad7ac493555bc977640eb85de01c2db093d4f8f2504b5f7f8cbe8da
     HEAD_REF master
     PATCHES
         install-3rd-libraries.patch # Remove this patch when nodesoup is added in vcpkg
         fix-dependencies.patch
-        fix-install-matplot_opengl-in-CMake.patch
 )
 
 vcpkg_check_features(
