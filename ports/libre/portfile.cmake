@@ -7,6 +7,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         778.diff
+        786.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBRE_BUILD_SHARED)
