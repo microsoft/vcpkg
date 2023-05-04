@@ -1,7 +1,7 @@
 {
   "name": "kenlm",
   "version": "20200924",
-  "port-version": 2,
+  "port-version": 4,
   "description": "KenLM: Faster and Smaller Language Model Queries",
   "supports": "!(arm64 & windows)",
   "dependencies": [
@@ -26,6 +26,7 @@
   "features": {
     "interpolate": {
       "description": "Build interpolation program",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "eigen3",
