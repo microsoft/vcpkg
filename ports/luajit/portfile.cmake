@@ -39,13 +39,6 @@ if(VCPKG_DETECTED_MSVC)
     endif()
 
     vcpkg_copy_pdbs()
-
-    file(INSTALL "${SOURCE_PATH}/src/lua.h"      DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-    file(INSTALL "${SOURCE_PATH}/src/luajit.h"   DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-    file(INSTALL "${SOURCE_PATH}/src/luaconf.h"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-    file(INSTALL "${SOURCE_PATH}/src/lualib.h"   DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-    file(INSTALL "${SOURCE_PATH}/src/lauxlib.h"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-    file(INSTALL "${SOURCE_PATH}/src/lua.hpp"    DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 else()
     vcpkg_list(SET options)
     if(VCPKG_CROSSCOMPILING)
@@ -90,15 +83,16 @@ else()
             "TARGET_AR=${VCPKG_DETECTED_CMAKE_AR} rcus"
             "TARGET_STRIP=${VCPKG_DETECTED_CMAKE_STRIP}"
     )
-    file(REMOVE_RECURSE
-        "${CURRENT_PACKAGES_DIR}/debug/include"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/lua"
-        "${CURRENT_PACKAGES_DIR}/debug/share"
-        "${CURRENT_PACKAGES_DIR}/lib/lua"
-        "${CURRENT_PACKAGES_DIR}/share/lua"
-        "${CURRENT_PACKAGES_DIR}/share/man"
-    )
 endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/lua"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/lib/lua"
+    "${CURRENT_PACKAGES_DIR}/share/lua"
+    "${CURRENT_PACKAGES_DIR}/share/man"
+)
 
 vcpkg_copy_tools(TOOL_NAMES luajit AUTO_CLEAN)
 
