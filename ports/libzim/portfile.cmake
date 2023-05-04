@@ -1,34 +1,30 @@
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openzim/libzim
     REF ${VERSION}
-    SHA512 abcd5ef0e3f32cff0863c726a27cb42ad55522c17254f87e2bf6261ec564864017ea9136cb885d837a358f98ed123bf512551342703a7149cf93672f18e32db1
+    SHA512 4554a9237f5167f6f94aad76ef0e847e949c47c6ee2a89bbd6e587da3b3a3e2d0a8b2d03f7a0fbde0e0dc96fb61bf8c115b3ef3cbd7eff5e880f152bee9b29f0
     HEAD_REF main
     PATCHES
         0001-build-share-library.patch
 
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        xapian     WITH_XAPIAN
-)
-
 set(EXTRA_OPTIONS "")
 
-if(NOT WITH_XAPIAN)
+if(NOT xapian IN_LIST FEATURES)
     list(APPEND EXTRA_OPTIONS "-Dwith_xapian=false")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    list(APPEND EXTRA_OPTIONS "-Dstatic-linkage=false")
+else()
+    list(APPEND EXTRA_OPTIONS "-Dstatic-linkage=true")
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
       -Dexamples=false
-      -Dstatic-linkage=false
-      -Ddefault_library=shared
       ${EXTRA_OPTIONS}
 
 )
