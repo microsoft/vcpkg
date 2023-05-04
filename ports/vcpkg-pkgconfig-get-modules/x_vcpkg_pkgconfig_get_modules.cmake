@@ -12,7 +12,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         message(FATAL_ERROR "extra arguments passed to x_vcpkg_pkgconfig_get_modules: ${arg_UNPARSED_ARGUMENTS}")
     endif()
     set(msvc "")
-    if(NOT arg_USE_MSVC_SYNTAX_ON_WINDOWS AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    if(arg_USE_MSVC_SYNTAX_ON_WINDOWS AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(msvc "--msvc-syntax")
     endif()
 
