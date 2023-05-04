@@ -162,6 +162,7 @@ vcpkg_cmake_configure(
         "-Dwinrtdebug=off"
     OPTIONS_DEBUG
         "-Dwinrtdebug=on"
+        -DLLVM_BUILD_TYPE=Debug
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
