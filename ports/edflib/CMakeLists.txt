@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(EDFlib VERSION 1.21 LANGUAGES C)
+project(EDFlib LANGUAGES C)
 
 option(BUILD_TOOLS "Build EDFlib tools." OFF)
 
