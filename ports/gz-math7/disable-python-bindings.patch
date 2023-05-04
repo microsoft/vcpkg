@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0adbed1..10e82dd 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -18,7 +18,7 @@ gz_build_tests(TYPE UNIT SOURCES ${gtest_sources})
+ add_subdirectory(graph)
+ 
+ # Bindings subdirectories
+-if (pybind11_FOUND AND NOT SKIP_PYBIND11)
++if (0)
+   add_subdirectory(python_pybind11)
+ endif()
+ 
