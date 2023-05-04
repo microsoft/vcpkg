@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
-    REF 1bfe02bdad6604d54913c62614bde57a055c8332 # 8.0.32
-    SHA512 9a556b783ee978c919ccc0c1c99ab4a84ecc9fe0b75e2e100ad616f3b7c7bd280c8da63eb9e9c98291256ebbd130aef8c6e5c404e93b7cc8b8fe754b055b650f
+    REF mysql-${VERSION}
+    SHA512 1233abe4fe055f62cc28c847e77bcfc37e03e77ee68b8606e5ad722e0b6d1ae30b95bbe623a88cecdfa0b5868b61eabaf4b99e78cb6fbb9cf3627c91d17feb0e
     HEAD_REF master
     PATCHES
         ignore-boost-version.patch
@@ -64,6 +64,7 @@ vcpkg_cmake_configure(
         BUNDLE_RUNTIME_LIBRARIES # only on windows
         LINK_STATIC_RUNTIME_LIBRARIES # only on windows
         WIX_DIR # only on windows
+        WITH_BUILD_ID # only on windows
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -122,11 +123,12 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/include2" "${CURRENT_PACKAGES_DIR}/include/
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/man"
     "${CURRENT_PACKAGES_DIR}/docs"
     "${CURRENT_PACKAGES_DIR}/debug/docs"
     "${CURRENT_PACKAGES_DIR}/lib/debug"
     "${CURRENT_PACKAGES_DIR}/lib/plugin"
-    "${CURRENT_PACKAGES_DIR}/lib/plugin/debug"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/plugin"
 )
 
 # delete dynamic dll on static build
@@ -140,7 +142,6 @@ if (BUILD_STATIC_LIBS)
         "${CURRENT_PACKAGES_DIR}/lib/libmysql.lib"
         "${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.lib"
         "${CURRENT_PACKAGES_DIR}/lib/libmysql.pdb"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.pdb"
         "${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.pdb"
     )
 endif()

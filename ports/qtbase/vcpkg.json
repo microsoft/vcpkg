@@ -213,6 +213,14 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "opengl"
+          ],
+          "platform": "osx"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
             "thread"
           ],
           "platform": "windows"
