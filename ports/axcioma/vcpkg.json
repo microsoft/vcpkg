@@ -3,6 +3,7 @@
   "version-date": "2023-04-26",
   "description": "AXCIOMA - Component Framework for Smart Information Systems",
   "homepage": "https://www.axcioma.org/",
+  "license": "MIT",
   "supports": "!(wasm32 | uwp | ios | android | (windows & (arm | static)))",
   "dependencies": [
     "bzip2",
