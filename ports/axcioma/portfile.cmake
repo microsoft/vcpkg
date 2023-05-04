@@ -20,7 +20,7 @@ vcpkg_from_github(
     SHA512 38cd56de659daa203fadc939e8f13c3b22b93585086ef4da3c32cd4ff2ace6ece7eee7c14e30014520e5ef9fe2b8e82c9810e41787ca46f3043dfc4155dec164
     HEAD_REF master
     PATCHES
-      fix_osx.patch     
+      fix_osx.patch
 )
 
 ###################################################
