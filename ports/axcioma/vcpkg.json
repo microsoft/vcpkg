@@ -3,7 +3,7 @@
   "version-date": "2023-04-26",
   "description": "AXCIOMA - Component Framework for Smart Information Systems",
   "homepage": "https://www.axcioma.org/",
-  "supports": "!(wasm32 & osx & uwp & ios & android & (windows & (arm | static)))",
+  "supports": "!(wasm32 & uwp & ios & android & (windows & (arm | static)))",
   "dependencies": [
     "bzip2",
     "openssl",
