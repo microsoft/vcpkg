@@ -2,8 +2,6 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/ace")
     message(FATAL_ERROR "FATAL ERROR: ace and axcioma are incompatible.")
 endif()
 
-#set(INSTALLED_PATH ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET})
-
 if(${CMAKE_BUILD_TYPE} MATCHES "^Debug$")
   set(INSTALLED_PATH ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug)
 endif()
@@ -131,17 +129,17 @@ if(${VCPKG_TARGET_ARCHITECTURE} MATCHES "x86")
   set(BITSIZE "32")
 endif()
 
-# vcpkg_execute_required_process(
-#   COMMAND ${BRIX11} configure -b ${BITSIZE} -e xerces3 -e openssl11 -W xercescroot=${CURRENT_INSTALLED_DIR} -W bzip2root=${CURRENT_INSTALLED_DIR} -W zlibroot=${CURRENT_INSTALLED_DIR} -W sslroot=${CURRENT_INSTALLED_DIR} --with=versioned_so=0
-#   WORKING_DIRECTORY ${SOURCE_PATH}
-#   LOGNAME brix11-configure-${TARGET_TRIPLET}
-# )
+vcpkg_execute_required_process(
+  COMMAND ${BRIX11} configure -b ${BITSIZE} -e xerces3 -e openssl11 -W xercescroot=${CURRENT_INSTALLED_DIR} -W bzip2root=${CURRENT_INSTALLED_DIR} -W zlibroot=${CURRENT_INSTALLED_DIR} -W sslroot=${CURRENT_INSTALLED_DIR} --with=versioned_so=0
+  WORKING_DIRECTORY ${SOURCE_PATH}
+  LOGNAME brix11-configure-${TARGET_TRIPLET}
+)
 
-# vcpkg_execute_required_process(
-#   COMMAND ${BRIX11} gen build workspace.mwc ${BRIX11_STATIC_FLAG}
-#   WORKING_DIRECTORY ${SOURCE_PATH}
-#   LOGNAME brix11-gen_build_workspace-${TARGET_TRIPLET}
-# )
+vcpkg_execute_required_process(
+  COMMAND ${BRIX11} gen build workspace.mwc ${BRIX11_STATIC_FLAG}
+  WORKING_DIRECTORY ${SOURCE_PATH}
+  LOGNAME brix11-gen_build_workspace-${TARGET_TRIPLET}
+)
 
 ###################################################
 #
@@ -149,28 +147,28 @@ endif()
 #
 ###################################################
 
-# if(VCPKG_TARGET_IS_WINDOWS)
-# 	set(TARGET_PLATFORM ${VCPKG_TARGET_ARCHITECTURE})
-# 	if(${VCPKG_TARGET_ARCHITECTURE} MATCHES "x86")
-#   	set(TARGET_PLATFORM "Win32")
-# 	endif()
-#   vcpkg_build_msbuild(
-#     PROJECT_PATH "${SOURCE_PATH}/workspace.sln" 
-#     PLATFORM ${TARGET_PLATFORM} 
-#     # OPTIONS /maxcpucount 
-#     USE_VCPKG_INTEGRATION
-#   )
-# elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-#   find_program(MAKE make)
-#   if(NOT MAKE)
-#     message(FATAL_ERROR "MAKE not found")
-#   endif()
-#   vcpkg_execute_build_process(
-#     COMMAND ${BRIX11} make --${VCPKG_BUILD_TYPE}
-#     WORKING_DIRECTORY ${SOURCE_PATH}
-#     LOGNAME brix11-make-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET}
-#   )
-# endif()
+if(VCPKG_TARGET_IS_WINDOWS)
+	set(TARGET_PLATFORM ${VCPKG_TARGET_ARCHITECTURE})
+	if(${VCPKG_TARGET_ARCHITECTURE} MATCHES "x86")
+  	set(TARGET_PLATFORM "Win32")
+	endif()
+  vcpkg_build_msbuild(
+    PROJECT_PATH "${SOURCE_PATH}/workspace.sln" 
+    PLATFORM ${TARGET_PLATFORM} 
+    # OPTIONS /maxcpucount 
+    USE_VCPKG_INTEGRATION
+  )
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+  find_program(MAKE make)
+  if(NOT MAKE)
+    message(FATAL_ERROR "MAKE not found")
+  endif()
+  vcpkg_execute_build_process(
+    COMMAND ${BRIX11} make --${VCPKG_BUILD_TYPE}
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME brix11-make-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET}
+  )
+endif()
 
 ###################################################
 #
