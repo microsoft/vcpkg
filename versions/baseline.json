@@ -1504,6 +1504,10 @@
       "baseline": "8.0.0",
       "port-version": 0
     },
+    "cialloo-rcon": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "cimg": {
       "baseline": "2.9.9",
       "port-version": 0
