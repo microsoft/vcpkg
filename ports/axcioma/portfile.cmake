@@ -3,6 +3,7 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/ace")
 endif()
 
 #set(INSTALLED_PATH ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET})
+
 if(${CMAKE_BUILD_TYPE} MATCHES "^Debug$")
   set(INSTALLED_PATH ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug)
 endif()
@@ -69,33 +70,34 @@ string(JSON BRIX11RC_BOOTSTRAP_LENGTH LENGTH ${BRIX11RC_BOOTSTRAP})
 math(EXPR BRIX11RC_BOOTSTRAP_LENGTH "${BRIX11RC_BOOTSTRAP_LENGTH} - 1")
 
 foreach(IDX RANGE ${BRIX11RC_BOOTSTRAP_LENGTH})
+  string(JSON BRIX11RC_ID GET ${BRIX11RC_BOOTSTRAP} ${IDX} id)
 	string(JSON BRIX11RC_DIR GET ${BRIX11RC_BOOTSTRAP} ${IDX} dir)
 	string(JSON BRIX11RC_REPO GET ${BRIX11RC_BOOTSTRAP} ${IDX} repo)
 	string(JSON BRIX11RC_TAG GET ${BRIX11RC_BOOTSTRAP} ${IDX} tag)
 	string(JSON BRIX11RC_COL_LENGTH LENGTH ${BRIX11RC_BOOTSTRAP} ${IDX} collections)
 	if(NOT EXISTS "${SOURCE_PATH}/${BRIX11RC_DIR}")
 		get_git_tag_sha(${BRIX11RC_REPO} ${BRIX11RC_TAG} TAG_SHA)
-		vcpkg_from_git(
-			OUT_SOURCE_PATH SUB_SOURCE_PATH
-			URL ${BRIX11RC_REPO}
-			REF ${TAG_SHA}
-		)
+    if(BRIX11RC_ID STREQUAL "MPC")
+      vcpkg_from_git(
+        OUT_SOURCE_PATH SUB_SOURCE_PATH
+        URL ${BRIX11RC_REPO}
+        REF ${TAG_SHA}
+        PATCHES mpc_bzip2.patch
+      )
+    else()
+      vcpkg_from_git(
+        OUT_SOURCE_PATH SUB_SOURCE_PATH
+        URL ${BRIX11RC_REPO}
+        REF ${TAG_SHA}
+      )
+    endif()
 		file(RENAME "${SUB_SOURCE_PATH}" "${SOURCE_PATH}/${BRIX11RC_DIR}")
 	endif()
 endforeach()
 
-vcpkg_apply_patches(
-	SOURCE_PATH ${SOURCE_PATH}
-	PATCHES
-	  mpc_bzip2.patch
-)
-
 set(ACE_ROOT ${SOURCE_PATH}/ACE/ACE)
 set(TAO_ROOT ${SOURCE_PATH}/ACE/TAO)
 set(MPC_ROOT ${SOURCE_PATH}/ACE/MPC)
-set(ENV{ACE_ROOT} ${ACE_ROOT})
-set(ENV{TAO_ROOT} ${TAO_ROOT})
-set(ENV{MPC_ROOT} ${MPC_ROOT})
 set(ACE_SOURCE_PATH ${ACE_ROOT}/ace)
 set(TAO_SOURCE_PATH ${TAO_ROOT}/tao)
 set(TAOX11_BASE_PATH ${SOURCE_PATH}/taox11)
@@ -107,10 +109,10 @@ set(CIAOX11_SOURCE_PATH CIAOX11_BASE_PATH/ciaox11)
 
 set(ENV{ACE_ROOT} ${ACE_ROOT})
 set(ENV{TAO_ROOT} ${TAO_ROOT})
+set(ENV{MPC_ROOT} ${MPC_ROOT})
 set(ENV{TAOX11_ROOT} ${TAOX11_BASE_PATH})
 set(ENV{CIAOX11_ROOT} ${CIAOX11_BASE_PATH})
 set(ENV{DANCEX11_ROOT} ${DANCEX11_BASE_PATH})
-
 set(ENV{SSL_ROOT} ${CURRENT_INSTALLED_DIR})
 set(ENV{BZIP2_ROOT} ${CURRENT_INSTALLED_DIR})
 set(ENV{ZLIB_ROOT} ${CURRENT_INSTALLED_DIR})
@@ -129,17 +131,17 @@ if(${VCPKG_TARGET_ARCHITECTURE} MATCHES "x86")
   set(BITSIZE "32")
 endif()
 
-vcpkg_execute_required_process(
-  COMMAND ${BRIX11} configure -b ${BITSIZE} -e xerces3 -e openssl11 -W xercescroot=${CURRENT_INSTALLED_DIR} -W bzip2root=${CURRENT_INSTALLED_DIR} -W zlibroot=${CURRENT_INSTALLED_DIR} -W sslroot=${CURRENT_INSTALLED_DIR} -W targetsysroot=${CURRENT_INSTALLED_DIR} --with=versioned_so=0
-  WORKING_DIRECTORY ${SOURCE_PATH}
-  LOGNAME brix11-configure-${TARGET_TRIPLET}
-)
+# vcpkg_execute_required_process(
+#   COMMAND ${BRIX11} configure -b ${BITSIZE} -e xerces3 -e openssl11 -W xercescroot=${CURRENT_INSTALLED_DIR} -W bzip2root=${CURRENT_INSTALLED_DIR} -W zlibroot=${CURRENT_INSTALLED_DIR} -W sslroot=${CURRENT_INSTALLED_DIR} --with=versioned_so=0
+#   WORKING_DIRECTORY ${SOURCE_PATH}
+#   LOGNAME brix11-configure-${TARGET_TRIPLET}
+# )
 
-vcpkg_execute_required_process(
-  COMMAND ${BRIX11} gen build workspace.mwc ${BRIX11_STATIC_FLAG}
-  WORKING_DIRECTORY ${SOURCE_PATH}
-  LOGNAME brix11-gen_build_workspace-${TARGET_TRIPLET}
-)
+# vcpkg_execute_required_process(
+#   COMMAND ${BRIX11} gen build workspace.mwc ${BRIX11_STATIC_FLAG}
+#   WORKING_DIRECTORY ${SOURCE_PATH}
+#   LOGNAME brix11-gen_build_workspace-${TARGET_TRIPLET}
+# )
 
 ###################################################
 #
@@ -147,30 +149,28 @@ vcpkg_execute_required_process(
 #
 ###################################################
 
-if(VCPKG_TARGET_IS_WINDOWS)
-
-	set(TARGET_PLATFORM ${VCPKG_TARGET_ARCHITECTURE})
-	if(${VCPKG_TARGET_ARCHITECTURE} MATCHES "x86")
-  	set(TARGET_PLATFORM "Win32")
-	endif()
-
-  vcpkg_build_msbuild(
-    PROJECT_PATH "${SOURCE_PATH}/workspace.sln" 
-    PLATFORM ${TARGET_PLATFORM} 
-    # OPTIONS /maxcpucount 
-    USE_VCPKG_INTEGRATION
-  )
-elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-  find_program(MAKE make)
-  if(NOT MAKE)
-    message(FATAL_ERROR "MAKE not found")
-  endif()
-  vcpkg_execute_build_process(
-    COMMAND ${BRIX11} make --${VCPKG_BUILD_TYPE}
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME brix11-make-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET}
-  )
-endif()
+# if(VCPKG_TARGET_IS_WINDOWS)
+# 	set(TARGET_PLATFORM ${VCPKG_TARGET_ARCHITECTURE})
+# 	if(${VCPKG_TARGET_ARCHITECTURE} MATCHES "x86")
+#   	set(TARGET_PLATFORM "Win32")
+# 	endif()
+#   vcpkg_build_msbuild(
+#     PROJECT_PATH "${SOURCE_PATH}/workspace.sln" 
+#     PLATFORM ${TARGET_PLATFORM} 
+#     # OPTIONS /maxcpucount 
+#     USE_VCPKG_INTEGRATION
+#   )
+# elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+#   find_program(MAKE make)
+#   if(NOT MAKE)
+#     message(FATAL_ERROR "MAKE not found")
+#   endif()
+#   vcpkg_execute_build_process(
+#     COMMAND ${BRIX11} make --${VCPKG_BUILD_TYPE}
+#     WORKING_DIRECTORY ${SOURCE_PATH}
+#     LOGNAME brix11-make-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET}
+#   )
+# endif()
 
 ###################################################
 #
@@ -178,30 +178,45 @@ endif()
 #
 ###################################################
 
+
+set(LIB_SUFFIX ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+set(DLL_SUFFIX ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+
+set(DLL_DECORATOR "")
+set(LIB_DEBUG_SUFFIX "")
+set(LIB_PREFIX lib)
 if(VCPKG_TARGET_IS_WINDOWS)
-  set(LIB_RELEASE_SUFFIX .lib)
-  set(LIB_DEBUG_SUFFIX d.lib)
-  set(DLL_RELEASE_SUFFIX .dll)
-  set(DLL_DEBUG_SUFFIX d.dll)
-  set(LIB_PREFIX)
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(DLL_DECORATOR s)
   endif()
-elseif(VCPKG_TARGET_IS_LINUX)
-  set(DLL_DECORATOR)
-  set(LIB_RELEASE_SUFFIX .a)
-  set(LIB_DEBUG_SUFFIX .a)
-  set(DLL_RELEASE_SUFFIX .so)
-  set(DLL_DEBUG_SUFFIX .so)
-  set(LIB_PREFIX lib)
-elseif(VCPKG_TARGET_IS_OSX)
-  set(DLL_DECORATOR)
-  set(LIB_RELEASE_SUFFIX .a)
-  set(LIB_DEBUG_SUFFIX .a)
-  set(DLL_RELEASE_SUFFIX .dylib)
-  set(DLL_DEBUG_SUFFIX .dylib)
-  set(LIB_PREFIX lib)
+  set(LIB_DEBUG_SUFFIX d)
+  set(LIB_PREFIX "")
 endif()
+
+# if(VCPKG_TARGET_IS_WINDOWS)
+#   set(LIB_RELEASE_SUFFIX .lib)
+#   set(LIB_DEBUG_SUFFIX d.lib)
+#   set(DLL_RELEASE_SUFFIX .dll)
+#   set(DLL_DEBUG_SUFFIX d.dll)
+#   set(LIB_PREFIX)
+#   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+#     set(DLL_DECORATOR s)
+#   endif()
+# elseif(VCPKG_TARGET_IS_LINUX)
+#   set(DLL_DECORATOR)
+#   set(LIB_RELEASE_SUFFIX .a)
+#   set(LIB_DEBUG_SUFFIX .a)
+#   set(DLL_RELEASE_SUFFIX .so)
+#   set(DLL_DEBUG_SUFFIX .so)
+#   set(LIB_PREFIX lib)
+# elseif(VCPKG_TARGET_IS_OSX)
+#   set(DLL_DECORATOR)
+#   set(LIB_RELEASE_SUFFIX .a)
+#   set(LIB_DEBUG_SUFFIX .a)
+#   set(DLL_RELEASE_SUFFIX .dylib)
+#   set(DLL_DEBUG_SUFFIX .dylib)
+#   set(LIB_PREFIX lib)
+# endif()
 
 # Install include files
 
@@ -221,18 +236,20 @@ install_includes(${ACE_SOURCE_PATH} "${ACE_INCLUDE_FOLDERS}" "ace")
 function(install_libraries SOURCE_PATH LIBRARIES)
   if(NOT VCPKG_TARGET_IS_WINDOWS)
     if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/lib")
-      vcpkg_execute_required_process(COMMAND mkdir -p "${CURRENT_PACKAGES_DIR}/lib" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
+      vcpkg_execute_required_process(COMMAND mkdir -p "${CURRENT_PACKAGES_DIR}/lib" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME mkdir-for-release-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
     endif()
     if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/")
-      vcpkg_execute_required_process(COMMAND mkdir -p "${CURRENT_PACKAGES_DIR}/debug/lib/" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
+      vcpkg_execute_required_process(COMMAND mkdir -p "${CURRENT_PACKAGES_DIR}/debug/lib/" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME mkdir-for-debug-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
     endif()
   endif()
   
   foreach(LIBRARY ${LIBRARIES})
     set(LIB_PATH ${SOURCE_PATH}/lib/)
+    
+    # Install the DLL files
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
       # Install the DLL files
-      set(RELEASE_DLL_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_RELEASE_SUFFIX})
+      set(RELEASE_DLL_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_SUFFIX})
       if(EXISTS ${RELEASE_DLL_FILE_PATH})
         if(VCPKG_TARGET_IS_WINDOWS)
           file(COPY ${RELEASE_DLL_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
@@ -240,7 +257,7 @@ function(install_libraries SOURCE_PATH LIBRARIES)
           vcpkg_execute_required_process(COMMAND cp "${RELEASE_DLL_FILE_PATH}" "${CURRENT_PACKAGES_DIR}/lib/" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
         endif()
       endif()
-      set(DEBUG_DLL_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DEBUG_SUFFIX})
+      set(DEBUG_DLL_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${LIB_DEBUG_SUFFIX}${DLL_SUFFIX})
       if(EXISTS ${DEBUG_DLL_FILE_PATH})
         if(VCPKG_TARGET_IS_WINDOWS)
           file(COPY ${DEBUG_DLL_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -251,7 +268,7 @@ function(install_libraries SOURCE_PATH LIBRARIES)
     endif()
     
     # Install the lib files
-    set(RELEASE_LIB_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_RELEASE_SUFFIX})
+    set(RELEASE_LIB_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_SUFFIX})
     if(EXISTS ${RELEASE_LIB_FILE_PATH})
       if(VCPKG_TARGET_IS_WINDOWS)
         file(COPY ${RELEASE_LIB_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
@@ -259,7 +276,7 @@ function(install_libraries SOURCE_PATH LIBRARIES)
         vcpkg_execute_required_process(COMMAND cp "${RELEASE_LIB_FILE_PATH}" "${CURRENT_PACKAGES_DIR}/lib/" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
       endif()
     endif()
-    set(DEBUG_LIB_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_DEBUG_SUFFIX})
+    set(DEBUG_LIB_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_DEBUG_SUFFIX}${LIB_SUFFIX})
     if(EXISTS ${DEBUG_LIB_FILE_PATH})
       if(VCPKG_TARGET_IS_WINDOWS)
         file(COPY ${DEBUG_LIB_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
@@ -328,7 +345,27 @@ set(TAOX11_LIBRARIES "taox11" "taox11_anytypecode" "taox11_bidir_giop" "taox11_c
                      "x11_logger")
 install_libraries(${SOURCE_PATH} "${TAOX11_LIBRARIES}")
 
+set(DANCEX11_LIBRARIES "dancex11_applicationmanager_skel" "dancex11_applicationmanager_stub" "dancex11_artifact_deployment_handler" 
+                       "dancex11_artifact_installation" "dancex11_artifactinstallation_stub" "dancex11_cdr_plan_loader" "dancex11_convert_plan" 
+                       "dancex11_deployment_ami_stub" "dancex11_deployment_configurator" "dancex11_deployment_handler" "dancex11_deployment_scheduler" 
+                       "dancex11_deployment_skel" "dancex11_deployment_stub" "dancex11_deploymentmanagerhandler_skel" 
+                       "dancex11_deploymentmanagerhandler_stub" "dancex11_domain_dm_handler" "dancex11_domainapplication_skel" 
+                       "dancex11_domainapplication_stub" "dancex11_domainapplicationmanager_skel" "dancex11_domainapplicationmanager_stub" 
+                       "dancex11_error_interceptors" "dancex11_executionmanager_impl" "dancex11_executionmanager_skel" "dancex11_executionmanager_stub" 
+                       "dancex11_file_installation" "dancex11_http_installation" "dancex11_installation_repository_manager" 
+                       "dancex11_locality_configuration" "dancex11_locality_dm_handler" "dancex11_locality_handler" "dancex11_localitymanager_skel" 
+                       "dancex11_localitymanager_stub" "dancex11_logger" "dancex11_node_deployment_ami_stub" "dancex11_node_dm_handler" 
+                       "dancex11_nodeapplication_skel" "dancex11_nodeapplication_stub" "dancex11_nodeapplicationmanager_skel" 
+                       "dancex11_nodeapplicationmanager_stub" "dancex11_nodemanager_impl" "dancex11_nodemanager_skel" "dancex11_nodemanager_stub" 
+                       "dancex11_plan_loader" "dancex11_split_plan" "dancex11_state" "dancex11_stub" "dancex11_targetmanager_skel")
+install_libraries(${DANCEX11_BASE_PATH} "${DANCEX11_LIBRARIES}")
 
+set(CIAOX11_LIBRARIES "ciaox11_ami4ccm_impl" "ciaox11_ami4ccm_stub" "ciaox11_ccm_session_stub" "ciaox11_ccm_stub" "ciaox11_ccmobject_skel"
+                      "ciaox11_ccmobject_stub" "ciaox11_config_stub" "ciaox11_corba4ccm_impl" "ciaox11_corba_util" "ciaox11_core"
+                      "ciaox11_deployment_handlers" "ciaox11_deployment_interceptors" "ciaox11_deployment_state" "ciaox11_exf_amh_base"
+                      "ciaox11_exf_core" "ciaox11_exf_deployment_handlers" "ciaox11_exf_logger" "ciaox11_exf_monitor" "ciaox11_exf_scheduler"
+                      "ciaox11_logger" "ciaox11_tt4ccm_conn" "ciaox11_tt4ccm_exf_conn" "ciaox11_tt4ccm_stub" "tt4ccm_conn_stub")
+install_libraries(${CIAOX11_BASE_PATH} "${CIAOX11_LIBRARIES}")
 
 # install idl compiler(s)
 
@@ -340,7 +377,7 @@ if(BUILD_TAO)
       file(COPY ${ACE_ROOT}/lib/${LIB_PREFIX}TAO_IDL_BE${DLL_DEBUG_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
     else()        
       if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
-        vcpkg_execute_required_process(COMMAND mkdir -p "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
+        vcpkg_execute_required_process(COMMAND mkdir -p "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-for-tools-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
       endif()
       vcpkg_execute_required_process(COMMAND cp "${ACE_ROOT}/lib/${LIB_PREFIX}ACE${DLL_DEBUG_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
       vcpkg_execute_required_process(COMMAND cp "${ACE_ROOT}/lib/${LIB_PREFIX}TAO_IDL_FE${DLL_DEBUG_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
@@ -351,9 +388,9 @@ if(BUILD_TAO)
     file(COPY ${ACE_ROOT}/bin/tao_idl${VCPKG_TARGET_EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
   else()        
     if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
-        vcpkg_execute_required_process(COMMAND mkdir -p "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
+        vcpkg_execute_required_process(COMMAND mkdir -p "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME mkdir-for-tools-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
     endif()
-    vcpkg_execute_required_process(COMMAND cp "${ACE_ROOT}/bin/tao_idl${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
+    vcpkg_execute_required_process(COMMAND cp "${ACE_ROOT}/bin/tao_idl${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-tao_idl-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
   endif()
 endif()
 
