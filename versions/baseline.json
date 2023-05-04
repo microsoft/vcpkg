@@ -5841,8 +5841,8 @@
       "port-version": 1
     },
     "openexr": {
-      "baseline": "3.1.5",
-      "port-version": 1
+      "baseline": "3.1.7",
+      "port-version": 0
     },
     "openfbx": {
       "baseline": "2022-07-18",
