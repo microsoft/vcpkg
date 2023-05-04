@@ -18,6 +18,12 @@ vcpkg_cmake_configure(
         -DWINDOWSSTORE=${USE_WINDOWSSTORE}
 )
 
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    if(VCPKG_TARGET_IS_WINDOWS)
+       vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/xlsxwriter.pc" "-lz" "-lzlib")
+    endif()
+endif()
+
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
