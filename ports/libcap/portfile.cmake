@@ -47,20 +47,20 @@ file(INSTALL "${SOURCE_PATH}/libcap/include/" DESTINATION "${CURRENT_PACKAGES_DI
 
 set(BUILD_DIR_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(INSTALL "${BUILD_DIR_RELEASE}/libcap/libcap.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib" )
+  file(INSTALL "${BUILD_DIR_RELEASE}/libcap/libcap.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 else()
   file(INSTALL "${BUILD_DIR_RELEASE}/libcap/libcap.so" DESTINATION "${CURRENT_PACKAGES_DIR}/lib" FOLLOW_SYMLINK_CHAIN)
 endif()
 
 set(BUILD_DIR_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(INSTALL "${BUILD_DIR_DEBUG}/libcap/libcap.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib" )
+  file(INSTALL "${BUILD_DIR_DEBUG}/libcap/libcap.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 else()
   file(INSTALL "${BUILD_DIR_DEBUG}/libcap/libcap.so" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib" FOLLOW_SYMLINK_CHAIN)
 endif()
 
-file(INSTALL "${BUILD_DIR_RELEASE}/libcap/libcap.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" )
-file(INSTALL "${BUILD_DIR_DEBUG}/libcap/libcap.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" )
+file(INSTALL "${BUILD_DIR_RELEASE}/libcap/libcap.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+file(INSTALL "${BUILD_DIR_DEBUG}/libcap/libcap.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License")
 
