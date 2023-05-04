@@ -177,22 +177,12 @@ endif()
 #
 ###################################################
 
-set(LIB_SUFFIX ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-set(DLL_SUFFIX ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-
-set(DLL_DECORATOR "")
-set(LIB_DEBUG_SUFFIX "")
-set(LIB_PREFIX lib)
-if(VCPKG_TARGET_IS_WINDOWS)
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(DLL_DECORATOR s)
-  endif()
-  set(LIB_DEBUG_SUFFIX d)
-  set(LIB_PREFIX "")
-endif()
 
 # Install include files
-
+# Arguments:
+# - SOURCE_PATH: The root path where the header, inline, and C++ source files are located.
+# - SUBDIRECTORIES: A list of subdirectories under the SOURCE_PATH that contain the files to be installed.
+# - INCLUDE_DIR: The destination include directory name where the files should be installed, relative to ${CURRENT_PACKAGES_DIR}/include.
 function(install_includes SOURCE_PATH SUBDIRECTORIES INCLUDE_DIR)
   foreach(SUB_DIR ${SUBDIRECTORIES})
     file(GLOB INCLUDE_FILES ${SOURCE_PATH}/${SUB_DIR}/*.h ${SOURCE_PATH}/${SUB_DIR}/*.inl ${SOURCE_PATH}/${SUB_DIR}/*.cpp)
@@ -203,62 +193,60 @@ endfunction()
 set(ACE_INCLUDE_FOLDERS "." "Compression" "Compression/rle" "ETCL" "QoS" "Monitor_Control" "os_include" "os_include/arpa" "os_include/net" "os_include/netinet" "os_include/sys")
 install_includes(${ACE_SOURCE_PATH} "${ACE_INCLUDE_FOLDERS}" "ace")
 
+# Set library and DLL suffixes and prefixes
+set(LIB_SUFFIX ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+set(DLL_SUFFIX ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+set(DLL_DECORATOR "")
+set(LIB_DEBUG_SUFFIX "")
+set(LIB_PREFIX lib)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(DLL_DECORATOR s)
+  endif()
+  set(LIB_DEBUG_SUFFIX d)
+  set(LIB_PREFIX "")
+endif()
 
 # Install libraries
-
+# Arguments:
+# - SOURCE_PATH: The path where the libraries are located
+# - LIBRARIES: A list of library names to install
 function(install_libraries SOURCE_PATH LIBRARIES)
-  if(NOT VCPKG_TARGET_IS_WINDOWS)
-    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/lib")
-      vcpkg_execute_required_process(COMMAND mkdir -p "${CURRENT_PACKAGES_DIR}/lib" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME mkdir-for-release-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
-    endif()
-    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/")
-      vcpkg_execute_required_process(COMMAND mkdir -p "${CURRENT_PACKAGES_DIR}/debug/lib/" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME mkdir-for-debug-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
-    endif()
-  endif()
-  
+
+  # Create lib directories if they don't exist
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/")
+
   foreach(LIBRARY ${LIBRARIES})
     set(LIB_PATH ${SOURCE_PATH}/lib)
-    
+
     # Install the DLL files
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-      # Install the DLL files
       set(RELEASE_DLL_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_SUFFIX})
       if(EXISTS ${RELEASE_DLL_FILE_PATH})
-        if(VCPKG_TARGET_IS_WINDOWS)
-          file(COPY ${RELEASE_DLL_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-        else()
-          vcpkg_execute_required_process(COMMAND cp "${RELEASE_DLL_FILE_PATH}" "${CURRENT_PACKAGES_DIR}/lib/" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
-        endif()
+        file(COPY ${RELEASE_DLL_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
       endif()
+
       set(DEBUG_DLL_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${LIB_DEBUG_SUFFIX}${DLL_SUFFIX})
       if(EXISTS ${DEBUG_DLL_FILE_PATH})
-        if(VCPKG_TARGET_IS_WINDOWS)
-          file(COPY ${DEBUG_DLL_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-        else()
-          vcpkg_execute_required_process(COMMAND cp "${DEBUG_DLL_FILE_PATH}" "${CURRENT_PACKAGES_DIR}/debug/lib/" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
-        endif()
+        file(COPY ${DEBUG_DLL_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
       endif()
     endif()
-    
+
     # Install the lib files
     set(RELEASE_LIB_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_SUFFIX})
     if(EXISTS ${RELEASE_LIB_FILE_PATH})
-      if(VCPKG_TARGET_IS_WINDOWS)
-        file(COPY ${RELEASE_LIB_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-      else()        
-        vcpkg_execute_required_process(COMMAND cp "${RELEASE_LIB_FILE_PATH}" "${CURRENT_PACKAGES_DIR}/lib/" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
-      endif()
+      file(COPY ${RELEASE_LIB_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     endif()
+
     set(DEBUG_LIB_FILE_PATH ${LIB_PATH}/${LIB_PREFIX}${LIBRARY}${DLL_DECORATOR}${LIB_DEBUG_SUFFIX}${LIB_SUFFIX})
     if(EXISTS ${DEBUG_LIB_FILE_PATH})
-      if(VCPKG_TARGET_IS_WINDOWS)
-        file(COPY ${DEBUG_LIB_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-      else()        
-        vcpkg_execute_required_process(COMMAND cp "${DEBUG_LIB_FILE_PATH}" "${CURRENT_PACKAGES_DIR}/debug/lib/" WORKING_DIRECTORY ${SOURCE_PATH} LOGNAME copy-libs-${VCPKG_BUILD_TYPE}-${TARGET_TRIPLET})
-      endif()
-    endif()         
+      file(COPY ${DEBUG_LIB_FILE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    endif()
   endforeach()
 endfunction()
+
 
 set(BUILD_TAO 1)
 if(BUILD_TAO)
