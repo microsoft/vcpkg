@@ -6,12 +6,11 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         0001-build-share-library.patch
-
 )
 
 set(EXTRA_OPTIONS "")
 
-if(NOT xapian IN_LIST FEATURES)
+if(NOT "xapian" IN_LIST FEATURES)
     list(APPEND EXTRA_OPTIONS "-Dwith_xapian=false")
 endif()
 
@@ -26,9 +25,7 @@ vcpkg_configure_meson(
     OPTIONS
       -Dexamples=false
       ${EXTRA_OPTIONS}
-
 )
-
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
@@ -36,6 +33,5 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
