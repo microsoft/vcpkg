@@ -1,38 +1,8 @@
 diff --git a/src/msvcbuild.bat b/src/msvcbuild.bat
-index aab4ef1..8418a8d 100644
+index aab4ef1..e92c486 100644
 --- a/src/msvcbuild.bat
 +++ b/src/msvcbuild.bat
-@@ -15,7 +15,7 @@
- @setlocal
- @rem Add more debug flags here, e.g. DEBUGCFLAGS=/DLUA_USE_APICHECK
- @set DEBUGCFLAGS=
--@set LJCOMPILE=cl /nologo /c /O2 /W3 /D_CRT_SECURE_NO_DEPRECATE /D_CRT_STDIO_INLINE=__declspec(dllexport)__inline
-+@set LJCOMPILE=cl /nologo /c         /D_CRT_SECURE_NO_DEPRECATE /D_CRT_STDIO_INLINE=__declspec(dllexport)__inline
- @set LJLINK=link /nologo
- @set LJMT=mt /nologo
- @set LJLIB=lib /nologo /nodefaultlib
-@@ -27,6 +27,11 @@
- @set BUILDTYPE=release
- @set ALL_LIB=lib_base.c lib_math.c lib_bit.c lib_string.c lib_table.c lib_io.c lib_os.c lib_package.c lib_debug.c lib_jit.c lib_ffi.c lib_buffer.c
- 
-+if "%LJARCH%"=="" goto :NATIVE
-+if "%LJARCH%"=="x86" @set LJCOMPILE=%LJCOMPILE% /arch:SSE2
-+goto :HAVE_BUILDVM
-+
-+:NATIVE
- %LJCOMPILE% host\minilua.c
- @if errorlevel 1 goto :BAD
- %LJLINK% /out:minilua.exe minilua.obj
-@@ -58,6 +63,8 @@ minilua %DASM% -LN %DASMFLAGS% -o host\buildvm_arch.h %DASC%
- if exist buildvm.exe.manifest^
-   %LJMT% -manifest buildvm.exe.manifest -outputresource:buildvm.exe
- 
-+copy buildvm.exe ..
-+:HAVE_BUILDVM
- buildvm -m peobj -o lj_vm.obj
- @if errorlevel 1 goto :BAD
- buildvm -m bcdef -o lj_bcdef.h %ALL_LIB%
-@@ -79,10 +86,9 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
+@@ -79,10 +79,9 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
  @set LJCOMPILE=%LJCOMPILE% /Zi %DEBUGCFLAGS%
  @set LJLINK=%LJLINK% /opt:ref /opt:icf /incremental:no
  :NODEBUG
@@ -44,7 +14,7 @@ index aab4ef1..8418a8d 100644
  @if errorlevel 1 goto :BAD
  %LJLINK% /DLL /out:%LJDLLNAME% lj_*.obj lib_*.obj
  @if errorlevel 1 goto :BAD
-@@ -102,7 +108,7 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
+@@ -102,7 +101,7 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
  if exist %LJDLLNAME%.manifest^
    %LJMT% -manifest %LJDLLNAME%.manifest -outputresource:%LJDLLNAME%;2
  
@@ -53,3 +23,9 @@ index aab4ef1..8418a8d 100644
  @if errorlevel 1 goto :BAD
  %LJLINK% /out:luajit.exe luajit.obj %LJLIBNAME%
  @if errorlevel 1 goto :BAD
+@@ -124,4 +123,5 @@ if exist luajit.exe.manifest^
+ @goto :END
+ :FAIL
+ @echo You must open a "Visual Studio Command Prompt" to run this script
++@exit 1
+ :END
