@@ -100,7 +100,7 @@ jobs:
               deprecated_output += "If you feel able to do so, please consider migrating them to the new functions.\n";
               core.warning(deprecated_output);
 
-              const deprecated_functions = {
+              let deprecated_functions = {
                   vcpkg_extract_source_archive_ex: 'vcpkg_extract_source_archive https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_extract_source_archive',
                   vcpkg_build_msbuild: 'vcpkg_install_msbuild https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_install_msbuild',
                   vcpkg_apply_patches: 'the PATCHES arguments to the \"extract\" helpers (for example, vcpkg_from_github() (https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_from_github))',
@@ -129,7 +129,7 @@ jobs:
               deprecated_output += "```\n";
               core.error(deprecated_output);
 
-              const deprecated_functions = {
+              let deprecated_functions = {
                   vcpkg_install_cmake: 'vcpkg_cmake_install (from port vcpkg-cmake)',
                   vcpkg_install_cmake: 'vcpkg_cmake_install (from port vcpkg-cmake)',
                   vcpkg_build_cmake: 'vcpkg_cmake_build (from port vcpkg-cmake)',
