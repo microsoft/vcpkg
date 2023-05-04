@@ -19,6 +19,8 @@ vcpkg_from_github(
     REF 8a4611cc7354ad6668619d675f6eeb419ee85447
     SHA512 38cd56de659daa203fadc939e8f13c3b22b93585086ef4da3c32cd4ff2ace6ece7eee7c14e30014520e5ef9fe2b8e82c9810e41787ca46f3043dfc4155dec164
     HEAD_REF master
+    PATCHES
+      fix_osx.patch
 )
 
 ###################################################
@@ -118,7 +120,7 @@ if(${VCPKG_TARGET_ARCHITECTURE} MATCHES "x86")
 endif()
 
 vcpkg_execute_required_process(
-  COMMAND ${BRIX11} configure -b ${BITSIZE} -e xerces3 -W xercescroot=${CURRENT_INSTALLED_DIR} -W bzip2root=${CURRENT_INSTALLED_DIR} -W zlibroot=${CURRENT_INSTALLED_DIR} -W sslroot=${CURRENT_INSTALLED_DIR} -W targetsysroot=${CURRENT_INSTALLED_DIR} --with=versioned_so=0
+  COMMAND ${BRIX11} configure -v -b ${BITSIZE} -e xerces3 -W xercescroot=${CURRENT_INSTALLED_DIR} -W bzip2root=${CURRENT_INSTALLED_DIR} -W zlibroot=${CURRENT_INSTALLED_DIR} -W sslroot=${CURRENT_INSTALLED_DIR} -W targetsysroot=${CURRENT_INSTALLED_DIR} --with=versioned_so=0
   WORKING_DIRECTORY ${SOURCE_PATH}
   LOGNAME brix11-configure-${TARGET_TRIPLET}
 )

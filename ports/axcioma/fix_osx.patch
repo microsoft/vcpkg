@@ -1,0 +1,56 @@
+diff --git a/brix11/lib/brix11/brix/common/cmds/configure/platform.rb b/brix11/lib/brix11/brix/common/cmds/configure/platform.rb
+index a2daaf0..74ad246 100644
+--- a/brix11/lib/brix11/brix/common/cmds/configure/platform.rb
++++ b/brix11/lib/brix11/brix/common/cmds/configure/platform.rb
+@@ -120,6 +120,37 @@ def platform_os
+                                         })
+                                         opts[:platform][:bits] = (opts[:platform][:arch] == 'x86_64' ? 64 : 32)
+                                       }
++        platform_helpers[/Darwin/i] = ->(_s, opts) {
++                                          opts[:platform].merge!({
++                                            os: :darwin,
++                                            arch: `uname -m`.chomp,
++                                            defaults: {
++                                              libroot: '/usr',
++                                              dll_dir: 'lib',
++                                              library_path_var: 'DYLD_LIBRARY_PATH',
++                                              test_configs: %w{MACOSX},
++                                              prj_type: BRIX11::Project.handler('gnumake').default_prj_type
++                                            },
++                                            project_type: lambda { |opts_, pt = nil, cc = nil|
++                                              opts_def = opts_[:platform][:defaults]
++                                              prjh = BRIX11::Project.handler(pt || opts_def[:prj_type], cc || opts_def[:prj_cc])
++                                              [prjh.class::ID, prjh.compiler]
++                                            },
++                                            config_include: 'config-macosx.h',
++                                            config_prelude: %Q{
++                                                #define ACE_HAS_VERSIONED_NAMESPACE 1
++                                                #define ACE_MONITOR_FRAMEWORK 0
++                                              }.gsub(/^\s+/, ''),
++                                            gnumake_include: 'platform_macosx.GNU',
++                                            gnumake_prelude: %Q{
++                                                debug=0
++                                                inline=1
++                                                optimize=1
++                                              }.gsub(/^\s+/, '')
++                                          })
++                                          opts[:platform][:bits] = 64
++                                        }
++            
+ 
+         def self.determin(opts)
+           build_target = (opts[:target] || platform_os)
+diff --git a/brix11/lib/brix11/system.rb b/brix11/lib/brix11/system.rb
+index 863d778..23460f2 100644
+--- a/brix11/lib/brix11/system.rb
++++ b/brix11/lib/brix11/system.rb
+@@ -24,6 +24,8 @@ def self.get_cpu_cores
+       unless @cpu_cores
+         if mswin?
+           @cpu_cores = (ENV['NUMBER_OF_PROCESSORS'] || 1).to_i
++        elsif File.exist?('/usr/sbin/sysctl')
++          @cpu_cores = (`/usr/sbin/sysctl -n hw.ncpu` rescue '1').strip.to_i
+         else
+           @cpu_cores = (`cat /proc/cpuinfo | grep processor | wc -l` rescue '1').strip.to_i
+         end
+
