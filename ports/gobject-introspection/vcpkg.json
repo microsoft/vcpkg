@@ -25,6 +25,10 @@
     },
     "python3",
     {
+      "name": "python3",
+      "host": true
+    },
+    {
       "name": "vcpkg-tool-meson",
       "host": true
     }
