@@ -118,7 +118,7 @@
     },
     "angle": {
       "baseline": "chromium_5414",
-      "port-version": 1
+      "port-version": 2
     },
     "annoy": {
       "baseline": "1.17.2",
@@ -595,6 +595,10 @@
     "blend2d": {
       "baseline": "2022-12-31",
       "port-version": 3
+    },
+    "blingfire": {
+      "baseline": "0.1.8.1",
+      "port-version": 0
     },
     "blitz": {
       "baseline": "2020-03-25",
@@ -1785,8 +1789,8 @@
       "port-version": 3
     },
     "cppkafka": {
-      "baseline": "0.3.1",
-      "port-version": 5
+      "baseline": "0.4.0",
+      "port-version": 0
     },
     "cppmicroservices": {
       "baseline": "3.6.0",
@@ -2973,7 +2977,7 @@
       "port-version": 0
     },
     "gtk3": {
-      "baseline": "3.24.36",
+      "baseline": "3.24.37",
       "port-version": 0
     },
     "gtkmm": {
@@ -3118,7 +3122,7 @@
     },
     "hiredis": {
       "baseline": "1.0.2",
-      "port-version": 4
+      "port-version": 5
     },
     "hnswlib": {
       "baseline": "0.7.0",
@@ -3309,7 +3313,7 @@
       "port-version": 1
     },
     "indicators": {
-      "baseline": "2.2",
+      "baseline": "2.3",
       "port-version": 0
     },
     "influxdb-cxx": {
@@ -3673,7 +3677,7 @@
       "port-version": 0
     },
     "kissnet": {
-      "baseline": "2022-10-18",
+      "baseline": "2023-02-04",
       "port-version": 0
     },
     "klein": {
@@ -4941,8 +4945,8 @@
       "port-version": 0
     },
     "luasocket": {
-      "baseline": "3.0.0",
-      "port-version": 1
+      "baseline": "3.1.0",
+      "port-version": 0
     },
     "luminoengine": {
       "baseline": "0.10.1",
@@ -5722,7 +5726,7 @@
     },
     "ogre": {
       "baseline": "13.6.2",
-      "port-version": 1
+      "port-version": 2
     },
     "ogre-next": {
       "baseline": "2.3.1",
@@ -6638,7 +6642,7 @@
     },
     "qtbase": {
       "baseline": "6.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.5.0",
@@ -7281,7 +7285,7 @@
       "port-version": 2
     },
     "sentry-native": {
-      "baseline": "0.6.1",
+      "baseline": "0.6.2",
       "port-version": 0
     },
     "septag-dmon": {
