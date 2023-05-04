@@ -670,51 +670,44 @@ function(vcpkg_configure_make)
         else() # dynamic
             set(LINKER_FLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
         endif()
+
         set(ARFLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
+        if(ARFLAGS_${var_suffix})
+            # ARFLAGS need to know the command for creating an archive (Maybe needs user customization?)
+            # or extract it from CMake via CMAKE_${lang}_ARCHIVE_CREATE ?
+            # or from CMAKE_${lang}_${rule} with rule being one of CREATE_SHARED_MODULE CREATE_SHARED_LIBRARY LINK_EXECUTABLE
+            string(PREPEND ARFLAGS_${var_suffix} "cr ")
+        endif()
+        string(STRIP "${ARFLAGS_${var_suffix}}" ARFLAGS_${var_suffix})
+
         set(LDFLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
-        if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES [[cl\.exe$]])
-            if(NOT vcm_paths_with_spaces)
-                string(APPEND LDFLAGS_${var_suffix} " -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link")
+        # Could use a future VCPKG_DETECTED_CMAKE_LIBRARY_PATH_FLAG
+        set(LIBRARY_PATH_FLAG "-L")
+        set(LINKER_FLAG_ESCAPE "")
+        # Could use a future VCPKG_DETECTED_MSVC
+        set(using_msvc_link 0)
+        if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_DETECTED_CMAKE_LINKER MATCHES [[link\.exe$]])
+            set(using_msvc_link 1)
+            set(LIBRARY_PATH_FLAG "-LIBPATH:")
+            # Removed by libtool
+            set(LINKER_FLAG_ESCAPE "-Xlinker ")
+            if(arg_USE_WRAPPERS)
+                 # 1st and 3rd are removed by libtool, 2nd by wrapper
+                 set(LINKER_FLAG_ESCAPE "-Xlinker -Xlinker -Xlinker ")
             endif()
             if(DEFINED ENV{_LINK_})
                 set(LINK_ENV_${var_suffix} "$ENV{_LINK_} ${LINKER_FLAGS_${var_suffix}}")
             else()
                 set(LINK_ENV_${var_suffix} "${LINKER_FLAGS_${var_suffix}}")
             endif()
-        else()
-            set(link_required_dirs "")
-            if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
-                set(link_required_dirs "-L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib")
-            endif()
-            if(EXISTS "{CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
-                set(link_required_dirs "${link_required_dirs} -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link")
-            endif()
-            string(STRIP "${link_required_dirs}" link_required_dirs)
-            if(link_required_dirs)
-                string(PREPEND LDFLAGS_${var_suffix} "${link_required_dirs} ")
-                # ARFLAGS doesn't need -L search paths since it just bundles object files
-            endif()
-            if(ARFLAGS_${var_suffix})
-                # ARFLAGS need to know the command for creating an archive (Maybe needs user customization?)
-                # or extract it from CMake via CMAKE_${lang}_ARCHIVE_CREATE ?
-                # or from CMAKE_${lang}_${rule} with rule being one of CREATE_SHARED_MODULE CREATE_SHARED_LIBRARY LINK_EXECUTABLE
-                string(PREPEND ARFLAGS_${var_suffix} "cr ")
-            endif()
-            string(STRIP "${LDFLAGS_${var_suffix}}" LDFLAGS_${var_suffix})
-            string(STRIP "${ARFLAGS_${var_suffix}}" ARFLAGS_${var_suffix})
-            if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_DETECTED_CMAKE_LINKER MATCHES [[link\.exe$]])
-                # Do not touch autotools quirks incoming!
-                # -Xlinker is repeated three times because:
-                # - libtool script eats -Xlinker
-                # - the compile wrapper eats -Xlinker
-                # - passing through both tools requires 3 -Xlinker; two being eaten in the first script.
-                # passing only through one script will keep one -Xlinker (done in configure)
-                # but cl will just ignore those with a warning. (Just like -Xcompiler)
-                separate_arguments(LDFLAGS_LIST NATIVE_COMMAND "${LDFLAGS_${var_suffix}}")
-                list(JOIN LDFLAGS_LIST " -Xlinker -Xlinker -Xlinker " LDFLAGS_${var_suffix})
-                string(PREPEND LDFLAGS_${var_suffix} "-Xlinker -Xlinker -Xlinker ")
-            endif()
         endif()
+        if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
+            string(PREPEND LDFLAGS_${var_suffix} "${LINKER_FLAG_ESCAPE}${LIBRARY_PATH_FLAG}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link ")
+        endif()
+        if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
+            string(PREPEND LDFLAGS_${var_suffix} "${LINKER_FLAG_ESCAPE}${LIBRARY_PATH_FLAG}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib ")
+        endif()
+        string(STRIP "${LDFLAGS_${var_suffix}}" LDFLAGS_${var_suffix})
     endmacro()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT arg_NO_DEBUG)
