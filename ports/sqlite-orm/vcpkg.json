@@ -1,8 +1,9 @@
 {
   "name": "sqlite-orm",
-  "version": "1.7.1",
+  "version": "1.8.2",
   "description": "SQLite ORM light header only library for modern C++",
   "homepage": "https://github.com/fnc12/sqlite_orm",
+  "license": "AGPL-3.0-or-later OR MIT",
   "dependencies": [
     "sqlite3",
     {

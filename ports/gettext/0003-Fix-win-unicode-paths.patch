@@ -1,12 +1,16 @@
-diff --git "a/gettext-runtime/intl/loadmsgcat.c" "b/gettext-runtime/intl/loadmsgcat.c"
-index 63351523..c078de3f 100644
+diff --git a/gettext-runtime/intl/loadmsgcat.c b/gettext-runtime/intl/loadmsgcat.c
+index d5a5fe1..5c47f48 100644
 --- a/gettext-runtime/intl/loadmsgcat.c
 +++ b/gettext-runtime/intl/loadmsgcat.c
-@@ -388,6 +388,55 @@ char *alloca ();
+@@ -390,9 +390,56 @@ char *alloca ();
  # define munmap(addr, len)	__munmap (addr, len)
- #endif
- 
-+#ifdef _WIN32
+ #elif defined _WIN32 && !defined __CYGWIN__
+ /* On native Windows, don't require linking with '-loldnames'.  */
+-# define open _open
++# define open(name, flags)	_open_utf8_windows_wrapper(name, flags)
+ # define read _read
+ # define close _close
++
 +/* Provide wrapper of "open" for Windows that supports UTF-8 filenames. */
 +# ifndef WIN32_LEAN_AND_MEAN
 +#  define WIN32_LEAN_AND_MEAN
@@ -14,8 +18,9 @@ index 63351523..c078de3f 100644
 +# ifndef WIN32_EXTRA_LEAN
 +#  define WIN32_EXTRA_LEAN
 +# endif
-+# undef NOMINMAX
-+# define NOMINMAX
++# ifndef NOMINMAX
++#  define NOMINMAX
++# endif
 +# include <windows.h>	// For: MultiByteToWideChar
 +# include <io.h>
 +# include <wchar.h>
@@ -52,9 +57,6 @@ index 63351523..c078de3f 100644
 +	free(pUtf16FileName);
 +	return fh;
 +}
-+# define open(name, flags)	_open_utf8_windows_wrapper(name, flags)
-+#endif // #ifdef _WIN32
-+
+ #endif
+ 
  /* For those losing systems which don't have `alloca' we have to add
-    some additional code emulating it.  */
- #ifdef HAVE_ALLOCA

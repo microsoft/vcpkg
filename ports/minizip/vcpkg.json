@@ -1,7 +1,8 @@
 {
   "name": "minizip",
   "version-semver": "1.2.13",
-  "description": "Zip compression library",
+  "port-version": 1,
+  "description": "Minizip zip file manipulation library",
   "homepage": "https://github.com/madler/zlib",
   "license": "Zlib",
   "supports": "!uwp",
@@ -22,6 +23,10 @@
       "dependencies": [
         "bzip2"
       ]
+    },
+    "tools": {
+      "description": "Install tools",
+      "supports": "!ios"
     }
   }
 }

@@ -4,9 +4,9 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 63ab4d153063960510cf60651d5c832824cf85f937f84adc5390c7c2fb46eb8e9f5d8cda2554d79d24c7a4f1b6cf0b7a6e20958fb69920b65d7c362c0a5f26b5
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         dll_exports.patch
         fix-dependency.patch

@@ -1,0 +1,14 @@
+diff --git a/src/tools/msvc/Solution.pm b/src/tools/msvc/Solution.pm
+index 72c5b98..0d153c0 100644
+--- a/src/tools/msvc/Solution.pm
++++ b/src/tools/msvc/Solution.pm
+@@ -128,6 +128,9 @@ sub copyFile
+ sub GetOpenSSLVersion
+ {
+ 	my $self = shift;
++	if (($ENV{'VCPKG_OPENSSL_VERSION'} // '') =~ /(\d+)\.(\d+)\.(\d+)/m) {
++		return ($1, $2, $3);
++	}
+ 
+ 	# Attempt to get OpenSSL version and location.  This assumes that
+ 	# openssl.exe is in the specified directory.

@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v0.8.1
     SHA512 12feedd6a1859ef55e27218dbd6dcceccbb5a4da34cd80240d2f7d44cd246c7afdeb59830c2d5b90189bb5159293532208bf5bb622250102e12d6e1bad14a193
     HEAD_REF dev
+    PATCHES
+        fix_xxhsum1_path.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

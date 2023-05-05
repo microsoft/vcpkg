@@ -1,9 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lballabio/QuantLib
-    REF QuantLib-v1.28
-    SHA512 720bc18e5a01367e5cea5c9a28f2103357e6d2708dbc13c208a73b52bc615ba03ab248eca75f94e9c7631e340faa87a18bef94b4ae9f277006fc62fac4b30bc4
+    REF QuantLib-v1.30
+    SHA512 7948f33fac124e615051863a1780ed2f98a626577174b54d0a276e604d3b034828e3d6c0c528687c4c0b974829dde830daf6be70f8de51467c9fc0f9a76eb525
     HEAD_REF master
+    PATCHES remove-amortizingbonds-all.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)

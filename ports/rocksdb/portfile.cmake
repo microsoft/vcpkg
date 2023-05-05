@@ -3,9 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF eb9a80fe1f18017b4d7f4084e8f2554f12234822 # v7.7.3
-  SHA512 6606a18a75c0794bc962b10c22aab9ae44e426b127972f2cb4b4d52a34f52181a0c66007fc17a5d1ee4d43de4c490b3754d805c6f7d02c280196a60d7a14dd2f
-  HEAD_REF master
+  REF "v${VERSION}"
+  SHA512 2f6fb50c5bb506665950520347104f666fcc29c7df5d806ccdf8c682f10043a0ea3c57b889871812951c5a5101ea8cf318b42b16383e5e6223e8c70e8a55e127
+  HEAD_REF main
   PATCHES
     0002-only-build-one-flavor.patch
     0003-use-find-package.patch
@@ -35,7 +35,6 @@ vcpkg_cmake_configure(
     -DWITH_TESTS=OFF
     -DWITH_BENCHMARK_TOOLS=OFF
     -DWITH_TOOLS=OFF
-    -DWITH_FOLLY_DISTRIBUTED_MUTEX=OFF
     -DUSE_RTTI=1
     -DROCKSDB_INSTALL_ON_WINDOWS=ON
     -DFAIL_ON_WARNINGS=OFF
@@ -47,6 +46,11 @@ vcpkg_cmake_configure(
     -DCMAKE_DISABLE_FIND_PACKAGE_gtest=TRUE
     -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
     ${FEATURE_OPTIONS}
+  MAYBE_UNUSED_VARIABLES
+    CMAKE_DISABLE_FIND_PACKAGE_NUMA
+    CMAKE_DISABLE_FIND_PACKAGE_gtest
+    CMAKE_DISABLE_FIND_PACKAGE_TBB
+    CMAKE_DEBUG_POSTFIX
 )
 
 vcpkg_cmake_install()
@@ -58,5 +62,15 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.Apache" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/LICENSE.leveldb" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_fixup_pkgconfig()
+
+vcpkg_install_copyright(COMMENT [[
+RocksDB is dual-licensed under both the GPLv2 (found in COPYING)
+and Apache 2.0 License (found in LICENSE.Apache). You may select,
+at your option, one of the above-listed licenses.
+]]
+  FILE_LIST
+    "${SOURCE_PATH}/LICENSE.leveldb"
+    "${SOURCE_PATH}/LICENSE.Apache"
+    "${SOURCE_PATH}/COPYING"
+)

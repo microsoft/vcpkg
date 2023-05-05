@@ -1,9 +1,10 @@
 {
   "name": "aws-c-s3",
-  "version": "0.1.25",
-  "port-version": 2,
+  "version": "0.2.3",
+  "port-version": 1,
   "description": "C99 library implementation for communicating with the S3 service, designed for maximizing throughput on high bandwidth EC2 instances.",
   "homepage": "https://github.com/awslabs/aws-c-s3",
+  "license": "Apache-2.0",
   "supports": "!(windows & arm) & !uwp",
   "dependencies": [
     "aws-c-auth",
@@ -12,6 +13,7 @@
     "aws-c-compression",
     "aws-c-http",
     "aws-c-io",
+    "aws-checksums",
     {
       "name": "s2n",
       "platform": "!uwp & !windows"

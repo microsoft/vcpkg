@@ -1,9 +1,11 @@
 {
   "name": "liblsl",
-  "version": "1.16.0",
+  "version": "1.16.1",
+  "port-version": 1,
   "description": "C++ lsl library for multi-modal time-synched data transmission over the local network",
   "homepage": "https://github.com/sccn/liblsl",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "asio",
     "boost-atomic",

@@ -1,7 +1,7 @@
 function(vcpkg_from_git)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        "LFS"
-        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG"
+        ""
+        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG;LFS"
         "PATCHES"
     )
 
@@ -11,7 +11,6 @@ function(vcpkg_from_git)
     if(DEFINED arg_TAG)
         message(WARNING "The TAG argument to vcpkg_from_git has been deprecated and has no effect.")
     endif()
-
 
     if(NOT DEFINED arg_OUT_SOURCE_PATH)
         message(FATAL_ERROR "OUT_SOURCE_PATH must be specified")
@@ -24,6 +23,9 @@ function(vcpkg_from_git)
     endif()
     if(DEFINED arg_FETCH_REF AND NOT DEFINED arg_REF)
         message(FATAL_ERROR "REF must be specified if FETCH_REF is specified")
+    endif()
+    if(NOT DEFINED arg_LFS AND "LFS" IN_LIST arg_KEYWORDS_MISSING_VALUES)
+        set(arg_LFS "${arg_URL}")
     endif()
 
     vcpkg_list(SET git_fetch_shallow_param --depth 1)
@@ -108,7 +110,7 @@ function(vcpkg_from_git)
             )
             vcpkg_execute_required_process(
                 ALLOW_IN_DOWNLOAD_MODE
-                COMMAND ${GIT} lfs fetch "${arg_URL}" "${ref_to_fetch}"
+                COMMAND ${GIT} lfs fetch "${arg_LFS}" "${ref_to_fetch}"
                 WORKING_DIRECTORY "${git_working_directory}"
                 LOGNAME "git-lfs-fetch-${TARGET_TRIPLET}"
             )

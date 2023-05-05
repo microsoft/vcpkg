@@ -1,10 +1,13 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
     FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 21176cb95fcab49a781d02789bf21191a96a34a6391f066699b3c20b414b3169c958bd86623deb34ca55912083862885f7a7d12b67cc041467da2ba94d9e83c3
+    SHA512 7ab8740925fa4ed2d860a35544c475ae905df5fa7fc0cc64ffa8c543df6073794e44c8ff39e3e1de1d677016ef9d27e9bc709d2505d13090faa8d6c47cd64bd0
+)
+vcpkg_download_distfile(GLIB_MR_3386
+    URLS "https://gitlab.gnome.org/GNOME/glib/-/merge_requests/3386.diff"
+    FILENAME "glib-mr-3386.diff"
+    SHA512 cb67e8908a7cb6f945d019da1bf56f504b9c2131a832bcdfbdc61c973c89efd8e4380d5d67f83e229998da1e8579f3ff87b7695a3318eee9613d1ab1168bd0db
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -12,6 +15,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
+        ${GLIB_MR_3386}
 )
 
 vcpkg_list(SET OPTIONS)
@@ -30,12 +34,17 @@ else()
     list(APPEND OPTIONS -Dlibmount=disabled)
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND OPTIONS -Diconv=external)
+vcpkg_list(SET ADDITIONAL_BINARIES)
+if(VCPKG_HOST_IS_WINDOWS)
+    # Presence of bash and sh enables installation of auxiliary components.
+    vcpkg_list(APPEND ADDITIONAL_BINARIES "bash = ['${CMAKE_COMMAND}', '-E', 'false']")
+    vcpkg_list(APPEND ADDITIONAL_BINARIES "sh = ['${CMAKE_COMMAND}', '-E', 'false']")
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    ADDITIONAL_BINARIES
+        ${ADDITIONAL_BINARIES}
     OPTIONS
         ${OPTIONS}
         -Dgtk_doc=false
@@ -56,9 +65,6 @@ set(GLIB_SCRIPTS
     glib-mkenums
     gtester-report
 )
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    list(REMOVE_ITEM GLIB_SCRIPTS glib-gettextize)
-endif()
 foreach(script IN LISTS GLIB_SCRIPTS)
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")
@@ -88,13 +94,36 @@ elseif(VCPKG_TARGET_IS_OSX)
 endif()
 vcpkg_copy_tools(TOOL_NAMES ${GLIB_TOOLS} AUTO_CLEAN)
 
+vcpkg_fixup_pkgconfig()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(LIBINTL_NAME "intl.lib")
+else()
+    set(LIBINTL_NAME "libintl")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        string(APPEND LIBINTL_NAME "${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
+    else()
+        string(APPEND LIBINTL_NAME "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    endif()
+endif()
+
+set(pc_replace_intl_path gio glib gmodule-no-export gobject gthread)
+foreach(pc_prefix IN LISTS pc_replace_intl_path)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\"" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/debug/lib/${LIBINTL_NAME}" "-lintl")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/lib/${LIBINTL_NAME}" "-lintl")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${pc_prefix}-2.0.pc" "\"" "")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/lib/${LIBINTL_NAME}" "-lintl")
+    endif()
+endforeach()
+
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gio-2.0.pc" "\${bindir}" "\${prefix}/tools/${PORT}")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glib-2.0.pc" "\${bindir}" "\${prefix}/tools/${PORT}")
 if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gio-2.0.pc" "\${bindir}" "\${prefix}/../tools/${PORT}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glib-2.0.pc" "\${bindir}" "\${prefix}/../tools/${PORT}")
 endif()
-vcpkg_fixup_pkgconfig()
 
 # Fix python scripts
 set(_file "${CURRENT_PACKAGES_DIR}/tools/${PORT}/gdbus-codegen")
@@ -113,6 +142,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/share/gdb"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/gio"
+    "${CURRENT_PACKAGES_DIR}/lib/gio"
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt")

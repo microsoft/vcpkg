@@ -1,6 +1,6 @@
 diff --git a/libswscale/aarch64/yuv2rgb_neon.S b/libswscale/aarch64/yuv2rgb_neon.S
-index f4b220f..af677af 100644
---- a/libswscale/aarch64/yuv2rgb_neon.S
+index af677afe6..f4b220fb6 100644
+--- a/libswscale/aarch64/yuv2rgb_neon.S	
 +++ b/libswscale/aarch64/yuv2rgb_neon.S
 @@ -169,19 +169,19 @@ function ff_\ifmt\()_to_\ofmt\()_neon, export=1
      sqdmulh             v26.8H, v26.8H, v0.8H                           // ((Y1*(1<<3) - y_offset) * y_coeff) >> 15

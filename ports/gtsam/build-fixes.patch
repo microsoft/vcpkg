@@ -1,0 +1,73 @@
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index cc2a7df8f..e11de1815 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -25,6 +25,14 @@ if(@GTSAM_USE_SYSTEM_EIGEN@)
+ find_dependency(Eigen3 REQUIRED)
+ endif()
+ 
++if(@GTSAM_USE_SYSTEM_METIS@)
++find_dependency(metis REQUIRED)
++endif()
++
++if(@GTSAM_USE_TBB@)
++find_dependency(TBB REQUIRED)
++endif()
++
+ # Load exports
+ include(${OUR_CMAKE_DIR}/@PACKAGE_NAME@-exports.cmake)
+ 
+diff --git a/cmake/FindTBB.cmake b/cmake/FindTBB.cmake
+index 0ecd4ca0e..725589a2d 100644
+--- a/cmake/FindTBB.cmake
++++ b/cmake/FindTBB.cmake
+@@ -1,3 +1,4 @@
++if(0)
+ # The MIT License (MIT)
+ #
+ # Copyright (c) 2015 Justus Calvin
+@@ -321,3 +322,4 @@ if(NOT TBB_FOUND)
+   unset(TBB_DEFAULT_SEARCH_DIR)
+ 
+ endif()
++endif()
+\ No newline at end of file
+diff --git a/cmake/HandleMetis.cmake b/cmake/HandleMetis.cmake
+index 5cbec4ff5..10dbb53de 100644
+--- a/cmake/HandleMetis.cmake
++++ b/cmake/HandleMetis.cmake
+@@ -13,10 +13,9 @@ option(GTSAM_USE_SYSTEM_METIS "Find and use system-installed libmetis. If 'off',
+ if(GTSAM_USE_SYSTEM_METIS)
+   # Debian package: libmetis-dev
+ 
+-  find_path(METIS_INCLUDE_DIR metis.h REQUIRED)
+-  find_library(METIS_LIBRARY metis REQUIRED)
++  find_package(metis CONFIG REQUIRED)
+ 
+-  if(METIS_INCLUDE_DIR AND METIS_LIBRARY)
++  if(metis_FOUND)
+     mark_as_advanced(METIS_INCLUDE_DIR)
+     mark_as_advanced(METIS_LIBRARY)
+ 
+@@ -27,7 +26,7 @@ if(GTSAM_USE_SYSTEM_METIS)
+       $<BUILD_INTERFACE:${GTSAM_SOURCE_DIR}/gtsam/3rdparty/metis/libmetis>
+       $<BUILD_INTERFACE:${GTSAM_SOURCE_DIR}/gtsam/3rdparty/metis/GKlib>
+     )
+-    target_link_libraries(metis-gtsam-if INTERFACE ${METIS_LIBRARY})
++    target_link_libraries(metis-gtsam-if INTERFACE ${METIS_LIBRARY} metis)
+   endif()
+ else()
+   # Bundled version:
+diff --git a/cmake/HandleTBB.cmake b/cmake/HandleTBB.cmake
+index fb944ba5b..393aeb345 100644
+--- a/cmake/HandleTBB.cmake
++++ b/cmake/HandleTBB.cmake
+@@ -14,7 +14,7 @@ if (GTSAM_WITH_TBB)
+         endif()
+         # all definitions and link requisites will go via imported targets:
+         # tbb & tbbmalloc
+-        list(APPEND GTSAM_ADDITIONAL_LIBRARIES tbb tbbmalloc)
++        list(APPEND GTSAM_ADDITIONAL_LIBRARIES TBB::tbb TBB::tbbmalloc)
+     else()
+         set(GTSAM_USE_TBB 0)  # This will go into config.h
+     endif()
