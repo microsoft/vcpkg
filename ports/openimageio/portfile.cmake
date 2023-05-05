@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
     REF "v${VERSION}"
-    SHA512 c7a4283b78197c262d8da31460ce8b07b44546f822142e32e6c1ea22376e1c4b9cfe9c39cc0994987c6c4f653c1f2764057944da97a3a090bf1bcb74a2a0b2c2
+    SHA512 e7dd7aba8dc0baa9bc50f362c21119bf4008edbd03a0c9f31bb03e01b5b0cc18c39f8a368885a4d756f6b475965138409c7e91eeae90b0ebc18d253ff314f025
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -10,11 +10,7 @@ vcpkg_from_github(
         fix-openexr-dll.patch
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
-        fix-vs2019-encoding-conversion.patch
-        qt6.patch
-        more_qt6.patch
         fix-openexr-target-missing.patch
-        1aa2cf6edf9f2bd57a21998fceeb095cbe1f2b84.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -44,7 +40,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libheif     USE_LIBHEIF
         pybind11    USE_PYTHON
         tools       OIIO_BUILD_TOOLS
-        tools       USE_OPENGL
         tools       USE_QT
 )
 
@@ -53,9 +48,9 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
+        -DOIIO_BUILD_TESTS=OFF
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
-        -DUSE_QT=OFF
         -DUSE_OpenVDB=OFF
         -DUSE_PTEX=OFF
         -DUSE_TBB=OFF

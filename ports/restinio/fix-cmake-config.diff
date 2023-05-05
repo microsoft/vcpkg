@@ -1,0 +1,12 @@
+diff --git a/dev/restinio/cmake/restinio-config.cmake.in b/dev/restinio/cmake/restinio-config.cmake.in
+index b8df667..02db4d8 100644
+--- a/dev/restinio/cmake/restinio-config.cmake.in
++++ b/dev/restinio/cmake/restinio-config.cmake.in
+@@ -1,3 +1,7 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(unofficial-http-parser)
++find_dependency(fmt)
++
+ include(${CMAKE_CURRENT_LIST_DIR}/restinio-targets.cmake)

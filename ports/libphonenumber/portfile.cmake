@@ -4,11 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/libphonenumber
     REF "v${VERSION}"
-    SHA512 401d6bdfe603ffd994ebb76c8b073e0f0d135390bee72fe4783b5fd9b684e2531af154906f49bf7803d3e720b2d0ccc00fc0ea6fbbd2729556a488c5f5647bee
+    SHA512 b864f0ff25ed32813dfa7db5d92ada501566b4d6c366f6ee856dff82680631b88acf24def742015d112e20d4e8aa7c6312c04afb846d492d1f5bef93099775ec
     HEAD_REF master
     PATCHES 
-        "fix-re2-identifiers.patch"
-        "fix-icui18n-lib-name.patch"
+        fix-re2-identifiers.patch
+        fix-icui18n-lib-name.patch
         fix-find-protobuf.patch
 )
 
@@ -25,6 +25,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
