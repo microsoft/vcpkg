@@ -1016,12 +1016,15 @@ index 906f7441d..a10ed754d 100644
 -
 -endif()
 diff --git a/libs/viewer/CMakeLists.txt b/libs/viewer/CMakeLists.txt
-index 621bb2498..47f09cec2 100644
+index 621bb2498..7ee870af1 100644
 --- a/libs/viewer/CMakeLists.txt
 +++ b/libs/viewer/CMakeLists.txt
-@@ -49,12 +49,3 @@ endif()
+@@ -47,14 +47,5 @@ endif()
  # ==================================================================================================
- install(TARGETS ${TARGET} ARCHIVE DESTINATION lib/${DIST_DIR})
+ # Installation
+ # ==================================================================================================
+-install(TARGETS ${TARGET} ARCHIVE DESTINATION lib/${DIST_DIR})
++install(TARGETS ${TARGET} ARCHIVE DESTINATION lib)
  install(DIRECTORY ${PUBLIC_HDR_DIR}/viewer DESTINATION include)
 -
 -# ==================================================================================================
@@ -1065,10 +1068,48 @@ index 64e39e33c..c07890991 100644
 -install(TARGETS ${TARGET} ARCHIVE DESTINATION lib/${DIST_DIR})
 +install(TARGETS ${TARGET} EXPORT filamentTargets ARCHIVE DESTINATION lib)
 diff --git a/third_party/basisu/tnt/CMakeLists.txt b/third_party/basisu/tnt/CMakeLists.txt
-index 59daa5407..21d78ac4f 100644
+index 59daa5407..ae401fca6 100644
 --- a/third_party/basisu/tnt/CMakeLists.txt
 +++ b/third_party/basisu/tnt/CMakeLists.txt
-@@ -57,9 +57,18 @@ add_library(basis_transcoder ${TRANSCODER_SRC})
+@@ -26,6 +26,15 @@ set(ENCODER_SRC
+     ../encoder/pvpngreader.cpp
+ )
+ 
++set(TRANSCODER_HDRS
++    ../transcoder/basisu_containers.h
++    ../transcoder/basisu_file_headers.h
++    ../transcoder/basisu_transcoder_internal.h
++    ../transcoder/basisu_transcoder_uastc.h
++    ../transcoder/basisu_transcoder.h
++    ../transcoder/basisu.h
++)
++
+ # Filament does not support certain compressed formats that BasisU can transcode
+ # to, so we disable them in the build to save space. Some of these mappings are
+ # confusing. (e.g., DXT5A corresponds to transcoder_texture_format::cTFBC4_R).
+@@ -37,19 +46,14 @@ set (BASIS_CONFIG
+     BASISD_SUPPORT_PVRTC1=0
+     BASISD_SUPPORT_PVRTC2=0
+     BASISD_SUPPORT_FXT1=0
++    BASISD_SUPPORT_DXT5A=1
++    BASISD_SUPPORT_DXT1=1
+ )
+ 
+ # The following BasisU setting is useful when diagnosing issues, but we're leaving it turned off
+ # even for debug builds, since it is quite verbose.
+ # set (BASIS_CONFIG ${BASIS_CONFIG} $<$<CONFIG:Debug>:BASISU_FORCE_DEVEL_MESSAGES=1>)
+ 
+-# DXT5A and DXT1 are both required for cTFBC3_RGBA aka DXT5_RGBA.
+-if (NOT IS_MOBILE_TARGET)
+-    set (BASIS_CONFIG ${BASIS_CONFIG} BASISD_SUPPORT_DXT5A=1 BASISD_SUPPORT_DXT1=1)
+-else()
+-    set (BASIS_CONFIG ${BASIS_CONFIG} BASISD_SUPPORT_DXT5A=0 BASISD_SUPPORT_DXT1=0)
+-endif()
+-
+ add_library(zstd ../zstd/zstd.c)
+ add_library(basis_encoder ${ENCODER_SRC})
+ add_library(basis_transcoder ${TRANSCODER_SRC})
+@@ -57,9 +61,18 @@ add_library(basis_transcoder ${TRANSCODER_SRC})
  target_link_libraries(basis_transcoder zstd)
  target_link_libraries(basis_encoder basis_transcoder)
  
@@ -1090,13 +1131,14 @@ index 59daa5407..21d78ac4f 100644
  
  target_compile_definitions(basis_encoder PRIVATE ${BASIS_CONFIG})
  target_compile_definitions(basis_transcoder PRIVATE ${BASIS_CONFIG})
-@@ -80,5 +89,5 @@ if (IS_HOST_PLATFORM)
+@@ -80,5 +93,6 @@ if (IS_HOST_PLATFORM)
      endif()
  endif()
  
 -install(TARGETS basis_transcoder ARCHIVE DESTINATION lib/${DIST_DIR})
 -install(TARGETS zstd ARCHIVE DESTINATION lib/${DIST_DIR})
 +install(TARGETS basis_transcoder EXPORT filamentTargets ARCHIVE DESTINATION lib)
++install(FILES ${TRANSCODER_HDRS} DESTINATION include/basisu/transcoder)
 +install(TARGETS zstd EXPORT filamentTargets ARCHIVE DESTINATION lib)
 diff --git a/third_party/cgltf/tnt/CMakeLists.txt b/third_party/cgltf/tnt/CMakeLists.txt
 index db9e2338d..e996a7a79 100644
