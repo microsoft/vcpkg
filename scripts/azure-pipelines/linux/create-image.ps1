@@ -15,8 +15,15 @@ or are running from Azure Cloud Shell.
 This script assumes you have installed the OpenSSH Client optional Windows component.
 #>
 
+[CmdLetBinding()]
+Param(
+  [parameter(Mandatory=$false)]
+  [string]$Prefix = "Lin-",
+  [parameter(Mandatory=$false)]
+  [string]$ProvisionScript
+)
+
 $Location = 'eastasia'
-$Prefix = 'Lin-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
 $VMSize = 'Standard_D8a_v4'
 $ProtoVMName = 'PROTOTYPE'
@@ -126,11 +133,14 @@ Write-Progress `
   -Status 'Running provisioning script provision-image.sh in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
+if($ProvisionScript.Length -eq 0) {
+  $ProvisionScript = "$PSScriptRoot\provision-image.sh"
+}
 $ProvisionImageResult = Invoke-AzVMRunCommandWithRetries `
   -ResourceGroupName $ResourceGroupName `
   -VMName $ProtoVMName `
   -CommandId 'RunShellScript' `
-  -ScriptPath "$PSScriptRoot\provision-image.sh"
+  -ScriptPath $ProvisionScript
 
 Write-Host "provision-image.sh output: $($ProvisionImageResult.value.Message)"
 

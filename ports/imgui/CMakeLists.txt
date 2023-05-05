@@ -53,8 +53,10 @@ if(IMGUI_BUILD_DX12_BINDING)
 endif()
 
 if(IMGUI_BUILD_GLFW_BINDING)
-    find_package(glfw3 CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
+    if(NOT EMSCRIPTEN)
+        find_package(glfw3 CONFIG REQUIRED)
+        target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
+    endif()
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_glfw.cpp)
 endif()
 

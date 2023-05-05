@@ -77,6 +77,14 @@ else()
     vcpkg_list(APPEND OPTIONS_RELEASE --disable-cli)
 endif()
 
+if("chroma-format-all" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS --chroma-format=all)
+endif()
+
+if(NOT "gpl" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS --disable-gpl)
+endif()
+
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS --extra-cflags=-D_WIN32_WINNT=0x0A00)
 endif()
