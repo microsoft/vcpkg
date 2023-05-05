@@ -3877,7 +3877,7 @@
       "port-version": 4
     },
     "libcopp": {
-      "baseline": "2.1.4",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "libcorrect": {
