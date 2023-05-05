@@ -24,19 +24,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         python ENABLE_PYTHON
         ruby ENABLE_RUBY
         tcl ENABLE_TCL
-        suserepo ENABLE_SUSEREPO
         comps ENABLE_COMPS
         helixrepo ENABLE_HELIXREPO
         debian ENABLE_DEBIAN
-        mdkrepo ENABLE_MDKREPO
-        archrepo ENABLE_ARCHREPO
         cudfrepo ENABLE_CUDFREPO
         conda ENABLE_CONDA
-        appdata ENABLE_APPDATA
         lzma-compression ENABLE_LZMA_COMPRESSION
         bzip2-compression ENABLE_BZIP2_COMPRESSION
         zstd-compression ENABLE_ZSTD_COMPRESSION
-        zchunk-compression ENABLE_ZCHUNK_COMPRESSION
 )
 
 if(WIN32)

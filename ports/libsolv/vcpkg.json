@@ -17,45 +17,6 @@
     "zlib"
   ],
   "features": {
-    "appdata": {
-      "description": "Build with AppStream appdata support"
-    },
-    "archrepo": {
-      "description": "Build with archlinux repository support"
-    },
-    "bzip2-compression": {
-      "description": "Build with bzip2 compression support",
-      "dependencies": [
-        "bzip2"
-      ]
-    },
-    "comps": {
-      "description": "Build with fedora comps support"
-    },
-    "conda": {
-      "description": "Build with conda dependency support"
-    },
-    "cudfrepo": {
-      "description": "Build with cudf repository support"
-    },
-    "debian": {
-      "description": "Build with debian database/repository support"
-    },
-    "haiku": {
-      "description": "Build with Haiku package support"
-    },
-    "helixrepo": {
-      "description": "Build with helix repository support"
-    },
-    "lzma-compression": {
-      "description": "Build with lzma/xz compression support",
-      "dependencies": [
-        "liblzma"
-      ]
-    },
-    "mdkrepo": {
-      "description": "Build with mandriva/mageia repository support"
-    },
     "perl": {
       "description": "Build perl bindings"
     },
@@ -72,14 +33,38 @@
     "ruby": {
       "description": "Build ruby bindings"
     },
-    "suserepo": {
-      "description": "Build with suse repository support"
-    },
     "tcl": {
       "description": "Build Tcl bindings"
     },
-    "zchunk-compression": {
-      "description": "Build with zchunk compression support"
+    "comps": {
+      "description": "Build with fedora comps support",
+      "dependencies": [
+        "expat"
+      ]
+    },
+    "helixrepo": {
+      "description": "Build with helix repository support"
+    },
+    "debian": {
+      "description": "Build with debian database/repository support"
+    },
+    "cudfrepo": {
+      "description": "Build with cudf repository support"
+    },
+    "conda": {
+      "description": "Build with conda dependency support"
+    },
+    "lzma-compression": {
+      "description": "Build with lzma/xz compression support",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "bzip2-compression": {
+      "description": "Build with bzip2 compression support",
+      "dependencies": [
+        "bzip2"
+      ]
     },
     "zstd-compression": {
       "description": "Build with zstd compression support",
