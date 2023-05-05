@@ -16,6 +16,9 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "tools"
+  ],
   "features": {
     "bzip2": {
       "description": "Support compression using bzip2 library",
