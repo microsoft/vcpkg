@@ -389,7 +389,7 @@
       "port-version": 0
     },
     "azure-core-cpp": {
-      "baseline": "1.8.2",
+      "baseline": "1.9.0",
       "port-version": 0
     },
     "azure-core-tracing-opentelemetry-cpp": {
@@ -397,7 +397,7 @@
       "port-version": 0
     },
     "azure-identity-cpp": {
-      "baseline": "1.4.0",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "azure-iot-sdk-c": {
@@ -417,7 +417,7 @@
       "port-version": 0
     },
     "azure-security-keyvault-administration-cpp": {
-      "baseline": "4.0.0-beta.2",
+      "baseline": "4.0.0-beta.3",
       "port-version": 0
     },
     "azure-security-keyvault-certificates-cpp": {
@@ -1502,6 +1502,10 @@
     },
     "chronoengine": {
       "baseline": "8.0.0",
+      "port-version": 0
+    },
+    "cialloo-rcon": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "cimg": {
@@ -2737,7 +2741,7 @@
       "port-version": 0
     },
     "geos": {
-      "baseline": "3.11.1",
+      "baseline": "3.11.2",
       "port-version": 0
     },
     "geotrans": {
@@ -3026,7 +3030,7 @@
     },
     "gz-tools2": {
       "baseline": "2.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-utils2": {
       "baseline": "2.0.0",
@@ -3398,7 +3402,7 @@
     },
     "jasper": {
       "baseline": "4.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "jbig2dec": {
       "baseline": "0.19",
@@ -4158,7 +4162,7 @@
     },
     "liblas": {
       "baseline": "1.8.1",
-      "port-version": 12
+      "port-version": 13
     },
     "liblbfgs": {
       "baseline": "1.10",
@@ -4270,7 +4274,7 @@
     },
     "libmysql": {
       "baseline": "8.0.32",
-      "port-version": 2
+      "port-version": 3
     },
     "libnice": {
       "baseline": "0.1.21",
@@ -5594,7 +5598,7 @@
     },
     "node-api-headers": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nonius": {
       "baseline": "2019-04-20",
@@ -5841,8 +5845,8 @@
       "port-version": 1
     },
     "openexr": {
-      "baseline": "3.1.5",
-      "port-version": 1
+      "baseline": "3.1.7",
+      "port-version": 0
     },
     "openfbx": {
       "baseline": "2022-07-18",
@@ -5910,7 +5914,7 @@
     },
     "openssl": {
       "baseline": "3.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -5930,7 +5934,7 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.8.3",
-      "port-version": 5
+      "port-version": 6
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -6386,7 +6390,7 @@
     },
     "pthreads": {
       "baseline": "3.0.0",
-      "port-version": 13
+      "port-version": 14
     },
     "ptyqt": {
       "baseline": "0.6.5",
@@ -8051,6 +8055,10 @@
     "tre": {
       "baseline": "0.8.0",
       "port-version": 5
+    },
+    "tree-similarity": {
+      "baseline": "0.1.1",
+      "port-version": 0
     },
     "tree-sitter": {
       "baseline": "0.20.6",

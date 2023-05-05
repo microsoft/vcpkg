@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
     REF mysql-${VERSION}
-    SHA512 1233abe4fe055f62cc28c847e77bcfc37e03e77ee68b8606e5ad722e0b6d1ae30b95bbe623a88cecdfa0b5868b61eabaf4b99e78cb6fbb9cf3627c91d17feb0e
+    SHA512 8b9f15b301b158e6ffc99dd916b9062968d36f6bdd7b898636fa61badfbe68f7328d4a39fa3b8b3ebef180d3aec1aee353bd2dac9ef1594e5772291390e17ac0
     HEAD_REF master
     PATCHES
         ignore-boost-version.patch
