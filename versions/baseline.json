@@ -8190,7 +8190,7 @@
     },
     "usd": {
       "baseline": "23.2",
-      "port-version": 0
+      "port-version": 1
     },
     "usockets": {
       "baseline": "0.8.5",
