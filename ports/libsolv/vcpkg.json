@@ -1,0 +1,91 @@
+{
+  "name": "libsolv",
+  "version": "0.7.24",
+  "description": "Library for solving packages and reading repositories",
+  "homepage": "https://github.com/openSUSE/libsolv",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "perl": {
+      "description": "Build perl bindings"
+    },
+    "python": {
+      "description": "Enable Python bindings",
+      "dependencies": [
+        "python3",
+        {
+          "name": "python3",
+          "host": true
+        }
+      ]
+    },
+    "ruby": {
+      "description": "Build ruby bindings"
+    },
+    "tcl": {
+      "description": "Build Tcl bindings"
+    },
+    "suserepo": {
+      "description": "Build with suse repository support"
+    },
+    "comps": {
+      "description": "Build with fedora comps support"
+    },
+    "helixrepo": {
+      "description": "Build with helix repository support"
+    },
+    "debian": {
+      "description": "Build with debian database/repository support"
+    },
+    "mdkrepo": {
+      "description": "Build with mandriva/mageia repository support"
+    },
+    "archrepo": {
+      "description": "Build with archlinux repository support"
+    },
+    "cudfrepo": {
+      "description": "Build with cudf repository support"
+    },
+    "haiku": {
+      "description": "Build with Haiku package support"
+    },
+    "conda": {
+      "description": "Build with conda dependency support"
+    },
+    "appdata": {
+      "description": "Build with AppStream appdata support"
+    },
+    "lzma-compression": {
+      "description": "Build with lzma/xz compression support",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "bzip2-compression": {
+      "description": "Build with bzip2 compression support",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "zstd-compression": {
+      "description": "Build with zstd compression support",
+      "dependencies": [
+        "zstd"
+      ]
+    },
+    "zchunk-compression": {
+      "description": "Build with zchunk compression support"
+    }
+  }
+}
