@@ -1,13 +1,17 @@
 {
   "name": "json-spirit",
-  "version-string": "4.1.0",
-  "port-version": 2,
+  "version": "4.1.0",
+  "port-version": 4,
   "description": "json parser using boost library",
   "dependencies": [
     "boost-config",
     "boost-integer",
     "boost-smart-ptr",
     "boost-spirit",
-    "boost-variant"
+    "boost-variant",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

@@ -18,8 +18,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_check_features(
         OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-        override GPERFTOOLS_WIN32_OVERRIDE
-        tools GPERFTOOLS_BUILD_TOOLS
+        FEATURES
+            override GPERFTOOLS_WIN32_OVERRIDE
+            tools GPERFTOOLS_BUILD_TOOLS
     )
 
     vcpkg_cmake_configure(

@@ -1,12 +1,12 @@
-set(DIRECTXTK_TAG feb2023)
+set(DIRECTXTK_TAG apr2023)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK12
-    REF feb2023b
-    SHA512 e17b726e8f73bd499ab0c7e9c1d8fb7f1af3bad3220a8b3accbf5993b735bcd7caa349b767d09af74a800e0cf1852749280fc0e7a0cf8fe186dbf13dd07ba11d
+    REF ${DIRECTXTK_TAG}
+    SHA512 ab8d9db145e8342e473e5b23d3ce0a396408c42db53ba38882e57f461b15694d291a98a55e2db19724c82ef1baef6ee1dc3c5ff3861684e9aeed296e352d7e7a
     HEAD_REF main
 )
 
@@ -33,32 +33,51 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/directxtk12)
 
-if(VCPKG_HOST_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+if("tools" IN_LIST FEATURES)
+
   vcpkg_download_distfile(
     MAKESPRITEFONT_EXE
     URLS "https://github.com/Microsoft/DirectXTK12/releases/download/${DIRECTXTK_TAG}/MakeSpriteFont.exe"
     FILENAME "makespritefont-${DIRECTXTK_TAG}.exe"
-    SHA512 2cf274cd1c9a4692b84bd3ac9c3266eb3a20b1598b29f8f77893cb5911c3e70c4b0151df54a3fdef93215db22c76854a61b6d3688ac9cd1875611fe34d196da3
-  )
-
-  vcpkg_download_distfile(
-    XWBTOOL_EXE
-    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/${DIRECTXTK_TAG}/XWBTool.exe"
-    FILENAME "xwbtool-${DIRECTXTK_TAG}.exe"
-    SHA512 ab328e336228ec5e1abe0aa44707203325d743432728a1d8d01990529350fe6dc0f1bc5d58ce961456f6273922169abc1a4a9ca3804dd7f40198a182462c332d
+    SHA512 f014172f127a00aa3b51f33c17062772e75271f57fbade4db8c2da634cbc090c0f4eb8dd2771f6faead624054244469705f195fe10d643570df3ba95dbcb119f
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
 
-  file(INSTALL
-    ${MAKESPRITEFONT_EXE}
-    ${XWBTOOL_EXE}
-    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
+  file(INSTALL "${MAKESPRITEFONT_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
 
   file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk12/makespritefont-${DIRECTXTK_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk12/makespritefont.exe")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool-${DIRECTXTK_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool.exe")
+
+  if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+
+    vcpkg_download_distfile(
+      XWBTOOL_EXE
+      URLS "https://github.com/Microsoft/DirectXTK12/releases/download/${DIRECTXTK_TAG}/XWBTool.exe"
+      FILENAME "xwbtool-${DIRECTXTK_TAG}.exe"
+      SHA512 2bb9f9ecfe65e373dadd84b1550e499de5507fcf57257379e3da1f4d4325df686ec5e784754990c89da0a2915c12578424f5b66009ebc14d969c5c92db50b09a
+    )
+
+    file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
+
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool-${DIRECTXTK_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool.exe")
+
+  elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+
+    vcpkg_download_distfile(
+      XWBTOOL_EXE
+      URLS "https://github.com/Microsoft/DirectXTK12/releases/download/${DIRECTXTK_TAG}/XWBTool_arm64.exe"
+      FILENAME "xwbtool-${DIRECTXTK_TAG}-arm64.exe"
+      SHA512 453a5504074f43104d77d79ab2824b7091302a0339361a433e56acc854594a3413f9675aaaa6be518329e2ab9c3cacb50a25293787d3f944e74d1a8eebc23a33
+    )
+
+    file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
+
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool-${DIRECTXTK_TAG}-arm64.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool.exe")
+
+  endif()
+
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
