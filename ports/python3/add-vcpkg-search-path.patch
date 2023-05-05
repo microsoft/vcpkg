@@ -1,0 +1,123 @@
+diff --git a/Python/pylifecycle.c b/Python/pylifecycle.c
+index eeaf20b46..13bb1fe7b 100644
+--- a/Python/pylifecycle.c
++++ b/Python/pylifecycle.c
+@@ -32,7 +32,10 @@
+ #ifdef MS_WINDOWS
+ #  undef BYTE
+ #  include "windows.h"
+-
++#  include <shlwapi.h>
++#  include <string.h>
++#  include <malloc.h>
++#  include <libloaderapi.h>
+    extern PyTypeObject PyWindowsConsoleIO_Type;
+ #  define PyWindowsConsoleIO_Check(op) \
+        (PyObject_TypeCheck((op), &PyWindowsConsoleIO_Type))
+@@ -88,6 +91,94 @@ __attribute__ ((section (".PyRuntime")))
+ = _PyRuntimeState_INIT;
+ static int runtime_initialized = 0;
+ 
++#if defined(MS_WINDOWS)
++
++typedef void (WINAPI *ADD)(PCWSTR NewDirectory);
++
++static int* is_vcpkg_search_path_added(void) {
++  static int is_search_path_added = 0;
++  return &is_search_path_added;
++}
++
++static ADD getAddDllDirectory(void) {
++  static ADD pAddDllDirectory = NULL;
++  if(pAddDllDirectory == NULL)  {
++    pAddDllDirectory = (ADD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "AddDllDirectory");
++  }
++  return pAddDllDirectory;
++}
++
++PyStatus Init_vcpkg_DllSearchPath(void) {
++  HMODULE dll_handle = NULL;
++  static wchar_t *module_dirname = NULL;
++
++  if (GetModuleHandleExW((GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT),
++                        (LPCWSTR) &Init_vcpkg_DllSearchPath, &dll_handle) == 0) {
++    // Getting the pythonxx.dll path failed
++  }
++
++  int buffer_size = 1024;
++  module_dirname = (wchar_t*)malloc(buffer_size*sizeof(wchar_t));
++  if( module_dirname == NULL)
++    return PyStatus_NoMemory();
++  if(GetModuleFileNameW(dll_handle, module_dirname, buffer_size - 1) == 0) {
++    // Call Failed!
++    return PyStatus_Error("vcpkg: Unable to retrieve module file name!");
++  }
++
++  wchar_t *old_module_dirname;
++  while( GetLastError() == ERROR_INSUFFICIENT_BUFFER)
++  {
++    buffer_size += buffer_size/2;
++    old_module_dirname = module_dirname;
++    if(module_dirname = (wchar_t*)realloc(module_dirname,buffer_size*sizeof(wchar_t))==NULL) {
++      // No memory?
++      free(old_module_dirname);
++      return PyStatus_NoMemory();
++    }
++    if(GetModuleFileNameW(dll_handle, &module_dirname[0], buffer_size - 1) == 0) {
++      return PyStatus_Error("vcpkg: Unable to retrieve module file name!");
++    }
++  }
++
++  wchar_t* last_path_seperator = wcsrchr(module_dirname, L'\\');
++
++  if(last_path_seperator) {
++    last_path_seperator[0] = L'\0'; // Remove file name from module_dirname
++  }
++
++  const wchar_t python_path[] = L"\\tools\\python3";
++  const size_t python_path_len = wcslen(python_path);
++  const size_t module_dirname_len = wcslen(module_dirname);
++  wchar_t* prefix_path_sep = wcsstr(module_dirname, python_path);
++
++  const size_t remaining_len = (size_t)(prefix_path_sep - module_dirname) - (module_dirname_len-python_path_len);
++
++  if(prefix_path_sep == NULL || remaining_len != 0) {
++    free(module_dirname);
++    return PyStatus_Ok(); // We are somewhere then vcpkg -> do nothing
++  }
++
++  prefix_path_sep[1] = L'b'; // module_dirname is now vcpkg_bin_dir
++  prefix_path_sep[2] = L'i';
++  prefix_path_sep[3] = L'n';
++  prefix_path_sep[4] = L'\0';
++
++  DWORD fileattr = GetFileAttributesW(module_dirname);
++
++  if( fileattr & FILE_ATTRIBUTE_DIRECTORY && !*is_vcpkg_search_path_added()) {
++    ADD pAddDllDirectory = getAddDllDirectory();
++    pAddDllDirectory(module_dirname);
++    fwprintf(stderr, L"Added vcpkg bin path to search for dlls. Path added: %ls \n", module_dirname);
++    *is_vcpkg_search_path_added() = 1;
++  }
++
++  free(module_dirname);
++  return PyStatus_Ok();
++};
++
++#endif
++
+ PyStatus
+ _PyRuntime_Initialize(void)
+ {
+@@ -102,6 +193,11 @@ _PyRuntime_Initialize(void)
+     }
+     runtime_initialized = 1;
+ 
++#ifdef MS_WINDOWS
++    PyStatus err = Init_vcpkg_DllSearchPath();
++    if(PyStatus_IsError(err))
++      return err;
++#endif
+     return _PyRuntimeState_Init(&_PyRuntime);
+ }
+ 

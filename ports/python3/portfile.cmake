@@ -9,6 +9,7 @@ set(PYTHON_VERSION_PATCH  7)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
+    101352.patch # Required to correctly detect clang-cl; delete on update
     0001-only-build-required-projects.patch
     0003-use-vcpkg-zlib.patch
     0004-devendor-external-dependencies.patch
@@ -19,6 +20,9 @@ set(PATCHES
     0012-force-disable-curses.patch
     0013-configure-no-libcrypt.patch  # https://github.com/python/cpython/pull/28881
     0014-fix-get-python-inc-output.patch
+    0015-use_correct_console_macro.patch # Required when MSBuild correctly forwards the cmake toolchain flags
+    0016-undup-ffi-symbols.patch # Required for lld-link.
+    add-vcpkg-search-path.patch # Required so that the build python3 executable can find dependent dll's within the vcpkg installed tree without having to copy them which would otherwise result in shared ownership of files problem. (e.g. using numpy build via vcpkg which requires lapack/blas)
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

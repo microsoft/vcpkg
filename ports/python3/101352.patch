@@ -1,0 +1,137 @@
+diff --git a/Include/cpython/pytime.h b/Include/cpython/pytime.h
+index e64f3b13e75c..16d88d191e9e 100644
+--- a/Include/cpython/pytime.h
++++ b/Include/cpython/pytime.h
+@@ -53,6 +53,10 @@ functions and constants
+ extern "C" {
+ #endif
+ 
++#ifdef __clang__
++struct timeval;
++#endif
++
+ /* _PyTime_t: Python timestamp with subsecond precision. It can be used to
+    store a duration, and so indirectly a date (related to another date, like
+    UNIX epoch). */
+diff --git a/Modules/_tracemalloc.c b/Modules/_tracemalloc.c
+index 08d7d1096c78..d086adc61c31 100644
+--- a/Modules/_tracemalloc.c
++++ b/Modules/_tracemalloc.c
+@@ -36,10 +36,11 @@
+ /* Pack the frame_t structure to reduce the memory footprint on 64-bit
+    architectures: 12 bytes instead of 16. */
++#if defined(_MSC_VER)
++#pragma pack(push, 4)
++#endif
+ typedef struct
+ #ifdef __GNUC__
+ __attribute__((packed))
+-#elif defined(_MSC_VER)
+-#pragma pack(push, 4)
+ #endif
+ {
+     /* filename cannot be NULL: "<unknown>" is used if the Python frame
+diff --git a/Modules/_decimal/libmpdec/mpdecimal.c b/Modules/_decimal/libmpdec/mpdecimal.c
+index f1626df46ed4..959934bda7a4 100644
+--- a/Modules/_decimal/libmpdec/mpdecimal.c
++++ b/Modules/_decimal/libmpdec/mpdecimal.c
+@@ -76,6 +76,12 @@
+   #endif
+ #endif
+ 
++/* ClangCL claims to support 128-bit int, but doesn't */
++#if defined(__SIZEOF_INT128__) && defined(__clang__) && defined(_MSC_VER)
++#undef __SIZEOF_INT128__
++#endif
++
++
+ 
+ #define MPD_NEWTONDIV_CUTOFF 1024L
+ 
+diff --git a/PC/pyconfig.h b/PC/pyconfig.h
+index 1d8408b363a6..fd85a302904c 100644
+--- a/PC/pyconfig.h
++++ b/PC/pyconfig.h
+@@ -97,9 +97,8 @@ WIN32 is still required for the locale module.
+  * _Py_STRINGIZE2(1200) which then expands to
+  * "1200"
+  */
+-#define _Py_STRINGIZE(X) _Py_STRINGIZE1((X))
+-#define _Py_STRINGIZE1(X) _Py_STRINGIZE2 ## X
+-#define _Py_STRINGIZE2(X) #X
++#define _Py_STRINGIZE(X) _Py_STRINGIZE1(X)
++#define _Py_STRINGIZE1(X) #X
+ 
+ /* MSVC defines _WINxx to differentiate the windows platform types
+ 
+@@ -122,11 +121,14 @@ WIN32 is still required for the locale module.
+ /* set the COMPILER */
+ #ifdef MS_WIN64
+ #if defined(_M_X64) || defined(_M_AMD64)
+-#if defined(__INTEL_COMPILER)
++#if defined(__clang__)
++#define COMPILER ("[Clang " __clang_version__ "] 64 bit (AMD64) with MSC v." _Py_STRINGIZE(_MSC_VER) " CRT]")
++#define PY_SUPPORT_TIER 0
++#elif defined(__INTEL_COMPILER)
+ #define COMPILER ("[ICC v." _Py_STRINGIZE(__INTEL_COMPILER) " 64 bit (amd64) with MSC v." _Py_STRINGIZE(_MSC_VER) " CRT]")
+ #else
+ #define COMPILER _Py_PASTE_VERSION("64 bit (AMD64)")
+-#endif /* __INTEL_COMPILER */
++#endif /* __clang__ */
+ #define PYD_PLATFORM_TAG "win_amd64"
+ #elif defined(_M_ARM64)
+ #define COMPILER _Py_PASTE_VERSION("64 bit (ARM64)")
+@@ -181,11 +183,14 @@ typedef _W64 int Py_ssize_t;
+ 
+ #if defined(MS_WIN32) && !defined(MS_WIN64)
+ #if defined(_M_IX86)
+-#if defined(__INTEL_COMPILER)
++#if defined(__clang__)
++#define COMPILER ("[Clang " __clang_version__ "] 32 bit (Intel) with MSC v." _Py_STRINGIZE(_MSC_VER) " CRT]")
++#define PY_SUPPORT_TIER 0
++#elif defined(__INTEL_COMPILER)
+ #define COMPILER ("[ICC v." _Py_STRINGIZE(__INTEL_COMPILER) " 32 bit (Intel) with MSC v." _Py_STRINGIZE(_MSC_VER) " CRT]")
+ #else
+ #define COMPILER _Py_PASTE_VERSION("32 bit (Intel)")
+-#endif /* __INTEL_COMPILER */
++#endif /* __clang__ */
+ #define PYD_PLATFORM_TAG "win32"
+ #elif defined(_M_ARM)
+ #define COMPILER _Py_PASTE_VERSION("32 bit (ARM)")
+diff --git a/PC/pyconfig.h b/PC/pyconfig.h
+index fd85a302904c..f5166a1506c9 100644
+--- a/PC/pyconfig.h
++++ b/PC/pyconfig.h
+@@ -76,26 +76,23 @@ WIN32 is still required for the locale module.
+ /* Compiler specific defines */
+ 
+ /* ------------------------------------------------------------------------*/
+-/* Microsoft C defines _MSC_VER */
++/* Microsoft C defines _MSC_VER, as does clang-cl.exe */
+ #ifdef _MSC_VER
+ 
+ /* We want COMPILER to expand to a string containing _MSC_VER's *value*.
+  * This is horridly tricky, because the stringization operator only works
+  * on macro arguments, and doesn't evaluate macros passed *as* arguments.
+- * Attempts simpler than the following appear doomed to produce "_MSC_VER"
+- * literally in the string.
+  */
+ #define _Py_PASTE_VERSION(SUFFIX) \
+         ("[MSC v." _Py_STRINGIZE(_MSC_VER) " " SUFFIX "]")
+ /* e.g., this produces, after compile-time string catenation,
+- *      ("[MSC v.1200 32 bit (Intel)]")
++ *      ("[MSC v.1900 64 bit (Intel)]")
+  *
+  * _Py_STRINGIZE(_MSC_VER) expands to
+- * _Py_STRINGIZE1((_MSC_VER)) expands to
+- * _Py_STRINGIZE2(_MSC_VER) but as this call is the result of token-pasting
+- *      it's scanned again for macros and so further expands to (under MSVC 6)
+- * _Py_STRINGIZE2(1200) which then expands to
+- * "1200"
++ * _Py_STRINGIZE1(_MSC_VER) and this second macro call is scanned
++ *      again for macros and so further expands to
++ * _Py_STRINGIZE1(1900) which then expands to
++ * "1900"
+  */
+ #define _Py_STRINGIZE(X) _Py_STRINGIZE1(X)
+ #define _Py_STRINGIZE1(X) #X
