@@ -17,6 +17,45 @@
     "zlib"
   ],
   "features": {
+    "appdata": {
+      "description": "Build with AppStream appdata support"
+    },
+    "archrepo": {
+      "description": "Build with archlinux repository support"
+    },
+    "bzip2-compression": {
+      "description": "Build with bzip2 compression support",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "comps": {
+      "description": "Build with fedora comps support"
+    },
+    "conda": {
+      "description": "Build with conda dependency support"
+    },
+    "cudfrepo": {
+      "description": "Build with cudf repository support"
+    },
+    "debian": {
+      "description": "Build with debian database/repository support"
+    },
+    "haiku": {
+      "description": "Build with Haiku package support"
+    },
+    "helixrepo": {
+      "description": "Build with helix repository support"
+    },
+    "lzma-compression": {
+      "description": "Build with lzma/xz compression support",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "mdkrepo": {
+      "description": "Build with mandriva/mageia repository support"
+    },
     "perl": {
       "description": "Build perl bindings"
     },
@@ -33,59 +72,20 @@
     "ruby": {
       "description": "Build ruby bindings"
     },
-    "tcl": {
-      "description": "Build Tcl bindings"
-    },
     "suserepo": {
       "description": "Build with suse repository support"
     },
-    "comps": {
-      "description": "Build with fedora comps support"
+    "tcl": {
+      "description": "Build Tcl bindings"
     },
-    "helixrepo": {
-      "description": "Build with helix repository support"
-    },
-    "debian": {
-      "description": "Build with debian database/repository support"
-    },
-    "mdkrepo": {
-      "description": "Build with mandriva/mageia repository support"
-    },
-    "archrepo": {
-      "description": "Build with archlinux repository support"
-    },
-    "cudfrepo": {
-      "description": "Build with cudf repository support"
-    },
-    "haiku": {
-      "description": "Build with Haiku package support"
-    },
-    "conda": {
-      "description": "Build with conda dependency support"
-    },
-    "appdata": {
-      "description": "Build with AppStream appdata support"
-    },
-    "lzma-compression": {
-      "description": "Build with lzma/xz compression support",
-      "dependencies": [
-        "liblzma"
-      ]
-    },
-    "bzip2-compression": {
-      "description": "Build with bzip2 compression support",
-      "dependencies": [
-        "bzip2"
-      ]
+    "zchunk-compression": {
+      "description": "Build with zchunk compression support"
     },
     "zstd-compression": {
       "description": "Build with zstd compression support",
       "dependencies": [
         "zstd"
       ]
-    },
-    "zchunk-compression": {
-      "description": "Build with zchunk compression support"
     }
   }
 }
