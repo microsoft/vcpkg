@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4e6979d..2465ba8 100644
+index 4e6979d..2ba5347 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -563,7 +563,9 @@ if (CAN_USE_FREETYPE)
@@ -19,22 +19,22 @@ index 4e6979d..2465ba8 100644
      add_definitions (-DHAVE_FREEIMAGE)
 -    OCCT_INCLUDE_CMAKE_FILE ("adm/cmake/freeimage")
 +    find_package(freeimage CONFIG REQUIRED)
-+      get_target_property(FREEIMAGE_INCLUDE_DIR freeimage INTERFACE_INCLUDE_DIRECTORIES)
++      get_target_property(FREEIMAGE_INCLUDE_DIR freeimage::FreeImage INTERFACE_INCLUDE_DIRECTORIES)
 +    list (APPEND 3RDPARTY_INCLUDE_DIRS "${FREEIMAGE_INCLUDE_DIR}")
    else()
      OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_FREEIMAGE")
      OCCT_CHECK_AND_UNSET ("INSTALL_FREEIMAGE")
-@@ -614,7 +618,9 @@ OCCT_IS_PRODUCT_REQUIRED (CSF_OpenVR CAN_USE_OPENVR)
- if (CAN_USE_OPENVR)
-   if (USE_OPENVR)
-     add_definitions (-DHAVE_OPENVR)
--    OCCT_INCLUDE_CMAKE_FILE ("adm/cmake/openvr")
+@@ -697,7 +701,9 @@ endif()
+ if (NOT DEFINED ANDROID AND CAN_USE_TBB)
+   if (USE_TBB)
+     add_definitions (-DHAVE_TBB)
+-    OCCT_INCLUDE_CMAKE_FILE ("adm/cmake/tbb")
 +    find_package(TBB CONFIG REQUIRED)
-+      get_target_property(TBB_INCLUDE_DIR tbb INTERFACE_INCLUDE_DIRECTORIES)
++      get_target_property(TBB_INCLUDE_DIR TBB::tbb INTERFACE_INCLUDE_DIRECTORIES)
 +    list (APPEND 3RDPARTY_INCLUDE_DIRS "${TBB_INCLUDE_DIR}")
    else()
-     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_OPENVR")
-     OCCT_CHECK_AND_UNSET ("INSTALL_OPENVR")
+     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_TBB")
+     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_TBBMALLOC")
 @@ -717,7 +723,9 @@ OCCT_IS_PRODUCT_REQUIRED (CSF_RapidJSON CAN_USE_RAPIDJSON)
  if (CAN_USE_RAPIDJSON)
    if (USE_RAPIDJSON)
@@ -46,3 +46,25 @@ index 4e6979d..2465ba8 100644
    else()
      OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_RAPIDJSON")
      OCCT_CHECK_AND_UNSET ("INSTALL_RAPIDJSON")
+diff --git a/src/OSD/OSD_Parallel_TBB.cxx b/src/OSD/OSD_Parallel_TBB.cxx
+index 2344a6c..280921c 100644
+--- a/src/OSD/OSD_Parallel_TBB.cxx
++++ b/src/OSD/OSD_Parallel_TBB.cxx
+@@ -25,7 +25,7 @@ Standard_DISABLE_DEPRECATION_WARNINGS
+ #include <tbb/parallel_for.h>
+ #include <tbb/parallel_for_each.h>
+ #include <tbb/blocked_range.h>
+-#include <tbb/task_scheduler_init.h>
++#include <tbb/global_control.h>
+ Standard_ENABLE_DEPRECATION_WARNINGS
+ 
+ //=======================================================================
+@@ -44,7 +44,7 @@ void OSD_Parallel::forEachExternal (UniversalIterator& theBegin,
+     const Standard_Integer aNbThreads = theNbItems > 0 ?
+       aThreadPool->NbDefaultThreadsToLaunch() : -1;
+ 
+-    tbb::task_scheduler_init aScheduler (aNbThreads);
++    tbb::global_control aControl(tbb::global_control::max_allowed_parallelism, aNbThreads);
+     tbb::parallel_for_each (theBegin, theEnd, theFunctor);
+   }
+   catch (tbb::captured_exception& anException)
