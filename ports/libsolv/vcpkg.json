@@ -48,23 +48,16 @@
       ]
     },
     "perl": {
-      "description": "Build perl bindings"
+      "description": "Build perl bindings",
+      "supports": "!windows"
     },
     "python": {
       "description": "Enable Python bindings",
-      "dependencies": [
-        "python3",
-        {
-          "name": "python3",
-          "host": true
-        }
-      ]
+      "supports": "!windows"
     },
     "ruby": {
-      "description": "Build ruby bindings"
-    },
-    "tcl": {
-      "description": "Build Tcl bindings"
+      "description": "Build ruby bindings",
+      "supports": "!windows"
     },
     "zstd-compression": {
       "description": "Build with zstd compression support",

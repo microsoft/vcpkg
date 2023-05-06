@@ -22,7 +22,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         perl ENABLE_PERL
         python ENABLE_PYTHON
         ruby ENABLE_RUBY
-        tcl ENABLE_TCL
         comps ENABLE_COMPS
         helixrepo ENABLE_HELIXREPO
         debian ENABLE_DEBIAN
@@ -32,6 +31,26 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         bzip2-compression ENABLE_BZIP2_COMPRESSION
         zstd-compression ENABLE_ZSTD_COMPRESSION
 )
+
+if (ENABLE_PYTHON OR ENABLE_PERL OR ENABLE_RUBY)
+    vcpkg_find_acquire_program(SWIG)
+    list(APPEND FEATURE_OPTIONS "-DSWIG_EXECUTABLE=${SWIG}")
+endif()
+
+if (ENABLE_PYTHON)
+    vcpkg_find_acquire_program(PYTHON3)
+    list(APPEND FEATURE_OPTIONS "-DPYTHON_EXECUTABLE=${PYTHON3}")
+endif()
+
+if (ENABLE_PERL)
+    vcpkg_find_acquire_program(PERL)
+    list(APPEND FEATURE_OPTIONS "-DPERL_EXECUTABLE=${PERL}")
+endif()
+
+if (ENABLE_RUBY)
+    vcpkg_find_acquire_program(RUBY)
+    list(APPEND FEATURE_OPTIONS "-DRUBY_EXECUTABLE=${RUBY}")
+endif()
 
 if(WIN32)
     list(APPEND FEATURE_OPTIONS "-DWITHOUT_COOKIEOPEN=ON")
