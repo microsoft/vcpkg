@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bf92061..933505d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -500,7 +500,7 @@ endif(ENABLE_CPP_CORE_GUIDELINES_CHECK)
+ 
+ add_library(netgen_cgns INTERFACE)
+ if(USE_CGNS)
+-    find_library( CGNS_LIBRARY NAMES cgns cgnsdll )
++    find_library( CGNS_LIBRARY NAMES cgnsdll cgns)
+     find_path( CGNS_INCLUDE_DIR cgnslib.h )
+     target_compile_definitions(netgen_cgns INTERFACE NG_CGNS)
+     target_include_directories(netgen_cgns INTERFACE ${CGNS_INCLUDE_DIR})

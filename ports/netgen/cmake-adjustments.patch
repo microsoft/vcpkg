@@ -1,0 +1,36 @@
+diff --git a/libsrc/core/CMakeLists.txt b/libsrc/core/CMakeLists.txt
+index c4f4795..cd5ad50 100644
+--- a/libsrc/core/CMakeLists.txt	
++++ b/libsrc/core/CMakeLists.txt
+@@ -28,8 +28,7 @@ endif(USE_PYTHON)
+ 
+ if(WIN32)
+   target_compile_options(ngcore PUBLIC /bigobj /MP /W1 /wd4068)
+-  get_WIN32_WINNT(ver)
+-  target_compile_definitions(ngcore PUBLIC _WIN32_WINNT=${ver} WNT WNT_WINDOW NOMINMAX MSVC_EXPRESS _CRT_SECURE_NO_WARNINGS HAVE_STRUCT_TIMESPEC WIN32)
++  target_compile_definitions(ngcore PUBLIC WNT WNT_WINDOW NOMINMAX MSVC_EXPRESS _CRT_SECURE_NO_WARNINGS HAVE_STRUCT_TIMESPEC WIN32)
+   target_link_options(ngcore PUBLIC /ignore:4273 /ignore:4217 /ignore:4049)
+ endif(WIN32)
+ 
+diff --git a/libsrc/meshing/visual_interface.hpp b/libsrc/meshing/visual_interface.hpp
+index 5f856a2..c1bd03b 100644
+--- a/libsrc/meshing/visual_interface.hpp	
++++ b/libsrc/meshing/visual_interface.hpp
+@@ -5,7 +5,7 @@
+ #include <meshing.hpp>
+ #include <myadt.hpp>
+ 
+-class Ng_SolutionData;
++struct Ng_SolutionData;
+ 
+ // Function pointers for visualization purposed, all set to nullptr by default and initialized correctly when the GUI library is loaded
+ 
+@@ -15,7 +15,7 @@ DLL_HEADER extern void (*Ptr_Ng_SetSolutionData) (Ng_SolutionData * soldata);
+ DLL_HEADER extern void (*Ptr_Ng_Redraw) (bool blocking);
+ 
+ // Tcl wrapper functions
+-class Tcl_Interp;
++struct Tcl_Interp;
+ typedef int (Tcl_CmdProc) (void * clientData, Tcl_Interp *interp,
+         int argc, const char *argv[]);
+ typedef void (Tcl_FreeProc) (char *blockPtr);
