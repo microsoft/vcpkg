@@ -1,7 +1,7 @@
 {
   "name": "pcre2",
   "version": "10.40",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Regular Expression pattern matching using the same syntax and semantics as Perl 5.",
   "homepage": "https://github.com/PCRE2Project/pcre2",
   "license": "BSD-3-Clause",
@@ -19,5 +19,26 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "default-features": [
+    "platform-default-features"
+  ],
+  "features": {
+    "jit": {
+      "description": "Build JIT support",
+      "supports": "!emscripten"
+    },
+    "platform-default-features": {
+      "description": "Enable default features",
+      "dependencies": [
+        {
+          "name": "pcre2",
+          "features": [
+            "jit"
+          ],
+          "platform": "!emscripten"
+        }
+      ]
+    }
+  }
 }
