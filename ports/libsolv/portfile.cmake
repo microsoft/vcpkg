@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         windows.patch
-    #     conda_variant_priorization.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DYNAMIC_LIBS)
@@ -46,7 +45,6 @@ vcpkg_configure_cmake(
         -DDISABLE_SHARED=${DISABLE_SHARED}
         -DENABLE_STATIC=${BUILD_STATIC_LIBS}
         -DMULTI_SEMANTICS=ON
-        ..
 )
 
 vcpkg_install_cmake()
