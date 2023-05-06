@@ -1,7 +1,7 @@
 {
   "name": "gl2ps",
   "version": "1.4.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "OpenGL to PostScript Printing Library",
   "homepage": "https://gitlab.onelab.info/gl2ps/gl2ps",
   "dependencies": [

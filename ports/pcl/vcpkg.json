@@ -1,11 +1,10 @@
 {
   "name": "pcl",
   "version": "1.13.0",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Point Cloud Library (PCL) is open source library for 2D/3D image and point cloud processing.",
   "homepage": "https://github.com/PointCloudLibrary/pcl",
   "license": "BSD-3-Clause",
-  "supports": "!(arm64 & windows)",
   "dependencies": [
     "boost-asio",
     "boost-date-time",
@@ -55,6 +54,7 @@
     },
     "cuda": {
       "description": "CUDA support for PCL",
+      "supports": "x64",
       "dependencies": [
         "cuda"
       ]
@@ -77,7 +77,10 @@
       ]
     },
     "opengl": {
-      "description": "OpenGL support for PCL"
+      "description": "OpenGL support for PCL",
+      "dependencies": [
+        "opengl"
+      ]
     },
     "openni2": {
       "description": "OpenNI2 support for PCL",
@@ -130,8 +133,15 @@
         }
       ]
     },
+    "surface-on-nurbs": {
+      "description": "Fitting NURBS to point clouds",
+      "dependencies": [
+        "zlib"
+      ]
+    },
     "tools": {
       "description": "Build PCL utilities",
+      "supports": "!static",
       "dependencies": [
         "boost-accumulators"
       ]

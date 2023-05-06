@@ -53,7 +53,8 @@ Param(
     $BinarySourceStub = $null,
     [String]$BuildReason = $null,
     [switch]$NoParentHashes = $false,
-    [switch]$PassingIsPassing = $false
+    [switch]$PassingIsPassing = $false,
+    [switch]$IsLinuxHost = $false
 )
 
 if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
@@ -104,7 +105,7 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
 }
 
-if ($Triplet -eq 'x64-linux') {
+if ($IsLinuxHost) {
     $env:HOME = '/home/agent'
     $executableExtension = [string]::Empty
 }

@@ -34,10 +34,7 @@ vcpkg_configure_meson(
         ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
-    ADDITIONAL_NATIVE_BINARIES
-        flex='${FLEX}'
-        bison='${BISON}'
-    ADDITIONAL_CROSS_BINARIES
+    ADDITIONAL_BINARIES
         flex='${FLEX}'
         bison='${BISON}'
         g-ir-annotation-tool='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-annotation-tool'

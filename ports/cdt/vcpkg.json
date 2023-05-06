@@ -1,7 +1,6 @@
 {
   "name": "cdt",
-  "version": "1.2.0",
-  "port-version": 1,
+  "version": "1.3.0",
   "description": "Constrained Delaunay Triangulation",
   "homepage": "https://github.com/artem-ogre/CDT.git",
   "license": "MPL-2.0",
@@ -21,12 +20,6 @@
     },
     "as-compiled-library": {
       "description": "Templates for float and double will be instantiated and compiled into a library"
-    },
-    "boost": {
-      "description": "Boost is used as a fall-back for features missing in C++98 and performance tweaks",
-      "dependencies": [
-        "boost-container"
-      ]
     }
   }
 }
