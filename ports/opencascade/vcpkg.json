@@ -18,6 +18,9 @@
     }
   ],
   "features": {
+    "exptocasexe": {
+      "description": "ExpToCasExe is an auxiliary tool to generate code for implementation of new STEP entities into OCCT. This tool consists of two packages: ExpToCasExe and TKExpress"
+    },
     "freeimage": {
       "description": "Enable optional usage of freeimage",
       "dependencies": [
