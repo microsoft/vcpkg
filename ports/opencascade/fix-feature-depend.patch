@@ -46,25 +46,3 @@ index 4e6979d..2ba5347 100644
    else()
      OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_RAPIDJSON")
      OCCT_CHECK_AND_UNSET ("INSTALL_RAPIDJSON")
-diff --git a/src/OSD/OSD_Parallel_TBB.cxx b/src/OSD/OSD_Parallel_TBB.cxx
-index 2344a6c..280921c 100644
---- a/src/OSD/OSD_Parallel_TBB.cxx
-+++ b/src/OSD/OSD_Parallel_TBB.cxx
-@@ -25,7 +25,7 @@ Standard_DISABLE_DEPRECATION_WARNINGS
- #include <tbb/parallel_for.h>
- #include <tbb/parallel_for_each.h>
- #include <tbb/blocked_range.h>
--#include <tbb/task_scheduler_init.h>
-+#include <tbb/global_control.h>
- Standard_ENABLE_DEPRECATION_WARNINGS
- 
- //=======================================================================
-@@ -44,7 +44,7 @@ void OSD_Parallel::forEachExternal (UniversalIterator& theBegin,
-     const Standard_Integer aNbThreads = theNbItems > 0 ?
-       aThreadPool->NbDefaultThreadsToLaunch() : -1;
- 
--    tbb::task_scheduler_init aScheduler (aNbThreads);
-+    tbb::global_control aControl(tbb::global_control::max_allowed_parallelism, aNbThreads);
-     tbb::parallel_for_each (theBegin, theEnd, theFunctor);
-   }
-   catch (tbb::captured_exception& anException)
