@@ -7,7 +7,7 @@ index 73e5f5a..f7ff0e7 100644
  endif()
  find_package(ZLIB QUIET)
 -if (EXISTS ${ZLIB_LIBRARY})
-+if (ZLIB_FOUND)
++if (WITH_ZLIB AND ZLIB_FOUND)
  set(ADDITIONAL_LIBS "${ADDITIONAL_LIBS}ZLIB::ZLIB;")
  endif()
  if (WIN32)
