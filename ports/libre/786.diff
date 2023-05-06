@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 455221b8..ee84747b 100644
+index 455221b8..51da4ca6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -663,8 +663,10 @@ set_target_properties(re-objs PROPERTIES POSITION_INDEPENDENT_CODE ON)
+@@ -663,8 +663,12 @@ set_target_properties(re-objs PROPERTIES POSITION_INDEPENDENT_CODE ON)
  target_compile_definitions(re-objs PRIVATE ${RE_DEFINITIONS})
  
  target_include_directories(re-objs PRIVATE .)
@@ -10,28 +10,30 @@ index 455221b8..ee84747b 100644
 +target_include_directories(re-objs PRIVATE
    ${OPENSSL_INCLUDE_DIR} ${ZLIB_INCLUDE_DIRS})
 +target_include_directories(re-objs PUBLIC
-+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++    $<INSTALL_INTERFACE:include>
++  )
  
  
  ##############################################################################
-@@ -680,6 +682,8 @@ if(LIBRE_BUILD_SHARED)
+@@ -680,6 +684,7 @@ if(LIBRE_BUILD_SHARED)
      ${PROJECT_SOVERSION}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
    set_target_properties(re-shared PROPERTIES SOVERSION ${PROJECT_SOVERSION})
    set_target_properties(re-shared PROPERTIES OUTPUT_NAME "re")
-+  set_target_properties(re-shared PROPERTIES PUBLIC_HEADER "${HEADERS}")
 +  add_library(libre::re-shared ALIAS re-shared)
  endif()
  
  
-@@ -692,7 +696,7 @@ if(LIBRE_BUILD_STATIC)
+@@ -692,8 +697,7 @@ if(LIBRE_BUILD_STATIC)
    list(APPEND RE_INSTALL_TARGETS re)
    add_library(re STATIC $<TARGET_OBJECTS:re-objs>)
    target_link_libraries(re PUBLIC ${LINKLIBS})
 -  target_include_directories(re PUBLIC include)
+-  set_target_properties(re PROPERTIES PUBLIC_HEADER "${HEADERS}")
 +  add_library(libre::re ALIAS re)
-   set_target_properties(re PROPERTIES PUBLIC_HEADER "${HEADERS}")
  
    if(MSVC)
+     set_target_properties(re PROPERTIES OUTPUT_NAME "re-static")
 @@ -719,6 +723,7 @@ configure_file(packaging/libre.pc.in libre.pc @ONLY)
  
  
@@ -40,12 +42,19 @@ index 455221b8..ee84747b 100644
    LIBRARY
      DESTINATION ${CMAKE_INSTALL_LIBDIR}
      COMPONENT Libraries
-@@ -729,6 +734,13 @@ install(TARGETS ${RE_INSTALL_TARGETS}
-   PUBLIC_HEADER
-     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/re
+@@ -726,9 +731,18 @@ install(TARGETS ${RE_INSTALL_TARGETS}
+   ARCHIVE
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
      COMPONENT Development
+-  PUBLIC_HEADER
 +  INCLUDES
-+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/re
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/re
+-    COMPONENT Development
++)
++
++install(FILES ${HEADERS}
++  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/re
++  COMPONENT Development
 +)
 +
 +install(EXPORT libre
@@ -54,7 +63,7 @@ index 455221b8..ee84747b 100644
  )
  
  if(LIBRE_BUILD_SHARED)
-@@ -745,6 +757,11 @@ install(FILES cmake/re-config.cmake
+@@ -745,6 +759,11 @@ install(FILES cmake/re-config.cmake
    COMPONENT Development
  )
  

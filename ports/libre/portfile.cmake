@@ -13,6 +13,9 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBRE_BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LIBRE_BUILD_STATIC)
 
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -23,17 +26,13 @@ vcpkg_cmake_configure(
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
 )
 
-set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
-
 vcpkg_cmake_install()
 
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
+vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME libre CONFIG_PATH lib/cmake/re)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/re)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
