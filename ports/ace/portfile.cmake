@@ -1,9 +1,5 @@
 vcpkg_minimum_required(VERSION 2022-10-12)
 
-if(EXISTS "${CURRENT_INSTALLED_DIR}/share/axcioma")
-	message(FATAL_ERROR "FATAL ERROR: ace and axcioma are incompatible.")
-endif()
-
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
