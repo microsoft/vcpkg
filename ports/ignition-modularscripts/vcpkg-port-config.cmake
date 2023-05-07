@@ -14,6 +14,9 @@ function(ignition_modular_build_library)
             "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
             -DBUILD_TESTING=OFF
             ${IML_OPTIONS}
+        MAYBE_UNUSED_VARIABLES
+            BUILD_TESTING
+            PKG_CONFIG_EXECUTABLE
     )
 
     vcpkg_cmake_install(ADD_BIN_TO_PATH)
