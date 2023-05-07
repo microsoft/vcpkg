@@ -310,6 +310,9 @@ else()
         DETERMINE_BUILD_TRIPLET
         AUTOCONFIG
         ADDITIONAL_MSYS_PACKAGES autoconf-archive
+            DIRECT_PACKAGES
+                "https://mirror.msys2.org/msys/x86_64/tzcode-2023c-1-x86_64.pkg.tar.zst"
+                7550b843964744607f736a7138f10c6cd92489406a1b84ac71d9a9d8aa16bc69048aa1b24e1f49291b010347047008194c334ca9c632e17fa8245e85549e3c7a
         OPTIONS
             ${BUILD_OPTS}
         OPTIONS_RELEASE
