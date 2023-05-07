@@ -12,9 +12,11 @@ function(ignition_modular_build_library)
         DISABLE_PARALLEL_CONFIGURE
         OPTIONS
             "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+            -DBUILD_DOCS=OFF
             -DBUILD_TESTING=OFF
             ${IML_OPTIONS}
         MAYBE_UNUSED_VARIABLES
+            BUILD_DOCS
             BUILD_TESTING
             PKG_CONFIG_EXECUTABLE
     )
