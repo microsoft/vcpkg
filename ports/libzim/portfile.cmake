@@ -1,7 +1,3 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(VCPKG_BUILD_TYPE release)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openzim/libzim

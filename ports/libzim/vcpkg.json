@@ -16,6 +16,7 @@
   "features": {
     "xapian": {
       "description": "Enable xapian support",
+      "supports": "!(windows & !mingw)",
       "dependencies": [
         "xapian"
       ]
