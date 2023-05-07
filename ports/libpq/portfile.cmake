@@ -305,10 +305,11 @@ else()
         list(APPEND BUILD_OPTS "PG_SYSROOT=${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
     endif()
     vcpkg_configure_make(
-        AUTOCONFIG
         SOURCE_PATH "${SOURCE_PATH}"
         COPY_SOURCE
         DETERMINE_BUILD_TRIPLET
+        AUTOCONFIG
+        ADDITIONAL_MSYS_PACKAGES autoconf-archive
         OPTIONS
             ${BUILD_OPTS}
         OPTIONS_RELEASE
