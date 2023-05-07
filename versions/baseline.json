@@ -3130,7 +3130,7 @@
     },
     "hnswlib": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hps": {
       "baseline": "2022-01-18",
