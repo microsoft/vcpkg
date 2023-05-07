@@ -3,6 +3,7 @@
   "version-date": "2023-05-05",
   "description": "Vcpkg helpers to package ignition libraries",
   "license": null,
+  "supports": "native",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
