@@ -2157,7 +2157,7 @@
       "port-version": 1
     },
     "draco": {
-      "baseline": "1.5.3",
+      "baseline": "1.5.6",
       "port-version": 0
     },
     "drlibs": {
@@ -2254,10 +2254,10 @@
     },
     "ecsutil": {
       "baseline": "1.0.7.15",
-      "port-version": 3
+      "port-version": 4
     },
     "edflib": {
-      "baseline": "1.21",
+      "baseline": "1.24",
       "port-version": 0
     },
     "edlib": {
@@ -2805,7 +2805,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "1.2.1",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "glbinding": {
@@ -3817,7 +3817,7 @@
       "port-version": 0
     },
     "libass": {
-      "baseline": "0.16.0",
+      "baseline": "0.17.1",
       "port-version": 0
     },
     "libassuan": {
@@ -3877,7 +3877,7 @@
       "port-version": 4
     },
     "libcopp": {
-      "baseline": "2.1.4",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "libcorrect": {
@@ -4365,7 +4365,7 @@
       "port-version": 1
     },
     "libphonenumber": {
-      "baseline": "8.13.9",
+      "baseline": "8.13.11",
       "port-version": 0
     },
     "libplist": {
@@ -4425,7 +4425,7 @@
       "port-version": 0
     },
     "librdkafka": {
-      "baseline": "2.1.0",
+      "baseline": "2.1.1",
       "port-version": 0
     },
     "libredwg": {
@@ -4655,6 +4655,10 @@
     "libuvc": {
       "baseline": "2020-11-24",
       "port-version": 4
+    },
+    "libvault": {
+      "baseline": "0.56.0",
+      "port-version": 0
     },
     "libvmdk": {
       "baseline": "20200926",
@@ -7389,8 +7393,8 @@
       "port-version": 1
     },
     "simde": {
-      "baseline": "0.7.2",
-      "port-version": 1
+      "baseline": "0.7.4",
+      "port-version": 0
     },
     "simdjson": {
       "baseline": "3.1.7",
@@ -8233,7 +8237,7 @@
       "port-version": 2
     },
     "uwebsockets": {
-      "baseline": "20.36.0",
+      "baseline": "20.40.0",
       "port-version": 0
     },
     "v-hacd": {

@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12)
-
 set(PATCHES )
 if (NOT VCPKG_TARGET_IS_LINUX)
     set(PATCHES FunctionLevelLinkingOn.diff)
