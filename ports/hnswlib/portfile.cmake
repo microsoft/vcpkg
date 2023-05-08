@@ -1,9 +1,19 @@
+# Backport CMake targets from develop
+vcpkg_download_distfile(
+    CMAKE_TARGETS_PATCH
+    URLS "https://github.com/nmslib/hnswlib/commit/dccd4f98acb9da404b7439606a97c4e3077a8d44.patch"
+    FILENAME dccd4f98acb9da404b7439606a97c4e3077a8d44.patch
+    SHA512 e514feaf9b5138627aa9847c12cba111acd6ae7315acff14aabe151e3339600418473f805053bb3b28ed92b32751ccac675feaa95cc3881090de672b70983140
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nmslib/hnswlib
-    REF dccd4f98acb9da404b7439606a97c4e3077a8d44 # v0.7.0 + CMake targets from develop
-    SHA512 4faa7c3dc75e45c506a14bd2932b62d42e919e7b6c6e275513ae5162ee6b203d63edbd9d0ce6cfb67c3b935460c2ea200a69beafa2b426eccb4b969d269e34bb
+    REF "v${VERSION}"
+    SHA512 fd74c23040598973d7e0b5a6af73eb884ee2d30703187d1702fdd48eaf8f7f96d8fbb125d3763f90111d9fb7c5ab3434ebdb818da8717d35c5571e99083c812b
     HEAD_REF master
+    PATCHES
+        ${CMAKE_TARGETS_PATCH}
 )
 
 set(VCPKG_BUILD_TYPE "release") # header-only port
