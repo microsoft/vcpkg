@@ -5,6 +5,7 @@
   "homepage": "http://www.vulkanscenegraph.org/",
   "license": "MIT",
   "dependencies": [
+    "glslang",
     {
       "name": "vcpkg-cmake",
       "host": true
