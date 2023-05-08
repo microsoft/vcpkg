@@ -8353,8 +8353,8 @@
       "port-version": 0
     },
     "vk-bootstrap": {
-      "baseline": "0.5",
-      "port-version": 1
+      "baseline": "0.7",
+      "port-version": 0
     },
     "vkfft": {
       "baseline": "1.2.31",
