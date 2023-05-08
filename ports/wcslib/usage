@@ -1,0 +1,5 @@
+The package wcslib provides CMake targets:
+
+    find_package(wcslib REQUIRED)
+    target_link_libraries(main PRIVATE wcslib)
+    target_include_directories(main PRIVATE wcslib)
