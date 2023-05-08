@@ -5534,7 +5534,7 @@
     },
     "nettle": {
       "baseline": "3.8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "networkdirect-sdk": {
       "baseline": "2.0.1",
@@ -7358,7 +7358,7 @@
     },
     "shiftmedia-libgnutls": {
       "baseline": "3.7.6",
-      "port-version": 1
+      "port-version": 2
     },
     "shiftmedia-libgpg-error": {
       "baseline": "1.45",
