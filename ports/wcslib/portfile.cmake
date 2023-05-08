@@ -9,11 +9,15 @@ vcpkg_extract_source_archive(
     ARCHIVE "${archive}"
 )
 
-file(COPY ${CURRENT_PORT_DIR}/CMakeLists.txt
-     DESTINATION ${src})
+vcpkg_configure_make(
+    SOURCE_PATH ${src}
+    COPY_SOURCE
+    OPTIONS
+        --with-libcfitsio-include=${CURRENT_INSTALLED_DIR}/include/cfitsio
+        --with-libcfitsio-lib=${CURRENT_INSTALLED_DIR}/lib
+)
 
-vcpkg_cmake_configure(SOURCE_PATH "${src}")
-vcpkg_cmake_install()
+vcpkg_install_make(MAKEFILE GNUmakefile)
 vcpkg_install_copyright(FILE_LIST "${src}/COPYING")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
