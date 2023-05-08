@@ -10,6 +10,7 @@ set_target_properties(libsonic
         PUBLIC_HEADER "${CMAKE_SOURCE_DIR}/sonic.h"
         SOVERSION ${PROJECT_VERSION_MAJOR}
         VERSION ${CMAKE_PROJECT_VERSION}
+        OUTPUT_NAME sonic
 )
 
 add_executable(sonic wave.c main.c)
