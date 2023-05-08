@@ -1,0 +1,86 @@
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index d4f4f06c..59e155b6 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -45,7 +45,7 @@ target_include_directories(mp-units-core ${units_as_system} INTERFACE
+ )
+ 
+ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+-    if(UNITS_LIBCXX)
++    if(UNITS_LIBCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "14")
+         find_package(range-v3 CONFIG REQUIRED)
+         target_link_libraries(mp-units-core INTERFACE range-v3::range-v3)
+     endif()
+diff --git a/src/core/include/units/bits/external/hacks.h b/src/core/include/units/bits/external/hacks.h
+index 847293f5..5f76bd5f 100644
+--- a/src/core/include/units/bits/external/hacks.h
++++ b/src/core/include/units/bits/external/hacks.h
+@@ -99,7 +99,7 @@ namespace std {
+ template<class T>
+ concept default_constructible = constructible_from<T>;
+ 
+-#elif UNITS_COMP_CLANG && UNITS_LIBCXX
++#elif UNITS_COMP_CLANG <= 13 && UNITS_LIBCXX
+ 
+ // concepts
+ using concepts::common_with;
+@@ -164,13 +164,13 @@ constexpr bool cmp_equal(T t, U u) noexcept
+   else
+       return u < 0 ? false : t == UU(u);
+ }
+- 
++
+ template<class T, class U>
+ constexpr bool cmp_not_equal(T t, U u) noexcept
+ {
+   return !cmp_equal(t, u);
+ }
+- 
++
+ template<class T, class U>
+ constexpr bool cmp_less(T t, U u) noexcept
+ {
+@@ -183,19 +183,19 @@ constexpr bool cmp_less(T t, U u) noexcept
+   else
+       return u < 0 ? false : t < UU(u);
+ }
+- 
++
+ template<class T, class U>
+ constexpr bool cmp_greater(T t, U u) noexcept
+ {
+   return cmp_less(u, t);
+ }
+- 
++
+ template<class T, class U>
+ constexpr bool cmp_less_equal(T t, U u) noexcept
+ {
+   return !cmp_greater(t, u);
+ }
+- 
++
+ template<class T, class U>
+ constexpr bool cmp_greater_equal(T t, U u) noexcept
+ {
+@@ -208,7 +208,6 @@ constexpr bool in_range(T t) noexcept
+   return std::cmp_greater_equal(t, std::numeric_limits<R>::min()) &&
+         std::cmp_less_equal(t, std::numeric_limits<R>::max());
+ }
+-
+ #endif
+ 
+ } // namespace std
+diff --git a/src/mp-unitsConfig.cmake b/src/mp-unitsConfig.cmake
+index a6360a6d..afe3f7a1 100644
+--- a/src/mp-unitsConfig.cmake
++++ b/src/mp-unitsConfig.cmake
+@@ -45,7 +45,7 @@ find_dependency(gsl-lite)
+ # add range-v3 dependency only for clang + libc++
+ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+     __check_libcxx_in_use(__units_libcxx)
+-    if(__units_libcxx)
++    if(__units_libcxx AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "14")
+         find_dependency(range-v3)
+     endif()
+     unset(__units_libcxx)
