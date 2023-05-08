@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "vsg" CONFIG_PATH "lib/cmake/vsg")
 vcpkg_copy_pdbs()
 
