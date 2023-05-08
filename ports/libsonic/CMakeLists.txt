@@ -4,6 +4,8 @@ project(sonic
     LANGUAGES C
 )
 
+option(BUILD_TOOL "Build sonic tool" ON)
+
 add_library(libsonic sonic.c)
 set_target_properties(libsonic
     PROPERTIES
@@ -13,15 +15,20 @@ set_target_properties(libsonic
         OUTPUT_NAME sonic
 )
 
-add_executable(sonic wave.c main.c)
-target_link_libraries(sonic
-    PRIVATE
-        libsonic
-)
-
-install(TARGETS libsonic sonic
+install(TARGETS libsonic
     ARCHIVE         DESTINATION lib
     LIBRARY         DESTINATION lib
     PUBLIC_HEADER   DESTINATION include
-    RUNTIME         DESTINATION bin
 )
+
+if (BUILD_TOOL)
+    add_executable(sonic wave.c main.c)
+    target_link_libraries(sonic
+        PRIVATE
+            libsonic
+    )
+
+    install(TARGETS sonic
+        RUNTIME         DESTINATION bin
+    )
+endif()
