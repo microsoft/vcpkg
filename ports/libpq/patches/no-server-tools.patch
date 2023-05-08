@@ -1,0 +1,13 @@
+diff --git a/src/bin/Makefile b/src/bin/Makefile
+index 7f9dde9..ec16bba 100644
+--- a/src/bin/Makefile
++++ b/src/bin/Makefile
+@@ -34,7 +34,7 @@ SUBDIRS = \
+ 	psql \
+ 	scripts
+ 
+-ifeq ($(PORTNAME), win32)
++ifeq ($(PORTNAME), xxx)
+ SUBDIRS += pgevent
+ else
+ ALWAYS_SUBDIRS += pgevent

@@ -20,8 +20,8 @@ set(PATCHES
         patches/windows/tcl_version.patch
         patches/windows/macro-def.patch
         patches/fix-configure.patch
-        )
-
+        patches/no-server-tools.patch
+)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND PATCHES patches/windows/MSBuildProject-static-lib.patch)
     list(APPEND PATCHES patches/windows/Mkvcbuild-static-lib.patch)
@@ -32,10 +32,11 @@ endif()
 if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
     list(APPEND PATCHES patches/windows/arm.patch)
 endif()
-if(NOT "${FEATURES}" MATCHES "client")
-    list(APPEND PATCHES patches/windows/minimize_install.patch)
-else()
+if("client" IN_LIST FEATURES)
     set(HAS_TOOLS TRUE)
+else()
+    set(HAS_TOOLS FALSE)
+    list(APPEND PATCHES patches/windows/minimize_install.patch)
 endif()
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -326,6 +327,9 @@ else()
     endif()
     if(VCPKG_TARGET_IS_MINGW)
         set(ENV{USING_MINGW} yes)
+    endif()
+    if(HAS_TOOLS)
+        set(ENV{LIBPQ_ENABLE_TOOLS} yes)
     endif()
     vcpkg_install_make()
 
