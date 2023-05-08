@@ -8,14 +8,7 @@ vcpkg_from_github(
         windows.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DYNAMIC_LIBS)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
-
-if (NOT BUILD_DYNAMIC_LIBS)
-    set(DISABLE_SHARED ON)
-else()
-    set(DISABLE_SHARED OFF)
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -57,11 +50,10 @@ if(WIN32)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DDISABLE_SHARED=${DISABLE_SHARED}
+        -DDISABLE_SHARED=${BUILD_STATIC_LIBS}
         -DENABLE_STATIC=${BUILD_STATIC_LIBS}
         -DMULTI_SEMANTICS=ON
 )
