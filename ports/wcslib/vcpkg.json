@@ -14,8 +14,6 @@
     },
     {
       "name": "cfitsio",
-      "host": false,
-      "default-features": true,
       "features": ["curl", "pthreads"]
     }
   ],
