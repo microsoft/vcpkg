@@ -71,8 +71,8 @@ index fba79ee..4fadb94 100644
  
  if test "$with_zstd" = yes ; then
 -  AC_CHECK_LIB(zstd, ZSTD_compress, [], [AC_MSG_ERROR([library 'zstd' is required for ZSTD support])])
-+  PKG_CHECK_MODULES([zstd], [zstd], [AC_DEFINE(HAVE_LIBZSTD,1,[Define to 1 if with lz4])], [AC_MSG_ERROR([library 'zstd' is required for ZSTD support])])
-+  LIBS="$LZ4_LIBS $LIBS"
++  PKG_CHECK_MODULES([ZSTD], [zstd], [AC_DEFINE(HAVE_LIBZSTD,1,[Define to 1 if with lz4])], [AC_MSG_ERROR([library 'zstd' is required for ZSTD support])])
++  LIBS="$ZSTD_LIBS $LIBS"
  fi
  
  # Note: We can test for libldap_r only after we know PTHREAD_LIBS;
