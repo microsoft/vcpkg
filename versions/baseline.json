@@ -3229,8 +3229,8 @@
       "port-version": 1
     },
     "ignition-modularscripts": {
-      "baseline": "2022-05-11",
-      "port-version": 2
+      "baseline": "2023-05-05",
+      "port-version": 0
     },
     "ignition-msgs1": {
       "baseline": "1.0.0",
