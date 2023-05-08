@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO charles-lunarg/vk-bootstrap
-    REF v0.7
+    REF "v${VERSION}"
     SHA512 357ce69b080c6abcef7764652f5ab5e5fc744a9d0308bf457787f27c3c14a911480a7f9caf304ee92c33519bfbc977fb320fa3ef4a329716d0bd1b03135dd98e
     HEAD_REF master
 )
