@@ -1,0 +1,25 @@
+{
+  "name": "wcslib",
+  "version": "7.12",
+  "homepage": "https://www.gnu.org/software/gnuastro/manual/html_node/WCSLIB.html",
+  "description": "World Coordinate System (WCS) (Library)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "cfitsio",
+      "host": false,
+      "default-features": true,
+      "features": ["curl", "pthreads"]
+    }
+  ],
+
+  "default-features": [],
+  "features": {}
+}
