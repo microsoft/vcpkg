@@ -13,6 +13,9 @@ vcpkg_configure_make(
     SOURCE_PATH ${src}
     COPY_SOURCE
     OPTIONS
+        --disable-flex
+        --disable-fortran
+        --without-pgplot
         --with-libcfitsio-include=${CURRENT_INSTALLED_DIR}/include/cfitsio
         --with-libcfitsio-lib=${CURRENT_INSTALLED_DIR}/lib
 )
