@@ -703,6 +703,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    # move plugins to ${prefix}/plugins/${PORT} instead of ${prefix}/lib/gstreamer-1.0
     if(NOT VCPKG_BUILD_TYPE)
         file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}*${CMAKE_SHARED_LIBRARY_SUFFIX}"
                            "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb"
@@ -716,6 +717,24 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(REMOVE ${DBG_BINS} ${REL_BINS})
     if(NOT VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0" "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0")
+    endif()
+
+    set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-1.0.pc")
+    if(EXISTS "${_file}")
+        file(READ "${_file}" _contents)
+        string(REPLACE [[toolsdir=${exec_prefix}/bin]] "toolsdir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginscannerdir=${libexecdir}/gstreamer-1.0]] "pluginscannerdir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginsdir=${libdir}/gstreamer-1.0]] "pluginsdir=\${prefix}/plugins/${PORT}" _contents "${_contents}")
+        file(WRITE "${_file}" "${_contents}")
+    endif()
+
+    set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-1.0.pc")
+    if(EXISTS "${_file}")
+        file(READ "${_file}" _contents)
+        string(REPLACE [[toolsdir=${exec_prefix}/bin]] "toolsdir=\${prefix}/tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginscannerdir=${libexecdir}/gstreamer-1.0]] "pluginscannerdir=\${prefix}/tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginsdir=${libdir}/gstreamer-1.0]] "pluginsdir=\${prefix}/plugins/${PORT}" _contents "${_contents}")
+        file(WRITE "${_file}" "${_contents}")
     endif()
 endif()
 
