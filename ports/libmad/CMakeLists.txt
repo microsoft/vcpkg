@@ -30,10 +30,23 @@ set(SOURCES
     version.h
 )
 
-add_library(
-    mad
-    ${SOURCES}
-)
+if (BUILD_DYNAMIC)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/libmad.pc.in" "${PROJECT_BINARY_DIR}/libmad.pc" @ONLY)
+    install(
+        FILES "${PROJECT_BINARY_DIR}/libmad.pc"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+    )
+    add_library(
+        mad
+        SHARED
+        ${SOURCES}
+    )
+else()
+    add_library(
+        mad
+        ${SOURCES}
+    )
+endif()
 
 target_compile_definitions(mad
     PRIVATE _LIB _MBCS ASO_ZEROCHECK HAVE_CONFIG_H FPM_DEFAULT
