@@ -57,7 +57,7 @@ include("${cmake_vars_file}")
 
 if(VCPKG_DETECTED_MSVC)
     set(config_file "${SOURCE_PATH}/src/tools/msvc/config.pl")
-    file(COPY_FILE "${SOURCE_PATH}/config.pl" "${config_file}")
+    file(COPY_FILE "${CURRENT_PORT_DIR}/config.pl" "${config_file}")
     file(READ "${config_file}" _contents)
     if("icu" IN_LIST FEATURES)
         string(REPLACE "icu       => undef" "icu      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
