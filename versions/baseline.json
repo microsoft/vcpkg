@@ -6798,7 +6798,7 @@
     },
     "qttools": {
       "baseline": "6.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qttranslations": {
       "baseline": "6.5.0",
