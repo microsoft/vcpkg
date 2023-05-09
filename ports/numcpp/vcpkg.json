@@ -1,6 +1,6 @@
 {
   "name": "numcpp",
-  "version": "2.8.0",
+  "version": "2.10.1",
   "description": "C++ implementation of the Python Numpy library",
   "homepage": "https://dpilger26.github.io/NumCpp",
   "license": "MIT",
@@ -12,6 +12,7 @@
     "boost-predef",
     "boost-random",
     "boost-type-traits",
+    "boost-date-time",
     {
       "name": "vcpkg-cmake",
       "host": true
