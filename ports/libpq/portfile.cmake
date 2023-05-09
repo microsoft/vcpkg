@@ -17,6 +17,7 @@ set(PATCHES
     patches/windows/tcl_version.patch
     patches/windows/macro-def.patch
     patches/fix-configure.patch
+    patches/single-linkage.patch
     patches/no-server-tools.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

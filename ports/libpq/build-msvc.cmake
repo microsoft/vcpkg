@@ -35,21 +35,17 @@ function(build_msvc build_type source_path)
     endif()
 
     message(STATUS "Building ${label}")
-    if(HAS_TOOLS)
-        vcpkg_execute_required_process(
-            COMMAND "${PERL}" build.pl ${build_type}
-            WORKING_DIRECTORY "${build_path}/src/tools/msvc"
-            LOGNAME "build-${label}"
-        )
-    else()
-        foreach(lib IN ITEMS libpq libecpg_compat)
-            vcpkg_execute_required_process(
-                COMMAND "${PERL}" build.pl ${build_type} ${lib}
-                WORKING_DIRECTORY "${build_path}/src/tools/msvc"
-                LOGNAME "build-${lib}-${label}"
-            )
-        endforeach()
+    set(targets libpq libecpg_compat)
+    if(HAS_TOOLS AND NOT build_type STREQUAL "DEBUG")
+        set(targets client)
     endif()
+    foreach(target IN LISTS targets)
+        vcpkg_execute_required_process(
+            COMMAND "${PERL}" build.pl ${build_type} ${target}
+            WORKING_DIRECTORY "${build_path}/src/tools/msvc"
+            LOGNAME "build-${target}-${label}"
+        )
+    endforeach()
 
     message(STATUS "Installing ${label}")
     vcpkg_execute_required_process(

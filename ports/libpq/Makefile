@@ -2,8 +2,6 @@ subdir = .
 top_builddir = .
 include src/Makefile.global
 
-.NOTPARALLEL:
-
 ifeq ($(LIBPQ_LIBRARY_TYPE), static)
 LIBPQ_INSTALL_LIBS = install-stlib
 endif
@@ -17,30 +15,32 @@ endif
 
 .PHONY: all
 all:
-	$(MAKE) -C src/include MAKELEVEL=0
-	$(MAKE) -C src/common MAKELEVEL=0
-	$(MAKE) -C src/port MAKELEVEL=0
-	$(MAKE) -C src/interfaces/libpq MAKELEVEL=0 all-$(LIBPQ_LIBRARY_TYPE)-lib
+	$(MAKE) -C src/include
+	$(MAKE) -C src/common
+	$(MAKE) -C src/port
+	$(MAKE) -C src/interfaces/libpq all-$(LIBPQ_LIBRARY_TYPE)-lib
 ifeq ($(LIBPQ_ENABLE_TOOLS), yes)
-	$(MAKE) -C src/fe_utils MAKELEVEL=0
-	$(MAKE) -C src/bin MAKELEVEL=0
+	$(MAKE) -C src/interfaces/ecpg
+	$(MAKE) -C src/fe_utils
+	$(MAKE) -C src/bin
 else
-	$(MAKE) -C src/bin/pg_config MAKELEVEL=0
+	$(MAKE) -C src/bin/pg_config
 endif
 
 .PHONY: install-stlib
 install-stlib:
-	$(MAKE) -C src/common MAKELEVEL=0 install -o all
+	$(MAKE) -C src/common install -o all
 	rm -f '$(DESTDIR)$(libdir)/libpgcommon_shlib.a'
-	$(MAKE) -C src/port MAKELEVEL=0 install -o all
+	$(MAKE) -C src/port install -o all
 	rm -f '$(DESTDIR)$(libdir)/libpgport_shlib.a'
 
 .PHONY: install
 install: $(LIBPQ_INSTALL_LIBS)
-	$(MAKE) -C src/include MAKELEVEL=0 install
-	$(MAKE) -C src/interfaces/libpq MAKELEVEL=0 $(EXTRA_TARGET) install-lib-$(LIBPQ_LIBRARY_TYPE) install-lib-pc install -o all -o install-lib
+	$(MAKE) -C src/include install
+	$(MAKE) -C src/interfaces/libpq $(EXTRA_TARGET) install-lib-$(LIBPQ_LIBRARY_TYPE) install-lib-pc install -o all -o install-lib
 ifeq ($(LIBPQ_ENABLE_TOOLS), yes)
-	$(MAKE) -C src/bin MAKELEVEL=0 install
+	$(MAKE) -C src/interfaces/ecpg install
+	$(MAKE) -C src/bin install
 else
-	$(MAKE) -C src/bin/pg_config MAKELEVEL=0 install
+	$(MAKE) -C src/bin/pg_config install
 endif
