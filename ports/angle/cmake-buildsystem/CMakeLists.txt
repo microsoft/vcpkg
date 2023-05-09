@@ -427,21 +427,66 @@ install(EXPORT ANGLEExport FILE unofficial-angle-targets.cmake NAMESPACE unoffic
 install(FILES unofficial-angle-config.cmake DESTINATION share/unofficial-angle)
 
 if(NOT DISABLE_INSTALL_HEADERS)
-    install(
-        DIRECTORY "${ANGLE_FRAMEWORK_HEADERS_DIR}"
-        DESTINATION include
-        FILES_MATCHING
-        PATTERN "*.h"
-        PATTERN "*.inc"
-        PATTERN "CL" EXCLUDE
-        PATTERN "GLSLANG" EXCLUDE
-        PATTERN "egl.h" EXCLUDE
-        PATTERN "eglext.h" EXCLUDE
-        PATTERN "eglplatform.h" EXCLUDE
-        PATTERN "KHR" EXCLUDE
-        PATTERN "WGL" EXCLUDE
-        PATTERN "export.h" EXCLUDE
-    )
+    if(INCLUDE_OPENGL_REGISTRY_HEADERS)
+        install(
+            DIRECTORY "${ANGLE_FRAMEWORK_HEADERS_DIR}/"
+            DESTINATION include
+            FILES_MATCHING
+            PATTERN "*.h"
+            PATTERN "*.inc"
+            PATTERN "CL" EXCLUDE
+            PATTERN "GLSLANG" EXCLUDE
+            PATTERN "EGL/egl.h" EXCLUDE
+            PATTERN "EGL/eglext.h" EXCLUDE
+            PATTERN "EGL/eglplatform.h" EXCLUDE
+            PATTERN "KHR" EXCLUDE
+            PATTERN "WGL" EXCLUDE
+            PATTERN "export.h" EXCLUDE
+        )
+    else()
+        install(
+            DIRECTORY "${ANGLE_FRAMEWORK_HEADERS_DIR}/"
+            DESTINATION include
+            FILES_MATCHING
+            PATTERN "*.h"
+            PATTERN "*.inc"
+            PATTERN "CL" EXCLUDE
+            PATTERN "GLSLANG" EXCLUDE
+            PATTERN "EGL/egl.h" EXCLUDE
+            PATTERN "EGL/eglext.h" EXCLUDE
+            PATTERN "EGL/eglplatform.h" EXCLUDE
+            PATTERN "KHR" EXCLUDE
+            PATTERN "WGL" EXCLUDE
+            PATTERN "export.h" EXCLUDE
+            PATTERN "GLES/egl.h" EXCLUDE
+            PATTERN "GLES/gl.h" EXCLUDE
+            PATTERN "GLES/glext.h" EXCLUDE
+            PATTERN "GLES/glplatform.h" EXCLUDE
+            PATTERN "GLES2/gl2.h" EXCLUDE
+            PATTERN "GLES2/gl2ext.h" EXCLUDE
+            PATTERN "GLES2/gl2platform.h" EXCLUDE
+            PATTERN "GLES3/gl3.h" EXCLUDE
+            PATTERN "GLES3/gl31.h" EXCLUDE
+            PATTERN "GLES3/gl32.h" EXCLUDE
+            PATTERN "GLES3/gl3platform.h" EXCLUDE
+        )
+
+        install(
+            DIRECTORY "${ANGLE_FRAMEWORK_HEADERS_DIR}/"
+            DESTINATION include/angle
+            FILES_MATCHING
+            PATTERN "*.h"
+            PATTERN "*.inc"
+            PATTERN "CL" EXCLUDE
+            PATTERN "GLSLANG" EXCLUDE
+            PATTERN "EGL/egl.h" EXCLUDE
+            PATTERN "EGL/eglext.h" EXCLUDE
+            PATTERN "EGL/eglplatform.h" EXCLUDE
+            PATTERN "KHR" EXCLUDE
+            PATTERN "WGL" EXCLUDE
+            PATTERN "export.h" EXCLUDE
+        )
+        endif()
 endif()
 
 if(NOT BUILD_SHARED_LIBS)
