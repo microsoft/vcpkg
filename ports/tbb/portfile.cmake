@@ -1,4 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
@@ -6,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneTBB
     REF "v${VERSION}"
-    SHA512 72f68730dfd89409796f9548d3c302111787712089688a7c77092ed1b3a7bf4e7444fe4b58015d2c78b7b71259852526789b2483bf1e71bea8146c4b4676e7b4
+    SHA512 2ece7f678ad7c8968c0ad5cda9f987e4b318c6d9735169e1039beb0ff8dfca18815835875211acc6c7068913d9b0bdd4c9ded22962b0bb48f4a0ce0f7b78f31c
     HEAD_REF onetbb_2021
 )
 
@@ -47,4 +46,4 @@ include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 ${_contents}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
