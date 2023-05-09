@@ -9,7 +9,7 @@ LIBPQ_INSTALL_LIBS = install-stlib
 endif
 
 ifeq ($(LIBPQ_LIBRARY_TYPE), shared)
-ifeq ($(USING_MINGW), yes)
+ifeq ($(LIBPQ_USING_MINGW), yes)
 # The import library name is the same as the static library name
 EXTRA_TARGET = install-lib-static
 endif
