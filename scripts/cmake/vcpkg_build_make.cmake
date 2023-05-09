@@ -108,7 +108,7 @@ function(vcpkg_build_make)
             else()
                 string(APPEND LDFLAGS_${cmake_buildtype} " ${LINKER_FLAGS_${cmake_buildtype}}")
             endif()
-            
+
             # Setup environment
             set(ENV{CPPFLAGS} "${CPPFLAGS_${cmake_buildtype}}")
             set(ENV{CFLAGS} "${CFLAGS_${cmake_buildtype}}")
@@ -138,8 +138,18 @@ function(vcpkg_build_make)
                 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${path_suffix}/bin")
             endif()
 
-            vcpkg_list(SET make_cmd_line ${make_command} ${make_opts})
-            vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${no_parallel_make_opts})
+            vcpkg_list(SET make_opts_per_build_type)
+            if(VCPKG_TARGET_IS_ANDROID AND EXISTS "${working_directory}/libtool")
+                # https://www.gnu.org/software/libtool/manual/html_node/Link-mode.html
+                # -avoid-version is handled specially by libtool link mode, this flag is not forwarded to linker,
+                # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
+                # We do it here instead of when invoking configure script because configure script will also use it
+                # for its own tests that are run without libtool (and this flag will be passed to compiler directly)
+                vcpkg_list(APPEND make_opts_per_build_type "LDFLAGS=-avoid-version ${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${cmake_buildtype}}")
+            endif()
+
+            vcpkg_list(SET make_cmd_line ${make_command} ${make_opts} ${make_opts_per_build_type})
+            vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${no_parallel_make_opts} ${make_opts_per_build_type})
 
             if (arg_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(

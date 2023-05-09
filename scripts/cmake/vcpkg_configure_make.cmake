@@ -789,13 +789,6 @@ function(vcpkg_configure_make)
             # Target windows with wrappers enabled cannot forward ARFLAGS since it breaks the wrapper
             set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
         endif()
-        # https://www.gnu.org/software/libtool/manual/html_node/Link-mode.html
-        # -avoid-version is handled specially by libtool link mode, this flag is not forwarded to linker,
-        # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
-        if(VCPKG_TARGET_IS_ANDROID)
-            set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
-            set(ENV{LDFLAGS_FOR_BUILD} "-avoid-version $ENV{LDFLAGS_FOR_BUILD}")
-        endif()
 
         if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
             # configure not using all flags to check if compiler works ...
