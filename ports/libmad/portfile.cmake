@@ -1,3 +1,7 @@
+if(NOT VCPKG_TARGET_IS_LINUX)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mad/libmad
@@ -10,20 +14,14 @@ vcpkg_from_sourceforge(
 #The archive only contains a Visual Studio 6.0 era DSP project file, so use a custom CMakeLists.txt
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-# Adds pkgconfig template if dynamic
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/libmad.pc.in" DESTINATION "${SOURCE_PATH}")
-endif()
+# Adds pkgconfig template
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/libmad.pc.in" DESTINATION "${SOURCE_PATH}")
 
 #Use the msvc++ config.h header
 file(COPY "${SOURCE_PATH}/msvc++/config.h" DESTINATION "${SOURCE_PATH}")
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DYNAMIC)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DBUILD_DYNAMIC=${BUILD_DYNAMIC}
 )
 
 vcpkg_cmake_install()
