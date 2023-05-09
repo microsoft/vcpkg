@@ -445,7 +445,7 @@
       "port-version": 5
     },
     "azure-storage-files-datalake-cpp": {
-      "baseline": "12.5.0",
+      "baseline": "12.6.0",
       "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
