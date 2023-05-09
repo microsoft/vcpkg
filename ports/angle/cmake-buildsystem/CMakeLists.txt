@@ -58,6 +58,16 @@ if(ANGLE_USE_D3D11_COMPOSITOR_NATIVE_WINDOW)
     endif()
     set(angle_enable_d3d11_compositor_native_window TRUE)
 endif()
+if(NOT BUILD_SHARED_LIBS)
+    add_definitions(
+        -DANGLE_EXPORT=
+        -DANGLE_STATIC=1
+        -DANGLE_UTIL_EXPORT=
+        -DEGLAPI=
+        -DGL_APICALL=
+        -DGL_API=
+    )
+endif()
 
 find_package(ZLIB REQUIRED)
 
@@ -432,4 +442,12 @@ if(NOT DISABLE_INSTALL_HEADERS)
         PATTERN "WGL" EXCLUDE
         PATTERN "export.h" EXCLUDE
     )
+endif()
+
+if(NOT BUILD_SHARED_LIBS)
+    foreach(angle_target EGL GLESv2 ANGLE)
+        if(TARGET ${angle_target})
+            target_compile_definitions(${angle_target} INTERFACE $<INSTALL_INTERFACE:KHRONOS_STATIC>)
+        endif()
+    endforeach()
 endif()
