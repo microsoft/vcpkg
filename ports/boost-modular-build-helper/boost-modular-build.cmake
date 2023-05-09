@@ -71,7 +71,7 @@ function(boost_modular_build)
             set(BOOST_LIB_RELEASE_SUFFIX -${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
             set(BOOST_LIB_DEBUG_SUFFIX -${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib) # Note: FindBoost.cmake will not look for d suffixed libraries
         endif()
-    elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND VCPKG_DETECTED_CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
         string(REGEX MATCH "[^\\\.]+" clang_major_ver "${VCPKG_DETECTED_CMAKE_CXX_COMPILER_VERSION}")
         set(BOOST_LIB_RELEASE_SUFFIX -clangw${clang_major_ver}-mt-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
         set(BOOST_LIB_DEBUG_SUFFIX -clangw${clang_major_ver}-mt-gd-${BOOST_ARCHITECTURE_TAG}-${BOOST_VERSION_ABI_TAG}.lib)
