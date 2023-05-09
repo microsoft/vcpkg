@@ -20,9 +20,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         debian ENABLE_DEBIAN
         cudfrepo ENABLE_CUDFREPO
         conda ENABLE_CONDA
-        lzma-compression ENABLE_LZMA_COMPRESSION
-        bzip2-compression ENABLE_BZIP2_COMPRESSION
-        zstd-compression ENABLE_ZSTD_COMPRESSION
+        lzma ENABLE_LZMA_COMPRESSION
+        bzip2 ENABLE_BZIP2_COMPRESSION
+        zstd ENABLE_ZSTD_COMPRESSION
 )
 
 if (ENABLE_PYTHON OR ENABLE_PERL OR ENABLE_RUBY)

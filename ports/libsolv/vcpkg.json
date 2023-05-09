@@ -17,7 +17,7 @@
     "zlib"
   ],
   "features": {
-    "bzip2-compression": {
+    "bzip2": {
       "description": "Build with bzip2 compression support",
       "dependencies": [
         "bzip2"
@@ -41,7 +41,7 @@
     "helixrepo": {
       "description": "Build with helix repository support"
     },
-    "lzma-compression": {
+    "lzma": {
       "description": "Build with lzma/xz compression support",
       "dependencies": [
         "liblzma"
@@ -59,7 +59,7 @@
       "description": "Build ruby bindings",
       "supports": "!windows"
     },
-    "zstd-compression": {
+    "zstd": {
       "description": "Build with zstd compression support",
       "dependencies": [
         "zstd"
