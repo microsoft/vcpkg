@@ -118,7 +118,7 @@
     },
     "angle": {
       "baseline": "chromium_5414",
-      "port-version": 2
+      "port-version": 3
     },
     "annoy": {
       "baseline": "1.17.2",
