@@ -2,10 +2,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jll63/yomm2
-    REF v1.1.2
-    SHA512  f45c3f3d267dedaa3c76f9dab1a75be01941e3715e71b30b878be49157a5ba97f2188c9e635272be3ca396019b161bb21a30199ca504c94a18673685f5dbf06d
+    REF "v${VERSION}"
+    SHA512  456422f829293339d1d29eda8a00ad1bf5a2b7adcf0eb3727729b25208e1e67bff8187e21d49b64817ebb3a2274cef5504e22d612b1c68de20c8fe458daa81ba
     HEAD_REF master
-    PATCHES "fix_find_boost.patch" "fix_uwp_osx.patch"
+    PATCHES "fix_find_boost.patch"
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

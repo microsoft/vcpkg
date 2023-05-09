@@ -81,7 +81,7 @@ if("chroma-format-all" IN_LIST FEATURES)
     vcpkg_list(APPEND OPTIONS --chroma-format=all)
 endif()
 
-if("disable-gpl" IN_LIST FEATURES)
+if(NOT "gpl" IN_LIST FEATURES)
     vcpkg_list(APPEND OPTIONS --disable-gpl)
 endif()
 
