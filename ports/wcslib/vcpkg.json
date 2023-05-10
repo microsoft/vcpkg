@@ -3,13 +3,5 @@
   "version": "7.12",
   "homepage": "https://www.gnu.org/software/gnuastro/manual/html_node/WCSLIB.html",
   "description": "World Coordinate System (WCS) (Library)",
-  "dependencies": [
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    }
-  ],
-
-  "default-features": [],
-  "features": {}
+  "supports": "!windows"
 }
