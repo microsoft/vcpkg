@@ -2617,8 +2617,8 @@
       "port-version": 1
     },
     "freetype": {
-      "baseline": "2.12.1",
-      "port-version": 3
+      "baseline": "2.13.0",
+      "port-version": 0
     },
     "freetype-gl": {
       "baseline": "2022-01-17",
