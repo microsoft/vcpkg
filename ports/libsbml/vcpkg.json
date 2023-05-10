@@ -17,7 +17,6 @@
   ],
   "default-features": [
     "comp",
-    "expat",
     "fbc",
     "groups",
     "layout",
