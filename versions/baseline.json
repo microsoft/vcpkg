@@ -8249,7 +8249,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "20.40.0",
+      "baseline": "20.41.0",
       "port-version": 0
     },
     "v-hacd": {
