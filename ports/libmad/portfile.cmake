@@ -15,7 +15,7 @@ vcpkg_from_sourceforge(
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 # Adds pkgconfig template
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/libmad.pc.in" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/mad.pc.in" DESTINATION "${SOURCE_PATH}")
 
 #Use the msvc++ config.h header
 file(COPY "${SOURCE_PATH}/msvc++/config.h" DESTINATION "${SOURCE_PATH}")

@@ -30,9 +30,9 @@ set(SOURCES
     version.h
 )
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/libmad.pc.in" "${PROJECT_BINARY_DIR}/libmad.pc" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/mad.pc.in" "${PROJECT_BINARY_DIR}/mad.pc" @ONLY)
 install(
-    FILES "${PROJECT_BINARY_DIR}/libmad.pc"
+    FILES "${PROJECT_BINARY_DIR}/mad.pc"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
 )
 add_library(
