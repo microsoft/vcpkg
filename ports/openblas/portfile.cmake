@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         uwp.patch
-       # fix-space-path.patch
         fix-redefinition-function.patch
         fix-uwp-build.patch
         install-tools.patch
