@@ -1,7 +1,7 @@
 {
   "name": "libgit2",
   "version-semver": "1.4.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Git linkable library",
   "homepage": "https://github.com/libgit2/libgit2",
   "supports": "!uwp",
@@ -49,7 +49,7 @@
     },
     "sectransp": {
       "description": "SSL support (sectransp)",
-      "supports": "!osx"
+      "supports": "osx"
     },
     "ssh": {
       "description": "SSH support via libssh2",
