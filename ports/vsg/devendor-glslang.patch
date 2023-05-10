@@ -1,0 +1,68 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 61da709f..472bc6af 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,9 +37,11 @@ find_package(Vulkan ${Vulkan_MIN_VERSION} REQUIRED)
+ 
+ find_package(Threads REQUIRED)
+ 
++find_package(glslang CONFIG REQUIRED)
++
+ # Enable/disable shader compilation support that pulls in glslang
+ set(VSG_SUPPORTS_ShaderCompiler  1 CACHE STRING "Optional shader compiler support, 0 for off, 1 for enabled." )
+-if (VSG_SUPPORTS_ShaderCompiler)
++if (FALSE)
+     if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/glslang/build_vars.cmake)
+ 
+         if (Git_FOUND)
+diff --git a/src/vsg/CMakeLists.txt b/src/vsg/CMakeLists.txt
+index 4154312f..49d63b97 100644
+--- a/src/vsg/CMakeLists.txt
++++ b/src/vsg/CMakeLists.txt
+@@ -226,7 +226,7 @@ set(SOURCES
+     utils/LoadPagedLOD.cpp
+ )
+ 
+-if (${VSG_SUPPORTS_ShaderCompiler})
++if (FALSE)
+ 
+     # include glslang source code directly into the VulkanScenegraph library build.
+     include(../glslang/build_vars.cmake)
+@@ -236,6 +236,14 @@ endif()
+ set(LIBRARIES PUBLIC
+         Vulkan::Vulkan
+         Threads::Threads
++        glslang::glslang
++        glslang::OSDependent
++        glslang::MachineIndependent
++        glslang::GenericCodeGen
++        glslang::glslang-default-resource-limits
++        glslang::OGLCompiler
++        glslang::SPVRemapper
++        glslang::SPIRV
+ )
+ 
+ # Check for std::atomic
+@@ -364,9 +372,6 @@ target_include_directories(vsg
+     PUBLIC
+         $<BUILD_INTERFACE:${VSG_SOURCE_DIR}/include>
+         $<BUILD_INTERFACE:${VSG_BINARY_DIR}/include>
+-    PRIVATE
+-        $<BUILD_INTERFACE:${VSG_SOURCE_DIR}/src/glslang>
+-        $<BUILD_INTERFACE:${GLSLANG_GENERATED_INCLUDEDIR}>
+ )
+ 
+ target_link_libraries(vsg ${LIBRARIES})
+diff --git a/src/vsg/utils/ShaderCompiler.cpp b/src/vsg/utils/ShaderCompiler.cpp
+index 71a7f09f..803f26a1 100644
+--- a/src/vsg/utils/ShaderCompiler.cpp
++++ b/src/vsg/utils/ShaderCompiler.cpp
+@@ -20,7 +20,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
+ #include <vsg/utils/ShaderCompiler.h>
+ 
+ #if VSG_SUPPORTS_ShaderCompiler
+-#    include <SPIRV/GlslangToSpv.h>
++#    include <glslang/SPIRV/GlslangToSpv.h>
+ #    include <glslang/Public/ResourceLimits.h>
+ #    include <glslang/Public/ShaderLang.h>
+ #endif

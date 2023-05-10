@@ -1,0 +1,19 @@
+{
+  "name": "rtmfp-cpp",
+  "version": "1.4.0-20230213.18168ec",
+  "description": "Secure Real-Time Media Flow Protocol Library (RTMFP)",
+  "homepage": "https://github.com/zenomt/rtmfp-cpp",
+  "license": "MIT",
+  "supports": "x64 & !uwp",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

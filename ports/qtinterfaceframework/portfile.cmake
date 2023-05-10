@@ -49,3 +49,5 @@ if(NOT VCPKG_CROSSCOMPILING)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 endif()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Qt6/QtInterfaceFramework/6.5.0/QtInterfaceFramework/private/qifqueryparser_flex_p.h" "${CURRENT_BUILDTREES_DIR}" "")

@@ -63,7 +63,7 @@ index 2820ace22..7fddbf0fb 100644
 +			$proj->AddLibrary($self->{options}->{icu} . '\lib\icuuc.lib'); #
 +			$proj->AddLibrary($self->{options}->{icu} . '\lib\icudt.lib'); #
  		}
-@@ -1074,22 +1074,22 @@ sub AddProject
+@@ -1074,27 +1074,27 @@ sub AddProject
  	{
  		$proj->AddIncludeDir($self->{options}->{xml} . '\include');
  		$proj->AddIncludeDir($self->{options}->{xml} . '\include\libxml2');
@@ -81,6 +81,12 @@ index 2820ace22..7fddbf0fb 100644
  		$proj->AddIncludeDir($self->{options}->{lz4} . '\include');
 -		$proj->AddLibrary($self->{options}->{lz4} . '\lib\liblz4.lib');
 +		$proj->AddLibrary($self->{options}->{lz4} . '\lib\lz4.lib'); #
+ 	}
+ 	if ($self->{options}->{zstd})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{zstd} . '\include');
+-		$proj->AddLibrary($self->{options}->{zstd} . '\lib\libzstd.lib');
++		$proj->AddLibrary($self->{options}->{zstd} . '\lib\zstd.lib');
  	}
  	if ($self->{options}->{uuid})
  	{

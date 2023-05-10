@@ -10,17 +10,18 @@ if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
+set(PATCHLIB fix-dependencies.patch cfg-rel-paths.patch swig-python-polyfill.patch pkgconfig.patch same-install-rules-all-platforms.patch)
+if(VCPKG_TARGET_IS_OSX)
+    list(APPEND PATCHLIB fix_override.patch) # upstream PR:https://github.com/OGRECave/ogre/pull/2831
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
-    REF v13.4.4
-    SHA512 59e0929f5022b2d289030d42c651ce4f44a215be7aae262b1b6919e1d00225d226cce6bfa2e78525ae902290615c87eabe7b8dfe27b7087dd56081460bd35e1f
+    REF "v${VERSION}"
+    SHA512 d4022a454e0649a01182545f24094ba1f72127099a9b096e1b438238659629e93b1d79277d02acc0aceebdc3969aab0031de7f86390077bafc66ccfd86755430
     HEAD_REF master
     PATCHES
-        fix-dependencies.patch
-        cfg-rel-paths.patch
-        swig-python-polyfill.patch
-        pkgconfig.patch
+        ${PATCHLIB}       
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")

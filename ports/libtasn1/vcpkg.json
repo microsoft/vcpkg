@@ -1,6 +1,7 @@
 {
   "name": "libtasn1",
   "version": "4.19.0",
+  "port-version": 1,
   "description": "A secure communications library implementing the SSL, TLS and DTLS protocols",
   "homepage": "https://www.gnutls.org/",
   "license": null,

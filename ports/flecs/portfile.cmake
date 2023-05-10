@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SanderMertens/flecs
     REF "v${VERSION}"
-    SHA512 06901a137ee4b6b1f6463ca6c35ec7271d21e138be08d3af8fbbf17d6e254242fadcc0e0d944de8ce1c89a6a2babe4e611142f227ef758c6e6b1f48db16740d8
+    SHA512 dbbf4cfc3d24624c804c6dcc27c76ebc07ed58e757a0b7a5a529200ecf4f58d72b7a0061fb1ec0d41c7ea610accfd8fa1eb2944e261aacc22a3b9566cabbac22
     HEAD_REF master
 )
 

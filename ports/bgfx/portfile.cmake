@@ -1,7 +1,9 @@
-vcpkg_download_distfile(ARCHIVE
-  URLS "https://github.com/bkaradzic/bgfx.cmake/archive/refs/tags/v1.118.8415-411.tar.gz"
-  FILENAME "bgfx.cmake.tar.gz"
-  SHA512 7a956a2d08e0e5b26b1a91931966234761f8dc6f9475b4b3fb4bb0045c0cf38f237bc34c4f74ca21f273b36367f3ffd0c17d379687e947bc9e4b779faf269cd4
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO "bkaradzic/bgfx.cmake"
+  HEAD_REF master
+  REF v${VERSION}
+  SHA512 b1f3c46d0f4985df3a09c74f627f1d0c426f204a8c680a91a65099c146cd41215e9af1c5cdf4a0a559d020f93455b71a6bc1412628cfd818467fd59996542377
 )
 
 vcpkg_from_github(
@@ -24,8 +26,8 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH_BGFX
   REPO "bkaradzic/bgfx"
   HEAD_REF master
-  REF bea82a13436a42a339e26354c8106dc28dedc178
-  SHA512 2a758891b362ee6d22e1ec1038075fb9e7f19911868f182aa3f2264150cffe1795a87fc959c566b89400f0c2fe4277d5dba8beb4e7c7e1374644b91ad7979b73
+  REF 6f36b4fb3a0d76090eb2727ecf11abac46eef8aa
+  SHA512 cb88fcba51184611ecf969e5ec391eabd43227d3e17071c70c75eed79e86da7fe9b3c07c01e88d2230a8245ec0c3d192b1694c289019bb4f9c1c4973b0b11314
 )
 
 vcpkg_check_features(
@@ -41,10 +43,6 @@ elseif (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 else ()
   set(BGFX_LIBRARY_TYPE "STATIC")
 endif ()
-
-vcpkg_extract_source_archive(SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-)
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-inject-packages.cmake" DESTINATION "${SOURCE_PATH}")
 
