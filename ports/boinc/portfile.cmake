@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF client_release/7.22/7.22.1
     SHA512 8b3efc68fe8df8f95a674d9deddbe355da2070a960b1768ee7f9c2afdd8a373e97297715dec5d7daf131d4b5c478afbc4476e152ec516080620f66e1a1f785af
     HEAD_REF master
+    PATCHES
+        fix-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -37,6 +39,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup()
+file(READ "${CURRENT_PACKAGES_DIR}/share/boinc/boinc-config.cmake" BOINC_CONFIG)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/boinc/boinc-config.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(OpenSSL)
+${BOINC_CONFIG}
+")
 
 vcpkg_copy_pdbs()
 

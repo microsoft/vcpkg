@@ -1,0 +1,49 @@
+diff --git a/lib/filesys.cpp b/lib/filesys.cpp
+index c258a0f8d1..76530fb432 100644
+--- a/lib/filesys.cpp
++++ b/lib/filesys.cpp
+@@ -63,6 +63,7 @@
+ 
+ #include "error_numbers.h"
+ #include "filesys.h"
++#include "str_replace.h"
+ #include "str_util.h"
+ #include "util.h"
+ 
+diff --git a/lib/str_util.h b/lib/str_util.h
+index 0e2d5f179a..22908d8568 100644
+--- a/lib/str_util.h
++++ b/lib/str_util.h
+@@ -22,8 +22,6 @@
+ #include <vector>
+ #include <string.h>
+ 
+-#include "str_replace.h"
+-
+ #define safe_strcpy(x, y) strlcpy(x, y, sizeof(x))
+ #define safe_strcat(x, y) strlcat(x, y, sizeof(x))
+ 
+diff --git a/lib/util.cpp b/lib/util.cpp
+index cfa495a6f9..2af4b0fb94 100644
+--- a/lib/util.cpp
++++ b/lib/util.cpp
+@@ -17,6 +17,7 @@
+ 
+ #if defined(_WIN32)
+ #include "boinc_win.h"
++#include "str_replace.h"
+ #include "str_util.h"
+ #include "win_util.h"
+ #endif
+diff --git a/lib/win_util.cpp b/lib/win_util.cpp
+index 86289e0ce7..82b17f4425 100644
+--- a/lib/win_util.cpp
++++ b/lib/win_util.cpp
+@@ -23,6 +23,7 @@
+ #include "util.h"
+ #include "filesys.h"
+ #include "win_util.h"
++#include "str_replace.h"
+ #include "str_util.h"
+ 
+ /**
