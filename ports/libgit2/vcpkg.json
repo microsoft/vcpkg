@@ -49,7 +49,7 @@
     },
     "sectransp": {
       "description": "SSL support (sectransp)",
-      "supports": "osx"
+      "supports": "!osx"
     },
     "ssh": {
       "description": "SSH support via libssh2",
