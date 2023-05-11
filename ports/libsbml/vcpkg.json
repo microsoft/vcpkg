@@ -1,8 +1,9 @@
 {
   "name": "libsbml",
-  "version": "5.19.0",
-  "port-version": 2,
+  "version": "5.20.0",
   "description": "A library for reading / writing SBML files",
+  "homepage": "https://github.com/sbmlteam/libsbml",
+  "license": "LGPL-2.1",
   "supports": "!uwp",
   "dependencies": [
     {
@@ -16,7 +17,6 @@
   ],
   "default-features": [
     "comp",
-    "expat",
     "fbc",
     "groups",
     "layout",

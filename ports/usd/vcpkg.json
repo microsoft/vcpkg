@@ -1,6 +1,6 @@
 {
   "name": "usd",
-  "version": "23.2",
+  "version": "23.5",
   "description": "Universal Scene Description (USD) is an efficient, scalable system for authoring, reading, and streaming time-sampled scene description for interchange between graphics applications.",
   "homepage": "https://github.com/PixarAnimationStudios/USD",
   "license": null,
@@ -15,6 +15,7 @@
     "boost-program-options",
     "boost-regex",
     "boost-system",
+    "boost-variant",
     "boost-vmd",
     "tbb",
     {
