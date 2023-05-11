@@ -8,8 +8,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF 4c1964ddcecd157b478166c4c360fe95ad06c042 #v2022.10.31.00
-    SHA512 5272c1145d85b682eefd72bb3d94723723e2e726a53cf91ece642c8affc378f428748c3d4fa9ae5262ee891865ff8a6914f31216d2f1699c5e6c6c0cc8ec3e7c
+    REF 1e6579890fe71387c14135080fc093045ab79897 #v2023.05.08.00
+    SHA512 0603b21e0717d2e201fb3f33907998ddf8c6d7fb38a02e44bee7ec01fb237c109fc8b5a8f01f71ba1901a494a2e38d063d8d636224fa91c7cb0b2f222e5d20c2
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
@@ -41,6 +41,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "zlib"       CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
+        "liburing"   WITH_liburing
     INVERTED_FEATURES
         "bzip2"      CMAKE_DISABLE_FIND_PACKAGE_BZip2
         "lzma"       CMAKE_DISABLE_FIND_PACKAGE_LibLZMA
@@ -62,6 +63,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         LIBAIO_FOUND
+        MSVC_USE_STATIC_RUNTIME
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -85,6 +87,6 @@ FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_fixup_pkgconfig()
