@@ -11,7 +11,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org
     REPO GNOME/gtk
     REF "${VERSION}"
-    SHA512 ae7036d8c9416a95740b20aa0cfe7f73391aefef56f02f27fa36e1231ba1f0d69bd446b9cebc47e0cfd09c0dcdc228156211cd140ad4618e6882ea52745ee4a8
+    SHA512 3021b65649c29d390a21580dc39ca1e7fa845d760c95a6178213cd890f5d8c6d68fe8a5600b283001e279a4bb2ec99f9b210c7abfa493701f7276f015059a9a1
     PATCHES
         0001-build.patch
         cairo-cpp-linkage.patch

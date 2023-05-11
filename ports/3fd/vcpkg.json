@@ -1,7 +1,7 @@
 {
   "name": "3fd",
   "version": "2.6.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "C++ Framework For Fast Development",
   "supports": "windows & !static & !arm64",
   "dependencies": [
