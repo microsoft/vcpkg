@@ -1,5 +1,5 @@
 vcpkg_download_distfile(archive
-    URLS "ftp://ftp.atnf.csiro.au/pub/software/wcslib/wcslib-7.12.tar.bz2"
+    URLS "https://www.atnf.csiro.au/people/mcalabre/WCS/wcslib-7.12.tar.bz2"
     FILENAME "wcslib-7.12.tar.bz2"
     SHA512 7f38f725992d3c4bd3c1b908d494ac361c17f6b60f091d987fda596211423bb7396b3a5e2f1f6dd6215835016d302083472a7ad0822f17cdfe230c8f556b3e23
 )

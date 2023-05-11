@@ -2,6 +2,6 @@
   "name": "wcslib",
   "version": "7.12",
   "description": "World Coordinate System (WCS) (Library)",
-  "homepage": "https://www.gnu.org/software/gnuastro/manual/html_node/WCSLIB.html",
+  "homepage": "https://www.atnf.csiro.au/people/mcalabre/WCS/",
   "supports": "!windows"
 }
