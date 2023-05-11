@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF v1.x
     PATCHES
         fmt-header.patch # https://github.com/gabime/spdlog/pull/2545
+        fmt-10-support.patch # Upstream patch: https://github.com/gabime/spdlog/commit/0ca574ae168820da0268b3ec7607ca7b33024d05
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
