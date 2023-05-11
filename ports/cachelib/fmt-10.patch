@@ -1,0 +1,13 @@
+diff --git a/cachelib/navy/admission_policy/DynamicRandomAP.cpp b/cachelib/navy/admission_policy/DynamicRandomAP.cpp
+index 3a8a1aa0..2ab0fa45 100644
+--- a/cachelib/navy/admission_policy/DynamicRandomAP.cpp
++++ b/cachelib/navy/admission_policy/DynamicRandomAP.cpp
+@@ -189,7 +189,7 @@ void DynamicRandomAP::updateThrottleParamsLocked(std::chrono::seconds curTime) {
+     XLOGF(INFO,
+           "max write rate {} will be used because target current write rate {} "
+           "exceeds it.",
+-          maxRate_, curTargetRate);
++          maxRate_.load(std::memory_order_relaxed), curTargetRate);
+     curTargetRate = maxRate_;
+   }
+   writeStats_.curTargetRate = curTargetRate;

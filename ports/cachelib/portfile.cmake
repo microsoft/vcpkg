@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build.patch
+        fmt-10.patch
 )
 
 FIND_PATH(NUMA_INCLUDE_DIR NAME numa.h
