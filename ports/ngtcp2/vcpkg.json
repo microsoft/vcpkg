@@ -4,7 +4,6 @@
   "description": "ngtcp2 project is an effort to implement RFC9000 QUIC protocol.",
   "homepage": "https://github.com/ngtcp2/ngtcp2",
   "license": "MIT",
-  "supports": "!(arm & uwp)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
