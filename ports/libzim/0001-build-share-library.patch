@@ -1,0 +1,26 @@
+diff --git a/meson.build b/meson.build
+index 6862f75..d887f9a 100644
+--- a/meson.build
++++ b/meson.build
+@@ -37,8 +37,6 @@ static_linkage = static_linkage or get_option('default_library')=='static'
+ lzma_dep = dependency('liblzma', static:static_linkage)
+ if static_linkage
+   add_project_arguments('-DLZMA_API_STATIC', language: 'cpp')
+-else
+-  private_conf.set('LIBZIM_EXPORT_DLL', true)
+ endif
+ 
+ zstd_dep = dependency('libzstd', static:static_linkage)
+@@ -59,6 +57,9 @@ pkg_requires = ['liblzma', 'libzstd']
+ if build_machine.system() == 'windows'
+     extra_link_args = ['-lRpcrt4', '-lWs2_32', '-lwinmm', '-licuuc', '-licuin']
+     extra_cpp_args = ['-DSORTPP_PASS']
++    if not static_linkage
++      extra_cpp_args += ['-DLIBZIM_EXPORT_DLL']
++    endif
+ else
+     extra_link_args = []
+     extra_cpp_args = []
+-- 
+2.37.3.windows.1
+

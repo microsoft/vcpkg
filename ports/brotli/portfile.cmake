@@ -14,6 +14,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBROTLI_DISABLE_TESTS=ON
+        # Required for wasm32-emscripten triplet to avoid "install" being turned off
+        -DBROTLI_EMSCRIPTEN=OFF
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

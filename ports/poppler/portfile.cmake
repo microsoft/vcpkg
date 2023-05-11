@@ -20,6 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         private-api ENABLE_UNSTABLE_API_ABI_HEADERS
         zlib        ENABLE_ZLIB
         glib        ENABLE_GLIB 
+        qt          ENABLE_QT6
 )
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=fontconfig")
@@ -56,7 +57,6 @@ vcpkg_cmake_configure(
         -DENABLE_UTILS=OFF
         -DENABLE_GOBJECT_INTROSPECTION=OFF
         -DENABLE_QT5=OFF
-        -DENABLE_QT6=OFF
         -DENABLE_CMS=none
         -DRUN_GPERF_IF_PRESENT=OFF
         -DENABLE_RELOCATABLE=OFF # https://gitlab.freedesktop.org/poppler/poppler/-/issues/1209
@@ -77,3 +77,5 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

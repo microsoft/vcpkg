@@ -1,10 +1,11 @@
 {
   "name": "drogon",
-  "version": "1.8.2",
+  "version": "1.8.4",
   "description": "A C++14/17 based HTTP web application framework running on Linux/macOS/Unix/Windows",
   "homepage": "https://github.com/an-tao/drogon",
   "documentation": "https://drogon.docsforge.com/master/overview/",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "brotli",
     "jsoncpp",

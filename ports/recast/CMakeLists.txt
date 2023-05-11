@@ -41,12 +41,12 @@ target_include_directories(
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DetourCrowd/Include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DetourTileCache/Include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Recast/Include>
-  $<INSTALL_INTERFACE:include>
-  $<INSTALL_INTERFACE:include/Detour/Include>
-  $<INSTALL_INTERFACE:include/DetourCrowd/Include>
-  $<INSTALL_INTERFACE:include/DetourTileCache/Include>
-  $<INSTALL_INTERFACE:include/Recast/Include>
-  $<INSTALL_INTERFACE:include/DebugUtils/Include>
+  $<INSTALL_INTERFACE:include/recast/>
+  $<INSTALL_INTERFACE:include/recast/Detour/Include>
+  $<INSTALL_INTERFACE:include/recast/DetourCrowd/Include>
+  $<INSTALL_INTERFACE:include/recast/DetourTileCache/Include>
+  $<INSTALL_INTERFACE:include/recast/Recast/Include>
+  $<INSTALL_INTERFACE:include/recast/DebugUtils/Include>
 )
 
 install(
@@ -59,9 +59,9 @@ install(
 install(EXPORT unofficial-recast-config DESTINATION share/unofficial-recast)
 
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(DIRECTORY DebugUtils/Include/ DESTINATION include/recast/DebugUtils)
-  install(DIRECTORY Detour/Include/ DESTINATION include/recast/Detour)
-  install(DIRECTORY DetourCrowd/Include/ DESTINATION include/recast/DetourCrowd)
-  install(DIRECTORY DetourTileCache/Include/ DESTINATION include/recast/DetourTileCache)
-  install(DIRECTORY Recast/Include/ DESTINATION include/recast/Recast)
+  install(DIRECTORY DebugUtils/Include/ DESTINATION include/recast/DebugUtils/Include)
+  install(DIRECTORY Detour/Include/ DESTINATION include/recast/Detour/Include)
+  install(DIRECTORY DetourCrowd/Include/ DESTINATION include/recast/DetourCrowd/Include)
+  install(DIRECTORY DetourTileCache/Include/ DESTINATION include/recast/DetourTileCache/Include)
+  install(DIRECTORY Recast/Include/ DESTINATION include/recast/Recast/Include)
 endif()

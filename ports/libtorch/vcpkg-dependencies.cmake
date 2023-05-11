@@ -160,7 +160,7 @@ endif()
  
 if(USE_ZSTD)
   find_package(zstd CONFIG REQUIRED) # zstd::libzstd_static
-  list(APPEND Caffe2_DEPENDENCY_LIBS zstd::libzstd_static)
+  list(APPEND Caffe2_DEPENDENCY_LIBS $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
 endif()
 
 if(USE_SYSTEM_ONNX)

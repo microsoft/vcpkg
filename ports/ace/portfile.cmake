@@ -10,14 +10,14 @@ if("tao" IN_LIST FEATURES)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE%2BTAO-src-${VERSION}.tar.gz"
         FILENAME "ACE-TAO-${VERSION}.tar.gz"
-        SHA512 7210091f0512fa9c7ba2ea9e3f805a2ba0aab4d848a8e9e5651a824dcac65ddd50b95c98f4da86900487fa0a79aede126d021f4eb109f224224fc88a58133f79
+        SHA512 a40a4761d396f1e7dc96287075810a3d874794f56057cf1f18b2bd27fbb89e024c2926890fd0a8efe825c31865c382b91e90477d78cba64877b93ba9909b7da2
     )
 else()
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
         FILENAME "ACE-src-${VERSION}.tar.gz"
-        SHA512 6e8b63ee8fa691656544a7a9e5887b499a8791f25766a8081df1d64e911f667a95fed26c1eb6355f6ce1233694f8ef11c1a986ca16a686e21fb1e375035a29ed
+        SHA512 716b27e347e013b866fa08f7ab182c60faf108e8000089b90717db86d6dd92d8c7e776d4850be27c5f50c8e31543f573ce19466efcd9b4b7bc8836eec5447860
     )
 endif()
 
@@ -64,12 +64,6 @@ list(JOIN ACE_FEATURE_LIST "," ACE_FEATURES)
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_PATH}")
-
-if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    set(MSBUILD_PLATFORM "Win32")
-else ()
-    set(MSBUILD_PLATFORM "${TRIPLET_SYSTEM_ARCH}")
-endif()
 
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
@@ -142,7 +136,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH ${PROJECT_SUBPATH}
     LICENSE_SUBPATH COPYING
-    PLATFORM ${MSBUILD_PLATFORM}
     SKIP_CLEAN
   )
 
@@ -285,7 +278,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
       SOURCE_PATH "${SOURCE_PATH}"
       PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
       LICENSE_SUBPATH COPYING
-      PLATFORM ${MSBUILD_PLATFORM}
       SKIP_CLEAN
     )
 

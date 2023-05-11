@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS https://oligarchy.co.uk/xapian/1.4.21/xapian-core-1.4.21.tar.xz
-    FILENAME xapian-core-1.4.21.tar.xz
-    SHA512 4071791daf47f5ae77f32f358c6020fcfa9aa81c15c8da25489b055eef30383695e449ab1cb73670f2f5db2b2a5f78056da0e8eea89d83aaad91dfe340a6b13a
+    URLS https://oligarchy.co.uk/xapian/1.4.22/xapian-core-1.4.22.tar.xz
+    FILENAME xapian-core-1.4.22.tar.xz
+    SHA512 60d66adbacbd59622d25e392060984bd1dc6c870f9031765f54cb335fb29f72f6d006d27af82a50c8da2cfbebd08dac4503a8afa8ad51bc4e6fa9cb367a59d29
 )
 
 vcpkg_extract_source_archive(
@@ -12,11 +12,10 @@ vcpkg_extract_source_archive(
 if(WIN32)
     vcpkg_replace_string("${SOURCE_PATH}/configure.ac" "z zlib zdll" "z zlib zdll zlibd")
 
-    # xapian does not support debug lib on Windows
-    # if use `set(VCPKG_BUILD_TYPE release)` ，the vcpkg post check can not passed，
-    # it will throw exception "Mismatching number of debug and release binaries. Found 0 for debug but 1 for release."
-    # that means the `set(VCPKG_BUILD_TYPE release)` can not be used in the WIN32 environment.
-    if(VCPKG_BUILD_TYPE STREQUAL "release")
+    if(MSVC)
+        # xapian.h has _DEBUG macro detection which will make the vcpkg check fail,replace #error with #warning 
+        vcpkg_replace_string("${SOURCE_PATH}/include/xapian/version_h.cc" "#error" "#warning")
+
         set(OPTIONS "CXXFLAGS=-EHsc")
     endif()
 endif()
