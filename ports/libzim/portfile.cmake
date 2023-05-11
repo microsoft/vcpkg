@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         cross-builds.diff
+        dllexport.diff
         disable-gtest.diff
 )
 
@@ -13,10 +14,6 @@ set(EXTRA_OPTIONS "")
 
 if(NOT "xapian" IN_LIST FEATURES)
     list(APPEND EXTRA_OPTIONS "-Dwith_xapian=false")
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND EXTRA_OPTIONS "-Dstatic-linkage=true")
 endif()
 
 vcpkg_configure_meson(
