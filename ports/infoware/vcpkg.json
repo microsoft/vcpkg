@@ -5,6 +5,7 @@
   "description": "C++ Library for pulling system and hardware information, without hitting the command line.",
   "homepage": "https://github.com/ThePhD/infoware",
   "license": "CC0-1.0",
+  "supports": "!android & !uwp & !(windows & arm)",
   "dependencies": [
     {
       "name": "infoware",
