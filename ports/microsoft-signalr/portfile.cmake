@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         find-msgpack.patch
-        find-jsoncpp.patch
 )
 
 vcpkg_check_features(
@@ -26,6 +25,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         ${FEATURE_OPTIONS}
         -DWALL=OFF
+        -DJSONCPP_LIB="JsonCpp::JsonCpp"
 )
 
 vcpkg_cmake_install()
