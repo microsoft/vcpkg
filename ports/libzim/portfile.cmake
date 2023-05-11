@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openzim/libzim
-    REF ${VERSION}
+    REF "${VERSION}"
     SHA512 4554a9237f5167f6f94aad76ef0e847e949c47c6ee2a89bbd6e587da3b3a3e2d0a8b2d03f7a0fbde0e0dc96fb61bf8c115b3ef3cbd7eff5e880f152bee9b29f0
     HEAD_REF main
     PATCHES
-        0001-build-share-library.patch
+        cross-builds.diff
         disable-gtest.diff
 )
 
@@ -15,9 +15,7 @@ if(NOT "xapian" IN_LIST FEATURES)
     list(APPEND EXTRA_OPTIONS "-Dwith_xapian=false")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    list(APPEND EXTRA_OPTIONS "-Dstatic-linkage=false")
-else()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND EXTRA_OPTIONS "-Dstatic-linkage=true")
 endif()
 
@@ -28,7 +26,7 @@ vcpkg_configure_meson(
       ${EXTRA_OPTIONS}
 )
 
-vcpkg_install_meson(ADD_BIN_TO_PATH)
+vcpkg_install_meson()
 
 vcpkg_copy_pdbs()
 

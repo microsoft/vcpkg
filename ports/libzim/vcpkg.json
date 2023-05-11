@@ -16,10 +16,12 @@
     },
     "zstd"
   ],
+  "default-features": [
+    "xapian"
+  ],
   "features": {
     "xapian": {
       "description": "Enable xapian support",
-      "supports": "!(windows & !mingw)",
       "dependencies": [
         "xapian"
       ]
