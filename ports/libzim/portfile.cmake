@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         0001-build-share-library.patch
+        disable-gtest.diff
 )
 
 set(EXTRA_OPTIONS "")
