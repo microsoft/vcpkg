@@ -1,20 +1,28 @@
 find_program(HDIUTIL NAMES hdiutil REQUIRED)
 set(dmg_path "NOTFOUND" CACHE FILEPATH "Where to find the DMG")
-set(mount_point "mount-intel-mkl" CACHE FILEPATH "Where to mount the DMG")
 set(output_dir "output_dir" CACHE FILEPATH "Where to put the packages")
 
 if(NOT EXISTS "${dmg_path}")
     message(FATAL_ERROR "'dmg_path' (${dmg_path}) does not exist.")
-endif()
-if(NOT IS_DIRECTORY "${mount_point}")
-    message(FATAL_ERROR "'mount_point' (${mount_point}) is not a directory.")
 endif()
 if(NOT IS_DIRECTORY "${output_dir}")
     message(FATAL_ERROR "'output_dir' (${output_dir}) is not a directory.")
 endif()
 
 execute_process(
-    COMMAND "${HDIUTIL}" attach "${dmg_path}" -mountpoint "${mount_point}"
+    COMMAND mktemp -d
+    RESULT_VARIABLE mktemp_result
+    OUTPUT_VARIABLE mount_point
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+if(NOT mktemp_result STREQUAL "0")
+    message(FATAL_ERROR "mktemp -d failed: ${mktemp_result}")
+elseif(NOT IS_DIRECTORY "${mount_point}")
+    message(FATAL_ERROR "'mount_point' (${mount_point}) is not a directory.")
+endif()
+
+execute_process(
+    COMMAND "${HDIUTIL}" attach "${dmg_path}" -mountpoint "${mount_point}" -readonly
     RESULT_VARIABLE mount_result
 )
 if(mount_result STREQUAL "0")
@@ -37,9 +45,9 @@ execute_process(
 )
 
 if(NOT mount_result STREQUAL "0")
-    message(FATAL_ERROR "Mounting ${dmg_path} failed.")
+    message(FATAL_ERROR "Mounting ${dmg_path} failed: ${mount_result}")
 elseif(NOT copy_result STREQUAL "0")
-    message(FATAL_ERROR "Coyping packages failed.")
+    message(FATAL_ERROR "Coyping packages failed: ${copy_result}")
 elseif(NOT unmount_result STREQUAL "0")
-    message(FATAL_ERROR "Unounting ${dmg_path} failed.")
+    message(FATAL_ERROR "Unounting ${dmg_path} failed: ${unmount_result}")
 endif()

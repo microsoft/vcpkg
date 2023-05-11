@@ -149,12 +149,10 @@ else()
       file(RENAME "${extract_0_dir}/l_onemkl_p_2023.0.0.25398_offline/packages" "${extract_0_dir}/packages")
     elseif(VCPKG_TARGET_IS_OSX)
       find_program(HDIUTIL NAMES hdiutil REQUIRED)
-      file(MAKE_DIRECTORY "${extract_0_dir}/mount-intel-mkl")
       file(MAKE_DIRECTORY "${extract_0_dir}/packages")
       message(STATUS "... Don't interrupt.")
       vcpkg_execute_required_process(
           COMMAND "${CMAKE_COMMAND}" "-Ddmg_path=${installer_path}"
-                                     "-Dmount_point=${extract_0_dir}/mount-intel-mkl"
                                      "-Doutput_dir=${extract_0_dir}/packages"
                                      "-DHDIUTIL=${HDIUTIL}"
                                      -P "${CMAKE_CURRENT_LIST_DIR}/copy-from-dmg.cmake"
