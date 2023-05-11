@@ -46,13 +46,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Modules)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES proxy AUTO_CLEAN)
-endif()
+vcpkg_copy_tools(TOOL_NAMES proxy AUTO_CLEAN)
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
           "${CMAKE_CURRENT_LIST_DIR}/usage"
           DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
