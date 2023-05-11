@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 b87c94e8bc81781c1cfb4292f1fe3ce046a5f192a25c02104f454b533349c1c0ed965570bd749b496bb316ccb89ae51c5e7461ffa06055e71dac659fbde79456
     HEAD_REF main
-    PATCHES find-msgpack.patch
+    PATCHES
+        find-msgpack.patch
+        find-jsoncpp.patch
 )
 
 vcpkg_check_features(

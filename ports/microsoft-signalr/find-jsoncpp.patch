@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4562873..159c861 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,12 +34,12 @@ if(USE_CPPRESTSDK)
+   set(CPPREST_LIB "cpprestsdk::cpprest")
+ endif()
+ 
+-find_package(jsoncpp REQUIRED)
++find_package(jsoncpp CONFIG REQUIRED)
+ # jsoncpp has different target names depending on whether it
+ # was built as a shared or static library. We make this override-able
+ # so we can be resilient to the changes between versions.
+-if(WIN32)
+-set(JSONCPP_LIB "jsoncpp_lib" CACHE STRING "jsoncpp target name")
++if(1)
++set(JSONCPP_LIB "JsonCpp::JsonCpp" CACHE STRING "jsoncpp target name")
+ else()
+ set(JSONCPP_LIB "jsoncpp_static" CACHE STRING "jsoncpp target name")
+ endif()
+diff --git a/src/signalrclient/microsoft-signalr-config.in.cmake b/src/signalrclient/microsoft-signalr-config.in.cmake
+index 09a7d56..4063efd 100644
+--- a/src/signalrclient/microsoft-signalr-config.in.cmake
++++ b/src/signalrclient/microsoft-signalr-config.in.cmake
+@@ -4,7 +4,7 @@ if(@USE_CPPRESTSDK@)
+   find_dependency(cpprestsdk)
+ endif()
+ 
+-find_dependency(jsoncpp)
++find_dependency(jsoncpp CONFIG)
+ 
+ if(@USE_MSGPACK@)
+   find_dependency(msgpack-cxx CONFIG)
