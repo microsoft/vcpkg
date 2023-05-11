@@ -1892,6 +1892,10 @@
       "baseline": "67",
       "port-version": 3
     },
+    "csprng": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "ctbignum": {
       "baseline": "2019-08-02",
       "port-version": 3
