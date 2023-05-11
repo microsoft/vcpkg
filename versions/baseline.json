@@ -2453,7 +2453,7 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2022.12.19.00",
+      "baseline": "2023.05.08.00",
       "port-version": 0
     },
     "font-chef": {
