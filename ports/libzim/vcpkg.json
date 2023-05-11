@@ -7,7 +7,6 @@
   "license": "GPL-2.0-or-later",
   "supports": "!android",
   "dependencies": [
-    "gtest",
     "icu",
     "liblzma",
     {
@@ -15,9 +14,6 @@
       "host": true
     },
     "zstd"
-  ],
-  "default-features": [
-    "xapian"
   ],
   "features": {
     "xapian": {
