@@ -12,10 +12,20 @@ vcpkg_extract_source_archive(
         msvc-no-debug.diff
 )
 
+set(OPTIONS "")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    list(APPEND OPTIONS
+        ac_cv_have_decl___popcnt=no
+        ac_cv_have_decl___popcnt64=no
+    )
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     USE_WRAPPERS
+    OPTIONS
+        ${OPTIONS}
 )
 
 vcpkg_install_make()
