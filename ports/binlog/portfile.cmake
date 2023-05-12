@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DBINLOG_BUILD_EXAMPLES=OFF
         -DBINLOG_BUILD_UNIT_TESTS=OFF
         -DBINLOG_BUILD_INTEGRATION_TESTS=OFF
+        -Dbenchmark_FOUND=OFF
 )
 
 vcpkg_cmake_install()
