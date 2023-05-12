@@ -1,0 +1,93 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8143963..784ac50 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -157,7 +157,7 @@ if(LIBIGL_INSTALL)
+     set(version_config_file "${CMAKE_CURRENT_BINARY_DIR}/LibiglConfigVersion.cmake")
+     set(export_dest_dir "${CMAKE_INSTALL_LIBDIR}/cmake/igl")
+ 
+-    foreach(suffix IN ITEMS "") #"_restricted" "_copyleft")
++    foreach(suffix IN ITEMS "" "_copyleft") #  "_restricted"
+         install(EXPORT LibiglTargets${suffix}
+             DESTINATION ${export_dest_dir}
+             NAMESPACE igl${suffix}::
+diff --git a/cmake/igl/modules/copyleft/cgal.cmake b/cmake/igl/modules/copyleft/cgal.cmake
+index 7ee7d84..d434cf3 100644
+--- a/cmake/igl/modules/copyleft/cgal.cmake
++++ b/cmake/igl/modules/copyleft/cgal.cmake
+@@ -31,3 +31,5 @@ igl_add_test(igl_copyleft_cgal ${SRC_FILES})
+ if(TARGET test_igl_copyleft_cgal)
+     igl_copy_dll(test_igl_copyleft_cgal)
+ endif()
++
++igl_install(igl_copyleft_cgal ${INC_FILES} ${SRC_FILES})
+diff --git a/cmake/igl/modules/copyleft/core.cmake b/cmake/igl/modules/copyleft/core.cmake
+index 8d03a90..aff8241 100644
+--- a/cmake/igl/modules/copyleft/core.cmake
++++ b/cmake/igl/modules/copyleft/core.cmake
+@@ -17,3 +17,5 @@ igl_target_sources(igl_copyleft_core ${INC_FILES} ${SRC_FILES})
+ target_link_libraries(igl_copyleft_core ${IGL_SCOPE}
+     igl::core
+ )
++
++igl_install(igl_copyleft_core ${INC_FILES} ${SRC_FILES})
+diff --git a/cmake/igl/modules/embree.cmake b/cmake/igl/modules/embree.cmake
+index de85066..bcc9992 100644
+--- a/cmake/igl/modules/embree.cmake
++++ b/cmake/igl/modules/embree.cmake
+@@ -23,3 +23,5 @@ target_link_libraries(igl_embree ${IGL_SCOPE}
+ # 5. Unit tests
+ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/tests/include/igl/embree/*.cpp")
+ igl_add_test(igl_embree ${SRC_FILES})
++
++igl_install(igl_embree ${INC_FILES} ${SRC_FILES})
+diff --git a/cmake/igl/modules/glfw.cmake b/cmake/igl/modules/glfw.cmake
+index f42d22a..e9930d8 100644
+--- a/cmake/igl/modules/glfw.cmake
++++ b/cmake/igl/modules/glfw.cmake
+@@ -21,3 +21,5 @@ target_link_libraries(igl_glfw ${IGL_SCOPE}
+     igl::opengl
+     $<TARGET_NAME:glfw>
+ )
++
++igl_install(igl_glfw ${INC_FILES} ${SRC_FILES})
+diff --git a/cmake/igl/modules/imgui.cmake b/cmake/igl/modules/imgui.cmake
+index f331854..7ff9738 100644
+--- a/cmake/igl/modules/imgui.cmake
++++ b/cmake/igl/modules/imgui.cmake
+@@ -23,3 +23,5 @@ target_link_libraries(igl_imgui ${IGL_SCOPE}
+     imgui::imgui
+     imguizmo::imguizmo
+ )
++
++igl_install(igl_imgui ${INC_FILES} ${SRC_FILES})
+diff --git a/cmake/igl/modules/opengl.cmake b/cmake/igl/modules/opengl.cmake
+index dfadb38..185494b 100644
+--- a/cmake/igl/modules/opengl.cmake
++++ b/cmake/igl/modules/opengl.cmake
+@@ -22,3 +22,5 @@ target_link_libraries(igl_opengl ${IGL_SCOPE}
+     # Link against OpenGL::OpenGL if available, or fallback to OpenGL::GL
+     $<IF:$<TARGET_EXISTS:OpenGL::OpenGL>,OpenGL::OpenGL,OpenGL::GL>
+ )
++
++igl_install(igl_opengl ${INC_FILES} ${SRC_FILES})
+diff --git a/cmake/igl/modules/png.cmake b/cmake/igl/modules/png.cmake
+index 8d8decc..293da91 100644
+--- a/cmake/igl/modules/png.cmake
++++ b/cmake/igl/modules/png.cmake
+@@ -21,3 +21,5 @@ target_link_libraries(igl_png ${IGL_SCOPE}
+     igl::opengl
+     stb::stb
+ )
++
++igl_install(igl_png ${INC_FILES} ${SRC_FILES})
+diff --git a/cmake/igl/modules/xml.cmake b/cmake/igl/modules/xml.cmake
+index 31ab979..815ea62 100644
+--- a/cmake/igl/modules/xml.cmake
++++ b/cmake/igl/modules/xml.cmake
+@@ -19,3 +19,5 @@ target_link_libraries(igl_xml ${IGL_SCOPE}
+     igl::core
+     tinyxml2::tinyxml2
+ )
++
++igl_install(igl_xml ${INC_FILES} ${SRC_FILES})

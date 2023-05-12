@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         dependencies.patch
         upstream_fixes.patch
+        install-extra-targets.patch
 )
 file(REMOVE
     "${SOURCE_PATH}/cmake/find/FindGMP.cmake"
@@ -65,4 +66,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/igl)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.GPL")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.MPL2" "${SOURCE_PATH}/LICENSE.GPL")
