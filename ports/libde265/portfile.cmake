@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 aa744c521fb15e68940956f70997ab969094aee1c129d404ee9a52f318248353bb8d53250b575b4040402645e44701086b78143f1e1122b61a925e9b6cd07566
     HEAD_REF master
     PATCHES
-        fix-libde265-headers.patch
         fix-interface-include.patch
 )
 
