@@ -11,16 +11,54 @@ index 8143963..784ac50 100644
          install(EXPORT LibiglTargets${suffix}
              DESTINATION ${export_dest_dir}
              NAMESPACE igl${suffix}::
+diff --git a/cmake/igl/libigl-config.cmake.in b/cmake/igl/libigl-config.cmake.in
+index 629896d..1bd0492 100644
+--- a/cmake/igl/libigl-config.cmake.in
++++ b/cmake/igl/libigl-config.cmake.in
+@@ -4,5 +4,16 @@ include(CMakeFindDependencyMacro)
+ find_dependency(Eigen3)
+ find_dependency(Threads)
+ include("${CMAKE_CURRENT_LIST_DIR}/LibiglConfigTargets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/LibiglConfigTargets_copyleft.cmake" OPTIONAL)
++if(TARGET igl::igl_xml)
++  find_dependency(tinyxml2)
++endif()
++if(TARGET igl::igl_opengl)
++  find_dependency(OpenGL)
++  find_dependency(glad)
++endif()
++if(TARGET igl::igl_glfw)
++  find_dependency(glfw3)
++endif()
+ 
+ check_required_components(Libigl)
 diff --git a/cmake/igl/modules/copyleft/cgal.cmake b/cmake/igl/modules/copyleft/cgal.cmake
-index 7ee7d84..d434cf3 100644
+index 7ee7d84..d06c6ee 100644
 --- a/cmake/igl/modules/copyleft/cgal.cmake
 +++ b/cmake/igl/modules/copyleft/cgal.cmake
-@@ -31,3 +31,5 @@ igl_add_test(igl_copyleft_cgal ${SRC_FILES})
+@@ -9,7 +9,7 @@ target_include_directories(igl_copyleft_cgal ${IGL_SCOPE}
+ )
+ 
+ # 3. Target sources
+-file(GLOB INC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.h")
++file(GLOB INC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.h" "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.hpp")
+ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.cpp")
+ igl_target_sources(igl_copyleft_cgal ${INC_FILES} ${SRC_FILES})
+ 
+@@ -22,6 +22,8 @@ target_link_libraries(igl_copyleft_cgal ${IGL_SCOPE}
+     CGAL::CGAL
+ )
+ 
++igl_install(igl_copyleft_cgal ${INC_FILES} ${SRC_FILES})
++
+ # 5. Unit tests
+ file(GLOB SRC_FILES
+     "${libigl_SOURCE_DIR}/tests/include/igl/copyleft/boolean/*.cpp"
+@@ -31,3 +33,4 @@ igl_add_test(igl_copyleft_cgal ${SRC_FILES})
  if(TARGET test_igl_copyleft_cgal)
      igl_copy_dll(test_igl_copyleft_cgal)
  endif()
 +
-+igl_install(igl_copyleft_cgal ${INC_FILES} ${SRC_FILES})
 diff --git a/cmake/igl/modules/copyleft/core.cmake b/cmake/igl/modules/copyleft/core.cmake
 index 8d03a90..aff8241 100644
 --- a/cmake/igl/modules/copyleft/core.cmake
@@ -32,15 +70,19 @@ index 8d03a90..aff8241 100644
 +
 +igl_install(igl_copyleft_core ${INC_FILES} ${SRC_FILES})
 diff --git a/cmake/igl/modules/embree.cmake b/cmake/igl/modules/embree.cmake
-index de85066..bcc9992 100644
+index de85066..052fc76 100644
 --- a/cmake/igl/modules/embree.cmake
 +++ b/cmake/igl/modules/embree.cmake
-@@ -23,3 +23,5 @@ target_link_libraries(igl_embree ${IGL_SCOPE}
+@@ -20,6 +20,9 @@ target_link_libraries(igl_embree ${IGL_SCOPE}
+     $<TARGET_NAME:embree>
+ )
+ 
++igl_install(igl_embree ${INC_FILES} ${SRC_FILES})
++
  # 5. Unit tests
  file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/tests/include/igl/embree/*.cpp")
  igl_add_test(igl_embree ${SRC_FILES})
 +
-+igl_install(igl_embree ${INC_FILES} ${SRC_FILES})
 diff --git a/cmake/igl/modules/glfw.cmake b/cmake/igl/modules/glfw.cmake
 index f42d22a..e9930d8 100644
 --- a/cmake/igl/modules/glfw.cmake
