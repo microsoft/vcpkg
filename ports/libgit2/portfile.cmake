@@ -30,7 +30,9 @@ function(set_tls_backend VALUE)
 endfunction()
 
 if(UNIX)
-    list(APPEND GIT_OPTIONS "-DGIT_OPENSSL=1")  
+    if("openssl" IN_LIST FEATURES)
+        list(APPEND GIT_OPTIONS "-DGIT_OPENSSL=1")  
+    endif()
 endif()
 
 foreach(GIT2_FEATURE ${FEATURES})
