@@ -29,9 +29,7 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME "qt6advanceddocking" CONFIG_PATH "lib/cmak
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/qt6advanceddocking/qt6advanceddockingConfig.cmake"
 "include(CMakeFindDependencyMacro)"
 [[include(CMakeFindDependencyMacro)
-find_dependency(Qt6Core)
-find_dependency(Qt6Gui)
-find_dependency(Qt6Widgets)]])
+find_dependency(Qt6 COMPONENTS Core Gui Widgets)]])
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/license")
