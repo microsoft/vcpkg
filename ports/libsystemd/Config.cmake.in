@@ -1,4 +1,3 @@
-
 get_filename_component(_systemd_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
 get_filename_component(_systemd_root "${_systemd_root}" PATH)
 get_filename_component(_systemd_root "${_systemd_root}" PATH)
