@@ -1,8 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 580df83..b0d2553 100644
+index 580df83..ac89904 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -122,11 +122,17 @@ set_target_properties(infoware_pci_generator PROPERTIES CXX_STANDARD 14
+@@ -93,6 +93,8 @@ if(INFOWARE_PCI_IDS_PATH)
+ 		message(WARNING "The specified pci.ids file INFOWARE_PCI_IDS_PATH=${INFOWARE_PCI_IDS_PATH} doesn't seem to exist.")
+ 	endif()
+ 	set(infoware_pci_ids_file "${INFOWARE_PCI_IDS_PATH}")
++elseif(HOST_PCI_DATA)
++	# git unused
+ elseif(NOT Git_FOUND)
+ 	message(SEND_ERROR "Couldn't find a usable git executable in the environment, and the CMake variable INFOWARE_PCI_IDS_PATH is empty.\n${infoware_pci_ids_error}")
+ else()
+@@ -122,11 +124,17 @@ set_target_properties(infoware_pci_generator PROPERTIES CXX_STANDARD 14
  set(INFOWARE_PCI_DATA_HPP pci_data.hpp)
  set(INFOWARE_PCI_DATA_GEN "infoware_generated/${INFOWARE_PCI_DATA_HPP}")
  

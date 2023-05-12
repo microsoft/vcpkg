@@ -19,9 +19,10 @@ vcpkg_check_features(
 
 if(VCPKG_CROSSCOMPILING)
     list(APPEND FEATURE_OPTIONS "-DHOST_PCI_DATA=${CURRENT_HOST_INSTALLED_DIR}/share/${PORT}/pci_data.hpp")
+else()
+    acquire_pciids(pciids_path)
+    list(APPEND FEATURE_OPTIONS "-DINFOWARE_PCI_IDS_PATH=${pciids_path}")
 endif()
-
-vcpkg_find_acquire_program(GIT)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -29,7 +30,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DINFOWARE_EXAMPLES=OFF
         -DINFOWARE_TESTS=OFF
-        "-DGIT_EXECUTABLE=${GIT}"
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=1
 )
 
 vcpkg_cmake_install()
