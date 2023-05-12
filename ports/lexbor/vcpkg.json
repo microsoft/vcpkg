@@ -3,6 +3,7 @@
   "version": "2.2.0",
   "description": "Lexbor is development of an open source HTML Renderer library.",
   "homepage": "https://github.com/lexbor/lexbor",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
