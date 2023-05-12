@@ -92,5 +92,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_ml"
     "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_data"
     "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_operators_ml"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/reference/ops"
     "${CURRENT_PACKAGES_DIR}/include/onnx/reference"
 )
