@@ -29,10 +29,8 @@ function(set_tls_backend VALUE)
     set(USE_HTTPS ${VALUE} PARENT_SCOPE)
 endfunction()
 
-if(UNIX)
-    if("openssl" IN_LIST FEATURES)
-        list(APPEND GIT_OPTIONS "-DGIT_OPENSSL=1")  
-    endif()
+if("openssl" IN_LIST FEATURES)
+    list(APPEND GIT_OPTIONS "-DGIT_OPENSSL=1")  
 endif()
 
 foreach(GIT2_FEATURE ${FEATURES})
