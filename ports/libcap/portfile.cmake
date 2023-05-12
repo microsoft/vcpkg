@@ -3,13 +3,11 @@ vcpkg_from_git(
   URL git://git.kernel.org/pub/scm/libs/libcap/libcap.git
   FETCH_REF "libcap-${VERSION}"
   REF 3c7dda330bd9a154bb5b878d31fd591e4951fe17
-  PATCHES
-    configure.patch
-    cross-compile.patch
 )
 
 # SKIP_CONFIGURE is broken https://github.com/microsoft/vcpkg/issues/14389
 # so we use patch to create empty configure executable
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_configure_make(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -23,24 +21,26 @@ vcpkg_build_make(SUBPATH libcap
     CC=gcc # use host architecture to generate cap_names.h
 )
 
+list(APPEND libcap_OPTIONS "prefix=${CURRENT_INSTALLED_DIR}" "CC=$ENV{CC}" "AR=$ENV{AR}" "RANLIB=$ENV{RANLIB}")
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   vcpkg_build_make(SUBPATH libcap
     BUILD_TARGET libcap.a
     OPTIONS
-      prefix=${CURRENT_INSTALLED_DIR}
+      ${libcap_OPTIONS}
   )
 else()
   vcpkg_build_make(SUBPATH libcap
     BUILD_TARGET libcap.so
     OPTIONS
-      prefix=${CURRENT_INSTALLED_DIR}
+      ${libcap_OPTIONS}
   )
 endif()
 
 vcpkg_build_make(SUBPATH libcap
   BUILD_TARGET libcap.pc
   OPTIONS
-    prefix=${CURRENT_INSTALLED_DIR}
+    ${libcap_OPTIONS}
 )
 
 file(INSTALL "${SOURCE_PATH}/libcap/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
