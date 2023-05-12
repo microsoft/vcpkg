@@ -5,7 +5,7 @@
   "description": "libproxy is a library that provides automatic proxy configuration management.",
   "homepage": "https://github.com/libproxy/libproxy",
   "license": "LGPL-2.1-only",
-  "supports": "!uwp",
+  "supports": "!(uwp | android)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
