@@ -1,5 +1,5 @@
 The package libsolv provides CMake targets:
 
-    find_package(libsolv REQUIRED)
+    find_package(LibSolv REQUIRED)
     include_directories(${LibSolv_INCLUDE_DIRS})
     target_link_libraries(main PRIVATE ${LibSolv_LIBRARIES})
