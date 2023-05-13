@@ -83,61 +83,53 @@ macro(z_vcpkg_configure_make_common_definitions)
     endif()
 endmacro()
 
-macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
-    string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
-    string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CXXPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
-    list(JOIN CXXPPFLAGS_${flag_suffix} "|" CXXREGEX)
-    if(CXXREGEX)
-        list(FILTER CPPFLAGS_${flag_suffix} INCLUDE REGEX "(${CXXREGEX})")
-    else()
-        set(CPPFLAGS_${flag_suffix})
-    endif()
-    list(JOIN CPPFLAGS_${flag_suffix} "|" CPPREGEX)
-    list(JOIN CPPFLAGS_${flag_suffix} " " CPPFLAGS_${flag_suffix})
-    set(CPPFLAGS_${flag_suffix} "${CPPFLAGS_${flag_suffix}}")
-    if(CPPREGEX)
-        string(REGEX REPLACE "(${CPPREGEX})" "" CFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
-        string(REGEX REPLACE "(${CPPREGEX})" "" CXXFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
-    else()
-        set(CFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
-        set(CXXFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
-    endif()
-    string(REGEX REPLACE " +" " " CPPFLAGS_${flag_suffix} "${CPPFLAGS_${flag_suffix}}")
-    string(REGEX REPLACE " +" " " CFLAGS_${flag_suffix} "${CFLAGS_${flag_suffix}}")
-    string(REGEX REPLACE " +" " " CXXFLAGS_${flag_suffix} "${CXXFLAGS_${flag_suffix}}")
-    string(STRIP "${CPPFLAGS_${flag_suffix}}" CPPFLAGS_${flag_suffix})
-    string(STRIP "${CFLAGS_${flag_suffix}}" CFLAGS_${flag_suffix})
-    string(STRIP "${CXXFLAGS_${flag_suffix}}" CXXFLAGS_${flag_suffix})
-    # libtool tries to filter CFLAGS passed to the link stage via a whitelist.
-    # that approach is flawed since it fails to pass flags unknown to libtool
-    # but required for linking to the link stage (e.g. -fsanitize=<x>).
-    # libtool has an -R option so we need to guard against -RTC by using -Xcompiler
-    # while configuring there might be a lot of unknown compiler option warnings due to that
-    # just ignore them.
-    if(VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" OR VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-      separate_arguments(CFLAGS_LIST NATIVE_COMMAND "${CFLAGS_${flag_suffix}}")
-      list(JOIN CFLAGS_LIST " -Xcompiler " CFLAGS_${var_suffix})
-      string(PREPEND CFLAGS_${var_suffix} "-Xcompiler ")
-    endif()
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" OR VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-      separate_arguments(CXXFLAGS_LIST NATIVE_COMMAND "${CXXFLAGS_${flag_suffix}}")
-      list(JOIN CXXFLAGS_LIST " -Xcompiler " CXXFLAGS_${var_suffix})
-      string(PREPEND CXXFLAGS_${var_suffix} "-Xcompiler ")
-    endif()
-    debug_message("CPPFLAGS_${flag_suffix}: ${CPPFLAGS_${flag_suffix}}")
-    debug_message("CFLAGS_${flag_suffix}: ${CFLAGS_${flag_suffix}}")
-    debug_message("CXXFLAGS_${flag_suffix}: ${CXXFLAGS_${flag_suffix}}")
-endmacro()
+# Initializes well-known and auxiliary variables for flags
+# - CCLINKER_FLAGS_<CONFIG>: LDFLAGS which must be included in CC/CXX to sidestep libtool whitelist
+# - CPPFLAGS_<CONFIG>:       preprocessor flags common to C and CXX
+# - CFLAGS_<CONFIG>
+# - CXXFLAGS_<CONFIG>
+# - LDFLAGS_<CONFIG>
+# - ARFLAGS_<CONFIG>
+# - LINK_ENV_${var_suffix}
+# Prerequisite: VCPKG_DETECTED_CMAKE_... vars loaded
+function(z_vcpkg_configure_make_process_flags var_suffix)
+    set(c_flags "${VCPKG_DETECTED_CMAKE_C_FLAGS_${var_suffix}}")
+    set(cxx_flags "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${var_suffix}}")
 
-macro(z_vcpkg_setup_make_linker_flags_vars var_suffix)
-    set(arflags "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
-    if(arflags)
-        # ARFLAGS need to know the command for creating an archive (Maybe needs user customization?)
-        # or extract it from CMake via CMAKE_${lang}_ARCHIVE_CREATE ?
-        # or from CMAKE_${lang}_${rule} with rule being one of CREATE_SHARED_MODULE CREATE_SHARED_LIBRARY LINK_EXECUTABLE
-        string(PREPEND arflags "cr ")
+    # Filter common cpp_flags out of c_flags and cxx_flags
+    string(REGEX MATCHALL "(^-| -)(D|isysroot|-sysroot=|isystem|m?[Aa][Rr][Cc][Hh]|-target=|target) ?[^ ]+" cxxpp_flags_list "${cxx_flags}")
+    if(cxxpp_flags_list STREQUAL "")
+        set(cpp_flags "")
+    else()
+        list(JOIN cxxpp_flags_list "|" cxxpp_regex)
+        string(REGEX MATCHALL "(^-| -)(D|isysroot|-sysroot=|isystem|m?[Aa][Rr][Cc][Hh]|-target=|target) ?[^ ]+" cpp_flags_list "${c_flags}")
+        list(FILTER cpp_flags_list INCLUDE REGEX "${cxxpp_regex}")
+        list(JOIN cpp_flags_list "|" cpp_regex)
+        if(NOT cpp_regex STREQUAL "")
+            string(REGEX REPLACE "${cpp_regex}" "" c_flags "${c_flags}")
+            string(REGEX REPLACE "${cpp_regex}" "" cxx_flags "${cxx_flags}")
+        endif()
+        list(JOIN cpp_flags_list " " cpp_flags)
     endif()
-    string(STRIP "${arflags}" ARFLAGS_${var_suffix})
+
+    # libtool tries to filter CFLAGS passed to the link stage via a whitelist.
+    # This approach is flawed since it fails to pass flags unknown to libtool
+    # but required for linking to the link stage (e.g. -fsanitize=<x>).
+    # libtool has an -R option so we need to guard against -RTC by using -Xcompiler.
+    # While configuring there might be a lot of unknown compiler option warnings
+    # due to that; just ignore them.
+    set(compiler_flag_escape "")
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" OR VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+        set(compiler_flag_escape "-Xcompiler ")
+    endif()
+    if(compiler_flag_escape)
+        separate_arguments(c_flags_list NATIVE_COMMAND "${c_flags}")
+        list(TRANSFORM c_flags_list PREPEND "${compiler_flag_escape}")
+        list(JOIN c_flags_list " " c_flags)
+        separate_arguments(cxx_flags_list NATIVE_COMMAND "${cxx_flags}")
+        list(TRANSFORM cxx_flags_list PREPEND "${compiler_flag_escape}")
+        list(JOIN cxx_flags_list " " cxx_flags)
+    endif()
 
     # Could use a future VCPKG_DETECTED_CMAKE_LIBRARY_PATH_FLAG
     set(library_path_flag "-L")
@@ -154,19 +146,14 @@ macro(z_vcpkg_setup_make_linker_flags_vars var_suffix)
             set(linker_flag_escape "-Xlinker -Xlinker -Xlinker ")
         endif()
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-            set(linker_flags "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
+            set(link_env "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
         else() # dynamic
-            set(linker_flags "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
-        endif()
-        if(DEFINED ENV{_LINK_})
-            set(LINK_ENV_${var_suffix} "$ENV{_LINK_} ${linker_flags}")
-        else()
-            set(LINK_ENV_${var_suffix} "${linker_flags}")
+            set(link_env "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
         endif()
     endif()
 
-    set(cclinker_flags "") # flags which must be passed with CC/CXX to avoid libtool quirks
-    set(ldflags "")        # flags which can be passed with LDFLAGS if escaped as needed
+    set(cclinker_flags "") # linker flags which must be passed with CC/CXX to avoid libtool quirks
+    set(ldflags "")        # linker flags which can be passed with LDFLAGS if escaped as needed
     separate_arguments(ldflags_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
     foreach(item IN LISTS ldflags_list)
         string(APPEND ldflags " ${linker_flag_escape}${item}")
@@ -180,9 +167,26 @@ macro(z_vcpkg_setup_make_linker_flags_vars var_suffix)
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
         string(PREPEND ldflags "${linker_flag_escape}${library_path_flag}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib ")
     endif()
-    string(STRIP "${cclinker_flags}" CCLINKER_FLAGS_${var_suffix})
-    string(STRIP "${ldflags}" LDFLAGS_${var_suffix})
-endmacro()
+
+    set(arflags "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
+    if(arflags)
+        # ARFLAGS need to know the command for creating an archive (Maybe needs user customization?)
+        # or extract it from CMake via CMAKE_${lang}_ARCHIVE_CREATE ?
+        # or from CMAKE_${lang}_${rule} with rule being one of CREATE_SHARED_MODULE CREATE_SHARED_LIBRARY LINK_EXECUTABLE
+        string(PREPEND arflags "cr ")
+    endif()
+
+    foreach(var IN ITEMS cclinker_flags cpp_flags c_flags cxx_flags ldflags arflags link_env)
+        string(STRIP "${${var}}" "${var}")
+    endforeach()
+    set(CCLINKER_FLAGS_${var_suffix} "${cclinker_flags}" PARENT_SCOPE)
+    set(CPPFLAGS_${var_suffix} "${cpp_flags}" PARENT_SCOPE)
+    set(CFLAGS_${var_suffix} "${c_flags}" PARENT_SCOPE)
+    set(CXXFLAGS_${var_suffix} "${cxx_flags}" PARENT_SCOPE)
+    set(LDFLAGS_${var_suffix} "${ldflags}" PARENT_SCOPE)
+    set(ARFLAGS_${var_suffix} "${arflags}" PARENT_SCOPE)
+    set(LINK_ENV_${var_suffix} "${link_env}" PARENT_SCOPE)
+endfunction()
 
 macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
     # Allows to overwrite settings in custom triplets via the environment on windows
@@ -734,18 +738,12 @@ function(vcpkg_configure_make)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT arg_NO_DEBUG)
-        set(var_suffix DEBUG)
-        list(APPEND all_buildtypes ${var_suffix})
-        z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${var_suffix})
-        z_vcpkg_setup_make_linker_flags_vars(${var_suffix})
-        unset(var_suffix)
+        list(APPEND all_buildtypes DEBUG)
+        z_vcpkg_configure_make_process_flags(DEBUG)
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(var_suffix RELEASE)
-        list(APPEND all_buildtypes ${var_suffix})
-        z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${var_suffix})
-        z_vcpkg_setup_make_linker_flags_vars(${var_suffix})
-        unset(var_suffix)
+        list(APPEND all_buildtypes RELEASE)
+        z_vcpkg_configure_make_process_flags(RELEASE)
     endif()
 
     foreach(var IN ITEMS arg_OPTIONS arg_OPTIONS_RELEASE arg_OPTIONS_DEBUG)

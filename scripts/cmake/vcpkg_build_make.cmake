@@ -84,8 +84,7 @@ function(vcpkg_build_make)
             set(working_directory "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_buildtype}/${arg_SUBPATH}")
             message(STATUS "Building ${TARGET_TRIPLET}-${short_buildtype}")
 
-            z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags("${cmake_buildtype}")
-            z_vcpkg_setup_make_linker_flags_vars("${cmake_buildtype}")
+            z_vcpkg_configure_make_process_flags("${cmake_buildtype}")
 
             # Setup environment
             set(ENV{CPPFLAGS} "${CPPFLAGS_${cmake_buildtype}}")
