@@ -165,18 +165,22 @@ macro(z_vcpkg_setup_make_linker_flags_vars var_suffix)
         endif()
     endif()
 
-    set(ldflags "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
-    if(linker_flag_escape)
-        separate_arguments(ldflags_list NATIVE_COMMAND "${ldflags}")
-        list(TRANSFORM ldflags_list PREPEND "${linker_flag_escape}")
-        list(JOIN ldflags_list " " ldflags)
-    endif()
+    set(cclinker_flags "") # flags which must be passed with CC/CXX to avoid libtool quirks
+    set(ldflags "")        # flags which can be passed with LDFLAGS if escaped as needed
+    separate_arguments(ldflags_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
+    foreach(item IN LISTS ldflags_list)
+        string(APPEND ldflags " ${linker_flag_escape}${item}")
+        if(item MATCHES "^--target=")
+            string(APPEND cclinker_flags " ${item}")
+        endif()
+    endforeach()
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
         string(PREPEND ldflags "${linker_flag_escape}${library_path_flag}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link ")
     endif()
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
         string(PREPEND ldflags "${linker_flag_escape}${library_path_flag}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib ")
     endif()
+    string(STRIP "${cclinker_flags}" CCLINKER_FLAGS_${var_suffix})
     string(STRIP "${ldflags}" LDFLAGS_${var_suffix})
 endmacro()
 
@@ -785,6 +789,14 @@ function(vcpkg_configure_make)
         if(ARFLAGS_${current_buildtype} AND NOT (arg_USE_WRAPPERS AND VCPKG_TARGET_IS_WINDOWS))
             # Target windows with wrappers enabled cannot forward ARFLAGS since it breaks the wrapper
             set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
+        endif()
+
+        if(CCLINKER_FLAGS_${current_buildtype})
+            # libtool removes some flags which are needed for configure tests.
+            set(ENV{CC} "$ENV{CC} ${CCLINKER_FLAGS_${current_buildtype}}")
+            set(ENV{CXX} "$ENV{CXX} ${CCLINKER_FLAGS_${current_buildtype}}")
+            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} ${CCLINKER_FLAGS_${current_buildtype}}")
+            set(ENV{CXX_FOR_BUILD} "$ENV{CXX_FOR_BUILD} ${CCLINKER_FLAGS_${current_buildtype}}")
         endif()
 
         if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
