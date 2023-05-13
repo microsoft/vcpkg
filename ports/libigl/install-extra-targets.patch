@@ -83,6 +83,21 @@ index 8d03a90..aff8241 100644
  )
 +
 +igl_install(igl_copyleft_core ${INC_FILES} ${SRC_FILES})
+diff --git a/cmake/igl/modules/core.cmake b/cmake/igl/modules/core.cmake
+index 137d30b..597c26b 100644
+--- a/cmake/igl/modules/core.cmake
++++ b/cmake/igl/modules/core.cmake
+@@ -12,8 +12,8 @@ target_include_directories(igl_core ${IGL_SCOPE}
+ )
+ 
+ # 3. Target sources
+-file(GLOB INC_FILES "${libigl_SOURCE_DIR}/include/igl/*.h")
+-file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/*.cpp")
++file(GLOB INC_FILES "${libigl_SOURCE_DIR}/include/igl/*.h" "${libigl_SOURCE_DIR}/include/igl/*.hpp")
++file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/*.cpp" "${libigl_SOURCE_DIR}/include/igl/*.c")
+ igl_target_sources(igl_core ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Install target & headers
 diff --git a/cmake/igl/modules/embree.cmake b/cmake/igl/modules/embree.cmake
 index de85066..052fc76 100644
 --- a/cmake/igl/modules/embree.cmake
@@ -137,6 +152,16 @@ index 8d8decc..293da91 100644
  )
 +
 +igl_install(igl_png ${INC_FILES} ${SRC_FILES})
+diff --git a/cmake/igl/modules/predicates.cmake b/cmake/igl/modules/predicates.cmake
+index 8f52119..899f540 100644
+--- a/cmake/igl/modules/predicates.cmake
++++ b/cmake/igl/modules/predicates.cmake
+@@ -23,3 +23,5 @@ target_link_libraries(igl_predicates ${IGL_SCOPE}
+ # 5. Unit tests
+ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/tests/include/igl/predicates/*.cpp")
+ igl_add_test(igl_predicates ${SRC_FILES})
++
++igl_install(igl_predicates ${INC_FILES} ${SRC_FILES})
 diff --git a/cmake/igl/modules/xml.cmake b/cmake/igl/modules/xml.cmake
 index 31ab979..815ea62 100644
 --- a/cmake/igl/modules/xml.cmake
