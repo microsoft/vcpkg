@@ -1710,10 +1710,7 @@ x265:arm64-windows=fail
 x265:arm-uwp=fail
 x265:x64-android=fail
 x265:x64-uwp=fail
-xalan-c:x64-windows-static=fail
-xalan-c:arm64-windows=fail
 # No xorg-macros available on osx
-xapian:arm-neon-android=fail
 xbitmaps:arm-neon-android=fail
 xbitmaps:arm64-android=fail
 xbitmaps:x64-android=fail

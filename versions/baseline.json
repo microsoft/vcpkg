@@ -4838,7 +4838,7 @@
     },
     "libzim": {
       "baseline": "8.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libzip": {
       "baseline": "1.9.2",
@@ -8602,7 +8602,7 @@
     },
     "xapian": {
       "baseline": "1.4.22",
-      "port-version": 0
+      "port-version": 1
     },
     "xaudio2redist": {
       "baseline": "1.2.11",
