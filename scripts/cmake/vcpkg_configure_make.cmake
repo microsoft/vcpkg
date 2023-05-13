@@ -556,11 +556,11 @@ function(vcpkg_configure_make)
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     # Set configure paths
-    set(arg_OPTIONS_RELEASE ${arg_OPTIONS_RELEASE} "--prefix=${z_vcpkg_prefix_path}")
-    set(arg_OPTIONS_DEBUG ${arg_OPTIONS_DEBUG} "--prefix=${z_vcpkg_prefix_path}${path_suffix_DEBUG}")
+    vcpkg_list(APPEND arg_OPTIONS_RELEASE "--prefix=${z_vcpkg_prefix_path}")
+    vcpkg_list(APPEND arg_OPTIONS_DEBUG "--prefix=${z_vcpkg_prefix_path}${path_suffix_DEBUG}")
     if(NOT arg_NO_ADDITIONAL_PATHS)
         # ${prefix} has an extra backslash to prevent early expansion when calling `bash -c configure "..."`.
-        set(arg_OPTIONS_RELEASE ${arg_OPTIONS_RELEASE}
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE
                             # Important: These should all be relative to prefix!
                             "--bindir=\\\${prefix}/tools/${PORT}/bin"
                             "--sbindir=\\\${prefix}/tools/${PORT}/sbin"
@@ -569,7 +569,7 @@ function(vcpkg_configure_make)
                             "--mandir=\\\${prefix}/share/${PORT}"
                             "--docdir=\\\${prefix}/share/${PORT}"
                             "--datarootdir=\\\${prefix}/share/${PORT}")
-        set(arg_OPTIONS_DEBUG ${arg_OPTIONS_DEBUG}
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG
                             # Important: These should all be relative to prefix!
                             "--bindir=\\\${prefix}/../tools/${PORT}${path_suffix_DEBUG}/bin"
                             "--sbindir=\\\${prefix}/../tools/${PORT}${path_suffix_DEBUG}/sbin"
