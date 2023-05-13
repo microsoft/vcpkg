@@ -90,25 +90,8 @@ function(vcpkg_build_make)
             message(STATUS "Building ${TARGET_TRIPLET}${short_buildtype}")
 
             z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags("${cmake_buildtype}")
+            z_vcpkg_setup_make_linker_flags_vars("${cmake_buildtype}")
 
-            if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${cmake_buildtype}}")
-            else() # dynamic
-                set(LINKER_FLAGS_${cmake_buildtype} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${cmake_buildtype}}")
-            endif()            
-            set(LDFLAGS_${cmake_buildtype} "")
-            if(EXISTS "${Z_VCPKG_INSTALLED}${path_suffix}/lib")
-                string(APPEND LDFLAGS_${cmake_buildtype} " -L${Z_VCPKG_INSTALLED}${path_suffix}/lib")
-            endif()
-            if(EXISTS "${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link")
-                string(APPEND LDFLAGS_${cmake_buildtype} " -L${Z_VCPKG_INSTALLED}${path_suffix}/lib/manual-link")
-            endif()
-            if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
-                set(LINK_ENV_${cmake_buildtype} "$ENV{_LINK_} ${LINKER_FLAGS_${cmake_buildtype}}")
-            else()
-                string(APPEND LDFLAGS_${cmake_buildtype} " ${LINKER_FLAGS_${cmake_buildtype}}")
-            endif()
-            
             # Setup environment
             set(ENV{CPPFLAGS} "${CPPFLAGS_${cmake_buildtype}}")
             set(ENV{CFLAGS} "${CFLAGS_${cmake_buildtype}}")
