@@ -1,0 +1,12 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 3465a8f..2b57440 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -26,6 +26,7 @@ else()
+   target_link_libraries(using_parser_urdf INTERFACE
+     GzURDFDOM::GzURDFDOM)
+ endif()
++install(TARGETS using_parser_urdf EXPORT ${PROJECT_LIBRARY_TARGET_NAME} COMPONENT libraries)
+ 
+ if (BUILD_TESTING)
+   # Build this test file only if Gazebo Tools is installed.
