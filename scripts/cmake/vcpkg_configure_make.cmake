@@ -575,6 +575,8 @@ function(vcpkg_configure_make)
                             "--sbindir=\\\${prefix}/../tools/${PORT}${path_suffix_DEBUG}/sbin"
                             "--libdir=\\\${prefix}/lib" # On some Linux distributions lib64 is the default
                             "--includedir=\\\${prefix}/../include"
+                            "--mandir=\\\${prefix}/share/${PORT}"
+                            "--docdir=\\\${prefix}/share/${PORT}"
                             "--datarootdir=\\\${prefix}/share/${PORT}")
     endif()
     # Setup common options
