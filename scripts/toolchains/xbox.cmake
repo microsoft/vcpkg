@@ -24,6 +24,7 @@ endif()
 if (DEFINED ENV{GRDKLatest})
     cmake_path(SET _vcpkg_grdk "$ENV{GRDKLatest}")
 
+    list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_grdk}/gameKit/Include")
     include_directories(BEFORE SYSTEM "${_vcpkg_grdk}/gameKit/Include")
     cmake_path(CONVERT "${_vcpkg_grdk}/gameKit/Include" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
 
@@ -36,12 +37,14 @@ if (DEFINED ENV{GXDKLatest})
     cmake_path(SET _vcpkg_gxdk "$ENV{GXDKLatest}")
 
     if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
+        list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/Scarlett")
         include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/Scarlett")
         cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
 
         link_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett")
         cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Lib/amd64;${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
     elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+        list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/XboxOne")
         include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/XboxOne")
         cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/XboxOne" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
 
