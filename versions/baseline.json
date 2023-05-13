@@ -546,7 +546,7 @@
     },
     "binlog": {
       "baseline": "2021-04-16",
-      "port-version": 0
+      "port-version": 1
     },
     "binn": {
       "baseline": "3.0",
