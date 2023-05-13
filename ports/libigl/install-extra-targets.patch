@@ -12,23 +12,37 @@ index 8143963..784ac50 100644
              DESTINATION ${export_dest_dir}
              NAMESPACE igl${suffix}::
 diff --git a/cmake/igl/libigl-config.cmake.in b/cmake/igl/libigl-config.cmake.in
-index 629896d..1bd0492 100644
+index 629896d..4db4396 100644
 --- a/cmake/igl/libigl-config.cmake.in
 +++ b/cmake/igl/libigl-config.cmake.in
-@@ -4,5 +4,16 @@ include(CMakeFindDependencyMacro)
+@@ -4,5 +4,30 @@ include(CMakeFindDependencyMacro)
  find_dependency(Eigen3)
  find_dependency(Threads)
  include("${CMAKE_CURRENT_LIST_DIR}/LibiglConfigTargets.cmake")
-+include("${CMAKE_CURRENT_LIST_DIR}/LibiglConfigTargets_copyleft.cmake" OPTIONAL)
-+if(TARGET igl::igl_xml)
-+  find_dependency(tinyxml2)
++if(TARGET igl::igl_embree)
++  find_dependency(embree 3)
++endif()
++if(TARGET igl::igl_glfw)
++  find_dependency(glfw3)
++endif()
++if(TARGET igl::igl_imgui)
++  find_dependency(imgui)
++  find_dependency(imguizmo)
 +endif()
 +if(TARGET igl::igl_opengl)
 +  find_dependency(OpenGL)
 +  find_dependency(glad)
 +endif()
-+if(TARGET igl::igl_glfw)
-+  find_dependency(glfw3)
++if(TARGET igl::igl_png)
++  find_dependency(Stb)
++endif()
++if(TARGET igl::igl_xml)
++  find_dependency(tinyxml2)
++endif()
++
++include("${CMAKE_CURRENT_LIST_DIR}/LibiglConfigTargets_copyleft.cmake" OPTIONAL)
++if(TARGET igl_copyless::igl_copyless_cgal)
++  find_dependency(CGAL CONFIG REQUIRED COMPONENTS Core)
 +endif()
  
  check_required_components(Libigl)
