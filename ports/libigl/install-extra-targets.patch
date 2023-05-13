@@ -12,7 +12,7 @@ index 8143963..784ac50 100644
              DESTINATION ${export_dest_dir}
              NAMESPACE igl${suffix}::
 diff --git a/cmake/igl/libigl-config.cmake.in b/cmake/igl/libigl-config.cmake.in
-index 629896d..4db4396 100644
+index 629896d..b161f9e 100644
 --- a/cmake/igl/libigl-config.cmake.in
 +++ b/cmake/igl/libigl-config.cmake.in
 @@ -4,5 +4,30 @@ include(CMakeFindDependencyMacro)
@@ -42,7 +42,7 @@ index 629896d..4db4396 100644
 +
 +include("${CMAKE_CURRENT_LIST_DIR}/LibiglConfigTargets_copyleft.cmake" OPTIONAL)
 +if(TARGET igl_copyless::igl_copyless_cgal)
-+  find_dependency(CGAL CONFIG REQUIRED COMPONENTS Core)
++  find_dependency(CGAL)
 +endif()
  
  check_required_components(Libigl)
@@ -152,16 +152,6 @@ index 8d8decc..293da91 100644
  )
 +
 +igl_install(igl_png ${INC_FILES} ${SRC_FILES})
-diff --git a/cmake/igl/modules/predicates.cmake b/cmake/igl/modules/predicates.cmake
-index 8f52119..899f540 100644
---- a/cmake/igl/modules/predicates.cmake
-+++ b/cmake/igl/modules/predicates.cmake
-@@ -23,3 +23,5 @@ target_link_libraries(igl_predicates ${IGL_SCOPE}
- # 5. Unit tests
- file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/tests/include/igl/predicates/*.cpp")
- igl_add_test(igl_predicates ${SRC_FILES})
-+
-+igl_install(igl_predicates ${INC_FILES} ${SRC_FILES})
 diff --git a/cmake/igl/modules/xml.cmake b/cmake/igl/modules/xml.cmake
 index 31ab979..815ea62 100644
 --- a/cmake/igl/modules/xml.cmake
