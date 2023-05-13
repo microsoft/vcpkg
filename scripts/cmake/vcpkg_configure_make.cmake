@@ -117,7 +117,6 @@ macro(z_vcpkg_setup_make_linker_flags_vars var_suffix)
     endif()
     string(STRIP "${arflags}" ARFLAGS_${var_suffix})
 
-    set(ldflags "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
     # Could use a future VCPKG_DETECTED_CMAKE_LIBRARY_PATH_FLAG
     set(library_path_flag "-L")
     # Could use a future VCPKG_DETECTED_MSVC
@@ -142,11 +141,9 @@ macro(z_vcpkg_setup_make_linker_flags_vars var_suffix)
         else()
             set(LINK_ENV_${var_suffix} "${linker_flags}")
         endif()
-        separate_arguments(ldflags_list NATIVE_COMMAND "${ldflags}")
-        list(TRANSFORM ldflags_list REPLACE " " "\\\\ ")
-        list(TRANSFORM ldflags_list PREPEND "${linker_flag_escape}")
-        list(JOIN ldflags_list " " ldflags)
     endif()
+
+    set(ldflags "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
         string(PREPEND ldflags "${linker_flag_escape}${library_path_flag}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link ")
     endif()
