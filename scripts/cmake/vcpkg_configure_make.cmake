@@ -61,6 +61,28 @@ macro(z_vcpkg_determine_autotools_target_arch_mac out_var)
     unset(osx_archs_num)
 endmacro()
 
+# Define variables used in both vcpkg_configure_make and vcpkg_build_make:
+# short_name_<CONFIG>:         unique abbreviation for the given build type
+# path_suffix_<CONFIG>:        installation path suffix for the given build type
+# z_vcpkg_installed_path:      CURRENT_INSTALLED_DIR with escaped space characters
+# z_vcpkg_prefix_path:         CURRENT_INSTALLED_DIR with unprotected spaces, but drive letters transformed for mingw/msys
+macro(z_vcpkg_configure_make_common_definitions)
+    set(short_name_RELEASE "rel")
+    set(short_name_DEBUG "dbg")
+
+    set(path_suffix_RELEASE "")
+    set(path_suffix_DEBUG "/debug")
+
+    # Some PATH handling for dealing with spaces....some tools will still fail with that!
+    # In particular, the libtool install command is unable to install correctly to paths with spaces.
+    string(REPLACE " " "\\ " z_vcpkg_installed_path "${CURRENT_INSTALLED_DIR}")
+    if(CMAKE_HOST_WIN32)
+        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" z_vcpkg_prefix_path "${CURRENT_INSTALLED_DIR}")
+    else()
+        set(z_vcpkg_prefix_path "${CURRENT_INSTALLED_DIR}")
+    endif()
+endmacro()
+
 macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
     string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
     string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CXXPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
@@ -526,26 +548,16 @@ function(vcpkg_configure_make)
         unset(z_vcpkg_make_set_env)
     endif()
 
-    # Some PATH handling for dealing with spaces....some tools will still fail with that!
-    # In particular, the libtool install command is unable to install correctly to paths with spaces.
-    # CURRENT_INSTALLED_DIR: Pristine native path (unprotected spaces, Windows drive letters)
-    # z_vcpkg_installed_path:      Native path with escaped space characters
-    # z_vcpkg_prefix_path:         Path with unprotected spaces, but drive letters transformed for mingw/msys
-    string(REPLACE " " "\\ " z_vcpkg_installed_path "${CURRENT_INSTALLED_DIR}")
-    if(CMAKE_HOST_WIN32)
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" z_vcpkg_prefix_path "${CURRENT_INSTALLED_DIR}")
-    else()
-        set(z_vcpkg_prefix_path "${CURRENT_INSTALLED_DIR}")
-    endif()
+    z_vcpkg_configure_make_common_definitions()
 
     # Cleanup previous build dirs
-    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-                        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_name_RELEASE}"
+                        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_name_DEBUG}"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     # Set configure paths
     set(arg_OPTIONS_RELEASE ${arg_OPTIONS_RELEASE} "--prefix=${z_vcpkg_prefix_path}")
-    set(arg_OPTIONS_DEBUG ${arg_OPTIONS_DEBUG} "--prefix=${z_vcpkg_prefix_path}/debug")
+    set(arg_OPTIONS_DEBUG ${arg_OPTIONS_DEBUG} "--prefix=${z_vcpkg_prefix_path}${path_suffix_DEBUG}")
     if(NOT arg_NO_ADDITIONAL_PATHS)
         # ${prefix} has an extra backslash to prevent early expansion when calling `bash -c configure "..."`.
         set(arg_OPTIONS_RELEASE ${arg_OPTIONS_RELEASE}
@@ -559,8 +571,8 @@ function(vcpkg_configure_make)
                             "--datarootdir=\\\${prefix}/share/${PORT}")
         set(arg_OPTIONS_DEBUG ${arg_OPTIONS_DEBUG}
                             # Important: These should all be relative to prefix!
-                            "--bindir=\\\${prefix}/../tools/${PORT}/debug/bin"
-                            "--sbindir=\\\${prefix}/../tools/${PORT}/debug/sbin"
+                            "--bindir=\\\${prefix}/../tools/${PORT}${path_suffix_DEBUG}/bin"
+                            "--sbindir=\\\${prefix}/../tools/${PORT}${path_suffix_DEBUG}/sbin"
                             "--libdir=\\\${prefix}/lib" # On some Linux distributions lib64 is the default
                             "--includedir=\\\${prefix}/../include"
                             "--datarootdir=\\\${prefix}/share/${PORT}")
@@ -712,8 +724,6 @@ function(vcpkg_configure_make)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT arg_NO_DEBUG)
         set(var_suffix DEBUG)
-        set(path_suffix_${var_suffix} "/debug")
-        set(short_name_${var_suffix} "dbg")
         list(APPEND all_buildtypes ${var_suffix})
         z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${var_suffix})
         z_vcpkg_setup_make_linker_flags_vars(${var_suffix})
@@ -721,8 +731,6 @@ function(vcpkg_configure_make)
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         set(var_suffix RELEASE)
-        set(path_suffix_${var_suffix} "")
-        set(short_name_${var_suffix} "rel")
         list(APPEND all_buildtypes ${var_suffix})
         z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${var_suffix})
         z_vcpkg_setup_make_linker_flags_vars(${var_suffix})
@@ -755,12 +763,7 @@ function(vcpkg_configure_make)
             set(relative_build_path .)
         endif()
 
-        # Setup PKG_CONFIG_PATH
-        if ("${current_buildtype}" STREQUAL "DEBUG")
-            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
-        else()
-            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
-        endif()
+        z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}")
 
         # Setup environment
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")
