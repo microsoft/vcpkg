@@ -1,4 +1,3 @@
-vcpkg_minimum_required(VERSION 2023-04-07) # for ${VERSION}
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if (VCPKG_TARGET_IS_WINDOWS)
