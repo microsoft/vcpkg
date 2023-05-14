@@ -4,6 +4,13 @@ cmake_policy(SET CMP0054 NEW)
 
 _find_package(${ARGS})
 
+# This is a workaround for a scenario when user calls both find_package(Freetype MODULE) and find_package(freetype CONFIG)
+# find_package(Freetype MODULE) should provide same targets as find_package(Freetype CONFIG)
+if(NOT TARGET freetype)
+    add_library(freetype INTERFACE IMPORTED)
+    set_property(TARGET freetype APPEND PROPERTY INTERFACE_LINK_LIBRARIES Freetype::Freetype)
+endif()
+
 if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     if("@FT_REQUIRE_ZLIB@")
         find_package(ZLIB)
