@@ -2234,7 +2234,7 @@
     },
     "easyloggingpp": {
       "baseline": "9.97.0",
-      "port-version": 2
+      "port-version": 3
     },
     "eathread": {
       "baseline": "1.32.09",
@@ -4398,7 +4398,7 @@
     },
     "libproxy": {
       "baseline": "0.4.18",
-      "port-version": 1
+      "port-version": 2
     },
     "libqcow": {
       "baseline": "20221124",
@@ -4931,6 +4931,30 @@
     "lpeg": {
       "baseline": "1.0.2",
       "port-version": 4
+    },
+    "ltla-aarand": {
+      "baseline": "2023-03-19",
+      "port-version": 0
+    },
+    "ltla-cppirlba": {
+      "baseline": "2023-04-07",
+      "port-version": 0
+    },
+    "ltla-cppkmeans": {
+      "baseline": "2023-03-20",
+      "port-version": 0
+    },
+    "ltla-knncolle": {
+      "baseline": "2023-05-09",
+      "port-version": 0
+    },
+    "ltla-powerit": {
+      "baseline": "2023-03-19",
+      "port-version": 0
+    },
+    "ltla-umappp": {
+      "baseline": "2023-05-11",
+      "port-version": 0
     },
     "lua": {
       "baseline": "5.4.4",
