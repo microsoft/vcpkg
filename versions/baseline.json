@@ -7346,7 +7346,7 @@
     },
     "shader-slang": {
       "baseline": "0.27.20",
-      "port-version": 1
+      "port-version": 0
     },
     "shaderc": {
       "baseline": "2021.1",
