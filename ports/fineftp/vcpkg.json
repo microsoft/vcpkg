@@ -5,7 +5,7 @@
   "description": "FineFTP is a minimal FTP server library for Windows and Unix flavors.",
   "homepage": "https://github.com/eclipse-ecal/fineftp-server",
   "license": "MIT",
-  "supports": "!uwp",
+  "supports": "!uwp & !android",
   "dependencies": [
     "asio",
     {
