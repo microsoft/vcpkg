@@ -62,16 +62,6 @@ index 23e60ad..cc969a8 100644
      ENDIF()
    ENDIF()
  ENDMACRO(MERGE_CONVENIENCE_LIBRARIES)
-@@ -535,8 +536,7 @@ FUNCTION(ADD_SHARED_LIBRARY TARGET_ARG)
-     ELSE()
-       SET(COMP COMPONENT SharedLibraries)
-     ENDIF()
--    MYSQL_INSTALL_TARGET(
--      ${TARGET} DESTINATION "${DESTINATION}" ${COMP})
-+    MYSQL_INSTALL_TARGET(${TARGET} EXPORT unofficial-libmysql DESTINATION "${INSTALL_LIBDIR}" ${COMP})
-   ENDIF()
- 
-   IF(ARG_COMPILE_DEFINITIONS)
 diff --git a/libmysql/CMakeLists.txt b/libmysql/CMakeLists.txt
 index 2ee26bfa284..46583f4f0a3 100644
 --- a/libmysql/CMakeLists.txt
