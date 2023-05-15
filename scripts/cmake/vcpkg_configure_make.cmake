@@ -84,8 +84,8 @@ macro(z_vcpkg_configure_make_common_definitions)
 endmacro()
 
 # Initializes well-known and auxiliary variables for flags
-# - CCLINKER_FLAGS_<CONFIG>: LDFLAGS which must be included in CC/CXX to sidestep libtool whitelist
-# - CPPFLAGS_<CONFIG>:       preprocessor flags common to C and CXX
+# - ABI_FLAGS_<CONFIG>: ABI flags which must be included in CC/CXX to satisfy configure and libtool
+# - CPPFLAGS_<CONFIG>:  preprocessor flags common to C and CXX
 # - CFLAGS_<CONFIG>
 # - CXXFLAGS_<CONFIG>
 # - LDFLAGS_<CONFIG>
@@ -93,24 +93,41 @@ endmacro()
 # - LINK_ENV_${var_suffix}
 # Prerequisite: VCPKG_DETECTED_CMAKE_... vars loaded
 function(z_vcpkg_configure_make_process_flags var_suffix)
-    set(c_flags "${VCPKG_DETECTED_CMAKE_C_FLAGS_${var_suffix}}")
-    set(cxx_flags "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${var_suffix}}")
+    # Wrapping in ' ' to facilitate pattern matching
+    set(c_flags   " ${VCPKG_DETECTED_CMAKE_C_FLAGS_${var_suffix}} ")
+    set(cxx_flags " ${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${var_suffix}} ")
+    set(ldflags   " ${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}} ")
 
-    # Filter common cpp_flags out of c_flags and cxx_flags
-    string(REGEX MATCHALL "(^-| -)(D|isysroot|-sysroot=|isystem|m?[Aa][Rr][Cc][Hh]|-target=|target) ?[^ ]+" cxxpp_flags_list "${cxx_flags}")
-    if(cxxpp_flags_list STREQUAL "")
-        set(cpp_flags "")
-    else()
-        list(JOIN cxxpp_flags_list "|" cxxpp_regex)
-        string(REGEX MATCHALL "(^-| -)(D|isysroot|-sysroot=|isystem|m?[Aa][Rr][Cc][Hh]|-target=|target) ?[^ ]+" cpp_flags_list "${c_flags}")
-        list(FILTER cpp_flags_list INCLUDE REGEX "${cxxpp_regex}")
-        list(JOIN cpp_flags_list "|" cpp_regex)
-        if(NOT cpp_regex STREQUAL "")
-            string(REGEX REPLACE "${cpp_regex}" "" c_flags "${c_flags}")
-            string(REGEX REPLACE "${cpp_regex}" "" cxx_flags "${cxx_flags}")
+    # Filter abi flags out of c_flags, cxx_flags and ldflags
+    set(abi_flags "")
+    string(REGEX MATCHALL " -(m?[Aa][Rr][Cc][Hh] +|-sysroot=|-target=|target +)[^ ]+" c_abi_flags "${c_flags}")
+    foreach(flag IN LISTS c_abi_flags)
+        string(APPEND abi_flags "${flag}")
+        string(REPLACE "${flag} " " " c_flags "${c_flags}")
+        string(REPLACE "${flag} " " " cxx_flags "${cxx_flags}")
+        string(REPLACE "${flag} " " " ldflags "${ldflags}")
+    endforeach()
+
+    # Filter common cpp flags out of c_flags and cxx_flags
+    set(cpp_flags "")
+    string(REGEX MATCHALL " -(D|isystem) ?[^ ]+" cxx_cpp_flags "${cxx_flags}")
+    foreach(flag IN LISTS cxx_cpp_flags)
+        string(FIND "${c_flags}" "${flag} " index)
+        if(NOT index STREQUAL "-1")
+            string(APPEND cpp_flags "${flag}")
+            string(REPLACE "${flag} " " " c_flags "${c_flags}")
+            string(REPLACE "${flag} " " " cxx_flags "${cxx_flags}")
         endif()
-        list(JOIN cpp_flags_list " " cpp_flags)
-    endif()
+    endforeach()
+    string(REGEX MATCHALL " -(D|isystem) ?[^ ]+" c_cpp_flags "${c_flags}")
+    foreach(flag IN LISTS c_cpp_flags)
+        string(FIND "${cxx_flags}" "${flag} " index)
+        if(NOT index STREQUAL "-1")
+            string(APPEND cpp_flags "${flag}")
+            string(REPLACE "${flag} " " " c_flags "${c_flags}")
+            string(REPLACE "${flag} " " " cxx_flags "${cxx_flags}")
+        endif()
+    endforeach()
 
     # libtool tries to filter CFLAGS passed to the link stage via a whitelist.
     # This approach is flawed since it fails to pass flags unknown to libtool
@@ -151,16 +168,11 @@ function(z_vcpkg_configure_make_process_flags var_suffix)
             set(link_env "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
         endif()
     endif()
-
-    set(cclinker_flags "") # linker flags which must be passed with CC/CXX to avoid libtool quirks
-    set(ldflags "")        # linker flags which can be passed with LDFLAGS if escaped as needed
-    separate_arguments(ldflags_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
-    foreach(item IN LISTS ldflags_list)
-        string(APPEND ldflags " ${linker_flag_escape}${item}")
-        if(item MATCHES "^--target=")
-            string(APPEND cclinker_flags " ${item}")
-        endif()
-    endforeach()
+    if(linker_flag_escape)
+        separate_arguments(ldflags_list NATIVE_COMMAND "${ldflags}")
+        list(TRANSFORM ldflags_list PREPEND "${linker_flag_escape}")
+        list(JOIN ldflags_list " " ldflags)
+    endif()
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
         string(PREPEND ldflags "${linker_flag_escape}${library_path_flag}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link ")
     endif()
@@ -176,10 +188,10 @@ function(z_vcpkg_configure_make_process_flags var_suffix)
         string(PREPEND arflags "cr ")
     endif()
 
-    foreach(var IN ITEMS cclinker_flags cpp_flags c_flags cxx_flags ldflags arflags link_env)
+    foreach(var IN ITEMS abi_flags cpp_flags c_flags cxx_flags ldflags arflags link_env)
         string(STRIP "${${var}}" "${var}")
     endforeach()
-    set(CCLINKER_FLAGS_${var_suffix} "${cclinker_flags}" PARENT_SCOPE)
+    set(ABI_FLAGS_${var_suffix} "${abi_flags}" PARENT_SCOPE)
     set(CPPFLAGS_${var_suffix} "${cpp_flags}" PARENT_SCOPE)
     set(CFLAGS_${var_suffix} "${c_flags}" PARENT_SCOPE)
     set(CXXFLAGS_${var_suffix} "${cxx_flags}" PARENT_SCOPE)
@@ -789,18 +801,14 @@ function(vcpkg_configure_make)
             set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
         endif()
 
-        if(CCLINKER_FLAGS_${current_buildtype})
+        # ABI_FLAGS isn't standard, but can be useful to reinject these flags into other variables
+        set(ENV{ABI_FLAGS} "${ABIFLAGS_${current_buildtype}}")
+        if(ABI_FLAGS_${current_buildtype})
             # libtool removes some flags which are needed for configure tests.
-            set(ENV{CC} "$ENV{CC} ${CCLINKER_FLAGS_${current_buildtype}}")
-            set(ENV{CXX} "$ENV{CXX} ${CCLINKER_FLAGS_${current_buildtype}}")
-            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} ${CCLINKER_FLAGS_${current_buildtype}}")
-            set(ENV{CXX_FOR_BUILD} "$ENV{CXX_FOR_BUILD} ${CCLINKER_FLAGS_${current_buildtype}}")
-        endif()
-
-        if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-            # configure not using all flags to check if compiler works ...
-            set(ENV{CC} "$ENV{CC} $ENV{CPPFLAGS} $ENV{CFLAGS}")
-            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} $ENV{CPPFLAGS} $ENV{CFLAGS}")
+            set(ENV{CC} "$ENV{CC} ${ABI_FLAGS_${current_buildtype}}")
+            set(ENV{CXX} "$ENV{CXX} ${ABI_FLAGS_${current_buildtype}}")
+            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} ${ABI_FLAGS_${current_buildtype}}")
+            set(ENV{CXX_FOR_BUILD} "$ENV{CXX_FOR_BUILD} ${ABI_FLAGS_${current_buildtype}}")
         endif()
 
         if(LINK_ENV_${current_buildtype})
