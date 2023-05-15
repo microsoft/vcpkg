@@ -41,8 +41,13 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
         set(CHARSET_FLAG)
     endif()
 
+    set(MP_BUILD_FLAG "")
+    if(NOT (CMAKE_CXX_COMPILER MATCHES "clang-cl.exe"))
+        set(MP_BUILD_FLAG "/MP")
+    endif()
+
     set(_vcpkg_cpp_flags "/DWIN32 /D_WINDOWS /D_UNICODE /DUNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB__" ) # VS adds /D "_WINDLL" for DLLs;
-    set(_vcpkg_common_flags "/nologo /Z7 /MP /GS /Gd /Gm- /W3 /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc")
+    set(_vcpkg_common_flags "/nologo /Z7 ${MP_BUILD_FLAG} /GS /Gd /Gm- /W3 /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc")
     #/ZW:nostdlib -> ZW is added by CMake # VS also normally adds /sdl but not cmake MSBUILD
     set(_vcpkg_winmd_flag "")
     file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" _vcpkg_vctools)
