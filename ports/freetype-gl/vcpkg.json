@@ -6,8 +6,8 @@
   "homepage": "https://github.com/rougier/freetype-gl",
   "dependencies": [
     "freetype",
-    "glew",
     "glad",
+    "glew",
     {
       "name": "vcpkg-cmake",
       "host": true
