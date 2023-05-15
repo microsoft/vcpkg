@@ -2709,7 +2709,7 @@
       "port-version": 0
     },
     "gdal": {
-      "baseline": "3.6.4",
+      "baseline": "3.7.0",
       "port-version": 0
     },
     "gdcm": {
@@ -6138,7 +6138,7 @@
     },
     "pdal": {
       "baseline": "2.5.3",
-      "port-version": 0
+      "port-version": 1
     },
     "pdal-c": {
       "baseline": "2.2.0",
