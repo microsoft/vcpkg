@@ -29,6 +29,10 @@ function(set_tls_backend VALUE)
     set(USE_HTTPS ${VALUE} PARENT_SCOPE)
 endfunction()
 
+if("openssl" IN_LIST FEATURES)
+    list(APPEND GIT_OPTIONS "-DGIT_OPENSSL=1")  
+endif()
+
 foreach(GIT2_FEATURE ${FEATURES})
     if(GIT2_FEATURE STREQUAL "pcre")
         set_regex_backend("pcre")
@@ -64,6 +68,7 @@ vcpkg_cmake_configure(
         -DREGEX_BACKEND=${REGEX_BACKEND}
         -DSTATIC_CRT=${STATIC_CRT}
         ${GIT2_FEATURES}
+        ${GIT_OPTIONS}
 )
 
 vcpkg_cmake_install()
