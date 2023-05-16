@@ -1,6 +1,7 @@
 {
   "name": "pdcurses",
-  "version-date": "2023-05-16",
+  "version": "3.9",
+  "port-version": 5,
   "description": "Public Domain Curses - a curses library for environments that don't fit the termcap/terminfo model.",
   "homepage": "https://pdcurses.org/",
   "license": null,
