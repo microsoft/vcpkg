@@ -6149,8 +6149,8 @@
       "port-version": 0
     },
     "pdcurses": {
-      "baseline": "2023-05-16",
-      "port-version": 0
+      "baseline": "3.9",
+      "port-version": 5
     },
     "pdqsort": {
       "baseline": "2019-07-30",
