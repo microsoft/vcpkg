@@ -5,14 +5,18 @@ if(NOT TARGET unofficial::pdcurses::pdcurses)
     get_filename_component(z_vcpkg_pdcurses_root "${z_vcpkg_pdcurses_root}" PATH)
     
     find_library(Z_VCPKG_PDCURSES_LIBRARY_RELEASE NAMES pdcurses PATHS "${z_vcpkg_pdcurses_root}/lib" NO_DEFAULT_PATH REQUIRED)
-    find_library(Z_VCPKG_PDCURSES_LIBRARY_DEBUG NAMES pdcurses PATHS "${z_vcpkg_pdcurses_root}/debug/lib" NO_DEFAULT_PATH REQUIRED)
     
     set_target_properties(unofficial::pdcurses::pdcurses PROPERTIES
       INTERFACE_INCLUDE_DIRECTORIES "${z_vcpkg_pdcurses_root}/include"
-      IMPORTED_LOCATION_DEBUG "${Z_VCPKG_PDCURSES_LIBRARY_DEBUG}"
       IMPORTED_LOCATION_RELEASE "${Z_VCPKG_PDCURSES_LIBRARY_RELEASE}"
-      IMPORTED_CONFIGURATIONS "Release;Debug"
+      IMPORTED_CONFIGURATIONS "Release"
     )
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        find_library(Z_VCPKG_PDCURSES_LIBRARY_DEBUG NAMES pdcurses PATHS "${z_vcpkg_pdcurses_root}/debug/lib" NO_DEFAULT_PATH REQUIRED)
+        set_property(TARGET unofficial::pdcurses::pdcurses APPEND PROPERTY IMPORTED_CONFIGURATIONS "Debug")
+        set_target_properties(unofficial::pdcurses::pdcurses PROPERTIES IMPORTED_LOCATION_DEBUG "${Z_VCPKG_PDCURSES_LIBRARY_DEBUG}")
+    endif()
     
     unset(z_vcpkg_pdcurses_root)
 endif()
