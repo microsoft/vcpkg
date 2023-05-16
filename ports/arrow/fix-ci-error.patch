@@ -1,0 +1,12 @@
+diff --git a/ci/scripts/java_jni_manylinux_build.sh b/ci/scripts/java_jni_manylinux_build.sh
+index 7480aa7..47ae472 100644
+--- a/ci/scripts/java_jni_manylinux_build.sh
++++ b/ci/scripts/java_jni_manylinux_build.sh
+@@ -141,7 +141,6 @@ archery linking check-dependencies \
+   --allow libgcc_s \
+   --allow libm \
+   --allow libpthread \
+-  --allow librt \
+   --allow libstdc++ \
+   --allow libz \
+   --allow linux-vdso \
