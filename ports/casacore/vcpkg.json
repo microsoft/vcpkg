@@ -1,0 +1,30 @@
+{
+  "name": "casacore",
+  "version": "3.5.0",
+  "homepage": "https://casacore.github.io/",
+  "description": "The casacore libraries",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "boost",
+    "blas",
+    {
+      "name": "cfitsio"
+    },
+    {
+      "name": "fftw3",
+      "features": ["threads"]
+    },
+    "gsl",
+    "lapack",
+    "readline-unix",
+    "wcslib",
+    "zlib"
+  ]
+}
