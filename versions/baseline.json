@@ -2101,8 +2101,8 @@
       "port-version": 2
     },
     "discord-game-sdk": {
-      "baseline": "2.5.6",
-      "port-version": 5
+      "baseline": "3.2.1",
+      "port-version": 6
     },
     "discord-rpc": {
       "baseline": "3.4.0",
