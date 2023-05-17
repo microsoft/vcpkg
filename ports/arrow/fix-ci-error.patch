@@ -1,17 +1,13 @@
-diff --git a/ci/scripts/java_jni_manylinux_build.sh b/ci/scripts/java_jni_manylinux_build.sh
-index 7480aa7..0e107c2 100644
---- a/ci/scripts/java_jni_manylinux_build.sh
-+++ b/ci/scripts/java_jni_manylinux_build.sh
-@@ -136,12 +136,10 @@ echo "=== Checking shared dependencies for libraries ==="
- pushd ${dist_dir}
- archery linking check-dependencies \
-   --allow ld-linux-x86-64 \
--  --allow libc \
-   --allow libdl \
-   --allow libgcc_s \
-   --allow libm \
-   --allow libpthread \
--  --allow librt \
-   --allow libstdc++ \
-   --allow libz \
-   --allow linux-vdso \
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index eeda520..f55080e 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -921,7 +921,7 @@ if(WIN32)
+   list(APPEND ARROW_SYSTEM_LINK_LIBS "ws2_32.dll")
+ endif()
+ 
+-if(NOT WIN32 AND NOT APPLE)
++if(NOT WIN32 AND NOT APPLE AND NOT ANDROID)
+   # Pass -lrt on Linux only
+   list(APPEND ARROW_SYSTEM_LINK_LIBS rt)
+ endif()

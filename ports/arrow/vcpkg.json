@@ -5,7 +5,7 @@
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",
-  "supports": "android",
+  "supports": "x64 | (arm64 & !windows)",
   "dependencies": [
     "boost-filesystem",
     "boost-multiprecision",
