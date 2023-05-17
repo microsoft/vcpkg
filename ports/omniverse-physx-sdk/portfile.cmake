@@ -12,20 +12,54 @@ vcpkg_from_github(
     HEAD_REF release/104.2
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" VCPKG_BUILD_STATIC_LIBS)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" VCPKG_LINK_CRT_STATICALLY)
+
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
-if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD)
-    if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        message(FATAL_ERROR "Clang and Clang++ are required for building this port.")
-    endif()
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8 AND MSVC AND MSVC_VERSION GREATER_EQUAL 1930)
-        message(FATAL_ERROR "Windows 64-bit with MSVC 2022+ is required for building this port.")
-    endif()
+if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(PLATFORM_OPTIONS
+        -DPX_BUILDSNIPPETS=OFF
+        -DPX_BUILDPVDRUNTIME=OFF
+        -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}
+    )
+elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(PLATFORM_OPTIONS
+        -DPX_BUILDSNIPPETS=OFF
+        -DPX_BUILDPVDRUNTIME=OFF
+        -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}
+    )
+elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(PLATFORM_OPTIONS
+        -DPX_BUILDSNIPPETS=OFF
+        -DPX_BUILDPVDRUNTIME=OFF
+        -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}
+        -DNV_USE_STATIC_WINCRT=${VCPKG_BUILD_STATIC_LIBS}
+        -DNV_USE_DEBUG_WINCRT=${VCPKG_LINK_CRT_STATICALLY}
+        -DPX_FLOAT_POINT_PRECISE_MATH=OFF
+    )
 else()
-    message(FATAL_ERROR "Unsupported architecture for this port.")
+    message(FATAL_ERROR "Unsupported platform/architecture combination")
 endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS "${PLATFORM_OPTIONS}"
+)
+
+
+# if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD)
+#     if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+#         message(FATAL_ERROR "Clang and Clang++ are required for building this port.")
+#     endif()
+# elseif(VCPKG_TARGET_IS_WINDOWS)
+#     if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8 AND MSVC AND MSVC_VERSION GREATER_EQUAL 1930)
+#         message(FATAL_ERROR "Windows 64-bit with MSVC 2022+ is required for building this port.")
+#     endif()
+# else()
+#     message(FATAL_ERROR "Unsupported architecture for this port.")
+# endif()
 
 # Release and debug directories for artifacts. These will change according to the platform.
 set(COMPILER_RELEASE_DIRECTORY "linux-release")
