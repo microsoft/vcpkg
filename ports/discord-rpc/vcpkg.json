@@ -1,7 +1,7 @@
 {
   "name": "discord-rpc",
-  "version-string": "3.4.0",
-  "port-version": 2,
+  "version": "3.4.0",
+  "port-version": 3,
   "description": "Rich Presence allows you to leverage the totally overhauled \"Now Playing\" section in a Discord user's profile to help people play your game together.",
   "homepage": "https://github.com/discordapp/discord-rpc",
   "dependencies": [

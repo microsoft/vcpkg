@@ -6,13 +6,12 @@ if(buildtrees_path_length GREATER warning_length AND CMAKE_HOST_WIN32)
     )
 endif()
 
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.gnome.org
     REPO GNOME/gtk
     REF "${VERSION}"
-    SHA512 20a91e30a89070461af06b33829bc723b348806b4a785d0743af8bd4789b55dade24686e08bf1b2f0335240463aacc040134babb0605b809186b15de9cf261e4
+    SHA512 3021b65649c29d390a21580dc39ca1e7fa845d760c95a6178213cd890f5d8c6d68fe8a5600b283001e279a4bb2ec99f9b210c7abfa493701f7276f015059a9a1
     PATCHES
         0001-build.patch
         cairo-cpp-linkage.patch
@@ -25,20 +24,22 @@ vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/glib/")
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gdk-pixbuf")
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
 
+
+vcpkg_list(SET ADDITIONAL_BINARIES)
 if("introspection" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Feature introspection currently only supports dynamic build.")
-    endif()
     list(APPEND OPTIONS_DEBUG -Dintrospection=false)
     list(APPEND OPTIONS_RELEASE -Dintrospection=true)
+    if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(GIR_TOOL_DIR "${CURRENT_INSTALLED_DIR}")
+    else()
+        set(GIR_TOOL_DIR "${CURRENT_HOST_INSTALLED_DIR}")
+    endif()
+    vcpkg_list(APPEND ADDITIONAL_BINARIES
+        "g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
+        "g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'"
+    )
 else()
     list(APPEND OPTIONS -Dintrospection=false)
-endif()
-
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
-else()
-    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
 endif()
 
 vcpkg_configure_meson(
@@ -66,8 +67,7 @@ vcpkg_configure_meson(
         "glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
         "gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'"
         "glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
-        "g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
-        "g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'"
+        ${ADDITIONAL_BINARIES}
 )
 
 # Reduce command line lengths, in particular for static windows builds.

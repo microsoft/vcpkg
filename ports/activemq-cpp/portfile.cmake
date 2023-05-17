@@ -1,5 +1,3 @@
-set(VERSION 3.9.5)
-
 set(PATCHES )
 if (NOT VCPKG_TARGET_IS_LINUX)
     set(PATCHES FunctionLevelLinkingOn.diff)
@@ -15,9 +13,9 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "activemq-cpp-library-${VERSION}-src.tar.bz2"
     SHA512 83692d3dfd5ecf557fc88d204a03bf169ce6180bcff27be41b09409b8f7793368ffbeed42d98ef6374c6b6b477d9beb8a4a9ac584df9e56725ec59ceceaa6ae2
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES ${PATCHES}
 )
 
@@ -65,12 +63,10 @@ else()
         vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" ";libapr-1.lib" ";apr-1.lib")
     endif()
 
-    if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
         set(BUILD_ARCH "Win32")
-    elseif (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-        set(BUILD_ARCH "x64")
     else()
-        message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+        set(BUILD_ARCH "${VCPKG_TARGET_ARCHITECTURE}")
     endif()
 
     string(REPLACE "/" "\\" WIN_SOURCE_PATH "${SOURCE_PATH}")
@@ -108,13 +104,13 @@ else()
         endif()
     endif()
 
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(COPY
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.lib"
             DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
         )
 
-        if (ACTIVEMQCPP_SHARED_LIB)
+        if(ACTIVEMQCPP_SHARED_LIB)
             file(COPY
                 "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.dll"
                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
