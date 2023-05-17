@@ -1,3 +1,11 @@
+if("pulseaudio" IN_LIST FEATURES)
+    message(
+    "${PORT} with pulseaudio feature currently requires the following from the system package manager:
+        libpulse-dev pulseaudio
+    These can be installed on Ubuntu systems via sudo apt install libpulse-dev pulseaudio"
+    )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
@@ -13,6 +21,7 @@ vcpkg_check_features(
     FEATURES
         buildtools  VCPKG_BUILD_MAKE_TABLES
         sndfile     enable-libsndfile
+        pulseaudio  enable-pulseaudio
 )
 
 # enable platform-specific features, force the build to fail if the required libraries are not found,
@@ -23,7 +32,7 @@ set(LINUX_OPTIONS enable-alsa ALSA_FOUND)
 set(ANDROID_OPTIONS enable-opensles OpenSLES_FOUND)
 set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack enable-lash
     enable-libinstpatch enable-midishare enable-oboe enable-openmp enable-oss enable-pipewire enable-portaudio
-    enable-profiling enable-pulseaudio enable-readline enable-sdl2 enable-systemd enable-trap-on-fpe enable-ubsan)
+    enable-profiling enable-readline enable-sdl2 enable-systemd enable-trap-on-fpe enable-ubsan)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS_TO_ENABLE ${WINDOWS_OPTIONS})
