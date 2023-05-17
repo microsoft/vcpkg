@@ -81,7 +81,6 @@ berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
 berkeleydb:x64-android=fail
 binlog:arm-neon-android=fail
-binlog:arm64-android=fail
 bitserializer:arm64-osx=fail
 blitz:x64-android=fail
 blitz:x64-uwp=fail
