@@ -19,6 +19,4 @@ index 8c7cc2b..122dc71 100644
 +#include <cstdint>
  
  namespace discord {
--- 
-3.2.1
 
