@@ -77,7 +77,7 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
+if (NOT VCPKG_BUILD_TYPE)
     # fix paths in target files
     list(APPEND TARGET_FILES 
         "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEApplicationFrameworkTargets-debug.cmake"
@@ -91,8 +91,8 @@ if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
 
     foreach(TARGET_FILE IN LISTS TARGET_FILES)
         file(READ "${TARGET_FILE}" filedata)
-        string(REGEX REPLACE "libd" "lib" filedata "${filedata}")
-        string(REGEX REPLACE "bind" "bin" filedata "${filedata}")
+        string(REGEX REPLACE "/libd" "/lib" filedata "${filedata}")
+        string(REGEX REPLACE "/bind" "/bin" filedata "${filedata}")
         file(WRITE "${TARGET_FILE}" "${filedata}")
     endforeach()
 
