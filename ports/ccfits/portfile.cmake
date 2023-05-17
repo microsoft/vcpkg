@@ -28,7 +28,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 # Remove duplicate include files
-# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Patch installed headers to look in the correct subdirectory
 file(GLOB HEADERS "${CURRENT_PACKAGES_DIR}/include/CCfits/*")
