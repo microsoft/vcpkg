@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-runtime-destination.patch
-        disable-warnings-as-error.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ALEMBIC_SHARED_LIBS)
@@ -24,6 +23,7 @@ vcpkg_cmake_configure(
         -DALEMBIC_SHARED_LIBS=${ALEMBIC_SHARED_LIBS}
         -DUSE_TESTS=OFF
         ${FEATURE_OPTIONS}
+        -DALEMBIC_DEBUG_WARNINGS_AS_ERRORS=OFF
 )
 
 vcpkg_cmake_install()
