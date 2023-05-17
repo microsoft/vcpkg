@@ -1,0 +1,13 @@
+diff --git a/libde265.pc.in b/libde265.pc.in
+index e3f23ed..ca4ace9 100644
+--- a/libde265.pc.in
++++ b/libde265.pc.in
+@@ -6,7 +6,7 @@ includedir=@includedir@
+ Name: libde265
+ Description: H.265/HEVC video decoder.
+ URL: https://github.com/strukturag/libde265
+-Version: @VERSION@
++Version: @PROJECT_VERSION@
+ Requires: 
+ Libs: -lde265 -L${libdir}
+ Libs.private: @LIBS@ -lstdc++
