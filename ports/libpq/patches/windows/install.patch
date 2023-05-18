@@ -147,3 +147,24 @@ index 8de79c6..578259d 100644
  				$_);
  			system(@args) && croak("Could not run msgfmt on $dir\\$_");
  			print ".";
+diff --git a/src/tools/msvc/Solution.pm b/src/tools/msvc/Solution.pm
+index d30e8fc..35126cd 100644
+--- a/src/tools/msvc/Solution.pm
++++ b/src/tools/msvc/Solution.pm
+@@ -760,14 +760,14 @@ sub GenerateFiles
+ 		  || confess "Could not open pg_config_paths.h";
+ 		print $o <<EOF;
+ #define PGBINDIR "/bin"
+-#define PGSHAREDIR "/share"
++#define PGSHAREDIR "/share/libpq"
+ #define SYSCONFDIR "/etc"
+ #define INCLUDEDIR "/include"
+ #define PKGINCLUDEDIR "/include"
+ #define INCLUDEDIRSERVER "/include/server"
+ #define LIBDIR "/lib"
+ #define PKGLIBDIR "/lib"
+-#define LOCALEDIR "/share/locale"
++#define LOCALEDIR "/share/libpq/locale"
+ #define DOCDIR "/doc"
+ #define HTMLDIR "/doc"
+ #define MANDIR "/man"

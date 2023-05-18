@@ -45,7 +45,7 @@ index 2820ace22..7fddbf0fb 100644
  	if ($self->{options}->{icu})
  	{
  		$proj->AddIncludeDir($self->{options}->{icu} . '\include');
- 		if ($self->{platform} eq 'Win32')
+ 		if (1)
  		{
 -			$proj->AddLibrary($self->{options}->{icu} . '\lib\icuin.lib');
 -			$proj->AddLibrary($self->{options}->{icu} . '\lib\icuuc.lib');
