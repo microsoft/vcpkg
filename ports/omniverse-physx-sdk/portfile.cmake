@@ -24,6 +24,7 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         -DPX_BUILDSNIPPETS=OFF
         -DPX_BUILDPVDRUNTIME=OFF
         -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}
+        -DPX_COPY_EXTERNAL_DLL=OFF
     )
     set(targetPlatform "linux")
 elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -31,6 +32,7 @@ elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         -DPX_BUILDSNIPPETS=OFF
         -DPX_BUILDPVDRUNTIME=OFF
         -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}
+        -DPX_COPY_EXTERNAL_DLL=OFF
     )
     set(targetPlatform "linuxAarch64")
 elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -42,7 +44,12 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         -DNV_USE_DEBUG_WINCRT=${VCPKG_LINK_CRT_STATICALLY}
         -DPX_FLOAT_POINT_PRECISE_MATH=OFF
     )
-    set(targetPlatform "win64")
+    # It would have been more correct to specify "win64" here, but we specify this so that packman can download
+    # the right dependencies on windows (see the "platforms" field in the dependencies.xml), that will also later
+    # set up the correct PM_xxx environment variables that we can pass to the cmake generation invocation to find
+    # whatever the PhysX project needs. Note that vc17(2022) is not required: the latest repo is guaranteed to work
+    # with vc15, vc16 and vc17 on x64 Windows. The binaries for these platforms downloaded by packman should be the same.
+    set(targetPlatform "vc17win64")
 else()
     message(FATAL_ERROR "Unsupported platform/architecture combination")
 endif()
@@ -54,18 +61,36 @@ set(PACKMAN_CMD "${PHYSX_ROOT_DIR}/buildtools/packman/packman")
 
 # Check if packman command exists
 if(NOT EXISTS ${PACKMAN_CMD})
-    set(PACKMAN_CMD "${PACKMAN_CMD}.sh")
+    if(VCPKG_TARGET_IS_LINUX)
+        set(PACKMAN_CMD "${PACKMAN_CMD}.sh")
+    elseif(VCPKG_TARGET_IS_WINDOWS)
+        set(PACKMAN_CMD "${PACKMAN_CMD}.bat")
+    endif()
 endif()
 
-#message(WARNING "NOW PULLING DEPS WITH PACKMAN!!! ${PACKMAN_CMD} pull ${PHYSX_ROOT_DIR}/dependencies.xml --platform ${targetPlatform} ")
+if(VCPKG_TARGET_IS_WINDOWS)
+        set(PACKMAN_CMD "${PACKMAN_CMD}.cmd")
+endif()
+
+message(WARNING "NOW PULLING DEPS WITH PACKMAN!!! ${PACKMAN_CMD} pull ${PHYSX_ROOT_DIR}/dependencies.xml --platform ${targetPlatform} ")
 # Pull the dependencies using packman
-execute_process(
-    COMMAND bash -c  "source ${PACKMAN_CMD} pull ${PHYSX_ROOT_DIR}/dependencies.xml --platform ${targetPlatform}; env"
-    RESULT_VARIABLE result # return code or error string
-    OUTPUT_VARIABLE output_envs
-    ERROR_VARIABLE error_output
-    WORKING_DIRECTORY ${PHYSX_ROOT_DIR}
-)
+if(VCPKG_TARGET_IS_LINUX)
+    execute_process(
+        COMMAND bash -c  "source ${PACKMAN_CMD} pull ${PHYSX_ROOT_DIR}/dependencies.xml --platform ${targetPlatform}; env"
+        RESULT_VARIABLE result # return code or error string
+        OUTPUT_VARIABLE output_envs
+        ERROR_VARIABLE error_output
+        WORKING_DIRECTORY ${PHYSX_ROOT_DIR}
+    )
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    execute_process(
+        COMMAND cmd /c "set PM_DISABLE_VS_WARNING=1 & ${PACKMAN_CMD} pull ${PHYSX_ROOT_DIR}/dependencies.xml --platform ${targetPlatform} & set"
+        RESULT_VARIABLE result # return code or error string
+        OUTPUT_VARIABLE output_envs
+        ERROR_VARIABLE error_output
+        WORKING_DIRECTORY ${PHYSX_ROOT_DIR}
+    )
+endif()
 
 if(NOT ${result} EQUAL 0)
     message(FATAL_ERROR "Error '${result}' occurred while pulling dependencies using packman (stdout: ${output_envs}, stderr: ${error_output})")
@@ -143,10 +168,9 @@ elseif(targetPlatform STREQUAL "linux")
         list(APPEND platformCMakeParams -DCMAKE_C_COMPILER=${PM_clang_PATH}/bin/clang -DCMAKE_CXX_COMPILER=${PM_clang_PATH}/bin/clang++)
     endif()
     set(generator "Unix Makefiles")
-elseif(targetPlatform STREQUAL "win64")
+elseif(targetPlatform STREQUAL "vc17win64")
     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/vc17win64/PhysX)
-    set(platformCMakeParams "-G Visual Studio 17 2022 -Ax64" -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86)
-    set(generator "Ninja")
+    set(platformCMakeParams -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86)
 endif()
 
 # Combine all parameters
@@ -154,9 +178,12 @@ set(cmakeParams ${platformCMakeParams} ${common_params} ${cmakeParams})
 # message(WARNING "ALL GENERATED CMake Parameters: ${cmakeParams}")
 # message(WARNING "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
+# message(FATAL_ERROR "here are the options: ${PLATFORM_OPTIONS}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
     GENERATOR "${generator}"
+    WINDOWS_USE_MSBUILD
     OPTIONS
         ${PLATFORM_OPTIONS}
         -DPHYSX_ROOT_DIR=${PHYSX_ROOT_DIR}
