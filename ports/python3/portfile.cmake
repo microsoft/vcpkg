@@ -227,15 +227,30 @@ else()
         "--without-readline"
         "--disable-test-modules"
     )
+
     if(VCPKG_TARGET_IS_OSX)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
-    endif()
 
-    vcpkg_configure_make(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS ${OPTIONS}
-        OPTIONS_DEBUG "--with-pydebug"
-    )
+        vcpkg_configure_make(
+            SOURCE_PATH "${SOURCE_PATH}"
+            PRERUN_SHELL "chmod a+x ./configure"
+            OPTIONS ${OPTIONS}
+            OPTIONS_DEBUG "--with-pydebug"
+        )
+    else()
+        if (VCPKG_CROSSCOMPILING)
+            list(APPEND OPTIONS "ac_cv_file__dev_ptmx=no")
+            list(APPEND OPTIONS "ac_cv_file__dev_ptc=no")
+        endif()
+
+        vcpkg_configure_make(
+            SOURCE_PATH "${SOURCE_PATH}"
+            PRERUN_SHELL "chmod a+x ./configure"
+            DETERMINE_BUILD_TRIPLET
+            OPTIONS ${OPTIONS}
+            OPTIONS_DEBUG "--with-pydebug"
+        )
+    endif()
     vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
 
     file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")

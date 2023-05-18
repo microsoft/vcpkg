@@ -1236,9 +1236,6 @@ ptex:x64-android=fail
 python2:arm-neon-android=fail
 python2:arm64-android=fail
 python2:x64-android=fail
-python3:arm-neon-android=fail
-python3:arm64-android=fail
-python3:x64-android=fail
 # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
 qbittorrent:x64-linux=fail
