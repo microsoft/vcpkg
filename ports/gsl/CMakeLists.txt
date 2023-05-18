@@ -39,7 +39,15 @@ foreach(DIR IN LISTS FOLDERS)
     endif()
 endforeach()
 
-file(COPY gsl_types.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(READ gsl_types.h GSLTYPES_H)
+if(WIN32)
+    string(REPLACE "#ifdef WIN32" "#if 1 /*WIN32*/" GSLTYPES_H "${GSLTYPES_H}")
+    if(BUILD_SHARED_LIBS)
+        string(REPLACE "#  ifdef GSL_DLL" "#  if 1 /*GSL_DLL*/" GSLTYPES_H "${GSLTYPES_H}")
+    endif()
+endif(WIN32)
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/gsl_types.h "${GSLTYPES_H}")
+
 file(GLOB_RECURSE PUBLIC_HEADERS gsl*.h)
 list(APPEND PUBLIC_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/gsl_types.h)
 
@@ -54,9 +62,6 @@ add_library(gsl ${SOURCES})
 set_target_properties(gsl PROPERTIES DEFINE_SYMBOL DLL_EXPORT WINDOWS_EXPORT_ALL_SYMBOLS ON)
 target_link_libraries(gsl PUBLIC gslcblas)
 
-if(BUILD_SHARED_LIBS)
-    target_compile_definitions(gsl PRIVATE GSL_DLL)
-endif(BUILD_SHARED_LIBS)
 
 if(INSTALL_HEADERS)
     set_target_properties(gsl PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
