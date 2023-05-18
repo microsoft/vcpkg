@@ -1,13 +1,11 @@
-diff --git a/libde265.pc.in b/libde265.pc.in
-index e3f23ed..ca4ace9 100644
---- a/libde265.pc.in
-+++ b/libde265.pc.in
-@@ -6,7 +6,7 @@ includedir=@includedir@
- Name: libde265
- Description: H.265/HEVC video decoder.
- URL: https://github.com/strukturag/libde265
--Version: @VERSION@
-+Version: @PROJECT_VERSION@
- Requires: 
- Libs: -lde265 -L${libdir}
- Libs.private: @LIBS@ -lstdc++
+diff --git a/libde265/CMakeLists.txt b/libde265/CMakeLists.txt
+index 2856f90..ccbc8b6 100644
+--- a/libde265/CMakeLists.txt
++++ b/libde265/CMakeLists.txt
+@@ -147,5 +147,6 @@ else()
+     set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+ endif()
+ 
++set(VERSION ${PROJECT_VERSION}) # so that the replacement in libde265.pc will work with both autotools and CMake
+ configure_file(../libde265.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libde265.pc @ONLY)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libde265.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
