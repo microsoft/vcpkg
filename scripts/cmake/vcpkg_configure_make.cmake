@@ -99,6 +99,10 @@ function(z_vcpkg_configure_make_process_flags var_suffix)
     separate_arguments(CXXFLAGS NATIVE_COMMAND "Z_VCM_WRAP ${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${var_suffix}} Z_VCM_WRAP")
     separate_arguments(LDFLAGS NATIVE_COMMAND "Z_VCM_WRAP ${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}} Z_VCM_WRAP")
     separate_arguments(ARFLAGS NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
+    foreach(var IN ITEMS CFLAGS CXXFLAGS LDFLAGS ARFLAGS)
+        vcpkg_list(APPEND z_vcm_all_flags ${${var}})
+    endforeach()
+    set(z_vcm_all_flags "${z_vcm_all_flags}" PARENT_SCOPE)
 
     # Filter abi flags out of CFLAGS, CXXFLAGS and LDFLAGS
     vcpkg_list(SET ABI_FLAGS)
@@ -326,17 +330,24 @@ function(vcpkg_configure_make)
     # LDFLAGS -> pass -L flags
     # LIBS -> pass -l flags
 
-    #Used by gcc/linux
+    # Used by gcc/linux
     vcpkg_backup_env_variables(VARS C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH)
 
-    #Used by cl
+    # Used by cl
     vcpkg_backup_env_variables(VARS INCLUDE LIB LIBPATH)
 
-    set(vcm_paths_with_spaces OFF)
-    if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
+    vcpkg_list(SET z_vcm_paths_with_spaces)
+    if(CURRENT_PACKAGES_DIR MATCHES " ")
+        vcpkg_list(APPEND z_vcm_paths_with_spaces "${CURRENT_PACKAGES_DIR}")
+    endif()
+    if(CURRENT_INSTALLED_DIR MATCHES " ")
+        vcpkg_list(APPEND z_vcm_paths_with_spaces "${CURRENT_INSTALLED_DIR}")
+    endif()
+    if(z_vcm_paths_with_spaces)
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
-        message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
-        set(vcm_paths_with_spaces ON)
+        vcpkg_list(APPEND z_vcm_paths_with_spaces "Please move the path to one without whitespaces!")
+        list(JOIN z_vcm_paths_with_spaces "\n   " z_vcm_paths_with_spaces)
+        message(STATUS "Warning: Paths with embedded space may be handled incorrectly by configure:\n   ${z_vcm_paths_with_spaces}")
     endif()
 
     set(configure_env "V=1")
@@ -566,14 +577,16 @@ function(vcpkg_configure_make)
             list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
     else()
-        # Because OSX dosn't like CMAKE_C(XX)_COMPILER (cc) in CC/CXX and rather wants to have gcc/g++
+        # OSX dosn't like CMAKE_C(XX)_COMPILER (cc) in CC/CXX and rather wants to have gcc/g++
+        vcpkg_list(SET z_vcm_all_tools)
         function(z_vcpkg_make_set_env envvar cmakevar)
-            set(prog "${VCPKG_DETECTED_CMAKE_${cmakevar}} ${ARGN}")
-            string(STRIP "${prog}" prog)
-            if(DEFINED ENV{${envvar}})
-                return()
-            endif()
-            if(VCPKG_DETECTED_CMAKE_${cmakevar})
+            set(prog "${VCPKG_DETECTED_CMAKE_${cmakevar}}")
+            if(NOT DEFINED ENV{${envvar}} AND NOT prog STREQUAL "")
+                vcpkg_list(APPEND z_vcm_all_tools "${prog}")
+                if(ARGN)
+                    string(APPEND prog " ${ARGN}")
+                endif()
+                set(z_vcm_all_tools "${z_vcm_all_tools}" PARENT_SCOPE)
                 set(ENV{${envvar}} "${prog}")
             endif()
         endfunction()
@@ -598,6 +611,13 @@ function(vcpkg_configure_make)
         z_vcpkg_make_set_env(AR AR)
         z_vcpkg_make_set_env(LD LINKER)
         unset(z_vcpkg_make_set_env)
+    endif()
+
+    list(FILTER z_vcm_all_tools INCLUDE REGEX " ")
+    if(z_vcm_all_tools)
+        list(REMOVE_DUPLICATES z_vcm_all_tools)
+        list(JOIN z_vcm_all_tools "\n   " tools)
+        message(STATUS "Warning: Tools with embedded space may be handled incorrectly by configure:\n   ${tools}")
     endif()
 
     z_vcpkg_configure_make_common_definitions()
@@ -783,6 +803,12 @@ function(vcpkg_configure_make)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         list(APPEND all_buildtypes RELEASE)
         z_vcpkg_configure_make_process_flags(RELEASE)
+    endif()
+    list(FILTER z_vcm_all_flags INCLUDE REGEX " ")
+    if(z_vcm_all_flags)
+        list(REMOVE_DUPLICATES z_vcm_all_flags)
+        list(JOIN z_vcm_all_flags "\n   " flags)
+        message(STATUS "Warning: Arguments with embedded space may be handled incorrectly by configure:\n   ${flags}")
     endif()
 
     foreach(var IN ITEMS arg_OPTIONS arg_OPTIONS_RELEASE arg_OPTIONS_DEBUG)
