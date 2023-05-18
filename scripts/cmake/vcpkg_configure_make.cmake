@@ -84,7 +84,7 @@ macro(z_vcpkg_configure_make_common_definitions)
 endmacro()
 
 # Initializes well-known and auxiliary variables for flags
-# - ABI_FLAGS_<CONFIG>: ABI flags which must be included in CC/CXX to satisfy configure and libtool
+# - ABI_FLAGS_<CONFIG>: ABI flags which must be included in CC/CXX to satisfy both configure and libtool
 # - CPPFLAGS_<CONFIG>:  preprocessor flags common to C and CXX
 # - CFLAGS_<CONFIG>
 # - CXXFLAGS_<CONFIG>
@@ -93,40 +93,88 @@ endmacro()
 # - LINK_ENV_${var_suffix}
 # Prerequisite: VCPKG_DETECTED_CMAKE_... vars loaded
 function(z_vcpkg_configure_make_process_flags var_suffix)
-    # Wrapping in ' ' to facilitate pattern matching
-    set(c_flags   " ${VCPKG_DETECTED_CMAKE_C_FLAGS_${var_suffix}} ")
-    set(cxx_flags " ${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${var_suffix}} ")
-    set(ldflags   " ${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}} ")
+    # separate_aruments is needed to remove outer quotes from detected cmake variables.
+    # (e.g. Android NDK has "--sysroot=...")
+    separate_arguments(CFLAGS NATIVE_COMMAND "Z_VCM_WRAP ${VCPKG_DETECTED_CMAKE_C_FLAGS_${var_suffix}} Z_VCM_WRAP")
+    separate_arguments(CXXFLAGS NATIVE_COMMAND "Z_VCM_WRAP ${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${var_suffix}} Z_VCM_WRAP")
+    separate_arguments(LDFLAGS NATIVE_COMMAND "Z_VCM_WRAP ${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}} Z_VCM_WRAP")
+    separate_arguments(ARFLAGS NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
 
-    # Filter abi flags out of c_flags, cxx_flags and ldflags
-    set(abi_flags "")
-    string(REGEX MATCHALL " -(m?[Aa][Rr][Cc][Hh] +|-sysroot=|-target=|target +)[^ ]+" c_abi_flags "${c_flags}")
-    foreach(flag IN LISTS c_abi_flags)
-        string(APPEND abi_flags "${flag}")
-        string(REPLACE "${flag} " " " c_flags "${c_flags}")
-        string(REPLACE "${flag} " " " cxx_flags "${cxx_flags}")
-        string(REPLACE "${flag} " " " ldflags "${ldflags}")
+    # Filter abi flags out of CFLAGS, CXXFLAGS and LDFLAGS
+    vcpkg_list(SET ABI_FLAGS)
+    set(pattern "")
+    foreach(arg IN LISTS CFLAGS)
+        if(arg STREQUAL "Z_VCM_WRAP")
+            continue()
+        elseif(NOT pattern STREQUAL "")
+            vcpkg_list(APPEND pattern "${arg}")
+        elseif(arg MATCHES "^--(sysroot|target)=.")
+            vcpkg_list(SET pattern "${arg}")
+        elseif(arg MATCHES "^-(m?[Aa][Rr][Cc][Hh]|target)\$")
+            vcpkg_list(SET pattern "${arg}")
+            continue()
+        else()
+           continue()
+        endif()
+        vcpkg_list(APPEND ABI_FLAGS ${pattern})
+        string(REPLACE ";${pattern};" ";" CFLAGS "${CFLAGS}")
+        string(REPLACE ";${pattern};" ";" CXXFLAGS "${CXXFLAGS}")
+        string(REPLACE ";${pattern};" ";" LDFLAGS "${LDFLAGS}")
+        set(pattern "")
     endforeach()
 
-    # Filter common cpp flags out of c_flags and cxx_flags
-    set(cpp_flags "")
-    string(REGEX MATCHALL " -(D|isystem) ?[^ ]+" cxx_cpp_flags "${cxx_flags}")
-    foreach(flag IN LISTS cxx_cpp_flags)
-        string(FIND "${c_flags}" "${flag} " index)
-        if(NOT index STREQUAL "-1")
-            string(APPEND cpp_flags "${flag}")
-            string(REPLACE "${flag} " " " c_flags "${c_flags}")
-            string(REPLACE "${flag} " " " cxx_flags "${cxx_flags}")
+    # Filter common CPPFLAGS out of CFLAGS and CXXFLAGS
+    vcpkg_list(SET CPPFLAGS)
+    vcpkg_list(SET pattern)
+    foreach(arg IN LISTS CXXFLAGS)
+        if(arg STREQUAL "Z_VCM_WRAP")
+            continue()
+        elseif(NOT pattern STREQUAL "")
+            vcpkg_list(APPEND pattern "${arg}")
+        elseif(arg MATCHES "^-(D|isystem).")
+            vcpkg_list(SET pattern "${arg}")
+        elseif(arg MATCHES "^-(D|isystem)\$")
+            vcpkg_list(SET pattern "${arg}")
+            continue()
+        else()
+            continue()
         endif()
+        string(FIND "${CFLAGS}" "${pattern} " index)
+        if(NOT index STREQUAL "-1")
+            vcpkg_list(APPEND CPPFLAGS ${pattern})
+            string(REPLACE ";${pattern};" ";" CFLAGS "${CFLAGS}")
+            string(REPLACE ";${pattern};" ";" CXXFLAGS "${CXXFLAGS}")
+            string(REPLACE ";${pattern};" ";" LDFLAGS "${LDFLAGS}")
+        endif()
+        vcpkg_list(SET pattern)
     endforeach()
-    string(REGEX MATCHALL " -(D|isystem) ?[^ ]+" c_cpp_flags "${c_flags}")
-    foreach(flag IN LISTS c_cpp_flags)
-        string(FIND "${cxx_flags}" "${flag} " index)
-        if(NOT index STREQUAL "-1")
-            string(APPEND cpp_flags "${flag}")
-            string(REPLACE "${flag} " " " c_flags "${c_flags}")
-            string(REPLACE "${flag} " " " cxx_flags "${cxx_flags}")
+    vcpkg_list(SET pattern)
+    foreach(arg IN LISTS CFLAGS)
+        if(arg STREQUAL "Z_VCM_WRAP")
+            continue()
+        elseif(NOT pattern STREQUAL "")
+            vcpkg_list(APPEND pattern "${arg}")
+        elseif(arg MATCHES "^-(D|isystem)\$")
+            vcpkg_list(SET pattern "${arg}")
+            continue()
+        elseif(arg MATCHES "^-(D|isystem).")
+            vcpkg_list(SET pattern "${arg}")
+        else()
+            continue()
         endif()
+        string(FIND "${CXXFLAGS}" "${pattern} " index)
+        if(NOT index STREQUAL "-1")
+            vcpkg_list(APPEND CPPFLAGS ${pattern})
+            string(REPLACE ";${pattern};" ";" CFLAGS "${CFLAGS}")
+            string(REPLACE ";${pattern};" ";" CXXFLAGS "${CXXFLAGS}")
+            string(REPLACE ";${pattern};" ";" LDFLAGS "${LDFLAGS}")
+        endif()
+        vcpkg_list(SET pattern)
+    endforeach()
+
+    # Remove start/end placeholders
+    foreach(list IN ITEMS CFLAGS CXXFLAGS LDFLAGS)
+        vcpkg_list(REMOVE_ITEM ${list} "Z_VCM_WRAP")
     endforeach()
 
     # libtool tries to filter CFLAGS passed to the link stage via a whitelist.
@@ -140,12 +188,8 @@ function(z_vcpkg_configure_make_process_flags var_suffix)
         set(compiler_flag_escape "-Xcompiler ")
     endif()
     if(compiler_flag_escape)
-        separate_arguments(c_flags_list NATIVE_COMMAND "${c_flags}")
-        list(TRANSFORM c_flags_list PREPEND "${compiler_flag_escape}")
-        list(JOIN c_flags_list " " c_flags)
-        separate_arguments(cxx_flags_list NATIVE_COMMAND "${cxx_flags}")
-        list(TRANSFORM cxx_flags_list PREPEND "${compiler_flag_escape}")
-        list(JOIN cxx_flags_list " " cxx_flags)
+        list(TRANSFORM CFLAGS PREPEND "${compiler_flag_escape}")
+        list(TRANSFORM CXXFLAGS PREPEND "${compiler_flag_escape}")
     endif()
 
     # Could use a future VCPKG_DETECTED_CMAKE_LIBRARY_PATH_FLAG
@@ -163,41 +207,32 @@ function(z_vcpkg_configure_make_process_flags var_suffix)
             set(linker_flag_escape "-Xlinker -Xlinker -Xlinker ")
         endif()
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-            set(link_env "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
-        else() # dynamic
-            set(link_env "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
+            string(STRIP "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}" LINK_ENV)
+        else()
+            string(STRIP "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}" LINK_ENV)
         endif()
     endif()
     if(linker_flag_escape)
-        separate_arguments(ldflags_list NATIVE_COMMAND "${ldflags}")
-        list(TRANSFORM ldflags_list PREPEND "${linker_flag_escape}")
-        list(JOIN ldflags_list " " ldflags)
+        list(TRANSFORM LDFLAGS PREPEND "${linker_flag_escape}")
     endif()
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
-        string(PREPEND ldflags "${linker_flag_escape}${library_path_flag}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link ")
+        vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link")
     endif()
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
-        string(PREPEND ldflags "${linker_flag_escape}${library_path_flag}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib ")
+        vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib")
     endif()
 
-    set(arflags "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
-    if(arflags)
+    if(ARFLAGS)
         # ARFLAGS need to know the command for creating an archive (Maybe needs user customization?)
         # or extract it from CMake via CMAKE_${lang}_ARCHIVE_CREATE ?
         # or from CMAKE_${lang}_${rule} with rule being one of CREATE_SHARED_MODULE CREATE_SHARED_LIBRARY LINK_EXECUTABLE
-        string(PREPEND arflags "cr ")
+        vcpkg_list(PREPEND ARFLAGS "cr")
     endif()
 
-    foreach(var IN ITEMS abi_flags cpp_flags c_flags cxx_flags ldflags arflags link_env)
-        string(STRIP "${${var}}" "${var}")
+    foreach(var IN ITEMS ABI_FLAGS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS ARFLAGS)
+        list(JOIN ${var} " " string)
+        set(${var}_${var_suffix} "${string}" PARENT_SCOPE)
     endforeach()
-    set(ABI_FLAGS_${var_suffix} "${abi_flags}" PARENT_SCOPE)
-    set(CPPFLAGS_${var_suffix} "${cpp_flags}" PARENT_SCOPE)
-    set(CFLAGS_${var_suffix} "${c_flags}" PARENT_SCOPE)
-    set(CXXFLAGS_${var_suffix} "${cxx_flags}" PARENT_SCOPE)
-    set(LDFLAGS_${var_suffix} "${ldflags}" PARENT_SCOPE)
-    set(ARFLAGS_${var_suffix} "${arflags}" PARENT_SCOPE)
-    set(LINK_ENV_${var_suffix} "${link_env}" PARENT_SCOPE)
 endfunction()
 
 macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
@@ -231,15 +266,7 @@ function(vcpkg_configure_make)
 
     # Remove outer quotes from cmake variables which will be forwarded via makefile/shell variables
     # substituted into makefile commands (e.g. Android NDK has "--sysroot=...")
-    foreach(var IN ITEMS VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG
-                         VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE
-                         VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG
-                         VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE
-                         VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG
-                         VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE
-                         VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_DEBUG
-                         VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE
-                         VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES
+    foreach(var IN ITEMS VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES
                          VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES
     )
         separate_arguments(cmake_list NATIVE_COMMAND "${${var}}")
@@ -801,8 +828,8 @@ function(vcpkg_configure_make)
             set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
         endif()
 
-        # ABI_FLAGS isn't standard, but can be useful to reinject these flags into other variables
-        set(ENV{ABI_FLAGS} "${ABIFLAGS_${current_buildtype}}")
+        # VCPKG_ABI_FLAGS isn't standard, but can be useful to reinject these flags into other variables
+        set(ENV{VCPKG_ABI_FLAGS} "${ABIFLAGS_${current_buildtype}}")
         if(ABI_FLAGS_${current_buildtype})
             # libtool removes some flags which are needed for configure tests.
             set(ENV{CC} "$ENV{CC} ${ABI_FLAGS_${current_buildtype}}")
