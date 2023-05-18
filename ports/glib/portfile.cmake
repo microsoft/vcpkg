@@ -2,12 +2,7 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
     FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 7ab8740925fa4ed2d860a35544c475ae905df5fa7fc0cc64ffa8c543df6073794e44c8ff39e3e1de1d677016ef9d27e9bc709d2505d13090faa8d6c47cd64bd0
-)
-vcpkg_download_distfile(GLIB_MR_3386
-    URLS "https://gitlab.gnome.org/GNOME/glib/-/merge_requests/3386.diff"
-    FILENAME "glib-mr-3386.diff"
-    SHA512 cb67e8908a7cb6f945d019da1bf56f504b9c2131a832bcdfbdc61c973c89efd8e4380d5d67f83e229998da1e8579f3ff87b7695a3318eee9613d1ab1168bd0db
+    SHA512 5a99723d72ae987999bdf3eac4f3cabe2e014616038f2006e84060b97d6d290b7d44a20d700e9c0f4572a6defed56169f624bcd21b0337f32832b311aa2737e6
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -15,7 +10,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
-        ${GLIB_MR_3386}
 )
 
 vcpkg_list(SET OPTIONS)
