@@ -34,12 +34,16 @@ function(build_msvc build_type source_path)
         set(ENV{MSBFLAGS} "$ENV{MSBFLAGS} /p:Platform=Win32")
     endif()
 
-    message(STATUS "Building ${label}")
-    set(targets libpq libecpg_compat)
+    set(build_targets libpq libecpg_compat)
+    set(install_target core)
     if(HAS_TOOLS AND NOT build_type STREQUAL "DEBUG")
-        set(targets client)
+        set(build_targets client)
+        set(install_target client)
     endif()
-    foreach(target IN LISTS targets)
+
+    message(STATUS "Building ${label}")
+    foreach(target IN LISTS build_targets)
+        string(REPLACE "client" "" target "${target}")
         vcpkg_execute_required_process(
             COMMAND "${PERL}" build.pl ${build_type} ${target}
             WORKING_DIRECTORY "${build_path}/src/tools/msvc"
@@ -49,7 +53,7 @@ function(build_msvc build_type source_path)
 
     message(STATUS "Installing ${label}")
     vcpkg_execute_required_process(
-        COMMAND "${PERL}" install.pl "${packages_dir}" client
+        COMMAND "${PERL}" install.pl "${packages_dir}" ${install_target}
         WORKING_DIRECTORY "${build_path}/src/tools/msvc"
         LOGNAME "install-${label}"
     )

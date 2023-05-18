@@ -11,9 +11,7 @@ set(PATCHES
     patches/windows/openssl-version.patch
     patches/windows/Solution.patch
     patches/windows/MSBuildProject_fix_gendef_perl.patch
-    patches/windows/msgfmt.patch
     patches/windows/python_lib.patch
-    patches/windows/fix-compile-flag-Zi.patch
     patches/windows/tcl_version.patch
     patches/windows/macro-def.patch
     patches/fix-configure.patch
@@ -34,7 +32,6 @@ if("client" IN_LIST FEATURES)
     set(HAS_TOOLS TRUE)
 else()
     set(HAS_TOOLS FALSE)
-    list(APPEND PATCHES patches/windows/minimize_install.patch)
 endif()
 vcpkg_extract_source_archive(
     SOURCE_PATH
