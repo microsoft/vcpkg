@@ -2,7 +2,7 @@ if(NOT CMAKE_HOST_WIN32)
     message(FATAL_ERROR "Visual Studio is only supported on Windows hosts.")
 endif()
 
-set(program_name "")
+set(program_name "clang")
 set(paths_to_search
     # LLVM in Visual Studio
     "$ENV{LLVMInstallDir}/x64/bin"
@@ -15,3 +15,7 @@ find_program(VSCLANG
     PATHS ${paths_to_search}
     NO_DEFAULT_PATH
 )
+if(NOT VSCLANG)
+    list(JOIN paths_to_search "\n   " paths)
+    message(FATAL_ERROR "Failed to find Visual Studio's clang in:\n   ${paths}")
+endif()
