@@ -142,6 +142,12 @@ endif()
 
 # Good optional plugins
 
+if("bzip2-good" IN_LIST FEATURES)
+    set(PLUGIN_GOOD_BZ2 enabled)
+else()
+    set(PLUGIN_GOOD_BZ2 disabled)
+endif()
+
 if("cairo" IN_LIST FEATURES)
     set(PLUGIN_GOOD_CAIRO enabled)
 else()
@@ -224,6 +230,12 @@ if("assrender" IN_LIST FEATURES)
     set(PLUGIN_BAD_ASSRENDER enabled)
 else()
     set(PLUGIN_BAD_ASSRENDER disabled)
+endif()
+
+if("bzip2-bad" IN_LIST FEATURES)
+    set(PLUGIN_BAD_BZ2 enabled)
+else()
+    set(PLUGIN_BAD_BZ2 disabled)
 endif()
 
 if("chromaprint" IN_LIST FEATURES)
@@ -412,7 +424,7 @@ vcpkg_configure_meson(
         -Dlibav=${LIBAV}
         -Dlibnice=disabled
         -Ddevtools=disabled
-        -Dges=disabled
+        -Dges=enabled
         -Drtsp_server=disabled
         -Domx=disabled
         -Dvaapi=disabled
@@ -459,7 +471,7 @@ vcpkg_configure_meson(
         # gst-plugins-good
         -Dgood=${PLUGIN_GOOD_SUPPORT}
         -Dgst-plugins-good:aalib=disabled
-        -Dgst-plugins-good:bz2=disabled
+        -Dgst-plugins-good:bz2=${PLUGIN_GOOD_BZ2}
         -Dgst-plugins-good:directsound=auto
         -Dgst-plugins-good:dv=disabled
         -Dgst-plugins-good:dv1394=disabled
@@ -508,7 +520,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:assrender=${PLUGIN_BAD_ASSRENDER}
         -Dgst-plugins-bad:bluez=disabled
         -Dgst-plugins-bad:bs2b=disabled
-        -Dgst-plugins-bad:bz2=disabled # Error during plugin configuration
+        -Dgst-plugins-bad:bz2=${PLUGIN_BAD_BZ2}
         -Dgst-plugins-bad:chromaprint=${PLUGIN_BAD_CHROMAPRINT}
         -Dgst-plugins-bad:closedcaption=${PLUGIN_BAD_CLOSEDCAPTION}
         -Dgst-plugins-bad:colormanagement=${PLUGIN_BAD_COLORMANAGEMENT}
@@ -550,7 +562,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:msdk=disabled
         -Dgst-plugins-bad:musepack=disabled
         -Dgst-plugins-bad:neon=disabled
-        -Dgst-plugins-bad:nvcodec=disabled
+        -Dgst-plugins-bad:nvcodec=enabled
         -Dgst-plugins-bad:onnx=disabled # libonnxruntime not found
         -Dgst-plugins-bad:openal=${PLUGIN_BAD_OPENAL}
         -Dgst-plugins-bad:openaptx=disabled
@@ -632,6 +644,7 @@ list(APPEND GST_BIN_TOOLS
     gst-launch-1.0
     gst-stats-1.0
     gst-typefind-1.0
+    ges-launch-1.0
 )
 list(APPEND GST_LIBEXEC_TOOLS
     gst-plugin-scanner
@@ -690,18 +703,40 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gstconfig.h" "!defined(GST_STATIC_COMPILATION)" "0")
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    # move plugins to ${prefix}/plugins/${PORT} instead of ${prefix}/lib/gstreamer-1.0
     if(NOT VCPKG_BUILD_TYPE)
-        file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll"
+        file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}*${CMAKE_SHARED_LIBRARY_SUFFIX}"
                            "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb"
         )
-        file(COPY ${DBG_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(COPY ${DBG_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}")
     endif()
-    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll"
+    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}*${CMAKE_SHARED_LIBRARY_SUFFIX}"
                        "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb"
     )
-    file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/${PORT}")
     file(REMOVE ${DBG_BINS} ${REL_BINS})
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0" "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0")
+    endif()
+
+    set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-1.0.pc")
+    if(EXISTS "${_file}")
+        file(READ "${_file}" _contents)
+        string(REPLACE [[toolsdir=${exec_prefix}/bin]] "toolsdir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginscannerdir=${libexecdir}/gstreamer-1.0]] "pluginscannerdir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginsdir=${libdir}/gstreamer-1.0]] "pluginsdir=\${prefix}/plugins/${PORT}" _contents "${_contents}")
+        file(WRITE "${_file}" "${_contents}")
+    endif()
+
+    set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-1.0.pc")
+    if(EXISTS "${_file}")
+        file(READ "${_file}" _contents)
+        string(REPLACE [[toolsdir=${exec_prefix}/bin]] "toolsdir=\${prefix}/tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginscannerdir=${libexecdir}/gstreamer-1.0]] "pluginscannerdir=\${prefix}/tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginsdir=${libdir}/gstreamer-1.0]] "pluginsdir=\${prefix}/plugins/${PORT}" _contents "${_contents}")
+        file(WRITE "${_file}" "${_contents}")
+    endif()
 endif()
 
 vcpkg_fixup_pkgconfig()

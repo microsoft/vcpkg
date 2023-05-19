@@ -4,17 +4,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF llvmorg-${VERSION}
-    SHA512 d64f97754c24f32deb5f284ebbd486b3a467978b7463d622f50d5237fff91108616137b4394f1d1ce836efa59bf7bec675b6dee257a79b241c15be52d4697460
+    SHA512 99beff9ee6f8c26f16ea53f03ba6209a119099cbe361701b0d5f4df9d5cc5f2f0da7c994c899a4cec876da8428564dc7a8e798226a9ba8b5c18a3ef8b181d39e
     HEAD_REF main
     PATCHES
-        0002-fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
-        0004-fix-dr-1734.patch
-        0005-fix-tools-path.patch
-        0007-fix-compiler-rt-install-path.patch
-        0009-fix-tools-install-path.patch
-        0010-fix-libffi.patch
-        0011-fix-install-bolt.patch
-        0012-disable-libomp-aliases.patch
+        0001-Fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
+        0002-Fix-DR-1734.patch
+        0003-Fix-tools-path.patch
+        0004-Fix-compiler-rt-install-path.patch
+        0005-Fix-tools-install-path.patch
+        0006-Fix-libffi.patch
+        0007-Fix-install-bolt.patch
+        0008-llvm_assert.patch
+        0009-disable-libomp-aliases.patch
 )
 
 vcpkg_check_features(
@@ -29,6 +30,7 @@ vcpkg_check_features(
         enable-ffi LLVM_ENABLE_FFI
         enable-terminfo LLVM_ENABLE_TERMINFO
         enable-threads LLVM_ENABLE_THREADS
+        enable-ios COMPILER_RT_ENABLE_IOS
         enable-eh LLVM_ENABLE_EH
         enable-bindings LLVM_ENABLE_BINDINGS
 )
@@ -40,14 +42,17 @@ include("${cmake_vars_file}")
 # LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
 # See https://developercommunity.visualstudio.com/content/problem/845933/miscompile-boolean-condition-deduced-to-be-always.html
 # and thread "[llvm-dev] Longstanding failing tests - clang-tidy, MachO, Polly" on llvm-dev Jan 21-23 2020.
-list(APPEND FEATURE_OPTIONS
-    -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
-)
+if(VCPKG_DETECTED_MSVC_VERSION LESS "1925" AND VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    list(APPEND FEATURE_OPTIONS
+        -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
+    )
+endif()
 
 # Force enable or disable external libraries
 set(llvm_external_libraries
     zlib
     libxml2
+    zstd
 )
 foreach(external_library IN LISTS llvm_external_libraries)
     string(TOLOWER "enable-${external_library}" feature_name)
@@ -224,12 +229,14 @@ endforeach()
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path(${PYTHON3_DIR})
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 set(LLVM_LINK_JOBS 1)
 
+file(REMOVE "${SOURCE_PATH}/llvm/cmake/modules/Findzstd.cmake")
+
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}/llvm
+    SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLLVM_INCLUDE_EXAMPLES=OFF
@@ -245,10 +252,20 @@ vcpkg_cmake_configure(
         "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
         "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
+
         -DPACKAGE_VERSION=${VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
-        -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
+        -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        -DCLANG_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        -DLLD_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        -DMLIR_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        -DBOLT_TOOLS_INSTALL_DIR:PATH=tools/llvm # all others are strings
+        -DOPENMP_TOOLS_INSTALL_DIR:PATH=tools/llvm
+    MAYBE_UNUSED_VARIABLES 
+        COMPILER_RT_ENABLE_IOS
+        OPENMP_TOOLS_INSTALL_DIR
+        MLIR_TOOLS_INSTALL_DIR
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -287,6 +304,7 @@ set(empty_dirs)
 
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/misc/ConfusableTable")
 endif()
 
 if("pstl" IN_LIST FEATURES)

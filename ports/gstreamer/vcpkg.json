@@ -1,7 +1,7 @@
 {
   "name": "gstreamer",
   "version": "1.20.5",
-  "port-version": 3,
+  "port-version": 8,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
@@ -81,6 +81,32 @@
           ]
         },
         "libass"
+      ]
+    },
+    "bzip2-bad": {
+      "description": "Enable bzip2 stream compression in bad plugins",
+      "dependencies": [
+        "bzip2",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        }
+      ]
+    },
+    "bzip2-good": {
+      "description": "Enable bzip2 stream compression in good plugins",
+      "dependencies": [
+        "bzip2",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-good"
+          ]
+        }
       ]
     },
     "cairo": {
@@ -286,6 +312,13 @@
         {
           "name": "ffmpeg",
           "default-features": false
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
         }
       ]
     },
