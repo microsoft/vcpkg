@@ -67,7 +67,7 @@ endif()
 
 vcpkg_list(APPEND OPTIONS "CCAS=${ccas}" "ASMFLAGS=${asmflags}")
 if(disable_assembly)
-    vcpkg_list(APPEND OPTIONS "--disable-assembly")
+    vcpkg_list(APPEND OPTIONS "--disable-assembler")
 endif()
 
 if(VCPKG_CROSSCOMPILING)
