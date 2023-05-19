@@ -1,0 +1,7 @@
+{
+  "name": "cpp-async",
+  "version-date": "2023-05-19",
+  "description": "Support types and functions for C++20 coroutines",
+  "homepage": "https://github.com/microsoft/cpp-async",
+  "license": "MIT"
+}
