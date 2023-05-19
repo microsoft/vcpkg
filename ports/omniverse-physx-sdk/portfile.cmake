@@ -36,9 +36,9 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         -DPX_BUILDSNIPPETS=OFF
         -DPX_BUILDPVDRUNTIME=OFF
         -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}
-        -DNV_USE_STATIC_WINCRT=${VCPKG_BUILD_STATIC_LIBS}
-        -DNV_USE_DEBUG_WINCRT=${VCPKG_LINK_CRT_STATICALLY}
+        -DNV_USE_STATIC_WINCRT=${VCPKG_LINK_CRT_STATICALLY}
         -DPX_FLOAT_POINT_PRECISE_MATH=OFF
+        -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>"
     )
     # It would have been more correct to specify "win64" here, but we specify this so that packman can download
     # the right dependencies on windows (see the "platforms" field in the dependencies.xml), that will also later
