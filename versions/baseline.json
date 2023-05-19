@@ -1233,8 +1233,8 @@
       "port-version": 1
     },
     "boringssl": {
-      "baseline": "2021-06-23",
-      "port-version": 4
+      "baseline": "2023-04-20",
+      "port-version": 0
     },
     "botan": {
       "baseline": "2.19.3",
@@ -8359,6 +8359,10 @@
     "vcpkg-tool-gn": {
       "baseline": "2022-04-16",
       "port-version": 1
+    },
+    "vcpkg-tool-go": {
+      "baseline": "1.20.3",
+      "port-version": 0
     },
     "vcpkg-tool-gyp-next": {
       "baseline": "2022-10-15",
