@@ -1,15 +1,12 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 65a4cbc14f2a972662435ebf4c3be60355f7d57da251590f75b65ded113dda2c89c4a047e3b337841cbaddcf3966c879f448c832687979017df8ab1aaddfbb88
+    SHA512 dfc7ccf5c1a3184fa93be762a880b7631faa4cd178cd72df8f5fd8a6296edafc56de2594617bebcb75ddf19ed4471dafcb574b22d7e9217dedfd7ea72c9247f2
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
-        fix-find-package2.patch
         libkml.patch
 )
 # `vcpkg clean` stumbles over one subdir

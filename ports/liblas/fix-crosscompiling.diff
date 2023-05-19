@@ -1,0 +1,13 @@
+diff --git a/cmake/liblas-config-version.cmake.in b/cmake/liblas-config-version.cmake.in
+index f9b7c7cb..5dd2aba1 100644
+--- a/cmake/liblas-config-version.cmake.in
++++ b/cmake/liblas-config-version.cmake.in
+@@ -22,7 +22,7 @@ elseif (MSVC AND NOT MSVC_VERSION STREQUAL "@MSVC_VERSION@")
+   # Reject if there's a mismatch in MSVC compiler versions
+   set (REASON "_MSC_VER = @MSVC_VERSION@")
+   set (PACKAGE_VERSION_UNSUITABLE TRUE)
+-elseif (NOT CMAKE_CROSSCOMPILING STREQUAL "@CMAKE_CROSSCOMPILING@")
++elseif (0)
+   # Reject if there's a mismatch in ${CMAKE_CROSSCOMPILING}
+   set (REASON "cross-compiling = @CMAKE_CROSSCOMPILING@")
+   set (PACKAGE_VERSION_UNSUITABLE TRUE)

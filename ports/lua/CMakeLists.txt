@@ -7,10 +7,9 @@
 #     - This is a source-incompatible change because extern "C" is chosen by the including application.
 # - The lua.hpp header will not be available.
 
-PROJECT ( lua )
-
-
 CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
+
+PROJECT(lua)
 
 # Build Libraries
 FILE(GLOB HDR_LIBLUA "${CMAKE_SOURCE_DIR}/src/*.h")
@@ -28,6 +27,7 @@ ENDIF ()
 
 IF (UNIX)
     ADD_DEFINITIONS (-DLUA_USE_POSIX)
+    FIND_LIBRARY (LIB_MATH NAMES m)
 ENDIF ()
 
 # C library
@@ -51,7 +51,6 @@ IF (UNIX)
             TARGET_COMPILE_DEFINITIONS (lua PUBLIC -DLUA_USE_DLOPEN)
             TARGET_LINK_LIBRARIES (lua ${CMAKE_DL_LIBS})
         ENDIF ()
-        FIND_LIBRARY (LIB_MATH NAMES m)
         IF (LIB_MATH)
             TARGET_LINK_LIBRARIES (lua m)
         ENDIF ()
@@ -93,6 +92,10 @@ IF (INSTALL_TOOLS)
             IF (_LIB_READLINE_NAME STREQUAL edit)
                 TARGET_INCLUDE_DIRECTORIES (luai PUBLIC /usr/include/edit)
             ENDIF ()
+        ENDIF ()
+        
+        IF (LIB_MATH)
+            TARGET_LINK_LIBRARIES (luac m)
         ENDIF ()
     ENDIF ()
     INSTALL ( TARGETS luai luac RUNTIME DESTINATION tools/lua )

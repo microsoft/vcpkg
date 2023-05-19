@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         no_stdc_check.patch
+        fix-library-name.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -23,8 +24,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
+        -DJAS_ENABLE_LIBHEIF=OFF # found via find_library instead of find_package
         -DJAS_ENABLE_LIBJPEG=ON
-        -DJAS_ENABLE_OPENGL=${JAS_ENABLE_OPENGL}
         -DJAS_ENABLE_DOC=OFF
         -DJAS_ENABLE_LATEX=OFF
         -DJAS_ENABLE_PROGRAMS=OFF
@@ -41,4 +43,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/LICENSE.txt)

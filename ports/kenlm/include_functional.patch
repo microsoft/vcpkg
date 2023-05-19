@@ -1,0 +1,12 @@
+diff --git a/util/string_piece_hash.hh b/util/string_piece_hash.hh
+index 6ff6f88..16808cd 100644
+--- a/util/string_piece_hash.hh
++++ b/util/string_piece_hash.hh
+@@ -1,6 +1,7 @@
+ #ifndef UTIL_STRING_PIECE_HASH_H
+ #define UTIL_STRING_PIECE_HASH_H
+ 
++#include <functional>
+ #include "util/have.hh"
+ #include "util/string_piece.hh"
+ 

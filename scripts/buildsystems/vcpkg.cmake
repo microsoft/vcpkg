@@ -56,12 +56,13 @@ if(VCPKG_PREFER_SYSTEM_LIBS)
 endif()
 
 # Manifest options and settings
+set(Z_VCPKG_MANIFEST_DIR_INITIAL_VALUE "${VCPKG_MANIFEST_DIR}")
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
     if(EXISTS "${CMAKE_SOURCE_DIR}/vcpkg.json")
-        set(VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}")
+        set(Z_VCPKG_MANIFEST_DIR_INITIAL_VALUE "${CMAKE_SOURCE_DIR}")
     endif()
 endif()
-set(VCPKG_MANIFEST_DIR "${VCPKG_MANIFEST_DIR}"
+set(VCPKG_MANIFEST_DIR "${Z_VCPKG_MANIFEST_DIR_INITIAL_VALUE}"
     CACHE PATH "The path to the vcpkg manifest directory." FORCE)
 
 if(DEFINED VCPKG_MANIFEST_DIR AND NOT VCPKG_MANIFEST_DIR STREQUAL "")
@@ -350,7 +351,13 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 elseif(MINGW)
     set(Z_VCPKG_TARGET_TRIPLET_PLAT mingw-dynamic)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows"))
-    set(Z_VCPKG_TARGET_TRIPLET_PLAT windows)
+    if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
+        set(Z_VCPKG_TARGET_TRIPLET_PLAT xbox-scarlett)
+    elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+        set(Z_VCPKG_TARGET_TRIPLET_PLAT xbox-xboxone)
+    else()
+        set(Z_VCPKG_TARGET_TRIPLET_PLAT windows)
+    endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT freebsd)
 endif()
@@ -386,16 +393,16 @@ if(NOT Z_VCPKG_ROOT_DIR)
 endif()
 
 if(DEFINED VCPKG_INSTALLED_DIR)
-    # do nothing
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${VCPKG_INSTALLED_DIR}")
 elseif(DEFINED _VCPKG_INSTALLED_DIR)
-    set(VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}")
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${_VCPKG_INSTALLED_DIR}")
 elseif(VCPKG_MANIFEST_MODE)
-    set(VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${CMAKE_BINARY_DIR}/vcpkg_installed")
 else()
-    set(VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${Z_VCPKG_ROOT_DIR}/installed")
 endif()
 
-set(VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
+set(VCPKG_INSTALLED_DIR "${Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE}"
     CACHE PATH
     "The directory which contains the installed libraries for each triplet" FORCE)
 set(_VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
@@ -513,7 +520,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
                 "--x-wait-for-lock"
                 "--x-manifest-root=${VCPKG_MANIFEST_DIR}"
                 "--x-install-root=${_VCPKG_INSTALLED_DIR}"
-                "${Z_VCPKG_FEATURE_FLAGS}"
+                ${Z_VCPKG_FEATURE_FLAGS}
                 ${Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
                 ${VCPKG_INSTALL_OPTIONS}
             OUTPUT_VARIABLE Z_VCPKG_MANIFEST_INSTALL_LOGTEXT
@@ -590,7 +597,7 @@ function(add_executable)
     list(FIND ARGV "MACOSX_BUNDLE" MACOSX_BUNDLE_IDX)
     if(IMPORTED_IDX EQUAL "-1" AND ALIAS_IDX EQUAL "-1")
         if(VCPKG_APPLOCAL_DEPS)
-            if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
+            if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp|xbox")
                 z_vcpkg_set_powershell_path()
                 set(EXTRA_OPTIONS "")
                 if(X_VCPKG_APPLOCAL_DEPS_SERIALIZED)
@@ -631,7 +638,7 @@ function(add_library)
     list(FIND ARGS "ALIAS" ALIAS_IDX)
     if(IMPORTED_IDX EQUAL "-1" AND INTERFACE_IDX EQUAL "-1" AND ALIAS_IDX EQUAL "-1")
         get_target_property(IS_LIBRARY_SHARED "${target_name}" TYPE)
-        if(VCPKG_APPLOCAL_DEPS AND Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
+        if(VCPKG_APPLOCAL_DEPS AND Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp|xbox" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
             z_vcpkg_set_powershell_path()
             add_custom_command(TARGET "${target_name}" POST_BUILD
                 COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
@@ -672,7 +679,7 @@ function(x_vcpkg_install_local_dependencies)
         message(FATAL_ERROR "DESTINATION must be specified")
     endif()
 
-    if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "^(windows|uwp)$")
+    if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "^(windows|uwp|xbox-.*)$")
         # Install CODE|SCRIPT allow the use of generator expressions
         cmake_policy(SET CMP0087 NEW) # CMake 3.14
 

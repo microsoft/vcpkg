@@ -16,7 +16,7 @@ parameters:
 
 jobs:
 - job: x64_linux
-  condition: contains('^x64-linux$', '${{ parameters.tripletPattern }}')
+  condition: and(succeeded(), contains('^x64-linux$', '${{ parameters.tripletPattern }}'))
   pool:
     name: ${{ parameters.poolName }}
   workspace:
@@ -54,7 +54,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet x64-linux -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      arguments: '-Triplet x64-linux -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -IsLinuxHost'
       pwsh: true
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: failure logs for x64-linux'
