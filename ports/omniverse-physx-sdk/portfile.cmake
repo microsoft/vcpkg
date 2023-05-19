@@ -59,7 +59,7 @@ set(PACKMAN_CMD "${PHYSX_ROOT_DIR}/buildtools/packman/packman")
 # Check if packman command exists
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(PACKMAN_CMD "${PACKMAN_CMD}.bat")
+    set(PACKMAN_CMD "${PACKMAN_CMD}.cmd")
 endif()
 
 if(NOT EXISTS ${PACKMAN_CMD})
