@@ -2,8 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ada-url/ada
     REF "v${VERSION}"
-    SHA512 a27fc3f8713e73baacbec4f36688bb60c71cdde0ad6142dfe314d09385757833e6166995a955856620183f6fe9bf04d7e4d62e3f3de11c6af86d2d988b719729
+    SHA512 689dcdc3e89f2ae51e039f6d354efea3231d3ff025c58f572596d87cebd7d5f2bf5ca8c530df8514369a14831dfdb1c65bc1d93a0ece579031eb3f0dd47548c0
     HEAD_REF main
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools ADA_TOOLS
 )
 
 vcpkg_cmake_configure(
@@ -12,6 +18,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DADA_BENCHMARKS=OFF
         -DBUILD_TESTING=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -20,7 +27,9 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME ada CONFIG_PATH "lib/cmake/ada")
 
-vcpkg_copy_tools(TOOL_NAMES adaparse AUTO_CLEAN)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES adaparse AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
