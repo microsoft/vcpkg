@@ -33,6 +33,8 @@ elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(targetPlatform "linuxAarch64")
 elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 
+
+
     set(PLATFORM_OPTIONS
         -DPX_BUILDSNIPPETS=OFF
         -DPX_BUILDPVDRUNTIME=OFF
@@ -41,11 +43,17 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         -DPX_FLOAT_POINT_PRECISE_MATH=OFF
     )
 
+
+
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        list(APPEND PLATFORM_OPTIONS -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>DLL)
+        list(APPEND PLATFORM_OPTIONS -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+        list(APPEND PLATFORM_OPTIONS -DWINCRT_NDEBUG="MD$<$<CONFIG:Debug>:d>")
     else()
-        list(APPEND PLATFORM_OPTIONS -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>)
+        list(APPEND PLATFORM_OPTIONS -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        list(APPEND PLATFORM_OPTIONS -DWINCRT_NDEBUG="MT$<$<CONFIG:Debug>:d>")
     endif()
+
+
 
     # Note: it would have been more correct to specify "win64" here, but we specify this so that packman can download
     # the right dependencies on windows (see the "platforms" field in the dependencies.xml), that will also later
