@@ -35,8 +35,8 @@ if (WIN32)
     )
     # Make sure the next CMake targets after this file will have the correct multi-threaded
     # statically-linked runtime library (either debug or release) as required by PhysX
-    message("Setting CMAKE_MSVC_RUNTIME_LIBRARY to multi-threaded statically-linked runtime for next targets")
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    # message("Setting CMAKE_MSVC_RUNTIME_LIBRARY to multi-threaded statically-linked runtime for next targets")
+    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 elseif(UNIX)
     set(PHYSX_LIBRARIES
         "PhysXExtensions_static_64"
