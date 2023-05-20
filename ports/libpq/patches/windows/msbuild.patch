@@ -57,7 +57,7 @@ index f24d9e5..356cc31 100644
        <ImageHasSafeExceptionHandlers/>
        <SubSystem>Console</SubSystem>
 diff --git a/src/tools/msvc/Mkvcbuild.pm b/src/tools/msvc/Mkvcbuild.pm
-index ef0a33c..ea07351 100644
+index ef0a33c..74f2f89 100644
 --- a/src/tools/msvc/Mkvcbuild.pm
 +++ b/src/tools/msvc/Mkvcbuild.pm
 @@ -114,8 +114,10 @@ sub mkvcbuild
@@ -79,8 +79,61 @@ index ef0a33c..ea07351 100644
  	$postgres->AddDefine('BUILDING_DLL');
  	$postgres->AddLibrary('secur32.lib');
  	$postgres->AddLibrary('ws2_32.lib');
+@@ -240,12 +243,13 @@ sub mkvcbuild
+ 		$pltcl->AddIncludeDir($solution->{options}->{tcl} . '/include');
+ 		$pltcl->AddReference($postgres);
+ 
+-		for my $tclver (qw(86t 86 85 84))
++		my $v = $solution->{options}->{tcl_version};
++		for my $tclver ( ("${v}","${v}s") )
+ 		{
+ 			my $tcllib = $solution->{options}->{tcl} . "/lib/tcl$tclver.lib";
+ 			if (-e $tcllib)
+ 			{
+-				$pltcl->AddLibrary($tcllib);
++				$pltcl->AddLibrary("\$(VcpkgTcl${tclver}Libs)");
+ 				$found = 1;
+ 				last;
+ 			}
+@@ -500,8 +504,7 @@ sub mkvcbuild
+ 		  . "print(str(sys.version_info[0])+str(sys.version_info[1]))";
+ 		my $prefixcmd =
+ 		  qq("$solution->{options}->{python}\\python" -c "$pythonprog");
+-		my $pyout = `$prefixcmd`;
+-		die "Could not query for python version!\n" if $?;
++		my $pyout = "$solution->{options}->{python}\n$solution->{options}->{python_version}";
+ 		my ($pyprefix, $pyver) = split(/\r?\n/, $pyout);
+ 
+ 		# Sometimes (always?) if python is not present, the execution
+@@ -517,8 +520,8 @@ sub mkvcbuild
+ 
+ 		my $plpython = $solution->AddProject('plpython' . $pymajorver,
+ 			'dll', 'PLs', 'src/pl/plpython');
+-		$plpython->AddIncludeDir($pyprefix . '/include');
+-		$plpython->AddLibrary($pyprefix . "/Libs/python$pyver.lib");
++		$plpython->AddIncludeDir($pyprefix . "/include/python$pyver");
++		$plpython->AddLibrary('$(VcpkgPythonLibs)');
+ 		$plpython->AddReference($postgres);
+ 
+ 		# Add transform modules dependent on plpython
+diff --git a/src/tools/msvc/Project.pm b/src/tools/msvc/Project.pm
+index 570bab5..2d51abe 100644
+--- a/src/tools/msvc/Project.pm
++++ b/src/tools/msvc/Project.pm
+@@ -167,6 +167,11 @@ sub AddReference
+ 		}
+ 		$self->AddLibrary(
+ 			"__CFGNAME__/" . $ref->{name} . "/" . $ref->{name} . ".lib");
++
++		if ($self->{solution}->{options}->{VCPKG_LIBRARY_LINKAGE} eq 'static')
++		{
++			map { $self->AddLibrary($_) } @{ $ref->{libraries} };
++		}
+ 	}
+ 	return;
+ }
 diff --git a/src/tools/msvc/Solution.pm b/src/tools/msvc/Solution.pm
-index 35126cd..63a4841 100644
+index 35126cd..231275b 100644
 --- a/src/tools/msvc/Solution.pm
 +++ b/src/tools/msvc/Solution.pm
 @@ -63,6 +63,11 @@ sub DeterminePlatform
@@ -95,7 +148,17 @@ index 35126cd..63a4841 100644
  	{
  		# Examine CL help output to determine if we are in 32 or 64-bit mode.
  		my $output = `cl /help 2>&1`;
-@@ -148,7 +153,7 @@ sub GetOpenSSLVersion
+@@ -124,6 +129,9 @@ sub copyFile
+ sub GetOpenSSLVersion
+ {
+ 	my $self = shift;
++	if ($self->{options}->{openssl_version} =~ /(\d+)\.(\d+)\.(\d+)/m) {
++		return ($1, $2, $3);
++	}
+ 
+ 	# Attempt to get OpenSSL version and location.  This assumes that
+ 	# openssl.exe is in the specified directory.
+@@ -148,7 +156,7 @@ sub GetOpenSSLVersion
  sub GenerateFiles
  {
  	my $self          = shift;
@@ -104,7 +167,7 @@ index 35126cd..63a4841 100644
  	my $ac_init_found = 0;
  	my $package_name;
  	my $package_version;
-@@ -502,7 +507,7 @@ sub GenerateFiles
+@@ -502,7 +510,7 @@ sub GenerateFiles
  		USE_PAM                    => undef,
  		USE_SLICING_BY_8_CRC32C    => undef,
  		USE_SSE42_CRC32C           => undef,
@@ -113,15 +176,70 @@ index 35126cd..63a4841 100644
  		USE_SYSTEMD                         => undef,
  		USE_SYSV_SEMAPHORES                 => undef,
  		USE_SYSV_SHARED_MEMORY              => undef,
-@@ -1060,7 +1065,7 @@ sub AddProject
+@@ -952,11 +960,15 @@ sub AddProject
+ 	if ($self->{options}->{zlib})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{zlib} . '\include');
+-		$proj->AddLibrary($self->{options}->{zlib} . '\lib\zdll.lib');
++		$proj->AddLibrary('$(VcpkgZlibLibs)');
+ 	}
+ 	if ($self->{options}->{openssl})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{openssl} . '\include');
++		$proj->AddLibrary('$(VcpkgOpensslLibs)');
++	}
++	elsif (0)
++	{
+ 		my ($digit1, $digit2, $digit3) = $self->GetOpenSSLVersion();
+ 
+ 		# Starting at version 1.1.0 the OpenSSL installers have
+@@ -1027,7 +1039,7 @@ sub AddProject
+ 	if ($self->{options}->{nls})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{nls} . '\include');
+-		$proj->AddLibrary($self->{options}->{nls} . '\lib\libintl.lib');
++		$proj->AddLibrary('$(VcpkgNlsLibs)');
+ 	}
+ 	if ($self->{options}->{gss})
+ 	{
+@@ -1060,6 +1072,10 @@ sub AddProject
  	if ($self->{options}->{icu})
  	{
  		$proj->AddIncludeDir($self->{options}->{icu} . '\include');
--		if ($self->{platform} eq 'Win32')
-+		if (1)
++		$proj->AddLibrary('$(VcpkgIcuLibs)');
++	}
++	elsif (0)
++	{
+ 		if ($self->{platform} eq 'Win32')
  		{
  			$proj->AddLibrary($self->{options}->{icu} . '\lib\icuin.lib');
- 			$proj->AddLibrary($self->{options}->{icu} . '\lib\icuuc.lib');
+@@ -1077,22 +1093,22 @@ sub AddProject
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{xml} . '\include');
+ 		$proj->AddIncludeDir($self->{options}->{xml} . '\include\libxml2');
+-		$proj->AddLibrary($self->{options}->{xml} . '\lib\libxml2.lib');
++		$proj->AddLibrary('$(VcpkgXmlLibs)');
+ 	}
+ 	if ($self->{options}->{xslt})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{xslt} . '\include');
+-		$proj->AddLibrary($self->{options}->{xslt} . '\lib\libxslt.lib');
++		$proj->AddLibrary('$(VcpkgXsltLibs)');
+ 	}
+ 	if ($self->{options}->{lz4})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{lz4} . '\include');
+-		$proj->AddLibrary($self->{options}->{lz4} . '\lib\liblz4.lib');
++		$proj->AddLibrary('$(VcpkgLz4Libs)');
+ 	}
+ 	if ($self->{options}->{zstd})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{zstd} . '\include');
+-		$proj->AddLibrary($self->{options}->{zstd} . '\lib\libzstd.lib');
++		$proj->AddLibrary('$(VcpkgZstdLibs)');
+ 	}
+ 	if ($self->{options}->{uuid})
+ 	{
 diff --git a/src/tools/msvc/gendef.pl b/src/tools/msvc/gendef.pl
 index b8c514a..1fb7619 100644
 --- a/src/tools/msvc/gendef.pl
