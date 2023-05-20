@@ -62,8 +62,6 @@ set(OPTIONS
     ac_cv_prog_INTLBISON=:
 )
 if(VCPKG_TARGET_IS_WINDOWS)
-    # The following options intentionally overwrite cached settings
-    # in order to facilitate regenerating a the checked-in config cache.
     list(APPEND OPTIONS
         # Avoid unnecessary tests.
         am_cv_func_iconv_works=yes
@@ -88,30 +86,18 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-if(NOT DEFINED VCPKG_AUTOCONF_CONFIG_CACHE)
-    set(VCPKG_AUTOCONF_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/${TARGET_TRIPLET}.sh")
-    if(VCPKG_TARGET_IS_MINGW)
-        set(VCPKG_AUTOCONF_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/mingw.sh")
-    elseif(VCPKG_TARGET_IS_WINDOWS)
-        set(VCPKG_AUTOCONF_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/windows.sh")
-    endif()
-endif()
-x_vcpkg_autoconf_cache_setup(
-    CACHE_FILE "${VCPKG_AUTOCONF_CONFIG_CACHE}"
-    OUT_OPTIONS_RELEASE config_cache_release
-    OUT_OPTIONS_DEBUG config_cache_debug
-)
+file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log")
+file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-dbg.log")
 vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime"
     DETERMINE_BUILD_TRIPLET
     USE_WRAPPERS
     OPTIONS
         ${OPTIONS}
     OPTIONS_RELEASE
-        ${config_cache_release}
+        "--cache-file=${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log"
     OPTIONS_DEBUG
-        ${config_cache_debug}
-)
-x_vcpkg_autoconf_cache_teardown()
+        "--cache-file=${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-dbg.log"
+    )
 
 # This helps with Windows build times, but should work everywhere in vcpkg.
 # - Avoid an extra command to move a temporary file, we are building out of source.

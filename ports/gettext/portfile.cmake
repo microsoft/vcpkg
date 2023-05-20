@@ -6,7 +6,7 @@
 # For fast builds in particular on Windows, the following choices are made:
 # - only release build type
 # - namespacing disabled (windows only)
-# - configuration cache (preconfigured for windows and mingw)
+# - configuration cache
 # - using preinstalled gettext-libintl
 # - skipping some subdirs
 set(VCPKG_BUILD_TYPE release)
@@ -83,8 +83,6 @@ if(subdirs)
         --without-libxcurses-prefix
     )
     if(VCPKG_TARGET_IS_WINDOWS)
-        # The following options intentionally overwrite cached settings
-        # in order to facilitate regenerating a the checked-in config cache.
         list(APPEND OPTIONS
             # Faster, but not for export
             --disable-namespacing
@@ -127,18 +125,7 @@ if(subdirs)
         endif()
     endif()
 
-    if(NOT DEFINED VCPKG_AUTOCONF_CONFIG_CACHE)
-        set(VCPKG_AUTOCONF_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/${TARGET_TRIPLET}.sh")
-        if(VCPKG_TARGET_IS_MINGW)
-            set(VCPKG_AUTOCONF_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/mingw.sh")
-        elseif(VCPKG_TARGET_IS_WINDOWS)
-            set(VCPKG_AUTOCONF_CONFIG_CACHE "${CMAKE_CURRENT_LIST_DIR}/config.cache/windows.sh")
-        endif()
-    endif()
-    x_vcpkg_autoconf_cache_setup(
-        CACHE_FILE "${VCPKG_AUTOCONF_CONFIG_CACHE}"
-        OUT_OPTIONS_RELEASE config_cache_release
-    )
+    file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log")
     vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
         DETERMINE_BUILD_TRIPLET
         USE_WRAPPERS
@@ -146,9 +133,8 @@ if(subdirs)
         OPTIONS
             ${OPTIONS}
         OPTIONS_RELEASE
-            ${config_cache_release}
+            "--cache-file=${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log"
     )
-    x_vcpkg_autoconf_cache_teardown()
 
     # This helps with Windows build times, but should work everywhere in vcpkg.
     # - Avoid an extra command to move a temporary file, we are building out of source.

@@ -8204,10 +8204,6 @@
       "baseline": "2022.02",
       "port-version": 0
     },
-    "vcpkg-autoconf-cache": {
-      "baseline": "2023-04-30",
-      "port-version": 0
-    },
     "vcpkg-cmake": {
       "baseline": "2022-12-22",
       "port-version": 0
