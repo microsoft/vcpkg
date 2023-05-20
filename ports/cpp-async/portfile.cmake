@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/cpp-async
-    REF 8eaf564048d679aef4dec5ae99713903ca4fa829
-    SHA512 43e7994952bd80dfc6b4acdd9d1730b6cdf9f3f44a4aa8c12650bdfcac6e733b7267789e64efeb1083a15a6b04131edcfece23c3cd2364894043b0dcc4c553a9
+    REF "v${VERSION}"
+    SHA512 c3a6700c86d6bec2680c9d0edfe3ed02e83f8ecec134163243a7bfa4e12d4867a47d64eadd377de9b2a69401b8b512e0ee274275895a8f301c266db24b6e0a4b
     HEAD_REF main
 )
 
