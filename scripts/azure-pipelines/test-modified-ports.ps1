@@ -84,7 +84,6 @@ $commonArgs = @(
 )
 $cachingArgs = @()
 
-$skipFailuresArg = @()
 if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     $cachingArgs = @('--no-binarycaching')
 } else {
@@ -95,7 +94,6 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
     }
     elseif ($BuildReason -eq 'PullRequest') {
         Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
-        $skipFailuresArg = @('--skip-failures')
     }
     else {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
@@ -134,54 +132,17 @@ if ($LASTEXITCODE -ne 0)
     throw "vcpkg clean failed"
 }
 
-$parentHashes = @()
-if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
-{
-    $headBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
-
-    # Prefetch tools for better output
-    foreach ($tool in @('cmake', 'ninja', 'git')) {
-        & "./vcpkg$executableExtension" fetch $tool
-        if ($LASTEXITCODE -ne 0)
-        {
-            throw "Failed to fetch $tool"
-        }
-    }
-
-    Write-Host "Comparing with HEAD~1"
-    & git revert -n -m 1 HEAD | Out-Null
-    $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
-    if ($parentBaseline -eq $headBaseline)
-    {
-        Write-Host "CI baseline unchanged, determining parent hashes"
-        $parentHashesFile = Join-Path $ArtifactStagingDirectory 'parent-hashes.json'
-        $parentHashes = @("--parent-hashes=$parentHashesFile")
-        # The vcpkg.cmake toolchain file is not part of ABI hashing,
-        # but changes must trigger at least some testing.
-        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
-        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-        & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
-    }
-    else
-    {
-        Write-Host "CI baseline was modified, not using parent hashes"
-    }
-    Write-Host "Running CI for HEAD"
-    & git reset --hard HEAD
-}
-
 # The vcpkg.cmake toolchain file is not part of ABI hashing,
 # but changes must trigger at least some testing.
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
+& "./vcpkg$executableExtension" test-features --all "--triplet=$Triplet" --failure-logs=$failureLogs "--ci-feature-baseline=$PSScriptRoot/../ci.feature.baseline.txt" @commonArgs @cachingArgs
 
-$failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
+$failureLogsEmpty = True
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 
 if ($LASTEXITCODE -ne 0)
 {
-    throw "vcpkg ci failed"
+    throw "vcpkg test-features failed"
 }
 
-Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
