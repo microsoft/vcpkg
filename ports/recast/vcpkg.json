@@ -1,6 +1,6 @@
 {
   "name": "recast",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "port-version": 6,
   "description": "Navigation-mesh Toolset for Games",
   "homepage": "https://github.com/recastnavigation/recastnavigation",

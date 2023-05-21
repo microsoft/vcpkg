@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO recastnavigation/recastnavigation
-    REF 1.5.1
+    REF 1.6.0
     SHA512 09900d8893e0c633a79e6188d15e68d1047040a0f2bceb2542f486dded64e69b918eaae159def81416a014fae26a46502783a2a712462bee4be2a3edf7bef47f
     HEAD_REF master
 )
