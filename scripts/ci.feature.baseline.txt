@@ -1,0 +1,1048 @@
+###########################################################################
+## This file defines the current expected build state of ports in CI.
+##
+## States
+## <unspecified> (default) -
+##           If a port is missing from this file then it is assumed
+##           to build successfully.
+##    fail - The port build is expected to fail in the CI system.
+##           This is not necessarily the same as if a port is expected to build
+##           on a developers machine because it may fail due to the machine
+##           configuration. When set to fail the CI system will silently skip
+##           the port for pull request CI runs. But the CI system will still
+##           attempt to build the port in scheduled runs, reporting unexpected
+##           build success as a CI failure.
+##    skip - Do not build this port in the CI system.
+##           This is added to ports that may be flaky or conflict with other
+##           ports. Please comment for why a port is skipped so it can be
+##           removed when the issue is resolved.
+## cascade - The port depends on a port that fails or is excluded by a supports
+##           expression but the port itself states that he can be build.
+##           This is added to ports to detect "hidden" not tested ports
+##
+##
+## CI tested triplets:
+##    arm64-windows
+##    arm-uwp
+##    x64-linux
+##    x64-osx
+##    x64-uwp
+##    x64-windows
+##    x64-windows-static
+##    x64-windows-static-md
+##    x86-windows
+##
+## You could select ports by triplet or supports expression:
+##    curl[wchar]:x64-osx   = fail # the wchar feature does not work on !windows
+##    curl[wchar](!windows) = combination-fails # Using support expressions is often shorter than listing all triplets
+
+
+# Add new items alphabetically
+
+# Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
+allegro5:arm64-windows=fail
+# Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
+apr:arm64-windows=fail
+# broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
+bde:x64-linux=fail
+blitz:x64-uwp=fail
+blitz:arm64-windows=fail
+blitz:arm-uwp=fail
+bond:arm-uwp=fail
+bond:x64-osx=fail
+bond:arm64-osx=fail
+bond:x64-uwp=fail
+caf:arm-uwp=fail
+caf:x64-uwp=fail
+caffe2:x86-windows=fail
+caffe2:arm64-windows=fail
+
+casclib:arm-uwp=fail
+casclib:x64-uwp=fail
+cctag:x64-windows-static-md=fail
+cello:arm-uwp=fail
+cello:x64-uwp=fail
+cfitsio:arm-uwp=fail
+cfitsio:x64-uwp=fail
+# chartdir does not offer stable download URLs
+chartdir=skip
+
+# chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI
+#  broken on Windows because it does not yet support VS2022
+chromium-base:x64-windows=skip
+chromium-base:x64-windows-static=skip
+chromium-base:x64-windows-static-md=skip
+#  broken on Linux because
+chromium-base:x64-linux=skip
+#  broken on OSX for unknown reasons; it appears to be messing with some form of system-wide cache
+#  because the first attempt to build it fails, but subsequent attempts succeed
+chromium-base:x64-osx=skip
+
+clamav:arm64-windows=fail
+clockutils:x64-linux=fail
+coin:arm64-windows=fail
+coin:arm-uwp=fail
+coin:x64-uwp=fail
+
+# there is an ICE in VS2022 with colmap in release mode
+colmap:x86-windows=fail
+colmap:x64-windows=fail
+colmap:x64-windows-static=fail
+colmap:x64-windows-static-md=fail
+
+concurrencpp:x64-linux=fail
+constexpr-contracts:x64-linux=fail
+coolprop:arm-uwp=fail
+coolprop:x64-uwp=fail
+coroutine:arm-uwp=fail
+coroutine:x64-linux=fail
+coroutine:x64-uwp=fail
+cppfs:arm-uwp=fail
+cppfs:x64-uwp=fail
+cppmicroservices:arm64-windows=fail
+cppmicroservices:arm-uwp=fail
+cppmicroservices:x64-uwp=fail
+cpp-netlib:arm-uwp=fail
+cpp-netlib:x64-uwp=fail
+cppcoro:x64-linux=fail
+cppcoro:arm-uwp=fail
+cppcoro:x64-uwp=fail
+# The x64-linux pipeline uses gcc 9.3.0, which lacks C++20 coroutine support.
+# This is known to work on x64-linux as of gcc 10.3.0.
+cppgraphqlgen:x64-linux=fail
+crashpad:arm64-windows=fail
+crashpad:arm-uwp=fail
+crashpad:x86-windows=fail
+ctemplate:x64-linux=fail
+ctemplate:x64-osx=fail
+cuda:x64-osx=fail
+# Since pipeline cannot automatically install dbghelp dependency, skip this detection
+dbghelp=skip
+dcmtk:x64-uwp=fail
+discord-game-sdk:x64-windows-static=fail
+discord-game-sdk:x64-windows-static-md=fail
+discord-rpc:arm-uwp=fail
+discord-rpc:x64-uwp=fail
+# requires g++11
+discordcoreapi:x64-linux=fail
+dlib:arm-uwp=fail
+dlib:x64-uwp=fail
+dmlc:arm-uwp=fail
+dmlc:x64-uwp=fail
+
+# requires python@2 from brew, but that no longer exists
+# python2 EOL yay!
+duktape:x64-osx=fail
+
+eastl:arm-uwp=fail
+easyloggingpp:arm-uwp=fail
+easyloggingpp:x64-uwp=fail
+ebml:arm-uwp=fail
+ebml:x64-uwp=fail
+ecsutil:arm64-windows=fail
+ecsutil:arm-uwp=fail
+ecsutil:x64-linux=fail
+ecsutil:x64-osx=fail
+ecsutil:x64-uwp=fail
+# Checks for gnu extension so only works with gcc.
+elfutils:x64-osx=fail
+elfutils:arm64-osx=fail
+epsilon:arm-uwp=fail
+epsilon:x64-uwp=fail
+faiss:arm64-windows=fail
+fastrtps:arm-uwp=fail
+fastrtps:x64-uwp=fail
+fastrtps:x64-windows-static=fail
+fastrtps:x64-windows-static-md=fail
+fmi4cpp:arm-uwp=fail
+fmi4cpp:x64-uwp=fail
+fmilib:arm64-windows=fail
+fmilib:arm-uwp=fail
+fmilib:x64-linux=fail
+fmilib:x64-uwp=fail
+fontconfig:x64-uwp=fail
+fontconfig:arm-uwp=fail
+foonathan-memory:arm64-windows=fail
+foonathan-memory:arm-uwp=fail
+foonathan-memory:x64-uwp=fail
+forge:x86-windows=fail
+freeglut:arm-uwp=fail
+freeglut:x64-uwp=fail
+freeglut:x64-osx=fail
+# Needs /bigobj
+freeopcua:arm64-windows=fail
+ftgl:x64-uwp=fail
+ftgl:arm-uwp=fail
+# https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
+functions-framework-cpp:x64-uwp=fail
+
+# VS 2022 Update 3 seems to have broken Gazebo: https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1522474
+gazebo:x64-windows=fail
+gazebo:x64-linux=fail
+
+# gsoap does not offer stable public source downloads
+gsoap = skip
+
+# Port geotrans source ftp://ftp.nga.mil server
+# extremely slow may take several hours to download
+geotrans=skip
+getopt:arm-uwp=fail
+getopt:x64-uwp=fail
+getopt-win32:x64-linux=fail
+getopt-win32:x64-osx=fail
+gflags:arm-uwp=fail
+gflags:x64-uwp=fail
+
+glew:arm64-windows=fail
+glfw3:arm-uwp=fail
+glfw3:x64-uwp=fail
+glibmm:x64-windows-static-md=fail
+glibmm:x64-windows-static=fail
+gmmlib:arm-uwp=fail
+gmmlib:arm64-windows=fail
+gmmlib:x64-osx=fail
+gmmlib:x64-uwp=fail
+gmmlib:x64-windows-static-md=fail
+gmmlib:x64-windows-static=fail
+gmmlib:x64-windows=fail
+gmmlib:x86-windows=fail
+google-cloud-cpp:arm-uwp=fail
+google-cloud-cpp:x64-uwp=fail
+gperftools:arm64-windows=fail
+gperftools:x64-uwp=fail
+gperftools:arm-uwp=fail
+graphicsmagick:arm-uwp=fail
+graphicsmagick:x64-uwp=fail
+# graphicsmagick non-uwp trigger an ICE in VS 2022 17.3 https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1557251
+graphicsmagick:x86-windows=fail
+graphicsmagick:x64-windows=fail
+graphicsmagick:x64-windows-static=fail
+graphicsmagick:x64-windows-static-md=fail
+graphqlparser:arm64-osx=fail # python2 required
+gtk:x64-windows-static=fail
+gtk:x64-windows-static-md=fail
+halide:x64-windows-static=fail
+hdf5:arm64-windows=fail
+hdf5:arm-uwp=fail
+hdf5:x64-uwp=fail
+healpix:x86-windows=fail
+healpix:x64-windows=fail
+healpix:x64-windows-static=fail
+healpix:x64-windows-static-md=fail
+healpix:x64-uwp=fail
+healpix:arm64-windows=fail
+healpix:arm-uwp=fail
+healpix:x64-osx=fail
+hpx:x64-windows-static=fail
+hpx:arm64-windows=fail
+hunspell:x64-windows-static-md=fail
+ideviceinstaller:x64-windows-static-md=fail
+idevicerestore:x64-linux=fail
+idevicerestore:x64-osx=fail
+ignition-common1:x64-linux=fail
+ignition-msgs1:arm64-windows=fail
+ignition-msgs1:arm-uwp=fail
+ignition-msgs1:x64-uwp=fail
+ignition-msgs5:arm64-windows=fail
+ignition-msgs5:arm-uwp=fail
+ignition-msgs5:x64-uwp=fail
+intel-mkl:arm64-windows=fail
+intel-mkl:arm-uwp=fail
+intel-mkl:x64-linux=fail
+intel-mkl:x64-osx=fail
+intel-mkl:arm64-osx=fail
+intel-mkl:x64-uwp=fail
+intel-mkl:x64-windows=fail
+intel-mkl:x64-windows-static=fail
+intel-mkl:x64-windows-static-md=fail
+intel-mkl:x86-windows=fail
+irrlicht:arm64-windows=fail
+irrlicht:arm-uwp=fail
+irrlicht:x64-uwp=fail
+ismrmrd:x86-windows=fail
+jemalloc:arm64-windows=fail
+jemalloc:arm-uwp=fail
+jemalloc:x64-uwp=fail
+jinja2cpplight:arm-uwp=fail
+jinja2cpplight:x64-uwp=fail
+kfr:arm64-windows=fail
+kfr:arm-uwp=fail
+kfr:x64-linux=fail
+lastools:arm-uwp=fail
+lastools:x64-uwp=fail
+lcm:x64-windows-static=fail
+lcm:x64-windows-static-md=fail
+leptonica:x64-uwp=fail
+leptonica:arm-uwp=fail
+leveldb:arm-uwp=fail
+leveldb:x64-uwp=fail
+libaiff:x64-linux=fail
+libarchive:arm-uwp=fail
+libcopp:arm64-windows=fail
+libcopp:arm-uwp=fail
+# Missing system libraries on linux to run/prepare autoconf
+libgpod:x64-linux=fail
+libgpod:x64-osx=fail
+libepoxy:arm-uwp=fail
+libepoxy:x64-uwp=fail
+libepoxy:x64-windows-static=fail
+libevent:arm-uwp=fail
+libevent:x64-uwp=fail
+libevhtp:x86-windows=fail
+libevhtp:x64-windows=fail
+libevhtp:x64-windows-static=fail
+libevhtp:x64-windows-static-md=fail
+libevhtp:x64-uwp=fail
+libevhtp:arm64-windows=fail
+libevhtp:arm-uwp=fail
+libexif:arm-uwp=fail
+libexif:x64-uwp=fail
+libfreenect2:arm64-windows=fail
+libgit2:arm-uwp=fail
+libgit2:x64-uwp=fail
+libgo:arm-uwp=fail
+libgo:x64-uwp=fail
+libgo:arm64-windows=fail
+libgxps:x64-windows-static=fail
+libgxps:x64-windows-static-md=fail
+libhdfs3:x64-linux=fail
+libhdfs3:x64-osx=fail
+libhdfs3:arm64-osx=fail
+libirecovery:x64-windows-static-md=fail
+# 120 min build time for libjxl arm-uwp-rel, reason unknown
+libjxl:arm-uwp=skip
+liblemon:arm-uwp=fail
+liblemon:x64-uwp=fail
+liblo:arm-uwp=fail
+liblo:x64-uwp=fail
+libmagic:x64-uwp=fail
+libmagic:arm-uwp=fail
+# Build fails since PIC is not enabled and some configuration tests do not work properly on UWP
+libmicrodns:arm-uwp=fail
+libmicrodns:x64-uwp=fail
+libmodman:x64-windows-static=fail
+libmodplug:arm-uwp=fail
+libmodplug:x64-uwp=fail
+libmpeg2:arm-uwp=fail
+libmpeg2:x64-linux=fail
+libmpeg2:x64-osx=fail
+libmpeg2:x64-uwp=fail
+libmupdf:x64-osx=fail
+libmysql:x86-windows=fail
+libmysql:arm64-windows=fail
+libopusenc:arm-uwp=fail
+libopusenc:x64-uwp=fail
+libosip2:x64-windows-static-md=fail
+libplist:x64-windows-static=fail
+# The developer of libqcow does not offer stable release archives
+libqcow=skip
+libsoundio:arm64-windows=fail
+libsoundio:arm-uwp=fail
+libsoundio:x64-uwp=fail
+libspatialite:arm-uwp=fail
+libspatialite:x64-uwp=fail
+libssh:arm64-windows=fail
+libssh:arm-uwp=fail
+libssh:x64-uwp=fail
+libtins:arm-uwp=fail
+libtins:x64-uwp=fail
+libtomcrypt:arm64-windows=fail
+libtomcrypt:arm-uwp=fail
+libusb:arm-uwp=fail
+libusb:x64-uwp=fail
+libusb:arm64-windows=fail
+libusbmuxd:arm-uwp=fail
+libusbmuxd:x64-uwp=fail
+libusbmuxd:x64-linux=fail
+libusbmuxd:x64-osx=fail
+libusb-win32:arm-uwp=fail
+libusb-win32:x64-linux=fail
+libusb-win32:x64-osx=fail
+libusb-win32:x64-uwp=fail
+libuv:arm-uwp=fail
+libuv:x64-uwp=fail
+libvmdk:arm-uwp=fail
+libvmdk:x64-uwp=fail
+#Skip detection to avoid upstream remove older releases
+libvmdk=skip
+libwandio:x86-windows=fail
+libwandio:x64-windows=fail
+libwandio:x64-windows-static=fail
+libwandio:x64-windows-static-md=fail
+libwandio:x64-uwp=fail
+libwandio:arm64-windows=fail
+libwandio:arm-uwp=fail
+# clang-cl ICEd
+libxt:arm64-windows=fail
+licensepp:arm-uwp=fail
+licensepp:x64-uwp=fail
+linenoise-ng:arm-uwp=fail
+linenoise-ng:x64-uwp=fail
+live555:arm-uwp=fail
+live555:x64-osx=fail
+live555:arm64-osx=fail
+live555:x64-uwp=fail
+# fails due to an outdated gcc version
+llfio:x64-linux=fail
+llgl:arm-uwp=fail
+llgl:x64-uwp=fail
+log4cplus:arm-uwp=fail
+log4cplus:x64-uwp=fail
+log4cxx:arm-uwp=fail
+log4cxx:x64-uwp=fail
+luajit:arm64-windows=fail
+luafilesystem:arm-uwp=fail
+luafilesystem:x64-uwp=fail
+luasec:x64-windows-static=fail
+lzfse:arm-uwp=fail
+marble:x64-windows-static=fail
+marble:x64-windows-static-md=fail
+marble:arm64-windows=fail
+marble:arm-uwp=fail
+marble:x64-linux=fail
+marble:x64-osx=fail
+marble:x86-windows=fail
+mathgl:arm-uwp=fail
+mathgl:x64-uwp=fail
+# Due to static crt.
+mesa:x64-windows-static=fail
+# Missing dependent libraries.
+mesa:x64-linux=fail
+mesa:x64-osx=fail
+milerius-sfml-imgui:x64-windows-static=fail
+minifb:arm-uwp=fail
+minifb:x64-uwp=fail
+miniupnpc:arm-uwp=fail
+miniupnpc:x64-uwp=fail
+minizip:arm-uwp=fail
+minizip:x64-uwp=fail
+# https://github.com/mlpack/mlpack/pull/2945
+mlpack:x64-uwp=fail
+ms-quic:arm-uwp=fail
+ms-quic:arm64-windows=fail
+ms-quic:x64-uwp=fail
+ms-quic:x64-windows-static-md=fail
+ms-quic:x64-windows=fail
+ms-quic:x86-windows=fail
+mongoose:arm-uwp=fail
+mongoose:x64-uwp=fail
+monkeys-audio:arm64-windows=fail
+monkeys-audio:arm-uwp=fail
+monkeys-audio:x64-linux=fail
+monkeys-audio:x64-osx=fail
+monkeys-audio:x64-uwp=fail
+monkeys-audio:x64-windows-static=fail
+moos-core:arm-uwp=fail
+moos-core:x64-uwp=fail
+moos-core:x64-windows-static=fail
+moos-essential:arm64-windows=fail
+moos-essential:x64-windows-static-md=fail
+moos-essential:x64-windows=fail
+moos-essential:x86-windows=fail
+msmpi:arm64-windows=fail
+msmpi:arm-uwp=fail
+msmpi:x64-linux=fail
+msmpi:x64-osx=fail
+msmpi:x64-uwp=fail
+munit:arm-uwp=fail
+munit:arm64-windows=fail
+munit:x64-uwp=fail
+nana:arm-uwp=fail
+nana:x64-linux=fail
+nana:x64-osx=fail
+nana:x64-uwp=fail
+nanodbc:arm-uwp=fail
+nanodbc:x64-uwp=fail
+nativefiledialog:arm-uwp=fail
+nativefiledialog:x64-uwp=fail
+nettle:arm-uwp=fail
+nettle:arm64-windows=fail
+ngspice:x64-windows-static=fail
+nng:arm-uwp=fail
+nng:x64-uwp=fail
+numactl:arm64-windows=fail
+numactl:arm-uwp=fail
+numactl:x64-osx=fail
+numactl:x64-uwp=fail
+numactl:x64-windows=fail
+numactl:x64-windows-static=fail
+numactl:x64-windows-static-md=fail
+numactl:x86-windows=fail
+ocilib:arm-uwp=fail
+ocilib:arm64-windows=fail
+ocilib:x64-uwp=fail
+ocilib:x64-windows-static-md=fail
+octomap:arm-uwp=fail
+octomap:x64-uwp=fail
+ode:arm64-windows=fail
+ode:arm-uwp=fail
+ode:x64-uwp=fail
+offscale-libetcd-cpp:arm-uwp=fail
+offscale-libetcd-cpp:x64-uwp=fail
+# ompl is vulnerable to some form of race in its dependent ports, and adding 'ode' as a dependency
+# does not resolve the issue
+# src/ompl/CMakeFiles/ompl.dir/extensions/ode/src/OpenDEStateValidityChecker.cpp.o
+# -L/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib   -L/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib
+# -Wl,-rpath,/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib:/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib::::::::::::::::::::::::::::::::::::::::::::::::
+# -lode  /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_serialization.a
+# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_filesystem.a
+# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_system.a  -lpthread && :
+# /usr/bin/ld: cannot find -lode
+ompl:x64-linux=fail
+openal-soft:arm-uwp=fail
+openal-soft:x64-uwp=fail
+# opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
+opencc:arm64-windows=fail
+# opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
+opencc:arm-uwp=fail
+opencc:x64-uwp=fail
+opencl:arm-uwp=fail
+opencl:x64-uwp=fail
+opencsg:arm-uwp=fail
+opencsg:x64-uwp=fail
+opendnp3:x64-uwp=fail
+opendnp3:arm-uwp=fail
+openmama:x64-windows-static-md=fail
+openmesh:arm64-windows=fail
+openmesh:arm-uwp=fail
+openmesh:x64-uwp=fail
+openscap:x64-windows-static=fail
+openscap:x64-osx=fail
+# https://github.com/AcademySoftwareFoundation/openvdb/issues/1362
+# openvdb\openvdb\libopenvdb.lib : fatal error LNK1248: image size (109A36020) exceeds maximum allowable size (FFFFFFFF)
+openvdb:x64-windows-static=fail
+openvdb:x64-windows-static-md=fail
+openvpn3:x64-osx=fail
+openvpn3:arm64-osx=fail
+openvr:arm64-windows=fail
+openvr:arm-uwp=fail
+openvr:x64-osx=fail
+openvr:x64-uwp=fail
+openvr:x64-windows-static=fail
+opusfile:arm-uwp=fail
+opusfile:x64-uwp=fail
+paho-mqtt:arm-uwp=fail
+paho-mqtt:x64-uwp=fail
+pango:x64-windows-static=fail
+pango:x64-windows-static-md=fail
+pfring:x64-osx=fail
+pfring:arm64-osx=fail
+# pfring on Linux currently fails because its build scripts enable warnings as
+# errors, and warnings trigger with the Linux kernel headers in the Azure images.
+pfring:x64-linux=fail
+pixman:arm-uwp=fail
+platform-folders:arm-uwp=fail
+platform-folders:x64-uwp=fail
+plibsys:arm-uwp=fail
+plibsys:x64-uwp=fail
+plplot:arm64-windows=fail
+plplot:arm-uwp=fail
+plplot:x64-uwp=fail
+pmdk:arm-uwp=fail
+pmdk:arm64-windows=fail
+pmdk:x64-linux=fail
+pmdk:x64-osx=fail
+pmdk:x64-uwp=fail
+pmdk:x64-windows-static=fail
+pmdk:x86-windows=fail
+popsift:x64-windows-static-md=fail
+portable-snippets:arm-uwp=fail
+# Not yet ready for these platforms.
+qbittorrent:x64-osx=fail
+qbittorrent:x64-linux=fail
+qpid-proton:arm-uwp=fail
+qpid-proton:x64-uwp=fail
+qpid-proton:x64-windows-static=fail
+qt5-base:arm64-windows=fail
+
+# Skip deprecated Qt module
+# (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
+qt5-canvas3d=skip
+# Missing system libraries
+qt5-wayland:x64-osx=fail
+qtwayland:x64-osx=fail
+qtwayland:arm64-osx=fail
+# Missing prerequisites for CI success
+qt5-webengine:x64-linux=fail
+qt5-webengine:x64-osx=fail
+# Fail due to outdated protoc headers.
+# D:\buildtrees\qt5-webengine\x64-windows-dbg\src\core\debug\gen\net/third_party/quiche/src/quic/core/proto/cached_network_parameters.pb.h(17):
+# fatal error C1189: #error:  This file was generated by an older version of protoc which is
+# Succesful built requires protobuf to be installed after qt5-webengine not before. Otherwise the build picks up the wrong headers from inside vcpkg.
+# Missing system libraries
+qt5-x11extras:x64-osx=fail
+qt5-x11extras:arm64-osx=fail
+# Missing libraries
+qt5-x11extras:x86-windows=fail
+qt5-x11extras:x64-windows=fail
+qt5-x11extras:x64-windows-static=fail
+qt5-x11extras:x64-windows-static-md=fail
+qtvirtualkeyboard[t9write] = skip # depends on the port 't9write' that does not exists
+qwt-qt6:x64-osx=fail
+rapidstring:arm64-windows=fail
+rapidstring:arm-uwp=fail
+rapidstring:x64-linux=fail
+rapidstring:x64-uwp=fail
+rapidstring:x64-windows=fail
+rapidstring:x64-windows-static=fail
+rapidstring:x64-windows-static-md=fail
+rapidstring:x86-windows=fail
+raylib:arm64-windows=fail
+raylib:arm-uwp=fail
+raylib:x64-uwp=fail
+readline:arm-uwp=fail
+readline:x64-uwp=fail
+realsense2:arm64-windows=fail
+realsense2:arm-uwp=fail
+realsense2:x64-uwp=fail
+replxx:arm-uwp=fail
+replxx:x64-uwp=fail
+restbed:arm-uwp=fail
+restbed:x64-uwp=fail
+rhash:arm64-windows=fail
+rocksdb:arm-uwp=fail
+rocksdb:x64-uwp=fail
+rpclib:arm64-windows=fail
+rpclib:arm-uwp=fail
+rpclib:x64-uwp=fail
+#The website of rply http://w3.impa.br/~diego/software/rply cannot be accessed
+rply=skip
+rsasynccpp:arm64-windows=fail
+rsasynccpp:arm-uwp=fail
+rsasynccpp:x64-linux=fail
+rsasynccpp:x64-osx=fail
+# Requires g++10 but CI compiler only has g++9
+rsm-binary-io:x64-linux=fail
+# Requires g++10 but CI compiler only has g++9
+rsm-bsa:x64-linux=fail
+rtlsdr:x64-uwp=fail
+rtlsdr:arm64-windows=fail
+rtlsdr:arm-uwp=fail
+rtlsdr:x64-linux=fail
+rtlsdr:x64-osx=fail
+
+# ryu does not support VS2022 yet
+ryu:x64-windows=fail
+ryu:x64-windows-static=fail
+ryu:x64-windows-static-md=fail
+
+scnlib:arm-uwp=fail
+scnlib:x64-uwp=fail
+sdformat10:x64-windows-static-md=fail
+sdformat6:arm-uwp=fail
+sdformat6:arm64-windows=fail
+sdformat6:x64-uwp=fail
+sdformat6:x64-windows-static-md=fail
+sdformat9:arm-uwp=fail
+sdformat9:x64-uwp=fail
+sdformat9:x64-windows-static-md=fail
+sdl2-mixer:arm-uwp=fail
+sdl2-mixer:x64-uwp=fail
+sdl2-net:arm-uwp=fail
+sdl2-net:x64-uwp=fail
+septag-sx:arm64-windows=fail
+septag-sx:arm-uwp=fail
+septag-sx:x64-uwp=fail
+shiva:x64-windows-static=fail
+shiva:x64-windows-static-md=fail
+shiva-sfml:x64-linux=fail
+shiva-sfml:x64-osx=fail
+shiva-sfml:arm64-osx=fail
+shiva-sfml:x86-windows=fail
+shiva-sfml:x64-windows=fail
+signalrclient:x64-uwp=fail
+signalrclient:arm-uwp=fail
+simbody:arm64-windows=fail
+skia:arm-uwp=fail
+skia:x64-uwp=fail
+sleef:x86-windows=fail
+slikenet:arm-uwp=fail
+slikenet:x64-uwp=fail
+smpeg2:x64-linux=fail
+sockpp:arm-uwp=fail
+sockpp:x64-uwp=fail
+soil2:arm-uwp=fail
+soil2:x64-uwp=fail
+soqt:arm64-windows=fail
+soqt:arm-uwp=fail
+soqt:x64-uwp=fail
+soundtouch:arm-uwp=fail
+soundtouch:x64-uwp=fail
+spaceland:arm64-windows=fail
+spaceland:arm-uwp=fail
+spaceland:x64-uwp=fail
+spdk:x64-linux=fail
+spdk-dpdk:arm64-windows=fail
+spdk-dpdk:arm-uwp=fail
+spdk-dpdk:x64-osx=fail
+spdk-dpdk:x64-uwp=fail
+spdk-dpdk:x64-windows=fail
+spdk-dpdk:x64-windows-static=fail
+spdk-dpdk:x64-windows-static-md=fail
+spdk-dpdk:x86-windows=fail
+spdk-ipsec:arm64-windows=fail
+spdk-ipsec:arm-uwp=fail
+spdk-ipsec:x64-osx=fail
+spdk-ipsec:x64-uwp=fail
+spdk-ipsec:x64-windows=fail
+spdk-ipsec:x64-windows-static=fail
+spdk-ipsec:x64-windows-static-md=fail
+spdk-ipsec:x86-windows=fail
+stormlib:arm-uwp=fail
+stormlib:x64-uwp=fail
+stxxl:arm-uwp=fail
+stxxl:x64-uwp=fail
+symengine:arm-uwp=fail
+systemc:arm64-windows=fail
+systemc:arm-uwp=fail
+systemc:x64-uwp=fail
+tcl:arm-uwp=fail
+tcl:arm64-windows=fail
+tcl:x64-uwp=fail
+telnetpp:arm-uwp=fail
+telnetpp:x64-uwp=fail
+
+# tensorflow does not support VS2022
+tensorflow:x64-windows=fail
+tensorflow:x64-windows-static=fail
+tensorflow:x64-windows-static-md=fail
+tensorflow-cc:x64-windows=fail
+tensorflow-cc:x64-windows-static=fail
+tensorflow-cc:x64-windows-static-md=fail
+
+tidy-html5:arm-uwp=fail
+tidy-html5:x64-uwp=fail
+tinkerforge:arm-uwp=fail
+tinkerforge:x64-uwp=fail
+tiny-process-library:arm-uwp=fail
+tiny-process-library:x64-uwp=fail
+tmxparser:arm64-windows=fail
+tmxparser:arm-uwp=fail
+tmxparser:x64-uwp=fail
+tmxparser:x64-windows=fail
+tmxparser:x64-windows-static=fail
+tmxparser:x64-windows-static-md=fail
+tmxparser:x86-windows=fail
+torch-th:arm64-windows=fail
+torch-th:arm-uwp=fail
+torch-th:x64-uwp=fail
+torch-th:x64-windows-static=fail
+treehopper:x64-windows-static=fail
+treehopper:x64-linux=fail
+unicorn-lib:arm-uwp=fail
+unicorn-lib:x64-uwp=fail
+unittest-cpp:arm64-windows=fail
+unittest-cpp:arm-uwp=fail
+unittest-cpp:x64-uwp=fail
+# USD has set official policy that they will not update to be compatible with TBB in the near term (https://github.com/PixarAnimationStudios/USD/issues/1600)
+usd=skip
+uthenticode:arm-uwp=fail
+uthenticode:x64-uwp=fail
+v8:arm64-windows=fail
+v8:arm-uwp=fail
+v8:x64-osx=fail
+v8:x64-uwp=fail
+vectorclass:arm64-windows=fail
+vectorclass:arm-uwp=fail
+vulkan:arm64-windows=fail
+vulkan:arm-uwp=fail
+vulkan:x64-linux=fail
+vulkan:x64-osx=fail
+vulkan:arm64-osx=fail
+vulkan:x64-uwp=fail
+vulkan:x64-windows=fail
+vulkan:x64-windows-static=fail
+vulkan:x64-windows-static-md=fail
+vulkan:x86-windows=fail
+winreg:x64-linux=fail
+winreg:x64-osx=fail
+wpilib:arm64-windows=fail
+wpilib:x64-osx=fail
+wxchartdir:x64-osx=fail
+x265:arm64-windows=fail
+x265:arm-uwp=fail
+x265:x64-uwp=fail
+xalan-c:x64-windows-static=fail
+xalan-c:arm64-windows=fail
+# No xorg-macros available on osx
+xbitmaps:x64-osx=skip
+xerces-c:arm-uwp=fail
+xerces-c:x64-uwp=fail
+xmlsec:arm-uwp=fail
+xmlsec:x64-uwp=fail
+yara:arm-uwp=fail
+yara:x64-uwp=fail
+z3:arm-uwp=fail
+z3:x64-uwp=fail
+zint:x64-osx=fail
+
+# failures for x64-windows-static-md
+ace:x64-windows-static-md=fail
+ijg-libjpeg:x64-windows-static-md=fail
+libcerf:x64-windows-static-md=fail
+libmicrohttpd:x64-windows-static-md=fail
+linenoise-ng:x64-windows-static-md=fail
+netcdf-cxx4:x64-windows-static-md=fail
+open62541:x64-windows-static-md=fail
+openscap:x64-windows-static-md=fail
+quantlib:x64-windows-static-md=fail
+sentencepiece:x64-windows-static-md=fail
+symengine:x64-windows-static-md=fail
+unicorn:x64-windows-static-md=fail
+
+# the version of v8 we have in the repo doesn't support VS2022
+v8:x86-windows=fail
+v8:x64-windows=fail
+v8:x64-windows-static=fail
+v8:x64-windows-static-md=fail
+
+zyre:x64-windows-static-md=fail
+usbmuxd:x64-windows-static-md=fail
+workflow:x64-uwp=fail
+workflow:arm-uwp=fail
+
+# VS2019 version 16.9.4's project system changes where PDBs are placed in a way that breaks the
+# upstream build script of this port.
+# See https://developercommunity.visualstudio.com/t/Toolset-169-regression-vcxproj-producin/1356639
+dimcli:x64-windows-static-md=fail
+dimcli:x64-windows-static=fail
+
+# ZeroC doesn't provide ARM tagets in project files.
+zeroc-ice(uwp)=fail
+
+# testing all features would be too slow:
+aws-sdk-cpp[access-management,accessanalyzer,acm,acm-pca,alexaforbusiness,amp,amplify,amplifybackend,apigateway,apigatewaymanagementapi,apigatewayv2,appconfig,appflow,appintegrations,application-autoscaling,application-insights,applicationcostprofiler,appmesh,apprunner,appstream,appsync,athena,auditmanager,autoscaling,autoscaling-plans,awsmigrationhub,awstransfer,backup,batch,braket,budgets,ce,chime,cloud9,clouddirectory,cloudformation,cloudfront,cloudhsm,cloudhsmv2,cloudsearch,cloudsearchdomain,cloudtrail,codeartifact,codebuild,codecommit,codedeploy,codeguru-reviewer,codeguruprofiler,codepipeline,codestar,codestar-connections,codestar-notifications,cognito-identity,cognito-idp,cognito-sync,comprehend,comprehendmedical,compute-optimizer,config,connect,connect-contact-lens,connectparticipant,cur,customer-profiles,databrew,dataexchange,datapipeline,datasync,dax,detective,devicefarm,devops-guru,directconnect,discovery,dlm,dms,docdb,ds,dynamodb,dynamodbstreams,ebs,ec2,ec2-instance-connect,ecr,ecr-public,ecs,eks,elastic-inference,elasticache,elasticbeanstalk,elasticfilesystem,elasticloadbalancing,elasticloadbalancingv2,elasticmapreduce,elastictranscoder,email,emr-containers,es,eventbridge,events,finspace,finspace-data,firehose,fis,fms,forecast,forecastquery,frauddetector,fsx,gamelift,glacier,globalaccelerator,glue,greengrass,greengrassv2,groundstation,guardduty,health,healthlake,honeycode,iam,identity-management,identitystore,imagebuilder,importexport,inspector,iot,iot-data,iot-jobs-data,iot1click-devices,iot1click-projects,iotanalytics,iotdeviceadvisor,iotevents,iotevents-data,iotfleethub,iotsecuretunneling,iotsitewise,iotthingsgraph,iotwireless,ivs,kafka,kendra,kinesis,kinesis-video-archived-media,kinesis-video-media,kinesis-video-signaling,kinesisanalytics,kinesisanalyticsv2,kinesisvideo,kms,lakeformation,lambda,lex,lex-models,lexv2-models,lexv2-runtime,license-manager,lightsail,location,logs,lookoutequipment,lookoutmetrics,lookoutvision,machinelearning,macie,macie2,managedblockchain,marketplace-catalog,marketplace-entitlement,marketplacecommerceanalytics,mediaconnect,mediaconvert,medialive,mediapackage,mediapackage-vod,mediastore,mediastore-data,mediatailor,meteringmarketplace,mgn,migrationhub-config,mobile,mobileanalytics,monitoring,mq,mturk-requester,mwaa,neptune,network-firewall,networkmanager,nimble,opsworks,opsworkscm,organizations,outposts,personalize,personalize-events,personalize-runtime,pi,pinpoint,pinpoint-email,polly,pricing,qldb,qldb-session,queues,quicksight,ram,rds,rds-data,redshift,redshift-data,rekognition,resource-groups,resourcegroupstaggingapi,robomaker,route53,route53domains,route53resolver,s3,s3-crt,s3-encryption,s3control,s3outposts,sagemaker,sagemaker-a2i-runtime,sagemaker-edge,sagemaker-featurestore-runtime,sagemaker-runtime,savingsplans,schemas,sdb,secretsmanager,securityhub,serverlessrepo,service-quotas,servicecatalog,servicecatalog-appregistry,servicediscovery,sesv2,shield,signer,sms,sms-voice,snowball,sns,sqs,ssm,ssm-contacts,ssm-incidents,sso,sso-admin,sso-oidc,states,storagegateway,sts,support,swf,synthetics,text-to-speech,textract,timestream-query,timestream-write,transcribe,transcribestreaming,transfer,translate,waf,waf-regional,wafv2,wellarchitected,workdocs,worklink,workmail,workmailmessageflow,workspaces,xray]  = no-separate-feature-test
+google-cloud-cpp[advisorynotifications,alloydb,apikeys,accessapproval,accesscontextmanager,apigateway,apigeeconnect,appengine,artifactregistry,asset,assuredworkloads,automl,baremetalsolution,batch,beyondcorp,bigquery,bigtable,billing,binaryauthorization,certificatemanager,channel,cloudbuild,composer,connectors,contactcenterinsights,container,containeranalysis,datacatalog,datamigration,dataplex,dataproc,datastream,debugger,deploy,dialogflow-cx,dialogflow-es,dlp,documentai,edgecontainer,eventarc,experimental-storage-grpc,filestore,functions,gameservices,gkehub,gkemulticloud,grafeas,iam,iap,ids,iot,kms,language,logging,managedidentities,memcache,monitoring,networkconnectivity,networkmanagement,notebooks,optimization,orgpolicy,osconfig,oslogin,policytroubleshooter,privateca,profiler,pubsub,recommender,redis,resourcemanager,resourcesettings,retail,run,scheduler,secretmanager,securitycenter,servicecontrol,servicedirectory,servicemanagement,serviceusage,shell,spanner,speech,storage,storagetransfer,talent,tasks,texttospeech,tpu,trace,translate,video,videointelligence,vision,vmmigration,vmwareengine,vpcaccess,webrisk,websecurityscanner,workflows] = no-separate-feature-test
+halide[target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-mips,target-nvptx,target-opencl,target-powerpc,target-riscv,target-x86] = no-separate-feature-test
+llvm[target-aarch64,target-all,target-amdgpu,target-arm,target-avr,target-bpf,target-hexagon,target-lanai,target-mips,target-msp430,target-nvptx,target-powerpc,target-riscv,target-sparc,target-spirv,target-systemz,target-ve,target-webassembly,target-x86,target-xcore] = no-separate-feature-test
+
+
+
+
+# cascade
+ace[xml-utils](osx) = cascade
+adios2[cuda](osx) = cascade
+ampl-asl(uwp | (osx & arm64)) = cascade
+ampl-mp(uwp | (osx & arm64)) = cascade
+arrow[cuda](osx) = cascade
+atk[introspection](static | !(native | (windows & x86))) = cascade
+boost-python[python2] = cascade
+braft(osx) = cascade
+caffe2(osx) = cascade
+colmap[cuda,cuda-redist](arm64 & osx) = cascade
+cub(!((windows & x64 & !uwp) | (linux & x64) | (linux & arm64))) = cascade
+curl[winssl](!windows) = cascade
+darknet[cuda,cudnn,full,opencv-cuda,opencv2-cuda,opencv3-cuda](arm64 & osx) = cascade
+dlib[cuda](osx) = cascade
+ffmpeg[amf,alsa,qsv](osx) = cascade
+flann[cuda](osx) = cascade
+gazebo(arm | uwp | osx) = cascade
+ginkgo[cuda](osx) = cascade
+gmsh[occ](osx) = cascade
+harfbuzz[introspection](static | !(native | (windows & x86))) = cascade
+hpx[cuda](osx) = cascade
+imgui[glut-binding,vulkan-binding](osx) = cascade
+itk[cuda](osx) = cascade
+libtorch(uwp | (arm & windows) | (arm64 & osx)) = cascade
+opencv[cuda,cudnn](osx) = cascade
+opencv[dnn-cuda](osx) = cascade
+opencv2[cuda](osx) = cascade
+opencv3[cuda](osx) = cascade
+opencv4[cuda,cudnn](osx) = cascade
+opencv4[dnn-cuda](osx) = cascade
+openvms[cuda](osx) = cascade
+paraview[cuda](osx) = cascade
+pcl[cuda](osx) = cascade
+sdl1-net(osx) = cascade
+seal[hexl](osx) = cascade
+symengine[tcmalloc] = cascade
+tensorpipe[cuda](osx) = cascade
+theia(osx) = cascade
+usockets[network] = cascade
+vk-bootstrap(osx) = cascade
+vtk-m[cuda](osx) = cascade
+vtk[cuda](osx) = cascade
+vulkan-hpp(osx) = cascade
+vulkan-memory-allocator-hpp(osx) = cascade
+wayland-protocols(windows | osx) = cascade
+wxchartdir(uwp) = cascade
+
+chronoengine[irrlicht]:arm64-osx = cascade
+coin-or-ipopt:arm64-osx = cascade
+coin-or-ipopt:arm64-osx = cascade
+czmq[httpd]:arm64-osx = cascade
+darknet[opencv2-base]:arm64-osx = cascade
+darknet[opencv3-base]:arm64-osx = cascade
+dartsim:arm64-osx = cascade
+fbgemm:arm64-osx = cascade
+ffmpeg[all-gpl]:arm64-osx = cascade
+ffmpeg[all-nonfree]:arm64-osx = cascade
+ffmpeg[all]:arm64-osx = cascade
+folly[liburing]:arm64-osx = cascade
+gdal[aws-ec2-windows]:arm64-osx = cascade
+gdk-pixbuf[introspection]:arm64-osx = cascade
+gl2ps:arm64-osx = cascade
+glpk[dl]:arm64-osx = cascade
+glpk[mysql]:arm64-osx = cascade
+glpk[odbc]:arm64-osx = cascade
+glui:arm64-osx = cascade
+graphene[introspection]:arm64-osx = cascade
+gstreamer[faad]:arm64-osx = cascade
+gtk[introspection]:arm64-osx = cascade
+gtk3[introspection]:arm64-osx = cascade
+gtkmm:arm64-osx = cascade
+idyntree[irrlicht]:arm64-osx = cascade
+ignition-common1:arm64-osx = cascade
+ignition-common3:arm64-osx = cascade
+ignition-fuel-tools1:arm64-osx = cascade
+ignition-fuel-tools4:arm64-osx = cascade
+ignition-transport8:arm64-osx = cascade
+ignition-transport9:arm64-osx = cascade
+irrxml:arm64-osx = cascade
+itk[cufftw]:arm64-osx = cascade
+kf5guiaddons[wayland]:arm64-osx = cascade
+libalkimia[webengine]:arm64-osx = cascade
+libcanberra[alsa]:arm64-osx = cascade
+libfreenect2[openni2]:arm64-osx = cascade
+libftdi:arm64-osx = cascade
+libhdfs3:arm64-osx = cascade
+libp7-baical:arm64-osx = cascade
+libpmemobj-cpp[benchmark]:arm64-osx = cascade
+libwebp[vwebp-sdl]:arm64-osx = cascade
+libxaw:arm64-osx = cascade
+luasec:arm64-osx = cascade
+magnum[vk-info]:arm64-osx = cascade
+magnum[vk]:arm64-osx = cascade
+oatpp-libressl:arm64-osx = cascade
+ogre-next:arm64-osx = cascade
+ogre-next[csharp]:arm64-osx = cascade
+ogre-next[d3d9]:arm64-osx = cascade
+ogre-next[java]:arm64-osx = cascade
+ogre-next[python]:arm64-osx = cascade
+onnx-optimizer[pybind11]:arm64-osx = cascade
+opencv[gtk]:arm64-osx = cascade
+openmvs:arm64-osx = cascade
+openmvs[ceres]:arm64-osx = cascade
+openmvs[cuda]:arm64-osx = cascade
+openmvs[nonfree]:arm64-osx = cascade
+openmvs[openmp]:arm64-osx = cascade
+openni2:arm64-osx = cascade
+osg-qt:arm64-osx = cascade
+osg[default-features]:arm64-osx = cascade
+osg[nvtt]:arm64-osx = cascade
+osg[sdl1]:arm64-osx = cascade
+pango[introspection]:arm64-osx = cascade
+pangolin[openni2]:arm64-osx = cascade
+pangolin[uvc]:arm64-osx = cascade
+pcl[apps]:arm64-osx = cascade
+pcl[openni2]:arm64-osx = cascade
+qt:arm64-osx = cascade
+qt[default-features]:arm64-osx = cascade
+qt3d[vulkan]:arm64-osx = cascade
+qt5-base[vulkan]:arm64-osx = cascade
+qt5[all]:arm64-osx = cascade
+qt5[doc]:arm64-osx = cascade
+qt5[wayland]:arm64-osx = cascade
+qt5[webengine]:arm64-osx = cascade
+qtapplicationmanager:arm64-osx = cascade
+qtbase[sql-oci](arm) = cascade
+realsense2[openni2]:arm64-osx = cascade
+saucer:arm64-osx = cascade
+skia[vulkan]:arm64-osx = cascade
+sqlitecpp[sqlcipher]:arm64-osx = cascade
+vtk[openvr]:arm64-osx = cascade
+wxwidgets[webview]:arm64-osx = cascade
+qt3d[vulkan](osx) = cascade
+vsg(osx) = cascade
+
+
+# failures
+# adios2[zfp](osx) = feature-fails # requires openmp (works with right setup)
+adios2[core,mpi,zfp](osx) = combination-fails # mpi not found
+adios2[python] = feature-fails # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
+boost-python[core] = combination-fails
+cgns[core,fortran,hdf5,legacy,lfs,lfsselector,mpi,tests,tools] = combination-fails # ["fortran","hdf5","mpi"]: Could NOT find MPI (missing: MPI_Fortran_FOUND) (found version "3.1")
+coroutine(osx) = fail # requires c++20
+cppslippi(osx) = fail # requires c++20
+curl[brotli,c-ares,http2,idn,idn2,mbedtls,non-http,openssl,sectransp,ssh,ssl,tool,websockets,wolfssl] = combination-fails
+duktape(osx) = fail # requires python2
+dv-processing[tools](osx) = feature-fails # requires c++20
+embree3[core,avx,avx2,avx512,default-features,sse2,sse42](osx) = combination-fails # CMake Error at CMakeLists.txt:447 (MESSAGE):   Using Embree as static library is not supported with AppleClang >= 9.0 when multiple ISAs are selected.  Please either build a shared library or enable only one ISA.
+ffmpeg[vpx] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31118
+fftw3[openmp](osx) = feature-fails # waits for https://github.com/microsoft/vcpkg/pull/30833
+freeglut(osx) = fail # fatal error: 'GL/glx.h' file not found
+glad[glx](osx) = feature-fails # fatal error: 'X11/X.h' file not found
+gstreamer[chromaprint] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
+gstreamer[libde265] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
+gstreamer[openal] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
+gstreamer[openmpt] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
+gstreamer[sndfile] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
+gstreamer[x11-bad](osx) = feature-fails # no x11 on macOS
+hdf5[core,cpp,fortran,map,parallel,szip,threadsafe,tools,utils,zlib] = combination-fails # some features are mutually exclusive
+igraph[openmp](osx) = feature-fails # openmp setup needed
+itk[python](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31042
+keystone(osx) = fail # requires python 2
+lapack-reference[core,cblas,noblas] = options # Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas.
+libadlmidi[dosbox-emulator] = options # You have to select at least one emulator
+libcanberra[core,defaults,gstreamer,gtk3,null](osx) = combination-fails # fatal error: 'gdk/gdkx.h' file not found
+libcanberra[core](osx) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31032
+libcanberra[gtk3](osx) = combination-fails # No package 'systemd' found # See https://github.com/microsoft/vcpkg/issues/31032
+libcanberra[oss](osx) = feature-fails # oss not installed
+libcanberra[pulse](osx) = feature-fails # pulseaudio not installed
+libgit2[core,openssl,winhttp,sectransp,mbedtls] = options # only one TLS backend is allowed
+libgit2[pcre,pcre2] = options # have to select pcre xor pcre2
+libgit2[winhttp] = feature-fails
+libgwenhywfar[qt5](osx) = feature-fails # See https://github.com/microsoft/vcpkg/issues/31216
+libidn2[nls](osx) = feature-fails # https://github.com/microsoft/vcpkg/issues/31011
+libmesh(osx) = fail # build failure
+qt3d(osx) = fail # see https://github.com/microsoft/vcpkg/issues/31336
+libopnmidi[gens-emulator] = options # You have to select at least one emulator
+libpq[core,bonjour,client,icu,lz4,nls,openssl,python,readline,tcl,xml,xslt,zlib,zstd](osx) = combination-fails # waits for https://github.com/microsoft/vcpkg/pull/31031
+libproxy[bindings-csharp](!windows) = feature-fails # No C# compiler installed
+libraw[openmp](osx) = feature-fails # requires openmp (works with right setup)
+libsbml[core,bzip2,comp,expat,fbc,groups,layout,multi,namespace,qual,render,test,zlib] = combination-fails # see https://github.com/microsoft/vcpkg/issues/31297
+libsbml[expat, libxml2] = options # have to select excatly one xml lib(they are features)
+libssh[openssl,mbedtls] = options # we have to select feature openssl or mbedtls
+llvm[libcxxabi] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31038
+magnum-plugins[meshoptimizersceneconverter] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31112
+magnum[wavaudioimporter](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31014
+mesa[egl](!windows) = feature-fails # ERROR: Problem encountered: EGL requires dri, haiku, or windows
+mesa[llvm] = feature-fails # ERROR: Neither a subproject directory nor a llvm.wrap file was found. (llvm-config found: NO)
+msdfgen[core,extensions,geometry-preprocessing,openmp,tools](osx) = combination-fails # requires openmp (works with right setup)
+onnx[pybind11](osx) = feature-fails # Could NOT find Python3 (missing: Development Development.Module)
+opencv4[core,ade,contrib,dc1394,default-features,dnn,eigen,ffmpeg,freetype,gdcm,gstreamer,halide,ipp,jasper,jpeg,lapack,nonfree,openexr,opengl,openmp,ovis,png,python,qt,quirc,sfm,tbb,tiff,vtk,webp,world] = combination-fails # waits for https://github.com/microsoft/vcpkg/pull/31045/files
+openscap(osx) = fail # Waits for https://github.com/microsoft/vcpkg/pull/27348
+osg[examples](osx) = feature-fails # https://github.com/microsoft/vcpkg/issues/31016
+osg[tools](osx) = feature-fails # https://github.com/microsoft/vcpkg/issues/31016
+pangolin[core,eigen,examples,ffmpeg,gui,jpeg,lz4,module,openexr,png,pybind11,realsense,test,tiff,tools,vars,video,zstd] = combination-fails # see https://github.com/microsoft/vcpkg/issues/31304
+poco[core,mariadb,mysql] = options # You can not install mariadb and mysql at the same time
+qt5compat[iconv] = feature-fails # requires qtbase without icu
+qtbase[fontconfig] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31247
+qtmultimedia[core,ffmpeg,gstreamer,qml,widgets] = combination-fails # Error: Qt will by default autolink both plugin backends in static builds leading to symbol collisions and a build failure in dependent ports! As such in static builds only one backend is allowed by default.
+qtopcua[uacpp] = feature-fails # Unified Automation C++ SDK is not installed
+realsense2[tools](osx) = feature-fails # Could NOT find Threads (missing: Threads_FOUND)
+restc-cpp[core,boost-log,openssl,threaded-ctx,zlib](osx) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31027
+restc-cpp[threaded-ctx] = combination-fails # Fixed on master: error: copying member subobject of type 'std::atomic_bool' (aka 'atomic<bool>') invokes deleted constructor
+sqlpp11-connector-mysql[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
+sqlpp11[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
+symengine[core,arb,flint,integer-class-boostmp,integer-class-flint,mpfr](osx) = combination-fails # undefined build error
+tgui[sdl2] = options # At least one of the backend features must be selected: sdl2 sfml
+tiff[core,cxx,jpeg,lzma,tools,webp,zip,zstd] = combination-fails # link failure if tools and webp are enabled
+vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
+vtk-m[omp](osx) = feature-fails # fixed by https://github.com/microsoft/vcpkg/pull/30923
+vtk[all] = feature-fails # Wait for fix: https://github.com/microsoft/vcpkg/pull/29260
+wasmedge[core,aot,tools] = combination-fails # see https://github.com/microsoft/vcpkg/issues/31217
+xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
+xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not 32
+yyjson[writer](osx) = feature-fails # error: call to undeclared function 'digi_is_digit'
+openblas[dynamic-arch] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31494
+liblsquic = fail # see https://github.com/microsoft/vcpkg/issues/31546
+gdal[tools] = feature-fails # see https://github.com/microsoft/vcpkg/pull/31545
+
+# skip
+entt[experimental] = skip # required head build
+glad[glx](osx) = skip # No x11 on osx
+magnum-plugins[cgltfimporter,glslangshaderconverter,ktximageconverter,ktximporter,openexrimageconverter,openexrimporter,spirvtoolsshaderconverter,stbdxtimageconverter] = skip # only available in head build
+openjpeg[tools] = skip # fails and is deprecated
+s2n = skip # builds to slow
+sciter = skip # The sciter port is deprecated by upstream and conflicts with upstream's replacement.
