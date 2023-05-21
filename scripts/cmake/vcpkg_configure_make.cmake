@@ -62,10 +62,10 @@ macro(z_vcpkg_determine_autotools_target_arch_mac out_var)
 endmacro()
 
 # Define variables used in both vcpkg_configure_make and vcpkg_build_make:
-# short_name_<CONFIG>:         unique abbreviation for the given build type
-# path_suffix_<CONFIG>:        installation path suffix for the given build type
-# z_vcpkg_installed_path:      CURRENT_INSTALLED_DIR with escaped space characters
-# z_vcpkg_prefix_path:         CURRENT_INSTALLED_DIR with unprotected spaces, but drive letters transformed for mingw/msys
+# short_name_<CONFIG>:           unique abbreviation for the given build type (rel, dbg)
+# path_suffix_<CONFIG>:          installation path suffix for the given build type ('', /debug)
+# current_installed_dir_escaped: CURRENT_INSTALLED_DIR with escaped space characters
+# current_installed_dir_msys:    CURRENT_INSTALLED_DIR with unprotected spaces, but drive letters transformed for msys
 macro(z_vcpkg_configure_make_common_definitions)
     set(short_name_RELEASE "rel")
     set(short_name_DEBUG "dbg")
@@ -75,11 +75,10 @@ macro(z_vcpkg_configure_make_common_definitions)
 
     # Some PATH handling for dealing with spaces....some tools will still fail with that!
     # In particular, the libtool install command is unable to install correctly to paths with spaces.
-    string(REPLACE " " "\\ " z_vcpkg_installed_path "${CURRENT_INSTALLED_DIR}")
+    string(REPLACE " " "\\ " current_installed_dir_escaped "${CURRENT_INSTALLED_DIR}")
+    set(current_installed_dir_msys "${CURRENT_INSTALLED_DIR}")
     if(CMAKE_HOST_WIN32)
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" z_vcpkg_prefix_path "${CURRENT_INSTALLED_DIR}")
-    else()
-        set(z_vcpkg_prefix_path "${CURRENT_INSTALLED_DIR}")
+        string(REGEX REPLACE "^([a-zA-Z]):/" "/\\1/" current_installed_dir_msys "${current_installed_dir_msys}")
     endif()
 endmacro()
 
@@ -220,10 +219,10 @@ function(z_vcpkg_configure_make_process_flags var_suffix)
         list(TRANSFORM LDFLAGS PREPEND "${linker_flag_escape}")
     endif()
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
-        vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link")
+        vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib/manual-link")
     endif()
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
-        vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib")
+        vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib")
     endif()
 
     if(ARFLAGS)
@@ -627,8 +626,8 @@ function(vcpkg_configure_make)
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     # Set configure paths
-    vcpkg_list(APPEND arg_OPTIONS_RELEASE "--prefix=${z_vcpkg_prefix_path}")
-    vcpkg_list(APPEND arg_OPTIONS_DEBUG "--prefix=${z_vcpkg_prefix_path}${path_suffix_DEBUG}")
+    vcpkg_list(APPEND arg_OPTIONS_RELEASE "--prefix=${current_installed_dir_msys}")
+    vcpkg_list(APPEND arg_OPTIONS_DEBUG "--prefix=${current_installed_dir_msys}${path_suffix_DEBUG}")
     if(NOT arg_NO_ADDITIONAL_PATHS)
         # ${prefix} has an extra backslash to prevent early expansion when calling `bash -c configure "..."`.
         vcpkg_list(APPEND arg_OPTIONS_RELEASE
