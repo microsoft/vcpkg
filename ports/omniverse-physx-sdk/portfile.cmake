@@ -193,6 +193,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     MAYBE_UNUSED_VARIABLES
         PX_OUTPUT_ARCH
+        PX_COPY_EXTERNAL_DLL
 )
 
 # Compile and install in vcpkg's final installation directories all of the include headers and binaries for debug/release
