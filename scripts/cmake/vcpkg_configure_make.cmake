@@ -117,7 +117,7 @@ function(z_vcpkg_configure_make_process_flags var_suffix)
             vcpkg_list(SET pattern "${arg}")
             continue()
         else()
-           continue()
+            continue()
         endif()
         vcpkg_list(APPEND ABI_FLAGS ${pattern})
         string(REPLACE ";${pattern};" ";" CFLAGS "${CFLAGS}")
@@ -266,15 +266,6 @@ function(vcpkg_configure_make)
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")
-
-    # Remove outer quotes from cmake variables which will be forwarded via makefile/shell variables
-    # substituted into makefile commands (e.g. Android NDK has "--sysroot=...")
-    foreach(var IN ITEMS VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES
-                         VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES
-    )
-        separate_arguments(cmake_list NATIVE_COMMAND "${${var}}")
-        list(JOIN cmake_list " " "${var}")
-    endforeach()
 
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
@@ -702,6 +693,8 @@ function(vcpkg_configure_make)
         endif()
     endif()
 
+    # Remove outer quotes from cmake variables which will be forwarded via makefile/shell variables
+    # substituted into makefile commands (e.g. Android NDK has "--sysroot=...")
     separate_arguments(c_libs_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
     separate_arguments(cxx_libs_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
     list(REMOVE_ITEM cxx_libs_list ${c_libs_list})
