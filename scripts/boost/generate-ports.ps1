@@ -25,6 +25,8 @@ else {
 $defaultPortVersion = 1
 $portVersions = @{
     #e.g. "boost-asio" = 1;
+    "boost-build" = 2;
+    "boost-modular-build-helper" = 2;
 }
 
 function Get-PortVersion {
@@ -651,15 +653,14 @@ if ($updateServicePorts) {
         -PortName "boost-modular-build-helper" `
         -Description "Internal vcpkg port used to build Boost libraries" `
         -License "MIT" `
-        -Dependencies @("boost-uninstall", @{ name = "vcpkg-cmake"; host = $True }, @{ name = "vcpkg-cmake-get-vars"; host = $True })
+        -Dependencies @(@{ name = "vcpkg-cmake"; host = $True }, @{ name = "vcpkg-cmake-get-vars"; host = $True })
 
     # Generate manifest files for boost-build
     GeneratePortManifest `
         -PortName "boost-build" `
         -Homepage "https://github.com/boostorg/build" `
         -Description "Boost.Build" `
-        -License "BSL-1.0" `
-        -Dependencies @("boost-uninstall")
+        -License "BSL-1.0"
 
     # Update Boost version in CMake files
     $files_with_boost_version = @(
