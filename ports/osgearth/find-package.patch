@@ -69,7 +69,7 @@ index cf8245b8b..233390a5f 100755
  if(OSGEARTH_BUILD_ZIP_PLUGIN)
 -    find_package(LibZip)
 +    find_package(libzip CONFIG REQUIRED)
-+	set(LIBZIP_LIBRARY libzip::zip)
++    set(LIBZIP_LIBRARY libzip::zip)
  endif()
  
  if(OSGEARTH_BUILD_TRITON_NODEKIT)
@@ -98,7 +98,7 @@ index cf8245b8b..233390a5f 100755
  IF (WITH_EXTERNAL_TINYXML)
 -    find_package(TinyXML)
 +    find_package(TINYXML NAMES tinyxml REQUIRED)
-+	set(TINYXML_LIBRARY unofficial-tinyxml::unofficial-tinyxml)
++    set(TINYXML_LIBRARY unofficial-tinyxml::unofficial-tinyxml)
  ENDIF (WITH_EXTERNAL_TINYXML)
  
  # postfix settings for various configs
@@ -106,7 +106,7 @@ index cf8245b8b..233390a5f 100755
      SET(OSGEARTH_DYNAMIC_OR_STATIC "SHARED")
  ELSE()
      SET(OSGEARTH_DYNAMIC_OR_STATIC "STATIC")
-+	add_definitions(-DOSGEARTH_LIBRARY_STATIC)
++    add_definitions(-DOSGEARTH_LIBRARY_STATIC)
  ENDIF()
  
  	
