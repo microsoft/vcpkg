@@ -61,16 +61,16 @@
         {
           "name": "libpq",
           "features": [
-            "python"
+            "readline"
           ],
-          "platform": "!android"
+          "platform": "!windows"
         },
         {
           "name": "libpq",
           "features": [
-            "readline"
+            "python"
           ],
-          "platform": "!windows"
+          "platform": "!android & !mingw"
         },
         {
           "name": "libpq",

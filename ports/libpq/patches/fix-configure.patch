@@ -72,7 +72,7 @@ index 9a73f50..a35395e 100644
  
  if test "$with_zstd" = yes ; then
 -  AC_CHECK_LIB(zstd, ZSTD_compress, [], [AC_MSG_ERROR([library 'zstd' is required for ZSTD support])])
-+  PKG_CHECK_MODULES([ZSTD], [zstd], [AC_DEFINE(HAVE_LIBZSTD,1,[Define to 1 if with lz4])], [AC_MSG_ERROR([library 'zstd' is required for ZSTD support])])
++  PKG_CHECK_MODULES([ZSTD], [libzstd], [AC_DEFINE(HAVE_LIBZSTD,1,[Define to 1 if with zstd])], [AC_MSG_ERROR([library 'zstd' is required for ZSTD support])])
 +  LIBS="$ZSTD_LIBS $LIBS"
  fi
  
