@@ -1,4 +1,4 @@
-set(DIRECTXTK_TAG mar2023)
+set(DIRECTXTK_TAG apr2023)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
     REF ${DIRECTXTK_TAG}
-    SHA512 ed0ec9e11ed88432a43d62dff4319ed0cc5ad98e9e4ee5a29313fb06beee38d4b86243603bd041fb90e93142aa60f65db88b09c53d363b32923e54fa17575a39
+    SHA512 161f647199479cdd79231717b963e2c28c40fe62f2d7e3e8aa16baeceac083645e68d4bbd993b1fb5ddf9ab8efc2a6606b037e922725bd0c74fbb83cba451111
     HEAD_REF main
 )
 
@@ -38,7 +38,7 @@ if("tools" IN_LIST FEATURES)
     MAKESPRITEFONT_EXE
     URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/MakeSpriteFont.exe"
     FILENAME "makespritefont-${DIRECTXTK_TAG}.exe"
-    SHA512 2a7c21356599846f10bc8adb1ec3e3ce509c9a446567ab7195e998a428e3a62629e8f6d4b7bd9fc3793a51f6eb61597b5feba49f3464ea3e4529d0991701e780
+    SHA512 f014172f127a00aa3b51f33c17062772e75271f57fbade4db8c2da634cbc090c0f4eb8dd2771f6faead624054244469705f195fe10d643570df3ba95dbcb119f
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
@@ -53,7 +53,7 @@ if("tools" IN_LIST FEATURES)
       XWBTOOL_EXE
       URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/XWBTool.exe"
       FILENAME "xwbtool-${DIRECTXTK_TAG}.exe"
-      SHA512 9bc9279767d6379501ec9d851cda52556eb1e96f583a162b4fad93f96985b18b2fe9d9c6eeb3f5f16b42ce2655ae3045bfe0ea0cb4aca425fe09bc079ad6a70d
+      SHA512 2bb9f9ecfe65e373dadd84b1550e499de5507fcf57257379e3da1f4d4325df686ec5e784754990c89da0a2915c12578424f5b66009ebc14d969c5c92db50b09a
     )
 
     file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
@@ -66,7 +66,7 @@ if("tools" IN_LIST FEATURES)
       XWBTOOL_EXE
       URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/XWBTool_arm64.exe"
       FILENAME "xwbtool-${DIRECTXTK_TAG}-arm64.exe"
-      SHA512 b49cbe9823182b600496a449a2ff5acd08491615584c523ede4506880cb9b293cedf0b350f186ed4ef53e4795a89d1b0331559fee59ee533751086d7bb4c9e54
+      SHA512 453a5504074f43104d77d79ab2824b7091302a0339361a433e56acc854594a3413f9675aaaa6be518329e2ab9c3cacb50a25293787d3f944e74d1a8eebc23a33
     )
 
     file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
@@ -85,4 +85,4 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -77,7 +77,7 @@ vcpkg_build_nmake(
         "LD=${ld}"
         "LDFLAGS=${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}"
     PROJECT_NAME "makefile"
-    TARGET install_dev install_modules
+    TARGET install_dev install_modules ${INSTALL_FIPS}
     LOGFILE_ROOT install
     OPTIONS
         "INSTALL_PDBS=${OPENSSL_BUILD_MAKES_PDBS}" # install-pdbs.patch
@@ -89,6 +89,9 @@ set(scripts "bin/c_rehash.pl" "misc/CA.pl" "misc/tsget.pl")
 if("tools" IN_LIST FEATURES)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/openssl.cnf")
+    if("fips" IN_LIST FEATURES)
+	file(RENAME "${CURRENT_PACKAGES_DIR}/fipsmodule.cnf" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fipsmodule.cnf")
+    endif()
     foreach(script IN LISTS scripts)
         file(COPY "${CURRENT_PACKAGES_DIR}/${script}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/${script}" "${CURRENT_PACKAGES_DIR}/debug/${script}")
@@ -96,6 +99,7 @@ if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES openssl AUTO_CLEAN)
 else()
     file(REMOVE "${CURRENT_PACKAGES_DIR}/openssl.cnf")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/fipsmodule.cnf")
     foreach(script IN LISTS scripts)
         file(REMOVE "${CURRENT_PACKAGES_DIR}/${script}" "${CURRENT_PACKAGES_DIR}/debug/${script}")
     endforeach()
@@ -125,4 +129,5 @@ file(REMOVE
     "${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf.dist"
     "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf"
     "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist"
+    "${CURRENT_PACKAGES_DIR}/debug/fipsmodule.cnf"
 )

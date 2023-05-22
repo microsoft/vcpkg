@@ -1,7 +1,7 @@
 {
   "name": "pangomm",
   "version": "2.50.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "pangomm is the official C++ interface for the Pango font layout library. See, for instance, the Pango::Layout class.",
   "homepage": "https://gitlab.gnome.org/GNOME/pangomm",
   "license": "LGPL-2.1-or-later",

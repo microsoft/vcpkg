@@ -1,6 +1,7 @@
 {
   "name": "libgit2",
   "version-semver": "1.4.2",
+  "port-version": 3,
   "description": "Git linkable library",
   "homepage": "https://github.com/libgit2/libgit2",
   "supports": "!uwp",
@@ -23,6 +24,7 @@
   "features": {
     "mbedtls": {
       "description": "SSL support (mbedTLS)",
+      "supports": "!windows",
       "dependencies": [
         "mbedtls"
       ]
@@ -46,18 +48,12 @@
       ]
     },
     "sectransp": {
-      "description": "SSL support (sectransp)"
+      "description": "SSL support (sectransp)",
+      "supports": "osx"
     },
     "ssh": {
       "description": "SSH support via libssh2",
       "dependencies": [
-        {
-          "name": "libgit2",
-          "default-features": false,
-          "features": [
-            "openssl"
-          ]
-        },
         "libssh2"
       ]
     },
@@ -91,7 +87,8 @@
       ]
     },
     "winhttp": {
-      "description": "SSL support (WinHTTP)"
+      "description": "SSL support (WinHTTP)",
+      "supports": "windows & !uwp"
     }
   }
 }

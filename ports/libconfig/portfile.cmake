@@ -8,17 +8,17 @@ vcpkg_from_github(
 
 if (NOT VCPKG_USE_HEAD_VERSION)
   message("If you would like to use cmake with the port, use `--head` option with vcpkg install.")
-  file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+  file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 endif()
 
 if (NOT VCPKG_USE_HEAD_VERSION)
   vcpkg_cmake_configure(
-      SOURCE_PATH ${SOURCE_PATH}
+      SOURCE_PATH "${SOURCE_PATH}"
       OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
   )
 else()
   vcpkg_cmake_configure(
-      SOURCE_PATH ${SOURCE_PATH}
+      SOURCE_PATH "${SOURCE_PATH}"
       OPTIONS
           -DBUILD_EXAMPLES=OFF
           -DBUILD_TESTS=OFF
@@ -30,11 +30,11 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 if (VCPKG_USE_HEAD_VERSION)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
   vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libconfig)
 endif()
 
-foreach(FILE ${CURRENT_PACKAGES_DIR}/include/libconfig.h++ ${CURRENT_PACKAGES_DIR}/include/libconfig.h)
+foreach(FILE "${CURRENT_PACKAGES_DIR}/include/libconfig.h++" "${CURRENT_PACKAGES_DIR}/include/libconfig.h")
   file(READ ${FILE} _contents)
   string(REPLACE "defined(LIBCONFIGXX_EXPORTS)" "0" _contents "${_contents}")
   string(REPLACE "defined(LIBCONFIG_EXPORTS)" "0" _contents "${_contents}")
@@ -49,4 +49,4 @@ foreach(FILE ${CURRENT_PACKAGES_DIR}/include/libconfig.h++ ${CURRENT_PACKAGES_DI
   file(WRITE ${FILE} "${_contents}")
 endforeach()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

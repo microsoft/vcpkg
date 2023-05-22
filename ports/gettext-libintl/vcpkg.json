@@ -1,0 +1,13 @@
+{
+  "name": "gettext-libintl",
+  "version": "0.21.1",
+  "description": "The libintl C library from GNU gettext-runtime.",
+  "homepage": "https://www.gnu.org/software/gettext/",
+  "license": "LGPL-2.1-or-later",
+  "dependencies": [
+    {
+      "name": "libiconv",
+      "platform": "!linux"
+    }
+  ]
+}

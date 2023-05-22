@@ -55,8 +55,8 @@ index 287f0cb..d35106f 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -1,4 +1,4 @@
--project('gtk+-3.0', 'c',
-+project('gtk+-3.0', 'c', 'cpp',
-         version: '3.24.34',
-         default_options: [
-           'buildtype=debugoptimized',
+-project('gtk+', 'c',
++project('gtk+', 'c', 'cpp',
+   version: '3.24.37',
+   default_options: [
+     'buildtype=debugoptimized',

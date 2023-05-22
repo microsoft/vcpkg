@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bshoshany/thread-pool
-    REF v3.3.0
-    SHA512 980c8dfe90e04cbc622ee4ae2ce67444069311619f0dc5d7ac3b3a3ea59ead42d4c867e669e8ce9c71cdc2a4bae431402a8f5032ab29fdfc1ca507b0e7102d8f
+    REF v3.4.0
+    SHA512 4eea216422ea7fd6df52589e84fefb34248fe56fd0bbdcc5c33ae21c0ba6b950ec74a31eeea144edfc22444f6777dc09f668fd3ed5236604e0c7de62e45381a7
     HEAD_REF master
 )
 
