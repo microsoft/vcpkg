@@ -7840,6 +7840,10 @@
       "baseline": "9.21.2-0e30f5c",
       "port-version": 2
     },
+    "task-thread-pool": {
+      "baseline": "1.0.7",
+      "port-version": 0
+    },
     "taskflow": {
       "baseline": "3.6.0",
       "port-version": 0
