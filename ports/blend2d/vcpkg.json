@@ -1,7 +1,7 @@
 {
   "name": "blend2d",
   "version-date": "2022-12-31",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Beta 2D Vector Graphics Powered by a JIT Compiler",
   "homepage": "https://github.com/blend2d/blend2d",
   "documentation": "https://blend2d.com/doc/index.html",
@@ -28,13 +28,42 @@
       "description": "Default feature. Enables use of futex."
     },
     "jit": {
-      "description": "Default feature. Enables jit pipeline compilation."
+      "description": "Default feature. Enables jit pipeline compilation.",
+      "dependencies": [
+        {
+          "name": "blend2d",
+          "default-features": false,
+          "features": [
+            "futex"
+          ],
+          "platform": "windows"
+        }
+      ]
     },
     "logging": {
-      "description": "Default feature. Enables logging."
+      "description": "Default feature. Enables logging.",
+      "dependencies": [
+        {
+          "name": "blend2d",
+          "default-features": false,
+          "features": [
+            "jit"
+          ]
+        }
+      ]
     },
     "tls": {
-      "description": "Default feature. Enables use of thread_local feature. Disable for platforms where thread local storage is expensive or not supported."
+      "description": "Default feature. Enables use of thread_local feature. Disable for platforms where thread local storage is expensive or not supported.",
+      "dependencies": [
+        {
+          "name": "blend2d",
+          "default-features": false,
+          "features": [
+            "futex"
+          ],
+          "platform": "windows"
+        }
+      ]
     }
   }
 }

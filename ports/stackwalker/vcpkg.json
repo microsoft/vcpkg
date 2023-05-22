@@ -1,0 +1,17 @@
+{
+  "name": "stackwalker",
+  "version": "1.20",
+  "description": "StackWalker - Walking the callstack.",
+  "license": "BSD-2-Clause",
+  "supports": "windows & !arm & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

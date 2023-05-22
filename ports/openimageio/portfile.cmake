@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
     REF "v${VERSION}"
-    SHA512 e7dd7aba8dc0baa9bc50f362c21119bf4008edbd03a0c9f31bb03e01b5b0cc18c39f8a368885a4d756f6b475965138409c7e91eeae90b0ebc18d253ff314f025
+    SHA512 e8b232bb3c1bb66cc6c4f023dcf6e29633a1aee64c49a2860c2157c0885960c40114ee3988d4f132e6e55670b8b1e01b5b4cd4462651ae047a89d22de527581c 
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -11,6 +11,7 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
+        fix-msvc-build.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -48,6 +49,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
+        -DOIIO_BUILD_TESTS=OFF
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
         -DUSE_OpenVDB=OFF

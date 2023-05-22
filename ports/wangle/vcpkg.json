@@ -1,6 +1,7 @@
 {
   "name": "wangle",
   "version-string": "2022.03.21.00",
+  "port-version": 1,
   "description": "Wangle is a framework providing a set of common client/server abstractions for building services in a consistent, modular, and composable way.",
   "homepage": "https://github.com/facebook/wangle",
   "license": "Apache-2.0",
@@ -13,6 +14,7 @@
     "double-conversion",
     "fizz",
     "folly",
+    "gflags",
     "glog",
     "libevent",
     "openssl",

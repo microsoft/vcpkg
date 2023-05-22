@@ -7,14 +7,14 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
-    REF v0.9
-    SHA512 00e8ff6d73d0428eb7a77fc5e0556458285922fbf9d5f0d42ed4f27ff98ffcd96b0f59bbaa3c103fd0903283ded6e7577d2a49362e5803cdbac0f3236af957cb
+    REF v0.9.1
+    SHA512 988f492501e5a449ecc89b98d4e8cb6164b65dfe2b5daf17ccc3035f1a477162b77ce7a2cc4c62d7b8a8d530d80f2b439c779319a6bd15b6d37b4a36406d8f4c
     HEAD_REF master
     PATCHES
         001-fix-vcxproj-vcpkg.patch
         002-fix-capstone-5.patch
         003-fix-imgui-path.patch
-        004-fix-crash-handler.patch
+        004-fix-missing-threads-dep.patch # https://github.com/wolfpld/tracy/pull/562
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
