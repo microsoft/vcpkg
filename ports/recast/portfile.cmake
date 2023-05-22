@@ -3,20 +3,24 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO recastnavigation/recastnavigation
-    REF 1.5.1
-    SHA512 09900d8893e0c633a79e6188d15e68d1047040a0f2bceb2542f486dded64e69b918eaae159def81416a014fae26a46502783a2a712462bee4be2a3edf7bef47f
+    REF v1.6.0
+    SHA512 7567aaa78219cc490a6f76210fba1f130f0c17aeaa06432ab1207e0fd03404abe31042e8b03971aa0d04ad65d39469f13575fe0072fb920c38581d39568b70fb
     HEAD_REF master
 )
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DRECASTNAVIGATION_DEMO=OFF
+        -DRECASTNAVIGATION_TESTS=OFF
+        -DRECASTNAVIGATION_EXAMPLES=OFF
+
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-recast CONFIG_PATH share/unofficial-recast)
+vcpkg_cmake_config_fixup(PACKAGE_NAME recastnavigation CONFIG_PATH lib/cmake/recastnavigation)
+
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
