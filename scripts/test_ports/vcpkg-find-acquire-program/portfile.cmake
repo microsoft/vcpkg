@@ -1,5 +1,8 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
+# For each vcpkg_find_acquire_program(NAME).cmake script,
+# there must be a literal call to vcpkg_find_acquire_program(NAME).cmake
+
 set(variables BAZEL BISON FLEX GIT GN NINJA PERL PKGCONFIG PYTHON2 PYTHON3 YASM)
 vcpkg_find_acquire_program(BAZEL)
 vcpkg_find_acquire_program(BISON)
@@ -55,5 +58,5 @@ foreach(variable IN LISTS variables)
 endforeach()
 if(missing)
     list(JOIN missing "\n   " missing)
-    message(FATAL_ERROR "The following variables do not exist:\n   ${missing}")
+    message(FATAL_ERROR "The following programs do not exist:\n   ${missing}")
 endif()
