@@ -328,7 +328,7 @@ set(known_packages "${Z_VCPKG_MSYS_PACKAGES_RESOLVED}")
 
 set(Z_VCPKG_MSYS_PACKAGES_RESOLVED "" CACHE INTERNAL "")
 vcpkg_find_acquire_program(PKGCONFIG)
-analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_acquire_program.cmake" DIRECT_ONLY)
+analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_acquire_program(PKGCONFIG).cmake" DIRECT_ONLY)
 
 set(Z_VCPKG_MSYS_PACKAGES_RESOLVED "" CACHE INTERNAL "")
 include("${SCRIPTS}/cmake/vcpkg_find_fortran.cmake")
