@@ -116,6 +116,9 @@
           "$package": "PostgreSQL",
           "name": "libpq",
           "default-features": false,
+          "features": [
+            "all"
+          ],
           "platform": "!uwp & !mingw"
         },
         {
