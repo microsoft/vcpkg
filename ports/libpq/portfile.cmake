@@ -8,17 +8,17 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        patches/fix-configure.patch
-        patches/single-linkage.patch
-        patches/no-server-tools.patch
-        patches/mingw-install.patch
-        patches/python.patch
-        patches/windows/install.patch
-        patches/windows/macro-def.patch
-        patches/windows/python_lib.patch
-        patches/windows/win_bison_flex.patch
-        patches/windows/msbuild.patch
-        patches/windows/spin_delay.patch
+        unix/fix-configure.patch
+        unix/single-linkage.patch
+        unix/no-server-tools.patch
+        unix/mingw-install.patch
+        unix/python.patch
+        windows/install.patch
+        windows/macro-def.patch
+        windows/python_lib.patch
+        windows/win_bison_flex.patch
+        windows/msbuild.patch
+        windows/spin_delay.patch
 )
 
 if("client" IN_LIST FEATURES)
