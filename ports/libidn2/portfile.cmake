@@ -23,6 +23,8 @@ vcpkg_extract_source_archive(SOURCE_PATH
         disable-subdirs.patch
         fix-msvc.patch
         fix-uwp.patch
+        fix_invalid_macro.patch
+        
 )
 
 vcpkg_list(SET options)
