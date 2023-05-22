@@ -2766,6 +2766,10 @@
     },
     "gettext": {
       "baseline": "0.21.1",
+      "port-version": 1
+    },
+    "gettext-libintl": {
+      "baseline": "0.21.1",
       "port-version": 0
     },
     "gettimeofday": {
@@ -5142,7 +5146,7 @@
     },
     "mchehab-zbar": {
       "baseline": "0.23.90",
-      "port-version": 3
+      "port-version": 4
     },
     "mcpp": {
       "baseline": "2.7.2.14",
