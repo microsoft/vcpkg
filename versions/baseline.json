@@ -1473,7 +1473,7 @@
       "port-version": 3
     },
     "charls": {
-      "baseline": "2.4.1",
+      "baseline": "2.4.2",
       "port-version": 0
     },
     "chartdir": {
