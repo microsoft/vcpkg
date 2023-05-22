@@ -16,7 +16,8 @@
   ],
   "features": {
     "tools": {
-      "description": "Build CLI tools (adaparse)"
+      "description": "Build CLI tools (adaparse)",
+      "supports": "!uwp"
     }
   }
 }
