@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-Fix-static-lib.patch
         0002-Remove-min-max-macros.patch
+		0003-Fix-linker-tools-error-at-handledeleter.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
