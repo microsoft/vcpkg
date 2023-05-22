@@ -2,10 +2,10 @@
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4bf4b3d..0ac07fb 100644
+index 6db56ee..59e14fb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -85,7 +85,7 @@ target_include_directories(samurai INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_
+@@ -84,7 +84,7 @@ target_include_directories(samurai INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_
    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
  # Find dependencies:

@@ -1,6 +1,6 @@
 {
   "name": "samurai",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Intervals coupled with algebra of set to handle adaptive mesh refinement and operators on it.",
   "homepage": "https://github.com/hpc-maths/samurai",
   "license": "BSD-3-Clause",
