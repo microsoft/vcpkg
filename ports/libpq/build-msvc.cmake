@@ -36,6 +36,15 @@ function(build_msvc build_type source_path)
     string(APPEND config "\$config->{tcl_version} = '90';\n")
     file(WRITE "${build_path}/src/tools/msvc/config.pl" "${config}")
 
+    set(build_in_parallel "-m")
+    set(build_targets libpq libecpg_compat)
+    set(install_target core)
+    if(HAS_TOOLS AND NOT build_type STREQUAL "DEBUG")
+        set(build_in_parallel "") # mitigate winflex races
+        set(build_targets client)
+        set(install_target client)
+    endif()
+
     string(REPLACE "x86" "Win32" platform "${VCPKG_TARGET_ARCHITECTURE}")
     vcpkg_get_windows_sdk(VCPKG_TARGET_PLATFORM_VERSION)
     set(ENV{MSBFLAGS} "\
@@ -45,19 +54,12 @@ function(build_msvc build_type source_path)
         /p:UseIntelMKL=No \
         /p:WindowsTargetPlatformVersion=${VCPKG_TARGET_PLATFORM_VERSION} \
         /p:VcpkgConfiguration=${vcpkg_configuration} \
-        /m \
+        ${build_in_parallel} \
         /p:ForceImportBeforeCppTargets=\"${SCRIPTS}/buildsystems/msbuild/vcpkg.targets;${build_path}/vcpkg-libs.props\" \
         /p:VcpkgTriplet=${TARGET_TRIPLET} \
         /p:VcpkgCurrentInstalledDir=\"${CURRENT_INSTALLED_DIR}\" \
         /p:ForceImportAfterCppTargets=\"${build_path}/libpq.props\" \
     ")
-
-    set(build_targets libpq libecpg_compat)
-    set(install_target core)
-    if(HAS_TOOLS AND NOT build_type STREQUAL "DEBUG")
-        set(build_targets client)
-        set(install_target client)
-    endif()
 
     message(STATUS "Building ${label}")
     foreach(target IN LISTS build_targets)

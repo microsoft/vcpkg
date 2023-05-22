@@ -57,7 +57,7 @@ index f24d9e5..356cc31 100644
        <ImageHasSafeExceptionHandlers/>
        <SubSystem>Console</SubSystem>
 diff --git a/src/tools/msvc/Mkvcbuild.pm b/src/tools/msvc/Mkvcbuild.pm
-index ef0a33c..74f2f89 100644
+index ef0a33c..dd68424 100644
 --- a/src/tools/msvc/Mkvcbuild.pm
 +++ b/src/tools/msvc/Mkvcbuild.pm
 @@ -114,8 +114,10 @@ sub mkvcbuild
@@ -85,7 +85,7 @@ index ef0a33c..74f2f89 100644
  
 -		for my $tclver (qw(86t 86 85 84))
 +		my $v = $solution->{options}->{tcl_version};
-+		for my $tclver ( ("${v}","${v}s") )
++		for my $tclver ( ("${v}","${v}s","${v}sx") )
  		{
  			my $tcllib = $solution->{options}->{tcl} . "/lib/tcl$tclver.lib";
  			if (-e $tcllib)

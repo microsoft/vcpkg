@@ -8,6 +8,7 @@
     <VcpkgPythonLibs>@CURRENT_INSTALLED_DIR@/debug/lib/python310_d.lib</VcpkgPythonLibs>
     <VcpkgTcl90Libs>@CURRENT_INSTALLED_DIR@/debug/lib/tcl90g.lib</VcpkgTcl90Libs>
     <VcpkgTcl90sLibs>@CURRENT_INSTALLED_DIR@/debug/lib/tcl90sg.lib</VcpkgTcl90sLibs>
+    <VcpkgTcl90sxLibs>@CURRENT_INSTALLED_DIR@/debug/lib/tcl90sgx.lib</VcpkgTcl90sxLibs>
     <VcpkgXmlLibs>@LIBXML2_LIBS_DEBUG@</VcpkgXmlLibs>
     <VcpkgXsltLibs>@LIBXSLT_LIBS_DEBUG@</VcpkgXsltLibs>
     <VcpkgZlibLibs>@CURRENT_INSTALLED_DIR@/debug/lib/zlibd.lib</VcpkgZlibLibs>
@@ -21,6 +22,7 @@
     <VcpkgPythonLibs>@CURRENT_INSTALLED_DIR@/lib/python310.lib</VcpkgPythonLibs>
     <VcpkgTcl90Libs>@CURRENT_INSTALLED_DIR@/lib/tcl90.lib</VcpkgTcl90Libs>
     <VcpkgTcl90sLibs>@CURRENT_INSTALLED_DIR@/lib/tcl90s.lib</VcpkgTcl90sLibs>
+    <VcpkgTcl90sxLibs>@CURRENT_INSTALLED_DIR@/lib/tcl90sx.lib</VcpkgTcl90sxLibs>
     <VcpkgXmlLibs>@LIBXML2_LIBS_RELEASE@</VcpkgXmlLibs>
     <VcpkgXsltLibs>@LIBXSLT_LIBS_RELEASE@</VcpkgXsltLibs>
     <VcpkgZlibLibs>@CURRENT_INSTALLED_DIR@/lib/zlib.lib</VcpkgZlibLibs>

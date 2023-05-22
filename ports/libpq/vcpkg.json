@@ -26,25 +26,24 @@
     }
   ],
   "default-features": [
-    "client",
-    "icu",
     "lz4",
     "openssl",
-    "python",
-    "xml",
-    "xslt",
-    "zlib",
-    "zstd"
+    "zlib"
   ],
   "features": {
-    "bonjour": {
-      "description": "Build with Bonjour support",
-      "supports": "osx"
-    },
-    "client": {
-      "$rem": "tests",
-      "description": "Build all client tools and libraries",
+    "all": {
+      "description": "Build all supported features",
       "dependencies": [
+        {
+          "name": "libpq",
+          "features": [
+            "client",
+            "icu",
+            "xml",
+            "xslt",
+            "zstd"
+          ]
+        },
         {
           "name": "libpq",
           "features": [
@@ -62,6 +61,13 @@
         {
           "name": "libpq",
           "features": [
+            "python"
+          ],
+          "platform": "!android"
+        },
+        {
+          "name": "libpq",
+          "features": [
             "readline"
           ],
           "platform": "!windows"
@@ -74,6 +80,13 @@
           "platform": "windows & !mingw & !arm"
         }
       ]
+    },
+    "bonjour": {
+      "description": "Build with Bonjour support",
+      "supports": "osx"
+    },
+    "client": {
+      "description": "Build all client tools and libraries"
     },
     "icu": {
       "description": "Build with support for the ICU library",
