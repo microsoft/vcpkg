@@ -9,35 +9,35 @@
   "dependencies": [
     {
       "name": "boost-assert",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-config",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-core",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-optional",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-smart-ptr",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-throw-exception",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-utility",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-vcpkg-helpers",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     }
   ]
 }

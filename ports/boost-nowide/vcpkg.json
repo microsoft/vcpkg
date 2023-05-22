@@ -10,25 +10,25 @@
     {
       "name": "boost-build",
       "host": true,
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-config",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-filesystem",
       "platform": "!uwp",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-modular-build-helper",
       "host": true,
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-vcpkg-helpers",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "vcpkg-cmake",

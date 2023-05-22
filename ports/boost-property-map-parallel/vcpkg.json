@@ -9,60 +9,60 @@
   "dependencies": [
     {
       "name": "boost-assert",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-concept-check",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-config",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-function",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-mpi",
       "platform": "!uwp",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-mpl",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-multi-index",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-optional",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-property-map",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-serialization",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-smart-ptr",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-static-assert",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-type-traits",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-vcpkg-helpers",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     }
   ]
 }

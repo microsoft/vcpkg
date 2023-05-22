@@ -9,23 +9,23 @@
   "dependencies": [
     {
       "name": "boost-config",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-exception",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-system",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-throw-exception",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-vcpkg-helpers",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     }
   ]
 }

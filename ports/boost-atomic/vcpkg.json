@@ -9,49 +9,49 @@
   "dependencies": [
     {
       "name": "boost-align",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-assert",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-build",
       "host": true,
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-config",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-modular-build-helper",
       "host": true,
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-predef",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-preprocessor",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-static-assert",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-type-traits",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-vcpkg-helpers",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "boost-winapi",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "vcpkg-cmake",
