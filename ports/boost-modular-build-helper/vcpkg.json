@@ -8,7 +8,7 @@
   "dependencies": [
     {
       "name": "boost-uninstall",
-      "version>=": "1.82.0#1"
+      "version>=": "1.82.0"
     },
     {
       "name": "vcpkg-cmake",
