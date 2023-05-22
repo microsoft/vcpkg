@@ -7017,7 +7017,7 @@
       "port-version": 0
     },
     "recast": {
-      "baseline": "1",
+      "baseline": "deprecated",
       "port-version": 0
     },
     "recastnavigation": {
