@@ -85,11 +85,12 @@ if("tools" IN_LIST FEATURES)
             file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/${osg_plugins_subdir}")
         endif()
     endif()
-    vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_boundarygen osgearth_clamp
-        osgearth_conv osgearth_imgui osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
+    vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_bakefeaturetiles osgearth_boundarygen
+        osgearth_clamp osgearth_conv osgearth_imgui osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
 		osgearth_createtile osgearth_mvtindex
         AUTO_CLEAN
     )
+	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
