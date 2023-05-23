@@ -1,3 +1,0 @@
-include(CMakeFindDependencyMacro)
-find_dependency(recastnavigation CONFIG REQUIRED)
-add_library(<old-target> ALIAS <new-target>)
