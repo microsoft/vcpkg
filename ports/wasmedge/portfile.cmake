@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 040eabea8ad7885b95fb3bdb97687e63412c027d853da0b37cc15b8b7e51c02f10286281c57d03a71d6d5a7bf7d4a5e627e31d6fd5ba560b80da675d1f1edbad
     HEAD_REF master
+    PATCHES
+        fmt-10.patch
 )
 
 set(WASMEDGE_CMAKE_OPTIONS "")

@@ -1,6 +1,6 @@
 {
   "name": "live555",
-  "version-date": "2023-03-30",
+  "version-date": "2023-05-10",
   "description": "A complete RTSP server application",
   "homepage": "http://www.live555.com/liveMedia",
   "license": "GPL-3.0-or-later",

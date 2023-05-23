@@ -9,6 +9,7 @@ vcpkg_from_github(
             deps-and-shared.patch
             fix-mpi.patch
             fix-headers.patch
+            fix-fmt-10.patch
 )
 
 if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)

@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
-    REF client_release/7.22/7.22.1
-    SHA512 8b3efc68fe8df8f95a674d9deddbe355da2070a960b1768ee7f9c2afdd8a373e97297715dec5d7daf131d4b5c478afbc4476e152ec516080620f66e1a1f785af
+    REF client_release/7.22/7.22.2
+    SHA512 ac1f63ecea4d24a86459d5f58aac45f04dfaee3e358fcb5a0ae201e9289e11debada30bf0f3ab1bba462068788a2eca2f4d6b3c45d3603c7b6ca6ad51effc85b
     HEAD_REF master
-    PATCHES
-        fix-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
