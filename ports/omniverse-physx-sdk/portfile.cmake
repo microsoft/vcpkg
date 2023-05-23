@@ -273,6 +273,7 @@ file(REMOVE_RECURSE
 
 # Install license and cmake wrapper (which will let users find_package(physx) in CMake)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+# file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/omniverse-physx-sdk-config.cmake" "${CURRENT_PACKAGES_DIR}/share/omniverse-physx-sdk/omniverse-physx-sdk-config.cmake" @ONLY)
 
 message("[VCPKG Omniverse PhysX port execution completed]")
