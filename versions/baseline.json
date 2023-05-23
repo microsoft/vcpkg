@@ -589,7 +589,7 @@
       "port-version": 0
     },
     "blaze": {
-      "baseline": "3.8.1",
+      "baseline": "3.8.2",
       "port-version": 0
     },
     "blend2d": {
