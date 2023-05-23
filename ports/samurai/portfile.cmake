@@ -15,11 +15,20 @@ set(VCPKG_BUILD_TYPE release)
 vcpkg_cmake_get_vars(cmake_vars_file)
 include(${cmake_vars_file})
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DFETCHCONTENT_FULLY_DISCONNECTED=OFF
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            -DFETCHCONTENT_FULLY_DISCONNECTED=OFF
+            -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="${SOURCE_PATH}/x64-windows-rel/_deps/_msvc_toolchain-src/Windows.MSVC.toolchain.cmake"
+    )
+else()
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            -DFETCHCONTENT_FULLY_DISCONNECTED=OFF
+    )
+endif()
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
