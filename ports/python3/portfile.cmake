@@ -19,6 +19,7 @@ set(PATCHES
     0012-force-disable-curses.patch
     0013-configure-no-libcrypt.patch  # https://github.com/python/cpython/pull/28881
     0014-fix-get-python-inc-output.patch
+    0015-python-for-build.patch # Python 3.11: Use --with-build-python instead
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -231,10 +232,31 @@ else()
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()
 
+    set(EXTRA_ARGUMENTS "")
+    if(VCPKG_CROSSCOMPILING)
+        list(APPEND EXTRA_ARGUMENTS DETERMINE_BUILD_TRIPLET)
+        list(APPEND OPTIONS
+            "--build=$(${SOURCE_PATH}/config.guess)"
+            # Python 3.11: Use --with-build-python instead
+            "PYTHON_FOR_BUILD=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            "PYTHON_FOR_REGEN=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            # Override python's AC_RUN_IFELSE cross compiling defaults.
+            # Users may override these values in VCPKG_CONFIGURE_MAKE_OPTIONS.
+            ac_cv_buggy_getaddrinfo=no
+            ac_cv_file__dev_ptc=no
+            ac_cv_file__dev_ptmx=no
+            ac_cv_pthread=yes
+            ac_osx_32bit=false
+        )
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS ${OPTIONS}
-        OPTIONS_DEBUG "--with-pydebug"
+        ${EXTRA_ARGUMENTS}
+        OPTIONS
+            ${OPTIONS}
+        OPTIONS_DEBUG
+            "--with-pydebug"
     )
     vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
 
@@ -310,6 +332,7 @@ _generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     function(replace_dirs_in_config_file python_config_file)
         vcpkg_replace_string("${python_config_file}" "${CURRENT_INSTALLED_DIR}" "' + _base + '")
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_HOST_INSTALLED_DIR}" "' + _base + '/../${HOST_TRIPLET}")
         vcpkg_replace_string("${python_config_file}" "${CURRENT_PACKAGES_DIR}" "' + _base + '")
         vcpkg_replace_string("${python_config_file}" "${CURRENT_BUILDTREES_DIR}" "not/existing")
     endfunction()
