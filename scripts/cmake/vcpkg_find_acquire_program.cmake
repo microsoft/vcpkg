@@ -96,6 +96,7 @@ function(vcpkg_find_acquire_program program)
     endif()
 
     set(raw_executable "OFF")
+    set(exact_version_match "OFF")
     set(program_name "")
     set(program_version "")
     set(search_names "")
@@ -142,6 +143,11 @@ function(vcpkg_find_acquire_program program)
         NAMES ${search_names}
     )
     if(NOT ${program})
+        set(extra_search_args "")
+        if(exact_version_match)
+            vcpkg_list(APPEND extra_search_args EXACT_VERSION_MATCH)
+        endif()
+
         z_vcpkg_find_acquire_program_find_external("${program}"
             ${extra_search_args}
             PROGRAM_NAME "${program_name}"
