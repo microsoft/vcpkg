@@ -13,7 +13,6 @@ vcpkg_extract_source_archive(
         unix/no-server-tools.patch
         unix/mingw-install.patch
         unix/python.patch
-        windows/install.patch
         windows/macro-def.patch
         windows/python_lib.patch
         windows/win_bison_flex.patch
