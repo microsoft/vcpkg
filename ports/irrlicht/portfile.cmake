@@ -1,7 +1,7 @@
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO irrlicht/Irrlicht%20SDK
-    REF 1.8/1.8.5
+    REF 1.8/${VERSION}
     FILENAME "irrlicht-${VERSION}.zip"
     SHA512 d11c7a056bfb8c9737ed583c5bc5794223bc59fb4620411b63bc4d1eedc41db2ed1cab5cb7a37fee42a7f38c0e0645f5fc53fd329fff0f2aa78e0df6804c47c9
     PATCHES
