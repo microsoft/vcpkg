@@ -15,13 +15,15 @@ index 597847b..da988ce 100644
  # Enable packaging
  set(CPACK_PACKAGE_DESCRIPTION "A C++ PDF manipulation library")
 diff --git a/src/podofo/CMakeLists.txt b/src/podofo/CMakeLists.txt
-index 3a148fb..ec79115 100644
+index 3a148fb..198c51b 100644
 --- a/src/podofo/CMakeLists.txt
 +++ b/src/podofo/CMakeLists.txt
-@@ -78,10 +78,14 @@ if(PODOFO_BUILD_STATIC)
+@@ -77,11 +77,15 @@ if(PODOFO_BUILD_STATIC)
+         CLEAN_DIRECT_OUTPUT 1
          OUTPUT_NAME "podofo"
      )
-     install(TARGETS podofo_static
+-    install(TARGETS podofo_static
++    install(TARGETS podofo_static podofo_private
 +        EXPORT PoDoFoConfig
          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
