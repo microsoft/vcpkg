@@ -28,6 +28,29 @@ index 7e48b3ff2..c9dffbb61 100644
      set_target_properties(
        casa_${module}
        PROPERTIES
+diff --git a/casa/CMakeLists.txt b/casa/CMakeLists.txt
+index 5e8c1bd97..1b2a20022 100644
+--- a/casa/CMakeLists.txt
++++ b/casa/CMakeLists.txt
+@@ -15,7 +15,9 @@ set (
+ parser_inputs
+ JsonGram
+ )
+- 
++
++find_package(ZLIB REQUIRED)
++
+ foreach (src ${parser_inputs})
+     if (BISON_VERSION VERSION_LESS 3.0)
+         BISON_TARGET (${src} Json/${src}.yy ${CMAKE_CURRENT_BINARY_DIR}/${src}.ycc COMPILE_FLAGS "-y -p ${src}")
+@@ -260,6 +262,7 @@ target_link_libraries (
+ casa_casa
+ ${de_libraries}
+ ${libm}
++${ZLIB_LIBRARIES}
+ dl
+ ${CASACORE_ARCH_LIBS}
+ )
 diff --git a/cmake/FindFFTW3.cmake b/cmake/FindFFTW3.cmake
 index 886f3bebb..b47b47752 100644
 --- a/cmake/FindFFTW3.cmake

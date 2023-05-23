@@ -23,8 +23,53 @@
     },
     "gsl",
     "lapack",
-    "readline-unix",
     "wcslib",
     "zlib"
-  ]
+  ],
+  "default-features": [
+    "dysco",
+    "openmp",
+    "readline",
+    "stacktrace",
+    "tablelocking",
+    "threads"
+  ],
+  "features": {
+    "adios2": {
+      "description": "Enable ADIOS2 support",
+      "dependencies": ["adios2"]
+    },
+    "dysco": {
+      "description": "Enable DYSCO Storage Manager support"
+    },
+    "readline": {
+      "description": "Enable readline support",
+      "dependencies": ["readline-unix"]
+    },
+    "hdf5": {
+      "description": "Enable HDF5 support",
+      "dependencies": ["hdf5"]
+    },
+    "mpi": {
+      "description": "Enable MPI support",
+      "dependencies": ["mpi"]
+    },
+    "python3": {
+      "description": "Enable Python3 support"
+    },
+    "openmp": {
+      "description": "Enable OpenMP support"
+    },
+    "stacktrace": {
+      "description": "Enable stacktrace support"
+    },
+    "tablelocking": {
+      "description": "Enable table locking"
+    },
+    "threads": {
+      "description": "Enable threading support",
+      "dependencies": ["pthreads"]
+    }
+  },
+  "supports": "!windows"
 }
