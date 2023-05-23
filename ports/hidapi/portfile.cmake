@@ -26,9 +26,7 @@ vcpkg_copy_pdbs()
 
 
 if ("pp-data-dump" IN_LIST FEATURES)
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/bin/pp_data_dump.exe" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/pp_data_dump.exe")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/pp_data_dump.exe")
+    vcpkg_copy_tools(TOOL_NAMES pp_data_dump AUTO_CLEAN)
 endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/hidapi/libhidapi.cmake" "\"/hidapi\"" "\"\${_IMPORT_PREFIX}/include\"")
