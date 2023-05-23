@@ -58,8 +58,6 @@ arrayfire:x64-linux=fail
 allegro5:arm64-windows=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
-arrow:arm64-android=fail
-arrow:x64-android=fail
 assimp:arm-neon-android=fail
 avro-c:arm-neon-android=fail
 avro-c:arm64-android=fail
@@ -81,7 +79,6 @@ berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
 berkeleydb:x64-android=fail
 binlog:arm-neon-android=fail
-binlog:arm64-android=fail
 bitserializer:arm64-osx=fail
 blitz:x64-android=fail
 blitz:x64-uwp=fail
