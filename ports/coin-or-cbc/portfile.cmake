@@ -24,6 +24,7 @@ if(1)
         --without-ositests
         --without-sample
         --without-netlib
+        --without-miplib3
         --without-amd
         --without-cholmod
         --without-mumps
