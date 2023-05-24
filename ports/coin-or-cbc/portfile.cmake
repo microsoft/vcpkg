@@ -17,6 +17,10 @@ if(1)
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
+        --with-coinutils
+        --with-clp
+        --with-cgl
+        --with-osi
         --disable-debug
         --disable-dependency-tracking
         --disable-silent-rules
