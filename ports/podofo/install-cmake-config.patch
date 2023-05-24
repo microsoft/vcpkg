@@ -15,7 +15,7 @@ index 597847b..da988ce 100644
  # Enable packaging
  set(CPACK_PACKAGE_DESCRIPTION "A C++ PDF manipulation library")
 diff --git a/src/podofo/CMakeLists.txt b/src/podofo/CMakeLists.txt
-index 3a148fb..198c51b 100644
+index 3a148fb..4ca1420 100644
 --- a/src/podofo/CMakeLists.txt
 +++ b/src/podofo/CMakeLists.txt
 @@ -77,11 +77,15 @@ if(PODOFO_BUILD_STATIC)
@@ -24,12 +24,12 @@ index 3a148fb..198c51b 100644
      )
 -    install(TARGETS podofo_static
 +    install(TARGETS podofo_static podofo_private
-+        EXPORT PoDoFoConfig
++        EXPORT podofo-config
          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
      )
-+    install(EXPORT PoDoFoConfig
++    install(EXPORT podofo-config
 +        DESTINATION share/podofo
 +    )
      set(PODOFO_LIBRARIES podofo_static podofo_private
@@ -39,12 +39,12 @@ index 3a148fb..198c51b 100644
      # Since we're building a shared podofo, prefer to depend on this one for
      # tests and tools over the static library (if built).
      install(TARGETS podofo_shared
-+        EXPORT PoDoFoConfig
++        EXPORT podofo-config
          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
      )
-+    install(EXPORT PoDoFoConfig
++    install(EXPORT podofo-config
 +        DESTINATION share/podofo
 +    )
  
