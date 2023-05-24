@@ -7169,8 +7169,8 @@
       "port-version": 0
     },
     "rsm-mmio": {
-      "baseline": "1.1.0",
-      "port-version": 2
+      "baseline": "2.0.0",
+      "port-version": 0
     },
     "rsocket": {
       "baseline": "2021.08.30.00",
