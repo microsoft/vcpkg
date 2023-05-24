@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO spnda/fastgltf
     REF "v${VERSION}"
-    SHA512 c8dd1deabcb23d3ecc1a85fcd874fe5f092f759cb3345c3bc348ae84626ccae378b3a4a5d0c026fa64d2c9717ca1c5d57bac052a62a2b7f6bbd671e8a005db88
+    SHA512 85b946f9ea849bcbbb77ff5d4dc8196d3348757cf6a940be1a50923158a31aa7b43aebed2799256cb3d303a81fa28e5eaeb000b6ecca3ab15f6a7a20908d8e8f
     HEAD_REF main
     PATCHES find_package.patch
 )
