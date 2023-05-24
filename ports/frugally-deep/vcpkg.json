@@ -1,0 +1,25 @@
+{
+  "name": "frugally-deep",
+  "version-semver": "0.15.19-p0",
+  "description": "Header-only library for using Keras models in C++.",
+  "homepage": "https://github.com/Dobiasd/frugally-deep",
+  "license": "MIT",
+  "dependencies": [
+    "eigen3",
+    "fplus",
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "double": {
+      "description": "Use double precision"
+    }
+  }
+}

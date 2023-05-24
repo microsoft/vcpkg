@@ -1,0 +1,27 @@
+{
+  "name": "sdl2-ttf",
+  "version": "2.20.2",
+  "description": "A library for rendering TrueType fonts with SDL",
+  "homepage": "https://www.libsdl.org/projects/SDL_ttf/",
+  "license": "Zlib",
+  "dependencies": [
+    "freetype",
+    "sdl2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "harfbuzz": {
+      "description": "Enable HarfBuzz support",
+      "dependencies": [
+        "harfbuzz"
+      ]
+    }
+  }
+}

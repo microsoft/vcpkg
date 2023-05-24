@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1705a8426..d13d41786 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -192,7 +192,7 @@ add_subdirectory(apps)
+ # so that users only need link libpdalcpp.
+ #
+ if (APPLE)
+-    set(PDAL_REEXPORT "-Wl,-reexport_library,$<TARGET_FILE:${PDAL_UTIL_LIB_NAME}>")
++    set(PDAL_REEXPORT "-Wl$<COMMA>-reexport_library$<COMMA>$<TARGET_FILE:${PDAL_UTIL_LIB_NAME}>")
+     #
+     # This allows the rpath reference for the reexported library (above) to
+     # be found.

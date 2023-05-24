@@ -1,0 +1,17 @@
+{
+  "name": "nanosvg",
+  "version-date": "2022-12-04",
+  "description": "NanoSVG is a simple stupid single-header-file SVG parse. The output of the parser is a list of cubic bezier shapes..",
+  "homepage": "https://github.com/memononen/nanosvg",
+  "license": "Zlib",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

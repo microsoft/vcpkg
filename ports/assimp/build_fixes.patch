@@ -1,0 +1,509 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 458a328..b8c2fc6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -56,7 +56,7 @@ IF(ASSIMP_HUNTER_ENABLED)
+   add_definitions(-DASSIMP_USE_HUNTER)
+ ENDIF()
+ 
+-PROJECT(Assimp VERSION 5.2.4)
++PROJECT(Assimp VERSION 5.2.5)
+ 
+ # All supported options ###############################################
+ 
+@@ -273,18 +273,18 @@ IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT MINGW)
+ ELSEIF(MSVC)
+   # enable multi-core compilation with MSVC
+   IF(CMAKE_CXX_COMPILER_ID MATCHES "Clang" ) # clang-cl
+-    ADD_COMPILE_OPTIONS(/bigobj /W4 /WX )
++    ADD_COMPILE_OPTIONS(/bigobj )
+   ELSE() # msvc
+-    ADD_COMPILE_OPTIONS(/MP /bigobj /W4 /WX)
++    ADD_COMPILE_OPTIONS(/MP /bigobj )
+   ENDIF()
+   # disable "elements of array '' will be default initialized" warning on MSVC2013
+   IF(MSVC12)
+     ADD_COMPILE_OPTIONS(/wd4351)	
+   ENDIF()
+   ADD_COMPILE_OPTIONS(/wd4244) #supress warning for double to float conversion if Double precission is activated
+-  SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /D_DEBUG /Zi /Od")
+-  SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
+-  SET(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG:FULL /PDBALTPATH:%_PDB% /OPT:REF /OPT:ICF")
++  # SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /D_DEBUG /Zi /Od")
++  # SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
++  # SET(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG:FULL /PDBALTPATH:%_PDB% /OPT:REF /OPT:ICF")
+ ELSEIF (CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
+   IF(NOT ASSIMP_HUNTER_ENABLED)
+     SET(CMAKE_CXX_STANDARD 17)
+@@ -418,7 +418,7 @@ ENDIF()
+ 
+ set(GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+ 
+-IF(ASSIMP_HUNTER_ENABLED)
++IF(0)
+   set(CONFIG_INSTALL_DIR "lib/cmake/${PROJECT_NAME}")
+   set(CMAKE_CONFIG_TEMPLATE_FILE "cmake-modules/assimp-hunter-config.cmake.in")
+   set(NAMESPACE "${PROJECT_NAME}::")
+@@ -426,7 +426,7 @@ IF(ASSIMP_HUNTER_ENABLED)
+   set(VERSION_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
+   set(PROJECT_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}Config.cmake")
+ ELSE()
+-  set(CONFIG_INSTALL_DIR "${ASSIMP_LIB_INSTALL_DIR}/cmake/assimp-${ASSIMP_VERSION_MAJOR}.${ASSIMP_VERSION_MINOR}")
++  set(CONFIG_INSTALL_DIR "${ASSIMP_LIB_INSTALL_DIR}/cmake/assimp")
+   set(CMAKE_CONFIG_TEMPLATE_FILE "cmake-modules/assimp-plain-config.cmake.in")
+   string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
+   set(NAMESPACE "${PROJECT_NAME_LOWERCASE}::")
+@@ -468,14 +468,14 @@ ENDIF()
+ 
+ # Search for external dependencies, and build them from source if not found
+ # Search for zlib
+-IF(ASSIMP_HUNTER_ENABLED)
+-  hunter_add_package(ZLIB)
+-  find_package(ZLIB CONFIG REQUIRED)
++IF(1)
++  # hunter_add_package(ZLIB)
++  find_package(ZLIB REQUIRED)
+ 
+   add_definitions(-DASSIMP_BUILD_NO_OWN_ZLIB)
+   set(ZLIB_FOUND TRUE)
+-  set(ZLIB_LIBRARIES ZLIB::zlib)
+-  set(ASSIMP_BUILD_MINIZIP TRUE)
++  set(ZLIB_LIBRARIES ZLIB::ZLIB)
++  set(ASSIMP_BUILD_MINIZIP OFF)
+ ELSE()
+   # If the zlib is already found outside, add an export in case assimpTargets can't find it.
+   IF( ZLIB_FOUND )
+@@ -516,12 +516,12 @@ ELSE()
+ ENDIF()
+ 
+ IF( NOT IOS )
+-  IF( NOT ASSIMP_BUILD_MINIZIP )
++  IF( 0 )
+     use_pkgconfig(UNZIP minizip)
+   ENDIF()
+ ELSE ()
+   IF( NOT BUILD_SHARED_LIBS )
+-    IF( NOT ASSIMP_BUILD_MINIZIP )
++    IF( 0 )
+       use_pkgconfig(UNZIP minizip)
+     ENDIF()
+   ENDIF ()
+diff --git a/cmake-modules/assimp-plain-config.cmake.in b/cmake-modules/assimp-plain-config.cmake.in
+index 6551dcb..0796448 100644
+--- a/cmake-modules/assimp-plain-config.cmake.in
++++ b/cmake-modules/assimp-plain-config.cmake.in
+@@ -1,5 +1,20 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++
++find_dependency(pugixml CONFIG)
++if(NOT @BUILD_SHARED_LIBS@)
++    find_dependency(kubazip CONFIG)
++    find_dependency(minizip CONFIG)
++    #find_dependency(openddlparser CONFIG)
++    find_dependency(poly2tri CONFIG)
++    #find_dependency(polyclipping  CONFIG)
++    find_dependency(RapidJSON CONFIG)
++    find_dependency(Stb MODULE)
++    find_dependency(utf8cpp CONFIG)
++    find_dependency(ZLIB)
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
+ 
+ set(ASSIMP_ROOT_DIR ${PACKAGE_PREFIX_DIR})
+diff --git a/code/AssetLib/3MF/D3MFExporter.cpp b/code/AssetLib/3MF/D3MFExporter.cpp
+index 42cd991..640e2fb 100644
+--- a/code/AssetLib/3MF/D3MFExporter.cpp
++++ b/code/AssetLib/3MF/D3MFExporter.cpp
+@@ -57,7 +57,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifdef ASSIMP_USE_HUNTER
+ #include <zip/zip.h>
+ #else
+-#include <contrib/zip/src/zip.h>
++#include <zip/zip.h>
+ #endif
+ 
+ namespace Assimp {
+diff --git a/code/AssetLib/Blender/BlenderTessellator.h b/code/AssetLib/Blender/BlenderTessellator.h
+index 0d0ba32..c3703c4 100644
+--- a/code/AssetLib/Blender/BlenderTessellator.h
++++ b/code/AssetLib/Blender/BlenderTessellator.h
+@@ -147,7 +147,7 @@ namespace Assimp
+ #ifdef ASSIMP_USE_HUNTER
+ #  include <poly2tri/poly2tri.h>
+ #else
+-#  include "../contrib/poly2tri/poly2tri/poly2tri.h"
++#  include <poly2tri/poly2tri.h>
+ #endif
+ 
+ namespace Assimp
+diff --git a/code/AssetLib/IFC/IFCGeometry.cpp b/code/AssetLib/IFC/IFCGeometry.cpp
+index ef59542..17e00cd 100644
+--- a/code/AssetLib/IFC/IFCGeometry.cpp
++++ b/code/AssetLib/IFC/IFCGeometry.cpp
+@@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #  include <poly2tri/poly2tri.h>
+ #  include <polyclipping/clipper.hpp>
+ #else
+-#  include "../contrib/poly2tri/poly2tri/poly2tri.h"
++#  include <poly2tri/poly2tri.h>
+ #  include "../contrib/clipper/clipper.hpp"
+ #endif
+ 
+diff --git a/code/AssetLib/IFC/IFCLoader.cpp b/code/AssetLib/IFC/IFCLoader.cpp
+index 0c20686..e6b20a3 100644
+--- a/code/AssetLib/IFC/IFCLoader.cpp
++++ b/code/AssetLib/IFC/IFCLoader.cpp
+@@ -54,7 +54,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifdef ASSIMP_USE_HUNTER
+ #include <minizip/unzip.h>
+ #else
+-#include <unzip.h>
++#include <minizip/unzip.h>
+ #endif
+ #endif
+ 
+diff --git a/code/AssetLib/IFC/IFCOpenings.cpp b/code/AssetLib/IFC/IFCOpenings.cpp
+index 3c4a0b3..3fab616 100644
+--- a/code/AssetLib/IFC/IFCOpenings.cpp
++++ b/code/AssetLib/IFC/IFCOpenings.cpp
+@@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #  include <poly2tri/poly2tri.h>
+ #  include <polyclipping/clipper.hpp>
+ #else
+-#  include "../contrib/poly2tri/poly2tri/poly2tri.h"
++#  include <poly2tri/poly2tri.h>
+ #  include "../contrib/clipper/clipper.hpp"
+ #endif
+ 
+diff --git a/code/AssetLib/MMD/MMDPmxParser.cpp b/code/AssetLib/MMD/MMDPmxParser.cpp
+index ca37ba1..2ce7bdd 100644
+--- a/code/AssetLib/MMD/MMDPmxParser.cpp
++++ b/code/AssetLib/MMD/MMDPmxParser.cpp
+@@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifdef ASSIMP_USE_HUNTER
+ #  include <utf8.h>
+ #else
+-#  include "../contrib/utf8cpp/source/utf8.h"
++#  include <utf8.h>
+ #endif
+ #include <assimp/Exceptional.h>
+ 
+diff --git a/code/AssetLib/SIB/SIBImporter.cpp b/code/AssetLib/SIB/SIBImporter.cpp
+index 7b66afa..5adbe1d 100644
+--- a/code/AssetLib/SIB/SIBImporter.cpp
++++ b/code/AssetLib/SIB/SIBImporter.cpp
+@@ -59,7 +59,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifdef ASSIMP_USE_HUNTER
+ #include <utf8.h>
+ #else
+-#include "../contrib/utf8cpp/source/utf8.h"
++#include <utf8.h>
+ #endif
+ #include <assimp/importerdesc.h>
+ #include <assimp/scene.h>
+diff --git a/code/AssetLib/STEPParser/STEPFileEncoding.cpp b/code/AssetLib/STEPParser/STEPFileEncoding.cpp
+index d4456e6..812f29b 100644
+--- a/code/AssetLib/STEPParser/STEPFileEncoding.cpp
++++ b/code/AssetLib/STEPParser/STEPFileEncoding.cpp
+@@ -48,7 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifdef ASSIMP_USE_HUNTER
+ #  include <utf8.h>
+ #else
+-#  include <contrib/utf8cpp/source/utf8.h>
++#  include <utf8.h>
+ #endif
+ 
+ #include <memory>
+diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
+index 5339454..45e07c0 100644
+--- a/code/CMakeLists.txt
++++ b/code/CMakeLists.txt
+@@ -897,8 +897,8 @@ SET( Extra_SRCS
+ SOURCE_GROUP( Extra FILES ${Extra_SRCS})
+ 
+ # pugixml
+-IF(ASSIMP_HUNTER_ENABLED)
+-  hunter_add_package(pugixml)
++IF(1)
++  #hunter_add_package(pugixml)
+   find_package(pugixml CONFIG REQUIRED)
+ ELSE()
+   SET( Pugixml_SRCS
+@@ -910,15 +910,15 @@ ELSE()
+ ENDIF()
+ 
+ # utf8
+-IF(ASSIMP_HUNTER_ENABLED)
+-  hunter_add_package(utf8)
++IF(1)
++  #hunter_add_package(utf8)
+   find_package(utf8cpp CONFIG REQUIRED)
+ ELSE()
+   # utf8 is header-only, so Assimp doesn't need to do anything.
+ ENDIF()
+ 
+ # polyclipping
+-IF(ASSIMP_HUNTER_ENABLED)
++IF(0)
+   hunter_add_package(polyclipping)
+   find_package(polyclipping CONFIG REQUIRED)
+ ELSE()
+@@ -930,8 +930,8 @@ ELSE()
+ ENDIF()
+ 
+ # poly2tri
+-IF(ASSIMP_HUNTER_ENABLED)
+-  hunter_add_package(poly2tri)
++IF(1)
++  #hunter_add_package(poly2tri)
+   find_package(poly2tri CONFIG REQUIRED)
+ ELSE()
+   SET( Poly2Tri_SRCS
+@@ -951,8 +951,8 @@ ELSE()
+ ENDIF()
+ 
+ # minizip/unzip
+-IF(ASSIMP_HUNTER_ENABLED)
+-  hunter_add_package(minizip)
++IF(1)
++  #hunter_add_package(minizip)
+   find_package(minizip CONFIG REQUIRED)
+ ELSE()
+   SET( unzip_SRCS
+@@ -969,9 +969,9 @@ ENDIF()
+ # zip (https://github.com/kuba--/zip)
+ separate_arguments(ASSIMP_EXPORTERS_LIST UNIX_COMMAND ${ASSIMP_EXPORTERS_ENABLED})
+ IF(3MF IN_LIST ASSIMP_EXPORTERS_LIST)
+-  IF(ASSIMP_HUNTER_ENABLED)
+-    hunter_add_package(zip)
+-    find_package(zip CONFIG REQUIRED)
++  IF(1)
++    #hunter_add_package(zip)
++    find_package(kubazip CONFIG REQUIRED)
+   ELSE()
+     SET( ziplib_SRCS
+       ../contrib/zip/src/miniz.h
+@@ -991,7 +991,7 @@ IF(3MF IN_LIST ASSIMP_EXPORTERS_LIST)
+ ENDIF()
+ 
+ # openddlparser
+-IF(ASSIMP_HUNTER_ENABLED)
++IF(0)
+   hunter_add_package(openddlparser)
+   find_package(openddlparser CONFIG REQUIRED)
+ ELSE()
+@@ -1014,7 +1014,7 @@ ELSE()
+ ENDIF()
+ 
+ # Open3DGC
+-IF(ASSIMP_HUNTER_ENABLED)
++IF(0)
+   # Nothing to do, not available in Hunter yet.
+ ELSE()
+   SET ( open3dgc_SRCS
+@@ -1049,6 +1049,7 @@ ELSE()
+     ../contrib/Open3DGC/o3dgcVector.inl
+   )
+   SOURCE_GROUP( Contrib\\open3dgc FILES ${open3dgc_SRCS})
++  INCLUDE_DIRECTORIES("../contrib")
+ ENDIF()
+ 
+ # Check dependencies for glTF importer with Open3DGC-compression.
+@@ -1057,7 +1058,7 @@ ENDIF()
+ IF (NOT WIN32)
+   FIND_PACKAGE(RT QUIET)
+ ENDIF ()
+-IF (NOT ASSIMP_HUNTER_ENABLED AND (RT_FOUND OR WIN32))
++IF (1)
+   SET( ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC 1 )
+   ADD_DEFINITIONS( -DASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1 )
+ ELSE ()
+@@ -1067,9 +1068,10 @@ ELSE ()
+ ENDIF ()
+ 
+ # RapidJSON
+-IF(ASSIMP_HUNTER_ENABLED)
+-  hunter_add_package(RapidJSON)
++IF(1)
++  #hunter_add_package(RapidJSON)
+   find_package(RapidJSON CONFIG REQUIRED)
++  ADD_DEFINITIONS( -DRAPIDJSON_HAS_STDSTRING=1)
+ ELSE()
+   INCLUDE_DIRECTORIES("../contrib/rapidjson/include")
+   ADD_DEFINITIONS( -DRAPIDJSON_HAS_STDSTRING=1)
+@@ -1080,9 +1082,9 @@ ELSE()
+ ENDIF()
+ 
+ # stb
+-IF(ASSIMP_HUNTER_ENABLED)
+-  hunter_add_package(stb)
+-  find_package(stb CONFIG REQUIRED)
++IF(1)
++  #hunter_add_package(stb)
++  find_package(Stb REQUIRED)
+ ELSE()
+   SET( stb_SRCS
+     ../contrib/stb/stb_image.h
+@@ -1106,7 +1108,7 @@ IF( MSVC OR "${CMAKE_CXX_SIMULATE_ID}" MATCHES "MSVC") # clang with MSVC ABI
+   ADD_DEFINITIONS( -D_CRT_SECURE_NO_WARNINGS )
+ endif ()
+ 
+-IF(NOT ASSIMP_HUNTER_ENABLED)
++IF(0)
+   if (UNZIP_FOUND)
+     SET (unzip_compile_SRCS "")
+   else ()
+@@ -1157,7 +1159,7 @@ SET( assimp_src
+ )
+ ADD_DEFINITIONS( -DOPENDDLPARSER_BUILD )
+ 
+-IF(NOT ASSIMP_HUNTER_ENABLED)
++IF(1)
+   INCLUDE_DIRECTORIES(
+       ${IRRXML_INCLUDE_DIR}
+       ../contrib/openddlparser/include
+@@ -1195,45 +1197,48 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
+   $<INSTALL_INTERFACE:${ASSIMP_INCLUDE_INSTALL_DIR}>
++  PRIVATE
++    ${Stb_INCLUDE_DIR}
+ )
+ 
+-IF(ASSIMP_HUNTER_ENABLED)
++IF(1)
+   TARGET_LINK_LIBRARIES(assimp
+-      PUBLIC
+-      polyclipping::polyclipping
+-      openddlparser::openddl_parser
++      PRIVATE
++      #polyclipping::polyclipping
++      #openddlparser::openddl_parser
++      ${OPENDDL_PARSER_LIBRARIES}
+       poly2tri::poly2tri
+       minizip::minizip
+-      ZLIB::zlib
+-      RapidJSON::rapidjson
++      ZLIB::ZLIB
++      rapidjson
+       utf8cpp
++      PUBLIC
+       pugixml
+-      stb::stb
+   )
+-  if(TARGET zip::zip)
+-    target_link_libraries(assimp PUBLIC zip::zip)
++  if(1)
++    target_link_libraries(assimp PRIVATE kubazip::kubazip)
+   endif()
+ 
+   if (ASSIMP_BUILD_DRACO)
+-    target_link_libraries(assimp PUBLIC ${draco_LIBRARIES})
++    target_link_libraries(assimp PRIVATE ${draco_LIBRARIES})
+   endif()
+ ELSE()
+-  TARGET_LINK_LIBRARIES(assimp ${ZLIB_LIBRARIES} ${OPENDDL_PARSER_LIBRARIES})
++  TARGET_LINK_LIBRARIES(assimp PRIVATE ${ZLIB_LIBRARIES} ${OPENDDL_PARSER_LIBRARIES})
+   if (ASSIMP_BUILD_DRACO)
+-    target_link_libraries(assimp ${draco_LIBRARIES})
++    target_link_libraries(assimp PRIVATE ${draco_LIBRARIES})
+   endif()
+ ENDIF()
+ 
+ if(ASSIMP_ANDROID_JNIIOSYSTEM)
+   set(ASSIMP_ANDROID_JNIIOSYSTEM_PATH port/AndroidJNI)
+   add_subdirectory(../${ASSIMP_ANDROID_JNIIOSYSTEM_PATH}/ ../${ASSIMP_ANDROID_JNIIOSYSTEM_PATH}/)
+-  target_link_libraries(assimp android_jniiosystem)
++  target_link_libraries(assimp PRIVATE android_jniiosystem)
+ endif()
+ 
+ IF (ASSIMP_BUILD_NONFREE_C4D_IMPORTER)
+-  TARGET_LINK_LIBRARIES(assimp optimized ${C4D_RELEASE_LIBRARIES})
+-  TARGET_LINK_LIBRARIES(assimp debug ${C4D_DEBUG_LIBRARIES})
+-  TARGET_LINK_LIBRARIES(assimp ${C4D_EXTRA_LIBRARIES})
++  TARGET_LINK_LIBRARIES(assimp PRIVATE optimized ${C4D_RELEASE_LIBRARIES})
++  TARGET_LINK_LIBRARIES(assimp PRIVATE debug ${C4D_DEBUG_LIBRARIES})
++  TARGET_LINK_LIBRARIES(assimp PRIVATE ${C4D_EXTRA_LIBRARIES})
+ ENDIF ()
+ 
+ if( MSVC )
+@@ -1274,13 +1279,13 @@ if (MINGW)
+     ARCHIVE_OUTPUT_NAME assimp
+   )
+   if (NOT BUILD_SHARED_LIBS)
+-    TARGET_LINK_LIBRARIES ( assimp -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lwinpthread ) # winpthread is for libminizip.
++    TARGET_LINK_LIBRARIES ( assimp PRIVATE -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lwinpthread ) # winpthread is for libminizip.
+   endif ()
+ endif()
+ 
+ if (${CMAKE_SYSTEM_NAME} MATCHES "WindowsStore")
+     target_compile_definitions(assimp PUBLIC WindowsStore)
+-    TARGET_LINK_LIBRARIES(assimp advapi32)
++    TARGET_LINK_LIBRARIES(assimp PRIVATE advapi32)
+ endif()
+ 
+ SET_TARGET_PROPERTIES( assimp PROPERTIES
+@@ -1310,10 +1315,10 @@ ENDIF()
+ 
+ # Build against external unzip, or add ../contrib/unzip so
+ # assimp can #include "unzip.h"
+-IF(NOT ASSIMP_HUNTER_ENABLED)
++IF(0)
+   if (UNZIP_FOUND)
+     INCLUDE_DIRECTORIES(${UNZIP_INCLUDE_DIRS})
+-    TARGET_LINK_LIBRARIES(assimp ${UNZIP_LIBRARIES})
++    TARGET_LINK_LIBRARIES(assimp PRIVATE ${UNZIP_LIBRARIES})
+   else ()
+     INCLUDE_DIRECTORIES("../")
+   endif ()
+@@ -1321,7 +1326,7 @@ ENDIF()
+ 
+ # Add RT-extension library for glTF importer with Open3DGC-compression.
+ IF (RT_FOUND AND ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC)
+-  TARGET_LINK_LIBRARIES(assimp ${RT_LIBRARY})
++  TARGET_LINK_LIBRARIES(assimp PRIVATE ${RT_LIBRARY})
+ ENDIF ()
+ 
+ 
+diff --git a/code/Common/StbCommon.h b/code/Common/StbCommon.h
+index 1265d25..18f4564 100644
+--- a/code/Common/StbCommon.h
++++ b/code/Common/StbCommon.h
+@@ -48,7 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #pragma GCC diagnostic ignored "-Wunused-function"
+ #endif
+ 
+-#include "stb/stb_image.h"
++#include <stb_image.h>
+ 
+ #if _MSC_VER
+ #pragma warning(pop)
+diff --git a/code/Common/BaseImporter.cpp b/code/Common/BaseImporter.cpp
+index 383300e..03fdd9a 100644
+--- a/code/Common/BaseImporter.cpp
++++ b/code/Common/BaseImporter.cpp
+@@ -332,7 +332,7 @@ std::string BaseImporter::GetExtension(const std::string &file) {
+ #ifdef ASSIMP_USE_HUNTER
+ #include <utf8.h>
+ #else
+-#include "../contrib/utf8cpp/source/utf8.h"
++#include <utf8.h>
+ #endif
+ 
+ // ------------------------------------------------------------------------------------------------
+diff --git a/code/Common/ZipArchiveIOSystem.cpp b/code/Common/ZipArchiveIOSystem.cpp
+index 3d5c72e..770cb9d 100644
+--- a/code/Common/ZipArchiveIOSystem.cpp
++++ b/code/Common/ZipArchiveIOSystem.cpp
+@@ -54,7 +54,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifdef ASSIMP_USE_HUNTER
+ #    include <minizip/unzip.h>
+ #else
+-#    include <unzip.h>
++#    include <minizip/unzip.h>
+ #endif
+ 
+ namespace Assimp {

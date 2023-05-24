@@ -1,0 +1,6 @@
+{
+  "name": "readerwriterqueue",
+  "version-semver": "1.0.6",
+  "description": "A single-producer, single-consumer lock-free queue",
+  "homepage": "https://github.com/cameron314/readerwriterqueue"
+}

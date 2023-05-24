@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b83fbbd..2f675d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2678,9 +2678,12 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/pcap.h DESTINATION include)
+ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/pcap-bpf.h DESTINATION include)
+ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/pcap-namedb.h DESTINATION include)
+ 
+-# On UN*X, and on Windows when not using MSVC, generate libpcap.pc and
+-# pcap-config and process man pages and arrange that they be installed.
+-if(NOT MSVC)
++# Generate libpcap.pc
++if(MSVC AND NOT BUILD_SHARED_LIBS)
++    set(PACKAGE_NAME ${LIBRARY_NAME}_static)
++else()
++    set(PACKAGE_NAME ${LIBRARY_NAME})
++endif()
+     set(prefix ${CMAKE_INSTALL_PREFIX})
+     set(exec_prefix "\${prefix}")
+     set(includedir "\${prefix}/include")
+@@ -2715,10 +2718,14 @@ if(NOT MSVC)
+     foreach(LIB ${PCAP_LINK_LIBRARIES})
+         set(LIBS "${LIBS} -l${LIB}")
+     endforeach(LIB)
+-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pcap-config.in ${CMAKE_CURRENT_BINARY_DIR}/pcap-config @ONLY)
+     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpcap.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libpcap.pc @ONLY)
+-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/pcap-config DESTINATION bin)
+     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpcap.pc DESTINATION lib/pkgconfig)
++    
++# On UN*X, and on Windows when not using MSVC, generate libpcap.pc and
++# pcap-config and process man pages and arrange that they be installed.
++if(NOT MSVC)
++    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pcap-config.in ${CMAKE_CURRENT_BINARY_DIR}/pcap-config @ONLY)
++    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/pcap-config DESTINATION bin)
+ 
+     #
+     # Man pages.

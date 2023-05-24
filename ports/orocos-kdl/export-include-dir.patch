@@ -1,0 +1,13 @@
+diff --git a/orocos_kdl/src/CMakeLists.txt b/orocos_kdl/src/CMakeLists.txt
+index 079ca8a..07eff4f 100644
+--- a/orocos_kdl/src/CMakeLists.txt
++++ b/orocos_kdl/src/CMakeLists.txt
+@@ -126,7 +126,7 @@ ENDIF()
+ #####end RPATH
+ 
+ # Needed so that the generated config.h can be used
+-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
++TARGET_INCLUDE_DIRECTORIES(orocos-kdl PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:include>)
+ TARGET_LINK_LIBRARIES(orocos-kdl ${Boost_LIBRARIES})
+ 
+ INSTALL(TARGETS orocos-kdl

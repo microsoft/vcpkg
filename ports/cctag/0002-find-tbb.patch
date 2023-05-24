@@ -1,0 +1,173 @@
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index c5a82c0..3ce4719 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -42,6 +42,7 @@
+ include(CMakeFindDependencyMacro)
+ 
+ set(OpenCV_DIR @OpenCV_DIR@)
++find_dependency(TBB)
+ find_dependency(OpenCV)
+ find_dependency(Eigen3 @CCTAG_EIGEN_REQUIRED_VERSION@)
+ find_dependency(Boost 1.66 REQUIRED COMPONENTS @BOOST_REQUIRED_COMPONENTS@)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 7b64b83..5398ed4 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -176,7 +176,8 @@ if(CCTAG_WITH_CUDA)
+                        ${OpenCV_LIBS}
+                        Boost::date_time Boost::chrono Boost::thread Boost::serialization Boost::system Boost::filesystem Boost::atomic Boost::program_options Boost::timer Boost::math_c99
+                        Eigen3::Eigen
+-                       ${TBB_LIBRARIES} ${CUDA_CUDADEVRT_LIBRARY})
++                       TBB::tbb
++                       ${CUDA_CUDADEVRT_LIBRARY})
+ 
+   if(NOT MSVC)
+    target_link_libraries(CCTag pthread dl)
+@@ -184,7 +185,7 @@ if(CCTAG_WITH_CUDA)
+ 
+   target_compile_definitions(CCTag
+                          PUBLIC -DCCTAG_WITH_CUDA
+-                         PRIVATE ${TBB_DEFINITIONS})
++)
+ 
+   if(CCTAG_HAVE_SHFL_DOWN_SYNC)
+     target_compile_definitions(CCTag PRIVATE "-DCCTAG_HAVE_SHFL_DOWN_SYNC")
+@@ -220,16 +221,13 @@ else() # without CUDA
+ #  get_target_property(testprop CCTag INTERFACE_INCLUDE_DIRECTORIES )
+ #  message(STATUS "testprop: ${testprop}")
+ 
+-  target_compile_definitions(CCTag
+-                             PRIVATE ${TBB_DEFINITIONS})
+ 
+   target_link_libraries(CCTag
+                         PUBLIC
+                           ${OpenCV_LIBS}
+                           Eigen3::Eigen
+                           Boost::atomic Boost::chrono Boost::date_time Boost::filesystem Boost::serialization Boost::system Boost::thread Boost::timer Boost::math_c99
+-                        PRIVATE
+-                          ${TBB_LIBRARIES})
++                          TBB::tbb)
+ 
+   if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+     target_link_libraries(CCTag PRIVATE pthread dl)
+diff --git a/src/applications/CMakeLists.txt b/src/applications/CMakeLists.txt
+index 506d19b..c7154fc 100644
+--- a/src/applications/CMakeLists.txt
++++ b/src/applications/CMakeLists.txt
+@@ -86,7 +86,7 @@ target_include_directories(detection PUBLIC
+   )
+ target_link_libraries(detection PUBLIC
+   CCTag::CCTag
+-  ${TBB_LIBRARIES}
++  TBB::tbb
+   ${OpenCV_LIBS}
+   Boost::filesystem Boost::program_options Boost::timer
+   )
+diff --git a/src/cctag/Detection.cpp b/src/cctag/Detection.cpp
+index 21c47bf..a800fbc 100644
+--- a/src/cctag/Detection.cpp
++++ b/src/cctag/Detection.cpp
+@@ -44,6 +44,7 @@
+ #include <list>
+ #include <utility>
+ #include <memory>
++#include <mutex>
+ #ifdef CCTAG_WITH_CUDA
+ #include <cctag/cuda/cctag_cuda_runtime.h> // only for debugging
+ #endif // CCTAG_WITH_CUDA
+@@ -71,7 +72,7 @@ static void constructFlowComponentFromSeed(
+         std::vector<CandidatePtr> & vCandidateLoopOne,
+         const Parameters & params)
+ {
+-  static tbb::mutex G_SortMutex;
++  static std::mutex G_SortMutex;
+   
+   assert( seed );
+   // Check if the seed has already been processed, i.e. belongs to an already
+@@ -102,7 +103,7 @@ static void constructFlowComponentFromSeed(
+     }
+     
+     {
+-      tbb::mutex::scoped_lock lock(G_SortMutex);
++      std::lock_guard<std::mutex> lock(G_SortMutex);
+       candidate->_averageReceivedVote = (float) (nReceivedVote*nReceivedVote) / (float) nVotedPoints;
+       auto it = std::lower_bound(vCandidateLoopOne.begin(), vCandidateLoopOne.end(), candidate,
+         [](const CandidatePtr& c1, const CandidatePtr& c2) { return c1->_averageReceivedVote > c2->_averageReceivedVote; });
+@@ -119,8 +120,8 @@ static void completeFlowComponent(
+   std::size_t runId,
+   const Parameters & params)
+ {
+-  static tbb::spin_mutex G_UpdateMutex;
+-  static tbb::mutex G_InsertMutex;
++  static std::mutex G_UpdateMutex;
++  static std::mutex G_InsertMutex;
+   
+   try
+   {
+@@ -171,7 +172,7 @@ static void completeFlowComponent(
+       if (nSegmentCommon == -1)
+       {
+         {
+-          tbb::spin_mutex::scoped_lock lock(G_UpdateMutex);
++          std::lock_guard<std::mutex> lock(G_UpdateMutex);
+           nLabel = nSegmentOut;
+           ++nSegmentOut;
+         }
+@@ -239,7 +240,7 @@ static void completeFlowComponent(
+     }
+ 
+     {
+-      tbb::mutex::scoped_lock lock(G_InsertMutex);
++      std::lock_guard<std::mutex> lock(G_InsertMutex);
+       vCandidateLoopTwo.push_back(candidate);
+     }
+ 
+@@ -384,7 +385,7 @@ static void cctagDetectionFromEdgesLoopTwoIteration(
+   float scale,
+   const Parameters& params)
+ {
+-    static tbb::mutex G_InsertMutex;
++    static std::mutex G_InsertMutex;
+     
+     const Candidate& candidate = vCandidateLoopTwo[iCandidate];
+ 
+@@ -543,7 +544,7 @@ static void cctagDetectionFromEdgesLoopTwoIteration(
+ #endif
+       
+       {
+-        tbb::mutex::scoped_lock lock(G_InsertMutex);
++        std::lock_guard<std::mutex> lock(G_InsertMutex);
+         markers.push_back( tag ); // markers takes responsibility for delete
+       }
+ #ifdef CCTAG_SERIALIZE
+diff --git a/src/cctag/Identification.cpp b/src/cctag/Identification.cpp
+index 15c9d9b..99b616a 100644
+--- a/src/cctag/Identification.cpp
++++ b/src/cctag/Identification.cpp
+@@ -29,6 +29,7 @@
+ 
+ #include <cmath>
+ #include <vector>
++#include <mutex>
+ 
+ #include <tbb/tbb.h>
+ 
+@@ -71,7 +72,7 @@ bool orazioDistanceRobust(
+ #endif // GRIFF_DEBUG
+   
+   const size_t cut_count = cuts.size();
+-  static tbb::mutex vscore_mutex;
++  static std::mutex vscore_mutex;
+ 
+   tbb::parallel_for(size_t(0), cut_count, [&](size_t i) {
+     const cctag::ImageCut& cut = cuts[i];
+@@ -183,7 +184,7 @@ bool orazioDistanceRobust(
+   #endif // GRIFF_DEBUG
+ 
+       {
+-        tbb::mutex::scoped_lock lock(vscore_mutex);
++        std::lock_guard<std::mutex> lock(vscore_mutex);
+         vScore[idSet.front().first].push_back(idSet.front().second);
+       }
+     }

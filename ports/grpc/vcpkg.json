@@ -1,0 +1,46 @@
+{
+  "name": "grpc",
+  "version-semver": "1.51.1",
+  "description": "An RPC library and framework",
+  "homepage": "https://github.com/grpc/grpc",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "abseil",
+    {
+      "name": "c-ares",
+      "platform": "!uwp"
+    },
+    {
+      "name": "grpc",
+      "host": true,
+      "features": [
+        "codegen"
+      ]
+    },
+    "openssl",
+    "protobuf",
+    {
+      "name": "protobuf",
+      "host": true
+    },
+    "re2",
+    "upb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "absl-sync": {
+      "description": "Deprecated."
+    },
+    "codegen": {
+      "description": "Build code generator machinery"
+    }
+  }
+}

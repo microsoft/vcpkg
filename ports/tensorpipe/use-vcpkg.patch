@@ -1,0 +1,52 @@
+diff --git a/tensorpipe/CMakeLists.txt b/tensorpipe/CMakeLists.txt
+index efcffc2..dd9bd16 100644
+--- a/tensorpipe/CMakeLists.txt
++++ b/tensorpipe/CMakeLists.txt
+@@ -119,8 +119,12 @@ list(APPEND TP_PUBLIC_HDRS
+   transport/uv/utility.h)
+ 
+ # Add uv package
+-find_package(uv REQUIRED)
+-list(APPEND TP_LINK_LIBRARIES uv::uv)
++find_package(libuv CONFIG REQUIRED) 
++if (TARGET uv)
++list(APPEND TP_LINK_LIBRARIES uv)
++else()
++list(APPEND TP_LINK_LIBRARIES uv_a)
++endif()
+ 
+ ### shm
+ 
+@@ -184,7 +188,8 @@ configure_file(config.h.in config.h)
+ # We should keep libnop headers private as they should not be exposed to downstream users,
+ # but they're currently transitively included by tensorpipe/transport/connection.h (which
+ # is still unclear whether it should be a public or private header).
+-list(APPEND TP_INCLUDE_DIRS $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/libnop/include>)
++find_path(LIBNOP_INCLUDE_DIRS "nop/serializer.h" REQUIRED)
++list(APPEND TP_INCLUDE_DIRS $<BUILD_INTERFACE:${LIBNOP_INCLUDE_DIRS}>)
+ 
+ 
+ ## Target
+diff --git a/tensorpipe/python/CMakeLists.txt b/tensorpipe/python/CMakeLists.txt
+index b722381..688886a 100644
+--- a/tensorpipe/python/CMakeLists.txt
++++ b/tensorpipe/python/CMakeLists.txt
+@@ -4,16 +4,11 @@
+ # This source code is licensed under the BSD-style license found in the
+ # LICENSE file in the root directory of this source tree.
+ 
+-if(NOT (COMMAND pybind11_add_module))
+-  add_subdirectory(
+-    ${PROJECT_SOURCE_DIR}/third_party/pybind11
+-    ${PROJECT_BINARY_DIR}/third_party/pybind11
+-    EXCLUDE_FROM_ALL)
+-endif()
++find_package(pybind11 CONFIG REQUIRED)
+ 
+ set(PYBIND11_CPP_STANDARD -std=c++14)
+ pybind11_add_module(pytensorpipe tensorpipe.cc)
+-target_link_libraries(pytensorpipe PRIVATE tensorpipe)
++target_link_libraries(pytensorpipe PRIVATE tensorpipe pybind11::module)
+ 
+ install(TARGETS pytensorpipe
+         EXPORT TensorpipeTargets

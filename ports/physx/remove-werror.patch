@@ -1,0 +1,52 @@
+diff --git a/physx/source/compiler/cmake/android/CMakeLists.txt b/physx/source/compiler/cmake/android/CMakeLists.txt
+index 06e0d98..2e5454d 100644
+--- a/physx/source/compiler/cmake/android/CMakeLists.txt
++++ b/physx/source/compiler/cmake/android/CMakeLists.txt
+@@ -52,6 +52,8 @@ SET(PHYSX_CXX_FLAGS_RELEASE "-O3 -g" CACHE INTERNAL "PhysX Release CXX Flags")
+ 
+ 
+ # These flags are local to the directory the CMakeLists.txt is in
++string(REPLACE " -Werror " " " PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS}")
++set(PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS}" CACHE INTERNAL "PhysX CXX")
+ SET(CMAKE_CXX_FLAGS ${PHYSX_CXX_FLAGS})
+ 
+ SET(CMAKE_CXX_FLAGS_DEBUG   ${PHYSX_CXX_FLAGS_DEBUG})
+diff --git a/physx/source/compiler/cmake/ios/CMakeLists.txt b/physx/source/compiler/cmake/ios/CMakeLists.txt
+index 5605e9a..b40500b 100644
+--- a/physx/source/compiler/cmake/ios/CMakeLists.txt
++++ b/physx/source/compiler/cmake/ios/CMakeLists.txt
+@@ -39,6 +39,8 @@ SET(PHYSX_CXX_FLAGS_PROFILE "-O3 -g" CACHE INTERNAL "PhysX Profile CXX Flags")
+ SET(PHYSX_CXX_FLAGS_RELEASE "-O3 -g" CACHE INTERNAL "PhysX Release CXX Flags")
+ 
+ # These flags are local to the directory the CMakeLists.txt is in
++string(REPLACE " -Werror " " " PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS}")
++set(PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS}" CACHE INTERNAL "PhysX CXX")
+ SET(CMAKE_CXX_FLAGS ${PHYSX_CXX_FLAGS})
+ 
+ SET(CMAKE_CXX_FLAGS_DEBUG   ${PHYSX_CXX_FLAGS_DEBUG})
+diff --git a/physx/source/compiler/cmake/linux/CMakeLists.txt b/physx/source/compiler/cmake/linux/CMakeLists.txt
+index aba5336..fd5f813 100644
+--- a/physx/source/compiler/cmake/linux/CMakeLists.txt
++++ b/physx/source/compiler/cmake/linux/CMakeLists.txt
+@@ -45,6 +45,8 @@ SET(PHYSX_CXX_FLAGS_PROFILE "-O3" CACHE INTERNAL "PhysX Profile CXX Flags")
+ SET(PHYSX_CXX_FLAGS_RELEASE "-O3" CACHE INTERNAL "PhysX Release CXX Flags")
+ 
+ # These flags are local to the directory the CMakeLists.txt is in, so don't get carried over to OTHER CMakeLists.txt (thus the CACHE variables above)
++string(REPLACE " -Werror " " " PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS}")
++set(PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS}" CACHE INTERNAL "PhysX CXX")
+ SET(CMAKE_CXX_FLAGS ${PHYSX_CXX_FLAGS})
+ 
+ SET(CMAKE_CXX_FLAGS_DEBUG   ${PHYSX_CXX_FLAGS_DEBUG})
+diff --git a/physx/source/compiler/cmake/mac/CMakeLists.txt b/physx/source/compiler/cmake/mac/CMakeLists.txt
+index bfd1357..cffb090 100644
+--- a/physx/source/compiler/cmake/mac/CMakeLists.txt
++++ b/physx/source/compiler/cmake/mac/CMakeLists.txt
+@@ -49,6 +49,8 @@ SET(PHYSX_CXX_FLAGS_PROFILE "-O3 -g" CACHE INTERNAL "PhysX Profile CXX Flags")
+ SET(PHYSX_CXX_FLAGS_RELEASE "-O3 -g" CACHE INTERNAL "PhysX Release CXX Flags")
+ 
+ # These flags are local to the directory the CMakeLists.txt is in
++string(REPLACE " -Werror " " " PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS}")
++set(PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS}" CACHE INTERNAL "PhysX CXX")
+ SET(CMAKE_CXX_FLAGS ${PHYSX_CXX_FLAGS})
+ 
+ SET(CMAKE_CXX_FLAGS_DEBUG   ${PHYSX_CXX_FLAGS_DEBUG})

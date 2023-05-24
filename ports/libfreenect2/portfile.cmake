@@ -1,49 +1,42 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenKinect/libfreenect2
     REF v0.2.0
     SHA512 3525e3f21462cecd3b198f64545786ffddc2cafdfd8146e5a46f0300b83f29f1ad0739618a07ab195c276149d7e2e909f7662e2d379a2880593cac75942b0666
     HEAD_REF master
+    PATCHES
+        fix-dependency-libusb.patch
+        fix-macbuild.patch
 )
 
-file(READ ${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake FINDLIBUSB)
+file(READ "${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" FINDLIBUSB)
 string(REPLACE "(WIN32)"
                "(WIN32_DISABLE)" FINDLIBUSB "${FINDLIBUSB}")
-file(WRITE ${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake "${FINDLIBUSB}")
-
-file(READ ${SOURCE_PATH}/examples/CMakeLists.txt EXAMPLECMAKE)
-string(REPLACE "(WIN32)"
-               "(WIN32_DISABLE)" EXAMPLECMAKE "${EXAMPLECMAKE}")
-file(WRITE ${SOURCE_PATH}/examples/CMakeLists.txt "${EXAMPLECMAKE}")
+file(WRITE "${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" "${FINDLIBUSB}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    opengl     ENABLE_OPENGL
-    opencl     ENABLE_OPENCL
+    FEATURES
+        opengl     ENABLE_OPENGL
+        opencl     ENABLE_OPENCL
+        openni2    BUILD_OPENNI2_DRIVER
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_CUDA=OFF
-        # FEATURES
+        -DBUILD_EXAMPLES=OFF
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/freenect2)
+vcpkg_cmake_config_fixup(PACKAGE_NAME freenect2 CONFIG_PATH lib/cmake/freenect2)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# The cmake config is actually called freenect2Config.cmake instead of libfreenect2Config.cmake ...
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libfreenect2 ${CURRENT_PACKAGES_DIR}/share/freenect2)
+file(INSTALL "${SOURCE_PATH}/GPL2" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# license file needs to be in share/libfreenect2 otherwise vcpkg will complain
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/libfreenect2/)
-file(COPY ${SOURCE_PATH}/GPL2 DESTINATION ${CURRENT_PACKAGES_DIR}/share/libfreenect2/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libfreenect2/GPL2 ${CURRENT_PACKAGES_DIR}/share/libfreenect2/copyright)
+vcpkg_fixup_pkgconfig()

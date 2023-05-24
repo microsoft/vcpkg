@@ -1,0 +1,22 @@
+{
+  "name": "grppi",
+  "version": "0.4.0",
+  "port-version": 2,
+  "description": "GrPPI is an open source generic and reusable parallel pattern programming interface developed at University Carlos III of Madrid.",
+  "homepage": "https://github.com/arcosuc3m/grppi",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "tbb": {
+      "description": "Enable tbb backend",
+      "dependencies": [
+        "tbb"
+      ]
+    }
+  }
+}

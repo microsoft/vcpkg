@@ -1,0 +1,6 @@
+{
+  "name": "happly",
+  "version-date": "2021-03-19",
+  "description": "A header-only C++ reader/writer for the PLY file format.",
+  "homepage": "https://github.com/nmwsharp/happly"
+}

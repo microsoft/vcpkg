@@ -1,0 +1,22 @@
+{
+  "name": "uriparser",
+  "version": "0.9.7",
+  "description": "Strictly RFC 3986 compliant URI parsing and handling library written in C89.",
+  "homepage": "https://uriparser.github.io/",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tool": {
+      "description": "Builds CLI tool uriparse."
+    }
+  }
+}

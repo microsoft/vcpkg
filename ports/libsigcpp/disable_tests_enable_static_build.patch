@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e1b28fe..b9a9d40 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -84,13 +84,13 @@ install (FILES
+ 		DESTINATION 
+ 			"${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
+ 
+-enable_testing()
++#enable_testing()
+ 
+ 
+ 
+ add_subdirectory (sigc++)
+-add_subdirectory (examples)
+-add_subdirectory (tests)
++#add_subdirectory (examples)
++#add_subdirectory (tests)
+ 
+ 
+ set (PROJECT_CMAKE_NAME		"${PROJECT_NAME}-3")
+diff --git a/sigc++/CMakeLists.txt b/sigc++/CMakeLists.txt
+index fa5a91a..86f1be7 100644
+--- a/sigc++/CMakeLists.txt
++++ b/sigc++/CMakeLists.txt
+@@ -23,7 +23,7 @@ set (SOURCE_FILES
+ 
+ set (SIGCPP_LIB_NAME sigc-${SIGCXX_API_VERSION})
+ 
+-add_library(${SIGCPP_LIB_NAME} SHARED ${SOURCE_FILES})
++add_library(${SIGCPP_LIB_NAME} ${SOURCE_FILES})
+ 
+ set_property (TARGET ${SIGCPP_LIB_NAME} PROPERTY VERSION ${PACKAGE_VERSION})
+ set_property(TARGET ${SIGCPP_LIB_NAME}  PROPERTY SOVERSION ${LIBSIGCPP_SOVERSION})

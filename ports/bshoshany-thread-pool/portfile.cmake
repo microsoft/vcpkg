@@ -1,0 +1,13 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO bshoshany/thread-pool
+    REF v3.4.0
+    SHA512 4eea216422ea7fd6df52589e84fefb34248fe56fd0bbdcc5c33ae21c0ba6b950ec74a31eeea144edfc22444f6777dc09f668fd3ed5236604e0c7de62e45381a7
+    HEAD_REF master
+)
+
+file(GLOB HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/*.hpp")
+
+file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

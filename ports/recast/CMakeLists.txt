@@ -1,14 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(recast)
 
-include_directories(
-  DebugUtils/Include
-  Detour/Include
-  DetourCrowd/Include
-  DetourTileCache/Include
-  Recast/Include
-)
-
 set(SRC
   DebugUtils/Source/DebugDraw.cpp
   DebugUtils/Source/DetourDebugDraw.cpp
@@ -42,16 +34,34 @@ set(SRC
 
 add_library(recast ${SRC})
 
+target_include_directories(
+  recast PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DebugUtils/Include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Detour/Include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DetourCrowd/Include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DetourTileCache/Include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Recast/Include>
+  $<INSTALL_INTERFACE:include/recast/>
+  $<INSTALL_INTERFACE:include/recast/Detour/Include>
+  $<INSTALL_INTERFACE:include/recast/DetourCrowd/Include>
+  $<INSTALL_INTERFACE:include/recast/DetourTileCache/Include>
+  $<INSTALL_INTERFACE:include/recast/Recast/Include>
+  $<INSTALL_INTERFACE:include/recast/DebugUtils/Include>
+)
+
 install(
   TARGETS recast
+  EXPORT unofficial-recast-config
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 
+install(EXPORT unofficial-recast-config DESTINATION share/unofficial-recast)
+
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(DIRECTORY DebugUtils/Include/ DESTINATION include/recast/DebugUtils)
-  install(DIRECTORY Detour/Include/ DESTINATION include/recast/Detour)
-  install(DIRECTORY DetourCrowd/Include/ DESTINATION include/recast/DetourCrowd)
-  install(DIRECTORY DetourTileCache/Include/ DESTINATION include/recast/DetourTileCache)
-  install(DIRECTORY Recast/Include/ DESTINATION include/recast/Recast)
+  install(DIRECTORY DebugUtils/Include/ DESTINATION include/recast/DebugUtils/Include)
+  install(DIRECTORY Detour/Include/ DESTINATION include/recast/Detour/Include)
+  install(DIRECTORY DetourCrowd/Include/ DESTINATION include/recast/DetourCrowd/Include)
+  install(DIRECTORY DetourTileCache/Include/ DESTINATION include/recast/DetourTileCache/Include)
+  install(DIRECTORY Recast/Include/ DESTINATION include/recast/Recast/Include)
 endif()

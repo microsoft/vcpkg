@@ -1,0 +1,79 @@
+{
+  "versions": [
+    {
+      "git-tree": "0ed989d414e631f12c2296afaf7e91f3a267c10c",
+      "version-semver": "7.1.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "5d3878991b69b5ed78b2d82c56c5d3a707e13eb0",
+      "version-semver": "5.0.2",
+      "port-version": 3
+    },
+    {
+      "git-tree": "9901ca1f1a121a702d4fb4c73ad6a482adff6c3f",
+      "version-semver": "5.0.2",
+      "port-version": 2
+    },
+    {
+      "git-tree": "025db5cad1969933359bac4047e0dea962fb692b",
+      "version-string": "5.0.2",
+      "port-version": 1
+    },
+    {
+      "git-tree": "da33c865acdf04845f77a46b89264544bfaf30cf",
+      "version-string": "5.0.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "508a42a39d654dd70909b5fea498b4b068ba6a09",
+      "version-string": "5.0.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "57a85674889c21c25770d674cee523e6040326e2",
+      "version-string": "5.0.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4780b3c02c9a92cc283f2da1c35214cb6e0f4cf5",
+      "version-string": "4.1.0-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "80dd089d889a2cdcdb95305892ae046892eb7167",
+      "version-string": "4.1.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c6b92cf16ca57984325782d235c5fa912d5d7d4e",
+      "version-string": "4.0.1-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "efa4837be64a9f13910f42f42acebeeceff9cd72",
+      "version-string": "3.1.1-2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "bbd300e066b856253b1b8c0f0efb60a9541b24cc",
+      "version-string": "3.1.1-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7c043529d43f507b1324fdc73894ec7fbdee7996",
+      "version-string": "2.0.0-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "f752db5c7989a9628b165cd449f2af19cf48d4d1",
+      "version-string": "2.0.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "bb50d32b30352fa1ebd31e92e488a519b3da87c7",
+      "version-string": "1.0.3",
+      "port-version": 0
+    }
+  ]
+}

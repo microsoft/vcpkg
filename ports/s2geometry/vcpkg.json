@@ -1,0 +1,22 @@
+{
+  "name": "s2geometry",
+  "version": "0.10.0",
+  "description": "S2 is a library for spherical geometry that aims to have the same robustness, flexibility, and performance as the very best planar geometry libraries.",
+  "homepage": "https://s2geometry.io",
+  "license": "Apache-2.0",
+  "supports": "!windows",
+  "dependencies": [
+    "abseil",
+    "gflags",
+    "glog",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

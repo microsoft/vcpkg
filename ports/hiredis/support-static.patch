@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9e78894..87aba5b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,4 +22,4 @@ PROJECT(hiredis VERSION "${VERSION}")
+ ENDIF()
+ 
+-ADD_LIBRARY(hiredis SHARED ${hiredis_sources})
++ADD_LIBRARY(hiredis ${hiredis_sources})
+ 
+@@ -60,5 +60,5 @@ IF(ENABLE_SSL)
+     SET(hiredis_ssl_sources 
+         ssl.c)
+-    ADD_LIBRARY(hiredis_ssl SHARED
++    ADD_LIBRARY(hiredis_ssl
+             ${hiredis_ssl_sources})
+ 

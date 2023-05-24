@@ -1,31 +1,28 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pantor/inja
-    REF v2.1.0
-    SHA512 6b3a3a6a9e2adff14083a8e83c95fdc5ccf0c930acff40c4cf6c11d67b0df18fd941307e5d1f0c45dcfcb4c4afd0026b718ca510a2b297b9c6be048f5b144d42
+    REF b2276440be8334aeba9cd5d628c2731d0f6a5809 # v3.4.0
+    SHA512 80f760668f72b9e0a54e1c74d169f98a99fdfffe6bacc56043681e48a4af21a2331a94ab5cb27b6e5a838d7d7fe5d8a806597bfb913f0f3aecb30755a23a4cf8
     HEAD_REF master
-    PATCHES
-        cmake-version.patch
 )
 
-vcpkg_configure_cmake(
+set(VCPKG_BUILD_TYPE release) # header-only port
+
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DINJA_USE_EMBEDDED_JSON=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARK=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/inja)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/inja")
 vcpkg_copy_pdbs()
 
-# Inja is a header-only library
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+
 # Don't need built-in nlohmann-json as this package depends on nlohmann-json
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/inja/json")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/inja RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

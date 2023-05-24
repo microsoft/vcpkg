@@ -1,73 +1,69 @@
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
+set(HALIDE_VERSION_TAG v${VERSION})
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    REF 65c26cba6a3eca2d08a0bccf113ca28746012cc3 #release_2019_08_27
-    SHA512 f95b31ec08a6c4e618a5c03b6ae9e0b41888035a268e82ee73abde8ea34dff325db270f1ff10387ef03de27e274ad27c7ccbc873c0b75bb6c1a8112cf3765c5d
-    HEAD_REF master
-    PATCHES
-        fix-install-path.patch
+    REF ${HALIDE_VERSION_TAG}
+    SHA512 918cd0a7e69e4414b98f17c5ec5cdb543ce3ae68ed07c9a80b7c0378c247a4a4fde62ade79b402e9ffcfce30c066a3fa662ea46c3a2a5b93eb5ec4e05b3fd808
+    HEAD_REF release/15.x
 )
 
-set(TARGET_X86 OFF)
-set(TARGET_ARM OFF)
-set(TARGET_AARCH64 OFF)
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86 OR VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-    # llvm x86 components are required for llvm x64
-    set(TARGET_X86 ON)
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-    set(TARGET_X86 OFF)
-    if (TARGET_TRIPLET STREQUAL arm64)
-        set(TARGET_AARCH64 ON)
-    else()
-        set(TARGET_ARM ON)
-    endif()
-endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(HALIDE_SHARED_LIBRARY ON)
-else()
-    set(HALIDE_SHARED_LIBRARY OFF)
-endif()
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    app WITH_APPS
-    test WITH_TESTS
-    tutorials WITH_TUTORIALS
-    docs WITH_DOCS
-    utils WITH_UTILS
-    nativeclient TARGET_NATIVE_CLIENT
-    hexagon TARGET_HEXAGON
-    metal TARGET_METAL
-    mips TARGET_MIPS
-    powerpc TARGET_POWERPC
-    ptx TARGET_PTX
-    opencl TARGET_OPENCL
-    opengl TARGET_OPENGL
-    opengl TARGET_OPENGLCOMPUTE
-    rtti HALIDE_ENABLE_RTTI
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        target-aarch64 TARGET_AARCH64
+        target-amdgpu TARGET_AMDGPU
+        target-arm TARGET_ARM
+        target-d3d12compute TARGET_D3D12COMPUTE
+        target-opengl-compute TARGET_OPENGLCOMPUTE
+        target-hexagon TARGET_HEXAGON
+        target-metal TARGET_METAL
+        target-mips TARGET_MIPS
+        target-nvptx TARGET_NVPTX
+        target-opencl TARGET_OPENCL
+        target-powerpc TARGET_POWERPC
+        target-riscv TARGET_RISCV
+        target-x86 TARGET_X86
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
-        -DTRIPLET_SYSTEM_ARCH=${TRIPLET_SYSTEM_ARCH}
-        -DHALIDE_SHARED_LIBRARY=${HALIDE_SHARED_LIBRARY}
-        -DTARGET_X86=${TARGET_X86}
-        -DTARGET_ARM=${TARGET_ARM}
-        -DTARGET_AARCH64=${TARGET_AARCH64}
-        #-DTARGET_AMDGPU
-        -DWARNINGS_AS_ERRORS=OFF
+        -DWITH_WABT=OFF
+        -DWITH_V8=OFF
+        -DWITH_DOCS=OFF
+        -DWITH_PYTHON_BINDINGS=OFF
+        -DWITH_TESTS=OFF
+        -DWITH_TUTORIALS=OFF
+        -DWITH_UTILS=OFF
+        -DCMAKE_INSTALL_LIBDIR=bin
+        "-DCMAKE_INSTALL_DATADIR=share/${PORT}"
+        "-DHalide_INSTALL_CMAKEDIR=share/${PORT}"
+        -DHalide_INSTALL_HELPERSDIR=share/HalideHelpers
+        -DHalide_INSTALL_PLUGINDIR=bin
+        -DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE
+        -DCMAKE_DISABLE_FIND_PACKAGE_JPEG=JPEG
 )
 
-vcpkg_install_cmake()
+# ADD_BIN_TO_PATH needed to compile autoschedulers, 
+# which use Halide.dll (and deps) during the build.
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/halide)
+# Release mode MODULE targets in CMake don't get PDBs.
+# Exclude those to avoid warning with default globs.
+vcpkg_copy_pdbs(
+    BUILD_PATHS
+        "${CURRENT_PACKAGES_DIR}/bin/Halide.dll" 
+        "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll"
+)
 
-vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME HalideHelpers)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)

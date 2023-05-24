@@ -1,0 +1,35 @@
+diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
+index bb3e15e5..80c5051e 100644
+--- a/fizz/CMakeLists.txt
++++ b/fizz/CMakeLists.txt
+@@ -64,7 +64,7 @@ endif()
+
+ include(CheckAtomic)
+
+-find_package(Sodium REQUIRED)
++find_package(unofficial-sodium CONFIG REQUIRED)
+
+ SET(FIZZ_SHINY_DEPENDENCIES "")
+ SET(FIZZ_LINK_LIBRARIES "")
+@@ -255,7 +255,7 @@ target_link_libraries(fizz
+   PUBLIC
+     ${FOLLY_LIBRARIES}
+     ${OPENSSL_LIBRARIES}
+-    sodium
++    unofficial-sodium::sodium
+     Threads::Threads
+     ZLIB::ZLIB
+     ${ZSTD_LIBRARY}
+diff --git a/fizz/cmake/fizz-config.cmake.in b/fizz/cmake/fizz-config.cmake.in
+index 679b0e61..b28750fa 100644
+--- a/fizz/cmake/fizz-config.cmake.in
++++ b/fizz/cmake/fizz-config.cmake.in
+@@ -26,7 +26,7 @@ endif()
+ set(FIZZ_LIBRARIES fizz::fizz)
+
+ include(CMakeFindDependencyMacro)
+-find_dependency(Sodium)
++find_dependency(unofficial-sodium CONFIG REQUIRED)
+ find_dependency(folly CONFIG)
+ find_dependency(ZLIB)
+

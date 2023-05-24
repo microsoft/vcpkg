@@ -1,28 +1,39 @@
-include(vcpkg_common_functions)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.mpfr.org/mpfr-4.0.2/mpfr-4.0.2.tar.xz"
-    FILENAME "mpfr-4.0.2.tar.xz"
-    SHA512 d583555d08863bf36c89b289ae26bae353d9a31f08ee3894520992d2c26e5683c4c9c193d7ad139632f71c0a476d85ea76182702a98bf08dde7b6f65a54f8b88
+    URLS "http://www.mpfr.org/mpfr-${VERSION}/mpfr-${VERSION}.tar.xz" "https://ftp.gnu.org/gnu/mpfr/mpfr-${VERSION}.tar.xz"
+    FILENAME "mpfr-${VERSION}.tar.xz"
+    SHA512 58e843125884ca58837ae5159cd4092af09e8f21931a2efd19c15de057c9d1dc0753ae95c592e2ce59a727fbc491af776db8b00a055320413cdcf2033b90505c
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        dll.patch
+        src-only.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
 )
 
-vcpkg_install_cmake()
+vcpkg_install_make()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/mpfr)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/mpfr/COPYING ${CURRENT_PACKAGES_DIR}/share/mpfr/copyright)
+file(REMOVE
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/AUTHORS"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/BUGS"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING.LESSER"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/NEWS"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/TODO"
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/COPYING.LESSER")

@@ -1,0 +1,17 @@
+{
+  "name": "libstemmer",
+  "version": "2017-9",
+  "port-version": 8,
+  "description": "Snowball is a small string processing language designed for creating stemming algorithms for use in Information Retrieval",
+  "homepage": "https://snowball.tartarus.org/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

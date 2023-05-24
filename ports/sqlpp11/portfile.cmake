@@ -1,34 +1,43 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rbock/sqlpp11
-    REF 0.58
-    SHA512 c391e72638a748e0e25b53176dc371ba468bc14bdcb6dda2f2418c4ab4d620ebc5507ee284ff81c3104888d0d959703c6c91b55ccd69a8641b07dcb20cd56209
+    REF 648183fd64070185019f9237481b888173abfaf2 # 2022-09-14
+    SHA512 0429c5972ef111a41422ebd3ca259bc7f2cca126b0abd526270e7c8553fbc9d22ee584c526340a7f3c667143a16b961c222687806641b6ddfe9a258bd5e1ccc8
     HEAD_REF master
-    PATCHES ddl2cpp_path.patch
+    PATCHES
+        ddl2cpp_path.patch
 )
 
-# Use sqlpp11's own build process, skipping tests
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sqlite3    BUILD_SQLITE3_CONNECTOR
+        mariadb    BUILD_MARIADB_CONNECTOR
+        mysql      BUILD_MYSQL_CONNECTOR
+        postgresql BUILD_POSTGRESQL_CONNECTOR
+)
+
+# Use sqlpp11's own build process
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    -DENABLE_TESTS:BOOL=OFF
+        -DBUILD_TESTING:BOOL=OFF
+        # Use vcpkg as source for the date library
+        -DUSE_SYSTEM_DATE:BOOL=ON
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Move CMake config files to the right place
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Sqlpp11 TARGET_PATH share/sqlpp11)
-
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Sqlpp11)
 
 # Delete redundant and unnecessary directories
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/cmake" "${CURRENT_PACKAGES_DIR}/include/date")
 
 # Move python script from bin directory
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/sqlpp11-ddl2cpp DESTINATION ${CURRENT_PACKAGES_DIR}/scripts)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
+file(COPY "${CURRENT_PACKAGES_DIR}/bin/sqlpp11-ddl2cpp" DESTINATION "${CURRENT_PACKAGES_DIR}/scripts")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sqlpp11 RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

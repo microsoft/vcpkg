@@ -1,0 +1,809 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 44d7df0..ed9e3d3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,6 +17,9 @@ set (CRASHRPT_VER 1403)
+ # Build options
+ option(CRASHRPT_BUILD_SHARED_LIBS "If set (default), CrashRpt modules are built as dynamic-link libraries, otherwise as static libs." ON)
+ option(CRASHRPT_LINK_CRT_AS_DLL "If set (default), CrashRpt modules link C run-time (CRT) as multi-threaded dynamic libraries, otherwise as multi-threaded static libs." ON)
++option(CRASHRPT_BUILD_PROBE "If set (default), CrashRpt builds the CrashRptProbe project." ON)
++option(CRASHRPT_BUILD_DEMOS "If set (default), CrashRpt builds the demo projects." ON)
++option(CRASHRPT_BUILD_TESTS "If set (default), CrashRpt builds the test projects." ON)
+ 
+ # Set output directory for executable files
+ if(CMAKE_CL_64)
+@@ -94,19 +97,65 @@ macro(fix_default_compiler_settings_)
+   
+ endmacro()
+ 
++find_package(ZLIB REQUIRED)
++find_package(PNG REQUIRED)
++find_package(Ogg REQUIRED)
++find_package(JPEG REQUIRED)
++
++find_library(THEORA_LIBRARY theora)
++if(NOT THEORA_LIBRARY)
++  message(FATAL_ERROR "theora library not found")
++endif()
++
++find_path(THEORA_INCLUDE_DIR theora/theora.h)
++if(NOT THEORA_INCLUDE_DIR)
++  message(FATAL_ERROR "theora include dir not found")
++endif()
++
++find_library(TINYXML_LIBRARY NAMES tinyxml)
++if(NOT TINYXML_LIBRARY)
++  message(FATAL_ERROR "tinyxml library not found")
++endif()
++
++find_path(TINYXML_INCLUDE_DIR tinyxml.h)
++if(NOT TINYXML_INCLUDE_DIR)
++  message(FATAL_ERROR "tinyxml include dir not found")
++endif()
++
++find_path(WTL_INCLUDE_DIR wtl/atlapp.h)
++if(NOT WTL_INCLUDE_DIR)
++  message(FATAL_ERROR "WTL include dir not found")
++endif()
++
++find_library(DBGHELP_LIBRARY dbghelp)
++if(NOT DBGHELP_LIBRARY)
++  message(FATAL_ERROR "dbghelp library not found")
++endif()
++
++find_path(DBGHELP_INCLUDE_DIR dbghelp.h)
++if(NOT DBGHELP_INCLUDE_DIR)
++  message(FATAL_ERROR "dbghelp include dir not found")
++endif()
++
+ # Other CMakeLists are located in project subdirectories 
+ 
++if(CRASHRPT_BUILD_DEMOS)
+ add_subdirectory("demos/ConsoleDemo")
+ add_subdirectory("demos/WTLDemo")
+ add_subdirectory("demos/MFCDemo")
++endif()
+ 
+ add_subdirectory("reporting/crashrpt")
+ add_subdirectory("reporting/crashsender")
+ 
++if(CRASHRPT_BUILD_PROBE)
+ add_subdirectory("processing/crashrptprobe")
+ add_subdirectory("processing/crprober")
++endif()
+ 
++if(CRASHRPT_BUILD_TESTS)
+ add_subdirectory("tests")
++endif()
+ 
+ # Set output directory for LIB files
+ if(CMAKE_CL_64)
+@@ -117,13 +166,13 @@ else(CMAKE_CL_64)
+ 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/thirdparty/lib)
+ endif(CMAKE_CL_64)
+ 
+-add_subdirectory("thirdparty/tinyxml")
+-add_subdirectory("thirdparty/jpeg")
+-add_subdirectory("thirdparty/libpng")
++#add_subdirectory("thirdparty/tinyxml")
++#add_subdirectory("thirdparty/jpeg")
++#add_subdirectory("thirdparty/libpng")
+ add_subdirectory("thirdparty/minizip")
+-add_subdirectory("thirdparty/zlib")
+-add_subdirectory("thirdparty/libogg")
+-add_subdirectory("thirdparty/libtheora")
++#add_subdirectory("thirdparty/zlib")
++#add_subdirectory("thirdparty/libogg")
++#add_subdirectory("thirdparty/libtheora")
+ 
+ 
+ 
+diff --git a/demos/ConsoleDemo/CMakeLists.txt b/demos/ConsoleDemo/CMakeLists.txt
+index e47ef4c..4df7b12 100644
+--- a/demos/ConsoleDemo/CMakeLists.txt
++++ b/demos/ConsoleDemo/CMakeLists.txt
+@@ -12,12 +12,12 @@ fix_default_compiler_settings_()
+ # Add include dir
+ include_directories(${CMAKE_SOURCE_DIR}/include 
+ 					${CMAKE_SOURCE_DIR}/reporting/CrashRpt
+-					${CMAKE_SOURCE_DIR}/thirdparty/wtl 
+-					${CMAKE_SOURCE_DIR}/thirdparty/zlib
++					${WTL_INCLUDE_DIR} 
++					${ZLIB_INCLUDE_DIRS}
+ 					${CMAKE_SOURCE_DIR}/thirdparty/minizip  
+-					${CMAKE_SOURCE_DIR}/thirdparty/jpeg 
+-					${CMAKE_SOURCE_DIR}/thirdparty/libpng 
+-					${CMAKE_SOURCE_DIR}/thirdparty/tinyxml )
++					${JPEG_INCLUDE_DIR} 
++					${PNG_INCLUDE_DIRS} 
++					${TINYXML_INCLUDE_DIR} )
+ 
+ # Add executable build target
+ add_executable(ConsoleDemo ${source_files} ${header_files})
+@@ -26,3 +26,7 @@ add_executable(ConsoleDemo ${source_files} ${header_files})
+ target_link_libraries(ConsoleDemo CrashRpt)
+ 
+ set_target_properties(ConsoleDemo PROPERTIES DEBUG_POSTFIX d )
++
++install(TARGETS ConsoleDemo 
++  RUNTIME DESTINATION tools/crashrpt
++)
+diff --git a/demos/MFCDemo/CMakeLists.txt b/demos/MFCDemo/CMakeLists.txt
+index a250ecc..ade93cb 100644
+--- a/demos/MFCDemo/CMakeLists.txt
++++ b/demos/MFCDemo/CMakeLists.txt
+@@ -44,7 +44,7 @@ if(CMAKE_CL_64)
+ ADD_CUSTOM_COMMAND(
+     TARGET WTLDemo
+     POST_BUILD
+-    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
++    #COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.ini\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.log\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/lang_files\\crashrpt_lang_EN.ini\" \"${CMAKE_BINARY_DIR}/bin\\x64\\crashrpt_lang.ini\""
+@@ -53,9 +53,13 @@ else(CMAKE_CL_64)
+ ADD_CUSTOM_COMMAND(
+     TARGET WTLDemo
+     POST_BUILD
+-    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\""
++    #COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.ini\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.log\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/lang_files\\crashrpt_lang_EN.ini\" \"${CMAKE_BINARY_DIR}/bin\\crashrpt_lang.ini\""
+ )
+-endif(CMAKE_CL_64)
+\ No newline at end of file
++endif(CMAKE_CL_64)
++
++install(TARGETS MFCDemo 
++  RUNTIME DESTINATION tools/crashrpt
++)
+diff --git a/demos/WTLDemo/AboutDlg.h b/demos/WTLDemo/AboutDlg.h
+index 83eaac0..e96d1c2 100644
+--- a/demos/WTLDemo/AboutDlg.h
++++ b/demos/WTLDemo/AboutDlg.h
+@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #pragma once
+ #include "stdafx.h"
+ #include <shellapi.h>
+-#include <atlctrlx.h>
++#include <wtl/atlctrlx.h>
+ #include "CrashRpt.h"
+ 
+ class CAboutDlg : public CDialogImpl<CAboutDlg>
+diff --git a/demos/WTLDemo/CMakeLists.txt b/demos/WTLDemo/CMakeLists.txt
+index 40aaefb..42c0f5a 100644
+--- a/demos/WTLDemo/CMakeLists.txt
++++ b/demos/WTLDemo/CMakeLists.txt
+@@ -19,7 +19,7 @@ fix_default_compiler_settings_()
+ 
+ # Add include dir
+ include_directories(${CMAKE_SOURCE_DIR}/include
+-					${CMAKE_SOURCE_DIR}/thirdparty/wtl)
++					${WTL_INCLUDE_DIR})
+ 
+ # Add executable build target
+ add_executable(WTLDemo WIN32 ${source_files} ${header_files})
+@@ -36,7 +36,7 @@ if(CMAKE_CL_64)
+ ADD_CUSTOM_COMMAND(
+     TARGET WTLDemo
+     POST_BUILD
+-    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
++    #COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.ini\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.log\" \"${CMAKE_BINARY_DIR}/bin\\x64\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/lang_files\\crashrpt_lang_EN.ini\" \"${CMAKE_BINARY_DIR}/bin\\x64\\crashrpt_lang.ini\""
+@@ -45,9 +45,13 @@ else(CMAKE_CL_64)
+ ADD_CUSTOM_COMMAND(
+     TARGET WTLDemo
+     POST_BUILD
+-    COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\""
++    #COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/bin\\dbghelp.dll\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.ini\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/demos/WTLDemo\\dummy.log\" \"${CMAKE_BINARY_DIR}/bin\""
+     COMMAND copy ARGS "\"${CMAKE_SOURCE_DIR}/lang_files\\crashrpt_lang_EN.ini\" \"${CMAKE_BINARY_DIR}/bin\\crashrpt_lang.ini\""
+ )
+-endif(CMAKE_CL_64)
+\ No newline at end of file
++endif(CMAKE_CL_64)
++
++install(TARGETS WTLDemo 
++  RUNTIME DESTINATION tools/crashrpt
++)
+diff --git a/demos/WTLDemo/DocumentDlg.h b/demos/WTLDemo/DocumentDlg.h
+index afce8fe..9b47728 100644
+--- a/demos/WTLDemo/DocumentDlg.h
++++ b/demos/WTLDemo/DocumentDlg.h
+@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #pragma once
+ #include "stdafx.h"
+ #include <shellapi.h>
+-#include <atlctrlx.h>
++#include <wtl/atlctrlx.h>
+ #include "CrashRpt.h"
+ 
+ class CDocumentDlg : public CDialogImpl<CDocumentDlg>
+diff --git a/demos/WTLDemo/WTLDemo.rc b/demos/WTLDemo/WTLDemo.rc
+index c651841..71f4b39 100644
+--- a/demos/WTLDemo/WTLDemo.rc
++++ b/demos/WTLDemo/WTLDemo.rc
+@@ -7,7 +7,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "atlres.h"
++#include "wtl/atlres.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+@@ -32,7 +32,7 @@ END
+ 
+ 2 TEXTINCLUDE 
+ BEGIN
+-    "#include ""atlres.h""\r\n"
++    "#include ""wtl/atlres.h""\r\n"
+     "\0"
+ END
+ 
+diff --git a/demos/WTLDemo/stdafx.h b/demos/WTLDemo/stdafx.h
+index a601446..658d9e5 100644
+--- a/demos/WTLDemo/stdafx.h
++++ b/demos/WTLDemo/stdafx.h
+@@ -16,10 +16,10 @@ be found in the Authors.txt file in the root of the source tree.
+ #pragma once
+ 
+ // Change these values to use different versions
+-#define WINVER		0x0500
++#define WINVER		0x0501
+ #define _WIN32_WINNT	0x0501
+-#define _WIN32_IE	0x0501
+-#define _RICHEDIT_VER	0x0200
++#define _WIN32_IE	0x0600
++#define _RICHEDIT_VER	0x0300
+ 
+ #include <atldef.h>
+ #if ( _ATL_VER < 0x0800 )
+@@ -52,18 +52,18 @@ namespace ATL
+ };
+ #endif // _WTL_SUPPORT_SDK_ATL3
+ 
+-#include <atlapp.h>
++#include <wtl/atlapp.h>
+ 
+ extern CAppModule _Module;
+ 
+ #include <atlwin.h>
+ 
+-#include <atlframe.h>
+-#include <atlctrls.h>
+-#include <atldlgs.h>
++#include <wtl/atlframe.h>
++#include <wtl/atlctrls.h>
++#include <wtl/atldlgs.h>
+ 
+ #define _WTL_USE_CSTRING
+-#include <atlmisc.h>
++#include <wtl/atlmisc.h>
+ 
+ #if _MSC_VER>=1400
+ #if defined _M_IX86
+diff --git a/processing/crashrptprobe/CMakeLists.txt b/processing/crashrptprobe/CMakeLists.txt
+index a6c692a..c513c6d 100644
+--- a/processing/crashrptprobe/CMakeLists.txt
++++ b/processing/crashrptprobe/CMakeLists.txt
+@@ -21,11 +21,11 @@ fix_default_compiler_settings_()
+ include_directories( ${CMAKE_SOURCE_DIR}/include 
+ 			${CMAKE_SOURCE_DIR}/reporting/crashrpt
+ 			${CMAKE_SOURCE_DIR}/reporting/crashsender
+-			${CMAKE_SOURCE_DIR}/thirdparty/wtl
+-			${CMAKE_SOURCE_DIR}/thirdparty/zlib
++			${WTL_INCLUDE_DIR}
++			${ZLIB_INCLUDE_DIRS}
+ 			${CMAKE_SOURCE_DIR}/thirdparty/minizip
+-			${CMAKE_SOURCE_DIR}/thirdparty/tinyxml
+-			${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/include)
++			${TINYXML_INCLUDE_DIR}
++			${DBGHELP_INCLUDE_DIR})
+ 			
+ # Add library build target
+ if(CRASHRPT_BUILD_SHARED_LIBS)	
+@@ -34,15 +34,15 @@ else(CRASHRPT_BUILD_SHARED_LIBS)
+ 	add_library(CrashRptProbe STATIC ${source_files} ${header_files})	
+ endif(CRASHRPT_BUILD_SHARED_LIBS)
+ 
+-if(CMAKE_CL_64)
+-	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64 )	
+-	target_link_libraries(CrashRptProbe ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64/dbghelp.lib)
+-else(CMAKE_CL_64)
+-	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib )
+-	target_link_libraries(CrashRptProbe ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/dbghelp.lib)
+-endif(CMAKE_CL_64)
++#if(CMAKE_CL_64)
++#	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64 )	
++#	target_link_libraries(CrashRptProbe ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64/dbghelp.lib)
++#else(CMAKE_CL_64)
++#	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib )
++#	target_link_libraries(CrashRptProbe ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/dbghelp.lib)
++#endif(CMAKE_CL_64)
+ 
+-target_link_libraries(CrashRptProbe zlib minizip tinyxml Rpcrt4.lib shell32.lib gdi32.lib version.lib psapi.lib)
++target_link_libraries(CrashRptProbe ZLIB::ZLIB minizip ${TINYXML_LIBRARY} ${DBGHELP_LIBRARY} Rpcrt4.lib shell32.lib gdi32.lib version.lib psapi.lib)
+ 
+ if(CRASHRPT_BUILD_SHARED_LIBS)
+ 
+@@ -58,4 +58,11 @@ else(CRASHRPT_BUILD_SHARED_LIBS)
+ 
+ endif(CRASHRPT_BUILD_SHARED_LIBS)
+ 
++set_target_properties(CrashRptProbe PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/CrashRptProbe.h)
+ 
++INSTALL(TARGETS CrashRptProbe
++  PUBLIC_HEADER DESTINATION include/crashrpt
++  LIBRARY
++  ARCHIVE
++  RUNTIME
++)
+diff --git a/processing/crashrptprobe/CrashRptProbe.rc b/processing/crashrptprobe/CrashRptProbe.rc
+index a08f63e..e12b8e9 100644
+--- a/processing/crashrptprobe/CrashRptProbe.rc
++++ b/processing/crashrptprobe/CrashRptProbe.rc
+@@ -7,7 +7,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "atlres.h"
++#include "wtl/atlres.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+@@ -32,7 +32,7 @@ END
+ 
+ 2 TEXTINCLUDE 
+ BEGIN
+-    "#include ""atlres.h""\r\n"
++    "#include ""wtl/atlres.h""\r\n"
+     "\0"
+ END
+ 
+diff --git a/processing/crashrptprobe/stdafx.h b/processing/crashrptprobe/stdafx.h
+index 2b027b2..0b60659 100644
+--- a/processing/crashrptprobe/stdafx.h
++++ b/processing/crashrptprobe/stdafx.h
+@@ -70,13 +70,13 @@ namespace ATL
+ };
+ #endif // _WTL_SUPPORT_SDK_ATL3
+ 
+-#include <atlapp.h>
++#include <wtl/atlapp.h>
+ extern CAppModule _Module;
+ #include <atlwin.h>
+ 
+ // CString-related includes
+ #define _WTL_USE_CSTRING
+-#include <atlmisc.h>
++#include <wtl/atlmisc.h>
+ 
+ #if _MSC_VER<1400
+ #define WCSNCPY_S(strDest, sizeInBytes, strSource, count) wcsncpy(strDest, strSource, count)
+diff --git a/processing/crprober/CMakeLists.txt b/processing/crprober/CMakeLists.txt
+index 046ba57..255e200 100644
+--- a/processing/crprober/CMakeLists.txt
++++ b/processing/crprober/CMakeLists.txt
+@@ -18,4 +18,8 @@ add_executable(crprober ${source_files} ${header_files})
+ # Add input link libraries
+ target_link_libraries(crprober CrashRptProbe)
+ 
+-set_target_properties(crprober PROPERTIES DEBUG_POSTFIX d )
+\ No newline at end of file
++set_target_properties(crprober PROPERTIES DEBUG_POSTFIX d )
++
++install(TARGETS crprober 
++  RUNTIME DESTINATION tools/crashrpt
++)
+diff --git a/reporting/crashrpt/CMakeLists.txt b/reporting/crashrpt/CMakeLists.txt
+index 42d40e2..c7e4fd6 100644
+--- a/reporting/crashrpt/CMakeLists.txt
++++ b/reporting/crashrpt/CMakeLists.txt
+@@ -18,7 +18,7 @@ add_definitions(-D_UNICODE -D_CRT_SECURE_NO_DEPRECATE)
+ fix_default_compiler_settings_()
+ 
+ # Add include dir
+-include_directories( ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/thirdparty/wtl)
++include_directories( ${CMAKE_SOURCE_DIR}/include ${WTL_INCLUDE_DIR})
+ 
+ # Add library build target
+ if(CRASHRPT_BUILD_SHARED_LIBS)
+@@ -55,3 +55,11 @@ else(CRASHRPT_BUILD_SHARED_LIBS)
+ 									RELEASE_POSTFIX LIB )
+ endif(CRASHRPT_BUILD_SHARED_LIBS)
+ 
++set_target_properties(CrashRpt PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include/CrashRpt.h)
++
++INSTALL(TARGETS CrashRpt
++  PUBLIC_HEADER DESTINATION include/crashrpt
++  LIBRARY
++  ARCHIVE
++  RUNTIME
++)
+diff --git a/reporting/crashrpt/CrashRpt.rc b/reporting/crashrpt/CrashRpt.rc
+index 95e7502..a8c821b 100644
+--- a/reporting/crashrpt/CrashRpt.rc
++++ b/reporting/crashrpt/CrashRpt.rc
+@@ -7,7 +7,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "atlres.h"
++#include "wtl/atlres.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+@@ -32,7 +32,7 @@ END
+ 
+ 2 TEXTINCLUDE 
+ BEGIN
+-    "#include ""atlres.h""\r\n"
++    "#include ""wtl/atlres.h""\r\n"
+     "\0"
+ END
+ 
+diff --git a/reporting/crashrpt/StdAfx.h b/reporting/crashrpt/StdAfx.h
+index 77d8c36..13bbe50 100644
+--- a/reporting/crashrpt/StdAfx.h
++++ b/reporting/crashrpt/StdAfx.h
+@@ -19,7 +19,7 @@ be found in the Authors.txt file in the root of the source tree.
+ #define WINVER		0x0501
+ #define _WIN32_WINNT	0x0501
+ #define _WIN32_IE	0x0600
+-#define _RICHEDIT_VER	0x0200
++#define _RICHEDIT_VER	0x0300
+ 
+ #include <errno.h>
+ #include <atldef.h>
+@@ -54,12 +54,12 @@ namespace ATL
+ };
+ #endif // _WTL_SUPPORT_SDK_ATL3
+ 
+-#include <atlapp.h>
++#include <wtl/atlapp.h>
+ extern CAppModule _Module;
+ #include <atlwin.h>
+ // CString-related includes
+ #define _WTL_USE_CSTRING
+-#include <atlmisc.h>
++#include <wtl/atlmisc.h>
+ #include <new.h>
+ #include <map>
+ #include <set>
+diff --git a/reporting/crashsender/CMakeLists.txt b/reporting/crashsender/CMakeLists.txt
+index 9b444c5..aa4ab8a 100644
+--- a/reporting/crashsender/CMakeLists.txt
++++ b/reporting/crashsender/CMakeLists.txt
+@@ -22,27 +22,27 @@ fix_default_compiler_settings_()
+ # Add include dir
+ include_directories( ${CMAKE_SOURCE_DIR}/include 
+                             ${CMAKE_SOURCE_DIR}/reporting/CrashRpt
+-                            ${CMAKE_SOURCE_DIR}/thirdparty/wtl 
+-                            ${CMAKE_SOURCE_DIR}/thirdparty/zlib
++                            ${WTL_INCLUDE_DIR} 
+                             ${CMAKE_SOURCE_DIR}/thirdparty/minizip  
+-                            ${CMAKE_SOURCE_DIR}/thirdparty/jpeg 
+-                            ${CMAKE_SOURCE_DIR}/thirdparty/libpng 
+-                            ${CMAKE_SOURCE_DIR}/thirdparty/tinyxml
+-                            ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/include 
+-							${CMAKE_SOURCE_DIR}/thirdparty/libogg/include
+-							${CMAKE_SOURCE_DIR}/thirdparty/libtheora/include)
+-
+-if(NOT CMAKE_CL_64)
+-	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib )
+-else(NOT CMAKE_CL_64)
+-	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64 )
+-endif(NOT CMAKE_CL_64)
++                            ${ZLIB_INCLUDE_DIRS}
++                            ${JPEG_INCLUDE_DIR} 
++                            ${PNG_INCLUDE_DIRS} 
++                            ${TINYXML_INCLUDE_DIR}
++                            ${DBGHELP_INCLUDE_DIR} 
++							${OGG_INCLUDE_DIRS}
++							${THEORA_INCLUDE_DIR})
++
++#if(NOT CMAKE_CL_64)
++#	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib )
++#else(NOT CMAKE_CL_64)
++#	link_directories( ${CMAKE_SOURCE_DIR}/thirdparty/dbghelp/lib/amd64 )
++#endif(NOT CMAKE_CL_64)
+ 
+ # Add executable build target
+ add_executable(CrashSender WIN32 ${source_files} ${header_files})
+ 
+ # Add input link libraries
+-target_link_libraries(CrashSender zlib minizip libjpeg libpng tinyxml libogg libtheora WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib psapi.lib)
++target_link_libraries(CrashSender ZLIB::ZLIB minizip ${JPEG_LIBRARIES} PNG::PNG ${TINYXML_LIBRARY} Ogg::ogg ${THEORA_LIBRARY} WS2_32.lib Dnsapi.lib wininet.lib Rpcrt4.lib Gdi32.lib shell32.lib Comdlg32.lib version.lib psapi.lib)
+ 
+ # Add compiler flags (/MP for multi-processor compilation, /Os to favor small code)
+ set_target_properties(CrashRpt PROPERTIES COMPILE_FLAGS "/Os")
+@@ -52,4 +52,12 @@ set_target_properties(CrashRpt PROPERTIES COMPILE_FLAGS "/Os")
+ 
+ set_target_properties(CrashSender PROPERTIES 
+ 				DEBUG_POSTFIX ${CRASHRPT_VER}d
+-				RELEASE_POSTFIX ${CRASHRPT_VER} )
+\ No newline at end of file
++				RELEASE_POSTFIX ${CRASHRPT_VER} )
++
++install(TARGETS CrashSender 
++  RUNTIME DESTINATION tools/crashrpt
++)
++
++file(GLOB LANG_FILES "${CMAKE_SOURCE_DIR}/lang_files/crashrpt_lang_*.ini")
++install(FILES ${LANG_FILES} DESTINATION tools/crashrpt)
++install(FILES "${CMAKE_SOURCE_DIR}/lang_files/crashrpt_lang_EN.ini" DESTINATION tools/crashrpt RENAME crashrpt_lang.ini)
+diff --git a/reporting/crashsender/CrashSender.rc b/reporting/crashsender/CrashSender.rc
+index 0502962..e10e269 100644
+--- a/reporting/crashsender/CrashSender.rc
++++ b/reporting/crashsender/CrashSender.rc
+@@ -7,7 +7,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "atlres.h"
++#include "wtl/atlres.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+@@ -243,7 +243,7 @@ END
+ 
+ 2 TEXTINCLUDE 
+ BEGIN
+-    "#include ""atlres.h""\r\n"
++    "#include ""wtl/atlres.h""\r\n"
+     "\0"
+ END
+ 
+diff --git a/reporting/crashsender/ErrorReportSender.cpp b/reporting/crashsender/ErrorReportSender.cpp
+index ac9603c..64cf2b5 100644
+--- a/reporting/crashsender/ErrorReportSender.cpp
++++ b/reporting/crashsender/ErrorReportSender.cpp
+@@ -722,9 +722,9 @@ BOOL CErrorReportSender::CreateMiniDump()
+         CompiledApiVer.Reserved = 0;
+         LPAPI_VERSION pActualApiVer = lpImagehlpApiVersionEx(&CompiledApiVer);    
+         pActualApiVer;
+-        ATLASSERT(CompiledApiVer.MajorVersion==pActualApiVer->MajorVersion);
+-        ATLASSERT(CompiledApiVer.MinorVersion==pActualApiVer->MinorVersion);
+-        ATLASSERT(CompiledApiVer.Revision==pActualApiVer->Revision);    
++        //ATLASSERT(CompiledApiVer.MajorVersion==pActualApiVer->MajorVersion);
++        //ATLASSERT(CompiledApiVer.MinorVersion==pActualApiVer->MinorVersion);
++        //ATLASSERT(CompiledApiVer.Revision==pActualApiVer->Revision);    
+     }
+ 
+     // Write minidump to the file
+@@ -1086,7 +1086,7 @@ BOOL CErrorReportSender::CreateCrashDescriptionXML(CErrorReportInfo& eri)
+         goto cleanup;
+     }
+ 
+-    doc.useMicrosoftBOM = true;
++    //doc.useMicrosoftBOM = true;
+     bool bSave = doc.SaveFile(f); 
+     if(!bSave)
+     {
+diff --git a/reporting/crashsender/FilePreviewCtrl.cpp b/reporting/crashsender/FilePreviewCtrl.cpp
+index e71aafc..5650291 100644
+--- a/reporting/crashsender/FilePreviewCtrl.cpp
++++ b/reporting/crashsender/FilePreviewCtrl.cpp
+@@ -365,7 +365,7 @@ BOOL CImage::LoadBitmapFromPNGFile(LPTSTR szFileName)
+     if (!png_ptr)
+         goto cleanup;
+ 
+-    if (setjmp(png_ptr->jmpbuf)) 
++    if (setjmp(png_jmpbuf(png_ptr)))
+         goto cleanup;
+ 
+     info_ptr = png_create_info_struct(png_ptr);
+@@ -389,7 +389,7 @@ BOOL CImage::LoadBitmapFromPNGFile(LPTSTR szFileName)
+     width = png_get_image_width(png_ptr, info_ptr);
+     height = png_get_image_height(png_ptr, info_ptr);
+ 
+-    if(info_ptr->channels==3)
++    if (png_get_channels(png_ptr, info_ptr) == 3)
+     {
+         png_set_strip_16(png_ptr);
+         png_set_packing(png_ptr); 
+@@ -408,14 +408,14 @@ BOOL CImage::LoadBitmapFromPNGFile(LPTSTR szFileName)
+     pBMI = (BITMAPINFO*)new BYTE[sizeof(BITMAPINFO)+256*4];
+     memset(pBMI, 0, sizeof(BITMAPINFO)+256*4);  
+     pBMI->bmiHeader.biSize = sizeof(BITMAPINFO);
+-    pBMI->bmiHeader.biBitCount = 8*info_ptr->channels;
++    pBMI->bmiHeader.biBitCount = 8 * png_get_channels(png_ptr, info_ptr);
+     pBMI->bmiHeader.biWidth = width;
+     pBMI->bmiHeader.biHeight = height;
+     pBMI->bmiHeader.biPlanes = 1;
+     pBMI->bmiHeader.biCompression = BI_RGB;
+     pBMI->bmiHeader.biSizeImage = rowbytes*height;
+ 
+-    if( info_ptr->channels == 1 )
++    if (png_get_channels(png_ptr, info_ptr) == 1)
+     {
+         RGBQUAD* palette = pBMI->bmiColors;
+ 
+@@ -431,7 +431,7 @@ BOOL CImage::LoadBitmapFromPNGFile(LPTSTR szFileName)
+ 
+     for(y=height-1; y>=0; y--)
+     {
+-        png_read_rows(png_ptr, &row, png_bytepp_NULL, 1); 
++        png_read_rows(png_ptr, &row, NULL, 1);
+ 
+         {
+             CAutoLock lock(&m_csLock);
+diff --git a/reporting/crashsender/ScreenCap.cpp b/reporting/crashsender/ScreenCap.cpp
+index c183c19..8f5643d 100644
+--- a/reporting/crashsender/ScreenCap.cpp
++++ b/reporting/crashsender/ScreenCap.cpp
+@@ -11,6 +11,7 @@ be found in the Authors.txt file in the root of the source tree.
+ #include "stdafx.h"
+ #include "ScreenCap.h"
+ #include "Utility.h"
++#include "zlib.h"
+ 
+ // Disable warning C4611: interaction between '_setjmp' and C++ object destruction is non-portable
+ #pragma warning(disable:4611)
+diff --git a/reporting/crashsender/stdafx.h b/reporting/crashsender/stdafx.h
+index f087ff4..4494d3a 100644
+--- a/reporting/crashsender/stdafx.h
++++ b/reporting/crashsender/stdafx.h
+@@ -19,7 +19,7 @@ be found in the Authors.txt file in the root of the source tree.
+ #define WINVER		0x0501
+ #define _WIN32_WINNT	0x0501
+ #define _WIN32_IE	0x0600
+-#define _RICHEDIT_VER	0x0200
++#define _RICHEDIT_VER	0x0300
+ 
+ typedef __int64 off_t, _off_t;
+ #define _OFF_T_DEFINED
+@@ -61,19 +61,19 @@ namespace ATL
+ };
+ #endif // _WTL_SUPPORT_SDK_ATL3
+ 
+-#include <atlapp.h>
++#include <wtl/atlapp.h>
+ 
+ extern CAppModule _Module;
+ 
+ #include <atlwin.h>
+ 
+-#include <atlframe.h>
+-#include <atlctrls.h>
+-#include <atldlgs.h>
+-#include <atlctrlx.h>
++#include <wtl/atlframe.h>
++#include <wtl/atlctrls.h>
++#include <wtl/atldlgs.h>
++#include <wtl/atlctrlx.h>
+ 
+ #define _WTL_USE_CSTRING
+-#include <atlmisc.h>
++#include <wtl/atlmisc.h>
+ 
+ #include <string>
+ #include <vector>
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index f7bfede..9358bef 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -32,7 +32,7 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /DEBUG")
+ # Add include dir
+ include_directories( ${CMAKE_SOURCE_DIR}/include 
+                      ${CMAKE_SOURCE_DIR}/reporting/CrashRpt
+-					 ${CMAKE_SOURCE_DIR}/thirdparty/wtl )
++					 ${WTL_INCLUDE_DIR} )
+ 
+ # Add executable build target
+ add_executable(Tests ${source_files} ${header_files})
+@@ -42,3 +42,10 @@ target_link_libraries(Tests CrashRpt CrashRptProbe)
+ 
+ set_target_properties(Tests PROPERTIES DEBUG_POSTFIX d )
+ #set_target_properties(Tests PROPERTIES COMPILE_FLAGS "/Zi" LINK_FLAGS "/DEBUG")
++
++install(TARGETS Tests 
++  RUNTIME DESTINATION tools/crashrpt
++)
++
++install(FILES "${CMAKE_SOURCE_DIR}/demos/WTLDemo/dummy.ini" DESTINATION tools/crashrpt)
++install(FILES "${CMAKE_SOURCE_DIR}/demos/WTLDemo/dummy.log" DESTINATION tools/crashrpt)
+diff --git a/tests/stdafx.h b/tests/stdafx.h
+index f12675b..0ec2117 100644
+--- a/tests/stdafx.h
++++ b/tests/stdafx.h
+@@ -19,7 +19,7 @@ be found in the Authors.txt file in the root of the source tree.
+ #define WINVER		0x0501
+ #define _WIN32_WINNT	0x0501
+ #define _WIN32_IE	0x0600
+-#define _RICHEDIT_VER	0x0200
++#define _RICHEDIT_VER	0x0300
+ 
+ #include <errno.h>
+ #include <winsock2.h>
+@@ -58,15 +58,15 @@ namespace ATL
+ };
+ #endif // _WTL_SUPPORT_SDK_ATL3
+ 
+-#include <atlapp.h>
++#include <wtl/atlapp.h>
+ 
+ extern CAppModule _Module;
+ 
+ #include <atlwin.h>
+ 
+-#include <atlframe.h>
+-#include <atlctrls.h>
+-#include <atldlgs.h>
++#include <wtl/atlframe.h>
++#include <wtl/atlctrls.h>
++#include <wtl/atldlgs.h>
+ #include <set>
+ #include <map>
+ #include <string>
+@@ -75,7 +75,7 @@ extern CAppModule _Module;
+ #include <conio.h>
+ 
+ #define _WTL_USE_CSTRING
+-#include <atlmisc.h>
++#include <wtl/atlmisc.h>
+ 
+ #if _MSC_VER<1400
+ #define _TCSCPY_S(strDestination, numberOfElements, strSource) _tcscpy(strDestination, strSource)
+diff --git a/thirdparty/libpng/CMakeLists.txt b/thirdparty/libpng/CMakeLists.txt
+index b358c4e..e0f7a33 100644
+--- a/thirdparty/libpng/CMakeLists.txt
++++ b/thirdparty/libpng/CMakeLists.txt
+@@ -7,7 +7,7 @@ aux_source_directory( . source_files )
+ add_definitions(-D_UNICODE -D_CRT_SECURE_NO_DEPRECATE /wd4244 /wd4267)
+ 
+ # Add include dir
+-include_directories( ${CMAKE_SOURCE_DIR}/thirdparty/zlib )
++include_directories( ${ZLIB_INCLUDE_DIRS} )
+ 
+ fix_default_compiler_settings_()
+ 
+@@ -15,6 +15,6 @@ fix_default_compiler_settings_()
+ add_library(libpng STATIC ${source_files})
+ 
+ # Add linker input libraries
+-target_link_libraries(libpng zlib)
++target_link_libraries(libpng ZLIB::ZLIB)
+ 
+ set_target_properties(libpng PROPERTIES DEBUG_POSTFIX d )
+\ No newline at end of file
+diff --git a/thirdparty/libtheora/CMakeLists.txt b/thirdparty/libtheora/CMakeLists.txt
+index 896fb47..f3cf5eb 100644
+--- a/thirdparty/libtheora/CMakeLists.txt
++++ b/thirdparty/libtheora/CMakeLists.txt
+@@ -8,7 +8,7 @@ aux_source_directory( ./lib/x86_vc x86_source_files )
+ add_definitions(-D_UNICODE -D_CRT_SECURE_NO_DEPRECATE /wd4244 /wd4700 /wd4214 /wd4554 /wd4018 /wd4100 /wd4132 /wd4389 /wd4127 /wd4701 /wd4245 /wd4267 /wd4334)
+ 
+ # Add include dir
+-include_directories(        ${CMAKE_SOURCE_DIR}/thirdparty/libogg/include
++include_directories(        ${OGG_INCLUDE_DIRS}
+ 							${CMAKE_SOURCE_DIR}/thirdparty/libtheora/include)
+ 
+ fix_default_compiler_settings_()
+diff --git a/thirdparty/minizip/CMakeLists.txt b/thirdparty/minizip/CMakeLists.txt
+index 5f4d0af..2b015c9 100644
+--- a/thirdparty/minizip/CMakeLists.txt
++++ b/thirdparty/minizip/CMakeLists.txt
+@@ -7,7 +7,7 @@ aux_source_directory( . source_files )
+ add_definitions(-D_UNICODE -D_CRT_SECURE_NO_DEPRECATE /wd4127 /wd4131 /wd4100 /wd4189 /wd4244)
+ 
+ # Add include dir
+-include_directories( ${CMAKE_SOURCE_DIR}/thirdparty/zlib )
++include_directories( ${ZLIB_INCLUDE_DIRS} )
+ 
+ fix_default_compiler_settings_()
+ 
+@@ -15,6 +15,6 @@ fix_default_compiler_settings_()
+ add_library(minizip STATIC ${source_files})
+ 
+ # Add linker input libraries
+-target_link_libraries(minizip zlib)
++target_link_libraries(minizip ZLIB::ZLIB)
+ 
+ set_target_properties(minizip PROPERTIES DEBUG_POSTFIX d )
+\ No newline at end of file

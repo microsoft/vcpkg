@@ -1,0 +1,26 @@
+diff --git a/include/xqilla/ast/XQDocumentOrder.hpp b/include/xqilla/ast/XQDocumentOrder.hpp
+index 81189e6..c22280a 100644
+--- a/include/xqilla/ast/XQDocumentOrder.hpp
++++ b/include/xqilla/ast/XQDocumentOrder.hpp
+@@ -68,7 +68,7 @@ private:
+   public:
+     uniqueLessThanCompareFn(const DynamicContext *context)
+       : context_(context) {}
+-    bool operator()(const Node::Ptr &first, const Node::Ptr &second)
++    bool operator()(const Node::Ptr &first, const Node::Ptr &second) const
+     {
+       return first->uniqueLessThan(second, context_);
+     }
+diff --git a/src/lexer/XQLexer.cpp b/src/lexer/XQLexer.cpp
+index 69c923f..aed0465 100644
+--- a/src/lexer/XQLexer.cpp
++++ b/src/lexer/XQLexer.cpp
+@@ -235,7 +235,7 @@ static void yy_flex_free YY_PROTO(( void * ));
+ #define YY_SKIP_YYWRAP
+ #define yytext_ptr yytext
+ 
+-#include <FlexLexer.h>
++#include "FlexLexer.h"
+ int yyFlexLexer::yylex()
+ 	{
+ 	LexerError( "yyFlexLexer::yylex invoked but %option yyclass used" );

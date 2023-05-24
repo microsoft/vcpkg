@@ -1,0 +1,88 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2def354..674ff2d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -66,6 +66,12 @@ endif()
+ ########################################################################
+ # Find build dependencies
+ ########################################################################
++if(MSVC)
++find_package(pthreads)
++find_package(libusb)
++include_directories(${PThreads4W_INCLUDE_DIR})
++include_directories(${LIBUSB_INCLUDE_DIRS})
++else()
+ if(WIN32 AND NOT MINGW)
+     set(THREADS_USE_PTHREADS_WIN32 true)
+ endif()
+@@ -79,6 +85,7 @@ endif()
+ if(NOT THREADS_FOUND)
+     message(FATAL_ERROR "pthreads(-win32) required to compile rtl-sdr")
+ endif()
++endif()
+
+ ########################################################################
+ # Create uninstall target
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 33faee7..fda4612 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -20,7 +20,11 @@
+ ########################################################################
+ add_library(rtlsdr SHARED librtlsdr.c
+   tuner_e4k.c tuner_fc0012.c tuner_fc0013.c tuner_fc2580.c tuner_r82xx.c)
++if(MSVC)
++target_link_libraries(rtlsdr ${LIBUSB_LIBRARIES})
++else()
+ target_link_libraries(rtlsdr PkgConfig::LIBUSB)
++endif()
+ target_include_directories(rtlsdr PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+   $<INSTALL_INTERFACE:include>  # <prefix>/include
+@@ -36,7 +40,11 @@ generate_export_header(rtlsdr)
+ ########################################################################
+ add_library(rtlsdr_static STATIC librtlsdr.c
+   tuner_e4k.c tuner_fc0012.c tuner_fc0013.c tuner_fc2580.c tuner_r82xx.c)
++if(MSVC)
++target_link_libraries(rtlsdr_static ${LIBUSB_LIBRARIES})
++else()
+ target_link_libraries(rtlsdr_static PkgConfig::LIBUSB)
++endif()
+ target_include_directories(rtlsdr_static PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+   $<INSTALL_INTERFACE:include>  # <prefix>/include
+@@ -58,8 +66,8 @@ IF(MSVC)
+         ${CMAKE_CURRENT_SOURCE_DIR}/rtlsdr.rc.in
+         ${CMAKE_CURRENT_BINARY_DIR}/rtlsdr.rc
+     @ONLY)
+-  target_sources(rtlsdr ${CMAKE_CURRENT_BINARY_DIR}/rtlsdr.rc)
+-  target_sources(rtlsdr_static ${CMAKE_CURRENT_BINARY_DIR}/rtlsdr.rc)
++  target_sources(rtlsdr PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/rtlsdr.rc)
++  target_sources(rtlsdr_static PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/rtlsdr.rc)
+ ENDIF(MSVC)
+
+ ########################################################################
+@@ -77,6 +85,11 @@ add_library(libgetopt_static STATIC
+ target_link_libraries(convenience_static
+     rtlsdr
+ )
++if(MSVC)
++target_link_libraries(convenience_static
++    ${PThreads4W_LIBRARY}
++)
++endif()
+ endif()
+
+ ########################################################################
+diff --git a/src/rtl_tcp.c b/src/rtl_tcp.c
+index 562198f..b4bfa51 100644
+--- a/src/rtl_tcp.c
++++ b/src/rtl_tcp.c
+@@ -35,6 +35,7 @@
+ #include <fcntl.h>
+ #else
+ #include <winsock2.h>
++#include <ws2tcpip.h>
+ #include "getopt/getopt.h"
+ #endif
+

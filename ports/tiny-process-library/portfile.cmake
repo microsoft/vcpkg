@@ -1,39 +1,35 @@
-include(vcpkg_common_functions)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eidheim/tiny-process-library
-    REF 273270d0f9d0cf4a8282fadd589060a7b0eab425
-    SHA512 f99e586ee6fa9b7c0a3633b59e0e099becba48e2ef375268eeecd9099a233e3b528ba373edc74983d49934ff10f99884fdeb594ff546054fc91d1341d0e86c0a
+    REF v2.0.4
+    SHA512 bbdd268361159b7c64cb60f29afa780ee5e57fa696f0683a55cb9824ec5985c8229a9a8217d2b9ecdd194b9a3acbbd75a1a821392361fbc85b1f6841f40c95db
     HEAD_REF master
     PATCHES
-        fix-cmake.patch
+        disable-examples.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(
-    CONFIG_PATH lib/cmake/unofficial-${PORT}
-    TARGET_PATH share/unofficial-${PORT}
+vcpkg_cmake_config_fixup(
+    CONFIG_PATH lib/cmake/tiny-process-library
 )
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

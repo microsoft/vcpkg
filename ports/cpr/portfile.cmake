@@ -1,37 +1,34 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO whoshuu/cpr
-    REF 1.3.0
-    SHA512 fd08f8a592a5e1fb8dc93158a4850b81575983c08527fb415f65bd9284f93c804c8680d16c548744583cd26b9353a7d4838269cfc59ccb6003da8941f620c273
+    REPO libcpr/cpr
+    REF 0445800cd2cace404ac37eb3e78ec5d1431a4f30 #1.10.2
+    SHA512 77723343b2ce89a10b8622cf54127edd6639412e3d457caed31b4fa1d3935d79846b4be695c327001fc2228313591e320c9080dbf8c09e3b69265f81641b9973
     HEAD_REF master
     PATCHES
         001-cpr-config.patch
-        002_cpr_fixcase.patch
+        disable_werror.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        ssl CPR_ENABLE_SSL
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
-        -DBUILD_CPR_TESTS=OFF
-        -DUSE_SYSTEM_CURL=ON
+        -DCPR_BUILD_TESTS=OFF
+        -DCPR_FORCE_USE_SYSTEM_CURL=ON
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cpr)
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/cprConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/lib/cmake/cpr)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cpr)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/cpr)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cpr/LICENSE ${CURRENT_PACKAGES_DIR}/share/cpr/copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

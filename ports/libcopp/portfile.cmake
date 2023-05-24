@@ -1,31 +1,35 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO owt5008137/libcopp
-    REF 1.2.1
-    SHA512 bd3525b7cafb261b395ab767d30654ee7c2920f2b8312ed7887b004e764b8dd8dece5f34a5f7724d16c4a56a281ea9eb3107eff54c947160fbf9f12b76b34485
+    REPO owent/libcopp
+    REF "v${VERSION}"
+    SHA512 aa594e1cab9e8489feb864539834a66f700be51000e551840456cbb27971894b3481b300be88a8273f7efc189e3003ecc680eabb3ae8131a90daa2ba90447973
     HEAD_REF v2
+    PATCHES fix-x86-windows.patch
 )
 
-# Use libcopp's own build process, skipping examples and tests
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+# atframework/cmake-toolset needed as a submodule for configure cmake
+vcpkg_from_github(
+  OUT_SOURCE_PATH ATFRAMEWORK_CMAKE_TOOLSET
+  REPO atframework/cmake-toolset
+  REF v1.10.1
+  SHA512 7ea18e41fabd35af5fd72fb954a1c60480ba85a9ff820104785d263e719751ba699eeca801ce5155041d8bf51fb2c37ea53f6ed404e4a4e7e810f1eb9bacead4
+  HEAD_REF main
+  )
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    # PREFER_NINJA # Disabled because Ninja does not invoke masm correctly for this project
+    OPTIONS "-DATFRAMEWORK_CMAKE_TOOLSET_DIR=${ATFRAMEWORK_CMAKE_TOOLSET}"
 )
-vcpkg_install_cmake()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/libcopp)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp)
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp)
-file(COPY ${SOURCE_PATH}/BOOST_LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp)
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcopp/copyright)
+vcpkg_cmake_install()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/BOOST_LICENSE_1_0.txt" "${SOURCE_PATH}/LICENSE")
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libcopp)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/libcopp/libcopp-config.cmake" "set(\${CMAKE_FIND_PACKAGE_NAME}_SOURCE_DIR \"${SOURCE_PATH}\")" "")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

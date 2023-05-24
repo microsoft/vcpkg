@@ -1,0 +1,15 @@
+{
+  "name": "avisynthplus",
+  "version": "3.7.2",
+  "port-version": 1,
+  "description": "An improved version of the AviSynth frameserver, with improved features and developer friendliness",
+  "homepage": "https://avs-plus.net/",
+  "license": "GPL-2.0",
+  "supports": "!arm & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,4 +1,0 @@
-Source: libzippp
-Version: 2019-07-22
-Description: Simple basic C++ wrapper around the libzip library. It is meant to be a portable and easy-to-use library for ZIP handling
-Build-Depends: zlib, libzip[bzip2]

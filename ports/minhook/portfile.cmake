@@ -1,9 +1,3 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
-
-include(vcpkg_common_functions)
-
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(BUILD_ARCH "Win32")
     set(OUTPUT_DIR "Win32")
@@ -30,20 +24,17 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "${CMAKE_SUPPORT_PATCH}"
-        install-destination.patch
+        fix-usage.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/minhook)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(COPY ${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/minhook-targets-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

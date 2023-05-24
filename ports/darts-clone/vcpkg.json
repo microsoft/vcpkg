@@ -1,0 +1,16 @@
+{
+  "name": "darts-clone",
+  "version-string": "1767ab87cffe",
+  "port-version": 3,
+  "description": "A static double-array trie structure",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

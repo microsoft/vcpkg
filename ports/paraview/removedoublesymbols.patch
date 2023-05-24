@@ -1,0 +1,89 @@
+diff --git a/Library/VisItLib/visit_vtk/lightweight/vtkUnstructuredGridFacelistFilter.C b/Library/VisItLib/visit_vtk/lightweight/vtkUnstructuredGridFacelistFilter.C
+index db64a0534..0d987d8e7 100644
+--- a/Library/VisItLib/visit_vtk/lightweight/vtkUnstructuredGridFacelistFilter.C
++++ b/Library/VisItLib/visit_vtk/lightweight/vtkUnstructuredGridFacelistFilter.C
+@@ -69,7 +69,10 @@
+ //
+ // Forward declare some of types used to hash faces.
+ //
+-class Quad;
++namespace hidden {
++    class Quad;
++}
++using hidden::Quad;
+ class QuadMemoryManager;
+ class Tri;
+ class TriMemoryManager;
+@@ -322,43 +325,43 @@ class HashEntryList
+ //  Creation:   October 21, 2002
+ //
+ // ****************************************************************************
++namespace hidden {
++    class Quad
++    {
++        friend class   Tri;
+ 
+-class Quad
+-{
+-    friend class   Tri;
+-
+-  public:
+-                   Quad() { ordering_case = 255; };
+-
+-    vtkIdType      AssignNodes(const vtkIdType *);
+-    bool           Equals(Quad *);
+-    bool           Equals(Tri *);
+-    void           AddInRemainingTriangle(Tri *, int);
+-    inline void    ReRegisterMemory(void)
+-                         {
+-                             hashEntryList->qmm.ReRegisterQuad(this);
+-                         }
++      public:
++                       Quad() { ordering_case = 255; };
+ 
+-    inline void    SetOriginalZone(const int &oz) { orig_zone = oz; };
+-    inline int     GetOriginalZone(void) { return orig_zone; };
++        vtkIdType      AssignNodes(const vtkIdType *);
++        bool           Equals(Quad *);
++        bool           Equals(Tri *);
++        void           AddInRemainingTriangle(Tri *, int);
++        inline void    ReRegisterMemory(void)
++                             {
++                                 hashEntryList->qmm.ReRegisterQuad(this);
++                             }
+ 
+-    void           OutputCell(int,vtkPolyData *, vtkCellData *, vtkCellData *);
++        inline void    SetOriginalZone(const int &oz) { orig_zone = oz; };
++        inline int     GetOriginalZone(void) { return orig_zone; };
+ 
+-    inline void    RegisterHashEntryList(HashEntryList *hel)
+-                          { hashEntryList = hel; };
+-    inline void    SetNumberOfPoints(int np) { npts = np; };
++        void           OutputCell(int,vtkPolyData *, vtkCellData *, vtkCellData *);
+ 
+-  protected:
+-    unsigned char  ordering_case;
+-    vtkIdType      nodes[3];
+-    vtkIdType      orig_zone;
++        inline void    RegisterHashEntryList(HashEntryList *hel)
++                              { hashEntryList = hel; };
++        inline void    SetNumberOfPoints(int np) { npts = np; };
+ 
+-    HashEntryList *hashEntryList;
+-    int            npts;
++      protected:
++        unsigned char  ordering_case;
++        vtkIdType      nodes[3];
++        vtkIdType      orig_zone;
+ 
+-    void           AddInRemainingTriangle(int, int);
+-};
++        HashEntryList *hashEntryList;
++        int            npts;
+ 
++        void           AddInRemainingTriangle(int, int);
++    };
++}
+ //
+ // We will be re-ordering the nodes into numerical order.  This enumerated
+ // type will allow the ordering to be preserved.

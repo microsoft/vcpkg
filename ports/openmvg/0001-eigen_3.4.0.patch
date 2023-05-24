@@ -1,0 +1,13 @@
+diff --git a/src/openMVG/multiview/solver_fundamental_kernel.cpp b/src/openMVG/multiview/solver_fundamental_kernel.cpp
+index 2ffd45a..bbf74b4 100644
+--- a/src/openMVG/multiview/solver_fundamental_kernel.cpp
++++ b/src/openMVG/multiview/solver_fundamental_kernel.cpp
+@@ -110,7 +110,7 @@ void EightPointSolver::Solve
+                          x2.colwise().homogeneous(),
+                          &epipolar_constraint);
+   // Find the F matrice in the nullspace of epipolar_constraint.
+-  Eigen::SelfAdjointEigenSolver<Mat9> solver
++  Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 9, 9>> solver
+     (epipolar_constraint.transpose() * epipolar_constraint);
+   f = solver.eigenvectors().leftCols<1>();
+ 

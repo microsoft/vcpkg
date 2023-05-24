@@ -1,0 +1,52 @@
+{
+  "name": "sentry-native",
+  "version": "0.6.2",
+  "description": "Sentry SDK for C, C++ and native applications.",
+  "homepage": "https://sentry.io/",
+  "license": "MIT",
+  "supports": "osx | (!arm & !uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "backend",
+    "transport"
+  ],
+  "features": {
+    "backend": {
+      "description": [
+        "Enables the platform-specific backend.",
+        "This feature does nothing for some platforms.",
+        "Cf. https://github.com/getsentry/sentry-native#compile-time-options"
+      ],
+      "dependencies": [
+        {
+          "$comment": "zlib is used by the crashpad backend.",
+          "name": "zlib",
+          "platform": "!android & !ios"
+        }
+      ]
+    },
+    "transport": {
+      "description": [
+        "Enables the platform-specific network transport.",
+        "This feature does nothing for some platforms.",
+        "Cf. https://github.com/getsentry/sentry-native#compile-time-options"
+      ],
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "platform": "!windows"
+        }
+      ]
+    }
+  }
+}

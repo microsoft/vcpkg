@@ -1,47 +1,71 @@
-include(vcpkg_common_functions)
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND OPTIONS
+            -Dmmx=disabled
+            -Dsse2=disabled
+            -Dssse3=disabled)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(VCPKG_CXX_FLAGS "/arch:SSE2 ${VCPKG_CXX_FLAGS}") # TODO: /arch: flag requires compiler check. needs to be MSVC
+    set(VCPKG_C_FLAGS "/arch:SSE2 ${VCPKG_C_FLAGS}")
+    list(APPEND OPTIONS
+            -Dmmx=enabled
+            -Dsse2=enabled
+            -Dssse3=enabled)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    #x64 in general has all those intrinsics. (except for UWP for some reason)
+    list(APPEND OPTIONS
+            -Dmmx=enabled
+            -Dsse2=enabled
+            -Dssse3=enabled)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+    list(APPEND OPTIONS
+            #-Darm-simd=enabled does not work with arm64-windows
+            -Dmmx=disabled
+            -Dsse2=disabled
+            -Dssse3=disabled)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips")
+    list(APPEND OPTIONS
+            -Dmmx=disabled
+            -Dsse2=disabled
+            -Dssse3=disabled)
+endif()
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+    list(APPEND OPTIONS
+                -Da64-neon=disabled
+                -Darm-simd=disabled
+                -Dneon=disabled
+                )
+endif()
 
-set(PIXMAN_VERSION 0.38.4)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.cairographics.org/releases/pixman-${PIXMAN_VERSION}.tar.gz"
-    FILENAME "pixman-${PIXMAN_VERSION}.tar.gz"
-    SHA512 b66dc23c0bc7327cb90085cbc14ccf96ad58001a927f23af24e0258ca13f32d4255535862f1efcf00e9e723410aa9f51edf26fb01c8cde49379d1225acf7b5af
-)
-vcpkg_extract_source_archive_ex(
+if(VCPKG_TARGET_IS_OSX)
+    # https://github.com/microsoft/vcpkg/issues/29168
+    list(APPEND OPTIONS -Da64-neon=disabled)
+endif()
+
+vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${PIXMAN_VERSION}
+    GITLAB_URL https://gitlab.freedesktop.org
+    REPO pixman/pixman
+    REF  37216a32839f59e8dcaa4c3951b3fcfc3f07852c # 0.42.2
+    SHA512 b010b2c698ebc95f8a8566c915ccfb81a82c08f0ccda8b11ddff4818eae4b51b103021d5bae9f3d3bd20bf494433f5fcc6b76188226fe336919b0b347cdcb828
+    PATCHES
+        no-host-cpu-checks.patch
+        fix_clang-cl.patch
+        missing_intrin_include.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/pixman)
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/pixman
-    PREFER_NINJA
+# Meson install wrongly pkgconfig file!
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${OPTIONS}
+        -Dlibpng=enabled
+        -Dtests=disabled
 )
+vcpkg_install_meson()
+vcpkg_fixup_pkgconfig()
 
-vcpkg_install_cmake()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-pixman TARGET_PATH share/unofficial-pixman)
-
-# Copy the appropriate header files.
-file(COPY
-    "${SOURCE_PATH}/pixman/pixman.h"
-    "${SOURCE_PATH}/pixman/pixman-accessor.h"
-    "${SOURCE_PATH}/pixman/pixman-combine32.h"
-    "${SOURCE_PATH}/pixman/pixman-compiler.h"
-    "${SOURCE_PATH}/pixman/pixman-edge-imp.h"
-    "${SOURCE_PATH}/pixman/pixman-inlines.h"
-    "${SOURCE_PATH}/pixman/pixman-private.h"
-    "${SOURCE_PATH}/pixman/pixman-version.h"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
-
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pixman)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pixman/COPYING ${CURRENT_PACKAGES_DIR}/share/pixman/copyright)
-
-vcpkg_copy_pdbs()
-
-vcpkg_test_cmake(PACKAGE_NAME unofficial-pixman)
+# # Handle copyright
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

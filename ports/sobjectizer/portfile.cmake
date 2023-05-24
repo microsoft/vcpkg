@@ -1,37 +1,25 @@
-include(vcpkg_common_functions)
-
-set(VERSION 5.6.1)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://sourceforge.net/projects/sobjectizer/files/sobjectizer/SObjectizer%20Core%20v.5.6/so-${VERSION}.tar.bz2"
-    FILENAME "so-${VERSION}.tar.bz2"
-    SHA512 f043a2d9025fe98d407023291100a79c2fbbd9d61e7c24602311e7383607b0fc1ec6108bfaea5f98021ebb942b3494f0380a2357bcaed01f92ede5dba0ab9cf0
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO stiffstream/sobjectizer
+    REF df7c3ee91b29079ae4e3525c34ad83a0d4e83d77 # v.5.7.4.2
+    SHA512 4caee3a95723c9564fbd5430492cc82513885ca17003e18b31378fc347ed8ad1b0859bd1693ecaaf514e8f82b86c07d1913a86f007250e2f28a77adfa03918b1
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(SOBJECTIZER_BUILD_STATIC ON)
-    set(SOBJECTIZER_BUILD_SHARED OFF)
-else()
-    set(SOBJECTIZER_BUILD_STATIC OFF)
-    set(SOBJECTIZER_BUILD_SHARED ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SOBJECTIZER_BUILD_STATIC )
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOBJECTIZER_BUILD_SHARED)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/dev
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/dev"
     OPTIONS
         -DSOBJECTIZER_BUILD_STATIC=${SOBJECTIZER_BUILD_STATIC}
         -DSOBJECTIZER_BUILD_SHARED=${SOBJECTIZER_BUILD_SHARED}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sobjectizer)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sobjectizer)
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+

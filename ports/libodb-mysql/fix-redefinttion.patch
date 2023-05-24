@@ -1,0 +1,32 @@
+diff --git a/odb/mysql/mysql-types.hxx b/odb/mysql/mysql-types.hxx
+index 5396791..32a2a03 100644
+--- a/odb/mysql/mysql-types.hxx
++++ b/odb/mysql/mysql-types.hxx
+@@ -7,13 +7,24 @@
+ 
+ #include <odb/mysql/details/config.hxx>
+ 
++#include <odb/mysql/version.hxx>
++
+ typedef bool my_bool;
++
++#if !defined(LIBODB_MYSQL_MARIADB) && MYSQL_VERSION_ID >= 80011
++struct MYSQL_BIND;
++#else
+ typedef struct st_mysql_bind MYSQL_BIND;
++#endif
+ 
+-#ifdef LIBODB_MYSQL_INCLUDE_SHORT
+-#  include <mysql_time.h>
++#ifdef LIBODB_MYSQL_MARIADB
++#  include <mysql/mysql.h>
+ #else
+-#  include <mysql/mysql_time.h>
++#  ifdef LIBODB_MYSQL_INCLUDE_SHORT
++#    include <mysql_time.h>
++#  else
++#    include <mysql/mysql_time.h>
++#  endif
+ #endif
+ 
+ #endif // ODB_MYSQL_MYSQL_TYPES_HXX

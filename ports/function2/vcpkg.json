@@ -1,0 +1,17 @@
+{
+  "name": "function2",
+  "version-semver": "4.2.2",
+  "description": "Improved drop-in replacement to std::function",
+  "homepage": "https://github.com/Naios/function2",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

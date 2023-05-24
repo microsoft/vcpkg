@@ -1,37 +1,30 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pybind/pybind11
-    REF e43e1cc01ae6d4e4e5ba10557a057d7f3d5ece0d
-    SHA512 546a0501c420cbbb21fb458192bae6c8d34bdd4bdbfe47fed22869e09429d6404b4e399e30c36c6d658bf8002339d051efde33685b03a00797b9cfe476cfb98e
+    REF "v${VERSION}"
+    SHA512 3894400f04cd08e2dbb14b3d696339f0364434f1d6f8bb057338ac88157ec7491b2df1e1e46ebd5abccdcd5775c5e9238de6404f0db87f64f5a1802db3a5b18c
     HEAD_REF master
 )
 
-vcpkg_find_acquire_program(PYTHON3)
-
-get_filename_component(PYPATH ${PYTHON3} PATH)
-set(ENV{PATH} "$ENV{PATH};${PYPATH}")
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPYBIND11_TEST=OFF
-        -DPYTHONLIBS_FOUND=ON
-        -DPYTHON_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include
-        -DPYTHON_MODULE_EXTENSION=.dll
+        -DPYBIND11_FINDPYTHON=ON
     OPTIONS_RELEASE
         -DPYTHON_IS_DEBUG=OFF
-        -DPYTHON_LIBRARIES=${CURRENT_INSTALLED_DIR}/lib/python36.lib
     OPTIONS_DEBUG
         -DPYTHON_IS_DEBUG=ON
-        -DPYTHON_LIBRARIES=${CURRENT_INSTALLED_DIR}/debug/lib/python36_d.lib
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/pybind11")
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/")
 
-# copy license
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pybind11/copyright)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pybind11/pybind11Tools.cmake" 
+                    [=[find_package(PythonLibsNew ${PYBIND11_PYTHON_VERSION} MODULE REQUIRED ${_pybind11_quiet})]=]
+                    [=[find_package(PythonLibs ${PYBIND11_PYTHON_VERSION} MODULE REQUIRED ${_pybind11_quiet})]=]) # CMake's PythonLibs works better with vcpkg 
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,4 +1,0 @@
-Source: woff2
-Version: 1.0.2
-Build-Depends: brotli
-Description: font compression reference code

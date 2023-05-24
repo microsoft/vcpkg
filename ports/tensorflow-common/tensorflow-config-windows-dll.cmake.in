@@ -1,0 +1,55 @@
+if(TARGET tensorflow@TF_LIB_SUFFIX@::tensorflow@TF_LIB_SUFFIX@)
+	return()
+endif()
+
+add_library(tensorflow@TF_LIB_SUFFIX@::tensorflow@TF_LIB_SUFFIX@ SHARED IMPORTED GLOBAL)
+
+# Compute the installation prefix from this tensorflow@TF_PORT_SUFFIX@-config.cmake file location.
+# CMAKE_CURRENT_LIST_DIR = [vcpkg_installed_dir]/[target_triplet]/share/tensorflow@TF_PORT_SUFFIX@
+get_filename_component(TENSORFLOW_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
+# TENSORFLOW_INSTALL_PREFIX = [vcpkg_installed_dir]/[target_triplet]/share
+get_filename_component(TENSORFLOW_INSTALL_PREFIX "${TENSORFLOW_INSTALL_PREFIX}" DIRECTORY)
+# TENSORFLOW_INSTALL_PREFIX = [vcpkg_installed_dir]/[target_triplet]
+
+target_include_directories(tensorflow@TF_LIB_SUFFIX@::tensorflow@TF_LIB_SUFFIX@
+	INTERFACE
+		@TF_INCLUDE_DIRS@
+)
+
+if(@TENSORFLOW_HAS_RELEASE@)
+	set_target_properties(tensorflow@TF_LIB_SUFFIX@::tensorflow@TF_LIB_SUFFIX@
+		PROPERTIES
+			IMPORTED_LOCATION "${TENSORFLOW_INSTALL_PREFIX}/bin/tensorflow@TF_LIB_SUFFIX@.dll"
+			IMPORTED_IMPLIB "${TENSORFLOW_INSTALL_PREFIX}/lib/tensorflow@TF_LIB_SUFFIX@.lib"
+	)
+
+	set_property(TARGET tensorflow@TF_LIB_SUFFIX@::tensorflow@TF_LIB_SUFFIX@
+		APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE
+	)
+	set_target_properties(tensorflow@TF_LIB_SUFFIX@::tensorflow@TF_LIB_SUFFIX@
+		PROPERTIES
+			IMPORTED_LOCATION_RELEASE "${TENSORFLOW_INSTALL_PREFIX}/bin/tensorflow@TF_LIB_SUFFIX@.dll"
+			IMPORTED_IMPLIB_RELEASE "${TENSORFLOW_INSTALL_PREFIX}/lib/tensorflow@TF_LIB_SUFFIX@.lib"
+	)
+endif()
+
+if(@TENSORFLOW_HAS_DEBUG@)
+	if(NOT @TENSORFLOW_HAS_RELEASE@)
+		set_target_properties(tensorflow@TF_LIB_SUFFIX@::tensorflow@TF_LIB_SUFFIX@
+			PROPERTIES
+				IMPORTED_LOCATION "${TENSORFLOW_INSTALL_PREFIX}/debug/bin/tensorflow@TF_LIB_SUFFIX@.dll"
+				IMPORTED_IMPLIB "${TENSORFLOW_INSTALL_PREFIX}/debug/lib/tensorflow@TF_LIB_SUFFIX@.lib"
+		)
+	endif()
+
+	set_property(TARGET tensorflow@TF_LIB_SUFFIX@::tensorflow@TF_LIB_SUFFIX@
+		APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG
+	)
+	set_target_properties(tensorflow@TF_LIB_SUFFIX@::tensorflow@TF_LIB_SUFFIX@
+		PROPERTIES
+			IMPORTED_LOCATION_DEBUG "${TENSORFLOW_INSTALL_PREFIX}/debug/bin/tensorflow@TF_LIB_SUFFIX@.dll"
+			IMPORTED_IMPLIB_DEBUG "${TENSORFLOW_INSTALL_PREFIX}/debug/lib/tensorflow@TF_LIB_SUFFIX@.lib"	
+	)
+endif()
+
+set(tensorflow@TF_LIB_SUFFIX@_FOUND TRUE)

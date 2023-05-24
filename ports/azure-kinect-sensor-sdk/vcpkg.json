@@ -1,0 +1,53 @@
+{
+  "name": "azure-kinect-sensor-sdk",
+  "version": "1.4.1",
+  "port-version": 5,
+  "description": "Azure Kinect SDK is a cross platform (Linux and Windows) user mode SDK to read data from your Azure Kinect device.",
+  "homepage": "https://github.com/microsoft/Azure-Kinect-Sensor-SDK",
+  "supports": "linux | windows",
+  "dependencies": [
+    "azure-c-shared-utility",
+    "cjson",
+    "ebml",
+    "glfw3",
+    "gtest",
+    "imgui",
+    "libjpeg-turbo",
+    "libsoundio",
+    "libusb",
+    {
+      "name": "libuvc",
+      "platform": "linux"
+    },
+    "libyuv",
+    "matroska",
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "docs": {
+      "description": "Build K4A doxygen documentation."
+    },
+    "tool": {
+      "description": "Build tools.",
+      "dependencies": [
+        "gl3w",
+        "glew",
+        {
+          "name": "imgui",
+          "features": [
+            "glfw-binding",
+            "opengl3-binding"
+          ]
+        }
+      ]
+    }
+  }
+}

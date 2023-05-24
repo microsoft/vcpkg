@@ -1,46 +1,51 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bulletphysics/bullet3
-    REF 2.88
-    SHA512 15face1940d496c96fd19a44139d11d2cbb629526c40432be4a0eef5fa9a532c842ec7318248c0359a080f2034111bf1a3c2d3a6fd789bec675bd368fac7bd93
+    REF "${VERSION}"
+    SHA512 7086e5fcf69635801bb311261173cb8d173b712ca1bd78be03df48fad884674e85512861190e45a1a62d5627aaad65cde08c175c44a3be9afa410d3dfd5358d4
     HEAD_REF master
-    PATCHES cmake-fix.patch
+    PATCHES
+        cmake-fix.patch
 )
 
-set(BULLET_MULTITHREADING OFF)
-if ("multithreading" IN_LIST FEATURES)
-    set(BULLET_MULTITHREADING ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        multithreading       BULLET2_MULTITHREADING
+        double-precision     USE_DOUBLE_PRECISION
+    INVERTED_FEATURES
+        rtti                 USE_MSVC_DISABLE_RTTI
+)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON
-        -DBUILD_DEMOS=OFF
         -DBUILD_CPU_DEMOS=OFF
         -DBUILD_BULLET2_DEMOS=OFF
+        -DBUILD_OPENGL3_DEMOS=OFF
         -DBUILD_BULLET3=OFF
-        -DBUILD_EXTRAS=OFF
-        -DBUILD_UNIT_TESTS=OFF
+        -DBUILD_EXTRAS=ON
+        -DBUILD_BULLET_ROBOTICS_GUI_EXTRA=OFF
+        -DBUILD_BULLET_ROBOTICS_EXTRA=OFF
+        -DBUILD_GIMPACTUTILS_EXTRA=OFF        
+        -DBUILD_UNIT_TESTS=OFF        
         -DINSTALL_LIBS=ON
-        -DBULLET2_MULTITHREADING=${BULLET_MULTITHREADING}
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/bullet3")
-
-# Clean up unneeded files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/bullet/BulletInverseDynamics/details)
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/bullet3 RENAME copyright)
+vcpkg_cmake_config_fixup(PACKAGE_NAME bullet CONFIG_PATH share/bullet)
+
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/bullet/BulletInverseDynamics/details")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

@@ -1,0 +1,21 @@
+{
+  "name": "kf5auth",
+  "version": "5.98.0",
+  "description": "Execute actions as privileged user",
+  "homepage": "https://api.kde.org/frameworks/kauth/html/index.html",
+  "supports": "!windows",
+  "dependencies": [
+    "ecm",
+    "kf5coreaddons",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,28 +1,40 @@
+From 6f4e2fea829b5986863403d6a611c52c5ac8b2a9 Mon Sep 17 00:00:00 2001
+From: raahilsha-z <raahil.sha@zimaging.io>
+Date: Wed, 7 Jul 2021 16:00:30 -0400
+Subject: [PATCH] pcl_utils
+
+---
+ cmake/pcl_utils.cmake | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
+
 diff --git a/cmake/pcl_utils.cmake b/cmake/pcl_utils.cmake
-index f523dbc8c..a171b6d24 100644
+index d87d02da9..7c951bfd5 100644
 --- a/cmake/pcl_utils.cmake
 +++ b/cmake/pcl_utils.cmake
-@@ -97,21 +97,12 @@ macro(SET_INSTALL_DIRS)
-   if (NOT DEFINED LIB_INSTALL_DIR)
+@@ -94,21 +94,12 @@ macro(SET_INSTALL_DIRS)
+   if(NOT DEFINED LIB_INSTALL_DIR)
      set(LIB_INSTALL_DIR "lib")
-   endif (NOT DEFINED LIB_INSTALL_DIR)
+   endif()
 -    if(NOT ANDROID)
 -      set(INCLUDE_INSTALL_ROOT
 -          "include/${PROJECT_NAME_LOWER}-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}")
--    else(NOT ANDROID)
+-    else()
 -      set(INCLUDE_INSTALL_ROOT "include") # Android, don't put into subdir
--    endif(NOT ANDROID)
-+    set(INCLUDE_INSTALL_ROOT "include") 
+-    endif()
++    set(INCLUDE_INSTALL_ROOT "include")
      set(INCLUDE_INSTALL_DIR "${INCLUDE_INSTALL_ROOT}/pcl")
      set(DOC_INSTALL_DIR "share/doc/${PROJECT_NAME_LOWER}-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}")
      set(BIN_INSTALL_DIR "bin")
      set(PKGCFG_INSTALL_DIR "${LIB_INSTALL_DIR}/pkgconfig")
 -    if(WIN32 AND NOT MINGW)
 -        set(PCLCONFIG_INSTALL_DIR "cmake")
--      else(WIN32 AND NOT MINGW)
+-      else()
 -        set(PCLCONFIG_INSTALL_DIR "share/${PROJECT_NAME_LOWER}-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}")
--      endif(WIN32 AND NOT MINGW)
+-      endif()
 +    set(PCLCONFIG_INSTALL_DIR "share/pcl")
- endmacro(SET_INSTALL_DIRS)
+ endmacro()
  
  
+-- 
+2.32.0.windows.1
+

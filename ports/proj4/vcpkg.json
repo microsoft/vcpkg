@@ -1,0 +1,56 @@
+{
+  "name": "proj4",
+  "version-semver": "8.9.9",
+  "port-version": 1,
+  "description": "A stub package that pulls in proj. Do not depend on this package.",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "proj",
+      "default-features": false,
+      "version>=": "9.0.0"
+    }
+  ],
+  "default-features": [
+    "net",
+    "tiff"
+  ],
+  "features": {
+    "net": {
+      "description": "Enable network support",
+      "dependencies": [
+        {
+          "name": "proj",
+          "default-features": false,
+          "features": [
+            "net"
+          ]
+        }
+      ]
+    },
+    "tiff": {
+      "description": "Enable TIFF support to read some grids",
+      "dependencies": [
+        {
+          "name": "proj",
+          "default-features": false,
+          "features": [
+            "tiff"
+          ]
+        }
+      ]
+    },
+    "tools": {
+      "description": "Build tools",
+      "dependencies": [
+        {
+          "name": "proj",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    }
+  }
+}

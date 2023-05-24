@@ -1,0 +1,20 @@
+{
+  "name": "cppgraphqlgen",
+  "version": "4.5.1",
+  "description": "C++ GraphQL schema service generator",
+  "homepage": "https://github.com/microsoft/cppgraphqlgen",
+  "license": "MIT",
+  "dependencies": [
+    "boost-program-options",
+    "pegtl",
+    "rapidjson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

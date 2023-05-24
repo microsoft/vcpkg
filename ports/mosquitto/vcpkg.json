@@ -1,0 +1,18 @@
+{
+  "name": "mosquitto",
+  "version": "2.0.14",
+  "description": "Mosquitto is an open source message broker that implements the MQ Telemetry Transport protocol versions 3.1 and 3.1.1, MQTT provides a lightweight method of carrying out messaging using a publish/subscribe model, This makes it suitable for machine to machine messaging such as with low power sensors or mobile devices such as phones, embedded computers or microcontrollers like the Arduino",
+  "homepage": "https://mosquitto.org/",
+  "license": "EPL-2.0",
+  "dependencies": [
+    "c-ares",
+    "libwebsockets",
+    "openssl",
+    "pthreads",
+    "uthash",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

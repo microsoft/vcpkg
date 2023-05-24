@@ -1,24 +1,36 @@
-include(vcpkg_common_functions)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO machinezone/IXWebSocket
-    REF v7.4.0
-    SHA512 ea78f42a8cf1dfaafe7bf3a849e62a8e039e10cc8d93add7bf2d5283f53311dac449f86c5f22496b55ad6e22597b2842cba85936170d2d0e720389a88d87268c
+    REF v11.4.3
+    SHA512 6db4f05b3a73aa5f6efdb6d4692d9f9665b14c3a6e4837ff6b2719d9261aa660166fd4ddf99ca8e6804202d6f71c399fe1c223932493ea8db0a73752cb5b8e97
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS -DUSE_TLS=1
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openssl   USE_OPEN_SSL
+        mbedtls   USE_MBED_TLS
+        sectransp USE_SECURE_TRANSPORT
 )
 
-vcpkg_install_cmake()
+if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
+    message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
+endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DUSE_TLS=1
+    MAYBE_UNUSED_VARIABLES
+        USE_SECURE_TRANSPORT
+)
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/ixwebsocket RENAME copyright)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ixwebsocket)
+vcpkg_fixup_pkgconfig()
 
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME ixwebsocket)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

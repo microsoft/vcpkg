@@ -1,24 +1,23 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/re2
-    REF 2019-09-01
-    SHA512 df446a7a00f3e8cd3f09c746ad41a6f58af3da88ab31cf8e2498d26e240bbe1f557f462fb6b10a818c3e00e02ec19dc60ce29eb6c4d61781aeb9b96b4c4e5af9
+    REF "${VERSION}"
+    SHA512 164953ae0cdd52efb0c327be3df8bb62532b37200e66adc3229c2dfdbd68cb794572559dbdf2d374e016c910a56712c88bbcca4caa683fdc55357af5716b1bf5
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DRE2_BUILD_TESTING=OFF
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DRE2_BUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/re2)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/re2 RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

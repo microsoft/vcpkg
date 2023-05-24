@@ -1,0 +1,25 @@
+diff --git a/src/regcomp.c b/src/regcomp.c
+--- a/src/regcomp.c
++++ b/src/regcomp.c
+@@ -3880,7 +3880,7 @@ reduce_string_list(Node* node)
+     {
+       Node* prev;
+       Node* curr;
+-      Node* prev_node;
++      Node* prev_node = NULL;
+       Node* next_node;
+ 
+       prev = NULL_NODE;
+diff --git a/src/regexec.c b/src/regexec.c
+index ce498c6..6848c0f 100644
+--- a/src/regexec.c
++++ b/src/regexec.c
+@@ -4216,7 +4216,7 @@ regset_search_body_position_lead(OnigRegSet* set,
+ {
+   int r, n, i;
+   UChar *s;
+-  UChar *low, *high;
++  UChar *low, *high = NULL;
+   UChar* sch_range;
+   regex_t* reg;
+   OnigEncoding enc;

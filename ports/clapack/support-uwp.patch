@@ -1,0 +1,87 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index db58b4e..0fb61a0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,6 +15,9 @@ if(NOT USE_BLAS_WRAP)
+ # _zrotg_ seems to be missing in the wrap header
+   add_definitions(-DNO_BLAS_WRAP)
+ endif()
++if (MSVC)
++  add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE)
++endif()
+ include_directories(${CLAPACK_SOURCE_DIR}/INCLUDE)
+ add_subdirectory(F2CLIBS)
+ add_subdirectory(SRC)
+diff --git a/F2CLIBS/libf2c/CMakeLists.txt b/F2CLIBS/libf2c/CMakeLists.txt
+index 094614a..e5b40ab 100644
+--- a/F2CLIBS/libf2c/CMakeLists.txt
++++ b/F2CLIBS/libf2c/CMakeLists.txt
+@@ -44,12 +44,19 @@ if(UNIX)
+ endif()
+ set_target_properties(arithchk PROPERTIES COMPILE_DEFINITIONS 
+   "NO_FPINIT;NO_LONG_LONG")
++  
++if (ARITH_PATH)
++configure_file(
++   "${ARITH_PATH}"
++   "${CMAKE_CURRENT_BINARY_DIR}/arith.h"
++   COPYONLY)
++else()
+ ADD_CUSTOM_COMMAND(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/arith.h
+    COMMAND arithchk > ${CMAKE_CURRENT_BINARY_DIR}/arith.h
+    DEPENDS arithchk
+    )
+-
++endif()
+ 
+ set(OFILES  ${MISC} ${POW} ${CX} ${DCX} ${REAL} ${DBL} ${INT} 
+   ${HALF} ${CMP} ${EFL} ${CHAR} ${I77} ${TIME})
+diff --git a/F2CLIBS/libf2c/inquire.c b/F2CLIBS/libf2c/inquire.c
+index 5936a67..4846d41 100644
+--- a/F2CLIBS/libf2c/inquire.c
++++ b/F2CLIBS/libf2c/inquire.c
+@@ -32,7 +32,7 @@ integer f_inqu(inlist *a)
+ 	{	byfile=1;
+ 		g_char(a->infile,a->infilen,buf);
+ #ifdef NON_UNIX_STDIO
+-		x = access(buf,0) ? -1 : 0;
++		x = _access(buf,0) ? -1 : 0;
+ 		for(i=0,p=NULL;i<MXUNIT;i++)
+ 			if(f__units[i].ufd != NULL
+ 			 && f__units[i].ufnm != NULL
+diff --git a/F2CLIBS/libf2c/open.c b/F2CLIBS/libf2c/open.c
+index a06428d..9d08cf7 100644
+--- a/F2CLIBS/libf2c/open.c
++++ b/F2CLIBS/libf2c/open.c
+@@ -48,7 +48,7 @@ f__bufadj(int n, int c)
+ #endif
+ {
+ 	unsigned int len;
+-	char *nbuf, *s, *t, *te;
++	char *nbuf = NULL, *s = NULL, *t = NULL, *te = NULL;
+ 
+ 	if (f__buf == f__buf0)
+ 		f__buflen = 1024;
+diff --git a/F2CLIBS/libf2c/rsne.c b/F2CLIBS/libf2c/rsne.c
+index e8e9dae..4d65436 100644
+--- a/F2CLIBS/libf2c/rsne.c
++++ b/F2CLIBS/libf2c/rsne.c
+@@ -103,7 +103,7 @@ mk_hashtab(Namelist *nl)
+ 	Vardesc *v, **vd, **vde;
+ 	hashentry *he;
+ 
+-	hashtab **x, **x0, *y;
++	hashtab **x = NULL, **x0 = NULL, *y = NULL;
+ 	for(x = &nl_cache; y = *x; x0 = x, x = &y->next)
+ 		if (nl == y->nl)
+ 			return y;
+@@ -308,7 +308,7 @@ x_rsne(cilist *a)
+ 	char buf[64];
+ 	hashtab *ht;
+ 	Vardesc *v;
+-	dimen *dn, *dn0, *dn1;
++	dimen *dn = NULL, *dn0 = NULL, *dn1;
+ 	ftnlen *dims, *dims1;
+ 	ftnlen b, b0, b1, ex, no, nomax, size, span;
+ 	ftnint no1, no2, type;

@@ -1,0 +1,12 @@
+{
+  "name": "sparsepp",
+  "version": "1.22",
+  "port-version": 4,
+  "description": "A fast, memory efficient hash map for C++",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "lemon",
+  "version": "0",
+  "port-version": 2,
+  "description": "Deprecated port, use liblemon instead",
+  "dependencies": [
+    "liblemon"
+  ]
+}

@@ -1,18 +1,15 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eliaskosunen/scnlib
-    REF v0.1.2
-    SHA512 bb2aa176517d6547d62800839b7e9d86821a4006f7d09a8b3731b67f6fd7130f5cf8d73e7c8331c7c50f1dd5ca19bd3759bb0e181fcaed2f0bfb7fd8276ef141
+    REF v1.0
+    SHA512 0d34b5a710a472618df5d8202bbd647f488aa0ac2ad593c4a212e42b8aee5c35882f6e0ab7a7241c766ed17c9273d5e6704b012ef7f23a1b329b2a2f28ec60c6
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
       -DSCN_TESTS=OFF 
       -DSCN_EXAMPLES=OFF
@@ -21,11 +18,15 @@ vcpkg_configure_cmake(
       -DSCN_RANGES=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/scn)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/scn)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/scn)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/scnlib RENAME copyright)
+file(REMOVE_RECURSE 
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/scn"
+)
 
-
-vcpkg_test_cmake(PACKAGE_NAME scn)
+file(INSTALL "${SOURCE_PATH}/LICENSE"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+    RENAME copyright)

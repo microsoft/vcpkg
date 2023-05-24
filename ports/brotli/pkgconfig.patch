@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0cdb73b..33a80a7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -406,6 +406,13 @@ function(transform_pc_file INPUT_FILE OUTPUT_FILE VERSION)
+ 
+   string(REGEX REPLACE "@PACKAGE_VERSION@" "${VERSION}" TEXT ${TEXT})
+ 
++  string(REPLACE [[ -R${libdir}]] "" TEXT ${TEXT})
++  if(NOT BUILD_SHARED_LIBS)
++    string(REGEX REPLACE [[( -lbrotli[a-z]*)]] [[\1-static]] TEXT ${TEXT})
++    if(LIBM_LIBRARY)
++      string(REPLACE " -lbrotlicommon-static" " -lbrotlicommon-static -l${LIBM_LIBRARY}" TEXT ${TEXT})
++    endif()
++  endif()
+   file(WRITE ${OUTPUT_FILE} ${TEXT})
+ endfunction()
+ 

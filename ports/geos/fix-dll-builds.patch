@@ -1,0 +1,72 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 074986f..bb5ab3a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -187,7 +187,7 @@ target_compile_features(geos_cxx_flags INTERFACE cxx_std_11)
+ target_compile_options(geos_cxx_flags INTERFACE
+ 	"$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-ffp-contract=off>"
+ 	"$<$<CXX_COMPILER_ID:GNU>:-ffp-contract=off>"
+-	$<$<CXX_COMPILER_ID:MSVC>:/fp:precise /wd4996>
++  "$<$<BOOL:${MSVC}>:/fp:precise /wd4996>"
+ 	)
+ 
+ # Use -ffloat-store for 32-bit builds (needed to make some tests pass)
+@@ -227,10 +227,10 @@ target_compile_definitions(geos_cxx_flags
+ 
+ target_compile_definitions(geos_developer_cxx_flags
+   INTERFACE
+-    $<$<CXX_COMPILER_ID:MSVC>:_CRT_NONSTDC_NO_DEPRECATE>
+-    $<$<CXX_COMPILER_ID:MSVC>:_SCL_SECURE_NO_DEPRECATE>
+-    $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+-    $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>)
++    "$<$<BOOL:${MSVC}>:_CRT_NONSTDC_NO_DEPRECATE>"
++    "$<$<BOOL:${MSVC}>:_SCL_SECURE_NO_DEPRECATE>"
++    "$<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>"
++    "$<$<BOOL:${WIN32}>:NOMINMAX>")
+ 
+ target_compile_options(geos_developer_cxx_flags
+   INTERFACE
+@@ -269,7 +269,7 @@ option(VERSION_MINGW_SHARED_LIBS "Add version suffix to MinGW shared libraries"
+ 
+ if(BUILD_SHARED_LIBS)
+   target_compile_definitions(geos
+-    PRIVATE $<IF:$<CXX_COMPILER_ID:MSVC>,GEOS_DLL_EXPORT,DLL_EXPORT>)
++    PRIVATE $<$<BOOL:${WIN32}>:GEOS_DLL_EXPORT>)
+ 
+   set_target_properties(geos PROPERTIES VERSION ${GEOS_VERSION_NOPATCH})
+   set_target_properties(geos PROPERTIES SOVERSION ${GEOS_VERSION_NOPATCH})
+@@ -287,7 +287,7 @@ target_link_libraries(geos_c PRIVATE geos)
+ 
+ if(BUILD_SHARED_LIBS)
+   target_compile_definitions(geos_c
+-    PRIVATE $<IF:$<CXX_COMPILER_ID:MSVC>,GEOS_DLL_EXPORT,DLL_EXPORT>)
++    PRIVATE $<$<BOOL:${WIN32}>:GEOS_DLL_EXPORT>)
+ 
+   set_target_properties(geos_c PROPERTIES VERSION ${CAPI_VERSION})
+   if(NOT WIN32 OR MINGW)
+diff --git a/include/geos/algorithm/locate/IndexedPointInAreaLocator.h b/include/geos/algorithm/locate/IndexedPointInAreaLocator.h
+index 7a647e4..52a29c9 100644
+--- a/include/geos/algorithm/locate/IndexedPointInAreaLocator.h
++++ b/include/geos/algorithm/locate/IndexedPointInAreaLocator.h
+@@ -51,7 +51,7 @@ namespace locate { // geos::algorithm::locate
+  * The index is lazy-loaded, which allows creating instances even if they are not used.
+  *
+  */
+-class IndexedPointInAreaLocator : public PointOnGeometryLocator {
++class GEOS_DLL IndexedPointInAreaLocator : public PointOnGeometryLocator {
+ private:
+     struct SegmentView {
+         SegmentView(const geom::Coordinate* p_p0, const geom::Coordinate* p_p1) : m_p0(p_p0) {
+diff --git a/include/geos/export.h b/include/geos/export.h
+index 1a26f8c..997fb4c 100644
+--- a/include/geos/export.h
++++ b/include/geos/export.h
+@@ -19,7 +19,7 @@
+ #  if defined(GEOS_DLL_EXPORT)
+ #    define GEOS_DLL   __declspec(dllexport)
+ #  elif defined(GEOS_DLL_IMPORT)
+-#    define GEOS_DLL   __declspec(dllimport)
++#    define GEOS_DLL   extern __declspec(dllimport)
+ #  else
+ #    define GEOS_DLL
+ #  endif

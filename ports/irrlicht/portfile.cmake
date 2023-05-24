@@ -1,66 +1,57 @@
-include(vcpkg_common_functions)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/irrlicht/Irrlicht%20SDK/1.8/1.8.4/irrlicht-1.8.4.zip"
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO irrlicht/Irrlicht%20SDK
+    REF 1.8/1.8.4
     FILENAME "irrlicht-1.8.4.zip"
     SHA512 de69ddd2c6bc80a1b27b9a620e3697b1baa552f24c7d624076d471f3aecd9b15f71dce3b640811e6ece20f49b57688d428e3503936a7926b3e3b0cc696af98d1
+    PATCHES
+        fix-encoding.patch
+        fix-sysctl.patch
+        fix-osx-compilation.patch
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF "1.8.4"
-    # [NO_REMOVE_ONE_LEVEL]
-    # [WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/src>]
-    # [PATCHES <a.patch>...]
-)
+if(VCPKG_TARGET_IS_LINUX)
+    message(
+"Irrlicht currently requires the following libraries from the system package manager:
+    libgl1-mesa
+    xf86vmode
 
-# Copy CMakeLists.txt to the source, because Irrlicht does not have one.
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt DESTINATION ${SOURCE_PATH})
-
-set(FAST_MATH FALSE)
-if("fast-fpu" IN_LIST FEATURES)
-    set(FAST_MATH TRUE)
+These can be installed on Ubuntu systems via sudo apt-get install libgl1-mesa-dev libxxf86vm-dev")
 endif()
 
-set(BUILD_TOOLS FALSE)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" "${SOURCE_PATH}/CMakeLists.txt" COPYONLY)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        unicode     IRR_UNICODE_PATH
+        fast-fpu    IRR_FAST_MATH
+        tools       IRR_BUILD_TOOLS
+)
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIB)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DIRR_SHARED_LIB=${SHARED_LIB}
+        ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup()
+
 if("tools" IN_LIST FEATURES)
-    set(BUILD_TOOLS TRUE)
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/irrlicht/")
 endif()
 
-set(SHARED_LIB TRUE)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(SHARED_LIB FALSE)
-endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS 
-        -DIRR_SHARED_LIB=${SHARED_LIB} 
-        -DIRR_FAST_MATH=${FAST_MATH}
-        -DIRR_BUILD_TOOLS=${BUILD_TOOLS}
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
-)
-
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets()
-
-if(BUILD_TOOLS)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/irrlicht/)
-endif()
-
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/irrlicht/irrlicht-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/irrlicht-targets.cmake)")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/irrlicht/irrlicht-config.cmake" "include(\${CMAKE_CURRENT_LIST_DIR}/irrlicht-targets.cmake)")
 
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/irrlicht)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/irrlicht")
 endif()
-# Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME irrlicht)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

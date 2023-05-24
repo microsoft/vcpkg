@@ -1,50 +1,41 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO ros/urdfdom
-  REF 1.0.3
-  SHA512 240181d9c61dd7544f16a79a400d9a2c4dc0a682bef165b46529efcb4b31e2a34e27896933b60b9ddbaa5c4a8d575ebda42752599ff3b0a98d1eeef8f9b0b7a7
-  HEAD_REF master
-  PATCHES
-    0001_use_math_defines.patch
-    0002_fix_exports.patch
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ros/urdfdom
+    REF ${VERSION}
+    SHA512 6386954bc7883e82d9db7c785ae074b47ca31efb7cc2686101e7813768824bed5b46a774a1296453c39ff76673a9dc77305bb2ac96b86ecf93fab22062ef2258
+    HEAD_REF master
+    PATCHES
+        0001_use_math_defines.patch
+        0005-fix-config-and-install.patch
+        0006-pc_file_for_windows.patch
 )
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
+vcpkg_copy_tools(TOOL_NAMES check_urdf urdf_mem_test urdf_to_graphiz urdf_to_graphviz AUTO_CLEAN)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/urdfdom/cmake)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/urdfdom)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/urdfdom/cmake)
+    # Empty folders
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/urdfdom")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
+    vcpkg_fixup_pkgconfig()
+endif()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/ ${CURRENT_PACKAGES_DIR}/tools/urdfdom/)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(GLOB URDFDOM_DLLS_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-foreach(URDFDOM_DLL_DEBUG ${URDFDOM_DLLS_DEBUG})
-  file(COPY ${URDFDOM_DLL_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-  file(REMOVE ${URDFDOM_DLL_DEBUG})
-endforeach()
-
-file(GLOB URDFDOM_DLLS_RELEASE ${CURRENT_PACKAGES_DIR}/lib/*.dll)
-foreach(URDFDOM_DLL_RELEASE ${URDFDOM_DLLS_RELEASE})
-  file(COPY ${URDFDOM_DLL_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-  file(REMOVE ${URDFDOM_DLL_RELEASE})
-endforeach()
-
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/urdfdom RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,16 @@
+{
+  "name": "vcpkg-tool-python2",
+  "version": "2.7.18",
+  "port-version": 1,
+  "description": "Python 2",
+  "homepage": "https://www.python.org/download/releases/2.0/",
+  "license": "PSF-2.0",
+  "supports": "!uwp & !(arm & windows)",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-lessmsi",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "vtk-dicom",
+  "version": "0.8.14",
+  "port-version": 1,
+  "description": "DICOM for VTK",
+  "homepage": "https://github.com/dgobbi/vtk-dicom",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "python3",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vtk",
+      "default-features": false
+    },
+    "zlib"
+  ],
+  "features": {
+    "gdcm": {
+      "description": "Use gdcm for decompressing DICOM files.",
+      "dependencies": [
+        "gdcm"
+      ]
+    }
+  }
+}

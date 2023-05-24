@@ -1,0 +1,14 @@
+{
+  "name": "libfabric",
+  "version-semver": "1.13.2",
+  "port-version": 1,
+  "description": "The OpenFabrics Interfaces Working Group (OFIWG) and the Libfabric open-source community are pleased to announce the release of version v1.6.2 of libfabric. See NEWS.md for the list of features and enhancements that have been added since the last release.",
+  "homepage": "https://github.com/ofiwg/libfabric",
+  "supports": "windows & !uwp & x64 & !static",
+  "dependencies": [
+    {
+      "name": "networkdirect-sdk",
+      "platform": "windows"
+    }
+  ]
+}

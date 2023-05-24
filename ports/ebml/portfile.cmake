@@ -1,28 +1,23 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Matroska-Org/libebml
-    REF release-1.3.9
-    SHA512 3ae22ed491024b276edde9237df0e41a8e5a4e142ec6783c77d5286d7825fb59be62f336d07f7042baac8fc7ac004ad7cc4605754c5801d65547449ea04c287f
+    REF release-1.4.4
+    SHA512 4a7926f56de211b8431105e37045a13d5e0576151326c87bc3168821c10342acee2aa6447438296f1d56893b3ebbc60851cb0c310f5561127612f0cd2477743f
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS -DDISABLE_PKGCONFIG=1
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/EBML)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/EBML)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_copy_pdbs()

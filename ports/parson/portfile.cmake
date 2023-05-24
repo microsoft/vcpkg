@@ -1,33 +1,26 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message("parson only supports static linkage")
-    set(VCPKG_LIBRARY_LINKAGE "static")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kgabis/parson
-    REF 33e5519d0ae68784c91c92af2f48a5b07dc14490
-    SHA512 b4477fe1038465edb210d1d02c8241ba02c44a01fa7838fb6217b36659eae3c5eaf450ec559bd609dfdc2417b4948eacc4a643ed7f1684f9b4bbaded421d7b80
+    REF 1314bf8ad6f22edd2feb9d8c867756f41db21f2a # accessed on 2022-11-13
+    SHA512 5f6003caea40c093dedfbd85dfe6d33202708b37b59ad9eeb815a5d287dd7b37f3522d3bf35fb718eab13260bb0c129b691703f04b9f1c3dbe7bef4b494928be
     HEAD_REF master
+    PATCHES
+        fix-cmake-files-path.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(COPY ${SOURCE_PATH}/parson.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_cmake_config_fixup()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-parson TARGET_PATH share/unofficial-parson)
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL
     ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/parson RENAME copyright)
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

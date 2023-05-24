@@ -1,0 +1,19 @@
+{
+  "name": "workflow",
+  "version": "0.10.5",
+  "port-version": 1,
+  "description": "About C++ Parallel Computing and Asynchronous Networking Engine",
+  "homepage": "https://github.com/sogou/workflow",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

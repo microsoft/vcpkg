@@ -1,0 +1,75 @@
+{
+  "name": "poco",
+  "version": "1.12.4",
+  "port-version": 4,
+  "description": "Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.",
+  "homepage": "https://github.com/pocoproject/poco",
+  "license": "BSL-1.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "expat",
+    "pcre2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "crypto": {
+      "description": "Crypto support",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "mariadb": {
+      "description": "MariaDB support for POCO",
+      "dependencies": [
+        "libmariadb"
+      ]
+    },
+    "mysql": {
+      "description": "Mysql support for POCO",
+      "dependencies": [
+        "libmysql"
+      ]
+    },
+    "netssl": {
+      "description": [
+        "NetSSL support for POCO",
+        "By default, this feature uses the OpenSSL implementation. The `POCO_ENABLE_NETSSL_WIN` triplet variable can be used to switch to the NetSSL_Win module."
+      ],
+      "dependencies": [
+        {
+          "name": "poco",
+          "default-features": false,
+          "features": [
+            "crypto"
+          ]
+        }
+      ]
+    },
+    "pdf": {
+      "description": "Haru support for POCO",
+      "dependencies": [
+        "libharu"
+      ]
+    },
+    "postgresql": {
+      "description": "PostgreSQL support for POCO",
+      "dependencies": [
+        "libpqxx"
+      ]
+    },
+    "sqlite3": {
+      "description": "Sqlite3 support for POCO",
+      "dependencies": [
+        "sqlite3"
+      ]
+    }
+  }
+}

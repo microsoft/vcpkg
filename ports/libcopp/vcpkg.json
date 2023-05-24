@@ -1,0 +1,20 @@
+{
+  "name": "libcopp",
+  "version": "2.2.0",
+  "maintainers": "owent <admin@owent.net>",
+  "description": "A cross-platfrom coroutine library for C++",
+  "homepage": "https://github.com/owent/libcopp",
+  "documentation": "https://libcopp.atframe.work/",
+  "license": "MIT",
+  "supports": "!(windows & arm)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

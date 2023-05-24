@@ -1,0 +1,20 @@
+diff --git a/CMake/FindLibPROJ.cmake b/CMake/FindLibPROJ.cmake
+index 6f607d4..86c85a9 100644
+--- a/CMake/FindLibPROJ.cmake
++++ b/CMake/FindLibPROJ.cmake
+@@ -1,5 +1,5 @@
+ find_path(LibPROJ_INCLUDE_DIR
+-  NAMES proj_api.h proj.h
++  NAMES proj.h
+   DOC "libproj include directories")
+ mark_as_advanced(LibPROJ_INCLUDE_DIR)
+ 
+@@ -9,7 +9,7 @@ find_library(LibPROJ_LIBRARY_RELEASE
+ mark_as_advanced(LibPROJ_LIBRARY_RELEASE)
+ 
+ find_library(LibPROJ_LIBRARY_DEBUG
+-  NAMES projd
++  NAMES projd proj_d proj NAMES_PER_DIR
+   DOC "libproj debug library")
+ mark_as_advanced(LibPROJ_LIBRARY_DEBUG)
+ 

@@ -7,12 +7,12 @@ diff -urN a/source/runConfigureICU b/source/runConfigureICU
          CXX=cl; export CXX
 -        RELEASE_CFLAGS='-Gy -MD'
 -        RELEASE_CXXFLAGS='-Gy -MD'
--        DEBUG_CFLAGS='-Zi -MDd'
--        DEBUG_CXXFLAGS='-Zi -MDd'
+-        DEBUG_CFLAGS='-FS -Zi -MDd'
+-        DEBUG_CXXFLAGS='-FS -Zi -MDd'
 +        RELEASE_CFLAGS='-Gy'
 +        RELEASE_CXXFLAGS='-Gy'
-+        DEBUG_CFLAGS='-Zi'
-+        DEBUG_CXXFLAGS='-Zi'
++        DEBUG_CFLAGS='-FS -Zi'
++        DEBUG_CXXFLAGS='-FS -Zi'
          DEBUG_LDFLAGS='-DEBUG'
          ;;
      *BSD)

@@ -1,44 +1,23 @@
---- a/CMakeLists.txt	2019-02-09 04:38:25.756325900 -0600
-+++ b/CMakeLists.txt	2019-02-09 04:39:55.299417600 -0600
-@@ -289,6 +289,8 @@ add_prefix(MP_SOURCES src/
- add_mp_library(mp ${MP_HEADERS} ${MP_SOURCES} ${MP_EXPR_INFO_FILE}
-   COMPILE_DEFINITIONS MP_DATE=${MP_DATE} MP_SYSINFO="${MP_SYSINFO}"
-   INCLUDE_DIRECTORIES src OBJECT_LIBRARIES format)
-+set_property(TARGET mp PROPERTY
-+  INTERFACE_INCLUDE_DIRECTORIES $<INSTALL_INTERFACE:include>)
- set_target_properties(mp PROPERTIES
-   VERSION ${MP_VERSION} SOVERSION ${MP_VERSION_MAJOR})
- 
-@@ -385,5 +387,10 @@ if(BUILD_TESTING)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d4c6762..c7b15b6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -197,7 +197,7 @@ function (add_mp_library name)
+   target_compile_definitions(${name}
+     PUBLIC ${add_mp_library_COMPILE_DEFINITIONS})
+   target_include_directories(${name}
+-    PUBLIC ${add_mp_library_INCLUDE_DIRECTORIES})
++    PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/${add_mp_library_INCLUDE_DIRECTORIES}> $<INSTALL_INTERFACE:include>)
+   if (add_mp_library_DEPENDS)
+     add_dependencies(${name} ${add_mp_library_DEPENDS})
+   endif ()
+@@ -363,6 +363,7 @@ if(BUILD_TESTING)
  endif()
  
  install(DIRECTORY include/mp DESTINATION include)
 -install(TARGETS mp DESTINATION lib RUNTIME DESTINATION bin)
-+install(TARGETS mp EXPORT unofficial-mp-targets
-+  DESTINATION lib RUNTIME DESTINATION bin)
++install(TARGETS mp EXPORT unofficial-mp-config DESTINATION lib RUNTIME DESTINATION bin)
  install(FILES LICENSE.rst DESTINATION share/mp)
-+install(EXPORT unofficial-mp-targets
-+  FILE unofficial-mp-config.cmake
-+  NAMESPACE unofficial::mp::
-+  DESTINATION share/unofficial-mp)
---- a/src/asl/CMakeLists.txt	2019-02-09 04:38:27.196322600 -0600
-+++ b/src/asl/CMakeLists.txt	2019-02-09 04:39:32.119889500 -0600
-@@ -235,6 +235,10 @@ add_mp_library(asl-extra OBJECT ${ASL_SO
- 
- add_mp_library(asl STATIC OBJECT_LIBRARIES asl-core asl-extra
-   LIBRARIES mp INCLUDE_DIRECTORIES ${ASL_INCLUDE_DIRS})
-+set_property(TARGET asl PROPERTY
-+  INTERFACE_INCLUDE_DIRECTORIES
-+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR};${PROJECT_SOURCE_DIR}/src/asl/solvers>
-+  $<INSTALL_INTERFACE:include>)
- 
- if (NOT WIN32)
-   target_link_libraries(asl m)
-@@ -353,4 +357,6 @@ endif ()
- install(FILES ${ASL_HEADERS} ${CMAKE_CURRENT_BINARY_DIR}/arith.h
-               solvers/opcode.hd solvers/r_opn.hd
-         DESTINATION include/asl)
--install(TARGETS asl tableproxy DESTINATION lib RUNTIME DESTINATION bin)
-+install(TARGETS tableproxy DESTINATION lib RUNTIME DESTINATION bin)
-+install(TARGETS asl EXPORT unofficial-mp-targets
-+        DESTINATION lib RUNTIME DESTINATION bin)
++install(EXPORT unofficial-mp-config DESTINATION share/unofficial-mp)
+ install(TARGETS gen-expr-info RUNTIME DESTINATION bin)
+\ No newline at end of file

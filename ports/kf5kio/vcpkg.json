@@ -1,0 +1,95 @@
+{
+  "name": "kf5kio",
+  "version": "5.98.0",
+  "description": "Network transparent access to files and data",
+  "homepage": "https://api.kde.org/frameworks/kio/html/index.html",
+  "license": null,
+  "dependencies": [
+    "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kf5archive",
+    {
+      "name": "kf5auth",
+      "platform": "!(windows | android)"
+    },
+    "kf5bookmarks",
+    "kf5completion",
+    "kf5config",
+    "kf5configwidgets",
+    "kf5coreaddons",
+    "kf5crash",
+    {
+      "name": "kf5dbusaddons",
+      "platform": "!android"
+    },
+    "kf5guiaddons",
+    "kf5i18n",
+    "kf5iconthemes",
+    "kf5itemviews",
+    "kf5jobwidgets",
+    "kf5service",
+    "kf5solid",
+    "kf5textwidgets",
+    "kf5widgetsaddons",
+    "kf5windowsystem",
+    "kf5xmlgui",
+    {
+      "name": "libiconv",
+      "platform": "windows & static"
+    },
+    {
+      "name": "libmount",
+      "platform": "linux"
+    },
+    "qt5-base",
+    {
+      "name": "qt5-macextras",
+      "platform": "osx"
+    },
+    {
+      "name": "qt5-x11extras",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "kf5notifications": {
+      "description": "Required to have error notification support in kpac",
+      "dependencies": [
+        {
+          "name": "kf5kio",
+          "default-features": false,
+          "features": [
+            "unixkf5notifications"
+          ],
+          "platform": "!(windows | android)"
+        }
+      ]
+    },
+    "kf5wallet": {
+      "description": "Required to have permanent storage of passwords for kpasswdserver",
+      "dependencies": [
+        "kf5wallet"
+      ]
+    },
+    "unixkf5notifications": {
+      "description": "Required to have error notification support in kpac (windows only)",
+      "dependencies": [
+        "kf5notifications"
+      ]
+    }
+  }
+}

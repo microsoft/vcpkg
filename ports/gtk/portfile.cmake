@@ -1,42 +1,106 @@
-
-include(vcpkg_common_functions)
-set(GTK_VERSION 3.22.19)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/gtk+/3.22/gtk+-${GTK_VERSION}.tar.xz"
-    FILENAME "gtk+-${GTK_VERSION}.tar.xz"
-    SHA512 c83198794433ee6eb29f8740d59bd7056cd36808b4bff1a99563ab1a1742e6635dab4f2a8be33317f74d3b336f0d1adc28dd91410da056b50a08c215f184dce2
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO GNOME/gtk
+    REF  74677018183b7b815c54b236841447132c0141e3 #v4.10.1
+    SHA512 7611c09c1b259c1e079b84abae603920b27403c0900b3265a07e540166bd468603ee2eb77e68e820921d979c345e69c62447fcead6fe38bb21d32bde8ece1e26
+    HEAD_REF master # branch name
+    PATCHES
+        0001-build.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH})
+vcpkg_find_acquire_program(PKGCONFIG)
+get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
+vcpkg_add_to_path("${PKGCONFIG_DIR}") # Post install script runs pkg-config so it needs to be on PATH
+vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/glib/")
 
-# generate sources using python script installed with glib
-if(NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.h OR NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.c)
-    vcpkg_find_acquire_program(PYTHON3)
-    set(GLIB_TOOL_DIR ${CURRENT_INSTALLED_DIR}/tools/glib)
-
-    vcpkg_execute_required_process(
-        COMMAND ${PYTHON3} ${GLIB_TOOL_DIR}/gdbus-codegen --interface-prefix org.Gtk. --c-namespace _Gtk --generate-c-code gtkdbusgenerated ./gtkdbusinterfaces.xml
-        WORKING_DIRECTORY ${SOURCE_PATH}/gtk
-        LOGNAME source-gen)
+set(x11 false)
+set(win32 false)
+set(osx false)
+if(VCPKG_TARGET_IS_LINUX)
+    set(OPTIONS -Dwayland-backend=false) # CI missing at least wayland-protocols
+    set(x11 true)
+    # Enable the wayland gdk backend (only when building on Unix except for macOS)
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    set(win32 true)
+elseif(VCPKG_TARGET_IS_OSX)
+    set(osx true)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DGTK_VERSION=${GTK_VERSION}
-    OPTIONS_DEBUG
-        -DGTK_SKIP_HEADERS=ON)
+list(APPEND OPTIONS -Dx11-backend=${x11}) #Enable the X11 gdk backend (only when building on Unix)
+list(APPEND OPTIONS -Dbroadway-backend=false) #Enable the broadway (HTML5) gdk backend
+list(APPEND OPTIONS -Dwin32-backend=${win32}) #Enable the Windows gdk backend (only when building on Windows)
+list(APPEND OPTIONS -Dmacos-backend=${osx}) #Enable the macOS gdk backend (only when building on macOS)
 
-vcpkg_install_cmake()
+if("introspection" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message(FATAL_ERROR "Feature introspection currently only supports dynamic build.")
+    endif()
+    list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
+    list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
+else()
+    list(APPEND OPTIONS -Dintrospection=disabled)
+endif()
+
+if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
+else()
+    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+endif()
+
+vcpkg_configure_meson(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        ${OPTIONS}
+        -Ddemos=false
+        -Dbuild-testsuite=false
+        -Dbuild-examples=false
+        -Dbuild-tests=false
+        -Dgtk_doc=false
+        -Dman-pages=false
+        -Dmedia-ffmpeg=disabled     # Build the ffmpeg media backend
+        -Dmedia-gstreamer=disabled  # Build the gstreamer media backend
+        -Dprint-cups=disabled       # Build the cups print backend
+        -Dvulkan=disabled           # Enable support for the Vulkan graphics API
+        -Dcloudproviders=disabled   # Enable the cloudproviders support
+        -Dsysprof=disabled          # include tracing support for sysprof
+        -Dtracker=disabled          # Enable Tracker3 filechooser search
+        -Dcolord=disabled           # Build colord support for the CUPS printing backend
+        -Df16c=disabled             # Enable F16C fast paths (requires F16C)
+    OPTIONS_DEBUG
+        ${OPTIONS_DEBUG}
+    OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
+    ADDITIONAL_BINARIES
+        glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+        glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
+        glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        sassc='${CURRENT_HOST_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
+)
+
+vcpkg_install_meson(ADD_BIN_TO_PATH)
+
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtk)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gtk/COPYING ${CURRENT_PACKAGES_DIR}/share/gtk/copyright)
+vcpkg_fixup_pkgconfig()
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+set(TOOL_NAMES gtk4-builder-tool
+               gtk4-encode-symbolic-svg
+               gtk4-query-settings
+               gtk4-update-icon-cache)
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND TOOL_NAMES gtk4-launch)
+endif()
+vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()

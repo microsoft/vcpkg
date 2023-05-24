@@ -1,0 +1,21 @@
+{
+  "name": "lapack",
+  "version-date": "2022-02-22",
+  "port-version": 2,
+  "description": "Metapackage for packages which provide LAPACK",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "clapack",
+      "platform": "(arm & windows) | uwp"
+    },
+    {
+      "name": "lapack-reference",
+      "platform": "!((arm & windows) | uwp)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

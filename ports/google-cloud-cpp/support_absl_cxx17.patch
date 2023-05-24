@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3fb0564..b4a251b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,6 +29,14 @@ if (NOT "${PROJECT_VERSION_PRE_RELEASE}" STREQUAL "")
+     set(PROJECT_VERSION "${PROJECT_VERSION}-${PROJECT_VERSION_PRE_RELEASE}")
+ endif ()
+ 
++find_package(absl CONFIG REQUIRED)
++
++# Use CMAKE_CXX_STANDARD=17 if ABSL_USE_CXX17 is set
++if (ABSL_USE_CXX17)
++    message(STATUS "Found absl uses CXX17, enable CXX17 feature.")
++    set(CMAKE_CXX_STANDARD 17)
++endif ()
++
+ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.3)
+         message(

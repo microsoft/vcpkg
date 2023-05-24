@@ -1,0 +1,15 @@
+{
+  "name": "tensorflow",
+  "version-semver": "2.10.0",
+  "description": "Library for computation using data flow graphs for scalable machine learning (C API version)",
+  "homepage": "https://github.com/tensorflow/tensorflow",
+  "license": "Apache-2.0",
+  "supports": "!(x86 | arm | uwp) | (arm64 & osx)",
+  "dependencies": [
+    "tensorflow-common",
+    {
+      "name": "vcpkg-tool-bazel",
+      "host": true
+    }
+  ]
+}

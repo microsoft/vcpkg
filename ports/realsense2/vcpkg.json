@@ -1,0 +1,35 @@
+{
+  "name": "realsense2",
+  "version": "2.53.1",
+  "description": "Intel® RealSense™ SDK 2.0 is a cross-platform library for Intel® RealSense™ depth cameras (D400 series and the SR300).",
+  "homepage": "https://github.com/IntelRealSense/librealsense",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "libusb",
+      "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "openni2": {
+      "description": "Build Intel® RealSense™ OpenNI2 driver",
+      "dependencies": [
+        "openni2"
+      ]
+    },
+    "tm2": {
+      "description": "Build Intel® RealSense™ T265 device"
+    },
+    "tools": {
+      "description": "Build Intel® RealSense™ tools"
+    }
+  }
+}

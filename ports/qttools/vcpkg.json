@@ -1,0 +1,107 @@
+{
+  "name": "qttools",
+  "version": "6.5.0",
+  "port-version": 1,
+  "description": "Qt Tools",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    "litehtml",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "assistant",
+        "linguist"
+      ]
+    }
+  ],
+  "features": {
+    "assistant": {
+      "description": "Build Qt Assistant",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network",
+            "png",
+            "sql-sqlite",
+            "widgets"
+          ]
+        }
+      ]
+    },
+    "designer": {
+      "description": "Build Qt Designer",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
+        }
+      ]
+    },
+    "linguist": {
+      "description": "Build Qt Linguist components",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "default-features": false,
+          "features": [
+            "designer"
+          ]
+        }
+      ]
+    },
+    "qdbus": {
+      "description": "Build qdbusviewer",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "dbus",
+            "widgets"
+          ]
+        }
+      ]
+    },
+    "qdoc": {
+      "description": "Build QDoc.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "enable-rtti"
+          ]
+        }
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

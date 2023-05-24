@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 303fcae..718ae88 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -35,15 +35,16 @@ ENDIF(BUILD_SHARED_LIBS)
+ 
+ ADD_CUSTOM_TARGET(doc)
+ 
+-FIND_PACKAGE(Doxygen)
+-IF(DOXYGEN_FOUND)
+-  ADD_CUSTOM_TARGET(doxygen
+-    ${DOXYGEN_EXECUTABLE}
+-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+-    COMMENT "Doxygen ...")
+-  ADD_DEPENDENCIES(doc doxygen)
+-
+-ENDIF(DOXYGEN_FOUND)
++IF (WIN32) # doxygen only have windows package in vcpkg now.
++   FIND_PACKAGE(Doxygen)
++   IF(DOXYGEN_FOUND)
++     ADD_CUSTOM_TARGET(doxygen
++       ${DOXYGEN_EXECUTABLE}
++       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
++       COMMENT "Doxygen ...")
++     ADD_DEPENDENCIES(doc doxygen)
++   ENDIF(DOXYGEN_FOUND)
++ENDIF()
+ 
+ SUBDIRS(src)
+ 

@@ -1,8 +1,8 @@
-diff --git a/lib/dgif_lib.c b/lib/dgif_lib.c
-index fddc0d2..7a6ab9c 100644
---- a/lib/dgif_lib.c
-+++ b/lib/dgif_lib.c
-@@ -54,7 +54,7 @@ DGifOpenFileName(const char *FileName, int *Error)
+diff --git a/dgif_lib.c b/dgif_lib.c
+index 82fc097..3bb302b 100644
+--- a/dgif_lib.c
++++ b/dgif_lib.c
+@@ -58,7 +58,7 @@ DGifOpenFileName(const char *FileName, int *Error)
      int FileHandle;
      GifFileType *GifFile;
  
@@ -11,7 +11,7 @@ index fddc0d2..7a6ab9c 100644
  	if (Error != NULL)
  	    *Error = D_GIF_ERR_OPEN_FAILED;
          return NULL;
-@@ -81,7 +81,7 @@ DGifOpenFileHandle(int FileHandle, int *Error)
+@@ -85,7 +85,7 @@ DGifOpenFileHandle(int FileHandle, int *Error)
      if (GifFile == NULL) {
          if (Error != NULL)
  	    *Error = D_GIF_ERR_NOT_ENOUGH_MEM;
@@ -20,7 +20,7 @@ index fddc0d2..7a6ab9c 100644
          return NULL;
      }
  
-@@ -95,7 +95,7 @@ DGifOpenFileHandle(int FileHandle, int *Error)
+@@ -99,7 +99,7 @@ DGifOpenFileHandle(int FileHandle, int *Error)
      if (Private == NULL) {
          if (Error != NULL)
  	    *Error = D_GIF_ERR_NOT_ENOUGH_MEM;
@@ -29,7 +29,7 @@ index fddc0d2..7a6ab9c 100644
          free((char *)GifFile);
          return NULL;
      }
-@@ -106,7 +106,7 @@ DGifOpenFileHandle(int FileHandle, int *Error)
+@@ -110,7 +110,7 @@ DGifOpenFileHandle(int FileHandle, int *Error)
      _setmode(FileHandle, O_BINARY);    /* Make sure it is in binary mode. */
  #endif /* _WIN32 */
  
@@ -38,11 +38,11 @@ index fddc0d2..7a6ab9c 100644
  
      /*@-mustfreeonly@*/
      GifFile->Private = (void *)Private;
-diff --git a/lib/egif_lib.c b/lib/egif_lib.c
-index f30b61b..18dc4a2 100644
---- a/lib/egif_lib.c
-+++ b/lib/egif_lib.c
-@@ -60,10 +60,10 @@ EGifOpenFileName(const char *FileName, const bool TestExistence, int *Error)
+diff --git a/egif_lib.c b/egif_lib.c
+index 6219af0..8ddda1b 100644
+--- a/egif_lib.c
++++ b/egif_lib.c
+@@ -67,10 +67,10 @@ EGifOpenFileName(const char *FileName, const bool TestExistence, int *Error)
      GifFileType *GifFile;
  
      if (TestExistence)
@@ -55,7 +55,7 @@ index f30b61b..18dc4a2 100644
  			  S_IREAD | S_IWRITE);
  
      if (FileHandle == -1) {
-@@ -73,7 +73,7 @@ EGifOpenFileName(const char *FileName, const bool TestExistence, int *Error)
+@@ -80,7 +80,7 @@ EGifOpenFileName(const char *FileName, const bool TestExistence, int *Error)
      }
      GifFile = EGifOpenFileHandle(FileHandle, Error);
      if (GifFile == (GifFileType *) NULL)
@@ -64,7 +64,7 @@ index f30b61b..18dc4a2 100644
      return GifFile;
  }
  
-@@ -118,7 +118,7 @@ EGifOpenFileHandle(const int FileHandle, int *Error)
+@@ -125,7 +125,7 @@ EGifOpenFileHandle(const int FileHandle, int *Error)
      _setmode(FileHandle, O_BINARY);    /* Make sure it is in binary mode. */
  #endif /* _WIN32 */
  
@@ -73,4 +73,3 @@ index f30b61b..18dc4a2 100644
  
      GifFile->Private = (void *)Private;
      Private->FileHandle = FileHandle;
-

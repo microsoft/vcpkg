@@ -1,0 +1,19 @@
+{
+  "name": "libwandio",
+  "version": "4.2.1",
+  "port-version": 6,
+  "description": "C library for simple and efficient file IO.",
+  "homepage": "https://github.com/wanduow/wandio",
+  "license": "LGPL-3.0-only",
+  "supports": "!windows",
+  "dependencies": [
+    "bzip2",
+    "curl",
+    "liblzma",
+    "lz4",
+    "lzo",
+    "pthread",
+    "zlib",
+    "zstd"
+  ]
+}

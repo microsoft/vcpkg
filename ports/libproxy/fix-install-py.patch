@@ -1,15 +1,22 @@
-diff --git a/bindings/python/python3/CMakeLists.txt b/bindings/python/python3/CMakeLists.txt
-index bf87dfc..9f94c2d 100644
---- a/bindings/python/python3/CMakeLists.txt
-+++ b/bindings/python/python3/CMakeLists.txt
-@@ -21,5 +21,4 @@ if(PYTHON3INTERP_FOUND)
-   
-   message(STATUS "Using PYTHON3_SITEPKG_DIR=${PYTHON3_SITEPKG_DIR}")
- 
--  install(FILES ../libproxy.py DESTINATION ${PYTHON3_SITEPKG_DIR})
- endif()
+diff --git a/bindings/perl/lib/CMakeLists.txt b/bindings/perl/lib/CMakeLists.txt
+index 7c36e51..ee2c5bc 100644
+--- a/bindings/perl/lib/CMakeLists.txt
++++ b/bindings/perl/lib/CMakeLists.txt
+@@ -1,2 +1 @@
+ add_custom_target(PMlibproxy ALL ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/Libproxy.pm ${CMAKE_BINARY_DIR}/perl/Net/Libproxy.pm)
+-install( FILES Libproxy.pm DESTINATION ${PX_PERL_ARCH}/Net )
+diff --git a/bindings/perl/src/CMakeLists.txt b/bindings/perl/src/CMakeLists.txt
+index 29e656d..dec5799 100644
+--- a/bindings/perl/src/CMakeLists.txt
++++ b/bindings/perl/src/CMakeLists.txt
+@@ -20,5 +20,3 @@ endif()
+ target_link_libraries(PLlibproxy ${PLlibproxy_LIB_DEPENDENCIES})
+ set_target_properties(PLlibproxy PROPERTIES OUTPUT_NAME "Libproxy")
+ set_target_properties(PLlibproxy PROPERTIES PREFIX "")
+-
+-install( TARGETS PLlibproxy DESTINATION ${PX_PERL_ARCH}/auto/Net/Libproxy )
 diff --git a/bindings/python/python2/CMakeLists.txt b/bindings/python/python2/CMakeLists.txt
-index 00df551..15d78f9 100644
+index f4d2b91..a79decc 100644
 --- a/bindings/python/python2/CMakeLists.txt
 +++ b/bindings/python/python2/CMakeLists.txt
 @@ -21,5 +21,4 @@ if(PYTHON2INTERP_FOUND)
@@ -18,19 +25,13 @@ index 00df551..15d78f9 100644
  
 -  install(FILES ../libproxy.py DESTINATION ${PYTHON2_SITEPKG_DIR})
  endif()
-diff --git a/bindings/perl/lib/CMakeLists.txt b/bindings/perl/lib/CMakeLists.txt
-index 9856627..f54c138 100644
---- a/bindings/perl/lib/CMakeLists.txt
-+++ b/bindings/perl/lib/CMakeLists.txt
-@@ -1,2 +1 @@
- add_custom_target(PMlibproxy ALL ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/Libproxy.pm ${CMAKE_BINARY_DIR}/perl/blib/lib/Libproxy.pm)
--install( FILES Libproxy.pm DESTINATION ${PX_PERL_ARCH}/Net )
-diff --git a/bindings/perl/src/CMakeLists.txt b/bindings/perl/src/CMakeLists.txt
-index 05176c4..9ca532f 100644
---- a/bindings/perl/src/CMakeLists.txt
-+++ b/bindings/perl/src/CMakeLists.txt
-@@ -21,4 +21,3 @@ target_link_libraries(PLlibproxy ${PLlibproxy_LIB_DEPENDENCIES})
- set_target_properties(PLlibproxy PROPERTIES OUTPUT_NAME "Libproxy")
- set_target_properties(PLlibproxy PROPERTIES PREFIX "")
+diff --git a/bindings/python/python3/CMakeLists.txt b/bindings/python/python3/CMakeLists.txt
+index fc3b24b..a13b6b7 100644
+--- a/bindings/python/python3/CMakeLists.txt
++++ b/bindings/python/python3/CMakeLists.txt
+@@ -21,5 +21,4 @@ if(PYTHON3INTERP_FOUND)
+   
+   message(STATUS "Using PYTHON3_SITEPKG_DIR=${PYTHON3_SITEPKG_DIR}")
  
--install( TARGETS PLlibproxy DESTINATION ${PX_PERL_ARCH}/auto/Net/Libproxy )
+-  install(FILES ../libproxy.py DESTINATION ${PYTHON3_SITEPKG_DIR})
+ endif()

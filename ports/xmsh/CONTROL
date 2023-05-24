@@ -1,4 +1,0 @@
-Source: xmsh
-Version: 0.4.1
-Description: Reference Implementation of XMSH Library
-Build-Depends: tl-expected

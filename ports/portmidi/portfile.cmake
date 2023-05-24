@@ -1,52 +1,31 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/portmedia/portmidi/217/portmidi-src-217.zip"
-    FILENAME "portmidi-src-217.zip"
-    SHA512 d08d4d57429d26d292b5fe6868b7c7a32f2f1d2428f6695cd403a697e2d91629bd4380242ab2720e8f21c895bb75cb56b709fb663a20e8e623120e50bfc5d90b
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO PortMidi/portmidi
+    REF "v${VERSION}"
+    SHA512 d9f22d161e1dd9a4bde1971bb2b6e5352da51545f4fe5ecad11c55e7a535f0d88efce18d1c8fd91e93b70a7926150f86a0f53972ad92370e86556a8dd72dc194
+    HEAD_REF master
+    PATCHES
+        "search-for-threads-in-config.patch"
 )
 
-# Mark portmidi-static as static, disable pmjni library depending on the Java SDK
-
-file(READ "${SOURCE_PATH}/pm_common/CMakeLists.txt" PM_CMAKE)
-string(REPLACE "add_library(portmidi-static \${LIBSRC})" "add_library(portmidi-static STATIC \${LIBSRC})" PM_CMAKE "${PM_CMAKE}")
-string(REPLACE "add_library(pmjni SHARED \${JNISRC})" "# Removed pmjni" PM_CMAKE "${PM_CMAKE}")
-string(REPLACE "target_link_libraries(pmjni \${JNI_EXTRA_LIBS})" "# Removed pmjni" PM_CMAKE "${PM_CMAKE}")
-string(REPLACE "set_target_properties(pmjni PROPERTIES EXECUTABLE_EXTENSION \"jnilib\")" "# Removed pmjni" PM_CMAKE "${PM_CMAKE}")
-file(WRITE "${SOURCE_PATH}/pm_common/CMakeLists.txt" "${PM_CMAKE}")
-
-# Run cmake configure step
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
-        -DJAVA_INCLUDE_PATH=
-        -DJAVA_INCLUDE_PATH2=
-        -DJAVA_JVM_LIBRARY=
-)
-
-# Run cmake build step, nothing is installed on Windows
-vcpkg_build_cmake()
-
-file(INSTALL ${SOURCE_PATH}/pm_common/portmidi.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/porttime/porttime.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/portmidi_s.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/portmidi_s.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    set(PM_USE_STATIC_RUNTIME ON)
 else()
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/portmidi.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Release/portmidi.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/portmidi.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Debug/portmidi.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    set(PM_USE_STATIC_RUNTIME OFF)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/portmidi RENAME copyright)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DPM_USE_STATIC_RUNTIME="${PM_USE_STATIC_RUNTIME}"
+)
+
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/PortMidi)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")

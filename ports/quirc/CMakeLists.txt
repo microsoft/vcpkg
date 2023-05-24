@@ -1,17 +1,27 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.19)
 
 project(quirc C)
 
 add_library(quirc
-	lib/decode.c
-	lib/identify.c
-	lib/quirc.c
-	lib/version_db.c
+    lib/decode.c
+    lib/identify.c
+    lib/quirc.c
+    lib/version_db.c
+    lib/quirc.h
 )
 
-install(TARGETS quirc
-		RUNTIME DESTINATION bin
-		ARCHIVE DESTINATION lib
-		LIBRARY DESTINATION lib)
+target_include_directories(quirc INTERFACE $<INSTALL_INTERFACE:include>)
 
-install(FILES ${PROJECT_SOURCE_DIR}/lib/quirc.h DESTINATION include)
+install(TARGETS quirc
+        EXPORT quirc-targets
+        RUNTIME DESTINATION bin
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib)
+
+install(FILES lib/quirc.h DESTINATION include)
+
+install(EXPORT quirc-targets
+    FILE quirc-config.cmake
+    NAMESPACE quirc::
+    DESTINATION share/quirc
+)

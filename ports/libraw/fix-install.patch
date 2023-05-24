@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 889fddf..e7d5a66 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -588,7 +588,7 @@ if (LIBRAW_INSTALL)
+     # Configure and install data file for packaging.
+     include(GNUInstallDirs)
+ 
+-    if(NOT MSVC)
++    if(1)
+         configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/data/libraw.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libraw.pc @ONLY)
+         install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libraw.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 
+@@ -612,7 +612,13 @@ if (LIBRAW_INSTALL)
+            )
+ 
+     # Install Shared binary files.
+-    install(TARGETS raw raw_r
++    install(TARGETS raw
++            EXPORT ${PROJECT_NAME}Targets
++            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/manual-link
++            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/manual-link
++           )
++    install(TARGETS raw_r
+             EXPORT ${PROJECT_NAME}Targets
+             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+@@ -623,6 +629,7 @@ if (LIBRAW_INSTALL)
+     if(NOT BUILD_SHARED_LIBS AND "${CMAKE_CXX_SIMULATE_ID}" STREQUAL "MSVC")
+         message("ClangCl does not support pdb generation with static libraries")
+     elseif(MSVC)
++    elseif(0)
+         install(FILES ${PROJECT_BINARY_DIR}/raw.pdb ${PROJECT_BINARY_DIR}/raw_r.pdb
+                 DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                 CONFIGURATIONS Debug RelWithDebInfo
+diff --git a/cmake/data/libraw.pc.cmake b/cmake/data/libraw.pc.cmake
+index 510526f..aa6ab21 100644
+--- a/cmake/data/libraw.pc.cmake
++++ b/cmake/data/libraw.pc.cmake
+@@ -1,6 +1,6 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@/manual-link
+ includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+ 
+ Name: @PROJECT_NAME@

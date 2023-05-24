@@ -1,0 +1,13 @@
+{
+  "name": "yasm-tool",
+  "version-date": "2021-12-14",
+  "description": "Legacy port. Use port yasm instead.",
+  "dependencies": [
+    {
+      "name": "yasm",
+      "features": [
+        "tools"
+      ]
+    }
+  ]
+}

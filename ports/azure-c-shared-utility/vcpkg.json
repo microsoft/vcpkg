@@ -1,0 +1,28 @@
+{
+  "name": "azure-c-shared-utility",
+  "version-date": "2023-01-18",
+  "description": "Azure C SDKs common code",
+  "homepage": "https://github.com/Azure/azure-c-shared-utility",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "azure-macro-utils-c",
+    {
+      "name": "curl",
+      "platform": "linux"
+    },
+    {
+      "name": "openssl",
+      "platform": "linux"
+    },
+    "umock-c",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

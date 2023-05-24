@@ -1,0 +1,33 @@
+{
+  "name": "igraph",
+  "version": "0.10.4",
+  "description": "igraph is a C library for network analysis and graph theory, with an emphasis on efficiency portability and ease of use.",
+  "homepage": "https://igraph.org/",
+  "license": "GPL-2.0-or-later",
+  "dependencies": [
+    "blas",
+    "lapack",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "graphml"
+  ],
+  "features": {
+    "graphml": {
+      "description": "Support for reading GraphML files",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
+    "openmp": {
+      "description": "Use OpenMP parallelization in some functions"
+    }
+  }
+}

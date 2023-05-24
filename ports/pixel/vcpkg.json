@@ -1,0 +1,28 @@
+{
+  "name": "pixel",
+  "version-date": "2022-03-15",
+  "port-version": 1,
+  "description": "Simple 2D Graphics based on standard and portable OpenGL.",
+  "homepage": "https://github.com/dascandy/pixel",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "glew",
+    "opengl",
+    {
+      "name": "sdl2",
+      "default-features": false,
+      "features": [
+        "x11"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "sdl2",
+      "platform": "!linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "dimcli",
+  "version-semver": "7.1.0",
+  "description": "C++ command line parser toolkit",
+  "homepage": "https://github.com/gknowles/dimcli",
+  "documentation": "https://gknowles.github.io/dimcli",
+  "license": "BSL-1.0",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

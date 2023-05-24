@@ -1,0 +1,8 @@
+{
+  "name": "gsoap",
+  "version": "2.8.112",
+  "port-version": 1,
+  "description": "The gSOAP toolkit is a C and C++ software development toolkit for SOAP and REST XML Web services and generic C/C++ XML data bindings.",
+  "homepage": "https://sourceforge.net/projects/gsoap2/",
+  "supports": "!(linux | osx | arm | uwp)"
+}

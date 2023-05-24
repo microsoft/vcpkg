@@ -1,0 +1,70 @@
+diff --git a/src/calibration/calibration.c b/src/calibration/calibration.c
+index d37c4e6..ec477f5 100644
+--- a/src/calibration/calibration.c
++++ b/src/calibration/calibration.c
+@@ -7,7 +7,6 @@
+ // Dependent libraries
+ #include <k4ainternal/common.h>
+ #include <cjson/cJSON.h>
+-#include <locale.h> //cJSON.h need this set correctly.
+ 
+ // System dependencies
+ #include <stdlib.h>
+@@ -637,27 +636,6 @@ k4a_result_t calibration_create_from_raw(char *raw_calibration,
+ 
+     k4a_result_t result = K4A_RESULT_SUCCEEDED;
+ 
+-#ifdef _WIN32
+-    int previous_thread_locale = -1;
+-    if (K4A_SUCCEEDED(result))
+-    {
+-        previous_thread_locale = _configthreadlocale(_ENABLE_PER_THREAD_LOCALE);
+-        result = K4A_RESULT_FROM_BOOL(previous_thread_locale == _ENABLE_PER_THREAD_LOCALE ||
+-                                      previous_thread_locale == _DISABLE_PER_THREAD_LOCALE);
+-    }
+-
+-    if (K4A_SUCCEEDED(result))
+-    {
+-        result = K4A_RESULT_FROM_BOOL(setlocale(LC_ALL, "C") != NULL);
+-    }
+-
+-#else // NOT _WIN32
+-
+-    locale_t thread_locale = newlocale(LC_ALL_MASK, "C", (locale_t)0);
+-    locale_t previous_locale = uselocale(thread_locale);
+-
+-#endif
+-
+     if (K4A_SUCCEEDED(result) && depth_calibration != NULL)
+     {
+         result = get_camera_calibration(raw_calibration, depth_calibration, "CALIBRATION_CameraLocationD0");
+@@ -680,29 +658,6 @@ k4a_result_t calibration_create_from_raw(char *raw_calibration,
+                                      "CALIBRATION_InertialSensorType_Accelerometer");
+     }
+ 
+-#ifdef _WIN32
+-    if (previous_thread_locale == _ENABLE_PER_THREAD_LOCALE || previous_thread_locale == _DISABLE_PER_THREAD_LOCALE)
+-    {
+-        if (K4A_FAILED(K4A_RESULT_FROM_BOOL(_configthreadlocale(previous_thread_locale) != -1)))
+-        {
+-            // Only set result to failed, don't let this call succeed and clear a failure that might have happened
+-            // already.
+-            result = K4A_RESULT_FAILED;
+-        }
+-    }
+-#else // NOT _WIN32
+-    if ((previous_locale != NULL) && (K4A_FAILED(K4A_RESULT_FROM_BOOL(uselocale(previous_locale) != NULL))))
+-    {
+-        // Only set result to failed, don't let this call succeed and clear a failure that might have happened
+-        // already.
+-        result = K4A_RESULT_FAILED;
+-    }
+-    if (thread_locale)
+-    {
+-        freelocale(thread_locale);
+-    }
+-#endif
+-
+     return result;
+ }
+ 

@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 09d82f1..f0d99e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1507,6 +1507,7 @@ else()
+   set(ENABLE_SHARED         "no")
+   set(ENABLE_STATIC         "yes")
+   set(LIBCURL_NO_SHARED     "${LIBCURL_LIBS}")
++  set(LIBCURL_LIBS          "")
+ endif()
+ # "a" (Linux) or "lib" (Windows)
+ string(REPLACE "." "" libext "${CMAKE_STATIC_LIBRARY_SUFFIX}")

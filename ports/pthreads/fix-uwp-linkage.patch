@@ -1,0 +1,37 @@
+diff --git a/implement.h b/implement.h
+index 1579376..3a7d29b 100644
+--- a/implement.h
++++ b/implement.h
+@@ -36,6 +36,12 @@
+ #if !defined(_IMPLEMENT_H)
+ #define _IMPLEMENT_H
+ 
++#if 1 // The condition should be `defined(__cplusplus_winrt)` when compile option is provided correctly.
++// porvide 2 static libs to resolve link error. 'kernel32' and 'windowsapp'
++#pragma comment(lib, "kernel32")
++#pragma comment(lib, "WindowsApp")
++#endif
++
+ #if !defined (__PTW32_CONFIG_H)
+ # error "config.h was not #included"
+ #endif
+
+diff --git a/pthread_cancel.c b/pthread_cancel.c
+index fddf216..bf16870 100644
+--- a/pthread_cancel.c
++++ b/pthread_cancel.c
+@@ -64,12 +64,12 @@ __ptw32_cancel_callback (ULONG_PTR unused)
+ DWORD
+ __ptw32_Registercancellation (PAPCFUNC unused1, HANDLE threadH, DWORD unused2)
+ {
+-  CONTEXT context;
++  /*CONTEXT context;
+ 
+   context.ContextFlags = CONTEXT_CONTROL;
+   GetThreadContext (threadH, &context);
+    __PTW32_PROGCTR (context) = (DWORD_PTR) __ptw32_cancel_self;
+-  SetThreadContext (threadH, &context);
++  SetThreadContext (threadH, &context);*/
+   return 0;
+ }
+ 

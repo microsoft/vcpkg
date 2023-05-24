@@ -1,0 +1,14 @@
+{
+  "name": "bitserializer-cpprestjson",
+  "version-string": "alias",
+  "port-version": 1,
+  "description": "Deprecated alias for bitserializer-cpprestjson",
+  "dependencies": [
+    {
+      "name": "bitserializer",
+      "features": [
+        "cpprestjson-archive"
+      ]
+    }
+  ]
+}

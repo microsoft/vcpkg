@@ -1,0 +1,45 @@
+{
+  "name": "kf5notifications",
+  "version": "5.98.0",
+  "description": "Desktop notifications",
+  "homepage": "https://api.kde.org/frameworks/knotifications/html/index.html",
+  "dependencies": [
+    "ecm",
+    "kf5config",
+    "kf5coreaddons",
+    {
+      "name": "kf5windowsystem",
+      "platform": "!android"
+    },
+    {
+      "name": "libcanberra",
+      "platform": "!(windows | uwp)"
+    },
+    {
+      "name": "libsnoretoast",
+      "platform": "windows"
+    },
+    {
+      "name": "qt5-androidextras",
+      "platform": "android"
+    },
+    "qt5-base",
+    {
+      "name": "qt5-macextras",
+      "platform": "osx"
+    },
+    "qt5-tools",
+    {
+      "name": "qt5-x11extras",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

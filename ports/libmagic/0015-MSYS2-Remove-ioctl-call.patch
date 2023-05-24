@@ -1,0 +1,27 @@
+# From https://github.com/msys2/MINGW-packages/commit/3a51faadb8bacf06c7b7fd84b2ea80775d1a8b0d
+
+# this is an advanced patch to fix building v5.38
+# see for details
+# this patch should be removed with the next version 
+diff --git a/src/compress.c b/src/compress.c
+index 33ce2bc..f172eda 100644
+--- a/src/compress.c
++++ b/src/compress.c
+@@ -378,7 +378,7 @@
+ sread(int fd, void *buf, size_t n, int canbepipe __attribute__((__unused__)))
+ {
+ 	ssize_t rv;
+-#ifdef FIONREAD
++#if defined(FIONREAD) && !defined(__MINGW32__) && !defined(WIN32)
+ 	int t = 0;
+ #endif
+ 	size_t rn = n;
+@@ -386,7 +386,7 @@
+ 	if (fd == STDIN_FILENO)
+ 		goto nocheck;
+ 
+-#ifdef FIONREAD
++#if defined(FIONREAD) && !defined(__MINGW32__) && !defined(WIN32)
+ 	if (canbepipe && (ioctl(fd, FIONREAD, &t) == -1 || t == 0)) {
+ #ifdef FD_ZERO
+ 		ssize_t cnt;

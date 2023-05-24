@@ -1,0 +1,52 @@
+diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
+index 7182364..4f90430 100644
+--- a/build/cmake/functions.cmake
++++ b/build/cmake/functions.cmake
+@@ -428,7 +428,7 @@ macro(wx_add_library name)
+         set_target_properties(${name} PROPERTIES PROJECT_LABEL ${name_short})
+ 
+         # Setup install
+-        set(runtime_dir "lib")
++        set(runtime_dir "bin")
+         if(WIN32 AND NOT WIN32_MSVC_NAMING)
+             # configure puts the .dll in the bin directory
+             set(runtime_dir "bin")
+diff --git a/build/cmake/init.cmake b/build/cmake/init.cmake
+index ef28c99..928bc0b 100644
+--- a/build/cmake/init.cmake
++++ b/build/cmake/init.cmake
+@@ -146,7 +146,7 @@ if(WIN32)
+     endif()
+ endif()
+ 
+-if(WIN32_MSVC_NAMING)
++if(0)
+     if(wxBUILD_SHARED)
+         set(lib_suffix "_dll")
+     else()
+diff --git a/build/cmake/install.cmake b/build/cmake/install.cmake
+index 384c683..a662a48 100644
+--- a/build/cmake/install.cmake
++++ b/build/cmake/install.cmake
+@@ -41,7 +41,7 @@ else()
+ 
+     install(DIRECTORY DESTINATION "bin")
+     install(CODE "execute_process( \
+-        COMMAND ${CMAKE_COMMAND} -E create_symlink \
++        COMMAND ${CMAKE_COMMAND} -E copy \
+         \"${CMAKE_INSTALL_PREFIX}/lib/wx/config/${wxBUILD_FILE_ID}\" \
+         \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/wx-config\" \
+         )"
+diff --git a/build/cmake/utils/CMakeLists.txt b/build/cmake/utils/CMakeLists.txt
+index dbed8cc..f1da8e3 100644
+--- a/build/cmake/utils/CMakeLists.txt
++++ b/build/cmake/utils/CMakeLists.txt
+@@ -39,7 +39,7 @@ if(wxUSE_XRC)
+ 
+         # Don't use wx_install() here to preserve escaping.
+         install(CODE "execute_process( \
+-            COMMAND ${CMAKE_COMMAND} -E create_symlink \
++            COMMAND ${CMAKE_COMMAND} -E copy \
+             \"${CMAKE_INSTALL_PREFIX}/bin/${wxrc_output_name}${EXE_SUFFIX}\" \
+             \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/wxrc${EXE_SUFFIX}\" \
+             )"

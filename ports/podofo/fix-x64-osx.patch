@@ -1,0 +1,13 @@
+diff --git a/src/podofo/base/PdfDate.cpp b/src/podofo/base/PdfDate.cpp
+index cefa221..75d80e4 100644
+--- a/src/podofo/base/PdfDate.cpp
++++ b/src/podofo/base/PdfDate.cpp
+@@ -196,7 +196,7 @@ PdfDate::PdfDate( const PdfString & sDate )
+ 
+     strncpy(m_szDate,sDate.GetString(),PDF_DATE_BUFFER_SIZE);
+ 
+-    struct tm _tm{};
++    struct tm _tm; memset (&_tm, 0, sizeof(struct tm));
+     _tm.tm_mday = 1;
+ 
+     const char * pszDate = sDate.GetString();

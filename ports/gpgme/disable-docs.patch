@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index 1772d69..9bf9863 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -45,7 +45,7 @@ else
+ tests =
+ endif
+ 
+-SUBDIRS = src ${tests} doc lang
++SUBDIRS = src ${tests} lang
+ 
+ # Fix the version of the spec file.
+ dist-hook: gen-ChangeLog

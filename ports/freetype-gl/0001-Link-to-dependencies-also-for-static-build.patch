@@ -1,0 +1,43 @@
+From 1ad7d07765445511d51f3888ffdedba2cb282e84 Mon Sep 17 00:00:00 2001
+From: Stig Hornang <shornang@gmail.com>
+Date: Sun, 1 May 2022 21:57:18 +0200
+Subject: [PATCH 1/4] Link to dependencies also for static build
+
+---
+ CMakeLists.txt | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2ccbf9a..b5db60a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -185,12 +185,6 @@ if(freetype-gl_BUILD_SHARED)
+     PROPERTIES
+         VERSION 0.3.2
+         SOVERSION 0)
+-    target_link_libraries (freetype-gl
+-			   ${OPENGL_LIBRARY}
+-			   ${FREETYPE_LIBRARIES}
+-			   ${MATH_LIBRARY}
+-			   ${GLEW_LIBRARY}
+-			   )
+ else()
+     add_library(freetype-gl STATIC
+         ${FREETYPE_GL_SRC}
+@@ -198,6 +192,13 @@ else()
+     )
+ endif()
+ 
++target_link_libraries(freetype-gl
++                      ${OPENGL_LIBRARY}
++                      ${FREETYPE_LIBRARIES}
++                      ${MATH_LIBRARY}
++                      ${GLEW_LIBRARY}
++)
++
+ if(freetype-gl_BUILD_MAKEFONT)
+     add_executable(makefont makefont.c)
+ 
+-- 
+2.27.0
+

@@ -1,0 +1,12 @@
+{
+  "name": "tsl-ordered-map",
+  "version": "1.0.0",
+  "port-version": 3,
+  "description": "C++ hash map and hash set which preserve the order of insertion",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

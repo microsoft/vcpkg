@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nanomsg
-    REF 1.1.5
-    SHA512 773b8e169a7accac21414c63972423a249164f5b843c6c65c1b03a2eb90d21da788a98debdeb396dab795e52d30605696bc2cf65e5e05687bf115438d5b22717
+    REF 1.2
+    SHA512 377b3a0b4be6d6decd2711ff84ac1855ae0a298e7557dbe4b7d881c2a76f4e521671b47987b924c434afdad7ff1dfebb50982c8c0afca9b44682c898510d4c92
     HEAD_REF master
 )
 
@@ -16,9 +14,8 @@ else()
     set(NN_ENABLE_NANOCAT OFF)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
         -DNN_STATIC_LIB=${NN_STATIC_LIB}
@@ -28,11 +25,11 @@ vcpkg_configure_cmake(
         -DNN_ENABLE_NANOCAT=${NN_ENABLE_NANOCAT}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(STRINGS ${SOURCE_PATH}/.version NN_PACKAGE_VERSION)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nanomsg-${NN_PACKAGE_VERSION})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nanomsg-${NN_PACKAGE_VERSION})
 
 vcpkg_replace_string(
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/nanomsg-config.cmake
@@ -41,30 +38,12 @@ vcpkg_replace_string(
 )
 
 if(NN_ENABLE_NANOCAT)
-    if(CMAKE_HOST_WIN32)
-        set(EXECUTABLE_SUFFIX ".exe")
-    else()
-        set(EXECUTABLE_SUFFIX "")
-    endif()
-
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/nanocat${EXECUTABLE_SUFFIX}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-    file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/bin/nanocat${EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/debug/bin/nanocat${EXECUTABLE_SUFFIX}
-    )
+    vcpkg_copy_tools(TOOL_NAMES nanocat AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
-
     vcpkg_replace_string(
         ${CURRENT_PACKAGES_DIR}/include/nanomsg/nn.h
         "defined(NN_STATIC_LIB)"
@@ -81,3 +60,5 @@ endif()
 configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()

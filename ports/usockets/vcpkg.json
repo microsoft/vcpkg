@@ -1,0 +1,31 @@
+{
+  "name": "usockets",
+  "version": "0.8.5",
+  "description": "Miniscule cross-platform eventing, networking & crypto for async applications",
+  "homepage": "https://github.com/uNetworking/uSockets",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "libuv",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "event": {
+      "description": "Build usockets with epoll support"
+    },
+    "network": {
+      "description": "Build usockets with winsock support",
+      "dependencies": [
+        "winsock2"
+      ]
+    },
+    "ssl": {
+      "description": "Build usockets with openssl support",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

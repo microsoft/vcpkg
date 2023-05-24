@@ -1,18 +1,6 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "PBC currently can only be built for desktop")
-endif()
-
-if(VCPKG_CRT_LINKAGE STREQUAL "static" AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "PBC currently can only be built using the dynamic CRT when building DLLs")
-endif()
-
 set(PBC_VERSION 0.5.14)
 
-if(VCPKG_CMAKE_SYSTEM_NAME)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(
         ARCHIVE
         URLS "https://crypto.stanford.edu/pbc/files/pbc-${PBC_VERSION}.tar.gz"
@@ -20,10 +8,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
         SHA512 d75d4ceb3f67ee62c7ca41e2a91ee914fbffaeb70256675aed6734d586950ea8e64e2f16dc069d71481eddb703624df8d46497005fb58e75cf098dd7e7961333
     )
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE ${ARCHIVE}
-        REF ${PBC_VERSION}
+        SOURCE_BASE ${PBC_VERSION}
         PATCHES linux.patch
     )
 
@@ -37,49 +25,21 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
     endif()
 
     set(OPTIONS ${SHARED_STATIC} LEX=${FLEX} YACC=${BISON}\ -y)
-    vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/setup
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME setup-${TARGET_TRIPLET}
+
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+        COPY_SOURCE
+        OPTIONS
+            ${OPTIONS}
     )
 
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG} -O0 -g -I${SOURCE_PATH}/include")
-    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
-    vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/configure --prefix=${CURRENT_PACKAGES_DIR}/debug ${OPTIONS} --with-sysroot=${CURRENT_INSTALLED_DIR}/debug
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME configure-${TARGET_TRIPLET}-dbg
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-        COMMAND make -j install
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME install-${TARGET_TRIPLET}-dbg
-    )
-
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-    set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE} -O3 -I${SOURCE_PATH}/include")
-    set(ENV{LDFLAGS} "${VCPKG_LINKER_FLAGS}")
-    vcpkg_execute_required_process(
-        COMMAND ${SOURCE_PATH}/configure --prefix=${CURRENT_PACKAGES_DIR} ${OPTIONS} --with-sysroot=${CURRENT_INSTALLED_DIR}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME configure-${TARGET_TRIPLET}-rel
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-        COMMAND make -j install
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME install-${TARGET_TRIPLET}-rel
-    )
+    vcpkg_install_make()
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/info)
-    configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/pbc/copyright COPYONLY)
+    file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 else()
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO blynn/pbc

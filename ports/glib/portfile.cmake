@@ -1,58 +1,143 @@
-# Glib uses winapi functions not available in WindowsStore
-vcpkg_fail_port_install(ON_TARGET "UWP")
+string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
+vcpkg_download_distfile(GLIB_ARCHIVE
+    URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
+    FILENAME "glib-${VERSION}.tar.xz"
+    SHA512 5a99723d72ae987999bdf3eac4f3cabe2e014616038f2006e84060b97d6d290b7d44a20d700e9c0f4572a6defed56169f624bcd21b0337f32832b311aa2737e6
+)
 
-# Glib relies on DllMain on Windows
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
-
-set(GLIB_VERSION 2.52.3)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.52/glib-${GLIB_VERSION}.tar.xz"
-    FILENAME "glib-${GLIB_VERSION}.tar.xz"
-    SHA512 a068f2519cfb82de8d4b7f004e7c1f15e841cad4046430a83b02b359d011e0c4077cdff447a1687ed7c68f1a11b4cf66b9ed9fc23ab5f0c7c6be84eb0ddc3017)
-
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${GLIB_VERSION}
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${GLIB_ARCHIVE}"
     PATCHES
         use-libiconv-on-windows.patch
-        arm64-defines.patch
-        fix-arm-builds.patch
+        libintl.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH})
-file(REMOVE_RECURSE ${SOURCE_PATH}/glib/pcre)
-file(WRITE ${SOURCE_PATH}/glib/pcre/Makefile.in)
-file(REMOVE ${SOURCE_PATH}/glib/win_iconv.c)
-
-if (selinux IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT EXISTS "/usr/include/selinux")
-    message("Selinux was not found in its typical system location. Your build may fail. You can install Selinux with \"apt-get install selinux\".")
+vcpkg_list(SET OPTIONS)
+if (selinux IN_LIST FEATURES)
+    if(NOT EXISTS "/usr/include/selinux")
+        message(WARNING "SELinux was not found in its typical system location. Your build may fail. You can install SELinux with \"apt-get install selinux libselinux1-dev\".")
+    endif()
+    list(APPEND OPTIONS -Dselinux=enabled)
+else()
+    list(APPEND OPTIONS -Dselinux=disabled)
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    selinux HAVE_SELINUX
+if (libmount IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dlibmount=enabled)
+else()
+    list(APPEND OPTIONS -Dlibmount=disabled)
+endif()
+
+vcpkg_list(SET ADDITIONAL_BINARIES)
+if(VCPKG_HOST_IS_WINDOWS)
+    # Presence of bash and sh enables installation of auxiliary components.
+    vcpkg_list(APPEND ADDITIONAL_BINARIES "bash = ['${CMAKE_COMMAND}', '-E', 'false']")
+    vcpkg_list(APPEND ADDITIONAL_BINARIES "sh = ['${CMAKE_COMMAND}', '-E', 'false']")
+endif()
+
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
+    ADDITIONAL_BINARIES
+        ${ADDITIONAL_BINARIES}
+    OPTIONS
+        ${OPTIONS}
+        -Dgtk_doc=false
+        -Dinstalled_tests=false
+        -Dlibelf=disabled
+        -Dman=false
+        -Dtests=false
+        -Dxattr=false
 )
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
-        -DGLIB_VERSION=${GLIB_VERSION}
-    OPTIONS_DEBUG
-        -DGLIB_SKIP_HEADERS=ON
-        -DGLIB_SKIP_TOOLS=ON
-)
-
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-glib TARGET_PATH share/unofficial-glib)
-
+vcpkg_install_meson(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/glib)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+set(GLIB_SCRIPTS
+    gdbus-codegen
+    glib-genmarshal
+    glib-gettextize
+    glib-mkenums
+    gtester-report
+)
+foreach(script IN LISTS GLIB_SCRIPTS)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")
+endforeach()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/glib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/glib/COPYING ${CURRENT_PACKAGES_DIR}/share/glib/copyright)
+set(GLIB_TOOLS
+    gapplication
+    gdbus
+    gio
+    gio-querymodules
+    glib-compile-resources
+    glib-compile-schemas
+    gobject-query
+    gresource
+    gsettings
+    gtester
+)
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(REMOVE_ITEM GLIB_TOOLS gapplication gtester)
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64|arm64")
+        list(APPEND GLIB_TOOLS gspawn-win64-helper gspawn-win64-helper-console)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        list(APPEND GLIB_TOOLS gspawn-win32-helper gspawn-win32-helper-console)
+    endif()
+elseif(VCPKG_TARGET_IS_OSX)
+    list(REMOVE_ITEM GLIB_TOOLS gapplication)
+endif()
+vcpkg_copy_tools(TOOL_NAMES ${GLIB_TOOLS} AUTO_CLEAN)
+
+vcpkg_fixup_pkgconfig()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(LIBINTL_NAME "intl.lib")
+else()
+    set(LIBINTL_NAME "libintl")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        string(APPEND LIBINTL_NAME "${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
+    else()
+        string(APPEND LIBINTL_NAME "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    endif()
+endif()
+
+set(pc_replace_intl_path gio glib gmodule-no-export gobject gthread)
+foreach(pc_prefix IN LISTS pc_replace_intl_path)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\"" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/debug/lib/${LIBINTL_NAME}" "-lintl")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/lib/${LIBINTL_NAME}" "-lintl")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${pc_prefix}-2.0.pc" "\"" "")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/lib/${LIBINTL_NAME}" "-lintl")
+    endif()
+endforeach()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gio-2.0.pc" "\${bindir}" "\${prefix}/tools/${PORT}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glib-2.0.pc" "\${bindir}" "\${prefix}/tools/${PORT}")
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gio-2.0.pc" "\${bindir}" "\${prefix}/../tools/${PORT}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glib-2.0.pc" "\${bindir}" "\${prefix}/../tools/${PORT}")
+endif()
+
+# Fix python scripts
+set(_file "${CURRENT_PACKAGES_DIR}/tools/${PORT}/gdbus-codegen")
+file(READ "${_file}" _contents)
+string(REPLACE "elif os.path.basename(filedir) == 'bin':" "elif os.path.basename(filedir) == 'tools':" _contents "${_contents}")
+string(REPLACE "path = os.path.join(filedir, '..', 'share', 'glib-2.0')" "path = os.path.join(filedir, '../..', 'share', 'glib-2.0')" _contents "${_contents}")
+string(REPLACE "path = os.path.join(filedir, '..')" "path = os.path.join(filedir, '../../share/glib-2.0')" _contents "${_contents}")
+string(REPLACE "path = os.path.join('${CURRENT_PACKAGES_DIR}/share', 'glib-2.0')" "path = os.path.join('unuseable/share', 'glib-2.0')" _contents "${_contents}")
+file(WRITE "${_file}" "${_contents}")
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/glib-gettextize")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/glib-gettextize" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/gdb"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/gio"
+    "${CURRENT_PACKAGES_DIR}/lib/gio"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt")

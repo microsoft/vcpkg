@@ -1,0 +1,18 @@
+{
+  "name": "glm",
+  "version": "0.9.9.8",
+  "port-version": 2,
+  "description": "OpenGL Mathematics (GLM)",
+  "homepage": "https://glm.g-truc.net",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

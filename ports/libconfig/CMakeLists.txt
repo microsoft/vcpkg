@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5.1)
 project(libconfig C CXX)
 
 if(MSVC)
-  add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS)
+  add_compile_options(/W3 /wd4005 /wd4996 /wd4018 -D_CRT_SECURE_NO_WARNINGS -DYY_NO_UNISTD_H -DYY_USE_CONST)
 endif()
 
 set(C_SOURCES
@@ -20,11 +20,9 @@ set(CPP_SOURCES
   lib/libconfigcpp.cc
 )
 
-find_path(STDINT_H stdint.h)
+set(CMAKE_C_STANDARD 99)
 
 include_directories(lib ${STDINT_H})
-
-add_definitions(-DYY_NO_UNISTD_H -DYY_USE_CONST)
 
 add_library(libconfig  ${C_SOURCES})
 add_library(libconfig++ ${CPP_SOURCES})
@@ -37,7 +35,10 @@ else()
   target_compile_definitions(libconfig++ PUBLIC -DLIBCONFIGXX_STATIC)
 endif()
 
-target_link_libraries(libconfig shlwapi)
+if (WIN32)
+  # Linux doesn't have shlwapi
+  target_link_libraries(libconfig shlwapi)
+endif()
 target_link_libraries(libconfig++ PRIVATE libconfig)
 
 install(

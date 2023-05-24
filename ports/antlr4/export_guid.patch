@@ -1,22 +1,22 @@
-diff -urN c/runtime/src/support/guid.h d/runtime/src/support/guid.h
---- c/runtime/src/support/guid.h	2017-07-01 09:51:22.000000000 +0800
-+++ d/runtime/src/support/guid.h	2018-09-05 10:16:23.847717700 +0800
-@@ -38,7 +38,7 @@
+diff -urN a/runtime/src/support/Guid.h b/runtime/src/support/Guid.h
+--- a/runtime/src/support/Guid.h
++++ b/runtime/src/support/Guid.h
+@@ -42,7 +42,7 @@ namespace antlrcpp {
  // 16 byte value that can be passed around by value. It also supports
  // conversion to string (via the stream operator <<) and conversion from a
  // string via constructor.
--class Guid
-+class ANTLR4CPP_PUBLIC Guid
- {
+-class Guid final {
++class ANTLR4CPP_PUBLIC Guid final {
  public:
- 
-@@ -90,7 +90,7 @@
+   using size_type = typename std::array<uint8_t, 16>::size_type;
+   using pointer = typename std::array<uint8_t, 16>::pointer;
+@@ -131,7 +131,7 @@ private:
  // function would no longer be cross-platform if we parameterized the android
  // version. Instead, construction of the GuidGenerator may be different on
  // each platform, but the use of newGuid is uniform.
--class GuidGenerator
-+class ANTLR4CPP_PUBLIC GuidGenerator
- {
+-class GuidGenerator final {
++class ANTLR4CPP_PUBLIC GuidGenerator final {
  public:
  #ifdef GUID_ANDROID
- 
+   GuidGenerator(JNIEnv *env);
+

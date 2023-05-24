@@ -1,5 +1,0 @@
-Source: live555
-Version: latest-1
-Homepage: https://www.live555.com/liveMedia
-Description: A complete RTSP server application
-Build-Depends: openssl

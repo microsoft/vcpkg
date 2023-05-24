@@ -1,0 +1,22 @@
+{
+  "name": "oniguruma",
+  "version": "6.9.7.1",
+  "port-version": 1,
+  "description": "Modern and flexible regular expressions library",
+  "homepage": "https://github.com/kkos/oniguruma",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "non-posix": {
+      "description": "Disable POSIX API"
+    }
+  }
+}

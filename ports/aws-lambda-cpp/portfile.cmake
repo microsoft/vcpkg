@@ -1,29 +1,26 @@
-include(vcpkg_common_functions)
-
-vcpkg_fail_port_install(MESSAGE "aws-lambda-cpp currently only supports Linux and Mac platforms" ON_TARGET "Windows")
-#if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-#    message(FATAL_ERROR "aws-lambda-cpp currently only supports Linux and Mac platforms")
-#endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-lambda-cpp
-    REF v0.1.0
-    SHA512 78b1ad1dcd88176a954c03b38cbb962c77488da6c75acb37a8b64cde147c030b02c6e51f0a974edb042e59c3c969d110d181ad097ef76f43255500b272a94454
+    REF "v${VERSION}"
+    SHA512 842bada21427c9c85442b8a33228bae7b347214418fcd0681154f1bd384633217d724cab53cddf372a59dfa5de01cca59118a316b0fd58fe9f2403b3b62163f6
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/aws-lambda-cpp RENAME copyright)
+vcpkg_cmake_config_fixup(PACKAGE_NAME aws-lambda-runtime CONFIG_PATH lib/aws-lambda-runtime/cmake)
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/aws-lambda-runtime")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/aws-lambda-runtime")
+
+# Handle copyright
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

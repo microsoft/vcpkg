@@ -1,0 +1,74 @@
+{
+  "versions": [
+    {
+      "git-tree": "c4c646a26ce3e6ad63992d3e4a55cb185159b23c",
+      "version": "1.3.7",
+      "port-version": 2
+    },
+    {
+      "git-tree": "54dcb5ab354422e9518a905d501ccc22dcb69098",
+      "version-string": "1.3.7",
+      "port-version": 1
+    },
+    {
+      "git-tree": "0b0587525c2053316552dce564fe504a2a40cc91",
+      "version-string": "1.3.7",
+      "port-version": 0
+    },
+    {
+      "git-tree": "01ccede900dde05e038364bc8b5576a5bfa4dcd4",
+      "version-string": "1.3.6-4d963fe",
+      "port-version": 2
+    },
+    {
+      "git-tree": "98e70b1efd9f89e964672f3796a2ab883c4dbd68",
+      "version-string": "1.3.6-4d963fe",
+      "port-version": 0
+    },
+    {
+      "git-tree": "114e152c9adfde6f7064b80f828381df5ccac1ab",
+      "version-string": "1.3.6-9eadecc-3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3413027bb7d4da56758b4eb789ae34dfe93b4cef",
+      "version-string": "1.3.6-9eadecc-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a58d3c6bb8aec5d8f56114e33d238365e8b79762",
+      "version-string": "1.3.6-112d3bd-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c38d184c633057325db94f5d59c237c31354d4fd",
+      "version-string": "1.3.6-112d3bd",
+      "port-version": 0
+    },
+    {
+      "git-tree": "330bd7ab75c092e6f20d67be59abac4efca0eb30",
+      "version-string": "1.3.5-143caf4-3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "cb1900cbe3690d4e461905e5b3c1a018c2a5a8a2",
+      "version-string": "1.3.5-143caf4-2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "d4563b5599024b017a53f39f201430a986a2419b",
+      "version-string": "1.3.5-1-143caf4023a90c09a5eb685fdd46fb9b9c36b1ee",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a707a67cdaa73df3b6212ec4a2275c83f12b47e2",
+      "version-string": "1.3.5-143caf4023a90c09a5eb685fdd46fb9b9c36b1ee",
+      "port-version": 0
+    },
+    {
+      "git-tree": "5d39ab08f2c1b122c040b6a21e5bc5f736879d31",
+      "version-string": "",
+      "port-version": 0
+    }
+  ]
+}

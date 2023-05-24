@@ -1,0 +1,52 @@
+diff --git a/DevIL/src-IL/CMakeLists.txt b/DevIL/src-IL/CMakeLists.txt
+index 4accaa1..c3a1874 100644
+--- a/DevIL/src-IL/CMakeLists.txt
++++ b/DevIL/src-IL/CMakeLists.txt
+@@ -160,6 +160,27 @@ if(WIN32)
+ 	# Linux uses libIL.so, libILU.so, and libILUT.so, but Windows uses
+ 	#  DevIL.dll, ILU.dll, and ILUT.dll.
+ 	set_target_properties(IL PROPERTIES OUTPUT_NAME "DevIL")
++    
++    configure_file(${CMAKE_CURRENT_LIST_DIR}/pkgconfig/IL.pc.cmake.in ${CMAKE_CURRENT_LIST_DIR}/pkgconfig/DevIL.pc.cmake.in COPYONLY)
++    
++    file(READ ${CMAKE_CURRENT_LIST_DIR}/pkgconfig/DevIL.pc.cmake.in PKGCONFIG_FILE)
++    string(REPLACE "IL" "DevIL" PKGCONFIG_FILE "${PKGCONFIG_FILE}")
++    file(WRITE ${CMAKE_CURRENT_LIST_DIR}/pkgconfig/DevIL.pc.cmake.in "${PKGCONFIG_FILE}")
++    
++    file(READ ${CMAKE_CURRENT_LIST_DIR}/../src-ILU/pkgconfig/ILU.pc.cmake.in PKGCONFIG_FILE)
++    string(REPLACE "Requires: IL" "Requires: DevIL" PKGCONFIG_FILE "${PKGCONFIG_FILE}")
++    string(REPLACE "Libs.private: -lIL" "Libs.private: -lDevIL" PKGCONFIG_FILE "${PKGCONFIG_FILE}")
++    file(WRITE ${CMAKE_CURRENT_LIST_DIR}/../src-ILU/pkgconfig/ILU.pc.cmake.in "${PKGCONFIG_FILE}")
++    
++    file(READ ${CMAKE_CURRENT_LIST_DIR}/../src-ILUT/pkgconfig/ILUT.pc.cmake.in PKGCONFIG_FILE)
++    string(REPLACE "Requires: IL" "Requires: DevIL" PKGCONFIG_FILE "${PKGCONFIG_FILE}")
++    string(REPLACE "Libs.private: -lIL" "Libs.private: -lDevIL" PKGCONFIG_FILE "${PKGCONFIG_FILE}")
++    file(WRITE ${CMAKE_CURRENT_LIST_DIR}/../src-ILUT/pkgconfig/ILUT.pc.cmake.in "${PKGCONFIG_FILE}")
++    set(PKGCFG_IN_FILE pkgconfig/DevIL.pc.cmake.in)
++    set(PKGCFG_FILE DevIL.pc)
++else(WIN32)
++    set(PKGCFG_IN_FILE pkgconfig/IL.pc.cmake.in)
++    set(PKGCFG_FILE IL.pc)
+ endif(WIN32)
+ 
+ if(UNICODE)
+@@ -246,8 +267,8 @@ endif()
+ # TODO: add Requires.private or Libs.private
+ # (needed to support static linking?)
+ # TODO: sort out version number
+-configure_file( pkgconfig/IL.pc.cmake.in
+-		${CMAKE_CURRENT_BINARY_DIR}/IL.pc @ONLY)
++configure_file( ${PKGCFG_IN_FILE}
++		${CMAKE_CURRENT_BINARY_DIR}/${PKGCFG_FILE} @ONLY)
+ 
+ 
+ # Installation
+@@ -259,7 +280,7 @@ install (TARGETS IL
+ install (FILES ../include/IL/il.h DESTINATION include/IL)
+ 
+ install(FILES
+-    ${CMAKE_CURRENT_BINARY_DIR}/IL.pc
++    ${CMAKE_CURRENT_BINARY_DIR}/${PKGCFG_FILE}
+ 	DESTINATION lib/pkgconfig
+ )
+ 

@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 19767a0..59dbf6c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -161,11 +161,13 @@ INSTALL (
+   )
+ 
+ INSTALL(TARGETS ${LOG4CPP_LIBRARY_NAME}
++    EXPORT log4cpp-targets
+     LIBRARY DESTINATION lib
+     ARCHIVE DESTINATION lib
+     RUNTIME DESTINATION bin)
+ 
+ INSTALL(FILES package.xml DESTINATION share/log4cpp)
++INSTALL(EXPORT log4cpp-targets NAMESPACE log4cpp:: DESTINATION share/log4cpp)
+ 
+ ###########################################################
+ # DOCUMENTATION

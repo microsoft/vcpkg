@@ -3,25 +3,24 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wren-lang/wren
-    REF d1a0d0682ac072fa20f2dcca356dac06565e93a1
-    SHA512 d6b7555da10ea209d04308467563ec401f699a22ca8524e4ae65fd050b0403c5e70430047dbb6a883b8021ab50525c17bb63d76543e7c59dfe4b521cfde6c413
+    REF 4a18fc489f9ea3d253b20dd40f4cdad0d6bb40eb #0.4.0
+    SHA512 b3d79e9cb647e52db06d5cddfc8c93d05ae0e8d87f0f879ac2b812fcc7f55e018d21d3b04d62eaeb12e6d931b5e43fbe357b187e7f446e86e39be015c51c2eee
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCOMPILE_AS_CPP=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 
 vcpkg_copy_pdbs()

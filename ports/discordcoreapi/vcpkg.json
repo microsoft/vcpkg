@@ -1,0 +1,23 @@
+{
+  "name": "discordcoreapi",
+  "version-date": "2023-01-02",
+  "description": "A Discord bot library written in C++ using custom asynchronous coroutines.",
+  "homepage": "https://discordcoreapi.com",
+  "license": "LGPL-2.1-or-later",
+  "supports": "(windows & x64 & !static) | (linux & x64)",
+  "dependencies": [
+    "ffmpeg",
+    "libsodium",
+    "openssl",
+    "opus",
+    "simdjson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

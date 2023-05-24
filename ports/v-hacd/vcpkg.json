@@ -1,0 +1,29 @@
+{
+  "name": "v-hacd",
+  "version": "3.2.0",
+  "port-version": 4,
+  "description": "The V-HACD library decomposes a 3D surface into a set of \"near\" convex parts.",
+  "homepage": "https://github.com/kmammou/v-hacd",
+  "supports": "!arm",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "opencl": {
+      "description": "Builds opencl enabled lib",
+      "dependencies": [
+        "opencl"
+      ]
+    },
+    "openmp": {
+      "description": "Builds openmp enabled lib"
+    }
+  }
+}

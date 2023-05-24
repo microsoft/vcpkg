@@ -1,33 +1,29 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/urdfdom_headers
-    REF 00c1c9c231e46b2300d04073ad696521758fa45c
-    SHA512 8622cfad074454ae34be3e77c37b201adeb0e348df251e1c2fd57f35ae24817bbd2880a9c465056976eb8815fda041ba2fbd70ccb7cac6efc5ed3d7a082e80ef
+    REF 2981892df9da19d10f58dc84de63820e4f554f63 # 1.1.0
+    SHA512 cc47d2fb9781f4c7f1af25ccfb4dc8cc9e72d2ec22cb2fe16866bb0e7ed40494181a413dcd74cb0407b4f5c20262f076f8ae87d605ba0e5477a57ff29ba30967
     HEAD_REF master
+    PATCHES fix-include-path.patch
   )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake TARGET_PATH share/urdfdom_headers)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/CMake")
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake PACKAGE_NAME urdfdom_headers)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/urdfdom_headers/cmake TARGET_PATH share/urdfdom_headers)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/urdfdom_headers)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom_headers)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/urdfdom_headers/cmake PACKAGE_NAME urdfdom_headers)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/urdfdom_headers")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom_headers")
 endif()
 
-# The config files for this project use underscore
-if(EXISTS ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers ${CURRENT_PACKAGES_DIR}/share/urdfdom_headers)
-endif()
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,33 +1,25 @@
-include(vcpkg_common_functions)
-
-# Download the release-1.11 from bitbucket
-vcpkg_from_bitbucket(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SpartanJ/soil2
-    REF release-1.11
-    SHA512 203c2306fd72e24b9e990cb054f3b1b0391eaf26ed645842fb381971673dab8ea20c2739c8dff1fc11c83d6f66add0ad77ae79d8ff68930e3e1cb003e34f2414
+    REF ddcb35d13cc4129103de1c1a3cb74b828fe46b4a # 1.3.0
+    SHA512 627c7bf4fddd5afef85ba7634c5ec0e10005c700abc1eb07c6346c1604e430c34aa4c33f6ffecbecb3dc2b04de7b855a3f6d923e94f23621ae0184e706358908
     HEAD_REF master
+    PATCHES Workaround-ICE-in-release.patch
 )
 
-# Copy the CMakeLists and LICENSE
 file(
     COPY 
-    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
-    ${CMAKE_CURRENT_LIST_DIR}/LICENSE
-    ${CMAKE_CURRENT_LIST_DIR}/soil2Config.cmake.in
-    ${CMAKE_CURRENT_LIST_DIR}/soil2ConfigVersion.cmake.in
-    DESTINATION ${SOURCE_PATH}
+    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+    "${CMAKE_CURRENT_LIST_DIR}/soil2Config.cmake.in"
+    DESTINATION "${SOURCE_PATH}"
 )
 
-# Configure the cmake file (we imported)
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
 )
 
-# Run the install
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/soil2 RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

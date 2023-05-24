@@ -1,15 +1,11 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sheredom/utf8.h
-    REF 841cb2deb8eb806e73fff0e1f43a11fca4f5da45
-    SHA512 cce44011abc58556c031c0de1018b83225bdbbc0e8d7374e3fd6f0b63c8e200086c49e7caac61b559f1e6d5a7ad349a58a13876a1b1341c18349a5cee59a105b
+    REF 500d4ea9f4c3449e5243c088d8af8700f7189734
+    SHA512 fbae7dbfd932176058dacb33ea491d17eb8e02c845e1ef2afc0ae482f563578a8a8011a8578f4aa8593bb0d7de8ba2df140bda05859a9a6bd67f6545ca0d7421
     HEAD_REF master
 )
 
-# Copy the utf8h header files
-file(COPY ${SOURCE_PATH}/utf8.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/utf8h)
+file(COPY "${SOURCE_PATH}/utf8.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/utf8h")
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/utf8h RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

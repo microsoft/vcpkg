@@ -1,0 +1,54 @@
+diff --git a/Source/Projects/VS2022/Console/Console.vcxproj b/Source/Projects/VS2022/Console/Console.vcxproj
+index e7eea4d..754e209 100644
+--- a/Source/Projects/VS2022/Console/Console.vcxproj
++++ b/Source/Projects/VS2022/Console/Console.vcxproj
+@@ -273,9 +273,6 @@
+     <Link>
+       <SubSystem>Console</SubSystem>
+     </Link>
+-    <PostBuildEvent>
+-      <Command>..\..\..\Certificate\signtool.exe sign /f ..\..\..\Certificate\MAC.pfx /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /td sha256 /fd sha256 /a /as /p password "$(TargetPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+     <ClCompile>
+@@ -299,9 +296,6 @@
+     <Link>
+       <SubSystem>Console</SubSystem>
+     </Link>
+-    <PostBuildEvent>
+-      <Command>..\..\..\Certificate\signtool.exe sign /f ..\..\..\Certificate\MAC.pfx /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /td sha256 /fd sha256 /a /as /p password "$(TargetPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <ClCompile>
+@@ -388,9 +382,6 @@
+     <Link>
+       <SubSystem>Console</SubSystem>
+     </Link>
+-    <PostBuildEvent>
+-      <Command>..\..\..\Certificate\signtool.exe sign /f ..\..\..\Certificate\MAC.pfx /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /td sha256 /fd sha256 /a /as /p password "$(TargetPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64EC'">
+     <ClCompile>
+@@ -414,9 +405,6 @@
+     <Link>
+       <SubSystem>Console</SubSystem>
+     </Link>
+-    <PostBuildEvent>
+-      <Command>..\..\..\Certificate\signtool.exe sign /f ..\..\..\Certificate\MAC.pfx /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /td sha256 /fd sha256 /a /as /p password "$(TargetPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+     <ClCompile>
+@@ -440,9 +428,6 @@
+     <Link>
+       <SubSystem>Console</SubSystem>
+     </Link>
+-    <PostBuildEvent>
+-      <Command>..\..\..\Certificate\signtool.exe sign /f ..\..\..\Certificate\MAC.pfx /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /td sha256 /fd sha256 /a /as /p password "$(TargetPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\..\..\Console\Console.cpp" />

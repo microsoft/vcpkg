@@ -1,27 +1,29 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO xiph/speex
-  REF Speex-1.2.0
-  SHA512  612dfd67a9089f929b7f2a613ed3a1d2fda3d3ec0a4adafe27e2c1f4542de1870b42b8042f0dcb16d52e08313d686cc35b76940776419c775417f5bad18b448f
-  HEAD_REF master
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO xiph/speex
+    REF 5dceaaf3e23ee7fd17c80cb5f02a838fd6c18e01 #Speex-1.2.1
+    SHA512  d03da906ec26ddcea2e1dc4157ac6dd056e1407381b0f37edd350552a02a7372e9108b4e39ae522f1b165be04b813ee11db0b47d17607e4dad18118b9041636b
+    HEAD_REF master
+    PATCHES
+        fix-vla-check.patch
+        subdirs.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
-  OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
-)
-
-vcpkg_install_cmake()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  file(READ "${CURRENT_PACKAGES_DIR}/include/speex/speex.h" _contents)
-  string(REPLACE "extern const SpeexMode" "__declspec(dllimport) extern const SpeexMode" _contents "${_contents}")
-  file(WRITE "${CURRENT_PACKAGES_DIR}/include/speex/speex.h" "${_contents}")
+if(VCPKG_TARGET_IS_OSX)
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n    automake\n    libtool\n\nIt can be installed with brew install autoconf automake libtool")
+elseif(VCPKG_TARGET_IS_LINUX)
+      message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n    automake\n    libtool\n\nIt can be installed with apt-get install autoconf automake libtool")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/speex RENAME copyright)
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
+    OPTIONS
+        --disable-binaries # no example programs (GPL, require libogg)
+)
+vcpkg_install_make()
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

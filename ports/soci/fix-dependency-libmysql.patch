@@ -1,0 +1,14 @@
+diff --git a/cmake/modules/FindMySQL.cmake b/cmake/modules/FindMySQL.cmake
+index 1233568..9a7cb61 100644
+--- a/cmake/modules/FindMySQL.cmake
++++ b/cmake/modules/FindMySQL.cmake
+@@ -13,6 +13,9 @@
+ #
+ # Redistribution and use is allowed according to the terms of the BSD license.
+ # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
++find_package(libmysql REQUIRED)
++set(MySQL_FOUND 1)
++return()
+ 
+ include(CheckCXXSourceCompiles)
+ 

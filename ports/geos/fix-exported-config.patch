@@ -1,0 +1,76 @@
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index a8c034fb2..a5cd14c13 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -61,11 +61,18 @@ function(configure_install_geos_pc)
+     set(libdir "$\{exec_prefix\}/${CMAKE_INSTALL_LIBDIR}")
+   endif()
+   set(VERSION ${GEOS_VERSION})
+-  set(EXTRA_LIBS "-lstdc++")
++  if(APPLE OR CMAKE_ANDROID_STL_TYPE MATCHES "^c\\+\\+")
++    set(EXTRA_LIBS "-lc++")
++  elseif(UNIX OR MINGW)
++    set(EXTRA_LIBS "-lstdc++")
++  else()
++    set(EXTRA_LIBS "")
++  endif()
+   if(HAVE_LIBM)
+     list(APPEND EXTRA_LIBS "-lm")
+   endif()
+   list(JOIN EXTRA_LIBS " " EXTRA_LIBS)
++  set(EXTRA_LIBS "${EXTRA_LIBS}" PARENT_SCOPE) # for geos-config
+ 
+   configure_file(
+     ${CMAKE_CURRENT_SOURCE_DIR}/geos.pc.in
+@@ -77,9 +84,9 @@ function(configure_install_geos_pc)
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ endfunction()
+ 
++configure_install_geos_pc()
+ if(NOT MSVC)
+   configure_install_geos_config()
+-  configure_install_geos_pc()
+ endif()
+ 
+ option(BUILD_ASTYLE "Build astyle (Artistic Style) tool" OFF)
+diff --git a/tools/geos-config.in b/tools/geos-config.in
+index 6eff1eb14..8827f6ac6 100644
+--- a/tools/geos-config.in
++++ b/tools/geos-config.in
+@@ -1,9 +1,11 @@
+ #!/bin/sh
+ 
+-prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-includedir=@includedir@
+-libdir=@libdir@
++DIRNAME=$(dirname $0)
++TOOLS=$(dirname $DIRNAME)
++prefix=$(CDPATH= cd -- "${DIRNAME%/tools/geos/*}" && pwd -P)
++exec_prefix=${prefix}
++includedir=${prefix}/include
++libdir=${prefix}${TOOLS##*/geos}/lib
+ 
+ usage()
+ {
+@@ -47,16 +49,16 @@ while test $# -gt 0; do
+       echo -L${libdir} -lgeos
+       ;;
+     --clibs)
+-      echo -L${libdir} -lgeos_c
++      echo -L${libdir} -lgeos_c $(if test "@BUILD_SHARED_LIBS@" != "ON"; then echo "-lgeos @EXTRA_LIBS@"; fi)
+       ;;
+     --cclibs)
+-      echo -L${libdir} -lgeos
++      echo -L${libdir} -lgeos $(if test "@BUILD_SHARED_LIBS@" != "ON"; then echo "@EXTRA_LIBS@"; fi)
+       ;;
+     --static-clibs)
+-      echo -L${libdir} -lgeos_c -lgeos -lstdc++ -lm
++      echo -L${libdir} -lgeos_c -lgeos -lstdc++ @EXTRA_LIBS@
+       ;;
+     --static-cclibs)
+-      echo -L${libdir} -lgeos -lstdc++ -lm
++      echo -L${libdir} -lgeos -lstdc++ @EXTRA_LIBS@
+       ;;
+     --cflags)
+       echo -I${includedir}

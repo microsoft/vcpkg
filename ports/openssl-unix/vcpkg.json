@@ -1,0 +1,9 @@
+{
+  "name": "openssl-unix",
+  "version-string": "deprecated",
+  "description": "Deprecated OpenSSL port. Use port openssl instead.",
+  "supports": "!windows",
+  "dependencies": [
+    "openssl"
+  ]
+}

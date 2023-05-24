@@ -20,26 +20,29 @@ index 496712d..3df05c7 100644
  
  set(version 3.0.1)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 389cf5a..94b7f99 100644
+index b6ac26b..851a97f 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -127,7 +127,7 @@ if  (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+@@ -127,9 +127,9 @@ if  (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
          endif ()
      endif()
      include(Graphite)
 -    if (BUILD_SHARED_LIBS)
 +    if (NOT DISABLE_TESTS)
          nolib_test(stdc++ $<TARGET_SONAME_FILE:graphite2>)
-     endif ()
+-    endif ()
++    endif()
      set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
-@@ -141,7 +141,9 @@ if  (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-         LINKER_LANGUAGE C)
+     CREATE_LIBTOOL_FILE(graphite2 "/lib${LIB_SUFFIX}")
+ endif()
+@@ -144,7 +144,9 @@ if  (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+     endif()
      target_link_libraries(graphite2 c)
      include(Graphite)
 -    nolib_test(stdc++ $<TARGET_SONAME_FILE:graphite2>)
 +    if (NOT DISABLE_TESTS)
 +        nolib_test(stdc++ $<TARGET_SONAME_FILE:graphite2>)
-+    endif ()
++    endif()
      set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
      CREATE_LIBTOOL_FILE(graphite2 "/lib${LIB_SUFFIX}")
  endif()

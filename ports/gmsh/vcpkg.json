@@ -1,0 +1,46 @@
+{
+  "name": "gmsh",
+  "version": "4.9.0",
+  "description": "Gmsh is an open source 3D finite element mesh generator with a built-in CAD engine and post-processor.",
+  "homepage": "https://gmsh.info",
+  "supports": "!uwp",
+  "dependencies": [
+    "blas",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "graphics": {
+      "description": "Enable building graphics lib even without GUI (advanced)",
+      "dependencies": [
+        "libjpeg-turbo",
+        "libpng",
+        "opengl",
+        "zlib"
+      ]
+    },
+    "mpi": {
+      "description": "Enable MPI (experimental, not used for meshing)",
+      "dependencies": [
+        "openmpi"
+      ]
+    },
+    "occ": {
+      "description": "Enable OpenCASCADE modules",
+      "dependencies": [
+        "caf",
+        "freetype",
+        "opencascade",
+        "tbb"
+      ]
+    },
+    "zipper": {
+      "description": "Enable Zip file compression/decompression",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

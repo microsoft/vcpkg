@@ -1,0 +1,14 @@
+{
+  "name": "bitserializer-rapidyaml",
+  "version-string": "alias",
+  "port-version": 3,
+  "description": "Deprecated alias for bitserializer-rapidyaml",
+  "dependencies": [
+    {
+      "name": "bitserializer",
+      "features": [
+        "rapidyaml-archive"
+      ]
+    }
+  ]
+}

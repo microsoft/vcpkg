@@ -1,21 +1,15 @@
 # WinReg - Header-only library
 
-include(vcpkg_common_functions)
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    message("winreg only support windows.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GiovanniDicanio/WinReg
-    REF v1.2.1
-    SHA512 c919f91bf37b2fd7c30f6463430e07f3b8d1a01b8d4c84591b56299faf9d5b651d7c3b35a2adc22e3b0aa471627060a45e179f98f309242683b17d4d0d81cb7b 
+    REF ba6b74972038778d0bf5ffa6de705ec6e2768735 #v6.1.0
+    SHA512 1b7ac1ef4322c2e1c80be840d4117424263c4ad02050926f1ebdd3fbb4978a02d12f485ccb0aff46ca4acc4188f48f7522ac4d6d663517d7bad71147224accc7
     HEAD_REF master
 )
 
 # Copy the single reusable library header
-file(COPY ${SOURCE_PATH}/WinReg/WinReg/WinReg.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+file(COPY "${SOURCE_PATH}/WinReg/WinReg.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

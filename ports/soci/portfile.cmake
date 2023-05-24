@@ -1,10 +1,13 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SOCI/soci
-    REF 3742c894ab8ba5fd51b6a156980e8b34db0f3063 #version 4.0.0 commit on 2019.11.10
-    SHA512 27950230d104bdc0ab8e439a69c59d1b157df373adc863a22c8332b8bb896c2a6e3028f8343bb36b42bf9ab2a2312375e20cbdeca7f497f0bb1424a4733f0c9c
+    REF "v${VERSION}"
+    SHA512 d501f55e7e7408e46b4823fd8a97d6ef587f5db0f5b98434be8dfc5693c91b8c3b84a24454279c83142ab1cd1fa139c6e54d6d9a67397b2ead61650fcc88bcdb
     HEAD_REF master
+    PATCHES
+        fix-dependency-libmysql.patch
+        export-include-dirs.patch
+        fix-mysql-feature-error.patch # https://bugs.mysql.com/bug.php?id=85131
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)
@@ -24,32 +27,35 @@ foreach(_feature IN LISTS ALL_FEATURES)
     else()
         list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
     endif()
+
+    if(_feature MATCHES "mysql")
+        set(MYSQL_OPT "-DMYSQL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/mysql")
+    endif()
 endforeach()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSOCI_TESTS=OFF
-        -DSOCI_CXX_C11=ON
-        -DSOCI_LIBDIR:STRING=lib # This is to always have output in the lib folder and not lib64 for 64-bit builds
-        -DLIBDIR:STRING=lib
+        -DSOCI_CXX11=ON
         -DSOCI_STATIC=${SOCI_STATIC}
         -DSOCI_SHARED=${SOCI_DYNAMIC}
         ${_COMPONENT_FLAGS}
-
-        -DWITH_MYSQL=OFF
-        -DWITH_ORACLE=OFF
-        -DWITH_FIREBIRD=OFF
-        -DWITH_DB2=OFF
+        ${MYSQL_OPT}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/SOCI)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SOCI)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+if ("mysql" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCIConfig.cmake"
+        "# Create imported target SOCI::soci_mysql"
+        "\ninclude(CMakeFindDependencyMacro)\nfind_dependency(libmysql)\n# Create imported target SOCI::soci_mysql"
+    )
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")

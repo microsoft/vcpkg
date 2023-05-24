@@ -1,0 +1,79 @@
+{
+  "versions": [
+    {
+      "git-tree": "39f955915ba68ad247df8963e6427bd3c0f3479a",
+      "version": "0.3.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "87cb384a3c0b77cf96d77ea95e22f1e9051cb19d",
+      "version": "0.3.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "83c0ba869841555aeff8eb4954efcc64ae25a755",
+      "version": "0.2.15",
+      "port-version": 0
+    },
+    {
+      "git-tree": "171dd3158b291f899517b1bab85f4c76c95a4d56",
+      "version": "0.2.14",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a4576b8566a843cf16e9a38143d1a99ae832d130",
+      "version": "0.2.13",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9a981571e3da6bf7df6ad44cb3ee5f816134c5f9",
+      "version": "0.2.12",
+      "port-version": 0
+    },
+    {
+      "git-tree": "752a985f24b4f8cdf068838ae1b791ea46ab7add",
+      "version-string": "0.2.11",
+      "port-version": 0
+    },
+    {
+      "git-tree": "0c24513fd9141f8cdff91adeaf1227a5de222229",
+      "version-string": "0.2.10",
+      "port-version": 0
+    },
+    {
+      "git-tree": "c73ab40f6430852ab78a07c559fb63b76a26d631",
+      "version-string": "0.2.9.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3e7a07ec38a1d71c429e8503ffbf8bac3cfc1691",
+      "version-string": "0.2.9.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "531c3a1ef0c63e2754b66547c238fa19f6d3c030",
+      "version-string": "0.2.9",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7d1ae2cb6d4dbbbdbb6c79bd98967016bbafd7da",
+      "version-string": "0.2.8-2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "921ec8586dde43aa999e6022eed308266be368ac",
+      "version-string": "0.2.8",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a3abc3267fed9b3eafe470e146f9ef3cb9196d81",
+      "version-string": "0.2.6",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7a71ce0f2a7333f2d10da7b00067f7fd208a8762",
+      "version-string": "0.2.5",
+      "port-version": 0
+    }
+  ]
+}

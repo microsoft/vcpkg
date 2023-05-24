@@ -1,66 +1,99 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
-file(GLOB OSG_PLUGINS_SUBDIR ${CURRENT_INSTALLED_DIR}/tools/osg/osgPlugins-*)
-list(LENGTH OSG_PLUGINS_SUBDIR OSG_PLUGINS_SUBDIR_LENGTH)
-if(NOT OSG_PLUGINS_SUBDIR_LENGTH EQUAL 1)
-    message(FATAL_ERROR "Could not determine osg version")
-endif()
-string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/osg/" "" OSG_PLUGINS_SUBDIR "${OSG_PLUGINS_SUBDIR}")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-    REF osgearth-2.10.2
-    SHA512 fa306a82374716dafae9d834ed0fb07a7369ae0961696de36b6e2af45bc150040295985d9b9781ab713fd0707691451a6a8f173b34253749ab22764f51e60045
+    REF 6b5fb806a9190f7425c32db65d3ea905a55a9c16 #version 3.3
+    SHA512 fe79ce6c73341f83d4aee8cb4da5341dead56a92f998212f7898079b79725f46b2209d64e68fe3b4d99d3c5c25775a8efd1bf3c3b3a049d4f609d3e30172d3bf
     HEAD_REF master
-    PATCHES 
-		RocksDB.patch
+    PATCHES
+        link-libraries.patch
+        find-package.patch
+        remove-tool-debug-suffix.patch
+		remove-lerc-gltf.patch
+		fix-osgearth-config.patch
+		export-plugins.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+if("tools" IN_LIST FEATURES)
+	message(STATUS "Downloading submodules")
+	# Download submodules from github manually since vpckg doesn't support submodules natively.
+	# IMGUI
+	#osgEarth is currently using imgui docking branch for osgearth_imgui example
+	vcpkg_from_github(
+		OUT_SOURCE_PATH IMGUI_SOURCE_PATH
+		REPO ocornut/imgui
+		REF 9e8e5ac36310607012e551bb04633039c2125c87 #docking branch
+		SHA512 1f1f743833c9a67b648922f56a638a11683b02765d86f14a36bc6c242cc524c4c5c5c0b7356b8053eb923fafefc53f4c116b21fb3fade7664554a1ad3b25e5ff
+		HEAD_REF master
+	)
+
+	# Remove exisiting folder in case it was not cleaned
+	file(REMOVE_RECURSE "${SOURCE_PATH}/src/third_party/imgui")
+	# Copy the submodules to the right place
+	file(COPY "${IMGUI_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/third_party/imgui")
+endif()
+
+file(REMOVE
+    "${SOURCE_PATH}/CMakeModules/FindBlend2D.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindGEOS.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindLibZip.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindOSG.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindSqlite3.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindWEBP.cmake"
+    "${SOURCE_PATH}/src/osgEarth/tinyxml.h" # https://github.com/gwaldron/osgearth/issues/1002
 )
 
-vcpkg_install_cmake()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-#Release
-set(OSGEARTH_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/osgearth)
-set(OSGEARTH_TOOL_PLUGIN_PATH ${OSGEARTH_TOOL_PATH}/${OSG_PLUGINS_SUBDIR})
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools       OSGEARTH_BUILD_TOOLS
+        blend2d     WITH_BLEND2D
+)
 
-file(MAKE_DIRECTORY ${OSGEARTH_TOOL_PATH})
-file(MAKE_DIRECTORY ${OSGEARTH_TOOL_PLUGIN_PATH})
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DLIB_POSTFIX=
+        -DCMAKE_CXX_STANDARD=11
+        -DOSGEARTH_BUILD_SHARED_LIBS=${BUILD_SHARED}
+        -DOSGEARTH_BUILD_EXAMPLES=OFF
+        -DOSGEARTH_BUILD_TESTS=OFF
+        -DOSGEARTH_BUILD_DOCS=OFF
+        -DOSGEARTH_BUILD_PROCEDURAL_NODEKIT=OFF
+        -DOSGEARTH_BUILD_TRITON_NODEKIT=OFF
+        -DOSGEARTH_BUILD_SILVERLINING_NODEKIT=OFF
+        -DWITH_EXTERNAL_TINYXML=ON
+        -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
+    OPTIONS_DEBUG
+        -DOSGEARTH_BUILD_TOOLS=OFF
+)
 
-file(GLOB OSGEARTH_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-file(GLOB OSGDB_PLUGINS ${CURRENT_PACKAGES_DIR}/bin/osgdb*.dll)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake/)
 
-file(COPY ${OSGEARTH_TOOLS} DESTINATION ${OSGEARTH_TOOL_PATH})
-file(COPY ${OSGDB_PLUGINS} DESTINATION ${OSGEARTH_TOOL_PLUGIN_PATH})
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/osgEarth/Export" "defined( OSGEARTH_LIBRARY_STATIC )" "1")
+endif()
 
-file(REMOVE_RECURSE ${OSGEARTH_TOOLS})
-file(REMOVE_RECURSE ${OSGDB_PLUGINS})
+set(osg_plugin_pattern "${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}osgdb*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
+if("tools" IN_LIST FEATURES)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(GLOB osg_plugins "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}/${osg_plugin_pattern}")
+        file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${osg_plugins_subdir}")
+        if(NOT VCPKG_BUILD_TYPE)
+            file(GLOB osg_plugins "${CURRENT_PACKAGES_DIR}/debug/plugins/${osg_plugins_subdir}/${osg_plugin_pattern}")
+            file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/${osg_plugins_subdir}")
+        endif()
+    endif()
+    vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_boundarygen osgearth_clamp
+        osgearth_conv osgearth_imgui osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
+		osgearth_createtile osgearth_mvtindex
+        AUTO_CLEAN
+    )
+endif()
 
-#Debug
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-set(OSGEARTH_DEBUG_TOOL_PATH ${CURRENT_PACKAGES_DIR}/debug/tools/osgearth)
-set(OSGEARTH_DEBUG_TOOL_PLUGIN_PATH ${OSGEARTH_DEBUG_TOOL_PATH}/${OSG_PLUGINS_SUBDIR})
-
-file(MAKE_DIRECTORY ${OSGEARTH_DEBUG_TOOL_PATH})
-file(MAKE_DIRECTORY ${OSGEARTH_DEBUG_TOOL_PLUGIN_PATH})
-
-file(GLOB OSGEARTH_DEBUG_TOOLS ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-file(GLOB OSGDB_DEBUG_PLUGINS ${CURRENT_PACKAGES_DIR}/debug/bin/osgdb*.dll)
-
-file(COPY ${OSGEARTH_DEBUG_TOOLS} DESTINATION ${OSGEARTH_DEBUG_TOOL_PATH})
-file(COPY ${OSGDB_DEBUG_PLUGINS} DESTINATION ${OSGEARTH_DEBUG_TOOL_PLUGIN_PATH})
-
-file(REMOVE_RECURSE ${OSGEARTH_DEBUG_TOOLS})
-file(REMOVE_RECURSE ${OSGDB_DEBUG_PLUGINS})
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/osgearth)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/osgearth/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/osgearth/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

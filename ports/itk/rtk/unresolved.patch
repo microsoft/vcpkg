@@ -1,0 +1,213 @@
+diff --git a/include/rtkDCMImagXImageIO.h b/include/rtkDCMImagXImageIO.h
+index 2a70ae046..69abb409e 100644
+--- a/include/rtkDCMImagXImageIO.h
++++ b/include/rtkDCMImagXImageIO.h
+@@ -18,7 +18,7 @@
+ 
+ #ifndef rtkDCMImagXImageIO_h
+ #define rtkDCMImagXImageIO_h
+-
++#include "RTKExport.h"
+ #include <itkGDCMImageIO.h>
+ 
+ #include "rtkMacro.h"
+@@ -32,7 +32,7 @@ namespace rtk
+  *
+  * \ingroup RTK
+  */
+-class DCMImagXImageIO : public itk::GDCMImageIO
++class RTK_EXPORT DCMImagXImageIO : public itk::GDCMImageIO
+ {
+ public:
+   ITK_DISALLOW_COPY_AND_ASSIGN(DCMImagXImageIO);
+diff --git a/include/rtkEdfImageIO.h b/include/rtkEdfImageIO.h
+index 66499c56b..7b16fbc5a 100644
+--- a/include/rtkEdfImageIO.h
++++ b/include/rtkEdfImageIO.h
+@@ -18,7 +18,7 @@
+ 
+ #ifndef rtkEdfImageIO_h
+ #define rtkEdfImageIO_h
+-
++#include "RTKExport.h"
+ #include <itkImageIOBase.h>
+ #include <fstream>
+ #include <cstring>
+@@ -36,7 +36,7 @@ namespace rtk
+  *
+  * \ingroup RTK IOFilters
+  */
+-class EdfImageIO : public itk::ImageIOBase
++class RTK_EXPORT EdfImageIO : public itk::ImageIOBase
+ {
+ public:
+   ITK_DISALLOW_COPY_AND_ASSIGN(EdfImageIO);
+diff --git a/include/rtkHisImageIO.h b/include/rtkHisImageIO.h
+index 2ef2005dd..95449b8a6 100644
+--- a/include/rtkHisImageIO.h
++++ b/include/rtkHisImageIO.h
+@@ -19,6 +19,8 @@
+ #ifndef rtkHisImageIO_h
+ #define rtkHisImageIO_h
+ 
++#include "RTKExport.h"
++
+ // itk include
+ #include <itkImageIOBase.h>
+ #include "rtkMacro.h"
+@@ -35,7 +37,7 @@ namespace rtk
+  *
+  * \ingroup RTK IOFilters
+  */
+-class HisImageIO : public itk::ImageIOBase
++class RTK_EXPORT HisImageIO : public itk::ImageIOBase
+ {
+ public:
+   /** Standard class type alias. */
+diff --git a/include/rtkHncImageIO.h b/include/rtkHncImageIO.h
+index 7b9539bde..dc9dca759 100644
+--- a/include/rtkHncImageIO.h
++++ b/include/rtkHncImageIO.h
+@@ -19,9 +19,11 @@
+ #ifndef rtkHncImageIO_h
+ #define rtkHncImageIO_h
+ 
++#include "RTKExport.h"
++
+ // itk include
+ #include <itkImageIOBase.h>
+-#include "itksys/SystemTools.hxx"
++//#include "itksys/SystemTools.hxx"
+ 
+ #if defined(_MSC_VER) && (_MSC_VER < 1600)
+ // SR: taken from
+@@ -43,7 +45,7 @@ namespace rtk
+  *
+  * \ingroup RTK IOFilters
+  */
+-class HncImageIO : public itk::ImageIOBase
++class RTK_EXPORT HncImageIO : public itk::ImageIOBase
+ {
+ public:
+   /** Standard class type alias. */
+diff --git a/include/rtkHncImageIOFactory.h b/include/rtkHncImageIOFactory.h
+index 2bca8f77e..1d5a97938 100644
+--- a/include/rtkHncImageIOFactory.h
++++ b/include/rtkHncImageIOFactory.h
+@@ -38,7 +38,7 @@ namespace rtk
+  *
+  * \ingroup RTK IOFilters
+  */
+-class HncImageIOFactory : public itk::ObjectFactoryBase
++class RTK_EXPORT HncImageIOFactory : public itk::ObjectFactoryBase
+ {
+ public:
+   /** Standard class type alias. */
+diff --git a/include/rtkHndImageIO.h b/include/rtkHndImageIO.h
+index 5a07897cc..5f843362a 100644
+--- a/include/rtkHndImageIO.h
++++ b/include/rtkHndImageIO.h
+@@ -19,6 +19,8 @@
+ #ifndef rtkHndImageIO_h
+ #define rtkHndImageIO_h
+ 
++#include "RTKExport.h"
++
+ // itk include
+ #include <itkImageIOBase.h>
+ 
+@@ -43,7 +45,7 @@ namespace rtk
+  *
+  * \ingroup RTK IOFilters
+  */
+-class HndImageIO : public itk::ImageIOBase
++class RTK_EXPORT HndImageIO : public itk::ImageIOBase
+ {
+ public:
+   /** Standard class type alias. */
+diff --git a/include/rtkImagXImageIO.h b/include/rtkImagXImageIO.h
+index d69e9a790..d6cc8388e 100644
+--- a/include/rtkImagXImageIO.h
++++ b/include/rtkImagXImageIO.h
+@@ -18,7 +18,7 @@
+ 
+ #ifndef rtkImagXImageIO_h
+ #define rtkImagXImageIO_h
+-
++#include "RTKExport.h"
+ #include <itkImageIOBase.h>
+ #include <fstream>
+ #include <cstring>
+@@ -34,7 +34,7 @@ namespace rtk
+  *
+  * \ingroup RTK
+  */
+-class ImagXImageIO : public itk::ImageIOBase
++class RTK_EXPORT ImagXImageIO : public itk::ImageIOBase
+ {
+ public:
+   /** Standard class type alias. */
+diff --git a/include/rtkOraImageIO.h b/include/rtkOraImageIO.h
+index ece525a42..2d5332872 100644
+--- a/include/rtkOraImageIO.h
++++ b/include/rtkOraImageIO.h
+@@ -19,6 +19,8 @@
+ #ifndef rtkOraImageIO_h
+ #define rtkOraImageIO_h
+ 
++#include "RTKExport.h"
++
+ // This is done to avoid any interference with zlib
+ #ifdef OF
+ #  undef OF
+@@ -41,7 +43,7 @@ namespace rtk
+  *
+  * \ingroup RTK IOFilters
+  */
+-class OraImageIO : public itk::MetaImageIO
++class RTK_EXPORT OraImageIO : public itk::MetaImageIO
+ {
+ public:
+   /** Standard class type alias. */
+diff --git a/include/rtkXRadImageIO.h b/include/rtkXRadImageIO.h
+index a72c934e4..0a92afa22 100644
+--- a/include/rtkXRadImageIO.h
++++ b/include/rtkXRadImageIO.h
+@@ -19,6 +19,7 @@
+ #ifndef rtkXRadImageIO_h
+ #define rtkXRadImageIO_h
+ 
++#include "RTKExport.h"
+ #include <itkImageIOBase.h>
+ #include <fstream>
+ #include <cstring>
+@@ -37,7 +38,7 @@ namespace rtk
+  *
+  * \ingroup RTK IOFilters
+  */
+-class XRadImageIO : public itk::ImageIOBase
++class RTK_EXPORT XRadImageIO : public itk::ImageIOBase
+ {
+ public:
+   /** Standard class type alias. */
+diff --git a/include/rtkXimImageIO.h b/include/rtkXimImageIO.h
+index ae789dbf9..741f05183 100644
+--- a/include/rtkXimImageIO.h
++++ b/include/rtkXimImageIO.h
+@@ -19,6 +19,7 @@
+ #ifndef rtkXimImageIO_h
+ #define rtkXimImageIO_h
+ 
++#include "RTKExport.h"
+ #include "rtkMacro.h"
+ 
+ // itk include
+@@ -43,7 +44,7 @@ namespace rtk
+  *
+  * \ingroup RTK IOFilters
+  */
+-class XimImageIO : public itk::ImageIOBase
++class RTK_EXPORT XimImageIO : public itk::ImageIOBase
+ {
+ public:
+   /** Standard class type alias. */

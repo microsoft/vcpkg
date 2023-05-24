@@ -1,4 +1,0 @@
-Source: catch
-Version: alias
-Build-Depends: catch2
-Description: Deprecated alias for Catch2 unit testing framework

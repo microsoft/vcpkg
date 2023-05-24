@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d72ae85..405d96b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,8 +22,8 @@ ENDIF()
+ 
+ #add_subdirectory (src)
+ 
+-find_package(CFITSIO REQUIRED)
+-INCLUDE_DIRECTORIES(${CFITSIO_INCLUDE_DIR})
++find_package(unofficial-cfitsio CONFIG REQUIRED)
++set(CFITSIO_LIBRARY cfitsio)
+ 
+ SET (LIB_TYPE STATIC)
+ IF (BUILD_SHARED_LIBS)

@@ -1,0 +1,17 @@
+{
+  "name": "cgicc",
+  "version": "3.2.19",
+  "port-version": 7,
+  "description": "GNU Cgicc is an ANSI C++ compliant class library that greatly simplifies the creation of CGI applications for the World Wide Web",
+  "homepage": "https://www.gnu.org/software/cgicc/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

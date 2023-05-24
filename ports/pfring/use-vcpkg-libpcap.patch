@@ -1,0 +1,146 @@
+diff --git a/userland/Makefile b/userland/Makefile
+index d5392c09..959470c0 100644
+--- a/userland/Makefile
++++ b/userland/Makefile
+@@ -1,4 +1,4 @@
+-all: libpfring pcap build_examples build_examples_zc build_examples_ft build_extcap 
++all: libpfring build_extcap 
+ # build_tcpdump build_c++
+ 
+ ###################
+@@ -14,52 +14,25 @@ libpfring: config
+ build_nbpf: config
+ 	cd nbpf; make
+ 
+-libpcap/Makefile:
+-	cd libpcap; ./configure --enable-ipv6 --enable-dbus=no --without-libnl --with-snf=no --disable-bluetooth --disable-canusb --with-dag=no
+-
+-pcap: libpfring libpcap/Makefile
+-	cd libpcap; make
+-
+-build_examples: config
+-	cd examples; make
+-
+-build_examples_zc: config
+-	cd examples_zc; make
+-
+-build_examples_ft: config
+-	cd examples_ft; make
+-
+ build_c++: libpfring
+ 	cd c++; make
+ 
+ tcpdump/Makefile:
+-	cd tcpdump; ./configure
++	cd tcpdump; ./configure --with_system_libpcap=yes
+ 
+-build_tcpdump: libpfring pcap tcpdump/Makefile
++build_tcpdump: libpfring tcpdump/Makefile
+ 	cd tcpdump; make
+ 
+-build_extcap: libpfring pcap
++build_extcap: libpfring
+ 	cd wireshark/extcap; make
+ 
+ ###################
+ 
+-clean: libpfring_clean pcap_clean examples_clean examples_ft_clean examples_zc_clean c++_clean tcpdump_clean nbpf_clean extcap_clean
++clean: libpfring_clean c++_clean tcpdump_clean nbpf_clean extcap_clean
+ 
+ libpfring_clean:
+ 	cd lib; make clean
+ 
+-pcap_clean:
+-	if test -f libpcap/config.status; then cd libpcap; make clean; fi
+-
+-examples_clean:
+-	cd examples; make clean
+-
+-examples_zc_clean:
+-	cd examples_zc; make clean
+-
+-examples_ft_clean:
+-	cd examples_ft; make clean
+-
+ c++_clean:
+ 	cd c++; make clean
+ 
+@@ -72,8 +45,5 @@ nbpf_clean:
+ extcap_clean:
+ 	cd wireshark/extcap; make clean
+ 
+-install: libpfring pcap examples examples_zc examples_ft
++install: libpfring
+ 	cd lib; make install
+-	cd libpcap; make install
+-	cd examples; make install
+-	cd examples_zc; make install
+diff --git a/userland/c++/Makefile.in b/userland/c++/Makefile.in
+index 02bf5164..b0442d84 100644
+--- a/userland/c++/Makefile.in
++++ b/userland/c++/Makefile.in
+@@ -1,8 +1,7 @@
+ CPP=g++ -g 
+ 
+ KERNEL_DIR=../../kernel
+-LIBPCAP_DIR=../libpcap
+-INCLUDE=-I$(KERNEL_DIR) -I$(LIBPCAP_DIR) -I../lib `../lib/pfring_config --include`
++INCLUDE=-I$(KERNEL_DIR) -I$(VCPKG_LIBPCAP_DIR)/include -I../lib `../lib/pfring_config --include`
+ LIBPFRING_CPP=libpfring_cpp.a
+ RANLIB=ranlib
+ OBJ=PFring.o
+@@ -11,7 +10,7 @@ LIBS=../lib/libpfring.a `../lib/pfring_config --libs` -lpthread
+ all: $(LIBPFRING_CPP) pf_test
+ 
+ pf_test: pf_test.cpp $(LIBPFRING_CPP)
+-	$(CPP) $(INCLUDE) $< $(LIBPFRING_CPP) -o $@ $(LIBS) $(LIBPCAP_DIR)/libpcap.a @SYSLIBS@
++	$(CPP) $(INCLUDE) $< $(LIBPFRING_CPP) -o $@ $(LIBS) $(VCPKG_LIBPCAP_DIR)/lib/libpcap.a @SYSLIBS@
+ 
+ $(LIBPFRING_CPP): $(OBJ)
+ 	@rm -f $@
+diff --git a/userland/snort/pfring-daq-module-zc/Makefile.am b/userland/snort/pfring-daq-module-zc/Makefile.am
+index 7123de18..45998688 100644
+--- a/userland/snort/pfring-daq-module-zc/Makefile.am
++++ b/userland/snort/pfring-daq-module-zc/Makefile.am
+@@ -4,5 +4,5 @@ ACLOCAL_AMFLAGS = -I m4
+ 
+ pkglib_LTLIBRARIES = daq_pfring_zc.la
+ daq_pfring_zc_la_SOURCES = daq_pfring_zc.c
+-daq_pfring_zc_la_CFLAGS = -DBUILDING_SO  -I../../libpcap
+-daq_pfring_zc_la_LDFLAGS = -module -export-dynamic -avoid-version -shared -lrt ../../libpcap/libpcap.a
++daq_pfring_zc_la_CFLAGS = -DBUILDING_SO  -I${VCPKG_LIBPCAP_DIR}/include
++daq_pfring_zc_la_LDFLAGS = -module -export-dynamic -avoid-version -shared -lrt ${VCPKG_LIBPCAP_DIR}/lib/libpcap.a
+diff --git a/userland/tcpdump-4.9.2/Makefile.in b/userland/tcpdump-4.9.2/Makefile.in
+index e2c74d13..47d9e2cc 100644
+--- a/userland/tcpdump-4.9.2/Makefile.in
++++ b/userland/tcpdump-4.9.2/Makefile.in
+@@ -373,7 +373,7 @@ TEST_DIST= `find tests \( -name 'DIFF' -prune \) -o \( -name NEW -prune \) -o -t
+ 
+ all: $(PROG) $(LIBNETDISSECT)
+ 
+-$(PROG): $(OBJ) @V_PCAPDEP@
++$(PROG): $(OBJ) $(VCPKG_LIBPCAP_DIR)/lib/libpcap.a
+ 	@rm -f $@
+ 	$(CC) $(FULL_CFLAGS) $(LDFLAGS) -o $@ $(OBJ) $(LIBS)
+ 
+diff --git a/userland/wireshark/extcap/Makefile.in b/userland/wireshark/extcap/Makefile.in
+index 970b9680..3e34ccc8 100644
+--- a/userland/wireshark/extcap/Makefile.in
++++ b/userland/wireshark/extcap/Makefile.in
+@@ -20,14 +20,13 @@ LIBPFRING  = ${PFRINGDIR}/libpfring.a
+ #
+ O_FLAG     = -O2 -DHAVE_PF_RING
+ EXTRA_LIBS =
+-PCAPDIR    = ../../libpcap
+-LIBPCAP    = ${PCAPDIR}/libpcap.a  ${EXTRA_LIBS}
++LIBPCAP    = ${VCPKG_LIBPCAP_DIR}/lib/libpcap.a  ${EXTRA_LIBS}
+ 
+ #
+ # Search directories
+ #
+ PFRING_KERNEL=../../../kernel
+-INCLUDE    = -I${PFRING_KERNEL} -I${PFRINGDIR} -I${PCAPDIR} -Ithird-party `../../lib/pfring_config --include`
++INCLUDE    = -I${PFRING_KERNEL} -I${PFRINGDIR} -I${VCPKG_LIBPCAP_DIR}/include -Ithird-party `../../lib/pfring_config --include`
+ 
+ #
+ # C compiler and flags

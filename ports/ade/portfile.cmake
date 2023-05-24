@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/ade
@@ -8,24 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS_DEBUG
     -DCMAKE_DEBUG_POSTFIX=d
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(COPY ${CURRENT_PACKAGES_DIR}/debug/share/ade/adeTargets-debug.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/ade/)
+vcpkg_cmake_config_fixup()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/ade/adeTargets-debug.cmake ADE_TARGET_DEBUG)
-string(REPLACE "/lib/"
-               "/debug/lib/" ADE_TARGET_DEBUG "${ADE_TARGET_DEBUG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/ade/adeTargets-debug.cmake "${ADE_TARGET_DEBUG}")
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/ade RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

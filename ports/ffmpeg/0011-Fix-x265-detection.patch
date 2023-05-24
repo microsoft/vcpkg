@@ -1,0 +1,15 @@
+diff --git a/configure b/configure
+--- a/configure
++++ b/configure
+@@ -6671,7 +6671,10 @@
+                              [ "$toolchain" != "msvc" ] ||
+                              require_cpp_condition libx264 x264.h "X264_BUILD >= 158"; } &&
+                              check_cpp_condition libx262 x264.h "X264_MPEG2"
+-enabled libx265           && require_pkg_config libx265 x265 x265.h x265_api_get &&
++enabled libx265           && { check_pkg_config libx265 x265 x265.h x265_api_get ||
++                                { { check_lib libx265 x265.h x265_api_get "-lx265 $pthreads_extralibs $libm_extralibs -ldl -lstdc++ -lgcc_s -lgcc -lrt -lnuma" ||
++                                require libx265 x265.h x265_api_get "-lx265 $pthreads_extralibs $libm_extralibs -ldl -lstdc++"; } &&
++                                    warn "using libx265 without pkg-config"; } } &&
+                              require_cpp_condition libx265 x265.h "X265_BUILD >= 70"
+ enabled libxavs           && require libxavs "stdint.h xavs.h" xavs_encoder_encode "-lxavs $pthreads_extralibs $libm_extralibs"
+ enabled libxavs2          && require_pkg_config libxavs2 "xavs2 >= 1.3.0" "stdint.h xavs2.h" xavs2_api_get

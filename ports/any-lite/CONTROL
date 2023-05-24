@@ -1,3 +1,0 @@
-Source: any-lite
-Version: 0.2.0
-Description: A C++17-like any, a type-safe container for single values of any type for C++98, C++11 and later in a single-file header-only library

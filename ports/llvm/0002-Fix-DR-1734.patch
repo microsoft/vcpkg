@@ -1,0 +1,17 @@
+ llvm/include/llvm/Support/type_traits.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/llvm/include/llvm/Support/type_traits.h b/llvm/include/llvm/Support/type_traits.h
+index 7b7d5d991f3f..469b681deea3 100644
+--- a/llvm/include/llvm/Support/type_traits.h
++++ b/llvm/include/llvm/Support/type_traits.h
+@@ -176,7 +176,8 @@ class is_trivially_copyable {
+       (has_deleted_copy_assign || has_trivial_copy_assign) &&
+       (has_deleted_copy_constructor || has_trivial_copy_constructor);
+ 
+-#ifdef HAVE_STD_IS_TRIVIALLY_COPYABLE
++// due to DR 1734, a type can be std::is_trivially_copyable but not llvm::is_trivially_copyable
++#if 0
+   static_assert(value == std::is_trivially_copyable<T>::value,
+                 "inconsistent behavior between llvm:: and std:: implementation of is_trivially_copyable");
+ #endif

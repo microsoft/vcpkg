@@ -1,0 +1,17 @@
+{
+  "name": "rply",
+  "version": "1.1.4",
+  "port-version": 3,
+  "description": "ANSI C Library for PLY file format input and output",
+  "homepage": "http://w3.impa.br/~diego/software/rply",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

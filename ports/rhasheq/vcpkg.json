@@ -1,0 +1,19 @@
+{
+  "name": "rhasheq",
+  "version": "0.0.1",
+  "description": "Simple header-only librhash wrapper for verifying hashes from a file to a given `const char *`.",
+  "license": "0BSD",
+  "supports": "!uwp",
+  "dependencies": [
+    "c89stringutils",
+    "rhash",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

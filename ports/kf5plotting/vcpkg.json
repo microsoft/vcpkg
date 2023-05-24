@@ -1,0 +1,19 @@
+{
+  "name": "kf5plotting",
+  "version": "5.98.0",
+  "description": "Lightweight plotting framework",
+  "homepage": "https://api.kde.org/frameworks/kplotting/html/index.html",
+  "dependencies": [
+    "ecm",
+    "qt5-base",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,416 +1,163 @@
-# vcpkg portfile.cmake for GDAL
-#
-# NOTE: update the version and checksum for new GDAL release
-include(vcpkg_common_functions)
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO OSGeo/gdal
+    REF "v${VERSION}"
+    SHA512 dfc7ccf5c1a3184fa93be762a880b7631faa4cd178cd72df8f5fd8a6296edafc56de2594617bebcb75ddf19ed4471dafcb574b22d7e9217dedfd7ea72c9247f2
+    HEAD_REF master
+    PATCHES
+        find-link-libraries.patch
+        fix-gdal-target-interfaces.patch
+        libkml.patch
+)
+# `vcpkg clean` stumbles over one subdir
+file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
-set(GDAL_VERSION_STR "2.4.1")
-set(GDAL_VERSION_PKG "241")
-set(GDAL_VERSION_LIB "204")
-set(GDAL_PACKAGE_SUM "edb9679ee6788334cf18971c803615ac9b1c72bc0c96af8fd4852cb7e8f58e9c4f3d9cb66406bc8654419612e1a7e9d0e62f361712215f4a50120f646bb0a738")
-
-if (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR "ARM is currently not supported.")
+# Cf. cmake/helpers/CheckDependentLibraries.cmake
+# The default for all `GDAL_USE_<PKG>` dependencies is `OFF`.
+# Here, we explicitly control dependencies provided via vpcpkg.
+# "core" is used for a dependency which must be enabled to avoid vendored lib.
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cfitsio          GDAL_USE_CFITSIO
+        curl             GDAL_USE_CURL
+        expat            GDAL_USE_EXPAT
+        freexl           GDAL_USE_FREEXL
+        geos             GDAL_USE_GEOS
+        core             GDAL_USE_GEOTIFF
+        gif              GDAL_USE_GIF
+        hdf5             GDAL_USE_HDF5
+        iconv            GDAL_USE_ICONV
+        jpeg             GDAL_USE_JPEG
+        core             GDAL_USE_JSONC
+        lerc             GDAL_USE_LERC
+        libkml           GDAL_USE_LIBKML
+        lzma             GDAL_USE_LIBLZMA
+        libxml2          GDAL_USE_LIBXML2
+        mysql-libmariadb GDAL_USE_MYSQL 
+        netcdf           GDAL_USE_NETCDF
+        odbc             GDAL_USE_ODBC
+        openjpeg         GDAL_USE_OPENJPEG
+        openssl          GDAL_USE_OPENSSL
+        pcre2            GDAL_USE_PCRE2
+        png              GDAL_USE_PNG
+        poppler          GDAL_USE_POPPLER
+        postgresql       GDAL_USE_POSTGRESQL
+        qhull            GDAL_USE_QHULL
+        #core             GDAL_USE_SHAPELIB  # https://github.com/OSGeo/gdal/issues/5711, https://github.com/microsoft/vcpkg/issues/16041
+        core             GDAL_USE_SHAPELIB_INTERNAL
+        libspatialite    GDAL_USE_SPATIALITE
+        sqlite3          GDAL_USE_SQLITE3
+        core             GDAL_USE_TIFF
+        webp             GDAL_USE_WEBP
+        core             GDAL_USE_ZLIB
+        zstd             GDAL_USE_ZSTD
+        tools            BUILD_APPS
+)
+if(GDAL_USE_ICONV AND VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_OPTIONS -D_ICONV_SECOND_ARGUMENT_IS_NOT_CONST=ON)
 endif()
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"
-    FILENAME "gdal${GDAL_VERSION_PKG}.zip"
-    SHA512 ${GDAL_PACKAGE_SUM}
+# Compatibility with older Android versions https://github.com/OSGeo/gdal/pull/5941
+if(VCPKG_TARGET_IS_ANDROID AND ANRDOID_PLATFORM VERSION_LESS 24 AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"))
+    list(APPEND FEATURE_OPTIONS -DBUILD_WITHOUT_64BIT_OFFSET=ON)
+endif()
+
+string(REPLACE "dynamic" "" qhull_target "Qhull::qhull${VCPKG_LIBRARY_LINKAGE}_r")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
+        ${FEATURE_OPTIONS}
+        -DBUILD_DOCS=OFF
+        -DBUILD_PYTHON_BINDINGS=OFF
+        -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_CSharp=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
+        -DGDAL_USE_INTERNAL_LIBS=OFF
+        -DGDAL_USE_EXTERNAL_LIBS=OFF
+        -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
+        -DOGR_BUILD_OPTIONAL_DRIVERS=ON
+        -DGDAL_CHECK_PACKAGE_MySQL_NAMES=unofficial-libmariadb
+        -DGDAL_CHECK_PACKAGE_MySQL_TARGETS=unofficial::libmariadb
+        -DMYSQL_LIBRARIES=unofficial::libmariadb
+        -DGDAL_CHECK_PACKAGE_NetCDF_NAMES=netCDF
+        -DGDAL_CHECK_PACKAGE_NetCDF_TARGETS=netCDF::netcdf
+        -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
+        "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
+        "-DQHULL_LIBRARY=${qhull_target}"
+        -DCMAKE_PROJECT_INCLUDE="${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
+    OPTIONS_DEBUG
+        -DBUILD_APPS=OFF
+    MAYBE_UNUSED_VARIABLES
+        QHULL_LIBRARY
+)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gdal)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdal/GDALConfig.cmake"
+    "include(CMakeFindDependencyMacro)"
+    "include(CMakeFindDependencyMacro)
+# gdal needs a pkg-config tool. A host dependency provides pkgconf.
+get_filename_component(vcpkg_host_prefix \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" ABSOLUTE)
+list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
 )
 
-# Extract source into architecture specific directory, because GDALs' nmake based build currently does not
-# support out of source builds.
-set(SOURCE_PATH_DEBUG   ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-debug/gdal-${GDAL_VERSION_STR})
-set(SOURCE_PATH_RELEASE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-release/gdal-${GDAL_VERSION_STR})
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    list(APPEND BUILD_TYPES "release")
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    list(APPEND BUILD_TYPES "debug")
-endif()
-
-foreach(BUILD_TYPE IN LISTS BUILD_TYPES)
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
-    vcpkg_extract_source_archive(${ARCHIVE} ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE})
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      vcpkg_apply_patches(
-          SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
-          PATCHES
-                0001-Fix-debug-crt-flags.patch
-                0002-Fix-static-build.patch
-      )
-    else()
-      vcpkg_apply_patches(
-          SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}
-          PATCHES
-                0001-Fix-debug-crt-flags.patch
-      )
-    endif()
-    vcpkg_apply_patches(
-        SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src-${TARGET_TRIPLET}-${BUILD_TYPE}/gdal-${GDAL_VERSION_STR}/ogr
-        PATCHES
-              0003-Fix-std-fabs.patch
+if (BUILD_APPS)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            gdalinfo
+            gdalbuildvrt
+            gdaladdo
+            gdal_grid
+            gdal_translate
+            gdal_rasterize
+            gdalsrsinfo
+            gdalenhance
+            gdalmanage
+            gdaltransform
+            gdaltindex
+            gdaldem
+            gdal_create
+            gdal_viewshed
+            nearblack
+            ogrlineref
+            ogrtindex
+            gdalwarp
+            gdal_contour
+            gdallocationinfo
+            ogrinfo
+            ogr2ogr
+            ogrlineref
+            nearblack
+            gdalmdiminfo
+            gdalmdimtranslate
+            gnmanalyse
+            gnmmanage
+        AUTO_CLEAN
     )
-endforeach()
-
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  # Check build system first
-  find_program(NMAKE nmake REQUIRED)
-
-  file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" NATIVE_PACKAGES_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/share/gdal" NATIVE_DATA_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/share/gdal/html" NATIVE_HTML_DIR)
-
-  # Setup proj4 libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PROJ_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/proj.lib" PROJ_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib" PROJ_LIBRARY_DBG)
-
-  # Setup libpng libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PNG_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpng16.lib" PNG_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpng16d.lib" PNG_LIBRARY_DBG)
-
-  # Setup zlib libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" ZLIB_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/zlib.lib" ZLIB_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib" ZLIB_LIBRARY_DBG)
-
-  # Setup geos libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" GEOS_INCLUDE_DIR)
-  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libgeos_c.lib ${CURRENT_INSTALLED_DIR}/lib/libgeos.lib" GEOS_LIBRARY_REL)
-      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libgeos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib" GEOS_LIBRARY_DBG)
-  else()
-      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
-      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
-  endif()
-
-  # Setup expat libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" EXPAT_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/expat.lib" EXPAT_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/expat.lib" EXPAT_LIBRARY_DBG)
-
-  # Setup curl libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" CURL_INCLUDE_DIR)
-  if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libcurl.lib")
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl.lib" CURL_LIBRARY_REL)
-  elseif(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libcurl_imp.lib")
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libcurl_imp.lib" CURL_LIBRARY_REL)
-  endif()
-  if(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl-d.lib")
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl-d.lib" CURL_LIBRARY_DBG)
-  elseif(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl-d_imp.lib")
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcurl-d_imp.lib" CURL_LIBRARY_DBG)
-  endif()
-
-  # Setup sqlite3 libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" SQLITE_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib" SQLITE_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib" SQLITE_LIBRARY_DBG)
-
-  # Setup PostgreSQL libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" PGSQL_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libpq.lib" PGSQL_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libpqd.lib" PGSQL_LIBRARY_DBG)
-
-  # Setup OpenJPEG libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" OPENJPEG_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/openjp2.lib" OPENJPEG_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/openjp2.lib" OPENJPEG_LIBRARY_DBG)
-
-  # Setup WebP libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" WEBP_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/webp.lib" WEBP_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/webpd.lib" WEBP_LIBRARY_DBG)
-
-  # Setup libxml2 libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" XML2_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib" XML2_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib" XML2_LIBRARY_DBG)
-
-  # Setup liblzma libraries + include path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" LZMA_INCLUDE_DIR)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/lzma.lib" LZMA_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib" LZMA_LIBRARY_DBG)
-
-  # Setup openssl libraries path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libeay32.lib ${CURRENT_INSTALLED_DIR}/lib/ssleay32.lib" OPENSSL_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libeay32.lib ${CURRENT_INSTALLED_DIR}/debug/lib/ssleay32.lib" OPENSSL_LIBRARY_DBG)
-
-  # Setup libiconv libraries path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib" ICONV_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib" ICONV_LIBRARY_DBG)
-
-  if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
-      # Setup MySQL libraries + include path
-      if("mysql-libmysql" IN_LIST FEATURES)
-          file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include/mysql" MYSQL_INCLUDE_DIR)
-          file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib" MYSQL_LIBRARY_REL)
-          file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib" MYSQL_LIBRARY_DBG)
-      endif()
-
-      if("mysql-libmariadb" IN_LIST FEATURES)
-          file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include/mysql" MYSQL_INCLUDE_DIR)
-          file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libmariadb.lib" MYSQL_LIBRARY_REL)
-          file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libmariadb.lib" MYSQL_LIBRARY_DBG)
-      endif()
-
-      list(APPEND NMAKE_OPTIONS MYSQL_INC_DIR=${MYSQL_INCLUDE_DIR})
-      list(APPEND NMAKE_OPTIONS_REL MYSQL_LIB=${MYSQL_LIBRARY_REL})
-      list(APPEND NMAKE_OPTIONS_DBG MYSQL_LIB=${MYSQL_LIBRARY_DBG})
-  endif()
-
-  if ("libspatialite" IN_LIST FEATURES)
-    # Setup spatialite libraries + include path
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include/spatialite" SPATIALITE_INCLUDE_DIR)
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/spatialite.lib" SPATIALITE_LIBRARY_REL)
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/spatialite.lib" SPATIALITE_LIBRARY_DBG)
-    set(HAVE_SPATIALITE "-DHAVE_SPATIALITE")
-  endif()
-
-  list(APPEND NMAKE_OPTIONS
-      GDAL_HOME=${NATIVE_PACKAGES_DIR}
-      DATADIR=${NATIVE_DATA_DIR}
-      HTMLDIR=${NATIVE_HTML_DIR}
-      GEOS_DIR=${GEOS_INCLUDE_DIR}
-      "GEOS_CFLAGS=-I${GEOS_INCLUDE_DIR} -DHAVE_GEOS"
-      PROJ_INCLUDE=-I${PROJ_INCLUDE_DIR}
-      EXPAT_DIR=${EXPAT_INCLUDE_DIR}
-      EXPAT_INCLUDE=-I${EXPAT_INCLUDE_DIR}
-      CURL_INC=-I${CURL_INCLUDE_DIR}
-      "SQLITE_INC=-I${SQLITE_INCLUDE_DIR} ${HAVE_SPATIALITE}"
-      PG_INC_DIR=${PGSQL_INCLUDE_DIR}
-      OPENJPEG_ENABLED=YES
-      OPENJPEG_CFLAGS=-I${OPENJPEG_INCLUDE_DIR}
-      OPENJPEG_VERSION=20100
-      WEBP_ENABLED=YES
-      WEBP_CFLAGS=-I${WEBP_INCLUDE_DIR}
-      LIBXML2_INC=-I${XML2_INCLUDE_DIR}
-      PNG_EXTERNAL_LIB=1
-      PNGDIR=${PNG_INCLUDE_DIR}
-      ZLIB_INC=-I${ZLIB_INCLUDE_DIR}
-      ZLIB_EXTERNAL_LIB=1
-      ACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1
-      MSVC_VER=1900
-  )
-
-  if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-      list(APPEND NMAKE_OPTIONS WIN64=YES)
-  endif()
-
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-      list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
-  else()
-      # Enables PDBs for release and debug builds
-      list(APPEND NMAKE_OPTIONS WITH_PDB=1)
-  endif()
-
-  if (VCPKG_CRT_LINKAGE STREQUAL static)
-      set(LINKAGE_FLAGS "/MT")
-  else()
-      set(LINKAGE_FLAGS "/MD")
-  endif()
-
-  list(APPEND NMAKE_OPTIONS_REL
-      ${NMAKE_OPTIONS}
-      CXX_CRT_FLAGS=${LINKAGE_FLAGS}
-      PROJ_LIBRARY=${PROJ_LIBRARY_REL}
-      PNG_LIB=${PNG_LIBRARY_REL}
-      "GEOS_LIB=${GEOS_LIBRARY_REL}"
-      EXPAT_LIB=${EXPAT_LIBRARY_REL}
-      "CURL_LIB=${CURL_LIBRARY_REL} wsock32.lib wldap32.lib winmm.lib"
-      "SQLITE_LIB=${SQLITE_LIBRARY_REL} ${SPATIALITE_LIBRARY_REL}"
-      OPENJPEG_LIB=${OPENJPEG_LIBRARY_REL}
-      WEBP_LIBS=${WEBP_LIBRARY_REL}
-      "LIBXML2_LIB=${XML2_LIBRARY_REL} ${ICONV_LIBRARY_REL} ${LZMA_LIBRARY_REL}"
-      ZLIB_LIB=${ZLIB_LIBRARY_REL}
-      "PG_LIB=${PGSQL_LIBRARY_REL} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_REL}"
-  )
-
-  list(APPEND NMAKE_OPTIONS_DBG
-      ${NMAKE_OPTIONS}
-      CXX_CRT_FLAGS="${LINKAGE_FLAGS}d"
-      PROJ_LIBRARY=${PROJ_LIBRARY_DBG}
-      PNG_LIB=${PNG_LIBRARY_DBG}
-      "GEOS_LIB=${GEOS_LIBRARY_DBG}"
-      EXPAT_LIB=${EXPAT_LIBRARY_DBG}
-      "CURL_LIB=${CURL_LIBRARY_DBG} wsock32.lib wldap32.lib winmm.lib"
-      "SQLITE_LIB=${SQLITE_LIBRARY_DBG} ${SPATIALITE_LIBRARY_DBG}"
-      OPENJPEG_LIB=${OPENJPEG_LIBRARY_DBG}
-      WEBP_LIBS=${WEBP_LIBRARY_DBG}
-      "LIBXML2_LIB=${XML2_LIBRARY_DBG} ${ICONV_LIBRARY_DBG} ${LZMA_LIBRARY_DBG}"
-      ZLIB_LIB=${ZLIB_LIBRARY_DBG}
-      "PG_LIB=${PGSQL_LIBRARY_DBG} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_DBG}"
-      DEBUG=1
-  )
-  
-  # Begin build process
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    ################
-    # Release build
-    ################
-    message(STATUS "Building ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-      COMMAND ${NMAKE} -f makefile.vc
-      "${NMAKE_OPTIONS_REL}"
-      WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-      LOGNAME nmake-build-${TARGET_TRIPLET}-release
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-rel done")
-  endif()
-
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    ################
-    # Debug build
-    ################
-
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-      COMMAND ${NMAKE} /G -f makefile.vc
-      "${NMAKE_OPTIONS_DBG}"
-      WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-      LOGNAME nmake-build-${TARGET_TRIPLET}-debug
-    )
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
-  endif()
-
-  message(STATUS "Packaging ${TARGET_TRIPLET}")
-
-  if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gdal/html)
-  endif()
-
-  vcpkg_execute_required_process(
-    COMMAND ${NMAKE} -f makefile.vc
-    "${NMAKE_OPTIONS_REL}"
-    "install"
-    "devinstall"
-    WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-    LOGNAME nmake-install-${TARGET_TRIPLET}
-  )
-
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-      file(COPY ${SOURCE_PATH_RELEASE}/gdal_i.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-      file(COPY ${SOURCE_PATH_DEBUG}/gdal_i.lib   DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_id.lib)
-    endif()
-
-  else()
-
-    set(GDAL_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/gdal)
-    file(MAKE_DIRECTORY ${GDAL_TOOL_PATH})
-
-    file(GLOB GDAL_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-    file(COPY ${GDAL_TOOLS} DESTINATION ${GDAL_TOOL_PATH})
-    file(REMOVE_RECURSE ${GDAL_TOOLS})
-
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-      file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/lib/gdal.lib)
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-      file(COPY ${SOURCE_PATH_DEBUG}/gdal${GDAL_VERSION_LIB}.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-      file(COPY ${SOURCE_PATH_DEBUG}/gdal_i.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-      file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/gdal_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib)
-    endif()
-  endif()
-
-  # Copy over PDBs
-  vcpkg_copy_pdbs()
-  
-  if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal204.pdb)
-  endif()
-
-elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin") # Build in UNIX
-  # Check build system first
-  find_program(MAKE make)
-  if (NOT MAKE)
-      message(FATAL_ERROR "MAKE not found")
-  endif()
-
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    ################
-    # Release build
-    ################
-    message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-    set(OUT_PATH_RELEASE ${SOURCE_PATH_RELEASE}/../../make-build-${TARGET_TRIPLET}-release)
-    file(MAKE_DIRECTORY ${OUT_PATH_RELEASE})
-    vcpkg_execute_required_process(
-      COMMAND "${SOURCE_PATH_RELEASE}/configure" --prefix=${OUT_PATH_RELEASE}
-      WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-      LOGNAME config-${TARGET_TRIPLET}-rel
-    )
-
-    message(STATUS "Building ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_build_process(
-      COMMAND make -j ${VCPKG_CONCURRENCY}
-      NO_PARALLEL_COMMAND make
-      WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-      LOGNAME make-build-${TARGET_TRIPLET}-release
-    )
-
-    message(STATUS "Installing ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-      COMMAND make install
-      WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-      LOGNAME make-install-${TARGET_TRIPLET}-release
-    )
-
-    file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/gdalplugins)
-    file(COPY ${OUT_PATH_RELEASE}/lib/pkgconfig DESTINATION ${OUT_PATH_RELEASE}/share/gdal)
-    file(REMOVE_RECURSE ${OUT_PATH_RELEASE}/lib/pkgconfig)
-    file(COPY ${OUT_PATH_RELEASE}/lib DESTINATION ${CURRENT_PACKAGES_DIR})
-    file(COPY ${OUT_PATH_RELEASE}/include DESTINATION ${CURRENT_PACKAGES_DIR})
-    file(COPY ${OUT_PATH_RELEASE}/share DESTINATION ${CURRENT_PACKAGES_DIR})
-    message(STATUS "Installing ${TARGET_TRIPLET}-rel done")
-  endif()
-
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    ################
-    # Debug build
-    ################
-    message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-    set(OUT_PATH_DEBUG ${SOURCE_PATH_RELEASE}/../../make-build-${TARGET_TRIPLET}-debug)
-    file(MAKE_DIRECTORY ${OUT_PATH_DEBUG})
-    vcpkg_execute_required_process(
-      COMMAND "${SOURCE_PATH_DEBUG}/configure" --prefix=${OUT_PATH_DEBUG}
-      WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-      LOGNAME config-${TARGET_TRIPLET}-debug
-    )
-
-    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_build_process(
-      COMMAND make -j ${VCPKG_CONCURRENCY}
-      NO_PARALLEL_COMMAND make
-      WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-      LOGNAME make-build-${TARGET_TRIPLET}-debug
-    )
-
-    message(STATUS "Installing ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-      COMMAND make -j install
-      WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-      LOGNAME make-install-${TARGET_TRIPLET}-debug
-    )
-
-    file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/gdalplugins)
-    file(REMOVE_RECURSE ${OUT_PATH_DEBUG}/lib/pkgconfig)
-    file(COPY ${OUT_PATH_DEBUG}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
-    message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
-  endif()
-else() # Other build system
-  message(FATAL_ERROR "Unsupport build system.")
 endif()
 
-# Handle copyright
-configure_file(${SOURCE_PATH_RELEASE}/LICENSE.TXT ${CURRENT_PACKAGES_DIR}/share/gdal/copyright COPYONLY)
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/gdal-config" "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config")
+
+file(GLOB bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
+if(NOT bin_files)
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
+endif()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,4 @@
+The package libiconv provides CMake targets:
+
+    find_package(Iconv)
+    target_link_libraries(main PRIVATE Iconv::Iconv)

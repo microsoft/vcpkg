@@ -1,4 +1,6 @@
-include(vcpkg_common_functions)
+if(VCPKG_TARGET_IS_MINGW)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,20 +11,19 @@ vcpkg_from_github(
     PATCHES
         "001-fix-cmake.patch"
         "002-fix-macosx-build.patch"
+        "003-fix-system-link.patch"
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libui TARGET_PATH share/unofficial-libui)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/libui/copyright COPYONLY)
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libui PACKAGE_NAME unofficial-libui)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

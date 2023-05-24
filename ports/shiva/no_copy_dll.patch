@@ -1,0 +1,13 @@
+diff --git a/modules/python/CMakeLists.txt b/modules/python/CMakeLists.txt
+index eef14ee87..d52a147d8 100644
+--- a/modules/python/CMakeLists.txt
++++ b/modules/python/CMakeLists.txt
+@@ -4,7 +4,7 @@ set(MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+ find_package(pybind11 CONFIG REQUIRED)
+ 
+ 
+-if (WIN32)
++if (WIN32 AND FALSE)
+     ## We need pyton dll
+     file(GLOB PYTHON_DLL ${PYTHON_LIBRARIES}/../*.dll)
+ 

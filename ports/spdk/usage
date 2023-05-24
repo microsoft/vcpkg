@@ -7,7 +7,7 @@ Add following to build examples/nvme/perf/perf.c
 
     ADD_EXECUTABLE(SPDKTest perf.c)
 
-    TARGET_LINK_DIRECTORIES(SPDKTest PRIVATE ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/spdk)
+    TARGET_LINK_DIRECTORIES(SPDKTest PRIVATE ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/spdk)
     TARGET_LINK_LIBRARIES(SPDKTest PRIVATE
                           SPDK::spdk_app_rpc
                           SPDK::spdk_bdev

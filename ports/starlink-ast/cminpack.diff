@@ -1,0 +1,13 @@
+diff --git a/src/polymap.c b/src/polymap.c
+index 0b436cc..1aee268 100644
+--- a/src/polymap.c
++++ b/src/polymap.c
+@@ -165,7 +165,7 @@ f     - AST_POLYTRAN: Fit a PolyMap inverse or forward transformation
+ #include "cmpmap.h"              /* Compound mappings */
+ #include "polymap.h"             /* Interface definition for this class */
+ #include "unitmap.h"             /* Unit mappings */
+-#include "cminpack/cminpack.h"   /* Levenberg - Marquardt minimization */
++#include "cminpack-1/cminpack.h"   /* Levenberg - Marquardt minimization */
+ #include "pal.h"                 /* SLALIB function definitions */
+ 
+ /* Error code definitions. */

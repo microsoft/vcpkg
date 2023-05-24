@@ -1,0 +1,14 @@
+diff --git a/src/mp-unitsConfig.cmake b/src/mp-unitsConfig.cmake
+--- a/src/mp-unitsConfig.cmake
++++ b/src/mp-unitsConfig.cmake
+@@ -39,8 +39,8 @@ function(__check_libcxx_in_use variable)
+ endfunction()
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(fmt)
+-find_dependency(gsl-lite)
++find_dependency(fmt CONFIG)
++find_dependency(gsl-lite CONFIG)
+ 
+ # add range-v3 dependency only for clang + libc++
+ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

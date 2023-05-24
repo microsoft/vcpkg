@@ -1,57 +1,73 @@
-set(PCRE2_VERSION 10.30)
-include(vcpkg_common_functions)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.pcre.org/pub/pcre/pcre2-${PCRE2_VERSION}.zip" "https://sourceforge.net/projects/pcre/files/pcre2/${PCRE2_VERSION}/pcre2-${PCRE2_VERSION}.zip/download"
-    FILENAME "pcre2-${PCRE2_VERSION}.zip"
-    SHA512 03e570b946ac29498a114b27e715a0fcf25702bfc9623f9fc085ee8a3214ab3c303baccb9c0af55da6916e8ce40d931d97f1ee9628690563041a943f0aa2bc54)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES fix-space.patch
-            fix-arm64-config.patch
-            fix-uwp.patch
+    REPO PCRE2Project/pcre2
+    REF pcre2-10.40
+    SHA512 098c21d60ecb3bb8449173f50c9ab8e6018fafd5d55548be08b15df37f8e08bcd4f851d75758c4d22505db30a3444bb65783d83cd876c63fdf0de2850815ef93
+    HEAD_REF master
+    PATCHES
+        pcre2-10.35_fix-uwp.patch
+        no-static-suffix.patch
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
-    set(JIT OFF)
-else()
-    set(JIT ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" INSTALL_PDB)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_STATIC_CRT)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        jit   PCRE2_SUPPORT_JIT
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
+        -DBUILD_STATIC_LIBS=${BUILD_STATIC}
+        -DPCRE2_STATIC_RUNTIME=${BUILD_STATIC_CRT}
         -DPCRE2_BUILD_PCRE2_8=ON
         -DPCRE2_BUILD_PCRE2_16=ON
         -DPCRE2_BUILD_PCRE2_32=ON
-        -DPCRE2_SUPPORT_JIT=${JIT}
         -DPCRE2_SUPPORT_UNICODE=ON
         -DPCRE2_BUILD_TESTS=OFF
-        -DPCRE2_BUILD_PCRE2GREP=OFF)
+        -DPCRE2_BUILD_PCRE2GREP=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Readline=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Editline=ON
+        -DINSTALL_MSVC_PDB=${INSTALL_PDB}
+        -DCMAKE_REQUIRE_FIND_PACKAGE_BZip2=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+    )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/pcre2.h PCRE2_H)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+file(READ "${CURRENT_PACKAGES_DIR}/include/pcre2.h" PCRE2_H)
+if(BUILD_STATIC)
     string(REPLACE "defined(PCRE2_STATIC)" "1" PCRE2_H "${PCRE2_H}")
 else()
     string(REPLACE "defined(PCRE2_STATIC)" "0" PCRE2_H "${PCRE2_H}")
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/pcre2.h "${PCRE2_H}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/pcre2.h" "${PCRE2_H}")
 
-# don't install POSIX wrapper
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/pcre2posix.h)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/pcre2-posix.lib ${CURRENT_PACKAGES_DIR}/debug/lib/pcre2-posixd.lib)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/pcre2-posix.dll ${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-posixd.dll)
+vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_pdbs()
+# The cmake file provided by pcre2 has some problems, so don't use it for now.
+#vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/cmake")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/man)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/man")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(BUILD_STATIC)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/..")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    endif()
+endif()
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

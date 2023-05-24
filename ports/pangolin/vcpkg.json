@@ -1,0 +1,131 @@
+{
+  "name": "pangolin",
+  "version": "0.8",
+  "port-version": 2,
+  "description": "Lightweight GUI Library",
+  "homepage": "https://github.com/stevenlovegrove/Pangolin",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "eigen3",
+    "glew",
+    "palsigslot",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "ffmpeg",
+    "jpeg",
+    "png"
+  ],
+  "features": {
+    "eigen": {
+      "description": "Unused option left for backwards compatibility with older versions"
+    },
+    "examples": {
+      "description": "Build Examples"
+    },
+    "ffmpeg": {
+      "description": "Build support for ffmpeg video input",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "features": [
+            "avformat"
+          ]
+        }
+      ]
+    },
+    "gui": {
+      "description": "Unused option left for backwards compatibility with older versions"
+    },
+    "jpeg": {
+      "description": "Build support for libjpeg image input",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "lz4": {
+      "description": "Build support for liblz4 compression",
+      "dependencies": [
+        "lz4"
+      ]
+    },
+    "module": {
+      "description": "Unused option left for backwards compatibility with older versions"
+    },
+    "openexr": {
+      "description": "Build support for libopenexr image input",
+      "dependencies": [
+        "openexr"
+      ]
+    },
+    "openni2": {
+      "description": "Build support for OpenNI2 video input",
+      "dependencies": [
+        "openni2"
+      ]
+    },
+    "png": {
+      "description": "Build support for libpng image input",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "pybind11": {
+      "description": "Python wrapper for Pangolin",
+      "dependencies": [
+        "pybind11",
+        "python3"
+      ]
+    },
+    "realsense": {
+      "description": "Build support for LibRealSense2 video input",
+      "dependencies": [
+        "realsense2"
+      ]
+    },
+    "test": {
+      "description": "Build Tests"
+    },
+    "tiff": {
+      "description": "Build support for libtiff image input",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "tools": {
+      "description": "Build Tools",
+      "dependencies": [
+        {
+          "name": "pangolin",
+          "default-features": false
+        }
+      ]
+    },
+    "uvc": {
+      "description": "Build support for MediaFoundation UVC input",
+      "dependencies": [
+        "libuvc"
+      ]
+    },
+    "vars": {
+      "description": "Unused option left for backwards compatibility with older versions"
+    },
+    "video": {
+      "description": "Unused option left for backwards compatibility with older versions"
+    },
+    "zstd": {
+      "description": "Build support for libzstd compression",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}

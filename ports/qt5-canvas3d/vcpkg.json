@@ -1,0 +1,12 @@
+{
+  "name": "qt5-canvas3d",
+  "version": "0",
+  "port-version": 2,
+  "description": "Qt5 Canvas 3d Module;",
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ]
+}

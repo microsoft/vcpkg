@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6b1f1dc..328f9b6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -80,7 +80,7 @@ set (NSYNC_OS_CPP_SRC
+ #    https://cmake.org/cmake/help/v3.1/policy/CMP0054.html
+ 
+ # Pick the include directory for the operating system.
+-if ("${CMAKE_SYSTEM_NAME}X" STREQUAL "WindowsX")
++if ("${CMAKE_SYSTEM_NAME}X" STREQUAL "WindowsX" OR "${CMAKE_SYSTEM_NAME}X" STREQUAL "WindowsStoreX")
+ 	include_directories ("${PROJECT_SOURCE_DIR}/platform/win32")
+ 	set (NSYNC_CPP_FLAGS "/TP")
+ 
+@@ -230,7 +230,7 @@ elseif (("${CMAKE_SYSTEM_PROCESSOR}X" STREQUAL "ppc64X"))
+ endif ()
+ 
+ # Windows uses some include files from the posix directory also.
+-if ("${CMAKE_SYSTEM_NAME}X" STREQUAL "WindowsX")
++if ("${CMAKE_SYSTEM_NAME}X" STREQUAL "WindowsX" OR "${CMAKE_SYSTEM_NAME}X" STREQUAL "WindowsStoreX")
+ 	include_directories ("${PROJECT_SOURCE_DIR}/platform/posix")
+ endif ()
+ 
+@@ -396,7 +396,8 @@ if (NSYNC_ENABLE_TESTS)
+ 	endforeach (t)
+ endif ()
+ 
+-set (CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
++# By default, install nsync always
++# set (CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
+ 
+ install (TARGETS nsync
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT RuntimeLibraries

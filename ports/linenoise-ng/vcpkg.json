@@ -1,0 +1,12 @@
+{
+  "name": "linenoise-ng",
+  "version-string": "4754bee2d8eb3",
+  "port-version": 3,
+  "description": "A small, portable GNU readline replacement for Linux, Windows and MacOS which is capable of handling UTF-8 characters.",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

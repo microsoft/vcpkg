@@ -3,21 +3,20 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO embotech/ecos
-    REF 2.0.7
-    SHA512 2781435164b68e5b113a12547cd3a5a787b806009d07d45209117758178cb6e85e26dfb5689172d60b5e40671eb6d303ece131eb5f1b8bab4cbb250af74597b2
+    REF v2.0.8
+    SHA512 c1adb188d6b2c400f817de15272472adfd013e2a174f49ec0bb2f7f889f26ba2b7ea165d9bedac3031bd2da7a770f2a285ad825d5b22ccc6cf43c756a20f844f
     HEAD_REF develop
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ecos RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH "share/ecos")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/ecos")

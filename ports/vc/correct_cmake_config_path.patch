@@ -1,0 +1,22 @@
+diff --git a/cmake/VcConfig.cmake.in b/cmake/VcConfig.cmake.in
+index 36de476..5cb0e5b 100644
+--- a/cmake/VcConfig.cmake.in
++++ b/cmake/VcConfig.cmake.in
+@@ -4,7 +4,7 @@
+ set_and_check(@PROJECT_NAME@_INSTALL_DIR @PACKAGE_CMAKE_INSTALL_PREFIX@)
+ set_and_check(@PROJECT_NAME@_INCLUDE_DIR @PACKAGE_CMAKE_INSTALL_PREFIX@/include)
+ set_and_check(@PROJECT_NAME@_LIB_DIR @PACKAGE_CMAKE_INSTALL_PREFIX@/lib@LIB_SUFFIX@)
+-set_and_check(@PROJECT_NAME@_CMAKE_MODULES_DIR ${@PROJECT_NAME@_LIB_DIR}/cmake/Vc)
++set_and_check(@PROJECT_NAME@_CMAKE_MODULES_DIR @PACKAGE_CMAKE_INSTALL_PREFIX@/share/vc)
+ set(@PROJECT_NAME@_VERSION_STRING "@PROJECT_VERSION@")
+ 
+ ### Setup @PROJECT_NAME@ defaults
+@@ -20,7 +20,7 @@ list(APPEND @PROJECT_NAME@_ALL_FLAGS ${@PROJECT_NAME@_COMPILE_FLAGS})
+ list(APPEND @PROJECT_NAME@_ALL_FLAGS ${@PROJECT_NAME@_ARCHITECTURE_FLAGS})
+ 
+ ### Import targets
+-include("@PACKAGE_CMAKE_INSTALL_PREFIX@/@PACKAGE_INSTALL_DESTINATION@/@PROJECT_NAME@Targets.cmake")
++include(${@PROJECT_NAME@_CMAKE_MODULES_DIR}/@PROJECT_NAME@Targets.cmake)
+ 
+ ### Define @PROJECT_NAME@_LIBRARIES for backwards compatibility
+ get_target_property(vc_lib_location @PROJECT_NAME@::Vc INTERFACE_LOCATION)

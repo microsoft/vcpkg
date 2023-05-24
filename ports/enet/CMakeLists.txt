@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.0.2)
 
 project(enet)
 
@@ -55,9 +55,7 @@ if(HAS_SOCKLEN_T)
     add_definitions(-DHAS_SOCKLEN_T=1)
 endif()
  
-include_directories(${PROJECT_SOURCE_DIR}/include)
- 
-add_library(enet STATIC
+add_library(enet
         callbacks.c
         compress.c
         host.c
@@ -69,13 +67,37 @@ add_library(enet STATIC
         win32.c
     )
 
+add_library(enet::enet ALIAS enet)
+
+target_include_directories(enet PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+if (BUILD_SHARED_LIBS)
+    target_compile_definitions(enet
+        PUBLIC ENET_DLL
+        PRIVATE ENET_BUILDING_LIB
+    )
+endif()
+	
+
 if (WIN32)
     target_link_libraries(enet winmm ws2_32)
 endif()
 
-install(TARGETS enet ARCHIVE DESTINATION lib
+set(ENET_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/enet)
+
+install(TARGETS enet EXPORT unofficial-enet-config
+                     ARCHIVE DESTINATION lib
                      LIBRARY DESTINATION lib
                      RUNTIME DESTINATION bin)
+
+INSTALL(EXPORT unofficial-enet-config
+    NAMESPACE unofficial::enet::
+    FILE unofficial-enet-config.cmake
+    DESTINATION share/unofficial-enet
+)
 
 install(DIRECTORY include/
         DESTINATION include)

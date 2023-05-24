@@ -1,0 +1,24 @@
+{
+  "name": "gettext",
+  "version": "0.21.1",
+  "port-version": 1,
+  "description": "A GNU framework to help produce multi-lingual messages.",
+  "homepage": "https://www.gnu.org/software/gettext/",
+  "license": "GPL-3.0-only",
+  "dependencies": [
+    "gettext-libintl"
+  ],
+  "features": {
+    "runtime-tools": {
+      "description": "Build runtime tools for internationalization of scripts",
+      "supports": "!uwp"
+    },
+    "tools": {
+      "description": "Build gettext tools",
+      "supports": "!uwp",
+      "dependencies": [
+        "libiconv"
+      ]
+    }
+  }
+}

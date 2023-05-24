@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeOpcUa/freeopcua
@@ -14,11 +12,11 @@ vcpkg_from_github(
         serverObj.patch
         include_asio_first.patch
         boost-1.70.patch
+        fix-std-headers.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
       -DBUILD_PYTHON=OFF
       -DBUILD_TESTING=OFF
@@ -26,10 +24,12 @@ vcpkg_configure_cmake(
       -DCMAKE_DEBUG_POSTFIX=d
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 #Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freeopcua RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/freeopcua" RENAME copyright)
+
+vcpkg_fixup_pkgconfig()

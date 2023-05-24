@@ -1,12 +1,10 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lava/matplotlib-cpp
-    REF f4ad842e70cc56a38f3e4cd852968c7c1cecc9a7
-    SHA512 433eb2bc60aa65b9bc40310d7a55b728737e59aafe13e06ddf1a71b25e3cc365cd10f64121fba936180c98eaf5c96dfaf2547e0e3c0daef0b808d1527a37cc17
+    REF 70d508fcb7febc66535ba923eac1b1a4e571e4d1
+    SHA512 4da452fc38b6c349a1b08b97775ef2d90354fabd3c8c3a0383f08609b22dea222b7f3e091efc1b833755f6b5c1e8564e675d2ed54cdc21f8b07b1b7bb44a82f4
     HEAD_REF master
 )
 

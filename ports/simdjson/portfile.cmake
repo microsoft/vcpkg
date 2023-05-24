@@ -1,35 +1,44 @@
-# https://github.com/Microsoft/vcpkg/issues/5418#issuecomment-470519894
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" "x86")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lemire/simdjson
-    REF 4da06830f1389c8cd33171f5ab3558e79f0ece04
-    SHA512 ffb11ee91f97d975fba2946653c9c847565933380f94e334d15e627f77a7a750702c539ca55d17e077b2ed0a79006f56a3b9a202d888bb7e2e3f0484237cb537
+    REPO simdjson/simdjson
+    REF "v${VERSION}"
     HEAD_REF master
-    PATCHES ${CMAKE_CURRENT_LIST_DIR}/no_benchmark.patch
+    SHA512 bdddf6a1afbe289fa075cbe05d9f70c29c61fa824be52e414d8344bd1c77117634bf44122629980e69571cf4bad1da5f2b9818ea878290cc360913fb2279d3e5
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        exceptions SIMDJSON_EXCEPTIONS
+        threads    SIMDJSON_ENABLE_THREADS
+    INVERTED_FEATURES
+        deprecated SIMDJSON_DISABLE_DEPRECATED_API
+        utf8-validation SIMDJSON_SKIPUTF8VALIDATION
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DSIMDJSON_JUST_LIBRARY=ON
+        -DSIMDJSON_SANITIZE_UNDEFINED=OFF
+        -DSIMDJSON_SANITIZE=OFF
+        -DSIMDJSON_SANITIZE_THREADS=OFF
         -DSIMDJSON_BUILD_STATIC=${SIMDJSON_BUILD_STATIC}
-    OPTIONS_DEBUG
-        -DSIMDJSON_SANITIZE=ON
+        -DSIMDJSON_DEVELOPMENT_CHECKS=OFF
+        -DSIMDJSON_VERBOSE_LOGGING=OFF
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-)
+vcpkg_fixup_pkgconfig()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

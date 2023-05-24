@@ -1,0 +1,10 @@
+{
+  "name": "sqlite-modern-cpp",
+  "version": "3.2-936cd0c8",
+  "port-version": 2,
+  "description": "The C++14 wrapper around sqlite library",
+  "homepage": "https://github.com/aminroosta/sqlite_modern_cpp",
+  "dependencies": [
+    "sqlite3"
+  ]
+}

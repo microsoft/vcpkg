@@ -1,85 +1,106 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(tesseract_patch fix-depend-libarchive.patch)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
-    REF 4.1.0
-    SHA512 d617f5c5b826640b2871dbe3d7973bcc5e66fafd837921a20e009d683806ed50f0f258aa455019d99fc54f5cb65c2fa0380e3a3c92b39ab0684b8799c730b09d
+    REF 080da83cc51c4ef8b324a7e03146fe0bd7e0944b #5.3.0
+    SHA512 77f7e69ca220edb51f0d1e21fae67288759bbefb6868203cd095c4457b16d7319d78cd47dd8e72be3da5aabb357f5f649b8da7fc3f2263faedecf10f556eb431
     PATCHES
-        fix-tiff-linkage.patch
-        fix-text2image.patch
+        ${tesseract_patch}
+        fix-tools.patch # See https://github.com/tesseract-ocr/tesseract/pull/4006
+        fix-debug-postfix.patch # See https://github.com/tesseract-ocr/tesseract/pull/4008
 )
 
-# The built-in cmake FindICU is better
-file(REMOVE ${SOURCE_PATH}/cmake/FindICU.cmake)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        training-tools  BUILD_TRAINING_TOOLS
+)
 
-# Handle Static Library Output
-if(VCPKG_LIBRARY_LINKAGE EQUAL "static")
-    list(APPEND OPTIONS_LIST -DSTATIC=ON)
-endif()
-
-# Handle CONTROL
-if("training_tools" IN_LIST FEATURES)
-    list(APPEND OPTIONS_LIST -DBUILD_TRAINING_TOOLS=ON)
-else()
-    list(APPEND OPTIONS_LIST -DBUILD_TRAINING_TOOLS=OFF)
-endif()
-if("cpu_independed" IN_LIST FEATURES)
-    list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=none)
-else()
-    list(APPEND OPTIONS_LIST -DTARGET_ARCHITECTURE=auto)
-endif()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DSTATIC=ON
+        ${FEATURE_OPTIONS}
         -DUSE_SYSTEM_ICU=True
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibArchive=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_LibArchive=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_CURL=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_Leptonica=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
         -DLeptonica_DIR=YES
-        ${OPTIONS_LIST}
+        -DSW_BUILD=OFF
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_OpenCL
 )
 
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-
-# Install tool
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/tesseract)
-set(EXTENSION)
-if(WIN32)
-    set(EXTENSION ".exe")
-endif()
-
-# copy training tools
-set(TRAINING_TOOLS_DIR ${CURRENT_PACKAGES_DIR}/tools/tesseract/training)
-if("training_tools" IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/ambiguous_words${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/classifier_tester${EXTENSION} 	DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/combine_tessdata${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/cntraining${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/dawg2wordlist${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/mftraining${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/shapeclustering${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/wordlist2dawg${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/combine_lang_model${EXTENSION} 	DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/lstmeval${EXTENSION} 			DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/lstmtraining${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/set_unicharset_properties${EXTENSION} DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/unicharset_extractor${EXTENSION} 	DESTINATION ${TRAINING_TOOLS_DIR})
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/text2image${EXTENSION} 		DESTINATION ${TRAINING_TOOLS_DIR})
-endif()
-
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/tesseract${EXTENSION} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tesseract)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/tesseract)
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tesseract)
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake"
+    "find_dependency(Leptonica)"
+[[
+find_dependency(CURL)
+find_dependency(Leptonica)
+find_dependency(LibArchive)
+]]
+)
+
+vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)
+vcpkg_fixup_pkgconfig()
+
+if("training-tools" IN_LIST FEATURES)
+    list(APPEND TRAINING_TOOLS
+        ambiguous_words classifier_tester combine_tessdata
+        cntraining dawg2wordlist mftraining shapeclustering
+        wordlist2dawg combine_lang_model lstmeval lstmtraining
+        set_unicharset_properties unicharset_extractor text2image
+        merge_unicharsets
+    )
+    vcpkg_copy_tools(TOOL_NAMES ${TRAINING_TOOLS} AUTO_CLEAN)
+endif()
+
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+# Install:
+file(GLOB API_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/api/*.h")
+file(INSTALL ${API_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/api")
+
+file(GLOB ARCH_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/arch/*.h")
+file(INSTALL ${ARCH_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/arch")
+
+file(GLOB CCMAIN_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/ccmain/*.h")
+file(INSTALL ${CCMAIN_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/ccmain")
+
+file(GLOB CCSTRUCT_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/ccstruct/*.h")
+file(INSTALL ${CCSTRUCT_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/ccstruct")
+
+file(GLOB CCUTIL_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/ccutil/*.h")
+file(INSTALL ${CCUTIL_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/ccutil")
+
+file(GLOB CLASSIFY_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/classify/*.h")
+file(INSTALL ${CLASSIFY_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/classify")
+
+file(GLOB CUTIL_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/cutil/*.h")
+file(INSTALL ${CUTIL_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/cutil")
+
+file(GLOB DICT_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/dict/*.h")
+file(INSTALL ${DICT_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/dict")
+
+file(GLOB LSTM_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/lstm/*.h")
+file(INSTALL ${LSTM_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/lstm")
+
+file(GLOB TEXTORD_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/textord/*.h")
+file(INSTALL ${TEXTORD_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/textord")
+
+file(GLOB VIEWER_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/viewer/*.h")
+file(INSTALL ${VIEWER_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/viewer")
+
+file(GLOB WORDREC_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/wordrec/*.h")
+file(INSTALL ${WORDREC_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/wordrec")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

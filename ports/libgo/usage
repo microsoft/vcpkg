@@ -1,5 +1,0 @@
-The package libgo provides CMake integration:
-
-    find_package(libgo REQUIRED)
-    target_include_directories(main PRIVATE ${LIBGO_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${LIBGO_LIBRARIES})

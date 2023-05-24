@@ -1,0 +1,19 @@
+{
+  "name": "aws-c-cal",
+  "version": "0.5.20",
+  "description": "C99 wrapper for cryptography primitives.",
+  "homepage": "https://github.com/awslabs/aws-c-cal",
+  "license": "Apache-2.0",
+  "supports": "!(windows & arm) & !uwp",
+  "dependencies": [
+    "aws-c-common",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,31 +1,30 @@
-include(vcpkg_common_functions)
-
-if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MediaArea/ZenLib
-    REF v0.4.37
-    SHA512 857091422d6425aeae59bf5a9dfedd72f5c9b4a18f29acf88842d812f2b470fc8b1b03a245af6b7d08d616dd5596a8905cc138daecee23dadea39ae4215f77d4
+    REF "v${VERSION}"
+    SHA512 4232eb6e73e9b380f6fe2ce3cfeb9fe343936362a35ca8d088c783dc6277332df762d689efe023e3f1418c2e6d2629e0b82ac93df9cce3ae0ab346c2ed1911f1
     HEAD_REF master
-
-    PATCHES vcpkg_support_in_cmakelists.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/Project/CMake
-    PREFER_NINJA
+vcpkg_find_acquire_program(PKGCONFIG)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/Project/CMake"
+    OPTIONS
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        -DCMAKE_REQUIRE_FIND_PACKAGE_PkgConfig=1
 )
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME zenlib)
+vcpkg_fixup_pkgconfig()
+if(NOT VCPKG_BUILD_TYPE AND VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libzen.pc" " -lzen" " -lzend")
+endif()
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/zenlib TARGET_PATH share/zenlib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
-
-file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/libzen RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME ZenLib MODULE)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")

@@ -1,0 +1,32 @@
+{
+  "name": "ryml",
+  "version": "0.5.0",
+  "description": "Rapid YAML library",
+  "homepage": "https://github.com/biojppm/rapidyaml",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "c4core",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "def-callbacks"
+  ],
+  "features": {
+    "dbg": {
+      "description": "Enable (very verbose) ryml debug prints."
+    },
+    "def-callbacks": {
+      "description": "Enable ryml's default implementation of callbacks: allocate(), free(), error()"
+    }
+  }
+}

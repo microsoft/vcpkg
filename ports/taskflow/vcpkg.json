@@ -1,0 +1,17 @@
+{
+  "name": "taskflow",
+  "version": "3.6.0",
+  "description": "Fast Parallel Tasking Programming Library using Modern C++",
+  "homepage": "https://github.com/taskflow/taskflow",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

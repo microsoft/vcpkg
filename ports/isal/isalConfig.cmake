@@ -1,17 +1,15 @@
+message(WARNING "'find_package(isal CONFIG)' is deprecated. Please use 'find_package(unofficial-isal CONFIG)' instead.")
 
-FUNCTION(SET_LIBRARY_TARGET NAMESPACE LIB_NAME DEBUG_LIB_FILE_NAME RELEASE_LIB_FILE_NAME INCLUDE_DIR)
-    ADD_LIBRARY(${NAMESPACE}::${LIB_NAME} STATIC IMPORTED)
-    SET_TARGET_PROPERTIES(${NAMESPACE}::${LIB_NAME} PROPERTIES
-                          IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                          IMPORTED_LOCATION_RELEASE "${RELEASE_LIB_FILE_NAME}"
-                          IMPORTED_LOCATION_DEBUG "${DEBUG_LIB_FILE_NAME}"
-                          INTERFACE_INCLUDE_DIRECTORIES "${INCLUDE_DIR}"
-                          )
-    SET(${NAMESPACE}_${LIB_NAME}_FOUND 1)
-ENDFUNCTION()
-
-GET_FILENAME_COMPONENT(ROOT "${CMAKE_CURRENT_LIST_FILE}" PATH)
-GET_FILENAME_COMPONENT(ROOT "${ROOT}" PATH)
-GET_FILENAME_COMPONENT(ROOT "${ROOT}" PATH)
-
-SET_LIBRARY_TARGET("ISAL" "isal" "${ROOT}/debug/lib/isa-l.a" "${ROOT}/lib/isa-l.a" "${ROOT}/include/isal")
+include(CMakeFindDependencyMacro)
+find_dependency(unofficial-isal)
+if(NOT TARGET unofficial::isal::isal)
+    set(isal_FOUND FALSE)
+elseif(TARGET ISAL::isa-l OR TARGET ISAL::isal)
+    # done
+elseif ("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+    add_library(ISAL::isa-l INTERFACE IMPORTED)
+    set_target_properties(ISAL::isa-l PROPERTIES INTERFACE_LINK_LIBRARIES unofficial::isal::isal)
+else()
+    add_library(ISAL::isal INTERFACE IMPORTED)
+    set_target_properties(ISAL::isal PROPERTIES INTERFACE_LINK_LIBRARIES unofficial::isal::isal)
+endif()

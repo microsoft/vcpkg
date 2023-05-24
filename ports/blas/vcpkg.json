@@ -1,0 +1,13 @@
+{
+  "name": "blas",
+  "version-date": "2023-03-25",
+  "description": "Metapackage for packages which provide BLAS",
+  "license": null,
+  "dependencies": [
+    "openblas",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

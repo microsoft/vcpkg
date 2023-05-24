@@ -1,0 +1,11 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+variables:
+  unstable-pool: 'vcpkg-testing-msvc'
+
+jobs:
+- template: job.yml
+  parameters:
+    triplet: x64-windows
+    jobName: x64_windows

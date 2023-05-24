@@ -3,25 +3,26 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mmahnic/argumentum
-    REF v0.2.2
-    SHA512 750a26d021cdf243479a20d01924007cdca717a53f34e4969d2df6c2c10c2f41a4df4bcd0a9fdf3d75928290d31195fa490fe13d4f2cba391c9dbad48aa98184
+    REF "v${VERSION}"
+    SHA512 3efd7950de1f05d89900a3139d2cff8c4e68250d67edd4940ad0e035e037c6fd7c5bc0dc4a5c89382f8d73313d5a8d055c04cf9a8440bc38e42e50cae323a765
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DARGUMENTUM_BUILD_EXAMPLES=OFF
         -DARGUMENTUM_BUILD_TESTS=OFF
+        -DARGUMENTUM_BUILD_STATIC_LIBS=ON
+        -DARGUMENTUM_INSTALL_HEADERONLY=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Argumentum)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Argumentum)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+file(INSTALL "${SOURCE_PATH}/LICENSE"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright)

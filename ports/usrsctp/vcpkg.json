@@ -1,0 +1,12 @@
+{
+  "name": "usrsctp",
+  "version": "0.9.5.0",
+  "port-version": 1,
+  "description": "A userland SCTP stack supporting FreeBSD, Linux, Mac OS X and Windows.",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

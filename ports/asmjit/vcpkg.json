@@ -1,0 +1,17 @@
+{
+  "name": "asmjit",
+  "version-date": "2023-03-25",
+  "description": "Complete x86/x64 JIT and Remote Assembler for C++",
+  "homepage": "https://github.com/asmjit/asmjit",
+  "supports": "!arm",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

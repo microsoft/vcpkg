@@ -1,0 +1,18 @@
+diff --git a/src/python/CMakeLists.txt b/src/python/CMakeLists.txt
+index dc260a7..433ffbb 100644
+--- a/src/python/CMakeLists.txt
++++ b/src/python/CMakeLists.txt
+@@ -6,6 +6,13 @@
+ checked_find_package (pybind11 REQUIRED
+                       VERSION_MIN 2.4.2)
+ 
++if(USE_FFMPEG AND UNIX AND NOT BUILD_SHARED_LIBS AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
++    include(CheckLinkerFlag)
++    check_linker_flag(C "LINKER:-Bsymbolic" supports_bsymbolic)
++    if(supports_bsymbolic)
++        add_link_options("LINKER:-Bsymbolic")
++    endif()
++endif()
+ 
+ file (GLOB python_srcs *.cpp)
+ setup_python_module (TARGET    PyOpenImageIO

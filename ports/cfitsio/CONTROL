@@ -1,4 +1,0 @@
-Source: cfitsio
-Version: 3.410-3
-Homepage: https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c
-Description: Library of C and Fortran subroutines for reading and writing data files in FITS (Flexible Image Transport System) data format

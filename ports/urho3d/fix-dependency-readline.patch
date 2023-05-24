@@ -1,0 +1,29 @@
+diff --git a/cmake/Modules/FindReadline.cmake b/cmake/Modules/FindReadline.cmake
+index ad5fbd0..f1ee2e8 100644
+--- a/cmake/Modules/FindReadline.cmake
++++ b/cmake/Modules/FindReadline.cmake
+@@ -48,4 +48,8 @@ endif ()
+ include (FindPackageHandleStandardArgs)
+ find_package_handle_standard_args (Readline REQUIRED_VARS READLINE_LIBRARIES READLINE_INCLUDE_DIRS FAIL_MESSAGE "Could NOT find Readline development library")
+ 
++if (READLINE_FOUND)
++    set(READLINE_LIBRARIES ${READLINE_LIBRARIES} curses)
++endif()
++
+ mark_as_advanced (READLINE_INCLUDE_DIRS READLINE_LIBRARIES)
+diff --git a/cmake/Modules/UrhoCommon.cmake b/cmake/Modules/UrhoCommon.cmake
+index b196095..9dd0ee9 100644
+--- a/cmake/Modules/UrhoCommon.cmake
++++ b/cmake/Modules/UrhoCommon.cmake
+@@ -226,9 +226,9 @@ if (CMAKE_PROJECT_NAME STREQUAL Urho3D)
+     option (URHO3D_TESTING "Enable testing support")
+     # By default this option is off (i.e. we use the MSVC dynamic runtime), this can be switched on if using Urho3D as a STATIC library
+     cmake_dependent_option (URHO3D_STATIC_RUNTIME "Use static C/C++ runtime libraries and eliminate the need for runtime DLLs installation (VS only)" FALSE "MSVC" FALSE)
+-    if (((URHO3D_LUA AND NOT URHO3D_LUAJIT) OR URHO3D_DATABASE_SQLITE) AND NOT ANDROID AND NOT IOS AND NOT TVOS AND NOT WEB AND NOT WIN32)
++    if (URHO3D_ENABLE_READLINE AND ((URHO3D_LUA AND NOT URHO3D_LUAJIT) OR URHO3D_DATABASE_SQLITE) AND NOT ANDROID AND NOT IOS AND NOT TVOS AND NOT WEB AND NOT WIN32)
+         # Find GNU Readline development library for Lua interpreter and SQLite's isql
+-        find_package (Readline)
++        find_package (Readline REQUIRED)
+     endif ()
+     if (CPACK_SYSTEM_NAME STREQUAL Linux)
+         cmake_dependent_option (URHO3D_USE_LIB64_RPM "Enable 64-bit RPM CPack generator using /usr/lib64 and disable all other generators (Debian-based host only)" FALSE "URHO3D_64BIT AND NOT HAS_LIB64" FALSE)

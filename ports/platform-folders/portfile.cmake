@@ -1,38 +1,35 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(TARGET_BUILD_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+set(TARGET_BUILD_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sago007/PlatformFolders
-    REF 4.0.0
-    SHA512 89bd9b971cff55ddb051ffcf2e1bbf1678ec14c601916d65ebd4d8e46a79cf93f12cbe9c13ebd0417808f35d7031d13274cda78f009a26fbd19d71e13a5e5ac6
+    REF 4.2.0
+    SHA512 50a9acd37b8b491e8938190b3b7ed1af2d3cc70bb6e59708dc1928269d5e4b8d52ec02f9330f3d9439099029ac61d193dadbca198e1d561432e02e488e103f7c
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-		-DBUILD_TESTING=OFF
+        -DPLATFORMFOLDERS_BUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(INSTALL ${TARGET_BUILD_PATH}-rel/platform_folders.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin/)
-    file(INSTALL ${TARGET_BUILD_PATH}-dbg/platform_folders.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(INSTALL "${TARGET_BUILD_PATH}-rel/platform_folders.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/")
+    file(INSTALL "${TARGET_BUILD_PATH}-dbg/platform_folders.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/")
 endif()
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake/ TARGET_PATH /share/platform_folders)
+if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_MinGW)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME platform_folders CONFIG_PATH cmake)
 else()
-	vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ TARGET_PATH /share/)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME platform_folders CONFIG_PATH lib/cmake)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/platform-folders RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_copy_pdbs()

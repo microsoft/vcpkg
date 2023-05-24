@@ -1,54 +1,59 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glfw/glfw
-    REF 3.3
-    SHA512 e74bb7ba0c1c3a524a193c4fb5a2d13ba0e75f8e309612ea19cdcc944859d6e2fe29d8b2e3db76236e1011b637564ddd5f4a176dcccfeb84d09bda060f08f774
+    REF 7482de6071d21db77a7236155da44c172a7f6c9e     #v3.3.8
+    SHA512 ec45b620338cf36a8dbdf7aaf54d7c3a49a1be4ae1a1ef95f1531094fec670870713969bbc23476769d374c7a71d93f6540ab64c46fb5f66f4402bb2d15c7d87
     HEAD_REF master
-    PATCHES
-        fix-config.patch
 )
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_LINUX)
     message(
 "GLFW3 currently requires the following libraries from the system package manager:
     xinerama
     xcursor
     xorg
     libglu1-mesa
+    pkg-config
 
-These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev")
+These can be installed on Ubuntu systems via sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config
+
+Alternatively, when targeting the Wayland display server, use the packages listed in the GLFW documentation here:
+
+https://www.glfw.org/docs/3.3/compile.html#compile_deps_wayland")
+else(VCPKG_TARGET_IS_OSX)
+    message(
+"GLFW3 currently requires the following libraries from the system package manager:
+    xinerama
+    xcursor
+    xorg
+    libglu1-mesa
+    pkg-config
+
+These can be installed via brew install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config")
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    wayland         GLFW_USE_WAYLAND
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DGLFW_BUILD_EXAMPLES=OFF
         -DGLFW_BUILD_TESTS=OFF
         -DGLFW_BUILD_DOCS=OFF
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/glfw3)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/glfw3)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/glfw3.dll OR EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/glfw3.dll)
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/lib/glfw3.dll ${CURRENT_PACKAGES_DIR}/bin/glfw3.dll)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/glfw3.dll ${CURRENT_PACKAGES_DIR}/debug/bin/glfw3.dll)
-        foreach(_conf release debug)
-            file(READ ${CURRENT_PACKAGES_DIR}/share/glfw3/glfw3Targets-${_conf}.cmake _contents)
-            string(REPLACE "lib/glfw3.dll" "bin/glfw3.dll" _contents "${_contents}")
-            file(WRITE ${CURRENT_PACKAGES_DIR}/share/glfw3/glfw3Targets-${_conf}.cmake "${_contents}")
-        endforeach()
-    endif()
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()

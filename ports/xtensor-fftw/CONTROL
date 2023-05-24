@@ -1,5 +1,0 @@
-Source: xtensor-fftw
-Version: 2019-11-30
-Description: FFTW bindings for the xtensor C++14 multi-dimensional array library
-Homepage: https://github.com/xtensor-stack/xtensor-fftw
-Build-Depends: fftw3, xtensor

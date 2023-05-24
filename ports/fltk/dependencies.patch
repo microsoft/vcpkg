@@ -1,0 +1,101 @@
+diff --git a/CMake/options.cmake b/CMake/options.cmake
+index ddd650f..69bcc2e 100644
+--- a/CMake/options.cmake
++++ b/CMake/options.cmake
+@@ -63,7 +63,7 @@ endif (APPLE)
+ # find X11 libraries and headers
+ set (PATH_TO_XLIBS)
+ if ((NOT APPLE OR OPTION_APPLE_X11) AND NOT WIN32)
+-  include (FindX11)
++  find_package(X11)
+   if (X11_FOUND)
+     set (USE_X11 1)
+     list (APPEND FLTK_LDLIBS -lX11)
+@@ -214,7 +214,7 @@ if (OPTION_USE_GL)
+     unset(HAVE_GL_GLU_H CACHE)
+     find_file (HAVE_GL_GLU_H GL/glu.h PATHS ${X11_INCLUDE_DIR})
+   else()
+-    include (FindOpenGL)
++    find_package(OpenGL REQUIRED)
+     if (APPLE)
+       set (HAVE_GL_GLU_H ${HAVE_OPENGL_GLU_H})
+     endif (APPLE)
+@@ -285,7 +285,7 @@ set (FLTK_PTHREADS_FOUND FALSE)
+ 
+ if (OPTION_USE_THREADS)
+ 
+-  include (FindThreads)
++  find_package(Threads REQUIRED)
+ 
+   if (CMAKE_HAVE_THREADS_LIBRARY)
+     add_definitions ("-D_THREAD_SAFE -D_REENTRANT")
+@@ -330,7 +330,8 @@ unset (debug_threads)
+ option (OPTION_USE_SYSTEM_ZLIB "use system zlib" ON)
+ 
+ if (OPTION_USE_SYSTEM_ZLIB)
+-  include (FindZLIB)
++  find_package(ZLIB REQUIRED)
++  set(LIB_zlib "${ZLIB_LIBRARIES}" CACHE INTERNAL "")
+ endif (OPTION_USE_SYSTEM_ZLIB)
+ 
+ if (ZLIB_FOUND)
+@@ -359,7 +360,8 @@ else ()
+ endif (APPLE)
+ 
+ if (OPTION_USE_SYSTEM_LIBJPEG)
+-  include (FindJPEG)
++  find_package(JPEG REQUIRED)
++  set(LIB_jpeg "${JPEG_LIBRARIES}" CACHE INTERNAL "")
+ endif (OPTION_USE_SYSTEM_LIBJPEG)
+ 
+ if (JPEG_FOUND)
+@@ -387,7 +389,9 @@ else ()
+ endif (APPLE)
+ 
+ if (OPTION_USE_SYSTEM_LIBPNG)
+-  include (FindPNG)
++  find_package(PNG REQUIRED)
++  set(HAVE_PNG_H "${PNG_FOUND}")
++  set(LIB_png "${PNG_LIBRARIES}" CACHE INTERNAL "")
+ endif (OPTION_USE_SYSTEM_LIBPNG)
+ 
+ if (PNG_FOUND)
+diff --git a/CMake/resources.cmake b/CMake/resources.cmake
+index 57173f2..734a528 100644
+--- a/CMake/resources.cmake
++++ b/CMake/resources.cmake
+@@ -39,7 +39,7 @@ endmacro (fl_find_header)
+ # Include FindPkgConfig for later use of pkg-config
+ #######################################################################
+ 
+-include (FindPkgConfig)
++find_package(PkgConfig)
+ 
+ # fl_debug_var (PKG_CONFIG_FOUND)
+ # fl_debug_var (PKG_CONFIG_EXECUTABLE)
+@@ -151,8 +151,7 @@ mark_as_advanced (HAVE_X11_XREGION_H)
+ 
+ # where to find freetype headers
+ 
+-find_path (FREETYPE_PATH freetype.h PATH_SUFFIXES freetype2)
+-find_path (FREETYPE_PATH freetype/freetype.h PATH_SUFFIXES freetype2)
++set(FREETYPE_PATH "" CACHE INTERNAL "Obsolete")
+ 
+ if (FREETYPE_PATH)
+   include_directories (${FREETYPE_PATH})
+@@ -162,11 +161,12 @@ mark_as_advanced (FREETYPE_PATH)
+ 
+ #######################################################################
+ # libraries
+-find_library (LIB_dl dl)
++set(LIB_dl "${CMAKE_DL_LIBS}" CACHE STRING "")
+ if ((NOT APPLE) OR OPTION_APPLE_X11)
+-  find_library (LIB_fontconfig fontconfig)
++  find_package(Fontconfig REQUIRED)
++  set(LIB_fontconfig "${Fontconfig_LIBRARIES}" CACHE INTERNAL "")
+ endif ((NOT APPLE) OR OPTION_APPLE_X11)
+-find_library (LIB_freetype freetype)
++set(LIB_freetype "" CACHE INTERNAL "Obsolete")
+ find_library (LIB_GL GL)
+ find_library (LIB_MesaGL MesaGL)
+ find_library (LIB_GLEW GLEW)

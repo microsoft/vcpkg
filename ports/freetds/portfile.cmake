@@ -1,63 +1,53 @@
-include(vcpkg_common_functions)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.freetds.org/files/stable/freetds-1.1.6.tar.bz2"
-    FILENAME "freetds-1.1.6.tar.bz2"
-    SHA512 160c8638302fd36a3f42d031dbd58525cde899b64d320f6187ce5865ea2c049a1af63be419623e4cd18ccf229dd2ee7ec509bc5721c3371de0f31710dad7470d
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO freetds/freetds
+    REF v1.3.10
+    HEAD_REF master
+    SHA512 78b494c04e3436bfdc4997e6f0196baef27246bb7ad825c487a16f247d13c99324a39d52bfe8f5306164ae3f5c7eb43ca83944b24a3ce6b4bcd733849b4064ad
+    PATCHES
+        disable-tests.patch
 )
 
-set(BUILD_freetds_openssl OFF)
-if("openssl" IN_LIST FEATURES)
-    set(BUILD_freetds_openssl ON)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openssl WITH_OPENSSL
+        tools WITH_TOOLS
+)
+
+vcpkg_find_acquire_program(PERL)
+get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+vcpkg_add_to_path("${PERL_PATH}")
+
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
+
+set(_WCHAR_SUPPORT ON)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(_WCHAR_SUPPORT OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DWITH_OPENSSL=${BUILD_freetds_openssl}
+        ${FEATURE_OPTIONS}
+        -DENABLE_ODBC_WIDE=${_WCHAR_SUPPORT}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/bsqldb.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/bsqlodbc.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/datacopy.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/defncopy.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/freebcp.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/tdspool.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/tsql.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/bsqldb)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/bsqlodbc)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/datacopy)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/defncopy)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/freebcp)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/tdspool)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/tsql)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/bsqldb.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/bsqlodbc.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/datacopy.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/defncopy.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/freebcp.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/tdspool.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/tsql.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/bsqldb)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/bsqlodbc)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/datacopy)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/defncopy)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/freebcp)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/tdspool)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/tsql)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES bsqldb bsqlodbc datacopy defncopy freebcp tdspool tsql AUTO_CLEAN)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/etc")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/etc" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/etc")
+    endif()
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc" "${CURRENT_PACKAGES_DIR}/debug/etc")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

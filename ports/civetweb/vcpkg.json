@@ -1,0 +1,26 @@
+{
+  "name": "civetweb",
+  "version": "1.15",
+  "port-version": 2,
+  "description": "Easy to use, powerful, C/C++ embeddable web server.",
+  "homepage": "https://github.com/civetweb/civetweb",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "ssl": {
+      "description": "Enable SSL support",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

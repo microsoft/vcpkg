@@ -1,0 +1,20 @@
+{
+  "name": "libuvc",
+  "version-date": "2020-11-24",
+  "port-version": 4,
+  "description": "a cross-platform library for USB video devices",
+  "homepage": "https://github.com/libuvc/libuvc",
+  "supports": "linux",
+  "dependencies": [
+    "libjpeg-turbo",
+    "libusb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

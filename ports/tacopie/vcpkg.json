@@ -1,0 +1,13 @@
+{
+  "name": "tacopie",
+  "version": "3.2.0",
+  "port-version": 5,
+  "description": "Tacopie is a TCP Client & Server C++11 library",
+  "homepage": "https://github.com/cpp-redis/tacopie",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

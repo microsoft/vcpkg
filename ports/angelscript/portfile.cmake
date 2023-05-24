@@ -1,31 +1,29 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://angelcode.com/angelscript/sdk/files/angelscript_2.34.0.zip"
-    FILENAME "angelscript_2.34.0.zip"
-    SHA512 c26dba452ab52c300da9c95fde8398acf4840cbc0e653ededf978d4a3e942cfe5b77292c74c49dc0279250a27cfd324c696c49d139a97c844b2a1eead9aae2f4
+    URLS "https://angelcode.com/angelscript/sdk/files/angelscript_2.36.1.zip"
+    FILENAME "angelscript_2.36.1.zip"
+    SHA512 d6d213ce72135c89e47e67521f654611ff67673f3decd9db3da4b7bf317a04a3f91c5c6ae36658ec3f2b20498facd069af02a91255a24ec79c96d8c90d6b554e
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
-       mark-threads-private.patch
+        mark-threads-private.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/angelscript/projects/cmake
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/angelscript/projects/cmake"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Angelscript)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Angelscript)
 
 # Copy the addon files
 if("addons" IN_LIST FEATURES)
-	file(INSTALL ${SOURCE_PATH}/add_on/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/angelscript FILES_MATCHING PATTERN "*.h" PATTERN "*.cpp")
+    file(INSTALL "${SOURCE_PATH}/add_on/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/angelscript" FILES_MATCHING PATTERN "*.h" PATTERN "*.cpp")
 endif()
 
-file(INSTALL ${CURRENT_PORT_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/manual/doc_license.html")

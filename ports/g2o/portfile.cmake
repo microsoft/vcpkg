@@ -1,31 +1,26 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RainerKuemmerle/g2o
-    REF 20170730_git
-    SHA512 a85e3f79e6a8bd0f81a9a1a7a01227779100d9f4ebd0ae9c03537bbdcc246018f292b53045f027bbe28ecf63b98de2f22f5528c992c93c9790eb6a3a40995903
+    REF fcba4eaca6f20d9a5792404cc8ef303aeb8ba5d2
+    SHA512 41e5a6d40db10d66182653d56f937f29264bf4f9412dfa651be949caeb055741c9d9ba75a122180892aafe7d45b334d50470284121148c0561e1d49f6ba5e20a
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_LGPL_SHARED_LIBS=${BUILD_LGPL_SHARED_LIBS}
         -DG2O_BUILD_EXAMPLES=OFF
         -DG2O_BUILD_APPS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-if(VCPKG_USE_HEAD_VERSION)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/g2o)
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/g2o)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(GLOB_RECURSE HEADERS "${CURRENT_PACKAGES_DIR}/include/*")
@@ -36,14 +31,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     endforeach()
 endif()
 
-file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+file(GLOB EXE "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+file(GLOB DEBUG_EXE "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
 if(EXE OR DEBUG_EXE)
     file(REMOVE ${EXE} ${DEBUG_EXE})
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Put the license file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/doc/license-bsd.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/g2o/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/g2o/license-bsd.txt ${CURRENT_PACKAGES_DIR}/share/g2o/copyright)
+file(INSTALL "${SOURCE_PATH}/doc/license-bsd.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

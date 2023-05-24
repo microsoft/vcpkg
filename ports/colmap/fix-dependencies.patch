@@ -1,0 +1,23 @@
+--- CMakeLists.txt.orig	2023-03-12 19:26:41.000000000 +0100
++++ CMakeLists.txt	2023-03-27 11:27:43.840624719 +0200
+@@ -99,14 +99,17 @@
+ 
+ find_package(Eigen3 REQUIRED)
+ 
+-find_package(FreeImage REQUIRED)
++find_package(FreeImage CONFIG REQUIRED)
++set(FREEIMAGE_LIBRARIES freeimage::FreeImage)
+ 
+ find_package(FLANN REQUIRED)
+ find_package(LZ4 REQUIRED)
+ 
+-find_package(Metis REQUIRED)
++find_package(metis CONFIG REQUIRED)
++set(METIS_LIBRARIES metis)
+ 
+-find_package(Glog REQUIRED)
++find_package(glog CONFIG REQUIRED)
++set(GLOG_LIBRARIES glog::glog)
+ 
+ find_package(SQLite3 REQUIRED)
+ 
