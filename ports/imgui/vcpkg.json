@@ -1,6 +1,7 @@
 {
   "name": "imgui",
   "version": "1.89.4",
+  "port-version": 1,
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -49,7 +50,10 @@
     "glfw-binding": {
       "description": "Make available GLFW binding",
       "dependencies": [
-        "glfw3"
+        {
+          "name": "glfw3",
+          "platform": "!emscripten"
+        }
       ]
     },
     "glut-binding": {

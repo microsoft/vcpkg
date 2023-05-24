@@ -1,6 +1,7 @@
 {
   "name": "node-api-headers",
   "version": "1.0.0",
+  "port-version": 1,
   "description": "NodeJS API for writing modules in C++",
   "homepage": "https://nodejs.org/api/addons.html",
   "license": "MIT",

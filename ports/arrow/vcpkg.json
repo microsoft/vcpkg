@@ -1,6 +1,7 @@
 {
   "name": "arrow",
-  "version": "11.0.0",
+  "version": "12.0.0",
+  "port-version": 1,
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",
@@ -37,6 +38,9 @@
     "parquet"
   ],
   "features": {
+    "acero": {
+      "description": "Acero support"
+    },
     "csv": {
       "description": "CSV support"
     },
@@ -101,10 +105,6 @@
       "dependencies": [
         "rapidjson"
       ]
-    },
-    "plasma": {
-      "description": "Plasma support",
-      "supports": "!windows"
     },
     "s3": {
       "description": "S3 support",

@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 46df4fb5a703d38d0a74fde9838e9f9702b24b442cb225517516c335a5ab18955699000bf0b2fc7d1698ada6d2e890ba3860933b6280f5160b0fce8a07484d0e
+    SHA512 f815be4fb20b6001ba5525270765fe239b5468708a7be34b93b60ee0ce63464727d183c9756fbc33bffd199019e1f06a7fddd306ce8388435cea7771070a2ca9
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -11,10 +11,12 @@ vcpkg_extract_source_archive(
         msvc-static-name.patch
         utf8proc.patch
         thrift.patch
+        fix-ci-error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        acero       ARROW_ACERO
         csv         ARROW_CSV
         cuda        ARROW_CUDA
         dataset     ARROW_DATASET
@@ -27,7 +29,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         orc         ARROW_ORC
         parquet     ARROW_PARQUET
         parquet     PARQUET_REQUIRE_ENCRYPTION
-        plasma      ARROW_PLASMA
         s3          ARROW_S3
 )
 
@@ -96,10 +97,6 @@ endif()
 
 if("example" IN_LIST FEATURES)
     file(INSTALL "${SOURCE_PATH}/cpp/examples/minimal_build/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/example")
-endif()
-
-if("plasma" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES plasma-store-server AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

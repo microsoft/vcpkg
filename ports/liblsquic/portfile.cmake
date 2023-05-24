@@ -9,7 +9,10 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REF v3.1.1
     SHA512 b4675be355703fea12f4b7d24812b93e739b2dbef04e3d8108b6fbe45dd16c129c9e04e58cdcfdf2a4448ee2edea68565dbd2445a76515bbdc8d9980f4210bee
     HEAD_REF master
-    PATCHES disable-asan.patch)
+    PATCHES 
+        disable-asan.patch
+        fix-found-boringssl.patch
+)
 
 # Submodules
 vcpkg_from_github(OUT_SOURCE_PATH LSQPACK_SOURCE_PATH
