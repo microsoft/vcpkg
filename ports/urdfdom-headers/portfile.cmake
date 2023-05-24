@@ -1,41 +1,29 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/urdfdom_headers
-    REF a15d906ff16a7fcbf037687b9c63b946c0cc04a1 # 1.0.5
-    SHA512 794acd3b077a1d8fa27d0a698cecbce42f3a7b30f867e79b9897b0d97dcd9e80d2cf3b0c75ee34f628f73afb871c439fffe4a1d7ed85c7fac6553fb1e5b56c36
+    REF 2981892df9da19d10f58dc84de63820e4f554f63 # 1.1.0
+    SHA512 cc47d2fb9781f4c7f1af25ccfb4dc8cc9e72d2ec22cb2fe16866bb0e7ed40494181a413dcd74cb0407b4f5c20262f076f8ae87d605ba0e5477a57ff29ba30967
     HEAD_REF master
     PATCHES fix-include-path.patch
   )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH CMake TARGET_PATH share/urdfdom_headers)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/CMake")
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake PACKAGE_NAME urdfdom_headers)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/urdfdom_headers/cmake TARGET_PATH share/urdfdom_headers)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/urdfdom_headers)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom_headers)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/urdfdom_headers/cmake PACKAGE_NAME urdfdom_headers)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/urdfdom_headers")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom_headers")
 endif()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
-    vcpkg_fixup_pkgconfig()
-endif()
+vcpkg_fixup_pkgconfig()
 
-# The config files for this project use underscore
-if(EXISTS ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers ${CURRENT_PACKAGES_DIR}/share/urdfdom_headers)
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-else()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-endif()
-
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

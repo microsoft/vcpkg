@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinmoene/expected-lite
-    REF v0.6.0
-    SHA512 83b6b1ab2f1683aede5b9d00798f821299a1e78ab10d4d321c3def0d1d4be25f0f9fd244530715408940fc36c1dff7d635861cf52f10f7dbd3b975840150c121
+    REF "v${VERSION}"
+    SHA512 d6a4f30f90494dda002ad27d227f17ce0201752178418d7dfada26441e853590d46816c88922e7d458dda68ad4414ddfe6b7fa4ed2a5854e4e3b22675b13f92a
     HEAD_REF master
 )
 
@@ -24,6 +24,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib"
 )
 
-file(INSTALL
-    "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

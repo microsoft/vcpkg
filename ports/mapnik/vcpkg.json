@@ -1,11 +1,10 @@
 {
   "name": "mapnik",
-  "version-date": "2022-01-28",
-  "port-version": 2,
+  "version-date": "2023-01-17",
+  "port-version": 1,
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "license": "LGPL-2.1-only",
-  "supports": "!(static & windows)",
   "dependencies": [
     "boost-assign",
     "boost-bimap",
@@ -111,14 +110,12 @@
     "input-pgraster": {
       "description": "PGRASTER input plugin",
       "dependencies": [
-        "libodb-pgsql",
         "libpq"
       ]
     },
     "input-postgis": {
       "description": "POSTGIS input plugin",
       "dependencies": [
-        "libodb-pgsql",
         "libpq"
       ]
     },
@@ -195,7 +192,6 @@
       "description": "utility application pgsql2sqlite",
       "dependencies": [
         "boost-program-options",
-        "libodb-pgsql",
         "libpq",
         "sqlite3"
       ]
@@ -215,7 +211,7 @@
     "viewer": {
       "description": "Make demo viewer application",
       "dependencies": [
-        "qt5-base"
+        "qtbase"
       ]
     },
     "webp": {

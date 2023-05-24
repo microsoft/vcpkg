@@ -1,0 +1,118 @@
+diff --git a/cmake/FindFFmpeg.cmake b/cmake/FindFFmpeg.cmake
+index 47d8769..46a5c9b 100644
+--- a/cmake/FindFFmpeg.cmake
++++ b/cmake/FindFFmpeg.cmake
+@@ -228,7 +228,7 @@ endfunction()
+       # message(STATUS "Libs: ${${_component}_LIBRARIES} | ${PC_${_component}_LIBRARIES}")
+ 
+       # message(STATUS "Required component ${_component} present.")
+-      set(FFMPEG_LIBRARIES    ${FFMPEG_LIBRARIES}    ${${_component}_LIBRARY} ${${_component}_LIBRARIES})
++      set(FFMPEG_LIBRARIES    ${FFMPEG_LIBRARIES}    ${${_component}_LIBRARY})
+       set(FFMPEG_DEFINITIONS  ${FFMPEG_DEFINITIONS}  ${${_component}_DEFINITIONS})
+ 
+       list(APPEND FFMPEG_INCLUDE_DIRS ${${_component}_INCLUDE_DIRS})
+@@ -240,8 +240,8 @@ endfunction()
+         set_target_properties(FFmpeg::${_lowerComponent} PROPERTIES
+             INTERFACE_COMPILE_OPTIONS "${${_component}_DEFINITIONS}"
+             INTERFACE_INCLUDE_DIRECTORIES ${${_component}_INCLUDE_DIRS}
+-            INTERFACE_LINK_LIBRARIES "${${_component}_LIBRARIES}"
+-            INTERFACE_LINK_DIRECTORIES "${${_component}_LIBRARY_DIRS}"
++            IMPORTED_LOCATION "${${_component}_LIBRARY}"
++            #INTERFACE_LINK_DIRECTORIES "${${_component}_LIBRARY_DIRS}"
+         )
+         if(__ffmpeg_is_static)
+             __ffmpeg_internal_set_dependencies(${_lowerComponent})
+@@ -250,6 +250,9 @@ endfunction()
+         if (UNIX AND NOT APPLE)
+           target_link_options(FFmpeg::${_lowerComponent} INTERFACE  "-Wl,--exclude-libs=lib${_lowerComponent}")
+         endif ()
++        if(WIN32 AND _lowerComponent STREQUAL "avutil")
++          target_link_libraries(FFmpeg::${_lowerComponent} INTERFACE "Bcrypt.lib")
++        endif()
+     endif()
+     else()
+       # message(STATUS "Required component ${_component} missing.")
+@@ -274,14 +277,21 @@ endfunction()
+ 
+ #endif ()
+ 
++
+ if (NOT TARGET FFmpeg::FFmpeg)
+-  add_library(FFmpeg INTERFACE)
++  add_library(FFmpeg INTERFACE IMPORTED)
+   set_target_properties(FFmpeg PROPERTIES
+       INTERFACE_COMPILE_OPTIONS "${FFMPEG_DEFINITIONS}"
+       INTERFACE_INCLUDE_DIRECTORIES "${FFMPEG_INCLUDE_DIRS}"
+       INTERFACE_LINK_LIBRARIES "${FFMPEG_LIBRARIES}"
+       INTERFACE_LINK_DIRECTORIES "${FFMPEG_LIBRARY_DIRS}")
+-  add_library(FFmpeg::FFmpeg ALIAS FFmpeg)
++  if(WIN32)
++    target_link_libraries(FFmpeg INTERFACE "Bcrypt.lib")
++  endif()
++
++      
++  add_library(FFmpeg::FFmpeg INTERFACE IMPORTED)
++  target_link_libraries(FFmpeg::FFmpeg INTERFACE FFmpeg)
+ endif()
+ 
+ # Now set the noncached _FOUND vars for the components.
+diff --git a/cmake/FindGObject.cmake b/cmake/FindGObject.cmake
+index 19a8a67..09e95d1 100644
+--- a/cmake/FindGObject.cmake
++++ b/cmake/FindGObject.cmake
+@@ -13,8 +13,8 @@
+ # ``GObject::GObject``
+ #     The gobject-2.0 library
+ 
+-include(CMakeFindDependencyMacro)
+-find_dependency(GLIB2)
++find_package(GLIB2)
++find_package(libffi)
+ qt_internal_disable_find_package_global_promotion(GLIB2::GLIB2)
+ 
+ if(NOT TARGET GObject::GObject)
+@@ -40,6 +40,7 @@ if(NOT TARGET GObject::GObject)
+             target_link_libraries(GObject::GObject INTERFACE
+                                 ${GObject_LIBRARY}
+                                 GLIB2::GLIB2
++                                libffi
+             )
+         endif()
+         include(FindPackageHandleStandardArgs)
+diff --git a/cmake/FindGStreamer.cmake b/cmake/FindGStreamer.cmake
+index c3becd7..895e1c8 100644
+--- a/cmake/FindGStreamer.cmake
++++ b/cmake/FindGStreamer.cmake
+@@ -19,8 +19,8 @@
+ #       If the gstgl-1.0 library is available and target GStreamer::GStreamer exists
+ #
+ 
+-include(CMakeFindDependencyMacro)
+-find_dependency(GObject)
++find_package(GObject)
++find_package(GLIB2)
+ 
+ find_package(PkgConfig QUIET)
+ function(find_gstreamer_component component prefix header library)
+@@ -74,7 +74,7 @@ find_gstreamer_component(Pbutils gstreamer-pbutils-1.0 gst/pbutils/pbutils.h gst
+ find_gstreamer_component(Allocators gstreamer-allocators-1.0 gst/allocators/allocators.h gstallocators-1.0)
+ 
+ if(TARGET GStreamer::Core)
+-    target_link_libraries(GStreamer::Core INTERFACE GObject::GObject)
++    target_link_libraries(GStreamer::Core INTERFACE GObject::GObject GLIB2::GMODULE)
+ endif()
+ if(TARGET GStreamer::Base AND TARGET GStreamer::Core)
+     target_link_libraries(GStreamer::Base INTERFACE GStreamer::Core)
+@@ -107,7 +107,11 @@ foreach(component ${GStreamer_FIND_COMPONENTS})
+     elseif (${component} STREQUAL "Gl")
+         find_gstreamer_component(Gl gstreamer-gl-1.0 gst/gl/gl.h gstgl-1.0)
+         if(TARGET GStreamer::Gl AND TARGET GStreamer::Video AND TARGET GStreamer::Allocators)
+-            target_link_libraries(GStreamer::Gl INTERFACE GStreamer::Video GStreamer::Allocators)
++            find_package(OpenGL)
++            if(OpenGL_FOUND)
++                target_link_libraries(GStreamer::Gl INTERFACE OpenGL::GL)
++            endif()
++            target_link_libraries(GStreamer::Gl INTERFACE GStreamer::Video GStreamer::Allocators GLIB2::GMODULE)
+         endif()
+     else()
+         message(WARNING "FindGStreamer.cmake: Invalid Gstreamer component \"${component}\" requested")

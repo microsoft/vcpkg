@@ -1,0 +1,12 @@
+diff --git a/cmake/LibKMLHelper.cmake b/cmake/LibKMLHelper.cmake
+index 5cc166a..3ed3079 100644
+--- a/cmake/LibKMLHelper.cmake
++++ b/cmake/LibKMLHelper.cmake
+@@ -1,6 +1,7 @@
+ macro(build_target)
+   cmake_parse_arguments(LIB  "" "NAME" "SRCS;INCS;LINKS;DEPENDS" ${ARGN} )
+   add_library(${LIB_NAME} ${LIB_SRCS})
++  target_include_directories(${LIB_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+   foreach(LIB_DEPEND ${LIB_DEPENDS})
+     add_dependencies(${LIB_NAME} ${LIB_DEPEND})

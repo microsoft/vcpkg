@@ -1,24 +1,25 @@
-set(PORT_VERSION 14.1)
+set(PORT_VERSION ${VERSION})
 # NOTE: the python patches must be regenerated on version update
 
 ## Download and extract sources
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"
     FILENAME "postgresql-${PORT_VERSION}.tar.bz2"
-    SHA512 4a0bec157d5464bb9e5f5c0eb0efdede55526e03f6f4d660b87d161a47705eb152fa0878960b1581bce42a5ed28a1f457825ea54e8d22e34b5b8eb36473ceefd
+    SHA512 115a8a4234791bba4e6dcc4617e9dd77abedcf767894ce9472c59cce9d5d4ef2d4e1746f3a0c7a99de4fc4385fb716652b70dce9f48be45a9db5a682517db7e8
 )
 
 set(PATCHES
         patches/windows/install.patch
         patches/windows/win_bison_flex.patch
-        patches/windows/openssl_exe_path.patch
+        patches/windows/openssl-version.patch
         patches/windows/Solution.patch
         patches/windows/MSBuildProject_fix_gendef_perl.patch
         patches/windows/msgfmt.patch
         patches/windows/python_lib.patch
         patches/windows/fix-compile-flag-Zi.patch
         patches/windows/tcl_version.patch
-        patches/fix-configure.patch        
+        patches/windows/macro-def.patch
+        patches/fix-configure.patch
         )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -30,15 +31,14 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
 endif()
 if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
     list(APPEND PATCHES patches/windows/arm.patch)
-    list(APPEND PATCHES patches/windows/host_skip_openssl.patch) # Skip openssl.exe version check since it cannot be executed by the host
 endif()
 if(NOT "${FEATURES}" MATCHES "client")
     list(APPEND PATCHES patches/windows/minimize_install.patch)
 else()
     set(HAS_TOOLS TRUE)
 endif()
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES ${PATCHES}
 )
@@ -84,6 +84,16 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 ## Do the build
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_cmake_get_vars(vars_file)
+    include("${vars_file}")
+
+    if("openssl" IN_LIST FEATURES)
+        file(STRINGS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/openssl.pc" OPENSSL_VERSION REGEX "Version:")
+        if(OPENSSL_VERSION)
+            set(ENV{VCPKG_OPENSSL_VERSION} "${OPENSSL_VERSION}")
+        endif()
+    endif()
+
     file(GLOB SOURCE_FILES ${SOURCE_PATH}/*)
     foreach(_buildtype ${port_config_list})
         # Copy libpq sources.
@@ -136,8 +146,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
            vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
         endif()
         if("${FEATURES}" MATCHES "openssl")
-            set(buildenv_contents "${buildenv_contents}\n\$ENV{'PATH'}=\$ENV{'PATH'} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
-            #set(_contents "${_contents}\n\$ENV{PATH}=\$ENV{PATH} . ';${CURRENT_INSTALLED_DIR}/tools/openssl';")
             string(REPLACE "openssl   => undef" "openssl   => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
         if("${FEATURES}" MATCHES "python")
@@ -162,9 +170,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         if("${FEATURES}" MATCHES "lz4")
            string(REPLACE "lz4       => undef" "lz4       => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
+        if("${FEATURES}" MATCHES "zstd")
+           string(REPLACE "zstd      => undef" "zstd      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
+        endif()
 
         file(WRITE "${CONFIG_FILE}" "${_contents}")
         file(WRITE "${BUILDPATH_${_buildtype}}/src/tools/msvc/buildenv.pl" "${buildenv_contents}")
+        configure_file("${CURRENT_PORT_DIR}/libpq.props.in" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libpq.props" @ONLY)
         vcpkg_get_windows_sdk(VCPKG_TARGET_PLATFORM_VERSION)
         set(ENV{MSBFLAGS} "/p:PlatformToolset=${VCPKG_PLATFORM_TOOLSET}
             /p:VCPkgLocalAppDataDisabled=true
@@ -172,6 +184,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             /p:WindowsTargetPlatformVersion=${VCPKG_TARGET_PLATFORM_VERSION}
             /m
             /p:ForceImportBeforeCppTargets=\"${SCRIPTS}/buildsystems/msbuild/vcpkg.targets\"
+            /p:ForceImportAfterCppTargets=\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/libpq.props\"
             /p:VcpkgTriplet=${TARGET_TRIPLET}
             /p:VcpkgCurrentInstalledDir=\"${CURRENT_INSTALLED_DIR}\""
             )
@@ -207,7 +220,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         )
         message(STATUS "Installing libpq ${TARGET_TRIPLET}-${_buildtype}... done")
     endforeach()
-
 
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}...")
     #Cleanup
@@ -249,6 +261,11 @@ else()
     else()
         list(APPEND BUILD_OPTS --without-zlib)
     endif()
+    if("zstd" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --with-zstd)
+    else()
+        list(APPEND BUILD_OPTS --without-zstd)
+    endif()
     if("icu" IN_LIST FEATURES)
         list(APPEND BUILD_OPTS --with-icu)
     else()
@@ -282,8 +299,10 @@ else()
     if(VCPKG_TARGET_IS_ANDROID) # AND CMAKE_SYSTEM_VERSION LESS 26)
         list(APPEND BUILD_OPTS ac_cv_header_langinfo_h=no)
     endif()
-    if(VCPKG_OSX_SYSROOT)
-        list(APPEND BUILD_OPTS "PG_SYSROOT=${VCPKG_OSX_SYSROOT}")
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    if(VCPKG_DETECTED_CMAKE_OSX_SYSROOT)
+        list(APPEND BUILD_OPTS "PG_SYSROOT=${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
     endif()
     vcpkg_configure_make(
         AUTOCONFIG
@@ -292,8 +311,11 @@ else()
         DETERMINE_BUILD_TRIPLET
         OPTIONS
             ${BUILD_OPTS}
+        OPTIONS_RELEASE
+            "DYLD_FALLBACK_LIBRARY_PATH=${CURRENT_INSTALLED_DIR}/lib:${CURRENT_INSTALLED_DIR}/debug/lib"
         OPTIONS_DEBUG
             --enable-debug
+            "DYLD_FALLBACK_LIBRARY_PATH=${CURRENT_INSTALLED_DIR}/debug/lib:${CURRENT_INSTALLED_DIR}/lib"
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

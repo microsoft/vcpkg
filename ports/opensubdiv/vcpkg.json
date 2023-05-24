@@ -1,13 +1,17 @@
 {
   "name": "opensubdiv",
-  "version-semver": "3.4.3",
-  "port-version": 4,
+  "version-semver": "3.5.0",
   "description": "An Open-Source subdivision surface library.",
   "homepage": "https://github.com/PixarAnimationStudios/OpenSubdiv",
+  "license": "Apache-2.0",
   "supports": "!arm & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],
@@ -30,16 +34,16 @@
       ]
     },
     "examples": {
-      "description": "Enable examples build"
+      "description": "Build examples"
     },
     "glew": {
-      "description": "Path to glew",
+      "description": "Enable GLEW wrapper library",
       "dependencies": [
         "glew"
       ]
     },
     "glfw": {
-      "description": "Path to glfw",
+      "description": "Build components depending on GLFW",
       "dependencies": [
         "glfw3"
       ]
@@ -53,8 +57,14 @@
         "opencl"
       ]
     },
+    "opengl": {
+      "description": "Enable OpenGL backend",
+      "dependencies": [
+        "opengl"
+      ]
+    },
     "ptex": {
-      "description": "Path to Ptex",
+      "description": "Enable Ptex support",
       "dependencies": [
         "ptex"
       ]

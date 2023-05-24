@@ -4,16 +4,16 @@ if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF 9cd9c2eff99877a3f10a7f9c2a3a5b9c15ea36c6
-       SHA512 4a9bf74f5f3971bcb954449bdef27e491a0abebc55356bcf0491c7e17dc941c90cf81d539fe4de1e23137866f55456776fcded34a4df2fb16b9020fe1b8d7851
+       REF 9e30fb0ec1b44dc1b041db6bdd53b130b2a18509
+       SHA512 f863bc1cb7482695061bf7012ae71ede87a74d08f7f3abc6360775ed70f14506142c5c751ae398086dcb3d3005a456af9b0267c62953a041502017468151ec35
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.88
-    SHA512 bfb7381334f1493d64386321401086e4136129b3cc57bf57505ec6183008dddab1a2056b0af2610bc3286c606bafdf9b6e3ebc103131e0504bab2336662bc2c1
+    REF v${VERSION}
+    SHA512 2284baf8628924b8c71f4d6beb78144ec919fd037bf37740244e417804858282d80be0acdc3e3c6273c9a5c1825f3754e2bedc208ff4ef486daf5f326fe3498e
     HEAD_REF master
     )
 endif()
@@ -75,4 +75,4 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

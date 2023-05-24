@@ -66,6 +66,6 @@ Halting portfile execution.
         "  Command failed: ${pretty_command}\n"
         "  Working Directory: ${arg_WORKING_DIRECTORY}\n"
         "  See logs for more information:\n"
-        "${stringifed_logs}"
+        "${stringified_logs}"
     )
 endfunction()

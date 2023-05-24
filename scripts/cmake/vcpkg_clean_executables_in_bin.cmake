@@ -33,6 +33,12 @@ function(vcpkg_clean_executables_in_bin)
             "${CURRENT_PACKAGES_DIR}/bin/${file_name}.pdb"
             "${CURRENT_PACKAGES_DIR}/debug/bin/${file_name}.pdb"
         )
+        if(NOT VCPKG_TARGET_BUNDLE_SUFFIX STREQUAL "")
+            file(REMOVE_RECURSE
+                "${CURRENT_PACKAGES_DIR}/bin/${file_name}${VCPKG_TARGET_BUNDLE_SUFFIX}"
+                "${CURRENT_PACKAGES_DIR}/debug/bin/${file_name}${VCPKG_TARGET_BUNDLE_SUFFIX}"
+            )
+        endif()
     endforeach()
 
     z_vcpkg_clean_executables_in_bin_remove_directory_if_empty("${CURRENT_PACKAGES_DIR}/bin")

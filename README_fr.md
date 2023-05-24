@@ -11,7 +11,7 @@ Si vous n'avez jamais utilisé vcpkg, ou si vous essayez d'utiliser vcpkg, lisez
 Pour une description des commandes disponibles, quand vous avez installé vcpkg, vous pouvez lancer `vcpkg help` ou `vcpkg help [commande]` pour de l'aide spécifique à une commande.
 
 
-* Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
+* GitHub: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
 * Discord: [\#include \<C++\>](https://www.includecpp.org), le canal #🌏vcpkg
 * Docs: [Documentation](docs/README.md)
@@ -308,4 +308,4 @@ vcpkg collecte des données pour nous aider à améliorer votre expérience.
 Les données collectées par Microsoft sont anonymes.
 Vous pouvez désactiver la télémétrie en relançant le bootstrap-vcpkg avec l'argument `-disableMetrics`, passer l'argument `--disable-metrics` à chaque exécution de vcpkg, ou en créant une variable d'environnement nommée `VCPKG_DISABLE_METRICS`.
 
-Vous trouverez plus d'informations à propos de la télémétrie dans vcpkg sur cette [page](docs/about/privacy.md).
+Vous trouverez plus d'informations à propos de la télémétrie dans vcpkg sur cette [page](https://learn.microsoft.com/vcpkg/about/privacy).

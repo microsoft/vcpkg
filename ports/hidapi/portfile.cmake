@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/hidapi
-    REF hidapi-0.12.0
-    SHA512 866268927698db6fa553e000ead3c0c4b8df67ea768d36acac9c71f06f0bd8283778e90eee03f81aaa930f38dbb5719391906c7d2742b74479ffa436104f5fa4
+    REF hidapi-0.13.1
+    SHA512 07b224b9b5146caf693e6d67514fed236436ed68f38a3ada98ebf8352dfaa4e175f576902affb4b79da1bb8c9b47a1ee0831a93c7d3d210e93faee24632f7d53
     HEAD_REF master
 )
 

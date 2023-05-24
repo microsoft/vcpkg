@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index 7aedf3424..43ab8dbaf 100644
+--- a/configure.ac	
++++ b/configure.ac
+@@ -56,7 +56,7 @@ AC_PROG_LN_S
+ AC_SEARCH_LIBS([recvfrom],[socket])
+ 
+ case $host_os in
+-     *mingw*)
++     *mingw* | *msys* )
+         AC_CHECK_LIB([ws2_32],[main])
+         ;;
+      *)

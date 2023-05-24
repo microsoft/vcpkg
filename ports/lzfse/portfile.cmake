@@ -12,25 +12,23 @@ vcpkg_from_github(
         disable-cli-option.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLZFSE_DISABLE_TESTS=ON
         -DLZFSE_DISABLE_CLI=ON)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/lzfse.h LZFSE_H)
+file(READ "${CURRENT_PACKAGES_DIR}/include/lzfse.h" LZFSE_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     string(REPLACE "defined(LZFSE_DLL)" "1" LZFSE_H "${LZFSE_H}")
 else()
     string(REPLACE "defined(LZFSE_DLL)" "0" LZFSE_H "${LZFSE_H}")
 endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/lzfse.h "${LZFSE_H}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/lzfse.h" "${LZFSE_H}")
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/lzfse)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/lzfse/LICENSE ${CURRENT_PACKAGES_DIR}/share/lzfse/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,17 @@
+{
+  "name": "sdl1-mixer",
+  "version-date": "2023-03-25",
+  "port-version": 1,
+  "description": "An audio mixer that supports various file formats for Simple Directmedia Layer.",
+  "homepage": "https://www.libsdl.org",
+  "license": "Zlib",
+  "supports": "!osx & !uwp & !arm",
+  "dependencies": [
+    "libflac",
+    "libmikmod",
+    "libogg",
+    "libvorbis",
+    "mpg123",
+    "sdl1"
+  ]
+}

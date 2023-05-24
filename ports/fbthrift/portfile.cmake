@@ -10,8 +10,18 @@ vcpkg_from_github(
     PATCHES 
         0001-fix-compatibility-with-boost-1.79.0.patch
         fix-glog.patch
+        0002-fix-dependency.patch
 )
 
+file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
+file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindOpenSSL.cmake")
+file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindZstd.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS

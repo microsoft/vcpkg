@@ -1,7 +1,7 @@
 {
   "name": "libpq",
-  "version": "14.1",
-  "port-version": 2,
+  "version": "15.2",
+  "port-version": 3,
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "license": "PostgreSQL",
@@ -14,6 +14,10 @@
         "bonjour"
       ],
       "platform": "osx"
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
     }
   ],
   "default-features": [
@@ -44,6 +48,7 @@
     },
     "nls": {
       "description": "Native Language Support (--enable-nls[=LANGUAGES])",
+      "supports": "!osx",
       "dependencies": [
         "gettext",
         {
@@ -119,6 +124,12 @@
       "description": "Use zlib (else --without-zlib)",
       "dependencies": [
         "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Use zstd (else --without-zstd)",
+      "dependencies": [
+        "zstd"
       ]
     }
   }

@@ -1,14 +1,13 @@
-set(CPPWINRT_VERSION 2.0.220418.1)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.nuget.org/api/v2/package/Microsoft.Windows.CppWinRT/${CPPWINRT_VERSION}"
-    FILENAME "cppwinrt.${CPPWINRT_VERSION}.zip"
-    SHA512 67738587f7b1ca98a7c2c2c0733dd09612deb5ef6bcfa788ca0bcccbbfde2c706a675316085a41e79ab2c8796a0dd3bdba87d5c996dc0b6f76b438b5d75d2567
+    URLS "https://www.nuget.org/api/v2/package/Microsoft.Windows.CppWinRT/${VERSION}"
+    FILENAME "cppwinrt.${VERSION}.zip"
+    SHA512 6ce0764c3558d94b0ec72daa6d6d139df3942d33f51d1f3a670b888fbba2b556e35df831fa9eea42d4fc9a0a1f0ca94abef1c4013dcc9b51053bffe2af4dfd85
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH src
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(
+    src
+    ARCHIVE "${ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
 )
 

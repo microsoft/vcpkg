@@ -1,0 +1,5 @@
+The package etcd-cpp-apiv3 is compatible with built-in CMake targets:
+
+    find_package(etcd-cpp-api CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE etcd-cpp-api)
+

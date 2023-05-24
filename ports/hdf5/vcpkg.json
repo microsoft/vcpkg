@@ -1,6 +1,6 @@
 {
   "name": "hdf5",
-  "version": "1.12.2",
+  "version": "1.14.0",
   "port-version": 1,
   "description": "HDF5 is a data model, library, and file format for storing and managing data",
   "homepage": "https://www.hdfgroup.org/downloads/hdf5/",
@@ -27,6 +27,9 @@
     "fortran": {
       "description": "Build with fortran"
     },
+    "map": {
+      "description": "Build the map API"
+    },
     "parallel": {
       "description": "parallel support for HDF5",
       "dependencies": [
@@ -41,8 +44,12 @@
     },
     "threadsafe": {
       "description": "thread safety for HDF5",
+      "supports": "!(static & windows)",
       "dependencies": [
-        "pthreads"
+        {
+          "name": "pthreads",
+          "platform": "!windows"
+        }
       ]
     },
     "tools": {

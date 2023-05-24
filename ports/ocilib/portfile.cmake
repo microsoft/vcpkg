@@ -1,29 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrogier/ocilib
-    REF v4.7.3
-    SHA512 80cf1f76420b506789b1f7edd9af826801236499dd0757be3438e3cdf286b95ddd7dd35909622b3862244f6b535a8744f0b25989fb3740a4a0fd984410fb420b
+    REF "v${VERSION}"
+    SHA512 310c25fbe47ab59570103afdc6f4517b979d4077c77665c931592d95e8c706dcf34d5c2f10309a9971534499b2c4367efd05b25cdf8ebd4de15cb2c104059760
     HEAD_REF master
     PATCHES fix-DisableWC4191.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(PLATFORM x86)
-    else()
-        set(PLATFORM x64)
-    endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
     # There is no debug configuration
     # As it is a C library, build the release configuration and copy its output to the debug folder
     set(VCPKG_BUILD_TYPE release)
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH proj/dll/ocilib_dll_vs2019.sln
+        PROJECT_SUBPATH proj/dll/ocilib_dll.sln
         INCLUDES_SUBPATH include
         LICENSE_SUBPATH LICENSE
         RELEASE_CONFIGURATION "Release - ANSI"
-        PLATFORM ${PLATFORM}
+        PLATFORM "${VCPKG_TARGET_ARCHITECTURE}"
         USE_VCPKG_INTEGRATION
         ALLOW_ROOT_INCLUDES)
 

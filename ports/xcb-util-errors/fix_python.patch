@@ -1,0 +1,20 @@
+diff --git a/src/extensions.py b/src/extensions.py
+index 94d7d57fe..022d4003e 100644
+--- a/src/extensions.py
++++ b/src/extensions.py
+@@ -1,5 +1,6 @@
+ #!/usr/bin/env python
+ import sys
++import glob 
+ from xml.etree.cElementTree import parse
+ 
+ class Module(object):
+@@ -83,7 +84,7 @@ def parseFile(filename):
+ 
+ # Parse the xml file
+ output_file = sys.argv[1]
+-for input_file in sys.argv[2:]:
++for input_file in glob.glob(sys.argv[2]):
+     parseFile(input_file)
+ 
+ assert xproto != None

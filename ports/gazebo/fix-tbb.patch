@@ -1,0 +1,443 @@
+diff --git a/cmake/SearchForStuff.cmake b/cmake/SearchForStuff.cmake
+index af56ee4..8583740 100644
+--- a/cmake/SearchForStuff.cmake
++++ b/cmake/SearchForStuff.cmake
+@@ -301,7 +301,7 @@ if (PKG_CONFIG_FOUND)
+ 
+   #################################################
+   # Find TBB
+-  pkg_check_modules(TBB tbb<2021)
++  pkg_check_modules(TBB tbb)
+   set (TBB_PKG_CONFIG "tbb")
+   if (NOT TBB_FOUND)
+     message(STATUS "TBB not found, attempting to detect manually")
+@@ -325,6 +325,12 @@ if (PKG_CONFIG_FOUND)
+       endif(tbb_library)
+     endif (NOT TBB_FOUND)
+   endif (NOT TBB_FOUND)
++  set(HAVE_TBB_GREATER_OR_EQUAL_2021 OFF)
++  if (DEFINED TBB_VERSION AND NOT ${TBB_VERSION} STREQUAL "")
++    if (${TBB_VERSION} VERSION_GREATER_EQUAL "2021.0")
++      set(HAVE_TBB_GREATER_OR_EQUAL_2021 ON)
++    endif()
++  endif()
+ 
+   #################################################
+   # Find OGRE
+diff --git a/cmake/gazebo-config.cmake.in b/cmake/gazebo-config.cmake.in
+index 36bb341..6bb8e51 100644
+--- a/cmake/gazebo-config.cmake.in
++++ b/cmake/gazebo-config.cmake.in
+@@ -223,3 +223,11 @@ list(APPEND @PKG_NAME@_LIBRARIES ${IGNITION-FUEL_TOOLS_LIBRARIES})
+ list(APPEND @PKG_NAME@_LDFLAGS -Wl,-rpath,${GAZEBO_INSTALL_LIB_DIR}/gazebo-@GAZEBO_MAJOR_VERSION@/plugins)
+ list(APPEND @PKG_NAME@_LDFLAGS -L${GAZEBO_INSTALL_LIB_DIR})
+ list(APPEND @PKG_NAME@_LDFLAGS -L${GAZEBO_INSTALL_LIB_DIR}/gazebo-@GAZEBO_MAJOR_VERSION@/plugins)
++
++set (GAZEBO_HAS_TBB_GREATER_OR_EQUAL_2021 @HAVE_TBB_GREATER_OR_EQUAL_2021@)
++if (GAZEBO_HAS_TBB_GREATER_OR_EQUAL_2021)
++  find_package(TBB CONFIG)
++  if (TARGET tbb::tbb)
++    list(APPEND @PKG_NAME@_LIBRARIES TBB::tbb)
++  endif ()
++endif ()
+diff --git a/gazebo/transport/CMakeLists.txt b/gazebo/transport/CMakeLists.txt
+index 8e59020..a72d49b 100644
+--- a/gazebo/transport/CMakeLists.txt
++++ b/gazebo/transport/CMakeLists.txt
+@@ -29,6 +29,7 @@ set (headers
+   SubscribeOptions.hh
+   Subscriber.hh
+   SubscriptionTransport.hh
++  TaskGroup.hh
+   TopicManager.hh
+   TransportIface.hh
+   TransportTypes.hh
+@@ -70,6 +71,12 @@ if (WIN32)
+   target_link_libraries(gazebo_transport ws2_32 Iphlpapi)
+ endif()
+ 
++if(${CMAKE_VERSION} VERSION_LESS "3.13.0")
++  link_directories(${TBB_LIBRARY_DIRS})
++else()
++  target_link_directories(gazebo_transport PUBLIC ${TBB_LIBRARY_DIRS})
++endif()
++
+ if (USE_PCH)
+     add_pch(gazebo_transport transport_pch.hh ${Boost_PKGCONFIG_CFLAGS} "-I${PROTOBUF_INCLUDE_DIR}" "-I${TBB_INCLUDEDIR}")
+ endif()
+diff --git a/gazebo/transport/Connection.hh b/gazebo/transport/Connection.hh
+index 0e7d88a..cbcd7af 100644
+--- a/gazebo/transport/Connection.hh
++++ b/gazebo/transport/Connection.hh
+@@ -17,7 +17,16 @@
+ #ifndef _CONNECTION_HH_
+ #define _CONNECTION_HH_
+ 
++#undef emit
+ #include <tbb/task.h>
++#define emit
++
++// If TBB_VERSION_MAJOR is not defined, this means that
++// tbb >= 2021 and we can include the tbb/version.h header
++#ifndef TBB_VERSION_MAJOR
++#include <tbb/version.h>
++#endif
++
+ #include <google/protobuf/message.h>
+ 
+ #include <boost/asio.hpp>
+@@ -37,6 +46,9 @@
+ #include "gazebo/common/Console.hh"
+ #include "gazebo/common/Exception.hh"
+ #include "gazebo/common/WeakBind.hh"
++#if TBB_VERSION_MAJOR >= 2021
++#include "gazebo/transport/TaskGroup.hh"
++#endif
+ #include "gazebo/util/system.hh"
+ 
+ #define HEADER_LENGTH 8
+@@ -54,7 +66,11 @@ namespace gazebo
+     /// \cond
+     /// \brief A task instance that is created when data is read from
+     /// a socket and used by TBB
++#if TBB_VERSION_MAJOR < 2021
+     class GZ_TRANSPORT_VISIBLE ConnectionReadTask : public tbb::task
++#else
++    class GZ_TRANSPORT_VISIBLE ConnectionReadTask
++#endif
+     {
+       /// \brief Constructor
+       /// \param[_in] _func Boost function pointer, which is the function
+@@ -68,6 +84,7 @@ namespace gazebo
+               {
+               }
+ 
++#if TBB_VERSION_MAJOR < 2021
+       /// \bried Overridden function from tbb::task that exectues the data
+       /// callback.
+       public: tbb::task *execute()
+@@ -75,6 +92,11 @@ namespace gazebo
+                 this->func(this->data);
+                 return NULL;
+               }
++#else
++      /// \brief Execute the data callback
++      public: void operator()() const
++              { this->func(this->data); }
++#endif
+ 
+       /// \brief The boost function pointer
+       private: boost::function<void (const std::string &)> func;
+@@ -310,12 +332,16 @@ namespace gazebo
+ 
+                 if (!_e && !transport::is_stopped())
+                 {
++#if TBB_VERSION_MAJOR < 2021
+                   ConnectionReadTask *task = new(tbb::task::allocate_root())
+                         ConnectionReadTask(boost::get<0>(_handler), data);
+                   tbb::task::enqueue(*task);
+ 
+                   // Non-tbb version:
+                   // boost::get<0>(_handler)(data);
++#else
++                  this->taskGroup.run<ConnectionReadTask>(boost::get<0>(_handler), data);
++#endif
+                 }
+               }
+ 
+@@ -465,6 +491,11 @@ namespace gazebo
+ 
+       /// \brief True if the connection is open.
+       private: bool isOpen;
++
++#if TBB_VERSION_MAJOR >= 2021
++      /// \brief For managing asynchronous tasks with tbb
++      private: TaskGroup taskGroup;
++#endif
+     };
+     /// \}
+   }
+diff --git a/gazebo/transport/ConnectionManager.cc b/gazebo/transport/ConnectionManager.cc
+index b0546e5..17016a4 100644
+--- a/gazebo/transport/ConnectionManager.cc
++++ b/gazebo/transport/ConnectionManager.cc
+@@ -27,6 +27,7 @@
+ using namespace gazebo;
+ using namespace transport;
+ 
++#if TBB_VERSION_MAJOR < 2021
+ /// TBB task to process nodes.
+ class TopicManagerProcessTask : public tbb::task
+ {
+@@ -37,20 +38,30 @@ class TopicManagerProcessTask : public tbb::task
+             return NULL;
+           }
+ };
++#endif
+ 
+ /// TBB task to establish subscriber to publisher connection.
++#if TBB_VERSION_MAJOR < 2021
+ class TopicManagerConnectionTask : public tbb::task
++#else
++class TopicManagerConnectionTask
++#endif
+ {
+   /// \brief Constructor.
+   /// \param[in] _pub Publish message
+   public: explicit TopicManagerConnectionTask(msgs::Publish _pub) : pub(_pub) {}
+ 
+   /// Implements the necessary execute function
++#if TBB_VERSION_MAJOR < 2021
+   public: tbb::task *execute()
+           {
+             TopicManager::Instance()->ConnectSubToPub(pub);
+             return NULL;
+           }
++#else
++  public: void operator()() const
++          { TopicManager::Instance()->ConnectSubToPub(pub); }
++#endif
+ 
+   /// \brief Publish message
+   private: msgs::Publish pub;
+@@ -273,11 +284,6 @@ void ConnectionManager::RunUpdate()
+   if (this->masterConn)
+     this->masterConn->ProcessWriteQueue();
+ 
+-  // Use TBB to process nodes. Need more testing to see if this makes
+-  // a difference.
+-  // TopicManagerProcessTask *task = new(tbb::task::allocate_root())
+-  //   TopicManagerProcessTask();
+-  // tbb::task::enqueue(*task);
+   boost::recursive_mutex::scoped_lock lock(this->connectionMutex);
+ 
+   TopicManager::Instance()->ProcessNodes();
+@@ -403,9 +409,13 @@ void ConnectionManager::ProcessMessage(const std::string &_data)
+     if (pub.host() != this->serverConn->GetLocalAddress() ||
+         pub.port() != this->serverConn->GetLocalPort())
+     {
++#if TBB_VERSION_MAJOR < 2021
+       TopicManagerConnectionTask *task = new(tbb::task::allocate_root())
+       TopicManagerConnectionTask(pub);
+       tbb::task::enqueue(*task);
++#else
++      this->taskGroup.run<TopicManagerConnectionTask>(pub);
++#endif
+     }
+   }
+   // publisher_subscribe. This occurs when we try to subscribe to a topic, and
+diff --git a/gazebo/transport/ConnectionManager.hh b/gazebo/transport/ConnectionManager.hh
+index ef80eaf..6dc212b 100644
+--- a/gazebo/transport/ConnectionManager.hh
++++ b/gazebo/transport/ConnectionManager.hh
+@@ -27,8 +27,11 @@
+ #include "gazebo/msgs/msgs.hh"
+ #include "gazebo/common/SingletonT.hh"
+ 
+-#include "gazebo/transport/Publisher.hh"
+ #include "gazebo/transport/Connection.hh"
++#include "gazebo/transport/Publisher.hh"
++#if TBB_VERSION_MAJOR >= 2021
++#include "gazebo/transport/TaskGroup.hh"
++#endif
+ #include "gazebo/util/system.hh"
+ 
+ /// \brief Explicit instantiation for typed SingletonT.
+@@ -194,6 +197,11 @@ namespace gazebo
+       /// \brief Condition used for synchronization
+       private: boost::condition_variable namespaceCondition;
+ 
++#if TBB_VERSION_MAJOR >= 2021
++      /// \brief For managing asynchronous tasks with tbb
++      private: TaskGroup taskGroup;
++#endif
++
+       // Singleton implementation
+       private: friend class SingletonT<ConnectionManager>;
+     };
+diff --git a/gazebo/transport/Node.hh b/gazebo/transport/Node.hh
+index b7d37f7..7248b72 100644
+--- a/gazebo/transport/Node.hh
++++ b/gazebo/transport/Node.hh
+@@ -18,7 +18,12 @@
+ #ifndef GAZEBO_TRANSPORT_NODE_HH_
+ #define GAZEBO_TRANSPORT_NODE_HH_
+ 
++#undef emit
+ #include <tbb/task.h>
++#define emit
++#ifndef TBB_VERSION_MAJOR
++#include <tbb/version.h>
++#endif
+ #include <boost/bind/bind.hpp>
+ #include <boost/enable_shared_from_this.hpp>
+ #include <map>
+@@ -26,6 +31,9 @@
+ #include <string>
+ #include <vector>
+ 
++#if TBB_VERSION_MAJOR >= 2021
++#include "gazebo/transport/TaskGroup.hh"
++#endif
+ #include "gazebo/transport/TransportTypes.hh"
+ #include "gazebo/transport/TopicManager.hh"
+ #include "gazebo/util/system.hh"
+@@ -36,7 +44,11 @@ namespace gazebo
+   {
+     /// \cond
+     /// \brief Task used by Node::Publish to publish on a one-time publisher
++#if TBB_VERSION_MAJOR < 2021
+     class GZ_TRANSPORT_VISIBLE PublishTask : public tbb::task
++#else
++    class GZ_TRANSPORT_VISIBLE PublishTask
++#endif
+     {
+       /// \brief Constructor
+       /// \param[in] _pub Publisher to publish the message on.
+@@ -49,16 +61,23 @@ namespace gazebo
+         this->msg->CopyFrom(_message);
+       }
+ 
++#if TBB_VERSION_MAJOR < 2021
+       /// \brief Overridden function from tbb::task that exectues the
+       /// publish task.
+       public: tbb::task *execute()
++#else
++      /// \brief Executes the publish task.
++      public: void operator()() const
++#endif
+               {
+                 this->pub->WaitForConnection();
+                 this->pub->Publish(*this->msg, true);
+                 this->pub->SendMessage();
+                 delete this->msg;
++#if TBB_VERSION_MAJOR < 2021
+                 this->pub.reset();
+                 return NULL;
++#endif
+               }
+ 
+       /// \brief Pointer to the publisher.
+@@ -159,11 +178,15 @@ namespace gazebo
+                   const google::protobuf::Message &_message)
+               {
+                 transport::PublisherPtr pub = this->Advertise<M>(_topic);
++#if TBB_VERSION_MAJOR < 2021
+                 PublishTask *task = new(tbb::task::allocate_root())
+                   PublishTask(pub, _message);
+ 
+                 tbb::task::enqueue(*task);
+                 return;
++#else
++                this->taskGroup.run<PublishTask>(pub, _message);
++#endif
+               }
+ 
+       /// \brief Advertise a topic
+@@ -420,6 +443,10 @@ namespace gazebo
+ 
+       /// \brief List of newly arrive messages
+       private: std::map<std::string, std::list<MessagePtr> > incomingMsgsLocal;
++#if TBB_VERSION_MAJOR >= 2021
++      /// \brief For managing asynchronous tasks with tbb
++      private: TaskGroup taskGroup;
++#endif
+ 
+       private: boost::mutex publisherMutex;
+       private: boost::mutex publisherDeleteMutex;
+diff --git a/gazebo/transport/TaskGroup.hh b/gazebo/transport/TaskGroup.hh
+new file mode 100644
+index 0000000..b95b5d8
+--- /dev/null
++++ b/gazebo/transport/TaskGroup.hh
+@@ -0,0 +1,47 @@
++/*
++ * Copyright (C) 2021 Open Source Robotics Foundation
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ *
++*/
++#ifndef GAZEBO_TRANSPORT_TASKGROUP_HH_
++#define GAZEBO_TRANSPORT_TASKGROUP_HH_
++
++#include <utility>
++
++// Emit is both a macro in Qt and a function defined by tbb
++#undef emit
++#include <tbb/tbb.h>
++#define emit
++
++namespace gazebo {
++  namespace transport {
++    class TaskGroup
++    {
++      public: ~TaskGroup() noexcept
++              {
++                // Wait for running tasks to finish
++                this->taskGroup.wait();
++              }
++
++      public: template<class Functor, class... Args> void run(Args&&... args)
++      {
++        this->taskGroup.run(Functor(std::forward<Args>(args)...));
++      }
++
++      private: tbb::task_group taskGroup;
++    };
++  }
++}
++
++#endif
+diff --git a/gazebo/transport/transport_pch.hh b/gazebo/transport/transport_pch.hh
+index 0119d40..f288de2 100644
+--- a/gazebo/transport/transport_pch.hh
++++ b/gazebo/transport/transport_pch.hh
+@@ -21,6 +21,7 @@
+  * To get a starting list for this file, I use the command:
+  *    grep --include="*.hh" --include="*.cc" --no-filename -r "#include <" | sort -u
+  */
++
+ #include <boost/algorithm/string.hpp>
+ #include <boost/asio.hpp>
+ #include <boost/bind/bind.hpp>
+@@ -44,8 +45,18 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string>
++#include <tbb/task.h>
++#ifndef TBB_VERSION_MAJOR
++#include <tbb/version.h>
++#endif
++#if TBB_VERSION_MAJOR < 2021
+ #include <tbb/blocked_range.h>
+ #include <tbb/parallel_for.h>
+ #include <tbb/task.h>
++#else
++#undef emit
++#include <tbb/tbb.h>
++#define emit
++#endif
+ #include <utility>
+ #include <vector>
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 5f2c112..6d09a11 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -49,6 +49,7 @@ target_link_libraries(gz
+  gazebo_gui
+  gazebo_physics
+  gazebo_sensors
++ gazebo_transport
+  ${Qt5Core_LIBRARIES}
+  ${Qt5Widgets_LIBRARIES}
+  ${Boost_LIBRARIES}

@@ -1,7 +1,7 @@
 {
   "name": "leveldb",
   "version": "1.22",
-  "port-version": 5,
+  "port-version": 6,
   "description": "LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.",
   "homepage": "https://github.com/google/leveldb",
   "license": "BSD-3-Clause",

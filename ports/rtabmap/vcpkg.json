@@ -1,12 +1,18 @@
 {
   "name": "rtabmap",
-  "version": "0.20.13",
-  "port-version": 3,
+  "version": "0.21.0",
+  "port-version": 1,
   "description": "Real-Time Appearance-Based Mapping",
   "homepage": "https://introlab.github.io/rtabmap/",
+  "license": "BSD-3-Clause",
   "supports": "windows & !static",
   "dependencies": [
-    "opencv",
+    "ceres",
+    "g2o",
+    {
+      "name": "opencv",
+      "default-features": false
+    },
     {
       "name": "pcl",
       "default-features": false,
@@ -14,6 +20,7 @@
         "vtk"
       ]
     },
+    "sqlite3",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -24,9 +31,103 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "gui",
+    "opencv-contrib",
+    "opencv-nonfree",
+    "tools"
+  ],
   "features": {
+    "gui": {
+      "description": "Build RTAB-Map with GUI support (Qt)",
+      "dependencies": [
+        {
+          "name": "pcl",
+          "default-features": false,
+          "features": [
+            "qt"
+          ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui",
+            "opengl",
+            "widgets"
+          ]
+        }
+      ]
+    },
+    "k4w2": {
+      "description": "Build RTAB-Map with Kinect For Windows SDK 2.0 camera driver",
+      "dependencies": [
+        "kinectsdk2"
+      ]
+    },
+    "octomap": {
+      "description": "Build RTAB-Map with OctoMap support",
+      "dependencies": [
+        "octomap"
+      ]
+    },
+    "opencv-contrib": {
+      "description": "Use OpenCV with contrib modules (e.g., xfeatures2d, aruco)",
+      "dependencies": [
+        {
+          "name": "opencv",
+          "default-features": false,
+          "features": [
+            "contrib"
+          ]
+        }
+      ]
+    },
+    "opencv-cuda": {
+      "description": "Use OpenCV with CUDA (accelerated SIFT ad SURF GPU options)",
+      "dependencies": [
+        {
+          "name": "opencv",
+          "default-features": false,
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    "opencv-nonfree": {
+      "description": "Use OpenCV with nonfree module (surf feature)",
+      "dependencies": [
+        {
+          "name": "opencv",
+          "default-features": false,
+          "features": [
+            "nonfree"
+          ]
+        }
+      ]
+    },
+    "openni2": {
+      "description": "Build RTAB-Map with OpenNI2 camera driver",
+      "dependencies": [
+        "kinectsdk1",
+        "openni2"
+      ]
+    },
+    "realsense2": {
+      "description": "Build RTAB-Map with RealSense2 camera driver",
+      "dependencies": [
+        {
+          "name": "realsense2",
+          "default-features": false,
+          "features": [
+            "tm2"
+          ]
+        }
+      ]
+    },
     "tools": {
-      "description": "Build tools",
+      "description": "Build RTAB-Map's tools",
       "dependencies": [
         "yaml-cpp"
       ]
