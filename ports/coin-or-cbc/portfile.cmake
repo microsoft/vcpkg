@@ -10,10 +10,19 @@ file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${SO
 #file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 #file(COPY ${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
+    OPTIONS
+        --disable-debug
+        --disable-dependency-tracking
+        --disable-silent-rules
 )
+
+#vcpkg_configure_cmake(
+#    SOURCE_PATH ${SOURCE_PATH}
+#    PREFER_NINJA
+#)
 
 vcpkg_install_cmake()
 
