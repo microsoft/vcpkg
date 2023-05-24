@@ -45,9 +45,6 @@ if(VCPKG_HOST_IS_WINDOWS)
     vcpkg_find_acquire_program(SWIG)
 endif()
 
-list(APPEND variables EXPECTED_FAIL)
-set(EXPECTED_FAIL /INTERPRETER /PROGRAM)
-
 set(missing "")
 foreach(variable IN LISTS variables)
     list(POP_BACK "${variable}" program)
