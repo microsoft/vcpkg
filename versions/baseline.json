@@ -3992,6 +3992,14 @@
       "baseline": "2.1.12+20230128",
       "port-version": 0
     },
+    "libeventheader-decode": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "libeventheader-tracepoint": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "libevhtp": {
       "baseline": "1.2.18",
       "port-version": 5
@@ -4622,6 +4630,10 @@
     },
     "libtorrent": {
       "baseline": "2.0.9",
+      "port-version": 0
+    },
+    "libtracepoint": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "libu2f-server": {
