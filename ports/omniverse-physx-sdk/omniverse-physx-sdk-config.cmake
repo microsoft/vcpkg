@@ -4,9 +4,13 @@
 # target_link_libraries(main omniverse-physx-sdk::physx_sdk)
 
 # Find include and library directories
-get_filename_component(OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/../../../../include/physx" ABSOLUTE)
-get_filename_component(OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../../lib" ABSOLUTE)
-get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../../debug/lib" ABSOLUTE)
+get_filename_component(z_vcpkg_omniverse_physx_sdk_prefix "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(z_vcpkg_omniverse_physx_sdk_prefix "${z_vcpkg_omniverse_physx_sdk_prefix}" PATH)
+get_filename_component(z_vcpkg_omniverse_physx_sdk_prefix "${z_vcpkg_omniverse_physx_sdk_prefix}" PATH)
+
+get_filename_component(OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS "${z_vcpkg_omniverse_physx_sdk_prefix}/include/physx" ABSOLUTE)
+get_filename_component(OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/lib" ABSOLUTE)
+get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/debug/lib" ABSOLUTE)
 
 message(WARNING "just found all of the include, release libs dir and debug libs dir: ${OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS} and ${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR} and ${OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR}")
 
@@ -63,6 +67,8 @@ set_target_properties(omniverse-physx-sdk PROPERTIES
     IMPORTED_LOCATION_DEBUG "${OMNIVERSE-PHYSX-SDK_LIBRARY_DEBUG}"
     INTERFACE_INCLUDE_DIRECTORIES "${OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS}"
 )
+
+message(WARNING "set_target_properties with IMPORTED_LOCATION_RELEASE ${OMNIVERSE-PHYSX-SDK_LIBRARY_RELEASE} IMPORTED_LOCATION_DEBUG ${OMNIVERSE-PHYSX-SDK_LIBRARY_DEBUG} INTERFACE_INCLUDE_DIRECTORIES ${OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS}")
 
 if(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "static")
     set_target_properties(omniverse-physx-sdk PROPERTIES
@@ -137,13 +143,17 @@ elseif(UNIX)
     # ...
     foreach(lib ${OMNIVERSE-PHYSX-SDK_LIBRARIES})
         find_library(full_path_of_${lib} NAMES ${lib} PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR}" NO_DEFAULT_PATH)
+        #message(WARNING "  --analyzing ${lib}.. imported location: ${full_path_of_${lib}}")
         add_library(${lib} UNKNOWN IMPORTED)
+        # When CMake will link against this lib target, it will use this absolute path
         set_target_properties(${lib} PROPERTIES
             IMPORTED_LOCATION "${full_path_of_${lib}}"
         )
         list(APPEND full_paths_of_libraries "${lib}")
     endforeach()
 endif()
+
+message(WARNING "full_paths_of_libraries is set to ${full_paths_of_libraries}")
 
 # Link the libraries to the target
 # TODO: make sure INTERFACE is the right one. I.e. whoever links with this target, will also link with all these libs, but the main library will NOT link against these (it doesn't depend on them).
