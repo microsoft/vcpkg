@@ -6,33 +6,38 @@ vcpkg_from_github(
     ## PATCHES fix-c1083-error.patch
 )
 
-file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${SOURCE_PATH}")
-#file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-#file(COPY ${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH})
 
-set(ENV{ACLOCAL} "aclocal -I \"${SOURCE_PATH}/BuildTools\"")
+if(0)
 
-vcpkg_configure_make(
+    file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${SOURCE_PATH}")
+
+    vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
         --disable-debug
         --disable-dependency-tracking
         --disable-silent-rules
-)
+    )
 
-#vcpkg_configure_cmake(
-#    SOURCE_PATH ${SOURCE_PATH}
-#    PREFER_NINJA
-#)
+    vcpkg_install_make()
+    vcpkg_copy_pdbs()
+    vcpkg_fixup_pkgconfig()
 
-vcpkg_install_make()
+else()
 
-#vcpkg_fixup_cmake_targets()
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH})
 
-vcpkg_copy_pdbs()
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+    )
 
-vcpkg_fixup_pkgconfig()
+    vcpkg_fixup_cmake_targets()
+    vcpkg_copy_pdbs()
+endif()
+
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
