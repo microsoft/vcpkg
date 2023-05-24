@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e63a431..163bada 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -65,8 +65,8 @@ endif ()
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+ 
+ if (WITH_SHARED_LIBUV)
+-  find_package(Libuv REQUIRED)
+-  include_directories(${LIBUV_INCLUDE_DIR})
++  find_package(libuv CONFIG REQUIRED)
++  set(LIBUV_LIBRARIES $<IF:$<TARGET_EXISTS:uv_a>,uv_a,uv>)
+ else (WITH_SHARED_LIBUV)
+   include_directories(deps/libuv/include)
+   add_subdirectory(deps/libuv EXCLUDE_FROM_ALL)

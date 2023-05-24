@@ -1,0 +1,13 @@
+diff --git a/bench/bench.cpp b/bench/bench.cpp
+index 8a46837a6..ae47f047c 100644
+--- a/bench/bench.cpp
++++ b/bench/bench.cpp
+@@ -15,7 +15,7 @@
+ #if defined(SPDLOG_USE_STD_FORMAT)
+ #    include <format>
+ #elif defined(SPDLOG_FMT_EXTERNAL)
+-#    include <fmt/locale.h>
++#    include <fmt/format.h>
+ #else
+ #    include "spdlog/fmt/bundled/format.h"
+ #endif

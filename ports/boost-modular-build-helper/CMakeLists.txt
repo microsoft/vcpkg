@@ -42,17 +42,21 @@ elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch")
     list(APPEND B2_OPTIONS architecture=loongarch)
 elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips64")
     list(APPEND B2_OPTIONS architecture=mips64)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "riscv")
+    list(APPEND B2_OPTIONS architecture=riscv)
 elseif("arm64" IN_LIST VCPKG_TARGET_ARCHITECTURE AND "x86_64" IN_LIST VCPKG_TARGET_ARCHITECTURE)
     list(APPEND B2_OPTIONS architecture=arm+x86)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+    # do nothing
 else()
     list(APPEND B2_OPTIONS architecture=x86)
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND WIN32)
-    list(APPEND B2_OPTIONS "asmflags=/safeseh")
-endif()
-
 if(VCPKG_DETECTED_MSVC)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        list(APPEND B2_OPTIONS "asmflags=/safeseh")
+    endif()
+
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         set(USER_CONFIG_TOOLSET clang-win)
     else()
@@ -63,6 +67,8 @@ if(VCPKG_DETECTED_MSVC)
     else()
         math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
     endif()
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+    set(USER_CONFIG_TOOLSET emscripten)
 elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(USER_CONFIG_TOOLSET clang)
 else()
@@ -188,11 +194,6 @@ if(NOT WIN32)
     list(APPEND B2_OPTIONS "--layout=system")
 endif()
 
-include(ProcessorCount)
-ProcessorCount(NUMBER_OF_PROCESSORS)
-if(NOT NUMBER_OF_PROCESSORS)
-    set(NUMBER_OF_PROCESSORS 1)
-endif()
 
 # Handle ICU
 if(WIN32)
@@ -274,7 +275,7 @@ add_custom_target(boost ALL
         --with-system
         --with-thread
         --with-chrono
-        -j${NUMBER_OF_PROCESSORS}
+        -j ${VCPKG_CONCURRENCY}
         -sBOOST_ROOT=${BOOST_BUILD_PATH}
         -sBOOST_BUILD_PATH=${BOOST_BUILD_PATH}
         --debug-configuration

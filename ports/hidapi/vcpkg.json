@@ -1,6 +1,6 @@
 {
   "name": "hidapi",
-  "version-semver": "0.12.0",
+  "version-semver": "0.13.1",
   "description": "A Simple library for communicating with USB and Bluetooth HID devices on Linux, Mac and Windows.",
   "homepage": "https://github.com/libusb/hidapi",
   "license": "BSD-3-Clause-Clear",

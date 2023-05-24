@@ -1,0 +1,26 @@
+From 4f2be34b4a33453d71847dbab977f9eaedf2e995 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dawid=20Wro=CC=81bel?= <me@dawidwrobel.com>
+Date: Wed, 19 Oct 2022 13:26:50 +0200
+Subject: [PATCH] Add misisng find_dependency's for static builds
+
+---
+ KF5GuiAddonsConfig.cmake.in | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/KF5GuiAddonsConfig.cmake.in b/KF5GuiAddonsConfig.cmake.in
+index b494230..73c2678 100644
+--- a/KF5GuiAddonsConfig.cmake.in
++++ b/KF5GuiAddonsConfig.cmake.in
+@@ -7,6 +7,9 @@ find_dependency(Qt@QT_MAJOR_VERSION@Gui @REQUIRED_QT_VERSION@)
+ 
+ if (NOT @BUILD_SHARED_LIBS@)
+     if (@WITH_X11@)
++        find_dependency(X11)
++        find_dependency(XCB COMPONENTS XCB)
++
+         if (NOT TARGET Qt6::Gui)
+             find_dependency(Qt5X11Extras @REQUIRED_QT_VERSION@)
+         endif()
+-- 
+2.38.0
+

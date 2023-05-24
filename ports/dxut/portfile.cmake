@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/DXUT
-    REF aug2022
-    SHA512 33552c4ced7a2e5653e3af9eda19dc48e3794c67e02b1588a96f2b964e552137930f5b6a9ff26b9377074137a743cbf7bd654b3d17bca442a7b667eff6d9eff8
+    REF feb2023
+    SHA512 c436fa29a0bf61818df100d66e907f7bd42b93a6a5571238db65c4dfab7d31be130fe61db9040ab06b4d6ec33d209c387d5ae9f8501daa0c53a579ec9cd24697
     HEAD_REF main
 )
 
@@ -12,6 +12,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         dxtk DIRECTXTK_INTEGRATION
+        spectre ENABLE_SPECTRE_MITIGATION
 )
 
 vcpkg_cmake_configure(

@@ -1,0 +1,76 @@
+diff --git a/src/tool/omniidl/cxx/cccp/cccp.c b/src/tool/omniidl/cxx/cccp/cccp.c
+index 507c330..5651b3e 100644
+--- a/src/tool/omniidl/cxx/cccp/cccp.c
++++ b/src/tool/omniidl/cxx/cccp/cccp.c
+@@ -182,15 +182,20 @@ my_bzero (b, length)
+ # endif
+ #endif
+ 
++#if defined(_MSC_VER)
++#define OMNI_HAVE_VPRINTF
++#define __STDC__
++#endif
++
+ #if defined (__STDC__) && defined (OMNI_HAVE_VPRINTF)
+ # include <stdarg.h>
+ # define VA_START(va_list, var) va_start (va_list, var)
+ # define PRINTF_ALIST(msg) char *msg, ...
+ # define PRINTF_DCL(msg)
+ # define PRINTF_PROTO(ARGS, m, n) PROTO (ARGS) __attribute__ ((format (__printf__, m, n)))
+ #else
+ # include <varargs.h>
+ # define VA_START(va_list, var) va_start (va_list)
+ # define PRINTF_ALIST(msg) msg, va_alist
+ # define PRINTF_DCL(msg) char *msg; va_dcl
+ # define PRINTF_PROTO(ARGS, m, n) () __attribute__ ((format (__printf__, m, n)))
+diff --git a/src/tool/omniidl/cxx/cccp/cexp.c b/src/tool/omniidl/cxx/cccp/cexp.c
+index 4b4679c..b534fb3 100644
+--- a/src/tool/omniidl/cxx/cccp/cexp.c
++++ b/src/tool/omniidl/cxx/cccp/cexp.c
+@@ -152,15 +152,20 @@ struct arglist {
+ # endif
+ #endif
+ 
++#if defined(_MSC_VER)
++#define OMNI_HAVE_VPRINTF
++#define __STDC__
++#endif
++
+ #if defined (__STDC__) && defined (OMNI_HAVE_VPRINTF)
+ # include <stdarg.h>
+ # define VA_START(va_list, var) va_start (va_list, var)
+ # define PRINTF_ALIST(msg) char *msg, ...
+ # define PRINTF_DCL(msg)
+ # define PRINTF_PROTO(ARGS, m, n) PROTO (ARGS) __attribute__ ((format (__printf__, m, n)))
+ #else
+ # include <varargs.h>
+ # define VA_START(va_list, var) va_start (va_list)
+ # define PRINTF_ALIST(msg) msg, va_alist
+ # define PRINTF_DCL(msg) char *msg; va_dcl
+ # define PRINTF_PROTO(ARGS, m, n) () __attribute__ ((format (__printf__, m, n)))
+diff --git a/src/tool/omniidl/cxx/cccp/cexp.y.source b/src/tool/omniidl/cxx/cccp/cexp.y.source
+index 6fc69f5..6f59873 100644
+--- a/src/tool/omniidl/cxx/cccp/cexp.y.source
++++ b/src/tool/omniidl/cxx/cccp/cexp.y.source
+@@ -111,15 +111,20 @@ struct arglist {
+ # endif
+ #endif
+ 
++#if defined(_MSC_VER)
++#define OMNI_HAVE_VPRINTF
++#define __STDC__
++#endif
++
+-#if defined (__STDC__) && defined (HAVE_VPRINTF)
++#if defined (__STDC__) && defined (OMNI_HAVE_VPRINTF)
+ # include <stdarg.h>
+ # define VA_START(va_list, var) va_start (va_list, var)
+ # define PRINTF_ALIST(msg) char *msg, ...
+ # define PRINTF_DCL(msg)
+ # define PRINTF_PROTO(ARGS, m, n) PROTO (ARGS) __attribute__ ((format (__printf__, m, n)))
+ #else
+ # include <varargs.h>
+ # define VA_START(va_list, var) va_start (va_list)
+ # define PRINTF_ALIST(msg) msg, va_alist
+ # define PRINTF_DCL(msg) char *msg; va_dcl
+ # define PRINTF_PROTO(ARGS, m, n) () __attribute__ ((format (__printf__, m, n)))

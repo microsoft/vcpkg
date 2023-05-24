@@ -1,7 +1,7 @@
 {
   "name": "freetype-gl",
   "version-date": "2022-01-17",
-  "port-version": 1,
+  "port-version": 2,
   "description": "OpenGL text using one vertex buffer, one texture and FreeType",
   "homepage": "https://github.com/rougier/freetype-gl",
   "dependencies": [
@@ -15,5 +15,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "glad": {
+      "description": "Use the GLAD gl loader",
+      "dependencies": [
+        "glad"
+      ]
+    }
+  }
 }

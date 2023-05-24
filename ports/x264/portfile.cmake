@@ -77,6 +77,14 @@ else()
     vcpkg_list(APPEND OPTIONS_RELEASE --disable-cli)
 endif()
 
+if("chroma-format-all" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS --chroma-format=all)
+endif()
+
+if(NOT "gpl" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS --disable-gpl)
+endif()
+
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS --extra-cflags=-D_WIN32_WINNT=0x0A00)
 endif()
@@ -127,6 +135,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT 
     if (NOT VCPKG_BUILD_TYPE)
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/libx264.lib")
     endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x264.h" "#ifdef X264_API_IMPORTS" "#if 1")
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x264.h" "defined(U_STATIC_IMPLEMENTATION)" "1")
     file(REMOVE_RECURSE

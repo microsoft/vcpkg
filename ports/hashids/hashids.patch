@@ -1,0 +1,18 @@
+diff --git a/src/hashids.c b/src/hashids.c
+index 7f0b2f3..8d68509 100644
+--- a/src/hashids.c
++++ b/src/hashids.c
+@@ -6,6 +6,13 @@
+ 
+ #include "hashids.h"
+ 
++#ifdef _MSC_VER
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#else
++#include <unistd.h>
++#endif
++
+ /* branch prediction hinting */
+ #ifndef __has_builtin
+ #   define __has_builtin(x) (0)

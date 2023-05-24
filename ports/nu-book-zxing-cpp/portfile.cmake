@@ -1,25 +1,27 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO nu-book/zxing-cpp
-    REF v1.3.0
-    SHA512 27821667dea3d09b91bf9825ff25483ed658d850fd238009f1c7e43b1b09e62d24b3a2cd78d4e39d29725931b32bfce3e21e7ec871830b3ad69a5a69c72d8de8
-    HEAD_REF master
+vcpkg_download_distfile(
+    STACK_PROTECTOR_FIX_PATCH
+    URLS https://github.com/zxing-cpp/zxing-cpp/commit/accced21bae23320aad47b295de1085ab4e561b5.patch
+    FILENAME accced21bae23320aad47b295de1085ab4e561b5.patch
+    SHA512 c787f7cd313d80fcaa39c171a59021453a98936a66b842b3d83389104c8398417eed42151b8f5649e339e83b7261e9caa3423d9fa7b47e1fd00c933d8b11447c
 )
 
-if (VCPKG_TARGET_IS_UWP)
-   set(ENV{CL} "$ENV{CL} -wd4996")
-endif()
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO zxing-cpp/zxing-cpp
+    REF v2.0.0
+    SHA512 fa22164f834a42194eafd0d3e9c09d953233c69843ac6e79c8d6513314be28d8082382b436c379368e687e0eed05cb5e566d2893ec6eb29233a36643904ae083
+    HEAD_REF master
+    PATCHES
+        "${STACK_PROTECTOR_FIX_PATCH}"
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_BLACKBOX_TESTS=OFF
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_SYSTEM_DEPS=ALWAYS
-    MAYBE_UNUSED_VARIABLES
-        # Currently no dependencies, but this defends against future additions
-        BUILD_SYSTEM_DEPS
 )
 
 vcpkg_cmake_install()

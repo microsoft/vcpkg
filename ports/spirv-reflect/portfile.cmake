@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Reflect
-    REF sdk-1.3.204.1
-    SHA512 af0bfcb7a8565cbd981034900760d304792e9dfb0a166b712e3506475fdeff282e0ba0f02d82d671ee05e7ed0792815eba654b66af0739404bf38c9e12ebf4f5
+    REF sdk-1.3.236.0
+    SHA512 8ee0b88e46feac0ece478c6584e0ceb96b2ac976c2d1dc5813e0e26b20de8fa0264499cc9eea973bb3dd9a6877a421d00557f0fef7e323926df1db314373ea90
     HEAD_REF master
 )
 

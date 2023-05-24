@@ -1,27 +1,28 @@
+vcpkg_minimum_required(VERSION 2022-10-12)
+
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
-set(ACE_VERSION 7.0.8)
-string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
+string(REPLACE "." "_" VERSION_DIRECTORY "${VERSION}")
 
 if("tao" IN_LIST FEATURES)
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
-        FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
-        SHA512 deb84570a000c6bbd8d8debe6f2dd099ad446df00a80715fd536a551ceb253915d4fc4e7886657299e16909a89175f4c8fe0610c33a893396cb56399bede38ed
+        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE%2BTAO-src-${VERSION}.tar.gz"
+        FILENAME "ACE-TAO-${VERSION}.tar.gz"
+        SHA512 a40a4761d396f1e7dc96287075810a3d874794f56057cf1f18b2bd27fbb89e024c2926890fd0a8efe825c31865c382b91e90477d78cba64877b93ba9909b7da2
     )
 else()
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
-        FILENAME ACE-src-${ACE_VERSION}.tar.gz
-        SHA512 80aac11ba99abade016b8532e8e67f752f383db3fa1cfcd79a78cad3713f69fb0ef5e9d0b3685f54de4114e0178fc367fa800aa29fd31b6c790b8d072d6a38c6
+        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
+        FILENAME "ACE-src-${VERSION}.tar.gz"
+        SHA512 716b27e347e013b866fa08f7ab182c60faf108e8000089b90717db86d6dd92d8c7e776d4850be27c5f50c8e31543f573ce19466efcd9b4b7bc8836eec5447860
     )
 endif()
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
 )
 
@@ -64,12 +65,6 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_PATH}")
 
-if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    set(MSBUILD_PLATFORM "Win32")
-else ()
-    set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
-endif()
-
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -107,14 +102,14 @@ endif()
 
 # Invoke mwc.pl to generate the necessary solution and project files
 vcpkg_execute_build_process(
-    COMMAND ${PERL} "${ACE_ROOT}/bin/mwc.pl" -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" "${WORKSPACE}.mwc" ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
+    COMMAND ${PERL} "${ACE_ROOT}/bin/mwc.pl" -type "${SOLUTION_TYPE}" -features "${ACE_FEATURES}" "${WORKSPACE}.mwc" ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
     WORKING_DIRECTORY "${ACE_ROOT}"
     LOGNAME mwc-${TARGET_TRIPLET}
 )
 
 if("xml" IN_LIST FEATURES)
   vcpkg_execute_build_process(
-      COMMAND ${PERL} "${ACE_ROOT}/bin/mwc.pl" -type ${SOLUTION_TYPE} -features "${ACE_FEATURES}" "${ACE_ROOT}/ACEXML/ACEXML.mwc" ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
+      COMMAND ${PERL} "${ACE_ROOT}/bin/mwc.pl" -type "${SOLUTION_TYPE}" -features "${ACE_FEATURES}" "${ACE_ROOT}/ACEXML/ACEXML.mwc" ${MPC_STATIC_FLAG} ${MPC_VALUE_TEMPLATE}
       WORKING_DIRECTORY "${ACE_ROOT}/ACEXML"
       LOGNAME mwc-xml-${TARGET_TRIPLET}
   )
@@ -141,7 +136,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH ${PROJECT_SUBPATH}
     LICENSE_SUBPATH COPYING
-    PLATFORM ${MSBUILD_PLATFORM}
     SKIP_CLEAN
   )
 
@@ -284,7 +278,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
       SOURCE_PATH "${SOURCE_PATH}"
       PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
       LICENSE_SUBPATH COPYING
-      PLATFORM ${MSBUILD_PLATFORM}
       SKIP_CLEAN
     )
 
@@ -334,7 +327,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
-      WORKING_DIRECTORY "${WORKING_DIR}/ACEXML"
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME make-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
@@ -348,7 +341,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
-      WORKING_DIRECTORY "${WORKING_DIR}/ACEXML"
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME install-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
@@ -371,7 +364,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} realclean
-      WORKING_DIRECTORY "${WORKING_DIR}/ACEXML"
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME realclean-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
@@ -385,7 +378,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
-      WORKING_DIRECTORY "${WORKING_DIR}/ACEXML"
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME make-xml-${TARGET_TRIPLET}-rel
     )
   endif()
@@ -399,7 +392,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
-      WORKING_DIRECTORY "${WORKING_DIR}/ACEXML"
+      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
       LOGNAME install-xml-${TARGET_TRIPLET}-rel
     )
   endif()
@@ -416,6 +409,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/ace/bin/MakeProjectCreator")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/share/ace/ace-devel.sh")
+  file(REMOVE "${CURRENT_PACKAGES_DIR}/share/tao/tao-devel.sh")
 endif()
 
 vcpkg_fixup_pkgconfig()

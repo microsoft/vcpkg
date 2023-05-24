@@ -3,13 +3,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xsimd
-    REF 8.1.0
-    SHA512 539f7b565b45e8225c6476ca1becc8243a84ae7fb51b45a584231e7d36aee10a09d7d30fb87d89cb77813fb063a7b7617bcf01fdf996f59d99e8d474d2a044ee
+    REF "${VERSION}"
+    SHA512 bd7a363bbebc9196954c8c87271f14f05ca177569fcf080dac91be06ad2801c43fccbb385afd700b80d58c83d77f26ba199a7105672e4a1e55c517d15dd6e8e3
     HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    xcomplex ENABLE_XTL_COMPLEX
+    FEATURES
+        xcomplex ENABLE_XTL_COMPLEX
 )
 
 vcpkg_cmake_configure(
@@ -27,4 +28,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

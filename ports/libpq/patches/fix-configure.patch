@@ -4,7 +4,7 @@ index fba79ee..4fadb94 100644
 +++ b/configure.ac
 @@ -19,7 +19,7 @@ m4_pattern_forbid(^PGAC_)dnl to catch undefined macros
  
- AC_INIT([PostgreSQL], [14.4], [pgsql-bugs@lists.postgresql.org], [], [https://www.postgresql.org/])
+ AC_INIT([PostgreSQL], [15.2], [pgsql-bugs@lists.postgresql.org], [], [https://www.postgresql.org/])
  
 -m4_if(m4_defn([m4_PACKAGE_VERSION]), [2.69], [], [m4_fatal([Autoconf version 2.69 is required.
 +m4_if(m4_defn([m4_PACKAGE_VERSION]), [2.69], [], [m4_warn([unsupported],[Autoconf version 2.69 is required.
@@ -48,7 +48,7 @@ index fba79ee..4fadb94 100644
    # Function introduced in OpenSSL 1.0.2.
    AC_CHECK_FUNCS([X509_get_signature_nid])
    # Functions introduced in OpenSSL 1.1.0. We used to check for
-@@ -1273,15 +1278,18 @@ if test "$with_pam" = yes ; then
+@@ -1365,15 +1365,18 @@ if test "$with_pam" = yes ; then
  fi
  
  if test "$with_libxml" = yes ; then
@@ -66,6 +66,12 @@ index fba79ee..4fadb94 100644
  if test "$with_lz4" = yes ; then
 -  AC_CHECK_LIB(lz4, LZ4_compress_default, [], [AC_MSG_ERROR([library 'lz4' is required for LZ4 support])])
 +  PKG_CHECK_MODULES([LZ4], [liblz4], [AC_DEFINE(HAVE_LIBLZ4,1,[Define to 1 if with lz4])], [AC_MSG_ERROR([library 'lz4' is required for LZ4 support])])
++  LIBS="$LZ4_LIBS $LIBS"
+ fi
+ 
+ if test "$with_zstd" = yes ; then
+-  AC_CHECK_LIB(zstd, ZSTD_compress, [], [AC_MSG_ERROR([library 'zstd' is required for ZSTD support])])
++  PKG_CHECK_MODULES([zstd], [zstd], [AC_DEFINE(HAVE_LIBZSTD,1,[Define to 1 if with lz4])], [AC_MSG_ERROR([library 'zstd' is required for ZSTD support])])
 +  LIBS="$LZ4_LIBS $LIBS"
  fi
  

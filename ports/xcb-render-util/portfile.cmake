@@ -7,8 +7,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxcb-render-util
-    REF  0317caf63de532fd7a0493ed6afa871a67253747 #v 0.3.9
-    SHA512 9a16c3eb3575586fce85a548cb5fd8b23aa8e42363b2c6d4e074e45f5c04089301ef2ff3012cf9cc94490359d4e28ff062feaecb97a880c9240bf7dbe5d03612
+    REF  5293d8b6165f23b9f7a8bcc903da0e4d7a75984c #v 0.3.10
+    SHA512 ecd1876b62c1345ce3c06ac525f1af4f59dcce3c8d76003c59dd64c80f7787d6d2754c481e585507d6bcaf443026a7aa22ab9eac28b5153eff78d216e53eb29f
     HEAD_REF master # branch name
     PATCHES pthread.patch # required since this port directly depends on pthread functions. So it has to directly link it!
 ) 

@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
-    REF dc83d99c95a42c960150ddeee06c124134b52208 # openal-soft-1.22.2
-    SHA512 3fbbdfbb2609ef8187d20ce74b2fb8082037288f3fd80df71d360705d8efdadfe8f62811af1cd824cb6572c8c3479b370f8ae3819b8b8bb0b20c34f7a73cc530
+    REF ${VERSION}
+    SHA512 7384e734ba6b0668adbb2b2629c950bdb61814584a745ced2327cc20b1b9ff9bc53a8e10ec3260ef2a2915048f4e3af8499d91f8515bb18a4e61c5eeef609d1a
     HEAD_REF master
-    PATCHES
-        0001-fix-mingw-x86-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -102,7 +100,7 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_copy_pdbs()

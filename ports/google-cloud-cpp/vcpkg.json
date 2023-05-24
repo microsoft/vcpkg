@@ -1,13 +1,13 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.2.0",
-  "port-version": 1,
+  "version": "2.10.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     "abseil",
+    "grpc",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -50,6 +50,30 @@
         }
       ]
     },
+    "advisorynotifications": {
+      "description": "Advisory Notifications API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "alloydb": {
+      "description": "Alloy DB API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "apigateway": {
       "description": "API Gateway API C++ Client Library",
       "dependencies": [
@@ -64,6 +88,18 @@
     },
     "apigeeconnect": {
       "description": "Apigee Connect API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "apikeys": {
+      "description": "API Keys API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -149,6 +185,18 @@
         }
       ]
     },
+    "batch": {
+      "description": "Batch API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "beyondcorp": {
       "description": "BeyondCorp API C++ Client Library",
       "dependencies": [
@@ -210,6 +258,18 @@
         }
       ]
     },
+    "certificatemanager": {
+      "description": "Certificate Manager API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "channel": {
       "description": "Cloud Channel API C++ Client Library",
       "supports": "!windows",
@@ -237,6 +297,30 @@
     },
     "composer": {
       "description": "Cloud Composer C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "confidentialcomputing": {
+      "description": "Confidential Computing API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "connectors": {
+      "description": "Connectors API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -332,8 +416,32 @@
         }
       ]
     },
+    "datastream": {
+      "description": "Datastream API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "debugger": {
       "description": "Stackdriver Debugger API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "deploy": {
+      "description": "Google Cloud Deploy API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -382,6 +490,18 @@
     },
     "documentai": {
       "description": "Cloud Document AI API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "edgecontainer": {
+      "description": "Distributed Cloud Edge Container API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -455,6 +575,18 @@
     },
     "gkehub": {
       "description": "GKE Hub C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "gkemulticloud": {
+      "description": "Anthos Multi-Cloud C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -602,6 +734,18 @@
     },
     "monitoring": {
       "description": "Cloud Monitoring API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "networkconnectivity": {
+      "description": "Network Connectivity API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -937,6 +1081,18 @@
         "nlohmann-json"
       ]
     },
+    "storageinsights": {
+      "description": "Storage Insights API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "storagetransfer": {
       "description": "Storage Transfer API C++ Client Library",
       "dependencies": [
@@ -1069,6 +1225,18 @@
         }
       ]
     },
+    "vmwareengine": {
+      "description": "VMware Engine API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "vpcaccess": {
       "description": "Serverless VPC Access API C++ Client Library",
       "dependencies": [
@@ -1107,6 +1275,18 @@
     },
     "workflows": {
       "description": "Workflow Executions API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "workstations": {
+      "description": "Workstations API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

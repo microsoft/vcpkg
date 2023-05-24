@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF v1.5.0
     SHA512 68ab5fe316cfbbbba31b5b2354f657e23c90e14674f8dac01df2bf98c4776a7fafcd690a4dfad3a340e6be577a22360ca04ef2397c8a0dd507adebdd54dc22fb
     HEAD_REF master
-    PATCHES fix-dependency-install.patch
+    PATCHES
+        fix-dependency-install.patch
+        fix-static.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)

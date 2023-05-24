@@ -1,8 +1,9 @@
 {
   "name": "re2",
-  "version-date": "2021-11-01",
+  "version-date": "2023-02-01",
   "description": "RE2 is a fast, safe, thread-friendly alternative to backtracking regular expression engines like those used in PCRE, Perl, and Python. It is a C++ library.",
   "homepage": "https://github.com/google/re2",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

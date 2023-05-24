@@ -32,7 +32,7 @@ APT_PACKAGES="git curl zip unzip tar"
 APT_PACKAGES="$APT_PACKAGES at libxt-dev gperf libxaw7-dev cifs-utils \
   build-essential g++ gfortran libx11-dev libxkbcommon-x11-dev libxi-dev \
   libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxxf86vm-dev \
-  libxcursor-dev yasm libnuma1 libnuma-dev \
+  libxcursor-dev yasm libnuma1 libnuma-dev libtool-bin \
   flex bison libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
   xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full \
   pkg-config meson nasm cmake ninja-build"
@@ -47,11 +47,17 @@ APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
   libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
   libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev"
 
+## required by xcb feature in qtbase
+APT_PACKAGES="$APT_PACKAGES libxcb-cursor-dev"
+
 ## required by libhdfs3
 APT_PACKAGES="$APT_PACKAGES libkrb5-dev"
 
 ## required by kf5windowsystem
 APT_PACKAGES="$APT_PACKAGES libxcb-res0-dev"
+
+## required by kf5globalaccel
+APT_PACKAGES="$APT_PACKAGES libxcb-keysyms1-dev libxcb-xkb-dev libxcb-record0-dev"
 
 ## required by mesa
 APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
@@ -87,8 +93,8 @@ APT_PACKAGES="$APT_PACKAGES haskell-stack"
 APT_PACKAGES="$APT_PACKAGES python-yaml"
 
 ## CUDA
-APT_PACKAGES="$APT_PACKAGES cuda-compiler-11-6 cuda-libraries-dev-11-6 cuda-driver-dev-11-6 \
-  cuda-cudart-dev-11-6 libcublas-11-6 libcurand-dev-11-6 cuda-nvml-dev-11-6 libcudnn8-dev libnccl2 \
+APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-1 cuda-libraries-dev-12-1 cuda-driver-dev-12-1 \
+  cuda-cudart-dev-12-1 libcublas-12-1 libcurand-dev-12-1 cuda-nvml-dev-12-1 libcudnn8-dev libnccl2 \
   libnccl-dev"
 
 ## PowerShell

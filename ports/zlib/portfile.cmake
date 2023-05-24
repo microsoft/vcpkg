@@ -1,15 +1,15 @@
+# When this port is updated, the minizip port should be updated at the same time
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO madler/zlib
-    REF v1.2.12
-    SHA512 5b029532a9f5f12ad425c12eccdf1b77c8d91801342c5b5e26ffb539f76a204e6c4882b40f0130f143f2cd38df90e90af2978cf4bb997e1fa3a0d1eff2ca979e
+    REF v1.2.13
+    SHA512 44b834fbfb50cca229209b8dbe1f96b258f19a49f5df23b80970b716371d856a4adf525edb4c6e0e645b180ea949cb90f5365a1d896160f297f56794dd888659
     HEAD_REF master
     PATCHES
-        cmake_dont_build_more_than_needed.patch
         0001-Prevent-invalid-inclusions-when-HAVE_-is-set-to-0.patch
-        debug-postfix-mingw.patch
-        0002-android-build-mingw.patch
-        CVE-2022-37434.patch
+        0002-skip-building-examples.patch
+        0003-build-static-or-shared-not-both.patch
+        0004-android-and-mingw-fixes.patch
 )
 
 # This is generated during the cmake build
@@ -19,7 +19,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSKIP_INSTALL_FILES=ON
-        -DSKIP_BUILD_EXAMPLES=ON
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
@@ -44,5 +43,11 @@ endif()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/zconf.h" "ifdef ZLIB_DLL" "if 0")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/zconf.h" "ifdef ZLIB_DLL" "if 1")
+endif()
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

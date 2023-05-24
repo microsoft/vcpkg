@@ -10,51 +10,42 @@ vcpkg_from_github(
         fix-arm-build-error.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/CppUTest/cmake TARGET_PATH share/CppUTest)
-if (EXISTS ${CURRENT_PACKAGES_DIR}/lib/CppUTest)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/CppUTest)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/CppUTest/cmake )
+if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/CppUTest")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/CppUTest")
 endif()
 
-if (EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/CppUTest)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/CppUTest)
+if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/CppUTest")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/CppUTest")
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
-    file(GLOB CPPUTEST_LIBS ${CURRENT_PACKAGES_DIR}/lib/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-    file(COPY ${CPPUTEST_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+    file(GLOB CPPUTEST_LIBS "${CURRENT_PACKAGES_DIR}/lib/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    file(COPY ${CPPUTEST_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     file(REMOVE ${CPPUTEST_LIBS})
     
-    file(READ ${CURRENT_PACKAGES_DIR}/share/CppUTest/CppUTestTargets-release.cmake RELEASE_CONFIG)
-    # Replace CppUTestExt first
-    string(REPLACE "\${_IMPORT_PREFIX}/lib/"
-                   "\${_IMPORT_PREFIX}/lib/manual-link/" RELEASE_CONFIG "${RELEASE_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/CppUTest/CppUTestTargets-release.cmake "${RELEASE_CONFIG}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/CppUTestTargets-release.cmake" "\${_IMPORT_PREFIX}/lib/" "\${_IMPORT_PREFIX}/lib/manual-link/")
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
-    file(GLOB CPPUTEST_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-    file(COPY ${CPPUTEST_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+    file(GLOB CPPUTEST_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    file(COPY ${CPPUTEST_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
     file(REMOVE ${CPPUTEST_LIBS})
 
-    file(READ ${CURRENT_PACKAGES_DIR}/share/CppUTest/CppUTestTargets-debug.cmake DEBUG_CONFIG)
-    # Replace CppUTestExt first
-    string(REPLACE "\${_IMPORT_PREFIX}/debug/lib/"
-                   "\${_IMPORT_PREFIX}/debug/lib/manual-link/" DEBUG_CONFIG "${DEBUG_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/CppUTest/CppUTestTargets-debug.cmake "${DEBUG_CONFIG}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/CppUTestTargets-debug.cmake" "\${_IMPORT_PREFIX}/debug/lib/" "\${_IMPORT_PREFIX}/debug/lib/manual-link/")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -20,12 +20,14 @@ vcpkg_from_github(
         pkgconfig.patch
         fix-openssl.patch
         fix-CMakeLists.patch
+        zstd.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         iconv            WITH_ICONV
         mariadbclient    VCPKG_MARIADBCLIENT
+        zstd             WITH_ZSTD
 )
 
 if("openssl" IN_LIST FEATURES)
@@ -49,6 +51,7 @@ vcpkg_cmake_configure(
         -DWITH_SSL=${WITH_SSL}
         -DREMOTEIO_PLUGIN_TYPE=OFF
         -DAUTH_GSSAPI_PLUGIN_TYPE=OFF
+        -DWITH_ZSTD=${WITH_ZSTD}
     MAYBE_UNUSED_VARIABLES
         AUTH_GSSAPI_PLUGIN_TYPE
 )

@@ -3,20 +3,12 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/ChakraCore
-    REF 385409ee4b634b860e090606a28acbc99f4d2567
-    SHA512 ef47db988c4ddd77fa87f4c5e1ac91d9f6b31b35aa6934d8b2863ee1274776d90a2b85dbad51eef069c96777d3cd7729349b89f23eda8c61b4cb637150bead71
+    REF fd6908097f758ef65bd83680cf413313ad36c98d
+    SHA512 c35a2e3680d3ff5c7d715752570b5f12cf9da716ef28377694e9aa079553b5c0276c51a66b342956d217e9842edd12c25af4a001fae34175a2114134ee4428ee
     HEAD_REF master
     PATCHES
-        fix-debug-linux-build.patch
+        add-missing-reference.patch # https://github.com/chakra-core/ChakraCore/pull/6862
 )
-
-if(WIN32)
-    find_path(COR_H_PATH cor.h)
-    if(COR_H_PATH MATCHES "NOTFOUND")
-        message(FATAL_ERROR "Could not find <cor.h>. Ensure the NETFXSDK is installed.")
-    endif()
-    get_filename_component(NETFXSDK_PATH "${COR_H_PATH}/../.." ABSOLUTE)
-endif()
 
 set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 file(REMOVE_RECURSE ${BUILDTREE_PATH})
@@ -24,13 +16,24 @@ file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
 
 if(WIN32)
     set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore only supports static CRT linkage
-    vcpkg_build_msbuild(
-        PROJECT_PATH "${BUILDTREE_PATH}/Build/Chakra.Core.sln"
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+        set(PLATFORM_ARG PLATFORM x86) # it's x86, not Win32 in sln file
+    endif()
+    vcpkg_install_msbuild(
+        SOURCE_PATH "${BUILDTREE_PATH}"
+        PROJECT_SUBPATH "Build/Chakra.Core.sln"
         OPTIONS
-            "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
             "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
             "/p:RuntimeLib=${CHAKRA_RUNTIME_LIB}"
+        ${PLATFORM_ARG}
     )
+    file(GLOB_RECURSE LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.lib")
+    file(GLOB_RECURSE DEBUG_LIB_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
+    foreach(file ${LIB_FILES} ${DEBUG_LIB_FILES})
+        if(NOT file MATCHES "ChakraCore.lib")
+            file(REMOVE ${file})
+        endif()
+    endforeach()
 else()
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
         set(CHAKRACORE_TARGET_ARCH amd64)
@@ -81,35 +84,7 @@ if(WIN32)
         "${BUILDTREE_PATH}/lib/Jsrt/ChakraCoreWindows.h"
         DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     )
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(INSTALL
-            "${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/ChakraCore.dll"
-            "${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/ChakraCore.pdb"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
-        )
-        file(INSTALL
-            "${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_debug/Chakracore.lib"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
-        )
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(INSTALL
-            "${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.dll"
-            "${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ChakraCore.pdb"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
-        )
-        file(INSTALL
-            "${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/Chakracore.lib"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
-        )
-        file(INSTALL
-            "${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/ch.exe"
-            "${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/GCStress.exe"
-            "${BUILDTREE_PATH}/Build/VcBuild/bin/${TRIPLET_SYSTEM_ARCH}_release/rl.exe"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/chakracore"
-        )
-        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/chakracore")
-    endif()
+    # Do not install dll/exe/lib files here because they are handled by vcpkg_install_msbuild
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(out_file libChakraCore.so)
@@ -117,8 +92,8 @@ else()
         set(out_file lib/libChakraCoreStatic.a)
     endif()
 
-    set(destination_dir_debug "${CURRENT_PACKAGES_DIR}/debug/bin")
-    set(destination_dir_release "${CURRENT_PACKAGES_DIR}/bin")
+    set(destination_dir_debug "${CURRENT_PACKAGES_DIR}/debug/lib")
+    set(destination_dir_release "${CURRENT_PACKAGES_DIR}/lib")
     set(out_dir_debug "${BUILDTREE_PATH}/out/Debug")
     set(out_dir_release "${BUILDTREE_PATH}/out/Release")
     foreach(config ${configs})
@@ -133,11 +108,18 @@ else()
             "${out_dir_release}/ch"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/chakracore"
         )
-        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/chakracore")
+        vcpkg_copy_tools(TOOL_NAMES ch
+            SEARCH_DIR "${out_dir_release}"
+        )
     endif()
 endif()
 
 vcpkg_copy_pdbs()
+
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/unofficial-chakracore-config.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}"
+)
 
 file(INSTALL
     "${SOURCE_PATH}/LICENSE.txt"

@@ -1,36 +1,21 @@
+string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_84_0
-    SHA512 2a000c052c14ee9e6bed243e92699517889554bc0dc03e9f28d398ecf14b405c336f1303e6ed15ed30e88d5d00fefecdc189e83def3f0a5431f63e3be1c55c35
+    REF ${curl_version}
+    SHA512 4a7aa0091ac1e0f1d4366277d585c19bd9ad786fa49329a96d43eb6aebd1b366c1c2144436c243686d9ad430e7d3f4137ea0764c7759198f0eb29107a5d86569
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
         0005_remove_imp_suffix.patch
         0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch
-        0021-normaliz.patch # for mingw on case-sensitive file system
         0022-deduplicate-libs.patch
         mbedtls-ws2_32.patch
         export-components.patch
+        0023-fix-find-cares.patch
+        version-major-7-8.patch
 )
-
-# schannel will enable sspi, but sspi do not support uwp
-foreach(feature IN ITEMS "schannel" "sspi" "tool" "winldap")
-    if(feature IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
-        message(FATAL_ERROR "Feature ${feature} is not supported on UWP.")
-    endif()
-endforeach()
-
-if("sectransp" IN_LIST FEATURES AND NOT (VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS))
-    message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
-endif()
-
-foreach(feature IN ITEMS "winldap" "winidn")
-    if(feature IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Feature ${feature} is not supported on non-Windows platforms.")
-    endif()
-endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -49,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
         winldap     USE_WIN32_LDAP
+        websockets  ENABLE_WEBSOCKETS
     INVERTED_FEATURES
         non-http    HTTP_ONLY
         winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
@@ -140,4 +126,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

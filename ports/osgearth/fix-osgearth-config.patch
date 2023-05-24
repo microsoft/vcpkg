@@ -1,5 +1,5 @@
 diff --git a/osgEarthConfig.cmake.in b/osgEarthConfig.cmake.in
-index 3f27dffe9..4141ff939 100644
+index 3f27dffe9..c787e7668 100644
 --- a/osgEarthConfig.cmake.in
 +++ b/osgEarthConfig.cmake.in
 @@ -6,52 +6,54 @@ set(XPREFIX OSGEARTH)
@@ -15,8 +15,9 @@ index 3f27dffe9..4141ff939 100644
 +set(osgEarth_DEFINITIONS ${${XPREFIX}_CFLAGS})
  
 -find_path(osgearth_INCLUDE_DIR
+-    NAMES OSGEARTH/RTREE.H
 +find_path(osgEarth_INCLUDE_DIR
-     NAMES OSGEARTH/RTREE.H
++    NAMES osgEarth/rtree.h
      HINTS ${${XPREFIX}_INCLUDE_DIRS}
  )
  

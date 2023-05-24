@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-fix_find_package.patch
+        0002-fix-imgui-dependency.patch
         004-fix-find-sfml.patch
 )
 
@@ -24,3 +25,5 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME ImGui-SFML CONFIG_PATH lib/cmake/ImGui-SFM
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -5,8 +5,9 @@ endif ()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RoaringBitmap/CRoaring
-    REF v0.7.1
-    SHA512 1d49da4e5b5ed0726feaf3608488e24f13c31358d1a72c7d0086fb6210313f73164745e0d1b616e8930073bbe259f7e1ac09fc97473b659694248f627c762f02
+    REF "v${VERSION}"
+
+    SHA512 c51e426c13045f45b907bc2801fcb01a2bb0620054ad5c2bb113fe486f77e292c85f29348e7d4d1c61f0263845be9403b754f418d81c293c5e2fb9e5407386b0
     HEAD_REF master
 )
 
@@ -27,6 +28,8 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
+vcpkg_fixup_pkgconfig()
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

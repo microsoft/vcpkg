@@ -8,8 +8,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE ${ARCHIVE}
         PATCHES
             fix-snprintf.patch
@@ -61,32 +61,30 @@ else()
     set(OPTIONS --without-nmap-update --with-openssl=${CURRENT_INSTALLED_DIR} --with-libssh2=${CURRENT_INSTALLED_DIR} --with-libz=${CURRENT_INSTALLED_DIR} --with-libpcre=${CURRENT_INSTALLED_DIR})
     message(STATUS "Building Options: ${OPTIONS}")
     
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Release)
-        # Since nmap makefile has strong relationshop with codes, copy codes to obj path
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-	    vcpkg_extract_source_archive(source_path_release
-            ARCHIVE "${ARCHIVE}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        )
+    # Since nmap makefile has strong relationshop with codes, copy codes to obj path
+    message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
+    vcpkg_extract_source_archive(source_path_release
+        ARCHIVE "${ARCHIVE}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+    )
 
-        vcpkg_execute_required_process(
-            COMMAND "./configure" ${OPTIONS}
-	    WORKING_DIRECTORY "${source_path_release}"
-            LOGNAME config-${TARGET_TRIPLET}-rel
-        )
-        
-        message(STATUS "Building ${TARGET_TRIPLET}-rel")
-        vcpkg_execute_required_process(
-            COMMAND make
-            WORKING_DIRECTORY "${source_path_release}"
-            LOGNAME build-${TARGET_TRIPLET}-rel
-        )
-        
-        message(STATUS "Installing ${TARGET_TRIPLET}-rel")
-        file(INSTALL ${source_path_release}/nmap DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    endif()
+    vcpkg_execute_required_process(
+        COMMAND "./configure" ${OPTIONS}
+    WORKING_DIRECTORY "${source_path_release}"
+        LOGNAME config-${TARGET_TRIPLET}-rel
+    )
     
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Debug)
+    message(STATUS "Building ${TARGET_TRIPLET}-rel")
+    vcpkg_execute_required_process(
+        COMMAND make
+        WORKING_DIRECTORY "${source_path_release}"
+        LOGNAME build-${TARGET_TRIPLET}-rel
+    )
+    
+    message(STATUS "Installing ${TARGET_TRIPLET}-rel")
+    file(INSTALL "${source_path_release}/nmap" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
+    
+    if (NOT VCPKG_BUILD_TYPE)
         # Since nmap makefile has strong relationshop with codes, copy codes to obj path
         message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
         vcpkg_extract_source_archive(source_path_debug
@@ -117,4 +115,6 @@ endif()
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

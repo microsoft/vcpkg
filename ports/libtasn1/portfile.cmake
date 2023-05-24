@@ -1,22 +1,19 @@
-set(VERSION 4.17.0)
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES msvc_fixes.patch)
-endif()
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/gnu/libtasn1/libtasn1-${VERSION}.tar.gz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libtasn1/libtasn1-${VERSION}.tar.gz"
     FILENAME "libtasn1-${VERSION}.tar.gz"
-    SHA512 9cbd920196d1e4c8f5aa613259cded2510d40edb583ce20cc2702e2dee9bf32bee85a159c74600ffbebc2af2787e28ed0fe0adf15fc46839283747f4fe166d3d
+    SHA512 287f5eddfb5e21762d9f14d11997e56b953b980b2b03a97ed4cd6d37909bda1ed7d2cdff9da5d270a21d863ab7e54be6b85c05f1075ac5d8f0198997cf335ef4
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${VERSION}
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    SOURCE_BASE "v${VERSION}"
     PATCHES
-        ${PATCHES}
+        msvc_fixes.patch
+        clang-fortify.patch # ported from https://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=522aea1093a598246346b3e1c426505c344fe19a
 )
+
+vcpkg_find_acquire_program(BISON)
 
 set(EXTRA_OPTS "")
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -34,19 +31,29 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND EXTRA_OPTS "CFLAGS=\$CFLAGS -DASN1_STATIC")
 endif()
 
-set(ENV{GTKDOCIZE} true)
+set(ENV{GTKDOCIZE} true) # true, the program
 vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
-    SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --disable-doc
         --disable-gtk-doc
         --disable-gcc-warnings
         ${EXTRA_OPTS}
+        "YACC=${BISON}"
 )
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools" "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug"
+)
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/doc/COPYING.LESSER"
+        "${SOURCE_PATH}/doc/COPYING"
+)

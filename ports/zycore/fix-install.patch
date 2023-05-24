@@ -1,0 +1,12 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d17f7d7..e34f508 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -208,6 +208,7 @@ install(FILES
+ 
+ install(TARGETS "Zycore" EXPORT "zycore-targets"
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+ install(EXPORT "zycore-targets"
