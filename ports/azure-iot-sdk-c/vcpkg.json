@@ -1,7 +1,6 @@
 {
   "name": "azure-iot-sdk-c",
-  "version-date": "2022-01-21",
-  "port-version": 2,
+  "version-date": "2023-01-18",
   "description": "A C99 SDK for connecting devices to Microsoft Azure IoT services",
   "homepage": "https://github.com/Azure/azure-iot-sdk-c",
   "license": "MIT",
@@ -21,51 +20,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "public-preview": {
-      "description": "A version of the azure-iot-sdk-c containing public-preview features.",
-      "dependencies": [
-        {
-          "name": "azure-c-shared-utility",
-          "features": [
-            "public-preview"
-          ]
-        },
-        {
-          "name": "azure-macro-utils-c",
-          "features": [
-            "public-preview"
-          ]
-        },
-        {
-          "name": "azure-uamqp-c",
-          "features": [
-            "public-preview"
-          ]
-        },
-        {
-          "name": "azure-uhttp-c",
-          "features": [
-            "public-preview"
-          ]
-        },
-        {
-          "name": "azure-umqtt-c",
-          "features": [
-            "public-preview"
-          ]
-        },
-        {
-          "name": "umock-c",
-          "features": [
-            "public-preview"
-          ]
-        }
-      ]
-    },
-    "use-prov-client": {
-      "description": "Enables device provisioning client for DPS"
-    }
-  }
+  ]
 }

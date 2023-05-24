@@ -1,8 +1,0 @@
---- a/CMakeLists.txt	Wed Dec 21 18:24:22 2016
-+++ b/CMakeLists.txt	Wed Dec 21 18:24:26 2016
-@@ -20,4 +20,4 @@
- # Recursively look for CMakeLists.txt in subdirs.
- add_subdirectory("include")
- add_subdirectory("libmetis")
--add_subdirectory("programs")
-+# add_subdirectory("programs")

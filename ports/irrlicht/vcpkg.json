@@ -1,7 +1,6 @@
 {
   "name": "irrlicht",
-  "version-string": "1.8.4",
-  "port-version": 13,
+  "version": "1.8.5",
   "description": "The Irrlicht Engine is an open source realtime 3D engine written in C++. It is cross-platform, using D3D, OpenGL and its own software renderers.",
   "homepage": "http://irrlicht.sourceforge.net",
   "supports": "!(arm | uwp)",

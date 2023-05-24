@@ -5,7 +5,7 @@ index 25990a5d8a..ba8df92858 100644
 @@ -326,6 +326,11 @@ include(cmake/xxhash.cmake)
  include(cmake/zlib.cmake)
  include(cmake/download_archive.cmake)
- 
+
 +if (ABSL_USE_CXX17)
 +    message(STATUS "Found absl uses CXX17, enable CXX17 feature.")
 +    set(CMAKE_CXX_STANDARD 17)

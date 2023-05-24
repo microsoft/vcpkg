@@ -1,8 +1,10 @@
 {
   "name": "oatpp",
   "version": "1.3.0",
+  "port-version": 1,
   "description": "Modern web framework.",
   "homepage": "https://github.com/oatpp/oatpp",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

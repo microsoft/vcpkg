@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapbox/earcut.hpp
-    REF v2.2.3
-    SHA512 f87f0084dbbcda85b409c326587a376d443f2484b6a69c216d2ad94ea8ea238912dfe1174b464b08faec10ea5c29ebae6478e7abfe5ff682a7b043784c1e3acf
+    REF "v${VERSION}"
+    SHA512 87f52bf99273dc47f78ebacd4ee0ccbab4edd3f9b85d97aed1c0d1165b3e2523e1a71f3a37a118e82170e79d57a2e09644d4115facb63dc6f704affb9c428e6b
     HEAD_REF master
 )
 

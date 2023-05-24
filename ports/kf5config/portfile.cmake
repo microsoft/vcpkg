@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kconfig
-    REF v5.89.0
-    SHA512 5b61812cd8b1d4cbbcc97e4ae350f5e46de9e7d73e3c68e3fbea3a2bad6a6be104c111ddcab9696593b60d34f74f3d4d7f828f54ad8d1f7b3408925b4bc51640
+    REF v5.98.0
+    SHA512 08d78422ae3df90f4ee2e88d2b2e3f485ecffc6f56c40e05825ecdc3321b95b4d18cfb3c11c327dce330ec50e09a8398e07f4d70243e0e2222f09de2005d9020
     HEAD_REF master
 )
 
@@ -47,3 +47,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+

@@ -3,12 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/yoga
-    REF v1.19.0
-    SHA512 B1CB1F23CF9B5DD2491B6883CAF8FB47E264B736C94F6AA6655E9A6F641664B4BCEEB48F74C98B955F0EE02BA2E0AE8E01539A928ABB4B81FAE13ED3B57287CA
+    REF 220d2582c94517b59d1c36f1c2faf5e3f88306f1
+    SHA512 fbb3d2bb4e48f571f25aab140fbda89472f0800128487141f4cb5b53e121017b06535e7bfd3a0f9f1ba726845e0b90da26da1b428a1d4b7c23d751635d4115cf
     HEAD_REF master
     PATCHES
-        add-project-declaration.patch
-        Export-unofficial-yoga-config.patch
+        disable_tests.patch
 )
 
 vcpkg_cmake_configure(
@@ -17,8 +16,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-yoga)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

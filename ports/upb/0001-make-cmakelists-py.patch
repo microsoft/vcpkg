@@ -1,8 +1,8 @@
 diff --git a/cmake/make_cmakelists.py b/cmake/make_cmakelists.py
-index d64c14f..12226cf 100755
+index d64c14f6..ad3597c3 100755
 --- a/cmake/make_cmakelists.py
 +++ b/cmake/make_cmakelists.py
-@@ -316,10 +316,132 @@ class Converter(object):
+@@ -316,10 +316,136 @@ class Converter(object):
        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
      endif()
  
@@ -104,6 +104,8 @@ index d64c14f..12226cf 100755
 +    set_target_properties(json PROPERTIES OUTPUT_NAME upb_json)
 +    set_target_properties(utf8_range PROPERTIES OUTPUT_NAME upb_utf8_range)
 +    set_target_properties(mini_table PROPERTIES OUTPUT_NAME upb_mini_table)
++    set_target_properties(extension_registry PROPERTIES OUTPUT_NAME upb_extension_registry)
++    set_target_properties(collections PROPERTIES OUTPUT_NAME upb_collections)
 +
 +    install(
 +      DIRECTORY ../upb
@@ -127,6 +129,8 @@ index d64c14f..12226cf 100755
 +      textformat
 +      mini_table_internal
 +      mini_table
++      extension_registry
++      collections
 +      ${UPB_CODEGEN_TARGETS}
 +      EXPORT upb-config
 +    )

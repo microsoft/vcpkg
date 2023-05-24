@@ -1,9 +1,9 @@
 {
   "name": "aws-c-io",
-  "version": "0.10.7",
-  "port-version": 2,
+  "version": "0.13.14",
   "description": "Handles all IO and TLS work for application protocols.",
   "homepage": "https://github.com/awslabs/aws-c-io",
+  "license": "Apache-2.0",
   "supports": "!(windows & arm) & !uwp",
   "dependencies": [
     "aws-c-cal",

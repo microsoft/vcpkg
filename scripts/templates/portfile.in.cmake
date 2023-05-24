@@ -13,7 +13,6 @@
 #   VCPKG_TOOLCHAIN           = ON OFF
 #   TRIPLET_SYSTEM_ARCH       = arm x86 x64
 #   BUILD_ARCH                = "Win32" "x64" "ARM"
-#   MSBUILD_PLATFORM          = "Win32"/"x64"/${TRIPLET_SYSTEM_ARCH}
 #   DEBUG_CONFIG              = "Debug Static" "Debug Dll"
 #   RELEASE_CONFIG            = "Release Static"" "Release DLL"
 #   VCPKG_TARGET_IS_WINDOWS
@@ -78,7 +77,7 @@ vcpkg_cmake_install()
 #    "name": "vcpkg-cmake-config",
 #    "host": true
 #}
-# vcpkg_cmake_config_fixup(CONFIG_PATH cmake TARGET_PATH share/@PORT@)
+# vcpkg_cmake_config_fixup()
 
 # Uncomment the line below if necessary to install the license file for the port
 # as a file named `copyright` to the directory `${CURRENT_PACKAGES_DIR}/share/${PORT}`

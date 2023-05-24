@@ -1,5 +1,6 @@
 {
   "name": "vcpkg-tool-nodejs",
-  "version-semver": "14.17.4",
+  "version-semver": "16.18.0",
+  "port-version": 1,
   "supports": "native"
 }

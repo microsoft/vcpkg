@@ -1,0 +1,24 @@
+From 08599a02debaa2ea015d1221dd2c8ca0481640a3 Mon Sep 17 00:00:00 2001
+From: Billy Robert O'Neal III <bion@microsoft.com>
+Date: Wed, 26 Apr 2023 05:17:09 +0000
+Subject: [PATCH 12/14] force disable curses
+
+---
+ Modules/Setup | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Modules/Setup b/Modules/Setup
+index 87c6a152f8..7ad53f5b4f 100644
+--- a/Modules/Setup
++++ b/Modules/Setup
+@@ -375,3 +375,7 @@ xxsubtype xxsubtype.c
+ #
+ #_sqlite3 _tkinter _curses pyexpat
+ #_codecs_jp _codecs_kr _codecs_tw unicodedata
++
++*disabled*
++_curses
++_curses_panel
+-- 
+2.25.1
+

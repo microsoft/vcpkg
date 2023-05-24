@@ -1,9 +1,9 @@
 {
   "name": "orc",
-  "version": "1.6.4",
-  "port-version": 4,
+  "version": "1.7.6",
   "description": "The smallest, fastest columnar storage for Hadoop workloads.",
   "homepage": "https://orc.apache.org/",
+  "license": "Apache-2.0",
   "dependencies": [
     "gtest",
     "lz4",

@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/crashpad/crashpad
-    REF 68aba08c48bb428b7b159b3371163f86e8d5a126
+    REF 261679b3d2f3336d8531ed38e110254c3e2d1c10
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -29,6 +29,15 @@ checkout_in_path(
     "https://chromium.googlesource.com/chromium/mini_chromium"
     "5654edb4225bcad13901155c819febb5748e502b"
 )
+
+if(VCPKG_TARGET_IS_LINUX)
+    # fetch lss
+    checkout_in_path(
+        "${SOURCE_PATH}/third_party/lss/lss"
+        https://chromium.googlesource.com/linux-syscall-support
+        9719c1e1e676814c456b55f5f070eabad6709d31
+    )
+endif()
 
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
     unset(_LIBRARY_DEB CACHE)
@@ -90,15 +99,16 @@ if(CMAKE_HOST_WIN32)
     set(OPTIONS_REL "${OPTIONS_REL} ${DISABLE_WHOLE_PROGRAM_OPTIMIZATION}")
 endif()
 
-vcpkg_configure_gn(
+vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS " target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" "
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
 
-vcpkg_install_gn(
+vcpkg_gn_install(
     SOURCE_PATH "${SOURCE_PATH}"
-    TARGETS client util third_party/mini_chromium/mini_chromium/base handler:crashpad_handler
+    TARGETS client client:common util third_party/mini_chromium/mini_chromium/base handler:crashpad_handler
 )
 
 message(STATUS "Installing headers...")
@@ -110,6 +120,17 @@ install_headers("${SOURCE_PATH}/client")
 install_headers("${SOURCE_PATH}/util")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/base")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build")
+
+file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
+file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h.flags" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
+if(VCPKG_TARGET_IS_OSX)
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+endif()
+
+vcpkg_copy_tools(
+    TOOL_NAMES crashpad_handler
+    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools")
 
 # remove empty directories
 file(REMOVE_RECURSE
@@ -123,6 +144,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${PORT}/build/config")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${PORT}/util/mach/__pycache__")
 
 vcpkg_copy_pdbs()
-file(INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,10 +1,15 @@
 {
   "name": "libusbmuxd",
   "version": "1.2.219",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A client library to multiplex connections from and to iOS devices",
-  "supports": "!(uwp | linux | osx)",
+  "license": "LGPL-2.1-only",
+  "supports": "!uwp",
   "dependencies": [
-    "libplist"
+    "libplist",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

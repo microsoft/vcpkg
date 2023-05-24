@@ -1,6 +1,6 @@
 {
   "name": "paraview",
-  "version": "5.9.1",
+  "version": "5.11.0",
   "port-version": 2,
   "description": "VTK-based Data Analysis and Visualization Application",
   "homepage": "https://www.paraview.org/",
@@ -11,6 +11,8 @@
     "boost-format",
     "cgns",
     "protobuf",
+    "qt5compat",
+    "qtsvg",
     {
       "name": "vcpkg-cmake",
       "host": true

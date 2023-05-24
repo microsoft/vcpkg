@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 e99d34d14fbde22be725ac2c0bec069fb584e45c66767af75efaf454ca61a7a5e57434bf86109f910884c72202b8cf98fe16505e7d3d30d9218abd4d8b27d5df
     PATCHES
         no-tests-and-examples.patch
+        fix_narrowing_error.patch
 )
 
 vcpkg_find_acquire_program(PYTHON2)

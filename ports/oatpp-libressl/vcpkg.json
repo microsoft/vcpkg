@@ -1,8 +1,10 @@
 {
   "name": "oatpp-libressl",
   "version": "1.3.0",
+  "port-version": 1,
   "description": "Oat++ libressl module providing secure server and client connection providers.",
   "homepage": "https://github.com/oatpp/oatpp-libressl",
+  "license": "Apache-2.0",
   "dependencies": [
     "libressl",
     "oatpp",

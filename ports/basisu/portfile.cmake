@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF 497875f756ed0e3eb62e0ff08d55c62242f4be74
     SHA512 2293b78620a7ed510dbecf48bcae5f4b8524fe9020f864c8e79cf94ea9d95d51dddf83a5b4ea29cc95db19f87137bfef1cb68b7fbc6387e08bb42898d81c9303
     HEAD_REF master
-    PATCHES fix-addostream.patch
+    PATCHES
+        fix-addostream.patch
+        fix-add-libgen-mingw.patch
 )
 
 vcpkg_cmake_configure(

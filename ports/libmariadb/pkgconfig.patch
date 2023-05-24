@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0be0fb1..33565f5 100644
+index a109325..b56403c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -393,7 +393,7 @@ ENDIF()
+@@ -420,7 +420,7 @@ ENDIF()
  INCLUDE(${CC_SOURCE_DIR}/plugins/CMakeLists.txt)
  ADD_SUBDIRECTORY(include)
  ADD_SUBDIRECTORY(libmariadb)
@@ -12,7 +12,7 @@ index 0be0fb1..33565f5 100644
  ENDIF()
  
 diff --git a/mariadb_config/CMakeLists.txt b/mariadb_config/CMakeLists.txt
-index 70e619b..7a22fa1 100644
+index 743ae52..482a4cf 100644
 --- a/mariadb_config/CMakeLists.txt
 +++ b/mariadb_config/CMakeLists.txt
 @@ -30,6 +30,15 @@ IF(${rllength} GREATER 0)
@@ -41,7 +41,7 @@ index 70e619b..7a22fa1 100644
  IF(CMAKE_SYSTEM_NAME MATCHES AIX)
 @@ -61,6 +71,7 @@ ENDIF()
  INSTALL(TARGETS mariadb_config
-         DESTINATION "bin"
+         DESTINATION "${INSTALL_BINDIR}"
          COMPONENT Development)
 +endif()
  

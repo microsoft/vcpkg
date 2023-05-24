@@ -11,6 +11,11 @@ vcpkg_from_github(
 string(COMPARE EQUAL VCPKG_CRT_LINKAGE "static" MSVC_STATIC_RUNTIME)
 string(COMPARE EQUAL VCPKG_LIBRARY_LINKAGE "static" BUILD_STATIC_LIBS)
 
+# on Windows hosts, the UnixCommands are not available; disable options that use them
+if(VCPKG_HOST_IS_WINDOWS)
+    set(ZZIPLIB_OPTIONS "-DZZIP_COMPAT=OFF;-DZZIP_PKGCONFIG=OFF")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -24,6 +29,7 @@ vcpkg_cmake_configure(
         -DZZIPBINS=OFF
         -DZZIPTEST=OFF
         -DZZIPDOCS=OFF
+        ${ZZIPLIB_OPTIONS}
 )
 vcpkg_cmake_install()
 

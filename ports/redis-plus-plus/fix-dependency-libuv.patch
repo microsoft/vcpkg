@@ -8,8 +8,8 @@ index e85a158..e67681c 100644
          # libuv dependency
 -        find_path(REDIS_PLUS_PLUS_ASYNC_LIB_HEADER NAMES uv.h)
 -        find_library(REDIS_PLUS_PLUS_ASYNC_LIB uv)
-+        find_package(unofficial-libuv CONFIG REQUIRED)
-+        set(REDIS_PLUS_PLUS_ASYNC_LIB unofficial::libuv::libuv)
++        find_package(libuv CONFIG REQUIRED)
++        set(REDIS_PLUS_PLUS_ASYNC_LIB $<IF:$<TARGET_EXISTS:uv_a>,uv_a,uv>)
      else()
          message(FATAL_ERROR "invalid REDIS_PLUS_PLUS_BUILD_ASYNC")
      endif()

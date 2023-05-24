@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 98d07c9..5b79f06 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -436,12 +436,12 @@ IF(WIN32)
+     LIST(APPEND LIBS winmm gdi32)
+     IF(FREEGLUT_BUILD_SHARED_LIBS)
+         TARGET_COMPILE_DEFINITIONS(freeglut PRIVATE FREEGLUT_EXPORTS)
+-        SET_TARGET_PROPERTIES(freeglut PROPERTIES OUTPUT_NAME ${LIBNAME})
++        SET_TARGET_PROPERTIES(freeglut PROPERTIES OUTPUT_NAME freeglut)
+     ENDIF()
+     IF(FREEGLUT_BUILD_STATIC_LIBS)
+         TARGET_COMPILE_DEFINITIONS(freeglut_static PUBLIC FREEGLUT_STATIC)
+         IF(FREEGLUT_REPLACE_GLUT)
+-            SET_TARGET_PROPERTIES(freeglut_static PROPERTIES OUTPUT_NAME ${LIBNAME})
++            SET_TARGET_PROPERTIES(freeglut_static PROPERTIES OUTPUT_NAME freeglut)
+         ENDIF()
+     ENDIF()
+ ELSE()
+diff --git a/include/GL/freeglut_std.h b/include/GL/freeglut_std.h
+index a5efb3b..6bdcdfb 100644
+--- a/include/GL/freeglut_std.h
++++ b/include/GL/freeglut_std.h
+@@ -71,9 +71,9 @@
+         /* Link with Win32 static freeglut lib */
+ #       if FREEGLUT_LIB_PRAGMAS
+ #           if defined(NDEBUG) || !defined(_DEBUG)
+-#              pragma comment (lib, "freeglut_static.lib")
++#              pragma comment (lib, "freeglut.lib")
+ #           else
+-#              pragma comment (lib, "freeglut_staticd.lib")
++#              pragma comment (lib, "freeglutd.lib")
+ #           endif
+ #       endif
+ 

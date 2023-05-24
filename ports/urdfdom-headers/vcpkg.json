@@ -1,7 +1,17 @@
 {
   "name": "urdfdom-headers",
-  "version-string": "1.0.5",
-  "port-version": 2,
+  "version": "1.1.0",
   "description": "The URDF (U-Robot Description Format) headers provides core data structure headers for URDF.",
-  "homepage": "https://github.com/ros/urdfdom_headers"
+  "homepage": "https://github.com/ros/urdfdom_headers",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

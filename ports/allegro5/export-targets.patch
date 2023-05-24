@@ -48,5 +48,5 @@ index 74edef8..0cf1edb 100644
 +        DESTINATION share/unofficial-allegro5
 +    )
      if(0)
-         install(FILES ${CMAKE_BINARY_DIR}/lib/${filename}.pdb
+         install(FILES ${CMAKE_BINARY_DIR}/lib/\${CMAKE_INSTALL_CONFIG_NAME}/${filename}.pdb
              DESTINATION lib

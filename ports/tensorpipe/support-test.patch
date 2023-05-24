@@ -1,8 +1,8 @@
 diff --git a/tensorpipe/test/CMakeLists.txt b/tensorpipe/test/CMakeLists.txt
-index 53e8643..c49ada6 100644
+index 53e8643..09baaa0 100644
 --- a/tensorpipe/test/CMakeLists.txt
 +++ b/tensorpipe/test/CMakeLists.txt
-@@ -93,25 +93,24 @@ if(TP_USE_CUDA)
+@@ -93,25 +93,30 @@ if(TP_USE_CUDA)
        channel/cuda_ipc/cuda_ipc_test.cc
        )
    endif()
@@ -25,13 +25,19 @@ index 53e8643..c49ada6 100644
 -add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/googletest
 -  ${PROJECT_BINARY_DIR}/third_party/googletest EXCLUDE_FROM_ALL)
 +find_package(GTest CONFIG REQUIRED)
++
++if (TARGET uv)
++    set(LIBUV_LIBRARY uv)
++else()
++    set(LIBUV_LIBRARY uv_a)
++endif()
  
  list(APPEND TP_TEST_LINK_LIBRARIES
    tensorpipe
 -  uv::uv
 -  gmock
 -  gtest_main)
-+  unofficial::libuv::libuv
++  ${LIBUV_LIBRARY}
 +  GTest::gmock
 +  GTest::gtest_main)
  

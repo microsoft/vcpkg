@@ -1,0 +1,19 @@
+{
+  "name": "aws-c-sdkutils",
+  "version": "0.1.7",
+  "description": "C99 library implementing AWS SDK specific utilities. Includes utilities for ARN parsing, reading AWS profiles, etc...",
+  "homepage": "https://github.com/awslabs/aws-c-sdkutils",
+  "license": "Apache-2.0",
+  "supports": "!(windows & arm) & !uwp",
+  "dependencies": [
+    "aws-c-common",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

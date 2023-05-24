@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF 0b678b19dc03f2a999d6e038814c4c50b9640a4e # v0.3.20
-    SHA512 6e32f7dfc5dde46570873810c1da09d102f76ccfce41a5adbaeef2fccada54f9ab07e1ee541a6d55e138e6500392a6f55236f4f3a7766803358e5a6205334946 
+    REF 394a9fbafe9010b76a2615c562204277a956eb52 # v0.3.23
+    SHA512 d79ae7ba4f9146f0bcacdef9b9cf4cd287e5eb2e3891f7deb4b3992b742a557ca094ac2f258420a16cfe6bbda7ca82addf415aecd7ced425a02374847c0b6013
     HEAD_REF develop
     PATCHES
         uwp.patch
-        fix-space-path.patch
         fix-redefinition-function.patch
         fix-uwp-build.patch
         install-tools.patch
@@ -53,6 +52,10 @@ elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
                 -DNOFORTRAN=ON
                 -DBU=_  #required for all blas functions to append extra _ using NAME
     )
+endif()
+
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    list(APPEND OPENBLAS_EXTRA_OPTIONS -DCORE=GENERIC)
 endif()
 
 vcpkg_cmake_configure(
@@ -108,4 +111,4 @@ vcpkg_replace_string(
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
