@@ -8593,7 +8593,7 @@
       "port-version": 2
     },
     "wmipp": {
-      "baseline": "1.0.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "woff2": {
