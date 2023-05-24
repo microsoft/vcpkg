@@ -1,5 +1,5 @@
 diff --git a/src/tools/msvc/Install.pm b/src/tools/msvc/Install.pm
-index 8de79c6..de2f2ae 100644
+index 8de79c6..3bc677d 100644
 --- a/src/tools/msvc/Install.pm
 +++ b/src/tools/msvc/Install.pm
 @@ -53,6 +53,11 @@ sub Install
@@ -46,8 +46,8 @@ index 8de79c6..de2f2ae 100644
 +			}
 +			elsif ($1 == 2)
 +			{
-+				push(@{ $install_list{'lib'} }, "lib");
 +				push(@{ $install_list{'bin'} }, "dll");
++				push(@{ $install_list{'lib'} }, "lib") if $is_sharedlib; # not for plugins
 +			}
 +			elsif ($is_sharedlib) # forced to static lib by vcpkg triplet
 +			{
@@ -64,8 +64,8 @@ index 8de79c6..de2f2ae 100644
 +			}
 +			elsif ($1 eq 'DynamicLibrary')
 +			{
-+				push(@{ $install_list{'lib'} }, "lib");
 +				push(@{ $install_list{'bin'} }, "dll");
++				push(@{ $install_list{'lib'} }, "lib") if $is_sharedlib; # not for plugins
 +			}
 +			elsif ($is_sharedlib) # forced to static lib by vcpkg triplet
 +			{
