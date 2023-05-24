@@ -12,7 +12,7 @@ vcpkg_from_github(
 vcpkg_download_distfile(
     CMAKELISTS_SOURCE_PATH
     URLS https://raw.githubusercontent.com/BLAKE3-team/BLAKE3/76f9339312e1d52632a1cfb9df285c01911d99ce/c/CMakeLists.txt
-    FILENAME CMakeLists.txt
+    FILENAME blake3-CMakeLists.txt
     SHA512 598699b90053fdbe381843f886c213f5e6d03281a9b8c1403726c300e83a9da353879da7170637024663af576e54f74a307049577360ded90d25e11bd852edde
 )
 vcpkg_download_distfile(
@@ -27,13 +27,9 @@ vcpkg_download_distfile(
     FILENAME libblake3.pc.in
     SHA512 cfbaea63368e655c3ac3357f791b6332ae0241f3fd4f98e19c48f28e633e25a5b1125d1cc6b4815edfd013a76379dffcf9723852a7b76f2910d19dc77e538fa2
 )
-
-file(COPY
-    "${CMAKELISTS_SOURCE_PATH}"
-    "${CMAKECONFIGIN_SOURCE_PATH}"
-    "${PKGCONFIGIN_SOURCE_PATH}"
-    DESTINATION "${SOURCE_PATH}/c/"
-)
+file(COPY_FILE "${CMAKELISTS_SOURCE_PATH}" "${SOURCE_PATH}/c/CMakeLists.txt")
+file(COPY_FILE "${CMAKECONFIGIN_SOURCE_PATH}" "${SOURCE_PATH}/c/blake3-config.cmake.in")
+file(COPY_FILE "${PKGCONFIGIN_SOURCE_PATH}" "${SOURCE_PATH}/c/libblake3.pc.in")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/c"
