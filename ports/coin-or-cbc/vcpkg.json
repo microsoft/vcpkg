@@ -1,0 +1,13 @@
+{
+  "name": "coin-or-cbc",
+  "version-date": "2023-04-19",
+  "description": "Cbc (Coin-or branch and cut) is an open-source mixed integer linear programming solver written in C++.",
+  "homepage": "https://github.com/coin-or/Cgl",
+  "license": "EPL-2.0",
+  "dependencies": [
+    "coinutils",
+    "coin-or-osi",
+    "coin-or-clp",
+    "coin-or-cgl"
+  ]
+}

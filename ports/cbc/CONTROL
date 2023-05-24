@@ -1,5 +1,0 @@
-Source: cbc
-Version: 2.10.10
-Homepage: https://github.com/coin-or/Cbc
-Description: Cbc (Coin-or branch and cut) is an open-source mixed integer linear programming solver written in C++.
-Build-Depends: coinutils, coin-or-osi, coin-or-clp, coin-or-cgl
