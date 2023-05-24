@@ -10,6 +10,8 @@ file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${SO
 #file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 #file(COPY ${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in DESTINATION ${SOURCE_PATH})
 
+set(ENV{ACLOCAL} "aclocal -I \"${SOURCE_PATH}/BuildTools\"")
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
@@ -24,11 +26,13 @@ vcpkg_configure_make(
 #    PREFER_NINJA
 #)
 
-vcpkg_install_cmake()
+vcpkg_install_make()
 
-vcpkg_fixup_cmake_targets()
+#vcpkg_fixup_cmake_targets()
 
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
