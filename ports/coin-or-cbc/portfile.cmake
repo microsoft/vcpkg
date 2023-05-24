@@ -21,9 +21,14 @@ if(1)
         --with-clp
         --with-cgl
         --with-osi
-        --disable-debug
-        --disable-dependency-tracking
-        --disable-silent-rules
+        --without-ositests
+        --without-sample
+        --without-netlib
+        --without-amd
+        --without-cholmod
+        --without-mumps
+        --enable-relocatable
+        --disable-readline
     )
 
     vcpkg_install_make()
