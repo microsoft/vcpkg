@@ -109,9 +109,9 @@ jobs:
                 // line has the format: <path>:<line_number>:<matched_string
                 // For example: ports/rtlsdr/portfile.cmake:42:    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
                 [file, line_number, match] = line.split(':');
-                for (deprecated_function in deprecated_functions) {
-                  if (match.indexOf(deprecated_function) !== -1) {
-                    core.warning(`The function ${deprecated_function} is deprecated. Please use ${deprecated_functions[deprecated_function]}`, {file, startLine: line_number});
+                for (deprecated_func in deprecated_functions) {
+                  if (match.indexOf(deprecated_func) !== -1) {
+                    core.warning(`The function ${deprecated_func} is deprecated. Please use ${deprecated_functions[deprecated_func]}`, {file, startLine: line_number});
                     break;
                   }
                 }
