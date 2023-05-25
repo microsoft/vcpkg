@@ -99,8 +99,16 @@ You can also search for the libraries you need with the `search` subcommand:
 In order to use vcpkg as a submodule with Visual Studio, add the following to each project file:
 
 ```xml
+<Import Project="<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.prcops" />
+```
+
+(after the Import for Microsoft.Cpp.Default.props)
+
+```xml
 <Import Project="<vcpkg_root>\scripts\buildsystems\msbuild\vcpkg.targets" />
 ```
+
+(after the Import for Microsoft.Cpp.targets)
 
 Or, if vcpkg is install globally, run the following command (may require administrator elevation):
 
