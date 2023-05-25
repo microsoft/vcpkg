@@ -17,7 +17,13 @@
   ],
   "features": {
     "draft": {
-      "description": "Build and install draft"
+      "description": "Build and install draft",
+      "dependencies": [
+        {
+          "name": "zeromq",
+          "features": ["draft"]
+        }
+      ]
     }
   }
 }
