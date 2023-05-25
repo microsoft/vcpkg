@@ -4884,6 +4884,10 @@
       "baseline": "2020-11-24",
       "port-version": 0
     },
+    "lightningscanner": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "lilv": {
       "baseline": "0.24.10",
       "port-version": 2
