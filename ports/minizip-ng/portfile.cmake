@@ -29,7 +29,7 @@ vcpkg_cmake_configure(
     OPTIONS 
         ${FEATURE_OPTIONS}
         -DMZ_FETCH_LIBS=OFF
-        -DMZ_PROJECT_SUFFIX:STRING=-ng
+        -DMZ_LIB_SUFFIX=-ng
 )
 
 vcpkg_cmake_install()
@@ -41,4 +41,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
