@@ -3,7 +3,7 @@
   "version": "3.5.0",
   "description": "The casacore libraries",
   "homepage": "https://casacore.github.io/",
-  "supports": "!windows",
+  "supports": "!osx & !windows",
   "dependencies": [
     "blas",
     "boost",
