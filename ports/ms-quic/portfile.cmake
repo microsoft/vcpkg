@@ -26,7 +26,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     LIST(APPEND QUIC_TLS "schannel")
 else()
     LIST(APPEND QUIC_TLS "openssl")
-    
+
     vcpkg_find_acquire_program(PERL)
     get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
     vcpkg_add_to_path(${PERL_EXE_PATH})
@@ -34,9 +34,7 @@ else()
     vcpkg_find_acquire_program(NASM)
     get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
     vcpkg_add_to_path(PREPEND ${NASM_EXE_PATH})
-
 endif()
-
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -60,8 +58,6 @@ if(NOT VCPKG_HOST_IS_WINDOWS)
     get_filename_component(MAKE_EXE_PATH ${MAKE} DIRECTORY)
     vcpkg_add_to_path(PREPEND ${MAKE_EXE_PATH})
 endif()
-
-
 
 #vcpkg_cmake_build(TARGET OpenSSL_Build) # separate build log for quictls/openssl
 vcpkg_cmake_install()
