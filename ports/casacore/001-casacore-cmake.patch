@@ -1,33 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7e48b3ff2..c9dffbb61 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -353,6 +353,7 @@ if (_uselapack STREQUAL YES)
- endif (_uselapack STREQUAL YES)
- if (_usefits STREQUAL YES)
-     find_package (CFITSIO 3.030 REQUIRED) # Should pad to three decimal digits
-+    find_package(ZLIB REQUIRED)
- endif (_usefits STREQUAL YES)
- if (_usewcs STREQUAL YES)
- #    find_package (WCSLIB 4.20 REQUIRED)
-@@ -376,6 +377,9 @@ if (CFITSIO_FOUND)
-     include_directories (${CFITSIO_INCLUDE_DIRS})
-     add_definitions (-DCFITSIO_VERSION_MAJOR=${CFITSIO_VERSION_MAJOR} -DCFITSIO_VERSION_MINOR=${CFITSIO_VERSION_MINOR})
- endif (CFITSIO_FOUND)
-+if (ZLIB_FOUND)
-+    include_directories (${ZLIB_INCLUDE_DIRS})
-+endif (ZLIB_FOUND)
- if (Boost_FOUND)
-     include_directories (${Boost_INCLUDE_DIRS})
-     add_definitions(-DHAVE_BOOST)
-@@ -526,6 +530,7 @@ endif( )
- add_subdirectory (build-tools)
- foreach (module ${_modules})
-     add_subdirectory (${module})
-+
-     set_target_properties(
-       casa_${module}
-       PROPERTIES
 diff --git a/casa/CMakeLists.txt b/casa/CMakeLists.txt
 index 5e8c1bd97..1b2a20022 100644
 --- a/casa/CMakeLists.txt
@@ -52,21 +22,9 @@ index 5e8c1bd97..1b2a20022 100644
  ${CASACORE_ARCH_LIBS}
  )
 diff --git a/cmake/FindFFTW3.cmake b/cmake/FindFFTW3.cmake
-index 886f3bebb..b47b47752 100644
+index 886f3bebb..66d117674 100644
 --- a/cmake/FindFFTW3.cmake
 +++ b/cmake/FindFFTW3.cmake
-@@ -8,9 +8,9 @@
- #  FFTW3_INCLUDE_DIR          - the FFTW3 include directory (cached)
- #  FFTW3_INCLUDE_DIRS         - the FFTW3 include directories
- #                               (identical to FFTW3_INCLUDE_DIR)
--#  FFTW3[FL]?_LIBRARY         - the FFTW3 library - double, single(F), 
-+#  FFTW3[FL]?_LIBRARY         - the FFTW3 library - double, single(F),
- #                               long-double(L) precision (cached)
--#  FFTW3[FL]?_THREADS_LIBRARY - the threaded FFTW3 library - double, single(F), 
-+#  FFTW3[FL]?_THREADS_LIBRARY - the threaded FFTW3 library - double, single(F),
- #                               long-double(L) precision (cached)
- #  FFTW3_LIBRARIES            - list of all FFTW3 libraries found
- 
 @@ -58,15 +58,6 @@ foreach(_comp ${_components})
    endif(_comp STREQUAL "single")
  endforeach(_comp ${_components})
@@ -83,15 +41,6 @@ index 886f3bebb..b47b47752 100644
  # Keep a list of variable names that we need to pass on to
  # find_package_handle_standard_args().
  set(_check_list)
-@@ -82,7 +73,7 @@ foreach(_lib ${_libraries})
- endforeach(_lib ${_libraries})
- 
- # Search for the header file.
--find_path(FFTW3_INCLUDE_DIR fftw3.h 
-+find_path(FFTW3_INCLUDE_DIR fftw3.h
-   HINTS ${FFTW3_ROOT_DIR} PATH_SUFFIXES include)
- mark_as_advanced(FFTW3_INCLUDE_DIR)
- list(APPEND _check_list FFTW3_INCLUDE_DIR)
 diff --git a/cmake/FindGSL.cmake b/cmake/FindGSL.cmake
 deleted file mode 100644
 index 4f4d31bf5..000000000

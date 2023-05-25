@@ -17,6 +17,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tablelocking        ENABLE_TABLELOCKING
+        deprecated          BUILD_DEPRECATED
         dysco               BUILD_DYSCO
         threads             USE_THREADS
         readline            USE_READLINE

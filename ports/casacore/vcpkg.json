@@ -42,6 +42,9 @@
         "adios2"
       ]
     },
+    "deprecated": {
+      "description": "Enable deprecated feature support"
+    },
     "dysco": {
       "description": "Enable DYSCO Storage Manager support"
     },
@@ -61,7 +64,10 @@
       "description": "Enable OpenMP support"
     },
     "python3": {
-      "description": "Enable Python3 support"
+      "description": "Enable Python3 support",
+      "dependencies": [
+        "python3"
+      ]
     },
     "readline": {
       "description": "Enable readline support",
