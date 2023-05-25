@@ -137,6 +137,7 @@ if (BUILD_APPS)
             gdalmdimtranslate
             gnmanalyse
             gnmmanage
+            sozip
         AUTO_CLEAN
     )
 endif()
