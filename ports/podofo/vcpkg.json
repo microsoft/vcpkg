@@ -9,7 +9,10 @@
     "freetype",
     "libjpeg-turbo",
     "libpng",
-    "libxml2",
+    {
+        "name": "libxml2"
+        "default-features": false
+    },
     "openssl",
     "tiff",
     {
