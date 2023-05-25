@@ -1,6 +1,5 @@
 set(program_name patchelf)
 set(program_version 0.14.5)
-set(supported_on_unix ON)
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
     execute_process(COMMAND "uname" "-m" OUTPUT_VARIABLE HOST_ARCH OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(HOST_ARCH STREQUAL "aarch64")
