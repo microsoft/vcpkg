@@ -10,8 +10,8 @@
     "libjpeg-turbo",
     "libpng",
     {
-        "name": "libxml2"
-        "default-features": false
+      "name": "libxml2",
+      "default-features": false
     },
     "openssl",
     "tiff",
