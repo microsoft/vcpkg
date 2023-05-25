@@ -181,19 +181,44 @@ message(WARNING "full_paths_of_libraries is set to ${full_paths_of_libraries}")
 target_link_libraries(omniverse-physx-sdk INTERFACE ${full_paths_of_libraries})
 
 
-find_library(PHYSX_GPU_64_LIB_RELEASE NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR}" NO_DEFAULT_PATH)
-find_library(PHYSX_GPU_64_LIB_DEBUG NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_BIN_DIR}" NO_DEFAULT_PATH)
-if(PHYSX_GPU_64_LIB_RELEASE)
-    # If the library is found, link it to the target
-    add_library(PHYSX_GPU_64_LIB UNKNOWN IMPORTED)
-    set_target_properties(PHYSX_GPU_64_LIB PROPERTIES
-        IMPORTED_LOCATION_RELEASE "${PHYSX_GPU_64_LIB_RELEASE}"
-        IMPORTED_LOCATION_DEBUG "${PHYSX_GPU_64_LIB_DEBUG}"
-    )
-    target_link_libraries(omniverse-physx-sdk INTERFACE ${PHYSX_GPU_64_LIB})
-else()
-    message(WARNING "PhysXGpu_64 library was not found in the port! GPU support will not be available!")
-endif()
+# find_file(Z_VCPKG_PDCURSES_DLL_DEBUG NAMES pdcurses.dll PATHS "${z_vcpkg_pdcurses_root}/debug/bin" NO_DEFAULT_PATH)
+# if(EXISTS "${Z_VCPKG_PDCURSES_LIBRARY_DEBUG}")
+#     set_property(TARGET unofficial::pdcurses::pdcurses APPEND PROPERTY IMPORTED_CONFIGURATIONS "Debug")
+#     set_target_properties(unofficial::pdcurses::pdcurses PROPERTIES IMPORTED_IMPLIB_DEBUG "${Z_VCPKG_PDCURSES_LIBRARY_DEBUG}")
+# endif()
+# if(EXISTS "${Z_VCPKG_PDCURSES_DLL_DEBUG}")
+#     set_target_properties(unofficial::pdcurses::pdcurses PROPERTIES IMPORTED_LOCATION_DEBUG "${Z_VCPKG_PDCURSES_DLL_DEBUG}")
+# endif()
+
+
+
+
+# if (WIN32)
+    # TODO: not working, find a way to copy the dll to the destination folder
+
+    # find_file(PHYSX_GPU_64_LIB_RELEASE NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR}" NO_DEFAULT_PATH)
+    # # if(EXISTS "${PHYSX_GPU_64_LIB_RELEASE}")
+    # #     set_property(TARGET omniverse-physx-sdk APPEND PROPERTY IMPORTED_CONFIGURATIONS "Debug")
+    # #     set_target_properties(unofficial::pdcurses::pdcurses PROPERTIES IMPORTED_IMPLIB_DEBUG "${Z_VCPKG_PDCURSES_LIBRARY_DEBUG}")
+    # # endif()
+    # if(EXISTS "${PHYSX_GPU_64_LIB_RELEASE}")
+    #     set_target_properties(omniverse-physx-sdk PROPERTIES IMPORTED_LOCATION_RELEASE "${PHYSX_GPU_64_LIB_RELEASE}")
+    # endif()
+# else()
+    find_library(PHYSX_GPU_64_LIB_RELEASE NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR}" NO_DEFAULT_PATH)
+    find_library(PHYSX_GPU_64_LIB_DEBUG NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_BIN_DIR}" NO_DEFAULT_PATH)
+    if(PHYSX_GPU_64_LIB_RELEASE)
+        # If the library is found, link it to the target
+        add_library(PHYSX_GPU_64_LIB UNKNOWN IMPORTED)
+        set_target_properties(PHYSX_GPU_64_LIB PROPERTIES
+            IMPORTED_LOCATION_RELEASE "${PHYSX_GPU_64_LIB_RELEASE}"
+            IMPORTED_LOCATION_DEBUG "${PHYSX_GPU_64_LIB_DEBUG}"
+        )
+        target_link_libraries(omniverse-physx-sdk PUBLIC ${PHYSX_GPU_64_LIB})
+    else()
+        message(WARNING "PhysXGpu_64 library was not found in the port! GPU support will not be available!")
+    endif()
+# endif()
 
 
 # ...
