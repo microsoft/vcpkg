@@ -62,6 +62,14 @@ else()
     add_library(omniverse-physx-sdk SHARED IMPORTED)
 endif()
 
+# Set IMPORTED_IMPLIB for the main target in case of dynamic libraries
+if (WIN32 AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set_target_properties(omniverse-physx-sdk PROPERTIES
+        IMPORTED_IMPLIB_RELEASE "${OMNIVERSE-PHYSX-SDK_LIBRARY_RELEASE}"
+        IMPORTED_IMPLIB_DEBUG "${OMNIVERSE-PHYSX-SDK_LIBRARY_DEBUG}"
+    )
+endif()
+
 set_target_properties(omniverse-physx-sdk PROPERTIES
     IMPORTED_LOCATION_RELEASE "${OMNIVERSE-PHYSX-SDK_LIBRARY_RELEASE}"
     IMPORTED_LOCATION_DEBUG "${OMNIVERSE-PHYSX-SDK_LIBRARY_DEBUG}"
@@ -133,6 +141,15 @@ if (WIN32)
         find_library(full_path_of_${lib}_RELEASE NAMES ${lib} PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR}" NO_DEFAULT_PATH)
         find_library(full_path_of_${lib}_DEBUG NAMES ${lib} PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR}" NO_DEFAULT_PATH)
         add_library(${lib} UNKNOWN IMPORTED)
+
+        # Set IMPORTED_IMPLIB for dynamic libraries
+        if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            set_target_properties(${lib} PROPERTIES
+                IMPORTED_IMPLIB_RELEASE "${full_path_of_${lib}_RELEASE}"
+                IMPORTED_IMPLIB_DEBUG "${full_path_of_${lib}_DEBUG}"
+            )
+        endif()
+
         set_target_properties(${lib} PROPERTIES
             IMPORTED_LOCATION_RELEASE "${full_path_of_${lib}_RELEASE}"
             IMPORTED_LOCATION_DEBUG "${full_path_of_${lib}_DEBUG}"
@@ -142,12 +159,14 @@ if (WIN32)
 elseif(UNIX)
     # ...
     foreach(lib ${OMNIVERSE-PHYSX-SDK_LIBRARIES})
-        find_library(full_path_of_${lib} NAMES ${lib} PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR}" NO_DEFAULT_PATH)
+        find_library(full_path_of_${lib}_RELEASE NAMES ${lib} PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR}" NO_DEFAULT_PATH)
+        find_library(full_path_of_${lib}_DEBUG NAMES ${lib} PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR}" NO_DEFAULT_PATH)
         #message(WARNING "  --analyzing ${lib}.. imported location: ${full_path_of_${lib}}")
         add_library(${lib} UNKNOWN IMPORTED)
         # When CMake will link against this lib target, it will use this absolute path
         set_target_properties(${lib} PROPERTIES
-            IMPORTED_LOCATION "${full_path_of_${lib}}"
+            IMPORTED_LOCATION_RELEASE "${full_path_of_${lib}_RELEASE}"
+            IMPORTED_LOCATION_DEBUG "${full_path_of_${lib}_DEBUG}"
         )
         list(APPEND full_paths_of_libraries "${lib}")
     endforeach()
