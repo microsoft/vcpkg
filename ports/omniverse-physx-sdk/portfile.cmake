@@ -152,7 +152,7 @@ endif()
 # Now generate ALL cmake parameters according to our distribution
 
 # Set common parameters
-set(common_params -DCMAKE_PREFIX_PATH=${PM_PATHS} -DPHYSX_ROOT_DIR=${PHYSX_ROOT_DIR} -DPX_OUTPUT_LIB_DIR=${PHYSX_ROOT_DIR} -DPX_OUTPUT_BIN_DIR=${PHYSX_ROOT_DIR})
+set(common_params -DCMAKE_PREFIX_PATH=$ENV{PM_PATHS} -DPHYSX_ROOT_DIR=${PHYSX_ROOT_DIR} -DPX_OUTPUT_LIB_DIR=${PHYSX_ROOT_DIR} -DPX_OUTPUT_BIN_DIR=${PHYSX_ROOT_DIR})
 
 if(DEFINED ENV{GENERATE_SOURCE_DISTRO} AND "$ENV{GENERATE_SOURCE_DISTRO}" STREQUAL "1")
     list(APPEND common_params -DPX_GENERATE_SOURCE_DISTRO=1)
@@ -161,18 +161,30 @@ endif()
 # Set platform and compiler specific parameters
 if(targetPlatform STREQUAL "linuxAarch64")
     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/linux-aarch64/PhysX)
-    set(platformCMakeParams "-G Unix Makefiles" -DTARGET_BUILD_PLATFORM=linux -DPX_OUTPUT_ARCH=arm -DCMAKE_TOOLCHAIN_FILE=${PM_CMakeModules_PATH}/linux/LinuxAarch64.cmake)
+    set(platformCMakeParams "-G Unix Makefiles" -DTARGET_BUILD_PLATFORM=linux -DPX_OUTPUT_ARCH=arm -DCMAKE_TOOLCHAIN_FILE=$ENV{PM_CMakeModules_PATH}/linux/LinuxAarch64.cmake)
     set(generator "Unix Makefiles")
 elseif(targetPlatform STREQUAL "linux")
     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/linux/PhysX)
     set(platformCMakeParams "-G Unix Makefiles" -DTARGET_BUILD_PLATFORM=linux -DPX_OUTPUT_ARCH=x86)
     if(compiler STREQUAL "clang")
-        list(APPEND platformCMakeParams -DCMAKE_C_COMPILER=${PM_clang_PATH}/bin/clang -DCMAKE_CXX_COMPILER=${PM_clang_PATH}/bin/clang++)
+        list(APPEND platformCMakeParams -DCMAKE_C_COMPILER=$ENV{PM_clang_PATH}/bin/clang -DCMAKE_CXX_COMPILER=$ENV{PM_clang_PATH}/bin/clang++)
     endif()
     set(generator "Unix Makefiles")
 elseif(targetPlatform STREQUAL "vc17win64") # Again: this will work for any Win64
     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/vc17win64/PhysX)
     set(platformCMakeParams -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86)
+endif()
+
+# Also make sure the packman-downloaded GPU driver is found as a binary
+list(APPEND platformCMakeParams -DPHYSX_PHYSXGPU_PATH=$ENV{PM_PhysXGpu_PATH}/bin)
+message(WARNING "YYYYYYYYYYYYYYyyyyyyyyyyYYYYYYYYYYYYYYYYYYYYYY -DPHYSX_PHYSXGPU_PATH=$ENV{PM_PhysXGpu_PATH}/bin")
+
+# Anyway the above only works for clang, see
+# source/compiler/cmake/linux/CMakeLists.txt:164
+# to avoid problems, we copy _immediately_ the extra binaries
+if(targetPlatform STREQUAL "linux")
+    file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/linux.clang/checked/libPhysXGpu_64.so" DESTINATION "${SOURCE_PATH}/physx/bin/linux.clang/debug")
+    file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/linux.clang/release/libPhysXGpu_64.so" DESTINATION "${SOURCE_PATH}/physx/bin/linux.clang/release")
 endif()
 
 set(cmakeParams ${platformCMakeParams} ${common_params} ${cmakeParams})
@@ -208,32 +220,39 @@ message("[PHYSX BUILD COMPLETED] Extracting build artifacts to vcpkg installatio
 # variable which specifies a list of suffixes to extract in that folder (e.g. all the .lib or .pdb)
 function(copy_in_vcpkg_destination_folder_physx_artifacts)
     macro(_copy_up _IN_DIRECTORY _OUT_DIRECTORY)
+        message(WARNING "AAAAAAAAAAAAAAAAAAAAAAAA looking in dir ${_IN_DIRECTORY} for output in ${_OUT_DIRECTORY} if there are fils of suffix ${_fpa_SUFFIXES}")
         foreach(_SUFFIX IN LISTS _fpa_SUFFIXES)
+            message(WARNING "AAAAAAAAAAAAAAAAAAAAAAAAA globbing for: ${SOURCE_PATH}/physx/${_IN_DIRECTORY}/*${_SUFFIX}")
             file(GLOB_RECURSE _ARTIFACTS
                 LIST_DIRECTORIES false
                 "${SOURCE_PATH}/physx/${_IN_DIRECTORY}/*${_SUFFIX}"
             )
             if(_ARTIFACTS)
+                message(WARNING "AAAAAAAAAAAAAAAAAAAAAAAA COPYING ${_ARTIFACTS} to ${CURRENT_PACKAGES_DIR}/${_OUT_DIRECTORY}")
                 file(COPY ${_ARTIFACTS} DESTINATION "${CURRENT_PACKAGES_DIR}/${_OUT_DIRECTORY}")
             endif()
         endforeach()
     endmacro()
 
     cmake_parse_arguments(_fpa "" "DIRECTORY" "SUFFIXES" ${ARGN})
-    _copy_up("bin/*/release" ${_fpa_DIRECTORY}) # could be physx/bin/linux.clang/release or physx/bin/win.x86_64.vc142.mt/release
+    _copy_up("bin/*/release" "${_fpa_DIRECTORY}") # could be physx/bin/linux.clang/release or physx/bin/win.x86_64.vc142.mt/release
     _copy_up("bin/*/debug" "debug/${_fpa_DIRECTORY}")
 endfunction()
 
 # Extract artifacts in the right vcpkg destinations
 
+# Create output directories
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin") # PhysX also downloads the Gpu driver shared library here
+message(WARNING "AAAAAAAAAAAAAAAAAAAAAAAA made dir ${CURRENT_PACKAGES_DIR}/bin")
 copy_in_vcpkg_destination_folder_physx_artifacts(
     DIRECTORY "lib"
     SUFFIXES ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}
 )
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin") # PhysX also downloads the Gpu driver shared library here
 copy_in_vcpkg_destination_folder_physx_artifacts(
     DIRECTORY "bin"
     SUFFIXES ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX} ".pdb"
