@@ -11,10 +11,12 @@ get_filename_component(z_vcpkg_omniverse_physx_sdk_prefix "${z_vcpkg_omniverse_p
 get_filename_component(OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS "${z_vcpkg_omniverse_physx_sdk_prefix}/include/physx" ABSOLUTE)
 get_filename_component(OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/lib" ABSOLUTE)
 get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/debug/lib" ABSOLUTE)
+get_filename_component(OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/bin" ABSOLUTE)
+get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_BIN_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/debug/bin" ABSOLUTE)
 
-message(WARNING "just found all of the include, release libs dir and debug libs dir: ${OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS} and ${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR} and ${OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR}")
+# message(WARNING "just found all of the include, release libs dir and debug libs dir: ${OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS} and ${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR} and ${OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR} and ${OMNIVERSE-PHYSX-SDK_BIN_DIR}")
 
-# Find library files
+# Find main library files
 find_library(OMNIVERSE-PHYSX-SDK_LIBRARY_RELEASE NAMES PhysX_static_64 PhysX_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR}" NO_DEFAULT_PATH)
 find_library(OMNIVERSE-PHYSX-SDK_LIBRARY_DEBUG NAMES PhysX_static_64 PhysX_64 PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR}" NO_DEFAULT_PATH)
 
@@ -177,5 +179,21 @@ message(WARNING "full_paths_of_libraries is set to ${full_paths_of_libraries}")
 # Link the libraries to the target
 # TODO: make sure INTERFACE is the right one. I.e. whoever links with this target, will also link with all these libs, but the main library will NOT link against these (it doesn't depend on them).
 target_link_libraries(omniverse-physx-sdk INTERFACE ${full_paths_of_libraries})
+
+
+find_library(PHYSX_GPU_64_LIB_RELEASE NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR}" NO_DEFAULT_PATH)
+find_library(PHYSX_GPU_64_LIB_DEBUG NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_BIN_DIR}" NO_DEFAULT_PATH)
+if(PHYSX_GPU_64_LIB_RELEASE)
+    # If the library is found, link it to the target
+    add_library(PHYSX_GPU_64_LIB UNKNOWN IMPORTED)
+    set_target_properties(PHYSX_GPU_64_LIB PROPERTIES
+        IMPORTED_LOCATION_RELEASE "${PHYSX_GPU_64_LIB_RELEASE}"
+        IMPORTED_LOCATION_DEBUG "${PHYSX_GPU_64_LIB_DEBUG}"
+    )
+    target_link_libraries(omniverse-physx-sdk INTERFACE ${PHYSX_GPU_64_LIB})
+else()
+    message(WARNING "PhysXGpu_64 library was not found in the port! GPU support will not be available!")
+endif()
+
 
 # ...

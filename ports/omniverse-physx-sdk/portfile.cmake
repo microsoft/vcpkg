@@ -182,9 +182,15 @@ message(WARNING "YYYYYYYYYYYYYYyyyyyyyyyyYYYYYYYYYYYYYYYYYYYYYY -DPHYSX_PHYSXGPU
 # Anyway the above only works for clang, see
 # source/compiler/cmake/linux/CMakeLists.txt:164
 # to avoid problems, we copy _immediately_ the extra binaries
-if(targetPlatform STREQUAL "linux")
+if(targetPlatform STREQUAL "linuxAarch64")
+    file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/linux.aarch64/checked/libPhysXGpu_64.so" DESTINATION "${SOURCE_PATH}/physx/bin/linux.aarch64/debug")
+    file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/linux.aarch64/release/libPhysXGpu_64.so" DESTINATION "${SOURCE_PATH}/physx/bin/linux.aarch64/release")
+elseif(targetPlatform STREQUAL "linux")
     file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/linux.clang/checked/libPhysXGpu_64.so" DESTINATION "${SOURCE_PATH}/physx/bin/linux.clang/debug")
     file(COPY "$ENV{PM_PhysXGpu_PATH}/bin/linux.clang/release/libPhysXGpu_64.so" DESTINATION "${SOURCE_PATH}/physx/bin/linux.clang/release")
+elseif(targetPlatform STREQUAL "vc17win64")
+    file(COPY "$ENV{PM_PhysXGpu_PATH}/win.x86_64.vc141.mt/checked/PhysXGpu_64.dll" DESTINATION "${SOURCE_PATH}/physx/bin/vc17win64/debug")
+    file(COPY "$ENV{PM_PhysXGpu_PATH}/win.x86_64.vc141.mt/release/PhysXGpu_64.dll" DESTINATION "${SOURCE_PATH}/physx/bin/vc17win64/release")
 endif()
 
 set(cmakeParams ${platformCMakeParams} ${common_params} ${cmakeParams})
@@ -245,14 +251,13 @@ endfunction()
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin") # PhysX also downloads the Gpu driver shared library here
-message(WARNING "AAAAAAAAAAAAAAAAAAAAAAAA made dir ${CURRENT_PACKAGES_DIR}/bin")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+
 copy_in_vcpkg_destination_folder_physx_artifacts(
     DIRECTORY "lib"
     SUFFIXES ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}
 )
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin") # PhysX also downloads the Gpu driver shared library here
+
 copy_in_vcpkg_destination_folder_physx_artifacts(
     DIRECTORY "bin"
     SUFFIXES ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX} ".pdb"
@@ -267,22 +272,22 @@ file(COPY "${SOURCE_PATH}/physx/physx" DESTINATION "${CURRENT_PACKAGES_DIR}/incl
 
 # Remove wrong compiler directories and wrong artifacts which might have been created
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE
-        "${CURRENT_PACKAGES_DIR}/bin/"
-        "${CURRENT_PACKAGES_DIR}/debug/bin/"
-    )
-else()
-    file(GLOB PHYSX_ARTIFACTS LIST_DIRECTORIES true
-        "${CURRENT_PACKAGES_DIR}/bin/*"
-        "${CURRENT_PACKAGES_DIR}/debug/bin/*"
-    )
-    foreach(_ARTIFACT IN LISTS PHYSX_ARTIFACTS)
-        if(IS_DIRECTORY ${_ARTIFACT})
-            file(REMOVE_RECURSE ${_ARTIFACT})
-        endif()
-    endforeach()
-endif()
+# if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+# #     file(REMOVE_RECURSE
+# # #        "${CURRENT_PACKAGES_DIR}/bin/"
+# #         "${CURRENT_PACKAGES_DIR}/debug/bin/"
+# #     )
+# else()
+#     file(GLOB PHYSX_ARTIFACTS LIST_DIRECTORIES true
+#         "${CURRENT_PACKAGES_DIR}/bin/*"
+#         "${CURRENT_PACKAGES_DIR}/debug/bin/*"
+#     )
+#     foreach(_ARTIFACT IN LISTS PHYSX_ARTIFACTS)
+#         if(IS_DIRECTORY ${_ARTIFACT})
+#             file(REMOVE_RECURSE ${_ARTIFACT})
+#         endif()
+#     endforeach()
+# endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
