@@ -174,38 +174,39 @@ function(vcpkg_find_acquire_program program)
                 SHA512 "${download_sha512}"
                 FILENAME "${download_filename}"
             )
+        else()
+            vcpkg_download_sourceforge(archive_path
+                ${sourceforge_args}
+                SHA512 "${download_sha512}"
+                FILENAME "${download_filename}"
+                )
+        endif()
 
-            if(raw_executable)
-                file(MAKE_DIRECTORY "${full_subdirectory}")
-                if("${rename_binary_to}" STREQUAL "")
-                    file(COPY "${archive_path}"
-                        DESTINATION "${full_subdirectory}"
-                        FILE_PERMISSIONS
-                            OWNER_READ OWNER_WRITE OWNER_EXECUTE
-                            GROUP_READ GROUP_EXECUTE
-                            WORLD_READ WORLD_EXECUTE
-                    )
-                else()
-                    file(INSTALL "${archive_path}"
-                        DESTINATION "${full_subdirectory}"
-                        RENAME "${rename_binary_to}"
-                        FILE_PERMISSIONS
-                            OWNER_READ OWNER_WRITE OWNER_EXECUTE
-                            GROUP_READ GROUP_EXECUTE
-                            WORLD_READ WORLD_EXECUTE
-                    )
-                endif()
-            else()
-                z_vcpkg_extract_archive(
-                    ARCHIVE "${DOWNLOADS}/${download_filename}"
+        if(raw_executable)
+            file(MAKE_DIRECTORY "${full_subdirectory}")
+            if("${rename_binary_to}" STREQUAL "")
+                file(COPY "${archive_path}"
                     DESTINATION "${full_subdirectory}"
+                    FILE_PERMISSIONS
+                        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                        GROUP_READ GROUP_EXECUTE
+                        WORLD_READ WORLD_EXECUTE
+                )
+            else()
+                file(INSTALL "${archive_path}"
+                    DESTINATION "${full_subdirectory}"
+                    RENAME "${rename_binary_to}"
+                    FILE_PERMISSIONS
+                        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                        GROUP_READ GROUP_EXECUTE
+                        WORLD_READ WORLD_EXECUTE
                 )
             endif()
         else()
-            # Locally change editable to suppress re-extraction each time
-            set(_VCPKG_EDITABLE 1)
-            vcpkg_from_sourceforge(OUT_SOURCE_PATH SFPATH ${sourceforge_args})
-            unset(_VCPKG_EDITABLE)
+            z_vcpkg_extract_archive(
+                ARCHIVE "${DOWNLOADS}/${download_filename}"
+                DESTINATION "${full_subdirectory}"
+            )
         endif()
 
         if(NOT "${post_install_command}" STREQUAL "")
