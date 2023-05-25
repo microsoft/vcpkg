@@ -58,6 +58,8 @@ include("${SCRIPTS}/cmake/vcpkg_replace_string.cmake")
 include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
 
 include("${SCRIPTS}/cmake/z_vcpkg_apply_patches.cmake")
+include("${SCRIPTS}/cmake/z_vcpkg_escape_regex_control_characters.cmake")
+include("${SCRIPTS}/cmake/z_vcpkg_extract_archive.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_forward_output_variable.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_function_arguments.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_get_cmake_vars.cmake")

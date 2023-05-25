@@ -163,21 +163,24 @@ function(vcpkg_find_acquire_program program)
             message(FATAL_ERROR "Could not find ${program_name}. Please install it via your package manager${example}")
         endif()
 
-        if(NOT "${sourceforge_args}" STREQUAL "")
-            # Locally change editable to suppress re-extraction each time
-            set(_VCPKG_EDITABLE 1)
-            vcpkg_from_sourceforge(OUT_SOURCE_PATH SFPATH ${sourceforge_args})
-            unset(_VCPKG_EDITABLE)
-        else()
+        if("${sourceforge_args}" STREQUAL "")
             vcpkg_download_distfile(archive_path
                 URLS ${download_urls}
                 SHA512 "${download_sha512}"
                 FILENAME "${download_filename}"
             )
 
-            file(MAKE_DIRECTORY "${full_subdirectory}")
             if(raw_executable)
-                if(NOT "${rename_binary_to}" STREQUAL "")
+                file(MAKE_DIRECTORY "${full_subdirectory}")
+                if("${rename_binary_to}" STREQUAL "")
+                    file(COPY "${archive_path}"
+                        DESTINATION "${full_subdirectory}"
+                        FILE_PERMISSIONS
+                            OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                            GROUP_READ GROUP_EXECUTE
+                            WORLD_READ WORLD_EXECUTE
+                    )
+                else()
                     file(INSTALL "${archive_path}"
                         DESTINATION "${full_subdirectory}"
                         RENAME "${rename_binary_to}"
@@ -186,43 +189,18 @@ function(vcpkg_find_acquire_program program)
                             GROUP_READ GROUP_EXECUTE
                             WORLD_READ WORLD_EXECUTE
                     )
-                else()
-                    file(COPY "${archive_path}"
-                        DESTINATION "${full_subdirectory}"
-                        FILE_PERMISSIONS
-                            OWNER_READ OWNER_WRITE OWNER_EXECUTE
-                            GROUP_READ GROUP_EXECUTE
-                            WORLD_READ WORLD_EXECUTE
-                    )
                 endif()
             else()
-                cmake_path(GET download_filename EXTENSION archive_extension)
-                string(TOLOWER "${archive_extension}" archive_extension)
-                if("${archive_extension}" MATCHES [[\.msi$]])
-                    cmake_path(NATIVE_PATH archive_path archive_native_path)
-                    cmake_path(NATIVE_PATH full_subdirectory destination_native_path)
-                    vcpkg_execute_in_download_mode(
-                        COMMAND msiexec
-                            /a "${archive_native_path}"
-                            /qn "TARGETDIR=${destination_native_path}"
-                        WORKING_DIRECTORY "${DOWNLOADS}"
-                    )
-                elseif("${archive_extension}" MATCHES [[\.7z\.exe$]])
-                    vcpkg_find_acquire_program(7Z)
-                    vcpkg_execute_in_download_mode(
-                        COMMAND ${7Z} x
-                            "${archive_path}"
-                            "-o${full_subdirectory}"
-                            -y -bso0 -bsp0
-                        WORKING_DIRECTORY "${full_subdirectory}"
-                    )
-                else()
-                    vcpkg_execute_in_download_mode(
-                        COMMAND "${CMAKE_COMMAND}" -E tar xzf "${archive_path}"
-                        WORKING_DIRECTORY "${full_subdirectory}"
-                    )
-                endif()
+                z_vcpkg_extract_archive(
+                    ARCHIVE "${DOWNLOADS}/${download_filename}"
+                    DESTINATION "${full_subdirectory}"
+                )
             endif()
+        else()
+            # Locally change editable to suppress re-extraction each time
+            set(_VCPKG_EDITABLE 1)
+            vcpkg_from_sourceforge(OUT_SOURCE_PATH SFPATH ${sourceforge_args})
+            unset(_VCPKG_EDITABLE)
         endif()
 
         if(NOT "${post_install_command}" STREQUAL "")
