@@ -6325,7 +6325,7 @@
       "port-version": 4
     },
     "podofo": {
-      "baseline": "0.9.8",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "poissonrecon": {

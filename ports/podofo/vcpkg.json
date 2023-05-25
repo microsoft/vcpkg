@@ -1,6 +1,6 @@
 {
   "name": "podofo",
-  "version": "0.9.8",
+  "version": "0.10.0",
   "description": "PoDoFo is a library to work with the PDF file format",
   "homepage": "https://sourceforge.net/projects/podofo/",
   "license": "LGPL-2.0-only",
@@ -9,6 +9,10 @@
     "freetype",
     "libjpeg-turbo",
     "libpng",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
     "openssl",
     "tiff",
     {
