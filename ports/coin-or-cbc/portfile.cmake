@@ -15,7 +15,7 @@ if(1)
 
     vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    #AUTOCONFIG
     OPTIONS
         --with-coinutils
         --with-clp
