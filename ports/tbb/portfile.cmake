@@ -9,9 +9,15 @@ vcpkg_from_github(
     HEAD_REF onetbb_2021
 )
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        hwloc TBB_DISABLE_HWLOC_AUTOMATIC_SEARCH)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DTBB_TEST=OFF
         -DTBB_STRICT=OFF
 )
