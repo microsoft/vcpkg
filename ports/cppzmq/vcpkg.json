@@ -21,7 +21,10 @@
       "dependencies": [
         {
           "name": "zeromq",
-          "features": ["draft"]
+          "default-features": false,
+          "features": [
+              "draft"
+          ]
         }
       ]
     }
