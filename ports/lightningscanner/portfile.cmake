@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO localcc/LightningScanner
-    REF v0.1.0
-    SHA512 b5ed88057353344055fcfbec9569b59e0226660ce9e27579257ff5e48d4a057454b8d06d046c477b1a5d33b7f6b23c07c5970142785dffb030ef7ff67cba9c7b
+    REF v${VERSION}
+    SHA512 7bd41e049ccdf1dbe39b2ab3c58344822300165482d7c5392fe1cd2b15a40baec9ff080963f7db60f2826ece983a06b921d8a28ba57edf751c2cc7644f0a1150
 )
 
 vcpkg_cmake_configure(
@@ -16,8 +16,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/LightningScanner)
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
