@@ -1,0 +1,11 @@
+--- configure.ac	2023-05-26 13:09:52
++++ configure.ac.patched	2023-05-26 13:13:23
+@@ -16,6 +16,8 @@
+ This file is part of the open source package Coin which is distributed
+ under the Eclipse Public License.])
+ 
++AC_CONFIG_MACRO_DIR([m4])
++
+ # List one file in the package so that the configure script can test
+ # whether the package is actually there.
+ AC_CONFIG_SRCDIR(src/CbcTree.hpp)

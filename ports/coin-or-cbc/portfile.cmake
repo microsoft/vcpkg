@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO coin-or/Cbc
     REF f30b1f4ad9326dc76cc8af715bb3cff109925447
     SHA512 0433715b0d08a3b6862b61371cbbf9956bc98b350c61b9fafe6526feb3d90aad04757d380467cc2b6c8014898ca850fa0d2b325849326e16751de1d68d54b270
-    ## PATCHES fix-c1083-error.patch
+    PATCHES dep.patch
 )
 
 
