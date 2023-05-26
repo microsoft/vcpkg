@@ -1,5 +1,7 @@
---- configure.ac	2023-05-26 13:09:52
-+++ configure.ac.patched	2023-05-26 13:13:23
+diff --git a/configure.ac b/configure.ac
+index a3f2fb9c4..e6f53f26c 100644
+--- a/configure.ac
++++ b/configure.ac
 @@ -16,6 +16,8 @@
  This file is part of the open source package Coin which is distributed
  under the Eclipse Public License.])
