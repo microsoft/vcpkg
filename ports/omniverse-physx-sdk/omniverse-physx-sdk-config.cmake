@@ -14,6 +14,8 @@ get_filename_component(OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR "${z_vcpkg_omniverse
 get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/debug/lib" ABSOLUTE)
 get_filename_component(OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/bin" ABSOLUTE)
 get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_BIN_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/debug/bin" ABSOLUTE)
+get_filename_component(OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/tools" ABSOLUTE)
+get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/tools/debug" ABSOLUTE)
 
 # Find main library files
 find_library(OMNIVERSE-PHYSX-SDK_LIBRARY_RELEASE NAMES PhysX_static_64 PhysX_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR}" NO_DEFAULT_PATH)
@@ -162,3 +164,23 @@ endif()
 
 # Link the libraries to the target with INTERFACE: i.e. whoever links with this target, will also link with all these libs, but the main library will NOT link against these (it doesn't depend on them).
 target_link_libraries(omniverse-physx-sdk INTERFACE ${full_paths_of_libraries})
+
+# Lastly also provide a target for clients to link with the GPU library (optional, provided by NVIDIA and downloaded through packman)
+
+# Find GPU library files
+if(WIN32)
+    find_library(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR}" NO_DEFAULT_PATH)
+    find_library(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR}" NO_DEFAULT_PATH)
+elseif(UNIX)
+    find_library(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR}" NO_DEFAULT_PATH)
+    find_library(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR}" NO_DEFAULT_PATH)
+endif()
+
+
+# Create imported target for GPU library
+add_library(omniverse-physx-sdk-gpu-library SHARED IMPORTED)
+
+set_target_properties(omniverse-physx-sdk-gpu-library PROPERTIES
+    IMPORTED_LOCATION_RELEASE "${OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE}"
+    IMPORTED_LOCATION_DEBUG "${OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG}"
+)
