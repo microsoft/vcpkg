@@ -212,6 +212,7 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         PX_OUTPUT_ARCH
         PX_COPY_EXTERNAL_DLL
+        PHYSX_PHYSXGPU_PATH
 )
 
 # Compile and install in vcpkg's final installation directories all of the include headers and binaries for debug/release
