@@ -2,6 +2,8 @@
 # Port for Omniverse PhysX 5 - NVIDIA Corporation
 # Marco Alesiani <malesiani@nvidia.com>
 # Note: this port is NOT officially supported by NVIDIA.
+# This port is also not a replacement for the 'physx' port: the newest Omniverse PhysX dropped support
+# for many platforms so the old one will continue to be community maintained to support all previous platforms.
 #
 
 vcpkg_from_github(
@@ -12,8 +14,6 @@ vcpkg_from_github(
     HEAD_REF release/104.2
 )
 
-# string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" VCPKG_BUILD_STATIC_LIBS)
-# string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" VCPKG_LINK_CRT_STATICALLY)
 if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
     set(VCPKG_BUILD_STATIC_LIBS TRUE)
 else()
@@ -25,8 +25,7 @@ else()
     set(VCPKG_LINK_CRT_STATICALLY FALSE)
 endif()
 
-# message(WARNING "VCPKG_LIBRARY_LINKAGE: ${VCPKG_LIBRARY_LINKAGE} VCPKG_CRT_LINKAGE: ${VCPKG_CRT_LINKAGE}")
-
+# Target platform detection for packman (the NVIDIA dependency downloader) and CMake options settings
 if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(PLATFORM_OPTIONS
         -DPX_BUILDSNIPPETS=OFF
@@ -45,8 +44,6 @@ elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(targetPlatform "linuxAarch64")
 elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 
-
-    message(WARNING "SETTING -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}")
     set(PLATFORM_OPTIONS
         -DPX_BUILDSNIPPETS=OFF
         -DPX_BUILDPVDRUNTIME=OFF
@@ -57,35 +54,17 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(PLATFORM_OPTIONS_RELEASE "")
     set(PLATFORM_OPTIONS_DEBUG "")
 
-    # list(APPEND PLATFORM_OPTIONS -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
-
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
         list(APPEND PLATFORM_OPTIONS_RELEASE -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL)
         list(APPEND PLATFORM_OPTIONS_RELEASE -DWINCRT_NDEBUG="/MD")
         list(APPEND PLATFORM_OPTIONS_DEBUG -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebugDLL)
         list(APPEND PLATFORM_OPTIONS_DEBUG -DWINCRT_DEBUG="/MDd")
-        # if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-        #     list(APPEND PLATFORM_OPTIONS -DWINCRT_DEBUG="/MDd>")
-        #     message(WARNING "LINKAGE DYNAMIC DEBUG, MDd")
-        # else()
-        #     list(APPEND PLATFORM_OPTIONS -DWINCRT_NDEBUG="/MD")
-        #     message(WARNING "LINKAGE DYNAMIC RELEASE, MD")
-        # endif()
     else()
         list(APPEND PLATFORM_OPTIONS_RELEASE -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded)
         # list(APPEND PLATFORM_OPTIONS_RELEASE -DWINCRT_NDEBUG="/MT")
         list(APPEND PLATFORM_OPTIONS_DEBUG -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug)
         list(APPEND PLATFORM_OPTIONS_DEBUG -DWINCRT_DEBUG="/MTd")
-        # if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-        #     list(APPEND PLATFORM_OPTIONS -DWINCRT_DEBUG="/MTd")
-        #     message(WARNING "LINKAGE STATIC DEBUG, MTd")
-        # else()
-        #     list(APPEND PLATFORM_OPTIONS -DWINCRT_NDEBUG="/MT")
-        #     message(WARNING "LINKAGE STATIC RELEASE, MT")
-        # endif()
     endif()
-
-
 
     # Note: it would have been more correct to specify "win64" here, but we specify this so that packman can download
     # the right dependencies on windows (see the "platforms" field in the dependencies.xml), that will also later
@@ -177,7 +156,6 @@ endif()
 
 # Also make sure the packman-downloaded GPU driver is found as a binary
 list(APPEND platformCMakeParams -DPHYSX_PHYSXGPU_PATH=$ENV{PM_PhysXGpu_PATH}/bin)
-message(WARNING "YYYYYYYYYYYYYYyyyyyyyyyyYYYYYYYYYYYYYYYYYYYYYY -DPHYSX_PHYSXGPU_PATH=$ENV{PM_PhysXGpu_PATH}/bin")
 
 # Anyway the above only works for clang, see
 # source/compiler/cmake/linux/CMakeLists.txt:164
@@ -227,15 +205,12 @@ message("[PHYSX BUILD COMPLETED] Extracting build artifacts to vcpkg installatio
 # variable which specifies a list of suffixes to extract in that folder (e.g. all the .lib or .pdb)
 function(copy_in_vcpkg_destination_folder_physx_artifacts)
     macro(_copy_up _IN_DIRECTORY _OUT_DIRECTORY)
-        message(WARNING "AAAAAAAAAAAAAAAAAAAAAAAA looking in dir ${_IN_DIRECTORY} for output in ${_OUT_DIRECTORY} if there are fils of suffix ${_fpa_SUFFIXES}")
         foreach(_SUFFIX IN LISTS _fpa_SUFFIXES)
-            message(WARNING "AAAAAAAAAAAAAAAAAAAAAAAAA globbing for: ${SOURCE_PATH}/physx/${_IN_DIRECTORY}/*${_SUFFIX}")
             file(GLOB_RECURSE _ARTIFACTS
                 LIST_DIRECTORIES false
                 "${SOURCE_PATH}/physx/${_IN_DIRECTORY}/*${_SUFFIX}"
             )
             if(_ARTIFACTS)
-                message(WARNING "AAAAAAAAAAAAAAAAAAAAAAAA COPYING ${_ARTIFACTS} to ${CURRENT_PACKAGES_DIR}/${_OUT_DIRECTORY}")
                 file(COPY ${_ARTIFACTS} DESTINATION "${CURRENT_PACKAGES_DIR}/${_OUT_DIRECTORY}")
             endif()
         endforeach()
@@ -264,32 +239,14 @@ copy_in_vcpkg_destination_folder_physx_artifacts(
     SUFFIXES ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX} ".pdb"
 )
 
-# Copy headers
+# Copy headers to port's destination folder
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
 
 # Renaming trick to finally have final folder structure as ${CURRENT_PACKAGES_DIR}/include/physx
 file(RENAME "${SOURCE_PATH}/physx/include" "${SOURCE_PATH}/physx/physx")
 file(COPY "${SOURCE_PATH}/physx/physx" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# Remove wrong compiler directories and wrong artifacts which might have been created
-
-# if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-# #     file(REMOVE_RECURSE
-# # #        "${CURRENT_PACKAGES_DIR}/bin/"
-# #         "${CURRENT_PACKAGES_DIR}/debug/bin/"
-# #     )
-# else()
-#     file(GLOB PHYSX_ARTIFACTS LIST_DIRECTORIES true
-#         "${CURRENT_PACKAGES_DIR}/bin/*"
-#         "${CURRENT_PACKAGES_DIR}/debug/bin/*"
-#     )
-#     foreach(_ARTIFACT IN LISTS PHYSX_ARTIFACTS)
-#         if(IS_DIRECTORY ${_ARTIFACT})
-#             file(REMOVE_RECURSE ${_ARTIFACT})
-#         endif()
-#     endforeach()
-# endif()
-
+# Remove useless build directories
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/source"
@@ -298,7 +255,7 @@ file(REMOVE_RECURSE
 
 # Install license and cmake wrapper (which will let users find_package(physx) in CMake)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
-# file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+# Install the cmake config that users will use, replace -if any- only @variables@
 configure_file("${CMAKE_CURRENT_LIST_DIR}/omniverse-physx-sdk-config.cmake" "${CURRENT_PACKAGES_DIR}/share/omniverse-physx-sdk/omniverse-physx-sdk-config.cmake" @ONLY)
 
 message("[VCPKG Omniverse PhysX port execution completed]")

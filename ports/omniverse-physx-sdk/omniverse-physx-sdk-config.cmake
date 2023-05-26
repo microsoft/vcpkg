@@ -1,9 +1,10 @@
 # omniverse-physx-sdk-config.cmake
-# user CMakeLists.txt should:
-# find_package(omniverse-physx-sdk CONFIG REQUIRED)
-# target_link_libraries(main omniverse-physx-sdk::physx_sdk)
+# A user's CMakeLists.txt should:
+#   find_package(omniverse-physx-sdk CONFIG REQUIRED)
+#   target_link_libraries(main omniverse-physx-sdk)
+# the GPU acceleration so/dlls are in the port's bin and debug/bin directories (needed for late binding)
 
-# Find include and library directories
+# Find include and library directories (up one level multiple times)
 get_filename_component(z_vcpkg_omniverse_physx_sdk_prefix "${CMAKE_CURRENT_LIST_FILE}" PATH)
 get_filename_component(z_vcpkg_omniverse_physx_sdk_prefix "${z_vcpkg_omniverse_physx_sdk_prefix}" PATH)
 get_filename_component(z_vcpkg_omniverse_physx_sdk_prefix "${z_vcpkg_omniverse_physx_sdk_prefix}" PATH)
@@ -14,12 +15,9 @@ get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR "${z_vcpkg_omniverse_p
 get_filename_component(OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/bin" ABSOLUTE)
 get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_BIN_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/debug/bin" ABSOLUTE)
 
-# message(WARNING "just found all of the include, release libs dir and debug libs dir: ${OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS} and ${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR} and ${OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR} and ${OMNIVERSE-PHYSX-SDK_BIN_DIR}")
-
 # Find main library files
 find_library(OMNIVERSE-PHYSX-SDK_LIBRARY_RELEASE NAMES PhysX_static_64 PhysX_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR}" NO_DEFAULT_PATH)
 find_library(OMNIVERSE-PHYSX-SDK_LIBRARY_DEBUG NAMES PhysX_static_64 PhysX_64 PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR}" NO_DEFAULT_PATH)
-
 
 # Set defaults according to known triplets
 
@@ -78,8 +76,7 @@ set_target_properties(omniverse-physx-sdk PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS}"
 )
 
-message(WARNING "set_target_properties with IMPORTED_LOCATION_RELEASE ${OMNIVERSE-PHYSX-SDK_LIBRARY_RELEASE} IMPORTED_LOCATION_DEBUG ${OMNIVERSE-PHYSX-SDK_LIBRARY_DEBUG} INTERFACE_INCLUDE_DIRECTORIES ${OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS}")
-
+# Deal with requested CRT linkage
 if(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "static")
     set_target_properties(omniverse-physx-sdk PROPERTIES
         INTERFACE_COMPILE_OPTIONS "/MT$<$<CONFIG:Debug>:d>"
@@ -90,11 +87,9 @@ elseif(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     )
 endif()
 
-message(WARNING "all right, target created and set with linkage ${VCPKG_LIBRARY_LINKAGE} and crt linkage ${VCPKG_CRT_LINKAGE}")
-
+# Get the necessary dependencies to link in
 if (WIN32)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    message(WARNING "---------------- YEAH GOING FOR DYNAMIC LIBS!")
         set(OMNIVERSE-PHYSX-SDK_LIBRARIES
             "PhysXExtensions_static_64.lib"
             "PhysXPvdSDK_static_64.lib"
@@ -106,7 +101,6 @@ if (WIN32)
             "PhysXVehicle2_static_64.lib"
         )
     else()
-        message(WARNING "---------------- YEAH GOING FOR STATIC LIBS!")
         set(OMNIVERSE-PHYSX-SDK_LIBRARIES
             "PhysXExtensions_static_64.lib"
             "PhysXPvdSDK_static_64.lib"
@@ -118,10 +112,6 @@ if (WIN32)
             "PhysXVehicle2_static_64.lib"
         )
     endif()
-    # Make sure the next CMake targets after this file will have the correct multi-threaded
-    # statically-linked runtime library (either debug or release) as required by PhysX
-    # message("Setting CMAKE_MSVC_RUNTIME_LIBRARY to multi-threaded statically-linked runtime for next targets")
-    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 elseif(UNIX)
     set(OMNIVERSE-PHYSX-SDK_LIBRARIES
         "PhysXExtensions_static_64"
@@ -134,11 +124,8 @@ elseif(UNIX)
     )
 endif()
 
-# ...
-
-# Prepare the full paths of the libraries
+# Prepare the full paths of the libraries and add them to the target as dependencies
 if (WIN32)
-    # ...
     foreach(lib ${OMNIVERSE-PHYSX-SDK_LIBRARIES})
         find_library(full_path_of_${lib}_RELEASE NAMES ${lib} PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR}" NO_DEFAULT_PATH)
         find_library(full_path_of_${lib}_DEBUG NAMES ${lib} PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR}" NO_DEFAULT_PATH)
@@ -159,12 +146,11 @@ if (WIN32)
         list(APPEND full_paths_of_libraries "${lib}")
     endforeach()
 elseif(UNIX)
-    # ...
     foreach(lib ${OMNIVERSE-PHYSX-SDK_LIBRARIES})
         find_library(full_path_of_${lib}_RELEASE NAMES ${lib} PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR}" NO_DEFAULT_PATH)
         find_library(full_path_of_${lib}_DEBUG NAMES ${lib} PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR}" NO_DEFAULT_PATH)
-        #message(WARNING "  --analyzing ${lib}.. imported location: ${full_path_of_${lib}}")
         add_library(${lib} UNKNOWN IMPORTED)
+
         # When CMake will link against this lib target, it will use this absolute path
         set_target_properties(${lib} PROPERTIES
             IMPORTED_LOCATION_RELEASE "${full_path_of_${lib}_RELEASE}"
@@ -174,51 +160,5 @@ elseif(UNIX)
     endforeach()
 endif()
 
-message(WARNING "full_paths_of_libraries is set to ${full_paths_of_libraries}")
-
-# Link the libraries to the target
-# TODO: make sure INTERFACE is the right one. I.e. whoever links with this target, will also link with all these libs, but the main library will NOT link against these (it doesn't depend on them).
+# Link the libraries to the target with INTERFACE: i.e. whoever links with this target, will also link with all these libs, but the main library will NOT link against these (it doesn't depend on them).
 target_link_libraries(omniverse-physx-sdk INTERFACE ${full_paths_of_libraries})
-
-
-# find_file(Z_VCPKG_PDCURSES_DLL_DEBUG NAMES pdcurses.dll PATHS "${z_vcpkg_pdcurses_root}/debug/bin" NO_DEFAULT_PATH)
-# if(EXISTS "${Z_VCPKG_PDCURSES_LIBRARY_DEBUG}")
-#     set_property(TARGET unofficial::pdcurses::pdcurses APPEND PROPERTY IMPORTED_CONFIGURATIONS "Debug")
-#     set_target_properties(unofficial::pdcurses::pdcurses PROPERTIES IMPORTED_IMPLIB_DEBUG "${Z_VCPKG_PDCURSES_LIBRARY_DEBUG}")
-# endif()
-# if(EXISTS "${Z_VCPKG_PDCURSES_DLL_DEBUG}")
-#     set_target_properties(unofficial::pdcurses::pdcurses PROPERTIES IMPORTED_LOCATION_DEBUG "${Z_VCPKG_PDCURSES_DLL_DEBUG}")
-# endif()
-
-
-
-
-# if (WIN32)
-    # TODO: not working, find a way to copy the dll to the destination folder
-
-    # find_file(PHYSX_GPU_64_LIB_RELEASE NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR}" NO_DEFAULT_PATH)
-    # # if(EXISTS "${PHYSX_GPU_64_LIB_RELEASE}")
-    # #     set_property(TARGET omniverse-physx-sdk APPEND PROPERTY IMPORTED_CONFIGURATIONS "Debug")
-    # #     set_target_properties(unofficial::pdcurses::pdcurses PROPERTIES IMPORTED_IMPLIB_DEBUG "${Z_VCPKG_PDCURSES_LIBRARY_DEBUG}")
-    # # endif()
-    # if(EXISTS "${PHYSX_GPU_64_LIB_RELEASE}")
-    #     set_target_properties(omniverse-physx-sdk PROPERTIES IMPORTED_LOCATION_RELEASE "${PHYSX_GPU_64_LIB_RELEASE}")
-    # endif()
-# else()
-    # find_library(PHYSX_GPU_64_LIB_RELEASE NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR}" NO_DEFAULT_PATH)
-    # find_library(PHYSX_GPU_64_LIB_DEBUG NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_BIN_DIR}" NO_DEFAULT_PATH)
-    # if(PHYSX_GPU_64_LIB_RELEASE)
-    #     # If the library is found, link it to the target
-    #     add_library(PHYSX_GPU_64_LIB UNKNOWN IMPORTED)
-    #     set_target_properties(PHYSX_GPU_64_LIB PROPERTIES
-    #         IMPORTED_LOCATION_RELEASE "${PHYSX_GPU_64_LIB_RELEASE}"
-    #         IMPORTED_LOCATION_DEBUG "${PHYSX_GPU_64_LIB_DEBUG}"
-    #     )
-    #     target_link_libraries(omniverse-physx-sdk PUBLIC ${PHYSX_GPU_64_LIB})
-    # else()
-    #     message(WARNING "PhysXGpu_64 library was not found in the port! GPU support will not be available!")
-    # endif()
-# endif()
-
-
-# ...
