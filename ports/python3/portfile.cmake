@@ -228,8 +228,15 @@ else()
         "--without-readline"
         "--disable-test-modules"
     )
-    if(VCPKG_TARGET_IS_OSX)
-        list(APPEND OPTIONS "LIBS=-liconv -lintl")
+    set(libs "")
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libintl.a")
+        string(APPEND libs " -lintl")
+    endif()
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libiconv.a")
+        string(APPEND libs " -liconv")
+    endif()
+    if(libs)
+        list(APPEND OPTIONS "LIBS=${libs}")
     endif()
 
     set(EXTRA_ARGUMENTS "")

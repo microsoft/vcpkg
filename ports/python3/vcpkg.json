@@ -13,8 +13,8 @@
     },
     "expat",
     {
-      "name": "gettext",
-      "platform": "osx"
+      "name": "gettext-libintl",
+      "platform": "!windows"
     },
     {
       "name": "libffi",
@@ -22,7 +22,7 @@
     },
     {
       "name": "libiconv",
-      "platform": "osx"
+      "platform": "!windows"
     },
     {
       "name": "liblzma",
