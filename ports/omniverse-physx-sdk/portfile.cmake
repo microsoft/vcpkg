@@ -237,16 +237,12 @@ copy_in_vcpkg_destination_folder_physx_artifacts(
     SUFFIXES ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}
 )
 
-copy_in_vcpkg_destination_folder_physx_artifacts(
-    DIRECTORY "bin"
-    SUFFIXES ".pdb"
-)
-
 if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    # Also copy whatever .so/.dll were built
+    # Also copy whatever .so/.dll were built. Remember that there should be NO /bin directory (nor debug/bin)
+    # when using static linkage
     copy_in_vcpkg_destination_folder_physx_artifacts(
         DIRECTORY "bin"
-        SUFFIXES ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}
+        SUFFIXES ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX} ".pdb"
     )
 endif()
 
