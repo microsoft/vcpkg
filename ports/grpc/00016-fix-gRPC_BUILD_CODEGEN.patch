@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 91b4bea..7be5ebb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25993,10 +25993,12 @@ if(gRPC_INSTALL)
+     DESTINATION ${gRPC_INSTALL_CMAKEDIR}
+     NAMESPACE gRPC::
+   )
+-  install(EXPORT gRPCPluginTargets
+-    DESTINATION ${gRPC_INSTALL_CMAKEDIR}
+-    NAMESPACE gRPC::
+-  )
++  if(gRPC_BUILD_CODEGEN)
++    install(EXPORT gRPCPluginTargets
++      DESTINATION ${gRPC_INSTALL_CMAKEDIR}
++      NAMESPACE gRPC::
++    )
++  endif()
+ endif()
+ 
+ include(CMakePackageConfigHelpers)
+diff --git a/templates/CMakeLists.txt.template b/templates/CMakeLists.txt.template
+index 7be9b0a..2b340ef 100644
+--- a/templates/CMakeLists.txt.template
++++ b/templates/CMakeLists.txt.template
+@@ -812,10 +812,12 @@
+       DESTINATION <%text>${gRPC_INSTALL_CMAKEDIR}</%text>
+       NAMESPACE gRPC::
+     )
+-    install(EXPORT gRPCPluginTargets
+-      DESTINATION <%text>${gRPC_INSTALL_CMAKEDIR}</%text>
+-      NAMESPACE gRPC::
+-    )
++    if(gRPC_BUILD_CODEGEN)
++      install(EXPORT gRPCPluginTargets
++        DESTINATION <%text>${gRPC_INSTALL_CMAKEDIR}</%text>
++        NAMESPACE gRPC::
++      )
++    endif()
+   endif()
+ 
+   include(CMakePackageConfigHelpers)
