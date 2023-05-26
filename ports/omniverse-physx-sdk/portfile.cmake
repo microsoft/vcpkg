@@ -14,12 +14,12 @@ vcpkg_from_github(
     HEAD_REF release/104.2
 )
 
-if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(VCPKG_BUILD_STATIC_LIBS TRUE)
 else()
     set(VCPKG_BUILD_STATIC_LIBS FALSE)
 endif()
-if("${VCPKG_CRT_LINKAGE}" STREQUAL "static")
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(VCPKG_LINK_CRT_STATICALLY TRUE)
 else()
     set(VCPKG_LINK_CRT_STATICALLY FALSE)
@@ -226,8 +226,11 @@ endfunction()
 # Create output directories
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin") # PhysX also downloads the Gpu driver shared library here
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Packman also downloads the Gpu driver shared library, so we'll place it in bin and debug/bin
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 copy_in_vcpkg_destination_folder_physx_artifacts(
     DIRECTORY "lib"
@@ -236,8 +239,45 @@ copy_in_vcpkg_destination_folder_physx_artifacts(
 
 copy_in_vcpkg_destination_folder_physx_artifacts(
     DIRECTORY "bin"
-    SUFFIXES ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX} ".pdb"
+    SUFFIXES ".pdb"
 )
+
+if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Also copy whatever .so/.dll were built
+    copy_in_vcpkg_destination_folder_physx_artifacts(
+        DIRECTORY "bin"
+        SUFFIXES ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}
+    )
+endif()
+
+# Special treatment is reserved for the PhysXGpu_64 shared library (downloaded by packman).
+# This is a 3rd party "optional functionality" dependency.
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/debug")
+set(GPULIBNAMES "")
+if(targetPlatform STREQUAL "linuxAarch64" OR targetPlatform STREQUAL "linux")
+    list(APPEND GPULIBNAMES "libPhysXGpu_64.so" "libPhysXDevice64.so")
+elseif(targetPlatform STREQUAL "vc17win64") # Again: this will work for any Win64
+    list(APPEND GPULIBNAMES "PhysXGpu_64.dll" "PhysXDevice64.dll")
+endif()
+
+function(_copy_single_files_from_dir_to_destdir _IN_FILES _IN_DIR _OUT_DIR)
+    file(GLOB_RECURSE _ARTIFACTS
+        LIST_DIRECTORIES false
+        "${_IN_DIR}"
+    )
+    foreach(_ARTIFACT IN LISTS _ARTIFACTS)
+        foreach(_FILE IN LISTS _IN_FILES)
+            if("${_ARTIFACT}" MATCHES "${_FILE}")
+                file(COPY "${_ARTIFACT}" DESTINATION "${_OUT_DIR}")
+            endif()
+        endforeach()
+    endforeach()
+endfunction()
+
+# Put it in 'tools', it's an optional component
+_copy_single_files_from_dir_to_destdir("${GPULIBNAMES}" "${SOURCE_PATH}/physx/bin/*/release/*" "${CURRENT_PACKAGES_DIR}/tools")
+_copy_single_files_from_dir_to_destdir("${GPULIBNAMES}" "${SOURCE_PATH}/physx/bin/*/debug/*" "${CURRENT_PACKAGES_DIR}/tools/debug")
 
 # Copy headers to port's destination folder
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
