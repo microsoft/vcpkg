@@ -46,12 +46,17 @@ endif()
 
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
+                            # CVE fixes from https://download.qt.io/official_releases/qt/5.15/
+                            patches/CVE-2023-32762-qtbase-5.15.diff
+                            patches/CVE-2023-32763-qtbase-5.15.diff
+
                             patches/winmain_pro.patch          #Moves qtmain to manual-link
                             patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
                             patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.
                             patches/gui_configure.patch        #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
                             patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
                             patches/egl.patch                  #Fix egl detection logic.
+                            patches/qtbug_96392.patch          #Backport fix for QTBUG-96392
                             patches/mysql_plugin_include.patch #Fix include path of mysql plugin
                             patches/mysql-configure.patch      #Fix mysql project
                             patches/cocoa.patch                #Fix missing include on macOS Monterrey, https://code.qt.io/cgit/qt/qtbase.git/commit/src/plugins/platforms/cocoa?id=dece6f5840463ae2ddf927d65eb1b3680e34a547

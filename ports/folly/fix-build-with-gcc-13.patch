@@ -1,0 +1,27 @@
+From e3cba5dd4f59c695d9cbf6bd02249af7103cc300 Mon Sep 17 00:00:00 2001
+From: Sam James <sam@gentoo.org>
+Date: Sun, 22 Jan 2023 05:06:16 +0000
+Subject: [PATCH] Fix build with GCC 13 (add missing includes)
+
+GCC 13 (as usual for new compiler releases) shuffles around some
+internal includes and so <stdexcept> etc is no longer transitively included.
+
+Signed-off-by: Sam James <sam@gentoo.org>
+---
+ folly/system/AtFork.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/folly/system/AtFork.cpp b/folly/system/AtFork.cpp
+index e888e52858a..a5570330dc3 100644
+--- a/folly/system/AtFork.cpp
++++ b/folly/system/AtFork.cpp
+@@ -14,6 +14,9 @@
+  * limitations under the License.
+  */
+ 
++#include <stdexcept>
++#include <system_error>
++
+ #include <folly/system/AtFork.h>
+ 
+ #include <folly/ScopeGuard.h>
