@@ -1,0 +1,23 @@
+From 017011941e5f17e9c98ee50b27209f97ab748f36 Mon Sep 17 00:00:00 2001
+From: Frank Yonamine <fsy0jpn@gmail.com>
+Date: Sat, 27 May 2023 08:54:06 +0200
+Subject: [PATCH 1/1] [python3] force disable hashlib ssl tkinter
+
+---
+ Modules/Setup | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Modules/Setup b/Modules/Setup
+index 7ad53f5..79ba4a4 100644
+--- a/Modules/Setup
++++ b/Modules/Setup
+@@ -379,3 +379,6 @@ xxsubtype xxsubtype.c
+ *disabled*
+ _curses
+ _curses_panel
++_hashlib
++_ssl
++_tkinter
+-- 
+2.39.2 (Apple Git-143)
+

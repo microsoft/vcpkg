@@ -30,6 +30,10 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     list(APPEND PATCHES 0011-gcc-ldflags-fix.patch)
 endif()
 
+if(VCPKG_TARGET_IS_OSX)
+    list(APPEND PATCHES 0015-force-disable-hashlib-ssl-tkinter.patch)
+endif()
+
 # Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
 # required to build this port on Windows 7 itself due to Python using itself in its own build system.
 if("deprecated-win7-support" IN_LIST FEATURES)
