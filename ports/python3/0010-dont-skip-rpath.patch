@@ -95,15 +95,7 @@ index 61b3266..4c2cfb4 100644
 @@ -1742,6 +1751,7 @@ def detect_compress_exts(self):
                  bz2_extra_link_args = ()
              self.add(Extension('_bz2', ['_bz2module.c'],
-                                libraries=['bz2'],
-+                               runtime_library_dirs=self.lib_dirs,
-                                extra_link_args=bz2_extra_link_args))
-         elif (self.compiler.find_library_file(self.lib_dirs, 'bz2d')):
-             if MACOS:
-@@ -1750,6 +1760,7 @@ def detect_compress_exts(self):
-                 bz2_extra_link_args = ()
-             self.add(Extension('_bz2', ['_bz2module.c'],
-                                libraries=['bz2d'],
+                                libraries=[bz2_name],
 +                               runtime_library_dirs=self.lib_dirs,
                                 extra_link_args=bz2_extra_link_args))
          else:
