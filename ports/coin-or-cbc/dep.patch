@@ -1,8 +1,8 @@
 diff --git a/configure.ac b/configure.ac
-index a3f2fb9c4..e6f53f26c 100644
+index 14146ec..ce926c9 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -16,6 +16,8 @@
+@@ -16,6 +16,8 @@ All Rights Reserved.
  This file is part of the open source package Coin which is distributed
  under the Eclipse Public License.])
  
