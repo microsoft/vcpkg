@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF aeee9b372827cea28697755ea1f68bfc5288548a #2023-05-18
     SHA512 feece3f05537b58270507d9423cc95fe577532997b857586aa49c2000516f3297c487696b659a35f194f0e970b8e84ff0c1a7446d4af7b400a2183704df995a2
     HEAD_REF main
+    PATCHES
+        fix_format.patch
 )
 
 vcpkg_cmake_configure(
@@ -11,8 +13,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTS=OFF
         -DBUILD_EXAMPLES=OFF
-    PATCHES
-        fix-localerrorcode-format.patch
 )
 
 # Prefer installed config files

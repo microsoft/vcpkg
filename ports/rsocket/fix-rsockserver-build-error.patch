@@ -55,3 +55,16 @@ index 39dae66..e2346ef 100644
  
    const std::unique_ptr<ConnectionAcceptor> duplexConnectionAcceptor_;
    bool started{false};
+diff --git a/yarpl/flowable/Flowable.h b/yarpl/flowable/Flowable.h
+index 9dff78b..bccd70d 100644
+--- a/yarpl/flowable/Flowable.h
++++ b/yarpl/flowable/Flowable.h
+@@ -494,7 +494,7 @@ std::shared_ptr<Flowable<T>> Flowable<T>::fromGenerator(
+       }
+     } catch (const std::exception& ex) {
+       subscriber.onError(
+-          folly::exception_wrapper(std::current_exception(), ex));
++          folly::exception_wrapper(folly::exception_wrapper::from_catch_ref_t{}, std::current_exception(), ex));
+     } catch (...) {
+       subscriber.onError(std::runtime_error(
+           "Flowable::fromGenerator() threw from Subscriber:onNext()"));
