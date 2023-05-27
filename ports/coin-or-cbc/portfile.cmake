@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO coin-or/Cbc
     REF 6f83969e50b6f67c60654704c1f71f970c621a3b
     SHA512 0433715b0d08a3b6862b61371cbbf9956bc98b350c61b9fafe6526feb3d90aad04757d380467cc2b6c8014898ca850fa0d2b325849326e16751de1d68d54b270
-    PATCHES dep.patch
+    PATCHES "dep.patch"
 )
 
 
