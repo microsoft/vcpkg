@@ -5,9 +5,9 @@
   "homepage": "https://github.com/coin-or/Cbc",
   "license": "EPL-2.0",
   "dependencies": [
-    "coinutils",
-    "coin-or-osi",
+    "coin-or-cgl",
     "coin-or-clp",
-    "coin-or-cgl"
+    "coin-or-osi",
+    "coinutils"
   ]
 }
