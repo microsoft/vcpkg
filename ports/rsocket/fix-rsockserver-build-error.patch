@@ -1,0 +1,57 @@
+diff --git a/rsocket/RSocketServer.cpp b/rsocket/RSocketServer.cpp
+index 1e20281..3a9f6b2 100644
+--- a/rsocket/RSocketServer.cpp
++++ b/rsocket/RSocketServer.cpp
+@@ -125,7 +125,7 @@ void RSocketServer::acceptConnection(
+        weakConSet = std::weak_ptr<ConnectionSet>(connectionSet_),
+        scheduledResponder = useScheduledResponder_](
+           std::unique_ptr<DuplexConnection> conn,
+-          SetupParameters params) mutable {
++          SetupParameters params) mutable noexcept{
+         if (auto connectionSet = weakConSet.lock()) {
+           RSocketServer::onRSocketSetup(
+               serviceHandler,
+@@ -135,12 +135,15 @@ void RSocketServer::acceptConnection(
+               std::move(params));
+         }
+       },
+-      std::bind(
+-          &RSocketServer::onRSocketResume,
+-          this,
+-          serviceHandler,
+-          std::placeholders::_1,
+-          std::placeholders::_2));
++      [this, serviceHandler=serviceHandler](
++          std::unique_ptr<DuplexConnection> connection,
++          ResumeParameters resumeParameters) mutable noexcept{
++              this->onRSocketResume(
++                  serviceHandler,
++                  std::move(connection),
++                  resumeParameters
++              );
++        });
+ }
+ 
+ void RSocketServer::onRSocketSetup(
+@@ -206,7 +209,7 @@ void RSocketServer::onRSocketSetup(
+ void RSocketServer::onRSocketResume(
+     std::shared_ptr<RSocketServiceHandler> serviceHandler,
+     std::unique_ptr<DuplexConnection> connection,
+-    ResumeParameters resumeParams) {
++    ResumeParameters resumeParams) noexcept{
+   auto result = serviceHandler->onResume(resumeParams.token);
+   if (result.hasError()) {
+     stats_->resumeFailedNoState();
+diff --git a/rsocket/RSocketServer.h b/rsocket/RSocketServer.h
+index 39dae66..e2346ef 100644
+--- a/rsocket/RSocketServer.h
++++ b/rsocket/RSocketServer.h
+@@ -118,7 +118,7 @@ class RSocketServer {
+   void onRSocketResume(
+       std::shared_ptr<RSocketServiceHandler> serviceHandler,
+       std::unique_ptr<DuplexConnection> connection,
+-      rsocket::ResumeParameters setupPayload);
++      rsocket::ResumeParameters setupPayload)noexcept;
+ 
+   const std::unique_ptr<ConnectionAcceptor> duplexConnectionAcceptor_;
+   bool started{false};
