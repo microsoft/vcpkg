@@ -1,6 +1,6 @@
 {
   "name": "coolprop",
-  "version-semver": "6.4.1",
+  "version-semver": "6.4.3",
   "port-version": 2,
   "description": "Thermophysical properties for the masses",
   "homepage": "https://github.com/CoolProp/CoolProp",

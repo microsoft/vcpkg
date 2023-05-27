@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index f4d9e90..1012718 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -351,6 +351,7 @@ if test "x$ABI" != xstandard ; then
+   if test "$libdir" = '${exec_prefix}/lib' ; then
+     # Try setting a better default
+     case "$host_cpu:$host_os:$ABI" in
++      *) ;; # $libdir is okay for vcpkg
+       *:solaris*:32|*:sunos*:32)
+ 	libdir='${exec_prefix}/lib'
+ 	;;

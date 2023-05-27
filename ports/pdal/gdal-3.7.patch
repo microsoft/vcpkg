@@ -1,0 +1,22 @@
+diff --git a/pdal/Geometry.cpp b/pdal/Geometry.cpp
+index 608bf86..8b010d3 100644
+--- a/pdal/Geometry.cpp
++++ b/pdal/Geometry.cpp
+@@ -153,7 +153,7 @@ Geometry& Geometry::operator=(const Geometry& input)
+ 
+ bool Geometry::srsValid() const
+ {
+-    OGRSpatialReference *srs = m_geom->getSpatialReference();
++    const OGRSpatialReference *srs = m_geom->getSpatialReference();
+     return srs && srs->GetRoot();
+ }
+ 
+@@ -172,7 +172,7 @@ Utils::StatusWithReason Geometry::transform(SpatialReference out)
+         return StatusWithReason(-2,
+             "Geometry::transform() failed.  NULL target SRS.");
+ 
+-    OGRSpatialReference *inSrs = m_geom->getSpatialReference();
++    const OGRSpatialReference *inSrs = m_geom->getSpatialReference();
+     SrsTransform transform(*inSrs, OGRSpatialReference(out.getWKT().data()));
+     if (m_geom->transform(transform.get()) != OGRERR_NONE)
+         return StatusWithReason(-1, "Geometry::transform() failed.");

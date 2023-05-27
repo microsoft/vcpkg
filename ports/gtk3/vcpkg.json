@@ -1,7 +1,6 @@
 {
   "name": "gtk3",
-  "version": "3.24.34",
-  "port-version": 2,
+  "version": "3.24.37",
   "description": "Portable library for creating graphical user interfaces.",
   "homepage": "https://www.gtk.org/",
   "license": null,
@@ -55,6 +54,7 @@
   "features": {
     "introspection": {
       "description": "build with introspection",
+      "supports": "!windows | !static",
       "dependencies": [
         {
           "name": "atk",

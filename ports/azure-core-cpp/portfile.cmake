@@ -1,10 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF azure-core_1.7.2
-    SHA512 f24d02bf34f8be665e08a9a2799498f78daf6103a0ac5c10d79dc6b7b4461dac8ea2f91088e11bc90d0c74b59a59dc1e6361ad053718fb6da6a0691a9ac314a6
-    PATCHES
-        add-ws232.patch # https://github.com/Azure/azure-sdk-for-cpp/pull/4127
+    REF azure-core_1.9.0
+    SHA512 15650af728123e902c5bcf99ae2e8186b7ad77fe1187f11f379ec7c0dab5a0aba197d6cf6e5348845f51fa0f2d195e9f8eba9595756e600c166bebdf0a8c1b31
 )
 
 vcpkg_check_features(
@@ -15,7 +13,7 @@ vcpkg_check_features(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}/sdk/core/azure-core/
+    SOURCE_PATH "${SOURCE_PATH}/sdk/core/azure-core/"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DWARNINGS_AS_ERRORS=OFF

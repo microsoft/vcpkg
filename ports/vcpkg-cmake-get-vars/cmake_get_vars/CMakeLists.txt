@@ -1,17 +1,62 @@
 cmake_minimum_required(VERSION 3.20)
 
+if(NOT VCPKG_OUTPUT_FILE)
+    message(FATAL_ERROR "VCPKG_OUTPUT_FILE is required to be defined")
+endif()
+
+if(NOT CMAKE_BUILD_TYPE)
+    message(FATAL_ERROR "CMAKE_BUILD_TYPE is required to be defined")
+else()
+    string(TOUPPER "${CMAKE_BUILD_TYPE}" VCPKG_CONFIGS)
+endif()
+
 set(VCPKG_LANGUAGES "C;CXX" CACHE STRING "Languages to enables for this project")
 
-set(OUTPUT_STRING)
+project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
+
+
+set(OUTPUT_STRING "# Generator: ${CMAKE_CURRENT_LIST_FILE}\n")
+
+function(escaped out_var value)
+    string(REPLACE "\\" "\\\\" value "${value}")
+    string(REPLACE "\"" "\\\"" value "${value}")
+    string(REPLACE "\$" "\\\$" value "${value}")
+    set(${out_var} "${value}" PARENT_SCOPE)
+endfunction()
+
 # Build default checklists
 list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_NAME
+                                        CMAKE_SYSTEM_VERSION
                                         CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_SYSTEM_PROCESSOR
                                         CMAKE_HOST_SYSTEM_PROCESSOR
                                         CMAKE_SIZEOF_VOID_P
                                         MSVC
                                         MSVC_VERSION)
+if(ANDROID)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK
+        CMAKE_ANDROID_ARCH
+        CMAKE_ANDROID_ARCH_ABI
+        CMAKE_ANDROID_ARM_MODE
+        CMAKE_ANDROID_ARM_NEON
+        CMAKE_ANDROID_NDK
+        CMAKE_ANDROID_NDK_TOOLCHAIN_HOST_TAG
+        CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION
+        CMAKE_ANDROID_NDK_VERSION
+        CMAKE_ANDROID_STL_TYPE
+    )
+    # Forward legacy variables from older NDKs
+    if("${CMAKE_ANDROID_ARCH}" STREQUAL "")
+        set(CMAKE_ANDROID_ARCH "${ANDROID_ARCH_NAME}")
+    endif()
+    if("${CMAKE_ANDROID_NDK_TOOLCHAIN_HOST_TAG}" STREQUAL "")
+        set(CMAKE_ANDROID_NDK_TOOLCHAIN_HOST_TAG "${ANDROID_HOST_TAG}")
+    endif()
+    if(CMAKE_SYSTEM_VERSION STREQUAL "1" AND ANDROID_PLATFORM_LEVEL GREATER "1")
+        set(CMAKE_SYSTEM_VERSION "${ANDROID_PLATFORM_LEVEL}")
+    endif()
+endif()
 if(APPLE)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
                                             CMAKE_OSX_SYSROOT)
@@ -67,30 +112,19 @@ set(VCPKG_VARS_TO_CHECK "${VCPKG_DEFAULT_VARS_TO_CHECK}" CACHE STRING "Variables
 set(VCPKG_FLAGS_TO_CHECK "${VCPKG_DEFAULT_FLAGS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
 set(VCPKG_ENV_VARS_TO_CHECK "${VCPKG_DEFAULT_ENV_VARS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
 
-if(NOT VCPKG_OUTPUT_FILE)
-    message(FATAL_ERROR "VCPKG_OUTPUT_FILE is required to be defined")
-endif()
-
-if(NOT CMAKE_BUILD_TYPE)
-    message(FATAL_ERROR "CMAKE_BUILD_TYPE is required to be defined")
-else()
-    string(TOUPPER "${CMAKE_BUILD_TYPE}" VCPKG_CONFIGS)
-endif()
-
-
-project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
-
 foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK VCPKG_FLAGS_TO_CHECK)
-  string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
+    escaped(value "${${VAR}}")
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${value}\")\n")
 endforeach()
 
 foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
     if(CMAKE_HOST_WIN32)
-        string(REPLACE "\\" "/" ENV_${_env} "$ENV{${_env}}")
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"${ENV_${_env}}\")\n")
+        string(REPLACE "\\" "/" value "$ENV{${_env}}")
+        escaped(value "${value}")
     else()
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"$ENV{${_env}}\")\n")
+        escaped(value "$ENV{${_env}}")
     endif()
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"${value}\")\n")
 endforeach()
 
 set(EXTRA_FLAGS "")
@@ -160,10 +194,8 @@ foreach(flag ${VCPKG_LANGUAGES} SHARED_LINKER EXE_LINKER STATIC_LINKER MODULE_LI
             endif()
         endif()
     endif()
-    string(REPLACE "\\" "\\\\" ${flag}_FLAGS "${${flag}_FLAGS}")
-    string(REPLACE "\"" "\\\"" ${flag}_FLAGS "${${flag}_FLAGS}")
-    string(REPLACE "\$" "\\\$" ${flag}_FLAGS "${${flag}_FLAGS}")
-    string(APPEND OUTPUT_STRING "set(VCPKG_COMBINED_${flag}_FLAGS_${VCPKG_CONFIGS} \"${${flag}_FLAGS}\")\n")
+    escaped(value "${${flag}_FLAGS}")
+    string(APPEND OUTPUT_STRING "set(VCPKG_COMBINED_${flag}_FLAGS_${VCPKG_CONFIGS} \"${value}\")\n")
 endforeach()
 
 file(WRITE "${VCPKG_OUTPUT_FILE}" "${OUTPUT_STRING}")

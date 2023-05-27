@@ -79,7 +79,7 @@
         },
         {
           "$package": "Intl",
-          "name": "gettext"
+          "name": "gettext-libintl"
         },
         {
           "$package": "GIF",
@@ -132,6 +132,11 @@
           "name": "libxslt",
           "default-features": false,
           "platform": "!uwp & !mingw"
+        },
+        {
+          "$package": "Curses",
+          "name": "ncurses",
+          "platform": "!windows | mingw"
         },
         {
           "$package": "PhysFS",

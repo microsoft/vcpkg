@@ -185,7 +185,7 @@ vcpkg_cmake_configure(
 )
 if(BUILD_RTK) # Remote Modules are only downloaded on configure.
     # TODO: In the future try to download via vcpkg_from_github and move the files. That way patching does not need this workaround
-    vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch)
+    vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch rtk/Add-missing-include-for-Cuda.patch)
 endif()
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -212,4 +212,4 @@ if("rtk" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/itk/Modules/RTK.cmake" "${SOURCE_PATH}/Modules/Remote/RTK/utilities/lp_solve" "\${ITK_INSTALL_PREFIX}/include/RTK/lpsolve")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

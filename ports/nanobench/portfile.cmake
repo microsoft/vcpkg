@@ -1,22 +1,23 @@
-vcpkg_minimum_required(VERSION 2022-11-10)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-# Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinus/nanobench
     REF v${VERSION}
-    SHA512 2d0c9e912fd2e777e3c75ac52d51daff720b51a776e5fc9f9d1e198f8b106bc13bd21219f195bf9c6c80b5a13fdb6b805c436d3060ec46fbd1f2ef67d58945db
+    SHA512 aa00dfc585445fda63b3ba1a802da259993b6b99d0bc2c9bb5f8a9dac64d25e9a61f072846d8f70ee2fea58482431749189179520ba7f6e075dbb223574a3a4d
     HEAD_REF master
-    PATCHES
-        fix-cmakefile.patch
 )
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

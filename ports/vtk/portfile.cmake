@@ -39,12 +39,18 @@ vcpkg_from_github(
         jsoncpp.patch
         iotr.patch
         ${STRING_PATCH}
+        9690.diff
 )
 
 # =============================================================================
 #Overwrite outdated modules if they have not been patched:
 file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
 # =============================================================================
+
+if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
+    message(WARNING "${HDF5_WITH_PARALLEL} Enabling MPI in vtk.")
+    list(APPEND FEATURES "mpi")
+endif()
 
 # =============================================================================
 # Options:

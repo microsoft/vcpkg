@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.7.0",
-  "port-version": 2,
+  "port-version": 6,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -104,6 +104,19 @@
       "description": "Enable dnn module",
       "dependencies": [
         "protobuf"
+      ]
+    },
+    "dnn-cuda": {
+      "description": "Build dnn module with CUDA support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "cudnn",
+            "dnn"
+          ]
+        }
       ]
     },
     "eigen": {

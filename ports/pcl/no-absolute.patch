@@ -2,7 +2,7 @@ diff --git a/PCLConfig.cmake.in b/PCLConfig.cmake.in
 index 4137ed1..167fde2 100644
 --- a/PCLConfig.cmake.in
 +++ b/PCLConfig.cmake.in
-@@ -230,7 +230,7 @@ macro(find_flann)
+@@ -225,7 +225,7 @@ macro(find_flann)
    if(PCL_ALL_IN_ONE_INSTALLER)
      set(FLANN_ROOT "${PCL_ROOT}/3rdParty/Flann")
    elseif(NOT FLANN_ROOT)
@@ -10,12 +10,4 @@ index 4137ed1..167fde2 100644
 +    set(FLANN_ROOT "${VCPKG_IMPORT_PREFIX}")
    endif()
  
-   set(FLANN_USE_STATIC @FLANN_USE_STATIC@)
-@@ -402,7 +402,6 @@ elseif(EXISTS "${PCL_DIR}/include/pcl/pcl_config.h")
-   # pcl_message("PCL found into a build tree.")
-   set(PCL_CONF_INCLUDE_DIR "${PCL_DIR}/include") # for pcl_config.h
-   set(PCL_LIBRARY_DIRS "${PCL_DIR}/@LIB_INSTALL_DIR@")
--  set(PCL_SOURCES_TREE "@CMAKE_SOURCE_DIR@")
- else()
-   pcl_report_not_found("PCL can not be found on this machine")
- endif()
+   set(PCL_FLANN_REQUIRED_TYPE @PCL_FLANN_REQUIRED_TYPE@)

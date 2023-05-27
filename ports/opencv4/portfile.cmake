@@ -50,6 +50,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"      WITH_CUBLAS
  "cuda"      WITH_CUDA
  "cudnn"     WITH_CUDNN
+ "dnn-cuda"  OPENCV_DNN_CUDA
  "eigen"     WITH_EIGEN
  "ffmpeg"    WITH_FFMPEG
  "freetype"  WITH_FREETYPE
@@ -444,6 +445,7 @@ vcpkg_cmake_configure(
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
         -DBUILD_IPP_IW=${WITH_IPP}
+        -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
 )
 
 vcpkg_cmake_install()
