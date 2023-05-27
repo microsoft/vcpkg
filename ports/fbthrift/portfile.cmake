@@ -50,6 +50,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/frozen/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/gtest/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/visitation/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/test"
