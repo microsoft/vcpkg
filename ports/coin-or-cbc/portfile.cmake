@@ -25,9 +25,6 @@ if(1)
         --without-sample
         --without-netlib
         --without-miplib3
-        --without-amd
-        --without-cholmod
-        --without-mumps
         --enable-relocatable
         --disable-readline
     )
