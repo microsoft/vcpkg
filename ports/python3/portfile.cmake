@@ -258,20 +258,9 @@ else()
             ac_cv_file__dev_ptmx=no
             ac_cv_pthread=yes
             ac_osx_32bit=false
+            # Only used to determine runtime deps of readline, but the port disables readline.
+            ac_cv_prog_READELF=true # true, the program
         )
-        if(VCPKG_TARGET_IS_ANDROID)
-            vcpkg_cmake_get_vars(cmake_vars_file)
-            include("${cmake_vars_file}")
-            cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER PARENT_PATH llvm_dir)
-            if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "Clang" AND llvm_dir)
-                find_program(READELF NAMES llvm-readelf PATHS "${llvm_dir}" NO_DEFAULT_PATH)
-                if(READELF)
-                    list(APPEND OPTIONS "ac_cv_prog_READELF=${READELF}")
-                else()
-                    message(WARNING "No llvm-readelf in ${llvm_dir}.")
-                endif()
-            endif()
-        endif()
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
             list(APPEND OPTIONS "LDFLAGS=\${LDFLAGS//-Wl,--no-undefined/}")
         endif()
