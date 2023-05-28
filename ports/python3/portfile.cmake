@@ -220,8 +220,12 @@ else()
         set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
     endif()
 
+    if(NOT ENV{PKG_CONFIG})
+        vcpkg_find_acquire_program(PKGCONFIG)
+        set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+    endif()
+
     set(OPTIONS
-        "--with-openssl=${CURRENT_INSTALLED_DIR}"
         "--without-ensurepip"
         "--with-suffix="
         "--with-system-expat"
