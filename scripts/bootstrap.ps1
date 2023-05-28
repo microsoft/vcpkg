@@ -47,12 +47,15 @@ Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 
 $versionDate = '2023-03-29'
 if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' -or $env:PROCESSOR_IDENTIFIER -match "ARMv[8,9] \(64-bit\)") {
-    Invoke-WebRequest "https://github.com/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg-arm64.exe" -OutFile "$vcpkgRootDir\vcpkg.exe"
+    $arch = "-arm64"
 } else {
-    Invoke-WebRequest "https://github.com/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg.exe" -OutFile "$vcpkgRootDir\vcpkg.exe"
+    $arch = ""
 }
+$uri = "https://github.com/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg$arch.exe"
+$dest = "$vcpkgRootDir\vcpkg.exe"
+Invoke-WebRequest $uri -OutFile $dest
 
-$signature = Get-AuthenticodeSignature "$vcpkgRootDir\vcpkg.exe"
+$signature = Get-AuthenticodeSignature $dest
 
 if ($signature.Status -ne "Valid")
 {
