@@ -390,7 +390,7 @@
     },
     "azure-c-shared-utility": {
       "baseline": "2023-01-18",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-core-cpp": {
       "baseline": "1.9.0",
