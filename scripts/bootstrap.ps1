@@ -52,7 +52,13 @@ if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' -or $env:PROCESSOR_IDENTIFIER -match
     Invoke-WebRequest "https://github.com/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg.exe" -OutFile "$vcpkgRootDir\vcpkg.exe"
 }
 
-Write-Host ""
+$signature = Get-AuthenticodeSignature "$vcpkgRootDir\vcpkg.exe"
+
+if ($signature.Status -ne "Valid")
+{
+    Write-Error "Validating the signature of vcpkg.exe failed: $signature.StatusMessage"
+    throw
+}
 
 if ($LASTEXITCODE -ne 0)
 {
