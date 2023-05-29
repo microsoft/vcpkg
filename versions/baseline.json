@@ -8390,7 +8390,7 @@
     },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-gn": {
       "baseline": "2022-04-16",
