@@ -10,14 +10,15 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" TINYUTF8_BUILD_STATIC)
 
-vcpkg_cmake_configure(
+vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
+    PREFER_NINJA
     OPTIONS 
         -DTINYUTF8_BUILD_STATIC=${TINYUTF8_BUILD_STATIC}
         -DTINYUTF8_BUILD_TESTING=OFF
 )
 
-vcpkg_cmake_install()
+vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 # Handle copyright
