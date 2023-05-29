@@ -1,9 +1,28 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
+set(variables "")
+
+# Tool ports
+
+foreach(tool IN ITEMS bazel)
+    list(APPEND variables "vcpkg-tool-${tool}")
+    find_program("vcpkg-tool-${tool}"
+        NAMES "${tool}"
+        PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools"
+              "${CURRENT_HOST_INSTALLED_DIR}/tools/vcpkg-tool-${tool}"
+        NO_DEFAULT_PATH
+        REQUIRED
+    )
+    if(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/vcpkg-tool-${tool}")
+        list(APPEND CMAKE_IGNORE_PATH "${CURRENT_HOST_INSTALLED_DIR}/tools/vcpkg-tool-${tool}")
+    endif()
+endforeach()
+list(APPEND CMAKE_IGNORE_PATH "${CURRENT_HOST_INSTALLED_DIR}/tools")
+
 # For each vcpkg_find_acquire_program(NAME).cmake script,
 # there must be a literal call to vcpkg_find_acquire_program(NAME).cmake
 
-set(variables BAZEL BISON FLEX GIT GN NINJA PERL PKGCONFIG PYTHON2 PYTHON3 YASM)
+list(APPEND variables BAZEL BISON FLEX GIT GN NINJA PERL PKGCONFIG PYTHON2 PYTHON3 YASM)
 vcpkg_find_acquire_program(BAZEL)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
