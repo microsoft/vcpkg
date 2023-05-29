@@ -1,5 +1,16 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
+set(validator_args "")
+if(VCPKG_TARGET_EXECUTABLE_SUFFIX)
+    set(validator_args VALIDATOR validate_suffix)
+endif()
+function(validate_suffix validator_result_var item)
+    cmake_path(GET item EXTENSION LAST_ONLY suffix)
+    if(NOT suffix STREQUAL VCPKG_TARGET_EXECUTABLE_SUFFIX)
+        set(${validator_result_var} FALSE PARENT_SCOPE)
+    endif()
+endfunction()
+
 set(variables "")
 
 # Tool ports
@@ -8,6 +19,7 @@ foreach(tool IN ITEMS bazel)
     list(APPEND variables "vcpkg-tool-${tool}")
     find_program("vcpkg-tool-${tool}"
         NAMES "${tool}"
+        ${validator_args}
         PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools"
               "${CURRENT_HOST_INSTALLED_DIR}/tools/vcpkg-tool-${tool}"
         NO_DEFAULT_PATH
