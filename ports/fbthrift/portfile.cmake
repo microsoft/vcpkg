@@ -4,7 +4,7 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
-    REF v2023.05.15.00
+    REF "v${VERSION}"
     SHA512  b9f7bb7037cbc24ba18928cfad8673fd321ec095dec5fa6ca5b6c51b468873bbefde4326d39faa916747f4273b5a4003d60c0f6f755bfce095f9d3e8946bcb46
     HEAD_REF master
     PATCHES 
