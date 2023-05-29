@@ -34,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         iconv            GDAL_USE_ICONV
         jpeg             GDAL_USE_JPEG
         core             GDAL_USE_JSONC
+        kea              GDAL_USE_KEA
         lerc             GDAL_USE_LERC
         libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
@@ -71,6 +72,12 @@ endif()
 
 string(REPLACE "dynamic" "" qhull_target "Qhull::qhull${VCPKG_LIBRARY_LINKAGE}_r")
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND RELEASE_OPTIONS -DKEA_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/libkea.lib)
+    list(APPEND DEBUG_OPTIONS -DKEA_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/libkea.lib)
+endif()
+
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -99,6 +106,9 @@ vcpkg_cmake_configure(
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
+        ${DEBUG_OPTIONS}
+    OPTIONS_RELEASE
+        ${RELEASE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         QHULL_LIBRARY
 )
