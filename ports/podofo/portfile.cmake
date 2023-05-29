@@ -38,6 +38,9 @@ vcpkg_cmake_configure(
         CMAKE_DISABLE_FIND_PACKAGE_Boost
         CMAKE_DISABLE_FIND_PACKAGE_CppUnit
         CMAKE_DISABLE_FIND_PACKAGE_LIBCRYPTO
+        CMAKE_DISABLE_FIND_PACKAGE_FONTCONFIG
+        CMAKE_DISABLE_FIND_PACKAGE_LIBIDN
+        PODOFO_NO_FONTMANAGER
 )
 
 vcpkg_cmake_install()
@@ -53,6 +56,8 @@ find_dependency(OpenSSL)
 )
 
 vcpkg_cmake_config_fixup()
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
