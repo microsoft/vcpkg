@@ -8,6 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}" PATCHES a.patch)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" TINYUTF8_BUILD_STATIC)
 
 vcpkg_cmake_configure(
