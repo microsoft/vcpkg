@@ -7,10 +7,10 @@
   "supports": "(windows & x64 & !static) | (linux & x64)",
   "dependencies": [
     "ffmpeg",
+    "jsonifier",
     "libsodium",
     "openssl",
     "opus",
-    "jsonifier",
     {
       "name": "vcpkg-cmake",
       "host": true
