@@ -7061,8 +7061,8 @@
       "port-version": 1
     },
     "refprop-headers": {
-      "baseline": "2019-04-14",
-      "port-version": 2
+      "baseline": "2022-12-07",
+      "port-version": 0
     },
     "rendergraph": {
       "baseline": "1.3.0",
