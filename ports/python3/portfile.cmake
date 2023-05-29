@@ -3,10 +3,10 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
-set(PYTHON_VERSION_MAJOR  3)
-set(PYTHON_VERSION_MINOR  10)
-set(PYTHON_VERSION_PATCH  7)
-set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
+string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" PYTHON_VERSION "${VERSION}")
+set(PYTHON_VERSION_MAJOR "${CMAKE_MATCH_1}")
+set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_2}")
+set(PYTHON_VERSION_PATCH "${CMAKE_MATCH_3}")
 
 set(PATCHES
     0001-only-build-required-projects.patch
@@ -14,10 +14,7 @@ set(PATCHES
     0004-devendor-external-dependencies.patch
     0005-dont-copy-vcruntime.patch
     0008-python.pc.patch
-    0009-bz2d.patch
-    0010-dont-skip-rpath.patch
     0012-force-disable-curses.patch
-    0013-configure-no-libcrypt.patch  # https://github.com/python/cpython/pull/28881
     0014-fix-get-python-inc-output.patch
 )
 
@@ -52,7 +49,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 88bf6efef632a7dad7306a59b7d5da159947d6675f0d264f1f33aa49a5703b4e4595011de52098eb839cc648994ae143f668507be7209f6bf3fe8ae0ec6a9125
+    SHA512 58290251f3597964f1002cd06470f9c533b92db9cc9f217d41436d3acd1f80603112235a539dd479b496c96f6b0a226d61e5fbe2d13737820b3c7afe1e821f6c
     HEAD_REF master
     PATCHES ${PATCHES}
 )
