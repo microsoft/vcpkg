@@ -18,7 +18,7 @@ vcpkg_from_github(
         snprintf.patch
         00012-fix-use-cxx17.patch
         00015-disable-download-archive.patch
-        00016-fix-gRPC_BUILD_CODEGEN.patch
+        00016-fix-gRPC_BUILD_CODEGEN.patch # Patch from upstream: https://github.com/grpc/grpc/pull/32986
 )
 
 if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
