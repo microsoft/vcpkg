@@ -7,7 +7,6 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     SHA512 af57c3e82a8804174c52105ecc14ea7a2d4e293ef13b2fc371f2455890ea54683ed76adf4649e561686a6b4c3368676f5edcc54d9f22c4850be3ba32832d3272
     PATCHES
         0001-unofficial-sqlite3-and-sqlcipher.patch
-        fix_dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
