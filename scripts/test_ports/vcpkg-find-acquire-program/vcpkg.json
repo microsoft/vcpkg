@@ -3,5 +3,5 @@
   "version-string": "0",
   "port-version": 1,
   "description": "Test port to exercise vcpkg_find_acquire_program",
-  "supports": "windows"
+  "supports": "native"
 }
