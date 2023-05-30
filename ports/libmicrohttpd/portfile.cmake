@@ -40,6 +40,8 @@ else()
             --disable-curl
             --disable-https
             --with-gnutls=no
+        OPTIONS_DEBUG --enable-asserts
+        OPTIONS_RELEASE --disable-asserts
     )
 
     vcpkg_install_make()
