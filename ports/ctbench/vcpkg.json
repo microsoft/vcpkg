@@ -10,7 +10,10 @@
     "boost-container",
     "boost-process",
     "fmt",
-    "llvm",
+    {
+      "name": "llvm",
+      "default-features": false
+    },
     "nlohmann-json",
     "sciplot",
     {
