@@ -7,14 +7,14 @@
   "supports": "!uwp",
   "dependencies": [
     {
-      "name": "libiconv",
-      "platform": "!windows"
-    },
-    {
       "name": "inih",
       "features": [
         "cpp"
       ]
+    },
+    {
+      "name": "libiconv",
+      "platform": "!windows"
     },
     {
       "name": "vcpkg-cmake",
