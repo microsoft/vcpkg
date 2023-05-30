@@ -22,7 +22,6 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-#file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/bin/sleef.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 # Install DLL and PDB files
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
