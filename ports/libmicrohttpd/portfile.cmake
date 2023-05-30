@@ -20,7 +20,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH w32/VS2015/libmicrohttpd.vcxproj
+        PROJECT_SUBPATH w32/VS-Any-Version/libmicrohttpd.vcxproj
         RELEASE_CONFIGURATION "Release-${CFG_SUFFIX}"
         DEBUG_CONFIGURATION "Debug-${CFG_SUFFIX}"
     )
