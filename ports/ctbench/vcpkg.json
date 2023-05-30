@@ -9,8 +9,8 @@
   "dependencies": [
     "boost-container",
     "boost-process",
-    "catch2",
     "fmt",
+    "llvm",
     "nlohmann-json",
     "sciplot",
     {
