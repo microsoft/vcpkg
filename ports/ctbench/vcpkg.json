@@ -2,6 +2,9 @@
   "name": "ctbench",
   "version-string": "1.3.1",
   "homepage": "https://github.com/JPenuchot/ctbench",
+  "documentation": "https://jpenuchot.github.io/ctbench-docs/",
+  "license": "MIT",
+  "supports": "!windows",
   "description": "Compiler-assisted variable size benchmarking for the study of C++ metaprogram compile times.",
   "dependencies": [
     {
