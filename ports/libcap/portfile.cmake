@@ -14,11 +14,22 @@ vcpkg_configure_make(
   COPY_SOURCE
 )
 
+find_program(GCC_FOUND gcc)
+find_program(CLANG_FOUND clang)
+if(GCC_FOUND)
+  set(C_HOST_COMPILER gcc)
+elseif (CLANG_FOUND)
+  set(C_HOST_COMPILER clang)
+else ()
+  message(FATAL_ERROR "Unable to find gcc or clang host compiler")
+endif ()
+
 vcpkg_build_make(SUBPATH libcap
   BUILD_TARGET cap_names.h
+  LOGFILE_ROOT "configure"
   OPTIONS
     prefix=${CURRENT_INSTALLED_DIR}
-    CC=gcc # use host architecture to generate cap_names.h
+    CC=${C_HOST_COMPILER} # use host architecture to generate cap_names.h
 )
 
 list(APPEND libcap_OPTIONS "prefix=${CURRENT_INSTALLED_DIR}" "CC=$ENV{CC}" "AR=$ENV{AR}" "RANLIB=$ENV{RANLIB}")
@@ -26,12 +37,14 @@ list(APPEND libcap_OPTIONS "prefix=${CURRENT_INSTALLED_DIR}" "CC=$ENV{CC}" "AR=$
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   vcpkg_build_make(SUBPATH libcap
     BUILD_TARGET libcap.a
+    LOGFILE_ROOT "build"
     OPTIONS
       ${libcap_OPTIONS}
   )
 else()
   vcpkg_build_make(SUBPATH libcap
     BUILD_TARGET libcap.so
+    LOGFILE_ROOT "build"
     OPTIONS
       ${libcap_OPTIONS}
   )
@@ -39,6 +52,7 @@ endif()
 
 vcpkg_build_make(SUBPATH libcap
   BUILD_TARGET libcap.pc
+  LOGFILE_ROOT "pkgconfig"
   OPTIONS
     ${libcap_OPTIONS}
 )
