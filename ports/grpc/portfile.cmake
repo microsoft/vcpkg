@@ -45,7 +45,6 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
         -DgRPC_INSTALL=ON
         -DgRPC_BUILD_TESTS=OFF
-        -DgRPC_BUILD_CODEGEN=ON
         -DgRPC_STATIC_LINKING=${gRPC_STATIC_LINKING}
         -DgRPC_MSVC_STATIC_RUNTIME=${gRPC_MSVC_STATIC_RUNTIME}
         -DgRPC_ZLIB_PROVIDER=package
@@ -89,9 +88,7 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+message(STATUS "111******gRPC_BUILD_CODEGEN=${gRPC_BUILD_CODEGEN}")
 
 vcpkg_copy_pdbs()
 if (VCPKG_TARGET_IS_WINDOWS)
