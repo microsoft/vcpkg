@@ -1941,7 +1941,7 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.0.1",
+      "baseline": "8.1.2",
       "port-version": 0
     },
     "curlpp": {
