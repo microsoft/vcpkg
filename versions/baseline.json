@@ -7718,7 +7718,7 @@
     },
     "sqlitecpp": {
       "baseline": "3.2.0",
-      "port-version": 2
+      "port-version": 1
     },
     "sqlpp11": {
       "baseline": "0.61",
