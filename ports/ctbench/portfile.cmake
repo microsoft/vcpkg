@@ -3,8 +3,8 @@ vcpkg_minimum_required(VERSION 2023-04-07)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jpenuchot/ctbench
-    REF v1.3.1
-    SHA512 59c633b08de0517c4fe6fd51f7468f7e7eab9131bd190d9b4d1b471a11e767da225f1eca797c2aa9c6b55b88377db48a525afce8d166486a06b989afa10cc2de
+    REF v1.3.2
+    SHA512 f04f03e556beaef6b8a62d54ff4b0ace14cb582ef5f7c584798a073f2794bd6be8e1186ab41a0b23d104e0a06ddf25139ef67c515bd9891928af026d773a9632
     HEAD_REF main
 )
 
