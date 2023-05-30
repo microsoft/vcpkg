@@ -13,7 +13,6 @@
     "llvm",
     "nlohmann-json",
     "sciplot",
-    "tbb",
     {
       "name": "vcpkg-cmake",
       "host": true
