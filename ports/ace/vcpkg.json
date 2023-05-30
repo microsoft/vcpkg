@@ -17,7 +17,7 @@
       "description": "The ACE ORB"
     },
     "versioned-namespace": {
-      "description": "Enable versioned namespace support",
+      "description": "Enable versioned namespace support"
     },
     "wchar": {
       "description": "Enable extra wide char functions in ACE",
