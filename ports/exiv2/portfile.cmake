@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
     REF "v${VERSION}"
-    SHA512 7d7121770a9394efd31acb74709583e587351fc48c485a2f684cacce4ed19a2d07a6cb1cea986c16bf64851fd53b22a7277c1e1ae1a6cd69a5761afae3c5c731
+    SHA512 35e483c6123f099167ed8647fae7c6e5512434c24d0afe684180ba6a5114068d5678280a01c8e6cfee0d1e555e1dc2a1606989d46950ce3ef1a3859caeed4dad
     HEAD_REF master
     PATCHES
         fix-find_expat.patch
+        fix-inih.patch # bypass findinih.cmake and use the vcpkg version directly
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
