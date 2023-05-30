@@ -7972,6 +7972,10 @@
       "baseline": "0.16.0",
       "port-version": 1
     },
+    "throwtheswitch-unity": {
+      "baseline": "2.5.2",
+      "port-version": 0
+    },
     "tidy-html5": {
       "baseline": "5.8.0",
       "port-version": 0

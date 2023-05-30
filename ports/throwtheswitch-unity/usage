@@ -1,0 +1,5 @@
+
+The package throwtheswitch-unity provides CMake targets:
+
+    find_package(unity REQUIRED)
+    target_link_libraries(main PRIVATE unity::framework)

@@ -1,0 +1,26 @@
+{
+  "name": "throwtheswitch-unity",
+  "version": "2.5.2",
+  "maintainers": "ThrowTheSwitch",
+  "description": "Simple Unit Testing for C",
+  "homepage": "http://www.throwtheswitch.org/unity",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "fixture": {
+      "description": "Fixture extension for unity"
+    },
+    "memory": {
+      "description": "Memory extension for unity"
+    }
+  }
+}
