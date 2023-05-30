@@ -1,9 +1,11 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO sammycage/lunasvg
-  REF "${VERSION}"
-  SHA512 519ca76a02da8faa4d07e6fc8a0db32c75c5b9abbe3584664037f02760e667e487248c0a445cd8ca5b0add0828cc1e0922a9c8a0aea52558d4fa083f6ae802f7
+  REF "v${VERSION}"
+  SHA512 368f76ae3c04fbcb08406d9e7793af37b5e28ab90ffe0978fae8783620a45af3270fcd4e895c553e3e651f0ba07e37355acffd9f0aab1bf9ef822f465de21073
   HEAD_REF master
+  PATCHES
+    fix-cmake.patch
 )
 
 vcpkg_cmake_configure(
@@ -15,7 +17,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/lunasvg)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-lunasvg)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
