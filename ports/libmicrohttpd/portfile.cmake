@@ -35,6 +35,7 @@ else()
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             --disable-doc
+            --disable-nls
             --disable-examples
             --disable-curl
             --disable-https
