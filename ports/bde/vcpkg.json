@@ -2,7 +2,7 @@
   "name": "bde",
   "version": "3.117.0.0",
   "description": "Basic Development Environment - a set of foundational C++ libraries used at Bloomberg.",
-  "supports": "!windows & !arm",
+  "supports": "!windows & !arm & !android & !osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -12,10 +12,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "cxx17": {
-      "description": "Enable compiler C++17."
-    }
-  }
+  ]
 }
