@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2023-04-07)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jpenuchot/ctbench
