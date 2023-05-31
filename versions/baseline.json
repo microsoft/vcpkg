@@ -2457,8 +2457,8 @@
       "port-version": 0
     },
     "fbthrift": {
-      "baseline": "2022.03.21.00",
-      "port-version": 3
+      "baseline": "2023.05.15.00",
+      "port-version": 0
     },
     "fcl": {
       "baseline": "0.7.0",
@@ -2497,8 +2497,8 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2022.10.31.00",
-      "port-version": 1
+      "baseline": "2023.05.15.00",
+      "port-version": 0
     },
     "flann": {
       "baseline": "2019-04-07",
@@ -2561,8 +2561,8 @@
       "port-version": 0
     },
     "folly": {
-      "baseline": "2022.10.31.00",
-      "port-version": 7
+      "baseline": "2023.05.15.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -5485,7 +5485,7 @@
       "port-version": 6
     },
     "mvfst": {
-      "baseline": "2022-11-03",
+      "baseline": "2023-05-18",
       "port-version": 0
     },
     "mygui": {
@@ -6441,8 +6441,8 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2022.07.11.00",
-      "port-version": 1
+      "baseline": "2023.05.15.00",
+      "port-version": 0
     },
     "psimd": {
       "baseline": "2021-02-21",
@@ -7178,7 +7178,7 @@
     },
     "rsocket": {
       "baseline": "2021.08.30.00",
-      "port-version": 1
+      "port-version": 2
     },
     "rtabmap": {
       "baseline": "0.21.0",
@@ -8521,8 +8521,8 @@
       "port-version": 4
     },
     "wangle": {
-      "baseline": "2022.03.21.00",
-      "port-version": 1
+      "baseline": "2023.05.15.00",
+      "port-version": 0
     },
     "wasmedge": {
       "baseline": "0.12.1",
