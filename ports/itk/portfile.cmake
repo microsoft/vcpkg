@@ -91,14 +91,14 @@ if("tools" IN_LIST FEATURES)
     endif()
 endif()
 if("vtk" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_find_acquire_python3_interpreter(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
          "-DPython3_EXECUTABLE:PATH=${PYTHON3}" # Required by mvtk if vtk[python] was build
          )
 endif()
 if("python" IN_LIST FEATURES)
     message(STATUS "${PORT} builds a long time (>1h) with python wrappers enabled!")
-    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_find_acquire_python3_interpreter(PYTHON3)
     vcpkg_find_acquire_program(SWIG) # Swig is only required for wrapping!
     get_filename_component(SWIG_DIR "${SWIG}" DIRECTORY)
     list(APPEND ADDITIONAL_OPTIONS

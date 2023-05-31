@@ -26,7 +26,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if("pybind11" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_find_acquire_python3_interpreter(PYTHON3)
     list(APPEND FEATURE_OPTIONS -DPYTHON_EXECUTABLE=${PYTHON3})
 endif()
 

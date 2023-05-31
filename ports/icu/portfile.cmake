@@ -22,7 +22,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         fix-win-build.patch
 )
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
 
 if(VCPKG_TARGET_IS_WINDOWS)

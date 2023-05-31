@@ -14,7 +14,7 @@ file(REMOVE "${SOURCE_PATH}/tools/cmake/Modules/FindPython.cmake")
 file(REMOVE "${SOURCE_PATH}/tools/cmake/Modules/FindOpenSSL.cmake")
 file(REMOVE "${SOURCE_PATH}/tools/cmake/Modules/FindJsonCpp.cmake")
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")

@@ -11,7 +11,7 @@ vcpkg_from_github(
         0002-fix-uwp.patch
 )
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 vcpkg_execute_required_process(
     COMMAND "${PYTHON3}" "${SOURCE_PATH}/cmake/make_cmakelists.py" "cmake/CMakeLists.txt"

@@ -10,7 +10,7 @@ vcpkg_from_github(
 file(REMOVE "${SOURCE_PATH}/cmake/FindThreads.cmake")
 
 if ("python" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_find_acquire_python3_interpreter(PYTHON3)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

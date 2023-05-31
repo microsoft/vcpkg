@@ -41,7 +41,8 @@ if(CMAKE_HOST_WIN32)
 	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3.exe")
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 else()
-	vcpkg_find_acquire_program(PYTHON3)
+	include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-tool-python3-interpreter/vcpkg-port-config.cmake")
+	vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 	# on macos arm64 use conda miniforge
 	if (VCPKG_HOST_IS_OSX)

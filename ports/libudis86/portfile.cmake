@@ -11,7 +11,7 @@ vcpkg_from_github(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 vcpkg_execute_required_process(
     COMMAND "${PYTHON3}" "${SOURCE_PATH}/scripts/ud_itab.py" "${SOURCE_PATH}/docs/x86/optable.xml" "${SOURCE_PATH}/libudis86/"

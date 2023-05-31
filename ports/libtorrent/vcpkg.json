@@ -1,6 +1,7 @@
 {
   "name": "libtorrent",
   "version": "2.0.9",
+  "port-version": 1,
   "maintainers": "Arvid Norberg <arvid.norberg@gmail.com>",
   "description": "An efficient feature complete C++ BitTorrent implementation",
   "homepage": "https://libtorrent.org",
@@ -50,8 +51,13 @@
     },
     "python": {
       "description": "build the python bindings in bindings/python directory",
+      "supports": "!windows",
       "dependencies": [
-        "boost-python"
+        "boost-python",
+        {
+          "name": "vcpkg-tool-python3-interpreter",
+          "host": true
+        }
       ]
     },
     "test": {

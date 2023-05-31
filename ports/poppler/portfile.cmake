@@ -41,7 +41,7 @@ if("zlib" IN_LIST FEATURES)
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

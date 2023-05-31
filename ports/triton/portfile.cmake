@@ -17,7 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 set(ADDITIONAL_OPTIONS "")
 if(PYTHON_BINDINGS)
-    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_find_acquire_python3_interpreter(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         "-DPYTHON_EXECUTABLE=${PYTHON3}"
     )

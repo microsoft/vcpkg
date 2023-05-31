@@ -14,7 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if (ENABLE_GLSLANG_BINARIES)
-    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_find_acquire_python3_interpreter(PYTHON3)
     get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
     vcpkg_add_to_path("${PYTHON_PATH}")
 endif ()

@@ -11,7 +11,7 @@ vcpkg_extract_source_archive(
         fix-static.patch
 )
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 # Add python3 to path
 get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)

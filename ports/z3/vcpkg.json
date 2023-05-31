@@ -1,6 +1,7 @@
 {
   "name": "z3",
   "version": "4.11.0",
+  "port-version": 1,
   "description": "Z3 is a theorem prover from Microsoft Research",
   "homepage": "https://github.com/Z3Prover/z3",
   "license": "MIT",
@@ -12,6 +13,10 @@
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-python3-interpreter",
       "host": true
     }
   ]

@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ${FLINT_HASH}
 )
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 vcpkg_extract_source_archive(
     SOURCE_PATH

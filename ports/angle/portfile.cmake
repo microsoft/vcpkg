@@ -67,7 +67,7 @@ vcpkg_download_distfile(GNI_TO_CMAKE_PY
 )
 
 # Generate CMake files from GN / GNI files
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 set(_root_gni_files_to_convert
   "compiler.gni Compiler.cmake"

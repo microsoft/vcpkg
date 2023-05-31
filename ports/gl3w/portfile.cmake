@@ -12,7 +12,7 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}
 file(COPY "${CURRENT_INSTALLED_DIR}/include/GL/glcorearb.h" DESTINATION "${SOURCE_PATH}/include/GL")
 file(COPY "${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h" DESTINATION "${SOURCE_PATH}/include/KHR")
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 vcpkg_execute_required_process(
   COMMAND "${PYTHON3}" "${SOURCE_PATH}/gl3w_gen.py"

@@ -1,7 +1,7 @@
 {
   "name": "llvm",
   "version": "15.0.7",
-  "port-version": 3,
+  "port-version": 4,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -21,6 +21,10 @@
     },
     {
       "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-python3-interpreter",
       "host": true
     }
   ],

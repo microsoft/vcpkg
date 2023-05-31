@@ -1,7 +1,7 @@
 {
   "name": "xcb",
   "version": "1.14",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C interface to the X Window System protocol, which replaces the traditional Xlib interface.",
   "homepage": "https://xcb.freedesktop.org/",
   "license": "X11-distribute-modifications-variant",
@@ -15,6 +15,10 @@
     },
     "pthread",
     "pthread-stubs",
+    {
+      "name": "vcpkg-tool-python3-interpreter",
+      "host": true
+    },
     "xcb-proto",
     "xcb-util-m4",
     "xorg-macros",

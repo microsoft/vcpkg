@@ -14,7 +14,7 @@ vcpkg_from_github(
 # conflicting with the built-in, more modern FindOpenCL.cmake
 file(REMOVE "${SOURCE_PATH}/src/FindOpenCL.cmake")
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"

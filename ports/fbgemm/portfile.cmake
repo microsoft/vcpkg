@@ -1,5 +1,5 @@
 # The project's CMakeLists.txt uses Python to select source files. Check if it is available in advance.
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

@@ -15,7 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         pybind11 BUILD_ONNX_PYTHON
 )
 if("pybind11" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_find_acquire_python3_interpreter(PYTHON3)
     list(APPEND FEATURE_OPTIONS
         -DPython3_EXECUTABLE=${PYTHON3}
         -DONNX_USE_PROTOBUF_SHARED_LIBS=ON # /wd4251

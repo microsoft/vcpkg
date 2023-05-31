@@ -20,7 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         generator nanopb_BUILD_GENERATOR
 )
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}

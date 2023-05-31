@@ -27,7 +27,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # Like protoc, python is required for codegen.
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 # PATH for .bat scripts so it can find 'python'
 get_filename_component(PYTHON_DIR "${PYTHON3}" PATH)

@@ -6,7 +6,7 @@ vcpkg_from_git(
     REF 261679b3d2f3336d8531ed38e110254c3e2d1c10
 )
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 
 function(checkout_in_path PATH URL REF)

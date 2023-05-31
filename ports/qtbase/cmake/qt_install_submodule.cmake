@@ -96,7 +96,7 @@ function(qt_cmake_configure)
     get_filename_component(PERL_PATH ${PERL} DIRECTORY)
     vcpkg_add_to_path(${PERL_PATH})
     if(NOT PORT STREQUAL "qtwebengine" OR QT_IS_LATEST) # qtwebengine requires python2; since 6.3 python3
-        vcpkg_find_acquire_program(PYTHON3) # Python is required by some qt ports
+        vcpkg_find_acquire_python3_interpreter(PYTHON3) # Python is required by some qt ports
         get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
         vcpkg_add_to_path(${PYTHON3_PATH})
     endif()

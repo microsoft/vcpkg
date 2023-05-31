@@ -22,7 +22,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS --disable-dependency-tracking)
 endif()
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 file(TO_NATIVE_PATH "${PYTHON3_DIR}" PYTHON3_DIR_NATIVE)
 vcpkg_add_to_path("${PYTHON3_DIR}")

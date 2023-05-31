@@ -43,7 +43,7 @@ endif()
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(GIT)
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

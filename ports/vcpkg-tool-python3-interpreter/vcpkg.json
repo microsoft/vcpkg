@@ -1,0 +1,10 @@
+{
+  "name": "vcpkg-tool-python3-interpreter",
+  "version": "3.10.7",
+  "description": "Python 3",
+  "homepage": "https://www.python.org/downloads/release/python-3107/",
+  "supports": "native",
+  "dependencies": [
+    "vcpkg-find-acquire-tool"
+  ]
+}

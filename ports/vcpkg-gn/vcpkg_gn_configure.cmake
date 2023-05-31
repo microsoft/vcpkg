@@ -25,7 +25,7 @@ function(vcpkg_gn_configure)
         message(FATAL_ERROR "SOURCE_PATH must be specified.")
     endif()
 
-    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_find_acquire_python3_interpreter(PYTHON3)
     get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
     vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 

@@ -111,7 +111,7 @@ endif()
 
 string(REPLACE ";" "," GLAD_API "${GLAD_API}")
 
-vcpkg_find_acquire_program(PYTHON3)
+vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 file(COPY
     "${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h"
