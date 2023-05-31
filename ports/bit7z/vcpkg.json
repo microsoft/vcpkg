@@ -1,0 +1,51 @@
+{
+  "name": "bit7z",
+  "version": "4.0.0-rc",
+  "port-version": 1,
+  "description": "A C++ static library offering a clean and simple interface to the 7-zip shared libraries",
+  "homepage": "https://github.com/rikyoz/bit7z",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "7zip",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "auto-format",
+    "regex-matching",
+    "use-std-byte"
+  ],
+  "features": {
+    "auto-format": {
+      "description": "Enable auto format detection"
+    },
+    "regex-matching": {
+      "description": "Enable regex matching of archived files"
+    },
+    "use-std-byte": {
+      "description": "Enable using type safe byte type (like std::byte) for buffers"
+    },
+    "use-native-string": {
+      "description": "Enable using the OS native string type (e.g., std::wstring on Windows, std::string elsewhere)"
+    },
+    "generate-pic": {
+      "description": "Enable generating Position Independent Code"
+    },
+    "link-libcpp": {
+      "description": "Enable linking to libc++",
+      "supports": "!windows"
+    },
+    "auto-prefix-long-paths": {
+      "description": "Enable automatically prepend paths with Windows long path prefix",
+      "supports": "windows"
+    }
+  }
+}

@@ -1,0 +1,113 @@
+From 3f1705653f2ad7fbc9f0e4563f6e4fa92585a889 Mon Sep 17 00:00:00 2001
+From: uuiid <957714080@qq.com>
+Date: Wed, 29 Mar 2023 09:14:44 +0800
+Subject: [PATCH] Fix using vcpkg 7z package and install
+
+---
+ CMakeLists.txt        | 39 +++++++++++++++++++++++++++++++++------
+ bit7z-config.cmake.in |  7 +++++++
+ tests/CMakeLists.txt  |  4 +---
+ 3 files changed, 41 insertions(+), 9 deletions(-)
+ create mode 100644 bit7z-config.cmake.in
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 41476ca..b980aaa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,7 +16,7 @@ if( POLICY CMP0076 )
+ endif()
+ 
+ set( EXTERNAL_LIBS_DIR ${PROJECT_SOURCE_DIR}/third_party )
+-set( 7ZIP_SOURCE_DIR ${EXTERNAL_LIBS_DIR}/7-zip )
++find_package(7zip CONFIG REQUIRED)
+ 
+ # public headers
+ set( PUBLIC_HEADERS
+@@ -172,18 +172,24 @@ message( STATUS "Language Standard: C++${CMAKE_CXX_STANDARD}" )
+ set( LIB_TARGET bit7z${ARCH_POSTFIX} )
+ add_library( ${LIB_TARGET} STATIC )
+ target_sources( ${LIB_TARGET}
+-                PUBLIC ${PUBLIC_HEADERS}
++                # PUBLIC ${PUBLIC_HEADERS}
+                 PRIVATE ${HEADERS} ${SOURCES} )
+ 
++target_sources(${LIB_TARGET}
++    PUBLIC
++    FILE_SET bit7z_headers TYPE HEADERS
++    BASE_DIRS ${CMAKE_CURRENT_LIST_DIR}/include
++    FILES ${PUBLIC_HEADERS}
++)
++
++target_link_libraries(${LIB_TARGET} PRIVATE 7zip::7zip)
+ # public includes
+ target_include_directories( ${LIB_TARGET} PUBLIC "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+                                                  "$<INSTALL_INTERFACE:include>" )
+ 
+ # private includes
+ target_include_directories( ${LIB_TARGET} PRIVATE "${PROJECT_SOURCE_DIR}/include/bit7z"
+-                                                  "${PROJECT_SOURCE_DIR}/src"
+-                                                  "${EXTERNAL_LIBS_DIR}"
+-                                                  "${7ZIP_SOURCE_DIR}/CPP/" )
++                                                  "${PROJECT_SOURCE_DIR}/src" )
+ 
+ # 7-zip compilation definitions
+ target_compile_definitions( ${LIB_TARGET} PRIVATE UNICODE _UNICODE )
+@@ -212,4 +218,25 @@ endif()
+ if( BIT7Z_BUILD_DOCS )
+     # docs
+     add_subdirectory( docs )
+-endif()
+\ No newline at end of file
++endif()
++    
++install(
++    TARGETS ${LIB_TARGET}
++    EXPORT ${PROJECT_NAME}_target
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++    RUNTIME DESTINATION bin
++    FILE_SET bit7z_headers
++)
++
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(${PROJECT_NAME}-config.cmake.in ${PROJECT_NAME}-config.cmake INSTALL_DESTINATION share/${PROJECT_NAME})
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake DESTINATION share/${PROJECT_NAME})
++
++install(
++    EXPORT ${PROJECT_NAME}_target
++    NAMESPACE ${PROJECT_NAME}::
++    FILE ${PROJECT_NAME}-targets.cmake
++    DESTINATION share/${PROJECT_NAME}
++)
+diff --git a/bit7z-config.cmake.in b/bit7z-config.cmake.in
+new file mode 100644
+index 0000000..f7037d8
+--- /dev/null
++++ b/bit7z-config.cmake.in
+@@ -0,0 +1,7 @@
++@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++
++find_dependency(7zip CONFIG)
++
++include("${CMAKE_CURRENT_LIST_DIR}/bit7z-targets.cmake")
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index a0e139c..f6ff95d 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -28,9 +28,7 @@ set( CMAKE_CXX_STANDARD_LIBRARIES "" )
+ 
+ target_link_libraries( ${TESTS_TARGET} PRIVATE ${LIB_TARGET} )
+ target_include_directories( ${TESTS_TARGET} PRIVATE "${PROJECT_SOURCE_DIR}/include/bit7z"
+-                                                    "${PROJECT_SOURCE_DIR}/src"
+-                                                    "${EXTERNAL_LIBS_DIR}"
+-                                                    "${7ZIP_SOURCE_DIR}/CPP/" )
++                                                    "${PROJECT_SOURCE_DIR}/src" )
+ 
+ if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
+     if( CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 3.6 )
+-- 
+2.39.2.windows.1
+
