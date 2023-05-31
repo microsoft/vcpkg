@@ -28,9 +28,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(GLOB MICROHTTPD_HEADERS "${SOURCE_PATH}/src/include/microhttpd.h")
     file(COPY ${MICROHTTPD_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 else()
+    vcpkg_list(SET config_args)
     if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(ENV{LIBS} "$ENV{LIBS} -framework Foundation -framework AppKit") # TODO: Get this from the extracted cmake vars somehow
     endif()
+    if("https" IN_LIST FEATURES)
+        vcpkg_list(APPEND config_args "--enable-https")
+    else()
+        vcpkg_list(APPEND config_args "--disable-https")
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
@@ -38,8 +45,7 @@ else()
             --disable-nls
             --disable-examples
             --disable-curl
-            --disable-https
-            --with-gnutls=no
+            ${config_args}
         OPTIONS_DEBUG --enable-asserts
         OPTIONS_RELEASE --disable-asserts
     )
