@@ -17,12 +17,12 @@ vcpkg_copy_pdbs()
 
 set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-
-if(BUILD_STATIC_LIBS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib" "${CURRENT_PACKAGES_DIR}/lib")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+endif()
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
