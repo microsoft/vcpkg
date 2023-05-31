@@ -3693,7 +3693,7 @@
       "port-version": 6
     },
     "kissfft": {
-      "baseline": "2021-11-14",
+      "baseline": "131.1.0",
       "port-version": 0
     },
     "kissnet": {
