@@ -1,14 +1,11 @@
-vcpkg_from_github(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO orocos-toolchain/log4cpp
-    REF v2.9.1
-    SHA512 5bd222c820a15c5d96587ac9fe864c3e2dc0fbce8389692be8dd41553ac0308002ad8d6f4ef3ef10af1d796f8ded410788d1a5d22f15505fac639da3f73e3518
-    HEAD_REF master
+    REPO log4cpp/log4cpp-1.1.x%20%28new%29
+    REF log4cpp-1.1
+    FILENAME "log4cpp-1.1.4.tar.gz"
+    SHA512 0cdbd46ccd048d70bea3c35d22080dc5dd21fc3b9c415fe464847e60775954f57e9c8344506f0f94f16e90e8bdaa9cc6d84d3aa65191501e52ee8dfc639f0398
     PATCHES
-        fix-install-targets.patch
-        Fix-StaticSupport.patch
-        fix-includepath.patch
-		fix-export-targets.patch
+        fix_link_msvcrt.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,20 +13,14 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-vcpkg_fixup_pkgconfig()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT})
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
 vcpkg_copy_pdbs()
 
-configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/log4cpp-config.in.cmake"
-    "${CURRENT_PACKAGES_DIR}/share/${PORT}/log4cpp-config.cmake"
-    @ONLY
-)
-
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib" "${CURRENT_PACKAGES_DIR}/lib")
+if(BUILD_STATIC_LIBS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+endif()
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
