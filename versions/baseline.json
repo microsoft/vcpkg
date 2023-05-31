@@ -2025,7 +2025,7 @@
       "port-version": 0
     },
     "dbg-macro": {
-      "baseline": "2021-11-02",
+      "baseline": "0.5.0",
       "port-version": 0
     },
     "dbghelp": {
@@ -8913,7 +8913,7 @@
       "port-version": 3
     },
     "zpp-bits": {
-      "baseline": "4.4.13",
+      "baseline": "4.4.17",
       "port-version": 0
     },
     "zserge-webview": {
