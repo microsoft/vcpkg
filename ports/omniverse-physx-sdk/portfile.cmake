@@ -289,9 +289,26 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/source"
 )
 
-# Install license and cmake wrapper (which will let users find_package(physx) in CMake)
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+
+
 # Install the cmake config that users will use, replace -if any- only @variables@
-configure_file("${CMAKE_CURRENT_LIST_DIR}/omniverse-physx-sdk-config.cmake" "${CURRENT_PACKAGES_DIR}/share/omniverse-physx-sdk/omniverse-physx-sdk-config.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/omniverse-physx-sdk-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/unofficial-omniverse-physx-sdk-config.cmake" @ONLY)
+
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
+file(COPY "${CURRENT_PACKAGES_DIR}/share/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share/")
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-omniverse-physx-sdk
+                         CONFIG_PATH share/omniverse-physx-sdk)
+
+# Remove fixup wrong directories
+file(REMOVE_RECURSE
+     "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+# Install license
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+
+# file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}" "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
+# file(RENAME "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/omniverse-physx-sdk-config.cmake"
+#      "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-omniverse-physx-sdk-config.cmake")
 
 message("[VCPKG Omniverse PhysX port execution completed]")
