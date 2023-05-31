@@ -89,3 +89,6 @@ part of the process of building AST and is distributed under GPL.
 
 The AST distribution includes the ERFA library. See LICENSE below.
 ]])
+
+# line directives are in preprocessed files installed by this port.
+set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)

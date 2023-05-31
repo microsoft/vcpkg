@@ -3602,7 +3602,7 @@
     },
     "kf5i18n": {
       "baseline": "5.98.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5iconthemes": {
       "baseline": "5.98.0",
@@ -6726,7 +6726,7 @@
     },
     "qtbase": {
       "baseline": "6.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.5.1",
@@ -7762,7 +7762,7 @@
     },
     "starlink-ast": {
       "baseline": "9.2.10",
-      "port-version": 0
+      "port-version": 1
     },
     "staticjson": {
       "baseline": "1.0.0",
@@ -8646,7 +8646,7 @@
     },
     "wt": {
       "baseline": "4.9.1",
-      "port-version": 0
+      "port-version": 1
     },
     "wtl": {
       "baseline": "10.0.10320",
