@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO breakfastquay/rubberband
     REF "v${VERSION}"
-    SHA512 953d705e4a69ed40732644b8039dae02ddf596216e484ce8625fdde796e0de35fe6ac6c4f180eabc457c98b63c3fba212afa74b731eac570bea1902b667f506f
+    SHA512 811a8dbf05fbee3e4631b49fee9fd0e23ea750ac24a9a16f20e6a7ea07e683783a9edf980c43e732b64c229db29ade3575938c4e6f9db8c4255b220eb30d9dcc
     HEAD_REF default
 )
 
