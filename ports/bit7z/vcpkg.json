@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "A C++ static library offering a clean and simple interface to the 7-zip shared libraries",
   "homepage": "https://github.com/rikyoz/bit7z",
+  "license": "MPL-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
