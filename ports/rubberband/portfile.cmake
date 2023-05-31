@@ -13,10 +13,19 @@ else()
     set(CLI_FEATURE disabled)
 endif()
 
+# Select fastest available FFT library according https://github.com/breakfastquay/rubberband/blob/default/COMPILING.md#fft-libraries-supported
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set(FFT_LIB "fftw")
+elseif(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(FFT_LIB "fftw")
+else()
+    set(FFT_LIB "sleef")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -Dfft=fftw                 # 'auto', 'builtin', 'kissfft', 'fftw', sleef', 'vdsp', 'ipp' 'FFT library to use. The default (auto) will use vDSP if available, the builtin implementation otherwise.')
+        -Dfft=${FFT_LIB}           # 'auto', 'builtin', 'kissfft', 'fftw', sleef', 'vdsp', 'ipp' 'FFT library to use. The default (auto) will use vDSP if available, the builtin implementation otherwise.')
         -Dresampler=libsamplerate  # 'auto', 'builtin', 'libsamplerate', 'speex', 'libspeexdsp', 'ipp' 'Resampler library to use. The default (auto) simply uses the builtin implementation.'
         -Dipp_path=                # 'Path to Intel IPP libraries, if selected for any of the other options.'
         -Dextra_include_dirs=      # 'Additional local header directories to search for dependencies.'

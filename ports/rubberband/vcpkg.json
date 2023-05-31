@@ -6,7 +6,14 @@
   "license": "GPL-2.0-or-later",
   "supports": "!uwp & !(windows & static)",
   "dependencies": [
-    "fftw3",
+    {
+      "name": "fftw3",
+      "platform": "(arm & windows) | (arm64 & osx)"
+    },
+    {
+      "name": "sleef",
+      "platform": "!(arm & windows) & !(arm64 & osx)"
+    },
     "libsamplerate",
     {
       "name": "vcpkg-tool-meson",
