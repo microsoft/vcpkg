@@ -14,29 +14,8 @@
       "host": true
     }
   ],
-  "default-features": [
-    "float"
-  ],
   "features": {
-    "alloca": {
-      "description": "Use alloca instead of malloc"
-    },
-    "double": {
-      "description": "Use double as principal datatype of kissfft"
-    },
-    "float": {
-      "description": "Use float as principal datatype of kissfft"
-    },
-    "int16": {
-      "description": "Use int16_t as principal datatype of kissfft"
-    },
-    "int32": {
-      "description": "Use int32_t as principal datatype of kissfft"
-    },
     "openmp": {
-      "description": "Build kissfft with OpenMP support"
-    },
-    "simd": {
       "description": "Build kissfft with OpenMP support"
     },
     "tools": {
