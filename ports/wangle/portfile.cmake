@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/wangle
-    REF v2022.03.21.00
-    SHA512 069fe7758ccb2f33665f53109047f2e0158e248fda8c760eddd978afd6980acbc6421db60721bf320deca557369377c8757f13c67f8685e3a98394324e75e72e
+    REF "v${VERSION}"
+    SHA512 aa87614f9630fd325e848bef38c520b85a57eaf0e3dd5cb3421a0bb55322fbdf9c22b153436d703eb30ac9f8c4d02bfb71b9313acd16c412609216eb0ca16109
     HEAD_REF master
     PATCHES
         fix-config-cmake.patch
