@@ -8497,7 +8497,7 @@
       "port-version": 6
     },
     "vulkan-headers": {
-      "baseline": "1.3.243",
+      "baseline": "1.3.250",
       "port-version": 2
     },
     "vulkan-hpp": {
