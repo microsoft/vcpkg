@@ -232,19 +232,12 @@ else()
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()
 
-    # Python tries to import its modules as part of the build process
-    # LD_LIBRARY_PATH must be set correctly for it to find *.so files
-    set(LD_LIBRARY_PATH_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib:$ENV{LD_LIBRARY_PATH}")
-    set(LD_LIBRARY_PATH_RELEASE "${CURRENT_INSTALLED_DIR}/lib:$ENV{LD_LIBRARY_PATH}")
-
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             ${OPTIONS}
         OPTIONS_DEBUG
             "--with-pydebug"
-        CONFIG_DEPENDENT_ENVIRONMENT
-            LD_LIBRARY_PATH
     )
     vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
 
