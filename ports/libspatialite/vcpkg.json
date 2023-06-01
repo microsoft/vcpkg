@@ -1,7 +1,7 @@
 {
   "name": "libspatialite",
   "version": "5.0.1",
-  "port-version": 12,
+  "port-version": 13,
   "description": "SpatiaLite is an open source library intended to extend the SQLite core to support fully fledged Spatial SQL capabilities.",
   "homepage": "https://www.gaia-gis.it/gaia-sins/libspatialite-sources",
   "license": null,
@@ -15,13 +15,7 @@
       ]
     },
     "proj",
-    {
-      "name": "sqlite3",
-      "default-features": false,
-      "features": [
-        "rtree"
-      ]
-    },
+    "sqlite3",
     {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
