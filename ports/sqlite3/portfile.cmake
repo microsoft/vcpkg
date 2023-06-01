@@ -40,6 +40,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS Unused
         session             SQLITE_ENABLE_PREUPDATE_HOOK
         omit-load-extension SQLITE_OMIT_LOAD_EXTENSION
         geopoly             SQLITE_ENABLE_GEOPOLY
+    INVERTED_FEATURES
+        json1               SQLITE_OMIT_JSON
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
