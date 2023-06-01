@@ -1,5 +1,5 @@
 diff --git a/wangle/CMakeLists.txt b/wangle/CMakeLists.txt
-index 977bbe4..155f9cc 100644
+index 85ae066..766d3d3 100644
 --- a/wangle/CMakeLists.txt
 +++ b/wangle/CMakeLists.txt
 @@ -64,18 +64,23 @@ set(CMAKE_INSTALL_DIR lib/cmake/wangle CACHE STRING
@@ -33,7 +33,7 @@ index 977bbe4..155f9cc 100644
    find_package(Librt)
 @@ -166,6 +171,14 @@ target_include_directories(
      ${LIBEVENT_INCLUDE_DIR}
-     ${DOUBLE_CONVERSION_INCLUDE_DIRS}
+     ${DOUBLE_CONVERSION_INCLUDE_DIR}
  )
 +set(Boost_LIBRARIES             Boost::boost Boost::filesystem  Boost::thread )
 +set(FOLLY_LIBRARIES             Folly::folly)
