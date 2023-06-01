@@ -232,6 +232,16 @@ else()
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()
 
+    # The version of the build Python must match the version of the cross compiled host Python.
+    # https://docs.python.org/3/using/configure.html#cross-compiling-options
+    if(VCPKG_CROSSCOMPILING)
+        set(_python_for_build "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+        list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
+    else()
+        vcpkg_find_acquire_program(PYTHON3)
+        list(APPEND OPTIONS "ac_cv_prog_PYTHON_FOR_REGEN=${PYTHON3}")
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
@@ -313,6 +323,7 @@ _generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     function(replace_dirs_in_config_file python_config_file)
         vcpkg_replace_string("${python_config_file}" "${CURRENT_INSTALLED_DIR}" "' + _base + '")
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_HOST_INSTALLED_DIR}" "' + _base + '/../${HOST_TRIPLET}")
         vcpkg_replace_string("${python_config_file}" "${CURRENT_PACKAGES_DIR}" "' + _base + '")
         vcpkg_replace_string("${python_config_file}" "${CURRENT_BUILDTREES_DIR}" "not/existing")
     endfunction()
