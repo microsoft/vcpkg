@@ -15,6 +15,45 @@
     }
   ],
   "features": {
+    "dbstat": {
+      "description": "Enable the DBSTAT virtual table"
+    },
+    "fts3": {
+      "description": "Enable the FTS3 extension"
+    },
+    "fts4": {
+      "description": "Enable the FTS4 extension"
+    },
+    "fts5": {
+      "description": "Enable the FTS5 extension"
+    },
+    "geopoly": {
+      "description": "Enable geopoly functionality for sqlite3"
+    },
+    "json1": {
+      "description": "Enable JSON functionality for sqlite3"
+    },
+    "limit": {
+      "description": "Enable the UPDATE/DELETE LIMIT clause"
+    },
+    "math": {
+      "description": "Enable math functions"
+    },
+    "memsys3": {
+      "description": "Enable MEMSYS3"
+    },
+    "memsys5": {
+      "description": "Enable MEMSYS5"
+    },
+    "omit-load-extension": {
+      "description": "Enable loading of external extensions"
+    },
+    "rtree": {
+      "description": "Enable the RTREE extension"
+    },
+    "session": {
+      "description": "Enable the SESSION extension"
+    },
     "tool": {
       "description": "Build sqlite3 executable"
     },
