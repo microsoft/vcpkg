@@ -144,15 +144,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
     endif()
 
-    # PythonForBuild is what's used on windows, despite the readme
-    vcpkg_backup_env_variables(VARS PythonForBuild)
-    if(VCPKG_CROSSCOMPILING)
-        set(ENV{PythonForBuild} "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python.exe")
-    else()
-        vcpkg_find_acquire_program(PYTHON3)
-        get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-        set(ENV{PythonForBuild} "${PYTHON3_DIR}/python.exe")
-    endif()
+	vcpkg_find_acquire_program(PYTHON3)
+	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+	set(ENV{PythonForBuild} "${PYTHON3_DIR}/python.exe") # PythonForBuild is what's used on windows, despite the readme
 
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -162,8 +156,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         TARGET_PLATFORM_VERSION "${WINSDK_VERSION}"
         SKIP_CLEAN
     )
-
-    vcpkg_restore_env_variables(VARS PythonForBuild)
 
     # The extension modules must be placed in the DLLs directory, so we can't use vcpkg_copy_tools()
     if(PYTHON_ALLOW_EXTENSIONS)
