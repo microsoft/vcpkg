@@ -14,6 +14,7 @@ set(PATCHES
     0004-devendor-external-dependencies.patch
     0005-dont-copy-vcruntime.patch
     0008-python.pc.patch
+    0010-dont-skip-rpath.patch
     0012-force-disable-curses.patch
     0014-fix-get-python-inc-output.patch
 )
@@ -244,10 +245,14 @@ else()
 
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
         OPTIONS
             ${OPTIONS}
         OPTIONS_DEBUG
             "--with-pydebug"
+            "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/debug/lib"
+        OPTIONS_RELEASE
+            "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/lib"
     )
     vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
 
