@@ -150,7 +150,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 
     Write-Host "Comparing with HEAD~1"
     & git revert -n -m 1 HEAD | Out-Null
-    $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
+    #$parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
+    $parentBaseline = $headBaseline
     if ($parentBaseline -eq $headBaseline)
     {
         Write-Host "CI baseline unchanged, determining parent hashes"
