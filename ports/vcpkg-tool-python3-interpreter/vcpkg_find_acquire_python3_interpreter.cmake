@@ -5,8 +5,8 @@ function(vcpkg_find_acquire_python3_interpreter out_var)
         message(FATAL_ERROR "Unrecognized arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    set(program_version 3.10.7)
     if(CMAKE_HOST_WIN32)
+        set(program_version 3.10.7)
         cmake_host_system_information(RESULT is64_bit QUERY IS_64BIT)
         set(installed_pythons "")
         foreach(candidate IN ITEMS "$ENV{ProgramFiles}/Python3*" "$ENV{ProgramW6432}/Python3*" "$ENV{ProgramFiles\(x86\)}/Python3*")
@@ -53,7 +53,7 @@ function(vcpkg_find_acquire_python3_interpreter out_var)
         vcpkg_find_acquire_tool(
             OUT_TOOL_PATH out_var_value
             TOOL_NAME "python3"
-            VERSION ${program_version}
+            VERSION 3.0.0
             BREW_PACKAGE_NAME "python@3"
             APT_PACKAGE_NAME "python3"
             DNF_PACKAGE_NAME "python"
