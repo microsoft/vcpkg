@@ -5,6 +5,7 @@
   "homepage": "https://xdf-modules.github.io/libxdf/",
   "license": "BSD-2-Clause",
   "dependencies": [
+    "pugixml",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,7 +13,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "pugixml"
+    }
   ]
 }
