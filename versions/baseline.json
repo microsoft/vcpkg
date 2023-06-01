@@ -2722,7 +2722,7 @@
     },
     "gdal": {
       "baseline": "3.7.0",
-      "port-version": 2
+      "port-version": 3
     },
     "gdcm": {
       "baseline": "3.0.22",
@@ -4558,7 +4558,7 @@
     },
     "libspatialite": {
       "baseline": "5.0.1",
-      "port-version": 12
+      "port-version": 13
     },
     "libspnav": {
       "baseline": "0.2.3",
@@ -6410,7 +6410,7 @@
     },
     "proj": {
       "baseline": "9.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "proj4": {
       "baseline": "8.9.9",
