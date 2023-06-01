@@ -202,6 +202,11 @@ else()
             ${OPTIONS_RELEASE}
             ${MAC_OSX_MIN_VERSION_CFLAGS}
             --as=nasm
+            --disable-examples
+            --disable-tools
+            --disable-docs
+            --disable-unit-tests
+            --enable-pic
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
         LOGNAME configure-${TARGET_TRIPLET}-rel)
     vcpkg_install_make()
