@@ -8490,7 +8490,7 @@
     },
     "vtk-m": {
       "baseline": "1.9.0",
-      "port-version": 2
+      "port-version": 3
     },
     "vulkan": {
       "baseline": "1.1.82.1",
