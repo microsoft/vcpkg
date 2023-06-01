@@ -1,3 +1,5 @@
+message(WARNING "Building ${PORT} requires a C++20 compliant compiler. GCC 12 and Clang 15 are known to work.")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jpenuchot/ctbench
