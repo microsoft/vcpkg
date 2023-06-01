@@ -19,7 +19,7 @@
       "description": "Build kissfft with OpenMP support"
     },
     "tools": {
-      "description": "Build kissfft with SIMD support",
+      "description": "Build kissfft tools",
       "supports": "linux | osx",
       "dependencies": [
         "libpng"
