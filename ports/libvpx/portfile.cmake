@@ -204,20 +204,16 @@ else()
             --as=nasm
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
         LOGNAME configure-${TARGET_TRIPLET}-rel)
-
-        message(STATUS "Building libvpx for Release")
-        vcpkg_execute_required_process(
-            COMMAND
-                ${BASH} --noprofile --norc -c "make -j8"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-            LOGNAME build-${TARGET_TRIPLET}-rel
-        )
-
     vcpkg_install_make()
 endif()
 vcpkg_fixup_pkgconfig()
 
+if(NOT DEFINED VCPKG_BUILD_TYPE)
+    set(LIBVPX_CONFIG_DEBUG ON)
+else()
+    set(LIBVPX_CONFIG_DEBUG OFF)
+endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake" @ONLY)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
