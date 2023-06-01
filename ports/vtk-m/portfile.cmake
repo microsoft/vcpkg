@@ -45,6 +45,7 @@ vcpkg_from_gitlab(GITLAB_URL "https://gitlab.kitware.com"
                   FILE_DISAMBIGUATOR 1
                   PATCHES
                     omp.patch
+					fix-build-error.patch
 )
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -69,4 +70,4 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
