@@ -25,24 +25,6 @@ else()
     set(SQLITE_API "")
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS Unused
-    FEATURES
-        dbstat              SQLITE_ENABLE_DBSTAT_VTAB
-        fts3                SQLITE_ENABLE_FTS3
-        fts4                SQLITE_ENABLE_FTS4
-        fts5                SQLITE_ENABLE_FTS5
-        memsys3             SQLITE_ENABLE_MEMSYS3
-        memsys5             SQLITE_ENABLE_MEMSYS5
-        math                SQLITE_ENABLE_MATH_FUNCTIONS
-        limit               SQLITE_ENABLE_UPDATE_DELETE_LIMIT
-        rtree               SQLITE_ENABLE_RTREE
-        session             SQLITE_ENABLE_SESSION
-        session             SQLITE_ENABLE_PREUPDATE_HOOK
-        omit-load-extension SQLITE_OMIT_LOAD_EXTENSION
-        geopoly             SQLITE_ENABLE_GEOPOLY
-        json1               SQLITE_ENABLE_JSON1
-)
-
 if(VCPKG_TARGET_IS_WINDOWS)
     set(SQLITE_OS_WIN "1")
     if(VCPKG_TARGET_IS_UWP)
