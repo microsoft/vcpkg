@@ -280,7 +280,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*' '${BAZEL}' --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build --subcommands=pretty_print --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "MSYS2_ARG_CONV_EXCL='*' '${BAZEL}' --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build --subcommands=pretty_print --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -306,7 +306,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "MSYS2_ARG_CONV_EXCL='*' ${BAZEL} --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
