@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
-    REF 203241ed3275625c8a25c4a1e7b86e3c0289c488 #v22.10.26
-    SHA512 b2c889aa97d039f0044133daea6c68361ab4d4bb80bd6c67d3e1f6ffd1b4175fc36a21b1ab3a75d83b0296c83d98f6e42756e01fc1193ba19a77c3e896cba212
+    REF "v${VERSION}"
+    SHA512 6eb5417984782208e0fcc33285d02bb13cda526d4029e0dd58e27c4f813eb39f26105ab0ed0880f7c02614985b96a241aad5086dd4f2d131c534a44a2884d08e
     HEAD_REF master
     PATCHES
         fix-uwp-build.patch
@@ -35,8 +35,8 @@ file(GLOB flatc_path ${CURRENT_PACKAGES_DIR}/bin/flatc*)
 if(flatc_path)
     vcpkg_copy_tools(TOOL_NAMES flatc AUTO_CLEAN)
 else()
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/flatbuffers/Flatbuffers-config.cmake"
-"include(\"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}/share/flatbuffers/FlatcTargets.cmake\")\n")
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/flatbuffers/flatbuffers-config.cmake"
+"\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}/share/flatbuffers/FlatcTargets.cmake\")\n")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -44,4 +44,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

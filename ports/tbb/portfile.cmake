@@ -1,4 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
@@ -6,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneTBB
     REF "v${VERSION}"
-    SHA512 d314e3d88b85c96607a9eda15e3d808bf361eb562a534c59101929236e90c187883e7718e5435b5e7f01f4ee652c9765af95f5f173368b83997e4666b7403a49
+    SHA512 2ece7f678ad7c8968c0ad5cda9f987e4b318c6d9735169e1039beb0ff8dfca18815835875211acc6c7068913d9b0bdd4c9ded22962b0bb48f4a0ce0f7b78f31c
     HEAD_REF onetbb_2021
 )
 
@@ -21,6 +20,16 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/TBB")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+
+set(arch_suffix "")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+  set(arch_suffix "32")
+endif()
+
+
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tbb${arch_suffix}.pc" "-ltbb12" "-ltbb12_debug")
+endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/doc"
@@ -37,4 +46,4 @@ include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 ${_contents}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

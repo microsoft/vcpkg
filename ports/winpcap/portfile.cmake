@@ -28,10 +28,10 @@ endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/packetNtx.patch.in" "${CURRENT_BUILDTREES_DIR}/src/packetNtx.patch" @ONLY)
 configure_file("${CMAKE_CURRENT_LIST_DIR}/wpcap.patch.in" "${CURRENT_BUILDTREES_DIR}/src/wpcap.patch" @ONLY)
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF ${WINPCAP_VERSION}
+    SOURCE_BASE ${WINPCAP_VERSION}
     PATCHES
         "${CURRENT_BUILDTREES_DIR}/src/packetNtx.patch"
         "${CURRENT_BUILDTREES_DIR}/src/wpcap.patch"

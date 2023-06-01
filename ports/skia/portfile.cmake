@@ -5,9 +5,9 @@ vcpkg_from_git(
     URL https://github.com/google/skia
     REF f86f242886692a18f5adc1cf9cbd6740cd0870fd
     PATCHES
-        python-executable.patch
         disable-msvc-env-setup.patch
         uwp.patch
+        core-opengl32.patch
 )
 
 # these following aren't available in vcpkg
@@ -178,7 +178,8 @@ if("metal" IN_LIST FEATURES)
 endif()
 
 if("vulkan" IN_LIST FEATURES)
-    string(APPEND OPTIONS "${OPTIONS} skia_use_vulkan=true")
+    string(APPEND OPTIONS " skia_use_vulkan=true")
+    file(COPY "${CURRENT_INSTALLED_DIR}/include/vk_mem_alloc.h" DESTINATION "${SOURCE_PATH}/third_party/vulkanmemoryallocator")
 endif()
 
 if("direct3d" IN_LIST FEATURES)
@@ -239,7 +240,8 @@ if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_gene
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
-string(APPEND OPTIONS " script_executable=\"${PYTHON3}\"")
+vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
+vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "python3 " "\\\"${PYTHON3}\\\" ")
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
@@ -247,7 +249,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     string(REGEX REPLACE "[\\]\$" "" WIN_VC "$ENV{VCINSTALLDIR}")
     string(APPEND OPTIONS " win_vc=\"${WIN_VC}\"")
 else()
-    string(APPEND OPTIONS_DBG " \
+    string(APPEND OPTIONS " \
         cc=\"${VCPKG_DETECTED_CMAKE_C_COMPILER}\" \
         cxx=\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\"")
 endif()
@@ -267,7 +269,7 @@ if(VCPKG_TARGET_IS_UWP)
     string(APPEND OPTIONS " extra_ldflags=${SKIA_LD_FLAGS}")
 endif()
 
-vcpkg_configure_gn(
+vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS "${OPTIONS} skia_use_lua=false skia_enable_tools=false skia_enable_spirv_validation=false"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
@@ -293,7 +295,7 @@ if(NOT VCPKG_BUILD_TYPE)
     file(READ "${CURRENT_BUILDTREES_DIR}/desc-${TARGET_TRIPLET}-dbg-out.log" desc_debug)
 endif()
 
-vcpkg_install_gn(
+vcpkg_gn_install(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS ${SKIA_TARGETS}
 )

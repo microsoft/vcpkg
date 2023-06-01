@@ -182,6 +182,9 @@ else()
     elseif(VCPKG_TARGET_IS_OSX)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             set(LIBVPX_TARGET "arm64-darwin20-gcc")
+            if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
+                set(MAC_OSX_MIN_VERSION_CFLAGS --extra-cflags=-mmacosx-version-min=${VCPKG_OSX_DEPLOYMENT_TARGET} --extra-cxxflags=-mmacosx-version-min=${VCPKG_OSX_DEPLOYMENT_TARGET})
+            endif()
         else()
             set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
         endif()
@@ -196,12 +199,19 @@ else()
         BUILD_TRIPLET --target=${LIBVPX_TARGET}
         OPTIONS
             ${OPTIONS}
-            --disable-examples
-            --disable-tools
-            --disable-docs
-            --disable-unit-tests
-            --enable-pic
-    )
+            ${OPTIONS_RELEASE}
+            ${MAC_OSX_MIN_VERSION_CFLAGS}
+            --as=nasm
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+        LOGNAME configure-${TARGET_TRIPLET}-rel)
+
+        message(STATUS "Building libvpx for Release")
+        vcpkg_execute_required_process(
+            COMMAND
+                ${BASH} --noprofile --norc -c "make -j8"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+            LOGNAME build-${TARGET_TRIPLET}-rel
+        )
 
     vcpkg_install_make()
 endif()

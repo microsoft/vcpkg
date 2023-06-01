@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SOCI/soci
-    REF 99e2d567161a302de4f99832af76e6d3b75b68e6 #version 4.0.2
-    SHA512 d08d2383808d46d5e9550e9c7d93fb405d9e336eb38d974ba429e5b9446d3af53d4e702b90e80c67e298333da0145457fa1146d9773322676030be69de4ec4f4
+    REF "v${VERSION}"
+    SHA512 d501f55e7e7408e46b4823fd8a97d6ef587f5db0f5b98434be8dfc5693c91b8c3b84a24454279c83142ab1cd1fa139c6e54d6d9a67397b2ead61650fcc88bcdb
     HEAD_REF master
     PATCHES
         fix-dependency-libmysql.patch
@@ -29,7 +29,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
     endif()
 
     if(_feature MATCHES "mysql")
-        set(MYSQL_OPT -DMYSQL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/mysql)
+        set(MYSQL_OPT "-DMYSQL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/mysql")
     endif()
 endforeach()
 
@@ -58,4 +58,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")

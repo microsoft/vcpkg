@@ -150,6 +150,7 @@ function(qt_cmake_configure)
         ${disable_parallel}
         OPTIONS
             -DQT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS:BOOL=ON # We don't want Qt to screw with users toolchain settings.
+            -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Because Qt doesn't correctly scope find_package calls. 
             #-DQT_HOST_PATH=<somepath> # For crosscompiling
             #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
             #-DQT_QMAKE_TARGET_MKSPEC=win32-msvc
@@ -191,6 +192,16 @@ function(qt_cmake_configure)
             QT_SYNCQT
             QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
             ${_qarg_OPTIONS_MAYBE_UNUSED}
+            INPUT_bundled_xcb_xinput
+            INPUT_freetype
+            INPUT_harfbuzz
+            INPUT_libjpeg
+            INPUT_libmd4c
+            INPUT_libpng
+            INPUT_opengl
+            INPUT_openssl
+            INPUT_xcb
+            INPUT_xkbcommon
     )
     set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
 endfunction()

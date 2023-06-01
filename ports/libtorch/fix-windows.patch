@@ -1,0 +1,100 @@
+diff --git a/torch/csrc/jit/tensorexpr/bounds_overlap.h b/torch/csrc/jit/tensorexpr/bounds_overlap.h
+index c78884d..baf44bb 100644
+--- a/torch/csrc/jit/tensorexpr/bounds_overlap.h
++++ b/torch/csrc/jit/tensorexpr/bounds_overlap.h
+@@ -65,6 +65,10 @@ enum OverlapKind { ContainedOrEqual, Contains, PartialOverlap, NoOverlap };
+ //     operator
+ //     NOT_DETERMINED: Some elements satify the given comparison operator and
+ //     some elements not
++#if defined(_WIN32)
++#undef TRUE
++#undef FALSE
++#endif
+ enum CmpEvalResult { TRUE, FALSE, NOT_DETERMINED };
+ 
+ // Returns the kind of overlap between Bound A and Bound A in a single
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index 3390f9b..578d0bd 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -1425,7 +1425,7 @@ target_include_directories(torch_cpu SYSTEM PRIVATE "${Caffe2_DEPENDENCY_INCLUDE
+ torch_set_target_props(torch_cpu)
+ 
+ 
+-target_compile_options(torch_cpu PRIVATE "-DCAFFE2_BUILD_MAIN_LIB")
++target_compile_definitions(torch_cpu PRIVATE CAFFE2_BUILD_MAIN_LIB)
+ if(BUILD_SPLIT_CUDA)
+   target_compile_options(torch_cuda_cu PRIVATE "-DTORCH_CUDA_CU_BUILD_MAIN_LIB")
+   target_compile_options(torch_cuda_cpp PRIVATE "-DTORCH_CUDA_CPP_BUILD_MAIN_LIB")
+@@ -1525,12 +1525,12 @@ if(MSVC AND NOT BUILD_SHARED_LIBS)
+   #
+   # NB: This must be target_compile_definitions, not target_compile_options,
+   # as the latter is not respected by nvcc
+-  target_compile_definitions(torch_cpu PUBLIC "AT_CORE_STATIC_WINDOWS=1")
++  target_compile_definitions(torch_cpu PUBLIC AT_CORE_STATIC_WINDOWS=1)
+ endif()
+ if(MSVC AND BUILD_SHARED_LIBS)
+   # ONNX is linked statically and needs to be exported from this library
+   # to be used externally. Make sure that references match the export.
+-  target_compile_options(torch_cpu PRIVATE "-DONNX_BUILD_MAIN_LIB")
++  target_compile_definitions(torch_cpu PRIVATE ONNX_BUILD_MAIN_LIB)
+ endif()
+ 
+ caffe2_interface_library(torch_cpu torch_cpu_library)
+diff --git a/aten/src/ATen/Parallel.h b/aten/src/ATen/Parallel.h
+index 0b494d9..06b5d88 100644
+--- a/aten/src/ATen/Parallel.h
++++ b/aten/src/ATen/Parallel.h
+@@ -28,13 +28,7 @@ TORCH_API bool in_parallel_region();
+ namespace internal {
+ 
+ // Initialise num_threads lazily at first parallel call
+-inline TORCH_API void lazy_init_num_threads() {
+-  thread_local bool init = false;
+-  if (C10_UNLIKELY(!init)) {
+-    at::init_num_threads();
+-    init = true;
+-  }
+-}
++TORCH_API void lazy_init_num_threads();
+ 
+ TORCH_API void set_thread_num(int);
+ 
+diff --git a/aten/src/ATen/ParallelCommon.cpp b/aten/src/ATen/ParallelCommon.cpp
+index 068c9d3..b869fde 100644
+--- a/aten/src/ATen/ParallelCommon.cpp
++++ b/aten/src/ATen/ParallelCommon.cpp
+@@ -17,6 +17,17 @@
+ 
+ namespace at {
+ 
++namespace internal {
++/// @see https://github.com/pytorch/pytorch/issues/87957
++void lazy_init_num_threads() {
++  thread_local bool init = false;
++  if (C10_UNLIKELY(!init)) {
++    at::init_num_threads();
++    init = true;
++  }
++}
++} // namespace internal
++
+ namespace {
+ 
+ const char* get_env_var(
+diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
+index 3b390ec..7cfa2b0 100644
+--- a/c10/CMakeLists.txt
++++ b/c10/CMakeLists.txt
+@@ -45,7 +45,10 @@ if(HAVE_SOVERSION)
+       VERSION ${TORCH_VERSION} SOVERSION ${TORCH_SOVERSION})
+ endif()
+ # If building shared library, set dllimport/dllexport proper.
+-target_compile_options(c10 PRIVATE "-DC10_BUILD_MAIN_LIB")
++target_compile_definitions(c10 PRIVATE C10_BUILD_MAIN_LIB)
++if(WIN32)
++  target_compile_definitions(c10 PRIVATE NOMINMAX)
++endif()
+ # Enable hidden visibility if compiler supports it.
+ if(${COMPILER_SUPPORTS_HIDDEN_VISIBILITY})
+   target_compile_options(c10 PRIVATE "-fvisibility=hidden")

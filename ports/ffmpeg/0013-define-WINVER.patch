@@ -1,7 +1,6 @@
-diff --git a/libavcodec/mf_utils.c b/libavcodec/mf_utils.c
-index eeabd0c..ea3a03b 100644
---- a/libavcodec/mf_utils.c
-+++ b/libavcodec/mf_utils.c
+diff --color -Naur src_old/libavcodec/mf_utils.c src/libavcodec/mf_utils.c
+--- src_old/libavcodec/mf_utils.c	2020-07-11 05:26:17.000000000 +0700
++++ src/libavcodec/mf_utils.c	2020-11-13 12:55:57.226976400 +0700
 @@ -22,6 +22,11 @@
  #define _WIN32_WINNT 0x0602
  #endif

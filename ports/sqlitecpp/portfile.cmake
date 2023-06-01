@@ -27,7 +27,7 @@ vcpkg_cmake_configure(
         -DSQLITECPP_RUN_CPPLINT=OFF
         -DSQLITECPP_RUN_CPPCHECK=OFF
         -DSQLITECPP_INTERNAL_SQLITE=OFF
-        -DSQLITE_ENABLE_COLUMN_METADATA=OFF
+        -DSQLITE_ENABLE_COLUMN_METADATA=ON
         -DSQLITECPP_INTERNAL_SQLITE=OFF
         -DSQLITECPP_USE_STATIC_RUNTIME=OFF # unconditionally off because vcpkg's toolchains already do the right thing
         # See https://github.com/SRombauts/SQLiteCpp/blob/e74403264ec7093060f4ed0e84bc9208997c8344/CMakeLists.txt#L40-L46

@@ -1,0 +1,4 @@
+imageinfo provides CMake targets:
+
+    find_package(imageinfo CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE imageinfo::imageinfo)

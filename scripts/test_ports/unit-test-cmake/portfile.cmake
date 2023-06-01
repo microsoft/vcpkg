@@ -44,9 +44,9 @@ function(unit_test_check_variable_unset utcvu_test utcvu_variable)
     if(Z_VCPKG_UNIT_TEST_HAS_FATAL_ERROR)
         unset_fatal_error()
         set_has_error()
-        message(STATUS "${utcvu_test} had an unexpected FATAL_ERROR;
+        message(SEND_ERROR "${utcvu_test} had an unexpected FATAL_ERROR;
     expected: \"${utcvu_value}\"")
-        message(STATUS "FATAL_ERROR: ${Z_VCPKG_UNIT_TEST_FATAL_ERROR}")
+        message(SEND_ERROR "FATAL_ERROR: ${Z_VCPKG_UNIT_TEST_FATAL_ERROR}")
         return()
     endif()
 
@@ -65,7 +65,7 @@ function(unit_test_check_variable_unset utcvu_test utcvu_variable)
     endif()
 
     if(DEFINED "${utcvu_variable}")
-        message(STATUS "${utcvu_test} set ${utcvu_variable};
+        message(SEND_ERROR "${utcvu_test} set ${utcvu_variable};
     expected: \"${utcvu_variable}\" unset
     actual  : \"${utcvu_actual_value}\"")
         set_has_error()
@@ -78,14 +78,14 @@ function(unit_test_check_variable_equal utcve_test utcve_variable utcve_value)
     if(Z_VCPKG_UNIT_TEST_HAS_FATAL_ERROR)
         unset_fatal_error()
         set_has_error()
-        message(STATUS "${utcve_test} had an unexpected FATAL_ERROR;
+        message(SEND_ERROR "${utcve_test} had an unexpected FATAL_ERROR;
     expected: \"${utcve_value}\"")
-        message(STATUS "FATAL_ERROR: ${Z_VCPKG_UNIT_TEST_FATAL_ERROR}")
+        message(SEND_ERROR "FATAL_ERROR: ${Z_VCPKG_UNIT_TEST_FATAL_ERROR}")
         return()
     endif()
 
     if(NOT DEFINED "${utcve_variable}" AND NOT "${utcve_variable}" MATCHES "^ENV\\{")
-        message(STATUS "${utcve_test} failed to set ${utcve_variable};
+        message(SEND_ERROR "${utcve_test} failed to set ${utcve_variable};
     expected: \"${utcve_value}\"")
         set_has_error()
         return()
@@ -105,7 +105,7 @@ function(unit_test_check_variable_equal utcve_test utcve_variable utcve_value)
     endif()
 
     if(NOT "${utcve_actual_value}" STREQUAL "${utcve_value}")
-        message(STATUS "${utcve_test} resulted in the wrong value for ${utcve_variable};
+        message(SEND_ERROR "${utcve_test} resulted in the wrong value for ${utcve_variable};
     expected: \"${utcve_value}\"
     actual  : \"${utcve_actual_value}\"")
         set_has_error()
@@ -118,9 +118,9 @@ function(unit_test_check_variable_not_equal utcve_test utcve_variable utcve_valu
     if(Z_VCPKG_UNIT_TEST_HAS_FATAL_ERROR)
         unset_fatal_error()
         set_has_error()
-        message(STATUS "${utcve_test} had an unexpected FATAL_ERROR;
+        message(SEND_ERROR "${utcve_test} had an unexpected FATAL_ERROR;
     expected: \"${utcve_value}\"")
-        message(STATUS "FATAL_ERROR: ${Z_VCPKG_UNIT_TEST_FATAL_ERROR}")
+        message(SEND_ERROR "FATAL_ERROR: ${Z_VCPKG_UNIT_TEST_FATAL_ERROR}")
         return()
     endif()
 
@@ -138,7 +138,7 @@ function(unit_test_check_variable_not_equal utcve_test utcve_variable utcve_valu
     endif()
 
     if("${utcve_actual_value}" STREQUAL "${utcve_value}")
-        message(STATUS "${utcve_test} failed to change ${utcve_variable};
+        message(SEND_ERROR "${utcve_test} failed to change ${utcve_variable};
     unchanged: \"${utcve_value}\"")
         set_has_error()
         return()
@@ -149,7 +149,7 @@ function(unit_test_ensure_success utcve_test)
     cmake_language(EVAL CODE "${utcve_test}")
     if(Z_VCPKG_UNIT_TEST_HAS_FATAL_ERROR)
         set_has_error()
-        message(STATUS "${utcve_test} was expected to be successful.")
+        message(SEND_ERROR "${utcve_test} was expected to be successful.")
     endif()
     unset_fatal_error()
 endfunction()
@@ -157,7 +157,7 @@ function(unit_test_ensure_fatal_error utcve_test)
     cmake_language(EVAL CODE "${utcve_test}")
     if(NOT Z_VCPKG_UNIT_TEST_HAS_FATAL_ERROR)
         set_has_error()
-        message(STATUS "${utcve_test} was expected to be a FATAL_ERROR.")
+        message(SEND_ERROR "${utcve_test} was expected to be a FATAL_ERROR.")
     endif()
     unset_fatal_error()
 endfunction()
@@ -184,6 +184,9 @@ if("backup-restore-env-vars" IN_LIST FEATURES)
 endif()
 if("setup-pkgconfig-path" IN_LIST FEATURES)
     include("${CMAKE_CURRENT_LIST_DIR}/test-z_vcpkg_setup_pkgconfig_path.cmake")
+endif()
+if("fixup-pkgconfig" IN_LIST FEATURES)
+    include("${CMAKE_CURRENT_LIST_DIR}/test-vcpkg_fixup_pkgconfig.cmake")
 endif()
 
 if(Z_VCPKG_UNIT_TEST_HAS_ERROR)

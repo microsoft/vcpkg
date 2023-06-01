@@ -1,8 +1,10 @@
+vcpkg_minimum_required(VERSION 2022-12-14)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nemtrif/utfcpp
-    REF v3.2.2
-    SHA512 b3d338bbb859eb6c6d38525a2d23062c3f5486bbc85e160e1e118ac557823d4ea128554fdf7a03288f7a3a6ba2c06830d6e51a714d0b5fc6a8001a870d560ac8
+    REF v${VERSION}
+    SHA512 760977df613abfb34fb7864cbbe90e8f2cf1f42b8502427a5e9c2a756ce87655120b7490ebdaa6c926a2cb56caef9ead0e0e10fb7cb732cf99a5b43c0cca411b
     HEAD_REF master
 )
 
@@ -25,4 +27,4 @@ endif()
 # Header only
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
