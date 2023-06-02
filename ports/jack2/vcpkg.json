@@ -1,10 +1,11 @@
 {
   "name": "jack2",
   "version-semver": "1.9.21",
+  "port-version": 1,
   "description": "Cross-platform API that enables device sharing and inter-application audio routing",
   "homepage": "https://jackaudio.org/",
   "license": "GPL-2.0",
-  "supports": "!uwp",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
