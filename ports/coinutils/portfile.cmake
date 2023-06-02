@@ -13,7 +13,9 @@ set(ENV{ACLOCAL} "aclocal -I \"${SOURCE_PATH}/BuildTools\"")
 #--enable-msvc
 set(options "")
 if("glpk" IN_LIST FEATURES)
-    string(APPEND options "--with-glpk")
+    list(APPEND options "--with-glpk")
+else()
+    list(APPEND options "--without-glpk")
 endif()
 
 vcpkg_configure_make(
