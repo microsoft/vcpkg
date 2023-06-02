@@ -9,6 +9,18 @@ vcpkg_from_git(
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 
+# Rename 'util' lib to avoid collision with system libutil
+vcpkg_replace_string("${SOURCE_PATH}/util/BUILD.gn" "crashpad_static_library(\"util\")" "crashpad_static_library(\"crashpad_util\")")
+vcpkg_replace_string("${SOURCE_PATH}/util/BUILD.gn" ":util" ":crashpad_util")
+vcpkg_replace_string("${SOURCE_PATH}/snapshot/BUILD.gn" ":util" ":crashpad_util")
+vcpkg_replace_string("${SOURCE_PATH}/client/BUILD.gn" "/util\"" "/util:crashpad_util\"")
+vcpkg_replace_string("${SOURCE_PATH}/handler/BUILD.gn" "/util\"" "/util:crashpad_util\"")
+vcpkg_replace_string("${SOURCE_PATH}/minidump/BUILD.gn" "/util\"" "/util:crashpad_util\"")
+vcpkg_replace_string("${SOURCE_PATH}/snapshot/BUILD.gn" "/util\"" "/util:crashpad_util\"")
+vcpkg_replace_string("${SOURCE_PATH}/tools/BUILD.gn" "/util\"" "/util:crashpad_util\"")
+vcpkg_replace_string("${SOURCE_PATH}/test/BUILD.gn" "/util\"" "/util:crashpad_util\"")
+vcpkg_replace_string("${SOURCE_PATH}/test/ios/BUILD.gn" "/util\"" "/util:crashpad_util\"")
+
 function(checkout_in_path PATH URL REF)
     if(EXISTS "${PATH}")
         return()
@@ -108,7 +120,7 @@ vcpkg_gn_configure(
 
 vcpkg_gn_install(
     SOURCE_PATH "${SOURCE_PATH}"
-    TARGETS client client:common util third_party/mini_chromium/mini_chromium/base handler:crashpad_handler
+    TARGETS client client:common util:crashpad_util third_party/mini_chromium/mini_chromium/base handler:crashpad_handler
 )
 
 message(STATUS "Installing headers...")
