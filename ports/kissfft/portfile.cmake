@@ -55,8 +55,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/include/kissfft/kiss_fft.h"
         "#ifdef KISS_FFT_SHARED"
-        "if 1 //#ifdef KISS_FFT_SHARED"
+        "#if 1 //#ifdef KISS_FFT_SHARED"
     )
 endif()
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/kissfft")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -1,0 +1,9 @@
+The package kissfft provides CMake targets:
+
+    # When built as static library:
+    find_package(kissfft CONFIG REQUIRED COMPONENTS STATIC float)
+
+    # When built as shared library:
+    find_package(kissfft CONFIG REQUIRED COMPONENTS SHARED float)
+
+    target_link_libraries(main PRIVATE kissfft::kissfft kissfft::kissfft-float)
