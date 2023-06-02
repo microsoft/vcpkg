@@ -1,7 +1,5 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # for plugins
 
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
@@ -24,6 +22,9 @@ endif()
 
 vcpkg_list(SET OPTIONS)
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(VCPKG_TARGET_ARCHITECTURE "x64")
+    endif()
     vcpkg_download_distfile(
         LTDL_H_PATH
         URLS "https://gitlab.com/graphviz/graphviz-windows-dependencies/-/raw/141d3a21be904fa8dc2ae3ed01d36684db07a35d/${VCPKG_TARGET_ARCHITECTURE}/include/ltdl.h"
@@ -105,4 +106,4 @@ else()
     file(COPY "${CURRENT_PACKAGES_DIR}/lib/graphviz" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
