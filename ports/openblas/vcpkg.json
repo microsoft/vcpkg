@@ -1,6 +1,7 @@
 {
   "name": "openblas",
   "version": "0.3.23",
+  "port-version": 1,
   "description": "OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.",
   "homepage": "https://github.com/xianyi/OpenBLAS",
   "license": "BSD-3-Clause",
@@ -28,6 +29,9 @@
       "description": "Support for multiple targets in a single library",
       "supports": "!windows | mingw"
     },
+    "openmp": {
+      "description": "Use OpenMP threading backend"
+    },
     "simplethread": {
       "description": "Use simple thread",
       "dependencies": [
@@ -40,7 +44,7 @@
       ]
     },
     "threads": {
-      "description": "Use a threading backend",
+      "description": "Use POSIX-like threading backend",
       "dependencies": [
         {
           "name": "pthread",
