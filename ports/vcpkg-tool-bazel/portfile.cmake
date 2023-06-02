@@ -1,7 +1,7 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 set(program bazel)
-set(program_version 5.2.0)
+set(program_version 5.4.1)
 
 if(VCPKG_CROSSCOMPILING)
     message(FATAL_ERROR "This is a host only port!")
@@ -38,7 +38,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     else()
         set(download_urls "https://github.com/bazelbuild/bazel/releases/download/${program_version}/bazel-${tool_subdirectory}-x86_64.exe")
         set(download_filename "bazel-${tool_subdirectory}-x86_64.exe")
-        set(download_sha512 4917dd714345359c24e40451e20862b2ed705824ceffe536d42e56ffcd66fcea581317857dfb5339b56534b0681efd8376e8eebdcf9daff0d087444b060bdc53)
+        set(download_sha512 d8ceec5a1b37034988ac923e5c53114da2985a9ea0518b24719f609a3b7c2895e36982195e9d8faa7af01c7fd6f69179dd110542e26197749dbd61fd91a28f1f)
     endif()
 endif()
 
