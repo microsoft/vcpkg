@@ -4,7 +4,7 @@ set(VCPKG_LIBRARY_LINKAGE "dynamic")
 # which we re-build anyway.  There is no source only package provided or it would be preferred (and smaller).
 vcpkg_download_distfile(ARCHIVE
     URLS "https://earth-info.nga.mil/php/download.php?file=wgs-mastertgz"
-    FILENAME "geotrans-${VERSION}-master.tgz"
+    FILENAME "geotrans-${VERSION}-master-b0bd5ca.tgz"
     SHA512 adf19357edc62681a2515e7210a752b0e09214b6ce69024e60150e0780059c08a9ab5a162a0562dbc37127438783a24bcde1adb88b559bc95ff9a5bea0eb8b39
 )
 
