@@ -23,3 +23,8 @@ Add the following cmake code to your CMakeLists.txt to create definitions for DC
                 "DEFAULT_SUPPORT_DATA_DIR=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk/"
         )
     endif()
+
+On windows you must use specific MSVC flags:
+
+    target_compile_options(main PUBLIC "/Zc:__cplusplus")
+    set_property(TARGET main PROPERTY CXX_STANDARD 17)
