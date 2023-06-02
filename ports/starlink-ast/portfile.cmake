@@ -75,6 +75,14 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/ast"
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    string(REPLACE "/" "\\\\" with_double_slash "${DOWNLOADS}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ast.h" "${with_double_slash}\\\\tools\\\\msys2\\\\" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ast.h" "${DOWNLOADS}/tools/msys2/" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/star/ast.h" "${with_double_slash}\\\\tools\\\\msys2\\\\" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/star/ast.h" "${DOWNLOADS}/tools/msys2/" "")
+endif()
+
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/COPYING.LESSER"
