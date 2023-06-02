@@ -14,7 +14,7 @@
   ],
   "features": {
     "glpk": {
-      "description": "ThirdParty wrapper for building Glpk",
+      "description": "Build with Glpk",
       "dependencies": [
         {
           "name": "glpk",
