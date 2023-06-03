@@ -1,0 +1,29 @@
+diff --git a/source/matplot/CMakeLists.txt b/source/matplot/CMakeLists.txt
+index fe9ad53..d1a604d 100644
+--- a/source/matplot/CMakeLists.txt
++++ b/source/matplot/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ if(NOT MINGW)
+-find_package(Filesystem REQUIRED COMPONENTS Experimental Final)
++  #find_package(Filesystem REQUIRED COMPONENTS Experimental Final)
+ endif()
+ 
+ #######################################################
+@@ -104,7 +104,7 @@ target_include_directories(matplot
+ # Dependencies
+ if(NOT MINGW)
+ target_link_libraries_system(matplot
+-  PRIVATE cimg nodesoup std::filesystem)
++  PRIVATE cimg nodesoup)
+ else()
+ target_link_libraries_system(matplot
+   PRIVATE cimg nodesoup)
+@@ -134,7 +134,7 @@ maybe_target_pedantic_warnings(matplot)
+ # Use experimental filesystem if std::filesystem is not available yet
+ if(NOT MINGW)
+     if (CXX_FILESYSTEM_IS_EXPERIMENTAL)
+-      target_compile_definitions(matplot PRIVATE CXX_FILESYSTEM_IS_EXPERIMENTAL)
++      #target_compile_definitions(matplot PRIVATE CXX_FILESYSTEM_IS_EXPERIMENTAL)
+     endif()
+ endif()
+ # Some hack to not depend on FILE* internals
