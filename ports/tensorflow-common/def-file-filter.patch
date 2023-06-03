@@ -1,0 +1,13 @@
+diff --git a/tensorflow/BUILD b/tensorflow/BUILD
+index 19ee800..cf93f36 100644
+--- a/tensorflow/BUILD
++++ b/tensorflow/BUILD
+@@ -1244,7 +1244,7 @@ genrule(
+     outs = ["tensorflow_filtered_def_file.def"],
+     cmd = select({
+         "//tensorflow:windows": """
+-              $(location @local_config_def_file_filter//:def_file_filter) \\
++              $${PYTHON_BIN_PATH} $${DEF_FILE_FILTER} \\
+               --input $(location :tensorflow_def_file) \\
+               --output $@
+           """,

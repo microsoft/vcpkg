@@ -5,6 +5,7 @@ set(TENSORFLOW_FILES
     "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_linux.py"
     "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_macos.py"
     "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_windows.py"
+    "${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch"
     "${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch"
     "${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch"
     "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_linux.py"

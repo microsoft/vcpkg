@@ -175,6 +175,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
+			"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch"
 			${STATIC_ONLY_PATCHES}
 			${WINDOWS_ONLY_PATCHES}
 	)
@@ -272,7 +273,10 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		list(APPEND BUILD_OPTS --macos_minimum_os=10.14)
 	endif()
 
-	list(APPEND BUILD_OPTS --action_env "MSYS2_ARG_CONV_EXCL=*")
+	file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/tensorflow/tools/def_file_filter/def_file_filter.py.tpl" "${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
+	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{dumpbin_bin_path}]] [[dumpbin.exe]])
+	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{undname_bin_path}]] [[undname.exe]])
+	list(APPEND BUILD_OPTS --action_env "DEF_FILE_FILTER=${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
 
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 		if(VCPKG_TARGET_IS_WINDOWS)
