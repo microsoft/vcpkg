@@ -71,6 +71,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/ast"
 )
 
+# Remove cl preprocessing comments
+foreach(file IN ITEMS "include/ast.h" "include/star/ast.h")
+    file(READ "${CURRENT_PACKAGES_DIR}/${file}" cpp_output)
+    string(REGEX REPLACE "#line [^ ]+ \"[^\"]*\"" "" cpp_output "${cpp_output}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/${file}" "${cpp_output}")
+endforeach()
+
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/COPYING.LESSER"
