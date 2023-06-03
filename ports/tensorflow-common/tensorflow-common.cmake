@@ -176,7 +176,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
-			#"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch"
+			"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch"
 			${STATIC_ONLY_PATCHES}
 			${WINDOWS_ONLY_PATCHES}
 	)
