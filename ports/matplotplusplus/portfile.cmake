@@ -16,6 +16,7 @@ vcpkg_from_github(
         install-3rd-libraries.patch # Remove this patch when nodesoup is added in vcpkg
         fix-dependencies.patch
         fix-pass-filesystem-s-required-flags-for-osx-failure.patch
+        fix-find-filesystem-on-osx-failure.patch
 )
 
 vcpkg_check_features(
