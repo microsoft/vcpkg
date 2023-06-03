@@ -1,6 +1,6 @@
 {
   "name": "matplotplusplus",
-  "version-date": "2023-02-17",
+  "version": "1.2.0",
   "description": "A C++ graphics library for data visualization",
   "homepage": "https://alandefreitas.github.io/matplotplusplus/",
   "license": "MIT",
