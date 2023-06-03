@@ -1,3 +1,4 @@
+set(VCPKG_BUILD_TYPE release)
 set(TF_VERSION 2.10.0)
 set(TF_VERSION_SHORT 2.10)
 
