@@ -279,6 +279,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{undname_bin_path}]] [[undname.exe]])
 	list(APPEND BUILD_OPTS --action_env "DEF_FILE_FILTER=${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
 
+	list(APPEND BUILD_OPTS --experimental_ui_max_stdouterr_bytes=-1)
+
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			list(JOIN BUILD_OPTS " " BUILD_OPTS)
