@@ -36,11 +36,11 @@ if(CMAKE_HOST_WIN32)
 			4b58c0b7d0e97b3840b96037fd67dd47c128d063e1f295015c842d29abe3274bf2df275f4996b23d7a4a2e211c63d037c80efaeacf995950a57f29a284a6e9c0
 	)
 
-	vcpkg_add_to_path("${MSYS_ROOT}/usr/bin" PREPEND)
+	vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
 	set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
 	set(ENV{BAZEL_SH} "${BASH}")
 
-	vcpkg_add_to_path("${MSYS_ROOT}/mingw64/bin" PREPEND)
+	vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/mingw64/bin")
 	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3.exe")
 	vcpkg_execute_required_process(COMMAND "${PYTHON3}" -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 else()
