@@ -15,10 +15,6 @@ function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	endif()
 endfunction()
 
-vcpkg_find_acquire_program(GIT)
-get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
-vcpkg_add_to_path(PREPEND ${GIT_DIR})
-
 string(FIND "${CURRENT_BUILDTREES_DIR}" " " POS)
 if(NOT POS EQUAL -1)
 	message(FATAL_ERROR "Your vcpkg path contains spaces. This is not supported by the bazel build tool. Aborting.")
@@ -30,18 +26,26 @@ if(CMAKE_HOST_WIN32)
 		message(WARNING "Your Windows username '$ENV{USERNAME}' contains spaces. Applying work-around to bazel. Be warned of possible further issues.")
 	endif()
 
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
-	vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
-	vcpkg_add_to_path(${MSYS_ROOT}/mingw64/bin)
-	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+	set(ENV{BAZEL_VC} "$ENV{VCInstallDir}")
+	set(ENV{BAZEL_VC_FULL_VERSION} "$ENV{VCToolsVersion}")
 
-	set(ENV{BAZEL_SH} ${MSYS_ROOT}/usr/bin/bash.exe)
-	set(ENV{BAZEL_VC} $ENV{VCInstallDir})
-	set(ENV{BAZEL_VC_FULL_VERSION} $ENV{VCToolsVersion})
+	vcpkg_acquire_msys(MSYS_ROOT
+		PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy
+		DIRECT_PACKAGES
+			# use msys2 git, not another entry in PATH
+			"https://mirror.msys2.org/msys/x86_64/git-2.41.0-1-x86_64.pkg.tar.zst"
+			4b58c0b7d0e97b3840b96037fd67dd47c128d063e1f295015c842d29abe3274bf2df275f4996b23d7a4a2e211c63d037c80efaeacf995950a57f29a284a6e9c0
+	)
 
+	vcpkg_add_to_path("${MSYS_ROOT}/usr/bin" PREPEND)
+	set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
+	set(ENV{BAZEL_SH} "${BASH}")
+
+	vcpkg_add_to_path("${MSYS_ROOT}/mingw64/bin" PREPEND)
 	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3.exe")
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
+	vcpkg_execute_required_process(COMMAND "${PYTHON3}" -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 else()
+	vcpkg_find_acquire_program(GIT)
 	vcpkg_find_acquire_program(PYTHON3)
 
 	# on macos arm64 use conda miniforge
@@ -315,7 +319,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*' ${BAZEL} --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "MSYS2_ARG_CONV_EXCL='*' ${BAZEL} --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
