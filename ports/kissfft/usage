@@ -2,8 +2,17 @@ The package kissfft provides CMake targets:
 
     # When built as static library:
     find_package(kissfft CONFIG REQUIRED COMPONENTS STATIC float)
+    find_package(kissfft CONFIG REQUIRED COMPONENTS STATIC double)
+    find_package(kissfft CONFIG REQUIRED COMPONENTS STATIC int16_t)
+    find_package(kissfft CONFIG REQUIRED COMPONENTS STATIC int32_t)
 
     # When built as shared library:
     find_package(kissfft CONFIG REQUIRED COMPONENTS SHARED float)
+    find_package(kissfft CONFIG REQUIRED COMPONENTS SHARED double)
+    find_package(kissfft CONFIG REQUIRED COMPONENTS SHARED int16_t)
+    find_package(kissfft CONFIG REQUIRED COMPONENTS SHARED int32_t)
 
     target_link_libraries(main PRIVATE kissfft::kissfft kissfft::kissfft-float)
+    target_link_libraries(main PRIVATE kissfft::kissfft kissfft::kissfft-double)
+    target_link_libraries(main PRIVATE kissfft::kissfft kissfft::kissfft-int16_t)
+    target_link_libraries(main PRIVATE kissfft::kissfft kissfft::kissfft-int32_t)
