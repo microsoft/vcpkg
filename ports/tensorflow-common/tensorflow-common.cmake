@@ -153,12 +153,11 @@ else()
 	endif()
 endif()
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-  list(APPEND PORT_BUILD_CONFIGS "dbg")
-endif()
-
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   list(APPEND PORT_BUILD_CONFIGS "rel")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  list(APPEND PORT_BUILD_CONFIGS "dbg")
 endif()
 
 foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
@@ -224,7 +223,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
-			list(APPEND BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
+			list(APPEND BUILD_OPTS --compilation_mode=dbg --features=fastbuild) # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
@@ -304,23 +303,32 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			)
 		endif()
 	else()
+		list(APPEND BUILD_OPTS "--python_path=${PYTHON3}")
 		if(VCPKG_TARGET_IS_WINDOWS)
-			if(VCPKG_CRT_LINKAGE STREQUAL static)
-				if(BUILD_TYPE STREQUAL dbg)
+			vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS2_ARG_CONV_EXCL=*")
+			list(APPEND BUILD_OPTS
+				"--define=no_tensorflow_py_deps=true"
+				"--features=fully_static_link"
+			)
+			if(VCPKG_CRT_LINKAGE STREQUAL "static")
+				# cf. 
+				if(BUILD_TYPE STREQUAL "dbg")
 					list(APPEND COPTS "--copt=-MTd")
+					list(APPEND CXXOPTS "--cxxopt=-MTd")
 				else()
 					list(APPEND COPTS "--copt=-MT")
+					list(APPEND CXXOPTS "--cxxopt=-MT")
 				endif()
 			endif()
-			list(JOIN BUILD_OPTS " " BUILD_OPTS)
-			list(JOIN COPTS " " COPTS)
-			list(JOIN CXXOPTS " " CXXOPTS)
-			list(JOIN LINKOPTS " " LINKOPTS)
 			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "MSYS2_ARG_CONV_EXCL='*' ${BAZEL} --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers"
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
+				COMMAND ${SETUP_ENV}
+					"${BAZEL}" "--output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl" --max_idle_secs=1
+						build --subcommands --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS}
+							"//tensorflow:${BAZEL_LIB_NAME}"
+							"//tensorflow:install_headers"
+				WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
+				LOGNAME "build-${TARGET_TRIPLET}-${BUILD_TYPE}"
 			)
 		else()
 			vcpkg_execute_build_process(
