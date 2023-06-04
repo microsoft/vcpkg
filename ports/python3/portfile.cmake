@@ -309,6 +309,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
     file(READ "${CMAKE_CURRENT_LIST_DIR}/usage.unix" usage_extra)
 endif()
+string(REPLACE "@PYTHON_VERSION_MINOR@" "${PYTHON_VERSION_MINOR}" usage_extra "${usage_extra}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage}\n${usage_extra}")
 
 function(_generate_finder)
