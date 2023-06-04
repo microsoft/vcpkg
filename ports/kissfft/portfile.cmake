@@ -21,7 +21,8 @@ if("tools" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PKGCONFIG)
 endif()
 
-set(datatypes "float;double;int16_t;int32_t")
+set(datatypes float double int16_t int32_t)
+
 foreach(datatype IN LISTS datatypes)
     vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
@@ -31,16 +32,20 @@ foreach(datatype IN LISTS datatypes)
             -DKISSFFT_TEST=OFF
             -DKISSFFT_STATIC=${KISSFFT_STATIC}
             ${FEATURE_OPTIONS}
+        LOGFILE_BASE "config-${TARGET_TRIPLET}-${datatype}"
     )
 
-    vcpkg_cmake_install()
+    vcpkg_cmake_build(
+        LOGFILE_BASE "install-${TARGET_TRIPLET}-${datatype}"
+        TARGET install
+    )
 
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/kissfft")
 
-    vcpkg_fixup_pkgconfig()
-
     vcpkg_copy_pdbs()
 endforeach()
+
+vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
