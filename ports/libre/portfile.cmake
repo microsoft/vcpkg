@@ -27,7 +27,7 @@ vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/re)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/re PACKAGE_NAME re)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
