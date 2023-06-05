@@ -2009,11 +2009,11 @@
       "port-version": 1
     },
     "daw-header-libraries": {
-      "baseline": "2.88.0",
+      "baseline": "2.93.1",
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "3.15.0",
+      "baseline": "3.17.2",
       "port-version": 0
     },
     "daw-utf-range": {
