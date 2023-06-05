@@ -167,22 +167,33 @@ if(NOT TARGET unofficial::omniverse-physx-sdk)
 
     # Lastly also provide a target for clients to link with the GPU library (optional, provided by NVIDIA and downloaded through packman)
 
-    # Find GPU library files
+    # Find GPU library files (these are used at late-binding to enable GPU acceleration)
     if(WIN32)
-        find_library(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR}" NO_DEFAULT_PATH)
-        find_library(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR}" NO_DEFAULT_PATH)
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR}" NO_DEFAULT_PATH)
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR}" NO_DEFAULT_PATH)
+
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_DEVICE_LIBRARY_RELEASE NAMES PhysXDevice64.dll PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR}" NO_DEFAULT_PATH)
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_DEVICE_LIBRARY_DEBUG NAMES PhysXDevice64.dll PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR}" NO_DEFAULT_PATH)
     elseif(UNIX)
-        find_library(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR}" NO_DEFAULT_PATH)
-        find_library(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR}" NO_DEFAULT_PATH)
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR}" NO_DEFAULT_PATH)
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG NAMES PhysXGpu_64 PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR}" NO_DEFAULT_PATH)
     endif()
 
 
-    # Create imported target for GPU library
+    # Create imported targets for GPU library
     add_library(unofficial::omniverse-physx-sdk-gpu-library SHARED IMPORTED)
-
     set_target_properties(unofficial::omniverse-physx-sdk-gpu-library PROPERTIES
         IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
         IMPORTED_LOCATION_RELEASE "${OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE}"
         IMPORTED_LOCATION_DEBUG "${OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG}"
     )
+
+    if(WIN32)
+        add_library(unofficial::omniverse-physx-sdk-gpu-device-library SHARED IMPORTED)
+        set_target_properties(unofficial::omniverse-physx-sdk-gpu-device-library PROPERTIES
+            IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
+            IMPORTED_LOCATION_RELEASE "${OMNIVERSE-PHYSX-SDK-GPU_DEVICE_LIBRARY_RELEASE}"
+            IMPORTED_LOCATION_DEBUG "${OMNIVERSE-PHYSX-SDK-GPU_DEVICE_LIBRARY_DEBUG}"
+        )
+    endif()
 endif()
