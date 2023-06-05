@@ -22,41 +22,41 @@ if(NOT TARGET unofficial::omniverse-physx-sdk)
     find_library(OMNIVERSE-PHYSX-SDK_LIBRARY_RELEASE NAMES PhysX_static_64 PhysX_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR}" NO_DEFAULT_PATH)
     find_library(OMNIVERSE-PHYSX-SDK_LIBRARY_DEBUG NAMES PhysX_static_64 PhysX_64 PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR}" NO_DEFAULT_PATH)
 
-    # Set defaults according to known triplets
+    # # Set defaults according to known triplets
 
-    if(VCPKG_TARGET_TRIPLET STREQUAL x64-windows)
-        if(NOT DEFINED VCPKG_LIBRARY_LINKAGE)
-            set(VCPKG_LIBRARY_LINKAGE dynamic)
-        endif()
-        if(NOT DEFINED VCPKG_CRT_LINKAGE)
-            set(VCPKG_CRT_LINKAGE dynamic)
-        endif()
-    elseif(VCPKG_TARGET_TRIPLET MATCHES x64-windows-static)
-        if(NOT DEFINED VCPKG_LIBRARY_LINKAGE)
-            set(VCPKG_LIBRARY_LINKAGE static)
-        endif()
-        if(NOT DEFINED VCPKG_CRT_LINKAGE)
-                set(VCPKG_CRT_LINKAGE static)
-        endif()
+    # if(VCPKG_TARGET_TRIPLET STREQUAL x64-windows)
+    #     if(NOT DEFINED VCPKG_LIBRARY_LINKAGE)
+    #         set(VCPKG_LIBRARY_LINKAGE dynamic)
+    #     endif()
+    #     if(NOT DEFINED VCPKG_CRT_LINKAGE)
+    #         set(VCPKG_CRT_LINKAGE dynamic)
+    #     endif()
+    # elseif(VCPKG_TARGET_TRIPLET MATCHES x64-windows-static)
+    #     if(NOT DEFINED VCPKG_LIBRARY_LINKAGE)
+    #         set(VCPKG_LIBRARY_LINKAGE static)
+    #     endif()
+    #     if(NOT DEFINED VCPKG_CRT_LINKAGE)
+    #             set(VCPKG_CRT_LINKAGE static)
+    #     endif()
 
-        if(VCPKG_TARGET_TRIPLET STREQUAL x64-windows-static-md)
-            if(NOT DEFINED VCPKG_CRT_LINKAGE)
-                set(VCPKG_CRT_LINKAGE dynamic)
-            endif()
-        endif()
-    elseif(VCPKG_TARGET_TRIPLET STREQUAL x64-linux)
-        if(NOT DEFINED VCPKG_LIBRARY_LINKAGE)
-            set(VCPKG_LIBRARY_LINKAGE static)
-        endif()
-    elseif(VCPKG_TARGET_TRIPLET STREQUAL x64-linux-dynamic)
-        if(NOT DEFINED VCPKG_LIBRARY_LINKAGE)
-            set(VCPKG_LIBRARY_LINKAGE dynamic)
-        endif()
-    elseif(VCPKG_TARGET_TRIPLET STREQUAL arm64-linux)
-        if(NOT DEFINED VCPKG_LIBRARY_LINKAGE)
-            set(VCPKG_LIBRARY_LINKAGE static)
-        endif()
-    endif()
+    #     if(VCPKG_TARGET_TRIPLET STREQUAL x64-windows-static-md)
+    #         if(NOT DEFINED VCPKG_CRT_LINKAGE)
+    #             set(VCPKG_CRT_LINKAGE dynamic)
+    #         endif()
+    #     endif()
+    # elseif(VCPKG_TARGET_TRIPLET STREQUAL x64-linux)
+    #     if(NOT DEFINED VCPKG_LIBRARY_LINKAGE)
+    #         set(VCPKG_LIBRARY_LINKAGE static)
+    #     endif()
+    # elseif(VCPKG_TARGET_TRIPLET STREQUAL x64-linux-dynamic)
+    #     if(NOT DEFINED VCPKG_LIBRARY_LINKAGE)
+    #         set(VCPKG_LIBRARY_LINKAGE dynamic)
+    #     endif()
+    # elseif(VCPKG_TARGET_TRIPLET STREQUAL arm64-linux)
+    #     if(NOT DEFINED VCPKG_LIBRARY_LINKAGE)
+    #         set(VCPKG_LIBRARY_LINKAGE static)
+    #     endif()
+    # endif()
 
     # Finally create imported target
     add_library(unofficial::omniverse-physx-sdk UNKNOWN IMPORTED)
@@ -76,16 +76,16 @@ if(NOT TARGET unofficial::omniverse-physx-sdk)
         INTERFACE_INCLUDE_DIRECTORIES "${OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS}"
     )
 
-    # Deal with requested CRT linkage
-    if(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "static")
-        set_target_properties(unofficial::omniverse-physx-sdk PROPERTIES
-            INTERFACE_COMPILE_OPTIONS "/MT$<$<CONFIG:Debug>:d>"
-        )
-    elseif(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        set_target_properties(unofficial::omniverse-physx-sdk PROPERTIES
-            INTERFACE_COMPILE_OPTIONS "/MD$<$<CONFIG:Debug>:d>"
-        )
-    endif()
+    # # Deal with requested CRT linkage
+    # if(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "static")
+    #     set_target_properties(unofficial::omniverse-physx-sdk PROPERTIES
+    #         INTERFACE_COMPILE_OPTIONS "/MT$<$<CONFIG:Debug>:d>"
+    #     )
+    # elseif(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    #     set_target_properties(unofficial::omniverse-physx-sdk PROPERTIES
+    #         INTERFACE_COMPILE_OPTIONS "/MD$<$<CONFIG:Debug>:d>"
+    #     )
+    # endif()
 
     # Get the necessary dependencies to link in
     if (WIN32)
