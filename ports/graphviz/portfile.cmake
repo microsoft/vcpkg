@@ -22,16 +22,10 @@ endif()
 
 vcpkg_list(SET OPTIONS)
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(FOLDER_PATH "")
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(FOLDER_PATH "x64")
-    else()
-        set(FOLDER_PATH ${VCPKG_TARGET_ARCHITECTURE})
-    endif()
     vcpkg_download_distfile(
         LTDL_H_PATH
-        URLS "https://gitlab.com/graphviz/graphviz-windows-dependencies/-/raw/141d3a21be904fa8dc2ae3ed01d36684db07a35d/${FOLDER_PATH}/include/ltdl.h"
-        FILENAME graphviz-ltdl-141d3a21.h
+        URLS "https://gitlab.com/graphviz/graphviz-windows-dependencies/-/raw/master/x64/include/ltdl.h"
+        FILENAME graphviz-ltdl-master.h
         SHA512 f2d20e849e35060536265f47014c40eb70e57dacd600a9db112fc465fbfa6a66217b44a8c3dc33039c260a27f09d9034b329b03cc28c32a22ec503fcd17b78cd
     )
     file(INSTALL "${LTDL_H_PATH}" DESTINATION "${SOURCE_PATH}/libltdl" RENAME ltdl.h)
