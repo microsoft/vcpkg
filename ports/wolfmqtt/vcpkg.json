@@ -1,11 +1,10 @@
 {
   "name": "wolfmqtt",
   "version": "1.15.0",
-  "port-version": 1,
   "description": "MQTT library used with wolfSSL library for many platforms",
   "homepage": "https://wolfssl.com",
   "license": "GPL-2.0-or-later",
-  "supports": "!uwp & !xbox",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -1,12 +1,10 @@
 {
   "name": "comms",
   "version-semver": "4.0.0",
-  "port-version": 1,
   "description": "COMMS is the C++(11) headers only, platform independent library, which makes the implementation of a communication protocol to be an easy and relatively quick process.",
   "homepage": "https://commschamp.github.io/",
   "documentation": "https://github.com/commschamp/comms",
   "license": "MPL-2.0",
-  "supports": "!xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

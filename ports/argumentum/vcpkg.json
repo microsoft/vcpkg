@@ -1,11 +1,9 @@
 {
   "name": "argumentum",
   "version": "0.3.2",
-  "port-version": 1,
   "description": "A C++17 command line argument parser inspired by Python argparse",
   "homepage": "https://github.com/mmahnic/argumentum",
   "license": "MPL-2.0",
-  "supports": "!xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

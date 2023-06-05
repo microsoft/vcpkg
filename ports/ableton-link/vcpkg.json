@@ -1,12 +1,10 @@
 {
   "name": "ableton-link",
   "version": "3.0.6",
-  "port-version": 1,
   "description": "Ableton Link, a technology that synchronizes musical beat, tempo, and phase across multiple applications running on one or more devices.",
   "homepage": "https://www.ableton.com/en/link/",
   "documentation": "http://ableton.github.io/link/",
   "license": "GPL-2.0-or-later",
-  "supports": "!xbox",
   "dependencies": [
     "asio",
     {

@@ -1,11 +1,11 @@
 {
   "name": "argtable2",
   "version": "2.13",
-  "port-version": 11,
+  "port-version": 10,
   "description": "Argtable is an ANSI C library for parsing GNU style command line options with a minimum of fuss.",
   "homepage": "http://argtable.sourceforge.net",
   "license": "LGPL-2.0-only",
-  "supports": "!uwp & !xbox",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "getopt",
