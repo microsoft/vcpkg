@@ -25,7 +25,7 @@ vcpkg_download_distfile(RAPIDS_cmake
 file(COPY "${RAPIDS_cmake}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
 
 vcpkg_download_distfile(execution_bs
-    URLS "https://raw.githubusercontent.com/brycelelbach/wg21_p2300_execution/main/execution.bs"
+    URLS "https://raw.githubusercontent.com/brycelelbach/wg21_p2300_execution/R7/execution.bs"
     FILENAME "execution.bs"
     SHA512 90f2a1d150b03c29bb05a5420e091c2371cb973335a089916716d778bc1081764436dc1ff0fec60f642ddb0ca5492c8b0c3a6d5451c2d60a42911f918fe980fa
 )
