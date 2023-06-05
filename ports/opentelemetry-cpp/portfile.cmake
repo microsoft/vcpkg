@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 eb7dde38134fd9f51f22a2288a3a1db9eeec3dce3889c02fea82e20738a697449be73d632c3d1889ff159f0274d57bfd066db506149b221fe6ced8f18fdc1237
+    SHA512 86cf0320f9ee50bc1aa2b7a8b254fb0df25d1bd1f5f01ebc3630ab7fe2f6ca5e53ca8e042518b4e7096dbb102c0b880e9a25fcdf5f668d24ff57d9247237bf62
     HEAD_REF main
     PATCHES
         # Use the compiler's default C++ version. Picking a version with
