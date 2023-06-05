@@ -7890,7 +7890,7 @@
     },
     "tbb": {
       "baseline": "2021.9.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tcb-span": {
       "baseline": "2021-12-15",
@@ -8282,7 +8282,7 @@
     },
     "usd": {
       "baseline": "23.5",
-      "port-version": 0
+      "port-version": 1
     },
     "usockets": {
       "baseline": "0.8.6",
