@@ -8289,7 +8289,7 @@
       "port-version": 0
     },
     "usockets": {
-      "baseline": "0.8.5",
+      "baseline": "0.8.6",
       "port-version": 0
     },
     "usrsctp": {
