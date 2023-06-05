@@ -12,7 +12,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 
-if(VCPKG_HOST_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_install()
     vcpkg_copy_pdbs()
 
@@ -24,7 +24,7 @@ if(VCPKG_HOST_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
     endif()
-elseif(VCPKG_HOST_IS_LINUX)
+elseif(VCPKG_TARGET_IS_LINUX)
     #message(STATUS "Configuring ${TARGET_TRIPLET}")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(SHARED_STATIC --enable-static --disable-shared)
