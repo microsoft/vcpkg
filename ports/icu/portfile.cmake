@@ -88,53 +88,58 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     if("tools" IN_LIST FEATURES)
         set(LIBICUTU_RPATH "libicutu")
     endif()
-    # add ID_PREFIX to libicudata libicui18n libicuio libicutu libicuuc
-    foreach(LIB_NAME IN ITEMS libicudata libicui18n libicuio ${LIBICUTU_RPATH} libicuuc)
-        vcpkg_execute_build_process(
-            COMMAND "${INSTALL_NAME_TOOL}" -id "${ID_PREFIX}/${LIB_NAME}.${ICU_VERSION_MAJOR}.dylib"
-            "${LIB_NAME}.${VERSION}.dylib"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
-            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
-        )
-    endforeach()
 
-    # add ID_PREFIX to libicui18n libicuio libicutu dependencies
-    foreach(LIB_NAME IN ITEMS libicui18n libicuio)
-        vcpkg_execute_build_process(
-            COMMAND "${INSTALL_NAME_TOOL}" -change "libicuuc.${ICU_VERSION_MAJOR}.dylib"
-                                                "${ID_PREFIX}/libicuuc.${ICU_VERSION_MAJOR}.dylib"
-                                                "${LIB_NAME}.${VERSION}.dylib"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
-            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
-        )
+    #31680: Fix @rpath in both debug and release build
+    foreach(CONFIG_TRIPLE IN ITEMS ${DEBUG_TRIPLET} ${RELEASE_TRIPLET})
+        # add ID_PREFIX to libicudata libicui18n libicuio libicutu libicuuc
+        foreach(LIB_NAME IN ITEMS libicudata libicui18n libicuio ${LIBICUTU_RPATH} libicuuc)
+            vcpkg_execute_build_process(
+                COMMAND "${INSTALL_NAME_TOOL}" -id "${ID_PREFIX}/${LIB_NAME}.${ICU_VERSION_MAJOR}.dylib"
+                "${LIB_NAME}.${VERSION}.dylib"
+                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${CONFIG_TRIPLE}/lib"
+                LOGNAME "make-build-fix-rpath-${CONFIG_TRIPLE}"
+            )
+        endforeach()
+
+        # add ID_PREFIX to libicui18n libicuio libicutu dependencies
+        foreach(LIB_NAME IN ITEMS libicui18n libicuio)
+            vcpkg_execute_build_process(
+                COMMAND "${INSTALL_NAME_TOOL}" -change "libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                    "${ID_PREFIX}/libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                    "${LIB_NAME}.${VERSION}.dylib"
+                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${CONFIG_TRIPLE}/lib"
+                LOGNAME "make-build-fix-rpath-${CONFIG_TRIPLE}"
+            )
+            vcpkg_execute_build_process(
+                COMMAND "${INSTALL_NAME_TOOL}" -change "libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                    "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                    "${LIB_NAME}.${VERSION}.dylib"
+                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${CONFIG_TRIPLE}/lib"
+                LOGNAME "make-build-fix-rpath-${CONFIG_TRIPLE}"
+            )
+        endforeach()
+
+        # add ID_PREFIX to remaining libicuio libicutu dependencies
+        foreach(LIB_NAME libicuio libicutu)
+            vcpkg_execute_build_process(
+                COMMAND "${INSTALL_NAME_TOOL}" -change "libicui18n.${ICU_VERSION_MAJOR}.dylib"
+                                                    "${ID_PREFIX}/libicui18n.${ICU_VERSION_MAJOR}.dylib"
+                                                    "${LIB_NAME}.${VERSION}.dylib"
+                WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${CONFIG_TRIPLE}/lib"
+                LOGNAME "make-build-fix-rpath-${CONFIG_TRIPLE}"
+            )
+        endforeach()
+
+        # add ID_PREFIX to libicuuc dependencies
         vcpkg_execute_build_process(
             COMMAND "${INSTALL_NAME_TOOL}" -change "libicudata.${ICU_VERSION_MAJOR}.dylib"
                                                 "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
-                                                "${LIB_NAME}.${VERSION}.dylib"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
-            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+                                                "libicuuc.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${CONFIG_TRIPLE}/lib"
+            LOGNAME "make-build-fix-rpath-${CONFIG_TRIPLE}"
         )
     endforeach()
 
-    # add ID_PREFIX to remaining libicuio libicutu dependencies
-    foreach(LIB_NAME libicuio libicutu)
-        vcpkg_execute_build_process(
-            COMMAND "${INSTALL_NAME_TOOL}" -change "libicui18n.${ICU_VERSION_MAJOR}.dylib"
-                                                "${ID_PREFIX}/libicui18n.${ICU_VERSION_MAJOR}.dylib"
-                                                "${LIB_NAME}.${VERSION}.dylib"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
-            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
-        )
-    endforeach()
-
-    # add ID_PREFIX to libicuuc dependencies
-    vcpkg_execute_build_process(
-        COMMAND "${INSTALL_NAME_TOOL}" -change "libicudata.${ICU_VERSION_MAJOR}.dylib"
-                                            "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
-                                            "libicuuc.${VERSION}.dylib"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
-        LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
-    )
 endif()
 
 vcpkg_install_make()
