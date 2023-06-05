@@ -223,7 +223,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
-			list(APPEND BUILD_OPTS --compilation_mode=dbg --features=fastbuild) # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
+			# list(APPEND BUILD_OPTS --compilation_mode=dbg --features=fastbuild) # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
+			list(APPEND BUILD_OPTS --compilation_mode=fastbuild) # debug build on Windows currently broken
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
@@ -303,15 +304,15 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			)
 		endif()
 	else()
-		list(APPEND BUILD_OPTS "--python_path=${PYTHON3}")
+		vcpkg_list(SET SETUP_ENV)
+		list(APPEND BUILD_OPTS
+			"--python_path=${PYTHON3}"
+			"--define=no_tensorflow_py_deps=true"
+		)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS2_ARG_CONV_EXCL=*")
-			list(APPEND BUILD_OPTS
-				"--define=no_tensorflow_py_deps=true"
-				"--features=fully_static_link"
-			)
+			list(APPEND BUILD_OPTS "--features=fully_static_link")
 			if(VCPKG_CRT_LINKAGE STREQUAL "static")
-				# cf. 
 				if(BUILD_TYPE STREQUAL "dbg")
 					list(APPEND COPTS "--copt=-MTd")
 					list(APPEND CXXOPTS "--cxxopt=-MTd")
@@ -320,23 +321,17 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 					list(APPEND CXXOPTS "--cxxopt=-MT")
 				endif()
 			endif()
-			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
-			vcpkg_execute_build_process(
-				COMMAND ${SETUP_ENV}
-					"${BAZEL}" "--output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl" --max_idle_secs=1
-						build --subcommands --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS}
-							"//tensorflow:${BAZEL_LIB_NAME}"
-							"//tensorflow:install_headers"
-				WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
-				LOGNAME "build-${TARGET_TRIPLET}-${BUILD_TYPE}"
-			)
-		else()
-			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} --output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl --max_idle_secs=1 build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
 		endif()
+		# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
+		vcpkg_execute_build_process(
+			COMMAND ${SETUP_ENV}
+				"${BAZEL}" "--output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl" --max_idle_secs=1
+					build --subcommands --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS}
+						"//tensorflow:${BAZEL_LIB_NAME}"
+						"//tensorflow:install_headers"
+			WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
+			LOGNAME "build-${TARGET_TRIPLET}-${BUILD_TYPE}"
+		)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			vcpkg_execute_build_process(
 				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_LIB_SUFFIX}
