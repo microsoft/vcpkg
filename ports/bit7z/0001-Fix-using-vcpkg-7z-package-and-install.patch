@@ -1,6 +1,6 @@
-From 3f1705653f2ad7fbc9f0e4563f6e4fa92585a889 Mon Sep 17 00:00:00 2001
+From f0f324b2c075e44c60104539b65254337856fe0a Mon Sep 17 00:00:00 2001
 From: uuiid <957714080@qq.com>
-Date: Wed, 29 Mar 2023 09:14:44 +0800
+Date: Mon, 5 Jun 2023 13:08:47 +0800
 Subject: [PATCH] Fix using vcpkg 7z package and install
 
 ---
@@ -11,7 +11,7 @@ Subject: [PATCH] Fix using vcpkg 7z package and install
  create mode 100644 bit7z-config.cmake.in
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 41476ca..b980aaa 100644
+index 41476ca..efb7968 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -16,7 +16,7 @@ if( POLICY CMP0076 )
@@ -71,12 +71,12 @@ index 41476ca..b980aaa 100644
 +
 +
 +include(CMakePackageConfigHelpers)
-+configure_package_config_file(${PROJECT_NAME}-config.cmake.in ${PROJECT_NAME}-config.cmake INSTALL_DESTINATION share/${PROJECT_NAME})
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake DESTINATION share/${PROJECT_NAME})
++configure_package_config_file(${PROJECT_NAME}-config.cmake.in unofficial-${PROJECT_NAME}-config.cmake INSTALL_DESTINATION share/${PROJECT_NAME})
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}-config.cmake DESTINATION share/${PROJECT_NAME})
 +
 +install(
 +    EXPORT ${PROJECT_NAME}_target
-+    NAMESPACE ${PROJECT_NAME}::
++    NAMESPACE unofficial::${PROJECT_NAME}::
 +    FILE ${PROJECT_NAME}-targets.cmake
 +    DESTINATION share/${PROJECT_NAME}
 +)
@@ -109,5 +109,5 @@ index a0e139c..f6ff95d 100644
  if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
      if( CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 3.6 )
 -- 
-2.39.2.windows.1
+2.40.1.windows.1
 
