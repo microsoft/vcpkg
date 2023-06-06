@@ -1,7 +1,7 @@
 {
   "name": "kenlm",
-  "version": "20200924",
-  "port-version": 4,
+  "version": "20230531",
+  "port-version": 5,
   "description": "KenLM: Faster and Smaller Language Model Queries",
   "supports": "!(arm64 & windows)",
   "dependencies": [
@@ -12,13 +12,13 @@
     "boost-test",
     "boost-thread",
     "bzip2",
-    {
-      "name": "eigen3",
-      "platform": "!windows"
-    },
     "liblzma",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     },
     "zlib"
