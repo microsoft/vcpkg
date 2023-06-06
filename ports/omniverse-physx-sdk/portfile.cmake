@@ -1,10 +1,10 @@
-#
+###############################################################################################################
 # Port for Omniverse PhysX 5 - NVIDIA Corporation
-# Marco Alesiani <malesiani@nvidia.com>
+# Written by Marco Alesiani <malesiani@nvidia.com>
 # Note: this port is NOT officially supported by NVIDIA.
 # This port is also not a replacement for the 'physx' port: the newest Omniverse PhysX dropped support
 # for many platforms so the old one will continue to be community maintained to support all previous platforms.
-#
+###############################################################################################################
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -289,8 +289,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/source"
 )
 
-
-
 # Install the cmake config that users will use, replace -if any- only @variables@
 configure_file("${CMAKE_CURRENT_LIST_DIR}/omniverse-physx-sdk-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/unofficial-omniverse-physx-sdk-config.cmake" @ONLY)
 
@@ -304,11 +302,8 @@ file(REMOVE_RECURSE
      "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-# Install license
+# Install license and usage file
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
-
-# file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}" "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
-# file(RENAME "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/omniverse-physx-sdk-config.cmake"
-#      "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-omniverse-physx-sdk-config.cmake")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 message("[VCPKG Omniverse PhysX port execution completed]")

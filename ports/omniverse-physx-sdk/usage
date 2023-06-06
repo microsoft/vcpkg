@@ -1,0 +1,69 @@
+[Sample port usage]
+This port can be consumed via user defined CMakeLists.txt as follows:
+
+    # CMakeLists.txt
+    cmake_minimum_required(VERSION 3.15)
+
+    # PLEASE CUSTOMIZE DESIRED TARGETS AND LINKAGES BEFORE IMPORTING THIS PACKAGE
+    ##############################################################
+    # set(VCPKG_TARGET_TRIPLET x64-windows)
+    # set(VCPKG_CRT_LINKAGE dynamic)
+
+    # set(VCPKG_TARGET_TRIPLET x64-windows-static)
+    # set(VCPKG_CRT_LINKAGE static)
+
+    set(VCPKG_TARGET_TRIPLET x64-linux)
+    ##############################################################
+
+    # Set the following variable to the location of your vcpkg local installation
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake")
+
+    project(HelloPhysX)
+
+    add_executable(hello_physx main.cpp)
+
+    # Note: if the package cannot be found, check that you're using the right triplet for your OS
+    # (and a supported one)
+    find_package(unofficial-omniverse-physx-sdk CONFIG REQUIRED)
+    target_link_libraries(hello_physx unofficial::omniverse-physx-sdk::sdk)
+
+    # Adjust CRT linkage according to requested one
+    if(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "static")
+        set_target_properties(unofficial::omniverse-physx-sdk::sdk PROPERTIES
+            INTERFACE_COMPILE_OPTIONS "/MT$<$<CONFIG:Debug>:d>"
+        )
+    elseif(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set_target_properties(unofficial::omniverse-physx-sdk::sdk PROPERTIES
+            INTERFACE_COMPILE_OPTIONS "/MD$<$<CONFIG:Debug>:d>"
+        )
+    endif()
+
+    # Optional: import the defined target to copy over the GPU acceleration libraries (3rd party provided by NVIDIA)
+    if(TARGET unofficial::omniverse-physx-sdk-gpu-library AND UNIX)
+        # Add rpath setting to find so libraries on unix based systems
+        set_target_properties(hello_physx PROPERTIES
+            BUILD_WITH_INSTALL_RPATH TRUE
+            INSTALL_RPATH "$ORIGIN"
+        )
+    endif()
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        target_compile_definitions(hello_physx PRIVATE _DEBUG)
+    endif()
+
+    if(TARGET unofficial::omniverse-physx-sdk-gpu-library)
+        add_custom_command(TARGET hello_physx POST_BUILD
+                        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                        $<TARGET_FILE:unofficial::omniverse-physx-sdk-gpu-library>
+                        $<TARGET_FILE_DIR:hello_physx>)
+        if(WIN32)
+            add_custom_command(TARGET hello_physx POST_BUILD
+                            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                            $<TARGET_FILE:unofficial::omniverse-physx-sdk-gpu-device-library>
+                            $<TARGET_FILE_DIR:hello_physx>)
+        endif()
+    else()
+        message(WARNING "GPU acceleration library target not defined - GPU acceleration will NOT be available!")
+    endif()
+
+
