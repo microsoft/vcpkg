@@ -1,14 +1,10 @@
 {
   "name": "hypergrep",
   "version": "0.1.0",
-  "homepage": "https://www.github.com/p-ranav/hypergrep",
   "description": "Recursively search directories for a regex pattern",
-  "supports": "linux",  
+  "homepage": "https://www.github.com/p-ranav/hypergrep",
+  "supports": "linux",
   "dependencies": [
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
     {
       "name": "argparse",
       "host": true
@@ -27,6 +23,10 @@
     },
     {
       "name": "libgit2",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
       "host": true
     }
   ]
