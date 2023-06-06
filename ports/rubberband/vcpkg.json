@@ -8,12 +8,12 @@
   "dependencies": [
     {
       "name": "fftw3",
-      "platform": "(arm & windows) | (arm64 & osx)"
+      "platform": "(arm & windows) | (x86 & windows) | (arm64 & osx)"
     },
     "libsamplerate",
     {
       "name": "sleef",
-      "platform": "!(arm & windows) & !(arm64 & osx)"
+      "platform": "!(arm & windows) & !(x86 & windows) & !(arm64 & osx)"
     },
     {
       "name": "vcpkg-tool-meson",
