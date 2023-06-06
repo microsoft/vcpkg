@@ -1,12 +1,11 @@
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO irrlicht/Irrlicht%20SDK
-    REF 1.8/1.8.4
-    FILENAME "irrlicht-1.8.4.zip"
-    SHA512 de69ddd2c6bc80a1b27b9a620e3697b1baa552f24c7d624076d471f3aecd9b15f71dce3b640811e6ece20f49b57688d428e3503936a7926b3e3b0cc696af98d1
+    REF 1.8/${VERSION}
+    FILENAME "irrlicht-${VERSION}.zip"
+    SHA512 d11c7a056bfb8c9737ed583c5bc5794223bc59fb4620411b63bc4d1eedc41db2ed1cab5cb7a37fee42a7f38c0e0645f5fc53fd329fff0f2aa78e0df6804c47c9
     PATCHES
         fix-encoding.patch
-        fix-sysctl.patch
         fix-osx-compilation.patch
 )
 
@@ -54,4 +53,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/irrlicht")
 endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt")

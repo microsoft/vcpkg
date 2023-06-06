@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 7bbf8d6..617ac93 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -247,13 +247,11 @@ list(REMOVE_ITEM APP_SOURCES
+@@ -247,13 +247,10 @@ list(REMOVE_ITEM APP_SOURCES
  list(REMOVE_ITEM APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/CoolPropLib.cpp")
  
  set(APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -16,8 +16,7 @@ index 7bbf8d6..617ac93 100644
 +find_package(Eigen3 CONFIG REQUIRED)
 +find_package(msgpack-cxx CONFIG REQUIRED)
 +find_package(fmt CONFIG REQUIRED)
-+link_libraries(Eigen3::Eigen fmt::fmt)
-+include_directories(msgpackc-cxx)
++link_libraries(Eigen3::Eigen msgpack-cxx fmt::fmt)
  list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
  list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/src")
  
