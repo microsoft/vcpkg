@@ -1,7 +1,7 @@
 From f8f8b7dc7929b18600c667ed92482e0ac7ec948d Mon Sep 17 00:00:00 2001
 From: Amin Yahyaabadi <aminyahyaabadi74@gmail.com>
 Date: Thu, 11 May 2023 12:14:34 -0700
-Subject: [PATCH] fix: pass filesystem's required flags for osx failures
+Subject: [PATCH 1/2] fix: pass filesystem's required flags for osx failures
 
 ---
  cmake/FindFilesystem.cmake | 5 ++++-

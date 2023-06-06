@@ -1,0 +1,56 @@
+From cefe59f72f055a06cfd47578b7753e8f4b91e115 Mon Sep 17 00:00:00 2001
+From: Amin Yahyaabadi <aminyahyaabadi74@gmail.com>
+Date: Tue, 6 Jun 2023 13:47:35 -0700
+Subject: [PATCH 2/2] fix: fix build on MacOS when FindFileSystem fails
+
+---
+ cmake/FindFilesystem.cmake            | 2 +-
+ source/matplot/CMakeLists.txt         | 2 +-
+ test/generate_examples/CMakeLists.txt | 8 ++++----
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/cmake/FindFilesystem.cmake b/cmake/FindFilesystem.cmake
+index ccdb3de..25d905b 100644
+--- a/cmake/FindFilesystem.cmake
++++ b/cmake/FindFilesystem.cmake
+@@ -248,5 +248,5 @@ cmake_pop_check_state()
+ set(Filesystem_FOUND ${_found} CACHE BOOL "TRUE if we can run a program using std::filesystem" FORCE)
+ 
+ if(Filesystem_FIND_REQUIRED AND NOT Filesystem_FOUND)
+-    message(FATAL_ERROR "Cannot run a simple program using std::filesystem\nYou need to update your C++ compiler to use this library")
++    message(STATUS "Could not run a simple program using std::filesystem\nYou might need to update your C++ compiler to use this library")
+ endif()
+diff --git a/source/matplot/CMakeLists.txt b/source/matplot/CMakeLists.txt
+index fe9ad53..b059aa1 100644
+--- a/source/matplot/CMakeLists.txt
++++ b/source/matplot/CMakeLists.txt
+@@ -102,7 +102,7 @@ target_include_directories(matplot
+            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+ 
+ # Dependencies
+-if(NOT MINGW)
++if(TARGET std::filesystem AND NOT MINGW)
+ target_link_libraries_system(matplot
+   PRIVATE cimg nodesoup std::filesystem)
+ else()
+diff --git a/test/generate_examples/CMakeLists.txt b/test/generate_examples/CMakeLists.txt
+index 32d0145..c9f7d09 100644
+--- a/test/generate_examples/CMakeLists.txt
++++ b/test/generate_examples/CMakeLists.txt
+@@ -1,8 +1,8 @@
+ if(NOT MINGW)
+-find_package(Filesystem REQUIRED)
++  find_package(Filesystem REQUIRED)
+ endif()
+ add_executable(generate_examples main.cpp)
+-if(NOT MINGW)
+-target_link_libraries(generate_examples std::filesystem)
++if(TARGET std::filesystem)
++  target_link_libraries(generate_examples std::filesystem)
+ endif()
+-target_compile_features(generate_examples PRIVATE cxx_std_17)
+\ No newline at end of file
++target_compile_features(generate_examples PRIVATE cxx_std_17)
+-- 
+2.34.1
+
