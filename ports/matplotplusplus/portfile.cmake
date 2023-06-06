@@ -15,7 +15,7 @@ vcpkg_from_github(
     PATCHES
         install-3rd-libraries.patch # Remove this patch when nodesoup is added in vcpkg
         fix-dependencies.patch
-        fix-find-filesystem-on-osx-failure.patch
+	fix-opengl-feature.patch
 )
 
 vcpkg_check_features(
