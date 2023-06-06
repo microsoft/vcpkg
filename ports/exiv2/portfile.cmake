@@ -15,6 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         video   EXIV2_ENABLE_VIDEO
         png     EXIV2_ENABLE_PNG
         nls     EXIV2_ENABLE_NLS
+        bmff    EXIV2_ENABLE_BMFF
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" EXIV2_CRT_DYNAMIC)
