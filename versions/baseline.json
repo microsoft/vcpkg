@@ -8788,6 +8788,10 @@
       "baseline": "10.0.0",
       "port-version": 0
     },
+    "xtd": {
+      "baseline": "2023-06-06",
+      "port-version": 0
+    },
     "xtensor": {
       "baseline": "0.24.6",
       "port-version": 0
