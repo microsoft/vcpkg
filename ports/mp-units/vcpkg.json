@@ -1,7 +1,7 @@
 {
   "name": "mp-units",
   "version-semver": "0.7.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "mp-units - A Units Library for C++",
   "homepage": "https://github.com/mpusz/units",
   "license": "MIT",
@@ -16,5 +16,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "version-2": {
+      "description": "Use development v2_framework branch"
+    }
+  }
 }
