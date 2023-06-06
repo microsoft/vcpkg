@@ -49,12 +49,28 @@ endforeach()
 vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
+    set(tool_names)
+
+    foreach(datatype IN LISTS datatypes)
+        if("openmp" IN_LIST FEATURES)
+            list(APPEND tool_names
+                "fastconv-${datatype}-openmp"
+                "fastconvr-${datatype}-openmp"
+                "fft-${datatype}-openmp"
+                "psdpng-${datatype}-openmp"
+            )
+        else()
+            list(APPEND tool_names
+                "fastconv-${datatype}"
+                "fastconvr-${datatype}"
+                "fft-${datatype}"
+                "psdpng-${datatype}"
+            )
+        endif()
+    endforeach()
+
     vcpkg_copy_tools(
-        TOOL_NAMES
-            fastconv
-            fastconvr
-            fft
-            psdpng
+        TOOL_NAMES ${tool_names}
         AUTO_CLEAN
     )
 endif()
