@@ -10,6 +10,7 @@ vcpkg_from_github(
 set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
   -DFL_TEXT_BUILD_TESTS=OFF
   -DFL_TEXT_BUILD_STANDALONE=OFF
+  -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON # flashlight-text doesn't explicitly export symbols
 )
 
 vcpkg_check_features(
