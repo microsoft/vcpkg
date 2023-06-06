@@ -107,12 +107,13 @@ set(ENV{TF_NCCL_VERSION} ${TF_VERSION_SHORT})
 set(ENV{NCCL_INSTALL_PATH} "")
 set(ENV{TF_NEED_CUDA} 0)
 set(ENV{TF_CONFIGURE_IOS} 0)
-set(ENV{CC_OPT_FLAGS} "-Wno-sign-compare")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-       if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" )
-               set(ENV{CC_OPT_FLAGS} "/arch:AVX")
-       endif()
+	if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" )
+		set(ENV{CC_OPT_FLAGS} "/arch:AVX")
+	endif()
+else()
+	set(ENV{CC_OPT_FLAGS} "-Wno-sign-compare")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -178,7 +179,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
-			"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch"
+			#"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch"
 			${STATIC_ONLY_PATCHES}
 			${WINDOWS_ONLY_PATCHES}
 	)
@@ -282,80 +283,58 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{undname_bin_path}]] [[undname.exe]])
 	list(APPEND BUILD_OPTS --action_env "DEF_FILE_FILTER=${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
 
-	list(APPEND BUILD_OPTS --experimental_ui_max_stdouterr_bytes=-1)
+	list(APPEND BUILD_OPTS
+		"--python_path=${PYTHON3}"
+		--define=no_tensorflow_py_deps=true
+		--experimental_ui_max_stdouterr_bytes=-1
+	)
 
-	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		if(VCPKG_TARGET_IS_WINDOWS)
-			list(JOIN BUILD_OPTS " " BUILD_OPTS)
-			list(JOIN COPTS " " COPTS)
-			list(JOIN CXXOPTS " " CXXOPTS)
-			list(JOIN LINKOPTS " " LINKOPTS)
-			# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
-			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*' '${BAZEL}' --output_user_root='${CURRENT_BUILDTREES_DIR}/.bzl' --max_idle_secs=1 build --subcommands=pretty_print --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers"
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-		else()
-			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} --output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl --max_idle_secs=1 build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} ${LINKOPTS} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
-				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-		endif()
-	else()
-		vcpkg_list(SET SETUP_ENV)
-		list(APPEND BUILD_OPTS
-			"--python_path=${PYTHON3}"
-			"--define=no_tensorflow_py_deps=true"
-		)
-		if(VCPKG_TARGET_IS_WINDOWS)
-			vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS2_ARG_CONV_EXCL=*")
-			list(APPEND BUILD_OPTS "--features=fully_static_link")
-			if(VCPKG_CRT_LINKAGE STREQUAL "static")
-				if(BUILD_TYPE STREQUAL "dbg")
-					list(APPEND COPTS "--copt=-MTd")
-					list(APPEND CXXOPTS "--cxxopt=-MTd")
-					list(APPEND LINKOPTS "--linkopt=-NODEFAULTLIB:libcmt.lib")
-				else()
-					list(APPEND COPTS "--copt=-MT")
-					list(APPEND CXXOPTS "--cxxopt=-MT")
-				endif()
+	vcpkg_list(SET SETUP_ENV)
+	if(VCPKG_TARGET_IS_WINDOWS)
+		vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS2_ARG_CONV_EXCL=*")
+		list(APPEND BUILD_OPTS "--features=fully_static_link")
+		if(VCPKG_CRT_LINKAGE STREQUAL "static")
+			if(BUILD_TYPE STREQUAL "dbg")
+				list(APPEND COPTS "--copt=-MTd")
+				list(APPEND CXXOPTS "--cxxopt=-MTd")
+				list(APPEND LINKOPTS "--linkopt=-NODEFAULTLIB:libcmt.lib")
+			else()
+				list(APPEND COPTS "--copt=-MT")
+				list(APPEND CXXOPTS "--cxxopt=-MT")
 			endif()
 		endif()
-		# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
-		vcpkg_execute_build_process(
-			COMMAND ${SETUP_ENV}
-				"${BAZEL}" "--output_user_root=${CURRENT_BUILDTREES_DIR}/.bzl" --max_idle_secs=1
-					build --subcommands --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS}
-						"//tensorflow:${BAZEL_LIB_NAME}"
-						"//tensorflow:install_headers"
-			WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
-			LOGNAME "build-${TARGET_TRIPLET}-${BUILD_TYPE}"
-		)
+	endif()
+	# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
+	vcpkg_execute_build_process(
+		COMMAND ${SETUP_ENV}
+			"${BAZEL}" "--output_user_root=${CURRENT_BUILDTREES_DIR}/_bzl" --max_idle_secs=1
+				build --subcommands --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS}
+					"//tensorflow:${BAZEL_LIB_NAME}"
+					"//tensorflow:install_headers"
+		WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
+		LOGNAME "build-${TARGET_TRIPLET}-${BUILD_TYPE}"
+	)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+		set(args ${TF_VERSION} ${TF_LIB_SUFFIX})
 		if(VCPKG_TARGET_IS_WINDOWS)
-			vcpkg_execute_build_process(
-				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_LIB_SUFFIX}
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
-		else()
-			vcpkg_execute_build_process(
-				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${TF_VERSION} ${TF_LIB_SUFFIX}
-				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
-				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
-			)
+			set(args ${TF_LIB_SUFFIX})
 		endif()
-		# for some reason stdout of bazel ends up in stderr, so use err log file in the following command
 		vcpkg_execute_build_process(
-			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow" ${TF_VERSION} ${TF_LIB_SUFFIX}
-			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
-			LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
+			COMMAND "${PYTHON3}" "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${args}
+			WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow"
+			LOGNAME "postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}"
+		)
+		# Cf. https://github.com/bazelbuild/bazel/issues/10496#issuecomment-664998097
+		# Bazel deliberately sends "informative logs" to stderr, so use err log file in the following command
+		vcpkg_execute_build_process(
+			COMMAND "${PYTHON3}" "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow" ${TF_VERSION} ${TF_LIB_SUFFIX}
+			WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}"
+			LOGNAME "postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}"
 		)
 		vcpkg_execute_build_process(
 			COMMAND ${STATIC_LINK_CMD}
-			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
-			LOGNAME postbuild3-${TARGET_TRIPLET}-${BUILD_TYPE}
+			WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}"
+			LOGNAME "postbuild3-${TARGET_TRIPLET}-${BUILD_TYPE}"
 		)
 	endif()
 
@@ -381,7 +360,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			else()
 				set(library_parts_variable TF_LIB_PARTS_RELEASE)
 			endif()
-			set(${library_parts_variable})
+			set(${library_parts_variable} "")
 
 			# library might have been split because no more than 4GB are supported even on x64 Windows
 			foreach(PART_NO RANGE 1 100)
