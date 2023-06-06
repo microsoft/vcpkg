@@ -3172,6 +3172,10 @@
       "baseline": "2.9.0",
       "port-version": 0
     },
+    "hypergrep": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "hyperscan": {
       "baseline": "5.4.2",
       "port-version": 0
