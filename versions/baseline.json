@@ -8470,7 +8470,7 @@
     },
     "vsg": {
       "baseline": "1.0.5",
-      "port-version": 0
+      "port-version": 1
     },
     "vtk": {
       "baseline": "9.2.0-pv5.11.0",
