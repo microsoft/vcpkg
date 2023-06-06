@@ -1,0 +1,114 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fc7a654..1e31334 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,13 +32,7 @@ if (PROJECT_IS_TOP_LEVEL)
+     endif(UNIFEX_BUILD_EXAMPLES)
+     # Tests do use gtest
+     if(BUILD_TESTING)
+-      include(gtest)
+-      target_compile_features(gtest PUBLIC cxx_std_17)
+-      target_compile_features(gtest_main PUBLIC cxx_std_17)
+-      if (UNIFEX_CXX_COMPILER_CLANGCL)
+-        target_compile_options(gtest PRIVATE -Wno-error)
+-        target_compile_options(gtest_main PRIVATE -Wno-error)
+-      endif()
++      find_package(GTest CONFIG REQUIRED)
+       add_subdirectory(test)
+     endif(BUILD_TESTING)
+   endif(BUILD_TESTING OR UNIFEX_BUILD_EXAMPLES)
+diff --git a/cmake/unifex_flags.cmake b/cmake/unifex_flags.cmake
+index 1d005d3..4953b0f 100644
+--- a/cmake/unifex_flags.cmake
++++ b/cmake/unifex_flags.cmake
+@@ -31,27 +31,16 @@ else()
+   set(UNIFEX_NO_MEMORY_RESOURCE TRUE)
+ endif()
+ 
+-if(DEFINED UNIFEX_NO_LIBURING)
+-  message(WARNING "[unifex warning]: forcing no_liburing=${UNIFEX_NO_LIBURING} !")
+-elseif(DEFINED ENV{UNIFEX_NO_LIBURING})
+-  message(WARNING "[unifex warning]: forcing no_liburing=$ENV{UNIFEX_NO_LIBURING} !")
+-  set(UNIFEX_NO_LIBURING $ENV{UNIFEX_NO_LIBURING})
+-  set(LIBURING_INCLUDE_DIRS $ENV{UNIFEX_LIBURING_INCLUDE_DIRS})
+-  set(LIBURING_LIBRARIES $ENV{UNIFEX_LIBURING_LIBRARIES})
+-else()
+-# Probe for libUring support
+-find_package(LibUring COMPONENTS)
+-# Set some variables to be used by configure_file.
+-if(LIBURING_FOUND)
++if(WITH_liburing)
+   set(UNIFEX_NO_LIBURING FALSE)
+ else()
+   set(UNIFEX_NO_LIBURING TRUE)
+ endif()
+-endif()
+ 
+ if(NOT UNIFEX_NO_LIBURING)
+-  set(UNIFEX_URING_INCLUDE_DIRS ${LIBURING_INCLUDE_DIRS})
+-  set(UNIFEX_URING_LIBRARY ${LIBURING_LIBRARIES})
++  find_package(PkgConfig)
++  pkg_check_modules(liburing REQUIRED IMPORTED_TARGET GLOBAL liburing>=2.0)
++  set(UNIFEX_URING_LIBRARY PkgConfig::liburing)
+ endif()
+ 
+ if(DEFINED UNIFEX_NO_EPOLL)
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index 98ff345..fbadfb3 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -80,19 +80,28 @@ if(CXX_COROUTINES_HAVE_COROUTINES)
+   target_link_libraries(unifex PUBLIC std::coroutines)
+ endif()
+ 
+-configure_file(unifex.pc.in unifex.pc @ONLY)
++#configure_file(unifex.pc.in unifex.pc @ONLY)
+ 
+ # install unifex with its configure file into the default paths
+ 
+-install(TARGETS unifex EXPORT unifexTargets)
++install(TARGETS unifex EXPORT unifexTargets DESTINATION lib)
++include(CMakePackageConfigHelpers)
++# generate the config file that includes the exports
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/unifex-config.cmake.in
++  "${CMAKE_CURRENT_BINARY_DIR}/unifex-config.cmake"
++  INSTALL_DESTINATION "share/unifex/"
++  NO_SET_AND_CHECK_MACRO
++  NO_CHECK_REQUIRED_COMPONENTS_MACRO
++  )
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unifex-config.cmake DESTINATION "share/unifex/")
+ install(FILES ${PROJECT_BINARY_DIR}/include/unifex/config.hpp
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/unifex/)
+ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
+         TYPE INCLUDE
+         PATTERN "*.in" EXCLUDE)
+ install(EXPORT unifexTargets
+-        FILE unifexConfig.cmake
++        FILE unifexTargets.cmake
+         NAMESPACE unifex::
+         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unifex/)
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unifex.pc
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
++#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unifex.pc
++#       DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 7f7a524..f28fbfb 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -8,7 +8,7 @@ foreach(file-path ${test-sources})
+     string( REPLACE ".cpp" "" file-path-without-ext ${file-path} )
+     get_filename_component(file-name ${file-path-without-ext} NAME)
+     add_executable( ${file-name} ${file-path})
+-    target_link_libraries(${file-name} PUBLIC unifex gtest_main)
++    target_link_libraries(${file-name} PUBLIC unifex GTest::gtest GTest::gtest_main)
+     add_test(NAME "test-${file-name}" COMMAND ${file-name})
+ endforeach()
+ 
+@@ -17,5 +17,5 @@ if(CXX_MEMORY_RESOURCE_HAVE_PMR)
+   target_link_libraries(submit_allocator_customisation_test PUBLIC std::memory_resource)
+ endif()
+ 
+-target_link_libraries(any_sender_of_test PUBLIC gmock)
+-target_link_libraries(async_manual_reset_event_test PUBLIC gmock)
++target_link_libraries(any_sender_of_test PUBLIC GTest::gmock)
++target_link_libraries(async_manual_reset_event_test PUBLIC GTest::gmock)

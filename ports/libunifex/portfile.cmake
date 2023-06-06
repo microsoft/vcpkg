@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-compile-error.patch
         fix-linux-timespec.patch
+        0001-fix-dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,8 +17,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         test    BUILD_TESTING
         test    UNIFEX_BUILD_EXAMPLES
         coroutines CXX_COROUTINES_HAVE_COROUTINES
+        liburing WITH_liburing
 )
 
+file(REMOVE "${SOURCE_PATH}/cmake/CMakeLists.txt.in")
+file(REMOVE "${SOURCE_PATH}/cmake/FindLibUring.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/gtest.cmake")
+file(REMOVE "${SOURCE_PATH}/source/unifex.pc.in")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unifex-config.cmake.in"
+   DESTINATION "${SOURCE_PATH}/source/"
+)
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS

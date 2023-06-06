@@ -1,0 +1,15 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+include ("${CMAKE_CURRENT_LIST_DIR}/unifexTargets.cmake" )
+
+
+if (@BUILD_TESTING@)
+    find_dependency(GTest CONFIG)
+endif()
+
+if (@WITH_liburing@)
+    find_dependency(PkgConfig)
+    pkg_check_modules(liburing REQUIRED IMPORTED_TARGET GLOBAL liburing>=2.0)
+endif()
+

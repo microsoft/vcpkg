@@ -1,14 +1,10 @@
 {
   "name": "libunifex",
   "version-date": "2023-01-25",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Unified Executors",
   "homepage": "https://github.com/facebookexperimental/libunifex",
   "dependencies": [
-    {
-      "name": "liburing",
-      "platform": "linux"
-    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -21,6 +17,9 @@
   "features": {
     "coroutines": {
       "description": "Support coroutine"
+    },
+    "liburing": {
+      "description": "support liburing"
     },
     "test": {
       "description": "Build test/example programs",
