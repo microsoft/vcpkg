@@ -5690,7 +5690,7 @@
     },
     "nrf-ble-driver": {
       "baseline": "4.1.4",
-      "port-version": 0
+      "port-version": 1
     },
     "nspr": {
       "baseline": "4.35",
