@@ -179,7 +179,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
-			#"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch"
+			"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch" # pylauncher mingw quirks
 			${STATIC_ONLY_PATCHES}
 			${WINDOWS_ONLY_PATCHES}
 	)
@@ -294,6 +294,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYSTEM=MINGW64" "MSYS2_ARG_CONV_EXCL=*")
 		list(APPEND BUILD_OPTS "--features=fully_static_link")
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
+			list(APPEND BUILD_OPTS "--features=static_link_msvcrt")
+		elseif(0)
 			if(BUILD_TYPE STREQUAL "dbg")
 				list(APPEND COPTS "--copt=-MTd")
 				list(APPEND CXXOPTS "--cxxopt=-MTd")
