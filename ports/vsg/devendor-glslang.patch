@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 61da709f..472bc6af 100644
+index 6e7ec437..db4d30f1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -37,9 +37,11 @@ find_package(Vulkan ${Vulkan_MIN_VERSION} REQUIRED)
@@ -16,10 +16,10 @@ index 61da709f..472bc6af 100644
  
          if (Git_FOUND)
 diff --git a/src/vsg/CMakeLists.txt b/src/vsg/CMakeLists.txt
-index 4154312..7afcdd4 100644
+index 3d9625e4..8fe89f89 100644
 --- a/src/vsg/CMakeLists.txt
 +++ b/src/vsg/CMakeLists.txt
-@@ -226,7 +226,7 @@ set(SOURCES
+@@ -227,7 +227,7 @@ set(SOURCES
      utils/LoadPagedLOD.cpp
  )
  
@@ -28,7 +28,7 @@ index 4154312..7afcdd4 100644
  
      # include glslang source code directly into the VulkanScenegraph library build.
      include(../glslang/build_vars.cmake)
-@@ -234,6 +234,14 @@ endif()
+@@ -235,6 +235,14 @@ endif()
  
  # set up library dependencies
  set(LIBRARIES PUBLIC
@@ -43,7 +43,7 @@ index 4154312..7afcdd4 100644
          Vulkan::Vulkan
          Threads::Threads
  )
-@@ -364,9 +372,6 @@ target_include_directories(vsg
+@@ -365,9 +373,6 @@ target_include_directories(vsg
      PUBLIC
          $<BUILD_INTERFACE:${VSG_SOURCE_DIR}/include>
          $<BUILD_INTERFACE:${VSG_BINARY_DIR}/include>
