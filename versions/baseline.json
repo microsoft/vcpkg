@@ -5613,7 +5613,7 @@
       "port-version": 4
     },
     "nghttp2": {
-      "baseline": "1.53.0",
+      "baseline": "1.54.0",
       "port-version": 0
     },
     "nghttp2-asio": {
