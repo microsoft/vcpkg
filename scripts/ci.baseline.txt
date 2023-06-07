@@ -1565,7 +1565,7 @@ tensorflow:x64-android=fail
 tensorflow-cc:x64-android=fail
 tensorflow-cc:x64-windows-static-md=fail
 tensorflow-cc:x64-windows-static=fail
-#?tensorflow-cc:x64-windows=fail
+tensorflow-cc:x64-windows=fail
 # WIP, avoid rebuild due to vpckg caching quirk
 llvm:x64-windows=skip
 llvm:x64-windows-static=skip
