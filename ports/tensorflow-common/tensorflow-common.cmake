@@ -117,7 +117,7 @@ else()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-	set(BAZEL_LIB_NAME tensorflow${TF_LIB_SUFFIX}.so)
+	set(BAZEL_LIB_NAME libtensorflow${TF_LIB_SUFFIX}.so)
 	set(PLATFORM_SUFFIX windows)
 	set(STATIC_LINK_CMD static_link.bat)
 elseif(VCPKG_TARGET_IS_OSX)
