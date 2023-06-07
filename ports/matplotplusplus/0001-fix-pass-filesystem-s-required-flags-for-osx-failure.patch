@@ -1,12 +1,3 @@
-From f8f8b7dc7929b18600c667ed92482e0ac7ec948d Mon Sep 17 00:00:00 2001
-From: Amin Yahyaabadi <aminyahyaabadi74@gmail.com>
-Date: Thu, 11 May 2023 12:14:34 -0700
-Subject: [PATCH 1/2] fix: pass filesystem's required flags for osx failures
-
----
- cmake/FindFilesystem.cmake | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
 diff --git a/cmake/FindFilesystem.cmake b/cmake/FindFilesystem.cmake
 index 7547e3f..ccdb3de 100644
 --- a/cmake/FindFilesystem.cmake
@@ -19,17 +10,16 @@ index 7547e3f..ccdb3de 100644
 +        set(CMAKE_REQUIRED_FLAGS "-std=c++17")
 +    endif()
  endif()
- 
+
  # Normalize and check the component list we were given
 @@ -154,7 +157,7 @@ if(NOT "Experimental" IN_LIST want_components)
  endif()
- 
+
  if(find_final)
 -    check_include_file_cxx("filesystem" _CXX_FILESYSTEM_HAVE_HEADER)
 +    check_include_file_cxx("filesystem" _CXX_FILESYSTEM_HAVE_HEADER CMAKE_REQUIRED_FLAGS ${CMAKE_REQUIRED_FLAGS})
      mark_as_advanced(_CXX_FILESYSTEM_HAVE_HEADER)
      if(_CXX_FILESYSTEM_HAVE_HEADER)
          # We found the non-experimental header. Don't bother looking for the
--- 
+--
 2.34.1
-
