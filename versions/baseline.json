@@ -5629,7 +5629,7 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "0.14.1",
+      "baseline": "0.16.0",
       "port-version": 0
     },
     "nifly": {
