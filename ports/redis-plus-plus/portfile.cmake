@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-conversion.patch
         fix-dependency-libuv.patch
+        fix-absolute-path.patch
 )
 
 if("cxx17" IN_LIST FEATURES)
