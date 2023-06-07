@@ -1,6 +1,7 @@
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+#    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
+set(ENV{MSYS2_ARG_CONV_EXCL} *)
 
 set(TF_LIB_SUFFIX "_cc")
 set(TF_PORT_SUFFIX "-cc")
