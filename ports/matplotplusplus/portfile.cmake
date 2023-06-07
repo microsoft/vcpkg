@@ -9,7 +9,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alandefreitas/matplotplusplus
-    REF v1.2.0
+    REF "v${VERSION}"
     SHA512 9193381fd9d4925259f28a03da33231b3da1273237e7510b93da1ca076610455746feb4ea0d8aa9a4a9e46a5f5f344fc1322f7ffc57963837dbe8b0be0b811ac
     HEAD_REF master
     PATCHES
