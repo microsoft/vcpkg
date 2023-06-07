@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index be6aa9d..a27f642 100644
+index be6aa9d..5ae70f8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -12,17 +12,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
@@ -20,14 +20,19 @@ index be6aa9d..a27f642 100644
  
  add_subdirectory(src)
  
-@@ -32,27 +21,29 @@ install(
+@@ -30,29 +19,27 @@ include(GNUInstallDirs)
+ install(
+   TARGETS nodesoup
    EXPORT nodesoup-targets
-   LIBRARY DESTINATION lib
-   ARCHIVE DESTINATION lib
+-  LIBRARY DESTINATION lib
+-  ARCHIVE DESTINATION lib
 -  INCLUDES
 -  DESTINATION include
-+  INCLUDES DESTINATION include
-   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nodesoup)
+-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nodesoup)
++    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nodesoup)
  
  include(CMakePackageConfigHelpers)
 -write_basic_package_version_file(
@@ -41,10 +46,11 @@ index be6aa9d..a27f642 100644
 +  NO_SET_AND_CHECK_MACRO
 +  NO_CHECK_REQUIRED_COMPONENTS_MACRO
 +  )
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nodesoup-config.cmake DESTINATION "share/nodesoup/")
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nodesoup-config.cmake DESTINATION "share/cmake/nodesoup/")
  install(
    EXPORT nodesoup-targets
-   FILE nodesoup-config.cmake
+-  FILE nodesoup-config.cmake
++  FILE nodesoup-targets.cmake
    NAMESPACE nodesoup::
 -  DESTINATION lib/cmake/nodesoup)
 -
@@ -53,16 +59,12 @@ index be6aa9d..a27f642 100644
 -  NAMESPACE nodesoup::
 -  FILE nodesoup-targets.cmake)
 +  DESTINATION share/cmake/nodesoup)
-+install(EXPORT nodesoup-targets
-+        FILE nodesoup-targets.cmake
-+        NAMESPACE nodesoup::
-+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nodesoup/)
  
 +if(0)
  if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
    set(CPACK_PACKAGE_VENDOR "olvb")
    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-@@ -67,3 +58,4 @@ if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR nodesoup_BUILD_DEMO)
+@@ -67,3 +54,4 @@ if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR nodesoup_BUILD_DEMO)
     AND BUILD_DEMO)
    add_subdirectory(demo)
  endif()
