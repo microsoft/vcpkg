@@ -7,14 +7,14 @@ vcpkg_from_github(
 )
 
 # Default flags
-set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
+set(FL_TEXT_DEFAULT_VCPKG_CMAKE_FLAGS
   -DFL_TEXT_BUILD_TESTS=OFF
   -DFL_TEXT_BUILD_STANDALONE=OFF
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
   # flashlight-text doesn't explicitly export symbols
-  list(APPEND FL_DEFAULT_VCPKG_CMAKE_FLAGS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON)
+  list(APPEND FL_TEXT_DEFAULT_VCPKG_CMAKE_FLAGS -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON)
 endif()
 
 vcpkg_check_features(
@@ -26,7 +26,7 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    ${FL_DEFAULT_VCPKG_CMAKE_FLAGS}
+    ${FL_TEXT_DEFAULT_VCPKG_CMAKE_FLAGS}
     ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
