@@ -15,6 +15,7 @@ vcpkg_from_github(
     PATCHES
         001-arm64-support.patch
         support-arm64-osx.diff # from https://github.com/NordicSemiconductor/pc-ble-driver/pull/271
+        gcc-11.2.0-compilation.patch # from https://github.com/NordicSemiconductor/pc-ble-driver/pull/272
 )
 
 # Ensure that git is found within CMakeLists.txt by appending vcpkg's git executable dirpath to $PATH.
