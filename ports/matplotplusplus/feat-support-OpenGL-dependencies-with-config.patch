@@ -1,0 +1,106 @@
+From cc21628b48b330d0fb3bf0b6884cbc67d7a4031a Mon Sep 17 00:00:00 2001
+From: Amin Yahyaabadi <aminyahyaabadi74@gmail.com>
+Date: Wed, 7 Jun 2023 13:40:38 -0700
+Subject: [PATCH] feat: support OpenGL dependencies with config
+
+---
+ Matplot++Config.cmake.in      |  5 ++++
+ source/matplot/CMakeLists.txt | 55 ++++++++++++++++++++---------------
+ 2 files changed, 37 insertions(+), 23 deletions(-)
+
+diff --git a/Matplot++Config.cmake.in b/Matplot++Config.cmake.in
+index fc9ceca..95734d0 100644
+--- a/Matplot++Config.cmake.in
++++ b/Matplot++Config.cmake.in
+@@ -16,6 +16,11 @@ if(NOT ${MATPLOT_BUILT_SHARED})
+     list(APPEND CMAKE_MODULE_PATH ${MATPLOT_CONFIG_INSTALL_DIR})
+     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+     find_dependency(Filesystem COMPONENTS Experimental Final)
++    # OpenGL backend
++    if (@MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND@)
++        find_dependency(glad CONFIG)
++        find_dependency(glfw3 CONFIG)
++    endif()
+     list(POP_BACK CMAKE_MODULE_PATH)
+ endif()
+ 
+diff --git a/source/matplot/CMakeLists.txt b/source/matplot/CMakeLists.txt
+index b059aa1..0809a56 100644
+--- a/source/matplot/CMakeLists.txt
++++ b/source/matplot/CMakeLists.txt
+@@ -214,32 +214,41 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+     # The biggest con of the OpenGL backend is that it cannot open a window
+     #     in another thread. All it can do is get in the middle of the render
+     #     loop and draw the plot.
+-    find_package(OpenGL REQUIRED)
++    find_package(OpenGL)
+ 
+     # https://github.com/Dav1dde/glad
+-    find_package(GLAD QUIET)
+-    if (NOT GLAD_FOUND AND NOT TARGET glad)
+-        # Use CPM only if not found, to avoid ODR violations
+-        # find_package(GLAD REQUIRE) would suffice if it worked well
+-        FetchContent_Declare(glad GIT_REPOSITORY https://github.com/Dav1dde/glad.git GIT_TAG df8e9e16110b305479a875399cee13daa0ccadd9)
+-        FetchContent_MakeAvailable(glad)
+-    else ()
+-        # FindGLAD does not usually create a target, so we create an interface target
+-        if (NOT TARGET glad)
+-            add_library(glad INTERFACE)
+-            target_include_directories(glad INTERFACE ${GLAD_INCLUDE_PATH})
+-            target_link_libraries(glad INTERFACE ${GLAD_LIBRARIES})
+-        endif ()
+-    endif ()
++    find_package(glad CONFIG)
++    if (NOT glad_FOUND)
++        find_package(GLAD QUIET)
++        if (NOT GLAD_FOUND AND NOT TARGET glad)
++            # Use CPM only if not found, to avoid ODR violations
++            # find_package(GLAD REQUIRE) would suffice if it worked well
++            FetchContent_Declare(glad GIT_REPOSITORY https://github.com/Dav1dde/glad.git GIT_TAG df8e9e16110b305479a875399cee13daa0ccadd9)
++            FetchContent_MakeAvailable(glad)
++        else ()
++            if(TARGET glad)
++                add_library(glad::glad ALIAS glad)
++                endif()
++            if(NOT TARGET glad::glad)
++                # FindGLAD does not usually create a target, so we create an interface target
++                add_library(glad::glad INTERFACE)
++                target_include_directories(glad::glad INTERFACE ${GLAD_INCLUDE_PATH})
++                target_link_libraries(glad::glad INTERFACE ${GLAD_LIBRARIES})
++            endif()
++        endif()
++    endif()
+ 
+     # https://github.com/glfw/glfw
+-    find_package(glfw3 QUIET)
+-    if (NOT GLFW3_FOUND AND NOT TARGET glfw)
+-        # Use CPM only if not found, to avoid ODR violations
+-        # find_package(glfw3 REQUIRE) would suffice if it worked well
+-        FetchContent_Declare(glfw3 GIT_REPOSITORY https://github.com/glfw/glfw.git GIT_TAG 3.3.2)
+-        FetchContent_MakeAvailable(glfw3)
+-    endif ()
++    find_package(glfw3 CONFIG)
++    if (NOT glfw3_FOUND)
++        find_package(glfw3 QUIET)
++        if (NOT GLFW3_FOUND AND NOT TARGET glfw)
++            # Use CPM only if not found, to avoid ODR violations
++            # find_package(glfw3 REQUIRE) would suffice if it worked well
++            FetchContent_Declare(glfw3 GIT_REPOSITORY https://github.com/glfw/glfw.git GIT_TAG 3.3.2)
++            FetchContent_MakeAvailable(glfw3)
++        endif ()
++    endif()
+ 
+     add_library(matplot_opengl
+             backend/opengl_embed.h
+@@ -247,7 +256,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+             backend/opengl.h
+             backend/opengl.cpp
+             )
+-    target_link_libraries(matplot_opengl PUBLIC matplot glad glfw ${CMAKE_DL_LIBS})
++    target_link_libraries(matplot_opengl PUBLIC matplot glad::glad glfw ${CMAKE_DL_LIBS})
+ 
+     list(APPEND TARGETS matplot_opengl)
+ endif()
+-- 
+2.34.1
+
