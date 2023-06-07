@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO flashlight/text
-    REF v0.0.3
+    REF "v${VERSION}"
     SHA512 8bf5a60ee064f8276ee1a90f2f74bdb17cad7c75b33196940d4455ac4fd6d14f44690ec42eab4a122f3d8ad8934a42d8ccaf758d85d3c39784cda95bc5ef6351
     HEAD_REF main
 )
