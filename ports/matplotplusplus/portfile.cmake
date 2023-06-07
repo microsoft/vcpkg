@@ -13,9 +13,7 @@ vcpkg_from_github(
     SHA512 9193381fd9d4925259f28a03da33231b3da1273237e7510b93da1ca076610455746feb4ea0d8aa9a4a9e46a5f5f344fc1322f7ffc57963837dbe8b0be0b811ac
     HEAD_REF master
     PATCHES
-        install-3rd-libraries.patch # Remove this patch when nodesoup is added in vcpkg
-        fix-dependencies.patch
-	fix-opengl-feature.patch
+            fix-dependencies.patch
 )
 
 vcpkg_check_features(
