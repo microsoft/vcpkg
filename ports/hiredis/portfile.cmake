@@ -19,12 +19,12 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ssl     ENABLE_SSL
-        example ENABLE_EXAMPLES
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
+    -DENABLE_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()

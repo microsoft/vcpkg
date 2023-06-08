@@ -1,8 +1,9 @@
+string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_88_1
-    SHA512 c5caa1f95580ddbf2041c9c4b885f84d4f5c5fcb905a5ea59f9dbb58a98fc292260f95cb935e963bf83d7dcecf98561deef5ce3ff91cdcb29a080559cff0ed64
+    REF "${curl_version}"
+    SHA512 d3c0bd113c772249c7e4e83cc26c6e2a1ff5644486c96318de6ab035300c52aca10756af665d91c5ce71f9d4afa4afbf7fbb756e9e4c800869b50c8a653bd519
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -71,6 +72,7 @@ vcpkg_cmake_configure(
         -DENABLE_MANUAL=OFF
         -DCURL_CA_FALLBACK=ON
         -DCURL_USE_LIBPSL=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON
 )

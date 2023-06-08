@@ -19,13 +19,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 5a821aaaaa89027ce08a347e5fc216757c2971e29f7d24792609378c54f657839b3775bf639e7330b28b4f96ef0d32869f0a96afcb25c8a2e1c2fe51a6eb4aa3
+    SHA512 7073fd82ce17a63d77babb6a184c14c7341e4b1f8f5a6caeaa1a6d9c78d6a12bb6d9cbad5d39d16412be6d1c12eac60364644664a8e26e3940476973ba07fd19
     PATCHES
+        disable-apps.patch
         disable-install-docs.patch
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
-        windows/umul128-arm64.patch # Fixed upstream in https://github.com/openssl/openssl/pull/20244, but not released as of 3.0.8
+        unix/android-cc.patch
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
         unix/no-static-libs-for-shared.patch
@@ -39,10 +40,20 @@ vcpkg_list(SET CONFIGURE_OPTIONS
     no-tests
 )
 
+set(INSTALL_FIPS "")
+if("fips" IN_LIST FEATURES)
+    vcpkg_list(APPEND INSTALL_FIPS install_fips)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-fips)
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_list(APPEND CONFIGURE_OPTIONS shared)
 else()
     vcpkg_list(APPEND CONFIGURE_OPTIONS no-shared no-module)
+endif()
+
+if(NOT "tools" IN_LIST FEATURES)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS no-apps)
 endif()
 
 if(DEFINED OPENSSL_USE_NOPINSHARED)
