@@ -31,7 +31,6 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         -DPX_BUILDSNIPPETS=OFF
         -DPX_BUILDPVDRUNTIME=OFF
         -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}
-        -DPX_COPY_EXTERNAL_DLL=OFF
     )
     set(targetPlatform "linux")
 elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -39,7 +38,6 @@ elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         -DPX_BUILDSNIPPETS=OFF
         -DPX_BUILDPVDRUNTIME=OFF
         -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}
-        -DPX_COPY_EXTERNAL_DLL=OFF
     )
     set(targetPlatform "linuxAarch64")
 elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -50,7 +48,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         -DPX_GENERATE_STATIC_LIBRARIES=${VCPKG_BUILD_STATIC_LIBS}
         -DNV_USE_STATIC_WINCRT=${VCPKG_LINK_CRT_STATICALLY}
         -DPX_FLOAT_POINT_PRECISE_MATH=OFF
-        -DPX_COPY_EXTERNAL_DLL=OFF
     )
     set(PLATFORM_OPTIONS_RELEASE "")
     set(PLATFORM_OPTIONS_DEBUG "")
@@ -78,56 +75,177 @@ else()
 endif()
 
 
-# All of the following code mimicks generate_projects.sh
+
+
+
+
+
+
+######################## TENTATIVE TO DOWNLOAD AND CACHE!!! ##############################
+
+set($ENV{PM_PATHS} "")
+
+set(ENV{PM_CMakeModules_PATH} "${CURRENT_BUILDTREES_DIR}/temp/CMakeModules")
+list(APPEND ENV{PM_PATHS} $ENV{PM_CMakeModules_PATH})
+
+# Create temporary directory
+file(MAKE_DIRECTORY "$ENV{PM_CMakeModules_PATH}")
+
+# Download file
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://d4i3qtqj3r0z5.cloudfront.net/CMakeModules%401.28.trunk.32494385.7z"
+    FILENAME "CMakeModules.7z"
+    SHA512 cccb0347d27a2b1391ffd3285fa19ca884fed91d8bf2e1683f86efad8aa0151a6e27080a6bec8975be585e4a51dd92cf85ac0cacf12ba28dce6e6efe74f57202
+)
+
+# Find 7zip program
+vcpkg_find_acquire_program(7Z)
+
+# Extract the file
+message(STATUS "Extracting $ENV{PM_CMakeModules_PATH} file")
+vcpkg_execute_required_process(
+    COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_CMakeModules_PATH}" "-y" "-bso0" "-bsp0"
+    WORKING_DIRECTORY "$ENV{PM_CMakeModules_PATH}"
+    LOGNAME "extract-CMakeModules"
+)
+
+
+
+set(ENV{PM_PhysXGpu_PATH} "${CURRENT_BUILDTREES_DIR}/temp/PhysXGpu")
+list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXGpu_PATH})
+
+# Create temporary directory
+file(MAKE_DIRECTORY "$ENV{PM_PhysXGpu_PATH}")
+
+# Download file
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%40104.2-5.1.264.32487460-public.zip"
+    FILENAME "PhysXGpu.zip"
+    SHA512 6bd0384c134d909b0c2d32b9639dde5d8a90b3de74e1971b913d646f284d3dd042e3cfd0d4a868e57370621e23e76001b3eac47ac235c6dd798328e199471502
+)
+
+# Find 7zip program
+vcpkg_find_acquire_program(7Z)
+
+# Extract the file
+message(STATUS "Extracting $ENV{PM_PhysXGpu_PATH} file")
+vcpkg_execute_required_process(
+    COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_PhysXGpu_PATH}" "-y" "-bso0" "-bsp0"
+    WORKING_DIRECTORY "$ENV{PM_PhysXGpu_PATH}"
+    LOGNAME "extract-PhysXGpu"
+)
+
+
+
+
+
+
+set(ENV{PM_PhysXDevice_PATH} "${CURRENT_BUILDTREES_DIR}/temp/PhysXDevice")
+list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXDevice_PATH})
+
+# Create temporary directory
+file(MAKE_DIRECTORY "$ENV{PM_PhysXDevice_PATH}")
+
+# Download file
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXDevice%4018.12.7.4.7z"
+    FILENAME "PhysXDevice.7z"
+    SHA512 c20eb2f1e0dcb9d692cb718ca7e3a332291e72a09614f37080f101e5ebc1591033029f0f1e6fba33a17d4c9f59f13e561f3fc81cee34cd53d50b579c01dd3f3c
+)
+
+# Find 7zip program
+vcpkg_find_acquire_program(7Z)
+
+# Extract the file
+message(STATUS "Extracting $ENV{PM_PhysXDevice_PATH} file")
+vcpkg_execute_required_process(
+    COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_PhysXDevice_PATH}" "-y" "-bso0" "-bsp0"
+    WORKING_DIRECTORY "$ENV{PM_PhysXDevice_PATH}"
+    LOGNAME "extract-PhysXDevice"
+)
+
+
+
+
+if(targetPlatform STREQUAL "vc17win64")
+
+    set(ENV{PM_freeglut_PATH} "${CURRENT_BUILDTREES_DIR}/temp/freeglut")
+    list(APPEND ENV{PM_PATHS} $ENV{PM_freeglut_PATH})
+
+    # Create temporary directory
+    file(MAKE_DIRECTORY "$ENV{PM_freeglut_PATH}")
+
+    # Download file
+    vcpkg_download_distfile(ARCHIVE
+        URLS "https://d4i3qtqj3r0z5.cloudfront.net/freeglut-windows%403.4_1.1.7z"
+        FILENAME "freeglut.7z"
+        SHA512 c01cb75dd466d6889a72d7236669bfce841cc6da9e0edb4208c4affb5ca939f28d64bc3d988bc85d98c589b0b42ac3464f606c89f6c113106669fc9fe84000e5
+    )
+
+    # Find 7zip program
+    vcpkg_find_acquire_program(7Z)
+
+    # Extract the file
+    message(STATUS "Extracting $ENV{PM_freeglut_PATH} file")
+    vcpkg_execute_required_process(
+        COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_freeglut_PATH}" "-y" "-bso0" "-bsp0"
+        WORKING_DIRECTORY "$ENV{PM_freeglut_PATH}"
+        LOGNAME "extract-freeglut"
+    )
+
+endif()
+
+
+# # All of the following code mimicks generate_projects.sh
 
 set(PHYSX_ROOT_DIR "${SOURCE_PATH}/physx")
-set(PACKMAN_CMD "${PHYSX_ROOT_DIR}/buildtools/packman/packman")
+# set(PACKMAN_CMD "${PHYSX_ROOT_DIR}/buildtools/packman/packman")
 
-# Check if packman command exists
+# # Check if packman command exists
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(PACKMAN_CMD "${PACKMAN_CMD}.cmd")
-endif()
+# if(VCPKG_TARGET_IS_WINDOWS)
+#     set(PACKMAN_CMD "${PACKMAN_CMD}.cmd")
+# endif()
 
-if(NOT EXISTS ${PACKMAN_CMD})
-    message(FATAL_ERROR "Cannot find packman (the NVIDIA package manager to download PhysX deps) searched location: ${PACKMAN_CMD}")
-endif()
+# if(NOT EXISTS ${PACKMAN_CMD})
+#     message(FATAL_ERROR "Cannot find packman (the NVIDIA package manager to download PhysX deps) searched location: ${PACKMAN_CMD}")
+# endif()
 
-# Pull the dependencies using the found packman
-if(VCPKG_TARGET_IS_LINUX)
-    execute_process(
-        COMMAND bash -c  "source ${PACKMAN_CMD} pull ${PHYSX_ROOT_DIR}/dependencies.xml --platform ${targetPlatform}; env"
-        RESULT_VARIABLE result # return code or error string
-        OUTPUT_VARIABLE output_envs
-        ERROR_VARIABLE error_output
-        WORKING_DIRECTORY ${PHYSX_ROOT_DIR}
-    )
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    execute_process(
-        COMMAND cmd /c "set PM_DISABLE_VS_WARNING=1 & ${PACKMAN_CMD} pull ${PHYSX_ROOT_DIR}/dependencies.xml --platform ${targetPlatform} & set"
-        RESULT_VARIABLE result # return code or error string
-        OUTPUT_VARIABLE output_envs
-        ERROR_VARIABLE error_output
-        WORKING_DIRECTORY ${PHYSX_ROOT_DIR}
-    )
-endif()
+# # Pull the dependencies using the found packman
+# if(VCPKG_TARGET_IS_LINUX)
+#     execute_process(
+#         COMMAND bash -c  "source ${PACKMAN_CMD} pull ${PHYSX_ROOT_DIR}/dependencies.xml --platform ${targetPlatform}; env"
+#         RESULT_VARIABLE result # return code or error string
+#         OUTPUT_VARIABLE output_envs
+#         ERROR_VARIABLE error_output
+#         WORKING_DIRECTORY ${PHYSX_ROOT_DIR}
+#     )
+# elseif(VCPKG_TARGET_IS_WINDOWS)
+#     execute_process(
+#         COMMAND cmd /c "set PM_DISABLE_VS_WARNING=1 & ${PACKMAN_CMD} pull ${PHYSX_ROOT_DIR}/dependencies.xml --platform ${targetPlatform} & set"
+#         RESULT_VARIABLE result # return code or error string
+#         OUTPUT_VARIABLE output_envs
+#         ERROR_VARIABLE error_output
+#         WORKING_DIRECTORY ${PHYSX_ROOT_DIR}
+#     )
+# endif()
 
-if(NOT ${result} EQUAL 0)
-    message(FATAL_ERROR "Error '${result}' occurred while pulling dependencies using packman (stdout: ${output_envs}, stderr: ${error_output})")
-endif()
+# if(NOT ${result} EQUAL 0)
+#     message(FATAL_ERROR "Error '${result}' occurred while pulling dependencies using packman (stdout: ${output_envs}, stderr: ${error_output})")
+# endif()
 
-# Packman downloads the deps and also sets environment variables with paths on where to find these:
-# let's parse the stdout for environment variables and inject them into ours (hacky)
-string(REPLACE "\n" ";" output_envs ${output_envs})
-foreach(env ${output_envs})
-    if(env MATCHES "^([^=]+)=(.*)$")
-        set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
-    endif()
-endforeach()
+# # Packman downloads the deps and also sets environment variables with paths on where to find these:
+# # let's parse the stdout for environment variables and inject them into ours (hacky)
+# string(REPLACE "\n" ";" output_envs ${output_envs})
+# foreach(env ${output_envs})
+#     if(env MATCHES "^([^=]+)=(.*)$")
+#         set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+#     endif()
+# endforeach()
 
-if(NOT EXISTS $ENV{PM_CMakeModules_PATH}) # Mandatory on every supported platform
-    message(FATAL_ERROR "CMake modules path was not found (packman dependency pull failure?)")
-endif()
+# if(NOT EXISTS $ENV{PM_CMakeModules_PATH}) # Mandatory on every supported platform
+#     message(FATAL_ERROR "CMake modules path was not found (packman dependency pull failure?)")
+# endif()
 
 # Now generate ALL cmake parameters according to our distribution
 
@@ -156,7 +274,7 @@ elseif(targetPlatform STREQUAL "vc17win64") # Again: this will work for any Win6
 endif()
 
 # Also make sure the packman-downloaded GPU driver is found as a binary
-list(APPEND platformCMakeParams -DPHYSX_PHYSXGPU_PATH=$ENV{PM_PhysXGpu_PATH}/bin)
+list(APPEND platformCMakeParams -DPHYSX_PHYSXGPU_PATH=${PM_PhysXGpu_PATH}/bin)
 
 # Anyway the above only works for clang, see
 # source/compiler/cmake/linux/CMakeLists.txt:164
@@ -190,7 +308,6 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     MAYBE_UNUSED_VARIABLES
         PX_OUTPUT_ARCH
-        PX_COPY_EXTERNAL_DLL
         PHYSX_PHYSXGPU_PATH
 )
 
@@ -302,6 +419,14 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-omniverse-physx-sdk
 file(REMOVE_RECURSE
      "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+if(targetPlatform STREQUAL "vc17win64")
+    # Remove freeglut (cannot be skipped in public release builds, but unnecessary)
+    file(REMOVE
+        "${CURRENT_PACKAGES_DIR}/bin/freeglut.dll"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/freeglutd.dll"
+    )
+endif()
 
 # Install license and usage file
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
