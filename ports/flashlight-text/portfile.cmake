@@ -6,25 +6,26 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-# Default flags
-set(FL_TEXT_DEFAULT_VCPKG_CMAKE_FLAGS
-  -DFL_TEXT_BUILD_TESTS=OFF
-  -DFL_TEXT_BUILD_STANDALONE=OFF
-)
-
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    kenlm FL_TEXT_USE_KENLM
+        kenlm FL_TEXT_USE_KENLM
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    ${FL_TEXT_DEFAULT_VCPKG_CMAKE_FLAGS}
-    ${FEATURE_OPTIONS}
+        -DFL_TEXT_BUILD_TESTS=OFF
+        -DFL_TEXT_BUILD_STANDALONE=OFF
+        ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        "-DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/debug/share/${PORT}"
+    OPTIONS_RELEASE
+        "-DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT}"
+
 )
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME ${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
