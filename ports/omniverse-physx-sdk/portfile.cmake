@@ -252,25 +252,37 @@ set(PHYSX_ROOT_DIR "${SOURCE_PATH}/physx")
 # Set common parameters
 set(common_params -DCMAKE_PREFIX_PATH=$ENV{PM_PATHS} -DPHYSX_ROOT_DIR=${PHYSX_ROOT_DIR} -DPX_OUTPUT_LIB_DIR=${PHYSX_ROOT_DIR} -DPX_OUTPUT_BIN_DIR=${PHYSX_ROOT_DIR})
 
-if(DEFINED ENV{GENERATE_SOURCE_DISTRO} AND "$ENV{GENERATE_SOURCE_DISTRO}" STREQUAL "1")
-    list(APPEND common_params -DPX_GENERATE_SOURCE_DISTRO=1)
-endif()
+# if(DEFINED ENV{GENERATE_SOURCE_DISTRO} AND "$ENV{GENERATE_SOURCE_DISTRO}" STREQUAL "1")
+#     list(APPEND common_params -DPX_GENERATE_SOURCE_DISTRO=1)
+# endif()
+
+# # Set platform and compiler specific parameters
+# if(targetPlatform STREQUAL "linuxAarch64")
+#     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/linux-aarch64/PhysX)
+#     set(platformCMakeParams "-G Unix Makefiles" -DTARGET_BUILD_PLATFORM=linux -DPX_OUTPUT_ARCH=arm -DCMAKE_TOOLCHAIN_FILE=$ENV{PM_CMakeModules_PATH}/linux/LinuxAarch64.cmake)
+#     set(generator "Unix Makefiles")
+# elseif(targetPlatform STREQUAL "linux")
+#     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/linux/PhysX)
+#     set(platformCMakeParams "-G Unix Makefiles" -DTARGET_BUILD_PLATFORM=linux -DPX_OUTPUT_ARCH=x86)
+#     # if(compiler STREQUAL "clang")
+#     #     list(APPEND platformCMakeParams -DCMAKE_C_COMPILER=$ENV{PM_clang_PATH}/bin/clang -DCMAKE_CXX_COMPILER=$ENV{PM_clang_PATH}/bin/clang++)
+#     # endif()
+#     # set(generator "Unix Makefiles")
+# elseif(targetPlatform STREQUAL "vc17win64") # Again: this will work for any Win64
+#     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/vc17win64/PhysX)
+#     set(platformCMakeParams -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86)
+# endif()
 
 # Set platform and compiler specific parameters
-if(targetPlatform STREQUAL "linuxAarch64")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_TARGET_IS_LINUX)
     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/linux-aarch64/PhysX)
-    set(platformCMakeParams "-G Unix Makefiles" -DTARGET_BUILD_PLATFORM=linux -DPX_OUTPUT_ARCH=arm -DCMAKE_TOOLCHAIN_FILE=$ENV{PM_CMakeModules_PATH}/linux/LinuxAarch64.cmake)
-    set(generator "Unix Makefiles")
-elseif(targetPlatform STREQUAL "linux")
+    list(APPEND platformCMakeParams -DTARGET_BUILD_PLATFORM=linux -DPX_OUTPUT_ARCH=arm -DCMAKE_TOOLCHAIN_FILE=$ENV{PM_CMakeModules_PATH}/linux/LinuxAarch64.cmake)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_TARGET_IS_LINUX)
     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/linux/PhysX)
-    set(platformCMakeParams "-G Unix Makefiles" -DTARGET_BUILD_PLATFORM=linux -DPX_OUTPUT_ARCH=x86)
-    if(compiler STREQUAL "clang")
-        list(APPEND platformCMakeParams -DCMAKE_C_COMPILER=$ENV{PM_clang_PATH}/bin/clang -DCMAKE_CXX_COMPILER=$ENV{PM_clang_PATH}/bin/clang++)
-    endif()
-    set(generator "Unix Makefiles")
-elseif(targetPlatform STREQUAL "vc17win64") # Again: this will work for any Win64
+    list(APPEND platformCMakeParams -DTARGET_BUILD_PLATFORM=linux -DPX_OUTPUT_ARCH=x86)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_TARGET_IS_WINDOWS)
     set(cmakeParams -DCMAKE_INSTALL_PREFIX=${PHYSX_ROOT_DIR}/install/vc17win64/PhysX)
-    set(platformCMakeParams -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86)
+    list(APPEND platformCMakeParams -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86)
 endif()
 
 # Also make sure the packman-downloaded GPU driver is found as a binary
