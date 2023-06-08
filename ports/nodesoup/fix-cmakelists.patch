@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index be6aa9d..5ae70f8 100644
+index be6aa9d..a343912 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -12,17 +12,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+@@ -12,58 +12,33 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
    option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
  endif()
  
@@ -20,7 +20,7 @@ index be6aa9d..5ae70f8 100644
  
  add_subdirectory(src)
  
-@@ -30,29 +19,27 @@ include(GNUInstallDirs)
+-include(GNUInstallDirs)
  install(
    TARGETS nodesoup
    EXPORT nodesoup-targets
@@ -32,7 +32,11 @@ index be6aa9d..5ae70f8 100644
 +    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 +    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 +    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nodesoup)
++    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" 
++    PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++    )
++install(FILES include/nodesoup.hpp DESTINATION include)
++
  
  include(CMakePackageConfigHelpers)
 -write_basic_package_version_file(
@@ -46,26 +50,51 @@ index be6aa9d..5ae70f8 100644
 +  NO_SET_AND_CHECK_MACRO
 +  NO_CHECK_REQUIRED_COMPONENTS_MACRO
 +  )
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nodesoup-config.cmake DESTINATION "share/cmake/nodesoup/")
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nodesoup-config.cmake DESTINATION "share/nodesoup/")
  install(
    EXPORT nodesoup-targets
 -  FILE nodesoup-config.cmake
-+  FILE nodesoup-targets.cmake
-   NAMESPACE nodesoup::
+-  NAMESPACE nodesoup::
 -  DESTINATION lib/cmake/nodesoup)
 -
 -export(
 -  TARGETS nodesoup
 -  NAMESPACE nodesoup::
 -  FILE nodesoup-targets.cmake)
-+  DESTINATION share/cmake/nodesoup)
++  NAMESPACE nodesoup
++  FILE nodesoup-targets.cmake
++  DESTINATION share/nodesoup)
  
-+if(0)
- if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-   set(CPACK_PACKAGE_VENDOR "olvb")
-   set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-@@ -67,3 +54,4 @@ if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR nodesoup_BUILD_DEMO)
-    AND BUILD_DEMO)
-   add_subdirectory(demo)
- endif()
-+endif()
+-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+-  set(CPACK_PACKAGE_VENDOR "olvb")
+-  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+-  set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+-  set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
+-  set(CPACK_SOURCE_IGNORE_FILES /.clang-format /compile_commands.json /.git
+-                                /dist /.*build.* /\\\\.DS_Store)
+-  include(CPack)
+-endif()
+-
+-if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR nodesoup_BUILD_DEMO)
+-   AND BUILD_DEMO)
+-  add_subdirectory(demo)
+-endif()
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index dbd43b9..be9b377 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,11 +1,12 @@
+ add_library(nodesoup algebra.cpp fruchterman_reingold.cpp kamada_kawai.cpp
+                      layout.cpp nodesoup.cpp)
+-add_library(nodesoup::nodesoup ALIAS nodesoup)
+ 
+ target_include_directories(
+   nodesoup
+   PUBLIC $<BUILD_INTERFACE:${nodesoup_SOURCE_DIR}/include>
+-  PRIVATE $<BUILD_INTERFACE:${nodesoup_SOURCE_DIR}/src>)
++  PRIVATE $<BUILD_INTERFACE:${nodesoup_SOURCE_DIR}/src>
++  INTERFACE $<INSTALL_INTERFACE:include>
++)
+ 
+ target_compile_features(nodesoup PUBLIC cxx_std_14)
+ 

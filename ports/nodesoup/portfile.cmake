@@ -18,8 +18,9 @@ vcpkg_cmake_configure(
     -DBUILD_DEMO=OFF
 )
 vcpkg_cmake_install()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+#vcpkg_cmake_config_fixup(PACKAGE_NAME nodesoup CONFIG_PATH lib/cmake/nodesoup)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/nodesoup/" RENAME copyright)
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/nodesoup/")

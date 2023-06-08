@@ -188,7 +188,7 @@ index f66dbb4..cf7a6d2 100644
 \ No newline at end of file
 +add_subdirectory(matplot)
 diff --git a/source/matplot/CMakeLists.txt b/source/matplot/CMakeLists.txt
-index fe9ad53..af3ef72 100644
+index fe9ad53..b106437 100644
 --- a/source/matplot/CMakeLists.txt
 +++ b/source/matplot/CMakeLists.txt
 @@ -1,5 +1,4 @@
@@ -197,7 +197,7 @@ index fe9ad53..af3ef72 100644
  endif()
  
  #######################################################
-@@ -102,12 +101,13 @@ target_include_directories(matplot
+@@ -102,11 +101,12 @@ target_include_directories(matplot
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
  
  # Dependencies
@@ -206,15 +206,13 @@ index fe9ad53..af3ef72 100644
 -target_link_libraries_system(matplot
 -  PRIVATE cimg nodesoup std::filesystem)
 +target_link_libraries(matplot
-+  PRIVATE cimg nodesoup::nodesoup)
++  PRIVATE cimg nodesoup)
  else()
 -target_link_libraries_system(matplot
--  PRIVATE cimg nodesoup)
 +target_link_libraries(matplot
-+  PRIVATE cimg nodesoup::nodesoup)
+   PRIVATE cimg nodesoup)
  endif()
  
- # Required compiler features required
 @@ -134,7 +134,6 @@ maybe_target_pedantic_warnings(matplot)
  # Use experimental filesystem if std::filesystem is not available yet
  if(NOT MINGW)
@@ -269,18 +267,9 @@ index fe9ad53..af3ef72 100644
      list(APPEND TARGETS matplot_opengl)
  endif()
 diff --git a/source/matplot/axes_objects/network.cpp b/source/matplot/axes_objects/network.cpp
-index b22b7b1..ddac788 100644
+index b22b7b1..4633dc4 100644
 --- a/source/matplot/axes_objects/network.cpp
 +++ b/source/matplot/axes_objects/network.cpp
-@@ -7,7 +7,7 @@
- #include <matplot/axes_objects/network.h>
- #include <matplot/core/axes_type.h>
- #include <matplot/util/common.h>
--#include <nodesoup.hpp>
-+#include <nodesoup/nodesoup.hpp>
- #include <random>
- #include <regex>
- #include <sstream>
 @@ -732,4 +732,4 @@ namespace matplot {
          return marker_colors_;
      }
