@@ -118,16 +118,16 @@ if(NOT TARGET unofficial::omniverse-physx-sdk)
     endif()
 
     # Create imported targets for GPU library
-    add_library(unofficial::omniverse-physx-sdk-gpu-library SHARED IMPORTED)
-    set_target_properties(unofficial::omniverse-physx-sdk-gpu-library PROPERTIES
+    add_library(unofficial::omniverse-physx-sdk::gpu-library SHARED IMPORTED)
+    set_target_properties(unofficial::omniverse-physx-sdk::gpu-library PROPERTIES
         IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
         IMPORTED_LOCATION_RELEASE "${OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE}"
         IMPORTED_LOCATION_DEBUG "${OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG}"
     )
 
     if(WIN32)
-        add_library(unofficial::omniverse-physx-sdk-gpu-device-library SHARED IMPORTED)
-        set_target_properties(unofficial::omniverse-physx-sdk-gpu-device-library PROPERTIES
+        add_library(unofficial::omniverse-physx-sdk::gpu-device-library SHARED IMPORTED)
+        set_target_properties(unofficial::omniverse-physx-sdk::gpu-device-library PROPERTIES
             IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
             IMPORTED_LOCATION_RELEASE "${OMNIVERSE-PHYSX-SDK-GPU_DEVICE_LIBRARY_RELEASE}"
             IMPORTED_LOCATION_DEBUG "${OMNIVERSE-PHYSX-SDK-GPU_DEVICE_LIBRARY_DEBUG}"
