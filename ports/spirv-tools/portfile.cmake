@@ -31,19 +31,18 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
- # the directory name is capitalized as opposed to the port name
 if(WIN32)
-    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools/cmake PACKAGE_NAME SPIRV-Tools)
-    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-link/cmake PACKAGE_NAME SPIRV-Tools-link)
-    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-lint/cmake PACKAGE_NAME SPIRV-Tools-lint)
-    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-opt/cmake PACKAGE_NAME SPIRV-Tools-opt)
-    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-reduce/cmake PACKAGE_NAME SPIRV-Tools-reduce)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools/cmake PACKAGE_NAME spirv-tools)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-link/cmake PACKAGE_NAME spirv-tools-link)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-lint/cmake PACKAGE_NAME spirv-tools-lint)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-opt/cmake PACKAGE_NAME spirv-tools-opt)
+    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-reduce/cmake PACKAGE_NAME spirv-tools-reduce)
 else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools PACKAGE_NAME SPIRV-Tools DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-link PACKAGE_NAME SPIRV-Tools-link DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-lint PACKAGE_NAME SPIRV-Tools-lint DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-opt PACKAGE_NAME SPIRV-Tools-opt DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-reduce PACKAGE_NAME SPIRV-Tools-reduce) # now delete
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools PACKAGE_NAME spirv-tools DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-link PACKAGE_NAME spirv-tools-link DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-lint PACKAGE_NAME spirv-tools-lint DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-opt PACKAGE_NAME spirv-tools-opt DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-reduce PACKAGE_NAME spirv-tools-reduce) # now delete
 endif()
 vcpkg_fixup_pkgconfig()
 
