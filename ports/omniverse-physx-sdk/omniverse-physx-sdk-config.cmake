@@ -47,6 +47,17 @@ if(NOT TARGET unofficial::omniverse-physx-sdk)
     # Add compile definitions to the target for debug/release builds
     target_compile_definitions(unofficial::omniverse-physx-sdk::sdk INTERFACE $<$<CONFIG:Debug>:_DEBUG>)
 
+    # Adjust CRT linkage according to requested one
+    if(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "static")
+        set_target_properties(unofficial::omniverse-physx-sdk::sdk PROPERTIES
+            INTERFACE_COMPILE_OPTIONS "/MT$<$<CONFIG:Debug>:d>"
+        )
+    elseif(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set_target_properties(unofficial::omniverse-physx-sdk::sdk PROPERTIES
+            INTERFACE_COMPILE_OPTIONS "/MD$<$<CONFIG:Debug>:d>"
+        )
+    endif()
+
     set(lib_names
             PhysXExtensions
             PhysXPvdSDK
