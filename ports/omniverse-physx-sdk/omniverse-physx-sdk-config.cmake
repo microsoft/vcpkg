@@ -101,13 +101,7 @@ if(NOT TARGET unofficial::omniverse-physx-sdk)
             INTERFACE_LINK_LIBRARIES unofficial::omniverse-physx-sdk::${name}
         )
         select_library_configurations(OMNIVERSE_${name})
-        list(APPEND OMNIVERSE-PHYSX-SDK_LIBRARIES ${OMNIVERSE_${name}_LIBRARIES})
     endforeach()
-
-    # Link the libraries to the target with INTERFACE: i.e. whoever links with this target, will also link with all these libs, but the main library will NOT link against these (it doesn't depend on them).
-    target_link_libraries(unofficial::omniverse-physx-sdk::sdk INTERFACE ${OMNIVERSE-PHYSX-SDK_LIBRARIES})
-
-    unset(OMNIVERSE-PHYSX-SDK_LIBRARIES) # Users are not supposed to link against this
 
     # Lastly also provide a target for clients to link with the GPU library (optional, provided by NVIDIA and downloaded through packman)
 
