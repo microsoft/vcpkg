@@ -1,11 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index be6aa9d..a343912 100644
+index be6aa9d..5d13818 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -12,58 +12,33 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-   option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
- endif()
+@@ -7,63 +7,26 @@ project(
+   HOMEPAGE_URL "https://github.com/olvb/nodesoup"
+   LANGUAGES CXX)
  
+-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+-  option(BUILD_DEMO "Build the demo" ON)
+-  option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+-endif()
+-
 -set(default_build_type "Release")
 -if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 -  message(
@@ -24,46 +29,32 @@ index be6aa9d..a343912 100644
  install(
    TARGETS nodesoup
    EXPORT nodesoup-targets
--  LIBRARY DESTINATION lib
--  ARCHIVE DESTINATION lib
+   LIBRARY DESTINATION lib
+   ARCHIVE DESTINATION lib
 -  INCLUDES
 -  DESTINATION include
 -  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nodesoup)
-+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-+    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" 
-+    PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-+    )
-+install(FILES include/nodesoup.hpp DESTINATION include)
-+
++  PUBLIC_HEADER DESTINATION include)
  
- include(CMakePackageConfigHelpers)
+-include(CMakePackageConfigHelpers)
 -write_basic_package_version_file(
 -  nodesoup-config-version.cmake
 -  VERSION ${PACKAGE_VERSION}
 -  COMPATIBILITY AnyNewerVersion)
  
-+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/nodesoup-config.cmake.in
-+  "${CMAKE_CURRENT_BINARY_DIR}/nodesoup-config.cmake"
-+  INSTALL_DESTINATION "share/nodesoup/"
-+  NO_SET_AND_CHECK_MACRO
-+  NO_CHECK_REQUIRED_COMPONENTS_MACRO
-+  )
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nodesoup-config.cmake DESTINATION "share/nodesoup/")
  install(
    EXPORT nodesoup-targets
 -  FILE nodesoup-config.cmake
--  NAMESPACE nodesoup::
++  DESTINATION share/nodesoup
+   NAMESPACE nodesoup::
 -  DESTINATION lib/cmake/nodesoup)
--
--export(
--  TARGETS nodesoup
--  NAMESPACE nodesoup::
--  FILE nodesoup-targets.cmake)
-+  NAMESPACE nodesoup
-+  FILE nodesoup-targets.cmake
-+  DESTINATION share/nodesoup)
++  FILE nodesoup-config.cmake
++  )
+ 
+ export(
+   TARGETS nodesoup
+   NAMESPACE nodesoup::
+   FILE nodesoup-targets.cmake)
  
 -if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 -  set(CPACK_PACKAGE_VENDOR "olvb")
@@ -80,14 +71,10 @@ index be6aa9d..a343912 100644
 -  add_subdirectory(demo)
 -endif()
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index dbd43b9..be9b377 100644
+index dbd43b9..2506587 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -1,11 +1,12 @@
- add_library(nodesoup algebra.cpp fruchterman_reingold.cpp kamada_kawai.cpp
-                      layout.cpp nodesoup.cpp)
--add_library(nodesoup::nodesoup ALIAS nodesoup)
- 
+@@ -5,7 +5,9 @@ add_library(nodesoup::nodesoup ALIAS nodesoup)
  target_include_directories(
    nodesoup
    PUBLIC $<BUILD_INTERFACE:${nodesoup_SOURCE_DIR}/include>
