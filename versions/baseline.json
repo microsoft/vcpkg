@@ -5538,7 +5538,7 @@
     },
     "nanomsg": {
       "baseline": "1.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nanopb": {
       "baseline": "0.4.7",
