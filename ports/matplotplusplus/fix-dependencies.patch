@@ -1,5 +1,62 @@
+diff --git a/Matplot++Config.cmake.in b/Matplot++Config.cmake.in
+index fc9ceca..c59cc1e 100644
+--- a/Matplot++Config.cmake.in
++++ b/Matplot++Config.cmake.in
+@@ -1,4 +1,5 @@
+ @PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
+ 
+ # How this Matplot++ installation was built
+ set(MATPLOT_BUILT_SHARED "@MATPLOTPP_BUILD_SHARED_LIBS@")
+@@ -10,12 +11,44 @@ if (NOT CMAKE_CXX_COMPILER_ID STREQUAL MATPLOT_BUILT_CXX_COMPILER_ID)
+     message(WARNING "This installation of Matplot++ was built with ${MATPLOT_BUILT_CXX_COMPILER_ID}.")
+ endif()
+ 
++if (@MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND@)
++  find_dependency(glad CONFIG)
++  find_dependency(glfw3 CONFIG)
++endif()
++find_dependency(nodesoup CONFIG )
++if (@WITH_JPEG@)
++find_dependency(JPEG)
++endif()
++
++if (@WITH_TIFF@)
++find_dependency(TIFF)
++endif()
++
++if (@WITH_ZLIB@)
++find_dependency(ZLIB)
++find_dependency(libpng CONFIG)
++endif()
++
++if (@WITH_LAPACK@)
++find_dependency(LAPACK)
++endif()
++
++if (@WITH_BLAS@)
++find_dependency(BLAS)
++endif()
++
++if (@WITH_FFTW3@)
++find_dependency(FFTW3 CONFIG)
++endif()
++
++if (@WITH_OPENCV@)
++find_dependency(OpenCV CONFIG)
++endif()
++
+ # Find dependencies
+ if(NOT ${MATPLOT_BUILT_SHARED})
+-    include(CMakeFindDependencyMacro)
+     list(APPEND CMAKE_MODULE_PATH ${MATPLOT_CONFIG_INSTALL_DIR})
+     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+-    find_dependency(Filesystem COMPONENTS Experimental Final)
+     list(POP_BACK CMAKE_MODULE_PATH)
+ endif()
+ 
 diff --git a/source/3rd_party/CMakeLists.txt b/source/3rd_party/CMakeLists.txt
-index 0735faa..79e33a7 100644
+index b5656e1..041ddd1 100644
 --- a/source/3rd_party/CMakeLists.txt
 +++ b/source/3rd_party/CMakeLists.txt
 @@ -1,6 +1,7 @@
@@ -10,152 +67,117 @@ index 0735faa..79e33a7 100644
  if(WITH_SYSTEM_NODESOUP)
    find_path(NODESOUP_INCLUDE_DIR nodesoup.hpp REQUIRED)
    find_library(NODESOUP_LIB nodesoup REQUIRED)
-@@ -49,17 +50,11 @@ if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
-       ARCHIVE DESTINATION lib)
+@@ -44,7 +45,10 @@ endif()
+ if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
+   install(TARGETS nodesoup
+       EXPORT Matplot++Targets
+-      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/Matplot++)
++      RUNTIME DESTINATION bin
++      LIBRARY DESTINATION lib
++      ARCHIVE DESTINATION lib)
++endif()
  endif()
  
+ 
+@@ -69,57 +73,69 @@ find_package(PkgConfig)
+ #            Lots of optional packages are not a good idea in general.
+ #            It makes the library much less "packagable" (https://youtu.be/sBP17HQAQjk)
+ #            and much more difficult to make sure it works on multiple OSs
+-find_package(JPEG)
+-if(JPEG_FOUND)
++
++if (WITH_JPEG)
++find_package(JPEG REQUIRED)
++if(1)
+   target_compile_definitions(cimg INTERFACE cimg_use_jpeg)
+   target_link_libraries(cimg INTERFACE ${JPEG_LIBRARIES})
+   target_include_directories(cimg INTERFACE ${JPEG_INCLUDE_DIRS})
+ endif()
 +endif()
  
- #######################################################
- ### CImg                                            ###
- #######################################################
--add_library(cimg INTERFACE)
--if(WITH_SYSTEM_CIMG)
--  find_path(CIMG_INCLUDE_DIR CImg.h REQUIRED)
--else()
--  set(CIMG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cimg)
--endif()
--target_include_directories(cimg INTERFACE $<BUILD_INTERFACE:${CIMG_INCLUDE_DIR}>)
- 
- find_package(PkgConfig)
- 
-@@ -75,18 +70,18 @@ find_package(PkgConfig)
- if (WITH_JPEG)
- find_package(JPEG REQUIRED)
- if(1)
--  target_compile_definitions(cimg INTERFACE cimg_use_jpeg)
--  target_link_libraries(cimg INTERFACE ${JPEG_LIBRARIES})
--  target_include_directories(cimg INTERFACE ${JPEG_INCLUDE_DIRS})
-+  target_compile_definitions(CImg::CImg INTERFACE cimg_use_jpeg)
-+  target_link_libraries(CImg::CImg INTERFACE ${JPEG_LIBRARIES})
-+  target_include_directories(CImg::CImg INTERFACE ${JPEG_INCLUDE_DIRS})
+-find_package(TIFF)
+-if(TIFF_FOUND)
++if (WITH_TIFF)
++find_package(TIFF REQUIRED)
++if(1)
+   target_compile_definitions(cimg INTERFACE cimg_use_tiff)
+   target_link_libraries(cimg INTERFACE ${TIFF_LIBRARIES})
+   target_include_directories(cimg INTERFACE ${TIFF_INCLUDE_DIRS})
  endif()
- endif()
++endif()
  
- if (WITH_TIFF)
- find_package(TIFF REQUIRED)
- if(1)
--  target_compile_definitions(cimg INTERFACE cimg_use_tiff)
--  target_link_libraries(cimg INTERFACE ${TIFF_LIBRARIES})
--  target_include_directories(cimg INTERFACE ${TIFF_INCLUDE_DIRS})
-+  target_compile_definitions(CImg::CImg INTERFACE cimg_use_tiff)
-+  target_link_libraries(CImg::CImg INTERFACE ${TIFF_LIBRARIES})
-+  target_include_directories(CImg::CImg INTERFACE ${TIFF_INCLUDE_DIRS})
- endif()
- endif()
- 
-@@ -95,8 +90,8 @@ find_package(ZLIB REQUIRED)
- if(1)
-   find_package(libpng CONFIG REQUIRED)
-   if (1)
--    target_compile_definitions(cimg INTERFACE cimg_use_zlib cimg_use_png)
--    target_link_libraries(cimg INTERFACE ZLIB::ZLIB png)
-+    target_compile_definitions(CImg::CImg INTERFACE cimg_use_zlib cimg_use_png)
-+    target_link_libraries(CImg::CImg INTERFACE ZLIB::ZLIB png)
+-find_package(ZLIB)
+-if(ZLIB_FOUND)
+-  find_package(PNG)
+-  if (PNG_FOUND)
++if (WITH_ZLIB)
++find_package(ZLIB REQUIRED)
++if(1)
++  find_package(libpng CONFIG REQUIRED)
++  if (1)
+     target_compile_definitions(cimg INTERFACE cimg_use_zlib cimg_use_png)
+-    target_include_directories(cimg INTERFACE ${ZLIB_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS})
+-    target_link_libraries(cimg INTERFACE ${ZLIB_LIBRARIES} ${PNG_LIBRARIES})
++    target_link_libraries(cimg INTERFACE ZLIB::ZLIB png)
    endif ()
  endif()
++endif()
+ 
+-find_package(LAPACK)
+-if(LAPACK_FOUND)
++if (WITH_LAPACK)
++find_package(LAPACK REQUIRED)
++if(1)
+   target_compile_definitions(cimg INTERFACE cimg_use_lapack)
+   target_link_libraries(cimg INTERFACE ${LAPACK_LIBRARIES})
+   target_include_directories(cimg INTERFACE ${LAPACK_INCLUDE_DIRS})
  endif()
-@@ -104,26 +99,26 @@ endif()
- if (WITH_LAPACK)
- find_package(LAPACK REQUIRED)
- if(1)
--  target_compile_definitions(cimg INTERFACE cimg_use_lapack)
--  target_link_libraries(cimg INTERFACE ${LAPACK_LIBRARIES})
--  target_include_directories(cimg INTERFACE ${LAPACK_INCLUDE_DIRS})
-+  target_compile_definitions(CImg::CImg INTERFACE cimg_use_lapack)
-+  target_link_libraries(CImg::CImg INTERFACE ${LAPACK_LIBRARIES})
-+  target_include_directories(CImg::CImg INTERFACE ${LAPACK_INCLUDE_DIRS})
++endif()
+ 
+-find_package(BLAS)
+-if(BLAS_FOUND)
++if (WITH_BLAS)
++find_package(BLAS REQUIRED)
++if(1)
+   target_compile_definitions(cimg INTERFACE cimg_use_blas)
+   target_link_libraries(cimg INTERFACE ${BLAS_LIBRARIES})
+   target_include_directories(cimg INTERFACE ${BLAS_INCLUDE_DIRS})
  endif()
++endif()
+ 
+-find_package(FFTW)
+-if(FFTW_FOUND)
++if (WITH_FFTW3)
++find_package(FFTW3 CONFIG REQUIRED)
++if(1)
+   target_compile_definitions(cimg INTERFACE cimg_use_fftw3)
+-  target_link_libraries(cimg INTERFACE ${FFTW_LIBRARIES})
+-  target_include_directories(cimg INTERFACE ${FFTW_INCLUDE_DIRS})
++  target_link_libraries(cimg INTERFACE FFTW3::fftw3)
++endif()
  endif()
  
- if (WITH_BLAS)
- find_package(BLAS REQUIRED)
- if(1)
--  target_compile_definitions(cimg INTERFACE cimg_use_blas)
--  target_link_libraries(cimg INTERFACE ${BLAS_LIBRARIES})
--  target_include_directories(cimg INTERFACE ${BLAS_INCLUDE_DIRS})
-+  target_compile_definitions(CImg::CImg INTERFACE cimg_use_blas)
-+  target_link_libraries(CImg::CImg INTERFACE ${BLAS_LIBRARIES})
-+  target_include_directories(CImg::CImg INTERFACE ${BLAS_INCLUDE_DIRS})
- endif()
- endif()
- 
- if (WITH_FFTW3)
- find_package(FFTW3 CONFIG REQUIRED)
- if(1)
--  target_compile_definitions(cimg INTERFACE cimg_use_fftw3)
--  target_link_libraries(cimg INTERFACE FFTW3::fftw3)
-+  target_compile_definitions(CImg::CImg INTERFACE cimg_use_fftw3)
-+  target_link_libraries(CImg::CImg INTERFACE FFTW3::fftw3)
- endif()
- endif()
- 
-@@ -131,8 +126,8 @@ if (CMAKE_MODULE_PATH)
-   if (WITH_OPENCV)
-   find_package(OpenCV CONFIG REQUIRED)
-   if (1)
--    target_compile_definitions(cimg INTERFACE cimg_use_opencv)
--    target_link_libraries(cimg INTERFACE opencv_core)
-+    target_compile_definitions(CImg::CImg INTERFACE cimg_use_opencv)
-+    target_link_libraries(CImg::CImg INTERFACE opencv_core)
-   endif()
+ if (CMAKE_MODULE_PATH)
+-  find_package(OpenCV QUIET)
+-  if (OpenCV_FOUND)
++  if (WITH_OPENCV)
++  find_package(OpenCV CONFIG REQUIRED)
++  if (1)
+     target_compile_definitions(cimg INTERFACE cimg_use_opencv)
+-    target_link_libraries(cimg INTERFACE ${OpenCV_LIBRARIES})
+-    target_include_directories(cimg INTERFACE ${OpenCV_INCLUDE_DIRS})
++    target_link_libraries(cimg INTERFACE opencv_core)
++  endif()
    endif()
  else()
-@@ -141,30 +136,26 @@ endif()
- 
- 
- if(LIBAVCODEC_FOUND AND LIBAVFORMAT_FOUND AND LIBSWSCALE_FOUND AND LIBAVUTIL_FOUND)
--  target_compile_definitions(cimg INTERFACE cimg_use_ffmpeg)
--  target_include_directories(cimg INTERFACE ${LIBAVFORMAT_INCLUDE_DIRS} ${LIBAVFORMAT_INCLUDE_DIRS}/libavformat)
--  target_include_directories(cimg INTERFACE ${LIBAVCODEC_INCLUDE_DIRS} ${LIBAVCODEC_INCLUDE_DIRS}/libavcodec )
--  target_include_directories(cimg INTERFACE ${LIBSWSCALE_INCLUDE_DIRS} ${LIBSWSCALE_INCLUDE_DIRS}/libswscale)
--  target_include_directories(cimg INTERFACE ${LIBAVUTIL_INCLUDE_DIRS} ${LIBAVUTIL_INCLUDE_DIRS}/libavutil )
--  target_link_libraries(cimg INTERFACE ${LIBAVFORMAT_LIBRARIES} )
--  target_link_libraries(cimg INTERFACE ${LIBAVCODEC_LIBRARIES} )
--  target_link_libraries(cimg INTERFACE ${LIBSWSCALE_LIBRARIES} )
--  target_link_libraries(cimg INTERFACE ${LIBAVUTIL_LIBRARIES} )
-+  target_compile_definitions(CImg::CImg INTERFACE cimg_use_ffmpeg)
-+  target_include_directories(CImg::CImg INTERFACE ${LIBAVFORMAT_INCLUDE_DIRS} ${LIBAVFORMAT_INCLUDE_DIRS}/libavformat)
-+  target_include_directories(CImg::CImg INTERFACE ${LIBAVCODEC_INCLUDE_DIRS} ${LIBAVCODEC_INCLUDE_DIRS}/libavcodec )
-+  target_include_directories(CImg::CImg INTERFACE ${LIBSWSCALE_INCLUDE_DIRS} ${LIBSWSCALE_INCLUDE_DIRS}/libswscale)
-+  target_include_directories(CImg::CImg INTERFACE ${LIBAVUTIL_INCLUDE_DIRS} ${LIBAVUTIL_INCLUDE_DIRS}/libavutil )
-+  target_link_libraries(CImg::CImg INTERFACE ${LIBAVFORMAT_LIBRARIES} )
-+  target_link_libraries(CImg::CImg INTERFACE ${LIBAVCODEC_LIBRARIES} )
-+  target_link_libraries(CImg::CImg INTERFACE ${LIBSWSCALE_LIBRARIES} )
-+  target_link_libraries(CImg::CImg INTERFACE ${LIBAVUTIL_LIBRARIES} )
- endif()
- 
- if(NOT WIN32)
-   if (NOT APPLE)
-     find_package(Threads REQUIRED)
--    target_link_libraries(cimg INTERFACE ${CMAKE_THREAD_LIBS_INIT})
-+    target_link_libraries(CImg::CImg INTERFACE ${CMAKE_THREAD_LIBS_INIT})
-   endif()
--  target_compile_definitions(cimg INTERFACE cimg_display=0)
-+  target_compile_definitions(CImg::CImg INTERFACE cimg_display=0)
- else()
--  target_compile_definitions(cimg INTERFACE cimg_display=2)
--  target_link_libraries(cimg INTERFACE gdi32)
-+  target_compile_definitions(CImg::CImg INTERFACE cimg_display=2)
-+  target_link_libraries(CImg::CImg INTERFACE gdi32)
- endif()
- 
- # Install (only necessary for static lib build)
--if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
--  install(TARGETS cimg
--      EXPORT Matplot++Targets)
+   message("No CMAKE_MODULE_PATH path for OpenCV configured")
+@@ -153,4 +169,4 @@ endif()
+ if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
+   install(TARGETS cimg
+       EXPORT Matplot++Targets)
 -endif()
 \ No newline at end of file
++endif()
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
 index f66dbb4..cf7a6d2 100644
 --- a/source/CMakeLists.txt
@@ -166,49 +188,48 @@ index f66dbb4..cf7a6d2 100644
 \ No newline at end of file
 +add_subdirectory(matplot)
 diff --git a/source/matplot/CMakeLists.txt b/source/matplot/CMakeLists.txt
-index fe9ad53..d5a631d 100644
+index fe9ad53..af3ef72 100644
 --- a/source/matplot/CMakeLists.txt
 +++ b/source/matplot/CMakeLists.txt
-@@ -1,5 +1,5 @@
+@@ -1,5 +1,4 @@
  if(NOT MINGW)
 -find_package(Filesystem REQUIRED COMPONENTS Experimental Final)
-+  #find_package(Filesystem REQUIRED COMPONENTS Experimental Final)
  endif()
  
  #######################################################
-@@ -102,12 +102,14 @@ target_include_directories(matplot
+@@ -102,12 +101,13 @@ target_include_directories(matplot
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
  
  # Dependencies
-+find_package(CImg CONFIG REQUIRED)
 +find_package(nodesoup CONFIG REQUIRED)
  if(NOT MINGW)
- target_link_libraries_system(matplot
+-target_link_libraries_system(matplot
 -  PRIVATE cimg nodesoup std::filesystem)
-+  PRIVATE CImg::CImg nodesoup::nodesoup)
++target_link_libraries(matplot
++  PRIVATE cimg nodesoup::nodesoup)
  else()
- target_link_libraries_system(matplot
+-target_link_libraries_system(matplot
 -  PRIVATE cimg nodesoup)
-+  PRIVATE CImg::CImg nodesoup::nodesoup)
++target_link_libraries(matplot
++  PRIVATE cimg nodesoup::nodesoup)
  endif()
  
  # Required compiler features required
-@@ -134,7 +136,7 @@ maybe_target_pedantic_warnings(matplot)
+@@ -134,7 +134,6 @@ maybe_target_pedantic_warnings(matplot)
  # Use experimental filesystem if std::filesystem is not available yet
  if(NOT MINGW)
      if (CXX_FILESYSTEM_IS_EXPERIMENTAL)
 -      target_compile_definitions(matplot PRIVATE CXX_FILESYSTEM_IS_EXPERIMENTAL)
-+      #target_compile_definitions(matplot PRIVATE CXX_FILESYSTEM_IS_EXPERIMENTAL)
      endif()
  endif()
  # Some hack to not depend on FILE* internals
-@@ -214,40 +216,20 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+@@ -214,32 +213,12 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
      # The biggest con of the OpenGL backend is that it cannot open a window
      #     in another thread. All it can do is get in the middle of the render
      #     loop and draw the plot.
 -    find_package(OpenGL REQUIRED)
-+    #find_package(OpenGL REQUIRED)
- 
+-
++    #
      # https://github.com/Dav1dde/glad
 -    find_package(GLAD QUIET)
 -    if (NOT GLAD_FOUND AND NOT TARGET glad)
@@ -234,11 +255,11 @@ index fe9ad53..d5a631d 100644
 -        FetchContent_Declare(glfw3 GIT_REPOSITORY https://github.com/glfw/glfw.git GIT_TAG 3.3.2)
 -        FetchContent_MakeAvailable(glfw3)
 -    endif ()
--
 +    find_package(glfw3 CONFIG REQUIRED)
+ 
      add_library(matplot_opengl
              backend/opengl_embed.h
-             backend/opengl_embed.cpp
+@@ -247,7 +226,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
              backend/opengl.h
              backend/opengl.cpp
              )

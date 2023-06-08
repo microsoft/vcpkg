@@ -7,6 +7,7 @@
   "supports": "!uwp & !(windows & arm)",
   "dependencies": [
     "cimg",
+    "nodesoup",
     {
       "name": "vcpkg-cmake",
       "host": true
