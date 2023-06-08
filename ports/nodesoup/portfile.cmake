@@ -9,9 +9,6 @@ vcpkg_from_github(
     PATCHES
       fix-cmakelists.patch
 )
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/nodesoup-config.cmake.in"
-   DESTINATION "${SOURCE_PATH}/"
-)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
