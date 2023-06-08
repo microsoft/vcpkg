@@ -3,12 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenEtherCATsociety/SOEM
-    REF abbf0d42e38d6cfbaa4c1e9e8e07ace651c386fd #v1.4.0
-    SHA512 2967775c6746bb63becea5eb12f136c184bbf874e1e5e8753374bfc212ec9cefbf1159350e79627b978af3562d261b61c50f38936a425c4d9c70598a1d136817
+    REF a901500618405760a564e64a6816705e29f50f9f
+    SHA512 d554bc1c3780b1a81402a7fda490f516caba6bd943a28482740b5c9d97e4273a11546e79c92796487ee9901f568cbf1b329d4e1c1d32602fdce0088a77c82443
     HEAD_REF master
-    PATCHES
-        winpcap.patch
-        disable-werror.patch
 )
 
 vcpkg_cmake_configure(
@@ -22,6 +19,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/bin"
     "${CURRENT_PACKAGES_DIR}/debug/bin"
     "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 # Handle copyright
