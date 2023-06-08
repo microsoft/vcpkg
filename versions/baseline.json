@@ -7573,7 +7573,7 @@
       "port-version": 1
     },
     "soem": {
-      "baseline": "1.4.0",
+      "baseline": "2022-12-02",
       "port-version": 4
     },
     "soil": {
