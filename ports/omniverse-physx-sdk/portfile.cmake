@@ -86,7 +86,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(7Z)
-    set(ENV{PM_CMakeModules_PATH} "${CURRENT_BUILDTREES_DIR}/temp/CMakeModules")
+    set(ENV{PM_CMakeModules_PATH} "${CURRENT_BUILDTREES_DIR}/CMakeModules_dep")
     file(MAKE_DIRECTORY "$ENV{PM_CMakeModules_PATH}")
     vcpkg_execute_required_process(
         COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_CMakeModules_PATH}" "-y" "-bso0" "-bsp0"
@@ -110,7 +110,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(7Z)
-    set(ENV{PM_PhysXGpu_PATH} "${CURRENT_BUILDTREES_DIR}/temp/PhysXGpu")
+    set(ENV{PM_PhysXGpu_PATH} "${CURRENT_BUILDTREES_DIR}/PhysXGpu_dep")
     file(MAKE_DIRECTORY "$ENV{PM_PhysXGpu_PATH}")
     vcpkg_execute_required_process(
         COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_PhysXGpu_PATH}" "-y" "-bso0" "-bsp0"
@@ -127,17 +127,13 @@ endif()
 message(STATUS "Extracted dependency to $ENV{PM_PhysXGpu_PATH}")
 list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXGpu_PATH})
 
-
-set(ENV{PM_PhysXDevice_PATH} "${CURRENT_BUILDTREES_DIR}/temp/PhysXDevice")
-list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXDevice_PATH})
-file(MAKE_DIRECTORY "$ENV{PM_PhysXDevice_PATH}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXDevice%4018.12.7.4.7z"
     FILENAME "PhysXDevice.7z"
     SHA512 c20eb2f1e0dcb9d692cb718ca7e3a332291e72a09614f37080f101e5ebc1591033029f0f1e6fba33a17d4c9f59f13e561f3fc81cee34cd53d50b579c01dd3f3c
 )
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(ENV{PM_PhysXDevice_PATH} "${CURRENT_BUILDTREES_DIR}/temp/PhysXDevice")
+    set(ENV{PM_PhysXDevice_PATH} "${CURRENT_BUILDTREES_DIR}/PhysXDevice_dep")
     file(MAKE_DIRECTORY "$ENV{PM_PhysXDevice_PATH}")
     vcpkg_find_acquire_program(7Z)
     vcpkg_execute_required_process(
@@ -157,7 +153,6 @@ list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXDevice_PATH})
 
 if(targetPlatform STREQUAL "vc17win64")
     set(ENV{PM_freeglut_PATH} "${CURRENT_BUILDTREES_DIR}/freeglut_dep")
-    list(APPEND ENV{PM_PATHS} $ENV{PM_freeglut_PATH})
     file(MAKE_DIRECTORY "$ENV{PM_freeglut_PATH}")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://d4i3qtqj3r0z5.cloudfront.net/freeglut-windows%403.4_1.1.7z"
@@ -171,6 +166,7 @@ if(targetPlatform STREQUAL "vc17win64")
         LOGNAME "extract-freeglut"
     )
     message(STATUS "Extracted dependency to $ENV{PM_freeglut_PATH}")
+    list(APPEND ENV{PM_PATHS} $ENV{PM_freeglut_PATH})
 endif()
 
 ######################## Now generate ALL cmake parameters according to our distribution ##############################
