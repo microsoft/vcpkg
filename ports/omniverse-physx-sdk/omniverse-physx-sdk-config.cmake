@@ -44,6 +44,9 @@ if(NOT TARGET unofficial::omniverse-physx-sdk)
         INTERFACE_INCLUDE_DIRECTORIES "${OMNIVERSE-PHYSX-SDK_INCLUDE_DIRS}"
     )
 
+    # Add compile definitions to the target for debug/release builds
+    target_compile_definitions(unofficial::omniverse-physx-sdk::sdk INTERFACE $<$<CONFIG:Debug>:_DEBUG>)
+
     set(lib_names
             PhysXExtensions
             PhysXPvdSDK
