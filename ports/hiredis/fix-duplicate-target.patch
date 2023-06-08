@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d9419e3..3e1d54a 100644
+index d9419e3..781e05f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -45,35 +45,22 @@ IF(WIN32)
@@ -43,7 +43,7 @@ index d9419e3..3e1d54a 100644
  include(CPack)
  
 -INSTALL(TARGETS hiredis hiredis_static
-+INSTALL(TARGETS hiredis 
++INSTALL(TARGETS hiredis
      EXPORT hiredis-targets
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
