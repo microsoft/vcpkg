@@ -79,38 +79,53 @@ endif()
 
 set($ENV{PM_PATHS} "")
 
-set(ENV{PM_CMakeModules_PATH} "${CURRENT_BUILDTREES_DIR}/temp/CMakeModules")
-list(APPEND ENV{PM_PATHS} $ENV{PM_CMakeModules_PATH})
-file(MAKE_DIRECTORY "$ENV{PM_CMakeModules_PATH}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://d4i3qtqj3r0z5.cloudfront.net/CMakeModules%401.28.trunk.32494385.7z"
     FILENAME "CMakeModules.7z"
     SHA512 cccb0347d27a2b1391ffd3285fa19ca884fed91d8bf2e1683f86efad8aa0151a6e27080a6bec8975be585e4a51dd92cf85ac0cacf12ba28dce6e6efe74f57202
 )
-vcpkg_find_acquire_program(7Z)
-message(STATUS "Extracting $ENV{PM_CMakeModules_PATH} file")
-vcpkg_execute_required_process(
-    COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_CMakeModules_PATH}" "-y" "-bso0" "-bsp0"
-    WORKING_DIRECTORY "$ENV{PM_CMakeModules_PATH}"
-    LOGNAME "extract-CMakeModules"
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(7Z)
+    set(ENV{PM_CMakeModules_PATH} "${CURRENT_BUILDTREES_DIR}/temp/CMakeModules")
+    file(MAKE_DIRECTORY "$ENV{PM_CMakeModules_PATH}")
+    vcpkg_execute_required_process(
+        COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_CMakeModules_PATH}" "-y" "-bso0" "-bsp0"
+        WORKING_DIRECTORY "$ENV{PM_CMakeModules_PATH}"
+        LOGNAME "extract-CMakeModules"
+    )
+else()
+    vcpkg_extract_source_archive(SOURCE_PATH
+        ARCHIVE "${ARCHIVE}"
+        BASE_DIRECTORY CMakeModules_dep
+    )
+    set(ENV{PM_CMakeModules_PATH} "${SOURCE_PATH}")
+endif()
+message(STATUS "Extracted dependency to $ENV{PM_CMakeModules_PATH}")
+list(APPEND ENV{PM_PATHS} $ENV{PM_CMakeModules_PATH})
 
-
-set(ENV{PM_PhysXGpu_PATH} "${CURRENT_BUILDTREES_DIR}/temp/PhysXGpu")
-list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXGpu_PATH})
-file(MAKE_DIRECTORY "$ENV{PM_PhysXGpu_PATH}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%40104.2-5.1.264.32487460-public.zip"
     FILENAME "PhysXGpu.zip"
     SHA512 6bd0384c134d909b0c2d32b9639dde5d8a90b3de74e1971b913d646f284d3dd042e3cfd0d4a868e57370621e23e76001b3eac47ac235c6dd798328e199471502
 )
-vcpkg_find_acquire_program(7Z)
-message(STATUS "Extracting $ENV{PM_PhysXGpu_PATH} file")
-vcpkg_execute_required_process(
-    COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_PhysXGpu_PATH}" "-y" "-bso0" "-bsp0"
-    WORKING_DIRECTORY "$ENV{PM_PhysXGpu_PATH}"
-    LOGNAME "extract-PhysXGpu"
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(7Z)
+    set(ENV{PM_PhysXGpu_PATH} "${CURRENT_BUILDTREES_DIR}/temp/PhysXGpu")
+    file(MAKE_DIRECTORY "$ENV{PM_PhysXGpu_PATH}")
+    vcpkg_execute_required_process(
+        COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_PhysXGpu_PATH}" "-y" "-bso0" "-bsp0"
+        WORKING_DIRECTORY "$ENV{PM_PhysXGpu_PATH}"
+        LOGNAME "extract-PhysXGpu"
+    )
+else()
+    vcpkg_extract_source_archive(SOURCE_PATH
+        ARCHIVE "${ARCHIVE}"
+        BASE_DIRECTORY PhysXGpu_dep
+    )
+    set(ENV{PM_PhysXGpu_PATH} "${SOURCE_PATH}")
+endif()
+message(STATUS "Extracted dependency to $ENV{PM_PhysXGpu_PATH}")
+list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXGpu_PATH})
 
 
 set(ENV{PM_PhysXDevice_PATH} "${CURRENT_BUILDTREES_DIR}/temp/PhysXDevice")
@@ -121,16 +136,27 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "PhysXDevice.7z"
     SHA512 c20eb2f1e0dcb9d692cb718ca7e3a332291e72a09614f37080f101e5ebc1591033029f0f1e6fba33a17d4c9f59f13e561f3fc81cee34cd53d50b579c01dd3f3c
 )
-vcpkg_find_acquire_program(7Z)
-message(STATUS "Extracting $ENV{PM_PhysXDevice_PATH} file")
-vcpkg_execute_required_process(
-    COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_PhysXDevice_PATH}" "-y" "-bso0" "-bsp0"
-    WORKING_DIRECTORY "$ENV{PM_PhysXDevice_PATH}"
-    LOGNAME "extract-PhysXDevice"
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(ENV{PM_PhysXDevice_PATH} "${CURRENT_BUILDTREES_DIR}/temp/PhysXDevice")
+    file(MAKE_DIRECTORY "$ENV{PM_PhysXDevice_PATH}")
+    vcpkg_find_acquire_program(7Z)
+    vcpkg_execute_required_process(
+        COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_PhysXDevice_PATH}" "-y" "-bso0" "-bsp0"
+        WORKING_DIRECTORY "$ENV{PM_PhysXDevice_PATH}"
+        LOGNAME "extract-PhysXDevice"
+    )
+else()
+    vcpkg_extract_source_archive(SOURCE_PATH
+        ARCHIVE "${ARCHIVE}"
+        BASE_DIRECTORY PhysXDevice_dep
+    )
+    set(ENV{PM_PhysXDevice_PATH} "${SOURCE_PATH}")
+endif()
+message(STATUS "Extracted dependency to $ENV{PM_PhysXDevice_PATH}")
+list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXDevice_PATH})
 
 if(targetPlatform STREQUAL "vc17win64")
-    set(ENV{PM_freeglut_PATH} "${CURRENT_BUILDTREES_DIR}/temp/freeglut")
+    set(ENV{PM_freeglut_PATH} "${CURRENT_BUILDTREES_DIR}/freeglut_dep")
     list(APPEND ENV{PM_PATHS} $ENV{PM_freeglut_PATH})
     file(MAKE_DIRECTORY "$ENV{PM_freeglut_PATH}")
     vcpkg_download_distfile(ARCHIVE
@@ -139,12 +165,12 @@ if(targetPlatform STREQUAL "vc17win64")
         SHA512 c01cb75dd466d6889a72d7236669bfce841cc6da9e0edb4208c4affb5ca939f28d64bc3d988bc85d98c589b0b42ac3464f606c89f6c113106669fc9fe84000e5
     )
     vcpkg_find_acquire_program(7Z)
-    message(STATUS "Extracting $ENV{PM_freeglut_PATH} file")
     vcpkg_execute_required_process(
         COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_freeglut_PATH}" "-y" "-bso0" "-bsp0"
         WORKING_DIRECTORY "$ENV{PM_freeglut_PATH}"
         LOGNAME "extract-freeglut"
     )
+    message(STATUS "Extracted dependency to $ENV{PM_freeglut_PATH}")
 endif()
 
 ######################## Now generate ALL cmake parameters according to our distribution ##############################
