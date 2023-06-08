@@ -1,0 +1,75 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d9419e3..3e1d54a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -45,35 +45,22 @@ IF(WIN32)
+ ENDIF()
+ 
+ ADD_LIBRARY(hiredis ${hiredis_sources})
+-ADD_LIBRARY(hiredis_static STATIC ${hiredis_sources})
+ ADD_LIBRARY(hiredis::hiredis ALIAS hiredis)
+-ADD_LIBRARY(hiredis::hiredis_static ALIAS hiredis_static)
+-
+-IF(NOT MSVC)
+-    SET_TARGET_PROPERTIES(hiredis_static
+-        PROPERTIES OUTPUT_NAME hiredis)
+-ENDIF()
+ 
+ SET_TARGET_PROPERTIES(hiredis
+     PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE
+     VERSION "${HIREDIS_SONAME}")
+ IF(MSVC)
+-    SET_TARGET_PROPERTIES(hiredis_static
+-        PROPERTIES COMPILE_FLAGS /Z7)
+ ENDIF()
+ IF(WIN32 OR MINGW)
+     TARGET_LINK_LIBRARIES(hiredis PUBLIC ws2_32 crypt32)
+-    TARGET_LINK_LIBRARIES(hiredis_static PUBLIC ws2_32 crypt32)
+ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+     TARGET_LINK_LIBRARIES(hiredis PUBLIC m)
+-    TARGET_LINK_LIBRARIES(hiredis_static PUBLIC m)
+ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "SunOS")
+     TARGET_LINK_LIBRARIES(hiredis PUBLIC socket)
+-    TARGET_LINK_LIBRARIES(hiredis_static PUBLIC socket)
+ ENDIF()
+ 
+ TARGET_INCLUDE_DIRECTORIES(hiredis PUBLIC $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+-TARGET_INCLUDE_DIRECTORIES(hiredis_static PUBLIC $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+ 
+ CONFIGURE_FILE(hiredis.pc.in hiredis.pc @ONLY)
+ 
+@@ -103,7 +90,7 @@ set(CPACK_RPM_PACKAGE_AUTOREQPROV ON)
+ 
+ include(CPack)
+ 
+-INSTALL(TARGETS hiredis hiredis_static
++INSTALL(TARGETS hiredis 
+     EXPORT hiredis-targets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+@@ -135,7 +122,7 @@ export(EXPORT hiredis-targets
+ if(WIN32)
+     SET(CMAKE_CONF_INSTALL_DIR share/hiredis)
+ else()
+-    SET(CMAKE_CONF_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/hiredis)
++    SET(CMAKE_CONF_INSTALL_DIR share/hiredis)
+ endif()
+ SET(INCLUDE_INSTALL_DIR include)
+ include(CMakePackageConfigHelpers)
+@@ -189,7 +176,6 @@ IF(ENABLE_SSL)
+     TARGET_LINK_LIBRARIES(hiredis_ssl PRIVATE ${OPENSSL_LIBRARIES})
+     IF (WIN32 OR MINGW)
+         TARGET_LINK_LIBRARIES(hiredis_ssl PRIVATE hiredis)
+-        TARGET_LINK_LIBRARIES(hiredis_ssl_static PUBLIC hiredis_static)
+     ENDIF()
+     CONFIGURE_FILE(hiredis_ssl.pc.in hiredis_ssl.pc @ONLY)
+ 
+@@ -218,7 +204,7 @@ IF(ENABLE_SSL)
+     if(WIN32)
+         SET(CMAKE_CONF_INSTALL_DIR share/hiredis_ssl)
+     else()
+-        SET(CMAKE_CONF_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/hiredis_ssl)
++        SET(CMAKE_CONF_INSTALL_DIR share/hiredis_ssl)
+     endif()
+     configure_package_config_file(hiredis_ssl-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/hiredis_ssl-config.cmake
+                                   INSTALL_DESTINATION ${CMAKE_CONF_INSTALL_DIR}

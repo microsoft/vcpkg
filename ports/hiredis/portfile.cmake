@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-timeval.patch
         fix-ssize_t.patch
         ${HIREDIS_PATCHES}
+        fix-duplicate-target.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
