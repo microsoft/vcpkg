@@ -1,0 +1,19 @@
+spirv-tools provides CMake targets:
+
+    find_package(SPIRV-Tools CONFIG REQUIRED)
+    # Note: SPIRV-Tools provides two targets.
+    # Only SPIRV-Tools-static has full symbol visibility.
+    target_link_libraries(main PRIVATE $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,SPIRV-Tools-shared,SPIRV-Tools-static>)
+
+    find_package(SPIRV-Tools-link CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE SPIRV-Tools-link)
+
+    find_package(SPIRV-Tools-lint CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE SPIRV-Tools-lint)
+
+    find_package(SPIRV-Tools-opt CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE SPIRV-Tools-opt)
+
+    find_package(SPIRV-Tools-reduce CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE SPIRV-Tools-reduce)
+
