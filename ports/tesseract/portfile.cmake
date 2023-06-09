@@ -50,21 +50,14 @@ vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)
 vcpkg_fixup_pkgconfig()
 
 if("training-tools" IN_LIST FEATURES)
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND TRAINING_TOOLS
+    list(APPEND TRAINING_TOOLS
             ambiguous_words classifier_tester combine_tessdata
             cntraining dawg2wordlist mftraining shapeclustering
             wordlist2dawg combine_lang_model lstmeval lstmtraining
             set_unicharset_properties unicharset_extractor merge_unicharsets
         )
-    else()
-        list(APPEND TRAINING_TOOLS
-            ambiguous_words classifier_tester combine_tessdata
-            cntraining dawg2wordlist mftraining shapeclustering
-            wordlist2dawg combine_lang_model lstmeval lstmtraining
-            set_unicharset_properties unicharset_extractor text2image
-            merge_unicharsets
-        )
+    if (NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        list(APPEND TRAINING_TOOLS text2image)
     endif()
     vcpkg_copy_tools(TOOL_NAMES ${TRAINING_TOOLS} AUTO_CLEAN)
 endif()
