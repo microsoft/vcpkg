@@ -15,14 +15,6 @@
     }
   ],
   "features": {
-    "example": {
-      "description": "Build example",
-      "dependencies": [
-        "libevent",
-        "libuv",
-        "pthread"
-      ]
-    },
     "ssl": {
       "description": "Build hiredis_ssl for SSL support",
       "dependencies": [

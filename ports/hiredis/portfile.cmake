@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 9dad012c144ed24de6aa413a3a10d19a9d0d9ece18dbc388406cd86c5b98cb66c76c586cb559c601ed13a75051d8921dc2882534cc3605513fde47d57276c3bb
     HEAD_REF master
     PATCHES
-        fix-feature-example.patch
         fix-timeval.patch
         fix-ssize_t.patch
         support-static.patch
@@ -17,13 +16,13 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ssl     ENABLE_SSL
-        example ENABLE_EXAMPLES
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
       -DENABLE_EXAMPLES=OFF
+      -DDISABLE_TESTS=ON
 )
 
 vcpkg_cmake_install()
