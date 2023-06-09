@@ -32,10 +32,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
-        -DSHADERC_SKIP_TESTS=true 
-        "-DSHADERC_GLSLANG_DIR=${CMAKE_CURRENT_LIST_DIR}/glslang"
-        "-DSHADERC_SPIRV_TOOLS_DIR=${CMAKE_CURRENT_LIST_DIR}/spirv-tools"
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DSHADERC_ENABLE_EXAMPLES=OFF
+        -DSHADERC_SKIP_TESTS=true 
 )
 
 vcpkg_cmake_install()

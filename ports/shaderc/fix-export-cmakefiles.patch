@@ -24,29 +24,31 @@ index f3277f0..5fd58ef 100644
      PRIVATE ${glslang_SOURCE_DIR}
              ${SPIRV-Headers_SOURCE_DIR}/include)
  target_compile_definitions(shaderc_shared
-@@ -59,10 +63,14 @@ if(SHADERC_ENABLE_INSTALL)
-     DESTINATION
+@@ -60,9 +64,14 @@ if(SHADERC_ENABLE_INSTALL)
        ${CMAKE_INSTALL_INCLUDEDIR}/shaderc)
  
--  install(TARGETS ${shaderc_install_target}
-+  install(TARGETS ${shaderc_install_target} EXPORT unofficial-shadercTargets
+   install(TARGETS ${shaderc_install_target}
++    EXPORT unofficial-shaderc-targets
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+  install(EXPORT unofficial-shadercTargets
++  install(EXPORT unofficial-shaderc-targets
 +    NAMESPACE unofficial::shaderc::
 +    DESTINATION share/unofficial-shaderc
 +  )
  endif(SHADERC_ENABLE_INSTALL)
  
  find_package(Threads)
-@@ -79,6 +87,11 @@ else()
+@@ -79,6 +87,14 @@ else()
  target_link_libraries(shaderc_shared PRIVATE ${SHADERC_LIBS})
  endif()
  
-+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-shaderc-config.cmake.in"
-+[[include("${CMAKE_CURRENT_LIST_DIR}/unofficial-shadercTargets.cmake")]])
-+configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-shaderc-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-shaderc-config.cmake" @ONLY)
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-shaderc-config.cmake" [[
++include(CMakeFindDependencyMacro)
++find_dependency(glslang CONFIG)
++find_dependency(SPIRV-Tools CONFIG)
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-shaderc-targets.cmake")
++]])
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-shaderc-config.cmake DESTINATION share/unofficial-shaderc)
 +
  shaderc_add_tests(
@@ -68,24 +70,27 @@ index 4926203..b152d7b 100644
  # We use parts of Glslang's HLSL compilation interface, which
  # now requires this preprocessor definition.
  add_definitions(-DENABLE_HLSL)
-@@ -50,12 +53,21 @@ target_link_libraries(shaderc_util PRIVATE
+@@ -50,12 +53,24 @@ target_link_libraries(shaderc_util PRIVATE
    SPIRV-Tools-opt ${CMAKE_THREAD_LIBS_INIT})
  
  if(SHADERC_ENABLE_INSTALL AND NOT BUILD_SHARED_LIBS)
 -  install(TARGETS shaderc_util
-+  install(TARGETS shaderc_util EXPORT unofficial-shaderc_utilTargets
++  install(TARGETS shaderc_util EXPORT unofficial-shaderc_util-targets
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+  install(EXPORT unofficial-shaderc_utilTargets
++  install(EXPORT unofficial-shaderc_util-targets
 +      NAMESPACE unofficial::shaderc_util::
 +      DESTINATION share/unofficial-shaderc_util
 +  )
  endif(SHADERC_ENABLE_INSTALL)
  
-+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-shaderc_util-config.cmake.in"
-+[[include("${CMAKE_CURRENT_LIST_DIR}/unofficial-shaderc_utilTargets.cmake")]])
-+configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-shaderc_util-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-shaderc_util-config.cmake" @ONLY)
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-shaderc_util-config.cmake" [[
++include(CMakeFindDependencyMacro)
++find_dependency(glslang CONFIG)
++find_dependency(SPIRV-Tools-opt CONFIG)
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-shaderc_util-targets.cmake")
++]])
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-shaderc_util-config.cmake DESTINATION share/unofficial-shaderc_util)
 +
  shaderc_add_tests(
