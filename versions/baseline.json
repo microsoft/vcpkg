@@ -7005,7 +7005,7 @@
       "port-version": 4
     },
     "raygui": {
-      "baseline": "3.2",
+      "baseline": "3.6",
       "port-version": 0
     },
     "raylib": {
