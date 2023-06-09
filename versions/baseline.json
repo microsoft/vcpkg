@@ -256,6 +256,10 @@
       "baseline": "5.2.5",
       "port-version": 0
     },
+    "async-mqtt": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "asynch": {
       "baseline": "2019-09-21",
       "port-version": 3
