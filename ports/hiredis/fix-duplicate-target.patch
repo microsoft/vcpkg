@@ -1,10 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d9419e3..e864bd6 100644
+index d9419e3..5409a2b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -47,33 +47,24 @@ ENDIF()
+@@ -45,35 +45,25 @@ IF(WIN32)
+ ENDIF()
+ 
  ADD_LIBRARY(hiredis ${hiredis_sources})
- ADD_LIBRARY(hiredis_static STATIC ${hiredis_sources})
+-ADD_LIBRARY(hiredis_static STATIC ${hiredis_sources})
  ADD_LIBRARY(hiredis::hiredis ALIAS hiredis)
 -ADD_LIBRARY(hiredis::hiredis_static ALIAS hiredis_static)
  
@@ -36,7 +38,7 @@ index d9419e3..e864bd6 100644
  
  CONFIGURE_FILE(hiredis.pc.in hiredis.pc @ONLY)
  
-@@ -103,7 +94,7 @@ set(CPACK_RPM_PACKAGE_AUTOREQPROV ON)
+@@ -103,7 +93,7 @@ set(CPACK_RPM_PACKAGE_AUTOREQPROV ON)
  
  include(CPack)
  
@@ -45,7 +47,7 @@ index d9419e3..e864bd6 100644
      EXPORT hiredis-targets
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -163,11 +154,7 @@ IF(ENABLE_SSL)
+@@ -163,11 +153,7 @@ IF(ENABLE_SSL)
          ssl.c)
      ADD_LIBRARY(hiredis_ssl
              ${hiredis_ssl_sources})
@@ -57,7 +59,7 @@ index d9419e3..e864bd6 100644
      ENDIF()
  
      IF (APPLE)
-@@ -179,21 +166,17 @@ IF(ENABLE_SSL)
+@@ -179,21 +165,17 @@ IF(ENABLE_SSL)
          WINDOWS_EXPORT_ALL_SYMBOLS TRUE
          VERSION "${HIREDIS_SONAME}")
      IF(MSVC)
