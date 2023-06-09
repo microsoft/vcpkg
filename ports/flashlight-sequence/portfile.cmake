@@ -1,0 +1,34 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO flashlight/sequence
+    # REF v${VERSION}
+    REF b0ac199fde689a0813897650218e2441977d8651
+    SHA512 0bfc106a4fdd54a082b3d43a45979b0442aa4a354c75f752a628f26530782470740265a149972a5a710c7c9e69800f150dd3f7d051514cb455ac4ae5535f41a5
+    HEAD_REF main
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openmp FL_SEQUENCE_USE_OPENMP
+        cuda   FL_SEQUENCE_USE_CUDA
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DFL_SEQUENCE_BUILD_TESTS=OFF
+        -DFL_SEQUENCE_BUILD_STANDALONE=OFF
+        ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        "-DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/debug/share/${PORT}"
+    OPTIONS_RELEASE
+        "-DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
