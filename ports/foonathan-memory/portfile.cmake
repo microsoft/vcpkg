@@ -34,8 +34,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME foonathan_memory)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/foonathan_memory/cmake")
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/foonathan_memory/cmake PACKAGE_NAME foonathan_memory)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/share/foonathan_memory/cmake")
     vcpkg_cmake_config_fixup(CONFIG_PATH share/foonathan_memory/cmake PACKAGE_NAME foonathan_memory)
 endif()
@@ -58,6 +58,10 @@ file(COPY
 )
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/foonathan_memory"
+)
+file(REMOVE_RECURSE 
+  "${CURRENT_PACKAGES_DIR}/lib/foonathan_memory" 
+  "${CURRENT_PACKAGES_DIR}/debug/lib/foonathan_memory"
 )
 # Place header files into the right folders - Done!
 
