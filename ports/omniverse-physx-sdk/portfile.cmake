@@ -94,11 +94,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         LOGNAME "extract-CMakeModules"
     )
 else()
-    vcpkg_extract_source_archive(SOURCE_PATH
+    vcpkg_extract_source_archive(CMAKEMODULES_SOURCE_PATH
+        NO_REMOVE_ONE_LEVEL
         ARCHIVE "${ARCHIVE}"
         BASE_DIRECTORY CMakeModules_dep
     )
-    set(ENV{PM_CMakeModules_PATH} "${SOURCE_PATH}")
+    set(ENV{PM_CMakeModules_PATH} "${CMAKEMODULES_SOURCE_PATH}")
 endif()
 message(STATUS "Extracted dependency to $ENV{PM_CMakeModules_PATH}")
 list(APPEND ENV{PM_PATHS} $ENV{PM_CMakeModules_PATH})
@@ -118,11 +119,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         LOGNAME "extract-PhysXGpu"
     )
 else()
-    vcpkg_extract_source_archive(SOURCE_PATH
+    vcpkg_extract_source_archive(PHYSXGPU_SOURCE_PATH
+        NO_REMOVE_ONE_LEVEL
         ARCHIVE "${ARCHIVE}"
         BASE_DIRECTORY PhysXGpu_dep
     )
-    set(ENV{PM_PhysXGpu_PATH} "${SOURCE_PATH}")
+    set(ENV{PM_PhysXGpu_PATH} "${PHYSXGPU_SOURCE_PATH}")
 endif()
 message(STATUS "Extracted dependency to $ENV{PM_PhysXGpu_PATH}")
 list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXGpu_PATH})
@@ -142,11 +144,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         LOGNAME "extract-PhysXDevice"
     )
 else()
-    vcpkg_extract_source_archive(SOURCE_PATH
+    vcpkg_extract_source_archive(PHYSXDEVICE_SOURCE_PATH
+        NO_REMOVE_ONE_LEVEL
         ARCHIVE "${ARCHIVE}"
         BASE_DIRECTORY PhysXDevice_dep
     )
-    set(ENV{PM_PhysXDevice_PATH} "${SOURCE_PATH}")
+    set(ENV{PM_PhysXDevice_PATH} "${PHYSXDEVICE_SOURCE_PATH}")
 endif()
 message(STATUS "Extracted dependency to $ENV{PM_PhysXDevice_PATH}")
 list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXDevice_PATH})
