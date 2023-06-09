@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d9419e3..7d870fb 100644
+index d9419e3..e864bd6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -47,33 +47,24 @@ ENDIF()
@@ -45,15 +45,6 @@ index d9419e3..7d870fb 100644
      EXPORT hiredis-targets
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -135,7 +126,7 @@ export(EXPORT hiredis-targets
- if(WIN32)
-     SET(CMAKE_CONF_INSTALL_DIR share/hiredis)
- else()
--    SET(CMAKE_CONF_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/hiredis)
-+    SET(CMAKE_CONF_INSTALL_DIR share/hiredis)
- endif()
- SET(INCLUDE_INSTALL_DIR include)
- include(CMakePackageConfigHelpers)
 @@ -163,11 +154,7 @@ IF(ENABLE_SSL)
          ssl.c)
      ADD_LIBRARY(hiredis_ssl
@@ -89,12 +80,3 @@ index d9419e3..7d870fb 100644
          EXPORT hiredis_ssl-targets
          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -218,7 +201,7 @@ IF(ENABLE_SSL)
-     if(WIN32)
-         SET(CMAKE_CONF_INSTALL_DIR share/hiredis_ssl)
-     else()
--        SET(CMAKE_CONF_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/hiredis_ssl)
-+        SET(CMAKE_CONF_INSTALL_DIR share/hiredis_ssl)
-     endif()
-     configure_package_config_file(hiredis_ssl-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/hiredis_ssl-config.cmake
-                                   INSTALL_DESTINATION ${CMAKE_CONF_INSTALL_DIR}

@@ -10,6 +10,7 @@ vcpkg_from_github(
         support-static.patch
         fix-pdb-install.patch
         fix-duplicate-target.patch
+        fix-cmake_conf_install_dir.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
