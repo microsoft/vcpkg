@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         cmake-config-dir.diff
         spirv-tools-shared.diff
+        fix-tool-deps.diff
 )
 
 vcpkg_find_acquire_program(PYTHON3)
