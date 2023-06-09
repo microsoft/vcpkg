@@ -12,9 +12,5 @@ set(glslang_SOURCE_DIR "${glslang_SOURCE_DIR}/glslang" "${glslang_SOURCE_DIR}" C
 
 set(SHADERC_SPIRV_TOOLS_DIR "" CACHE STRING "unused")
 find_package(SPIRV-Tools CONFIG REQUIRED)
-if(BUILD_SHARED_LIBS)
-    add_library(SPIRV-Tools ALIAS SPIRV-Tools-shared)
-else()
-    add_library(SPIRV-Tools ALIAS SPIRV-Tools-static)
-endif()
+add_library(SPIRV-Tools ALIAS SPIRV-Tools-static) # as linked by SPIRV-Tools-opt
 find_package(SPIRV-Tools-opt CONFIG REQUIRED)
