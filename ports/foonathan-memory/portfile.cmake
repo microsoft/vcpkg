@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF v0.7-3
     SHA512 302a046e204d1cd396a4a36b559d3360d17801d99f0f22b58314ff66706ae86ce4f364731004c1c293e01567a9510229cda7fc4978e0e47740176026d47e8403
     HEAD_REF master
+    PATCHES
+        fix-foonathan-memory-include-install-dir.patch
 )
 
 vcpkg_from_github(
@@ -45,19 +47,8 @@ vcpkg_copy_pdbs()
 # Place header files into the right folders
 # The original layout is not a problem for CMake-based project.
 file(COPY
-    "${CURRENT_PACKAGES_DIR}/include/foonathan_memory/foonathan"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-)
-file(GLOB
-    COMP_INCLUDE_FILES
-    "${CURRENT_PACKAGES_DIR}/include/foonathan_memory/comp/foonathan/*.hpp"
-)
-file(COPY
     ${COMP_INCLUDE_FILES}
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/foonathan"
-)
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/include/foonathan_memory"
 )
 file(REMOVE_RECURSE 
   "${CURRENT_PACKAGES_DIR}/lib/foonathan_memory" 
