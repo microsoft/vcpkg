@@ -16,7 +16,7 @@ index 61da709f..472bc6af 100644
  
          if (Git_FOUND)
 diff --git a/src/vsg/CMakeLists.txt b/src/vsg/CMakeLists.txt
-index 4154312f..49d63b97 100644
+index 4154312..7afcdd4 100644
 --- a/src/vsg/CMakeLists.txt
 +++ b/src/vsg/CMakeLists.txt
 @@ -226,7 +226,7 @@ set(SOURCES
@@ -28,10 +28,10 @@ index 4154312f..49d63b97 100644
  
      # include glslang source code directly into the VulkanScenegraph library build.
      include(../glslang/build_vars.cmake)
-@@ -236,6 +236,14 @@ endif()
+@@ -234,6 +234,14 @@ endif()
+ 
+ # set up library dependencies
  set(LIBRARIES PUBLIC
-         Vulkan::Vulkan
-         Threads::Threads
 +        glslang::glslang
 +        glslang::OSDependent
 +        glslang::MachineIndependent
@@ -40,9 +40,9 @@ index 4154312f..49d63b97 100644
 +        glslang::OGLCompiler
 +        glslang::SPVRemapper
 +        glslang::SPIRV
+         Vulkan::Vulkan
+         Threads::Threads
  )
- 
- # Check for std::atomic
 @@ -364,9 +372,6 @@ target_include_directories(vsg
      PUBLIC
          $<BUILD_INTERFACE:${VSG_SOURCE_DIR}/include>
