@@ -95,7 +95,9 @@ ARCH="$(uname -m)"
 
 if [ -e /etc/alpine-release ]; then
     vcpkgUseSystem="ON"
-    vcpkgUseMuslC="ON"
+    if [ "$ARCH" = "x86_64" ]; then
+        vcpkgUseMuslC="ON"
+    fi
 fi
 
 if [ "$UNAME" = "OpenBSD" ]; then
@@ -126,23 +128,23 @@ fi
 
 # Choose the vcpkg binary to download
 vcpkgDownloadTool="ON"
-vcpkgToolReleaseTag="2023-03-14"
+vcpkgToolReleaseTag="2023-06-07"
 if [ "$UNAME" = "Darwin" ]; then
     echo "Downloading vcpkg-macos..."
-    vcpkgToolReleaseSha="1483466835306542826520b554f63c9edd9c7c202249e87fa25e0d7b24b81b1fd1deb46b7adab23c93bb81bbb71455d32a4d77e158c834e6194fbf51540f86bb"
+    vcpkgToolReleaseSha="109879edb5e47e329532034afdd7edcc658be790555fe45fee20e0791457e0a42ff930a1450aa1f6faaa98732ed6a6abea2f53f5e5547adce987d8fa0c124df1"
     vcpkgToolName="vcpkg-macos"
 elif [ "$vcpkgUseMuslC" = "ON" ]; then
     echo "Downloading vcpkg-muslc..."
-    vcpkgToolReleaseSha="eed287d99ea524e06b9806d03edee0af65fe68be782cb54c0660e4df1a10bd68d580521aaaa32b186cd6ee2c0b309e7c5151c5a1de8bf978bd4dcc203ce0f1cc"
+    vcpkgToolReleaseSha="96ed9b3e4ac58b61f54147b2533fd563bebe69721aa972974c0de354a31092c4cc24094372d37d9eb7968433fffa0e29c5e5dfd80cfdf7a76d0db373b0890fad"
     vcpkgToolName="vcpkg-muslc"
 elif [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-glibc..."
-    vcpkgToolReleaseSha="333c5a74be1d9b2e4e9854724947b5b5d2ba56ef4b1a5cde33141156c4a8e7b18588f5a3c8a44dd8a0665758bac494f862987f5b7fb6f09e35f6f3ff54c849b4"
+    vcpkgToolReleaseSha="7bc383231533262b436610ddce21946ff4f558afe2763cac03f186593e4be50c9377ebf8af6ecae5783a0589fa5f2ec540da70544d53f348fc23c731782de629"
     vcpkgToolName="vcpkg-glibc"
 else
     echo "Unable to determine a binary release of vcpkg; attempting to build from source."
     vcpkgDownloadTool="OFF"
-    vcpkgToolReleaseSha="2002d3826e359a35b34c0b75966d60abfa09d7c39472a57742ee6cea6c1341215826336e48dd845b0a33e8d1134f924eb3b0b9f516d0ea6e46b57f2ac489e270"
+    vcpkgToolReleaseSha="148b85bd92fd9b53f66d0718b9bdf12d1a698cc5b15e491e093c170acd8aa59ae02fd65da0d79901ed9fa179e2bf3d9a1db046bb34e194f6c982ac6e2d7b73a0"
 fi
 
 # Do the download or build.

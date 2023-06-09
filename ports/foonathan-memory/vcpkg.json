@@ -4,14 +4,6 @@
   "description": "STL compatible C++ memory allocator library",
   "homepage": "https://foonathan.net/doc/memory/",
   "license": "Zlib",
-  "default-features": [
-    "tool"
-  ],
-  "features": {
-    "tool": {
-      "description": "Build foonathan memory tool"
-    }
-  },
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -21,5 +13,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "tool"
+  ],
+  "features": {
+    "tool": {
+      "description": "Build foonathan memory tool"
+    }
+  }
 }

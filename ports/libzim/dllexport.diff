@@ -1,0 +1,52 @@
+diff --git a/include/zim/zim.h b/include/zim/zim.h
+index 5d1af80..6171f56 100644
+--- a/include/zim/zim.h
++++ b/include/zim/zim.h
+@@ -33,14 +33,16 @@
+ #define DEPRECATED
+ #endif
+ 
+-#if (defined _WIN32 || defined __CYGWIN__) && defined LIBZIM_EXPORT_DLL
++#include <zim/zim_config.h>
++
++#if defined(LIBZIM_DLL) && defined(LIBZIM_BUILDING_LIBRARY)
+     #define LIBZIM_API __declspec(dllexport)
++#elif defined(LIBZIM_DLL)
++    #define LIBZIM_API __declspec(dllimport)
+ #else
+     #define LIBZIM_API
+ #endif
+ 
+-#include <zim/zim_config.h>
+-
+ namespace zim
+ {
+   // An index of an entry (in a zim file)
+diff --git a/meson.build b/meson.build
+index 7f97dbc..8fd13d7 100644
+--- a/meson.build
++++ b/meson.build
+@@ -14,6 +14,10 @@ sizeof_size_t = cpp.sizeof('size_t')
+ private_conf = configuration_data()
+ public_conf = configuration_data()
+ 
++if host_machine.system() == 'windows' and get_option('default_library') == 'shared'
++  public_conf.set('LIBZIM_DLL', true)
++endif
++
+ private_conf.set('VERSION', '"@0@"'.format(meson.project_version()))
+ public_conf.set('LIBZIM_VERSION', '"@0@"'.format(meson.project_version()))
+ private_conf.set('DIRENT_CACHE_SIZE', get_option('DIRENT_CACHE_SIZE'))
+diff --git a/src/meson.build b/src/meson.build
+index 4529b7c..956b145 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -75,7 +75,7 @@ libzim = library('zim',
+                  include_directories : inc,
+                  dependencies : deps,
+                  link_args : extra_link_args,
+-                 cpp_args : extra_cpp_args,
++                 cpp_args : extra_cpp_args + '-DLIBZIM_BUILDING_LIBRARY',
+                  version: meson.project_version(),
+                  install : true)
+ libzim_dep = declare_dependency(link_with: libzim,

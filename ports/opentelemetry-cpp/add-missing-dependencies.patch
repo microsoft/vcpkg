@@ -1,0 +1,15 @@
+diff --git a/cmake/opentelemetry-proto.cmake b/cmake/opentelemetry-proto.cmake
+index 34b33d3..19e67e9 100644
+--- a/cmake/opentelemetry-proto.cmake
++++ b/cmake/opentelemetry-proto.cmake
+@@ -311,6 +311,10 @@ if(WITH_OTLP_GRPC)
+   endif()
+ endif()
+
++if(TARGET gRPC::grpc++)
++  target_link_libraries(opentelemetry_proto PUBLIC gRPC::grpc++)
++endif()
++
+ if(BUILD_SHARED_LIBS)
+   foreach(proto_target ${OPENTELEMETRY_PROTO_TARGETS})
+     set_property(TARGET ${proto_target} PROPERTY POSITION_INDEPENDENT_CODE ON)

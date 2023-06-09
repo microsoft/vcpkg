@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ctabin/libzippp
-    REF 681bac0362b82bba8f28117d8a48dca54f028ee5 #v6.0-1.9.2 with CXX std version c++11
-    SHA512 2f9ab671de2af0e97d5b3fe4f367504ad47f2e1f6df8009aec8e96680f34bf0e3ae5b45ebaea846676b2527d0a5fd31d91c6f62a2bba2867c6010a387ff24150
+    REF 1934adf591ffe2a53e48d46a522b222b9c1df870 #v6.1-1.9.2 with CXX std version c++11
+    SHA512 1fcc30b5e94c7b7d4bfcd520e91f8cff3d00feeda9acd280ccefa13986aeb98884f45af44334c965a0b6c33a9300f0757d727ff15b86a98e66dd7bf3179c042a
     HEAD_REF master
-    PATCHES fix-find-lzma.patch
 )
 
 vcpkg_check_features( 

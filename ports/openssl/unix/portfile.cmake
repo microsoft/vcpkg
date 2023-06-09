@@ -87,13 +87,6 @@ elseif(VCPKG_TARGET_IS_MINGW)
         set(OPENSSL_ARCH mingw)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
-    set(INTERPRETER "$ENV{EMSDK}/upstream/emscripten/emconfigure")
-    # We must wrap the build in emmake which does not pass jobserver fds.
-    vcpkg_list(SET MAKEFILE_OPTIONS
-        MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile.emscripten"
-        DISABLE_PARALLEL
-    )
-    set(ENV{VCPKG_JOBS} "-j${VCPKG_CONCURRENCY}")
     vcpkg_list(APPEND CONFIGURE_OPTIONS
         threads
         no-engine
