@@ -5,8 +5,6 @@ vcpkg_find_acquire_python3_interpreter(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-message(FATAL_ERROR "${PYTHON3}")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
