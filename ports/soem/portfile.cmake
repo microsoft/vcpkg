@@ -6,10 +6,14 @@ vcpkg_from_github(
     REF a901500618405760a564e64a6816705e29f50f9f
     SHA512 d554bc1c3780b1a81402a7fda490f516caba6bd943a28482740b5c9d97e4273a11546e79c92796487ee9901f568cbf1b329d4e1c1d32602fdce0088a77c82443
     HEAD_REF master
+    PATCHES
+        winpcap.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+    -DBUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
