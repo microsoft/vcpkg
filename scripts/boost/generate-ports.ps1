@@ -24,7 +24,7 @@ else {
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 2
 $portVersions = @{
-    #e.g. "boost-asio" = 1;
+    "boost-atomic" = 3;
 }
 
 function Get-PortVersion {
