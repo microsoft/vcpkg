@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO foonathan/memory
     REF v0.7-3
-    SHA512 cea17694971de46ae2f680a300fdf1921a6999f7c6c991c0905940880f751ac5ae296fd7b349d0080f31e5eb5b4c3ca0b0616a29525db7b22e4f3b41a47d4796
+    SHA512 302a046e204d1cd396a4a36b559d3360d17801d99f0f22b58314ff66706ae86ce4f364731004c1c293e01567a9510229cda7fc4978e0e47740176026d47e8403
     HEAD_REF master
 )
 
@@ -24,21 +24,20 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES tool FOONATHAN_MEMORY_BUILD_TOOLS
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DFOONATHAN_MEMORY_BUILD_EXAMPLES=OFF
         -DFOONATHAN_MEMORY_BUILD_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/foonathan_memory)
+    vcpkg_cmake_config_fixup   (CONFIG_PATH cmake TARGET_PATH share/foonathan_memory)
 elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/foonathan_memory/cmake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/foonathan_memory/cmake TARGET_PATH share/foonathan_memory)
+    vcpkg_cmake_config_fixup   (CONFIG_PATH share/foonathan_memory/cmake TARGET_PATH share/foonathan_memory)
 endif()
 
 vcpkg_copy_pdbs()
