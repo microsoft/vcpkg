@@ -18,14 +18,14 @@ vcpkg_from_github(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/build-version.inc" DESTINATION "${SOURCE_PATH}/glslc/src")
 
-set(OPTIONS)
+set(OPTIONS "")
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     list(APPEND OPTIONS -DSHADERC_ENABLE_SHARED_CRT=ON)
 endif()
 
 # shaderc uses python to manipulate copyright information
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
+get_filename_component(PYTHON3_EXE_PATH "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
 vcpkg_cmake_configure(
@@ -33,8 +33,8 @@ vcpkg_cmake_configure(
     OPTIONS
         ${OPTIONS}
         -DSHADERC_SKIP_TESTS=true 
-        -DSHADERC_GLSLANG_DIR=${CMAKE_CURRENT_LIST_DIR}/glslang
-        -DSHADERC_SPIRV_TOOLS_DIR=${CMAKE_CURRENT_LIST_DIR}/spirv-tools
+        "-DSHADERC_GLSLANG_DIR=${CMAKE_CURRENT_LIST_DIR}/glslang"
+        "-DSHADERC_SPIRV_TOOLS_DIR=${CMAKE_CURRENT_LIST_DIR}/spirv-tools"
         -DSHADERC_ENABLE_EXAMPLES=OFF
 )
 
