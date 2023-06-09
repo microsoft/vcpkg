@@ -10,8 +10,7 @@ vcpkg_from_github(
     PATCHES 
         disable-update-version.patch
         fix-build-type.patch
-        fix-install-shaderc_util.patch
-        fix-export-cmakefiles.patch
+        cmake-config-export.patch
         # NOTE: This should be removed when shaderc gets updated to use glslang 11.12.0
         fix-tbuiltinresource-for-glslang-11-12.patch
 )
@@ -41,10 +40,10 @@ vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-shaderc CONFIG_PATH share/unofficial-shaderc)
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-shaderc_util CONFIG_PATH share/unofficial-shaderc_util)
 
 vcpkg_copy_tools(TOOL_NAMES glslc AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
