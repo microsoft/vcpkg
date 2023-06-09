@@ -27,7 +27,8 @@ jobs:
           unset VCPKG_ROOT
 
           git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' > .github-pr.changed-portfiles
-          if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_apply_patches|vcpkg_build_msbuild|vcpkg_extract_source_archive_ex|vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-cmake; else touch .github-pr.deprecated-cmake; fi
+          if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_apply_patches|vcpkg_build_msbuild|vcpkg_extract_source_archive_ex)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-function; else touch .github-pr.deprecated-function; fi
+          if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-cmake; else touch .github-pr.deprecated-cmake; fi
           git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*vcpkg.json' | sed 's/[MAR]\t*//' > .github-pr.changed-manifest-files
           cat .github-pr.changed-manifest-files | while read filename; do grep -q -E '"license": ' "$filename" || echo "$filename" || true; done > .github-pr.missing-license
           cat .github-pr.changed-manifest-files | while read filename; do match=$(grep -oiP '"license": ".*\K(AGPL-1\.0|AGPL-3\.0|BSD-2-Clause-FreeBSD|BSD-2-Clause-NetBSD|bzip2-1\.0\.5|eCos-2\.0|GFDL-1\.1|GFDL-1\.2|GFDL-1\.3|GPL-1\.0|GPL-1\.0\+|GPL-2\.0|GPL-2\.0\+|GPL-2\.0-with-autoconf-exception|GPL-2\.0-with-bison-exception|GPL-2\.0-with-classpath-exception|GPL-2\.0-with-font-exception|GPL-2\.0-with-GCC-exception|GPL-3\.0|GPL-3\.0\+|GPL-3\.0-with-autoconf-exception|GPL-3\.0-with-GCC-exception|LGPL-2\.0|LGPL-2\.0\+|LGPL-2\.1|LGPL-2\.1\+|LGPL-3\.0|LGPL-3\.0\+|Nunit|StandardML-NJ|wxWindows)(?=[ "])' "$filename" || true); if [ ! -z "$match" ]; then echo "$filename (has deprecated license \"$match\")" ; fi ; done > .github-pr.deprecated-license
@@ -53,7 +54,8 @@ jobs:
             const add_version_out = (await fs.readFile('.github-pr.x-add-version.out', 'utf8')).trim()
             const version_string_out = (await fs.readFile('.github-pr.version-string.out', 'utf8')).trim()
             const format = (await fs.readFile('.github-pr.format-manifest', 'utf8')).trim()
-            const cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).split('\n').filter(s => s.length > 0)
+            const deprecated_function = (await fs.readFile('.github-pr.deprecated-function', 'utf8')).split('\n').filter(s => s.length > 0)
+            const deprecated_cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).split('\n').filter(s => s.length > 0)
             const missing_license = (await fs.readFile('.github-pr.missing-license', 'utf8')).trim()
             const deprecated_license = (await fs.readFile('.github-pr.deprecated-license', 'utf8')).trim()
 
@@ -92,34 +94,55 @@ jobs:
               approve = false;
             }
             
-            if (cmake.length > 0) {
+            if (deprecated_function.length > 0) {
               var deprecated_output = '';
               deprecated_output += "You have modified or added at least one portfile where deprecated functions are used.\n"
               deprecated_output += "If you feel able to do so, please consider migrating them to the new functions.\n";
-              deprecated_output += "In the ports that use the new function vcpkg_cmake_install, vcpkg_cmake_build or vcpkg_cmake_config_fixup, you have to add the corresponding dependencies:\n";
+              core.warning(deprecated_output);
+
+              let deprecated_functions = {
+                  vcpkg_extract_source_archive_ex: 'vcpkg_extract_source_archive https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_extract_source_archive',
+                  vcpkg_build_msbuild: 'vcpkg_install_msbuild https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_install_msbuild',
+                  vcpkg_apply_patches: 'the PATCHES arguments to the \"extract\" helpers (for example, vcpkg_from_github() (https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_from_github))',
+              };
+              for (let line of deprecated_function) {
+                // line has the format: <path>:<line_number>:<matched_string
+                // For example: ports/rtlsdr/portfile.cmake:42:    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+                [file, line_number, match] = line.split(':');
+                for (deprecated_func in deprecated_functions) {
+                  if (match.indexOf(deprecated_func) !== -1) {
+                    core.warning(`The function ${deprecated_func} is deprecated. Please use ${deprecated_functions[deprecated_func]}`, {file, startLine: line_number});
+                    break;
+                  }
+                }
+              }
+            }
+
+            if (deprecated_cmake.length > 0) {
+              var deprecated_output = '';
+              deprecated_output += "You have modified or added at least one portfile where deprecated functions are used.\n"
+              deprecated_output += "These functions have been forbidden in vcpkg, please migrating them to the new functions.\n";
+              deprecated_output += "In the ports that use the new function vcpkg_cmake_configure, vcpkg_cmake_install, vcpkg_cmake_build or vcpkg_cmake_config_fixup, you have to add the corresponding dependencies:\n";
               deprecated_output += "```json\n";
               deprecated_output += '{\n  "name": "vcpkg-cmake",\n  "host": true\n},\n'
               deprecated_output += '{\n  "name": "vcpkg-cmake-config",\n  "host": true\n}\n';
               deprecated_output += "```\n";
-              core.warning(deprecated_output);
+              core.error(deprecated_output);
 
-              const deprecated_functions = {
+              let deprecated_functions = {
                   vcpkg_install_cmake: 'vcpkg_cmake_install (from port vcpkg-cmake)',
                   vcpkg_install_cmake: 'vcpkg_cmake_install (from port vcpkg-cmake)',
                   vcpkg_build_cmake: 'vcpkg_cmake_build (from port vcpkg-cmake)',
                   vcpkg_configure_cmake: 'vcpkg_cmake_configure (Please remove the option PREFER_NINJA) (from port vcpkg-cmake)',
                   vcpkg_fixup_cmake_targets: 'vcpkg_cmake_config_fixup (from port vcpkg-cmake-config)',
-                  vcpkg_extract_source_archive_ex: 'vcpkg_extract_source_archive https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_extract_source_archive',
-                  vcpkg_build_msbuild: 'vcpkg_install_msbuild https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_install_msbuild',
-                  vcpkg_apply_patches: 'the PATCHES arguments to the \"extract\" helpers (for example, vcpkg_from_github() (https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_from_github))',
               };
-              for (let line of cmake) {
+              for (let line of deprecated_cmake) {
                 // line has the format: <path>:<line_number>:<matched_string
                 // For example: ports/rtlsdr/portfile.cmake:42:    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
                 [file, line_number, match] = line.split(':');
-                for (deprecated_function in deprecated_functions) {
-                  if (match.indexOf(deprecated_function) !== -1) {
-                    core.warning(`The function ${deprecated_function} is deprecated. Please use ${deprecated_functions[deprecated_function]}`, {file, startLine: line_number});
+                for (deprecated_cmake_function in deprecated_functions) {
+                  if (match.indexOf(deprecated_cmake_function) !== -1) {
+                    core.warning(`The function ${deprecated_cmake_function} is deprecated. Please use ${deprecated_functions[deprecated_cmake_function]}`, {file, startLine: line_number});
                     break;
                   }
                 }
