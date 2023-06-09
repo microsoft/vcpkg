@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO KhronosGroup/SPIRV-Tools
     REF v2022.4
     SHA512 d93e97e168c50f545cc42418603ffc5fa6299bb3cc30d927444e4de0d955abc5dd481c9662a59cd49fc379da6bcc6df6fb747947e3dc144cee9b489aff7c4785
+    PATCHES
+        cmake-config-dir.diff
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -31,20 +33,11 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
- # the directory name is capitalized as opposed to the port name
-if(WIN32)
-    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools/cmake PACKAGE_NAME SPIRV-Tools)
-    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-link/cmake PACKAGE_NAME SPIRV-Tools-link)
-    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-lint/cmake PACKAGE_NAME SPIRV-Tools-lint)
-    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-opt/cmake PACKAGE_NAME SPIRV-Tools-opt)
-    vcpkg_cmake_config_fixup(CONFIG_PATH SPIRV-Tools-reduce/cmake PACKAGE_NAME SPIRV-Tools-reduce)
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools PACKAGE_NAME SPIRV-Tools DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-link PACKAGE_NAME SPIRV-Tools-link DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-lint PACKAGE_NAME SPIRV-Tools-lint DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-opt PACKAGE_NAME SPIRV-Tools-opt DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-reduce PACKAGE_NAME SPIRV-Tools-reduce) # now delete
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools PACKAGE_NAME spirv-tools DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-link PACKAGE_NAME spirv-tools-link DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-lint PACKAGE_NAME spirv-tools-lint DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-opt PACKAGE_NAME spirv-tools-opt DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-reduce PACKAGE_NAME spirv-tools-reduce) # now delete
 vcpkg_fixup_pkgconfig()
 
 if(TOOLS_INSTALL)
@@ -62,20 +55,6 @@ if(TOOLS_INSTALL)
     )
 endif()
 
-if(WIN32)
-    file(REMOVE_RECURSE 
-        "${CURRENT_PACKAGES_DIR}/debug/SPIRV-Tools" 
-        "${CURRENT_PACKAGES_DIR}/debug/SPIRV-Tools-link"
-        "${CURRENT_PACKAGES_DIR}/debug/SPIRV-Tools-lint"  
-        "${CURRENT_PACKAGES_DIR}/debug/SPIRV-Tools-opt"
-        "${CURRENT_PACKAGES_DIR}/debug/SPIRV-Tools-reduce" 
-        "${CURRENT_PACKAGES_DIR}/SPIRV-Tools" 
-        "${CURRENT_PACKAGES_DIR}/SPIRV-Tools-link" 
-        "${CURRENT_PACKAGES_DIR}/SPIRV-Tools-lint" 
-        "${CURRENT_PACKAGES_DIR}/SPIRV-Tools-opt" 
-        "${CURRENT_PACKAGES_DIR}/SPIRV-Tools-reduce"
-    )
-endif()
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
@@ -85,4 +64,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
