@@ -83,8 +83,8 @@ macro(z_vcpkg_configure_make_common_definitions)
 endmacro()
 
 # Initializes well-known and auxiliary variables for flags
-# - ABI_FLAGS_<CONFIG>: ABI flags which must be included in CC/CXX to satisfy both configure and libtool
-# - CPPFLAGS_<CONFIG>:  preprocessor flags common to C and CXX
+# - ABIFLAGS_<CONFIG>: ABI flags which must be included in CC/CXX to satisfy both configure and libtool
+# - CPPFLAGS_<CONFIG>: preprocessor flags common to C and CXX
 # - CFLAGS_<CONFIG>
 # - CXXFLAGS_<CONFIG>
 # - LDFLAGS_<CONFIG>
@@ -104,7 +104,7 @@ function(z_vcpkg_configure_make_process_flags var_suffix)
     set(z_vcm_all_flags "${z_vcm_all_flags}" PARENT_SCOPE)
 
     # Filter abi flags out of CFLAGS, CXXFLAGS and LDFLAGS
-    vcpkg_list(SET ABI_FLAGS)
+    vcpkg_list(SET ABIFLAGS)
     set(pattern "")
     foreach(arg IN LISTS CFLAGS)
         if(arg STREQUAL "Z_VCM_WRAP")
@@ -119,7 +119,7 @@ function(z_vcpkg_configure_make_process_flags var_suffix)
         else()
             continue()
         endif()
-        vcpkg_list(APPEND ABI_FLAGS ${pattern})
+        vcpkg_list(APPEND ABIFLAGS ${pattern})
         string(REPLACE ";${pattern};" ";" CFLAGS "${CFLAGS}")
         string(REPLACE ";${pattern};" ";" CXXFLAGS "${CXXFLAGS}")
         string(REPLACE ";${pattern};" ";" LDFLAGS "${LDFLAGS}")
@@ -232,7 +232,7 @@ function(z_vcpkg_configure_make_process_flags var_suffix)
         vcpkg_list(PREPEND ARFLAGS "cr")
     endif()
 
-    foreach(var IN ITEMS ABI_FLAGS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS ARFLAGS)
+    foreach(var IN ITEMS ABIFLAGS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS ARFLAGS)
         list(JOIN ${var} " " string)
         set(${var}_${var_suffix} "${string}" PARENT_SCOPE)
     endforeach()
@@ -845,14 +845,14 @@ function(vcpkg_configure_make)
             set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
         endif()
 
-        # VCPKG_ABI_FLAGS isn't standard, but can be useful to reinject these flags into other variables
-        set(ENV{VCPKG_ABI_FLAGS} "${ABIFLAGS_${current_buildtype}}")
-        if(ABI_FLAGS_${current_buildtype})
+        # VCPKG_ABIFLAGS isn't standard, but can be useful to reinject these flags into other variables
+        set(ENV{VCPKG_ABIFLAGS} "${ABIFLAGS_${current_buildtype}}")
+        if(ABIFLAGS_${current_buildtype})
             # libtool removes some flags which are needed for configure tests.
-            set(ENV{CC} "$ENV{CC} ${ABI_FLAGS_${current_buildtype}}")
-            set(ENV{CXX} "$ENV{CXX} ${ABI_FLAGS_${current_buildtype}}")
-            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} ${ABI_FLAGS_${current_buildtype}}")
-            set(ENV{CXX_FOR_BUILD} "$ENV{CXX_FOR_BUILD} ${ABI_FLAGS_${current_buildtype}}")
+            set(ENV{CC} "$ENV{CC} ${ABIFLAGS_${current_buildtype}}")
+            set(ENV{CXX} "$ENV{CXX} ${ABIFLAGS_${current_buildtype}}")
+            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} ${ABIFLAGS_${current_buildtype}}")
+            set(ENV{CXX_FOR_BUILD} "$ENV{CXX_FOR_BUILD} ${ABIFLAGS_${current_buildtype}}")
         endif()
 
         if(LINK_ENV_${current_buildtype})
