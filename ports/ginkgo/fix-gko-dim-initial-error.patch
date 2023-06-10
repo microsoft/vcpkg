@@ -1,0 +1,14 @@
+diff --git a/core/base/mtx_io.cpp b/core/base/mtx_io.cpp
+index b8faf8c..fd03e6d 100644
+--- a/core/base/mtx_io.cpp
++++ b/core/base/mtx_io.cpp
+@@ -843,7 +843,8 @@ matrix_data<ValueType, IndexType> read_binary_convert(std::istream& is,
+         throw GKO_STREAM_ERROR(
+             "cannot read into this format, would assign complex to real");
+     }
+-    matrix_data<ValueType, IndexType> result(gko::dim<2>{num_rows, num_cols});
++    matrix_data<ValueType, IndexType> result(
++        gko::dim<2>{static_cast<std::size_t>(num_rows), static_cast<std::size_t>(num_cols)});
+     result.nonzeros.resize(num_entries);
+     constexpr auto entry_binary_size =
+         sizeof(FileValueType) + 2 * sizeof(FileIndexType);

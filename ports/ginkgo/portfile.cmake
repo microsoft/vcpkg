@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v1.5.0
     SHA512 5b76e240d27c24cbcd7292638da4748cfba39494784894fcffce63e0aff2cd7c5c24155ccd6fc6cdfab413b627afd1b2f9dc09a58d1e01bd4d5a25169f357041
     HEAD_REF master
+    PATCHES
+         fix-gko-dim-initial-error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
