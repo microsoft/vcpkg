@@ -1,35 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8980dab..2093b4b 100644
+index 8980dab..8b19ffe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -142,15 +142,14 @@ find_package(SELinux)
- find_package(SWIG)
- find_package(LibXml2 REQUIRED)
- find_package(LibXslt REQUIRED)
--find_package(XMLSEC REQUIRED)
-+find_package(unofficial-xmlsec CONFIG REQUIRED)
- if (APPLE)
- 	set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl/")
+@@ -148,9 +148,7 @@ if (APPLE)
  endif()
  find_package(OpenSSL REQUIRED)
  add_definitions(${XMLSEC_DEFINITIONS})
 -if (WIN32)
-+target_link_libraries(main PRIVATE unofficial::xmlsec::xmlsec1-openssl)
  	add_compile_definitions("XMLSEC_CRYPTO_OPENSSL")
 -endif()
  find_package(BZip2)
  
  # PThread
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9347087..3ac9b2e 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -127,7 +127,7 @@ endif()
- if(LIBYAML_FOUND)
- 	target_link_libraries(openscap ${LIBYAML_LIBRARIES})
- endif()
--
-+target_link_libraries(openscap unofficial::xmlsec::xmlsec1-openssl)
- if(WIN32)
- 	set(OPENSCAP_INSTALL_DESTINATION ".")
- else()
