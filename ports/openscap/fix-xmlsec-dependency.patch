@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8980dab..583b7a4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -142,15 +142,13 @@ find_package(SELinux)
+ find_package(SWIG)
+ find_package(LibXml2 REQUIRED)
+ find_package(LibXslt REQUIRED)
+-find_package(XMLSEC REQUIRED)
++find_package(unofficial-xmlsec CONFIG REQUIRED)
+ if (APPLE)
+ 	set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl/")
+ endif()
+ find_package(OpenSSL REQUIRED)
+ add_definitions(${XMLSEC_DEFINITIONS})
+-if (WIN32)
+-	add_compile_definitions("XMLSEC_CRYPTO_OPENSSL")
+-endif()
++target_link_libraries(main PRIVATE unofficial::xmlsec::xmlsec1-openssl)
+ find_package(BZip2)
+ 
+ # PThread

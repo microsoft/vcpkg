@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF dev
     PATCHES
         fix-build.patch
+        fix-xmlsec-dependency.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindThreads.cmake")
 
