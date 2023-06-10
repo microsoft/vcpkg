@@ -8501,7 +8501,7 @@
       "port-version": 1
     },
     "vulkan-memory-allocator-hpp": {
-      "baseline": "3.0.1-1",
+      "baseline": "3.0.1.1",
       "port-version": 0
     },
     "vvenc": {
