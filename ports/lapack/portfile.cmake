@@ -37,3 +37,4 @@ else()
         configure_file("${CMAKE_CURRENT_LIST_DIR}/lapack.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc" @ONLY)
     endif()
 endif()
+

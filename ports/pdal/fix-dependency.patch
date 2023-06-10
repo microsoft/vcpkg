@@ -1,9 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 42cca1e..43b0ced 100644
+index 1705a8426..248edcd38 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -266,7 +265,7 @@ target_include_directories(${PDAL_BASE_LIB_NAME}
- target_link_libraries(${PDAL_BASE_LIB_NAME}
+@@ -269,7 +269,7 @@ target_link_libraries(${PDAL_BASE_LIB_NAME}
      PRIVATE
          ${CMAKE_THREAD_LIBS_INIT}
          ${CMAKE_DL_LIBS}
@@ -13,7 +12,7 @@ index 42cca1e..43b0ced 100644
          ${LIBXML2_LIBRARIES}
          ${ZLIB_LIBRARIES}
 diff --git a/cmake/zstd.cmake b/cmake/zstd.cmake
-index bfaa5b2..e73ec9e 100644
+index dfe3dc024..42a78d646 100644
 --- a/cmake/zstd.cmake
 +++ b/cmake/zstd.cmake
 @@ -4,7 +4,14 @@
