@@ -20,7 +20,7 @@ index 8980dab..78d2b29 100644
  
  # PThread
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9347087..bbe8414 100644
+index 9347087..3ac9b2e 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -127,7 +127,7 @@ endif()
@@ -28,7 +28,7 @@ index 9347087..bbe8414 100644
  	target_link_libraries(openscap ${LIBYAML_LIBRARIES})
  endif()
 -
-+target_link_libraries(openscap PRIVATE unofficial::xmlsec::xmlsec1-openssl)
++target_link_libraries(openscap unofficial::xmlsec::xmlsec1-openssl)
  if(WIN32)
  	set(OPENSCAP_INSTALL_DESTINATION ".")
  else()
