@@ -1557,16 +1557,16 @@ teemo:x64-android=fail
 telnetpp:arm-uwp=fail
 telnetpp:x64-uwp=fail
 
-# tensorflow does not support VS2022
 tensorflow:x64-android=fail
-tensorflow:x64-windows-static-md=fail
+# tensorflow:x64-windows-static-md=fail
 # tensorflow:x64-windows-static fails in building the nasm debug variant
-tensorflow:x64-windows-static=fail
-tensorflow:x64-windows=fail
+# tensorflow:x64-windows-static=fail
+# tensorflow:x64-windows=fail
+# tensorflow-cc fails in link step, maybe VS2022 issue
 tensorflow-cc:x64-android=fail
-#?tensorflow-cc:x64-windows-static-md=fail
+tensorflow-cc:x64-windows-static-md=fail
 tensorflow-cc:x64-windows-static=fail
-#?tensorflow-cc:x64-windows=fail
+tensorflow-cc:x64-windows=fail
 # WIP, avoid rebuild due to vpckg caching quirk
 llvm:x64-windows=skip
 llvm:x64-windows-static=skip
