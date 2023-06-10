@@ -42,13 +42,13 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-vcpkg_download_distfile(program_path
+vcpkg_download_distfile(archive_path
     URLS ${download_urls}
     SHA512 "${download_sha512}"
     FILENAME "${download_filename}"
 )
 
-file(INSTALL "${program_path}"
+file(INSTALL "${archive_path}"
     DESTINATION "${CURRENT_PACKAGES_DIR}/tools"
     RENAME "${program}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
     FILE_PERMISSIONS

@@ -14,6 +14,10 @@ function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	endif()
 endfunction()
 
+vcpkg_find_acquire_program(GIT)
+get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
+vcpkg_add_to_path(PREPEND "${GIT_DIR}")
+
 string(FIND "${CURRENT_BUILDTREES_DIR}" " " POS)
 if(NOT POS EQUAL -1)
 	message(FATAL_ERROR "Your vcpkg path contains spaces. This is not supported by the bazel build tool. Aborting.")
@@ -25,26 +29,19 @@ if(CMAKE_HOST_WIN32)
 		message(WARNING "Your Windows username '$ENV{USERNAME}' contains spaces. Applying work-around to bazel. Be warned of possible further issues.")
 	endif()
 
+
+	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
+	vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
+	set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
+
+	set(ENV{BAZEL_SH} "${BASH}")
 	set(ENV{BAZEL_VC} "$ENV{VCInstallDir}")
 	set(ENV{BAZEL_VC_FULL_VERSION} "$ENV{VCToolsVersion}")
 
-	vcpkg_acquire_msys(MSYS_ROOT
-		PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy
-		DIRECT_PACKAGES
-			# use msys2 git, not another entry in PATH
-			"https://mirror.msys2.org/msys/x86_64/git-2.41.0-1-x86_64.pkg.tar.zst"
-			4b58c0b7d0e97b3840b96037fd67dd47c128d063e1f295015c842d29abe3274bf2df275f4996b23d7a4a2e211c63d037c80efaeacf995950a57f29a284a6e9c0
-	)
-
-	vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
-	set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
-	set(ENV{BAZEL_SH} "${BASH}")
-
 	vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/mingw64/bin")
 	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3.exe")
-	vcpkg_execute_required_process(COMMAND "${PYTHON3}" -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 else()
-	vcpkg_find_acquire_program(GIT)
 	vcpkg_find_acquire_program(PYTHON3)
 
 	# on macos arm64 use conda miniforge
@@ -154,11 +151,11 @@ else()
 	endif()
 endif()
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-  list(APPEND PORT_BUILD_CONFIGS "rel")
-endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   list(APPEND PORT_BUILD_CONFIGS "dbg")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  list(APPEND PORT_BUILD_CONFIGS "rel")
 endif()
 
 foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
@@ -224,8 +221,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
-			# list(APPEND BUILD_OPTS --compilation_mode=dbg --features=fastbuild) # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
-			list(APPEND BUILD_OPTS --compilation_mode=fastbuild) # debug build on Windows currently broken
+			list(APPEND BUILD_OPTS --compilation_mode=dbg --features=fastbuild) # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
@@ -278,6 +274,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		list(APPEND BUILD_OPTS --macos_minimum_os=10.14)
 	endif()
 
+	# Together with def-file-filter.patch, creates workaround for a broken step.
 	file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/tensorflow/tools/def_file_filter/def_file_filter.py.tpl" "${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
 	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{dumpbin_bin_path}]] [[dumpbin.exe]])
 	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{undname_bin_path}]] [[undname.exe]])
@@ -308,26 +305,27 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		LOGNAME "build-${TARGET_TRIPLET}-${BUILD_TYPE}"
 	)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-		set(args ${TF_VERSION} ${TF_LIB_SUFFIX})
+		set(args "${TF_VERSION}" "${TF_LIB_SUFFIX}")
 		if(VCPKG_TARGET_IS_WINDOWS)
-			set(args ${TF_LIB_SUFFIX})
+			set(args "${TF_LIB_SUFFIX}")
 		endif()
 		vcpkg_execute_build_process(
-			COMMAND "${PYTHON3}" "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${args}
-			WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow"
-			LOGNAME "postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}"
+			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" ${args}
+			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
+			LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
 		)
+		# The following command must use the err log file because
+		# bazel deliberately sends "informative logs" to stderr.
 		# Cf. https://github.com/bazelbuild/bazel/issues/10496#issuecomment-664998097
-		# Bazel deliberately sends "informative logs" to stderr, so use err log file in the following command
 		vcpkg_execute_build_process(
-			COMMAND "${PYTHON3}" "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow" ${TF_VERSION} ${TF_LIB_SUFFIX}
-			WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}"
-			LOGNAME "postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}"
+			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow" ${TF_VERSION} ${TF_LIB_SUFFIX}
+			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
+			LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
 		)
 		vcpkg_execute_build_process(
 			COMMAND ${STATIC_LINK_CMD}
-			WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}"
-			LOGNAME "postbuild3-${TARGET_TRIPLET}-${BUILD_TYPE}"
+			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
+			LOGNAME postbuild3-${TARGET_TRIPLET}-${BUILD_TYPE}
 		)
 	endif()
 
