@@ -7561,7 +7561,7 @@
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.7.4.3",
+      "baseline": "5.7.5",
       "port-version": 0
     },
     "soci": {
