@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8980dab..d6bd12b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -148,9 +148,7 @@ if (APPLE)
+ endif()
+ find_package(OpenSSL REQUIRED)
+ add_definitions(${XMLSEC_DEFINITIONS})
+-if (WIN32)
+ 	add_compile_definitions("XMLSEC_CRYPTO_OPENSSL")
+-endif()
+ find_package(BZip2)
+ 
+ # PThread
+@@ -605,14 +603,6 @@ if(NOT WIN32)
+ 		${CMAKE_CURRENT_BINARY_DIR}/libopenscap.pc
+ 		DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+ 	)
+-	if(WITH_SYSTEMD)
+-		# systemd service for offline (boot-time) remediation
+-		configure_file("oscap-remediate.service.in" "oscap-remediate.service" @ONLY)
+-		install(FILES
+-			${CMAKE_CURRENT_BINARY_DIR}/oscap-remediate.service
+-			DESTINATION ${SYSTEMD_UNITDIR}
+-		)
+-	endif()
+ endif()
+ 
+ # changelog
