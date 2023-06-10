@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8980dab..78d2b29 100644
+index 8980dab..2093b4b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -142,15 +142,12 @@ find_package(SELinux)
+@@ -142,15 +142,14 @@ find_package(SELinux)
  find_package(SWIG)
  find_package(LibXml2 REQUIRED)
  find_package(LibXslt REQUIRED)
@@ -14,7 +14,8 @@ index 8980dab..78d2b29 100644
  find_package(OpenSSL REQUIRED)
  add_definitions(${XMLSEC_DEFINITIONS})
 -if (WIN32)
--	add_compile_definitions("XMLSEC_CRYPTO_OPENSSL")
++target_link_libraries(main PRIVATE unofficial::xmlsec::xmlsec1-openssl)
+ 	add_compile_definitions("XMLSEC_CRYPTO_OPENSSL")
 -endif()
  find_package(BZip2)
  
