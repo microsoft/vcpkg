@@ -288,9 +288,10 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS_NO_PATHCONV=1" "MSYS2_ARG_CONV_EXCL=*")
 		list(APPEND BUILD_OPTS --features=fully_static_link)
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
+			# Not applying static CRT linkage to host tools.
 			if(BUILD_TYPE STREQUAL "dbg")
-				list(APPEND COPTS --copt=-MTd --host_copt=-MD)
-				list(APPEND CXXOPTS --cxxopt=-MTd --host_cxxopt=-MD)
+				list(APPEND COPTS --copt=-MTd --host_copt=-MDd)
+				list(APPEND CXXOPTS --cxxopt=-MTd --host_cxxopt=-MDd)
 				list(APPEND LINKOPTS
 					--linkopt=/NODEFAULTLIB:libucrt.lib
 					--linkopt=/NODEFAULTLIB:libvcruntime.lib
