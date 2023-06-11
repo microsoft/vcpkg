@@ -289,15 +289,18 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	vcpkg_list(SET SETUP_ENV)
 	if(VCPKG_TARGET_IS_WINDOWS)
 		vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS_NO_PATHCONV=1" "MSYS2_ARG_CONV_EXCL=*")
-		list(APPEND BUILD_OPTS "--features=fully_static_link")
+		list(APPEND BUILD_OPTS --features=fully_static_link)
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
-			list(APPEND BUILD_OPTS "--features=static_link_msvcrt")
+			list(APPEND BUILD_OPTS --features=static_link_msvcrt)
 			if(BUILD_TYPE STREQUAL "dbg")
-				list(APPEND COPTS "--copt=-MTd")
-				list(APPEND CXXOPTS "--cxxopt=-MTd")
-			else()
-				list(APPEND COPTS "--copt=-MT")
-				list(APPEND CXXOPTS "--cxxopt=-MT")
+				list(APPEND COPTS --copt=-MTd)
+				list(APPEND CXXOPTS --cxxopt=-MTd)
+				list(APPEND LINKOPTS
+					--linkopt=/NODEFAULTLIB:libucrt.lib
+					--linkopt=/NODEFAULTLIB:libvcruntime.lib
+					--linkopt=/NODEFAULTLIB:libcmt.lib
+					--linkopt=/NODEFAULTLIB:libcpmt.lib
+				)
 			endif()
 		endif()
 		# Together with def-file-filter.patch, creates workaround for a general windows build errors.
