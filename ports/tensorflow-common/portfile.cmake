@@ -8,7 +8,6 @@ set(TENSORFLOW_FILES
     "${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch"
     "${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch"
     "${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch"
-    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-nasm.patch"
     "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_linux.py"
     "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_macos.py"
     "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_windows.py"
