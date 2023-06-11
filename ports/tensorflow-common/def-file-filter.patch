@@ -7,7 +7,7 @@ index 19ee800..cf93f36 100644
      cmd = select({
          "//tensorflow:windows": """
 -              $(location @local_config_def_file_filter//:def_file_filter) \\
-+              $${PYTHON_BIN_PATH} $${DEF_FILE_FILTER} \\
++              $${PYTHON_BIN_PATH} $${VCPKG_DEF_FILE_FILTER} \\
                --input $(location :tensorflow_def_file) \\
                --output $@
            """,

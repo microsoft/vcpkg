@@ -29,15 +29,17 @@ if(CMAKE_HOST_WIN32)
 		message(WARNING "Your Windows username '$ENV{USERNAME}' contains spaces. Applying work-around to bazel. Be warned of possible further issues.")
 	endif()
 
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
-	vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
-	set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
+	vcpkg_find_acquire_program(NASM)
 
-	set(ENV{BAZEL_SH} "${BASH}")
+	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
+	cmake_path(CONVERT "${MSYS_ROOT}" TO_NATIVE_PATH_LIST MSYS_ROOT_NATIVE)
+	vcpkg_add_to_path(PREPEND "${MSYS_ROOT_NATIVE}\\usr\\bin")
+	vcpkg_add_to_path(PREPEND "${MSYS_ROOT_NATIVE}\\mingw64\\bin")
+
+	set(ENV{BAZEL_SH} "${MSYS_ROOT}/usr/bin/bash.exe")
 	set(ENV{BAZEL_VC} "$ENV{VCInstallDir}")
 	set(ENV{BAZEL_VC_FULL_VERSION} "$ENV{VCToolsVersion}")
 
-	vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/mingw64/bin")
 	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3.exe")
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 else()
@@ -159,13 +161,19 @@ endif()
 
 foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks
-	set(STATIC_ONLY_PATCHES)
-	set(WINDOWS_ONLY_PATCHES)
-	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-		set(STATIC_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/change-macros-for-static-lib.patch")  # there is no static build option - change macros via patch and link library manually at the end
+	vcpkg_list(SET extra_patches)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+		vcpkg_list(APPEND extra_patches
+			# there is no static build option - change macros via patch and link library manually at the end
+			"${CMAKE_CURRENT_LIST_DIR}/change-macros-for-static-lib.patch"
+		)
 	endif()
 	if(VCPKG_TARGET_IS_WINDOWS)
-		set(WINDOWS_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch")
+		vcpkg_list(APPEND extra_patches
+			"${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch"
+			"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch" # pylauncher mingw quirks
+			"${CMAKE_CURRENT_LIST_DIR}/vcpkg-nasm.patch" # nasm x64-windows-static quirks
+		)
 	endif()
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
@@ -175,9 +183,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
-			"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch" # pylauncher mingw quirks
-			${STATIC_ONLY_PATCHES}
-			${WINDOWS_ONLY_PATCHES}
+			${extra_patches}
 	)
 
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
@@ -274,12 +280,6 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		list(APPEND BUILD_OPTS --macos_minimum_os=10.14)
 	endif()
 
-	# Together with def-file-filter.patch, creates workaround for a broken step.
-	file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/tensorflow/tools/def_file_filter/def_file_filter.py.tpl" "${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
-	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{dumpbin_bin_path}]] [[dumpbin.exe]])
-	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{undname_bin_path}]] [[undname.exe]])
-	list(APPEND BUILD_OPTS --action_env "DEF_FILE_FILTER=${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
-
 	list(APPEND BUILD_OPTS
 		"--python_path=${PYTHON3}"
 		--define=no_tensorflow_py_deps=true
@@ -293,6 +293,14 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
 			list(APPEND BUILD_OPTS "--features=static_link_msvcrt")
 		endif()
+		# Together with def-file-filter.patch, creates workaround for a general windows build errors.
+		set(vcpkg_def_file_filter "${CURRENT_BUILDTREES_DIR}/def_file_filter-${TARGET_TRIPLET}.py.log")
+		file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/tensorflow/tools/def_file_filter/def_file_filter.py.tpl" "${vcpkg_def_file_filter}")
+		vcpkg_replace_string("${vcpkg_def_file_filter}" [[%{dumpbin_bin_path}]] [[dumpbin.exe]])
+		vcpkg_replace_string("${vcpkg_def_file_filter}" [[%{undname_bin_path}]] [[undname.exe]])
+		list(APPEND BUILD_OPTS --action_env "VCPKG_DEF_FILE_FILTER=${vcpkg_def_file_filter}")
+		# Together with vcpkg-nasm.patch, creates workaround for a nasm build error on x64-windows-static.
+		list(APPEND BUILD_OPTS --action-env "VCPKG_NASM=${NASM}")
 	endif()
 	# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 	vcpkg_execute_build_process(
