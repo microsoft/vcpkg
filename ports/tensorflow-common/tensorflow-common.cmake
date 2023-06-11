@@ -234,6 +234,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		else()
 			list(APPEND BUILD_OPTS --compilation_mode=dbg)
 		endif()
+		list(APPEND BUILD_OPTS --features=dbg)
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
 		separate_arguments(VCPKG_C_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_DEBUG})
@@ -288,20 +289,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS_NO_PATHCONV=1" "MSYS2_ARG_CONV_EXCL=*")
 		list(APPEND BUILD_OPTS --features=fully_static_link)
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
-			# Not applying static CRT linkage to host tools.
-			if(BUILD_TYPE STREQUAL "dbg")
-				list(APPEND COPTS --copt=-MTd)
-				list(APPEND CXXOPTS --cxxopt=-MTd)
-				list(APPEND LINKOPTS
-					--linkopt=/NODEFAULTLIB:libucrt.lib
-					--linkopt=/NODEFAULTLIB:libvcruntime.lib
-					--linkopt=/NODEFAULTLIB:libcmt.lib
-					--linkopt=/NODEFAULTLIB:libcpmt.lib
-				)
-			else()
-				list(APPEND COPTS --copt=-MT)
-				list(APPEND CXXOPTS --cxxopt=-MT)
-			endif()
+			list(APPEND BUILD_OPTS --features=static_link_msvcrt)
 		endif()
 		# Together with def-file-filter.patch, creates workaround for a general windows build errors.
 		set(vcpkg_def_file_filter "${CURRENT_BUILDTREES_DIR}/def_file_filter-${TARGET_TRIPLET}.py.log")
