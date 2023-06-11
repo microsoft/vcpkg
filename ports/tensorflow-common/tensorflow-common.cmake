@@ -300,7 +300,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		vcpkg_replace_string("${vcpkg_def_file_filter}" [[%{undname_bin_path}]] [[undname.exe]])
 		list(APPEND BUILD_OPTS --action_env "VCPKG_DEF_FILE_FILTER=${vcpkg_def_file_filter}")
 		# Together with vcpkg-nasm.patch, creates workaround for a nasm build error on x64-windows-static.
-		list(APPEND BUILD_OPTS --action-env "VCPKG_NASM=${NASM}")
+		list(APPEND BUILD_OPTS --action_env "VCPKG_NASM=${NASM}")
 	endif()
 	# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 	vcpkg_execute_build_process(
