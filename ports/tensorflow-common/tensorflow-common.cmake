@@ -293,7 +293,12 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		list(APPEND BUILD_OPTS --features=fully_static_link)
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
 			if(BUILD_TYPE STREQUAL "debug")
-				list(APPEND BUILD_OPTS --features=static_link_msvcrt_debug) # requires --features=dbg, already set
+				list(APPEND BUILD_OPTS
+					# requires --features=dbg, already set
+					--features=static_link_msvcrt_debug
+					--features=-static_link_msvcrt_no_debug
+					--features=-dynamic_link_msvcrt_no_debug
+				)
 			else()
 				list(APPEND BUILD_OPTS --features=static_link_msvcrt_no_debug)
 			endif()
