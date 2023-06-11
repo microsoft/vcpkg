@@ -289,8 +289,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		list(APPEND BUILD_OPTS --features=fully_static_link)
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
 			if(BUILD_TYPE STREQUAL "dbg")
-				list(APPEND COPTS --copt=-MTd)
-				list(APPEND CXXOPTS --cxxopt=-MTd)
+				list(APPEND COPTS --copt=-MTd --host_copt=-MT)
+				list(APPEND CXXOPTS --cxxopt=-MTd --host_cxxopt=-MT)
 				list(APPEND LINKOPTS
 					--linkopt=/NODEFAULTLIB:libucrt.lib
 					--linkopt=/NODEFAULTLIB:libvcruntime.lib
