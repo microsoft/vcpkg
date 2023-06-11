@@ -214,10 +214,10 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 
 	message(STATUS "Warning: Building TensorFlow can take an hour or more.")
-	set(COPTS)
-	set(CXXOPTS)
-	set(LINKOPTS)
 	set(BUILD_OPTS --jobs=${VCPKG_CONCURRENCY} --config=opt)
+	set(COPTS "")
+	set(CXXOPTS "")
+	set(LINKOPTS "")
 	message(STATUS "Build Tensorflow with concurrent level: ${VCPKG_CONCURRENCY}")
 	if(VCPKG_TARGET_IS_WINDOWS)
 		set(PLATFORM_COMMAND WINDOWS_COMMAND)
@@ -227,7 +227,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			#list(APPEND BUILD_OPTS --compilation_mode=dbg --features=fastbuild) # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
-			list(APPEND BUILD_OPTS --compilation_mode=fastbuild)
+			list(APPEND BUILD_OPTS --compilation_mode=dbg)
+			list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK)
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
@@ -292,16 +293,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS_NO_PATHCONV=1" "MSYS2_ARG_CONV_EXCL=*")
 		list(APPEND BUILD_OPTS --features=fully_static_link)
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
-			if(BUILD_TYPE STREQUAL "debug")
-				list(APPEND BUILD_OPTS
-					# requires --features=dbg, already set
-					--features=static_link_msvcrt_debug
-					--features=-static_link_msvcrt_no_debug
-					--features=-dynamic_link_msvcrt_no_debug
-				)
-			else()
-				list(APPEND BUILD_OPTS --features=static_link_msvcrt_no_debug)
-			endif()
+			list(APPEND BUILD_OPTS --features=static_link_msvcrt)
 		endif()
 		# Together with def-file-filter.patch, creates workaround for a general windows build errors.
 		set(vcpkg_def_file_filter "${CURRENT_BUILDTREES_DIR}/def_file_filter-${TARGET_TRIPLET}.py.log")
