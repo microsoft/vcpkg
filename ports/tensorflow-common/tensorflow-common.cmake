@@ -297,6 +297,9 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 					--linkopt=/NODEFAULTLIB:libcmt.lib
 					--linkopt=/NODEFAULTLIB:libcpmt.lib
 				)
+			else()
+				list(APPEND COPTS --copt=-MT)
+				list(APPEND CXXOPTS --cxxopt=-MT)
 			endif()
 		endif()
 		# Together with def-file-filter.patch, creates workaround for a general windows build errors.
