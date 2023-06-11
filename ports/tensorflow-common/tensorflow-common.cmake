@@ -29,7 +29,6 @@ if(CMAKE_HOST_WIN32)
 		message(WARNING "Your Windows username '$ENV{USERNAME}' contains spaces. Applying work-around to bazel. Be warned of possible further issues.")
 	endif()
 
-
 	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
 	vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
 	set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
@@ -221,7 +220,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
-			list(APPEND BUILD_OPTS --compilation_mode=dbg --features=fastbuild) # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
+			#list(APPEND BUILD_OPTS --compilation_mode=dbg --features=fastbuild) # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
+			list(APPEND BUILD_OPTS --compilation_mode=fastbuild)
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
@@ -288,7 +288,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 
 	vcpkg_list(SET SETUP_ENV)
 	if(VCPKG_TARGET_IS_WINDOWS)
-		vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS2_ARG_CONV_EXCL=*")
+		vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS_NO_PATHCONV=1" "MSYS2_ARG_CONV_EXCL=*")
 		list(APPEND BUILD_OPTS "--features=fully_static_link")
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
 			list(APPEND BUILD_OPTS "--features=static_link_msvcrt")
