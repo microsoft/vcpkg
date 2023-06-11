@@ -21,7 +21,7 @@ vcpkg_extract_source_archive(
 )
 
 file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
-string(REGEX MATCH "python3\\.([0-9]+)" p_version ${p})
+string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
 set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
 
 vcpkg_replace_string("${SOURCE_PATH}/configure.ac" "python_version=3.REPLACEME" "python_version=3.${PYTHON_VERSION_MINOR}")

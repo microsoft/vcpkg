@@ -19,7 +19,7 @@
     <VcpkgLz4Libs>@CURRENT_INSTALLED_DIR@/lib/lz4.lib</VcpkgLz4Libs>
     <VcpkgNlsLibs>@CURRENT_INSTALLED_DIR@/lib/intl.lib;@CURRENT_INSTALLED_DIR@/lib/iconv.lib;@CURRENT_INSTALLED_DIR@/lib/charset.lib</VcpkgNlsLibs>
     <VcpkgOpensslLibs>@CURRENT_INSTALLED_DIR@/lib/libssl.lib;@CURRENT_INSTALLED_DIR@/lib/libcrypto.lib;crypt32.lib;ws2_32.lib;secur32.lib</VcpkgOpensslLibs>
-    <VcpkgPythonLibs>@CURRENT_INSTALLED_DIR@/lib/python33@PYTHON_VERSION_MINOR@.lib</VcpkgPythonLibs>
+    <VcpkgPythonLibs>@CURRENT_INSTALLED_DIR@/lib/python3@PYTHON_VERSION_MINOR@.lib</VcpkgPythonLibs>
     <VcpkgTcl90Libs>@CURRENT_INSTALLED_DIR@/lib/tcl90.lib</VcpkgTcl90Libs>
     <VcpkgTcl90sLibs>@CURRENT_INSTALLED_DIR@/lib/tcl90s.lib</VcpkgTcl90sLibs>
     <VcpkgTcl90sxLibs>@CURRENT_INSTALLED_DIR@/lib/tcl90sx.lib</VcpkgTcl90sxLibs>
