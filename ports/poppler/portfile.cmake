@@ -24,8 +24,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zlib        CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
         glib        ENABLE_GLIB
         glib        CMAKE_REQUIRE_FIND_PACKAGE_GLIB
-        glib        CMAKE_REQUIRE_FIND_PACKAGE_GObjectIntrospection
-        glib        CMAKE_REQUIRE_FIND_PACKAGE_GTK
         qt          ENABLE_QT6
         qt          CMAKE_REQUIRE_FIND_PACKAGE_Qt6
         lcms2       CMAKE_REQUIRE_FIND_PACKAGE_LCMS2
@@ -75,6 +73,8 @@ vcpkg_cmake_configure(
         -DCMAKE_REQUIRE_FIND_PACKAGE_TIFF=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_PNG=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_Boost=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_GObjectIntrospection=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_GTK=ON
         ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
