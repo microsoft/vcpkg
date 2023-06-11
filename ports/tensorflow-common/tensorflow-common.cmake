@@ -310,7 +310,9 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 					"//tensorflow:install_headers"
 		WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
 		LOGNAME "build-${TARGET_TRIPLET}-${BUILD_TYPE}"
-		SAVE_LOG_FILES bazel-out/x64_windows-fastbuild/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
+		SAVE_LOG_FILES
+			bazel-out/x64_windows-fastbuild/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
+			bazel-out/x64_windows-opt-exec-50AE0418/bin/external/llvm-project/mlir/mlir-tblgen.exe-2.params
 	)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 		set(args "${TF_VERSION}" "${TF_LIB_SUFFIX}")
