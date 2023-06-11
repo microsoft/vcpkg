@@ -304,7 +304,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		list(APPEND BUILD_OPTS --action_env "VCPKG_NASM=${NASM}")
 	endif()
 	# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
-	vcpkg_execute_build_process(
+	vcpkg_execute_required_process(
 		COMMAND ${SETUP_ENV}
 			"${BAZEL}" "--output_user_root=${CURRENT_BUILDTREES_DIR}/_bzl" --max_idle_secs=1
 				build --subcommands --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS}
@@ -312,6 +312,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 					"//tensorflow:install_headers"
 		WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
 		LOGNAME "build-${TARGET_TRIPLET}-${BUILD_TYPE}"
+		SAVE_LOG_FILES bazel-out/x64_windows-fastbuild/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
 	)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 		set(args "${TF_VERSION}" "${TF_LIB_SUFFIX}")
