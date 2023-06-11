@@ -292,7 +292,11 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS_NO_PATHCONV=1" "MSYS2_ARG_CONV_EXCL=*")
 		list(APPEND BUILD_OPTS --features=fully_static_link)
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
-			list(APPEND BUILD_OPTS --features=static_link_msvcrt)
+			if(BUILD_TYPE STREQUAL "debug")
+				list(APPEND BUILD_OPTS --features=static_link_msvcrt_debug) # requires --features=dbg, already set
+			else()
+				list(APPEND BUILD_OPTS --features=static_link_msvcrt_no_debug)
+			endif()
 		endif()
 		# Together with def-file-filter.patch, creates workaround for a general windows build errors.
 		set(vcpkg_def_file_filter "${CURRENT_BUILDTREES_DIR}/def_file_filter-${TARGET_TRIPLET}.py.log")
