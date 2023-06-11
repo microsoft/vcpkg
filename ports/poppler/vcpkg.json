@@ -83,7 +83,7 @@
         }
       ]
     },
-    "lcms2": {
+    "cms": {
       "description": "Enable use of LCMS2 as color management system",
       "dependencies": [
         "lcms"
