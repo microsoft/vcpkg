@@ -290,8 +290,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
 			# Not applying static CRT linkage to host tools.
 			if(BUILD_TYPE STREQUAL "dbg")
-				list(APPEND COPTS --copt=-MTd --host_copt=-MDd)
-				list(APPEND CXXOPTS --cxxopt=-MTd --host_cxxopt=-MDd)
+				list(APPEND COPTS --copt=-MTd)
+				list(APPEND CXXOPTS --cxxopt=-MTd)
 				list(APPEND LINKOPTS
 					--linkopt=/NODEFAULTLIB:libucrt.lib
 					--linkopt=/NODEFAULTLIB:libvcruntime.lib
@@ -299,8 +299,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 					--linkopt=/NODEFAULTLIB:libcpmt.lib
 				)
 			else()
-				list(APPEND COPTS --copt=-MT --host_copt=-MD)
-				list(APPEND CXXOPTS --cxxopt=-MT --host_cxxopt=-MD)
+				list(APPEND COPTS --copt=-MT)
+				list(APPEND CXXOPTS --cxxopt=-MT)
 			endif()
 		endif()
 		# Together with def-file-filter.patch, creates workaround for a general windows build errors.
