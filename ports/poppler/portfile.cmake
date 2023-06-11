@@ -16,11 +16,19 @@ set(POPPLER_PC_REQUIRES "freetype2 libjpeg libopenjp2 libpng libtiff-4 poppler-v
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cairo       WITH_Cairo
+        cairo       CMAKE_REQUIRE_FIND_PACKAGE_CAIRO
         curl        ENABLE_LIBCURL
+        curl        CMAKE_REQUIRE_FIND_PACKAGE_CURL
         private-api ENABLE_UNSTABLE_API_ABI_HEADERS
         zlib        ENABLE_ZLIB
-        glib        ENABLE_GLIB 
+        zlib        CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
+        glib        ENABLE_GLIB
+        glib        CMAKE_REQUIRE_FIND_PACKAGE_GLIB
+        glib        CMAKE_REQUIRE_FIND_PACKAGE_GObjectIntrospection
+        glib        CMAKE_REQUIRE_FIND_PACKAGE_GTK
         qt          ENABLE_QT6
+        qt          CMAKE_REQUIRE_FIND_PACKAGE_Qt6
+        lcms2       CMAKE_REQUIRE_FIND_PACKAGE_LCMS2
 )
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=fontconfig")
@@ -61,6 +69,12 @@ vcpkg_cmake_configure(
         -DRUN_GPERF_IF_PRESENT=OFF
         -DENABLE_RELOCATABLE=OFF # https://gitlab.freedesktop.org/poppler/poppler/-/issues/1209
         -DWITH_NSS3=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_ECM=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_JPEG=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_TIFF=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_PNG=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_Boost=ON
         ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
