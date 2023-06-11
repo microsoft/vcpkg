@@ -32,7 +32,7 @@ function(build_msvc build_type source_path)
         file(STRINGS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/openssl.pc" OPENSSL_VERSION REGEX "Version:")
         string(APPEND config "\$config->{openssl_version} = '${OPENSSL_VERSION}';\n")
     endif()
-    string(APPEND config "\$config->{python_version} = '3.10';\n")
+    string(APPEND config "\$config->{python_version} = '3.${PYTHON_VERSION_MINOR}';\n")
     string(APPEND config "\$config->{tcl_version} = '90';\n")
     file(WRITE "${build_path}/src/tools/msvc/config.pl" "${config}")
 
