@@ -38,6 +38,12 @@
         }
       ]
     },
+    "cms": {
+      "description": "Enable use of LCMS2 as color management system",
+      "dependencies": [
+        "lcms"
+      ]
+    },
     "curl": {
       "description": "curl for poppler",
       "dependencies": [
@@ -81,12 +87,6 @@
             "cairo"
           ]
         }
-      ]
-    },
-    "cms": {
-      "description": "Enable use of LCMS2 as color management system",
-      "dependencies": [
-        "lcms"
       ]
     },
     "private-api": {
