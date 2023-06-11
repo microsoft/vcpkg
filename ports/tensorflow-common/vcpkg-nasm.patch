@@ -1,0 +1,30 @@
+diff --git a/third_party/jpeg/jpeg.BUILD b/third_party/jpeg/jpeg.BUILD
+index cc17e06..b85ba56 100644
+--- a/third_party/jpeg/jpeg.BUILD
++++ b/third_party/jpeg/jpeg.BUILD
+@@ -300,7 +300,7 @@ genrule(
+         "simd/x86_64/jsimdcpu.o",
+     ],
+     cmd = "for out in $(OUTS); do\n" +
+-          "  $(location @nasm//:nasm) -f elf64" +
++          "  $${VCPKG_NASM} -f elf64" +
+           "    -DELF -DPIC -D__x86_64__" +
+           "    -I $$(dirname $(location jconfig.h))/" +
+           "    -I $$(dirname $(location jconfigint.h))/" +
+@@ -309,7 +309,6 @@ genrule(
+           "    -o $$out" +
+           "    $$(dirname $(location simd/x86_64/jccolext-sse2.asm))/$$(basename $${out%.o}.asm)\n" +
+           "done",
+-    tools = ["@nasm"],
+ )
+ 
+ template_rule(
+@@ -502,7 +501,7 @@ genrule(
+         "simd/x86_64/jsimdcpu.obj",
+     ],
+     cmd = "for out in $(OUTS); do\n" +
+-          "  $(location @nasm//:nasm) -fwin64 -DWIN64 -D__x86_64__" +
++          "  $${VCPKG_NASM} -fwin64 -DWIN64 -D__x86_64__" +
+           "    -I $$(dirname $(location simd/x86_64/jccolext-sse2.asm))/" +
+           "    -I $$(dirname $(location simd/nasm/jdct.inc))/" +
+           "    -I $$(dirname $(location simd/nasm/jdct.inc))/../../win/" +

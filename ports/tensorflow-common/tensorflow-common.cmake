@@ -29,6 +29,8 @@ if(CMAKE_HOST_WIN32)
 		message(WARNING "Your Windows username '$ENV{USERNAME}' contains spaces. Applying work-around to bazel. Be warned of possible further issues.")
 	endif()
 
+	vcpkg_find_acquire_program(NASM)
+
 	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
 	cmake_path(CONVERT "${MSYS_ROOT}" TO_NATIVE_PATH_LIST MSYS_ROOT_NATIVE)
 	vcpkg_add_to_path(PREPEND "${MSYS_ROOT_NATIVE}\\usr\\bin")
@@ -170,6 +172,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		vcpkg_list(APPEND extra_patches
 			"${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch"
 			"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch" # pylauncher mingw quirks
+			"${CMAKE_CURRENT_LIST_DIR}/vcpkg-nasm.patch" # nasm x64-windows-static quirks
 		)
 	endif()
 	vcpkg_from_github(
@@ -297,6 +300,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		vcpkg_replace_string("${vcpkg_def_file_filter}" [[%{dumpbin_bin_path}]] [[dumpbin.exe]])
 		vcpkg_replace_string("${vcpkg_def_file_filter}" [[%{undname_bin_path}]] [[undname.exe]])
 		list(APPEND BUILD_OPTS --action_env "VCPKG_DEF_FILE_FILTER=${vcpkg_def_file_filter}")
+		# Together with vcpkg-nasm.patch, creates workaround for a nasm build error on x64-windows-static.
+		list(APPEND BUILD_OPTS --action_env "VCPKG_NASM=${NASM}")
 	endif()
 	# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
 	vcpkg_execute_build_process(
