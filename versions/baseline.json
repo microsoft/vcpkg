@@ -2416,6 +2416,10 @@
       "baseline": "4.0.0",
       "port-version": 0
     },
+    "fastbuild": {
+      "baseline": "1.10",
+      "port-version": 0
+    },
     "fastcdr": {
       "baseline": "1.0.26",
       "port-version": 0
