@@ -9,16 +9,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alandefreitas/matplotplusplus
-    REF "v${VERSION}"
-    SHA512 9193381fd9d4925259f28a03da33231b3da1273237e7510b93da1ca076610455746feb4ea0d8aa9a4a9e46a5f5f344fc1322f7ffc57963837dbe8b0be0b811ac
+    REF 77de308584674654731fc1af0fdec86d02684b60 # v1.2.0 with patches merged upstream
+    SHA512 ecf2edb7e9c6bdb8a94a135465a5ddaa6bc7db1e14c35ad4dace29dcf53b4c178ff21affd44cd92aab30c88563cffe4edcd6bdb2a2ccdfb37607c864f2f0ac81
     HEAD_REF master
     PATCHES
         install-3rd-libraries.patch # Remove this patch when nodesoup is added in vcpkg
         fix-dependencies.patch
-        feat-support-OpenGL-dependencies-with-config.patch
-        # remove these for the next version as they are already merged upstream
-        fix-pass-filesystem-s-required-flags-for-osx-failure.patch
-        fix-fix-build-on-MacOS-when-FindFileSystem-fails.patch
 )
 
 vcpkg_check_features(
