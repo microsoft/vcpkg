@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         winpcap.patch
+        disable-werror.patch
 )
 
 vcpkg_cmake_configure(
