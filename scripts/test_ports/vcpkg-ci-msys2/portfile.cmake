@@ -3,6 +3,7 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 set(msys_repo_url    "https://mirror.msys2.org/msys/x86_64")
 set(mingw64_repo_url "https://mirror.msys2.org/mingw/mingw64")
 set(mingw32_repo_url "https://mirror.msys2.org/mingw/mingw32")
+set(clangarm64_repo_url "https://mirror.msys2.org/mingw/clangarm64")
 
 # Ignore these updates (e.g. for known problems)
 vcpkg_list(SET ignored_packages
@@ -165,6 +166,8 @@ function(analyze_package_list list_var script)
             set(repo "mingw64")
         elseif(name MATCHES "^mingw-w64-i686")
             set(repo "mingw32")
+        elseif(name MATCHES "^mingw-w64-clang-aarch64")
+            set(repo "clangarm64")
         endif()
 
         file(GLOB files "${${repo}_repo_files}/${name}-*/desc")
@@ -305,7 +308,7 @@ endfunction()
 
 message(STATUS "*** Downloading current msys2 package lists")
 string(TIMESTAMP stamp "%Y-%m-%d" UTC)
-foreach(repo IN ITEMS msys mingw32 mingw64)
+foreach(repo IN ITEMS msys mingw32 mingw64 clangarm64)
     string(REPLACE "/" "-" local_file "msys2-${stamp}-${repo}.files")
     set(archive "${DOWNLOADS}/${local_file}")
     vcpkg_download_distfile(repo_files_archive
