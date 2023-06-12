@@ -149,7 +149,7 @@ index 5817066..9389435 100644
  URL: @CMAKE_PROJECT_HOMEPAGE_URL@
 -Libs: -L${libdir} -lre
 -Libs.private: -L${libdir} -lre -ldl -lssl -lcrypto -lz -lpthread
-+Libs: -L${libdir} -lre@PC_LIBNAME_SUFFIX@
++Libs: -L${libdir} -l@PC_LIBNAME@
 +Libs.private: @PC_LINKLIBS@
 +Requires.private: @PC_REQUIRES@
  Cflags: -I${includedir}
