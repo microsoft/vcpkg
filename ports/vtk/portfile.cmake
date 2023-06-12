@@ -40,6 +40,7 @@ vcpkg_from_github(
         iotr.patch
         ${STRING_PATCH}
         9690.diff
+        missing-include-fixes.patch
 )
 
 # =============================================================================
