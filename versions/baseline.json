@@ -2585,8 +2585,8 @@
       "port-version": 0
     },
     "foonathan-memory": {
-      "baseline": "2019-07-21",
-      "port-version": 4
+      "baseline": "0.7.3",
+      "port-version": 0
     },
     "forest": {
       "baseline": "12.1.0",
