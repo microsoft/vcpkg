@@ -2,7 +2,7 @@
   "name": "flashlight-sequence",
   "version": "0.0.1",
   "description": "Flashlight Sequence is a library containing fast implementations of sequence loss algorithms.",
-  "homepage": "https://github.com/jacobkahn/sequence",
+  "homepage": "https://github.com/flashlight/sequence",
   "license": "MIT",
   "dependencies": [
     {
