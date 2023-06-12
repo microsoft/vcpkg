@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenSCAP/openscap
-    REF 3eccd5c064b9b152fe14a95b3534c60e003be17f #1.3.6
+    REF ${VERSION}
     SHA512 ceffe9775accc9afc69fdab07fa4112a2519d7e5366b80ec6932c6fcfad589772601ef4042d8a3389682a1fb4901d63cf586e76a8f3276251bc2d926560188d9
     HEAD_REF dev
     PATCHES
@@ -46,4 +46,4 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 #Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
