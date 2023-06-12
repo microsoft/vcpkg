@@ -21,10 +21,10 @@ function(vcpkg_find_acquire_python3_interpreter out_var)
                 OUT_EXTRACTED_ROOT out_extract_root
                 TOOL_NAME python
                 VERSION ${program_version}
-                DOWNLOAD_FILENAME "python-${program_version}-embed-win32.zip"
-                SHA512 a69445906a909ce5f2554c544fe4251a8ab9c5028b531975b8c78fa8e98295b2bf06e1840f346a3c0edf485a7792c40c9d318bffd36b9c7829ac72b7cf8697bc
-                URLS "https://www.python.org/ftp/python/${program_version}/python-${program_version}-embed-win32.zip"
-                TOOL_SUBDIRECTORY "python-${program_version}-x86/python3"
+                DOWNLOAD_FILENAME "python-${program_version}-embed-amd64.zip"
+                SHA512 29b47f8073b54c092a2c8b39b09ab392f757a8c09149e8d2de043907fffb250b5f6801175e16fedb4fae7b6555822acdc57d81d13c2fea95ef0f6ed717f86cb9
+                URLS "https://www.python.org/ftp/python/${program_version}/python-${program_version}-embed-amd64.zip"
+                TOOL_SUBDIRECTORY "python-${program_version}-amd64/python3"
                 VERSION_COMMAND "--version"
                 VERSION_PREFIX "Python"
                 PATHS_TO_SEARCH ${installed_pythons}
@@ -36,10 +36,10 @@ function(vcpkg_find_acquire_python3_interpreter out_var)
                 OUT_EXTRACTED_ROOT out_extract_root
                 TOOL_NAME python
                 VERSION ${program_version}
-                DOWNLOAD_FILENAME "python-${program_version}-embed-amd64.zip"
-                SHA512 29b47f8073b54c092a2c8b39b09ab392f757a8c09149e8d2de043907fffb250b5f6801175e16fedb4fae7b6555822acdc57d81d13c2fea95ef0f6ed717f86cb9
-                URLS "https://www.python.org/ftp/python/${program_version}/python-${program_version}-embed-amd64.zip"
-                TOOL_SUBDIRECTORY "python-${program_version}-amd64/python3"
+                DOWNLOAD_FILENAME "python-${program_version}-embed-win32.zip"
+                SHA512 a69445906a909ce5f2554c544fe4251a8ab9c5028b531975b8c78fa8e98295b2bf06e1840f346a3c0edf485a7792c40c9d318bffd36b9c7829ac72b7cf8697bc
+                URLS "https://www.python.org/ftp/python/${program_version}/python-${program_version}-embed-win32.zip"
+                TOOL_SUBDIRECTORY "python-${program_version}-x86/python3"
                 VERSION_COMMAND "--version"
                 VERSION_PREFIX "Python"
                 PATHS_TO_SEARCH ${installed_pythons}
