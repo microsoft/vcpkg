@@ -3001,7 +3001,7 @@
       "port-version": 0
     },
     "gtk3": {
-      "baseline": "3.24.37",
+      "baseline": "3.24.38",
       "port-version": 0
     },
     "gtkmm": {
@@ -4670,7 +4670,7 @@
     },
     "libunifex": {
       "baseline": "2023-01-25",
-      "port-version": 1
+      "port-version": 2
     },
     "libunistring": {
       "baseline": "1.1",
@@ -7005,7 +7005,7 @@
       "port-version": 4
     },
     "raygui": {
-      "baseline": "3.2",
+      "baseline": "3.6",
       "port-version": 0
     },
     "raylib": {
@@ -7561,7 +7561,7 @@
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.7.4.3",
+      "baseline": "5.7.5",
       "port-version": 0
     },
     "soci": {
