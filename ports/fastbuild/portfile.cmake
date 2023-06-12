@@ -1,0 +1,51 @@
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+if (VCPKG_TARGET_IS_WINDOWS)
+	set(FASTBUILD_EXE_SUFFIX ".exe")
+	if (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+		vcpkg_download_distfile(
+			ARCHIVE
+			URLS "https://www.fastbuild.org/downloads/v${VERSION}/FASTBuild-Windows-x64-v${VERSION}.zip"
+			FILENAME "FASTBuild-Windows-x64-v${VERSION}.zip"
+			SHA512 09ae76441e3c368473328b29f1c081feb32737129961c3b55c6cbc6a5758b202edbeaa7e8a2445550ecb6954c3fe1ea14eff37e26d7149468ef7027f2fb913b2
+		)
+	else()
+		message(FATAL_ERROR "Unsupported platform. Please implement me!")
+	endif()
+elseif (VCPKG_TARGET_IS_OSX)
+	set(FASTBUILD_EXE_SUFFIX "")
+	if (VCPKG_TARGET_ARCHITECTURE MATCHES "x64" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+		vcpkg_download_distfile(
+			ARCHIVE
+			URLS "https://www.fastbuild.org/downloads/v${VERSION}/FASTBuild-OSX-x64+ARM-v${VERSION}.zip"
+			FILENAME "FASTBuild-OSX-x64+ARM-v${VERSION}.zip"
+			SHA512 186D15382BE99F5D16D7E8E895A20D16AAD72B12CFF6A4AA3BA140F4735963C768FE92951613DDAAC355467E98300DF59DFE727DBAA9242ED11A8EDF0AC09DE7
+		)
+	else()
+		message(FATAL_ERROR "Unsupported platform. Please implement me!")
+	endif()
+elseif(VCPKG_TARGET_IS_LINUX)
+	set(FASTBUILD_EXE_SUFFIX "")
+	if (VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+		vcpkg_download_distfile(
+			ARCHIVE
+			URLS "https://www.fastbuild.org/downloads/v${VERSION}/FASTBuild-Linux-x64-v${VERSION}.zip"
+			FILENAME "FASTBuild-Linux-x64-v${VERSION}.zip"
+			SHA512 495A8F46A807C9D8379B391BBE1DC20B847EF68A48983B0DD5AE8A185253B035A75FB79B81ECFA181DE6553C71BBBF2F12B087AC2FBD7D5C72030B87595BAFBC
+		)
+	else()
+		message(FATAL_ERROR "Unsupported platform. Please implement me!")
+	endif()
+else()
+	message(FATAL_ERROR "Unsupported platform. Please implement me!")
+endif()
+
+vcpkg_extract_source_archive(
+	BINDIST_PATH
+	ARCHIVE "${ARCHIVE}"
+	NO_REMOVE_ONE_LEVEL
+)
+
+file(INSTALL "${BINDIST_PATH}/FBuild${FASTBUILD_EXE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+file(INSTALL "${BINDIST_PATH}/FBuildWorker${FASTBUILD_EXE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+file(INSTALL "${BINDIST_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
