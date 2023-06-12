@@ -8,14 +8,13 @@ export DEBIAN_FRONTEND=noninteractive
 # Add apt repos
 
 ## CUDA
-apt-key del 7fa2af80
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
-mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
-add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
 
 ## PowerShell
-wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
 add-apt-repository universe
@@ -104,7 +103,7 @@ APT_PACKAGES="$APT_PACKAGES powershell"
 if [[ $(grep microsoft /proc/version) ]]; then
 echo "Skipping install of ADO prerequisites on WSL."
 else
-APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu66"
+APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70 debsums liblttng-ust1"
 fi
 
 apt-get -y --no-install-recommends install $APT_PACKAGES
