@@ -8441,7 +8441,7 @@
       "port-version": 1
     },
     "vcpkg-tool-python3-interpreter": {
-      "baseline": "3.0.0",
+      "baseline": "3",
       "port-version": 0
     },
     "vectorclass": {

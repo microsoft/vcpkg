@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-tool-python3-interpreter",
-  "version": "3.0.0",
+  "version": "3",
   "description": "Python 3",
   "homepage": "https://www.python.org/",
   "supports": "native",
