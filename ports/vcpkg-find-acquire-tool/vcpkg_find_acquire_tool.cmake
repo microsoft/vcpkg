@@ -13,7 +13,7 @@ function(z_vcpkg_try_find_acquire_tool_validator result candidate)
         string(FIND
             "${program_version_output}"
             "${arg_VERSION_PREFIX}" prefix_offset)
-        # If there's no matching prefix, this isn't even the program we're looking for, so bail
+        # If there's no matching prefix, this isn't even the program we're looking for, so fail
         if(prefix_offset EQUAL -1)
             set("${result}" FALSE PARENT_SCOPE)
             return()
