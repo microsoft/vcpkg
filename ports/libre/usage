@@ -1,4 +1,5 @@
-The package libre is compatible with built-in CMake targets:
+libre provides CMake targets:
 
-    find_package(re CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE re)
+    find_package(libre CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE libre::libre)
+    
