@@ -2,24 +2,24 @@ include_guard(GLOBAL)
 # This function is called through find_path or find_program to validate that the program works
 function(z_vcpkg_try_find_acquire_tool_validator result candidate)
     vcpkg_execute_in_download_mode(
-        COMMAND ${candidate} $CACHE{z_vcpkg_try_find_acquire_tool_validator_VERSION_COMMAND}
+        COMMAND ${candidate} ${arg_VERSION_COMMAND}
         WORKING_DIRECTORY "${VCPKG_ROOT_DIR}"
         OUTPUT_VARIABLE program_version_output
     )
 
     # Given VERSION_PREFIX is "my fancy program" and program_version_output is
     # "my fancy program   1.2.0", extract the dots-numeric part
-    if(DEFINED CACHE{z_vcpkg_try_find_acquire_tool_validator_VERSION_PREFIX})
+    if(DEFINED arg_VERSION_PREFIX)
         string(FIND
             "${program_version_output}"
-            "$CACHE{z_vcpkg_try_find_acquire_tool_validator_VERSION_PREFIX}" prefix_offset)
+            "${arg_VERSION_PREFIX}" prefix_offset)
         # If there's no matching prefix, this isn't even the program we're looking for, so bail
         if(prefix_offset EQUAL -1)
             set("${result}" FALSE PARENT_SCOPE)
             return()
         endif()
 
-        string(LENGTH "$CACHE{z_vcpkg_try_find_acquire_tool_validator_VERSION_PREFIX}" prefix_length)
+        string(LENGTH "${arg_VERSION_PREFIX}" prefix_length)
         math(EXPR prefix_end "${prefix_offset} + ${prefix_length}")
 
         string(SUBSTRING "${program_version_output}" "${prefix_end}" -1 program_version_output)
@@ -36,19 +36,17 @@ function(z_vcpkg_try_find_acquire_tool_validator result candidate)
 
     set(version_compare VERSION_GREATER_EQUAL)
     set(version_compare_msg "at least")
-    if($CACHE{z_vcpkg_try_find_acquire_tool_validator_EXACT_VERSION_MATCH})
+    if(${arg_EXACT_VERSION_MATCH})
         set(version_compare VERSION_EQUAL)
         set(version_compare_msg "exact")
     endif()
 
-    if("${program_version_output}" ${version_compare} "$CACHE{z_vcpkg_try_find_acquire_tool_validator_MIN_VERSION}")
-        message(STATUS "Found $CACHE{z_vcpkg_try_find_acquire_tool_validator_TOOL_NAME}\
-('${program_version_output}'): ${candidate}")
+    if("${program_version_output}" ${version_compare} "${arg_MIN_VERSION}")
+        message(STATUS "Found ${arg_TOOL_NAME} ('${program_version_output}'): ${candidate}")
         set("${result}" TRUE PARENT_SCOPE)
     else()
-        message(STATUS "Skipping $CACHE{z_vcpkg_try_find_acquire_tool_validator_TOOL_NAME}\
-('${program_version_output}') ${candidate} because ${version_compare_msg} version \
-$CACHE{z_vcpkg_try_find_acquire_tool_validator_MIN_VERSION} is required!")
+        message(STATUS "Skipping ${arg_TOOL_NAME} ('${program_version_output}') ${candidate} because \
+${version_compare_msg} version ${arg_MIN_VERSION} is required!")
         set("${result}" FALSE PARENT_SCOPE)
     endif()
 endfunction()
@@ -70,14 +68,6 @@ function(z_vcpkg_try_find_existing_tool)
         message(FATAL_ERROR "Unrecognized arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    # Forward relevant args to the validator function
-    set(forwarded_args TOOL_NAME EXACT_VERSION_MATCH MIN_VERSION VERSION_PREFIX VERSION_COMMAND)
-    foreach(arg_name IN ITEMS ${forwarded_args})
-        if(DEFINED "arg_${arg_name}")
-            set("z_vcpkg_try_find_acquire_tool_validator_${arg_name}" "${arg_${arg_name}}" CACHE INTERNAL "" FORCE)
-        endif()
-    endforeach()
-
     # Do the actual find
     debug_message("PATHS_TO_SEARCH ${arg_PATHS_TO_SEARCH}")
     find_program(tool_path
@@ -93,13 +83,6 @@ function(z_vcpkg_try_find_existing_tool)
     if(DEFINED tool_path)
         set("${arg_OUT_TOOL_PATH}" "${tool_path}" PARENT_SCOPE)
     endif()
-
-    # Clean up cache entries forwarded to the validator
-    foreach(arg_name IN ITEMS ${forwarded_args})
-        if(DEFINED "arg_${arg_name}")
-            unset("z_vcpkg_try_find_acquire_tool_validator_${arg_name}" CACHE)
-        endif()
-    endforeach()
 endfunction()
 
 function(vcpkg_find_acquire_tool)
