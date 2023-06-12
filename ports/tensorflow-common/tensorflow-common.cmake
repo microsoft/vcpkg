@@ -229,8 +229,9 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			list(APPEND BUILD_OPTS --compilation_mode=dbg)
 			list(APPEND BUILD_OPTS --features=dbg) # necessary for debug CRT
 			# overrides /DEBUG:FULL to avoid .pdb >4GB error
-			list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK --linkopt=/OPT:REF --linkopt=/OPT:ICF)
-			list(APPEND COPTS --copt=/Od --copt=/Z7) # as in fastbuild
+			list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK)
+			#list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK --linkopt=/OPT:REF --linkopt=/OPT:ICF)
+			#list(APPEND COPTS --copt=/Od --copt=/Z7) # as in fastbuild
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
