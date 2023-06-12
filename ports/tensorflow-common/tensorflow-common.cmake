@@ -107,14 +107,6 @@ set(ENV{TF_NEED_CUDA} 0)
 set(ENV{TF_CONFIGURE_IOS} 0)
 
 if(VCPKG_TARGET_IS_WINDOWS)
-	if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" )
-		set(ENV{CC_OPT_FLAGS} "/arch:AVX")
-	endif()
-else()
-	set(ENV{CC_OPT_FLAGS} "-Wno-sign-compare")
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
 	set(BAZEL_LIB_NAME tensorflow${TF_LIB_SUFFIX}.dll)
 	set(PLATFORM_SUFFIX windows)
 	set(STATIC_LINK_CMD static_link.bat)
@@ -224,14 +216,14 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	else()
 		set(PLATFORM_COMMAND UNIX_COMMAND)
 	endif()
-	if(BUILD_TYPE STREQUAL dbg)
+	if(BUILD_TYPE STREQUAL "dbg")
 		if(VCPKG_TARGET_IS_WINDOWS)
 			list(APPEND BUILD_OPTS --compilation_mode=dbg)
-			list(APPEND BUILD_OPTS --features=dbg) # necessary for debug CRT
+			#list(APPEND BUILD_OPTS --features=dbg) # necessary for debug CRT
 			# overrides /DEBUG:FULL to avoid .pdb >4GB error
-			list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK)
+			#list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK)
 			#list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK --linkopt=/OPT:REF --linkopt=/OPT:ICF)
-			#list(APPEND COPTS --copt=/Od --copt=/Z7) # as in fastbuild
+			list(APPEND COPTS --copt=/Od --copt=/Z7) # as in fastbuild
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
@@ -290,12 +282,16 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		--experimental_ui_max_stdouterr_bytes=-1
 	)
 
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+		list(APPEND BUILD_OPTS --dynamic_mode=off)
+	endif()
+
 	vcpkg_list(SET SETUP_ENV)
 	if(VCPKG_TARGET_IS_WINDOWS)
 		vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS_NO_PATHCONV=1" "MSYS2_ARG_CONV_EXCL=*")
 		list(APPEND BUILD_OPTS --features=fully_static_link)
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
-			list(APPEND BUILD_OPTS --features=static_link_msvcrt)
+			list(APPEND BUILD_OPTS --features=static_link_cpp_runtimes)
 		endif()
 		# Together with def-file-filter.patch, creates workaround for a general windows build errors.
 		set(vcpkg_def_file_filter "${CURRENT_BUILDTREES_DIR}/def_file_filter-${TARGET_TRIPLET}.py.log")
@@ -316,8 +312,12 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
 		LOGNAME "build-${TARGET_TRIPLET}-${BUILD_TYPE}"
 		SAVE_LOG_FILES
-			bazel-out/x64_windows-fastbuild/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
+			# Parameter (response) files to inspect compiler flags (.obj) and linker flags (.exe)
+			# x64-windows-opt-exec: used for some host tools
+			bazel-out/x64_windows-opt-exec-50AE0418/bin/external/llvm-project/llvm/_objs/Demangle/Demangle.obj.params
 			bazel-out/x64_windows-opt-exec-50AE0418/bin/external/llvm-project/mlir/mlir-tblgen.exe-2.params
+			# x64-windows-dbg: regular, debug
+			bazel-out/x64_windows-fastbuild/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
 			bazel-out/x64_windows-dbg/bin/tensorflow/cc/array_ops_genrule.genrule_script.sh
 	)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
