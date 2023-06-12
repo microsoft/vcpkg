@@ -1,0 +1,4 @@
+gettext-libintl is compatible with built-in CMake targets:
+
+    find_package(Intl REQUIRED)
+    target_link_libraries(main PRIVATE Intl::Intl) # since CMake 3.20

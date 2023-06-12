@@ -25,9 +25,9 @@ vcpkg_download_distfile(RAPIDS_cmake
 file(COPY "${RAPIDS_cmake}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
 
 vcpkg_download_distfile(execution_bs
-    URLS "https://raw.githubusercontent.com/brycelelbach/wg21_p2300_execution/main/execution.bs"
+    URLS "https://raw.githubusercontent.com/brycelelbach/wg21_p2300_execution/R7/execution.bs"
     FILENAME "execution.bs"
-    SHA512 22493329bcc26d4c30950df632349daf632adee87bdc904167afcdbb1f9398da2ca3ce9aad1d1c9dab961a2946b0fb9e5b66619b8a529f7cf04fe6aec01c5bb8
+    SHA512 90f2a1d150b03c29bb05a5420e091c2371cb973335a089916716d778bc1081764436dc1ff0fec60f642ddb0ca5492c8b0c3a6d5451c2d60a42911f918fe980fa
 )
 file(COPY "${execution_bs}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
 
@@ -47,4 +47,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/stdexec)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
