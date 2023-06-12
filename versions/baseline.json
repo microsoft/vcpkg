@@ -8481,8 +8481,8 @@
       "port-version": 2
     },
     "vsg": {
-      "baseline": "1.0.5",
-      "port-version": 1
+      "baseline": "1.0.6",
+      "port-version": 0
     },
     "vtk": {
       "baseline": "9.2.0-pv5.11.0",
