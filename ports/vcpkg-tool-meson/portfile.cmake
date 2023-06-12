@@ -20,7 +20,6 @@ set(supported_on_unix ON)
 set(version_command --version)
 set(extra_search_args EXACT_VERSION_MATCH)
 
-include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-tool-python3-interpreter/vcpkg-port-config.cmake")
 vcpkg_find_acquire_python3_interpreter(PYTHON3)
 
 # Reenable if no patching of meson is required within vcpkg
