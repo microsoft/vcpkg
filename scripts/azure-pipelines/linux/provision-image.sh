@@ -71,7 +71,7 @@ APT_PACKAGES="$APT_PACKAGES nodejs"
 APT_PACKAGES="$APT_PACKAGES libwayland-dev"
 
 ## required by all GN projects
-APT_PACKAGES="$APT_PACKAGES python2 python-is-python3"
+APT_PACKAGES="$APT_PACKAGES python-is-python3"
 
 ## required by libctl
 APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
@@ -87,9 +87,6 @@ APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 
 ## required by bond
 APT_PACKAGES="$APT_PACKAGES haskell-stack"
-
-## required by duktape
-APT_PACKAGES="$APT_PACKAGES python-yaml"
 
 ## CUDA
 APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-1 cuda-libraries-dev-12-1 cuda-driver-dev-12-1 \
