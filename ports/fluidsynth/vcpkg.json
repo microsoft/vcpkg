@@ -1,6 +1,6 @@
 {
   "name": "fluidsynth",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "port-version": 2,
   "description": "FluidSynth reads and handles MIDI events from the MIDI input device. It is the software analogue of a MIDI synthesizer. FluidSynth can also play midifiles using a Soundfont.",
   "homepage": "https://github.com/FluidSynth/fluidsynth",
@@ -31,6 +31,10 @@
   "features": {
     "buildtools": {
       "description": "Build tools gentables"
+    },
+    "pulseaudio": {
+      "description": "Build with PulseAudio support",
+      "supports": "linux"
     },
     "sndfile": {
       "description": "Enable rendering to file and SF3 support",

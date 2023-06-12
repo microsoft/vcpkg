@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -297,6 +297,18 @@
     },
     "composer": {
       "description": "Cloud Composer C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "confidentialcomputing": {
+      "description": "Confidential Computing API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1069,6 +1081,18 @@
         "nlohmann-json"
       ]
     },
+    "storageinsights": {
+      "description": "Storage Insights API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "storagetransfer": {
       "description": "Storage Transfer API C++ Client Library",
       "dependencies": [
@@ -1251,6 +1275,18 @@
     },
     "workflows": {
       "description": "Workflow Executions API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "workstations": {
+      "description": "Workstations API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

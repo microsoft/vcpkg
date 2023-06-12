@@ -1,7 +1,7 @@
 {
   "name": "libde265",
-  "version": "1.0.8",
-  "port-version": 7,
+  "version": "1.0.11",
+  "port-version": 1,
   "description": "Open h.265 video codec implementation.",
   "homepage": "https://www.libde265.org/",
   "license": "LGPL-3.0-only",

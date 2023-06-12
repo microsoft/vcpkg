@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  windows-pool: 'PrWin-2023-03-15'
-  linux-pool: 'PrLin-2023-03-15'
+  android-pool: 'PrAnd-2023-05-09'
+  linux-pool: 'PrLin-2023-05-09'
+  windows-pool: 'PrWin-2023-05-09'
   osx-pool: 'PrOsx-2022-02-04'
+  linux-docker-image: 'andcontainerregistry.azurecr.io/vcpkg-android:2023-04-20'
 
 parameters:
   - name: vcpkgToolSha
@@ -82,5 +84,32 @@ jobs:
 - template: linux/azure-pipelines.yml
   parameters:
     poolName: $(linux-pool)
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+
+- template: android/azure-pipelines.yml
+  parameters:
+    triplet: arm-neon-android
+    jobName: arm_neon_android
+    poolName: $(android-pool)
+    dockerImage: $(linux-docker-image)
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+
+- template: android/azure-pipelines.yml
+  parameters:
+    triplet: x64-android
+    jobName: x64_android
+    poolName: $(android-pool)
+    dockerImage: $(linux-docker-image)
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+
+- template: android/azure-pipelines.yml
+  parameters:
+    triplet: arm64-android
+    jobName: arm64_android
+    poolName: $(android-pool)
+    dockerImage: $(linux-docker-image)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}

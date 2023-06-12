@@ -2,8 +2,8 @@ string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF ${curl_version}
-    SHA512 4a7aa0091ac1e0f1d4366277d585c19bd9ad786fa49329a96d43eb6aebd1b366c1c2144436c243686d9ad430e7d3f4137ea0764c7759198f0eb29107a5d86569
+    REF "${curl_version}"
+    SHA512 d3c0bd113c772249c7e4e83cc26c6e2a1ff5644486c96318de6ab035300c52aca10756af665d91c5ce71f9d4afa4afbf7fbb756e9e4c800869b50c8a653bd519
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -14,7 +14,6 @@ vcpkg_from_github(
         mbedtls-ws2_32.patch
         export-components.patch
         0023-fix-find-cares.patch
-        version-major-7-8.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -73,6 +72,7 @@ vcpkg_cmake_configure(
         -DENABLE_MANUAL=OFF
         -DCURL_CA_FALLBACK=ON
         -DCURL_USE_LIBPSL=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON
 )

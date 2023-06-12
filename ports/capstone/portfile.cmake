@@ -18,20 +18,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "m680x"       CAPSTONE_M680X_SUPPORT
         "m68k"        CAPSTONE_M68K_SUPPORT
         "mips"        CAPSTONE_MIPS_SUPPORT
-        "osxkernel"   CAPSTONE_OSXKERNEL_SUPPORT
         "ppc"         CAPSTONE_PPC_SUPPORT
         "sparc"       CAPSTONE_SPARC_SUPPORT
         "sysz"        CAPSTONE_SYSZ_SUPPORT
         "tms320c64x"  CAPSTONE_TMS320C64X_SUPPORT
         "x86"         CAPSTONE_X86_SUPPORT
-        "x86-reduce"  CAPSTONE_X86_REDUCE
         "xcore"       CAPSTONE_XCORE_SUPPORT
         "diet"        CAPSTONE_BUILD_DIET
 )
-
-if ("osxkernel" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
-    message(FATAL_ERROR "Feature 'osxkernel' only supported in OSX")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
