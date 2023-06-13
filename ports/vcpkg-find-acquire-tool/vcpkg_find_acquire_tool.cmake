@@ -54,7 +54,7 @@ endfunction()
 function(z_vcpkg_try_find_existing_tool)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "EXACT_VERSION_MATCH"
-        "OUT_TOOL_PATH;TOOL_NAME;MIN_VERSION;VERSION_PREFIX"
+        "OUT_TOOL_PATH;TOOL_NAME;MIN_VERSION;VERSION_PREFIX;INTERPRETER"
         "SEARCH_NAMES;PATHS_TO_SEARCH;VERSION_COMMAND"
         )
 
@@ -86,9 +86,28 @@ function(z_vcpkg_try_find_existing_tool)
 endfunction()
 
 function(vcpkg_find_acquire_tool)
+    set(single_args
+        OUT_TOOL_PATH
+        OUT_TOOL_ACQUIRED
+        OUT_EXTRACTED_ROOT
+        TOOL_NAME
+        VERSION
+        DOWNLOAD_FILENAME
+        SHA512
+        RENAME_BINARY_TO
+        TOOL_SUBDIRECTORY
+        BREW_PACKAGE_NAME
+        APT_PACKAGE_NAME
+        DNF_PACKAGE_NAME
+        ZYPPER_PACKAGE_NAME
+        APK_PACKAGE_NAME
+        VERSION_PREFIX
+        INTERPRETER
+    )
+
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "RAW_EXECUTABLE;EXACT_VERSION_MATCH"
-        "OUT_TOOL_PATH;OUT_TOOL_ACQUIRED;OUT_EXTRACTED_ROOT;TOOL_NAME;VERSION;DOWNLOAD_FILENAME;SHA512;RENAME_BINARY_TO;TOOL_SUBDIRECTORY;BREW_PACKAGE_NAME;APT_PACKAGE_NAME;DNF_PACKAGE_NAME;ZYPPER_PACKAGE_NAME;APK_PACKAGE_NAME;VERSION_PREFIX"
+        "${single_args}"
         "SEARCH_NAMES;URLS;PATHS_TO_SEARCH;VERSION_COMMAND"
     )
 
@@ -138,7 +157,10 @@ function(vcpkg_find_acquire_tool)
     if(DEFINED arg_VERSION_PREFIX)
         vcpkg_list(APPEND search_args VERSION_PREFIX "${arg_VERSION_PREFIX}")
     endif()
-        
+    if(DEFINED arg_INTERPRETER)
+        vcpkg_list(APPEND search_args INTERPRETER "${arg_INTERPRETER}")
+    endif()
+
     z_vcpkg_try_find_existing_tool(${search_args})
 
     if(NOT out_tool_path)
