@@ -1,0 +1,12 @@
+diff --git a/include/ginkgo/core/base/mpi.hpp b/include/ginkgo/core/base/mpi.hpp
+index baa83a6..60311c7 100644
+--- a/include/ginkgo/core/base/mpi.hpp
++++ b/include/ginkgo/core/base/mpi.hpp
+@@ -113,6 +113,7 @@ GKO_REGISTER_MPI_TYPE(unsigned short, MPI_UNSIGNED_SHORT);
+ GKO_REGISTER_MPI_TYPE(unsigned long, MPI_UNSIGNED_LONG);
+ GKO_REGISTER_MPI_TYPE(long, MPI_LONG);
+ GKO_REGISTER_MPI_TYPE(long long, MPI_LONG_LONG_INT);
++GKO_REGISTER_MPI_TYPE(unsigned long long, MPI_UNSIGNED_LONG_LONG);
+ GKO_REGISTER_MPI_TYPE(float, MPI_FLOAT);
+ GKO_REGISTER_MPI_TYPE(double, MPI_DOUBLE);
+ GKO_REGISTER_MPI_TYPE(long double, MPI_LONG_DOUBLE);
