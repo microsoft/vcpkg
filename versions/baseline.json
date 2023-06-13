@@ -1490,7 +1490,7 @@
     },
     "chipmunk": {
       "baseline": "7.0.3",
-      "port-version": 4
+      "port-version": 5
     },
     "chmlib": {
       "baseline": "0.40",
