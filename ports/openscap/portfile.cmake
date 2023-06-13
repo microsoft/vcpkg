@@ -16,8 +16,6 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        docs    ENABLE_DOCS
-        tests   ENABLE_TESTS
         util    ENABLE_OSCAP_UTIL
         python  ENABLE_PYTHON3
 )
@@ -35,7 +33,10 @@ vcpkg_cmake_configure(
         -DENABLE_OSCAP_UTIL_VM=OFF
         -DENABLE_OSCAP_UTIL_PODMAN=OFF
         -DENABLE_OSCAP_UTIL_CHROOT=OFF
+        -DENABLE_OSCAP_UTIL=OFF
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+	-DENABLE_TESTS=OFF
+	-DENABLE_DOCS=OFF
 )
 
 vcpkg_cmake_install()

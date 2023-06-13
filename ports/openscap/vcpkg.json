@@ -22,14 +22,8 @@
     "zlib"
   ],
   "features": {
-    "docs": {
-      "description": "install docs"
-    },
     "python": {
       "description": "build with python3"
-    },
-    "tests": {
-      "description": "build with tests"
     },
     "util": {
       "description": "build available utils",
