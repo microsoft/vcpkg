@@ -1,14 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d9419e3..5409a2b 100644
+index d9419e3..fca0ee8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -45,35 +45,25 @@ IF(WIN32)
- ENDIF()
+@@ -46,12 +46,11 @@ ENDIF()
  
  ADD_LIBRARY(hiredis ${hiredis_sources})
--ADD_LIBRARY(hiredis_static STATIC ${hiredis_sources})
+ ADD_LIBRARY(hiredis_static STATIC ${hiredis_sources})
++SET_TARGET_PROPERTIES(hiredis_static PROPERTIES EXCLUDE_FROM_ALL TRUE)
  ADD_LIBRARY(hiredis::hiredis ALIAS hiredis)
--ADD_LIBRARY(hiredis::hiredis_static ALIAS hiredis_static)
+ ADD_LIBRARY(hiredis::hiredis_static ALIAS hiredis_static)
  
  IF(NOT MSVC)
 -    SET_TARGET_PROPERTIES(hiredis_static
@@ -16,29 +16,7 @@ index d9419e3..5409a2b 100644
  ENDIF()
  
  SET_TARGET_PROPERTIES(hiredis
-     PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE
-     VERSION "${HIREDIS_SONAME}")
- IF(MSVC)
--    SET_TARGET_PROPERTIES(hiredis_static
--        PROPERTIES COMPILE_FLAGS /Z7)
- ENDIF()
- IF(WIN32 OR MINGW)
-     TARGET_LINK_LIBRARIES(hiredis PUBLIC ws2_32 crypt32)
--    TARGET_LINK_LIBRARIES(hiredis_static PUBLIC ws2_32 crypt32)
- ELSEIF(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-     TARGET_LINK_LIBRARIES(hiredis PUBLIC m)
--    TARGET_LINK_LIBRARIES(hiredis_static PUBLIC m)
- ELSEIF(CMAKE_SYSTEM_NAME MATCHES "SunOS")
-     TARGET_LINK_LIBRARIES(hiredis PUBLIC socket)
--    TARGET_LINK_LIBRARIES(hiredis_static PUBLIC socket)
- ENDIF()
- 
- TARGET_INCLUDE_DIRECTORIES(hiredis PUBLIC $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
--TARGET_INCLUDE_DIRECTORIES(hiredis_static PUBLIC $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
- 
- CONFIGURE_FILE(hiredis.pc.in hiredis.pc @ONLY)
- 
-@@ -103,7 +93,7 @@ set(CPACK_RPM_PACKAGE_AUTOREQPROV ON)
+@@ -103,7 +102,7 @@ set(CPACK_RPM_PACKAGE_AUTOREQPROV ON)
  
  include(CPack)
  
@@ -47,33 +25,18 @@ index d9419e3..5409a2b 100644
      EXPORT hiredis-targets
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -163,11 +153,7 @@ IF(ENABLE_SSL)
-         ssl.c)
-     ADD_LIBRARY(hiredis_ssl
+@@ -165,9 +164,8 @@ IF(ENABLE_SSL)
              ${hiredis_ssl_sources})
--    ADD_LIBRARY(hiredis_ssl_static STATIC
--            ${hiredis_ssl_sources})
+     ADD_LIBRARY(hiredis_ssl_static STATIC
+             ${hiredis_ssl_sources})
++    SET_TARGET_PROPERTIES(hiredis_ssl_static PROPERTIES EXCLUDE_FROM_ALL TRUE)
      IF(NOT MSVC)
 -        SET_TARGET_PROPERTIES(hiredis_ssl_static
 -            PROPERTIES OUTPUT_NAME hiredis_ssl)
      ENDIF()
  
      IF (APPLE)
-@@ -179,21 +165,17 @@ IF(ENABLE_SSL)
-         WINDOWS_EXPORT_ALL_SYMBOLS TRUE
-         VERSION "${HIREDIS_SONAME}")
-     IF(MSVC)
--        SET_TARGET_PROPERTIES(hiredis_ssl_static
--            PROPERTIES COMPILE_FLAGS /Z7)
-     ENDIF()
- 
-     TARGET_INCLUDE_DIRECTORIES(hiredis_ssl PRIVATE "${OPENSSL_INCLUDE_DIR}")
--    TARGET_INCLUDE_DIRECTORIES(hiredis_ssl_static PRIVATE "${OPENSSL_INCLUDE_DIR}")
- 
-     TARGET_LINK_LIBRARIES(hiredis_ssl PRIVATE ${OPENSSL_LIBRARIES})
-     IF (WIN32 OR MINGW)
-         TARGET_LINK_LIBRARIES(hiredis_ssl PRIVATE hiredis)
--        TARGET_LINK_LIBRARIES(hiredis_ssl_static PUBLIC hiredis_static)
+@@ -193,7 +191,7 @@ IF(ENABLE_SSL)
      ENDIF()
      CONFIGURE_FILE(hiredis_ssl.pc.in hiredis_ssl.pc @ONLY)
  
