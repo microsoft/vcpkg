@@ -5129,8 +5129,8 @@
       "port-version": 0
     },
     "mapnik": {
-      "baseline": "2023-01-17",
-      "port-version": 1
+      "baseline": "2023-06-12",
+      "port-version": 0
     },
     "marble": {
       "baseline": "22.04.0",
