@@ -1,17 +1,34 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3d52d0c..94248ba 100644
+index 3d52d0c..d175f0a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -44,7 +44,7 @@ IF(WIN32)
+@@ -44,14 +44,13 @@ IF(WIN32)
      ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -DWIN32_LEAN_AND_MEAN)
  ENDIF()
  
 -ADD_LIBRARY(hiredis SHARED ${hiredis_sources})
 +ADD_LIBRARY(hiredis ${hiredis_sources})
  ADD_LIBRARY(hiredis_static STATIC ${hiredis_sources})
++SET_TARGET_PROPERTIES(hiredis_static PROPERTIES EXCLUDE_FROM_ALL TRUE)
  ADD_LIBRARY(hiredis::hiredis ALIAS hiredis)
  ADD_LIBRARY(hiredis::hiredis_static ALIAS hiredis_static)
-@@ -161,7 +161,7 @@ IF(ENABLE_SSL)
+ 
+ IF(NOT MSVC)
+-    SET_TARGET_PROPERTIES(hiredis_static
+-        PROPERTIES OUTPUT_NAME hiredis)
+ ENDIF()
+ 
+ SET_TARGET_PROPERTIES(hiredis
+@@ -103,7 +102,7 @@ set(CPACK_RPM_PACKAGE_AUTOREQPROV ON)
+ 
+ include(CPack)
+ 
+-INSTALL(TARGETS hiredis hiredis_static
++INSTALL(TARGETS hiredis
+     EXPORT hiredis-targets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+@@ -161,13 +160,12 @@ IF(ENABLE_SSL)
      FIND_PACKAGE(OpenSSL REQUIRED)
      SET(hiredis_ssl_sources
          ssl.c)
@@ -20,3 +37,19 @@ index 3d52d0c..94248ba 100644
              ${hiredis_ssl_sources})
      ADD_LIBRARY(hiredis_ssl_static STATIC
              ${hiredis_ssl_sources})
++    SET_TARGET_PROPERTIES(hiredis_ssl_static PROPERTIES EXCLUDE_FROM_ALL TRUE)
+     IF(NOT MSVC)
+-        SET_TARGET_PROPERTIES(hiredis_ssl_static
+-            PROPERTIES OUTPUT_NAME hiredis_ssl)
+     ENDIF()
+ 
+     IF (APPLE)
+@@ -193,7 +191,7 @@ IF(ENABLE_SSL)
+     ENDIF()
+     CONFIGURE_FILE(hiredis_ssl.pc.in hiredis_ssl.pc @ONLY)
+ 
+-    INSTALL(TARGETS hiredis_ssl hiredis_ssl_static
++    INSTALL(TARGETS hiredis_ssl
+         EXPORT hiredis_ssl-targets
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

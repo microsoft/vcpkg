@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 94248ba..d9419e3 100644
+index d175f0a..fca0ee8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -109,7 +109,7 @@ INSTALL(TARGETS hiredis hiredis_static
+@@ -108,7 +108,7 @@ INSTALL(TARGETS hiredis
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
  
@@ -11,7 +11,7 @@ index 94248ba..d9419e3 100644
      INSTALL(FILES $<TARGET_PDB_FILE:hiredis>
          DESTINATION ${CMAKE_INSTALL_BINDIR}
          CONFIGURATIONS Debug RelWithDebInfo)
-@@ -199,7 +199,7 @@ IF(ENABLE_SSL)
+@@ -197,7 +197,7 @@ IF(ENABLE_SSL)
          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
  
