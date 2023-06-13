@@ -1,4 +1,6 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ginkgo-project/ginkgo
@@ -30,7 +32,6 @@ vcpkg_cmake_configure(
         -DGINKGO_BUILD_BENCHMARKS=OFF
         -DGINKGO_WITH_CCACHE=OFF
         -DGINKGO_DEVEL_TOOLS=OFF
-        -DBUILD_SHARED_LIBS=OFF
         -DGINKGO_SKIP_DEPENDENCY_UPDATE=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         ${FEATURE_OPTIONS}
@@ -39,6 +40,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Ginkgo)
 vcpkg_fixup_pkgconfig()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ginkgo/GinkgoConfig.cmake" [[string(REPLACE "lib/cmake/Ginkgo" "" GINKGO_INSTALL_PREFIX "${GINKGO_CONFIG_FILE_PATH}")]] "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ginkgo/GinkgoConfig.cmake" "GINKGO_INSTALL_PREFIX" "_IMPORT_PREFIX")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ginkgo/GinkgoConfig.cmake" "/lib/cmake/Ginkgo\"" "/share/ginkgo\"")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ginkgo/GinkgoConfig.cmake" "/lib/cmake/Ginkgo/Modules\"" "/share/ginkgo/Modules/Modules\"")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ginkgo/GinkgoConfig.cmake" "\"${SOURCE_PATH}/cmake/Modules/\"" "")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ginkgo" RENAME copyright)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ginkgo")
