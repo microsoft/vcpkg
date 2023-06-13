@@ -1,0 +1,14 @@
+diff --git a/src/CbcSolver.cpp b/src/CbcSolver.cpp
+index 93da884..01950c1 100644
+--- a/src/CbcSolver.cpp
++++ b/src/CbcSolver.cpp
+@@ -6,6 +6,9 @@
+     \brief Second level routines for the cbc stand-alone solver.
+ */
+ 
++// glpk currently not supported
++#undef COINUTILS_HAS_GLPK
++
+ // Need these up front to define symbols for other imports
+ #include "CoinUtilsConfig.h"
+ #include "ClpConfig.h"
