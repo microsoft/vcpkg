@@ -319,12 +319,14 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		LOGNAME "build-${TARGET_TRIPLET}-${BUILD_TYPE}"
 		SAVE_LOG_FILES
 			# Parameter (response) files to inspect compiler flags (.obj) and linker flags (.exe)
-			# x64-windows-opt-exec: used for some host tools
-			bazel-out/x64_windows-opt-exec-50AE0418/bin/external/llvm-project/llvm/_objs/Demangle/Demangle.obj.params
-			bazel-out/x64_windows-opt-exec-50AE0418/bin/external/llvm-project/mlir/mlir-tblgen.exe-2.params
-			# x64-windows-dbg: regular, debug
-			bazel-out/x64_windows-fastbuild/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
-			bazel-out/x64_windows-dbg/bin/tensorflow/cc/array_ops_genrule.genrule_script.sh
+			# x64-windows-<host_compilation_mode>-exec: used for host tool to be used during build
+			bazel-out/x64_windows-dbg-exec-50AE0418/bin/external/llvm-project/llvm/_objs/Demangle/Demangle.obj.params
+			bazel-out/x64_windows-dbg-exec-50AE0418/bin/external/llvm-project/mlir/mlir-tblgen.exe-2.params
+			# x64-windows-<compilation_mode>: regular
+			bazel-out/x64_windows-dbg/bin/external/com_github_grpc_grpc/src/compiler/_objs/grpc_cpp_plugin/cpp_plugin.obj.params
+			bazel-out/x64_windows-dbg/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
+			# bash script
+			bazel-out/x64_windows-dbg/bin/tensorflow/cc/training_ops_genrule.genrule_script.sh
 	)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 		set(args "${TF_VERSION}" "${TF_LIB_SUFFIX}")
