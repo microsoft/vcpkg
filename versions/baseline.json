@@ -4794,7 +4794,7 @@
     },
     "libxkbcommon": {
       "baseline": "1.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libxkbfile": {
       "baseline": "1.1.0",
@@ -8126,10 +8126,6 @@
     },
     "tomlplusplus": {
       "baseline": "3.1.0",
-      "port-version": 0
-    },
-    "tool-meson": {
-      "baseline": "2022-01-21",
       "port-version": 0
     },
     "torch-th": {
