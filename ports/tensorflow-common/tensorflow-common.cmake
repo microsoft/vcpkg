@@ -177,6 +177,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
 			${extra_patches}
 	)
+	# No interactive questions
+	vcpkg_replace_string("${SOURCE_PATH}/configure.py" "answer = raw_input(question)" "answer = ''")
 
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
 	tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
@@ -187,6 +189,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py --workspace "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
 		WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 		LOGNAME config-${TARGET_TRIPLET}-${BUILD_TYPE}
+		SAVE_LOG_FILES
+			.tf_configure.bazelrc
 	)
 
 	if(DEFINED ENV{BAZEL_CUSTOM_CACERTS})
@@ -218,12 +222,14 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 	if(BUILD_TYPE STREQUAL "dbg")
 		if(VCPKG_TARGET_IS_WINDOWS)
-			list(APPEND BUILD_OPTS --compilation_mode=dbg)
+			list(APPEND BUILD_OPTS --compilation_mode=dbg --host_compilation_mode=dbg)
 			#list(APPEND BUILD_OPTS --features=dbg) # necessary for debug CRT
 			# overrides /DEBUG:FULL to avoid .pdb >4GB error
 			#list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK)
-			#list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK --linkopt=/OPT:REF --linkopt=/OPT:ICF)
 			list(APPEND COPTS --copt=/Od --copt=/Z7) # as in fastbuild
+			list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK --linkopt=/OPT:REF --linkopt=/OPT:ICF)
+			list(APPEND COPTS --host_copt=/Od --host_copt=/Z7) # as in fastbuild
+			list(APPEND LINKOPTS --host_linkopt=/DEBUG:FASTLINK --host_linkopt=/OPT:REF --host_linkopt=/OPT:ICF)
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
