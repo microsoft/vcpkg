@@ -125,7 +125,7 @@ function(vcpkg_find_acquire_tool)
     vcpkg_list(SET search_args
         OUT_TOOL_PATH out_tool_path
         TOOL_NAME "${arg_TOOL_NAME}"
-        MIN_VERSION "${program_version}"
+	MIN_VERSION "${arg_VERSION}"
         SEARCH_NAMES ${arg_SEARCH_NAMES}
         PATHS_TO_SEARCH ${arg_PATHS_TO_SEARCH}
     )
