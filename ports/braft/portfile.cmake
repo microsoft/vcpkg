@@ -15,7 +15,7 @@ vcpkg_from_github(
         fix-build.patch
         fix-dependency.patch
         export-target.patch
-        ${GCC_11_PATCH}
+        "${GCC_11_PATCH}"
 )
 
 vcpkg_cmake_configure(
