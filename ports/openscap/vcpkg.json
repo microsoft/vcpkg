@@ -24,15 +24,6 @@
   "features": {
     "python": {
       "description": "build with python3"
-    },
-    "util": {
-      "description": "build available utils",
-      "dependencies": [
-        {
-          "name": "getopt-win32",
-          "platform": "windows"
-        }
-      ]
     }
   }
 }
