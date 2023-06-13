@@ -5,9 +5,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO foonathan/memory
-    REF 885a9d97bebe9a2f131d21d3c0928c42ab377c8b
-    SHA512 7ce78a6e67d590a41b7f8a3d4ae0f6c1fa157c561b718a63973dffc000df74a9f0a0d7955a099e84fbeb3cf4085092eb866a6b8cec8bafd50bdcee94d069f65d
+    REF "v0.7-3"
+    SHA512 302a046e204d1cd396a4a36b559d3360d17801d99f0f22b58314ff66706ae86ce4f364731004c1c293e01567a9510229cda7fc4978e0e47740176026d47e8403
     HEAD_REF master
+    PATCHES
+        fix-foonathan-memory-include-install-dir.patch
 )
 
 vcpkg_from_github(
@@ -34,8 +36,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME foonathan_memory)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/foonathan_memory/cmake")
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/foonathan_memory/cmake PACKAGE_NAME foonathan_memory)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/share/foonathan_memory/cmake")
     vcpkg_cmake_config_fixup(CONFIG_PATH share/foonathan_memory/cmake PACKAGE_NAME foonathan_memory)
 endif()
@@ -45,28 +47,12 @@ vcpkg_copy_pdbs()
 # Place header files into the right folders
 # The original layout is not a problem for CMake-based project.
 file(COPY
-    "${CURRENT_PACKAGES_DIR}/include/foonathan_memory/foonathan"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-)
-file(GLOB
-    COMP_INCLUDE_FILES
-    "${CURRENT_PACKAGES_DIR}/include/foonathan_memory/comp/foonathan/*.hpp"
-)
-file(COPY
     ${COMP_INCLUDE_FILES}
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/foonathan"
 )
-file(COPY
-    "${CURRENT_PACKAGES_DIR}/include/foonathan_memory/config_impl.hpp"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/foonathan/memory"
-)
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/include/foonathan_memory"
-)
-vcpkg_replace_string(
-    "${CURRENT_PACKAGES_DIR}/share/foonathan_memory/foonathan_memory-config.cmake"
-    "\${_IMPORT_PREFIX}/include/foonathan_memory/comp;\${_IMPORT_PREFIX}/include/foonathan_memory"
-    "\${_IMPORT_PREFIX}/include"
+file(REMOVE_RECURSE 
+  "${CURRENT_PACKAGES_DIR}/lib/foonathan_memory" 
+  "${CURRENT_PACKAGES_DIR}/debug/lib/foonathan_memory"
 )
 # Place header files into the right folders - Done!
 

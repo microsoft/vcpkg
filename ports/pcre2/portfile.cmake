@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PCRE2Project/pcre2
-    REF pcre2-10.40
-    SHA512 098c21d60ecb3bb8449173f50c9ab8e6018fafd5d55548be08b15df37f8e08bcd4f851d75758c4d22505db30a3444bb65783d83cd876c63fdf0de2850815ef93
+    REF "pcre2-${VERSION}"
+    SHA512 3d0ee66e23809d3da2fe2bf4ed6e20b0fb96c293a91668935f6319e8d02e480eeef33da01e08a7436a18a1a85a116d83186b953520f394c866aad3cea73c7f5c
     HEAD_REF master
     PATCHES
         pcre2-10.35_fix-uwp.patch
