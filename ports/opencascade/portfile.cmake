@@ -23,14 +23,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tbb"        USE_TBB
         "rapidjson"  USE_RAPIDJSON
         "samples"    INSTALL_SAMPLES 
-        "exptocasexe"  EMSCRIPTEN
 )
-
-if("exptocasexe" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES "ExpToCasExe" AUTO_CLEAN)
-else()
-    list(APPEND FEATURE_OPTIONS -DEMSCRIPTEN=OFF)
-endif()
 
 # VTK option in opencascade not currently supported because only 6.1.0 is supported but vcpkg has >= 9.0
 
