@@ -7969,8 +7969,8 @@
       "port-version": 2
     },
     "thor": {
-      "baseline": "2.0",
-      "port-version": 6
+      "baseline": "2022-04-16",
+      "port-version": 0
     },
     "thorvg": {
       "baseline": "0.9.0",
