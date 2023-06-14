@@ -1,0 +1,14 @@
+diff --git a/include/baseXYData.h b/include/baseXYData.h
+index 2877e4f..f018b35 100644
+--- a/include/baseXYData.h
++++ b/include/baseXYData.h
+@@ -5,6 +5,9 @@
+ #include "CMinMax.h"
+ #include "xyMultimapLabel.h"
+ #include <deque>
++#include <time.h>
++#include <vector>
++#include <limits>
+ 
+ //This possible to handle a lot of data quicker
+ //plot just second 1000 point to display..

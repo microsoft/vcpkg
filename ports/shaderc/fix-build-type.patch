@@ -1,5 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 52ebd1c..f73252f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,6 +144,8 @@ function(define_pkg_config_file NAME LIBS)
+   endif()
+ endfunction()
+ 
++if(BUILD_SHARED_LIBS)
+ define_pkg_config_file(shaderc -lshaderc_shared)
++else()
+ define_pkg_config_file(shaderc_static "-lshaderc ${EXTRA_STATIC_PKGCONFIG_LIBS} -lshaderc_util")
+-define_pkg_config_file(shaderc_combined -lshaderc_combined)
++endif()
 diff --git a/libshaderc/CMakeLists.txt b/libshaderc/CMakeLists.txt
-index 3ada419..f3277f0 100644
+index 3ada419..d3bc639 100644
 --- a/libshaderc/CMakeLists.txt
 +++ b/libshaderc/CMakeLists.txt
 @@ -24,13 +24,16 @@ set(SHADERC_SOURCES
@@ -33,7 +47,7 @@ index 3ada419..f3277f0 100644
        ${CMAKE_INSTALL_INCLUDEDIR}/shaderc)
  
 -  install(TARGETS shaderc shaderc_shared
-+  install(TARGETS ${shaderc_install_target}
++  install(TARGETS ${shaderc_install_target} shaderc_util
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
