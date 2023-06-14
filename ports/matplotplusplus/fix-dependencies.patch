@@ -55,17 +55,6 @@ index fc9ceca..1601015 100644
      list(POP_BACK CMAKE_MODULE_PATH)
  endif()
  
-diff --git a/cmake/FindFilesystem.cmake b/cmake/FindFilesystem.cmake
-index 7547e3f..8d6411b 100644
---- a/cmake/FindFilesystem.cmake
-+++ b/cmake/FindFilesystem.cmake
-@@ -245,5 +245,5 @@ cmake_pop_check_state()
- set(Filesystem_FOUND ${_found} CACHE BOOL "TRUE if we can run a program using std::filesystem" FORCE)
- 
- if(Filesystem_FIND_REQUIRED AND NOT Filesystem_FOUND)
--    message(FATAL_ERROR "Cannot run a simple program using std::filesystem\nYou need to update your C++ compiler to use this library")
-+    message(STATUS "Cannot run a simple program using std::filesystem\nYou need to update your C++ compiler to use this library")
- endif()
 diff --git a/source/3rd_party/CMakeLists.txt b/source/3rd_party/CMakeLists.txt
 index b5656e1..7ff4046 100644
 --- a/source/3rd_party/CMakeLists.txt
@@ -178,25 +167,17 @@ index b5656e1..7ff4046 100644
    endif()
  else()
    message("No CMAKE_MODULE_PATH path for OpenCV configured")
-@@ -153,4 +167,4 @@ endif()
- if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
-   install(TARGETS cimg
-       EXPORT Matplot++Targets)
--endif()
-\ No newline at end of file
-+endif()
 diff --git a/source/matplot/CMakeLists.txt b/source/matplot/CMakeLists.txt
-index fe9ad53..c493418 100644
+index fe9ad53..b06ed7e 100644
 --- a/source/matplot/CMakeLists.txt
 +++ b/source/matplot/CMakeLists.txt
-@@ -1,5 +1,5 @@
+@@ -1,5 +1,4 @@
  if(NOT MINGW)
 -find_package(Filesystem REQUIRED COMPONENTS Experimental Final)
-+find_package(Filesystem COMPONENTS Experimental Final)
  endif()
  
  #######################################################
-@@ -102,12 +102,16 @@ target_include_directories(matplot
+@@ -102,12 +101,13 @@ target_include_directories(matplot
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
  
  # Dependencies
@@ -206,9 +187,6 @@ index fe9ad53..c493418 100644
 -  PRIVATE cimg nodesoup std::filesystem)
 +target_link_libraries(matplot
 +  PRIVATE cimg nodesoup::nodesoup)
-+  if(TARGET std::filesystem)
-+    target_link_libraries(matplot PRIVATE std::filesystem)
-+  endif()
  else()
 -target_link_libraries_system(matplot
 -  PRIVATE cimg nodesoup)
@@ -217,7 +195,7 @@ index fe9ad53..c493418 100644
  endif()
  
  # Required compiler features required
-@@ -134,7 +138,6 @@ maybe_target_pedantic_warnings(matplot)
+@@ -134,7 +134,6 @@ maybe_target_pedantic_warnings(matplot)
  # Use experimental filesystem if std::filesystem is not available yet
  if(NOT MINGW)
      if (CXX_FILESYSTEM_IS_EXPERIMENTAL)
@@ -225,7 +203,7 @@ index fe9ad53..c493418 100644
      endif()
  endif()
  # Some hack to not depend on FILE* internals
-@@ -217,7 +220,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+@@ -217,7 +216,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
      find_package(OpenGL REQUIRED)
  
      # https://github.com/Dav1dde/glad
@@ -234,7 +212,7 @@ index fe9ad53..c493418 100644
      if (NOT GLAD_FOUND AND NOT TARGET glad)
          # Use CPM only if not found, to avoid ODR violations
          # find_package(GLAD REQUIRE) would suffice if it worked well
-@@ -233,7 +236,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+@@ -233,7 +232,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
      endif ()
  
      # https://github.com/glfw/glfw
@@ -243,7 +221,7 @@ index fe9ad53..c493418 100644
      if (NOT GLFW3_FOUND AND NOT TARGET glfw)
          # Use CPM only if not found, to avoid ODR violations
          # find_package(glfw3 REQUIRE) would suffice if it worked well
-@@ -247,7 +250,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+@@ -247,7 +246,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
              backend/opengl.h
              backend/opengl.cpp
              )
