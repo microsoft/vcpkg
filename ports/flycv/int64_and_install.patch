@@ -1,0 +1,90 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 097f8e3..9c5152e 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -79,18 +79,18 @@ endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+ 
+ configure_file(
+     "${PROJECT_SOURCE_DIR}/include/flycv_namespace.h.in"
+-    "${CMAKE_INSTALL_PREFIX}/flycv/include/flycv_namespace.h")
++    "${CMAKE_INSTALL_PREFIX}/include/flycv_namespace.h")
+ 
+ configure_file(
+     "${PROJECT_SOURCE_DIR}/include/version.h.in"
+-    "${CMAKE_INSTALL_PREFIX}/flycv/include/version.h")
++    "${CMAKE_INSTALL_PREFIX}/include/version.h")
+ 
+ # add modules
+ add_subdirectory(modules)
+ 
+ configure_file(
+     "${PROJECT_SOURCE_DIR}/include/flycv.h.in"
+-    "${CMAKE_INSTALL_PREFIX}/flycv/include/flycv.h")
++    "${CMAKE_INSTALL_PREFIX}/include/flycv.h")
+ 
+ # ============================ Unit Test ==================================
+ # Add gtest
+diff --git a/cmake/platform/windows/windows.cmake b/cmake/platform/windows/windows.cmake
+index 04d487a..2bcd83c 100755
+--- a/cmake/platform/windows/windows.cmake
++++ b/cmake/platform/windows/windows.cmake
+@@ -1,6 +1,4 @@
+ add_compile_options(/W4)
+-set(CMAKE_CXX_FLAGS_RELEASE /MD)
+-set(CMAKE_CXX_FLAGS_DEBUG /MDd)
+ set(CMAKE_CXX_STANDARD 11)
+ 
+ if(CMAKE_BUILD_TYPE STREQUAL Release)
+diff --git a/modules/CMakeLists.txt b/modules/CMakeLists.txt
+index ee9b14f..75333ea 100755
+--- a/modules/CMakeLists.txt
++++ b/modules/CMakeLists.txt
+@@ -4,7 +4,7 @@ endif()
+ 
+ include_directories(
+     ${PROJECT_SOURCE_DIR}
+-    ${CMAKE_INSTALL_PREFIX}/flycv/include
++    ${CMAKE_INSTALL_PREFIX}/include
+ )
+ 
+ get_subdir_list(FCV_ALL_MODULE_LIST ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -110,24 +110,13 @@ foreach(each_interface ${FCV_UNIVERSE_INTERFACES})
+     install(FILES
+         ${CMAKE_SOURCE_DIR}/${each_interface}
+         DESTINATION
+-        ${CMAKE_INSTALL_PREFIX}/flycv/include/${OUTPUT_INTERFACE_PATH}
++        ${CMAKE_INSTALL_PREFIX}/include/${OUTPUT_INTERFACE_PATH}
+     )
+ endforeach()
+ 
+-install(TARGETS ${FCV_TARGET_NAME}
+-    DESTINATION ${CMAKE_INSTALL_PREFIX}/flycv/${FCV_INSTALL_LIB_NAME})
++install(TARGETS ${FCV_TARGET_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
++install(TARGETS ${FCV_TARGET_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+ 
+ if(BUILD_SHARED_LIBS AND (BUILD_TEST OR BUILD_BENCHMARK))
+     install(TARGETS ${FCV_TARGET_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+ endif()
+-
+-foreach(item ${FCV_EXPORT_LIBS})
+-    string(REGEX MATCH "\/" BLACKSLASH ${item})
+-    if ("${BLACKSLASH}" STREQUAL "")
+-        install(TARGETS ${item}
+-            DESTINATION ${CMAKE_INSTALL_PREFIX}/flycv/${FCV_INSTALL_LIB_NAME})
+-    else()
+-        install(FILES ${item}
+-            DESTINATION ${CMAKE_INSTALL_PREFIX}/flycv/${FCV_INSTALL_LIB_NAME})
+-    endif()
+-endforeach()
+diff --git a/modules/img_transform/resize/src/resize_avx.cpp b/modules/img_transform/resize/src/resize_avx.cpp
+index c9c8260..f167dde 100755
+--- a/modules/img_transform/resize/src/resize_avx.cpp
++++ b/modules/img_transform/resize/src/resize_avx.cpp
+@@ -13,6 +13,7 @@
+ // limitations under the License.
+ 
+ #include "modules/img_transform/resize/include/resize_avx.h"
++typedef int64_t __int64_t;
+ 
+ #include <cmath>
+ #include <immintrin.h>
