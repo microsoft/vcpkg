@@ -210,7 +210,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 
 	message(STATUS "Warning: Building TensorFlow can take an hour or more.")
-	set(BUILD_OPTS --jobs=${VCPKG_CONCURRENCY} --config=opt)
+	set(BUILD_OPTS --jobs=${VCPKG_CONCURRENCY} --config=opt --action_env PATH)
 	set(COPTS "")
 	set(CXXOPTS "")
 	set(LINKOPTS "")
@@ -326,6 +326,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			bazel-out/x64_windows-dbg/bin/external/com_github_grpc_grpc/src/compiler/_objs/grpc_cpp_plugin/cpp_plugin.obj.params
 			bazel-out/x64_windows-dbg/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
 			# bash script
+			bazel-x64-windows-dbg/external/bazel_tools/tools/genrule/genrule-setup.sh
 			bazel-out/x64_windows-dbg/bin/tensorflow/cc/training_ops_genrule.genrule_script.sh
 	)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
