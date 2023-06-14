@@ -7581,8 +7581,8 @@
       "port-version": 1
     },
     "soem": {
-      "baseline": "1.4.0",
-      "port-version": 4
+      "baseline": "2023-06-09",
+      "port-version": 0
     },
     "soil": {
       "baseline": "2021-04-22",
