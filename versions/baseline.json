@@ -5646,7 +5646,7 @@
     },
     "nifly": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nifticlib": {
       "baseline": "2020-04-30",
