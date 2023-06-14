@@ -7,17 +7,20 @@ vcpkg_from_github(
     SHA512 be98cd5a1106fb1b6e6cb6b880229f590c2d4c4cc176dcceb2e2226ff3f2344ccb4510fb3a0911e9329701af50f076ee2efb9a3afc9e985b4d9c3fb92c12102d
     HEAD_REF master
     PATCHES
-		      fix-cmakelists.patch
+        fix-cmakelists.patch
 )
-#return()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
-    -DBUILD_DEMO=OFF
+        -DBUILD_DEMO=OFF
 )
+
 vcpkg_cmake_install()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
 vcpkg_cmake_config_fixup(PACKAGE_NAME nodesoup CONFIG_PATH lib/cmake/nodesoup)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/nodesoup/" RENAME copyright)
