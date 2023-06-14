@@ -2552,6 +2552,10 @@
       "baseline": "2.3.2",
       "port-version": 2
     },
+    "flycv": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "fmem": {
       "baseline": "c-libs-2ccee3d2fb",
       "port-version": 3
