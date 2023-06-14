@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO endingly/games101-cgl
     REF v${VERSION}
-    SHA512  59b0d0aea7629f7c07e4815408ee96dee3c62c128a57420fb9d7c395f28eae1d6fedb6193ff844ed2d84df632fda2a0f2f3ad5e471a03fa7543d21da10ca3af5
+    SHA512  609bc549a5bb20254fa8ae8a765b688352d017bf4f1fa278385b534da3c75eb81fc893dd1736db7efd0ab13c62de3597ccb678a3c2a6f31c0ee6549f6d5c9f3d
     HEAD_REF main
 )
 
