@@ -7546,7 +7546,7 @@
     },
     "sltbench": {
       "baseline": "2.4.0",
-      "port-version": 2
+      "port-version": 3
     },
     "smf": {
       "baseline": "0.1.1",
