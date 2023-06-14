@@ -89,6 +89,7 @@ function(vcpkg_check_features)
         if(variable STREQUAL last_variable)
             message(FATAL_ERROR "vcpkg_check_features passed the same feature variable multiple times: '${variable}'")
         endif()
+        set(last_variable ${variable})
     endforeach()
 
     set("${arg_OUT_FEATURE_OPTIONS}" "${feature_options}" PARENT_SCOPE)
