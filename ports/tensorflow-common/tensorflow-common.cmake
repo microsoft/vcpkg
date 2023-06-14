@@ -151,7 +151,11 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   list(APPEND PORT_BUILD_CONFIGS "rel")
 endif()
 
+vcpkg_backup_env_variables(VARS PATH)
+
 foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
+	vcpkg_restore_env_variables(VARS PATH)
+
 	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks
 	vcpkg_list(SET extra_patches)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -184,6 +188,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
 	file(RENAME ${SOURCE_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
 	set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}")
+	vcpkg_add_to_path("${SOURCE_PATH}") # for relative paths
 
 	vcpkg_execute_required_process(
 		COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py --workspace "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
@@ -327,6 +332,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			bazel-out/x64_windows-dbg/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
 			# bash script
 			bazel-x64-windows-dbg/external/bazel_tools/tools/genrule/genrule-setup.sh
+			bazel-out/x64_windows-dbg/bin/tensorflow/cc/array_ops_genrule.genrule_script.sh
 			bazel-out/x64_windows-dbg/bin/tensorflow/cc/training_ops_genrule.genrule_script.sh
 	)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
