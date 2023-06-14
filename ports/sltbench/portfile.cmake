@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_download_distfile(
     MISSING_STDDEF_H
     URLS https://github.com/ivafanas/sltbench/commit/ec702203f406d3b1db71dac6bd39337d175cdc2c.patch?full_index=1
-    SHA512 0
+    SHA512 ada4ac8519dc7c5537438423d83cee99cd85b84172c402438800f70f6a550875819ea94be8cffcb174a45715e6709e1fd777415424aabf65a1b3e4430b503af1
     FILENAME ec702203f406d3b1db71dac6bd39337d175cdc2c.patch
 )
 
