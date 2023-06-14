@@ -235,6 +235,9 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK --linkopt=/OPT:REF --linkopt=/OPT:ICF)
 			list(APPEND COPTS --host_copt=/Od --host_copt=/Z7) # as in fastbuild
 			list(APPEND LINKOPTS --host_linkopt=/DEBUG:FASTLINK --host_linkopt=/OPT:REF --host_linkopt=/OPT:ICF)
+			# markers, no-op
+			list(APPEND COPTS --copt=/DVCPKG_TARGET --host_copt=/DVCPKG_HOST)
+			list(APPEND LINKOPTS --linkopt=/NODEFAULTLIB:VCPKG_TARGET.lib --host_linkopt=/NODEFAULTLIB:VCPKG_HOST.lib)
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
@@ -258,7 +261,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		separate_arguments(VCPKG_LINKER_FLAGS ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS})
 		separate_arguments(VCPKG_LINKER_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_DEBUG)
-			list(APPEND LINKOPTS "--linkopt=${OPT}")
+			#list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
 	else()
 		list(APPEND BUILD_OPTS --compilation_mode=opt)
@@ -330,9 +333,12 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			# x64-windows-<compilation_mode>: regular
 			bazel-out/x64_windows-dbg/bin/external/com_github_grpc_grpc/src/compiler/_objs/grpc_cpp_plugin/cpp_plugin.obj.params
 			bazel-out/x64_windows-dbg/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
+			bazel-out/x64_windows-dbg/bin/tensorflow/compiler/tf2xla/kernels/_objs/xla_ops/random_ops_util.obj.param
+			bazel-out/x64_windows-dbg/bin/tensorflow/cc/ops/random_ops_gen_cc.exe-2.params
 			# bash script
 			bazel-x64-windows-dbg/external/bazel_tools/tools/genrule/genrule-setup.sh
 			bazel-out/x64_windows-dbg/bin/tensorflow/cc/array_ops_genrule.genrule_script.sh
+			bazel-out/x64_windows-dbg/bin/tensorflow/cc/random_ops_genrule.genrule_script.sh
 			bazel-out/x64_windows-dbg/bin/tensorflow/cc/training_ops_genrule.genrule_script.sh
 	)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
