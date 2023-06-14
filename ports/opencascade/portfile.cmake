@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
-    REF 185d29b92f6764ffa9fc195b7dbe7bba3c4ac855 #V7.7.0
-    SHA512 837b8a8d5163647bdd1689c7afbf8774fad8525b411213fc53ee5892336e9f7a02947ef6bf12f86ab09e016e7f96c2f9f9470790e61efc0155f172a05d54cf0f
+    REF ffce0d66bbaafe3a95984d0e61804c201b9995d2 #V7.7.1
+    SHA512 bf65ec9334e67e0d33cfd05c25e4ff1f454646a61b43fbbdce5cb38f9c433db421c90c4dc79bc401feeccb78b88be25615eb09b385636a243e75be3d3a9e1be4
     HEAD_REF master
     PATCHES
         fix-pdb-find.patch
