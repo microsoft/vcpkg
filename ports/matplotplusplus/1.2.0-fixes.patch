@@ -1,0 +1,752 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index de1ffe9..12e814d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,6 +53,15 @@ option(MATPLOTPP_BUILD_HIGH_RESOLUTION_WORLD_MAP "Compile the high resolution ma
+ option(MATPLOTPP_BUILD_FOR_DOCUMENTATION_IMAGES "Bypass show() commands and save figures as .svg at destruction" OFF)
+ option(MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND "Compile target with the experimental OpenGL backend" OFF)
+ 
++# Optional dependencies
++option(MATPLOTPP_WITH_JPEG "Require building with JPEG support" OFF)
++option(MATPLOTPP_WITH_TIFF "Require building with TIFF support" OFF)
++option(MATPLOTPP_WITH_PNG "Require building with PNG support" OFF)
++option(MATPLOTPP_WITH_LAPACK "Require building with LAPACK support" OFF)
++option(MATPLOTPP_WITH_BLAS "Require building with BLAS support" OFF)
++option(MATPLOTPP_WITH_FFTW "Require building with FFTW support" OFF)
++option(MATPLOTPP_WITH_OpenCV "Require building with OpenCV support" OFF)
++
+ # Where to find dependencies
+ option(MATPLOTPP_WITH_SYSTEM_CIMG "Use system-provided CImg.h instead of bundled" OFF)
+ option(MATPLOTPP_WITH_SYSTEM_NODESOUP "Use system-provided nodesoup instead of bundled" OFF)
+diff --git a/Matplot++Config.cmake.in b/Matplot++Config.cmake.in
+index fc9ceca..e0b25cb 100644
+--- a/Matplot++Config.cmake.in
++++ b/Matplot++Config.cmake.in
+@@ -11,11 +11,29 @@ if (NOT CMAKE_CXX_COMPILER_ID STREQUAL MATPLOT_BUILT_CXX_COMPILER_ID)
+ endif()
+ 
+ # Find dependencies
++
+ if(NOT ${MATPLOT_BUILT_SHARED})
+     include(CMakeFindDependencyMacro)
+     list(APPEND CMAKE_MODULE_PATH ${MATPLOT_CONFIG_INSTALL_DIR})
+     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
++
++    # optional dependencies
++    set(MATPLOT_OPTIONAL_DEPENDENCIES JPEG TIFF ZLIB PNG LAPACK BLAS FFTW3 OpenCV)
++    foreach(MATPLOT_OPTIONAL_DEPENDENCY ${MATPLOT_OPTIONAL_DEPENDENCIES})
++        if (@MATPLOTPP_WITH_${MATPLOT_OPTIONAL_DEPENDENCY}@)
++            find_dependency(${MATPLOT_OPTIONAL_DEPENDENCY} REQUIRED)
++        else()
++            find_dependency(${MATPLOT_OPTIONAL_DEPENDENCY})
++        endif()
++    endforeach()
++
+     find_dependency(Filesystem COMPONENTS Experimental Final)
++
++    # OpenGL backend
++    if (@MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND@)
++        find_dependency(glad)
++        find_dependency(glfw3)
++    endif()
+     list(POP_BACK CMAKE_MODULE_PATH)
+ endif()
+ 
+diff --git a/README.md b/README.md
+index b989db4..d38f82d 100644
+--- a/README.md
++++ b/README.md
+@@ -9341,14 +9341,21 @@ If contributing to the documentation, please edit [`README.md`](README.md) direc
+             <sub><b>Actions-user</b></sub>
+         </a>
+     </td>
++    <td align="center">
++        <a href="https://github.com/aminya">
++            <img src="https://avatars.githubusercontent.com/u/16418197?v=4" width="100;" alt="aminya"/>
++            <br />
++            <sub><b>Amin Yahyaabadi</b></sub>
++        </a>
++    </td></tr>
++<tr>
+     <td align="center">
+         <a href="https://github.com/leha-bot">
+             <img src="https://avatars.githubusercontent.com/u/10153298?v=4" width="100;" alt="leha-bot"/>
+             <br />
+             <sub><b>Alex</b></sub>
+         </a>
+-    </td></tr>
+-<tr>
++    </td>
+     <td align="center">
+         <a href="https://github.com/rath3t">
+             <img src="https://avatars.githubusercontent.com/u/10537464?v=4" width="100;" alt="rath3t"/>
+@@ -9383,15 +9390,15 @@ If contributing to the documentation, please edit [`README.md`](README.md) direc
+             <br />
+             <sub><b>Gitplcc</b></sub>
+         </a>
+-    </td>
++    </td></tr>
++<tr>
+     <td align="center">
+         <a href="https://github.com/madronalabs">
+             <img src="https://avatars.githubusercontent.com/u/1434276?v=4" width="100;" alt="madronalabs"/>
+             <br />
+             <sub><b>Randy Jones</b></sub>
+         </a>
+-    </td></tr>
+-<tr>
++    </td>
+     <td align="center">
+         <a href="https://github.com/sammi">
+             <img src="https://avatars.githubusercontent.com/u/189128?v=4" width="100;" alt="sammi"/>
+@@ -9406,13 +9413,6 @@ If contributing to the documentation, please edit [`README.md`](README.md) direc
+             <sub><b>Akash Patel</b></sub>
+         </a>
+     </td>
+-    <td align="center">
+-        <a href="https://github.com/aminya">
+-            <img src="https://avatars.githubusercontent.com/u/16418197?v=4" width="100;" alt="aminya"/>
+-            <br />
+-            <sub><b>Amin Yahyaabadi</b></sub>
+-        </a>
+-    </td>
+     <td align="center">
+         <a href="https://github.com/aalbaali">
+             <img src="https://avatars.githubusercontent.com/u/36138453?v=4" width="100;" alt="aalbaali"/>
+diff --git a/cmake/FindFilesystem.cmake b/cmake/FindFilesystem.cmake
+index 7547e3f..25d905b 100644
+--- a/cmake/FindFilesystem.cmake
++++ b/cmake/FindFilesystem.cmake
+@@ -128,6 +128,9 @@ set(CMAKE_REQUIRED_QUIET ${Filesystem_FIND_QUIETLY})
+ # All of our tests required C++17 or later
+ if(NOT DEFINED CMAKE_CXX_STANDARD OR CMAKE_CXX_STANDARD LESS 17)
+     set(CMAKE_CXX_STANDARD 17)
++    if (NOT DEFINED CMAKE_REQUIRED_FLAGS)
++        set(CMAKE_REQUIRED_FLAGS "-std=c++17")
++    endif()
+ endif()
+ 
+ # Normalize and check the component list we were given
+@@ -154,7 +157,7 @@ if(NOT "Experimental" IN_LIST want_components)
+ endif()
+ 
+ if(find_final)
+-    check_include_file_cxx("filesystem" _CXX_FILESYSTEM_HAVE_HEADER)
++    check_include_file_cxx("filesystem" _CXX_FILESYSTEM_HAVE_HEADER CMAKE_REQUIRED_FLAGS ${CMAKE_REQUIRED_FLAGS})
+     mark_as_advanced(_CXX_FILESYSTEM_HAVE_HEADER)
+     if(_CXX_FILESYSTEM_HAVE_HEADER)
+         # We found the non-experimental header. Don't bother looking for the
+@@ -245,5 +248,5 @@ cmake_pop_check_state()
+ set(Filesystem_FOUND ${_found} CACHE BOOL "TRUE if we can run a program using std::filesystem" FORCE)
+ 
+ if(Filesystem_FIND_REQUIRED AND NOT Filesystem_FOUND)
+-    message(FATAL_ERROR "Cannot run a simple program using std::filesystem\nYou need to update your C++ compiler to use this library")
++    message(STATUS "Could not run a simple program using std::filesystem\nYou might need to update your C++ compiler to use this library")
+ endif()
+diff --git a/source/3rd_party/CMakeLists.txt b/source/3rd_party/CMakeLists.txt
+index b5656e1..5b806ea 100644
+--- a/source/3rd_party/CMakeLists.txt
++++ b/source/3rd_party/CMakeLists.txt
+@@ -1,3 +1,5 @@
++set(EXPORTED_TARGETS)
++
+ #######################################################
+ ### NodeSoup                                        ###
+ #######################################################
+@@ -44,7 +46,9 @@ endif()
+ if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
+   install(TARGETS nodesoup
+       EXPORT Matplot++Targets
+-      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/Matplot++)
++      RUNTIME DESTINATION bin
++      LIBRARY DESTINATION lib
++      ARCHIVE DESTINATION lib)
+ endif()
+ 
+ 
+@@ -52,6 +56,7 @@ endif()
+ ### CImg                                            ###
+ #######################################################
+ add_library(cimg INTERFACE)
++list(APPEND EXPORTED_TARGETS cimg)
+ if(WITH_SYSTEM_CIMG)
+   find_path(CIMG_INCLUDE_DIR CImg.h REQUIRED)
+ else()
+@@ -69,57 +74,115 @@ find_package(PkgConfig)
+ #            Lots of optional packages are not a good idea in general.
+ #            It makes the library much less "packagable" (https://youtu.be/sBP17HQAQjk)
+ #            and much more difficult to make sure it works on multiple OSs
+-find_package(JPEG)
++
++if(MATPLOTPP_WITH_JPEG)
++  find_package(JPEG REQUIRED)
++else()
++  find_package(JPEG QUIET)
++endif()
+ if(JPEG_FOUND)
+   target_compile_definitions(cimg INTERFACE cimg_use_jpeg)
+   target_link_libraries(cimg INTERFACE ${JPEG_LIBRARIES})
+   target_include_directories(cimg INTERFACE ${JPEG_INCLUDE_DIRS})
+ endif()
+ 
+-find_package(TIFF)
++if(MATPLOTPP_WITH_TIFF)
++  find_package(TIFF REQUIRED)
++else()
++  find_package(TIFF QUIET)
++endif()
+ if(TIFF_FOUND)
+   target_compile_definitions(cimg INTERFACE cimg_use_tiff)
+   target_link_libraries(cimg INTERFACE ${TIFF_LIBRARIES})
+   target_include_directories(cimg INTERFACE ${TIFF_INCLUDE_DIRS})
+ endif()
+ 
+-find_package(ZLIB)
+-if(ZLIB_FOUND)
+-  find_package(PNG)
+-  if (PNG_FOUND)
+-    target_compile_definitions(cimg INTERFACE cimg_use_zlib cimg_use_png)
+-    target_include_directories(cimg INTERFACE ${ZLIB_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS})
+-    target_link_libraries(cimg INTERFACE ${ZLIB_LIBRARIES} ${PNG_LIBRARIES})
+-  endif ()
++if(MATPLOTPP_WITH_PNG)
++  find_package(ZLIB REQUIRED)
++  find_package(libpng)
++  if(NOT libpng_FOUND)
++    find_package(PNG REQUIRED)
++  endif()
++else()
++  find_package(ZLIB QUIET)
++  find_package(libpng QUIET)
++  if(NOT libpng_FOUND)
++    find_package(PNG QUIET)
++  endif()
++endif()
++if(ZLIB_FOUND AND (libpng_FOUND OR PNG_FOUND))
++  target_compile_definitions(cimg INTERFACE cimg_use_zlib cimg_use_png)
++  if (TARGET ZLIB::ZLIB)
++    target_link_libraries(cimg INTERFACE ZLIB::ZLIB)
++  else()
++    target_include_directories(cimg INTERFACE ${ZLIB_INCLUDE_DIRS})
++    target_link_libraries(cimg INTERFACE ${ZLIB_LIBRARIES})
++  endif()
++  if (TARGET png)
++    target_link_libraries(cimg INTERFACE png)
++  else()
++    target_include_directories(cimg INTERFACE ${libpng_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS})
++    target_link_libraries(cimg INTERFACE ${libpng_LIBRARIES} ${PNG_LIBRARIES})
++  endif()
+ endif()
+ 
+-find_package(LAPACK)
++if(MATPLOTPP_WITH_LAPACK)
++  find_package(LAPACK REQUIRED)
++else()
++  find_package(LAPACK QUIET)
++endif()
+ if(LAPACK_FOUND)
+   target_compile_definitions(cimg INTERFACE cimg_use_lapack)
+   target_link_libraries(cimg INTERFACE ${LAPACK_LIBRARIES})
+   target_include_directories(cimg INTERFACE ${LAPACK_INCLUDE_DIRS})
+ endif()
+ 
+-find_package(BLAS)
++if(MATPLOTPP_WITH_BLAS)
++  find_package(BLAS REQUIRED)
++else()
++  find_package(BLAS QUIET)
++endif()
+ if(BLAS_FOUND)
+   target_compile_definitions(cimg INTERFACE cimg_use_blas)
+   target_link_libraries(cimg INTERFACE ${BLAS_LIBRARIES})
+   target_include_directories(cimg INTERFACE ${BLAS_INCLUDE_DIRS})
+ endif()
+ 
+-find_package(FFTW)
+-if(FFTW_FOUND)
++if(MATPLOTPP_WITH_FFTW)
++  find_package(FFTW3)
++  if(NOT FFTW3_FOUND)
++    find_package(FFTW REQUIRED)
++  endif()
++else()
++  find_package(FFTW3 QUIET)
++  if(NOT FFTW3_FOUND)
++    find_package(FFTW QUIET)
++  endif()
++endif()
++if(FFTW3_FOUND OR FFTW_FOUND)
+   target_compile_definitions(cimg INTERFACE cimg_use_fftw3)
+-  target_link_libraries(cimg INTERFACE ${FFTW_LIBRARIES})
+-  target_include_directories(cimg INTERFACE ${FFTW_INCLUDE_DIRS})
++  if (TARGET FFTW3::fftw3)
++    target_link_libraries(cimg INTERFACE FFTW3::fftw3)
++  else()
++    target_include_directories(cimg INTERFACE ${FFTW3_INCLUDE_DIRS} ${FFTW_INCLUDE_DIRS})
++    target_link_libraries(cimg INTERFACE ${FFTW3_LIBRARIES} ${FFTW_LIBRARIES})
++  endif()
+ endif()
+ 
+ if (CMAKE_MODULE_PATH)
+-  find_package(OpenCV QUIET)
++  if(MATPLOTPP_WITH_OpenCV)
++    find_package(OpenCV REQUIRED)
++  else()
++    find_package(OpenCV QUIET)
++  endif()
+   if (OpenCV_FOUND)
+     target_compile_definitions(cimg INTERFACE cimg_use_opencv)
+-    target_link_libraries(cimg INTERFACE ${OpenCV_LIBRARIES})
+-    target_include_directories(cimg INTERFACE ${OpenCV_INCLUDE_DIRS})
++    if(TARGET opencv_core)
++      target_link_libraries(cimg INTERFACE opencv_core)
++    else()
++      target_include_directories(cimg INTERFACE ${OpenCV_INCLUDE_DIRS})
++      target_link_libraries(cimg INTERFACE ${OpenCV_LIBRARIES})
++    endif()
+   endif()
+ else()
+   message("No CMAKE_MODULE_PATH path for OpenCV configured")
+@@ -151,6 +214,6 @@ endif()
+ 
+ # Install (only necessary for static lib build)
+ if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
+-  install(TARGETS cimg
++  install(TARGETS ${EXPORTED_TARGETS}
+       EXPORT Matplot++Targets)
+-endif()
+\ No newline at end of file
++endif()
+diff --git a/source/matplot/CMakeLists.txt b/source/matplot/CMakeLists.txt
+index fe9ad53..3e4850a 100644
+--- a/source/matplot/CMakeLists.txt
++++ b/source/matplot/CMakeLists.txt
+@@ -90,7 +90,7 @@ add_library(matplot
+         freestanding/plot.h
+ )
+ 
+-set(TARGETS matplot)
++set(EXPORTED_TARGETS matplot)
+ 
+ # Target aliases
+ add_library(Matplot++::matplot ALIAS matplot)
+@@ -102,7 +102,7 @@ target_include_directories(matplot
+            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+ 
+ # Dependencies
+-if(NOT MINGW)
++if(TARGET std::filesystem AND NOT MINGW)
+ target_link_libraries_system(matplot
+   PRIVATE cimg nodesoup std::filesystem)
+ else()
+@@ -214,42 +214,50 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+     # The biggest con of the OpenGL backend is that it cannot open a window
+     #     in another thread. All it can do is get in the middle of the render
+     #     loop and draw the plot.
+-    find_package(OpenGL REQUIRED)
++    add_library(matplot_opengl
++            backend/opengl_embed.h
++            backend/opengl_embed.cpp
++            backend/opengl.h
++            backend/opengl.cpp
++            )
++
++    find_package(OpenGL)
+ 
+     # https://github.com/Dav1dde/glad
+-    find_package(GLAD QUIET)
+-    if (NOT GLAD_FOUND AND NOT TARGET glad)
++    find_package(glad CONFIG)
++    if (NOT glad_FOUND)
++        find_package(GLAD QUIET)
++    endif()
++    if (NOT glad_FOUND AND NOT GLAD_FOUND)
+         # Use CPM only if not found, to avoid ODR violations
+         # find_package(GLAD REQUIRE) would suffice if it worked well
+-        FetchContent_Declare(glad GIT_REPOSITORY https://github.com/Dav1dde/glad.git GIT_TAG df8e9e16110b305479a875399cee13daa0ccadd9)
++        FetchContent_Declare(glad GIT_REPOSITORY https://github.com/Dav1dde/glad.git GIT_TAG v0.1.36)
+         FetchContent_MakeAvailable(glad)
+-    else ()
++        list(APPEND EXPORTED_TARGETS glad)
++    endif()
++    if(TARGET glad::glad)
++        target_link_libraries(matplot_opengl PUBLIC glad::glad)
++    elseif(TARGET glad)
++        target_link_libraries(matplot_opengl PUBLIC glad)
++    else()
+         # FindGLAD does not usually create a target, so we create an interface target
+-        if (NOT TARGET glad)
+-            add_library(glad INTERFACE)
+-            target_include_directories(glad INTERFACE ${GLAD_INCLUDE_PATH})
+-            target_link_libraries(glad INTERFACE ${GLAD_LIBRARIES})
+-        endif ()
+-    endif ()
++        add_library(glad::glad INTERFACE)
++        target_include_directories(glad::glad INTERFACE ${GLAD_INCLUDE_PATH})
++        target_link_libraries(glad::glad INTERFACE ${GLAD_LIBRARIES})
++    endif()
+ 
+     # https://github.com/glfw/glfw
+     find_package(glfw3 QUIET)
+-    if (NOT GLFW3_FOUND AND NOT TARGET glfw)
++    if ((NOT glfw3_FOUND AND NOT GLFW3_FOUND) OR NOT TARGET glfw)
+         # Use CPM only if not found, to avoid ODR violations
+         # find_package(glfw3 REQUIRE) would suffice if it worked well
+-        FetchContent_Declare(glfw3 GIT_REPOSITORY https://github.com/glfw/glfw.git GIT_TAG 3.3.2)
++        FetchContent_Declare(glfw3 GIT_REPOSITORY https://github.com/glfw/glfw.git GIT_TAG 3.3.8)
+         FetchContent_MakeAvailable(glfw3)
+-    endif ()
++    endif()
+ 
+-    add_library(matplot_opengl
+-            backend/opengl_embed.h
+-            backend/opengl_embed.cpp
+-            backend/opengl.h
+-            backend/opengl.cpp
+-            )
+-    target_link_libraries(matplot_opengl PUBLIC matplot glad glfw ${CMAKE_DL_LIBS})
++    target_link_libraries(matplot_opengl PUBLIC matplot glfw ${CMAKE_DL_LIBS})
+ 
+-    list(APPEND TARGETS matplot_opengl)
++    list(APPEND EXPORTED_TARGETS matplot_opengl)
+ endif()
+ 
+ #######################################################
+@@ -257,7 +265,7 @@ endif()
+ #######################################################
+ if (MATPLOTPP_BUILD_INSTALLER)
+     # Install targets
+-    install(TARGETS ${TARGETS}
++    install(TARGETS ${EXPORTED_TARGETS}
+             EXPORT Matplot++Targets
+ 	    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+diff --git a/source/matplot/axes_objects/bars.cpp b/source/matplot/axes_objects/bars.cpp
+index a2dc904..d5a5225 100644
+--- a/source/matplot/axes_objects/bars.cpp
++++ b/source/matplot/axes_objects/bars.cpp
+@@ -143,7 +143,7 @@ namespace matplot {
+ 
+     std::string bars::data_string() {
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         double m = x_minimum_difference();
+         double cw = cluster_width();
+diff --git a/source/matplot/axes_objects/box_chart.cpp b/source/matplot/axes_objects/box_chart.cpp
+index 4c39002..fe9b5e6 100644
+--- a/source/matplot/axes_objects/box_chart.cpp
++++ b/source/matplot/axes_objects/box_chart.cpp
+@@ -127,7 +127,7 @@ namespace matplot {
+         }
+         std::vector<double> unique_groups = unique(x_data_);
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         // for each group
+         for (size_t i = 0; i < unique_groups.size(); ++i) {
+diff --git a/source/matplot/axes_objects/circles.cpp b/source/matplot/axes_objects/circles.cpp
+index 6e90bf4..ddfe11d 100644
+--- a/source/matplot/axes_objects/circles.cpp
++++ b/source/matplot/axes_objects/circles.cpp
+@@ -45,7 +45,7 @@ namespace matplot {
+ 
+     std::string circles::data_string() {
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         for (size_t i = 0; i < x_.size(); ++i) {
+             auto value_or_default = [](const std::vector<double> &v,
+diff --git a/source/matplot/axes_objects/contours.cpp b/source/matplot/axes_objects/contours.cpp
+index d8b4d16..62b37f8 100644
+--- a/source/matplot/axes_objects/contours.cpp
++++ b/source/matplot/axes_objects/contours.cpp
+@@ -50,7 +50,7 @@ namespace matplot {
+         double contour_max_level = *max_it;
+ 
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         if (filled_) {
+             auto [lower_levels, upper_levels] = get_lowers_and_uppers();
+@@ -478,7 +478,7 @@ namespace matplot {
+         double zmin = *min_level_it;
+ 
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         for (size_t i = 0; i < lines_.size(); ++i) {
+             if (i != 0) {
+@@ -771,7 +771,7 @@ namespace matplot {
+         auto [lower_levels, upper_levels] = get_lowers_and_uppers();
+ 
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         if (filled_) {
+             // Plot the line segments
+diff --git a/source/matplot/axes_objects/error_bar.cpp b/source/matplot/axes_objects/error_bar.cpp
+index e004484..38c07de 100644
+--- a/source/matplot/axes_objects/error_bar.cpp
++++ b/source/matplot/axes_objects/error_bar.cpp
+@@ -79,7 +79,7 @@ namespace matplot {
+         const bool has_x_bar = !x_negative_delta_.empty();
+         const bool has_xy_bar = has_y_bar && has_x_bar;
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         if (has_xy_bar) {
+             for (size_t i = 0; i < y_data_.size(); ++i) {
+diff --git a/source/matplot/axes_objects/filled_area.cpp b/source/matplot/axes_objects/filled_area.cpp
+index bd96929..1317f02 100644
+--- a/source/matplot/axes_objects/filled_area.cpp
++++ b/source/matplot/axes_objects/filled_area.cpp
+@@ -58,7 +58,7 @@ namespace matplot {
+ 
+     std::string filled_area::data_string() {
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+ 
+         std::vector<double> stacked_data;
+diff --git a/source/matplot/axes_objects/histogram.cpp b/source/matplot/axes_objects/histogram.cpp
+index 0228aa1..71e38b3 100644
+--- a/source/matplot/axes_objects/histogram.cpp
++++ b/source/matplot/axes_objects/histogram.cpp
+@@ -55,7 +55,7 @@ namespace matplot {
+     std::string histogram::plot_string() {
+         maybe_update_face_color();
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         if (!is_polar()) {
+             if (!stairs_only_) {
+@@ -89,7 +89,7 @@ namespace matplot {
+     std::string histogram::data_string() {
+         make_sure_data_is_preprocessed();
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         if (!is_polar()) {
+             for (size_t i = 0; i < values_.size(); ++i) {
+diff --git a/source/matplot/axes_objects/labels.cpp b/source/matplot/axes_objects/labels.cpp
+index 58318b0..b8ea3e7 100644
+--- a/source/matplot/axes_objects/labels.cpp
++++ b/source/matplot/axes_objects/labels.cpp
+@@ -98,7 +98,7 @@ namespace matplot {
+             font_size_factor = (xrange_increase + yrange_increase) / 2.;
+         }
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         const bool custom_sizes = !sizes_.empty();
+         const bool custom_colors = !colors_.empty();
+diff --git a/source/matplot/axes_objects/line.cpp b/source/matplot/axes_objects/line.cpp
+index 1e4667b..ad9f110 100644
+--- a/source/matplot/axes_objects/line.cpp
++++ b/source/matplot/axes_objects/line.cpp
+@@ -163,7 +163,7 @@ namespace matplot {
+         const bool x_is_manual = !x_data_.empty();
+ 
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         for (const auto &style : styles_to_plot()) {
+             if (visible_) {
+diff --git a/source/matplot/axes_objects/matrix.cpp b/source/matplot/axes_objects/matrix.cpp
+index 3c907f3..f696a66 100644
+--- a/source/matplot/axes_objects/matrix.cpp
++++ b/source/matplot/axes_objects/matrix.cpp
+@@ -167,7 +167,7 @@ namespace matplot {
+ 
+         // stream matrix
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         double x_width_ = x_width();
+         double y_width_ = y_width();
+@@ -275,7 +275,7 @@ namespace matplot {
+ 
+     std::string matrix::image_data_string() {
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         auto [h, w] = size(matrices_[0]);
+         double x_width_ = x_width();
+diff --git a/source/matplot/axes_objects/network.cpp b/source/matplot/axes_objects/network.cpp
+index b22b7b1..8086a77 100644
+--- a/source/matplot/axes_objects/network.cpp
++++ b/source/matplot/axes_objects/network.cpp
+@@ -106,7 +106,7 @@ namespace matplot {
+ 
+     std::string network::data_string() {
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         bool plot_z_data = z_data_.size() == x_data_.size();
+         bool line_width_is_variable = !line_widths_.empty() && z_data_.empty();
+diff --git a/source/matplot/axes_objects/network.h b/source/matplot/axes_objects/network.h
+index 57d408f..8cfd117 100644
+--- a/source/matplot/axes_objects/network.h
++++ b/source/matplot/axes_objects/network.h
+@@ -83,7 +83,7 @@ namespace matplot {
+         network &edge_labels(const IterableValues<C> &e_labels) {
+             std::vector<std::string> str_labels;
+             std::stringstream ss;
+-            ss.precision(5);
++            ss.precision(10);
+             ss << std::fixed;
+             for (const auto &edge_label : e_labels) {
+                 ss << "{/:Italic " << edge_label << " }";
+@@ -101,7 +101,7 @@ namespace matplot {
+         network &node_labels(const IterableValues<C> &e_labels) {
+             std::vector<std::string> str_labels;
+             std::stringstream ss;
+-            ss.precision(5);
++            ss.precision(10);
+             ss << std::fixed;
+             for (const auto &edge_label : e_labels) {
+                 ss << edge_label;
+diff --git a/source/matplot/axes_objects/parallel_lines.cpp b/source/matplot/axes_objects/parallel_lines.cpp
+index 6b46e32..6c5931f 100644
+--- a/source/matplot/axes_objects/parallel_lines.cpp
++++ b/source/matplot/axes_objects/parallel_lines.cpp
+@@ -170,7 +170,7 @@ namespace matplot {
+ 
+         const bool color_is_variable = !line_colors_.empty();
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         // for each point
+         for (size_t i = 0; i < data_[0].size(); ++i) {
+diff --git a/source/matplot/axes_objects/surface.cpp b/source/matplot/axes_objects/surface.cpp
+index aba34ef..b1fca68 100644
+--- a/source/matplot/axes_objects/surface.cpp
++++ b/source/matplot/axes_objects/surface.cpp
+@@ -58,7 +58,7 @@ namespace matplot {
+     std::string surface::set_variables_string() {
+         maybe_update_line_spec();
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+ 
+         if (surface_in_2d_) {
+@@ -249,7 +249,7 @@ namespace matplot {
+ 
+     std::string surface::plot_string() {
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         // plot surface
+         bool is_solid_surface = palette_map_at_bottom_ ||
+@@ -350,7 +350,7 @@ namespace matplot {
+ 
+     std::string surface::grid_data_string() {
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         const bool contour = (contour_base_ || contour_surface_);
+         const bool palette_map_3d = palette_map_at_bottom_ ||
+@@ -475,7 +475,7 @@ namespace matplot {
+ 
+     std::string surface::ribbon_data_string() {
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         auto send_point = [](std::stringstream &ss, double x, double y,
+                              double z, double c) {
+diff --git a/source/matplot/axes_objects/vectors.cpp b/source/matplot/axes_objects/vectors.cpp
+index 3f01c41..f3deaac 100644
+--- a/source/matplot/axes_objects/vectors.cpp
++++ b/source/matplot/axes_objects/vectors.cpp
+@@ -72,7 +72,7 @@ namespace matplot {
+     std::string vectors::plot_string() {
+         maybe_update_line_spec();
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         ss << " '-' with vectors";
+         if (!c_data_.empty()) {
+@@ -115,7 +115,7 @@ namespace matplot {
+ 
+     std::string vectors::data_string() {
+         std::stringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         if (visible_) {
+             for (size_t i = 0; i < v_data_.size(); ++i) {
+diff --git a/source/matplot/core/axes_type.cpp b/source/matplot/core/axes_type.cpp
+index 6f787b0..b1e3b04 100644
+--- a/source/matplot/core/axes_type.cpp
++++ b/source/matplot/core/axes_type.cpp
+@@ -100,7 +100,7 @@ namespace matplot {
+         if (any_obj_needs_colormap && !colormap_.empty() &&
+             !children_.empty()) {
+             std::stringstream ss;
+-            ss.precision(5);
++            ss.precision(10);
+             ss << std::fixed;
+             // limit the number of colors in the palette
+             // this is useful for contour plots
+@@ -527,7 +527,7 @@ namespace matplot {
+ 
+             if (cb_axis_.visible()) {
+                 std::stringstream ss;
+-                ss.precision(5);
++                ss.precision(10);
+                 ss << std::fixed;
+                 ss << "set colorbox";
+                 if (!cb_axis_.reverse()) {
+diff --git a/source/matplot/util/common.h b/source/matplot/util/common.h
+index cb95f22..c45bc59 100644
+--- a/source/matplot/util/common.h
++++ b/source/matplot/util/common.h
+@@ -46,7 +46,7 @@ namespace matplot {
+ 
+     template <class T> std::string num2str(Arithmetic<T> num) {
+         std::ostringstream ss;
+-        ss.precision(5);
++        ss.precision(10);
+         ss << std::fixed;
+         ss << num;
+         return ss.str();
+diff --git a/test/generate_examples/CMakeLists.txt b/test/generate_examples/CMakeLists.txt
+index 32d0145..c9f7d09 100644
+--- a/test/generate_examples/CMakeLists.txt
++++ b/test/generate_examples/CMakeLists.txt
+@@ -1,8 +1,8 @@
+ if(NOT MINGW)
+-find_package(Filesystem REQUIRED)
++  find_package(Filesystem REQUIRED)
+ endif()
+ add_executable(generate_examples main.cpp)
+-if(NOT MINGW)
+-target_link_libraries(generate_examples std::filesystem)
++if(TARGET std::filesystem)
++  target_link_libraries(generate_examples std::filesystem)
+ endif()
+-target_compile_features(generate_examples PRIVATE cxx_std_17)
+\ No newline at end of file
++target_compile_features(generate_examples PRIVATE cxx_std_17)

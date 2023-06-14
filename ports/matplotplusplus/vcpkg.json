@@ -55,8 +55,8 @@
         "opengl"
       ]
     },
-    "zlib": {
-      "description": "ZLIB and libpng support for Matplot++",
+    "png": {
+      "description": "png support for Matplot++",
       "dependencies": [
         "libpng",
         "zlib"

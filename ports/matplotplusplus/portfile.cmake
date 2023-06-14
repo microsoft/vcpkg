@@ -13,25 +13,21 @@ vcpkg_from_github(
     SHA512 9193381fd9d4925259f28a03da33231b3da1273237e7510b93da1ca076610455746feb4ea0d8aa9a4a9e46a5f5f344fc1322f7ffc57963837dbe8b0be0b811ac
     HEAD_REF master
     PATCHES
-        install-3rd-libraries.patch # Remove this patch when nodesoup is added in vcpkg
-        fix-dependencies.patch
-        feat-support-OpenGL-dependencies-with-config.patch
-        # remove these for the next version as they are already merged upstream
-        fix-pass-filesystem-s-required-flags-for-osx-failure.patch
-        fix-fix-build-on-MacOS-when-FindFileSystem-fails.patch
+        # remove this for the next version
+        1.2.0-fixes.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         opengl  MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND
-        jpeg    WITH_JPEG
-        tiff    WITH_TIFF
-        zlib    WITH_ZLIB
-        lapack  WITH_LAPACK
-        blas    WITH_BLAS
-        fftw3   WITH_FFTW3
-        opencv  WITH_OPENCV
+        jpeg    MATPLOTPP_WITH_JPEG
+        tiff    MATPLOTPP_WITH_TIFF
+        png     MATPLOTPP_WITH_PNG
+        lapack  MATPLOTPP_WITH_LAPACK
+        blas    MATPLOTPP_WITH_BLAS
+        fftw    MATPLOTPP_WITH_FFTW
+        opencv  MATPLOTPP_WITH_OpenCV
 )
 
 vcpkg_cmake_configure(
