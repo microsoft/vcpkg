@@ -1,12 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sewenew/redis-plus-plus
-    REF f3b19a8a1f609d1a1b79002802e5cf8c336dc262 # 1.3.7
-    SHA512 c99a4506be06224ebc4adaa29d5eeff0f6efae8b99e48ac02c26cec4a86fb46237a7d380ddb89eddc3d2e75c0c567e9b68610bcf271a0c708bca8ca6a5641075
+    REF 4368319fb668204f345da05b9dd79762506c67b6 # 1.3.8
+    SHA512 37774078fb98992c4b4be276c91a2b6a8b8810d62a5087184d1fa2c05db77de15058d5139747578f7a2f9219351c05de32740b63c153ea902493d4b5d05c2d68
     HEAD_REF master
     PATCHES
         fix-conversion.patch
         fix-dependency-libuv.patch
+        fix-absolute-path.patch
 )
 
 if("cxx17" IN_LIST FEATURES)
@@ -28,6 +29,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" REDIS_PLUS_PLUS_BUILD_
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DREDIS_PLUS_PLUS_USE_TLS=OFF
         -DREDIS_PLUS_PLUS_BUILD_STATIC=${REDIS_PLUS_PLUS_BUILD_STATIC}

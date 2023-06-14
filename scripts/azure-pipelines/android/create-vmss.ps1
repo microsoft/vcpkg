@@ -3,4 +3,4 @@ Param(
   [parameter(Mandatory=$true)]
   [string]$ImageName
 )
-../linux/create-vmss.ps1 -ImageName $ImageName -Prefix "PrAnd-"
+& "$PSScriptRoot/../linux/create-vmss.ps1" -ImageName $ImageName -Prefix "PrAnd-" -AddAndroidContainerRegistryPermissions
