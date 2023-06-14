@@ -1,77 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index be6aa9d..5d13818 100644
+index be6aa9d..26e59f3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -7,63 +7,26 @@ project(
-   HOMEPAGE_URL "https://github.com/olvb/nodesoup"
-   LANGUAGES CXX)
- 
--if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
--  option(BUILD_DEMO "Build the demo" ON)
--  option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
--endif()
--
--set(default_build_type "Release")
--if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
--  message(
--    STATUS
--      "Setting build type to '${default_build_type}' as none was specified.")
--  set(CMAKE_BUILD_TYPE
--      "${default_build_type}"
--      CACHE STRING "Choose the type of build." FORCE)
--  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
--                                               "MinSizeRel" "RelWithDebInfo")
--endif()
- 
- add_subdirectory(src)
- 
--include(GNUInstallDirs)
- install(
-   TARGETS nodesoup
-   EXPORT nodesoup-targets
-   LIBRARY DESTINATION lib
+@@ -34,7 +34,7 @@ install(
    ARCHIVE DESTINATION lib
--  INCLUDES
--  DESTINATION include
+   INCLUDES
+   DESTINATION include
 -  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nodesoup)
 +  PUBLIC_HEADER DESTINATION include)
  
--include(CMakePackageConfigHelpers)
--write_basic_package_version_file(
--  nodesoup-config-version.cmake
--  VERSION ${PACKAGE_VERSION}
--  COMPATIBILITY AnyNewerVersion)
- 
- install(
-   EXPORT nodesoup-targets
--  FILE nodesoup-config.cmake
-+  DESTINATION share/nodesoup
-   NAMESPACE nodesoup::
--  DESTINATION lib/cmake/nodesoup)
-+  FILE nodesoup-config.cmake
-+  )
- 
- export(
-   TARGETS nodesoup
-   NAMESPACE nodesoup::
-   FILE nodesoup-targets.cmake)
- 
--if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
--  set(CPACK_PACKAGE_VENDOR "olvb")
--  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
--  set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
--  set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
--  set(CPACK_SOURCE_IGNORE_FILES /.clang-format /compile_commands.json /.git
--                                /dist /.*build.* /\\\\.DS_Store)
--  include(CPack)
--endif()
--
--if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR nodesoup_BUILD_DEMO)
--   AND BUILD_DEMO)
--  add_subdirectory(demo)
--endif()
+ include(CMakePackageConfigHelpers)
+ write_basic_package_version_file(
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index dbd43b9..2506587 100644
+index dbd43b9..44164c9 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -5,7 +5,9 @@ add_library(nodesoup::nodesoup ALIAS nodesoup)
@@ -79,8 +20,8 @@ index dbd43b9..2506587 100644
    nodesoup
    PUBLIC $<BUILD_INTERFACE:${nodesoup_SOURCE_DIR}/include>
 -  PRIVATE $<BUILD_INTERFACE:${nodesoup_SOURCE_DIR}/src>)
++         $<INSTALL_INTERFACE:include>
 +  PRIVATE $<BUILD_INTERFACE:${nodesoup_SOURCE_DIR}/src>
-+  INTERFACE $<INSTALL_INTERFACE:include>
 +)
  
  target_compile_features(nodesoup PUBLIC cxx_std_14)

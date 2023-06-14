@@ -1,6 +1,6 @@
 {
   "name": "nodesoup",
-  "version": "0.1.0",
+  "version-date": "2023-06-12",
   "description": "Force-directed graph layout with Fruchterman-Reingold",
   "license": "Unlicense",
   "dependencies": [
