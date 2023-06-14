@@ -100,7 +100,7 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
         $binaryCachingMode = 'write'
     }
 
-    $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
+    $cachingArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode;http,https://s3.hilton.rwth-aachen.de/binarycache-vcpkg/{triplet}/{name}/{version}/{sha},readwrite")
 }
 
 if ($IsLinuxHost) {
@@ -136,7 +136,7 @@ if ($LASTEXITCODE -ne 0)
 # but changes must trigger at least some testing.
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-& "./vcpkg$executableExtension" test-features --all "--triplet=$Triplet" --failure-logs=$failureLogs "--binarysource=http,https://s3.hilton.rwth-aachen.de/binarycache-vcpkg/{triplet}/{name}/{version}/{sha},readwrite" "--ci-feature-baseline=$PSScriptRoot/../ci.feature.baseline.txt" @commonArgs @cachingArgs
+& "./vcpkg$executableExtension" test-features --all "--triplet=$Triplet" --failure-logs=$failureLogs "--ci-feature-baseline=$PSScriptRoot/../ci.feature.baseline.txt" @commonArgs @cachingArgs
 
 $failureLogsEmpty = True
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
