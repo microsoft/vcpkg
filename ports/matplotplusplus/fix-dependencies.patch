@@ -1,5 +1,5 @@
 diff --git a/Matplot++Config.cmake.in b/Matplot++Config.cmake.in
-index fc9ceca..c59cc1e 100644
+index fc9ceca..1601015 100644
 --- a/Matplot++Config.cmake.in
 +++ b/Matplot++Config.cmake.in
 @@ -1,4 +1,5 @@
@@ -12,37 +12,37 @@ index fc9ceca..c59cc1e 100644
      message(WARNING "This installation of Matplot++ was built with ${MATPLOT_BUILT_CXX_COMPILER_ID}.")
  endif()
  
-+if (@MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND@)
++if ("@MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND@")
 +  find_dependency(glad CONFIG)
 +  find_dependency(glfw3 CONFIG)
 +endif()
 +find_dependency(nodesoup CONFIG )
-+if (@WITH_JPEG@)
++if ("@WITH_JPEG@")
 +find_dependency(JPEG)
 +endif()
 +
-+if (@WITH_TIFF@)
++if ("@WITH_TIFF@")
 +find_dependency(TIFF)
 +endif()
 +
-+if (@WITH_ZLIB@)
++if ("@WITH_ZLIB@")
 +find_dependency(ZLIB)
 +find_dependency(libpng CONFIG)
 +endif()
 +
-+if (@WITH_LAPACK@)
++if ("@WITH_LAPACK@")
 +find_dependency(LAPACK)
 +endif()
 +
-+if (@WITH_BLAS@)
++if ("@WITH_BLAS@")
 +find_dependency(BLAS)
 +endif()
 +
-+if (@WITH_FFTW3@)
++if ("@WITH_FFTW3@")
 +find_dependency(FFTW3 CONFIG)
 +endif()
 +
-+if (@WITH_OPENCV@)
++if ("@WITH_OPENCV@")
 +find_dependency(OpenCV CONFIG)
 +endif()
 +
@@ -56,7 +56,7 @@ index fc9ceca..c59cc1e 100644
  endif()
  
 diff --git a/source/3rd_party/CMakeLists.txt b/source/3rd_party/CMakeLists.txt
-index b5656e1..041ddd1 100644
+index b5656e1..7ff4046 100644
 --- a/source/3rd_party/CMakeLists.txt
 +++ b/source/3rd_party/CMakeLists.txt
 @@ -1,6 +1,7 @@
@@ -67,19 +67,15 @@ index b5656e1..041ddd1 100644
  if(WITH_SYSTEM_NODESOUP)
    find_path(NODESOUP_INCLUDE_DIR nodesoup.hpp REQUIRED)
    find_library(NODESOUP_LIB nodesoup REQUIRED)
-@@ -44,7 +45,10 @@ endif()
- if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
-   install(TARGETS nodesoup
-       EXPORT Matplot++Targets
--      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/Matplot++)
-+      RUNTIME DESTINATION bin
-+      LIBRARY DESTINATION lib
-+      ARCHIVE DESTINATION lib)
-+endif()
+@@ -47,6 +48,7 @@ if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
+       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/Matplot++)
  endif()
  
++endif()
  
-@@ -69,57 +73,69 @@ find_package(PkgConfig)
+ #######################################################
+ ### CImg                                            ###
+@@ -69,57 +71,69 @@ find_package(PkgConfig)
  #            Lots of optional packages are not a good idea in general.
  #            It makes the library much less "packagable" (https://youtu.be/sBP17HQAQjk)
  #            and much more difficult to make sure it works on multiple OSs
@@ -171,24 +167,8 @@ index b5656e1..041ddd1 100644
    endif()
  else()
    message("No CMAKE_MODULE_PATH path for OpenCV configured")
-@@ -153,4 +169,4 @@ endif()
- if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
-   install(TARGETS cimg
-       EXPORT Matplot++Targets)
--endif()
-\ No newline at end of file
-+endif()
-diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index f66dbb4..cf7a6d2 100644
---- a/source/CMakeLists.txt
-+++ b/source/CMakeLists.txt
-@@ -1,2 +1,2 @@
- add_subdirectory(3rd_party)
--add_subdirectory(matplot)
-\ No newline at end of file
-+add_subdirectory(matplot)
 diff --git a/source/matplot/CMakeLists.txt b/source/matplot/CMakeLists.txt
-index fe9ad53..af3ef72 100644
+index fe9ad53..b06ed7e 100644
 --- a/source/matplot/CMakeLists.txt
 +++ b/source/matplot/CMakeLists.txt
 @@ -1,5 +1,4 @@
@@ -223,43 +203,25 @@ index fe9ad53..af3ef72 100644
      endif()
  endif()
  # Some hack to not depend on FILE* internals
-@@ -214,32 +213,12 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
-     # The biggest con of the OpenGL backend is that it cannot open a window
-     #     in another thread. All it can do is get in the middle of the render
-     #     loop and draw the plot.
--    find_package(OpenGL REQUIRED)
--
-+    #
+@@ -217,7 +216,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+     find_package(OpenGL REQUIRED)
+ 
      # https://github.com/Dav1dde/glad
 -    find_package(GLAD QUIET)
--    if (NOT GLAD_FOUND AND NOT TARGET glad)
--        # Use CPM only if not found, to avoid ODR violations
--        # find_package(GLAD REQUIRE) would suffice if it worked well
--        FetchContent_Declare(glad GIT_REPOSITORY https://github.com/Dav1dde/glad.git GIT_TAG df8e9e16110b305479a875399cee13daa0ccadd9)
--        FetchContent_MakeAvailable(glad)
--    else ()
--        # FindGLAD does not usually create a target, so we create an interface target
--        if (NOT TARGET glad)
--            add_library(glad INTERFACE)
--            target_include_directories(glad INTERFACE ${GLAD_INCLUDE_PATH})
--            target_link_libraries(glad INTERFACE ${GLAD_LIBRARIES})
--        endif ()
--    endif ()
-+    find_package(glad CONFIG REQUIRED)
++    find_package(GLAD name glad CONFIG REQUIRED)
+     if (NOT GLAD_FOUND AND NOT TARGET glad)
+         # Use CPM only if not found, to avoid ODR violations
+         # find_package(GLAD REQUIRE) would suffice if it worked well
+@@ -233,7 +232,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+     endif ()
  
      # https://github.com/glfw/glfw
 -    find_package(glfw3 QUIET)
--    if (NOT GLFW3_FOUND AND NOT TARGET glfw)
--        # Use CPM only if not found, to avoid ODR violations
--        # find_package(glfw3 REQUIRE) would suffice if it worked well
--        FetchContent_Declare(glfw3 GIT_REPOSITORY https://github.com/glfw/glfw.git GIT_TAG 3.3.2)
--        FetchContent_MakeAvailable(glfw3)
--    endif ()
-+    find_package(glfw3 CONFIG REQUIRED)
- 
-     add_library(matplot_opengl
-             backend/opengl_embed.h
-@@ -247,7 +226,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
++    find_package(GLFW3 name glfw3 CONFIG REQUIRED)
+     if (NOT GLFW3_FOUND AND NOT TARGET glfw)
+         # Use CPM only if not found, to avoid ODR violations
+         # find_package(glfw3 REQUIRE) would suffice if it worked well
+@@ -247,7 +246,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
              backend/opengl.h
              backend/opengl.cpp
              )
@@ -268,14 +230,3 @@ index fe9ad53..af3ef72 100644
  
      list(APPEND TARGETS matplot_opengl)
  endif()
-diff --git a/source/matplot/axes_objects/network.cpp b/source/matplot/axes_objects/network.cpp
-index b22b7b1..4633dc4 100644
---- a/source/matplot/axes_objects/network.cpp
-+++ b/source/matplot/axes_objects/network.cpp
-@@ -732,4 +732,4 @@ namespace matplot {
-         return marker_colors_;
-     }
- 
--} // namespace matplot
-\ No newline at end of file
-+} // namespace matplot
