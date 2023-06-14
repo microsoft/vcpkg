@@ -1,8 +1,8 @@
 diff --git a/src/osgEarthDrivers/CMakeLists.txt b/src/osgEarthDrivers/CMakeLists.txt
-index d178f951b..010896310 100644
+index 79acbe9c4..89e28b141 100644
 --- a/src/osgEarthDrivers/CMakeLists.txt
 +++ b/src/osgEarthDrivers/CMakeLists.txt
-@@ -30,7 +30,6 @@ add_subdirectory(earth)
+@@ -31,7 +31,6 @@ add_subdirectory(earth)
  add_subdirectory(engine_rex)
  add_subdirectory(featurefilter_intersect)
  add_subdirectory(featurefilter_join)
@@ -10,11 +10,9 @@ index d178f951b..010896310 100644
  add_subdirectory(kml)
  add_subdirectory(mapinspector)
  add_subdirectory(monitor)
-@@ -40,7 +39,6 @@ add_subdirectory(sky_simple)
- add_subdirectory(template)
- add_subdirectory(terrainshader)
- add_subdirectory(webp)
--add_subdirectory(lerc)
- add_subdirectory(vdatum_egm2008)
- add_subdirectory(vdatum_egm84)
- add_subdirectory(vdatum_egm96)
+@@ -61,5 +60,4 @@ endif()
+ 
+ IF(NOT APPLE AND NOT ANDROID)
+     add_subdirectory(fastdxt)
+-    add_subdirectory(lerc)
+ ENDIF()

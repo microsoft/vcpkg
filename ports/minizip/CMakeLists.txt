@@ -45,6 +45,10 @@ if(ANDROID)
   target_compile_definitions(minizip PRIVATE IOAPI_NO_64)
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  target_compile_definitions(minizip PRIVATE -DIOWIN32_USING_WINRT_API)
+endif()
+
 if(NOT DISABLE_INSTALL_TOOLS)
   add_executable(minizip_bin minizip.c)
   add_executable(miniunz_bin miniunz.c)

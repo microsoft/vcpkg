@@ -1,5 +1,5 @@
 # Don't file if the bin folder exists. We need exe and custom files.
-SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 message(STATUS [=[
 The usd port does not work the the version of Threading Building Blocks (tbb) currently chosen by vcpkg's baselines,
@@ -16,20 +16,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/USD
     REF "v${USD_VERSION}"
-    SHA512 2529aec788cab3ff4c47041f5bc0043fde81dcef8ca313f6390f2e5fb7a10b1b0b1dd47fd6c86e3b4cfc0a1b27bff4d9b94b96bfba6bec3d5ff8f6e2fccb9e11
+    SHA512 fd3e7a90f837a5d016d94be34747b2c1daed3f01f252e4b1aa5cb195f32acaecca9373b8f5c7be9c235148f04b0afa47da9462b357ef1dd1e11cf20a7225ae66
     HEAD_REF master
     PATCHES
         fix_build-location.patch
 )
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON2_DIR}")
-
-IF (VCPKG_TARGET_IS_WINDOWS)
-ELSE()
+if(NOT VCPKG_TARGET_IS_WINDOWS)
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindTBB.cmake)
-ENDIF()
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
