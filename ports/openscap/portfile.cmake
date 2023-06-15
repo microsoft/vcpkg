@@ -40,7 +40,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_tools(TOOL_NAMES oscap AUTO_CLEAN)
+if(ENABLE_OSCAP_UTIL)
+    vcpkg_copy_tools(TOOL_NAMES oscap AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
