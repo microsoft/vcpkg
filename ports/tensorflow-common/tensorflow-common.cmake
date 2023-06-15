@@ -188,7 +188,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
 	file(RENAME ${SOURCE_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
 	set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}")
-	vcpkg_add_to_path("${SOURCE_PATH}") # for relative paths
+	vcpkg_add_to_path(".") # for relative paths, last resort
 
 	vcpkg_execute_required_process(
 		COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py --workspace "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
@@ -239,8 +239,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			list(APPEND COPTS --copt=/DVCPKG_TARGET --host_copt=/DVCPKG_HOST)
 			list(APPEND LINKOPTS --linkopt=/NODEFAULTLIB:VCPKG_TARGET.lib --host_linkopt=/NODEFAULTLIB:VCPKG_HOST.lib)
 			# Override command line to limit pdb size
-			list(APPEND BUILD_OPTS --action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF")
-			list(APPEND BUILD_OPTS --host_action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF")
+			list(APPEND BUILD_OPTS --action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF /INCREMENTAL:NO")
+			list(APPEND BUILD_OPTS --host_action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF /INCREMENTAL:NO")
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
