@@ -2,7 +2,7 @@
   "name": "indirect-value",
   "version-date": "2023-06-01",
   "description": "An indirect value-type for C++",
-  "license": "Unlicense",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
