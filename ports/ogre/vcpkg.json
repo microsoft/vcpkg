@@ -1,7 +1,7 @@
 {
   "name": "ogre",
   "version": "13.6.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "license": "MIT",
@@ -43,7 +43,15 @@
     },
     "csharp": {
       "description": "Build csharp bindings",
-      "supports": "!static & !android & !ios & !emscripten"
+      "supports": "!static & !android & !ios & !emscripten",
+      "dependencies": [
+        {
+          "name": "ogre",
+          "features": [
+            "swig"
+          ]
+        }
+      ]
     },
     "d3d9": {
       "description": "Build Direct3D9 RenderSystem",
@@ -60,7 +68,15 @@
     },
     "java": {
       "description": "Build Java (JNI) bindings",
-      "supports": "!static & !android & !ios & !emscripten"
+      "supports": "!static & !android & !ios & !emscripten",
+      "dependencies": [
+        {
+          "name": "ogre",
+          "features": [
+            "swig"
+          ]
+        }
+      ]
     },
     "openexr": {
       "description": "Build with OpenEXR support",
@@ -87,11 +103,20 @@
       "description": "Build Python bindings",
       "supports": "!static & !android & !ios & !emscripten",
       "dependencies": [
+        {
+          "name": "ogre",
+          "features": [
+            "swig"
+          ]
+        },
         "python3"
       ]
     },
     "strict": {
       "description": "Force Ogre resource manager to be strict with group names and resource names"
+    },
+    "swig": {
+      "description": "find package swig"
     },
     "tools": {
       "description": "Build tools",
