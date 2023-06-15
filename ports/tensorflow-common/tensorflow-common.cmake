@@ -227,17 +227,20 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 	if(BUILD_TYPE STREQUAL "dbg")
 		if(VCPKG_TARGET_IS_WINDOWS)
+			# We must use dbg to get the right CRT.
 			list(APPEND BUILD_OPTS --compilation_mode=dbg --host_compilation_mode=dbg)
-			#list(APPEND BUILD_OPTS --features=dbg) # necessary for debug CRT
 			# overrides /DEBUG:FULL to avoid .pdb >4GB error
 			#list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK)
 			list(APPEND COPTS --copt=/Od --copt=/Z7) # as in fastbuild
-			list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK --linkopt=/OPT:REF --linkopt=/OPT:ICF)
+			#list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK --linkopt=/OPT:REF --linkopt=/OPT:ICF)
 			list(APPEND COPTS --host_copt=/Od --host_copt=/Z7) # as in fastbuild
-			list(APPEND LINKOPTS --host_linkopt=/DEBUG:FASTLINK --host_linkopt=/OPT:REF --host_linkopt=/OPT:ICF)
+			#list(APPEND LINKOPTS --host_linkopt=/DEBUG:FASTLINK --host_linkopt=/OPT:REF --host_linkopt=/OPT:ICF)
 			# markers, no-op
 			list(APPEND COPTS --copt=/DVCPKG_TARGET --host_copt=/DVCPKG_HOST)
 			list(APPEND LINKOPTS --linkopt=/NODEFAULTLIB:VCPKG_TARGET.lib --host_linkopt=/NODEFAULTLIB:VCPKG_HOST.lib)
+			# Override command line to limit pdb size
+			list(APPEND BUILD_OPTS --action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF")
+			list(APPEND BUILD_OPTS --host_action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF")
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
@@ -261,7 +264,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		separate_arguments(VCPKG_LINKER_FLAGS ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS})
 		separate_arguments(VCPKG_LINKER_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_DEBUG)
-			#list(APPEND LINKOPTS "--linkopt=${OPT}")
+			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
 	else()
 		list(APPEND BUILD_OPTS --compilation_mode=opt)
