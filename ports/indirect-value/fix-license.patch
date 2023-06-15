@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index da1d4d8..61e7ce1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -162,12 +162,6 @@ if (${CPP_INDIRECT_IS_NOT_SUBPROJECT})
+             ${CMAKE_INSTALL_INCLUDEDIR}
+     )
+ 
+-    install(
+-        FILES
+-            "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt"
+-        DESTINATION
+-            "${CMAKE_INSTALL_DATAROOTDIR}/licenses/indirect_value"
+-    )
+ 
+     install(
+         TARGETS indirect_value
+@@ -179,13 +173,14 @@ if (${CPP_INDIRECT_IS_NOT_SUBPROJECT})
+ 
+     install(
+         EXPORT indirect_value-export-set
++        FILE indirect_value-target.cmake
+         NAMESPACE indirect_value::
+         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/indirect_value"
+     )
+ 
+     configure_package_config_file(
+         ${CMAKE_CURRENT_LIST_DIR}/indirect_value-config.cmake.in
+-        ${CMAKE_CURRENT_BINARY_DIR}/indirect_value-config.cmake
++        ${CMAKE_CURRENT_BINARY_DIR}/indirect-value-config.cmake
+         INSTALL_DESTINATION
+             "${CMAKE_INSTALL_LIBDIR}/cmake/indirect_value"
+     )
+@@ -199,7 +194,7 @@ if (${CPP_INDIRECT_IS_NOT_SUBPROJECT})
+ 
+     install(
+         FILES
+-            ${CMAKE_CURRENT_BINARY_DIR}/indirect_value-config.cmake
++            ${CMAKE_CURRENT_BINARY_DIR}/indirect-value-config.cmake
+             ${CMAKE_CURRENT_BINARY_DIR}/indirect_value-version.cmake
+         DESTINATION
+             "${CMAKE_INSTALL_LIBDIR}/cmake/indirect_value"

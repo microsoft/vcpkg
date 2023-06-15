@@ -3352,6 +3352,10 @@
       "baseline": "2.3",
       "port-version": 0
     },
+    "indirect-value": {
+      "baseline": "2023-06-01",
+      "port-version": 0
+    },
     "influxdb-cxx": {
       "baseline": "0.7.1",
       "port-version": 0
