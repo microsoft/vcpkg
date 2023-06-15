@@ -40,6 +40,7 @@ if(CMAKE_HOST_WIN32)
 	set(ENV{BAZEL_VC} "$ENV{VCInstallDir}")
 	set(ENV{BAZEL_VC_FULL_VERSION} "$ENV{VCToolsVersion}")
 
+	include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-get-python-packages/x_vcpkg_get_python_packages.cmake")
 	x_vcpkg_get_python_packages(
 		PYTHON_VERSION 3
 		PACKAGES numpy
