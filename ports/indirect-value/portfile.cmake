@@ -19,7 +19,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME indirect-value CONFIG_PATH lib/cmake/indirect_value)
+vcpkg_cmake_config_fixup(PACKAGE_NAME indirect_value CONFIG_PATH lib/cmake/indirect_value)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" )
