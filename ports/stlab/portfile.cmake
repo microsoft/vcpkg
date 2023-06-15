@@ -6,10 +6,17 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cpp17shims   STLAB_USE_BOOST_CPP17_SHIMS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        ${FEATURE_OPTIONS}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6=ON
 )
 
 vcpkg_cmake_install()

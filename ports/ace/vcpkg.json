@@ -1,7 +1,7 @@
 {
   "name": "ace",
-  "version": "7.0.11",
-  "port-version": 2,
+  "version": "7.1.0",
+  "port-version": 1,
   "maintainers": "Johnny Willemsen <jwillemsen@remedy.nl>",
   "description": "The ADAPTIVE Communication Environment",
   "homepage": "https://github.com/DOCGroup/ACE_TAO",

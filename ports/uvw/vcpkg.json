@@ -1,8 +1,7 @@
 {
   "name": "uvw",
-  "version": "2.12.1",
-  "port-version": 2,
-  "description": "Header-only, event based, tiny and easy to use libuv wrapper in modern C++.",
+  "version": "3.0.0",
+  "description": "A compilable static library, event based, tiny and easy to use libuv wrapper in modern C++.",
   "homepage": "https://github.com/skypjack/uvw",
   "license": "MIT",
   "dependencies": [

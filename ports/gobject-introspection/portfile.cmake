@@ -8,8 +8,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 b8fba2bd12e93776c55228acf3487bef36ee40b1abdc7f681b827780ac94a8bfa1f59b0c30d60fa5a1fea2f610de78b9e52029f411128067808f17eb6374cdc5
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
         0001-g-ir-tool-template.in.patch
@@ -34,10 +34,7 @@ vcpkg_configure_meson(
         ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
-    ADDITIONAL_NATIVE_BINARIES
-        flex='${FLEX}'
-        bison='${BISON}'
-    ADDITIONAL_CROSS_BINARIES
+    ADDITIONAL_BINARIES
         flex='${FLEX}'
         bison='${BISON}'
         g-ir-annotation-tool='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-annotation-tool'

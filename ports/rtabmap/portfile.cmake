@@ -7,7 +7,6 @@ vcpkg_from_github(
     SHA512 47fa00e760cd9089d42dc27cc0120f2dc2ad4b32b6a05e87fb5320fd6fe3971e68958984714895640989543be9252fd0fb96ccebf0d00d70afbad224022a7a53
     HEAD_REF master
     PATCHES
-        fix_qt_deploy_plugins.patch
         fix_autouic.patch
 )
 
@@ -118,24 +117,22 @@ if("tools" IN_LIST FEATURES)
     
     # Remove duplicate files that were added by qtdeploy 
     # that would be already deployed by vcpkg_copy_tools
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tmp)
-    file(GLOB RTABMAP_REL_LIBS ${CURRENT_PACKAGES_DIR}/tmp/rtabmap*)
-    file(COPY ${RTABMAP_REL_LIBS} DESTINATION  ${CURRENT_PACKAGES_DIR}/bin)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tmp")
+    file(GLOB RTABMAP_REL_LIBS "${CURRENT_PACKAGES_DIR}/tmp/rtabmap*")
+    file(COPY ${RTABMAP_REL_LIBS} DESTINATION  "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tmp")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/translations")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/plugins ${CURRENT_PACKAGES_DIR}/tools/${PORT}/plugins)
     #qt.conf
-    file(WRITE ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "[Paths]
-    Prefix = .")
+    file(COPY "${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/qt.conf" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "./../../../" "./../../")
 
     # Debug
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/debug/tmp)
-    file(GLOB RTABMAP_DBG_LIBS ${CURRENT_PACKAGES_DIR}/debug/tmp/rtabmap*)
-    file(COPY ${RTABMAP_DBG_LIBS} DESTINATION  ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/debug/tmp")
+    file(GLOB RTABMAP_DBG_LIBS "${CURRENT_PACKAGES_DIR}/debug/tmp/rtabmap*")
+    file(COPY ${RTABMAP_DBG_LIBS} DESTINATION  "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tmp")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/plugins")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/translations")
-    
   endif()
 endif()
 

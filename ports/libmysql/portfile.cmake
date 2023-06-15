@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
-    REF 1bfe02bdad6604d54913c62614bde57a055c8332 # 8.0.32
-    SHA512 9a556b783ee978c919ccc0c1c99ab4a84ecc9fe0b75e2e100ad616f3b7c7bd280c8da63eb9e9c98291256ebbd130aef8c6e5c404e93b7cc8b8fe754b055b650f
+    REF mysql-${VERSION}
+    SHA512 8b9f15b301b158e6ffc99dd916b9062968d36f6bdd7b898636fa61badfbe68f7328d4a39fa3b8b3ebef180d3aec1aee353bd2dac9ef1594e5772291390e17ac0
     HEAD_REF master
     PATCHES
         ignore-boost-version.patch
@@ -40,6 +40,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DWITHOUT_SERVER=ON
+        -DWITH_BUILD_ID=OFF
         -DWITH_UNIT_TESTS=OFF
         -DENABLED_PROFILING=OFF
         -DENABLE_TESTING=OFF
@@ -63,6 +64,7 @@ vcpkg_cmake_configure(
         BUNDLE_RUNTIME_LIBRARIES # only on windows
         LINK_STATIC_RUNTIME_LIBRARIES # only on windows
         WIX_DIR # only on windows
+        WITH_BUILD_ID # only on windows
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -121,11 +123,12 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/include2" "${CURRENT_PACKAGES_DIR}/include/
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/man"
     "${CURRENT_PACKAGES_DIR}/docs"
     "${CURRENT_PACKAGES_DIR}/debug/docs"
     "${CURRENT_PACKAGES_DIR}/lib/debug"
     "${CURRENT_PACKAGES_DIR}/lib/plugin"
-    "${CURRENT_PACKAGES_DIR}/lib/plugin/debug"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/plugin"
 )
 
 # delete dynamic dll on static build
@@ -139,7 +142,6 @@ if (BUILD_STATIC_LIBS)
         "${CURRENT_PACKAGES_DIR}/lib/libmysql.lib"
         "${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.lib"
         "${CURRENT_PACKAGES_DIR}/lib/libmysql.pdb"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.pdb"
         "${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.pdb"
     )
 endif()
@@ -168,4 +170,4 @@ file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURR
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # copy license
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

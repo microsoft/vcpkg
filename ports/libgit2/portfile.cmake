@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF v1.4.2
-    SHA512 144bec7f8e66d97b20335d87d1eb68d522f5e59064b0c557505c088d3c486d45704f023d701f51de572efa8e2eb111e3136eb5d23c035e29d16698206b5ec277
-    HEAD_REF maint/v1.4
+    REF v1.6.4
+    SHA512 fd73df91710f19b0d6c3765c37c7f529233196da91cf4d58028a8d3840244f11df44abafabd74a8ed1cbe4826d1afd6ff9f01316d183ace0924c65e7cf0eb8d5
+    HEAD_REF maint/v1.6
     PATCHES
         fix-configcmake.patch
 )
@@ -29,6 +29,10 @@ function(set_tls_backend VALUE)
     set(USE_HTTPS ${VALUE} PARENT_SCOPE)
 endfunction()
 
+if("openssl" IN_LIST FEATURES)
+    list(APPEND GIT_OPTIONS "-DGIT_OPENSSL=1")
+endif()
+
 foreach(GIT2_FEATURE ${FEATURES})
     if(GIT2_FEATURE STREQUAL "pcre")
         set_regex_backend("pcre")
@@ -37,19 +41,10 @@ foreach(GIT2_FEATURE ${FEATURES})
     elseif(GIT2_FEATURE STREQUAL "openssl")
         set_tls_backend("OpenSSL")
     elseif(GIT2_FEATURE STREQUAL "winhttp")
-        if(NOT VCPKG_TARGET_IS_WINDOWS)
-            message(FATAL_ERROR "winhttp is not supported on non-Windows and uwp platforms")
-        endif()
         set_tls_backend("WinHTTP")
     elseif(GIT2_FEATURE STREQUAL "sectransp")
-        if(NOT VCPKG_TARGET_IS_OSX)
-            message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
-        endif()
         set_tls_backend("SecureTransport")
     elseif(GIT2_FEATURE STREQUAL "mbedtls")
-        if(VCPKG_TARGET_IS_WINDOWS)
-            message(FATAL_ERROR "mbedtls is not supported on Windows because a certificate file must be specified at compile time")
-        endif()
         set_tls_backend("mbedTLS")
     endif()
 endforeach()
@@ -72,7 +67,9 @@ vcpkg_cmake_configure(
         -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}
         -DSTATIC_CRT=${STATIC_CRT}
+        -DBUILD_CLI=OFF
         ${GIT2_FEATURES}
+        ${GIT_OPTIONS}
 )
 
 vcpkg_cmake_install()
