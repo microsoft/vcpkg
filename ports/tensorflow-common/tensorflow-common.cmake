@@ -14,6 +14,10 @@ function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	endif()
 endfunction()
 
+vcpkg_find_acquire_program(GIT)
+get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
+vcpkg_add_to_path(PREPEND "${GIT_DIR}")
+
 string(FIND "${CURRENT_BUILDTREES_DIR}" " " POS)
 if(NOT POS EQUAL -1)
 	message(FATAL_ERROR "Your vcpkg path contains spaces. This is not supported by the bazel build tool. Aborting.")
@@ -25,36 +29,18 @@ if(CMAKE_HOST_WIN32)
 		message(WARNING "Your Windows username '$ENV{USERNAME}' contains spaces. Applying work-around to bazel. Be warned of possible further issues.")
 	endif()
 
-	vcpkg_find_acquire_program(NASM)
+	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
+	vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
+	set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
 
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils
-		DIRECT_PACKAGES
-			# use msys2 git as in tf install instructions
-			"https://mirror.msys2.org/msys/x86_64/git-2.41.0-1-x86_64.pkg.tar.zst"
-			4b58c0b7d0e97b3840b96037fd67dd47c128d063e1f295015c842d29abe3274bf2df275f4996b23d7a4a2e211c63d037c80efaeacf995950a57f29a284a6e9c0
-	)
-	cmake_path(CONVERT "${MSYS_ROOT}" TO_NATIVE_PATH_LIST MSYS_ROOT_NATIVE)
-	vcpkg_add_to_path(PREPEND "${MSYS_ROOT_NATIVE}\\usr\\bin")
-
-	set(ENV{BAZEL_SH} "${MSYS_ROOT}/usr/bin/bash.exe")
+	set(ENV{BAZEL_SH} "${BASH}")
 	set(ENV{BAZEL_VC} "$ENV{VCInstallDir}")
 	set(ENV{BAZEL_VC_FULL_VERSION} "$ENV{VCToolsVersion}")
 
-	include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-get-python-packages/x_vcpkg_get_python_packages.cmake")
-	x_vcpkg_get_python_packages(
-		PYTHON_VERSION 3
-		PACKAGES numpy
-		OUT_PYTHON_VAR PYTHON3
-	)
-	message(STATUS "Using Python3: ${PYTHON3}")
-	cmake_path(GET PYTHON3 PARENT_PATH python_dir)
-	cmake_path(CONVERT "${python_dir}" TO_NATIVE_PATH_LIST python_dir_native)
-	vcpkg_add_to_path(PREPEND "${python_dir_native}")
+	vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/mingw64/bin")
+	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3.exe")
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 else()
-	vcpkg_find_acquire_program(GIT)
-	cmake_path(GET GIT PARENT_PATH git_dir)
-	vcpkg_add_to_path(PREPEND "${git_dir}")
-
 	vcpkg_find_acquire_program(PYTHON3)
 
 	# on macos arm64 use conda miniforge
@@ -86,8 +72,9 @@ else()
 	else()
 		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U pip numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
 	endif()
+
+	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 endif()
-vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
 
@@ -116,6 +103,14 @@ set(ENV{TF_NCCL_VERSION} ${TF_VERSION_SHORT})
 set(ENV{NCCL_INSTALL_PATH} "")
 set(ENV{TF_NEED_CUDA} 0)
 set(ENV{TF_CONFIGURE_IOS} 0)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+	if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" )
+		set(ENV{CC_OPT_FLAGS} "/arch:AVX")
+	endif()
+else()
+	set(ENV{CC_OPT_FLAGS} "-Wno-sign-compare")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
 	set(BAZEL_LIB_NAME tensorflow${TF_LIB_SUFFIX}.dll)
@@ -164,19 +159,13 @@ endif()
 
 foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks
-	vcpkg_list(SET extra_patches)
-	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-		vcpkg_list(APPEND extra_patches
-			# there is no static build option - change macros via patch and link library manually at the end
-			"${CMAKE_CURRENT_LIST_DIR}/change-macros-for-static-lib.patch"
-		)
+	set(STATIC_ONLY_PATCHES)
+	set(WINDOWS_ONLY_PATCHES)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+		set(STATIC_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/change-macros-for-static-lib.patch")  # there is no static build option - change macros via patch and link library manually at the end
 	endif()
 	if(VCPKG_TARGET_IS_WINDOWS)
-		vcpkg_list(APPEND extra_patches
-			"${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch"
-			"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch" # pylauncher mingw quirks
-			"${CMAKE_CURRENT_LIST_DIR}/vcpkg-nasm.patch" # nasm x64-windows-static quirks
-		)
+		set(WINDOWS_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch")
 	endif()
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
@@ -186,10 +175,10 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
-			${extra_patches}
+			"${CMAKE_CURRENT_LIST_DIR}/def-file-filter.patch" # pylauncher mingw quirks
+			${STATIC_ONLY_PATCHES}
+			${WINDOWS_ONLY_PATCHES}
 	)
-	# No interactive questions
-	vcpkg_replace_string("${SOURCE_PATH}/configure.py" "answer = raw_input(question)" "answer = ''")
 
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
 	tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
@@ -200,8 +189,6 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py --workspace "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
 		WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 		LOGNAME config-${TARGET_TRIPLET}-${BUILD_TYPE}
-		SAVE_LOG_FILES
-			.tf_configure.bazelrc
 	)
 
 	if(DEFINED ENV{BAZEL_CUSTOM_CACERTS})
@@ -221,32 +208,20 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 
 	message(STATUS "Warning: Building TensorFlow can take an hour or more.")
+	set(COPTS)
+	set(CXXOPTS)
+	set(LINKOPTS)
 	set(BUILD_OPTS --jobs=${VCPKG_CONCURRENCY} --config=opt)
-	set(COPTS "")
-	set(CXXOPTS "")
-	set(LINKOPTS "")
 	message(STATUS "Build Tensorflow with concurrent level: ${VCPKG_CONCURRENCY}")
 	if(VCPKG_TARGET_IS_WINDOWS)
 		set(PLATFORM_COMMAND WINDOWS_COMMAND)
 	else()
 		set(PLATFORM_COMMAND UNIX_COMMAND)
 	endif()
-	if(BUILD_TYPE STREQUAL "dbg")
+	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
-			# We must use dbg to get the right CRT.
-			list(APPEND BUILD_OPTS --compilation_mode=dbg --host_compilation_mode=opt)
-			# overrides /DEBUG:FULL to avoid .pdb >4GB error
-			#list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK)
-			list(APPEND COPTS --copt=/Od --copt=/Z7) # as in fastbuild
-			#list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK --linkopt=/OPT:REF --linkopt=/OPT:ICF)
-			#list(APPEND COPTS --host_copt=/Od --host_copt=/Z7) # as in fastbuild
-			#list(APPEND LINKOPTS --host_linkopt=/DEBUG:FASTLINK --host_linkopt=/OPT:REF --host_linkopt=/OPT:ICF)
-			# markers, no-op
-			list(APPEND COPTS --copt=/DVCPKG_TARGET --host_copt=/DVCPKG_HOST)
-			list(APPEND LINKOPTS --linkopt=/NODEFAULTLIB:VCPKG_TARGET.lib --host_linkopt=/NODEFAULTLIB:VCPKG_HOST.lib)
-			# Override command line to limit pdb size
-			list(APPEND BUILD_OPTS --action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF /INCREMENTAL:NO")
-			#list(APPEND BUILD_OPTS --host_action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF /INCREMENTAL:NO")
+			#list(APPEND BUILD_OPTS --compilation_mode=dbg --features=fastbuild) # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
+			list(APPEND BUILD_OPTS --compilation_mode=fastbuild)
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
@@ -299,34 +274,28 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		list(APPEND BUILD_OPTS --macos_minimum_os=10.14)
 	endif()
 
+	# Together with def-file-filter.patch, creates workaround for a broken step.
+	file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/tensorflow/tools/def_file_filter/def_file_filter.py.tpl" "${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
+	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{dumpbin_bin_path}]] [[dumpbin.exe]])
+	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{undname_bin_path}]] [[undname.exe]])
+	list(APPEND BUILD_OPTS --action_env "DEF_FILE_FILTER=${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
+
 	list(APPEND BUILD_OPTS
 		"--python_path=${PYTHON3}"
 		--define=no_tensorflow_py_deps=true
 		--experimental_ui_max_stdouterr_bytes=-1
 	)
 
-	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-		list(APPEND BUILD_OPTS --dynamic_mode=off)
-	endif()
-
 	vcpkg_list(SET SETUP_ENV)
 	if(VCPKG_TARGET_IS_WINDOWS)
 		vcpkg_list(SET SETUP_ENV "${CMAKE_COMMAND}" -E env "MSYS_NO_PATHCONV=1" "MSYS2_ARG_CONV_EXCL=*")
-		list(APPEND BUILD_OPTS --features=fully_static_link)
+		list(APPEND BUILD_OPTS "--features=fully_static_link")
 		if(VCPKG_CRT_LINKAGE STREQUAL "static")
-			list(APPEND BUILD_OPTS --features=static_link_cpp_runtimes)
+			list(APPEND BUILD_OPTS "--features=static_link_msvcrt")
 		endif()
-		# Together with def-file-filter.patch, creates workaround for a general windows build errors.
-		set(vcpkg_def_file_filter "${CURRENT_BUILDTREES_DIR}/def_file_filter-${TARGET_TRIPLET}.py.log")
-		file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/tensorflow/tools/def_file_filter/def_file_filter.py.tpl" "${vcpkg_def_file_filter}")
-		vcpkg_replace_string("${vcpkg_def_file_filter}" [[%{dumpbin_bin_path}]] [[dumpbin.exe]])
-		vcpkg_replace_string("${vcpkg_def_file_filter}" [[%{undname_bin_path}]] [[undname.exe]])
-		list(APPEND BUILD_OPTS --action_env "VCPKG_DEF_FILE_FILTER=${vcpkg_def_file_filter}")
-		# Together with vcpkg-nasm.patch, creates workaround for a nasm build error on x64-windows-static.
-		list(APPEND BUILD_OPTS --action_env "VCPKG_NASM=${NASM}")
 	endif()
 	# use --output_user_root to work-around too-long-path-names issue and username-with-spaces issue
-	vcpkg_execute_required_process(
+	vcpkg_execute_build_process(
 		COMMAND ${SETUP_ENV}
 			"${BAZEL}" "--output_user_root=${CURRENT_BUILDTREES_DIR}/_bzl" --max_idle_secs=1
 				build --subcommands --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS}
@@ -334,21 +303,6 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 					"//tensorflow:install_headers"
 		WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
 		LOGNAME "build-${TARGET_TRIPLET}-${BUILD_TYPE}"
-		SAVE_LOG_FILES
-			# Parameter (response) files to inspect compiler flags (.obj) and linker flags (.exe)
-			# x64-windows-<host_compilation_mode>-exec: used for host tool to be used during build
-			bazel-out/x64_windows-dbg-exec-50AE0418/bin/external/llvm-project/llvm/_objs/Demangle/Demangle.obj.params
-			bazel-out/x64_windows-dbg-exec-50AE0418/bin/external/llvm-project/mlir/mlir-tblgen.exe-2.params
-			# x64-windows-<compilation_mode>: regular
-			bazel-out/x64_windows-dbg/bin/external/com_github_grpc_grpc/src/compiler/_objs/grpc_cpp_plugin/cpp_plugin.obj.params
-			bazel-out/x64_windows-dbg/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
-			bazel-out/x64_windows-dbg/bin/tensorflow/compiler/tf2xla/kernels/_objs/xla_ops/random_ops_util.obj.param
-			bazel-out/x64_windows-dbg/bin/tensorflow/cc/ops/random_ops_gen_cc.exe-2.params
-			# bash script
-			bazel-x64-windows-dbg/external/bazel_tools/tools/genrule/genrule-setup.sh
-			bazel-out/x64_windows-dbg/bin/tensorflow/cc/array_ops_genrule.genrule_script.sh
-			bazel-out/x64_windows-dbg/bin/tensorflow/cc/random_ops_genrule.genrule_script.sh
-			bazel-out/x64_windows-dbg/bin/tensorflow/cc/training_ops_genrule.genrule_script.sh
 	)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 		set(args "${TF_VERSION}" "${TF_LIB_SUFFIX}")
@@ -374,6 +328,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			LOGNAME postbuild3-${TARGET_TRIPLET}-${BUILD_TYPE}
 		)
 	endif()
+message(FATAL_ERROR STOP)
 
 	if(BUILD_TYPE STREQUAL "dbg")
 		set(DIR_PREFIX "/debug")
@@ -532,4 +487,3 @@ else()
 endif()
 
 message(STATUS "You may want to delete ${CURRENT_BUILDTREES_DIR} to free diskspace.")
-message(FATAL_ERROR STOP)
