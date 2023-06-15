@@ -9,7 +9,7 @@ omniverse-physx-sdk provides CMake targets:
     # Optional: import the defined target to copy over the GPU acceleration libraries (3rd party provided by NVIDIA)
     if(TARGET unofficial::omniverse-physx-sdk::gpu-library)
         if(UNIX)
-            # Add rpath setting to find so libraries on unix based systems
+            # Add rpath setting to find .so libraries on unix based systems
             set_target_properties(hello_physx PROPERTIES
                 BUILD_WITH_INSTALL_RPATH TRUE
                 INSTALL_RPATH "$ORIGIN"
