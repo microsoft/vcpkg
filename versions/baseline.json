@@ -85,7 +85,7 @@
       "port-version": 4
     },
     "alpaca": {
-      "baseline": "0.2.0",
+      "baseline": "0.2.1",
       "port-version": 0
     },
     "alpaka": {
@@ -233,7 +233,7 @@
       "port-version": 0
     },
     "asio": {
-      "baseline": "1.24.0",
+      "baseline": "1.28.0",
       "port-version": 1
     },
     "asio-grpc": {
@@ -254,6 +254,10 @@
     },
     "assimp": {
       "baseline": "5.2.5",
+      "port-version": 0
+    },
+    "async-mqtt": {
+      "baseline": "1.0.2",
       "port-version": 0
     },
     "asynch": {
@@ -650,7 +654,7 @@
     },
     "boost-asio": {
       "baseline": "1.82.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-assert": {
       "baseline": "1.82.0",
@@ -2038,7 +2042,7 @@
     },
     "dbow3": {
       "baseline": "1.0.0",
-      "port-version": 2
+      "port-version": 3
     },
     "dbus": {
       "baseline": "1.15.2",
@@ -2533,7 +2537,7 @@
       "port-version": 0
     },
     "flecs": {
-      "baseline": "3.2.3",
+      "baseline": "3.2.4",
       "port-version": 0
     },
     "flint": {
@@ -2707,6 +2711,10 @@
     "gamenetworkingsockets": {
       "baseline": "1.4.1",
       "port-version": 1
+    },
+    "games101-cgl": {
+      "baseline": "0.1.0",
+      "port-version": 0
     },
     "gamma": {
       "baseline": "gamma-2018-01-27",
@@ -3037,7 +3045,7 @@
       "port-version": 0
     },
     "gul14": {
-      "baseline": "2.8.0",
+      "baseline": "2.9.1",
       "port-version": 0
     },
     "gumbo": {
@@ -3101,7 +3109,7 @@
       "port-version": 3
     },
     "hazelcast-cpp-client": {
-      "baseline": "5.2.0",
+      "baseline": "5.3.0",
       "port-version": 0
     },
     "hdf5": {
@@ -3149,8 +3157,8 @@
       "port-version": 0
     },
     "hiredis": {
-      "baseline": "1.0.2",
-      "port-version": 5
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "hnswlib": {
       "baseline": "0.7.0",
@@ -4901,7 +4909,7 @@
       "port-version": 0
     },
     "lightningscanner": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "lilv": {
@@ -5173,8 +5181,8 @@
       "port-version": 2
     },
     "matplotplusplus": {
-      "baseline": "2021-04-11",
-      "port-version": 6
+      "baseline": "1.2.0",
+      "port-version": 0
     },
     "matroska": {
       "baseline": "1.7.1",
@@ -5642,7 +5650,7 @@
     },
     "nifly": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nifticlib": {
       "baseline": "2020-04-30",
@@ -5687,6 +5695,10 @@
     "node-api-headers": {
       "baseline": "1.0.0",
       "port-version": 1
+    },
+    "nodesoup": {
+      "baseline": "2023-06-12",
+      "port-version": 0
     },
     "nonius": {
       "baseline": "2019-04-20",
@@ -6374,7 +6386,7 @@
     },
     "poppler": {
       "baseline": "23.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "popsift": {
       "baseline": "0.9",
@@ -7538,7 +7550,7 @@
     },
     "sltbench": {
       "baseline": "2.4.0",
-      "port-version": 2
+      "port-version": 3
     },
     "smf": {
       "baseline": "0.1.1",
@@ -7969,8 +7981,8 @@
       "port-version": 2
     },
     "thor": {
-      "baseline": "2.0",
-      "port-version": 6
+      "baseline": "2022-04-16",
+      "port-version": 0
     },
     "thorvg": {
       "baseline": "0.9.0",
@@ -8238,7 +8250,7 @@
     },
     "unicorn-lib": {
       "baseline": "2022-01-24",
-      "port-version": 1
+      "port-version": 2
     },
     "units": {
       "baseline": "2.3.3",
@@ -8290,7 +8302,7 @@
     },
     "usd": {
       "baseline": "23.5",
-      "port-version": 1
+      "port-version": 2
     },
     "usockets": {
       "baseline": "0.8.6",
