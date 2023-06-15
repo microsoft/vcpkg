@@ -15,7 +15,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_find_acquire_program(YASM)
 
-if(VCPKG_TARGET_IS_OSX)
+if(NOT VCPKG_TARGET_IS_OSX)
     # System python too old (3.9; meson needs 3.10)
     list(APPEND variables MESON)
     vcpkg_find_acquire_program(MESON)
