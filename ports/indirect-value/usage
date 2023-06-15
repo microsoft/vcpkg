@@ -1,4 +1,4 @@
-The package noindirect-value provides CMake targets:
+The package indirect-value provides CMake targets:
 
     find_package(indirect-value CONFIG REQUIRED)
     target_link_libraries(main PRIVATE indirect_value::indirect_value)
