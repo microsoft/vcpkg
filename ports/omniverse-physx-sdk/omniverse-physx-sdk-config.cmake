@@ -18,8 +18,6 @@ if(NOT TARGET unofficial::omniverse-physx-sdk)
     get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_LIBS_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/debug/lib" ABSOLUTE)
     get_filename_component(OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/bin" ABSOLUTE)
     get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_BIN_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/debug/bin" ABSOLUTE)
-    get_filename_component(OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/tools" ABSOLUTE)
-    get_filename_component(OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR "${z_vcpkg_omniverse_physx_sdk_prefix}/tools/debug" ABSOLUTE)
 
     # Find main library files
     find_library(OMNIVERSE-PHYSX-SDK_LIBRARY_RELEASE NAMES PhysX_static_64 PhysX_64 PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_LIBS_DIR}" NO_DEFAULT_PATH)
@@ -46,17 +44,6 @@ if(NOT TARGET unofficial::omniverse-physx-sdk)
 
     # Add compile definitions to the target for debug/release builds
     target_compile_definitions(unofficial::omniverse-physx-sdk::sdk INTERFACE $<$<CONFIG:Debug>:_DEBUG>)
-
-    # Adjust CRT linkage according to requested one
-    if(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "static")
-        set_target_properties(unofficial::omniverse-physx-sdk::sdk PROPERTIES
-            INTERFACE_COMPILE_OPTIONS "/MT$<$<CONFIG:Debug>:d>"
-        )
-    elseif(WIN32 AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        set_target_properties(unofficial::omniverse-physx-sdk::sdk PROPERTIES
-            INTERFACE_COMPILE_OPTIONS "/MD$<$<CONFIG:Debug>:d>"
-        )
-    endif()
 
     set(lib_names
             PhysXExtensions
@@ -107,14 +94,14 @@ if(NOT TARGET unofficial::omniverse-physx-sdk)
 
     # Find GPU library files (these are used at late-binding to enable GPU acceleration)
     if(WIN32)
-        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR}" NO_DEFAULT_PATH)
-        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR}" NO_DEFAULT_PATH)
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR}" NO_DEFAULT_PATH)
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG NAMES PhysXGpu_64.dll PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_BIN_DIR}" NO_DEFAULT_PATH)
 
-        find_file(OMNIVERSE-PHYSX-SDK-GPU_DEVICE_LIBRARY_RELEASE NAMES PhysXDevice64.dll PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR}" NO_DEFAULT_PATH)
-        find_file(OMNIVERSE-PHYSX-SDK-GPU_DEVICE_LIBRARY_DEBUG NAMES PhysXDevice64.dll PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR}" NO_DEFAULT_PATH)
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_DEVICE_LIBRARY_RELEASE NAMES PhysXDevice64.dll PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR}" NO_DEFAULT_PATH)
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_DEVICE_LIBRARY_DEBUG NAMES PhysXDevice64.dll PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_BIN_DIR}" NO_DEFAULT_PATH)
     elseif(UNIX)
-        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE NAMES libPhysXGpu_64.so PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_TOOLS_DIR}" NO_DEFAULT_PATH)
-        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG NAMES libPhysXGpu_64.so PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_TOOLS_DIR}" NO_DEFAULT_PATH)
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE NAMES libPhysXGpu_64.so PATHS "${OMNIVERSE-PHYSX-SDK_RELEASE_BIN_DIR}" NO_DEFAULT_PATH)
+        find_file(OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_DEBUG NAMES libPhysXGpu_64.so PATHS "${OMNIVERSE-PHYSX-SDK_DEBUG_BIN_DIR}" NO_DEFAULT_PATH)
     endif()
 
     # Create imported targets for GPU library

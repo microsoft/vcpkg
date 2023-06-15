@@ -49,20 +49,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         -DNV_USE_STATIC_WINCRT=${VCPKG_LINK_CRT_STATICALLY}
         -DPX_FLOAT_POINT_PRECISE_MATH=OFF
     )
-    set(PLATFORM_OPTIONS_RELEASE "")
-    set(PLATFORM_OPTIONS_DEBUG "")
-
-    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        list(APPEND PLATFORM_OPTIONS_RELEASE -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL)
-        list(APPEND PLATFORM_OPTIONS_RELEASE -DWINCRT_NDEBUG="/MD")
-        list(APPEND PLATFORM_OPTIONS_DEBUG -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebugDLL)
-        list(APPEND PLATFORM_OPTIONS_DEBUG -DWINCRT_DEBUG="/MDd")
-    else()
-        list(APPEND PLATFORM_OPTIONS_RELEASE -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded)
-        # list(APPEND PLATFORM_OPTIONS_RELEASE -DWINCRT_NDEBUG="/MT")
-        list(APPEND PLATFORM_OPTIONS_DEBUG -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug)
-        list(APPEND PLATFORM_OPTIONS_DEBUG -DWINCRT_DEBUG="/MTd")
-    endif()
 
     # Note: it would have been more correct to specify "win64" here, but we specify this so that packman can download
     # the right dependencies on windows (see the "platforms" field in the dependencies.xml), that will also later
@@ -220,10 +206,8 @@ vcpkg_cmake_configure(
         ${PLATFORM_OPTIONS}
         -DPHYSX_ROOT_DIR=${PHYSX_ROOT_DIR}
         ${cmakeParams}
-    OPTIONS_RELEASE
-        ${PLATFORM_OPTIONS_RELEASE}
     OPTIONS_DEBUG
-        ${PLATFORM_OPTIONS_DEBUG}
+        -DNV_USE_DEBUG_WINCRT=TRUE
     DISABLE_PARALLEL_CONFIGURE
     MAYBE_UNUSED_VARIABLES
         PX_OUTPUT_ARCH
@@ -285,8 +269,8 @@ endif()
 
 # Special treatment is reserved for the PhysXGpu_64 shared library (downloaded by packman).
 # This is a 3rd party "optional functionality" dependency.
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/debug")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
 set(GPULIBNAMES "")
 if(targetPlatform STREQUAL "linuxAarch64" OR targetPlatform STREQUAL "linux")
     list(APPEND GPULIBNAMES "libPhysXGpu_64.so" "libPhysXDevice64.so")
@@ -308,9 +292,9 @@ function(_copy_single_files_from_dir_to_destdir _IN_FILES _IN_DIR _OUT_DIR)
     endforeach()
 endfunction()
 
-# Put it in 'tools', it's an optional component
-_copy_single_files_from_dir_to_destdir("${GPULIBNAMES}" "${SOURCE_PATH}/physx/bin/*/release/*" "${CURRENT_PACKAGES_DIR}/tools")
-_copy_single_files_from_dir_to_destdir("${GPULIBNAMES}" "${SOURCE_PATH}/physx/bin/*/debug/*" "${CURRENT_PACKAGES_DIR}/tools/debug")
+# Put it in binary directories, it's an optional component
+_copy_single_files_from_dir_to_destdir("${GPULIBNAMES}" "${SOURCE_PATH}/physx/bin/*/release/*" "${CURRENT_PACKAGES_DIR}/bin")
+_copy_single_files_from_dir_to_destdir("${GPULIBNAMES}" "${SOURCE_PATH}/physx/bin/*/debug/*" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 # Copy headers to port's destination folder
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
