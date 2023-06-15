@@ -532,3 +532,4 @@ else()
 endif()
 
 message(STATUS "You may want to delete ${CURRENT_BUILDTREES_DIR} to free diskspace.")
+message(FATAL_ERROR STOP)
