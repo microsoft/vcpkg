@@ -1542,7 +1542,7 @@
     },
     "clapack": {
       "baseline": "3.2.1",
-      "port-version": 21
+      "port-version": 22
     },
     "clara": {
       "baseline": "1.1.5",
