@@ -278,7 +278,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/tensorflow/tools/def_file_filter/def_file_filter.py.tpl" "${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
 	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{dumpbin_bin_path}]] [[dumpbin.exe]])
 	vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log" [[%{undname_bin_path}]] [[undname.exe]])
-	list(APPEND BUILD_OPTS --action_env "DEF_FILE_FILTER=${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
+	list(APPEND BUILD_OPTS --action_env "VCPKG_DEF_FILE_FILTER=${CURRENT_BUILDTREES_DIR}/def_file_filter.py.log")
 
 	list(APPEND BUILD_OPTS
 		"--python_path=${PYTHON3}"
