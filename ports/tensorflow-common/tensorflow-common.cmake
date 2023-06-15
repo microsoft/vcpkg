@@ -14,10 +14,6 @@ function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
 	endif()
 endfunction()
 
-vcpkg_find_acquire_program(GIT)
-get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
-vcpkg_add_to_path(PREPEND "${GIT_DIR}")
-
 string(FIND "${CURRENT_BUILDTREES_DIR}" " " POS)
 if(NOT POS EQUAL -1)
 	message(FATAL_ERROR "Your vcpkg path contains spaces. This is not supported by the bazel build tool. Aborting.")
@@ -31,18 +27,28 @@ if(CMAKE_HOST_WIN32)
 
 	vcpkg_find_acquire_program(NASM)
 
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
+	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils git)
 	cmake_path(CONVERT "${MSYS_ROOT}" TO_NATIVE_PATH_LIST MSYS_ROOT_NATIVE)
 	vcpkg_add_to_path(PREPEND "${MSYS_ROOT_NATIVE}\\usr\\bin")
-	vcpkg_add_to_path(PREPEND "${MSYS_ROOT_NATIVE}\\mingw64\\bin")
 
 	set(ENV{BAZEL_SH} "${MSYS_ROOT}/usr/bin/bash.exe")
 	set(ENV{BAZEL_VC} "$ENV{VCInstallDir}")
 	set(ENV{BAZEL_VC_FULL_VERSION} "$ENV{VCToolsVersion}")
 
-	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3.exe")
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
+	x_vcpkg_get_python_packages(
+		PYTHON_VERSION 3
+		PACKAGES numpy
+		OUT_PYTHON_VAR PYTHON3
+	)
+	message(STATUS "Using Python3: ${PYTHON3}")
+	cmake_path(GET PYTHON3 PARENT_PATH python_dir)
+	cmake_path(CONVERT "${python_dir}" TO_NATIVE_PATH_LIST python_dir_native)
+	vcpkg_add_to_path(PREPEND "${python_dir_native}")
 else()
+	vcpkg_find_acquire_program(GIT)
+	cmake_path(GET GIT PARENT_PATH git_dir)
+	vcpkg_add_to_path(PREPEND "${git_dir}")
+
 	vcpkg_find_acquire_program(PYTHON3)
 
 	# on macos arm64 use conda miniforge
@@ -74,9 +80,8 @@ else()
 	else()
 		vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install -U pip numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pip-${TARGET_TRIPLET})
 	endif()
-
-	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 endif()
+vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequisites-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
 
@@ -151,11 +156,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   list(APPEND PORT_BUILD_CONFIGS "rel")
 endif()
 
-vcpkg_backup_env_variables(VARS PATH)
-
 foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
-	vcpkg_restore_env_variables(VARS PATH)
-
 	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks
 	vcpkg_list(SET extra_patches)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -188,8 +189,6 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
 	file(RENAME ${SOURCE_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
 	set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}")
-	vcpkg_add_to_path("${SOURCE_PATH}") # for relative paths
-	vcpkg_add_to_path(".") # for relative paths, last resort
 
 	vcpkg_execute_required_process(
 		COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py --workspace "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}"
@@ -216,7 +215,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 
 	message(STATUS "Warning: Building TensorFlow can take an hour or more.")
-	set(BUILD_OPTS --jobs=${VCPKG_CONCURRENCY} --config=opt --action_env PATH)
+	set(BUILD_OPTS --jobs=${VCPKG_CONCURRENCY} --config=opt)
 	set(COPTS "")
 	set(CXXOPTS "")
 	set(LINKOPTS "")

@@ -4,5 +4,11 @@
   "port-version": 3,
   "description": "This meta package holds common files for the C [tensorflow] and the C++ [tensorflow-cc] API version of TensorFlow but is not installable on its own.",
   "homepage": "https://github.com/tensorflow/tensorflow",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    }
+  ]
 }
