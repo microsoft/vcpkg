@@ -43,8 +43,8 @@
     "qt": {
       "description": "Enable build of Qt map drawing backend",
       "dependencies": [
-        "qt5-svg",
-        "qt5-base"
+        "qt5-base",
+        "qt5-svg"
       ]
     },
     "svg": {
