@@ -4502,7 +4502,7 @@
     },
     "libsbml": {
       "baseline": "5.20.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libsbsms": {
       "baseline": "2.3.0",
@@ -5342,7 +5342,7 @@
     },
     "mnn": {
       "baseline": "1.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "modp-base64": {
       "baseline": "2020-09-26",
@@ -5818,7 +5818,7 @@
     },
     "ogre": {
       "baseline": "13.6.2",
-      "port-version": 2
+      "port-version": 3
     },
     "ogre-next": {
       "baseline": "2.3.1",
