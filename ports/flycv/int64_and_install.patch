@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 097f8e3..9c5152e 100755
+index 097f8e3..86eec04 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -79,18 +79,18 @@ endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -12,7 +12,7 @@ index 097f8e3..9c5152e 100755
  configure_file(
      "${PROJECT_SOURCE_DIR}/include/version.h.in"
 -    "${CMAKE_INSTALL_PREFIX}/flycv/include/version.h")
-+    "${CMAKE_INSTALL_PREFIX}/include/version.h")
++    "${CMAKE_INSTALL_PREFIX}/include/flycv_version.h")
  
  # add modules
  add_subdirectory(modules)
