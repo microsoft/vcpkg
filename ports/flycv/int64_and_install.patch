@@ -24,6 +24,33 @@ index 097f8e3..86eec04 100755
  
  # ============================ Unit Test ==================================
  # Add gtest
+diff --git a/cmake/FCVFindDependencies.cmake b/cmake/FCVFindDependencies.cmake
+index ca85c85..8dc49e6 100755
+--- a/cmake/FCVFindDependencies.cmake
++++ b/cmake/FCVFindDependencies.cmake
+@@ -5,15 +5,18 @@ if(BUILD_FCV_MEDIA_IO)
+     if(WITH_FCV_IMGCODECS)
+         # Build with jpeg
+         if(WITH_LIB_JPEG_TURBO)
+-            include(external/libjpeg-turbo)
++            find_package(libjpeg-turbo CONFIG REQUIRED)
++            target_link_libraries(${FCV_TARGET_NAME} libjpeg-turbo::turbojpeg)
++            list(APPEND FCV_LINK_DEPS libjpeg-turbo::turbojpeg)
+             add_definitions(-DWITH_LIB_JPEG_TURBO)
+         endif(WITH_LIB_JPEG_TURBO)
+ 
+         # Build with libpng.
+         if(WITH_LIB_PNG)
+-            include(external/libpng)
+-            include(external/zlib)
+-            add_dependencies(libpng zlib)
++            find_package(PNG REQUIRED)
++            list(APPEND FCV_LINK_DEPS libpng)
++            target_link_libraries(${FCV_TARGET_NAME} PNG::PNG)
++            include_directories(${PNG_PNG_INCLUDE_DIR})
+             add_definitions(-DWITH_LIB_PNG)
+         endif(WITH_LIB_PNG)
+     endif(WITH_FCV_IMGCODECS)
 diff --git a/cmake/platform/windows/windows.cmake b/cmake/platform/windows/windows.cmake
 index 04d487a..2bcd83c 100755
 --- a/cmake/platform/windows/windows.cmake
@@ -88,3 +115,16 @@ index c9c8260..f167dde 100755
  
  #include <cmath>
  #include <immintrin.h>
+diff --git a/modules/media_io/imgcodecs/src/imgcodecs_png.cpp b/modules/media_io/imgcodecs/src/imgcodecs_png.cpp
+index 7214b49..458107c 100755
+--- a/modules/media_io/imgcodecs/src/imgcodecs_png.cpp
++++ b/modules/media_io/imgcodecs/src/imgcodecs_png.cpp
+@@ -15,7 +15,7 @@
+ #include "modules/media_io/imgcodecs/include/imgcodecs_png.h"
+ 
+ #ifdef WITH_LIB_PNG
+-#include "third_party/libpng/png.h"
++#include "png.h"
+ #endif
+ 
+ G_FCV_NAMESPACE1_BEGIN(g_fcv_ns)

@@ -6,6 +6,8 @@
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
+    "libjpeg-turbo",
+    "libpng",
     {
       "name": "vcpkg-cmake",
       "host": true
