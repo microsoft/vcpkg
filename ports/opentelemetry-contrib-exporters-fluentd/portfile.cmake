@@ -15,12 +15,11 @@ vcpkg_cmake_configure(
         -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE
         -DBUILD_TESTING=OFF
         -DBUILD_PACKAGE=ON
-        ${FEATURE_OPTIONS}
 )
 
-vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
-vcpkg_copy_pdbs()
+vcpkg_cmake_build(
+    TARGET package
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
