@@ -6,22 +6,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
-        cairo   OSMSCOUT_BUILD_MAP_CAIRO
-        directx OSMSCOUT_BUILD_MAP_DIRECTX
-        gdi     OSMSCOUT_BUILD_MAP_GDI
-        svg     OSMSCOUT_BUILD_MAP_SVG
-        qt      OSMSCOUT_BUILD_MAP_QT
-    )
-else()
-    vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
-        cairo OSMSCOUT_BUILD_MAP_CAIRO
-        svg   OSMSCOUT_BUILD_MAP_SVG
-        qt    OSMSCOUT_BUILD_MAP_QT
-    )
-    list(APPEND FEATURE_OPTIONS -DOSMSCOUT_BUILD_MAP_DIRECTX=OFF -DOSMSCOUT_BUILD_MAP_GDI=OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
+    cairo   OSMSCOUT_BUILD_MAP_CAIRO
+    directx OSMSCOUT_BUILD_MAP_DIRECTX
+    gdi     OSMSCOUT_BUILD_MAP_GDI
+    svg     OSMSCOUT_BUILD_MAP_SVG
+    qt      OSMSCOUT_BUILD_MAP_QT
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
