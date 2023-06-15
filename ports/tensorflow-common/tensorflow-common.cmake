@@ -188,6 +188,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
 	file(RENAME ${SOURCE_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE})
 	set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}")
+	vcpkg_add_to_path("${SOURCE_PATH}") # for relative paths
 	vcpkg_add_to_path(".") # for relative paths, last resort
 
 	vcpkg_execute_required_process(
