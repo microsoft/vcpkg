@@ -17,19 +17,25 @@ elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD")
     set(version_command --version)
 elseif(CMAKE_HOST_WIN32)
     if(NOT EXISTS "${PKGCONFIG}")
-        set(VERSION 0.29.2-3)
-        set(program_version git-9.0.0.6373.5be8fcd83-1)
-        vcpkg_acquire_msys(
-            PKGCONFIG_ROOT
-            NO_DEFAULT_PACKAGES
-            DIRECT_PACKAGES
-                "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.zst"
-                0c086bf306b6a18988cc982b3c3828c4d922a1b60fd24e17c3bead4e296ee6de48ce148bc6f9214af98be6a86cb39c37003d2dcb6561800fdf7d0d1028cf73a4
-                "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${program_version}-any.pkg.tar.zst"
-                c89c27b5afe4cf5fdaaa354544f070c45ace5e9d2f2ebb4b956a148f61681f050e67976894e6f52e42e708dadbf730fee176ac9add3c9864c21249034c342810
-        )
+        set(program_version 1.8.0)
+        if("$ENV{PROCESSOR_ARCHITECTURE}" STREQUAL "ARM64")
+            vcpkg_acquire_msys(PKGCONFIG_ROOT
+                NO_DEFAULT_PACKAGES
+                DIRECT_PACKAGES
+                    "https://mirror.msys2.org/mingw/clangarm64/mingw-w64-clang-aarch64-pkgconf-1~1.8.0-2-any.pkg.tar.zst"
+                    f682bbeb4588a169a26d3c9c1ce258c0022954fa11a64e05cd803bcbb8c4e2442022c0c6bc7e54d3324359c80ea67904187d4cb3b682914f5f14a03251daae7c
+            )
+            set("${program}" "${PKGCONFIG_ROOT}/clangarm64/bin/pkg-config.exe" CACHE INTERNAL "")
+        else()
+            vcpkg_acquire_msys(PKGCONFIG_ROOT
+                NO_DEFAULT_PACKAGES
+                DIRECT_PACKAGES
+                    "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-pkgconf-1~1.8.0-2-any.pkg.tar.zst"
+                    e5217d9c55ede4c15706b4873761cc6e987eabc1308120a3e8406571ae2993907f3776f2b2bba18d7aaec80ef97227696058cedc1b67a773530dc1e6077b95e6
+            )
+            set("${program}" "${PKGCONFIG_ROOT}/mingw32/bin/pkg-config.exe" CACHE INTERNAL "")
+        endif()
     endif()
-    set("${program}" "${PKGCONFIG_ROOT}/mingw32/bin/pkg-config.exe" CACHE INTERNAL "")
     set("${program}" "${${program}}" PARENT_SCOPE)
     return()
 else()

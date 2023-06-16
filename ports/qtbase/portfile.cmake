@@ -471,18 +471,17 @@ if(VCPKG_CROSSCOMPILING)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake" "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}")
 endif()
 
-# The following pattern exists in qt-cmake scripts, but is still relocatable, so disable the absolute paths check.
-# warning: There should be no absolute paths, such as the following, in an installed package:
-# Absolute paths were found in the following files:
-#     packages/qtbase_x64-linux/tools/Qt6/bin/qt-cmake-private
-#     packages/qtbase_x64-linux/tools/Qt6/bin/debug/qt-cmake-private
-#     packages/qtbase_x64-linux/tools/Qt6/bin/debug/qt-cmake
-#     packages/qtbase_x64-linux/tools/Qt6/bin/qt-cmake
-# 
-# # Try to use original cmake, otherwise to make it relocatable, use any cmake found in PATH.
-# original_cmake_path="/home/bion/vcpkg/downloads/tools/cmake-3.25.1-linux/cmake-3.25.1-linux-x86_64/bin/cmake"
-# cmake_path=$original_cmake_path
-# if ! test -f "$cmake_path"; then
-#     cmake_path="cmake"
-# fi
-set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
+function(remove_original_cmake_path file)
+    file(READ "${file}" _contents)
+    string(REGEX REPLACE "original_cmake_path=[^\n]*" "original_cmake_path=''" _contents "${_contents}")
+    file(WRITE "${file}" "${_contents}")
+endfunction()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    foreach(file "qt-cmake" "qt-cmake-private")
+        remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${file}")
+        if(NOT VCPKG_BUILD_TYPE)
+            remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/${file}")
+        endif()
+    endforeach()
+endif()
