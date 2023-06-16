@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
     REF ${UVATLAS_TAG}
-    SHA512 3eb19aa1f56d948aed71b98e7aaacebb5713480fda94f8e6fb8189502e6b3f154e18468b1f1cbad235f5d393b5c2fc658fcbe2e04c0b358679eae560366c22dc
+    SHA512 bd1ff3373871bb27872461c0211939f2f6d9b5b4927897bdb4668fdde4a862af74ee193a52434bf30a6cc0268d6fd084453bcedd2bd57c7abb2ca33e1643fced
     HEAD_REF main
     PATCHES openexr.patch
 )
