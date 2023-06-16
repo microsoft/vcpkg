@@ -25,16 +25,15 @@ index 097f8e3..86eec04 100755
  # ============================ Unit Test ==================================
  # Add gtest
 diff --git a/cmake/FCVFindDependencies.cmake b/cmake/FCVFindDependencies.cmake
-index ca85c85..8dc49e6 100755
+index ca85c85..d91c1bb 100755
 --- a/cmake/FCVFindDependencies.cmake
 +++ b/cmake/FCVFindDependencies.cmake
-@@ -5,15 +5,18 @@ if(BUILD_FCV_MEDIA_IO)
+@@ -5,15 +5,16 @@ if(BUILD_FCV_MEDIA_IO)
      if(WITH_FCV_IMGCODECS)
          # Build with jpeg
          if(WITH_LIB_JPEG_TURBO)
 -            include(external/libjpeg-turbo)
 +            find_package(libjpeg-turbo CONFIG REQUIRED)
-+            target_link_libraries(${FCV_TARGET_NAME} libjpeg-turbo::turbojpeg)
 +            list(APPEND FCV_LINK_DEPS libjpeg-turbo::turbojpeg)
              add_definitions(-DWITH_LIB_JPEG_TURBO)
          endif(WITH_LIB_JPEG_TURBO)
@@ -45,8 +44,7 @@ index ca85c85..8dc49e6 100755
 -            include(external/zlib)
 -            add_dependencies(libpng zlib)
 +            find_package(PNG REQUIRED)
-+            list(APPEND FCV_LINK_DEPS libpng)
-+            target_link_libraries(${FCV_TARGET_NAME} PNG::PNG)
++            list(APPEND FCV_LINK_DEPS PNG::PNG)
 +            include_directories(${PNG_PNG_INCLUDE_DIR})
              add_definitions(-DWITH_LIB_PNG)
          endif(WITH_LIB_PNG)
@@ -63,7 +61,7 @@ index 04d487a..2bcd83c 100755
  
  if(CMAKE_BUILD_TYPE STREQUAL Release)
 diff --git a/modules/CMakeLists.txt b/modules/CMakeLists.txt
-index ee9b14f..75333ea 100755
+index ee9b14f..9a944d3 100755
 --- a/modules/CMakeLists.txt
 +++ b/modules/CMakeLists.txt
 @@ -4,7 +4,7 @@ endif()
@@ -75,7 +73,7 @@ index ee9b14f..75333ea 100755
  )
  
  get_subdir_list(FCV_ALL_MODULE_LIST ${CMAKE_CURRENT_SOURCE_DIR})
-@@ -110,24 +110,13 @@ foreach(each_interface ${FCV_UNIVERSE_INTERFACES})
+@@ -110,24 +110,16 @@ foreach(each_interface ${FCV_UNIVERSE_INTERFACES})
      install(FILES
          ${CMAKE_SOURCE_DIR}/${each_interface}
          DESTINATION
@@ -84,10 +82,12 @@ index ee9b14f..75333ea 100755
      )
  endforeach()
  
--install(TARGETS ${FCV_TARGET_NAME}
+ install(TARGETS ${FCV_TARGET_NAME}
 -    DESTINATION ${CMAKE_INSTALL_PREFIX}/flycv/${FCV_INSTALL_LIB_NAME})
-+install(TARGETS ${FCV_TARGET_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-+install(TARGETS ${FCV_TARGET_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
++    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
++)
  
  if(BUILD_SHARED_LIBS AND (BUILD_TEST OR BUILD_BENCHMARK))
      install(TARGETS ${FCV_TARGET_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
