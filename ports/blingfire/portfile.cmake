@@ -4,11 +4,12 @@ vcpkg_from_github(
     REF c0381c68b6aa6d1b4e569888bae1642e40494a99
     SHA512 0fa15791fc815a992023bae6f30c84dda1d477bcdedcf1343d4dbe4b09b51e17fd87bf130d58e50f378ca94982a6306d7f980e3ff4522091be036428684bdcbb
     HEAD_REF master
+    PATCHES
+        ninja.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    WINDOWS_USE_MSBUILD
     OPTIONS
         ${ADDITIONAL_OPTIONS}
     )

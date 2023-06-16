@@ -12,6 +12,9 @@ vcpkg_from_github(
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
+# Avoid abseil, no matter if vcpkg or system
+vcpkg_replace_string("${SOURCE_PATH}/ogr/ogrsf_frmts/flatgeobuf/flatbuffers/base.h" [[__has_include("absl/strings/string_view.h")]] "(0)")
+
 # Cf. cmake/helpers/CheckDependentLibraries.cmake
 # The default for all `GDAL_USE_<PKG>` dependencies is `OFF`.
 # Here, we explicitly control dependencies provided via vpcpkg.
@@ -137,6 +140,7 @@ if (BUILD_APPS)
             gdalmdimtranslate
             gnmanalyse
             gnmmanage
+            sozip
         AUTO_CLEAN
     )
 endif()
