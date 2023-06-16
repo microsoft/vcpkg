@@ -42,7 +42,6 @@ function(boost_modular_build)
     else()
         message(FATAL_ERROR "Could not find b2 in ${BOOST_BUILD_PATH}")
     endif()
-
     if(VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR STREQUAL "IA64")
       string(APPEND BOOST_ARCHITECTURE_TAG "i")
     elseif(VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR MATCHES "^[xX]86"

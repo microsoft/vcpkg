@@ -424,7 +424,7 @@ vcpkg_configure_meson(
         -Dlibav=${LIBAV}
         -Dlibnice=disabled
         -Ddevtools=disabled
-        -Dges=disabled
+        -Dges=enabled
         -Drtsp_server=disabled
         -Domx=disabled
         -Dvaapi=disabled
@@ -644,6 +644,7 @@ list(APPEND GST_BIN_TOOLS
     gst-launch-1.0
     gst-stats-1.0
     gst-typefind-1.0
+    ges-launch-1.0
 )
 list(APPEND GST_LIBEXEC_TOOLS
     gst-plugin-scanner

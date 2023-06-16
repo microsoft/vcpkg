@@ -4,11 +4,10 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
-    REF v2022.03.21.00
-    SHA512 8d2d9430dc3a4ecc23042cd9bcf4eee888824449d05d98baec408aef806b934d643e578d3876169f69966c846aeddbe0aa84416c4e020cba028a49d2fccfe7ab
+    REF "v${VERSION}"
+    SHA512 b9f7bb7037cbc24ba18928cfad8673fd321ec095dec5fa6ca5b6c51b468873bbefde4326d39faa916747f4273b5a4003d60c0f6f755bfce095f9d3e8946bcb46
     HEAD_REF master
     PATCHES 
-        0001-fix-compatibility-with-boost-1.79.0.patch
         fix-glog.patch
         0002-fix-dependency.patch
 )
@@ -51,6 +50,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/frozen/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/gtest/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/visitation/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/test"

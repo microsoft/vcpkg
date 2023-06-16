@@ -1,10 +1,11 @@
 {
   "name": "glibmm",
   "version": "2.76.0",
+  "port-version": 1,
   "description": "This is glibmm, a C++ API for parts of glib that are useful for C++.",
   "homepage": "https://www.gtkmm.org.",
   "license": "LGPL-2.1-or-later",
-  "supports": "!uwp",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     "gettext",
     "glib",
