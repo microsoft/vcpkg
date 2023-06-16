@@ -17,6 +17,7 @@ vcpkg_from_github(
         boost-1.70.patch
         fix-windows-minmax.patch
         fix-deps.patch
+        openssl.patch # from https://github.com/facebook/folly/pull/2016
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
