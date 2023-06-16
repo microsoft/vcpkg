@@ -9,7 +9,7 @@ vcpkg_from_github(
     SHA512 3d0c5666509a19be54ea0c48a3c8e1c4a951a2d991a7c9f7fe6d326661464538f1ab9dc573b1b2647f49fb6bef45bbd866142a4ce0fba38545ad182b8d55f61f
     HEAD_REF devel
     PATCHES
-     #   fix-install-path.patch
+        fix-install-path.patch
 )
 
 vcpkg_cmake_configure(
