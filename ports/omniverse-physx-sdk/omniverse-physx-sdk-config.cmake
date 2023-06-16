@@ -107,7 +107,6 @@ if(NOT TARGET unofficial::omniverse-physx-sdk)
         IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
         IMPORTED_LOCATION "${OMNIVERSE-PHYSX-SDK-GPU_LIBRARY_RELEASE}"
     )
-
     if(WIN32)
         add_library(unofficial::omniverse-physx-sdk::gpu-device-library SHARED IMPORTED)
         set_target_properties(unofficial::omniverse-physx-sdk::gpu-device-library PROPERTIES
