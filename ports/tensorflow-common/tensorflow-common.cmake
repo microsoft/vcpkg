@@ -155,11 +155,11 @@ else()
 	endif()
 endif()
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-  list(APPEND PORT_BUILD_CONFIGS "dbg")
-endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   list(APPEND PORT_BUILD_CONFIGS "rel")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  list(APPEND PORT_BUILD_CONFIGS "dbg")
 endif()
 
 foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
@@ -233,6 +233,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	endif()
 	if(BUILD_TYPE STREQUAL "dbg")
 		if(VCPKG_TARGET_IS_WINDOWS)
+			set(compilation_mode "dbg")
 			# We must use dbg to get the right CRT.
 			list(APPEND BUILD_OPTS --compilation_mode=dbg --host_compilation_mode=opt)
 			# overrides /DEBUG:FULL to avoid .pdb >4GB error
@@ -273,6 +274,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
 	else()
+		set(compilation_mode "opt")
 		list(APPEND BUILD_OPTS --compilation_mode=opt)
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
@@ -340,15 +342,15 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			bazel-out/x64_windows-dbg-exec-50AE0418/bin/external/llvm-project/llvm/_objs/Demangle/Demangle.obj.params
 			bazel-out/x64_windows-dbg-exec-50AE0418/bin/external/llvm-project/mlir/mlir-tblgen.exe-2.params
 			# x64-windows-<compilation_mode>: regular
-			bazel-out/x64_windows-dbg/bin/external/com_github_grpc_grpc/src/compiler/_objs/grpc_cpp_plugin/cpp_plugin.obj.params
-			bazel-out/x64_windows-dbg/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
-			bazel-out/x64_windows-dbg/bin/tensorflow/compiler/tf2xla/kernels/_objs/xla_ops/random_ops_util.obj.param
-			bazel-out/x64_windows-dbg/bin/tensorflow/cc/ops/random_ops_gen_cc.exe-2.params
+			bazel-out/x64_windows-${compilation_mode}/bin/external/com_github_grpc_grpc/src/compiler/_objs/grpc_cpp_plugin/cpp_plugin.obj.params
+			bazel-out/x64_windows-${compilation_mode}/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
+			bazel-out/x64_windows-${compilation_mode}/bin/tensorflow/compiler/tf2xla/kernels/_objs/xla_ops/random_ops_util.obj.param
+			bazel-out/x64_windows-${compilation_mode}/bin/tensorflow/cc/ops/random_ops_gen_cc.exe-2.params
 			# bash script
-			bazel-x64-windows-dbg/external/bazel_tools/tools/genrule/genrule-setup.sh
-			bazel-out/x64_windows-dbg/bin/tensorflow/cc/array_ops_genrule.genrule_script.sh
-			bazel-out/x64_windows-dbg/bin/tensorflow/cc/random_ops_genrule.genrule_script.sh
-			bazel-out/x64_windows-dbg/bin/tensorflow/cc/training_ops_genrule.genrule_script.sh
+			bazel-x64-windows-${compilation_mode}/external/bazel_tools/tools/genrule/genrule-setup.sh
+			bazel-out/x64_windows-${compilation_mode}/bin/tensorflow/cc/array_ops_genrule.genrule_script.sh
+			bazel-out/x64_windows-${compilation_mode}/bin/tensorflow/cc/random_ops_genrule.genrule_script.sh
+			bazel-out/x64_windows-${compilation_mode}/bin/tensorflow/cc/training_ops_genrule.genrule_script.sh
 	)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 		set(args "${TF_VERSION}" "${TF_LIB_SUFFIX}")
