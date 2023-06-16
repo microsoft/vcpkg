@@ -1,13 +1,13 @@
 {
   "name": "cctag",
   "version-semver": "1.0.2",
-  "port-version": 3,
+  "port-version": 4,
   "maintainers": "alicevision-team@googlegroups.com",
   "description": "Computer vision library for detecting CCTag markers made up of concentric circles",
   "homepage": "https://github.com/alicevision/CCTag",
   "documentation": "https://cctag.readthedocs.io/",
   "license": "MPL-2.0",
-  "supports": "!(uwp | arm | arm64 | android | x86)",
+  "supports": "!(uwp | arm | arm64 | android | x86 | xbox)",
   "dependencies": [
     "boost-accumulators",
     "boost-algorithm",
