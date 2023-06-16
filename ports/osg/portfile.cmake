@@ -74,7 +74,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 # The package osg can be configured to use different OpenGL profiles via a custom triplet file:
 # Possible values are GLCORE, GL2, GL3, GLES1, GLES2, GLES3, and GLES2+GLES3
 if(NOT DEFINED osg_OPENGL_PROFILE)
-    set(osg_OPENGL_PROFILE "GL3")
+    set(osg_OPENGL_PROFILE "GL2")
 endif()
 
 # Plugin control variables are used only if prerequisites are satisfied.

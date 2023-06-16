@@ -424,7 +424,7 @@ vcpkg_configure_meson(
         -Dlibav=${LIBAV}
         -Dlibnice=disabled
         -Ddevtools=disabled
-        -Dges=disabled
+        -Dges=enabled
         -Drtsp_server=disabled
         -Domx=disabled
         -Dvaapi=disabled
@@ -644,6 +644,7 @@ list(APPEND GST_BIN_TOOLS
     gst-launch-1.0
     gst-stats-1.0
     gst-typefind-1.0
+    ges-launch-1.0
 )
 list(APPEND GST_LIBEXEC_TOOLS
     gst-plugin-scanner
@@ -702,18 +703,40 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gstconfig.h" "!defined(GST_STATIC_COMPILATION)" "0")
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    # move plugins to ${prefix}/plugins/${PORT} instead of ${prefix}/lib/gstreamer-1.0
     if(NOT VCPKG_BUILD_TYPE)
-        file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll"
+        file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}*${CMAKE_SHARED_LIBRARY_SUFFIX}"
                            "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb"
         )
-        file(COPY ${DBG_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(COPY ${DBG_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}")
     endif()
-    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll"
+    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}*${CMAKE_SHARED_LIBRARY_SUFFIX}"
                        "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb"
     )
-    file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/${PORT}")
     file(REMOVE ${DBG_BINS} ${REL_BINS})
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0" "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0")
+    endif()
+
+    set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gstreamer-1.0.pc")
+    if(EXISTS "${_file}")
+        file(READ "${_file}" _contents)
+        string(REPLACE [[toolsdir=${exec_prefix}/bin]] "toolsdir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginscannerdir=${libexecdir}/gstreamer-1.0]] "pluginscannerdir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginsdir=${libdir}/gstreamer-1.0]] "pluginsdir=\${prefix}/plugins/${PORT}" _contents "${_contents}")
+        file(WRITE "${_file}" "${_contents}")
+    endif()
+
+    set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gstreamer-1.0.pc")
+    if(EXISTS "${_file}")
+        file(READ "${_file}" _contents)
+        string(REPLACE [[toolsdir=${exec_prefix}/bin]] "toolsdir=\${prefix}/tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginscannerdir=${libexecdir}/gstreamer-1.0]] "pluginscannerdir=\${prefix}/tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginsdir=${libdir}/gstreamer-1.0]] "pluginsdir=\${prefix}/plugins/${PORT}" _contents "${_contents}")
+        file(WRITE "${_file}" "${_contents}")
+    endif()
 endif()
 
 vcpkg_fixup_pkgconfig()

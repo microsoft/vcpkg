@@ -19,11 +19,11 @@ index 4cdc999..c6ede41 100644
  # you could be running mingw32 on linux in which case you do NOT want the gdcmuuid lib
  APPEND_COPYRIGHT(${CMAKE_CURRENT_SOURCE_DIR}/gdcmuuid/COPYING)
 diff --git a/Utilities/VTK/Applications/CMakeLists.txt b/Utilities/VTK/Applications/CMakeLists.txt
-index c7f1ad9..20883a2 100644
+index a7f7e7e..ab89a73 100644
 --- a/Utilities/VTK/Applications/CMakeLists.txt
 +++ b/Utilities/VTK/Applications/CMakeLists.txt
-@@ -45,7 +45,13 @@ foreach(app ${GDCM_VTK_APPS})
-     target_link_libraries(${app} ${VTK_LIBRARIES} vtkIOXML)
+@@ -60,7 +60,12 @@ foreach(app ${GDCM_VTK_APPS})
+     endif()
    endif()
    if(WIN32 AND NOT CYGWIN)
 -    target_link_libraries(${app} gdcmgetopt)
@@ -33,7 +33,6 @@ index c7f1ad9..20883a2 100644
 +    else()
 +        target_link_libraries(${app} gdcmgetopt)
 +    endif()
-+else()
    endif()
    if(NOT GDCM_INSTALL_NO_RUNTIME)
      install(TARGETS ${app}

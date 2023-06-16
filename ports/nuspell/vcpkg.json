@@ -1,6 +1,7 @@
 {
   "name": "nuspell",
   "version-semver": "5.1.2",
+  "port-version": 1,
   "description": [
     "Nuspell is a fast and safe spelling checker software program.",
     "It is designed for languages with rich morphology and complex word compounding.",
@@ -8,6 +9,7 @@
   ],
   "homepage": "https://nuspell.github.io/",
   "license": "LGPL-3.0-or-later",
+  "supports": "!xbox",
   "dependencies": [
     "icu",
     {
