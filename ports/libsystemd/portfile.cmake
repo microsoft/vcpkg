@@ -50,4 +50,4 @@ vcpkg_fixup_pkgconfig()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-systemd/unofficial-systemd-config.cmake" @ONLY)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.GPL2" "${SOURCE_PATH}/LICENSE.LGPL2.1")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.LGPL2.1")
