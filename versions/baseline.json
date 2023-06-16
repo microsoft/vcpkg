@@ -2762,7 +2762,7 @@
     },
     "geotrans": {
       "baseline": "3.9",
-      "port-version": 0
+      "port-version": 1
     },
     "getdns": {
       "baseline": "1.7.0",
