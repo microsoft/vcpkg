@@ -17,6 +17,15 @@
       {
         "name": "vcpkg-cmake-config",
         "host": true
+      },
+      {
+        "name": "opentelemetry-cpp"
+      }
+    ],
+    "overrides": [
+      {
+        "name": "opentelemetry-cpp",
+        "version": "1.6.0"
       }
     ]
   }
