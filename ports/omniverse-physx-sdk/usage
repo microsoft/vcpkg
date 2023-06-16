@@ -10,20 +10,20 @@ omniverse-physx-sdk provides CMake targets:
     if(TARGET unofficial::omniverse-physx-sdk::gpu-library)
         if(UNIX)
             # Add rpath setting to find .so libraries on unix based systems
-            set_target_properties(hello_physx PROPERTIES
+            set_target_properties(main PROPERTIES
                 BUILD_WITH_INSTALL_RPATH TRUE
                 INSTALL_RPATH "$ORIGIN"
             )
         endif()
-        add_custom_command(TARGET hello_physx POST_BUILD
+        add_custom_command(TARGET main POST_BUILD
                         COMMAND ${CMAKE_COMMAND} -E copy_if_different
                         $<TARGET_FILE:unofficial::omniverse-physx-sdk::gpu-library>
-                        $<TARGET_FILE_DIR:hello_physx>)
+                        $<TARGET_FILE_DIR:main>)
         if(WIN32)
-            add_custom_command(TARGET hello_physx POST_BUILD
+            add_custom_command(TARGET main POST_BUILD
                             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                             $<TARGET_FILE:unofficial::omniverse-physx-sdk::gpu-device-library>
-                            $<TARGET_FILE_DIR:hello_physx>)
+                            $<TARGET_FILE_DIR:main>)
         endif()
     else()
         message(WARNING "GPU acceleration library target not defined - GPU acceleration will NOT be available!")
