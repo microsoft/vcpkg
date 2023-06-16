@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PaddlePaddle/FlyCV
-    REF "release/v1.2.0"
+    REF "release/v${VERSION}"
     SHA512 6f40f00f54a3d10da3f49a3c070e6cc8319c3d429d3fe4651e3ca1c55973d9610b64e05a5dec5a33dd8e6c7c293117a1d1b85e2833e07faebfd591f8fed3da14
     HEAD_REF develop
     PATCHES
