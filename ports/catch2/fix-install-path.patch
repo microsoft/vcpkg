@@ -11,3 +11,35 @@ index 6d381d8..94122e6 100644
          CACHE PATH "Path where catch2.pc is installed"
      )
      configure_file(
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index fd05dbd..a31060d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -404,7 +404,6 @@ if (NOT_SUBPROJECT)
+     install(
+       TARGETS
+         Catch2
+-        Catch2WithMain
+       EXPORT
+         Catch2Targets
+       LIBRARY DESTINATION
+@@ -415,6 +414,19 @@ if (NOT_SUBPROJECT)
+         ${CMAKE_INSTALL_BINDIR}
+     )
+ 
++     install(
++      TARGETS
++        Catch2WithMain
++      EXPORT
++        Catch2Targets
++      LIBRARY DESTINATION
++        ${CMAKE_INSTALL_PREFIX}/lib/manual-link
++      ARCHIVE DESTINATION
++        ${CMAKE_INSTALL_PREFIX}/lib/manual-link
++      RUNTIME DESTINATION
++        ${CMAKE_INSTALL_PREFIX}/bin
++    )
++
+ 
+     install(
+       EXPORT
