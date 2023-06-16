@@ -269,8 +269,7 @@ endif()
 
 # Special treatment is reserved for the PhysXGpu_64 shared library (downloaded by packman).
 # This is a 3rd party "optional functionality" dependency.
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
 set(GPULIBNAMES "")
 if(targetPlatform STREQUAL "linuxAarch64" OR targetPlatform STREQUAL "linux")
     list(APPEND GPULIBNAMES "libPhysXGpu_64.so" "libPhysXDevice64.so")
@@ -292,9 +291,8 @@ function(_copy_single_files_from_dir_to_destdir _IN_FILES _IN_DIR _OUT_DIR)
     endforeach()
 endfunction()
 
-# Put it in binary directories, it's an optional component
-_copy_single_files_from_dir_to_destdir("${GPULIBNAMES}" "${SOURCE_PATH}/physx/bin/*/release/*" "${CURRENT_PACKAGES_DIR}/bin")
-_copy_single_files_from_dir_to_destdir("${GPULIBNAMES}" "${SOURCE_PATH}/physx/bin/*/debug/*" "${CURRENT_PACKAGES_DIR}/debug/bin")
+# Put it in binary directories, it's an optional component (only release binaries should go in tools/)
+_copy_single_files_from_dir_to_destdir("${GPULIBNAMES}" "${SOURCE_PATH}/physx/bin/*/release/*" "${CURRENT_PACKAGES_DIR}/tools")
 
 # Copy headers to port's destination folder
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
