@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO localcc/LightningScanner
     REF v${VERSION}
-    SHA512 7bd41e049ccdf1dbe39b2ab3c58344822300165482d7c5392fe1cd2b15a40baec9ff080963f7db60f2826ece983a06b921d8a28ba57edf751c2cc7644f0a1150
+    SHA512 fa2aefb6a6097544f578a96592b7b2ff58d5bccac7b10a0ab45fbe87e1204b3cbde5c16c64974e7434ea385727fb150b39080bf809f9698d944f75a6c110fe3c
 )
 
 vcpkg_cmake_configure(
