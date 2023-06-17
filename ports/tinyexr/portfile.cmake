@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fixtargets.patch
+        fix-uwp.patch # https://github.com/syoyo/tinyexr/pull/195
 )
 
 vcpkg_cmake_configure(
