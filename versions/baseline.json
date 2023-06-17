@@ -4334,7 +4334,7 @@
     },
     "libnice-gst": {
       "baseline": "0.1.21",
-      "port-version": 2
+      "port-version": 3
     },
     "libnoise": {
       "baseline": "1.0.0",
