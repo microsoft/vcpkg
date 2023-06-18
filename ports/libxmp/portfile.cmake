@@ -22,6 +22,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_SHARED=${BUILD_SHARED}
+        -DLIBXMP_DOCS=OFF
 )
 
 vcpkg_cmake_install()
