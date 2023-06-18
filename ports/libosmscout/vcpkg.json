@@ -40,8 +40,8 @@
       "description": "GDI+ backend renderer",
       "supports": "windows"
     },
-    "qt": {
-      "description": "Enable build of Qt map drawing backend",
+    "qt5": {
+      "description": "Enable build of Qt5 map drawing backend",
       "dependencies": [
         "qt5-base",
         "qt5-svg"
