@@ -19,5 +19,14 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "ocr": {
+      "description": "Enable OCR support",
+      "dependencies": [
+        "leptonica",
+        "tesseract"
+      ]
+    }
+  }
 }
