@@ -23,9 +23,10 @@
       "description": "Platform specific default features",
       "dependencies": [
         {
+          "name": "mp-units",
           "features": [
-            "fmt",
-            "range-v3"
+            "install-range-v3",
+            "use-libfmt"
           ],
           "platform": "osx"
         }
