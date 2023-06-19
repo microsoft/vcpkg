@@ -20,10 +20,9 @@
   ],
   "features": {
     "default-features": {
-      "description": "osx default dependencies",
+      "description": "Platform specific default features",
       "dependencies": [
         {
-          "name": "mp-units",
           "features": [
             "fmt",
             "range-v3"
