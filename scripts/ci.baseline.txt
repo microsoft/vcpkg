@@ -1145,6 +1145,7 @@ openmesh:x64-uwp=fail
 openmpi:arm-neon-android=fail
 openmpi:arm64-android=fail
 openmpi:x64-android=fail
+openmvg:x64-linux=fail
 openscap:arm-neon-android=fail
 openscap:arm64-android=fail
 openscap:x64-android=fail
