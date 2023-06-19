@@ -5,9 +5,7 @@
   "homepage": "https://github.com/mpusz/units",
   "license": "MIT",
   "dependencies": [
-    "fmt",
     "gsl-lite",
-    "range-v3",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,8 +16,17 @@
     }
   ],
   "features": {
+    "install-range-v3": {
+      "description": "Provide range-v3 for compilers not supporting std::ranges",
+      "dependencies": [
+        "range-v3"
+      ]
+    },
     "use-libfmt": {
-      "description": "Use libfmt instead of std::format"
+      "description": "Use libfmt instead of std::format",
+      "dependencies": [
+        "fmt"
+      ]
     }
   }
 }
