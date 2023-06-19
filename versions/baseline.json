@@ -221,8 +221,8 @@
       "port-version": 4
     },
     "arrow": {
-      "baseline": "12.0.0",
-      "port-version": 2
+      "baseline": "12.0.1",
+      "port-version": 0
     },
     "arsenalgear": {
       "baseline": "2.1.0",
@@ -257,7 +257,7 @@
       "port-version": 0
     },
     "async-mqtt": {
-      "baseline": "1.0.2",
+      "baseline": "1.0.3",
       "port-version": 0
     },
     "asynch": {
@@ -666,7 +666,7 @@
     },
     "boost-atomic": {
       "baseline": "1.82.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-beast": {
       "baseline": "1.82.0",
@@ -934,7 +934,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.82.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-move": {
       "baseline": "1.82.0",
@@ -1542,7 +1542,7 @@
     },
     "clapack": {
       "baseline": "3.2.1",
-      "port-version": 21
+      "port-version": 22
     },
     "clara": {
       "baseline": "1.1.5",
@@ -1662,7 +1662,7 @@
     },
     "coinutils": {
       "baseline": "2023-02-02",
-      "port-version": 0
+      "port-version": 1
     },
     "collada-dom": {
       "baseline": "2.5.0",
@@ -2329,7 +2329,7 @@
       "port-version": 5
     },
     "entt": {
-      "baseline": "3.11.1",
+      "baseline": "3.12.0",
       "port-version": 0
     },
     "epsilon": {
@@ -2573,7 +2573,7 @@
       "port-version": 0
     },
     "folly": {
-      "baseline": "2023.05.15.00",
+      "baseline": "2023.05.22.00",
       "port-version": 0
     },
     "font-chef": {
@@ -2837,7 +2837,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "1.2.3",
+      "baseline": "1.2.6",
       "port-version": 0
     },
     "glbinding": {
@@ -2913,7 +2913,7 @@
       "port-version": 3
     },
     "google-cloud-cpp": {
-      "baseline": "2.10.0",
+      "baseline": "2.11.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -3352,6 +3352,10 @@
       "baseline": "2.3",
       "port-version": 0
     },
+    "indirect-value": {
+      "baseline": "2023-06-01",
+      "port-version": 0
+    },
     "influxdb-cxx": {
       "baseline": "0.7.1",
       "port-version": 0
@@ -3417,7 +3421,7 @@
       "port-version": 10
     },
     "ixwebsocket": {
-      "baseline": "11.4.3",
+      "baseline": "11.4.4",
       "port-version": 0
     },
     "jack2": {
@@ -4394,7 +4398,7 @@
     },
     "libosmscout": {
       "baseline": "1.1.1",
-      "port-version": 2
+      "port-version": 3
     },
     "libp7-baical": {
       "baseline": "replaced",
@@ -4814,7 +4818,7 @@
     },
     "libxlsxwriter": {
       "baseline": "1.1.5",
-      "port-version": 1
+      "port-version": 2
     },
     "libxml2": {
       "baseline": "2.10.3",
@@ -5517,8 +5521,8 @@
       "port-version": 5
     },
     "mysql-connector-cpp": {
-      "baseline": "8.0.30",
-      "port-version": 1
+      "baseline": "8.0.32",
+      "port-version": 0
     },
     "nameof": {
       "baseline": "0.10.2",
@@ -6006,7 +6010,7 @@
     },
     "openscap": {
       "baseline": "1.3.7",
-      "port-version": 1
+      "port-version": 2
     },
     "openslide": {
       "baseline": "3.4.1",
@@ -6047,6 +6051,10 @@
     "openvdb": {
       "baseline": "10.0.0",
       "port-version": 3
+    },
+    "openvino": {
+      "baseline": "2023-06-11",
+      "port-version": 0
     },
     "openvpn3": {
       "baseline": "3.7.0",
@@ -6582,7 +6590,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.10",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -6949,7 +6957,7 @@
       "port-version": 9
     },
     "quill": {
-      "baseline": "2.9.1",
+      "baseline": "3.0.1",
       "port-version": 0
     },
     "quirc": {
@@ -7434,7 +7442,7 @@
     },
     "sfml": {
       "baseline": "2.5.1",
-      "port-version": 15
+      "port-version": 16
     },
     "sfsexp": {
       "baseline": "1.3.1",
@@ -7589,8 +7597,8 @@
       "port-version": 0
     },
     "sockpp": {
-      "baseline": "0.7.1",
-      "port-version": 1
+      "baseline": "0.8.1",
+      "port-version": 0
     },
     "soem": {
       "baseline": "2023-06-09",
@@ -8525,8 +8533,8 @@
       "port-version": 2
     },
     "vulkan-memory-allocator-hpp": {
-      "baseline": "3.0.1",
-      "port-version": 1
+      "baseline": "3.0.1.1",
+      "port-version": 0
     },
     "vvenc": {
       "baseline": "1.7.0",
@@ -8849,8 +8857,8 @@
       "port-version": 1
     },
     "yara": {
-      "baseline": "4.3.0",
-      "port-version": 1
+      "baseline": "4.3.2",
+      "port-version": 0
     },
     "yas": {
       "baseline": "7.1.0",
