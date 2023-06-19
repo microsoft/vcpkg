@@ -5541,7 +5541,7 @@
       "port-version": 6
     },
     "nanoflann": {
-      "baseline": "1.4.3",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "nanogui": {
