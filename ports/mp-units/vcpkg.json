@@ -15,7 +15,23 @@
       "host": true
     }
   ],
+  "default-features": [
+    "default-features"
+  ],
   "features": {
+    "default-features": {
+      "description": "osx default dependencies",
+      "dependencies": [
+        {
+          "name": "mp-units",
+          "features": [
+            "fmt",
+            "range-v3"
+          ],
+          "platform": "osx"
+        }
+      ]
+    },
     "install-range-v3": {
       "description": "Provide range-v3 for compilers not supporting std::ranges",
       "dependencies": [
