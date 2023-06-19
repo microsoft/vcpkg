@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF v2.53.1
-    SHA512 ea975cf919f483dc6669bd3fbce6c301df2ffadbe592972fdec8051de373374a5243565cb87b592f21f017c5ca319634617bacb0c49557136fda3620c59f2101
+    REF v2.54.1
+    SHA512 *************************************
     HEAD_REF master
     PATCHES
         fix_openni2.patch
