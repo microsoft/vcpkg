@@ -135,7 +135,7 @@ index 0965b84..af7f2de 100644
 +        set_target_properties(libre::libre PROPERTIES INTERFACE_LINK_LIBRARIES libre::re_shared)
 +    elseif(TARGET libre::re AND (NOT BUILD_SHARED_LIBS OR NOT TARGET libre::re_shared))
 +        add_library(libre::libre INTERFACE IMPORTED)
-+        set_target_properties(libre::libre PROPERTIES INTERFACE_LINK_LIBRARIES libre::re_shared)
++        set_target_properties(libre::libre PROPERTIES INTERFACE_LINK_LIBRARIES libre::re)
 +    endif()
 +endif()
 diff --git a/packaging/libre.pc.in b/packaging/libre.pc.in
