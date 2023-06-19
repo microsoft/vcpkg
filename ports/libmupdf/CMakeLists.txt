@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 3.9)
 project(libmupdf)
 
-set(CMAKE_DEBUG_POSTFIX d)
+option(ENABLE_OCR "Build with OCR" OFF)
 
-# TODO: Toggle based on the [ocr] feature flag?
-set(OCR_FEATURE_IS_ENABLED 0)
+set(CMAKE_DEBUG_POSTFIX d)
 
 if(WIN32)
   execute_process(
@@ -28,7 +27,7 @@ find_package(ZLIB REQUIRED)
 find_package(OpenJPEG CONFIG REQUIRED)
 find_library(JBIG2DEC_LIB NAMES jbig2decd jbig2dec)
 
-if (OCR_FEATURE_IS_ENABLED)
+if (ENABLE_OCR)
   find_package(Leptonica CONFIG REQUIRED)
   find_package(Tesseract CONFIG REQUIRED)
 endif()
@@ -38,7 +37,7 @@ list(FILTER SOURCES EXCLUDE REGEX "source/tools/[a-z]*\\.c$")
 list(FILTER SOURCES EXCLUDE REGEX "source/tests/.*.c$")
 list(FILTER SOURCES EXCLUDE REGEX "source/fitz/output-docx.c")
 
-if (OCR_FEATURE_IS_ENABLED)
+if (ENABLE_OCR)
   list(APPEND SOURCES "source/fitz/tessocr.cpp")
 endif()
 
@@ -51,7 +50,7 @@ else()
 endif()
 
 
-if (OCR_FEATURE_IS_ENABLED)
+if (ENABLE_OCR)
   target_compile_definitions(libmupdf PRIVATE -DHAVE_TESSERACT=1 -DHAVE_LEPTONICA=1)
 else()
   target_compile_definitions(libmupdf PRIVATE -DOCR_DISABLED=1)
@@ -66,7 +65,7 @@ target_include_directories(libmupdf
     ${HARFBUZZ_INCLUDE}
 )
 
-if (OCR_FEATURE_IS_ENABLED)
+if (ENABLE_OCR)
 target_include_directories(libmupdf
   PRIVATE
     ${Leptonica_INCLUDE_DIRS}
