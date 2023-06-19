@@ -155,11 +155,11 @@ else()
 	endif()
 endif()
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-  list(APPEND PORT_BUILD_CONFIGS "rel")
-endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   list(APPEND PORT_BUILD_CONFIGS "dbg")
+endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  list(APPEND PORT_BUILD_CONFIGS "rel")
 endif()
 
 foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
@@ -235,10 +235,10 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			set(compilation_mode "dbg")
 			# We must use dbg to get the right CRT.
-			list(APPEND BUILD_OPTS --compilation_mode=dbg --host_compilation_mode=opt)
+			list(APPEND BUILD_OPTS --compilation_mode=dbg --host_compilation_mode=dbg)
 			# overrides /DEBUG:FULL to avoid .pdb >4GB error
 			#list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK)
-			list(APPEND COPTS --copt=/Od --copt=/Z7) # as in fastbuild
+			#list(APPEND COPTS --copt=/Od --copt=/Z7) # as in fastbuild
 			#list(APPEND LINKOPTS --linkopt=/DEBUG:FASTLINK --linkopt=/OPT:REF --linkopt=/OPT:ICF)
 			#list(APPEND COPTS --host_copt=/Od --host_copt=/Z7) # as in fastbuild
 			#list(APPEND LINKOPTS --host_linkopt=/DEBUG:FASTLINK --host_linkopt=/OPT:REF --host_linkopt=/OPT:ICF)
@@ -246,8 +246,10 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			list(APPEND COPTS --copt=/DVCPKG_TARGET --host_copt=/DVCPKG_HOST)
 			list(APPEND LINKOPTS --linkopt=/NODEFAULTLIB:VCPKG_TARGET.lib --host_linkopt=/NODEFAULTLIB:VCPKG_HOST.lib)
 			# Override command line to limit pdb size
+			list(APPEND BUILD_OPTS --action_env "_CL_=/Od /Z7 /Gw /Gy")
 			list(APPEND BUILD_OPTS --action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF /INCREMENTAL:NO")
-			#list(APPEND BUILD_OPTS --host_action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF /INCREMENTAL:NO")
+			list(APPEND BUILD_OPTS --host_action_env "_CL_=/Od /Z7 /Gw /Gy")
+			list(APPEND BUILD_OPTS --host_action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF /INCREMENTAL:NO")
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
