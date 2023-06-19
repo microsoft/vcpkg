@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d175f0a..fca0ee8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -108,7 +108,7 @@ INSTALL(TARGETS hiredis
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+-if (MSVC)
++if (MSVC AND BUILD_SHARED_LIBS)
+     INSTALL(FILES $<TARGET_PDB_FILE:hiredis>
+         DESTINATION ${CMAKE_INSTALL_BINDIR}
+         CONFIGURATIONS Debug RelWithDebInfo)
+@@ -197,7 +197,7 @@ IF(ENABLE_SSL)
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+-    if (MSVC)
++    if (MSVC AND BUILD_SHARED_LIBS)
+         INSTALL(FILES $<TARGET_PDB_FILE:hiredis_ssl>
+             DESTINATION ${CMAKE_INSTALL_BINDIR}
+             CONFIGURATIONS Debug RelWithDebInfo)
