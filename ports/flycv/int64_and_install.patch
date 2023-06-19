@@ -25,16 +25,15 @@ index 097f8e3..86eec04 100755
  # ============================ Unit Test ==================================
  # Add gtest
 diff --git a/cmake/FCVFindDependencies.cmake b/cmake/FCVFindDependencies.cmake
-index ca85c85..06ca510 100755
+index ca85c85..37dd552 100755
 --- a/cmake/FCVFindDependencies.cmake
 +++ b/cmake/FCVFindDependencies.cmake
-@@ -5,15 +5,16 @@ if(BUILD_FCV_MEDIA_IO)
+@@ -5,15 +5,15 @@ if(BUILD_FCV_MEDIA_IO)
      if(WITH_FCV_IMGCODECS)
          # Build with jpeg
          if(WITH_LIB_JPEG_TURBO)
 -            include(external/libjpeg-turbo)
 +            find_package(libjpeg-turbo CONFIG REQUIRED)
-+            list(APPEND FCV_LINK_DEPS libjpeg-turbo::turbojpeg)
 +            list(APPEND FCV_LINK_DEPS $<IF:$<TARGET_EXISTS:libjpeg-turbo::turbojpeg>,libjpeg-turbo::turbojpeg,libjpeg-turbo::turbojpeg-static>)
              add_definitions(-DWITH_LIB_JPEG_TURBO)
          endif(WITH_LIB_JPEG_TURBO)
