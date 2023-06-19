@@ -4,7 +4,7 @@
   "description": "A high-performance library for processing computer visual tasks.",
   "homepage": "https://github.com/PaddlePaddle/FlyCV",
   "license": "Apache-2.0",
-  "supports": "!(arm64 & windows)",
+  "supports": "!(arm64 & windows) | !(arm & uwp)",
   "dependencies": [
     "libjpeg-turbo",
     "libpng",
