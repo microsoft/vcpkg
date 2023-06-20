@@ -252,9 +252,9 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			)
 			# Override command line to limit pdb size
 			list(APPEND BUILD_OPTS --action_env "_CL_=/Od /Z7 /Gw /Gy")
-			list(APPEND BUILD_OPTS --action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF /INCREMENTAL:NO")
+			list(APPEND BUILD_OPTS --action_env "_LINK_=/DEBUG:FASTLINK /INCREMENTAL:NO")
 			list(APPEND BUILD_OPTS --host_action_env "_CL_=/Od /Z7 /Gw /Gy")
-			list(APPEND BUILD_OPTS --host_action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF /INCREMENTAL:NO")
+			list(APPEND BUILD_OPTS --host_action_env "_LINK_=/DEBUG:FASTLINK /INCREMENTAL:NO")
 		elseif(VCPKG_TARGET_IS_OSX)
 			if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 				list(APPEND BUILD_OPTS --compilation_mode=opt) # debug & fastbuild build on macOS arm64 currently broken
