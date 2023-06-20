@@ -1,4 +1,4 @@
-# omniverse-physx-sdk-config.cmake (which later generates unofficial-omniverse-physx-sdk-config.cmake)
+# omniverse-physx-sdk-config.cmake (from which unofficial-omniverse-physx-sdk-config.cmake is generated)
 # A user's CMakeLists.txt should:
 #   find_package(unofficial-omniverse-physx-sdk CONFIG REQUIRED)
 #   target_link_libraries(main PRIVATE unofficial::omniverse-physx-sdk::sdk)
