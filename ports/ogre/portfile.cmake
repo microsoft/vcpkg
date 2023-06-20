@@ -29,6 +29,8 @@ file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OGRE_STATIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" OGRE_CONFIG_STATIC_LINK_CRT)
 
+set(OGRE_ETC_PATH "etc/${PORT}")
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     assimp   OGRE_BUILD_PLUGIN_ASSIMP
@@ -68,9 +70,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DOGRE_CFG_INSTALL_PATH=etc/${PORT}
+        -DOGRE_CFG_INSTALL_PATH=${OGRE_ETC_PATH}
         -DOGRE_CMAKE_DIR=share/${PORT}
-        -DOGRE_MEDIA_PATH=share/${PORT}/Media
+        -DOGRE_MEDIA_PATH=include/OGRE
         -DOGRE_PLUGINS_PATH=plugins/${PORT}
         -DOGRE_BUILD_DEPENDENCIES=OFF
         -DOGRE_BUILD_LIBS_AS_FRAMEWORKS=OFF
@@ -101,9 +103,6 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DOGRE_BUILD_TOOLS=OFF
         -DOGRE_INSTALL_TOOLS=OFF
-        "-DOGRE_MEDIA_PATH=${CURRENT_PACKAGES_DIR}/debug/include/OGRE"
-    OPTIONS_RELEASE
-        "-DOGRE_MEDIA_PATH=${CURRENT_PACKAGES_DIR}/include/OGRE"
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_Qt5
         CMAKE_DISABLE_FIND_PACKAGE_Qt6
@@ -124,11 +123,13 @@ vcpkg_fixup_pkgconfig()
 
 
 if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/etc/${PORT}/resources.cfg" "=../../share" "=../../../share")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/etc/${PORT}/resources.cfg" "[Tests]\nFileSystem=${CURRENT_PACKAGES_DIR}/debug/Tests/Media" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/${OGRE_ETC_PATH}/resources.cfg" "=../../share" "=../../../share")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/${OGRE_ETC_PATH}/resources.cfg" "[Tests]\nFileSystem=${CURRENT_PACKAGES_DIR}/debug/Tests/Media" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/${OGRE_ETC_PATH}/resources.cfg" "${CURRENT_PACKAGES_DIR}" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/OgreTargets-debug.cmake" "${_IMPORT_PREFIX}/plugins" "${_IMPORT_PREFIX}/debug/plugins")
 endif()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/etc/${PORT}/resources.cfg" "[Tests]\nFileSystem=${CURRENT_PACKAGES_DIR}/Tests/Media" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${OGRE_ETC_PATH}/resources.cfg" "[Tests]\nFileSystem=${CURRENT_PACKAGES_DIR}/Tests/Media" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${OGRE_ETC_PATH}/resources.cfg" "${CURRENT_PACKAGES_DIR}" "")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/etc/ogre/samples.cfg"
