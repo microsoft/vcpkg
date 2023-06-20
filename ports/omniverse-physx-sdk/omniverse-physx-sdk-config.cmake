@@ -2,7 +2,7 @@
 # A user's CMakeLists.txt should:
 #   find_package(unofficial-omniverse-physx-sdk CONFIG REQUIRED)
 #   target_link_libraries(main PRIVATE unofficial::omniverse-physx-sdk::sdk)
-# the GPU acceleration .so/.dll libraries are in the port's bin directory (needed for late binding).
+# the GPU acceleration .so/.dll libraries are in the port's tools/ directory (needed for late binding).
 # See the usage file for more info and more detailed explanation on how to use this.
 
 include(${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
