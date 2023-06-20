@@ -6,6 +6,7 @@
   "license": "LGPL-2.1-or-later",
   "supports": "!uwp",
   "dependencies": [
+    "gettext",
     {
       "name": "vcpkg-cmake",
       "host": true
