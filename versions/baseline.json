@@ -4833,8 +4833,8 @@
       "port-version": 3
     },
     "libxmp": {
-      "baseline": "2023-04-13",
-      "port-version": 1
+      "baseline": "4.6.0",
+      "port-version": 0
     },
     "libxmu": {
       "baseline": "1.1.3",
