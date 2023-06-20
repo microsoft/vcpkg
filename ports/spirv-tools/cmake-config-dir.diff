@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1b8fe92..8f3f91a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -269,7 +269,7 @@ else()
+ endif()
+ 
+ if(ENABLE_SPIRV_TOOLS_INSTALL)
+-  if(WIN32)
++  if(0)
+     macro(spvtools_config_package_dir TARGET PATH)
+       set(${PATH} ${TARGET}/cmake)
+     endmacro()

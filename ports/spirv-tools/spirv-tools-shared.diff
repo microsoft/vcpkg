@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8f3f91a..2cf1e40 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -389,10 +389,14 @@ add_custom_target(spirv-tools-shared-pkg-config ALL
+ 
+ # Install pkg-config file
+ if (ENABLE_SPIRV_TOOLS_INSTALL)
++  set(shared_pc "")
++  if(BUILD_SHARED_LIBS)
++    set(shared_pc "${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc")
++  endif()
+   install(
+     FILES
+       ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools.pc
+-      ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc
++      ${shared_pc}
+     DESTINATION
+       ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ endif()
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index 668579a..7874c1a 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -421,6 +421,10 @@ if (ANDROID)
+ endif()
+ 
+ if(ENABLE_SPIRV_TOOLS_INSTALL)
++  if(NOT BUILD_SHARED_LIBS)
++    set_target_properties(${SPIRV_TOOLS}-shared PROPERTIES EXCLUDE_FROM_ALL 1)
++    list(REMOVE_ITEM SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-shared)
++  endif()
+   install(TARGETS ${SPIRV_TOOLS_TARGETS} EXPORT ${SPIRV_TOOLS}Targets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
