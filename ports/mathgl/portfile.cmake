@@ -1,7 +1,7 @@
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mathgl/mathgl
-    REF "mathgl 8.0"
+    REF "mathgl%208.0"
     FILENAME "mathgl-${VERSION}.tar.gz"
     SHA512 1ff3023f1bbd7bfd84202777a0166a8d4255a020a07f3650b9858929345bc8a2ceea4db155d2c93ba32b762d2304474276290a9edac99fda70fb4b5bc12982c2
     PATCHES
@@ -16,6 +16,7 @@ vcpkg_from_sourceforge(
         fix-mgllab.patch
         include_functional.patch
         fix-include-property.patch
+        fix_link_gsl.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/addons/getopt")
 

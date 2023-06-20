@@ -1,10 +1,11 @@
 {
   "name": "jsonifier",
-  "version": "0.9.1",
+  "version": "0.9.2",
+  "port-version": 1,
   "description": "A few classes for parsing and serializing json - very rapidly.",
   "homepage": "https://github.com/realtimechris/jsonifier",
   "license": "LGPL-2.1-or-later",
-  "supports": "(windows & x64 & !uwp) | (linux & x64) | (osx & x64)",
+  "supports": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (osx & x64)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
