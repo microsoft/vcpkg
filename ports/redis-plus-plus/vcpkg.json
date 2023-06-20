@@ -37,7 +37,7 @@
     "cxx17": {
       "description": "Build redis-plus-plus with cxx 17 standard"
     },
-    "tls":{
+    "tls": {
       "description": "Build with TLS support",
       "dependencies": [
         {
