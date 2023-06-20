@@ -6206,7 +6206,7 @@
     },
     "pdal": {
       "baseline": "2.5.3",
-      "port-version": 1
+      "port-version": 2
     },
     "pdal-c": {
       "baseline": "2.2.0",
