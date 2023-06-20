@@ -234,6 +234,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 	if(BUILD_TYPE STREQUAL "dbg")
 		if(VCPKG_TARGET_IS_WINDOWS)
 			set(compilation_mode "dbg")
+			set(host_compilation_mode "dbg")
 			# We must use dbg to get the right CRT.
 			list(APPEND BUILD_OPTS --compilation_mode=dbg --host_compilation_mode=dbg)
 			# overrides /DEBUG:FULL to avoid .pdb >4GB error
@@ -243,8 +244,12 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			#list(APPEND COPTS --host_copt=/Od --host_copt=/Z7) # as in fastbuild
 			#list(APPEND LINKOPTS --host_linkopt=/DEBUG:FASTLINK --host_linkopt=/OPT:REF --host_linkopt=/OPT:ICF)
 			# markers, no-op
-			list(APPEND COPTS --copt=/DVCPKG_TARGET --host_copt=/DVCPKG_HOST)
-			list(APPEND LINKOPTS --linkopt=/NODEFAULTLIB:VCPKG_TARGET.lib --host_linkopt=/NODEFAULTLIB:VCPKG_HOST.lib)
+			#list(APPEND COPTS --copt=/DVCPKG_TARGET --host_copt=/DVCPKG_HOST)
+			#list(APPEND LINKOPTS --linkopt=/NODEFAULTLIB:VCPKG_TARGET.lib --host_linkopt=/NODEFAULTLIB:VCPKG_HOST.lib)
+			# Align host env with target env?
+			list(APPEND BUILD_OPTS
+				--distinct_host_configuration=false # Until bazel 5
+			)
 			# Override command line to limit pdb size
 			list(APPEND BUILD_OPTS --action_env "_CL_=/Od /Z7 /Gw /Gy")
 			list(APPEND BUILD_OPTS --action_env "_LINK_=/DEBUG:FASTLINK /OPT:REF /OPT:ICF /INCREMENTAL:NO")
@@ -277,6 +282,7 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		endforeach()
 	else()
 		set(compilation_mode "opt")
+		set(host_compilation_mode "opt")
 		list(APPEND BUILD_OPTS --compilation_mode=opt)
 
 		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
@@ -341,8 +347,8 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 		SAVE_LOG_FILES
 			# Parameter (response) files to inspect compiler flags (.obj) and linker flags (.exe)
 			# x64-windows-<host_compilation_mode>-exec: used for host tool to be used during build
-			bazel-out/x64_windows-dbg-exec-50AE0418/bin/external/llvm-project/llvm/_objs/Demangle/Demangle.obj.params
-			bazel-out/x64_windows-dbg-exec-50AE0418/bin/external/llvm-project/mlir/mlir-tblgen.exe-2.params
+			bazel-out/x64_windows-${host_compilation_mode}-exec-50AE0418/bin/external/llvm-project/llvm/_objs/Demangle/Demangle.obj.params
+			bazel-out/x64_windows-${host_compilation_mode}-exec-50AE0418/bin/external/llvm-project/mlir/mlir-tblgen.exe-2.params
 			# x64-windows-<compilation_mode>: regular
 			bazel-out/x64_windows-${compilation_mode}/bin/external/com_github_grpc_grpc/src/compiler/_objs/grpc_cpp_plugin/cpp_plugin.obj.params
 			bazel-out/x64_windows-${compilation_mode}/bin/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin.exe-2.params
@@ -353,6 +359,16 @@ foreach(BUILD_TYPE IN LISTS PORT_BUILD_CONFIGS)
 			bazel-out/x64_windows-${compilation_mode}/bin/tensorflow/cc/array_ops_genrule.genrule_script.sh
 			bazel-out/x64_windows-${compilation_mode}/bin/tensorflow/cc/random_ops_genrule.genrule_script.sh
 			bazel-out/x64_windows-${compilation_mode}/bin/tensorflow/cc/training_ops_genrule.genrule_script.sh
+			# ad-hoc
+			bazel-out/x64_windows-${host_compilation_mode}-exec-50AE0418/bin/external/llvm-project/mlir/_objs/TableGen/Pass.obj.params
+			bazel-out/x64_windows-${host_compilation_mode}-exec-50AE0418/bin/external/llvm-project/mlir/Support.lib-2.params
+			bazel-out/x64_windows-${host_compilation_mode}-exec-50AE0418/bin/external/llvm-project/mlir/TableGen.lib-2.params
+			#bazel-out/x64_windows-${host_compilation_mode}-exec-50AE0418/bin/external/llvm-project/mlir/mlir-tblgen.exe-2.params
+			bazel-out/x64_windows-dbg/bin/external/llvm-project/llvm/_objs/TableGen/JSONBackend.obj.params
+			bazel-out/x64_windows-dbg/bin/external/llvm-project/llvm/TableGen.lib-2.params
+			bazel-out/x64_windows-dbg/bin/external/llvm-project/llvm/_objs/tblgen/TableGen.obj.params
+			bazel-out/x64_windows-dbg/bin/external/llvm-project/llvm/tblgen.lib-2.params
+			bazel-out/x64_windows-${host_compilation_mode}-exec-50AE0418/bin/tensorflow/compiler/mlir/xla/operator_writer_gen.exe-2.params
 	)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 		set(args "${TF_VERSION}" "${TF_LIB_SUFFIX}")
