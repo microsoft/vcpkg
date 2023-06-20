@@ -6,7 +6,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     fix-include-path.patch
-	fix-missing-limits.patch
+    fix-missing-limits.patch
 )
 
 vcpkg_cmake_configure(
