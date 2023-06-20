@@ -11,6 +11,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DNANOFLANN_BUILD_EXAMPLES=OFF
         -DNANOFLANN_BUILD_TESTS=OFF
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
 )
 
 vcpkg_cmake_install()
