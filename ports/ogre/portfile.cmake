@@ -72,7 +72,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DOGRE_CFG_INSTALL_PATH=${OGRE_ETC_PATH}
         -DOGRE_CMAKE_DIR=share/${PORT}
-        -DOGRE_MEDIA_PATH=include/OGRE
+        -DOGRE_MEDIA_PATH=share/${PORT}/Media
         -DOGRE_PLUGINS_PATH=plugins/${PORT}
         -DOGRE_BUILD_DEPENDENCIES=OFF
         -DOGRE_BUILD_LIBS_AS_FRAMEWORKS=OFF
