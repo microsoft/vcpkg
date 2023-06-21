@@ -26,6 +26,12 @@
       "dependencies": [
         "openssl"
       ]
+    },
+    "wolfssl": {
+      "description": "Build usockets with wolfssl support",
+      "dependencies": [
+        "wolfssl"
+      ]
     }
   }
 }
