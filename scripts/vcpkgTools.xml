@@ -15,39 +15,32 @@
         <archiveName>python-3.10.7.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>cmake-3.27.20230617</version>
-        <exeRelativePath>cmake-3.27.20230617-gf025a44-windows-i386/bin/cmake.exe</exeRelativePath>
-        <url>https://cmake.org/files/dev/cmake-3.27.20230617-gf025a44-windows-i386.zip</url>
-        <sha512>76e2f048c3451cbb684a3c101c8dd4ba3a9f62b308d0e18883e05271d5326b2128a6f0ea82192113d314bf2eb06db6e2e8a926d00af351e9a6766e8e111e86e2</sha512>
-        <archiveName>cmake-3.27.20230617-gf025a44-windows-i386.zip</archiveName>
+        <version>3.27.0-rc3</version>
+        <exeRelativePath>cmake-3.27.0-rc3-windows-i386.zip</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.0-rc3/cmake-3.27.0-rc3-windows-i386.zip</url>
+        <sha512>0</sha512>
+        <archiveName>cmake-3.27.0-rc3-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.27.0-rc2</version>
-        <exeRelativePath>cmake-3.27.0-rc2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.27.0-rc2/cmake-3.27.0-rc2-macos-universal.tar.gz</url>
-        <sha512>5a7db06ed979d6c3b489cc5c1a45e4aeb3c0709a7d700859f6a6778a4e9285da99ff655a14a5f3659e8c82a3ad6d18f8e3e53582c37271ba2b27fd2257c8896e</sha512>
-        <archiveName>cmake-3.27.0-rc2-macos-universal.tar.gz</archiveName>
+        <version>3.27.0-rc3</version>
+        <exeRelativePath>cmake-3.27.0-rc3-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.0-rc3/cmake-3.27.0-rc3-macos-universal.tar.gz</url>
+        <sha512>1b72d3495948e7736c297d7648e604450f939253f21a52f04349527512c980ab34d7866a9f883b72c275fc887ce88f570276f061046bf95fe82142e25ae3b1d1</sha512>
+        <archiveName>cmake-3.27.0-rc3-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.27.0-rc2</version>
-        <exeRelativePath>cmake-3.27.0-rc2-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.27.0-rc2/cmake-3.27.0-rc2-linux-x86_64.tar.gz</url>
-        <sha512>ec688d3563ec368500c2db616e7d80bb8a3946da01e226c072338a412e84f616536d031e509de7fc432d30b0ceaa251c745dced17b6feaa944a79ea503f5f2d5</sha512>
-        <archiveName>cmake-3.27.0-rc2-linux-x86_64.tar.gz</archiveName>
-    </tool>
-    <tool name="cmake" os="freebsd">
-        <version>3.20.4</version>
-        <exeRelativePath>usr/local/bin/cmake</exeRelativePath>
-        <url>https://pkg.freebsd.org/FreeBSD:13:amd64/quarterly/All/cmake-3.20.4.txz</url>
-        <sha512>3e5b675d7ff924f92996d912e2365582e687375109ef99c9073fb8196bb329243a406b218cf1358d7cc518988b311ce9e5bf87de4d64f2e6377b7c2bc8894475</sha512>
-        <archiveName>cmake-3.20.4.txz</archiveName>
+        <version>3.27.0-rc3</version>
+        <exeRelativePath>cmake-3.27.0-rc3-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.0-rc3/cmake-3.27.0-rc3-linux-x86_64.tar.gz</url>
+        <sha512>d7854c0937825b52ab1628bf0ce93b2703b57d8d6dc90524d8079b0fde358b6c1bc71d658685cdc142bb1c97332e04d8ff7a828e0b3a4d532d2848ae9774789f</sha512>
+        <archiveName>cmake-3.27.0-rc3-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
         <version>2.7.4</version>
         <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.35.1.windows.2/PortableGit-2.35.1.2-32-bit.7z.exe</url>
-        <sha512>f98df16641a615bbc36c5c319c78abb780d824ff35ed5f2a095e2d5fce2acacfc7f6532c96f1c81d3d3cd8a642858cbd9de0e0e5fcde9ca11e6ad9f6598bb82f</sha512>
-        <archiveName>PortableGit-2.35.1.2-32-bit.7z.exe</archiveName>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.41.0.windows.1/PortableGit-2.41.0-32-bit.7z.exe</url>
+        <sha512>e483a890e77b427c20785e7528279338c7d99651e0afbf704bf2ff3cde23d0895c07e961603d133d5d78aea2308a2994e532974de41674e4f334423b1b47bd0e</sha512>
+        <archiveName>PortableGit-2.41.0-32-bit.7z.exe</archiveName>
     </tool>
     <tool name="git" os="linux">
         <version>2.7.4</version>
