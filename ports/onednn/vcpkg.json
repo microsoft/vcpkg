@@ -1,6 +1,6 @@
 {
   "name": "onednn",
-  "version": "3.0.0",
+  "version": "3.1.1",
   "description": "oneAPI Deep Neural Network Library (oneDNN)",
   "homepage": "https://github.com/oneapi-src/oneDNN",
   "license": "Apache-2.0",
@@ -14,5 +14,25 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "opencl": {
+      "description": "Build the CPU runtime with OpenCL",
+      "dependencies": [
+        "opencl"
+      ]
+    },
+    "openmp": {
+      "description": "Build the CPU runtime with OpenMP"
+    },
+    "sycl": {
+      "description": "Build the CPU and GPU runtimes with SYCL. Compiler must support SYCL."
+    },
+    "tbb": {
+      "description": "Build the CPU runtime with Intel Thread Building Blocks",
+      "dependencies": [
+        "tbb"
+      ]
+    }
+  }
 }
