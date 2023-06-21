@@ -10,6 +10,7 @@ done
 vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
 vcpkgUseMuslC="OFF"
+vcpkgUseHead="OFF"
 for var in "$@"
 do
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
@@ -22,6 +23,8 @@ do
         echo "Warning: -buildTests no longer has any effect; ignored."
     elif [ "$var" = "-musl" ]; then
         vcpkgUseMuslC="ON"
+    elif [ "$var" = "-vcpkgToolHead" ]; then
+        vcpkgUseHead="ON"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
         echo "Usage: ./bootstrap-vcpkg.sh [options]"
         echo
@@ -129,7 +132,9 @@ fi
 # Choose the vcpkg binary to download
 vcpkgDownloadTool="ON"
 vcpkgToolReleaseTag="2023-06-15"
-if [ "$UNAME" = "Darwin" ]; then
+if [ "$vcpkgUseHead" = "ON" ]; then
+    vcpkgDownloadTool="OFF"
+elif [ "$UNAME" = "Darwin" ]; then
     echo "Downloading vcpkg-macos..."
     vcpkgToolReleaseSha="3a746ca1402b5ac6cd26d09077681c4f8d1090a06ed4243574d81bcff22d651eae5a47107b407828bfa36236f2c4c02d3e2c6392d92b8c5aaf9992f332091f35"
     vcpkgToolName="vcpkg-macos"
@@ -217,25 +222,33 @@ else
         # If we can't find g++, allow CMake to do the look-up
     fi
 
-    vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
-    vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
+    echo "Building vcpkg-tool..."
     baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
     buildDir="$baseBuildDir/build"
-    tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
     srcBaseDir="$baseBuildDir/src"
-    srcDir="$srcBaseDir/vcpkg-tool-$vcpkgToolReleaseTag"
 
-    if [ -e "$tarballPath" ]; then
-        vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
-    else
-        echo "Downloading vcpkg tool sources"
-        vcpkgDownloadFile "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
-    fi
-
-    echo "Building vcpkg-tool..."
     rm -rf "$baseBuildDir"
     mkdir -p "$buildDir"
-    vcpkgExtractTar "$tarballPath" "$srcBaseDir"
+
+    if [ "$vcpkgUseHead" = "ON" ]; then
+        srcDir="$srcBaseDir/vcpkg-tool"
+        git clone -b main --single-branch --depth=1 https://github.com/microsoft/vcpkg-tool.git "$srcDir"
+    else
+        vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
+        vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
+        tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
+        srcDir="$srcBaseDir/vcpkg-tool-$vcpkgToolReleaseTag"
+
+        if [ -e "$tarballPath" ]; then
+            vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+        else
+            echo "Downloading vcpkg tool sources"
+            vcpkgDownloadFile "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+        fi
+
+        vcpkgExtractTar "$tarballPath" "$srcBaseDir"
+    fi
+
     cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DVCPKG_DEVELOPMENT_WARNINGS=OFF"
 
     if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
