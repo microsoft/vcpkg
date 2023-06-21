@@ -5857,7 +5857,7 @@
       "port-version": 5
     },
     "onednn": {
-      "baseline": "3.0.0",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "oniguruma": {
