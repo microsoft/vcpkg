@@ -25,7 +25,8 @@ else {
 $defaultPortVersion = 2
 $portVersions = @{
     "boost-atomic" = 3;
-    "boost-modular-build-helper" = 3;
+    "boost-modular-build-helper" = 4;
+    "boost-uninstall" = 3;
 }
 
 function Get-PortVersion {
