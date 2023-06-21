@@ -14,6 +14,7 @@ endif()
 
 if (CMAKE_USE_WOLFSSL)
     find_package(wolfssl REQUIRED)
+    find_package(Threads REQUIRED)
     set(USE_WOLFSSL "-DUSE_WOLFSSL -DLIBUS_USE_WOLFSSL")
 
     list(APPEND CMAKE_REQUIRED_INCLUDES ${OPENSSL_INCLUDE_DIR})
