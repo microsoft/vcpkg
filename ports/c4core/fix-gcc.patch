@@ -1,0 +1,13 @@
+diff --git a/c4Project.cmake b/c4Project.cmake
+index a9bd99a..939fed5 100644
+--- a/c4Project.cmake
++++ b/c4Project.cmake
+@@ -2154,7 +2154,7 @@ function(c4_add_target target)
+            (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 4.8) AND
+            (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0))
+             c4_dbg("${target}: adding compat include path")
+-            target_include_directories(${target} PUBLIC $<BUILD_INTERFACE:${_c4_project_dir}/compat>)
++            target_include_directories(${target} PUBLIC $<BUILD_INTERFACE:${_c4_project_dir}/compat> $<INSTALL_INTERFACE:include>)
+         endif()
+ 
+     # gather dlls so that they can be automatically copied to the target directory

@@ -9,20 +9,21 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(CM_COMMIT_HASH fe41e86552046c3df9ba73a40bf3d755df028c1e)
+set(CM_COMMIT_HASH a1f9d73608025c595653e9d52236228efd23ea04)
 
 # Get cmake scripts for c4core
 vcpkg_download_distfile(
     CMAKE_ARCHIVE
     URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
     FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 7292f9856d9c41581f2731e73fdf08880e0f4353b757da38a13ec89b62c5c8cb52b9efc1a9ff77336efa0b6809727c17649e607d8ecacc965a9b2a7a49925237
+    SHA512 6b0dec93804288801ea8535665e04dc63d886f0ace1ebc7ff1660ed07b514ccf931a5cfa1be46c0c25ba390458f125b4f2546a158adeb5a782fcba39d1419440
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH_CMAKE
     ARCHIVE ${CMAKE_ARCHIVE}
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
+    PATCHES fix-gcc.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
