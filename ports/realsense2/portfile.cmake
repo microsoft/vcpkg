@@ -2,11 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
     REF v2.54.1
-    SHA512 *************************************
+    SHA512 9b7146a5f6a4152d95286f679e0f5314ab0b040f67a030e42dfe01ad995af486d3d158d1ac7ef0bbe783a90e067d32e4bb4ba1a524fe75a89be6c7fe9c3a30ed
     HEAD_REF master
     PATCHES
         fix_openni2.patch
-        fix_config_osx.patch
+        #fix_config_osx.patch
 )
 
 file(COPY "${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf" DESTINATION "${SOURCE_PATH}")
