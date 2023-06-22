@@ -1,7 +1,6 @@
 {
   "name": "usockets",
   "version": "0.8.6",
-  "port-version": 1,
   "description": "Miniscule cross-platform eventing, networking & crypto for async applications",
   "homepage": "https://github.com/uNetworking/uSockets",
   "license": "Apache-2.0",
@@ -26,12 +25,6 @@
       "description": "Build usockets with openssl support",
       "dependencies": [
         "openssl"
-      ]
-    },
-    "wolfssl": {
-      "description": "Build usockets with wolfssl support",
-      "dependencies": [
-        "wolfssl"
       ]
     }
   }
