@@ -28,5 +28,3 @@ omniverse-physx-sdk provides CMake targets:
     else()
         message(WARNING "GPU acceleration library target not defined - GPU acceleration will NOT be available!")
     endif()
-
-
