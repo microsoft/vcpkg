@@ -13,8 +13,6 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        test    BUILD_TESTING
-        test    UNIFEX_BUILD_EXAMPLES
         coroutines CXX_COROUTINES_HAVE_COROUTINES
 )
 
@@ -23,6 +21,8 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DCMAKE_CXX_STANDARD:STRING=20
+        -DBUILD_TESTING=OFF
+        -DUNIFEX_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()

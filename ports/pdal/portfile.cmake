@@ -13,6 +13,8 @@ vcpkg_from_github(
         no-pkgconfig-requires.patch
         no-rpath.patch
         fix-gcc-13-build.patch  #upstream PR: https://github.com/PDAL/PDAL/pull/4039
+        gdal-3.7.patch
+        mingw.patch
 )
 
 # Prefer pristine CMake find modules + wrappers and config files from vcpkg.
@@ -57,6 +59,8 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Libexecinfo:BOOL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libunwind:BOOL=ON
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
 )
 
 vcpkg_cmake_install()
