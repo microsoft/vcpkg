@@ -6,7 +6,10 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_download_distfile(
     ARCHIVE
-    URLS "https://ftpmirror.gnu.org/gmp/gmp-${VERSION}.tar.xz" "https://ftp.gnu.org/gnu/gmp/gmp-${VERSION}.tar.xz" "https://gmplib.org/download/gmp/gmp-${VERSION}.tar.xz"
+    URLS
+        "https://ftpmirror.gnu.org/gmp/gmp-${VERSION}.tar.xz"
+        "https://ftp.gnu.org/gnu/gmp/gmp-${VERSION}.tar.xz"
+        "https://gmplib.org/download/gmp/gmp-${VERSION}.tar.xz"
     FILENAME "gmp-${VERSION}.tar.xz"
     SHA512 c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
 )
