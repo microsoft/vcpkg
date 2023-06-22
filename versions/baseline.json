@@ -4017,11 +4017,11 @@
       "port-version": 0
     },
     "libeventheader-decode": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "libeventheader-tracepoint": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "libevhtp": {
@@ -4657,11 +4657,11 @@
       "port-version": 0
     },
     "libtracepoint": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "libtracepoint-decode": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "libu2f-server": {
