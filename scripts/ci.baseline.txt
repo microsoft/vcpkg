@@ -1087,14 +1087,6 @@ ogre-next:x64-windows-static = skip
 ogre-next:x64-windows-static-md=skip
 ogre-next:x86-windows        = skip
 ois:x64-android=fail
-omniverse-physx-sdk:arm64-android=fail
-omniverse-physx-sdk:arm64-windows=fail
-omniverse-physx-sdk:arm-neon-android=fail
-omniverse-physx-sdk:arm-uwp=fail
-omniverse-physx-sdk:x64-android=fail
-omniverse-physx-sdk:x64-osx=fail
-omniverse-physx-sdk:x64-uwp=fail
-omniverse-physx-sdk:x86-windows=fail
 # ompl is vulnerable to some form of race in its dependent ports, and adding 'ode' as a dependency
 # does not resolve the issue
 # src/ompl/CMakeFiles/ompl.dir/extensions/ode/src/OpenDEStateValidityChecker.cpp.o
