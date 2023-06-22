@@ -10,7 +10,7 @@ done
 vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
 vcpkgUseMuslC="OFF"
-vcpkgUseHead="OFF"
+vcpkgToolHead="OFF"
 for var in "$@"
 do
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
@@ -24,7 +24,7 @@ do
     elif [ "$var" = "-musl" ]; then
         vcpkgUseMuslC="ON"
     elif [ "$var" = "-vcpkgToolHead" ]; then
-        vcpkgUseHead="ON"
+        vcpkgToolHead="ON"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
         echo "Usage: ./bootstrap-vcpkg.sh [options]"
         echo
@@ -132,7 +132,7 @@ fi
 # Choose the vcpkg binary to download
 vcpkgDownloadTool="ON"
 vcpkgToolReleaseTag="2023-06-15"
-if [ "$vcpkgUseHead" = "ON" ]; then
+if [ "$vcpkgToolHead" = "ON" ]; then
     vcpkgDownloadTool="OFF"
 elif [ "$UNAME" = "Darwin" ]; then
     echo "Downloading vcpkg-macos..."
@@ -230,7 +230,7 @@ else
     rm -rf "$baseBuildDir"
     mkdir -p "$buildDir"
 
-    if [ "$vcpkgUseHead" = "ON" ]; then
+    if [ "$vcpkgToolHead" = "ON" ]; then
         srcDir="$srcBaseDir/vcpkg-tool"
         git clone -b main --single-branch --depth=1 https://github.com/microsoft/vcpkg-tool.git "$srcDir"
     else
