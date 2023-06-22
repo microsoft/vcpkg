@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
         uwp.patch
         fix-redefinition-function.patch
-        fix-uwp-build.patch
         install-tools.patch
 )
 
@@ -26,9 +25,9 @@ vcpkg_add_to_path("${SED_EXE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        threads         USE_THREAD
-        simplethread    USE_SIMPLE_THREADED_LEVEL3
-        "dynamic-arch"  DYNAMIC_ARCH
+        threads        USE_THREAD
+        simplethread   USE_SIMPLE_THREADED_LEVEL3
+        "dynamic-arch" DYNAMIC_ARCH
 )
 
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
@@ -42,9 +41,8 @@ endif()
 set(OPENBLAS_EXTRA_OPTIONS)
 # for UWP version, must build non uwp first for helper
 # binaries.
-if(VCPKG_TARGET_IS_UWP)    
-    list(APPEND OPENBLAS_EXTRA_OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64
-                "-DBLASHELPER_BINARY_DIR=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND OPENBLAS_EXTRA_OPTIONS "-DBLASHELPER_BINARY_DIR=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
 elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
     string(APPEND VCPKG_C_FLAGS " -DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
     string(APPEND VCPKG_CXX_FLAGS " -DNEEDBUNDERSCORE")
