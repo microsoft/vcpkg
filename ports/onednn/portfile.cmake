@@ -10,33 +10,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(DNNL_OPTIONS "-DDNNL_LIBRARY_TYPE=STATIC")
 endif()
 
-# Can't have both sycl and any other feature
-list(LENGTH FEATURES _features_length)
-if ("sycl" IN_LIST FEATURES AND ${_features_length} GREATER 2)
-    message(FATAL_ERROR "sycl must be the only feature for GPU + CPU runtimes")
-endif()
-
-# Can't have both openmp and tbb
-if ("openmp" IN_LIST FEATURES AND "tbb" IN_LIST FEATURES)
-    message(FATAL_ERROR "Cannot enable openmp and tbb features simultaneously")
-endif()
-
-if ("sycl" IN_LIST FEATURES)
-    list(APPEND DNNL_OPTIONS "-DDNNL_CPU_RUNTIME=SYCL" "-DDNNL_GPU_RUNTIME=SYCL")
-endif()
-
-if ("openmp" IN_LIST FEATURES)
-    list(APPEND DNNL_OPTIONS "-DDNNL_CPU_RUNTIME=OMP")
-endif()
-
-if ("tbb" IN_LIST FEATURES)
-    list(APPEND DNNL_OPTIONS "-DDNNL_CPU_RUNTIME=TBB")
-endif()
-
-if ("opencl" IN_LIST FEATURES)
-    list(APPEND DNNL_OPTIONS "-DDNNL_GPU_RUNTIME=OCL")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${DNNL_OPTIONS}
