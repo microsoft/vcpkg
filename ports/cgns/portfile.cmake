@@ -60,7 +60,10 @@ vcpkg_copy_tools(
 if(VCPKG_TARGET_IS_WINDOWS)
     set(TOOLS "adf2hdf.bat" "hdf2adf.bat" "cgnsupdate.bat")
 elseif(VCPKG_TARGET_IS_LINUX)
-    set(TOOLS "adf2hdf" "hdf2adf" "cgnsupdate")
+    set(TOOLS "cgnsupdate")
+    if("hdf5" IN_LIST FEATURES)
+        list(APPEND TOOLS "adf2hdf" "hdf2adf")
+    endif()
 endif()
 
 foreach(TOOL ${TOOLS})
