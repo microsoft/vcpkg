@@ -16,7 +16,7 @@
     </tool>
     <tool name="cmake" os="windows">
         <version>3.27.0-rc3</version>
-        <exeRelativePath>cmake-3.27.0-rc3-windows-i386.zip</exeRelativePath>
+        <exeRelativePath>cmake-3.27.0-rc3-windows-i386/bin/cmake.exe</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.27.0-rc3/cmake-3.27.0-rc3-windows-i386.zip</url>
         <sha512>057b53764c2b6f51196f7224b6e26885fff4b5c0cd52a9c6b33cf8df524eea0b6d51e04c3cf892092b5e44251a4c4263152a1fb0efb4179fceaf25f490c6cad3</sha512>
         <archiveName>cmake-3.27.0-rc3-windows-i386.zip</archiveName>
