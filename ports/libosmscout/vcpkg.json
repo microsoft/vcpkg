@@ -1,7 +1,7 @@
 {
   "name": "libosmscout",
   "version": "1.1.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": "libosmscout offers applications simple, high-level interfaces for offline location and POI lokup, rendering and routing functionalities based on OpenStreetMap (OSM) data.",
   "homepage": "http://libosmscout.sourceforge.net/",
   "documentation": "http://libosmscout.sourceforge.net/documentation/",
@@ -40,8 +40,8 @@
       "description": "GDI+ backend renderer",
       "supports": "windows"
     },
-    "qt": {
-      "description": "Enable build of Qt map drawing backend",
+    "qt5": {
+      "description": "Enable build of Qt5 map drawing backend",
       "dependencies": [
         "qt5-base",
         "qt5-svg"
