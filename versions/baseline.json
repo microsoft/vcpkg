@@ -6521,7 +6521,7 @@
       "port-version": 0
     },
     "pybind11": {
-      "baseline": "2.10.3",
+      "baseline": "2.10.4",
       "port-version": 0
     },
     "pystring": {
