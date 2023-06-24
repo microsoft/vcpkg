@@ -1,7 +1,7 @@
 {
   "name": "json-spirit",
   "version": "4.1.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "json parser using boost library",
   "dependencies": [
     "boost-config",
