@@ -4842,7 +4842,7 @@
     },
     "libxmp": {
       "baseline": "4.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libxmu": {
       "baseline": "1.1.3",
