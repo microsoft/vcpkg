@@ -217,14 +217,14 @@ endfunction()
 # 1. for shared libraries in `lib` and `debug/lib`
 #    - fix its own install names to `@rpath` prefix 
 #    - fix its dependent shared library install name to `@rpath` prefix
-#       - include libraries only from the same port, assuming other `libraries` from other vcpkg ports are already fixed!
+#       - include libraries only from the same port, assuming other libraries from other managed ports by vcpkg are already fixed!
 #       - exclude system libraries in `/usr/lib/` and `/System/Library`!
-#    - fix rpath to `@loader`(or using absolute path `CURRENT_HOST_INSTALLED_DIR`, like `/opt/vcpkg/installed/arm64-osx-dynamic/lib` or `/opt/vcpkg/installed/arm64-osx-dynamic/debug/lib`)
+#    - fix rpath to `@loader`(or using absolute path `CURRENT_INSTALLED_DIR`, like `/opt/vcpkg/installed/arm64-osx-dynamic/lib` or `/opt/vcpkg/installed/arm64-osx-dynamic/debug/lib`)
 # 2. for exe in `tools/{package}/bin/`
 #    - fix its dependent shared library install name to `@rpath` prefix
-#       - include libraries only from the same port, assuming other `libraries` from other vcpkg ports are already fixed!
+#       - include libraries only from the same port in lib/, assuming other libraries from other managed ports by vcpkg are already fixed!
 #       - exclude system libraries in `/usr/lib/` and `/System/Library`!
-#    - fix rpath to `@loader/../../../`
+#    - fix rpath to `@loader/../../../`  to be relative with `lib/`
 function(z_vcpkg_fixup_install_name_rpath_in_dir)
   find_program(
     install_name_tool_cmd
