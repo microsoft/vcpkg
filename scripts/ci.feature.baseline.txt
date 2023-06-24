@@ -80,36 +80,17 @@ chromium-base:x64-osx=skip
 
 clamav:arm64-windows=fail
 clockutils:x64-linux=fail
-coin:arm64-windows=fail
-coin:arm-uwp=fail
-coin:x64-uwp=fail
-
-# there is an ICE in VS2022 with colmap in release mode
-colmap:x86-windows=fail
-colmap:x64-windows=fail
-colmap:x64-windows-static=fail
-colmap:x64-windows-static-md=fail
-
+coin(uwp | (windows & arm)) = fail
+colmap(windows) = fail # there is an ICE in VS2022 with colmap in release mode
 concurrencpp:x64-linux=fail
 constexpr-contracts:x64-linux=fail
-coolprop:arm-uwp=fail
-coolprop:x64-uwp=fail
-coroutine:arm-uwp=fail
-coroutine:x64-linux=fail
-coroutine:x64-uwp=fail
-cppfs:arm-uwp=fail
-cppfs:x64-uwp=fail
-cppmicroservices:arm64-windows=fail
-cppmicroservices:arm-uwp=fail
-cppmicroservices:x64-uwp=fail
-cpp-netlib:arm-uwp=fail
-cpp-netlib:x64-uwp=fail
-cppcoro:x64-linux=fail
-cppcoro:arm-uwp=fail
-cppcoro:x64-uwp=fail
-# The x64-linux pipeline uses gcc 9.3.0, which lacks C++20 coroutine support.
-# This is known to work on x64-linux as of gcc 10.3.0.
-cppgraphqlgen:x64-linux=fail
+coolprop(uwp)=fail
+coroutine(uwp | linux )=fail
+cppfs(uwp)=fail
+cppmicroservices(uwp | (windows & arm))=fail
+cpp-netlib(uwp)=fail
+cppcoro(uwp | linux)=fail
+cppgraphqlgen:x64-linux=fail # The x64-linux pipeline uses gcc 9.3.0, which lacks C++20 coroutine support. This is known to work on x64-linux as of gcc 10.3.0.
 crashpad:arm64-windows=fail
 crashpad:arm-uwp=fail
 crashpad:x86-windows=fail
@@ -127,28 +108,15 @@ discord-rpc:x64-uwp=fail
 discordcoreapi:x64-linux=fail
 dlib:arm-uwp=fail
 dlib:x64-uwp=fail
-dmlc:arm-uwp=fail
-dmlc:x64-uwp=fail
-
-# requires python@2 from brew, but that no longer exists
-# python2 EOL yay!
-duktape:x64-osx=fail
-
+dmlc(uwp) = fail
 eastl:arm-uwp=fail
 easyloggingpp:arm-uwp=fail
 easyloggingpp:x64-uwp=fail
 ebml:arm-uwp=fail
 ebml:x64-uwp=fail
-ecsutil:arm64-windows=fail
-ecsutil:arm-uwp=fail
-ecsutil:x64-linux=fail
-ecsutil:x64-osx=fail
-ecsutil:x64-uwp=fail
-# Checks for gnu extension so only works with gcc.
-elfutils:x64-osx=fail
-elfutils:arm64-osx=fail
-epsilon:arm-uwp=fail
-epsilon:x64-uwp=fail
+ecsutil(windows & !uwp & !arm) = fail
+elfutils(osx) = fail # Checks for gnu extension so only works with gcc.
+epsilon(uwp)=fail
 faiss:arm64-windows=fail
 fastrtps:arm-uwp=fail
 fastrtps:x64-uwp=fail
@@ -169,33 +137,22 @@ forge:x86-windows=fail
 freeglut:arm-uwp=fail
 freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
-# Needs /bigobj
-freeopcua:arm64-windows=fail
+freeopcua:arm64-windows=fail # Needs /bigobj
 ftgl:x64-uwp=fail
 ftgl:arm-uwp=fail
-# https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
-functions-framework-cpp:x64-uwp=fail
+
+functions-framework-cpp:x64-uwp=fail # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
 
 # VS 2022 Update 3 seems to have broken Gazebo: https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1522474
 gazebo:x64-windows=fail
 gazebo:x64-linux=fail
-
-# gsoap does not offer stable public source downloads
-gsoap = skip
-
-# Port geotrans source ftp://ftp.nga.mil server
-# extremely slow may take several hours to download
-geotrans=skip
+gsoap = skip # gsoap does not offer stable public source downloads
+geotrans = skip # Port geotrans source ftp://ftp.nga.mil server extremely slow may take several hours to download
 getopt:arm-uwp=fail
 getopt:x64-uwp=fail
-getopt-win32:x64-linux=fail
-getopt-win32:x64-osx=fail
-gflags:arm-uwp=fail
-gflags:x64-uwp=fail
-
+gflags(uwp)=fail
 glew:arm64-windows=fail
-glfw3:arm-uwp=fail
-glfw3:x64-uwp=fail
+glfw3(uwp)=fail
 glibmm:x64-windows-static-md=fail
 glibmm:x64-windows-static=fail
 gmmlib:arm-uwp=fail
@@ -206,33 +163,17 @@ gmmlib:x64-windows-static-md=fail
 gmmlib:x64-windows-static=fail
 gmmlib:x64-windows=fail
 gmmlib:x86-windows=fail
-google-cloud-cpp:arm-uwp=fail
-google-cloud-cpp:x64-uwp=fail
+google-cloud-cpp(uwp)=fail
 gperftools:arm64-windows=fail
 gperftools:x64-uwp=fail
 gperftools:arm-uwp=fail
-graphicsmagick:arm-uwp=fail
-graphicsmagick:x64-uwp=fail
-# graphicsmagick non-uwp trigger an ICE in VS 2022 17.3 https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1557251
-graphicsmagick:x86-windows=fail
-graphicsmagick:x64-windows=fail
-graphicsmagick:x64-windows-static=fail
-graphicsmagick:x64-windows-static-md=fail
+graphicsmagick(uwp)=fail
+graphicsmagick(windows & !uwp) = fail # graphicsmagick non-uwp trigger an ICE in VS 2022 17.3 https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1557251
 graphqlparser:arm64-osx=fail # python2 required
 gtk:x64-windows-static=fail
 gtk:x64-windows-static-md=fail
 halide:x64-windows-static=fail
-hdf5:arm64-windows=fail
-hdf5:arm-uwp=fail
-hdf5:x64-uwp=fail
-healpix:x86-windows=fail
-healpix:x64-windows=fail
-healpix:x64-windows-static=fail
-healpix:x64-windows-static-md=fail
-healpix:x64-uwp=fail
-healpix:arm64-windows=fail
-healpix:arm-uwp=fail
-healpix:x64-osx=fail
+hdf5((arm & windows) | uwp) = fail
 hpx:x64-windows-static=fail
 hpx:arm64-windows=fail
 hunspell:x64-windows-static-md=fail
@@ -305,9 +246,6 @@ libgo:x64-uwp=fail
 libgo:arm64-windows=fail
 libgxps:x64-windows-static=fail
 libgxps:x64-windows-static-md=fail
-libhdfs3:x64-linux=fail
-libhdfs3:x64-osx=fail
-libhdfs3:arm64-osx=fail
 libirecovery:x64-windows-static-md=fail
 # 120 min build time for libjxl arm-uwp-rel, reason unknown
 libjxl:arm-uwp=skip
@@ -620,12 +558,7 @@ rtlsdr:arm64-windows=fail
 rtlsdr:arm-uwp=fail
 rtlsdr:x64-linux=fail
 rtlsdr:x64-osx=fail
-
-# ryu does not support VS2022 yet
-ryu:x64-windows=fail
-ryu:x64-windows-static=fail
-ryu:x64-windows-static-md=fail
-
+ryu(windows)=fail # ryu does not support VS2022 yet
 scnlib:arm-uwp=fail
 scnlib:x64-uwp=fail
 sdformat10:x64-windows-static-md=fail
@@ -807,8 +740,8 @@ workflow:arm-uwp=fail
 dimcli:x64-windows-static-md=fail
 dimcli:x64-windows-static=fail
 
-# ZeroC doesn't provide ARM tagets in project files.
-zeroc-ice(uwp)=fail
+
+zeroc-ice(uwp)=fail # ZeroC doesn't provide ARM tagets in project files.
 
 # testing all features would be too slow:
 aws-sdk-cpp[access-management,accessanalyzer,acm,acm-pca,alexaforbusiness,amp,amplify,amplifybackend,apigateway,apigatewaymanagementapi,apigatewayv2,appconfig,appflow,appintegrations,application-autoscaling,application-insights,applicationcostprofiler,appmesh,apprunner,appstream,appsync,athena,auditmanager,autoscaling,autoscaling-plans,awsmigrationhub,awstransfer,backup,batch,braket,budgets,ce,chime,cloud9,clouddirectory,cloudformation,cloudfront,cloudhsm,cloudhsmv2,cloudsearch,cloudsearchdomain,cloudtrail,codeartifact,codebuild,codecommit,codedeploy,codeguru-reviewer,codeguruprofiler,codepipeline,codestar,codestar-connections,codestar-notifications,cognito-identity,cognito-idp,cognito-sync,comprehend,comprehendmedical,compute-optimizer,config,connect,connect-contact-lens,connectparticipant,cur,customer-profiles,databrew,dataexchange,datapipeline,datasync,dax,detective,devicefarm,devops-guru,directconnect,discovery,dlm,dms,docdb,ds,dynamodb,dynamodbstreams,ebs,ec2,ec2-instance-connect,ecr,ecr-public,ecs,eks,elastic-inference,elasticache,elasticbeanstalk,elasticfilesystem,elasticloadbalancing,elasticloadbalancingv2,elasticmapreduce,elastictranscoder,email,emr-containers,es,eventbridge,events,finspace,finspace-data,firehose,fis,fms,forecast,forecastquery,frauddetector,fsx,gamelift,glacier,globalaccelerator,glue,greengrass,greengrassv2,groundstation,guardduty,health,healthlake,honeycode,iam,identity-management,identitystore,imagebuilder,importexport,inspector,iot,iot-data,iot-jobs-data,iot1click-devices,iot1click-projects,iotanalytics,iotdeviceadvisor,iotevents,iotevents-data,iotfleethub,iotsecuretunneling,iotsitewise,iotthingsgraph,iotwireless,ivs,kafka,kendra,kinesis,kinesis-video-archived-media,kinesis-video-media,kinesis-video-signaling,kinesisanalytics,kinesisanalyticsv2,kinesisvideo,kms,lakeformation,lambda,lex,lex-models,lexv2-models,lexv2-runtime,license-manager,lightsail,location,logs,lookoutequipment,lookoutmetrics,lookoutvision,machinelearning,macie,macie2,managedblockchain,marketplace-catalog,marketplace-entitlement,marketplacecommerceanalytics,mediaconnect,mediaconvert,medialive,mediapackage,mediapackage-vod,mediastore,mediastore-data,mediatailor,meteringmarketplace,mgn,migrationhub-config,mobile,mobileanalytics,monitoring,mq,mturk-requester,mwaa,neptune,network-firewall,networkmanager,nimble,opsworks,opsworkscm,organizations,outposts,personalize,personalize-events,personalize-runtime,pi,pinpoint,pinpoint-email,polly,pricing,qldb,qldb-session,queues,quicksight,ram,rds,rds-data,redshift,redshift-data,rekognition,resource-groups,resourcegroupstaggingapi,robomaker,route53,route53domains,route53resolver,s3,s3-crt,s3-encryption,s3control,s3outposts,sagemaker,sagemaker-a2i-runtime,sagemaker-edge,sagemaker-featurestore-runtime,sagemaker-runtime,savingsplans,schemas,sdb,secretsmanager,securityhub,serverlessrepo,service-quotas,servicecatalog,servicecatalog-appregistry,servicediscovery,sesv2,shield,signer,sms,sms-voice,snowball,sns,sqs,ssm,ssm-contacts,ssm-incidents,sso,sso-admin,sso-oidc,states,storagegateway,sts,support,swf,synthetics,text-to-speech,textract,timestream-query,timestream-write,transcribe,transcribestreaming,transfer,translate,waf,waf-regional,wafv2,wellarchitected,workdocs,worklink,workmail,workmailmessageflow,workspaces,xray]  = no-separate-feature-test
@@ -870,7 +803,6 @@ wxchartdir(uwp) = cascade
 chronoengine[irrlicht]:arm64-osx = cascade
 coin-or-ipopt:arm64-osx = cascade
 coin-or-ipopt:arm64-osx = cascade
-czmq[httpd]:arm64-osx = cascade
 darknet[opencv2-base]:arm64-osx = cascade
 darknet[opencv3-base]:arm64-osx = cascade
 dartsim:arm64-osx = cascade
@@ -905,7 +837,6 @@ libalkimia[webengine]:arm64-osx = cascade
 libcanberra[alsa]:arm64-osx = cascade
 libfreenect2[openni2]:arm64-osx = cascade
 libftdi:arm64-osx = cascade
-libhdfs3:arm64-osx = cascade
 libp7-baical:arm64-osx = cascade
 libpmemobj-cpp[benchmark]:arm64-osx = cascade
 libwebp[vwebp-sdl]:arm64-osx = cascade
@@ -938,7 +869,6 @@ pcl[apps]:arm64-osx = cascade
 pcl[openni2]:arm64-osx = cascade
 qt:arm64-osx = cascade
 qt[default-features]:arm64-osx = cascade
-qt3d[vulkan]:arm64-osx = cascade
 qt5-base[vulkan]:arm64-osx = cascade
 qt5[all]:arm64-osx = cascade
 qt5[doc]:arm64-osx = cascade
@@ -958,22 +888,28 @@ vsg(osx) = cascade
 
 # failures
 # adios2[zfp](osx) = feature-fails # requires openmp (works with right setup)
-adios2[core,mpi,zfp](osx) = combination-fails # mpi not found
+# adios2[core,mpi,zfp](osx) = combination-fails # mpi not found
+ableton-link[hut](linux) = feature-fails # libportaudiocpp0 must be installed in ci. See https://github.com/microsoft/vcpkg/pull/32144
 adios2[python] = feature-fails # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
+arrayfire[opencl](linux) = feature-fails # error: ‘DBL_EPSILON’ was not declared in this scope. See https://github.com/microsoft/vcpkg/issues/32145
 boost-python[core] = combination-fails
+boringssl(linux) = fail # golang-go must be installed. See https://github.com/microsoft/vcpkg/pull/32096
 cgns[core,fortran,hdf5,legacy,lfs,lfsselector,mpi,tests,tools] = combination-fails # ["fortran","hdf5","mpi"]: Could NOT find MPI (missing: MPI_Fortran_FOUND) (found version "3.1")
 coroutine(osx) = fail # requires c++20
 cppslippi(osx) = fail # requires c++20
 curl[brotli,c-ares,http2,idn,idn2,mbedtls,non-http,openssl,sectransp,ssh,ssl,tool,websockets,wolfssl] = combination-fails
+dmlc[openmp](osx) = feature-fails # No openmp on osx
 duktape(osx) = fail # requires python2
 dv-processing[tools](osx) = feature-fails # requires c++20
 embree3[core,avx,avx2,avx512,default-features,sse2,sse42](osx) = combination-fails # CMake Error at CMakeLists.txt:447 (MESSAGE):   Using Embree as static library is not supported with AppleClang >= 9.0 when multiple ISAs are selected.  Please either build a shared library or enable only one ISA.
 ffmpeg[vpx] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31118
 fftw3[openmp](osx) = feature-fails # waits for https://github.com/microsoft/vcpkg/pull/30833
+flashlight-cpu = fail # CMake Error: INSTALL(EXPORT) given unknown export "flashlightTargets". See https://github.com/microsoft/vcpkg/issues/32098
 freeglut(osx) = fail # fatal error: 'GL/glx.h' file not found
+ginkgo[openmp](osx) = feature-fails # No openmp on osx
 glad[glx](osx) = feature-fails # fatal error: 'X11/X.h' file not found
+google-cloud-cpp[storagetransfer](osx) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32149
 gstreamer[chromaprint] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
-gstreamer[libde265] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
 gstreamer[openal] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
 gstreamer[openmpt] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
 gstreamer[sndfile] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
@@ -982,9 +918,11 @@ hdf5[core,cpp,fortran,map,parallel,szip,threadsafe,tools,utils,zlib] = combinati
 igraph[openmp](osx) = feature-fails # openmp setup needed
 itk[python](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31042
 keystone(osx) = fail # requires python 2
+kissfft[openmp](osx) = feature-fails # No openmp on osx
 lapack-reference[core,cblas,noblas] = options # Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas.
 libadlmidi[dosbox-emulator] = options # You have to select at least one emulator
 libcanberra[core,defaults,gstreamer,gtk3,null](osx) = combination-fails # fatal error: 'gdk/gdkx.h' file not found
+libcanberra[core] = combination-fails # configure: error: *** No backend enabled. ***
 libcanberra[core](osx) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31032
 libcanberra[gtk3](osx) = combination-fails # No package 'systemd' found # See https://github.com/microsoft/vcpkg/issues/31032
 libcanberra[oss](osx) = feature-fails # oss not installed
@@ -995,7 +933,6 @@ libgit2[winhttp] = feature-fails
 libgwenhywfar[qt5](osx) = feature-fails # See https://github.com/microsoft/vcpkg/issues/31216
 libidn2[nls](osx) = feature-fails # https://github.com/microsoft/vcpkg/issues/31011
 libmesh(osx) = fail # build failure
-qt3d(osx) = fail # see https://github.com/microsoft/vcpkg/issues/31336
 libopnmidi[gens-emulator] = options # You have to select at least one emulator
 libpq[core,bonjour,client,icu,lz4,nls,openssl,python,readline,tcl,xml,xslt,zlib,zstd](osx) = combination-fails # waits for https://github.com/microsoft/vcpkg/pull/31031
 libproxy[bindings-csharp](!windows) = feature-fails # No C# compiler installed
@@ -1009,15 +946,22 @@ magnum[wavaudioimporter](osx) = feature-fails # see https://github.com/microsoft
 mesa[egl](!windows) = feature-fails # ERROR: Problem encountered: EGL requires dri, haiku, or windows
 mesa[llvm] = feature-fails # ERROR: Neither a subproject directory nor a llvm.wrap file was found. (llvm-config found: NO)
 msdfgen[core,extensions,geometry-preprocessing,openmp,tools](osx) = combination-fails # requires openmp (works with right setup)
+msdfgen[openmp](osx) = feature-fails # No openmp on osx
 onnx[pybind11](osx) = feature-fails # Could NOT find Python3 (missing: Development Development.Module)
+openblas[dynamic-arch] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31494
+opencv2[ffmpeg] = feature-fails # error: use of undeclared identifier 'CODEC_ID_H264'; did you mean 'AV_CODEC_ID_H264'? See https://github.com/microsoft/vcpkg/issues/32151
+opencv3[ffmpeg] = feature-fails # error: use of undeclared identifier 'CODEC_ID_H264'; did you mean 'AV_CODEC_ID_H264'? See https://github.com/microsoft/vcpkg/issues/32150
 opencv4[core,ade,contrib,dc1394,default-features,dnn,eigen,ffmpeg,freetype,gdcm,gstreamer,halide,ipp,jasper,jpeg,lapack,nonfree,openexr,opengl,openmp,ovis,png,python,qt,quirc,sfm,tbb,tiff,vtk,webp,world] = combination-fails # waits for https://github.com/microsoft/vcpkg/pull/31045/files
 openscap(osx) = fail # Waits for https://github.com/microsoft/vcpkg/pull/27348
 osg[examples](osx) = feature-fails # https://github.com/microsoft/vcpkg/issues/31016
 osg[tools](osx) = feature-fails # https://github.com/microsoft/vcpkg/issues/31016
 pangolin[core,eigen,examples,ffmpeg,gui,jpeg,lz4,module,openexr,png,pybind11,realsense,test,tiff,tools,vars,video,zstd] = combination-fails # see https://github.com/microsoft/vcpkg/issues/31304
 poco[core,mariadb,mysql] = options # You can not install mariadb and mysql at the same time
+qt3d[animation] = options # is a requirement, see https://github.com/microsoft/vcpkg/issues/31336
+qt3d[extras] = options # is a requirement, see https://github.com/microsoft/vcpkg/issues/31336
 qt5compat[iconv] = feature-fails # requires qtbase without icu
 qtbase[fontconfig] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31247
+qtbase[sql-oci] = feature-fails # see https://github.com/microsoft/vcpkg/issues/32052
 qtmultimedia[core,ffmpeg,gstreamer,qml,widgets] = combination-fails # Error: Qt will by default autolink both plugin backends in static builds leading to symbol collisions and a build failure in dependent ports! As such in static builds only one backend is allowed by default.
 qtopcua[uacpp] = feature-fails # Unified Automation C++ SDK is not installed
 realsense2[tools](osx) = feature-fails # Could NOT find Threads (missing: Threads_FOUND)
@@ -1028,16 +972,16 @@ sqlpp11[core,mariadb,mysql] = options # can not select mariadb and mysql at the 
 symengine[core,arb,flint,integer-class-boostmp,integer-class-flint,mpfr](osx) = combination-fails # undefined build error
 tgui[sdl2] = options # At least one of the backend features must be selected: sdl2 sfml
 tiff[core,cxx,jpeg,lzma,tools,webp,zip,zstd] = combination-fails # link failure if tools and webp are enabled
+vlpp[tools](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32143 (error: inconsistent begin/end types in range-based ‘for’ statement)
 vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
 vtk-m[omp](osx) = feature-fails # fixed by https://github.com/microsoft/vcpkg/pull/30923
 vtk[all] = feature-fails # Wait for fix: https://github.com/microsoft/vcpkg/pull/29260
+wasmedge[aot] = feature-fails # ar: /libzstd.a: No such file or directory. See https://github.com/microsoft/vcpkg/issues/32146
 wasmedge[core,aot,tools] = combination-fails # see https://github.com/microsoft/vcpkg/issues/31217
 xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
 xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not 32
 yyjson[writer](osx) = feature-fails # error: call to undeclared function 'digi_is_digit'
-openblas[dynamic-arch] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31494
-liblsquic = fail # see https://github.com/microsoft/vcpkg/issues/31546
-gdal[tools] = feature-fails # see https://github.com/microsoft/vcpkg/pull/31545
+
 
 # skip
 entt[experimental] = skip # required head build
@@ -1046,3 +990,4 @@ magnum-plugins[cgltfimporter,glslangshaderconverter,ktximageconverter,ktximporte
 openjpeg[tools] = skip # fails and is deprecated
 s2n = skip # builds to slow
 sciter = skip # The sciter port is deprecated by upstream and conflicts with upstream's replacement.
+libhdfs3 = skip # never worked https://github.com/microsoft/vcpkg/pull/10021#issuecomment-1595343157
