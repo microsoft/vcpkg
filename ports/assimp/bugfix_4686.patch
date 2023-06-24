@@ -1,0 +1,38 @@
+diff --git a/code/AssetLib/FBX/FBXExportNode.cpp b/code/AssetLib/FBX/FBXExportNode.cpp
+index 21c61b2..9cf863c 100644
+--- a/code/AssetLib/FBX/FBXExportNode.cpp
++++ b/code/AssetLib/FBX/FBXExportNode.cpp
+@@ -360,7 +360,7 @@ void FBX::Node::EndBinary(
+     bool has_children
+ ) {
+     // if there were children, add a null record
+-    if (has_children) { s.PutString(Assimp::FBX::NULL_RECORD); }
++    if (has_children) { s.PutString(Assimp::FBX::NULL_RECORD,Assimp::FBX::NumNullRecords); }
+ 
+     // now go back and write initial pos
+     this->end_pos = s.Tell();
+diff --git a/include/assimp/StreamWriter.h b/include/assimp/StreamWriter.h
+index 1bdfcc6..5f6e9d7 100644
+--- a/include/assimp/StreamWriter.h
++++ b/include/assimp/StreamWriter.h
+@@ -225,7 +225,19 @@ public:
+         ::memcpy(dest, s.C_Str(), s.length);
+         cursor += s.length;
+     }
+-
++    // ---------------------------------------------------------------------
++    /** Write an char array to the stream */
++    void PutString(const char *s, size_t size) {
++        if (size == 0)
++            return;
++        // as Put(T f) below
++        if (cursor + size >= buffer.size()) {
++            buffer.resize(cursor + size);
++        }
++        void *dest = &buffer[cursor];
++        ::memcpy(dest, s, size);
++        cursor += size;
++    }
+     // ---------------------------------------------------------------------
+     /** Write a std::string to the stream */
+     void PutString(const std::string& s)
