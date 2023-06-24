@@ -8322,7 +8322,7 @@
     },
     "usockets": {
       "baseline": "0.8.6",
-      "port-version": 0
+      "port-version": 1
     },
     "usrsctp": {
       "baseline": "0.9.5.0",

@@ -22,6 +22,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ssl CMAKE_USE_OPENSSL
         event CMAKE_USE_EVENT
         network CMAKE_USE_NETWORK
+        wolfssl CMAKE_USE_WOLFSSL
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
