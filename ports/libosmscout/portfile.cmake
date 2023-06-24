@@ -11,7 +11,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
     directx OSMSCOUT_BUILD_MAP_DIRECTX
     gdi     OSMSCOUT_BUILD_MAP_GDI
     svg     OSMSCOUT_BUILD_MAP_SVG
-    qt      OSMSCOUT_BUILD_MAP_QT
+    qt5      OSMSCOUT_BUILD_MAP_QT
 )
 
 vcpkg_cmake_configure(

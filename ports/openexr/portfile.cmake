@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openexr
-    REF v3.1.7
-    SHA512 f72f5e728f10c06fca0172c9b4c1df752225c3aed7384b4eaa502f92f8547bb1df93fe96d4d132a81eb32b729cb9fd615be825aa6c5de78481d3038c0d47c4d5
+    REF "v${VERSION}"
+    SHA512 ec60e79341695452e05f50bbcc0d55e0ce00fbb64cdec01a83911189c8643eb28a8046b14ee4230e5f438f018f2f1d0714f691983474d7979befd199f3f34758
     HEAD_REF master
+    PATCHES
+        fix-arm64-windows-build.patch # https://github.com/AcademySoftwareFoundation/openexr/pull/1447
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS

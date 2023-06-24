@@ -2,9 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF 50c85f01ab44b2470f08b0f8824cced109628fc6
-    SHA512 e14ac8d48f577188522d0b80f55d53a839f843a03bf0eccf7e370a7bfe977d19e65e4f4748274baf9b0a71751bbdcb7c1e2d4270e54b1ddd72f578176f48058d
+    SHA512 1673cdab4f0d73ba5e3d0ac1e8a7b136d25df59704575a468016650c3c6c0dcba0bdc0a2306f61a14d49792651b21e9233d166610e0b463624b309758f1b1c04
     PATCHES
         001-disable-tools.patch
+        002-typo-in-default-option-value.patch
     HEAD_REF master)
 
 function(ov_checkout_in_path PATH REPO REF SHA512)
