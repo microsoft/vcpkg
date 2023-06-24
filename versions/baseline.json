@@ -7482,7 +7482,7 @@
     },
     "shiva": {
       "baseline": "1.0",
-      "port-version": 5
+      "port-version": 6
     },
     "shiva-sfml": {
       "baseline": "1.0",
