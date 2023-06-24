@@ -484,6 +484,10 @@
       "baseline": "1.6",
       "port-version": 1
     },
+    "baresip-libre": {
+      "baseline": "3.2.0",
+      "port-version": 0
+    },
     "basisu": {
       "baseline": "1.11",
       "port-version": 7
@@ -3981,8 +3985,8 @@
       "port-version": 1
     },
     "libdjinterop": {
-      "baseline": "0.16.0",
-      "port-version": 1
+      "baseline": "0.19.1",
+      "port-version": 0
     },
     "libdmx": {
       "baseline": "1.1.4",
@@ -4478,10 +4482,6 @@
     },
     "librdkafka": {
       "baseline": "2.1.1",
-      "port-version": 0
-    },
-    "baresip-libre": {
-      "baseline": "3.2.0",
       "port-version": 0
     },
     "libredwg": {
