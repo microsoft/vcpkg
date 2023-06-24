@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 d1ce33e89b17fa8f82e21b51dfa1308e38c617fea52c34a20b7b6c8643318280df24c043238ddd73ba2dbc139c5b5de1c2cb3add1f5629a54694c78b415d73d1
     HEAD_REF master
-    PATCHES no_copy_dll.patch
+    PATCHES find_python_and_no_copy_dll.patch
 )
 
 find_library(PYTHON_RELEASE NAMES python310 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
