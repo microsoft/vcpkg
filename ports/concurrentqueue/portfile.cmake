@@ -1,5 +1,4 @@
 # header-only library
-vcpkg_minimum_required(VERSION 2022-11-10)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -30,4 +29,3 @@ file(GLOB HEADER_FILES "${SOURCE_PATH}/*.h")
 file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
-
