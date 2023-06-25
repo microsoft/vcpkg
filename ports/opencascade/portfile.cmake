@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-install-prefix-path.patch
         install-include-dir.patch
         fix-depend-freetype.patch
+        fix-dependence.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -98,7 +99,7 @@ if (NOT VCPKG_BUILD_TYPE)
 
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     # debug creates libd and bind directories that need moving
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bind" "${CURRENT_PACKAGES_DIR}/debug/bin")
