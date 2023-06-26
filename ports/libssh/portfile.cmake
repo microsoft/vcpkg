@@ -37,7 +37,6 @@ vcpkg_cmake_configure(
         -DWITH_SYMBOL_VERSIONING=OFF)
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
 #Fixup pthread naming
 if(NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_IS_WINDOWS)
@@ -57,13 +56,18 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
 endif()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libssh)
+file(READ "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake" cmake_config)
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake"
-        ".dll"
-        ".lib"
-    )
+    string(REPLACE ".dll" ".lib" cmake_config "${cmake_config}")
 endif()
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake"
+"include(CMakeFindDependencyMacro)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_dependency(Threads)
+${cmake_config}
+")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
