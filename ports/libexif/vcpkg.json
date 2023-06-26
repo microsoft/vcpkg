@@ -7,10 +7,24 @@
   "license": "LGPL-2.1-or-later",
   "supports": "!uwp",
   "dependencies": [
-    "gettext",
     {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "nls": {
+      "description": "Enable native language support.",
+      "dependencies": [
+        "gettext",
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    }
+  }
 }
