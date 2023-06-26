@@ -5,6 +5,7 @@
   "description": "Modern C++ Game Engine",
   "homepage": "https://github.com/Milerius/shiva",
   "license": "MIT",
+  "supports": "!(static & windows)",
   "dependencies": [
     "boost-dll",
     "boost-filesystem",
