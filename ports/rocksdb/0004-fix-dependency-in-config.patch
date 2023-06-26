@@ -1,6 +1,3 @@
- cmake/RocksDBConfig.cmake.in | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
 diff --git a/cmake/RocksDBConfig.cmake.in b/cmake/RocksDBConfig.cmake.in
 index 0bd14be11..ad07f018a 100644
 --- a/cmake/RocksDBConfig.cmake.in
