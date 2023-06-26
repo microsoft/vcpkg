@@ -229,9 +229,24 @@ function(z_vcpkg_fixup_install_name_rpath_in_dir)
   find_program(
     install_name_tool_cmd
     NAMES install_name_tool
-    DOC "Absolute path of otool cmd"
-    REQUIRED
+    DOC "Absolute path of install_name_tool cmd"
   )
+
+  if(NOT install_name_tool_cmd)
+    message(WARNING " install_name_tool not found!")
+    return()
+  endif()
+
+  find_program(
+    otool_cmd
+    NAMES otool
+    DOC "Absolute path of otool cmd"
+  )
+
+  if(NOT otool_cmd)
+    message(WARNING "otool not found!")
+    return()
+  endif()
 
   message(DEBUG "Start fix install name and rpath for Mach-O files")
 
