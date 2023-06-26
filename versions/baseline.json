@@ -5121,8 +5121,8 @@
       "port-version": 10
     },
     "mailio": {
-      "baseline": "0.21.0",
-      "port-version": 2
+      "baseline": "0.23.0",
+      "port-version": 0
     },
     "makeid": {
       "baseline": "1.0.2",
