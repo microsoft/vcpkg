@@ -1344,6 +1344,7 @@ rest-rpc:x64-linux=skip
 rest-rpc:x64-osx=skip
 rest-rpc:arm64-osx=skip
 rhash:arm64-windows=fail
+rocksdb:arm-neon-android=fail
 rpclib:arm64-windows=fail
 rpclib:arm-uwp=fail
 rpclib:x64-uwp=fail
