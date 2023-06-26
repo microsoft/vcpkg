@@ -8,6 +8,7 @@ vcpkg_from_github(
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
+        gdal-pr-8005.diff # Remove in 3.7.1
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
