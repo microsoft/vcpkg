@@ -5122,7 +5122,7 @@
     },
     "mailio": {
       "baseline": "0.23.0",
-      "port-version": 2
+      "port-version": 0
     },
     "makeid": {
       "baseline": "1.0.2",
