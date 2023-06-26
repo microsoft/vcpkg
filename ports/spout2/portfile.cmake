@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-include-path.patch
+        fix-dx-keyed.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
