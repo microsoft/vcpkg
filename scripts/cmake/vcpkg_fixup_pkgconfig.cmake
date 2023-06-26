@@ -129,7 +129,7 @@ function(z_vcpkg_fixup_pkgconfig_check_files arg_file arg_config)
     cmake_path(GET arg_file STEM LAST_ONLY package_name)
     debug_message("Checking package (${arg_config}): ${package_name}")
     execute_process(
-        COMMAND "${PKGCONFIG}" --print-errors --errors-to-stdout --version --simulate --exists "${package_name}"
+        COMMAND "${PKGCONFIG}" --print-errors --exists "${package_name}"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
         RESULT_VARIABLE error_var
         OUTPUT_VARIABLE output
