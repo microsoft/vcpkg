@@ -1,3 +1,16 @@
+diff --git a/cmake/XercesNetAccessorSelection.cmake b/cmake/XercesNetAccessorSelection.cmake
+index 7a63f1f..22ea65b 100644
+--- a/cmake/XercesNetAccessorSelection.cmake
++++ b/cmake/XercesNetAccessorSelection.cmake
+@@ -23,7 +23,7 @@ option(network "Network support" ON)
+ 
+ if(network)
+   find_library(SOCKET_LIBRARY socket)
+-  find_library(NSL_LIBRARY nsl)
++  set(NSL_LIBRARY "" CACHE INTERNAL "Not used")
+ 
+   # netaccessors in order of preference
+ 
 diff --git a/src/XercesCConfig.cmake.in b/src/XercesCConfig.cmake.in
 index aa8fc2e..07ec56d 100644
 --- a/src/XercesCConfig.cmake.in
