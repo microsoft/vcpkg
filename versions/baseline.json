@@ -6234,7 +6234,7 @@
     },
     "pdcurses": {
       "baseline": "3.9",
-      "port-version": 5
+      "port-version": 6
     },
     "pdqsort": {
       "baseline": "2019-07-30",
