@@ -14,8 +14,6 @@ if(NOT TARGET unofficial::pdcurses::pdcurses)
         set_target_properties(unofficial::pdcurses::pdcurses PROPERTIES IMPORTED_LOCATION_RELEASE "${Z_VCPKG_PDCURSES_LIBRARY_RELEASE}")
     endif()
 
- 
-
     find_library(Z_VCPKG_PDCURSES_LIBRARY_DEBUG NAMES pdcurses PATHS "${z_vcpkg_pdcurses_root}/debug/lib" NO_DEFAULT_PATH)
     if(EXISTS "${Z_VCPKG_PDCURSES_LIBRARY_DEBUG}")
         set_property(TARGET unofficial::pdcurses::pdcurses APPEND PROPERTY IMPORTED_CONFIGURATIONS "Debug")
