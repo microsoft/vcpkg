@@ -1,7 +1,7 @@
 {
   "name": "libtracepoint",
-  "version": "1.0.0",
-  "description": "Linux tracepoints interface for C/C++",
+  "version": "1.1.0",
+  "description": "C/C++ interface for generating Linux Tracepoints",
   "homepage": "https://github.com/microsoft/LinuxTracepoints/",
   "license": "MIT",
   "supports": "linux | windows",
