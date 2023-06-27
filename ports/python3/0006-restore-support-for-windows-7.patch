@@ -41,14 +41,15 @@ index bc730fc..7d3d559 100644
  #endif
  
  #ifdef __APPLE__
-@@ -217,6 +217,10 @@ getpath_isfile(PyObject *Py_UNUSED(self), PyObject *args)
+@@ -217,6 +217,11 @@ getpath_isfile(PyObject *Py_UNUSED(self), PyObject *args)
      return r;
  }
  
++#ifdef MS_WINDOWS
 +static int _PathCchFindExtension_Initialized = 0;
 +typedef HRESULT (__stdcall *PPathCchFindExtension) (PCWSTR pszPath, size_t cchPath, PCWSTR *ppszExt);
 +static PPathCchFindExtension _PathCchFindExtension;
-+
++#endif
  
  static PyObject *
  getpath_isxfile(PyObject *Py_UNUSED(self), PyObject *args)
@@ -121,15 +122,16 @@ diff --git a/Modules/posixmodule.c b/Modules/posixmodule.c
  #  include <lmcons.h>             // UNLEN
  #  include "osdefs.h"             // SEP
  #  define HAVE_SYMLINK
-@@ -4471,6 +4471,10 @@ os__getvolumepathname_impl(PyObject *module, path_t *path)
+@@ -4471,6 +4471,11 @@ os__getvolumepathname_impl(PyObject *module, path_t *path)
      return result;
  }
  
++#ifdef MS_WINDOWS
 +static int _PathCchSkipRoot_Initialized = 0;
 +typedef HRESULT (__stdcall *PPathCchSkipRoot) (PCWSTR pszPath, PCWSTR *ppszRootEnd);
 +static PPathCchSkipRoot _PathCchSkipRoot;
-+
-
++#endif
+ 
  /*[clinic input]
  os._path_splitroot
 @@ -4489,6 +4493,19 @@ os__path_splitroot_impl(PyObject *module, path_t *path)
@@ -222,16 +224,18 @@ index c86ed40..6b1535d 100644
  extern int winerror_to_errno(int);
  #endif
  
-@@ -1999,13 +1999,44 @@ _Py_wrealpath(const wchar_t *path,
+@@ -1999,13 +1999,46 @@ _Py_wrealpath(const wchar_t *path,
  }
  #endif
  
++#ifdef MS_WINDOWS
 +static int _PathCchSkipRoot_Initialized = 0;
 +typedef HRESULT (__stdcall *PPathCchSkipRoot) (PCWSTR pszPath, PCWSTR *ppszRootEnd);
 +static PPathCchSkipRoot _PathCchSkipRoot;
 +
 +#ifndef PATHCCH_ALLOW_LONG_PATHS
 +#define PATHCCH_ALLOW_LONG_PATHS 0x00000001
++#endif
 +#endif
  
  int
@@ -268,13 +272,15 @@ index c86ed40..6b1535d 100644
      if (FAILED(hr) || path == tail) {
          return 0;
      }
-@@ -2086,6 +2117,9 @@ _Py_abspath(const wchar_t *path, wchar_t **abspath_p)
+@@ -2086,6 +2117,11 @@ _Py_abspath(const wchar_t *path, wchar_t **abspath_p)
  #endif
  }
  
++#ifdef MS_WINDOWS
 +static int _PathCchCombineEx_Initialized = 0;
 +typedef HRESULT (__stdcall *PPathCchCombineEx) (PWSTR  pszPathOut, size_t cchPathOut, PCWSTR pszPathIn, PCWSTR pszMore, ULONG  dwFlags);
 +static PPathCchCombineEx _PathCchCombineEx;
++#endif
  
  // The caller must ensure "buffer" is big enough.
  static int
