@@ -2540,6 +2540,10 @@
       "baseline": "23.5.26",
       "port-version": 0
     },
+    "flatbush": {
+      "baseline": "1.1.2",
+      "port-version": 0
+    },
     "flecs": {
       "baseline": "3.2.4",
       "port-version": 0
