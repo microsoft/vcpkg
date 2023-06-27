@@ -19,12 +19,18 @@
       "host": true
     }
   ],
+  "default-features": [
+    "network"
+  ],
   "features": {
     "icu": {
       "description": "ICU support",
       "dependencies": [
         "icu"
       ]
+    },
+    "network": {
+      "description": "Network support"
     },
     "xmlch-wchar": {
       "description": "XMLCh type uses wchar_t"
