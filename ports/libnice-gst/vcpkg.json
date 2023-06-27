@@ -1,10 +1,11 @@
 {
   "name": "libnice-gst",
   "version": "0.1.21",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Gstreamer Libnice plugins.",
   "homepage": "https://nice.freedesktop.org",
   "license": "LGPL-2.1-only AND MPL-1.1",
+  "supports": "!xbox",
   "dependencies": [
     "gstreamer",
     "libnice"
