@@ -10,6 +10,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMAILIO_BUILD_DOCUMENTATION=OFF
+        -DMAILIO_BUILD_EXAMPLES=OFF
+        -DMAILIO_BUILD_TESTS=OFF
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
