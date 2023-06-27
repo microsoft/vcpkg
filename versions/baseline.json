@@ -8921,8 +8921,8 @@
       "port-version": 0
     },
     "zeromq": {
-      "baseline": "2023-01-31",
-      "port-version": 5
+      "baseline": "2023-06-20",
+      "port-version": 0
     },
     "zfp": {
       "baseline": "1.0.0",
