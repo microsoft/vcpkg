@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GPUOpen-LibrariesAndSDKs/display-library
-    REF 881fa21e177203a30eb498d43bcbbec3d9b18d37
+    REF "${VERSION}"
     SHA512 e65bcb840929bfcc840abb361d92245c511948567c659e75f0b2784dc869cd851904819e71281afde5b4f3000ef0de7e3d33a32e5102110a26daca898414ceae
     HEAD_REF master
 )
