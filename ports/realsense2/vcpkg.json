@@ -25,9 +25,6 @@
         "openni2"
       ]
     },
-    "tm2": {
-      "description": "Build Intel® RealSense™ T265 device"
-    },
     "tools": {
       "description": "Build Intel® RealSense™ tools"
     }
