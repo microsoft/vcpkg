@@ -1,6 +1,6 @@
 {
   "name": "socket-io-client",
-  "version-date": "2022-08-19",
+  "version-date": "2023-02-14",
   "description": "C++11 implementation of Socket.IO client",
   "homepage": "https://github.com/socketio/socket.io-client-cpp",
   "license": "MIT",
