@@ -8,6 +8,7 @@ vcpkg_from_github(
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
+        gdal-pr-8005.diff # Remove in 3.7.1
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -91,7 +92,7 @@ vcpkg_cmake_configure(
         -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
         "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
         "-DQHULL_LIBRARY=${qhull_target}"
-        -DCMAKE_PROJECT_INCLUDE="${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
     MAYBE_UNUSED_VARIABLES
