@@ -5,6 +5,7 @@
   "description": "Xerces-C++ is a XML parser, for parsing, generating, manipulating, and validating XML documents using the DOM, SAX, and SAX2 APIs.",
   "homepage": "https://github.com/apache/xerces-c",
   "license": "Apache-2.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "libiconv",
