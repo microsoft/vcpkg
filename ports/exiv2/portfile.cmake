@@ -6,7 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-find_expat.patch
-        fix-inih.patch # bypass findinih.cmake and use the vcpkg version directly
+        fix-inih.patch
+        fix-brotli.patch
+        fix-expat.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

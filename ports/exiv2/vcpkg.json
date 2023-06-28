@@ -27,7 +27,10 @@
   ],
   "features": {
     "bmff": {
-      "description": "Support for BMFF files (e.g., CR3, HEIF, HEIC, AVIF, and JPEG XL)"
+      "description": "Support for BMFF files (e.g., CR3, HEIF, HEIC, AVIF, and JPEG XL)",
+      "dependencies": [
+        "brotli"
+      ]
     },
     "nls": {
       "description": "Build native language support",

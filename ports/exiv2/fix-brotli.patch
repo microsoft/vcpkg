@@ -1,0 +1,13 @@
+diff --git a/cmake/findDependencies.cmake b/cmake/findDependencies.cmake
+index 1075c303..1debbd77 100644
+--- a/cmake/findDependencies.cmake
++++ b/cmake/findDependencies.cmake
+@@ -47,7 +47,7 @@ if( EXIV2_ENABLE_PNG )
+ endif( )
+ 
+ if( EXIV2_ENABLE_BMFF AND EXIV2_ENABLE_BROTLI )
+-    find_package( Brotli REQUIRED )
++    find_package( BROTLI NAMES unofficial-brotli CONFIG REQUIRED )
+ endif( )
+ 
+ if( EXIV2_ENABLE_WEBREADY )
