@@ -1,7 +1,7 @@
 {
   "name": "rsocket",
   "version-string": "2021.08.30.00",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C++ implementation of RSocket http://rsocket.io",
   "homepage": "https://github.com/rsocket/rsocket-cpp",
   "dependencies": [

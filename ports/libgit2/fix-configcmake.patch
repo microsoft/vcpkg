@@ -19,20 +19,19 @@ index 2a3a91b8c..cbb409350 100644
  	list(APPEND LIBGIT2_PC_REQUIRES "libpcre")
  elseif(REGEX_BACKEND STREQUAL "regcomp")
  	add_feature_info(regex ON "using system regcomp")
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index e7b54d036..6b549deef 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -298,10 +298,28 @@ if(MSVC_IDE)
- endif()
+diff --git a/src/libgit2/CMakeLists.txt b/src/libgit2/CMakeLists.txt
+index 876a703e8..8283f9585 100644
+--- a/src/libgit2/CMakeLists.txt
++++ b/src/libgit2/CMakeLists.txt
+@@ -110,10 +110,28 @@ FILE(WRITE "${PROJECT_BINARY_DIR}/include/${LIBGIT2_FILENAME}.h" ${LIBGIT2_INCLU
  
  # Install
--install(TARGETS git2
-+install(TARGETS git2 EXPORT unofficial-git2Targets
+ 
+-install(TARGETS libgit2package
++install(TARGETS libgit2package EXPORT unofficial-git2Targets
  	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
  	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
- 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
- )
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +
 +install(EXPORT unofficial-git2Targets
 +    NAMESPACE unofficial::git2::
@@ -51,5 +50,6 @@ index e7b54d036..6b549deef 100644
 +configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-git2-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-git2-config.cmake" @ONLY)
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-git2-config.cmake DESTINATION share/unofficial-git2)
 +
- install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/git2 DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
- install(FILES ${PROJECT_SOURCE_DIR}/include/git2.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/git2/
+         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIBGIT2_FILENAME}")
+ install(FILES ${PROJECT_BINARY_DIR}/include/git2/experimental.h
