@@ -1,7 +1,7 @@
 {
   "name": "zeromq",
   "version-date": "2023-01-31",
-  "port-version": 5,
+  "port-version": 6,
   "description": "The ZeroMQ lightweight messaging kernel is a library which extends the standard socket interfaces with features traditionally provided by specialised messaging middleware products",
   "homepage": "https://github.com/zeromq/libzmq",
   "license": "LGPL-3.0-only",
@@ -20,7 +20,7 @@
     "draft": {
       "description": "Build and install draft APIs"
     },
-    "sodium": {
+    "curve": {
       "description": "Using libsodium for CURVE security",
       "dependencies": [
         "libsodium"
