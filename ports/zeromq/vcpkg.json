@@ -17,14 +17,14 @@
     }
   ],
   "features": {
-    "draft": {
-      "description": "Build and install draft APIs"
-    },
     "curve": {
       "description": "Using libsodium for CURVE security",
       "dependencies": [
         "libsodium"
       ]
+    },
+    "draft": {
+      "description": "Build and install draft APIs"
     },
     "websockets": {
       "description": "Enable WebSocket transport"
