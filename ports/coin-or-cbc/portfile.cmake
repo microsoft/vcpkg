@@ -14,7 +14,7 @@ set(ENV{ACLOCAL} "aclocal -I \"${SOURCE_PATH}/BuildTools\"")
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    DETERMINE_BUILD_TRIPLET
     USE_WRAPPERS
     OPTIONS
         --with-coinutils
