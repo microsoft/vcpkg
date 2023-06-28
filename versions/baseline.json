@@ -1698,7 +1698,7 @@
     },
     "concurrencpp": {
       "baseline": "0.1.6",
-      "port-version": 1
+      "port-version": 2
     },
     "concurrentqueue": {
       "baseline": "1.0.4",
