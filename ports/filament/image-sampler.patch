@@ -1,5 +1,5 @@
 diff --git a/libs/image/include/image/ImageSampler.h b/libs/image/include/image/ImageSampler.h
-index e01da45ec..c6ea3af00 100644
+index e01da45ec..a802e68e2 100644
 --- a/libs/image/include/image/ImageSampler.h
 +++ b/libs/image/include/image/ImageSampler.h
 @@ -20,6 +20,8 @@
@@ -11,13 +11,14 @@ index e01da45ec..c6ea3af00 100644
  
  namespace image {
  
-@@ -159,6 +161,20 @@ uint32_t getMipmapCount(const LinearImage& source);
+@@ -159,6 +161,32 @@ uint32_t getMipmapCount(const LinearImage& source);
  UTILS_PUBLIC
  Filter filterFromString(const char* name);
  
 +/**
 + * Returns whether simpleScaleDownRgba() is usable on the specified dimensions.
 + */
++UTILS_PUBLIC
 +bool canSimpleScaleDown(uint32_t sourceWidth, uint32_t sourceHeight, uint32_t destinationWidth, uint32_t destinationHeight);
 +
 +/**
@@ -25,7 +26,18 @@ index e01da45ec..c6ea3af00 100644
 + * a whole number of source pixels on each dimension. canSimpleScaleDown(sourceWidth, sourceHeight, destinationWidth, destinationHeight)
 + * must return true as a precondition.
 + */
++UTILS_PUBLIC
 +std::unique_ptr<uint8_t[]> simpleScaleDownRgba(
++    const uint8_t *source, uint32_t sourceWidth, uint32_t sourceHeight, uint32_t sourceLineStride,
++    uint32_t destinationWidth, uint32_t destinationHeight, uint32_t destinationLineStride);
++
++/**
++ * Scales down a single byte per component RGB image where each destination pixel corresponds to
++ * a whole number of source pixels on each dimension. canSimpleScaleDown(sourceWidth, sourceHeight, destinationWidth, destinationHeight)
++ * must return true as a precondition.
++ */
++UTILS_PUBLIC
++std::unique_ptr<uint8_t[]> simpleScaleDownRgb(
 +    const uint8_t *source, uint32_t sourceWidth, uint32_t sourceHeight, uint32_t sourceLineStride,
 +    uint32_t destinationWidth, uint32_t destinationHeight, uint32_t destinationLineStride);
 +
@@ -33,10 +45,10 @@ index e01da45ec..c6ea3af00 100644
  
  #endif /* IMAGE_IMAGESAMPLER_H */
 diff --git a/libs/image/src/ImageSampler.cpp b/libs/image/src/ImageSampler.cpp
-index 157f15867..4d22518cb 100644
+index 157f15867..b0b20f8b0 100644
 --- a/libs/image/src/ImageSampler.cpp
 +++ b/libs/image/src/ImageSampler.cpp
-@@ -379,4 +379,64 @@ Filter filterFromString(const char* rawname) {
+@@ -379,4 +379,70 @@ Filter filterFromString(const char* rawname) {
      return iter == map.end() ? Filter::DEFAULT : iter->second;
  }
  
@@ -98,6 +110,12 @@ index 157f15867..4d22518cb 100644
 +    const uint8_t *source, uint32_t sourceWidth, uint32_t sourceHeight, uint32_t sourceLineStride,
 +    uint32_t destinationWidth, uint32_t destinationHeight, uint32_t destinationLineStride) {
 +  return(simpleScaleDown<4u>(source, sourceWidth, sourceHeight, sourceLineStride, destinationWidth, destinationHeight, destinationLineStride));
++}
++
++std::unique_ptr<uint8_t[]> simpleScaleDownRgb(
++    const uint8_t *source, uint32_t sourceWidth, uint32_t sourceHeight, uint32_t sourceLineStride,
++    uint32_t destinationWidth, uint32_t destinationHeight, uint32_t destinationLineStride) {
++  return(simpleScaleDown<3u>(source, sourceWidth, sourceHeight, sourceLineStride, destinationWidth, destinationHeight, destinationLineStride));
 +}
 +
  } // namespace image
