@@ -1,0 +1,17 @@
+{
+  "name": "unordered-dense",
+  "version": "4.0.1",
+  "description": "A fast & densely stored hashmap and hashset based on robin-hood backward shift deletion",
+  "homepage": "https://github.com/martinus/unordered_dense",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

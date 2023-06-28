@@ -9,7 +9,7 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         REPO skypjack/entt
         REF "v${VERSION}"
-        SHA512 dfbf95e70685e04f1917589fe2484e928cf8883615840b7b5b2906e21bec0830cefcb97133f8822f682bffae8f98d99d525407a00e8dc885f6aa5655af3bcc94
+        SHA512 51fe70e68cbb7d3a5a9ca6b5ff974d324e34248a13a1c828b6c5876461a173861ab26f1bfd0bac7287f8499d07b93bdb73622b579d11a65c916aad7b642dc6e0
         HEAD_REF master
     )
 endif()

@@ -1,7 +1,7 @@
 {
   "name": "kvasir-mpl",
   "version-date": "2019-08-06",
-  "port-version": 2,
+  "port-version": 3,
   "description": "This library is part of the Kvasir project. Kvasir is a collection of zero cost statically checked libraries for resource constrained systems including microcontrollers.",
   "homepage": "https://github.com/kvasir-io/mpl",
   "dependencies": [

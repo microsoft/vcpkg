@@ -1,7 +1,6 @@
 {
   "name": "zeroc-ice",
-  "version": "3.7.7",
-  "port-version": 4,
+  "version": "3.7.9",
   "maintainers": "Benjamin Oldenburg <benjamin.oldenburg@ordis.co.th>",
   "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
   "homepage": "https://github.com/zeroc-ice/ice",
@@ -18,12 +17,18 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "glacier2lib",
+    "icegridlib",
+    "icestormlib"
+  ],
   "features": {
     "glacier2lib": {
       "description": "Glacier2 libraries"
     },
     "glacier2router": {
       "description": "Glacier2Router",
+      "supports": "!(windows & static)",
       "dependencies": [
         {
           "name": "zeroc-ice",
@@ -35,13 +40,16 @@
       ]
     },
     "iceboxlib": {
-      "description": "IceBox libraries and runtime"
+      "description": "IceBox libraries and runtime",
+      "supports": "!(windows & static)"
     },
     "iceboxtools": {
-      "description": "IceBox tools"
+      "description": "IceBox tools",
+      "supports": "!(windows & static)"
     },
     "icebridge": {
       "description": "IceBridge",
+      "supports": "!(windows & static)",
       "dependencies": [
         {
           "name": "zeroc-ice",
@@ -78,6 +86,7 @@
     },
     "icegridtools": {
       "description": "IceGrid tools",
+      "supports": "!(windows & static)",
       "dependencies": [
         "expat",
         {
@@ -105,6 +114,7 @@
     },
     "icestormtools": {
       "description": "IceStorm tools",
+      "supports": "!(windows & static)",
       "dependencies": [
         "lmdb",
         {

@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 580df83..ac89904 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -93,6 +93,8 @@ if(INFOWARE_PCI_IDS_PATH)
+ 		message(WARNING "The specified pci.ids file INFOWARE_PCI_IDS_PATH=${INFOWARE_PCI_IDS_PATH} doesn't seem to exist.")
+ 	endif()
+ 	set(infoware_pci_ids_file "${INFOWARE_PCI_IDS_PATH}")
++elseif(HOST_PCI_DATA)
++	# git unused
+ elseif(NOT Git_FOUND)
+ 	message(SEND_ERROR "Couldn't find a usable git executable in the environment, and the CMake variable INFOWARE_PCI_IDS_PATH is empty.\n${infoware_pci_ids_error}")
+ else()
+@@ -122,11 +124,17 @@ set_target_properties(infoware_pci_generator PROPERTIES CXX_STANDARD 14
+ set(INFOWARE_PCI_DATA_HPP pci_data.hpp)
+ set(INFOWARE_PCI_DATA_GEN "infoware_generated/${INFOWARE_PCI_DATA_HPP}")
+ 
++if(HOST_PCI_DATA)
++	set_target_properties(infoware_pci_generator PROPERTIES EXCLUDE_FROM_ALL 1)
++	configure_file("${HOST_PCI_DATA}" "${CMAKE_CURRENT_BINARY_DIR}/${INFOWARE_PCI_DATA_GEN}" COPYONLY)
++else()
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${INFOWARE_PCI_DATA_GEN}" DESTINATION "share/infoware")
+ add_custom_command(OUTPUT ${INFOWARE_PCI_DATA_GEN}
+                    COMMAND ${CMAKE_COMMAND} -E make_directory infoware_generated/
+                    COMMAND $<TARGET_FILE:infoware_pci_generator> "${infoware_pci_ids_file}" > "infoware_generated/pci_data.hpp"
+                    DEPENDS "${infoware_pci_ids_file}"
+                    COMMENT "Generating ${INFOWARE_PCI_DATA_HPP}")
++endif()
+ 
+ add_custom_target(infoware_generate_pcis DEPENDS "${INFOWARE_PCI_DATA_GEN}")
+ add_dependencies(infoware infoware_generate_pcis)
