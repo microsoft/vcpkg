@@ -14,17 +14,16 @@ vcpkg_find_acquire_program(FLEX)
 
 get_filename_component(FLEX_PATH ${FLEX} DIRECTORY CACHE)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DFLEX_ROOT=${FLEX_PATH}
         -DCMAKE_POLICY_DEFAULT_CMP0074=NEW
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-configure_file(${SOURCE_PATH}/legal/LGPLv3 ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/legal/GPLv3 ${SOURCE_PATH}/legal/LGPLv3 ${SOURCE_PATH}/copying.md)
