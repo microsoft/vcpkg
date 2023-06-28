@@ -1188,14 +1188,6 @@ paho-mqtt:x64-uwp=fail
 pcl:arm-neon-android=fail
 pcl:arm64-android=fail
 pcl:x64-android=fail
-pfring:arm-neon-android=fail
-pfring:arm64-android=fail
-pfring:x64-android=fail
-pfring:x64-osx=fail
-pfring:arm64-osx=fail
-# pfring on Linux currently fails because its build scripts enable warnings as
-# errors, and warnings trigger with the Linux kernel headers in the Azure images.
-pfring:x64-linux=fail
 pixman:arm-neon-android=fail
 pixman:arm64-android=fail
 platform-folders:arm-uwp=fail
