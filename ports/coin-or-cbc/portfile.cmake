@@ -4,7 +4,6 @@ vcpkg_from_github(
     REF 6f83969e50b6f67c60654704c1f71f970c621a3b
     SHA512 f56b5806b2acffe7259410254640009f9b7a27713972d771b1083a05ca197a65715b007f42f0b8bf6e87b2a889e2889a7466222e0b06f01a4c5297cbaf455c4d
     PATCHES
-        #dep.patch
         pkgconf_win.patch
         disable_glpk.patch
 )
