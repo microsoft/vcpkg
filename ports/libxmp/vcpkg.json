@@ -1,6 +1,7 @@
 {
   "name": "libxmp",
   "version": "4.6.0",
+  "port-version": 1,
   "description": "Libxmp is a library that renders module files to PCM data.",
   "homepage": "https://sourceforge.net/projects/xmp/",
   "license": "LGPL-2.1-or-later",
