@@ -22,10 +22,10 @@ index 559c8ed..0fe60e9 100644
 -    find_package(unofficial-libuv CONFIG REQUIRED)
 -    target_link_libraries(wpiutil unofficial::libuv::libuv)
 +    find_package(libuv CONFIG REQUIRED)
-+    if (TARGET uv)
-+        target_link_libraries(wpiutil uv)
++    if (TARGET libuv::uv)
++        target_link_libraries(wpiutil libuv::uv)
 +    else()
-+        target_link_libraries(wpiutil uv_a)
++        target_link_libraries(wpiutil libuv::uv_a)
 +    endif()
  endif()
  
