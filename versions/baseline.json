@@ -8326,7 +8326,7 @@
     },
     "usd": {
       "baseline": "23.5",
-      "port-version": 2
+      "port-version": 3
     },
     "usockets": {
       "baseline": "0.8.6",
