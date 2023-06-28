@@ -55,7 +55,7 @@ function(vcpkg_build_make)
         #TODO: optimize for install-data (release) and install-exec (release/debug)
 
     else()
-        if(VCPKG_HOST_IS_OPENBSD)
+        if(VCPKG_HOST_IS_FREEBSD OR VCPKG_HOST_IS_OPENBSD)
             find_program(Z_VCPKG_MAKE gmake REQUIRED)
         else()
             find_program(Z_VCPKG_MAKE make REQUIRED)
