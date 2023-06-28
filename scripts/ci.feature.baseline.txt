@@ -2,24 +2,32 @@
 ## This file defines the current expected build state of ports in CI.
 ##
 ## States
-## <unspecified> (default) -
+## The following states can be specified for a port:
 ##           If a port is missing from this file then it is assumed
 ##           to build successfully.
 ##    fail - The port build is expected to fail in the CI system.
 ##           This is not necessarily the same as if a port is expected to build
 ##           on a developers machine because it may fail due to the machine
-##           configuration. When set to fail the CI system will silently skip
-##           the port for pull request CI runs. But the CI system will still
-##           attempt to build the port in scheduled runs, reporting unexpected
-##           build success as a CI failure.
+##           configuration. 
 ##    skip - Do not build this port in the CI system.
 ##           This is added to ports that may be flaky or conflict with other
 ##           ports. Please comment for why a port is skipped so it can be
 ##           removed when the issue is resolved.
 ## cascade - The port depends on a port that fails or is excluded by a supports
-##           expression but the port itself states that he can be build.
-##           This is added to ports to detect "hidden" not tested ports
+##           expression of a dependency but the port itself states that it can be build.
+##           This is added to ports to detect "hidden" not tested ports. 
 ##
+## Additional States can be specified for specific features:
+##            feature-fails - A feature does not build. It is therefore excluded
+##                            from the "combined" feature test because it would
+##                            simply fail too.
+##        combination-fails - A combination of features 
+##                            
+##                            
+##                     skip - 
+##        combination-fails - 
+## no-separate-feature-test - 
+##                  options - 
 ##
 ## CI tested triplets:
 ##    arm64-windows
@@ -291,7 +299,6 @@ libusb:x64-uwp=fail
 libusb:arm64-windows=fail
 libusbmuxd:arm-uwp=fail
 libusbmuxd:x64-uwp=fail
-libusbmuxd:x64-linux=fail
 libusbmuxd:x64-osx=fail
 libusb-win32:arm-uwp=fail
 libusb-win32:x64-linux=fail
@@ -321,7 +328,6 @@ live555:x64-osx=fail
 live555:arm64-osx=fail
 live555:x64-uwp=fail
 # fails due to an outdated gcc version
-llfio:x64-linux=fail
 llgl:arm-uwp=fail
 llgl:x64-uwp=fail
 log4cplus:arm-uwp=fail
@@ -417,16 +423,6 @@ ode:arm-uwp=fail
 ode:x64-uwp=fail
 offscale-libetcd-cpp:arm-uwp=fail
 offscale-libetcd-cpp:x64-uwp=fail
-# ompl is vulnerable to some form of race in its dependent ports, and adding 'ode' as a dependency
-# does not resolve the issue
-# src/ompl/CMakeFiles/ompl.dir/extensions/ode/src/OpenDEStateValidityChecker.cpp.o
-# -L/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib   -L/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib
-# -Wl,-rpath,/mnt/vcpkg-ci/packages/flann_x64-linux/debug/lib:/mnt/vcpkg-ci/packages/ode_x64-linux/debug/lib::::::::::::::::::::::::::::::::::::::::::::::::
-# -lode  /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_serialization.a
-# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_filesystem.a
-# /mnt/vcpkg-ci/installed/x64-linux/debug/lib/libboost_system.a  -lpthread && :
-# /usr/bin/ld: cannot find -lode
-ompl:x64-linux=fail
 openal-soft:arm-uwp=fail
 openal-soft:x64-uwp=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
@@ -549,10 +545,6 @@ rsasynccpp:arm64-windows=fail
 rsasynccpp:arm-uwp=fail
 rsasynccpp:x64-linux=fail
 rsasynccpp:x64-osx=fail
-# Requires g++10 but CI compiler only has g++9
-rsm-binary-io:x64-linux=fail
-# Requires g++10 but CI compiler only has g++9
-rsm-bsa:x64-linux=fail
 rtlsdr:x64-uwp=fail
 rtlsdr:arm64-windows=fail
 rtlsdr:arm-uwp=fail
@@ -788,7 +780,7 @@ paraview[cuda](osx) = cascade
 pcl[cuda](osx) = cascade
 sdl1-net(osx) = cascade
 seal[hexl](osx) = cascade
-symengine[tcmalloc] = cascade
+symengine[tcmalloc](osx) = cascade
 tensorpipe[cuda](osx) = cascade
 theia(osx) = cascade
 usockets[network] = cascade
@@ -875,7 +867,6 @@ qt5[doc]:arm64-osx = cascade
 qt5[wayland]:arm64-osx = cascade
 qt5[webengine]:arm64-osx = cascade
 qtapplicationmanager:arm64-osx = cascade
-qtbase[sql-oci](arm) = cascade
 realsense2[openni2]:arm64-osx = cascade
 saucer:arm64-osx = cascade
 skia[vulkan]:arm64-osx = cascade
@@ -884,6 +875,7 @@ vtk[openvr]:arm64-osx = cascade
 wxwidgets[webview]:arm64-osx = cascade
 qt3d[vulkan](osx) = cascade
 vsg(osx) = cascade
+flashlight-sequence[cuda](osx) = cascade
 
 
 # failures
@@ -907,7 +899,6 @@ fftw3[openmp](osx) = feature-fails # waits for https://github.com/microsoft/vcpk
 flashlight-cpu = fail # CMake Error: INSTALL(EXPORT) given unknown export "flashlightTargets". See https://github.com/microsoft/vcpkg/issues/32098
 freeglut(osx) = fail # fatal error: 'GL/glx.h' file not found
 ginkgo[openmp](osx) = feature-fails # No openmp on osx
-glad[glx](osx) = feature-fails # fatal error: 'X11/X.h' file not found
 google-cloud-cpp[storagetransfer](osx) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32149
 gstreamer[chromaprint] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
 gstreamer[openal] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
@@ -941,16 +932,18 @@ libsbml[core,bzip2,comp,expat,fbc,groups,layout,multi,namespace,qual,render,test
 libsbml[expat, libxml2] = options # have to select excatly one xml lib(they are features)
 libssh[openssl,mbedtls] = options # we have to select feature openssl or mbedtls
 llvm[libcxxabi] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31038
+llvm[core,libcxx] = options # Exclude libcxx from all
 magnum-plugins[meshoptimizersceneconverter] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31112
+#magnum-plugins[meshoptimizersceneconverter] = skip # see https://github.com/microsoft/vcpkg/issues/31112
 magnum[wavaudioimporter](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31014
 mesa[egl](!windows) = feature-fails # ERROR: Problem encountered: EGL requires dri, haiku, or windows
 mesa[llvm] = feature-fails # ERROR: Neither a subproject directory nor a llvm.wrap file was found. (llvm-config found: NO)
 msdfgen[core,extensions,geometry-preprocessing,openmp,tools](osx) = combination-fails # requires openmp (works with right setup)
 msdfgen[openmp](osx) = feature-fails # No openmp on osx
 onnx[pybind11](osx) = feature-fails # Could NOT find Python3 (missing: Development Development.Module)
-openblas[dynamic-arch] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31494
-opencv2[ffmpeg] = feature-fails # error: use of undeclared identifier 'CODEC_ID_H264'; did you mean 'AV_CODEC_ID_H264'? See https://github.com/microsoft/vcpkg/issues/32151
-opencv3[ffmpeg] = feature-fails # error: use of undeclared identifier 'CODEC_ID_H264'; did you mean 'AV_CODEC_ID_H264'? See https://github.com/microsoft/vcpkg/issues/32150
+openblas[dynamic-arch](arm) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31494
+opencv2[ffmpeg] = feature-fails # ffmpeg5+ is not supported under opencv2. See https://github.com/microsoft/vcpkg/issues/32151
+opencv3[ffmpeg] = feature-fails # ffmpeg5+ is not supported under opencv3. See https://github.com/microsoft/vcpkg/issues/32150
 opencv4[core,ade,contrib,dc1394,default-features,dnn,eigen,ffmpeg,freetype,gdcm,gstreamer,halide,ipp,jasper,jpeg,lapack,nonfree,openexr,opengl,openmp,ovis,png,python,qt,quirc,sfm,tbb,tiff,vtk,webp,world] = combination-fails # waits for https://github.com/microsoft/vcpkg/pull/31045/files
 openscap(osx) = fail # Waits for https://github.com/microsoft/vcpkg/pull/27348
 osg[examples](osx) = feature-fails # https://github.com/microsoft/vcpkg/issues/31016
@@ -981,6 +974,9 @@ wasmedge[core,aot,tools] = combination-fails # see https://github.com/microsoft/
 xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
 xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not 32
 yyjson[writer](osx) = feature-fails # error: call to undeclared function 'digi_is_digit'
+matplotplusplus[opengl] = feature-fails # see https://github.com/microsoft/vcpkg/pull/32227
+opencv3[vtk] = feature-fails # vtk version not compatible. See https://github.com/microsoft/vcpkg/issues/32228
+flashlight-sequence[openmp](osx) = feature-fails # No openmp on osx
 
 
 # skip
