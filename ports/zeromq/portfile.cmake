@@ -47,7 +47,7 @@ vcpkg_cmake_configure(
         WITH_LIBBSD
         WITH_TLS
 )
-message(FATAL_ERROR "${FEATURE_OPTIONS}")
+
 vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
