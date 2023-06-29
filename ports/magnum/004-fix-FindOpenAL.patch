@@ -11,22 +11,15 @@ index 64371a4..375ca58 100644
  if(BUILD_PLUGINS_STATIC)
      set(MAGNUM_ANYAUDIOIMPORTER_BUILD_STATIC 1)
 diff --git a/src/MagnumPlugins/WavAudioImporter/CMakeLists.txt b/src/MagnumPlugins/WavAudioImporter/CMakeLists.txt
-index f4172d4..3c0eefc 100644
+index f4172d4..bdfd9da 100644
 --- a/src/MagnumPlugins/WavAudioImporter/CMakeLists.txt
 +++ b/src/MagnumPlugins/WavAudioImporter/CMakeLists.txt
-@@ -24,6 +24,7 @@
+@@ -24,6 +24,8 @@
  #
 
  find_package(Corrade REQUIRED PluginManager)
-+find_package(OpenAL REQUIRED)
++include(CMakeFindDependencyMacro)
++find_dependency(OpenAL)
 
  if(BUILD_PLUGINS_STATIC)
      set(MAGNUM_WAVAUDIOIMPORTER_BUILD_STATIC 1)
-@@ -37,6 +38,7 @@ add_library(WavAudioImporterObjects OBJECT
-     WavHeader.cpp
-     WavHeader.h)
- target_include_directories(WavAudioImporterObjects PUBLIC
-+    $<TARGET_PROPERTY:OpenAL::OpenAL,INTERFACE_INCLUDE_DIRECTORIES>
-     $<TARGET_PROPERTY:Magnum,INTERFACE_INCLUDE_DIRECTORIES>
-     $<TARGET_PROPERTY:MagnumAudio,INTERFACE_INCLUDE_DIRECTORIES>)
- if(NOT BUILD_PLUGINS_STATIC)
