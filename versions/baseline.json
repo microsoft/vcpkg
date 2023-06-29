@@ -8930,7 +8930,7 @@
     },
     "zeromq": {
       "baseline": "2023-06-20",
-      "port-version": 0
+      "port-version": 1
     },
     "zfp": {
       "baseline": "1.0.0",
