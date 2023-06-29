@@ -13,6 +13,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        sodium          WITH_LIBSODIUM
         draft           ENABLE_DRAFTS
         websockets      ENABLE_WS
         websockets-secure WITH_TLS
@@ -22,10 +23,6 @@ vcpkg_check_features(
 set(PLATFORM_OPTIONS "")
 if(VCPKG_TARGET_IS_MINGW)
     set(PLATFORM_OPTIONS -DCMAKE_SYSTEM_VERSION=6.0 -DZMQ_HAVE_IPC=0)
-endif()
-
-if("curve" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DWITH_LIBSODIUM=ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -50,7 +47,7 @@ vcpkg_cmake_configure(
         WITH_LIBBSD
         WITH_TLS
 )
-
+message(FATAL_ERROR "${FEATURE_OPTIONS}")
 vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()

@@ -18,13 +18,23 @@
   ],
   "features": {
     "curve": {
-      "description": "Using libsodium for CURVE security",
-      "dependencies": [
-        "libsodium"
-      ]
+      "description": "Enable CURVE security"
     },
     "draft": {
       "description": "Build and install draft APIs"
+    },
+    "sodium": {
+      "description": "Using libsodium for CURVE security",
+      "dependencies": [
+        "libsodium",
+        {
+          "name": "zeromq",
+          "default-features": false,
+          "features": [
+            "curve"
+          ]
+        }
+      ]
     },
     "websockets": {
       "description": "Enable WebSocket transport"
