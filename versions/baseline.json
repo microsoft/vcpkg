@@ -122,7 +122,7 @@
     },
     "angle": {
       "baseline": "chromium_5414",
-      "port-version": 3
+      "port-version": 4
     },
     "annoy": {
       "baseline": "1.17.2",
@@ -1698,7 +1698,7 @@
     },
     "concurrencpp": {
       "baseline": "0.1.6",
-      "port-version": 1
+      "port-version": 2
     },
     "concurrentqueue": {
       "baseline": "1.0.4",
