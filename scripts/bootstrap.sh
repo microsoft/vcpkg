@@ -261,7 +261,7 @@ Telemetry
 vcpkg collects usage data in order to help us improve your experience.
 The data collected by Microsoft is anonymous.
 You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics,
-passing --disable-metrics to vcpkg on the command line,
+passing --disableMetrics to vcpkg on the command line,
 or by setting the VCPKG_DISABLE_METRICS environment variable.
 
 Read more about vcpkg telemetry at docs/about/privacy.md
