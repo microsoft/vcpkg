@@ -8,7 +8,11 @@
   "license": "BSL-1.0",
   "dependencies": [
     {
-      "name": "boost-vcpkg-helpers",
+      "name": "boost-cmake-helper",
+      "version>=": "1.82.0"
+    },
+    {
+      "name": "boost-headers",
       "version>=": "1.82.0"
     }
   ]
