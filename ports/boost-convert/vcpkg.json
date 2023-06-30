@@ -8,6 +8,10 @@
   "license": "BSL-1.0",
   "dependencies": [
     {
+      "name": "boost-cmake",
+      "version>=": "1.82.0"
+    },
+    {
       "name": "boost-config",
       "version>=": "1.82.0"
     },
@@ -17,6 +21,10 @@
     },
     {
       "name": "boost-function-types",
+      "version>=": "1.82.0"
+    },
+    {
+      "name": "boost-headers",
       "version>=": "1.82.0"
     },
     {
@@ -49,10 +57,6 @@
     },
     {
       "name": "boost-type-traits",
-      "version>=": "1.82.0"
-    },
-    {
-      "name": "boost-vcpkg-helpers",
       "version>=": "1.82.0"
     }
   ]

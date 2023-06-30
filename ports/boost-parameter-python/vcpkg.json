@@ -9,6 +9,14 @@
   "supports": "!emscripten",
   "dependencies": [
     {
+      "name": "boost-cmake",
+      "version>=": "1.82.0"
+    },
+    {
+      "name": "boost-headers",
+      "version>=": "1.82.0"
+    },
+    {
       "name": "boost-mpl",
       "version>=": "1.82.0"
     },
@@ -23,10 +31,6 @@
     {
       "name": "boost-python",
       "platform": "!uwp & !emscripten & !ios & !android",
-      "version>=": "1.82.0"
-    },
-    {
-      "name": "boost-vcpkg-helpers",
       "version>=": "1.82.0"
     }
   ]

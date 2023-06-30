@@ -8,11 +8,15 @@
   "license": "BSL-1.0",
   "dependencies": [
     {
-      "name": "boost-preprocessor",
+      "name": "boost-cmake",
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-vcpkg-helpers",
+      "name": "boost-headers",
+      "version>=": "1.82.0"
+    },
+    {
+      "name": "boost-preprocessor",
       "version>=": "1.82.0"
     }
   ]

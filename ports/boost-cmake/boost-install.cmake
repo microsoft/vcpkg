@@ -1,17 +1,22 @@
 include_guard(GLOBAL)
 
 function(boost_configure_and_install)
-  cmake_parse_arguments(PARSE_ARGV 0 "arg" "HEADERS_ONLY" "SOURCE_PATH" "OPTIONS")
+  cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH" "OPTIONS")
 
   string(REPLACE "-" "_" boost_lib_name "${PORT}")
   string(REPLACE "boost_" "" boost_lib_name "${boost_lib_name}")
+
+  set(headers_only OFF)
+  if(NOT EXISTS "${arg_SOURCE_PATH}/src")
+    set(headers_only ON)
+  endif()
 
   set(boost_lib_path "libs/${boost_lib_name}")
   if(boost_lib_name MATCHES "numeric")
     string(REPLACE "numeric_" "numeric/" boost_lib_path "${boost_lib_path}")
   endif()
 
-  if(NOT EXISTS "${arg_SOURCE_PATH}/libs")
+  if(NOT EXISTS "${arg_SOURCE_PATH}/libs") # Check for --editable workflow
     set(target_path "${arg_SOURCE_PATH}/${boost_lib_path}")
     cmake_path(GET target_path PARENT_PATH parent_path)
     file(RENAME "${arg_SOURCE_PATH}/" "${arg_SOURCE_PATH}.tmp/")
@@ -43,15 +48,15 @@ function(boost_configure_and_install)
   vcpkg_cmake_install()
 
   vcpkg_cmake_config_fixup(PACKAGE_NAME boost_${boost_lib_name} CONFIG_PATH lib/cmake/boost_${boost_lib_name}-${VERSION})
-  
-  if(DEFINED arg_HEADERS_ONLY)
+
+  if(headers_only)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
   endif()
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     #file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
   endif()
-  vcpkg_install_copyright(FILE_LIST "${CURRENT_INSTALLED_DIR}/share/boost-cmake-helper/copyright")
+  vcpkg_install_copyright(FILE_LIST "${CURRENT_INSTALLED_DIR}/share/boost-cmake/copyright")
 endfunction()
 
 #BOOST_ENABLE_MPI

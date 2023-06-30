@@ -16,8 +16,7 @@
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-build",
-      "host": true,
+      "name": "boost-cmake",
       "version>=": "1.82.0"
     },
     {
@@ -29,8 +28,7 @@
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-modular-build-helper",
-      "host": true,
+      "name": "boost-headers",
       "version>=": "1.82.0"
     },
     {
@@ -60,14 +58,6 @@
     {
       "name": "boost-variant2",
       "version>=": "1.82.0"
-    },
-    {
-      "name": "boost-vcpkg-helpers",
-      "version>=": "1.82.0"
-    },
-    {
-      "name": "vcpkg-cmake",
-      "host": true
     }
   ]
 }

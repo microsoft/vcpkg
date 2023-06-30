@@ -13,8 +13,7 @@
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-build",
-      "host": true,
+      "name": "boost-cmake",
       "version>=": "1.82.0"
     },
     {
@@ -39,16 +38,15 @@
       "version>=": "1.82.0"
     },
     {
+      "name": "boost-headers",
+      "version>=": "1.82.0"
+    },
+    {
       "name": "boost-iterator",
       "version>=": "1.82.0"
     },
     {
       "name": "boost-lexical-cast",
-      "version>=": "1.82.0"
-    },
-    {
-      "name": "boost-modular-build-helper",
-      "host": true,
       "version>=": "1.82.0"
     },
     {
@@ -94,14 +92,6 @@
     {
       "name": "boost-type-traits",
       "version>=": "1.82.0"
-    },
-    {
-      "name": "boost-vcpkg-helpers",
-      "version>=": "1.82.0"
-    },
-    {
-      "name": "vcpkg-cmake",
-      "host": true
     }
   ]
 }

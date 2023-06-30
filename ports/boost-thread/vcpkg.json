@@ -24,12 +24,11 @@
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-build",
-      "host": true,
+      "name": "boost-chrono",
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-chrono",
+      "name": "boost-cmake",
       "version>=": "1.82.0"
     },
     {
@@ -65,6 +64,10 @@
       "version>=": "1.82.0"
     },
     {
+      "name": "boost-headers",
+      "version>=": "1.82.0"
+    },
+    {
       "name": "boost-intrusive",
       "version>=": "1.82.0"
     },
@@ -78,11 +81,6 @@
     },
     {
       "name": "boost-lexical-cast",
-      "version>=": "1.82.0"
-    },
-    {
-      "name": "boost-modular-build-helper",
-      "host": true,
       "version>=": "1.82.0"
     },
     {
@@ -130,16 +128,8 @@
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-vcpkg-helpers",
-      "version>=": "1.82.0"
-    },
-    {
       "name": "boost-winapi",
       "version>=": "1.82.0"
-    },
-    {
-      "name": "vcpkg-cmake",
-      "host": true
     }
   ]
 }

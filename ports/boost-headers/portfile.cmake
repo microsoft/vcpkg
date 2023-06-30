@@ -8,4 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-boost_configure_and_install(HEADERS_ONLY SOURCE_PATH "${SOURCE_PATH}" OPTIONS --trace-expand)
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

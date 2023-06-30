@@ -270,7 +270,6 @@ function GeneratePort() {
     param (
         [string]$Library,
         [string]$Hash,
-        [bool]$NeedsBuild,
         $Dependencies = @()
     )
 
@@ -327,42 +326,20 @@ function GeneratePort() {
         $portfileLines += @(Get-Content "$scriptsDir/post-source-stubs/$Library.cmake")
     }
 
-    if ($NeedsBuild) {
+    $portfileLines += @(
+        "set(FEATURE_OPTIONS `"`")"
+    )
+    if (Test-Path "$portsDir/$portName/features.cmake") {
         $portfileLines += @(
-            "include(`${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
+            "include(`"`${CMAKE_CURRENT_LIST_DIR}/features.cmake`")"
         )
-        # b2-options.cmake contains port-specific build options
-        if (Test-Path "$portsDir/$portName/b2-options.cmake") {
-            $portfileLines += @(
-                "boost_modular_build("
-                "    SOURCE_PATH `${SOURCE_PATH}"
-                "    BOOST_CMAKE_FRAGMENT `"`${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake`""
-                ")"
-            )
-        }
-        elseif (Test-Path "$portsDir/$portName/b2-options.cmake.in") {
-            $portfileLines += @(
-                'configure_file('
-                '    "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"'
-                '    "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"'
-                '    @ONLY'
-                ')'
-                'boost_modular_build('
-                '    SOURCE_PATH ${SOURCE_PATH}'
-                '    BOOST_CMAKE_FRAGMENT "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"'
-                ')'
-            )
-        }
-        else {
-            $portfileLines += @(
-                "boost_modular_build(SOURCE_PATH `${SOURCE_PATH})"
-            )
-        }
     }
 
     $portfileLines += @(
-        "include(`${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)"
-        "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
+        "boost_configure_and_install("
+        "    SOURCE_PATH `"`${SOURCE_PATH}`""
+        "    OPTIONS `${FEATURE_OPTIONS}"
+        ")"
     )
 
     if (Test-Path "$scriptsDir/post-build-stubs/$Library.cmake") {
@@ -403,8 +380,6 @@ $foundLibraries = Get-ChildItem $scriptsDir/boost/libs -directory | ForEach-Obje
         "interval"
         "odeint"
         "ublas"
-    }
-    elseif ($_ -eq "headers") {
     }
     else {
         $_
@@ -584,23 +559,13 @@ foreach ($library in $libraries) {
             )
         })
         $deps = @($deps | ForEach-Object { GeneratePortDependency $_ })
-        $deps += @("boost-vcpkg-helpers")
-
-        $needsBuild = $false
-        if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "function_types") {
-            $deps += @(
-                @{ name = "boost-build"; host = $True },
-                @{ name = "boost-modular-build-helper"; host = $True },
-                @{ name = "vcpkg-cmake"; host = $True }
-            )
-            $needsBuild = $true
-        }
+        $deps += @("boost-cmake")
+        $deps += @("boost-headers")
 
         GeneratePort `
             -Library $library `
             -Hash $hash `
-            -Dependencies $deps `
-            -NeedsBuild $needsBuild
+            -Dependencies $deps
 
         $boostPortDependencies += @(GeneratePortDependency $library)
     }
@@ -631,17 +596,11 @@ if ($updateServicePorts) {
 
     # Generate manifest files for boost-vcpkg-helpers
     GeneratePortManifest `
-        -PortName "boost-vcpkg-helpers" `
-        -Description "Internal vcpkg port used to modularize Boost" `
-        -License "MIT" `
+        -PortName "boost-cmake" `
+        -Description "Boost cmake files" `
+        -License "BSL-1.0" `
         -Dependencies @("boost-uninstall")
 
-    # Generate manifest files for boost-modular-build-helper
-    GeneratePortManifest `
-        -PortName "boost-modular-build-helper" `
-        -Description "Internal vcpkg port used to build Boost libraries" `
-        -License "MIT" `
-        -Dependencies @("boost-uninstall", @{ name = "vcpkg-cmake"; host = $True }, @{ name = "vcpkg-cmake-get-vars"; host = $True })
 
     # Generate manifest files for boost-build
     GeneratePortManifest `
@@ -653,9 +612,7 @@ if ($updateServicePorts) {
 
     # Update Boost version in CMake files
     $files_with_boost_version = @(
-        "$portsDir/boost-build/portfile.cmake",
-        "$portsDir/boost-modular-build-helper/boost-modular-build.cmake",
-        "$portsDir/boost-vcpkg-helpers/portfile.cmake"
+        "$portsDir/boost-cmake/portfile.cmake"
     )
     $files_with_boost_version | % {
         $content = Get-Content -LiteralPath $_ `

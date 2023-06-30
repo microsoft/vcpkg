@@ -8,15 +8,19 @@
   "license": "BSL-1.0",
   "dependencies": [
     {
+      "name": "boost-cmake",
+      "version>=": "1.82.0"
+    },
+    {
       "name": "boost-config",
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-static-assert",
+      "name": "boost-headers",
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-vcpkg-helpers",
+      "name": "boost-static-assert",
       "version>=": "1.82.0"
     }
   ]

@@ -13,6 +13,10 @@
       "version>=": "1.82.0"
     },
     {
+      "name": "boost-cmake",
+      "version>=": "1.82.0"
+    },
+    {
       "name": "boost-config",
       "version>=": "1.82.0"
     },
@@ -22,7 +26,7 @@
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-vcpkg-helpers",
+      "name": "boost-headers",
       "version>=": "1.82.0"
     }
   ]

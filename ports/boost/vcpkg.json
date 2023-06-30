@@ -210,6 +210,10 @@
       "version>=": "1.82.0"
     },
     {
+      "name": "boost-headers",
+      "version>=": "1.82.0"
+    },
+    {
       "name": "boost-heap",
       "version>=": "1.82.0"
     },

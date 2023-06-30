@@ -13,8 +13,7 @@
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-build",
-      "host": true,
+      "name": "boost-cmake",
       "version>=": "1.82.0"
     },
     {
@@ -26,12 +25,11 @@
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-iterator",
+      "name": "boost-headers",
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-modular-build-helper",
-      "host": true,
+      "name": "boost-iterator",
       "version>=": "1.82.0"
     },
     {
@@ -43,16 +41,8 @@
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-vcpkg-helpers",
-      "version>=": "1.82.0"
-    },
-    {
       "name": "libiconv",
       "platform": "!uwp & !windows & !mingw"
-    },
-    {
-      "name": "vcpkg-cmake",
-      "host": true
     }
   ],
   "features": {

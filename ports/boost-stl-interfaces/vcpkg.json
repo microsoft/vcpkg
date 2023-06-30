@@ -12,15 +12,19 @@
       "version>=": "1.82.0"
     },
     {
+      "name": "boost-cmake",
+      "version>=": "1.82.0"
+    },
+    {
       "name": "boost-config",
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-type-traits",
+      "name": "boost-headers",
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-vcpkg-helpers",
+      "name": "boost-type-traits",
       "version>=": "1.82.0"
     }
   ]
