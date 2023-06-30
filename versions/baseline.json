@@ -6037,7 +6037,7 @@
       "port-version": 0
     },
     "opentelemetry-fluentd": {
-      "baseline": "1.2.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "opentracing": {

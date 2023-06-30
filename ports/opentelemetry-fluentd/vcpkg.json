@@ -1,9 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "opentelemetry-fluentd",
-  "version-semver": "1.2.0",
+  "version-semver": "2.0.0",
   "description": "mdsd/fluentd exporter for OpenTelemetry C++",
-  "homepage": "https://github.com/open-telemetry/opentelemetry-cpp-contrib/tree/main/exporters/fluentd",
+  "homepage": "https://github.com/niande-xbox/opentelemetry-cpp-contrib/tree/main/exporters/fluentd",
   "license": "Apache-2.0",
   "dependencies": [
     "curl",
