@@ -32,3 +32,5 @@ file(INSTALL
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH_SUPER}/LICENSE_1_0.txt")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
