@@ -161,14 +161,15 @@ function(vcpkg_from_git)
         message(STATUS "Using cached ${archive}")
     endif()
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE "${archive}"
         REF "${sanitized_ref}"
         PATCHES ${arg_PATCHES}
         NO_REMOVE_ONE_LEVEL
         ${extract_working_directory_param}
         ${skip_patch_check_param}
+        Z_ALLOW_OLD_PARAMETER_NAMES
     )
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)

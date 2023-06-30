@@ -122,12 +122,13 @@ function(vcpkg_from_gitlab)
         ${sha512_param}
         ${redownload_param}
     )
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE "${archive}"
         REF "${sanitized_ref}"
         PATCHES ${arg_PATCHES}
         ${working_directory_param}
+        Z_ALLOW_OLD_PARAMETER_NAMES
     )
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

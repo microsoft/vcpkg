@@ -94,13 +94,14 @@ function(vcpkg_from_sourceforge)
     if(DEFINED arg_WORKING_DIRECTORY)
         set(working_directory_param "WORKING_DIRECTORY" "${arg_WORKING_DIRECTORY}")
     endif()
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE "${ARCHIVE}"
         REF "${sanitized_ref}"
         ${no_remove_one_level_param}
         ${working_directory_param}
         PATCHES ${arg_PATCHES}
+        Z_ALLOW_OLD_PARAMETER_NAMES
     )
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
