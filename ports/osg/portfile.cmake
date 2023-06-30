@@ -138,10 +138,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/osg/Config" "#ifndef OSG_LIBRARY_STATIC\n#define OSG_LIBRARY_STATIC 1\n#endif\n")
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_copy_tools(TOOL_NAMES osg2cpp osgshaderpipeline AUTO_CLEAN)
-endif()
-
 set(osg_plugins_subdir "osgPlugins-${OSG_VER}")
 if("tools" IN_LIST FEATURES)
     set(osg_plugin_pattern "${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}osgdb*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
