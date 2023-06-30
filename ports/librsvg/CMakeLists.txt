@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.11)
 project(librsvg C)
 
+set(LIBRSVG_VERSION 2.40.20)
+
 find_package(unofficial-libcroco CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2 gio-2 IMPORTED_TARGET)
@@ -147,3 +149,6 @@ find_dependency(unofficial-libcroco CONFIG)
 include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-librsvg-targets.cmake)
 ")
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-librsvg-config.cmake DESTINATION share/unofficial-librsvg)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/librsvg.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/librsvg.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/librsvg.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")

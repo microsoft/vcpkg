@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/librsvg.pc.in" DESTINATION "${SOURCE_PATH}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/config.h.linux" "${SOURCE_PATH}/config.h.linux" COPYONLY)
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -27,6 +28,8 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-librsvg CONFIG_PATH share/unofficial-librsvg)
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
