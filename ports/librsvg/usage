@@ -8,4 +8,3 @@ vcpkg provides proprietary CMake targets:
 
     find_package(unofficial-librsvg CONFIG REQUIRED)
     target_link_libraries(main PRIVATE unofficial::librsvg::rsvg-2.40 unofficial::librsvg::pixbufloader-svg)
-    
