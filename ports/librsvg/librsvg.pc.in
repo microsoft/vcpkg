@@ -10,5 +10,3 @@ Requires: glib-2.0 gobject-2.0 gdk-pixbuf-2.0 cairo pango pangocairo
 Requires.private:
 Libs: -L${libdir} -lrsvg-2.40 -lpixbufloader-svg
 Cflags: -I${includedir}
-
-
