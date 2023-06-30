@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE
         -DBUILD_TESTING=OFF
-        -DWITH_LOGS_PREVIEW=ON
 )
 
 vcpkg_cmake_install()
