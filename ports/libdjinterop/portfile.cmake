@@ -9,7 +9,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME DjInterop CONFIG_PATH lib/cmake/DjInterop)
+vcpkg_cmake_config_fixup(PACKAGE_NAME djinterop CONFIG_PATH lib/cmake/DjInterop)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
