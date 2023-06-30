@@ -5,6 +5,7 @@ function(boost_configure_and_install)
 
   string(REPLACE "-" "_" boost_lib_name "${PORT}")
   string(REPLACE "boost_" "" boost_lib_name "${boost_lib_name}")
+  set(boost_lib_name_config "${boost_lib_name}")
 
   set(headers_only OFF)
   if(NOT EXISTS "${arg_SOURCE_PATH}/src")
@@ -14,6 +15,7 @@ function(boost_configure_and_install)
   set(boost_lib_path "libs/${boost_lib_name}")
   if(boost_lib_name MATCHES "numeric")
     string(REPLACE "numeric_" "numeric/" boost_lib_path "${boost_lib_path}")
+    string(REPLACE "numeric_" "numeric/" boost_lib_name "${boost_lib_name}")
   endif()
 
   if(NOT EXISTS "${arg_SOURCE_PATH}/libs") # Check for --editable workflow
@@ -47,9 +49,9 @@ function(boost_configure_and_install)
 
   vcpkg_cmake_install()
 
-  vcpkg_cmake_config_fixup(PACKAGE_NAME boost_${boost_lib_name} CONFIG_PATH lib/cmake/boost_${boost_lib_name}-${VERSION})
+  vcpkg_cmake_config_fixup(PACKAGE_NAME boost_${boost_lib_name_config} CONFIG_PATH lib/cmake/boost_${boost_lib_name_config}-${VERSION})
 
-  if(headers_only)
+  if(headers_only OR "${PORT}" STREQUAL "boost-system") # TODO fix boost-system
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
   endif()
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
