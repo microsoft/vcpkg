@@ -138,7 +138,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/osg/Config" "#ifndef OSG_LIBRARY_STATIC\n#define OSG_LIBRARY_STATIC 1\n#endif\n")
 endif()
 
-set(tools osg2cpp osgshaderpipeline)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_copy_tools(TOOL_NAMES osg2cpp osgshaderpipeline AUTO_CLEAN)
+endif()
+
 set(osg_plugins_subdir "osgPlugins-${OSG_VER}")
 if("tools" IN_LIST FEATURES)
     set(osg_plugin_pattern "${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}osgdb*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
@@ -149,12 +152,12 @@ if("tools" IN_LIST FEATURES)
         file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/${osg_plugins_subdir}")
     endif()
 
-    list(APPEND tools osgversion present3D)
+    set(tools osgversion present3D)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(APPEND tools osgviewer osgarchive osgconv osgfilecache)
     endif()
+    vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 endif()
-vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
