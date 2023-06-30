@@ -38,20 +38,40 @@ function(boost_configure_and_install)
  \n\
   include(BoostRoot) \n\
   ")
+
+  if("${PORT}" MATCHES "boost-(mpi|graph_parallel|property_map_parallel)")
+    list(APPEND arg_OPTIONS -DBOOST_ENABLE_MPI=ON)
+  endif()
+
+  if("${PORT}" MATCHES "boost-(python|parameter_python)")
+    list(APPEND arg_OPTIONS -DBOOST_ENABLE_PYTHON=ON)
+  endif()
+
   vcpkg_cmake_configure(
     SOURCE_PATH "${arg_SOURCE_PATH}"
     OPTIONS
       -DBOOST_INCLUDE_LIBRARIES=${boost_lib_name}
+      #-DBOOST_ENABLE_PYTHON=ON
       #"-DBOOST_INSTALL_CMAKEDIR=lib/cmake"
+      -DBOOST_RUNTIME_LINK=${VCPKG_CRT_LINKAGE}
       "-DBOOST_INSTALL_INCLUDE_SUBDIR="
       ${arg_OPTIONS}
   )
 
   vcpkg_cmake_install()
 
+  file(GLOB cmake_paths "${CURRENT_PACKAGES_DIR}/lib/cmake/*" LIST_DIRECTORIES true)
+  file(GLOB cmake_files "${CURRENT_PACKAGES_DIR}/lib/cmake/*" LIST_DIRECTORIES false)
+  list(REMOVE_ITEM cmake_paths "${cmake_files}" "${CURRENT_PACKAGES_DIR}/lib/cmake/boost_${boost_lib_name_config}-${VERSION}")
+  message(STATUS "cmake_paths:'${cmake_paths}'")
+  foreach(config_path IN LISTS cmake_paths)
+    string(REPLACE "-${VERSION}" "" config_path "${config_path}")
+    string(REPLACE "${CURRENT_PACKAGES_DIR}/lib/cmake/" "" config_name "${config_path}")
+    vcpkg_cmake_config_fixup(PACKAGE_NAME ${config_name} CONFIG_PATH lib/cmake/${config_name}-${VERSION} DO_NOT_DELETE_PARENT_CONFIG_PATH)
+  endforeach()
   vcpkg_cmake_config_fixup(PACKAGE_NAME boost_${boost_lib_name_config} CONFIG_PATH lib/cmake/boost_${boost_lib_name_config}-${VERSION})
 
-  if(headers_only OR "${PORT}" STREQUAL "boost-system") # TODO fix boost-system
+  if(headers_only OR "${PORT}" MATCHES "boost-(system|math)") # TODO fix boost-system
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
   endif()
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
@@ -60,10 +80,3 @@ function(boost_configure_and_install)
   endif()
   vcpkg_install_copyright(FILE_LIST "${CURRENT_INSTALLED_DIR}/share/boost-cmake/copyright")
 endfunction()
-
-#BOOST_ENABLE_MPI
-#BOOST_ENABLE_PYTHON
-#BOOST_RUNTIME_LINK
-#BOOST_STAGEDIR
-#BOOST_INCLUDE_LIBRARIES can be set to the respective lib name
-#BOOST_SUPERPROJECT_SOURCE_DIR

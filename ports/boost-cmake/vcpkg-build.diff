@@ -16,7 +16,7 @@ index e93f90712..063032e8a 100644
        get_target_property(__boost_lib_incdir "boost_${__boost_lib_target}" INTERFACE_INCLUDE_DIRECTORIES)
  
 -      if(__boost_lib_incdir STREQUAL "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/${__boost_lib}/include")
-+      if(1)
++      if(__boost_lib_incdir STREQUAL "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/${__boost_lib}/include")
  
          boost_message(DEBUG "Enabling installation for '${__boost_lib}'")
          boost_install(TARGETS "boost_${__boost_lib_target}" VERSION "${BOOST_SUPERPROJECT_VERSION}" HEADER_DIRECTORY "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/${__boost_lib}/include")
@@ -37,10 +37,12 @@ index e93f90712..063032e8a 100644
          string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
          list(APPEND result ${dep})
  
-@@ -206,16 +207,20 @@ function(__boost_scan_dependencies lib var)
+@@ -206,16 +207,22 @@ function(__boost_scan_dependencies lib var)
  
    endif()
  
++  list(REMOVE_DUPLICATES required_components)
++  list(REMOVE_ITEM required_components boost ${lib}) # due to property_tree and python
 +  if(required_components)
 +    find_package(Boost COMPONENTS ${required_components} REQUIRED CONFIG)
 +  endif()
