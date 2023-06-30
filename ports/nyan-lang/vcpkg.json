@@ -2,8 +2,8 @@
   "name": "nyan-lang",
   "version-date": "2023-06-27",
   "description": "nyan is a data description language, It is a mixture of python, json, patch, wml, yaml and some new ideas.",
-  "license": "LGPL-3.0-or-later",
   "homepage": "https://github.com/SFTtech/nyan",
+  "license": "LGPL-3.0-or-later",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
