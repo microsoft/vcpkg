@@ -93,8 +93,8 @@
             "freetype"
           ]
         },
-        "sdl2",
-        "sdl1"
+        "sdl1",
+        "sdl2"
       ]
     },
     "fontconfig": {
