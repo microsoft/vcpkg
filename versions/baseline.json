@@ -3990,7 +3990,7 @@
     },
     "libdjinterop": {
       "baseline": "0.19.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libdmx": {
       "baseline": "1.1.4",
