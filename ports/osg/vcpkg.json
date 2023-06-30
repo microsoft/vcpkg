@@ -1,7 +1,7 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 19,
+  "port-version": 20,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
   "homepage": "https://www.openscenegraph.com/",
   "license": null,
@@ -93,7 +93,8 @@
             "freetype"
           ]
         },
-        "sdl2"
+        "sdl2",
+        "sdl1"
       ]
     },
     "fontconfig": {

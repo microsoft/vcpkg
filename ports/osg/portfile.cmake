@@ -138,6 +138,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/osg/Config" "#ifndef OSG_LIBRARY_STATIC\n#define OSG_LIBRARY_STATIC 1\n#endif\n")
 endif()
 
+set(tools osg2cpp osgshaderpipeline)
 set(osg_plugins_subdir "osgPlugins-${OSG_VER}")
 if("tools" IN_LIST FEATURES)
     set(osg_plugin_pattern "${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}osgdb*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
@@ -152,8 +153,8 @@ if("tools" IN_LIST FEATURES)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(APPEND tools osgviewer osgarchive osgconv osgfilecache)
     endif()
-    vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 endif()
+vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -165,6 +166,6 @@ if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openscenegraph.pc" "\\\n" " ")
 endif()
 vcpkg_fixup_pkgconfig()
-
+set(osg_OPENGL_PROFILE GL3)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
