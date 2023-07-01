@@ -8,6 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+
 set(FEATURE_OPTIONS "")
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"

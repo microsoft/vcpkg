@@ -48,7 +48,7 @@ function(boost_configure_and_install)
     list(APPEND arg_OPTIONS -DBOOST_ENABLE_MPI=ON)
   endif()
 
-  if("${PORT}" MATCHES "boost-(python|parameter_python)")
+  if("${PORT}" MATCHES "boost-(python|parameter-python)")
     list(APPEND arg_OPTIONS -DBOOST_ENABLE_PYTHON=ON)
   endif()
 
