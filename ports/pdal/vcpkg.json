@@ -1,7 +1,7 @@
 {
   "name": "pdal",
-  "version": "2.4.3",
-  "port-version": 3,
+  "version": "2.5.3",
+  "port-version": 1,
   "description": "PDAL - Point Data Abstraction Library is a library for manipulating point cloud data.",
   "homepage": "https://pdal.io/",
   "license": null,
