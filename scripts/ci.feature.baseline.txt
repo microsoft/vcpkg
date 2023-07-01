@@ -934,8 +934,6 @@ libssh[openssl,mbedtls] = options # we have to select feature openssl or mbedtls
 llvm[libcxxabi] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31038
 llvm[core,libcxx] = options # Exclude libcxx from all
 magnum-plugins[meshoptimizersceneconverter] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31112
-#magnum-plugins[meshoptimizersceneconverter] = skip # see https://github.com/microsoft/vcpkg/issues/31112
-magnum[wavaudioimporter](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31014
 mesa[egl](!windows) = feature-fails # ERROR: Problem encountered: EGL requires dri, haiku, or windows
 mesa[llvm] = feature-fails # ERROR: Neither a subproject directory nor a llvm.wrap file was found. (llvm-config found: NO)
 msdfgen[core,extensions,geometry-preprocessing,openmp,tools](osx) = combination-fails # requires openmp (works with right setup)
@@ -964,7 +962,6 @@ sqlpp11-connector-mysql[core,mariadb,mysql] = options # can not select mariadb a
 sqlpp11[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
 symengine[core,arb,flint,integer-class-boostmp,integer-class-flint,mpfr](osx) = combination-fails # undefined build error
 tgui[sdl2] = options # At least one of the backend features must be selected: sdl2 sfml
-tiff[core,cxx,jpeg,lzma,tools,webp,zip,zstd] = combination-fails # link failure if tools and webp are enabled
 vlpp[tools](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32143 (error: inconsistent begin/end types in range-based ‘for’ statement)
 vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
 vtk-m[omp](osx) = feature-fails # fixed by https://github.com/microsoft/vcpkg/pull/30923
@@ -974,9 +971,12 @@ wasmedge[core,aot,tools] = combination-fails # see https://github.com/microsoft/
 xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
 xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not 32
 yyjson[writer](osx) = feature-fails # error: call to undeclared function 'digi_is_digit'
-matplotplusplus[opengl] = feature-fails # see https://github.com/microsoft/vcpkg/pull/32227
 opencv3[vtk] = feature-fails # vtk version not compatible. See https://github.com/microsoft/vcpkg/issues/32228
 flashlight-sequence[openmp](osx) = feature-fails # No openmp on osx
+curl[ssh] = feature-fails # See https://github.com/microsoft/vcpkg/issues/32258
+curl[openssl,wolfssl] = options # openssl and wolfssl are exclusive ssl backends
+tensorpipe[test] = feature-fails # See https://github.com/microsoft/vcpkg/issues/32328
+
 
 
 # skip
