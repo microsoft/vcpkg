@@ -90,7 +90,8 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "freetype"
+            "freetype",
+            "plugins"
           ]
         },
         "sdl2"
@@ -134,7 +135,7 @@
       "description": "Set to ON to generate CPack configuration files and packaging targets"
     },
     "plugins": {
-      "description": "Build most OSG Plugins",
+      "description": "Build most OSG plugins",
       "dependencies": [
         {
           "name": "curl",
@@ -206,7 +207,8 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "freetype"
+            "freetype",
+            "plugins"
           ]
         }
       ]
