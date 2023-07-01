@@ -15,13 +15,18 @@ function(vcpkg_cmake_config_fixup)
     endif()
 
     if(NOT arg_CONFIG_PATH AND NOT arg_PACKAGE_NAME)
-        set(arg_PACKAGE_NAME "${PORT}")
-        z_vcpkg_cmake_config_fixup_find_config_path(arg_CONFIG_PATH "${arg_PACKAGE_NAME}")
+        z_vcpkg_cmake_config_fixup_find_config_path(arg_CONFIG_PATH "")
+        message(STATUS "CMake config: ${arg_CONFIG_PATH}")
+        z_vcpkg_cmake_config_fixup_find_package_name(arg_PACKAGE_NAME "${arg_CONFIG_PATH}")
+        message(STATUS "CMake package: ${arg_PACKAGE_NAME}")
     elseif(NOT arg_CONFIG_PATH)
         z_vcpkg_cmake_config_fixup_find_config_path(arg_CONFIG_PATH "${arg_PACKAGE_NAME}")
+        message(STATUS "CMake config: ${arg_CONFIG_PATH}")
     elseif(NOT arg_PACKAGE_NAME)
         z_vcpkg_cmake_config_fixup_find_package_name(arg_PACKAGE_NAME "${arg_CONFIG_PATH}")
+        message(STATUS "CMake package: ${arg_PACKAGE_NAME}")
     elseif(arg_CONFIG_PATH STREQUAL "share/${arg_PACKAGE_NAME}")
+        message(STATUS "CMake package: ${arg_PACKAGE_NAME}")
         message(STATUS "Warning from vcpkg_cmake_config_fixup:
 
    When passing 'PACKAGE_NAME ${arg_PACKAGE_NAME}' to vcpkg_cmake_config_fixup,
@@ -275,11 +280,91 @@ function(z_vcpkg_cmake_config_fixup_merge out_var release_var debug_var)
 endfunction()
 
 function(z_vcpkg_cmake_config_fixup_find_config_path out_path name)
-    set("${out_path}" "share/${name}" PARENT_SCOPE)
+    set(expected_name "${name}")
+    if(expected_name STREQUAL "")
+        set(expected_name "${PORT}")
+    endif()
+    # Cf. https://cmake.org/cmake/help/latest/command/find_package.html#config-mode-search-procedure
+    set(config_search_pattern_1
+        ""
+        cmake/ CMake/
+        */
+        */cmake/ */CMake/
+        */cmake/*/ */CMake/*/
+        lib/*/cmake/*/ lib*/cmake/*/ share/cmake/*/
+        lib/*/*/ lib*/*/ share/*/
+        lib/*/*/cmake/ lib/*/*/CMake/ lib*/*/cmake/ lib*/*/CMake/ share/*/cmake/ share/*/CMake/
+        */lib/*/cmake/*/ */lib*/cmake/*/ */share/cmake/*/
+        */lib/*/*/ */lib*/*/ */share/*/
+        */lib/*/*/cmake/ */lib/*/*/CMake/ */lib*/*/cmake/ */lib*/*/CMake/ */share/*/cmake/ */share/*/CMake/
+    )
+    list(TRANSFORM config_search_pattern_1 PREPEND "${CURRENT_PACKAGES_DIR}/")
+    set(config_search_pattern_2 "${config_search_pattern_1}")
+    list(TRANSFORM config_search_pattern_1 APPEND "*-config.cmake")
+    list(TRANSFORM config_search_pattern_2 APPEND "*Config.cmake")
+    file(GLOB file_list
+        LIST_DIRECTORIES false
+        RELATIVE "${CURRENT_PACKAGES_DIR}"
+        ${config_search_pattern_1}
+        ${config_search_pattern_2}
+    )
+    list(FILTER file_list EXCLUDE REGEX "^debug/.*\$")
+    list(LENGTH file_list count)
+    if(count EQUAL "1")
+        cmake_path(GET file_list PARENT_PATH config_path)
+        set("${out_path}" "${config_path}" PARENT_SCOPE)
+        return()
+    elseif(count GREATER "0")
+        # warn (error would break compatibility)
+        foreach(file IN LISTS file_list)
+            string(TOLOWER "${expected_name}" expected_name_lower)
+            cmake_path(GET file FILENAME filename)
+            if(filename STREQUAL "${expected_name}Config.cmake" OR filename STREQUAL "${expected_name_lower}-config.cmake")
+                cmake_path(GET file PARENT_PATH config_path)
+                set("${out_path}" "${config_path}" PARENT_SCOPE)
+                return()
+            endif()
+        endforeach()
+        # use expected_name if included
+        list(JOIN file_list "\n   " candidate_files)
+        message(STATUS "Warning from vcpkg_cmake_config_fixup:
+
+   Found CMake config files, but none is matching name '${expected_name}':
+   ${candidate_files}
+   Pass a matching CONFIG_PATH or PACKAGE_NAME to vcpkg_cmake_config_fixup.
+")
+    endif()
+    set("${out_path}" "share/${expected_name}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_cmake_config_fixup_find_package_name out_name path)
-    set("${out_name}" "${PORT}" PARENT_SCOPE)
+    file(GLOB file_list
+        LIST_DIRECTORIES false
+        RELATIVE "${CURRENT_PACKAGES_DIR}/${path}"
+        "${CURRENT_PACKAGES_DIR}/${path}/*Config.cmake"
+        "${CURRENT_PACKAGES_DIR}/${path}/*-config.cmake"
+    )
+    set(filename "${PORT}-config.cmake")
+    list(LENGTH file_list count)
+    if(count EQUAL "1")
+        cmake_path(GET file_list FILENAME filename)
+    elseif(count GREATER "0")
+        list(JOIN file_list "\n   " file_list)
+        message(STATUS "Warning from vcpkg_cmake_config_fixup:
+
+   Found multiple CMake config files:
+   ${candidate_files}
+   Pass a matching PACKAGE_NAME to vcpkg_cmake_config_fixup.
+")
+    endif()
+    string(REGEX REPLACE "(-c|C)onfig.cmake\$" "" name "${filename}")
+    string(TOLOWER "${name}" name)
+    string(LENGTH "${PORT}" len)
+    string(SUBSTRING "${name}" "0" "${len}" common)
+    if(common STREQUAL PORT)
+        set(name "${PORT}")
+    endif()
+    set("${out_name}" "${name}" PARENT_SCOPE)
 endfunction()
 
 # name : The target dir name (i.e. without 'share/`)
