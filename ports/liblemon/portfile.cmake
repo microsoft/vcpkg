@@ -31,8 +31,8 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/lemon/cmake PACKAGE_NAME lemon)
 
 file(GLOB EXE "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-file(COPY ${EXE} DESTINATION "{CURRENT_PACKAGES_DIR}/tools/liblemon/")
-vcpkg_copy_tool_dependencies("{CURRENT_PACKAGES_DIR}/tools/liblemon")
+file(COPY ${EXE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/liblemon/")
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/liblemon")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
