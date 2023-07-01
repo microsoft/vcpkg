@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF  "${VERSION}"
     SHA512 a5475d3f988928fc3d03b69fc34b33ada35bd790138a0f4a733642558c72945e79c5dcde88b656cbc1cafbc3cb2dd4ba28031e09e507d730056876148ef65014
     HEAD_REF master
-    PATCHES fix-install-path.patch skip-grpc-compilation.patch
+    PATCHES
+        fix-install-path.patch
+        skip-grpc-compilation.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -31,13 +33,14 @@ else()
     # The build needs a version of the Haskel Tool stack that is newer than some distros ship with.
     # For this reason the message is not guarded by checking to see if the tool is installed.
     message("\nA recent version of Haskell Tool Stack is required to build.\n  For information on how to install see https://docs.haskellstack.org/en/stable/README/\n")
-
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         bond-over-grpc BOND_ENABLE_GRPC
 )
+
+set(ENV{STACK_ROOT} "${CURRENT_BUILDTREES_DIR}/stack")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -46,7 +49,6 @@ vcpkg_cmake_configure(
         -DBOND_LIBRARIES_ONLY=TRUE
         -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
         -DBOND_SKIP_GBC_TESTS=TRUE
-        -DBOND_ENABLE_COMM=FALSE
         -DBOND_FIND_RAPIDJSON=TRUE
         -DBOND_STACK_OPTIONS=--allow-different-user
         ${FEATURE_OPTIONS}

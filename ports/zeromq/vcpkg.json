@@ -1,11 +1,11 @@
 {
   "name": "zeromq",
-  "version-date": "2023-01-31",
-  "port-version": 4,
+  "version-date": "2023-06-20",
+  "port-version": 1,
   "description": "The ZeroMQ lightweight messaging kernel is a library which extends the standard socket interfaces with features traditionally provided by specialised messaging middleware products",
   "homepage": "https://github.com/zeromq/libzmq",
-  "license": "LGPL-3.0-only",
-  "supports": "!uwp",
+  "license": "MPL-2.0",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -17,13 +17,23 @@
     }
   ],
   "features": {
+    "curve": {
+      "description": "Enable CURVE security"
+    },
     "draft": {
       "description": "Build and install draft APIs"
     },
     "sodium": {
       "description": "Using libsodium for CURVE security",
       "dependencies": [
-        "libsodium"
+        "libsodium",
+        {
+          "name": "zeromq",
+          "default-features": false,
+          "features": [
+            "curve"
+          ]
+        }
       ]
     },
     "websockets": {

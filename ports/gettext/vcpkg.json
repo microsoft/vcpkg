@@ -1,10 +1,11 @@
 {
   "name": "gettext",
   "version": "0.21.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A GNU framework to help produce multi-lingual messages.",
   "homepage": "https://www.gnu.org/software/gettext/",
   "license": "GPL-3.0-only",
+  "supports": "!xbox",
   "dependencies": [
     "gettext-libintl"
   ],
