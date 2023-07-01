@@ -2792,6 +2792,10 @@
       "baseline": "0",
       "port-version": 3
     },
+    "getopt-bsd": {
+      "baseline": "0.0.1",
+      "port-version": 1
+    },
     "getopt-win32": {
       "baseline": "0.1",
       "port-version": 7
