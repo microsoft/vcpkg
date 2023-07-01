@@ -15,10 +15,17 @@ vcpkg_cmake_install()
 file(INSTALL "${SOURCE_PATH}/cmake/LICENSE.txt"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
      RENAME copyright)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
-                    "${CURRENT_PACKAGES_DIR}/debug/share")
-if (NOT CMAKE_SYSTEM_NAME MATCHES "Windows|CYGWIN.*|MSYS.*" AND NOT MINGW)
+
+if (NOT DEFINED CMAKE_SYSTEM_NAME)
+    # Should've been set as per https://cmake.org/cmake/help/latest/variable/CMAKE_SYSTEM_NAME.html
+    set(CMAKE_SYSTEM_NAME "${CMAKE_HOST_SYSTEM_NAME}")
+endif (NOT DEFINED CMAKE_SYSTEM_NAME)
+
+if (CMAKE_SYSTEM_NAME MATCHES "Windows|CYGWIN.*|MSYS.*" OR MINGW)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                        "${CURRENT_PACKAGES_DIR}/debug/share")
+else ()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-endif (NOT CMAKE_SYSTEM_NAME MATCHES "Windows|CYGWIN.*|MSYS.*" AND NOT MINGW)
+endif (CMAKE_SYSTEM_NAME MATCHES "Windows|CYGWIN.*|MSYS.*" OR MINGW)
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS "enabled")
 
