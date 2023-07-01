@@ -8,8 +8,9 @@ function(boost_configure_and_install)
   set(boost_lib_name_config "${boost_lib_name}")
 
   set(headers_only OFF)
-  if(NOT EXISTS "${arg_SOURCE_PATH}/src")
+  if(NOT EXISTS "${arg_SOURCE_PATH}/src"  OR "${PORT}" MATCHES "boost-(system|math|regex)")
     set(headers_only ON)
+    set(VCPKG_BUILD_TYPE release)
   endif()
 
   set(boost_lib_path "libs/${boost_lib_name}")
@@ -70,13 +71,16 @@ function(boost_configure_and_install)
   endforeach()
   vcpkg_cmake_config_fixup(PACKAGE_NAME boost_${boost_lib_name_config} CONFIG_PATH lib/cmake/boost_${boost_lib_name_config}-${VERSION})
 
-  if(headers_only OR "${PORT}" MATCHES "boost-(system|math)") # TODO fix boost-system
+  if(headers_only) # TODO fix boost-system
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
   endif()
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
+                      "${CURRENT_PACKAGES_DIR}/debug/include"
+      )
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     #file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
   endif()
   vcpkg_install_copyright(FILE_LIST "${CURRENT_INSTALLED_DIR}/share/boost-cmake/copyright")
+  
+
 endfunction()
