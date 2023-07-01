@@ -8494,7 +8494,7 @@
     },
     "vk-bootstrap": {
       "baseline": "0.7",
-      "port-version": 0
+      "port-version": 1
     },
     "vkfft": {
       "baseline": "1.2.31",
