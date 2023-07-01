@@ -17,6 +17,10 @@ function(boost_configure_and_install)
   if(boost_lib_name MATCHES "numeric")
     string(REPLACE "numeric_" "numeric/" boost_lib_path "${boost_lib_path}")
     string(REPLACE "numeric_" "numeric/" boost_lib_name "${boost_lib_name}")
+  elseif(PORT MATCHES "boost-(ublas|odeint|interval)")
+    set(boost_lib_name_config "numeric_${boost_lib_name}")
+    set(boost_lib_path "libs/numeric/${boost_lib_name}")
+    set(boost_lib_name "numeric/${boost_lib_name}")
   endif()
 
   if(NOT EXISTS "${arg_SOURCE_PATH}/libs") # Check for --editable workflow
@@ -56,6 +60,7 @@ function(boost_configure_and_install)
       #"-DBOOST_INSTALL_CMAKEDIR=lib/cmake"
       -DBOOST_RUNTIME_LINK=${VCPKG_CRT_LINKAGE}
       "-DBOOST_INSTALL_INCLUDE_SUBDIR="
+      "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT="
       ${arg_OPTIONS}
   )
 
@@ -69,7 +74,12 @@ function(boost_configure_and_install)
     string(REPLACE "${CURRENT_PACKAGES_DIR}/lib/cmake/" "" config_name "${config_path}")
     vcpkg_cmake_config_fixup(PACKAGE_NAME ${config_name} CONFIG_PATH lib/cmake/${config_name}-${VERSION} DO_NOT_DELETE_PARENT_CONFIG_PATH)
   endforeach()
-  vcpkg_cmake_config_fixup(PACKAGE_NAME boost_${boost_lib_name_config} CONFIG_PATH lib/cmake/boost_${boost_lib_name_config}-${VERSION})
+  if(NOT PORT MATCHES "boost-(stacktrace|test)") 
+    vcpkg_cmake_config_fixup(PACKAGE_NAME boost_${boost_lib_name_config} CONFIG_PATH lib/cmake/boost_${boost_lib_name_config}-${VERSION})
+  else()
+    # These ports have no cmake config being named like the port
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+  endif()
 
   if(headers_only) # TODO fix boost-system
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
