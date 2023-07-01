@@ -72,6 +72,7 @@ function(boost_configure_and_install)
 
   if(headers_only OR "${PORT}" MATCHES "boost-(system|math)") # TODO fix boost-system
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
   endif()
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
