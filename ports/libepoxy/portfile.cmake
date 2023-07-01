@@ -16,6 +16,8 @@ vcpkg_from_github(
 
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
     set(OPTIONS -Dglx=no -Degl=no -Dx11=false)
+elseif(VCPKG_TARGET_IS_ANDROID)
+    set(OPTIONS -Dglx=no -Degl=yes -Dx11=false)
 else()
     set(OPTIONS -Dglx=yes -Degl=yes -Dx11=true)
 endif()
