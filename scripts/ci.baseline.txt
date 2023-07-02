@@ -548,6 +548,7 @@ gul14:x64-android=fail
 gz-tools2:arm-neon-android=fail
 gz-tools2:x64-android=fail
 gz-tools2:arm64-android=fail
+halide:x86-windows=fail
 halide:x64-windows-static=fail
 hdf5:arm64-windows=fail
 hdf5:arm-uwp=fail
