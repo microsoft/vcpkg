@@ -5,7 +5,7 @@
   "description": "Epoxy is a library for handling OpenGL function pointer management for you",
   "homepage": "https://github.com/anholt/libepoxy",
   "license": "MIT",
-  "supports": "!uwp",
+  "supports": "!uwp & !(windows & staticcrt)",
   "dependencies": [
     {
       "name": "egl-registry",

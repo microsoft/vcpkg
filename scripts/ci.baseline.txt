@@ -670,7 +670,6 @@ libgpg-error:x64-android=fail
 # Missing system libraries on linux to run/prepare autoconf
 libgpod:x64-linux=fail
 libgpod:x64-osx=fail
-libepoxy:x64-windows-static=fail
 libevhtp:x86-windows=fail
 libevhtp:x64-windows=fail
 libevhtp:x64-windows-static=fail
