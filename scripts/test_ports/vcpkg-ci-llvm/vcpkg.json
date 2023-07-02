@@ -9,7 +9,6 @@
       "name": "llvm",
       "default-features": false,
       "features": [
-        "bolt",
         "clang",
         "default-targets",
         "disable-assertions",
@@ -23,28 +22,29 @@
         "enable-zlib",
         "lld",
         "lldb",
-        "openmp",
-        "polly"
+        "tools"
       ]
     },
     {
-      "$comment": "Platform restriction due to CI artifact upload quirks",
+      "$comment": "Platform restriction due to CI artifact upload quirks; features which need utils",
       "name": "llvm",
       "default-features": false,
       "features": [
-        "tools"
+        "bolt",
+        "openmp",
+        "polly",
+        "utils"
       ],
       "platform": "!static"
     },
     {
-      "$comment": "Platform restriction due to CI artifact upload quirks",
+      "$comment": "Platform restriction due to CI artifact upload quirks; flang",
       "name": "llvm",
       "default-features": false,
       "features": [
-        "flang",
-        "utils"
+        "flang"
       ],
-      "platform": "osx"
+      "platform": "linux"
     }
   ]
 }
