@@ -44,7 +44,7 @@
       "features": [
         "flang"
       ],
-      "platform": "!static & !x86"
+      "platform": "linux"
     }
   ]
 }
