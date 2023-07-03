@@ -11,7 +11,7 @@ if(NOT TARGET vk-bootstrap::vk-bootstrap)
     set_target_properties(vk-bootstrap::vk-bootstrap PROPERTIES IMPORTED_LOCATION_RELEASE "${Z_VCPKG_VKBOOTSTRAP_LIBRARY_RELEASE}")
 
     find_library(Z_VCPKG_VKBOOTSTRAP_LIBRARY_DEBUG NAMES vk-bootstrap PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
-    if(EXISTS "${Z_VCPKG_VKBOOTSTRAP_LIBRARY_DEBUG}")
+    if(Z_VCPKG_VKBOOTSTRAP_LIBRARY_DEBUG)
         set_property(TARGET vk-bootstrap::vk-bootstrap APPEND PROPERTY IMPORTED_CONFIGURATIONS "Debug")
         set_target_properties(vk-bootstrap::vk-bootstrap PROPERTIES IMPORTED_LOCATION_DEBUG "${Z_VCPKG_VKBOOTSTRAP_LIBRARY_DEBUG}")
     endif()
