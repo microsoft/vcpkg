@@ -17,6 +17,7 @@ vcpkg_check_features(
         draft           ENABLE_DRAFTS
         websockets      ENABLE_WS
         websockets-secure WITH_TLS
+        curve           ENABLE_CURVE
 )
 
 set(PLATFORM_OPTIONS "")
