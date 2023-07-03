@@ -44,7 +44,7 @@ function(boost_configure_and_install)
   include(BoostRoot) \n\
   ")
 
-  if("${PORT}" MATCHES "boost-(mpi|graph_parallel|property_map_parallel)")
+  if("${PORT}" MATCHES "boost-(mpi|graph-parallel|property-map-parallel)")
     list(APPEND arg_OPTIONS -DBOOST_ENABLE_MPI=ON)
   endif()
 
