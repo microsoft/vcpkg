@@ -1,19 +1,25 @@
-function(set_library_target NAMESPACE LIB_NAME DEBUG_LIB_FILE_NAME RELEASE_LIB_FILE_NAME INCLUDE_DIR)
-    add_library(${NAMESPACE}::${LIB_NAME} STATIC IMPORTED)
-    set_target_properties(${NAMESPACE}::${LIB_NAME} PROPERTIES
-                          IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                          IMPORTED_LOCATION_RELEASE "${RELEASE_LIB_FILE_NAME}"
-                          IMPORTED_LOCATION_DEBUG "${DEBUG_LIB_FILE_NAME}"
-                          INTERFACE_INCLUDE_DIRECTORIES "${INCLUDE_DIR}"
-                          )
-    set(${NAMESPACE}_${LIB_NAME}_FOUND 1)
-endfunction()
+if(NOT TARGET unofficial::libev::libev)
+    get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+    get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+    get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 
-get_filename_component(ROOT "${CMAKE_CURRENT_LIST_FILE}" PATH)
-get_filename_component(ROOT "${ROOT}" PATH)
-get_filename_component(ROOT "${ROOT}" PATH)
+    add_library(unofficial::libev::libev UNKNOWN IMPORTED)
 
-set_library_target("libev" "libev"
-                   "${ROOT}/debug/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ev${CMAKE_STATIC_LIBRARY_SUFFIX}"
-                   "${ROOT}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}ev${CMAKE_STATIC_LIBRARY_SUFFIX}"
-                   "${ROOT}/include/")
+    set_target_properties(unofficial::libev::libev PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+    )
+
+    find_library(LIBEV_LIBRARY_DEBUG NAMES ev libev PATHS "${_IMPORT_PREFIX}/debug" PATH_SUFFIXES lib NO_DEFAULT_PATH)
+    if(EXISTS "${LIBEV_LIBRARY_DEBUG}")
+        set_property(TARGET unofficial::libev::libev APPEND PROPERTY IMPORTED_CONFIGURATIONS "Debug")
+        set_target_properties(unofficial::libev::libev PROPERTIES IMPORTED_LOCATION_DEBUG "${LIBEV_LIBRARY_DEBUG}")
+    endif()
+
+    find_library(LIBEV_LIBRARY_RELEASE NAMES ev libev PATHS "${_IMPORT_PREFIX}/" PATH_SUFFIXES lib NO_DEFAULT_PATH)
+    if(EXISTS "${LIBEV_LIBRARY_RELEASE}")
+        set_property(TARGET unofficial::libev::libev APPEND PROPERTY IMPORTED_CONFIGURATIONS "Release")
+        set_target_properties(unofficial::libev::libev PROPERTIES IMPORTED_LOCATION_RELEASE "${LIBEV_LIBRARY_RELEASE}")
+    endif()
+
+    unset(_IMPORT_PREFIX)
+endif()
