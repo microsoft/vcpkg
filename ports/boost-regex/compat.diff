@@ -1,7 +1,7 @@
-diff --git a/regex/CMakeLists.txt b/regex/CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
 index ccd422301..0959c5ab1 100644
---- a/regex/CMakeLists.txt	
-+++ b/regex/CMakeLists.txt
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
 @@ -8,17 +8,25 @@ cmake_minimum_required(VERSION 3.5...3.16)
  
  project(boost_regex VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)

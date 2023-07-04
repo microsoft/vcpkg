@@ -1,7 +1,7 @@
-diff --git a/context/CMakeLists.txt b/context/CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 98e5ab8dd..45767bcee 100644
---- a/context/CMakeLists.txt	
-+++ b/context/CMakeLists.txt
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
 @@ -168,7 +168,7 @@ unset(_asm_suffix)
  
  if(BOOST_CONTEXT_IMPLEMENTATION STREQUAL "fcontext")
