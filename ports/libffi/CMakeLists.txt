@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 project(libffi C ASM)
 
-set(CMAKE_SHARED_LIBRARY_PREFIX)
-set(CMAKE_STATIC_LIBRARY_PREFIX)
-
 if(NOT CMAKE_SYSTEM_PROCESSOR)
     set(CMAKE_SYSTEM_PROCESSOR "${CMAKE_HOST_SYSTEM_PROCESSOR}")
 endif()
@@ -219,6 +216,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 add_library(libffi ${FFI_SOURCES})
+
+if(CMAKE_STATIC_LIBRARY_PREFIX STREQUAL "lib")
+    set_target_properties(libffi PROPERTIES OUTPUT_NAME ffi)
+endif()
 
 install(TARGETS libffi
     EXPORT ${PROJECT_NAME}Targets

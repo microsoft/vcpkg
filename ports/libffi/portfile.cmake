@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libffi/libffi
@@ -20,8 +18,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
 
-# Create pkgconfig file
 set(PACKAGE_VERSION ${VERSION})
 set(prefix "${CURRENT_INSTALLED_DIR}")
 set(exec_prefix "\${prefix}")
@@ -29,9 +28,7 @@ set(libdir "\${prefix}/lib")
 set(toolexeclibdir "\${libdir}")
 set(includedir "\${prefix}/include")
 configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc" @ONLY)
-
-# debug
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+if (NOT VCPKG_BUILD_TYPE)
   set(prefix "${CURRENT_INSTALLED_DIR}/debug")
   set(exec_prefix "\${prefix}")
   set(libdir "\${prefix}/lib")
@@ -39,18 +36,10 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   set(includedir "\${prefix}/../include")
     configure_file("${SOURCE_PATH}/libffi.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc" @ONLY)
 endif()
-
-vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup()
-
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc"
-            "-lffi" "-llibffi")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc"
-            "-lffi" "-llibffi")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc" " -lffi" " -llibffi")
+    if(NOT DEFINED VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc" " -lffi" " -llibffi")
     endif()
 endif()
 vcpkg_fixup_pkgconfig()
