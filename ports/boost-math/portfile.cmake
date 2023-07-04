@@ -6,7 +6,6 @@ vcpkg_from_github(
     REF boost-1.82.0
     SHA512 2788b5cc1ca359544d81c5942465703b11a6c243234adfb4e87a355ebdfdfbd52f99bfab2355b49438bbc0ed4d96d26ac924abd14464519d35099f91bb5129db
     HEAD_REF master
-    PATCHES 001-remove-checks.patch
 )
 
 set(FEATURE_OPTIONS "")

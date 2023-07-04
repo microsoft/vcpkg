@@ -1,0 +1,26 @@
+diff --git a/context/CMakeLists.txt b/context/CMakeLists.txt
+index 98e5ab8dd..45767bcee 100644
+--- a/context/CMakeLists.txt	
++++ b/context/CMakeLists.txt
+@@ -168,7 +168,7 @@ unset(_asm_suffix)
+ 
+ if(BOOST_CONTEXT_IMPLEMENTATION STREQUAL "fcontext")
+ 
+-  set(IMPL_SOURCES ${ASM_SOURCES})
++  set(IMPL_SOURCES "")
+ 
+   if(BOOST_CONTEXT_ASSEMBLER STREQUAL masm AND BOOST_CONTEXT_ARCHITECTURE STREQUAL i386)
+       set_source_files_properties(${ASM_SOURCES} PROPERTIES COMPILE_FLAGS "/safeseh")
+@@ -194,9 +194,12 @@ else()
+   )
+ endif()
+ 
++add_library(boost_context_asm ${ASM_SOURCES})
++
+ add_library(boost_context
+   ${IMPL_SOURCES}
+   ${STACK_TRAITS_SOURCES}
++  $<TARGET_OBJECTS:boost_context_asm>
+ )
+ 
+ add_library(Boost::context ALIAS boost_context)
