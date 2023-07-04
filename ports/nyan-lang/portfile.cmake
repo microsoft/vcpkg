@@ -5,8 +5,8 @@ set(VERSION 0.1)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SFTtech/nyan
-    REF 97ab90a6c878318f613ae0e9a4d60428d589f451
-    SHA512 d2ade03201643198539b19e94cb8ba775fb69c0199a08e7291bd31f616453e8dfd7bfa48302683423e4e1270a412c3da4aa1fe3a5f9c39b8f806dcf7dfe1666a
+    REF v0.3
+    SHA512 0
     HEAD_REF master
 )
 
@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_copy_tools(TOOL_NAMES nyancat AUTO_CLEAN)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/legal/GPLv3 ${SOURCE_PATH}/legal/LGPLv3 ${SOURCE_PATH}/copying.md)
