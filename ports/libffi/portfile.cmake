@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DFFI_CONFIG_FILE=${CMAKE_CURRENT_LIST_DIR}/fficonfig.h"
+        "-DVERSION=${VERSION}"
     OPTIONS_DEBUG
         -DFFI_SKIP_HEADERS=ON
 )
@@ -44,14 +45,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 vcpkg_fixup_pkgconfig()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ffi.h"
-        "   *know* they are going to link with the static library.  */"
-        "   *know* they are going to link with the static library.  */
-
-#define FFI_BUILDING
-"
-    )
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ffi.h" "!defined FFI_BUILDING" "0")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

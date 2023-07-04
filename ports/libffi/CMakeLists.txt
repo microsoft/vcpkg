@@ -1,13 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 project(libffi C ASM)
 
-if(NOT CMAKE_SYSTEM_PROCESSOR)
-    set(CMAKE_SYSTEM_PROCESSOR "${CMAKE_HOST_SYSTEM_PROCESSOR}")
-endif()
-
-# config variables for ffi.h.in
-set(VERSION 3.4.4)
-
 set(KNOWN_PROCESSORS x86 x86_64 amd64 arm arm64 i386 i686 armv7l armv7-a aarch64 mips64el riscv32 riscv64)
 
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" lower_system_processor)
