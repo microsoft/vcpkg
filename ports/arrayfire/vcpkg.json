@@ -42,9 +42,9 @@
     "opencl": {
       "description": "ArrayFire OpenCL backend",
       "dependencies": [
+        "clblast",
         "clfft",
-        "opencl",
-        "clblast"
+        "opencl"
       ]
     },
     "unified": {
