@@ -11,15 +11,17 @@ diff --git a/configure.ac b/configure.ac
 index 61b3266..4c2cfb4 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -49,6 +49,12 @@  [$1]
+@@ -49,6 +49,14 @@  [$1]
  [RESTORE_ENV]
  )dnl
  
++if test "$ac_sys_system" != "Darwin"; then
 +AS_VAR_IF([GNULD], [yes], [
-+  LDFLAGS="-Wl,--enable-new-dtags,-rpath=$vcpkg_rpath"
++  LDFLAGS="-Wl,--enable-new-dtags,-rpath,$vcpkg_rpath"
 +], [
-+  LDFLAGS="-Wl,-rpath=$vcpkg_rpath"
++  LDFLAGS="-Wl,-rpath,$vcpkg_rpath"
 +])
++fi
 +
  dnl PY_CHECK_FUNC(FUNCTION, [INCLUDES], [AC_DEFINE-VAR])
  AC_DEFUN([PY_CHECK_FUNC],
