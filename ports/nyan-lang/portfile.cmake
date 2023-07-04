@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SFTtech/nyan
     REF v0.3
-    SHA512 0
+    SHA512 53411795142aa2dfd197d4e550a9de4f2e68519426a228d7e9fe162e8f113886ae5febbceef8daa643c60a9089ede4b5c8dda9c136617357b58279cc732efba6
     HEAD_REF master
 )
 
