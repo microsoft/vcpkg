@@ -36,10 +36,13 @@ vcpkg_cmake_configure(
         -DSTATIC_MSVCRT=${STATIC_MSVCRT}
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DWITH_JDBC=${WITH_JDBC}  # the following variables are only used by jdbc
-    MAYBE_UNUSED_VARIABLES  # and they are windows only
         -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql"
-        -DMYSQL_LIB_DIR=${CURRENT_INSTALLED_DIR}
-        -DWITH_BOOST=${CURRENT_INSTALLED_DIR}
+        -DMYSQL_LIB_DIR="${CURRENT_INSTALLED_DIR}"
+        -DWITH_BOOST="${CURRENT_INSTALLED_DIR}"
+    MAYBE_UNUSED_VARIABLES  # and they are windows only
+        MYSQL_INCLUDE_DIR
+        MYSQL_LIB_DIR
+        WITH_BOOST
 )
 
 vcpkg_cmake_install()
