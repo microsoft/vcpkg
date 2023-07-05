@@ -16,7 +16,9 @@ vcpkg_from_github(
     REF ${boost_cmake_ref}
     SHA512 ${boost_cmake_sha512}
     HEAD_REF master
-    PATCHES "vcpkg-build.diff"
+    PATCHES 
+      "vcpkg-build.diff"
+      "avoid-recursive-find.diff"
 )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in" "${SOURCE_PATH_CMAKE}/CMakeLists.txt" @ONLY)
