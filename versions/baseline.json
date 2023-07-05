@@ -6257,8 +6257,8 @@
       "port-version": 1
     },
     "pfring": {
-      "baseline": "2019-10-17",
-      "port-version": 4
+      "baseline": "8.4.0",
+      "port-version": 0
     },
     "pfultz2-linq": {
       "baseline": "2019-05-14",
