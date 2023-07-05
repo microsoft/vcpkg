@@ -1,16 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 project(libffi C ASM)
 
-set(CMAKE_SHARED_LIBRARY_PREFIX)
-set(CMAKE_STATIC_LIBRARY_PREFIX)
-
-if(NOT CMAKE_SYSTEM_PROCESSOR)
-    set(CMAKE_SYSTEM_PROCESSOR "${CMAKE_HOST_SYSTEM_PROCESSOR}")
-endif()
-
-# config variables for ffi.h.in
-set(VERSION 3.4.4)
-
 set(KNOWN_PROCESSORS x86 x86_64 amd64 arm arm64 i386 i686 armv7l armv7-a aarch64 mips64el riscv32 riscv64)
 
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" lower_system_processor)
@@ -219,6 +209,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 add_library(libffi ${FFI_SOURCES})
+
+if(CMAKE_STATIC_LIBRARY_PREFIX STREQUAL "lib")
+    set_target_properties(libffi PROPERTIES OUTPUT_NAME ffi)
+endif()
 
 install(TARGETS libffi
     EXPORT ${PROJECT_NAME}Targets
