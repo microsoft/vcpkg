@@ -168,31 +168,19 @@ vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# File conflict with opengl-registry! Make sure headers are similar on Update!
-# angle defines some additional entrypoints.
-# opengl-registry probably needs an upstream update to account for those
-# Due to that all angle headers get moved to include/angle.
-# If you want to use those instead of the onces provided by opengl-registry make sure
-# VCPKG_INSTALLED_DIR/include/angle is before VCPKG_INSTALLED_DIR/include
-file(GLOB_RECURSE angle_includes "${CURRENT_PACKAGES_DIR}/include")
-file(COPY ${angle_includes} DESTINATION "${CURRENT_PACKAGES_DIR}/include/angle")
-
-set(_double_files
-    "include/GLES/egl.h"
-    "include/GLES/gl.h"
-    "include/GLES/glext.h"
-    "include/GLES/glplatform.h"
-    "include/GLES2/gl2.h"
-    "include/GLES2/gl2ext.h"
-    "include/GLES2/gl2platform.h"
-    "include/GLES3/gl3.h"
-    "include/GLES3/gl31.h"
-    "include/GLES3/gl32.h"
-    "include/GLES3/gl3platform.h")
-foreach(_file ${_double_files})
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/${_file}")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/${_file}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+# Remove empty directories inside include directory
+file(GLOB directory_children RELATIVE "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include/*")
+foreach(directory_child ${directory_children})
+    if(IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/${directory_child}")
+        file(GLOB_RECURSE subdirectory_children "${CURRENT_PACKAGES_DIR}/include/${directory_child}/*")
+        if("${subdirectory_children}" STREQUAL "")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${directory_child}")
+        endif()
     endif()
 endforeach()
+unset(subdirectory_children)
+unset(directory_child)
+unset(directory_children)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
