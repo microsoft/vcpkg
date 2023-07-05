@@ -1648,6 +1648,10 @@
       "baseline": "2023-02-02",
       "port-version": 0
     },
+    "coin-or-cbc": {
+      "baseline": "2023-02-01",
+      "port-version": 0
+    },
     "coin-or-cgl": {
       "baseline": "2023-02-01",
       "port-version": 0
