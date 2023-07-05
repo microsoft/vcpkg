@@ -29,9 +29,16 @@ vcpkg_extract_source_archive(
       ${PATCHES}
 )
 
-vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/python3") # port ask python distutils for info.
+vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/python3") # port ask python distutils for info.
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   set(ENV{PYTHONPATH} "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/Lib${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
+endif()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
+    string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp "${_py3_include_path}")
+    set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
+    list(APPEND OPTIONS "PYTHON=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}")
 endif()
 
 vcpkg_find_acquire_program(FLEX)
