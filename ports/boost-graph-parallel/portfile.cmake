@@ -11,5 +11,5 @@ vcpkg_from_github(
 set(FEATURE_OPTIONS "")
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS ${FEATURE_OPTIONS} --trace-expand
 )
