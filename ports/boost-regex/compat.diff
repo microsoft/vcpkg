@@ -12,7 +12,7 @@ index ccd422301..0959c5ab1 100644
 + "src/wide_posix_api.cpp"
 + "src/regex.cpp"
 + "src/regex_debug.cpp"
-+ "static_mutex.cpp"
++ "src/static_mutex.cpp"
 +)
 +
 +add_library(boost_regex "${regex_compat_sources}")
