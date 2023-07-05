@@ -25,15 +25,21 @@ else()
     set(SQLITE_API "")
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS Unused
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        fts5                SQLITE_ENABLE_FTS5
+        math                SQLITE_ENABLE_MATH_FUNCTIONS
+        zlib                WITH_ZLIB
+    INVERTED_FEATURES
+        tool                SQLITE3_SKIP_TOOLS
+)
+vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-effects
     FEATURES
         dbstat              SQLITE_ENABLE_DBSTAT_VTAB
         fts3                SQLITE_ENABLE_FTS3
         fts4                SQLITE_ENABLE_FTS4
-        fts5                SQLITE_ENABLE_FTS5
         memsys3             SQLITE_ENABLE_MEMSYS3
         memsys5             SQLITE_ENABLE_MEMSYS5
-        math                SQLITE_ENABLE_MATH_FUNCTIONS
         limit               SQLITE_ENABLE_UPDATE_DELETE_LIMIT
         rtree               SQLITE_ENABLE_RTREE
         session             SQLITE_ENABLE_SESSION
@@ -56,13 +62,6 @@ endif()
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/sqlite3.pc.in" DESTINATION "${SOURCE_PATH}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/sqlite3-vcpkg-config.h.in" "${SOURCE_PATH}/sqlite3-vcpkg-config.h" @ONLY)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        zlib                WITH_ZLIB
-    INVERTED_FEATURES
-        tool                SQLITE3_SKIP_TOOLS
-)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
