@@ -13,9 +13,8 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/exporters/fluentd"
     OPTIONS
-        -DCMAKE_BUILD_TYPE=Release
-        -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE
         -DBUILD_TESTING=OFF
+        -DBUILD_EXAMPLE=OFF
 )
 
 vcpkg_cmake_install()
