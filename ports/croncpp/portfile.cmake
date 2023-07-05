@@ -1,3 +1,4 @@
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -17,7 +18,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
