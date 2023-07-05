@@ -14,8 +14,6 @@ vcpkg_configure_make(
     AUTOCONFIG
 )
 
-vcpkg_build_make(INSTALL_TARGET libev)
-
 vcpkg_install_make()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
