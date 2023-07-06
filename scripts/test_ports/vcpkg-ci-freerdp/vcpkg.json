@@ -23,14 +23,14 @@
       "features": [
         "ffmpeg"
       ],
-      "platform": "!windows"
+      "platform": "linux | osx"
     },
     {
       "name": "freerdp",
       "features": [
         "urbdrc"
       ],
-      "platform": "!uwp & !xbox & !android"
+      "platform": "linux | osx"
     }
   ]
 }
