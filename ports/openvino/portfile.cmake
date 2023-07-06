@@ -6,7 +6,6 @@ vcpkg_from_github(
     PATCHES
         001-disable-tools.patch
         002-typo-in-default-option-value.patch
-        fix-conflict-error.patch
     HEAD_REF master)
 
 function(ov_checkout_in_path PATH REPO REF SHA512)
@@ -15,6 +14,7 @@ function(ov_checkout_in_path PATH REPO REF SHA512)
         REPO ${REPO}
         REF ${REF}
         SHA512 ${SHA512}
+        PATCHES ${PATCHES}
     )
 
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/${PATH}")
@@ -64,6 +64,7 @@ if(ENABLE_INTEL_CPU)
         openvinotoolkit/oneDNN
         48bf41e04ba8cdccb1e7ad166fecfb329f5f84a1
         8a5ef1ce07545bc28328d1cfd49a8ee8f2ff13c2e393623cb842982b83963881f3d096230805d2a187100c68a2ca30c99add5a975f3f623d9f4a51517c2d585f
+        fix-conflict-error.patch
     )
 
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
