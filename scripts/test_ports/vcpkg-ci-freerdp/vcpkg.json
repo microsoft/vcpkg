@@ -7,8 +7,7 @@
     {
       "name": "freerdp",
       "features": [
-        "server",
-        "urbdrc"
+        "server"
       ]
     },
     {
@@ -25,6 +24,13 @@
         "ffmpeg"
       ],
       "platform": "!windows"
+    },
+    {
+      "name": "freerdp",
+      "features": [
+        "urbdrc"
+      ],
+      "platform": "!uwp & !xbox & !android"
     }
   ]
 }
