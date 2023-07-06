@@ -10,7 +10,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-g-ir-tool-template.in.patch
         0002-cross-build.patch
@@ -21,15 +21,44 @@ vcpkg_extract_source_archive(
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 
-set(OPTIONS_DEBUG -Dbuild_introspection_data=false)
-set(OPTIONS_RELEASE -Dbuild_introspection_data=true)
-if(VCPKG_CROSSCOMPILING AND
-   NOT (CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86"))
-    list(APPEND OPTIONS_RELEASE -Dgi_cross_use_prebuilt_gi=true)
+if(VCPKG_TARGET_IS_WINDOWS)
+    # This is the same check that is used in vcpkg_find_acquire_program(PYTHON3)
+    if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
+        set(_host_arch $ENV{PROCESSOR_ARCHITEW6432})
+    else()
+        set(_host_arch $ENV{PROCESSOR_ARCHITECTURE})
+    endif()
+
+    if(_host_arch MATCHES "(x|X)86")
+        set(_vcpkg_python_host_arch "x86")
+    elseif(_host_arch MATCHES "(amd|AMD)64")
+        set(_vcpkg_python_host_arch "x64")
+    elseif(_host_arch MATCHES "^(ARM|arm)64$")
+        set(_vcpkg_python_host_arch "arm64")
+    else()
+        message(FATAL_ERROR "Unknown architecture ${_host_arch}")
+    endif()
+
+    if("${_vcpkg_python_host_arch}" STREQUAL "${VCPKG_TARGET_ARCHITECTURE}")
+        set(_can_build_introspection_data TRUE)
+    endif()
+else()
+    set(_can_build_introspection_data TRUE)
+endif()
+
+list(APPEND OPTIONS_DEBUG -Dbuild_introspection_data=false)
+if(_can_build_introspection_data)
+    # This option requires running target binaries on host machine)
+    list(APPEND OPTIONS_RELEASE
+        -Dbuild_introspection_data=true
+        -Dgi_cross_use_prebuilt_gi=true
+    )
+else()
+    list(APPEND OPTIONS_RELEASE -Dbuild_introspection_data=false)
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
@@ -49,8 +78,6 @@ vcpkg_install_meson(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
-
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 set(GI_TOOLS
         g-ir-compiler
@@ -74,8 +101,13 @@ foreach(script IN LISTS GI_SCRIPTS)
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")
 endforeach()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB _pyd_lib_files "${CURRENT_PACKAGES_DIR}/lib/gobject-introspection/giscanner/_giscanner.*.lib")
+    file(REMOVE ${_pyd_lib_files})
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 
-set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) # _giscanner.lib
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
