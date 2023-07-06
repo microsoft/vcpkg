@@ -1,6 +1,6 @@
 {
   "name": "croncpp",
-  "version-string": "v2023.03.30",
+  "version-date": "2023-03-30",
   "description": "croncpp is a C++11/14/17 header-only cross-platform library for handling CRON expressions.",
   "homepage": "https://github.com/mariusbancila/croncpp",
   "license": "MIT",
