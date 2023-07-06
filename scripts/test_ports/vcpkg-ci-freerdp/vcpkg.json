@@ -1,0 +1,24 @@
+{
+  "name": "vcpkg-ci-freerdp",
+  "version-string": "ci",
+  "description": "Port to force features of certain ports within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "dependencies": [
+    {
+      "name": "freerdp",
+      "features": [
+        "ffmpeg",
+        "server",
+        "urbdrc"
+      ]
+    },
+    {
+      "name": "freerdp",
+      "features": [
+        "wayland",
+        "x11"
+      ],
+      "platform": "linux"
+    }
+  ]
+}
