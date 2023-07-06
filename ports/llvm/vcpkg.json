@@ -305,6 +305,18 @@
         }
       ]
     },
+    "enable-mlir-python-bindings": {
+      "description": "Build MLIR Python bindings.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "mlir"
+          ]
+        }
+      ]
+    },
     "openmp": {
       "description": "Include LLVM OpenMP libraries.",
       "dependencies": [

@@ -146,6 +146,11 @@ if("lldb" IN_LIST FEATURES)
 endif()
 if("mlir" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "mlir")
+    if("enable-mlir-python-bindings" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS
+            -DMLIR_ENABLE_BINDINGS_PYTHON=ON
+        )
+    endif()
 endif()
 if("openmp" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "openmp")
