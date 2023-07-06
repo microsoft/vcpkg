@@ -41,7 +41,8 @@
       ]
     },
     "server": {
-      "description": "Build server components"
+      "description": "Build server components",
+      "supports": "!android & !ios & !uwp"
     },
     "urbdrc": {
       "description": "USB redirection channel support",
