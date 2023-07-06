@@ -1,0 +1,17 @@
+diff --git a/liveMedia/MPEGVideoStreamFramer.cpp b/liveMedia/MPEGVideoStreamFramer.cpp
+index 59c4656..7667a33 100644
+--- a/liveMedia/MPEGVideoStreamFramer.cpp
++++ b/liveMedia/MPEGVideoStreamFramer.cpp
+@@ -129,7 +129,11 @@ void MPEGVideoStreamFramer
+     fPictureTimeBase = fFrameRate == 0.0 ? 0.0 : tc.pictures/fFrameRate;
+     fTcSecsBase = (((tc.days*24)+tc.hours)*60+tc.minutes)*60+tc.seconds;
+     fHaveSeenFirstTimeCode = True;
+-  } else if (fCurGOPTimeCode == fPrevGOPTimeCode) {
++  } else if (fCurGOPTimeCode.days == fPrevGOPTimeCode.days
++             && fCurGOPTimeCode.hours == fPrevGOPTimeCode.hours
++             && fCurGOPTimeCode.minutes == fPrevGOPTimeCode.minutes
++             && fCurGOPTimeCode.seconds == fPrevGOPTimeCode.seconds
++             && fCurGOPTimeCode.pictures == fPrevGOPTimeCode.pictures) {
+     // The time code has not changed since last time.  Adjust for this:
+     fPicturesAdjustment += picturesSinceLastGOP;
+   } else {
