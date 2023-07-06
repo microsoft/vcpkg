@@ -88,6 +88,9 @@ endif()
 
 set(ENET_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/enet)
 
+configure_file ("${CMAKE_SOURCE_DIR}/libenet.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libenet.pc" @ONLY)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/libenet.pc" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
+
 install(TARGETS enet EXPORT unofficial-enet-config
                      ARCHIVE DESTINATION lib
                      LIBRARY DESTINATION lib
