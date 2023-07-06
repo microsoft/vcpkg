@@ -19,7 +19,6 @@ endif()
 
 file(GLOB BASIC_USAGE_ENVIRONMENT_SRCS BasicUsageEnvironment/*.c BasicUsageEnvironment/*.cpp)
 add_library(BasicUsageEnvironment ${BASIC_USAGE_ENVIRONMENT_SRCS})
-target_compile_features(BasicUsageEnvironment PUBLIC cxx_auto_type)
 
 file(GLOB GROUPSOCK_SRCS groupsock/*.c groupsock/*.cpp)
 add_library(groupsock ${GROUPSOCK_SRCS})
