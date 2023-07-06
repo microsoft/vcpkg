@@ -17,6 +17,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DFLEX_ROOT=${FLEX_PATH}"
+        -DCMAKE_POLICY_DEFAULT_CMP0074=NEW
 )
 
 vcpkg_cmake_install()
