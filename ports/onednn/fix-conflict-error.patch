@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index fb43030..8f9238e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -199,7 +199,7 @@ foreach(header ${HEADERS_ROOT})
+     install(FILES ${header} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/")
+ endforeach()
+ foreach(header ${HEADERS_SUBDIR})
+-    install(FILES ${header} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/oneapi/dnnl/")
++    install(FILES ${header} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/oneapi/dnnl/dnnl/")
+ endforeach()
+ 
+ # Write version and package config files
