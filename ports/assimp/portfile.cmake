@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 ac0dc4243f9d1ff077966f0037187b4374075ac97e75e1a3cd6bdc1caf5f8e4d40953d9a8a316480969c09524d87daa9d3ed75e6ac6f037dd5b1c5f25fce3afb
     HEAD_REF master
     PATCHES
+        bugfix_4686.patch
         build_fixes.patch
 )
 
