@@ -427,7 +427,6 @@ freeopcua:arm-neon-android=fail
 freeopcua:arm64-android=fail
 freeopcua:arm64-windows=fail
 freeopcua:x64-android=fail
-freerdp:x64-android=fail
 fruit:arm-neon-android=fail
 fruit:arm64-android=fail
 fruit:x64-android=fail
