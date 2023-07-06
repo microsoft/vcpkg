@@ -24,12 +24,10 @@
       "platform": "!windows"
     }
   ],
-  "default-features": [
-    "ffmpeg"
-  ],
   "features": {
     "ffmpeg": {
       "description": "Enable image scaling, video and audio with ffmpeg",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "ffmpeg",
