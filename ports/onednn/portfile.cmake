@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF v3.1.1
     SHA512 0dae0ccff1e459ce24356694732bf4ee3c459469de70984863e1aed3bc965471793a110dedbb11f2baa762749cea7652a150d2f9a442c299d9ffa00febd87fec
     HEAD_REF master
-    PATCHES
-        fix-conflict-error.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)

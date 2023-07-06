@@ -1,0 +1,13 @@
+diff --git a/src/plugins/intel_cpu/thirdparty/onednn/src/CMakeLists.txt b/src/plugins/intel_cpu/thirdparty/onednn/src/CMakeLists.txt
+index be89cf5..6be4c1a 100644
+--- a/src/plugins/intel_cpu/thirdparty/onednn/src/CMakeLists.txt
++++ b/src/plugins/intel_cpu/thirdparty/onednn/src/CMakeLists.txt
+@@ -216,7 +216,7 @@ foreach(header ${HEADERS_ROOT})
+     install(FILES ${header} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/")
+ endforeach()
+ foreach(header ${HEADERS_SUBDIR})
+-    install(FILES ${header} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/oneapi/dnnl/")
++    install(FILES ${header} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/oneapi/dnnl/header/")
+ endforeach()
+ 
+ # Write version and package config files
