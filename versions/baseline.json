@@ -1885,7 +1885,7 @@
       "port-version": 0
     },
     "croncpp": {
-      "baseline": "v2023.03.30",
+      "baseline": "2023-03-30",
       "port-version": 0
     },
     "crossguid": {
