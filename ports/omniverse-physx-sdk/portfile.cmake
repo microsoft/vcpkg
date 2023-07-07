@@ -6,6 +6,9 @@
 # for many platforms so the old one will continue to be community maintained to support all previous platforms.
 ###############################################################################################################
 
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/physx/copyright")
+    message(FATAL_ERROR "'${PORT}' conflicts with 'physx'. Please remove physx:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA-Omniverse/PhysX

@@ -1,3 +1,7 @@
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/omniverse-physx-sdk/copyright")
+    message(FATAL_ERROR "'${PORT}' conflicts with 'omniverse-physx-sdk'. Please remove omniverse-physx-sdk:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
+
 vcpkg_download_distfile(
     patch1
     URLS "https://github.com/NVIDIAGameWorks/PhysX/commit/ada4fccf04e5a5832af1353d6d1f91de691aa47d.patch"
