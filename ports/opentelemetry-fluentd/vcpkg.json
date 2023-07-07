@@ -5,7 +5,6 @@
   "description": "mdsd/fluentd exporter for OpenTelemetry C++",
   "homepage": "https://github.com/open-telemetry/opentelemetry-cpp-contrib/tree/main/exporters",
   "license": "Apache-2.0",
-  "supports": "!windows & !uwp",
   "dependencies": [
     "curl",
     "nlohmann-json",
@@ -20,3 +19,4 @@
     }
   ]
 }
+g
