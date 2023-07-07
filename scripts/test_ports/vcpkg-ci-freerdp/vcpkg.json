@@ -29,7 +29,8 @@
     {
       "name": "freerdp",
       "features": [
-        "server"
+        "server",
+        "winpr-tools"
       ],
       "platform": "linux | osx | windows"
     }

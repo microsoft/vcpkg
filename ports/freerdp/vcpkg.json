@@ -57,6 +57,10 @@
         "wayland"
       ]
     },
+    "winpr-tools": {
+      "description": "Build winpr tools",
+      "supports": "!android & !ios & !uwp"
+    },
     "x11": {
       "description": "Enable X11 support",
       "supports": "!windows & !android & !ios",

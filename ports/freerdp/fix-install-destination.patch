@@ -1,3 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8894a58..d2f8b2f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -960,6 +960,9 @@ else()
+ 	set(FREERDP_LIBRARY_PATH "${CMAKE_INSTALL_LIBDIR}")
+ 	set(FREERDP_PLUGIN_PATH "${CMAKE_INSTALL_LIBDIR}/freerdp${FREERDP_VERSION_MAJOR}")
+ endif()
++set(FREERDP_DATA_PATH "share/freerdp")
++set(FREERDP_LIBRARY_PATH "${CMAKE_INSTALL_LIBDIR}")
++set(FREERDP_PLUGIN_PATH "${CMAKE_INSTALL_LIBDIR}/freerdp${FREERDP_VERSION_MAJOR}")
+ set(FREERDP_ADDIN_PATH "${FREERDP_PLUGIN_PATH}")
+ 
+ # Path to put extensions
 diff --git a/client/Windows/CMakeLists.txt b/client/Windows/CMakeLists.txt
 index 6274571..b0a5d27 100644
 --- a/client/Windows/CMakeLists.txt
@@ -63,6 +77,19 @@ index c94a209..7c533b7 100644
  if (WITH_DEBUG_SYMBOLS AND MSVC AND BUILD_SHARED_LIBS)
      get_target_property(OUTPUT_FILENAME ${MODULE_NAME} OUTPUT_NAME)
      install(FILES ${CMAKE_PDB_BINARY_DIR}/${OUTPUT_FILENAME}.pdb DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT symbols)
+diff --git a/server/shadow/CMakeLists.txt b/server/shadow/CMakeLists.txt
+index 3e0df0b..e54fb04 100644
+--- a/server/shadow/CMakeLists.txt
++++ b/server/shadow/CMakeLists.txt
+@@ -86,7 +86,7 @@ if (WITH_LIBRARY_VERSIONING)
+ 	  set_target_properties(${MODULE_NAME} PROPERTIES VERSION ${FREERDP_VERSION} SOVERSION ${FREERDP_API_VERSION})
+ endif()
+ 
+-install(TARGETS ${MODULE_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT server EXPORT FreeRDP-ShadowTargets)
++install(TARGETS ${MODULE_NAME} COMPONENT server EXPORT FreeRDP-ShadowTargets)
+ 
+ if (WITH_DEBUG_SYMBOLS AND MSVC)
+ 	get_target_property(OUTPUT_FILENAME ${MODULE_NAME} OUTPUT_NAME)
 diff --git a/winpr/libwinpr/CMakeLists.txt b/winpr/libwinpr/CMakeLists.txt
 index 2df8d89..da23a1b 100644
 --- a/winpr/libwinpr/CMakeLists.txt

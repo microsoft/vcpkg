@@ -8,6 +8,8 @@ vcpkg_from_github(
         DontInstallSystemRuntimeLibs.patch
         fix-include-path.patch
         fix-install-destination.patch
+        wfreerdp-server-cli.patch
+        pr-7060-jni-onload.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindOpenSSL.cmake")
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
@@ -23,6 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         server  WITH_SERVER
     	urbdrc  CHANNEL_URBDRC
         wayland WITH_WAYLAND
+        winpr-tools WITH_WINPR_TOOLS
         x11     WITH_X11
 )
 
@@ -52,17 +55,29 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-set(tools winpr-hash winpr-makecert)
+vcpkg_list(SET tools)
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND tools wfreerdp)
+    if("server" IN_LIST FEATURES)
+        list(APPEND tools wfreerdp-server)
+    endif()
 elseif(VCPKG_TARGET_IS_OSX)
-    list(APPEND tools mfreerdp)
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/client/Mac/cli/MacFreeRDP.app"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
+    )
+    list(APPEND tools MacFreeRDP)
+    if("server" IN_LIST FEATURES)
+        list(APPEND tools mfreerdp-server)
+    endif()
 endif()
 if("wayland" IN_LIST FEATURES)
     list(APPEND tools wlfreerdp)
 endif()
 if("x11" IN_LIST FEATURES)
     list(APPEND tools xfreerdp)
+endif()
+if("winpr-tools" IN_LIST FEATURES)
+    list(APPEND tools winpr-hash winpr-makecert)
 endif()
 if("server" IN_LIST FEATURES)
     list(APPEND tools freerdp-proxy freerdp-shadow-cli)
@@ -73,7 +88,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Client2 PACKAGE_NAME free
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/WinPR2 PACKAGE_NAME winpr2 DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP2 PACKAGE_NAME freerdp)
 
-vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
+if(tools)
+    vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
+endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" ".")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_PACKAGES_DIR}/" "")

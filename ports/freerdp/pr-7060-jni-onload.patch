@@ -1,0 +1,89 @@
+diff --git a/client/Android/android_freerdp.c b/client/Android/android_freerdp.c
+index 0fd987f446e..014c4d4db96 100644
+--- a/client/Android/android_freerdp.c
++++ b/client/Android/android_freerdp.c
+@@ -1093,7 +1093,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
+ 	(*env)->RegisterNatives(env, activityClass, methods, sizeof(methods) / sizeof(methods[0]));
+ 	/* create global reference for class */
+ 	gJavaActivityClass = (*env)->NewGlobalRef(env, activityClass);
++
+ 	g_JavaVm = vm;
++	winpr_set_java_vm((void*)vm);
++
+ 	return init_callback_environment(vm, env);
+ }
+ 
+diff --git a/winpr/include/winpr/sysinfo.h b/winpr/include/winpr/sysinfo.h
+index c14e999d970..7af615947bd 100644
+--- a/winpr/include/winpr/sysinfo.h
++++ b/winpr/include/winpr/sysinfo.h
+@@ -344,6 +344,20 @@ extern "C"
+ #define PF_SSE_INSTRUCTIONS_AVAILABLE PF_XMMI_INSTRUCTIONS_AVAILABLE
+ #define PF_SSE2_INSTRUCTIONS_AVAILABLE PF_XMMI64_INSTRUCTIONS_AVAILABLE
+ 
++#ifdef ANDROID
++
++	/*
++	 * Call winpr_set_java_vm() from JNI_OnLoad in a shared library:
++	 * JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
++	 * and then call winpr_get_java_vm to obtain the JavaVM* handle.
++	 * The functions use void* to avoid including jni.h in exported headers.
++	 */
++
++	WINPR_API void winpr_set_java_vm(void* vm);
++	WINPR_API void* winpr_get_java_vm();
++
++#endif
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/winpr/libwinpr/sysinfo/sysinfo.c b/winpr/libwinpr/sysinfo/sysinfo.c
+index dd15bb374e2..a4d0ddf90cc 100644
+--- a/winpr/libwinpr/sysinfo/sysinfo.c
++++ b/winpr/libwinpr/sysinfo/sysinfo.c
+@@ -988,3 +988,20 @@ BOOL IsProcessorFeaturePresentEx(DWORD ProcessorFeature)
+ #endif
+ 	return ret;
+ }
++
++#ifdef ANDROID
++
++#include <jni.h>
++static JavaVM* g_JavaVM = NULL;
++
++void winpr_set_java_vm(void* vm)
++{
++	g_JavaVM = (JavaVM*)vm;
++}
++
++void* winpr_get_java_vm()
++{
++	return (void*)g_JavaVM;
++}
++
++#endif
+diff --git a/winpr/libwinpr/timezone/timezone.c b/winpr/libwinpr/timezone/timezone.c
+index b29ecab33dd..c42928d6738 100644
+--- a/winpr/libwinpr/timezone/timezone.c
++++ b/winpr/libwinpr/timezone/timezone.c
+@@ -151,18 +151,12 @@ static char* winpr_get_timezone_from_link(void)
+ 
+ #if defined(ANDROID)
+ #include <jni.h>
+-static JavaVM* jniVm = NULL;
+-
+-JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
+-{
+-	jniVm = vm;
+-	return JNI_VERSION_1_6;
+-}
+ 
+ static char* winpr_get_android_timezone_identifier(void)
+ {
+ 	char* tzid = NULL;
+ 	JNIEnv* jniEnv;
++	JavaVM* jniVm = (JavaVM*)winpr_get_java_vm();
+ 
+ 	/* Preferred: Try to get identifier from java TimeZone class */
+ 	if (jniVm && ((*jniVm)->GetEnv(jniVm, (void**)&jniEnv, JNI_VERSION_1_6) == JNI_OK))
