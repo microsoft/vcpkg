@@ -8,7 +8,7 @@ vcpkg_from_github(
         002-typo-in-default-option-value.patch
     HEAD_REF master)
 
-function(ov_checkout_in_path PATH REPO REF SHA512)
+function(ov_checkout_in_path PATH REPO REF SHA512 PATCHES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO ${REPO}
@@ -50,6 +50,7 @@ if(ENABLE_INTEL_GPU)
             oneapi-src/oneDNN
             f27dedbfc093f51032a4580198bb80579440dc15
             882eb42e31490df1b35b5e55bef1be8452b710b7a16f5ad648961510abd288e16dbd783e0163aab9dd161fd3a9bd836b0f4afc82b14043d80d1dad9c3400af1b
+            ""
         )
     endif()
 

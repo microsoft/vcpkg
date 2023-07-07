@@ -1,7 +1,7 @@
-diff --git a/src/plugins/intel_cpu/thirdparty/onednn/src/CMakeLists.txt b/src/plugins/intel_cpu/thirdparty/onednn/src/CMakeLists.txt
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index be89cf5..6be4c1a 100644
---- a/src/plugins/intel_cpu/thirdparty/onednn/src/CMakeLists.txt
-+++ b/src/plugins/intel_cpu/thirdparty/onednn/src/CMakeLists.txt
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
 @@ -216,7 +216,7 @@ foreach(header ${HEADERS_ROOT})
      install(FILES ${header} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/")
  endforeach()
