@@ -26,12 +26,6 @@
         "bzip2"
       ]
     },
-    "jemalloc": {
-      "description": "build with JeMalloc",
-      "dependencies": [
-        "jemalloc"
-      ]
-    },
     "liburing": {
       "description": "build with liburing",
       "dependencies": [
