@@ -1,12 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF azure-identity_1.5.1
-    SHA512 f3e12c0685ec7a1cde724feafbc84a8aa66688ed7b54bb9c4787d516aee3142310863013a5d49869e1a1e64af8f5ce908640fee64190bc9c2f9715e3afa833bc
+    REF azure-core-amqp_1.0.0-beta.1
+    SHA512 4fc520c546cd395d4c50a9385d33db09b50865046b5383b1442057d4ac78ffc6a6be221af6aef3dcb938ffde1927e8de4270d5b1c9cf5d97ac8b1581b51d014b
+    PATCHES
+        00100-fix_dependency.patch
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/sdk/identity/azure-identity/"
+    SOURCE_PATH "${SOURCE_PATH}/sdk/core/azure-core-amqp/"
     OPTIONS
         -DWARNINGS_AS_ERRORS=OFF
         -DBUILD_TESTING=OFF
