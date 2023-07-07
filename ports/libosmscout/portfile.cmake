@@ -6,23 +6,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-	vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-		cairo OSMDCOUT_BUILD_MAP_CAIRO
-		directx OSMDCOUT_BUILD_MAP_DIRECTX
-		gdi OSMDCOUT_BUILD_MAP_GDI
-		svg OSMDCOUT_BUILD_MAP_SVG
-	)
-else()
-	vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-		cairo OSMDCOUT_BUILD_MAP_CAIRO
-		svg OSMDCOUT_BUILD_MAP_SVG
-	)
-	list(APPEND FEATURE_OPTIONS -DOSMDCOUT_BUILD_MAP_DIRECTX=OFF -DOSMDCOUT_BUILD_MAP_GDI=OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
+    cairo   OSMSCOUT_BUILD_MAP_CAIRO
+    directx OSMSCOUT_BUILD_MAP_DIRECTX
+    gdi     OSMSCOUT_BUILD_MAP_GDI
+    svg     OSMSCOUT_BUILD_MAP_SVG
+    qt5      OSMSCOUT_BUILD_MAP_QT
+)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    WINDOWS_USE_MSBUILD
     OPTIONS
         -DOSMSCOUT_BUILD_DEMOS=OFF
         -DOSMSCOUT_BUILD_TOOL_DUMPDATA=OFF
@@ -33,15 +27,14 @@ vcpkg_configure_cmake(
         -DOSMSCOUT_BUILD_TOOL_STYLEEDITOR=OFF
         -DOSMSCOUT_BUILD_EXTERN_MATLAB=OFF
         -DOSMSCOUT_BUILD_TESTS=OFF
-        -DOSMDCOUT_BUILD_MAP_QT=OFF
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_tools(TOOL_NAMES Import AUTO_CLEAN)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libosmscout)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libosmscout)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

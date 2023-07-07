@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9edc0a68..af786821 100644
+index 35365b27..53c5fffd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -25,7 +25,7 @@ option(WITH_DEBUG_SYMBOLS "With debug symbols" ON)
- option(WITH_THRIFT "With thrift framed protocol supported" OFF)
+@@ -26,7 +26,7 @@ option(WITH_THRIFT "With thrift framed protocol supported" OFF)
  option(WITH_SNAPPY "With snappy" OFF)
+ option(WITH_RDMA "With RDMA" OFF)
  option(BUILD_UNIT_TESTS "Whether to build unit tests" OFF)
 -option(BUILD_BRPC_TOOLS "Whether to build brpc tools" ON)
 +option(BUILD_BRPC_TOOLS "Whether to build brpc tools" OFF)
  option(DOWNLOAD_GTEST "Download and build a fresh copy of googletest. Requires Internet access." ON)
  
  # Enable MACOSX_RPATH. Run "cmake --help-policy CMP0042" for policy details.
-@@ -65,7 +65,8 @@ endif()
+@@ -66,7 +66,8 @@ endif()
  
  if(WITH_THRIFT)
      set(THRIFT_CPP_FLAG "-DENABLE_THRIFT_FRAMED_PROTOCOL")
@@ -20,8 +20,8 @@ index 9edc0a68..af786821 100644
 +    set(THRIFT_LIB "thrift::thrift")
  endif()
  
- include(GNUInstallDirs)
-@@ -144,11 +145,14 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+ set(WITH_RDMA_VAL "0")
+@@ -150,14 +151,14 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
      endif()
  endif()
  
@@ -33,13 +33,16 @@ index 9edc0a68..af786821 100644
  
 -find_path(LEVELDB_INCLUDE_PATH NAMES leveldb/db.h)
 -find_library(LEVELDB_LIB NAMES leveldb)
+-if ((NOT LEVELDB_INCLUDE_PATH) OR (NOT LEVELDB_LIB))
+-    message(FATAL_ERROR "Fail to find leveldb")
+-endif()
 +find_package(leveldb CONFIG REQUIRED)
 +set(LEVELDB_INCLUDE_PATH ${PROTOBUF_INCLUDE_DIR})
 +set(LEVELDB_LIB leveldb::leveldb)
- if ((NOT LEVELDB_INCLUDE_PATH) OR (NOT LEVELDB_LIB))
-     message(FATAL_ERROR "Fail to find leveldb")
- endif()
-@@ -163,8 +167,9 @@ if(WITH_SNAPPY)
+ 
+ if(WITH_SNAPPY)
+     find_path(SNAPPY_INCLUDE_PATH NAMES snappy.h)
+@@ -169,8 +170,9 @@ if(WITH_SNAPPY)
  endif()
  
  if(WITH_GLOG)
@@ -51,8 +54,8 @@ index 9edc0a68..af786821 100644
      if((NOT GLOG_INCLUDE_PATH) OR (NOT GLOG_LIB))
          message(FATAL_ERROR "Fail to find glog")
      endif()
-@@ -182,7 +187,7 @@ if(WITH_MESALINK)
-     include_directories(${MESALINK_INCLUDE_PATH})
+@@ -197,7 +199,7 @@ if(WITH_RDMA)
+     endif()
  endif()
  
 -find_library(PROTOC_LIB NAMES protoc)
@@ -60,7 +63,7 @@ index 9edc0a68..af786821 100644
  if(NOT PROTOC_LIB)
      message(FATAL_ERROR "Fail to find protoc lib")
  endif()
-@@ -193,7 +198,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+@@ -208,7 +210,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
          )
  endif()
  
@@ -69,7 +72,7 @@ index 9edc0a68..af786821 100644
  
  include_directories(
          ${GFLAGS_INCLUDE_PATH}
-@@ -208,9 +213,9 @@ set(DYNAMIC_LIB
+@@ -223,9 +225,9 @@ set(DYNAMIC_LIB
      ${LEVELDB_LIB}
      ${PROTOC_LIB}
      ${CMAKE_THREAD_LIBS_INIT}
@@ -97,7 +100,7 @@ index dfad5fd8..8423d55a 100644
    set(GFLAGS_FOUND TRUE)
  endif(GFLAGS_INCLUDE_PATH AND GFLAGS_LIBRARY)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index fbcc7cc5..1c61c4ce 100644
+index fbcc7cc5..c2d0d7bb 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -31,16 +31,24 @@ add_dependencies(SOURCES_LIB PROTO_LIB)
@@ -126,7 +129,7 @@ index fbcc7cc5..1c61c4ce 100644
  # for protoc-gen-mcpack
  set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/output/bin)
      
-@@ -49,35 +57,58 @@ set(protoc_gen_mcpack_SOURCES
+@@ -49,35 +57,57 @@ set(protoc_gen_mcpack_SOURCES
   )
      
  add_executable(protoc-gen-mcpack ${protoc_gen_mcpack_SOURCES})
@@ -136,7 +139,7 @@ index fbcc7cc5..1c61c4ce 100644
      add_library(brpc-shared SHARED $<TARGET_OBJECTS:BUTIL_LIB> 
                                     $<TARGET_OBJECTS:SOURCES_LIB>
                                     $<TARGET_OBJECTS:PROTO_LIB>)
-     target_link_libraries(brpc-shared ${DYNAMIC_LIB})
+-    target_link_libraries(brpc-shared ${DYNAMIC_LIB})
 +    target_include_directories(brpc-shared PUBLIC $<INSTALL_INTERFACE:include>)
      if(BRPC_WITH_GLOG)
          target_link_libraries(brpc-shared ${GLOG_LIB})

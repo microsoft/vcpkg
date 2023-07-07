@@ -1,20 +1,17 @@
 {
   "name": "liblas",
   "version": "1.8.1",
-  "port-version": 11,
+  "port-version": 13,
   "description": "A C/C++ library for reading and writing the very common LAS LiDAR format.",
   "license": null,
   "supports": "!arm & !staticcrt",
   "dependencies": [
-    "boost-detail",
-    "boost-filesystem",
+    "boost-foreach",
     "boost-interprocess",
     "boost-iostreams",
     "boost-lambda",
-    "boost-multi-index",
     "boost-program-options",
-    "boost-system",
-    "boost-thread",
+    "boost-property-tree",
     "boost-uuid",
     "libgeotiff",
     {

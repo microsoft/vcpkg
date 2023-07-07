@@ -1,9 +1,9 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://live555.com/liveMedia/public/live.2023.01.19.tar.gz"
-    FILENAME "live.2023.01.19.tar.gz"
-    SHA512 155c38097d37864978d6b68bf0a7268a9cc88160ebbe679ca5654bd925c5400ef5f74aa6307f53c9584a4611d914d0c8edd275b66b7ca9a66be6591a5b5a8f4f
+    URLS "http://live555.com/liveMedia/public/live.2023.06.10.tar.gz"
+    FILENAME "live.2023.06.10.tar.gz"
+    SHA512 634f90db6339ebef6c6bc28f382034150e04e1bcc26d651da8823de7ed8a62bd648737fdf8be0c2734ba17a2516033af48e85b256170eaf30a2c484ede2d2004
 )
 
 vcpkg_extract_source_archive(

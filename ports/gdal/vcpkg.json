@@ -1,7 +1,7 @@
 {
   "name": "gdal",
-  "version-semver": "3.6.2",
-  "port-version": 2,
+  "version-semver": "3.7.0",
+  "port-version": 4,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -13,8 +13,17 @@
       "name": "pkgconf",
       "host": true
     },
-    "proj",
-    "tiff",
+    {
+      "name": "proj",
+      "default-features": false,
+      "features": [
+        "tiff"
+      ]
+    },
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

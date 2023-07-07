@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.81.0",
+    $version = "1.82.0",
     $portsDir = $null
 )
 
@@ -22,11 +22,10 @@ else {
 }
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 1
+$defaultPortVersion = 2
 $portVersions = @{
-    #e.g. "boost-asio" = 1;
-    "boost-locale" = 2;
-    "boost-vcpkg-helpers" = 2;
+    "boost-atomic" = 3;
+    "boost-modular-build-helper" = 3;
 }
 
 function Get-PortVersion {
@@ -92,11 +91,8 @@ $portData = @{
         };
     };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
-    "boost-stacktrace"       = @{ "supports" = "!uwp" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-coroutine2"       = @{ "supports" = "!emscripten" };
-    "boost-test"             = @{ "supports" = "!uwp" };
-    "boost-wave"             = @{ "supports" = "!uwp" };
     "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
     "boost-locale"           = @{
         "dependencies" = @(@{ "name" = "libiconv"; "platform" = "!uwp & !windows & !mingw" });
@@ -148,6 +144,7 @@ $portData = @{
             }
         }
     };
+    "boost-random"           = @{ "supports" = "!uwp" };
     "boost-regex"            = @{
         "features" = @{
             "icu" = @{
@@ -156,6 +153,9 @@ $portData = @{
             }
         }
     }
+    "boost-stacktrace"       = @{ "supports" = "!uwp" };
+    "boost-test"             = @{ "supports" = "!uwp" };
+    "boost-wave"             = @{ "supports" = "!uwp" };
 }
 
 function GeneratePortName() {
@@ -178,17 +178,6 @@ function GeneratePortDependency() {
     }
 }
 
-function MakePortVersionString() {
-    param (
-        [string]$PortName
-    )
-    $thisPortVersion = Get-PortVersion $PortName
-    if ($thisPortVersion -ne 0) {
-        return $version + '#' + $thisPortVersion
-    }
-
-    return $version
-}
 
 function AddBoostVersionConstraints() {
     param (
@@ -199,14 +188,14 @@ function AddBoostVersionConstraints() {
     foreach ($dependency in $Dependencies) {
         if ($dependency.Contains("name")) {
             if ($dependency.name.StartsWith("boost")) {
-                $dependency["version>="] = MakePortVersionString $dependency.name
+                $dependency["version>="] = $version
             }
         }
         else {
             if ($dependency.StartsWith("boost")) {
                 $dependency = @{
                     "name"       = $dependency
-                    "version>="  = MakePortVersionString $dependency
+                    "version>="  = $version
                 }
             }
         }

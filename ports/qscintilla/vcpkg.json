@@ -1,22 +1,20 @@
 {
   "name": "qscintilla",
-  "version": "2.12.0",
-  "port-version": 1,
+  "version": "2.13.4",
+  "port-version": 2,
   "description": "QScintilla is a port to Qt of the Scintilla editing component. Features syntax highlighting, code-completion and much more (Barebone build without python bindings (missing dependeny PyQt) and without QtDesigner plugin)",
   "homepage": "https://www.riverbankcomputing.com/software/qscintilla",
-  "supports": "!(windows & (arm | arm64))",
+  "license": "GPL-3.0-or-later",
+  "supports": "!xbox",
   "dependencies": [
     {
-      "name": "qt5-base",
+      "name": "qtbase",
       "default-features": false
     },
     {
-      "name": "qt5-macextras",
-      "platform": "osx"
-    },
-    {
-      "name": "qt5-winextras",
-      "platform": "windows"
+      "name": "vcpkg-qmake",
+      "host": true,
+      "default-features": false
     }
   ]
 }

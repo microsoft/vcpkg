@@ -1,11 +1,11 @@
 {
   "name": "gstreamer",
   "version": "1.20.5",
-  "port-version": 1,
+  "port-version": 10,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
-  "supports": "!uwp",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     "glib",
     {
@@ -83,10 +83,41 @@
         "libass"
       ]
     },
+    "bzip2-bad": {
+      "description": "Enable bzip2 stream compression in bad plugins",
+      "dependencies": [
+        "bzip2",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        }
+      ]
+    },
+    "bzip2-good": {
+      "description": "Enable bzip2 stream compression in good plugins",
+      "dependencies": [
+        "bzip2",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-good"
+          ]
+        }
+      ]
+    },
     "cairo": {
       "description": "Enable support for the cairo graphics library",
       "dependencies": [
-        "cairo",
+        {
+          "name": "cairo",
+          "features": [
+            "gobject"
+          ]
+        },
         {
           "name": "gstreamer",
           "default-features": false,
@@ -259,7 +290,16 @@
       ]
     },
     "gpl": {
-      "description": "Allow build of plugins that have (A)GPL-licensed dependencies"
+      "description": "Allow build of plugins that have (A)GPL-licensed dependencies",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
+      ]
     },
     "jpeg": {
       "description": "Enable support for the JPEG file format",
@@ -273,6 +313,22 @@
           ]
         },
         "libjpeg-turbo"
+      ]
+    },
+    "libav": {
+      "description": "libav plugins",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
       ]
     },
     "libde265": {
@@ -340,6 +396,13 @@
           "default-features": false,
           "features": [
             "tools"
+          ]
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
           ]
         }
       ]

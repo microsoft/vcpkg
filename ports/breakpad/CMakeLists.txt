@@ -24,13 +24,13 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL Android)
     file(GLOB_RECURSE LIBBREAKPAD_SOURCES src/processor/*.cc)
     if(WIN32)
         list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-            "_unittest|synth_minidump|/tests|/testdata|/linux|/mac|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+            "_unittest|_selftest|synth_minidump|/tests|/testdata|/linux|/mac|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
     elseif(APPLE)
         list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-            "_unittest|synth_minidump|/tests|/testdata|/linux|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+            "_unittest|_selftest|synth_minidump|/tests|/testdata|/linux|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
     else()
         list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-            "_unittest|synth_minidump|/tests|/testdata|/mac|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+            "_unittest|_selftest|synth_minidump|/tests|/testdata|/mac|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
     endif()
 
     find_library(LIBDISASM_LIB NAMES libdisasmd libdisasm)
@@ -192,7 +192,7 @@ if(INSTALL_HEADERS)
     if(WIN32)
         set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/mac|/solaris|/android|/dwarf|/tests|/testdata|/unittests")
     elseif(APPLE)
-        set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/windows|/solaris|/android|/dwarf|/tests|/testdata|/unittests|/sender|/testapp|/*proj|/gcov")
+        set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/windows|/solaris|/android|/dwarf|/tests|/testdata|/unittests|/sender|/testapp|\.xcodeproj|/gcov")
     else()
         set(HEADER_EXCLUDE_REGEX "/apple|/ios|/windows|/mac|/solaris|/android|/dwarf|/tests|/testdata|/unittests")
         install(

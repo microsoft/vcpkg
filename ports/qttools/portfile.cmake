@@ -1,7 +1,8 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES)
+set(${PORT}_PATCHES
+    devendor-litehtml.patch)
 
 #TODO check features and setup: (means force features!)
 
@@ -97,9 +98,12 @@ if(VCPKG_TARGET_IS_OSX)
         list(APPEND OSX_APP_FOLDERS qdbusviewer.app)
     endif()
     foreach(_appfolder IN LISTS OSX_APP_FOLDERS)
-        message(STATUS "Moving: ${_appfolder}")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_appfolder}/" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}/")
+        # Folders are only existing in case of native builds 
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_appfolder}")
+            message(STATUS "Moving: ${_appfolder}")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_appfolder}/" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}/")
+        endif()    
     endforeach()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()

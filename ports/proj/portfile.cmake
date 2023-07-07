@@ -1,9 +1,8 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
     REF "${VERSION}"
-    SHA512 bdc3cba27f330829b30290f563cb1cded75d3861909399177334a354662f4cb54e05baef40b8d267978c746f41543c3de1c119ca08919c87fd9460506c5c566e
+    SHA512 ac6cf14c7a4bf0435b0b6c373b665762f46ea7609fdbffc512efc308441bf0ac7bf4dee2bcf3b60e98a604b2e3f1e7a67fdac9f455c1ad37ad3f705185a2b620
     HEAD_REF master
     PATCHES
         fix-win-output-name.patch

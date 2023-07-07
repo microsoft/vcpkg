@@ -29,6 +29,7 @@ set(name "${PORT}")
 configure_file("${CURRENT_PORT_DIR}/${PORT}.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${PORT}.pc" @ONLY)
 if(NOT VCPKG_BUILD_TYPE)
     configure_file("${CURRENT_PORT_DIR}/${PORT}.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" @ONLY)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PORT}.pc" "/include" "/../include")
 endif()
 
 

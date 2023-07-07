@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO blend2d/blend2d
-  REF 7b420376ed32f3979f860d8c3be04128ab5c6690
-  SHA512 88818bfe18b0638b02f84277a4584ddf2cee2158540c1794c3a96c12891274472dc896bef94408baf9ec398e30549c0b3feda58e4b7bf3014a0cf436f394a3ed
+  REF 452d549751188b04367b5af46c040cb737f5f76c # commited on 2023-05-11
+  SHA512 e2d3a0f5b956aadde5498f3aa4fb0663db8ad525cc909da080315fddf9f6322632a62761f0fe94ddb7c6347896e42c62e7e03e944843b3ca3400326eddc4ffcc
   HEAD_REF master
 )
 
@@ -20,40 +20,39 @@ if(NOT BLEND2D_NO_JIT)
   vcpkg_from_github(
     OUT_SOURCE_PATH ASMJIT_SOURCE_PATH
     REPO asmjit/asmjit
-    REF a9ac13536e08041296010645551b2cdcd615d512
-    SHA512 64e7649208889f0c96890d3904c2f8e716a72b1edf2dfd07af0114565e03681e503c062af8b4fea4ed70122bd7eab2f966038f7b29058f60f6f3f609508422b6
+    REF 3577608cab0bc509f856ebf6e41b2f9d9f71acc4 # commited on 2023-04-28
+    SHA512 36557af5c82ccc8e5ef2d4effe22b75e22c2bf1f4504daae3ff813e907449be6e7b25678af071cb9dede7c6e02dc5c8ad2fc2a3da011aa660eb7f5c75ab23042
     HEAD_REF master
   )
 
-  file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/asmjit)
+  file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/asmjit")
 
-  get_filename_component(ASMJIT_SOURCE_DIR_NAME ${ASMJIT_SOURCE_PATH} NAME)
-  file(COPY ${ASMJIT_SOURCE_PATH} DESTINATION ${SOURCE_PATH}/3rdparty)
-  file(RENAME ${SOURCE_PATH}/3rdparty/${ASMJIT_SOURCE_DIR_NAME} ${SOURCE_PATH}/3rdparty/asmjit)
+  get_filename_component(ASMJIT_SOURCE_DIR_NAME "${ASMJIT_SOURCE_PATH}" NAME)
+  file(COPY "${ASMJIT_SOURCE_PATH}" DESTINATION "${SOURCE_PATH}/3rdparty")
+  file(RENAME "${SOURCE_PATH}/3rdparty/${ASMJIT_SOURCE_DIR_NAME}" "${SOURCE_PATH}/3rdparty/asmjit")
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBLEND2D_STATIC=${BLEND2D_STATIC}
+        "-DBLEND2D_STATIC=${BLEND2D_STATIC}"
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if(BLEND2D_STATIC)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 
 if(BLEND2D_STATIC)
-  # Install usage
-  configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage_static.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME usage)
+else()
+  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()

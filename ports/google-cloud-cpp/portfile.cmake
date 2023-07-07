@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v2.7.0
-    SHA512 d87b79b64dd224088ae9473a828909313f4c7c64abc815ebf9105eca5ff2dee11199f2fecff2862559b16cd96550bc9f7b7a30299aae7a32fbea1fdce101897d
+    REF "v${VERSION}"
+    SHA512 206d07eb65da472a9cc743ef6de0ddc7c0e13833cb990dc2415681be7c2a9d8ddfac6a25880ff3dbd2c73257d2ad8f7b8331cc1755e31d85bdb5386a12c91dbe
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
@@ -40,6 +40,10 @@ vcpkg_cmake_configure(
         -DGOOGLE_CLOUD_CPP_ENABLE_CCACHE=OFF
         -DGOOGLE_CLOUD_CPP_ENABLE_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
+        # This is needed by the `experimental-storage-grpc` feature until vcpkg
+        # gets Protobuf >= 4.23.0.  It has no effect for other features, so
+        # it is simpler to just always turn it on.
+        -DGOOGLE_CLOUD_CPP_ENABLE_CTYPE_CORD_WORKAROUND=ON
 )
 
 vcpkg_cmake_install()

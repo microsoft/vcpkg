@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.2.0-pv5.11.0",
-  "port-version": 2,
+  "port-version": 8,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": "BSD-3-Clause",
@@ -30,8 +30,11 @@
     "libxml2",
     "lz4",
     "netcdf-c",
-    "pegtl-2",
-    "proj",
+    "pegtl",
+    {
+      "name": "proj",
+      "default-features": false
+    },
     "pugixml",
     {
       "name": "seacas",
@@ -101,13 +104,9 @@
     "gdal": {
       "description": "Support GDAL compilation",
       "dependencies": [
-        "gdal",
         {
-          "name": "vtk",
-          "default-features": false,
-          "features": [
-            "mpi"
-          ]
+          "name": "gdal",
+          "default-features": false
         }
       ]
     },

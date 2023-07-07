@@ -1,14 +1,14 @@
 vcpkg_buildpath_length_warning(37)
 
-if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING "qt5-base currently requires some packages from the system package manager, see https://doc.qt.io/qt-5/linux-requirements.html")
-    message(WARNING 
-[[
-qt5-base for qt5-x11extras requires several libraries from the system package manager. Please refer to
-  https://github.com/microsoft/vcpkg/blob/master/scripts/azure-pipelines/linux/provision-image.sh
-  for a complete list of them.
-]]
+if(VCPKG_TARGET_IS_LINUX)
+    message(WARNING "qt5-base currently requires some packages from the system package manager. "
+    "They can be installed on Ubuntu systems via "
+    "sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libgl1-mesa-dev libxrender-dev "
+    "libxi-dev libxkbcommon-dev libxkbcommon-x11-dev. For more information, see "
+    "https://doc.qt.io/qt-5/linux.html and https://doc.qt.io/qt-5/linux-requirements.html"
     )
+elseif(VCPKG_TARGET_IS_MINGW AND CMAKE_HOST_WIN32)
+    find_program(MINGW32_MAKE mingw32-make PATHS ENV PATH NO_DEFAULT_PATH REQUIRED)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
@@ -46,13 +46,19 @@ endif()
 
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
+                            # CVE fixes from https://download.qt.io/official_releases/qt/5.15/
+                            patches/CVE-2023-32762-qtbase-5.15.diff
+                            patches/CVE-2023-32763-qtbase-5.15.diff
+                            patches/CVE-2023-33285-qtbase-5.15.diff
+                            patches/CVE-2023-34410-qtbase-5.15.diff
+
                             patches/winmain_pro.patch          #Moves qtmain to manual-link
                             patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
                             patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.
                             patches/gui_configure.patch        #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
-                            patches/icu.patch                  #Help configure find static icu builds in vcpkg on windows
                             patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
                             patches/egl.patch                  #Fix egl detection logic.
+                            patches/qtbug_96392.patch          #Backport fix for QTBUG-96392
                             patches/mysql_plugin_include.patch #Fix include path of mysql plugin
                             patches/mysql-configure.patch      #Fix mysql project
                             patches/cocoa.patch                #Fix missing include on macOS Monterrey, https://code.qt.io/cgit/qt/qtbase.git/commit/src/plugins/platforms/cocoa?id=dece6f5840463ae2ddf927d65eb1b3680e34a547
@@ -65,6 +71,7 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/create_cmake.patch
                             patches/Qt5GuiConfigExtras.patch   # Patches the library search behavior for EGL since angle is not build with Qt
                             patches/fix_angle.patch            # Failed to create OpenGL context for format QSurfaceFormat ...
+                            patches/mingw9.patch               # Fix compile with MinGW-W64 9.0.0: Redefinition of 'struct _FILE_ID_INFO'
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -100,7 +107,6 @@ list(APPEND CORE_OPTIONS
     -system-doubleconversion
     -system-sqlite
     -system-harfbuzz
-    -icu
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
     -openssl-linked
@@ -173,8 +179,8 @@ find_library(ICUDATA_DEBUG NAMES icudatad libicudatad icudata libicudata icudtd 
 set(ICU_RELEASE "${ICUIN_RELEASE} ${ICULX_RELEASE} ${ICUUC_RELEASE} ${ICUIO_RELEASE} ${ICUDATA_RELEASE}")
 set(ICU_DEBUG "${ICUIN_DEBUG} ${ICULX_DEBUG} ${ICUUC_DEBUG} ${ICUIO_DEBUG} ${ICUDATA_DEBUG}")
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(ICU_RELEASE "${ICU_RELEASE} Advapi32.lib")
-    set(ICU_DEBUG "${ICU_DEBUG} Advapi32.lib" )
+    set(ICU_RELEASE "${ICU_RELEASE} -ladvapi32")
+    set(ICU_DEBUG "${ICU_DEBUG} -ladvapi32" )
 endif()
 
 find_library(FONTCONFIG_RELEASE NAMES fontconfig PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -204,10 +210,8 @@ set(RELEASE_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "PCRE2_LIBS=${PCRE2_RELEASE}"
             "FREETYPE_LIBS=${FREETYPE_RELEASE_ALL}"
-            "ICU_LIBS=${ICU_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_RELEASE}"
             )
 set(DEBUG_OPTIONS
@@ -216,12 +220,30 @@ set(DEBUG_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "PCRE2_LIBS=${PCRE2_DEBUG}"
             "FREETYPE_LIBS=${FREETYPE_DEBUG_ALL}"
-            "ICU_LIBS=${ICU_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
+
+if("icu" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS -icu)
+
+    # This if/else corresponds to icu setup in src/corelib/configure.json.
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        list(APPEND CORE_OPTIONS
+            "ICU_LIBS_RELEASE=${ICU_RELEASE}"
+            "ICU_LIBS_DEBUG=${ICU_DEBUG}"
+        )
+    else()
+        list(APPEND RELEASE_OPTIONS "ICU_LIBS=${ICU_RELEASE}")
+        list(APPEND DEBUG_OPTIONS "ICU_LIBS=${ICU_DEBUG}")
+    endif()
+
+    list(APPEND RELEASE_OPTIONS "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}")
+    list(APPEND DEBUG_OPTIONS "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}")
+else()
+    list(APPEND CORE_OPTIONS -no-icu)
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_IS_UWP)
@@ -232,7 +254,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     else()
         list(APPEND CORE_OPTIONS -opengl dynamic) # other possible option without moving angle dlls: "-opengl desktop". "-opengel es2" only works with commented patch
     endif()
-    set(ADDITIONAL_WINDOWS_LIBS "ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib")
+    set(ADDITIONAL_WINDOWS_LIBS "-lws2_32 -lsecur32 -ladvapi32 -lshell32 -lcrypt32 -luser32 -lgdi32")
     list(APPEND RELEASE_OPTIONS
             "SQLITE_LIBS=${SQLITE_RELEASE}"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"
@@ -250,9 +272,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
     list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -xcb -linuxfb)
-    if (NOT EXISTS "/usr/include/GL/glu.h")
-        message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
-    endif()
     list(APPEND RELEASE_OPTIONS
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"

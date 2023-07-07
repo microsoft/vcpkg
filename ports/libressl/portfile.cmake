@@ -4,20 +4,17 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
   return()
 endif()
 
-set(LIBRESSL_VERSION 3.4.2)
-set(LIBRESSL_HASH ae91a840b29330681dc2a4f55a9bd760e6fe1bdfb3399017aae3a16bd21b413e97cbb8ba504400f0a1f42757f6128b3fa763d06bae4fc9f2b9dbeea867a57ad2)
-
 vcpkg_download_distfile(
     LIBRESSL_SOURCE_ARCHIVE
-    URLS "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PORT}-${LIBRESSL_VERSION}.tar.gz" "https://ftp.fau.de/openbsd/LibreSSL/${PORT}-${LIBRESSL_VERSION}.tar.gz"
-    FILENAME "${PORT}-${LIBRESSL_VERSION}.tar.gz"
-    SHA512 "${LIBRESSL_HASH}"
+    URLS "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PORT}-${VERSION}.tar.gz"
+         "https://ftp.fau.de/openbsd/LibreSSL/${PORT}-${VERSION}.tar.gz"
+    FILENAME "${PORT}-${VERSION}.tar.gz"
+    SHA512 8fc81e05d1c9f9259d06508ca97d5a1ba5d46b857088c273c20e6b242921f7eac58a1136564ad9831c923758ee63f7b0897c8c6c7b1e53ab8132a995cc559aeb
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${LIBRESSL_SOURCE_ARCHIVE}"
-    REF "${LIBRESSL_VERSION}"
     PATCHES
         0001-enable-ocspcheck-on-msvc.patch
         0002-suppress-msvc-warnings.patch
@@ -59,7 +56,9 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+
+vcpkg_fixup_pkgconfig()
 
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(GLOB_RECURSE LIBS "${CURRENT_PACKAGES_DIR}/*.lib")
