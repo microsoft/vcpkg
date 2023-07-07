@@ -1,0 +1,48 @@
+diff --git a/cmake/SelectSSH.cmake b/cmake/SelectSSH.cmake
+index 23dfc97..df1aa2e 100644
+--- a/cmake/SelectSSH.cmake
++++ b/cmake/SelectSSH.cmake
+@@ -1,20 +1,21 @@
+ # Optional external dependency: libssh2
+ if(USE_SSH)
+-	find_pkglibraries(LIBSSH2 libssh2)
+-	if(NOT LIBSSH2_FOUND)
+-		find_package(LibSSH2)
+-		set(LIBSSH2_INCLUDE_DIRS ${LIBSSH2_INCLUDE_DIR})
+-		get_filename_component(LIBSSH2_LIBRARY_DIRS "${LIBSSH2_LIBRARY}" DIRECTORY)
+-		set(LIBSSH2_LIBRARIES ${LIBSSH2_LIBRARY})
++	if(1)
++       find_package(Libssh2 CONFIG REQUIRED)
++		if(BUILD_SHARED_LIBS)
++            set(LIBSSH2_LIBRARIES Libssh2::libssh2_shared)
++       else()
++            set(LIBSSH2_LIBRARIES Libssh2::libssh2_static)
++       endif()
+ 		set(LIBSSH2_LDFLAGS "-lssh2")
+ 	endif()
+ 
+-	if(NOT LIBSSH2_FOUND)
++	if(0)
+ 		message(FATAL_ERROR "LIBSSH2 not found. Set CMAKE_PREFIX_PATH if it is installed outside of the default search path.")
+ 	endif()
+ endif()
+ 
+-if(LIBSSH2_FOUND)
++if(USE_SSH)
+ 	set(GIT_SSH 1)
+ 	list(APPEND LIBGIT2_SYSTEM_INCLUDES ${LIBSSH2_INCLUDE_DIRS})
+ 	list(APPEND LIBGIT2_SYSTEM_LIBS ${LIBSSH2_LIBRARIES})
+diff --git a/src/libgit2/CMakeLists.txt b/src/libgit2/CMakeLists.txt
+index 9ed2cae..04d3c50 100644
+--- a/src/libgit2/CMakeLists.txt
++++ b/src/libgit2/CMakeLists.txt
+@@ -145,6 +145,9 @@ endif()
+ if(@REGEX_BACKEND@ STREQUAL "pcre")
+     find_dependency(unofficial-pcre CONFIG)
+ endif()
++if(@USE_SSH@ STREQUAL "ON")
++    find_dependency(Libssh2 CONFIG)
++endif()
+ include("${CMAKE_CURRENT_LIST_DIR}/unofficial-git2Targets.cmake")
+ ]])
+ configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-git2-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-git2-config.cmake" @ONLY)

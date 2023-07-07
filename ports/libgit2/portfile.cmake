@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF maint/v1.6
     PATCHES
         fix-configcmake.patch
+        fix-findssh.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindPCRE.cmake")
@@ -78,4 +79,4 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
