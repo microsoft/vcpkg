@@ -1,0 +1,26 @@
+diff --git a/sdk/core/azure-core-amqp/vcpkg/Config.cmake.in b/sdk/core/azure-core-amqp/vcpkg/Config.cmake.in
+index 989c8be1..1a2924a6 100644
+--- a/sdk/core/azure-core-amqp/vcpkg/Config.cmake.in
++++ b/sdk/core/azure-core-amqp/vcpkg/Config.cmake.in
+@@ -4,7 +4,7 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(azure-core-cpp "1.9.0-beta.1")
++find_dependency(azure-core-cpp)
+ 
+ find_dependency(azure-uamqp-c)
+ 
+diff --git a/sdk/core/azure-core-amqp/vcpkg/vcpkg.json b/sdk/core/azure-core-amqp/vcpkg/vcpkg.json
+index 152abfdd..a55e54ae 100644
+--- a/sdk/core/azure-core-amqp/vcpkg/vcpkg.json
++++ b/sdk/core/azure-core-amqp/vcpkg/vcpkg.json
+@@ -15,7 +15,7 @@
+     {
+       "name": "azure-core-cpp",
+       "default-features": false,
+-      "version>=": "1.9.0-beta.1"
++      "version>=": "1.10.1"
+     },
+     {
+       "name": "azure-uamqp-c"
