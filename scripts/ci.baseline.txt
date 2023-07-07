@@ -406,6 +406,7 @@ foonathan-memory:x64-android=fail
 foonathan-memory:x64-uwp=fail
 freeglut:arm-neon-android=fail
 freeglut:arm-uwp=fail
+foonathan-memory:arm-neon-android=fail
 freeglut:arm64-android=fail
 freeglut:x64-android=fail
 freeglut:x64-uwp=fail
