@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         DontInstallSystemRuntimeLibs.patch
         fix-include-path.patch
+        fix-install-destination.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindOpenSSL.cmake")
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
