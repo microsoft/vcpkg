@@ -1,0 +1,14 @@
+{
+  "name": "vcpkg-ci-libgit2",
+  "version-string": "ci",
+  "description": "Validates libgit2 with ssh.",
+  "dependencies": [
+    {
+      "name": "libgit2",
+      "default-features": false,
+      "features": [
+        "ssh"
+      ]
+    }
+  ]
+}
