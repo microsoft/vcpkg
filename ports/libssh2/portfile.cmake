@@ -12,6 +12,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
         zlib    CMAKE_DISABLE_FIND_PACKAGE_ZLIB # for use by the cryto backend
 )
+if("openssl" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DCRYPTO_BACKEND=OpenSSL")
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_OPTIONS "-DCRYPTO_BACKEND=WinCNG")
+else()
+    message(FATAL_ERROR "Port ${PORT} only supports OpenSSL and WinCNG crypto backends.")
+endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND FEATURE_OPTIONS "-DBUILD_STATIC_LIBS:BOOL=OFF")
 endif()
