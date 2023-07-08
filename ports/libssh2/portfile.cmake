@@ -8,7 +8,9 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        zlib ENABLE_ZLIB_COMPRESSION
+        zlib    ENABLE_ZLIB_COMPRESSION
+    INVERTED_FEATURES
+        zlib    CMAKE_DISABLE_FIND_PACKAGE_ZLIB # for use by the cryto backend
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND FEATURE_OPTIONS "-DBUILD_STATIC_LIBS:BOOL=OFF")
@@ -22,6 +24,8 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DENABLE_DEBUG_LOGGING=OFF
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_ZLIB
 )
 
 vcpkg_cmake_install()
