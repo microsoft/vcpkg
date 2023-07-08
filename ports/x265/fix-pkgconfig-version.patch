@@ -1,13 +1,13 @@
-diff --git a/source/cmake/version.cmake b/source/cmake/version.cmake
-index b1e995f..d7df148 100644
---- a/source/cmake/version.cmake
-+++ b/source/cmake/version.cmake
-@@ -7,7 +7,7 @@ find_package(Git QUIET) # present in 2.8.8
- 
- # defaults, in case everything below fails
+diff --git "a/source/cmake/Version.cmake" "b/source/cmake/Version.cmake"
+index 3bbf42f..6c80818 100644
+--- "a/source/cmake/Version.cmake"
++++ "b/source/cmake/Version.cmake"
+@@ -26,7 +26,7 @@
+  #################################################################################################################
+  #Default Settings, for user to be vigilant about x265 version being reported during product build.
  set(X265_VERSION "unknown")
 -set(X265_LATEST_TAG "0.0")
 +set(X265_LATEST_TAG "0.0" CACHE STRING "x265 version")
  set(X265_TAG_DISTANCE "0")
  
- if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../.hg_archival.txt)
+ #Find version control software to be used for live and extracted repositories from compressed tarballs
