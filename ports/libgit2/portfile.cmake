@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF maint/v1.6
     PATCHES
         fix-configcmake.patch
+        dependencies.diff
         mingw-winhttp.diff
 )
 
@@ -50,6 +51,8 @@ if(NOT REGEX_BACKEND)
     message(FATAL_ERROR "Must choose pcre or pcre2 regex backend")
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS GIT2_FEATURES
     FEATURES    
@@ -65,6 +68,7 @@ vcpkg_cmake_configure(
         -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}
         -DSTATIC_CRT=${STATIC_CRT}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         ${GIT2_FEATURES}
     OPTIONS_DEBUG
         -DBUILD_CLI=OFF
