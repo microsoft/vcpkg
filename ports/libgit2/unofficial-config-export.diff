@@ -1,0 +1,19 @@
+diff --git a/src/libgit2/CMakeLists.txt b/src/libgit2/CMakeLists.txt
+index dcb4279..c2a97e1 100644
+--- a/src/libgit2/CMakeLists.txt
++++ b/src/libgit2/CMakeLists.txt
+@@ -129,9 +129,14 @@ FILE(WRITE "${PROJECT_BINARY_DIR}/include/${LIBGIT2_FILENAME}.h" ${LIBGIT2_INCLU
+ # Install
+ 
+ install(TARGETS libgit2package
++	EXPORT unofficial-libgit2-targets
+ 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(EXPORT unofficial-libgit2-targets
++    NAMESPACE unofficial::libgit2::
++    DESTINATION share/unofficial-libgit2
++)
+ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/git2/
+         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIBGIT2_FILENAME}")
+ install(FILES ${PROJECT_BINARY_DIR}/include/git2/experimental.h
