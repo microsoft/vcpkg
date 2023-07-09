@@ -91,4 +91,12 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+set(file_list "${SOURCE_PATH}/COPYING")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    file(WRITE "${CURRENT_BUILDTREES_DIR}/Notice for ntlmclient" [[
+Copyright (c) Edward Thomson.  All rights reserved.
+These source files are part of ntlmclient, distributed under the MIT license.
+]])
+    list(APPEND file_list "${CURRENT_BUILDTREES_DIR}/Notice for ntlmclient")
+endif()
+vcpkg_install_copyright(FILE_LIST ${file_list})

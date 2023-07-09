@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Git linkable library",
   "homepage": "https://github.com/libgit2/libgit2",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     "http-parser",
