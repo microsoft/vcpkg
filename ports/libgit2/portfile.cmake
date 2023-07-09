@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 fd73df91710f19b0d6c3765c37c7f529233196da91cf4d58028a8d3840244f11df44abafabd74a8ed1cbe4826d1afd6ff9f01316d183ace0924c65e7cf0eb8d5
     HEAD_REF maint/v1.6
     PATCHES
+        c-standard.diff # for 'inline' in system headers
         cli-include-dirs.diff
         dependencies.diff
         mingw-winhttp.diff
