@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF maint/v1.6
     PATCHES
         fix-configcmake.patch
+        mingw-winhttp.diff
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindPCRE.cmake")
