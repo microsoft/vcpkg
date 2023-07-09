@@ -67,6 +67,8 @@ vcpkg_cmake_configure(
         ${GIT2_FEATURES}
     OPTIONS_DEBUG
         -DBUILD_CLI=OFF
+    MAYBE_UNUSED_VARIABLES
+        STATIC_CRT
 )
 
 vcpkg_cmake_install()
