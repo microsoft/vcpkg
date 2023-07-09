@@ -147,8 +147,11 @@ endif()
 if("mlir" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "mlir")
     if("enable-mlir-python-bindings" IN_LIST FEATURES)
+        x_vcpkg_get_python_packages(PYTHON_VERSION 3 PACKAGES numpy OUT_PYTHON_VAR PYTHON3)
         list(APPEND FEATURE_OPTIONS
             -DMLIR_ENABLE_BINDINGS_PYTHON=ON
+            -DPYTHON_EXECUTABLE:FILEPATH=${PYTHON3}
+            -DPython3_EXECUTABLE:FILEPATH=${PYTHON3}
         )
     endif()
 endif()

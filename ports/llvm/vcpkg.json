@@ -22,6 +22,10 @@
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
     }
   ],
   "default-features": [
@@ -196,6 +200,7 @@
     "enable-mlir-python-bindings": {
       "description": "Build MLIR Python bindings.",
       "dependencies": [
+        "pybind11",
         {
           "name": "llvm",
           "default-features": false,
