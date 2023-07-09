@@ -4233,7 +4233,7 @@
       "port-version": 1
     },
     "liblemon": {
-      "baseline": "2023-07-09",
+      "baseline": "2019-06-13",
       "port-version": 6
     },
     "liblinear": {
