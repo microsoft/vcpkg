@@ -1,0 +1,14 @@
+diff --git a/wpiutil/src/main/native/include/wpi/Synchronization.h b/wpiutil/src/main/native/include/wpi/Synchronization.h
+index 62a79efd9..f3c3bf143 100644
+--- a/wpiutil/src/main/native/include/wpi/Synchronization.h
++++ b/wpiutil/src/main/native/include/wpi/Synchronization.h
+@@ -442,6 +442,9 @@ class SignalObject final {
+   T m_handle;
+ };
+ 
++template<typename T>
++auto format_as(const SignalObject<T> &s) { return s.GetHandle(); }
++
+ }  // namespace wpi
+ 
+ extern "C" {

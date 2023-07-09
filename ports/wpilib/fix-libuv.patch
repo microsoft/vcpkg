@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4291632af..601f81941 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -167,8 +167,7 @@ endif()
+ 
+ if (USE_SYSTEM_LIBUV)
+ set (LIBUV_SYSTEM_REPLACE "
+-find_package(PkgConfig REQUIRED)
+-pkg_check_modules(libuv REQUIRED IMPORTED_TARGET libuv)
++find_dependency(libuv CONFIG)
+ ")
+ endif()
+ 
+diff --git a/wpinet/CMakeLists.txt b/wpinet/CMakeLists.txt
+index 3da7bf0c5..39ccf81e0 100644
+--- a/wpinet/CMakeLists.txt
++++ b/wpinet/CMakeLists.txt
+@@ -149,9 +149,8 @@ if (NOT USE_SYSTEM_LIBUV)
+         endif()
+     endif()
+ else()
+-    find_package(PkgConfig REQUIRED)
+-    pkg_check_modules(libuv REQUIRED IMPORTED_TARGET libuv)
+-    target_link_libraries(wpinet PUBLIC PkgConfig::libuv)
++    find_package(libuv CONFIG REQUIRED)
++    target_link_libraries(wpinet PUBLIC $<IF:$<TARGET_EXISTS:libuv::uv_a>,libuv::uv_a,libuv::uv>)
+ endif()
+ 
+ if (MSVC)

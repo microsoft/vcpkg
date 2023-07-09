@@ -1,0 +1,44 @@
+diff --git a/wpimath/CMakeLists.txt b/wpimath/CMakeLists.txt
+index e3d90cd4c11..4500879b19c 100644
+--- a/wpimath/CMakeLists.txt
++++ b/wpimath/CMakeLists.txt
+@@ -89,8 +89,7 @@ if (WITH_JAVA)
+ 
+ endif()
+ 
+-file(GLOB_RECURSE wpimath_native_src src/main/native/cpp/*.cpp
+-                                     src/main/native/thirdparty/drake/src/*.cpp)
++file(GLOB_RECURSE wpimath_native_src src/main/native/cpp/*.cpp)
+ list(REMOVE_ITEM wpimath_native_src ${wpimath_jni_src})
+ 
+ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS FALSE)
+@@ -118,10 +117,6 @@ else()
+     target_link_libraries (wpimath Eigen3::Eigen)
+ endif()
+ 
+-install(DIRECTORY src/main/native/thirdparty/drake/include/ DESTINATION "${include_dest}/wpimath")
+-target_include_directories(wpimath SYSTEM PUBLIC
+-                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/main/native/thirdparty/drake/include>)
+-
+ install(DIRECTORY src/main/native/thirdparty/gcem/include/ DESTINATION "${include_dest}/wpimath")
+ target_include_directories(wpimath SYSTEM PUBLIC
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/main/native/thirdparty/gcem/include>)
+diff --git a/wpimath/src/test/native/cpp/estimator/MerweScaledSigmaPointsTest.cpp b/wpimath/src/test/native/cpp/estimator/MerweScaledSigmaPointsTest.cpp
+index 19a734b5815..4471dc946c5 100644
+--- a/wpimath/src/test/native/cpp/estimator/MerweScaledSigmaPointsTest.cpp
++++ b/wpimath/src/test/native/cpp/estimator/MerweScaledSigmaPointsTest.cpp
+@@ -6,8 +6,6 @@
+ 
+ #include "frc/estimator/MerweScaledSigmaPoints.h"
+ 
+-namespace drake::math {
+-namespace {
+ TEST(MerweScaledSigmaPointsTest, ZeroMean) {
+   frc::MerweScaledSigmaPoints<2> sigmaPoints;
+   auto points = sigmaPoints.SquareRootSigmaPoints(
+@@ -30,5 +28,3 @@ TEST(MerweScaledSigmaPointsTest, NonzeroMean) {
+                                    {2.0, 2.0, 2.00548, 2.0, 1.99452}})
+           .norm() < 1e-3);
+ }
+-}  // namespace
+-}  // namespace drake::math

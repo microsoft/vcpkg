@@ -1,59 +1,51 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wpilibsuite/allwpilib
-    REF 35eb90c135eba994a2ca2cbd50a68c367910f4b6
-    SHA512 55bc608632ab67c097f3cce7c5ad9790b2b123a633c93bf5b4008f90bf79538cc142c911850d5f49b75e3a12f43ffad9f6f5f9bcdf1351cce7513ecc4b04e439
-    PATCHES fix-dependency-libuv.patch
+    REF d37f990ce3a8a36bc791dd989dcea2868759e556
+    SHA512 0d22ad2fe80973935e87e4864acaacfd96023aa11b77ba84f0a39dde17ba9d86f864971d8f1c9f4a6a1c56db59758cac112d645822da8e0b34b41b065332dff1
+    PATCHES 
+        fmtlib-fix.patch # https://github.com/wpilibsuite/allwpilib/pull/5429
+        no-drake.patch # https://github.com/wpilibsuite/allwpilib/pull/5427
+        fix-unsed-variable.patch # https://github.com/wpilibsuite/allwpilib/pull/5430
+        fix-fmtlib-10.patch # https://github.com/wpilibsuite/allwpilib/pull/5433
+        fix-libuv.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  INVERTED_FEATURES
-    cameraserver WITHOUT_CSCORE
-    allwpilib WITHOUT_ALLWPILIB
+  FEATURES
+    cameraserver WITH_CSCORE
+    allwpilib WITH_SIMULATION_MODULES
+    allwpilib WITH_WPILIB
 )
+
+vcpkg_find_acquire_program(PYTHON3)
+x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES jinja2)
+
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-      -DWITHOUT_JAVA=ON
       ${FEATURE_OPTIONS}
-      -DUSE_VCPKG_LIBUV=ON
-      -DUSE_VCPKG_EIGEN=ON
-      -DFLAT_INSTALL_WPILIB=ON
+      "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+      -DWITH_JAVA=OFF
+      -DWITH_EXAMPLES=OFF
+      -DWITH_TESTS=OFF
+      -DWITH_GUI=OFF
+      -DWITH_SIMULATION_MODULES=OFF
+      -DUSE_SYSTEM_FMTLIB=ON
+      -DUSE_SYSTEM_LIBUV=ON
+      -DUSE_SYSTEM_EIGEN=ON
 )
 vcpkg_cmake_install()
-
-file(COPY "${CURRENT_PACKAGES_DIR}/wpilib/include/ntcore/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(COPY "${CURRENT_PACKAGES_DIR}/wpilib/include/wpiutil/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-
-if ("allwpilib" IN_LIST FEATURES)
-    file(COPY "${CURRENT_PACKAGES_DIR}/wpilib/include/wpilibc/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-    file(COPY "${CURRENT_PACKAGES_DIR}/wpilib/include/hal/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/gen")
-endif()
-
-if ("cameraserver" IN_LIST FEATURES)
-    file(COPY "${CURRENT_PACKAGES_DIR}/wpilib/include/cameraserver/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-    file(COPY "${CURRENT_PACKAGES_DIR}/wpilib/include/cscore/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-endif()
-
-if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY "${CURRENT_PACKAGES_DIR}/wpilib/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin" FILES_MATCHING PATTERN "*.dll")
-    file(COPY "${CURRENT_PACKAGES_DIR}/debug/wpilib/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin" FILES_MATCHING PATTERN "*.dll")
-
-    file(COPY "${CURRENT_PACKAGES_DIR}/wpilib/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin" FILES_MATCHING PATTERN "*.so")
-    file(COPY "${CURRENT_PACKAGES_DIR}/debug/wpilib/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin" FILES_MATCHING PATTERN "*.so")
-
-    file(COPY "${CURRENT_PACKAGES_DIR}/wpilib/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin" FILES_MATCHING PATTERN "*.dylib")
-    file(COPY "${CURRENT_PACKAGES_DIR}/debug/wpilib/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin" FILES_MATCHING PATTERN "*.dylib")
-endif()
-
-file(COPY "${CURRENT_PACKAGES_DIR}/wpilib/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib" FILES_MATCHING PATTERN "*.lib")
-file(COPY "${CURRENT_PACKAGES_DIR}/debug/wpilib/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib" FILES_MATCHING PATTERN "*.lib")
-
-file(COPY "${CURRENT_PACKAGES_DIR}/wpilib/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib" FILES_MATCHING PATTERN "*.a")
-file(COPY "${CURRENT_PACKAGES_DIR}/debug/wpilib/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib" FILES_MATCHING PATTERN "*.a")
+vcpkg_cmake_config_fixup(PACKAGE_NAME wpilib)
+vcpkg_cmake_config_fixup(PACKAGE_NAME ntcore)
+vcpkg_cmake_config_fixup(PACKAGE_NAME wpimath)
+vcpkg_cmake_config_fixup(PACKAGE_NAME wpinet)
+vcpkg_cmake_config_fixup(PACKAGE_NAME wpiutil)
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

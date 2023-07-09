@@ -1,0 +1,13 @@
+diff --git a/wpiutil/src/main/native/thirdparty/llvm/include/wpi/DenseMap.h b/wpiutil/src/main/native/thirdparty/llvm/include/wpi/DenseMap.h
+index b1ffd436c..4135bc391 100644
+--- a/wpiutil/src/main/native/thirdparty/llvm/include/wpi/DenseMap.h
++++ b/wpiutil/src/main/native/thirdparty/llvm/include/wpi/DenseMap.h
+@@ -126,7 +126,7 @@ public:
+       for (BucketT *P = getBuckets(), *E = getBucketsEnd(); P != E; ++P)
+         P->getFirst() = EmptyKey;
+     } else {
+-      unsigned NumEntries = getNumEntries();
++      [[maybe_unused]] unsigned NumEntries = getNumEntries();
+       for (BucketT *P = getBuckets(), *E = getBucketsEnd(); P != E; ++P) {
+         if (!KeyInfoT::isEqual(P->getFirst(), EmptyKey)) {
+           if (!KeyInfoT::isEqual(P->getFirst(), TombstoneKey)) {

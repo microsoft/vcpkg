@@ -8813,8 +8813,8 @@
       "port-version": 1
     },
     "wpilib": {
-      "baseline": "2020-03-02",
-      "port-version": 4
+      "baseline": "2023-07-09",
+      "port-version": 0
     },
     "wren": {
       "baseline": "0.4.0",
