@@ -55,8 +55,9 @@ endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS GIT2_FEATURES
-    FEATURES
-        ssh USE_SSH
+    FEATURES    
+        ssh     USE_SSH
+        tools   BUILD_CLI
 )
 
 vcpkg_cmake_configure(
@@ -67,14 +68,19 @@ vcpkg_cmake_configure(
         -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}
         -DSTATIC_CRT=${STATIC_CRT}
-        -DBUILD_CLI=OFF
         ${GIT2_FEATURES}
+    OPTIONS_DEBUG
+        -DBUILD_CLI=OFF
         ${GIT_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-git2 CONFIG_PATH share/unofficial-git2)
 vcpkg_fixup_pkgconfig()
+
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES git2 AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
