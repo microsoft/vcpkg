@@ -1,14 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 77df76d..97ab002 100644
+index 77df76d..bebb8c8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -24,5 +24,16 @@ include(MiscCheck)
+@@ -24,5 +24,17 @@ include(MiscCheck)
  add_subdirectory(tensorpipe)
  
  install(EXPORT TensorpipeTargets
 -        DESTINATION share/cmake/Tensorpipe
 -        FILE TensorpipeTargets.cmake)
 +        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/unofficial-tensorpipe
++        NAMESPACE unofficial::tensorpipe::
 +        FILE unofficial-tensorpipe-targets.cmake)
 +
 +# Create TensorpipeConfig.cmake for find_package(unofficial-tensorpipe CONFIG)
