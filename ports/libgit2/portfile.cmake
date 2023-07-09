@@ -9,8 +9,15 @@ vcpkg_from_github(
         mingw-winhttp.diff
         unofficial-config-export.diff
 )
-
-file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindPCRE.cmake")
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/cmake/FindPCRE.cmake"
+    "${SOURCE_PATH}/cmake/FindPCRE2.cmake"
+    "${SOURCE_PATH}/deps/chromium-zlib"
+    "${SOURCE_PATH}/deps/http-parser"
+    "${SOURCE_PATH}/deps/pcre"
+    "${SOURCE_PATH}/deps/winhttp"
+    "${SOURCE_PATH}/deps/zlib"
+)
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
@@ -69,6 +76,7 @@ vcpkg_cmake_configure(
         -DREGEX_BACKEND=${REGEX_BACKEND}
         -DSTATIC_CRT=${STATIC_CRT}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON
         ${GIT2_FEATURES}
     OPTIONS_DEBUG
         -DBUILD_CLI=OFF
