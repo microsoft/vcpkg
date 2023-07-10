@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
     REF "v${VERSION}"
-    SHA512 19ce4718e23b3cc245091ae5b8face1c871f55c54a6eefb8d4f3264b3e16e2129e5c8e4fcb22bc994e0864d7a454e4ed03de1bc0817a8380ca34be849a7d4c90
+    SHA512 cf55f0f739e57fc37ca5a6aaf7838fa9b6116fc45d6a459e8ae840fc45931b5344c2286ec3d5debf62d332eb0f86e4b1f2f6f6406dc2fddec6250067cc3249d7
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -18,7 +18,6 @@ vcpkg_from_github(
         snprintf.patch
         00012-fix-use-cxx17.patch
         00015-disable-download-archive.patch
-        00016-fix-gRPC_BUILD_CODEGEN.patch # Patch from upstream: https://github.com/grpc/grpc/pull/32986
 )
 
 if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
