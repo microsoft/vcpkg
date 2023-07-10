@@ -452,12 +452,9 @@ gemmlowp:x64-android=fail
 gherkin-c:arm-neon-android=fail
 gherkin-c:arm64-android=fail
 gherkin-c:x64-android=fail
-
-# Port geotrans source ftp://ftp.nga.mil server
-# extremely slow may take several hours to download
-geotrans:x64-linux           = skip
-geotrans:x64-windows         = skip
-geotrans:x86-windows         = skip
+geotrans:arm-neon-android=fail
+geotrans:arm64-android=fail
+geotrans:x64-android=fail
 getopt:arm-uwp=fail
 getopt:x64-uwp=fail
 gflags:arm-uwp=fail
