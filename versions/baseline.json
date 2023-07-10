@@ -490,11 +490,7 @@
     },
     "baresip-libre": {
       "baseline": "3.2.0",
-<<<<<<< HEAD
-      "port-version": 0
-=======
       "port-version": 1
->>>>>>> dafef74af53669ef1cc9015f55e0ce809ead62aa
     },
     "basisu": {
       "baseline": "1.11",
