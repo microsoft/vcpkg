@@ -4709,8 +4709,8 @@
       "port-version": 1
     },
     "libunifex": {
-      "baseline": "2023-01-25",
-      "port-version": 2
+      "baseline": "0.3.0",
+      "port-version": 0
     },
     "libunistring": {
       "baseline": "1.1",
