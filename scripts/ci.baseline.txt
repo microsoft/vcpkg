@@ -181,8 +181,6 @@ chartdir:x64-windows=skip
 chartdir:x64-windows-static-md=skip
 chartdir:x64-osx=skip
 chipmunk:arm-neon-android=fail
-chipmunk:arm64-android=fail
-chipmunk:x64-android=fail
 
 # chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI
 #  broken on Windows because it does not yet support VS2022
@@ -401,11 +399,11 @@ folly:arm64-android=fail
 folly:x64-android=fail
 fontconfig:x64-uwp=fail
 fontconfig:arm-uwp=fail
-foonathan-memory:arm-neon-android=fail
 foonathan-memory:arm64-android=fail
 foonathan-memory:arm64-windows=fail
 foonathan-memory:arm-uwp=fail
 foonathan-memory:x64-android=fail
+foonathan-memory:arm-neon-android=fail
 foonathan-memory:x64-uwp=fail
 freeglut:arm-neon-android=fail
 freeglut:arm-uwp=fail
