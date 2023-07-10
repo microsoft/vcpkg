@@ -21,6 +21,7 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        client-mac WITH_CLIENT_MAC
         ffmpeg  WITH_FFMPEG
         ffmpeg  WITH_SWSCALE
         server  WITH_SERVER

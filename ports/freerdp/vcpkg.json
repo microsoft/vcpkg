@@ -25,6 +25,10 @@
     }
   ],
   "features": {
+    "client-mac": {
+      "description": "Build native mac client. Requires XCode.",
+      "supports": "osx"
+    },
     "ffmpeg": {
       "description": "Enable image scaling, video and audio with ffmpeg",
       "supports": "!windows",
