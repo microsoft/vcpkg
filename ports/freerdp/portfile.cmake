@@ -29,10 +29,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         x11     WITH_X11
 )
 
+vcpkg_list(SET GENERATOR_OPTION)
+if(VCPKG_TARGET_IS_OSX)
+    list(APPEND GENERATOR_OPTION GENERATOR "Unix Makefiles")
+endif()
+
 vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    ${GENERATOR_OPTION}
     OPTIONS
         ${FEATURE_OPTIONS}
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
