@@ -7613,7 +7613,7 @@
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.8.0",
+      "baseline": "5.8.0.1",
       "port-version": 0
     },
     "soci": {
