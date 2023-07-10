@@ -8,6 +8,7 @@ vcpkg_from_github(
         DontInstallSystemRuntimeLibs.patch
         fix-include-path.patch
         fix-install-destination.patch
+        keep-dup-libs.patch
         wfreerdp-server-cli.patch
         pr-7060-jni-onload.patch
 )
