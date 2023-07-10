@@ -23,5 +23,5 @@ file(
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/libevConfig.cmake"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libev-config.cmake"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
