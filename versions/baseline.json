@@ -6545,7 +6545,7 @@
       "port-version": 0
     },
     "pybind11": {
-      "baseline": "2.10.3",
+      "baseline": "2.10.4",
       "port-version": 0
     },
     "pystring": {
@@ -7506,7 +7506,7 @@
     },
     "shiva": {
       "baseline": "1.0",
-      "port-version": 5
+      "port-version": 6
     },
     "shiva-sfml": {
       "baseline": "1.0",
