@@ -3,9 +3,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO leadedge/Spout2
-    REF 9db0efadba16e1d884164d348f556922cfc80c50 #v2.007.009
-    SHA512 d45613590fb53155c90839cf6eb7fe646ef4ec463b6cd1624aff54870818f0bc4faccded78a6b2c089fa4e8756cf15c7e17def2ef32ac6c34144e562b58c5d8b
+    REF 62362774c96547d63b502d7efd5cfbf138eb7570 #v2.007.010
+    SHA512 89d0dcec719c068e27c2f55605e4b45b32fe3a5e097c821b0aa45f4ee9284e63830bd741ac7bb1bff917190d9a51daa36b452580fc673c05767b7bfcbc9a494f
     HEAD_REF master
+    PATCHES
+        fix-include-path.patch
+        fix-dx-keyed.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")

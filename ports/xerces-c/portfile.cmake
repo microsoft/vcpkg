@@ -16,6 +16,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS options
     FEATURES
         icu     CMAKE_REQUIRE_FIND_PACKAGE_ICU
+        network network
     INVERTED_FEATURES
         icu     CMAKE_DISABLE_FIND_PACKAGE_ICU
 )
@@ -47,6 +48,8 @@ vcpkg_cmake_configure(
         -DDISABLE_SAMPLES=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_CURL=ON
         ${options}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_CURL
 )
 
 vcpkg_cmake_install()
