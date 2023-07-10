@@ -18,10 +18,7 @@ vcpkg_install_make()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(
-    INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}"
-    RENAME copyright
-)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libevConfig.cmake"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
