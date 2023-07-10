@@ -20,8 +20,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(
     INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}"
     RENAME copyright
 )
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/libevConfig.cmake"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libevConfig.cmake"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
