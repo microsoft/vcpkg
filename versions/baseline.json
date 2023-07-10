@@ -2518,7 +2518,7 @@
     },
     "flann": {
       "baseline": "2019-04-07",
-      "port-version": 6
+      "port-version": 7
     },
     "flash-runtime-extensions": {
       "baseline": "2.4",
