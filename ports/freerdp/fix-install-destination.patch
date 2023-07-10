@@ -78,11 +78,20 @@ index c94a209..7c533b7 100644
      get_target_property(OUTPUT_FILENAME ${MODULE_NAME} OUTPUT_NAME)
      install(FILES ${CMAKE_PDB_BINARY_DIR}/${OUTPUT_FILENAME}.pdb DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT symbols)
 diff --git a/server/shadow/CMakeLists.txt b/server/shadow/CMakeLists.txt
-index 3e0df0b..e54fb04 100644
+index 3e0df0b..0daa245 100644
 --- a/server/shadow/CMakeLists.txt
 +++ b/server/shadow/CMakeLists.txt
 @@ -86,7 +86,7 @@ if (WITH_LIBRARY_VERSIONING)
  	  set_target_properties(${MODULE_NAME} PROPERTIES VERSION ${FREERDP_VERSION} SOVERSION ${FREERDP_API_VERSION})
+ endif()
+ 
+-install(TARGETS ${MODULE_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT server EXPORT FreeRDP-ShadowTargets)
++install(TARGETS ${MODULE_NAME} COMPONENT server EXPORT FreeRDP-ShadowTargets)
+ 
+ if (WITH_DEBUG_SYMBOLS AND MSVC)
+ 	get_target_property(OUTPUT_FILENAME ${MODULE_NAME} OUTPUT_NAME)
+@@ -291,7 +291,7 @@ if (WITH_LIBRARY_VERSIONING)
+ 	set_target_properties(${MODULE_NAME} PROPERTIES VERSION ${FREERDP_VERSION} SOVERSION ${FREERDP_API_VERSION})
  endif()
  
 -install(TARGETS ${MODULE_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT server EXPORT FreeRDP-ShadowTargets)
