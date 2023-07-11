@@ -3954,7 +3954,7 @@
     },
     "libcroco": {
       "baseline": "0.6.13",
-      "port-version": 4
+      "port-version": 5
     },
     "libcsv": {
       "baseline": "3.0.3",
