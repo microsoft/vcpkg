@@ -1,0 +1,81 @@
+diff --git a/src/lib/geogram_gfx/CMakeLists.txt b/src/lib/geogram_gfx/CMakeLists.txt
+index 195b1e2..75bc931 100644
+--- a/src/lib/geogram_gfx/CMakeLists.txt
++++ b/src/lib/geogram_gfx/CMakeLists.txt
+@@ -26,8 +26,8 @@ endif()
+ 
+ add_library(geogram_gfx ${SOURCES} $<TARGET_OBJECTS:geogram_gfx_third_party>)
+ 
+-target_include_directories(geogram_gfx PUBLIC ${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party)
+-target_include_directories(geogram_gfx PRIVATE ${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party/imgui)
++target_include_directories(geogram_gfx PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party>)
++target_include_directories(geogram_gfx PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party/imgui>)
+ 
+ if(ANDROID)
+   target_include_directories(geogram_gfx PRIVATE
+diff --git a/src/lib/geogram_gfx/third_party/CMakeLists.txt b/src/lib/geogram_gfx/third_party/CMakeLists.txt
+index ef97a11..b0ab769 100644
+--- a/src/lib/geogram_gfx/third_party/CMakeLists.txt
++++ b/src/lib/geogram_gfx/third_party/CMakeLists.txt
+@@ -55,6 +55,8 @@ set_target_properties(
+     geogram_gfx_third_party PROPERTIES
+     FOLDER "GEOGRAM"
+ )
++find_package(glfw3 CONFIG REQUIRED)
++target_link_libraries(geogram_gfx_third_party PRIVATE glfw)
+ 
+ if(ANDROID)
+   target_include_directories(geogram_gfx_third_party PRIVATE
+diff --git a/src/lib/geogram_gfx/third_party/ImGuiColorTextEdit/TextEditor.cpp b/src/lib/geogram_gfx/third_party/ImGuiColorTextEdit/TextEditor.cpp
+index a00355b..227c084 100644
+--- a/src/lib/geogram_gfx/third_party/ImGuiColorTextEdit/TextEditor.cpp
++++ b/src/lib/geogram_gfx/third_party/ImGuiColorTextEdit/TextEditor.cpp
+@@ -18,11 +18,7 @@
+ 
+ // [Bruno Levy] includes for GLFW, needed by pixelratio()
+ #ifndef __ANDROID__
+-#ifdef GEO_USE_SYSTEM_GLFW3
+ #include <GLFW/glfw3.h>
+-#else
+-#include <third_party/glfw/include/GLFW/glfw3.h>
+-#endif
+ #endif
+ 
+ // [Bruno Levy] 
+@@ -482,7 +478,6 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
+ 	//[Bruno Levy] added 'NoNav' flag
+ 	ImGui::BeginChild(aTitle, aSize, aBorder, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoNav);
+ 
+-	ImGui::PushAllowKeyboardFocus(true);
+ 
+ 	auto shift = io.KeyShift;
+ 	auto ctrl = io.KeyCtrl;
+@@ -850,7 +845,6 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
+ 		mScrollToCursor = false;
+ 	}
+ 
+-	ImGui::PopAllowKeyboardFocus();
+ 	ImGui::EndChild();
+ 	ImGui::PopStyleVar();
+ // [Bruno Levy] Commented out because I'd rather use the default style.
+diff --git a/src/lib/geogram_gfx/third_party/imgui_lua_bindings/imgui_iterator.h b/src/lib/geogram_gfx/third_party/imgui_lua_bindings/imgui_iterator.h
+index 8f923fd..5e3c441 100644
+--- a/src/lib/geogram_gfx/third_party/imgui_lua_bindings/imgui_iterator.h
++++ b/src/lib/geogram_gfx/third_party/imgui_lua_bindings/imgui_iterator.h
+@@ -380,14 +380,14 @@ IMGUI_FUNCTION(PopTextWrapPos)
+ CALL_FUNCTION_NO_RET(PopTextWrapPos)
+ END_IMGUI_FUNC
+ //    IMGUI_API void          PushAllowKeyboardFocus(bool allow_keyboard_focus);              // allow focusing using TAB/Shift-TAB, enabled by default but you can disable it for certain widgets
+-IMGUI_FUNCTION(PushAllowKeyboardFocus)
++/*IMGUI_FUNCTION(PushAllowKeyboardFocus)
+ BOOL_ARG(allow_keyboard_focus)
+ CALL_FUNCTION_NO_RET(PushAllowKeyboardFocus, allow_keyboard_focus)
+ END_IMGUI_FUNC
+ //    IMGUI_API void          PopAllowKeyboardFocus();
+ IMGUI_FUNCTION(PopAllowKeyboardFocus)
+ CALL_FUNCTION_NO_RET(PopAllowKeyboardFocus)
+-END_IMGUI_FUNC
++END_IMGUI_FUNC*/
+ //    IMGUI_API void          PushButtonRepeat(bool repeat);                                  // in 'repeat' mode, Button*() functions return repeated true in a typematic manner (using io.KeyRepeatDelay/io.KeyRepeatRate setting). Note that you can call IsItemActive() after any Button() to tell if the button is held in the current frame.
+ IMGUI_FUNCTION(PushButtonRepeat)
+ BOOL_ARG(repeat)
