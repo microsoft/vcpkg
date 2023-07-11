@@ -6,7 +6,8 @@ vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO RealTimeChris/DiscordCoreAPI
 	REF "v${VERSION}"
-    SHA512 62fe2e3bc61cfc18c253a5d23faba95c0550e0e60b1bfbd55627afaee7ca441aeb44358a3f52c97255bd0afacb79855839af238caeff28b555f4682dc6cc2674
+    	SHA512 a073aa37c666083ed62ff036cd5a3419d6d558b952aceec0c8584b0889bc0402625e2318255d2a92949e1954e70f54892157edd2374b7152eadc0bb5ba868b65
+    	HEAD_REF main
 )
 
 vcpkg_cmake_configure(
