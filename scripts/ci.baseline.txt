@@ -71,9 +71,6 @@ azure-identity-cpp:x64-android=fail
 backward-cpp:arm-neon-android=fail
 backward-cpp:arm64-android=fail
 backward-cpp:x64-android=fail
-bde:x64-android=fail
-# broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
-bde:x64-linux=fail
 bento4:arm-neon-android=fail
 berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
@@ -181,8 +178,6 @@ chartdir:x64-windows=skip
 chartdir:x64-windows-static-md=skip
 chartdir:x64-osx=skip
 chipmunk:arm-neon-android=fail
-chipmunk:arm64-android=fail
-chipmunk:x64-android=fail
 
 # chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI
 #  broken on Windows because it does not yet support VS2022
@@ -384,11 +379,11 @@ folly:arm64-android=fail
 folly:x64-android=fail
 fontconfig:x64-uwp=fail
 fontconfig:arm-uwp=fail
-foonathan-memory:arm-neon-android=fail
 foonathan-memory:arm64-android=fail
 foonathan-memory:arm64-windows=fail
 foonathan-memory:arm-uwp=fail
 foonathan-memory:x64-android=fail
+foonathan-memory:arm-neon-android=fail
 foonathan-memory:x64-uwp=fail
 freeglut:arm-neon-android=fail
 freeglut:arm-uwp=fail
@@ -437,12 +432,9 @@ gemmlowp:x64-android=fail
 gherkin-c:arm-neon-android=fail
 gherkin-c:arm64-android=fail
 gherkin-c:x64-android=fail
-
-# Port geotrans source ftp://ftp.nga.mil server
-# extremely slow may take several hours to download
-geotrans:x64-linux           = skip
-geotrans:x64-windows         = skip
-geotrans:x86-windows         = skip
+geotrans:arm-neon-android=fail
+geotrans:arm64-android=fail
+geotrans:x64-android=fail
 
 # Conflicts with libevent
 gherkin-c:arm64-windows         = skip
@@ -1153,9 +1145,6 @@ rest-rpc:x64-linux=skip
 rest-rpc:x64-osx=skip
 rest-rpc:arm64-osx=skip
 rhash:arm64-windows=fail
-rocksdb:arm-neon-android=fail
-rocksdb:arm-uwp=fail
-rocksdb:x64-uwp=fail
 rpclib:arm64-windows=fail
 rpclib:arm-uwp=fail
 rpclib:x64-uwp=fail
@@ -1210,8 +1199,6 @@ septag-sx:x64-android=fail
 sfml:arm-neon-android=fail
 sfml:arm64-android=fail
 sfml:x64-android=fail
-shiva:x64-windows-static=fail
-shiva:x64-windows-static-md=fail
 shiva-sfml:x64-linux=fail
 shiva-sfml:x64-osx=fail
 shiva-sfml:arm64-osx=fail

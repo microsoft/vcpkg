@@ -1,6 +1,6 @@
 {
   "name": "marl",
-  "version-date": "2022-03-02",
+  "version-date": "2023-06-28",
   "description": "A hybrid thread/fiber task scheduler written in modern C++",
   "homepage": "https://github.com/google/marl",
   "license": "Apache-2.0",

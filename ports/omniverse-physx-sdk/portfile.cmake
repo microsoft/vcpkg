@@ -9,9 +9,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA-Omniverse/PhysX
-    REF 104.2-physx-5.1.3 # newest tag
-    SHA512 63838192cc7da45bc7f26d6204b48c5593afd976853378e6749a6c112b9079a9586ecceb85f088ce54678fe8ccfa22cc9a5a9c255e8fa8d01cf7a84aa5b269a7
-    HEAD_REF release/104.2
+    REF 105.0-physx-5.2.1 # newest tag
+    SHA512 d1c27d79d9c54a6ea0a79f5fa3ccd0b7821a48116c765b185442809d21fdd20086e2bfd6408d8a87e1507e0b951f1d9efb794f33d53bc05ab017fa50a41ba770
+    HEAD_REF main
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -66,34 +66,9 @@ endif()
 set($ENV{PM_PATHS} "")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://d4i3qtqj3r0z5.cloudfront.net/CMakeModules%401.28.trunk.32494385.7z"
-    FILENAME "CMakeModules.7z"
-    SHA512 cccb0347d27a2b1391ffd3285fa19ca884fed91d8bf2e1683f86efad8aa0151a6e27080a6bec8975be585e4a51dd92cf85ac0cacf12ba28dce6e6efe74f57202
-)
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_find_acquire_program(7Z)
-    set(ENV{PM_CMakeModules_PATH} "${CURRENT_BUILDTREES_DIR}/CMakeModules_dep")
-    file(MAKE_DIRECTORY "$ENV{PM_CMakeModules_PATH}")
-    vcpkg_execute_required_process(
-        COMMAND "${7Z}" x "${ARCHIVE}" "-o$ENV{PM_CMakeModules_PATH}" "-y" "-bso0" "-bsp0"
-        WORKING_DIRECTORY "$ENV{PM_CMakeModules_PATH}"
-        LOGNAME "extract-CMakeModules"
-    )
-else()
-    vcpkg_extract_source_archive(CMAKEMODULES_SOURCE_PATH
-        NO_REMOVE_ONE_LEVEL
-        ARCHIVE "${ARCHIVE}"
-        BASE_DIRECTORY CMakeModules_dep
-    )
-    set(ENV{PM_CMakeModules_PATH} "${CMAKEMODULES_SOURCE_PATH}")
-endif()
-message(STATUS "Extracted dependency to $ENV{PM_CMakeModules_PATH}")
-list(APPEND ENV{PM_PATHS} $ENV{PM_CMakeModules_PATH})
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%40104.2-5.1.264.32487460-public.zip"
-    FILENAME "PhysXGpu.zip"
-    SHA512 6bd0384c134d909b0c2d32b9639dde5d8a90b3de74e1971b913d646f284d3dd042e3cfd0d4a868e57370621e23e76001b3eac47ac235c6dd798328e199471502
+    URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%40105.0-5.2.498.33012328-public-signed.7z"
+    FILENAME "PhysXGpu.7z"
+    SHA512 b834d4e0ed7d015d33d03862e30ad8296974e605bd4de49d9cfa168958d8e3b67a9b52cc1f2169f25c32211e1880de1ff7f76edae4d4a1b1f12dc6d1873c2d8e
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(7Z)
