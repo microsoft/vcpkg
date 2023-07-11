@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools ENABLE_GLSLANG_BINARIES
+        rtti ENABLE_RTTI
 )
 
 if (ENABLE_GLSLANG_BINARIES)
