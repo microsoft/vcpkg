@@ -5518,7 +5518,7 @@
     },
     "mujoco": {
       "baseline": "2.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "mujs": {
       "baseline": "1.3.2",
