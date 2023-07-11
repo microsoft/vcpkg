@@ -1,7 +1,6 @@
 {
   "name": "redis-plus-plus",
-  "version-semver": "1.3.9",
-  "port-version": 1,
+  "version-semver": "1.3.10",
   "description": "This is a C++ client for Redis. It's based on hiredis, and written in C++ 11",
   "homepage": "https://github.com/sewenew/redis-plus-plus",
   "license": "Apache-2.0",
