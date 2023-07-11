@@ -272,7 +272,7 @@ if(WITH_IPP)
       vcpkg_download_distfile(OCV_DOWNLOAD
         URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/1224f78da6684df04397ac0f40c961ed37f79ccb/ippicv/ippicv_2021.8_lnx_intel64_20230330_general.tgz"
         FILENAME "opencv-cache/ippicv/43219bdc7e3805adcbe3a1e2f1f3ef3b-ippicv_2021.8_lnx_intel64_20230330_general.tgz"
-        SHA512 de6d80695cd6deef359376476edc4ff85fdddcf94972b936e0017f8a48aaa5d18f55c4253ae37deb83bff2f71410f68408063c88b5f3bf4df3c416aa93ceca87
+        SHA512 e54085172465a9aa82e454c1055d62be9cb970e99e75343ab7849241f36762021c5b30cf2cff0d92bab2ccec65809c467293bea865e5af3ad82af8f75bf08ea0
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
