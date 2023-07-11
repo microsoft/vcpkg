@@ -5870,7 +5870,7 @@
     },
     "omniverse-physx-sdk": {
       "baseline": "5.2.1",
-      "port-version": 1
+      "port-version": 0
     },
     "ompl": {
       "baseline": "1.5.1",
