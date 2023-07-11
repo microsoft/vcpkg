@@ -2670,7 +2670,7 @@
     },
     "fribidi": {
       "baseline": "1.0.12",
-      "port-version": 0
+      "port-version": 1
     },
     "frozen": {
       "baseline": "1.1.1",
