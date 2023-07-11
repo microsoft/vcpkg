@@ -4106,7 +4106,7 @@
     },
     "libgit2": {
       "baseline": "1.6.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libgme": {
       "baseline": "0.6.3",
@@ -4622,7 +4622,7 @@
     },
     "libssh2": {
       "baseline": "1.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libstemmer": {
       "baseline": "2017-9",
