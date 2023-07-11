@@ -70,10 +70,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND tools wfreerdp-server)
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
-    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/client/Mac/cli/MacFreeRDP.app"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
-    )
-    list(APPEND tools MacFreeRDP)
+    if("client-mac" IN_LIST FEATURES)
+        file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/client/Mac/cli/MacFreeRDP.app"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
+        )
+        list(APPEND tools MacFreeRDP)
+    endif()
     if("server" IN_LIST FEATURES)
         list(APPEND tools mfreerdp-server)
     endif()
