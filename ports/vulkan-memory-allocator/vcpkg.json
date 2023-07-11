@@ -1,9 +1,19 @@
 {
   "name": "vulkan-memory-allocator",
   "version": "3.0.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Easy to integrate Vulkan memory allocation library from GPUOpen",
   "homepage": "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator",
   "license": "MIT",
-  "supports": "!uwp & !xbox"
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
