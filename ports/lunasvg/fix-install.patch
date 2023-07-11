@@ -2,10 +2,10 @@
  1 file changed, 2 insertions(+), 13 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9916c67..159f3a6 100755
+index ea4b2d2..b6fcbec 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -24,16 +24,5 @@ if(LUNASVG_BUILD_EXAMPLES)
+@@ -23,16 +23,5 @@ if(LUNASVG_BUILD_EXAMPLES)
      add_subdirectory(example)
  endif()
  
