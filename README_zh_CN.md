@@ -271,10 +271,10 @@ $ ./vcpkg integrate bash # 或 zsh
 
 ## 示例
 
-请查看 [文档](docs/README.md) 获取具体示例，
-其包含 [安装并使用包](docs/examples/installing-and-using-packages.md)，
-[使用压缩文件添加包](docs/examples/packaging-zipfiles.md)
-和 [从 GitHub 源中添加一个包](docs/examples/packaging-github-repos.md)。
+请查看 [文档](https://learn.microsoft.com/vcpkg) 获取具体示例，
+其包含 [安装并使用包](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages)，
+[使用压缩文件添加包](https://learn.microsoft.com/vcpkg/examples/packaging-zipfiles)
+和 [从 GitHub 源中添加一个包](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos)。
 
 我们的文档现在也可以从 [vcpkg.io](https://vcpkg.io/) 在线获取。
 我们真诚的希望您向我们提出关于此网站的任何建议! 请在[这里](https://github.com/vcpkg/vcpkg.github.io/issues) 创建 issue.
