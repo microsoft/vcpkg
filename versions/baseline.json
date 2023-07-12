@@ -2122,7 +2122,7 @@
     },
     "dirent": {
       "baseline": "1.23.2",
-      "port-version": 2
+      "port-version": 3
     },
     "discord-game-sdk": {
       "baseline": "3.2.1",
