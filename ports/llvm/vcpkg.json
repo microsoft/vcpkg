@@ -200,14 +200,14 @@
     "enable-mlir-python-bindings": {
       "description": "Build MLIR Python bindings.",
       "dependencies": [
-        "pybind11",
         {
           "name": "llvm",
           "default-features": false,
           "features": [
             "mlir"
           ]
-        }
+        },
+        "pybind11"
       ]
     },
     "enable-rtti": {
