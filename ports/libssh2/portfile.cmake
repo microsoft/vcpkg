@@ -8,8 +8,17 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        zlib ENABLE_ZLIB_COMPRESSION
+        zlib    ENABLE_ZLIB_COMPRESSION
+    INVERTED_FEATURES
+        zlib    CMAKE_DISABLE_FIND_PACKAGE_ZLIB # for use by the cryto backend
 )
+if("openssl" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DCRYPTO_BACKEND=OpenSSL")
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_OPTIONS "-DCRYPTO_BACKEND=WinCNG")
+else()
+    message(FATAL_ERROR "Port ${PORT} only supports OpenSSL and WinCNG crypto backends.")
+endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND FEATURE_OPTIONS "-DBUILD_STATIC_LIBS:BOOL=OFF")
 endif()
@@ -22,6 +31,8 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DENABLE_DEBUG_LOGGING=OFF
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_ZLIB
 )
 
 vcpkg_cmake_install()
@@ -36,6 +47,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libssh2.h" "ifdef _WINDLL" "if 1")
     else()
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libssh2.h" "ifdef _WINDLL" "if 0")
+    endif()
+    if(VCPKG_TARGET_STATIC_LIBRARY_PREFIX STREQUAL "")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libssh2.pc" " -lssh2" " -llibssh2")
+        if(NOT VCPKG_BUILD_TYPE)
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libssh2.pc" " -lssh2" " -llibssh2")
+        endif()
     endif()
 endif()
 
