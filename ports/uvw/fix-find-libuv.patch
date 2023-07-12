@@ -9,9 +9,9 @@ index 289c006..180383f 100644
 +
 +find_package(libuv CONFIG REQUIRED)
 +if (TARGET libuv::uv)
-+    target_link_libraries(uvw PRIVATE libuv::uv)
++    target_link_libraries(uvw INTERFACE libuv::uv)
 +else()
-+    target_link_libraries(uvw PRIVATE libuv::uv_a)
++    target_link_libraries(uvw INTERFACE libuv::uv_a)
 +endif()
 +
  install(
