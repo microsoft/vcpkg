@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif 
     REF "v${VERSION}"
-    SHA512 d81f841ac63d58f56414bf8d799a12af0c846148d2c245cd0c0cc3133edd0b3e08e5018efbc82b83fbab00209a6e0806133f63283bf7244cc4e9cf37b4fa8110
+    SHA512 ef32fced3a66d888caf2202b55bc4c81094045abfd2806216bbf0c359a30663c500ed5e33a9cef316bcfd933498e87753e9af6b3c179e84c370efd62900493c0
     HEAD_REF master
     PATCHES
         gdk-pixbuf.patch
