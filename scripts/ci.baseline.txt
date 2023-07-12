@@ -432,9 +432,6 @@ gemmlowp:x64-android=fail
 gherkin-c:arm-neon-android=fail
 gherkin-c:arm64-android=fail
 gherkin-c:x64-android=fail
-geotrans:arm-neon-android=fail
-geotrans:arm64-android=fail
-geotrans:x64-android=fail
 
 # Conflicts with libevent
 gherkin-c:arm64-windows         = skip
