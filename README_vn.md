@@ -9,7 +9,7 @@
 Vcpkg giúp bạn quản lý các thư viện C và C++ trên Windows, Linux và MacOS.
 Phần mềm này và hệ sinh thái của nó vẫn đang không ngừng phát triển, và chúng tôi luôn trân trọng những đóng góp của bạn!
 
-Nếu bạn chưa từng sử dụng vcpkg trước đây, hoặc nếu bạn đang tìm hiểu cách để sử dụng vcpkg, xin hãy xem phần [Bắt Đầu](#getting-started) cho hướng dẫn cài đặt vcpkg.
+Nếu bạn chưa từng sử dụng vcpkg trước đây, hoặc nếu bạn đang tìm hiểu cách để sử dụng vcpkg, xin hãy xem phần [Bắt Đầu](#bắt-đầu) cho hướng dẫn cài đặt vcpkg.
 
 Để xem mô tả ngắn về những lệnh khả thi, khi bạn đã cài đặt vcpkg, bạn có thể chạy `vcpkg help`, hoặc `vcpkg help [command]` cho những lệnh nhất định.
 
@@ -20,32 +20,32 @@ Nếu bạn chưa từng sử dụng vcpkg trước đây, hoặc nếu bạn đ
 
 # Mục Lục
 
-- [Vcpkg: Tổng quan](#vcpkg-overview)
-- [Mục Lục](#table-of-contents)
-- [Bắt Đầu](#getting-started)
-  - [Bắt Đầu Nhanh: Windows](#quick-start-windows)
-  - [Bắt Đầu Nhanh: Unix](#quick-start-unix)
-  - [Cài đặt Developer Tools cho Linux](#installing-linux-developer-tools)
-  - [Cài đặt Developer Tools cho macOS](#installing-macos-developer-tools)
-  - [Sử dụng vcpkg với CMake](#using-vcpkg-with-cmake)
-    - [Visual Studio Code với Công cụ CMake](#visual-studio-code-with-cmake-tools)
-    - [Vcpkg với Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
-    - [Vcpkg với CLion](#vcpkg-with-clion)
-    - [Vcpkg dưới dạng Submodule](#vcpkg-as-a-submodule)
-- [Gợi ý/Tự động điền](#tab-completionauto-completion)
-- [Các ví dụ](#examples)
-- [Đóng Góp](#contributing)
-- [Giấy Phép](#license)
-- [Bảo Mật](#security)
-- [Thu Thập Dữ Liệu](#telemetry)
+- [Vcpkg: Tổng quan](#vcpkg-tổng-quan)
+- [Mục Lục](#mục-lục)
+- [Bắt Đầu](#bắt-đầu)
+  - [Bắt Đầu Nhanh: Windows](#bắt-đầu-nhanh-windows)
+  - [Bắt Đầu Nhanh: Unix](#bắt-đầu-nhanh-unix)
+  - [Cài đặt Developer Tools cho Linux](#cài-đặt-developer-tools-cho-linux)
+  - [Cài đặt Developer Tools cho macOS](#cài-đặt-developer-tools-cho-macos)
+  - [Sử dụng vcpkg với CMake](#sử-dụng-vcpkg-với-cmake)
+    - [Visual Studio Code với Công cụ CMake](#visual-studio-code-với-công-cụ-cmake)
+    - [Vcpkg với Visual Studio CMake Projects](#vcpkg-với-visual-studio-cmake-projects)
+    - [Vcpkg với CLion](#vcpkg-với-clion)
+    - [Vcpkg dưới dạng Submodule](#vcpkg-dưới-dạng-submodule)
+- [Gợi ý/Tự động điền](#gợi-ýtự-động-điền)
+- [Các ví dụ](#các-ví-dụ)
+- [Đóng Góp](#đóng-góp)
+- [Giấy Phép](#giấy-phép)
+- [Bảo Mật](#bảo-mật)
+- [Thu Thập Dữ Liệu](#thu-thập-dữ-liệu)
 
 # Bắt Đầu
-Đầu tiên, hãy làm theo hướng dẫn cài đặt cho [Windows](#quick-start-windows), hoặc [macOS và Linux](#quick-start-unix), tùy theo hệ điều hành mà bạn đang sử dụng.
+Đầu tiên, hãy làm theo hướng dẫn cài đặt cho [Windows](#bắt-đầu-nhanh-windows), hoặc [macOS và Linux](#bắt-đầu-nhanh-unix), tùy theo hệ điều hành mà bạn đang sử dụng.
 
 Ngoài ra, hãy xem [Cài đặt và Sử dụng Packages][getting-started:using-a-package].
 Nếu một thư viện bạn cần hiện đang chưa có trong vcpkg, bạn có thể [mở một issue trên GitHub repo][contributing:submit-issue] nơi mà đội ngũ vcpkg và cộng đồng có thể thấy và có khả năng thêm port đó vào vcpkg.
 
-Sau khi bạn đã cài đặt vcpkg, bạn có thể muốn thêm [tự động điền](#tab-completionauto-completion) vào shell của bạn.
+Sau khi bạn đã cài đặt vcpkg, bạn có thể muốn thêm [tự động điền](#gợi-ýtự-động-điền) vào shell của bạn.
 
 ## Bắt Đầu Nhanh: Windows
 
@@ -102,7 +102,7 @@ Tất cả các thư viện sẽ ngay lập tức có sẵn để được `#inc
 trong project của bạn mà không cần cấu hình gì thêm.
 
 Nếu bạn đang sử dụng CMake với Visual Studio,
-hãy tiếp tục [ở đây](#vcpkg-with-visual-studio-cmake-projects).
+hãy tiếp tục [ở đây](#vcpkg-với-visual-studio-cmake-projects).
 
 Để sử dụng vcpkg với CMake bên ngoài một IDE,
 bạn có thể sử dụng file toolchain:
@@ -113,7 +113,7 @@ bạn có thể sử dụng file toolchain:
 ```
 
 Với CMake, bạn vẫn sẽ cần thêm `find_package` và những lệnh khác để sử dụng thư viện.
-Hãy xem [phần CMake](#using-vcpkg-with-cmake) để biết thêm,
+Hãy xem [phần CMake](#sử-dụng-vcpkg-với-cmake) để biết thêm,
 bao gồm việc sử dụng CMake với một IDE.
 
 ## Bắt Đầu Nhanh: Unix
@@ -153,7 +153,7 @@ $ cmake --build [build directory]
 ```
 
 Với CMake, bạn vẫn sẽ cần thêm `find_package` và những lệnh khác để sử dụng thư viện.
-Hãy xem [phần CMake](#using-vcpkg-with-cmake) để biết thêm
+Hãy xem [phần CMake](#sử-dụng-vcpkg-với-cmake) để biết thêm
 về các tốt nhất để sử dụng vcpkg với CMake,
 và Công cụ CMake cho VSCode.
 
@@ -190,7 +190,7 @@ $ xcode-select --install
 
 Sau đó làm theo hướng dẫn trong cửa sổ được mở ra.
 
-Sau đó bạn sẽ có thể khởi động vcpkg theo hướng dẫn ở [bắt đầu nhanh](#quick-start-unix)
+Sau đó bạn sẽ có thể khởi động vcpkg theo hướng dẫn ở [bắt đầu nhanh](#bắt-đầu-nhanh-unix)
 
 ## Sử dụng vcpkg với CMake
 
@@ -248,8 +248,8 @@ nhưng nó sẽ khiến việc cấu hình-build trở nên dễ dàng hơn.
 [getting-started:using-a-package]: https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
-[getting-started:linux-gcc]: #installing-linux-developer-tools
-[getting-started:macos-dev-tools]: #installing-macos-developer-tools
+[getting-started:linux-gcc]: #cài-đặt-developer-tools-cho-linux
+[getting-started:macos-dev-tools]: #cài-đặt-developer-tools-cho-macos
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
