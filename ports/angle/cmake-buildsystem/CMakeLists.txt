@@ -398,7 +398,7 @@ if (angle_use_x11)
     target_sources(ANGLE PRIVATE ${libangle_gpu_info_util_x11_sources})
     target_sources(ANGLE PRIVATE "src/gpu_info_util/SystemInfo_x11.cpp")
     target_compile_definitions(ANGLE PRIVATE ANGLE_USE_X11 GPU_INFO_USE_X11)
-    target_link_libraries(ANGLE PRIVATE $X11_LIBRARIES} X11::X11 X11::Xi X11::Xext)
+    target_link_libraries(ANGLE PRIVATE ${X11_LIBRARIES} X11::X11 X11::Xi X11::Xext)
 endif()
 
 # set export names of some targets to match prior vcpkg port buildsystem
