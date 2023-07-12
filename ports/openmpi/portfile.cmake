@@ -9,8 +9,8 @@ vcpkg_download_distfile(ARCHIVE
   SHA512 f7b177121863ef79df6106639d18a89c028442b1314340638273b12025c4dc2cf9b5316cb7e6ecca8b65a51ee40a306a6b0970d7cce727fbb269a14f89af3161
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
         keep_isystem.patch

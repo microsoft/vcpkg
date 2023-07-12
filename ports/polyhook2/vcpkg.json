@@ -1,6 +1,7 @@
 {
   "name": "polyhook2",
-  "version-date": "2022-03-01",
+  "version-date": "2023-05-16",
+  "port-version": 1,
   "description": "C++17, x86/x64 Hooking Library v2.0",
   "homepage": "https://github.com/stevemk14ebr/PolyHook_2_0",
   "license": "MIT",
@@ -16,28 +17,20 @@
     }
   ],
   "default-features": [
-    "capstone",
     "detours",
     "exception",
     "inlinentd",
     "pe",
-    "virtuals",
-    "zydis"
+    "virtuals"
   ],
   "features": {
-    "capstone": {
-      "description": "Capstone disassembler integration.",
-      "dependencies": [
-        {
-          "name": "capstone",
-          "features": [
-            "x86"
-          ]
-        }
-      ]
-    },
     "detours": {
-      "description": "Implement detour functionality"
+      "description": "Implement detour functionality",
+      "dependencies": [
+        "asmjit",
+        "asmtk",
+        "zydis"
+      ]
     },
     "exception": {
       "description": "Implement all exception hooking functionality"
@@ -53,12 +46,6 @@
     },
     "virtuals": {
       "description": "Implement all virtual table hooking functionality"
-    },
-    "zydis": {
-      "description": "Zydis disassembler integration.",
-      "dependencies": [
-        "zydis"
-      ]
     }
   }
 }

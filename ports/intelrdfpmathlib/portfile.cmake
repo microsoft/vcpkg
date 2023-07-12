@@ -6,9 +6,10 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 4d445855f41b066b784f0c6b4e52f854df4129fa9d43569b1e1518f002b860f69796459c78de46a8ea24fb6e7aefe7f8bc1f253e78971a5ef202dab2a7b1b75a
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES missing-includes.patch
 )
 
 set(LIB_SOURCE_PATH "${SOURCE_PATH}/LIBRARY")

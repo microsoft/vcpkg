@@ -2,11 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/zstd
     REF "v${VERSION}"
-    SHA512 b6f64850ceb6cfed831fff3c43508d2a72338862a96dd9430b1d3ebbfcee40201c8b6dcf8b6b603e252bb96f3f283c9cb07da7f24414187f5f1fea3b51e01863
+    SHA512 356994e0d8188ce97590bf86b602eb50cbcb2f951594afb9c2d6e03cc68f966862505afc4a50e76efd55e4cfb11dbc9b15c7837b7827a961a1311ef72cd23505
     HEAD_REF dev
     PATCHES
         no-static-suffix.patch
-        emscripten.patch
+        fix-emscripten-and-clang-cl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZSTD_BUILD_STATIC)
