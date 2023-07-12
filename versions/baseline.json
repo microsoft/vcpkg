@@ -2084,6 +2084,10 @@
       "baseline": "1.8.0",
       "port-version": 10
     },
+    "devpaul123-thread-pool": {
+      "baseline": "0.6.0",
+      "port-version": 0
+    },
     "dimcli": {
       "baseline": "7.1.0",
       "port-version": 0
