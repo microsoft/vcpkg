@@ -1,0 +1,18 @@
+{
+  "name": "devpaul123-thread-pool",
+  "version": "0.6.0",
+  "homepage": "https://github.com/DeveloperPaul123/thread-pool",
+  "maintainers": "Paul Tsouchlos <developer.paul.123@gmail.com>",
+  "description": "dp::thread_pool - fast, lightweight C++20 thread pool.",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
