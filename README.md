@@ -322,7 +322,7 @@ places the associated license(s) in the location `installed/<triplet>/share/<por
 Most ports in vcpkg build the libraries in question using the original build system preferred
 by the original developers of those libraries, and download source code and build tools from their
 official distribution locations. For use behind a firewall, the specific access needed will depend
-on which ports are being installed. If you must install in an "air gapped" environment, consider
+on which ports are being installed. If you must install it in an "air gapped" environment, consider
 installing once in a non-"air gapped" environment, populating an
 [asset cache](https://learn.microsoft.com/vcpkg/users/assetcaching) shared with the otherwise "air gapped" environment.
 
