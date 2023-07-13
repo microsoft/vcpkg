@@ -3,8 +3,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO machinezone/IXWebSocket
-    REF 2149ac7ed60d7713a86446c4b93c6004f66415ac #v11.2.6
-    SHA512 737667f6e89156168db771fd2a6d3686cd51ddc753fa083ae399a84c689770a09fd86643bb2d838e9ae5a729067236f1d9b4ceece912145cfb83b29541a3d2c1
+    REF "v${VERSION}"
+    SHA512 698ad96f25f53bf48906201826008bad46c657f8043d3653988716ddd9fb5dfeb52cebc002b3af76b91d0561155607a5f38bbc2c808aa67f438432207da82a35
+    PATCHES
+        fix-C2065-of-errorMsg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -18,18 +20,19 @@ if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-	${FEATURE_OPTIONS}
-	-DUSE_TLS=1
+        ${FEATURE_OPTIONS}
+        -DUSE_TLS=1
+    MAYBE_UNUSED_VARIABLES
+        USE_SECURE_TRANSPORT
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ixwebsocket)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ixwebsocket)
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

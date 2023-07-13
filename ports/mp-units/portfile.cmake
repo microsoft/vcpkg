@@ -1,15 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mpusz/units
-    REF v0.7.0
-    SHA512 72175f34f358d0741650ce9c8a7b28fced90cc45ddd3f1662ae1cb9ff7d31403ff742ee07ab4c96bd2d95af714d9111a888cf6acccb91e568e12d1ef663b2f64
+    REF "v${VERSION}"
+    SHA512 6369c886629955c6457911b98a702c29bacce58e9049e1da700055a3f8b1981cce4f545c1d09550ec1c57f8805f7fc1f0198118950a14b2a7b797dd437ed72df
     PATCHES
-        cmake.patch
-        config.patch
+      config.patch
 )
 
+set(USE_LIBFMT OFF)
+if ("use-libfmt" IN_LIST FEATURES)
+    set(USE_LIBFMT ON)
+endif()
+
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH "${SOURCE_PATH}/src"
+    OPTIONS
+      -DUNITS_USE_LIBFMT=${USE_LIBFMT}
 )
 
 vcpkg_cmake_install()
@@ -17,7 +23,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 # Handle copyright/readme/package files
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug"

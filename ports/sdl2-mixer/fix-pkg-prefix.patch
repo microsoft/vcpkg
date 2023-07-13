@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e70c4d0b..8038abee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -753,7 +753,7 @@ if(SDL2MIXER_INSTALL)
+     endif()
+ 
+     ##### export files #####
+-    if(WIN32 AND NOT MINGW)
++    if(0)
+         set(PKG_PREFIX "cmake")
+     else()
+         set(PKG_PREFIX "${CMAKE_INSTALL_LIBDIR}/cmake/SDL2_mixer")

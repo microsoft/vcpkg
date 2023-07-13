@@ -1,0 +1,38 @@
+{
+  "name": "rubberband",
+  "version": "3.2.1",
+  "port-version": 1,
+  "description": "A high quality software library for audio time-stretching and pitch-shifting.",
+  "homepage": "https://www.breakfastquay.com/rubberband/",
+  "license": "GPL-2.0-or-later",
+  "supports": "!uwp & !(windows & static) & !xbox",
+  "dependencies": [
+    {
+      "name": "fftw3",
+      "platform": "(arm & windows) | (x86 & windows) | (arm64 & osx)"
+    },
+    "libsamplerate",
+    {
+      "name": "sleef",
+      "platform": "!(arm & windows) & !(x86 & windows) & !(arm64 & osx)"
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "features": {
+    "cli": {
+      "description": "Build the command-line utility",
+      "dependencies": [
+        {
+          "name": "libsndfile",
+          "default-features": false,
+          "features": [
+            "external-libs"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,9 +1,10 @@
 {
   "name": "gobject-introspection",
-  "version": "1.70.0",
-  "port-version": 1,
+  "version": "1.72.0",
+  "port-version": 3,
   "description": "A middleware layer between C libraries (using GObject) and language bindings.",
   "homepage": "https://gi.readthedocs.io/en/latest/",
+  "license": null,
   "supports": "!static & (native | (windows & x86))",
   "dependencies": [
     {

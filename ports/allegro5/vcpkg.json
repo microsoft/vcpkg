@@ -1,9 +1,10 @@
 {
   "name": "allegro5",
   "version": "5.2.6.0",
-  "port-version": 2,
+  "port-version": 4,
   "description": "Allegro is a cross-platform library mainly aimed at video game and multimedia programming. It handles common, low-level tasks such as creating windows, accepting user input, loading data, drawing images, playing sounds, etc. and generally abstracting away the underlying platform. However, Allegro is not a game engine: you are free to design and structure your program as you like.",
   "homepage": "https://github.com/liballeg/allegro5",
+  "license": "BSD-3-Clause AND Zlib",
   "dependencies": [
     "bzip2",
     "freetype",

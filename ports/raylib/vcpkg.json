@@ -1,12 +1,16 @@
 {
   "name": "raylib",
-  "version-semver": "4.0.0",
-  "port-version": 2,
+  "version-semver": "4.5.0",
+  "port-version": 1,
   "description": "A simple and easy-to-use library to enjoy videogames programming",
   "homepage": "https://github.com/raysan5/raylib",
   "license": "Zlib",
   "supports": "!(arm | uwp)",
   "dependencies": [
+    {
+      "name": "glfw3",
+      "platform": "!(windows | emscripten)"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -1,6 +1,81 @@
 {
   "versions": [
     {
+      "git-tree": "57e5580a75a4aa261871733eeda97721e557fe58",
+      "version": "0.6.5",
+      "port-version": 0
+    },
+    {
+      "git-tree": "fd5779f3ac082cce4ffa01f13b9ed0f9f4f74d73",
+      "version": "0.6.4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "26846f654fd9638934b225f981999759025ff252",
+      "version": "0.6.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "d7e8c1737ce3b69ee1dda758a40891fc460c8ff9",
+      "version": "0.6.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b3b1a8af6979eb89aefb53e29667592309485c18",
+      "version": "0.6.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4c8485e46d8fe7b95d8e3cd0e3423ef80b328c8f",
+      "version": "0.6.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b230da8becc701f07efd5f68cba93fcf4b9be02b",
+      "version": "0.5.4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "10a861c0b8f25d9243ce5136b508ef30c9eb126d",
+      "version": "0.5.3",
+      "port-version": 2
+    },
+    {
+      "git-tree": "5ac3f218a83c74fd1479bb64ae8fd07e04a7309e",
+      "version": "0.5.3",
+      "port-version": 1
+    },
+    {
+      "git-tree": "15c6d0c378a9b3db466534495786b58b171957be",
+      "version": "0.5.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "d09222f412378415ba0afcd6aa37ec01a6b751e8",
+      "version": "0.5.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b6921611eaa64bc5a1864afb305afc272035b396",
+      "version": "0.5.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "731787acd156ff3881f9ee1cc7c17d70bc1a8ce0",
+      "version": "0.5.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2d63a9c2ec32267974a30485bf6f64ca57f1a2f8",
+      "version": "0.4.18",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2d6b1817e6134faaf9a3f85d1719c925dd15a3a9",
+      "version": "0.4.17",
+      "port-version": 0
+    },
+    {
       "git-tree": "3dff7be1b47155d1580f43be48d8b95761251883",
       "version-semver": "0.4.15",
       "port-version": 0

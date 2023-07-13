@@ -45,6 +45,12 @@ else()
 endif()
 file(GLOB_RECURSE TO_REMOVE "${CURRENT_PACKAGES_DIR}/lib/*${_lib_suffix}" "${CURRENT_PACKAGES_DIR}/debug/lib/*${_lib_suffix}" "${CURRENT_PACKAGES_DIR}/lib/*${_lib_suffix}.*" "${CURRENT_PACKAGES_DIR}/debug/lib/*${_lib_suffix}.*")
 file(REMOVE ${TO_REMOVE})
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/etc/profile.d/debuginfod.sh" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../..")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc")
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/elfutils/bin/eu-make-debug-archive" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/elfutils/debug")
  
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

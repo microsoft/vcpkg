@@ -2,116 +2,123 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/gmp.h" OR "${CURRENT_INSTALLED_DIR}/
     message(FATAL_ERROR "Can't build ${PORT} if mpir is installed. Please remove mpir, and try install ${PORT} again if you need it.")
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO ShiftMediaProject/gmp
-        REF 0018c44e8dfcc3b64b43e0aea4b3f419f0b65fd0 #v6.2.1-2
-        SHA512 2405e2536ca9fe0b890f44f54c936ac0e4b5a9ebe6a19e1c48a9c21b7211d2a1b45865852e3c65a98a6735216a4e27bea75c0fd6e52efeed4baecd95da9895a5
-        HEAD_REF master
-        PATCHES
-            vs.build.patch
-            runtime.patch
-            adddef.patch
-    )
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
-    yasm_tool_helper(OUT_VAR YASM)
-    file(TO_NATIVE_PATH "${YASM}" YASM)
+vcpkg_download_distfile(
+    ARCHIVE
+    URLS
+        "https://ftpmirror.gnu.org/gmp/gmp-${VERSION}.tar.xz"
+        "https://ftp.gnu.org/gnu/gmp/gmp-${VERSION}.tar.xz"
+        "https://gmplib.org/download/gmp/gmp-${VERSION}.tar.xz"
+    FILENAME "gmp-${VERSION}.tar.xz"
+    SHA512 c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
+)
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        set(CONFIGURATION_RELEASE ReleaseDLL)
-        set(CONFIGURATION_DEBUG DebugDLL)
-    else()
-        set(CONFIGURATION_RELEASE Release)
-        set(CONFIGURATION_DEBUG Debug)
-    endif()
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    SOURCE_BASE "v${VERSION}"
+    PATCHES
+        asmflags.patch
+        cross-tools.patch
+        subdirs.patch
+        msvc_symbol.patch
+        arm64-coff.patch
+        gmp-arm64-asm-fix-5f32dbc41afc.patch # Avoid the x18 register since it is reserved on arm64 osx and windows. Source: https://gmplib.org/repo/gmp/raw-rev/5f32dbc41afc
+)
 
-    if(VCPKG_TARGET_IS_UWP)
-        string(APPEND CONFIGURATION_RELEASE WinRT)
-        string(APPEND CONFIGURATION_DEBUG WinRT)
-    endif()
-
-    #Setup YASM integration
-    set(_porjectfile)
-    if(VCPKG_TARGET_IS_UWP)
-        set(_porjectfile "${SOURCE_PATH}/SMP/libgmp_winrt.vcxproj")
-    else()
-        set(_porjectfile "${SOURCE_PATH}/SMP/libgmp.vcxproj")
-    endif()
-    set(_file "${_porjectfile}")
-    file(READ "${_file}" _contents)
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
-                     "<Import Project=\"${CURRENT_HOST_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
-                    _contents "${_contents}")
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
-                     "<Import Project=\"${CURRENT_HOST_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
-                    _contents "${_contents}")
-    file(WRITE "${_file}" "${_contents}")
-
-    vcpkg_install_msbuild(
-        USE_VCPKG_INTEGRATION
-        SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH SMP/libgmp.sln
-        PLATFORM ${TRIPLET_SYSTEM_ARCH}
-        LICENSE_SUBPATH COPYING.LESSERv3
-        TARGET Rebuild
-        RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
-        DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
-        SKIP_CLEAN
-        OPTIONS "/p:YasmPath=${YASM}"
-    )
-    get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
-    set(PACKAGE_VERSION 6.2.1)
-    set(PACKAGE_NAME gmp)
-    set(prefix "${CURRENT_INSTALLED_DIR}")
-    set(exec_prefix "\${prefix}")
-    set(libdir "\${prefix}/lib")
-    set(includedir "\${prefix}/include")
-    set(LIBS -lgmp)
-    configure_file("${SOURCE_PATH}/gmp.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gmp.pc" @ONLY)
-    configure_file("${SOURCE_PATH}/gmpxx.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gmpxx.pc" @ONLY)
-    set(prefix "${CURRENT_INSTALLED_DIR}/debug")
-    set(exec_prefix "\${prefix}")
-    set(libdir "\${prefix}/lib")
-    set(includedir "\${prefix}/../include")
-    set(LIBS -lgmpd)
-    configure_file("${SOURCE_PATH}/gmp.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gmp.pc" @ONLY)
-    configure_file("${SOURCE_PATH}/gmpxx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gmpxx.pc" @ONLY)
-    vcpkg_fixup_pkgconfig()
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gmp.h"
-                            "#if defined(DLL_EXPORT) && defined(NO_ASM)"
-                            "#if 1")
-    endif()
-else()
-    vcpkg_download_distfile(
-        ARCHIVE
-        URLS https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
-        FILENAME gmp-6.2.1.tar.xz
-        SHA512 c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
-    )
-
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
-        ARCHIVE ${ARCHIVE}
-        REF gmp-6.2.1
-        PATCHES
-            tools.patch
-    )
-
-    vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
-        AUTOCONFIG
-        OPTIONS
-            --enable-cxx
-    )
-
-    vcpkg_install_make()
-    vcpkg_fixup_pkgconfig()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-    # # Handle copyright
-    file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_list(SET OPTIONS)
+if("fat" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS "--enable-fat")
 endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_list(APPEND OPTIONS
+        "ac_cv_func_memset=yes"
+        "gmp_cv_asm_w32=.word"
+    )
+endif()
+
+set(disable_assembly OFF)
+set(ccas "")
+set(asmflags "-c")
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        string(APPEND asmflags " --target=i686-pc-windows-msvc")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        string(APPEND asmflags " --target=x86_64-pc-windows-msvc")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        string(APPEND asmflags " --target=arm64-pc-windows-msvc")
+    else()
+        set(disable_assembly ON)
+    endif()
+    if(NOT disable_assembly)
+        vcpkg_find_acquire_program(CLANG)
+        set(ccas "${CLANG}")
+    endif()
+elseif(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    # not exporting asm functions
+    set(disable_assembly ON)
+elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+    vcpkg_list(APPEND OPTIONS "ABI=32")
+    string(APPEND asmflags " -m32")
+else()
+    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+endif()
+
+if(disable_assembly)
+    vcpkg_list(APPEND OPTIONS "--enable-assembly=no")
+elseif(ccas)
+    cmake_path(GET ccas PARENT_PATH ccas_dir)
+    vcpkg_add_to_path("${ccas_dir}")
+    cmake_path(GET ccas FILENAME ccas_command)
+endif()
+vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
+
+if(VCPKG_CROSSCOMPILING)
+    set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+endif()
+
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
+    OPTIONS
+        ${OPTIONS}
+        --enable-cxx
+        --with-pic
+        --with-readline=no
+        "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+)
+vcpkg_install_make()
+vcpkg_fixup_pkgconfig()
+
+if(NOT VCPKG_CROSSCOMPILING)
+    file(INSTALL
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-bases${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-fac${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-fib${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-jacobitab${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-psqr${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-trialdivtab${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
+        USE_SOURCE_PERMISSIONS
+    )
+    vcpkg_copy_tool_dependencies("${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/README"
+        "${SOURCE_PATH}/COPYING.LESSERv3"
+        "${SOURCE_PATH}/COPYINGv3"
+        "${SOURCE_PATH}/COPYINGv2"
+)

@@ -1,6 +1,8 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
+set(${PORT}_PATCHES "")
+
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -9,6 +11,8 @@ FEATURES
     "spellchecker"          FEATURE_webengine_spellchecker
     "geolocation"           FEATURE_webengine_geolocation
     "webchannel"            FEATURE_webengine_webchannel
+    "geolocation"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Positioning
+    "webchannel"            CMAKE_REQUIRE_FIND_PACKAGE_Qt6WebChannel
 INVERTED_FEATURES
     "geolocation"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Positioning
     "webchannel"            CMAKE_DISABLE_FIND_PACKAGE_Qt6WebChannel
@@ -42,8 +46,6 @@ endif()
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
-vcpkg_find_acquire_program(GPERF)
-vcpkg_find_acquire_program(PYTHON2)
 
 #vcpkg_find_acquire_program(GN) # Qt builds its own internal version
 
@@ -53,16 +55,18 @@ if(NOT NODEJS)
     message(FATAL_ERROR "node not found! Please install it via your system package manager!")
 endif()
 
-get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY )
-vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY )
-vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
+
+vcpkg_find_acquire_program(PYTHON3)
+x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES html5lib)
+
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
+set(GPERF "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
 if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
@@ -73,12 +77,18 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     endif()
 endif()
 
-### Download third_party modules
-vcpkg_from_git(
-    OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
-    URL git://code.qt.io/qt/qtwebengine-chromium.git
-    REF "${${PORT}_chromium_REF}"
-)
+string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtree_length)
+# We know that C:/buildrees/${PORT} is to long to build Release. Debug works however. Means 24 length is too much but 23 might work.
+if(buildtree_length GREATER 22 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+    message(WARNING "Buildtree path '${CURRENT_BUILDTREES_DIR}' is too long.\nConsider passing --x-buildtrees-root=<shortpath> to vcpkg!\nTrying to use '${CURRENT_BUILDTREES_DIR}/../tmp'")
+    set(CURRENT_BUILDTREES_DIR "${CURRENT_BUILDTREES_DIR}/../tmp") # activly avoid long path issues in CI. -> Means CI will not return logs
+    cmake_path(NORMAL_PATH CURRENT_BUILDTREES_DIR)
+    string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtree_length_new)
+    if(buildtree_length_new GREATER 22)
+         message(FATAL_ERROR "Buildtree path is too long. Build will fail! Pass --x-buildtrees-root=<shortpath> to vcpkg!")
+    endif()
+    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+endif()
 
 ##### qt_install_submodule
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
@@ -88,21 +98,14 @@ qt_download_submodule(PATCHES ${${PORT}_PATCHES})
 if(QT_UPDATE_VERSION)
     return()
 endif()
-if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/chromium")
-    file(RENAME "${SOURCE_PATH_WEBENGINE}/chromium" "${SOURCE_PATH}/src/3rdparty/chromium")
-endif()
-if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/gn")
-    file(RENAME "${SOURCE_PATH_WEBENGINE}/gn" "${SOURCE_PATH}/src/3rdparty/gn")
-endif()
 
-qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes. 
+qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
                     OPTIONS ${FEATURE_OPTIONS}
                         -DGPerf_EXECUTABLE=${GPERF}
                         -DBISON_EXECUTABLE=${BISON}
                         -DFLEX_EXECUTABLE=${FLEX}
-                        #-DGn_EXECUTABLE=${GN}
-                        -DPython2_EXECUTABLE=${PYTHON2}
                         -DNodejs_EXECUTABLE=${NODEJS}
+                        -DQT_FEATURE_webengine_jumbo_build=0
                    OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
                    OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
 

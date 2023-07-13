@@ -1,19 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4406362..0595ab8 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -120,9 +120,9 @@ if (WIN32)
-         PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/mman-win32>)
- endif (WIN32)
- 
--add_subdirectory(trantor)
-+find_package(Trantor CONFIG REQUIRED)
- 
--target_link_libraries(${PROJECT_NAME} PUBLIC trantor)
-+target_link_libraries(${PROJECT_NAME} PUBLIC Trantor::Trantor)
- 
- if(${CMAKE_SYSTEM_NAME} STREQUAL "Haiku")
-     target_link_libraries(${PROJECT_NAME} PRIVATE network)
-@@ -316,11 +316,10 @@ endif (NOT WIN32)
+@@ -360,11 +360,10 @@ endif (NOT WIN32)
  
  if (BUILD_POSTGRESQL)
      # find postgres
@@ -24,12 +13,12 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 -        target_link_libraries(${PROJECT_NAME} PRIVATE pg_lib)
 +    find_package(PostgreSQL REQUIRED)
 +    if(PostgreSQL_FOUND)
-+      set(pg_FOUND true)
-+      target_link_libraries(${PROJECT_NAME} PRIVATE PostgreSQL::PostgreSQL)
++        set(pg_FOUND true)
++        target_link_libraries(${PROJECT_NAME} PRIVATE PostgreSQL::PostgreSQL)
          set(DROGON_SOURCES
              ${DROGON_SOURCES}
-             orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc)
-@@ -348,7 +348,7 @@ if (BUILD_POSTGRESQL)
+             orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc
+@@ -394,7 +393,7 @@ if (BUILD_POSTGRESQL)
                  ${private_headers}
                  orm_lib/src/postgresql_impl/PgConnection.h)
          endif (libpq_supports_batch)
@@ -38,15 +27,20 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  endif (BUILD_POSTGRESQL)
  
  if (BUILD_MYSQL)
-diff --git a/drogon_ctl/CMakeLists.txt b/drogon_ctl/CMakeLists.txt
+
+index 9f2f1e7..76bd2ec 100755
 --- a/drogon_ctl/CMakeLists.txt
 +++ b/drogon_ctl/CMakeLists.txt
-@@ -19,7 +19,7 @@ add_executable(_drogon_ctl
+@@ -19,7 +19,11 @@ add_executable(_drogon_ctl
  target_link_libraries(_drogon_ctl ${PROJECT_NAME})
- if (WIN32 AND BUILD_DROGON_SHARED)
+ if (WIN32 AND BUILD_SHARED_LIBS)
    set(DROGON_FILE $<TARGET_FILE:drogon>)
 -  set(TRANTOR_FILE $<TARGET_FILE:trantor>)
-+  set(TRANTOR_FILE $<TARGET_FILE:Trantor::Trantor>)
++  if (USE_SUBMODULE)
++    set(TRANTOR_FILE $<TARGET_FILE:trantor>)
++  else()
++    set(TRANTOR_FILE $<TARGET_FILE:Trantor::Trantor>)
++  endif()
    add_custom_command(TARGET _drogon_ctl POST_BUILD
            COMMAND ${CMAKE_COMMAND}
            -DCTL_FILE=${DROGON_FILE}

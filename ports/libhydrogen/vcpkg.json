@@ -1,8 +1,9 @@
 {
   "name": "libhydrogen",
-  "version-date": "2021-12-02",
+  "version-date": "2022-06-21",
   "description": "A lightweight, secure, easy-to-use crypto library suitable for constrained environments",
   "homepage": "https://github.com/jedisct1/libhydrogen",
+  "license": "ISC",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

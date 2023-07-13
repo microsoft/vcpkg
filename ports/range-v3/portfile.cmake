@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ericniebler/range-v3
-    REF 83783f578e0e6666d68a3bf17b0038a80e62530e # 2021-11-2
-    SHA512 f0953e3c4e25ddf2f94b583080b8966faf1973243e01f77d23f8c04c2e0352003e4bd12490a46176472ad46c80dec99a1a8880a9bde8006eb01e3c3d8eee2fb4
+    REF a81477931a8aa2ad025c6bda0609f38e09e4d7ec # Dude, where's my bored ape? (0.12.0)
+    SHA512 e58030bc7c281e90298025dc21fed9bdabda358cd847b59e5b58feb3e0b93fcf6398e3b8e2912e45deeed67f454c08d4fc4df7f8d0dc378b437612f15c0832fe
     HEAD_REF master
 )
 

@@ -1,10 +1,19 @@
 {
   "name": "libcroco",
   "version": "0.6.13",
-  "port-version": 3,
+  "port-version": 5,
   "description": "A standalone css2 parsing and manipulation library",
+  "license": "LGPL-2.0-only",
   "dependencies": [
     "glib",
-    "libxml2"
+    "libxml2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

@@ -1,13 +1,14 @@
 {
   "name": "matplotplusplus",
-  "version-date": "2021-04-11",
-  "port-version": 5,
+  "version": "1.2.0",
+  "port-version": 1,
   "description": "A C++ graphics library for data visualization",
   "homepage": "https://alandefreitas.github.io/matplotplusplus/",
   "license": "MIT",
   "supports": "!uwp & !(windows & arm)",
   "dependencies": [
     "cimg",
+    "nodesoup",
     {
       "name": "vcpkg-cmake",
       "host": true

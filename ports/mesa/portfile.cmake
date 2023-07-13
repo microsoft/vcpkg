@@ -1,20 +1,3 @@
-# Build-Depends: From X Window PR: zstd, drm (!windows), elfutils (!windows), wayland (!windows), wayland-protocols (!windows), xdamage, xshmfence (!windows), x11, xcb, xfixes, xext, xxf86vm, xrandr, xv, xvmc (!windows), egl-registry, opengl-registry, tool-meson
-# Required LLVM modules: LLVM (modules: bitwriter, core, coroutines, engine, executionengine, instcombine, mcdisassembler, mcjit, scalaropts, transformutils) found: YES 
-
-# Patches are from https://github.com/pal1000/mesa-dist-win/tree/master/patches
-set(PATCHES
-    # Fix swrAVX512 build
-    swravx512-post-static-link.patch
-    # Fix swr build with MSVC
-    swr-msvc-2.patch
-    # Fix swr build with LLVM 13
-    swr-llvm13.patch
-    # Fix radv MSVC build with LLVM 13
-    radv-msvc-llvm13-2.patch
-    # Fix d3d10sw MSVC build
-    d3d10sw.patch
-)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # some parts of this port can only build as a shared library.
@@ -24,71 +7,13 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-21.2.5
-    SHA512 a9ead27f08e862738938cf728928b7937ff37e4c26967f2e46e40a3c8419159397f75b2f4ce43f9b453b35bb3716df581087fb7ba8434fafdfab9488c3db6f92
+    REF b590fd1951a1949e5fe2bbfd61f0814c402af263 # mesa-23.0.1
+    SHA512 7a66a587ef01fb58b51f3ebea584b40f70114844484df528d38ad1caa071fac7d6e23f1ed80309847f7e28468071571294bb8812a9882c0b86c89cf5a4144fe9
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
-    PATCHES ${PATCHES}
-) 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
-vcpkg_add_to_path("${PYTHON3_DIR}/Scripts")
-set(ENV{PYTHON} "${PYTHON3}")
+)
 
-function(vcpkg_get_python_package PYTHON_DIR )
-    cmake_parse_arguments(PARSE_ARGV 0 _vgpp "" "PYTHON_EXECUTABLE" "PACKAGES")
-    
-    if(NOT _vgpp_PYTHON_EXECUTABLE)
-        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PYTHON_EXECUTABLE!")
-    endif()
-    if(NOT _vgpp_PACKAGES)
-        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PACKAGES!")
-    endif()
-    if(NOT _vgpp_PYTHON_DIR)
-        get_filename_component(_vgpp_PYTHON_DIR "${_vgpp_PYTHON_EXECUTABLE}" DIRECTORY)
-    endif()
-
-    if (WIN32)
-        set(PYTHON_OPTION "")
-    else()
-        set(PYTHON_OPTION "--user")
-    endif()
-
-    if("${_vgpp_PYTHON_DIR}" MATCHES "${DOWNLOADS}") # inside vcpkg
-        if(NOT EXISTS "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-            if(NOT EXISTS "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-                vcpkg_from_github(
-                    OUT_SOURCE_PATH PYFILE_PATH
-                    REPO pypa/get-pip
-                    REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
-                    SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
-                    HEAD_REF master
-                )
-                execute_process(COMMAND "${_vgpp_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION})
-            endif()
-            foreach(_package IN LISTS _vgpp_PACKAGES)
-                execute_process(COMMAND "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package} ${PYTHON_OPTION})
-            endforeach()
-        else()
-            foreach(_package IN LISTS _vgpp_PACKAGES)
-                execute_process(COMMAND "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package})
-            endforeach()
-        endif()
-        if(NOT VCPKG_TARGET_IS_WINDOWS)
-            execute_process(COMMAND pip3 install ${_vgpp_PACKAGES})
-        endif()
-    else() # outside vcpkg
-        foreach(_package IN LISTS _vgpp_PACKAGES)
-            execute_process(COMMAND ${_vgpp_PYTHON_EXECUTABLE} -c "import ${_package}" RESULT_VARIABLE HAS_ERROR)
-            if(HAS_ERROR)
-                message(FATAL_ERROR "Python package '${_package}' needs to be installed for port '${PORT}'.\nComplete list of required python packages: ${_vgpp_PACKAGES}")
-            endif()
-        endforeach()
-    endif()
-endfunction()
-
-vcpkg_get_python_package(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES setuptools mako)
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako )
 
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
@@ -115,7 +40,6 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
 endif()
 
 # For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more. 
-#string(APPEND GALLIUM_DRIVERS 'auto')
 list(APPEND MESA_OPTIONS -Dzstd=enabled)
 list(APPEND MESA_OPTIONS -Dshared-llvm=auto)
 list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
@@ -124,25 +48,18 @@ list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
 list(APPEND MESA_OPTIONS -Dglvnd=false)
 list(APPEND MESA_OPTIONS -Dglx=disabled)
 list(APPEND MESA_OPTIONS -Dgbm=disabled)
-list(APPEND MESA_OPTIONS -Dosmesa=true)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND MESA_OPTIONS -Dshared-swr=false)
-    list(APPEND MESA_OPTIONS "-Dswr-arches=['avx']")
+if("offscreen" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dosmesa=true)
 else()
-    list(APPEND MESA_OPTIONS -Dshared-swr=true)
-    list(APPEND MESA_OPTIONS "-Dswr-arches=['avx','avx2','knl','skx']")
+    list(APPEND MESA_OPTIONS -Dosmesa=false)
 endif()
 
-string(APPEND GALLIUM_DRIVERS 'swrast')
 if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
-    string(APPEND GALLIUM_DRIVERS ",'swr'") # SWR always requires llvm
 else()
     list(APPEND MESA_OPTIONS -Dllvm=disabled)
 endif()
-
-list(APPEND MESA_OPTIONS -Dgallium-drivers=[${GALLIUM_DRIVERS}])
 
 if("gles1" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dgles1=enabled)
@@ -187,24 +104,38 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    # installed by egl-registry
+    "${CURRENT_PACKAGES_DIR}/include/KHR"
+    "${CURRENT_PACKAGES_DIR}/include/EGL"
+    # installed by opengl-registry
+    "${CURRENT_PACKAGES_DIR}/include/GL"
+    "${CURRENT_PACKAGES_DIR}/include/GLES"
+    "${CURRENT_PACKAGES_DIR}/include/GLES2"
+    "${CURRENT_PACKAGES_DIR}/include/GLES3"
+)
+file(GLOB remaining "${CURRENT_PACKAGES_DIR}/include/*")
+if(NOT remaining)
+    # All headers to be provided by egl-registry and/or opengl-registry
+    set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
+endif()
 
-#installed by egl-registry
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/egl.h")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglext.h")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglplatform.h")
-#installed by opengl-registry
-set(_double_files include/GL/glcorearb.h include/GL/glext.h include/GL/glxext.h 
-    include/GLES/egl.h include/GLES/gl.h include/GLES/glext.h include/GLES/glplatform.h 
-    include/GLES2/gl2.h include/GLES2/gl2ext.h include/GLES2/gl2platform.h
-    include/GLES3/gl3.h  include/GLES3/gl31.h include/GLES3/gl32.h include/GLES3/gl3platform.h)
-list(TRANSFORM _double_files PREPEND "${CURRENT_PACKAGES_DIR}/")
-file(REMOVE ${_double_files})
+if(VCPKG_TARGET_IS_WINDOWS)
+    # opengl32.lib is already installed by port opengl.
+    # Mesa claims to provide a drop-in replacement of opengl32.dll.
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/opengl32.lib")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32.lib")
+    endif()
+endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES2")
-# Handle copyright
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+if(FEATURES STREQUAL "core")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/license.rst")

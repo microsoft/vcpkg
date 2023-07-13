@@ -1,11 +1,16 @@
 {
   "name": "ignition-transport8",
-  "version-string": "8.1.0",
-  "port-version": 2,
+  "version": "8.1.0",
+  "port-version": 4,
   "description": "Transport middleware for robotics",
+  "license": null,
   "dependencies": [
     "cppzmq",
     "ignition-cmake2",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    },
     "ignition-msgs5",
     {
       "name": "libuuid",

@@ -1,6 +1,6 @@
 {
   "name": "kf5guiaddons",
-  "version": "5.89.0",
+  "version": "5.98.0",
   "description": "Addons to QtGui",
   "homepage": "https://api.kde.org/frameworks/kguiaddons/html/index.html",
   "dependencies": [
@@ -33,7 +33,8 @@
         {
           "name": "kf5guiaddons",
           "features": [
-            "wayland"
+            "wayland",
+            "x11"
           ],
           "platform": "linux"
         }
@@ -42,7 +43,20 @@
     "wayland": {
       "description": "Linux-only. Build with support for KeySequenceEditor inhibiting shortcuts on Wayland",
       "dependencies": [
-        "qt5-wayland"
+        "plasma-wayland-protocols",
+        {
+          "name": "qt5-wayland",
+          "platform": "linux"
+        }
+      ]
+    },
+    "x11": {
+      "description": "Linux-only. Build with support for KeySequenceEditor inhibiting shortcuts on X11",
+      "dependencies": [
+        {
+          "name": "qt5-x11extras",
+          "platform": "linux"
+        }
       ]
     }
   }

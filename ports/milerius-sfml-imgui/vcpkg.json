@@ -1,8 +1,10 @@
 {
   "name": "milerius-sfml-imgui",
   "version": "1.1",
-  "port-version": 4,
+  "port-version": 6,
   "description": "imgui dll for sfml usage",
+  "homepage": "https://github.com/Milerius/imgui-sfml-shared",
+  "license": "MIT",
   "dependencies": [
     "imgui",
     "sfml",

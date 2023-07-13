@@ -1,9 +1,9 @@
 {
   "name": "openimageio",
-  "version": "2.3.10.1",
-  "port-version": 2,
+  "version": "2.4.11.1",
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "boost-algorithm",
     "boost-asio",
@@ -19,10 +19,8 @@
     "boost-thread",
     "boost-type-traits",
     "fmt",
-    "libheif",
     "libjpeg-turbo",
     "libpng",
-    "libsquish",
     "openexr",
     "robin-map",
     "tiff",
@@ -42,6 +40,7 @@
       "dependencies": [
         {
           "name": "ffmpeg",
+          "default-features": false,
           "features": [
             "avresample"
           ]
@@ -60,6 +59,12 @@
         "giflib"
       ]
     },
+    "libheif": {
+      "description": "Enable heif support for openimageio",
+      "dependencies": [
+        "libheif"
+      ]
+    },
     "libraw": {
       "description": "Enable RAW image files support",
       "dependencies": [
@@ -67,7 +72,10 @@
       ]
     },
     "opencolorio": {
-      "description": "Enable opencolorio support for openimageio",
+      "description": [
+        "Enable opencolorio support for openimageio.",
+        "This feature can only be used when openexr and opencolorio use the same version of Imath."
+      ],
       "dependencies": [
         "opencolorio"
       ]
@@ -75,7 +83,10 @@
     "opencv": {
       "description": "Enable opencv support for openimageio",
       "dependencies": [
-        "opencv"
+        {
+          "name": "opencv",
+          "default-features": false
+        }
       ]
     },
     "openjpeg": {
@@ -94,7 +105,10 @@
       "description": "Build openimageio tools",
       "dependencies": [
         "opengl",
-        "qt5-base"
+        {
+          "name": "qtbase",
+          "default-features": false
+        }
       ]
     },
     "webp": {

@@ -1,9 +1,11 @@
 {
   "name": "libnice",
-  "version": "0.1.18",
+  "version": "0.1.21",
+  "port-version": 1,
   "description": "Libnice is an implementation of the IETF's Interactive Connectivity Establishment (ICE) standard (RFC 5245) and the Session Traversal Utilities for NAT (STUN) standard (RFC 5389).",
   "homepage": "https://nice.freedesktop.org",
-  "license": "LGPL-2.1-only",
+  "license": "LGPL-2.1-only AND MPL-1.1",
+  "supports": "!xbox",
   "dependencies": [
     "glib",
     {

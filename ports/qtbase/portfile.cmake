@@ -3,29 +3,41 @@
 # Always check the toplevel CMakeLists.txt for the find_package call and search for linkage against the Qt:: targets
 # Often enough certain (bigger) dependencies are only used to build examples and/or tests.
 # As such getting the correct dependency information relevant for vcpkg requires a manual search/check
-
-#set(QT_IS_LATEST ON)
+set(QT_IS_LATEST ON)
 
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
         allow_outside_prefix.patch
-        clang-cl_source_location.patch
         config_install.patch
-        dont_force_cmakecache.patch
         fix_cmake_build.patch
         harfbuzz.patch
         fix_egl.patch
+        fix_egl_2.patch
+        installed_dir.patch
+        GLIB2-static.patch # alternative is to force pkg-config
+        clang-cl_source_location.patch
+        clang-cl_QGADGET_fix.diff
         )
 
-if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
-    list(APPEND ${PORT}_PATCHES
-        )
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    list(APPEND ${PORT}_PATCHES env.patch)
 endif()
+
+list(APPEND ${PORT}_PATCHES 
+        dont_force_cmakecache_latest.patch
+    )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
     message(FATAL_ERROR "${PORT} requires feature doubleconversion on windows!" )
+endif()
+
+if(VCPKG_TARGET_IS_LINUX)
+    message(WARNING "qtbase currently requires packages from the system package manager. "
+    "They can be installed on Ubuntu systems via sudo apt-get install " 
+    "'^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev "
+    "libxkbcommon-x11-dev.")
 endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
@@ -55,6 +67,7 @@ foreach(_input IN LISTS input_vars)
 endforeach()
 
 # General features:
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "appstore-compliant"  FEATURE_appstore_compliant
@@ -62,14 +75,16 @@ FEATURES
     "framework"           FEATURE_framework
     "concurrent"          FEATURE_concurrent
     "concurrent"          FEATURE_future
-    "concurrent"          FEATURE_thread
     "dbus"                FEATURE_dbus
     "gui"                 FEATURE_gui
+    "thread"              FEATURE_thread
     "network"             FEATURE_network
     "sql"                 FEATURE_sql
     "widgets"             FEATURE_widgets
     #"xml"                 FEATURE_xml  # Required to build moc
     "testlib"             FEATURE_testlib
+    "zstd"                CMAKE_REQUIRE_FIND_PACKAGE_zstd
+    ${require_features}
 INVERTED_FEATURES
     "zstd"              CMAKE_DISABLE_FIND_PACKAGE_ZSTD
     "dbus"              CMAKE_DISABLE_FIND_PACKAGE_WrapDBus1
@@ -89,10 +104,12 @@ FEATURES
     "glib"                FEATURE_glib
     "icu"                 FEATURE_icu
     "pcre2"               FEATURE_pcre2
+    #"icu"                 CMAKE_REQUIRE_FIND_PACKAGE_ICU
+    "glib"                CMAKE_REQUIRE_FIND_PACKAGE_GLIB2
 INVERTED_FEATURES
     #"doubleconversion"      CMAKE_DISABLE_FIND_PACKAGE_WrapDoubleConversion # Required
-    "icu"                   CMAKE_DISABLE_FIND_PACKAGE_ICU
     #"pcre2"                 CMAKE_DISABLE_FIND_PACKAGE_WrapSystemPCRE2 # Bug in qt cannot be deactivated
+    "icu"                  CMAKE_DISABLE_FIND_PACKAGE_ICU
     "glib"                 CMAKE_DISABLE_FIND_PACKAGE_GLIB2
     )
 
@@ -106,6 +123,8 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON
  FEATURES
     "openssl"             FEATURE_openssl
     "brotli"              FEATURE_brotli
+    #"brotli"              CMAKE_REQUIRE_FIND_PACKAGE_WrapBrotli
+    #"openssl"             CMAKE_REQUIRE_FIND_PACKAGE_WrapOpenSSL
  INVERTED_FEATURES
     "brotli"              CMAKE_DISABLE_FIND_PACKAGE_WrapBrotli
     "openssl"             CMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL
@@ -128,7 +147,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "fontconfig"          FEATURE_fontconfig # NOT WINDOWS
     "jpeg"                FEATURE_jpeg
     "png"                 FEATURE_png
-    #"opengl"              INPUT_opengl=something
+    "opengl"              FEATURE_opengl
     "xlib"                FEATURE_xlib
     "xkb"                 FEATURE_xkbcommon
     "xcb"                 FEATURE_xcb
@@ -136,9 +155,24 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xkbcommon-x11"       FEATURE_xkbcommon_x11
     "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
     "xrender"             FEATURE_xcb_native_painting # experimental
+    "gles2"               FEATURE_opengles2
+    #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_Vulkan
+    "egl"                 FEATURE_egl
+    #"fontconfig"          CMAKE_REQUIRE_FIND_PACKAGE_Fontconfig
+    #"harfbuzz"            CMAKE_REQUIRE_FIND_PACKAGE_WrapSystemHarfbuzz
+    #"jpeg"                CMAKE_REQUIRE_FIND_PACKAGE_JPEG
+    #"png"                 CMAKE_REQUIRE_FIND_PACKAGE_PNG
+    #"xlib"                CMAKE_REQUIRE_FIND_PACKAGE_X11
+    #"xkb"                 CMAKE_REQUIRE_FIND_PACKAGE_XKB
+    #"xcb"                 CMAKE_REQUIRE_FIND_PACKAGE_XCB
+    #"xcb-xlib"            CMAKE_REQUIRE_FIND_PACKAGE_X11_XCB
+    #"xkbcommon-x11"       CMAKE_REQUIRE_FIND_PACKAGE_XKB_COMMON_X11
+    #"xrender"             CMAKE_REQUIRE_FIND_PACKAGE_XRender
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
+    "opengl"              CMAKE_DISABLE_FIND_PACKAGE_WrapOpenGL
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
+    "gles2"               CMAKE_DISABLE_FIND_PACKAGE_GLESv2
     "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
@@ -153,6 +187,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     # There are more X features but I am unsure how to safely disable them! Most of them seem to be found automaticall with find_package(X11)
      )
 
+if( "gles2" IN_LIST FEATURES)
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_opengl='es2')
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_desktop=OFF)
+endif()
+
+if(NOT "opengl" IN_LIST FEATURES AND NOT "gles2" IN_LIST FEATURES)
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_opengl='no')
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_desktop=OFF)
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_dynamic=OFF)
+endif()
+
 if("xcb" IN_LIST FEATURES)
     list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xcb=yes)
 else()
@@ -163,7 +208,11 @@ if("xkb" IN_LIST FEATURES)
 else()
     list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xkbcommon=no)
 endif()
-list(APPEND FEATURE_GUI_OPTIONS )
+
+# Disable GLES3
+list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles3:BOOL=OFF)
+list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles31:BOOL=OFF)
+list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles32:BOOL=OFF)
 
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_ATSPI2:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_DirectFB:BOOL=ON)
@@ -171,24 +220,26 @@ list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libdrm:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_gbm:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libinput:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Mtdev:BOOL=ON)
-list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GLESv2:BOOL=ON) # only used if INPUT_opengl is correctly set
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Tslib:BOOL=ON)
 # sql-drivers features:
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     FEATURES
     "sql-sqlite"          FEATURE_system_sqlite
+    "sql-odbc"            FEATURE_sql_odbc
+    "sql-mysql"           FEATURE_sql_mysql
+    "sql-oci"             FEATURE_sql_oci
+    #"sql-psql"            CMAKE_REQUIRE_FIND_PACKAGE_PostgreSQL
+    #"sql-sqlite"          CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
     INVERTED_FEATURES
     "sql-psql"            CMAKE_DISABLE_FIND_PACKAGE_PostgreSQL
     "sql-sqlite"          CMAKE_DISABLE_FIND_PACKAGE_SQLite3
-    # "sql-db2"             FEATURE_sql-db2
-    # "sql-ibase"           FEATURE_sql-ibase
-    # "sql-mysql"           FEATURE_sql-mysql
-    # "sql-oci"             FEATURE_sql-oci
-    # "sql-odbc"            FEATURE_sql-odbc
+    "sql-odbc"            CMAKE_DISABLE_FIND_PACKAGE_ODBC
+    "sql-mysql"           CMAKE_DISABLE_FIND_PACKAGE_MySQL
+    "sql-oci"             CMAKE_DISABLE_FIND_PACKAGE_Oracle
     )
 
-set(DB_LIST DB2 MySQL Oracle ODBC)
+set(DB_LIST DB2 Interbase)
 foreach(_db IN LISTS DB_LIST)
     list(APPEND FEATURE_SQLDRIVERS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${_db}:BOOL=ON)
 endforeach()
@@ -221,6 +272,13 @@ set(TOOL_NAMES
         uic
         qtpaths
         qtpaths6
+        windeployqt
+        windeployqt6
+        macdeployqt
+        macdeployqt6
+        androiddeployqt6
+        syncqt
+        tracepointgen
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -250,41 +308,38 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                     )
 
 # Install CMake helper scripts
-if(QT_IS_LATEST)
-    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details-latest.cmake")
-else()
-    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details.cmake")
-endif()
-file(INSTALL
-    "${port_details}"
-    DESTINATION
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME
-        "qt_port_details.cmake"
-    )
 file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake/"
     DESTINATION
         "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     )
 
-qt_stop_on_update()
+file(CONFIGURE OUTPUT "${CURRENT_PACKAGES_DIR}/share/${PORT}/port_status.cmake" CONTENT "set(qtbase_with_icu ${FEATURE_icu})\n")
 
-set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module qt-internal-configure-tests)
+set(other_files qt-cmake
+                 qt-cmake-private
+                 qt-cmake-standalone-test
+                 qt-configure-module
+                 qt-internal-configure-tests
+                 )
 if(CMAKE_HOST_WIN32)
     set(script_suffix .bat)
 else()
     set(script_suffix)
 endif()
-set(other_files
-        target_qt.conf
-        qt-cmake-private-install.cmake
-        syncqt.pl
-        android_cmakelist_patcher.sh
-        android_emulator_launcher.sh
-        ensure_pro_file.cmake
-        )
+list(TRANSFORM other_files APPEND "${script_suffix}")
+
+list(APPEND other_files 
+                android_cmakelist_patcher.sh
+                android_emulator_launcher.sh
+                ensure_pro_file.cmake
+                syncqt.pl
+                target_qt.conf
+                qt-cmake-private-install.cmake
+                qt-testrunner.py
+                sanitizer-testrunner.py
+                )
+
 foreach(_config debug release)
     if(_config MATCHES "debug")
         set(path_suffix debug/)
@@ -295,33 +350,44 @@ foreach(_config debug release)
         continue()
     endif()
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${path_suffix}")
-    foreach(script IN LISTS script_files)
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}")
-            set(target_script "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${path_suffix}${script}${script_suffix}")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}" "${target_script}")
-            file(READ "${target_script}" _contents)
+    foreach(other_file IN LISTS other_files)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other_file}")
+            set(target_file "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${path_suffix}${other_file}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other_file}" "${target_file}")
+            file(READ "${target_file}" _contents)
             if(_config MATCHES "debug")
-                string(REPLACE "\\..\\share\\" "\\..\\..\\..\\..\\share\\" _contents "${_contents}")
+                string(REPLACE "..\\share\\" "..\\..\\..\\..\\share\\" _contents "${_contents}")
+                string(REPLACE "../share/" "../../../../share/" _contents "${_contents}")
             else()
-                string(REPLACE "\\..\\share\\" "\\..\\..\\..\\share\\" _contents "${_contents}")
+                string(REPLACE "..\\share\\" "..\\..\\..\\share\\" _contents "${_contents}")
+                string(REPLACE "../share/" "../../../share/" _contents "${_contents}")
             endif()
-            file(WRITE "${target_script}" "${_contents}")
-        endif()
-    endforeach()
-    foreach(other IN LISTS other_files)
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${path_suffix}${other}")
+            string(REGEX REPLACE "set cmake_path=[^\n]+\n" "set cmake_path=cmake\n" _contents "${_contents}")
+            file(WRITE "${target_file}" "${_contents}")
         endif()
     endforeach()
 endforeach()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+# Fixup qt.toolchain.cmake
+set(qttoolchain "${CURRENT_PACKAGES_DIR}/share/Qt6/qt.toolchain.cmake")
+file(READ "${qttoolchain}" toolchain_contents)
+string(REGEX REPLACE "set\\\(__qt_initially_configured_toolchain_file [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
+string(REGEX REPLACE "set\\\(__qt_chainload_toolchain_file [^\\\n]+\\\n" "set(__qt_chainload_toolchain_file \"\${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}\")" toolchain_contents "${toolchain_contents}")
+string(REGEX REPLACE "set\\\(VCPKG_CHAINLOAD_TOOLCHAIN_FILE [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
+string(REGEX REPLACE "set\\\(__qt_initial_c_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
+string(REGEX REPLACE "set\\\(__qt_initial_cxx_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
+string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${vcpkg_installed_dir}/${HOST_TRIPLET}" toolchain_contents "${toolchain_contents}")
+file(WRITE "${qttoolchain}" "${toolchain_contents}")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_CROSSCOMPILING)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/qmake" "${CURRENT_PACKAGES_DIR}/debug/bin/qmake") # qmake has been moved so this is the qmake helper script
     endif()
     file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
     if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error.
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
+    else()
+        message(STATUS "Files in '/bin':${_bin_files}")
     endif()
 endif()
 
@@ -362,7 +428,7 @@ configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_debug.conf" @ONL
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_DLL_FILES brotlicommon brotlidec bz2 freetype harfbuzz libpng16)
-    set(DLLS_TO_COPY)
+    set(DLLS_TO_COPY "")
     foreach(_file IN LISTS _DLL_FILES)
         if(EXISTS "${CURRENT_INSTALLED_DIR}/bin/${_file}.dll")
             list(APPEND DLLS_TO_COPY "${CURRENT_INSTALLED_DIR}/bin/${_file}.dll")
@@ -371,16 +437,51 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY ${DLLS_TO_COPY} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
 endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qmake.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
 set(hostinfofile "${CURRENT_PACKAGES_DIR}/share/Qt6HostInfo/Qt6HostInfoConfig.cmake")
 file(READ "${hostinfofile}" _contents)
 string(REPLACE [[set(QT6_HOST_INFO_LIBEXECDIR "bin")]] [[set(QT6_HOST_INFO_LIBEXECDIR "tools/Qt6/bin")]] _contents "${_contents}")
 string(REPLACE [[set(QT6_HOST_INFO_BINDIR "bin")]] [[set(QT6_HOST_INFO_BINDIR "tools/Qt6/bin")]] _contents "${_contents}")
 file(WRITE "${hostinfofile}" "${_contents}")
 
-set(coretools "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreTools.cmake")
-if(EXISTS "${coretools}")
-    file(READ "${coretools}" _contents)
-    string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.exe"]] [["${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.debug.bat"]] _contents "${_contents}")
-    file(WRITE "${coretools}" "${_contents}")
+if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake"
+                         "PACKAGE_PREFIX_DIR}/bin/syncqt"
+                         "PACKAGE_PREFIX_DIR}/tools/Qt6/bin/syncqt")
+endif()
+
+set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsTargets-debug.cmake")
+if(EXISTS "${configfile}")
+    file(READ "${configfile}" _contents)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qmake.exe")
+        file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qmake.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
+        string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qmake.debug.bat"]] _contents "${_contents}")
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qtpaths.exe")
+        file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qtpaths.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
+        string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qtpaths.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/qtpaths.debug.bat"]] _contents "${_contents}")
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/windeployqt.exe")
+        file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/windeployqt.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
+        string(REPLACE [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.exe"]] [[ "${_IMPORT_PREFIX}/tools/Qt6/bin/windeployqt.debug.bat"]] _contents "${_contents}")
+    endif()
+    file(WRITE "${configfile}" "${_contents}")
+endif()
+
+if(VCPKG_CROSSCOMPILING)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake" "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}")
+endif()
+
+function(remove_original_cmake_path file)
+    file(READ "${file}" _contents)
+    string(REGEX REPLACE "original_cmake_path=[^\n]*" "original_cmake_path=''" _contents "${_contents}")
+    file(WRITE "${file}" "${_contents}")
+endfunction()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    foreach(file "qt-cmake" "qt-cmake-private")
+        remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${file}")
+        if(NOT VCPKG_BUILD_TYPE)
+            remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/${file}")
+        endif()
+    endforeach()
 endif()

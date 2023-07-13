@@ -1,24 +1,3 @@
-#[===[.md:
-# vcpkg_copy_tool_dependencies
-
-Copy all DLL dependencies of built tools into the tool folder.
-
-## Usage
-```cmake
-vcpkg_copy_tool_dependencies(<${CURRENT_PACKAGES_DIR}/tools/${PORT}>)
-```
-## Parameters
-The path to the directory containing the tools.
-
-## Notes
-This command should always be called by portfiles after they have finished rearranging the binary output, if they have any tools.
-
-## Examples
-
-* [glib](https://github.com/Microsoft/vcpkg/blob/master/ports/glib/portfile.cmake)
-* [fltk](https://github.com/Microsoft/vcpkg/blob/master/ports/fltk/portfile.cmake)
-#]===]
-
 function(z_vcpkg_copy_tool_dependencies_search tool_dir path_to_search)
     if(DEFINED Z_VCPKG_COPY_TOOL_DEPENDENCIES_COUNT)
         set(count ${Z_VCPKG_COPY_TOOL_DEPENDENCIES_COUNT})

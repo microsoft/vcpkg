@@ -3,24 +3,23 @@ set(VCPKG_LIBRARY_LINKAGE static)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenVPN/openvpn3
-    REF release/3.4.1
-    SHA512 2d0a7d2d48047c969ba1cb49b34d51c85dd82ae97296d7c096ead13a8e7cc69fa3908262228e29d93f60b7273814d8ef5a402a5d401cd7f91370868d5d308678
+    REF release/3.7
+    SHA512 de95bd2b1a01179aa81e1612be175540c2486b856f66880372d09966655bbbadd71d874ed49b032566dde2896207bc76298c5cfcf73e86272c04d5aaa977d660
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(COPY ${SOURCE_PATH}/openvpn DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
-file(COPY ${SOURCE_PATH}/client/ovpncli.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/openvpn/)
+file(COPY "${SOURCE_PATH}/openvpn" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${SOURCE_PATH}/client/ovpncli.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/openvpn")
 
-file(GLOB_RECURSE HEADERS ${CURRENT_PACKAGES_DIR}/include/openvpn/*)
+file(GLOB_RECURSE HEADERS "${CURRENT_PACKAGES_DIR}/include/openvpn/*")
 foreach(HEADER IN LISTS HEADERS)
     file(READ "${HEADER}" _contents)
     string(REPLACE "defined(USE_ASIO)" "1" _contents "${_contents}")
@@ -30,6 +29,9 @@ foreach(HEADER IN LISTS HEADERS)
     file(WRITE "${HEADER}" "${_contents}")
 endforeach()
 
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-openvpn CONFIG_PATH share/unofficial-openvpn)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL
-    ${SOURCE_PATH}/COPYRIGHT.AGPLV3
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/openvpn3 RENAME copyright)
+    "${SOURCE_PATH}/COPYRIGHT.AGPLV3"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

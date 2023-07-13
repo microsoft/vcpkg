@@ -1,10 +1,21 @@
 {
   "name": "flashlight-cpu",
   "version": "0.3",
-  "port-version": 2,
+  "port-version": 5,
   "description": "A C++ standalone library for machine learning. CPU backend.",
   "homepage": "https://github.com/facebookresearch/flashlight",
+  "license": "MIT",
   "supports": "!(windows | osx)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "default-features": [
     "fl"
   ],
@@ -20,7 +31,13 @@
           ]
         },
         "gflags",
-        "libsndfile"
+        {
+          "name": "libsndfile",
+          "default-features": false,
+          "features": [
+            "external-libs"
+          ]
+        }
       ]
     },
     "fl": {

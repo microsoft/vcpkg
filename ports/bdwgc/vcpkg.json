@@ -1,9 +1,18 @@
 {
   "name": "bdwgc",
-  "version": "8.2.0",
-  "port-version": 2,
+  "version": "8.2.4",
   "description": "The Boehm-Demers-Weiser conservative C/C++ Garbage Collector (libgc, bdwgc, boehm-gc)",
+  "homepage": "https://www.hboehm.info/gc/",
+  "license": "MIT",
   "dependencies": [
-    "libatomic-ops"
+    "libatomic-ops",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

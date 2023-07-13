@@ -1,8 +1,19 @@
 {
   "name": "directx-headers",
-  "version": "1.4.9",
-  "port-version": 1,
+  "version": "1.610.2",
   "description": "Official DirectX 12 Headers",
   "homepage": "https://devblogs.microsoft.com/directx/",
-  "supports": "windows | linux"
+  "documentation": "https://devblogs.microsoft.com/directx/gettingstarted-dx12agility/",
+  "license": "MIT",
+  "supports": "(windows & !xbox) | linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

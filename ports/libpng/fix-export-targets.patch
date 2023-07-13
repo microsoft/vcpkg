@@ -1,65 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b45e878..19f8692 100644
+index c01cdcb..0ad4ba4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -536,7 +536,7 @@ if(PNG_SHARED)
-     set_target_properties(png PROPERTIES PREFIX "lib")
-     set_target_properties(png PROPERTIES IMPORT_PREFIX "lib")
-   endif()
--  target_link_libraries(png ${ZLIB_LIBRARY} ${M_LIBRARY})
-+  target_link_libraries(png ZLIB::ZLIB ${M_LIBRARY})
- 
-   if(UNIX AND AWK)
-     if(HAVE_LD_VERSION_SCRIPT)
-@@ -564,7 +564,7 @@ if(PNG_STATIC)
-     # msvc does not append 'lib' - do it here to have consistent name
-     set_target_properties(png_static PROPERTIES PREFIX "lib")
-   endif()
--  target_link_libraries(png_static ${ZLIB_LIBRARY} ${M_LIBRARY})
-+  target_link_libraries(png_static ZLIB::ZLIB ${M_LIBRARY})
+@@ -1033,6 +1033,12 @@ if(NOT SKIP_INSTALL_EXPORT AND NOT SKIP_INSTALL_ALL)
+   install(EXPORT libpng
+           DESTINATION lib/libpng
+           FILE lib${PNG_LIB_NAME}.cmake)
++  file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libpng-config.cmake" "
++  include(CMakeFindDependencyMacro)
++  find_dependency(ZLIB)
++  include(\"\${CMAKE_CURRENT_LIST_DIR}/lib${PNG_LIB_NAME}.cmake\")
++  ")
++  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libpng-config.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/libpng")        
  endif()
  
- if(PNG_FRAMEWORK)
-@@ -581,7 +581,7 @@ if(PNG_FRAMEWORK)
-     XCODE_ATTRIBUTE_INSTALL_PATH "@rpath"
-     PUBLIC_HEADER "${libpng_public_hdrs}"
-     OUTPUT_NAME png)
--  target_link_libraries(png_framework ${ZLIB_LIBRARY} ${M_LIBRARY})
-+  target_link_libraries(png_framework ZLIB::ZLIB ${M_LIBRARY})
- endif()
- 
- if(NOT PNG_LIB_TARGETS)
-@@ -746,7 +746,7 @@ if(PNG_SHARED)
-   set(PNG_BIN_TARGETS pngfix)
- 
-   add_executable(png-fix-itxt ${png_fix_itxt_sources})
--  target_link_libraries(png-fix-itxt ${ZLIB_LIBRARY} ${M_LIBRARY})
-+  target_link_libraries(png-fix-itxt ZLIB::ZLIB ${M_LIBRARY})
-   list(APPEND PNG_BIN_TARGETS png-fix-itxt)
- endif()
- 
-@@ -851,7 +851,7 @@ endif()
- # INSTALL
- if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
-   install(TARGETS ${PNG_LIB_TARGETS}
--          EXPORT libpng
-+          EXPORT libpng-targets
-           RUNTIME DESTINATION bin
-           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -919,7 +919,14 @@ endif()
- 
- # Create an export file that CMake users can include() to import our targets.
- if(NOT SKIP_INSTALL_EXPORT AND NOT SKIP_INSTALL_ALL)
--  install(EXPORT libpng DESTINATION lib/libpng FILE libpngConfig.cmake)
-+  install(EXPORT libpng-targets DESTINATION lib/libpng)
-+  file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libpng-config.cmake"
-+ [[include(CMakeFindDependencyMacro)
-+find_dependency(ZLIB)
-+include("${CMAKE_CURRENT_LIST_DIR}/libpng-targets.cmake")
-+ ]])
-+
-+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpng-config.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/libpng)
- endif()
- 
- # what's with libpng-manual.txt and all the extra files?
+ # TODO: Create MSVC import lib for MinGW-compiled shared lib.

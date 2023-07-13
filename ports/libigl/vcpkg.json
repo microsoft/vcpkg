@@ -1,10 +1,10 @@
 {
   "name": "libigl",
-  "version": "2.3.0",
-  "port-version": 1,
+  "version": "2.4.0",
+  "port-version": 4,
   "description": "libigl is a simple C++ geometry processing library. We have a wide functionality including construction of sparse discrete differential geometry operators and finite-elements matrices such as the cotangent Laplacian and diagonalized mass matrix, simple facet and edge-based topology data structures, mesh-viewing utilities for OpenGL and GLSL, and many core functions for matrix manipulation which make Eigen feel a lot more like MATLAB.",
   "homepage": "https://github.com/libigl/libigl",
-  "supports": "!(arm | uwp)",
+  "license": null,
   "dependencies": [
     "eigen3",
     {
@@ -17,10 +17,22 @@
     }
   ],
   "features": {
+    "cgal": {
+      "description": "Build with cgal",
+      "dependencies": [
+        {
+          "name": "cgal",
+          "default-features": false
+        }
+      ]
+    },
     "embree": {
       "description": "Build with embree",
       "dependencies": [
-        "embree3"
+        {
+          "name": "embree3",
+          "default-features": false
+        }
       ]
     },
     "glfw": {
@@ -63,6 +75,19 @@
       "dependencies": [
         "glad",
         "opengl"
+      ]
+    },
+    "png": {
+      "description": "Install PNG support",
+      "dependencies": [
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        },
+        "stb"
       ]
     },
     "xml": {

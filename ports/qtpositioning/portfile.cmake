@@ -1,8 +1,12 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
+set(${PORT}_PATCHES
+    devendor-poly2tri.patch)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
+    "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
 INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
 )

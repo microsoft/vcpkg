@@ -1,8 +1,9 @@
 {
   "name": "entt",
-  "version": "3.9.0",
+  "version": "3.12.0",
   "description": "Gaming meets modern C++ - a fast and reliable entity-component system and much more",
   "homepage": "https://github.com/skypjack/entt",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

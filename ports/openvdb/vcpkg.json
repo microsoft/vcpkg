@@ -1,8 +1,11 @@
 {
   "name": "openvdb",
-  "version": "8.2.0",
+  "version": "10.0.0",
+  "port-version": 3,
   "description": "Sparse volume data structure and tools",
   "homepage": "https://github.com/dreamworksanimation/openvdb",
+  "license": "MPL-2.0",
+  "supports": "!xbox",
   "dependencies": [
     "blosc",
     "boost-any",
@@ -13,7 +16,7 @@
     "boost-system",
     "boost-thread",
     "boost-uuid",
-    "ilmbase",
+    "imath",
     "openexr",
     "tbb",
     {

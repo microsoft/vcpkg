@@ -1,0 +1,25 @@
+{
+  "name": "luv",
+  "version-semver": "1.44.2",
+  "port-version": 1,
+  "description": "Bare libuv bindings for lua",
+  "homepage": "https://github.com/luvit/luv",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "libuv",
+      "version>=": "1.44.2"
+    },
+    "lua-compat53",
+    "luajit",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

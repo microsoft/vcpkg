@@ -1,45 +1,37 @@
-# Modelled after https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
-
-# These "checks" are also performed as part of our critical-path azure-pipelines review,
-# however here they are better able to post back to the original PR
-name: PR Suggestions
+name: Check For Common Mistakes
 
 on:
   pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  Check:
+    runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           # fetch-depth 50 tries to ensure we capture the whole history of the branch
           fetch-depth: 50
 
-      - uses: actions/cache@v2
-        id: cache
-        with:
-          path: |
-            ./vcpkg
-          key: ${{ runner.os }}-${{ hashFiles('scripts/bootstrap*') }}
-
-      - name: bootstrap
-        if: steps.cache.outputs.cache-hit != 'true'
+      - name: Bootstrap
         run: ./bootstrap-vcpkg.sh
-
-      - name: Save PR number
-        run: |
-          mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/NR
 
       - name: Formatting
         run: |
           git config user.email github-actions
           git config user.name github-actions@github.com
 
-          git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' | while read filename; do grep -q -E '(vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' "$filename" && echo " - \`$filename\`" || true; done > .github-pr.deprecated-cmake
-          git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*vcpkg.json' | sed 's/[MAR]\t*//' | while read filename; do grep -q -E '"license": ' "$filename" || echo " - \`$filename\`" || true; done > .github-pr.missing-license
+          git --version
+
+          unset VCPKG_ROOT
+
+          git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' > .github-pr.changed-portfiles
+          if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_apply_patches|vcpkg_build_msbuild|vcpkg_extract_source_archive_ex)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-function; else touch .github-pr.deprecated-function; fi
+          if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-cmake; else touch .github-pr.deprecated-cmake; fi
+          git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*vcpkg.json' | sed 's/[MAR]\t*//' > .github-pr.changed-manifest-files
+          cat .github-pr.changed-manifest-files | while read filename; do grep -q -E '"license": ' "$filename" || echo "$filename" || true; done > .github-pr.missing-license
+          cat .github-pr.changed-manifest-files | while read filename; do match=$(grep -oiP '"license": ".*\K(AGPL-1\.0|AGPL-3\.0|BSD-2-Clause-FreeBSD|BSD-2-Clause-NetBSD|bzip2-1\.0\.5|eCos-2\.0|GFDL-1\.1|GFDL-1\.2|GFDL-1\.3|GPL-1\.0|GPL-1\.0\+|GPL-2\.0|GPL-2\.0\+|GPL-2\.0-with-autoconf-exception|GPL-2\.0-with-bison-exception|GPL-2\.0-with-classpath-exception|GPL-2\.0-with-font-exception|GPL-2\.0-with-GCC-exception|GPL-3\.0|GPL-3\.0\+|GPL-3\.0-with-autoconf-exception|GPL-3\.0-with-GCC-exception|LGPL-2\.0|LGPL-2\.0\+|LGPL-2\.1|LGPL-2\.1\+|LGPL-3\.0|LGPL-3\.0\+|Nunit|StandardML-NJ|wxWindows)(?=[ "])' "$filename" || true); if [ ! -z "$match" ]; then echo "$filename (has deprecated license \"$match\")" ; fi ; done > .github-pr.deprecated-license
           ./vcpkg format-manifest --all --convert-control
           git diff > .github-pr.format-manifest
           git add -u
@@ -47,86 +39,133 @@ jobs:
           # HEAD^^ refers to the "main" commit that was merged into
           git checkout HEAD^^ -- versions
           git restore --staged versions
-          ./vcpkg x-add-version --all --skip-formatting-check > .github-pr.x-add-version.out
+          ./vcpkg x-add-version --all --skip-formatting-check | grep 'instead of "version-string"' | tee .github-pr.version-string.out || true
+          git checkout -- versions
+          ./vcpkg x-add-version --all --skip-formatting-check --skip-version-format-check | tee .github-pr.x-add-version.out || true
           git diff > .github-pr.x-add-version.diff
           git reset HEAD~ --mixed
 
-      - uses: actions/github-script@v4
+      - name: Generate Reply
+        uses: actions/github-script@v6
         with:
           script: |
             const { promises: fs } = require('fs')
             const add_version = (await fs.readFile('.github-pr.x-add-version.diff', 'utf8')).trim()
             const add_version_out = (await fs.readFile('.github-pr.x-add-version.out', 'utf8')).trim()
+            const version_string_out = (await fs.readFile('.github-pr.version-string.out', 'utf8')).trim()
             const format = (await fs.readFile('.github-pr.format-manifest', 'utf8')).trim()
-            const cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).trim()
+            const deprecated_function = (await fs.readFile('.github-pr.deprecated-function', 'utf8')).split('\n').filter(s => s.length > 0)
+            const deprecated_cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).split('\n').filter(s => s.length > 0)
             const missing_license = (await fs.readFile('.github-pr.missing-license', 'utf8')).trim()
+            const deprecated_license = (await fs.readFile('.github-pr.deprecated-license', 'utf8')).trim()
 
             let approve = true;
-            var output = ''
             if (format !== "") {
-              output += "<details><summary><b>All manifest files must be formatted</b></summary>\n\n"
-              output += "`./vcpkg format-manifest ports/*/vcpkg.json`\n"
-              output += "<details><summary><b>Diff</b></summary>\n\n"
-              output += "```diff\n" + format + "\n```\n"
-              output += "</details></details>\n\n"
+              var format_output = '';
+              format_output += "All vcpkg.json files must be formatted. To fix this problem, run:\n";
+              format_output += "./vcpkg format-manifest ports/*/vcpkg.json\n";
+              format_output += "\n";
+              format_output += "It should make the following changes:";
+              format_output += "```diff\n" + format + "\n```";
+              core.error(format_output);
               approve = false;
             }
             if (add_version_out !== "") {
-              output += "<details><summary><b>PRs must add only one version and must not modify any published versions</b></summary>\n\n"
-              output += "When making any changes to a library, the version or port-version in `vcpkg.json` or `CONTROL` must be modified.\n"
-              output += "```\n" + add_version_out + "\n```\n</details>\n\n"
+              var add_version_output = '';
+              add_version_output += "PRs must add only one version, and must not modify any published versions.\n";
+              add_version_output += "When making any changes to a library, the version or port-version in vcpkg.json must be modified, and the version database updated.\n";
+              add_version_output += "Making the following changes will fix this problem:";
+              add_version_output += "```diff\n" + add_version_out + "\n```";
+              core.error(add_version_output);
               approve = false;
+            }
+            if (version_string_out !== "") {
+              core.warning(version_string_out);
             }
             if (add_version !== "") {
-              output += "<details><summary><b>After committing all other changes, the version database must be updated</b></summary>\n\n"
-              output += "```sh\n"
-              output += "git add -u && git commit\n"
-              output += "git checkout ${{ github.event.pull_request.base.sha }} -- versions\n"
-              output += "./vcpkg x-add-version --all\n"
-              output += "```\n"
-              output += "<details><summary><b>Diff</b></summary>\n\n"
-              output += "```diff\n" + add_version + "\n```\n"
-              output += "</details></details>\n\n"
+              var update_version_db_output = '';
+              update_version_db_output += "After committing all other changes, the version database must be updated.\n";
+              update_version_db_output += "This can be done by running the following commands after committing your changes:\n"
+              update_version_db_output += "\n"
+              update_version_db_output += "git add -u && git commit\n"
+              update_version_db_output += "git checkout ${{ github.event.pull_request.base.sha }} -- versions\n"
+              update_version_db_output += "./vcpkg x-add-version --all"
+              core.error(update_version_db_output);
               approve = false;
             }
-            if (cmake !== "") {
-              output += "You have modified or added at least one portfile where deprecated functions are used.\n"
-              output += "<details>\n\n"
-              output += "If you feel able to do so, please consider migrating them to the new functions:\n"
-              output += "    `vcpkg_install_cmake` -> `vcpkg_cmake_install` (from port `vcpkg-cmake`)\n"
-              output += "    `vcpkg_build_cmake` -> `vcpkg_cmake_build` (from port `vcpkg-cmake`)\n"
-              output += "    `vcpkg_configure_cmake` -> `vcpkg_cmake_configure` (Please remove the option `PREFER_NINJA`) (from port `vcpkg-cmake`)\n"
-              output += "    `vcpkg_fixup_cmake_targets` -> `vcpkg_cmake_config_fixup` (from port `vcpkg-cmake-config`)\n"
-              output += "\n"
-              output += "In the ports that use the new function, you have to add the corresponding dependencies:\n"
-              output += "```json\n"
-              output += '{\n  "name": "vcpkg-cmake",\n  "host": true\n},\n'
-              output += '{\n  "name": "vcpkg-cmake-config",\n  "host": true\n}\n'
-              output += "```\n"
-              output += `The following files are affected:\n${cmake}\n`
-              output += "</details>\n\n"
-            }
-            if (missing_license !== "") {
-              output += 'You have modified or added at least one vcpkg.json where a "license" field is missing.\n'
-              output += "<details>\n\n"
+            
+            if (deprecated_function.length > 0) {
+              var deprecated_output = '';
+              deprecated_output += "You have modified or added at least one portfile where deprecated functions are used.\n"
+              deprecated_output += "If you feel able to do so, please consider migrating them to the new functions.\n";
+              core.warning(deprecated_output);
 
-              output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
-              output += missing_license
-              output += "\n\nValid values for the license field can be found in the [documentation](https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/manifest-files.md#license)\n"
-              output += "</details>\n\n"
+              let deprecated_functions = {
+                  vcpkg_extract_source_archive_ex: 'vcpkg_extract_source_archive https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_extract_source_archive',
+                  vcpkg_build_msbuild: 'vcpkg_install_msbuild https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_install_msbuild',
+                  vcpkg_apply_patches: 'the PATCHES arguments to the \"extract\" helpers (for example, vcpkg_from_github() (https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_from_github))',
+              };
+              for (let line of deprecated_function) {
+                // line has the format: <path>:<line_number>:<matched_string
+                // For example: ports/rtlsdr/portfile.cmake:42:    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+                [file, line_number, match] = line.split(':');
+                for (deprecated_func in deprecated_functions) {
+                  if (match.indexOf(deprecated_func) !== -1) {
+                    core.warning(`The function ${deprecated_func} is deprecated. Please use ${deprecated_functions[deprecated_func]}`, {file, startLine: line_number});
+                    break;
+                  }
+                }
+              }
             }
 
-            if (approve) {
-              await fs.writeFile("pr/event", "APPROVE")
-            } else {
-              output = "_This is a new experimental fast check for PR issues. Please let us know if this bot is helpful!_\n\n" + output
-              await fs.writeFile("pr/event", "REQUEST_CHANGES")
+            if (deprecated_cmake.length > 0) {
+              var deprecated_output = '';
+              deprecated_output += "You have modified or added at least one portfile where deprecated functions are used.\n"
+              deprecated_output += "These functions have been forbidden in vcpkg, please migrating them to the new functions.\n";
+              deprecated_output += "In the ports that use the new function vcpkg_cmake_configure, vcpkg_cmake_install, vcpkg_cmake_build or vcpkg_cmake_config_fixup, you have to add the corresponding dependencies:\n";
+              deprecated_output += "```json\n";
+              deprecated_output += '{\n  "name": "vcpkg-cmake",\n  "host": true\n},\n'
+              deprecated_output += '{\n  "name": "vcpkg-cmake-config",\n  "host": true\n}\n';
+              deprecated_output += "```\n";
+              core.error(deprecated_output);
+
+              let deprecated_functions = {
+                  vcpkg_install_cmake: 'vcpkg_cmake_install (from port vcpkg-cmake)',
+                  vcpkg_install_cmake: 'vcpkg_cmake_install (from port vcpkg-cmake)',
+                  vcpkg_build_cmake: 'vcpkg_cmake_build (from port vcpkg-cmake)',
+                  vcpkg_configure_cmake: 'vcpkg_cmake_configure (Please remove the option PREFER_NINJA) (from port vcpkg-cmake)',
+                  vcpkg_fixup_cmake_targets: 'vcpkg_cmake_config_fixup (from port vcpkg-cmake-config)',
+              };
+              for (let line of deprecated_cmake) {
+                // line has the format: <path>:<line_number>:<matched_string
+                // For example: ports/rtlsdr/portfile.cmake:42:    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+                [file, line_number, match] = line.split(':');
+                for (deprecated_cmake_function in deprecated_functions) {
+                  if (match.indexOf(deprecated_cmake_function) !== -1) {
+                    core.warning(`The function ${deprecated_cmake_function} is deprecated. Please use ${deprecated_functions[deprecated_cmake_function]}`, {file, startLine: line_number});
+                    break;
+                  }
+                }
+              }
             }
-            await fs.writeFile("pr/body", output)
 
-            console.log(output);
+            if (missing_license !== "" || deprecated_license !== "") {
+              var license_output = '';
+              license_output += 'You have modified or added at least one vcpkg.json where you should check the \"license\" field.\n'
+              if (missing_license !== "") {
+                license_output += 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
+                license_output += missing_license
+                license_output += "\n\nValid values for the license field can be found at https://learn.microsoft.com/en-us/vcpkg/reference/vcpkg-json#license\n\n"
+              }
+              if (deprecated_license !== "") {
+                license_output += 'If you feel able to do so, please consider replacing the deprecated license identifiers in the following files:\n'
+                license_output += deprecated_license
+                license_output += "\n\nDeprecated and non deprecated license identifiers can be found at https://spdx.org/licenses/#deprecated\n"
+              }
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: pr
-          path: pr/
+              core.warning(license_output);
+            }
+
+            if (!approve) {
+              process.exitCode = 1;
+            }

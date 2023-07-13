@@ -1,16 +1,22 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+set(filename readline-${VERSION}.tar.gz)
 vcpkg_download_distfile(
-  ARCHIVE
-  URLS https://ftp.gnu.org/gnu/readline/readline-8.1.tar.gz
-  FILENAME readline-8.1.tar.gz
-  SHA512 27790d0461da3093a7fee6e89a51dcab5dc61928ec42e9228ab36493b17220641d5e481ea3d8fee5ee0044c70bf960f55c7d3f1a704cf6b9c42e5c269b797e00
+    ARCHIVE
+    URLS
+        "https://ftpmirror.gnu.org/gnu/readline/${filename}"
+        "https://ftp.gnu.org/gnu/readline/${filename}"
+    FILENAME "${filename}"
+    SHA512 0a451d459146bfdeecc9cdd94bda6a6416d3e93abd80885a40b334312f16eb890f8618a27ca26868cebbddf1224983e631b1cbc002c1a4d1cd0d65fba9fea49a
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
+    DETERMINE_BUILD_TRIPLET
     OPTIONS
         --with-curses=yes
+        --disable-install-examples
 )
 
 vcpkg_install_make()

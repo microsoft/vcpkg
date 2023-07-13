@@ -1,15 +1,14 @@
 {
   "name": "caffe2",
-  "version-string": "0.8.1",
-  "port-version": 5,
+  "version": "0.8.1",
+  "port-version": 8,
   "description": "Caffe2 is a lightweight, modular, and scalable deep learning framework.",
   "homepage": "https://github.com/caffe2/caffe2",
-  "supports": "!x86",
+  "license": "Apache-2.0",
   "dependencies": [
-    "eigen3",
-    "gflags",
-    "glog",
-    "lmdb",
-    "protobuf"
+    {
+      "name": "libtorch",
+      "default-features": false
+    }
   ]
 }

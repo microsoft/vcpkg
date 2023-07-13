@@ -1,15 +1,37 @@
 {
   "name": "xerces-c",
-  "version-string": "3.2.3",
+  "version": "3.2.4",
   "port-version": 3,
   "description": "Xerces-C++ is a XML parser, for parsing, generating, manipulating, and validating XML documents using the DOM, SAX, and SAX2 APIs.",
   "homepage": "https://github.com/apache/xerces-c",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "libiconv",
+      "platform": "!windows & !osx"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "network"
+  ],
   "features": {
     "icu": {
       "description": "ICU support",
       "dependencies": [
         "icu"
       ]
+    },
+    "network": {
+      "description": "Network support"
     },
     "xmlch-wchar": {
       "description": "XMLCh type uses wchar_t"

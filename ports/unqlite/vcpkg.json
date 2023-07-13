@@ -1,7 +1,14 @@
 {
   "name": "unqlite",
-  "version-string": "1.1.9",
+  "version": "1.1.9",
+  "port-version": 2,
   "description": "An embedded NoSQL, transactional database engine",
   "homepage": "https://unqlite.org/",
-  "license": "BSD-2-Clause"
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

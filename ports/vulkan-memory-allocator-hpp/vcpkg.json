@@ -1,0 +1,12 @@
+{
+  "name": "vulkan-memory-allocator-hpp",
+  "version": "3.0.1.1",
+  "description": "C++ bindings for VulkanMemoryAllocator (Development branch)",
+  "homepage": "https://github.com/YaaZ/VulkanMemoryAllocator-Hpp",
+  "license": "CC0-1.0",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    "vulkan",
+    "vulkan-memory-allocator"
+  ]
+}

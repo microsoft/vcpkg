@@ -3,9 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
-    REF f91b6b42b1b9854772a90ae9501464a161707d1e # v1.6.0
-    SHA512 5e3db75fcaa86b766d33e368f58cec5c5b2b9ba7fde658d13868d577679c13069756e68e86323b972daccc4f7d5e392d24d2d42e5308c1ae7e9955e651d45866
-    HEAD_REF master
+    REF v1.8.2
+    SHA512 532f2cee66cf527ef4452a060cfdedba6417e5d8f72225d6bf50adf6422d9a769b0f54f48982b438fa9ced975ac47bcc5e62c3c23ce871b5cfdbcf9cc0d2b829
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(

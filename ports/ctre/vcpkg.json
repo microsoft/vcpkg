@@ -1,8 +1,9 @@
 {
   "name": "ctre",
-  "version-semver": "3.4.1",
+  "version-semver": "3.7.2",
   "description": "A Compile time PCRE (almost) compatible regular expression matcher",
   "homepage": "https://github.com/hanickadot/compile-time-regular-expressions",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -1,9 +1,11 @@
 {
   "name": "cairomm",
-  "version": "1.16.0",
-  "port-version": 1,
+  "version": "1.16.2",
+  "port-version": 4,
   "description": "A C++ wrapper for the cairo graphics library",
   "homepage": "https://www.cairographics.org",
+  "license": "LGPL-2.0-only",
+  "supports": "!xbox",
   "dependencies": [
     "cairo",
     "libsigcpp",

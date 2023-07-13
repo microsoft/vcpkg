@@ -1,29 +1,36 @@
 # Glib uses winapi functions not available in WindowsStore
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/GNOME/sources/glibmm/2.68/glibmm-2.68.1.tar.xz"
-    FILENAME "glibmm-2.68.1.tar.xz"
-    SHA512 ca164f986da651e66bb5b98a760853e73d57ff84e035809d4c3b2c0a1b6ddf8ca68ffc49a71d0e0b2e14eca1c00e2e727e3bf3821e0b2b3a808397c3d33c6d5c
+string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIBMM_MAJOR_MINOR "${VERSION}")
+vcpkg_download_distfile(GLIBMM_ARCHIVE
+    URLS "https://ftp.gnome.org/pub/GNOME/sources/glibmm/${GLIBMM_MAJOR_MINOR}/glibmm-${VERSION}.tar.xz"
+    FILENAME "glibmm-${VERSION}.tar.xz"
+    SHA512 be49599f5eb8eb5a1cef015cdb37af2564fcd1ea845aa4344804ca5f0f61468949711e25cefebb93219e1be37128ebfdd2a816324e752ac4395b4b87c072fc78
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${GLIBMM_ARCHIVE}"
 )
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -Dbuild-examples=false
         -Dmsvc14x-parallel-installable=false
 )
+
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/glibmm-2.68/proc" "${CURRENT_PACKAGES_DIR}/lib/glibmm-2.68/proc")
+# intentionally 2.68 - glib does not install glibmm-2.7x files
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/lib/glibmm-2.68/proc"
+    "${CURRENT_PACKAGES_DIR}/lib/glibmm-2.68/proc"
+)
 
 vcpkg_fixup_pkgconfig()
 
-# Handle copyright and readme
+# Handle copyright and readmes
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME readme.txt)
+file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME readme.txt)
+file(INSTALL "${SOURCE_PATH}/README.SUN" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/README.win32" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

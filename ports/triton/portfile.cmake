@@ -1,30 +1,26 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO JonathanSalwan/Triton
-  REF 64a2b9b0490c82e41b37e623b1d0da14e2382e7a
-  SHA512 ff99a270813043df2bc0da765e04aae4b9d5a911d20c6e5ffca1472eae8d6e1fcfff3cd56da023d6a77a647644839430bf72902acd84ec521a0e098f185d275c
-  PATCHES
-    fix-dependencies.patch
-    fix-usage.patch
-    fix-python.patch
+  REF 2b655f20528065cf70e0fa95e2d01b34a8ef6a17
+  SHA512 819c0c6eb9e5609240fe4be47c1f4584d2979e3b54f34c2978989ad9b3b10f73dc65ac87fca88fbfc26767f7a4df5b3a2ae70bcbda43ec89eef4c456a37bd884
+  HEAD_REF master
 )
 
-file(REMOVE "${SOURCE_PATH}/CMakeModules/FindZ3.cmake")
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATICLIB)
+string(COMPARE NOTEQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DYNAMICLIB)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATICCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "python"         PYTHON_BINDINGS
+        "python" PYTHON_BINDINGS
+        "boost"  BOOST_INTERFACE
 )
 
-set(ADDITIONAL_OPTIONS )
+set(ADDITIONAL_OPTIONS "")
 if(PYTHON_BINDINGS)
     vcpkg_find_acquire_program(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
-        -DPYTHON_EXECUTABLE=${PYTHON3}
-        )
+        "-DPYTHON_EXECUTABLE=${PYTHON3}"
+    )
 endif()
 
 vcpkg_cmake_configure(
@@ -32,17 +28,11 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DZ3_INTERFACE=ON
-        -DBUILD_SHARED_LIBS=${STATICLIB}
+        -DBUILD_SHARED_LIBS=${DYNAMICLIB}
         -DMSVC_STATIC=${STATICCRT}
         -DBUILD_EXAMPLES=OFF
         -DENABLE_TEST=OFF
-        -DCAPSTONE_PKGCONF_INCLUDE_DIRS="${CURRENT_INSTALLED_DIR}/include"
         ${ADDITIONAL_OPTIONS}
-    OPTIONS_DEBUG
-        -DCAPSTONE_PKGCONF_LIBRARY_DIRS="${CURRENT_INSTALLED_DIR}/debug/lib"
-    OPTIONS_RELEASE
-        -DCAPSTONE_PKGCONF_LIBRARY_DIRS="${CURRENT_INSTALLED_DIR}/lib"
-       
 )
 
 vcpkg_cmake_install()
@@ -53,8 +43,7 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 # Remove duplicate files
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
-                    "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,9 +1,10 @@
 {
   "name": "libsquish",
-  "version-string": "1.15",
-  "port-version": 9,
+  "version": "1.15",
+  "port-version": 13,
   "description": "Open source DXT compression library.",
   "homepage": "https://sourceforge.net/projects/libsquish",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -13,5 +14,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "sse2": {
+      "description": "Build with SSE2",
+      "supports": "osx & x64"
+    }
+  }
 }

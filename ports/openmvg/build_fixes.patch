@@ -156,63 +156,9 @@ index 5d909ec..ab7eb6f 100644
 +endif()
 + 
 +find_package(flann REQUIRED)
- 
+
  # ==============================================================================
  # CoinUtils
-@@ -303,6 +322,7 @@ endif()
- # - internal by default (CoinUtils),
- # - external if COINUTILS_INCLUDE_DIR_HINTS and a valid CoinUtils setup is found
- # ==============================================================================
-+if(0)
- if (NOT DEFINED COINUTILS_INCLUDE_DIR_HINTS)
-   set(COINUTILS_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/CoinUtils/src/)
-   set(OpenMVG_USE_INTERNAL_COINUTILS ON)
-@@ -312,6 +332,9 @@ if (NOT DEFINED COINUTILS_INCLUDE_DIR_HINTS)
- else()
-   find_package(CoinUtils QUIET)
- endif()
-+endif()
-+ 
-+find_package(CoinUtils REQUIRED)
- 
- ## ==============================================================================
- ## Clp
-@@ -319,6 +342,7 @@ endif()
- ## - internal by default (Clp),
- ## - external if CLP_INCLUDE_DIR_HINTS and a valid Clp setup is found
- ## ==============================================================================
-+if(0)
- if (NOT DEFINED CLP_INCLUDE_DIR_HINTS)
-   set(CLP_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/Clp/src/)
-   set(OpenMVG_USE_INTERNAL_CLP ON)
-@@ -330,13 +354,17 @@ if (NOT DEFINED CLP_INCLUDE_DIR_HINTS)
- else()
-   find_package(Clp QUIET)
- endif()
-+endif()
- 
-+find_package(Clp REQUIRED)
-+ 
- # ==============================================================================
- # Osi
- # ==============================================================================
- # - internal by default (Osi),
- # - external if OSI_INCLUDE_DIR_HINTS and a valid Osi setup is found
- # ==============================================================================
-+if(0)
- if (NOT DEFINED OSI_INCLUDE_DIR_HINTS)
-   set(OSI_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/Osi/src/)
-   set(OpenMVG_USE_INTERNAL_OSI ON)
-@@ -346,6 +374,9 @@ if (NOT DEFINED OSI_INCLUDE_DIR_HINTS)
- else()
-   find_package(Osi QUIET)
- endif()
-+endif()
-+
-+find_package(Osi REQUIRED)
- 
- # ==============================================================================
- # Internal CLP/OSI/COINUTILS libraries:
 @@ -364,6 +395,7 @@ endif()
  # - internal by default (Lemon),
  # - external if LEMON_INCLUDE_DIR_HINTS and a valid Lemon setup is found
@@ -332,21 +278,6 @@ index 5d909ec..ab7eb6f 100644
    message(STATUS "LEMON: " ${LEMON_VERSION} " (internal)")
  else()
    message(STATUS "LEMON: " ${LEMON_VERSION} " (external)")
-diff --git a/src/cmakeFindModules/FindClp.cmake b/src/cmakeFindModules/FindClp.cmake
-index 8a69c23..6ebc661 100644
---- a/src/cmakeFindModules/FindClp.cmake
-+++ b/src/cmakeFindModules/FindClp.cmake
-@@ -50,8 +50,8 @@ IF(EXISTS "${CLP_DIR}" AND NOT "${CLP_DIR}" STREQUAL "")
-         ENDIF (NOT EXISTS ${CLP_VERSION_FILE})
-         SET(CLP_INCLUDE_DIR ${CLP_DIR})
- 
--        FIND_LIBRARY(CLP_LIBRARY NAMES Clp)
--        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver)
-+        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver Clp)
-+        FIND_LIBRARY(OSICLP_LIBRARY NAMES OsiClp Clp)
-         FIND_LIBRARY(OSICLP_LIBRARY NAMES OsiClp)
- 
-         # locate Clp libraries
 diff --git a/src/cmakeFindModules/OpenMVGConfig.cmake.in b/src/cmakeFindModules/OpenMVGConfig.cmake.in
 index e7dfbfd..65224c4 100644
 --- a/src/cmakeFindModules/OpenMVGConfig.cmake.in
@@ -360,15 +291,12 @@ index e7dfbfd..65224c4 100644
  # unsets all public (designed to be used externally) variables and reports
  # error message at priority depending upon [REQUIRED/QUIET/<NONE>] argument.
  macro(OPENMVG_REPORT_NOT_FOUND REASON_MSG)
-@@ -58,10 +58,20 @@ set(CALLERS_CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
+@@ -58,10 +58,17 @@ set(CALLERS_CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
  # Reset CMake module path to the installation directory of this
  # script.
  set(CMAKE_MODULE_PATH ${CURRENT_CONFIG_INSTALL_DIR})
 +include(CMakeFindDependencyMacro)
 +
-+find_dependency(CoinUtils)
-+find_dependency(Clp)
-+find_dependency(Osi)
 +find_dependency(flann)
 +find_dependency(Threads)
 +find_dependency(cereal)
@@ -477,30 +405,6 @@ index cd800b0..20e9c8e 100644
  
        #ifdef OPENMVG_USE_OPENMP
        #pragma omp parallel for private(descr, descriptor)
-diff --git a/src/openMVG/linearProgramming/CMakeLists.txt b/src/openMVG/linearProgramming/CMakeLists.txt
-index cc5212f..acc57dd 100644
---- a/src/openMVG/linearProgramming/CMakeLists.txt
-+++ b/src/openMVG/linearProgramming/CMakeLists.txt
-@@ -15,16 +15,12 @@ target_link_libraries(openMVG_linearProgramming
-   PUBLIC
-     openMVG_numeric
-   PRIVATE
--    ${CLP_LIBRARIES}     # clp + solver wrapper
--    ${COINUTILS_LIBRARY} # container tools
--    ${OSI_LIBRARY}       # generic LP
-+    Coin::Clp       # clp + solver wrapper
-+    Coin::CoinUtils # container tools
-+    Coin::Osi       # generic LP
- )
- 
- target_include_directories(openMVG_linearProgramming
--  PRIVATE
--    ${CLP_INCLUDE_DIRS}
--    ${COINUTILS_INCLUDE_DIRS}
--    ${OSI_INCLUDE_DIRS}
-   PUBLIC
-     $<INSTALL_INTERFACE:include>
- )
 diff --git a/src/openMVG/matching/CMakeLists.txt b/src/openMVG/matching/CMakeLists.txt
 index 2e0eafd7..d54d1e88 100644
 --- a/src/openMVG/matching/CMakeLists.txt
@@ -617,45 +521,6 @@ index 6db7e83..51e06f5 100644
      ${OpenCV_LIBS})
    target_include_directories(openMVG_main_ComputeFeatures_OpenCV PRIVATE ${OpenCV_INCLUDE_DIRS})
  
-diff --git a/src/software/SfM/SfM_GlobalPipeline.py.in b/src/software/SfM/SfM_GlobalPipeline.py.in
-index 42b41cc..7fda0cd 100644
---- a/src/software/SfM/SfM_GlobalPipeline.py.in
-+++ b/src/software/SfM/SfM_GlobalPipeline.py.in
-@@ -21,7 +21,7 @@
- OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
- 
- # Indicate the openMVG camera sensor width directory
--CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY@"
- 
- import os
- import subprocess
-diff --git a/src/software/SfM/SfM_SequentialPipeline.py.in b/src/software/SfM/SfM_SequentialPipeline.py.in
-index 423c85c..0ff2e77 100644
---- a/src/software/SfM/SfM_SequentialPipeline.py.in
-+++ b/src/software/SfM/SfM_SequentialPipeline.py.in
-@@ -21,7 +21,7 @@
- OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
- 
- # Indicate the openMVG camera sensor width directory
--CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY@"
- 
- import os
- import subprocess
-diff --git a/src/software/SfM/tutorial_demo.py.in b/src/software/SfM/tutorial_demo.py.in
-index c7361f3..1c56aab 100644
---- a/src/software/SfM/tutorial_demo.py.in
-+++ b/src/software/SfM/tutorial_demo.py.in
-@@ -12,7 +12,7 @@
- OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
- 
- # Indicate the openMVG camera sensor width directory
--CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY@"
- 
- import os
- import subprocess
 diff --git a/src/software/VO/Tracker_opencv_klt.hpp b/src/software/VO/Tracker_opencv_klt.hpp
 index aa7dffe..2c4d237 100644
 --- a/src/software/VO/Tracker_opencv_klt.hpp
@@ -761,3 +626,16 @@ index b8928083..1d10f939 100644
      ${OPENMVG_LIBRARY_DEPENDENCIES}
  )
  
+diff --git a/src/cmakeFindModules/FindClp.cmake b/src/cmakeFindModules/FindClp.cmake
+index 8a69c2344..1ed9a21fe 100644
+--- a/src/cmakeFindModules/FindClp.cmake
++++ b/src/cmakeFindModules/FindClp.cmake
+@@ -51,7 +51,7 @@ IF(EXISTS "${CLP_DIR}" AND NOT "${CLP_DIR}" STREQUAL "")
+         SET(CLP_INCLUDE_DIR ${CLP_DIR})
+ 
+         FIND_LIBRARY(CLP_LIBRARY NAMES Clp)
+-        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver)
++        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver Clp)
+         FIND_LIBRARY(OSICLP_LIBRARY NAMES OsiClp)
+ 
+         # locate Clp libraries

@@ -1,9 +1,11 @@
 {
   "name": "gdk-pixbuf",
-  "version": "2.42.2",
-  "port-version": 2,
+  "version": "2.42.10",
+  "port-version": 1,
   "description": "Image loading library.",
-  "homepage": "https://developer.gnome.org/gdk-pixbuf/",
+  "homepage": "https://gitlab.gnome.org/GNOME/gdk-pixbuf",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!xbox",
   "dependencies": [
     "gettext",
     "glib",
@@ -12,11 +14,29 @@
       "host": true
     },
     "libpng",
-    "tiff",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "introspection": {
+      "description": "build with introspection",
+      "dependencies": [
+        {
+          "name": "gobject-introspection",
+          "host": true
+        },
+        {
+          "name": "gobject-introspection",
+          "platform": "windows & x86"
+        }
+      ]
+    }
+  }
 }

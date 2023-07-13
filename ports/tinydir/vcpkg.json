@@ -1,7 +1,7 @@
 {
   "name": "tinydir",
-  "version-string": "1.2.4",
-  "port-version": 1,
+  "version": "1.2.5",
   "description": "Lightweight, portable and easy to integrate C directory and file reader",
-  "homepage": "https://github.com/cxong/tinydir"
+  "homepage": "https://github.com/cxong/tinydir",
+  "license": "BSD-2-Clause"
 }

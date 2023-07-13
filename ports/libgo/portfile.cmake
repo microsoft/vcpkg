@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake.patch
+        Add-target-include-directory.patch
 )
 
 vcpkg_from_github(

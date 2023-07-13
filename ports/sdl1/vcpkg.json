@@ -1,7 +1,9 @@
 {
   "name": "sdl1",
   "version": "1.2.15",
-  "port-version": 15,
+  "port-version": 18,
   "description": "Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.",
-  "homepage": "https://www.libsdl.org"
+  "homepage": "https://www.libsdl.org",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!osx & !uwp"
 }

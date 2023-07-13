@@ -1,8 +1,9 @@
 {
   "name": "sockpp",
-  "version-date": "2022-01-24",
+  "version": "0.8.1",
   "description": "Simple, modern, C++ socket library. This is a fairly low-level C++ wrapper around the Berkeley sockets library using socket, acceptor, and connector classes that are familiar concepts from other languages.",
   "homepage": "https://github.com/fpagliughi/sockpp",
+  "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
     {

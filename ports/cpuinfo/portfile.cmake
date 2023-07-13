@@ -1,14 +1,14 @@
 # On Windows, we can get a cpuinfo.dll, but it exports no symbols.
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/cpuinfo
-    REF 5916273f79a21551890fd3d56fc5375a78d1598d
-    SHA512 50e537b61d991e8579577fb1ecf8d9ceb2171dbad96dfe159a062eadfdc0b2372b94988fc6f223c20e327453c7f55042ee06779f5b5fe0922f4470f746c9686b
+    REF 5e63739504f0f8e18e941bd63b2d6d42536c7d90
+    SHA512 6a61f4574661a55771c2ec31bb0919a51d0bd8c770477b254a5c14dc5323716af275c7fe3abc5aa96720d7cc929559ca66f614265d3940e076b8db2fa15c8e36
     HEAD_REF master
-    PATCHES
-        fix-install.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,32 +16,48 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools CPUINFO_BUILD_TOOLS
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS_DEBUG
-        -DCPUINFO_BUILD_TOOLS=OFF
-        -DCPUINFO_LOG_LEVEL=debug
-    OPTIONS_RELEASE
-        ${FEATURE_OPTIONS}
-        -DCPUINFO_LOG_LEVEL=default
+set(LINK_OPTIONS "")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    list(APPEND LINK_OPTIONS -DCPUINFO_LIBRARY_TYPE=shared)
+else()
+    list(APPEND LINK_OPTIONS -DCPUINFO_LIBRARY_TYPE=static)
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    list(APPEND LINK_OPTIONS -DCPUINFO_RUNTIME_TYPE=shared)
+else()
+    list(APPEND LINK_OPTIONS -DCPUINFO_RUNTIME_TYPE=static)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
+        ${LINK_OPTIONS}
         -DCPUINFO_BUILD_UNIT_TESTS=OFF
         -DCPUINFO_BUILD_MOCK_TESTS=OFF
         -DCPUINFO_BUILD_BENCHMARKS=OFF
+    OPTIONS_DEBUG
+        -DCPUINFO_LOG_LEVEL=debug
+    OPTIONS_RELEASE
+        -DCPUINFO_LOG_LEVEL=default
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
+vcpkg_fixup_pkgconfig() # pkg_check_modules(libcpuinfo)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if("tools" IN_LIST FEATURES)
+    set(additional_tools "")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cpuid-dump${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        list(APPEND additional_tools "cpuid-dump")
+    endif()
     vcpkg_copy_tools(
-        TOOL_NAMES cache-info cpuid-dump cpu-info isa-info
+        TOOL_NAMES cache-info cpu-info isa-info ${additional_tools}
         AUTO_CLEAN
     )
 endif()
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

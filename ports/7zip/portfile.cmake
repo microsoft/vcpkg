@@ -1,30 +1,32 @@
-set(7ZIP_VERSION 19.00)
+set(7ZIP_VERSION "2201")
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.7-zip.org/a/7z1900-src.7z"
-    FILENAME "7z1900-src.7z"
-    SHA512 d68b308e175224770adc8b1495f1ba3cf3e7f67168a7355000643d3d32560ae01aa34266f0002395181ed91fb5e682b86e0f79c20625b42d6e2c62dd24a5df93
+    URLS "https://www.7-zip.org/a/7z${7ZIP_VERSION}-src.7z"
+    FILENAME "7z${7ZIP_VERSION}-src.7z"
+    SHA512 c37cede4b7253b8dc4372e9e011ef0fee0c1cd53cf9705bf106672a455e7ce1e5a0a288c763d73d3c28b2a41fb860c9bacb702b01d9192eed810787c7da1e0d8
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${7ZIP_VERSION}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/7zip-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
+vcpkg_cmake_config_fixup()
+
 file(
-    INSTALL ${CMAKE_CURRENT_LIST_DIR}/License.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    INSTALL "${SOURCE_PATH}/DOC/License.txt"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

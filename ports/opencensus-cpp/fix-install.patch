@@ -1,10 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0ecec53..45d994c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,7 +38,13 @@ enable_testing()
+ 
+ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+ 
+-include(OpenCensusDeps)
++find_package(absl CONFIG REQUIRED)
++find_package(prometheus-cpp CONFIG REQUIRED)
++
++if(BUILD_TESTING)
++  find_package(GTest CONFIG REQUIRED)
++  find_package(benchmark CONFIG REQUIRED)
++endif()
+ 
+ include(OpenCensusHelpers)
+ 
 diff --git a/cmake/OpenCensusHelpers.cmake b/cmake/OpenCensusHelpers.cmake
-index 8fdfe96..53bc877 100644
+index 8fdfe96..6667085 100644
 --- a/cmake/OpenCensusHelpers.cmake
 +++ b/cmake/OpenCensusHelpers.cmake
-@@ -37,6 +37,13 @@ function(opencensus_test NAME SRC)
+@@ -35,8 +35,15 @@ function(opencensus_test NAME SRC)
+     set(_NAME "opencensus_${NAME}")
+     add_executable(${_NAME} ${SRC})
      prepend_opencensus(DEPS "${ARGN}")
-     target_link_libraries(${_NAME} "${DEPS}" gmock gtest_main)
+-    target_link_libraries(${_NAME} "${DEPS}" gmock gtest_main)
++    target_link_libraries(${_NAME} "${DEPS}" GTest::gmock GTest::gtest_main)
      add_test(NAME ${_NAME} COMMAND ${_NAME})
 +
 +    install(
@@ -16,10 +38,12 @@ index 8fdfe96..53bc877 100644
    endif()
  endfunction()
  
-@@ -50,6 +57,13 @@ function(opencensus_benchmark NAME SRC)
+@@ -49,7 +56,14 @@ function(opencensus_benchmark NAME SRC)
+     set(_NAME "opencensus_${NAME}")
      add_executable(${_NAME} ${SRC})
      prepend_opencensus(DEPS "${ARGN}")
-     target_link_libraries(${_NAME} "${DEPS}" benchmark)
+-    target_link_libraries(${_NAME} "${DEPS}" benchmark)
++    target_link_libraries(${_NAME} "${DEPS}" benchmark::benchmark)
 +
 +    install(
 +      TARGETS ${_NAME}

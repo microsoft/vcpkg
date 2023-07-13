@@ -1,16 +1,32 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/pango
-    REF  26aadb2508f9022cbfc72e73b558c6791f5d46d9 #v1.50.3
-    SHA512 09c2578300d391b406c14dfbf7f28968d326c6861f7eb1a3a8d1d8c4700d6e9f74c8621a3f2d181abe1f695324c6e5fc3a55eb038ebbe53a53be086983e3a186
-    HEAD_REF master # branch name
+    REF "${VERSION}"
+    SHA512 5de67e711a1f25bd2c741162bb8306ae380d134f95b9103db6e96864d3a1100321ce106d8238dca54e746cd8f1cfdbe50cc407878611d3d09694404f3f128c73
+    HEAD_REF master
 ) 
 
+if("introspection" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message(FATAL_ERROR "Feature introspection currently only supports dynamic build.")
+    endif()
+    list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
+    list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
+else()
+    list(APPEND OPTIONS -Dintrospection=disabled)
+endif()
+
+if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
+else()
+    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+endif()
+
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -Dintrospection=disabled # Build the GObject introspection data for Pango
         -Dfontconfig=enabled # Build with FontConfig support.
         -Dsysprof=disabled # include tracing support for sysprof
         -Dlibthai=disabled # Build with libthai support
@@ -18,25 +34,22 @@ vcpkg_configure_meson(
         -Dxft=disabled # Build with xft support
         -Dfreetype=enabled # Build with freetype support
         -Dgtk_doc=false #Build API reference for Pango using GTK-Doc
-    ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-    ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+        ${OPTIONS}
+    OPTIONS_DEBUG
+        ${OPTIONS_DEBUG}
+    OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
+    ADDITIONAL_BINARIES
+        "glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'"
+        "glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
+        "g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
+        "g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'"
 )
 
-vcpkg_install_meson()
+vcpkg_install_meson(ADD_BIN_TO_PATH)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES pango-view pango-list pango-segmentation AUTO_CLEAN)
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/pango.pc")
-if(EXISTS "${_file}")
-    vcpkg_replace_string("${_file}" [[-I"${includedir}/pango-1.0"]] [[-I"${includedir}/pango-1.0" -I"${includedir}/harfbuzz"]])
-endif()
-set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/pango.pc")
-if(EXISTS "${_file}")
-    vcpkg_replace_string("${_file}" [[-I"${includedir}/pango-1.0"]] [[-I"${includedir}/pango-1.0" -I"${includedir}/harfbuzz"]])
-endif()
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

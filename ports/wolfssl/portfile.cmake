@@ -1,0 +1,38 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO wolfssl/wolfssl
+    REF v5.5.4-stable
+    SHA512 6ecb37d614ae7b8ea9caa5bedebe2bb16b2719e172e146fc707ce1ead09a6c4d168b8e8aa52255d4cf0341a0617f17d7f4b321ba88aaa77664861c31ca7a1163
+    HEAD_REF master
+    PATCHES
+        pr_5949.patch
+    )
+
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+      -DWOLFSSL_BUILD_OUT_OF_TREE=yes
+      -DWOLFSSL_EXAMPLES=no
+      -DWOLFSSL_CRYPT_TESTS=no
+      -DWOLFSSL_OPENSSLEXTRA=yes
+      -DWOLFSSL_TPM=yes
+      -DWOLFSSL_TLSX=yes
+      -DWOLFSSL_OCSP=yes
+      -DWOLFSSL_OCSPSTAPLING=yes
+      -DWOLFSSL_OCSPSTAPLING_V2=yes
+      -DWOLFSSL_CRL=yes
+      -DWOLFSSL_DES3=yes
+      -DCMAKE_C_FLAGS='-DWOLFSSL_ALT_CERT_CHAINS\ -DWOLFSSL_DES_ECB\ -DWOLFSSL_CUSTOM_OID\ -DHAVE_OID_ENCODING\ -DWOLFSSL_CERT_GEN\ -DWOLFSSL_ASN_TEMPLATE\ -DWOLFSSL_KEY_GEN\ -DHAVE_PKCS7\ -DHAVE_AES_KEYWRAP\ -DWOLFSSL_AES_DIRECT\ -DHAVE_X963_KDF'
+    OPTIONS_DEBUG
+      -DWOLFSSL_DEBUG=yes)
+
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/wolfssl)
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

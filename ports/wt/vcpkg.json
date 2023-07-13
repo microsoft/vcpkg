@@ -1,8 +1,11 @@
 {
   "name": "wt",
-  "version": "4.6.1",
+  "version": "4.9.1",
+  "port-version": 2,
   "description": "Wt is a C++ library for developing web applications",
   "homepage": "https://github.com/emweb/wt",
+  "license": "GPL-2.0-only",
+  "supports": "!xbox",
   "dependencies": [
     "boost-algorithm",
     "boost-array",

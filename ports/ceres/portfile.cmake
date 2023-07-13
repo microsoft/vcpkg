@@ -9,14 +9,13 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ceres-solver/ceres-solver
-    REF 2.0.0
-    SHA512 6379666ef57af4ea85026644fa21365ce18fbaa12d50bd452bcdae0743a7b013effdd42c961e90c31815991bf315bd6904553dcc1a382ff5ed8c7abe9edf9a6c
+    REF f68321e7de8929fbcdb95dd42877531e64f72f66 #2.1.0
+    SHA512 67bbd8a9385a40fe69d118fbc84da0fcc9aa1fbe14dd52f5403ed09686504213a1d931e95a1a0148d293b27ab5ce7c1d618fbf2e8fed95f2bbafab851a1ef449
     HEAD_REF master
     PATCHES
         0001_cmakelists_fixes.patch
         0002_use_glog_target.patch
         0003_fix_exported_ceres_config.patch
-        0004_fix_lib_path_linux.patch
         find-package-required.patch
 )
 
@@ -25,6 +24,7 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindEigen.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindMETIS.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -33,12 +33,27 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "lapack"            LAPACK
         "eigensparse"       EIGENSPARSE
         "tools"             GFLAGS
+        "cuda"              CUDA
 )
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND FEATURE_OPTIONS -DMINIGLOG=ON)
+endif()
+
+foreach (FEATURE ${FEATURE_OPTIONS})
+    message(STATUS "${FEATURE}")
+endforeach()
+
+set(TARGET_OPTIONS )
+if(VCPKG_TARGET_IS_IOS)
+    # Note: CMake uses "OSX" not just for macOS, but also iOS, watchOS and tvOS.
+    list(APPEND TARGET_OPTIONS "-DIOS_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${TARGET_OPTIONS}
         -DEXPORT_BUILD_DIR=ON
         -DBUILD_BENCHMARKS=OFF
         -DBUILD_EXAMPLES=OFF
@@ -51,11 +66,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
-else()
-  vcpkg_cmake_config_fixup(CONFIG_PATH "lib${LIB_SUFFIX}/cmake/Ceres")
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib${LIB_SUFFIX}/cmake/Ceres")
 
 vcpkg_copy_pdbs()
 

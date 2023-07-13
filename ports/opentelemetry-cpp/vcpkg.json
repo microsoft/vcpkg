@@ -1,15 +1,15 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "opentelemetry-cpp",
-  "version-semver": "1.2.0",
+  "version-semver": "1.9.1",
   "description": [
     "OpenTelemetry is a collection of tools, APIs, and SDKs.",
     "You use it to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) for analysis in order to understand your software's performance and behavior."
   ],
   "homepage": "https://github.com/open-telemetry/opentelemetry-cpp",
   "license": "Apache-2.0",
-  "supports": "!(windows & !static)",
   "dependencies": [
+    "abseil",
     "curl",
     "nlohmann-json",
     {
@@ -26,7 +26,8 @@
       "description": "Whether to include the Elasticsearch Client in the SDK"
     },
     "etw": {
-      "description": "Whether to include the ETW Exporter in the SDK"
+      "description": "Whether to include the ETW Exporter in the SDK",
+      "supports": "windows"
     },
     "jaeger": {
       "description": "Whether to include the Jaeger exporter",
@@ -37,8 +38,37 @@
     "otlp": {
       "description": "Whether to include the OpenTelemetry Protocol in the SDK",
       "dependencies": [
-        "grpc",
         "protobuf"
+      ]
+    },
+    "otlp-grpc": {
+      "description": "Whether to include the OTLP gRPC exporter in the SDK",
+      "dependencies": [
+        "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        },
+        {
+          "name": "opentelemetry-cpp",
+          "default-features": false,
+          "features": [
+            "otlp"
+          ]
+        }
+      ]
+    },
+    "otlp-http": {
+      "description": "Whether to include the OpenTelemetry Protocol over HTTP in the SDK",
+      "dependencies": [
+        "curl",
+        {
+          "name": "opentelemetry-cpp",
+          "default-features": false,
+          "features": [
+            "otlp"
+          ]
+        }
       ]
     },
     "prometheus": {

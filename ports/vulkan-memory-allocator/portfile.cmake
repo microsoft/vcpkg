@@ -1,13 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
-    REF 55868965ae1fa956c07695d4642e1add8c9450f7
-    SHA512 433d8a961a1fa4c80894f014fdfbbcafeb94932a3eea2eced9c7109dcbf7350a60efb9fb1d8f3c621f2d72c118f47f82f8e9e6f4db75038fbad3a727b5896479
+    REF a6bfc237255a6bac1513f7c1ebde6d8aed6b5191 #v3.0.1
+    SHA512  14361ff201fd660c22b60de54c648ff20a2e2a7f65105f66853a9a4dbffbeca2ae42098dcb1528bb4e524639b92fa4ff27ebd3940c42ccfaf7c99c08bdd0d8ce
     HEAD_REF master
+    PATCHES
+        gcc13.patch # https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/commit/29d492b60c84ca784ea0943efc7d2e6e0f3bdaac
 )
 
 file(COPY "${SOURCE_PATH}/include/vk_mem_alloc.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-vulkan-memory-allocator-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-vulkan-memory-allocator)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-vulkan-memory-allocator-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-vulkan-memory-allocator")
 
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/vulkan-memory-allocator/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

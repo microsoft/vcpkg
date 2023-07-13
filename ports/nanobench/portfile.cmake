@@ -1,16 +1,23 @@
-# Header-only library
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinus/nanobench
-    REF ee8b36e956bb2b8753dd1f6732b4d9d90afb09f9 #v4.3.0
-    SHA512 46807f3b945d062dd3c829ec349cc892f9b2334c8a3c74c1225b0cd918af6864a1e539ac2bbad0ee6e20d285b5ad8e307e72996f2531377c55683cb0593ed3e7
+    REF v${VERSION}
+    SHA512 aa00dfc585445fda63b3ba1a802da259993b6b99d0bc2c9bb5f8a9dac64d25e9a61f072846d8f70ee2fea58482431749189179520ba7f6e075dbb223574a3a4d
     HEAD_REF master
 )
 
-file(
-    COPY ${SOURCE_PATH}/src/include/nanobench.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

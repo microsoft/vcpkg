@@ -1,0 +1,17 @@
+From: Fabrice Fontaine <fontaine.fabrice@gmail.com>
+Date: Wed, 16 Feb 2022 00:11:38 +0100
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b975d490..df2ca15f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,7 +52,9 @@ endif()
+ #
+ #-----------------------------------------------------------------------------
+ 
+-find_package(Protobuf)
++if(BUILD_TESTING)
++    find_package(Protobuf)
++endif()
+ 
+ 
+ #-----------------------------------------------------------------------------

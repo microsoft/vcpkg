@@ -1,12 +1,13 @@
+# header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uNetworking/uWebSockets
-    REF v20.9.0
-    SHA512 a5f8716e5f7db4a842abd6bb1143b76b13c9cba7d623910110a18b1cb88adeda80918c3e4ba9ab434fd55f8a57b78ebb15b684d575eb59d5d6e458d24654a726
+    REF "v${VERSION}"
+    SHA512 ceb950a3d4c2ffd58867ef1cc92d5405441dff603ceb6958ef5660f93c8e1da2346cecb43d209ab08d4feac9c1f023f7bff22a13f537dbb3eab0f122f27f70f6
     HEAD_REF master
 )
 
 file(COPY "${SOURCE_PATH}/src"  DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/src" "${CURRENT_PACKAGES_DIR}/include/uwebsockets")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

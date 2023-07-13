@@ -1,50 +1,17 @@
 diff --git a/meson.build b/meson.build
-index c418f50b1..e7158c036 100644
+index f44fa2d4e..d465253af 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -2048,42 +2048,10 @@ endif
+@@ -2088,9 +2088,9 @@
+ # proxy-libintl subproject.
  # FIXME: glib-gettext.m4 has much more checks to detect broken/uncompatible
  # implementations. This could be extended if issues are found in some platforms.
- libintl_deps = []
--if cc.has_function('ngettext', args : osx_ldflags)
--  have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset')
--else
--  # First just find the bare library.
--  libintl = cc.find_library('intl', required : false)
--  # The bare library probably won't link without help if it's static.
--  if libintl.found() and not cc.has_function('ngettext', args : osx_ldflags, dependencies : libintl)
--     libintl_iconv = cc.find_library('iconv', required : false)
--     # libintl supports different threading APIs, which may not
--     # require additional flags, but it defaults to using pthreads if
--     # found. Meson's "threads" dependency does not allow you to
--     # prefer pthreads. We may not be using pthreads for glib itself
--     # either so just link the library to satisfy libintl rather than
--     # also defining the macros with the -pthread flag.
--     libintl_pthread = cc.find_library('pthread', required : false)
--     # Try linking with just libiconv.
--     if libintl_iconv.found() and cc.has_function('ngettext', args : osx_ldflags, dependencies : [libintl, libintl_iconv])
--       libintl_deps += [libintl_iconv]
--     # Then also try linking with pthreads.
--     elif libintl_iconv.found() and libintl_pthread.found() and cc.has_function('ngettext', args : osx_ldflags, dependencies : [libintl, libintl_iconv, libintl_pthread])
--       libintl_deps += [libintl_iconv, libintl_pthread]
--     else
--       libintl = disabler()
--     endif
--  endif
--  if not libintl.found()
--    libintl = subproject('proxy-libintl').get_variable('intl_dep')
--    libintl_deps = [libintl] + libintl_deps
--    have_bind_textdomain_codeset = true  # proxy-libintl supports it
--  else
--    libintl_deps = [libintl] + libintl_deps
--    have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset', args : osx_ldflags,
-+libintl = dependency('Intl', method:'cmake', required : true)
-+libintl_deps += [libintl]
-+have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset', args : osx_ldflags,
-                                                    dependencies : libintl_deps)
--  endif
--endif
--
- glib_conf.set('HAVE_BIND_TEXTDOMAIN_CODESET', have_bind_textdomain_codeset)
- 
- # We require gettext to always be present
+-libintl_deps = []
+-libintl = dependency('intl', required: false, allow_fallback: false)
+-if libintl.found()
++libintl = dependency('Intl', method:'cmake', required: true)
++libintl_deps = [libintl]
++if false
+   # libintl supports different threading APIs, which may not
+   # require additional flags, but it defaults to using pthreads if
+   # found. Meson's "threads" dependency does not allow you to

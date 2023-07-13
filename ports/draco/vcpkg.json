@@ -1,8 +1,9 @@
 {
   "name": "draco",
-  "version": "1.4.3",
+  "version": "1.5.6",
   "description": " A library for compressing and decompressing 3D geometric meshes and point clouds. It is intended to improve the storage and transmission of 3D graphics.",
   "homepage": "https://github.com/google/draco",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

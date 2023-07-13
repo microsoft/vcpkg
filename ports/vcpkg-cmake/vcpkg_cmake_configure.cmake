@@ -1,97 +1,4 @@
-#[===[.md:
-# vcpkg_cmake_configure
-
-Configure a CMake buildsystem.
-
-```cmake
-vcpkg_cmake_configure(
-    SOURCE_PATH <source-path>
-    [LOGFILE_BASE <logname-base>]
-    [DISABLE_PARALLEL_CONFIGURE]
-    [NO_CHARSET_FLAG]
-    [WINDOWS_USE_MSBUILD]
-    [GENERATOR <generator>]
-    [OPTIONS
-        <configure-setting>...]
-    [OPTIONS_RELEASE
-        <configure-setting>...]
-    [OPTIONS_DEBUG
-        <configure-setting>...]
-    [MAYBE_UNUSED_VARIABLES
-        <option-name>...]
-)
-```
-
-`vcpkg_cmake_configure` configures a CMake build system for use with
-`vcpkg_cmake_buildsystem_build` and `vcpkg_cmake_buildsystem_install`.
-`source-path` is where the source is located; by convention,
-this is usually `${SOURCE_PATH}`, which is set by one of the `vcpkg_from_*` functions.
-This function configures the build system for both Debug and Release builds by default,
-assuming that `VCPKG_BUILD_TYPE` is not set; if it is, then it will only configure for
-that build type.
-
-Use the `OPTIONS` argument to set the configure settings for both release and debug,
-and use `OPTIONS_RELEASE` and `OPTIONS_DEBUG` to set the configure settings for
-release only and debug only respectively.
-
-By default, when possible, `vcpkg_cmake_configure` uses [ninja-build]
-as its build system. If the `WINDOWS_USE_MSBUILD` argument is passed, then
-`vcpkg_cmake_configure` will use a Visual Studio generator on Windows;
-on every other platform, `vcpkg_cmake_configure` just uses Ninja.
-
-[ninja-build]: https://ninja-build.org/
-
-Additionally, one may pass the specific generator a port should use with `GENERATOR`.
-This is useful if some project-specific buildsystem
-has been wrapped in a CMake build system that doesn't perform an actual build.
-If used for this purpose, it should be set to `"NMake Makefiles"`.
-`vcpkg_cmake_buildsystem_build` and `install` do not support this being set to anything
-except for NMake.
-
-For libraries which cannot be configured in parallel,
-pass the `DISABLE_PARALLEL_CONFIGURE` flag. This is needed, for example,
-if the library's build system writes back into the source directory during configure.
-This also disables the `CMAKE_DISABLE_SOURCE_CHANGES` option.
-
-By default, this function adds flags to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`
-which set the default character set to utf-8 for MSVC.
-If the library sets its own code page, pass the `NO_CHARSET_FLAG` option.
-
-This function makes certain that all options passed in are used by the
-underlying CMake build system. If there are options that might be unused,
-perhaps on certain platforms, pass those variable names to
-`MAYBE_UNUSED_VARIABLES`. For example:
-```cmake
-vcpkg_cmake_configure(
-    ...
-    OPTIONS
-        -DBUILD_EXAMPLE=OFF
-    ...
-    MAYBE_UNUSED_VARIABLES
-        BUILD_EXAMPLE
-)
-```
-
-`LOGFILE_BASE` is used to set the base of the logfile names;
-by default, this is `config`, and thus the logfiles end up being something like
-`config-x86-windows-dbg.log`. You can set it to anything you like;
-if you set it to `config-the-first`,
-you'll get something like `config-the-first-x86-windows.dbg.log`.
-
-## Notes
-This command supplies many common arguments to CMake. To see the full list, examine the source.
-
-## Examples
-
-* [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
-* [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
-* [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
-* [opencv4](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv4/portfile.cmake)
-#]===]
-if(Z_VCPKG_CMAKE_CONFIGURE_GUARD)
-    return()
-endif()
-set(Z_VCPKG_CMAKE_CONFIGURE_GUARD ON CACHE INTERNAL "guard variable")
+include_guard(GLOBAL)
 
 macro(z_vcpkg_cmake_configure_both_set_or_unset var1 var2)
     if(DEFINED ${var1} AND NOT DEFINED ${var2})
@@ -109,12 +16,16 @@ function(vcpkg_cmake_configure)
     )
 
     if(NOT arg_Z_CMAKE_GET_VARS_USAGE AND DEFINED CACHE{Z_VCPKG_CMAKE_GENERATOR})
-        message(WARNING "vcpkg_cmake_configure already called; this function should only be called once.")
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} already called; this function should only be called once.")
+    endif()
+    if(arg_PREFER_NINJA)
+        message(WARNING "PREFER_NINJA has been deprecated in ${CMAKE_CURRENT_FUNCTION}. Please remove it from the portfile!")
     endif()
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR "vcpkg_cmake_buildsystem_build was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
+
     if(NOT DEFINED arg_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH must be set")
     endif()
@@ -130,12 +41,14 @@ function(vcpkg_cmake_configure)
         set(configuring_message "Configuring ${TARGET_TRIPLET}")
 
         foreach(option IN LISTS arg_OPTIONS arg_OPTIONS_RELEASE arg_OPTIONS_DEBUG)
-            if(option MATCHES "^-D([^:=]*)[:=]")
-                list(APPEND manually_specified_variables "${CMAKE_MATCH_1}")
+            if("${option}" MATCHES "^-D([^:=]*)[:=]")
+                vcpkg_list(APPEND manually_specified_variables "${CMAKE_MATCH_1}")
             endif()
         endforeach()
-        list(REMOVE_DUPLICATES manually_specified_variables)
-        list(REMOVE_ITEM manually_specified_variables ${arg_MAYBE_UNUSED_VARIABLES})
+        vcpkg_list(REMOVE_DUPLICATES manually_specified_variables)
+        foreach(maybe_unused_var IN LISTS arg_MAYBE_UNUSED_VARIABLES)
+            vcpkg_list(REMOVE_ITEM manually_specified_variables "${maybe_unused_var}")
+        endforeach()
         debug_message("manually specified variables: ${manually_specified_variables}")
     endif()
 
@@ -147,94 +60,53 @@ function(vcpkg_cmake_configure)
         endif()
     endif()
 
-    set(ninja_can_be_used ON) # Ninja as generator
-    set(ninja_host ON) # Ninja as parallel configurator
-
-    if(host_architecture STREQUAL "x86")
+    set(ninja_host ON) # Ninja availability
+    if(host_architecture STREQUAL "x86" OR DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
         # Prebuilt ninja binaries are only provided for x64 hosts
-        set(ninja_can_be_used OFF)
-        set(ninja_host OFF)
-    elseif(VCPKG_TARGET_IS_UWP)
-        # Ninja and MSBuild have many differences when targetting UWP, so use MSBuild to maximize existing compatibility
-        set(ninja_can_be_used OFF)
-    endif()
-
-    set(generator)
-    if(DEFINED arg_GENERATOR)
-        set(generator "${arg_GENERATOR}")
-    elseif(arg_WINDOWS_USE_MSBUILD OR NOT ninja_can_be_used)
-        if(VCPKG_PLATFORM_TOOLSET STREQUAL "v120")
-            if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-                set(generator "Visual Studio 12 2013")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-                set(generator "Visual Studio 12 2013 Win64")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-                set(generator "Visual Studio 12 2013 ARM")
-            endif()
-        elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
-            if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-                set(generator "Visual Studio 14 2015")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-                set(generator "Visual Studio 14 2015 Win64")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-                set(generator "Visual Studio 14 2015 ARM")
-            endif()
-        elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
-            if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-                set(generator "Visual Studio 15 2017")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-                set(generator "Visual Studio 15 2017 Win64")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-                set(generator "Visual Studio 15 2017 ARM")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-                set(generator "Visual Studio 15 2017")
-                set(arch "ARM64")
-            endif()
-        elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
-            set(generator "Visual Studio 16 2019")
-            if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-                set(arch "Win32")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-                set(arch "x64")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-                set(arch "ARM")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-                set(arch "ARM64")
-            else()
-                set(generator)
-            endif()
-        elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v143")
-            set(generator "Visual Studio 17 2022")
-            if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-                set(arch "Win32")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-                set(arch "x64")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-                set(arch "ARM")
-            elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-                set(arch "ARM64")
-            else()
-                set(generator)
-            endif()
+        find_program(NINJA NAMES ninja ninja-build)
+        if(NOT NINJA)
+            set(ninja_host OFF)
+            set(arg_DISABLE_PARALLEL_CONFIGURE ON)
+            set(arg_WINDOWS_USE_MSBUILD ON)
         endif()
-    else()
-        set(generator "Ninja")
     endif()
 
-    if(NOT DEFINED generator)
+    set(generator "")
+    set(architecture_options "")
+    if(arg_WINDOWS_USE_MSBUILD AND VCPKG_HOST_IS_WINDOWS AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        z_vcpkg_get_visual_studio_generator(OUT_GENERATOR generator OUT_ARCH arch)
+        vcpkg_list(APPEND architecture_options "-A${arch}")
+        if(DEFINED VCPKG_PLATFORM_TOOLSET)
+            vcpkg_list(APPEND arg_OPTIONS "-T${VCPKG_PLATFORM_TOOLSET}")
+        endif()
+        if(NOT generator)
+            message(FATAL_ERROR "Unable to determine appropriate Visual Studio generator for triplet ${TARGET_TRIPLET}:
+    ENV{VisualStudioVersion} : $ENV{VisualStudioVersion}
+    VCPKG_TARGET_ARCHITECTURE: ${VCPKG_TARGET_ARCHITECTURE}")
+        endif()
+    elseif(DEFINED arg_GENERATOR)
+        set(generator "${arg_GENERATOR}")
+    elseif(ninja_host)
+        set(generator "Ninja")
+    elseif(NOT VCPKG_HOST_IS_WINDOWS)
+        set(generator "Unix Makefiles")
+    endif()
+
+    if(NOT generator)
         if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-            set(VCPKG_CMAKE_SYSTEM_NAME Windows)
+            set(VCPKG_CMAKE_SYSTEM_NAME "Windows")
         endif()
         message(FATAL_ERROR "Unable to determine appropriate generator for: "
             "${VCPKG_CMAKE_SYSTEM_NAME}-${VCPKG_TARGET_ARCHITECTURE}-${VCPKG_PLATFORM_TOOLSET}")
     endif()
 
-    # If we use Ninja, make sure it's on PATH
-    if(generator STREQUAL "Ninja" AND NOT DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
+    if(generator STREQUAL "Ninja")
         vcpkg_find_acquire_program(NINJA)
+        vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
+        # If we use Ninja, it must be on PATH for CMake's ExternalProject,
+        # cf. https://gitlab.kitware.com/cmake/cmake/-/issues/23355.
         get_filename_component(ninja_path "${NINJA}" DIRECTORY)
         vcpkg_add_to_path("${ninja_path}")
-        list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
     set(build_dir_release "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
@@ -248,7 +120,7 @@ function(vcpkg_cmake_configure)
     endif()
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME)
-        list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
+        vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
         if(VCPKG_TARGET_IS_UWP AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
         elseif(VCPKG_TARGET_IS_ANDROID AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
@@ -257,13 +129,17 @@ function(vcpkg_cmake_configure)
     endif()
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
-        list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
+        vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
+    endif()
+
+    if(DEFINED VCPKG_XBOX_CONSOLE_TARGET)
+        vcpkg_list(APPEND arg_OPTIONS "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
     endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        list(APPEND arg_OPTIONS "-DBUILD_SHARED_LIBS=ON")
+        vcpkg_list(APPEND arg_OPTIONS "-DBUILD_SHARED_LIBS=ON")
     elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND arg_OPTIONS "-DBUILD_SHARED_LIBS=OFF")
+        vcpkg_list(APPEND arg_OPTIONS "-DBUILD_SHARED_LIBS=OFF")
     else()
         message(FATAL_ERROR
             "Invalid setting for VCPKG_LIBRARY_LINKAGE: \"${VCPKG_LIBRARY_LINKAGE}\". "
@@ -280,28 +156,11 @@ function(vcpkg_cmake_configure)
     endif()
 
     if(NOT DEFINED VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        if(VCPKG_TARGET_IS_MINGW)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
-        elseif(VCPKG_TARGET_IS_WINDOWS)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-        elseif(VCPKG_TARGET_IS_LINUX)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
-        elseif(VCPKG_TARGET_IS_ANDROID)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
-        elseif(VCPKG_TARGET_IS_OSX)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
-        elseif(VCPKG_TARGET_IS_IOS)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
-        elseif(VCPKG_TARGET_IS_FREEBSD)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
-        elseif(VCPKG_TARGET_IS_OPENBSD)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/openbsd.cmake")
-        endif()
+        z_vcpkg_select_default_vcpkg_chainload_toolchain()
     endif()
 
-
     list(JOIN VCPKG_TARGET_ARCHITECTURE "\;" target_architecture_string)
-    list(APPEND arg_OPTIONS
+    vcpkg_list(APPEND arg_OPTIONS
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
         "-DVCPKG_SET_CHARSET_FLAG=${VCPKG_SET_CHARSET_FLAG}"
@@ -332,127 +191,99 @@ function(vcpkg_cmake_configure)
         "-DVCPKG_MANIFEST_INSTALL=OFF"
     )
 
-    if(DEFINED arch)
-        list(APPEND arg_OPTIONS "-A${arch}")
-    endif()
-
     # Sets configuration variables for macOS builds
     foreach(config_var IN ITEMS INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT OSX_ARCHITECTURES)
         if(DEFINED VCPKG_${config_var})
-            list(JOIN VCPKG_${config_var} "\;" config_var_value)
-            list(APPEND arg_OPTIONS "-DCMAKE_${config_var}=${config_var_value}")
+            vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
         endif()
     endforeach()
 
+    vcpkg_list(PREPEND arg_OPTIONS "-DFETCHCONTENT_FULLY_DISCONNECTED=ON")
+
     # Allow overrides / additional configuration variables from triplets
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
-        list(APPEND arg_OPTIONS "${VCPKG_CMAKE_CONFIGURE_OPTIONS}")
+        vcpkg_list(APPEND arg_OPTIONS ${VCPKG_CMAKE_CONFIGURE_OPTIONS})
     endif()
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE)
-        list(APPEND arg_OPTIONS_RELEASE "${VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE}")
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE ${VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE})
     endif()
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG)
-        list(APPEND arg_OPTIONS_DEBUG "${VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG}")
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG ${VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG})
     endif()
 
-    if(ninja_host AND CMAKE_HOST_WIN32 AND NOT arg_DISABLE_PARALLEL_CONFIGURE)
-        list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
+    vcpkg_list(SET rel_command
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
+        -G "${generator}"
+        ${architecture_options}
+        "-DCMAKE_BUILD_TYPE=Release"
+        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
+        ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
+    vcpkg_list(SET dbg_command
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
+        -G "${generator}"
+        ${architecture_options}
+        "-DCMAKE_BUILD_TYPE=Debug"
+        "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
+        ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
+
+    if(NOT arg_DISABLE_PARALLEL_CONFIGURE)
+        vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 
         vcpkg_find_acquire_program(NINJA)
 
-        if(NOT DEFINED ninja_path)
-            # if ninja_path was defined above, we've already done this
-            get_filename_component(ninja_path "${NINJA}" DIRECTORY)
-            vcpkg_add_to_path("${ninja_path}")
-        endif()
-
         #parallelize the configure step
-        set(parallel_configure_contents
-            "rule CreateProcess\n  command = $process\n\n"
+        set(ninja_configure_contents
+            "rule CreateProcess\n  command = \$process\n\n"
         )
 
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            set(line "build ../CMakeCache.txt: CreateProcess\n  ")
-            string(APPEND line "process = \"${CMAKE_COMMAND}\" -E chdir \"${build_dir_release}\" ")
-            string(APPEND line "\"${CMAKE_COMMAND}\" -S \"${arg_SOURCE_PATH}\" ")
-
-            if(DEFINED arg_OPTIONS AND NOT arg_OPTIONS STREQUAL "")
-                list(JOIN arg_OPTIONS "\" \"" options)
-                string(APPEND line "\"${options}\" ")
-            endif()
-            if(DEFINED arg_OPTIONS_RELEASE AND NOT arg_OPTIONS_RELEASE STREQUAL "")
-                list(JOIN arg_OPTIONS_RELEASE "\" \"" options_rel)
-                string(APPEND line "\"${options_rel}\" ")
-            endif()
-            string(APPEND line "-G \"${generator}\" ")
-            string(APPEND line "\"-DCMAKE_BUILD_TYPE=Release\" ")
-            string(APPEND line "\"-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}\"")
-            string(APPEND parallel_configure_contents "${line}\n\n")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
+            z_vcpkg_configure_cmake_build_cmakecache(ninja_configure_contents ".." "rel")
         endif()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            set(line "build ../../${TARGET_TRIPLET}-dbg/CMakeCache.txt: CreateProcess\n  ")
-            string(APPEND line "process = \"${CMAKE_COMMAND}\" -E chdir \"${build_dir_debug}\" ")
-            string(APPEND line "\"${CMAKE_COMMAND}\" -S \"${arg_SOURCE_PATH}\" ")
-
-            if(DEFINED arg_OPTIONS AND NOT arg_OPTIONS STREQUAL "")
-                list(JOIN arg_OPTIONS "\" \"" options)
-                string(APPEND line "\"${options}\" ")
-            endif()
-            if(DEFINED arg_OPTIONS_DEBUG AND NOT arg_OPTIONS_DEBUG STREQUAL "")
-                list(JOIN arg_OPTIONS_DEBUG "\" \"" options_dbg)
-                string(APPEND line "\"${options_dbg}\" ")
-            endif()
-            string(APPEND line "-G \"${generator}\" ")
-            string(APPEND line "\"-DCMAKE_BUILD_TYPE=Debug\" ")
-            string(APPEND line "\"-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug\"")
-            string(APPEND parallel_configure_contents "${line}\n\n")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
+            z_vcpkg_configure_cmake_build_cmakecache(ninja_configure_contents "../../${TARGET_TRIPLET}-dbg" "dbg")
         endif()
 
         file(MAKE_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure")
-        file(WRITE "${build_dir_release}/vcpkg-parallel-configure/build.ninja" "${parallel_configure_contents}")
+        file(WRITE
+            "${build_dir_release}/vcpkg-parallel-configure/build.ninja"
+            "${ninja_configure_contents}")
 
         message(STATUS "${configuring_message}")
         vcpkg_execute_required_process(
-            COMMAND ninja -v
+            COMMAND "${NINJA}" -v
             WORKING_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGFILE_BASE}"
+            SAVE_LOG_FILES
+                "../../${TARGET_TRIPLET}-dbg/CMakeCache.txt" ALIAS "dbg-CMakeCache.txt.log"
+                "../CMakeCache.txt" ALIAS "rel-CMakeCache.txt.log"
         )
-        list(APPEND config_logs
+        
+        vcpkg_list(APPEND config_logs
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-out.log"
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-err.log")
     else()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
             message(STATUS "${configuring_message}-dbg")
             vcpkg_execute_required_process(
-                COMMAND
-                    "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
-                    ${arg_OPTIONS}
-                    ${arg_OPTIONS_DEBUG}
-                    -G "${generator}"
-                    "-DCMAKE_BUILD_TYPE=Debug"
-                    "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
+                COMMAND ${dbg_command}
                 WORKING_DIRECTORY "${build_dir_debug}"
                 LOGNAME "${arg_LOGFILE_BASE}-dbg"
+                SAVE_LOG_FILES CMakeCache.txt
             )
-            list(APPEND config_logs
+            vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-out.log"
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-err.log")
         endif()
 
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
             message(STATUS "${configuring_message}-rel")
             vcpkg_execute_required_process(
-                COMMAND
-                    "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
-                    ${arg_OPTIONS}
-                    ${arg_OPTIONS_RELEASE}
-                    -G "${generator}"
-                    "-DCMAKE_BUILD_TYPE=Release"
-                    "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
+                COMMAND ${rel_command}
                 WORKING_DIRECTORY "${build_dir_release}"
                 LOGNAME "${arg_LOGFILE_BASE}-rel"
+                SAVE_LOG_FILES CMakeCache.txt
             )
-            list(APPEND config_logs
+            vcpkg_list(APPEND config_logs
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-out.log"
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-err.log")
         endif()
@@ -474,7 +305,7 @@ function(vcpkg_cmake_configure)
         foreach(unused_variable IN LISTS unused_variables)
             if(unused_variable IN_LIST manually_specified_variables)
                 debug_message("manually specified unused variable: ${unused_variable}")
-                list(APPEND all_unused_variables "${unused_variable}")
+                vcpkg_list(APPEND all_unused_variables "${unused_variable}")
             else()
                 debug_message("unused variable (not manually specified): ${unused_variable}")
             endif()
@@ -482,8 +313,8 @@ function(vcpkg_cmake_configure)
     endforeach()
 
     if(DEFINED all_unused_variables)
-        list(REMOVE_DUPLICATES all_unused_variables)
-        list(JOIN all_unused_variables "\n    " all_unused_variables)
+        vcpkg_list(REMOVE_DUPLICATES all_unused_variables)
+        vcpkg_list(JOIN all_unused_variables "\n    " all_unused_variables)
         message(WARNING "The following variables are not used in CMakeLists.txt:
     ${all_unused_variables}
 Please recheck them and remove the unnecessary options from the `vcpkg_cmake_configure` call.

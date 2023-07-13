@@ -1,7 +1,7 @@
 {
   "name": "msmpi",
   "version": "10.1.12498",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Microsoft MPI (MS-MPI) is a Microsoft implementation of the Message Passing Interface standard for developing and running parallel applications on the Windows platform.",
   "homepage": "https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi",
   "license": "MIT",

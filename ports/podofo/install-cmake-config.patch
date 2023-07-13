@@ -1,0 +1,52 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 597847b..da988ce 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -258,11 +258,6 @@ endif()
+ # To use these dependencies set PODOFO_DIR to the podofo BUILD directory in
+ # your build (eg -DPODOFO_DIR=/path/to/podofo when running cmake to configure
+ # the app that'll use podofo). See: find_package(...) in the cmake docs.
+-if(PODOFO_BUILD_SHARED)
+-    export(TARGETS podofo_shared FILE "${PROJECT_BINARY_DIR}/podofoConfig.cmake")
+-else()
+-    export(TARGETS podofo_static podofo_private FILE "${PROJECT_BINARY_DIR}/podofoConfig.cmake")
+-endif()
+ 
+ # Enable packaging
+ set(CPACK_PACKAGE_DESCRIPTION "A C++ PDF manipulation library")
+diff --git a/src/podofo/CMakeLists.txt b/src/podofo/CMakeLists.txt
+index 3a148fb..4ca1420 100644
+--- a/src/podofo/CMakeLists.txt
++++ b/src/podofo/CMakeLists.txt
+@@ -77,11 +77,15 @@ if(PODOFO_BUILD_STATIC)
+         CLEAN_DIRECT_OUTPUT 1
+         OUTPUT_NAME "podofo"
+     )
+-    install(TARGETS podofo_static
++    install(TARGETS podofo_static podofo_private
++        EXPORT podofo-config
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     )
++    install(EXPORT podofo-config
++        DESTINATION share/podofo
++    )
+     set(PODOFO_LIBRARIES podofo_static podofo_private
+         CACHE INTERNAL "Which podofo library variant to depend on")
+ endif()
+@@ -102,10 +106,14 @@ if(PODOFO_BUILD_SHARED)
+     # Since we're building a shared podofo, prefer to depend on this one for
+     # tests and tools over the static library (if built).
+     install(TARGETS podofo_shared
++        EXPORT podofo-config
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     )
++    install(EXPORT podofo-config
++        DESTINATION share/podofo
++    )
+ 
+     # Create a pkg-config file for linking against shared library
+     # if pkg-config is available on the system.

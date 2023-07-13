@@ -1,7 +1,6 @@
 {
   "name": "cpu-features",
-  "version": "0.6.0",
-  "port-version": 1,
+  "version": "0.7.0",
   "description": "A cross-platform C library to retrieve CPU features (such as available instructions) at runtime",
   "homepage": "https://github.com/google/cpu_features",
   "license": "Apache-2.0",

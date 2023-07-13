@@ -1,0 +1,9 @@
+{
+  "name": "dstorage",
+  "version": "1.2.0",
+  "description": "DirectStorage for Windows",
+  "homepage": "https://aka.ms/directstorage/",
+  "documentation": "https://github.com/microsoft/DirectStorage",
+  "license": null,
+  "supports": "windows & !uwp & !xbox"
+}

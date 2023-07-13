@@ -1,26 +1,25 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SpartanJ/soil2
-    REF 51023d551d895fb4beb576d726d798ccfe358d34
-    SHA512 5ce8b3f04eea674cdef7ee58778e81bcefa5df7afb1013ad28dcd2d502e26915529da8bf06b751b8c350165172866e4f99d4b1081bb6c7ba04ac83a78faba83c
+    REF ddcb35d13cc4129103de1c1a3cb74b828fe46b4a # 1.3.0
+    SHA512 627c7bf4fddd5afef85ba7634c5ec0e10005c700abc1eb07c6346c1604e430c34aa4c33f6ffecbecb3dc2b04de7b855a3f6d923e94f23621ae0184e706358908
     HEAD_REF master
+    PATCHES Workaround-ICE-in-release.patch
 )
 
 file(
     COPY 
-    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
-    ${CMAKE_CURRENT_LIST_DIR}/LICENSE
-    ${CMAKE_CURRENT_LIST_DIR}/soil2Config.cmake.in
-    DESTINATION ${SOURCE_PATH}
+    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+    "${CMAKE_CURRENT_LIST_DIR}/soil2Config.cmake.in"
+    DESTINATION "${SOURCE_PATH}"
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

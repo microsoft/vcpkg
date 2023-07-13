@@ -1,17 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbry/WavPack
-    REF 5.4.0
-    SHA512 4DD6C484032FDFB1BC0E9A95881677FADE39A5E07CB98713A6B29DF0E9A570D6D27856FCAF412A714A5D7708C9CC2ADACE03A06970B06C4C5B2987E7EB2E643D
-    HEAD_REF master
-    PATCHES
-        OpenSSL.patch
-        fix-symbol-exports.patch
+    REF 5.6.0
+    SHA512 16e1b5a74261843dff148eee6a83a0c84717477c06907af3ee1bc799f9157ba8c0d3c71eee9d93d74a1081151198a8a23d84c14a60c4b35fc145d10ee901cca1
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DWAVPACK_INSTALL_DOCS=OFF
         -DWAVPACK_BUILD_PROGRAMS=OFF
@@ -21,12 +16,12 @@ vcpkg_configure_cmake(
         -DWAVPACK_BUILD_DOCS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/WavPack)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/WavPack)
 endif()
 
 vcpkg_copy_pdbs()
@@ -37,8 +32,12 @@ file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/s
 
 if(WIN32 AND (NOT MINGW))
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wavpack.pc" "-lwavpack" "-lwavpackdll")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wavpack.pc" "-lwavpack" "-lwavpackdll")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wavpack.pc" "-lwavpack" "-lwavpackdll")
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wavpack.pc" "-lwavpack" "-lwavpackdll")
+        endif()
     endif()
 endif()
 

@@ -1,0 +1,17 @@
+{
+  "name": "ngtcp2",
+  "version": "0.17.0",
+  "description": "ngtcp2 project is an effort to implement RFC9000 QUIC protocol.",
+  "homepage": "https://github.com/ngtcp2/ngtcp2",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

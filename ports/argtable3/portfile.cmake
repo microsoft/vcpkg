@@ -1,32 +1,36 @@
-vcpkg_download_distfile(ARCHIVE
-   URLS "https://github.com/argtable/argtable3/releases/download/v3.2.1.52f24e5/argtable-v3.2.1.52f24e5.tar.gz"
-   FILENAME "argtable-v3.2.1.52f24e5.tar.gz"
-   SHA512 cec77d56048b38bb7af8553cb660e745972bbd90378eeea4e928579af78190c8a41fdb29c972263e18955e3a497e09c42f705f7c4d548c3c523c5cb104c97a10
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO argtable/argtable3
+    REF 7704006f3cbb556e11da80a5b97469075a32892e # 3.2.1 + minor patches including ARGTABLE3_ENABLE_EXAMPLES support
+    SHA512 c51aa0a33a247c3801e36ca5d9523acefa31f21a34c1e86965a39290c1b437785e4d7e0ae80a65d811803b8fcbbc3a96ba3d6aefaea9bda15abc0f38bd1f45cc
+    HEAD_REF master
+    PATCHES Fix-dependence-getopt.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+set(ARGTABLE3_REPLACE_GETOPT ON)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+   set(ARGTABLE3_REPLACE_GETOPT OFF)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DARGTABLE3_ENABLE_CONAN=OFF
         -DARGTABLE3_ENABLE_TESTS=OFF
+        -DARGTABLE3_ENABLE_EXAMPLES=OFF
+        -DARGTABLE3_REPLACE_GETOPT=${ARGTABLE3_REPLACE_GETOPT}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT})
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

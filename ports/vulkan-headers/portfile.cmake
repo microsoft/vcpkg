@@ -1,15 +1,14 @@
-# header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-Headers
-    REF 52a76fd0a693708eb8c25bd0ab7a1008091f64d4 #v1.2.203
-    SHA512 e3a337f0f1d0d003db522385b40ed187416e2246e64718b7d980ecdd92ac400a9e96b06dbb52c6f09cf7725772b5772727efb61c0e2f3a67989fe693fa569d38
-    HEAD_REF master
+    REF bae9700cd9425541a0f6029957f005e5ad3ef660
+    SHA512 b1a51cb868563bf044c65cab8411547b8a08ea21998f01e5be53027217ddd18ff6907d78490c08e3f14865c53436ddf092811726ae3df23a29f8edd614bdb95b
+    HEAD_REF v1.3.250
 )
 
-# This must be vulkan as other vulkan packages expect it there.
-file(COPY "${SOURCE_PATH}/include/vulkan/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vulkan")
-file(COPY "${SOURCE_PATH}/include/vk_video/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vk_video")
+set(VCPKG_BUILD_TYPE release) # header-only port
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_install()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

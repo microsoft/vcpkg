@@ -3,15 +3,40 @@
   <PropertyGroup>
     <VcpkgPropsImported>true</VcpkgPropsImported>
     <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
+  </PropertyGroup>
+
+  <!-- Set the default value of $(VcpkgConfiguration) according to $(UseDebugLibraries) and $(Configuration) -->
+  <Choose>
+    <When Condition="'$(VcpkgConfiguration)' != ''" />
+    <When Condition="'$(UseDebugLibraries)' == ''">
+      <PropertyGroup>
+        <VcpkgConfiguration>$(Configuration)</VcpkgConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(UseDebugLibraries)' == 'true'">
+      <PropertyGroup>
+        <VcpkgConfiguration>Debug</VcpkgConfiguration>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <VcpkgConfiguration>Release</VcpkgConfiguration>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <PropertyGroup>
     <VcpkgUseStatic Condition="'$(VcpkgUseStatic)' == ''">false</VcpkgUseStatic>
     <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\..'))</VcpkgRoot>
 
     <VcpkgAutoLink Condition="'$(VcpkgAutoLink)' == ''">true</VcpkgAutoLink>
     <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!).
     Tried to add /lib as a parameter to the linker call but was unable to find a way to pass it as the first parameter. -->
-    <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true'">false</VcpkgAutoLink>
+    <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true' OR '$(PlatformToolset.ToLower())' == 'clangcl'">false</VcpkgAutoLink>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
+
+    <!-- Classic Mode: The following line is edited by the mint standalone bundle script to be false for standlone copies -->
+    <VcpkgEnableClassic Condition="'$(VcpkgEnableClassic)' == ''">true</VcpkgEnableClassic>
 
     <!-- Manifest files -->
     <VcpkgEnableManifest Condition="'$(VcpkgEnableManifest)' == ''">false</VcpkgEnableManifest>

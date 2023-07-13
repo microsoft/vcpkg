@@ -14,7 +14,7 @@ Vcpkg는 Windows, Linux 및 MacOS에서 C 및 C++ 라이브러리를 관리하�
 Vcpkg를 설치하였다면, `vcpkg help` 명령어로 사용 가능한 명령어에 대한 간단한 설명을 볼 수 있습니다.
 `vcpkg help [command]` 명령어로는 각 명령어별 도움말을 볼 수 있습니다.
 
-* Github: port는 [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)에, 관련 프로그램은 [https://github.com/microsoft/vcpkg-tool](https://github.com/microsoft/vcpkg-tool)에 있습니다.
+* GitHub: port는 [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)에, 관련 프로그램은 [https://github.com/microsoft/vcpkg-tool](https://github.com/microsoft/vcpkg-tool)에 있습니다.
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), #vcpkg 채널
 * Discord: [\#include \<C++\>](https://www.includecpp.org), #🌏vcpkg 채널
 * 도움말: [Documentation](docs/README.md)
@@ -119,8 +119,7 @@ IDE 외부에서 CMake와 함께 vcpkg를 사용하려면,
 다음과 같이 툴체인 파일을 사용할 수 있습니다.
 
 ```cmd
-> cmake -B [build directory] -S . -DCMAKE_TOOLCH
-AIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [build directory]
 ```
 
@@ -163,7 +162,7 @@ $ ./vcpkg/vcpkg search [search term]
 CMake와 함께 vcpkg를 사용하려면 툴체인 파일을 이용해 보세요.
 
 ```sh
-$ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake -B [build directory] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 $ cmake --build [build directory]
 ```
 
@@ -254,7 +253,7 @@ cmake 실행 시 `CMAKE_TOOLCHAIN_FILE`을 전달하는 대신,
 첫 번째 `project()` 호출 전에 CMakeLists.txt에 다음을 추가하는 방법도 있습니다.
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file")
 ```
 
@@ -263,7 +262,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 vcpkg를 사용하지 않을 수 있습니다.
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/integration.md
+[getting-started:integration]: docs/users/buildsystems/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools
@@ -344,4 +343,4 @@ Microsoft는 이 정보를 익명으로 수집합니다.
 - 명령줄에서 vcpkg에 --disable-metrics 전달
 - VCPKG_DISABLE_METRICS 환경 변수 설정
 
-docs/about/privacy.md에서 vcpkg 데이터 수집에 대해 자세히 알아보세요.
+[https://learn.microsoft.com/vcpkg/about/privacy](https://learn.microsoft.com/vcpkg/about/privacy)에서 vcpkg 데이터 수집에 대해 자세히 알아보세요.

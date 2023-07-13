@@ -12,6 +12,8 @@ vcpkg_from_github(
     REF 70b9ec13427ea68de6f4213e9dfec6129fbab21b
     SHA512 c91fbb9a672257c63ee83b40b62961b89568ca33081048b440876c390a2a2e11c602aaf43a6c9485fd85a91248f34a70d7b9ea769d0cfcd4b35b80d58a6ad737
     HEAD_REF develop
+    PATCHES
+        fix-messing-header.patch
 )
 
 # Handle version data here to prevent issues from doing this twice in parallel
@@ -32,6 +34,7 @@ vcpkg_cmake_configure(
         -DSLEEPY_VCPKG=ON 
         -DAUTO_DOWNLOAD_LIBRARY=OFF 
         -DUSE_BOOST_ASIO=ON
+        -DCMAKE_CXX_STANDARD=17
         ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
@@ -40,4 +43,4 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sleepy-discord)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

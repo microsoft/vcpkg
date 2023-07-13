@@ -1,6 +1,6 @@
 {
   "name": "kf5plotting",
-  "version": "5.89.0",
+  "version": "5.98.0",
   "description": "Lightweight plotting framework",
   "homepage": "https://api.kde.org/frameworks/kplotting/html/index.html",
   "dependencies": [

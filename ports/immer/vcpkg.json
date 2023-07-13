@@ -1,8 +1,10 @@
 {
   "name": "immer",
-  "version-date": "2021-05-03",
+  "version": "0.8.0",
+  "port-version": 1,
   "description": "Postmodern immutable and persistent data structures for C++",
   "homepage": "https://sinusoid.es/immer/",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

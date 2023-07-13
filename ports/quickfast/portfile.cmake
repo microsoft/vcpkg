@@ -7,10 +7,10 @@ vcpkg_from_github(
     PATCHES 00001-fix-boost-asio.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 if(NOT EXISTS "${SOURCE_PATH}/quickfast")
-	file(RENAME ${SOURCE_PATH}/src ${SOURCE_PATH}/quickfast)
+	file(RENAME "${SOURCE_PATH}/src" "${SOURCE_PATH}/quickfast")
 endif()
 
 file(GLOB_RECURSE SRC_FILES  "${SOURCE_PATH}/quickfast/*.cpp" "${SOURCE_PATH}/quickfast/*.h")
@@ -30,19 +30,19 @@ else()
   set(BUILD_SHARED_LIBS OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    WINDOWS_USE_MSBUILD
     OPTIONS
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-    PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/quickfast)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/quickfast)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file(${SOURCE_PATH}/license.txt ${CURRENT_PACKAGES_DIR}/share/quickfast/copyright COPYONLY)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/quickfast)
+configure_file("${SOURCE_PATH}/license.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

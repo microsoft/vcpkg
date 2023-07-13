@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boost-ext/sml
-    REF v1.1.4
-    SHA512 0ded162e5d9d7cc9d8769fd9131d7a5cfc98187c8e9d98393eda9e0804c282e510707de38fe7229d2fe16aea70c9a8e300f14e992fff3ddedd0fa1b6a66ab1ba
+    REF v1.1.5
+    SHA512 6babee6da2db93912afa2eb932591674a73f43609b7c2b0523e84ba682c09f6d4f67d1c7f6ea48f73f1f09de8df2eaf2ae30b3399c1602189ea08d42689758d7
     HEAD_REF master
 )
 

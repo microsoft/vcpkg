@@ -1,8 +1,10 @@
 {
   "name": "freetype",
-  "version-semver": "2.11.1",
+  "version": "2.12.1",
+  "port-version": 3,
   "description": "A library to render fonts.",
   "homepage": "https://www.freetype.org/",
+  "license": "FTL OR GPL-2.0-or-later",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -31,6 +33,9 @@
       "dependencies": [
         "bzip2"
       ]
+    },
+    "error-strings": {
+      "description": "Enable support for meaningful error descriptions."
     },
     "png": {
       "description": "Support PNG compressed OpenType embedded bitmaps.",

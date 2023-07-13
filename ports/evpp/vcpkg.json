@@ -1,9 +1,10 @@
 {
   "name": "evpp",
-  "version-string": "0.7.0",
-  "port-version": 5,
+  "version": "0.7.0",
+  "port-version": 7,
   "description": "A modern C++ network library based on libevent for developing high performance network services in TCP/UDP/HTTP protocols.",
   "homepage": "https://github.com/Qihoo360/evpp",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "boost-lockfree",
@@ -16,15 +17,18 @@
     "glog",
     {
       "name": "libevent",
-      "platform": "windows"
-    },
-    {
-      "name": "libevent",
       "features": [
         "openssl"
-      ],
-      "platform": "!windows"
+      ]
     },
-    "rapidjson"
+    "rapidjson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

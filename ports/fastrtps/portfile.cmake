@@ -1,12 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-DDS
-    REF v2.4.0
-    SHA512 2E9C0378AF86DD657391D577F6951096DD45970A2C4D9C384EE5A452A1DD129E6E0AED91E0B908A35A04CAF979253700560561D34082DA81FE737FE104C149AF
+    REF v2.7.0
+    SHA512 289c94fb177209ffc80e93ae61822c83e7cb74ba7682f05a921c50ce048498bd811c19825d1fdb8af39b29a64904e96d87c5c59468139f0d8bb528549b80c94a
     HEAD_REF master
     PATCHES
         fix-find-package-asio.patch
         disable-symlink.patch
+        fix-xtime.patch
 )
 
 vcpkg_cmake_configure(
@@ -58,12 +59,15 @@ elseif(VCPKG_TARGET_IS_LINUX)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery" "$dir/../tools/fastdds/fastdds.py" "$dir/../fastdds/fastdds.py")
 endif()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/fastdds/discovery/parser.py" "tool_path / '../../../bin'" "tool_path / '../../${PORT}'")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

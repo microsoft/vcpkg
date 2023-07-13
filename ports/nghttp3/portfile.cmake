@@ -1,0 +1,45 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ngtcp2/nghttp3
+    REF v${VERSION}
+    SHA512 542a992f20fd1d19b526429c2bc7cec3d636178dd31c323b658361f928d9b8d1b8c56d18b17c93a645e42b217f623480342ae2b96e1d6f1d9d34e102f73c3337
+    HEAD_REF main
+)
+
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" ENABLE_STATIC_CRT)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIB)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DENABLE_LIB_ONLY=ON
+        -DBUILD_TESTING=OFF
+        "-DENABLE_STATIC_CRT=${ENABLE_STATIC_CRT}"
+        "-DENABLE_STATIC_LIB=${ENABLE_STATIC_LIB}"
+        "-DENABLE_SHARED_LIB=${ENABLE_SHARED_LIB}"
+        -DCMAKE_DISABLE_FIND_PACKAGE_CUnit=ON
+    MAYBE_UNUSED_VARIABLES
+        BUILD_TESTING
+)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/man"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
+    file(APPEND "${CURRENT_PACKAGES_DIR}/include/nghttp3/version.h" [[
+]])
+endif()
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

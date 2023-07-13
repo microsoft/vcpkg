@@ -1,10 +1,10 @@
 {
   "name": "clblast",
   "version": "1.5.2",
-  "port-version": 1,
+  "port-version": 3,
   "description": "A modern, lightweight, performant and tunable OpenCL BLAS library written in C++11.",
   "homepage": "https://github.com/CNugteren/CLBlast",
-  "supports": "!static",
+  "license": "Apache-2.0",
   "dependencies": [
     "opencl",
     {

@@ -1,0 +1,43 @@
+diff --git a/src/tools/msvc/pgflex.pl b/src/tools/msvc/pgflex.pl
+index aceed5ffd..f6ed215e8 100644
+--- a/src/tools/msvc/pgflex.pl	
++++ b/src/tools/msvc/pgflex.pl
+@@ -16,7 +16,7 @@ $ENV{CYGWIN} = 'nodosfilewarning';
+ 
+ do './src/tools/msvc/buildenv.pl' if -e 'src/tools/msvc/buildenv.pl';
+ 
+-my ($flexver) = `flex -V`;    # grab first line
++my ($flexver) = `win_flex -V`;    # grab first line
+ $flexver = (split(/\s+/, $flexver))[1];
+ $flexver =~ s/[^0-9.]//g;
+ my @verparts = split(/\./, $flexver);
+@@ -52,7 +52,7 @@ close($mf);
+ my $basetarg = basename($output);
+ my $flexflags = ($make =~ /^$basetarg:\s*FLEXFLAGS\s*=\s*(\S.*)/m ? $1 : '');
+ 
+-system("flex $flexflags -o$output $input");
++system("win_flex $flexflags -o$output $input");
+ if ($? == 0)
+ {
+ 
+diff --git a/src/tools/msvc/pgbison.pl b/src/tools/msvc/pgbison.pl
+index 895e398c0..f5b524a5d 100644
+--- a/src/tools/msvc/pgbison.pl	
++++ b/src/tools/msvc/pgbison.pl
+@@ -13,7 +13,7 @@ use File::Basename;
+ 
+ do './src/tools/msvc/buildenv.pl' if -e 'src/tools/msvc/buildenv.pl';
+ 
+-my ($bisonver) = `bison -V`;    # grab first line
++my ($bisonver) = `win_bison -V`;    # grab first line
+ $bisonver = (split(/\s+/, $bisonver))[3];    # grab version number
+ 
+ unless ($bisonver eq '1.875' || $bisonver ge '2.2')
+@@ -51,5 +51,5 @@ close($mf);
+ 
+ my $nodep = $bisonver ge '3.0' ? "-Wno-deprecated" : "";
+ 
+-system("bison $nodep $headerflag $input -o $output");
++system("win_bison $nodep $headerflag $input -o $output");
+ exit $? >> 8;
+

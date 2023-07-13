@@ -3,6 +3,10 @@ cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0054 NEW)
 cmake_policy(SET CMP0057 NEW)
 
+set(OPENSSL_VERSION_MAJOR @OPENSSL_VERSION_MAJOR@)
+set(OPENSSL_VERSION_MINOR @OPENSSL_VERSION_MINOR@)
+set(OPENSSL_VERSION_FIX @OPENSSL_VERSION_FIX@)
+
 if(OPENSSL_USE_STATIC_LIBS)
     if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "dynamic")
         message(WARNING "OPENSSL_USE_STATIC_LIBS is set, but vcpkg port openssl was built with dynamic linkage")

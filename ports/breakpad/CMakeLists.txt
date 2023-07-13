@@ -17,19 +17,20 @@ set(CMAKE_DEBUG_POSTFIX d)
 
 string(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "Release" DEFAULT_INSTALL_HEADERS)
 option(INSTALL_HEADERS "Install header files" ${DEFAULT_INSTALL_HEADERS})
+option(INSTALL_TOOLS "Install tools" OFF)
 
 # libbreakpad target
 if(NOT CMAKE_SYSTEM_NAME STREQUAL Android)
     file(GLOB_RECURSE LIBBREAKPAD_SOURCES src/processor/*.cc)
     if(WIN32)
         list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-            "_unittest|synth_minidump|/tests|/testdata|/linux|/mac|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+            "_unittest|_selftest|synth_minidump|/tests|/testdata|/linux|/mac|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
     elseif(APPLE)
         list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-            "_unittest|synth_minidump|/tests|/testdata|/linux|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+            "_unittest|_selftest|synth_minidump|/tests|/testdata|/linux|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
     else()
         list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-            "_unittest|synth_minidump|/tests|/testdata|/mac|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+            "_unittest|_selftest|synth_minidump|/tests|/testdata|/mac|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
     endif()
 
     find_library(LIBDISASM_LIB NAMES libdisasmd libdisasm)
@@ -99,6 +100,87 @@ target_include_directories(libbreakpad_client
 )
 list(APPEND TARGETS libbreakpad_client)
 
+if(INSTALL_TOOLS)
+    if(LINUX)
+        add_executable(microdump_stackwalk
+                src/processor/microdump_stackwalk.cc)
+        target_link_libraries(microdump_stackwalk PRIVATE libbreakpad libbreakpad_client)
+        install(TARGETS microdump_stackwalk DESTINATION bin)
+
+        add_executable(minidump_dump
+                src/processor/minidump_dump.cc)
+        target_link_libraries(minidump_dump PRIVATE libbreakpad libbreakpad_client)
+        install(TARGETS minidump_dump DESTINATION bin)
+
+        add_executable(minidump_stackwalk
+                src/processor/minidump_stackwalk.cc)
+        target_link_libraries(minidump_stackwalk PRIVATE libbreakpad libbreakpad_client)
+        install(TARGETS minidump_stackwalk DESTINATION bin)
+
+        add_executable(core2md
+            src/tools/linux/core2md/core2md.cc)
+        target_link_libraries(core2md PRIVATE libbreakpad_client)
+        install(TARGETS core2md DESTINATION bin)
+
+        add_executable(pid2md
+            src/tools/linux/pid2md/pid2md.cc)
+        target_link_libraries(pid2md PRIVATE libbreakpad_client)
+        install(TARGETS pid2md DESTINATION bin)
+
+        add_executable(dump_syms
+            src/common/dwarf_cfi_to_module.cc
+            src/common/dwarf_cu_to_module.cc
+            src/common/dwarf_line_to_module.cc
+            src/common/dwarf_range_list_handler.cc
+            src/common/language.cc
+            src/common/module.cc
+            src/common/path_helper.cc
+            src/common/stabs_reader.cc
+            src/common/stabs_to_module.cc
+            src/common/dwarf/bytereader.cc
+            src/common/dwarf/dwarf2diehandler.cc
+            src/common/dwarf/dwarf2reader.cc
+            src/common/dwarf/elf_reader.cc
+            src/common/linux/crc32.cc
+            src/common/linux/dump_symbols.cc
+            src/common/linux/elf_symbols_to_module.cc
+            src/common/linux/elfutils.cc
+            src/common/linux/file_id.cc
+            src/common/linux/linux_libc_support.cc
+            src/common/linux/memory_mapped_file.cc
+            src/common/linux/safe_readlink.cc
+            src/tools/linux/dump_syms/dump_syms.cc)
+        target_link_libraries(dump_syms PRIVATE libbreakpad_client)
+        install(TARGETS dump_syms DESTINATION bin)
+
+        add_executable(minidump-2-core
+            src/common/linux/memory_mapped_file.cc
+            src/tools/linux/md2core/minidump-2-core.cc)
+        target_link_libraries(minidump-2-core PRIVATE libbreakpad_client)
+        install(TARGETS minidump-2-core DESTINATION bin)
+
+        add_executable(minidump_upload
+            src/common/linux/http_upload.cc
+            src/tools/linux/symupload/minidump_upload.cc)
+        target_link_libraries(minidump_upload PRIVATE libbreakpad_client ${CMAKE_DL_LIBS})
+        install(TARGETS minidump_upload DESTINATION bin)
+
+        add_executable(sym_upload
+            src/common/linux/http_upload.cc
+            src/common/linux/libcurl_wrapper.cc
+            src/common/linux/symbol_collector_client.cc
+            src/common/linux/symbol_upload.cc
+            src/tools/linux/symupload/sym_upload.cc)
+        target_link_libraries(sym_upload PRIVATE libbreakpad_client ${CMAKE_DL_LIBS})
+        install(TARGETS sym_upload DESTINATION bin)
+
+        add_executable(core_handler
+            src/tools/linux/core_handler/core_handler.cc)
+        target_link_libraries(core_handler PRIVATE libbreakpad_client)
+        install(TARGETS core_handler DESTINATION bin)
+    endif()
+endif()
+
 # installation
 install(TARGETS ${TARGETS} EXPORT unofficial-breakpad-targets
     RUNTIME DESTINATION bin
@@ -110,7 +192,7 @@ if(INSTALL_HEADERS)
     if(WIN32)
         set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/mac|/solaris|/android|/dwarf|/tests|/testdata|/unittests")
     elseif(APPLE)
-        set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/windows|/solaris|/android|/dwarf|/tests|/testdata|/unittests|/sender|/testapp|/*proj|/gcov")
+        set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/windows|/solaris|/android|/dwarf|/tests|/testdata|/unittests|/sender|/testapp|\.xcodeproj|/gcov")
     else()
         set(HEADER_EXCLUDE_REGEX "/apple|/ios|/windows|/mac|/solaris|/android|/dwarf|/tests|/testdata|/unittests")
         install(

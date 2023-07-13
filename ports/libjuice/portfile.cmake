@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libjuice
-    REF 3795466e704191dd35f8a46b82ca06cbbc395cd9 #v0.9.6
-    SHA512 3c931b47d852ead3027ed077f9ba930e9b5b77de1cf984023dd4bac3b52980f68419517e4edf11e8fd2741bfb2e154d3c748073ed302182e395df0b0acc1910c
+    REF eff89f7ae3450d66fcebe4d3d1d2aacca527eb8c #v1.0.6
+    SHA512 f28e8116e9437f7e2c114c0b6e296ec2c4bda264428ca94c3aa7356bfc3c76ac77f4664678579c933f70e6cb380c68ad42c03a83d5140bf41e20fc4272f1ae54
     HEAD_REF master
     PATCHES
         fix-for-vcpkg.patch

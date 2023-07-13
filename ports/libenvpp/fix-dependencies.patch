@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dc57bb1..932cefc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,6 +63,7 @@ FetchContent_Declare(fmt
+ 	GIT_TAG 9.1.0
+ )
+ FetchContent_MakeAvailable(fmt)
++find_package(fmt CONFIG REQUIRED)
+ 
+ if(LIBENVPP_TESTS)
+ 	FetchContent_Declare(Catch2

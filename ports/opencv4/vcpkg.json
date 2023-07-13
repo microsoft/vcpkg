@@ -1,6 +1,7 @@
 {
   "name": "opencv4",
-  "version": "4.5.5",
+  "version": "4.7.0",
+  "port-version": 6,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -11,6 +12,10 @@
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
       "host": true
     },
     "zlib"
@@ -30,11 +35,11 @@
       "dependencies": [
         {
           "name": "hdf5",
-          "platform": "!uwp & !(windows & (arm | arm64))"
+          "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
         },
         {
           "name": "tesseract",
-          "platform": "!uwp & !(windows & (arm | arm64))"
+          "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
         }
       ]
     },
@@ -62,6 +67,12 @@
             "cuda"
           ]
         }
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
       ]
     },
     "default-features": {
@@ -95,6 +106,19 @@
         "protobuf"
       ]
     },
+    "dnn-cuda": {
+      "description": "Build dnn module with CUDA support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "cudnn",
+            "dnn"
+          ]
+        }
+      ]
+    },
     "eigen": {
       "description": "Eigen support for opencv",
       "dependencies": [
@@ -119,8 +143,14 @@
     "freetype": {
       "description": "Freetype support for opencv",
       "dependencies": [
-        "freetype",
-        "harfbuzz"
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "name": "harfbuzz",
+          "default-features": false
+        }
       ]
     },
     "gdcm": {
@@ -132,13 +162,23 @@
     "gstreamer": {
       "description": "gstreamer support for opencv",
       "dependencies": [
-        "gstreamer"
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
       ]
     },
     "gtk": {
-      "description": "GDCM support for opencv",
+      "description": "GTK support for opencv",
+      "supports": "!windows & !osx & !ios & !android",
       "dependencies": [
-        "gtk"
+        {
+          "name": "gtk3",
+          "default-features": false
+        }
       ]
     },
     "halide": {
@@ -225,9 +265,16 @@
     "qt": {
       "description": "Qt GUI support for opencv",
       "dependencies": [
+        "qt5compat",
         {
-          "name": "qt5-base",
-          "default-features": false
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "concurrent",
+            "gui",
+            "testlib",
+            "widgets"
+          ]
         }
       ]
     },

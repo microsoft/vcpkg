@@ -1,6 +1,9 @@
 {
   "name": "ncurses",
-  "version-string": "6.3",
-  "description": "free software emulation of curses in System V Release 4.0",
+  "version": "6.4",
+  "port-version": 1,
+  "description": "Free software emulation of curses in System V Release 4.0, and more",
+  "homepage": "https://invisible-island.net/ncurses/announce.html",
+  "license": "MIT",
   "supports": "!windows | mingw"
 }

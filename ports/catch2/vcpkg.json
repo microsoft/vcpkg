@@ -1,8 +1,10 @@
 {
   "name": "catch2",
-  "version-semver": "2.13.8",
+  "version-semver": "3.3.2",
+  "port-version": 1,
   "description": "A modern, header-only test framework for unit testing.",
   "homepage": "https://github.com/catchorg/Catch2",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

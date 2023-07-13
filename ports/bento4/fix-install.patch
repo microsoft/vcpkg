@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6de3bfe..2b2239a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -81,3 +81,20 @@ foreach(app ${BENTO4_APPS})
+   endif()
+ endforeach()
+ endif(BUILD_APPS)
++
++file(GLOB AP4_INCLUDES
++  ${SOURCE_CODECS}/*.h
++  ${SOURCE_CORE}/*.h
++  ${SOURCE_CRYPTO}/*.h
++  ${SOURCE_METADATA}/*.h
++)
++
++# Install targets
++install(TARGETS ap4
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
++
++# Install headers
++install(FILES ${AP4_INCLUDES} DESTINATION include/bento4)

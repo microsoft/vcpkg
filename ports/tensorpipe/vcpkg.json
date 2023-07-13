@@ -1,9 +1,10 @@
 {
   "name": "tensorpipe",
-  "version-date": "2021-04-26",
-  "port-version": 1,
+  "version-date": "2022-03-16",
+  "port-version": 5,
   "description": "A tensor-aware point-to-point communication primitive for machine learning",
   "homepage": "https://github.com/pytorch/tensorpipe",
+  "license": "BSD-3-Clause",
   "supports": "linux | osx",
   "dependencies": [
     "libnop",

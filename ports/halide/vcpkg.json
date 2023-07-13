@@ -1,12 +1,46 @@
 {
   "name": "halide",
-  "version": "13.0.2",
+  "version": "15.0.0",
+  "port-version": 1,
   "description": "Halide is a programming language designed to make it easier to write high-performance image and array processing code on modern machines.",
   "homepage": "https://github.com/halide/Halide",
+  "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "halide",
+      "default-features": false,
+      "features": [
+        "target-arm"
+      ],
+      "platform": "arm32"
+    },
+    {
+      "name": "halide",
+      "default-features": false,
+      "features": [
+        "target-aarch64"
+      ],
+      "platform": "arm64"
+    },
+    {
+      "name": "halide",
+      "default-features": false,
+      "features": [
+        "target-x86"
+      ],
+      "platform": "x86 | x64"
+    },
+    {
+      "name": "halide",
+      "features": [
+        "target-all"
+      ],
+      "platform": "!x86 & !x64 & !arm"
+    },
+    {
       "name": "llvm",
+      "default-features": false,
       "features": [
         "clang",
         "enable-rtti",
@@ -22,46 +56,7 @@
       "host": true
     }
   ],
-  "default-features": [
-    "jit"
-  ],
   "features": {
-    "jit": {
-      "description": "Include targets required for jit compilation",
-      "dependencies": [
-        {
-          "name": "halide",
-          "default-features": false,
-          "features": [
-            "target-aarch64"
-          ],
-          "platform": "arm64"
-        },
-        {
-          "name": "halide",
-          "default-features": false,
-          "features": [
-            "target-x86"
-          ],
-          "platform": "x86 | x64"
-        },
-        {
-          "name": "halide",
-          "default-features": false,
-          "features": [
-            "target-arm"
-          ],
-          "platform": "arm & !arm64"
-        },
-        {
-          "name": "halide",
-          "features": [
-            "target-all"
-          ],
-          "platform": "!x86 & !x64 & !arm & !arm64"
-        }
-      ]
-    },
     "target-aarch64": {
       "description": "Include AArch64 target",
       "dependencies": [
@@ -90,6 +85,7 @@
             "target-mips",
             "target-nvptx",
             "target-opencl",
+            "target-opengl-compute",
             "target-powerpc",
             "target-riscv",
             "target-x86"
@@ -165,6 +161,9 @@
     },
     "target-opencl": {
       "description": "Include OpenCL-C target"
+    },
+    "target-opengl-compute": {
+      "description": "Include OpenGL Compute target"
     },
     "target-powerpc": {
       "description": "Include PowerPC target",

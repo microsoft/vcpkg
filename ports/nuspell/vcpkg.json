@@ -1,13 +1,32 @@
 {
   "name": "nuspell",
-  "version-semver": "5.0.0",
+  "version-semver": "5.1.2",
+  "port-version": 1,
   "description": [
     "Nuspell is a fast and safe spelling checker software program.",
     "It is designed for languages with rich morphology and complex word compounding.",
     "Nuspell is written in modern C++ and it supports Hunspell dictionaries."
   ],
   "homepage": "https://nuspell.github.io/",
+  "license": "LGPL-3.0-or-later",
+  "supports": "!xbox",
   "dependencies": [
-    "icu"
-  ]
+    "icu",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools",
+      "dependencies": [
+        "getopt"
+      ]
+    }
+  }
 }

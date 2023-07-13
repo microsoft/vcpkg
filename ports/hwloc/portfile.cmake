@@ -1,10 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-mpi/hwloc
-    REF 6fa8466a9c9c28de8ca3bd9e879c426edd85decf # hwloc-2.7.0
-    SHA512 33bcc30362ba27076eacc83327a9d6235e2914a3c64536631e05e2d44c2c12b0176d55cc42ec0dc3c80682b977a83e60bd3a41f3ef486581cf8afa62ad2e9516
+    REF 42bebfa5e4b96c99c2482645c8eb86d4755ef23b
+    SHA512 87aff1e0eb7389a8d433f2936b6e23e8c37381d46fb7e60a205a97bc0f86f3c8926e3a6da6e54d4aeb89ef19abbe73a9d392f8c7871108b2a9fbf0b011de9f2c
     PATCHES
         fix_shared_win_build.patch
+        stdout_fileno.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

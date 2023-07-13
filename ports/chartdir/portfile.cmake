@@ -1,21 +1,21 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+# ChartDirector's DLL interface only contains primitive types, so it is CRT agnostic.
+if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+    message(STATUS "Note: ${PORT} only supports dynamic library linkage. Building dynamic library.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+endif()
 
-if(TRIPLET_SYSTEM_ARCH MATCHES "arm" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_LIBRARY_LINKAGE STREQUAL static)
-
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-
-elseif(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_download_distfile(ARCHIVE_FILE
-        URLS "https://www.advsofteng.net/chartdir_cpp_win.zip"
+        URLS "https://www.advsofteng.com/vcpkg/chartdir_cpp_win_7.0.0.zip"
         FILENAME "chartdir_cpp_win-7.0.0.zip"
-        SHA512 38d9dae641c0341ccee4709138afd37ad4718c34def70a0dc569956bf9c3488d0d66072f604dca4663dc80bd09446a2ba27ef3806fc3b87dda6aaa5453a7316f
+        SHA512 e5b5d387cff693a7f5ee98c2d2df75f421129b006e4324ae30ace0cbaac58867f048868ddfacdb3224c7165c8f27219c4273f3c778be3330d39ef95260d4186b
     )
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE "${ARCHIVE_FILE}"
-        REF 7.0.0
+        SOURCE_BASE 7.0.0
     )
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -34,15 +34,15 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
 elseif(VCPKG_TARGET_IS_OSX)
 
     vcpkg_download_distfile(ARCHIVE_FILE
-        URLS "https://www.advsofteng.net/chartdir_cpp_mac.tar.gz"
+        URLS "https://www.advsofteng.com/vcpkg/chartdir_cpp_mac_7.0.0.tar.gz"
         FILENAME "chartdir_cpp_mac-7.0.0.tar.gz"
-        SHA512 3f00a4eb7c6b7fc1ebd4856c287ca9a76ca4ce813b4203350526c7ef10c946baa3768446178b664af8e8222275f10f9ee6f5f87cf1e23f23c4a221f431864744
+        SHA512 fd46ac45e8906854ededb9e30ee3ba8bdd05588e6ca7c9fdf140254ee637d32565417d799da33b23228f1ade8111fcae037eed4cf978a11d35e70ab8861214a2
     )
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE "${ARCHIVE_FILE}"
-        REF 7.0.0
+        SOURCE_BASE 7.0.0
     )
 
     file(COPY "${SOURCE_PATH}/lib/libchartdir.7.dylib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
@@ -55,7 +55,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 
         vcpkg_download_distfile(ARCHIVE_FILE
-            URLS "https://www.advsofteng.net/chartdir_cpp_linux_64.tar.gz"
+            URLS "https://www.advsofteng.com/vcpkg/chartdir_cpp_linux_64_7.0.0.tar.gz"
             FILENAME "chartdir_cpp_linux_64-7.0.0.tar.gz"
             SHA512 ea2e05f28dd9647fed49feaf130d8034065067463965f144b3fae4eae482579b1ecf528dc86d1b3602887d5ca0c3b1569404489b0f4cb2300b798fed940cd467
         )
@@ -63,17 +63,17 @@ elseif(VCPKG_TARGET_IS_LINUX)
     else()
 
         vcpkg_download_distfile(ARCHIVE_FILE
-            URLS "https://www.advsofteng.net/chartdir_cpp_linux.tar.gz"
+            URLS "https://www.advsofteng.com/vcpkg/chartdir_cpp_linux_7.0.0.tar.gz"
             FILENAME "chartdir_cpp_linux-7.0.0.tar.gz"
             SHA512 54720fb431fa0fb34be3a187ec3886b0f2a7307ea52a0415fab8513117a157f64a8c0e0b01304aac1d313e4557768242e6b12002509fde2e5303d930c78c0e03
         )
 
     endif()
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE "${ARCHIVE_FILE}"
-        REF 7.0.0
+        SOURCE_BASE 7.0.0
     )
 
     file(COPY "${SOURCE_PATH}/lib/libchartdir.so.7.0.0" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
@@ -88,6 +88,6 @@ endif()
 file(GLOB HEADERS "${SOURCE_PATH}/include/*.h")
 file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/chartdir.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(COPY "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/chartdir-config.cmake" @ONLY)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

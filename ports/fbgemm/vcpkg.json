@@ -1,9 +1,9 @@
 {
   "name": "fbgemm",
-  "version-date": "2021-03-18",
-  "port-version": 3,
+  "version": "0.4.1",
   "description": "FB (Facebook) + GEMM (General Matrix-Matrix Multiplication)",
   "homepage": "https://code.fb.com/ml-applications/fbgemm/",
+  "license": "BSD-3-Clause",
   "supports": "!(x86 | uwp)",
   "dependencies": [
     "asmjit",

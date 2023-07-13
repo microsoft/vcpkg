@@ -1,7 +1,6 @@
 {
   "name": "hidapi",
-  "version-semver": "0.11.2",
-  "port-version": 1,
+  "version-semver": "0.14.0",
   "description": "A Simple library for communicating with USB and Bluetooth HID devices on Linux, Mac and Windows.",
   "homepage": "https://github.com/libusb/hidapi",
   "license": "BSD-3-Clause-Clear",
@@ -19,5 +18,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "pp-data-dump": {
+      "description": "Build pp_data_dump.exe tool, to store WIN32 HidD Preparsed Data as file",
+      "supports": "windows"
+    }
+  }
 }

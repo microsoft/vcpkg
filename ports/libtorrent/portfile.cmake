@@ -30,16 +30,16 @@ endif()
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO arvidn/libtorrent
-        REF 44e285c30f06772e48f515580f961998e1037b7e # v2.0.5
-        SHA512 c7ce747930ab8c1852d0efdc6268d9faa39643abd6b6560b4b5e0b06a12ab207ec61ac301a0bcc7622521a8ae490cc02cbe0b6e43208bc216c08bf472b40cb85
+        REF "v${VERSION}"
+        SHA512 cc9c0d9ae66bd7c7df7487e33e8d452ba7b5756987be35a3309038a1dec576e91de5fbabe9d05e58bea9c82d83aad33c607804eeefaf3113a51354bef1a25340
         HEAD_REF RC_2_0
 )
 
 vcpkg_from_github(
         OUT_SOURCE_PATH TRYSIGNAL_SOURCE_PATH
         REPO arvidn/try_signal
-        REF 334fd139e2bb387017b42d36753a03935e3bca75
-        SHA512 a25d439b2d979e975f9dd125a34072f70bfc7a08fab950e3829130742c05c584ae88d9f58fc0f1b4fa0b51df2c0e32c5b24c5828d53b121b4bc183a4c68d6a5a
+        REF 105cce59972f925a33aa6b1c3109e4cd3caf583d #2022-10-27
+        SHA512 4a0090755831e0e4a1930817345fa5934144421d9a9d710fe8ed3712233fa2fa037fc0e0d4f88b7cc8fb1bc05fe2d55372af1ff47d6fbf5208e03f45f2a424e4
         HEAD_REF master
 )
 
@@ -54,8 +54,8 @@ vcpkg_from_github(
 vcpkg_from_github(
         OUT_SOURCE_PATH LIB_SIMULATOR_SOURCE_PATH
         REPO arvidn/libsimulator
-        REF 64fb5b4fde1879abc09c018604d57e485a12e999
-        SHA512 20b57eb436127028339528f34a9db7e7149d2c5d86149114444205370482d3f5284e76493f2fbc1c6904175e6482671bfcaeb98d0bee7d399e546abef02f32f3
+        REF 39144efe83fcd38778cf76fc609e3475694642ca #2022-10-27
+        SHA512 a021f769d52d127355ecaceaf912bf3e86aaa256d4768d270fbe6066793b6159eddecd0262f3f2158602f883d49b3aac39eb79be5399212cdd7711f921ffa15a
         HEAD_REF master
 )
 
@@ -78,7 +78,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibtorrentRasterbar CONFIG_PATH lib/cmake/LibtorrentRasterbar)
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 # Do not duplicate include files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/cmake")

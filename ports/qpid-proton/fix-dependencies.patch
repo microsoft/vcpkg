@@ -1,0 +1,87 @@
+diff --git a/c/CMakeLists.txt b/c/CMakeLists.txt
+index 27b40e7..81de970 100644
+--- a/c/CMakeLists.txt
++++ b/c/CMakeLists.txt
+@@ -377,8 +377,13 @@ if (PROACTOR STREQUAL "iocp" OR (NOT PROACTOR AND NOT PROACTOR_OK))
+ endif()
+ 
+ if (PROACTOR STREQUAL "libuv" OR (NOT PROACTOR AND NOT PROACTOR_OK))
+-  find_package(Libuv)
++  find_package(Libuv NAMES libuv CONFIG)
+   if (Libuv_FOUND)
++    if (TARGET libuv::uv)
++      add_library(Libuv::Libuv ALIAS libuv::uv)
++    else()
++      add_library(Libuv::Libuv ALIAS libuv::uv_a)
++    endif()
+     set (PROACTOR_OK libuv)
+     set (qpid-proton-proactor src/proactor/libuv.c ${qpid-proton-proactor-common})
+     set (PROACTOR_LIBS Libuv::Libuv)
+@@ -727,11 +732,6 @@ install (FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/ProtonConfig.cmake
+   ${CMAKE_CURRENT_BINARY_DIR}/ProtonConfigVersion.cmake
+   DESTINATION ${LIB_INSTALL_DIR}/cmake/Proton)
+-install (FILES
+-  ../tools/cmake/Modules/FindCyrusSASL.cmake
+-  ../tools/cmake/Modules/FindOpenSSL.cmake
+-  ../tools/cmake/Modules/FindThreads.cmake
+-  DESTINATION ${LIB_INSTALL_DIR}/cmake/Proton)
+ 
+ if (ENABLE_BENCHMARKS)
+   add_subdirectory(benchmarks)
+diff --git a/c/src/ProtonConfig.cmake.in b/c/src/ProtonConfig.cmake.in
+index 3eca7bc..fe27234 100644
+--- a/c/src/ProtonConfig.cmake.in
++++ b/c/src/ProtonConfig.cmake.in
+@@ -23,7 +23,7 @@
+ # URL: http://qpid.apache.org/proton/
+ 
+ @PACKAGE_INIT@
+-if (NOT Proton_USE_STATIC_LIBS)
++if ("1")
+   include("${CMAKE_CURRENT_LIST_DIR}/ProtonTargets.cmake")
+ else()
+   include("${CMAKE_CURRENT_LIST_DIR}/ProtonTargetsStatic.cmake")
+@@ -32,9 +32,8 @@ endif()
+ set(Proton_VERSION @PN_VERSION@)
+ 
+ # find dependencies, because static libs don't transitively pull them
+-if (Proton_USE_STATIC_LIBS)
++if ("1")
+     set(CMAKE_MODULE_PATH_OLD ${CMAKE_MODULE_PATH})
+-    set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+ 
+     set(CyrusSASL_FOUND @CyrusSASL_FOUND@)
+     if (CyrusSASL_FOUND)
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 2049fe9..3dc8a06 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -26,10 +26,10 @@ find_package(Threads)
+ include(versions.cmake)
+ 
+ # Check for JSON-CPP support for connection configuration
+-find_package(JsonCpp)
+ option(ENABLE_JSONCPP "Use jsoncpp parser for connection configuration" ${JsonCpp_FOUND})
+ if (ENABLE_JSONCPP)
+-  include_directories(${JsonCpp_INCLUDE_DIRS})
++  find_package(JsonCpp NAMES jsoncpp CONFIG REQUIRED)
++  set(JsonCpp_LIBRARY JsonCpp::JsonCpp)
+   set(CONNECT_CONFIG_SRC src/connect_config.cpp)
+   set(CONNECT_CONFIG_LIBS ${JsonCpp_LIBRARY})
+ else()
+diff --git a/cpp/ProtonCppConfig.cmake.in b/cpp/ProtonCppConfig.cmake.in
+index aaa1bf9..e1be025 100644
+--- a/cpp/ProtonCppConfig.cmake.in
++++ b/cpp/ProtonCppConfig.cmake.in
+@@ -23,7 +23,9 @@
+ # URL: http://qpid.apache.org/proton/
+ 
+ @PACKAGE_INIT@
+-if (NOT ProtonCpp_USE_STATIC_LIBS)
++include(CMakeFindDependencyMacro)
++find_dependency(Proton CONFIG)
++if (1)
+   include("${CMAKE_CURRENT_LIST_DIR}/ProtonCppTargets.cmake")
+ else()
+   include("${CMAKE_CURRENT_LIST_DIR}/ProtonCppTargetsStatic.cmake")

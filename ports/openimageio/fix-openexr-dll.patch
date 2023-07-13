@@ -1,0 +1,13 @@
+diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
+index dad053c..4d7e11c 100644
+--- a/src/cmake/externalpackages.cmake
++++ b/src/cmake/externalpackages.cmake
+@@ -103,7 +103,7 @@ checked_find_package (OpenEXR REQUIRED
+ # building against Imath/OpenEXR 3.x when there is still a system-level
+ # install version of 2.x.
+ include_directories(BEFORE ${IMATH_INCLUDES} ${OPENEXR_INCLUDES})
+-if (MSVC AND NOT LINKSTATIC)
++if (WIN32 AND BUILD_SHARED_LIBS)
+     add_definitions (-DOPENEXR_DLL) # Is this needed for new versions?
+ endif ()
+ if (OPENEXR_VERSION VERSION_GREATER_EQUAL 3.0)

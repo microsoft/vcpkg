@@ -1,7 +1,7 @@
 {
   "name": "shapelib",
-  "version-string": "1.5.0",
-  "port-version": 2,
+  "version": "1.5.0",
+  "port-version": 4,
   "description": "Shapefile C Library is simple C API for reading and writing ESRI Shapefiles",
   "homepage": "https://download.osgeo.org/shapelib",
   "dependencies": [

@@ -1,7 +1,18 @@
 {
   "name": "chipmunk",
-  "version-string": "7.0.3",
-  "port-version": 2,
+  "version": "7.0.3",
+  "port-version": 6,
   "description": "A fast and lightweight 2D game physics library.",
-  "homepage": "https://github.com/slembcke/Chipmunk2D"
+  "homepage": "https://github.com/slembcke/Chipmunk2D",
+  "supports": "!(arm & !arm64 & android)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

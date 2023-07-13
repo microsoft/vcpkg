@@ -1,21 +1,3 @@
-diff --git a/libgeotiff/bin/CMakeLists.txt b/libgeotiff/bin/CMakeLists.txt
-index 7b12341..b6b1d0c 100644
---- a/libgeotiff/bin/CMakeLists.txt
-+++ b/libgeotiff/bin/CMakeLists.txt
-@@ -22,12 +19,11 @@ MESSAGE(STATUS "Adding GeoTIFF utilities to build")
- 
- FOREACH(utility ${GEOTIFF_UTILITIES})
-     ADD_EXECUTABLE(${utility} ${utility}.c ${GETOPT_SOURCE})
--    TARGET_LINK_LIBRARIES(${utility} xtiff ${GEOTIFF_LIBRARY_TARGET})
-+    TARGET_LINK_LIBRARIES(${utility} ${GEOTIFF_LIBRARY_TARGET})
- ENDFOREACH()
- 
- ADD_EXECUTABLE(geotifcp geotifcp.c ${GETOPT_SOURCE})
- TARGET_LINK_LIBRARIES(geotifcp
--    xtiff
-     ${GEOTIFF_LIBRARY_TARGET}
-     ${JPEG_LIBRARIES}
-     ${ZLIB_LIBRARIES})
 diff --git a/libgeotiff/cmake/CMakeLists.txt b/libgeotiff/cmake/CMakeLists.txt
 index 47a2b00..3809ba3 100644
 --- a/libgeotiff/cmake/CMakeLists.txt

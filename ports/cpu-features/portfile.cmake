@@ -3,10 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/cpu_features
-    REF a8397ba4591237c17d18e4acc091f5f3ebe7391e # 0.6.0
-    SHA512 71a583e8190699d6df3dfa2857886089265cdfbcb916d9828a3611a1d6d23487464d6448b900b49637f015dd7d4e18bb206e0249af0932928f8ced13a081d42b
+    REF v0.7.0
+    SHA512 e602c88c4a104d69dff0297a4c4f8e26d02d548fc35ce2616429ff8280f2a37e9eaa99451a38b7c302907352cf15bdf8c09c2e0e52b09bf4cd3b7e2b21f8ddb0
     HEAD_REF master
-    PATCHES make_list_cpu_features_optional.patch
+    PATCHES
+        make_list_cpu_features_optional.patch
+        windows-x86-fix.patch
 )
 
 # If feature "tools" is not specified, disable building/exporting executable targets.
@@ -20,6 +22,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()

@@ -1,6 +1,7 @@
 {
   "name": "bext-sml",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Your scalable C++14 one header only State Machine Library with no dependencies",
-  "homepage": "https://github.com/boost-ext/sml"
+  "homepage": "https://github.com/boost-ext/sml",
+  "license": "BSL-1.0"
 }

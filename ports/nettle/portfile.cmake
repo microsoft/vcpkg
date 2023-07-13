@@ -1,136 +1,117 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO ShiftMediaProject/nettle
-        REF bf483378326c67d634977287dd576279734b7acc #v3.6
-        SHA512 ba125a27c81a800be8bc8d1b0d4f3125587330ef64d8a605b4d3ae211fb675c5ef89e9bf4bcf63b07d0f004c6c5ff851630690cdd1eda6b5b8a526d84edffe73
-        HEAD_REF master
-        PATCHES
-            gmp.patch
-            name.dir.patch
-            runtime.patch
-    )
+vcpkg_from_gitlab(
+    GITLAB_URL https://git.lysator.liu.se/
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO nettle/nettle
+    REF nettle_3.8.1_release_20220727
+    SHA512 ed1fa1b77afd61fafa15b63f4324809fa69569691d16b93f403c83794672859a1760d102902349f93b1632de568c36e06a0e2b5b61877082b1982dfcf2c52172
+    HEAD_REF master
+    PATCHES 
+        subdirs.patch
+        fix-libdir.patch
+        compile.patch
+        host-tools.patch
+        ccas.patch
+        msvc-support.patch
+)
 
-    include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
-    yasm_tool_helper(OUT_VAR YASM)
-    file(TO_NATIVE_PATH "${YASM}" YASM)
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        set(CONFIGURATION_RELEASE ReleaseDLL)
-        set(CONFIGURATION_DEBUG DebugDLL)
+# Maintainer switch: Temporarily set this to 1 to re-generate the lists
+# of exported symbols. This is needed when the version is bumped.
+set(GENERATE_SYMBOLS 0)
+if(GENERATE_SYMBOLS)
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+        vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
     else()
-        set(CONFIGURATION_RELEASE Release)
-        set(CONFIGURATION_DEBUG Debug)
+        set(GENERATE_SYMBOLS 0)
     endif()
+endif()
 
-    if(VCPKG_TARGET_IS_UWP)
-        string(APPEND CONFIGURATION_RELEASE WinRT)
-        string(APPEND CONFIGURATION_DEBUG WinRT)
-    endif()
+vcpkg_list(SET OPTIONS)
+if("tools" IN_LIST FEATURES)
+    vcpkg_list(APPEND OPTIONS --enable-tools)
+endif()
 
-    #Setup YASM integration
-    set(_nettleproject)
-    set(_hogweedproject)
-    if(VCPKG_TARGET_IS_UWP)
-        set(_nettleproject "${SOURCE_PATH}/SMP/libnettle_winrt.vcxproj")
-        set(_hogweedproject "${SOURCE_PATH}/SMP/libhogweed_winrt.vcxproj")
+# As in gmp
+set(disable_assembly OFF)
+set(ccas "")
+set(asmflags "")
+if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    vcpkg_list(APPEND OPTIONS ac_cv_func_memset=yes)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        string(APPEND asmflags " --target=i686-pc-windows-msvc -m32")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        string(APPEND asmflags " --target=x86_64-pc-windows-msvc")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        string(APPEND asmflags " --target=arm64-pc-windows-msvc")
     else()
-        set(_nettleproject "${SOURCE_PATH}/SMP/libnettle.vcxproj")
-        set(_hogweedproject "${SOURCE_PATH}/SMP/libhogweed.vcxproj")
+        set(disable_assembly ON)
     endif()
-
-    file(READ "${_nettleproject}" _contents)
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
-                    _contents "${_contents}")
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
-                    _contents "${_contents}")
-    string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already
-    file(WRITE "${_nettleproject}" "${_contents}")
-
-    file(READ "${_hogweedproject}" _contents)
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
-                    _contents "${_contents}")
-    string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
-                    _contents "${_contents}")
-    string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already
-    file(WRITE "${_hogweedproject}" "${_contents}")
-
-    vcpkg_install_msbuild(
-        USE_VCPKG_INTEGRATION
-        SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH SMP/libnettle.sln
-        PLATFORM ${TRIPLET_SYSTEM_ARCH}
-        LICENSE_SUBPATH COPYING.LESSERv3
-        TARGET Rebuild
-        RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
-        DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
-        SKIP_CLEAN
-        OPTIONS "/p:YasmPath=${YASM}"
-    )
-
-    get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
-    set(PACKAGE_VERSION 3.6)
-    set(prefix "${CURRENT_INSTALLED_DIR}")
-    set(exec_prefix "\${prefix}")
-    set(libdir "\${prefix}/lib")
-    set(includedir "\${prefix}/include")
-    set(LIBS "-lnettle -lgmp")
-    configure_file("${SOURCE_PATH}/nettle.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/nettle.pc" @ONLY)
-    set(HOGWEED -lhogweed)
-    set(LIBS -lnettle)
-    configure_file("${SOURCE_PATH}/hogweed.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libhogweed.pc" @ONLY)
-    set(prefix "${CURRENT_INSTALLED_DIR}/debug")
-    set(exec_prefix "\${prefix}")
-    set(libdir "\${prefix}/lib")
-    set(includedir "\${prefix}/../include")
-    set(LIBS "-lnettled -lgmpd")
-    configure_file("${SOURCE_PATH}/nettle.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/nettle.pc" @ONLY)
-    set(LIBS -lnettled)
-    set(HOGWEED -lhogweedd)
-    configure_file("${SOURCE_PATH}/hogweed.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libhogweed.pc" @ONLY)
-    vcpkg_fixup_pkgconfig()
+    if(NOT disable_assembly)
+        vcpkg_find_acquire_program(CLANG)
+        set(ccas "${CLANG}")
+    endif()
 else()
-    vcpkg_from_gitlab(
-        GITLAB_URL https://git.lysator.liu.se/
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO nettle/nettle
-        REF  9e2bea82b9fb606bffd2d3f648e05248e146e54f #v3.6
-        SHA512 008089eba2ef197a0ec6a266baac485e72051e646d19861f3fb605915a591bc2dd38edcb4ea7eaad958ea5d56f7744d42c25b691b49921a1285edd22f9c90b7f
-        HEAD_REF master
-        PATCHES 
-		fix-InstallLibPath.patch
-		flags.patch
-    )
+    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+endif()
 
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        set(OPTIONS --disable-static)
-    else()
-        set(OPTIONS --disable-shared)
-    endif()
+if(disable_assembly)
+    vcpkg_list(APPEND OPTIONS "--enable-assembler=no")
+elseif(ccas)
+    cmake_path(GET ccas PARENT_PATH ccas_dir)
+    vcpkg_add_to_path("${ccas_dir}")
+    cmake_path(GET ccas FILENAME ccas_command)
+    vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
+endif()
 
-    vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
-        AUTOCONFIG
-        OPTIONS
-            --disable-documentation
-            --disable-openssl
-            ${OPTIONS}
-    )
+if(VCPKG_CROSSCOMPILING)
+    set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+endif()
 
-    vcpkg_install_make()
-    vcpkg_fixup_pkgconfig()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    file(GLOB def_files "${CMAKE_CURRENT_LIST_DIR}/*.def")
+    file(COPY ${def_files} DESTINATION "${SOURCE_PATH}")
+    vcpkg_list(APPEND OPTIONS "MSVC_TARGET=${VCPKG_TARGET_ARCHITECTURE}")
+else()
+    vcpkg_list(APPEND OPTIONS "MSVC_TARGET=no")
+endif()
 
-    # # Handle copyright
-    file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
+    OPTIONS
+        ${OPTIONS}
+        --disable-documentation
+        --disable-openssl
+        "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    OPTIONS_DEBUG
+        --disable-tools
+)
+vcpkg_install_make()
+vcpkg_fixup_pkgconfig()
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    endif()
+if(NOT VCPKG_CROSSCOMPILING)
+    set(tool_names desdata eccdata) # aes gcm sha twofish?
+    list(TRANSFORM tool_names PREPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
+    list(TRANSFORM tool_names APPEND "${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    file(COPY ${tool_names} DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+endif()
+
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYINGv3")
+
+if(GENERATE_SYMBOLS)
+    include("${CMAKE_CURRENT_LIST_DIR}/lib-to-def.cmake")
+    lib_to_def(BASENAME nettle REGEX "_*nettle_")
+    lib_to_def(BASENAME hogweed REGEX "_*nettle_")
 endif()

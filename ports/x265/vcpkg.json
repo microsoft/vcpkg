@@ -1,8 +1,15 @@
 {
   "name": "x265",
-  "version-string": "3.4",
-  "port-version": 5,
+  "version": "3.4",
+  "port-version": 9,
   "description": "x265 is a H.265 / HEVC video encoder application library, designed to encode video or images into an H.265 / HEVC encoded bitstream.",
   "homepage": "https://github.com/videolan/x265",
-  "supports": "!(uwp | arm)"
+  "license": "GPL-2.0-or-later",
+  "supports": "!uwp & !(arm & windows) & !xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

@@ -1,39 +1,3 @@
-#[===[.md:
-# vcpkg_execute_build_process
-
-Execute a required build process
-
-## Usage
-```cmake
-vcpkg_execute_build_process(
-    COMMAND <cmd> [<args>...]
-    [NO_PARALLEL_COMMAND <cmd> [<args>...]]
-    WORKING_DIRECTORY </path/to/dir>
-    LOGNAME <log_name>
-)
-```
-## Parameters
-### COMMAND
-The command to be executed, along with its arguments.
-
-### NO_PARALLEL_COMMAND
-Optional parameter which specifies a non-parallel command to attempt if a
-failure potentially due to parallelism is detected.
-
-### WORKING_DIRECTORY
-The directory to execute the command in.
-
-### LOGNAME
-The prefix to use for the log files.
-
-This should be a unique name for different triplets so that the logs don't
-conflict when building multiple at once.
-
-## Examples
-
-* [icu](https://github.com/Microsoft/vcpkg/blob/master/ports/icu/portfile.cmake)
-#]===]
-
 set(Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES
     "LINK : fatal error LNK1102:"
     " fatal error C1060: "
@@ -48,6 +12,8 @@ set(Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES
     "Cannot write file"
     # Multiple threads caused the wrong order of creating folders and creating files in folders
     "Can't open"
+    # `make install` may stumble over concurrency, in particular with `mkdir` on osx.
+    "mkdir [^:]*: File exists"
 )
 list(JOIN Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES "|" Z_VCPKG_EXECUTE_BUILD_PROCESS_RETRY_ERROR_MESSAGES)
 
@@ -73,6 +39,13 @@ function(vcpkg_execute_build_process)
     set(log_err "${log_prefix}-err.log")
     set(all_logs "${log_out}" "${log_err}")
 
+    if(X_PORT_PROFILE)
+        vcpkg_list(PREPEND arg_COMMAND "${CMAKE_COMMAND}" "-E" "time")
+        if(DEFINED arg_NO_PARALLEL_COMMAND)
+            vcpkg_list(PREPEND arg_NO_PARALLEL_COMMAND "${CMAKE_COMMAND}" "-E" "time")
+        endif()
+    endif()
+
     execute_process(
         COMMAND ${arg_COMMAND}
         WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
@@ -80,7 +53,10 @@ function(vcpkg_execute_build_process)
         ERROR_FILE "${log_err}"
         RESULT_VARIABLE error_code
     )
-
+    if (NOT error_code MATCHES "^[0-9]+$")
+        list(JOIN arg_COMMAND " " command)
+        message(FATAL_ERROR "Failed to execute command \"${command}\" in working directory \"${arg_WORKING_DIRECTORY}\": ${error_code}")
+    endif()
     if(NOT error_code EQUAL "0")
         file(READ "${log_out}" out_contents)
         file(READ "${log_err}" err_contents)

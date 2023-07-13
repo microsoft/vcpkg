@@ -1,15 +1,17 @@
 {
   "name": "sfml",
-  "version": "2.5.1",
-  "port-version": 12,
+  "version": "2.6.0",
+  "port-version": 17,
   "description": "Simple and fast multimedia library",
-  "homepage": "https://github.com/sfml/sfml",
+  "homepage": "https://github.com/SFML/SFML",
+  "license": "Zlib",
   "dependencies": [
     "freetype",
     "libflac",
     "libogg",
     "libvorbis",
     "openal-soft",
+    "opengl",
     "stb",
     {
       "name": "vcpkg-cmake",

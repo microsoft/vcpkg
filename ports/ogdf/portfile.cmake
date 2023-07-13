@@ -1,15 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ogdf/ogdf
-    REF  8a103cf3a7dfff87fe8b7534575604bc53c0870c
-    SHA512 264e8586be7a18640f253eb7b289dd99f1f2fc42c4d2304ab12f7c6aa9c5754b710642e7296038aea0cd9368d732d0106501fefed800743b403adafff7e3f0b2
+    REF 214105da97863e1d0a066157e5cc573b65b433a9
+    SHA512 8ab9f266fef224ce600cec418d5de56761714fbaa2d509ba89d55700c1d27d02a5fc93fab8eb8e10325a42c7d2fa8e251e2a18ece9a9565e215bf39672bff92d
     HEAD_REF master
-    PATCHES fix-c4723.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCOIN_INSTALL_LIBRARY_DIR:STRING=lib
         -DCOIN_INSTALL_CMAKE_DIR:STRING=lib/cmake/OGDF
@@ -17,11 +15,11 @@ vcpkg_configure_cmake(
         -DOGDF_INSTALL_CMAKE_DIR:STRING=lib/cmake/OGDF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OGDF)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OGDF)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/minisat/doc ${CURRENT_PACKAGES_DIR}/include/ogdf/lib/minisat/doc)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/minisat/doc" "${CURRENT_PACKAGES_DIR}/include/ogdf/lib/minisat/doc")

@@ -12,9 +12,9 @@ option(BUILD_EXECUTABLES OFF)
 include(CheckIncludeFile)
 check_include_file(stddef.h HAVE_STDDEF_H)
 check_include_file(stdlib.h HAVE_STDLIB_H)
-configure_file(jconfig.txt ${CMAKE_CURRENT_SOURCE_DIR}/jconfig.h)
+configure_file(jconfig.txt ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h)
 
-list(APPEND PUBLIC_HEADERS jpeglib.h jerror.h jmorecfg.h jconfig.h)
+list(APPEND PUBLIC_HEADERS jpeglib.h jerror.h jmorecfg.h ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h)
 
 add_library(jpeg
     ${PUBLIC_HEADERS} jinclude.h jpegint.h jversion.h
@@ -34,6 +34,8 @@ if(WIN32)
         _CRT_SECURE_NO_WARNINGS
     )
 endif()
+
+target_include_directories(jpeg PRIVATE include ${CMAKE_CURRENT_BINARY_DIR})
 
 install(FILES       ${PUBLIC_HEADERS}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/include

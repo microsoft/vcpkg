@@ -1,9 +1,11 @@
 {
   "name": "mpg123",
-  "version": "1.29.2",
+  "version": "1.31.3",
   "port-version": 1,
   "description": "mpg123 is a real time MPEG 1.0/2.0/2.5 audio player/decoder for layers 1, 2 and 3 (MPEG 1.0 layer 3 also known as MP3).",
   "homepage": "https://sourceforge.net/projects/mpg123/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -13,6 +15,9 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "yasm-tool-helper"
+    {
+      "name": "yasm-tool-helper",
+      "platform": "windows"
+    }
   ]
 }

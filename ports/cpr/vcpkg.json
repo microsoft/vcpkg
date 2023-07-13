@@ -1,8 +1,9 @@
 {
   "name": "cpr",
-  "version-semver": "1.7.2",
+  "version-semver": "1.10.2+3",
   "description": "C++ Requests is a simple wrapper around libcurl inspired by the excellent Python Requests project.",
   "homepage": "https://github.com/libcpr/cpr",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "curl",
@@ -16,5 +17,26 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "ssl"
+  ],
+  "features": {
+    "ssl": {
+      "description": "Enable SSL support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        },
+        {
+          "name": "openssl",
+          "platform": "linux"
+        }
+      ]
+    }
+  }
 }

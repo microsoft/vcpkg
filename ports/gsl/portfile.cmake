@@ -6,8 +6,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 3300a748b63b583374701d5ae2a9db7349d0de51061a9f98e7c145b2f7de9710b3ad58b3318d0be2a9a287ace4cc5735bb9348cdf48075b98c1f6cc1029df131
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
         0001-configure.patch
@@ -23,6 +23,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jtv/libpqxx
-    REF 221ddc8be329bafb376a3d83b9cd257fd52fc7b7 # 7.6.0
-    SHA512 32a673bbae2f26fbc41bdcba007d9a5ded29680cb49ba434d1913cd5007bc1c1443bf38c88d9c5a6abe0a3ee519c0f691464c8d2b144cd3f16652447d644e400
+    REF 17e5a6c8ac3abc05329891aaa378bd6004b9c8ee # 7.7.4
+    SHA512 51dc5525e801696b7716e4a4a7d8d794baa5bf7372da62a30e4b602bfb09ff53a4355bfc5e39945636cff018095d2917c9a79181bb3f824091b7780863b0073c
     HEAD_REF master
     PATCHES
         fix_build_with_vs2017.patch
-        fix_build_with_apple_clang_13.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/config-public-compiler.h.in" DESTINATION "${SOURCE_PATH}")

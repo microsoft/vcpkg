@@ -2,25 +2,26 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH CMAKE_SOURCE_PATH
-  REPO noloader/cryptopp-cmake
-  REF CRYPTOPP_8_5_0
-  SHA512 758633786c81f5a34ade0ab99983b3262bb3a028b086e734b1f8ddb618c801453d517f67176178936f87ec36a91fca93fba9bcaec4301705138954e6eb49d136
+  REPO abdes/cryptopp-cmake
+  REF 206aab4cb1e6e78b8460b8c0fe08449c280e321e #CRYPTOPP_8_7_0_1
+  SHA512 594cf9c277d703462375bdd466acd0145e849f55a7519ab266c3f2a6bd810341e86b088b9b4419a2ba2e63146c26de5ac295be071ec008dffdee8dc1edf32157
   HEAD_REF master
-  PATCHES
-    cmake.patch
 )
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO weidai11/cryptopp
-  REF CRYPTOPP_8_5_0
-  SHA512 e8dd210c9e9d4925edc456e4d68780deaa224d85e11394ad5da835dcb1a1e6b3e899aa473acf20449f9721116960884b6d88b29335479b305bb7e29faa87e6c0
+  REF 511806c0eba8ba5b5cedd4b4a814e96df92864a6 #CRYPTOPP_8_7_0
+  SHA512 9d26299c6a55b32a790190c1e1dcbd9a93abc0c2a997714cb7c3a53daf9e142ba54afbd1fbaf86029dfc80d4687fd296dde589440ead07278499478d262a1483
   HEAD_REF master
   PATCHES patch.patch
 )
 
-file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_SOURCE_PATH}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_SOURCE_PATH}/cryptopp" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_SOURCE_PATH}/cmake" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_SOURCE_PATH}/test" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_SOURCE_PATH}/cryptopp/cryptoppConfig.cmake" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_SOURCE_PATH}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 if("pem-pack" IN_LIST FEATURES)
     vcpkg_from_github(
@@ -35,13 +36,13 @@ if("pem-pack" IN_LIST FEATURES)
         ${PEM_PACK_SOURCE_PATH}/*.h
         ${PEM_PACK_SOURCE_PATH}/*.cpp
     )
-    file(COPY ${PEM_PACK_FILES} DESTINATION ${SOURCE_PATH})
+    file(INSTALL ${PEM_PACK_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 endif()
 
 # disable assembly on ARM Windows to fix broken build
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
     set(CRYPTOPP_DISABLE_ASM "ON")
-else()
+elseif(NOT DEFINED CRYPTOPP_DISABLE_ASM) # Allow disabling using a triplet file
     set(CRYPTOPP_DISABLE_ASM "OFF")
 endif()
 
@@ -51,23 +52,41 @@ endif()
 #   https://www.cryptopp.com/wiki/Visual_Studio#Dynamic_Runtime_Linking
 #   https://www.cryptopp.com/wiki/Visual_Studio#The_DLL
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_SHARED=OFF
+        -DCRYPTOPP_SOURCES=${SOURCE_PATH}
+        -DCRYPTOPP_BUILD_SHARED=OFF
         -DBUILD_STATIC=ON
-        -DBUILD_TESTING=OFF
-        -DBUILD_DOCUMENTATION=OFF
+        -DCRYPTOPP_BUILD_TESTING=OFF
+        -DCRYPTOPP_BUILD_DOCUMENTATION=OFF
         -DDISABLE_ASM=${CRYPTOPP_DISABLE_ASM}
+        -DUSE_INTERMEDIATE_OBJECTS_TARGET=OFF # Not required when we build static only
+        -DCMAKE_POLICY_DEFAULT_CMP0063=NEW # Honor "<LANG>_VISIBILITY_PRESET" properties
+    MAYBE_UNUSED_VARIABLES
+        BUILD_STATIC
+        USE_INTERMEDIATE_OBJECTS_TARGET
+        CMAKE_POLICY_DEFAULT_CMP0063
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cryptopp)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/cryptopp)
+
+if(NOT VCPKG_BUILD_TYPE)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+endif()
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+vcpkg_fixup_pkgconfig()
 
 # There is no way to suppress installation of the headers and resource files in debug build.
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cryptopp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/cryptopp/License.txt ${CURRENT_PACKAGES_DIR}/share/cryptopp/copyright)
+file(COPY "${SOURCE_PATH}/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/License.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

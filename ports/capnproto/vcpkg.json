@@ -1,9 +1,9 @@
 {
   "name": "capnproto",
-  "version": "0.9.1",
-  "port-version": 2,
+  "version": "0.10.3",
   "description": "Data interchange format and capability-based RPC system",
   "homepage": "https://capnproto.org/",
+  "license": "MIT",
   "supports": "!windows | (!uwp & !arm)",
   "dependencies": [
     {

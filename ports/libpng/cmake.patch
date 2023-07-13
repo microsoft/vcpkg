@@ -1,47 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6451fcf..6599e1d 100644
+index 8652564..d0681d2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -44,7 +44,7 @@ if(NOT PNG_BUILD_ZLIB)
- endif()
- 
- if(UNIX AND NOT APPLE AND NOT BEOS AND NOT HAIKU)
--  find_library(M_LIBRARY m)
-+  set(M_LIBRARY m)
- else()
-   # libm is not needed and/or not available
-   set(M_LIBRARY "")
-@@ -551,21 +551,14 @@ endif()
- 
- if(PNG_STATIC)
-   # does not work without changing name
--  set(PNG_LIB_NAME_STATIC png_static)
-   add_library(png_static STATIC ${libpng_sources})
-   add_dependencies(png_static genfiles)
+@@ -614,7 +614,7 @@ if(PNG_STATIC)
    # MSVC doesn't use a different file extension for shared vs. static
-   # libs.  We are able to change OUTPUT_NAME to remove the _static
+   # libs. We are able to change OUTPUT_NAME to remove the _static
    # for all other platforms.
 -  if(NOT MSVC)
--    set_target_properties(png_static PROPERTIES
--      OUTPUT_NAME "${PNG_LIB_NAME}"
--      CLEAN_DIRECT_OUTPUT 1)
--  else()
--    set_target_properties(png_static PROPERTIES
--      OUTPUT_NAME "${PNG_LIB_NAME}_static"
--      CLEAN_DIRECT_OUTPUT 1)
--  endif()
-+  set_target_properties(png_static PROPERTIES
-+    OUTPUT_NAME "${PNG_LIB_NAME}"
-+    CLEAN_DIRECT_OUTPUT 1)
-   list(APPEND PNG_LIB_TARGETS png_static)
-   if(MSVC)
-     # msvc does not append 'lib' - do it here to have consistent name
-@@ -915,7 +908,7 @@ endif()
- 
- # Create an export file that CMake users can include() to import our targets.
- if(NOT SKIP_INSTALL_EXPORT AND NOT SKIP_INSTALL_ALL)
--  install(EXPORT libpng DESTINATION lib/libpng FILE lib${PNG_LIB_NAME}.cmake)
-+  install(EXPORT libpng DESTINATION lib/libpng FILE libpngConfig.cmake)
- endif()
- 
- # what's with libpng-manual.txt and all the extra files?
++  if(1)
+     set_target_properties(png_static PROPERTIES
+                           OUTPUT_NAME "${PNG_LIB_NAME}"
+                           CLEAN_DIRECT_OUTPUT 1)

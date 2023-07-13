@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ki18n
-    REF v5.89.0
-    SHA512 f83d8b9ef51cc05a2eccb175e602fd0530d0cb6bb0c21e582a82fdd2897d9f988c2d927f2dc986faaf7482ec1c81e8cea4a9e74fc557c88be9958393db71c2a9
+    REF v5.98.0
+    SHA512 5bb2c216825448d207dbcaa521503ddb78f77ba52668992447c792bcc4f48f8a0d6de7d3f564dc917a14765ae7f0ad7e43dd0ce8f368e97eb8dfe077fa8b4c46
     PATCHES ${PATCHES}
 )
 
@@ -35,4 +35,17 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+
+# The following pattern has an absolute path, but is still ultimately relocatable, so skip absolute paths check:
+# share\KF5I18n\KF5I18nMacros.cmake
+# # The Python executable used for building ki18n will be used as a fallback
+# # solution if it cannot be found in $PATH when building applications.
+# set(_KI18N_PYTHON_EXECUTABLE "C:/Dev/vcpkg-downloads/tools/python/python-3.10.7-x64/python.exe")
+# 
+# find_program(KI18N_PYTHON_EXECUTABLE NAMES python3 python2 python)
+# if(NOT KI18N_PYTHON_EXECUTABLE)
+#     set(KI18N_PYTHON_EXECUTABLE "${_KI18N_PYTHON_EXECUTABLE}")
+# endif()
+set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)

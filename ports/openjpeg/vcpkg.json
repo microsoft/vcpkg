@@ -1,8 +1,9 @@
 {
   "name": "openjpeg",
-  "version-semver": "2.4.0",
+  "version": "2.5.0",
   "description": "OpenJPEG is an open-source JPEG 2000 codec written in C language. It has been developed in order to promote the use of JPEG 2000, a still-image compression standard from the Joint Photographic Experts Group (JPEG). Since April 2015, it is officially recognized by ISO/IEC and ITU-T as a JPEG 2000 Reference Software.",
   "homepage": "https://github.com/uclouvain/openjpeg",
+  "license": "BSD-2-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -15,16 +16,32 @@
   ],
   "features": {
     "jp3d": {
-      "description": "Build optional component jp3d"
+      "description": "(deprecated)"
     },
     "jpip": {
       "description": "Build optional component jpip"
     },
     "jpwl": {
-      "description": "Build optional component jpwl"
+      "description": "(deprecated)"
     },
     "mj2": {
-      "description": "Build optional component mj2"
+      "description": "(deprecated)"
+    },
+    "tools": {
+      "description": "(deprecated)",
+      "dependencies": [
+        {
+          "name": "curl",
+          "platform": "!windows"
+        },
+        {
+          "name": "fastcgi",
+          "platform": "!windows"
+        },
+        "lcms",
+        "tiff",
+        "zlib"
+      ]
     }
   }
 }

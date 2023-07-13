@@ -3,6 +3,13 @@ else(WIN32)
   message(FATAL_ERROR "Findasiosdk.cmake: Unsupported platform ${CMAKE_SYSTEM_NAME}" )
 endif(WIN32)
 
+# if this script is invoked multiple times, we end up adding
+# "asiosdk" to the directory multiple times, leading to incorrect
+# include paths
+if (ASIOSDK_ROOT_DIR)
+    return()
+endif()
+
 find_path(
   ASIOSDK_ROOT_DIR
   asiosdk

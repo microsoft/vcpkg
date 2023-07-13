@@ -1,9 +1,9 @@
 {
   "name": "sqlite3",
-  "version": "3.37.2",
+  "version": "3.42.0",
   "port-version": 1,
   "description": "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.",
-  "homepage": "https://github.com/sqlite/sqlite",
+  "homepage": "https://sqlite.org/",
   "license": "blessing",
   "dependencies": [
     {
@@ -15,7 +15,13 @@
       "host": true
     }
   ],
+  "default-features": [
+    "json1"
+  ],
   "features": {
+    "dbstat": {
+      "description": "Enable the DBSTAT virtual table"
+    },
     "fts3": {
       "description": "Enable the FTS3 extension"
     },
@@ -56,7 +62,7 @@
       "description": "Build sqlite3 executable"
     },
     "zlib": {
-      "description": "Build sqlite3 with zlib support",
+      "description": "Build sqlite3 command line tool with zlib support; has no effect on the library itself",
       "dependencies": [
         "zlib"
       ]

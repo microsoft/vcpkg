@@ -1,7 +1,19 @@
 {
   "name": "portable-snippets",
-  "version-string": "2019-09-20",
-  "port-version": 1,
+  "version-date": "2019-09-20",
+  "port-version": 3,
   "description": "Collection of miscellaneous portable C snippets",
-  "homepage": "https://github.com/nemequ/portable-snippets"
+  "homepage": "https://github.com/nemequ/portable-snippets",
+  "license": null,
+  "supports": "!(arm & osx)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

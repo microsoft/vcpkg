@@ -1,13 +1,3 @@
-#[===[.md:
-# vcpkg_build_qmake
-
-Build a qmake-based project, previously configured using vcpkg_configure_qmake.
-
-```cmake
-vcpkg_build_qmake()
-```
-#]===]
-
 function(z_run_jom_build invoke_command targets log_prefix log_suffix)
     message(STATUS "Package ${log_prefix}-${TARGET_TRIPLET}-${log_suffix}")
     vcpkg_execute_build_process(
@@ -33,7 +23,10 @@ function(vcpkg_build_qmake)
     set(ENV{_CL_} "/utf-8")
 
     if(CMAKE_HOST_WIN32)
-        if (VCPKG_QMAKE_USE_NMAKE)
+        if(VCPKG_TARGET_IS_MINGW)
+            find_program(MINGW32_MAKE mingw32-make REQUIRED)
+            set(invoke_command "${MINGW32_MAKE}")
+        elseif (VCPKG_QMAKE_USE_NMAKE)
             find_program(NMAKE nmake)
             set(invoke_command "${NMAKE}")
             get_filename_component(nmake_exe_path "${NMAKE}" DIRECTORY)
@@ -47,8 +40,6 @@ function(vcpkg_build_qmake)
         find_program(MAKE make)
         set(invoke_command "${MAKE}")
     endif()
-
-    file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
 
     if(NOT DEFINED arg_BUILD_LOGNAME)
         set(arg_BUILD_LOGNAME build)

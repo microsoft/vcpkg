@@ -1,15 +1,25 @@
 {
   "name": "gettext",
-  "version": "0.21",
-  "port-version": 9,
-  "description": "GNU gettext provides libintl and a set of tools to help produce multi-lingual messages.",
+  "version": "0.21.1",
+  "port-version": 2,
+  "description": "A GNU framework to help produce multi-lingual messages.",
   "homepage": "https://www.gnu.org/software/gettext/",
+  "license": "GPL-3.0-only",
+  "supports": "!xbox",
   "dependencies": [
-    "libiconv"
+    "gettext-libintl"
   ],
   "features": {
+    "runtime-tools": {
+      "description": "Build runtime tools for internationalization of scripts",
+      "supports": "!uwp"
+    },
     "tools": {
-      "description": "Build gettext tools"
+      "description": "Build gettext tools",
+      "supports": "!uwp",
+      "dependencies": [
+        "libiconv"
+      ]
     }
   }
 }

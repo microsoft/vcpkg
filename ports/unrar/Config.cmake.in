@@ -1,0 +1,25 @@
+
+get_filename_component(_unrar_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_unrar_root "${_unrar_root}" PATH)
+get_filename_component(_unrar_root "${_unrar_root}" PATH)
+
+if (EXISTS "${_unrar_root}/bin/unrar.dll")
+
+    add_library(unofficial::unrar::unrar SHARED IMPORTED)
+    set_target_properties(unofficial::unrar::unrar PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES   "${_unrar_root}/include"    
+        IMPORTED_LOCATION_DEBUG         "${_unrar_root}/debug/bin/unrar.dll"
+        IMPORTED_IMPLIB_DEBUG           "${_unrar_root}/debug/lib/unrar.lib"
+        IMPORTED_LOCATION_RELEASE       "${_unrar_root}/bin/unrar.dll"
+        IMPORTED_IMPLIB_RELEASE         "${_unrar_root}/lib/unrar.lib"
+        IMPORTED_CONFIGURATIONS         "Debug;Release")
+
+    set(unrar_FOUND TRUE)
+
+else()
+
+    set(unrar_FOUND FALSE)
+
+endif()
+
+unset(_unrar_root)

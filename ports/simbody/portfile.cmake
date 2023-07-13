@@ -2,9 +2,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simbody/simbody
-    REF 040562785acd4b6d9d26ea6762d5c80075e0c474
-    SHA512 b803ed45fbaa60c5af601ac2d0be2a109eae19428d72ab06952403e12116ee08592014d85accad8e6a64aed6bb0afbd6f9dff6588c4b22da65fd1bac067f8662
+    REF 462b2a6dbb8794db2922d72f52b29b488a178ebc
+    SHA512 e2b1837e0a04461ebc94e80f5e8aa29f874a1113383db8b24e77b0c9413c4a6bab0299c6a9b2f07147e82ef01a765fed6d6455d5bd059882c646830dd8d1b224
     HEAD_REF master
+    PATCHES
+        common-name-libs.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBRARIES)
@@ -20,6 +22,8 @@ vcpkg_cmake_configure(
         -DBUILD_VISUALIZER=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
+        -DBUILD_TESTS_AND_EXAMPLES_STATIC=OFF
+        -DBUILD_TESTS_AND_EXAMPLES_SHARED=OFF
 )
 
 vcpkg_cmake_install()
@@ -32,8 +36,9 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc")
 
 vcpkg_fixup_pkgconfig()
 
-# Handle copyright
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

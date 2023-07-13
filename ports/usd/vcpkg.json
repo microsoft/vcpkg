@@ -1,10 +1,11 @@
 {
   "name": "usd",
-  "version-string": "20.08",
-  "port-version": 2,
+  "version": "23.5",
+  "port-version": 3,
   "description": "Universal Scene Description (USD) is an efficient, scalable system for authoring, reading, and streaming time-sampled scene description for interchange between graphics applications.",
   "homepage": "https://github.com/PixarAnimationStudios/USD",
-  "supports": "!x86",
+  "license": null,
+  "supports": "!x86 & !arm & !android",
   "dependencies": [
     "boost-assign",
     "boost-crc",
@@ -15,8 +16,17 @@
     "boost-program-options",
     "boost-regex",
     "boost-system",
+    "boost-variant",
     "boost-vmd",
     "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ]
 }

@@ -1,7 +1,8 @@
 {
   "name": "stb",
-  "version-string": "2020-09-14",
+  "version-date": "2023-04-11",
   "port-version": 1,
   "description": "public domain header-only libraries",
-  "homepage": "https://github.com/nothings/stb"
+  "homepage": "https://github.com/nothings/stb",
+  "license": "MIT OR CC-PDDC"
 }

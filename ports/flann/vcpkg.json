@@ -1,7 +1,7 @@
 {
   "name": "flann",
   "version-date": "2019-04-07",
-  "port-version": 5,
+  "port-version": 7,
   "description": "Fast Library for Approximate Nearest Neighbors",
   "homepage": "https://github.com/mariusmuja/flann",
   "license": "BSD-3-Clause",

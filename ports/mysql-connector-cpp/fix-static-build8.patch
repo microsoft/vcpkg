@@ -1,0 +1,105 @@
+diff --git a/cdk/cmake/dependency.cmake b/cdk/cmake/dependency.cmake
+index a1775da..f9c3edf 100644
+--- a/cdk/cmake/dependency.cmake
++++ b/cdk/cmake/dependency.cmake
+@@ -57,6 +57,7 @@ set(EXT_FWD
+   CMAKE_SYSTEM_NAME CMAKE_SYSTEM_VERSION
+   CMAKE_SYSTEM_PROCESSOR
+   CMAKE_C_COMPILER CMAKE_CXX_COMPILER
++  BUILD_SHARED_LIBS STATIC_MSVCRT BUILD_STATIC
+ )
+ 
+ set(EXT_DIR ${CMAKE_CURRENT_LIST_DIR}/ext CACHE INTERNAL "external project utils location")
+@@ -117,7 +118,7 @@ function(add_ext NAME)
+   endif()
+ 
+   foreach(var ${EXT_FWD})
+-    if(${var})
++    if(DEFINED ${var})
+        message("-- option ${var}: ${${var}}")
+        list(APPEND cmake_opts -D${var}=${${var}})
+     endif()
+diff --git a/cdk/extra/lz4/CMakeLists.txt b/cdk/extra/lz4/CMakeLists.txt
+index 4c3aab0..a1596af 100644
+--- a/cdk/extra/lz4/CMakeLists.txt
++++ b/cdk/extra/lz4/CMakeLists.txt
+@@ -34,6 +34,10 @@ include(platform)
+ 
+ enable_pic()
+ 
++if (MSVC AND STATIC_MSVCRT)
++  message("lz4 using static runtime library")
++  set_msvcrt(STATIC)
++endif (MSVC AND STATIC_MSVCRT)
+ add_library(lz4 STATIC
+     lz4.c
+     lz4frame.c
+diff --git a/cdk/extra/zlib/CMakeLists.txt b/cdk/extra/zlib/CMakeLists.txt
+index 237c2c3..7746bd0 100644
+--- a/cdk/extra/zlib/CMakeLists.txt
++++ b/cdk/extra/zlib/CMakeLists.txt
+@@ -162,6 +162,10 @@ endif()
+ 
+ # -------------------------------------------------------------------------
+ 
++if (MSVC AND STATIC_MSVCRT)
++  message("zlib using static runtime library")
++  set_msvcrt(STATIC)
++endif (MSVC AND STATIC_MSVCRT)
+ ADD_LIBRARY(zlib STATIC
+   ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
+ 
+diff --git a/cdk/extra/zstd/CMakeLists.txt b/cdk/extra/zstd/CMakeLists.txt
+index 2109f3e..a60034e 100644
+--- a/cdk/extra/zstd/CMakeLists.txt
++++ b/cdk/extra/zstd/CMakeLists.txt
+@@ -57,6 +57,10 @@ SET(ZSTD_SRCS
+   lib/dictBuilder/zdict.c
+ )
+ 
++if (MSVC AND STATIC_MSVCRT)
++  message("zstd using static runtime library")
++  set_msvcrt(STATIC)
++endif (MSVC AND STATIC_MSVCRT)
+ ADD_LIBRARY(zstd STATIC ${ZSTD_SRCS})
+ set_target_properties(zstd PROPERTIES FOLDER "Misc")
+ 
+diff --git a/cmake/libutils.cmake b/cmake/libutils.cmake
+index 05ea32e..ff26ba6 100644
+--- a/cmake/libutils.cmake
++++ b/cmake/libutils.cmake
+@@ -164,7 +164,11 @@ function(merge_libraries TARGET)
+   set_property(SOURCE "${LIBUTILS_SCRIPT_DIR}/empty.cc" PROPERTY LANGUAGE CXX)
+ 
+   add_library(${TARGET} ${TYPE} "${LIBUTILS_SCRIPT_DIR}/empty.cc")
+-  target_link_libraries(${TARGET} PRIVATE ${ARGN})
++  if(TYPE STREQUAL "SHARED")
++    target_link_libraries(${TARGET} PRIVATE ${ARGN})
++  else()
++    add_dependencies(${TARGET} ${ARGN})
++  endif()
+ 
+   #
+   # Arrange for marge_archives.cmake script to be executed in a POST_BUILD
+@@ -314,7 +318,7 @@ function(merge_libraries TARGET)
+         --target ${TARGET}-deps
+         --config $<CONFIG>
+         --
+-          /nologo /v:q /filelogger /flp:Verbosity=q /flp:ShowCommandLine
++          /nologo /v:q /filelogger /flp:Verbosity=m /flp:ShowCommandLine
+           /flp:LogFile=\"${log_file}.STATIC\"
+ 
+       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+diff --git a/install_layout.cmake b/install_layout.cmake
+index 5730ce4..e6514ac 100644
+--- a/install_layout.cmake
++++ b/install_layout.cmake
+@@ -177,7 +177,7 @@ set(LIB_NAME_BASE "mysqlcppconn${CONCPP_VERSION_MAJOR}")
+ set(LIB_NAME_STATIC "${LIB_NAME_BASE}-static")
+ 
+ if(WIN32 AND STATIC_MSVCRT)
+-  set(LIB_NAME_STATIC "${LIB_NAME}-mt")
++  set(LIB_NAME_STATIC "${LIB_NAME_STATIC}-mt")
+ endif()
+ 
+ if(BUILD_STATIC)

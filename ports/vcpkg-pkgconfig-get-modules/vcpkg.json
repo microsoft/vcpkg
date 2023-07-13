@@ -1,6 +1,8 @@
 {
   "name": "vcpkg-pkgconfig-get-modules",
-  "version-date": "2022-02-10",
+  "version-date": "2023-02-25",
+  "documentation": "https://vcpkg.io/en/docs/README.html",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "pkgconf",

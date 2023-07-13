@@ -1,8 +1,8 @@
 diff --git a/config/cmake/hdf5-config.cmake.in b/config/cmake/hdf5-config.cmake.in
-index 4d02c9c..8c10d2d 100644
+index 1a3fb7bbf2..79081ce040 100644
 --- a/config/cmake/hdf5-config.cmake.in
 +++ b/config/cmake/hdf5-config.cmake.in
-@@ -55,7 +55,10 @@ set (${HDF5_PACKAGE_NAME}_PARALLEL_FILTERED_WRITES "@PARALLEL_FILTERED_WRITES@")
+@@ -56,7 +56,10 @@ set (${HDF5_PACKAGE_NAME}_PARALLEL_FILTERED_WRITES "@PARALLEL_FILTERED_WRITES@")
  #-----------------------------------------------------------------------------
  # Dependencies
  #-----------------------------------------------------------------------------
@@ -13,19 +13,19 @@ index 4d02c9c..8c10d2d 100644
    set (${HDF5_PACKAGE_NAME}_MPI_C_INCLUDE_PATH "@MPI_C_INCLUDE_DIRS@")
    set (${HDF5_PACKAGE_NAME}_MPI_C_LIBRARIES    "@MPI_C_LIBRARIES@")
    if (${HDF5_PACKAGE_NAME}_BUILD_FORTRAN)
-@@ -111,11 +114,11 @@ set (${HDF5_PACKAGE_NAME}_VERSION_MINOR  @HDF5_VERSION_MINOR@)
+@@ -114,11 +117,11 @@ set (${HDF5_PACKAGE_NAME}_VERSION_MINOR  @HDF5_VERSION_MINOR@)
  # project which has already built hdf5 as a subproject
  #-----------------------------------------------------------------------------
  if (NOT TARGET "@HDF5_PACKAGE@")
 -  if (${HDF5_PACKAGE_NAME}_ENABLE_Z_LIB_SUPPORT AND ${HDF5_PACKAGE_NAME}_PACKAGE_EXTLIBS)
--    include (@PACKAGE_SHARE_INSTALL_DIR@/@ZLIB_PACKAGE_NAME@/@ZLIB_PACKAGE_NAME@@HDF_PACKAGE_EXT@-targets.cmake)
+-    include (@PACKAGE_SHARE_INSTALL_DIR@/@ZLIB_PACKAGE_NAME@@HDF_PACKAGE_EXT@-targets.cmake)
 +  if (${HDF5_PACKAGE_NAME}_ENABLE_Z_LIB_SUPPORT)
 +    find_dependency(ZLIB)
    endif ()
 -  if (${HDF5_PACKAGE_NAME}_ENABLE_SZIP_SUPPORT AND ${HDF5_PACKAGE_NAME}_PACKAGE_EXTLIBS)
--    include (@PACKAGE_SHARE_INSTALL_DIR@/@SZ_PACKAGE_NAME@/@SZ_PACKAGE_NAME@@HDF_PACKAGE_EXT@-targets.cmake)
+-    include (@PACKAGE_SHARE_INSTALL_DIR@/@SZIP_PACKAGE_NAME@@HDF_PACKAGE_EXT@-targets.cmake)
 +  if (${HDF5_PACKAGE_NAME}_ENABLE_SZIP_SUPPORT)
 +    find_dependency(szip)
    endif ()
-   include (@PACKAGE_SHARE_INSTALL_DIR@/@HDF5_PACKAGE@/@HDF5_PACKAGE@@HDF_PACKAGE_EXT@-targets.cmake)
+   include (@PACKAGE_SHARE_INSTALL_DIR@/@HDF5_PACKAGE@@HDF_PACKAGE_EXT@-targets.cmake)
  endif ()

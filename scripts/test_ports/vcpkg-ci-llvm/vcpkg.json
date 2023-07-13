@@ -2,6 +2,7 @@
   "name": "vcpkg-ci-llvm",
   "version-string": "0",
   "description": "LLVM features testing within CI.",
+  "license": null,
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
     {
@@ -9,9 +10,10 @@
       "default-features": false,
       "features": [
         "clang",
-        "enable-abi-breaking-checks",
+        "default-targets",
         "disable-assertions",
         "disable-clang-static-analyzer",
+        "enable-abi-breaking-checks",
         "enable-bindings",
         "enable-eh",
         "enable-rtti",
@@ -20,19 +22,29 @@
         "enable-zlib",
         "lld",
         "lldb",
-        "polly",
-        "target-all",
-        "tools",
-        "utils"
+        "tools"
       ]
     },
     {
+      "$comment": "Platform restriction due to CI artifact upload quirks; features which need utils",
+      "name": "llvm",
+      "default-features": false,
+      "features": [
+        "bolt",
+        "openmp",
+        "polly",
+        "utils"
+      ],
+      "platform": "!static"
+    },
+    {
+      "$comment": "Platform restriction due to CI artifact upload quirks; flang",
       "name": "llvm",
       "default-features": false,
       "features": [
         "flang"
       ],
-      "platform": "!(x86 & windows)"
+      "platform": "linux"
     }
   ]
 }

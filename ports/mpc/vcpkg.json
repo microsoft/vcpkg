@@ -1,7 +1,7 @@
 {
   "name": "mpc",
-  "version-string": "1.2.0",
-  "port-version": 1,
+  "version": "1.2.0",
+  "port-version": 3,
   "description": "GNU MPC is a C library for the arithmetic of complex numbers with arbitrarily high precision and correct rounding of the result.",
   "homepage": "http://www.multiprecision.org/mpc/",
   "dependencies": [

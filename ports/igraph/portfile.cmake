@@ -4,20 +4,22 @@
 #  - The release tarball contains pre-generated parser sources, which eliminates the dependency on bison/flex.
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/igraph/igraph/releases/download/0.9.6/igraph-0.9.6.tar.gz"
-    FILENAME "igraph-0.9.6.tar.gz"
-    SHA512 2e83b81d7a5a0e526f0ad4ad12a7e31e8205f702715061c0c07155d66fcef30ccdb9dad962c50a26b00f4da0fe0e337e51294ff6c3b03cd855b6dfc41b54e306
+    URLS "https://github.com/igraph/igraph/releases/download/0.10.5/igraph-0.10.5.tar.gz"
+    FILENAME "igraph-0.10.5.tar.gz"
+    SHA512 1d0460528a77ecc2947eae1ff19d1c0921469718b4c75c946b9686dc19b4e3ec7c8ac724bcf45bb42f4b6b328151522eb45fe4cfa955e03cce54c9968387e285
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+      "glpk-uwp.patch" # patch GLPK for UWP compatibility
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    graphml   IGRAPH_GRAPHML_SUPPORT
-    openmp    IGRAPH_OPENMP_SUPPORT
+        graphml         IGRAPH_GRAPHML_SUPPORT
+        openmp          IGRAPH_OPENMP_SUPPORT
 )
 
 # Allow cross-compilation. See https://igraph.org/c/html/latest/igraph-Installation.html#igraph-Installation-cross-compiling
@@ -38,18 +40,17 @@ vcpkg_cmake_configure(
         -DIGRAPH_ENABLE_LTO=AUTO
         # ARPACK not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_ARPACK=ON
-        # OpenBLAS provides BLAS/LAPACK but some tests fail with OpenBLAS on Windows.
-        # See https://github.com/igraph/igraph/issues/1491
-        -DIGRAPH_USE_INTERNAL_BLAS=ON
-        -DIGRAPH_USE_INTERNAL_LAPACK=ON
-        -DIGRAPH_USE_INTERNAL_CXSPARSE=OFF
         # GLPK is not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_GLPK=ON
         # Currently, external GMP provides no performance or functionality benefits.
         -DIGRAPH_USE_INTERNAL_GMP=ON
         # PLFIT is not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_PLFIT=ON
+        # Use BLAS and LAPACK from vcpkg
+        -DIGRAPH_USE_INTERNAL_BLAS=OFF
+        -DIGRAPH_USE_INTERNAL_LAPACK=OFF
         -DF2C_EXTERNAL_ARITH_HEADER=${ARITH_H}
+        -DIGRAPH_WARNINGS_AS_ERRORS=OFF
         ${FEATURE_OPTIONS}
 )
 

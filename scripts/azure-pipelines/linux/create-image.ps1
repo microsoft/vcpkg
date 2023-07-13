@@ -15,15 +15,22 @@ or are running from Azure Cloud Shell.
 This script assumes you have installed the OpenSSH Client optional Windows component.
 #>
 
-$Location = 'westus2'
-$Prefix = 'Lin-'
+[CmdLetBinding()]
+Param(
+  [parameter(Mandatory=$false)]
+  [string]$Prefix = "Lin-",
+  [parameter(Mandatory=$false)]
+  [string]$ProvisionScript
+)
+
+$Location = 'eastasia'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D32as_v4'
+$VMSize = 'Standard_D8a_v4'
 $ProtoVMName = 'PROTOTYPE'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Linux Image'
-$TotalProgress = 9
+$TotalProgress = 11
 $CurrentProgress = 1
 
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
@@ -88,8 +95,8 @@ $VM = Add-AzVMNetworkInterface -VM $VM -Id $Nic.Id
 $VM = Set-AzVMSourceImage `
   -VM $VM `
   -PublisherName 'Canonical' `
-  -Offer '0001-com-ubuntu-server-focal' `
-  -Skus '20_04-lts-gen2' `
+  -Offer '0001-com-ubuntu-server-jammy' `
+  -Skus '22_04-lts' `
   -Version latest
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
@@ -107,14 +114,33 @@ New-AzVm `
 ####################################################################################################
 Write-Progress `
   -Activity $ProgressActivity `
+  -Status 'Waiting 1 minute to let Azure VM customizations be applied' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+Start-Sleep -Seconds 60
+
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Restarting VM' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+Restart-AzVm -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
   -Status 'Running provisioning script provision-image.sh in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
+if($ProvisionScript.Length -eq 0) {
+  $ProvisionScript = "$PSScriptRoot\provision-image.sh"
+}
 $ProvisionImageResult = Invoke-AzVMRunCommandWithRetries `
   -ResourceGroupName $ResourceGroupName `
   -VMName $ProtoVMName `
   -CommandId 'RunShellScript' `
-  -ScriptPath "$PSScriptRoot\provision-image.sh"
+  -ScriptPath $ProvisionScript
 
 Write-Host "provision-image.sh output: $($ProvisionImageResult.value.Message)"
 
@@ -143,7 +169,7 @@ Set-AzVM `
   -Generalized
 
 $VM = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
-$ImageConfig = New-AzImageConfig -Location $Location -SourceVirtualMachineId $VM.ID -HyperVGeneration 'V2'
+$ImageConfig = New-AzImageConfig -Location $Location -SourceVirtualMachineId $VM.ID
 $ImageName = Find-ImageName -ResourceGroupName 'vcpkg-image-minting' -Prefix $Prefix
 New-AzImage -Image $ImageConfig -ImageName $ImageName -ResourceGroupName 'vcpkg-image-minting'
 

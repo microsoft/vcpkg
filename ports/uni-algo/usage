@@ -1,0 +1,4 @@
+The package uni-algo provides CMake targets:
+
+    find_package(uni-algo CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE uni-algo::uni-algo)

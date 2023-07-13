@@ -1,68 +1,82 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/xerces-c
-    REF v3.2.3
-    SHA512 aaafe2de4ea156d94e71e3631c79bd66660badf17bf2a19587a0ca34011f70bd1584a0beef909409a3ff05eecea9d37ffee6dbb267625f59217fd86705d2cd28
+    REF "v${VERSION}"
+    SHA512 0da61e000e871c045fb6e546cabba244eb6470a7a972c1d1b817ba5ce91c0d1d12dfb3ff1479d8b57ab06c49deefd1c16c36dc2541055e41a1cdb15dbd769fcf
     HEAD_REF master
     PATCHES
+        dependencies.patch
         disable-tests.patch
         remove-dll-export-macro.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake/FindICU.cmake")
 
-set(DISABLE_ICU ON)
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS options
+    FEATURES
+        icu     CMAKE_REQUIRE_FIND_PACKAGE_ICU
+        network network
+    INVERTED_FEATURES
+        icu     CMAKE_DISABLE_FIND_PACKAGE_ICU
+)
 if("icu" IN_LIST FEATURES)
-    set(DISABLE_ICU OFF)
+    vcpkg_list(APPEND options -Dtranscoder=icu)
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_list(APPEND options -Dtranscoder=windows)
+elseif(VCPKG_TARGET_IS_OSX)
+    vcpkg_list(APPEND options -Dtranscoder=macosunicodeconverter)
+elseif(VCPKG_HOST_IS_OSX)
+    # Because of a bug in the transcoder selection script, the option
+    # "macosunicodeconverter" is always selected when building on macOS,
+    # regardless of the target platform. This breaks cross-compiling.
+    # As a workaround we force "iconv", which should at least work for iOS.
+    # Upstream fix: https://github.com/apache/xerces-c/pull/52
+    vcpkg_list(APPEND options -Dtranscoder=iconv)
+else()
+    # xercesc chooses gnuiconv or iconv (cmake/XercesTranscoderSelection.cmake)
 endif()
-if ("xmlch-wchar" IN_LIST FEATURES)
-    set(XMLCHTYPE -Dxmlch-type=wchar_t)
+if("xmlch-wchar" IN_LIST FEATURES)
+    vcpkg_list(APPEND options -Dxmlch-type=wchar_t)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DDISABLE_TESTS=ON
         -DDISABLE_DOC=ON
         -DDISABLE_SAMPLES=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_ICU=${DISABLE_ICU}
         -DCMAKE_DISABLE_FIND_PACKAGE_CURL=ON
-        ${XMLCHTYPE}
+        ${options}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_CURL
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/cmake)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/xercesc)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME xercesc)
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/XercesC TARGET_PATH share/xercesc)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/XercesC PACKAGE_NAME xercesc)
 endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfigInternal.cmake _contents)
-string(REPLACE
-    "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
-    "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)"
-    _contents
-    "${_contents}"
-)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfigInternal.cmake "${_contents}")
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfig.cmake _contents)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/xercesc/XercesCConfig.cmake "include(CMakeFindDependencyMacro)\nfind_dependency(Threads)\n${_contents}")
-
-configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    ${CURRENT_PACKAGES_DIR}/share/xercesc
-    @ONLY
-)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/xercesc/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
 vcpkg_fixup_pkgconfig()
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xerces-c.pc" "-lxerces-c" "-lxerces-c_3")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xerces-c.pc" "-lxerces-c" "-lxerces-c_3D")
+    endif()
+endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

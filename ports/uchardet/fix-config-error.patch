@@ -1,0 +1,16 @@
+diff --git a/src/tools/CMakeLists.txt b/src/tools/CMakeLists.txt
+index 7afad1d..c7a3cd8 100644
+--- a/src/tools/CMakeLists.txt
++++ b/src/tools/CMakeLists.txt
+@@ -27,10 +27,7 @@ if (GETOPT_INCLUDE_DIR AND GETOPT_LIBRARY)
+     target_link_libraries(${UCHARDET_BINARY} PRIVATE ${GETOPT_LIBRARY})
+ endif (GETOPT_INCLUDE_DIR AND GETOPT_LIBRARY)
+ 
+-target_link_libraries(
+-	${UCHARDET_BINARY}
+-	${UCHARDET_LIBRARY}
+-)
++target_link_libraries(${UCHARDET_BINARY} PRIVATE ${UCHARDET_LIBRARY})
+ 
+ install(
+ 	TARGETS

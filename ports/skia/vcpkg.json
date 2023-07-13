@@ -1,39 +1,144 @@
 {
   "name": "skia",
-  "version-date": "2020-05-18",
-  "port-version": 8,
+  "version": "0.36.0",
+  "port-version": 7,
   "description": [
     "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
     "It serves as the graphics engine for Google Chrome and Chrome OS, Android, Mozilla Firefox and Firefox OS, and many other products.",
     "Skia is sponsored and managed by Google, but is available for use by anyone under the BSD Free Software License. While engineering of the core components is done by the Skia development team, we consider contributions from any source."
   ],
   "homepage": "https://skia.org",
-  "supports": "osx | windows",
+  "license": null,
+  "supports": "!(windows & arm & !arm64)",
   "dependencies": [
     "expat",
-    {
-      "name": "freetype",
-      "default-features": false
-    },
-    {
-      "name": "harfbuzz",
-      "features": [
-        "icu"
-      ]
-    },
-    "icu",
     "libjpeg-turbo",
     "libpng",
     "libwebp",
     {
-      "name": "vcpkg-cmake-config",
+      "name": "opengl",
+      "default-features": false,
+      "platform": "windows & !arm64 & !uwp"
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-gn",
+      "host": true
+    },
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-gn",
       "host": true
     },
     "zlib"
   ],
+  "default-features": [
+    "default-features"
+  ],
   "features": {
+    "dawn": {
+      "description": "dawn support for skia"
+    },
+    "default-features": {
+      "description": "Default feature configuration",
+      "dependencies": [
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "direct3d"
+          ],
+          "platform": "uwp"
+        },
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "gl",
+            "harfbuzz",
+            "icu"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ],
+          "platform": "!(windows | osx | ios)"
+        }
+      ]
+    },
+    "direct3d": {
+      "description": "Direct3D support for skia",
+      "supports": "windows"
+    },
+    "fontconfig": {
+      "description": "Fontconfig support",
+      "dependencies": [
+        "fontconfig",
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        }
+      ]
+    },
+    "freetype": {
+      "description": "Freetype support",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "default-features": false
+        }
+      ]
+    },
+    "gl": {
+      "description": "OpenGL support for skia",
+      "supports": "!(windows & arm) & !uwp",
+      "dependencies": [
+        "opengl-registry"
+      ]
+    },
+    "harfbuzz": {
+      "description": "Harfbuzz support",
+      "dependencies": [
+        "harfbuzz"
+      ]
+    },
+    "icu": {
+      "description": "Use icu",
+      "dependencies": [
+        "icu"
+      ]
+    },
     "metal": {
-      "description": "metal support for skia"
+      "description": "Metal support for skia",
+      "supports": "ios, osx"
+    },
+    "vulkan": {
+      "description": "Vulkan support for skia",
+      "dependencies": [
+        "vulkan",
+        "vulkan-memory-allocator"
+      ]
     }
   }
 }

@@ -1,12 +1,12 @@
 {
   "name": "libtorrent",
-  "version": "2.0.5",
+  "version": "2.0.9",
   "maintainers": "Arvid Norberg <arvid.norberg@gmail.com>",
   "description": "An efficient feature complete C++ BitTorrent implementation",
   "homepage": "https://libtorrent.org",
   "documentation": "https://libtorrent.org/reference.html",
   "license": "BSD-2-Clause",
-  "supports": "!uwp & !(windows & arm)",
+  "supports": "!uwp",
   "dependencies": [
     "boost-asio",
     "boost-chrono",

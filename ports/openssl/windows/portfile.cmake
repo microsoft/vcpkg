@@ -1,37 +1,10 @@
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-)
-
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 
-vcpkg_find_acquire_program(JOM)
-
-set(OPENSSL_SHARED no-shared)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(OPENSSL_SHARED shared)
-endif()
-
-set(CONFIGURE_OPTIONS
-    enable-static-engine
-    enable-capieng
-    no-ssl2
-    no-tests
-    -utf-8
-    ${OPENSSL_SHARED}
-)
-
-if(DEFINED OPENSSL_USE_NOPINSHARED)
-    set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-pinshared)
-endif()
-
-if(OPENSSL_NO_AUTOLOAD_CONFIG)
-    set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-autoload-config)
-endif()
-
-set(CONFIGURE_COMMAND "${PERL}" Configure ${CONFIGURE_OPTIONS})
+vcpkg_find_acquire_program(PERL)
+get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
+vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(OPENSSL_ARCH VC-WIN32)
@@ -45,128 +18,116 @@ else()
     message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-set(OPENSSL_MAKEFILE "makefile")
-
-file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-                    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-
-    # Copy openssl sources.
-    message(STATUS "Copying openssl release source files...")
-    file(GLOB OPENSSL_SOURCE_FILES ${SOURCE_PATH}/*)
-    foreach(SOURCE_FILE ${OPENSSL_SOURCE_FILES})
-        file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-    endforeach()
-    message(STATUS "Copying openssl release source files... done")
-    set(SOURCE_PATH_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-
-    set(OPENSSLDIR_RELEASE ${CURRENT_PACKAGES_DIR})
-
-    message(STATUS "Configure ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-        COMMAND ${CONFIGURE_COMMAND} ${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_RELEASE}" "--openssldir=${OPENSSLDIR_RELEASE}" -FS
-        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-        LOGNAME configure-perl-${TARGET_TRIPLET}-rel
+if(VCPKG_TARGET_IS_UWP)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS
+        no-unit-test
+        no-asm
+        no-uplink
     )
-    message(STATUS "Configure ${TARGET_TRIPLET}-rel done")
-
-    message(STATUS "Build ${TARGET_TRIPLET}-rel")
-    # Openssl's buildsystem has a race condition which will cause JOM to fail at some point.
-    # This is ok; we just do as much work as we can in parallel first, then follow up with a single-threaded build.
-    make_directory(${SOURCE_PATH_RELEASE}/inc32/openssl)
-    execute_process(
-        COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
-        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-        OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-out.log
-        ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-0-err.log
-    )
-    vcpkg_execute_required_process(
-        COMMAND nmake -f ${OPENSSL_MAKEFILE} install_sw install_ssldirs
-        WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
-        LOGNAME build-${TARGET_TRIPLET}-rel-1)
-
-    message(STATUS "Build ${TARGET_TRIPLET}-rel done")
+    string(APPEND OPENSSL_ARCH "-UWP")
 endif()
 
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    # Copy openssl sources.
-    message(STATUS "Copying openssl debug source files...")
-    file(GLOB OPENSSL_SOURCE_FILES ${SOURCE_PATH}/*)
-    foreach(SOURCE_FILE ${OPENSSL_SOURCE_FILES})
-        file(COPY ${SOURCE_FILE} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-    endforeach()
-    message(STATUS "Copying openssl debug source files... done")
-    set(SOURCE_PATH_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-
-    set(OPENSSLDIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug)
-
-    message(STATUS "Configure ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-        COMMAND ${CONFIGURE_COMMAND} debug-${OPENSSL_ARCH} "--prefix=${OPENSSLDIR_DEBUG}" "--openssldir=${OPENSSLDIR_DEBUG}" -FS
-        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-        LOGNAME configure-perl-${TARGET_TRIPLET}-dbg
-    )
-    message(STATUS "Configure ${TARGET_TRIPLET}-dbg done")
-
-    message(STATUS "Build ${TARGET_TRIPLET}-dbg")
-    make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl)
-    execute_process(
-        COMMAND "${JOM}" -k -j ${VCPKG_CONCURRENCY} -f "${OPENSSL_MAKEFILE}"
-        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-        OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-out.log
-        ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
-    )
-    vcpkg_execute_required_process(
-        COMMAND nmake -f "${OPENSSL_MAKEFILE}" install_sw install_ssldirs
-        WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
-        LOGNAME build-${TARGET_TRIPLET}-dbg-1)
-
-    message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
+if(VCPKG_CONCURRENCY GREATER "1")
+    vcpkg_list(APPEND CONFIGURE_OPTIONS no-makedepend)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/certs")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/private")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/engines-1_1")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/certs")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-1_1")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/private")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+cmake_path(NATIVE_PATH CURRENT_PACKAGES_DIR NORMALIZE install_dir_native)
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+# Clang always uses /Z7;  Patching /Zi /Fd<Name> out of openssl requires more work.
+set(OPENSSL_BUILD_MAKES_PDBS ON)
+if (VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang" OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(OPENSSL_BUILD_MAKES_PDBS OFF)
+endif()
+
+cmake_path(NATIVE_PATH NASM NORMALIZE as)
+cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_C_COMPILER NORMALIZE cc)
+cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_AR NORMALIZE ar)
+cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_LINKER NORMALIZE ld)
+
+vcpkg_build_nmake(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PREFER_JOM
+    CL_LANGUAGE NONE
+    PRERUN_SHELL_RELEASE "${PERL}" Configure
+        ${CONFIGURE_OPTIONS} 
+        ${OPENSSL_ARCH}
+        "--prefix=${install_dir_native}"
+        "--openssldir=${install_dir_native}"
+        "AS=${as}"
+        "CC=${cc}"
+        "CFLAGS=${VCPKG_COMBINED_C_FLAGS_RELEASE}"
+        "AR=${ar}"
+        "ARFLAGS=${VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE}"
+        "LD=${ld}"
+        "LDFLAGS=${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}"
+    PRERUN_SHELL_DEBUG "${PERL}" Configure
+        ${CONFIGURE_OPTIONS}
+        ${OPENSSL_ARCH}
+        --debug
+        "--prefix=${install_dir_native}\\debug"
+        "--openssldir=${install_dir_native}\\debug"
+        "AS=${as}"
+        "CC=${cc}"
+        "CFLAGS=${VCPKG_COMBINED_C_FLAGS_DEBUG}"
+        "AR=${ar}"
+        "ARFLAGS=${VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG}"
+        "LD=${ld}"
+        "LDFLAGS=${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}"
+    PROJECT_NAME "makefile"
+    TARGET install_dev install_modules ${INSTALL_FIPS}
+    LOGFILE_ROOT install
+    OPTIONS
+        "INSTALL_PDBS=${OPENSSL_BUILD_MAKES_PDBS}" # install-pdbs.patch
+    OPTIONS_RELEASE
+        install_runtime install_ssldirs # extra targets
+)
+
+set(scripts "bin/c_rehash.pl" "misc/CA.pl" "misc/tsget.pl")
+if("tools" IN_LIST FEATURES)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/openssl.cnf")
+    if("fips" IN_LIST FEATURES)
+	file(RENAME "${CURRENT_PACKAGES_DIR}/fipsmodule.cnf" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fipsmodule.cnf")
+    endif()
+    foreach(script IN LISTS scripts)
+        file(COPY "${CURRENT_PACKAGES_DIR}/${script}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/${script}" "${CURRENT_PACKAGES_DIR}/debug/${script}")
+    endforeach()
+    vcpkg_copy_tools(TOOL_NAMES openssl AUTO_CLEAN)
+else()
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/openssl.cnf")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/fipsmodule.cnf")
+    foreach(script IN LISTS scripts)
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/${script}" "${CURRENT_PACKAGES_DIR}/debug/${script}")
+    endforeach()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
+endif()
+
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/certs"
+    "${CURRENT_PACKAGES_DIR}/misc"
+	"${CURRENT_PACKAGES_DIR}/private"
+	"${CURRENT_PACKAGES_DIR}/lib/engines-3"
+	"${CURRENT_PACKAGES_DIR}/debug/certs"
+    "${CURRENT_PACKAGES_DIR}/debug/misc"
+	"${CURRENT_PACKAGES_DIR}/debug/lib/engines-3"
+	"${CURRENT_PACKAGES_DIR}/debug/private"
+	"${CURRENT_PACKAGES_DIR}/debug/include"
+)
 file(REMOVE
     "${CURRENT_PACKAGES_DIR}/ct_log_list.cnf"
     "${CURRENT_PACKAGES_DIR}/ct_log_list.cnf.dist"
     "${CURRENT_PACKAGES_DIR}/openssl.cnf.dist"
-    "${CURRENT_PACKAGES_DIR}/debug/bin/openssl.exe"
     "${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf"
     "${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf.dist"
     "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf"
     "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist"
+    "${CURRENT_PACKAGES_DIR}/debug/fipsmodule.cnf"
 )
-
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/openssl/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/openssl.exe" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.exe")
-file(RENAME "${CURRENT_PACKAGES_DIR}/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.cnf")
-
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/openssl")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    # They should be empty, only the exes deleted above were in these directories
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/")
-endif()
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h"
-    "<winsock.h>"
-    "<winsock2.h>"
-)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/rand.h"
-    "#  include <windows.h>"
-    "#ifndef _WINSOCKAPI_\n#define _WINSOCKAPI_\n#endif\n#  include <windows.h>"
-)
-
-vcpkg_copy_pdbs()
-
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -2,18 +2,30 @@
   "name": "unit-test-cmake",
   "version-string": "0",
   "description": "Ensures that the CMake scripts are unit tested.",
+  "license": "MIT",
   "supports": "x64",
   "default-features": [
+    "backup-restore-env-vars",
+    "fixup-pkgconfig",
     "function-arguments",
+    "host-path-list",
     "list",
-    "minimum-required"
+    "merge-libs",
+    "minimum-required",
+    "setup-pkgconfig-path"
   ],
   "features": {
-    "host-path-list": {
-      "description": "Test the vcpkg_host_path_list function"
+    "backup-restore-env-vars": {
+      "description": "Test the vcpkg_backup/restore_env_vars functions"
+    },
+    "fixup-pkgconfig": {
+      "description": "Test the vcpkg_fixup_pkgconfig function"
     },
     "function-arguments": {
       "description": "Test the z_vcpkg_function_arguments function"
+    },
+    "host-path-list": {
+      "description": "Test the vcpkg_host_path_list function"
     },
     "list": {
       "description": "Test the vcpkg_list function"
@@ -29,6 +41,9 @@
     },
     "minimum-required": {
       "description": "Test the vcpkg_minimum_required function"
+    },
+    "setup-pkgconfig-path": {
+      "description": "Test the z_vcpkg_setup/restore_pkgconfig_path functions"
     }
   }
 }

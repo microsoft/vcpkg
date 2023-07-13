@@ -4,14 +4,16 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 2d34b5ccac7b08740dbdacc6ebe451d8a34cf9d9bfec85a5e776e87adf94abfd803c222412d8e10fbaa4ed46f504aa87180396af1b108666cde4314a55610b40
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         omp_test.patch
         patch_targets.patch
         fftw3_arch_fix.patch
         aligned_malloc.patch
+        bigobj.patch
+        fix-openmp.patch
 )
 
 vcpkg_check_features(
@@ -28,28 +30,20 @@ vcpkg_check_features(
 
 set(ENABLE_FLOAT_CMAKE fftw3f)
 set(ENABLE_LONG_DOUBLE_CMAKE fftw3l)
-set(ENABLE_DEFAULT_PRECISION_CMAKE fftw3)
+set(Z_DEFAULT_PRECISION_CMAKE fftw3)
 
-foreach(PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE ENABLE_DEFAULT_PRECISION)
-    if(PRECISION STREQUAL "ENABLE_LONG_DOUBLE")
-        vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS 
-            -D${PRECISION}=ON
-            -DENABLE_OPENMP=${ENABLE_OPENMP}
-            -DENABLE_THREADS=${HAVE_THREADS}
-            -DWITH_COMBINED_THREADS=${HAVE_THREADS}
-            -DBUILD_TESTS=OFF
-        )
-    else()
-        vcpkg_cmake_configure(
+foreach(PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE Z_DEFAULT_PRECISION)
+    vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS 
             -D${PRECISION}=ON
             ${FEATURE_OPTIONS}
             -DBUILD_TESTS=OFF
-        )
-    endif()
+            -DCMAKE_REQUIRE_FIND_PACKAGE_OpenMP=ON
+        MAYBE_UNUSED_VARIABLES
+            CMAKE_REQUIRE_FIND_PACKAGE_OpenMP
+            Z_DEFAULT_PRECISION
+    )
 
     vcpkg_cmake_install()
 

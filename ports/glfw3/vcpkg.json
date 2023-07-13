@@ -1,8 +1,10 @@
 {
   "name": "glfw3",
-  "version-semver": "3.3.6",
+  "version-semver": "3.3.8",
+  "port-version": 2,
   "description": "GLFW is a free, Open Source, multi-platform library for OpenGL, OpenGL ES and Vulkan application development. It provides a simple, platform-independent API for creating windows, contexts and surfaces, reading input, handling events, etc.",
   "homepage": "https://github.com/glfw/glfw",
+  "license": "Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -12,5 +14,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "wayland": {
+      "description": "Use Wayland display server",
+      "supports": "linux",
+      "dependencies": [
+        "wayland"
+      ]
+    }
+  }
 }

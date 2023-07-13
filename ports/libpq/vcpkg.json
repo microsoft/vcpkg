@@ -1,9 +1,9 @@
 {
   "name": "libpq",
-  "version": "12.9",
-  "port-version": 1,
+  "version": "15.3",
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
+  "license": "PostgreSQL",
   "supports": "!uwp",
   "dependencies": [
     {
@@ -13,51 +13,116 @@
         "bonjour"
       ],
       "platform": "osx"
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true,
+      "platform": "windows & !mingw"
     }
   ],
   "default-features": [
+    "lz4",
     "openssl",
     "zlib"
   ],
   "features": {
+    "all": {
+      "description": "Build all supported features",
+      "dependencies": [
+        {
+          "name": "libpq",
+          "features": [
+            "client",
+            "icu",
+            "xml",
+            "xslt",
+            "zstd"
+          ]
+        },
+        {
+          "name": "libpq",
+          "features": [
+            "bonjour"
+          ],
+          "platform": "osx"
+        },
+        {
+          "name": "libpq",
+          "features": [
+            "nls"
+          ],
+          "platform": "!osx"
+        },
+        {
+          "name": "libpq",
+          "features": [
+            "readline"
+          ],
+          "platform": "!windows"
+        },
+        {
+          "name": "libpq",
+          "features": [
+            "python"
+          ],
+          "platform": "!android & !mingw"
+        },
+        {
+          "name": "libpq",
+          "features": [
+            "tcl"
+          ],
+          "platform": "windows & !mingw & !arm"
+        }
+      ]
+    },
     "bonjour": {
-      "description": "Build with Bonjour support (--with-bonjour)"
+      "description": "Build with Bonjour support",
+      "supports": "osx"
     },
     "client": {
-      "description": "Build all client tools and libraries."
+      "description": "Build all client tools and libraries"
     },
     "icu": {
-      "description": "Build with support for the ICU library (--with-icu)",
+      "description": "Build with support for the ICU library",
       "dependencies": [
         "icu"
       ]
     },
-    "libedit": {
-      "description": "prefer libedit (--with-libedit-preferred)",
+    "lz4": {
+      "description": "Use lz4",
       "dependencies": [
-        "libedit"
-      ]
-    },
-    "llvm": {
-      "description": "Build with support for LLVM based JIT compilation (--with-llvm)",
-      "dependencies": [
-        "llvm"
+        "lz4"
       ]
     },
     "nls": {
-      "description": "Native Language Support (--enable-nls[=LANGUAGES])",
+      "description": "Native Language Support",
+      "supports": "!osx",
       "dependencies": [
-        "gettext"
+        "gettext",
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ],
+          "platform": "!windows, mingw"
+        }
       ]
     },
     "openssl": {
-      "description": "support for encrypted client connections and random number generation on platforms that do not have \"/dev/urandom\" (except windows) (--with-openssl)",
+      "description": "support for encrypted client connections and random number generation on platforms that do not have \"/dev/urandom\" (except windows)",
       "dependencies": [
         "openssl"
       ]
     },
     "python": {
-      "description": "build the PL/Python server programming language (dynamic only?) (--with-python)",
+      "$supports": "!(windows & (static | mingw))",
+      "description": "build the PL/Python server programming language",
       "dependencies": [
         {
           "name": "libpq",
@@ -70,16 +135,16 @@
       ]
     },
     "readline": {
-      "description": "Use readline (else --without-readline)",
+      "description": "Use readline",
+      "supports": "!windows, mingw",
       "dependencies": [
         "readline"
       ]
     },
-    "systemd": {
-      "description": "Build with support for systemd service notifications. (--with-systemd)"
-    },
     "tcl": {
-      "description": "build the PL/Tcl procedural language(dynamic only?) (--with-tcl)",
+      "$supports": "!(windows & (static | mingw))",
+      "description": "build the PL/Tcl procedural language",
+      "supports": "windows & !mingw",
       "dependencies": [
         {
           "name": "libpq",
@@ -91,25 +156,38 @@
         "tcl"
       ]
     },
-    "uuid": {
-      "description": "Build the uuid-ossp module (which provides functions to generate UUIDs) (--with-uuid=LIBRARY LIBRARY=(bsd|e2fs|ossp))"
-    },
     "xml": {
-      "description": "Build with libxml (--with-libxml)",
+      "description": "Build with libxml",
       "dependencies": [
-        "libxml2"
+        {
+          "name": "libxml2",
+          "default-features": false
+        }
       ]
     },
     "xslt": {
-      "description": "Build with libxslt (--with-libxslt)",
+      "description": "Build with libxslt",
       "dependencies": [
+        {
+          "name": "libpq",
+          "default-features": false,
+          "features": [
+            "xml"
+          ]
+        },
         "libxslt"
       ]
     },
     "zlib": {
-      "description": "Use zlib (else --without-zlib)",
+      "description": "Use zlib",
       "dependencies": [
         "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Use zstd",
+      "dependencies": [
+        "zstd"
       ]
     }
   }

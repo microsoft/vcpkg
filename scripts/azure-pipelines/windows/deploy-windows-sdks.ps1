@@ -42,8 +42,5 @@ Function InstallWindowsDK {
   }
 }
 
-# Windows 10 SDK, version 2004 (10.0.19041.0)
-InstallWindowsDK 'https://go.microsoft.com/fwlink/?linkid=2120843'
-
 # Windows 10 WDK,  version 2004
 InstallWindowsDK 'https://go.microsoft.com/fwlink/?linkid=2128854'

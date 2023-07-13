@@ -1,0 +1,13 @@
+diff --git a/include/allegro5/internal/aintern_atomicops.h b/include/allegro5/internal/aintern_atomicops.h
+index 5054552..a4310f1 100644
+--- a/include/allegro5/internal/aintern_atomicops.h
++++ b/include/allegro5/internal/aintern_atomicops.h
+@@ -49,7 +49,7 @@
+       return old - 1;
+    })
+ 
+-#elif defined(_MSC_VER) && _M_IX86 >= 400
++#elif defined(_MSC_VER) && (_M_IX86 >= 400 || defined(_M_ARM64))
+ 
+    /* MSVC, x86 */
+    /* MinGW supports these too, but we already have asm code above. */

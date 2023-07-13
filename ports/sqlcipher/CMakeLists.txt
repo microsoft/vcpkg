@@ -37,10 +37,18 @@ if(WITH_JSON1)
     add_compile_definitions(SQLITE_ENABLE_JSON1)
 endif()
 
+
+if(WITH_FTS5)
+    add_compile_definitions(SQLITE_ENABLE_FTS5)
+endif()
+
 target_include_directories(sqlcipher INTERFACE $<INSTALL_INTERFACE:include>)
 if(NOT WIN32)
     find_package(Threads REQUIRED)
-    target_link_libraries(sqlcipher PRIVATE Threads::Threads ${CMAKE_DL_LIBS} m)
+    target_link_libraries(sqlcipher PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
+endif()
+if (UNIX AND NOT APPLE)
+    target_link_libraries(sqlcipher PRIVATE m)
 endif()
 
 target_link_libraries(sqlcipher PRIVATE ${OPENSSL_CRYPTO_LIBRARY})

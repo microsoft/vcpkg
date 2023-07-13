@@ -40,7 +40,7 @@ foreach(DIR IN LISTS FOLDERS)
 endforeach()
 
 file(READ gsl_types.h GSLTYPES_H)
-string(REPLACE "#ifdef WIN32" "#if 1 /*WIN32*/" GSLTYPES_H "${GSLTYPES_H}")
+string(REPLACE "#ifdef WIN32" "#ifdef _WIN32" GSLTYPES_H "${GSLTYPES_H}")
 if(BUILD_SHARED_LIBS)
     string(REPLACE "#  ifdef GSL_DLL" "#  if 1 /*GSL_DLL*/" GSLTYPES_H "${GSLTYPES_H}")
 endif()
@@ -74,6 +74,9 @@ set(TARGET_INSTALL_OPTIONS)
 if(INSTALL_HEADERS)
     set(TARGET_INSTALL_OPTIONS PUBLIC_HEADER DESTINATION include/gsl)
 endif()
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gsl.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/gsl.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gsl.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 install(TARGETS gsl gslcblas
     RUNTIME DESTINATION bin

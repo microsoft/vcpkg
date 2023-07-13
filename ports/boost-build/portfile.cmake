@@ -4,17 +4,18 @@ if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME 
     return()
 endif()
 
-set(BOOST_VERSION 1.78.0)
+set(BOOST_VERSION 1.82.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${BOOST_VERSION}
-    SHA512 867966e3d254c0e996786587fb64ad1bda6f96546e5302c15231b17d66537798770bbd9e89f800d445a1f0a4d3be06dff8aed42dfd3a77b563d0f5d715e79324
+    SHA512 5f8d46f48e037737e3465e3562c9bdbcacb4a075305c073fe665a8e9c7381ecaa4f5b91a42a9c509cf1c2e0f2af10dbb19f9d443a06fd09edf7372c008d91204
     HEAD_REF master
     PATCHES
-        0001-don-t-skip-install-targets.patch
         0002-fix-get-version.patch
+        0003-fix-emscripten.patch
+        0004-workaround-MSVC-codegen-bug-in-17.5-on-ARM64.patch
 )
 
 vcpkg_download_distfile(ARCHIVE

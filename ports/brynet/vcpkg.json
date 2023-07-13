@@ -1,7 +1,6 @@
 {
   "name": "brynet",
-  "version-string": "1.11.1",
-  "port-version": 1,
+  "version": "1.12.2",
   "description": "A C++ header only cross platform high performance tcp network library, and support SSL/HTTP/Websocket.",
   "homepage": "https://github.com/IronsDu/brynet"
 }

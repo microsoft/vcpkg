@@ -7,6 +7,7 @@ set(TOOL_NAMES qscxmlc)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
+    "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Qml
 INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Qml
 )

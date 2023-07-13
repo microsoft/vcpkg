@@ -1,7 +1,6 @@
 {
   "name": "hpx",
-  "version-semver": "1.7.1",
-  "port-version": 4,
+  "version": "1.8.1",
   "description": [
     "The C++ Standards Library for Concurrency and Parallelism",
     "HPX is a C++ Standards Library for Concurrency and Parallelism. It implements all of the corresponding facilities as defined by the C++ Standard. Additionally, in HPX we implement functionalities proposed as part of the ongoing C++ standardization process. We also extend the C++ Standard APIs to the distributed case."
@@ -30,6 +29,10 @@
     },
     "hwloc",
     {
+      "name": "pkgconf",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -37,5 +40,43 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "bzip2",
+    "mpi",
+    "snappy",
+    "zlib"
+  ],
+  "features": {
+    "bzip2": {
+      "description": "Build with bzip2 compression",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "cuda": {
+      "description": "Build with CUDA support",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "mpi": {
+      "description": "Build with MPI parcelport",
+      "dependencies": [
+        "mpi"
+      ]
+    },
+    "snappy": {
+      "description": "Build with snappy compression",
+      "dependencies": [
+        "snappy"
+      ]
+    },
+    "zlib": {
+      "description": "Build with zlib compression",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
 }

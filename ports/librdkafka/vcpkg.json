@@ -1,10 +1,12 @@
 {
   "name": "librdkafka",
-  "version": "1.8.2",
+  "version": "2.1.1",
   "description": "The Apache Kafka C/C++ library",
   "homepage": "https://github.com/edenhill/librdkafka",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
+    "lz4",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -15,10 +17,10 @@
     }
   ],
   "features": {
-    "lz4": {
-      "description": "Enable external LZ4 library support",
+    "curl": {
+      "description": "Build with curl",
       "dependencies": [
-        "lz4"
+        "curl"
       ]
     },
     "snappy": {

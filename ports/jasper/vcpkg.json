@@ -1,9 +1,10 @@
 {
   "name": "jasper",
-  "version": "2.0.33",
-  "port-version": 3,
+  "version": "4.0.0",
+  "port-version": 2,
   "description": "Open source implementation of the JPEG-2000 Part-1 standard",
-  "homepage": "https://github.com/mdadams/jasper",
+  "homepage": "https://github.com/jasper-software/jasper",
+  "license": null,
   "dependencies": [
     "libjpeg-turbo",
     {
@@ -16,17 +17,33 @@
     }
   ],
   "default-features": [
-    "opengl"
+    "default-features"
   ],
   "features": {
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "jasper",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ],
+          "platform": "!(windows & arm) & !uwp & !ios"
+        }
+      ]
+    },
     "opengl": {
       "description": "Enable the use of the OpenGL/GLUT Library",
       "dependencies": [
         {
           "name": "freeglut",
-          "platform": "!osx"
+          "platform": "!osx & !(windows & arm) & !uwp"
         },
-        "opengl"
+        {
+          "name": "opengl",
+          "platform": "!(windows & arm) & !uwp"
+        }
       ]
     }
   }

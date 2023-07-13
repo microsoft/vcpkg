@@ -1,9 +1,10 @@
 {
   "name": "szip",
   "version": "2.1.1",
-  "port-version": 7,
+  "port-version": 11,
   "description": "Szip compression software, providing lossless compression of scientific data",
   "homepage": "https://support.hdfgroup.org/ftp/lib-external/szip",
+  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-cmake",

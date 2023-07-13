@@ -25,11 +25,13 @@ The name of the image to deploy into the scale set.
 [CmdLetBinding()]
 Param(
   [parameter(Mandatory=$true)]
-  [string]$ImageName
+  [string]$ImageName,
+  [parameter(Mandatory=$false)]
+  [string]$Prefix = "PrLin-",
+  [switch]$AddAndroidContainerRegistryPermissions
 )
 
-$Location = 'westus2'
-$Prefix = 'PrLin-'
+$Location = 'eastasia'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
 $VMSize = 'Standard_D32a_v4'
 $LiveVMPrefix = 'BUILD'
@@ -64,7 +66,8 @@ $Vmss = New-AzVmssConfig `
   -UpgradePolicyMode Manual `
   -EvictionPolicy Delete `
   -Priority Spot `
-  -MaxPrice -1
+  -MaxPrice -1 `
+  -IdentityType SystemAssigned
 
 $NicName = $ResourceGroupName + 'NIC'
 New-AzNetworkInterface `
@@ -98,10 +101,26 @@ $Vmss = Set-AzVmssStorageProfile `
   -DiffDiskSetting Local `
   -ImageReferenceId $Image.Id
 
-New-AzVmss `
+$Vmss = Set-AzVmssBootDiagnostic `
+  -VirtualMachineScaleSet $Vmss `
+  -Enabled $true
+
+$VmssCreated = New-AzVmss `
   -ResourceGroupName $ResourceGroupName `
   -Name $VmssName `
   -VirtualMachineScaleSet $Vmss
+
+if ($AddAndroidContainerRegistryPermissions) {
+  $spID = $VmssCreated.Identity.PrincipalId
+
+  $acrGroup = "And-Registry"
+  $acrName = "AndContainerRegistry"
+  
+  $resourceID = (Get-AzContainerRegistry -ResourceGroupName $acrGroup -Name $acrName).Id
+
+  # needs admin privileges
+  New-AzRoleAssignment -ObjectId $spID -Scope $resourceID -RoleDefinitionName AcrPull
+}
 
 Write-Host "Location: $Location"
 Write-Host "Resource group name: $ResourceGroupName"

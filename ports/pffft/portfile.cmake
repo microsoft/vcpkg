@@ -6,6 +6,8 @@ vcpkg_from_bitbucket(
     REF ed78751d751e51bbd94c41d24f748b400f272d69
     SHA512 44f65c7f7e5b71f549dca2e03d58b1fd64e698858f79e4c2833a9ae3dff8a835cf9d5e14be2341c6370f800012cb69b05b9226d6918b12e67f7f7e81ed8e9ad4
     HEAD_REF master
+    PATCHES
+        fix-invalid-command.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

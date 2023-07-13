@@ -1,17 +1,7 @@
 cmake_minimum_required(VERSION 3.9)
 project(libffi C ASM)
 
-set(CMAKE_SHARED_LIBRARY_PREFIX)
-set(CMAKE_STATIC_LIBRARY_PREFIX)
-
-if(NOT CMAKE_SYSTEM_PROCESSOR)
-    set(CMAKE_SYSTEM_PROCESSOR "${CMAKE_HOST_SYSTEM_PROCESSOR}")
-endif()
-
-# config variables for ffi.h.in
-set(VERSION 3.4.2)
-
-set(KNOWN_PROCESSORS x86 x86_64 amd64 arm arm64 i386 i686 armv7l armv7-a aarch64)
+set(KNOWN_PROCESSORS x86 x86_64 amd64 arm arm64 i386 i686 armv7l armv7-a aarch64 mips64el riscv32 riscv64)
 
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" lower_system_processor)
 
@@ -29,8 +19,12 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND VCPKG_TARGET_ARCHITECTURE STREQUA
     set(TARGET X86_WIN64)
 elseif(lower_system_processor MATCHES "arm64|aarch64")
     set(TARGET ARM64)
+elseif(lower_system_processor MATCHES "mips64")
+    set(TARGET MIPS64)
 elseif(lower_system_processor MATCHES "arm")
     set(TARGET ARM)
+elseif(lower_system_processor MATCHES "riscv")
+    set(TARGET RISCV)
 elseif(CMAKE_SYSTEM_NAME MATCHES "BSD" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_FREEBSD)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin"  AND CMAKE_SIZEOF_VOID_P EQUAL 4)
@@ -43,7 +37,7 @@ else()
     message(FATAL_ERROR "Cannot determine target. Please consult ${CMAKE_CURRENT_SOURCE_DIR}/configure.ac and add your platform to this CMake file.")
 endif()
 
-if("${TARGET}" STREQUAL "X86_64")
+if("${TARGET}" STREQUAL "X86_64" OR "${TARGET}" STREQUAL "MIPS64")
     set(HAVE_LONG_DOUBLE 1)
 else()
     set(HAVE_LONG_DOUBLE 0)
@@ -58,6 +52,10 @@ if ("${TARGET}" STREQUAL "ARM_WIN64" OR "${TARGET}" STREQUAL "ARM64")
     file(COPY src/aarch64/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
 elseif ("${TARGET}" STREQUAL "ARM_WIN32" OR "${TARGET}" STREQUAL "ARM")
     file(COPY src/arm/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
+elseif ("${TARGET}" MATCHES "MIPS")
+    file(COPY src/mips/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
+elseif ("${TARGET}" STREQUAL "RISCV")
+    file(COPY src/riscv/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
 else()
     file(COPY src/x86/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
 endif()
@@ -85,6 +83,14 @@ elseif("${TARGET}" STREQUAL "ARM_WIN32" OR "${TARGET}" STREQUAL "ARM")
     set(FFI_SOURCES
         ${FFI_SOURCES}
         src/arm/ffi.c)
+elseif("${TARGET}" MATCHES "MIPS")
+    set(FFI_SOURCES
+        ${FFI_SOURCES}
+        src/mips/ffi.c)
+elseif("${TARGET}" STREQUAL "RISCV")
+   set(FFI_SOURCES
+	${FFI_SOURCES}
+	src/riscv/ffi.c)
 else()
     set(FFI_SOURCES
         ${FFI_SOURCES}
@@ -189,6 +195,10 @@ elseif("${TARGET}" STREQUAL "ARM_WIN64")
     endif()
 elseif("${TARGET}" STREQUAL "ARM64")
     add_assembly(src/aarch64/sysv.S)
+elseif("${TARGET}" MATCHES "MIPS")
+    add_assembly(src/mips/n32.S)
+elseif("${TARGET}" MATCHES "RISCV")
+    add_assembly(src/riscv/sysv.S)
 else()
     message(FATAL_ERROR "Target not implemented")
 endif()
@@ -199,6 +209,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 add_library(libffi ${FFI_SOURCES})
+
+if(CMAKE_STATIC_LIBRARY_PREFIX STREQUAL "lib")
+    set_target_properties(libffi PROPERTIES OUTPUT_NAME ffi)
+endif()
 
 install(TARGETS libffi
     EXPORT ${PROJECT_NAME}Targets

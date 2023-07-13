@@ -1,16 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CoolProp/IF97
-    REF v2.1.2
-    SHA512 a7625fcc1ca0763df5b4cf5be741babbaefc09022940b4fc5ee1c05121751282c18ebd87ae58e1eee9bdb46dab5ae6fb4ed9a31fc2c53dc6de5cbd243fa4c8e9
+    REF v2.1.3
+    SHA512 b29a74f134d69b72ba4bb825b25f0631f2fb335500da5d9016c4e6e417d8c93a5b309e95770eb6a7b723948dd82a7b46d873a1fe4e3f3047a881603442d73eff
     HEAD_REF master
+    PATCHES
+        relax-encoding.diff
 )
 
-file(INSTALL ${SOURCE_PATH}/IF97.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL "${SOURCE_PATH}/IF97.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# Handle copyright
-file(
-  INSTALL ${SOURCE_PATH}/LICENSE
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/if97
-  RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

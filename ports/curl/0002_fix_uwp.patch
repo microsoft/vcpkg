@@ -1,8 +1,8 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 62b7b33..8a4bd71 100644
+index 8cea346c3..967312905 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -115,6 +115,10 @@ if(CURL_HAS_LTO)
+@@ -118,6 +118,10 @@ if(CURL_HAS_LTO)
      INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO TRUE)
  endif()
  
@@ -12,4 +12,4 @@ index 62b7b33..8a4bd71 100644
 +
  if(WIN32)
    if(BUILD_SHARED_LIBS)
-     set_property(TARGET ${LIB_NAME} APPEND PROPERTY COMPILE_DEFINITIONS "_USRDLL")
+     if(MSVC)

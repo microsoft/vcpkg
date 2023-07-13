@@ -1,9 +1,11 @@
 {
   "name": "openmvs",
-  "version": "1.1.1",
-  "port-version": 2,
+  "version": "2.1.0",
+  "port-version": 1,
   "description": "OpenMVS: open Multi-View Stereo reconstruction library",
   "homepage": "https://cdcseacave.github.io/openMVS",
+  "license": "AGPL-3.0-only",
+  "supports": "!xbox",
   "dependencies": [
     "boost-iostreams",
     "boost-program-options",
@@ -32,14 +34,30 @@
       "name": "vcpkg-cmake",
       "host": true
     },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
+  "default-features": [
+    "nonfree"
+  ],
   "features": {
+    "ceres": {
+      "description": "CERES support for openmvs",
+      "dependencies": [
+        "ceres"
+      ]
+    },
     "cuda": {
       "description": "CUDA support for openmvs",
       "dependencies": [
         "cuda"
       ]
+    },
+    "nonfree": {
+      "description": "nonfree support for openmvs"
     },
     "openmp": {
       "description": "OpenMP support for openmvs"

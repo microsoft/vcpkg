@@ -1,14 +1,17 @@
 cmake_minimum_required(VERSION 3.9)
-project(boost CXX)
+project(boost NONE)
 
 # The following variables are used in user-config.jam file
-set(USER_CONFIG_TOOLSET)
-set(USER_CONFIG_TOOLSET_VERSION)
-set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND)
-set(USER_CONFIG_TOOLSET_OPTIONS)
-set(USER_CONFIG_EXTRA_LINES)
+set(USER_CONFIG_TOOLSET "")
+set(USER_CONFIG_TOOLSET_VERSION "")
+set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND "")
+set(USER_CONFIG_TOOLSET_OPTIONS "")
+set(USER_CONFIG_EXTRA_LINES "")
+set(USER_CONFIG_REQUIREMENTS "")
 
-set(B2_OPTIONS)
+set(B2_OPTIONS "")
+
+include("${VCPKG_CMAKE_VARS_FILE}")
 
 # Add build type specific options
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -23,199 +26,152 @@ else()
     list(APPEND B2_OPTIONS link=static)
 endif()
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+if(VCPKG_DETECTED_CMAKE_SIZEOF_VOID_P EQUAL "8")
     list(APPEND B2_OPTIONS address-model=64)
 else()
     list(APPEND B2_OPTIONS address-model=32)
 endif()
 
-if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "s390x")
     list(APPEND B2_OPTIONS architecture=s390x)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     list(APPEND B2_OPTIONS architecture=arm)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ppc64le")
     list(APPEND B2_OPTIONS architecture=power)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch")
+    list(APPEND B2_OPTIONS architecture=loongarch)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips64")
+    list(APPEND B2_OPTIONS architecture=mips64)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "riscv")
+    list(APPEND B2_OPTIONS architecture=riscv)
+elseif("arm64" IN_LIST VCPKG_TARGET_ARCHITECTURE AND "x86_64" IN_LIST VCPKG_TARGET_ARCHITECTURE)
+    list(APPEND B2_OPTIONS architecture=arm+x86)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+    # do nothing
 else()
     list(APPEND B2_OPTIONS architecture=x86)
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND WIN32)
-    list(APPEND B2_OPTIONS "asmflags=/safeseh")
+if(VCPKG_DETECTED_MSVC)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        list(APPEND B2_OPTIONS "asmflags=/safeseh")
+    endif()
+
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        set(USER_CONFIG_TOOLSET clang-win)
+    else()
+        set(USER_CONFIG_TOOLSET msvc)
+        if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
+        else()
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
+        endif()
+    endif()
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+    set(USER_CONFIG_TOOLSET emscripten)
+elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(USER_CONFIG_TOOLSET clang)
+else()
+    set(USER_CONFIG_TOOLSET gcc)
 endif()
 
 if(WIN32)
-    if(MSVC)
-        if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-            set(USER_CONFIG_TOOLSET clang-win)
-        else()
-            set(USER_CONFIG_TOOLSET msvc)
-        endif()
-        if(MSVC_VERSION LESS 1900)
-            math(EXPR USER_CONFIG_TOOLSET_VERSION "${MSVC_VERSION} / 10 - 60")
-        else()
-            math(EXPR USER_CONFIG_TOOLSET_VERSION "${MSVC_VERSION} / 10 - 50")
-        endif()
-    else()
-        if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-            set(USER_CONFIG_TOOLSET clang)
-        else()
-            set(USER_CONFIG_TOOLSET gcc)
-        endif()
-    endif()
     list(APPEND B2_OPTIONS target-os=windows)
 elseif(APPLE)
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-      set(USER_CONFIG_TOOLSET clang)
+    if(IOS)
+        list(APPEND B2_OPTIONS target-os=iphone)
     else()
-        set(USER_CONFIG_TOOLSET gcc)
+        list(APPEND B2_OPTIONS target-os=darwin)
     endif()
-    list(APPEND B2_OPTIONS target-os=darwin)
 elseif(ANDROID)
-    set(USER_CONFIG_TOOLSET gcc)
     list(APPEND B2_OPTIONS target-os=android)
+elseif(VCPKG_DETECTED_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    list(APPEND B2_OPTIONS target-os=freebsd)
 else()
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        set(USER_CONFIG_TOOLSET clang)
-    else()
-        set(USER_CONFIG_TOOLSET gcc)
-    endif()
     list(APPEND B2_OPTIONS target-os=linux)
 endif()
 
 # Properly handle compiler and linker flags passed by VCPKG
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
-    set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_RELEASE}")
-    if(BUILD_SHARED_LIBS)
-        set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
-    else()
-        set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_RELEASE}")
-    endif()
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CXXFLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
-    set(CFLAGS "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_DEBUG}")
-    if(BUILD_SHARED_LIBS)
-        set(LDFLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
-    else()
-        set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_DEBUG}")
-    endif()
-endif()
+string(TOUPPER "${CMAKE_BUILD_TYPE}" UPPER_BUILD_TYPE)
+
+set(CXXFLAGS "${VCPKG_COMBINED_CXX_FLAGS_${UPPER_BUILD_TYPE}}")
+set(CFLAGS "${VCPKG_COMBINED_C_FLAGS_${UPPER_BUILD_TYPE}}")
+set(LDFLAGS "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${UPPER_BUILD_TYPE}}")
+set(ARFLAGS "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${UPPER_BUILD_TYPE}}")
 
 if(APPLE)
-    if(CMAKE_OSX_DEPLOYMENT_TARGET)
-        set(CXXFLAGS "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} ${CXXFLAGS}")
-        set(CFLAGS "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} ${CFLAGS}")
-        set(LDFLAGS "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} ${LDFLAGS}")
-    endif()
-
-    if(CMAKE_OSX_SYSROOT)
-        set(CXXFLAGS "-isysroot ${CMAKE_OSX_SYSROOT} ${CXXFLAGS}")
-        set(CFLAGS "-isysroot ${CMAKE_OSX_SYSROOT} ${CFLAGS}")
-        set(LDFLAGS "-isysroot ${CMAKE_OSX_SYSROOT} ${LDFLAGS}")
-    endif()
-
-    # if specific architectures are set, configure them,
-    # if not set, this will still default to current arch
-    foreach(ARCH IN LISTS CMAKE_OSX_ARCHITECTURES)
-        set(CXXFLAGS "-arch ${ARCH} ${CXXFLAGS}")
-        set(CFLAGS "-arch ${ARCH} ${CFLAGS}")
-        set(LDFLAGS "-arch ${ARCH} ${LDFLAGS}")
-    endforeach()
-endif()
-
-string(REGEX REPLACE "[ \t\r\n]+" " " CXXFLAGS "${CXXFLAGS}")
-string(STRIP "${CXXFLAGS}" CXXFLAGS)
-string(REGEX REPLACE "[ \t\r\n]+" " " CFLAGS "${CFLAGS}")
-string(STRIP "${CFLAGS}" CFLAGS)
-string(REGEX REPLACE "[ \t\r\n]+" " " LDFLAGS "${LDFLAGS}")
-string(STRIP "${LDFLAGS}" LDFLAGS)
-
-if(NOT CXXFLAGS STREQUAL "")
-    string(REPLACE " " " <cxxflags>" CXXFLAGS "<cxxflags>${CXXFLAGS}")
-endif()
-if(NOT CFLAGS STREQUAL "")
-    string(REPLACE " " " <cflags>" CFLAGS "<cflags>${CFLAGS}")
-endif()
-if(NOT LDFLAGS STREQUAL "")
-    string(REPLACE " " " <linkflags>" LDFLAGS "<linkflags>${LDFLAGS}")
-endif()
-
-if(CMAKE_CXX_COMPILER_TARGET AND CMAKE_CXX_COMPILE_OPTIONS_TARGET)
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        string(APPEND CXXFLAGS " <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET}${CMAKE_CXX_COMPILER_TARGET}")
-        string(APPEND LDFLAGS " <linkflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET}${CMAKE_CXX_COMPILER_TARGET}")
-    else()
-        string(APPEND CXXFLAGS " <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET} <compileflags>${CMAKE_CXX_COMPILER_TARGET}")
-        string(APPEND LDFLAGS " <linkflags>${CMAKE_CXX_COMPILE_OPTIONS_TARGET} <linkflags>${CMAKE_CXX_COMPILER_TARGET}")
+    string(APPEND COMPILEFLAGS " -D_DARWIN_C_SOURCE")
+    if(NOT CXXFLAGS MATCHES " -std=")
+        # If the user hasn't provided their own standard flag, use at least c++11
+        string(APPEND CXXFLAGS " -std=c++11")
     endif()
 endif()
 
-if(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        string(APPEND CXXFLAGS " <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN}${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
-        string(APPEND LDFLAGS " <linkflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN}${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
-    else()
-        string(APPEND CXXFLAGS " <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN} <compileflags>${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
-        string(APPEND LDFLAGS " <linkflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN} <linkflags>${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
-    endif()
-endif()
-
-if(CMAKE_SYSROOT AND CMAKE_CXX_COMPILE_OPTIONS_SYSROOT)
-    string(APPEND CXXFLAGS " <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}")
-    string(APPEND LDFLAGS " <linkflags>${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}")
-endif()
-foreach(INCDIR IN LISTS CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES)
-    string(APPEND CXXFLAGS " <compileflags>${CMAKE_INCLUDE_FLAG_C}${CMAKE_INCLUDE_FLAG_C_SEP}${INCDIR}")
-endforeach()
-
-if(APPLE)
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        string(APPEND CXXFLAGS " <compileflags>-D_DARWIN_C_SOURCE <cxxflags>-std=c++11 <cxxflags>-stdlib=libc++")
-        string(APPEND LDFLAGS " <linkflags>-stdlib=libc++")
-    else()
-        string(APPEND CXXFLAGS " <compileflags>-D_DARWIN_C_SOURCE <cxxflags>-std=c++11")
-    endif()
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(VCPKG_DETECTED_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     # cl in b2 appears to not receive `LIBPATH` for finding winmd files, so we transform them to `/AI` options.
     set(libpath_args "$ENV{LIBPATH}")
     # Apply: {x -> /AI"x"}
     list(TRANSFORM libpath_args PREPEND "/AI\"")
     list(TRANSFORM libpath_args APPEND "\"")
-    # Apply: {\ -> \\}
-    list(TRANSFORM libpath_args REPLACE "\\\\" "\\\\\\\\")
-    # Apply: {" -> \"}
-    list(TRANSFORM libpath_args REPLACE "\\\"" "\\\\\"")
     list(JOIN libpath_args " " libpath_arg)
-
-    string(APPEND CXXFLAGS " <compileflags>\"${libpath_arg}\" <cxxflags>/ZW <compileflags>\"/D_WIN32_WINNT=0x0A00\"")
-    string(APPEND CFLAGS " <cflags>-Zl")
+    string(APPEND COMPILEFLAGS " ${libpath_arg} /D_WIN32_WINNT=0x0A00")
     list(APPEND B2_OPTIONS windows-api=store)
-    list(APPEND B2_OPTIONS linkflags=WindowsApp.lib)
+    list(APPEND B2_OPTIONS linkflags=WindowsApp.lib) # TODO: Fix this; Probably should use a VCPKG_DETECTED_ variable and also be applied in the !store case
 endif()
 
-set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND "\"${CMAKE_CXX_COMPILER}\"")
+set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND "\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\"")
 
-if(USER_CONFIG_TOOLSET STREQUAL "msvc")
+string(APPEND CXXFLAGS "${COMPILEFLAGS}")
+string(APPEND CFLAGS "${COMPILEFLAGS}")
+
+foreach(var CXXFLAGS CFLAGS LDFLAGS ARFLAGS)
+    string(REPLACE [[\]] [[\\]] ${var} "${${var}}")
+    string(REPLACE [["]] [[\"]] ${var} "${${var}}")
+    if(WIN32)
+        # env variables need extra %%var%% to be not expanded early
+        string(REGEX REPLACE [[(%[^%]+%)]] [[%\1%]] ${var} "${${var}}")
+        # remove PDB flag, until the pdb install rule of boost-build can be deactivated. 
+        string(REGEX REPLACE "-PDB:[^ ]+" "" ${var} "${${var}}") 
+    endif()
+    string(REGEX REPLACE "[ \t\r\n]+" " " ${var} "${${var}}")
+    string(STRIP "${${var}}" ${var})
+endforeach()
+
+if(CFLAGS MATCHES "-Zi" OR CXXFLAGS MATCHES "-Zi")
+    list(APPEND B2_OPTIONS
+            debug-store=database
+            pch=off
+        )
+endif()
+
+if(USER_CONFIG_TOOLSET MATCHES "^(msvc|clang-win)$")
     file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <setup>\"${NOTHING_BAT}\"\n"
-        "    ${CXXFLAGS}\n"
-        "    ${CFLAGS}\n"
-        "    ${LDFLAGS}\n"
     )
+    if(NOT ARFLAGS STREQUAL "")
+        # Only apply these flags for MSVC
+        string(APPEND USER_CONFIG_REQUIREMENTS "<archiveflags>\"${ARFLAGS}\"\n    ")
+    endif()
 else()
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
-        "    <ranlib>\"${CMAKE_RANLIB}\"\n"
-        "    <archiver>\"${CMAKE_AR}\"\n"
-        "    ${CXXFLAGS}\n"
-        "    ${CFLAGS}\n"
-        "    ${LDFLAGS}\n"
+        "    <ranlib>\"${VCPKG_DETECTED_CMAKE_RANLIB}\"\n"
+        "    <archiver>\"${VCPKG_DETECTED_CMAKE_AR}\"\n"
     )
 endif()
 
-if(WIN32 AND NOT USER_CONFIG_TOOLSET STREQUAL "msvc")
+if(NOT CXXFLAGS STREQUAL "")
+    string(APPEND USER_CONFIG_TOOLSET_OPTIONS "    <cxxflags>\"${CXXFLAGS}\"\n")
+endif()
+if(NOT CFLAGS STREQUAL "")
+    string(APPEND USER_CONFIG_TOOLSET_OPTIONS "    <cflags>\"${CFLAGS}\"\n    <asmflags>\"${CFLAGS}\"\n")
+endif()
+if(NOT LDFLAGS STREQUAL "")
+    string(APPEND USER_CONFIG_REQUIREMENTS "<linkflags>\"${LDFLAGS}\"\n    ")
+    string(APPEND USER_CONFIG_TOOLSET_OPTIONS "    <linkflags>\"${LDFLAGS}\"\n")
+endif()
+
+if(WIN32 AND NOT USER_CONFIG_TOOLSET MATCHES "^(msvc|clang-win)$")
     # MINGW here causes b2 to not run cygpath
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <flavor>mingw\n"
@@ -238,11 +194,6 @@ if(NOT WIN32)
     list(APPEND B2_OPTIONS "--layout=system")
 endif()
 
-include(ProcessorCount)
-ProcessorCount(NUMBER_OF_PROCESSORS)
-if(NOT NUMBER_OF_PROCESSORS)
-    set(NUMBER_OF_PROCESSORS 1)
-endif()
 
 # Handle ICU
 if(WIN32)
@@ -255,7 +206,7 @@ endif()
 # Handle Python
 set(python_versions "")
 
-if("python2" IN_LIST FEATURES)
+if(WITH_PYTHON2)
     # Find Python2 in the current installed directory
     file(GLOB python2_include_dir "${CURRENT_INSTALLED_DIR}/include/python2.*")
     string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python2_version "${python2_include_dir}")
@@ -266,7 +217,7 @@ if("python2" IN_LIST FEATURES)
     list(APPEND python_versions "${python2_version}")
 endif()
 
-if("python3" IN_LIST FEATURES)
+if(WITH_PYTHON3)
     # Find Python3 in the current installed directory
     file(GLOB python3_include_dir "${CURRENT_INSTALLED_DIR}/include/python3.*")
     string(REGEX REPLACE ".*python([0-9\.]+).*" "\\1" python3_version "${python3_include_dir}")
@@ -275,6 +226,15 @@ if("python3" IN_LIST FEATURES)
         "using python : ${python3_version} : : \"${python3_include_dir}\" : \"${CURRENT_INSTALLED_DIR}/debug/lib\" : <python-debugging>on ;\n"
     )
     list(APPEND python_versions "${python3_version}")
+endif()
+
+if(NOT python_versions STREQUAL "")
+    list(JOIN python_versions "," python_versions)
+    list(APPEND B2_OPTIONS "python=${python_versions}")
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        list(APPEND B2_OPTIONS "python-debugging=on")
+    endif()
 endif()
 
 if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
@@ -291,11 +251,6 @@ if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
             "   <find-shared-library>openmpi ;\n"
         )
     endif()
-endif()
-
-if(NOT python_versions STREQUAL "")
-    list(JOIN python_versions "," python_versions)
-    list(APPEND B2_OPTIONS "python=${python_versions}")
 endif()
 
 # Include port specific CMake fragment
@@ -320,7 +275,7 @@ add_custom_target(boost ALL
         --with-system
         --with-thread
         --with-chrono
-        -j${NUMBER_OF_PROCESSORS}
+        -j ${VCPKG_CONCURRENCY}
         -sBOOST_ROOT=${BOOST_BUILD_PATH}
         -sBOOST_BUILD_PATH=${BOOST_BUILD_PATH}
         --debug-configuration
@@ -336,10 +291,10 @@ add_custom_target(boost ALL
         threading=multi
 
         stage
-    WORKING_DIRECTORY ${SOURCE_PATH}/build
+    WORKING_DIRECTORY "${SOURCE_PATH}/build"
 )
 
-set(SUBDIR ${CMAKE_CURRENT_BINARY_DIR}/stage/lib)
+set(SUBDIR "${CMAKE_CURRENT_BINARY_DIR}/stage/lib")
 install(
     CODE "
 file(GLOB LIBS \"${SUBDIR}/*.so.*\" \"${SUBDIR}/*.so\" \"${SUBDIR}/*.a\" \"${SUBDIR}/*.dylib\" \"${SUBDIR}/*.dylib.*\" \"${SUBDIR}/*.lib\")

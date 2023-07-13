@@ -1,23 +1,25 @@
 {
   "name": "gmp",
-  "version-string": "6.2.1",
-  "port-version": 8,
+  "version": "6.2.1",
+  "port-version": 20,
   "description": "The GNU Multiple Precision Arithmetic Library",
   "homepage": "https://gmplib.org",
-  "supports": "!(windows & (arm | arm64))",
+  "license": "LGPL-3.0-only OR GPL-2.0-only",
+  "supports": "!xbox",
   "dependencies": [
     {
-      "name": "vs-yasm",
-      "host": true,
-      "platform": "windows"
+      "name": "gmp",
+      "host": true
     },
     {
-      "name": "yasm",
-      "host": true,
-      "features": [
-        "tools"
-      ],
-      "platform": "windows"
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
     }
-  ]
+  ],
+  "features": {
+    "fat": {
+      "description": "Enable runtime selection of optimized low level routines",
+      "supports": "!windows | mingw"
+    }
+  }
 }

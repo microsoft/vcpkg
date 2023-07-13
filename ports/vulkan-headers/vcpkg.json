@@ -1,6 +1,19 @@
 {
   "name": "vulkan-headers",
-  "version": "1.2.203",
+  "version": "1.3.250",
+  "port-version": 2,
   "description": "Vulkan header files and API registry",
-  "homepage": "https://github.com/KhronosGroup/Vulkan-Headers"
+  "homepage": "https://github.com/KhronosGroup/Vulkan-Headers",
+  "license": "Apache-2.0",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

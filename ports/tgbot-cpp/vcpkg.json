@@ -1,9 +1,9 @@
 {
   "name": "tgbot-cpp",
-  "version-string": "1.2.1",
-  "port-version": 1,
-  "description": "C++14 library for Telegram bot API.",
+  "version": "1.6",
+  "description": "C++ library for Telegram bot API.",
   "homepage": "https://github.com/reo7sp/tgbot-cpp",
+  "license": "MIT",
   "dependencies": [
     "boost-algorithm",
     "boost-asio",
@@ -14,6 +14,10 @@
     "boost-variant",
     "curl",
     "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
     "zlib"
   ]
 }

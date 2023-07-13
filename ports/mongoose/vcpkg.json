@@ -1,9 +1,9 @@
 {
   "name": "mongoose",
-  "version": "7.5",
-  "port-version": 1,
+  "version": "7.9",
   "description": "Embedded web server / embedded networking library",
   "homepage": "https://cesanta.com/",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     {

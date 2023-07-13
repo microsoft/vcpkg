@@ -1,12 +1,20 @@
 {
   "name": "protobuf",
-  "version-semver": "3.18.0",
-  "port-version": 1,
+  "version": "3.21.12",
   "description": "Protocol Buffers - Google's data interchange format",
   "homepage": "https://github.com/protocolbuffers/protobuf",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "protobuf",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],

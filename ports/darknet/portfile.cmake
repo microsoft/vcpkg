@@ -1,9 +1,10 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 5853e51d604712918bd2fb23bab0ec82d19a88f9
-  SHA512 d61e94209d66db3b71ad14d83c83a4d562879119b67881e9eacc60efb16e44496b291000c8c545055db5ae0e542cfb149fdbed2058584962fa52b604353ddccd
+  REF 8a0bf84c19e38214219dbd3345f04ce778426c57
+  SHA512 6253d5b498f4f6eba7fc539d5a4b4e163139f4841623f11d84760bcf1ffabe6519f85e98e3d4aeac6846313fea3b98451407134b6b6f5b91137c62d1647109d9
   HEAD_REF master
+  PATCHES fix-dependence-getopt.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -26,39 +27,36 @@ if ("cuda" IN_LIST FEATURES)
 endif()
 
 #make sure we don't use any integrated pre-built library nor any unnecessary CMake module
-file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty)
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindPThreads_windows.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindCUDNN.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindStb.cmake)
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty")
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Modules")
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   DISABLE_PARALLEL_CONFIGURE
-  PREFER_NINJA
   OPTIONS ${FEATURE_OPTIONS}
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
     -DENABLE_OPENCV:BOOL=${ENABLE_OPENCV}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet uselib)
 if ("opencv-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
   vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES uselib_track)
 endif()
 
-file(COPY ${SOURCE_PATH}/cfg DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(COPY ${SOURCE_PATH}/data DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(COPY "${SOURCE_PATH}/cfg" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+file(COPY "${SOURCE_PATH}/data" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/scripts/download_weights.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/scripts)
+file(INSTALL "${SOURCE_PATH}/scripts/download_weights.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/scripts")
 message(STATUS "To download weight files, please go to ${CURRENT_INSTALLED_DIR}/tools/${PORT}/scripts and run ./download_weights.ps1")
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

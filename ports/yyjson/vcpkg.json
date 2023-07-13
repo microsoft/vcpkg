@@ -1,6 +1,6 @@
 {
   "name": "yyjson",
-  "version": "0.3.0",
+  "version": "0.6.0",
   "description": "A high performance JSON library written in ANSI C",
   "homepage": "https://github.com/ibireme/yyjson",
   "license": "MIT",
@@ -13,5 +13,25 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "fast-fp-conv",
+    "non-standard",
+    "reader",
+    "writer"
+  ],
+  "features": {
+    "fast-fp-conv": {
+      "description": "Build with custom floating-point number conversion"
+    },
+    "non-standard": {
+      "description": "Build with support for non-standard JSON"
+    },
+    "reader": {
+      "description": "Build with JSON reader"
+    },
+    "writer": {
+      "description": "Build with JSON writer"
+    }
+  }
 }

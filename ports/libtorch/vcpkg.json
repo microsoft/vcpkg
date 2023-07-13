@@ -1,0 +1,123 @@
+{
+  "name": "libtorch",
+  "version": "1.12.1",
+  "port-version": 3,
+  "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
+  "homepage": "https://pytorch.org/",
+  "license": null,
+  "supports": "(windows & !static) | osx | linux",
+  "dependencies": [
+    "cpuinfo",
+    "eigen3",
+    "flatbuffers",
+    {
+      "name": "flatbuffers",
+      "host": true
+    },
+    "fmt",
+    "foxi",
+    "gemmlowp",
+    "gflags",
+    "glog",
+    "lmdb",
+    {
+      "name": "mpi",
+      "platform": "linux"
+    },
+    "onnx",
+    "onnx-optimizer",
+    {
+      "name": "openblas",
+      "platform": "windows"
+    },
+    "protobuf",
+    {
+      "name": "protobuf",
+      "host": true
+    },
+    "sleef",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "xnnpack"
+  ],
+  "features": {
+    "dist": {
+      "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
+      "dependencies": [
+        {
+          "name": "gloo",
+          "platform": "linux"
+        },
+        {
+          "name": "libuv",
+          "platform": "windows | osx"
+        },
+        {
+          "name": "openmpi",
+          "platform": "linux | osx"
+        },
+        {
+          "name": "tensorpipe",
+          "platform": "linux | osx"
+        }
+      ]
+    },
+    "leveldb": {
+      "description": "Build with LevelDB",
+      "dependencies": [
+        "leveldb",
+        "snappy"
+      ]
+    },
+    "nnpack": {
+      "description": "Build with NNPack",
+      "supports": "linux | osx",
+      "dependencies": [
+        "nnpack"
+      ]
+    },
+    "opencv": {
+      "description": "Build with OpenCV 3.x",
+      "dependencies": [
+        "opencv"
+      ]
+    },
+    "tbb": {
+      "description": "Build with Intel TBB",
+      "dependencies": [
+        "tbb"
+      ]
+    },
+    "vulkan": {
+      "description": "Build with Vulkan GPU backend",
+      "supports": "!windows",
+      "dependencies": [
+        "vulkan"
+      ]
+    },
+    "xnnpack": {
+      "description": "Build with XNNPack",
+      "dependencies": [
+        "xnnpack"
+      ]
+    },
+    "zstd": {
+      "description": "Build with ZSTD",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}

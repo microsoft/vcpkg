@@ -1,12 +1,12 @@
 {
   "name": "libcopp",
-  "version-semver": "1.4.1",
-  "port-version": 1,
+  "version": "2.2.0",
   "maintainers": "owent <admin@owent.net>",
   "description": "A cross-platfrom coroutine library for C++",
   "homepage": "https://github.com/owent/libcopp",
   "documentation": "https://libcopp.atframe.work/",
   "license": "MIT",
+  "supports": "!(windows & arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

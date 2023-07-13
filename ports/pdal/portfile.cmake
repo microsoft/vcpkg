@@ -3,27 +3,37 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PDAL/PDAL
-    REF 2.3.0
-    SHA512 898ea54c8c8e0a9bb8aed8d7f542da5a44b02c8656273783366d711b5b3f50b547438aa1cb4d41b490d187dae7bef20fe3b6c64dcb87c06e6f4cb91a8f79ac59
+    REF "${VERSION}"
+    SHA512 cefc610682f8dafd5c186ed612edc2db904690c3a53d5111ece0965d197053b064bd8cbd9adab293c47ec1894949b5e33623b0f0e6b6cad35617a20f0039bd79
     HEAD_REF master
     PATCHES
-        0002-no-source-dir-writes.patch
-        0003-fix-copy-vendor.patch
         fix-dependency.patch
-        use-vcpkg-boost.patch
         fix-unix-compiler-options.patch
         fix-find-library-suffix.patch
         no-pkgconfig-requires.patch
         no-rpath.patch
+        fix-gcc-13-build.patch  #upstream PR: https://github.com/PDAL/PDAL/pull/4039
+        gdal-3.7.patch
+        mingw.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
-file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/pdalboost/boost" "${SOURCE_PATH}/vendor/pdalboost/libs")
-
 # Prefer pristine CMake find modules + wrappers and config files from vcpkg.
-foreach(package IN ITEMS Curl GeoTIFF ICONV PostgreSQL ZSTD)
+foreach(package IN ITEMS Curl GeoTIFF ICONV ZSTD)
     file(REMOVE "${SOURCE_PATH}/cmake/modules/Find${package}.cmake")
 endforeach()
+
+# De-vendoring
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/vendor/nanoflann"
+    "${SOURCE_PATH}/vendor/nlohmann"
+    "${SOURCE_PATH}/pdal/JsonFwd.hpp"
+)
+file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nanoflann.hpp" DESTINATION "${SOURCE_PATH}/vendor/nanoflann")
+file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nlohmann/json.hpp" DESTINATION "${SOURCE_PATH}/vendor/nlohmann/nlohmann")
+file(APPEND "${SOURCE_PATH}/vendor/nlohmann/nlohmann/json.hpp" "namespace NL = nlohmann;\n")
+file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nlohmann/json_fwd.hpp" DESTINATION "${SOURCE_PATH}/pdal")
+file(RENAME "${SOURCE_PATH}/pdal/json_fwd.hpp" "${SOURCE_PATH}/pdal/JsonFwd.hpp")
+file(APPEND "${SOURCE_PATH}/pdal/JsonFwd.hpp" "namespace NL = nlohmann;\n")
 
 unset(ENV{OSGEO4W_HOME})
 
@@ -33,29 +43,24 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         e57         BUILD_PLUGIN_E57
         hdf5        BUILD_PLUGIN_HDF
         i3s         BUILD_PLUGIN_I3S
-        laszip      WITH_LASZIP
         lzma        WITH_LZMA
         pgpointcloud BUILD_PLUGIN_PGPOINTCLOUD
         zstd        WITH_ZSTD
 )
-if(BUILD_PLUGIN_DRACO)
-    vcpkg_find_acquire_program(PKGCONFIG)
-endif()
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DPDAL_PLUGIN_INSTALL_PATH=.
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
-        -DPOSTGRESQL_LIBRARIES=PostgreSQL::PostgreSQL
         -DWITH_TESTS:BOOL=OFF
         -DWITH_COMPLETION:BOOL=OFF
-        -DWITH_LAZPERF:BOOL=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Libexecinfo:BOOL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libunwind:BOOL=ON
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
-        POSTGRESQL_LIBRARIES
+        PKG_CONFIG_EXECUTABLE
 )
 
 vcpkg_cmake_install()
@@ -83,4 +88,38 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(READ "${SOURCE_PATH}/LICENSE.txt" pdal_license)
+file(READ "${SOURCE_PATH}/vendor/arbiter/LICENSE" arbiter_license)
+file(READ "${SOURCE_PATH}/vendor/kazhdan/PoissonRecon.h" kazhdan_license)
+string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" kazhdan_license "${kazhdan_license}")
+file(READ "${SOURCE_PATH}/vendor/lazperf/lazperf.hpp" lazperf_license)
+string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" lazperf_license "${lazperf_license}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
+"${pdal_license}
+---
+
+Files in vendor/arbiter/:
+
+${arbiter_license}
+---
+
+Files in vendor/kazhdan/:
+
+${kazhdan_license}
+---
+
+Files in vendor/lazperf/:
+
+${lazperf_license}
+---
+
+Files in vendor/eigen:
+
+Most Eigen source code is subject to the terms of the Mozilla Public License
+v. 2.0. You can obtain a copy the MPL 2.0 at http://mozilla.org/MPL/2.0/.
+
+Some files included in Eigen are under one of the following licenses:
+ - Apache License, Version 2.0 
+ - BSD 3-Clause \"New\" or \"Revised\" License
+")

@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f7d677c..d527ff4 100644
+index 48019cce95..1eda700ae8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -17705,7 +17705,7 @@ generate_pkgconfig(
+@@ -23186,7 +23186,7 @@ generate_pkgconfig(
    "high performance general RPC framework"
    "${gRPC_CORE_VERSION}"
-   "gpr openssl absl_base absl_bind_front absl_cord absl_core_headers absl_flat_hash_map absl_inlined_vector absl_memory absl_optional absl_status absl_statusor absl_str_format absl_strings absl_synchronization absl_time absl_variant"
+   "gpr openssl absl_any_invocable absl_base absl_bind_front absl_cleanup absl_cord absl_core_headers absl_flat_hash_map absl_flat_hash_set absl_function_ref absl_hash absl_inlined_vector absl_memory absl_optional absl_random_random absl_span absl_status absl_statusor absl_str_format absl_strings absl_synchronization absl_time absl_type_traits absl_utility absl_variant"
 -  "-lgrpc -laddress_sorting -lre2 -lupb -lcares -lz"
-+  "-lgrpc -lgrpc_upbdefs -laddress_sorting -lre2 -lupb_fastdecode -lupb_json -lupb_pb -lupb_handlers -lupb_textformat -lupb_reflection -lupb -lcares -lz"
++  "-lgrpc -laddress_sorting -lre2 -lupb_textformat -lupb_mini_table -lupb -lupb_collections -lupb_reflection -lupb_extension_registry -lupb_json -lupb_fastdecode -lupb_utf8_range -ldescriptor_upb_proto -lcares -lz"
    ""
    "grpc.pc")
  

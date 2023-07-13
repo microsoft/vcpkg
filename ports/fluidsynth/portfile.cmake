@@ -1,68 +1,97 @@
+if("pulseaudio" IN_LIST FEATURES)
+    message(
+    "${PORT} with pulseaudio feature currently requires the following from the system package manager:
+        libpulse-dev pulseaudio
+    These can be installed on Ubuntu systems via sudo apt install libpulse-dev pulseaudio"
+    )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
-    REF 6c807bdd37748411801e93c48fcd5789d5a6a278 #v2.2.4
-    SHA512 5fab3b4d58fa47825cf6afc816828fb57879523b8d7659fb20deacdf5439e74fd4b0f2b3f03a8db89cc4106b3b36f2ec450a858e02af30245b6413db70060a11
+    REF "v${VERSION}"
+    SHA512 "702b80ff9c8e2ba9fadd46a0377a295be78900c831ec4b6b75c2f5fee7e453b2e1f5511b076ccc044be7e6eb87086230c50c317dad3597a16d610e16032410fc"
     HEAD_REF master
     PATCHES
-        fix-dependencies.patch
-        separate-gentables.patch
+        gentables.patch
 )
 
-if ("buildtools" IN_LIST FEATURES)
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}/src/gentables"
-        LOGFILE_BASE configure-tools
-    )
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        buildtools  VCPKG_BUILD_MAKE_TABLES
+        sndfile     enable-libsndfile
+        pulseaudio  enable-pulseaudio
+)
 
-    vcpkg_cmake_build(
-        LOGFILE_BASE install-tools
-        TARGET install
-    )
+# enable platform-specific features, force the build to fail if the required libraries are not found,
+# and disable all other features to avoid system libraries to be picked up
+set(WINDOWS_OPTIONS enable-dsound enable-wasapi enable-waveout enable-winmidi HAVE_MMSYSTEM_H HAVE_DSOUND_H HAVE_OBJBASE_H)
+set(MACOS_OPTIONS enable-coreaudio enable-coremidi COREAUDIO_FOUND COREMIDI_FOUND)
+set(LINUX_OPTIONS enable-alsa ALSA_FOUND)
+set(ANDROID_OPTIONS enable-opensles OpenSLES_FOUND)
+set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack enable-lash
+    enable-libinstpatch enable-midishare enable-oboe enable-openmp enable-oss enable-pipewire enable-portaudio
+    enable-profiling enable-readline enable-sdl2 enable-systemd enable-trap-on-fpe enable-ubsan)
 
-    vcpkg_copy_tools(TOOL_NAMES make_tables AUTO_CLEAN)
-
-    vcpkg_add_to_path(APPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(OPTIONS_TO_ENABLE ${WINDOWS_OPTIONS})
+    set(OPTIONS_TO_DISABLE ${MACOS_OPTIONS} ${LINUX_OPTIONS} ${ANDROID_OPTIONS})
+elseif(VCPKG_TARGET_IS_OSX)
+    set(OPTIONS_TO_ENABLE ${MACOS_OPTIONS})
+    set(OPTIONS_TO_DISABLE ${WINDOWS_OPTIONS} ${LINUX_OPTIONS} ${ANDROID_OPTIONS})
+elseif(VCPKG_TARGET_IS_LINUX)
+    set(OPTIONS_TO_ENABLE ${LINUX_OPTIONS})
+    set(OPTIONS_TO_DISABLE ${WINDOWS_OPTIONS} ${MACOS_OPTIONS} ${ANDROID_OPTIONS})
+elseif(VCPKG_TARGET_IS_ANDROID)
+    set(OPTIONS_TO_ENABLE ${ANDROID_OPTIONS})
+    set(OPTIONS_TO_DISABLE ${WINDOWS_OPTIONS} ${MACOS_OPTIONS} ${LINUX_OPTIONS})
 endif()
 
-set(feature_list dbus jack libinstpatch libsndfile midishare opensles oboe oss sdl2 pulseaudio readline lash alsa systemd coreaudio coremidi dart)
-vcpkg_list(SET FEATURE_OPTIONS)
-foreach(_feature IN LISTS feature_list)
-    list(APPEND FEATURE_OPTIONS -Denable-${_feature}:BOOL=OFF)
+foreach(_option IN LISTS OPTIONS_TO_ENABLE)
+    list(APPEND ENABLED_OPTIONS "-D{_option}:BOOL=ON")
 endforeach()
-
-vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
+    
+foreach(_option IN LISTS OPTIONS_TO_DISABLE IGNORED_OPTIONS)
+    list(APPEND DISABLED_OPTIONS "-D${_option}:BOOL=OFF")
+endforeach()
 
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         ${FEATURE_OPTIONS}
-        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
-        -DLIB_INSTALL_DIR=lib
-        -Denable-pkgconfig=ON
-        -Denable-framework=OFF # Needs system permission to install framework
-    OPTIONS_DEBUG
-        -Denable-debug:BOOL=ON
+        ${ENABLED_OPTIONS}
+        ${DISABLED_OPTIONS}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     MAYBE_UNUSED_VARIABLES
-        enable-coreaudio
-        enable-coremidi
-        enable-dart
+        ${OPTIONS_TO_DISABLE}
+        VCPKG_BUILD_MAKE_TABLES
+        enable-coverage
+        enable-framework
+        enable-ubsan
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fluidsynth)
+
 vcpkg_fixup_pkgconfig()
 
-# Copy fluidsynth.exe to tools dir
-vcpkg_copy_tools(TOOL_NAMES fluidsynth AUTO_CLEAN)
-
-# Remove unnecessary files
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+set(tools fluidsynth)
+if("buildtools" IN_LIST FEATURES)
+    list(APPEND tools make_tables)
 endif()
+vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/man")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

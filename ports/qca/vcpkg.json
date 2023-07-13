@@ -1,12 +1,16 @@
 {
   "name": "qca",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "port-version": 2,
   "description": "Qt Cryptographic Architecture (QCA).",
-  "homepage": "https://cgit.kde.org/qca.git/",
+  "homepage": "https://userbase.kde.org/QCA",
   "dependencies": [
     {
-      "name": "qt5-base",
+      "name": "qt5compat",
+      "default-features": false
+    },
+    {
+      "name": "qtbase",
       "default-features": false
     },
     {

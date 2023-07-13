@@ -1,15 +1,36 @@
 cmake_minimum_required(VERSION 3.20)
 
+if(NOT VCPKG_OUTPUT_FILE)
+    message(FATAL_ERROR "VCPKG_OUTPUT_FILE is required to be defined")
+endif()
+
+if(NOT CMAKE_BUILD_TYPE)
+    message(FATAL_ERROR "CMAKE_BUILD_TYPE is required to be defined")
+else()
+    string(TOUPPER "${CMAKE_BUILD_TYPE}" VCPKG_CONFIGS)
+endif()
+
 set(VCPKG_LANGUAGES "C;CXX" CACHE STRING "Languages to enables for this project")
 
-set(OUTPUT_STRING)
+project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
+
+
+set(OUTPUT_STRING "# Generator: ${CMAKE_CURRENT_LIST_FILE}\n")
+
+function(escaped out_var value)
+    string(REPLACE "\\" "\\\\" value "${value}")
+    string(REPLACE "\"" "\\\"" value "${value}")
+    string(REPLACE "\$" "\\\$" value "${value}")
+    set(${out_var} "${value}" PARENT_SCOPE)
+endfunction()
+
 # Build default checklists
 list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_NAME
                                         CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_SYSTEM_PROCESSOR
                                         CMAKE_HOST_SYSTEM_PROCESSOR)
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+if(APPLE)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
                                             CMAKE_OSX_SYSROOT)
 endif()
@@ -20,7 +41,7 @@ foreach(prog IN LISTS PROGLIST)
 endforeach()
 set(COMPILERS ${VCPKG_LANGUAGES} RC)
 foreach(prog IN LISTS COMPILERS)
-    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${prog}_COMPILER CMAKE_${prog}_COMPILER_ID)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${prog}_COMPILER CMAKE_${prog}_COMPILER_ID CMAKE_${prog}_COMPILER_FRONTEND_VARIANT)
 endforeach()
 # Variables to check
 foreach(_lang IN LISTS VCPKG_LANGUAGES)
@@ -30,7 +51,8 @@ foreach(_lang IN LISTS VCPKG_LANGUAGES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILE_FEATURES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_EXTENSION)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
-    
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILER_TARGET)
+
     # Probably never required since implicit. 
     #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
     #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_INCLUDE_DIRECTORIES)
@@ -44,7 +66,7 @@ list(APPEND VCPKG_DEFAULT_ENV_VARS_TO_CHECK PATH INCLUDE C_INCLUDE_PATH CPLUS_IN
 list(REMOVE_DUPLICATES VCPKG_DEFAULT_ENV_VARS_TO_CHECK)
 
 #Flags to check. Flags are a bit special since they are configuration aware. 
-set(FLAGS ${VCPKG_LANGUAGES} RC SHARED_LINKER STATIC_LINKER EXE_LINKER)
+set(FLAGS ${VCPKG_LANGUAGES} RC SHARED_LINKER STATIC_LINKER EXE_LINKER MODULE_LINKER)
 foreach(flag IN LISTS FLAGS)
     list(APPEND VCPKG_DEFAULT_FLAGS_TO_CHECK CMAKE_${flag}_FLAGS)
 endforeach()
@@ -63,67 +85,91 @@ set(VCPKG_VARS_TO_CHECK "${VCPKG_DEFAULT_VARS_TO_CHECK}" CACHE STRING "Variables
 set(VCPKG_FLAGS_TO_CHECK "${VCPKG_DEFAULT_FLAGS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
 set(VCPKG_ENV_VARS_TO_CHECK "${VCPKG_DEFAULT_ENV_VARS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
 
-if(NOT VCPKG_OUTPUT_FILE)
-    message(FATAL_ERROR "VCPKG_OUTPUT_FILE is required to be defined")
-endif()
-
-if(NOT CMAKE_BUILD_TYPE)
-    message(FATAL_ERROR "CMAKE_BUILD_TYPE is required to be defined")
-else()
-    string(TOUPPER "${CMAKE_BUILD_TYPE}" VCPKG_CONFIGS)
-endif()
-
-
-project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
-
 foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
-  string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
+    escaped(value "${${VAR}}")
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${value}\")\n")
 endforeach()
 
 foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
     if(CMAKE_HOST_WIN32)
-        string(REPLACE "\\" "/" ENV_${_env} "$ENV{${_env}}")
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"${ENV_${_env}}\")\n")
+        string(REPLACE "\\" "/" value "$ENV{${_env}}")
+        escaped(value "${value}")
     else()
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"$ENV{${_env}}\")\n")
+        escaped(value "$ENV{${_env}}")
     endif()
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"${value}\")\n")
 endforeach()
 
-macro(_vcpkg_adjust_flags flag_var)
-    if(MSVC) # Transform MSVC /flags to -flags due to bash scripts intepreting /flag as a path.
-        string(REGEX REPLACE "(^| )/" "\\1-" ${flag_var} "${${flag_var}}")
+set(extra_flags "")
+if(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        string(APPEND extra_flags " \"${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN}${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}\"")
+    else()
+        string(APPEND extra_flags " ${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN} \"${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}\"")
     endif()
-    if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-        if("${flag_var}" IN_LIST VCPKG_LANG_FLAGS)
+endif()
+if(CMAKE_SYSROOT AND CMAKE_CXX_COMPILE_OPTIONS_SYSROOT)
+    string(APPEND extra_flags " \"${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}\"")
+endif()
+
+macro(_vcpkg_adjust_flags flag_var)
+    if(MSVC) # Transform MSVC /flags to -flags due to msys2 runtime intepreting /flag as a path.
+        string(REGEX REPLACE "(^| )/" "\\1-" ${flag_var} "${${flag_var}}")
+        if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+            if("${flag_var}" STREQUAL "CMAKE_CXX_FLAGS")
+                string(APPEND ${flag_var} " -ZW:nostdlib")
+            endif()
+        endif()
+    endif()
+    if(APPLE)
+        set(flags_to_add_osx_arch_sysroot "${VCPKG_LANG_FLAGS}" CMAKE_SHARED_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_EXE_LINKER_FLAGS)
+        if("${flag_var}" IN_LIST flags_to_add_osx_arch_sysroot)
             # macOS - append arch and isysroot if cross-compiling
             if(NOT "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}")
-
                 foreach(arch IN LISTS CMAKE_OSX_ARCHITECTURES)
                     string(APPEND ${flag_var} " -arch ${arch}")
                 endforeach()
             endif()
             string(APPEND ${flag_var} " -isysroot ${CMAKE_OSX_SYSROOT}")
             if (CMAKE_OSX_DEPLOYMENT_TARGET)
-                string(APPEND ${flag_var} " -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}") 
+                list(GET VCPKG_LANGUAGES 0 lang)
+                string(APPEND ${flag_var} " ${CMAKE_${lang}_OSX_DEPLOYMENT_TARGET_FLAG}${CMAKE_OSX_DEPLOYMENT_TARGET}")
+                unset(lang)
             endif()
         endif()
+        unset(flags_to_add_osx_arch_sysroot)
     endif()
+    set(flags_to_add_target "${VCPKG_LANG_FLAGS}" CMAKE_SHARED_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS CMAKE_EXE_LINKER_FLAGS)
+    list(GET VCPKG_LANGUAGES 0 lang)
+    if(CMAKE_${lang}_COMPILER_TARGET AND "${flag_var}" IN_LIST flags_to_add_target)
+        if (CMAKE_${lang}_COMPILER_ID STREQUAL Clang)
+            string(PREPEND ${flag_var} "${CMAKE_${lang}_COMPILE_OPTIONS_TARGET}${CMAKE_${lang}_COMPILER_TARGET} ")
+        elseif(CMAKE_${lang}_COMPILE_OPTIONS_TARGET)
+            string(PREPEND ${flag_var} "${CMAKE_${lang}_COMPILE_OPTIONS_TARGET} ${CMAKE_${lang}_COMPILER_TARGET} ")
+        endif()
+    endif()
+    if("${flag_var}" IN_LIST flags_to_add_target)
+        string(APPEND ${flag_var} " ${extra_flags}")
+    endif()
+    unset(lang)
+    unset(flags_to_add_target)
 endmacro()
 
 foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
     string(STRIP "${${flag}}" ${flag}) # Strip leading and trailing whitespaces
     _vcpkg_adjust_flags(${flag})
-    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_RAW_${flag} \" ${${flag}}\")\n")
+    escaped(value "${${flag}}")
+    string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_RAW_${flag} \" ${value}\")\n")
     foreach(config IN LISTS VCPKG_CONFIGS)
+        escaped(raw_value "${CMAKE_${flag}_FLAGS_${config}}")
+        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_RAW_${flag}_${config} \"${raw_value}\")\n")
         string(STRIP "${${flag}_${config}}" ${flag}_${config})
         _vcpkg_adjust_flags(${flag}_${config})
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_RAW_${flag}_${config} \"${CMAKE_${flag}_FLAGS_${config}}\")\n")
-        set(COMBINED_${flag}_${config} "${${flag}} ${${flag}_${config}}")
-        string(STRIP "${COMBINED_${flag}_${config}}" COMBINED_${flag}_${config})
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${flag}_${config} \"${COMBINED_${flag}_${config}}\")\n")
+        escaped(combined_value "${${flag}} ${${flag}_${config}}")
+        string(STRIP "${combined_value}" combined_value)
+        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${flag}_${config} \"${combined_value}\")\n")
     endforeach()
 endforeach()
-
 
 file(WRITE "${VCPKG_OUTPUT_FILE}" "${OUTPUT_STRING}")
 

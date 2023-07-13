@@ -2,13 +2,15 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO slirp/libslirp
-    REF v4.6.1
-    SHA512 04a9dd88cd58c849a24b9cff405d951952760d99ea2bef0b070463dff088d79f44557a13c9427ba0043f58d4b9e06b68ff64a4f23a7b0d66df594e32e1521cae
+    REF v4.7.0
+    SHA512 387f4a6dad240ce633df2640bb49c6cb0041c8b3afc8d0ef38186d385f00dd9e4ef4443e93e1b71dbf05e22892b6f2771a87a202e815d8ec899ab5c147a1f09f
     HEAD_REF master
 )
 
-vcpkg_acquire_msys(MSYS_ROOT)
-vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+if(VCPKG_HOST_IS_WINDOWS)
+    vcpkg_acquire_msys(MSYS_ROOT)
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"

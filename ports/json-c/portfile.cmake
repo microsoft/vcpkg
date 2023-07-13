@@ -1,24 +1,27 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO json-c/json-c
-    REF eae040a84a479ccad1d1c48314345c51ecf1a4a4
-    SHA512 18d8a31b341830b04676cad13fbc0608fb75a323522161ac8fd0bb5058db82c1c261d504696a1e12f4b03eb0967632885580ff81d808adf2f1dff7e32d131ba0
+    REF d28ac67dde77566f53a97f22b4ea7cb36afe6582
+    SHA512 30063c8e32eb82e170647363055119f2f7eab19e1c3152673b966f41ed07e0349c3d6141b215b9912f9e84c2e06677b3d7ac949f720c7ebc2c95d692dc3881fe
     HEAD_REF master
     PATCHES pkgconfig.patch
+            fix-clang-cl.patch
+            fix-build-with-clang.patch #https://github.com/json-c/json-c/pull/783 Remove in next version
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

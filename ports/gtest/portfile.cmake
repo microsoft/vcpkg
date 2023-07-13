@@ -5,33 +5,33 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF release-1.11.0
-    SHA512 6fcc7827e4c4d95e3ae643dd65e6c4fc0e3d04e1778b84f6e06e390410fe3d18026c131d828d949d2f20dde6327d30ecee24dcd3ef919e21c91e010d149f3a28
+    REF v1.13.0
+    SHA512 70c0cfb1b4147bdecb467ecb22ae5b5529eec0abc085763213a796b7cdbd81d1761d12b342060539b936fa54f345d33f060601544874d6213fdde79111fa813e
     HEAD_REF main
     PATCHES
+        001-fix-UWP-death-test.patch
+        clang-tidy-no-lint.patch
         fix-main-lib-path.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_GMOCK=ON
-        -DBUILD_GTEST=ON
-        -DCMAKE_DEBUG_POSTFIX=d
         -Dgtest_force_shared_crt=${GTEST_FORCE_SHARED_CRT}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GTest TARGET_PATH share/GTest)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/GTest)
 
 file(
     INSTALL
         "${SOURCE_PATH}/googletest/src/gtest.cc"
         "${SOURCE_PATH}/googletest/src/gtest_main.cc"
         "${SOURCE_PATH}/googletest/src/gtest-all.cc"
+        "${SOURCE_PATH}/googletest/src/gtest-assertion-result.cc"
         "${SOURCE_PATH}/googletest/src/gtest-death-test.cc"
         "${SOURCE_PATH}/googletest/src/gtest-filepath.cc"
         "${SOURCE_PATH}/googletest/src/gtest-internal-inl.h"
@@ -58,3 +58,5 @@ endif()
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

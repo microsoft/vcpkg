@@ -1,12 +1,22 @@
 {
   "name": "libfreenect2",
-  "version-string": "0.2.0",
-  "port-version": 7,
+  "version": "0.2.0",
+  "port-version": 10,
   "description": "Open source drivers for the Kinect for Windows v2 device",
   "homepage": "https://github.com/OpenKinect/libfreenect2",
+  "license": "GPL-2.0-only",
+  "supports": "!xbox",
   "dependencies": [
     "libjpeg-turbo",
-    "libusb"
+    "libusb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
     "opengl"
@@ -23,6 +33,12 @@
       "dependencies": [
         "glfw3",
         "opengl"
+      ]
+    },
+    "openni2": {
+      "description": "OpenNI2 support for libfreenect2",
+      "dependencies": [
+        "openni2"
       ]
     }
   }

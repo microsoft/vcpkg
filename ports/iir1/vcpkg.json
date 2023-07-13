@@ -1,6 +1,6 @@
 {
   "name": "iir1",
-  "version": "1.9.0",
+  "version": "1.9.4",
   "description": "Realtime C++ filter library",
   "homepage": "https://github.com/berndporr/iir1",
   "license": "MIT",

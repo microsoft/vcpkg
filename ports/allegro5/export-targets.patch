@@ -28,10 +28,18 @@ index 7c5720b..72880c4 100644
  #
  #   Documentation
 diff --git a/cmake/Common.cmake b/cmake/Common.cmake
-index 74edef8..0cf1edb 100644
+index b95479f..4093a47 100644
 --- a/cmake/Common.cmake
 +++ b/cmake/Common.cmake
-@@ -220,6 +220,7 @@ endfunction(set_our_framework_properties)
+@@ -166,6 +166,7 @@ function(add_our_library target framework_name sources extra_flags link_with)
+     # Library dependencies are transitive by default.  Any target which links
+     # with this target will therefore pull in these dependencies automatically.
+     target_link_libraries(${target} ${link_with})
++    target_include_directories(${target} PUBLIC "$<INSTALL_INTERFACE:include>")
+ 
+     # Set list of dependencies that the user would need to explicitly link with
+     # if static linking.
+@@ -220,6 +221,7 @@ endfunction(set_our_framework_properties)
  
  function(install_our_library target filename)
      install(TARGETS ${target}
@@ -39,7 +47,7 @@ index 74edef8..0cf1edb 100644
              LIBRARY DESTINATION "lib${LIB_SUFFIX}"
              ARCHIVE DESTINATION "lib${LIB_SUFFIX}"
              FRAMEWORK DESTINATION "${FRAMEWORK_INSTALL_PREFIX}"
-@@ -227,6 +228,10 @@ function(install_our_library target filename)
+@@ -227,6 +229,10 @@ function(install_our_library target filename)
              # Doesn't work, see below.
              # PUBLIC_HEADER DESTINATION "include"
              )
@@ -48,5 +56,5 @@ index 74edef8..0cf1edb 100644
 +        DESTINATION share/unofficial-allegro5
 +    )
      if(0)
-         install(FILES ${CMAKE_BINARY_DIR}/lib/${filename}.pdb
+         install(FILES ${CMAKE_BINARY_DIR}/lib/\${CMAKE_INSTALL_CONFIG_NAME}/${filename}.pdb
              DESTINATION lib

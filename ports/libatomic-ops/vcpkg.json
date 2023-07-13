@@ -1,7 +1,9 @@
 {
   "name": "libatomic-ops",
-  "version": "7.7.0",
+  "version": "7.8.0",
   "description": "The atomic_ops project (Atomic memory update operations portable implementation)",
+  "homepage": "https://github.com/ivmai/libatomic_ops",
+  "license": "MIT OR GPL-2.0-or-later",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

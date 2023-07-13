@@ -1,13 +1,21 @@
 {
   "name": "tesseract",
-  "version": "4.1.1",
-  "port-version": 10,
+  "version": "5.3.1",
+  "port-version": 1,
   "description": "An OCR Engine that was developed at HP Labs between 1985 and 1995... and now at Google.",
   "homepage": "https://github.com/tesseract-ocr/tesseract",
-  "supports": "!arm",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false
+    },
     "leptonica",
-    "libarchive",
+    {
+      "name": "libarchive",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,9 +26,6 @@
     }
   ],
   "features": {
-    "cpu-independed": {
-      "description": "build on any cpu extension commands support"
-    },
     "training-tools": {
       "description": "build training tools",
       "dependencies": [

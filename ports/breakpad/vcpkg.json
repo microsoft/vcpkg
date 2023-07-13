@@ -1,11 +1,16 @@
 {
   "name": "breakpad",
-  "version-date": "2020-09-14",
+  "version-date": "2022-07-12",
   "port-version": 5,
   "description": "a set of client and server components which implement a crash-reporting system.",
   "homepage": "https://github.com/google/breakpad",
-  "supports": "!uwp",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp & (!windows | !arm) & (!windows | !arm64)",
   "dependencies": [
+    {
+      "name": "atlmfc",
+      "platform": "windows"
+    },
     "libdisasm",
     {
       "name": "vcpkg-cmake",
@@ -15,5 +20,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build breakpad tools",
+      "supports": "linux"
+    }
+  }
 }

@@ -1,10 +1,10 @@
 {
   "name": "aom",
-  "version-semver": "3.2.0",
-  "port-version": 2,
+  "version-semver": "3.5.0",
+  "port-version": 1,
   "description": "AV1 codec library",
   "homepage": "https://aomedia.googlesource.com/aom",
-  "supports": "!(windows & arm & !uwp)",
+  "license": "BSD-2-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

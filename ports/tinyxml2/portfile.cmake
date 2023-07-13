@@ -4,10 +4,15 @@ vcpkg_from_github(
     REF 9.0.0
     SHA512 9C5CE8131984690DF302CA3E32314573B137180ED522C92FD631692979C942372A28F697FDB3D5E56BCF2D3DC596262B724D088153F3E1D721C9536F2A883367
     HEAD_REF master
+    PATCHES
+        0001-fix-do-not-force-export-the-symbols-when-building-st.patch
+        0002-fix-check-for-TINYXML2_EXPORT-on-non-windows.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -Dtinyxml2_BUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
@@ -19,4 +24,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/readme.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

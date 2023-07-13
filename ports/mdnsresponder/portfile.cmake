@@ -1,12 +1,9 @@
-vcpkg_download_distfile(ARCHIVE
-  URLS https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-878.270.2.tar.gz
-  FILENAME mDNSResponder-878.270.2.tar.gz
-  SHA512 dbc1805c757fceb2b37165ad2575e4084447c10f47ddc871f5476e25affd91f5f759662c17843e30857a9ea1ffd25132bc8012737cf22700ac329713e6a3ac0a
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO apple-oss-distributions/mDNSResponder
+    REF f783506af3836b39b83fc14115bc2728a49db4b2 #mDNSResponder-1557.140.5.0.1
+    SHA512 f5954d3f8ef40790e14d17de4cd861fc7df6900e54affefb8282f080a0bfc8b4ac9d238f2faaea6bb3849b342836e45f3b2cb9361402f89fcdce3c627a2b9b4d
+    HEAD_REF main
 )
 
 IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
@@ -56,38 +53,20 @@ function(FIX_VCXPROJ VCXPROJ_PATH)
 endfunction()
 
 FIX_VCXPROJ("${SOURCE_PATH}/mDNSWindows/DLL/dnssd.vcxproj")
+if(${VCPKG_CRT_LINKAGE} STREQUAL "dynamic" AND ${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
+    FIX_VCXPROJ("${SOURCE_PATH}/mDNSWindows/DLLStub/DLLStub.vcxproj")
+endif()
 FIX_VCXPROJ("${SOURCE_PATH}/Clients/DNS-SD.VisualStudio/dns-sd.vcxproj")
 
-vcpkg_build_msbuild(
-  PROJECT_PATH "${SOURCE_PATH}/mDNSResponder.sln"
-  PLATFORM ${BUILD_ARCH}
-  TARGET dns-sd
+vcpkg_install_msbuild(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "mDNSWindows/mDNSResponder.sln"
+    PLATFORM ${BUILD_ARCH}
+    TARGET dns-sd
+    SKIP_CLEAN
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  file(INSTALL
-    "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Release/dnssd.dll"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
-  )
-  file(INSTALL
-    "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Debug/dnssd.dll"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
-  )
-endif()
-file(INSTALL
-  "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Release/dnssd.lib"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
-)
-file(INSTALL
-  "${SOURCE_PATH}/mDNSWindows/DLL/${BUILD_ARCH}/Debug/dnssd.lib"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
-)
-file(INSTALL
-  "${SOURCE_PATH}/mDNSShared/dns_sd.h"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-)
-file(INSTALL
-  "${SOURCE_PATH}/LICENSE"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
-)
+file(INSTALL "${SOURCE_PATH}/mDNSShared/dns_sd.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
 vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

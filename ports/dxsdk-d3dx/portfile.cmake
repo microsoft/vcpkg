@@ -14,8 +14,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 9f6a95ed858555c1c438a85219ede32c82729068b21dd7ecf11de01cf3cdd525b2f04a58643bfcc14c48a29403dc1c80246f0a12a1ef4377b91b855f6d6d7986
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH PACKAGE_PATH
+vcpkg_extract_source_archive(
+    PACKAGE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
 )
@@ -36,3 +36,5 @@ file(GLOB DEBUG_DLL_FILES "${PACKAGE_PATH}/build/native/debug/bin/${VCPKG_TARGET
 file(INSTALL ${DEBUG_DLL_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/")
 
 file(INSTALL "${PACKAGE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/dxsdk-d3dx-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" COPYONLY)

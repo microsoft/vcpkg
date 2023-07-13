@@ -1,7 +1,9 @@
 {
   "name": "chartdir",
   "version": "7.0.0",
-  "port-version": 2,
+  "port-version": 7,
   "description": "ChartDirector is a powerful chart component for creating professional looking charts for web and windows applications.",
-  "homepage": "https://www.advsofteng.com/"
+  "homepage": "https://www.advsofteng.com/",
+  "license": null,
+  "supports": "!(arm & windows) & !uwp"
 }

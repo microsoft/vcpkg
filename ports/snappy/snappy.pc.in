@@ -1,0 +1,10 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: @name@
+Description: @description@
+Version: @version@
+Libs: -L${libdir} -l@name@
+Cflags: -I${includedir}

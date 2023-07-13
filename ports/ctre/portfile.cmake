@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hanickadot/compile-time-regular-expressions
-    REF v3.4.1
-    SHA512 a7b44df9c30fb46373e34d8b98fe3ef3fd0486d33ba4d7bbf58a29eef05b22b8c903bf79ae539008a564f46e0bdee3e7700819d8d072c00537f8d175af59be3e
+    REF "v${VERSION}"
+    SHA512 1ffb56ca88db5c8b0e5a5e1bf25f4eb9d59b43a31f9a38970bb2beaa22390e86a5beaf350b20e336759d7af99509c4c120b4638969719b931e316e01976c24dc
     HEAD_REF main
 )
 
@@ -17,4 +17,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/ctre")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

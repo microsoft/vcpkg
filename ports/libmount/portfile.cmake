@@ -1,19 +1,20 @@
 set(VERSION_MAJOR 2)
-set(VERSION_MINOR 37)
-set(VERSION_PATCH 2)
-set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+set(VERSION_MINOR 38)
+set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v${VERSION_MAJOR}.${VERSION_MINOR}/util-linux-${VERSION}.tar.xz"
     FILENAME "util-linux-${VERSION}.tar.xz"
-    SHA512 38f0fe820445e3bfa79550e6581c230f98c7661566ccc4daa51c7208a5f972c61b4e57dfc86bed074fdbc7c40bc79f856be8f6a05a8860c1c0cecc4208e8b81d
+    SHA512 d0f7888f457592067938e216695871ce6475a45d83a092cc3fd72b8cf8fca145ca5f3a99122f1744ef60b4f773055cf4e178dc6c59cd30837172aee0b5597e8c
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF ${VERSION}
+    SOURCE_BASE ${VERSION}
 )
+
+set(ENV{GTKDOCIZE} true)
 
 vcpkg_configure_make(
     AUTOCONFIG

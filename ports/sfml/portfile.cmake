@@ -1,23 +1,17 @@
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO SFML/SFML
-    REF 2.5.1
+    REF "${VERSION}"
     HEAD_REF master
-    SHA512 7aed2fc29d1da98e6c4d598d5c86cf536cb4eb5c2079cdc23bb8e502288833c052579dadbe0ce13ad6461792d959bf6d9660229f54c54cf90a541c88c6b03d59
+    SHA512 aac734e8b0e16936c0238ec792c922923545ec6cf06576bc70004fa1920cd05b4c5e56fbc8a77b650bbe6e202adc39df1d30509dbce95778d04338917a38a87a
     PATCHES
-        use-system-freetype.patch
-        stb_include.patch
-        arm64.patch
+        fix-dependencies.patch
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/extlibs")
-# Without this, we get error: list sub-command REMOVE_DUPLICATES requires list to be present.
-file(MAKE_DIRECTORY "${SOURCE_PATH}/extlibs/libs")
-file(WRITE "${SOURCE_PATH}/extlibs/libs/x" "")
 # The embedded FindFreetype doesn't properly handle debug libraries
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Modules/FindFreetype.cmake")
 
 if(VCPKG_TARGET_IS_LINUX)
-    message(STATUS "SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxrandr\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxrandr-dev libxi-dev libudev-dev libgl1-mesa-dev")
+    message(STATUS "SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxrandr\n    libxcursor\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxrandr-dev libxcursor-dev libxi-dev libudev-dev libgl1-mesa-dev")
 endif()
 
 vcpkg_cmake_configure(
@@ -33,28 +27,23 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SFML)
 vcpkg_copy_pdbs()
 
-FILE(READ "${CURRENT_PACKAGES_DIR}/share/sfml/SFMLConfig.cmake" SFML_CONFIG)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    FILE(WRITE "${CURRENT_PACKAGES_DIR}/share/sfml/SFMLConfig.cmake" "set(SFML_STATIC_LIBRARIES true)\ninclude(CMakeFindDependencyMacro)\nfind_dependency(Freetype)\n${SFML_CONFIG}")
-else()
-    FILE(WRITE "${CURRENT_PACKAGES_DIR}/share/sfml/SFMLConfig.cmake" "set(SFML_STATIC_LIBRARIES false)\n${SFML_CONFIG}")
-endif()
-
 # move sfml-main to manual link dir
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib")
     file(COPY "${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib")
-    file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib")
     file(GLOB FILES "${CURRENT_PACKAGES_DIR}/share/sfml/SFML*Targets-*.cmake")
     foreach(FILE ${FILES})
         vcpkg_replace_string("${FILE}" "/lib/sfml-main" "/lib/manual-link/sfml-main")
     endforeach()
 endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib")
+    file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib")
+endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
-configure_file("${SOURCE_PATH}/license.md" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.md")

@@ -1,16 +1,22 @@
 {
   "name": "leptonica",
-  "version": "1.81.1",
-  "port-version": 1,
+  "version": "1.83.1",
   "description": "An open source library containing software that is broadly useful for image processing and image analysis applications",
   "homepage": "https://github.com/DanBloomberg/leptonica",
+  "license": null,
   "dependencies": [
     "giflib",
     "libjpeg-turbo",
     "libpng",
-    "libwebp",
+    {
+      "name": "libwebp",
+      "default-features": false
+    },
     "openjpeg",
-    "tiff",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

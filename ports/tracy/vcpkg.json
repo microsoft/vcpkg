@@ -1,9 +1,10 @@
 {
   "name": "tracy",
-  "version": "0.7.8",
-  "port-version": 2,
+  "version-semver": "0.9.1",
+  "port-version": 1,
   "description": "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications.",
   "homepage": "https://github.com/wolfpld/tracy",
+  "license": "BSD-3-Clause",
   "supports": "!(windows & (arm | uwp))",
   "dependencies": [
     {
@@ -18,5 +19,46 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "crash-handler"
+  ],
+  "features": {
+    "cli-tools": {
+      "description": "Build Tracy command-line tools: `capture`, `csvexport`, `import-chrome` and `update`",
+      "supports": "!(windows & x86)",
+      "dependencies": [
+        {
+          "name": "capstone",
+          "features": [
+            "arm",
+            "arm64",
+            "x86"
+          ]
+        }
+      ]
+    },
+    "crash-handler": {
+      "description": "Enable crash handler"
+    },
+    "gui-tools": {
+      "description": "Build Tracy GUI tool: `profiler` (aka `Tracy` executable)",
+      "supports": "!(windows & x86)",
+      "dependencies": [
+        {
+          "name": "capstone",
+          "features": [
+            "arm",
+            "arm64",
+            "x86"
+          ]
+        },
+        "freetype",
+        "glfw3"
+      ]
+    },
+    "on-demand": {
+      "description": "Enable on-demand profiling"
+    }
+  }
 }

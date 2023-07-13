@@ -1,0 +1,7 @@
+{
+  "name": "hps",
+  "version-date": "2022-01-18",
+  "description": "A C++11 High Performance Serialization Library.",
+  "homepage": "https://github.com/jl2922/hps",
+  "license": "MIT"
+}

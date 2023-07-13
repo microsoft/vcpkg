@@ -1,8 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 48908ead..5022a019 100644
+index 48908ead..90c17759 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -96,9 +96,12 @@ add_subdirectory(UnitTest++)
+@@ -92,13 +92,13 @@ include_directories(${PYTHON_INCLUDE_DIRS})
+ endif ()
+ 
+ if( WIN32 OR ${CMAKE_SYSTEM_NAME} STREQUAL "Linux" )
+-add_subdirectory(UnitTest++)
++#add_subdirectory(UnitTest++)
  endif()
  
  add_subdirectory(src)
@@ -11,12 +16,21 @@ index 48908ead..5022a019 100644
  if( WIN32)
 -add_subdirectory(test)
 +#add_subdirectory(test)
-+target_compile_definitions(TestUnitTest++ PRIVATE _CRT_SECURE_NO_WARNINGS)
-+target_compile_definitions(UnitTest++ PRIVATE _CRT_SECURE_NO_WARNINGS)
-+target_compile_definitions(ut PRIVATE _WINSOCK_DEPRECATED_NO_WARNINGS)
  endif()
  
  install(DIRECTORY ${CMAKE_SOURCE_DIR}/spec/ DESTINATION share/quickfix
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index cb4a60c6..d21fa995 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ add_subdirectory(C++)
+ 
+-if( WIN32 OR ${CMAKE_SYSTEM_NAME} STREQUAL "Linux" )
++if(0)
+ 
+ add_executable(at at.cpp getopt.c)
+ 
 diff --git a/src/C++/CMakeLists.txt b/src/C++/CMakeLists.txt
 index 07774c97..27692631 100644
 --- a/src/C++/CMakeLists.txt
@@ -61,7 +75,7 @@ index 0aa2cd3e..2829e110 100644
  #endif
  
 +#ifdef __cpp_noexcept_function_type
-+#define QUICKFIX_THROW(...) noexcept(false)
++#define QUICKFIX_THROW(...) noexcept
 +#else
 +#define QUICKFIX_THROW(...) throw(__VA_ARGS__)
 +#endif

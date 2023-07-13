@@ -1,5 +1,5 @@
 set(MSMPI_VERSION "10.1.12498")
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-${MSMPI_VERSION})
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/msmpi-${MSMPI_VERSION}")
 
 vcpkg_download_distfile(SDK_ARCHIVE
     URLS "https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisdk.msi"
@@ -27,10 +27,10 @@ if(EXISTS "${SYSTEM_MPIEXEC_FILEPATH}")
     set(MPIEXEC_VERSION_LOGNAME "mpiexec-version")
     vcpkg_execute_required_process(
         COMMAND ${SYSTEM_MPIEXEC_FILEPATH}
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
         LOGNAME ${MPIEXEC_VERSION_LOGNAME}
     )
-    file(READ ${CURRENT_BUILDTREES_DIR}/${MPIEXEC_VERSION_LOGNAME}-out.log MPIEXEC_OUTPUT)
+    file(READ "${CURRENT_BUILDTREES_DIR}/${MPIEXEC_VERSION_LOGNAME}-out.log" MPIEXEC_OUTPUT)
 
     if(MPIEXEC_OUTPUT MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+)\\.[0-9]+\\]")
         if(NOT CMAKE_MATCH_1 STREQUAL MSMPI_VERSION)
@@ -69,13 +69,13 @@ file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/msiexec-${TARGET_TRIPLET}.log" MS
 set(PARAM_MSI "/a \"${SDK_ARCHIVE}\"")
 set(PARAM_LOG "/log \"${MSIEXEC_LOG_PATH}\"")
 set(PARAM_TARGET_DIR "TARGETDIR=\"${SDK_SOURCE_DIR}\"")
-set(SCRIPT_FILE ${CURRENT_BUILDTREES_DIR}/msiextract-msmpi.bat)
+set(SCRIPT_FILE "${CURRENT_BUILDTREES_DIR}/msiextract-msmpi.bat")
 # Write the command out to a script file and run that to avoid weird escaping behavior when spaces are present
 file(WRITE ${SCRIPT_FILE} "msiexec ${PARAM_MSI} /qn ${PARAM_LOG} ${PARAM_TARGET_DIR}")
 
 vcpkg_execute_required_process(
     COMMAND ${SCRIPT_FILE}
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
     LOGNAME extract-sdk
 )
 
@@ -92,34 +92,37 @@ file(INSTALL
         "${SOURCE_INCLUDE_PATH}/pmidbg.h"
         "${SOURCE_INCLUDE_PATH}/${TRIPLET_SYSTEM_ARCH}/mpifptr.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include
+        "${CURRENT_PACKAGES_DIR}/include"
 )
 
 # NOTE: since the binary distribution does not include any debug libraries we always install the release libraries
 SET(VCPKG_POLICY_ONLY_RELEASE_CRT enabled)
 
 file(GLOB STATIC_LIBS
-    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifec.lib
-    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifmc.lib
-    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib
-    ${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib
+    "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifec.lib"
+    "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifmc.lib"
+    "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifes.lib"
+    "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpifms.lib"
 )
 
 file(INSTALL
         "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpi.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+    DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
 )
 file(INSTALL
         "${SOURCE_LIB_PATH}/${TRIPLET_SYSTEM_ARCH}/msmpi.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    file(INSTALL ${STATIC_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(INSTALL ${STATIC_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(INSTALL ${STATIC_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(INSTALL ${STATIC_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
 
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/mpi-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 # Handle copyright
-file(COPY "${SOURCE_PATH}/sdk/PFiles/Microsoft SDKs/MPI/License/MicrosoftMPI-SDK-EULA.rtf" DESTINATION ${CURRENT_PACKAGES_DIR}/share/msmpi)
-file(COPY "${SOURCE_PATH}/sdk/PFiles/Microsoft SDKs/MPI/License/MPI-SDK-TPN.txt" DESTINATION ${CURRENT_PACKAGES_DIR}/share/msmpi)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/msmpi/copyright "See the accompanying MicrosoftMPI-SDK-EULA.rtf and MPI-SDK-TPN.txt")
+file(COPY "${SOURCE_PATH}/sdk/PFiles/Microsoft SDKs/MPI/License/MicrosoftMPI-SDK-EULA.rtf" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(COPY "${SOURCE_PATH}/sdk/PFiles/Microsoft SDKs/MPI/License/MPI-SDK-TPN.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "See the accompanying MicrosoftMPI-SDK-EULA.rtf and MPI-SDK-TPN.txt")

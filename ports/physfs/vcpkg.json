@@ -1,14 +1,18 @@
 {
   "name": "physfs",
-  "version-semver": "3.0.2",
-  "port-version": 6,
+  "version-semver": "3.2.0",
+  "port-version": 1,
   "description": "a library to provide abstract access to various archives",
   "homepage": "https://icculus.org/physfs/",
+  "license": "Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
       "host": true
     },
-    "zlib"
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

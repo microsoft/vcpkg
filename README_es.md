@@ -111,7 +111,7 @@ Para utilizar Vcpkg con CMake sin un IDE,
 puede utilizar el archivo de herramientas incluido:
 
 ```cmd
-> cmake -B [directorio de compilación] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [directorio de compilación] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 > cmake --build [directorio de compilación]
 ```
 
@@ -168,7 +168,7 @@ $ ./vcpkg/vcpkg search [término de búsqueda]
 Para usar vcpkg con CMake, tiene que usar el siguiente archivo toolchain:
 
 ```sh
-$ cmake -B [directorio de compilación] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+$ cmake -B [directorio de compilación] -S . "-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake"
 $ cmake --build [directorio de compilación]
 ```
 
@@ -261,7 +261,7 @@ puede agregar lo siguiente as su CMakeLists,txt antes de la primera llamada a `p
 en vez de pasar `CMAKE_TOOLCHAIN_FILE` a la invocación de CMake.
 
 ```cmake
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
   CACHE STRING "Vcpkg toolchain file")
 ```
 
@@ -319,7 +319,7 @@ puede usar un simple `vcpkg install --feature-flags=manifests`
 Para más información, revise la especificación de [manifiesto][getting-started:manifest-spec]
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/integration.md
+[getting-started:integration]: docs/users/buildsystems/integration.md
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #Instalando-Herramientas-de-desarrollo-en-Linux
@@ -402,4 +402,4 @@ puede ser dado de baja de la telemetría realizando lo siguiente:
 - agregar el parametro `--disable-metrics` a vcpkg en la línea de comandos
 - agregar la variable de entorno `VCPKG_DISABLE_METRICS`
 
-Se puede leer más sobre la telemetría de vcpkg en docs/about/privacy.md
+Se puede leer más sobre la telemetría de vcpkg en [https://learn.microsoft.com/vcpkg/about/privacy](https://learn.microsoft.com/vcpkg/about/privacy).

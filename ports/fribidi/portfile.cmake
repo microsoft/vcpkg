@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fribidi/fribidi
-    REF v1.0.11
-    SHA512 9ddb0dbfb28ee4f1d9dd5d46fe1fff75c5446bfdacaabf8647847c36ef72eec823f6e6d6d1369d67c292d680004f7113c9e69114a8fae1d73ab11a58c66a8b8a
+    REF v1.0.12
+    SHA512 a3a63e1dde1cffb097376df0b34522700cff600da61bdafd6f4f50db6937383b9f73a82081cb1a7f2e1946ba07fea13e2880a4250b1508850bffa500046a7fa5
     HEAD_REF master
     PATCHES meson-crosscompile.patch
 )
@@ -53,4 +53,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

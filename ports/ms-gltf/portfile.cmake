@@ -5,12 +5,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/glTF-SDK
-    REF ac3e70392feb6aef18a07314669f6af2ebc72787 # r1.9.5.4
-    SHA512 389b801ddc6f0b29269bcd1215fa9e63fe46a1f1a8778125c6439e34fe0925d5534b1cdbea30824a4a8aa008015124dc7cc4558daa9522fc6d85e00e8e41e4a9
+    REF eaccf166e2718c6133db426545b6d008cb7ad79f # 28-06-2022
+    SHA512 112e31d2f42d2fb22060a687f7d33f22e677d8d7eca006eb8c1edef6a61b8bad637df15492665656ea88a5a0b980851eb978a180b4a01d307d1bbc92f63500f1
     HEAD_REF master
     PATCHES
         fix-install.patch
-        fix-apple-filesystem.patch
 )
 
 # note: Test/Sample executables won't be installed
@@ -23,14 +22,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 # note: Platform-native buildsystem will be more helpful to launch/debug the tests/samples.
 # note: The PDB file path is making Ninja fails to install.
 #       For Windows, we rely on /MP. The other platforms should be able to build with PREFER_NINJA.
-set(WINDOWS_USE_MSBUILD)
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(WINDOWS_USE_MSBUILD "WINDOWS_USE_MSBUILD")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    ${WINDOWS_USE_MSBUILD}
+    WINDOWS_USE_MSBUILD
     OPTIONS
         ${FEATURE_OPTIONS}
 )
@@ -42,4 +36,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

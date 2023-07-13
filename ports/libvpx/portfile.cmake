@@ -1,16 +1,16 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(LIBVPX_VERSION 1.10.0)
+set(LIBVPX_VERSION 1.12.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libvpx
     REF v${LIBVPX_VERSION}
-    SHA512 f88c588145b5164e98531b75215e119056cd806a9dbe6599bb9dab35c0af0ecd4b3daabee7d795e412a58aeb543d5c7dc0107457c4bd8f4d434e966e8e22a32d
+    SHA512 dc059bc3102b75524ae29989372334b3e0f2acf1520e5a4daa4073831bb55949d82897c498fb9d2d38b59f1a66bb0ad24407d0d086b1e3a8394a4933f04f2ed0
     HEAD_REF master
     PATCHES
         0002-Fix-nasm-debug-format-flag.patch
-        0003-add-uwp-and-v142-support.patch
+        0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
 )
 
@@ -19,12 +19,12 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 
 if(CMAKE_HOST_WIN32)
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-	set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+    set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
 else()
-	set(BASH /bin/bash)
-	set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
+    set(BASH /bin/bash)
+    set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
 endif()
 
 vcpkg_find_acquire_program(NASM)
@@ -42,7 +42,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_CRT_SUFFIX md)
     endif()
 
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore AND VCPKG_PLATFORM_TOOLSET STREQUAL v142)
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore AND (VCPKG_PLATFORM_TOOLSET STREQUAL v142 OR VCPKG_PLATFORM_TOOLSET STREQUAL v143))
         set(LIBVPX_TARGET_OS "uwp")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
         set(LIBVPX_TARGET_OS "win32")
@@ -64,7 +64,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_ARCH_DIR "ARM")
     endif()
 
-    if(VCPKG_PLATFORM_TOOLSET STREQUAL v142)
+    if(VCPKG_PLATFORM_TOOLSET STREQUAL v143)
+        set(LIBVPX_TARGET_VS "vs17")
+    elseif(VCPKG_PLATFORM_TOOLSET STREQUAL v142)
         set(LIBVPX_TARGET_VS "vs16")
     else()
         set(LIBVPX_TARGET_VS "vs15")
@@ -143,10 +145,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}")
         configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/vpx.pc" @ONLY)
     endif()
-    
+
     if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         set(LIBVPX_PREFIX "${CURRENT_INSTALLED_DIR}/debug")
-        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpx.pc" @ONLY)   
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/vpx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpx.pc" @ONLY)
     endif()
 
 else()
@@ -191,6 +193,9 @@ else()
     elseif(VCPKG_TARGET_IS_OSX)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             set(LIBVPX_TARGET "arm64-darwin20-gcc")
+            if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
+                set(MAC_OSX_MIN_VERSION_CFLAGS --extra-cflags=-mmacosx-version-min=${VCPKG_OSX_DEPLOYMENT_TARGET} --extra-cxxflags=-mmacosx-version-min=${VCPKG_OSX_DEPLOYMENT_TARGET})
+            endif()
         else()
             set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
         endif()
@@ -210,6 +215,7 @@ else()
             --target=${LIBVPX_TARGET}
             ${OPTIONS}
             ${OPTIONS_RELEASE}
+            ${MAC_OSX_MIN_VERSION_CFLAGS}
             --as=nasm
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
         LOGNAME configure-${TARGET_TRIPLET}-rel)
@@ -243,6 +249,7 @@ else()
             --target=${LIBVPX_TARGET}
             ${OPTIONS}
             ${OPTIONS_DEBUG}
+            ${MAC_OSX_MIN_VERSION_CFLAGS}
             --as=nasm
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
         LOGNAME configure-${TARGET_TRIPLET}-dbg)

@@ -1,10 +1,11 @@
 {
   "name": "libmysql",
-  "version": "8.0.20",
-  "port-version": 5,
+  "version": "8.0.32",
+  "port-version": 6,
   "description": "A MySQL client library for C development",
   "homepage": "https://github.com/mysql/mysql-server",
-  "supports": "!(windows & x86) & !uwp",
+  "license": "GPL-2.0-or-later",
+  "supports": "!(windows & x86) & !uwp & !xbox",
   "dependencies": [
     "boost-algorithm",
     "boost-functional",
@@ -14,6 +15,10 @@
     "icu",
     "libevent",
     "lz4",
+    {
+      "name": "ncurses",
+      "platform": "!windows | mingw"
+    },
     "openssl",
     {
       "name": "vcpkg-cmake",

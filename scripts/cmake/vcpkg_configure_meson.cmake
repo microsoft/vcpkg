@@ -1,47 +1,4 @@
-#[===[.md:
-# vcpkg_configure_meson
-
-Configure Meson for Debug and Release builds of a project.
-
-## Usage
-```cmake
-vcpkg_configure_meson(
-    SOURCE_PATH <${SOURCE_PATH}>
-    [NO_PKG_CONFIG]
-    [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-    [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-    [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-)
-```
-
-## Parameters
-### SOURCE_PATH
-Specifies the directory containing the `meson.build`.
-By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-
-### OPTIONS
-Additional options passed to Meson during the configuration.
-
-### OPTIONS_RELEASE
-Additional options passed to Meson during the Release configuration. These are in addition to `OPTIONS`.
-
-### OPTIONS_DEBUG
-Additional options passed to Meson during the Debug configuration. These are in addition to `OPTIONS`.
-
-### NO_PKG_CONFIG
-Disable pkg-config setup 
-
-## Notes
-This command supplies many common arguments to Meson. To see the full list, examine the source.
-
-## Examples
-
-* [fribidi](https://github.com/Microsoft/vcpkg/blob/master/ports/fribidi/portfile.cmake)
-* [libepoxy](https://github.com/Microsoft/vcpkg/blob/master/ports/libepoxy/portfile.cmake)
-#]===]
-
-function(z_vcpkg_append_proglist var_to_append additional_binaries)
-    string(APPEND "${var_to_append}" "[binaries]\n")
+function(z_vcpkg_meson_set_proglist_variables config_type)
     if(VCPKG_TARGET_IS_WINDOWS)
         set(proglist MT AR)
     else()
@@ -50,93 +7,59 @@ function(z_vcpkg_append_proglist var_to_append additional_binaries)
     foreach(prog IN LISTS proglist)
         if(VCPKG_DETECTED_CMAKE_${prog})
             if(meson_${prog})
-                string(APPEND "${var_to_append}" "${meson_${prog}} = '${VCPKG_DETECTED_CMAKE_${prog}}'\n")
-            else()
+                string(TOUPPER "MESON_${meson_${prog}}" var_to_set)
+                set("${var_to_set}" "${meson_${prog}} = ['${VCPKG_DETECTED_CMAKE_${prog}}']" PARENT_SCOPE)
+            elseif(${prog} STREQUAL AR AND VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${config_type})
+                # Probably need to move AR somewhere else
                 string(TOLOWER "${prog}" proglower)
-                string(APPEND "${var_to_append}" "${proglower} = '${VCPKG_DETECTED_CMAKE_${prog}}'\n")
+                z_vcpkg_meson_convert_compiler_flags_to_list(ar_flags "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${config_type}}")
+                list(PREPEND ar_flags "${VCPKG_DETECTED_CMAKE_${prog}}")
+                z_vcpkg_meson_convert_list_to_python_array(ar_flags ${ar_flags})
+                set("MESON_AR" "${proglower} = ${ar_flags}" PARENT_SCOPE)
+            else()
+                string(TOUPPER "MESON_${prog}" var_to_set)
+                string(TOLOWER "${prog}" proglower)
+                set("${var_to_set}" "${proglower} = ['${VCPKG_DETECTED_CMAKE_${prog}}']" PARENT_SCOPE)
             endif()
         endif()
     endforeach()
-    set(programs C CXX RC)
-    set(meson_RC windres)
-    set(meson_CXX cpp)
-    foreach(prog IN LISTS programs)
-        if(VCPKG_DETECTED_CMAKE_${prog}_COMPILER)
-            if(meson_${prog})
-                string(APPEND "${var_to_append}" "${meson_${prog}} = '${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}'\n")
-            else()
-                string(TOLOWER "${prog}" proglower)
-                string(APPEND "${var_to_append}" "${proglower} = '${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}'\n")
-            endif()
-        endif()
-    endforeach()
-    if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS)
-        # for gcc and icc the linker flag -fuse-ld is used. See https://github.com/mesonbuild/meson/issues/8647#issuecomment-878673456
-        if (NOT VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "^(GNU|Intel)$")
-            string(APPEND "${var_to_append}" "c_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
-        endif()
-    endif()
-    if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS)
-        # for gcc and icc the linker flag -fuse-ld is used. See https://github.com/mesonbuild/meson/issues/8647#issuecomment-878673456
-        if (NOT VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Intel)$")
-            string(APPEND "${var_to_append}" "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
-        endif()
-    endif()
-
-    get_filename_component(CMAKE_PATH "${CMAKE_COMMAND}" DIRECTORY)
-    vcpkg_add_to_path("${CMAKE_PATH}" PREPEND) # Make CMake invokeable for Meson
-    string(APPEND "${var_to_append}" "cmake = '${CMAKE_COMMAND}'\n")
-
-    vcpkg_find_acquire_program(PYTHON3)
-    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-    vcpkg_add_to_path("${PYTHON3_DIR}")
-    string(APPEND "${var_to_append}" "python = '${PYTHON3}'\n")
-
-    vcpkg_find_acquire_program(NINJA)
-    get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-    vcpkg_add_to_path(PREPEND "${NINJA_PATH}") # Prepend to use the correct ninja. 
-    # string(APPEND "${var_to_append}" "ninja = '${NINJA}'\n") # This does not work due to meson issues
-    
-    foreach(additional_binary IN LISTS additional_binaries)
-        string(APPEND "${var_to_append}" "${additional_binary}\n")
-    endforeach()
-    set("${var_to_append}" "${${var_to_append}}" PARENT_SCOPE)
-endfunction()
-
-function(z_vcpkg_meson_generate_native_file additional_binaries) #https://mesonbuild.com/Native-environments.html
-    set(native_config "")
-    z_vcpkg_append_proglist(native_config "${additional_binaries}")
-
-    string(APPEND native_config "[built-in options]\n") #https://mesonbuild.com/Builtin-options.html
-    if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
-        # This is currently wrongly documented in the meson docs or buggy. The docs say: 'none' = no flags
-        # In reality however 'none' tries to deactivate eh and meson passes the flags for it resulting in a lot of warnings
-        # about overriden flags. Until this is fixed in meson vcpkg should not pass this here.
-        # string(APPEND native_config "cpp_eh='none'\n") # To make sure meson is not adding eh flags by itself using msvc
-    endif()
+    set(compilers "${arg_LANGUAGES}")
     if(VCPKG_TARGET_IS_WINDOWS)
-        set(c_winlibs "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
-        set(cpp_winlibs "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
-        foreach(libvar IN ITEMS c_winlibs cpp_winlibs)
-            string(REGEX REPLACE "( |^)(-|/)" [[;\2]] "${libvar}" "${${libvar}}")
-            string(REPLACE ".lib " ".lib;" "${libvar}" "${${libvar}}")
-            vcpkg_list(REMOVE_ITEM "${libvar}" "")
-            vcpkg_list(JOIN "${libvar}" "', '" "${libvar}")
-            string(APPEND native_config "${libvar} = ['${${libvar}}']\n")
-        endforeach()
+        list(APPEND compilers RC)
     endif()
-
-    set(native_config_name "${CURRENT_BUILDTREES_DIR}/meson-native-${TARGET_TRIPLET}.log")
-    set(vcpkg_meson_native_file "${native_config_name}" PARENT_SCOPE)
-    file(WRITE "${native_config_name}" "${native_config}")
+    set(meson_RC windres)
+    set(meson_Fortran fc)
+    set(meson_CXX cpp)
+    foreach(prog IN LISTS compilers)
+        if(VCPKG_DETECTED_CMAKE_${prog}_COMPILER)
+            string(TOUPPER "MESON_${prog}" var_to_set)
+            if(meson_${prog})
+                set("${var_to_set}" "${meson_${prog}} = ['${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}']" PARENT_SCOPE)
+                if (DEFINED VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID AND NOT VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID MATCHES "^(GNU|Intel)$")
+                    string(TOUPPER "MESON_${prog}_LD" var_to_set)
+                    set(${var_to_set} "${meson_${prog}}_ld = ['${VCPKG_DETECTED_CMAKE_LINKER}']" PARENT_SCOPE)
+                endif()
+            elseif(${prog} MATCHES RC AND VCPKG_DETECTED_CMAKE_RC_FLAGS_${config_type})
+                z_vcpkg_meson_convert_compiler_flags_to_list(rc_flags "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${config_type}}")
+                list(PREPEND rc_flags "${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}")
+                z_vcpkg_meson_convert_list_to_python_array(rc_flags ${rc_flags})
+                set("${var_to_set}" "${meson_${prog}} = ${rc_flags}" PARENT_SCOPE)
+            else()
+                string(TOLOWER "${prog}" proglower)
+                set("${var_to_set}" "${proglower} = ['${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}']" PARENT_SCOPE)
+                if (DEFINED VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID AND NOT VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID MATCHES "^(GNU|Intel)$")
+                    string(TOUPPER "MESON_${prog}_LD" var_to_set)
+                    set(${var_to_set} "${proglower}_ld = ['${VCPKG_DETECTED_CMAKE_LINKER}']" PARENT_SCOPE)
+                endif()
+            endif()
+        endif()
+    endforeach()
 endfunction()
 
 function(z_vcpkg_meson_convert_compiler_flags_to_list out_var compiler_flags)
-    string(REPLACE ";" [[\;]] tmp_var "${compiler_flags}")
-    string(REGEX REPLACE [=[( +|^)((\"(\\"|[^"])+"|\\"|\\ |[^ ])+)]=] ";\\2" tmp_var "${tmp_var}")
-    vcpkg_list(POP_FRONT tmp_var) # The first element is always empty due to the above replacement
-    list(TRANSFORM tmp_var STRIP) # Strip leading trailing whitespaces from each element in the list.
-    set("${out_var}" "${tmp_var}" PARENT_SCOPE)
+    separate_arguments(cmake_list NATIVE_COMMAND "${compiler_flags}")
+    list(TRANSFORM cmake_list REPLACE ";" [[\\;]])
+    set("${out_var}" "${cmake_list}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_meson_convert_list_to_python_array out_var)
@@ -147,9 +70,7 @@ function(z_vcpkg_meson_convert_list_to_python_array out_var)
 endfunction()
 
 # Generates the required compiler properties for meson
-function(z_vcpkg_meson_generate_flags_properties_string out_var config_type)
-    set(result "")
-
+function(z_vcpkg_meson_set_flags_variables config_type)
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(libpath_flag /LIBPATH:)
     else()
@@ -161,93 +82,35 @@ function(z_vcpkg_meson_generate_flags_properties_string out_var config_type)
         set(path_suffix "")
     endif()
 
+    set(includepath "-I${CURRENT_INSTALLED_DIR}/include")
     set(libpath "${libpath_flag}${CURRENT_INSTALLED_DIR}${path_suffix}/lib")
 
-    z_vcpkg_meson_convert_compiler_flags_to_list(cflags "${VCPKG_DETECTED_CMAKE_C_FLAGS_${config_type}}")
-    vcpkg_list(APPEND cflags "-I${CURRENT_INSTALLED_DIR}/include")
-    z_vcpkg_meson_convert_list_to_python_array(cflags ${cflags})
-    string(APPEND result "c_args = ${cflags}\n")
-
-    z_vcpkg_meson_convert_compiler_flags_to_list(cxxflags "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${config_type}}")
-    vcpkg_list(APPEND cxxflags "-I${CURRENT_INSTALLED_DIR}/include")
-    z_vcpkg_meson_convert_list_to_python_array(cxxflags ${cxxflags})
-    string(APPEND result "cpp_args = ${cxxflags}\n")
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    foreach(lang IN LISTS arg_LANGUAGES)
+        z_vcpkg_meson_convert_compiler_flags_to_list(${lang}flags "${VCPKG_DETECTED_CMAKE_${lang}_FLAGS_${config_type}}")
+        if(lang MATCHES "^(C|CXX)$")
+            vcpkg_list(APPEND ${lang}flags "${includepath}")
+        endif()
+        z_vcpkg_meson_convert_list_to_python_array(${lang}flags ${${lang}flags})
+        set(lang_mapping "${lang}")
+        if(lang STREQUAL "Fortran")
+            set(lang_mapping "FC")
+        endif()
+        string(TOLOWER "${lang_mapping}" langlower)
+        if(lang STREQUAL "CXX")
+            set(langlower cpp)
+        endif()
+        set(MESON_${lang_mapping}FLAGS "${langlower}_args = ${${lang}flags}\n")
         set(linker_flags "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${config_type}}")
-    else()
-        set(linker_flags "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${config_type}}")
-    endif()
-    z_vcpkg_meson_convert_compiler_flags_to_list(linker_flags "${linker_flags}")
-    if(VCPKG_TARGET_IS_OSX)
-        # macOS - append arch and isysroot if cross-compiling
-        if(NOT "${VCPKG_OSX_ARCHITECTURES}" STREQUAL "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
-            foreach(arch IN LISTS VCPKG_OSX_ARCHITECTURES)
-                vcpkg_list(APPEND linker_flags -arch "${arch}")
-            endforeach()
-        endif()
-        if(VCPKG_DETECTED_CMAKE_OSX_SYSROOT)
-            vcpkg_list(APPEND linker_flags -isysroot "${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
-        endif()    
-    endif()
-    vcpkg_list(APPEND linker_flags "${libpath}")
-    z_vcpkg_meson_convert_list_to_python_array(linker_flags ${linker_flags})
-    string(APPEND result "c_link_args = ${linker_flags}\n")
-    string(APPEND result "cpp_link_args = ${linker_flags}\n")
-    set("${out_var}" "${result}" PARENT_SCOPE)
+        z_vcpkg_meson_convert_compiler_flags_to_list(linker_flags "${linker_flags}")
+        vcpkg_list(APPEND linker_flags "${libpath}")
+        z_vcpkg_meson_convert_list_to_python_array(linker_flags ${linker_flags})
+        string(APPEND MESON_${lang_mapping}FLAGS "${langlower}_link_args = ${linker_flags}")
+        set(MESON_${lang_mapping}FLAGS "${MESON_${lang_mapping}FLAGS}" PARENT_SCOPE)
+    endforeach()
 endfunction()
 
-function(z_vcpkg_meson_generate_native_file_config config_type) #https://mesonbuild.com/Native-environments.html
-    set(native_file "[properties]\n") #https://mesonbuild.com/Builtin-options.html
-    #Setup CMake properties
-    string(APPEND native_file "cmake_toolchain_file  = '${SCRIPTS}/buildsystems/vcpkg.cmake'\n")
-    string(APPEND native_file "[cmake]\n")
-
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-        elseif(VCPKG_TARGET_IS_LINUX)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
-        elseif(VCPKG_TARGET_IS_ANDROID)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
-        elseif(VCPKG_TARGET_IS_OSX)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
-        elseif(VCPKG_TARGET_IS_IOS)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
-        elseif(VCPKG_TARGET_IS_FREEBSD)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
-        elseif(VCPKG_TARGET_IS_OPENBSD)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/openbsd.cmake")
-        elseif(VCPKG_TARGET_IS_MINGW)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
-        endif()
-    endif()
-
-    string(APPEND native_file "VCPKG_TARGET_TRIPLET = '${TARGET_TRIPLET}'\n")
-    string(APPEND native_file "VCPKG_CHAINLOAD_TOOLCHAIN_FILE = '${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}'\n")
-    string(APPEND native_file "VCPKG_CRT_LINKAGE = '${VCPKG_CRT_LINKAGE}'\n")
-
-    string(APPEND native_file "[built-in options]\n")
-    z_vcpkg_meson_generate_flags_properties_string(native_properties "${config_type}")
-    string(APPEND native_file "${native_properties}")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        if(VCPKG_CRT_LINKAGE STREQUAL "static")
-            set(crt_type mt)
-        else()
-            set(crt_type md)
-        endif()
-        if("${config_type}" STREQUAL "DEBUG")
-            string(APPEND crt_type "d")
-        endif()
-        string(APPEND native_file "b_vscrt = '${crt_type}'\n")
-    endif()
-    string(TOLOWER "${config_type}" lowerconfig)
-    set(native_config_name "${CURRENT_BUILDTREES_DIR}/meson-native-${TARGET_TRIPLET}-${lowerconfig}.log")
-    file(WRITE "${native_config_name}" "${native_file}")
-    set("vcpkg_meson_native_file_${config_type}" "${native_config_name}" PARENT_SCOPE)
-endfunction()
-
-function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbuild.com/Cross-compilation.html
+function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #https://mesonbuild.com/Cross-compilation.html
+    set(build_unknown FALSE)
     if(CMAKE_HOST_WIN32)
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
             set(build_arch $ENV{PROCESSOR_ARCHITEW6432})
@@ -267,21 +130,28 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
             set(build_cpu_fam arm)
             set(build_cpu armv7hl)
         else()
-            message(FATAL_ERROR "Unsupported host architecture ${build_arch}!")
+            if(NOT DEFINED VCPKG_MESON_CROSS_FILE OR NOT DEFINED VCPKG_MESON_NATIVE_FILE)
+                message(WARNING "Unsupported build architecture ${build_arch}! Please set VCPKG_MESON_(CROSS|NATIVE)_FILE to a meson file containing the build_machine entry!")
+            endif()
+            set(build_unknown TRUE)
         endif()
     elseif(CMAKE_HOST_UNIX)
         # at this stage, CMAKE_HOST_SYSTEM_PROCESSOR is not defined
         execute_process(
             COMMAND uname -m
             OUTPUT_VARIABLE MACHINE
+            OUTPUT_STRIP_TRAILING_WHITESPACE
             COMMAND_ERROR_IS_FATAL ANY)
-        
+
         # Show real machine architecture to visually understand whether we are in a native Apple Silicon terminal or running under Rosetta emulation
         debug_message("Machine: ${MACHINE}")
 
         if(MACHINE MATCHES "arm64|aarch64")
             set(build_cpu_fam aarch64)
             set(build_cpu armv8)
+        elseif(MACHINE MATCHES "armv7h?l")
+            set(build_cpu_fam arm)
+            set(build_cpu ${MACHINE})
         elseif(MACHINE MATCHES "x86_64|amd64")
             set(build_cpu_fam x86_64)
             set(build_cpu x86_64)
@@ -291,14 +161,48 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
         elseif(MACHINE MATCHES "i386")
             set(build_cpu_fam x86)
             set(build_cpu i386)
+        elseif(MACHINE MATCHES "loongarch64")
+            set(build_cpu_fam loongarch64)
+            set(build_cpu loongarch64)
         else()
             # https://github.com/mesonbuild/meson/blob/master/docs/markdown/Reference-tables.md#cpu-families
-            message(FATAL_ERROR "Unhandled machine: ${MACHINE}")
+            if(NOT DEFINED VCPKG_MESON_CROSS_FILE OR NOT DEFINED VCPKG_MESON_NATIVE_FILE)
+                message(WARNING "Unhandled machine: ${MACHINE}! Please set VCPKG_MESON_(CROSS|NATIVE)_FILE to a meson file containing the build_machine entry!")
+            endif()
+            set(build_unknown TRUE)
         endif()
     else()
-        message(FATAL_ERROR "Failed to detect the host architecture!")
+        if(NOT DEFINED VCPKG_MESON_CROSS_FILE OR NOT DEFINED VCPKG_MESON_NATIVE_FILE)
+            message(WARNING "Failed to detect the build architecture! Please set VCPKG_MESON_(CROSS|NATIVE)_FILE to a meson file containing the build_machine entry!")
+        endif()
+        set(build_unknown TRUE)
     endif()
 
+    set(build "[build_machine]\n") # Machine the build is performed on
+    string(APPEND build "endian = 'little'\n")
+    if(WIN32)
+        string(APPEND build "system = 'windows'\n")
+    elseif(DARWIN)
+        string(APPEND build "system = 'darwin'\n")
+    elseif(CYGWIN)
+        string(APPEND build "system = 'cygwin'\n")
+    elseif(UNIX)
+        string(APPEND build "system = 'linux'\n")
+    else()
+        set(build_unknown TRUE)
+    endif()
+
+    if(DEFINED build_cpu_fam)
+        string(APPEND build "cpu_family = '${build_cpu_fam}'\n")
+    endif()
+    if(DEFINED build_cpu)
+        string(APPEND build "cpu = '${build_cpu}'")
+    endif()
+    if(NOT build_unknown)
+        set(${build_system} "${build}" PARENT_SCOPE)
+    endif()
+
+    set(host_unkown FALSE)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "(amd|AMD|x|X)64")
         set(host_cpu_fam x86_64)
         set(host_cpu x86_64)
@@ -311,134 +215,177 @@ function(z_vcpkg_meson_generate_cross_file additional_binaries) #https://mesonbu
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)$")
         set(host_cpu_fam arm)
         set(host_cpu armv7hl)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch64")
+        set(host_cpu_fam loongarch64)
+        set(host_cpu loongarch64)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "wasm32")
+        set(host_cpu_fam wasm32)
+        set(host_cpu wasm32)
     else()
-        message(FATAL_ERROR "Unsupported target architecture ${VCPKG_TARGET_ARCHITECTURE}!" )
+        if(NOT DEFINED VCPKG_MESON_CROSS_FILE OR NOT DEFINED VCPKG_MESON_NATIVE_FILE)
+            message(WARNING "Unsupported target architecture ${VCPKG_TARGET_ARCHITECTURE}! Please set VCPKG_MESON_(CROSS|NATIVE)_FILE to a meson file containing the host_machine entry!" )
+        endif()
+        set(host_unkown TRUE)
     endif()
 
-    set(cross_file "")
-    z_vcpkg_append_proglist(cross_file "${additional_binaries}")
-
-    string(APPEND cross_file "[properties]\n")
-
-    string(APPEND cross_file "[host_machine]\n")
-    string(APPEND cross_file "endian = 'little'\n")
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW)
+    set(host "[host_machine]\n") # host=target in vcpkg. 
+    string(APPEND host "endian = 'little'\n")
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW OR VCPKG_TARGET_IS_UWP)
         set(meson_system_name "windows")
     else()
         string(TOLOWER "${VCPKG_CMAKE_SYSTEM_NAME}" meson_system_name)
     endif()
-    string(APPEND cross_file "system = '${meson_system_name}'\n")
-    string(APPEND cross_file "cpu_family = '${host_cpu_fam}'\n")
-    string(APPEND cross_file "cpu = '${host_cpu}'\n")
-
-    string(APPEND cross_file "[build_machine]\n")
-    string(APPEND cross_file "endian = 'little'\n")
-    if(WIN32)
-        string(APPEND cross_file "system = 'windows'\n")
-    elseif(DARWIN)
-        string(APPEND cross_file "system = 'darwin'\n")
-    else()
-        string(APPEND cross_file "system = 'linux'\n")
-    endif()
-
-    if(DEFINED build_cpu_fam)
-        string(APPEND cross_file "cpu_family = '${build_cpu_fam}'\n")
-    endif()
-    if(DEFINED build_cpu)
-        string(APPEND cross_file "cpu = '${build_cpu}'\n")
+    string(APPEND host "system = '${meson_system_name}'\n")
+    string(APPEND host "cpu_family = '${host_cpu_fam}'\n")
+    string(APPEND host "cpu = '${host_cpu}'")
+    if(NOT host_unkown)
+        set(${host_system} "${host}" PARENT_SCOPE)
     endif()
 
     if(NOT build_cpu_fam MATCHES "${host_cpu_fam}"
        OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_UWP
        OR (VCPKG_TARGET_IS_MINGW AND NOT WIN32))
-        set(native_config_name "${CURRENT_BUILDTREES_DIR}/meson-cross-${TARGET_TRIPLET}.log")
-        set(vcpkg_meson_cross_file "${native_config_name}" PARENT_SCOPE)
-        file(WRITE "${native_config_name}" "${cross_file}")
+        set(${is_cross} TRUE PARENT_SCOPE)
     endif()
 endfunction()
 
-function(z_vcpkg_meson_generate_cross_file_config config_type) #https://mesonbuild.com/Native-environments.html
-    set(cross_${config_type}_log "[properties]\n") #https://mesonbuild.com/Builtin-options.html
-    string(APPEND cross_${config_type}_log "[built-in options]\n")
-    z_vcpkg_meson_generate_flags_properties_string(cross_properties ${config_type})
-    string(APPEND cross_${config_type}_log "${cross_properties}")
+function(z_vcpkg_meson_setup_extra_windows_variables config_type)
+    ## b_vscrt
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        set(crt_type "mt")
+    else()
+        set(crt_type "md")
+    endif()
+    if(config_type STREQUAL "DEBUG")
+        set(crt_type "${crt_type}d")
+    endif()
+    set(MESON_VSCRT_LINKAGE "b_vscrt = '${crt_type}'" PARENT_SCOPE)
+    ## winlibs
+    separate_arguments(c_winlibs NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
+    separate_arguments(cpp_winlibs NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
+    z_vcpkg_meson_convert_list_to_python_array(c_winlibs ${c_winlibs})
+    z_vcpkg_meson_convert_list_to_python_array(cpp_winlibs ${cpp_winlibs})
+    set(MESON_WINLIBS "c_winlibs = ${c_winlibs}\n")
+    string(APPEND MESON_WINLIBS "cpp_winlibs = ${cpp_winlibs}")
+    set(MESON_WINLIBS "${MESON_WINLIBS}" PARENT_SCOPE)
+endfunction()
+
+function(z_vcpkg_meson_setup_variables config_type)
+    set(meson_var_list VSCRT_LINKAGE WINLIBS MT AR RC C C_LD CXX CXX_LD OBJC OBJC_LD OBJCXX OBJCXX_LD FC FC_LD WINDRES CFLAGS CXXFLAGS OBJCFLAGS OBJCXXFLAGS FCFLAGS SHARED_LINKER_FLAGS)
+    foreach(var IN LISTS meson_var_list)
+        set(MESON_${var} "")
+    endforeach()
+
     if(VCPKG_TARGET_IS_WINDOWS)
-        if(VCPKG_CRT_LINKAGE STREQUAL "static")
-            set(crt_type mt)
-        else()
-            set(crt_type md)
-        endif()
-        if(${config_type} STREQUAL "DEBUG")
-            set(crt_type ${crt_type}d)
-        endif()
-        string(APPEND cross_${config_type}_log "b_vscrt = '${crt_type}'\n")
+        z_vcpkg_meson_setup_extra_windows_variables("${config_type}")
     endif()
-    string(TOLOWER "${config_type}" lowerconfig)
-    set(native_config_name "${CURRENT_BUILDTREES_DIR}/meson-cross-${TARGET_TRIPLET}-${lowerconfig}.log")
-    set(VCPKG_MESON_CROSS_FILE_${config_type} "${native_config_name}" PARENT_SCOPE)
-    file(WRITE "${native_config_name}" "${cross_${config_type}_log}")
-endfunction()
 
+    z_vcpkg_meson_set_proglist_variables("${config_type}")
+    z_vcpkg_meson_set_flags_variables("${config_type}")
+
+    foreach(var IN LISTS meson_var_list)
+        set(MESON_${var} "${MESON_${var}}" PARENT_SCOPE)
+    endforeach()
+endfunction()
 
 function(vcpkg_configure_meson)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "NO_PKG_CONFIG"
         "SOURCE_PATH"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;LANGUAGES;ADDITIONAL_BINARIES;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES"
     )
+
+    if(NOT arg_LANGUAGES)
+        set(arg_LANGUAGES C CXX)
+    endif()
+
+    if(DEFINED arg_ADDITIONAL_NATIVE_BINARIES OR DEFINED arg_ADDITIONAL_CROSS_BINARIES)
+        message(WARNING "Options ADDITIONAL_(NATIVE|CROSS)_BINARIES have been deprecated. Only use ADDITIONAL_BINARIES!")
+    endif()
+
+    vcpkg_list(APPEND arg_ADDITIONAL_BINARIES ${arg_ADDITIONAL_NATIVE_BINARIES} ${arg_ADDITIONAL_CROSS_BINARIES})
+    vcpkg_list(REMOVE_DUPLICATES arg_ADDITIONAL_BINARIES)
+    vcpkg_list(JOIN arg_ADDITIONAL_BINARIES "\n" MESON_ADDITIONAL_BINARIES)
 
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
+    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
+        z_vcpkg_select_default_vcpkg_chainload_toolchain()
+    endif()
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")
 
     vcpkg_find_acquire_program(MESON)
 
+    get_filename_component(CMAKE_PATH "${CMAKE_COMMAND}" DIRECTORY)
+    vcpkg_add_to_path("${CMAKE_PATH}" PREPEND) # Make CMake invokeable for Meson
+
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    vcpkg_add_to_path("${PYTHON3_DIR}")
+
+    vcpkg_find_acquire_program(NINJA)
+    get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
+    vcpkg_add_to_path(PREPEND "${NINJA_PATH}") # Prepend to use the correct ninja.
+
+    set(buildtypes "")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(buildname "DEBUG")
+        vcpkg_list(APPEND buildtypes "${buildname}")
+        set(path_suffix_${buildname} "debug/")
+        set(suffix_${buildname} "dbg")
+        set(meson_input_file_${buildname} "${CURRENT_BUILDTREES_DIR}/meson-${TARGET_TRIPLET}-${suffix_${buildname}}.log")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(buildname "RELEASE")
+        vcpkg_list(APPEND buildtypes "${buildname}")
+        set(path_suffix_${buildname} "")
+        set(suffix_${buildname} "rel")
+        set(meson_input_file_${buildname} "${CURRENT_BUILDTREES_DIR}/meson-${TARGET_TRIPLET}-${suffix_${buildname}}.log")
+    endif()
+
     vcpkg_list(APPEND arg_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
 
-    if(NOT vcpkg_meson_cross_file)
-        z_vcpkg_meson_generate_cross_file("${arg_ADDITIONAL_CROSS_BINARIES}")
+    z_vcpkg_get_build_and_host_system(MESON_HOST_MACHINE MESON_BUILD_MACHINE IS_CROSS)
+
+    if(IS_CROSS)
+        # VCPKG_CROSSCOMPILING is not used since it regresses a lot of ports in x64-windows-x triplets
+        # For consistency this should proably be changed in the future?
+        vcpkg_list(APPEND arg_OPTIONS --native "${SCRIPTS}/buildsystems/meson/none.txt")
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG --cross "${meson_input_file_DEBUG}")
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE --cross "${meson_input_file_RELEASE}")
+    else()
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG --native "${meson_input_file_DEBUG}")
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE --native "${meson_input_file_RELEASE}")
     endif()
-    # We must use uppercase `DEBUG` and `RELEASE` here because they matches the configuration data
-    if(NOT VCPKG_MESON_CROSS_FILE_DEBUG AND vcpkg_meson_cross_file)
-        z_vcpkg_meson_generate_cross_file_config(DEBUG)
+
+    # User provided cross/native files
+    if(VCPKG_MESON_NATIVE_FILE)
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE --native "${VCPKG_MESON_NATIVE_FILE}")
     endif()
-    if(NOT VCPKG_MESON_CROSS_FILE_RELEASE AND vcpkg_meson_cross_file)
-        z_vcpkg_meson_generate_cross_file_config(RELEASE)
+    if(VCPKG_MESON_NATIVE_FILE_RELEASE)
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE --native "${VCPKG_MESON_NATIVE_FILE_RELEASE}")
     endif()
-    if(vcpkg_meson_cross_file)
-        vcpkg_list(APPEND arg_OPTIONS --cross "${vcpkg_meson_cross_file}")
+    if(VCPKG_MESON_NATIVE_FILE_DEBUG)
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG --native "${VCPKG_MESON_NATIVE_FILE_DEBUG}")
     endif()
-    if(VCPKG_MESON_CROSS_FILE_DEBUG)
-        vcpkg_list(APPEND arg_OPTIONS_DEBUG --cross "${VCPKG_MESON_CROSS_FILE_DEBUG}")
+    if(VCPKG_MESON_CROSS_FILE)
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE --cross "${VCPKG_MESON_CROSS_FILE}")
     endif()
     if(VCPKG_MESON_CROSS_FILE_RELEASE)
         vcpkg_list(APPEND arg_OPTIONS_RELEASE --cross "${VCPKG_MESON_CROSS_FILE_RELEASE}")
     endif()
+    if(VCPKG_MESON_CROSS_FILE_DEBUG)
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG --cross "${VCPKG_MESON_CROSS_FILE_DEBUG}")
+    endif()
 
-    if(NOT vcpkg_meson_native_file AND NOT vcpkg_meson_cross_file)
-        z_vcpkg_meson_generate_native_file("${arg_ADDITIONAL_NATIVE_BINARIES}")
-    endif()
-    if(NOT vcpkg_meson_native_file_DEBUG AND NOT vcpkg_meson_cross_file)
-        z_vcpkg_meson_generate_native_file_config(DEBUG)
-    endif()
-    if(NOT vcpkg_meson_native_file_RELEASE AND NOT vcpkg_meson_cross_file)
-        z_vcpkg_meson_generate_native_file_config(RELEASE)
-    endif()
-    if(vcpkg_meson_native_file AND NOT vcpkg_meson_cross_file)
-        vcpkg_list(APPEND arg_OPTIONS --native "${vcpkg_meson_native_file}")
-        vcpkg_list(APPEND arg_OPTIONS_DEBUG --native "${vcpkg_meson_native_file_DEBUG}")
-        vcpkg_list(APPEND arg_OPTIONS_RELEASE --native "${vcpkg_meson_native_file_RELEASE}")
-    else()
-        vcpkg_list(APPEND arg_OPTIONS --native "${SCRIPTS}/buildsystems/meson/none.txt")
-    endif()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        vcpkg_list(APPEND arg_OPTIONS --default-library shared)
+        set(MESON_DEFAULT_LIBRARY shared)
     else()
-        vcpkg_list(APPEND arg_OPTIONS --default-library static)
+        set(MESON_DEFAULT_LIBRARY static)
     endif()
 
     vcpkg_list(APPEND arg_OPTIONS --libdir lib) # else meson install into an architecture describing folder
@@ -453,65 +400,48 @@ function(vcpkg_configure_meson)
         vcpkg_list(APPEND arg_OPTIONS_DEBUG "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}/debug','${CURRENT_INSTALLED_DIR}']")
         vcpkg_list(APPEND arg_OPTIONS_RELEASE "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/debug']")
     endif()
-    
-    if(NOT arg_NO_PKG_CONFIG)
-        vcpkg_find_acquire_program(PKGCONFIG)
-        get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)
-        vcpkg_add_to_path("${PKGCONFIG_PATH}")
-        set(pkgconfig_share_dir "${CURRENT_INSTALLED_DIR}/share/pkgconfig/")
+
+    # Allow overrides / additional configuration variables from triplets
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS)
+        vcpkg_list(APPEND arg_OPTIONS ${VCPKG_MESON_CONFIGURE_OPTIONS})
     endif()
-    
-    set(buildtypes)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(buildname "DEBUG")
-        vcpkg_list(APPEND buildtypes ${buildname})
-        set(path_suffix_${buildname} "debug/")
-        set(suffix_${buildname} "dbg")
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE)
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE ${VCPKG_MESON_CONFIGURE_OPTIONS_RELEASE})
     endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(buildname "RELEASE")
-        vcpkg_list(APPEND buildtypes ${buildname})
-        set(path_suffix_${buildname} "")
-        set(suffix_${buildname} "rel")
+    if(DEFINED VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG)
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MESON_CONFIGURE_OPTIONS_DEBUG})
     endif()
 
-    vcpkg_backup_env_variables(VARS INCLUDE)
-    vcpkg_host_path_list(APPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
     # configure build
     foreach(buildtype IN LISTS buildtypes)
         message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${buildtype}}")
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}")
         #setting up PKGCONFIG
-        vcpkg_backup_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
         if(NOT arg_NO_PKG_CONFIG)
-            set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
-            set(pkgconfig_installed_dir "${CURRENT_INSTALLED_DIR}/${path_suffix_${buildtype}}lib/pkgconfig/")
-            vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${pkgconfig_installed_dir}" "${pkgconfig_share_dir}" "$ENV{PKG_CONFIG_PATH}")
+            if ("${buildtype}" STREQUAL "DEBUG")
+                z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
+            else()
+                z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
+            endif()
         endif()
+
+        z_vcpkg_meson_setup_variables(${buildtype})
+        configure_file("${SCRIPTS}/buildsystems/meson/meson.template.in" "${meson_input_file_${buildtype}}" @ONLY)
 
         vcpkg_execute_required_process(
             COMMAND ${MESON} ${arg_OPTIONS} ${arg_OPTIONS_${buildtype}} ${arg_SOURCE_PATH}
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}"
             LOGNAME config-${TARGET_TRIPLET}-${suffix_${buildtype}}
+            SAVE_LOG_FILES
+                meson-logs/meson-log.txt
+                meson-info/intro-dependencies.json
+                meson-logs/install-log.txt
         )
 
-        #Copy meson log files into buildtree for CI
-        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/meson-log.txt")
-            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/meson-log.txt" DESTINATION "${CURRENT_BUILDTREES_DIR}")
-            file(RENAME "${CURRENT_BUILDTREES_DIR}/meson-log.txt" "${CURRENT_BUILDTREES_DIR}/meson-log-${suffix_${buildtype}}.log")
-        endif()
-        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-info/intro-dependencies.json")
-            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-info/intro-dependencies.json" DESTINATION "${CURRENT_BUILDTREES_DIR}")
-            file(RENAME "${CURRENT_BUILDTREES_DIR}/intro-dependencies.json" "${CURRENT_BUILDTREES_DIR}/intro-dependencies-${suffix_${buildtype}}.log")
-        endif()
-        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/install-log.txt")
-            file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}/meson-logs/install-log.txt" DESTINATION "${CURRENT_BUILDTREES_DIR}")
-            file(RENAME "${CURRENT_BUILDTREES_DIR}/install-log.txt" "${CURRENT_BUILDTREES_DIR}/install-log-${suffix_${buildtype}}.log")
-        endif()
         message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${buildtype}} done")
 
-        vcpkg_restore_env_variables(VARS PKG_CONFIG PKG_CONFIG_PATH)
+        if(NOT arg_NO_PKG_CONFIG)
+            z_vcpkg_restore_pkgconfig_path()
+        endif()
     endforeach()
-
-    vcpkg_restore_env_variables(VARS INCLUDE)
 endfunction()

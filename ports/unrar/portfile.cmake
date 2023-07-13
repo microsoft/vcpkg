@@ -1,5 +1,5 @@
-set(UNRAR_VERSION "5.8.1")
-set(UNRAR_SHA512 31303df575e8a5ed9fc03e20d0482306536c3496894a39788052c5c9dfde61eb7f5ca29b8c48354581622a020aa446f108af956ab43024a48731a12233155612)
+set(UNRAR_VERSION "6.1.7")
+set(UNRAR_SHA512 b1a95358ff66b0e049597bbc4e1786d0bc909a8aff4aca94ee793d0d5a3c8b052eb347d88f44b6bc2e6231e777f1b711c198711118ae9ffbe8db2f72e7fbe846)
 set(UNRAR_FILENAME unrarsrc-${UNRAR_VERSION}.tar.gz)
 set(UNRAR_URL https://www.rarlab.com/rar/${UNRAR_FILENAME})
 
@@ -11,10 +11,10 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME ${UNRAR_FILENAME}
     SHA512 ${UNRAR_SHA512}
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF ${UNRAR_VERSION}
+    SOURCE_BASE ${UNRAR_VERSION}
     PATCHES msbuild-use-default-sma.patch
 )
 
@@ -35,6 +35,8 @@ file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/unrar.dll"  DESTIN
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/unrar.lib"  DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
 vcpkg_copy_pdbs()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-unrar/unofficial-unrar-config.cmake" @ONLY)
 
 #COPYRIGHT
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

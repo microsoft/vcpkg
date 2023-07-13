@@ -1,21 +1,28 @@
-set(VERSION v1.2.3)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF "${VERSION}"
-    SHA512 ffcc697901ec978fb9d1f8996f8a4c5114c98a0ec19206cac95d1a84f8d0fcbe38bf73e88f1df59d53bc6be481102aa2f2a6a0efa29797e7ce11123bd23131c2
+    REF "v${VERSION}"
+    SHA512 bb45d288a097b461d2a7106153c7f4b4c38c73cf767fe15c6c9c2213a6e3fcaf9b436fb70c1e7c6dcbc8ef45f232a5bd2f140285fab486358cb5a3a17da96d6e
     HEAD_REF master
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        openssl UA_ENABLE_ENCRYPTION_OPENSSL
-        mbedtls UA_ENABLE_ENCRYPTION_MBEDTLS
         amalgamation UA_ENABLE_AMALGAMATION
         historizing UA_ENABLE_HISTORIZING
 )
+
+if("openssl" IN_LIST FEATURES)
+    set(OPEN62541_ENCRYPTION_OPTIONS -DUA_ENABLE_ENCRYPTION=OPENSSL)
+    if("mbedtls" IN_LIST FEATURES)
+        message(WARNING "Only one encryption method can be used. When both [openssl] and [mbedtls] "
+            "are on, openssl is used. To use [mbedtls], don't enable [openssl]. To suppress this "
+            "message, don't enable [mbedtls]")
+    endif()
+elseif("mbedtls" IN_LIST FEATURES)
+    set(OPEN62541_ENCRYPTION_OPTIONS -DUA_ENABLE_ENCRYPTION=MBEDTLS)
+endif()
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
@@ -25,6 +32,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${OPEN62541_ENCRYPTION_OPTIONS}
         -DOPEN62541_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d

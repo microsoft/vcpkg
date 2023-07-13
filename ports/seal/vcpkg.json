@@ -1,9 +1,9 @@
 {
   "name": "seal",
-  "version-semver": "3.7.2",
-  "port-version": 2,
+  "version": "4.1.1",
   "description": "Microsoft SEAL is an easy-to-use and powerful homomorphic encryption library.",
   "homepage": "https://github.com/microsoft/SEAL",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

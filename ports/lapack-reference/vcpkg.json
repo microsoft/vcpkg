@@ -1,6 +1,7 @@
 {
   "name": "lapack-reference",
-  "version": "3.10.0",
+  "version": "3.11.0",
+  "port-version": 1,
   "description": "LAPACK - Linear Algebra PACKage",
   "homepage": "http://www.netlib.org/lapack/",
   "license": "BSD-3-Clause-Open-MPI",

@@ -12,9 +12,9 @@ vcpkg_from_github(
         openjpeg2.patch
         var_libraries.patch
         wrapping.patch
-        python_gpu_wrapping.patch
         opencl.patch
         use-the-lrintf-intrinsic.patch
+        dont-build-gtest.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,6 +27,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tbb"          Module_ITKTBB
         "rtk"          Module_RTK
         "tools"        RTK_BUILD_APPLICATIONS
+        "opencv"       Module_ITKVideoBridgeOpenCV
         # There are a lot of more (remote) modules and options in ITK
         # feel free to add those as a feature
 )
@@ -109,6 +110,12 @@ if("python" IN_LIST FEATURES)
         )
     #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages within vcpkg
 endif()
+if("opencv" IN_LIST FEATURES)
+    message(STATUS "${PORT} includes the ITKVideoBridgeOpenCV")
+    list(APPEND ADDITIONAL_OPTIONS
+        -DModule_ITKVideoBridgeOpenCV:BOOL=ON
+        )
+endif()
 
 set(USE_64BITS_IDS OFF)
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL x64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
@@ -178,7 +185,7 @@ vcpkg_cmake_configure(
 )
 if(BUILD_RTK) # Remote Modules are only downloaded on configure.
     # TODO: In the future try to download via vcpkg_from_github and move the files. That way patching does not need this workaround
-    vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch)
+    vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch rtk/Add-missing-include-for-Cuda.patch)
 endif()
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -197,4 +204,12 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/include/ITK-5.3/vcl_where_root_dir.h")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.3/itk_eigen.h" "include(${SOURCE_PATH}/CMake/UseITK.cmake)" "include(UseITK)")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.3/itk_eigen.h" "message(STATUS \"From ITK: Eigen3_DIR: ${CURRENT_INSTALLED_DIR}/share/eigen3\")" "")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+if("rtk" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.3/rtkConfiguration.h" "#define RTK_BINARY_DIR \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Modules/Remote/RTK\"" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ITK-5.3/rtkConfiguration.h" "#define RTK_DATA_ROOT \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ExternalData/Modules/Remote/RTK/test\"" "")
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/itk/Modules/RTK.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "\${ITK_INSTALL_PREFIX}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/itk/Modules/RTK.cmake" "${SOURCE_PATH}/Modules/Remote/RTK/utilities/lp_solve" "\${ITK_INSTALL_PREFIX}/include/RTK/lpsolve")
+endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

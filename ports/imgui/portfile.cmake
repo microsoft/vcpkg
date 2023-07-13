@@ -4,26 +4,22 @@ if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF 1ee252772ae9c0a971d06257bb5c89f628fa696a
-       SHA512 942cd8e39f490c15d90b6feb6f919ebeab8f6f8f9aacfcbf552daef24b0f7e637ad5f630767a52fd9993d84a80b5954c7b05f7400a9f96b6b739cf5680368119
+       REF dc3e531ff28450bff73fde0163b1d076b6bb5605
+       SHA512 c716d90c57a036f0117eb02814c3ed164db31727f604fb7568e8413dfba73b678e09c6405a2af52e12522cb766fcf585a97a69b33097349b66755e5b9b04fd06
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.87
-    SHA512 3255b06698ab9c8951953e1e0b6d160d64adfa4c011b21a4288547292a7f8fff586875faf9dae0677818bde65bd7e98da92f16f6beb1e6a66aa835edf32e8ce2
+    REF v${VERSION}
+    SHA512 69023cbff02287cb6409b08079d21469680222ca985fd1acd658dcf704c615cb2d74668821dc4830bef70be6033640b0528d3a103b70ebeb4b7563576305bf80
     HEAD_REF master
     )
 endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/imgui-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
-if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_OSX))
-    message(FATAL_ERROR "Feature metal-binding and osx-binding are only supported on osx.")
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES 
@@ -79,4 +75,4 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

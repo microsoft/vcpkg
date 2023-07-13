@@ -1,19 +1,51 @@
 {
   "name": "libsndfile",
-  "version-string": "1.0.31",
-  "description": "Library to read, write and manipulate many soundfile types. Authored by Eric de Castro Lopo",
+  "version-semver": "1.2.0",
+  "port-version": 1,
+  "description": "A library for reading and writing audio files",
   "homepage": "https://github.com/erikd/libsndfile",
-  "license": "LGPL-2.1",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "default-features": [
-    "external-libs"
+    "external-libs",
+    "mpeg"
   ],
   "features": {
+    "experimental": {
+      "description": "Enable experimental code",
+      "dependencies": [
+        "speex"
+      ]
+    },
     "external-libs": {
-      "description": "Default feature. Enables Ogg Vorbis, FLAC and Ogg Opus formats support.",
+      "description": "Enable FLAC, Vorbis, and Opus codecs",
       "dependencies": [
         "libflac",
         "libvorbis",
         "opus"
+      ]
+    },
+    "mpeg": {
+      "description": "Enable MPEG codecs",
+      "dependencies": [
+        "mp3lame",
+        "mpg123"
+      ]
+    },
+    "regtest": {
+      "description": "Build regtest",
+      "dependencies": [
+        "sqlite3"
       ]
     }
   }

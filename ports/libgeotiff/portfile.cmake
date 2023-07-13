@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/libgeotiff
-    REF  7da5bacae7814c65ebb78f0b64e1141fbcb3de1e #v1.7.0
-    SHA512 36047778fbbb4a533a7b65e7b32ab8c0955f59b95417b68b68e7ddd398191445e730e00271756213bf657cbf7cd5eb028b25d4b0741e5b309c78c207b4ec01c6
+    REF  1.7.1
+    SHA512 3c71a19f02a46a86d546777e2afe6bd715098779845967a5253ca949e0cacc0117c697cabd099611247e85e15cf1813733ae0ef445b136d7001f34667a4c8dd6
     HEAD_REF master
     PATCHES
         cmakelists.patch
-        geotiff-config.patch
-        fix-staticbuild.patch
         skip-doc-install.patch
+        public-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -21,7 +20,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/libgeotiff"
     OPTIONS
         -DGEOTIFF_BIN_SUBDIR=bin
-        -DGEOTIFF_DATA_SUBDIR=share
         -DWITH_TIFF=1
         -DHAVE_TIFFOPEN=1
         -DHAVE_TIFFMERGEFIELDINFO=1
@@ -46,3 +44,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/libgeotiff/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

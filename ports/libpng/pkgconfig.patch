@@ -1,24 +1,32 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6599e1d7d..c0bb2fad2 100644
+index 0ad4ba4..a249d42 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -894,13 +894,13 @@ if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL)
-   install(FILES libpng.3 libpngpf.3 DESTINATION ${PNG_MAN_DIR}/man3)
-   install(FILES png.5 DESTINATION ${PNG_MAN_DIR}/man5)
-   # Install pkg-config files
-+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpng.pc
-+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}.pc
-+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-   if(NOT CMAKE_HOST_WIN32 OR CYGWIN OR MINGW)
--    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpng.pc
--            DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libpng-config
--             DESTINATION bin)
-+             DESTINATION tools/libpng)
--    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}.pc
--            DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}-config
--             DESTINATION bin)
-+             DESTINATION tools/libpng)
-   endif()
+@@ -932,12 +932,15 @@ endif()
+ # We use the same files like ./configure, so we have to set its vars.
+ # Only do this on Windows for Cygwin - the files don't make much sense
+ # outside of a UNIX look-alike.
+-if(NOT WIN32 OR CYGWIN OR MINGW)
++if(1)
+   set(prefix      ${CMAKE_INSTALL_PREFIX})
+   set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+   set(libdir      ${CMAKE_INSTALL_FULL_LIBDIR})
+   set(includedir  ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+-  set(LIBS        "-lz -lm")
++  set(LIBS        "")
++  if(M_LIBRARY)
++    string(APPEND LIBS "-lm")
++  endif()
+   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpng.pc.in
+                  ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}.pc
+                  @ONLY)
+@@ -1010,6 +1013,9 @@ if(NOT SKIP_INSTALL_PROGRAMS AND NOT SKIP_INSTALL_ALL)
+ endif()
+ 
+ if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL)
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}.pc
++            DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
++elseif(0)
+   # Install the man pages.
+   install(FILES libpng.3 libpngpf.3
+           DESTINATION ${CMAKE_INSTALL_MANDIR}/man3)

@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/smart_ptr
-    REF boost-1.78.0
-    SHA512 96f5d910dae54441d8d85ffab6a3dc3711ebb69325152a16185822e95be683548575f8074b13b64123da5ec6ca666ca33f26984c931fd642b8c9373ed682181e
+    REF boost-1.82.0
+    SHA512 2089a9cbc968a1b2c5ffbb911a9a237d3b241e9ed9cfa444fafc36806280dfea4fc7d65b81fadff0946b4b5e163480536023abb1eb1bc8a4994ae69916dda721
     HEAD_REF master
 )
 

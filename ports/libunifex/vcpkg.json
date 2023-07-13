@@ -1,7 +1,6 @@
 {
   "name": "libunifex",
-  "version-date": "2021-12-07",
-  "port-version": 1,
+  "version": "0.3.0",
   "description": "Unified Executors",
   "homepage": "https://github.com/facebookexperimental/libunifex",
   "dependencies": [
@@ -19,11 +18,8 @@
     }
   ],
   "features": {
-    "test": {
-      "description": "Build test/example programs",
-      "dependencies": [
-        "gtest"
-      ]
+    "coroutines": {
+      "description": "Support coroutine"
     }
   }
 }

@@ -1,6 +1,16 @@
 {
   "name": "stxxl",
-  "version-string": "2018-11-15",
-  "port-version": 4,
-  "description": "Standard Template Library for Extra Large Data Sets"
+  "version-date": "2018-11-15",
+  "port-version": 6,
+  "description": "Standard Template Library for Extra Large Data Sets",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

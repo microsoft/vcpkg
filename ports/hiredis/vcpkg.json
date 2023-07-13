@@ -1,9 +1,9 @@
 {
   "name": "hiredis",
-  "version": "1.0.2",
-  "port-version": 3,
+  "version": "1.1.0",
   "description": "Hiredis is a minimalistic C client library for the Redis database.",
   "homepage": "https://github.com/redis/hiredis",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -15,14 +15,6 @@
     }
   ],
   "features": {
-    "example": {
-      "description": "Build example",
-      "dependencies": [
-        "libevent",
-        "libuv",
-        "pthread"
-      ]
-    },
     "ssl": {
       "description": "Build hiredis_ssl for SSL support",
       "dependencies": [

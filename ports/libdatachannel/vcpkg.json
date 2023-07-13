@@ -1,8 +1,11 @@
 {
   "name": "libdatachannel",
-  "version-semver": "0.16.4",
+  "version-semver": "0.18.2",
+  "port-version": 2,
   "description": "libdatachannel is a standalone implementation of WebRTC Data Channels, WebRTC Media Transport, and WebSockets in C++17 with C bindings for POSIX platforms (including GNU/Linux, Android, and Apple macOS) and Microsoft Windows.",
   "homepage": "https://github.com/paullouisageneau/libdatachannel",
+  "license": "MPL-2.0",
+  "supports": "!xbox",
   "dependencies": [
     "libjuice",
     "openssl",

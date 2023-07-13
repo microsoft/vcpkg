@@ -14,14 +14,14 @@ at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6
 or are running from Azure Cloud Shell.
 #>
 
-$Location = 'westus2'
+$Location = 'eastasia'
 $Prefix = 'Win-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D32as_v4'
+$VMSize = 'Standard_D8a_v4'
 $ProtoVMName = 'PROTOTYPE'
-$WindowsServerSku = '2022-datacenter-g2'
+$WindowsServerSku = '2022-datacenter'
 $ErrorActionPreference = 'Stop'
-$CudnnBaseUrl = 'https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-11.2-windows-x64-v8.1.1.33.zip'
+$CudnnBaseUrl = 'https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-windows-x86_64-8.8.1.3_cuda12-archive.zip'
 
 $ProgressActivity = 'Creating Windows Image'
 $TotalProgress = 18
@@ -253,7 +253,7 @@ Set-AzVM `
   -Generalized
 
 $VM = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
-$ImageConfig = New-AzImageConfig -Location $Location -SourceVirtualMachineId $VM.ID -HyperVGeneration 'V2'
+$ImageConfig = New-AzImageConfig -Location $Location -SourceVirtualMachineId $VM.ID
 $ImageName = Find-ImageName -ResourceGroupName 'vcpkg-image-minting' -Prefix $Prefix
 New-AzImage -Image $ImageConfig -ImageName $ImageName -ResourceGroupName 'vcpkg-image-minting'
 
