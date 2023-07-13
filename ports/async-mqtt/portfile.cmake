@@ -8,6 +8,16 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+set(ASYNC_MQTT_USE_TLS OFF)
+if ("use-tls" IN_LIST FEATURES)
+    set(ASYNC_MQTT_USE_TLS ON)
+endif()
+
+set(ASYNC_MQTT_USE_STATIC_OPENSSL OFF)
+if ("static-openssl" IN_LIST FEATURES)
+    set(ASYNC_MQTT_USE_STATIC_OPENSSL ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -15,6 +25,8 @@ vcpkg_cmake_configure(
         -DASYNC_MQTT_BUILD_EXAMPLES=OFF
         -DASYNC_MQTT_BUILD_UNIT_TESTS=OFF
         -DASYNC_MQTT_BUILD_SYSTEM_TESTS=OFF
+        -DASYNC_MQTT_USE_TLS=${ASYNC_MQTT_USE_TLS}
+        -DASYNC_MQTT_USE_STATIC_OPENSSL=${ASYNC_MQTT_USE_STATIC_OPENSSL}
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
