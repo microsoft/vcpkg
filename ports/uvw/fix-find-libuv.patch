@@ -8,7 +8,7 @@ index 8c4b664..92267d6 100644
  endif()
 +
 +find_path(LIBUV_INCLUDE_DIR NAMES uv.h PATH_SUFFIXES uv REQUIRED)
-+find_library(LIBUV_LIBRARY NAMES uv uv_a REQUIRED)
++find_library(LIBUV_LIBRARY NAMES uv uv_a libuv REQUIRED)
 +target_include_directories(uvw PUBLIC ${LIBUV_INCLUDE_DIR})
 +target_link_libraries(uvw PRIVATE ${LIBUV_LIBRARY})
 +
