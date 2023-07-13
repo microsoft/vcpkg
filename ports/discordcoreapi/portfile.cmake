@@ -5,11 +5,9 @@ endif()
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO RealTimeChris/DiscordCoreAPI
-	REF c8d4698d2c0ee818def85d63562585a218b2da70
-	SHA512 82a2bada44d1e2c2cc4638b885011a95189febd77bc4d3c26ce8c25005b8202d6c7cbb1f580dbcc1556dd0919f33cfb25127774f37cea17a544fbe31970618b5
-	HEAD_REF main
-    PATCHES
-        0001-Add-extern-C-to-avcodec.patch
+	REF "v${VERSION}"
+    	SHA512 a073aa37c666083ed62ff036cd5a3419d6d558b952aceec0c8584b0889bc0402625e2318255d2a92949e1954e70f54892157edd2374b7152eadc0bb5ba868b65
+    	HEAD_REF main
 )
 
 vcpkg_cmake_configure(

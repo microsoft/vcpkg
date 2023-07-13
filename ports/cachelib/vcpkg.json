@@ -1,6 +1,6 @@
 {
   "name": "cachelib",
-  "version-string": "2023.02.27.00",
+  "version-string": "2023.05.08.00",
   "description": "facebook cachelib",
   "homepage": "https://github.com/facebook/CacheLib",
   "license": "Apache-2.0",

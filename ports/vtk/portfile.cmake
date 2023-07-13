@@ -23,7 +23,7 @@ vcpkg_from_github(
     PATCHES
         FindLZMA.patch
         FindLZ4.patch
-        Findproj.patch
+        libproj.patch
         pegtl.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type.
@@ -40,6 +40,7 @@ vcpkg_from_github(
         iotr.patch
         ${STRING_PATCH}
         9690.diff
+        missing-include-fixes.patch
 )
 
 # =============================================================================
