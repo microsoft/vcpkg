@@ -1068,13 +1068,41 @@ index 64e39e33c..c07890991 100644
 -install(TARGETS ${TARGET} ARCHIVE DESTINATION lib/${DIST_DIR})
 +install(TARGETS ${TARGET} EXPORT filamentTargets ARCHIVE DESTINATION lib)
 diff --git a/third_party/basisu/tnt/CMakeLists.txt b/third_party/basisu/tnt/CMakeLists.txt
-index 59daa5407..ae401fca6 100644
+index 59daa5407..9378c93f4 100644
 --- a/third_party/basisu/tnt/CMakeLists.txt
 +++ b/third_party/basisu/tnt/CMakeLists.txt
-@@ -26,6 +26,15 @@ set(ENCODER_SRC
+@@ -26,6 +26,43 @@ set(ENCODER_SRC
      ../encoder/pvpngreader.cpp
  )
  
++set(ENCODER_HDRS
++    ../encoder/basisu_backend.h
++    ../encoder/basisu_basis_file.h
++    ../encoder/basisu_bc7enc.h
++    ../encoder/basisu_comp.h
++    ../encoder/basisu_enc.h
++    ../encoder/basisu_etc.h
++    ../encoder/basisu_frontend.h
++    ../encoder/basisu_gpu_texture.h
++    ../encoder/basisu_kernels_declares.h
++    ../encoder/basisu_kernels_imp.h
++    ../encoder/basisu_miniz.h
++    ../encoder/basisu_ocl_kernels.h
++    ../encoder/basisu_opencl.h
++    ../encoder/basisu_pvrtc1_4.h
++    ../encoder/basisu_resampler.h
++    ../encoder/basisu_resampler_filters.h
++    ../encoder/basisu_ssim.h
++    ../encoder/basisu_uastc_enc.h
++    ../encoder/cppspmd_flow.h
++    ../encoder/cppspmd_math.h
++    ../encoder/cppspmd_math_declares.h
++    ../encoder/cppspmd_sse.h
++    ../encoder/cppspmd_type_aliases.h
++    ../encoder/jpgd.h
++    ../encoder/pvpngreader.h
++)
++
 +set(TRANSCODER_HDRS
 +    ../transcoder/basisu_containers.h
 +    ../transcoder/basisu_file_headers.h
@@ -1087,7 +1115,7 @@ index 59daa5407..ae401fca6 100644
  # Filament does not support certain compressed formats that BasisU can transcode
  # to, so we disable them in the build to save space. Some of these mappings are
  # confusing. (e.g., DXT5A corresponds to transcoder_texture_format::cTFBC4_R).
-@@ -37,19 +46,14 @@ set (BASIS_CONFIG
+@@ -37,19 +74,14 @@ set (BASIS_CONFIG
      BASISD_SUPPORT_PVRTC1=0
      BASISD_SUPPORT_PVRTC2=0
      BASISD_SUPPORT_FXT1=0
@@ -1109,7 +1137,7 @@ index 59daa5407..ae401fca6 100644
  add_library(zstd ../zstd/zstd.c)
  add_library(basis_encoder ${ENCODER_SRC})
  add_library(basis_transcoder ${TRANSCODER_SRC})
-@@ -57,9 +61,18 @@ add_library(basis_transcoder ${TRANSCODER_SRC})
+@@ -57,9 +89,18 @@ add_library(basis_transcoder ${TRANSCODER_SRC})
  target_link_libraries(basis_transcoder zstd)
  target_link_libraries(basis_encoder basis_transcoder)
  
@@ -1131,12 +1159,15 @@ index 59daa5407..ae401fca6 100644
  
  target_compile_definitions(basis_encoder PRIVATE ${BASIS_CONFIG})
  target_compile_definitions(basis_transcoder PRIVATE ${BASIS_CONFIG})
-@@ -80,5 +93,6 @@ if (IS_HOST_PLATFORM)
+@@ -80,5 +121,9 @@ if (IS_HOST_PLATFORM)
      endif()
  endif()
  
 -install(TARGETS basis_transcoder ARCHIVE DESTINATION lib/${DIST_DIR})
 -install(TARGETS zstd ARCHIVE DESTINATION lib/${DIST_DIR})
++install(TARGETS basis_encoder EXPORT filamentTargets ARCHIVE DESTINATION lib)
++install(FILES ${ENCODER_HDRS} DESTINATION include/basisu/encoder)
++
 +install(TARGETS basis_transcoder EXPORT filamentTargets ARCHIVE DESTINATION lib)
 +install(FILES ${TRANSCODER_HDRS} DESTINATION include/basisu/transcoder)
 +install(TARGETS zstd EXPORT filamentTargets ARCHIVE DESTINATION lib)
