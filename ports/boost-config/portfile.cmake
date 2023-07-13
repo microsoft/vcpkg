@@ -13,6 +13,16 @@ boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
 file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#ifndef BOOST_ALL_NO_LIB\n#define BOOST_ALL_NO_LIB\n#endif\n")
 file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#undef BOOST_ALL_DYN_LINK\n")
 
+file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_NO_RTTI\n")
+file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_NO_TYPEID\n")
+file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_NO_CXX11_HDR_TYPEINDEX\n")
+file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_EXCEPTION_DISABLE\n")
+#file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_NO_EXCEPTIONS\n")
+file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_TYPE_INDEX_FORCE_NO_RTTI_COMPATIBILITY\n")
+
+#file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_DISABLE_EXPLICIT_SYMBOL_VISIBILITY\n")
+#file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_NO_TYPENAME_WITH_CTOR\n")
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_ALL_DYN_LINK\n")
 endif()

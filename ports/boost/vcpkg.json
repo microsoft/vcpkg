@@ -288,11 +288,6 @@
       "version>=": "1.82.0"
     },
     {
-      "name": "boost-log",
-      "platform": "!uwp & !emscripten",
-      "version>=": "1.82.0"
-    },
-    {
       "name": "boost-logic",
       "version>=": "1.82.0"
     },
