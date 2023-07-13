@@ -1,0 +1,25 @@
+From 6dbe2c1c3029c8f3184a312d8bb9968fa0b86807 Mon Sep 17 00:00:00 2001
+From: heinezen <heinezen@hotmail.de>
+Date: Wed, 12 Jul 2023 15:10:22 +0200
+Subject: [PATCH] buildsys: Detect WindowsStore build environment.
+
+---
+ nyan/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/nyan/CMakeLists.txt b/nyan/CMakeLists.txt
+index 1e634d1..262cf69 100644
+--- a/nyan/CMakeLists.txt
++++ b/nyan/CMakeLists.txt
+@@ -99,7 +99,7 @@ if(UNIX)
+ 	endif()
+ endif()
+ 
+-if(WIN32)
++if(WIN32 AND (NOT WINDOWS_STORE))
+ 	set_target_properties(nyan PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+ 	target_link_libraries(nyan PRIVATE DbgHelp)
+ endif()
+-- 
+2.41.0.windows.2
+
