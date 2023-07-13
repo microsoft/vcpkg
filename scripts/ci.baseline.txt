@@ -177,7 +177,6 @@ chartdir:x86-windows=skip
 chartdir:x64-windows=skip
 chartdir:x64-windows-static-md=skip
 chartdir:x64-osx=skip
-chipmunk:arm-neon-android=fail
 
 # chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI
 #  broken on Windows because it does not yet support VS2022
@@ -342,10 +341,13 @@ evpp:arm-neon-android=fail
 evpp:arm64-android=fail
 evpp:x64-android=fail
 faiss:arm64-windows=fail
+fastrtps:arm-neon-android=fail
 fastrtps:arm-uwp=fail
+fastrtps:arm64-android=fail
+fastrtps:x64-android=fail
 fastrtps:x64-uwp=fail
-fastrtps:x64-windows-static=fail
 fastrtps:x64-windows-static-md=fail
+fastrtps:x64-windows-static=fail
 fdk-aac:arm-neon-android=fail
 fdk-aac:arm64-android=fail
 fdk-aac:x64-android=fail
@@ -379,11 +381,8 @@ folly:arm64-android=fail
 folly:x64-android=fail
 fontconfig:x64-uwp=fail
 fontconfig:arm-uwp=fail
-foonathan-memory:arm64-android=fail
 foonathan-memory:arm64-windows=fail
 foonathan-memory:arm-uwp=fail
-foonathan-memory:x64-android=fail
-foonathan-memory:arm-neon-android=fail
 foonathan-memory:x64-uwp=fail
 freeglut:arm-neon-android=fail
 freeglut:arm-uwp=fail
@@ -432,10 +431,6 @@ gemmlowp:x64-android=fail
 gherkin-c:arm-neon-android=fail
 gherkin-c:arm64-android=fail
 gherkin-c:x64-android=fail
-geotrans:arm-neon-android=fail
-geotrans:arm64-android=fail
-geotrans:x64-android=fail
-
 # Conflicts with libevent
 gherkin-c:arm64-windows         = skip
 gherkin-c:arm-uwp               = skip
