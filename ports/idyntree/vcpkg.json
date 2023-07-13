@@ -1,0 +1,40 @@
+{
+  "name": "idyntree",
+  "version": "9.0.0",
+  "port-version": 1,
+  "description": "Multibody Dynamics Library designed for Free Floating Robots.",
+  "homepage": "https://github.com/robotology/idyntree",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!xbox",
+  "dependencies": [
+    "eigen3",
+    "libxml2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "assimp"
+  ],
+  "features": {
+    "assimp": {
+      "description": "Add support for loading meshes",
+      "dependencies": [
+        "assimp"
+      ]
+    },
+    "irrlicht": {
+      "description": "Add support for irrlicht-based visualizer",
+      "supports": "!windows",
+      "dependencies": [
+        "glfw3",
+        "irrlicht"
+      ]
+    }
+  }
+}

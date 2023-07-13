@@ -1,12 +1,8 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "matroska does not currently support UWP")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Matroska-Org/libmatroska
-    REF release-1.6.3
-    SHA512 f4b4cd5b5e76c452fb559ead28c4bcb5ec4e28d74898f13c1709a6ab75d95cf82b319118445d7a7f895708bb0d5d1f3c09040d3e3263c6a2f2a27ffc92d35c2f
+    REF release-1.7.1
+    SHA512 abb4fb4b527266944b1a59516866462498675c5e71bb679758894dff6156169d7132dddaa2e2ef6187a6dbce4a4aa377eeb75dd869268fd44933c769b34be5b9
     HEAD_REF master
 )
 
@@ -24,3 +20,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_copy_pdbs()

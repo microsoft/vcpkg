@@ -14,7 +14,7 @@ vcpkg_configure_meson(
         -Dgtk_doc=false
         -Dmanpage=false
         -Dvapi=false
-    ADDITIONAL_NATIVE_BINARIES
+    ADDITIONAL_BINARIES
          gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
          glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )

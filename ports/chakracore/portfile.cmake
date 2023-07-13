@@ -10,14 +10,6 @@ vcpkg_from_github(
         add-missing-reference.patch # https://github.com/chakra-core/ChakraCore/pull/6862
 )
 
-if(WIN32)
-    find_path(COR_H_PATH cor.h)
-    if(COR_H_PATH MATCHES "NOTFOUND")
-        message(FATAL_ERROR "Could not find <cor.h>. Ensure the NETFXSDK is installed.")
-    endif()
-    get_filename_component(NETFXSDK_PATH "${COR_H_PATH}/../.." ABSOLUTE)
-endif()
-
 set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
 file(REMOVE_RECURSE ${BUILDTREE_PATH})
 file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
@@ -31,7 +23,6 @@ if(WIN32)
         SOURCE_PATH "${BUILDTREE_PATH}"
         PROJECT_SUBPATH "Build/Chakra.Core.sln"
         OPTIONS
-            "/p:DotNetSdkRoot=${NETFXSDK_PATH}/"
             "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
             "/p:RuntimeLib=${CHAKRA_RUNTIME_LIB}"
         ${PLATFORM_ARG}

@@ -49,8 +49,8 @@ set(PATCHES common.pri.patch
             gl.patch
             build_1.patch
             build_2.patch
-            build_3.patch
-            workaround-msvc2022-ice.patch)
+            workaround-msvc2022-missing-include-in-chromium-ui-accessability.patch
+            )
 
 set(OPTIONS)
 if("proprietary-codecs" IN_LIST FEATURES)

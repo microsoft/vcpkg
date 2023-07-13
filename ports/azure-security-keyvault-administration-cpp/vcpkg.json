@@ -1,6 +1,6 @@
 {
   "name": "azure-security-keyvault-administration-cpp",
-  "version-semver": "4.0.0-beta.2",
+  "version-semver": "4.0.0-beta.3",
   "description": [
     "Microsoft Azure Key Vault Administration SDK for C++",
     "This library provides Azure Key Vault Administration SDK."
@@ -11,7 +11,7 @@
     {
       "name": "azure-core-cpp",
       "default-features": false,
-      "version>=": "1.7.2"
+      "version>=": "1.9.0"
     },
     {
       "name": "vcpkg-cmake",
