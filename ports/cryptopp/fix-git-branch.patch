@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b0ee7a2..ad24d32 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -214,11 +214,8 @@ else()
+   endif()
+ endif()
+ 
+-if (Git_FOUND)
+-  execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+-                  WORKING_DIRECTORY ${cryptopp-cmake_SOURCE_DIR}
+-                  OUTPUT_VARIABLE cryptopp_GIT_BRANCH)
+-  string(STRIP ${cryptopp_GIT_BRANCH} cryptopp_GIT_BRANCH)
++if(CRTPTOPP_GIT_BRANCH)
++    set(cryptopp_GIT_BRANCH ${CRTPTOPP_GIT_BRANCH})
+ else()
+   set(cryptopp_GIT_BRANCH "master")
+ endif()
