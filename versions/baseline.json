@@ -6178,7 +6178,7 @@
     },
     "pango": {
       "baseline": "1.50.14",
-      "port-version": 1
+      "port-version": 2
     },
     "pangolin": {
       "baseline": "0.8",
