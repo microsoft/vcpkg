@@ -74,15 +74,18 @@ index ecc1ac2..0d5539f 100644
          find_package (unofficial-sqlite3 CONFIG)
          message(STATUS "Link to sqlite3 system library")
 diff --git a/src/Database.cpp b/src/Database.cpp
-index f0d8d28..b1edc1b 100644
+index f0d8d28..eb16b4b 100644
 --- a/src/Database.cpp
 +++ b/src/Database.cpp
-@@ -15,7 +15,7 @@
+@@ -15,7 +15,11 @@
  #include <SQLiteCpp/Exception.h>
  #include <SQLiteCpp/Statement.h>
- 
--#include <sqlite3.h>
+
++#ifdef SQLITE_HAS_CODEC
 +#include <sqlcipher/sqlite3.h>
++#else
+ #include <sqlite3.h>
++#endif
  #include <fstream>
  #include <string.h>
  
