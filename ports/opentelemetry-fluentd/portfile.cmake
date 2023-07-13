@@ -5,9 +5,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp-contrib
-    REF 49a42a3bd950d3359f0b3921c13f6adc7cfc793a  # Maps to 2.0.0
+    REF 7afa91952f08aad1fa79b8992f20a4b0cdaadaff  # Maps to 2.0.0
     HEAD_REF main
-    SHA512 a2d621363860b0ff391ddf53cb2a293c7652c17d10e99bd9d085969df64a8f13b32e550124879833dd43f9e9428a422bc1ae7ca4a737722e7b24be886d6b576d
+    SHA512 b28415c867aee5efe99f7521a145b5c402ac555d83be75a8b1d2760aed226ac109a6d092e86d7afedcc2ed8dc848d9662ac6505133d32f99b810f51e2748d1fc
 )
 
 vcpkg_cmake_configure(
