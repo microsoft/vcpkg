@@ -20,6 +20,9 @@ file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOO
 #file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_NO_EXCEPTIONS\n")
 file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_TYPE_INDEX_FORCE_NO_RTTI_COMPATIBILITY\n")
 
+#file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_DISABLE_EXPLICIT_SYMBOL_VISIBILITY\n")
+#file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_NO_TYPENAME_WITH_CTOR\n")
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_ALL_DYN_LINK\n")
 endif()
