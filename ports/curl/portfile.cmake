@@ -34,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         winidn      USE_WIN32_IDN
         winldap     USE_WIN32_LDAP
         websockets  ENABLE_WEBSOCKETS
+        zstd        CURL_ZSTD
     INVERTED_FEATURES
         non-http    HTTP_ONLY
         winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
