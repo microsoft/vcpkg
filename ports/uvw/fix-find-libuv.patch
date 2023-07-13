@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 289c006..180383f 100644
+index 8c4b664..92267d6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -193,6 +193,14 @@ if (BUILD_UVW_LIBS)
@@ -7,11 +7,11 @@ index 289c006..180383f 100644
      )
  endif()
 +
-+find_package(libuv CONFIG REQUIRED)
-+if (TARGET libuv::uv)
-+    target_link_libraries(uvw INTERFACE libuv::uv)
-+else()
-+    target_link_libraries(uvw INTERFACE libuv::uv_a)
++find_path(LIBUV_INCLUDE_DIR NAMES uv.h PATH_SUFFIXES uv REQUIRED)
++find_library(LIBUV_LIBRARY NAMES uv uv_a REQUIRED)
++if (LIBUV_LIBRARY)
++    target_include_directories(uvw PUBLIC ${LIBUV_INCLUDE_DIR})
++    target_link_libraries(uvw PRIVATE ${LIBUV_LIBRARY})
 +endif()
 +
  install(

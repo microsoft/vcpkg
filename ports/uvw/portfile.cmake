@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skypjack/uvw
@@ -7,12 +9,11 @@ vcpkg_from_github(
         fix-find-libuv.patch
 )
 
-set(VCPKG_BUILD_TYPE release) # header-only port
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_UVW_LIBS=${BUILD_STATIC}
+        -DBUILD_UVW_LIBS=ON
+        -DBUILD_UVW_SHARED_LIB=OFF
         -DFETCH_LIBUV=OFF
         -DFIND_LIBUV=OFF
 )
@@ -20,7 +21,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/uvw)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
