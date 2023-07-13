@@ -6,7 +6,7 @@ index 0d93203..031088a 100644
  
    target_compile_features(pybind11_headers INTERFACE cxx_inheriting_constructors cxx_user_literals
                                                       cxx_right_angle_brackets)
-+  target_compile_definitions (pybind11_headers INTERFACE Py_DEBUG)  
++  target_compile_definitions (pybind11_headers INTERFACE $<$<CONFIG:Debug>:Py_DEBUG>)
    if(NOT "${PYBIND11_INTERNALS_VERSION}" STREQUAL "")
      target_compile_definitions(
        pybind11_headers INTERFACE "PYBIND11_INTERNALS_VERSION=${PYBIND11_INTERNALS_VERSION}")

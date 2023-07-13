@@ -1,0 +1,4 @@
+The package OpenVINO can be used in cmake scripts as:
+
+    find_package(OpenVINO REQUIRED)
+    target_link_libraries(main PRIVATE openvino::runtime)

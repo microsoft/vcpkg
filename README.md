@@ -252,7 +252,7 @@ This will still allow people to not use vcpkg,
 by passing the `CMAKE_TOOLCHAIN_FILE` directly,
 but it will make the configure-build step slightly easier.
 
-[getting-started:using-a-package]: https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages.md
+[getting-started:using-a-package]: https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools
@@ -282,9 +282,9 @@ depending on the shell you use, then restart your console.
 # Examples
 
 See the [documentation](https://learn.microsoft.com/vcpkg) for specific walkthroughs,
-including [installing and using a package](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages.md),
-[adding a new package from a zipfile](https://learn.microsoft.com/vcpkg/examples/packaging-zipfiles.md),
-and [adding a new package from a GitHub repo](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos.md).
+including [installing and using a package](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages),
+[adding a new package from a zipfile](https://learn.microsoft.com/vcpkg/examples/packaging-zipfiles),
+and [adding a new package from a GitHub repo](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos).
 
 Our docs are now also available online at our website https://vcpkg.io/. We really appreciate any and all feedback! You can submit an issue in https://github.com/vcpkg/vcpkg.github.io/issues.
 
@@ -323,7 +323,7 @@ by the original developers of those libraries, and download source code and buil
 official distribution locations. For use behind a firewall, the specific access needed will depend
 on which ports are being installed. If you must install in in an "air gapped" environment, consider
 installing once in a non-"air gapped" environment, populating an
-[asset cache](https://learn.microsoft.com/vcpkg/users/assetcaching.md) shared with the otherwise "air gapped" environment.
+[asset cache](https://learn.microsoft.com/vcpkg/users/assetcaching) shared with the otherwise "air gapped" environment.
 
 # Telemetry
 

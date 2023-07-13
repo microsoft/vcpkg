@@ -1,11 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_download_distfile(INSTALL_PACKAGE_CONFIG_PATCH
-    URLS "https://patch-diff.githubusercontent.com/raw/pytorch/tensorpipe/pull/435.diff"
-    FILENAME tensorpipe-pr-435.patch
-    SHA512 7bcf604a967da36b8af936f8b8ab87b442834024b0b2cb886811c15e80893be842fbee2667bbbc39886814ec9b2f4ed0c2527de51fdb7dc293b25cce515f5e4b
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/tensorpipe
@@ -13,6 +7,7 @@ vcpkg_from_github(
     SHA512 1e5faf17a7236c5506c08cb28be16069b11bb929bbca64ed9745ce4277d46739186ab7d6597da7437d90ed2d166d4c37ef2f3bceabe8083ef3adbb0e8e5f227e
     PATCHES
         "${INSTALL_PACKAGE_CONFIG_PATCH}"
+        support-find-package.patch
         use-vcpkg.patch
         support-test.patch
 )
@@ -45,7 +40,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/Tensorpipe" PACKAGE_NAME "Tensorpipe")
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/unofficial-tensorpipe" PACKAGE_NAME "unofficial-tensorpipe")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"

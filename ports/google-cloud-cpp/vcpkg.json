@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.10.0",
+  "version": "2.13.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -380,6 +380,18 @@
         }
       ]
     },
+    "datafusion": {
+      "description": "Cloud Data Fusion API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "datamigration": {
       "description": "Database Migration API C++ Client Library",
       "dependencies": [
@@ -732,6 +744,30 @@
         }
       ]
     },
+    "metastore": {
+      "description": "Dataproc Metastore API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "migrationcenter": {
+      "description": "Migration Center API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "monitoring": {
       "description": "Cloud Monitoring API C++ Client Library",
       "dependencies": [
@@ -758,6 +794,18 @@
     },
     "networkmanagement": {
       "description": "Network Management API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "networksecurity": {
+      "description": "Secure Web Proxy API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -866,6 +914,18 @@
     },
     "pubsub": {
       "description": "The Google Cloud Bigtable C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "rapidmigrationassessment": {
+      "description": "Rapid Migration Assessment C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1095,6 +1155,18 @@
     },
     "storagetransfer": {
       "description": "Storage Transfer API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "support": {
+      "description": "Cloud Support API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
