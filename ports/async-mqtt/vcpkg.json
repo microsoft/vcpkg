@@ -29,17 +29,17 @@
   "default-features": [
     "use-tls"
   ],
-  "features":{
+  "features": {
+    "static-openssl": {
+      "description": "Use static OpenSSL library",
+      "dependencies": [
+        "zlib"
+      ]
+    },
     "use-tls": {
       "description": "Enable TLS support",
       "dependencies": [
         "openssl"
-      ]
-    },
-  "static-openssl": {
-      "description": "Use static OpenSSL library",
-      "dependencies": [
-        "zlib"
       ]
     }
   }
