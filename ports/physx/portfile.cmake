@@ -284,10 +284,10 @@ file(REMOVE_RECURSE
 )
 
 # Install the cmake config that users will use, replace -if any- only @variables@
-configure_file("${CMAKE_CURRENT_LIST_DIR}/omniverse-physx-sdk-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/unofficial-omniverse-physx-sdk-config.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/omniverse-physx-sdk-config.cmake" "${CURRENT_PACKAGES_DIR}/share/omniverse-physx-sdk/unofficial-omniverse-physx-sdk-config.cmake" @ONLY)
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
-file(COPY "${CURRENT_PACKAGES_DIR}/share/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share/")
+file(COPY "${CURRENT_PACKAGES_DIR}/share/omniverse-physx-sdk" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share/")
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-omniverse-physx-sdk
                          CONFIG_PATH share/omniverse-physx-sdk)
 
