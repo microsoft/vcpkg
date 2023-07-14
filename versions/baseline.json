@@ -8385,8 +8385,8 @@
       "port-version": 0
     },
     "uvw": {
-      "baseline": "3.0.0",
-      "port-version": 1
+      "baseline": "3.2.0",
+      "port-version": 0
     },
     "uwebsockets": {
       "baseline": "20.44.0",
