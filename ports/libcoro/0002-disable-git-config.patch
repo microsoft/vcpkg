@@ -15,4 +15,4 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 +#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 +#)
  
- option(LIBCORO_BUILD_TESTS    "Build the tests, Default=ON." ON)
+ option(LIBCORO_EXTERNAL_DEPENDENCIES "Use Cmake find_package to resolve dependencies instead of embedded libraries, Default=OFF." OFF)

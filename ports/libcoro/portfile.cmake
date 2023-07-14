@@ -7,12 +7,12 @@ vcpkg_from_github(
     PATCHES
         0001-allow-shared-lib.patch
         0002-disable-git-config.patch
-        0003-fix-dependencies.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DLIBCORO_EXTERNAL_DEPENDENCIES=ON
         -DLIBCORO_BUILD_TESTS=OFF
         -DLIBCORO_BUILD_EXAMPLES=OFF
 )
