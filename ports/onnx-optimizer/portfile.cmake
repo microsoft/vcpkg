@@ -10,6 +10,8 @@ vcpkg_from_github(
         fix-cmakelists.patch
 )
 
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         pybind11 BUILD_ONNX_PYTHON
@@ -26,6 +28,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DONNX_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
 )
 if("pybind11" IN_LIST FEATURES)
     # This target is not in install/export
