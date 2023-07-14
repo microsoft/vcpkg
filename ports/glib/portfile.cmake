@@ -10,6 +10,8 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
+        ${GLIB_MR_3386}
+        tsc-allow-threadpriority-to-fail-windows.patch 
 )
 
 vcpkg_list(SET OPTIONS)
