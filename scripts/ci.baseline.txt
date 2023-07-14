@@ -431,10 +431,6 @@ gemmlowp:x64-android=fail
 gherkin-c:arm-neon-android=fail
 gherkin-c:arm64-android=fail
 gherkin-c:x64-android=fail
-geotrans:arm-neon-android=fail
-geotrans:arm64-android=fail
-geotrans:x64-android=fail
-
 # Conflicts with libevent
 gherkin-c:arm64-windows         = skip
 gherkin-c:arm-uwp               = skip
@@ -1024,7 +1020,6 @@ pmdk:x64-linux=fail
 pmdk:x64-osx=fail
 pmdk:x64-uwp=fail
 pmdk:x64-windows-static=fail
-polyhook2:x64-android=fail
 popsift:x64-windows-static-md=fail
 popsift:x64-linux=fail # segfaults :(
 portable-snippets:arm-uwp=fail

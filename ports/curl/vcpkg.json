@@ -1,7 +1,7 @@
 {
   "name": "curl",
   "version": "8.1.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": null,
@@ -199,6 +199,12 @@
       "description": "SSL support (wolfSSL)",
       "dependencies": [
         "wolfssl"
+      ]
+    },
+    "zstd": {
+      "description": "ZStandard support (zstd)",
+      "dependencies": [
+        "zstd"
       ]
     }
   }
