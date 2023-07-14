@@ -7,4 +7,4 @@ librsvg can be imported via CMake FindPkgConfig module:
 vcpkg provides proprietary CMake targets:
 
     find_package(unofficial-librsvg CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::librsvg::rsvg-2.40 unofficial::librsvg::pixbufloader-svg)
+    target_link_libraries(main PRIVATE unofficial::librsvg::rsvg unofficial::librsvg::pixbufloader-svg)

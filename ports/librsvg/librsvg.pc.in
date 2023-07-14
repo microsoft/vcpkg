@@ -7,6 +7,5 @@ Name: librsvg
 Description: library that renders svg files
 Version: @LIBRSVG_VERSION@
 Requires: glib-2.0 gobject-2.0 gdk-pixbuf-2.0 cairo pango pangocairo
-Requires.private:
-Libs: -L${libdir} -lrsvg-2.40 -lpixbufloader-svg
+Libs: -L${libdir} -l@targets@ -lpixbufloader-svg -lm
 Cflags: -I${includedir}

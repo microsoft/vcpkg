@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.11)
 project(librsvg C)
 
 set(LIBRSVG_VERSION 2.40.20)
+set(targets rsvg)
 
 find_package(unofficial-libcroco CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
@@ -88,10 +89,10 @@ else()
     list(APPEND LIBRSVG_SOURCES rsvg.symbols)
 endif()
 
-add_library(rsvg-2.40 ${LIBRSVG_SOURCES})
+add_library(${targets} ${LIBRSVG_SOURCES})
 add_library(pixbufloader-svg ${PIXBUFLOADERSVG_SOURCES})
 
-target_compile_definitions(rsvg-2.40 PRIVATE -DRSVG_COMPILATION -D_CRT_SECURE_NO_WARNINGS -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}")
+target_compile_definitions(${targets} PRIVATE -DRSVG_COMPILATION -D_CRT_SECURE_NO_WARNINGS -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}")
 
 target_include_directories(pixbufloader-svg PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(pixbufloader-svg PRIVATE 
@@ -101,7 +102,7 @@ target_compile_definitions(pixbufloader-svg PRIVATE
     -DGDK_PIXBUF_ENABLE_BACKEND 
     -DG_LOG_DOMAIN="libpixbufloader-svg")
 
-target_link_libraries(rsvg-2.40 PRIVATE
+target_link_libraries(${targets} PRIVATE
     PkgConfig::GLIB2
     ${LIBXML2_LIBRARIES}
     PkgConfig::PANGO
@@ -110,12 +111,12 @@ target_link_libraries(rsvg-2.40 PRIVATE
     unofficial::libcroco::croco-0.6
 )
 target_link_libraries(pixbufloader-svg PRIVATE
-    rsvg-2.40
+    ${targets}
     PkgConfig::GLIB2
     PkgConfig::GDK_PIXBUF
 )
 
-install(TARGETS rsvg-2.40 pixbufloader-svg
+install(TARGETS ${targets} pixbufloader-svg
     EXPORT librsvg-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
