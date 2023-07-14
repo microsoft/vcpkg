@@ -1,0 +1,26 @@
+diff --git a/src/plugins/intel_cpu/CMakeLists.txt b/src/plugins/intel_cpu/CMakeLists.txt
+index e1f04b4a..ecb7619a 100644
+--- a/src/plugins/intel_cpu/CMakeLists.txt
++++ b/src/plugins/intel_cpu/CMakeLists.txt
+@@ -94,7 +94,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE dnnl
+ 
+ target_compile_definitions(${TARGET_NAME} PRIVATE IMPLEMENT_INFERENCE_EXTENSION_API)
+ target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+-target_include_directories(${TARGET_NAME} SYSTEM PRIVATE $<TARGET_PROPERTY:dnnl,INCLUDE_DIRECTORIES>)
++target_include_directories(${TARGET_NAME} SYSTEM BEFORE PRIVATE $<TARGET_PROPERTY:dnnl,INCLUDE_DIRECTORIES>)
+ 
+ # Cross compiled function
+ # TODO: The same for proposal, proposalONNX, topk
+diff --git a/src/plugins/intel_gpu/thirdparty/CMakeLists.txt b/src/plugins/intel_gpu/thirdparty/CMakeLists.txt
+index 788f3ca3..579ebdd8 100644
+--- a/src/plugins/intel_gpu/thirdparty/CMakeLists.txt
++++ b/src/plugins/intel_gpu/thirdparty/CMakeLists.txt
+@@ -127,7 +127,7 @@ if(ENABLE_ONEDNN_FOR_GPU)
+         set_target_properties(onednn_gpu_tgt PROPERTIES
+             INTERFACE_LINK_DIRECTORIES "${ONEDNN_INSTALL_DIR}/lib/$<CONFIG>"
+             INTERFACE_LINK_LIBRARIES "onednn_gpu"
+-            INTERFACE_INCLUDE_DIRECTORIES "${ONEDNN_INSTALL_DIR}/include"
++            INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${ONEDNN_INSTALL_DIR}/include"
+             INTERFACE_COMPILE_DEFINITIONS ENABLE_ONEDNN_FOR_GPU
+         )
+         add_dependencies(onednn_gpu_tgt onednn_gpu_build)

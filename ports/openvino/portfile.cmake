@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         001-disable-tools.patch
         002-typo-in-default-option-value.patch
+        reorder-dnnl.patch
     HEAD_REF master)
 
 function(ov_checkout_in_path PATH REPO REF SHA512)
