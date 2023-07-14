@@ -21,6 +21,13 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/uvw)
 
+file(READ "${CURRENT_PACKAGES_DIR}/share/uvw/uvwConfig.cmake" cmake_config)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/uvw/uvwConfig.cmake"
+"include(CMakeFindDependencyMacro)
+find_dependency(libuv)
+${cmake_config}
+")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
