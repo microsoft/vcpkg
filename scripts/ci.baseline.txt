@@ -1019,7 +1019,6 @@ pmdk:x64-linux=fail
 pmdk:x64-osx=fail
 pmdk:x64-uwp=fail
 pmdk:x64-windows-static=fail
-polyhook2:x64-android=fail
 popsift:x64-windows-static-md=fail
 popsift:x64-linux=fail # segfaults :(
 portable-snippets:arm-uwp=fail
