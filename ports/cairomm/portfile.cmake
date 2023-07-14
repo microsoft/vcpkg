@@ -17,6 +17,7 @@ vcpkg_configure_meson(
     OPTIONS
         -Dbuild-examples=false
         -Dmsvc14x-parallel-installable=false    # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
+        -Dbuild-tests=false
 )
 
 vcpkg_install_meson()
