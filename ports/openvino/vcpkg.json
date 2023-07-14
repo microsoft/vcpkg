@@ -51,7 +51,8 @@
       "name": "xbyak",
       "platform": "!(arm | uwp)",
       "version>=": "6.69"
-    }
+    },
+    "onednn"
   ],
   "default-features": [
     "auto",
