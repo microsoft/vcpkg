@@ -1,7 +1,6 @@
 {
   "name": "gdal",
-  "version-semver": "3.7.0",
-  "port-version": 4,
+  "version-semver": "3.7.1",
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
