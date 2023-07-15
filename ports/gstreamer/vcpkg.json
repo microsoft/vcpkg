@@ -1,7 +1,7 @@
 {
   "name": "gstreamer",
   "version": "1.20.5",
-  "port-version": 10,
+  "port-version": 11,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
@@ -40,6 +40,7 @@
     },
     "alsa": {
       "description": "Enable support for ALSA (Advanced Linux Sound Architecture)",
+      "supports": "linux",
       "dependencies": [
         {
           "name": "alsa",
@@ -249,6 +250,7 @@
     },
     "fluidsynth": {
       "description": "Enable support for the Fluidsynth MIDI decoder",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "fluidsynth",
@@ -272,6 +274,18 @@
           "default-features": false,
           "features": [
             "plugins-good"
+          ]
+        }
+      ]
+    },
+    "ges": {
+      "description": "Enable support for GStreamer Editing Services",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
           ]
         }
       ]
@@ -359,6 +373,7 @@
     },
     "modplug": {
       "description": "Enable support for the ModPlug audio decoder",
+      "supports": "!uwp",
       "dependencies": [
         {
           "name": "gstreamer",
