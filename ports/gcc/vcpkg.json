@@ -1,0 +1,21 @@
+{
+  "name": "gcc",
+  "version": "13.1.0",
+  "description": "The GNU Compiler Collection.",
+  "homepage": "https://gcc.gnu.org/",
+  "license": "GPL-2.0",
+  "supports": "linux",
+  "dependencies": [
+    "gmp",
+    "mpc",
+    "mpfr",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

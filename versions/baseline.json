@@ -2748,6 +2748,10 @@
       "baseline": "2022-01-20",
       "port-version": 4
     },
+    "gcc": {
+      "baseline": "13.1.0",
+      "port-version": 0
+    },
     "gcem": {
       "baseline": "1.16.0",
       "port-version": 0
