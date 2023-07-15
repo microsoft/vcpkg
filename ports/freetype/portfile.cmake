@@ -1,17 +1,17 @@
-set(FT_VERSION 2.12.1)
+string(REPLACE "." "-" FT_VERSION "${VERSION}")
 
-vcpkg_from_sourceforge(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO freetype/freetype2
-    REF ${FT_VERSION}
-    FILENAME freetype-${FT_VERSION}.tar.xz
-    SHA512 6482de1748dc2cc01e033d21a3b492dadb1f039d13d9179685fdcf985e24d7f587cbca4c27ed8a7fdb7d9ad59612642ac5f4db062443154753295363f45c052f
+    REPO freetype/freetype
+    REF "VER-${FT_VERSION}"
+    SHA512 6cf9ee201e69b4f78c973c1026243bcb65d9ff74f4378be65c6542ed0ca984ecc9271351d8ff56310b0f4c5e628b4e3fbdf93727b310f9e9e9172238dd647bdd
+    HEAD_REF master
     PATCHES
         0003-Fix-UWP.patch
         brotli-static.patch
         bzip2.patch
         fix-exports.patch
-        error-strings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
