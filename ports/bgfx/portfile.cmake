@@ -35,8 +35,8 @@ vcpkg_check_features(
   FEATURES tools BGFX_BUILD_TOOLS multithreaded BGFX_CONFIG_MULTITHREADED
 )
 
-if (BGFX_BUILD_TOOLS AND TARGET_TRIPLET MATCHES "(windows|uwp)")
-  # bgfx doesn't apply __declspec(dllexport) which prevents dynamic linking for tools
+if (TARGET_TRIPLET MATCHES "(windows|uwp)")
+  # bgfx doesn't apply __declspec(dllexport) which prevents dynamic linking
   set(BGFX_LIBRARY_TYPE "STATIC")
 elseif (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(BGFX_LIBRARY_TYPE "SHARED")
