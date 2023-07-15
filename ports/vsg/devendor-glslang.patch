@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 61da709f..472bc6af 100644
+index 6e7ec437..db4d30f1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -37,9 +37,11 @@ find_package(Vulkan ${Vulkan_MIN_VERSION} REQUIRED)
@@ -16,10 +16,10 @@ index 61da709f..472bc6af 100644
  
          if (Git_FOUND)
 diff --git a/src/vsg/CMakeLists.txt b/src/vsg/CMakeLists.txt
-index 4154312f..49d63b97 100644
+index 3d9625e4..96285e99 100644
 --- a/src/vsg/CMakeLists.txt
 +++ b/src/vsg/CMakeLists.txt
-@@ -226,7 +226,7 @@ set(SOURCES
+@@ -227,14 +227,24 @@ set(SOURCES
      utils/LoadPagedLOD.cpp
  )
  
@@ -28,10 +28,12 @@ index 4154312f..49d63b97 100644
  
      # include glslang source code directly into the VulkanScenegraph library build.
      include(../glslang/build_vars.cmake)
-@@ -236,6 +236,14 @@ endif()
- set(LIBRARIES PUBLIC
-         Vulkan::Vulkan
-         Threads::Threads
+ endif()
+ 
+ # set up library dependencies
+-set(LIBRARIES PUBLIC
++set(LIBRARIES
++	PRIVATE
 +        glslang::glslang
 +        glslang::OSDependent
 +        glslang::MachineIndependent
@@ -40,10 +42,11 @@ index 4154312f..49d63b97 100644
 +        glslang::OGLCompiler
 +        glslang::SPVRemapper
 +        glslang::SPIRV
++	PUBLIC
+         Vulkan::Vulkan
+         Threads::Threads
  )
- 
- # Check for std::atomic
-@@ -364,9 +372,6 @@ target_include_directories(vsg
+@@ -365,9 +375,6 @@ target_include_directories(vsg
      PUBLIC
          $<BUILD_INTERFACE:${VSG_SOURCE_DIR}/include>
          $<BUILD_INTERFACE:${VSG_BINARY_DIR}/include>
@@ -66,3 +69,15 @@ index 71a7f09f..803f26a1 100644
  #    include <glslang/Public/ResourceLimits.h>
  #    include <glslang/Public/ShaderLang.h>
  #endif
+diff --git a/src/vsg/vsgConfig.cmake.in b/src/vsg/vsgConfig.cmake.in
+index 7ea0de02..4f7e77bd 100644
+--- a/src/vsg/vsgConfig.cmake.in
++++ b/src/vsg/vsgConfig.cmake.in
+@@ -2,6 +2,7 @@ include(CMakeFindDependencyMacro)
+ 
+ find_package(Vulkan @Vulkan_MIN_VERSION@ REQUIRED)
+ find_dependency(Threads)
++find_dependency(glslang)
+ 
+ @FIND_DEPENDENCY_WINDOWING@
+ include("${CMAKE_CURRENT_LIST_DIR}/vsgTargets.cmake")

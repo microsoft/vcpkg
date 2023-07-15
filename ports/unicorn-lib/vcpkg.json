@@ -1,7 +1,7 @@
 {
   "name": "unicorn-lib",
   "version-date": "2022-01-24",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Unicode library for C++ by Ross Smith",
   "homepage": "https://github.com/CaptainCrowbar/unicorn-lib",
   "license": "MIT",
