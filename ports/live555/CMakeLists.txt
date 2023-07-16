@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(live555 C CXX)
 
+set(CMAKE_CXX_STANDARD 20)
 include_directories(
     BasicUsageEnvironment/include
     groupsock/include

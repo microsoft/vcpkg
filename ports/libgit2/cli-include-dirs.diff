@@ -1,0 +1,12 @@
+diff --git a/src/cli/CMakeLists.txt b/src/cli/CMakeLists.txt
+index 84b6c19..df2119c 100644
+--- a/src/cli/CMakeLists.txt
++++ b/src/cli/CMakeLists.txt
+@@ -46,6 +46,7 @@ set_target_properties(git2_cli PROPERTIES OUTPUT_NAME ${LIBGIT2_FILENAME})
+ ide_split_sources(git2_cli)
+ 
+ target_include_directories(git2_cli PRIVATE ${CLI_INCLUDES})
++target_include_directories(git2_cli SYSTEM PRIVATE ${LIBGIT2_SYSTEM_INCLUDES})
+ 
+ if(MSVC_IDE)
+ 	# Precompiled headers
