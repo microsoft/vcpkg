@@ -3,13 +3,11 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.21.12
-    SHA512 152f8441c325e808b942153c15e82fdb533d5273b50c25c28916ec568ada880f79242bb61ee332ac5fb0d20f21239ed6f8de02ef6256cc574b1fc354d002c6b0
-    HEAD_REF master
+    REF v23.4
+    SHA512 b93a4e0339ecbe085796de5b6c61feae35229d40db9019c043090bcaa483a1cce78a99487c5638482c68832fcede5579a0e5ec731221a88359b80db9bb6dc566
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
-        compile_options.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -42,10 +40,12 @@ vcpkg_cmake_configure(
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
+        -Dprotobuf_ABSL_PROVIDER:STRING=package
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME utf8_range CONFIG_PATH lib/cmake/utf8_range)
 
 # It appears that at this point the build hasn't actually finished. There is probably
 # a process spawned by the build, therefore we need to wait a bit.
@@ -65,13 +65,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         "\${_IMPORT_PREFIX}/bin/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         "\${_IMPORT_PREFIX}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
     )
-endif()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(READ "${CURRENT_PACKAGES_DIR}/debug/share/protobuf/protobuf-targets-debug.cmake" DEBUG_MODULE)
-    string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" DEBUG_MODULE "${DEBUG_MODULE}")
-    string(REPLACE "\${_IMPORT_PREFIX}/debug/bin/protoc${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}" DEBUG_MODULE "${DEBUG_MODULE}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-debug.cmake" "${DEBUG_MODULE}")
 endif()
 
 protobuf_try_remove_recurse_wait("${CURRENT_PACKAGES_DIR}/debug/share")
@@ -115,6 +108,11 @@ foreach(_package IN LISTS packages)
     set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${_package}.pc")
     if(EXISTS "${_file}")
         vcpkg_replace_string(${_file} "-l${_package}" "-l${_package}d")
+        vcpkg_replace_string(${_file} "absl_abseil_dll" "abseil_dll")
+    endif()
+    set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${_package}.pc")
+    if(EXISTS "${_file}")
+        vcpkg_replace_string(${_file} "absl_abseil_dll" "abseil_dll")
     endif()
 endforeach()
 
