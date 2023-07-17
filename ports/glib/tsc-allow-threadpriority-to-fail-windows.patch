@@ -1,0 +1,18 @@
+diff --git a/glib/gthread-win32.c b/glib/gthread-win32.c
+index 58e244ebe..480e52cb0 100644
+--- a/glib/gthread-win32.c
++++ b/glib/gthread-win32.c
+@@ -516,11 +516,8 @@ g_system_thread_new (GThreadFunc proxy,
+       goto error;
+     }
+ 
+-  if (SetThreadPriority (thread->handle, thread_prio) == 0)
+-    {
+-      message = "Error setting new thread priority";
+-      goto error;
+-    }
++  // tsc patch: Failure to set thread priority isn't fatal
++  SetThreadPriority (thread->handle, thread_prio);
+ 
+   if (ResumeThread (thread->handle) == (DWORD) -1)
+     {
