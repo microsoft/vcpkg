@@ -289,6 +289,14 @@ elseif(VCPKG_TARGET_IS_LINUX)
         list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_TYPES_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread")
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        # Avoid frameworks for vcpkg
+        list(APPEND CORE_OPTIONS -no-framework)
+        # Such that Qt executables like moc find their libs. The default path is ../Frameworks
+        list(APPEND DEBUG_OPTIONS -R ${CURRENT_INSTALLED_DIR}/debug/lib)
+        list(APPEND RELEASE_OPTIONS -R ${CURRENT_INSTALLED_DIR}/lib)
+    endif()
+
     list(APPEND CORE_OPTIONS -fontconfig)
     if("${VCPKG_TARGET_ARCHITECTURE}" MATCHES "arm64")
         FILE(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)

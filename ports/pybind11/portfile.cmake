@@ -2,19 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pybind/pybind11
     REF "v${VERSION}"
-    SHA512 3894400f04cd08e2dbb14b3d696339f0364434f1d6f8bb057338ac88157ec7491b2df1e1e46ebd5abccdcd5775c5e9238de6404f0db87f64f5a1802db3a5b18c
+    SHA512 7970defbb6d057a44468ed707c80bfa6ef8c9578528fbc084b03aeea20a52dbd681581f82d55ff90af11ee89693379bd79e2ab6603239ba05b0aa8da29dd93c7
     HEAD_REF master
+    PATCHES
+        fix-debug-link.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPYBIND11_TEST=OFF
-        -DPYBIND11_FINDPYTHON=ON
-    OPTIONS_RELEASE
-        -DPYTHON_IS_DEBUG=OFF
-    OPTIONS_DEBUG
-        -DPYTHON_IS_DEBUG=ON
+        # Disable all Python searching, Python required only for tests
+        -DPYBIND11_NOPYTHON=ON
 )
 
 vcpkg_cmake_install()
@@ -23,8 +22,5 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/pybind11/pybind11Tools.cmake" 
-                    [=[find_package(PythonLibsNew ${PYBIND11_PYTHON_VERSION} MODULE REQUIRED ${_pybind11_quiet})]=]
-                    [=[find_package(PythonLibs ${PYBIND11_PYTHON_VERSION} MODULE REQUIRED ${_pybind11_quiet})]=]) # CMake's PythonLibs works better with vcpkg 
-
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

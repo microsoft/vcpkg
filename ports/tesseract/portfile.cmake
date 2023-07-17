@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         ${tesseract_patch}
         fix_static_link_icu.patch
+        fix-aarch64-mfpu-not-available.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

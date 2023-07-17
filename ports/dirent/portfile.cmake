@@ -11,7 +11,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/dirent RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 vcpkg_copy_pdbs()
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
