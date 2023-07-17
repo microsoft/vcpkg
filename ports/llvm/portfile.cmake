@@ -4,17 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 99beff9ee6f8c26f16ea53f03ba6209a119099cbe361701b0d5f4df9d5cc5f2f0da7c994c899a4cec876da8428564dc7a8e798226a9ba8b5c18a3ef8b181d39e
+    SHA512 6f084ac08cc5ec99996eb59fa7d5a8ea3b9ebc5b78159b87a868ebfd049b9f9a9048824df1a545e2a20bedff57ebe26f57e57cbc7bd9433edcd36424d973a4d5
     HEAD_REF main
     PATCHES
         0001-Fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
-        0002-Fix-DR-1734.patch
         0003-Fix-tools-path.patch
         0004-Fix-compiler-rt-install-path.patch
         0005-Fix-tools-install-path.patch
         0006-Fix-libffi.patch
         0007-Fix-install-bolt.patch
-        0008-llvm_assert.patch
         0009-disable-libomp-aliases.patch
 )
 
@@ -337,6 +335,7 @@ if(empty_dirs)
 endif()
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tools(TOOL_NAMES lld AUTO_CLEAN)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"

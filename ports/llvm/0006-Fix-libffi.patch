@@ -1,8 +1,5 @@
- llvm/cmake/modules/FindFFI.cmake | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/llvm/cmake/modules/FindFFI.cmake b/llvm/cmake/modules/FindFFI.cmake
-index b0d859af8959..a756d0c8fdb0 100644
+index a493a89..3754424 100644
 --- a/llvm/cmake/modules/FindFFI.cmake
 +++ b/llvm/cmake/modules/FindFFI.cmake
 @@ -34,7 +34,7 @@ else()
