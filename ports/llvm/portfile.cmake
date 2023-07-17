@@ -15,6 +15,7 @@ vcpkg_from_github(
         0007-Fix-install-bolt.patch
         0008-llvm_assert.patch
         0009-disable-libomp-aliases.patch
+        0010-remove-numpy.patch
 )
 
 vcpkg_check_features(
@@ -147,7 +148,7 @@ endif()
 if("mlir" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "mlir")
     if("enable-mlir-python-bindings" IN_LIST FEATURES)
-        x_vcpkg_get_python_packages(PYTHON_VERSION 3 PACKAGES numpy OUT_PYTHON_VAR PYTHON3)
+        vcpkg_find_acquire_program(PYTHON3)
         list(APPEND FEATURE_OPTIONS
             -DMLIR_ENABLE_BINDINGS_PYTHON=ON
             -DPYTHON_EXECUTABLE:FILEPATH=${PYTHON3}
