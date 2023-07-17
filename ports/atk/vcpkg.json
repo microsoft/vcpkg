@@ -1,10 +1,10 @@
 {
   "name": "atk",
   "version": "2.38.0",
-  "port-version": 6,
+  "port-version": 7,
   "description": "GNOME Accessibility Toolkit",
   "homepage": "https://developer.gnome.org/atk/",
-  "license": "GPL-2.0-only",
+  "license": "LGPL-2.0-or-later",
   "supports": "!xbox",
   "dependencies": [
     "gettext",
