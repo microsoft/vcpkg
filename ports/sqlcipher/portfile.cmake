@@ -82,3 +82,4 @@ file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+vcpkg_fixup_pkgconfig()
