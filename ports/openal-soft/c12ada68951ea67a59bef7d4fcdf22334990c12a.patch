@@ -1,0 +1,54 @@
+From c12ada68951ea67a59bef7d4fcdf22334990c12a Mon Sep 17 00:00:00 2001
+From: Chris Robinson <chris.kcat@gmail.com>
+Date: Tue, 4 Jul 2023 11:30:18 -0700
+Subject: [PATCH] Don't use an import target for OpenSL
+
+---
+ CMakeLists.txt         |  3 ++-
+ cmake/FindOpenSL.cmake | 12 +++++-------
+ 2 files changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 34fd33122..af25a96c7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1183,7 +1183,8 @@ if(ALSOFT_BACKEND_OPENSL)
+         set(HAVE_OPENSL 1)
+         set(ALC_OBJS  ${ALC_OBJS} alc/backends/opensl.cpp alc/backends/opensl.h)
+         set(BACKENDS  "${BACKENDS} OpenSL,")
+-        set(EXTRA_LIBS "OpenSL::OpenSLES" ${EXTRA_LIBS})
++        set(EXTRA_LIBS ${OPENSL_LIBRARIES} ${EXTRA_LIBS})
++        set(INC_PATHS ${INC_PATHS} ${OPENSL_INCLUDE_DIRS})
+     endif()
+ endif()
+ if(ALSOFT_REQUIRE_OPENSL AND NOT HAVE_OPENSL)
+diff --git a/cmake/FindOpenSL.cmake b/cmake/FindOpenSL.cmake
+index 004287494..3df54d447 100644
+--- a/cmake/FindOpenSL.cmake
++++ b/cmake/FindOpenSL.cmake
+@@ -2,8 +2,9 @@
+ # Find the OpenSL libraries
+ #
+ #  This module defines the following variables and targets:
+-#     OPENSL_FOUND     - True if OPENSL was found
+-#     OpenSL::OpenSLES - The OpenSLES target
++#     OPENSL_FOUND        - True if OPENSL was found
++#     OPENSL_INCLUDE_DIRS - The OpenSL include paths
++#     OPENSL_LIBRARIES    - The OpenSL libraries to link
+ #
+ 
+ #=============================================================================
+@@ -53,11 +54,8 @@ find_package_handle_standard_args(OpenSL REQUIRED_VARS OPENSL_LIBRARY OPENSL_INC
+     OPENSL_ANDROID_INCLUDE_DIR)
+ 
+ if(OPENSL_FOUND)
+-    add_library(OpenSL::OpenSLES UNKNOWN IMPORTED)
+-    set_target_properties(OpenSL::OpenSLES PROPERTIES
+-        IMPORTED_LOCATION ${OPENSL_LIBRARY}
+-        INTERFACE_INCLUDE_DIRECTORIES ${OPENSL_INCLUDE_DIR}
+-        INTERFACE_INCLUDE_DIRECTORIES ${OPENSL_ANDROID_INCLUDE_DIR})
++    set(OPENSL_LIBRARIES ${OPENSL_LIBRARY})
++    set(OPENSL_INCLUDE_DIRS ${OPENSL_INCLUDE_DIR} ${OPENSL_ANDROID_INCLUDE_DIR})
+ endif()
+ 
+ mark_as_advanced(OPENSL_INCLUDE_DIR OPENSL_ANDROID_INCLUDE_DIR OPENSL_LIBRARY)
