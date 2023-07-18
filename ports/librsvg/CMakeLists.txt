@@ -1,8 +1,15 @@
 cmake_minimum_required(VERSION 3.11)
 project(librsvg C)
 
-set(LIBRSVG_VERSION 2.40.20)
-set(targets rsvg)
+set(RSVG_API_MAJOR_VERSION 2)
+set(RSVG_API_VERSION "2.0")
+Set(VERSION "2.40.20")
+set(targets "rsvg-${RSVG_API_MAJOR_VERSION}")
+
+Set(prefix "${CMAKE_INSTALL_PREFIX}")
+Set(exec_prefix "\${prefix}")
+Set(libdir "\${prefix}/lib")
+Set(includedir "\${prefix}/include")
 
 find_package(unofficial-libcroco CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
@@ -135,7 +142,7 @@ install(FILES
     rsvg-cairo.h
     librsvg-features.h
     librsvg-enum-types.h
-    DESTINATION include/librsvg
+    DESTINATION include/librsvg-${RSVG_API_VERSION}
 )
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-librsvg-config.cmake "

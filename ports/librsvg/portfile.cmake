@@ -12,7 +12,6 @@ vcpkg_extract_source_archive(
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/librsvg.pc.in" DESTINATION "${SOURCE_PATH}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/config.h.linux" "${SOURCE_PATH}/config.h.linux" COPYONLY)
 
 vcpkg_find_acquire_program(PKGCONFIG)
