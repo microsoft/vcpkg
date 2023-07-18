@@ -1,7 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3515d77..556fb78 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -131,9 +131,9 @@ endif()
+@@ -138,9 +138,9 @@ endif()
  # Adds our cmake folder to the search path for find_package
  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
  if(HTTPLIB_REQUIRE_BROTLI)
@@ -13,7 +14,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  endif()
  # Just setting this variable here for people building in-tree
  if(Brotli_FOUND)
-@@ -216,9 +216,9 @@ target_link_libraries(${PROJECT_NAME} ${_INTERFACE_OR_PUBLIC}
+@@ -223,9 +223,9 @@ target_link_libraries(${PROJECT_NAME} ${_INTERFACE_OR_PUBLIC}
  		# Needed for API from MacOS Security framework
  		"$<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>,$<BOOL:${HTTPLIB_USE_CERTS_FROM_MACOSX_KEYCHAIN}>>:-framework CoreFoundation -framework Security>"
  		# Can't put multiple targets in a single generator expression or it bugs out.
@@ -26,13 +27,13 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  		$<$<BOOL:${HTTPLIB_IS_USING_ZLIB}>:ZLIB::ZLIB>
  		$<$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>:OpenSSL::SSL>
  		$<$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>:OpenSSL::Crypto>
-@@ -274,9 +274,6 @@ install(FILES "${_httplib_build_includedir}/httplib.h" TYPE INCLUDE)
- install(FILES
+@@ -283,9 +283,6 @@ if(HTTPLIB_INSTALL)
+ 	install(FILES
  		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
  		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
 -		# Install it so it can be used later by the httplibConfig.cmake file.
 -		# Put it in the same dir as our config file instead of a global path so we don't potentially stomp on other packages.
 -		"${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindBrotli.cmake"
- 	DESTINATION ${_TARGET_INSTALL_CMAKEDIR}
- )
+ 		DESTINATION ${_TARGET_INSTALL_CMAKEDIR}
+ 	)
  
