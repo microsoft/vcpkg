@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uNetworking/uWebSockets
     REF "v${VERSION}"
-    SHA512 ceb950a3d4c2ffd58867ef1cc92d5405441dff603ceb6958ef5660f93c8e1da2346cecb43d209ab08d4feac9c1f023f7bff22a13f537dbb3eab0f122f27f70f6
+    SHA512 38022fc555a89654828d872ef2b4ef3a6b01e8eccfe511cb8df37dff772c6c09b379933da73606970ac8581333b3be26ad7b0a8cdec8d19fe05b326fbf4f6c84
     HEAD_REF master
 )
 
