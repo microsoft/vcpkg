@@ -15,25 +15,25 @@
         <archiveName>python-3.10.7.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.27.0-rc3</version>
-        <exeRelativePath>cmake-3.27.0-rc3-windows-i386/bin/cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.27.0-rc3/cmake-3.27.0-rc3-windows-i386.zip</url>
-        <sha512>057b53764c2b6f51196f7224b6e26885fff4b5c0cd52a9c6b33cf8df524eea0b6d51e04c3cf892092b5e44251a4c4263152a1fb0efb4179fceaf25f490c6cad3</sha512>
-        <archiveName>cmake-3.27.0-rc3-windows-i386.zip</archiveName>
+        <version>3.27.0</version>
+        <exeRelativePath>cmake-3.27.0-windows-i386/bin/cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.0/cmake-3.27.0-windows-i386.zip</url>
+        <sha512>587238431fffde2593f49e85d66226c34669a77feaece6fea7b8d140112319843fc0033c69b98d0759054ebddfddf7339da5a2e4617258c051a6a7c8aee3812e</sha512>
+        <archiveName>cmake-3.27.0-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.27.0-rc3</version>
-        <exeRelativePath>cmake-3.27.0-rc3-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.27.0-rc3/cmake-3.27.0-rc3-macos-universal.tar.gz</url>
-        <sha512>1b72d3495948e7736c297d7648e604450f939253f21a52f04349527512c980ab34d7866a9f883b72c275fc887ce88f570276f061046bf95fe82142e25ae3b1d1</sha512>
-        <archiveName>cmake-3.27.0-rc3-macos-universal.tar.gz</archiveName>
+        <version>3.27.0</version>
+        <exeRelativePath>cmake-3.27.0-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.0/cmake-3.27.0-macos-universal.tar.gz</url>
+        <sha512>ad30b1483e2888afac5bc73c195860e23f099f54bc795536c3ef423d447a0db905c192dea8e76261dea76f36d87fe6b3ed632fc73819ec985d7e71902ef1674f</sha512>
+        <archiveName>cmake-3.27.0-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.27.0-rc3</version>
-        <exeRelativePath>cmake-3.27.0-rc3-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.27.0-rc3/cmake-3.27.0-rc3-linux-x86_64.tar.gz</url>
-        <sha512>d7854c0937825b52ab1628bf0ce93b2703b57d8d6dc90524d8079b0fde358b6c1bc71d658685cdc142bb1c97332e04d8ff7a828e0b3a4d532d2848ae9774789f</sha512>
-        <archiveName>cmake-3.27.0-rc3-linux-x86_64.tar.gz</archiveName>
+        <version>3.27.0</version>
+        <exeRelativePath>cmake-3.27.0-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.0/cmake-3.27.0-linux-x86_64.tar.gz</url>
+        <sha512>05a288fdee44640611fa1b1dcedc89e5fd161c9ab05dc8f20cd45bada4f8bb55df58f2d02cc3f02232d05afe824b71e011a535d6cbf437ac449b8b4c1157884c</sha512>
+        <archiveName>cmake-3.27.0-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
         <version>2.7.4</version>
