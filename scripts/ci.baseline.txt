@@ -71,6 +71,7 @@ azure-identity-cpp:x64-android=fail
 backward-cpp:arm-neon-android=fail
 backward-cpp:arm64-android=fail
 backward-cpp:x64-android=fail
+bde:x64-linux=skip
 bento4:arm-neon-android=fail
 berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
