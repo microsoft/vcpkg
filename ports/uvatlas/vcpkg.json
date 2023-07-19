@@ -1,6 +1,6 @@
 {
   "name": "uvatlas",
-  "version-date": "2023-04-28",
+  "version-date": "2023-06-13",
   "description": "UVAtlas isochart texture atlas",
   "homepage": "https://github.com/Microsoft/UVAtlas",
   "documentation": "https://github.com/Microsoft/UVAtlas/wiki",
@@ -9,7 +9,7 @@
   "dependencies": [
     {
       "name": "directx-headers",
-      "platform": "(windows & !xbox) | linux"
+      "platform": "mingw | linux"
     },
     "directxmath",
     {

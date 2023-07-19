@@ -1,7 +1,5 @@
 @PACKAGE_INIT@
 
-include(CMakeFindDependencyMacro)
-
 if(NOT TARGET libffi)
   include("${CMAKE_CURRENT_LIST_DIR}/libffiTargets.cmake")
 endif()

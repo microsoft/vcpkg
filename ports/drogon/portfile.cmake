@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         vcpkg.patch
         drogon_config.patch
+        fix_gcc13.patch #https://github.com/drogonframework/drogon/pull/1563
 )
 
 vcpkg_check_features(

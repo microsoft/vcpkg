@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-install-prefix-path.patch
         install-include-dir.patch
         fix-depend-freetype.patch
+        fix-dependence.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
