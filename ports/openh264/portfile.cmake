@@ -24,7 +24,6 @@ vcpkg_add_to_path("${PKGCONFIG_PATH}")
 
 set(ENV{PKGCONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
-
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS -Dtests=disabled
