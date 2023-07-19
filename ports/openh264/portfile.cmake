@@ -22,7 +22,7 @@ set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 get_filename_component(PKGCONFIG_PATH "${PKGCONFIG}" DIRECTORY)
 vcpkg_add_to_path("${PKGCONFIG_PATH}")
 
-set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+set(ENV{PKGCONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
 
 vcpkg_configure_meson(
