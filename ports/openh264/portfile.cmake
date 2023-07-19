@@ -17,6 +17,14 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     endforeach(GAS_PATH)
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+get_filename_component(PKGCONFIG_PATH "${PKGCONFIG}" DIRECTORY)
+vcpkg_add_to_path("${PKGCONFIG_PATH}")
+
+set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS -Dtests=disabled
