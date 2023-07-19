@@ -1705,8 +1705,8 @@
       "port-version": 0
     },
     "concurrencpp": {
-      "baseline": "0.1.6",
-      "port-version": 2
+      "baseline": "0.1.7",
+      "port-version": 0
     },
     "concurrentqueue": {
       "baseline": "1.0.4",
