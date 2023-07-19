@@ -6182,7 +6182,7 @@
     },
     "pango": {
       "baseline": "1.50.14",
-      "port-version": 2
+      "port-version": 3
     },
     "pangolin": {
       "baseline": "0.8",
