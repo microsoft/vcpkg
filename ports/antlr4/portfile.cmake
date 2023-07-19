@@ -4,6 +4,8 @@ vcpkg_from_github(
     HEAD_REF dev
     REF "${VERSION}"
     SHA512 947ecca28712aa4dd98d7b7e0753e91881e55642f7951ca65a576b94db87440767a1b93d08e82db69ad527ee28bf89f0b2f9c0aaa604a999a7e48c163764ee12
+    PATCHES
+        set-export-macro-define-as-private.patch
 )
 
 set(RUNTIME_PATH "${SOURCE_PATH}/runtime/Cpp")
