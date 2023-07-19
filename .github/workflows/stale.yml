@@ -29,3 +29,10 @@ jobs:
           days-before-issue-stale: 60
           days-before-pr-stale: -1
           days-before-close: 14
+      - uses: actions/stale@v6
+        with:
+          stale-issue-message: "This is an automated message. Per our repo policy, stale issues get closed if there has been no activity in the past 90 days. The issue will be automatically closed in 14 days. If you wish to keep this issue open, please add a new comment."
+          only-labels: 'category:community-triplet'
+          days-before-issue-stale: 90
+          days-before-pr-stale: -1
+          days-before-close: 14
