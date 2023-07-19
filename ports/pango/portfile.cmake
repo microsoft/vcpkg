@@ -12,10 +12,7 @@ vcpkg_from_gitlab(
 # Mimics patch for Gentoo https://gitweb.gentoo.org/repo/gentoo.git/commit/?id=f688df5100ef2b88c975ecd40fd343c62e2ab276
 # Silence false positive with GCC 13 and -O3 at least
 # https://gitlab.gnome.org/GNOME/pango/-/issues/740	
-execute_process(
-    COMMAND bash "-c" "sed -i -e '/\-Werror=array-bounds/d' ${SOURCE_PATH}/meson.build" 
-    OUTPUT_VARIABLE FOO
-)
+vcpkg_replace_string("${SOURCE_PATH}/meson.build" "-Werror=array-bounds" "")
 
 if("introspection" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
