@@ -26,10 +26,10 @@ index 44abb409..61eb3836 100644
 +include_directories(${Iconv_INCLUDE_DIRS})
 +target_link_libraries(kio_ftp Qt${QT_MAJOR_VERSION}::Network KF5::KIOCore KF5::I18n KF5::ConfigCore ${Iconv_LIBRARIES})
 \ No newline at end of file
-diff --git a/src/ioslaves/http/CMakeLists.txt b/src/ioslaves/http/CMakeLists.txt
+diff --git a/src/kioworkers/http/CMakeLists.txt b/src/kioworkers/http/CMakeLists.txt
 index e616d08b..0631edb6 100644
---- a/src/ioslaves/http/CMakeLists.txt
-+++ b/src/ioslaves/http/CMakeLists.txt
+--- a/src/kioworkers/http/CMakeLists.txt
++++ b/src/kioworkers/http/CMakeLists.txt
 @@ -37,11 +37,15 @@ target_sources(kio_http_cache_cleaner PRIVATE
      http_cache_cleaner.cpp
  )
@@ -55,10 +55,10 @@ index e616d08b..0631edb6 100644
  )
  if(GSSAPI_FOUND)
    target_link_libraries(kio_http PRIVATE ${GSSAPI_LIBS})
-diff --git a/src/ioslaves/http/kcookiejar/CMakeLists.txt b/src/ioslaves/http/kcookiejar/CMakeLists.txt
+diff --git a/src/kioworkers/http/kcookiejar/CMakeLists.txt b/src/kioworkers/http/kcookiejar/CMakeLists.txt
 index 0f770ae4..2600d2d2 100644
---- a/src/ioslaves/http/kcookiejar/CMakeLists.txt
-+++ b/src/ioslaves/http/kcookiejar/CMakeLists.txt
+--- a/src/kioworkers/http/kcookiejar/CMakeLists.txt
++++ b/src/kioworkers/http/kcookiejar/CMakeLists.txt
 @@ -13,10 +13,13 @@ target_sources(kcookiejar5 PRIVATE
      main.cpp
  )
@@ -108,10 +108,10 @@ index 4e40d214..7ba0d911 100644
  # Rename target to allow co-installability with plasma-workspace <= 5.9
  set_target_properties(remotedirnotify PROPERTIES OUTPUT_NAME "remotenotifier")
  
-diff --git a/src/ioslaves/telnet/CMakeLists.txt b/src/ioslaves/telnet/CMakeLists.txt
+diff --git a/src/schemehandlers/telnet/CMakeLists.txt b/src/schemehandlers/telnet/CMakeLists.txt
 index ffee12c8..0b03c211 100644
---- a/src/ioslaves/telnet/CMakeLists.txt
-+++ b/src/ioslaves/telnet/CMakeLists.txt
+--- a/src/schemehandlers/telnet/CMakeLists.txt
++++ b/src/schemehandlers/telnet/CMakeLists.txt
 @@ -2,10 +2,13 @@
  add_executable(ktelnetservice5 ktelnetservice.cpp)
  ecm_mark_nongui_executable(ktelnetservice5)
