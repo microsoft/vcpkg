@@ -129,8 +129,8 @@
       "port-version": 0
     },
     "antlr4": {
-      "baseline": "4.11.1",
-      "port-version": 1
+      "baseline": "4.13.0",
+      "port-version": 0
     },
     "any-lite": {
       "baseline": "0.4.0",
