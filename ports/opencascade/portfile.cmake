@@ -47,6 +47,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencascade)
+vcpkg_copy_tools(TOOL_NAMES ExpToCasExe AUTO_CLEAN)
 
 #make occt includes relative to source_file
 list(APPEND ADDITIONAL_HEADERS 
