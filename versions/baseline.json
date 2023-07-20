@@ -3365,8 +3365,8 @@
       "port-version": 1
     },
     "implot": {
-      "baseline": "0.14",
-      "port-version": 2
+      "baseline": "0.15",
+      "port-version": 0
     },
     "indicators": {
       "baseline": "2.3",
