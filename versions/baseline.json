@@ -2114,7 +2114,7 @@
     },
     "directxtex": {
       "baseline": "2023-06-13",
-      "port-version": 0
+      "port-version": 1
     },
     "directxtk": {
       "baseline": "2023-06-13",
@@ -6174,7 +6174,7 @@
     },
     "paho-mqtt": {
       "baseline": "1.3.12",
-      "port-version": 0
+      "port-version": 1
     },
     "paho-mqttpp3": {
       "baseline": "1.2.0",
