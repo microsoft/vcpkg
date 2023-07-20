@@ -1,5 +1,5 @@
 [Sample port usage]
-omniverse-physx-sdk provides CMake targets:
+physx provides CMake targets:
 
     cmake_minimum_required(VERSION 3.15)
 
