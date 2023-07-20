@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/extra-cmake-modules
-    REF v5.98.0
-    SHA512 355bf2010dd4c736981d0f708ab7245c0925104e19da01acee0482494f815088e5d7aed9aa968251f13c2c5b8cbfd67dc8bb147dec46050fea0881c00f456d9d
+    REF "v${VERSION}"
+    SHA512 ccca4c1dbd9649ac3c4e1c93472814644c87a37ec13ed655f3c3f5f005fc2d1f55c7a821a5e93d83ddcb3d10ebd91d988b68ff63c344bd3664b9f1121928d130
     HEAD_REF master
     PATCHES
         fix_canberra.patch         # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/187
@@ -26,7 +26,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING-CMAKE-SCRIPTS" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING-CMAKE-SCRIPTS")
 
 # Allow empty include directory
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
