@@ -28,7 +28,7 @@ if(NOT TARGET unofficial::skia::skia)
 
     add_library(unofficial::skia::skia UNKNOWN IMPORTED)
     set_target_properties(unofficial::skia::skia PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES "${z_vcpkg_skia_root}/include/skia"
+        INTERFACE_INCLUDE_DIRECTORIES "${z_vcpkg_skia_root}/include/skia;${z_vcpkg_skia_root}/include"
     )
 
     find_library(z_vcpkg_skia_lib_release NAMES skia skia.dll PATHS "${z_vcpkg_skia_root}/lib" NO_DEFAULT_PATH)
