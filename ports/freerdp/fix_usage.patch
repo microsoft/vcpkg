@@ -1,0 +1,35 @@
+diff --git a/client/FreeRDP-ClientConfig.cmake.in b/client/FreeRDP-ClientConfig.cmake.in
+index 779374c..1fcf6bf 100644
+--- a/client/FreeRDP-ClientConfig.cmake.in
++++ b/client/FreeRDP-ClientConfig.cmake.in
+@@ -7,4 +7,6 @@ set(FreeRDP-Client_VERSION_REVISION "@FREERDP_VERSION_REVISION@")
+ 
+ set_and_check(FreeRDP-Client_INCLUDE_DIR "@PACKAGE_FREERDP_INCLUDE_DIR@")
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(winpr)
+ include("${CMAKE_CURRENT_LIST_DIR}/FreeRDP-ClientTargets.cmake")
+diff --git a/client/common/CMakeLists.txt b/client/common/CMakeLists.txt
+index b465a63..c4cd1c1 100644
+--- a/client/common/CMakeLists.txt
++++ b/client/common/CMakeLists.txt
+@@ -70,6 +70,7 @@ endif()
+ 
+ set(${MODULE_PREFIX}_LIBS ${${MODULE_PREFIX}_LIBS} winpr)
+ 
++target_include_directories(${MODULE_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
+ target_link_libraries(${MODULE_NAME} ${PRIVATE_KEYWORD} ${FREERDP_CHANNELS_CLIENT_LIBS})
+ if(OPENBSD)
+ 	target_link_libraries(${MODULE_NAME} ${PUBLIC_KEYWORD} ${${MODULE_PREFIX}_LIBS} ossaudio)
+diff --git a/libfreerdp/CMakeLists.txt b/libfreerdp/CMakeLists.txt
+index a259b68..2dda5c2 100644
+--- a/libfreerdp/CMakeLists.txt
++++ b/libfreerdp/CMakeLists.txt
+@@ -394,6 +394,7 @@ if (WITH_LIBRARY_VERSIONING)
+ endif()
+
+
++target_include_directories(${MODULE_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
+ target_link_libraries(${MODULE_NAME} ${PRIVATE_KEYWORD} ${LIBFREERDP_LIBS} winpr)
+
+ install(TARGETS ${MODULE_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries EXPORT FreeRDPTargets)

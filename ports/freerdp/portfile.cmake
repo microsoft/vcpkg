@@ -1,17 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
-    REF 2.9.0
-    SHA512 8b43ff28c5afaf6dc12f73fe9cab3969049f40725dedc873af5af1caabefec4bdd1bedad7df121c1440493e5441296db076ba7726242bfb32f76dad0b21564ed
+    REF "${VERSION}"
+    SHA512 388c00d2f883b41d4ec127bcb871607429c136bfb99daf87f491e9f1e7d456e1fac403db9f9dec7611e729dfd2f913fa414ed3d0020d92c284c8f3ba1eeb80cb
     HEAD_REF master
     PATCHES
         DontInstallSystemRuntimeLibs.patch
         fix-linux-build.patch
-        openssl_threads.patch
+        #openssl_threads.patch
         fix-include-path.patch
-        fix-libusb.patch
-        install-dirs.patch
-        fix-FreeRDP.patch 
+        #fix-libusb.patch  upstream modify
+        #install-dirs.patch
+        fix-FreeRDP.patch
+        fix_usage.patch
 )
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)
@@ -150,5 +151,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" ".")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_PACKAGES_DIR}/" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_PACKAGES_DIR}" "")
+
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

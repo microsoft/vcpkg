@@ -1,7 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 54df8cf..5232d46 100644
+index cdca0a0..f052312 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -18,7 +18,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-cmake_minimum_required(VERSION 2.8)
++cmake_minimum_required(VERSION 3.11)
+ 
+ project(FreeRDP C CXX)
+ 
 @@ -129,7 +129,7 @@ endif()
  
  message(STATUS "Git Revision ${GIT_REVISION}")
@@ -11,6 +20,14 @@ index 54df8cf..5232d46 100644
  
  # Compatibility options
  if(DEFINED STATIC_CHANNELS)
+@@ -931,6 +931,7 @@ if(OPENSSL_FOUND)
+ 	add_definitions("-DWITH_OPENSSL")
+ 	message(STATUS "Using OpenSSL Version: ${OPENSSL_VERSION}")
+ 	include_directories(${OPENSSL_INCLUDE_DIR})
++    list(APPEND OPENSSL_LIBRARIES Threads::Threads)
+ endif()
+ 
+ if(MBEDTLS_FOUND)
 diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
 index a020dc5..0bc1157 100644
 --- a/include/CMakeLists.txt
@@ -25,10 +42,10 @@ index a020dc5..0bc1157 100644
  file(GLOB FREERDP_HEADERS "freerdp/*.h")
  install(FILES ${FREERDP_HEADERS} DESTINATION ${FREERDP_INSTALL_INCLUDE_DIR} COMPONENT headers)
 diff --git a/winpr/CMakeLists.txt b/winpr/CMakeLists.txt
-index d8a40da..73ffba4 100644
+index 7b3ef1a..9536981 100644
 --- a/winpr/CMakeLists.txt
 +++ b/winpr/CMakeLists.txt
-@@ -221,7 +221,7 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.10")
+@@ -238,7 +238,7 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.10")
  
  	SetFreeRDPCMakeInstallDir(WINPR_CMAKE_INSTALL_DIR "WinPR${WINPR_VERSION_MAJOR}")
  
