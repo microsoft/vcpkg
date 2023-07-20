@@ -2653,7 +2653,7 @@
       "port-version": 7
     },
     "freerdp": {
-      "baseline": "2.9.0",
+      "baseline": "2.10.0",
       "port-version": 0
     },
     "freetds": {
