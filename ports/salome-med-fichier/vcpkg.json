@@ -1,7 +1,7 @@
 {
-  "name": "med-fichier",
+  "name": "salome-med-fichier",
   "version": "4.1.1",
-  "description": "salome-medcoupling is a part of SALOME platform to manipulate meshes and fields in memory, and use salome-med format for files.",
+  "description": "med-fichier provides a low level C API for fine-grained access to the structure of MED files (.med)",
   "homepage": "https://www.salome-platform.org",
   "license": "LGPL-3.0-or-later",
   "dependencies": [
