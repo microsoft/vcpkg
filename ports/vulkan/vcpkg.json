@@ -1,8 +1,14 @@
 {
   "name": "vulkan",
   "version": "1.1.82.1",
-  "port-version": 5,
-  "description": "A graphics and compute API that provides high-efficiency, cross-platform access to modern GPUs on a wide variety of devices.",
+  "port-version": 6,
+  "description": "A stub package that ensures that the Vulkan SDK is installed.",
   "license": null,
-  "supports": "!uwp & !xbox"
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

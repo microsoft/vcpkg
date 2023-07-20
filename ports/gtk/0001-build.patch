@@ -1,44 +1,26 @@
 diff --git a/meson.build b/meson.build
-index 41cf592..cb4d638 100644
+index 13517714b7..2132611c88 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -897,24 +897,24 @@ subdir('po-properties')
- subdir('docs/tools')
+@@ -857,15 +857,15 @@ subdir('po')
+ 
  subdir('docs/reference')
  
 -if not meson.is_cross_build()
--  if meson.version().version_compare('>=0.57.0')
--    gnome.post_install(
--      glib_compile_schemas: true,
--      gio_querymodules: gio_module_dirs,
--      gtk_update_icon_cache: get_option('demos'),
--    )
--  else
--    meson.add_install_script('build-aux/meson/post-install.py',
--                             gtk_api_version,
--                             gtk_binary_version,
--                             gtk_libdir,
--                             gtk_datadir,
--                             gtk_bindir)
--  endif
+-  gnome.post_install(
+-    glib_compile_schemas: true,
+-    gio_querymodules: gio_module_dirs,
+-    gtk_update_icon_cache: get_option('demos'),
+-  )
 -else
 -  message('Not executing post-install steps automatically when cross compiling')
 -endif
 +#if not meson.is_cross_build()
-+#  if meson.version().version_compare('>=0.57.0')
-+#    gnome.post_install(
-+#      glib_compile_schemas: true,
-+#      gio_querymodules: gio_module_dirs,
-+#      gtk_update_icon_cache: get_option('demos'),
-+#    )
-+#  else
-+#    meson.add_install_script('build-aux/meson/post-install.py',
-+#                             gtk_api_version,
-+#                             gtk_binary_version,
-+#                             gtk_libdir,
-+#                             gtk_datadir,
-+#                             gtk_bindir)
-+#  endif
++   gnome.post_install(
++     glib_compile_schemas: true,
++     gio_querymodules: gio_module_dirs,
++     gtk_update_icon_cache: get_option('demos'),
++   )
 +#else
 +#  message('Not executing post-install steps automatically when cross compiling')
 +#endif

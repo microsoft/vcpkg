@@ -1,0 +1,13 @@
+diff --git a/cmake_unofficial/CMakeLists.txt b/cmake_unofficial/CMakeLists.txt
+index d5456b0..aed0db5 100644
+--- a/cmake_unofficial/CMakeLists.txt
++++ b/cmake_unofficial/CMakeLists.txt
+@@ -122,7 +122,7 @@ if(NOT XXHASH_BUNDLED_MODE)
+     install(TARGETS xxhsum
+       EXPORT xxHashTargets
+       RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+-    install(FILES "${XXHASH_DIR}/xxhsum.1"
++    install(FILES "${XXHASH_DIR}/cli/xxhsum.1"
+       DESTINATION "${CMAKE_INSTALL_MANDIR}/man1")
+   endif(XXHASH_BUILD_XXHSUM)
+ 

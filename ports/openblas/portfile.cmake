@@ -1,14 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF b89fb708caa5a5a32de8f4306c4ff132e0228e9a # v0.3.21
-    SHA512 495e885409f0c6178332cddd685f3c002dc92e7af251c4e4eb3da6935ef6e81565c2505d436245b9bf53ce58649764e0471dc43b7f5f30b6ed092366cbbc2d5c
+    REF 394a9fbafe9010b76a2615c562204277a956eb52 # v0.3.23
+    SHA512 d79ae7ba4f9146f0bcacdef9b9cf4cd287e5eb2e3891f7deb4b3992b742a557ca094ac2f258420a16cfe6bbda7ca82addf415aecd7ced425a02374847c0b6013
     HEAD_REF develop
     PATCHES
         uwp.patch
-        fix-space-path.patch
         fix-redefinition-function.patch
-        fix-uwp-build.patch
         install-tools.patch
 )
 
@@ -27,9 +25,9 @@ vcpkg_add_to_path("${SED_EXE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        threads         USE_THREAD
-        simplethread    USE_SIMPLE_THREADED_LEVEL3
-        "dynamic-arch"  DYNAMIC_ARCH
+        threads        USE_THREAD
+        simplethread   USE_SIMPLE_THREADED_LEVEL3
+        "dynamic-arch" DYNAMIC_ARCH
 )
 
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
@@ -43,9 +41,8 @@ endif()
 set(OPENBLAS_EXTRA_OPTIONS)
 # for UWP version, must build non uwp first for helper
 # binaries.
-if(VCPKG_TARGET_IS_UWP)    
-    list(APPEND OPENBLAS_EXTRA_OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64
-                "-DBLASHELPER_BINARY_DIR=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND OPENBLAS_EXTRA_OPTIONS "-DBLASHELPER_BINARY_DIR=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
 elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
     string(APPEND VCPKG_C_FLAGS " -DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
     string(APPEND VCPKG_CXX_FLAGS " -DNEEDBUNDERSCORE")
@@ -112,4 +109,4 @@ vcpkg_replace_string(
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

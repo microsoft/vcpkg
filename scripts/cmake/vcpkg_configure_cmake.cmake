@@ -185,6 +185,10 @@ function(vcpkg_configure_cmake)
         endif()
     endif()
 
+    if(DEFINED VCPKG_XBOX_CONSOLE_TARGET)
+        vcpkg_list(APPEND arg_OPTIONS "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
+    endif()
+
     if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
     endif()

@@ -6,26 +6,43 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         visibility.patch
+        visibility-for-tool.patch
         thread-header.patch
 )
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION  "${SOURCE_PATH}")
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        hwopt   WITH_OPTIMIZATIONS
+        tool    BUILD_TOOL
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DUPSTREAM_VER=${VERSION}
+    OPTIONS_DEBUG
+        -DBUILD_TOOL=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-libargon2 PACKAGE_NAME unofficial-libargon2)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-argon2-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-argon2")
+vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-argon2 PACKAGE_NAME unofficial-argon2)
+# Migration path
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-libargon2-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-libargon2")
 
-vcpkg_copy_tools(TOOL_NAMES argon2_tool AUTO_CLEAN)
+if(BUILD_TOOL)
+    vcpkg_copy_tools(TOOL_NAMES argon2 AUTO_CLEAN)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/argon2.h" "defined(USING_ARGON2_DLL)" "1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(RENAME "${CURRENT_PACKAGES_DIR}/tools/${PORT}/argon2_tool${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/argon2${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-libargon2-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-libargon2/unofficial-libargon2-config.cmake" @ONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

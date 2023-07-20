@@ -10,6 +10,8 @@ vcpkg_from_github(
     REF 43d10a7ccf37ec1b895742712dd4a05577b73ff1
     SHA512 e830d26de00e8f5f378145f06691cb16121c40d3bd2cd663fad9a97db37251a11b56053178b619e3a2627f0cd518b6290a8381b26e517a9f16f0246d2f91958e
     HEAD_REF master
+    PATCHES
+        gcc-11.patch # https://github.com/darrenjs/wampcc/commit/d1a8c6dcabcc32e9d9774f306555e9080d871c2f
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

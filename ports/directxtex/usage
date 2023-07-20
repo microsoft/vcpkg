@@ -1,0 +1,4 @@
+The package DirectXTex is compatible with built-in CMake targets:
+
+    find_package(directxtex CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Microsoft::DirectXTex)

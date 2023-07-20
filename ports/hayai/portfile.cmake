@@ -14,7 +14,7 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DINSTALL_HAYAI=ON
         -DBUILD_HAYAI_TESTS=OFF
@@ -23,42 +23,42 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/CMake")
     vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
-elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/CMake/${PORT})
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/CMake/${PORT}")
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/CMake/${PORT})
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle manual-link libraries
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/hayai_main.lib)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/hayai_main.lib")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
     file(RENAME
-        ${CURRENT_PACKAGES_DIR}/debug/lib/hayai_main.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/hayai_main.lib
+        "${CURRENT_PACKAGES_DIR}/debug/lib/hayai_main.lib"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/hayai_main.lib"
     )
 
     vcpkg_replace_string(
-        ${CURRENT_PACKAGES_DIR}/share/${PORT}/hayai-targets-debug.cmake
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}/hayai-targets-debug.cmake"
         "\${CMAKE_CURRENT_LIST_DIR}/../../debug/lib/hayai_main.lib"
         "\${CMAKE_CURRENT_LIST_DIR}/../../debug/lib/manual-link/hayai_main.lib"
     )
 endif()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/hayai_main.lib)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/hayai_main.lib")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     file(RENAME
-        ${CURRENT_PACKAGES_DIR}/lib/hayai_main.lib
-        ${CURRENT_PACKAGES_DIR}/lib/manual-link/hayai_main.lib
+        "${CURRENT_PACKAGES_DIR}/lib/hayai_main.lib"
+        "${CURRENT_PACKAGES_DIR}/lib/manual-link/hayai_main.lib"
     )
 
     vcpkg_replace_string(
-        ${CURRENT_PACKAGES_DIR}/share/${PORT}/hayai-targets-release.cmake
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}/hayai-targets-release.cmake"
         "\${CMAKE_CURRENT_LIST_DIR}/../../lib/hayai_main.lib"
         "\${CMAKE_CURRENT_LIST_DIR}/../../lib/manual-link/hayai_main.lib"
     )
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE.md" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

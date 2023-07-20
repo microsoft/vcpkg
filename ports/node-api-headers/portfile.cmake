@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO nodejs/node-api-headers
   REF "v${VERSION}"
-  SHA512 095cff78b1bc4ca7cc81de30e941fb369f41596b3ae9d092100b1a5baf2c00ef9a4ac14016605346bc0532eb459b6a7dea10ed53fa595cf65825010ce75fcb67
+  SHA512 e80d9b8cc2d96929a6d73fc1e5bcfbf6d585bef114946f939b93195aefb91bf8e6ef8720625394d344636626fd74548db71ff178f9f529ab5b20db980f09b197
   HEAD_REF main
 )
 
@@ -15,5 +15,7 @@ endif()
 file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include" RENAME "node")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-${PORT}-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake" @ONLY)

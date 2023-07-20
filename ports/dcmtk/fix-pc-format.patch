@@ -1,0 +1,32 @@
+diff --git a/CMake/dcmtk.pc.in b/CMake/dcmtk.pc.in
+index 13c79c0..46fc98a 100644
+--- a/CMake/dcmtk.pc.in
++++ b/CMake/dcmtk.pc.in
+@@ -1,14 +1,14 @@
+- prefix="@CMAKE_INSTALL_PREFIX@"
+- exec_prefix="${prefix}"
+- libdir="${prefix}/@CMAKE_INSTALL_LIBDIR@"
+- includedir="${prefix}/include/"
++prefix="@CMAKE_INSTALL_PREFIX@"
++exec_prefix="${prefix}"
++libdir="${prefix}/@CMAKE_INSTALL_LIBDIR@"
++includedir="${prefix}/include/"
+ 
+- Name: DCMTK
+- Description: DICOM Toolkit (DCMTK)
+- URL: https://dcmtk.org
+- Version: @DCMTK_MAJOR_VERSION@.@DCMTK_MINOR_VERSION@.@DCMTK_BUILD_VERSION@
+- Requires: @PKGCONF_REQ_PUB@
+- Requires.private: @PKGCONF_REQ_PRIV@
+- Cflags: -I"${includedir}"
+- Libs: -L"${libdir}" @PKGCONF_LIBS@
+- Libs.private: -L"${libdir}" @PKGCONF_LIBS_PRIV@
++Name: DCMTK
++Description: DICOM Toolkit (DCMTK)
++URL: https://dcmtk.org
++Version: @DCMTK_MAJOR_VERSION@.@DCMTK_MINOR_VERSION@.@DCMTK_BUILD_VERSION@
++Requires: @PKGCONF_REQ_PUB@
++Requires.private: @PKGCONF_REQ_PRIV@
++Cflags: -I"${includedir}"
++Libs: -L"${libdir}" @PKGCONF_LIBS@
++Libs.private: -L"${libdir}" @PKGCONF_LIBS_PRIV@

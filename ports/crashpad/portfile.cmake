@@ -30,6 +30,15 @@ checkout_in_path(
     "5654edb4225bcad13901155c819febb5748e502b"
 )
 
+if(VCPKG_TARGET_IS_LINUX)
+    # fetch lss
+    checkout_in_path(
+        "${SOURCE_PATH}/third_party/lss/lss"
+        https://chromium.googlesource.com/linux-syscall-support
+        9719c1e1e676814c456b55f5f070eabad6709d31
+    )
+endif()
+
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
     unset(_LIBRARY_DEB CACHE)
     find_library(_LIBRARY_DEB NAMES ${LIBRARY_NAMES}

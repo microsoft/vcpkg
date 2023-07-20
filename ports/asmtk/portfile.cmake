@@ -25,6 +25,13 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/asmtk)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/asmtk/globals.h" "!defined(ASMTK_STATIC)" "0")
+endif()
+
+set(cmakefile "${CURRENT_PACKAGES_DIR}/share/asmtk/asmtk-config.cmake")
+file(READ "${cmakefile}" contents)
+file(WRITE "${cmakefile}" "include(CMakeFindDependencyMacro)\nfind_dependency(asmjit)\n${contents}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

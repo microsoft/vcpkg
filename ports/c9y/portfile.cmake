@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rioki/c9y
-    REF v0.7.0
-    SHA512 1c68351a42cea3a5cc52e00d3828acb16d6a96dfc4b9bf53fa4f8090b691a6f5734e2bb219af5cc54bc997517434417a4567d133c5a589f247abe9de73ba1cac
+    REF v0.8.0
+    SHA512 f3161bde45fd534029ef4609b1b49d4edbeb636c9305e01e7e9cfa6a62cde0978632d46597510bea0ff96cae09b819905c0d8c5d2fd85cf641d7b47ea2a732b1
     )
 
 vcpkg_cmake_configure(

@@ -1,7 +1,7 @@
 {
   "name": "opencv2",
   "version": "2.4.13.7",
-  "port-version": 17,
+  "port-version": 18,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",

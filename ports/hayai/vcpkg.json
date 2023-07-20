@@ -1,7 +1,7 @@
 {
   "name": "hayai",
   "version-date": "2019-08-10",
-  "port-version": 2,
+  "port-version": 3,
   "description": "C++ benchmarking framework",
   "homepage": "https://github.com/nickbruun/hayai",
   "dependencies": [

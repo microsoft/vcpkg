@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF boost-1.82.0
     SHA512 d54fd77ca7996da138b10408df1eae28bbcae0c6475467cc19837bf6f6624c38ad7f9e1eec87ceae27f516583b204fdbaeb04daad7cc28e6aeec02ab5f188731
     HEAD_REF master
-    PATCHES windows_alloca_header.patch
+    PATCHES
+        windows_alloca_header.patch
+        fix_coro_compile_error_msvc.patch #upstream PR: https://github.com/chriskohlhoff/asio/pull/1313
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
