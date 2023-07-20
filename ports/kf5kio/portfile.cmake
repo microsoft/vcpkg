@@ -32,8 +32,8 @@ vcpkg_cmake_configure(
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_LIBEXECDIR=bin
         ${FEATURE_OPTIONS}
-        --trace-expand
-    MAYBE_UNUSED_VARIABLES CMAKE_DISABLE_FIND_PACKAGE_KF5Notifications
+    MAYBE_UNUSED_VARIABLES 
+        CMAKE_DISABLE_FIND_PACKAGE_KF5Notifications
 )
 
 vcpkg_cmake_install()
