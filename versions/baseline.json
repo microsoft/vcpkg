@@ -3577,51 +3577,51 @@
       "port-version": 2
     },
     "kf5archive": {
-      "baseline": "5.98.0",
-      "port-version": 1
+      "baseline": "5.108.0",
+      "port-version": 0
     },
     "kf5attica": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5auth": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5bookmarks": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5codecs": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5completion": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5config": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5configwidgets": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5coreaddons": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5crash": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5dbusaddons": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5declarative": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5diagram": {
@@ -3629,39 +3629,39 @@
       "port-version": 1
     },
     "kf5globalaccel": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5guiaddons": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5holidays": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5i18n": {
-      "baseline": "5.98.0",
-      "port-version": 1
+      "baseline": "5.108.0",
+      "port-version": 0
     },
     "kf5iconthemes": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5itemmodels": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5itemviews": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5jobwidgets": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5kcmutils": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5kio": {
@@ -3669,59 +3669,59 @@
       "port-version": 0
     },
     "kf5newstuff": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5notifications": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5package": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5parts": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5plotting": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5service": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5solid": {
-      "baseline": "5.98.0",
-      "port-version": 1
+      "baseline": "5.108.0",
+      "port-version": 0
     },
     "kf5sonnet": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5syntaxhighlighting": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5textwidgets": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5wallet": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5widgetsaddons": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5windowsystem": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kf5xmlgui": {
-      "baseline": "5.98.0",
+      "baseline": "5.108.0",
       "port-version": 0
     },
     "kfr": {
