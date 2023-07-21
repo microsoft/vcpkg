@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kplotting
-    REF v5.98.0
+    REF "v${VERSION}"
     SHA512 966b62cef7e617678d8ea63c68ff6e79db29a024ffa779a743e20ee643f9fcefe7af766fbb430ecfc2000ed1be9536ab0479d094fc8d899fcf5c0cd44f3d0302
     HEAD_REF master
 )

@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kauth
-    REF v5.98.0
-    SHA512 c9989057077f8da26e260e1aec7fc2cfe07db62835a51b254f92e63e0e5c1500aae95001592ccd98a06a0701cb93cf34006b306e1230f6a53c8f683b8131bc17
+    REF "v${VERSION}"
+    SHA512 4f4f6d88edb31538bde60514cfac57ddc6075bbb557fbc19e2b7d17d772c1f817811d3d843fba8c879f596c67e7be1a7b31e8bd19e3317a40be15b0e273cfcca
     HEAD_REF master
-    PATCHES
-        0001-Config.cmake.in-declare-static-dependencies.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure

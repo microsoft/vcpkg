@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcodecs
-    REF v5.98.0
-    SHA512 0fc58451a3e2774ea2626bcbdd0a9838bdcce5f8c75ffe30b67dc08255729f802b1cc0a5fc9f821058eb9496c4cabe40c988300b0cfbed4302d35b262c4c3610
+    REF "v${VERSION}"
+    SHA512 066275a3a375466df0db3d2c6cfbd10cfc95d44ef40ea6e12e34cb8094a832a129a72158d95cebad7a7cdbdeba5f7da970dbbc74660b3a51bd11c615bcb77c78
     HEAD_REF master
 )
 

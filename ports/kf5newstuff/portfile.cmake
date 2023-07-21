@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/knewstuff
-    REF v5.98.0
-    SHA512 dadbd4bcd6408e6b8afba4155a164563b2f3303162edd2f9cd193ab6e6677ce857e4455ccffee8ee289b1c8e634d7b3e5fe1e842efc4c89e67bd25ea103a9f50
+    REF "v${VERSION}"
+    SHA512 05402095361cea642ce84b8d0e78326933b723d6638a60721fbc137d34bae78e17e9d2bec87d54e8a034db73a8d1739a9b15b611f8eb6ebf0ab61c7c890e9e27
     HEAD_REF master
     PATCHES
         0001-Fix-KF5NewStuffWidgets_EXPORTS-is-not-defined-on-cla.patch

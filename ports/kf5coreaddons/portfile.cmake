@@ -1,10 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcoreaddons
-    REF v5.98.0
-    SHA512 99c86e7931d62b7af6f631103b5d6ea75d70d2977842d4e3962dbc22bbdcfe398484d74d7c58a90bd9e86c738d632a3fd68da8ece42841559e7cc48ee1431ab6
-    PATCHES
-        0001-Add-support-for-static-builds.patch # https://invent.kde.org/frameworks/kcoreaddons/-/merge_requests/129
+    REF "v${VERSION}"
+    SHA512 80aab23b4e9c87c1743fc05db5f5d2a94e81249e0178eefab3313fc398897cdfdc51a21427f3dad9e705c7635331e9f05a8a0be5d73673f239ad85196abf697f
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure

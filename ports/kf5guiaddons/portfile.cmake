@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kguiaddons
-    REF v5.98.0
-    SHA512 957edb3a4c78dcc52ae96f4565b617413b9dcd10e2681df0a945042c1d2ae87b8327567ad58f78c665e2e38351d6cc33129cf1ad30497912ccfa281c870e1607
+    REF "v${VERSION}"
+    SHA512 0eb464b71a4f25ed730063b4d5de378515ebc05d6661d8361f74ceb8efb1ee8aaf1232944566ecea81e45f1775512ee7cd4e7edfb13d6ae4d1f33205a72b43b5
     HEAD_REF master
     PATCHES
         fix_cmake.patch # https://github.com/microsoft/vcpkg/issues/17607#issuecomment-831518812
-        0001-Add-misisng-find_dependency-s-for-static-builds.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

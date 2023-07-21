@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kholidays
-    REF v5.98.0
-    SHA512 e09eaa97094edd2feb5ec3677be8764bc1c3f6749c21eff8c0a2c9c047c21d35805f07b985d5d50a60e8acd48ff5096cc7f28a4fe22f49f45c74de390b7402ca
+    REF "v${VERSION}"
+    SHA512 fc39835c8f2b632e5e38bf0f8a6f3ae7a9daa1aae8b4af262e595a3f0ca1d13347a2c93d56798f7dc59f7aba0dd8e869b4a41049b5b4a7eabd014f38b2af414c
     HEAD_REF master
 )
 

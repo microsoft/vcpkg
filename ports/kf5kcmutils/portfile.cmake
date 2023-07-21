@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcmutils
-    REF v5.98.0
-    SHA512 959901d7ba447eff13e4c1341c5530fccecf42f7f5e4dc69bee669c9e22770f5af57ed2f08979aac5fd2e1015f2bbadf5d302d99e1e0031c20927d833e6a3cea
+    REF "v${VERSION}"
+    SHA512 7c60878586f4824dc923cf9c237057bc140fb6e6cba1ea3a1deee2d95089a96f57b39026c10fbe3cc81e12ef33d6e4a6b99f4aa1b9368478885147af560cef7e
     HEAD_REF master
-    PATCHES
-        0001-Fix-missing-kcmutils_proxy_model-export-in-static-bu.patch   # https://invent.kde.org/frameworks/kcmutils/-/merge_requests/104
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
