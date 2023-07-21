@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 9c1e82f42f228345f3b024bed5d08be643c00f8a
     SHA512 ab690489151f5f8451c63c8a78a89a586950f88d19b6df685d979db9442f36b68db402ae5a6749e75b17ac3e1c06447d2d4803d43f9d373031cc05d9b25770e9
     HEAD_REF master
+    PATCHES
+        fix-install.patch
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port
