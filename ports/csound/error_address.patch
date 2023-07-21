@@ -1,0 +1,16 @@
+diff --git a/util1/CMakeLists.txt b/util1/CMakeLists.txt
+index 639ed0a..30e1661 100644
+--- a/util1/CMakeLists.txt
++++ b/util1/CMakeLists.txt
+@@ -17,8 +17,8 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_CLANG OR MSVC)
+         csd_util/base64.c csd_util/makecsd.c)
+     make_utility(makecsd "${makecsd_SRCS}")
+ 
+-    set(scot_SRCS
+-        scot/scot_main.c scot/scot.c)
+-    make_utility(scot "${scot_SRCS}")
++    # set(scot_SRCS
++    #     scot/scot_main.c scot/scot.c)
++    # make_utility(scot "${scot_SRCS}")
+ endif()
+ 

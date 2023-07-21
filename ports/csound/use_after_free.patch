@@ -1,0 +1,25 @@
+diff --git a/Engine/memalloc.c b/Engine/memalloc.c
+index 541b6eb..999dedb 100644
+--- a/Engine/memalloc.c
++++ b/Engine/memalloc.c
+@@ -207,13 +207,13 @@ void *mrealloc(CSOUND *csound, void *oldp, size_t size)
+     /* allocate memory */
+     p = realloc((void*) pp, ALLOC_BYTES(size));
+     if (UNLIKELY(p == NULL)) {
+-#ifdef MEMDEBUG
+-      CSOUND_MEM_SPINLOCK
+-      /* alloc failed, restore original header */
+-      pp->magic = MEMALLOC_MAGIC;
+-      pp->ptr = oldp;
+-      CSOUND_MEM_SPINUNLOCK
+-#endif
++// #ifdef MEMDEBUG
++//       CSOUND_MEM_SPINLOCK
++//       /* alloc failed, restore original header */
++//       pp->magic = MEMALLOC_MAGIC;
++//       pp->ptr = oldp;
++//       CSOUND_MEM_SPINUNLOCK
++// #endif
+       memdie(csound, size);
+       return NULL;
+     }

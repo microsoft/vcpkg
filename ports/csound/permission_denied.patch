@@ -1,0 +1,40 @@
+diff --git a/interfaces/CMakeLists.txt b/interfaces/CMakeLists.txt
+index aff6e8f..9f276c4 100644
+--- a/interfaces/CMakeLists.txt
++++ b/interfaces/CMakeLists.txt
+@@ -109,21 +109,21 @@ check_deps(BUILD_LUA_INTERFACE SWIG_FOUND BUILD_CXX_INTERFACE
+ LUA_LIBRARY LUA_H_PATH)
+ 
+ 
+-if(NOT APPLE)
+-      execute_process (
+-           COMMAND python3 -c
+-           "import site, sys; sys.stdout.write(site.getsitepackages()[0])"
+-           OUTPUT_VARIABLE PYTHON3_SITE_PACKAGES
+-         )
+-      SET(PYTHON3_MODULE_INSTALL_DIR ${PYTHON3_SITE_PACKAGES} CACHE
+-       PATH "Python3 module install dir")
++# if(NOT APPLE)
++#       execute_process (
++#            COMMAND python3 -c
++#            "import site, sys; sys.stdout.write(site.getsitepackages()[0])"
++#            OUTPUT_VARIABLE PYTHON3_SITE_PACKAGES
++#          )
++#       SET(PYTHON3_MODULE_INSTALL_DIR ${PYTHON3_SITE_PACKAGES} CACHE
++#        PATH "Python3 module install dir")
+        
+-      if (PYTHON3_MODULE_INSTALL_DIR)
+-         message(STATUS "PYTHON3 MODULE INSTALL DIR: ${PYTHON3_MODULE_INSTALL_DIR}" )
+-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/ctcsound.py
+-            DESTINATION ${PYTHON3_MODULE_INSTALL_DIR})
+-      endif()
+-endif(NOT APPLE)
++#       if (PYTHON3_MODULE_INSTALL_DIR)
++#          message(STATUS "PYTHON3 MODULE INSTALL DIR: ${PYTHON3_MODULE_INSTALL_DIR}" )
++#         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/ctcsound.py
++#             DESTINATION ${PYTHON3_MODULE_INSTALL_DIR})
++#       endif()
++# endif(NOT APPLE)
+ 
+ 
+ if(BUILD_JAVA_INTERFACE OR BUILD_LUA_INTERFACE)

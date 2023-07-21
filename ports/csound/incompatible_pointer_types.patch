@@ -1,0 +1,14 @@
+diff --git a/Top/threadsafe.c b/Top/threadsafe.c
+index 8cf7335..797f72e 100644
+--- a/Top/threadsafe.c
++++ b/Top/threadsafe.c
+@@ -70,7 +70,8 @@ typedef struct _message_queue {
+ 
+ /* atomicGetAndIncrementWithModulus */
+ static long atomicGet_Incr_Mod(volatile long* val, long mod) {
+-  volatile long oldVal, newVal;
++  volatile long oldVal;
++  long newVal;
+   do {
+     oldVal = *val;
+     newVal = (oldVal + 1) % mod;

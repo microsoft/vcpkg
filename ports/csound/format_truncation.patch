@@ -1,0 +1,32 @@
+diff --git a/InOut/rtjack.c b/InOut/rtjack.c
+index a0b1c97..b607de3 100644
+--- a/InOut/rtjack.c
++++ b/InOut/rtjack.c
+@@ -341,7 +341,8 @@ static void listPorts(CSOUND *csound, int isOutput){
+ 
+ static void rtJack_RegisterPorts(RtJackGlobals *p)
+ {
+-    char          portName[MAX_NAME_LEN + 4];
++    volatile int max_name_length_plus_4 = MAX_NAME_LEN + 4;
++    char          portName[max_name_length_plus_4];
+     unsigned long flags = 0UL;
+     int           i;
+     CSOUND *csound = p->csound;
+@@ -351,7 +352,7 @@ static void rtJack_RegisterPorts(RtJackGlobals *p)
+     if (p->inputEnabled) {
+       /* register input ports */
+       for (i = 0; i < p->nChannels_i; i++) {
+-        snprintf(portName, MAX_NAME_LEN + 4, "%s%d", p->inputPortName, i + 1);
++        snprintf(portName, max_name_length_plus_4, "%s%d", p->inputPortName, i + 1);
+         p->inPorts[i] = jack_port_register(p->client, &(portName[0]),
+                                            JACK_DEFAULT_AUDIO_TYPE,
+                                            flags | JackPortIsInput, 0UL);
+@@ -362,7 +363,7 @@ static void rtJack_RegisterPorts(RtJackGlobals *p)
+     if (p->outputEnabled) {
+       /* register output ports */
+       for (i = 0; i < p->nChannels; i++) {
+-        snprintf(portName, MAX_NAME_LEN + 4, "%s%d", p->outputPortName, i + 1);
++        snprintf(portName, max_name_length_plus_4, "%s%d", p->outputPortName, i + 1);
+         p->outPorts[i] = jack_port_register(p->client, &(portName[0]),
+                                             JACK_DEFAULT_AUDIO_TYPE,
+                                             flags | JackPortIsOutput, 0UL);
