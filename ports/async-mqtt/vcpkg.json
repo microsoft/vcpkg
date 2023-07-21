@@ -30,12 +30,6 @@
     "use-tls"
   ],
   "features": {
-    "static-openssl": {
-      "description": "Use static OpenSSL library",
-      "dependencies": [
-        "zlib"
-      ]
-    },
     "use-tls": {
       "description": "Enable TLS support",
       "dependencies": [
