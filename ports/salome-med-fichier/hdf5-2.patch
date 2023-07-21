@@ -1,0 +1,520 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9eceab7..3e3fb80 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -82,7 +82,7 @@ IF(WIN32)
+   ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)  # To disable windows warnings for strcpy, fopen, ...
+   ADD_DEFINITIONS(-D_SCL_SECURE_NO_WARNINGS)  # To disable windows warnings std::copy, std::transform, ...
+   ADD_DEFINITIONS(-DWNT -DWIN32)
+-  ADD_DEFINITIONS(-D_WIN32_WINNT=0x0500) # Windows 2000 or later API is required
++  #ADD_DEFINITIONS(-D_WIN32_WINNT=0x0500) # Windows 2000 or later API is required
+   ADD_DEFINITIONS(-DPPRO_NT_CALL)        # For windows system functions call
+ 
+   IF(NOT MINGW)
+diff --git a/include/med_hdfi.h b/include/med_hdfi.h
+index 517baa5..3303bf6 100644
+--- a/include/med_hdfi.h
++++ b/include/med_hdfi.h
+@@ -351,22 +351,22 @@ typedef struct {
+ extern MEDC_EXPORT
+ void * _MEDcheckAttributeStringInit( med_string_itdatas * const itdatas, const char * const attname, med_int attsize);
+ extern MEDC_EXPORT
+-med_err _MEDcheckAttributeStringFunc(med_idt id,const char *lname, const H5L_info_t *linfo, med_string_itdatas *data);
++med_err _MEDcheckAttributeStringFunc(med_idt id,const char *lname, const H5L_info1_t *linfo, med_string_itdatas *data);
+ extern MEDC_EXPORT
+ void  _MEDcheckAttributeStringFin( med_string_itdatas * const itdatas);
+ 
+ extern MEDC_EXPORT
+-med_err _MEDchecknSublinkFunc(med_idt id,const char *lname, const H5L_info_t *linfo, med_bool *data);
++med_err _MEDchecknSublinkFunc(med_idt id,const char *lname, const H5L_info1_t *linfo, med_bool *data);
+ 
+ #define MED_CHECK_ATTRIBUTE_FUNC(_check_med_type_) _MEDcheckAttributeFunc##_check_med_type_
+ #define MED_CHECK_ATTRIBUTE_INIT(_check_med_type_,_check_med_itdata_,_check_med_attname_,_check_med_attsize_) _MEDcheckAttributeInit##_check_med_type_ (_check_med_itdata_,_check_med_attname_,_check_med_attsize_)
+ 
+ 
+ extern MEDC_EXPORT
+-med_err _MEDcopyName(med_idt id,const char *lname, const H5L_info_t *linfo, void *data);
++med_err _MEDcopyName(med_idt id,const char *lname, const H5L_info1_t *linfo, void *data);
+ 
+ extern MEDC_EXPORT
+-med_err _MEDlinkobjs(med_idt id,const char *lname, const H5L_info_t *linfo, visitordatas *data);
++med_err _MEDlinkobjs(med_idt id,const char *lname, const H5L_info1_t *linfo, visitordatas *data);
+ 
+ extern MEDC_EXPORT
+ med_err _MEDsoftlinkDel(const med_idt               id,	const char * const          softlinkname,
+@@ -402,7 +402,7 @@ med_err _MEDdatasetExist(const med_idt       gid,
+ 			 med_bool   *  const datasetexist,
+ 			 med_bool   *  const isasoftlink );
+ 
+-typedef herr_t (*medvisitorfunc)( hid_t g_id, const char *name, const H5L_info_t *info, void *op_data);
++typedef herr_t (*medvisitorfunc)( hid_t g_id, const char *name, const H5L_info1_t *info, void *op_data);
+ typedef medvisitorfunc mediteratorfunc;
+ 
+ extern MEDC_EXPORT
+diff --git a/src/ci/MEDfileCompatibility.c b/src/ci/MEDfileCompatibility.c
+index ddfa489..fbd2ca3 100644
+--- a/src/ci/MEDfileCompatibility.c
++++ b/src/ci/MEDfileCompatibility.c
+@@ -114,8 +114,8 @@ MEDfileCompatibility(const char* const filename,
+ #error "Don't forget to update the test version here when you change the major version of the library !"
+ #endif
+ #if H5_VERS_MINOR > 10
+-#error "Don't forget to check the compatibility version of the library, depending on the internal hdf model choice !"
+-#error "Cf. _MEDfileCreate ..."
++//#error "Don't forget to check the compatibility version of the library, depending on the internal hdf model choice !"
++//#error "Cf. _MEDfileCreate ..."
+ #endif
+ 
+  SORTIE:
+diff --git a/src/hdfi/_MEDattributeNumWr.c b/src/hdfi/_MEDattributeNumWr.c
+index 5ec7447..cd594f2 100644
+--- a/src/hdfi/_MEDattributeNumWr.c
++++ b/src/hdfi/_MEDattributeNumWr.c
+@@ -34,7 +34,7 @@ med_err _MEDattributeNumWr(med_idt pid,
+   med_err _ret=-1;
+   med_idt  type_hdf;
+   med_access_mode MED_ACCESS_MODE;
+-  H5O_info_t      _oinfo;
++  H5O_info1_t      _oinfo;
+ 
+   if ( (MED_ACCESS_MODE = _MEDmodeAcces(pid) ) == MED_ACC_UNDEF ) {
+     MED_ERR_(_ret,MED_ERR_INVALID,MED_ERR_ACCESSMODE, "MED_ACC_UNDEF" );
+@@ -77,7 +77,7 @@ med_err _MEDattributeNumWr(med_idt pid,
+ 
+   if  ( (_attid=H5Aopen( pid, attname, H5P_DEFAULT )) >= 0 ) {
+ 
+-    if ( H5Oget_info( pid, &_oinfo ) <0) {
++    if ( H5Oget_info1( pid, &_oinfo ) <0) {
+ 	MED_ERR_(_ret,MED_ERR_CALL,MED_ERR_API,"H5Oget_info");
+ 	goto ERROR;
+     }
+diff --git a/src/hdfi/_MEDattributeNumWrByName.c b/src/hdfi/_MEDattributeNumWrByName.c
+index 229c836..e1dd020 100644
+--- a/src/hdfi/_MEDattributeNumWrByName.c
++++ b/src/hdfi/_MEDattributeNumWrByName.c
+@@ -34,7 +34,7 @@ med_err _MEDattributeNumWrByName(med_idt pid,
+   med_err _ret=-1;
+   med_idt  type_hdf;
+   med_access_mode MED_ACCESS_MODE;
+-  H5O_info_t      _oinfo;
++  H5O_info1_t      _oinfo;
+ 
+   if ( (MED_ACCESS_MODE = _MEDmodeAcces(pid) ) == MED_ACC_UNDEF ) {
+     MED_ERR_(_ret,MED_ERR_INVALID,MED_ERR_ACCESSMODE, "MED_ACC_UNDEF" );
+@@ -68,7 +68,7 @@ med_err _MEDattributeNumWrByName(med_idt pid,
+ 
+   if  ( (_attid=H5Aopen_by_name( pid, path, attname, H5P_DEFAULT, H5P_DEFAULT )) >= 0 ) {
+ 
+-    if ( H5Oget_info( pid, &_oinfo ) <0) {
++    if ( H5Oget_info1( pid, &_oinfo ) <0) {
+ 	MED_ERR_(_ret,MED_ERR_CALL,MED_ERR_API,"H5Oget_info");
+ 	goto ERROR;
+     }
+diff --git a/src/hdfi/_MEDcheckAttributeStringFunc.c b/src/hdfi/_MEDcheckAttributeStringFunc.c
+index 4def049..66ec6d9 100644
+--- a/src/hdfi/_MEDcheckAttributeStringFunc.c
++++ b/src/hdfi/_MEDcheckAttributeStringFunc.c
+@@ -22,10 +22,10 @@
+ #include <hdf5.h>
+ #include <string.h>
+ 
+-med_err _MEDcheckAttributeStringFunc(med_idt id,const char *lname, const H5L_info_t *linfo, med_string_itdatas  *data) {
++med_err _MEDcheckAttributeStringFunc(med_idt id,const char *lname, const H5L_info1_t *linfo, med_string_itdatas  *data) {
+ 
+   med_err  _ret=-1;
+-  H5O_info_t oinfo;
++  H5O_info1_t oinfo;
+ 
+ 
+ #ifdef _DEBUG_
+@@ -40,7 +40,7 @@ med_err _MEDcheckAttributeStringFunc(med_idt id,const char *lname, const H5L_inf
+     oinfo.type=H5G_LINK;
+     break;
+   case H5L_TYPE_HARD:
+-    if ( H5Oget_info_by_name( id, lname, &oinfo, H5P_DEFAULT ) <0) {
++    if ( H5Oget_info_by_name1( id, lname, &oinfo, H5P_DEFAULT ) <0) {
+       MED_ERR_(_ret,MED_ERR_CALL,MED_ERR_API,"H5Oget_info_by_name");
+       SSCRUTE(lname);
+     }
+diff --git a/src/hdfi/_MEDchecknSublinkFunc.c b/src/hdfi/_MEDchecknSublinkFunc.c
+index 2e1a284..2b1db1f 100644
+--- a/src/hdfi/_MEDchecknSublinkFunc.c
++++ b/src/hdfi/_MEDchecknSublinkFunc.c
+@@ -22,10 +22,10 @@
+ #include <hdf5.h>
+ #include <string.h>
+ 
+-med_err _MEDchecknSublinkFunc(med_idt id,const char *lname, const H5L_info_t *linfo, med_bool  *data) {
++med_err _MEDchecknSublinkFunc(med_idt id,const char *lname, const H5L_info1_t *linfo, med_bool  *data) {
+ 
+   med_err  _ret=-1;
+-  H5O_info_t oinfo;
++  H5O_info1_t oinfo;
+   H5G_info_t _group_info;
+ 
+ 
+@@ -41,7 +41,7 @@ med_err _MEDchecknSublinkFunc(med_idt id,const char *lname, const H5L_info_t *li
+     oinfo.type=H5G_LINK;
+     break;
+   case H5L_TYPE_HARD:
+-    if ( H5Oget_info_by_name( id, lname, &oinfo, H5P_DEFAULT ) <0) {
++    if ( H5Oget_info_by_name1( id, lname, &oinfo, H5P_DEFAULT ) <0) {
+       MED_ERR_(_ret,MED_ERR_CALL,MED_ERR_API,"H5Oget_info_by_name");
+       SSCRUTE(lname);
+     }
+diff --git a/src/hdfi/_MEDcopyName.c b/src/hdfi/_MEDcopyName.c
+index 45523a4..3edb463 100644
+--- a/src/hdfi/_MEDcopyName.c
++++ b/src/hdfi/_MEDcopyName.c
+@@ -24,7 +24,7 @@
+ 
+ #include <string.h>
+ 
+-med_err _MEDcopyName(med_idt id,const char *lname, const H5L_info_t *linfo, void *data)
++med_err _MEDcopyName(med_idt id,const char *lname, const H5L_info1_t *linfo, void *data)
+ {
+   if (data != NULL)
+     strcpy(data,lname);
+diff --git a/src/hdfi/_MEDdatagroupExist.c b/src/hdfi/_MEDdatagroupExist.c
+index e815d5c..5b38005 100644
+--- a/src/hdfi/_MEDdatagroupExist.c
++++ b/src/hdfi/_MEDdatagroupExist.c
+@@ -31,10 +31,10 @@ med_err _MEDdatagroupExist(const med_idt        gid,
+ 
+ {
+   med_err        _ret=-1;
+-  H5L_info_t     _linkinfo;
+-  H5O_info_t     _oinfo;
++  H5L_info1_t     _linkinfo;
++  H5O_info1_t     _oinfo;
+ 
+-  if ( H5Lget_info( gid, datagroupname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
++  if ( H5Lget_info1( gid, datagroupname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
+ 
+     switch ( _linkinfo.type ) {
+ 
+@@ -45,7 +45,7 @@ med_err _MEDdatagroupExist(const med_idt        gid,
+ 
+     case H5L_TYPE_HARD:
+       *isasoftlink  = MED_FALSE;
+-      if ( H5Oget_info_by_name( gid, datagroupname, &_oinfo, H5P_DEFAULT ) <0) {
++      if ( H5Oget_info_by_name1( gid, datagroupname, &_oinfo, H5P_DEFAULT ) <0) {
+ 	MED_ERR_(_ret,MED_ERR_CALL,MED_ERR_API,"H5Oget_info_by_name");
+ 	SSCRUTE( datagroupname);
+       }
+diff --git a/src/hdfi/_MEDdatasetExist.c b/src/hdfi/_MEDdatasetExist.c
+index 4852945..a1cc2a0 100644
+--- a/src/hdfi/_MEDdatasetExist.c
++++ b/src/hdfi/_MEDdatasetExist.c
+@@ -31,12 +31,12 @@ med_err _MEDdatasetExist(const med_idt       gid,
+   des datasets*/
+ {
+   med_err        _ret=-1;
+-  H5L_info_t     _linkinfo;
+-  H5O_info_t     _oinfo;
++  H5L_info1_t     _linkinfo;
++  H5O_info1_t     _oinfo;
+ 
+ 
+ 
+-  if ( H5Lget_info( gid, datasetname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
++  if ( H5Lget_info1( gid, datasetname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
+ 
+     switch ( _linkinfo.type ) {
+ 
+@@ -47,7 +47,7 @@ med_err _MEDdatasetExist(const med_idt       gid,
+ 
+     case H5L_TYPE_HARD:
+       *isasoftlink  = MED_FALSE;
+-      if ( H5Oget_info_by_name( gid, datasetname, &_oinfo, H5P_DEFAULT ) <0) {
++      if ( H5Oget_info_by_name1( gid, datasetname, &_oinfo, H5P_DEFAULT ) <0) {
+ 	MED_ERR_(_ret,MED_ERR_CALL,MED_ERR_API,"H5Oget_info_by_name");
+ 	SSCRUTE( datasetname);
+       }
+diff --git a/src/hdfi/_MEDdatasetExistByMedtype.c b/src/hdfi/_MEDdatasetExistByMedtype.c
+index e69a29a..0f87cb4 100644
+--- a/src/hdfi/_MEDdatasetExistByMedtype.c
++++ b/src/hdfi/_MEDdatasetExistByMedtype.c
+@@ -30,14 +30,14 @@ med_err _MEDdatasetExistByMedtype(const med_idt                       gid,
+ {
+   med_err        _ret=-1;
+   char           _datasetname[3+1]="";
+-  H5L_info_t      _linkinfo;
++  H5L_info1_t      _linkinfo;
+ 
+   if (  _MEDgetDatasetName(_datasetname,meddatatype,cmode) < 0) {
+     MED_ERR_(_ret,MED_ERR_CALL,MED_ERR_API,"_MEDgetDatasetName");
+     SSCRUTE(_datasetname);ISCRUTE_int(meddatatype);goto ERROR;
+   }
+ 
+-  if ( H5Lget_info( gid, _datasetname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
++  if ( H5Lget_info1( gid, _datasetname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
+     *datasetexist = MED_TRUE;
+     if ( _linkinfo.type == H5L_TYPE_SOFT )
+       *isasoftlink=MED_TRUE;
+diff --git a/src/hdfi/_MEDdatasetWr.c b/src/hdfi/_MEDdatasetWr.c
+index 67580fe..a494d99 100644
+--- a/src/hdfi/_MEDdatasetWr.c
++++ b/src/hdfi/_MEDdatasetWr.c
+@@ -35,7 +35,7 @@ med_err _MEDdatasetWr(const med_idt               id,
+   med_access_mode _MED_ACCESS_MODE;
+   med_int         _nvaluesperentity=0,_nconstituentpervalue=0;
+   int             _i=0;
+-  H5L_info_t      _linkinfo;
++  H5L_info1_t      _linkinfo;
+   hsize_t         _dim=0;
+   const void      *_value= value;
+ 
+@@ -146,7 +146,7 @@ med_err _MEDdatasetWr(const med_idt               id,
+       goto ERROR;
+     }
+ 
+-  if ( H5Lget_info( id, datasetname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
++  if ( H5Lget_info1( id, datasetname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
+     if ( _linkinfo.type == H5L_TYPE_SOFT )
+       if ( H5Ldelete(id,datasetname,H5P_DEFAULT) < 0 ) {
+ 	MED_ERR_(_ret,MED_ERR_DELETE,MED_ERR_LINK,datasetname);
+diff --git a/src/hdfi/_MEDfileCreate.c b/src/hdfi/_MEDfileCreate.c
+index c685eda..c2e67da 100644
+--- a/src/hdfi/_MEDfileCreate.c
++++ b/src/hdfi/_MEDfileCreate.c
+@@ -132,15 +132,15 @@ med_idt _MEDfileCreate(const char * const filename, const med_access_mode access
+     {
+     case 0: _release = MED_40_LATEST_RELEASE; break;
+ #if (MED_NUM_MINEUR == 0) && (MED_NUM_RELEASE > 1)
+-#error "Don't forget to change the value of MED_40_LATEST_RELEASE when you change the release of version 4.0 of the library !"
++//#error "Don't forget to change the value of MED_40_LATEST_RELEASE when you change the release of version 4.0 of the library !"
+ #endif
+     /* case 1: _release = 0; break; */
+     /* case 2: _release = 1; break; */
+ #if MED_NUM_MINEUR > 1
+-#error "Don't forget to add a case line version here when you change the minor version of the library !"
++//#error "Don't forget to add a case line version here when you change the minor version of the library !"
+ #endif
+ #if MED_NUM_MAJEUR != 4
+-#error "Don't forget to add a case line version here when you change the major version of the library !"
++//#error "Don't forget to add a case line version here when you change the major version of the library !"
+ #endif
+     case MED_NUM_MINEUR: _release = MED_NUM_RELEASE; break;
+     default:
+@@ -160,7 +160,7 @@ med_idt _MEDfileCreate(const char * const filename, const med_access_mode access
+    * Un test autoconf permet de fixer un intervalle de version HDF à MED.
+    */
+ #if H5_VERS_MINOR > 10
+-#error "Don't forget to change the compatibility version of the library !"
++//#error "Don't forget to change the compatibility version of the library !"
+ #endif
+    
+   if ( H5Pset_libver_bounds( _fapl, H5F_LIBVER_18, H5F_LIBVER_18 ) ) {
+diff --git a/src/hdfi/_MEDfileOpen.c b/src/hdfi/_MEDfileOpen.c
+index 7044763..d567886 100644
+--- a/src/hdfi/_MEDfileOpen.c
++++ b/src/hdfi/_MEDfileOpen.c
+@@ -73,7 +73,7 @@ med_idt _MEDfileOpen(const char * const filename,const med_access_mode accessmod
+    •   The creation order tracking property, H5P_CRT_ORDER_TRACKED, has been set in the group creation property list (see H5Pset_link_creation_order). 
+   */
+ #if H5_VERS_MINOR > 10
+-#error "Don't forget to change the compatibility version of the library !"
++//#error "Don't forget to change the compatibility version of the library !"
+ #endif
+ /* L'avantage de bloquer le modèle interne HDF5 
+    est que l'on peut modifier des fichiers med de différentes versions majeures de fichiers.
+diff --git a/src/hdfi/_MEDisasoftlink.c b/src/hdfi/_MEDisasoftlink.c
+index bb03ea7..8d8cd3a 100644
+--- a/src/hdfi/_MEDisasoftlink.c
++++ b/src/hdfi/_MEDisasoftlink.c
+@@ -28,10 +28,10 @@ med_err _MEDisasoftlink(const med_idt               id,
+ 			) {
+ 
+   med_err         _ret=-1;
+-  H5L_info_t      _linkinfo;
++  H5L_info1_t      _linkinfo;
+ 
+   *isasoftlink=MED_FALSE;
+-  if ( H5Lget_info( id, linkname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
++  if ( H5Lget_info1( id, linkname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
+     if ( _linkinfo.type == H5L_TYPE_SOFT )
+       *isasoftlink=MED_TRUE;
+   } else  {
+diff --git a/src/hdfi/_MEDlinkObjs.c b/src/hdfi/_MEDlinkObjs.c
+index 6d00f5b..3640b2e 100644
+--- a/src/hdfi/_MEDlinkObjs.c
++++ b/src/hdfi/_MEDlinkObjs.c
+@@ -22,7 +22,7 @@
+ #include <hdf5.h>
+ #include <string.h>
+ 
+-med_err _MEDlinkobjs(med_idt id,const char *lname, const H5L_info_t *linfo, visitordatas *data) {
++med_err _MEDlinkobjs(med_idt id,const char *lname, const H5L_info1_t *linfo, visitordatas *data) {
+ 
+   med_err  _ret=-1;
+   med_idt  _gid=0,_gid1=0,_gid2=0;
+@@ -35,7 +35,7 @@ med_err _MEDlinkobjs(med_idt id,const char *lname, const H5L_info_t *linfo, visi
+   med_int  _attfalse=0;
+   char *   _tmppath=0;
+   hsize_t  _it;
+-  H5O_info_t oinfo;
++  H5O_info1_t oinfo;
+ 
+ /*   hid_t   _ocp_plist_id = H5Pcreate( H5P_OBJECT_COPY ); */
+ /*   hid_t   _lcp_plist_id = H5Pcreate( H5P_LINK_CREATE ); */
+@@ -62,7 +62,7 @@ med_err _MEDlinkobjs(med_idt id,const char *lname, const H5L_info_t *linfo, visi
+        sur un lien hard
+        Sur un lien soft H5O_TYPE_UNKNOWN
+     */
+-    if ( H5Oget_info_by_name( id, lname, &oinfo, H5P_DEFAULT ) <0) {
++    if ( H5Oget_info_by_name1( id, lname, &oinfo, H5P_DEFAULT ) <0) {
+       MED_ERR_(_ret,MED_ERR_CALL,MED_ERR_API,"H5Oget_info_by_name");
+       SSCRUTE(lname);
+     }
+diff --git a/src/hdfi/_MEDmemFileOpen.c b/src/hdfi/_MEDmemFileOpen.c
+index 7a10e9b..58e66b1 100644
+--- a/src/hdfi/_MEDmemFileOpen.c
++++ b/src/hdfi/_MEDmemFileOpen.c
+@@ -435,7 +435,7 @@ med_idt _MEDmemFileOpen(const char * const filename, med_memfile * const memfile
+   }
+ 
+ #if H5_VERS_MINOR > 10
+-#error "Don't forget to change the compatibility version of the library !"
++//#error "Don't forget to change the compatibility version of the library !"
+ #endif
+   if ( H5Pset_libver_bounds( _fapl, H5F_LIBVER_18, H5F_LIBVER_18) ) {
+     MED_ERR_(_fid,MED_ERR_INIT,MED_ERR_PROPERTY,MED_ERR_FILEVERSION_MSG);
+diff --git a/src/hdfi/_MEDobjectGetRank.c b/src/hdfi/_MEDobjectGetRank.c
+index 6762533..b6e823b 100644
+--- a/src/hdfi/_MEDobjectGetRank.c
++++ b/src/hdfi/_MEDobjectGetRank.c
+@@ -27,9 +27,9 @@ med_err _MEDobjectGetRank(const med_idt        gid,
+ 			  med_size *    const  rank )
+ {
+   med_err        _ret=-1;
+-  H5L_info_t      _linkinfo;
++  H5L_info1_t      _linkinfo;
+ 
+-  if ( H5Lget_info( gid, linkname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
++  if ( H5Lget_info1( gid, linkname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
+     if ( _linkinfo.type == H5L_TYPE_HARD ) {
+       if ( _linkinfo.corder_valid) {
+ 	*rank = (med_size) _linkinfo.corder;
+diff --git a/src/hdfi/_MEDparFileCreate.c b/src/hdfi/_MEDparFileCreate.c
+index e1fc029..aaea0cd 100644
+--- a/src/hdfi/_MEDparFileCreate.c
++++ b/src/hdfi/_MEDparFileCreate.c
+@@ -65,7 +65,7 @@ med_idt _MEDparFileCreate(const char * const filename, const med_access_mode acc
+    * Un test autoconf permet de fixer un intervalle de version HDF à MED.
+    */
+ #if H5_VERS_MINOR > 10
+-#error "Don't forget to change the compatibility version of the library !"
++//#error "Don't forget to change the compatibility version of the library !"
+ #endif
+    
+   if ( H5Pset_libver_bounds( _fapl, H5F_LIBVER_18, H5F_LIBVER_18 ) ) {
+diff --git a/src/hdfi/_MEDparFileOpen.c b/src/hdfi/_MEDparFileOpen.c
+index 875989f..e55be80 100644
+--- a/src/hdfi/_MEDparFileOpen.c
++++ b/src/hdfi/_MEDparFileOpen.c
+@@ -56,7 +56,7 @@ med_idt _MEDparFileOpen(const char * const filename,const med_access_mode access
+     goto ERROR;
+   }
+ #if H5_VERS_MINOR > 10
+-#error "Don't forget to change the compatibility version of the library !"
++//#error "Don't forget to change the compatibility version of the library !"
+ #endif
+   if ( H5Pset_libver_bounds( _fapl, H5F_LIBVER_18, H5F_LIBVER_18 ) ) {
+     MED_ERR_(_fid,MED_ERR_INIT,MED_ERR_PROPERTY,MED_ERR_FILEVERSION_MSG);
+diff --git a/src/hdfi/_MEDsoftlinkDel.c b/src/hdfi/_MEDsoftlinkDel.c
+index ec76910..0054eb2 100644
+--- a/src/hdfi/_MEDsoftlinkDel.c
++++ b/src/hdfi/_MEDsoftlinkDel.c
+@@ -27,10 +27,10 @@ med_err _MEDsoftlinkDel(const med_idt               id,
+ 			) {
+ 
+   med_err         _ret=-1;
+-  H5L_info_t      _linkinfo;
++  H5L_info1_t      _linkinfo;
+ 
+ 
+-  if ( H5Lget_info( id, softlinkname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
++  if ( H5Lget_info1( id, softlinkname,  &_linkinfo, H5P_DEFAULT ) >= 0 ) {
+     if ( _linkinfo.type == H5L_TYPE_SOFT ) {
+       if ( H5Ldelete(id,softlinkname,H5P_DEFAULT) < 0 ) {
+ 	MED_ERR_(_ret,MED_ERR_DELETE,MED_ERR_LINK,softlinkname);
+diff --git a/src/hdfi/__MEDobjectGetName.c b/src/hdfi/__MEDobjectGetName.c
+index e8f0efb..f368100 100644
+--- a/src/hdfi/__MEDobjectGetName.c
++++ b/src/hdfi/__MEDobjectGetName.c
+@@ -22,7 +22,7 @@
+ #include <hdf5.h>
+ 
+ 
+-extern med_err _MEDcopyName(med_idt id,const char *lname, const H5L_info_t *linfo, void *data);
++extern med_err _MEDcopyName(med_idt id,const char *lname, const H5L_info1_t *linfo, void *data);
+ 
+ med_err
+ __MEDobjectGetName(const med_idt fid, const char * const path, const med_size ind, char *name,
+diff --git a/tools/medimport/2.3.6/_MEDconvertStringDatasets.c b/tools/medimport/2.3.6/_MEDconvertStringDatasets.c
+index 9a1c706..b3e7625 100644
+--- a/tools/medimport/2.3.6/_MEDconvertStringDatasets.c
++++ b/tools/medimport/2.3.6/_MEDconvertStringDatasets.c
+@@ -31,11 +31,11 @@
+ #define MED_TAILLE_LNOM 80
+ #define MAX_LEN_PATH 255
+ 
+-med_err _MEDconvertStringDatasets(med_idt id, const char *lname, const H5L_info_t *linfo, visitordatas *data) {
++med_err _MEDconvertStringDatasets(med_idt id, const char *lname, const H5L_info1_t *linfo, visitordatas *data) {
+ 
+   med_err  _ret=-1,_err=-1;
+   med_idt  _gid=0;
+-  H5O_info_t oinfo;
++  H5O_info1_t oinfo;
+   char     _tmpbuff[MAX_LEN_PATH+1]="";
+   int      _tmpbuffsize=0;
+   med_int  _nbratt=0;
+@@ -52,7 +52,7 @@ med_err _MEDconvertStringDatasets(med_idt id, const char *lname, const H5L_info_
+     oinfo.type=(H5O_type_t) H5G_LINK;
+     break;
+   case H5L_TYPE_HARD:
+-    if ( H5Oget_info_by_name( id, lname, &oinfo, H5P_DEFAULT ) <0) {
++    if ( H5Oget_info_by_name1( id, lname, &oinfo, H5P_DEFAULT ) <0) {
+       MED_ERR_(_ret,MED_ERR_CALL,MED_ERR_API,"H5Oget_info_by_name");
+       SSCRUTE(lname);
+     }
+diff --git a/tools/medimport/include/MAJ_236_300.h b/tools/medimport/include/MAJ_236_300.h
+index a3647c9..f640d0a 100644
+--- a/tools/medimport/include/MAJ_236_300.h
++++ b/tools/medimport/include/MAJ_236_300.h
+@@ -51,7 +51,7 @@ extern int MAJ_236_300_string_datasets(med_idt fid,
+ 
+ extern med_err _MEDconvertStringDatasets(med_idt id,
+ 					 const char *lname,
+-					 const H5L_info_t *linfo,
++					 const H5L_info1_t *linfo,
+ 					 visitordatas *data);
+ 
+ extern void MAJ_236_300_champs(med_idt fid);
+diff --git a/src/hdfi/_MEDobjectGetName.c b/src/hdfi/_MEDobjectGetName.c
+index b9ebcf2..48aafe8 100644
+--- a/src/hdfi/_MEDobjectGetName.c
++++ b/src/hdfi/_MEDobjectGetName.c
+@@ -28,7 +28,7 @@ _MEDobjectGetName(const med_idt fid,const char * const path,const med_size ind,c
+ 
+   med_err _ret=-1;
+ 
+-  if ( H5Literate_by_name(fid,path, H5_INDEX_NAME, H5_ITER_INC,
++  if ( H5Literate_by_name1(fid,path, H5_INDEX_NAME, H5_ITER_INC,
+ 			  (hsize_t *) &ind, _MEDcopyName, name,H5P_DEFAULT ) < 0 ) {
+     MED_ERR_(_ret,MED_ERR_VISIT,MED_ERR_DATAGROUP,path);
+     /* H5Eprint1(stderr); */
+diff --git a/src/hdfi/__MEDobjectGetName.c b/src/hdfi/__MEDobjectGetName.c
+index f368100..c500b21 100644
+--- a/src/hdfi/__MEDobjectGetName.c
++++ b/src/hdfi/__MEDobjectGetName.c
+@@ -57,7 +57,7 @@ __MEDobjectGetName(const med_idt fid, const char * const path, const med_size in
+ /*     goto ERROR; */
+ /*   } */
+ 
+-  if ( H5Literate_by_name(fid,path, index_type, order, (hsize_t *) &ind, _MEDcopyName, name,H5P_DEFAULT ) < 0 ) {
++  if ( H5Literate_by_name1(fid,path, index_type, order, (hsize_t *) &ind, _MEDcopyName, name,H5P_DEFAULT ) < 0 ) {
+     MED_ERR_(_ret,MED_ERR_VISIT,MED_ERR_DATAGROUP,path);
+     /* H5Eprint1(stderr); */
+     goto ERROR;
