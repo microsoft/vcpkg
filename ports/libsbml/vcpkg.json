@@ -65,7 +65,15 @@
       "description": "support for Qualitative Modeling"
     },
     "render": {
-      "description": "support for Rendering information"
+      "description": "support for Rendering information",
+      "dependencies": [
+        {
+          "name": "libsbml",
+          "features": [
+            "layout"
+          ]
+        }
+      ]
     },
     "test": {
       "description": "Unit testing of libSBMLs implementation",
