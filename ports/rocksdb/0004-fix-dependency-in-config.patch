@@ -1,8 +1,13 @@
 diff --git a/cmake/RocksDBConfig.cmake.in b/cmake/RocksDBConfig.cmake.in
-index 0bd14be11..f9f6aa878 100644
+index 0bd14be11..ad07f018a 100644
 --- a/cmake/RocksDBConfig.cmake.in
 +++ b/cmake/RocksDBConfig.cmake.in
-@@ -37,7 +37,7 @@ if(@WITH_LZ4@)
+@@ -33,11 +33,11 @@ if(@WITH_BZ2@)
+ endif()
+ 
+ if(@WITH_LZ4@)
+-  find_dependency(lz4)
++  find_dependency(lz4 CONFIG)
  endif()
  
  if(@WITH_ZSTD@)

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/highway
     REF "${VERSION}"
-    SHA512 fc419c862e1686b6278081e8e10da41dc2bdfbd386a29b59e21a57375a47d3eeb5c7297e3078c78007b212121d936640b192a26a16c941e73cf599f24e081021
+    SHA512 75aaa0a3f97c6b044acb146ac4db20c1d813c4215b9c1620e72352d00c136939db7059f599122d6600e385bffa8b24d7fd9c1fe09772f4941e5300767a8c68dd
     HEAD_REF master
 )
 
@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/hwy)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/hwy/highway_export.h" "defined(HWY_SHARED_DEFINE)" "1")
