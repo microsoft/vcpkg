@@ -1,19 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8f9d057..83f0f21 100644
+index 32f0332..4cec80c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -67,10 +67,13 @@ else()
+@@ -65,12 +65,12 @@ else()
+         target_compile_options(wolfmqtt PUBLIC ${WOLFSSL_CFLAGS_OTHER})
+     else()
          # For support with vcpkg
-         find_package(wolfssl CONFIG)
+-        find_package(wolfssl CONFIG)
++        find_package(wolfssl CONFIG REQUIRED)
          if (wolfssl_FOUND)
-+            find_path(WOLFSSL_INCLUDE_DIR NAMES wolfssl/ssl.h)
-+            find_library(WOLFSSL_LIBRARY_PATH NAMES wolfssl)
              target_compile_definitions(wolfmqtt PUBLIC
                  "ENABLE_MQTT_TLS"
                  )
 -            target_link_libraries(wolfmqtt PUBLIC wolfssl)
-+            include_directories(${WOLFSSL_INCLUDE_DIR})
-+            target_link_libraries(wolfmqtt PUBLIC ${WOLFSSL_LIBRARY_PATH})
++            target_link_libraries(wolfmqtt PUBLIC wolfssl::wolfssl)
          endif()
      endif()
  endif()
