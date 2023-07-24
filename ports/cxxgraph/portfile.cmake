@@ -1,7 +1,9 @@
+# Header-only library
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ZigRazor/CXXGraph
-    REF v2.0.0
+    REF "v${VERSION}"
     SHA512 a4409c81132e6c7e34022c54d9a57b965970aa8e1fcd97b9f916334c1d480674a526e7d5ad727ab652e4842083249dea89de519b104c1f9f205423eabd3c2338
     HEAD_REF master
 )
