@@ -168,6 +168,12 @@ if(WIN32 OR APPLE)
     set_target_properties(boincapi PROPERTIES IMPORT_PREFIX "lib")
 endif()
 
+# currently this is for MinGW only
+set(build_options "")
+if(HAVE_STRCASECMP)
+    list(APPEND build_options "-DHAVE_STRCASECMP")
+endif()
+
 if(APPLE)
     target_include_directories(boinc PUBLIC
                                 $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib/mac>
@@ -183,12 +189,14 @@ elseif(WIN32)
                                 -D_CRT_SECURE_NO_WARNINGS
                                 -DWIN32
                                 -D_CONSOLE
+                                ${build_options}
     )
 
     target_compile_definitions(boincapi PUBLIC
                                 -D_CRT_SECURE_NO_WARNINGS
                                 -DWIN32
                                 -D_CONSOLE
+                                ${build_options}
     )
 
     target_include_directories(boinc PUBLIC
