@@ -27,10 +27,10 @@
     }
   ],
   "default-features": [
-    "use-tls"
+    "tls"
   ],
   "features": {
-    "use-tls": {
+    "tls": {
       "description": "Enable TLS support",
       "dependencies": [
         "openssl"

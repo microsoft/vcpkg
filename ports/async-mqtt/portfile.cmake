@@ -8,14 +8,15 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-set(ASYNC_MQTT_USE_TLS OFF)
-if ("use-tls" IN_LIST FEATURES)
-    set(ASYNC_MQTT_USE_TLS ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tls ASYNC_MQTT_USE_TLS
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DASYNC_MQTT_BUILD_TOOLS=OFF
         -DASYNC_MQTT_BUILD_EXAMPLES=OFF
         -DASYNC_MQTT_BUILD_UNIT_TESTS=OFF
