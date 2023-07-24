@@ -258,7 +258,7 @@
     },
     "async-mqtt": {
       "baseline": "1.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "asynch": {
       "baseline": "2019-09-21",
@@ -1277,7 +1277,7 @@
       "port-version": 5
     },
     "brpc": {
-      "baseline": "1.4.0",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "brunocodutra-metal": {
@@ -1589,8 +1589,8 @@
       "port-version": 2
     },
     "clipper2": {
-      "baseline": "1.1.1",
-      "port-version": 1
+      "baseline": "1.2.2",
+      "port-version": 0
     },
     "clockutils": {
       "baseline": "1.1.1",
@@ -1713,7 +1713,7 @@
       "port-version": 0
     },
     "configcat": {
-      "baseline": "2.0.1",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "console-bridge": {
@@ -2194,7 +2194,7 @@
     },
     "drogon": {
       "baseline": "1.8.4",
-      "port-version": 1
+      "port-version": 2
     },
     "dstorage": {
       "baseline": "1.2.0",
@@ -2725,7 +2725,7 @@
       "port-version": 6
     },
     "gamedev-framework": {
-      "baseline": "1.0.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "gamenetworkingsockets": {
@@ -4250,7 +4250,7 @@
     },
     "liblemon": {
       "baseline": "2019-06-13",
-      "port-version": 5
+      "port-version": 6
     },
     "liblinear": {
       "baseline": "243",
@@ -4514,7 +4514,7 @@
     },
     "librsvg": {
       "baseline": "2.40.20",
-      "port-version": 7
+      "port-version": 8
     },
     "librsync": {
       "baseline": "2.3.2",
@@ -5369,7 +5369,7 @@
       "port-version": 0
     },
     "mlpack": {
-      "baseline": "4.0.1",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "mman": {
@@ -5921,8 +5921,8 @@
       "port-version": 1
     },
     "openal-soft": {
-      "baseline": "1.23.0",
-      "port-version": 2
+      "baseline": "1.23.1",
+      "port-version": 0
     },
     "openblas": {
       "baseline": "0.3.23",
@@ -6646,7 +6646,7 @@
     },
     "qt5-declarative": {
       "baseline": "5.15.10",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-doc": {
       "baseline": "5.15.10",
@@ -6734,7 +6734,7 @@
     },
     "qt5-tools": {
       "baseline": "5.15.10",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-translations": {
       "baseline": "5.15.10",
@@ -8893,8 +8893,8 @@
       "port-version": 1
     },
     "xxhash": {
-      "baseline": "0.8.1",
-      "port-version": 2
+      "baseline": "0.8.2",
+      "port-version": 0
     },
     "yajl": {
       "baseline": "2.1.0",
