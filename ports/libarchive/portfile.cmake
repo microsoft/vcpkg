@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
     REF "v${VERSION}"
-    SHA512 07339d54e8e82c0a13c69590e1653a5734fcd06ca3d01b2087a09c3d55e29e5ed4e16c5ef7ca44258f049c7b2de6245315be2c8b043f8db68515750649daafbe
+    SHA512 0a7212f84cf865d0485469b4bfc29835b47847757c19895a04f9446cbf788123e9f0d51e73c91ca040961793bd25f8e58f5a08806f2e59778a93e11f7860ed1f
     HEAD_REF master
     PATCHES
         disable-warnings.patch
@@ -58,6 +58,7 @@ vcpkg_cmake_configure(
         -DENABLE_TAR=OFF
         -DENABLE_CPIO=OFF
         -DENABLE_CAT=OFF
+        -DENABLE_UNZIP=OFF
         -DENABLE_XATTR=OFF
         -DENABLE_ACL=OFF
         -DENABLE_ICONV=OFF

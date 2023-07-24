@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2634da..d037071 100644
+index 764fe5d4..d5f0ca93 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -155,9 +155,6 @@ IF (MSVC)
+@@ -161,9 +161,6 @@ IF (MSVC)
    #################################################################
    # Set compile flags for debug build.
    # This is added into CMAKE_C_FLAGS when CMAKE_BUILD_TYPE is "Debug"
