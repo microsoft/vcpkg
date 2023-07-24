@@ -1,14 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum
-    REF v2020.06
-    SHA512 65b0c8a4520d1d282420c30ecd7c8525525d4dbb6e562e1e2e93d110f4eb686af43f098bf02460727fab1e1f9446dd00a99051e150c05ea40b1486a44fea1042
+    REF f79a9dfecfc042520704f9ad7e563114ee6ed5f7
+    SHA512 c76de6edb1b36cb56d871413a795f7aadca7fa5ae020bf863f7c0e84133f439748a62940043e65861ebdbf7e477381668366804d7589b83093a6d2d62d4bd19e
     HEAD_REF master
     PATCHES
-        002-sdl-includes.patch
-        003-fix-FindGLFW.patch
-        004-fix-FindOpenAL.patch
-        005-fix-find-sdl2.patch
+    # LENIHAN    002-sdl-includes.patch
+    # LENIHAN    003-fix-FindGLFW.patch
+    # LENIHAN    004-fix-FindOpenAL.patch
+    # LENIHAN    005-fix-find-sdl2.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -91,11 +91,11 @@ set(_TOOLS
     gl-info
     imageconverter
     sceneconverter)
-if(VCPKG_USE_HEAD_VERSION)
-list(APPEND _TOOLS
-    shaderconverter
-    vk-info)
-endif()
+# LENIHAN if(VCPKG_USE_HEAD_VERSION)
+# LENIHAN list(APPEND _TOOLS
+# LENIHAN     shaderconverter
+# LENIHAN     vk-info)
+# LENIHAN endif()
 foreach(_tool IN LISTS _TOOLS)
     if("${_tool}" IN_LIST FEATURES)
         list(APPEND _TOOL_EXEC_NAMES magnum-${_tool})

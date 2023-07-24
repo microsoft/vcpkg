@@ -1,7 +1,7 @@
 {
   "name": "corrade",
-  "version-string": "2020.06",
-  "port-version": 5,
+  "version-string": "LENIHAN - 2023.07.15 - All checks have passed - dbecd392b1b58cf57ce68102f309ae675ea50126",
+  "port-version": 0,  
   "description": "C++11/C++14 multiplatform utility library.",
   "homepage": "https://magnum.graphics/corrade/",
   "dependencies": [

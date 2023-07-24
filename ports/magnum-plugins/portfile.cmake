@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-plugins
-    REF v2020.06
-    SHA512 3c11c2928bfc9d04c1ad64f72b6ffac6cf80a1ef3aacc5d0486b9ad955cf4f6ea6d5dcb3846dc5d73f64ec522a015eafb997f62c79ad7ff91169702341f23af0
+    REF cbf2818f76cd0347c18f8231b14563bf443706f3
+    SHA512 719044bf608db2c4fd12b35da3c24c6bed87d397bb93737e147bb67a33994e45ea1799fb93195fb486da4084bddfa4c7fb0295c5d53988a4b97f3f7b47a4174a
     HEAD_REF master
     PATCHES
-        002-fix-stb-conflict.patch
+    # LENIHAN    002-fix-stb-conflict.patch
 )
 
 if("basisimporter" IN_LIST FEATURES OR "basisimageconverter" IN_LIST FEATURES)

@@ -1,7 +1,7 @@
 {
   "name": "magnum",
-  "version-string": "2020.06",
-  "port-version": 13,
+  "version-string": "LENIHAN - 2023.07.05 - All checks have passed - f79a9dfecfc042520704f9ad7e563114ee6ed5f7",
+  "port-version": 0,
   "description": "C++11/C++14 graphics middleware for games and data visualization",
   "homepage": "https://magnum.graphics/",
   "license": null,

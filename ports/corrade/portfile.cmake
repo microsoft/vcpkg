@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/corrade
-    REF v2020.06
-    SHA512 94cc8959b0ee43ecd8d13a25307e7829d53dc6601628d97c32288d1704e2c0835b755bffc06b2105e6aa5a612f119a60e83cb475860b51e6a35999215c100227
+    REF dbecd392b1b58cf57ce68102f309ae675ea50126
+    SHA512 e2c142477721e928e324c275019292ce3140636d180c26f69726c5ffb008d05bb86497b16cbdc63898fbbef249130a055ba40202e92d8429c387bb656d10f717
     HEAD_REF master
     PATCHES
-        fix-vs2019.patch
-        build-corrade-rc-always.patch
+        # LENIHAN fix-vs2019.patch
+        # LENIHAN build-corrade-rc-always.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
