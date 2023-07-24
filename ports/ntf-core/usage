@@ -1,0 +1,5 @@
+The package ntf-core provides the CMake targets:
+
+    find_package(ntc REQUIRED)
+    find_package(nts REQUIRED)
+    target_link_libraries(main PRIVATE ntc nts)
