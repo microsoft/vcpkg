@@ -307,6 +307,7 @@ dimcli:x64-windows-static=fail
 directxsdk:x86-windows=skip
 directxsdk:x64-windows=skip
 directxsdk:x64-windows-static-md=skip
+discordcoreapi:x64-linux=fail
 discord-rpc:arm-uwp=fail
 discord-rpc:x64-uwp=fail
 discount:x64-android=fail
