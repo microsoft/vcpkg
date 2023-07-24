@@ -6646,7 +6646,7 @@
     },
     "qt5-declarative": {
       "baseline": "5.15.10",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-doc": {
       "baseline": "5.15.10",
@@ -6734,7 +6734,7 @@
     },
     "qt5-tools": {
       "baseline": "5.15.10",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-translations": {
       "baseline": "5.15.10",
