@@ -235,7 +235,6 @@ coin-or-ipopt:x64-linux=fail
 concurrencpp:arm-neon-android=fail
 concurrencpp:arm64-android=fail
 concurrencpp:x64-android=fail
-concurrencpp:x64-linux=fail
 concurrencpp:x64-osx=fail
 constexpr-contracts:arm-neon-android=fail
 constexpr-contracts:arm64-android=fail
