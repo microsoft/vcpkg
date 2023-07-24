@@ -1,6 +1,6 @@
 {
   "name": "azure-storage-files-shares-cpp",
-  "version-semver": "12.5.0",
+  "version-semver": "12.6.0",
   "description": [
     "Microsoft Azure Storage Files Shares SDK for C++",
     "This library provides Azure Storage Files Shares SDK."

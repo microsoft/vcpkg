@@ -11,6 +11,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLIBKEA_WITH_GDAL=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_GDAL=ON
 )
 
 vcpkg_cmake_install()
