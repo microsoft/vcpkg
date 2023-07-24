@@ -9,14 +9,6 @@ vcpkg_from_github(
     PATCHES fix-build.patch
 )
 
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(BUILD_ARCH "Win32")
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(BUILD_ARCH "x64")
-else()
-    message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-endif()
-
 # Use /Z7 rather than /Zi to avoid "fatal error C1090: PDB API call failed, error code '23': (0x00000006)"
 foreach(VCXPROJ IN ITEMS
     "${SOURCE_PATH}/EasyHookDll/EasyHookDll.vcxproj"
@@ -78,7 +70,6 @@ vcpkg_install_msbuild(
     TARGET EasyHookDll
     RELEASE_CONFIGURATION "netfx4-Release"
     DEBUG_CONFIGURATION "netfx4-Debug"
-    PLATFORM ${BUILD_ARCH}
 )
 
 # Remove the mismatch rebuild library

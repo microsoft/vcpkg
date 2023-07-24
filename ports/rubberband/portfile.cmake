@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO breakfastquay/rubberband
     REF "v${VERSION}"
-    SHA512 953d705e4a69ed40732644b8039dae02ddf596216e484ce8625fdde796e0de35fe6ac6c4f180eabc457c98b63c3fba212afa74b731eac570bea1902b667f506f
+    SHA512 811a8dbf05fbee3e4631b49fee9fd0e23ea750ac24a9a16f20e6a7ea07e683783a9edf980c43e732b64c229db29ade3575938c4e6f9db8c4255b220eb30d9dcc
     HEAD_REF default
 )
 
@@ -13,10 +13,19 @@ else()
     set(CLI_FEATURE disabled)
 endif()
 
+# Select fastest available FFT library according https://github.com/breakfastquay/rubberband/blob/default/COMPILING.md#fft-libraries-supported
+if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
+    set(FFT_LIB "fftw")
+elseif(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(FFT_LIB "fftw")
+else()
+    set(FFT_LIB "sleef")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -Dfft=fftw                 # 'auto', 'builtin', 'kissfft', 'fftw', sleef', 'vdsp', 'ipp' 'FFT library to use. The default (auto) will use vDSP if available, the builtin implementation otherwise.')
+        -Dfft=${FFT_LIB}           # 'auto', 'builtin', 'kissfft', 'fftw', sleef', 'vdsp', 'ipp' 'FFT library to use. The default (auto) will use vDSP if available, the builtin implementation otherwise.')
         -Dresampler=libsamplerate  # 'auto', 'builtin', 'libsamplerate', 'speex', 'libspeexdsp', 'ipp' 'Resampler library to use. The default (auto) simply uses the builtin implementation.'
         -Dipp_path=                # 'Path to Intel IPP libraries, if selected for any of the other options.'
         -Dextra_include_dirs=      # 'Additional local header directories to search for dependencies.'

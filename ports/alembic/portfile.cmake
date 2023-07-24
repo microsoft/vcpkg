@@ -3,12 +3,11 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
-    REF 1.8.3
-    SHA512 0049c72d93e66e12d704d27e7ba36cd9c718667f2ce4f7baa1bee1613ed88ba53abea98f457e14f7f2144cb353810a4108d26c7dd1a1543ec2af576272f19036
+    REF "${VERSION}"
+    SHA512 89a480970eb09893112bf650011ede852205d1fa3718680a3983392bbcf3eb3f22f4ec01f42d12bfcaf655ce43d7d6f583b764ec03f4c5a84023359502b3636e
     HEAD_REF master
     PATCHES
         fix-runtime-destination.patch
-        disable-warnings-as-error.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ALEMBIC_SHARED_LIBS)
@@ -24,6 +23,7 @@ vcpkg_cmake_configure(
         -DALEMBIC_SHARED_LIBS=${ALEMBIC_SHARED_LIBS}
         -DUSE_TESTS=OFF
         ${FEATURE_OPTIONS}
+        -DALEMBIC_DEBUG_WARNINGS_AS_ERRORS=OFF
 )
 
 vcpkg_cmake_install()
@@ -46,4 +46,4 @@ vcpkg_copy_tools(
 )
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
