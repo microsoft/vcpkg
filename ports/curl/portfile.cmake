@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF "${curl_version}"
-    SHA512 d3c0bd113c772249c7e4e83cc26c6e2a1ff5644486c96318de6ab035300c52aca10756af665d91c5ce71f9d4afa4afbf7fbb756e9e4c800869b50c8a653bd519
+    SHA512 8dfca7f322b2a8f26ab866fd67f0a6a73ce9fa032b20f031e46df66ad04c79b6df4a2731945e6aa719460f3b4daef09f45ea671b2349140f915935c22040ba00
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -34,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         winidn      USE_WIN32_IDN
         winldap     USE_WIN32_LDAP
         websockets  ENABLE_WEBSOCKETS
+        zstd        CURL_ZSTD
     INVERTED_FEATURES
         non-http    HTTP_ONLY
         winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM

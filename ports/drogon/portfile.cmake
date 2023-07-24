@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         vcpkg.patch
+        vcpkg_redis.patch
         drogon_config.patch
         fix_gcc13.patch #https://github.com/drogonframework/drogon/pull/1563
 )
