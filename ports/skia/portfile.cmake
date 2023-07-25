@@ -93,7 +93,7 @@ declare_external_from_pkgconfig(libpng)
 declare_external_from_pkgconfig(libwebp MODULES libwebpdecoder libwebpdemux libwebpmux libwebp)
 declare_external_from_pkgconfig(zlib)
 
-declare_external_from_vcpkg(vulkan-headers)
+declare_external_from_vcpkg(vulkan_headers PATH third_party/externals/vulkan-headers)
 
 set(known_cpus x86 x64 arm arm64 wasm)
 if(NOT VCPKG_TARGET_ARCHITECTURE IN_LIST known_cpus)
@@ -176,7 +176,7 @@ endif()
 
 if("vulkan" IN_LIST FEATURES)
     list(APPEND required_externals
-        vulkan-headers
+        vulkan_headers
         vulkan-tools
     )
     string(APPEND OPTIONS " skia_use_vulkan=true")
@@ -220,8 +220,8 @@ They can be installed on Debian based systems via
         tint
         jinja2
         markupsafe
+        vulkan_headers
 ## Remove
-        vulkan-headers
         vulkan-tools
         abseil-cpp
 ## REMOVE ^
