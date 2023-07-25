@@ -6149,7 +6149,7 @@
       "port-version": 1
     },
     "osmanip": {
-      "baseline": "4.5.2",
+      "baseline": "4.6.0",
       "port-version": 0
     },
     "otl": {
