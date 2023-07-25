@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO etcd-cpp-apiv3/etcd-cpp-apiv3
     REF "v${VERSION}"
-    SHA512 3bf1e0b178ddc77c8c0818f049cc83ac08d44ca767835eac9514d7af3c7cf583d1d3bf25c2d8cb02afd60a73fb493cb0956d3154baaa6203f5db0e79c0163f57
+    SHA512 4ef9c07d5c69f3f50f40811146c178d1837fbda7e5e9f3369eba6177fc9e17c27d1e5cd2add7a203f47e0105f0a8a433de4c2511d395afcf1c5413e716033f44
     HEAD_REF master
+        PATCHES
+        fix-LNK1107-error.patch
 )
 
 vcpkg_cmake_configure(
