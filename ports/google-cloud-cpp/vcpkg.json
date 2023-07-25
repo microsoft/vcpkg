@@ -9,6 +9,10 @@
     "abseil",
     "grpc",
     {
+      "name": "opentelemetry-cpp",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -826,6 +830,25 @@
             "grpc-common"
           ]
         }
+      ]
+    },
+    "opentelemetry": {
+      "description": "OpenTelemetry C++ GCP Exporter Library",
+      "dependencies": [
+        {
+          "name": "curl",
+          "features": [
+            "ssl"
+          ]
+        },
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "trace"
+          ]
+        },
+        "nlohmann-json"
       ]
     },
     "optimization": {
