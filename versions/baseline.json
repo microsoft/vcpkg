@@ -5016,7 +5016,7 @@
       "baseline": "2.0.7",
       "port-version": 1
     },
-    "log4cpp": {
+    "log4cpp-log4cpp": {
       "baseline": "1.1.4",
       "port-version": 0
     },
