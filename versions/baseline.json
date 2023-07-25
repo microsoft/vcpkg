@@ -624,6 +624,10 @@
       "baseline": "1.21.3",
       "port-version": 0
     },
+    "blpapi": {
+      "baseline": "3.20.2",
+      "port-version": 0
+    },
     "boinc": {
       "baseline": "7.22.2",
       "port-version": 2
