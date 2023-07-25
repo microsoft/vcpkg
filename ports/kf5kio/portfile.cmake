@@ -65,6 +65,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
-vcpkg_install_copyright(FILE_LIST "${LICENSE_FILES}")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
 
 
