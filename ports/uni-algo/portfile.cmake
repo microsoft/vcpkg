@@ -19,8 +19,6 @@ vcpkg_cmake_config_fixup(NO_PREFIX_CORRECTION)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-# Remove empty directory
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/uni_algo/impl/doc")
 
 # Install copyright and usage
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
