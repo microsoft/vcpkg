@@ -56,7 +56,7 @@ vcpkg_execute_required_process(
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY "${CURRENT_PORT_DIR}/Packet.vcxproj" DESTINATION "${SOURCE_PATH}/packetNtx/Dll/Project/")
+    configure_file("${CURRENT_PORT_DIR}/Packet.vcxproj.in" "${SOURCE_PATH}/packetNtx/Dll/Project/Packet.vcxproj" COPYONLY)
 endif()
 
 vcpkg_build_msbuild(
@@ -84,7 +84,7 @@ vcpkg_execute_required_process(
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY "${CURRENT_PORT_DIR}/wpcap.vcxproj" DESTINATION "${SOURCE_PATH}/wpcap/PRJ/")
+    configure_file("${CURRENT_PORT_DIR}/wpcap.vcxproj.in" "${SOURCE_PATH}/wpcap/PRJ/wpcap.vcxproj" COPYONLY)
 endif()
 
 vcpkg_build_msbuild(
@@ -168,5 +168,4 @@ endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pcap-stdinc.h" "#define inline __inline" "#ifndef __cplusplus\n#define inline __inline\n#endif")
 
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "The latest license is available in https://www.winpcap.org/misc/copyright.htm and in the header files.
-")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "The latest license is available in https://www.winpcap.org/misc/copyright.htm and in the header files.")

@@ -19,3 +19,5 @@
 * [ ] Submit PR with those changes.
 * [ ] Submit a full CI rebuild with those changes: https://dev.azure.com/vcpkg/public/_build?definitionId=29  
       refs/pull/NUMBER/head
+* [ ] Run `generate-sas-tokens.ps1` and update the relevant libraries on dev.azure.com/vcpkg and
+      devdiv.visualstudio.com.

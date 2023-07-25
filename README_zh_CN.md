@@ -12,7 +12,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 * GitHub: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/)， #vcpkg 频道
 * Discord: [\#include \<C++\>](https://www.includecpp.org)， #🌏vcpkg 频道
-* 文档: [Documentation](docs/README.md)
+* 文档: [Documentation](https://learn.microsoft.com/vcpkg)
 
 # 目录
 
@@ -241,8 +241,7 @@ set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems
 
 使用此种方式可无需设置 `CMAKE_TOOLCHAIN_FILE` 即可使用 vcpkg，且更容易完成配置工作。
 
-[getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/buildsystems/integration.md
+[getting-started:using-a-package]: https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools
@@ -250,7 +249,6 @@ set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
-[getting-started:manifest-spec]: docs/specifications/manifests.md
 
 # Tab 补全/自动补全
 
@@ -271,10 +269,10 @@ $ ./vcpkg integrate bash # 或 zsh
 
 ## 示例
 
-请查看 [文档](docs/README.md) 获取具体示例，
-其包含 [安装并使用包](docs/examples/installing-and-using-packages.md)，
-[使用压缩文件添加包](docs/examples/packaging-zipfiles.md)
-和 [从 GitHub 源中添加一个包](docs/examples/packaging-github-repos.md)。
+请查看 [文档](https://learn.microsoft.com/vcpkg) 获取具体示例，
+其包含 [安装并使用包](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages)，
+[使用压缩文件添加包](https://learn.microsoft.com/vcpkg/examples/packaging-zipfiles)
+和 [从 GitHub 源中添加一个包](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos)。
 
 我们的文档现在也可以从 [vcpkg.io](https://vcpkg.io/) 在线获取。
 我们真诚的希望您向我们提出关于此网站的任何建议! 请在[这里](https://github.com/vcpkg/vcpkg.github.io/issues) 创建 issue.

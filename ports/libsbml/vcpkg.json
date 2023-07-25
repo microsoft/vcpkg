@@ -1,10 +1,11 @@
 {
   "name": "libsbml",
   "version": "5.20.0",
+  "port-version": 1,
   "description": "A library for reading / writing SBML files",
   "homepage": "https://github.com/sbmlteam/libsbml",
   "license": "LGPL-2.1",
-  "supports": "!uwp",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -64,7 +65,15 @@
       "description": "support for Qualitative Modeling"
     },
     "render": {
-      "description": "support for Rendering information"
+      "description": "support for Rendering information",
+      "dependencies": [
+        {
+          "name": "libsbml",
+          "features": [
+            "layout"
+          ]
+        }
+      ]
     },
     "test": {
       "description": "Unit testing of libSBMLs implementation",
