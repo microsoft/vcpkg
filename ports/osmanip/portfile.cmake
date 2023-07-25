@@ -19,7 +19,10 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/osmanip)
 
 # Remove duplicate files
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib" 
+                    "${CURRENT_PACKAGES_DIR}/lib"
+                    "${CURRENT_PACKAGES_DIR}/debug")
 
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
