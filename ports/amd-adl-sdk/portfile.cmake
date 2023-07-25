@@ -8,4 +8,9 @@ vcpkg_from_github(
 
 # Install the ADL headers to the default vcpkg location
 file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT.md")
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" [[As of 2023-07-25, according to
+https://github.com/GPUOpen-LibrariesAndSDKs/display-library/blob/master/Public-Documents/README.md#end-user-license-agreement
+this software is bound by the "SOFTWARE DEVELOPMENT KIT LICENSE AGREEMENT" PDF located at
+https://github.com/GPUOpen-LibrariesAndSDKs/display-library/blob/master/Public-Documents/ADL%20SDK%20EULA.pdf
+]])
