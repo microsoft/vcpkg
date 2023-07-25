@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_openni2.patch
+        fix-osx.patch # from https://github.com/IntelRealSense/librealsense/pull/11997
 )
 
 file(COPY "${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf" DESTINATION "${SOURCE_PATH}")
