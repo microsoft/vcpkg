@@ -3,15 +3,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO JustWhit3/osmanip
     REF "v${VERSION}"
-    SHA512 cbbae779435bec3995756e1dbc8c283868dd923453054177dfa73bc00ac3510488467e535a1c4b14726f02d198f298eaeb884c1716dcde07e9aec06d02b22d32
+    SHA512 7735c9898b2eec3e43c7b683b4dceefd01b80027a17bbf95a7b346d10cf46ec8edf34268580d39affc5987d822b2df333e1be06b23e1d3f87e193671e9229235
     HEAD_REF main
 )
 
 # Main commands
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DOSMANIP_TESTS=OFF
 )
 vcpkg_cmake_install()
 
