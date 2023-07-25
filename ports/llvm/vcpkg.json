@@ -5,7 +5,7 @@
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
-  "supports": "!uwp & !(arm & windows)",
+  "supports": "!static & x64 & windows",
   "dependencies": [
     {
       "name": "atlmfc",
