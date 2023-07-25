@@ -1,7 +1,7 @@
 {
   "name": "plf-nanotimer",
-  "version-string": "2019-08-10",
-  "port-version": 1,
+  "version-date": "2019-08-10",
+  "port-version": 2,
   "description": "A simple C++ 03/11/etc timer class for ~microsecond-precision cross-platform benchmarking",
   "homepage": "https://www.plflib.org/"
 }

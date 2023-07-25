@@ -1,9 +1,9 @@
 # Glib uses winapi functions not available in WindowsStore
-
+string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIBMM_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIBMM_ARCHIVE
-    URLS "https://ftp.gnome.org/pub/GNOME/sources/glibmm/2.74/glibmm-2.74.0.tar.xz"
-    FILENAME "glibmm-2.74.0.tar.xz"
-    SHA512 29c16a6c921fb135721c39b5328e0b45e09c500c65175199c1ec5ee75bdd5fb907072389c6980da3bf8fac0846235af5580f692706eb00d26947804daa1c99c9
+    URLS "https://ftp.gnome.org/pub/GNOME/sources/glibmm/${GLIBMM_MAJOR_MINOR}/glibmm-${VERSION}.tar.xz"
+    FILENAME "glibmm-${VERSION}.tar.xz"
+    SHA512 be49599f5eb8eb5a1cef015cdb37af2564fcd1ea845aa4344804ca5f0f61468949711e25cefebb93219e1be37128ebfdd2a816324e752ac4395b4b87c072fc78
 )
 
 vcpkg_extract_source_archive(

@@ -35,24 +35,28 @@ macro(z_vcpkg_determine_autotools_target_cpu out_var)
     endif()
 endmacro()
 
+macro(z_vcpkg_set_arch_mac out_var value)
+    # Better match the arch behavior of config.guess
+    # See: https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD
+    if("${value}" MATCHES "^(ARM|arm)64$")
+        set(${out_var} "aarch64")
+    else()
+        set(${out_var} "${value}")
+    endif()
+endmacro()
+
 macro(z_vcpkg_determine_autotools_host_arch_mac out_var)
-    set(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
+    z_vcpkg_set_arch_mac(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
 endmacro()
 
 macro(z_vcpkg_determine_autotools_target_arch_mac out_var)
     list(LENGTH VCPKG_OSX_ARCHITECTURES osx_archs_num)
     if(osx_archs_num EQUAL 0)
-        set(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
+        z_vcpkg_set_arch_mac(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
     elseif(osx_archs_num GREATER_EQUAL 2)
         set(${out_var} "universal")
     else()
-        # Better match the arch behavior of config.guess
-        # See: https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD
-        if(VCPKG_OSX_ARCHITECTURES MATCHES "^(ARM|arm)64$")
-            set(${out_var} "aarch64")
-        else()
-            set(${out_var} "${VCPKG_OSX_ARCHITECTURES}")
-        endif()
+        z_vcpkg_set_arch_mac(${out_var} "${VCPKG_OSX_ARCHITECTURES}")
     endif()
     unset(osx_archs_num)
 endmacro()
@@ -136,6 +140,23 @@ function(vcpkg_configure_make)
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")
 
+    # Remove outer quotes from cmake variables which will be forwarded via makefile/shell variables
+    # substituted into makefile commands (e.g. Android NDK has "--sysroot=...")
+    foreach(var IN ITEMS VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_DEBUG
+                         VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE
+                         VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES
+                         VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES
+    )
+        separate_arguments(cmake_list NATIVE_COMMAND "${${var}}")
+        list(JOIN cmake_list " " "${var}")
+    endforeach()
+
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
     endif()
@@ -201,7 +222,56 @@ function(vcpkg_configure_make)
 
     set(configure_env "V=1")
 
-    # macOS - cross-compiling support
+    # Establish a bash environment as expected by autotools.
+    if(CMAKE_HOST_WIN32)
+        list(APPEND msys_require_packages autoconf-wrapper automake-wrapper binutils libtool make pkgconf which)
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${msys_require_packages} ${arg_ADDITIONAL_MSYS_PACKAGES})
+        set(base_cmd "${MSYS_ROOT}/usr/bin/bash.exe" --noprofile --norc --debug)
+        vcpkg_list(SET add_to_env)
+        if(arg_USE_WRAPPERS AND VCPKG_TARGET_IS_WINDOWS)
+            vcpkg_list(APPEND add_to_env "${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
+            vcpkg_list(APPEND add_to_env "${MSYS_ROOT}/usr/share/automake-1.16")
+        endif()
+        cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
+        cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
+        cmake_path(CONVERT "$ENV{LOCALAPPDATA}" TO_CMAKE_PATH_LIST local_app_data NORMALIZE)
+        file(REAL_PATH "${system_root}" system_root)
+
+        message(DEBUG "path_list:${path_list}") # Just to have --trace-expand output
+
+        vcpkg_list(SET find_system_dirs 
+            "${system_root}/system32"
+            "${system_root}/System32"
+            "${system_root}/system32/"
+            "${system_root}/System32/"
+            "${local_app_data}/Microsoft/WindowsApps"
+            "${local_app_data}/Microsoft/WindowsApps/"
+        )
+
+        string(TOUPPER "${find_system_dirs}" find_system_dirs_upper)
+
+        set(index 0)
+        set(appending TRUE)
+        foreach(item IN LISTS path_list)
+            if(item IN_LIST find_system_dirs OR item IN_LIST find_system_dirs_upper)
+                set(appending FALSE)
+                break()
+            endif()
+            math(EXPR index "${index} + 1")
+        endforeach()
+
+        if(appending)
+            message(WARNING "Unable to find system dir in the PATH variable! Appending required msys paths!")
+        endif()
+        vcpkg_list(INSERT path_list "${index}" ${add_to_env} "${MSYS_ROOT}/usr/bin")
+
+        cmake_path(CONVERT "${path_list}" TO_NATIVE_PATH_LIST native_path_list)
+        set(ENV{PATH} "${native_path_list}")
+    else()
+        find_program(base_cmd bash REQUIRED)
+    endif()
+
+   # macOS - cross-compiling support
     if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
         if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
@@ -232,13 +302,9 @@ function(vcpkg_configure_make)
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
         endif()
     endif()
-    
+
     # Pre-processing windows configure requirements
     if (VCPKG_TARGET_IS_WINDOWS)
-        if(CMAKE_HOST_WIN32)
-            list(APPEND msys_require_packages binutils libtool autoconf automake-wrapper automake1.16 m4 which)
-            vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${msys_require_packages} ${arg_ADDITIONAL_MSYS_PACKAGES})
-        endif()
         if (arg_DETERMINE_BUILD_TRIPLET OR NOT arg_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
             z_vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
@@ -267,46 +333,6 @@ function(vcpkg_configure_make)
                 string(APPEND arg_BUILD_TRIPLET " --host=${TARGET_ARCH}-unknown-mingw32")
             endif()
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
-        endif()
-        if(CMAKE_HOST_WIN32)
-            vcpkg_list(SET add_to_env)
-            if(arg_USE_WRAPPERS)
-                vcpkg_list(APPEND add_to_env "${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
-                vcpkg_list(APPEND add_to_env "${MSYS_ROOT}/usr/share/automake-1.16")
-            endif()
-            cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
-            cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
-            file(REAL_PATH "${system_root}" system_root)
-
-            message(DEBUG "path_list:${path_list}") # Just to have --trace-expand output
-
-            set(find_system_dirs 
-                    "${system_root}/system32"
-                    "${system_root}/System32"
-                    "${system_root}/system32/"
-                    "${system_root}/System32/")
-
-            string(TOUPPER "${find_system_dirs}" find_system_dirs_upper)
-
-            set(index "-1")
-            foreach(system_dir IN LISTS find_system_dirs find_system_dirs_upper)
-                list(FIND path_list "${system_dir}" index)
-                if(NOT index EQUAL "-1")
-                    break()
-                endif()
-            endforeach()
-
-            if(index GREATER_EQUAL "0")
-                vcpkg_list(INSERT path_list "${index}" ${add_to_env} "${MSYS_ROOT}/usr/bin")
-            else()
-                message(WARNING "Unable to find system32 dir in the PATH variable! Appending required msys paths!")
-                vcpkg_list(APPEND path_list ${add_to_env} "${MSYS_ROOT}/usr/bin")
-            endif()
-
-            cmake_path(CONVERT "${path_list}" TO_NATIVE_PATH_LIST native_path_list)
-            set(ENV{PATH} "${native_path_list}")
-
-            set(bash_executable "${MSYS_ROOT}/usr/bin/bash.exe")
         endif()
 
         # Remove full filepaths due to spaces and prepend filepaths to PATH (cross-compiling tools are unlikely on path by default)
@@ -517,13 +543,6 @@ function(vcpkg_configure_make)
     endif()
 
     file(RELATIVE_PATH relative_build_path "${CURRENT_BUILDTREES_DIR}" "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}")
-
-    set(base_cmd)
-    if(CMAKE_HOST_WIN32)
-        set(base_cmd ${bash_executable} --noprofile --norc --debug)
-    else()
-        find_program(base_cmd bash REQUIRED)
-    endif()
 
     # Used by CL 
     vcpkg_host_path_list(PREPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
@@ -787,6 +806,8 @@ function(vcpkg_configure_make)
         if(LINK_ENV_${current_buildtype})
             set(link_config_backup "$ENV{_LINK_}")
             set(ENV{_LINK_} "${LINK_ENV_${current_buildtype}}")
+        else()
+            unset(link_config_backup)
         endif()
 
         vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH) # LD_LIBRARY_PATH)
@@ -826,9 +847,8 @@ function(vcpkg_configure_make)
         endif()
         z_vcpkg_restore_pkgconfig_path()
         
-        if(link_config_backup)
+        if(DEFINED link_config_backup)
             set(ENV{_LINK_} "${link_config_backup}")
-            unset(link_config_backup)
         endif()
         
         if(arg_ADD_BIN_TO_PATH)

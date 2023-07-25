@@ -23,7 +23,7 @@ vcpkg_from_github(
     PATCHES
         FindLZMA.patch
         FindLZ4.patch
-        Findproj.patch
+        libproj.patch
         pegtl.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type.
@@ -40,12 +40,18 @@ vcpkg_from_github(
         iotr.patch
         ${STRING_PATCH}
         9690.diff
+        missing-include-fixes.patch
 )
 
 # =============================================================================
 #Overwrite outdated modules if they have not been patched:
 file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
 # =============================================================================
+
+if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
+    message(WARNING "${HDF5_WITH_PARALLEL} Enabling MPI in vtk.")
+    list(APPEND FEATURES "mpi")
+endif()
 
 # =============================================================================
 # Options:

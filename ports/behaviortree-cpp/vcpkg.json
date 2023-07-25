@@ -1,12 +1,19 @@
 {
   "name": "behaviortree-cpp",
-  "version": "3.5.6",
-  "port-version": 2,
+  "version": "4.1.1",
   "description": "Behavior Trees Library in C++.",
   "homepage": "https://www.behaviortree.dev",
   "supports": "!uwp",
   "dependencies": [
     "boost-coroutine2",
-    "cppzmq"
+    "cppzmq",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

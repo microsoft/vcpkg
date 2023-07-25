@@ -1,20 +1,30 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/hidapi
-    REF hidapi-0.13.1
-    SHA512 07b224b9b5146caf693e6d67514fed236436ed68f38a3ada98ebf8352dfaa4e175f576902affb4b79da1bb8c9b47a1ee0831a93c7d3d210e93faee24632f7d53
+    REF hidapi-${VERSION}
+    SHA512 66a045144f90b41438898b82f0398e80223323ebfe6e4f197d2713696bb3ae60f36aea5a37a9999b34b12294783fd7e4c28c6e785462559cbe21276009da1eac
     HEAD_REF master
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+FEATURES
+    "pp-data-dump"           HIDAPI_BUILD_PP_DATA_DUMP
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS -DHIDAPI_BUILD_HIDTEST=OFF
+    ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+
+if ("pp-data-dump" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES pp_data_dump AUTO_CLEAN)
+endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/hidapi/libhidapi.cmake" "\"/hidapi\"" "\"\${_IMPORT_PREFIX}/include\"")
 

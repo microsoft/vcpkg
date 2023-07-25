@@ -1,8 +1,8 @@
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO DragonJoker/RenderGraph
-    REF v1.2.0
+    REF v${VERSION}
     HEAD_REF master
-    SHA512 54f2b06931ef912888ae12227b39b17d25969dd5443a37d61cb8072b0137ed6361b03e09ac18e7abe21dfd49b5a5a2ec23f0d2d8e9ede03ddb8fb589d874237c
+    SHA512 48bb3211022499538eebca0051f931ec105af9ccd3fea21d546fcd9cb41bc9d2191c70382e00caaf79fce48303e56d83d7089f7b975f635bcef3645c80abda30
 )
 
 vcpkg_from_github(OUT_SOURCE_PATH CMAKE_SOURCE_PATH
@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
         -DVULKAN_HEADERS_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include
 )
 
+vcpkg_copy_pdbs()
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/RenderGraph)
 

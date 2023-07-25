@@ -6,43 +6,43 @@ vcpkg_from_github(
     PATCHES 
         fix-pkg-prefix.patch 
         fix-pkgconfig.patch 
-        fix-windows-static-findfluidsynth.patch
-        fix-missing-find-opusfile.patch
-        fix-deps-link.patch
+        fix-deps-targets.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        fluidsynth SDL2MIXER_MIDI
         fluidsynth SDL2MIXER_MIDI_FLUIDSYNTH
+        libflac SDL2MIXER_FLAC
         libflac SDL2MIXER_FLAC_LIBFLAC
         libmodplug SDL2MIXER_MOD
         libmodplug SDL2MIXER_MOD_MODPLUG
-        libvorbis SDL2MIXER_VORBIS_VORBISFILE
+        mpg123 SDL2MIXER_MP3
         mpg123 SDL2MIXER_MP3_MPG123
-        nativemidi SDL2MIXER_MIDI_NATIVE
         opusfile SDL2MIXER_OPUS
-    INVERTED_FEATURES
-        libflac SDL2MIXER_FLAC_DRFLAC
-        mpg123 SDL2MIXER_MP3_DRMP3
 )
 
-if(FEATURE_OPTIONS MATCHES "SDL2MIXER_VORBIS_VORBISFILE=ON")
-    set(VORBIS_BACKEND "VORBISFILE")
-else()
-    set(VORBIS_BACKEND "STB")    
+if("fluidsynth" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    list(APPEND EXTRA_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${EXTRA_OPTIONS}
         -DSDL2MIXER_VENDORED=OFF
         -DSDL2MIXER_SAMPLES=OFF
         -DSDL2MIXER_DEPS_SHARED=OFF
         -DSDL2MIXER_OPUS_SHARED=OFF
         -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF
-        -DSDL2MIXER_VORBIS=${VORBIS_BACKEND}
+        -DSDL2MIXER_VORBIS="VORBISFILE"
+        -DSDL2MIXER_FLAC_DRFLAC=OFF
+        -DSDL2MIXER_MIDI_NATIVE=OFF
+        -DSDL2MIXER_MIDI_TIMIDITY=OFF
+        -DSDL2MIXER_MP3_DRMP3=OFF
 )
 
 vcpkg_cmake_install()

@@ -41,8 +41,13 @@ endif()
 
 # OpenGL backend
 if(USE_OPENGL)
+    list(APPEND ANGLE_SOURCES
+        ${angle_translator_glsl_base_sources}
+        ${angle_translator_glsl_sources}
+        ${angle_translator_apple_sources}
+    )
     # Enable GLSL compiler output.
-    list(APPEND ANGLE_DEFINITIONS ANGLE_ENABLE_GLSL)
+    list(APPEND ANGLE_DEFINITIONS ANGLE_ENABLE_GLSL ANGLE_ENABLE_GL_DESKTOP_BACKEND ANGLE_ENABLE_APPLE_WORKAROUNDS)
 endif()
 
 if(USE_ANGLE_EGL OR ENABLE_WEBGL)

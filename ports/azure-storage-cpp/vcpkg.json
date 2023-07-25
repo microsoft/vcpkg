@@ -1,7 +1,7 @@
 {
   "name": "azure-storage-cpp",
-  "version-string": "7.5.0",
-  "port-version": 3,
+  "version": "7.5.0",
+  "port-version": 5,
   "description": [
     "[legacy] Microsoft Azure Storage Client SDK for C++",
     "A client library for working with Microsoft Azure storage services including blobs, files, tables, and queues. This client library enables working with the Microsoft Azure storage services which include the blob service for storing binary and text data, the file service for storing binary and text data, the table service for storing structured non-relational data, and the queue service for storing messages that may be accessed by a client."
@@ -36,6 +36,14 @@
     {
       "name": "libxml2",
       "platform": "!windows & !uwp"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ]
 }

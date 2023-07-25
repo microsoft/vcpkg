@@ -308,4 +308,4 @@ vcpkg collecte des données pour nous aider à améliorer votre expérience.
 Les données collectées par Microsoft sont anonymes.
 Vous pouvez désactiver la télémétrie en relançant le bootstrap-vcpkg avec l'argument `-disableMetrics`, passer l'argument `--disable-metrics` à chaque exécution de vcpkg, ou en créant une variable d'environnement nommée `VCPKG_DISABLE_METRICS`.
 
-Vous trouverez plus d'informations à propos de la télémétrie dans vcpkg sur cette [page](docs/about/privacy.md).
+Vous trouverez plus d'informations à propos de la télémétrie dans vcpkg sur cette [page](https://learn.microsoft.com/vcpkg/about/privacy).

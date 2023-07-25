@@ -57,11 +57,9 @@ function(z_vcpkg_meson_set_proglist_variables config_type)
 endfunction()
 
 function(z_vcpkg_meson_convert_compiler_flags_to_list out_var compiler_flags)
-    string(REPLACE ";" [[\;]] tmp_var "${compiler_flags}")
-    string(REGEX REPLACE [=[( +|^)((\"(\\"|[^"])+"|\\"|\\ |[^ ])+)]=] ";\\2" tmp_var "${tmp_var}")
-    vcpkg_list(POP_FRONT tmp_var) # The first element is always empty due to the above replacement
-    list(TRANSFORM tmp_var STRIP) # Strip leading trailing whitespaces from each element in the list.
-    set("${out_var}" "${tmp_var}" PARENT_SCOPE)
+    separate_arguments(cmake_list NATIVE_COMMAND "${compiler_flags}")
+    list(TRANSFORM cmake_list REPLACE ";" [[\\;]])
+    set("${out_var}" "${cmake_list}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_meson_convert_list_to_python_array out_var)

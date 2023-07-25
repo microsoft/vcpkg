@@ -1,11 +1,11 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-set(MA_VERSION 904)
+set(MA_VERSION 1008)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://monkeysaudio.com/files/MAC_${MA_VERSION}_SDK.zip"
     FILENAME "MAC_${MA_VERSION}_SDK.zip"
-    SHA512 d104421e9bfa8c36dee89bd292c06629ff39a33e84569a5578f4a255432238a0cf09a7d03c5f7df3daf0e41d5cf3ac88f3b58581daf09a94935de91056334681
+    SHA512 0c96b6fa8da9d412679e8c9b43e98d475a650899694a9d085c3b0272775cf229bb09c7c4f24a18ab7ee5516d2d34f7acd59e4216aca8fe08ed04f75e33e29322
 )
 
 vcpkg_extract_source_archive(

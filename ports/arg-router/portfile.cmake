@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO cmannett85/arg_router
     REF v${VERSION}
     HEAD_REF main
-    SHA512 69448b9343247679a7f288c4b69819df68ba8893d3537b2bdfedf77e2c4f8d39696c68f7716eda108810a7b951f2fec57d329d4113623edf2d28c55e3e68329f
+    SHA512 b14f4fadf93ee405d3a0da919c74a5c7e83e012a811246802b05114f466b1d15031c8b912d064d0ea29b3cb86c1bd8fe184e9c80e1700b230e1880f94f204971
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port
@@ -21,21 +21,9 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
-set(CMAKE_FILE_DIR "lib/cmake/arg_router")
-if (WIN32)
-    set(CMAKE_FILE_DIR "cmake")
-elseif (APPLE)
-    set(CMAKE_FILE_DIR "arg_router.framework/Resources/CMake")
-endif()
-
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME arg_router
-    CONFIG_PATH "${CMAKE_FILE_DIR}"
 )
-
-string(FIND "${CMAKE_FILE_DIR}" "/" CMAKE_FILE_DIR_SLASH_IDX)
-string(SUBSTRING "${CMAKE_FILE_DIR}" 0 ${CMAKE_FILE_DIR_SLASH_IDX} CMAKE_FILE_DIR_ROOT)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${CMAKE_FILE_DIR_ROOT}")
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/arg_router/LICENSE"
             "${CURRENT_PACKAGES_DIR}/include/arg_router/README.md"

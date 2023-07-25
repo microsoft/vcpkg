@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/libzmq
-    REF ce6d48c578a08770fb171486750300fd534d0254
-    SHA512 e204db3e40d99df2206f9537bf7dbc9bb8994174f4f9c4770dcc7a92622e6ff0e2b1be537d7fff96cfbdb0cdd0174bfd11ba60d08c4bab0ccb4db3ec25c06593
+    REF ecc63d0d3b0e1a62c90b58b1ccdb5ac16cb2400a
+    SHA512 4e8f709691d8f3f64d41cc0f0fd70fe0a676247dc88b1283fa90f41b838f5b83100ccabd18714e5638cfa66c5cec0ac67943a3559d535357ff3499de62e47069
     PATCHES 
         fix-arm.patch
 )
@@ -15,7 +15,9 @@ vcpkg_check_features(
     FEATURES
         sodium          WITH_LIBSODIUM
         draft           ENABLE_DRAFTS
-        websockets-sha1 ENABLE_WS
+        websockets      ENABLE_WS
+        websockets-secure WITH_TLS
+        curve           ENABLE_CURVE
 )
 
 set(PLATFORM_OPTIONS "")
@@ -32,6 +34,8 @@ vcpkg_cmake_configure(
         -DWITH_PERF_TOOL=OFF
         -DWITH_DOCS=OFF
         -DWITH_NSS=OFF
+        -DWITH_LIBBSD=OFF
+        -DCMAKE_REQUIRE_FIND_PACKAGE_GnuTLS=ON
         -DWITH_LIBSODIUM_STATIC=${BUILD_STATIC}
         ${FEATURE_OPTIONS}
         ${PLATFORM_OPTIONS}
@@ -39,6 +43,9 @@ vcpkg_cmake_configure(
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
     MAYBE_UNUSED_VARIABLES
         USE_PERF_TOOLS
+        CMAKE_REQUIRE_FIND_PACKAGE_GnuTLS
+        WITH_LIBBSD
+        WITH_TLS
 )
 
 vcpkg_cmake_install()
@@ -61,8 +68,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/zmq/COPYING.LESSER.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/zmq")
 
 vcpkg_fixup_pkgconfig()

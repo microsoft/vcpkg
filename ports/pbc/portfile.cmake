@@ -1,17 +1,15 @@
-set(PBC_VERSION 0.5.14)
-
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(
         ARCHIVE
-        URLS "https://crypto.stanford.edu/pbc/files/pbc-${PBC_VERSION}.tar.gz"
-        FILENAME pbc-${PBC_VERSION}.tar.gz
+        URLS "https://crypto.stanford.edu/pbc/files/pbc-${VERSION}.tar.gz"
+        FILENAME pbc-${VERSION}.tar.gz
         SHA512 d75d4ceb3f67ee62c7ca41e2a91ee914fbffaeb70256675aed6734d586950ea8e64e2f16dc069d71481eddb703624df8d46497005fb58e75cf098dd7e7961333
     )
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE ${ARCHIVE}
-        REF ${PBC_VERSION}
+        SOURCE_BASE "${VERSION}"
         PATCHES linux.patch
     )
 
@@ -27,7 +25,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS ${SHARED_STATIC} LEX=${FLEX} YACC=${BISON}\ -y)
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         COPY_SOURCE
         OPTIONS
@@ -36,8 +34,8 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_install_make()
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/info)
-    file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/info")
+    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 else()
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
     vcpkg_from_github(
@@ -105,9 +103,10 @@ else()
         OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
         OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
         OPTIONS /p:SolutionDir=../
-        ALLOW_ROOT_INCLUDES ON
+        ALLOW_ROOT_INCLUDES
     )
 
     # clean up mpir stuff
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/mpir.lib ${CURRENT_PACKAGES_DIR}/debug/lib/mpir.lib)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/mpir.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/mpir.lib")
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-pbc-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
 endif()

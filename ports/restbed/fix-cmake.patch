@@ -54,7 +54,7 @@ index e6095da..6bf8d81 100644
  
  if ( BUILD_TESTS )
      find_package( catch REQUIRED )
-@@ -119,5 +133,21 @@ file( GLOB ARTIFACTS "${SOURCE_DIR}/*.hpp" )
+@@ -119,5 +133,26 @@ file( GLOB ARTIFACTS "${SOURCE_DIR}/*.hpp" )
  
  install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "${CMAKE_INSTALL_PREFIX}/include" )
  install( FILES ${ARTIFACTS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/corvusoft/${PROJECT_NAME}" )
@@ -74,6 +74,11 @@ index e6095da..6bf8d81 100644
 +    find_dependency(OpenSSL)
 +endif()
 +include("${CMAKE_CURRENT_LIST_DIR}/unofficial-restbed-target.cmake")
++if("@BUILD_SHARED_LIBS@")
++    add_library(unofficial::restbed::restbed ALIAS unofficial::restbed::restbed-shared)
++else()
++    add_library(unofficial::restbed::restbed ALIAS unofficial::restbed::restbed-static)
++endif()
 +]])
 +
 +configure_file( "${CMAKE_CURRENT_BINARY_DIR}/unofficial-restbed-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-restbed-config.cmake" @ONLY)

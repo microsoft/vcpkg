@@ -15,14 +15,12 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindOpenEXR.cmake")
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OPENVDB_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPENVDB_SHARED)
 
-set(OPENVDB_BUILD_TOOLS OFF)
-if ("tools" IN_LIST FEATURES)
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(OPENVDB_BUILD_TOOLS ON)
-  else()
-    message(FATAL_ERROR "Unable to build tools if static libraries are required")
-  endif()
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "tools" OPENVDB_BUILD_TOOLS
+)
+
 
 if ("ax" IN_LIST FEATURES)
   if(NOT VCPKG_TARGET_IS_WINDOWS)

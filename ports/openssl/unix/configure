@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -15,7 +15,7 @@ for OPTION; do
         INTERPRETER="${LAST_SEEN}"
         COPY_OPTIONS=yes
         ;;
-    --prefix=*|--openssldir=*|--libdir=*|--debug,*)
+    --prefix=*|--openssldir=*|--libdir=*|--cross-compile-prefix=*|--debug,*)
         OUT_OPTIONS+=("${OPTION}")
         ;;
     -*|*=*)

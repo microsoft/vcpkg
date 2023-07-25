@@ -1,19 +1,42 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO breakfastquay/rubberband
-    REF v3.1.1
-    SHA512 aef4de02b6fe250ab43d627d30720dab8aea3587b428ce76fe339d0b1f0e50da6ba7fa7c76f61306704dd2cfc24241f3d4108b6c155c3d12624eac859672f86c
+    REF "v${VERSION}"
+    SHA512 811a8dbf05fbee3e4631b49fee9fd0e23ea750ac24a9a16f20e6a7ea07e683783a9edf980c43e732b64c229db29ade3575938c4e6f9db8c4255b220eb30d9dcc
     HEAD_REF default
 )
+
+
+if("cli" IN_LIST FEATURES)
+    set(CLI_FEATURE enabled)
+else()    
+    set(CLI_FEATURE disabled)
+endif()
+
+# Select fastest available FFT library according https://github.com/breakfastquay/rubberband/blob/default/COMPILING.md#fft-libraries-supported
+if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
+    set(FFT_LIB "fftw")
+elseif(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(FFT_LIB "fftw")
+else()
+    set(FFT_LIB "sleef")
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -Dfft=fftw                 # 'auto', 'builtin', 'kissfft', 'fftw', 'vdsp', 'ipp' 'FFT library to use. The default (auto) will use vDSP if available, the builtin implementation otherwise.')
-        -Dresampler=libsamplerate  # 'auto', 'builtin', 'libsamplerate', 'speex', 'ipp' 'Resampler library to use. The default (auto) simply uses the builtin implementation.'
+        -Dfft=${FFT_LIB}           # 'auto', 'builtin', 'kissfft', 'fftw', sleef', 'vdsp', 'ipp' 'FFT library to use. The default (auto) will use vDSP if available, the builtin implementation otherwise.')
+        -Dresampler=libsamplerate  # 'auto', 'builtin', 'libsamplerate', 'speex', 'libspeexdsp', 'ipp' 'Resampler library to use. The default (auto) simply uses the builtin implementation.'
         -Dipp_path=                # 'Path to Intel IPP libraries, if selected for any of the other options.'
         -Dextra_include_dirs=      # 'Additional local header directories to search for dependencies.'
         -Dextra_lib_dirs=          # 'Additional local library directories to search for dependencies.'
+        -Djni=disabled             # 'auto', 'disabled', 'enabled'
+        -Dladspa=disabled          # 'auto', 'disabled', 'enabled'
+        -Dlv2=disabled             # 'auto', 'disabled', 'enabled' lv2 feature is not yet supported yet because vcpkg can't isntall to 
+                                   # %APPDATA%\LV2 or %COMMONPROGRAMFILES%\LV2 but also complains about dlls in "${CURRENT_PACKAGES_DIR}/lib/lv2"
+        -Dvamp=disabled           # 'auto', 'disabled', 'enabled'
+        -Dcmdline=${CLI_FEATURE}   # 'auto', 'disabled', 'enabled'
+        -Dtests=disabled           # 'auto', 'disabled', 'enabled'
     )
 
 vcpkg_install_meson()
@@ -29,17 +52,10 @@ else()
   set(RUBBERBAND_PROGRAM_NAMES rubberband rubberband-r3)
 endif()
 
-# Features cli and lv2 are build whenever suficient dependencies are installed,
 # Remove them when not enabled.
 if("cli" IN_LIST FEATURES)
   vcpkg_copy_tools(TOOL_NAMES ${RUBBERBAND_PROGRAM_NAMES} AUTO_CLEAN)
-else()
-  vcpkg_clean_executables_in_bin(FILE_NAMES ${RUBBERBAND_PROGRAM_NAMES})
 endif()
-
-# lv2 feature is not supported yet because vcpkg can't isntall to
-# %APPDATA%\LV2 or %COMMONPROGRAMFILES%\LV2 but also complains about dlls in "${CURRENT_PACKAGES_DIR}/lib/lv2"
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/lv2" "${CURRENT_PACKAGES_DIR}/debug/lib/lv2")
 
 file(
   INSTALL "${SOURCE_PATH}/COPYING"

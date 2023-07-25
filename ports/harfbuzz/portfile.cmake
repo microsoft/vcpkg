@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF "${VERSION}"
-    SHA512 7a96b5ffc1c15c919275dad9456575fe12dfa54883fecad5fd42c0e3c64360178425f70d2fbe3c44f39a61361320b4a6ec8af7c4f8378ad788d460a609f3e224
+    REF ${VERSION}
+    SHA512 bfad0310f0f20a900b02f3f061920e7488d4565292864eb349e71a9597a10b2305fdeb1b19ac1975444d59f7903e5308961e4b84e33c25aa23d6e588536c5c5d
     HEAD_REF master
-    PATCHES
 )
 
 if("icu" IN_LIST FEATURES)
@@ -97,7 +96,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure hb-info)
 endif()
 if(TOOL_NAMES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
@@ -107,4 +106,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

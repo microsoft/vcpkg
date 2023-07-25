@@ -7,10 +7,10 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 4ec7b94e537df109638b821f3a7e3b7bf31d89c3739a6e4c85cad4fab876390ae482971d6f66198818400f467661e86f39dc1d2a4a88077fd81e3a0b7ed64110
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF "${VERSION}"
+    SOURCE_BASE "${VERSION}"
     PATCHES
         "01-nspr-no-lib-prefix.patch"
         "02-gen-debug-info-for-release.patch"

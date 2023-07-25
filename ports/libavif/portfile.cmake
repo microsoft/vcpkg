@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         disable-source-utf8.patch
         fix-compiler-warnings.patch
+        find-dependency.patch # from https://github.com/AOMediaCodec/libavif/pull/1339
 )
 
 vcpkg_cmake_configure(
@@ -14,6 +15,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DAVIF_CODEC_AOM=ON
         -DAVIF_BUILD_APPS=OFF
+        -DCMAKE_REQUIRE_FIND_PACKAGE_libyuv=ON
 )
 
 vcpkg_cmake_install()

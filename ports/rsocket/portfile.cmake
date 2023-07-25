@@ -14,6 +14,7 @@ vcpkg_from_github(
     fix-find-dependencies.patch
     use-cpp-17.patch
     fix-folly.patch
+    fix-rsockserver-build-error.patch
 )
 
 vcpkg_cmake_configure(
