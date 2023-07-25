@@ -7586,7 +7586,7 @@
     },
     "sleef": {
       "baseline": "3.5.1",
-      "port-version": 4
+      "port-version": 5
     },
     "sleepy-discord": {
       "baseline": "2022-02-05",
