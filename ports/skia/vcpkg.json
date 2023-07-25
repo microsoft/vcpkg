@@ -43,7 +43,10 @@
   ],
   "features": {
     "dawn": {
-      "description": "dawn support for skia"
+      "description": "dawn support for skia",
+      "dependencies": [
+        "vulkan-headers"
+      ]
     },
     "default-features": {
       "description": "Default feature configuration",
@@ -136,6 +139,7 @@
     "vulkan": {
       "description": "Vulkan support for skia",
       "dependencies": [
+        "vulkan-headers",
         "vulkan-memory-allocator"
       ]
     }

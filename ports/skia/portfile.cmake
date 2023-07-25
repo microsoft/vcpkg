@@ -77,11 +77,6 @@ declare_external_from_git(tint
     REF "200492e32b94f042d9942154fb4fa7f93bb8289a"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(vulkan-headers
-    URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Headers"
-    REF "c896e2f920273bfee852da9cca2a356bc1c2031e"
-    LICENSE_FILE LICENSE.txt
-)
 declare_external_from_git(vulkan-tools
     URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Tools"
     REF "d55c7aaf041af331bee8c22fb448a6ff4c797f73"
@@ -97,6 +92,8 @@ declare_external_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES
 declare_external_from_pkgconfig(libpng)
 declare_external_from_pkgconfig(libwebp MODULES libwebpdecoder libwebpdemux libwebpmux libwebp)
 declare_external_from_pkgconfig(zlib)
+
+declare_external_from_vcpkg(vulkan-headers)
 
 set(known_cpus x86 x64 arm arm64 wasm)
 if(NOT VCPKG_TARGET_ARCHITECTURE IN_LIST known_cpus)
