@@ -178,8 +178,17 @@ if("metal" IN_LIST FEATURES)
 endif()
 
 if("vulkan" IN_LIST FEATURES)
+    list(APPEND required_externals
+        vulkan-headers
+        vulkan-tools
+    )
     string(APPEND OPTIONS " skia_use_vulkan=true")
-    file(COPY "${CURRENT_INSTALLED_DIR}/include/vk_mem_alloc.h" DESTINATION "${SOURCE_PATH}/third_party/vulkanmemoryallocator")
+    file(COPY "${CURRENT_INSTALLED_DIR}/include/vk_mem_alloc.h" DESTINATION "${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include")
+    # Cf. third_party/vulkanmemoryallocator/GrVulkanMemoryAllocator.h:25
+    vcpkg_replace_string("${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include/vk_mem_alloc.h"
+        "#include <vulkan/vulkan.h>"
+        "#ifndef VULKAN_H_\n    #include <vulkan/vulkan.h>\n#endif"
+    )
 endif()
 
 if("direct3d" IN_LIST FEATURES)
@@ -230,6 +239,7 @@ They can be installed on Debian based systems via
     )
 endif()
 
+list(REMOVE_DUPLICATES required_externals)
 get_externals(${required_externals})
 if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py")
     vcpkg_find_acquire_program(GIT)
