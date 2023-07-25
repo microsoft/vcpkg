@@ -236,7 +236,6 @@ They can be installed on Debian based systems via
     )
 endif()
 
-list(REMOVE_DUPLICATES required_externals)
 get_externals(${required_externals})
 if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py")
     vcpkg_find_acquire_program(GIT)
