@@ -52,14 +52,18 @@ else()
     endif()
 
     vcpkg_list(SET make_options "EXECUTABLE_SUFFIX=${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    set(strip_options "") # cf. src/Makefile
     if(VCPKG_TARGET_IS_OSX)
         vcpkg_list(APPEND make_options "TARGET_SYS=Darwin")
+        set(strip_options " -x")
     elseif(VCPKG_TARGET_IS_IOS)
         vcpkg_list(APPEND make_options "TARGET_SYS=iOS")
+        set(strip_options " -x")
     elseif(VCPKG_TARGET_IS_LINUX)
         vcpkg_list(APPEND make_options "TARGET_SYS=Linux")
     elseif(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_list(APPEND make_options "TARGET_SYS=Windows")
+        set(strip_options " --strip-unneeded")
     endif()
 
     set(dasm_archs "")
@@ -84,7 +88,7 @@ else()
         OPTIONS
             ${make_options}
             "TARGET_AR=${VCPKG_DETECTED_CMAKE_AR} rcus"
-            "TARGET_STRIP=${VCPKG_DETECTED_CMAKE_STRIP}"
+            "TARGET_STRIP=${VCPKG_DETECTED_CMAKE_STRIP}${strip_options}"
     )
 endif()
 

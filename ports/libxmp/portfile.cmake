@@ -22,6 +22,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_SHARED=${BUILD_SHARED}
+        -DLIBXMP_DOCS=OFF
 )
 
 vcpkg_cmake_install()
@@ -38,4 +39,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(INSTALL "${SOURCE_PATH}/docs/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/COPYING.LIB")

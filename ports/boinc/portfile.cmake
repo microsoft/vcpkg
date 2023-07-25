@@ -30,8 +30,15 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
     endif()
 endif()
 
+set(build_options "")
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND build_options "-DHAVE_STRCASECMP=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        ${build_options}
 )
 
 vcpkg_cmake_install()

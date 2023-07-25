@@ -1,0 +1,69 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4406362..62d7f50 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -461,33 +461,28 @@ if (BUILD_SQLITE)
+ endif (BUILD_SQLITE)
+ 
+ if (BUILD_REDIS)
+-    find_package(Hiredis)
+-    if (Hiredis_FOUND)
+-        add_definitions(-DUSE_REDIS)
+-        target_link_libraries(${PROJECT_NAME} PRIVATE Hiredis_lib)
+-        set(DROGON_SOURCES
+-            ${DROGON_SOURCES}
+-            nosql_lib/redis/src/RedisClientImpl.cc
+-            nosql_lib/redis/src/RedisClientLockFree.cc
+-            nosql_lib/redis/src/RedisClientManager.cc
+-            nosql_lib/redis/src/RedisConnection.cc
+-            nosql_lib/redis/src/RedisResult.cc
+-            nosql_lib/redis/src/RedisTransactionImpl.cc
+-            nosql_lib/redis/src/SubscribeContext.cc
+-            nosql_lib/redis/src/RedisSubscriberImpl.cc)
+-        set(private_headers
+-            ${private_headers}
+-            nosql_lib/redis/src/RedisClientImpl.h
+-            nosql_lib/redis/src/RedisClientLockFree.h
+-            nosql_lib/redis/src/RedisConnection.h
+-            nosql_lib/redis/src/RedisTransactionImpl.h
+-            nosql_lib/redis/src/SubscribeContext.h
+-            nosql_lib/redis/src/RedisSubscriberImpl.h)
+-
+-    endif (Hiredis_FOUND)
+-endif (BUILD_REDIS)
+-
+-if (NOT Hiredis_FOUND)
++    find_package(hiredis CONFIG REQUIRED)
++    add_definitions(-DUSE_REDIS)
++    target_link_libraries(${PROJECT_NAME} PRIVATE hiredis::hiredis)
++    set(DROGON_SOURCES
++        ${DROGON_SOURCES}
++        nosql_lib/redis/src/RedisClientImpl.cc
++        nosql_lib/redis/src/RedisClientLockFree.cc
++        nosql_lib/redis/src/RedisClientManager.cc
++        nosql_lib/redis/src/RedisConnection.cc
++        nosql_lib/redis/src/RedisResult.cc
++        nosql_lib/redis/src/RedisTransactionImpl.cc
++        nosql_lib/redis/src/SubscribeContext.cc
++        nosql_lib/redis/src/RedisSubscriberImpl.cc)
++    set(private_headers
++        ${private_headers}
++        nosql_lib/redis/src/RedisClientImpl.h
++        nosql_lib/redis/src/RedisClientLockFree.h
++        nosql_lib/redis/src/RedisConnection.h
++        nosql_lib/redis/src/RedisTransactionImpl.h
++        nosql_lib/redis/src/SubscribeContext.h
++        nosql_lib/redis/src/RedisSubscriberImpl.h)
++else()
+     set(DROGON_SOURCES
+         ${DROGON_SOURCES}
+         lib/src/RedisClientSkipped.cc
+@@ -496,7 +491,7 @@ if (NOT Hiredis_FOUND)
+     set(private_headers
+         ${private_headers}
+         lib/src/RedisClientManager.h)
+-endif (NOT Hiredis_FOUND)
++endif (BUILD_REIDS)
+ 
+ if (BUILD_TESTING)
+     add_subdirectory(nosql_lib/redis/tests)
