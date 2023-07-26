@@ -82,7 +82,7 @@ endforeach()
 if(EXISTS "${SCRIPTS}/cmake/vcpkg_install_meson.cmake")
     file(READ "${SCRIPTS}/cmake/vcpkg_install_meson.cmake" install_meson)
     string(REPLACE [[COMMAND "${NINJA}"]] [[
-        TIMEOUT 3600
+        TIMEOUT 18000 # 5 h
         COMMAND "${NINJA}"]]
         install_meson "${install_meson}"
     )
