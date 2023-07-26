@@ -18,11 +18,9 @@ This development package can be installed on the system by
 elseif(VCPKG_TARGET_IS_OSX)
     message(WARNING [[
 To build libhdfs3, the following libraries are needed.
-    libuuid
     libgsasl
 These development packages can be installed on the system via
-    git clone https://gitlab.com/gsasl/gsasl.git
-    brew install util-linux;export LDFLAGS="-L/usr/local/opt/util-linux/lib";export CPPFLAGS="-I/usr/local/opt/util-linux/include"
+    git clone https://gitlab.com/gsasl/gsasl.git]])
 endif()
 
 vcpkg_cmake_configure(
