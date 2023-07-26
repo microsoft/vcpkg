@@ -10,19 +10,11 @@ vcpkg_from_github(
 # Main commands
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DCMAKE_BUILD_TYPE=Release
 )
 vcpkg_cmake_install()
 
 # Move cmake configs
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/osmanip)
-
-# Remove duplicate files
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib" 
-                    "${CURRENT_PACKAGES_DIR}/lib"
-                    "${CURRENT_PACKAGES_DIR}/debug")
 
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
