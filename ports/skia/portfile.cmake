@@ -307,7 +307,7 @@ vcpkg_gn_install(
 )
 
 # Use skia repository layout in ${CURRENT_PACKAGES_DIR}/include/skia
-file(COPY "${SOURCE_PATH}/include"
+file(COPY "${SOURCE_PATH}/include/"
           "${SOURCE_PATH}/modules"
           "${SOURCE_PATH}/src"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia"
@@ -316,10 +316,18 @@ file(COPY "${SOURCE_PATH}/include"
 auto_clean("${CURRENT_PACKAGES_DIR}/include/skia")
 set(skia_dll_static "0")
 set(skia_dll_dynamic "1")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/core/SkTypes.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/core/SkTypes.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}")
 
-# vcpkg legacy layout omits "include/" component. Just duplicate.
-file(COPY "${CURRENT_PACKAGES_DIR}/include/skia/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia")
+function(fix_skia_include_path file)
+    vcpkg_replace_string("${file}" "\"include/" "\"skia/")
+    vcpkg_replace_string("${file}" "\"modules/" "\"skia/modules/")
+    vcpkg_replace_string("${file}" "\"src/" "\"skia/src/")
+endfunction(fix_skia_include_path)
+
+file(GLOB_RECURSE SKIA_HEADERS "${CURRENT_PACKAGES_DIR}/include/skia/*.h")
+foreach(header ${SKIA_HEADERS})
+    fix_skia_include_path("${header}")
+endforeach()
 
 get_definitions(SKIA_DEFINITIONS_REL "${desc_release}" "//:skia")
 get_link_libs(SKIA_DEP_REL "${desc_release}" "//:skia")
@@ -339,8 +347,9 @@ file(INSTALL
 )
 file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/example/convert-to-nia.cpp" [[
 // Test for https://github.com/microsoft/vcpkg/issues/27219
-#include "include/core/SkColorSpace.h"
+#include "skia/core/SkColorSpace.h"
 ]])
+fix_skia_include_path("${CURRENT_PACKAGES_DIR}/share/${PORT}/example/convert-to-nia.cpp")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
