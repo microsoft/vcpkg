@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-re2-identifiers.patch
         fix-icui18n-lib-name.patch
         fix-find-protobuf.patch
+        re2-2023-07-01-compat.patch
 )
 
 vcpkg_cmake_configure(

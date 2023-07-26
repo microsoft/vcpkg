@@ -4454,7 +4454,7 @@
     },
     "libphonenumber": {
       "baseline": "8.13.13",
-      "port-version": 0
+      "port-version": 1
     },
     "libplist": {
       "baseline": "1.3.6",
