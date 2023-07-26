@@ -32,8 +32,11 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/lib/plugins/designer"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/plugins/designer"
+)
 file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/data/kf5/kmoretools/presets-kmoretools/_README.md")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/data/kf5/kmoretools/presets-kmoretools/_README.md")
 
