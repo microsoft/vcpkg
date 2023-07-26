@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
         PATCHES
         fix-LNK1107-error.patch
+        fix-undeclared-error.patch
 )
 
 vcpkg_cmake_configure(
