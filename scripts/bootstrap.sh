@@ -190,7 +190,7 @@ elif [ "$ARCH" = "x86_64" ]; then
 else
     echo "Unable to determine a binary release of vcpkg; attempting to build from source."
     vcpkgDownloadTool="OFF"
-    vcpkgToolReleaseSha=$SOURCE_SHA
+    vcpkgToolReleaseSha=$VCPKG_TOOL_SOURCE_SHA
 fi
 
 # Do the download or build.
