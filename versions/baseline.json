@@ -5020,9 +5020,9 @@
       "baseline": "2.0.7",
       "port-version": 1
     },
-    "log4cpp": {
-      "baseline": "2.9.1",
-      "port-version": 8
+    "log4cpp-log4cpp": {
+      "baseline": "1.1.4",
+      "port-version": 0
     },
     "log4cxx": {
       "baseline": "1.0.0",
