@@ -1,13 +1,11 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-set(HALIDE_VERSION_TAG v${VERSION})
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    REF ${HALIDE_VERSION_TAG}
-    SHA512 918cd0a7e69e4414b98f17c5ec5cdb543ce3ae68ed07c9a80b7c0378c247a4a4fde62ade79b402e9ffcfce30c066a3fa662ea46c3a2a5b93eb5ec4e05b3fd808
-    HEAD_REF release/15.x
+    REF "v${VERSION}"
+    SHA512 4fc5253ad0e8fca2fd347ef139c8c150e2fb5dd2351da2b13adb9e00530a9d55943bc4952c1d42706a9ffbb57f81ed2854536d9e2f32dfab0dfc741696cc7e61
+    HEAD_REF main
 )
 
 vcpkg_check_features(
@@ -65,5 +63,5 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME HalideHelpers)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
