@@ -14,7 +14,7 @@ index d2d6812..ac93a8e 100644
  
  # Keep this in sync with llvm/cmake/CMakeLists.txt!
 -set(LLVM_INSTALL_PACKAGE_DIR "${CMAKE_INSTALL_PACKAGEDIR}/llvm" CACHE STRING
-+set(LLVM_INSTALL_PACKAGE_DIR "$share/llvm" CACHE STRING
++set(LLVM_INSTALL_PACKAGE_DIR "share/llvm" CACHE STRING
    "Path for CMake subdirectory for LLVM (defaults to '${CMAKE_INSTALL_PACKAGEDIR}/llvm')")
  # CMAKE_INSTALL_PACKAGEDIR might be absolute, so don't reuse below.
  string(REPLACE "${CMAKE_CFG_INTDIR}" "." llvm_cmake_builddir "${LLVM_LIBRARY_DIR}")
