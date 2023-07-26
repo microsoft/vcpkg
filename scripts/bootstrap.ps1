@@ -63,6 +63,8 @@ if ($LASTEXITCODE -ne 0)
     throw
 }
 
+& "$vcpkgRootDir\vcpkg.exe" version
+
 if ($disableMetrics)
 {
     Set-Content -Value "" -Path "$vcpkgRootDir\vcpkg.disable-metrics" -Force
