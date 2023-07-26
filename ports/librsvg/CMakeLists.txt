@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 3.11)
 project(librsvg C)
 
+set(RSVG_API_MAJOR_VERSION 2)
+set(RSVG_API_VERSION "2.0")
+Set(VERSION "2.40.20")
+set(targets "rsvg-${RSVG_API_MAJOR_VERSION}")
+
+Set(prefix "${CMAKE_INSTALL_PREFIX}")
+Set(exec_prefix "\${prefix}")
+Set(libdir "\${prefix}/lib")
+Set(includedir "\${prefix}/include")
+
 find_package(unofficial-libcroco CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2 gio-2 IMPORTED_TARGET)
@@ -86,10 +96,10 @@ else()
     list(APPEND LIBRSVG_SOURCES rsvg.symbols)
 endif()
 
-add_library(rsvg-2.40 ${LIBRSVG_SOURCES})
+add_library(${targets} ${LIBRSVG_SOURCES})
 add_library(pixbufloader-svg ${PIXBUFLOADERSVG_SOURCES})
 
-target_compile_definitions(rsvg-2.40 PRIVATE -DRSVG_COMPILATION -D_CRT_SECURE_NO_WARNINGS -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}")
+target_compile_definitions(${targets} PRIVATE -DRSVG_COMPILATION -D_CRT_SECURE_NO_WARNINGS -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}")
 
 target_include_directories(pixbufloader-svg PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(pixbufloader-svg PRIVATE 
@@ -99,7 +109,7 @@ target_compile_definitions(pixbufloader-svg PRIVATE
     -DGDK_PIXBUF_ENABLE_BACKEND 
     -DG_LOG_DOMAIN="libpixbufloader-svg")
 
-target_link_libraries(rsvg-2.40 PRIVATE
+target_link_libraries(${targets} PRIVATE
     PkgConfig::GLIB2
     ${LIBXML2_LIBRARIES}
     PkgConfig::PANGO
@@ -108,12 +118,12 @@ target_link_libraries(rsvg-2.40 PRIVATE
     unofficial::libcroco::croco-0.6
 )
 target_link_libraries(pixbufloader-svg PRIVATE
-    rsvg-2.40
+    ${targets}
     PkgConfig::GLIB2
     PkgConfig::GDK_PIXBUF
 )
 
-install(TARGETS rsvg-2.40 pixbufloader-svg
+install(TARGETS ${targets} pixbufloader-svg
     EXPORT librsvg-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
@@ -132,7 +142,7 @@ install(FILES
     rsvg-cairo.h
     librsvg-features.h
     librsvg-enum-types.h
-    DESTINATION include/librsvg
+    DESTINATION include/librsvg-${RSVG_API_VERSION}
 )
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-librsvg-config.cmake "
@@ -147,3 +157,6 @@ find_dependency(unofficial-libcroco CONFIG)
 include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-librsvg-targets.cmake)
 ")
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-librsvg-config.cmake DESTINATION share/unofficial-librsvg)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/librsvg.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/librsvg.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/librsvg.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")

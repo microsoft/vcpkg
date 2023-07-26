@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF 371a8e1373f7b2f66bbb92291be2f3e50dc19856 # pcl-1.13.0
-    SHA512 5c023e46386882d51a5d9a3c8ac594c17585e3d14c011964109ad0ae432c660ebb7fc1fe56f1130b6eafa75d1d9ca48f05e22e1d7cbb4a0794e32982da168563
+    REF "pcl-${VERSION}"
+    SHA512 f6860b2103cb033839d044c3fed1fc3e8a989cd4f9776ae9d20e7d381b05eff8efde33dd06316ce419b44d877877ed21735d80b09d1daf64b0f94cdd302374fb
     HEAD_REF master
     PATCHES
         add-gcc-version-check.patch
@@ -12,10 +12,6 @@ vcpkg_from_github(
         pcl_utils.patch
         install-examples.patch
         no-absolute.patch
-        add_bigobj_option.patch
-        outofcore_viewer_remove_include.patch
-        fix_opennurbs_win32.patch
-        disable_kinfu_for_cuda12.patch
         devendor-zlib.patch
 )
 
@@ -52,6 +48,7 @@ vcpkg_cmake_configure(
         -DPCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
+        -DPCL_ENABLE_MARCHNATIVE=OFF
         # WITH
         -DWITH_DAVIDSDK=OFF
         -DWITH_DOCS=OFF
