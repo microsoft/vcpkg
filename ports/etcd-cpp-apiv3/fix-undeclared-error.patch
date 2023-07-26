@@ -8,7 +8,7 @@ index d5a4179..1633088 100644
  
 +#if(VCPKG_TARGET_IS_ANDROID)
 +#include <netinet/in.h>
-+endif()
++#endif()
 +	
  #include <stdio.h>
  #include <stdlib.h>
