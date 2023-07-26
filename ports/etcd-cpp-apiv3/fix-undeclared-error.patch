@@ -6,7 +6,7 @@ index d5a4179..1633088 100644
  #define NOMINMAX
  #endif
  
-+#if(VCPKG_TARGET_IS_ANDROID)
++#ifdef __ANDROID__
 +#include <netinet/in.h>
 +#endif
 +	
