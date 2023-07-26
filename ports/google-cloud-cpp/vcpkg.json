@@ -8,10 +8,7 @@
   "dependencies": [
     "abseil",
     "grpc",
-    {
-      "name": "opentelemetry-cpp",
-      "host": true
-    },
+    "opentelemetry-cpp",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -540,6 +537,19 @@
         }
       ]
     },
+    "experimental-opentelemetry": {
+      "description": "OpenTelemetry C++ GCP Exporter Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "rest-common",
+            "trace"
+          ]
+        }
+      ]
+    },
     "experimental-storage-grpc": {
       "description": "The GCS+gRPC plugin",
       "dependencies": [
@@ -832,25 +842,6 @@
         }
       ]
     },
-    "opentelemetry": {
-      "description": "OpenTelemetry C++ GCP Exporter Library",
-      "dependencies": [
-        {
-          "name": "curl",
-          "features": [
-            "ssl"
-          ]
-        },
-        {
-          "name": "google-cloud-cpp",
-          "default-features": false,
-          "features": [
-            "trace"
-          ]
-        },
-        "nlohmann-json"
-      ]
-    },
     "optimization": {
       "description": "Cloud Optimization API C++ Client Library",
       "dependencies": [
@@ -1007,6 +998,18 @@
         }
       ]
     },
+    "rest-common": {
+      "description": "Dependencies used by all REST-based libraries",
+      "dependencies": [
+        {
+          "name": "curl",
+          "features": [
+            "ssl"
+          ]
+        },
+        "nlohmann-json"
+      ]
+    },
     "retail": {
       "description": "Retail API C++ Client Library",
       "dependencies": [
@@ -1156,12 +1159,12 @@
       "dependencies": [
         "crc32c",
         {
-          "name": "curl",
+          "name": "google-cloud-cpp",
+          "default-features": false,
           "features": [
-            "ssl"
+            "rest-common"
           ]
-        },
-        "nlohmann-json"
+        }
       ]
     },
     "storageinsights": {

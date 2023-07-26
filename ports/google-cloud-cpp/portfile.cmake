@@ -14,8 +14,10 @@ vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
-# This feature does not exist, but allows us to simplify the vcpkg.json file.
+# These features do not exist, but they allow us to simplify the vcpkg.json
+# file.
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "grpc-common")
+list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "rest-common")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "googleapis")
 # google-cloud-cpp uses dialogflow_cx and dialogflow_es. Underscores
 # are invalid in `vcpkg` features, we use dashes (`-`) as a separator
@@ -28,11 +30,6 @@ endif ()
 if ("dialogflow-es" IN_LIST FEATURES)
     list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "dialogflow-es")
     list(APPEND GOOGLE_CLOUD_CPP_ENABLE "dialogflow_es")
-endif ()
-# This feature is experimental.
-if ("opentelemetry" IN_LIST FEATURES)
-    list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "opentelemetry")
-    list(APPEND GOOGLE_CLOUD_CPP_ENABLE "experimental-opentelemetry")
 endif ()
 
 vcpkg_cmake_configure(
