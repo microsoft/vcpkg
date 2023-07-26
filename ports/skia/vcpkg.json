@@ -137,7 +137,7 @@
       "description": "Vulkan support for skia",
       "dependencies": [
         "vulkan",
-		"vulkan-headers",
+        "vulkan-headers",
         "vulkan-memory-allocator"
       ]
     }
