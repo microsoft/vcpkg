@@ -8,13 +8,16 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         devendor-sublibs.diff
+        minizip.patch
         fix-mergestaticlibs.diff
         unofficial-export.diff
 )
 
-file(REMOVE RECURSE
+file(GLOB vendored_minizip "${SOURCE_PATH}/ThirdParty/Minizip/minizip/*")
+list(FILTER vendored_minizip EXCLUDE REGEX "/minizip.[ch]\$|/miniunz.[ch]\$")
+file(REMOVE_RECURSE
+    ${vendored_minizip}
     "${SOURCE_PATH}/ThirdParty/Expat"
-    "${SOURCE_PATH}/ThirdParty/Minizip"
     "${SOURCE_PATH}/ThirdParty/Zlib"
 )
 

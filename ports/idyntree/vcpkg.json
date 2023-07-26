@@ -1,9 +1,11 @@
 {
   "name": "idyntree",
-  "version": "8.1.0",
+  "version": "9.0.0",
+  "port-version": 1,
   "description": "Multibody Dynamics Library designed for Free Floating Robots.",
   "homepage": "https://github.com/robotology/idyntree",
   "license": "LGPL-2.1-or-later",
+  "supports": "!xbox",
   "dependencies": [
     "eigen3",
     "libxml2",
@@ -17,8 +19,7 @@
     }
   ],
   "default-features": [
-    "assimp",
-    "irrlicht"
+    "assimp"
   ],
   "features": {
     "assimp": {
@@ -29,7 +30,9 @@
     },
     "irrlicht": {
       "description": "Add support for irrlicht-based visualizer",
+      "supports": "!windows",
       "dependencies": [
+        "glfw3",
         "irrlicht"
       ]
     }

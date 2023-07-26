@@ -13,6 +13,8 @@ vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
     "project.load [ path.join [ path.make $(here:D) ] ../config/checks/architecture ]"
 )
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
+#Make sure to keep this line when updating boost.
+file(INSTALL "${SOURCE_PATH}/config/has_synchronization_lib.cpp" DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost-atomic")
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

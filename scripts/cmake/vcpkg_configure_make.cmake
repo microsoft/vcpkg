@@ -224,7 +224,7 @@ function(vcpkg_configure_make)
 
     # Establish a bash environment as expected by autotools.
     if(CMAKE_HOST_WIN32)
-        list(APPEND msys_require_packages binutils libtool autoconf automake-wrapper automake1.16 m4 which)
+        list(APPEND msys_require_packages autoconf-wrapper automake-wrapper binutils libtool make pkgconf which)
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${msys_require_packages} ${arg_ADDITIONAL_MSYS_PACKAGES})
         set(base_cmd "${MSYS_ROOT}/usr/bin/bash.exe" --noprofile --norc --debug)
         vcpkg_list(SET add_to_env)

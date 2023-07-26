@@ -9,12 +9,6 @@ vcpkg_from_github(
 
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(PLATFORM x86)
-    else()
-        set(PLATFORM x64)
-    endif()
-
     # There is no debug configuration
     # As it is a C library, build the release configuration and copy its output to the debug folder
     set(VCPKG_BUILD_TYPE release)
@@ -24,7 +18,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         INCLUDES_SUBPATH include
         LICENSE_SUBPATH LICENSE
         RELEASE_CONFIGURATION "Release - ANSI"
-        PLATFORM ${PLATFORM}
+        PLATFORM "${VCPKG_TARGET_ARCHITECTURE}"
         USE_VCPKG_INTEGRATION
         ALLOW_ROOT_INCLUDES)
 

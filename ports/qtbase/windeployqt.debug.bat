@@ -6,5 +6,5 @@ set BAKCD=!CD!
 cd /D %mypath%\..\..\..\debug\bin
 set PATH=!CD!;%PATH%
 cd %BAKCD%
-"%mypath%\windeployqt.exe" --qtpaths "%mypath%\qtpaths.debug.bat" %*
+"%mypath%\windeployqt6.exe" --qtpaths "%mypath%\qtpaths.debug.bat" %*
 endlocal

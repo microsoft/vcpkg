@@ -6,10 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiaoyeli/superlu
     REF "v${VERSION}"
-    SHA512 1461b52bc18a8b0345beb70fdd46e07df497a13be840bcc061158ea1d0e61c8745806d1ad21cb2723db80f5ed762c3741f9c0ded2b2013df46da0e8bb6b77b83
+    SHA512 8feeb08404cad58724f0f6478bc785b56d8c725b549f1fdc07d3578c4e14bdbdbd8bcda1cdfd366a39417eda60765825e87cf781c68e6723a8246cb357b41439
     HEAD_REF master
     PATCHES
         remove-make.inc.patch
+        superfluous-configure.patch
 )
 
 vcpkg_cmake_configure(

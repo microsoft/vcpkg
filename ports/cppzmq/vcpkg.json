@@ -1,6 +1,7 @@
 {
   "name": "cppzmq",
   "version": "4.9.0",
+  "port-version": 1,
   "description": "Header-only C++ binding for ZeroMQ",
   "homepage": "https://github.com/zeromq/cppzmq",
   "license": "MIT",
@@ -17,7 +18,16 @@
   ],
   "features": {
     "draft": {
-      "description": "Build and install draft"
+      "description": "Build and install draft",
+      "dependencies": [
+        {
+          "name": "zeromq",
+          "default-features": false,
+          "features": [
+            "draft"
+          ]
+        }
+      ]
     }
   }
 }

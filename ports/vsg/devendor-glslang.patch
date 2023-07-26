@@ -1,0 +1,83 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6e7ec437..db4d30f1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,9 +37,11 @@ find_package(Vulkan ${Vulkan_MIN_VERSION} REQUIRED)
+ 
+ find_package(Threads REQUIRED)
+ 
++find_package(glslang CONFIG REQUIRED)
++
+ # Enable/disable shader compilation support that pulls in glslang
+ set(VSG_SUPPORTS_ShaderCompiler  1 CACHE STRING "Optional shader compiler support, 0 for off, 1 for enabled." )
+-if (VSG_SUPPORTS_ShaderCompiler)
++if (FALSE)
+     if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/glslang/build_vars.cmake)
+ 
+         if (Git_FOUND)
+diff --git a/src/vsg/CMakeLists.txt b/src/vsg/CMakeLists.txt
+index 3d9625e4..96285e99 100644
+--- a/src/vsg/CMakeLists.txt
++++ b/src/vsg/CMakeLists.txt
+@@ -227,14 +227,24 @@ set(SOURCES
+     utils/LoadPagedLOD.cpp
+ )
+ 
+-if (${VSG_SUPPORTS_ShaderCompiler})
++if (FALSE)
+ 
+     # include glslang source code directly into the VulkanScenegraph library build.
+     include(../glslang/build_vars.cmake)
+ endif()
+ 
+ # set up library dependencies
+-set(LIBRARIES PUBLIC
++set(LIBRARIES
++	PRIVATE
++        glslang::glslang
++        glslang::OSDependent
++        glslang::MachineIndependent
++        glslang::GenericCodeGen
++        glslang::glslang-default-resource-limits
++        glslang::OGLCompiler
++        glslang::SPVRemapper
++        glslang::SPIRV
++	PUBLIC
+         Vulkan::Vulkan
+         Threads::Threads
+ )
+@@ -365,9 +375,6 @@ target_include_directories(vsg
+     PUBLIC
+         $<BUILD_INTERFACE:${VSG_SOURCE_DIR}/include>
+         $<BUILD_INTERFACE:${VSG_BINARY_DIR}/include>
+-    PRIVATE
+-        $<BUILD_INTERFACE:${VSG_SOURCE_DIR}/src/glslang>
+-        $<BUILD_INTERFACE:${GLSLANG_GENERATED_INCLUDEDIR}>
+ )
+ 
+ target_link_libraries(vsg ${LIBRARIES})
+diff --git a/src/vsg/utils/ShaderCompiler.cpp b/src/vsg/utils/ShaderCompiler.cpp
+index 71a7f09f..803f26a1 100644
+--- a/src/vsg/utils/ShaderCompiler.cpp
++++ b/src/vsg/utils/ShaderCompiler.cpp
+@@ -20,7 +20,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
+ #include <vsg/utils/ShaderCompiler.h>
+ 
+ #if VSG_SUPPORTS_ShaderCompiler
+-#    include <SPIRV/GlslangToSpv.h>
++#    include <glslang/SPIRV/GlslangToSpv.h>
+ #    include <glslang/Public/ResourceLimits.h>
+ #    include <glslang/Public/ShaderLang.h>
+ #endif
+diff --git a/src/vsg/vsgConfig.cmake.in b/src/vsg/vsgConfig.cmake.in
+index 7ea0de02..4f7e77bd 100644
+--- a/src/vsg/vsgConfig.cmake.in
++++ b/src/vsg/vsgConfig.cmake.in
+@@ -2,6 +2,7 @@ include(CMakeFindDependencyMacro)
+ 
+ find_package(Vulkan @Vulkan_MIN_VERSION@ REQUIRED)
+ find_dependency(Threads)
++find_dependency(glslang)
+ 
+ @FIND_DEPENDENCY_WINDOWING@
+ include("${CMAKE_CURRENT_LIST_DIR}/vsgTargets.cmake")

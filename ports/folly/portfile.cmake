@@ -8,8 +8,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF d8ed9cd2869c74b00fa6f1a7603301183f5c2249 #v2022.10.31.00
-    SHA512 55040dadb8a847f0d04c37a2dce920bb456a59decebc90920831998df9671feb33daf1f4235115adcce5eb9c469b97b9d96fa7a67a5914c434ebc1efc04f4770
+    REF "v${VERSION}"
+    SHA512 6e9433c65d91ff1af51b74e7153ce3d116484d6eb9cbe72747bad902bcb237fccffc35897c63ee3612fa633164b62884a94f511b7039112e2725851ad2719776
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
@@ -17,6 +17,7 @@ vcpkg_from_github(
         boost-1.70.patch
         fix-windows-minmax.patch
         fix-deps.patch
+        openssl.patch # from https://github.com/facebook/folly/pull/2016
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")

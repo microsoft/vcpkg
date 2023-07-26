@@ -1,0 +1,13 @@
+diff --git a/cmake/draco.pc.template b/cmake/draco.pc.template
+index 050219c..2886bfc 100644
+--- a/cmake/draco.pc.template
++++ b/cmake/draco.pc.template
+@@ -1,6 +1,6 @@
+ Name: @PROJECT_NAME@
+ Description: Draco geometry de(com)pression library.
+ Version: @DRACO_VERSION@
+-Cflags: -I@includes_path@
+-Libs: -L@libs_path@ -ldraco
++Cflags: -I@CMAKE_INSTALL_FULL_INCLUDEDIR@
++Libs: -L@CMAKE_INSTALL_FULL_LIBDIR@ -ldraco
+ Libs.private: @CMAKE_THREAD_LIBS_INIT@
