@@ -6,6 +6,6 @@ index fcfa811..e4d4360 100644
  add_executable(${MODULE_NAME} ${${MODULE_PREFIX}_SRCS})
  
 -set_target_properties(${MODULE_NAME} PROPERTIES OUTPUT_NAME "wfreerdp-server")
-+set_target_properties(${MODULE_NAME} PROPERTIES RUNTIME_OUTPUT_NAME "wfreerdp-server")
++set_target_properties(${MODULE_NAME} PROPERTIES RUNTIME_OUTPUT_NAME wfreerdp-server PDB_NAME wfreerdp-server.exe)
  
  set(${MODULE_PREFIX}_LIBS wfreerdp-server)
