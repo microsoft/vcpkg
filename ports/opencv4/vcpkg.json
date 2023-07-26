@@ -21,7 +21,16 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    "default-features",
+    "contrib",
+    "cuda",
+    "dnn",
+    "ffmpeg",
+    "jpeg",
+    "png",
+    "quirc",
+    "tiff",
+    "webp"
   ],
   "features": {
     "ade": {
