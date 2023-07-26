@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 4ef9c07d5c69f3f50f40811146c178d1837fbda7e5e9f3369eba6177fc9e17c27d1e5cd2add7a203f47e0105f0a8a433de4c2511d395afcf1c5413e716033f44
     HEAD_REF master
         PATCHES
-        fix-LNK1107-error.patch
-        fix-undeclared-error.patch
+            fix-LNK1107-error.patch
+            fix-undeclared-error.patch
 )
 
 vcpkg_cmake_configure(
