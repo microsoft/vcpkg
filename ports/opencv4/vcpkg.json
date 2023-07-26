@@ -21,9 +21,9 @@
     "zlib"
   ],
   "default-features": [
-    "default-features",
     "contrib",
     "cuda",
+    "default-features",
     "dnn",
     "ffmpeg",
     "jpeg",
