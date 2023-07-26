@@ -26,6 +26,7 @@ $defaultPortVersion = 2
 $portVersions = @{
     "boost-atomic" = 3;
     "boost-modular-build-helper" = 4;
+    "boost-ublas" = 3;
 }
 
 function Get-PortVersion {
@@ -580,6 +581,7 @@ foreach ($library in $libraries) {
         # break unnecessary dependencies
         $deps = @($deps | ? {
             -not (
+                ($library -eq 'ublas' -and $_ -eq 'compute') -or # PR #29325
                 ($library -eq 'gil' -and $_ -eq 'filesystem') # PR #20575
             )
         })

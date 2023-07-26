@@ -1,16 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 35365b27..53c5fffd 100644
+index 4ac815d6..dbb9b7ee 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,7 +26,7 @@ option(WITH_THRIFT "With thrift framed protocol supported" OFF)
- option(WITH_SNAPPY "With snappy" OFF)
- option(WITH_RDMA "With RDMA" OFF)
- option(BUILD_UNIT_TESTS "Whether to build unit tests" OFF)
--option(BUILD_BRPC_TOOLS "Whether to build brpc tools" ON)
-+option(BUILD_BRPC_TOOLS "Whether to build brpc tools" OFF)
- option(DOWNLOAD_GTEST "Download and build a fresh copy of googletest. Requires Internet access." ON)
- 
- # Enable MACOSX_RPATH. Run "cmake --help-policy CMP0042" for policy details.
 @@ -66,7 +66,8 @@ endif()
  
  if(WITH_THRIFT)
@@ -21,7 +12,7 @@ index 35365b27..53c5fffd 100644
  endif()
  
  set(WITH_RDMA_VAL "0")
-@@ -150,14 +151,14 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+@@ -150,11 +151,15 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
      endif()
  endif()
  
@@ -30,19 +21,16 @@ index 35365b27..53c5fffd 100644
 +get_target_property(PROTOBUF_INCLUDE_DIR protobuf::libprotobuf INTERFACE_INCLUDE_DIRECTORIES)
 +set(PROTOBUF_LIBRARIES protobuf::libprotobuf)
  find_package(Threads REQUIRED)
++find_package(ZLIB REQUIRED)
  
--find_path(LEVELDB_INCLUDE_PATH NAMES leveldb/db.h)
--find_library(LEVELDB_LIB NAMES leveldb)
--if ((NOT LEVELDB_INCLUDE_PATH) OR (NOT LEVELDB_LIB))
--    message(FATAL_ERROR "Fail to find leveldb")
--endif()
 +find_package(leveldb CONFIG REQUIRED)
-+set(LEVELDB_INCLUDE_PATH ${PROTOBUF_INCLUDE_DIR})
+ find_path(LEVELDB_INCLUDE_PATH NAMES leveldb/db.h)
+-find_library(LEVELDB_LIB NAMES leveldb)
 +set(LEVELDB_LIB leveldb::leveldb)
- 
- if(WITH_SNAPPY)
-     find_path(SNAPPY_INCLUDE_PATH NAMES snappy.h)
-@@ -169,8 +170,9 @@ if(WITH_SNAPPY)
+ if ((NOT LEVELDB_INCLUDE_PATH) OR (NOT LEVELDB_LIB))
+     message(FATAL_ERROR "Fail to find leveldb")
+ endif()
+@@ -169,8 +174,9 @@ if(WITH_SNAPPY)
  endif()
  
  if(WITH_GLOG)
@@ -54,7 +42,7 @@ index 35365b27..53c5fffd 100644
      if((NOT GLOG_INCLUDE_PATH) OR (NOT GLOG_LIB))
          message(FATAL_ERROR "Fail to find glog")
      endif()
-@@ -197,7 +199,7 @@ if(WITH_RDMA)
+@@ -197,7 +203,7 @@ if(WITH_RDMA)
      endif()
  endif()
  
@@ -63,7 +51,7 @@ index 35365b27..53c5fffd 100644
  if(NOT PROTOC_LIB)
      message(FATAL_ERROR "Fail to find protoc lib")
  endif()
-@@ -208,7 +210,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+@@ -208,7 +214,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
          )
  endif()
  
@@ -72,7 +60,7 @@ index 35365b27..53c5fffd 100644
  
  include_directories(
          ${GFLAGS_INCLUDE_PATH}
-@@ -223,9 +225,9 @@ set(DYNAMIC_LIB
+@@ -223,11 +229,11 @@ set(DYNAMIC_LIB
      ${LEVELDB_LIB}
      ${PROTOC_LIB}
      ${CMAKE_THREAD_LIBS_INIT}
@@ -82,8 +70,11 @@ index 35365b27..53c5fffd 100644
 +    ${OPENSSL_SSL_LIBRARY}
 +    ${THRIFT_LIB}
      dl
-     z)
+-    z)
++    ZLIB::ZLIB)
  
+ if(WITH_MESALINK)
+     list(APPEND DYNAMIC_LIB ${MESALINK_LIB})
 diff --git a/cmake/FindGFLAGS.cmake b/cmake/FindGFLAGS.cmake
 index dfad5fd8..8423d55a 100644
 --- a/cmake/FindGFLAGS.cmake
@@ -100,7 +91,7 @@ index dfad5fd8..8423d55a 100644
    set(GFLAGS_FOUND TRUE)
  endif(GFLAGS_INCLUDE_PATH AND GFLAGS_LIBRARY)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index fbcc7cc5..c2d0d7bb 100644
+index fbcc7cc5..95037a0d 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -31,16 +31,24 @@ add_dependencies(SOURCES_LIB PROTO_LIB)
@@ -113,8 +104,9 @@ index fbcc7cc5..c2d0d7bb 100644
                                 $<TARGET_OBJECTS:PROTO_LIB>)
  
 -if(BRPC_WITH_THRIFT)
+-   target_link_libraries(brpc-static thrift)
 +if(WITH_THRIFT)
-    target_link_libraries(brpc-static thrift)
++   target_link_libraries(brpc-static ${THRIFT_LIB})
  endif()
  
 +target_link_libraries(brpc-static PUBLIC ${DYNAMIC_LIB})
@@ -129,7 +121,7 @@ index fbcc7cc5..c2d0d7bb 100644
  # for protoc-gen-mcpack
  set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/output/bin)
      
-@@ -49,35 +57,57 @@ set(protoc_gen_mcpack_SOURCES
+@@ -49,35 +57,62 @@ set(protoc_gen_mcpack_SOURCES
   )
      
  add_executable(protoc-gen-mcpack ${protoc_gen_mcpack_SOURCES})
@@ -145,22 +137,27 @@ index fbcc7cc5..c2d0d7bb 100644
          target_link_libraries(brpc-shared ${GLOG_LIB})
      endif()
 -    if(BRPC_WITH_THRIFT)
+-        target_link_libraries(brpc-shared thrift)
 +    if(WITH_THRIFT)
-         target_link_libraries(brpc-shared thrift)
++        target_link_libraries(brpc-shared ${THRIFT_LIB})
      endif()
      SET_TARGET_PROPERTIES(brpc-shared PROPERTIES OUTPUT_NAME brpc CLEAN_DIRECT_OUTPUT 1)
- 
+-
++    if(0)
      target_link_libraries(protoc-gen-mcpack brpc-shared ${DYNAMIC_LIB} pthread)
- 
+-
 -    install(TARGETS brpc-shared
++    endif()
 +    install(TARGETS brpc-shared EXPORT unofficial-brpcTargets
              RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
              LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
              ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
              )
  else()
--    target_link_libraries(protoc-gen-mcpack brpc-static ${DYNAMIC_LIB} pthread)
++if(0)
+     target_link_libraries(protoc-gen-mcpack brpc-static ${DYNAMIC_LIB} pthread)
  endif()
++endif()
  
  
  
@@ -172,10 +169,12 @@ index fbcc7cc5..c2d0d7bb 100644
          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
          )
 +endif()
++
 +file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-brpc-config.cmake"
 +[[include(CMakeFindDependencyMacro)
 +find_dependency(OpenSSL)
 +find_dependency(Threads)
++find_dependency(ZLIB)
 +find_dependency(gflags CONFIG)
 +find_dependency(protobuf CONFIG)
 +find_dependency(leveldb CONFIG)
