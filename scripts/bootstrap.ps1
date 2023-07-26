@@ -46,7 +46,7 @@ while (!($vcpkgRootDir -eq "") -and !(Test-Path "$vcpkgRootDir\.vcpkg-root"))
 Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 
 # Read the vcpkg-tool config file to determine what release to download
-$Config = ConvertFrom-StringData (Get-Content "$vcpkgRootDir/.vcpkg-tool" -Raw)
+$Config = ConvertFrom-StringData (Get-Content "$PSScriptRoot\vcpkg-tool-metadata.txt" -Raw)
 $versionDate = $Config.VCPKG_TOOL_RELEASE_TAG
 
 if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' -or $env:PROCESSOR_IDENTIFIER -match "ARMv[8,9] \(64-bit\)") {

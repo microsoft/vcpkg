@@ -172,7 +172,7 @@ vcpkgExtractTar()
 #   Download and build from source
 
 # Read the vcpkg-tool config file to determine what release to download
-. $vcpkgRootDir/.vcpkg-tool
+. "$vcpkgRootDir/scripts/vcpkg-tool-metadata.txt"
 
 vcpkgDownloadTool="ON"
 if [ "$UNAME" = "Darwin" ]; then
