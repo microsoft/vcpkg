@@ -6462,7 +6462,7 @@
     },
     "portaudio": {
       "baseline": "19.7",
-      "port-version": 4
+      "port-version": 5
     },
     "portmidi": {
       "baseline": "2.0.4",
