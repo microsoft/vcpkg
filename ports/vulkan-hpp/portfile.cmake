@@ -3,7 +3,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-Hpp
-    REF 48b4b6f985c00b9028e6c94088a2c90b1da82c9c #v1.3.259
+    REF "v${VERSION}"
     SHA512 68c26541961881a3e6c9287719d8b50ccb6a9e44b5c0213a780db37dc7b107aec736abdeda19c74837f37f490662cf40c4cc4c2d3da17eeb5f84923fcdfc2d6e
     HEAD_REF master
 )
