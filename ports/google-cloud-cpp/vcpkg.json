@@ -9,7 +9,6 @@
   "dependencies": [
     "abseil",
     "grpc",
-    "opentelemetry-cpp",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -548,7 +547,8 @@
             "rest-common",
             "trace"
           ]
-        }
+        },
+        "opentelemetry-cpp"
       ]
     },
     "experimental-storage-grpc": {
