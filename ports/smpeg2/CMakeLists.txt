@@ -10,6 +10,8 @@ include_directories(${CMAKE_SOURCE_DIR})
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+else()
+    add_compile_options(-Wno-narrowing)
 endif()
 add_definitions(-DNOCONTROLS -DTHREADED_AUDIO)
 
