@@ -1,0 +1,13 @@
+diff --git a/src/kpac/proxyscout.cpp b/src/kpac/proxyscout.cpp
+index 945fd3b..4aa89ac 100644
+--- a/src/kpac/proxyscout.cpp
++++ b/src/kpac/proxyscout.cpp
+@@ -33,7 +33,7 @@
+ 
+ #include <QLoggingCategory>
+ Q_DECLARE_LOGGING_CATEGORY(KIO_KPAC)
+-Q_LOGGING_CATEGORY(KIO_CORE_DIRLISTER, "kf.kio.kpac", QtWarningMsg)
++Q_LOGGING_CATEGORY(KIO_KPAC, "kf.kio.kpac", QtWarningMsg)
+ 
+ namespace KPAC
+ {
