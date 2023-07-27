@@ -5909,11 +5909,11 @@
       "port-version": 1
     },
     "onnx": {
-      "baseline": "1.13.1",
+      "baseline": "1.14.0",
       "port-version": 0
     },
     "onnx-optimizer": {
-      "baseline": "0.2.6",
+      "baseline": "0.3.17",
       "port-version": 0
     },
     "onnxruntime-gpu": {
@@ -6102,7 +6102,7 @@
     },
     "openvino": {
       "baseline": "2023-06-11",
-      "port-version": 2
+      "port-version": 3
     },
     "openvpn3": {
       "baseline": "3.7.0",
