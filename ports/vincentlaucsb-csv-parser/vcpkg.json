@@ -1,5 +1,5 @@
 {
-  "name": "csv-parser",
+  "name": "vincentlaucsb-csv-parser",
   "version": "2.1.3",
   "description": "A modern C++ library for reading, writing, and analyzing CSV (and similar) files.",
   "homepage": "https://github.com/vincentlaucsb/csv-parser",

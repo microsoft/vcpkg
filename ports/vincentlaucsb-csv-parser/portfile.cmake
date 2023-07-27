@@ -21,12 +21,12 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-csv-parser)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-vincentlaucsb-csv-parser)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-csv-parser/unofficial-csv-parser-config.cmake" cmake_config)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-csv-parser/unofficial-csv-parser-config.cmake"
+file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-vincentlaucsb-csv-parser/unofficial-vincentlaucsb-csv-parser-config.cmake" cmake_config)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-vincentlaucsb-csv-parser/unofficial-vincentlaucsb-csv-parser-config.cmake"
 "include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(mio CONFIG)

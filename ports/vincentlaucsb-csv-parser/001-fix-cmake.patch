@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e729a8b..03e7924 100644
+index e729a8b..e5b68d3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,12 @@
@@ -30,13 +30,13 @@ index e729a8b..03e7924 100644
  
 -## Executables
 -add_subdirectory("programs")
-+install(TARGETS csv EXPORT unofficial-csv-parser)
++install(TARGETS csv EXPORT unofficial-vincentlaucsb-csv-parser)
 +
 +install(
-+    EXPORT unofficial-csv-parser
-+    FILE unofficial-csv-parser-config.cmake
-+    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-csv-parser"
-+    NAMESPACE unofficial::csv-parser::
++    EXPORT unofficial-vincentlaucsb-csv-parser
++    FILE unofficial-vincentlaucsb-csv-parser-config.cmake
++    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-vincentlaucsb-csv-parser"
++    NAMESPACE unofficial::vincentlaucsb-csv-parser::
 +)
 +
 +install(
@@ -50,7 +50,7 @@ index e729a8b..03e7924 100644
  ## Developer settings
  if (CSV_DEVELOPER)
 diff --git a/include/internal/CMakeLists.txt b/include/internal/CMakeLists.txt
-index 42cac24..da10afc 100644
+index 42cac24..89ec413 100644
 --- a/include/internal/CMakeLists.txt
 +++ b/include/internal/CMakeLists.txt
 @@ -24,4 +24,8 @@ target_sources(csv
@@ -58,7 +58,7 @@ index 42cac24..da10afc 100644
  
  set_target_properties(csv PROPERTIES LINKER_LANGUAGE CXX)
 -target_link_libraries(csv PRIVATE Threads::Threads)
-+target_include_directories(csv 
++target_include_directories(csv
 +	PUBLIC ${HEDLEY_INCLUDE_DIRS}
 +	INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/csv>
 +)
