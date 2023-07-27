@@ -1,4 +1,4 @@
 csv-parser provides CMake targets:
 
-    find_package(unofficial-csv-parser CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::csv-parser::csv)
+    find_package(unofficial-vincentlaucsb-csv-parser CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::vincentlaucsb-csv-parser::csv)
