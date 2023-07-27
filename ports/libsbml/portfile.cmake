@@ -21,7 +21,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         multi       ENABLE_MULTI
         qual        ENABLE_QUAL
         render      ENABLE_RENDER
-        render      ENABLE_LAYOUT
         bzip2       WITH_BZIP2
         zlib        WITH_ZLIB
         test        WITH_CHECK

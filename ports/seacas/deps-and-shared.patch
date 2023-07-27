@@ -101,7 +101,7 @@ diff --git a/cmake/tribits/common_tpls/FindTPLCGNS.cmake b/cmake/tribits/common_
 index 37c329cd4..9d221f64f 100644
 --- a/cmake/tribits/common_tpls/FindTPLCGNS.cmake
 +++ b/cmake/tribits/common_tpls/FindTPLCGNS.cmake
-@@ -45,12 +45,12 @@ if ((CGNS_ALLOW_MODERN AND HDF5_FOUND_MODERN_CONFIG_FILE) OR CGNS_FORCE_MODERN)
+@@ -45,14 +45,14 @@ if ((CGNS_ALLOW_MODERN AND HDF5_FOUND_MODERN_CONFIG_FILE) OR CGNS_FORCE_MODERN)
    print_var(CGNS_ALLOW_MODERN)
    print_var(CGNS_FORCE_MODERN)
    message("-- Using find_package(CGNS ${minimum_modern_CGNS_version} CONFIG) ...")
@@ -113,11 +113,12 @@ index 37c329cd4..9d221f64f 100644
      tribits_extpkg_create_imported_all_libs_target_and_config_file(
        CGNS
 -      INNER_FIND_PACKAGE_NAME  CGNS
-+      INNER_FIND_PACKAGE_NAME  cgns
 -      IMPORTED_TARGETS_FOR_ALL_LIBS   CGNS::cgns)
++      INNER_FIND_PACKAGE_NAME  cgns
 +      IMPORTED_TARGETS_FOR_ALL_LIBS   CGNS::CGNS)
      set(TPL_CGNS_NOT_FOUND FALSE)
    endif()
+ 
 diff --git a/cmake/tribits/common_tpls/FindTPLHDF5.cmake b/cmake/tribits/common_tpls/FindTPLHDF5.cmake
 index 716068c28..3d8fc8e76 100644
 --- a/cmake/tribits/common_tpls/FindTPLHDF5.cmake
@@ -134,8 +135,7 @@ index 716068c28..3d8fc8e76 100644
 @@ -17,7 +17,7 @@ if (Netcdf_ALLOW_MODERN)
      tribits_extpkg_create_imported_all_libs_target_and_config_file(
        HDF5
--      INNER_FIND_PACKAGE_NAME  HDF5
-+      INNER_FIND_PACKAGE_NAME  HDF5
+       INNER_FIND_PACKAGE_NAME  HDF5
 -      IMPORTED_TARGETS_FOR_ALL_LIBS   ${HDF5_EXPORT_LIBRARIES})
 +      IMPORTED_TARGETS_FOR_ALL_LIBS  hdf5::hdf5)
      set(HDF5_INTERNAL_IS_MODERN TRUE)
@@ -181,10 +181,6 @@ index c2c98f4be..9626cdb92 100644
                           PATH_SUFFIXES ${cgns_lib_suffixes})
  
          endif()
-diff --git a/cmake/tribits/common_tpls/find_modules/FindHDF5.cmake b/cmake/tribits/common_tpls/find_modules/FindHDF5-donotuse.cmake
-similarity index 100%
-rename from cmake/tribits/common_tpls/find_modules/FindHDF5.cmake
-rename to cmake/tribits/common_tpls/find_modules/FindHDF5-donotuse.cmake
 diff --git a/packages/seacas/libraries/aprepro_lib/CMakeLists.txt b/packages/seacas/libraries/aprepro_lib/CMakeLists.txt
 index ef391f1c6..a4869415b 100644
 --- a/packages/seacas/libraries/aprepro_lib/CMakeLists.txt
@@ -217,44 +213,44 @@ diff --git a/packages/seacas/libraries/exodus/CMakeLists.txt b/packages/seacas/l
 index 2ed3ec4ab..f80f697f1 100644
 --- a/packages/seacas/libraries/exodus/CMakeLists.txt
 +++ b/packages/seacas/libraries/exodus/CMakeLists.txt
-@@ -1,5 +1,5 @@
- TRIBITS_SUBPACKAGE(Exodus)
--
-+set(EXODUSII_BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS}" CACHE BOOL "")
- if (SEACASExodus_ENABLE_STATIC)
- INCLUDE(InstallSymLink)
+@@ -13,6 +13,7 @@ FILE(GLOB SOURCES src/ex_*.c)
+ if (NOT ${PACKAGE_NAME}_HIDE_DEPRECATED_CODE)
+   FILE(GLOB DEP_SOURCES src/deprecated/ex_*.c)
  endif()
-@@ -46,6 +46,8 @@ if (SEACASExodus_ENABLE_SHARED)
-       set_property(TARGET exodus_shared PROPERTY C_STANDARD 99)
-       set_target_properties(exodus_shared PROPERTIES OUTPUT_NAME exodus)
-       INSTALL(TARGETS exodus_shared DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-+      target_compile_definitions(exodus_shared PRIVATE exoIIc_EXPORTS)
-+      target_compile_definitions(exodus PRIVATE exoIIc_EXPORTS)
-    endif()
- endif()
++set(EXODUSII_BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS}")
+ TRIBITS_CONFIGURE_FILE(exodus_config.h)
+ 
+ if (NOT ${EXODUS_THREADSAFE})
+@@ -32,6 +33,9 @@ TRIBITS_ADD_LIBRARY(
+   HEADERS ${HEADERS}
+   SOURCES ${SOURCES} ${DEP_SOURCES}
+ )
++if(BUILD_SHARED_LIBS)
++  target_compile_definitions(exodus PRIVATE exoIIc_EXPORTS)
++endif()
+ 
+ set_property(TARGET exodus PROPERTY C_STANDARD 99)
  
 diff --git a/packages/seacas/libraries/exodus/cmake/exodus_config.h.in b/packages/seacas/libraries/exodus/cmake/exodus_config.h.in
 index e4dcd51f2..a88254ab7 100644
 --- a/packages/seacas/libraries/exodus/cmake/exodus_config.h.in
 +++ b/packages/seacas/libraries/exodus/cmake/exodus_config.h.in
-@@ -4,4 +4,19 @@
+@@ -4,4 +4,17 @@
  
  @SEACAS_DEPRECATED_DECLARATIONS@
  
 +#cmakedefine EXODUSII_BUILD_SHARED_LIBS
-+#if defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER) ||                \
-+  defined(__MINGW32__) || defined(_WIN64) || defined(__MINGW64__)
-+#if defined(EXODUSII_BUILD_SHARED_LIBS)
++#if defined(_WIN32)
++# if defined(EXODUSII_BUILD_SHARED_LIBS)
 +#  if defined(exoIIc_EXPORTS)
 +#    define EXODUS_EXPORT __declspec( dllexport ) extern
 +#  else
 +#    define EXODUS_EXPORT __declspec( dllimport ) extern
 +#  endif
-+#endif
++# endif
 +#else
 +#  define EXODUS_EXPORT extern
 +#endif
-+
 +
  #endif
 diff --git a/packages/seacas/libraries/exodus/include/exodusII.h b/packages/seacas/libraries/exodus/include/exodusII.h
