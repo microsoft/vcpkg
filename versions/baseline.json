@@ -4153,8 +4153,8 @@
       "port-version": 5
     },
     "libguarded": {
-      "baseline": "1.4.1",
-      "port-version": 0
+      "baseline": "2019-08-27",
+      "port-version": 3
     },
     "libgwenhywfar": {
       "baseline": "5.6.0",
