@@ -1,7 +1,7 @@
 {
   "name": "vcpkg-ci-freerdp",
   "version-string": "ci",
-  "description": "Port to force features of certain ports within CI",
+  "description": "Force non-default features of freerdp within vcpkg CI",
   "homepage": "https://github.com/microsoft/vcpkg",
   "dependencies": [
     {
@@ -22,14 +22,8 @@
     {
       "name": "freerdp",
       "features": [
-        "urbdrc"
-      ],
-      "platform": "linux | osx"
-    },
-    {
-      "name": "freerdp",
-      "features": [
         "server",
+        "urbdrc",
         "winpr-tools"
       ],
       "platform": "linux | osx | windows"
