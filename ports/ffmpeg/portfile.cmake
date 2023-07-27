@@ -693,7 +693,12 @@ if("ffplay" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ffplay AUTO_CLEAN)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+if (NOT VCPKG_BUILD_TYPE)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+elseif (VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/include")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share")
+endif ()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -842,10 +847,17 @@ function(extract_version_from_component out)
     set("${out}" "${major_version}.${minor_version}.${micro_version}" PARENT_SCOPE)
 endfunction()
 
-extract_regex_from_file(FFMPEG_VERSION
-    FILE_WITHOUT_EXTENSION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libavutil/ffversion"
-    REGEX "#define FFMPEG_VERSION[ ]+\"(.+)\""
-)
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    extract_regex_from_file(FFMPEG_VERSION
+        FILE_WITHOUT_EXTENSION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libavutil/ffversion"
+        REGEX "#define FFMPEG_VERSION[ ]+\"(.+)\""
+    )
+elseif (VCPKG_BUILD_TYPE STREQUAL "debug")
+    extract_regex_from_file(FFMPEG_VERSION
+        FILE_WITHOUT_EXTENSION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libavutil/ffversion"
+        REGEX "#define FFMPEG_VERSION[ ]+\"(.+)\""
+    )
+endif ()
 
 extract_version_from_component(LIBAVUTIL_VERSION
     COMPONENT libavutil)
@@ -863,7 +875,12 @@ extract_version_from_component(LIBSWSCALE_VERSION
     COMPONENT libswscale)
 
 # Handle copyright
-file(STRINGS "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-out.log" LICENSE_STRING REGEX "License: .*" LIMIT_COUNT 1)
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(STRINGS "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-out.log" LICENSE_STRING REGEX "License: .*" LIMIT_COUNT 1)
+elseif (VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(STRINGS "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-out.log" LICENSE_STRING REGEX "License: .*" LIMIT_COUNT 1)
+endif ()
+
 if(LICENSE_STRING STREQUAL "License: LGPL version 2.1 or later")
     set(LICENSE_FILE "COPYING.LGPLv2.1")
 elseif(LICENSE_STRING STREQUAL "License: LGPL version 3 or later")
