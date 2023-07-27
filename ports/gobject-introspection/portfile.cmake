@@ -51,7 +51,6 @@ if(_can_build_introspection_data)
     # This option requires running target binaries on host machine)
     list(APPEND OPTIONS_RELEASE
         -Dbuild_introspection_data=true
-        -Dgi_cross_use_prebuilt_gi=true
     )
 else()
     list(APPEND OPTIONS_RELEASE -Dbuild_introspection_data=false)
@@ -66,9 +65,6 @@ vcpkg_configure_meson(
     ADDITIONAL_BINARIES
         flex='${FLEX}'
         bison='${BISON}'
-        g-ir-annotation-tool='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-annotation-tool'
-        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        g-ir-scanner='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-scanner'
 )
 
 vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
