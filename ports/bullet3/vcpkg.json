@@ -23,6 +23,9 @@
     },
     "rtti": {
       "description": "Enable RTTI on windows"
+    },
+    "openmp": {
+      "description": "Use openmp scheduler for bullet3"
     }
   }
 }
