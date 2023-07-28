@@ -13,5 +13,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+	"cppmodule": {
+      "description": "Build a module instead of a traditional library"
+    }
+  }
 }
