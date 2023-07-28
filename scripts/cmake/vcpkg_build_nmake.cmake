@@ -87,7 +87,7 @@ function(vcpkg_build_nmake)
                 if(NOT arg_CL_LANGUAGE STREQUAL "NONE")
                     set(ENV{_CL_} "${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_FLAGS_DEBUG}")
                 endif()
-                set(ENV{_LINK_} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
+                #set(ENV{_LINK_} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
 
                 set(prerun_variable_name arg_PRERUN_SHELL_DEBUG)
             else()
@@ -102,7 +102,7 @@ function(vcpkg_build_nmake)
                 if(NOT arg_CL_LANGUAGE STREQUAL "NONE")
                     set(ENV{_CL_} "${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_FLAGS_RELEASE}")
                 endif()
-                set(ENV{_LINK_} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
+                #set(ENV{_LINK_} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
                 set(prerun_variable_name arg_PRERUN_SHELL_RELEASE)
             endif()
 
@@ -137,6 +137,7 @@ function(vcpkg_build_nmake)
 
             set(run_nmake TRUE)
             set(tool_suffix "")
+            message(STATUS "ENV{PATH}:$ENV{PATH}")
             if(arg_PREFER_JOM)
                 execute_process(
                     COMMAND "${JOM}" /K /J ${VCPKG_CONCURRENCY} ${make_opts}
