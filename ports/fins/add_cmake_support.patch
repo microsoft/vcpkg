@@ -42,7 +42,6 @@ index 0000000..bebc220
 +        -Wwrite-strings
 +        -Wnested-externs
 +        -Wredundant-decls
-+        -Werror
 +        -funsigned-char
 +    )
 +endif()
@@ -96,6 +95,7 @@ index 0000000..bebc220
 +install(
 +    EXPORT "${PROJECT_NAME}Targets"
 +    DESTINATION share/${PROJECT_NAME}
++    NAMESPACE fins::
 +)
 \ No newline at end of file
 diff --git a/cmake/finsConfig.cmake.in b/cmake/finsConfig.cmake.in
