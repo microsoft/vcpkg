@@ -7,7 +7,7 @@
   "homepage": "https://www.libfins.org",
   "documentation": "https://www.libfins.org/api-reference/",
   "license": "MIT",
-  "supports": "!uwp && !osx && !android",
+  "supports": "!uwp & !osx & !android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
