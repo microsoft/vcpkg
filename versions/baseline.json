@@ -8305,7 +8305,7 @@
       "port-version": 1
     },
     "uni-algo": {
-      "baseline": "0.7.0",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "unicorn": {
