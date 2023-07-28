@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 608c580..4dcc835 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -33,6 +33,13 @@ if(protobuf_DEPRECATED_CMAKE_SUBDIRECTORY_USAGE)
+ endif()
+ 
+ # Add c++11 flags
++if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
++    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.38.32920.95")
++        string(APPEND VCPKG_CXX_FLAGS "/D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR")
++        string(APPEND VCPKG_C_FLAGS "/D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR")
++    endif()
++endif()
++
+ if (CYGWIN)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+ else()

@@ -10,13 +10,8 @@ vcpkg_from_github(
         fix-static-build.patch
         fix-default-proto-file-path.patch
         compile_options.patch
+        fix-new-headers.patch
 )
-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.38.32920.95")
-        string(APPEND VCPKG_CXX_FLAGS "/D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR")
-        string(APPEND VCPKG_C_FLAGS "/D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR")
-     endif()
-endif()
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" protobuf_BUILD_SHARED_LIBS)
