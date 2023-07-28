@@ -15,7 +15,7 @@
     }
   ],
   "features": {
-	"cppmodule": {
+    "cppmodule": {
       "description": "Build a module instead of a traditional library"
     }
   }
