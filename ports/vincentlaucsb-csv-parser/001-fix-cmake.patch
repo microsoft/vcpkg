@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e729a8b..e5b68d3 100644
+index e729a8b..c63edab 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,12 @@
@@ -41,7 +41,7 @@ index e729a8b..e5b68d3 100644
 +
 +install(
 +    DIRECTORY "${CMAKE_SOURCE_DIR}/include/"
-+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/csv"
++    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/vincentlaucsb-csv-parser"
 +    PATTERN "*.cpp" EXCLUDE
 +    PATTERN "CMakeLists.txt" EXCLUDE
 +    PATTERN "external" EXCLUDE
@@ -50,16 +50,18 @@ index e729a8b..e5b68d3 100644
  ## Developer settings
  if (CSV_DEVELOPER)
 diff --git a/include/internal/CMakeLists.txt b/include/internal/CMakeLists.txt
-index 42cac24..89ec413 100644
+index 42cac24..30ea9e7 100644
 --- a/include/internal/CMakeLists.txt
 +++ b/include/internal/CMakeLists.txt
-@@ -24,4 +24,8 @@ target_sources(csv
+@@ -23,5 +23,9 @@ target_sources(csv
+ 		data_type.h
  		)
  
- set_target_properties(csv PROPERTIES LINKER_LANGUAGE CXX)
+-set_target_properties(csv PROPERTIES LINKER_LANGUAGE CXX)
 -target_link_libraries(csv PRIVATE Threads::Threads)
++set_target_properties(csv PROPERTIES LINKER_LANGUAGE CXX OUTPUT_NAME "vincentlaucsb-csv-parser-csv")
 +target_include_directories(csv
 +	PUBLIC ${HEDLEY_INCLUDE_DIRS}
-+	INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/csv>
++	INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/vincentlaucsb-csv-parser>
 +)
 +target_link_libraries(csv PRIVATE Threads::Threads PUBLIC mio::mio mio::mio-headers nonstd::string-view-lite)
