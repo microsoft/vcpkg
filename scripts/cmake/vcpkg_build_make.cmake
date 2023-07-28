@@ -71,6 +71,11 @@ function(vcpkg_build_make)
     vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH CPPFLAGS CFLAGS CXXFLAGS RCFLAGS)
 
     foreach(buildtype IN ITEMS "debug" "release")
+
+        if(COMMAND vcpkg_user_setup_env_${buildtype})
+          cmake_language(CALL vcpkg_user_setup_env_${buildtype})
+        endif()
+
         if (buildtype STREQUAL "debug" AND _VCPKG_MAKE_NO_DEBUG)
             continue()
         endif()
@@ -180,6 +185,10 @@ function(vcpkg_build_make)
             if(arg_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${env_backup_path}")
             endif()
+        endif()
+
+        if(COMMAND vcpkg_user_setup_env_${buildtype}_restore)
+          cmake_language(CALL vcpkg_user_setup_env_${buildtype}_restore)
         endif()
 
         vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH)
