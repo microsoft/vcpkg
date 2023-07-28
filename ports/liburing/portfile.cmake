@@ -30,7 +30,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
                 "${CURRENT_PACKAGES_DIR}/lib/liburing.a"
     )
 endif()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man2")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man7")
