@@ -1,26 +1,25 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenBluetoothToolbox/SimpleBLE
-    REF "v${VERSION}"
     HEAD_REF main
-    SHA512 bf9b166340df6620fcafe7e453795bc314769aed49c5284b425ea90b064a9d242432625f544ea6f79441e36c1b9ed5909dfc80d1e69c102ce27589cc09f02417
+    REF a07397dbdd7f8149b7b235b5b21b88b60e8cfbed
+    SHA512 f9bdb668da151dbc2335b9cfd17a130fdefb349e57e9ff3a270e1c0cc8b7ad1bfdf03704cd1e2c1c7c8b34f44684aa2bf649c14666c2c6fd9ea0ddad1e6bc8a3
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/simpleble"
-    WINDOWS_USE_MSBUILD
     OPTIONS
         -DLIBFMT_VENDORIZE=OFF
 )
 
 vcpkg_cmake_install()
 
-#vcpkg_copy_pdbs()
+vcpkg_copy_pdbs()
 
-#vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/simpleble")
 
-#vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig()
 
-#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-#file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

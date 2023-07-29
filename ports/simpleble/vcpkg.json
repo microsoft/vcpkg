@@ -1,10 +1,11 @@
 {
   "name": "simpleble",
-  "version-date": "0.6.1",
+  "version-date": "2023-07-29",
   "description": "The ultimate fully-fledged cross-platform library and bindings for Bluetooth Low Energy (BLE).",
   "homepage": "https://github.com/OpenBluetoothToolbox/SimpleBLE",
   "license": "MIT",
   "dependencies": [
+    "fmt",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,7 +13,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "fmt"
+    }
   ]
 }
