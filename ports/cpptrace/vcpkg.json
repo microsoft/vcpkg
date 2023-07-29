@@ -3,5 +3,15 @@
 	"version-string": "v0.1",
 	"description": "Lightweight, zero-configuration-required, and cross-platform stacktrace library for C++ ",
 	"homepage": "https://github.com/jeremy-rifkin/cpptrace",
-    "license": "MIT"
+    "license": "MIT",
+    "dependencies": [
+        {
+          "name": "vcpkg-cmake",
+          "host": true
+        },
+        {
+          "name": "vcpkg-cmake-config",
+          "host": true
+        }
+    ]
 }
