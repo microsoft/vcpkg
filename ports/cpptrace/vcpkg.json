@@ -1,0 +1,6 @@
+{
+	"name": "cpptrace",
+	"version": "0.1.0",
+	"description": "Lightweight, zero-configuration-required, and cross-platform stacktrace library for C++ ",
+	"homepage": "https://github.com/jeremy-rifkin/cpptrace"
+}
