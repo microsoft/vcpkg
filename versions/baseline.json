@@ -7677,7 +7677,7 @@
       "port-version": 2
     },
     "sophus": {
-      "baseline": "2021-09-14",
+      "baseline": "1.22.10",
       "port-version": 0
     },
     "soqt": {
