@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lammertb/libfins
-    REF b686d55a21be4c1dcc31e23f794141f27ee7c714
-    SHA512  73686b1cb32638574c22a18ddcb7ee9320bb34489ee58ad2e971e3382a1a3a48f16996698b2f23b2e46f9cb1d06a3683971a70d3c5bb6d779edff5673b79b9d6
+    REF 5525ef513137507ec3ecab68c698a21b30497bc3
+    SHA512  6d5c039cefa55183460b14c226a77e24a93200a288486fca6fd5a3639d78e028a89a7eb25775c802cd78fdb371b0cae05236926612395896f56b23f61f5e5e87
     HEAD_REF master
-    PATCHES
-        "add_cmake_support.patch"
 )
 
 vcpkg_cmake_configure(
@@ -22,7 +20,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-# file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 
 
