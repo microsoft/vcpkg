@@ -1,4 +1,0 @@
-FlyCV can be found via the built-in CMake find-module:
-
-find_package(FLYCV REQUIRED)
-target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:flycv::flycv_shared>,flycv::flycv_shared,flycv::flycv_static>)
