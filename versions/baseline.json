@@ -2669,7 +2669,7 @@
       "port-version": 7
     },
     "freerdp": {
-      "baseline": "2.9.0",
+      "baseline": "2.10.0",
       "port-version": 0
     },
     "freetds": {
@@ -4742,7 +4742,7 @@
     },
     "libusb": {
       "baseline": "1.0.26.11791",
-      "port-version": 0
+      "port-version": 1
     },
     "libusb-win32": {
       "baseline": "1.2.6.0",
