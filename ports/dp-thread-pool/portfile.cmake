@@ -8,8 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(PACKAGE_PROJECT_CMAKE_LOCATION "${SOURCE_PATH}/3rdparty/PackageProject.cmake")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
