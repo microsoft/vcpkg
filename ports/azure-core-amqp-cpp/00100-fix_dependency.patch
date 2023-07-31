@@ -1,0 +1,43 @@
+diff --git a/sdk/core/azure-core-amqp/CMakeLists.txt b/sdk/core/azure-core-amqp/CMakeLists.txt
+index 4af39728..f888b1ba 100644
+--- a/sdk/core/azure-core-amqp/CMakeLists.txt
++++ b/sdk/core/azure-core-amqp/CMakeLists.txt
+@@ -31,7 +31,7 @@ if(NOT AZ_ALL_LIBRARIES)
+ endif()
+ 
+ find_package(uamqp CONFIG REQUIRED)
+-find_package(umock_c)
++find_package(umock_c CONFIG REQUIRED)
+ find_package(azure_macro_utils_c CONFIG REQUIRED)
+ find_package(azure_c_shared_utility CONFIG REQUIRED)
+ 
+@@ -101,8 +101,8 @@ add_library(Azure::azure-core-amqp ALIAS azure-core-amqp)
+ # coverage. Has no effect if BUILD_CODE_COVERAGE is OFF
+ create_code_coverage(core azure-core-amqp azure-core-amqp-tests "tests?/*;samples?/*")
+ 
+-# uAMQP's headers require the manual addition of umock_c and azure_macro_utils_c to the target link libraries. 
+-target_link_libraries(azure-core-amqp PRIVATE uamqp umock_c azure_macro_utils_c PUBLIC Azure::azure-core)
++# uAMQP's headers require the manual addition of umock_c, azure_macro_utils_c, and aziotsharedutil to the target link libraries. 
++target_link_libraries(azure-core-amqp PRIVATE uamqp umock_c azure_macro_utils_c aziotsharedutil PUBLIC Azure::azure-core)
+ 
+ get_az_version("${CMAKE_CURRENT_SOURCE_DIR}/src/private/package_version.hpp")
+ generate_documentation(azure-core-amqp ${AZ_LIBRARY_VERSION})
+diff --git a/sdk/core/azure-core-amqp/vcpkg/Config.cmake.in b/sdk/core/azure-core-amqp/vcpkg/Config.cmake.in
+index 989c8be1..176bc75f 100644
+--- a/sdk/core/azure-core-amqp/vcpkg/Config.cmake.in
++++ b/sdk/core/azure-core-amqp/vcpkg/Config.cmake.in
+@@ -4,9 +4,12 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(azure-core-cpp "1.9.0-beta.1")
++find_dependency(azure-core-cpp)
+ 
+-find_dependency(azure-uamqp-c)
++find_dependency(uamqp)
++find_dependency(umock_c)
++find_dependency(azure_macro_utils_c)
++find_dependency(azure_c_shared_utility)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/azure-core-amqp-cppTargets.cmake")
+ 

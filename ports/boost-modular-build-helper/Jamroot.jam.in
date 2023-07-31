@@ -104,7 +104,7 @@ if "@PORT@" != "boost-atomic"
     lib synchronization ;
     explicit synchronization ;
 
-    exe has_synchronization_lib : @CURRENT_INSTALLED_DIR@/share/boost-atomic/has_synchronization_lib.cpp : <library>synchronization ;
+    exe has_synchronization_lib : "@CURRENT_INSTALLED_DIR@/share/boost-atomic/has_synchronization_lib.cpp" : <library>synchronization ;
     explicit has_synchronization_lib ;
 
     rule check-synchronization-lib ( properties * )
