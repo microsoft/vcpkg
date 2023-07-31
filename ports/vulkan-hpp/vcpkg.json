@@ -1,7 +1,6 @@
 {
   "name": "vulkan-hpp",
-  "version": "1.3.231",
-  "port-version": 2,
+  "version": "1.3.259",
   "description": "Header only C++ bindings for the Vulkan C API",
   "license": "Apache-2.0",
   "supports": "!uwp & !xbox",

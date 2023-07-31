@@ -1,6 +1,7 @@
 {
   "name": "trantor",
   "version-semver": "1.5.11",
+  "port-version": 1,
   "description": "A non-blocking I/O cross-platform TCP network library, using C++14",
   "homepage": "https://github.com/an-tao/trantor",
   "license": "BSD-2-Clause",
