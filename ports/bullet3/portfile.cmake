@@ -14,7 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         multithreading       BULLET2_MULTITHREADING
         double-precision     USE_DOUBLE_PRECISION
-		extras               BUILD_EXTRAS
+        extras               BUILD_EXTRAS
     INVERTED_FEATURES
         rtti                 USE_MSVC_DISABLE_RTTI
 )
