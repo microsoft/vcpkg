@@ -12,6 +12,7 @@ vcpkg_from_github(
         wfreerdp-server-cli.patch
         pr-7060-jni-onload.patch
         find-dependency.patch
+        export-include.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindOpenSSL.cmake")
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
