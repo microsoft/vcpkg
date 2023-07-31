@@ -32,4 +32,7 @@ ${config}"
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(READ "${SOURCE_PATH}/video/video.h" video_terms)
+string(REGEX REPLACE "#ifndef .*" "" video_terms "${video_terms}")
+file(WRITE "${SOURCE_PATH}/Additional notes" "${video_terms}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/Additional notes")

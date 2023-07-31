@@ -4,6 +4,7 @@
   "port-version": 10,
   "description": "SDL MPEG Player Library",
   "homepage": "https://www.libsdl.org/projects/smpeg/",
+  "license": null,
   "dependencies": [
     "sdl2",
     {
