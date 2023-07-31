@@ -2084,10 +2084,6 @@
       "baseline": "1.8.0",
       "port-version": 10
     },
-    "devpaul123-thread-pool": {
-      "baseline": "0.6.0",
-      "port-version": 0
-    },
     "dimcli": {
       "baseline": "7.1.0",
       "port-version": 0
@@ -2175,6 +2171,10 @@
     "double-conversion": {
       "baseline": "3.2.1",
       "port-version": 1
+    },
+    "dp-thread-pool": {
+      "baseline": "0.6.1",
+      "port-version": 0
     },
     "dpdk": {
       "baseline": "22.07",
