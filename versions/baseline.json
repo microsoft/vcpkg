@@ -6462,7 +6462,7 @@
     },
     "portmidi": {
       "baseline": "2.0.4",
-      "port-version": 1
+      "port-version": 2
     },
     "portsmf": {
       "baseline": "239",
