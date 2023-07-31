@@ -25,7 +25,7 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-smpeg2)
 file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-smpeg2/unofficial-smpeg2-config.cmake" config)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-smpeg2/unofficial-smpeg2-config.cmake"
-"find_dependency(CMakeFindDependencyMacro)
+"include(CMakeFindDependencyMacro)
 find_dependency(SDL2 CONFIG)
 ${config}"
 )
