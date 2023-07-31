@@ -19,14 +19,14 @@
     "double-precision": {
       "description": "Use float64 doubles for bullet3"
     },
+    "extras": {
+      "description": "Build the extras"
+    },
     "multithreading": {
       "description": "Multithreading functionality for bullet3"
     },
     "rtti": {
       "description": "Enable RTTI on windows"
-    },
-	"extras": {
-      "description": "Build the extras"
     }
   }
 }
