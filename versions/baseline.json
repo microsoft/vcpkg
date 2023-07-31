@@ -5484,6 +5484,10 @@
       "baseline": "13.1.0",
       "port-version": 0
     },
+    "mruby": {
+      "baseline": "3.2.0",
+      "port-version": 0
+    },
     "ms-angle": {
       "baseline": "alias",
       "port-version": 1
