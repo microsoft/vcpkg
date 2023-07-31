@@ -22,8 +22,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME threadpool
-    CONFIG_PATH lib/cmake/ThreadPool-${VERSION}
+    PACKAGE_NAME thread-pool
+    CONFIG_PATH lib/cmake/thread-pool-${VERSION}
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
