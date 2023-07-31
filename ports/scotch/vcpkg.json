@@ -7,6 +7,7 @@
   "dependencies": [
     "bzip2",
     "liblzma",
+    "pthread",
     {
       "name": "vcpkg-cmake",
       "host": true
