@@ -5,9 +5,8 @@
   "homepage": "https://gitlab.inria.fr/scotch/scotch",
   "license": null,
   "dependencies": [
-    "zlib",
-    "liblzma",
     "bzip2",
+    "liblzma",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -15,6 +14,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ]
 }
