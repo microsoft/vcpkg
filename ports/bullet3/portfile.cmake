@@ -15,6 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         multithreading       BULLET2_MULTITHREADING
         double-precision     USE_DOUBLE_PRECISION
+		extras               BUILD_EXTRAS
     INVERTED_FEATURES
         rtti                 USE_MSVC_DISABLE_RTTI
 )
@@ -27,7 +28,6 @@ vcpkg_cmake_configure(
         -DBUILD_BULLET2_DEMOS=OFF
         -DBUILD_OPENGL3_DEMOS=OFF
         -DBUILD_BULLET3=OFF
-        -DBUILD_EXTRAS=ON
         -DBUILD_BULLET_ROBOTICS_GUI_EXTRA=OFF
         -DBUILD_BULLET_ROBOTICS_EXTRA=OFF
         -DBUILD_GIMPACTUTILS_EXTRA=OFF        
