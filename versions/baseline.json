@@ -462,7 +462,7 @@
     },
     "azure-storage-cpp": {
       "baseline": "7.5.0",
-      "port-version": 5
+      "port-version": 6
     },
     "azure-storage-files-datalake-cpp": {
       "baseline": "12.7.0",
@@ -2130,7 +2130,7 @@
     },
     "directxtex": {
       "baseline": "2023-06-13",
-      "port-version": 0
+      "port-version": 1
     },
     "directxtk": {
       "baseline": "2023-06-13",
@@ -6190,7 +6190,7 @@
     },
     "paho-mqtt": {
       "baseline": "1.3.12",
-      "port-version": 0
+      "port-version": 1
     },
     "paho-mqttpp3": {
       "baseline": "1.2.0",
