@@ -8,9 +8,7 @@ vcpkg_from_github(
     PATCHES
         patch-relocatable-rpath.patch
         fix-aws-root.patch
-        fix-openssl3.patch
         lock-curl-http-and-tls-settings.patch
-        turn-off-warnings-as-errors.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -44,6 +42,7 @@ vcpkg_cmake_configure(
         "-DBUILD_ONLY=${BUILD_ONLY}"
         "-DBUILD_DEPS=OFF"
         "-DBUILD_SHARED_LIBS=OFF"
+        "-DAWS_SDK_WARNINGS_ARE_ERRORS=OFF"
         "-DCMAKE_INSTALL_RPATH=${rpath}"
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
 )
