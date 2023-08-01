@@ -338,7 +338,7 @@
     },
     "avro-cpp": {
       "baseline": "2022-11-07",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-auth": {
       "baseline": "0.6.22",
