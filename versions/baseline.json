@@ -1978,7 +1978,7 @@
     },
     "curlpp": {
       "baseline": "2018-06-15",
-      "port-version": 7
+      "port-version": 8
     },
     "cute-headers": {
       "baseline": "2019-09-20",
