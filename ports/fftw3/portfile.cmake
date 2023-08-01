@@ -14,6 +14,7 @@ vcpkg_extract_source_archive(
         aligned_malloc.patch
         bigobj.patch
         fix-openmp.patch
+        fix-feature-avx2.patch
 )
 
 vcpkg_check_features(
@@ -36,7 +37,7 @@ foreach(PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE Z_DEFAULT_PRECISION)
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS 
-            -D${PRECISION}=OFF
+            -D${PRECISION}=ON
             ${FEATURE_OPTIONS}
             -DBUILD_TESTS=OFF
             -DCMAKE_REQUIRE_FIND_PACKAGE_OpenMP=ON
@@ -63,6 +64,6 @@ file(WRITE "${SOURCE_PATH}/include/fftw3.h" "${_contents}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 vcpkg_fixup_pkgconfig()

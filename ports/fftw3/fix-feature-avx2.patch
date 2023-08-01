@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e3d0caa..5511c25 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -293,7 +293,11 @@ if (ENABLE_FLOAT)
+ endif ()
+ 
+ if (ENABLE_LONG_DOUBLE)
+-  set (FFTW_LDOUBLE TRUE)
++  if(ENABLE_AVX2)
++    set (FFTW_LDOUBLE FALSE)
++  else()
++    set (FFTW_LDOUBLE TRUE)
++  endif()
+   set (BENCHFFT_LDOUBLE TRUE)
+   set (PREC_SUFFIX l)
+ endif ()
