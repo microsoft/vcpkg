@@ -10,7 +10,6 @@
     "dirent",
     "expat",
     "libpng",
-    "lzo",
     "pixman",
     "pthread",
     {
