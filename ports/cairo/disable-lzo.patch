@@ -1,0 +1,22 @@
+diff --git a/meson.build b/meson.build
+index 12512d115..aec6b003a 100644
+--- a/meson.build
++++ b/meson.build
+@@ -201,7 +201,16 @@ else
+   endif
+ endif
+ 
+-lzo_dep = dependency('lzo2', required: false)
++# TSC patch: Never look for lzo (GPL-licensed), but keep lzo_dep around so
++# downstream meson.build files will still work
++#
++# From the docs at https://mesonbuild.com/Reference-manual_functions.html#dependency
++#
++# If dependency_name is '', the dependency is always not found. 
++# So with required: false, this always returns a dependency object 
++# for which the found() method returns false, and which can be passed 
++# like any other dependency to the dependencies: keyword argument of a build_target.
++lzo_dep = dependency('', required: false)
+ if lzo_dep.found()
+   conf.set('HAVE_LZO', 1)
+ endif
