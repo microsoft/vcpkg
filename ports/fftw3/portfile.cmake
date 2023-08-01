@@ -36,7 +36,7 @@ foreach(PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE Z_DEFAULT_PRECISION)
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS 
-            -D${PRECISION}=ON
+            -D${PRECISION}=OFF
             ${FEATURE_OPTIONS}
             -DBUILD_TESTS=OFF
             -DCMAKE_REQUIRE_FIND_PACKAGE_OpenMP=ON
