@@ -1421,8 +1421,8 @@
       "port-version": 2
     },
     "catch2": {
-      "baseline": "3.3.2",
-      "port-version": 1
+      "baseline": "3.4.0",
+      "port-version": 0
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e",
