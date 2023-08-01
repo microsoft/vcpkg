@@ -2173,7 +2173,7 @@
       "port-version": 1
     },
     "dp-thread-pool": {
-      "baseline": "0.6.1",
+      "baseline": "0.6.2",
       "port-version": 0
     },
     "dpdk": {
