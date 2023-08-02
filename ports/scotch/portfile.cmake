@@ -48,4 +48,7 @@ vcpkg_copy_tools(TOOL_NAMES
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/CeCILL-C_V1-en.txt")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/scotch/SCOTCHConfig.cmake" "find_dependency(Threads)" "if(NOT WIN32)\nfind_dependency(Threads)\nelse()\nfind_dependency(PThreads4W)\nendif()")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/man"
+                    "${CURRENT_PACKAGES_DIR}/man"
+                    )
