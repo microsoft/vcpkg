@@ -601,7 +601,7 @@
       "port-version": 3
     },
     "bitsery": {
-      "baseline": "5.2.2",
+      "baseline": "5.2.3",
       "port-version": 0
     },
     "blake3": {
