@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF stable
 )
 
+set(VCPKG_BUILD_TYPE release) # header-only port
+
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 
 vcpkg_cmake_install()
