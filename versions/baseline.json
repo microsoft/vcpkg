@@ -5266,7 +5266,7 @@
     },
     "mdspan": {
       "baseline": "0.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "mecab": {
       "baseline": "2019-09-25",
