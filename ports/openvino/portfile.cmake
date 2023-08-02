@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         001-disable-tools.patch
         002-typo-in-default-option-value.patch
+        003-fix-find-onnx.patch
     HEAD_REF master)
 
 function(ov_checkout_in_path PATH REPO REF SHA512)
@@ -114,6 +115,7 @@ vcpkg_cmake_configure(
         "-DENABLE_PYTHON=OFF"
         "-DENABLE_GAPI_PREPROCESSING=OFF"
         "-DCPACK_GENERATOR=VCPKG"
+        "-DCMAKE_DISABLE_FIND_PACKAGE_pybind11=ON"
 )
 
 vcpkg_cmake_install()
