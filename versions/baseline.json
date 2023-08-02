@@ -2192,6 +2192,10 @@
       "baseline": "3.2.1",
       "port-version": 1
     },
+    "dp-thread-pool": {
+      "baseline": "0.6.2",
+      "port-version": 0
+    },
     "dpdk": {
       "baseline": "22.07",
       "port-version": 1
