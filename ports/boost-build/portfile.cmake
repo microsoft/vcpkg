@@ -16,6 +16,7 @@ vcpkg_from_github(
         0002-fix-get-version.patch
         0003-fix-emscripten.patch
         0004-workaround-MSVC-codegen-bug-in-17.5-on-ARM64.patch
+        0005-disable-msvc-toolset-autodetect.patch
 )
 
 vcpkg_download_distfile(ARCHIVE

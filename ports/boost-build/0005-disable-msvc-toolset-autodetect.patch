@@ -1,0 +1,11 @@
+diff --git a/src/tools/msvc.jam b/src/tools/msvc.jam
+--- a/src/tools/msvc.jam
++++ b/src/tools/msvc.jam
+@@ -2228,7 +2228,6 @@
+ .version-14.3-env = VS170COMNTOOLS ProgramFiles ProgramFiles(x86) ;
+ 
+ # Auto-detect all the available msvc installations on the system.
+-auto-detect-toolset-versions ;
+ 
+ 
+ # And finally trigger the actual Boost Build toolset registration.
