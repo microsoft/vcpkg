@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xdf-modules/libxdf
-    REF "v${VERSION}"
-    SHA512 81ff3598442d3ea166ec54b74248ad7b7eca5fcfdb72526978966398ad9e6524883183e71b68e349c46c2705779bf2b4922ce097f01afe7a62faa449ab8fa075
+    REF 524c37ff7aa4130ccb779ed035165bf43312bd90
+    SHA512 8c5eb1b37b9b1e6f38dcd9cc3b930a3a4af03e7fb3a67209a3b53e9c3259f41f5f0fa56d301b98c105ae75943b4ab6ee0b432965f0d4e99278829792b2ab1474
     HEAD_REF main
-    PATCHES
-        fix-pugixml-dependency.patch
 )
 
 vcpkg_cmake_configure(
