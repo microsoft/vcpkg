@@ -9,7 +9,7 @@ find_package(Boost REQUIRED)
 find_package(RapidJSON CONFIG REQUIRED)
 
 add_library(modern-cpp-kafka INTERFACE)
-target_include_directories(modern-cpp-kafka INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/modern-cpp-kafka>)
+target_include_directories(modern-cpp-kafka INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_link_libraries(modern-cpp-kafka INTERFACE RdKafka::rdkafka Boost::boost rapidjson)
 
 install(TARGETS modern-cpp-kafka EXPORT unofficial-modern-cpp-kafka)
@@ -23,5 +23,5 @@ install(
 
 install(
     DIRECTORY "${CMAKE_SOURCE_DIR}/include/kafka"
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/modern-cpp-kafka"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
