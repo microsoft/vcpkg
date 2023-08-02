@@ -5,7 +5,9 @@
   "homepage": "https://github.com/morganstanley/modern-cpp-kafka",
   "license": "Apache-2.0",
   "dependencies": [
+    "boost-optional",
     "librdkafka",
+    "rapidjson",
     {
       "name": "vcpkg-cmake",
       "host": true

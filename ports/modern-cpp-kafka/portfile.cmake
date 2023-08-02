@@ -21,6 +21,8 @@ file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-modern-cpp-kafka/unofficial-
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-modern-cpp-kafka/unofficial-modern-cpp-kafka-config.cmake"
 "include(CMakeFindDependencyMacro)
 find_dependency(RdKafka CONFIG)
+find_dependency(Boost)
+find_dependency(RapidJSON CONFIG)
 ${cmake_config}
 ")
 
