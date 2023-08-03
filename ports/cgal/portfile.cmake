@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         x86_windows.patch
+        # Upstream patch: https://github.com/CGAL/cgal/pull/7635
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
