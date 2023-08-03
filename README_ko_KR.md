@@ -17,7 +17,7 @@ Vcpkg를 설치하였다면, `vcpkg help` 명령어로 사용 가능한 명령�
 * GitHub: port는 [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)에, 관련 프로그램은 [https://github.com/microsoft/vcpkg-tool](https://github.com/microsoft/vcpkg-tool)에 있습니다.
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), #vcpkg 채널
 * Discord: [\#include \<C++\>](https://www.includecpp.org), #🌏vcpkg 채널
-* 도움말: [Documentation](docs/README.md)
+* 도움말: [Documentation](https://learn.microsoft.com/vcpkg)
 
 # 목차
 
@@ -261,8 +261,8 @@ set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems
 또한, 여전히 `CMAKE_TOOLCHAIN_FILE`을 직접 전달하면
 vcpkg를 사용하지 않을 수 있습니다.
 
-[getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/buildsystems/integration.md
+[getting-started:using-a-package]: https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages
+[getting-started:integration]: https://learn.microsoft.com/en-us/vcpkg/users/buildsystems/msbuild-integration
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools
@@ -270,7 +270,7 @@ vcpkg를 사용하지 않을 수 있습니다.
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
-[getting-started:manifest-spec]: docs/specifications/manifests.md
+[getting-started:manifest-spec]: https://learn.microsoft.com/en-us/vcpkg/users/manifests
 
 # 탭 완성/자동 완성
 
@@ -289,10 +289,10 @@ $ ./vcpkg integrate bash # or zsh
 
 # 예시
 
-[패키지 설치 및 사용](docs/examples/installing-and-using-packages.md),
-[zip 파일에서 새 패키지 추가](docs/examples/packaging-zipfiles.md),
-[GitHub 저장소에서 새 패키지 추가](docs/examples/packaging-github-repos.md)에
-대한 구체적인 예시는 [문서](docs/README.md)를 참고하세요.
+[패키지 설치 및 사용](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages),
+[zip 파일에서 새 패키지 추가](https://learn.microsoft.com/vcpkg/examples/packaging-zipfiles),
+[GitHub 저장소에서 새 패키지 추가]([docs/examples/packaging-github-repos.md](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos))에
+대한 구체적인 예시는 [문서](https://learn.microsoft.com/vcpkg)를 참고하세요.
 
 문서는 이제 웹사이트 https://vcpkg.io/ 에서도 온라인으로 확인 가능합니다. 모든 피드백에 진심으로 감사드립니다!
 https://github.com/vcpkg/vcpkg.github.io/issues 에서 이슈를 제출할 수 있습니다.
