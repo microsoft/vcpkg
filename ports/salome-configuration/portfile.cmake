@@ -11,3 +11,9 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH_CONFIG}/copyright/CEA_EDF.txt")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" [[set(SALOME_CONFIGURATION_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")]])
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
+if(HDF5_WITH_PARALLEL)
+    file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake/SalomeMacros.cmake" contents)
+    string(PREPEND contents "set(SALOME_USE_MPI ON)\n")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake/SalomeMacros.cmake" "${contents}")
+endif()
