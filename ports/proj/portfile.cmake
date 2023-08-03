@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
         remove-doc.patch
+        remove_toolset_restriction.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

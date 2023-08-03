@@ -1,0 +1,36 @@
+From c205ad7b772efcf8c03bd898eb54791b42f1f762 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Daniel=20Sch=C3=BCrmann?= <daschuer@mixxx.org>
+Date: Tue, 25 Jul 2023 00:20:55 +0200
+Subject: [PATCH] Don't depend on CoreFoundation with an absolute path.
+
+---
+ absl/time/CMakeLists.txt | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/absl/time/CMakeLists.txt b/absl/time/CMakeLists.txt
+index 7b72054..c3392ae 100644
+--- a/absl/time/CMakeLists.txt
++++ b/absl/time/CMakeLists.txt
+@@ -54,10 +54,6 @@ absl_cc_library(
+     ${ABSL_DEFAULT_COPTS}
+ )
+ 
+-if(APPLE)
+-  find_library(CoreFoundation CoreFoundation)
+-endif()
+-
+ absl_cc_library(
+   NAME
+     time_zone
+@@ -84,7 +80,7 @@ absl_cc_library(
+   COPTS
+     ${ABSL_DEFAULT_COPTS}
+   DEPS
+-    $<$<PLATFORM_ID:Darwin>:${CoreFoundation}>
++    $<$<PLATFORM_ID:Darwin>:-Wl,-framework,CoreFoundation>
+ )
+ 
+ # Internal-only target, do not depend on directly.
+-- 
+2.25.1
+

@@ -20,6 +20,10 @@ vcpkg_check_features(
         tools BUILD_TOOLS
 )
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT (VCPKG_TARGET_IS_XBOX OR VCPKG_TARGET_IS_MINGW) AND NOT "dx12" IN_LIST FEATURES)
+  list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_directx-headers=TRUE")
+endif()
+
 if(VCPKG_TARGET_IS_MINGW AND ("dx11" IN_LIST FEATURES))
     message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
 endif()

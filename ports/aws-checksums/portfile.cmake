@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-checksums
     REF "v${VERSION}"
-    SHA512 3aae2e9818a1cec3e002c480a7979780b613c9f2389e719c6b35df9d118cd789bad48d9fbe348e20988cffafaee85f766a828be673a34d1963e775a1b951737b
+    SHA512 68e4acf8d57fb124951b854001641bd977aeac849ff96c0b5c35e69b9340c00ffdded4c22ffc2d32dacbddcecae1177afef7e1df36fa7d485b0f01eed55b16ae
     HEAD_REF master
 )
 
