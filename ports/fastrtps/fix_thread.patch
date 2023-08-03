@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7e4df1b..4de06dc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,7 +53,17 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+         file(WRITE "${PROJECT_SOURCE_DIR}/include/fastrtps/utils/TimedMutex.hpp" "${_contents}")
+     endif()
+ endif()
+-
++###############################################################################
++# Replace _Thrd_success with _Thrd_result::_Success. As a workround of the
++# unreleased version of MSVC, it will be deleted after release.
++###############################################################################
++if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
++    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.38.32926.95")
++        file(READ "${PROJECT_SOURCE_DIR}/include/fastrtps/utils/TimedMutex.hpp" _contents)
++        string(REPLACE "_Thrd_success" "_Thrd_result::_Success" _contents "${_contents}")
++        file(WRITE "${PROJECT_SOURCE_DIR}/include/fastrtps/utils/TimedMutex.hpp" "${_contents}")
++    endif()
++endif()
+ ###############################################################################
+ # Warning level
+ ###############################################################################

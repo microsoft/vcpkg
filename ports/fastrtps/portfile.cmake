@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-find-package-asio.patch
         disable-symlink.patch
         fix-xtime.patch
+        fix_thread.patch
 )
 
 vcpkg_cmake_configure(
