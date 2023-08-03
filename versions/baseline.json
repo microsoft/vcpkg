@@ -8957,7 +8957,7 @@
       "port-version": 0
     },
     "yoga": {
-      "baseline": "1.19.0+20230215",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "yomm2": {
