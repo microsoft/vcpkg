@@ -13,10 +13,10 @@
     "boost-system",
     "boost-thread",
     "libxml2",
-    "metis",
-    "scotch",
     "med-fichier",
+    "metis",
     "salome-configuration",
+    "scotch",
     {
       "name": "vcpkg-cmake",
       "host": true
