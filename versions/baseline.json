@@ -7973,8 +7973,8 @@
       "port-version": 0
     },
     "tbb": {
-      "baseline": "2021.9.0",
-      "port-version": 2
+      "baseline": "2021.10.0",
+      "port-version": 0
     },
     "tcb-span": {
       "baseline": "2021-12-15",
