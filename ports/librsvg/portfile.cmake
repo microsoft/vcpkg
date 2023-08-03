@@ -30,6 +30,13 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-librsvg CONFIG_PATH share/unoff
 
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB_RECURSE pc_files "${CURRENT_PACKAGES_DIR}/*.pc")
+    foreach(pc_file ${pc_files})
+        vcpkg_replace_string("${pc_file}" " -lm" "")
+    endforeach()
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
