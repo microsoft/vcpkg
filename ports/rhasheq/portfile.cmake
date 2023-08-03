@@ -8,6 +8,8 @@ vcpkg_from_github(
         find-rhash.patch
 )
 
+file(REMOVE "${SOURCE_PATH}/cmake/modules/FindLibRHash.cmake")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
