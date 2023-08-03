@@ -2509,7 +2509,7 @@
       "port-version": 0
     },
     "fins": {
-      "baseline": "0.7.0",
+      "baseline": "2023-07-31",
       "port-version": 0
     },
     "fixed-string": {
