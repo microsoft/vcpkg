@@ -4,7 +4,7 @@
   "description": "ThorVG is a platform-independent portable library for drawing vector-based scenes and animations",
   "homepage": "https://www.thorvg.org",
   "license": "MIT",
-  "supports": "!(windows & arm & !uwp)",
+  "supports": "!(arm & uwp) & !windows",
   "dependencies": [
     {
       "name": "vcpkg-tool-meson",
