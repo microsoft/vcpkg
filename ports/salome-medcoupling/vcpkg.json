@@ -13,9 +13,9 @@
     "boost-system",
     "boost-thread",
     "libxml2",
-    "med-fichier",
     "metis",
     "salome-configuration",
+    "salome-med-fichier",
     "scotch",
     {
       "name": "vcpkg-cmake",
