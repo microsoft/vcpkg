@@ -7265,7 +7265,7 @@
       "port-version": 0
     },
     "rsm-binary-io": {
-      "baseline": "2.0.5",
+      "baseline": "2.0.6",
       "port-version": 0
     },
     "rsm-bsa": {
