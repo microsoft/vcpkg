@@ -4817,7 +4817,7 @@
       "port-version": 0
     },
     "libxdf": {
-      "baseline": "2023-08-02",
+      "baseline": "0.99.8",
       "port-version": 0
     },
     "libxdiff": {
