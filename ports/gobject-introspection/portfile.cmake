@@ -21,39 +21,11 @@ vcpkg_extract_source_archive(
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    # This is the same check that is used in vcpkg_find_acquire_program(PYTHON3)
-    if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
-        set(_host_arch $ENV{PROCESSOR_ARCHITEW6432})
-    else()
-        set(_host_arch $ENV{PROCESSOR_ARCHITECTURE})
-    endif()
-
-    if(_host_arch MATCHES "(x|X)86")
-        set(_vcpkg_python_host_arch "x86")
-    elseif(_host_arch MATCHES "(amd|AMD)64")
-        set(_vcpkg_python_host_arch "x64")
-    elseif(_host_arch MATCHES "^(ARM|arm)64$")
-        set(_vcpkg_python_host_arch "arm64")
-    else()
-        message(FATAL_ERROR "Unknown architecture ${_host_arch}")
-    endif()
-
-    if("${_vcpkg_python_host_arch}" STREQUAL "${VCPKG_TARGET_ARCHITECTURE}")
-        set(_can_build_introspection_data TRUE)
-    endif()
-else()
-    set(_can_build_introspection_data TRUE)
-endif()
-
-list(APPEND OPTIONS_DEBUG -Dbuild_introspection_data=false)
-if(_can_build_introspection_data)
-    # This option requires running target binaries on host machine)
-    list(APPEND OPTIONS_RELEASE
-        -Dbuild_introspection_data=true
-    )
-else()
-    list(APPEND OPTIONS_RELEASE -Dbuild_introspection_data=false)
+set(OPTIONS_DEBUG -Dbuild_introspection_data=false)
+set(OPTIONS_RELEASE -Dbuild_introspection_data=true)
+if(VCPKG_CROSSCOMPILING AND
+   NOT (CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86"))
+    list(APPEND OPTIONS_RELEASE -Dgi_cross_use_prebuilt_gi=true)
 endif()
 
 vcpkg_configure_meson(
@@ -65,6 +37,9 @@ vcpkg_configure_meson(
     ADDITIONAL_BINARIES
         flex='${FLEX}'
         bison='${BISON}'
+        g-ir-annotation-tool='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-annotation-tool'
+        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        g-ir-scanner='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-scanner'
 )
 
 vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
