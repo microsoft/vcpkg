@@ -2,7 +2,6 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH_CONFIG
     URL "https://git.salome-platform.org/gitpub/tools/configuration.git"
     REF "25f724f7a6c0000330a40c3851dcd8bc2493e1fa"
-    PATCHES
 )
 
 file(COPY "${SOURCE_PATH_CONFIG}/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

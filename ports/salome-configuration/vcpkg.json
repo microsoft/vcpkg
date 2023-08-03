@@ -3,5 +3,6 @@
   "version": "9.10.0",
   "description": "Configuration files and other utilities for SALOME platform",
   "homepage": "https://www.salome-platform.org",
-  "license": "LGPL-2.1-or-later"
+  "license": "LGPL-2.1-or-later",
+  "supports": "windows | linux"
 }

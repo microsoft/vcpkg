@@ -2,7 +2,9 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://git.salome-platform.org/gitpub/tools/medcoupling.git"
     REF "fe2e38d301902c626f644907e00e499552bb2fa5"
-    PATCHES win.patch fix-missing-symbols.patch
+    PATCHES 
+        win.patch 
+        fix-missing-symbols.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  MEDCOUPLING_BUILD_STATIC)
