@@ -20,7 +20,6 @@ vcpkg_cmake_configure(
       -DMEDCOUPLING_METIS_V5=ON
       -DMETIS_LIBRARIES=metis # this is a target
       -DSCOTCH_LIBRARIES=SCOTCH::scotch
-      #--trace-expand
 )
 
 vcpkg_cmake_install()
