@@ -302,7 +302,7 @@
     },
     "attr": {
       "baseline": "2.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "aubio": {
       "baseline": "2022-01-26",
