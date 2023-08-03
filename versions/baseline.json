@@ -4178,7 +4178,7 @@
     },
     "libhdfs3": {
       "baseline": "2019-11-05",
-      "port-version": 4
+      "port-version": 5
     },
     "libheif": {
       "baseline": "1.16.2",
