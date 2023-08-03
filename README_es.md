@@ -57,6 +57,11 @@ donde el equipo de vcpkg y la comunidad pueden verlo, y potencialmente hacer un 
 Después de tener Vcpkg instalado y funcionando,
 puede que desee añadir [completado con tab](#Completado-TabAutoCompletado) en su terminal.
 
+Finalmente, si está interesado en el futuro de Vcpkg,
+puede ver la guía de [archivos de manifiesto][getting-started:manifest-spec]!
+esta es una característica experimental y es probable que tenga errores,
+así que se recomienda revisar y [crear incidencias][contributing:submit-issue]!
+
 ### Inicio Rápido: Windows
 
 Prerrequisitos:
