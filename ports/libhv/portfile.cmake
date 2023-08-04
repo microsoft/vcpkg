@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ithewei/libhv
-    REF 3a67fe506a291ee94ed80bbdd73553fcb6a6b1ef #v1.3.0
+    REF v${VERSION} #v1.3.0
     SHA512 3aa341a94950b0d4f3351a6f62a4c34947b481bb59f1954dd8d031313e73d9c6add1017cf386c507b231b114d80cfc0739a50bed179bdbc31052c86e2f1321a3
     HEAD_REF master
     PATCHES
