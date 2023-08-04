@@ -320,7 +320,7 @@ pelos desenvolvedores originais dessas bibliotecas e baixar o código-fonte e cr
 locais de distribuição oficiais. Para uso atrás de um firewall, o acesso específico necessário dependerá
 em quais portas estão sendo instaladas. Se você precisar instalar em um ambiente "air gap", considere
 instalando uma vez em um ambiente sem "air gap", preenchendo um
-[cache de ativos](docs/users/assetcaching.md) compartilhado com o ambiente "air gapped".
+[cache de ativos](https://learn.microsoft.com/vcpkg/users/assetcaching) compartilhado com o ambiente "air gapped".
 
 # Telemetria
 
