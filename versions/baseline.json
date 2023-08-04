@@ -5673,8 +5673,8 @@
       "port-version": 0
     },
     "netcdf-c": {
-      "baseline": "4.8.1",
-      "port-version": 3
+      "baseline": "4.9.2",
+      "port-version": 0
     },
     "netcdf-cxx4": {
       "baseline": "4.3.1",
