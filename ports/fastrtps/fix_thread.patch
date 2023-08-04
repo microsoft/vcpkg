@@ -1,23 +1,17 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7e4df1b..4de06dc 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -53,7 +53,17 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-         file(WRITE "${PROJECT_SOURCE_DIR}/include/fastrtps/utils/TimedMutex.hpp" "${_contents}")
-     endif()
- endif()
--
-+###############################################################################
-+# Replace _Thrd_success with _Thrd_result::_Success. As a workround of the
-+# unreleased version of MSVC, it will be deleted after release.
-+###############################################################################
-+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.38.32926.95")
-+        file(READ "${PROJECT_SOURCE_DIR}/include/fastrtps/utils/TimedMutex.hpp" _contents)
-+        string(REPLACE "_Thrd_success" "_Thrd_result::_Success" _contents "${_contents}")
-+        file(WRITE "${PROJECT_SOURCE_DIR}/include/fastrtps/utils/TimedMutex.hpp" "${_contents}")
-+    endif()
-+endif()
- ###############################################################################
- # Warning level
- ###############################################################################
+diff --git a/include/fastrtps/utils/TimedMutex.hpp b/include/fastrtps/utils/TimedMutex.hpp
+index b1982f5..f1e67f0 100644
+--- a/include/fastrtps/utils/TimedMutex.hpp
++++ b/include/fastrtps/utils/TimedMutex.hpp
+@@ -39,6 +39,12 @@ namespace fastrtps {
+ #if defined(_WIN32)
+ class TimedMutex
+ {
++    // On MSVC 19.38.32926.95 `_Thrd_success` was changed into `_Thrd_result::_Success`.
++    // See https://github.com/eProsima/Fast-DDS/issues/3783
++    // See https://github.com/microsoft/STL/pull/3897
++#if defined(_MSC_FULL_VER) && _MSC_FULL_VER >= 193832926
++    using _Thrd_success = _Thrd_result::_Success;
++#endif
+ public:
+
+     TimedMutex()
