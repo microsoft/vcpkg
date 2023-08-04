@@ -1,3 +1,9 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    # Fixing static builds requires fixing/removing _declspec(dllexport|dllimport)
+    # in the EXPORTS macros.
+endif()
+
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://git.salome-platform.org/gitpub/tools/medcoupling.git"
