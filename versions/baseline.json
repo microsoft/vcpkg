@@ -2473,7 +2473,7 @@
       "port-version": 1
     },
     "fastio": {
-      "baseline": "2022-11-14",
+      "baseline": "2023-07-06",
       "port-version": 0
     },
     "fastlz": {
