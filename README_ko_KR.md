@@ -291,7 +291,7 @@ $ ./vcpkg integrate bash # or zsh
 
 [패키지 설치 및 사용](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages),
 [zip 파일에서 새 패키지 추가](https://learn.microsoft.com/vcpkg/examples/packaging-zipfiles),
-[GitHub 저장소에서 새 패키지 추가]([docs/examples/packaging-github-repos.md](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos))에
+[GitHub 저장소에서 새 패키지 추가](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos)에
 대한 구체적인 예시는 [문서](https://learn.microsoft.com/vcpkg)를 참고하세요.
 
 문서는 이제 웹사이트 https://vcpkg.io/ 에서도 온라인으로 확인 가능합니다. 모든 피드백에 진심으로 감사드립니다!
@@ -331,7 +331,7 @@ Vcpk가 제공하는 대부분의 port는 각각의 라이브러리를 빌드할
 소스 코드와 빌드 도구를 각각의 공식 배포처로부터 다운로드합니다.
 방화벽 뒤에서 사용하는 경우, 어떤 port를 설치하느냐에 따라 필요한 접근 권한이 달라질 수 있습니다.
 만약 "air gapped" 환경에서 설치해야만 한다면, "air gapped"가 아닌 환경에서 
-[asset 캐시](docs/users/assetcaching.md)를 다운로드하고, 
+[asset 캐시](https://learn.microsoft.com/vcpkg/users/assetcaching)를 다운로드하고, 
 이후에 "air gapped" 환경에서 공유하는 것을 고려해 보십시오.
 
 # 데이터 수집
