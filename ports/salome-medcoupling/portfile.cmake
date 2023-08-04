@@ -60,3 +60,6 @@ endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/MEDCoupling/MEDCouplingConfig.cmake" "/cmake_files" "/share/MEDCoupling")
 vcpkg_copy_tools(TOOL_NAMES medpartitioner AUTO_CLEAN)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
