@@ -1156,6 +1156,7 @@ rtlsdr:x64-uwp=fail
 rttr:arm-neon-android=fail
 rttr:arm64-android=fail
 rttr:x64-android=fail
+salome-medcoupling:x64-linux=fail
 scintilla:arm-neon-android=fail
 scintilla:arm64-android=fail
 scintilla:x64-android=fail
