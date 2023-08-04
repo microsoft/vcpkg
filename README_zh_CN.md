@@ -300,7 +300,7 @@ vcpkg会将库的协议文件放置在 `installed/<triplet>/share/<port>/copyrig
 
 大多数vcpkg中的库采用其官方发布的构建工具来构建它们，并从其官方渠道下载源码及构建工具。
 若您的环境包含防火墙或反病毒程序，为了避免构建失败，请考虑在禁用防火墙与反病毒程序的环境中构建它们一次，
-再将它们生成的二进制缓存共享给原始环境中使用。
+再将它们生成的[二进制缓存](https://learn.microsoft.com/vcpkg/users/assetcaching)共享给原始环境中使用。
 
 # 数据收集
 
