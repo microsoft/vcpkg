@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 390ac0a..4bcd909 100644
+index ffe15a9..19768d6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2100,6 +2100,21 @@ STRING(REPLACE ";" " " LINKFLAGS "${LINKFLAGS}")
+@@ -2485,6 +2485,21 @@ STRING(REPLACE ";" " " LINKFLAGS "${LINKFLAGS}")
  SET(LIBS ${NC_LIBS})
  SET(NC_LIBS "-lnetcdf")
  
@@ -25,11 +25,11 @@ index 390ac0a..4bcd909 100644
    ${netCDF_SOURCE_DIR}/netcdf.pc.in
    ${netCDF_BINARY_DIR}/netcdf.pc @ONLY)
 diff --git a/netcdf.pc.in b/netcdf.pc.in
-index 22b5594..a48b7c2 100644
+index 238e113..e162353 100644
 --- a/netcdf.pc.in
 +++ b/netcdf.pc.in
 @@ -9,5 +9,6 @@ Description: NetCDF Client Library for C
- URL: http://www.unidata.ucar.edu/netcdf
+ URL: https://www.unidata.ucar.edu/netcdf
  Version: @PACKAGE_VERSION@
  Libs: -L${libdir} @NC_LIBS@
 -Libs.private: @LIBS@

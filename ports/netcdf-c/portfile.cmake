@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-c
-    REF cd6173f472b778fa0e558982c59f7183aa5b8e47 # v4.8.1
-    SHA512 e965b9c865f31abcd0ae045cb709a41710e72bcf5bd237972cd62688f0f099f1b12be316a448d22315b1c73eb99fae3ea38072e9a3646a4f70ba42507d82f537
+    REF "v${VERSION}"
+    SHA512 e0c299843083cde54bfaccebd4f831513c2c531f3a98e37a1bc14d12a5e63af0b994cab9292bcb17e1b162ffe26b49ed3f9c6de7f2f48cdfcfd3f3c4a377bb04
     HEAD_REF master
     PATCHES
         no-install-deps.patch
@@ -92,4 +92,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")
