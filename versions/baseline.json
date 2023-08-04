@@ -7873,8 +7873,8 @@
       "port-version": 0
     },
     "status-code": {
-      "baseline": "2023-01-27",
-      "port-version": 2
+      "baseline": "2023-07-22",
+      "port-version": 0
     },
     "status-value-lite": {
       "baseline": "1.1.0",
