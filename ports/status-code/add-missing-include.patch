@@ -1,5 +1,5 @@
 diff --git a/wg21/file_io_error.cpp b/wg21/file_io_error.cpp
-index 41f23a1..fe69458 100644
+index 1933566..710d534 100644
 --- a/wg21/file_io_error.cpp
 +++ b/wg21/file_io_error.cpp
 @@ -24,6 +24,7 @@ http://www.boost.org/LICENSE_1_0.txt)
@@ -8,5 +8,5 @@ index 41f23a1..fe69458 100644
  #include <stdio.h>  // for sprintf
 +#include <utility>  // for std::move
  
+ #include "status-code/nested_status_code.hpp"
  #include "status-code/system_error2.hpp"
- 
