@@ -12,8 +12,9 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" [[set
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
+file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake/SalomeMacros.cmake" contents)
 if(HDF5_WITH_PARALLEL)
-    file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake/SalomeMacros.cmake" contents)
     string(PREPEND contents "set(SALOME_USE_MPI ON)\n")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake/SalomeMacros.cmake" "${contents}")
 endif()
+string(REPLACE [[SET(CMAKE_PREFIX_PATH "${${_envvar}}")]] "" contents "${contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake/SalomeMacros.cmake" "${contents}")
