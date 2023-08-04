@@ -7514,7 +7514,7 @@
     },
     "sfml": {
       "baseline": "2.6.0",
-      "port-version": 17
+      "port-version": 18
     },
     "sfsexp": {
       "baseline": "1.3.1",
