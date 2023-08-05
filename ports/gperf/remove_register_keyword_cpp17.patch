@@ -1,9 +1,3 @@
-commit a5ff738a4b545ad25640753b651a6322b463c7b0
-Author: rdh <ridwanabdulhafidh@gmail.com>
-Date:   Wed Aug 2 05:04:58 2023 -0400
-
-    update cpp
-
 diff --git a/lib/getline.cc b/lib/getline.cc
 index c57c633..0984a7c 100644
 --- a/lib/getline.cc
