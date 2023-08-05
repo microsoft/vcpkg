@@ -1,12 +1,18 @@
+vcpkg_download_distfile(cmake_config_patch
+    URLS https://patch-diff.githubusercontent.com/raw/PCRE2Project/pcre2/pull/260.diff
+    SHA512 ab8cfee458222818b9dfea4e7c57be645f8ecb1b93db74f2b7fa97f8e330d076ae296f395de4d25afff26318367a50ab0067eff5223b9d6a5d3208a86bba5338
+    FILENAME ${PORT}-pr-260.diff
+)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PCRE2Project/pcre2
-    REF "pcre2-${VERSION}"
-    SHA512 3d0ee66e23809d3da2fe2bf4ed6e20b0fb96c293a91668935f6319e8d02e480eeef33da01e08a7436a18a1a85a116d83186b953520f394c866aad3cea73c7f5c
+    REF 7cc9d63
+    SHA512 5f521ba67f7812508e68694b0a8d945c09a3eb84b6b0224ca8ee92587fc8288a3c62389363662641221634a4413b4c957f744e7a82c1db8c95d995057ecc3294
     HEAD_REF master
     PATCHES
         pcre2-10.35_fix-uwp.patch
         no-static-suffix.patch
+        ${cmake_config_patch}
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -52,8 +58,7 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/include/pcre2.h" "${PCRE2_H}")
 vcpkg_fixup_pkgconfig()
 
 # The cmake file provided by pcre2 has some problems, so don't use it for now.
-#vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/cmake")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/pcre2)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/man")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
