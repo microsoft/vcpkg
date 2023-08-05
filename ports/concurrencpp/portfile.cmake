@@ -2,11 +2,10 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO David-Haim/concurrencpp
   REF "v.${VERSION}"
-  SHA512 51e8ba898256165ef5173a098e804121ae0d1212b5d83e6356a34c72dc3d66849f7382e1f35f5ec34718425563faf1795675c6eeb5374dd660a65800e8318a1f
+  SHA512 b87a6bd0593d6a7d35f911a0a9835e1afe416aa25d06e4d448789617c94ec2faeb5df07d68d5ccc7e986009f09016f90ef57016b1aabe567996d3ad9816add4c
   HEAD_REF master
   PATCHES
     fix-include-path.patch
-    fix-missing-limits.patch
 )
 
 vcpkg_cmake_configure(
