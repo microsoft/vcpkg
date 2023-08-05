@@ -13,18 +13,17 @@ vcpkg_cmake_configure(
         -DPEGTL_BUILD_EXAMPLES=OFF
         -DPEGTL_INSTALL_INCLUDE_DIR=include/pegtl-2
         -DPEGTL_INSTALL_DOC_DIR=share/pegtl-2
-        -DPEGTL_INSTALL_CMAKE_DIR=share/pegtl-2/cmake
+        -DPEGTL_INSTALL_CMAKE_DIR=share/pegtl-2
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/pegtl-2/cmake)
+# Handle collision with latest pegtl
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/pegtl-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/pegtl-config-version.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config-version.cmake")
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-
-# Handle collision with latest pegtl
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/pegtl-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/pegtl-config-version.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config-version.cmake")

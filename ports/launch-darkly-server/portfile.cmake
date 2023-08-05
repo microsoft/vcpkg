@@ -71,21 +71,19 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
+set(shareDir "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/launch-darkly-server-config.cmake DESTINATION ${shareDir})
+file(RENAME ${shareDir}/ldserverapiTargets.cmake ${shareDir}/ldserverapi-targets.cmake)
 vcpkg_cmake_config_fixup(
 	CONFIG_PATH lib/cmake/ldserverapi
 )
 
 file(REMOVE_RECURSE
 	"${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-    
-vcpkg_copy_pdbs()
-
-set(shareDir "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/launch-darkly-server-config.cmake DESTINATION ${shareDir})
-file(RENAME ${shareDir}/ldserverapiTargets.cmake ${shareDir}/ldserverapi-targets.cmake)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

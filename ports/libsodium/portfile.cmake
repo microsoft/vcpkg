@@ -20,12 +20,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
-
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME unofficial-sodium
-)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/sodiumConfig.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-sodium/unofficial-sodiumConfig.cmake" @ONLY)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-sodium)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -34,10 +31,5 @@ file(REMOVE_RECURSE
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/Makefile.am")
 
-configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/sodiumConfig.cmake.in"
-    "${CURRENT_PACKAGES_DIR}/share/unofficial-sodium/unofficial-sodiumConfig.cmake"
-    @ONLY
-)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

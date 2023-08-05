@@ -16,8 +16,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/UnitTest++)
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/unittest-cpp" "${CURRENT_PACKAGES_DIR}/share/unittest++")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/UnitTest++ PACKAGE_NAME unittest++)
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
