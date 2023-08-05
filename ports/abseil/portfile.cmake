@@ -5,11 +5,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 20230125.0
-    SHA512 b3d334215c78b31a2eb10bd9d4a978cd48367866d6daa2065c6c727282bafe19ef7ff5bd7cd4ed5c319d3b04e0711222e08ddbe7621ef1e079fed93a7307112f
+    REF 20230125.3
+    SHA512 50509acfc4128fd31435631f71ac8cd0350acd9e290f78502723149016e7f07c9d84182ba99e0938b1873fecda09393d3fd7af8dabfb0d89cdcdd8a69a917e70
     HEAD_REF master
     PATCHES
         fix-dll-support.patch
+        core-foundation-deps.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

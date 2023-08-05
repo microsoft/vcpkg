@@ -9,6 +9,9 @@ set(QT_IS_LATEST ON)
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
+        # CVE fixes from https://download.qt.io/official_releases/qt/6.5/
+        patches/CVE-2023-38197-qtbase-6.5.diff
+
         allow_outside_prefix.patch
         config_install.patch
         fix_cmake_build.patch
@@ -469,4 +472,19 @@ endif()
 
 if(VCPKG_CROSSCOMPILING)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake" "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}")
+endif()
+
+function(remove_original_cmake_path file)
+    file(READ "${file}" _contents)
+    string(REGEX REPLACE "original_cmake_path=[^\n]*" "original_cmake_path=''" _contents "${_contents}")
+    file(WRITE "${file}" "${_contents}")
+endfunction()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    foreach(file "qt-cmake" "qt-cmake-private")
+        remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${file}")
+        if(NOT VCPKG_BUILD_TYPE)
+            remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/${file}")
+        endif()
+    endforeach()
 endif()

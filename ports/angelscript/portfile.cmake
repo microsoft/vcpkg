@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         mark-threads-private.patch
+        fix-dependency.patch
 )
 
 vcpkg_cmake_configure(

@@ -1,63 +1,40 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ntop/PF_RING
-    REF 582fa09bc58411cfe6f27facd7e6438924f779d2
-    SHA512 78dd2d2f9df259483196905f80a904534632a835f742d1f8b3ad645ea80f2dad78356960a2b35e2678525786a7344fa248b708bd3f86101c43fb36c7abc05598
+    REF "${VERSION}"
+    SHA512 de86fb2ead8af63a3b73026225ac2dba9ae97c90d0925e30c63ed75f1d1f7f057b6ab586b06dd24fdbbfdce694048b72bbdd35fc4de0c22508701a6c3ee7c7a2
     HEAD_REF dev
-    PATCHES
-        use-vcpkg-libpcap.patch
-        makefile.patch
 )
 
-file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(COPY "${SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-endif()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(COPY "${SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-endif()
-set(ENV{VCPKG_LIBPCAP_DIR} "${CURRENT_INSTALLED_DIR}")
-vcpkg_build_make()
-vcpkg_fixup_pkgconfig()
+file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/kernel")
+file(COPY "${SOURCE_PATH}/kernel/linux/pf_ring.h" DESTINATION "${CURRENT_BUILDTREES_DIR}/kernel/linux")
 
-vcpkg_copy_pdbs()
+vcpkg_find_acquire_program(BISON)
+vcpkg_find_acquire_program(FLEX)
 
-# Install manually because pfring cannot set prefix
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
-    set(PFRING_OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+vcpkg_configure_make(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "userland"
+    COPY_SOURCE
+    OPTIONS
+        --disable-archopt
+)
+string(REPLACE "dynamic" "shared" install_target "install-${VCPKG_LIBRARY_LINKAGE}")
+vcpkg_install_make(
+    SUBPATH "lib"
+    INSTALL_TARGET "${install_target}"
+    OPTIONS
+        "LEX=${FLEX}"
+        "YACC=${BISON}"
+)
 
-    if (VCPKG_BUILD_TYPE STREQUAL debug)
-        file(GLOB_RECURSE PFRING_KO_FILES "${PFRING_OBJ_DIR}/*.ko")
-        file(INSTALL ${PFRING_KO_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/share/${PORT})
-
-        file(INSTALL ${SOURCE_PATH}/userland/lib/pfring.h DESTINATION ${CURRENT_PACKAGES_DIR}/debug/include)
-    endif()
-
-    file(GLOB_RECURSE PFRING_LIBS "${PFRING_OBJ_DIR}/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
-    file(INSTALL ${PFRING_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(GLOB_RECURSE PFRING_DLLS "${PFRING_OBJ_DIR}/*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
-        file(INSTALL ${PFRING_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    endif()
-endif()
-
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
-    set(PFRING_OBJ_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-
-    file(GLOB_RECURSE PFRING_KO_FILES "${PFRING_OBJ_DIR}/*.ko")
-    file(INSTALL ${PFRING_KO_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-    file(GLOB_RECURSE PFRING_LIBS "${PFRING_OBJ_DIR}/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
-    file(INSTALL ${PFRING_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(GLOB_RECURSE PFRING_DLLS "${PFRING_OBJ_DIR}/*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
-        file(INSTALL ${PFRING_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    endif()
-
-    file(INSTALL ${SOURCE_PATH}/userland/lib/pfring.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-endif()
-
-#Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(
+    COMMENT [[
+The user-space PF_RING library source code is distributed under the LGPLv2.1.
+The library is built using binary objects from the userland/lib/libs directory
+which adds an NTOP END USER LICENSE AGREEMENT.
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/userland/lib/libs/EULA.txt"
+)

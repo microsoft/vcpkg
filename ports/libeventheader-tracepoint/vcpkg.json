@@ -1,14 +1,14 @@
 {
   "name": "libeventheader-tracepoint",
-  "version": "1.0.0",
-  "description": "EventHeader-encoded Linux tracepoints for C/C++",
+  "version": "1.1.0",
+  "description": "C/C++ interface for generating EventHeader-encoded Linux Tracepoints",
   "homepage": "https://github.com/microsoft/LinuxTracepoints/",
   "license": "MIT",
   "supports": "linux | windows",
   "dependencies": [
     {
       "name": "libtracepoint",
-      "version>=": "1.0.0"
+      "version>=": "1.1.0"
     },
     {
       "name": "vcpkg-cmake",

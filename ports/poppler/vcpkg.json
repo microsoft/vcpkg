@@ -1,11 +1,11 @@
 {
   "name": "poppler",
   "version": "23.1.0",
-  "port-version": 2,
+  "port-version": 4,
   "description": "A PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
   "license": "GPL-2.0-or-later",
-  "supports": "!uwp",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     "boost-container",
     "boost-move",
@@ -36,6 +36,12 @@
           "name": "cairo",
           "default-features": false
         }
+      ]
+    },
+    "cms": {
+      "description": "Enable use of LCMS2 as color management system",
+      "dependencies": [
+        "lcms"
       ]
     },
     "curl": {

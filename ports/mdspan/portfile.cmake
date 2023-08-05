@@ -1,10 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kokkos/mdspan
-    REF mdspan-0.5.0
-    SHA512 f14b021006f945434435c5575a734bcf308598b5c21fd62a54248ad6c5b1ffe29ba4bcf57935751f5c8dd3dd9b56bd799a502c4818f06f8594a32f0202b1b52e
+    REF "mdspan-${VERSION}"
+    SHA512 d0e247b5ed5765f3ddd04634462c428b19beceb81b0b7d8221443b3f6ab122e232e85c15d56c208b244be2f6667d7e1db571848b61190b64ec110f7d31c3e0c9
     HEAD_REF stable
 )
+
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 
@@ -12,6 +14,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mdspan)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
