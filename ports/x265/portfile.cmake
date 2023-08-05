@@ -1,12 +1,12 @@
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO multicoreware/x265_git
-    REF "${VERSION}" #v3.5
+    REF "${VERSION}"
     SHA512 e95e454b438114cf90e32818847afa65b54caf69442a4a39dc92f125a7ec6f99c83ec509549ced3395cd5a77305abef0ecdad38b4a359f82fb17fce6c4c7cc7a
     HEAD_REF master
     PATCHES
         disable-install-pdb.patch
-        fix-pkgconfig-version.patch
+        version.patch
 )
 
 set(ASSEMBLY_OPTIONS "-DENABLE_ASSEMBLY=OFF")
@@ -23,7 +23,7 @@ vcpkg_cmake_configure(
         ${ASSEMBLY_OPTIONS}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_LIBNUMA=OFF
-        -DX265_LATEST_TAG=3.4
+        "-DVERSION=${VERSION}"
     OPTIONS_DEBUG
         -DENABLE_CLI=OFF
     MAYBE_UNUSED_VARIABLES
