@@ -9,7 +9,6 @@ vcpkg_from_github(
     PATCHES
         0001-fix_find_package.patch
         0002-fix-imgui-dependency.patch
-        004-fix-find-sfml.patch
 )
 
 vcpkg_cmake_configure(
