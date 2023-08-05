@@ -8613,7 +8613,7 @@
       "port-version": 0
     },
     "vulkan-hpp": {
-      "baseline": "1.3.260",
+      "baseline": "deprecated",
       "port-version": 0
     },
     "vulkan-memory-allocator": {
