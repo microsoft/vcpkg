@@ -39,11 +39,11 @@ index 3a974c4..8a1c6cd 100644
  
  if (IMGUI_SFML_IMGUI_DEMO)
      list(APPEND IMGUI_SOURCES ${IMGUI_DEMO_SOURCES})
-@@ -92,7 +72,7 @@ add_library(ImGui-SFML
+@@ -92,7 +72,8 @@ add_library(ImGui-SFML
  add_library(ImGui-SFML::ImGui-SFML ALIAS ImGui-SFML)
  
  target_link_libraries(ImGui-SFML
--  PUBLIC
+   PUBLIC
 +    imgui::imgui
      sfml-graphics
      sfml-system
