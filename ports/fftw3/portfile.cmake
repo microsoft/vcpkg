@@ -9,7 +9,6 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         omp_test.patch
-        patch_targets.patch
         fftw3_arch_fix.patch
         aligned_malloc.patch
         bigobj.patch
@@ -52,7 +51,7 @@ foreach(package_name IN LISTS package_names)
     )
     vcpkg_copy_pdbs()
 
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "${package_name}" CONFIG_PATH lib/cmake)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "${package_name}" CONFIG_PATH "lib/cmake/${package_name}")
 endforeach()
 vcpkg_fixup_pkgconfig()
 
