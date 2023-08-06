@@ -39,6 +39,7 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "${FEATURE_OPTIONS}"
+        "-Dcpp_std=c++11"
 )
 
 vcpkg_install_meson()
