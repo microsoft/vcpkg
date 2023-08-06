@@ -19,13 +19,13 @@ vcpkg_extract_source_archive(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        openmp ENABLE_OPENMP
+        openmp  ENABLE_OPENMP
         threads ENABLE_THREADS
         threads WITH_COMBINED_THREADS
-        avx2 ENABLE_AVX2
-        avx ENABLE_AVX
-        sse2 ENABLE_SSE2
-        sse ENABLE_SSE
+        avx2    ENABLE_AVX2
+        avx     ENABLE_AVX
+        sse2    ENABLE_SSE2
+        sse     ENABLE_SSE
 )
 
 set(ENABLE_FLOAT_CMAKE fftw3f)
@@ -44,13 +44,12 @@ foreach(PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE Z_DEFAULT_PRECISION)
             CMAKE_REQUIRE_FIND_PACKAGE_OpenMP
             Z_DEFAULT_PRECISION
     )
-
     vcpkg_cmake_install()
-
     vcpkg_copy_pdbs()
 
     vcpkg_cmake_config_fixup(PACKAGE_NAME ${${PRECISION}_CMAKE} CONFIG_PATH lib/cmake)
 endforeach()
+vcpkg_fixup_pkgconfig()
 
 file(READ "${SOURCE_PATH}/api/fftw3.h" _contents)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -63,6 +62,4 @@ file(WRITE "${SOURCE_PATH}/include/fftw3.h" "${_contents}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
