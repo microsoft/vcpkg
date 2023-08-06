@@ -1,21 +1,20 @@
 {
-    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-    "name": "libcln",
-    "version-date": "2023-06-29",
-    "description": "Class Library for Numbers.",
-    "homepage": "https://www.ginac.de/CLN/cln.git/",
-    "license": "GPL-2.0-only",
-    "documentation": "https://www.ginac.de/CLN/cln.html",
-    "dependencies": [
-      "gmp",
-      {
-        "name": "vcpkg-cmake",
-        "host": true
-      },
-      {
-        "name": "vcpkg-cmake-config",
-        "host": true
-      }
-    ]
-  }
-  
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "libcln",
+  "version-date": "2023-06-29",
+  "description": "Class Library for Numbers.",
+  "homepage": "https://www.ginac.de/CLN/cln.git/",
+  "documentation": "https://www.ginac.de/CLN/cln.html",
+  "license": "GPL-2.0-only",
+  "dependencies": [
+    "gmp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

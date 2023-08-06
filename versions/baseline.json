@@ -3952,6 +3952,10 @@
       "baseline": "1.13",
       "port-version": 4
     },
+    "libcln": {
+      "baseline": "2023-06-29",
+      "port-version": 0
+    },
     "libconfig": {
       "baseline": "1.7.3",
       "port-version": 3
