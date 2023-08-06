@@ -29,25 +29,30 @@ vcpkg_check_features(
         sse     ENABLE_SSE
 )
 
-set(ENABLE_FLOAT_CMAKE fftw3f)
-set(ENABLE_LONG_DOUBLE_CMAKE fftw3l)
-set(Z_DEFAULT_PRECISION_CMAKE fftw3)
+set(package_names  fftw3 fftw3f fftw3l)
+set(fftw3_options  "")
+set(fftw3f_options -DENABLE_FLOAT=ON)
+set(fftw3l_options -DENABLE_LONG_DOUBLE=ON -DENABLE_AVX2=OFF -DENABLE_AVX=OFF -DENABLE_SSE2=OFF)
 
-foreach(PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE Z_DEFAULT_PRECISION)
+foreach(package_name IN LISTS package_names)
+    message(STATUS "${package_name}...")
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
+        LOGFILE_BASE "config-${package_name}-${TARGET_TRIPLET}"
         OPTIONS 
-            -D${PRECISION}=ON
             ${FEATURE_OPTIONS}
+            ${${package_name}_options} # may override FEATURE_OPTIONS
             -DBUILD_TESTS=OFF
         MAYBE_UNUSED_VARIABLES
             CMAKE_REQUIRE_FIND_PACKAGE_OpenMP
-            Z_DEFAULT_PRECISION
     )
-    vcpkg_cmake_install()
+    vcpkg_cmake_build(
+        LOGFILE_BASE "install-${package_name}"
+        TARGET install
+    )
     vcpkg_copy_pdbs()
 
-    vcpkg_cmake_config_fixup(PACKAGE_NAME ${${PRECISION}_CMAKE} CONFIG_PATH lib/cmake)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "${package_name}" CONFIG_PATH lib/cmake)
 endforeach()
 vcpkg_fixup_pkgconfig()
 
