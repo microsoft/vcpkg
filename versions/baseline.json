@@ -7566,7 +7566,7 @@
     },
     "signalrclient": {
       "baseline": "1.0.0-beta1-9",
-      "port-version": 4
+      "port-version": 5
     },
     "sigslot": {
       "baseline": "1.0.0",
