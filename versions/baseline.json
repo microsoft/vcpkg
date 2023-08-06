@@ -8296,6 +8296,10 @@
       "baseline": "0.5.0",
       "port-version": 2
     },
+    "tuplet": {
+      "baseline": "2.1.1",
+      "port-version": 0
+    },
     "turbobase64": {
       "baseline": "2020-01-12",
       "port-version": 3
