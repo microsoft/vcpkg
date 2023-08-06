@@ -1,0 +1,4 @@
+inih provides CMake targets:
+    find_package(unofficial-inih CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::inih::libinih @inireader_usage@)
+Alternatively use via PkgConfig
