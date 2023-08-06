@@ -8,7 +8,6 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        omp_test.patch
         fftw3_arch_fix.patch
         aligned_malloc.patch
         bigobj.patch
