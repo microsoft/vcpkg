@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         aligned_malloc.patch
         bigobj.patch
         fix-openmp.patch
+        install-subtargets.patch
 )
 
 vcpkg_check_features(
