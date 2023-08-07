@@ -1,9 +1,9 @@
-The package libcln can be used via CMake:
+The package cln can be used via CMake:
 
     find_library(cln CONFIG REQUIRED)
     target_link_libraries(main PRIVATE cln::cln)
 
-The package libcln can be imported via CMake FindPkgConfig module:
+The package cln can be imported via CMake FindPkgConfig module:
 
     find_package(PkgConfig)
     PKG_CHECK_MODULES(CLN)
