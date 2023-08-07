@@ -300,11 +300,6 @@ __pycache__/
 !/triplets/x64-windows-static.cmake
 !/triplets/x64-windows.cmake
 !/triplets/x86-windows.cmake
-#TSC-specific triplets
-!/triplets/arm64-osx-dynamic-release.cmake
-!/triplets/x64-osx-dynamic-release.cmake
-!/triplets/x64-windows-dynamic-release.cmake
-
 !/triplets/community
 !/triplets/community/**
 
