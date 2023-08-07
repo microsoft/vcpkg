@@ -6,7 +6,7 @@
   "homepage": "https://www.ginac.de/CLN/cln.git/",
   "documentation": "https://www.ginac.de/CLN/cln.html",
   "license": "GPL-2.0-only",
-  "supports": "!uwp | !(native & android)",
+  "supports": "!uwp | !android",
   "dependencies": [
     "gmp",
     {
