@@ -2954,7 +2954,7 @@
     },
     "gobject-introspection": {
       "baseline": "1.72.0",
-      "port-version": 3
+      "port-version": 4
     },
     "google-cloud-cpp": {
       "baseline": "2.14.0",
@@ -4486,7 +4486,7 @@
     },
     "libpq": {
       "baseline": "15.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libpqxx": {
       "baseline": "7.7.4",
@@ -5266,7 +5266,7 @@
     },
     "mdl-sdk": {
       "baseline": "2021.1.2",
-      "port-version": 1
+      "port-version": 2
     },
     "mdns": {
       "baseline": "1.4.2",
@@ -5910,7 +5910,7 @@
     },
     "omniorb": {
       "baseline": "4.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "ompl": {
       "baseline": "1.5.1",
@@ -6238,7 +6238,7 @@
     },
     "paraview": {
       "baseline": "5.11.0",
-      "port-version": 2
+      "port-version": 3
     },
     "parmetis": {
       "baseline": "2022-07-27",
@@ -6597,8 +6597,8 @@
       "port-version": 6
     },
     "python3": {
-      "baseline": "3.10.7",
-      "port-version": 7
+      "baseline": "3.11.4",
+      "port-version": 0
     },
     "qca": {
       "baseline": "2.3.5",
@@ -7562,7 +7562,7 @@
     },
     "shiva": {
       "baseline": "1.0",
-      "port-version": 6
+      "port-version": 7
     },
     "shiva-sfml": {
       "baseline": "1.0",
@@ -8493,7 +8493,7 @@
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
-      "baseline": "2022-06-30",
+      "baseline": "2023-07-28",
       "port-version": 0
     },
     "vcpkg-gfortran": {
@@ -8606,11 +8606,11 @@
     },
     "vtk": {
       "baseline": "9.2.0-pv5.11.0",
-      "port-version": 8
+      "port-version": 9
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
-      "port-version": 1
+      "port-version": 2
     },
     "vtk-m": {
       "baseline": "1.9.0",
