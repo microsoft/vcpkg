@@ -4522,7 +4522,7 @@
     },
     "libraw": {
       "baseline": "0.21.1",
-      "port-version": 1
+      "port-version": 2
     },
     "librdkafka": {
       "baseline": "2.2.0",
