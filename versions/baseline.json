@@ -7352,8 +7352,16 @@
       "baseline": "2018-09-21",
       "port-version": 3
     },
+    "salome-configuration": {
+      "baseline": "9.10.0",
+      "port-version": 0
+    },
     "salome-med-fichier": {
       "baseline": "4.1.1",
+      "port-version": 1
+    },
+    "salome-medcoupling": {
+      "baseline": "9.10.0",
       "port-version": 0
     },
     "sassc": {
