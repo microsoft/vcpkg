@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF "${curl_version}"
-    SHA512 8dfca7f322b2a8f26ab866fd67f0a6a73ce9fa032b20f031e46df66ad04c79b6df4a2731945e6aa719460f3b4daef09f45ea671b2349140f915935c22040ba00
+    SHA512 7b0aef4f1cb93d446017a337e752d43254db92e02561875d1eb88eb3020a3efaf5d3f7fdfb1ff12dfd561d526789b284a10bef35af81bd6d9cfb2c3dc325815b
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
