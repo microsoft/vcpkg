@@ -1838,7 +1838,7 @@
     },
     "cpprestsdk": {
       "baseline": "2.10.18",
-      "port-version": 2
+      "port-version": 3
     },
     "cppslippi": {
       "baseline": "1.0.3.14",
@@ -5326,7 +5326,7 @@
     },
     "microsoft-signalr": {
       "baseline": "0.1.0-alpha4",
-      "port-version": 6
+      "port-version": 7
     },
     "mikktspace": {
       "baseline": "2020-10-06",
@@ -7574,7 +7574,7 @@
     },
     "signalrclient": {
       "baseline": "1.0.0-beta1-9",
-      "port-version": 4
+      "port-version": 5
     },
     "sigslot": {
       "baseline": "1.0.0",
