@@ -15,6 +15,11 @@ FEATURES
     "diagnostics"           JSON_Diagnostics
 )
 
+# Remove the docs folder to avoid false positives for scanners that look for vulnerable open source dependencies.
+# The docs use a number of Python components that have historically caused several vulnerability alerts, but they
+# are not needed for customers using Nlohmann JSON through Vcpkg.
+file(REMOVE_RECURSE "${SOURCE_PATH}/docs")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
