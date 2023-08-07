@@ -2977,8 +2977,8 @@
       "port-version": 5
     },
     "gperftools": {
-      "baseline": "2019-09-02",
-      "port-version": 5
+      "baseline": "2.10",
+      "port-version": 0
     },
     "gpgme": {
       "baseline": "1.18.0",
