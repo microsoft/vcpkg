@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO systemd/systemd
   REF "v${VERSION}"
-  SHA512 3bbc431a292ab590b70d3b490a528f71d30ccf478ddfa66d1c210f40c260ef49ac30651c19f2d073acf38d68398a4a6fbf95391f0e3ea0333d94b9d4e81d514f
+  SHA512 84b4d16980fe2e64d5c3c95b9b4fbaad1076f368f493fdd745cbafbe7ce825293384f5fa0b6360ba8188da23c4575e87402fb666a3b71f84ff8b323aba0c07ff
   PATCHES
     pkgconfig.patch
 )
@@ -12,6 +12,7 @@ vcpkg_configure_meson(
   OPTIONS
     -Dstatic-libsystemd=true
     -Daudit=false
+    -Dgcrypt=false
   OPTIONS_DEBUG
     -Drootprefix=${CURRENT_PACKAGES_DIR}/debug
     -Dpkgconfiglibdir={CURRENT_PACKAGES_DIR}/debug

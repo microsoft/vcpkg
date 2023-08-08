@@ -1,6 +1,6 @@
 {
   "name": "libsystemd",
-  "version": "253",
+  "version": "254",
   "description": "Libsystemd",
   "homepage": "https://github.com/systemd/systemd",
   "license": "LGPL-2.1+",
