@@ -38,6 +38,7 @@
     "webrtc": {
       "description": "Enable WebRTC",
       "dependencies": [
+        "libsrtp",
         {
           "name": "zlmediakit",
           "default-features": false,
@@ -45,8 +46,7 @@
             "openssl",
             "sctp"
           ]
-        },
-        "libsrtp"
+        }
       ]
     },
     "x264": {
