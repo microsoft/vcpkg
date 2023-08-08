@@ -18,6 +18,19 @@ vcpkg_from_github(
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdpart/ZLToolKit")
 file(COPY "${TOOL_KIT_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/3rdpart/ZLToolKit")
 
+if ("mp4" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH MEDIA_SRV_SOURCE_PATH
+        REPO ireader/media-server
+        REF cdbb3d6b9ea254f454c6e466c5962af5ace01199
+        SHA512 c9b6ed487ec283572022fe6eb8562258063a84b513ccc3f8783e4da9f46b19705ce41baf9603277a7642683e24ac4168a11a0c4e7a18b5f56145bf4986064664
+        HEAD_REF master
+    )
+
+    file(REMOVE_RECURSE "${SOURCE_PATH}/3rdpart/media-server")
+    file(COPY "${MEDIA_SRV_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/3rdpart/media-server")
+endif()
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" static ZLMEDIAKIT_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" static ZLMEDIAKIT_CRT_STATIC)
 
@@ -25,6 +38,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         openssl ENABLE_OPENSSL
         x264    ENABLE_X264
+        mp4     ENABLE_MP4
+        mp4     ENABLE_HLS_FMP4
+        mp4     ENABLE_RTPPROXY
+        mp4     ENABLE_HLS
         #mysql   ENABLE_MYSQL
     INVERTED_FEATURES
 )
@@ -45,16 +62,9 @@ vcpkg_cmake_configure(
         -DENABLE_SERVER=ON
         -DENABLE_SERVER_LIB=OFF
         -DENABLE_SRT=ON
-        -DENABLE_SCTP=ON
+        -DENABLE_SCTP=OFF # needs dependency usrsctp
         -DENABLE_WEBRTC=OFF
         -DENABLE_WEPOLL=ON
-        # needs dependency libmov
-        -DENABLE_MP4=OFF
-        -DENABLE_HLS_FMP4=OFF
-        # needs dependency ffmpeg
-        -DENABLE_RTPPROXY=OFF
-        -DENABLE_HLS=OFF
-
         -DDISABLE_REPORT=OFF
         -DUSE_SOLUTION_FOLDERS=ON
         -DENABLE_TESTS=OFF

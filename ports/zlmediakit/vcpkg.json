@@ -15,7 +15,13 @@
       "host": true
     }
   ],
+  "default-features": [
+    "openssl"
+  ],
   "features": {
+    "mp4": {
+      "description": "Enable MP4"
+    },
     "openssl": {
       "description": "Enable OpenSSL",
       "dependencies": [
