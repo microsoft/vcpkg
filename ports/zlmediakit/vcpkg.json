@@ -5,6 +5,7 @@
   "homepage": "https://github.com/ZLMediaKit/ZLMediaKit",
   "license": "MIT",
   "dependencies": [
+    "jsoncpp",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,8 +13,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "jsoncpp"
+    }
   ],
   "features": {
     "openssl": {
