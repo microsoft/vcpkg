@@ -1,0 +1,41 @@
+diff --git a/src/cmake/ie_parallel.cmake b/src/cmake/ie_parallel.cmake
+index e8aa1c30ef..259e4152c2 100644
+--- a/src/cmake/ie_parallel.cmake
++++ b/src/cmake/ie_parallel.cmake
+@@ -282,7 +282,7 @@ function(set_ie_threading_interface_for TARGET_NAME)
+                     foreach(include_directory IN LISTS include_directories)
+                         # cannot include /usr/include headers as SYSTEM
+                         if(NOT "${include_directory}" MATCHES "^/usr.*$")
+-                            target_include_directories(${TARGET_NAME} SYSTEM BEFORE
++                            target_include_directories(${TARGET_NAME} SYSTEM
+                                 ${LINK_TYPE} $<BUILD_INTERFACE:${include_directory}>)
+                         else()
+                             set(_system_library ON)
+diff --git a/src/plugins/intel_cpu/CMakeLists.txt b/src/plugins/intel_cpu/CMakeLists.txt
+index e1f04b4ad2..d1150fdab0 100644
+--- a/src/plugins/intel_cpu/CMakeLists.txt
++++ b/src/plugins/intel_cpu/CMakeLists.txt
+@@ -83,18 +83,19 @@ elseif(RISCV64)
+     set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME "openvino_riscv_cpu_plugin")
+ endif()
+ 
+-set_ie_threading_interface_for(${TARGET_NAME})
+-
+ ie_mark_target_as_cc(${TARGET_NAME})
+ 
+ target_link_libraries(${TARGET_NAME} PRIVATE dnnl
+                                              ov_shape_inference
+-                                             openvino::pugixml
+                                              inference_engine_snippets)
+ 
++target_include_directories(${TARGET_NAME} SYSTEM PRIVATE $<TARGET_PROPERTY:dnnl,INCLUDE_DIRECTORIES>)
+ target_compile_definitions(${TARGET_NAME} PRIVATE IMPLEMENT_INFERENCE_EXTENSION_API)
+ target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+-target_include_directories(${TARGET_NAME} SYSTEM PRIVATE $<TARGET_PROPERTY:dnnl,INCLUDE_DIRECTORIES>)
++
++# system libraries must go last
++target_link_libraries(${TARGET_NAME} PRIVATE openvino::pugixml)
++set_ie_threading_interface_for(${TARGET_NAME})
+ 
+ # Cross compiled function
+ # TODO: The same for proposal, proposalONNX, topk
