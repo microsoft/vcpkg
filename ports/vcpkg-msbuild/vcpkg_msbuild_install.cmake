@@ -53,7 +53,7 @@ function(vcpkg_msbuild_install)
                                      DEPENDENT_PKGCONFIG ${arg_DEPENDENT_PKGCONFIG}
                                      ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS_DEBUG}
                                      ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS_RELEASE})
-        list(APPEND arg_OPTIONS         
+        list(APPEND arg_OPTIONS
             "/p:ForceImportAfterCppProps=${props_file}"
             "/p:ForceImportAfterCppTargets=${target_file}"
         )
@@ -69,6 +69,7 @@ function(vcpkg_msbuild_install)
         "-maxCpuCount:${VCPKG_CONCURRENCY}"
         # other Properties 
         "/p:Platform=${arg_PLATFORM}"
+        "/p:PlatformTarget=${TRIPLET_SYSTEM_ARCH}"
         "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
         "/p:WindowsTargetPlatformVersion=${arg_TARGET_PLATFORM_VERSION}"
         # vcpkg properties
