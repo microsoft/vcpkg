@@ -63,6 +63,32 @@ vcpkg_cmake_configure(
         -DENABLE_MEM_DEBUG=OFF
     OPTIONS_DEBUG
         -DENABLE_MEM_DEBUG=ON
+    MAYBE_UNUSED_VARIABLES
+        DISABLE_REPORT
+        ENABLE_API
+        ENABLE_API_STATIC_LIB
+        ENABLE_ASAN
+        ENABLE_CXX_API
+        ENABLE_FAAC
+        ENABLE_FFMPEG
+        ENABLE_HLS
+        ENABLE_HLS_FMP4
+        ENABLE_JEMALLOC_STATIC
+        ENABLE_MEM_DEBUG
+        ENABLE_MP4
+        ENABLE_MSVC_MT
+        ENABLE_PLAYER
+        ENABLE_RTPPROXY
+        ENABLE_SCTP
+        ENABLE_SERVER
+        ENABLE_SERVER_LIB
+        ENABLE_SRT
+        ENABLE_TESTS
+        ENABLE_WEBRTC
+        ENABLE_WEPOLL
+        ENABLE_X264
+        USE_SOLUTION_FOLDERS
+  
 )
 
 vcpkg_cmake_install()
