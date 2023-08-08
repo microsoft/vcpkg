@@ -4689,7 +4689,7 @@
       "port-version": 0
     },
     "libsystemd": {
-      "baseline": "253",
+      "baseline": "254",
       "port-version": 0
     },
     "libtar": {
