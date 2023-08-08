@@ -54,12 +54,6 @@
           ]
         }
       ]
-    },
-    "x264": {
-      "description": "Enable x264",
-      "dependencies": [
-        "x264"
-      ]
     }
   }
 }

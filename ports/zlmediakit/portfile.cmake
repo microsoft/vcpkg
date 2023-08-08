@@ -37,7 +37,6 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" static ZLMEDIAKIT_CRT_STATIC)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         openssl ENABLE_OPENSSL
-        x264    ENABLE_X264
         mp4     ENABLE_MP4
         mp4     ENABLE_HLS_FMP4
         mp4     ENABLE_RTPPROXY
@@ -63,6 +62,7 @@ vcpkg_cmake_configure(
         -DENABLE_SERVER=ON
         -DENABLE_SERVER_LIB=OFF
         -DENABLE_SRT=ON
+        -DENABLE_X264=OFF
         -DENABLE_WEPOLL=ON
         -DDISABLE_REPORT=OFF
         -DUSE_SOLUTION_FOLDERS=ON
