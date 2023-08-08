@@ -20,4 +20,15 @@ index c90129d..06bde42 100644
  
  ##############################################################################
  
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cb85679..c9390bb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -434,6 +434,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ # for assert.h
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdpart)
  
++find_package(jsoncpp CONFIG REQUIRED)
+ add_subdirectory(3rdpart)
+ 
+ add_subdirectory(src)
