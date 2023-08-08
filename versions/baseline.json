@@ -429,7 +429,7 @@
       "port-version": 5
     },
     "azure-macro-utils-c": {
-      "baseline": "2023-08-07",
+      "baseline": "2022-01-21",
       "port-version": 1
     },
     "azure-security-attestation-cpp": {
@@ -8337,7 +8337,7 @@
       "port-version": 0
     },
     "umock-c": {
-      "baseline": "2023-08-07",
+      "baseline": "2022-01-21",
       "port-version": 1
     },
     "uni-algo": {
