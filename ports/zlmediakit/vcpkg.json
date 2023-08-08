@@ -1,0 +1,32 @@
+{
+  "name": "zlmediakit",
+  "version-date": "2023-08-05",
+  "description": "A high-performance carrier-grade streaming media service framework based on C++11.",
+  "homepage": "https://github.com/ZLMediaKit/ZLMediaKit",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "jsoncpp"
+  ],
+  "features": {
+    "openssl": {
+      "description": "Enable OpenSSL",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "x264": {
+      "description": "Enable x264",
+      "dependencies": [
+        "x264"
+      ]
+    }
+  }
+}
