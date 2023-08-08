@@ -45,6 +45,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("${WINSDK_VERSION}" VERSION_GREATER_EQUAL "10.0.22000")
         list(APPEND PATCHES "0007-workaround-windows-11-sdk-rc-compiler-error.patch")
     endif()
+    if(VCPKG_CROSSCOMPILING)
+        list(APPEND PATCHES "0016-fix-win-cross.patch")
+    endif()
 endif()
 
 vcpkg_from_github(
@@ -109,8 +112,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     configure_file("${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in" "${SOURCE_PATH}/PCbuild/python_vcpkg.props")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/openssl.props.in" "${SOURCE_PATH}/PCbuild/openssl.props")
     file(WRITE "${SOURCE_PATH}/PCbuild/libffi.props"
-        "<?xml version='1.0' encoding='utf-8'?>
-        <Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' />"
+        "<?xml version='1.0' encoding='utf-8'?>"
+        "<Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' />"
     )
 
     list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_SET_CHARSET_FLAG=OFF")
@@ -147,6 +150,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
     set(ENV{PythonForBuild} "${PYTHON3_DIR}/python.exe") # PythonForBuild is what's used on windows, despite the readme
 
+    if(VCPKG_CROSSCOMPILING)
+        vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+    endif()
+
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "PCbuild/pcbuild.proj"
@@ -155,6 +162,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ADDITIONAL_LIBS_RELEASE ${add_libs_rel}
         ADDITIONAL_LIBS_DEBUG ${add_libs_dbg}
     )
+
+    if(NOT VCPKG_CROSSCOMPILING)
+        file(GLOB_RECURSE freeze_module "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/PCbuild/**/_freeze_module.exe")
+        file(COPY "${freeze_module}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+    endif()
 
     # The extension modules must be placed in the DLLs directory, so we can't use vcpkg_copy_tools()
     if(PYTHON_ALLOW_EXTENSIONS)

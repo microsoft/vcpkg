@@ -7,6 +7,10 @@ function(vcpkg_msbuild_install)
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;DEPENDENT_PKGCONFIG;ADDITIONAL_LIBS;ADDITIONAL_LIBS_DEBUG;ADDITIONAL_LIBS_RELEASE"
     )
 
+    if(VCPKG_CROSSCOMPILING)
+        set(arg_ADD_BIN_TO_PATH OFF)
+    endif()
+
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
