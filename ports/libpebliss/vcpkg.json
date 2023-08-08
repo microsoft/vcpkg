@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Cross-Platform PE Manipulating Library",
   "homepage": "https://github.com/MMitsuha/libpebliss",
-  "supports": "x64 | x86",
+  "supports": "(x64 | x86) & windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
