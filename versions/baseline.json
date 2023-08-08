@@ -6005,8 +6005,8 @@
       "port-version": 10
     },
     "opencv4": {
-      "baseline": "4.7.0",
-      "port-version": 6
+      "baseline": "4.8.0",
+      "port-version": 0
     },
     "opendnp3": {
       "baseline": "3.1.1",

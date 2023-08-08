@@ -1,14 +1,10 @@
-file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
-string(JSON OPENCV_VERSION GET "${_contents}" version)
-
 set(USE_QT_VERSION "6")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
-    REF ${OPENCV_VERSION}
-    SHA512 f799e1eb4ef1eb81212319cf908d0a64d2d5179c8da86b919b06e96a6870a9f3ed33251223a841b71711349018ea6782c174179fa59958a1573e22d11cc9347d
-    FILE_DISAMBIGUATOR 1
+    REF ${VERSION}
+    SHA512 48738c3e7460a361274357aef1dd427082ccd59f749d6317d92a414b3741ce6116ea15ed4fedd2d47a25e456c705f3ba114357558646097bfc0e6dba9b3b865c
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -163,8 +159,8 @@ if("contrib" IN_LIST FEATURES)
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
-    REF ${OPENCV_VERSION}
-    SHA512 f0d878180655de4255cb72cf358a5949dfcf53a386e74f9a743902ac1bae12b2e812a1fc4ecc56a6afdc6adbffec867883a3245ce0b527614cc76e3710e23230
+    REF ${VERSION}
+    SHA512 81cc41cfe1ea03e60b0657edeaa76a90926e5e79a9f93a482e17bc9edbf1b5ce36b13d108fd8fb097f2fb3d6381fbeb102811f44bfc761c2de7f69bf3c5298a1
     HEAD_REF master
     PATCHES
       0007-fix-hdf5.patch
