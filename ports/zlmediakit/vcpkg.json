@@ -23,6 +23,12 @@
     "mp4": {
       "description": "Enable MP4"
     },
+    "mysql": {
+      "description": "Enable mysql",
+      "dependencies": [
+        "libmysql"
+      ]
+    },
     "openssl": {
       "description": "Enable OpenSSL",
       "dependencies": [

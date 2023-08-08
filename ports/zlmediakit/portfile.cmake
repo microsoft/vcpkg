@@ -44,7 +44,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         mp4     ENABLE_HLS
         sctp    ENABLE_SCTP
         webrtc  ENABLE_WEBRTC
-        #mysql   ENABLE_MYSQL
+        mysql   ENABLE_MYSQL
     INVERTED_FEATURES
 )
 
@@ -59,7 +59,6 @@ vcpkg_cmake_configure(
         -DENABLE_JEMALLOC_STATIC=OFF
         -DENABLE_FAAC=OFF
         -DENABLE_FFMPEG=OFF
-        -DENABLE_MYSQL=OFF
         -DENABLE_PLAYER=ON
         -DENABLE_SERVER=ON
         -DENABLE_SERVER_LIB=OFF
