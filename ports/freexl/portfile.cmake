@@ -8,7 +8,8 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        fix-pc-file.patch
+        dependencies.patch
+        subdirs.patch
 )
 
 vcpkg_configure_make(
