@@ -4610,7 +4610,7 @@
     },
     "libsodium": {
       "baseline": "1.0.18",
-      "port-version": 8
+      "port-version": 9
     },
     "libsonic": {
       "baseline": "0.2.0",
