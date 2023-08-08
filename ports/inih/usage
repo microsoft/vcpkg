@@ -1,4 +1,12 @@
-inih provides CMake targets:
+The package inih can be imported via CMake FindPkgConfig module:
+
+    find_package(PkgConfig)
+    pkg_check_modules(INIH REQUIRED IMPORTED_TARGET inih INIReader)
+
+    target_link_libraries(main PRIVATE PkgConfig::INIH)
+
+Alternatively, the package inih provides unofficial CMake targets:
+
     find_package(unofficial-inih CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::inih::libinih @inireader_usage@)
-Alternatively use via PkgConfig
+
+    target_link_libraries(main PRIVATE unofficial::inih::libinih unofficial::inih::inireader)

@@ -21,15 +21,7 @@ else()
 endif()
 
 # Install unofficial CMake package
-vcpkg_cmake_configure(
-    SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}"
-    OPTIONS
-        -DVERSION="${VERSION}"
-        "${FEATURE_OPTIONS}" 
-        -DINIH_CONFIG_DEBUG="${INIH_CONFIG_DEBUG}"
-)
-vcpkg_cmake_install()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-inihConfig.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-inih/unofficial-inihConfig.cmake" @ONLY)
 
 # meson build
 string(REPLACE "OFF" "false" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
@@ -49,9 +41,4 @@ vcpkg_copy_pdbs()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
-if(with_INIReader)
-  set(inireader_usage "unofficial::inih::inireader")
-endif()
-
-# Correct usage for installed features
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)

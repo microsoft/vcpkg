@@ -1,13 +1,3 @@
-@PACKAGE_INIT@
-
-# Compute the installation prefix relative to this file.
-get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
-get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
-get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
-if(_IMPORT_PREFIX STREQUAL "/")
-  set(_IMPORT_PREFIX "")
-endif()
-
 if(TARGET unofficial::inih::libinih)
   return()
 endif()
@@ -15,45 +5,40 @@ endif()
 set(INIH_WITH_INI_READER @with_INIReader@)
 set(INIH_WITH_DEBUG @INIH_CONFIG_DEBUG@)
 
+# Compute the installation prefix relative to this file.
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+
 ###################
 ####  libinih  ####
 
-# Add library target (note: inih always has a static build in vcpkg).
-add_library(unofficial::inih::libinih STATIC IMPORTED)
+add_library(unofficial::inih::libinih UNKNOWN IMPORTED)
 
-find_library(INIH_INIHLIB_RELEASE NAMES inih PATHS "${_IMPORT_PREFIX}/lib/" NO_DEFAULT_PATH)
+find_library(INIH_INIHLIB_RELEASE NAMES inih PATHS "${_IMPORT_PREFIX}/lib/" REQUIRED NO_DEFAULT_PATH)
 set_target_properties(unofficial::inih::libinih PROPERTIES
-INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-IMPORTED_LINK_INTERFACE_LANGUAGES "C"
-IMPORTED_LOCATION_RELEASE "${INIH_INIHLIB_RELEASE}"
-IMPORTED_CONFIGURATIONS "RELEASE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+  IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+  IMPORTED_LOCATION_RELEASE "${INIH_INIHLIB_RELEASE}"
+  IMPORTED_CONFIGURATIONS "RELEASE"
 )
-
-list(APPEND _IMPORT_CHECK_FILES "${INIH_INIHLIB_RELEASE}")
-unset(INIH_INIHLIB_RELEASE CACHE)
 
 if(INIH_WITH_DEBUG)
   set_property(TARGET unofficial::inih::libinih APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
-
-  find_library(INIH_INIHLIB_DEBUG NAMES inih PATHS "${_IMPORT_PREFIX}/debug/lib/" NO_DEFAULT_PATH)
+  find_library(INIH_INIHLIB_DEBUG NAMES inih PATHS "${_IMPORT_PREFIX}/debug/lib/" REQUIRED NO_DEFAULT_PATH)
   set_target_properties(unofficial::inih::libinih PROPERTIES 
     IMPORTED_LOCATION_DEBUG "${INIH_INIHLIB_DEBUG}"
   )
-  list(APPEND _IMPORT_CHECK_FILES "${INIH_INIHLIB_DEBUG}")
-  unset(INIH_INIHLIB_DEBUG CACHE)
 endif()
-
-list(APPEND _IMPORT_CHECK_FILES "${_IMPORT_PREFIX}/include/ini.h")
 
 ####  libinih  ####
 ###################
 #### INIReader ####
 
 if(INIH_WITH_INI_READER)
-  # Add library target (note: inih always has a static build in vcpkg).
-  add_library(unofficial::inih::inireader STATIC IMPORTED)
+  add_library(unofficial::inih::inireader UNKNOWN IMPORTED)
 
-  find_library(INIH_INIREADER_RELEASE NAMES INIReader PATHS "${_IMPORT_PREFIX}/lib/" NO_DEFAULT_PATH)
+  find_library(INIH_INIREADER_RELEASE NAMES INIReader PATHS "${_IMPORT_PREFIX}/lib/" REQUIRED NO_DEFAULT_PATH)
   set_target_properties(unofficial::inih::inireader PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
     IMPORTED_LINK_INTERFACE_LANGUAGES "C;CXX"
@@ -61,8 +46,6 @@ if(INIH_WITH_INI_READER)
     INTERFACE_LINK_LIBRARIES "unofficial::inih::libinih"
     IMPORTED_CONFIGURATIONS "RELEASE"
   )
-  list(APPEND _IMPORT_CHECK_FILES "${INIH_INIREADER_RELEASE}")
-  unset(INIH_INIREADER_RELEASE CACHE)
 
   if(INIH_WITH_DEBUG)
     set_property(TARGET unofficial::inih::inireader APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
@@ -70,25 +53,8 @@ if(INIH_WITH_INI_READER)
     set_target_properties(unofficial::inih::inireader PROPERTIES 
       IMPORTED_LOCATION_DEBUG "${INIH_INIREADER_DEBUG}"
     )
-    list(APPEND _IMPORT_CHECK_FILES "${INIH_INIREADER_DEBUG}")
-    unset(INIH_INIREADER_DEBUG CACHE)
   endif()
-
-  list(APPEND _IMPORT_CHECK_FILES "${_IMPORT_PREFIX}/include/INIReader.h")
 endif()
 
 #### INIReader ####
 ###################
-
-# Check header and library files are present.
-foreach(file ${_IMPORT_CHECK_FILES} )
-  if(NOT EXISTS "${file}" )
-    message(FATAL_ERROR "unofficial::inih::inih references the file
-  \"${file}\"
-but this file does not exist.  Possible reasons include:
-* The file was deleted, renamed, or moved to another location.
-* An install or uninstall procedure did not complete successfully.
-")
-  endif()
-endforeach()
-unset(_IMPORT_CHECK_FILES)
