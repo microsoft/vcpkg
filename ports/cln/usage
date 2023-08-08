@@ -8,7 +8,3 @@ The package cln can be imported via CMake FindPkgConfig module:
     find_package(PkgConfig)
     PKG_CHECK_MODULES(CLN)
     target_link_libraries(main PRIVATE PkgConfig::CLN)
-
-And the package provide a executable `pi`:
-
-    the path of executable: <package_dir>/tools/libcln/pi

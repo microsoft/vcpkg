@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3db9926..4f4cbf1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -215,8 +215,4 @@ install(FILES
+ )
+ 
+ add_subdirectory(src)
+-add_subdirectory(tests)
+ add_subdirectory(include)
+-add_subdirectory(examples)
+-add_subdirectory(doc)
+-
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2cf5341..70e3f1f 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -970,7 +970,7 @@ if (NOT cln_asm_sources)
+ endif()
+ 
+ if (WIN32 AND CMAKE_COMPILER_IS_GNUCXX AND BUILD_SHARED_LIBS)
+-	set_target_properties(cln PROPERTIES LINK_FLAGS "-Wl,--export-all-symbols")
++	set_target_properties(cln PROPERTIES LINK_FLAGS "-Wl,--export-all-symbols,--allow-multiple-definition")
+ endif()
+ if (NOT BUILD_SHARED_LIBS)
+ 	set_target_properties(cln PROPERTIES OUTPUT_NAME "cln")
