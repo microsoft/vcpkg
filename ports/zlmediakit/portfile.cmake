@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ZLMediaKit/ZLMediaKit
-    REF 383da1e09ea78c24f380ffce8b7695ceec315c24
-    SHA512 f5ac5bf1e3629c67a9487fe082baaabeeb06532eac9777dcc02c362dc0632d5e2594400f6b9a6dd5cbdace614db5fb39f2cab3d86ce0ea066f0d2e09c56c300d
+    REF 2378617dd8bb208129ae7cbbafc26dfeae096d13
+    SHA512 ca1f212a9ccf20bdd38a2811909b8327df9fe3d1da17ecf15b996ab040071b267bbef697657b26001c157175d54c96f3156ffdf51f09b2ea1078a9ca283171d8
     HEAD_REF master
     PATCHES fix-dependency.patch
 )
@@ -51,22 +51,21 @@ vcpkg_cmake_configure(
         # needs dependency libmov
         -DENABLE_MP4=OFF
         -DENABLE_HLS_FMP4=OFF
-        # needs dependency libmpeg
+        # needs dependency ffmpeg
         -DENABLE_RTPPROXY=OFF
         -DENABLE_HLS=OFF
 
         -DDISABLE_REPORT=OFF
         -DUSE_SOLUTION_FOLDERS=ON
         -DENABLE_TESTS=OFF
+        -DENABLE_MEM_DEBUG=OFF # only valid on Linux
         ${FEATURE_OPTIONS}
-    OPTIONS_RELEASE
-        -DENABLE_MEM_DEBUG=OFF
-    OPTIONS_DEBUG
-        -DENABLE_MEM_DEBUG=ON
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+vcpkg_copy_tools(TOOL_NAMES MediaServer AUTO_CLEAN)
     
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
