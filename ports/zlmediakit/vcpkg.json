@@ -23,12 +23,6 @@
     "mp4": {
       "description": "Enable MP4"
     },
-    "mysql": {
-      "description": "Enable mysql",
-      "dependencies": [
-        "libmysql"
-      ]
-    },
     "openssl": {
       "description": "Enable OpenSSL",
       "dependencies": [
@@ -38,7 +32,14 @@
     "sctp": {
       "description": "Enable SCTP",
       "dependencies": [
-        "usrsctp"
+        "usrsctp",
+        {
+          "name": "zlmediakit",
+          "default-features": false,
+          "features": [
+            "webrtc"
+          ]
+        }
       ]
     },
     "webrtc": {
@@ -49,8 +50,7 @@
           "name": "zlmediakit",
           "default-features": false,
           "features": [
-            "openssl",
-            "sctp"
+            "openssl"
           ]
         }
       ]
