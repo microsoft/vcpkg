@@ -37,7 +37,7 @@
       "port-version": 14
     },
     "ada-url": {
-      "baseline": "2.5.1",
+      "baseline": "2.6.0",
       "port-version": 0
     },
     "ade": {
@@ -405,11 +405,11 @@
       "port-version": 1
     },
     "azure-core-amqp-cpp": {
-      "baseline": "1.0.0-beta.1",
+      "baseline": "1.0.0-beta.2",
       "port-version": 0
     },
     "azure-core-cpp": {
-      "baseline": "1.10.1",
+      "baseline": "1.10.2",
       "port-version": 0
     },
     "azure-core-tracing-opentelemetry-cpp": {
@@ -421,7 +421,7 @@
       "port-version": 0
     },
     "azure-iot-sdk-c": {
-      "baseline": "2023-01-18",
+      "baseline": "2023-08-06",
       "port-version": 0
     },
     "azure-kinect-sensor-sdk": {
@@ -1345,7 +1345,7 @@
       "port-version": 5
     },
     "c-ares": {
-      "baseline": "1.19.0",
+      "baseline": "1.19.1",
       "port-version": 0
     },
     "c-dbg-macro": {
@@ -1769,7 +1769,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.13.1",
+      "baseline": "0.13.3",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -1838,7 +1838,7 @@
     },
     "cpprestsdk": {
       "baseline": "2.10.18",
-      "port-version": 2
+      "port-version": 3
     },
     "cppslippi": {
       "baseline": "1.0.3.14",
@@ -2930,7 +2930,7 @@
     },
     "glslang": {
       "baseline": "12.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -2946,7 +2946,7 @@
     },
     "gmp": {
       "baseline": "6.2.1",
-      "port-version": 20
+      "port-version": 21
     },
     "gmsh": {
       "baseline": "4.9.0",
@@ -2954,7 +2954,7 @@
     },
     "gobject-introspection": {
       "baseline": "1.72.0",
-      "port-version": 3
+      "port-version": 4
     },
     "google-cloud-cpp": {
       "baseline": "2.14.0",
@@ -2974,11 +2974,11 @@
     },
     "gperf": {
       "baseline": "3.1",
-      "port-version": 5
+      "port-version": 6
     },
     "gperftools": {
-      "baseline": "2019-09-02",
-      "port-version": 5
+      "baseline": "2.10",
+      "port-version": 0
     },
     "gpgme": {
       "baseline": "1.18.0",
@@ -3321,8 +3321,8 @@
       "port-version": 5
     },
     "ignition-plugin1": {
-      "baseline": "1.1.0",
-      "port-version": 2
+      "baseline": "1.4.0",
+      "port-version": 0
     },
     "ignition-tools": {
       "baseline": "1.5.0",
@@ -3341,7 +3341,7 @@
       "port-version": 4
     },
     "ignition-utils1": {
-      "baseline": "1.4.0",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "igraph": {
@@ -3378,7 +3378,7 @@
     },
     "imgui-sfml": {
       "baseline": "2.5",
-      "port-version": 3
+      "port-version": 4
     },
     "imguizmo": {
       "baseline": "1.83",
@@ -4465,8 +4465,8 @@
       "port-version": 2
     },
     "libphonenumber": {
-      "baseline": "8.13.13",
-      "port-version": 1
+      "baseline": "8.13.17",
+      "port-version": 0
     },
     "libplist": {
       "baseline": "1.3.6",
@@ -4486,7 +4486,7 @@
     },
     "libpq": {
       "baseline": "15.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libpqxx": {
       "baseline": "7.7.4",
@@ -4522,7 +4522,7 @@
     },
     "libraw": {
       "baseline": "0.21.1",
-      "port-version": 1
+      "port-version": 2
     },
     "librdkafka": {
       "baseline": "2.2.0",
@@ -5266,7 +5266,7 @@
     },
     "mdl-sdk": {
       "baseline": "2021.1.2",
-      "port-version": 1
+      "port-version": 2
     },
     "mdns": {
       "baseline": "1.4.2",
@@ -5326,7 +5326,7 @@
     },
     "microsoft-signalr": {
       "baseline": "0.1.0-alpha4",
-      "port-version": 6
+      "port-version": 7
     },
     "mikktspace": {
       "baseline": "2020-10-06",
@@ -5910,7 +5910,7 @@
     },
     "omniorb": {
       "baseline": "4.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "ompl": {
       "baseline": "1.5.1",
@@ -6037,7 +6037,7 @@
       "port-version": 4
     },
     "openimageio": {
-      "baseline": "2.4.11.1",
+      "baseline": "2.4.13.0",
       "port-version": 0
     },
     "openjpeg": {
@@ -6082,7 +6082,7 @@
     },
     "openssl": {
       "baseline": "3.1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -6238,7 +6238,7 @@
     },
     "paraview": {
       "baseline": "5.11.0",
-      "port-version": 2
+      "port-version": 3
     },
     "parmetis": {
       "baseline": "2022-07-27",
@@ -6597,8 +6597,8 @@
       "port-version": 6
     },
     "python3": {
-      "baseline": "3.10.7",
-      "port-version": 7
+      "baseline": "3.11.4",
+      "port-version": 0
     },
     "qca": {
       "baseline": "2.3.5",
@@ -7352,8 +7352,16 @@
       "baseline": "2018-09-21",
       "port-version": 3
     },
+    "salome-configuration": {
+      "baseline": "9.10.0",
+      "port-version": 0
+    },
     "salome-med-fichier": {
       "baseline": "4.1.1",
+      "port-version": 1
+    },
+    "salome-medcoupling": {
+      "baseline": "9.10.0",
       "port-version": 0
     },
     "sassc": {
@@ -7554,7 +7562,7 @@
     },
     "shiva": {
       "baseline": "1.0",
-      "port-version": 6
+      "port-version": 7
     },
     "shiva-sfml": {
       "baseline": "1.0",
@@ -7566,7 +7574,7 @@
     },
     "signalrclient": {
       "baseline": "1.0.0-beta1-9",
-      "port-version": 4
+      "port-version": 5
     },
     "sigslot": {
       "baseline": "1.0.0",
@@ -7581,8 +7589,8 @@
       "port-version": 0
     },
     "simd": {
-      "baseline": "5.2.123",
-      "port-version": 1
+      "baseline": "5.3.128",
+      "port-version": 0
     },
     "simde": {
       "baseline": "0.7.6",
@@ -8296,6 +8304,10 @@
       "baseline": "0.5.0",
       "port-version": 2
     },
+    "tuplet": {
+      "baseline": "2.1.1",
+      "port-version": 0
+    },
     "turbobase64": {
       "baseline": "2020-01-12",
       "port-version": 3
@@ -8481,7 +8493,7 @@
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
-      "baseline": "2022-06-30",
+      "baseline": "2023-07-28",
       "port-version": 0
     },
     "vcpkg-gfortran": {
@@ -8594,11 +8606,11 @@
     },
     "vtk": {
       "baseline": "9.2.0-pv5.11.0",
-      "port-version": 8
+      "port-version": 9
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
-      "port-version": 1
+      "port-version": 2
     },
     "vtk-m": {
       "baseline": "1.9.0",
@@ -8613,8 +8625,8 @@
       "port-version": 0
     },
     "vulkan-hpp": {
-      "baseline": "1.3.259",
-      "port-version": 1
+      "baseline": "deprecated",
+      "port-version": 0
     },
     "vulkan-memory-allocator": {
       "baseline": "3.0.1",
@@ -8905,7 +8917,7 @@
       "port-version": 2
     },
     "xsimd": {
-      "baseline": "10.0.0",
+      "baseline": "11.1.0",
       "port-version": 0
     },
     "xtensor": {

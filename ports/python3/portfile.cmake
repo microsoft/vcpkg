@@ -3,10 +3,10 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
-set(PYTHON_VERSION_MAJOR  3)
-set(PYTHON_VERSION_MINOR  10)
-set(PYTHON_VERSION_PATCH  7)
-set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
+string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" PYTHON_VERSION "${VERSION}")
+set(PYTHON_VERSION_MAJOR "${CMAKE_MATCH_1}")
+set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_2}")
+set(PYTHON_VERSION_PATCH "${CMAKE_MATCH_3}")
 
 set(PATCHES
     0001-only-build-required-projects.patch
@@ -14,10 +14,8 @@ set(PATCHES
     0004-devendor-external-dependencies.patch
     0005-dont-copy-vcruntime.patch
     0008-python.pc.patch
-    0009-bz2d.patch
     0010-dont-skip-rpath.patch
     0012-force-disable-curses.patch
-    0013-configure-no-libcrypt.patch  # https://github.com/python/cpython/pull/28881
     0014-fix-get-python-inc-output.patch
 )
 
@@ -52,7 +50,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 88bf6efef632a7dad7306a59b7d5da159947d6675f0d264f1f33aa49a5703b4e4595011de52098eb839cc648994ae143f668507be7209f6bf3fe8ae0ec6a9125
+    SHA512 de64f0d09bf2c08873bb3d99bb95c0b675895ed05f8ac5f7bc071322c051ad537c61ea9df9b65bb67d74c4e5b3ab8a75f83da101b22046ee41ba4f77cf0bc549
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -78,7 +76,7 @@ function(make_python_pkgconfig)
     file(WRITE ${out_full_path} "${pkgconfig_file}")
 endfunction()
 
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_WINDOWS)
     # Due to the way Python handles C extension modules on Windows, a static python core cannot
     # load extension modules.
     if(PYTHON_ALLOW_EXTENSIONS)
@@ -146,6 +144,10 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
     endif()
+
+	vcpkg_find_acquire_program(PYTHON3)
+	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+	set(ENV{PythonForBuild} "${PYTHON3_DIR}/python.exe") # PythonForBuild is what's used on windows, despite the readme
 
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -234,10 +236,26 @@ else()
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()
 
+    # The version of the build Python must match the version of the cross compiled host Python.
+    # https://docs.python.org/3/using/configure.html#cross-compiling-options
+    if(VCPKG_CROSSCOMPILING)
+        set(_python_for_build "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+        list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
+    else()
+        vcpkg_find_acquire_program(PYTHON3)
+        list(APPEND OPTIONS "ac_cv_prog_PYTHON_FOR_REGEN=${PYTHON3}")
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS ${OPTIONS}
-        OPTIONS_DEBUG "--with-pydebug"
+        AUTOCONFIG
+        OPTIONS
+            ${OPTIONS}
+        OPTIONS_DEBUG
+            "--with-pydebug"
+            "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/debug/lib"
+        OPTIONS_RELEASE
+            "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/lib"
     )
     vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
 
@@ -294,6 +312,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
     file(READ "${CMAKE_CURRENT_LIST_DIR}/usage.unix" usage_extra)
 endif()
+string(REPLACE "@PYTHON_VERSION_MINOR@" "${PYTHON_VERSION_MINOR}" usage_extra "${usage_extra}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage}\n${usage_extra}")
 
 function(_generate_finder)
@@ -313,6 +332,7 @@ _generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     function(replace_dirs_in_config_file python_config_file)
         vcpkg_replace_string("${python_config_file}" "${CURRENT_INSTALLED_DIR}" "' + _base + '")
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_HOST_INSTALLED_DIR}" "' + _base + '/../${HOST_TRIPLET}")
         vcpkg_replace_string("${python_config_file}" "${CURRENT_PACKAGES_DIR}" "' + _base + '")
         vcpkg_replace_string("${python_config_file}" "${CURRENT_BUILDTREES_DIR}" "not/existing")
     endfunction()

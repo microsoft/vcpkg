@@ -1,8 +1,8 @@
 diff --git a/cpp/src/phonenumbers/regexp_adapter_re2.cc b/cpp/src/phonenumbers/regexp_adapter_re2.cc
-index bb542234..a4ccb545 100644
+index 398f369b..3dd5d854 100644
 --- a/cpp/src/phonenumbers/regexp_adapter_re2.cc
 +++ b/cpp/src/phonenumbers/regexp_adapter_re2.cc
-@@ -39,7 +39,7 @@ class RE2RegExpInput : public RegExpInput {
+@@ -41,7 +41,7 @@ class RE2RegExpInput : public RegExpInput {
          utf8_input_(string_) {}
  
    virtual string ToString() const {

@@ -26,6 +26,7 @@ vcpkg_from_github(
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
+        windows/perlasm-scheme.patch
         unix/android-cc.patch
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
