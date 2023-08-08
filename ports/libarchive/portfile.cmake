@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
     REF "v${VERSION}"
-    SHA512 07339d54e8e82c0a13c69590e1653a5734fcd06ca3d01b2087a09c3d55e29e5ed4e16c5ef7ca44258f049c7b2de6245315be2c8b043f8db68515750649daafbe
+    SHA512 68b3cf2583286788772c88257bd0933a3889c9fd9dcd29bf6dfc64ae244dc68b07336ce9972e1ecc8757d4102b38f182d61c359af15dbbda6de21339d9cdef61
     HEAD_REF master
     PATCHES
         disable-warnings.patch
@@ -87,4 +87,4 @@ foreach(header "include/archive.h" "include/archive_entry.h")
 endforeach()
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
