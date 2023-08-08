@@ -2693,8 +2693,8 @@
       "port-version": 2
     },
     "freexl": {
-      "baseline": "1.0.6",
-      "port-version": 2
+      "baseline": "2.0.0",
+      "port-version": 0
     },
     "fribidi": {
       "baseline": "1.0.12",
