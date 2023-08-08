@@ -3,6 +3,8 @@ vcpkg_from_github(
   REPO systemd/systemd
   REF "v${VERSION}"
   SHA512 3bbc431a292ab590b70d3b490a528f71d30ccf478ddfa66d1c210f40c260ef49ac30651c19f2d073acf38d68398a4a6fbf95391f0e3ea0333d94b9d4e81d514f
+  PATCHES
+    pkgconfig.patch
 )
 
 vcpkg_configure_meson(
@@ -47,7 +49,5 @@ file(INSTALL "${BUILD_DIR_RELEASE}/src/libsystemd/libsystemd.pc" DESTINATION "${
 file(INSTALL "${BUILD_DIR_DEBUG}/src/libsystemd/libsystemd.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 vcpkg_fixup_pkgconfig()
-
-configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-systemd/unofficial-systemd-config.cmake" @ONLY)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.LGPL2.1")
