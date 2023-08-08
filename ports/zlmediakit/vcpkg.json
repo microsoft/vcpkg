@@ -29,6 +29,25 @@
         "openssl"
       ]
     },
+    "sctp": {
+      "description": "Enable SCTP",
+      "dependencies": [
+        "usrsctp"
+      ]
+    },
+    "webrtc": {
+      "description": "Enable WebRTC",
+      "dependencies": [
+        {
+          "name": "zlmediakit",
+          "default-features": false,
+          "features": [
+            "openssl",
+            "sctp"
+          ]
+        }
+      ]
+    },
     "x264": {
       "description": "Enable x264",
       "dependencies": [
