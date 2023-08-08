@@ -4,6 +4,7 @@
   "description": "A high-performance carrier-grade streaming media service framework based on C++11.",
   "homepage": "https://github.com/ZLMediaKit/ZLMediaKit",
   "license": "MIT",
+  "supports": "!uwp & !android",
   "dependencies": [
     "jsoncpp",
     {
