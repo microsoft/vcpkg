@@ -17,6 +17,7 @@ set(PATCHES
     0010-dont-skip-rpath.patch
     0012-force-disable-curses.patch
     0014-fix-get-python-inc-output.patch
+    0015-dont-use-WINDOWS-def.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -24,7 +25,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Fix build failures with GCC for built-in modules (https://github.com/microsoft/vcpkg/issues/26573)
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_LINUX)
     list(APPEND PATCHES 0011-gcc-ldflags-fix.patch)
 endif()
 
@@ -37,7 +38,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
     message(FATAL_ERROR "python3 requires the feature deprecated-win7-support when building on Windows 7.")
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PYTHON_ALLOW_EXTENSIONS)
     # The Windows 11 SDK has a problem that causes it to error on the resource files, so we patch that.
     vcpkg_get_windows_sdk(WINSDK_VERSION)
@@ -94,11 +95,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
         find_library(SQLITE_DEBUG NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(SSL_RELEASE NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(SSL_DEBUG NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE_RELEASE}")
+        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE_DEBUG}")
     else()
         message(STATUS "WARNING: Static builds of Python will not have C extension modules available.")
     endif()
     find_library(ZLIB_RELEASE NAMES zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
     find_library(ZLIB_DEBUG NAMES zlib zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+    list(APPEND add_libs_rel "${ZLIB_RELEASE}")
+    list(APPEND add_libs_dbg "${ZLIB_DEBUG}")
 
     configure_file("${SOURCE_PATH}/PC/pyconfig.h" "${SOURCE_PATH}/PC/pyconfig.h")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in" "${SOURCE_PATH}/PCbuild/python_vcpkg.props")
@@ -108,6 +113,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         <Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' />"
     )
 
+    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_SET_CHARSET_FLAG=OFF")
     if(PYTHON_ALLOW_EXTENSIONS)
         set(OPTIONS
             "/p:IncludeExtensions=true"
@@ -137,25 +143,17 @@ if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND OPTIONS "/p:_VcpkgPythonLinkage=StaticLibrary")
     endif()
 
-    # _freeze_importlib.exe is run as part of the build process, so make sure the required dynamic libs are available.
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
-    endif()
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    set(ENV{PythonForBuild} "${PYTHON3_DIR}/python.exe") # PythonForBuild is what's used on windows, despite the readme
 
-	vcpkg_find_acquire_program(PYTHON3)
-	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-	set(ENV{PythonForBuild} "${PYTHON3_DIR}/python.exe") # PythonForBuild is what's used on windows, despite the readme
-
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "PCbuild/pcbuild.proj"
+        ADD_BIN_TO_PATH
         OPTIONS ${OPTIONS}
-        LICENSE_SUBPATH "LICENSE"
-        TARGET_PLATFORM_VERSION "${WINSDK_VERSION}"
-        SKIP_CLEAN
+        ADDITIONAL_LIBS_RELEASE ${add_libs_rel}
+        ADDITIONAL_LIBS_DEBUG ${add_libs_dbg}
     )
 
     # The extension modules must be placed in the DLLs directory, so we can't use vcpkg_copy_tools()
@@ -202,8 +200,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 
     vcpkg_fixup_pkgconfig()
-
-    vcpkg_clean_msbuild()
 
     # Remove static library belonging to executable
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -277,8 +273,6 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 
-    file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
-
     vcpkg_fixup_pkgconfig()
 
     # Perform some post-build checks on modules
@@ -301,6 +295,8 @@ else()
         endif()
     endif()
 endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)
 if(VCPKG_TARGET_IS_WINDOWS)
