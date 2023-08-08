@@ -26,6 +26,13 @@ function(replace_runtime_library PROJ_FILE)
 endfunction(replace_runtime_library)
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+  # Use /Z7 to embed debug information into the executable
+  vcpkg_replace_string(
+      "${SOURCE_PATH}/msvc/Base.props"
+      "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
+      "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+  )
+
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
       set(LIBUSB_PROJECT_TYPE dll)
   else()
