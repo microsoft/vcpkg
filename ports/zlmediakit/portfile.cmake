@@ -57,7 +57,7 @@ vcpkg_cmake_configure(
         -DENABLE_JEMALLOC_STATIC=OFF
         -DENABLE_FAAC=OFF
         -DENABLE_FFMPEG=OFF
-        -DENABLE_PLAYER=ON
+        -DENABLE_PLAYER=OFF
         -DENABLE_SERVER=ON
         -DENABLE_SERVER_LIB=OFF
         -DENABLE_SRT=ON
