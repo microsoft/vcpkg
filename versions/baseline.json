@@ -7593,7 +7593,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "3.2.15",
+      "baseline": "3.2.16",
       "port-version": 0
     },
     "simple-fft": {
