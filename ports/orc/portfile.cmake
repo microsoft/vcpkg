@@ -50,7 +50,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-orc)
 vcpkg_copy_pdbs()
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-orc/unofficial-orc-config.cmake" cmake_config)
@@ -60,7 +60,7 @@ find_dependency(Snappy CONFIG)
 find_dependency(ZLIB)
 find_dependency(zstd CONFIG)
 find_dependency(lz4 CONFIG)
-find_dependency(protobuf CONFIG)
+find_dependency(Protobuf CONFIG)
 ${cmake_config}
 ")
 

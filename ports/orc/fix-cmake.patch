@@ -38,7 +38,7 @@ index 972f2fc03..d13f70097 100644
 +    NAMESPACE unofficial::orc::
 +)
 diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
-index 47c1a65ba..b93ff0e26 100644
+index 47c1a65ba..25f7c3216 100644
 --- a/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cmake_modules/ThirdpartyToolchain.cmake
 @@ -71,214 +71,27 @@ endif ()
@@ -336,7 +336,7 @@ index 47c1a65ba..b93ff0e26 100644
 -            DESTINATION "lib")
 -  endif ()
 -endif ()
-+find_package(protobuf CONFIG REQUIRED)
++find_package(Protobuf CONFIG REQUIRED)
  
  # ----------------------------------------------------------------------
  # LIBHDFSPP
