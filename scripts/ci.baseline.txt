@@ -320,8 +320,6 @@ drogon:x64-android=fail
 duktape:arm-neon-android=fail
 duktape:arm64-android=fail
 duktape:x64-android=fail
-duktape:x64-osx=skip
-duktape:arm64-osx=skip
 duktape:x64-linux=fail
 
 eastl:arm-uwp=fail
