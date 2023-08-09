@@ -19,6 +19,14 @@ set(PATCHES
     0014-fix-get-python-inc-output.patch
 )
 
+if (VCPKG_CROSSCOMPILING AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
+    message(STATUS "Warning: static library with cross-compiling is not supported. Building dynamic library.")
+    set(VCPKG_LIBRARY_LINKAGE dynamic)
+    list(APPEND PATCHES 
+        0016-explicit-define-ctypes_pythonapi-for-Android.patch
+    )
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND PATCHES 0002-static-library.patch)
 endif()
@@ -232,6 +240,21 @@ else()
         "--without-readline"
         "--disable-test-modules"
     )
+    if(VCPKG_CROSSCOMPILING AND VCPKG_TARGET_IS_ANDROID)
+        if(NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+            set(VCPKG_CMAKE_SYSTEM_VERSION 29)
+        endif()
+        set(VCPKG_MAKE_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET} --build=x86_64-linux-gnu")
+        set(OPTIONS "${OPTIONS}"
+            # For CONFIG_SITE property needed while cross-compile 
+            "ac_cv_file__dev_ptmx=yes"
+            "ac_cv_file__dev_ptc=no"
+            "ac_cv_buggy_getaddrinfo=no" # For check IPv6 functionality
+        )
+        set(ENV{READELF} $ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-readelf)
+        set(ENV{CC} $ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android${VCPKG_CMAKE_SYSTEM_VERSION}-clang)
+    endif()
+
     if(VCPKG_TARGET_IS_OSX)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()
