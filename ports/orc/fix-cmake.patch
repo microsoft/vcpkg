@@ -1,0 +1,355 @@
+diff --git a/c++/src/CMakeLists.txt b/c++/src/CMakeLists.txt
+index 972f2fc03..d13f70097 100644
+--- a/c++/src/CMakeLists.txt
++++ b/c++/src/CMakeLists.txt
+@@ -208,13 +208,28 @@ endif(BUILD_ENABLE_AVX512)
+ 
+ add_library (orc STATIC ${SOURCE_FILES})
+ 
++target_include_directories(orc
++  PUBLIC
++  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++  )
++
+ target_link_libraries (orc
+-  orc::protobuf
+-  orc::zlib
+-  orc::snappy
+-  orc::lz4
+-  orc::zstd
++  PRIVATE
++  protobuf::libprotobuf
++  ZLIB::ZLIB
++  Snappy::snappy
++  lz4::lz4
++  $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
+   ${LIBHDFSPP_LIBRARIES}
+   )
+ 
+-install(TARGETS orc DESTINATION lib)
++include(GNUInstallDirs)
++
++install(TARGETS orc EXPORT unofficial-orc)
++
++install(
++    EXPORT unofficial-orc
++    FILE unofficial-orc-config.cmake
++    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-orc"
++    NAMESPACE unofficial::orc::
++)
+diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
+index 47c1a65ba..b93ff0e26 100644
+--- a/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cmake_modules/ThirdpartyToolchain.cmake
+@@ -71,214 +71,27 @@ endif ()
+ # ----------------------------------------------------------------------
+ # Snappy
+ 
+-if (NOT "${SNAPPY_HOME}" STREQUAL "")
+-  find_package (Snappy REQUIRED)
+-  set(SNAPPY_VENDORED FALSE)
+-else ()
+-  set(SNAPPY_HOME "${THIRDPARTY_DIR}/snappy_ep-install")
+-  set(SNAPPY_INCLUDE_DIR "${SNAPPY_HOME}/include")
+-  set(SNAPPY_STATIC_LIB "${SNAPPY_HOME}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}snappy${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-  set(SNAPPY_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${SNAPPY_HOME}
+-                        -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_LIBDIR=lib)
+-
+-  if (BUILD_POSITION_INDEPENDENT_LIB)
+-    set(SNAPPY_CMAKE_ARGS ${SNAPPY_CMAKE_ARGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON)
+-  endif ()
+-
+-  ExternalProject_Add (snappy_ep
+-    URL "https://github.com/google/snappy/archive/${SNAPPY_VERSION}.tar.gz"
+-    CMAKE_ARGS ${SNAPPY_CMAKE_ARGS}
+-    ${THIRDPARTY_LOG_OPTIONS}
+-    BUILD_BYPRODUCTS "${SNAPPY_STATIC_LIB}")
+-
+-  set(SNAPPY_LIBRARY ${SNAPPY_STATIC_LIB})
+-  set(SNAPPY_VENDORED TRUE)
+-endif ()
+-
+-add_library (orc_snappy INTERFACE)
+-add_library (orc::snappy ALIAS orc_snappy)
+-if (ORC_PREFER_STATIC_SNAPPY AND ${SNAPPY_STATIC_LIB})
+-  target_link_libraries(orc_snappy INTERFACE ${SNAPPY_STATIC_LIB})
+-else ()
+-  target_link_libraries(orc_snappy INTERFACE ${SNAPPY_LIBRARY})
+-endif ()
+-target_include_directories (orc_snappy SYSTEM INTERFACE ${SNAPPY_INCLUDE_DIR})
+-
+-if (SNAPPY_VENDORED)
+-  add_dependencies (orc_snappy snappy_ep)
+-  if (INSTALL_VENDORED_LIBS)
+-    install(FILES "${SNAPPY_STATIC_LIB}"
+-            DESTINATION "lib")
+-  endif ()
+-endif ()
++find_package(Snappy CONFIG REQUIRED)
+ 
+ # ----------------------------------------------------------------------
+ # ZLIB
+ 
+-if (NOT "${ZLIB_HOME}" STREQUAL "")
+-  find_package (ZLIB REQUIRED)
+-  set(ZLIB_VENDORED FALSE)
+-else ()
+-  set(ZLIB_PREFIX "${THIRDPARTY_DIR}/zlib_ep-install")
+-  set(ZLIB_INCLUDE_DIR "${ZLIB_PREFIX}/include")
+-  if (MSVC)
+-    set(ZLIB_STATIC_LIB_NAME zlibstatic)
+-    if (${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG")
+-      set(ZLIB_STATIC_LIB_NAME ${ZLIB_STATIC_LIB_NAME}d)
+-    endif ()
+-  else ()
+-    set(ZLIB_STATIC_LIB_NAME z)
+-  endif ()
+-  set(ZLIB_STATIC_LIB "${ZLIB_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}${ZLIB_STATIC_LIB_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-  set(ZLIB_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${ZLIB_PREFIX}
+-                      -DBUILD_SHARED_LIBS=OFF)
+-
+-  if (BUILD_POSITION_INDEPENDENT_LIB)
+-    set(ZLIB_CMAKE_ARGS ${ZLIB_CMAKE_ARGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON)
+-  endif ()
+-
+-  ExternalProject_Add (zlib_ep
+-    URL "https://zlib.net/fossils/zlib-${ZLIB_VERSION}.tar.gz"
+-    CMAKE_ARGS ${ZLIB_CMAKE_ARGS}
+-    ${THIRDPARTY_LOG_OPTIONS}
+-    BUILD_BYPRODUCTS "${ZLIB_STATIC_LIB}")
+-
+-  set(ZLIB_LIBRARY ${ZLIB_STATIC_LIB})
+-  set(ZLIB_VENDORED TRUE)
+-endif ()
+-
+-add_library (orc_zlib INTERFACE)
+-add_library (orc::zlib ALIAS orc_zlib)
+-if (ORC_PREFER_STATIC_ZLIB AND ${ZLIB_STATIC_LIB})
+-  target_link_libraries (orc_zlib INTERFACE ${ZLIB_STATIC_LIB})
+-else ()
+-  target_link_libraries (orc_zlib INTERFACE ${ZLIB_LIBRARY})
+-endif ()
+-target_include_directories (orc_zlib SYSTEM INTERFACE ${ZLIB_INCLUDE_DIR})
+-
+-if (ZLIB_VENDORED)
+-  add_dependencies (orc_zlib zlib_ep)
+-  if (INSTALL_VENDORED_LIBS)
+-    install(FILES "${ZLIB_STATIC_LIB}"
+-            DESTINATION "lib")
+-  endif ()
+-endif ()
++find_package(ZLIB REQUIRED)
+ 
+ # ----------------------------------------------------------------------
+ # Zstd
+ 
+-if (NOT "${ZSTD_HOME}" STREQUAL "")
+-  find_package (ZSTD REQUIRED)
+-  set(ZSTD_VENDORED FALSE)
+-else ()
+-  set(ZSTD_HOME "${THIRDPARTY_DIR}/zstd_ep-install")
+-  set(ZSTD_INCLUDE_DIR "${ZSTD_HOME}/include")
+-  if (MSVC)
+-    set(ZSTD_STATIC_LIB_NAME zstd_static)
+-    if (${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG")
+-      set(ZSTD_STATIC_LIB_NAME ${ZSTD_STATIC_LIB_NAME})
+-    endif ()
+-  else ()
+-    set(ZSTD_STATIC_LIB_NAME zstd)
+-  endif ()
+-  set(ZSTD_STATIC_LIB "${ZSTD_HOME}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}${ZSTD_STATIC_LIB_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-  set(ZSTD_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${ZSTD_HOME}
+-          -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_LIBDIR=lib)
+-
+-  if (BUILD_POSITION_INDEPENDENT_LIB)
+-    set(ZSTD_CMAKE_ARGS ${ZSTD_CMAKE_ARGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON)
+-  endif ()
+-
+-  if (CMAKE_VERSION VERSION_GREATER "3.7")
+-    set(ZSTD_CONFIGURE SOURCE_SUBDIR "build/cmake" CMAKE_ARGS ${ZSTD_CMAKE_ARGS})
+-  else()
+-    set(ZSTD_CONFIGURE CONFIGURE_COMMAND "${THIRDPARTY_CONFIGURE_COMMAND}" ${ZSTD_CMAKE_ARGS}
+-            "${CMAKE_CURRENT_BINARY_DIR}/zstd_ep-prefix/src/zstd_ep/build/cmake")
+-  endif()
+-
+-  ExternalProject_Add(zstd_ep
+-          URL "https://github.com/facebook/zstd/archive/v${ZSTD_VERSION}.tar.gz"
+-          ${ZSTD_CONFIGURE}
+-          ${THIRDPARTY_LOG_OPTIONS}
+-          BUILD_BYPRODUCTS ${ZSTD_STATIC_LIB})
+-
+-  set(ZSTD_LIBRARY ${ZSTD_STATIC_LIB})
+-  set(ZSTD_VENDORED TRUE)
+-endif ()
+-
+-add_library (orc_zstd INTERFACE)
+-add_library (orc::zstd ALIAS orc_zstd)
+-if (ORC_PREFER_STATIC_ZSTD AND ${ZSTD_STATIC_LIB})
+-  target_link_libraries (orc_zstd INTERFACE ${ZSTD_STATIC_LIB})
+-else ()
+-  target_link_libraries (orc_zstd INTERFACE ${ZSTD_LIBRARY})
+-endif ()
+-target_include_directories (orc_zstd SYSTEM INTERFACE ${ZSTD_INCLUDE_DIR})
+-
+-if (ZSTD_VENDORED)
+-  add_dependencies (orc_zstd zstd_ep)
+-  if (INSTALL_VENDORED_LIBS)
+-    install(FILES "${ZSTD_STATIC_LIB}"
+-            DESTINATION "lib")
+-  endif ()
+-endif ()
++find_package(zstd CONFIG REQUIRED)
+ 
+ # ----------------------------------------------------------------------
+ # LZ4
+ 
+-if (NOT "${LZ4_HOME}" STREQUAL "")
+-  find_package (LZ4 REQUIRED)
+-  set(LZ4_VENDORED FALSE)
+-else ()
+-  set(LZ4_PREFIX "${THIRDPARTY_DIR}/lz4_ep-install")
+-  set(LZ4_INCLUDE_DIR "${LZ4_PREFIX}/include")
+-  set(LZ4_STATIC_LIB "${LZ4_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}lz4${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-  set(LZ4_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${LZ4_PREFIX}
+-                     -DCMAKE_INSTALL_LIBDIR=lib
+-                     -DBUILD_SHARED_LIBS=OFF)
+-
+-  if (BUILD_POSITION_INDEPENDENT_LIB)
+-    set(LZ4_CMAKE_ARGS ${LZ4_CMAKE_ARGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON)
+-  endif ()
+-
+-  if (CMAKE_VERSION VERSION_GREATER "3.7")
+-    set(LZ4_CONFIGURE SOURCE_SUBDIR "build/cmake" CMAKE_ARGS ${LZ4_CMAKE_ARGS})
+-  else()
+-    set(LZ4_CONFIGURE CONFIGURE_COMMAND "${THIRDPARTY_CONFIGURE_COMMAND}" ${LZ4_CMAKE_ARGS}
+-                                        "${CMAKE_CURRENT_BINARY_DIR}/lz4_ep-prefix/src/lz4_ep/build/cmake")
+-  endif()
+-
+-  ExternalProject_Add(lz4_ep
+-    URL "https://github.com/lz4/lz4/archive/v${LZ4_VERSION}.tar.gz"
+-    ${LZ4_CONFIGURE}
+-    ${THIRDPARTY_LOG_OPTIONS}
+-    BUILD_BYPRODUCTS ${LZ4_STATIC_LIB})
+-
+-  set(LZ4_LIBRARY ${LZ4_STATIC_LIB})
+-  set(LZ4_VENDORED TRUE)
+-endif ()
+-
+-add_library (orc_lz4 INTERFACE)
+-add_library (orc::lz4 ALIAS orc_lz4)
+-if (ORC_PREFER_STATIC_LZ4 AND ${LZ4_STATIC_LIB})
+-  target_link_libraries (orc_lz4 INTERFACE ${LZ4_STATIC_LIB})
+-else ()
+-  target_link_libraries (orc_lz4 INTERFACE ${LZ4_LIBRARY})
+-endif ()
+-target_include_directories (orc_lz4 SYSTEM INTERFACE ${LZ4_INCLUDE_DIR})
+-
+-if (LZ4_VENDORED)
+-  add_dependencies (orc_lz4 lz4_ep)
+-  if (INSTALL_VENDORED_LIBS)
+-    install(FILES "${LZ4_STATIC_LIB}"
+-            DESTINATION "lib")
+-  endif ()
+-endif ()
++find_package(lz4 CONFIG REQUIRED)
+ 
+ # ----------------------------------------------------------------------
+ # IANA - Time Zone Database
+ 
+-if (WIN32)
++if (WIN32 AND TEST_VALGRIND_MEMCHECK)
+   SET(CURRENT_TZDATA_FILE "")
+   SET(CURRENT_TZDATA_SHA512 "")
+   File(DOWNLOAD "https://ftp.osuosl.org/pub/cygwin/noarch/release/tzdata/sha512.sum" ${CMAKE_CURRENT_BINARY_DIR}/sha512.sum)
+@@ -381,77 +194,7 @@ endif ()
+ # ----------------------------------------------------------------------
+ # Protobuf
+ 
+-if (NOT "${PROTOBUF_HOME}" STREQUAL "")
+-  find_package (Protobuf REQUIRED)
+-  set(PROTOBUF_VENDORED FALSE)
+-else ()
+-  set(PROTOBUF_PREFIX "${THIRDPARTY_DIR}/protobuf_ep-install")
+-  set(PROTOBUF_INCLUDE_DIR "${PROTOBUF_PREFIX}/include")
+-  set(PROTOBUF_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PROTOBUF_PREFIX}
+-                          -DCMAKE_INSTALL_LIBDIR=lib
+-                          -DBUILD_SHARED_LIBS=OFF
+-                          -Dprotobuf_BUILD_TESTS=OFF)
+-
+-  if (BUILD_POSITION_INDEPENDENT_LIB)
+-    set(PROTOBUF_CMAKE_ARGS ${PROTOBUF_CMAKE_ARGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON)
+-  endif ()
+-
+-  if (MSVC)
+-    set(PROTOBUF_STATIC_LIB_PREFIX lib)
+-    list(APPEND PROTOBUF_CMAKE_ARGS -Dprotobuf_MSVC_STATIC_RUNTIME=OFF
+-                                    -Dprotobuf_DEBUG_POSTFIX=)
+-  else ()
+-    set(PROTOBUF_STATIC_LIB_PREFIX ${CMAKE_STATIC_LIBRARY_PREFIX})
+-  endif ()
+-  set(PROTOBUF_STATIC_LIB "${PROTOBUF_PREFIX}/lib/${PROTOBUF_STATIC_LIB_PREFIX}protobuf${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-  set(PROTOC_STATIC_LIB "${PROTOBUF_PREFIX}/lib/${PROTOBUF_STATIC_LIB_PREFIX}protoc${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-  set(PROTOBUF_EXECUTABLE "${PROTOBUF_PREFIX}/bin/protoc${CMAKE_EXECUTABLE_SUFFIX}")
+-
+-  if (CMAKE_VERSION VERSION_GREATER "3.7")
+-    set(PROTOBUF_CONFIGURE SOURCE_SUBDIR "cmake" CMAKE_ARGS ${PROTOBUF_CMAKE_ARGS})
+-  else()
+-    set(PROTOBUF_CONFIGURE CONFIGURE_COMMAND "${THIRDPARTY_CONFIGURE_COMMAND}" ${PROTOBUF_CMAKE_ARGS}
+-                                             "${CMAKE_CURRENT_BINARY_DIR}/protobuf_ep-prefix/src/protobuf_ep/cmake")
+-  endif()
+-
+-  ExternalProject_Add(protobuf_ep
+-    URL "https://github.com/google/protobuf/archive/v${PROTOBUF_VERSION}.tar.gz"
+-    ${PROTOBUF_CONFIGURE}
+-    ${THIRDPARTY_LOG_OPTIONS}
+-    BUILD_BYPRODUCTS "${PROTOBUF_STATIC_LIB}" "${PROTOC_STATIC_LIB}")
+-
+-  set(PROTOBUF_LIBRARY ${PROTOBUF_STATIC_LIB})
+-  set(PROTOC_LIBRARY ${PROTOC_STATIC_LIB})
+-  set(PROTOBUF_VENDORED TRUE)
+-endif ()
+-
+-add_library (orc_protobuf INTERFACE)
+-add_library (orc::protobuf ALIAS orc_protobuf)
+-add_library (orc_protoc INTERFACE)
+-add_library (orc::protoc ALIAS orc_protoc)
+-
+-if (ORC_PREFER_STATIC_PROTOBUF AND ${PROTOBUF_STATIC_LIB})
+-  target_link_libraries (orc_protobuf INTERFACE ${PROTOBUF_STATIC_LIB})
+-else ()
+-  target_link_libraries (orc_protobuf INTERFACE ${PROTOBUF_LIBRARY})
+-endif()
+-target_include_directories (orc_protobuf SYSTEM INTERFACE ${PROTOBUF_INCLUDE_DIR})
+-
+-if (ORC_PREFER_STATIC_PROTOBUF AND ${PROTOC_STATIC_LIB})
+-  target_link_libraries (orc_protoc INTERFACE ${PROTOC_STATIC_LIB})
+-else ()
+-  target_link_libraries (orc_protoc INTERFACE ${PROTOC_LIBRARY})
+-endif()
+-target_include_directories (orc_protoc SYSTEM INTERFACE ${PROTOBUF_INCLUDE_DIR})
+-
+-if (PROTOBUF_VENDORED)
+-  add_dependencies (orc_protoc protobuf_ep)
+-  add_dependencies (orc_protobuf protobuf_ep)
+-  if (INSTALL_VENDORED_LIBS)
+-    install(FILES "${PROTOBUF_STATIC_LIB}" "${PROTOC_STATIC_LIB}"
+-            DESTINATION "lib")
+-  endif ()
+-endif ()
++find_package(protobuf CONFIG REQUIRED)
+ 
+ # ----------------------------------------------------------------------
+ # LIBHDFSPP
+diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
+index 3863c408e..b71ab5eae 100644
+--- a/tools/src/CMakeLists.txt
++++ b/tools/src/CMakeLists.txt
+@@ -70,7 +70,7 @@ add_executable (orc-metadata
+ 
+ target_link_libraries (orc-metadata
+   orc
+-  orc::protobuf
++  protobuf::libprotobuf
+   ${CMAKE_THREAD_LIBS_INIT}
+   )
+ 
