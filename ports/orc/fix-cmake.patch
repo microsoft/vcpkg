@@ -1,11 +1,13 @@
 diff --git a/c++/src/CMakeLists.txt b/c++/src/CMakeLists.txt
-index 972f2fc03..d13f70097 100644
+index 972f2fc03..5b39554c8 100644
 --- a/c++/src/CMakeLists.txt
 +++ b/c++/src/CMakeLists.txt
 @@ -208,13 +208,28 @@ endif(BUILD_ENABLE_AVX512)
  
  add_library (orc STATIC ${SOURCE_FILES})
  
++include(GNUInstallDirs)
++
 +target_include_directories(orc
 +  PUBLIC
 +  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
@@ -27,8 +29,6 @@ index 972f2fc03..d13f70097 100644
    )
  
 -install(TARGETS orc DESTINATION lib)
-+include(GNUInstallDirs)
-+
 +install(TARGETS orc EXPORT unofficial-orc)
 +
 +install(
