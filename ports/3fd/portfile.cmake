@@ -14,7 +14,7 @@ vcpkg_from_github(
 
 # Build:
 if (VCPKG_TARGET_IS_UWP) # UWP:
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "3FD/3FD.WinRT.UWP.vcxproj"
     )
