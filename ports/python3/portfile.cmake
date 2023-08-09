@@ -241,21 +241,6 @@ else()
         "--without-readline"
         "--disable-test-modules"
     )
-    if(VCPKG_CROSSCOMPILING AND VCPKG_TARGET_IS_ANDROID)
-        if(NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
-            set(VCPKG_CMAKE_SYSTEM_VERSION 29)
-        endif()
-        set(VCPKG_MAKE_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET} --build=x86_64-linux-gnu")
-        set(OPTIONS "${OPTIONS}"
-            # For CONFIG_SITE property needed while cross-compile 
-            "ac_cv_file__dev_ptmx=yes"
-            "ac_cv_file__dev_ptc=no"
-            "ac_cv_buggy_getaddrinfo=no" # For check IPv6 functionality
-        )
-        set(ENV{READELF} $ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-readelf)
-        set(ENV{CC} $ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android${VCPKG_CMAKE_SYSTEM_VERSION}-clang)
-    endif()
-
     if(VCPKG_TARGET_IS_OSX)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()
@@ -265,6 +250,21 @@ else()
     if(VCPKG_CROSSCOMPILING)
         set(_python_for_build "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
         list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
+        
+        if(VCPKG_TARGET_IS_ANDROID)
+            list(APPEND OPTIONS 
+                "--build=x86_64-linux-gnu"
+                # For CONFIG_SITE property needed while cross-compile: https://docs.python.org/3/using/configure.html#cmdoption-arg-CONFIG_SITE
+                "ac_cv_file__dev_ptmx=yes"
+                "ac_cv_file__dev_ptc=no"
+                "ac_cv_buggy_getaddrinfo=no"
+            )
+            if(NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+                set(VCPKG_CMAKE_SYSTEM_VERSION 29)
+            endif()
+            set(ENV{READELF} $ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-readelf)
+            set(ENV{CC} $ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android${VCPKG_CMAKE_SYSTEM_VERSION}-clang)
+        endif()
     else()
         vcpkg_find_acquire_program(PYTHON3)
         list(APPEND OPTIONS "ac_cv_prog_PYTHON_FOR_REGEN=${PYTHON3}")
