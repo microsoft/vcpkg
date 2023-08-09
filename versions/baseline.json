@@ -402,7 +402,7 @@
     },
     "azure-c-shared-utility": {
       "baseline": "2023-08-07",
-      "port-version": 1
+      "port-version": 0
     },
     "azure-core-amqp-cpp": {
       "baseline": "1.0.0-beta.2",
