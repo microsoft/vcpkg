@@ -469,7 +469,7 @@
       "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
-      "baseline": "12.6.0",
+      "baseline": "12.6.1",
       "port-version": 0
     },
     "azure-storage-queues-cpp": {
