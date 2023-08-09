@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5758320..522a94c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,7 +59,7 @@ if(XTENSOR_USE_TBB AND XTENSOR_USE_OPENMP)
+ endif()
+ 
+ if(XTENSOR_USE_XSIMD)
+-    set(xsimd_REQUIRED_VERSION 10.0.0)
++    set(xsimd_REQUIRED_VERSION 11.0.1)
+     if(TARGET xsimd)
+         set(xsimd_VERSION ${XSIMD_VERSION_MAJOR}.${XSIMD_VERSION_MINOR}.${XSIMD_VERSION_PATCH})
+         # Note: This is not SEMVER compatible comparison
