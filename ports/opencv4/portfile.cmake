@@ -1,9 +1,16 @@
 set(USE_QT_VERSION "6")
 
+# https://github.com/opencv/opencv/pull/24043
+vcpkg_download_distfile(ARM64_WINDOWS_FIX
+  URLS https://github.com/opencv/opencv/commit/e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch
+  SHA512 b91b45ac49994c3f4481d5ca04d708d9b063239fd2105e2eb1aae26cc70361ff042e99c51edd67beb9463624147ba77fd562097ab20676bba3b8ce068d455dbc
+  FILENAME opencv4-e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
-    REF ${VERSION}
+    REF "${VERSION}"
     SHA512 48738c3e7460a361274357aef1dd427082ccd59f749d6317d92a414b3741ce6116ea15ed4fedd2d47a25e456c705f3ba114357558646097bfc0e6dba9b3b865c
     HEAD_REF master
     PATCHES
@@ -19,6 +26,7 @@ vcpkg_from_github(
       0011-remove-python2.patch
       0012-fix-zlib.patch
       0015-fix-freetype.patch
+      "${ARM64_WINDOWS_FIX}"
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
