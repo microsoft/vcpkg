@@ -5993,8 +5993,8 @@
       "port-version": 0
     },
     "opencv": {
-      "baseline": "4.7.0",
-      "port-version": 1
+      "baseline": "4.8.0",
+      "port-version": 0
     },
     "opencv2": {
       "baseline": "2.4.13.7",
