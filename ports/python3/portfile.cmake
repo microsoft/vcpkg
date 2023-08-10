@@ -19,7 +19,7 @@ set(PATCHES
     0014-fix-get-python-inc-output.patch
 )
 
-if (VCPKG_CROSSCOMPILING AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
+if (VCPKG_CROSSCOMPILING AND VCPKG_TARGET_IS_ANDROID)
     message(STATUS "Warning: static library with cross-compiling is not supported. Building dynamic library.")
     set(VCPKG_LIBRARY_LINKAGE dynamic)
     list(APPEND PATCHES 
