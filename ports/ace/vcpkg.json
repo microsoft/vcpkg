@@ -1,10 +1,19 @@
 {
   "name": "ace",
   "version": "7.1.1",
+  "port-version": 1,
   "maintainers": "Johnny Willemsen <jwillemsen@remedy.nl>",
   "description": "The ADAPTIVE Communication Environment",
   "homepage": "https://github.com/DOCGroup/ACE_TAO",
   "license": "DOC",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
+  ],
   "features": {
     "ssl": {
       "description": "Enable SSL/TLS features in ACE",
