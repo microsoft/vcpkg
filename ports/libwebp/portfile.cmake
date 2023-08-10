@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0002-cmake-config.patch
-        0007-fix-arm-build.patch
+        0003-simd.patch
         0008-sdl.patch
         0010-fix_build.patch
 )
