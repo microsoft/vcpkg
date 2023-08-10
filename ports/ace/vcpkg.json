@@ -6,6 +6,7 @@
   "description": "The ADAPTIVE Communication Environment",
   "homepage": "https://github.com/DOCGroup/ACE_TAO",
   "license": "DOC",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-msbuild",
