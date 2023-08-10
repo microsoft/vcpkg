@@ -44,6 +44,11 @@
       "name": "sqlite3",
       "platform": "!(windows & static)"
     },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    },
     "zlib"
   ],
   "features": {
