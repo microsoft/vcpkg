@@ -17,16 +17,9 @@ set(PATCHES
     0010-dont-skip-rpath.patch
     0012-force-disable-curses.patch
     0014-fix-get-python-inc-output.patch
+    0015-disable-SOVERSION-for-Android.patch
+    0016-explicit-define-ctypes_pythonapi-for-Android.patch
 )
-
-if (VCPKG_CROSSCOMPILING AND VCPKG_TARGET_IS_ANDROID)
-    message(STATUS "Warning: static library with cross-compiling is not supported. Building dynamic library.")
-    set(VCPKG_LIBRARY_LINKAGE dynamic)
-    list(APPEND PATCHES 
-        0015-disable-SOVERSION-for-Android.patch
-        0016-explicit-define-ctypes_pythonapi-for-Android.patch
-    )
-endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND PATCHES 0002-static-library.patch)
