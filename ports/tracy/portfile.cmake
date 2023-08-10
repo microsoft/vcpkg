@@ -80,10 +80,9 @@ function(tracy_tool_install_unix tracy_TOOL tracy_TOOL_NAME)
 endfunction()
 
 function(tracy_tool_install_win32 tracy_TOOL tracy_TOOL_NAME)
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "${tracy_TOOL}/build/win32/${tracy_TOOL_NAME}.sln"
-        USE_VCPKG_INTEGRATION
     )
 endfunction()
 

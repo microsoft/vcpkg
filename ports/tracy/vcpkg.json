@@ -39,6 +39,11 @@
         {
           "name": "tbb",
           "platform": "!windows"
+        },
+        {
+          "name": "vcpkg-msbuild",
+          "host": true,
+          "platform": "windows"
         }
       ]
     },
@@ -66,6 +71,11 @@
         {
           "name": "tbb",
           "platform": "!windows"
+        },
+        {
+          "name": "vcpkg-msbuild",
+          "host": true,
+          "platform": "windows"
         }
       ]
     },
