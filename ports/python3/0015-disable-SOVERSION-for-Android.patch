@@ -1,22 +1,5 @@
 diff --git a/configure.ac b/configure.ac
 index 73ee71c6d2..a62edaebae 100644
---- a/configure
-+++ b/configure
-@@ -5993,7 +5993,10 @@
- 	  LDLIBRARY='libpython$(LDVERSION).so'
- 	  BLDLIBRARY='-L. -lpython$(LDVERSION)'
- 	  RUNSHARED=LD_LIBRARY_PATH=`pwd`${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
--	  INSTSONAME="$LDLIBRARY".$SOVERSION
-+     if test $ac_sys_system != Linux-android
-+     then
-+         INSTSONAME="$LDLIBRARY".$SOVERSION
-+     fi
- 	  if test "$with_pydebug" != yes
-           then
- 	      PY3LIBRARY=libpython3.so
-
-diff --git a/configure.ac b/configure.ac
-index 73ee71c6d2..a62edaebae 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1153,7 +1153,10 @@
