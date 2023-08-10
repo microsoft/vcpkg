@@ -253,37 +253,37 @@ else()
         set(_python_for_build "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
         list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
 
-        if(VCPKG_TARGET_IS_ANDROID)
-            vcpkg_cmake_get_vars(cmake_vars_file)
-            include("${cmake_vars_file}")
-            cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER PARENT_PATH llvm_dir)
+        # if(VCPKG_TARGET_IS_ANDROID)
+        #     vcpkg_cmake_get_vars(cmake_vars_file)
+        #     include("${cmake_vars_file}")
+        #     cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER PARENT_PATH llvm_dir)
 
-            if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm")
-                set(clang_arch_prefix "armv7a")
-            elseif(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm64")
-                set(clang_arch_prefix "aarch64")
-            elseif(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "x86_64")
-                set(clang_arch_prefix "x86_64")
-            elseif(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "x86")
-                set(clang_arch_prefix "i686")
-            endif()
+        #     if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm")
+        #         set(clang_arch_prefix "armv7a")
+        #     elseif(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm64")
+        #         set(clang_arch_prefix "aarch64")
+        #     elseif(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "x86_64")
+        #         set(clang_arch_prefix "x86_64")
+        #     elseif(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "x86")
+        #         set(clang_arch_prefix "i686")
+        #     endif()
 
-            if(DEFINED clang_arch_prefix)
-                set(clang_c_compiler ${llvm_dir}/${clang_arch_prefix}-linux-android${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}-clang)
-            else()
-                set(clang_c_compiler ${VCPKG_DETECTED_CMAKE_C_COMPILER})
-            endif()
+        #     if(DEFINED clang_arch_prefix)
+        #         set(clang_c_compiler ${llvm_dir}/${clang_arch_prefix}-linux-android${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}-clang)
+        #     else()
+        #         set(clang_c_compiler ${VCPKG_DETECTED_CMAKE_C_COMPILER})
+        #     endif()
 
-            list(APPEND OPTIONS 
-                "--build=${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}-linux-gnu"
-                "CC=${clang_c_compiler}"
-                "READELF=${llvm_dir}/llvm-readelf"
-                # For CONFIG_SITE property needed while cross-compile: https://docs.python.org/3/using/configure.html#cmdoption-arg-CONFIG_SITE
-                "ac_cv_file__dev_ptmx=yes"
-                "ac_cv_file__dev_ptc=no"
-                "ac_cv_buggy_getaddrinfo=no"
-            )
-        endif()
+        #     list(APPEND OPTIONS 
+        #         "--build=${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}-linux-gnu"
+        #         "CC=${clang_c_compiler}"
+        #         "READELF=${llvm_dir}/llvm-readelf"
+        #         # For CONFIG_SITE property needed while cross-compile: https://docs.python.org/3/using/configure.html#cmdoption-arg-CONFIG_SITE
+        #         "ac_cv_file__dev_ptmx=yes"
+        #         "ac_cv_file__dev_ptc=no"
+        #         "ac_cv_buggy_getaddrinfo=no"
+        #     )
+        # endif()
     else()
         vcpkg_find_acquire_program(PYTHON3)
         list(APPEND OPTIONS "ac_cv_prog_PYTHON_FOR_REGEN=${PYTHON3}")
