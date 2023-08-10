@@ -114,7 +114,6 @@ if("xml" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
   file(RELATIVE_PATH PROJECT_SUBPATH "${SOURCE_PATH}" "${WORKSPACE}.sln")
   vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
