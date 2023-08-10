@@ -1,7 +1,7 @@
 {
   "name": "wpilib",
   "version-date": "2020-03-02",
-  "port-version": 3,
+  "port-version": 4,
   "description": "WPILib is the software library package for the FIRST Robotics Competition. The core install includes wpiutil, a common utilies library, and ntcore, the base NetworkTables library.",
   "homepage": "https://github.com/wpilibsuite/allwpilib",
   "license": null,

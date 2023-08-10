@@ -1,7 +1,7 @@
 {
   "name": "rsasynccpp",
   "version": "0.0.7",
-  "port-version": 1,
+  "port-version": 2,
   "maintainers": "Rene Stein <rene@renestein.net>",
   "description": "Task Parallel Library (TPL)/dataflow/actors/async primitives for C++ based on C++ 20 coroutines.",
   "homepage": "https://github.com/renestein/Rstein.AsyncCpp",

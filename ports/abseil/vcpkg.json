@@ -1,6 +1,6 @@
 {
   "name": "abseil",
-  "version": "20230125.0",
+  "version": "20230125.3",
   "port-version": 1,
   "description": [
     "an open-source collection designed to augment the C++ standard library.",

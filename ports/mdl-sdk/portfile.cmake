@@ -65,6 +65,25 @@ endif()
 
 # MDL-SDK
 
+# The patch "workaround gcc bit" works around <bit> included with gcc included with Ubuntu 22.04
+# failing to compile as used here, with errors originating *inside* <bit> like:
+# [156/1742] /usr/bin/c++ -DBIT64=1 -DDEBUG -DHAS_SSE -DMDL_SOURCE_RELEASE -DMI_PLATFORM=\"linux-x86-64-gcc\" -DMI_PLATFORM_UNIX -DX86=1 -D_DEBUG -I/home/bion/vcpkg/buildtrees/mdl-sdk/x64-linux-dbg/src/base/system/main -I/home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/src/base/system/main -I/home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/include -I/home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/src -fPIC -g -fPIC -fno-strict-aliasing -march=nocona -gdwarf-3 -gstrict-dwarf -Wall -Wvla -Wno-init-list-lifetime -Wno-placement-new -Wno-parentheses -Wno-sign-compare -Wno-narrowing -Wno-unused-but-set-variable -Wno-unused-local-typedefs -Wno-deprecated-declarations -Wno-unknown-pragmas -std=gnu++17 -MD -MT src/base/system/main/CMakeFiles/base-system-main.dir/module_registration_entry.cpp.o -MF src/base/system/main/CMakeFiles/base-system-main.dir/module_registration_entry.cpp.o.d -o src/base/system/main/CMakeFiles/base-system-main.dir/module_registration_entry.cpp.o -c /home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/src/base/system/main/module_registration_entry.cpp
+# FAILED: src/base/system/main/CMakeFiles/base-system-main.dir/module_registration_entry.cpp.o 
+# /usr/bin/c++ -DBIT64=1 -DDEBUG -DHAS_SSE -DMDL_SOURCE_RELEASE -DMI_PLATFORM=\"linux-x86-64-gcc\" -DMI_PLATFORM_UNIX -DX86=1 -D_DEBUG -I/home/bion/vcpkg/buildtrees/mdl-sdk/x64-linux-dbg/src/base/system/main -I/home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/src/base/system/main -I/home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/include -I/home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/src -fPIC -g -fPIC -fno-strict-aliasing -march=nocona -gdwarf-3 -gstrict-dwarf -Wall -Wvla -Wno-init-list-lifetime -Wno-placement-new -Wno-parentheses -Wno-sign-compare -Wno-narrowing -Wno-unused-but-set-variable -Wno-unused-local-typedefs -Wno-deprecated-declarations -Wno-unknown-pragmas -std=gnu++17 -MD -MT src/base/system/main/CMakeFiles/base-system-main.dir/module_registration_entry.cpp.o -MF src/base/system/main/CMakeFiles/base-system-main.dir/module_registration_entry.cpp.o.d -o src/base/system/main/CMakeFiles/base-system-main.dir/module_registration_entry.cpp.o -c /home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/src/base/system/main/module_registration_entry.cpp
+# In file included from /home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/src/base/system/main/types.h:37,
+#                  from /home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/src/base/system/main/module_registration_entry.h:39,
+#                  from /home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/src/base/system/main/module_registration_entry.cpp:34:
+# /home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/include/mi/base/types.h: In function ‘constexpr T mi::base::binary_cast(const S&)’:
+# /home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/include/mi/base/types.h:356:89: error: ‘bit_cast’ is not a member of ‘mi::base::std’
+#   356 | template<class T, class S> constexpr T binary_cast(const S& src) noexcept { return std::bit_cast<T,S>(src); }
+#       |                                                                                         ^~~~~~~~
+# /home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/include/mi/base/types.h:356:99: error: expected primary-expression before ‘,’ token
+#   356 | template<class T, class S> constexpr T binary_cast(const S& src) noexcept { return std::bit_cast<T,S>(src); }
+#       |                                                                                                   ^
+# /home/bion/vcpkg/buildtrees/mdl-sdk/src/830ab63109-115b19fca8/include/mi/base/types.h:356:101: error: expected primary-expression before ‘>’ token
+#   356 | template<class T, class S> constexpr T binary_cast(const S& src) noexcept { return std::bit_cast<T,S>(src); }
+#       |                                                                                                     ^
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/MDL-SDK
@@ -81,6 +100,8 @@ vcpkg_from_github(
         007-plugin-options.patch
         008-build-static-llvm.patch
         009-include-priority-vendored-llvm.patch
+        010-workaround-gcc-bit.patch
+        011-fix-python.patch
 )
 
 string(COMPARE NOTEQUAL "${VCPKG_CRT_LINKAGE}" "static" _MVSC_CRT_LINKAGE_OPTION)

@@ -1,10 +1,11 @@
 {
   "name": "moos-core",
   "version": "10.4.0",
-  "port-version": 8,
+  "port-version": 9,
   "description": "A very light weight, easy to use middleware.",
   "homepage": "https://sites.google.com/site/moossoftware/",
   "license": "GPL-2.0-or-later",
+  "supports": "!xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -1,9 +1,9 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip
+    URLS https://dl-game-sdk.discordapp.net/3.2.1/discord_game_sdk.zip
     FILENAME discord_game_sdk.zip
-    SHA512 4c8f72c7bdf92bc969fb86b96ea0d835e01b9bab1a2cc27ae00bdac1b9733a1303ceadfe138c24a7609b76d61d49999a335dd596cf3f335d894702e2aa23406f
+    SHA512 4851cb70f428eb391959018aa7206e11232348189f7e47f9b8e15535f02a8b114ef825198b0d772979b77ca47061ee7fa764ca90a1dc39370eb9802e8bf04541
 )
 
 vcpkg_extract_source_archive(
@@ -20,6 +20,8 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(ARCH_FOLDER "x86")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(ARCH_FOLDER "x86_64")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(ARCH_FOLDER "aarch64")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)

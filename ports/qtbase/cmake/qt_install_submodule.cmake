@@ -192,6 +192,16 @@ function(qt_cmake_configure)
             QT_SYNCQT
             QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
             ${_qarg_OPTIONS_MAYBE_UNUSED}
+            INPUT_bundled_xcb_xinput
+            INPUT_freetype
+            INPUT_harfbuzz
+            INPUT_libjpeg
+            INPUT_libmd4c
+            INPUT_libpng
+            INPUT_opengl
+            INPUT_openssl
+            INPUT_xcb
+            INPUT_xkbcommon
     )
     set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
 endfunction()

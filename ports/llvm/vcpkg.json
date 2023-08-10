@@ -1,12 +1,16 @@
 {
   "name": "llvm",
   "version": "15.0.7",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
+    {
+      "name": "atlmfc",
+      "platform": "windows & !mingw"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

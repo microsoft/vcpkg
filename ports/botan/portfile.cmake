@@ -32,6 +32,7 @@ endif()
 
 vcpkg_list(SET configure_arguments
     "--distribution-info=vcpkg ${TARGET_TRIPLET}"
+    --disable-cc-tests
     --with-pkg-config
     --link-method=copy
     --with-debug-info

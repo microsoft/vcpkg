@@ -1,6 +1,6 @@
 {
   "name": "directxmesh",
-  "version-date": "2023-04-28",
+  "version-date": "2023-06-13",
   "description": "DirectXMesh geometry processing library",
   "homepage": "https://github.com/Microsoft/DirectXMesh",
   "documentation": "https://github.com/microsoft/DirectXMesh/wiki",
@@ -9,7 +9,7 @@
   "dependencies": [
     {
       "name": "directx-headers",
-      "platform": "(windows & !xbox) | linux"
+      "platform": "mingw | linux"
     },
     "directxmath",
     {
@@ -27,7 +27,13 @@
   ],
   "features": {
     "dx12": {
-      "description": "Build with DirectX12 support for Windows 10/Windows 11"
+      "description": "Build with DirectX12 support for Windows 10/Windows 11",
+      "dependencies": [
+        {
+          "name": "directx-headers",
+          "platform": "windows & !xbox"
+        }
+      ]
     },
     "spectre": {
       "description": "Build Spectre-mitigated library"

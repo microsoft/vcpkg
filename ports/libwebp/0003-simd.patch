@@ -1,0 +1,23 @@
+diff --git a/cmake/cpu.cmake b/cmake/cpu.cmake
+index 7513ca8..38ec73b 100644
+--- a/cmake/cpu.cmake
++++ b/cmake/cpu.cmake
+@@ -50,7 +50,7 @@ if(MSVC AND CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+   if(MSVC_VERSION GREATER_EQUAL 1800 AND NOT CMAKE_C_FLAGS MATCHES "/arch:")
+     set(SIMD_ENABLE_FLAGS)
+   else()
+-    set(SIMD_ENABLE_FLAGS "/arch:AVX;/arch:SSE2;;;;")
++    set(SIMD_ENABLE_FLAGS          ";/arch:SSE2;;;;") # /arch:AVX is too much for SSE4
+   endif()
+   set(SIMD_DISABLE_FLAGS)
+ else()
+@@ -110,6 +110,9 @@ foreach(I_SIMD RANGE ${WEBP_SIMD_FLAGS_RANGE})
+        "src/dsp/*${WEBP_SIMD_FILE_EXTENSION}")
+   if(WEBP_HAVE_${WEBP_SIMD_FLAG})
+     # Memorize the file and flags.
++    if("${SIMD_COMPILE_FLAG}" STREQUAL "")
++      set(SIMD_COMPILE_FLAG " ")
++    endif()
+     foreach(FILE ${SIMD_FILES})
+       list(APPEND WEBP_SIMD_FILES_TO_INCLUDE ${FILE})
+       list(APPEND WEBP_SIMD_FLAGS_TO_INCLUDE ${SIMD_COMPILE_FLAG})

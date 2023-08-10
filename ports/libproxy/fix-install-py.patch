@@ -6,11 +6,11 @@ index 7c36e51..ee2c5bc 100644
  add_custom_target(PMlibproxy ALL ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/Libproxy.pm ${CMAKE_BINARY_DIR}/perl/Net/Libproxy.pm)
 -install( FILES Libproxy.pm DESTINATION ${PX_PERL_ARCH}/Net )
 diff --git a/bindings/perl/src/CMakeLists.txt b/bindings/perl/src/CMakeLists.txt
-index 2800a85..c5d8e0f 100644
+index 29e656d..dec5799 100644
 --- a/bindings/perl/src/CMakeLists.txt
 +++ b/bindings/perl/src/CMakeLists.txt
-@@ -21,5 +21,3 @@ target_link_libraries(PLlibproxy ${PLlibproxy_LIB_DEPENDENCIES})
- target_compile_options(PLlibproxy PRIVATE ${PX_PERL_CCFLAGS})
+@@ -20,5 +20,3 @@ endif()
+ target_link_libraries(PLlibproxy ${PLlibproxy_LIB_DEPENDENCIES})
  set_target_properties(PLlibproxy PROPERTIES OUTPUT_NAME "Libproxy")
  set_target_properties(PLlibproxy PROPERTIES PREFIX "")
 -
