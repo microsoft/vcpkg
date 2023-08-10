@@ -245,15 +245,30 @@ else()
         "--without-readline"
         "--disable-test-modules"
     )
-    set(libs "")
+    set(libs_release "")
+    set(libs_debug "")
     if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libintl.a")
-        string(APPEND libs " -lintl")
+        string(APPEND libs_release " ${CURRENT_INSTALLED_DIR}/lib/libintl.a")
+        if(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/libintl.a")
+            string(APPEND libs_debug " ${CURRENT_INSTALLED_DIR}/debug/lib/libintl.a")
+        else()
+            string(APPEND libs_debug " ${CURRENT_INSTALLED_DIR}/lib/libintl.a")
+        endif()
     endif()
-    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libiconv.a" OR VCPKG_TARGET_IS_OSX)
-        string(APPEND libs " -liconv")
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libiconv.a")
+        string(APPEND libs_release " ${CURRENT_INSTALLED_DIR}/lib/libiconv.a")
+        if(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.a")
+            string(APPEND libs_debug " ${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.a")
+        else()
+            string(APPEND libs_debug " ${CURRENT_INSTALLED_DIR}/lib/libiconv.a")
+        endif()
+    elseif(VCPKG_TARGET_IS_OSX)
+        string(APPEND libs_release " -liconv")
+        string(APPEND libs_debug " -liconv")
     endif()
-    if(libs)
-        list(APPEND OPTIONS "LIBS=${libs}")
+    if(libs_release)
+        list(APPEND OPTIONS_RELEASE "LIBS=${libs_release}")
+        list(APPEND OPTIONS_DEBUG "LIBS=${libs_debug}")
     endif()
 
     # The version of the build Python must match the version of the cross compiled host Python.
@@ -289,8 +304,10 @@ else()
         OPTIONS_DEBUG
             "--with-pydebug"
             "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/debug/lib"
+            ${OPTIONS_DEBUG}
         OPTIONS_RELEASE
             "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/lib"
+            ${OPTIONS_RELEASE}
     )
     vcpkg_install_make(
         ADD_BIN_TO_PATH
