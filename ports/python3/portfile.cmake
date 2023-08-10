@@ -256,12 +256,13 @@ else()
         list(APPEND OPTIONS "LIBS=${libs}")
     endif()
 
+    # The version of the build Python must match the version of the cross compiled host Python.
+    # https://docs.python.org/3/using/configure.html#cross-compiling-options
     if(VCPKG_CROSSCOMPILING)
         list(APPEND OPTIONS
             "--build=$(${SOURCE_PATH}/config.guess)"
-            # Python 3.11: Use --with-build-python instead
-            "PYTHON_FOR_BUILD=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}${VCPKG_HOST_EXECUTABLE_SUFFIX}"
-            "PYTHON_FOR_REGEN=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            "--with-build-python=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            #"PYTHON_FOR_REGEN=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}${VCPKG_HOST_EXECUTABLE_SUFFIX}"
             # Override python's AC_RUN_IFELSE cross compiling defaults.
             # Users may override these values in VCPKG_CONFIGURE_MAKE_OPTIONS.
             ac_cv_buggy_getaddrinfo=no
@@ -275,13 +276,6 @@ else()
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
             list(APPEND OPTIONS "LDFLAGS=\${LDFLAGS//-Wl,--no-undefined/}")
         endif()
-    endif()
-
-    # The version of the build Python must match the version of the cross compiled host Python.
-    # https://docs.python.org/3/using/configure.html#cross-compiling-options
-    if(VCPKG_CROSSCOMPILING)
-        set(_python_for_build "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
-        list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
     else()
         vcpkg_find_acquire_program(PYTHON3)
         list(APPEND OPTIONS "ac_cv_prog_PYTHON_FOR_REGEN=${PYTHON3}")
