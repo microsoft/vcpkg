@@ -6,7 +6,7 @@ diff --git a/Lib/ctypes/__init__.py b/Lib/ctypes/__init__.py
      pythonapi = PyDLL("python dll", None, _sys.dllhandle)
  elif _sys.platform == "cygwin":
      pythonapi = PyDLL("libpython%d.%d.dll" % _sys.version_info[:2])
-+elif _os.environ.get('ANDROID_BOOTLOGO') == '1':
++elif hasattr(sys, 'getandroidapilevel'):
 +    pythonapi = PyDLL("libpython%d.%d.so" % _sys.version_info[:2])
  else:
      pythonapi = PyDLL(None)
