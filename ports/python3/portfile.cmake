@@ -254,13 +254,30 @@ else()
         list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
 
         if(VCPKG_TARGET_IS_ANDROID)
-            if(NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
-                set(VCPKG_CMAKE_SYSTEM_VERSION 29)
+            vcpkg_cmake_get_vars(cmake_vars_file)
+            include("${cmake_vars_file}")
+            cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER PARENT_PATH llvm_dir)
+
+            if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm")
+                set(clang_arch_prefix "armv7a")
+            elseif(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm64")
+                set(clang_arch_prefix "aarch64")
+            elseif(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "x86_64")
+                set(clang_arch_prefix "x86_64")
+            elseif(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "x86")
+                set(clang_arch_prefix "i686")
             endif()
+
+            if(DEFINED clang_arch_prefix)
+                set(clang_c_compiler ${llvm_dir}/${clang_arch_prefix}-linux-android29-clang)
+            else()
+                set(clang_c_compiler ${VCPKG_DETECTED_CMAKE_C_COMPILER})
+            endif()
+
             list(APPEND OPTIONS 
-                "--build=x86_64-linux-gnu"
-                "CC=$ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android${VCPKG_CMAKE_SYSTEM_VERSION}-clang"
-                "READELF=$ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-readelf"
+                "--build=${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}-linux-gnu"
+                "CC=${clang_c_compiler}"
+                "READELF=${llvm_dir}/llvm-readelf"
                 # For CONFIG_SITE property needed while cross-compile: https://docs.python.org/3/using/configure.html#cmdoption-arg-CONFIG_SITE
                 "ac_cv_file__dev_ptmx=yes"
                 "ac_cv_file__dev_ptc=no"
