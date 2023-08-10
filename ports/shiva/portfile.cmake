@@ -7,18 +7,11 @@ vcpkg_from_github(
     PATCHES find_python_and_no_copy_dll.patch
 )
 
-find_library(PYTHON_RELEASE NAMES python310 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(PYTHON_DEBUG NAMES python310_d python310 PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-include(SelectLibraryConfigurations)
-select_library_configurations(PYTHON)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DSHIVA_BUILD_TESTS=OFF
-        "-DPYTHON_LIBRARY=${PYTHON_LIBRARIES}"
-        "-DPYTHON_LIBRARIES=${PYTHON_LIBRARIES}"
         "-DPYTHON_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/python3/python${VCPKG_EXECUTABLE_SUFFIX}"
 )
 

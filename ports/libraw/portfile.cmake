@@ -14,6 +14,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dependencies.patch
+        install-interface.patch
         # Move the non-thread-safe library to manual-link. This is unfortunately needed
         # because otherwise libraries that build on top of libraw have to choose.
         fix-install.patch
