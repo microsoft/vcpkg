@@ -73,18 +73,13 @@ else()
     vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" "ClCompile Include=\"..\\src" "ClCompile Include=\"${WIN_SOURCE_PATH}\\src")
     vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" "ClInclude Include=\"..\\src" "ClInclude Include=\"${WIN_SOURCE_PATH}\\src")
     vcpkg_replace_string("${ACTIVEMQCPP_MSVC_PROJ}" "../src/main" "${WIN_SOURCE_PATH}\\src\\main")
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
          SOURCE_PATH "${SOURCE_PATH}/vs2010-build"
          PROJECT_SUBPATH "activemq-cpp.vcxproj"
          RELEASE_CONFIGURATION ${RELEASE_CONF}
          DEBUG_CONFIGURATION   ${DEBUG_CONF}
          PLATFORM ${BUILD_ARCH}
-         USE_VCPKG_INTEGRATION
-         ALLOW_ROOT_INCLUDES
-         SKIP_CLEAN
     )
-
-    vcpkg_copy_pdbs()
 
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(COPY
