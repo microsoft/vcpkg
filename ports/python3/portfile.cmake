@@ -269,7 +269,7 @@ else()
             endif()
 
             if(DEFINED clang_arch_prefix)
-                set(clang_c_compiler ${llvm_dir}/${clang_arch_prefix}-linux-android29-clang)
+                set(clang_c_compiler ${llvm_dir}/${clang_arch_prefix}-linux-android${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}-clang)
             else()
                 set(clang_c_compiler ${VCPKG_DETECTED_CMAKE_C_COMPILER})
             endif()
