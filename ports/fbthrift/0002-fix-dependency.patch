@@ -1,19 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index beae7d7..0d03162 100644
+index d2b69ad..84b2bf8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -100,7 +100,8 @@ endif ()
+@@ -96,22 +96,24 @@ endif ()
  
  # Find required dependencies for thrift/lib
- if(lib_only OR build_all)
+ if (THRIFT_LIB_ONLY OR build_all)
 -  find_package(Gflags REQUIRED)
 +  find_package(gflags CONFIG REQUIRED)
 +  set(LIBGFLAGS_LIBRARY gflags::gflags)
    find_package(glog CONFIG REQUIRED)
    set (GLOG_LIBRARIES glog::glog)
    find_package(folly CONFIG REQUIRED)
-@@ -108,16 +109,17 @@ if(lib_only OR build_all)
-   find_package(fmt CONFIG REQUIRED)
+   find_package(fizz CONFIG REQUIRED)
    find_package(wangle CONFIG REQUIRED)
    find_package(ZLIB REQUIRED)
 -  find_package(Zstd REQUIRED)
@@ -23,7 +22,6 @@ index beae7d7..0d03162 100644
 +  elseif(TARGET zstd::libzstd_static)
 +    set(ZSTD_LIBRARIES zstd::libzstd_static)
 +  endif()
-+
    # https://cmake.org/cmake/help/v3.9/module/FindThreads.html
    set(THREADS_PREFER_PTHREAD_FLAG ON)
    find_package(Threads)
@@ -32,10 +30,9 @@ index beae7d7..0d03162 100644
 -    ${GLOG_INCLUDE_DIRS}
 -    ${OPENSSL_INCLUDE_DIR}
 -    ${ZSTD_INCLUDE_DIRS}
--    ${Boost_INCLUDE_DIRS}
    )
    add_definitions("-DTHRIFT_HAVE_LIBSNAPPY=0")
-   if(lib_only)
+   if (THRIFT_LIB_ONLY)
 diff --git a/thrift/cmake/FBThriftConfig.cmake.in b/thrift/cmake/FBThriftConfig.cmake.in
 index e1297ed..c7d9d59 100644
 --- a/thrift/cmake/FBThriftConfig.cmake.in

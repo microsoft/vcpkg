@@ -15,6 +15,7 @@ vcpkg_from_github(
         002-fix-capstone-5.patch
         003-fix-imgui-path.patch
         004-fix-missing-threads-dep.patch # https://github.com/wolfpld/tracy/pull/562
+        005-fix-imgui-path-legacy.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -84,6 +85,7 @@ function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
                 BASE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}"
                 OUTPUT_VARIABLE relative_path_makefile_dir)
 
+            set(ENV{LEGACY} 1)
             vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
             vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${path_suffix}/lib/pkgconfig")
 

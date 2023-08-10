@@ -1,49 +1,52 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index df623ef..8e653b8 100644
+index 597847b..da988ce 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -569,10 +569,4 @@ CONFIGURE_FILE(${PoDoFo_SOURCE_DIR}/podofo_config.h.in ${PoDoFo_BINARY_DIR}/podo
+@@ -258,11 +258,6 @@ endif()
  # To use these dependencies set PODOFO_DIR to the podofo BUILD directory in
  # your build (eg -DPODOFO_DIR=/path/to/podofo when running cmake to configure
- # the app that'll use podofo). See: FIND_PACKAGE(...) in the cmake docs.
--IF(PODOFO_BUILD_SHARED)
--  EXPORT(TARGETS podofo_shared FILE "${CMAKE_CURRENT_BINARY_DIR}/PoDoFoConfig.cmake")
--ENDIF(PODOFO_BUILD_SHARED)
--IF(PODOFO_BUILD_STATIC)
--  EXPORT(TARGETS podofo_static FILE "${CMAKE_CURRENT_BINARY_DIR}/PoDoFoConfig.cmake")
--ENDIF(PODOFO_BUILD_STATIC)
+ # the app that'll use podofo). See: find_package(...) in the cmake docs.
+-if(PODOFO_BUILD_SHARED)
+-    export(TARGETS podofo_shared FILE "${PROJECT_BINARY_DIR}/podofoConfig.cmake")
+-else()
+-    export(TARGETS podofo_static podofo_private FILE "${PROJECT_BINARY_DIR}/podofoConfig.cmake")
+-endif()
  
+ # Enable packaging
+ set(CPACK_PACKAGE_DESCRIPTION "A C++ PDF manipulation library")
 diff --git a/src/podofo/CMakeLists.txt b/src/podofo/CMakeLists.txt
-index bba6b5f..16f0798 100644
+index 3a148fb..4ca1420 100644
 --- a/src/podofo/CMakeLists.txt
 +++ b/src/podofo/CMakeLists.txt
-@@ -275,10 +275,14 @@ IF(PODOFO_BUILD_STATIC)
-         CACHE INTERNAL "Which PoDoFo library variant to depend on")
-     SET(USING_SHARED_PODOFO FALSE)
-     INSTALL(TARGETS podofo_static
-+        EXPORT PoDoFoConfig
-         RUNTIME DESTINATION "bin"
-         LIBRARY DESTINATION "${LIBDIRNAME}"
-         ARCHIVE DESTINATION "${LIBDIRNAME}"
-         )
-+    INSTALL(EXPORT PoDoFoConfig
+@@ -77,11 +77,15 @@ if(PODOFO_BUILD_STATIC)
+         CLEAN_DIRECT_OUTPUT 1
+         OUTPUT_NAME "podofo"
+     )
+-    install(TARGETS podofo_static
++    install(TARGETS podofo_static podofo_private
++        EXPORT podofo-config
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     )
++    install(EXPORT podofo-config
 +        DESTINATION share/podofo
-+        )
- ENDIF(PODOFO_BUILD_STATIC)
- 
- IF(PODOFO_BUILD_SHARED)
-@@ -301,10 +305,14 @@ IF(PODOFO_BUILD_SHARED)
-         CACHE INTERNAL "Which PoDoFo library variant to depend on")
-     SET(USING_SHARED_PODOFO TRUE)
-     INSTALL(TARGETS podofo_shared
-+        EXPORT PoDoFoConfig
-         RUNTIME DESTINATION "bin"
-         LIBRARY DESTINATION "${LIBDIRNAME}"
-         ARCHIVE DESTINATION "${LIBDIRNAME}"
-         )
-+    INSTALL(EXPORT PoDoFoConfig
++    )
+     set(PODOFO_LIBRARIES podofo_static podofo_private
+         CACHE INTERNAL "Which podofo library variant to depend on")
+ endif()
+@@ -102,10 +106,14 @@ if(PODOFO_BUILD_SHARED)
+     # Since we're building a shared podofo, prefer to depend on this one for
+     # tests and tools over the static library (if built).
+     install(TARGETS podofo_shared
++        EXPORT podofo-config
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     )
++    install(EXPORT podofo-config
 +        DESTINATION share/podofo
-+        )
++    )
  
- 
-       # Create a pkg-config file for linking against shared library
+     # Create a pkg-config file for linking against shared library
+     # if pkg-config is available on the system.

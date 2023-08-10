@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 dd65938bebb2e6714e5603db3bfc82cd1a63395c17dce014147a41fdc74548cb526e1457a7472aa51bb80ce629a9935b4db9eeadf735efaf30899ef73f776a58
     HEAD_REF master
     PATCHES
+        000-fix-deps.patch
 )
 
 vcpkg_cmake_configure(

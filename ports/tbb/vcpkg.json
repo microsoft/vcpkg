@@ -1,10 +1,11 @@
 {
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "tbb",
-  "version": "2021.9.0",
+  "version": "2021.10.0",
   "description": "Intel's Threading Building Blocks.",
   "homepage": "https://github.com/oneapi-src/oneTBB",
   "license": "Apache-2.0",
-  "supports": "(windows & !uwp) | linux | osx | ios",
+  "supports": "(windows & !uwp) | linux | osx | ios | android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -14,5 +15,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "hwloc": {
+      "description": "Builds TBB with TBBBind support for Hibrid CPUs or NUMA architectures.",
+      "supports": "!static & !osx",
+      "dependencies": [
+        "hwloc"
+      ]
+    }
+  }
 }

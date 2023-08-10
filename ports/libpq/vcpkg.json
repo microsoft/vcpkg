@@ -1,7 +1,7 @@
 {
   "name": "libpq",
-  "version": "15.2",
-  "port-version": 3,
+  "version": "15.3",
+  "port-version": 1,
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "license": "PostgreSQL",
@@ -18,6 +18,11 @@
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true
+    },
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true,
+      "platform": "windows & !mingw"
     }
   ],
   "default-features": [
@@ -26,28 +31,77 @@
     "zlib"
   ],
   "features": {
+    "all": {
+      "description": "Build all supported features",
+      "dependencies": [
+        {
+          "name": "libpq",
+          "features": [
+            "client",
+            "icu",
+            "xml",
+            "xslt",
+            "zstd"
+          ]
+        },
+        {
+          "name": "libpq",
+          "features": [
+            "bonjour"
+          ],
+          "platform": "osx"
+        },
+        {
+          "name": "libpq",
+          "features": [
+            "nls"
+          ],
+          "platform": "!osx"
+        },
+        {
+          "name": "libpq",
+          "features": [
+            "readline"
+          ],
+          "platform": "!windows"
+        },
+        {
+          "name": "libpq",
+          "features": [
+            "python"
+          ],
+          "platform": "!android & !mingw"
+        },
+        {
+          "name": "libpq",
+          "features": [
+            "tcl"
+          ],
+          "platform": "windows & !mingw & !arm"
+        }
+      ]
+    },
     "bonjour": {
-      "description": "Build with Bonjour support (--with-bonjour)",
+      "description": "Build with Bonjour support",
       "supports": "osx"
     },
     "client": {
-      "description": "Build all client tools and libraries (dynamic only?)",
-      "supports": "!(windows & !mingw & static)"
+      "description": "Build all client tools and libraries"
     },
     "icu": {
-      "description": "Build with support for the ICU library (--with-icu)",
+      "description": "Build with support for the ICU library",
       "dependencies": [
         "icu"
       ]
     },
     "lz4": {
-      "description": "Use lz4 (else --without-lz4)",
+      "description": "Use lz4",
       "dependencies": [
         "lz4"
       ]
     },
     "nls": {
-      "description": "Native Language Support (--enable-nls[=LANGUAGES])",
+      "description": "Native Language Support",
       "supports": "!osx",
       "dependencies": [
         "gettext",
@@ -56,19 +110,20 @@
           "host": true,
           "features": [
             "tools"
-          ]
+          ],
+          "platform": "!windows, mingw"
         }
       ]
     },
     "openssl": {
-      "description": "support for encrypted client connections and random number generation on platforms that do not have \"/dev/urandom\" (except windows) (--with-openssl)",
+      "description": "support for encrypted client connections and random number generation on platforms that do not have \"/dev/urandom\" (except windows)",
       "dependencies": [
         "openssl"
       ]
     },
     "python": {
-      "description": "build the PL/Python server programming language (dynamic only?) (--with-python)",
-      "supports": "!(windows & (static | mingw))",
+      "$supports": "!(windows & (static | mingw))",
+      "description": "build the PL/Python server programming language",
       "dependencies": [
         {
           "name": "libpq",
@@ -81,15 +136,16 @@
       ]
     },
     "readline": {
-      "description": "Use readline (else --without-readline)",
+      "description": "Use readline",
       "supports": "!windows, mingw",
       "dependencies": [
         "readline"
       ]
     },
     "tcl": {
-      "description": "build the PL/Tcl procedural language(dynamic only?) (--with-tcl)",
-      "supports": "!(windows & (static | mingw))",
+      "$supports": "!(windows & (static | mingw))",
+      "description": "build the PL/Tcl procedural language",
+      "supports": "windows & !mingw",
       "dependencies": [
         {
           "name": "libpq",
@@ -102,13 +158,16 @@
       ]
     },
     "xml": {
-      "description": "Build with libxml (--with-libxml)",
+      "description": "Build with libxml",
       "dependencies": [
-        "libxml2"
+        {
+          "name": "libxml2",
+          "default-features": false
+        }
       ]
     },
     "xslt": {
-      "description": "Build with libxslt (--with-libxslt)",
+      "description": "Build with libxslt",
       "dependencies": [
         {
           "name": "libpq",
@@ -121,13 +180,13 @@
       ]
     },
     "zlib": {
-      "description": "Use zlib (else --without-zlib)",
+      "description": "Use zlib",
       "dependencies": [
         "zlib"
       ]
     },
     "zstd": {
-      "description": "Use zstd (else --without-zstd)",
+      "description": "Use zstd",
       "dependencies": [
         "zstd"
       ]

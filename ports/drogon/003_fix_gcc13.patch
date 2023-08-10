@@ -1,0 +1,12 @@
+diff --git a/lib/inc/drogon/RateLimiter.h b/lib/inc/drogon/RateLimiter.h
+index 6940321..2c5f039 100644
+--- a/lib/inc/drogon/RateLimiter.h
++++ b/lib/inc/drogon/RateLimiter.h
+@@ -3,6 +3,7 @@
+ #include <memory>
+ #include <chrono>
+ #include <mutex>
++#include <string>
+ 
+ namespace drogon
+ {

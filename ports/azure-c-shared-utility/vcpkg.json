@@ -1,6 +1,7 @@
 {
   "name": "azure-c-shared-utility",
   "version-date": "2023-01-18",
+  "port-version": 1,
   "description": "Azure C SDKs common code",
   "homepage": "https://github.com/Azure/azure-c-shared-utility",
   "license": "MIT",
@@ -9,11 +10,11 @@
     "azure-macro-utils-c",
     {
       "name": "curl",
-      "platform": "linux"
+      "platform": "!windows"
     },
     {
       "name": "openssl",
-      "platform": "linux"
+      "platform": "!windows & !osx"
     },
     "umock-c",
     {

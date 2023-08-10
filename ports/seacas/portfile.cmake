@@ -11,6 +11,7 @@ vcpkg_from_github(
             fix-headers.patch
             fix-fmt-10.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake/tribits/common_tpls/find_modules/FindHDF5.cmake")
 
 if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
     message(WARNING "${HDF5_WITH_PARALLEL} Enabling MPI in seacas.")

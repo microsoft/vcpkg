@@ -1,10 +1,11 @@
 {
   "name": "restbed",
   "version": "4.8",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Corvusoft's Restbed framework brings asynchronous RESTful functionality to C++14 applications.",
   "homepage": "https://github.com/corvusoft/restbed",
   "license": "AGPL-3.0-or-later OR CPL-1.0",
+  "supports": "!xbox",
   "dependencies": [
     "asio",
     {

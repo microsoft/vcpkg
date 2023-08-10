@@ -1,11 +1,11 @@
 {
   "name": "libusb-win32",
   "version": "1.2.6.0",
-  "port-version": 9,
+  "port-version": 10,
   "description": "Allows user space applications to access many USB device on Windows.",
   "homepage": "https://sourceforge.net/projects/libusb-win32",
   "license": "LGPL-3.0-only",
-  "supports": "windows & !static",
+  "supports": "windows & !static & !xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
