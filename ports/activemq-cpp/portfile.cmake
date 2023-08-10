@@ -83,17 +83,17 @@ else()
 
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(COPY
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp.lib"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${BUILD_ARCH}/${RELEASE_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp.lib"
             DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
         )
 
         if (ACTIVEMQCPP_SHARED_LIB)
             file(COPY
-                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.dll"
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.dll"
                 DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
             )
             file(COPY
-                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vs2010-build/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.pdb"
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${BUILD_ARCH}/${RELEASE_CONF}/activemq-cpp.pdb"
                 DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
             )
         endif()
@@ -101,17 +101,17 @@ else()
 
     if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(COPY
-            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.lib"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${BUILD_ARCH}/${DEBUG_CONF}/${ACTIVEMQCPP_LIB_PREFFIX}activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.lib"
             DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
         )
 
         if(ACTIVEMQCPP_SHARED_LIB)
             file(COPY
-                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.dll"
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.dll"
                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
             )
             file(COPY
-                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/vs2010-build/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.pdb"
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${BUILD_ARCH}/${DEBUG_CONF}/activemq-cpp${ACTIVEMQCPP_LIB_SUFFIX}.pdb"
                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
             )
         endif()
@@ -120,10 +120,9 @@ else()
     file(COPY "${SOURCE_PATH}/src/main/activemq" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN *.h)
     file(COPY "${SOURCE_PATH}/src/main/cms"      DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN *.h)
     file(COPY "${SOURCE_PATH}/src/main/decaf"    DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN *.h)
-    vcpkg_clean_msbuild()
 endif()
 
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CURRENT_PORT_DIR}/activemq-cppConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/activemq-cpp")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
