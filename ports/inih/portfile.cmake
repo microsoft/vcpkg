@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO benhoyt/inih
@@ -11,6 +13,15 @@ vcpkg_check_features(
     FEATURES
         cpp with_INIReader
 )
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(INIH_CONFIG_DEBUG ON)
+else()
+    set(INIH_CONFIG_DEBUG OFF)
+endif()
+
+# Install unofficial CMake package
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-inihConfig.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-inih/unofficial-inihConfig.cmake" @ONLY)
 
 # meson build
 string(REPLACE "OFF" "false" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
