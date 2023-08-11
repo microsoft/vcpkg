@@ -1,21 +1,12 @@
 The package inih can be imported via CMake FindPkgConfig module:
 
-    find_package(PkgConfig)
+    find_package(PkgConfig REQUIRED)
 
     # C API
     pkg_check_modules(INIH REQUIRED IMPORTED_TARGET inih)
     target_link_libraries(main PRIVATE PkgConfig::INIH)
 
-    # C++ API (Requires "cpp" feature)
+    # C++ API (Requires "cpp" default-feature)
     pkg_check_modules(INIReader REQUIRED IMPORTED_TARGET INIReader)
     target_link_libraries(main PRIVATE PkgConfig::INIReader)
 
-Alternatively, the package inih provides unofficial CMake targets:
-
-    find_package(unofficial-inih CONFIG REQUIRED)
-
-    # C API
-    target_link_libraries(main PRIVATE unofficial::inih::libinih)
-
-    # C++ API (Requires "cpp" feature)
-    target_link_libraries(main PRIVATE unofficial::inih::inireader)
