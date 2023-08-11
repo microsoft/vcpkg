@@ -41,19 +41,15 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/include/absl/time/internal/cctz/testdata"
 )
 
-function(fix_dll_definitions file)
-    vcpkg_replace_string("${file}"
-        "!defined(ABSL_CONSUME_DLL)" "0"
-    )
-    vcpkg_replace_string("${file}"
-        "defined(ABSL_CONSUME_DLL)" "1"
-    )
-endfunction(fix_dll_definitions file)
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB_RECURSE headers "${CURRENT_PACKAGES_DIR}/include/absl/*.h")
-    foreach(header ${headers})
-        fix_dll_definitions("${header}")
+    foreach(header IN LISTS ${headers})
+        vcpkg_replace_string("${header}"
+            "!defined(ABSL_CONSUME_DLL)" "0"
+        )
+        vcpkg_replace_string("${header}"
+            "defined(ABSL_CONSUME_DLL)" "1"
+        )
     endforeach()
 endif()
 
