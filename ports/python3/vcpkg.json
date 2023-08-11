@@ -46,7 +46,8 @@
     },
     {
       "name": "vcpkg-cmake-get-vars",
-      "host": true
+      "host": true,
+      "platform": "android"
     },
     {
       "name": "vcpkg-msbuild",
