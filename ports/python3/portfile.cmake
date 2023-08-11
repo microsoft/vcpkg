@@ -18,9 +18,14 @@ set(PATCHES
     0012-force-disable-curses.patch
     0014-fix-get-python-inc-output.patch
     0015-dont-use-WINDOWS-def.patch
-    0017-disable-SOVERSION-for-Android.patch
-    0018-explicit-define-ctypes_pythonapi-for-Android.patch
 )
+
+if(VCPKG_CROSSCOMPILING AND VCPKG_TARGET_IS_ANDROID)
+    list(APPEND PATCHES
+        0017-disable-SOVERSION-for-Android.patch
+        0018-explicit-define-ctypes_pythonapi-for-Android.patch
+    )
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND PATCHES 0002-static-library.patch)
