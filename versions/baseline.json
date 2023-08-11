@@ -6161,7 +6161,7 @@
       "port-version": 1
     },
     "orc": {
-      "baseline": "1.7.6",
+      "baseline": "1.9.0",
       "port-version": 0
     },
     "orocos-kdl": {
