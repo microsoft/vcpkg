@@ -1,3 +1,5 @@
+#header-only library
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wx257osn2/qoixx
