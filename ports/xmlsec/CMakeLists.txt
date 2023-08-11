@@ -79,9 +79,11 @@ add_compile_definitions(HAVE_STRING_H)
 add_compile_definitions(HAVE_CTYPE_H)
 add_compile_definitions(HAVE_MALLOC_H)
 add_compile_definitions(HAVE_MEMORY_H)
+add_compile_definitions(XMLSEC_NO_XSLT=1)
 add_compile_definitions(XMLSEC_DEFAULT_CRYPTO="openssl")
 add_compile_definitions(XMLSEC_NO_GOST)
 add_compile_definitions(XMLSEC_NO_GOST2012)
+add_compile_definitions(XMLSEC_NO_SIZE_T)
 add_compile_definitions(UNICODE)
 add_compile_definitions(_UNICODE)
 add_compile_definitions(_MBCS)
@@ -103,7 +105,7 @@ else()
 endif()
 
 target_compile_definitions(xmlsec1 PRIVATE ${XMLSEC_CORE_CFLAGS})
-target_compile_definitions(xmlsec1-openssl PRIVATE ${XMLSEC_OPENSSL_CFLAGS}
+target_compile_definitions(xmlsec1-openssl PRIVATE ${XMLSEC_OPENSSL_CFLAGS})
 
 install(TARGETS xmlsec1 xmlsec1-openssl
     EXPORT xmlsecExport
