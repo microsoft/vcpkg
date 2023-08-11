@@ -87,6 +87,10 @@ add_compile_definitions(_UNICODE)
 add_compile_definitions(_MBCS)
 add_compile_definitions(_REENTRANT)
 
+target_compile_definitions(xmlsec1-openssl PRIVATE
+    -DXMLSEC_CRYPTO_OPENSSL
+)
+
 set_target_properties(xmlsec1 PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
 set_target_properties(xmlsec1-openssl PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
 
@@ -98,12 +102,8 @@ else()
     set(XMLSEC_OPENSSL_CFLAGS ${XMLSEC_CORE_CFLAGS})
 endif()
 
-target_compile_definitions(xmlsec1
-    PRIVATE ${XMLSEC_CORE_CFLAGS}
-    PUBLIC XMLSEC_NO_SIZE_T XMLSEC_NO_XSLT)
-target_compile_definitions(xmlsec1-openssl
-    PRIVATE ${XMLSEC_OPENSSL_CFLAGS}
-    PUBLIC XMLSEC_NO_SIZE_T XMLSEC_NO_XSLT XMLSEC_CRYPTO_OPENSSL)
+target_compile_definitions(xmlsec1 PRIVATE ${XMLSEC_CORE_CFLAGS})
+target_compile_definitions(xmlsec1-openssl PRIVATE ${XMLSEC_OPENSSL_CFLAGS}
 
 install(TARGETS xmlsec1 xmlsec1-openssl
     EXPORT xmlsecExport
