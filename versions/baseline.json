@@ -26,7 +26,7 @@
     },
     "ace": {
       "baseline": "7.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "acl": {
       "baseline": "2.3.1",
@@ -34,7 +34,7 @@
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
-      "port-version": 14
+      "port-version": 15
     },
     "ada-url": {
       "baseline": "2.6.0",
@@ -401,8 +401,8 @@
       "port-version": 0
     },
     "azure-c-shared-utility": {
-      "baseline": "2023-01-18",
-      "port-version": 1
+      "baseline": "2023-08-07",
+      "port-version": 0
     },
     "azure-core-amqp-cpp": {
       "baseline": "1.0.0-beta.2",
@@ -421,7 +421,7 @@
       "port-version": 0
     },
     "azure-iot-sdk-c": {
-      "baseline": "2023-08-06",
+      "baseline": "2023-08-07",
       "port-version": 0
     },
     "azure-kinect-sensor-sdk": {
@@ -481,15 +481,15 @@
       "port-version": 0
     },
     "azure-uamqp-c": {
-      "baseline": "2023-01-18",
+      "baseline": "2023-08-07",
       "port-version": 0
     },
     "azure-uhttp-c": {
-      "baseline": "2023-01-18",
+      "baseline": "2023-08-07",
       "port-version": 0
     },
     "azure-umqtt-c": {
-      "baseline": "2023-01-18",
+      "baseline": "2023-08-03",
       "port-version": 0
     },
     "b64": {
@@ -1473,7 +1473,7 @@
       "port-version": 3
     },
     "cgal": {
-      "baseline": "5.5.3",
+      "baseline": "5.6",
       "port-version": 0
     },
     "cgicc": {
@@ -1645,7 +1645,7 @@
       "port-version": 3
     },
     "cnats": {
-      "baseline": "3.6.0",
+      "baseline": "3.6.1",
       "port-version": 0
     },
     "cnl": {
@@ -2282,7 +2282,7 @@
     },
     "easyhook": {
       "baseline": "2.7.7097.0",
-      "port-version": 6
+      "port-version": 7
     },
     "easyloggingpp": {
       "baseline": "9.97.0",
@@ -3141,7 +3141,7 @@
       "port-version": 1
     },
     "harfbuzz": {
-      "baseline": "8.0.0",
+      "baseline": "8.1.1",
       "port-version": 0
     },
     "hash-library": {
@@ -4606,7 +4606,7 @@
     },
     "libsndfile": {
       "baseline": "1.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libsnoretoast": {
       "baseline": "0.8.0",
@@ -6126,7 +6126,7 @@
     },
     "openvino": {
       "baseline": "2023-06-11",
-      "port-version": 4
+      "port-version": 5
     },
     "openvpn3": {
       "baseline": "3.7.0",
@@ -7605,8 +7605,8 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "1.0.0",
-      "port-version": 1
+      "baseline": "3.2.16",
+      "port-version": 0
     },
     "simple-fft": {
       "baseline": "2020-06-14",
