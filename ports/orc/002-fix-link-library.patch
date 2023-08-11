@@ -1,0 +1,52 @@
+diff --git a/c++/src/CMakeLists.txt b/c++/src/CMakeLists.txt
+index 972f2fc03..5b39554c8 100644
+--- a/c++/src/CMakeLists.txt
++++ b/c++/src/CMakeLists.txt
+@@ -208,13 +208,28 @@ endif(BUILD_ENABLE_AVX512)
+ 
+ add_library (orc STATIC ${SOURCE_FILES})
+ 
++include(GNUInstallDirs)
++
++target_include_directories(orc
++  PUBLIC
++  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++  )
++
+ target_link_libraries (orc
+-  orc::protobuf
+-  orc::zlib
+-  orc::snappy
+-  orc::lz4
+-  orc::zstd
++  PRIVATE
++  protobuf::libprotobuf
++  ZLIB::ZLIB
++  Snappy::snappy
++  lz4::lz4
++  $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
+   ${LIBHDFSPP_LIBRARIES}
+   )
+ 
+-install(TARGETS orc DESTINATION lib)
++install(TARGETS orc EXPORT unofficial-orc)
++
++install(
++    EXPORT unofficial-orc
++    FILE unofficial-orc-config.cmake
++    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-orc"
++    NAMESPACE unofficial::orc::
++)
+diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
+index 3863c408e..b71ab5eae 100644
+--- a/tools/src/CMakeLists.txt
++++ b/tools/src/CMakeLists.txt
+@@ -70,7 +70,7 @@ add_executable (orc-metadata
+ 
+ target_link_libraries (orc-metadata
+   orc
+-  orc::protobuf
++  protobuf::libprotobuf
+   ${CMAKE_THREAD_LIBS_INIT}
+   )
+ 

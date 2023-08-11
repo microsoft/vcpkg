@@ -7,7 +7,8 @@ vcpkg_from_github(
   SHA512 e79eea2d7a318354d3c6d0a7d0961f6356a590ba53c54911a478a88c63dd1117d6fc3760cae2b2071144fe0418f6ed3aab5ae6f5f093da8a4ddf804964f87e25
   HEAD_REF master
   PATCHES
-    fix-cmake.patch
+    001-fix-find-package.patch
+    002-fix-link-library.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindGTest.cmake")
