@@ -3413,7 +3413,7 @@
       "port-version": 0
     },
     "inih": {
-      "baseline": "56",
+      "baseline": "57",
       "port-version": 0
     },
     "iniparser": {

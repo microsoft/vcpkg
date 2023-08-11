@@ -1,0 +1,60 @@
+if(TARGET unofficial::inih::libinih)
+  return()
+endif()
+
+set(INIH_WITH_INI_READER @with_INIReader@)
+set(INIH_WITH_DEBUG @INIH_CONFIG_DEBUG@)
+
+# Compute the installation prefix relative to this file.
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+
+###################
+####  libinih  ####
+
+add_library(unofficial::inih::libinih UNKNOWN IMPORTED)
+
+find_library(INIH_INIHLIB_RELEASE NAMES inih PATHS "${_IMPORT_PREFIX}/lib/" REQUIRED NO_DEFAULT_PATH)
+set_target_properties(unofficial::inih::libinih PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+  IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+  IMPORTED_LOCATION_RELEASE "${INIH_INIHLIB_RELEASE}"
+  IMPORTED_CONFIGURATIONS "RELEASE"
+)
+
+if(INIH_WITH_DEBUG)
+  set_property(TARGET unofficial::inih::libinih APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+  find_library(INIH_INIHLIB_DEBUG NAMES inih PATHS "${_IMPORT_PREFIX}/debug/lib/" REQUIRED NO_DEFAULT_PATH)
+  set_target_properties(unofficial::inih::libinih PROPERTIES 
+    IMPORTED_LOCATION_DEBUG "${INIH_INIHLIB_DEBUG}"
+  )
+endif()
+
+####  libinih  ####
+###################
+#### INIReader ####
+
+if(INIH_WITH_INI_READER)
+  add_library(unofficial::inih::inireader UNKNOWN IMPORTED)
+
+  find_library(INIH_INIREADER_RELEASE NAMES INIReader PATHS "${_IMPORT_PREFIX}/lib/" REQUIRED NO_DEFAULT_PATH)
+  set_target_properties(unofficial::inih::inireader PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+    IMPORTED_LINK_INTERFACE_LANGUAGES "C;CXX"
+    IMPORTED_LOCATION_RELEASE "${INIH_INIREADER_RELEASE}"
+    INTERFACE_LINK_LIBRARIES "unofficial::inih::libinih"
+    IMPORTED_CONFIGURATIONS "RELEASE"
+  )
+
+  if(INIH_WITH_DEBUG)
+    set_property(TARGET unofficial::inih::inireader APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+    find_library(INIH_INIREADER_DEBUG NAMES INIReader PATHS "${_IMPORT_PREFIX}/debug/lib/" NO_DEFAULT_PATH)
+    set_target_properties(unofficial::inih::inireader PROPERTIES 
+      IMPORTED_LOCATION_DEBUG "${INIH_INIREADER_DEBUG}"
+    )
+  endif()
+endif()
+
+#### INIReader ####
+###################
