@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
         fix-linux-configure.patch
         gaiaconfig-msvc.patch
         fix-mingw.patch
+        fix-utf8-source.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS unused
