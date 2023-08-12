@@ -1,0 +1,5 @@
+cairomm provides usage:
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(CAIROMM REQUIRED IMPORTED_TARGET cairomm-1.16)
+    target_link_libraries(main PRIVATE PkgConfig::CAIROMM)

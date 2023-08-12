@@ -118,36 +118,6 @@ if [ "$vcpkgUseSystem" = "ON" ]; then
     vcpkgCheckRepoTool gcc
 fi
 
-# Determine what we are going to do to bootstrap:
-# MacOS -> Download vcpkg-macos
-# Linux
-#   useMuslC -> download vcpkg-muslc
-#   amd64 -> download vcpkg-glibc
-# Otherwise
-#   Download and build from source
-
-# Choose the vcpkg binary to download
-vcpkgDownloadTool="ON"
-vcpkgToolReleaseTag="2023-06-15"
-if [ "$UNAME" = "Darwin" ]; then
-    echo "Downloading vcpkg-macos..."
-    vcpkgToolReleaseSha="3a746ca1402b5ac6cd26d09077681c4f8d1090a06ed4243574d81bcff22d651eae5a47107b407828bfa36236f2c4c02d3e2c6392d92b8c5aaf9992f332091f35"
-    vcpkgToolName="vcpkg-macos"
-elif [ "$vcpkgUseMuslC" = "ON" ]; then
-    echo "Downloading vcpkg-muslc..."
-    vcpkgToolReleaseSha="0426668fbfaece4f51798c1ee201ffbc26b0b239e212ce6118b2ab5d2490b414a01e725b05ce98c8a95d06341a70405f4223bd4f42e291c5792ec2a631e22cc1"
-    vcpkgToolName="vcpkg-muslc"
-elif [ "$ARCH" = "x86_64" ]; then
-    echo "Downloading vcpkg-glibc..."
-    vcpkgToolReleaseSha="4c49238277cecc81cf0a152f9505e4020290e25ada736ec8ff956f740e5e4b986a9e5c3cc0816f4c9ccde06639cb5275d57ea86818060573fa246d019ef835f8"
-    vcpkgToolName="vcpkg-glibc"
-else
-    echo "Unable to determine a binary release of vcpkg; attempting to build from source."
-    vcpkgDownloadTool="OFF"
-    vcpkgToolReleaseSha="05c50173959634a4557b756fce78f92bbc38bf23c91d4c41368c24f91e9479966fb4537a391cee2141423edd6cf84ca488c9e1d57323aa65575baa0ecc6af8e3"
-fi
-
-# Do the download or build.
 vcpkgCheckEqualFileHash()
 {
     url=$1; filePath=$2; expectedHash=$3
@@ -193,8 +163,39 @@ vcpkgExtractTar()
     mv "$toPath.partial" "$toPath"
 }
 
+# Determine what we are going to do to bootstrap:
+# MacOS -> Download vcpkg-macos
+# Linux
+#   useMuslC -> download vcpkg-muslc
+#   amd64 -> download vcpkg-glibc
+# Otherwise
+#   Download and build from source
+
+# Read the vcpkg-tool config file to determine what release to download
+. "$vcpkgRootDir/scripts/vcpkg-tool-metadata.txt"
+
+vcpkgDownloadTool="ON"
+if [ "$UNAME" = "Darwin" ]; then
+    echo "Downloading vcpkg-macos..."
+    vcpkgToolReleaseSha=$VCPKG_MACOS_SHA
+    vcpkgToolName="vcpkg-macos"
+elif [ "$vcpkgUseMuslC" = "ON" ]; then
+    echo "Downloading vcpkg-muslc..."
+    vcpkgToolReleaseSha=$VCPKG_MUSLC_SHA
+    vcpkgToolName="vcpkg-muslc"
+elif [ "$ARCH" = "x86_64" ]; then
+    echo "Downloading vcpkg-glibc..."
+    vcpkgToolReleaseSha=$VCPKG_GLIBC_SHA
+    vcpkgToolName="vcpkg-glibc"
+else
+    echo "Unable to determine a binary release of vcpkg; attempting to build from source."
+    vcpkgDownloadTool="OFF"
+    vcpkgToolReleaseSha=$VCPKG_TOOL_SOURCE_SHA
+fi
+
+# Do the download or build.
 if [ "$vcpkgDownloadTool" = "ON" ]; then
-    vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$vcpkgToolReleaseTag/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
+    vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
 else
     if [ "x$CXX" = "x" ]; then
         if which g++-12 >/dev/null 2>&1; then
@@ -217,13 +218,13 @@ else
         # If we can't find g++, allow CMake to do the look-up
     fi
 
-    vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
+    vcpkgToolReleaseTarball="$VCPKG_TOOL_RELEASE_TAG.tar.gz"
     vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
     baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
     buildDir="$baseBuildDir/build"
     tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
     srcBaseDir="$baseBuildDir/src"
-    srcDir="$srcBaseDir/vcpkg-tool-$vcpkgToolReleaseTag"
+    srcDir="$srcBaseDir/vcpkg-tool-$VCPKG_TOOL_RELEASE_TAG"
 
     if [ -e "$tarballPath" ]; then
         vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
@@ -248,6 +249,8 @@ else
     rm -rf "$vcpkgRootDir/vcpkg"
     cp "$buildDir/vcpkg" "$vcpkgRootDir/"
 fi
+
+"$vcpkgRootDir/vcpkg" version
 
 # Apply the disable-metrics marker file.
 if [ "$vcpkgDisableMetrics" = "ON" ]; then

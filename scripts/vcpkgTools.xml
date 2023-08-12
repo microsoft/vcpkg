@@ -1,53 +1,46 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.10.7</version>
+        <version>3.11.4</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.10.7/python-3.10.7-embed-win32.zip</url>
-        <sha512>a69445906a909ce5f2554c544fe4251a8ab9c5028b531975b8c78fa8e98295b2bf06e1840f346a3c0edf485a7792c40c9d318bffd36b9c7829ac72b7cf8697bc</sha512>
-        <archiveName>python-3.10.7-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.11.4/python-3.11.4-embed-win32.zip</url>
+        <sha512>4cdbb2efdc7764a87edfb7370716c1caf660d38bce37a280ec59b7aecab5672c5798aabe19a8ae395224bea7dfe644bd92656f0bbc44348717981b45a909c024</sha512>
+        <archiveName>python-3.11.4-embed-win32.zip</archiveName>
     </tool>
     <tool name="python3_with_venv" os="windows">
-        <version>3.10.7</version>
+        <version>3.11.4</version>
         <exeRelativePath>tools\python.exe</exeRelativePath>
-        <url>https://www.nuget.org/api/v2/package/python/3.10.7</url>
-        <sha512>dc763c4f3e9594619173a99740a6b54686c768c240efe316d4d3f8914383bd06420c0802781baf983ea840c49412b8330c1af93f31d2c73eb0ea22a55e71aa13</sha512>
-        <archiveName>python-3.10.7.nupkg.zip</archiveName>
+        <url>https://www.nuget.org/api/v2/package/python/3.11.4</url>
+        <sha512>3f311506440238103a3ed5f2b5c62f8fe5f935e24c7a44bd5aac588c9e0383a2eb7651cb3ee18e5873c2edf5718019c8648955bdedb9efe3101c1041776fc31e</sha512>
+        <archiveName>python-3.11.4.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.25.1</version>
-        <exeRelativePath>cmake-3.25.1-windows-i386\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-windows-i386.zip</url>
-        <sha512>4a84abdb53781178a99046aa09cf6a6b2bfe159d6b6bbdd2449839d2f50b872b4cc783c44774343b6122ec9400bcfdec65fffd4a246575ba55d178bc180f6adc</sha512>
-        <archiveName>cmake-3.25.1-windows-i386.zip</archiveName>
+        <version>3.27.1</version>
+        <exeRelativePath>cmake-3.27.1-windows-i386/bin/cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-windows-i386.zip</url>
+        <sha512>a847f636fb27ba41ba9e6eaafa56937c614bcb39c6d0c9723241c229a9b0a77b4d00ebee88639561035d43f9aa64895f387eab56c628990c01191da57839cda0</sha512>
+        <archiveName>cmake-3.27.1-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.25.1</version>
-        <exeRelativePath>cmake-3.25.1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-macos-universal.tar.gz</url>
-        <sha512>6009ff799ee516c1ca3bf3a31bacdd59fc48f772a03c822f49e1e9b6a6582e64d75c6005a90574539d61b7094dfe36bfe4b4c1560a4fb7d1287be472c0fd146a</sha512>
-        <archiveName>cmake-3.25.1-macos-universal.tar.gz</archiveName>
+        <version>3.27.1</version>
+        <exeRelativePath>cmake-3.27.1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-macos-universal.tar.gz</url>
+        <sha512>78e639b93786eb994bdbc6263afc48267d42d9305c1cb1cb9482adf012e7b4f45934e744a98eaf93d8361f154e642cada13398cca064c1700f009a7795746fe7</sha512>
+        <archiveName>cmake-3.27.1-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.25.1</version>
-        <exeRelativePath>cmake-3.25.1-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-linux-x86_64.tar.gz</url>
-        <sha512>df456fafa9e63ab0105a6355cc3f66d0567c43172fb424ba75b364f65c6da100dbb303ddd11abd68b42b3b52a90805dfda36aae2468c64c204446f4befda0c78</sha512>
-        <archiveName>cmake-3.25.1-linux-x86_64.tar.gz</archiveName>
-    </tool>
-    <tool name="cmake" os="freebsd">
-        <version>3.20.4</version>
-        <exeRelativePath>usr/local/bin/cmake</exeRelativePath>
-        <url>https://pkg.freebsd.org/FreeBSD:13:amd64/quarterly/All/cmake-3.20.4.txz</url>
-        <sha512>3e5b675d7ff924f92996d912e2365582e687375109ef99c9073fb8196bb329243a406b218cf1358d7cc518988b311ce9e5bf87de4d64f2e6377b7c2bc8894475</sha512>
-        <archiveName>cmake-3.20.4.txz</archiveName>
+        <version>3.27.1</version>
+        <exeRelativePath>cmake-3.27.1-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-linux-x86_64.tar.gz</url>
+        <sha512>192374a68e2971f04974a194645726196d9b8ee7abd650d1e6f65f7aa2ccc9b186c3edb473bb4958c764532edcdd42f4182ee1fcb86b17d78b0bcd6305ce3df1</sha512>
+        <archiveName>cmake-3.27.1-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
         <version>2.7.4</version>
         <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.35.1.windows.2/PortableGit-2.35.1.2-32-bit.7z.exe</url>
-        <sha512>f98df16641a615bbc36c5c319c78abb780d824ff35ed5f2a095e2d5fce2acacfc7f6532c96f1c81d3d3cd8a642858cbd9de0e0e5fcde9ca11e6ad9f6598bb82f</sha512>
-        <archiveName>PortableGit-2.35.1.2-32-bit.7z.exe</archiveName>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.41.0.windows.1/PortableGit-2.41.0-32-bit.7z.exe</url>
+        <sha512>e483a890e77b427c20785e7528279338c7d99651e0afbf704bf2ff3cde23d0895c07e961603d133d5d78aea2308a2994e532974de41674e4f334423b1b47bd0e</sha512>
+        <archiveName>PortableGit-2.41.0-32-bit.7z.exe</archiveName>
     </tool>
     <tool name="git" os="linux">
         <version>2.7.4</version>

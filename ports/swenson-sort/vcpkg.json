@@ -1,0 +1,7 @@
+{
+  "name": "swenson-sort",
+  "version-date": "2021-05-22",
+  "description": "sort.h is an implementation of a ton of sorting algorithms in C with a user-defined type that is provided at include time.",
+  "homepage": "https://github.com/swenson/sort",
+  "license": "MIT"
+}
