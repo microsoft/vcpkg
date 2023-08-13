@@ -37,7 +37,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/MEDFile/MEDFileConfig.cmake" "/cmake/" "/share/MEDFile/")
 else()
   vcpkg_cmake_config_fixup(PACKAGE_NAME MEDFile CONFIG_PATH share/cmake/medfile-4.1.1)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/MEDFile/MEDFileConfig.cmake" "/cmake/medfile-4.1.1" "/share/MEDFile/")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/MEDFile/MEDFileConfig.cmake" "share/cmake/medfile-${VERSION}" "share/MEDFile")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

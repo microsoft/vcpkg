@@ -1,17 +1,17 @@
 diff --git a/meson.build b/meson.build
-index 4522a94..c387148 100644
+index b8c2191..8f280b4 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -271,7 +271,7 @@ mm_conf_data.set('CAIROMM_MINOR_VERSION', cairomm_minor_version)
- mm_conf_data.set('CAIROMM_MICRO_VERSION', cairomm_micro_version)
+@@ -288,7 +288,7 @@ mm_conf_data.set('CAIROMM_MICRO_VERSION', cairomm_micro_version)
  mm_conf_data.set('VERSION', meson.project_version()) # for MSVC_NMake/cairomm/cairomm.rc
  
+ cairommconfig_h_meson = files('cairommconfig.h.meson')
 -install_includeconfigdir = install_libdir / cairomm_pcname / 'include'
 +install_includeconfigdir = install_includedir
- cairommconfig_h = configure_file(
-   input: 'cairommconfig.h.meson',
+ configure_file(
+   input: cairommconfig_h_meson,
    output: 'cairommconfig.h',
-@@ -361,7 +361,7 @@ summary = [
+@@ -380,7 +380,7 @@ summary = [
    'Directories:',
    '                  prefix: @0@'.format(install_prefix),
    '              includedir: @0@'.format(install_prefix / install_includedir),

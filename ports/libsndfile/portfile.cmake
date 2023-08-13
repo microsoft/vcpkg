@@ -39,7 +39,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(WIN32 AND (NOT MINGW) AND (NOT CYGWIN))
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
     set(CONFIG_PATH cmake)
 else()
     set(CONFIG_PATH lib/cmake/SndFile)
