@@ -4,6 +4,7 @@
   "description": "The ultimate fully-fledged cross-platform library and bindings for Bluetooth Low Energy (BLE).",
   "homepage": "https://github.com/OpenBluetoothToolbox/SimpleBLE",
   "license": "MIT",
+  "supports": "!android & !uwp",
   "dependencies": [
     "fmt",
     {
