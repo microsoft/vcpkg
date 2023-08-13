@@ -26,9 +26,15 @@ index 4406bc2..5717680 100644
    ${PROJECT_SOURCE_DIR}/cmake/version.cmake.in
    ${PROJECT_BINARY_DIR}/cmake/version.cmake
 diff --git a/cmake/LEMONConfig.cmake.in b/cmake/LEMONConfig.cmake.in
-index b0d2d8b..61c4a14 100644
+index b0d2d8b..6bb662a 100644
 --- a/cmake/LEMONConfig.cmake.in
 +++ b/cmake/LEMONConfig.cmake.in
+@@ -1,4 +1,4 @@
+-SET(LEMON_INCLUDE_DIR "@CMAKE_INSTALL_PREFIX@/include" CACHE PATH "LEMON include directory")
++SET(LEMON_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../include" CACHE PATH "LEMON include directory")
+ SET(LEMON_INCLUDE_DIRS "${LEMON_INCLUDE_DIR}")
+ 
+ IF(UNIX)
 @@ -7,7 +7,12 @@ ELSEIF(WIN32)
    SET(LEMON_LIB_NAME "lemon.lib")
  ENDIF(UNIX)
@@ -42,7 +48,7 @@ index b0d2d8b..61c4a14 100644
  
  MARK_AS_ADVANCED(LEMON_LIBRARY LEMON_INCLUDE_DIR)
 +
-+include(${CMAKE_CURRENT_LIST_DIR}/lemon-targets.cmake)
++INCLUDE(${CMAKE_CURRENT_LIST_DIR}/lemon-targets.cmake)
 diff --git a/lemon/CMakeLists.txt b/lemon/CMakeLists.txt
 index 4e6567e..ad6f5bf 100644
 --- a/lemon/CMakeLists.txt
