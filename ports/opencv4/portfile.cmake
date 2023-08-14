@@ -27,9 +27,11 @@ vcpkg_from_github(
       0012-fix-zlib.patch
       0015-fix-freetype.patch
       "${ARM64_WINDOWS_FIX}"
+      0016-fix-flatbuffers.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)
@@ -49,33 +51,34 @@ set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE 
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
- "ade"       WITH_ADE
- "contrib"   WITH_CONTRIB
- "cuda"      WITH_CUBLAS
- "cuda"      WITH_CUDA
- "cudnn"     WITH_CUDNN
- "dnn-cuda"  OPENCV_DNN_CUDA
- "eigen"     WITH_EIGEN
- "ffmpeg"    WITH_FFMPEG
- "freetype"  WITH_FREETYPE
- "gdcm"      WITH_GDCM
- "gstreamer" WITH_GSTREAMER
- "gtk"       WITH_GTK
- "halide"    WITH_HALIDE
- "jasper"    WITH_JASPER
- "jpeg"      WITH_JPEG
- "lapack"    WITH_LAPACK
- "nonfree"   OPENCV_ENABLE_NONFREE
- "openexr"   WITH_OPENEXR
- "opengl"    WITH_OPENGL
- "png"       WITH_PNG
- "quirc"     WITH_QUIRC
- "sfm"       BUILD_opencv_sfm
- "tiff"      WITH_TIFF
- "vtk"       WITH_VTK
- "webp"      WITH_WEBP
- "world"     BUILD_opencv_world
- "dc1394"    WITH_1394
+ "ade"          WITH_ADE
+ "contrib"      WITH_CONTRIB
+ "cuda"         WITH_CUBLAS
+ "cuda"         WITH_CUDA
+ "cudnn"        WITH_CUDNN
+ "dc1394"       WITH_1394
+ "dnn-cuda"     OPENCV_DNN_CUDA
+ "eigen"        WITH_EIGEN
+ "ffmpeg"       WITH_FFMPEG
+ "flatbuffers"  WITH_FLATBUFFERS
+ "freetype"     WITH_FREETYPE
+ "gdcm"         WITH_GDCM
+ "gstreamer"    WITH_GSTREAMER
+ "gtk"          WITH_GTK
+ "halide"       WITH_HALIDE
+ "jasper"       WITH_JASPER
+ "jpeg"         WITH_JPEG
+ "lapack"       WITH_LAPACK
+ "nonfree"      OPENCV_ENABLE_NONFREE
+ "openexr"      WITH_OPENEXR
+ "opengl"       WITH_OPENGL
+ "png"          WITH_PNG
+ "quirc"        WITH_QUIRC
+ "sfm"          BUILD_opencv_sfm
+ "tiff"         WITH_TIFF
+ "vtk"          WITH_VTK
+ "webp"         WITH_WEBP
+ "world"        BUILD_opencv_world
 )
 
 # Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "python", "qt", "tbb"
