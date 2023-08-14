@@ -28,4 +28,11 @@ vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/COPYING_GLIB"
 )
 
+file(REMOVE
+      "${CURRENT_PACKAGES_DIR}/debug/bin/Gee.External.Capstone.Proxy.dll"
+      "${CURRENT_PACKAGES_DIR}/bin/Gee.External.Capstone.Proxy.dll"
+      "${CURRENT_PACKAGES_DIR}/debug/bin/capstone.dll"
+      "${CURRENT_PACKAGES_DIR}/bin/capstone.dll"
+      ) # Import via nuget / used in samples
+
 file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/COPYING.LIB" "${CURRENT_PACKAGES_DIR}/debug/lib/COPYING.LIB")
