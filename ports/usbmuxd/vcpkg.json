@@ -14,8 +14,10 @@
     {
       "name": "vcpkg-msbuild",
       "host": true,
-      "platform": "windows",
-      "features": [ "pkg-config"]
+      "features": [
+        "pkg-config"
+      ],
+      "platform": "windows"
     }
   ]
 }
