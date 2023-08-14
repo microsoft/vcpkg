@@ -77,8 +77,7 @@ if("codemodels" IN_LIST FEATURES)
     file(COPY ${NGSPICE_CODEMODELS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/lib/ngspice")
 
     # copy over spinit (spice init)
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/visualc/spinit_all" "${BUILDTREE_PATH}/visualc/spinit")
-    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/visualc/spinit" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ngspice")
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/visualc/spinit_all" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ngspice" RENAME spinit)
 endif()
 
 # Unforunately install_msbuild isn't able to dual include directories that effectively layer
