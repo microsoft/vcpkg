@@ -6082,7 +6082,7 @@
     },
     "openslide": {
       "baseline": "3.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "openssl": {
       "baseline": "3.1.2",

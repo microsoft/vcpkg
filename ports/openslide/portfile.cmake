@@ -9,8 +9,10 @@ vcpkg_from_github(
     REF "v${VERSION}" 
     SHA512 5b0315215f9cada56c85e0068c9493a66c70bae1230cc01dd00ce364414f53bf285728dc860d7de0ac30a10bdc3c1a76f728446b96ca337a62d588f5cc2a971c
     HEAD_REF master
-    PATCHES remove-w-flags.patch
-            ${PATCHES}
+    PATCHES
+        remove-w-flags.patch
+        add-missing-io-h-header.patch
+        ${PATCHES}
 )
 
 set(opts "")
