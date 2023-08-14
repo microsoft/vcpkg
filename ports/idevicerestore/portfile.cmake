@@ -12,6 +12,8 @@ vcpkg_from_github(
 vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH idevicerestore.vcxproj
+    DEPENDENT_PKGCONFIG libimobiledevice-1.0 libzip zlib openssl
+    ADDITIONAL_LIBS getopt.lib irecovery.lib
 )
 
 vcpkg_install_copyright("${SOURCE_PATH}/COPYING")
