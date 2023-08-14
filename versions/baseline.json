@@ -6074,7 +6074,7 @@
     },
     "openni2": {
       "baseline": "2.2.0.33",
-      "port-version": 14
+      "port-version": 15
     },
     "openscap": {
       "baseline": "1.3.7",
