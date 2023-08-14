@@ -22,7 +22,10 @@ if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
             set_property(TARGET exiv2lib APPEND PROPERTY INTERFACE_LINK_LIBRARIES Iconv::Iconv)
         endif()
         if("@EXIV2_ENABLE_NLS@")
-            set_property(TARGET exiv2lib APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${Intl_LIBRARIES})
+            set_property(TARGET exiv2lib APPEND PROPERTY INTERFACE_LINK_LIBRARIES
+                "\$<\$<NOT:\$<CONFIG:DEBUG>>:${Intl_LIBRARY_RELEASE}>"
+                "\$<\$<CONFIG:DEBUG>:${Intl_LIBRARY_DEBUG}>"
+            )
         endif()
     endif()
 endif()
