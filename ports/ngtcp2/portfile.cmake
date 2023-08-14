@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/ngtcp2
     REF "v${VERSION}"
-    SHA512 d4457b6fdc32276b45d97ae608f4f5b0dc686ebecdf55ac6d3a4cb6f569899cdb812a075e525f328e6755dca0d5f7320491311d3d3ecb929bf765e9cbd97ed31
+    SHA512 949bfa9e932588e327ca9d8234f30d6400b65a565b266e36ae64ffbb322add54cbd6ab670eaa6555aaf29305307137a779bd1ec87b019c6b82bddacd2de45eeb
     HEAD_REF master
     PATCHES
       export-unofficical-target.patch

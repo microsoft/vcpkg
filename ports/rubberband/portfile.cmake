@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO breakfastquay/rubberband
     REF "v${VERSION}"
-    SHA512 811a8dbf05fbee3e4631b49fee9fd0e23ea750ac24a9a16f20e6a7ea07e683783a9edf980c43e732b64c229db29ade3575938c4e6f9db8c4255b220eb30d9dcc
+    SHA512 6d7ce80f47a5870920748d6e2ff9425f9d90e3fd2d62d7b937158ad2134829bc1d1e34ec4fd6327de5d6f1924b4bb793dc4c9d10574102e11338383c4522ba84
     HEAD_REF default
 )
 
@@ -57,8 +57,4 @@ if("cli" IN_LIST FEATURES)
   vcpkg_copy_tools(TOOL_NAMES ${RUBBERBAND_PROGRAM_NAMES} AUTO_CLEAN)
 endif()
 
-file(
-  INSTALL "${SOURCE_PATH}/COPYING"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-  RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

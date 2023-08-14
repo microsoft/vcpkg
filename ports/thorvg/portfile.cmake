@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
-    REF v0.9.0
-    SHA512 c0294a60f0b2e432bec62e1c44f0cb632420ec5c9390df210c8b8db5507fa8f5946bdc8a7879007e4e54865dc4538f4bf1e26d76f90a324cc5edd5cdf61c0fc0
+    REF v0.10.0
+    SHA512 63e0df26be141eeabf0c7204a75f55c57b59f0f2514d896ee6c73c17453e9e1b606434fa93bbbebc6a2671389ecd7ec39c1099ef25c2e9459932e9cc4d8b1241
     HEAD_REF master
     PATCHES
         install-tools.patch
+        windows-build-option.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
