@@ -7270,7 +7270,7 @@
     },
     "rsasynccpp": {
       "baseline": "0.0.7",
-      "port-version": 2
+      "port-version": 3
     },
     "rsig": {
       "baseline": "0.1.1",
