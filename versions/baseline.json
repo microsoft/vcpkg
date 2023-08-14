@@ -406,7 +406,7 @@
     },
     "azure-core-amqp-cpp": {
       "baseline": "1.0.0-beta.2",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-core-cpp": {
       "baseline": "1.10.2",
