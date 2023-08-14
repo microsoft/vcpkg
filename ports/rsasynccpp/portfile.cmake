@@ -26,14 +26,21 @@ else()
   endif()
 endif()
 
-vcpkg_install_msbuild(
+if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
+    set(MSBUILD_PLATFORM "x86")
+else ()
+    set(MSBUILD_PLATFORM ${TRIPLET_SYSTEM_ARCH})
+endif()
+
+vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH RStein.AsyncCppLib.sln
-    LICENSE_SUBPATH LICENSE
     PLATFORM "${TRIPLET_SYSTEM_ARCH}"
     DEBUG_CONFIGURATION "${DEBUG_CONFIGURATION}"
     RELEASE_CONFIGURATION "${RELEASE_CONFIGURATION}"
 )
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(COPY "${SOURCE_PATH}/RStein.AsyncCpp/"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/asynccpp"
