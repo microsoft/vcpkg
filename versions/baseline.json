@@ -4930,7 +4930,7 @@
     },
     "libxt": {
       "baseline": "1.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libxtst": {
       "baseline": "1.2.4",
@@ -6082,7 +6082,7 @@
     },
     "openslide": {
       "baseline": "3.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "openssl": {
       "baseline": "3.1.2",
