@@ -4442,7 +4442,7 @@
     },
     "libosip2": {
       "baseline": "5.2.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libosmium": {
       "baseline": "2.19.0",
