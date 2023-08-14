@@ -1,7 +1,7 @@
-diff --git a/w32/common/libmicrohttpd-build-settings.vcxproj b/w32/common/libmicrohttpd-build-settings.vcxproj
+diff --git a/w32/common/libmicrohttpd-build-settings.props b/w32/common/libmicrohttpd-build-settings.props
 index 97d84a87f..8ffcb19c4 100644
---- a/w32/common/libmicrohttpd-build-settings.vcxproj
-+++ b/w32/common/libmicrohttpd-build-settings.vcxproj
+--- a/w32/common/libmicrohttpd-build-settings.props
++++ b/w32/common/libmicrohttpd-build-settings.props
 @@ -37,10 +37,6 @@
      <Lib>
        <AdditionalDependencies>Ws2_32.lib</AdditionalDependencies>
