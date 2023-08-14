@@ -19,15 +19,17 @@ index 537b738..6dba0fb 100644
  
  if(WITH_FLATBUFFERS OR HAVE_FLATBUFFERS)
 diff --git a/modules/dnn/misc/tflite/schema_generated.h b/modules/dnn/misc/tflite/schema_generated.h
-index 44162ee..9761414 100644
+index 44162ee..b2633d6 100644
 --- a/modules/dnn/misc/tflite/schema_generated.h
 +++ b/modules/dnn/misc/tflite/schema_generated.h
-@@ -10,7 +10,7 @@
+@@ -8,10 +8,6 @@
+ 
+ // Ensure the included flatbuffers.h is the same version as when this file was
  // generated, otherwise it may not be compatible.
- static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
-               FLATBUFFERS_VERSION_MINOR == 5 &&
+-static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
+-              FLATBUFFERS_VERSION_MINOR == 5 &&
 -              FLATBUFFERS_VERSION_REVISION == 9,
-+              FLATBUFFERS_VERSION_REVISION == 26,
-              "Non-compatible flatbuffers version included");
+-             "Non-compatible flatbuffers version included");
  
  namespace opencv_tflite {
+ 
