@@ -8382,7 +8382,7 @@
     },
     "unrar": {
       "baseline": "6.1.7",
-      "port-version": 2
+      "port-version": 3
     },
     "upb": {
       "baseline": "2022-06-21",
