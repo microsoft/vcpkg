@@ -17,7 +17,7 @@ vcpkg_from_github(
             replace_environment_variable.patch
 )
 
-file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR} NATIVE_INSTALLED_DIR")
+file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" NATIVE_INSTALLED_DIR)
 configure_file("${SOURCE_PATH}/Source/Drivers/Kinect/Kinect.vcxproj" "${SOURCE_PATH}/Source/Drivers/Kinect/Kinect.vcxproj" @ONLY)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
