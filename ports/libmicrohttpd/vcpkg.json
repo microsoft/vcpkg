@@ -1,9 +1,9 @@
 {
   "name": "libmicrohttpd",
-  "version": "0.9.75",
-  "port-version": 1,
+  "version": "0.9.77",
   "description": "GNU libmicrohttpd is a small C library that is supposed to make it easy to run an HTTP server as part of another application",
   "homepage": "https://www.gnu.org/software/libmicrohttpd/",
+  "license": "LGPL-2.1-or-later",
   "supports": "!(arm | uwp)",
   "dependencies": [
     {
@@ -15,5 +15,14 @@
       "host": true,
       "platform": "windows"
     }
-  ]
+  ],
+  "features": {
+    "https": {
+      "description": "Enable HTTPS protocol support",
+      "supports": "!windows | mingw",
+      "dependencies": [
+        "libgnutls"
+      ]
+    }
+  }
 }

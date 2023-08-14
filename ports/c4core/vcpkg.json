@@ -1,7 +1,6 @@
 {
   "name": "c4core",
-  "version": "0.1.9",
-  "port-version": 1,
+  "version": "0.1.11",
   "description": "Library of low-level C++ utilities",
   "homepage": "https://github.com/biojppm/c4core",
   "license": "MIT",

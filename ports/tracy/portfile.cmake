@@ -7,16 +7,27 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
-    REF a8511d357650282c6915f7aa9775e9c4945e42b5
-    SHA512 6e0ff0be7621490b607eaae46d4ec13ea66b0061ed580c99d75eda3a7c9479b34c70da9ad844bd4a05e329bb40cebf48e7c6bab05d2a946d56b2d432c7ddc125
+    REF v0.9.1
+    SHA512 988f492501e5a449ecc89b98d4e8cb6164b65dfe2b5daf17ccc3035f1a477162b77ce7a2cc4c62d7b8a8d530d80f2b439c779319a6bd15b6d37b4a36406d8f4c
     HEAD_REF master
     PATCHES
         001-fix-vcxproj-vcpkg.patch
         002-fix-capstone-5.patch
+        003-fix-imgui-path.patch
+        004-fix-missing-threads-dep.patch # https://github.com/wolfpld/tracy/pull/562
+        005-fix-imgui-path-legacy.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+        FEATURES
+            on-demand TRACY_ON_DEMAND
+        INVERTED_FEATURES
+            crash-handler TRACY_NO_CRASH_HANDLER
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 
@@ -74,6 +85,7 @@ function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
                 BASE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}"
                 OUTPUT_VARIABLE relative_path_makefile_dir)
 
+            set(ENV{LEGACY} 1)
             vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
             vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${path_suffix}/lib/pkgconfig")
 
@@ -90,12 +102,16 @@ function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
     endforeach()
 endfunction()
 
+function(tracy_tool_install_win32 tracy_TOOL tracy_TOOL_NAME)
+  vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "${tracy_TOOL}/build/win32/${tracy_TOOL_NAME}.sln"
+  )
+endfunction()
+
 if("capture" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_msbuild_install(
-            SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "capture/build/win32/capture.vcxproj"
-        )
+        tracy_tool_install_win32(capture capture)
     else()
         tracy_tool_install_make(capture capture)
     endif()
@@ -103,10 +119,7 @@ endif()
 
 if("csvexport" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_msbuild_install(
-            SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "csvexport/build/win32/csvexport.vcxproj"
-        )
+        tracy_tool_install_win32(csvexport csvexport)
     else()
         tracy_tool_install_make(csvexport csvexport)
     endif()
@@ -114,10 +127,7 @@ endif()
 
 if("import-chrome" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_msbuild_install(
-            SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "import-chrome/build/win32/import-chrome.vcxproj"
-        )
+        tracy_tool_install_win32(import-chrome import-chrome)
     else()
         tracy_tool_install_make(import-chrome import-chrome)
     endif()
@@ -125,10 +135,7 @@ endif()
 
 if("profiler" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_msbuild_install(
-            SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "profiler/build/win32/Tracy.vcxproj"
-        )
+        tracy_tool_install_win32(profiler Tracy)
     else()
         tracy_tool_install_make(profiler Tracy)
     endif()
@@ -136,10 +143,7 @@ endif()
 
 if("update" IN_LIST tracy_tools)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_msbuild_install(
-            SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "update/build/win32/update.vcxproj"
-        )
+        tracy_tool_install_win32(update update)
     else()
         tracy_tool_install_make(update update)
     endif()
@@ -148,18 +152,6 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
 vcpkg_fixup_pkgconfig()
-
-foreach(TOOL capture csvexport import-chrome profiler update)
-    if(${TOOL} IN_LIST tracy_tools)
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
-        endif()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-        endif()
-        break()
-    endif()
-endforeach()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

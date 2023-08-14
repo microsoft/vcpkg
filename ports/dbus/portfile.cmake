@@ -4,14 +4,13 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbus/dbus
-    REF c91ca6edad658274607323a438eea7c7c6c5e392 #1.13.18
-    SHA512  4dd4d369152591040ebe9f474a0ba8911d8a91546d64b1d6f7335b7fd8026bd99a8a4fe1c78b80eb2e31e9e58324d432857e2a7af1d1cb950d22b4430cc0f7ac
+    REF ed866a94889e13c83dc873d8b5f86a907f908456 #1.15.2
+    SHA512  eca9bfabfa6e8a3bf82ecc3c36dbd038c2450aded539a6d405a2709e876ccbf5002391802f6d538a5bbc16723f0d51f059f03cb6d226b400bc032b3bbe59cf10
     HEAD_REF master
     PATCHES 
         cmake.dep.patch
         pkgconfig.patch
         getpeereid.patch # missing check from configure.ac
-        rdynamic.patch # OSX doesn't like '-Wl,--export-dynamic'
 ) 
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

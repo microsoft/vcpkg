@@ -1,7 +1,7 @@
-diff --git a/meson.build b/meson.build
+diff --git a/subprojects/gstreamer/meson.build b/subprojects/gstreamer/meson.build
 index bed8c4e..772809e 100644
---- a/meson.build
-+++ b/meson.build
+--- a/subprojects/gstreamer/meson.build
++++ b/subprojects/gstreamer/meson.build
 @@ -435,8 +435,8 @@ if cc.has_header('execinfo.h')
    endif
  endif

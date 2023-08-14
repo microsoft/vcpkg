@@ -33,9 +33,8 @@ if(VCPKG_CROSSCOMPILING)
     )
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         ${FEATURE_OPTIONS}
         "${corrade_rc_param}"
@@ -45,7 +44,7 @@ vcpkg_configure_cmake(
         CORRADE_RC_EXECUTABLE
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Debug includes and share are the same as release
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

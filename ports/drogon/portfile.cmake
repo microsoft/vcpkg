@@ -1,12 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
-    REF v1.8.1
-    SHA512 ee7303350fd2b6d7a6ad283d0edcc5a7e6ef289652e3393699d9c4101308681f0124ebff6225de1665e86d2e2cf4c3192a17e70a204268e40d935acd097324a3
+    REF v1.8.4
+    SHA512 381b4b576d316e55690dc0531cfeaeee4c0e00ce540a502e1c1870eea9a463d00d7e4bc9a354c459e5fbc6da5f046757f07ff2077bb3a9603f97f448f2d17ea2
     HEAD_REF master
     PATCHES
-        vcpkg.patch
-        drogon_config.patch
+        001_vcpkg.patch
+        002_drogon_config.patch
+        003_fix_gcc13.patch #https://github.com/drogonframework/drogon/pull/1563
+        004_deps_redis.patch
+        005_drogon_ctl.patch
 )
 
 vcpkg_check_features(
@@ -30,6 +33,7 @@ vcpkg_cmake_configure(
         -DBUILD_SHARED_LIBS=${BUILD_DROGON_SHARED}
         -DBUILD_EXAMPLES=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
+        -DUSE_SUBMODULE=OFF
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_Boost

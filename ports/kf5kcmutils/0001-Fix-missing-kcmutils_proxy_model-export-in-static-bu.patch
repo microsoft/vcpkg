@@ -1,0 +1,12 @@
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index fcd5bc1..cc1660b 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -47,3 +47,7 @@ add_library(kcmutils_proxy_model STATIC kpluginproxymodel.cpp)
+ # Needed to link this static lib to shared libs
+ set_property(TARGET kcmutils_proxy_model PROPERTY POSITION_INDEPENDENT_CODE ON)
+ target_link_libraries(kcmutils_proxy_model PUBLIC KF5KCMUtilsCore KF5::ItemViews)
++
++if(NOT BUILD_SHARED_LIBS)
++  install(TARGETS kcmutils_proxy_model EXPORT KF5KCMUtilsTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
++endif()

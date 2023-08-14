@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/rapidyaml
-    REF 213b201d264139cd1b887790197e08850af628e3 #v0.4.1
-    SHA512 f76e3c41284441dc195402fadda5ceb56fd48c7954a24c29457e14d2f1996d46e9cfb01dd366b00c588108777735b7ccc1d68215c6ecc609cc7b805535c77309
+    REF "v${VERSION}"
+    SHA512 861f1d2c39c5c8d455e8d40e3ecadd828b948c5dea2bcb88ba92686ca77b9a7d69ab2d94407732eab574e4e3c7b319d0f1b31250b18fb513310847192623a2f7
     HEAD_REF master
     PATCHES cmake-fix.patch
 )
@@ -68,4 +68,4 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/ryml/rymlConfig.cmake" "${_contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

@@ -1,9 +1,10 @@
 {
   "name": "nethost",
-  "version": "6.0.5",
+  "version": "7.0.0",
   "description": "Provides a set of APIs that can be used to host .NET Core (dotnet)",
-  "homepage": "https://github.com/dotnet/runtime/tree/master/src/installer/corehost/cli/nethost",
-  "supports": "!uwp",
+  "homepage": "https://github.com/dotnet/runtime/tree/main/src/native/corehost/nethost",
+  "license": "MIT",
+  "supports": "(windows & !uwp), (linux, osx)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

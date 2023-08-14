@@ -17,28 +17,25 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     test        MNN_BUILD_TEST
     test        MNN_BUILD_BENCHMARK
     cuda        MNN_CUDA
-    cuda        MNN_GPU_TRACE
     vulkan      MNN_VULKAN
-    vulkan      MNN_GPU_TRACE
-    vulkan      MNN_USE_SYSTEM_LIB
     opencl      MNN_OPENCL
-    opencl      MNN_USE_SYSTEM_LIB
     metal       MNN_METAL
-    metal       MNN_GPU_TRACE
     tools       MNN_BUILD_TOOLS
     tools       MNN_BUILD_QUANTOOLS
     tools       MNN_BUILD_TRAIN
     tools       MNN_EVALUATION
     tools       MNN_BUILD_CONVERTER
+    gpu         MNN_GPU_TRACE
+    system      MNN_USE_SYSTEM_LIB
 )
 
 # 'cuda' feature in Windows failes with Ninja because of parallel PDB access. Make it optional
-set(NINJA_OPTION PREFER_NINJA)
-if("cuda" IN_LIST FEATURES)
+set(NINJA_OPTION WINDOWS_USE_MSBUILD)
+if(NOT "cuda" IN_LIST FEATURES)
     unset(NINJA_OPTION)
 endif()
 
-set(FLATC_EXEC ${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX})
+set(FLATC_EXEC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 if (NOT EXISTS "${FLATC_EXEC}")
     message(FATAL_ERROR "Expected ${FLATC_EXEC} to exist.")
 endif()
@@ -66,8 +63,8 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     ${NINJA_OPTION}
     OPTIONS
         ${FEATURE_OPTIONS} ${PLATFORM_OPTIONS}
@@ -77,7 +74,7 @@ vcpkg_configure_cmake(
     OPTIONS_DEBUG
         -DMNN_DEBUG_MEMORY=ON -DMNN_DEBUG_TENSOR_SIZE=ON
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_download_distfile(COPYRIGHT_PATH
@@ -86,19 +83,19 @@ vcpkg_download_distfile(COPYRIGHT_PATH
     SHA512 98f6b79b778f7b0a15415bd750c3a8a097d650511cb4ec8115188e115c47053fe700f578895c097051c9bc3dfb6197c2b13a15de203273e1a3218884f86e90e8
 )
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${COPYRIGHT_PATH} ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(RENAME "${COPYRIGHT_PATH}" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     if("metal" IN_LIST FEATURES)
-        file(RENAME ${CURRENT_PACKAGES_DIR}/bin/mnn.metallib
-                    ${CURRENT_PACKAGES_DIR}/share/${PORT}/mnn.metallib)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/mnn.metallib"
+                    "${CURRENT_PACKAGES_DIR}/share/${PORT}/mnn.metallib")
     endif()
 else()
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if("test" IN_LIST FEATURES)
     # no install(TARGETS) for the following binaries. check the buildtrees...
     # vcpkg_copy_tools(

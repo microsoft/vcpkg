@@ -1,44 +1,34 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES 0017-Patch-for-ticket-9019-CUDA-Compile-Broken-Using-MSVC.patch)  # https://trac.ffmpeg.org/ticket/9019
-endif()
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.4.1
-    SHA512 a53e617937f9892c5cfddb00896be9ad8a3e398dc7cf3b6c893b52ff38aff6ff0cbc61a44cd5f93d9a28f775e71ae82996a5e2b699a769c1de8f882aab34c797
+    REF n${VERSION}
+    SHA512 1b90c38b13149f2de7618ad419adc277afd5e65bbf52b849a7245aec0f92f73189c8547599dba8408b8828a767c1120f132727b57cd6231cd8b81de2471a4b8b
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
+        0002-fix-msvc-link.patch #upstreamed in future version
         0003-fix-windowsinclude.patch
         0004-fix-debug-build.patch
+        0005-fix-nasm.patch #upstreamed in future version
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
         0009-Fix-fdk-detection.patch
-        0010-Fix-x264-detection.patch
         0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
-        0014-avfilter-dependency-fix.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
-        0016-configure-dnn-needs-avformat.patch  # https://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
-        ${PATCHES}
-        0018-libaom-Dont-use-aom_codec_av1_dx_algo.patch
-        0019-libx264-Do-not-explicitly-set-X264_API_IMPORTS.patch
         0020-fix-aarch64-libswscale.patch
-        0021-fix-sdl2-version-check.patch
+        0022-fix-iconv.patch
+        0024-fix-gcc13-binutils.patch
 )
 
-if (SOURCE_PATH MATCHES " ")
+if(SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    # ffmpeg nasm build gives link error on x86, so fall back to yasm
-    vcpkg_find_acquire_program(YASM)
-    get_filename_component(YASM_EXE_PATH "${YASM}" DIRECTORY)
-    vcpkg_add_to_path("${YASM_EXE_PATH}")
-else()
+if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
     vcpkg_find_acquire_program(NASM)
     get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
     vcpkg_add_to_path("${NASM_EXE_PATH}")
@@ -53,23 +43,15 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect")
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-  set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
-endif()
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-  set(OPTIONS "${OPTIONS} --enable-asm --disable-x86asm")
-endif()
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-  set(OPTIONS "${OPTIONS} --enable-asm --enable-x86asm")
-endif()
+set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect --disable-autodetect")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_acquire_msys(MSYS_ROOT)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake1.16)
     set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/share/automake-1.16")
+    string(APPEND OPTIONS " --pkg-config=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 else()
-    set(SHELL /bin/sh)
+    find_program(SHELL bash)
 endif()
 
 if(VCPKG_TARGET_IS_MINGW)
@@ -79,20 +61,27 @@ if(VCPKG_TARGET_IS_MINGW)
         string(APPEND OPTIONS " --target-os=mingw64")
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
-    string(APPEND OPTIONS " --target-os=linux")
+    string(APPEND OPTIONS " --target-os=linux --enable-pthreads")
+elseif(VCPKG_TARGET_IS_UWP)
+    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    string(APPEND OPTIONS " --target-os=win32")
+    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-dxva2 --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_OSX)
-    string(APPEND OPTIONS " --target-os=darwin")
+    string(APPEND OPTIONS " --target-os=darwin --enable-appkit --enable-avfoundation --enable-coreimage --enable-audiotoolbox --enable-videotoolbox")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
     string(APPEND OPTIONS " --target-os=android")
 else()
 endif()
 
+if(VCPKG_TARGET_IS_OSX)
+    list(JOIN VCPKG_OSX_ARCHITECTURES " " OSX_ARCHS)
+    list(LENGTH VCPKG_OSX_ARCHITECTURES OSX_ARCH_COUNT)
+endif()
+
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
-
 if(VCPKG_DETECTED_MSVC)
+    string(APPEND OPTIONS " --disable-inline-asm") # clang-cl has inline assembly but this leads to undefined symbols.
     set(OPTIONS "--toolchain=msvc ${OPTIONS}")
     # This is required because ffmpeg depends upon optimizations to link correctly
     string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -O2")
@@ -104,9 +93,74 @@ endif()
 string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -I \"${CURRENT_INSTALLED_DIR}/include\"")
 string(APPEND VCPKG_COMBINED_C_FLAGS_RELEASE " -I \"${CURRENT_INSTALLED_DIR}/include\"")
 
-set(_csc_PROJECT_PATH ffmpeg)
+## Setup vcpkg toolchain
 
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
+
+set(prog_env "")
+
+if(VCPKG_DETECTED_CMAKE_C_COMPILER)
+    get_filename_component(CC_path "${VCPKG_DETECTED_CMAKE_C_COMPILER}" DIRECTORY)
+    get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
+    set(ENV{CC} "${CC_filename}")
+    string(APPEND OPTIONS " --cc=${CC_filename}")
+    #string(APPEND OPTIONS " --host_cc=${CC_filename}") ffmpeg not yet setup for cross builds?
+    list(APPEND prog_env "${CC_path}")
+endif()
+
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER)
+    get_filename_component(CXX_path "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}" DIRECTORY)
+    get_filename_component(CXX_filename "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}" NAME)
+    set(ENV{CXX} "${CXX_filename}")
+    string(APPEND OPTIONS " --cxx=${CXX_filename}")
+    #string(APPEND OPTIONS " --host_cxx=${CC_filename}")
+    list(APPEND prog_env "${CXX_path}")
+endif()
+
+if(VCPKG_DETECTED_CMAKE_RC_COMPILER)
+    get_filename_component(RC_path "${VCPKG_DETECTED_CMAKE_RC_COMPILER}" DIRECTORY)
+    get_filename_component(RC_filename "${VCPKG_DETECTED_CMAKE_RC_COMPILER}" NAME)
+    set(ENV{WINDRES} "${RC_filename}")
+    string(APPEND OPTIONS " --windres=${RC_filename}")
+    list(APPEND prog_env "${RC_path}")
+endif()
+
+if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    get_filename_component(LD_path "${VCPKG_DETECTED_CMAKE_LINKER}" DIRECTORY)
+    get_filename_component(LD_filename "${VCPKG_DETECTED_CMAKE_LINKER}" NAME)
+    set(ENV{LD} "${LD_filename}")
+    string(APPEND OPTIONS " --ld=${LD_filename}")
+    #string(APPEND OPTIONS " --host_ld=${LD_filename}")
+    list(APPEND prog_env "${LD_path}")
+endif()
+
+if(VCPKG_DETECTED_CMAKE_NM)
+    get_filename_component(NM_path "${VCPKG_DETECTED_CMAKE_NM}" DIRECTORY)
+    get_filename_component(NM_filename "${VCPKG_DETECTED_CMAKE_NM}" NAME)
+    set(ENV{NM} "${NM_filename}")
+    string(APPEND OPTIONS " --nm=${NM_filename}")
+    list(APPEND prog_env "${NM_path}")
+endif()
+
+if(VCPKG_DETECTED_CMAKE_AR)
+    get_filename_component(AR_path "${VCPKG_DETECTED_CMAKE_AR}" DIRECTORY)
+    get_filename_component(AR_filename "${VCPKG_DETECTED_CMAKE_AR}" NAME)
+    if(AR_filename MATCHES [[^(llvm-)?lib\.exe$]])
+        set(ENV{AR} "ar-lib ${AR_filename}")
+        string(APPEND OPTIONS " --ar='ar-lib ${AR_filename}'")
+    else()
+        set(ENV{AR} "${AR_filename}")
+        string(APPEND OPTIONS " --ar='${AR_filename}'")
+    endif()
+    list(APPEND prog_env "${AR_path}")
+endif()
+
+list(REMOVE_DUPLICATES prog_env)
+vcpkg_add_to_path(PREPEND ${prog_env})
+
+# More? RANLIB OBJCC STRIP BIN2C
+
+file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
 set(FFMPEG_PKGCONFIG_MODULES libavutil)
 
@@ -138,10 +192,6 @@ if("ffprobe" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-ffprobe")
 else()
     set(OPTIONS "${OPTIONS} --disable-ffprobe")
-endif()
-
-if (NOT "alsa" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --disable-alsa")
 endif()
 
 if("avcodec" IN_LIST FEATURES)
@@ -207,16 +257,21 @@ else()
     set(ENABLE_SWSCALE OFF)
 endif()
 
-set(ENABLE_AVRESAMPLE OFF)
-if("avresample" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-avresample")
-    set(ENABLE_AVRESAMPLE ON)
-    list(APPEND FFMPEG_PKGCONFIG_MODULES libavresample)
-endif()
-
 set(STATIC_LINKAGE OFF)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(STATIC_LINKAGE ON)
+endif()
+
+if ("alsa" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-alsa")
+else()
+    set(OPTIONS "${OPTIONS} --disable-alsa")
+endif()
+
+if("amf" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-amf")
+else()
+    set(OPTIONS "${OPTIONS} --disable-amf")
 endif()
 
 if("aom" IN_LIST FEATURES)
@@ -334,10 +389,21 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
 endif()
 
+if("openmpt" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopenmpt")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopenmpt")
+endif()
+
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
 else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
+        string(APPEND OPTIONS " --enable-schannel")
+    elseif(VCPKG_TARGET_IS_OSX)
+        string(APPEND OPTIONS " --enable-securetransport")
+    endif()
 endif()
 
 if("opus" IN_LIST FEATURES)
@@ -442,15 +508,13 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libsrt")
 endif()
 
-if (VCPKG_TARGET_IS_OSX)
-    set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
+if ("qsv" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")   
+else()
+    set(OPTIONS "${OPTIONS} --disable-libmfx")
 endif()
 
-if(VCPKG_TARGET_IS_IOS)
-    set(OPTIONS "${OPTIONS} --disable-audiotoolbox") # disable AudioToolbox on iOS
-endif()
-
-set(OPTIONS_CROSS " --enable-cross-compile")
+set(OPTIONS_CROSS "--enable-cross-compile")
 
 # ffmpeg needs --cross-prefix option to use appropriate tools for cross-compiling.
 if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*-)gcc$")
@@ -458,9 +522,9 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*-)gcc$")
 endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    string(APPEND OPTIONS_CROSS " --arch=x86_64")
+    set(BUILD_ARCH "x86_64")
 else()
-    string(APPEND OPTIONS_CROSS " --arch=${VCPKG_TARGET_ARCHITECTURE}")
+    set(BUILD_ARCH ${VCPKG_TARGET_ARCHITECTURE})
 endif()
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -468,7 +532,7 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
         vcpkg_find_acquire_program(GASPREPROCESSOR)
         foreach(GAS_PATH ${GASPREPROCESSOR})
             get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
-            set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${GAS_ITEM_PATH}")
+            vcpkg_add_to_path("${GAS_ITEM_PATH}")
         endforeach(GAS_PATH)
     endif()
 endif()
@@ -480,9 +544,8 @@ if(VCPKG_TARGET_IS_UWP)
     string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
 endif()
 
-# Note: --disable-optimizations can't be used due to https://ffmpeg.org/pipermail/libav-user/2013-March/003945.html
-set(OPTIONS_DEBUG "--debug")
-set(OPTIONS_RELEASE "")
+set(OPTIONS_DEBUG "--debug --disable-optimizations")
+set(OPTIONS_RELEASE "--enable-optimizations")
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
 
@@ -500,15 +563,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
 endif()
 
-set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
-
-get_filename_component(CC_path "${VCPKG_DETECTED_CMAKE_C_COMPILER}" DIRECTORY)
-get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
-set(ENV{CC} "${CC_filename}")
-if(CC_path)
-    vcpkg_add_to_path(PREPEND "${CC_path}")
-endif()
-
 message(STATUS "Building Options: ${OPTIONS}")
 
 # Release build
@@ -516,13 +570,15 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
-    message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
+    message(STATUS "Building ${PORT} for Release")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     # We use response files here as the only known way to handle spaces in paths
     set(crsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cflags.rsp")
-    file(WRITE "${crsp}" "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
+    string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_C_FLAGS_RELEASE_SANITIZED "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
+    file(WRITE "${crsp}" "${VCPKG_COMBINED_C_FLAGS_RELEASE_SANITIZED}")
     set(ldrsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ldflags.rsp")
-    file(WRITE "${ldrsp}" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}")
+    string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE_SANITIZED "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}")
+    file(WRITE "${ldrsp}" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE_SANITIZED}")
     set(ENV{CFLAGS} "@${crsp}")
     # All tools except the msvc arm{,64} assembler accept @... as response file syntax.
     # For that assembler, there is no known way to pass in flags. We must hope that not passing flags will work acceptably.
@@ -530,6 +586,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         set(ENV{ASFLAGS} "@${crsp}")
     endif()
     set(ENV{LDFLAGS} "@${ldrsp}")
+    set(ENV{ARFLAGS} "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE}")
 
     set(BUILD_DIR         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     set(CONFIGURE_OPTIONS "${OPTIONS} ${OPTIONS_RELEASE}")
@@ -541,6 +598,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         COMMAND "${SHELL}" ./build.sh
         WORKING_DIRECTORY "${BUILD_DIR}"
         LOGNAME "build-${TARGET_TRIPLET}-rel"
+        SAVE_LOG_FILES ffbuild/config.log
     )
 endif()
 
@@ -550,17 +608,20 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
     set(ENV{LDFLAGS} "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
-    message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
+    message(STATUS "Building ${PORT} for Debug")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     set(crsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cflags.rsp")
-    file(WRITE "${crsp}" "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+    string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_C_FLAGS_DEBUG_SANITIZED "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+    file(WRITE "${crsp}" "${VCPKG_COMBINED_C_FLAGS_DEBUG_SANITIZED}")
     set(ldrsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/ldflags.rsp")
-    file(WRITE "${ldrsp}" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
+    string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG_SANITIZED "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
+    file(WRITE "${ldrsp}" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG_SANITIZED}")
     set(ENV{CFLAGS} "@${crsp}")
     if(NOT VCPKG_DETECTED_MSVC OR NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
         set(ENV{ASFLAGS} "@${crsp}")
     endif()
     set(ENV{LDFLAGS} "@${ldrsp}")
+    set(ENV{ARFLAGS} "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG}")
 
     set(BUILD_DIR         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     set(CONFIGURE_OPTIONS "${OPTIONS} ${OPTIONS_DEBUG}")
@@ -572,6 +633,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         COMMAND "${SHELL}" ./build.sh
         WORKING_DIRECTORY "${BUILD_DIR}"
         LOGNAME "build-${TARGET_TRIPLET}-dbg"
+        SAVE_LOG_FILES ffbuild/config.log
     )
 endif()
 
@@ -699,7 +761,6 @@ function(append_dependencies_from_libs out)
     list(TRANSFORM contents REPLACE "^-Wl,-framework," "-l")
     list(FILTER contents EXCLUDE REGEX "^-Wl,.+")
     list(TRANSFORM contents REPLACE "^-l" "")
-    list(FILTER contents EXCLUDE REGEX "^avresample$")
     list(FILTER contents EXCLUDE REGEX "^avutil$")
     list(FILTER contents EXCLUDE REGEX "^avcodec$")
     list(FILTER contents EXCLUDE REGEX "^avdevice$")
@@ -734,14 +795,25 @@ message(STATUS "Dependencies (debug):   ${FFMPEG_DEPENDENCIES_DEBUG}")
 # Handle version strings
 
 function(extract_regex_from_file out)
-    cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "FILE;REGEX" "")
-    file(READ "${arg_FILE}" contents)
+    cmake_parse_arguments(PARSE_ARGV 1 "arg" "MAJOR" "FILE_WITHOUT_EXTENSION;REGEX" "")
+    file(READ "${arg_FILE_WITHOUT_EXTENSION}.h" contents)
     if (contents MATCHES "${arg_REGEX}")
         if(NOT CMAKE_MATCH_COUNT EQUAL 1)
             message(FATAL_ERROR "Could not identify match group in regular expression \"${arg_REGEX}\"")
         endif()
     else()
-        message(FATAL_ERROR "Could not find line matching \"${arg_REGEX}\" in file \"${arg_FILE}\"")
+        if (arg_MAJOR)
+            file(READ "${arg_FILE_WITHOUT_EXTENSION}_major.h" contents)
+            if (contents MATCHES "${arg_REGEX}")
+                if(NOT CMAKE_MATCH_COUNT EQUAL 1)
+                    message(FATAL_ERROR "Could not identify match group in regular expression \"${arg_REGEX}\"")
+                endif()
+            else()
+                message(WARNING "Could not find line matching \"${arg_REGEX}\" in file \"${arg_FILE_WITHOUT_EXTENSION}_major.h\"")
+            endif()
+        else()
+            message(WARNING "Could not find line matching \"${arg_REGEX}\" in file \"${arg_FILE_WITHOUT_EXTENSION}.h\"")
+        endif()
     endif()
     set("${out}" "${CMAKE_MATCH_1}" PARENT_SCOPE)
 endfunction()
@@ -751,22 +823,23 @@ function(extract_version_from_component out)
     string(TOLOWER "${arg_COMPONENT}" component_lower)
     string(TOUPPER "${arg_COMPONENT}" component_upper)
     extract_regex_from_file(major_version
-        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        FILE_WITHOUT_EXTENSION "${SOURCE_PATH}/${component_lower}/version"
+        MAJOR
         REGEX "#define ${component_upper}_VERSION_MAJOR[ ]+([0-9]+)"
     )
     extract_regex_from_file(minor_version
-        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        FILE_WITHOUT_EXTENSION "${SOURCE_PATH}/${component_lower}/version"
         REGEX "#define ${component_upper}_VERSION_MINOR[ ]+([0-9]+)"
     )
     extract_regex_from_file(micro_version
-        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        FILE_WITHOUT_EXTENSION "${SOURCE_PATH}/${component_lower}/version"
         REGEX "#define ${component_upper}_VERSION_MICRO[ ]+([0-9]+)"
     )
     set("${out}" "${major_version}.${minor_version}.${micro_version}" PARENT_SCOPE)
 endfunction()
 
 extract_regex_from_file(FFMPEG_VERSION
-    FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libavutil/ffversion.h"
+    FILE_WITHOUT_EXTENSION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libavutil/ffversion"
     REGEX "#define FFMPEG_VERSION[ ]+\"(.+)\""
 )
 
@@ -778,10 +851,8 @@ extract_version_from_component(LIBAVDEVICE_VERSION
     COMPONENT libavdevice)
 extract_version_from_component(LIBAVFILTER_VERSION
     COMPONENT libavfilter)
-extract_version_from_component( LIBAVFORMAT_VERSION
+extract_version_from_component(LIBAVFORMAT_VERSION
     COMPONENT libavformat)
-extract_version_from_component(LIBAVRESAMPLE_VERSION
-    COMPONENT libavresample)
 extract_version_from_component(LIBSWRESAMPLE_VERSION
     COMPONENT libswresample)
 extract_version_from_component(LIBSWSCALE_VERSION
@@ -806,4 +877,5 @@ endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindFFMPEG.cmake" @ONLY)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/${LICENSE_FILE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${LICENSE_FILE}")

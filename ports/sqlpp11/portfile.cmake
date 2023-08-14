@@ -6,14 +6,16 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         ddl2cpp_path.patch
+        fix_link_sqlite3.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        sqlite3  BUILD_SQLITE3_CONNECTOR
-        mariadb  BUILD_MARIADB_CONNECTOR
-        mysql    BUILD_MYSQL_CONNECTOR
+        sqlite3    BUILD_SQLITE3_CONNECTOR
+        mariadb    BUILD_MARIADB_CONNECTOR
+        mysql      BUILD_MYSQL_CONNECTOR
+        postgresql BUILD_POSTGRESQL_CONNECTOR
 )
 
 # Use sqlpp11's own build process

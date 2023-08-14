@@ -1,7 +1,7 @@
 {
   "name": "libmount",
   "version": "2.38",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Block device identification library from util-linux",
   "homepage": "https://git.kernel.org/pub/scm/utils/util-linux/util-linux.git/about/",
   "license": "GPL-2.0-only",

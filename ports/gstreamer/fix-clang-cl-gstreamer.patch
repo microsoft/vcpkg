@@ -1,20 +1,20 @@
-diff --git a/gst/parse/meson.build b/gst/parse/meson.build
+diff --git a/subprojects/gstreamer/gst/parse/meson.build b/subprojects/gstreamer/gst/parse/meson.build
 index 35ed6f2f4..5e38e49ea 100644
---- a/gst/parse/meson.build
-+++ b/gst/parse/meson.build
+--- a/subprojects/gstreamer/gst/parse/meson.build
++++ b/subprojects/gstreamer/gst/parse/meson.build
 @@ -16,7 +16,7 @@ else
  endif
  
- flex_cdata.set('FLEX', flex.path())
+ flex_cdata.set('FLEX', flex.full_path())
 -if cc.get_id() == 'msvc'
 +if cc.get_argument_syntax() == 'msvc'
    flex_cdata.set('FLEX_ARGS', '--nounistd')
  else
    flex_cdata.set('FLEX_ARGS', '')
-diff --git a/meson.build b/meson.build
+diff --git a/subprojects/gstreamer/meson.build b/subprojects/gstreamer/meson.build
 index 772809e15..70b1eafc5 100644
---- a/meson.build
-+++ b/meson.build
+--- a/subprojects/gstreamer/meson.build
++++ b/subprojects/gstreamer/meson.build
 @@ -36,7 +36,7 @@ cc = meson.get_compiler('c')
  
  cdata = configuration_data()

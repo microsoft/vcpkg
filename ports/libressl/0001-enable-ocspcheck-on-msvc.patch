@@ -1,5 +1,5 @@
 diff --git a/apps/ocspcheck/CMakeLists.txt b/apps/ocspcheck/CMakeLists.txt
-index 3c80458..e8d3bf5 100644
+index 2dddb6e..fd35685 100644
 --- a/apps/ocspcheck/CMakeLists.txt
 +++ b/apps/ocspcheck/CMakeLists.txt
 @@ -1,5 +1,3 @@
@@ -9,7 +9,7 @@ index 3c80458..e8d3bf5 100644
  	OCSPCHECK_SRC
  	http.c
 @@ -13,13 +11,27 @@ else()
-         set(OCSPCHECK_SRC ${OCSPCHECK_SRC} compat/strtonum.c)
+         set(OCSPCHECK_SRC ${OCSPCHECK_SRC} compat/memmem.c)
  endif()
  
 +check_function_exists(getopt HAVE_GETOPT)
@@ -34,10 +34,10 @@ index 3c80458..e8d3bf5 100644
  
 -add_executable(ocspcheck ${OCSPCHECK_SRC})
 +add_executable(ocspcheck ${OCSPCHECK_SRC} ${GETOPT_SRC} ${FTRUNCATE_SRC})
+ target_include_directories(ocspcheck PUBLIC ../../include)
  target_include_directories(ocspcheck PRIVATE . ./compat ../../include/compat)
  target_link_libraries(ocspcheck tls ${OPENSSL_LIBS})
- 
-@@ -28,5 +40,3 @@ if(ENABLE_LIBRESSL_INSTALL)
+@@ -29,5 +41,3 @@ if(ENABLE_LIBRESSL_INSTALL)
  	install(FILES ocspcheck.8 DESTINATION ${CMAKE_INSTALL_MANDIR}/man8)
  
  endif(ENABLE_LIBRESSL_INSTALL)

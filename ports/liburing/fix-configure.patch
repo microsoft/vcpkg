@@ -2,15 +2,15 @@ diff --git a/configure b/configure
 index 2c2441b..620c443 100644
 --- a/configure
 +++ b/configure
-@@ -14,7 +14,7 @@ for opt do
-   ;;
-   --includedir=*) includedir="$optarg"
-   ;;
--  --libdir=*) libdir="$optarg"
-+  --datarootdir=*) libdir="$optarg"
-   ;;
-   --libdevdir=*) libdevdir="$optarg"
-   ;;
+@@ -20,7 +20,7 @@ for opt do
+  ;;
+  --mandir=*) mandir="$optarg"
+  ;;
+-  --datadir=*) datadir="$optarg"
++  --datarootdir=*) datadir="$optarg"
+  ;;
+  --cc=*) cc="$optarg"
+  ;;
 @@ -28,10 +28,12 @@ for opt do
    ;;
    --nolibc) liburing_nolibc="yes"

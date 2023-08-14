@@ -1,7 +1,7 @@
 {
   "name": "nmap",
   "version": "7.70",
-  "port-version": 8,
+  "port-version": 9,
   "description": "A library for scanning network ports.",
   "dependencies": [
     {
@@ -14,11 +14,6 @@
     "pcre",
     {
       "name": "python2",
-      "platform": "windows"
-    },
-    {
-      "name": "vcpkg-msbuild",
-      "host": true,
       "platform": "windows"
     },
     {

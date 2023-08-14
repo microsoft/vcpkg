@@ -1,0 +1,24 @@
+diff --git a/sqlite3.c b/sqlite3.c
+index a290c82..a5d4d97 100644
+--- a/sqlite3.c
++++ b/sqlite3.c
+@@ -17,6 +17,7 @@
+ ** language. The code for the "sqlite3" command-line shell is also in a
+ ** separate file. This file contains only code for the core SQLite library.
+ */
++#include <sqlite3-vcpkg-config.h>
+ #define SQLITE_CORE 1
+ #define SQLITE_AMALGAMATION 1
+ #ifndef SQLITE_PRIVATE
+diff --git a/sqlite3.h b/sqlite3.h
+index 24b9167..9fd81b9 100644
+--- a/sqlite3.h
++++ b/sqlite3.h
+@@ -32,6 +32,7 @@
+ */
+ #ifndef SQLITE3_H
+ #define SQLITE3_H
++#include "./sqlite3-vcpkg-config.h"
+ #include <stdarg.h>     /* Needed for the definition of va_list */
+ 
+ /*

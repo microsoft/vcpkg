@@ -1,15 +1,20 @@
 {
   "name": "ideviceinstaller",
   "version": "1.1.2.23",
-  "port-version": 4,
+  "port-version": 7,
   "description": "Manage apps of iOS devices",
-  "supports": "!(windows & arm64)",
+  "homepage": "https://libimobiledevice.org/",
+  "license": "LGPL-2.1-only",
+  "supports": "windows & !arm64 & !xbox",
   "dependencies": [
     "libimobiledevice",
     "libzip",
     {
       "name": "vcpkg-msbuild",
       "host": true,
+      "features": [
+        "pkgconf"
+      ],
       "platform": "windows"
     }
   ]

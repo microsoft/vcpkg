@@ -1,12 +1,10 @@
 {
   "name": "vcpkg-msbuild",
-  "version-date": "2022-08-04",
-  "port-version": 1,
+  "version-date": "2023-08-08",
   "documentation": "https://vcpkg.io/en/docs/README.html",
   "license": "MIT",
   "supports": "native & windows",
   "dependencies": [
-    "pkgconf",
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true
@@ -15,5 +13,13 @@
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "pkg-config": {
+      "description": "Enable pkg-config lookup for msbuild",
+      "dependencies": [
+        "pkgconf"
+      ]
+    }
+  }
 }

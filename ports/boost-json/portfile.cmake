@@ -3,12 +3,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.80.0
-    SHA512 cf18af252ef10e07c008cd360df9bd7683758bb53b401f01a37378e4c82d95f743f1a10af0aed9a9f60d3ca64469af4c2fa03ff7ac1b3b693237bc1fefd0aec6
+    REF boost-1.82.0
+    SHA512 cd5e1d262ae598dd5d4c40af804e4815c26b90effa802385f56e44e6f149ffab1869dc01c27a8b245fb3489893e2d1c4ff8f2dca9461ca851f0eb93472b6a9a0
     HEAD_REF master
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" 
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile"
     "import ../../config/checks/config"
     "import ../config/checks/config"
 )

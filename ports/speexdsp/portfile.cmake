@@ -12,10 +12,10 @@ else()
         FILENAME "speexdsp-1.2.1.tar.gz"
         SHA512 41b5f37b48db5cb8c5a0f6437a4a8266d2627a5b7c1088de8549fe0bf0bb3105b7df8024fe207eef194096e0726ea73e2b53e0a4293d8db8e133baa0f8a3bad3
     )
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE "${ARCHIVE}"
-        REF "1.2.1"
+        SOURCE_BASE "1.2.1"
         PATCHES
             jitter_ctl.patch
     )

@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-07-02",
+  "version-date": "2022-11-12",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "license": "MIT",
   "default-features": [
@@ -39,6 +39,11 @@
       "description": "Ports to be tested via find_package($package)",
       "dependencies": [
         {
+          "$package": "Boost",
+          "name":"boost",
+          "platform": "!uwp"
+        },
+        {
           "$package": "BZip2",
           "name": "bzip2"
         },
@@ -58,13 +63,28 @@
           "platform": "!mingw & !uwp"
         },
         {
+          "$comment": "CMake 3.13 for debug postfix support",
+          "$package": "GLUT",
+          "$since": "3.13",
+          "name": "freeglut",
+          "platform": "!uwp & !osx"
+        },
+        {
           "$package": "Freetype",
           "name": "freetype",
           "default-features": false
         },
         {
+          "$comment": "CMake 3.9 for find_dependency forwarding extra arguments",
+          "$package": "GDAL",
+          "$since": "3.9",
+          "name": "gdal",
+          "default-features": false,
+          "platform": "!uwp"
+        },
+        {
           "$package": "Intl",
-          "name": "gettext"
+          "name": "gettext-libintl"
         },
         {
           "$package": "GIF",
@@ -74,6 +94,11 @@
           "$package": "ICU",
           "name": "icu",
           "platform": "!uwp"
+        },
+        {
+          "$package": "LAPACK",
+          "name": "lapack",
+          "platform": "!(uwp & arm)"
         },
         {
           "$package": "Iconv",
@@ -114,9 +139,27 @@
           "platform": "!uwp & !mingw"
         },
         {
+          "$package": "Curses",
+          "name": "ncurses",
+          "platform": "!windows | mingw"
+        },
+        {
+          "$package": "PhysFS",
+          "name": "physfs"
+        },
+        {
+          "$package": "SQLite3",
+          "$since": "3.14",
+          "name": "sqlite3",
+          "default-features": false
+        },
+        {
           "$package": "TIFF",
           "name": "tiff",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "zstd"
+          ]
         },
         {
           "$package": "wxWidgets",

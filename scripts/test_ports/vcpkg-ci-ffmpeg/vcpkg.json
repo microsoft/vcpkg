@@ -81,8 +81,7 @@
       "name": "ffmpeg",
       "default-features": false,
       "features": [
-        "ssh",
-        "x265"
+        "ssh"
       ],
       "platform": "!(uwp | arm)"
     },
@@ -93,6 +92,14 @@
         "x264"
       ],
       "platform": "!(arm & windows)"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "x265"
+      ],
+      "platform": "!uwp & !(arm & windows)"
     },
     {
       "name": "ffmpeg",

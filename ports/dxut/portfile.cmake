@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/DXUT
-    REF oct2022
-    SHA512 3d6a56421b51012a33caf19c8f28319cfccf52d32f264f02ea72ad32ec208eaf94491f768ca2cbb3bee2c187d04559c48c291b04f9a41fb4763f68ac5b21d5f5
+    REF jun2023
+    SHA512 72a322fcf062d0f52d0e854660e48943d0e10e7856019ad5bc0b37bcb2bde909d6fbc315e04e2b90a13a50a05129b8787159791ec525f5003f0c090dce9a7d42
     HEAD_REF main
 )
 
@@ -12,6 +12,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         dxtk DIRECTXTK_INTEGRATION
+        spectre ENABLE_SPECTRE_MITIGATION
 )
 
 vcpkg_cmake_configure(
@@ -24,5 +25,5 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/dxut)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

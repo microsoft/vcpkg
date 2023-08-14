@@ -1,7 +1,7 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 18,
+  "port-version": 20,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
   "homepage": "https://www.openscenegraph.com/",
   "license": null,
@@ -90,7 +90,8 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "freetype"
+            "freetype",
+            "plugins"
           ]
         },
         "sdl2"
@@ -134,7 +135,7 @@
       "description": "Set to ON to generate CPack configuration files and packaging targets"
     },
     "plugins": {
-      "description": "Build most OSG Plugins",
+      "description": "Build most OSG plugins",
       "dependencies": [
         {
           "name": "curl",
@@ -206,7 +207,8 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "freetype"
+            "freetype",
+            "plugins"
           ]
         }
       ]

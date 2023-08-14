@@ -1,0 +1,319 @@
+diff --git a/mk/mklib.mk b/mk/mklib.mk
+index 8f64b14dd..1d73cfdbe 100644
+--- a/mk/mklib.mk
++++ b/mk/mklib.mk
+@@ -16,6 +16,8 @@
+ # are called libfoo.a and libfoo.so.1.3 etc.
+ #
+ 
++ifndef NoReleaseBuild
++
+ all:: mkstatic mkshared
+ 
+ export:: mkstatic mkshared
+@@ -147,9 +149,13 @@ mkshared::
+ 
+ endif
+ 
++endif
++
+ ##############################################################################
+ # Build debug libraries for Win32
+ ##############################################################################
++ifndef NoDebugBuild
++
+ ifdef Win32Platform
+ 
+ ifdef BuildSharedLibrary
+@@ -231,3 +237,4 @@ veryclean::
+ 
+ endif
+ endif
++endif
+\ No newline at end of file
+diff --git a/src/lib/dir.mk b/src/lib/dir.mk
+index 732f8457c..bff3144f8 100644
+--- a/src/lib/dir.mk
++++ b/src/lib/dir.mk
+@@ -17,9 +17,14 @@ ciao::
+ ifndef EmbeddedSystem
+ ifdef Win32Platform
+ ifndef MinGW32Build
++ifndef NoReleaseBuild
+ export::
+ 	(cd $(EXPORT_TREE)/$(BINDIR); editbin /REBASE:BASE=0x68000000,DOWN *_rt.dll; )
++endif
++ifndef NoDebugBuild
++export::
+ 	(cd $(EXPORT_TREE)/$(BINDIR); editbin /REBASE:BASE=0x68000000,DOWN *_rtd.dll; )
+ endif
+ endif
+ endif
++endif
+diff --git a/src/lib/omnithread/dir.mk b/src/lib/omnithread/dir.mk
+index ed2194c98..adb87adba 100644
+--- a/src/lib/omnithread/dir.mk
++++ b/src/lib/omnithread/dir.mk
+@@ -32,14 +32,6 @@ LIB_VERSION  := $(OMNITHREAD_VERSION)
+ LIB_OBJS     := $(CXXSRCS:.cc=.o)
+ LIB_IMPORTS  := $(OMNITHREAD_PLATFORM_LIB)
+ 
+-all:: mkstatic mkshared
+-
+-export:: mkstatic mkshared
+-
+-ifdef INSTALLTARGET
+-install:: mkstatic mkshared
+-endif
+-
+ vers := $(subst ., ,$(LIB_VERSION))
+ ifeq ($(words $(vers)), 2)
+   vers  := _ $(vers)
+@@ -50,6 +42,16 @@ endif
+ 
+ namespec := $(LIB_NAME) $(vers)
+ 
++ifndef NoReleaseBuild
++
++all:: mkstatic mkshared
++
++export:: mkstatic mkshared
++
++ifdef INSTALLTARGET
++install:: mkstatic mkshared
++endif
++
+ ##############################################################################
+ # Build Static library
+ ##############################################################################
+@@ -158,9 +160,12 @@ mkshared::
+ 
+ endif
+ 
++endif
+ ##############################################################################
+ # Build debug libraries for Win32
+ ##############################################################################
++ifndef NoDebugBuild
++
+ ifdef Win32Platform
+ 
+ ifdef BuildSharedLibrary
+@@ -239,4 +244,4 @@ veryclean::
+ 
+ endif
+ endif
+-
++endif
+diff --git a/src/services/mklib/dynstublib/dir.mk b/src/services/mklib/dynstublib/dir.mk
+index 23573345d..e128aa87a 100644
+--- a/src/services/mklib/dynstublib/dir.mk
++++ b/src/services/mklib/dynstublib/dir.mk
+@@ -12,15 +12,18 @@ COS_DYNSK_SRCS = $(COS_INTERFACES:%=%DynSK.cc)
+ 
+ CXXSRCS = $(COS_DYNSK_SRCS)
+ 
+-all:: mkstatic mkshared
+-
+-export:: mkstatic mkshared
+-
+ ifdef Win32Platform
+   MSVC_STATICLIB_CXXNODEBUGFLAGS += -D_WINSTATIC
+   MSVC_STATICLIB_CXXDEBUGFLAGS += -D_WINSTATIC
+ endif
+ 
++ifndef NoReleaseBuild
++all:: mkstatic mkshared
++
++export:: mkstatic mkshared
++
++
++
+ 
+ ##############################################################################
+ # Build Static library
+@@ -108,10 +111,11 @@ else
+ mkshared::
+ 
+ endif
+-
++endif
+ ##############################################################################
+ # Build debug libraries for Win32
+ ##############################################################################
++ifndef NoDebugBuild
+ ifdef Win32Platform
+ 
+ all:: mkstaticdbug mkshareddbug
+@@ -145,6 +149,7 @@ clean::
+ #####################################################
+ #      DLL debug libraries
+ #####################################################
++
+ shareddbugversion = $(OMNIORB_VERSION)
+ 
+ dynsknamespec   = $(subst ., ,$(COS_DYNSKLIB_NAME).$(shareddbugversion))
+@@ -173,3 +178,4 @@ clean::
+ 	@(dir=shareddebug; $(CleanSharedLibrary))
+ 
+ endif
++endif
+\ No newline at end of file
+diff --git a/src/services/mklib/mkBOAlib/dir.mk b/src/services/mklib/mkBOAlib/dir.mk
+index 1869d083d..18cc38764 100644
+--- a/src/services/mklib/mkBOAlib/dir.mk
++++ b/src/services/mklib/mkBOAlib/dir.mk
+@@ -16,6 +16,8 @@ COS_SK_OBJS = $(COS_INTERFACES:%=%SK.o)
+ COS_SK_SRCS = $(COS_INTERFACES:%=%SK.cc)
+ CXXSRCS = $(COS_SK_SRCS) 
+ 
++ifndef NoReleaseBuild
++
+ all:: mkstatic mkshared
+ 
+ export:: mkstatic mkshared
+@@ -124,10 +126,11 @@ else
+ mkshared::
+ 
+ endif
+-
++endif
+ ##############################################################################
+ # Build debug libraries for Win32
+ ##############################################################################
++ifndef NoDebugBuild
+ ifdef Win32Platform
+ 
+ all:: mkstaticdbug mkshareddbug
+@@ -190,4 +193,4 @@ clean::
+ 
+ endif
+ 
+-
++endif
+diff --git a/src/services/mklib/stublib/dir.mk b/src/services/mklib/stublib/dir.mk
+index d58027d84..87f7ec22b 100644
+--- a/src/services/mklib/stublib/dir.mk
++++ b/src/services/mklib/stublib/dir.mk
+@@ -12,15 +12,18 @@ COS_SK_SRCS = $(COS_INTERFACES:%=%SK.cc)
+ 
+ CXXSRCS = $(COS_SK_SRCS)
+ 
+-all:: mkstatic mkshared
+-
+-export:: mkstatic mkshared
+-
+ ifdef Win32Platform
+   MSVC_STATICLIB_CXXNODEBUGFLAGS += -D_WINSTATIC
+   MSVC_STATICLIB_CXXDEBUGFLAGS += -D_WINSTATIC
+ endif
+ 
++ifndef NoReleaseBuild
++
++all:: mkstatic mkshared
++
++export:: mkstatic mkshared
++
++
+ 
+ ##############################################################################
+ # Build Static library
+@@ -108,10 +111,11 @@ else
+ mkshared::
+ 
+ endif
+-
++endif
+ ##############################################################################
+ # Build debug libraries for Win32
+ ##############################################################################
++ifdef NoDebugBuild
+ ifdef Win32Platform
+ 
+ all:: mkstaticdbug mkshareddbug
+@@ -173,3 +177,4 @@ clean::
+ 	@(dir=shareddebug; $(CleanSharedLibrary))
+ 
+ endif
++endif
+diff --git a/src/lib/omniORB/orbcore/dir.mk b/src/lib/omniORB/orbcore/dir.mk
+index 634e6b1e2..4370fed07 100644
+--- a/src/lib/omniORB/orbcore/dir.mk
++++ b/src/lib/omniORB/orbcore/dir.mk
+@@ -220,6 +220,7 @@ include $(BASE_OMNI_TREE)/mk/mklib.mk
+ 
+ #########################################################################
+ ifdef Win32Platform
++ifndef NoReleaseBuild
+ 
+ stublib = static/$(patsubst %,$(LibNoDebugPattern),msvcstub)
+ 
+@@ -236,6 +237,8 @@ clean::
+ 
+ veryclean::
+ 	$(RM) $(stublib)
++endif
++ifndef NoDebugBuild
+ 
+ stubdblib = debug/$(patsubst %,$(LibDebugPattern),msvcstub)
+ 
+@@ -254,6 +257,7 @@ veryclean::
+ 	$(RM) $(stubdblib)
+ 
+ endif
++endif
+ 
+ #########################################################################
+ ifdef OPEN_SSL_ROOT
+diff --git a/src/services/mklib/stublib/dir.mk b/src/services/mklib/stublib/dir.mk
+index 87f7ec22b..ce46f6c5f 100644
+--- a/src/services/mklib/stublib/dir.mk
++++ b/src/services/mklib/stublib/dir.mk
+@@ -115,7 +115,7 @@ endif
+ ##############################################################################
+ # Build debug libraries for Win32
+ ##############################################################################
+-ifdef NoDebugBuild
++ifndef NoDebugBuild
+ ifdef Win32Platform
+ 
+ all:: mkstaticdbug mkshareddbug
+diff --git a/mk/mklib.mk b/mk/mklib.mk
+index 1d73cfdbe..e6e8d65fe 100644
+--- a/mk/mklib.mk
++++ b/mk/mklib.mk
+@@ -16,16 +16,6 @@
+ # are called libfoo.a and libfoo.so.1.3 etc.
+ #
+ 
+-ifndef NoReleaseBuild
+-
+-all:: mkstatic mkshared
+-
+-export:: mkstatic mkshared
+-
+-ifdef INSTALLTARGET
+-install:: mkstatic mkshared
+-endif
+-
+ vers := $(subst ., ,$(LIB_VERSION))
+ ifeq ($(words $(vers)), 2)
+   vers  := _ $(vers)
+@@ -36,6 +26,16 @@ endif
+ 
+ namespec := $(LIB_NAME) $(vers)
+ 
++ifndef NoReleaseBuild
++
++all:: mkstatic mkshared
++
++export:: mkstatic mkshared
++
++ifdef INSTALLTARGET
++install:: mkstatic mkshared
++endif
++
+ ##############################################################################
+ # Build Static library
+ ##############################################################################
+

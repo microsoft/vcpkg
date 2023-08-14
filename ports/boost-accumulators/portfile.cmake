@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/accumulators
-    REF boost-1.80.0
-    SHA512 e3d129cf6f922f0d31e0c94f72d277758985eff9338bbc19470ea28d8f8d41202bea0f0e653acf449001da9db13bed576ff99beebda1d87ab92de7cf0ec68208
+    REF boost-1.82.0
+    SHA512 8ad900f0f421af1302682a397d1bffb2aee4c5ab4b2103f3afe427905c7fa86cbabaaaffc6fbcef0f3ddb60f865756aafd1e7b5baa42176ed3ed2d2d8388b264
     HEAD_REF master
 )
 

@@ -1,20 +1,19 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BLAKE3-team/BLAKE3
-    REF 1.3.1
-    SHA512 9906673a9eca100a6ad8c369f4c380ac66b59ed055cb8358fe99bb67ebbcc98e24da5860b257136a1f9cc8ece5733b2ac68c55b9be65ae6f2904ffd92ef34ce6
+    REF "${VERSION}"
+    SHA512 e2a3a4811a0a8c88492efb74123dcbe26176fd307e1ba527b67001ae076970a36fd26282d4cd728c875ab228827962564a00ff0c3a8d99e2f12a29bbf431c547
     HEAD_REF main
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH "${SOURCE_PATH}/c"
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

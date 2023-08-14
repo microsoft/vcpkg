@@ -18,9 +18,9 @@ index f9daeac..48eea0e 100644
  
 +# An option to disable the executable target list_cpu_features.
 +option(BUILD_EXECUTABLE "Build list_cpu_features executable." ON)
- # BUILD_TESTING is a standard CMake variable, but we declare it here to make it
- # prominent in the GUI.
- option(BUILD_TESTING "Enable test (depends on googletest)." OFF)
+ # BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to make
+ # it prominent in the GUI.
+ # cpu_features uses bit-fields which are - to some extends - implementation-defined (see https://en.cppreference.com/w/c/language/bit_field).
 @@ -157,9 +159,11 @@ add_library(CpuFeature::cpu_features ALIAS cpu_features)
  # program : list_cpu_features
  #
@@ -36,7 +36,7 @@ index f9daeac..48eea0e 100644
  
  #
  # ndk_compat
-@@ -223,17 +227,26 @@ if(BUILD_TESTING)
+@@ -223,18 +227,28 @@ if(BUILD_TESTING)
  endif()
  
  #
@@ -52,6 +52,7 @@ index f9daeac..48eea0e 100644
    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+   BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR}
  )
 +if(BUILD_EXECUTABLE)
 +  install(TARGETS list_cpu_features
@@ -60,6 +61,7 @@ index f9daeac..48eea0e 100644
 +    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR}
 +  )
 +endif()
  install(EXPORT CpuFeaturesTargets

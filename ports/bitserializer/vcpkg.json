@@ -1,8 +1,7 @@
 {
   "name": "bitserializer",
-  "version": "0.44",
-  "port-version": 2,
-  "description": "C++ 17 library for serialization to JSON, XML, YAML",
+  "version": "0.50",
+  "description": "C++ 17 library for serialization to JSON, XML, YAML, CSV",
   "homepage": "https://bitbucket.org/Pavel_Kisliak/bitserializer",
   "license": "MIT",
   "dependencies": [
@@ -21,6 +20,9 @@
       "dependencies": [
         "cpprestsdk"
       ]
+    },
+    "csv-archive": {
+      "description": "Module for support CSV"
     },
     "pugixml-archive": {
       "description": "Module for support XML (implementation based on the PugiXml library)",

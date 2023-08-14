@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/cppzmq
-    REF v4.8.1
-    SHA512 02F9B77F67DD46557705511195EB3F4F4E52381256BC9687F36D3E69DB6A628C19CFFF02209B6E6B53822A60781AB0850EB064D8F020E059FC1ACA4D191B66DB
+    REF v4.9.0
+    SHA512 a9d1c25084b5b84dfa20a005299213c3bb610e46ac7433236fd8d3c60c7e71153c738da4645343080c0d1cad9008aca1a3091d4247c7a2f08c506ed3054d55a7
     HEAD_REF master
 )
 
@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/cppzmq)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/share/${PORT}/libzmq-pkg-config")
 

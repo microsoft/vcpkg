@@ -11,10 +11,10 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME ${UNRAR_FILENAME}
     SHA512 ${UNRAR_SHA512}
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF ${UNRAR_VERSION}
+    SOURCE_BASE ${UNRAR_VERSION}
     PATCHES msbuild-use-default-sma.patch
 )
 

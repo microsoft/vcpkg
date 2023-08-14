@@ -1,0 +1,125 @@
+diff --git a/src/openslide-decode-tifflike.c b/src/openslide-decode-tifflike.c
+index 63e0ad5f2..8de1abb38 100644
+--- a/src/openslide-decode-tifflike.c
++++ b/src/openslide-decode-tifflike.c
+@@ -348,7 +348,7 @@ static bool populate_item(struct _openslide_tifflike *tl,
+   uint64_t count = item->count;
+   int32_t value_size = get_value_size(item->type, &count);
+   g_assert(value_size);
+-  ssize_t len = value_size * count;
++  size_t len = value_size * count;
+ 
+   buf = g_try_malloc(len);
+   if (buf == NULL) {
+@@ -485,7 +485,7 @@ static struct tiff_directory *read_directory(FILE *f, int64_t *diroff,
+     }
+ 
+     // check for overflow
+-    if (count > SSIZE_MAX / value_size) {
++    if (count > PTRDIFF_MAX / value_size) {
+       g_set_error(err, OPENSLIDE_ERROR, OPENSLIDE_ERROR_FAILED,
+                   "Value count too large");
+       goto FAIL;
+diff --git a/src/openslide-features.h b/src/openslide-features.h
+index a5328fbf4..db7593d6f 100644
+--- a/src/openslide-features.h
++++ b/src/openslide-features.h
+@@ -22,26 +22,7 @@
+ #ifndef OPENSLIDE_OPENSLIDE_FEATURES_H_
+ #define OPENSLIDE_OPENSLIDE_FEATURES_H_
+ 
+-
+-#ifndef __cplusplus
+-#  ifdef _MSC_VER
+-#    ifndef bool
+-#      define bool unsigned char
+-#    endif
+-#    ifndef true
+-#      define true 1
+-#    endif
+-#    ifndef false
+-#      define false 0
+-#    endif
+-#    ifndef __bool_true_false_are_defined
+-#      define __bool_true_false_are_defined 1
+-#    endif
+-#  else
+-#    include <stdbool.h>
+-#  endif
+-#endif
+-
++#include <stdbool.h>
+ 
+ // for exporting from shared libraries or DLLs
+ #if defined _WIN32
+diff --git a/src/openslide-private.h b/src/openslide-private.h
+index a70bcba4a..e39f288ed 100644
+--- a/src/openslide-private.h
++++ b/src/openslide-private.h
+@@ -34,6 +34,11 @@
+ 
+ #include <cairo.h>
+ 
++#ifdef _MSC_VER
++#define fseeko fseek
++#define ftello ftell
++#endif
++
+ /* the associated image structure */
+ struct _openslide_associated_image {
+   const struct _openslide_associated_image_ops *ops;
+@@ -357,8 +362,8 @@ void openslide_cancel_prefetch_hint(openslide_t *osr, int prefetch_id);
+    Every @p replacement must be unique to avoid conflicting-type errors. */
+ #define _OPENSLIDE_POISON(replacement) error__use_ ## replacement ## _instead
+ #define fopen _OPENSLIDE_POISON(_openslide_fopen)
+-#define fseek _OPENSLIDE_POISON(fseeko)
+-#define ftell _OPENSLIDE_POISON(ftello)
++//#define fseek _OPENSLIDE_POISON(fseeko)
++//#define ftell _OPENSLIDE_POISON(ftello)
+ #define strtod _OPENSLIDE_POISON(_openslide_parse_double)
+ #define g_ascii_strtod _OPENSLIDE_POISON(_openslide_parse_double_)
+ #define sqlite3_open _OPENSLIDE_POISON(_openslide_sqlite_open)
+diff --git a/test/test-common.c b/test/test-common.c
+index 8003128c9..3f369435b 100644
+--- a/test/test-common.c
++++ b/test/test-common.c
+@@ -22,11 +22,12 @@
+ #ifdef WIN32
+ #define _WIN32_WINNT 0x0600
+ #include <windows.h>
++#else
++#include <unistd.h>
+ #endif
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
+ #include <fcntl.h>
+ #include <glib.h>
+ 
+diff --git a/test/test.c b/test/test.c
+index 50f0651d3..7fb192a57 100644
+--- a/test/test.c
++++ b/test/test.c
+@@ -32,7 +32,7 @@
+ #include <stdlib.h>
+ #include <stdbool.h>
+ #include <inttypes.h>
+-#include <sys/time.h>
++//#include <sys/time.h>
+ 
+ #include <glib.h>
+ #include <cairo.h>
+diff --git a/test/try_open.c b/test/try_open.c
+index dd3a6a2f6..ad9233eb1 100644
+--- a/test/try_open.c
++++ b/test/try_open.c
+@@ -24,7 +24,7 @@
+ #include <stdio.h>
+ #include <stdarg.h>
+ #include <string.h>
+-#include <unistd.h>
++//#include <unistd.h>
+ #include <glib.h>
+ #include "openslide.h"
+ #include "test-common.h"

@@ -11,9 +11,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND PATCHES fix-path-in-project.patch)
 endif()
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES ${PATCHES}
 )
 

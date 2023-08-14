@@ -13,14 +13,14 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -363,16 +363,28 @@
+@@ -401,16 +401,28 @@
      install(
        TARGETS
          Catch2
 -        Catch2WithMain
        EXPORT
          Catch2Targets
-       LIBRARY DESTINATION 
+       LIBRARY DESTINATION
          ${CMAKE_INSTALL_LIBDIR}
        ARCHIVE DESTINATION
          ${CMAKE_INSTALL_LIBDIR}

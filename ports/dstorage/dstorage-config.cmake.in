@@ -13,7 +13,15 @@ if (EXISTS "${_dstorage_root_lib}")
       INTERFACE_INCLUDE_DIRECTORIES        "${_dstorage_root}/include"
       IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
 
-    set(dstorage_FOUND TRUE)
+   add_library(Microsoft::DirectStorageCore SHARED IMPORTED)
+   set_target_properties(Microsoft::DirectStorageCore PROPERTIES
+      IMPORTED_LOCATION                    "${_dstorage_root}/bin/dstoragecore.dll"
+      IMPORTED_IMPLIB                      "${_dstorage_root_lib}"
+      IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
+
+   target_link_libraries(Microsoft::DirectStorage INTERFACE Microsoft::DirectStorageCore)
+
+   set(dstorage_FOUND TRUE)
 
 else()
 

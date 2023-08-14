@@ -1,6 +1,16 @@
 {
   "name": "intel-mkl",
-  "version": "2020.0.0",
+  "version": "2023.0.0",
   "port-version": 2,
-  "description": "Intel® Math Kernel Library (Intel® MKL) accelerates math processing routines, increases application performance, and reduces development time on Intel® processors. Due to the complexity involved, this package doesn't install MKL. It instead verifies that MKL is installed. Please download and install MKL from https://registrationcenter.intel.com/en/products/download/3178/ manually before using it in vcpkg."
+  "description": "Intel® Math Kernel Library (Intel® MKL) accelerates math processing routines, increases application performance, and reduces development time on Intel® processors.",
+  "homepage": "https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html",
+  "license": null,
+  "supports": "(windows | linux | osx) & x64",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-lessmsi",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
 }

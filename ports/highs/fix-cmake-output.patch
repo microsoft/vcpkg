@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6c0642877..30fb625a2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -184,6 +184,7 @@ if(MSVC)
+             unsigned long y;
+             _BitScanReverse(&y, x);
+             _BitScanReverse64(&x, y);
++            __popcnt64(x);
+             return 0;
+         }"
+         HIGHS_HAVE_BITSCAN_REVERSE)
+@@ -548,9 +549,9 @@ if (PYTHON)
+ endif()
+ 
+ # Add tests in examples/tests
+-add_subdirectory(examples)
++#add_subdirectory(examples)
+ 
+-add_subdirectory(app)
++#add_subdirectory(app)
+ 
+ if (EXP)
+     add_executable(doctest)
