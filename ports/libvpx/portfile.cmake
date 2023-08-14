@@ -92,14 +92,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             ${LIBVPX_CRT_LINKAGE}
             ${OPTIONS}
             --as=nasm
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp"
         LOGNAME configure-${TARGET_TRIPLET})
 
     message(STATUS "Generating MSBuild projects")
     vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc -c "make dist"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp"
         LOGNAME generate-${TARGET_TRIPLET})
 
     vcpkg_msbuild_install(
