@@ -3262,7 +3262,7 @@
     },
     "idevicerestore": {
       "baseline": "1.0.12",
-      "port-version": 7
+      "port-version": 8
     },
     "idyntree": {
       "baseline": "9.0.0",
