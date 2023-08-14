@@ -22,10 +22,6 @@
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true
-    },
-    {
-      "name": "vcpkg-get-python-packages",
-      "host": true
     }
   ],
   "default-features": [
@@ -207,7 +203,8 @@
             "mlir"
           ]
         },
-        "pybind11"
+        "pybind11",
+        "python3"
       ]
     },
     "enable-rtti": {
