@@ -1,6 +1,7 @@
 {
   "name": "libosmscout",
-  "version-string": "1.1.1",
+  "version": "1.1.1",
+  "port-version": 4,
   "description": "libosmscout offers applications simple, high-level interfaces for offline location and POI lokup, rendering and routing functionalities based on OpenStreetMap (OSM) data.",
   "homepage": "http://libosmscout.sourceforge.net/",
   "documentation": "http://libosmscout.sourceforge.net/documentation/",
@@ -10,6 +11,14 @@
     "liblzma",
     "libxml2",
     "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
@@ -24,10 +33,19 @@
       ]
     },
     "directx": {
-      "description": "Direct2D backend renderer"
+      "description": "Direct2D backend renderer",
+      "supports": "windows"
     },
     "gdi": {
-      "description": "GDI+ backend renderer"
+      "description": "GDI+ backend renderer",
+      "supports": "windows"
+    },
+    "qt5": {
+      "description": "Enable build of Qt5 map drawing backend",
+      "dependencies": [
+        "qt5-base",
+        "qt5-svg"
+      ]
     },
     "svg": {
       "description": "SVG backend renderer",

@@ -1,6 +1,6 @@
 ignition_modular_library(NAME common
-                         VERSION "3.9.0"
-                         SHA512 1bae86efd7da10ac517d67a75ad1b612ea2046128eb75e0f0a134ffff7cc76431e850a9b46fdb7dc6603e2acb044f4204fdedaf38fc7bff82883db3f36830fb9
+                         VERSION "3.14.1"
+                         SHA512 5f83685b67cb0b8e295136f74a681e2ca5f00a730b0a221f0c00cab5f9049c84692185fb5924ab29cd07cbdf85450e81dfcdc984fc8af4ed4cc549b2fe2f9a6e
                          OPTIONS -DUSE_EXTERNAL_TINYXML2=ON
                          PATCHES fix-dependencies.patch)
 

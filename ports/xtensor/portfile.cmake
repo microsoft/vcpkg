@@ -3,9 +3,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xtensor
-    REF 825c0fd8a465049c06ad89fa3911b342dbffcabf # 0.24.0
-    SHA512 18b030efb88255108f3e2a0f5da9f082c32f2b637cb83fcabd5b579b0cff67b503d378037088c535497da09c00a5430ca87e737235b3b0b449da183925d99e68
+    REF "${VERSION}"
+    SHA512 6284fb5de5d61c87a8599baad86b6c8c95d06d3753698a3a49efe9a87c291965e4a2439c84abf0722ce97ca7e48c5fdb0b64141f1bc8de7a7d06b7de9ec06cb6
     HEAD_REF master
+    PATCHES
+        fix-find-tbb-and-install-destination.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -34,4 +36,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

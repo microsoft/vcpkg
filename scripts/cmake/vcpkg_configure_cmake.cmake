@@ -27,16 +27,22 @@ function(z_vcpkg_get_visual_studio_generator)
     if(DEFINED arg_UNPARSED_ARGUMENTS)
             message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-    if("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v120" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-        set(generator "Visual Studio 12 2013")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v140" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-        set(generator "Visual Studio 14 2015")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v141")
-        set(generator "Visual Studio 15 2017")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v142")
-        set(generator "Visual Studio 16 2019")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v143")
-        set(generator "Visual Studio 17 2022")
+
+    if(DEFINED ENV{VisualStudioVersion})
+        if("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "12.99" AND
+           "$ENV{VisualStudioVersion}" VERSION_GREATER_EQUAL  "12.0" AND
+           NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
+            set(generator "Visual Studio 12 2013")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "14.99" AND
+               NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
+            set(generator "Visual Studio 14 2015")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "15.99")
+            set(generator "Visual Studio 15 2017")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "16.99")
+            set(generator "Visual Studio 16 2019")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "17.99")
+            set(generator "Visual Studio 17 2022")
+        endif()
     endif()
 
     if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
@@ -149,8 +155,12 @@ function(vcpkg_configure_cmake)
         if("${generator}" STREQUAL "" OR "${generator_arch}" STREQUAL "")
             message(FATAL_ERROR
                 "Unable to determine appropriate generator for triplet ${TARGET_TRIPLET}:
+    ENV{VisualStudioVersion} : $ENV{VisualStudioVersion}
     platform toolset: ${VCPKG_PLATFORM_TOOLSET}
     architecture    : ${VCPKG_TARGET_ARCHITECTURE}")
+        endif()
+        if(DEFINED VCPKG_PLATFORM_TOOLSET)
+            vcpkg_list(APPEND arg_OPTIONS "-T${VCPKG_PLATFORM_TOOLSET}")
         endif()
     endif()
 
@@ -173,6 +183,10 @@ function(vcpkg_configure_cmake)
         elseif(VCPKG_TARGET_IS_ANDROID AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             set(VCPKG_CMAKE_SYSTEM_VERSION 21)
         endif()
+    endif()
+
+    if(DEFINED VCPKG_XBOX_CONSOLE_TARGET)
+        vcpkg_list(APPEND arg_OPTIONS "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
     endif()
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
@@ -301,7 +315,9 @@ function(vcpkg_configure_cmake)
             COMMAND "${NINJA}" -v
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGNAME}"
-            SAVE_LOG_FILES ../../${TARGET_TRIPLET}-dbg/CMakeCache.txt ../CMakeCache.txt
+            SAVE_LOG_FILES
+                "../../${TARGET_TRIPLET}-dbg/CMakeCache.txt" ALIAS "dbg-CMakeCache.txt.log"
+                "../CMakeCache.txt" ALIAS "rel-CMakeCache.txt.log"
         )
         
         vcpkg_list(APPEND config_logs

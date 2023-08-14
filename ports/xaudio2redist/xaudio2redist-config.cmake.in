@@ -18,8 +18,8 @@ if (EXISTS "${_xaudio2_root_lib}")
 
    add_library(Microsoft::XApoBase STATIC IMPORTED)
    set_target_properties(Microsoft::XApoBase PROPERTIES
-      IMPORTED_LOCATION_RELEASE            "${_xaudio2_root}/lib/xapobaseredist_md.lib"
-      IMPORTED_LOCATION_DEBUG              "${_xaudio2_root}/debug/lib/xapobaseredist_md.lib"
+      IMPORTED_LOCATION_RELEASE            "${_xaudio2_root}/lib/xapobaseredist@lib_suffix@.lib"
+      IMPORTED_LOCATION_DEBUG              "${_xaudio2_root}/debug/lib/xapobaseredist@lib_suffix@.lib"
       INTERFACE_INCLUDE_DIRECTORIES        "${_xaudio2_root}/include/xaudio2redist"
       IMPORTED_CONFIGURATIONS              "Debug;Release")
 

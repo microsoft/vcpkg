@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO greg7mdp/gtl
-    REF v1.1.2
-    SHA512 f609b965826f738592d85b015c3a5d29830cebc457e21987aaa69ab0fc4336adfd69538d81bd8b46c9467a449d7c25dd92fd3fa0ec86e68e423a4abf2bafa517
+    REF "v${VERSION}"
+    SHA512 c6ab1ae6bfdee7f4fa49ab6ea27138cfe7159b5b0fb918a65f27cc7fff74e632f2567508453d1767bc406ac6286ff3a12edeffd185b5b2acf0ef304d4175b86e
     HEAD_REF main
 )
 

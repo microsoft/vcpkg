@@ -1,0 +1,19 @@
+{
+  "name": "rkcommon",
+  "version": "1.10.0",
+  "description": "This project represents a common set of C++ infrastructure and CMake utilities used by various components of Intel® oneAPI Rendering Toolkit.",
+  "homepage": "https://github.com/ospray/rkcommon/",
+  "license": "Apache-2.0",
+  "supports": "x86 | x64",
+  "dependencies": [
+    "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

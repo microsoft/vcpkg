@@ -2,13 +2,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Headers
-    REF sdk-1.3.216.0
-    SHA512 951715cf62a643bfce6a3854f2206b95dd65e60b27355a2f290e829da0f06e19877e9dfcbf53f455b8a0524fb851a851742f3e16bb29be2f470cd62d3a8fc8f0
+    REF sdk-1.3.231.1
+    SHA512 d2c47127fd81430383e8656917f76933b713ca6cb93b2a9c16c9e0b125e2f62f8c497cab3a4fcc2a711decd911ec5d15f1eb0270add05442aff6672e08c890d7
     HEAD_REF master
 )
 
-# This must be spirv as other spirv packages expect it there.
-file(COPY "${SOURCE_PATH}/include/spirv/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/spirv")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+vcpkg_fixup_pkgconfig()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

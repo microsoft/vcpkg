@@ -1,13 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sewenew/redis-plus-plus
-    REF e29c63db54653a660d7a0f556f670b7a6fce0a78 # 1.3.2
-    SHA512 47b18f41cfaf5e11d6eba1201a3da3a1ed355583cde0772de68e5f0f25953e1467c83249848b25b16c9db9e3f6c5df5e1dd832f4b3dd41289c69111867e48d8c
+    REF "${VERSION}"
+    SHA512 43741da2222a9416cee16f522244ddf243b7a188f08704bb05e66f659213b05189fcef35b7b100b128d301e889765ad3f151889e9b5b9e6510479bec58b04ce0
     HEAD_REF master
     PATCHES
-        fix-ws2-linking-windows.patch
         fix-conversion.patch
         fix-dependency-libuv.patch
+        fix-absolute-path.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "tls"   REDIS_PLUS_PLUS_USE_TLS
 )
 
 if("cxx17" IN_LIST FEATURES)
@@ -18,10 +23,10 @@ endif()
 
 set(EXTRA_OPT "")
 if ("async" IN_LIST FEATURES)
-    list(APPEND EXTRA_OPT -DREDIS_PLUS_PLUS_BUILD_ASYNC="libuv")
+    list(APPEND EXTRA_OPT "-DREDIS_PLUS_PLUS_BUILD_ASYNC=libuv")
 endif()
 if ("async-std" IN_LIST FEATURES)
-    list(APPEND EXTRA_OPT -DREDIS_PLUS_PLUS_ASYNC_FUTURE="std")
+    list(APPEND EXTRA_OPT "-DREDIS_PLUS_PLUS_ASYNC_FUTURE=std")
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" REDIS_PLUS_PLUS_BUILD_STATIC)
@@ -29,8 +34,9 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" REDIS_PLUS_PLUS_BUILD_
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DREDIS_PLUS_PLUS_USE_TLS=OFF
+        ${FEATURE_OPTIONS}
         -DREDIS_PLUS_PLUS_BUILD_STATIC=${REDIS_PLUS_PLUS_BUILD_STATIC}
         -DREDIS_PLUS_PLUS_BUILD_SHARED=${REDIS_PLUS_PLUS_BUILD_SHARED}
         -DREDIS_PLUS_PLUS_BUILD_TEST=OFF
@@ -42,10 +48,19 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
+vcpkg_cmake_config_fixup(PACKAGE_NAME redis++ CONFIG_PATH share/cmake/redis++)
+
+if("async" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/redis++/redis++-config.cmake"
+"include(CMakeFindDependencyMacro)"
+[[include(CMakeFindDependencyMacro)
+find_dependency(libuv CONFIG)]])
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright )
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_fixup_pkgconfig()

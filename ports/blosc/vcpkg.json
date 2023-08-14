@@ -1,12 +1,20 @@
 {
   "name": "blosc",
-  "version-string": "1.18.1",
-  "port-version": 4,
+  "version": "1.21.3",
   "description": "A blocking, shuffling and loss-less compression library that can be faster than `memcpy()`",
   "homepage": "https://github.com/Blosc/c-blosc",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "lz4",
     "snappy",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib",
     "zstd"
   ]

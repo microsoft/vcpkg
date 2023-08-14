@@ -1,9 +1,10 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 15,
+  "port-version": 20,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
-  "homepage": "https://github.com/openscenegraph/OpenSceneGraph",
+  "homepage": "https://www.openscenegraph.com/",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     {
@@ -13,6 +14,7 @@
     "opengl-registry",
     {
       "name": "openimageio",
+      "default-features": false,
       "platform": "osx"
     },
     {
@@ -88,7 +90,8 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "freetype"
+            "freetype",
+            "plugins"
           ]
         },
         "sdl2"
@@ -125,7 +128,6 @@
     "openexr": {
       "description": "Build the exr plugin",
       "dependencies": [
-        "ilmbase",
         "openexr"
       ]
     },
@@ -133,10 +135,16 @@
       "description": "Set to ON to generate CPack configuration files and packaging targets"
     },
     "plugins": {
-      "description": "Build most OSG Plugins",
+      "description": "Build most OSG plugins",
       "dependencies": [
-        "curl",
-        "gdal",
+        {
+          "name": "curl",
+          "default-features": false
+        },
+        {
+          "name": "gdal",
+          "default-features": false
+        },
         {
           "name": "giflib",
           "platform": "windows"
@@ -156,7 +164,10 @@
           "name": "libxml2",
           "platform": "windows"
         },
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "rest-http-device": {
@@ -182,7 +193,10 @@
     "tools": {
       "description": "Enable to build OSG Applications (e.g. osgviewer)",
       "dependencies": [
-        "curl",
+        {
+          "name": "curl",
+          "default-features": false
+        },
         {
           "name": "libiconv",
           "platform": "windows"
@@ -193,7 +207,8 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "freetype"
+            "freetype",
+            "plugins"
           ]
         }
       ]

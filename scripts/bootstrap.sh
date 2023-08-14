@@ -95,7 +95,9 @@ ARCH="$(uname -m)"
 
 if [ -e /etc/alpine-release ]; then
     vcpkgUseSystem="ON"
-    vcpkgUseMuslC="ON"
+    if [ "$ARCH" = "x86_64" ]; then
+        vcpkgUseMuslC="ON"
+    fi
 fi
 
 if [ "$UNAME" = "OpenBSD" ]; then
@@ -116,36 +118,6 @@ if [ "$vcpkgUseSystem" = "ON" ]; then
     vcpkgCheckRepoTool gcc
 fi
 
-# Determine what we are going to do to bootstrap:
-# MacOS -> Download vcpkg-macos
-# Linux
-#   useMuslC -> download vcpkg-muslc
-#   amd64 -> download vcpkg-glibc
-# Otherwise
-#   Download and build from source
-
-# Choose the vcpkg binary to download
-vcpkgDownloadTool="ON"
-vcpkgToolReleaseTag="2022-08-24"
-if [ "$UNAME" = "Darwin" ]; then
-    echo "Downloading vcpkg-macos..."
-    vcpkgToolReleaseSha="5a5c7af982612d19a5bacf220a356e84a6be2058835e749279c0ac438ee22f23ca3b2e268d390f1b854a56d979b571a62b9cf812ff7087949205efa2988cc29e"
-    vcpkgToolName="vcpkg-macos"
-elif [ "$vcpkgUseMuslC" = "ON" ]; then
-    echo "Downloading vcpkg-muslc..."
-    vcpkgToolReleaseSha="337ddbb19d8c94c67c7bb3a6b30c11e7cf585e95d2d09ea2b99d4fda8228e0ef2badc0559d2357da8931eb34c68ec807c959f8bbf9cd282b3d6167a8eb536dff"
-    vcpkgToolName="vcpkg-muslc"
-elif [ "$ARCH" = "x86_64" ]; then
-    echo "Downloading vcpkg-glibc..."
-    vcpkgToolReleaseSha="6fc396b53bbe2aeecbd8f4e8a01b5d0fc1304eaa68d5552570de7c2f2176e44e6d5c5ca0ccfe76b50e6d954686c7ec0fc4bf679fd91143bf11952c470be4fde4"
-    vcpkgToolName="vcpkg-glibc"
-else
-    echo "Unable to determine a binary release of vcpkg; attempting to build from source."
-    vcpkgDownloadTool="OFF"
-    vcpkgToolReleaseSha="a1f934ead84bf5a0526aee05dfb34153313432d078ecfcf122cdd4b68fc06ccc3fe9935d5c94deb696c5678ed173c0b0e7f172b4a896144390171412bb45774d"
-fi
-
-# Do the download or build.
 vcpkgCheckEqualFileHash()
 {
     url=$1; filePath=$2; expectedHash=$3
@@ -191,8 +163,39 @@ vcpkgExtractTar()
     mv "$toPath.partial" "$toPath"
 }
 
+# Determine what we are going to do to bootstrap:
+# MacOS -> Download vcpkg-macos
+# Linux
+#   useMuslC -> download vcpkg-muslc
+#   amd64 -> download vcpkg-glibc
+# Otherwise
+#   Download and build from source
+
+# Read the vcpkg-tool config file to determine what release to download
+. "$vcpkgRootDir/scripts/vcpkg-tool-metadata.txt"
+
+vcpkgDownloadTool="ON"
+if [ "$UNAME" = "Darwin" ]; then
+    echo "Downloading vcpkg-macos..."
+    vcpkgToolReleaseSha=$VCPKG_MACOS_SHA
+    vcpkgToolName="vcpkg-macos"
+elif [ "$vcpkgUseMuslC" = "ON" ]; then
+    echo "Downloading vcpkg-muslc..."
+    vcpkgToolReleaseSha=$VCPKG_MUSLC_SHA
+    vcpkgToolName="vcpkg-muslc"
+elif [ "$ARCH" = "x86_64" ]; then
+    echo "Downloading vcpkg-glibc..."
+    vcpkgToolReleaseSha=$VCPKG_GLIBC_SHA
+    vcpkgToolName="vcpkg-glibc"
+else
+    echo "Unable to determine a binary release of vcpkg; attempting to build from source."
+    vcpkgDownloadTool="OFF"
+    vcpkgToolReleaseSha=$VCPKG_TOOL_SOURCE_SHA
+fi
+
+# Do the download or build.
 if [ "$vcpkgDownloadTool" = "ON" ]; then
-    vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$vcpkgToolReleaseTag/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
+    vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
 else
     if [ "x$CXX" = "x" ]; then
         if which g++-12 >/dev/null 2>&1; then
@@ -215,13 +218,13 @@ else
         # If we can't find g++, allow CMake to do the look-up
     fi
 
-    vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
+    vcpkgToolReleaseTarball="$VCPKG_TOOL_RELEASE_TAG.tar.gz"
     vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
     baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
     buildDir="$baseBuildDir/build"
     tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
     srcBaseDir="$baseBuildDir/src"
-    srcDir="$srcBaseDir/vcpkg-tool-$vcpkgToolReleaseTag"
+    srcDir="$srcBaseDir/vcpkg-tool-$VCPKG_TOOL_RELEASE_TAG"
 
     if [ -e "$tarballPath" ]; then
         vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
@@ -246,6 +249,8 @@ else
     rm -rf "$vcpkgRootDir/vcpkg"
     cp "$buildDir/vcpkg" "$vcpkgRootDir/"
 fi
+
+"$vcpkgRootDir/vcpkg" version
 
 # Apply the disable-metrics marker file.
 if [ "$vcpkgDisableMetrics" = "ON" ]; then

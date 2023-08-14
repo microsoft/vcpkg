@@ -1,4 +1,4 @@
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" 
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile"
     "import ../../config/checks/config"
     "import ../config/checks/config"
 )

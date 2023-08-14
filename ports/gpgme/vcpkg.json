@@ -1,10 +1,10 @@
 {
   "name": "gpgme",
-  "version-string": "1.14.0",
-  "port-version": 2,
+  "version": "1.18.0",
   "description": "A library designed to make access to GnuPG easier for applications",
   "homepage": "https://gnupg.org/software/gpgme/index.html",
-  "supports": "!windows",
+  "license": null,
+  "supports": "!windows | mingw",
   "dependencies": [
     "libassuan",
     "libgpg-error",

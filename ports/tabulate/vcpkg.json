@@ -1,7 +1,17 @@
 {
   "name": "tabulate",
-  "version-string": "2019-01-06",
-  "port-version": 1,
+  "version": "1.5",
   "description": "Table maker for modern C++",
-  "homepage": "https://github.com/p-ranav/tabulate"
+  "homepage": "https://github.com/p-ranav/tabulate",
+  "license": "MIT AND BSL-1.0 AND BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

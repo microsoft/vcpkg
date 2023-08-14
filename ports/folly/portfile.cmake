@@ -8,22 +8,30 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF 46c03de426e26f4c5a92df37ab233c586fbe369a #v2022.08.15.00
-    SHA512 6798878d6892ed79d954fb5754ee102ea04868bce4be9be5dc7c6d6c7ddcbc5573719fe09470d89c385d9e487a75d1a9abc70c29c67698b957fc68b97a8bea32
+    REF "v${VERSION}"
+    SHA512 6e9433c65d91ff1af51b74e7153ce3d116484d6eb9cbe72747bad902bcb237fccffc35897c63ee3612fa633164b62884a94f511b7039112e2725851ad2719776
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
         disable-non-underscore-posix-names.patch
         boost-1.70.patch
         fix-windows-minmax.patch
+        fix-deps.patch
+        openssl.patch # from https://github.com/facebook/folly/pull/2016
 )
 
-file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/FindLZ4.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/FindSnappy.cmake"
-    DESTINATION "${SOURCE_PATH}/CMake/"
-)
-file(REMOVE "${SOURCE_PATH}/CMake/FindGFlags.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindZstd.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindSnappy.cmake")
+file(REMOVE "${SOURCE_PATH}/CMake/FindLZ4.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindDoubleConversion.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
+file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
     set(MSVC_USE_STATIC_RUNTIME ON)
@@ -31,25 +39,21 @@ else()
     set(MSVC_USE_STATIC_RUNTIME OFF)
 endif()
 
-set(FEATURE_OPTIONS)
-
-macro(feature FEATURENAME PACKAGENAME)
-    if("${FEATURENAME}" IN_LIST FEATURES)
-        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=OFF)
-    else()
-        list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${PACKAGENAME}=ON)
-    endif()
-endmacro()
-
-feature(zlib ZLIB)
-feature(bzip2 BZip2)
-feature(lzma LibLZMA)
-feature(lz4 LZ4)
-feature(zstd Zstd)
-feature(snappy Snappy)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "zlib"       CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
+        "liburing"   WITH_liburing
+    INVERTED_FEATURES
+        "bzip2"      CMAKE_DISABLE_FIND_PACKAGE_BZip2
+        "lzma"       CMAKE_DISABLE_FIND_PACKAGE_LibLZMA
+        "lz4"        CMAKE_DISABLE_FIND_PACKAGE_LZ4
+        "zstd"       CMAKE_DISABLE_FIND_PACKAGE_Zstd
+        "snappy"     CMAKE_DISABLE_FIND_PACKAGE_Snappy
+        "libsodium"  CMAKE_DISABLE_FIND_PACKAGE_unofficial-sodium
+)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
         -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
@@ -58,6 +62,9 @@ vcpkg_cmake_configure(
         -DLIBAIO_FOUND=OFF
         -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        LIBAIO_FOUND
+        MSVC_USE_STATIC_RUNTIME
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -77,18 +84,10 @@ STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CON
 STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/debug/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
 string(REPLACE "-vc140-mt.lib" "-vc140-mt\$<\$<CONFIG:DEBUG>:-gd>.lib" _contents "${_contents}")
 FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
-FILE(READ "${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake" _contents)
-FILE(WRITE "${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake"
-"include(CMakeFindDependencyMacro)
-find_dependency(Threads)
-find_dependency(glog CONFIG)
-find_dependency(gflags CONFIG REQUIRED)
-find_dependency(ZLIB)
-${_contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_fixup_pkgconfig()

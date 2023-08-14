@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e13414978..77ecf3e9e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -303,6 +303,10 @@ if (USE_BOOST)
+         list (APPEND OPENTURNS_PRIVATE_LIBRARIES ${MPC_LIBRARIES})
+       endif ()
+     endif ()
++    if((USE_MPC OR USE_MPFR) AND NOT BUILD_SHARED_LIBS)
++        find_library(GMP_LIBRARY NAMES gmp)
++        list (APPEND OPENTURNS_PRIVATE_LIBRARIES ${GMP_LIBRARY})
++    endif()
+     list (APPEND OPENTURNS_PRIVATE_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
+   endif ()
+ endif ()

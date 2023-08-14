@@ -22,6 +22,8 @@ vcpkg_configure_make(
 vcpkg_install_make()
 
 if(VCPKG_TARGET_IS_WINDOWS)
+    file(COPY "${SOURCE_PATH}/include/msvc_compat/strings.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/jemalloc/msvc_compat")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jemalloc/jemalloc.h" "<strings.h>" "\"msvc_compat/strings.h\"")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/jemalloc.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")

@@ -42,27 +42,33 @@ elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch")
     list(APPEND B2_OPTIONS architecture=loongarch)
 elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips64")
     list(APPEND B2_OPTIONS architecture=mips64)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "riscv")
+    list(APPEND B2_OPTIONS architecture=riscv)
 elseif("arm64" IN_LIST VCPKG_TARGET_ARCHITECTURE AND "x86_64" IN_LIST VCPKG_TARGET_ARCHITECTURE)
     list(APPEND B2_OPTIONS architecture=arm+x86)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+    # do nothing
 else()
     list(APPEND B2_OPTIONS architecture=x86)
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND WIN32)
-    list(APPEND B2_OPTIONS "asmflags=/safeseh")
-endif()
-
 if(VCPKG_DETECTED_MSVC)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        list(APPEND B2_OPTIONS "asmflags=/safeseh")
+    endif()
+
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         set(USER_CONFIG_TOOLSET clang-win)
     else()
         set(USER_CONFIG_TOOLSET msvc)
+        if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
+        else()
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
+        endif()
     endif()
-    if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
-    else()
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
-    endif()
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+    set(USER_CONFIG_TOOLSET emscripten)
 elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(USER_CONFIG_TOOLSET clang)
 else()
@@ -79,6 +85,8 @@ elseif(APPLE)
     endif()
 elseif(ANDROID)
     list(APPEND B2_OPTIONS target-os=android)
+elseif(VCPKG_DETECTED_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    list(APPEND B2_OPTIONS target-os=freebsd)
 else()
     list(APPEND B2_OPTIONS target-os=linux)
 endif()
@@ -136,7 +144,7 @@ if(CFLAGS MATCHES "-Zi" OR CXXFLAGS MATCHES "-Zi")
         )
 endif()
 
-if(USER_CONFIG_TOOLSET STREQUAL "msvc")
+if(USER_CONFIG_TOOLSET MATCHES "^(msvc|clang-win)$")
     file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <setup>\"${NOTHING_BAT}\"\n"
@@ -163,7 +171,7 @@ if(NOT LDFLAGS STREQUAL "")
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS "    <linkflags>\"${LDFLAGS}\"\n")
 endif()
 
-if(WIN32 AND NOT USER_CONFIG_TOOLSET STREQUAL "msvc")
+if(WIN32 AND NOT USER_CONFIG_TOOLSET MATCHES "^(msvc|clang-win)$")
     # MINGW here causes b2 to not run cygpath
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <flavor>mingw\n"
@@ -186,11 +194,6 @@ if(NOT WIN32)
     list(APPEND B2_OPTIONS "--layout=system")
 endif()
 
-include(ProcessorCount)
-ProcessorCount(NUMBER_OF_PROCESSORS)
-if(NOT NUMBER_OF_PROCESSORS)
-    set(NUMBER_OF_PROCESSORS 1)
-endif()
 
 # Handle ICU
 if(WIN32)
@@ -272,7 +275,7 @@ add_custom_target(boost ALL
         --with-system
         --with-thread
         --with-chrono
-        -j${NUMBER_OF_PROCESSORS}
+        -j ${VCPKG_CONCURRENCY}
         -sBOOST_ROOT=${BOOST_BUILD_PATH}
         -sBOOST_BUILD_PATH=${BOOST_BUILD_PATH}
         --debug-configuration
@@ -288,10 +291,10 @@ add_custom_target(boost ALL
         threading=multi
 
         stage
-    WORKING_DIRECTORY ${SOURCE_PATH}/build
+    WORKING_DIRECTORY "${SOURCE_PATH}/build"
 )
 
-set(SUBDIR ${CMAKE_CURRENT_BINARY_DIR}/stage/lib)
+set(SUBDIR "${CMAKE_CURRENT_BINARY_DIR}/stage/lib")
 install(
     CODE "
 file(GLOB LIBS \"${SUBDIR}/*.so.*\" \"${SUBDIR}/*.so\" \"${SUBDIR}/*.a\" \"${SUBDIR}/*.dylib\" \"${SUBDIR}/*.dylib.*\" \"${SUBDIR}/*.lib\")

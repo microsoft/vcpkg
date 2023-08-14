@@ -4,13 +4,13 @@
 #  - The release tarball contains pre-generated parser sources, which eliminates the dependency on bison/flex.
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/igraph/igraph/releases/download/0.9.9/igraph-0.9.9.tar.gz"
-    FILENAME "igraph-0.9.9.tar.gz"
-    SHA512 bbfe8b76e7806ba4c70cbf0dc5ce6724f1805383c1fb6ac05c5cd1bfc829682ff2184e4f836886a562851d1af1384fd7cccb5027c4aa0deadd0e35d50aabb451
+    URLS "https://github.com/igraph/igraph/releases/download/0.10.6/igraph-0.10.6.tar.gz"
+    FILENAME "igraph-0.10.6.tar.gz"
+    SHA512 e01d8bf2335b95a94a0abf095d2f43bc4397f028406389c4a0bddc038b117d7c5b6f02032d77c11c44ae51dbae10b92c677555d879dec6f028a5d8cb97c37029
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
       "glpk-uwp.patch" # patch GLPK for UWP compatibility
@@ -40,7 +40,6 @@ vcpkg_cmake_configure(
         -DIGRAPH_ENABLE_LTO=AUTO
         # ARPACK not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_ARPACK=ON
-        -DIGRAPH_USE_INTERNAL_CXSPARSE=OFF
         # GLPK is not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_GLPK=ON
         # Currently, external GMP provides no performance or functionality benefits.
@@ -51,6 +50,7 @@ vcpkg_cmake_configure(
         -DIGRAPH_USE_INTERNAL_BLAS=OFF
         -DIGRAPH_USE_INTERNAL_LAPACK=OFF
         -DF2C_EXTERNAL_ARITH_HEADER=${ARITH_H}
+        -DIGRAPH_WARNINGS_AS_ERRORS=OFF
         ${FEATURE_OPTIONS}
 )
 

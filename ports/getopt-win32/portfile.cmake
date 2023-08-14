@@ -11,13 +11,24 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 
-file(COPY "${SOURCE_PATH}/getopt.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
+file(COPY "${SOURCE_PATH}/getopt.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/getopt.h"
-        "	#define __GETOPT_H_" "	#define __GETOPT_H_\n	#define STATIC_GETOPT"
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/getopt.h"
+        "	#define __GETOPT_H_"
+        "	#define __GETOPT_H_\n	#define STATIC_GETOPT"
     )
 endif()
 
+vcpkg_cmake_config_fixup(
+    CONFIG_PATH  "share/unofficial-getopt-win32"
+    PACKAGE_NAME "unofficial-getopt-win32"
+)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
-set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS "enabled")

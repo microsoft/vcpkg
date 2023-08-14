@@ -2,9 +2,8 @@ diff --git a/cmake/ConfigureChecks.cmake b/cmake/ConfigureChecks.cmake
 index 7bc789f0e..ec476d9ed 100644
 --- a/cmake/ConfigureChecks.cmake	
 +++ b/cmake/ConfigureChecks.cmake
-@@ -44,6 +44,7 @@ check_include_file(sys/inotify.h DBUS_BUS_ENABLE_INOTIFY)
+@@ -44,5 +44,6 @@ check_include_file(sys/inotify.h DBUS_BUS_ENABLE_INOTIFY)
  
- check_symbol_exists(backtrace    "execinfo.h"       HAVE_BACKTRACE)          #  dbus-sysdeps.c, dbus-sysdeps-win.c
  check_symbol_exists(getgrouplist "grp.h"            HAVE_GETGROUPLIST)       #  dbus-sysdeps.c
 +check_symbol_exists(getpeereid   "sys/types.h;unistd.h" HAVE_GETPEEREID)     #  dbus-sysdeps.c,
  check_symbol_exists(getpeerucred "ucred.h"          HAVE_GETPEERUCRED)       #  dbus-sysdeps.c, dbus-sysdeps-win.c

@@ -1,8 +1,9 @@
 {
   "name": "fast-float",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "Fast and exact implementation of the C++ from_chars functions for float and double types: 4x faster than strtod",
   "homepage": "https://github.com/fastfloat/fast_float",
+  "license": "Apache-2.0 OR MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

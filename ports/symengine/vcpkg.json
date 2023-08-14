@@ -1,6 +1,6 @@
 {
   "name": "symengine",
-  "version": "0.9.0",
+  "version": "0.10.1",
   "description": "SymEngine is a fast symbolic manipulation library",
   "homepage": "https://github.com/symengine/symengine",
   "license": "BSD-3-Clause",
@@ -43,6 +43,15 @@
       "dependencies": [
         "flint",
         "gmp"
+      ]
+    },
+    "llvm": {
+      "description": "Build with LLVM",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false
+        }
       ]
     },
     "mpfr": {

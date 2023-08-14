@@ -1,7 +1,7 @@
 {
   "name": "readline",
-  "version-string": "0",
-  "port-version": 3,
+  "version": "0",
+  "port-version": 4,
   "description": "GNU readline and history libraries",
   "supports": "!uwp",
   "dependencies": [

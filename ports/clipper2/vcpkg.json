@@ -1,0 +1,13 @@
+{
+  "name": "clipper2",
+  "version": "1.2.2",
+  "description": "Polygon Clipping and Offsetting",
+  "homepage": "http://www.angusj.com/clipper2",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "cocoyaxi",
-  "version-semver": "2.0.3",
-  "port-version": 3,
+  "version": "3.0.0",
+  "port-version": 1,
   "description": "A go-style coroutine library in C++11 and more",
   "homepage": "https://github.com/idealvin/cocoyaxi",
   "license": "MIT",
@@ -9,6 +9,10 @@
   "dependencies": [
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],

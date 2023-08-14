@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rioki/glow
-    REF v0.2.0
-    SHA512 ff81b56ce8bbceb5119c5cf48764cc1978bb0d3c4cddccc85ef0d3f7c85188c1dab53e083e09509d6ca96e4ac30ba277fc6915ba9ae388422c35cc8cd08c3978
+    REF v0.2.1
+    SHA512 410d0bcc98f9587321dceab498ed84fe2cffbf1f38ba59592d5f7eded9eea67c17e40415966d14f548b7e91f23e17fc0162c216c34b905c641647f90274af5b1
 )
 
 vcpkg_cmake_configure(

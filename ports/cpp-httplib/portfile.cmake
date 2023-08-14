@@ -1,13 +1,23 @@
-# Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yhirose/cpp-httplib
-    REF 9452c0a4b69c5e4e31169ed32e961d330695122c   #v0.10.7
-    SHA512 23c4ca159ed4ddf29c3911436436502df76420d8bc8b202f290627de96ee6a741b74409a90f943f3fbbb59af1975bd8c36a94bd4c5eff3981f4514feb326e110
+    REF "v${VERSION}"
+    SHA512 5181f185bc0bb37429847e2656534ff25512458c0219631c982b776c65fd6be73e038f88d47e42b4f614324e51577bc8815e80952c7c7ca6e66eca4a16a9f30d
     HEAD_REF master
+    PATCHES
+        fix-find-brotli.patch
 )
 
-file(COPY "${SOURCE_PATH}/httplib.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+set(VCPKG_BUILD_TYPE release) # header-only port
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME httplib CONFIG_PATH lib/cmake/httplib)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

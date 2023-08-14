@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/wil
-    REF f9284c19c9873664978b873b8858d7dfacc6af1e
-    SHA512 df81e7f12f15f8e382f537f783c33c9833bb83c4d86d571bd47503e7400698686f51a8a50efd2224c95a5409ab8ef719186d806afbfc4ea2af8d4fd7f8dce024
+    REF 9db6276dce851dc2b6807fc81bffbec2e27acd0b
+    SHA512 da26905b2665e952c06a42f1b56e7cb6e335cccb592d7dac5e59a11bbf2b10e5d532649383d2feb2313432c9be5068a2cd57b368a309f65899cbff61e866fc10
     HEAD_REF master
 )
 
@@ -20,4 +20,8 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/WIL)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+# Install natvis files
+file(INSTALL "${SOURCE_PATH}/natvis/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/natvis")
+
+# Install copyright
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

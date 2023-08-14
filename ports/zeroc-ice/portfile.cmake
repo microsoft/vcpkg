@@ -2,9 +2,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeroc-ice/ice
-    REF v3.7.7
-    SHA512 73c3a2bb14c9e145383e4026206edd3e03b29c60a33af628611bfdab71d69a3aed108ce4e6cbfd67eb852560110e3495b4bd238c8cdf0de9d1f8e2f1088513ee
-    PATCHES md5i_fix.patch slice2swift.patch mcppd_fix.patch
+    REF "v${VERSION}"
+    SHA512 07d7c439fbe1f69d808d05a11f32e09cdd8d4df2a93b6f253496304e0a521d417212ae688e316b4450dae406b59d1a460025b51ecd0614c69e48d86c0a6f81c5
+    PATCHES mcppd_fix.patch no-werror.patch
 )
 
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
@@ -160,46 +160,46 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(ICE_BUILD_CONFIG "static cpp11-static")
     endif()
-
+    if(NOT VCPKG_BUILD_TYPE)
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_build_process(
-        COMMAND make
-            V=1
-            "prefix=${CURRENT_PACKAGES_DIR}/debug"
-            linux_id=vcpkg
-            "CONFIGS=${ICE_BUILD_CONFIG}"
-            USR_DIR_INSTALL=yes
-            OPTIMIZE=no
-            ${ICE_OPTIONAL_COMPONENTS_MAKE}
-            "-j${VCPKG_CONCURRENCY}"
-        WORKING_DIRECTORY ${SOURCE_PATH}/cpp
-        LOGNAME make-${TARGET_TRIPLET}-dbg
-    )
+        vcpkg_execute_build_process(
+            COMMAND make
+                V=1
+                "prefix=${CURRENT_PACKAGES_DIR}/debug"
+                linux_id=vcpkg
+                "CONFIGS=${ICE_BUILD_CONFIG}"
+                USR_DIR_INSTALL=yes
+                OPTIMIZE=no
+                ${ICE_OPTIONAL_COMPONENTS_MAKE}
+                "-j${VCPKG_CONCURRENCY}"
+            WORKING_DIRECTORY ${SOURCE_PATH}/cpp
+            LOGNAME make-${TARGET_TRIPLET}-dbg
+        )
 
-    # Install debug libraries to packages directory
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-    if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
-        file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib64/*")
-    else()
-        file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib/*")
-    endif()
-    file(COPY ${ICE_DEBUG_LIBRARIES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        # Install debug libraries to packages directory
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+        if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
+            file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib64/*")
+        else()
+            file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib/*")
+        endif()
+        file(COPY ${ICE_DEBUG_LIBRARIES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
-    # Clean up for the next round
-    vcpkg_execute_build_process(
-        COMMAND make distclean
-        WORKING_DIRECTORY ${SOURCE_PATH}/cpp
-        LOGNAME make-clean-${TARGET_TRIPLET}
-    )
+        # Clean up for the next round
+        vcpkg_execute_build_process(
+            COMMAND make distclean
+            WORKING_DIRECTORY ${SOURCE_PATH}/cpp
+            LOGNAME make-clean-${TARGET_TRIPLET}
+        )
 
-    if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib")
-        file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib")
-    endif()
-    if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
-        file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib64")
-    endif()
-    file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/bin")
-
+        if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib")
+            file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib")
+        endif()
+        if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
+            file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib64")
+        endif()
+        file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/bin")
+    endif() # TODO: get-cmake-vars!
     # Release build
     set(ENV{LDFLAGS} "-L${CURRENT_INSTALLED_DIR}/lib")
     message(STATUS "Building ${TARGET_TRIPLET}-rel")

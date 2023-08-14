@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rollbear/trompeloeil
-    REF v41
-    SHA512 f68a3f1c5f2cd1b49fb8c90612383d68ca1a0bcd1ca6b0a0fbe6e3cef23af011b5503d788023519f182a1221d55774796115f9248caf33175f919fd18e5e43f9
+    REF ba406bfd71caf63f2180990a390ff5518e570c21    # v43
+    SHA512 5a638392ee4078690e94a61fd5838f6b0ffd67784a6cb139c114286c5cb8453c450252c550e9efee575aa38d02d5de1b51ba4df6a1679d02987606559a96520d
     HEAD_REF master
-    PATCHES disable_master_project.patch
 )
 
 vcpkg_cmake_configure(
@@ -21,4 +20,6 @@ if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/trompeloeil.hpp")
     message(FATAL_ERROR "Main includes have moved. Please update the forwarder.")
 endif()
 
-configure_file("${SOURCE_PATH}/LICENSE_1_0.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")

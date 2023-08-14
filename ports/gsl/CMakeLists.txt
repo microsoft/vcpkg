@@ -40,7 +40,7 @@ foreach(DIR IN LISTS FOLDERS)
 endforeach()
 
 file(READ gsl_types.h GSLTYPES_H)
-string(REPLACE "#ifdef WIN32" "#if 1 /*WIN32*/" GSLTYPES_H "${GSLTYPES_H}")
+string(REPLACE "#ifdef WIN32" "#ifdef _WIN32" GSLTYPES_H "${GSLTYPES_H}")
 if(BUILD_SHARED_LIBS)
     string(REPLACE "#  ifdef GSL_DLL" "#  if 1 /*GSL_DLL*/" GSLTYPES_H "${GSLTYPES_H}")
 endif()

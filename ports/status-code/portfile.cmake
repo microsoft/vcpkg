@@ -1,29 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/status-code
-    REF 0cca391ad9168581641b569e031f25c7ee1673b3
-    SHA512 5fdf3e268d0a4a388202547ceac271832642648fdc50824a8f26d86bad1d45c93394ff6651e50232dde534e057dfadaf7a7436b893dd7b182a75bcd57e24fc9d
+    REF 5be338838d278e730b78c07f6306ae71f6c1959c
+    SHA512 61685b7ba40fd2e8a985a8135065b335655aac7aee7778ca3317004c9730078361cfa4bd1b9ac2f9002efc707bfb6168c0275f11e0c5a6b079d42c8240528a90
     HEAD_REF master
+    PATCHES
+        add-missing-include.patch
 )
 
 # Because status-code's deployed files are header-only, the debug build is not necessary
 set(VCPKG_BUILD_TYPE release)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DPROJECT_IS_DEPENDENCY=On
+        -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/status-code)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/status-code)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include2")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
-file(RENAME "${CURRENT_PACKAGES_DIR}/include2" "${CURRENT_PACKAGES_DIR}/include/status-code")
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/Licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Licence.txt")

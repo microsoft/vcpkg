@@ -1,55 +1,54 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO KhronosGroup/glslang
-  REF 11.8.0
-  SHA512 b60d328fab6d5319e49fbf8aeb86c31a7c8dfb4bc75d39c081cbb72f90750fd98f2a4f3ab091614187ad9e0d2e27471f9dab7ca5547cabb856d17bff694f8c98
-  HEAD_REF master
-  PATCHES
-    ignore-crt.patch
-    always-install-resource-limits.patch
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO KhronosGroup/glslang
+    REF "${VERSION}"
+    SHA512 999ee0a4324263f6c12126b76bb098fc7009ea444be5cb052bd3fd7109589b52180acd8e7a90735ef7dc4be1e29aab5d98845e1aeae874b7d2ccc9279063ab50
+    HEAD_REF master
 )
 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path("${PYTHON_PATH}")
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools ENABLE_GLSLANG_BINARIES
+        rtti ENABLE_RTTI
+)
 
-if(VCPKG_TARGET_IS_IOS)
-  # this case will report error since all executable will require BUNDLE DESTINATION
-  set(BUILD_BINARIES OFF)
-else()
-  set(BUILD_BINARIES ON)  
-endif()
+if (ENABLE_GLSLANG_BINARIES)
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON_PATH ${PYTHON3} DIRECTORY)
+    vcpkg_add_to_path("${PYTHON_PATH}")
+endif ()
+
+if (WIN32)
+    set(PLATFORM_OPTIONS "-DOVERRIDE_MSVCCRT=OFF")
+endif ()
 
 vcpkg_cmake_configure(
-  SOURCE_PATH "${SOURCE_PATH}"
-  OPTIONS
-    -DSKIP_GLSLANG_INSTALL=OFF
-    -DBUILD_EXTERNAL=OFF
-    -DENABLE_GLSLANG_BINARIES=${BUILD_BINARIES}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_EXTERNAL=OFF
+        -DENABLE_CTEST=OFF
+        -DSKIP_GLSLANG_INSTALL=OFF
+        ${FEATURE_OPTIONS}
+        ${PLATFORM_OPTIONS}
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/glslang DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/glslang-config.cmake"
+    "${PACKAGE_PREFIX_DIR}/lib/cmake/glslang/glslang-targets.cmake"
+    "${PACKAGE_PREFIX_DIR}/share/${PORT}/glslang-targets.cmake"
+)
 
 vcpkg_copy_pdbs()
 
-if(NOT BUILD_BINARIES)
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-else()
-  vcpkg_copy_tools(TOOL_NAMES glslangValidator spirv-remap AUTO_CLEAN)
-endif()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
-                    "${CURRENT_PACKAGES_DIR}/debug/bin")
+if (ENABLE_GLSLANG_BINARIES)
+    vcpkg_copy_tools(TOOL_NAMES glslangValidator spirv-remap AUTO_CLEAN)
+endif ()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/glslang/glslang-config.cmake" OR EXISTS "${CURRENT_PACKAGES_DIR}/share/glslang/glslangConfig.cmake")
-  message(FATAL_ERROR "glslang has been updated to provide a -config file -- please remove the vcpkg provided version from the portfile")
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(COPY
-  "${CMAKE_CURRENT_LIST_DIR}/glslang-config.cmake"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-)
-
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

@@ -1,7 +1,7 @@
 {
   "name": "memorymodule",
-  "version-string": "2019-12-31",
-  "port-version": 2,
+  "version-date": "2019-12-31",
+  "port-version": 3,
   "description": "Library to load a DLL from memory",
   "homepage": "https://github.com/fancycode/MemoryModule",
   "supports": "!linux & !osx & !uwp",

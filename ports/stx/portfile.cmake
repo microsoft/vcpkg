@@ -3,33 +3,25 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lamarrr/STX
-    REF v1.0.1
-    SHA512 544ca32f07cd863082fa9688f5d56e2715b0129ff90d2a8533cc24a92c943e5848c4b2b06a71f54c12668f6e89e9e3c649f595f9eb886f671a5fa18d343f794b
-    HEAD_REF master
-    PATCHES
-        "CMakeLists.patch"
+    REF "v${VERSION}"
+    SHA512 fb4c6bece76a7d2503e6f9c6121cbb011bb6d3765629223952b456f3e4f1c0e3fffd50114ace988fe842ede8ef9243c24680832c334bb8c4dabb55f64f43294f
+    HEAD_REF main
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-     backtrace    STX_ENABLE_BACKTRACE
+    FEATURES
+        backtrace    STX_ENABLE_BACKTRACE
 )
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DSTX_BUILD_DOCS=OFF
-        -DSTX_BUILD_BENCHMARKS=OFF
-        -DSTX_BUILD_SHARED=OFF
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/stx)
+vcpkg_cmake_install()
+
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug/include"
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

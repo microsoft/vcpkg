@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simdjson/simdjson
-    REF 933c2ebeacf9a1df12acd9a6781e590cad2f81f7 # v2.2.2
+    REF "v${VERSION}"
     HEAD_REF master
-    SHA512 6dda3fbbba7e788adc7b29710c2b08c428a180fadd298c4129a5856e65de1d947b38ecff0098fcd29ad98923e14910ba77eaedbd3d3a9fa3a0c49c686ecbb1b4
+    SHA512 eeac785c7868362f51f3fb87cb4e0cfc77b2c4e3767afbe1d22df87f16a3cb4af1dc27a1df5ba3c139cb0a3053bc30afcdcb31515ce4e757c309ed2c0f3f507e
 )
 
 vcpkg_check_features(
@@ -13,6 +13,7 @@ vcpkg_check_features(
         threads    SIMDJSON_ENABLE_THREADS
     INVERTED_FEATURES
         deprecated SIMDJSON_DISABLE_DEPRECATED_API
+        utf8-validation SIMDJSON_SKIPUTF8VALIDATION
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
@@ -36,6 +37,8 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
+vcpkg_fixup_pkgconfig()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

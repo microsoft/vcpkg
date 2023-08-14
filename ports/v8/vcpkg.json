@@ -1,7 +1,7 @@
 {
   "name": "v8",
   "version": "9.1.269.39",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Google Chrome's JavaScript engine",
   "homepage": "https://v8.dev",
   "license": "BSD-3-Clause",
@@ -15,6 +15,10 @@
     {
       "name": "pthread",
       "platform": "linux"
+    },
+    {
+      "name": "vcpkg-gn",
+      "host": true
     },
     {
       "name": "vcpkg-tool-python2",

@@ -1,0 +1,20 @@
+{
+  "name": "ltla-umappp",
+  "version-date": "2023-05-11",
+  "description": "UMAP C++ implementation",
+  "homepage": "https://github.com/LTLA/umappp",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    "ltla-aarand",
+    "ltla-cppirlba",
+    "ltla-knncolle",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "easyloggingpp",
   "version": "9.97.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Easylogging++ is a single header efficient logging library for C++ applications.",
   "homepage": "https://github.com/amrayn/easyloggingpp",
   "dependencies": [
@@ -13,5 +13,16 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "no-defaultfile": {
+      "description": "Do not write to default log file \"myeasylog.log\" (compile with ELPP_NO_DEFAULT_LOG_FILE)"
+    },
+    "std-locking": {
+      "description": "Use std::mutex for thread synchronization (compile with ELPP_FORCE_USE_STD_THREAD)"
+    },
+    "thread-safe": {
+      "description": "Make easyloggingpp thread safe (compile with ELPP_THREAD_SAFE)"
+    }
+  }
 }

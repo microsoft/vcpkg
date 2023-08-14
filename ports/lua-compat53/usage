@@ -1,0 +1,4 @@
+The package lua-compat53 provides a header only C-API and can be used from CMake via:
+
+    find_path(LUA_COMPAT53_INCLUDE_DIRS "compat-5.3.h")
+    target_include_directories(main PRIVATE ${LUA_COMPAT53_INCLUDE_DIRS})

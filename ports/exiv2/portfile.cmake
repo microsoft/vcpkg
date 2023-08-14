@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
-    REF ad5484cb1eaba3ad0e49b290d244f6b1ee9ff076  #v0.27.5
-    SHA512 33b8c60990b05f1599860974d6fe44baba8369356acd2cab3ce4919a48bb44348ed0496ffc4581d9fd5eb8a1b36d48a0eaa3fafe4584bfd655d0a88e7a9458ef
+    REF "v${VERSION}"
+    SHA512 7d7121770a9394efd31acb74709583e587351fc48c485a2f684cacce4ed19a2d07a6cb1cea986c16bf64851fd53b22a7277c1e1ae1a6cd69a5761afae3c5c731
     HEAD_REF master
     PATCHES
         fix-find_expat.patch
@@ -15,13 +15,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         video   EXIV2_ENABLE_VIDEO
         png     EXIV2_ENABLE_PNG
         nls     EXIV2_ENABLE_NLS
+        bmff    EXIV2_ENABLE_BMFF
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" EXIV2_CRT_DYNAMIC)
-
-if("unicode" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "Feature unicode only supports Windows platform.")
-endif()
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
 
@@ -40,7 +37,6 @@ vcpkg_cmake_configure(
         -DEXIV2_ENABLE_WEBREADY=OFF
         -DEXIV2_ENABLE_CURL=OFF
         -DEXIV2_ENABLE_SSH=OFF
-        -DEXIV2_ENABLE_BMFF=OFF
         -DEXIV2_TEAM_EXTRA_WARNINGS=OFF
         -DEXIV2_TEAM_WARNINGS_AS_ERRORS=OFF
         -DEXIV2_TEAM_PACKAGING=OFF
@@ -51,11 +47,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/exiv2)
 vcpkg_fixup_pkgconfig()
 
-if("nls" IN_LIST FEATURES)
-    set(EXIV2_ENABLE_NLS ON)
-else()
-    set(EXIV2_ENABLE_NLS OFF)
-endif()
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
     ${CURRENT_PACKAGES_DIR}/share/${PORT}
@@ -64,13 +55,12 @@ configure_file(
 
 vcpkg_copy_pdbs()
 
-# Clean
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/exiv2" "${CURRENT_PACKAGES_DIR}/lib/exiv2")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/exiv2"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/lib/exiv2"
+    "${CURRENT_PACKAGES_DIR}/share/man"
+)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -1,15 +1,23 @@
 {
   "name": "stx",
-  "version-string": "1.0.1",
-  "port-version": 1,
-  "description": "C++17 & C++ 20 error-handling and utility extensions",
+  "version": "0.0.3",
+  "description": "STX is a collection of libraries and utilities designed to make working with C++ easier and less error-prone.",
   "homepage": "https://github.com/lamarrr/STX",
+  "license": "MIT",
+  "dependencies": [
+    "abseil",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
   "features": {
     "backtrace": {
-      "description": "stacktrace support for STX",
-      "dependencies": [
-        "abseil"
-      ]
+      "description": "stacktrace support for STX"
     }
   }
 }

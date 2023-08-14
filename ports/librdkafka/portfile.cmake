@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO edenhill/librdkafka
-    REF v1.9.2
-    SHA512 f067b227bc784e1dee61261d540632e54a4e5849934d1f55571979fea6b3c6858c27bcd397cf33fbee2409df12b149bb78f201f33646d14b5288a33147a9c9dc
+    REF "v${VERSION}"
+    SHA512 1a85b5864efdeece1327e461b62a378f24b73eb7174168f630aeff01d4a5074d6b2f15744bc267665fcfc6384e804df00c20b7271ecd85a98dca84746b86b4d9
     HEAD_REF master
     PATCHES
         lz4.patch
-        fix_curl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
