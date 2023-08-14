@@ -19,7 +19,7 @@ vcpkg_msbuild_install(
 )
 
 file(
-    INSTALL "${SOURCE_PATH}/msvc/distro/include/unicorn"
+    INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/msvc/distro/include/unicorn"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     RENAME "unicorn"
 )
@@ -27,3 +27,5 @@ vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/COPYING"
     "${SOURCE_PATH}/COPYING_GLIB"
 )
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/COPYING.LIB" "${CURRENT_PACKAGES_DIR}/debug/lib/COPYING.LIB")
