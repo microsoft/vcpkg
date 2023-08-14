@@ -8,6 +8,11 @@
     "curl",
     "libimobiledevice",
     "libirecovery",
-    "libzip"
+    "libzip",
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
   ]
 }
