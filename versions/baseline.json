@@ -3258,7 +3258,7 @@
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
-      "port-version": 6
+      "port-version": 7
     },
     "idevicerestore": {
       "baseline": "1.0.12",
