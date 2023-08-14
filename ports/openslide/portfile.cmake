@@ -11,8 +11,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         remove-w-flags.patch
-        add-missing-io-h-header.patch
         ${PATCHES}
+        add-missing-io-h-header.patch
 )
 
 set(opts "")
