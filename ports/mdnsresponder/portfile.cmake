@@ -14,7 +14,7 @@ ENDIF()
 
 vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH mDNSResponder.sln
+    PROJECT_SUBPATH mDNSWindows/mDNSResponder.sln
     PLATFORM ${BUILD_ARCH}
     TARGET dns-sd
 )
