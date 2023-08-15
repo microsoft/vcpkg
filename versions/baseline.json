@@ -8902,7 +8902,7 @@
     },
     "xmlsec": {
       "baseline": "1.2.37",
-      "port-version": 1
+      "port-version": 2
     },
     "xnnpack": {
       "baseline": "2022-02-17",
