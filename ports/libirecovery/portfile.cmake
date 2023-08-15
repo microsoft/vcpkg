@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF msvc-master
 )
 
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH libirecovery.sln
 )
