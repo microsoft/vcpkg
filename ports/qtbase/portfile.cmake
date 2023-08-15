@@ -9,6 +9,9 @@ set(QT_IS_LATEST ON)
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
+        # CVE fixes from https://download.qt.io/official_releases/qt/6.5/
+        patches/CVE-2023-38197-qtbase-6.5.diff
+
         allow_outside_prefix.patch
         config_install.patch
         fix_cmake_build.patch
