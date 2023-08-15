@@ -8,10 +8,26 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
 )
 
-set(extra_cflags "-DFFI_BUILDING")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    string(APPEND extra_cflags " -DFFI_BUILDING_DLL")
+vcpkg_list(SET options)
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(extra_cflags "-DFFI_BUILDING")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        string(APPEND extra_cflags " -DFFI_BUILDING_DLL")
+    endif()
+    vcpkg_list(APPEND options "CFLAGS=\${CFLAGS} ${extra_cflags}")
 endif()
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    set(ccas "${SOURCE_PATH}/msvcc.sh")
+else()
+    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+endif()
+cmake_path(GET ccas PARENT_PATH ccas_dir)
+vcpkg_add_to_path("${ccas_dir}")
+cmake_path(GET ccas FILENAME ccas_command)
+vcpkg_list(APPEND options "CCAS=${ccas_command}")
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -20,11 +36,8 @@ vcpkg_configure_make(
     OPTIONS
         --enable-portable-binary
         --disable-docs
-        "CFLAGS=\${CFLAGS} ${extra_cflags}"
+        ${options}
 )
-
-# WIP
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libtool" DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME "libtool-${TARGET_TRIPLET}-dbg.log")
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
