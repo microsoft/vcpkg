@@ -5714,7 +5714,7 @@
     },
     "ngspice": {
       "baseline": "39",
-      "port-version": 0
+      "port-version": 1
     },
     "ngtcp2": {
       "baseline": "0.18.0",
