@@ -7620,6 +7620,10 @@
       "baseline": "2020-06-14",
       "port-version": 2
     },
+    "simpleble": {
+      "baseline": "2023-07-29",
+      "port-version": 0
+    },
     "simpleini": {
       "baseline": "4.19",
       "port-version": 0
