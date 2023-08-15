@@ -5742,7 +5742,7 @@
     },
     "nmap": {
       "baseline": "7.70",
-      "port-version": 9
+      "port-version": 10
     },
     "nmslib": {
       "baseline": "2.1.1",
