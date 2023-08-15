@@ -8470,7 +8470,7 @@
     },
     "v8": {
       "baseline": "9.1.269.39",
-      "port-version": 5
+      "port-version": 6
     },
     "valijson": {
       "baseline": "0.6",
