@@ -6,6 +6,8 @@ vcpkg_from_github(
     PATCHES
         fix-uwp.patch
         fix-file_path.patch
+        fix-LibeventConfig_cmake_in_path.patch
+        fix-usage.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
