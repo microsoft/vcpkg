@@ -13,8 +13,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "${VERSION}"
     PATCHES
-        cmake.patch
-        fixup-targets.patch
+        fix-cmake.patch
 )
 
 vcpkg_cmake_configure(
@@ -30,6 +29,8 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH share/lemon/cmake PACKAGE_NAME lemon)
 
+vcpkg_fixup_pkgconfig()
+
 file(GLOB EXE "${CURRENT_PACKAGES_DIR}/bin/*.exe")
 file(COPY ${EXE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/liblemon/")
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/liblemon")
@@ -39,6 +40,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

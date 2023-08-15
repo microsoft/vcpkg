@@ -55,7 +55,8 @@ if (VCPKG_TARGET_IS_LINUX)
     "${PACKAGE_PATH}/bin/dxc"
     DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 
-  set(dll_name "libdxcompiler.so")
+  set(dll_name_dxc "libdxcompiler.so")
+  set(dll_name_dxil "libdxil.so")
   set(dll_dir  "lib")
   set(lib_name "libdxcompiler.so")
   set(tool_path "bin/dxc")
@@ -96,7 +97,8 @@ else()
     "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
     DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
 
-  set(dll_name "dxcompiler.dll")
+  set(dll_name_dxc "dxcompiler.dll")
+  set(dll_name_dxil "dxil.dll")
   set(dll_dir  "bin")
   set(lib_name "dxcompiler.lib")
   set(tool_path "tools/directx-dxc/dxc.exe")
