@@ -21,7 +21,7 @@ if(PORT MATCHES "(icu)" AND 1 )
 # vcruntime.lib msvcprt.lib ucrt.lib kernel32.lib vcasan.lib legacy_stdio_wide_specifiers.lib
   endfunction()
   function(vcpkg_user_setup_env_debug)
-    set(ENV{_LINK_} "-wholearchive:clang_rt.asan_dbg_dynamic-x86_64.lib -wholearchive:clang_rt.asan_dbg_dynamic_runtime_thunk-x86_64.lib")
+    set(ENV{_LINK_} "-wholearchive:clang_rt.asan_dynamic-x86_64.lib -wholearchive:clang_rt.asan_dynamic_runtime_thunk-x86_64.lib")
 # vcruntimed.lib msvcprtd.lib ucrtd.lib kernel32.lib vcasand.lib legacy_stdio_wide_specifiers.lib
   endfunction()
   function(vcpkg_user_setup_env_release_restore)
