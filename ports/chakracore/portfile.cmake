@@ -75,25 +75,17 @@ else()
 endif()
 
 file(INSTALL
-    "${BUILDTREE_PATH}/lib/Jsrt/ChakraCore.h"
-    "${BUILDTREE_PATH}/lib/Jsrt/ChakraCommon.h"
-    "${BUILDTREE_PATH}/lib/Jsrt/ChakraDebug.h"
+    "${BUILDTREE_PATH}-rel/lib/Jsrt/ChakraCore.h"
+    "${BUILDTREE_PATH}-rel/lib/Jsrt/ChakraCommon.h"
+    "${BUILDTREE_PATH}-rel/lib/Jsrt/ChakraDebug.h"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(INSTALL
-        "${BUILDTREE_PATH}/lib/Jsrt/ChakraCommonWindows.h"
-        "${BUILDTREE_PATH}/lib/Jsrt/ChakraCoreWindows.h"
+        "${BUILDTREE_PATH}-rel/lib/Jsrt/ChakraCommonWindows.h"
+        "${BUILDTREE_PATH}-rel/lib/Jsrt/ChakraCoreWindows.h"
         DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     )
-    # Remove unnecessary static libraries.
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
-        file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
-        list(FILTER PDLIBS EXCLUDE REGEX ".*/ChakraCore.lib$")
-        list(FILTER PRLIBS EXCLUDE REGEX ".*/ChakraCore.lib$")
-    endif()
-    file(REMOVE ${PDLIBS} ${PRLIBS})
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(out_file libChakraCore.so)
