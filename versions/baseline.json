@@ -4065,8 +4065,8 @@
       "port-version": 2
     },
     "libevent": {
-      "baseline": "2.1.12+20230128",
-      "port-version": 0
+      "baseline": "2.1.12",
+      "port-version": 8
     },
     "libeventheader-decode": {
       "baseline": "1.1.0",
