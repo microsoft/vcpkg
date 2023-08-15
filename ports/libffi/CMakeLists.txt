@@ -215,7 +215,8 @@ if(CMAKE_STATIC_LIBRARY_PREFIX STREQUAL "lib")
 endif()
 
 if(NOT WIN32)
-    target_compile_options(libffi PUBLIC -fPIC)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 install(TARGETS libffi
