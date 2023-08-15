@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH libirecovery.sln
+    ADDITIONAL_LIBS getopt.lib
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
