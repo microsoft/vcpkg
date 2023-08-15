@@ -18,31 +18,34 @@
 ##           This is added to ports to detect "hidden" not tested ports. 
 ##
 ## Additional States can be specified for specific features:
-##            feature-fails - A feature does not build. It is therefore excluded
+##            feature-fails - The listed feature do not build. They are therefore excluded
 ##                            from the "combined" feature test because it would
 ##                            simply fail too.
-##        combination-fails - A combination of features 
-##                            
-##                            
-##                     skip - 
-##        combination-fails - 
-## no-separate-feature-test - 
-##                  options - 
-##
-## CI tested triplets:
-##    arm64-windows
-##    arm-uwp
-##    x64-linux
-##    x64-osx
-##    x64-uwp
-##    x64-windows
-##    x64-windows-static
-##    x64-windows-static-md
-##    x86-windows
+##        combination-fails - The listed combination of features will fail to build.
+##                     skip - The listed features are not tested in the CI system.
+##                  cascade - The listed features are cascading.
+## no-separate-feature-test - The listed features are not tested in the "seperate" feature test.
+##                  options - The listed features are mutually exclusive and can not be selected together.
+##                            The first feature in the list is added to every test combination. Use the `core`
+##                            feature as first one to add no feature to every test combination.
 ##
 ## You could select ports by triplet or supports expression:
-##    curl[wchar]:x64-osx   = fail # the wchar feature does not work on !windows
-##    curl[wchar](!windows) = combination-fails # Using support expressions is often shorter than listing all triplets
+##    curl[wchar]:x64-osx   = feature-fails # the wchar feature does not work on !windows
+##    curl[wchar](!windows) = feature-fails # Using support expressions is often shorter than listing all triplets
+##
+## Examples:
+##    qt3d[extras] = options # extras will be always added to the test combination (it is currently a requirement)
+##    curl[core,openssl,wolfssl] = options # openssl and wolfssl are exclusive ssl backends but none must be selected
+##    libgit2[pcre,pcre2] = options # you have to select pcre xor pcre2
+## 
+##    libcanberra[gtk3](osx) = combination-fails # The feature works in the "combined" feature test
+##    vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
+##
+##    entt[experimental] = skip # required head build
+##    realsense2[openni2](!windows) = cascade # cpkg-tool-lessmsi[core] only supports native & windows
+##
+##    # Testing all targets seperatly would be too time consuming:
+##    halide[target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-mips,target-nvptx,target-opencl,target-powerpc,target-riscv,target-x86] = no-separate-feature-test 
 
 
 # Add new items alphabetically
@@ -613,7 +616,6 @@ stormlib:arm-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-uwp=fail
 stxxl:x64-uwp=fail
-symengine:arm-uwp=fail
 systemc:arm64-windows=fail
 systemc:arm-uwp=fail
 systemc:x64-uwp=fail
@@ -699,7 +701,6 @@ open62541:x64-windows-static-md=fail
 openscap:x64-windows-static-md=fail
 quantlib:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
-symengine:x64-windows-static-md=fail
 unicorn:x64-windows-static-md=fail
 
 # the version of v8 we have in the repo doesn't support VS2022
@@ -888,7 +889,7 @@ coroutine(osx) = fail # requires c++20
 cppslippi(osx) = fail # requires c++20
 ctbench(osx) = fail # requires C++ 20
 curl[brotli,c-ares,http2,idn,idn2,mbedtls,non-http,openssl,sectransp,ssh,ssl,tool,websockets,wolfssl] = combination-fails
-curl[openssl,wolfssl] = options # openssl and wolfssl are exclusive ssl backends
+curl[core,openssl,wolfssl] = options # openssl and wolfssl are exclusive ssl backends
 dmlc[openmp](osx) = feature-fails # No openmp on osx
 duktape(osx) = fail # requires python2
 dv-processing[tools](osx) = feature-fails # requires c++20
@@ -949,7 +950,7 @@ opencv2[python](osx) = feature-fails # requires python2
 opencv2[world] = feature-fails # See https://github.com/microsoft/vcpkg/issues/29943
 opencv3[ffmpeg] = feature-fails # ffmpeg5+ is not supported under opencv3. See https://github.com/microsoft/vcpkg/issues/32150
 opencv3[halide] = feature-fails # Same as opencv4[halide]
-opencv3[python] = feature-fails # Same as opencv4[python]
+opencv3[webp] = feature-fails # Same as opencv4[webp]
 opencv3[vtk](osx) = feature-fails # vtk version not compatible. See https://github.com/microsoft/vcpkg/issues/32228
 opencv4[core,ade,contrib,dc1394,default-features,dnn,eigen,ffmpeg,freetype,gdcm,gstreamer,halide,ipp,jasper,jpeg,lapack,nonfree,openexr,opengl,openmp,ovis,png,python,qt,quirc,sfm,tbb,tiff,vtk,webp,world] = combination-fails # waits for https://github.com/microsoft/vcpkg/pull/31045/files
 opencv4[halide] = feature-fails # See https://github.com/microsoft/vcpkg/issues/33200
@@ -972,9 +973,6 @@ restc-cpp[threaded-ctx] = combination-fails # Fixed on master: error: copying me
 rubberband[cli](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32360
 sqlpp11-connector-mysql[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
 sqlpp11[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
-symengine[core,arb,flint,integer-class-boostmp,integer-class-flint,llvm,mpfr] = combination-fails # See https://github.com/microsoft/vcpkg/issues/32355
-symengine[core,arb,flint,integer-class-boostmp,integer-class-flint,mpfr](osx) = combination-fails # undefined build error
-symengine[integer-class-boostmp,flint,integer-class-flint,mpfr] = options # can not select integer-class-boostmp and integer-class-flint at the same time. Can not use flint and mpfr with integer-class-boostmp (See https://github.com/symengine/symengine/issues/1969 and https://github.com/symengine/symengine/issues/1970)
 tgui[sdl2] = options # At least one of the backend features must be selected: sdl2 sfml
 vlpp[tools](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32143 (error: inconsistent begin/end types in range-based ‘for’ statement)
 vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
