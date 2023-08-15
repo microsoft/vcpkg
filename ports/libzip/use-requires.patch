@@ -38,7 +38,7 @@ index cf85fc4b7..90615fec9 100644
    else()
      message(WARNING "-- lzma library not found; lzma/xz support disabled")
    endif(LIBLZMA_FOUND)
-+  list(APPEND REQUIRES lzma)
++  list(APPEND REQUIRES liblzma)
  endif(ENABLE_LZMA)
  
  if(ENABLE_ZSTD)
