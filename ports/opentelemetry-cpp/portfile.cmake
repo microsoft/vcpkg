@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 86cf0320f9ee50bc1aa2b7a8b254fb0df25d1bd1f5f01ebc3630ab7fe2f6ca5e53ca8e042518b4e7096dbb102c0b880e9a25fcdf5f668d24ff57d9247237bf62
+    SHA512 5bd1a376ffb5a0f8c5706a8088230ee2506eb1858c206d98ba7b1b52949e1072afd98c1323c1c5eb6a3787143bcbe689bb52e55551e7cbc7076431864e212926
     HEAD_REF main
     PATCHES
         # Use the compiler's default C++ version. Picking a version with
@@ -26,15 +26,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zipkin WITH_ZIPKIN
         prometheus WITH_PROMETHEUS
         elasticsearch WITH_ELASTICSEARCH
-        jaeger WITH_JAEGER
-        otlp WITH_OTLP
         otlp-http WITH_OTLP_HTTP
         zpages WITH_ZPAGES
         otlp-grpc WITH_OTLP_GRPC
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
-if(WITH_OTLP)
+if(WITH_OTLP_HTTP OR WITH_OTLP_GRPC)
     set(OTEL_PROTO_VERSION "0.19.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
