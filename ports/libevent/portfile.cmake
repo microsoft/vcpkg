@@ -6,8 +6,6 @@ vcpkg_from_github(
     PATCHES
         fix-uwp.patch
         fix-file_path.patch
-        fix-LibeventConfig_cmake_in_path.patch
-        fix-usage.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -72,4 +70,4 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 #Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
