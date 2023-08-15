@@ -585,6 +585,12 @@ if(VCPKG_TARGET_IS_ANDROID)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.android")
 endif()
 
+if("python" IN_LIST FEATURES)
+  file(GLOB python_dir LIST_DIRECTORIES true RELATIVE "${CURRENT_PACKAGES_DIR}/lib/" "${CURRENT_PACKAGES_DIR}/lib/python*")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/${python_dir}/site-packages/cv2/typing")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${python_dir}/site-packages/cv2/typing")
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
