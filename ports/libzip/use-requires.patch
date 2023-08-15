@@ -78,7 +78,7 @@ index d51b0ab63..755685c03 100644
  Name: libzip
  Description: library for handling zip archives
  Version: @PROJECT_VERSION@
-+Requires: @REQUIRES@
++Requires.private: @REQUIRES@
  Libs: @PKG_CONFIG_RPATH@ -L${libdir} -lzip
  Libs.private: @LIBS@
  Cflags: -I${includedir}
