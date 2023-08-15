@@ -214,6 +214,10 @@ if(CMAKE_STATIC_LIBRARY_PREFIX STREQUAL "lib")
     set_target_properties(libffi PROPERTIES OUTPUT_NAME ffi)
 endif()
 
+if(NOT WIN32)
+    target_compile_options(libffi PUBLIC -fPIC)
+endif()
+
 install(TARGETS libffi
     EXPORT ${PROJECT_NAME}Targets
     RUNTIME DESTINATION bin
