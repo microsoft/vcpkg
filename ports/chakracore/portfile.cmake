@@ -86,7 +86,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         "${BUILDTREE_PATH}/lib/Jsrt/ChakraCoreWindows.h"
         DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     )
-    # Do not install dll/exe/lib files here because they are handled by vcpkg_install_msbuild
+    # Remove unnecessary static libraries.
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
+        file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
+        list(FILTER PDLIBS EXCLUDE REGEX ".*/ChakraCore.lib$")
+        list(FILTER PRLIBS EXCLUDE REGEX ".*/ChakraCore.lib$")
+    endif()
+    file(REMOVE ${PDLIBS} ${PRLIBS})
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(out_file libChakraCore.so)
@@ -114,13 +121,8 @@ else()
             SEARCH_DIR "${out_dir_release}"
         )
     endif()
-else()
-    # Remove unnecessary static libraries.
-    file(GLOB PDLIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*")
-    file(GLOB PRLIBS "${CURRENT_PACKAGES_DIR}/lib/*")
-    list(FILTER PDLIBS EXCLUDE REGEX ".*/ChakraCore.lib$")
-    list(FILTER PRLIBS EXCLUDE REGEX ".*/ChakraCore.lib$")
-    file(REMOVE ${PDLIBS} ${PRLIBS})
+
+
 endif()
 
 file(INSTALL
