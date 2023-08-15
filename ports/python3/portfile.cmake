@@ -250,9 +250,6 @@ else()
     if(VCPKG_CROSSCOMPILING)
         set(_python_for_build "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
         list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
-    else()
-        vcpkg_find_acquire_program(PYTHON3)
-        list(APPEND OPTIONS "ac_cv_prog_PYTHON_FOR_REGEN=${PYTHON3}")
     endif()
 
     vcpkg_configure_make(
