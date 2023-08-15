@@ -6422,7 +6422,7 @@
     },
     "pmdk": {
       "baseline": "1.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "pngpp": {
       "baseline": "0.2.10",
