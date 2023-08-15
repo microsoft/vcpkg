@@ -2953,7 +2953,7 @@
       "port-version": 21
     },
     "gmsh": {
-      "baseline": "4.9.0",
+      "baseline": "4.11.1",
       "port-version": 0
     },
     "gobject-introspection": {
