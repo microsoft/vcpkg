@@ -8,12 +8,23 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
 )
 
+set(extra_cflags "-DFFI_BUILDING")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    string(APPEND extra_cflags " -DFFI_BUILDING_DLL")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     DETERMINE_BUILD_TRIPLET
+    USE_WRAPPERS
     OPTIONS
+        --enable-portable-binary
         --disable-docs
+        "CFLAGS=\${CFLAGS} ${extra_cflags}"
 )
+
+# WIP
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libtool" DESTINATION "${CURRENT_BUILDTREES_DIR}" RENAME "libtool-${TARGET_TRIPLET}-dbg.log")
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
