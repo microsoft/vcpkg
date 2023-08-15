@@ -7394,7 +7394,7 @@
     },
     "scintilla": {
       "baseline": "4.4.6",
-      "port-version": 2
+      "port-version": 3
     },
     "sciplot": {
       "baseline": "0.3.1",
