@@ -63,6 +63,7 @@ if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 #https://devblogs.microsoft.com/cppblog/asan-for-windows-x64-and-debug-build-support/
+# https://devblogs.microsoft.com/cppblog/msvc-address-sanitizer-one-dll-for-all-runtime-configurations/
 #dynamic CRT case is not allowed to have /wholearchive!
 set(sanitizer_path "")
 set(sanitizer_libs "")
@@ -77,7 +78,7 @@ if(VCPKG_USE_SANITIZERS)
         # /wholearchive: is not used for asan_dynamic by clang. Only the _thunk has wholearchive
         set(sanitizer_libs_exe_rel "/wholearchive:clang_rt.asan_dynamic-${asan_arch}.lib /wholearchive:clang_rt.asan_dynamic_runtime_thunk-${asan_arch}.lib")
         set(sanitizer_libs_dll_rel "${sanitizer_libs_exe_rel}")
-        set(sanitizer_libs_exe_dbg "/wholearchive:clang_rt.asan_dbg_dynamic-${asan_arch}.lib /wholearchive:clang_rt.asan_dynamic_runtime_thunk-${asan_arch}.lib")
+        set(sanitizer_libs_exe_dbg "/wholearchive:clang_rt.asan_dynamic-${asan_arch}.lib /wholearchive:clang_rt.asan_dynamic_runtime_thunk-${asan_arch}.lib")
         set(sanitizer_libs_dll_dbg "${sanitizer_libs_exe_dbg}")
       else()
         # TODO
