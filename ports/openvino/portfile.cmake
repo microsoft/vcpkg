@@ -9,6 +9,7 @@ vcpkg_from_github(
         003-fix-find-onnx.patch
         004-onednn-build.patch
         005-rename-utils.patch
+        007-dnnl-library-rename.patch
     HEAD_REF master)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
