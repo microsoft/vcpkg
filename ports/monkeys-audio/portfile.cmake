@@ -14,6 +14,7 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
     PATCHES
         remove-certificate-step.patch
+        fix-outdir.patch
 )
 
 file(REMOVE_RECURSE
