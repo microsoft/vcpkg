@@ -10,7 +10,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
-        ${GLIB_MR_3386}
+        fix-build-race-on-gio.patch # https://gitlab.gnome.org/GNOME/glib/-/merge_requests/3512
         tsc-allow-threadpriority-to-fail-windows.patch 
 )
 

@@ -21,6 +21,7 @@ vcpkg_cmake_configure(
         -DSFML_USE_SYSTEM_DEPS=ON
         -DSFML_MISC_INSTALL_PREFIX=share/sfml
         -DSFML_GENERATE_PDB=OFF
+        -DSFML_WARNINGS_AS_ERRORS=OFF #Remove in the next version
 )
 
 vcpkg_cmake_install()

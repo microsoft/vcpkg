@@ -1,0 +1,4 @@
+modern-cpp-kafka provides CMake targets:
+
+    find_package(unofficial-modern-cpp-kafka CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::modern-cpp-kafka::modern-cpp-kafka)

@@ -11,14 +11,12 @@ if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_EMSCRIPTEN)
 endif()
 
 set(PATCHLIB fix-dependencies.patch cfg-rel-paths.patch swig-python-polyfill.patch pkgconfig.patch same-install-rules-all-platforms.patch)
-if(VCPKG_TARGET_IS_OSX)
-    list(APPEND PATCHLIB fix_override.patch) # upstream PR:https://github.com/OGRECave/ogre/pull/2831
-endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
     REF "v${VERSION}"
-    SHA512 d4022a454e0649a01182545f24094ba1f72127099a9b096e1b438238659629e93b1d79277d02acc0aceebdc3969aab0031de7f86390077bafc66ccfd86755430
+    SHA512 adadf0ce8510515c7519b87b502090c4a8d6694af0850ebd4a030d2dda497978eeb811746c74aa0cd1dc41adc0bf5f04fe38d02eb4ff03a56999c6635efe1e0e
     HEAD_REF master
     PATCHES
         ${PATCHLIB}       
@@ -39,14 +37,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     freeimage OGRE_BUILD_PLUGIN_FREEIMAGE
     freeimage CMAKE_REQUIRE_FIND_PACKAGE_FreeImage
     java     OGRE_BUILD_COMPONENT_JAVA
-    java     CMAKE_REQUIRE_FIND_PACKAGE_SWIG
     openexr  OGRE_BUILD_PLUGIN_EXRCODEC
     openexr  CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
     python   OGRE_BUILD_COMPONENT_PYTHON
     python   CMAKE_REQUIRE_FIND_PACKAGE_Python3
-    python   CMAKE_REQUIRE_FIND_PACKAGE_SWIG
     csharp   OGRE_BUILD_COMPONENT_CSHARP
-    csharp   CMAKE_REQUIRE_FIND_PACKAGE_SWIG
     overlay  OGRE_BUILD_COMPONENT_OVERLAY
     overlay  CMAKE_REQUIRE_FIND_PACKAGE_FREETYPE
     zip      OGRE_CONFIG_ENABLE_ZIP
@@ -54,6 +49,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools    OGRE_BUILD_TOOLS
     tools    OGRE_INSTALL_TOOLS
 )
+
+if("java" IN_LIST FEATURES OR "python" IN_LIST FEATURES OR "csharp" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_REQUIRE_FIND_PACKAGE_SWIG=ON")
+endif()
 
 if(CMAKE_REQUIRE_FIND_PACKAGE_SWIG)
     vcpkg_find_acquire_program(SWIG)
@@ -169,4 +168,4 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
