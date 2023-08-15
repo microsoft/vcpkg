@@ -7982,7 +7982,7 @@
     },
     "symengine": {
       "baseline": "0.10.1",
-      "port-version": 0
+      "port-version": 1
     },
     "systemc": {
       "baseline": "2.3.3",
