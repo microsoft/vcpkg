@@ -35,4 +35,18 @@ file(REMOVE
       "${CURRENT_PACKAGES_DIR}/bin/capstone.dll"
       ) # Import via nuget / used in samples
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+        "${CURRENT_PACKAGES_DIR}/lib/unicorn.lib"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/unicorn.lib"
+    )
+else()
+    file(REMOVE
+        "${CURRENT_PACKAGES_DIR}/lib/unicorn_static.lib"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/unicorn_static.lib"
+    )
+endif()
+
 file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/COPYING.LIB" "${CURRENT_PACKAGES_DIR}/debug/lib/COPYING.LIB")
