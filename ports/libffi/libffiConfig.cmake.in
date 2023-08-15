@@ -1,5 +1,19 @@
-@PACKAGE_INIT@
-
 if(NOT TARGET libffi)
-  include("${CMAKE_CURRENT_LIST_DIR}/libffiTargets.cmake")
+    find_library(LIBFFI_LIBRARY_RELEASE NAMES ffi PATHS "@CURRENT_PACKAGES_DIR@/lib" REQUIRED)
+    find_library(LIBFFI_LIBRARY_DEBUG NAMES ffi PATHS "@CURRENT_PACKAGES_DIR@/debug/lib")
+    mark_as_advanced(LIBFFI_LIBRARY_RELEASE LIBFFI_LIBRARY_DEBUG)
+    add_library(libffi UNKNOWN IMPORTED)
+    set_target_properties(libffi PROPERTIES
+        IMPORTED_CONFIGURATIONS "Release"
+        INTERFACE_INCLUDE_DIRECTORIES "@CURRENT_PACKAGES_DIR@/include"
+        IMPORTED_LOCATION_RELEASE "${LIBFFI_LIBRARY_RELEASE}"
+        IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
+    )
+    if(LIBFFI_LIBRARY_DEBUG)
+        set_property(TARGET libffi APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug)
+        set_target_properties(libffi PROPERTIES
+            IMPORTED_LOCATION_DEBUG "${LIBFFI_LIBRARY_DEBUG}"
+            IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C"
+        )
+    endif()
 endif()
