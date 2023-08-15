@@ -177,7 +177,7 @@
       "port-version": 2
     },
     "arg-router": {
-      "baseline": "1.3.0",
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "argagg": {
@@ -406,7 +406,7 @@
     },
     "azure-core-amqp-cpp": {
       "baseline": "1.0.0-beta.2",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-core-cpp": {
       "baseline": "1.10.2",
@@ -3197,7 +3197,7 @@
       "port-version": 0
     },
     "highway": {
-      "baseline": "1.0.4",
+      "baseline": "1.0.6",
       "port-version": 0
     },
     "hikogui": {
@@ -4029,8 +4029,8 @@
       "port-version": 1
     },
     "libdjinterop": {
-      "baseline": "0.19.1",
-      "port-version": 1
+      "baseline": "0.19.2",
+      "port-version": 0
     },
     "libdmx": {
       "baseline": "1.1.4",
@@ -4278,7 +4278,7 @@
     },
     "liblemon": {
       "baseline": "2019-06-13",
-      "port-version": 6
+      "port-version": 7
     },
     "liblinear": {
       "baseline": "243",
@@ -4930,7 +4930,7 @@
     },
     "libxt": {
       "baseline": "1.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libxtst": {
       "baseline": "1.2.4",
@@ -6082,7 +6082,7 @@
     },
     "openslide": {
       "baseline": "3.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "openssl": {
       "baseline": "3.1.2",
@@ -6602,7 +6602,7 @@
     },
     "python3": {
       "baseline": "3.11.4",
-      "port-version": 1
+      "port-version": 2
     },
     "qca": {
       "baseline": "2.3.5",
@@ -6626,6 +6626,10 @@
     },
     "qoi": {
       "baseline": "2023-08-10",
+      "port-version": 0
+    },
+    "qoixx": {
+      "baseline": "2022-12-07",
       "port-version": 0
     },
     "qpid-proton": {
@@ -7615,6 +7619,10 @@
     "simple-fft": {
       "baseline": "2020-06-14",
       "port-version": 2
+    },
+    "simpleble": {
+      "baseline": "2023-07-29",
+      "port-version": 0
     },
     "simpleini": {
       "baseline": "4.19",
@@ -8894,7 +8902,7 @@
     },
     "xmlsec": {
       "baseline": "1.2.37",
-      "port-version": 1
+      "port-version": 2
     },
     "xnnpack": {
       "baseline": "2022-02-17",
@@ -9041,7 +9049,7 @@
       "port-version": 0
     },
     "zlmediakit": {
-      "baseline": "2023-08-08",
+      "baseline": "2023-08-12",
       "port-version": 0
     },
     "zookeeper": {
