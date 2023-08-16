@@ -18,6 +18,7 @@ set(PATCHES
     0010-dont-skip-rpath.patch
     0012-force-disable-curses.patch
     0014-fix-get-python-inc-output.patch
+    0015-dont-use-WINDOWS-def.patch
     0016-undup-ffi-symbols.patch # Required for lld-link.
     add-vcpkg-search-path.patch # Required so that the build python3 executable can find dependent dll's within the vcpkg installed tree without having to copy them which would otherwise result in shared ownership of files problem. (e.g. using numpy build via vcpkg which requires lapack/blas)
 )
