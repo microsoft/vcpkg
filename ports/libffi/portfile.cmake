@@ -50,6 +50,7 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
