@@ -5429,7 +5429,7 @@
       "port-version": 2
     },
     "mongo-c-driver": {
-      "baseline": "1.22.2",
+      "baseline": "1.24.3",
       "port-version": 0
     },
     "mongo-cxx-driver": {
