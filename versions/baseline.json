@@ -4802,7 +4802,7 @@
     },
     "libwebp": {
       "baseline": "1.3.1",
-      "port-version": 1
+      "port-version": 2
     },
     "libwebsockets": {
       "baseline": "4.3.2",
