@@ -5981,7 +5981,7 @@
       "port-version": 2
     },
     "opencolorio": {
-      "baseline": "2.1.2",
+      "baseline": "2.2.1",
       "port-version": 0
     },
     "opencolorio-tools": {
@@ -6041,7 +6041,7 @@
       "port-version": 4
     },
     "openimageio": {
-      "baseline": "2.4.13.0",
+      "baseline": "2.4.14.0",
       "port-version": 0
     },
     "openjpeg": {

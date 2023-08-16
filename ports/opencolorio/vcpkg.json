@@ -8,6 +8,7 @@
   "dependencies": [
     "expat",
     "imath",
+    "minizip-ng",
     "pystring",
     {
       "name": "vcpkg-cmake",
@@ -17,8 +18,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "yaml-cpp",
-    "minizip-ng"
+    "yaml-cpp"
   ],
   "features": {
     "tools": {
