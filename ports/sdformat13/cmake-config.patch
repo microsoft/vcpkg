@@ -10,3 +10,14 @@ index 3465a8f..2b57440 100644
  
  if (BUILD_TESTING)
    # Build this test file only if Gazebo Tools is installed.
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -58,6 +58,6 @@
+   if (NOT DEFINED USE_INTERNAL_URDF OR NOT USE_INTERNAL_URDF)
+-    gz_find_package(GzURDFDOM VERSION 1.0 QUIET)
++    gz_find_package(GzURDFDOM)
+     if (NOT GzURDFDOM_FOUND)
+       if (NOT DEFINED USE_INTERNAL_URDF)
+         # fallback to internal urdf
+         set(USE_INTERNAL_URDF ON)

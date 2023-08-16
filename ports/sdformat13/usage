@@ -1,4 +1,0 @@
-sdformat13 provides CMake targets:
-
-    find_package(sdformat13 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE sdformat13::sdformat13)
