@@ -3042,7 +3042,7 @@
     },
     "gsoap": {
       "baseline": "2.8.112",
-      "port-version": 1
+      "port-version": 2
     },
     "gst-rtsp-server": {
       "baseline": "1.20.5",
