@@ -12,15 +12,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # There is no debug configuration
     # As it is a C library, build the release configuration and copy its output to the debug folder
     set(VCPKG_BUILD_TYPE release)
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH proj/dll/ocilib_dll.sln
-        INCLUDES_SUBPATH include
-        LICENSE_SUBPATH LICENSE
         RELEASE_CONFIGURATION "Release - ANSI"
-        PLATFORM "${VCPKG_TARGET_ARCHITECTURE}"
-        USE_VCPKG_INTEGRATION
-        ALLOW_ROOT_INCLUDES)
+        PLATFORM ${VCPKG_TARGET_ARCHITECTURE}
+    )
+
+    file(COPY "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug")
     file(COPY "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
@@ -42,5 +41,6 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/${PORT}" "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
-    file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
