@@ -46,7 +46,7 @@ vcpkg_extract_source_archive_ex(
     # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
     # REF 1.0.0
     # (Optional) Read the docs for how to generate patches at:
-    # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
+    # https://github.com/microsoft/vcpkg-docs/blob/main/vcpkg/examples/patching.md
     # PATCHES
     #   001_port_fixes.patch
     #   002_more_port_fixes.patch

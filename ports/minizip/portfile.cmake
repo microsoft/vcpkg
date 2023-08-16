@@ -1,7 +1,4 @@
-# When this port is updated, the minizip port should be updated at the same time
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
+# When zlib updated, the minizip port should be updated at the same time
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO madler/zlib
@@ -15,6 +12,20 @@ vcpkg_from_github(
         pkgconfig.patch
 )
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+# Maintainer switch: Temporarily set this to 1 to re-generate the lists
+# of exported symbols. This is needed when the version is bumped.
+set(GENERATE_SYMBOLS 0)
+if(GENERATE_SYMBOLS)
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+        vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    else()
+        set(GENERATE_SYMBOLS 0)
+    endif()
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         bzip2   ENABLE_BZIP2
@@ -23,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+          "${CMAKE_CURRENT_LIST_DIR}/minizip-win32.def"
           "${CMAKE_CURRENT_LIST_DIR}/unofficial-minizipConfig.cmake.in"
     DESTINATION "${SOURCE_PATH}/contrib/minizip"
 )
@@ -56,3 +68,8 @@ endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/minizipConfig.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/minizipConfig.cmake" @ONLY)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/contrib/minizip/MiniZip64_info.txt")
+
+if(GENERATE_SYMBOLS)
+    include("${CMAKE_CURRENT_LIST_DIR}/lib-to-def.cmake")
+    lib_to_def(BASENAME minizip REGEX "(call|fill|unz|win32|zip)")
+endif()

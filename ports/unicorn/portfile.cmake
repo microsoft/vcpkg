@@ -1,7 +1,3 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
-
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     message(FATAL_ERROR "unicorn can currently only be built with /MT or /MTd (static CRT linkage)")
 endif()
@@ -17,40 +13,40 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(UNICORN_PLATFORM "Win32")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(UNICORN_PLATFORM "x64")
-else()
-    message(FATAL_ERROR "Unsupported architecture")
-endif()
-
-vcpkg_build_msbuild(
-    PROJECT_PATH "${SOURCE_PATH}/msvc/unicorn.sln"
-    PLATFORM "${UNICORN_PLATFORM}"
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "msvc/unicorn.sln"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Release/unicorn.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Release/unicorn.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Debug/unicorn.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Debug/unicorn.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-else()
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Release/unicorn_static.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Debug/unicorn_static.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-endif()
-
 file(
-    INSTALL "${SOURCE_PATH}/msvc/distro/include/unicorn"
+    INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/msvc/distro/include/unicorn"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     RENAME "unicorn"
 )
-file(
-    INSTALL "${SOURCE_PATH}/COPYING"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unicorn"
-    RENAME "copyright"
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/COPYING_GLIB"
 )
-file(
-    INSTALL "${SOURCE_PATH}/COPYING_GLIB"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unicorn"
-)
+
+file(REMOVE
+      "${CURRENT_PACKAGES_DIR}/debug/bin/Gee.External.Capstone.Proxy.dll"
+      "${CURRENT_PACKAGES_DIR}/bin/Gee.External.Capstone.Proxy.dll"
+      "${CURRENT_PACKAGES_DIR}/debug/bin/capstone.dll"
+      "${CURRENT_PACKAGES_DIR}/bin/capstone.dll"
+      ) # Import via nuget / used in samples
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+        "${CURRENT_PACKAGES_DIR}/lib/unicorn.lib"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/unicorn.lib"
+    )
+else()
+    file(REMOVE
+        "${CURRENT_PACKAGES_DIR}/lib/unicorn_static.lib"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/unicorn_static.lib"
+    )
+endif()
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/COPYING.LIB" "${CURRENT_PACKAGES_DIR}/debug/lib/COPYING.LIB")
