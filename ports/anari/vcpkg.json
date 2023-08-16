@@ -5,10 +5,7 @@
   "homepage": "https://www.khronos.org/anari",
   "license": "Apache-2.0",
   "dependencies": [
-    {
-      "name": "glm",
-      "host": true
-    },
+    "glm",
     {
       "name": "vcpkg-cmake",
       "host": true
