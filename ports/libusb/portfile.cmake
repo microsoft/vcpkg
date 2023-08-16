@@ -11,46 +11,23 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-function(replace_runtime_library PROJ_FILE)
-    if(VCPKG_CRT_LINKAGE STREQUAL "static")
-        file(READ "${PROJ_FILE}" PROJ_CONTENT)
-        string(REPLACE "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" PROJ_CONTENT "${PROJ_CONTENT}")
-        string(REPLACE "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" PROJ_CONTENT "${PROJ_CONTENT}")
-        file(WRITE "${PROJ_FILE}" "${PROJ_CONTENT}")
-    else()
-        file(READ "${PROJ_FILE}" PROJ_CONTENT)
-        string(REPLACE "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" PROJ_CONTENT "${PROJ_CONTENT}")
-        string(REPLACE "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" PROJ_CONTENT "${PROJ_CONTENT}")
-        file(WRITE "${PROJ_FILE}" "${PROJ_CONTENT}")
-    endif()
-endfunction(replace_runtime_library)
-
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-  # Use /Z7 to embed debug information into the executable
-  vcpkg_replace_string(
-      "${SOURCE_PATH}/msvc/Base.props"
-      "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
-      "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
-  )
 
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
       set(LIBUSB_PROJECT_TYPE dll)
   else()
       set(LIBUSB_PROJECT_TYPE static)
   endif()
-  replace_runtime_library("${SOURCE_PATH}/msvc/Configuration.Base.props")
-  replace_runtime_library("${SOURCE_PATH}/msvc/Configuration.DynamicLibrary.props")
-  replace_runtime_library("${SOURCE_PATH}/msvc/Configuration.StaticLibrary.props")
 
   # The README.md file in the archive is a symlink to README
   # which causes issues with the windows MSBUILD process
   file(REMOVE "${SOURCE_PATH}/README.md")
 
-  vcpkg_install_msbuild(
+  vcpkg_msbuild_install(
       SOURCE_PATH "${SOURCE_PATH}"
       PROJECT_SUBPATH msvc/libusb_${LIBUSB_PROJECT_TYPE}.vcxproj
-      LICENSE_SUBPATH COPYING
   )
+
   file(INSTALL "${SOURCE_PATH}/libusb/libusb.h"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/libusb-1.0")
   set(prefix "")
   set(exec_prefix [[${prefix}]])
