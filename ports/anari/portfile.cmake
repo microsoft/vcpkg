@@ -18,13 +18,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-  CONFIG_PATH "lib/cmake/${PORT}-${VERSION}")
+  CONFIG_PATH "lib/cmake/${PORT}-${VERSION}"
+)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE 
   "${CURRENT_PACKAGES_DIR}/debug/include" 
-  "${CURRENT_PACKAGES_DIR}/debug/share")
+  "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 vcpkg_install_copyright(
   FILE_LIST "${SOURCE_PATH}/LICENSE"
