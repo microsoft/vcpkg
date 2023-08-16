@@ -12,6 +12,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "glm",
+      "host": true
     }
   ]
 }

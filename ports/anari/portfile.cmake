@@ -9,7 +9,9 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
+    -DBUILD_CTS=OFF
     -DBUILD_EXAMPLES=OFF
+    -DBUILD_HELIDE_DEVICE=OFF # Default implementation is disabled because it depends on an internal version of Embree.
     -DBUILD_TESTING=OFF
     -DBUILD_VIEWER=OFF
 )
