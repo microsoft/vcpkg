@@ -5394,7 +5394,7 @@
     },
     "minizip-ng": {
       "baseline": "4.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "mio": {
       "baseline": "2023-03-03",
