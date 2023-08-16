@@ -7921,7 +7921,7 @@
       "port-version": 2
     },
     "stduuid": {
-      "baseline": "1.2.2",
+      "baseline": "1.2.3",
       "port-version": 0
     },
     "stftpitchshift": {
