@@ -5018,7 +5018,7 @@
     },
     "llvm": {
       "baseline": "15.0.7",
-      "port-version": 3
+      "port-version": 4
     },
     "lmdb": {
       "baseline": "0.9.29",
@@ -6602,7 +6602,7 @@
     },
     "python3": {
       "baseline": "3.11.4",
-      "port-version": 2
+      "port-version": 3
     },
     "qca": {
       "baseline": "2.3.5",
