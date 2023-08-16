@@ -5,5 +5,5 @@ file(REMOVE
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg.json"
     )
 
-vcpkg_install_copyright("${VCPKG_ROOT_DIR}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")
 

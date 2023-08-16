@@ -1,0 +1,95 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Remove-vcpkg-make-test",
+        "type": "shell",  
+        "command": "${workspaceFolder}/vcpkg remove vcpkg-make-test",      
+      },
+      {
+        "label": "Debug CMake configure within vcpkg",
+        "type": "shell",
+        "dependsOn" : [
+          "Remove-vcpkg-make-test"
+        ],
+        "command": "${workspaceFolder}/vcpkg",
+        "args" : [
+          "install",
+          "vcpkg-make-test",
+          "--binarysource=clear",
+          "--x-cmake-args=-DVCPKG_CMAKE_CONFIGURE_OPTIONS=--debugger;--debugger-pipe=\\\\.\\pipe\\vcpkg-cmake-debugging"
+        ],
+        "isBackground": true,
+        "group": "none",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": [
+          {
+          "pattern": [
+              {
+              "regexp": ".",
+              "file": 1,
+              "location": 2,
+              "message": 3
+              }
+          ],
+          "background": {
+              "activeOnStart": true,
+              "beginsPattern": "Computing installation plan",
+              "endsPattern": "Configuring x64-windows-release",
+          }
+          }
+      ]
+      },
+      {
+        "label": "Debug portfile execution",
+        "type": "shell",
+        "dependsOn" : [
+          "Remove-vcpkg-make-test"
+        ],
+        "command": "${workspaceFolder}/vcpkg",
+        "args" : [
+          "install",
+          "vcpkg-make-test",
+          "--binarysource=clear",
+          "--x-cmake-args=--debugger",
+          "--x-cmake-args=--debugger-pipe=\\\\.\\pipe\\vcpkg-cmake-debugging"
+        ],
+        "isBackground": true,
+        "group": "none",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": [
+          {
+          "pattern": [
+              {
+              "regexp": ".",
+              "file": 1,
+              "location": 2,
+              "message": 3
+              }
+          ],
+          "background": {
+              "activeOnStart": true,
+              "beginsPattern": "Computing installation plan",
+              "endsPattern": "Configuring x64-windows-release",
+          }
+          }
+      ]
+      },
+      {
+        "type": "cmake",
+        "label": "CMake: Installieren",
+        "command": "install",
+        "problemMatcher": [],
+        "detail": "CMake-Vorlage Installieren Aufgabe"
+      },
+      
+    ]
+}

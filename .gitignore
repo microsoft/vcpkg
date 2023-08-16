@@ -280,7 +280,7 @@ __pycache__/
 # vcpkg - Start
 ############################################################
 
-.vscode/
+#.vscode/
 *.code-workspace
 /buildtrees/
 /build*/
