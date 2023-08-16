@@ -1,10 +1,11 @@
 vcpkg_minimum_required(VERSION 2022-10-12)
 
-vcpkg_from_git(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL "https://github.com/libunwind/libunwind.git"
-    REF 24947191d61dda869e039e0414fe97e9f594acd5
+    REPO "libunwind/libunwind"
+    REF v1.7.2
     HEAD_REF "v1.7-stable"
+    SHA512 b560f45cfa8ca3a60b41779afbcd862860c0f7af4014298c0b22eaec8b39740349c2077a940fb0d235c8f7d6a567e00c5cb0a04c251053f90c51320616784fd2
 )
 
 vcpkg_configure_make(
