@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "libunwind/libunwind"
@@ -12,7 +10,7 @@ vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
 )
-vcpkg_build_make(ENABLE_INSTALL)
+vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
 
