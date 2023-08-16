@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         disable-dynamic-when-static.patch
         fix-include-directory.patch # vcpkg legacy decision
+        fix-missing-header.patch  # for building mongo-c-driver
 )
 file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")
 
