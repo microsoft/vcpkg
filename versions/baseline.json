@@ -4086,7 +4086,7 @@
     },
     "libfabric": {
       "baseline": "1.13.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libffi": {
       "baseline": "3.4.4",
