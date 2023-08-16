@@ -14,8 +14,10 @@ index eeaf20b46..13bb1fe7b 100644
     extern PyTypeObject PyWindowsConsoleIO_Type;
  #  define PyWindowsConsoleIO_Check(op) \
         (PyObject_TypeCheck((op), &PyWindowsConsoleIO_Type))
-@@ -88,6 +91,94 @@ __attribute__ ((section (".PyRuntime")))
+@@ -88,8 +91,96 @@ __attribute__ ((section (".PyRuntime")))
  = _PyRuntimeState_INIT;
+ _Py_COMP_DIAG_POP
+ 
  static int runtime_initialized = 0;
  
 +#if defined(MS_WINDOWS)
