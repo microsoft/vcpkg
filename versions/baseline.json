@@ -4242,7 +4242,7 @@
     },
     "libirecovery": {
       "baseline": "1.0.25",
-      "port-version": 7
+      "port-version": 8
     },
     "libjpeg-turbo": {
       "baseline": "2.1.5.1",
