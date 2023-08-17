@@ -41,6 +41,21 @@ endfunction()
 
 
 function(z_vcpkg_make_prepare_compiler_flags)
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "NO_CPP" 
+        "LIBS_OUT"
+        "LANGUAGES"
+    )
+    if(DEFINED arg_LANGUAGES)
+        # What a nice trick to get more output from vcpkg_cmake_get_vars if required
+        # But what will it return for ASM on windows? TODO: Needs actual testing
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${arg_LANGUAGES}")
+    endif()
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+
+    #TODO: parent scope requiered vars
+
 endfunction()
 
 function(z_vcpkg_make_prepare_environment_common)
@@ -67,3 +82,18 @@ macro(z_vcpkg_conflicting_args)
     unset(conflicting_args_set)
     unset(z_vcpkg_conflicting_args_index)
 endmacro()
+
+function(z_vcpkg_set_global_property property value)
+    if(DEFINED ARGN AND NOT ARGN MATCHES "^APPEND(_STRING)?$")
+        message(FATAL_ERROR "'${CMAKE_CURRENT_FUNCTION}' called with invalid arguments '${ARGN}'")
+    endif()
+    set_property(GLOBAL ${ARGN} PROPERTY "z_vcpkg_global_property_${property}" ${value})
+endfunction()
+
+function(z_vcpkg_get_global_property outvar property)
+    if(DEFINED ARGN AND NOT ARGN STREQUAL "SET")
+        message(FATAL_ERROR "'${CMAKE_CURRENT_FUNCTION}' called with invalid arguments '${ARGN}'")
+    endif()
+    get_property(outprop GLOBAL PROPERTY "z_vcpkg_global_property_${property}")
+    set(${outvar} "${outprop}" PARENT_SCOPE)
+endfunction()
