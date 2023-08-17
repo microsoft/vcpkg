@@ -6,7 +6,7 @@
       {
         "label": "Remove-vcpkg-make-test",
         "type": "shell",  
-        "command": "${workspaceFolder}/vcpkg remove vcpkg-make-test",      
+        "command": "${workspaceFolder}/vcpkg remove vcpkg-make --recurse",
       },
       {
         "label": "Debug CMake configure within vcpkg",
