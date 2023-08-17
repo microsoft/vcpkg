@@ -71,7 +71,7 @@ Prerrequisitos:
 - [Visual Studio][getting-started:visual-studio] 2015 Update 3 o superior con el paquete Inglés de Visual Studio.
 
 Primero, descargue y compile vcpkg; puede ser instalado en cualquier lugar, pero por lo general recomendamos usar vcpkg  
-como submódulo para el repositorio que lo consume pueda permanecer autónomo.
+como submódulo, asi el repositorio que lo consume puede permanecer autónomo.
 Alternativamente vcpkg puede ser instalado globalmente;
 recomendamos que sea en un lugar como `C:\src\vcpkg` o `C:\dev\vcpkg`, 
 
