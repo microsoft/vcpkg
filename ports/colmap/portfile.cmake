@@ -1,13 +1,11 @@
-set(COLMAP_REF "30da037ce19bdceb6d239c45342fadb221bdabb2") # 3.8 with bugfixes
+set(COLMAP_REF "58ba46f81db47e2982545f763698f312d793e9e3") # Aug 13, 2023
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
     REF "${COLMAP_REF}"
     SHA512 2aad3c39efee025bebdbec41215f32968c3a63e160f9e7de0a6a2bf2d2c96bb1c20af0e10173d1d81ed4712e58fd97e7c8aabef8f9c47cc542d89b14c6ae420d
-    HEAD_REF dev
-    PATCHES
-        fix-dependencies.patch
+    HEAD_REF main
 )
 
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
