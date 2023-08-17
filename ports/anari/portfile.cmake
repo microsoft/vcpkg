@@ -17,7 +17,6 @@ vcpkg_cmake_configure(
     -DBUILD_EXAMPLES=OFF
     -DBUILD_TESTING=OFF
     -DBUILD_VIEWER=OFF
-    -DPYTHON_EXECUTABLE=${PYTHON3}
 )
 
 vcpkg_cmake_install()
@@ -31,6 +30,13 @@ file(REMOVE_RECURSE
   "${CURRENT_PACKAGES_DIR}/debug/include" 
   "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE 
+    "${CURRENT_PACKAGES_DIR}/bin" 
+    "${CURRENT_PACKAGES_DIR}/debug/bin"
+  )
+endif()
 
 vcpkg_install_copyright(
   FILE_LIST "${SOURCE_PATH}/LICENSE"
