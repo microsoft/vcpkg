@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ebiggers/libdeflate
     REF "v${VERSION}"
-    SHA512 4e2c0f78e55befc8cbc390722ee5e9e7662315eaafe1979e300972990acf4afffc32a1220cca7a6e944d551a430dd13d36b40066dfe8141789de1a5418ac620f
+    SHA512 8a60fa5850f323389370f931579f85a094a35b3db334f2a2afa61bee39ecebc797e93c6fe5deb4178e19d83a1427533975dba6c05ce0b1db88b43c9268d09124
     HEAD_REF master
     PATCHES
         remove_wrong_c_flags_modification.diff
@@ -12,8 +12,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         compression   LIBDEFLATE_COMPRESSION_SUPPORT
         decompression LIBDEFLATE_DECOMPRESSION_SUPPORT
-        gzip          LIBDEFLATE_ZLIB_SUPPORT
-        zlib          LIBDEFLATE_GZIP_SUPPORT
+        gzip          LIBDEFLATE_GZIP_SUPPORT
+        zlib          LIBDEFLATE_ZLIB_SUPPORT
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LIBDEFLATE_BUILD_STATIC)
