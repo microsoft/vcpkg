@@ -2405,8 +2405,8 @@
       "port-version": 7
     },
     "exiv2": {
-      "baseline": "0.27.6",
-      "port-version": 3
+      "baseline": "0.28.0",
+      "port-version": 0
     },
     "expat": {
       "baseline": "2.5.0",
