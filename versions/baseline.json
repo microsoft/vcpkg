@@ -2958,7 +2958,7 @@
     },
     "gobject-introspection": {
       "baseline": "1.72.0",
-      "port-version": 4
+      "port-version": 5
     },
     "google-cloud-cpp": {
       "baseline": "2.14.0",
