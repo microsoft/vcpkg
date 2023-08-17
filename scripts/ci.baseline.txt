@@ -42,7 +42,6 @@
 ace:arm-neon-android=fail
 ace:arm64-android=fail
 ace:x64-android=fail
-ace:x64-windows-static-md=fail
 allegro5:arm-neon-android=fail
 allegro5:arm64-android=fail
 allegro5:x64-android=fail
@@ -969,12 +968,6 @@ openturns:x64-osx=fail
 # openvdb\openvdb\libopenvdb.lib : fatal error LNK1248: image size (109A36020) exceeds maximum allowable size (FFFFFFFF)
 openvdb:x64-windows-static=fail
 openvdb:x64-windows-static-md=fail
-# openvino conflicts with oneDNN, see https://github.com/microsoft/vcpkg/pull/32418#issuecomment-1634989305
-openvino:x64-linux=skip
-openvino:x64-osx=skip
-openvino:x64-windows=skip
-openvino:x64-windows-static=skip
-openvino:x64-windows-static-md=skip
 openvpn3:x64-osx=fail
 openvpn3:arm64-osx=fail
 openvr:x64-windows-static=fail

@@ -23,6 +23,14 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-xmlsec)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/xmlsec/xmlsec.h"
+    "ifdef XMLSEC_NO_SIZE_T"
+    "if 1 //ifdef XMLSEC_NO_SIZE_T"
+  )
+endif()
+
 # unofficial legacy usage
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/xmlsec-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 

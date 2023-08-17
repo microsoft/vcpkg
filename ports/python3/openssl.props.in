@@ -10,5 +10,14 @@
         ${CRYPTO_DEBUG};${SSL_DEBUG};%(AdditionalDependencies)
       </AdditionalDependencies>
     </Link>
+    <Lib>
+      <AdditionalDependencies>Crypt32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExternals)'=='Release|true'">
+        ${CRYPTO_RELEASE};${SSL_RELEASE};%(AdditionalDependencies)
+      </AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExternals)'=='Debug|true'">
+        ${CRYPTO_DEBUG};${SSL_DEBUG};%(AdditionalDependencies)
+      </AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
 </Project>
