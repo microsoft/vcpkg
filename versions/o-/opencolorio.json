@@ -1,12 +1,16 @@
 {
   "versions": [
     {
+<<<<<<< HEAD
       "git-tree": "1a947849587bac230890f7ff379721027d137c95",
       "version-semver": "2.2.1",
       "port-version": 0
     },
     {
       "git-tree": "d728bb2681e89ffbe9c6e1ec2811d5d194d9fd09",
+=======
+      "git-tree": "9569944b76966b78bec5ef83672899acd7e4febe",
+>>>>>>> master
       "version-semver": "2.1.2",
       "port-version": 0
     },
