@@ -42,7 +42,6 @@
 ace:arm-neon-android=fail
 ace:arm64-android=fail
 ace:x64-android=fail
-ace:x64-windows-static-md=fail
 allegro5:arm-neon-android=fail
 allegro5:arm64-android=fail
 allegro5:x64-android=fail
