@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO osrf/sdformat
-    REF a978ade73e7b3509d378667dca394681e55ca068 #9.8.0
-    SHA512 958c0613da7c885f81cceee726da10574188e5edafb7d3aca680e40bbdca6ff1bc7b721ee1c56c53e3973960ae715912adfa6541cf3e35d32a5dc2ef2a997505 
+    REPO gazebosim/sdformat
+    REF "sdformat9_${VERSION}"
+    SHA512 388e1b336750c1a2b05abf3a521ea6ab809e1bbf6c4c97eaa7e11c6474a894479840910c90197bd1dbddcd4a11d983897678d31d5939afc60b647772e456bd24
     HEAD_REF sdf9
     PATCHES
         fix-dependency-urdfdom.patch
@@ -39,4 +39,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,13 +1,10 @@
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO osrf/sdformat
-    REF sdformat10_10.0.0
-    SHA512 1caf98427d25e7c17bfacaab20382c573fac0c965b40ad0c5e0efd32ddfdaa20250d8c79ecf574989ba10b1feb884a9df3927b18ec2cd88f7c66b4d8194bc731
+    REPO gazebosim/sdformat
+    REF "sdformat10_${VERSION}"
+    SHA512 df8ec1cc5341be57d687dfb664a9d0ff085725906e8c43d8c843b83371beaaaf0830b1447158995942c67de5700e6795fa6ccd96f0a3ee9467f33ee1cc57c38a
     HEAD_REF sdf10
-    PATCHES
-        fix-quote.patch
-        no-absolute.patch
 )
 
 # Ruby is required by the sdformat build process
@@ -39,4 +36,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
