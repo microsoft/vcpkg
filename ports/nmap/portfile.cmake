@@ -38,24 +38,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
         WORKING_DIRECTORY ${SOURCE_PATH}/mswin32
         LOGNAME upgrade-Packet-${TARGET_TRIPLET}
     )
-    # Build
-    vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/mswin32/nmap.vcxproj
-    PLATFORM ${MSBUILD_PLATFORM}
-    USE_VCPKG_INTEGRATION
+    vcpkg_msbuild_install(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH mswin32/nmap.vcxproj
+        PLATFORM ${MSBUILD_PLATFORM}
     )
-    
-    # Install
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Release)
-        file(INSTALL ${SOURCE_PATH}/mswin32/Release/nmap.exe
-                     ${SOURCE_PATH}/mswin32/Release/nmap.pdb
-                     DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    endif()
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Debug)
-        file(INSTALL ${SOURCE_PATH}/mswin32/Debug/nmap.exe
-                     ${SOURCE_PATH}/mswin32/Debug/nmap.pdb
-                     DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    endif()
 else()
     set(ENV{LDFLAGS} "$ENV{LDFLAGS} -pthread")
     set(OPTIONS --without-nmap-update --with-openssl=${CURRENT_INSTALLED_DIR} --with-libssh2=${CURRENT_INSTALLED_DIR} --with-libz=${CURRENT_INSTALLED_DIR} --with-libpcre=${CURRENT_INSTALLED_DIR})
@@ -112,9 +99,7 @@ else()
     set(SOURCE_PATH "${source_path_release}")
 endif()
 
-vcpkg_copy_pdbs()
-
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
