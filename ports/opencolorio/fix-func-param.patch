@@ -47,3 +47,20 @@ index 85fc7bb..e07ed23 100644
  
      MinizipNgHandlerGuard extracterGuard(reader, false, false);
  
+diff --git a/src/OpenColorIO/OCIOZArchive.cpp b/src/OpenColorIO/OCIOZArchive.cpp
+index 85fc7bb..45416cd 100644
+--- a/src/OpenColorIO/OCIOZArchive.cpp
++++ b/src/OpenColorIO/OCIOZArchive.cpp
+@@ -24,9 +24,11 @@
+ #include "mz_strm_mem.h"
+ #include "mz_strm_os.h"
+ #include "mz_strm_split.h"
+-#include "mz_strm_zlib.h"
+ #include "mz_zip.h"
+ #include "mz_zip_rw.h"
++#ifndef __APPLE__
++#include "mz_strm_zlib.h"
++#endif
+
+ namespace OCIO_NAMESPACE
+ {
