@@ -2885,8 +2885,8 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "1.3.3",
-      "port-version": 1
+      "baseline": "1.3.5",
+      "port-version": 0
     },
     "glbinding": {
       "baseline": "3.1.0",
@@ -2953,7 +2953,7 @@
       "port-version": 21
     },
     "gmsh": {
-      "baseline": "4.9.0",
+      "baseline": "4.11.1",
       "port-version": 0
     },
     "gobject-introspection": {
@@ -3042,7 +3042,7 @@
     },
     "gsoap": {
       "baseline": "2.8.112",
-      "port-version": 1
+      "port-version": 2
     },
     "gst-rtsp-server": {
       "baseline": "1.20.5",
@@ -4017,7 +4017,7 @@
       "port-version": 2
     },
     "libdeflate": {
-      "baseline": "1.17",
+      "baseline": "1.18",
       "port-version": 0
     },
     "libdisasm": {
@@ -4086,7 +4086,7 @@
     },
     "libfabric": {
       "baseline": "1.13.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libffi": {
       "baseline": "3.4.4",
@@ -4242,7 +4242,7 @@
     },
     "libirecovery": {
       "baseline": "1.0.25",
-      "port-version": 7
+      "port-version": 8
     },
     "libjpeg-turbo": {
       "baseline": "2.1.5.1",
@@ -4334,7 +4334,7 @@
     },
     "libmicrohttpd": {
       "baseline": "0.9.77",
-      "port-version": 0
+      "port-version": 1
     },
     "libmikmod": {
       "baseline": "3.3.11.1",
@@ -4748,6 +4748,10 @@
       "baseline": "1.1",
       "port-version": 3
     },
+    "libunwind": {
+      "baseline": "1.7.2",
+      "port-version": 0
+    },
     "liburing": {
       "baseline": "2.3",
       "port-version": 1
@@ -4962,7 +4966,7 @@
     },
     "libzip": {
       "baseline": "1.9.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libzippp": {
       "baseline": "6.1-1.9.2",
@@ -5498,7 +5502,7 @@
     },
     "mpir": {
       "baseline": "2022-03-02",
-      "port-version": 1
+      "port-version": 2
     },
     "mpmcqueue": {
       "baseline": "2021-12-01",
@@ -6010,7 +6014,7 @@
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6598,7 +6602,7 @@
     },
     "python2": {
       "baseline": "2.7.18",
-      "port-version": 6
+      "port-version": 7
     },
     "python3": {
       "baseline": "3.11.4",
@@ -7274,7 +7278,7 @@
     },
     "rsasynccpp": {
       "baseline": "0.0.7",
-      "port-version": 2
+      "port-version": 3
     },
     "rsig": {
       "baseline": "0.1.1",
@@ -7917,7 +7921,7 @@
       "port-version": 2
     },
     "stduuid": {
-      "baseline": "1.2.2",
+      "baseline": "1.2.3",
       "port-version": 0
     },
     "stftpitchshift": {
@@ -8097,7 +8101,7 @@
       "port-version": 0
     },
     "thorvg": {
-      "baseline": "0.10.0",
+      "baseline": "0.10.1",
       "port-version": 0
     },
     "threadpool": {
@@ -8470,7 +8474,7 @@
     },
     "v8": {
       "baseline": "9.1.269.39",
-      "port-version": 5
+      "port-version": 6
     },
     "valijson": {
       "baseline": "0.6",
