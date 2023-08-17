@@ -16,6 +16,6 @@ vcpkg_msbuild_install(
     ADDITIONAL_LIBS getopt.lib irecovery.lib
 )
 
-vcpkg_install_copyright("${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
