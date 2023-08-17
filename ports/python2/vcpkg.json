@@ -1,9 +1,16 @@
 {
   "name": "python2",
   "version": "2.7.18",
-  "port-version": 6,
+  "port-version": 7,
   "description": "The Python programming language as an embeddable library",
   "homepage": "https://www.python.org",
   "license": "Python-2.0",
-  "supports": "!(arm & osx) & !(arm & windows) & !uwp"
+  "supports": "!(arm & osx) & !(arm & windows) & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
 }
