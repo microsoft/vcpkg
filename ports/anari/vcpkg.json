@@ -6,8 +6,10 @@
   "license": "Apache-2.0",
   "dependencies": [
     "glm",
-    "pthreads",
-    "python3",
+    {
+      "name": "python3",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
