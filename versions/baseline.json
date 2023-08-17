@@ -426,7 +426,7 @@
     },
     "azure-kinect-sensor-sdk": {
       "baseline": "1.4.1",
-      "port-version": 5
+      "port-version": 6
     },
     "azure-macro-utils-c": {
       "baseline": "2022-01-21",
