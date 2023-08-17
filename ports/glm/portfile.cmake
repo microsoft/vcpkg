@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO g-truc/glm
-    REF 5c46b9c07008ae65cb81ab79cd677ecc1934b903 #v0.9.9.8+20230608
+    REF 5c46b9c07008ae65cb81ab79cd677ecc1934b903 # commit on 2023-06-08
     SHA512 17315dd05059accf3d4084d35dd037d4001f88a1d91da9a6fd5cedecab652c8bef8efa89cd45e21cd227f964a03408401edc2384c22e50caa449abf71b23fd6a
     HEAD_REF master
 )
