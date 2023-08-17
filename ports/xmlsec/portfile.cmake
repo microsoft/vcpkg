@@ -1,11 +1,11 @@
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
-string(REPLACE "." "_" release_tag "xmlsec-${VERSION}")
+string(REPLACE "." "_" release_tag "xmlsec_${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lsh123/xmlsec
     REF "${release_tag}"
-    SHA512 4e4a9d6be76582e207c6c678feeaf1d572e2eac04fb032fa742e059e45f1eeebf664535d723e27cefb7026604cb445faecec0a801dcf65c95ae6d5cf046a0d1f
+    SHA512 c7b867edc23cb6cf08228f9737fc50e3bd08ac7baedc43e26d3cfd113ea54256ff357335b23aea7b5e49cd24809c3de9da1c9314eb5ab90727aa821530b72ef8
     HEAD_REF master
     PATCHES 
         pkgconfig_fixes.patch
