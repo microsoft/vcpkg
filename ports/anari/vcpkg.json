@@ -4,7 +4,7 @@
   "description": "Cross-Platform 3D Rendering Engine API.",
   "homepage": "https://www.khronos.org/anari",
   "license": "Apache-2.0",
-  "supports": "!android & !(arm64 & windows)",
+  "supports": "!(arm64 & windows)",
   "dependencies": [
     "glm",
     "python3",
