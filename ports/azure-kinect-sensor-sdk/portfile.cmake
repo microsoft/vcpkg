@@ -10,7 +10,7 @@ vcpkg_from_github(
         fix-dependency-imgui.patch
         fix-linux.patch
         fix-calibration-c.patch
-        fix-build-imgui.patch
+        fix-build-imgui.patch #https://github.com/microsoft/Azure-Kinect-Sensor-SDK/pull/1945
 )
 
 vcpkg_find_acquire_program(PYTHON3)
