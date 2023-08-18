@@ -1,7 +1,15 @@
 include_guard(GLOBAL)
 
 ### Mapping variables
-
+macro(z_vcpkg_make_set_common_vars)
+    set(path_suffix_RELEASE "")
+    set(path_suffix_DEBUG "/debug")
+    set(suffix_RELEASE "rel")
+    set(suffix_DEBUG "dbg")
+    foreach(config IN ITEMS RELEASE DEBUG)
+        set("workdir_${config}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${config}}")
+    endforeach()
+endmacro()
 
 ####
 function(z_vcpkg_make_determine_arch out_var value)
@@ -68,6 +76,17 @@ endfunction()
 
 
 ### General helper scripts (should maybe be moved to a seperate port)
+
+function(z_vcpkg_convert_to_msys_path outvar invar)
+    if(CMAKE_HOST_WIN32)
+        string(REGEX REPLACE "^([a-zA-Z]):/" "/\\1/" current_installed_dir_msys "${invar}")
+    endif()
+    set("${outvar}" "${current_installed_dir_msys}" PARENT_SCOPE)
+endfunction()
+function(z_vcpkg_escape_spaces_in_path outvar invar)
+    string(REPLACE " " "\\ " current_installed_dir_escaped "${invar}")
+    set("${outvar}" "${current_installed_dir_escaped}" PARENT_SCOPE)
+endfunction()
 
 macro(z_vcpkg_unparsed_args warning_level)
     if(DEFINED arg_UNPARSED_ARGUMENTS)

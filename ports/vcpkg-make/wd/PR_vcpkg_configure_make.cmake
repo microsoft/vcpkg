@@ -1,25 +1,4 @@
 
-# Define variables used in both vcpkg_configure_make and vcpkg_build_make:
-# short_name_<CONFIG>:           unique abbreviation for the given build type (rel, dbg)
-# path_suffix_<CONFIG>:          installation path suffix for the given build type ('', /debug)
-# current_installed_dir_escaped: CURRENT_INSTALLED_DIR with escaped space characters
-# current_installed_dir_msys:    CURRENT_INSTALLED_DIR with unprotected spaces, but drive letters transformed for msys
-macro(z_vcpkg_configure_make_common_definitions)
-    set(short_name_RELEASE "rel")
-    set(short_name_DEBUG "dbg")
-
-    set(path_suffix_RELEASE "")
-    set(path_suffix_DEBUG "/debug")
-
-    # Some PATH handling for dealing with spaces....some tools will still fail with that!
-    # In particular, the libtool install command is unable to install correctly to paths with spaces.
-    string(REPLACE " " "\\ " current_installed_dir_escaped "${CURRENT_INSTALLED_DIR}")
-    set(current_installed_dir_msys "${CURRENT_INSTALLED_DIR}")
-    if(CMAKE_HOST_WIN32)
-        string(REGEX REPLACE "^([a-zA-Z]):/" "/\\1/" current_installed_dir_msys "${current_installed_dir_msys}")
-    endif()
-endmacro()
-
 # Initializes well-known and auxiliary variables for flags
 # - ABIFLAGS_<CONFIG>: ABI flags which must be included in CC/CXX to satisfy both configure and libtool
 # - CPPFLAGS_<CONFIG>: preprocessor flags common to C and CXX
@@ -475,7 +454,6 @@ function(vcpkg_configure_make)
             set(ENV{LIBS} "${all_libs_string}")
         endif()
     endif()
-    debug_message("ENV{LIBS}:$ENV{LIBS}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT arg_NO_DEBUG)
         list(APPEND all_buildtypes DEBUG)
@@ -508,16 +486,6 @@ function(vcpkg_configure_make)
             endif()
             set(ENV{${ENV_VAR}} "${${ENV_VAR}_${current_buildtype}}")
         endforeach()
-
-        set(target_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_name_${current_buildtype}}")
-        file(MAKE_DIRECTORY "${target_dir}")
-        file(RELATIVE_PATH relative_build_path "${target_dir}" "${src_dir}")
-
-        if(arg_COPY_SOURCE)
-            file(COPY "${src_dir}/" DESTINATION "${target_dir}")
-            set(relative_build_path .)
-        endif()
-
 
         # Setup environment
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")

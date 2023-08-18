@@ -76,7 +76,7 @@ endfunction()
 
 function(vcpkg_prepare_pkgconfig config)
     set(subdir "")
-    if(config STREQUAL "debug")
+    if(config MATCHES "(DEBUG|debug)")
         set(subdir "/debug")
     endif()
 
@@ -169,8 +169,13 @@ function(vcpkg_copy_source config)
 endfunction()
 
 function(vcpkg_make_run_configure config)
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "COPY_SOURCE" 
+        "BASH;SOURCE_PATH;CONFIGURE_SUBPATH"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
+    )
     vcpkg_prepare_pkgconfig("${config}")
-    vcpkg_make_prepare_env("${config}")    
+    vcpkg_make_prepare_env("${config}")
     vcpkg_run_bash() # TODO: Add options. 
     vcpkg_make_restore_env()
     vcpkg_restore_pkgconfig()
@@ -189,20 +194,20 @@ function(vcpkg_make_configure) #
 
 
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;COPY_SOURCE;USE_WRAPPERS;NO_WRAPPERS;NO_CPP;DETERMINE_BUILD_TRIPLET"
+        "AUTOCONFIG;COPY_SOURCE;;NO_WRAPPERS;NO_CPP;NO_CONFIGURE_TRIPLET"
         "SOURCE_PATH;CONFIGURE_SUBPATH;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES;RUN_SCRIPTS"
     )
 
     z_vcpkg_unparsed_args(FATAL_ERROR)
-    z_vcpkg_conflicting_args(arg_USE_WRAPPERS arg_NO_WRAPPERS)
-
+    #z_vcpkg_conflicting_args(arg_USE_WRAPPERS arg_NO_WRAPPERS)
+    z_vcpkg_conflicting_args(arg_BUILD_TRIPLET arg_NO_CONFIGURE_TRIPLET)
 
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
     endif()
-    if(NOT DEFINED arg_BUILD_TRIPLET)
-        z_vcpkg_make_get_build_triplet(arg_BUILD_TRIPLET)
+    if(NOT DEFINED arg_BUILD_TRIPLET AND NOT arg_NO_CONFIGURE_TRIPLET)
+        z_vcpkg_make_get_build_triplet(arg_BUILD_TRIPLET) # <- Needs to know the compiler
     endif()
 
     # Can be set in the triplet to append options for configure
@@ -228,7 +233,7 @@ function(vcpkg_make_configure) #
     vcpkg_make_get_shell(shell_cmd)
 
     if(arg_AUTOCONFIG)
-        vcpkg_run_autoreconf("${shell_cmd}" "${arg_SOURCE_PATH}")
+        vcpkg_run_autoreconf("${shell_cmd}" "${src_dir}")
     endif()
 
     if(arg_RUN_SCRIPTS)
@@ -258,12 +263,23 @@ function(vcpkg_make_configure) #
     # Used by cl
         INCLUDE LIB LIBPATH _CL_ _LINK_
     )
-
+    z_vcpkg_make_set_common_vars()
     z_vcpkg_make_prepare_compiler_flags()
     z_vcpkg_make_prepare_environment_common()
+
+    set(build_configs RELEASE)
+    if(NOT VCPKG_BUILD_TYPE)
+        list(PREPEND build_configs DEBUG)
+    endif()
+
     foreach(config IN LISTS build_configs)
+        set(target_dir "${work_dir_${config_up}}")
+        file(REMOVE_RECURSE "${target_dir}")
+        file(MAKE_DIRECTORY "${target_dir}")
+        file(RELATIVE_PATH relative_build_path "${target_dir}" "${src_dir}")
         if(arg_COPY_SOURCE)
-            vcpkg_copy_source("${config}")
+            file(COPY "${src_dir}/" DESTINATION "${target_dir}")
+            set(relative_build_path ".")
         endif()
         vcpkg_make_run_configure("${config}")
     endforeach()
