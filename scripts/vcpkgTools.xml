@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.10.7</version>
+        <version>3.11.4</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.10.7/python-3.10.7-embed-win32.zip</url>
-        <sha512>a69445906a909ce5f2554c544fe4251a8ab9c5028b531975b8c78fa8e98295b2bf06e1840f346a3c0edf485a7792c40c9d318bffd36b9c7829ac72b7cf8697bc</sha512>
-        <archiveName>python-3.10.7-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.11.4/python-3.11.4-embed-win32.zip</url>
+        <sha512>4cdbb2efdc7764a87edfb7370716c1caf660d38bce37a280ec59b7aecab5672c5798aabe19a8ae395224bea7dfe644bd92656f0bbc44348717981b45a909c024</sha512>
+        <archiveName>python-3.11.4-embed-win32.zip</archiveName>
     </tool>
     <tool name="python3_with_venv" os="windows">
-        <version>3.10.7</version>
+        <version>3.11.4</version>
         <exeRelativePath>tools\python.exe</exeRelativePath>
-        <url>https://www.nuget.org/api/v2/package/python/3.10.7</url>
-        <sha512>dc763c4f3e9594619173a99740a6b54686c768c240efe316d4d3f8914383bd06420c0802781baf983ea840c49412b8330c1af93f31d2c73eb0ea22a55e71aa13</sha512>
-        <archiveName>python-3.10.7.nupkg.zip</archiveName>
+        <url>https://www.nuget.org/api/v2/package/python/3.11.4</url>
+        <sha512>3f311506440238103a3ed5f2b5c62f8fe5f935e24c7a44bd5aac588c9e0383a2eb7651cb3ee18e5873c2edf5718019c8648955bdedb9efe3101c1041776fc31e</sha512>
+        <archiveName>python-3.11.4.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
         <version>3.27.1</version>

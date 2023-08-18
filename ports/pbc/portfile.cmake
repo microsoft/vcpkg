@@ -47,9 +47,6 @@ else()
         PATCHES windows.patch
     )
 
-    set(CMAKE_FIND_LIBRARY_PREFIXES "")
-    set(CMAKE_FIND_LIBRARY_SUFFIXES "")
-
     find_path(MPIR_INCLUDE_DIR "gmp.h" HINTS ${CURRENT_INSTALLED_DIR} PATH_SUFFIXES include)
     if(NOT MPIR_INCLUDE_DIR)
         message(FATAL_ERROR "GMP includes not found")
@@ -73,12 +70,6 @@ else()
         set(ConfigurationSuffix " DLL")
     endif()
 
-    if(VCPKG_CRT_LINKAGE STREQUAL "static")
-        set(RuntimeLibraryExt "")
-    else()
-        set(RuntimeLibraryExt "DLL")
-    endif()
-
     if(TRIPLET_SYSTEM_ARCH STREQUAL "x86")
         set(Platform "Win32")
     else()
@@ -94,18 +85,15 @@ else()
     file(COPY ${FILES} ${MPIR_LIBRARIES_DBG} DESTINATION "${SOURCE_PATH_PARENT}/mpir/${LibrarySuffix}/${Platform}/Debug")
 
     get_filename_component(SOURCE_PATH_SUFFIX ${SOURCE_PATH} NAME)
-    vcpkg_install_msbuild(SOURCE_PATH ${SOURCE_PATH_PARENT}
+    vcpkg_msbuild_install(SOURCE_PATH ${SOURCE_PATH_PARENT}
         PROJECT_SUBPATH ${SOURCE_PATH_SUFFIX}/pbcwin/projects/pbclib.vcxproj
-        INCLUDES_SUBPATH ${SOURCE_PATH_SUFFIX}/include
-        LICENSE_SUBPATH ${SOURCE_PATH_SUFFIX}/COPYING
         RELEASE_CONFIGURATION "Release${ConfigurationSuffix}"
         DEBUG_CONFIGURATION "Debug${ConfigurationSuffix}"
-        OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
-        OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
         OPTIONS /p:SolutionDir=../
-        ALLOW_ROOT_INCLUDES
     )
 
+    vcpkg_install_copyright(FILE_LIST " ${SOURCE_PATH}/COPYING")
+    file(COPY "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
     # clean up mpir stuff
     file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/mpir.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/mpir.lib")
     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-pbc-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")

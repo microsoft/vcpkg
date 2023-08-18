@@ -1,13 +1,18 @@
 {
   "name": "libirecovery",
   "version": "1.0.25",
-  "port-version": 7,
+  "port-version": 8,
   "description": "Library and utility to talk to iBoot/iBSS via USB on Mac OS X, Windows, and Linux",
   "license": "LGPL-2.1-only",
   "supports": "windows & !arm64 & !static & !staticcrt & !xbox",
   "dependencies": [
     "getopt",
     "libusbmuxd",
-    "readline"
+    "readline",
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
   ]
 }
