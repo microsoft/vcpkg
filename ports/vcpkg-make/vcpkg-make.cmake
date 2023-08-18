@@ -113,6 +113,46 @@ function(vcpkg_restore_pkgconfig)
     endforeach()
 endfunction()
 
+function(z_vcpkg_make_get_build_triplet out)
+    # --build: the machine you are building on
+    # --host: the machine you are building for
+    # --target: the machine that CC will produce binaries for
+    # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
+    # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
+    z_vcpkg_make_determine_target_arch(TARGET_ARCH)
+    z_vcpkg_make_determine_host_arch(BUILD_ARCH)
+
+    set(build_triplet "")
+    if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS)
+        # This is required since we are running in a msys
+        # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
+        set(build_triplet "--build=${BUILD_ARCH}-pc-mingw32") 
+    endif()
+
+    set(host_triplet "")
+    if(VCPKG_CROSSCOMPILING)
+        if(VCPKG_TARGET_IS_WINDOWS)
+            if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}" OR NOT CMAKE_HOST_WIN32)
+                set(host_triplet"--host=${TARGET_ARCH}-pc-mingw32")
+            elseif(VCPKG_TARGET_IS_UWP)
+                # Needs to be different from --build to enable cross builds.
+                set(host_triplet"--host=${TARGET_ARCH}-unknown-mingw32")
+            endif()
+        elseif(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX AND NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
+            set(host_triplet "--host=${TARGET_ARCH}-apple-darwin")
+        elseif(VCPKG_TARGET_IS_LINUX) 
+            # TODO: Use a different approach here
+            if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1)
+                set(host_triplet "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+            endif()
+        endif()
+    endif()
+
+    set(output "${build_triplet} ${host_triplet}")
+    string(STRIP "${output}" output)
+    set("${out}" "${output}" PARENT_SCOPE)
+endfunction()
+
 function(vcpkg_make_prepare_env config)
 # TODO
 # - Setup the environment variables for make giving <config>
@@ -160,6 +200,9 @@ function(vcpkg_make_configure) #
 
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
+    endif()
+    if(NOT DEFINED arg_BUILD_TRIPLET)
+        z_vcpkg_make_get_build_triplet(arg_BUILD_TRIPLET)
     endif()
 
     # Can be set in the triplet to append options for configure
