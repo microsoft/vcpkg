@@ -1,5 +1,10 @@
 include_guard(GLOBAL)
 
+### Mapping variables
+
+
+
+####
 function(z_vcpkg_make_determine_arch out_var value)
     if(${value} MATCHES "(amd|AMD)64")
         set(${out_var} x86_64 PARENT_SCOPE)
@@ -61,6 +66,9 @@ endfunction()
 function(z_vcpkg_make_prepare_environment_common)
 endfunction()
 
+
+### General helper scripts (should maybe be moved to a seperate port)
+
 macro(z_vcpkg_unparsed_args warning_level)
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message("${warning_level}" "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -97,3 +105,22 @@ function(z_vcpkg_get_global_property outvar property)
     get_property(outprop GLOBAL PROPERTY "z_vcpkg_global_property_${property}")
     set(${outvar} "${outprop}" PARENT_SCOPE)
 endfunction()
+
+function(z_vcpkg_warn_path_with_spaces)
+    vcpkg_list(SET z_vcm_paths_with_spaces)
+    if(CURRENT_BUILDTREES_DIR MATCHES " ")
+        vcpkg_list(APPEND z_vcm_paths_with_spaces "${CURRENT_BUILDTREES_DIR}")
+    endif()
+    if(CURRENT_PACKAGES_DIR MATCHES " ")
+        vcpkg_list(APPEND z_vcm_paths_with_spaces "${CURRENT_PACKAGES_DIR}")
+    endif()
+    if(CURRENT_INSTALLED_DIR MATCHES " ")
+        vcpkg_list(APPEND z_vcm_paths_with_spaces "${CURRENT_INSTALLED_DIR}")
+    endif()
+    if(z_vcm_paths_with_spaces)
+        # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
+        vcpkg_list(APPEND z_vcm_paths_with_spaces "Please move the path to one without whitespaces!")
+        list(JOIN z_vcm_paths_with_spaces "\n   " z_vcm_paths_with_spaces)
+        message(STATUS "Warning: Paths with embedded space may be handled incorrectly by configure:\n   ${z_vcm_paths_with_spaces}")
+    endif()
+endfunctioN()

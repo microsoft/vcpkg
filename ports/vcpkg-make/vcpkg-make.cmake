@@ -70,6 +70,7 @@ function(vcpkg_make_configure) #
     #"OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     #)
 
+
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "AUTOCONFIG;COPY_SOURCE;USE_WRAPPERS;NO_WRAPPERS;NO_CPP;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;CONFIGURE_SUBPATH;BUILD_TRIPLET"
@@ -78,6 +79,8 @@ function(vcpkg_make_configure) #
 
     z_vcpkg_unparsed_args(FATAL_ERROR)
     z_vcpkg_conflicting_args(arg_USE_WRAPPERS arg_NO_WRAPPERS)
+
+    z_vcpkg_warn_path_with_spaces()
 
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_setup_win_msys("${arg_ADDITIONAL_MSYS_PACKAGES}")
