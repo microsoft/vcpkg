@@ -74,44 +74,7 @@ endfunction()
 function(vcpkg_prepare_win_compile_wrappers)
 endfunction()
 
-function(vcpkg_prepare_pkgconfig config)
-    set(subdir "")
-    if(config MATCHES "(DEBUG|debug)")
-        set(subdir "/debug")
-    endif()
 
-    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
-        if(DEFINED ENV{${envvar}})
-            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}" "$ENV{${envvar}}")
-        else()
-            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}")
-        endif()
-    endforeach()
-
-    vcpkg_find_acquire_program(PKGCONFIG)
-    get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
-    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
-
-    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} 
-                            "${CURRENT_INSTALLED_DIR}/share/pkgconfig/"
-                            "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig/"
-                            "${CURRENT_PACKAGES_DIR}/share/pkgconfig/"
-                            "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig/"
-                        )
-endfunction()
-
-function(vcpkg_restore_pkgconfig)
-    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
-        z_vcpkg_get_global_property(has_backup "make-pkg-config-backup-${envvar}" SET)
-        if(has_backup)
-            z_vcpkg_get_global_property(backup "make-pkg-config-backup-${envvar}")
-            set("ENV{${envvar}}" "${backup}")
-            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}")
-        else()
-            unset("ENV{${envvar}}")
-        endif()
-    endforeach()
-endfunction()
 
 function(z_vcpkg_make_get_build_triplet out)
     # --build: the machine you are building on
@@ -122,33 +85,33 @@ function(z_vcpkg_make_get_build_triplet out)
     z_vcpkg_make_determine_target_arch(TARGET_ARCH)
     z_vcpkg_make_determine_host_arch(BUILD_ARCH)
 
-    set(build_triplet "")
+    set(build_opt "")
     if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS)
         # This is required since we are running in a msys
         # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
-        set(build_triplet "--build=${BUILD_ARCH}-pc-mingw32") 
+        set(build_opt "--build=${BUILD_ARCH}-pc-mingw32") 
     endif()
 
-    set(host_triplet "")
+    set(host_opt "")
     if(VCPKG_CROSSCOMPILING)
         if(VCPKG_TARGET_IS_WINDOWS)
             if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}" OR NOT CMAKE_HOST_WIN32)
-                set(host_triplet"--host=${TARGET_ARCH}-pc-mingw32")
+                set(host_opt "--host=${TARGET_ARCH}-pc-mingw32")
             elseif(VCPKG_TARGET_IS_UWP)
                 # Needs to be different from --build to enable cross builds.
-                set(host_triplet"--host=${TARGET_ARCH}-unknown-mingw32")
+                set(host_opt "--host=${TARGET_ARCH}-unknown-mingw32")
             endif()
         elseif(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX AND NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
-            set(host_triplet "--host=${TARGET_ARCH}-apple-darwin")
+            set(host_opt "--host=${TARGET_ARCH}-apple-darwin")
         elseif(VCPKG_TARGET_IS_LINUX) 
             # TODO: Use a different approach here
             if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1)
-                set(host_triplet "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+                set(host_opt "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
         endif()
     endif()
 
-    set(output "${build_triplet} ${host_triplet}")
+    set(output "${build_opt} ${host_opt}")
     string(STRIP "${output}" output)
     set("${out}" "${output}" PARENT_SCOPE)
 endfunction()
