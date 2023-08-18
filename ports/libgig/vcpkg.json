@@ -6,7 +6,7 @@
     "dependencies": [
       {
         "name": "libuuid",
-        "platform": "!osx"
+        "platform": "!osx & !windows"
       },
       {
         "name": "vcpkg-cmake",
