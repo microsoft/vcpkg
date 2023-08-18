@@ -1,31 +1,19 @@
-From 32c4bdd88555309752215c53842d438cb51bcb62 Mon Sep 17 00:00:00 2001
-From: bloess <josua.bloess@uni-bayreuth.de>
-Date: Mon, 15 Feb 2021 16:26:36 +0100
-Subject: [PATCH] install include-dir
-
----
- CMakeLists.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 100d613..464f95a 100644
+index f4ec871..59e5134 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1171,6 +1171,14 @@ foreach (OCCT_MODULE ${OCCT_MODULES})
+@@ -1246,6 +1246,14 @@ foreach (OCCT_MODULE ${OCCT_MODULES})
  endforeach()
  set (OCCT_MODULES_ENABLED ${OCCT_MODULES_ENABLED_SORTED})
  
 +foreach (OCCT_LIBRARY ${OCCT_LIBRARIES})
-+	target_include_directories(
-+		${OCCT_LIBRARY} 
-+		INTERFACE
-+		$<INSTALL_INTERFACE:include>)
-+
++  target_include_directories(
++    ${OCCT_LIBRARY} 
++    INTERFACE
++    $<INSTALL_INTERFACE:include>
++    $<INSTALL_INTERFACE:include/opencascade>)
 +endforeach()
 +
  # Add all targets to the build-tree export set
  export (TARGETS ${OCCT_LIBRARIES} FILE "${CMAKE_BINARY_DIR}/OpenCASCADETargets.cmake")
  
--- 
-2.14.3.windows.1
-
