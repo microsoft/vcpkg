@@ -9,12 +9,14 @@ vcpkg_from_github(
         fix-definitions.patch
 )
 
-vcpkg_install_msbuild(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH usbmuxd.vcxproj
-    LICENSE_SUBPATH COPYING.GPLv2
-    USE_VCPKG_INTEGRATION
+    DEPENDENT_PKGCONFIG libimobiledevice-1.0
+    ADDITIONAL_LIBS getopt.lib
 )
 
 # No headers
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.GPLv2")
