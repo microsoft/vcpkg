@@ -194,6 +194,7 @@ foreach(flag ${VCPKG_LANGUAGES} SHARED_LINKER EXE_LINKER STATIC_LINKER MODULE_LI
             endif()
         endif()
     endif()
+    string(STRIP "${${flag}_FLAGS}" "${flag}_FLAGS")
     escaped(value "${${flag}_FLAGS}")
     string(APPEND OUTPUT_STRING "set(VCPKG_COMBINED_${flag}_FLAGS_${VCPKG_CONFIGS} \"${value}\")\n")
 endforeach()
