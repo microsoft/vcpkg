@@ -5,7 +5,6 @@ index cccfc54..91a8fa4 100644
 @@ -40,6 +40,11 @@
  #include <assert.h>
  #include <functional>
-
 +#ifdef _MSC_VER
 +#include <type_traits>
 +using ssize_t = std::make_signed<std::size_t>::type;
