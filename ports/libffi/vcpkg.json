@@ -7,10 +7,6 @@
   "license": "MIT",
   "dependencies": [
     {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    },
-    {
       "name": "vcpkg-cmake-get-vars",
       "host": true
     }
