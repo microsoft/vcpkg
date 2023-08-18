@@ -3,7 +3,6 @@ include_guard(GLOBAL)
 ### Mapping variables
 
 
-
 ####
 function(z_vcpkg_make_determine_arch out_var value)
     if(${value} MATCHES "(amd|AMD)64")
@@ -54,6 +53,7 @@ function(z_vcpkg_make_prepare_compiler_flags)
     if(DEFINED arg_LANGUAGES)
         # What a nice trick to get more output from vcpkg_cmake_get_vars if required
         # But what will it return for ASM on windows? TODO: Needs actual testing
+        # list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=C\;CXX\;ASM") ASM compiler will point to CL with MSVC
         list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${arg_LANGUAGES}")
     endif()
     vcpkg_cmake_get_vars(cmake_vars_file)
@@ -102,7 +102,7 @@ function(z_vcpkg_get_global_property outvar property)
     if(DEFINED ARGN AND NOT ARGN STREQUAL "SET")
         message(FATAL_ERROR "'${CMAKE_CURRENT_FUNCTION}' called with invalid arguments '${ARGN}'")
     endif()
-    get_property(outprop GLOBAL PROPERTY "z_vcpkg_global_property_${property}")
+    get_property(outprop GLOBAL PROPERTY "z_vcpkg_global_property_${property}" ${ARGN})
     set(${outvar} "${outprop}" PARENT_SCOPE)
 endfunction()
 
@@ -124,3 +124,52 @@ function(z_vcpkg_warn_path_with_spaces)
         message(STATUS "Warning: Paths with embedded space may be handled incorrectly by configure:\n   ${z_vcm_paths_with_spaces}")
     endif()
 endfunctioN()
+
+###
+function(vcpkg_insert_msys_into_path msys_out)
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "" 
+        "PATH_OUT"
+        "PACKAGES"
+    )
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${arg_ADDITIONAL_PACKAGES})
+    cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
+    cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
+    cmake_path(CONVERT "$ENV{LOCALAPPDATA}" TO_CMAKE_PATH_LIST local_app_data NORMALIZE)
+    file(REAL_PATH "${system_root}" system_root)
+
+    vcpkg_list(SET find_system_dirs 
+        "${system_root}/system32"
+        "${system_root}/System32"
+        "${system_root}/system32/"
+        "${system_root}/System32/"
+        "${local_app_data}/Microsoft/WindowsApps"
+        "${local_app_data}/Microsoft/WindowsApps/"
+    )
+
+    string(TOUPPER "${find_system_dirs}" find_system_dirs_upper)
+
+    set(index 0)
+    set(appending TRUE)
+    foreach(item IN LISTS path_list)
+        if(item IN_LIST find_system_dirs OR item IN_LIST find_system_dirs_upper)
+            set(appending FALSE)
+            break()
+        endif()
+        math(EXPR index "${index} + 1")
+    endforeach()
+
+    if(appending)
+        message(WARNING "Unable to find system dir in the PATH variable! Appending required msys paths!")
+    endif()
+    vcpkg_list(INSERT path_list "${index}" "${MSYS_ROOT}/usr/bin")
+
+    cmake_path(CONVERT "${path_list}" TO_NATIVE_PATH_LIST native_path_list)
+    set(ENV{PATH} "${native_path_list}") # Should this be backed up?
+
+    if(DEFINED arg_PATH_OUT)
+        set("${arg_PATH_OUT}" "${path_list}" PARENT_SCOPE)
+    endif()
+
+    set("${msys_out}" "${MSYS_ROOT}" PARENT_SCOPE)
+endfunction()

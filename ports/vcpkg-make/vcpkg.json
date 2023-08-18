@@ -5,6 +5,11 @@
   "license": "MIT",
   "supports": "native",
   "dependencies" : [
+    {
+      "name" : "pkgconf",
+      "host" : true,
+      "platform" : "windows"
+    },
     "vcpkg-cmake-get-vars"
   ]
 }

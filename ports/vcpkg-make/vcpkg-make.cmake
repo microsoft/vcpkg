@@ -2,19 +2,69 @@
 include_guard(GLOBAL)
 include("${CMAKE_CURRENT_SOURCE_DIR}/vcpkg-make-common.cmake")
 
-function(vcpkg_run_autoreconf)
+function(vcpkg_run_autoreconf bash_cmd work_dir)
 # TODO:
 # - Run autoreconf
 # - Deal with tools like autopoint etc.
 # does it make sense to parse configure.ac ?
+    find_program(AUTORECONF autoreconf) # find_file instead ? autoreconf is a perl script. 
+    if(NOT AUTORECONF)
+        message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
+    endif()
+    message(STATUS "Generating configure for ${TARGET_TRIPLET}")
+    vcpkg_run_bash(
+        BASH "${bash_cmd}"
+        COMMAND "autoreconf -vfi"
+        WORKING_DIRECTORY "${work_dir}"
+        LOGNAME "autoconf-${TARGET_TRIPLET}"
+    )
+    message(STATUS "Finished generating configure for ${TARGET_TRIPLET}")
 endfunction()
 
 function(vcpkg_run_bash)
-# Prerun shell replacement
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "" 
+        "WORKING_DIRECTORY;LOGNAME"
+        "BASH;COMMAND"
+    )
+    if (CMAKE_HOST_WIN32)
+        vcpkg_execute_required_process(
+            COMMAND ${arg_BASH} -c "${arg_COMMAND}"
+            WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
+            LOGNAME "${arg_LOGNAME}"
+        )
+    else()
+        vcpkg_execute_required_process(
+            COMMAND ${arg_COMMAND}
+            WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
+            LOGNAME "${arg_LOGNAME}"
+        )
+    endif()
 endfunction()
 
-function(vcpkg_setup_win_msys)
-# Get and put msys in the correct location in path
+function(vcpkg_make_setup_win_msys msys_out)
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "" 
+        ""
+        "PACKAGES"
+    )
+    list(APPEND msys_require_packages autoconf-wrapper automake-wrapper binutils libtool make which)
+    vcpkg_insert_msys_into_path(msys PACKAGES ${msys_require_packages} ${arg_PACKAGES})
+    set("${msys_out}" "${msys}" PARENT_SCOPE)
+endfunction()
+
+function(vcpkg_make_get_shell out_var)
+    set(bash_options "")
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        vcpkg_make_setup_win_msys("${arg_ADDITIONAL_MSYS_PACKAGES}")
+        if(arg_USE_WRAPPERS AND NOT arg_NO_WRAPPERS)
+            vcpkg_prepare_win_compile_wrappers(msys_root)
+        endif()
+        set(bash_options --noprofile --norc --debug)
+        set(bash_cmd "${msys_root}/usr/bin/bash.exe" CACHE STRING "")
+    endif()
+    find_program(bash_cmd NAMES bash sh REQUIRED)
+    set("${out_var}" "{bash_cmd}" ${bash_options} PARENT_SCOPE)
 endfunction()
 
 function(vcpkg_prepare_compile_flags)
@@ -24,16 +74,43 @@ endfunction()
 function(vcpkg_prepare_win_compile_wrappers)
 endfunction()
 
-
 function(vcpkg_prepare_pkgconfig config)
-# TODO
-# Setup pkg-config paths
-# Use cmake_language(DEFER to automatically call the restore command somehow ?
+    set(subdir "")
+    if(config STREQUAL "debug")
+        set(subdir "/debug")
+    endif()
+
+    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
+        if(DEFINED ENV{${envvar}})
+            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}" "$ENV{${envvar}}")
+        else()
+            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}")
+        endif()
+    endforeach()
+
+    vcpkg_find_acquire_program(PKGCONFIG)
+    get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
+    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} 
+                            "${CURRENT_INSTALLED_DIR}/share/pkgconfig/"
+                            "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig/"
+                            "${CURRENT_PACKAGES_DIR}/share/pkgconfig/"
+                            "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig/"
+                        )
 endfunction()
 
 function(vcpkg_restore_pkgconfig)
-# TODO
-# restore variables
+    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
+        z_vcpkg_get_global_property(has_backup "make-pkg-config-backup-${envvar}" SET)
+        if(has_backup)
+            z_vcpkg_get_global_property(backup "make-pkg-config-backup-${envvar}")
+            set("ENV{${envvar}}" "${backup}")
+            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}")
+        else()
+            unset("ENV{${envvar}}")
+        endif()
+    endforeach()
 endfunction()
 
 function(vcpkg_make_prepare_env config)
@@ -74,25 +151,70 @@ function(vcpkg_make_configure) #
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "AUTOCONFIG;COPY_SOURCE;USE_WRAPPERS;NO_WRAPPERS;NO_CPP;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;CONFIGURE_SUBPATH;BUILD_TRIPLET"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES;RUN_SCRIPTS"
     )
 
     z_vcpkg_unparsed_args(FATAL_ERROR)
     z_vcpkg_conflicting_args(arg_USE_WRAPPERS arg_NO_WRAPPERS)
 
+
+    if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
+        set(arg_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
+    endif()
+
+    # Can be set in the triplet to append options for configure
+    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS)
+        list(APPEND arg_OPTIONS ${VCPKG_MAKE_CONFIGURE_OPTIONS})
+    endif()
+    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE)
+        list(APPEND arg_OPTIONS_RELEASE ${VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE})
+    endif()
+    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG)
+        list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG})
+    endif()
+
+    set(src_dir "${arg_SOURCE_PATH}/${arg_CONFIGURE_SUBPATH}")
+
     z_vcpkg_warn_path_with_spaces()
 
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        vcpkg_setup_win_msys("${arg_ADDITIONAL_MSYS_PACKAGES}")
-        if(arg_USE_WRAPPERS AND NOT arg_NO_WRAPPERS)
-            vcpkg_prepare_win_compile_wrappers()
-        endif()
-    else()
+    if(arg_USE_WRAPPERS AND VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+        # Lets assume that wrappers are only required for MSVC like frontends.
+        vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/wrappers")
     endif()
 
+    vcpkg_make_get_shell(shell_cmd)
+
     if(arg_AUTOCONFIG)
-        vcpkg_run_autoreconf("${arg_SOURCE_PATH}")
+        vcpkg_run_autoreconf("${shell_cmd}" "${arg_SOURCE_PATH}")
     endif()
+
+    if(arg_RUN_SCRIPTS)
+        message(STATUS "Running scripts for ${TARGET_TRIPLET} ${arg_RUN_SCRIPT}")
+        set(run_index 0)
+        foreach(script IN LISTS arg_RUN_SCRIPTS)
+            message(STATUS "Running script:'${script}'")
+            vcpkg_run_bash(
+                BASH "${shell_cmd}"
+                COMMAND "${script}"
+                WORKING_DIRECTORY "${src_dir}"
+                LOGNAME "run-script-${run_index}-${TARGET_TRIPLET}"
+            )
+            math(EXPR run_index "${run_index}+1")
+        endforeach()
+        message(STATUS "Finished running scripts for ${TARGET_TRIPLET}")
+    endif()
+
+    # Backup environment variables
+    # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
+    set(cm_FLAGS AR AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
+    list(TRANSFORM cm_FLAGS APPEND "FLAGS")
+    vcpkg_backup_env_variables(VARS 
+        ${cm_FLAGS}
+    # Used by gcc/linux
+        C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH
+    # Used by cl
+        INCLUDE LIB LIBPATH _CL_ _LINK_
+    )
 
     z_vcpkg_make_prepare_compiler_flags()
     z_vcpkg_make_prepare_environment_common()
@@ -102,6 +224,13 @@ function(vcpkg_make_configure) #
         endif()
         vcpkg_make_run_configure("${config}")
     endforeach()
+
+    # Restore environment
+    vcpkg_restore_env_variables(VARS 
+        ${cm_FLAGS} 
+        C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH
+        INCLUDE LIB LIBPATH _CL_ _LINK_
+    )
 
 endfunction()
 

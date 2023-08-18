@@ -193,45 +193,6 @@ function(vcpkg_configure_make)
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
 
-    if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
-    endif()
-
-    if(arg_USE_WRAPPERS AND arg_NO_WRAPPERS)
-        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed conflicting options USE_WRAPPERS and NO_WRAPPERS. Please remove one of them!")
-    endif()
-
-    z_vcpkg_get_cmake_vars(cmake_vars_file)
-    debug_message("Including cmake vars from: ${cmake_vars_file}")
-    include("${cmake_vars_file}")
-
-    if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
-        set(arg_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
-    endif()
-
-    set(src_dir "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}")
-
-    set(requires_autogen OFF) # use autogen.sh
-    set(requires_autoconfig OFF) # use autotools and configure.ac
-    if(EXISTS "${src_dir}/configure" AND EXISTS "${src_dir}/configure.ac" AND arg_AUTOCONFIG) # remove configure; rerun autoconf
-        set(requires_autoconfig ON)
-        file(REMOVE "${SRC_DIR}/configure") # remove possible outdated configure scripts
-    elseif(arg_SKIP_CONFIGURE)
-        # no action requested
-    elseif(EXISTS "${src_dir}/configure")
-        # run normally; no autoconf or autogen required
-    elseif(EXISTS "${src_dir}/configure.ac") # Run autoconfig
-        set(requires_autoconfig ON)
-        set(arg_AUTOCONFIG ON)
-    elseif(EXISTS "${src_dir}/autogen.sh") # Run autogen
-        set(requires_autogen ON)
-    else()
-        message(FATAL_ERROR "Could not determine method to configure make")
-    endif()
-
-    debug_message("requires_autogen:${requires_autogen}")
-    debug_message("requires_autoconfig:${requires_autoconfig}")
-
     if(CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe") #only applies to windows (clang-)cl and lib
         if(arg_AUTOCONFIG)
             set(arg_USE_WRAPPERS ON)
@@ -247,87 +208,7 @@ function(vcpkg_configure_make)
         set(arg_USE_WRAPPERS OFF)
     endif()
 
-    # Backup environment variables
-    # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
-    set(cm_FLAGS AR AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
-    list(TRANSFORM cm_FLAGS APPEND "FLAGS")
-    vcpkg_backup_env_variables(VARS ${cm_FLAGS})
-
-
-    # FC fotran compiler | FF Fortran 77 compiler 
-    # LDFLAGS -> pass -L flags
-    # LIBS -> pass -l flags
-
-    # Used by gcc/linux
-    vcpkg_backup_env_variables(VARS C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH)
-
-    # Used by cl
-    vcpkg_backup_env_variables(VARS INCLUDE LIB LIBPATH)
-
-    vcpkg_list(SET z_vcm_paths_with_spaces)
-    if(CURRENT_PACKAGES_DIR MATCHES " ")
-        vcpkg_list(APPEND z_vcm_paths_with_spaces "${CURRENT_PACKAGES_DIR}")
-    endif()
-    if(CURRENT_INSTALLED_DIR MATCHES " ")
-        vcpkg_list(APPEND z_vcm_paths_with_spaces "${CURRENT_INSTALLED_DIR}")
-    endif()
-    if(z_vcm_paths_with_spaces)
-        # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
-        vcpkg_list(APPEND z_vcm_paths_with_spaces "Please move the path to one without whitespaces!")
-        list(JOIN z_vcm_paths_with_spaces "\n   " z_vcm_paths_with_spaces)
-        message(STATUS "Warning: Paths with embedded space may be handled incorrectly by configure:\n   ${z_vcm_paths_with_spaces}")
-    endif()
-
     set(configure_env "V=1")
-
-    # Establish a bash environment as expected by autotools.
-    if(CMAKE_HOST_WIN32)
-        list(APPEND msys_require_packages autoconf-wrapper automake-wrapper binutils libtool make pkgconf which)
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${msys_require_packages} ${arg_ADDITIONAL_MSYS_PACKAGES})
-        set(base_cmd "${MSYS_ROOT}/usr/bin/bash.exe" --noprofile --norc --debug)
-        vcpkg_list(SET add_to_env)
-        if(arg_USE_WRAPPERS AND VCPKG_TARGET_IS_WINDOWS)
-            vcpkg_list(APPEND add_to_env "${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
-            vcpkg_list(APPEND add_to_env "${MSYS_ROOT}/usr/share/automake-1.16")
-        endif()
-        cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
-        cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
-        cmake_path(CONVERT "$ENV{LOCALAPPDATA}" TO_CMAKE_PATH_LIST local_app_data NORMALIZE)
-        file(REAL_PATH "${system_root}" system_root)
-
-        message(DEBUG "path_list:${path_list}") # Just to have --trace-expand output
-
-        vcpkg_list(SET find_system_dirs 
-            "${system_root}/system32"
-            "${system_root}/System32"
-            "${system_root}/system32/"
-            "${system_root}/System32/"
-            "${local_app_data}/Microsoft/WindowsApps"
-            "${local_app_data}/Microsoft/WindowsApps/"
-        )
-
-        string(TOUPPER "${find_system_dirs}" find_system_dirs_upper)
-
-        set(index 0)
-        set(appending TRUE)
-        foreach(item IN LISTS path_list)
-            if(item IN_LIST find_system_dirs OR item IN_LIST find_system_dirs_upper)
-                set(appending FALSE)
-                break()
-            endif()
-            math(EXPR index "${index} + 1")
-        endforeach()
-
-        if(appending)
-            message(WARNING "Unable to find system dir in the PATH variable! Appending required msys paths!")
-        endif()
-        vcpkg_list(INSERT path_list "${index}" ${add_to_env} "${MSYS_ROOT}/usr/bin")
-
-        cmake_path(CONVERT "${path_list}" TO_NATIVE_PATH_LIST native_path_list)
-        set(ENV{PATH} "${native_path_list}")
-    else()
-        find_program(base_cmd bash REQUIRED)
-    endif()
 
    # macOS - cross-compiling support
     if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
@@ -589,17 +470,6 @@ function(vcpkg_configure_make)
         list(APPEND arg_OPTIONS --disable-shared --enable-static)
     endif()
 
-    # Can be set in the triplet to append options for configure
-    if(DEFINED VCPKG_CONFIGURE_MAKE_OPTIONS)
-        list(APPEND arg_OPTIONS ${VCPKG_CONFIGURE_MAKE_OPTIONS})
-    endif()
-    if(DEFINED VCPKG_CONFIGURE_MAKE_OPTIONS_RELEASE)
-        list(APPEND arg_OPTIONS_RELEASE ${VCPKG_CONFIGURE_MAKE_OPTIONS_RELEASE})
-    endif()
-    if(DEFINED VCPKG_CONFIGURE_MAKE_OPTIONS_DEBUG)
-        list(APPEND arg_OPTIONS_DEBUG ${VCPKG_CONFIGURE_MAKE_OPTIONS_DEBUG})
-    endif()
-
     file(RELATIVE_PATH relative_build_path "${CURRENT_BUILDTREES_DIR}" "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}")
 
     # Used by CL 
@@ -668,63 +538,6 @@ function(vcpkg_configure_make)
     endif()
     debug_message("ENV{LIBS}:$ENV{LIBS}")
 
-    # Run autoconf if necessary
-    if (arg_AUTOCONFIG OR requires_autoconfig AND NOT arg_NO_AUTOCONFIG)
-        find_program(AUTORECONF autoreconf)
-        if(NOT AUTORECONF)
-            message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
-        endif()
-        message(STATUS "Generating configure for ${TARGET_TRIPLET}")
-        if (CMAKE_HOST_WIN32)
-            vcpkg_execute_required_process(
-                COMMAND ${base_cmd} -c "autoreconf -vfi"
-                WORKING_DIRECTORY "${src_dir}"
-                LOGNAME "autoconf-${TARGET_TRIPLET}"
-            )
-        else()
-            vcpkg_execute_required_process(
-                COMMAND "${AUTORECONF}" -vfi
-                WORKING_DIRECTORY "${src_dir}"
-                LOGNAME "autoconf-${TARGET_TRIPLET}"
-            )
-        endif()
-        message(STATUS "Finished generating configure for ${TARGET_TRIPLET}")
-    endif()
-    if(requires_autogen)
-        message(STATUS "Generating configure for ${TARGET_TRIPLET} via autogen.sh")
-        if (CMAKE_HOST_WIN32)
-            vcpkg_execute_required_process(
-                COMMAND ${base_cmd} -c "./autogen.sh"
-                WORKING_DIRECTORY "${src_dir}"
-                LOGNAME "autoconf-${TARGET_TRIPLET}"
-            )
-        else()
-            vcpkg_execute_required_process(
-                COMMAND "./autogen.sh"
-                WORKING_DIRECTORY "${src_dir}"
-                LOGNAME "autoconf-${TARGET_TRIPLET}"
-            )
-        endif()
-        message(STATUS "Finished generating configure for ${TARGET_TRIPLET}")
-    endif()
-
-    if (arg_PRERUN_SHELL)
-        message(STATUS "Prerun shell with ${TARGET_TRIPLET}")
-        if (CMAKE_HOST_WIN32)
-            vcpkg_execute_required_process(
-                COMMAND ${base_cmd} -c "${arg_PRERUN_SHELL}"
-                WORKING_DIRECTORY "${src_dir}"
-                LOGNAME "prerun-${TARGET_TRIPLET}"
-            )
-        else()
-            vcpkg_execute_required_process(
-                COMMAND "${base_cmd}" -c "${arg_PRERUN_SHELL}"
-                WORKING_DIRECTORY "${src_dir}"
-                LOGNAME "prerun-${TARGET_TRIPLET}"
-            )
-        endif()
-    endif()
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT arg_NO_DEBUG)
         list(APPEND all_buildtypes DEBUG)
         z_vcpkg_configure_make_process_flags(DEBUG)
@@ -766,7 +579,6 @@ function(vcpkg_configure_make)
             set(relative_build_path .)
         endif()
 
-        z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}")
 
         # Setup environment
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")
@@ -862,9 +674,6 @@ function(vcpkg_configure_make)
     else()
         find_program(Z_VCPKG_MAKE make REQUIRED)
     endif()
-
-    # Restore environment
-    vcpkg_restore_env_variables(VARS ${cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     set(_VCPKG_PROJECT_SOURCE_PATH ${arg_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${arg_PROJECT_SUBPATH} PARENT_SCOPE)
