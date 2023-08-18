@@ -18,12 +18,7 @@
         "suitesparse"
       ]
     },
-    {
-      "name": "cgal",
-      "features": [
-        "qt"
-      ]
-    },
+    "cgal",
     "eigen3",
     "flann",
     "freeimage",

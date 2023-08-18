@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
     REF "${COLMAP_REF}"
-    SHA512 2aad3c39efee025bebdbec41215f32968c3a63e160f9e7de0a6a2bf2d2c96bb1c20af0e10173d1d81ed4712e58fd97e7c8aabef8f9c47cc542d89b14c6ae420d
+    SHA512 03ff355bc69cd0f9c9bdf8f6403fe37c07e7579bae5230f56ab91947de2505e0cc3aa13e2f00038c18c47f332a5c1df4c6c61c5b3e164db89c79ae65b4adba43
     HEAD_REF main
 )
 
