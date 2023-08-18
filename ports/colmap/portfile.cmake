@@ -8,16 +8,6 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-set(MSVC_USE_STATIC_CRT_VALUE OFF)
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        # Note that this is imposed by the same limitation of the Ceres dependency.
-        # Consider removing this check when Ceres supports this mode.
-        message(FATAL_ERROR "colmap does not support mixing static CRT and dynamic library linkage")
-    endif()
-    set(MSVC_USE_STATIC_CRT_VALUE ON)
-endif()
-
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
     message(FATAL_ERROR "Feature cuda and cuda-redist require x64 triplet.")
 endif()
