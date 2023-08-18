@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 65484a7..c13d84e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -75,11 +75,16 @@ function(config_library target)
+         FILE llhttp-config.cmake
+         NAMESPACE llhttp::
+         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/llhttp)
++		
++  target_include_directories(${target}
++    PRIVATE include ${CMAKE_CURRENT_BINARY_DIR}
++    INTERFACE $<INSTALL_INTERFACE:include>
++)
+ endfunction(config_library target)
+ 
+ if(BUILD_SHARED_LIBS)
+-  add_library(llhttp_shared SHARED
+-      ${llhttp_src}
++  add_library(llhttp_shared
++      ${LLHTTP_SOURCES}
+   )
+   add_library(llhttp::llhttp ALIAS llhttp_shared)
+   config_library(llhttp_shared)
+@@ -87,13 +92,9 @@ endif()
+ 
+ if(BUILD_STATIC_LIBS)
+   add_library(llhttp_static STATIC
+-      ${llhttp_src}
++      ${LLHTTP_SOURCES}
+   )
+-  if(BUILD_SHARED_LIBS)
+-    add_library(llhttp::llhttp ALIAS llhttp_shared)
+-  else()
+-    add_library(llhttp::llhttp ALIAS llhttp_static)
+-  endif()
++  add_library(llhttp::llhttp ALIAS llhttp_static)
+   config_library(llhttp_static)
+ endif()
+ 
