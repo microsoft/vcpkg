@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9bff4b1..ef3a9db 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,6 +17,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
++if(NOT WIN32 AND NOT APPLE)
++	find_package(unofficial-libuuid CONFIG REQUIRED)
++	add_definitions(-DHAVE_UUID_UUID_H -DHAVE_UUID_GENERATE)
++endif()
++
+ #TODO: this is written for vcpkg cppunit install
+ #if you're adding other platform and package managers it's probably better to put everything in FindCppUnit.cmake
+ #and replace everything here with a simple find_package(CppUnit)
+@@ -89,6 +94,9 @@ endif()
+ if(BUILD_SHARED_LIBS AND MSVC)
+ 	set_target_properties(libgig PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+ endif()
++if(NOT WIN32 AND NOT APPLE)
++	target_link_libraries(libgig PRIVATE unofficial::UUID::uuid)
++endif()
+
+ #libakai library
+ add_library(libakai src/Akai.cpp)
