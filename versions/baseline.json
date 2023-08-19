@@ -580,6 +580,10 @@
       "baseline": "3.0",
       "port-version": 3
     },
+    "bison": {
+      "baseline": "3.8.1",
+      "port-version": 0
+    },
     "bitmagic": {
       "baseline": "7.12.3",
       "port-version": 0
