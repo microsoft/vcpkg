@@ -22,7 +22,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "vsgxchange" CONFIG_PATH "lib/cmake/vsgXchange")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "vsgXchange" CONFIG_PATH "lib/cmake/vsgXchange")
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES vsgconv AUTO_CLEAN)
