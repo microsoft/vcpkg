@@ -1,0 +1,25 @@
+qcoro-qt6 provides CMake targets:
+
+    find_package(QCoro6Core CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE QCoro6::Core)
+
+    find_package(QCoro6DBus CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE QCoro6::DBus)
+
+    find_package(QCoro6Network CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE QCoro6::Network)
+
+    find_package(QCoro6Qml CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE QCoro6::Qml)
+
+    find_package(QCoro6Quick CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE QCoro6::Quick)
+
+    find_package(QCoro6Test CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE QCoro6::Test)
+
+    find_package(QCoro6WebSockets CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE QCoro6::WebSockets)
+
+You can also use `QCoro` target namespace for transparent
+support of both Qt5 and Qt6.
