@@ -8632,6 +8632,10 @@
       "baseline": "1.0.6",
       "port-version": 0
     },
+    "vsgimgui": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "vtk": {
       "baseline": "9.2.0-pv5.11.0",
       "port-version": 9
