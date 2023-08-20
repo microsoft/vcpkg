@@ -52,9 +52,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME QCoro6Core CONFIG_PATH lib/cmake/QCoro6Cor
 
 # Remove debug includes
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-# Remove mkspec files (not needed here and they would conflict with QCoro5 mkspecs)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/mkspecs")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/mkspecs")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

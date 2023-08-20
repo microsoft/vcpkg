@@ -6616,7 +6616,7 @@
       "baseline": "2.3.5",
       "port-version": 2
     },
-    "qcoro-qt6": {
+    "qcoro": {
       "baseline": "0.9.0",
       "port-version": 0
     },

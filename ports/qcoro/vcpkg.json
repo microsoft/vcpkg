@@ -1,7 +1,7 @@
 {
-  "name": "qcoro-qt6",
+  "name": "qcoro",
   "version": "0.9.0",
-  "description": "Coroutine support for Qt5",
+  "description": "Coroutine support for Qt",
   "homepage": "https://www.github.com/danvratil/qcoro",
   "documentation": "https://qcoro.dvratil.cz",
   "license": "MIT",
