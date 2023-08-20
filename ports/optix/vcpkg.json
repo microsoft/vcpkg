@@ -1,0 +1,11 @@
+{
+  "name": "optix",
+  "version": "8.0.0",
+  "description": "NVIDIA OptiX ray tracing engine.",
+  "homepage": "https://developer.nvidia.com/rtx/ray-tracing/optix",
+  "license": null,
+  "supports": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)",
+  "dependencies": [
+    "cuda"
+  ]
+}

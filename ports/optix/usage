@@ -1,0 +1,9 @@
+The package optix provides CMake variables:
+
+    find_package(OptiX REQUIRED)
+    target_include_directories(main PRIVATE ${OptiX_INCLUDE_DIR})
+
+Or the following CMake target:
+
+    find_package(OptiX REQUIRED)
+    target_link_libraries(main PRIVATE OptiX::OptiX)
