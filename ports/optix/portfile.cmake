@@ -1,14 +1,16 @@
-set(PREV_MODULE_PATH ${CMAKE_MODULE_PATH})
+set(OptiX_PREV_MODULE_PATH ${CMAKE_MODULE_PATH})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 find_package(OptiX ${VERSION})
-set(CMAKE_MODULE_PATH ${PREV_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${OptiX_PREV_MODULE_PATH})
 
 if(NOT OptiX_FOUND)
   message(FATAL_ERROR "Could not find OptiX. Before continuing, please download and install OptiX (v${VERSION} or higher) from:"
-                      "\n    https://developer.nvidia.com/designworks/optix/download\n")
+                      "\n    https://developer.nvidia.com/designworks/optix/download\n"
+                      "If you are certain that OptiX is already installed, please set the OptiX_INSTALL_DIR environment variable to its location.\n")
 elseif(OptiX_VERSION VERSION_LESS VERSION)
-  message(FATAL_ERROR "OptiX v${OptiX_VERSION} found, but v${VERSION} is required. Please download and install a more recent version of OptiX from:"
-                      "\n    https://developer.nvidia.com/designworks/optix/download\n")
+  message(FATAL_ERROR "OptiX v${OptiX_VERSION} found, but v${VERSION} or higher is required. Please download and install a more recent version of OptiX from:"
+                      "\n    https://developer.nvidia.com/designworks/optix/download\n"
+                      "If you are certain that the necessary version is already installed, please set the OptiX_INSTALL_DIR environment variable to its location.\n")
 endif()
 
 message(STATUS "Found OptiX v${OptiX_VERSION}: (include ${OptiX_INCLUDE_DIR})")
