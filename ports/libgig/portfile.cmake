@@ -9,7 +9,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-msvc-fix-ssize_t.patch
-        0002-always-allow-cmake.patch
+        0002-cmake-fixes.patch
         0003-fix-linux-build.patch
 )
 
