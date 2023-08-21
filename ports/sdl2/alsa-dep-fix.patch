@@ -1,13 +1,13 @@
 diff --git a/SDL2Config.cmake.in b/SDL2Config.cmake.in
-index cc8bcf2..0ad86ae 100644
+index cc8bcf26d..1261ec4e0 100644
 --- a/SDL2Config.cmake.in
 +++ b/SDL2Config.cmake.in
-@@ -30,6 +30,8 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SDL2testTargets.cmake")
-   set(SDL2_SDL2test_FOUND TRUE)
+@@ -36,6 +36,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/sdlfind.cmake")
+ set(SDL_ALSA @SDL_ALSA@)
+ set(SDL_ALSA_SHARED @SDL_ALSA_SHARED@)
+ if(SDL_ALSA AND NOT SDL_ALSA_SHARED AND TARGET SDL2::SDL2-static)
++  include(CMakeFindDependencyMacro)
++  find_dependency(ALSA)
+   sdlFindALSA()
  endif()
- 
-+include(CMakeFindDependencyMacro)
-+find_dependency(ALSA)
- 
- include("${CMAKE_CURRENT_LIST_DIR}/sdlfind.cmake")
- 
+ unset(SDL_ALSA)
