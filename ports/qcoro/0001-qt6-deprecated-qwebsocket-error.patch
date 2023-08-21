@@ -1,16 +1,3 @@
-commit 1f420bb8f9f0028d1289143c4a51bcf8da88387d
-Author: Marius P <nmariusp1@gmail.com>
-Date:   Sat May 13 12:40:48 2023 +0300
-
-    qcorowebsocket replace QWebSocket::error with QWebSocket::errorOccurred
-    
-    I build using cmake build configuration "Debug" not "RelWithDebInfo".
-    Building qcoro fails with error "qcoro/qcoro/websockets/qcorowebsocket.cpp:
-    35:73: error: ‘void QWebSocket::error(QAbstractSocket::SocketError)’
-    is deprecated: Use errorOccurred instead [-Werror=deprecated-declarations]".
-    Because "# Only enable strict warnings in debug mode
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Werror -pedantic")".
-
 diff --git a/qcoro/websockets/qcorowebsocket.cpp b/qcoro/websockets/qcorowebsocket.cpp
 index be9c1f7..c686d14 100644
 --- a/qcoro/websockets/qcorowebsocket.cpp
