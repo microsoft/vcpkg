@@ -7,8 +7,8 @@ index cccfc54..91a8fa4 100644
  #include <functional>
 
 +#ifdef _MSC_VER
-+#include <type_traits>
-+using ssize_t = std::make_signed<std::size_t>::type;
++#include <BaseTsd.h>
++using ssize_t = SSIZE_T;
 +#endif
 +
  #ifndef __has_extension
