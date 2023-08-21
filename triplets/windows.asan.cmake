@@ -76,9 +76,9 @@ if(VCPKG_USE_SANITIZERS)
       if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
         # -include:__asan_seh_interceptor <- used by clang
         # /wholearchive: is not used for asan_dynamic by clang. Only the _thunk has wholearchive
-        set(sanitizer_libs_exe_rel "/wholearchive:clang_rt.asan_dynamic-${asan_arch}.lib /wholearchive:clang_rt.asan_dynamic_runtime_thunk-${asan_arch}.lib")
+        set(sanitizer_libs_exe_rel "clang_rt.asan_dynamic-${asan_arch}.lib /wholearchive:clang_rt.asan_dynamic_runtime_thunk-${asan_arch}.lib /DEFAULTLIB:MSVCRT /DEFAULTLIB:OLDNAMES")
         set(sanitizer_libs_dll_rel "${sanitizer_libs_exe_rel}")
-        set(sanitizer_libs_exe_dbg "/wholearchive:clang_rt.asan_dynamic-${asan_arch}.lib /wholearchive:clang_rt.asan_dynamic_runtime_thunk-${asan_arch}.lib")
+        set(sanitizer_libs_exe_dbg "clang_rt.asan_dynamic-${asan_arch}.lib /wholearchive:clang_rt.asan_dynamic_runtime_thunk-${asan_arch}.lib /DEFAULTLIB:MSVCRTD /DEFAULTLIB:OLDNAMES")
         set(sanitizer_libs_dll_dbg "${sanitizer_libs_exe_dbg}")
       else()
         # TODO

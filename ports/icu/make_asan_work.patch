@@ -7,7 +7,7 @@ index 6f50798eb..172543fd3 100644
  
  ## These are the library specific LDFLAGS
 -LDFLAGSICUDT+=	-NOENTRY# The NOENTRY option is required for creating a resource-only DLL.
-+## LDFLAGSICUDT+=	-NOENTRY# The NOENTRY option is required for creating a resource-only DLL.
++##LDFLAGSICUDT+=	-NOENTRY# The NOENTRY option is required for creating a resource-only DLL.
  LDFLAGSICUUC=# Unused for now.
  LDFLAGSICUI18N=# Unused for now.
  LDFLAGSICUIO=# Unused for now.
@@ -20,7 +20,7 @@ index c2ac112f6..30a0ea65f 100644
  #ifdef WINDOWS_WITH_MSVC
  #define LINK_CMD "link.exe /nologo /release /out:"
 -#define LINK_FLAGS "/NXCOMPAT /DYNAMICBASE /DLL /NOENTRY /MANIFEST:NO /implib:"
-+#define LINK_FLAGS "/NXCOMPAT /DYNAMICBASE /DLL /MANIFEST:NO /implib:"
++#define LINK_FLAGS "/NXCOMPAT /DYNAMICBASE /DLL /MANIFEST:NO /INFERASANLIBS MSVCRT.lib oldnames.lib vcruntime.lib /implib:"
  
  #define LINK_EXTRA_UWP_FLAGS "/APPCONTAINER "
  #define LINK_EXTRA_UWP_FLAGS_X86_ONLY "/SAFESEH "
