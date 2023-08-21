@@ -5,7 +5,6 @@
   "homepage": "https://www.github.com/danvratil/qcoro",
   "documentation": "https://qcoro.dvratil.cz",
   "license": "MIT",
-  "supports": "!osx",
   "dependencies": [
     "qtbase",
     {
