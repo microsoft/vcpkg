@@ -1,12 +1,12 @@
-diff --git a/SDL2Config.cmake.in b/SDL2Config.cmake.in
-index cc8bcf26d..347234849 100644
---- a/SDL2Config.cmake.in
-+++ b/SDL2Config.cmake.in
-@@ -36,6 +36,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/sdlfind.cmake")
- set(SDL_ALSA @SDL_ALSA@)
- set(SDL_ALSA_SHARED @SDL_ALSA_SHARED@)
- if(SDL_ALSA AND NOT SDL_ALSA_SHARED AND TARGET SDL2::SDL2-static)
+diff --git a/cmake/sdlfind.cmake b/cmake/sdlfind.cmake
+index a8145484f..6c32305c2 100644
+--- a/cmake/sdlfind.cmake
++++ b/cmake/sdlfind.cmake
+@@ -1,6 +1,6 @@
+ 
+ macro(sdlFindALSA)
+-  find_package(ALSA MODULE)
 +  find_package(ALSA CONFIG REQUIRED)
-   sdlFindALSA()
- endif()
- unset(SDL_ALSA)
+   if(ALSA_FOUND AND (NOT TARGET ALSA::ALSA) )
+     add_Library(ALSA::ALSA UNKNOWN IMPORTED)
+     set_property(TARGET ALSA::ALSA PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${ALSA_INCLUDE_DIRS})
