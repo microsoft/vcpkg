@@ -10,10 +10,10 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         assimp   VSGXCHANGE_WITH_ASSIMP
-		curl     VSGXCHANGE_WITH_CURL
-		freetype VSGXCHANGE_WITH_FREETYPE
-		gdal     VSGXCHANGE_WITH_GDAL
-		openexr  VSGXCHANGE_WITH_OPENEXR
+	curl     VSGXCHANGE_WITH_CURL
+	freetype VSGXCHANGE_WITH_FREETYPE
+	gdal     VSGXCHANGE_WITH_GDAL
+	openexr  VSGXCHANGE_WITH_OPENEXR
 )
 
 vcpkg_cmake_configure(
