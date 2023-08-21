@@ -6,20 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_meson(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -Dgenerate_cmake_config=true
-        -Dbuild_tests=false
-        -Dbuild_examples=false
-)
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/tomlplusplus)
 
-vcpkg_install_meson()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/tomlplusplus)
-cmake_path(NATIVE_PATH SOURCE_PATH native_source_path)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tomlplusplus/tomlplusplusConfig.cmake" "${native_source_path}" "")
-vcpkg_fixup_pkgconfig()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/meson.build")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
