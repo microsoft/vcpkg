@@ -1,6 +1,6 @@
 # Create Docker image for Android
 
-$Location = 'eastasia'
+$Location = 'westus3'
 $Date = (Get-Date -Format 'yyyy-MM-dd')
 $ResourceGroupName = "And-Registry"
 $ContainerRegistryName = "AndContainerRegistry"

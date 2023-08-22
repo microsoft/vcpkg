@@ -1,5 +1,5 @@
 diff --git a/cpp/src/phonenumbers/regexp_adapter_re2.cc b/cpp/src/phonenumbers/regexp_adapter_re2.cc
-index bb54223..398f369 100644
+index bb542234..398f369b 100644
 --- a/cpp/src/phonenumbers/regexp_adapter_re2.cc
 +++ b/cpp/src/phonenumbers/regexp_adapter_re2.cc
 @@ -31,6 +31,8 @@

@@ -64,8 +64,8 @@ foreach(CSPROJ IN ITEMS
     )
 endforeach()
 
-vcpkg_install_msbuild(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH EasyHook.sln
     TARGET EasyHookDll
     RELEASE_CONFIGURATION "netfx4-Release"
@@ -101,4 +101,4 @@ endif()
 file(INSTALL "${SOURCE_PATH}/Public/easyhook.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/easyhook")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
