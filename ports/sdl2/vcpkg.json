@@ -18,6 +18,10 @@
     "base"
   ],
   "features": {
+    "alsa": {
+      "description": "Build with ALSA support",
+      "supports": "linux"
+    },
     "base": {
       "description": "Base functionality for SDL",
       "dependencies": [
@@ -25,6 +29,7 @@
           "name": "sdl2",
           "default-features": false,
           "features": [
+            "alsa",
             "ibus",
             "wayland",
             "x11"

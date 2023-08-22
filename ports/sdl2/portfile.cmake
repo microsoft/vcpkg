@@ -17,6 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         vulkan   SDL_VULKAN
         x11      SDL_X11
+        alsa     SDL_ALSA
         wayland  SDL_WAYLAND
         samplerate SDL_LIBSAMPLERATE
         ibus     SDL_IBUS
