@@ -1,9 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gperftools/gperftools
-    REF gperftools-2.10
-    SHA512 4400711723be9401f519d85b3b69c026e4715473cbed48ab0573df17abdf895fb971ee969875fe5127a2e8b9aba90d858285e50c8e012384c2c36d5a76b1f0c4
+    REF gperftools-2.11
+    SHA512 890599dde997266f3cb110d45f59b1227ad3c65f4e964b9cb18bebf1df0d086ee049ea1fb1b653abcd71f921b93d105fa382eb26fcbba992a333878e69d9196c
     HEAD_REF master
+    PATCHES pkg-config.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)

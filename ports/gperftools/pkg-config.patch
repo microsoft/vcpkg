@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index a46f149..e5b7cc3 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1400,7 +1400,7 @@ libtcmalloc.pc: Makefile
+ 	echo '' >> "$@".tmp
+ 	echo 'Name: $(PACKAGE)' >> "$@".tmp
+ 	echo 'Version: $(VERSION)' >> "$@".tmp
+-	echo 'Summary: Performance tools for C++' >> "$@".tmp
++	echo 'Description: Performance tools for C++' >> "$@".tmp
+ 	echo 'URL: https://github.com/gperftools/gperftools' >> "$@".tmp
+ 	echo 'Requires:' >> "$@".tmp
+ 	echo 'Libs: -L$${libdir} -ltcmalloc' >> "$@".tmp
