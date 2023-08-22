@@ -1498,7 +1498,7 @@
     },
     "cgns": {
       "baseline": "4.3.0",
-      "port-version": 4
+      "port-version": 5
     },
     "chaiscript": {
       "baseline": "6.1.0",
@@ -1849,7 +1849,7 @@
       "port-version": 3
     },
     "cppslippi": {
-      "baseline": "1.0.3.14",
+      "baseline": "1.1.3.14",
       "port-version": 0
     },
     "cpptoml": {
@@ -3262,7 +3262,7 @@
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23",
-      "port-version": 6
+      "port-version": 7
     },
     "idevicerestore": {
       "baseline": "1.0.12",
@@ -3378,7 +3378,7 @@
     },
     "imath": {
       "baseline": "3.1.9",
-      "port-version": 0
+      "port-version": 1
     },
     "imgui": {
       "baseline": "1.89.7",
@@ -4338,7 +4338,7 @@
     },
     "libmicrohttpd": {
       "baseline": "0.9.77",
-      "port-version": 1
+      "port-version": 2
     },
     "libmikmod": {
       "baseline": "3.3.11.1",
@@ -5402,7 +5402,7 @@
     },
     "minizip-ng": {
       "baseline": "4.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "mio": {
       "baseline": "2023-03-03",
@@ -5989,7 +5989,7 @@
       "port-version": 2
     },
     "opencolorio": {
-      "baseline": "2.1.2",
+      "baseline": "2.2.1",
       "port-version": 0
     },
     "opencolorio-tools": {
@@ -6049,7 +6049,7 @@
       "port-version": 4
     },
     "openimageio": {
-      "baseline": "2.4.13.0",
+      "baseline": "2.4.14.0",
       "port-version": 0
     },
     "openjpeg": {
@@ -6594,6 +6594,10 @@
     },
     "pugixml": {
       "baseline": "1.13.0",
+      "port-version": 0
+    },
+    "pulzed-mini": {
+      "baseline": "0.9.14",
       "port-version": 0
     },
     "pybind11": {
@@ -7306,7 +7310,7 @@
     },
     "rtabmap": {
       "baseline": "0.21.0",
-      "port-version": 1
+      "port-version": 2
     },
     "rtaudio": {
       "baseline": "2021-11-16",
@@ -8629,7 +8633,7 @@
       "port-version": 2
     },
     "vsg": {
-      "baseline": "1.0.6",
+      "baseline": "1.0.8",
       "port-version": 0
     },
     "vtk": {
