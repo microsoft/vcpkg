@@ -5,14 +5,13 @@
 # - OptiX_INCLUDE_DIR
 # - OptiX_ROOT_DIR
 # - OptiX_VERSION
-# - Interface library target OptiX::OptiX.
 
 list(APPEND OptiX_POTENTIAL_DIRS
   "${OptiX_DIR}"
-  "${OptiX_INSTALL_DIR}"    # https://github.com/owl-project/owl uses this style.
+  "${OptiX_INSTALL_DIR}"       # https://github.com/owl-project/owl uses this style.
   "${OptiX_PATH}"
   "${OptiX_ROOT}"
-  "${OptiX_ROOT_DIR}"       # https://github.com/nvidia/visrtx uses this style.
+  "${OptiX_ROOT_DIR}"          # https://github.com/nvidia/visrtx uses this style.
   "${OptiX_ROOT_PATH}"
 
   "${OPTIX_DIR}"
@@ -36,7 +35,10 @@ list(APPEND OptiX_POTENTIAL_DIRS
   "$ENV{OPTIX_ROOT_DIR}"
   "$ENV{OPTIX_ROOT_PATH}"
 
-  "$ENV{PATH}"
+  "$ENV{PATH}"                 # Explicitly included as a package manager (e.g. vcpkg) may remove system paths.
+)
+list(APPEND OptiX_POTENTIAL_SUFFIXES
+  "/OptiX"
 )
 
 if(WIN32)
@@ -55,10 +57,6 @@ if(WIN32)
   )
 elseif(LINUX)
   list(APPEND OptiX_POTENTIAL_DIRS
-    "$ENV{CPATH}"
-    "$ENV{C_INCLUDE_PATH}"
-    "$ENV{CPLUS_INCLUDE_PATH}"
-
     "/include"
     "/include/nvidia"
     "/lib"
@@ -107,25 +105,16 @@ elseif(LINUX)
     "/var/local/lib64/nvidia"
     "/var/local/opt"
     "/var/local/opt/nvidia"
+
+    "$ENV{CPATH}"              # Explicitly included as a package manager (e.g. vcpkg) may remove compiler paths.
+    "$ENV{C_INCLUDE_PATH}"     # Explicitly included as a package manager (e.g. vcpkg) may remove compiler paths.
+    "$ENV{CPLUS_INCLUDE_PATH}" # Explicitly included as a package manager (e.g. vcpkg) may remove compiler paths.
+  )
+  list(APPEND OptiX_POTENTIAL_SUFFIXES 
+    "/optix" # Linux is case sensitive.
+    "/OPTIX" # Linux is case sensitive.
   )
 endif()
-
-list(APPEND OptiX_POTENTIAL_SUFFIXES
-  "/optix"
-  "/OptiX"
-  "/OPTIX"
-)
-list(APPEND OptiX_POTENTIAL_VERSIONED_SUFFIXES
-  "/optix *"
-  "/OptiX *"
-  "/OPTIX *"
-  "/optix-*"
-  "/OptiX-*"
-  "/OPTIX-*"
-  "/OptiX SDK *"
-  "/OptiX-SDK-*"
-  "/NVIDIA-OptiX-SDK-*"
-)
 
 set(OptiX_VALID_POTENTIAL_DIRS)
 foreach(OptiX_POTENTIAL_DIR IN LISTS OptiX_POTENTIAL_DIRS)
@@ -133,13 +122,21 @@ foreach(OptiX_POTENTIAL_DIR IN LISTS OptiX_POTENTIAL_DIRS)
     list(APPEND OptiX_VALID_POTENTIAL_DIRS "${OptiX_POTENTIAL_DIR}")
   
     foreach(OptiX_POTENTIAL_SUFFIX IN LISTS OptiX_POTENTIAL_SUFFIXES)
-      if(IS_DIRECTORY "${OptiX_POTENTIAL_DIR}/${OptiX_POTENTIAL_SUFFIX}")
-        list(APPEND OptiX_VALID_POTENTIAL_DIRS "${OptiX_POTENTIAL_DIR}/${OptiX_POTENTIAL_SUFFIX}")
+      if(IS_DIRECTORY "${OptiX_POTENTIAL_DIR}${OptiX_POTENTIAL_SUFFIX}")
+        list(APPEND OptiX_VALID_POTENTIAL_DIRS "${OptiX_POTENTIAL_DIR}${OptiX_POTENTIAL_SUFFIX}")
       endif()
+      
+      file(GLOB OptiX_POTENTIAL_VERSIONED_DIRS "${OptiX_POTENTIAL_DIR}${OptiX_POTENTIAL_SUFFIX}*")
+      foreach(OptiX_POTENTIAL_VERSIONED_DIR IN LISTS OptiX_POTENTIAL_VERSIONED_DIRS)
+        # TODO: Parse version, add to potential dirs ideally only correct versions.
+        list(APPEND OptiX_VALID_POTENTIAL_DIRS "${OptiX_POTENTIAL_VERSIONED_DIR}")
+      endforeach()
     endforeach()
-
-    # TODO Check with OptiX_POTENTIAL_VERSIONED_SUFFIXES, append to OptiX_VALID_POTENTIAL_DIRS, ideally only correct versions.
   endif()
+endforeach()
+
+foreach(DIR IN LISTS OptiX_VALID_POTENTIAL_DIRS)
+  message(INFO "${DIR}")
 endforeach()
 
 find_path(
@@ -147,7 +144,7 @@ find_path(
   NAMES
     "include/optix.h"
   PATHS
-    ${OptiX_POTENTIAL_DIRS}
+    ${OptiX_VALID_POTENTIAL_DIRS}
 )
 
 if (OptiX_ROOT_DIR)
@@ -161,8 +158,9 @@ if (OptiX_ROOT_DIR)
   math(EXPR OptiX_MICRO_VERSION "${OptiX_VERSION_CODE} % 100")
   set(OptiX_VERSION "${OptiX_MAJOR_VERSION}.${OptiX_MINOR_VERSION}.${OptiX_MICRO_VERSION}")
   
-  add_library(OptiX::OptiX INTERFACE IMPORTED)
-  target_include_directories(OptiX::OptiX INTERFACE "${OptiX_INCLUDE_DIR}")
+  # Not allowed in scripting mode.
+  # add_library(OptiX::OptiX INTERFACE IMPORTED)
+  # target_include_directories(OptiX::OptiX INTERFACE "${OptiX_INCLUDE_DIR}")
 endif()
 
 include(FindPackageHandleStandardArgs)
