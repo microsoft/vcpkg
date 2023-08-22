@@ -3062,7 +3062,7 @@
     },
     "gtk3": {
       "baseline": "3.24.38",
-      "port-version": 1
+      "port-version": 0
     },
     "gtkmm": {
       "baseline": "4.10.0",
