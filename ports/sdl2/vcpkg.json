@@ -20,7 +20,10 @@
   "features": {
     "alsa": {
       "description": "Build with ALSA support",
-      "supports": "linux"
+      "supports": "linux",
+      "dependencies": [
+        "alsa"
+      ]
     },
     "base": {
       "description": "Base functionality for SDL",
