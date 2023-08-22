@@ -3009,8 +3009,8 @@
       "port-version": 2
     },
     "graphicsmagick": {
-      "baseline": "1.3.37",
-      "port-version": 3
+      "baseline": "1.3.41",
+      "port-version": 0
     },
     "graphite2": {
       "baseline": "1.3.14",
