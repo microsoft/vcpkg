@@ -27,6 +27,7 @@ vcpkg_from_github(
       0012-fix-zlib.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
+      0019-missing-include.patch
       "${ARM64_WINDOWS_FIX}"
 )
 # Disallow accidental build of vendored copies
