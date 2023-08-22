@@ -1,12 +1,13 @@
-diff --git a/cmake/sdlfind.cmake b/cmake/sdlfind.cmake
-index a8145484f..6c32305c2 100644
---- a/cmake/sdlfind.cmake
-+++ b/cmake/sdlfind.cmake
-@@ -1,6 +1,6 @@
- 
- macro(sdlFindALSA)
--  find_package(ALSA MODULE)
-+  find_package(ALSA CONFIG REQUIRED)
-   if(ALSA_FOUND AND (NOT TARGET ALSA::ALSA) )
-     add_Library(ALSA::ALSA UNKNOWN IMPORTED)
-     set_property(TARGET ALSA::ALSA PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${ALSA_INCLUDE_DIRS})
+diff --git a/cmake/sdlchecks.cmake b/cmake/sdlchecks.cmake
+index c4aec174e..e1bc67b41 100644
+--- a/cmake/sdlchecks.cmake
++++ b/cmake/sdlchecks.cmake
+@@ -91,7 +91,7 @@ endmacro()
+ # - HAVE_SDL_LOADSO opt
+ macro(CheckALSA)
+   if(SDL_ALSA)
+-    sdlFindALSA()
++    find_package(ALSA CONFIG REQUIRED)
+     if(ALSA_FOUND)
+       file(GLOB ALSA_SOURCES "${SDL2_SOURCE_DIR}/src/audio/alsa/*.c")
+       list(APPEND SOURCE_FILES ${ALSA_SOURCES})
