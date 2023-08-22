@@ -7,12 +7,12 @@ index b1982f5..cac1adb 100644
              max_wait.tv_sec += secs.count();
              max_wait.tv_nsec = (long)nsecs.count();
 -            return (_Thrd_success == _Mtx_timedlock(mutex_, (xtime*)&max_wait));
-+            return (0 == _Mtx_timedlock(mutex_, (xtime*)&max_wait));
++            return (0 == static_cast<int>(_Mtx_timedlock(mutex_, (xtime*)&max_wait)));
          }
          else
          {
 -            return (_Thrd_success == _Mtx_trylock(mutex_));
-+            return (0 == _Mtx_trylock(mutex_));
++            return (0 == static_cast<int>(_Mtx_trylock(mutex_)));
          }
      }
  
@@ -21,7 +21,7 @@ index b1982f5..cac1adb 100644
      bool try_lock()
      {
 -        return (_Thrd_success == _Mtx_trylock(mutex_));
-+        return (0 == _Mtx_trylock(mutex_));
++        return (0 == static_cast<int>(_Mtx_trylock(mutex_)));
      }
  
      template <class Rep, class Period>
@@ -30,12 +30,12 @@ index b1982f5..cac1adb 100644
              max_wait.tv_sec += secs.count();
              max_wait.tv_nsec = (long)nsecs.count();
 -            return (_Thrd_success == _Mtx_timedlock(mutex_, (xtime*)&max_wait));
-+            return (0 == _Mtx_timedlock(mutex_, (xtime*)&max_wait));
++            return (0 == static_cast<int>(_Mtx_timedlock(mutex_, (xtime*)&max_wait)));
          }
          else
          {
 -            return (_Thrd_success == _Mtx_trylock(mutex_));
-+            return (0 == _Mtx_trylock(mutex_));
++            return (0 == static_cast<int>(_Mtx_trylock(mutex_)));
          }
      }
  
