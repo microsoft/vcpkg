@@ -16,9 +16,6 @@ else()
 endif()
 
 if ("tools" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "This feature doesn't support Windows platform")
-    endif()
     list(APPEND BUILD_OPTIONS -Dtools=all)
 endif()
 
