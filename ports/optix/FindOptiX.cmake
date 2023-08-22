@@ -1,4 +1,4 @@
-# This is the hardest-trying FindOptiX.cmake in existence.
+# This is the hardest-trying FindOptiX.cmake in existence for OptiX > 7.0.0.
 #
 # Defines:
 # - OptiX_FOUND
@@ -110,7 +110,7 @@ elseif(LINUX)
     "$ENV{C_INCLUDE_PATH}"     # Explicitly included as a package manager (e.g. vcpkg) may remove compiler paths.
     "$ENV{CPLUS_INCLUDE_PATH}" # Explicitly included as a package manager (e.g. vcpkg) may remove compiler paths.
   )
-  list(APPEND OptiX_POTENTIAL_SUFFIXES 
+  list(APPEND OptiX_POTENTIAL_SUFFIXES
     "/optix" # Linux is case sensitive.
     "/OPTIX" # Linux is case sensitive.
   )
@@ -128,15 +128,18 @@ foreach(OptiX_POTENTIAL_DIR IN LISTS OptiX_POTENTIAL_DIRS)
       
       file(GLOB OptiX_POTENTIAL_VERSIONED_DIRS "${OptiX_POTENTIAL_DIR}${OptiX_POTENTIAL_SUFFIX}*")
       foreach(OptiX_POTENTIAL_VERSIONED_DIR IN LISTS OptiX_POTENTIAL_VERSIONED_DIRS)
-        # TODO: Parse version, add to potential dirs ideally only correct versions.
-        list(APPEND OptiX_VALID_POTENTIAL_DIRS "${OptiX_POTENTIAL_VERSIONED_DIR}")
+        string(REGEX MATCH "[0-9]+\.[0-9]+\.[0-9]+" OptiX_POTENTIAL_VERSION "${OptiX_POTENTIAL_VERSIONED_DIR}")
+        if(NOT OptiX_POTENTIAL_VERSION OR OptiX_POTENTIAL_VERSION VERSION_GREATER_EQUAL "7.0.0")
+          list(PREPEND OptiX_VALID_POTENTIAL_DIRS "${OptiX_POTENTIAL_VERSIONED_DIR}") # Prepended to ensure the latest version is found first.
+        endif()
       endforeach()
     endforeach()
   endif()
 endforeach()
 
-foreach(DIR IN LISTS OptiX_VALID_POTENTIAL_DIRS)
-  message(INFO "${DIR}")
+message(DEBUG " OptiX_VALID_POTENTIAL_DIRS: ")
+foreach(OptiX_VALID_POTENTIAL_DIR IN LISTS OptiX_VALID_POTENTIAL_DIRS)
+  message(DEBUG " ${OptiX_VALID_POTENTIAL_DIR} ")
 endforeach()
 
 find_path(
