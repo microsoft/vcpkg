@@ -8,7 +8,6 @@ vcpkg_from_github(
     PATCHES
         0001-remove-ifndef-NOUNCRYPT.patch
         0002-add-declaration-for-mkdir.patch
-        0003-no-io64.patch
         pkgconfig.patch
 )
 
