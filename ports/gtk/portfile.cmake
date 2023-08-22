@@ -88,6 +88,8 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
 set(TOOL_NAMES gtk4-builder-tool
                gtk4-encode-symbolic-svg
                gtk4-query-settings
@@ -99,12 +101,6 @@ vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/glib-2.0")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/glib-2.0" "${CURRENT_PACKAGES_DIR}/share/gtk-4.0/glib-2.0")
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

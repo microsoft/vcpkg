@@ -1,10 +1,10 @@
 diff --git a/meson.build b/meson.build
-index 5efd8a9..d51af19 100644
+index c599843..0cafd79 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -857,7 +857,7 @@ subdir('po')
+@@ -1008,7 +1008,7 @@ subdir('docs/reference')
  
- subdir('docs/reference')
+ install_data('m4macros/gtk-3.0.m4', install_dir: join_paths(get_option('datadir'), 'aclocal'))
  
 -if not meson.is_cross_build()
 +if false

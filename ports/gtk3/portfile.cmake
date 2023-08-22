@@ -13,6 +13,7 @@ vcpkg_from_gitlab(
     REF "${VERSION}"
     SHA512 ffb52ee34074be6e88fda40a025044b653d05b69c35819eed159a020a6f1c881a83735aa7bec943470c465328bb3bb20b34afeb3b98cdcfca9d2eaaed3ab61ef
     PATCHES
+        0001-build.patch
         cairo-cpp-linkage.patch
 )
 
@@ -94,8 +95,4 @@ vcpkg_copy_tools(TOOL_NAMES ${GTK_TOOLS} AUTO_CLEAN)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/glib-2.0")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/share/glib-2.0" "${CURRENT_PACKAGES_DIR}/share/gtk-3.0/glib-2.0")
-endif()
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
