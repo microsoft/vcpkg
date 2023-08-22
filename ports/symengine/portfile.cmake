@@ -16,13 +16,7 @@ vcpkg_check_features(
         llvm WITH_LLVM
 )
 
-if(integer-class-boostmp IN_LIST FEATURES)
-    set(INTEGER_CLASS boostmp)
-
-    if(integer-class-flint IN_LIST FEATURES)
-        message(WARNING "Both boostmp and flint are given for integer class, will use boostmp only.")
-    endif()
-elseif(integer-class-flint IN_LIST FEATURES)
+if(integer-class-flint IN_LIST FEATURES)
     set(INTEGER_CLASS flint)
 endif()
 
@@ -31,8 +25,6 @@ if(VCPKG_TARGET_IS_UWP)
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE")
 endif()
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MSVC_USE_MT)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -40,10 +32,10 @@ vcpkg_cmake_configure(
         -DBUILD_BENCHMARKS=no
         -DBUILD_TESTS=no
         -DMSVC_WARNING_LEVEL=3
-        -DMSVC_USE_MT=${MSVC_USE_MT}
+        -DMSVC_USE_MT=no
         -DWITH_SYMENGINE_RCP=yes
         -DWITH_SYMENGINE_TEUCHOS=no
-        -DINTEGER_CLASS=${INTEGER_CLASS}
+        -DWITH_SYMENGINE_THREAD_SAFE=yes
         ${FEATURE_OPTIONS}
 )
 
