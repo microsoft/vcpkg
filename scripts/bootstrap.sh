@@ -198,7 +198,9 @@ if [ "$vcpkgDownloadTool" = "ON" ]; then
     vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
 else
     if [ "x$CXX" = "x" ]; then
-        if which g++-12 >/dev/null 2>&1; then
+        if which g++-13 >/dev/null 2>&1; then
+            CXX=g++-13
+        elif which g++-12 >/dev/null 2>&1; then
             CXX=g++-12
         elif which g++-11 >/dev/null 2>&1; then
             CXX=g++-11
