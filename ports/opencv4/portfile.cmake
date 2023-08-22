@@ -27,6 +27,7 @@ vcpkg_from_github(
       0012-fix-zlib.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
+      0019-missing-include.patch
       "${ARM64_WINDOWS_FIX}"
 )
 # Disallow accidental build of vendored copies
@@ -583,6 +584,12 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencv")
 if(VCPKG_TARGET_IS_ANDROID)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/README.android")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.android")
+endif()
+
+if("python" IN_LIST FEATURES)
+  file(GLOB python_dir LIST_DIRECTORIES true RELATIVE "${CURRENT_PACKAGES_DIR}/lib/" "${CURRENT_PACKAGES_DIR}/lib/python*")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/${python_dir}/site-packages/cv2/typing")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${python_dir}/site-packages/cv2/typing")
 endif()
 
 vcpkg_fixup_pkgconfig()
