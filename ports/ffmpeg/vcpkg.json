@@ -345,6 +345,9 @@
         "dav1d"
       ]
     },
+    "disable-everything": {
+      "description": "Disable all encoders, decoders, hwaccels, muxers, demuxers, parsers, bitstream filters, protocols, input devices, output devices and filters, unless explicitely enabled."
+    },
     "fdk-aac": {
       "description": "AAC de/encoding via libfdk-aac, **including GPL-incompatible patent-encumbered HE-AAC**. If you do not require HE-AAC, use the built-in FFmpeg AAC codec.",
       "dependencies": [
@@ -411,6 +414,9 @@
         }
       ]
     },
+    "file": {
+      "description": "Enable the file protocol"
+    },
     "fontconfig": {
       "description": "Useful for drawtext filter",
       "dependencies": [
@@ -431,6 +437,9 @@
     },
     "gpl": {
       "description": "Allow use of GPL code, the resulting libs and binaries will be under GPL"
+    },
+    "h264": {
+      "description": "Enable the H.264 decoder, parser and demuxer."
     },
     "iconv": {
       "description": "Iconv support",
