@@ -264,7 +264,7 @@ function(vcpkg_make_configure) #
         INCLUDE LIB LIBPATH _CL_ _LINK_
     )
     z_vcpkg_make_set_common_vars()
-    z_vcpkg_make_prepare_compiler_flags()
+    z_vcpkg_make_prepare_flags()
     z_vcpkg_make_prepare_environment_common()
 
     set(build_configs RELEASE)
