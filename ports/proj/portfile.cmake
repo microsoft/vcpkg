@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
     REF "${VERSION}"
-    SHA512 a48980b94b6c68738dd5ab70a1de6aa42f325fd612155623195a14774caadcaceff08035c01696458d3dd706b2277d89ea093949a1855fafa9951c59821cb1cb
+    SHA512 ac6cf14c7a4bf0435b0b6c373b665762f46ea7609fdbffc512efc308441bf0ac7bf4dee2bcf3b60e98a604b2e3f1e7a67fdac9f455c1ad37ad3f705185a2b620
     HEAD_REF master
     PATCHES
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
         remove-doc.patch
+        remove_toolset_restriction.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

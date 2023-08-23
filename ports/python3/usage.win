@@ -1,6 +1,6 @@
 The package python3 provides a python interpreter that supports virtual environments:
 
-    >tools\python3\python3.10 -m venv c:\path\to\venv
+    >tools\python3\python.exe -m venv c:\path\to\venv
     >set VIRTUAL_ENV=c:\path\to\venv
     >set PATH=c:\path\to\venv\bin;%PATH%
     >set PYTHONHOME=

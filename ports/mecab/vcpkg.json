@@ -1,7 +1,7 @@
 {
   "name": "mecab",
-  "version-string": "2019-09-25",
-  "port-version": 3,
+  "version-date": "2019-09-25",
+  "port-version": 4,
   "description": "A morphological analysis engine based on CRF",
   "supports": "!(uwp | arm | arm64)",
   "dependencies": [

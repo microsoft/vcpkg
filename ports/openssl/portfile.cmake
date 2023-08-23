@@ -19,14 +19,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 5a821aaaaa89027ce08a347e5fc216757c2971e29f7d24792609378c54f657839b3775bf639e7330b28b4f96ef0d32869f0a96afcb25c8a2e1c2fe51a6eb4aa3
+    SHA512 c48ad86265b0fee18b23863b645a286d131a863a3418c7d2ed6c819eebb822ad0f2985ba3ecbf4def32515442f0eb40aba08f3146d113247e86ec80fbddca1c1
     PATCHES
         disable-apps.patch
         disable-install-docs.patch
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
-        windows/umul128-arm64.patch # Fixed upstream in https://github.com/openssl/openssl/pull/20244, but not released as of 3.0.8
+        windows/perlasm-scheme.patch
         unix/android-cc.patch
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
@@ -40,6 +40,12 @@ vcpkg_list(SET CONFIGURE_OPTIONS
     no-weak-ssl-ciphers
     no-tests
 )
+
+set(INSTALL_FIPS "")
+if("fips" IN_LIST FEATURES)
+    vcpkg_list(APPEND INSTALL_FIPS install_fips)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-fips)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_list(APPEND CONFIGURE_OPTIONS shared)
@@ -67,4 +73,4 @@ else()
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

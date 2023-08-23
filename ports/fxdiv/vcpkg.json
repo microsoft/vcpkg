@@ -1,6 +1,13 @@
 {
   "name": "fxdiv",
-  "version-string": "2021-02-21",
+  "version-date": "2021-02-21",
+  "port-version": 2,
   "description": "C99/C++ header-only library for division via fixed-point multiplication by inverse",
-  "homepage": "https://github.com/Maratyszcza/FXdiv"
+  "homepage": "https://github.com/Maratyszcza/FXdiv",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

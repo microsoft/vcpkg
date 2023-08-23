@@ -1,13 +1,13 @@
 diff --git a/runtime/Cpp/runtime/CMakeLists.txt b/runtime/Cpp/runtime/CMakeLists.txt
-index 19cc21c..2a33fe9 100644
+index 86fdab9..97486fb 100644
 --- a/runtime/Cpp/runtime/CMakeLists.txt
 +++ b/runtime/Cpp/runtime/CMakeLists.txt
-@@ -103,7 +103,7 @@ set(static_lib_suffix "")
+@@ -120,7 +120,7 @@ set(static_lib_suffix "")
  if (WIN32)
    set(static_lib_suffix "-static")
-   if(BUILD_SHARED_LIBS)
--  target_compile_definitions(antlr4_shared PUBLIC ANTLR4CPP_EXPORTS)
-+  target_compile_definitions(antlr4_shared PRIVATE ANTLR4CPP_EXPORTS)
-   else()
-   target_compile_definitions(antlr4_static PUBLIC ANTLR4CPP_STATIC)
+   if (TARGET antlr4_shared)
+-    target_compile_definitions(antlr4_shared PUBLIC ANTLR4CPP_EXPORTS)
++    target_compile_definitions(antlr4_shared PRIVATE ANTLR4CPP_EXPORTS)
    endif()
+   if (TARGET antlr4_static)
+     target_compile_definitions(antlr4_static PUBLIC ANTLR4CPP_STATIC)

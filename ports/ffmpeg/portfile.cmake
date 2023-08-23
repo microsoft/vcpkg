@@ -21,6 +21,7 @@ vcpkg_from_github(
         0015-Fix-xml2-detection.patch
         0020-fix-aarch64-libswscale.patch
         0022-fix-iconv.patch
+        0024-fix-gcc13-binutils.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -513,7 +514,7 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libmfx")
 endif()
 
-set(OPTIONS_CROSS " --enable-cross-compile")
+set(OPTIONS_CROSS "--enable-cross-compile")
 
 # ffmpeg needs --cross-prefix option to use appropriate tools for cross-compiling.
 if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*-)gcc$")

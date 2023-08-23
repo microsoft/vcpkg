@@ -5,7 +5,9 @@ cmake_policy(SET CMP0012 NEW)
 include(CMakeFindDependencyMacro)
 
 if (@IMGUI_BUILD_GLFW_BINDING@)
-    find_dependency(glfw3 CONFIG)
+    if (NOT "@EMSCRIPTEN@")
+        find_dependency(glfw3 CONFIG)
+    endif()
 endif()
 
 if (@IMGUI_BUILD_GLUT_BINDING@)
@@ -22,6 +24,10 @@ endif()
 
 if (@IMGUI_FREETYPE@)
     find_dependency(freetype CONFIG)
+endif()
+
+if (@IMGUI_BUILD_ALLEGRO5_BINDING@)
+    find_dependency(unofficial-allegro5 CONFIG)
 endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/imgui-targets.cmake")

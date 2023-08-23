@@ -1,7 +1,7 @@
 {
   "name": "alac-decoder",
-  "version-string": "0.2",
-  "port-version": 6,
+  "version": "0.2",
+  "port-version": 7,
   "description": "ALAC C implementation of a decoder, written from reverse engineering the file format",
   "homepage": "https://distfiles.macports.org/alac_decoder",
   "dependencies": [

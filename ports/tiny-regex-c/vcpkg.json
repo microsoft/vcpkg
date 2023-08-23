@@ -1,7 +1,7 @@
 {
   "name": "tiny-regex-c",
-  "version-string": "2019-07-31",
-  "port-version": 2,
+  "version-date": "2019-07-31",
+  "port-version": 3,
   "description": "A small regex implementation in C",
   "homepage": "https://github.com/kokke/tiny-regex-c",
   "dependencies": [

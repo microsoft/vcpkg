@@ -132,6 +132,10 @@ function(vcpkg_cmake_configure)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
     endif()
 
+    if(DEFINED VCPKG_XBOX_CONSOLE_TARGET)
+        vcpkg_list(APPEND arg_OPTIONS "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
+    endif()
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         vcpkg_list(APPEND arg_OPTIONS "-DBUILD_SHARED_LIBS=ON")
     elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

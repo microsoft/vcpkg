@@ -1,8 +1,6 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2a9724e..95d4d7e 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -99,12 +99,14 @@ find_package(Boost REQUIRED COMPONENTS
+--- CMakeLists.txt.orig	2023-03-12 19:26:41.000000000 +0100
++++ CMakeLists.txt	2023-03-27 11:27:43.840624719 +0200
+@@ -99,14 +99,17 @@
  
  find_package(Eigen3 REQUIRED)
  
@@ -17,5 +15,9 @@ index 2a9724e..95d4d7e 100644
 +find_package(metis CONFIG REQUIRED)
 +set(METIS_LIBRARIES metis)
  
- find_package(Glog REQUIRED)
+-find_package(Glog REQUIRED)
++find_package(glog CONFIG REQUIRED)
++set(GLOG_LIBRARIES glog::glog)
+ 
+ find_package(SQLite3 REQUIRED)
  

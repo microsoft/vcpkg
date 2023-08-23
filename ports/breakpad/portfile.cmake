@@ -42,8 +42,8 @@ if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES microdump_stackwalk minidump_dump minidump_stackwalk core2md pid2md dump_syms minidump-2-core minidump_upload sym_upload core_handler AUTO_CLEAN)
 endif()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-breakpad CONFIG_PATH share/unofficial-breakpad)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-breakpad)
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

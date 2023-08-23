@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO cmannett85/arg_router
     REF v${VERSION}
     HEAD_REF main
-    SHA512 7f19f9b4df8c2b8968cfc05a92eb3dab44fdc261835a75ccf6e0ec64c68059f05fd7125466e81fa8b04638ab79792b2151216214bb121c06c77c4441a6917315
+    SHA512 0348a39c0e091b1b0d6887528f6d48372162ed2526fb81935761cf93ff006fc685bbf834d44cea60cdaf4d8b2e947b6cb1a81c901c02aaba68a0dfd16a12ca20
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port
