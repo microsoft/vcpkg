@@ -189,7 +189,6 @@ else()
 endif()
 
 
-vcpkg_copy_pdbs()
 
 # v8 libraries are listed as SYSTEM_LIBRARIES because the pc files reference each other.
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m dl pthread Winmm DbgHelp v8_libbase v8_libplatform v8)

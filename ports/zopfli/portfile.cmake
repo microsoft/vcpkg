@@ -14,7 +14,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 
 # Install tools
 file(COPY "${CURRENT_PACKAGES_DIR}/bin/zopfli${VCPKG_TARGET_EXECUTABLE_SUFFIX}"

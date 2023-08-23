@@ -47,7 +47,6 @@ elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 endif()
 
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/symengine/symengine_config_cling.h")

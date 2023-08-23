@@ -1,7 +1,7 @@
 {
   "name": "tinkerforge",
   "version": "2.1.25",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Tinkerforge C API bindings for bricks and bricklets",
   "supports": "!uwp",
   "dependencies": [

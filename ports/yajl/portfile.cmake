@@ -12,7 +12,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/yajl.pc")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")

@@ -25,7 +25,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 
 if(URIPARSER_BUILD_TOOLS)
     vcpkg_copy_tools(

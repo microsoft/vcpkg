@@ -25,7 +25,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH share/telnetpp)
 
-vcpkg_copy_pdbs()
 
 # Remove duplicate header files and CMake input file
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

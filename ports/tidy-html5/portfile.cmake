@@ -19,7 +19,6 @@ vcpkg_cmake_configure(
         -DTIDY_CONSOLE_SHARED=${BUILD_SHARED_LIB}
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE

@@ -27,7 +27,6 @@ vcpkg_cmake_configure(
       -DWOLFSSL_DEBUG=yes)
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

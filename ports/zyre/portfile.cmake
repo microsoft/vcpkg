@@ -34,7 +34,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/CMake")
     vcpkg_cmake_config_fixup(CONFIG_PATH CMake)

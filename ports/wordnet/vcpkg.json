@@ -1,7 +1,7 @@
 {
   "name": "wordnet",
   "version": "3.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "WordNet is a large lexical database of English",
   "dependencies": [
     {

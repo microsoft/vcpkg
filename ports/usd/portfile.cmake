@@ -72,8 +72,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(RENAME ${CURRENT_FROM} ${CURRENT_TO})
     endforeach()
 
-    vcpkg_copy_pdbs()
-
+    
     function(file_replace_regex filename match_string replace_string)
         file(READ ${filename} _contents)
         string(REGEX REPLACE "${match_string}" "${replace_string}" _contents "${_contents}")

@@ -39,4 +39,3 @@ vcpkg_cmake_install()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-vcpkg_copy_pdbs()

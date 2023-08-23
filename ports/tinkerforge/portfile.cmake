@@ -30,4 +30,3 @@ file(REMOVE_RECURSE
 
 file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-vcpkg_copy_pdbs()

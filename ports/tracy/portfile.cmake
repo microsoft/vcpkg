@@ -150,7 +150,6 @@ if("update" IN_LIST tracy_tools)
     endif()
 endif()
 
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
 vcpkg_fixup_pkgconfig()
 

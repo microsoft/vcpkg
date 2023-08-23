@@ -40,7 +40,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 
 if (BUILD_TOOLS)
     set(EXTRA_BUILD_TOOLS "")

@@ -24,7 +24,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/TBB")
-vcpkg_copy_pdbs()
 
 if(NOT VCPKG_BUILD_TYPE)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|arm|wasm32)$")

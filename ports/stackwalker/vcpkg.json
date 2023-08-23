@@ -1,6 +1,7 @@
 {
   "name": "stackwalker",
   "version-date": "2023-06-24",
+  "port-version": 1,
   "description": "StackWalker - Walking the callstack.",
   "license": "BSD-2-Clause",
   "supports": "windows & !uwp",

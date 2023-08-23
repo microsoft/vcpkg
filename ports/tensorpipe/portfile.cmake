@@ -39,7 +39,6 @@ vcpkg_cmake_configure(
         TP_ENABLE_CUDA_IPC
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/unofficial-tensorpipe" PACKAGE_NAME "unofficial-tensorpipe")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

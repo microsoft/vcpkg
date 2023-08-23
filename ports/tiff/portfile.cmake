@@ -91,5 +91,4 @@ if ("tools" IN_LIST FEATURES)
     )
 endif()
 
-vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
         -DWITH_OPTIM=ON
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"

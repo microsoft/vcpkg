@@ -21,6 +21,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 configure_file("${SOURCE_PATH}/LICENSE.md" "${CURRENT_PACKAGES_DIR}/share/usrsctp/copyright" COPYONLY)
 
-vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()

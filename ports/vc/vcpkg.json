@@ -1,6 +1,7 @@
 {
   "name": "vc",
   "version": "1.4.3",
+  "port-version": 1,
   "description": "SIMD Vector Classes for C++ .",
   "homepage": "https://github.com/VcDevel/Vc",
   "license": "BSD-3-Clause",

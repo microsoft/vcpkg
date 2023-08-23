@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
         -DVULKAN_HEADERS_INSTALL_DIR=${CURRENT_INSTALLED_DIR}
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/volk)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

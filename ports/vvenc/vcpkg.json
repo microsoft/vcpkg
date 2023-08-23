@@ -1,6 +1,7 @@
 {
   "name": "vvenc",
   "version": "1.7.0",
+  "port-version": 1,
   "description": "VVenC is a fast and efficient H.266/VVC encoder implementation.",
   "homepage": "https://github.com/fraunhoferhhi/vvenc",
   "license": "BSD-3-Clause-Clear",

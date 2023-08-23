@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 # Handle copyright
 configure_file("${SOURCE_PATH}/LICENCE" "${CURRENT_PACKAGES_DIR}/share/tinyutf8/copyright" COPYONLY)
