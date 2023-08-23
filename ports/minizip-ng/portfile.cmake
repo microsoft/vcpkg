@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 be3a9e9580847d595abbd200ec89a97e38086cab5b34d3a4db1507247ed04f9209290945989b200225ea412ee0e37fb9f1947404d1631d2dfeb5c6dc55ce3d05
     HEAD_REF master
+    PATCHES
+        fix_find_zstd.patch
 )
 
 vcpkg_check_features(

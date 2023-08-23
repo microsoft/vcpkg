@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6f6c6bc..e3b6bf5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -334,18 +334,12 @@ endif()
+ if(MZ_ZSTD)
+     # Check if zstd is present
+     if(NOT MZ_FORCE_FETCH_LIBS)
+-        find_package(PkgConfig QUIET)
+-        if(PKGCONFIG_FOUND)
+-            pkg_check_modules(ZSTD libzstd)
+-        endif()
+-        if(NOT ZSTD_FOUND)
+-            find_package(ZSTD QUIET)
+-            if(ZSTD_FOUND)
+-                if(TARGET zstd::libzstd_static)
+-                    list(APPEND ZSTD_LIBRARIES zstd::libzstd_static)
+-                else()
+-                    list(APPEND ZSTD_LIBRARIES zstd::libzstd_shared)
+-                endif()
++        find_package(zstd CONFIG REQUIRED)
++        if(zstd_FOUND)
++            if(TARGET zstd::libzstd_shared)
++                list(APPEND ZSTD_LIBRARIES zstd::libzstd_shared)
++            else()
++                list(APPEND ZSTD_LIBRARIES zstd::libzstd_static)
+             endif()
+         endif()
+     endif()

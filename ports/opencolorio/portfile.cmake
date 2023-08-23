@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
         -DOCIO_USE_OPENEXR_HALF:BOOL=OFF
         -DOCIO_INSTALL_EXT_PACKAGES=NONE
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenImageIO=On
+        -DOCIO_INSTALL_EXT_PACKAGES=ALL
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_OpenImageIO
@@ -60,7 +61,7 @@ file(REMOVE_RECURSE
 )
 if(OCIO_BUILD_APPS)
     vcpkg_copy_tools(
-        TOOL_NAMES ociowrite ociomakeclf ociochecklut ociocheck ociobakelut
+        TOOL_NAMES ociowrite ociomakeclf ociochecklut ociocheck ociobakelut ocioarchive ocioconvert ociolutimage ocioperf
         AUTO_CLEAN
     )
 endif()
