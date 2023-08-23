@@ -1649,6 +1649,7 @@ xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not
 xtensor[xsimd] = feature-fails # xsimd is already at version 11 but 10 is required. See https://github.com/microsoft/vcpkg/issues/33045
 yyjson[writer](osx) = feature-fails # error: call to undeclared function 'digi_is_digit'
 zeroc-ice[glacier2router,iceboxtools,icebridge,icegridtools,icestormtools](windows) = feature-fails # Missing include? See https://github.com/microsoft/vcpkg/issues/33326
+nanopb[generator](windows) = feature-fails # error while installation. See https://github.com/microsoft/vcpkg/issues/33339
 
 # skip
 entt[experimental] = skip # required head build
