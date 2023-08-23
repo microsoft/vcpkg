@@ -205,10 +205,6 @@ endfunction()
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(Z_VCPKG_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
 
-if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-endif()
-
 if(VCPKG_TOOLCHAIN)
     cmake_policy(POP)
     return()
@@ -759,14 +755,17 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
 endif()
 
 option(VCPKG_TRACE_FIND_PACKAGE "Trace calls to find_package()" OFF)
-if(NOT DEFINED VCPKG_OVERRIDE_FIND_PACKAGE_NAME)
-    set(VCPKG_OVERRIDE_FIND_PACKAGE_NAME find_package)
-endif()
+
+# Backcompat for _find_package in vcpkg-cmake-wrapper.cmake
+macro(_find_package z_vcpkg_find_package_package_name)
+  find_package(${z_vcpkg_find_package_package_name} ${ARGN} BYPASS_PROVIDER)
+endmacro()
+
 # NOTE: this is not a function, which means that arguments _are not_ perfectly forwarded
 # this is fine for `find_package`, since there are no usecases for `;` in arguments,
 # so perfect forwarding is not important
 set(z_vcpkg_find_package_backup_id "0")
-macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
+macro(vcpkg_find_package dep_method z_vcpkg_find_package_package_name)
     if(VCPKG_TRACE_FIND_PACKAGE)
         string(REPEAT "  " "${z_vcpkg_find_package_backup_id}" z_vcpkg_find_package_indent)
         string(JOIN " " z_vcpkg_find_package_argn ${ARGN})
@@ -775,8 +774,15 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
         unset(z_vcpkg_find_package_indent)
     endif()
 
+    if(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_in_wrapper AND
+       "${z_vcpkg_find_package_package_name}" STREQUAL "${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_NAME}")
+      ## Somebody overwrote find_package make sure we don't do further recursive calls by bypassing the provider
+      find_package(${z_vcpkg_find_package_package_name} ${ARGN} BYPASS_PROVIDER)
+    endif()
+    
     math(EXPR z_vcpkg_find_package_backup_id "${z_vcpkg_find_package_backup_id} + 1")
     set(z_vcpkg_find_package_package_name "${z_vcpkg_find_package_package_name}")
+    set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_NAME "${z_vcpkg_find_package_package_name}")
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN "${ARGN}")
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars "")
 
@@ -806,53 +812,11 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
             set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_ARGS "${ARGS}")
         endif()
         set(ARGS "${z_vcpkg_find_package_package_name};${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN}")
+        set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_in_wrapper "TRUE")
         include("${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
-    elseif(z_vcpkg_find_package_package_name STREQUAL "Boost" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/boost")
-        # Checking for the boost headers disables this wrapper unless the user has installed at least one boost library
-        # these intentionally are not backed up
-        set(Boost_USE_STATIC_LIBS OFF)
-        set(Boost_USE_MULTITHREADED ON)
-        set(Boost_NO_BOOST_CMAKE ON)
-        set(Boost_USE_STATIC_RUNTIME)
-        unset(Boost_USE_STATIC_RUNTIME CACHE)
-        if(CMAKE_VS_PLATFORM_TOOLSET STREQUAL "v120")
-            set(Boost_COMPILER "-vc120")
-        else()
-            set(Boost_COMPILER "-vc140")
-        endif()
-        _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
-    elseif(z_vcpkg_find_package_package_name STREQUAL "ICU" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/unicode/utf.h")
-        list(FIND z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN "COMPONENTS" z_vcpkg_find_package_COMPONENTS_IDX)
-        if(NOT z_vcpkg_find_package_COMPONENTS_IDX EQUAL "-1")
-            _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN} COMPONENTS data)
-        else()
-            _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
-        endif()
-    elseif(z_vcpkg_find_package_package_name STREQUAL "GSL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/gsl")
-        _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
-        if(GSL_FOUND AND TARGET GSL::gsl)
-            set_property( TARGET GSL::gslcblas APPEND PROPERTY IMPORTED_CONFIGURATIONS Release )
-            set_property( TARGET GSL::gsl APPEND PROPERTY IMPORTED_CONFIGURATIONS Release )
-            if( EXISTS "${GSL_LIBRARY_DEBUG}" AND EXISTS "${GSL_CBLAS_LIBRARY_DEBUG}")
-                set_property( TARGET GSL::gsl APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug )
-                set_target_properties( GSL::gsl PROPERTIES IMPORTED_LOCATION_DEBUG "${GSL_LIBRARY_DEBUG}" )
-                set_property( TARGET GSL::gslcblas APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug )
-                set_target_properties( GSL::gslcblas PROPERTIES IMPORTED_LOCATION_DEBUG "${GSL_CBLAS_LIBRARY_DEBUG}" )
-            endif()
-        endif()
-    elseif("${z_vcpkg_find_package_package_name}" STREQUAL "CURL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/curl")
-        _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
-        if(CURL_FOUND)
-            if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/nghttp2.lib")
-                list(APPEND CURL_LIBRARIES
-                    "debug" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib/nghttp2.lib"
-                    "optimized" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/nghttp2.lib")
-            endif()
-        endif()
-    elseif("${z_vcpkg_find_package_lowercase_package_name}" STREQUAL "grpc" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/grpc")
-        _find_package(gRPC ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
+        unset(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_in_wrapper)
     else()
-        _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
+        find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN} BYPASS_PROVIDER)
     endif()
     # Do not use z_vcpkg_find_package_package_name beyond this point since it might have changed!
     # Only variables using z_vcpkg_find_package_backup_id can used correctly below!
@@ -864,11 +828,15 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
         endif()
         unset("z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_var}")
     endforeach()
+    unset(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_NAME)
     math(EXPR z_vcpkg_find_package_backup_id "${z_vcpkg_find_package_backup_id} - 1")
     if(z_vcpkg_find_package_backup_id LESS "0")
         message(FATAL_ERROR "[vcpkg]: find_package ended with z_vcpkg_find_package_backup_id being less than 0! This is a logical error and should never happen. Please provide a cmake trace log via cmake cmd line option '--trace-expand'!")
     endif()
 endmacro()
+
+cmake_language(SET_DEPENDENCY_PROVIDER vcpkg_find_package
+               SUPPORTED_METHODS FIND_PACKAGE)
 
 cmake_policy(PUSH)
 cmake_policy(VERSION 3.7.2)
