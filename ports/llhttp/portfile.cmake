@@ -25,7 +25,6 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(
     CONFIG_PATH "/lib/cmake/${PORT}"
 )
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE-MIT")
 
