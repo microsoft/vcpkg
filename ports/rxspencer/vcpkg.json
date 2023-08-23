@@ -1,7 +1,7 @@
 {
   "name": "rxspencer",
   "version": "3.9.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Henry Spencer's BSD regular expression library.",
   "homepage": "https://garyhouston.github.io/regex/",
   "license": "MIT AND CC0-1.0",

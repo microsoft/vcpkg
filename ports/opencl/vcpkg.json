@@ -1,7 +1,7 @@
 {
   "name": "opencl",
   "version-string": "v2023.02.06",
-  "port-version": 2,
+  "port-version": 3,
   "description": "C/C++ headers and ICD loader (Installable Client Driver) for OpenCL",
   "homepage": "https://github.com/KhronosGroup/OpenCL-Headers",
   "license": "Apache-2.0",

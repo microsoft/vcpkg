@@ -1,6 +1,7 @@
 {
   "name": "pystring",
   "version": "1.1.4",
+  "port-version": 1,
   "description": "Pystring is a collection of C++ functions which match the interface and behavior of python's string class methods using std::string",
   "homepage": "https://github.com/imageworks/pystring",
   "license": "BSD-3-Clause",

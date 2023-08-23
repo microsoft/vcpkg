@@ -58,7 +58,6 @@ vcpkg_configure_make(
 vcpkg_build_make(BUILD_TARGET depend LOGFILE_ROOT depend)
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

@@ -75,7 +75,6 @@ vcpkg_cmake_configure(
         -DMNN_DEBUG_MEMORY=ON -DMNN_DEBUG_TENSOR_SIZE=ON
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_download_distfile(COPYRIGHT_PATH
     URLS "https://apache.org/licenses/LICENSE-2.0.txt"

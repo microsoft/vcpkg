@@ -19,7 +19,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME libvault CONFIG_PATH lib/cmake/libvault)
 vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_pdbs()
 
 
 file(INSTALL "${SOURCE_PATH}/LICENSE"

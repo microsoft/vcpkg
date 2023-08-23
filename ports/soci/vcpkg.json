@@ -1,6 +1,7 @@
 {
   "name": "soci",
   "version": "4.0.3",
+  "port-version": 1,
   "description": "SOCI database access library",
   "homepage": "https://github.com/SOCI/soci",
   "license": "BSL-1.0",

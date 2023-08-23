@@ -51,7 +51,6 @@ vcpkg_replace_string(
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/OpenColorIO")
 
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

@@ -22,7 +22,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(

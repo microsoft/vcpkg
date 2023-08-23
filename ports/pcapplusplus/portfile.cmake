@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 file(APPEND ${CURRENT_PACKAGES_DIR}/share/unofficial-pcapplusplus/unofficial-pcapplusplus-config.cmake "
 include(CMakeFindDependencyMacro)

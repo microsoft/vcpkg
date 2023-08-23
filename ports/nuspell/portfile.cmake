@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nuspell)
 vcpkg_fixup_pkgconfig(

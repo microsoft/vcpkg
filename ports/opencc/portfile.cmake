@@ -28,7 +28,6 @@ vcpkg_cmake_install(
     DISABLE_PARALLEL
 )
 
-vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 

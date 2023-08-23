@@ -33,8 +33,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             DEBUG=Y
             SKIP_HEADERS=Y
     )
-    vcpkg_copy_pdbs()
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/curses.h" "#ifdef PDC_DLL_BUILD" "#if 1")
     endif()
 endif()

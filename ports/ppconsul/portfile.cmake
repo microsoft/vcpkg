@@ -23,6 +23,5 @@ file(INSTALL "${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DI
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 
-vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()

@@ -1,6 +1,7 @@
 {
   "name": "openfbx",
   "version-date": "2022-07-18",
+  "port-version": 1,
   "description": "Lightweight open source FBX importer",
   "homepage": "https://github.com/nem0/OpenFBX",
   "license": "MIT",

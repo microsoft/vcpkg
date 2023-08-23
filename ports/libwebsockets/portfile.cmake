@@ -184,7 +184,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     endif()
 endif ()
 
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/lws_config.h" "${CURRENT_PACKAGES_DIR}" "")
 

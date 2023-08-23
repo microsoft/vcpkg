@@ -58,7 +58,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libxml2")
 vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_pdbs()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES xmllint xmlcatalog AUTO_CLEAN)

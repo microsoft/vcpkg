@@ -108,7 +108,6 @@ else()
     endif()
 endif()
 
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/certs"

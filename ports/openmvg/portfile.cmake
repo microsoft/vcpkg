@@ -103,7 +103,6 @@ if(OpenMVG_BUILD_SHARED)
         file(REMOVE_RECURSE "${DLL_FILES}")
     endif()
 endif()
-vcpkg_copy_pdbs()
 
 if("software" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_OSX)

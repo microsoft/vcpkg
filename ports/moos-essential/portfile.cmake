@@ -13,7 +13,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/MOOS")
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/pAntler")

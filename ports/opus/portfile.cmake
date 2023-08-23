@@ -42,7 +42,6 @@ vcpkg_cmake_configure(
         OPUS_DISABLE_INTRINSICS
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Opus)
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)

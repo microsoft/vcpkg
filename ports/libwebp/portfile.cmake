@@ -56,7 +56,6 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME WebP CONFIG_PATH share/WebP/cmake)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

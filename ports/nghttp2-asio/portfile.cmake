@@ -20,7 +20,6 @@ vcpkg_cmake_configure(
         "-DENABLE_SHARED_LIB=${ENABLE_SHARED_LIB}"
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE

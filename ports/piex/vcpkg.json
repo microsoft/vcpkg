@@ -1,7 +1,7 @@
 {
   "name": "piex",
   "version-date": "2019-07-11",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The Preview Image Extractor (PIEX) is designed to find and extract the largest",
   "homepage": "https://github.com/google/piex",
   "dependencies": [

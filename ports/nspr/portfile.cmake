@@ -54,7 +54,6 @@ vcpkg_configure_make(
     DISABLE_VERBOSE_FLAGS
 )
 vcpkg_install_make()
-vcpkg_copy_pdbs()
 
 #
 # VCPKG FHS adjustments

@@ -44,7 +44,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SoQt-1.6.0)
 vcpkg_fixup_pkgconfig()
 

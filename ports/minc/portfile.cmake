@@ -38,7 +38,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake PACKAGE_NAME libminc)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

@@ -9,4 +9,3 @@ vcpkg_from_github(
 file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/range-v3-vs2015)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/range-v3-vs2015/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/range-v3-vs2015/copyright)
 file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR} FILES_MATCHING PATTERN "*.hpp")
-vcpkg_copy_pdbs()

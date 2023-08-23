@@ -59,7 +59,6 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltconfig.h" "#de
 vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
 
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h" "ifdef LIBXSLT_STATIC" "if 1")

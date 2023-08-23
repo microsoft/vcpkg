@@ -30,7 +30,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Ptex)
-vcpkg_copy_pdbs()
 
 foreach(HEADER PtexHalf.h Ptexture.h)
     file(READ "${CURRENT_PACKAGES_DIR}/include/${HEADER}" PTEX_HEADER)

@@ -1,7 +1,7 @@
 {
   "name": "lodepng",
   "version-date": "2021-12-04",
-  "port-version": 1,
+  "port-version": 2,
   "description": "PNG encoder and decoder in C++",
   "homepage": "https://github.com/lvandeve/lodepng",
   "dependencies": [

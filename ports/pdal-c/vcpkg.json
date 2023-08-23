@@ -1,6 +1,7 @@
 {
   "name": "pdal-c",
   "version": "2.2.0",
+  "port-version": 1,
   "description": "C API for the Point Data Abstraction Library (PDAL)",
   "homepage": "https://github.com/PDAL/CAPI#readme",
   "supports": "!(windows & staticcrt)",

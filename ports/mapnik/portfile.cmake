@@ -72,7 +72,6 @@ vcpkg_cmake_install()
 if(IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin/plugins")
     file(COPY "${CURRENT_PACKAGES_DIR}/bin/plugins" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
-vcpkg_copy_pdbs()
 
 set(_tool_names "")
 if("viewer" IN_LIST FEATURES)

@@ -14,7 +14,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libxmlmm-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-libxmlmm")
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libxmlmm)

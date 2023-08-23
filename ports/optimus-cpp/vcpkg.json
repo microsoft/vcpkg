@@ -1,6 +1,7 @@
 {
   "name": "optimus-cpp",
   "version": "0.3.0",
+  "port-version": 1,
   "description": "ID hashing and Obfuscation using Knuth's Algorithm for C++",
   "homepage": "https://github.com/kafeg/optimus-cpp",
   "supports": "!uwp",

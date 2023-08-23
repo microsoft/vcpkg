@@ -54,7 +54,6 @@ vcpkg_cmake_configure(
 
 # Run the build, copy pdbs and fixup the cmake targets
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME PahoMqttCpp CONFIG_PATH "lib/cmake/PahoMqttCpp")
 
 # Remove the include and share folders in debug folder

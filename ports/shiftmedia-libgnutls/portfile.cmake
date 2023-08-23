@@ -174,4 +174,3 @@ set(GNUTLS_LIBS "-lgnutlsd")
 configure_file("${SOURCE_PATH}/lib/gnutls.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gnutls.pc" @ONLY)
 
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()

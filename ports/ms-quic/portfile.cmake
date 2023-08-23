@@ -62,7 +62,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_build(TARGET OpenSSL_Build) # separate build log for quictls/openssl
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME msquic CONFIG_PATH lib/cmake/msquic)
 
 if("tools" IN_LIST FEATURES)

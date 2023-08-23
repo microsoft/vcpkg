@@ -53,7 +53,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-orc)
-vcpkg_copy_pdbs()
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-orc/unofficial-orc-config.cmake" cmake_config)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-orc/unofficial-orc-config.cmake"

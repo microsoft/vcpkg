@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME msgpack-c CONFIG_PATH lib/cmake/msgpack-c)
 vcpkg_fixup_pkgconfig()

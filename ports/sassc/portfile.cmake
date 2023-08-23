@@ -24,7 +24,6 @@ vcpkg_configure_make(
 )
 vcpkg_install_make(MAKEFILE GNUmakefile)
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 # Handle copyright

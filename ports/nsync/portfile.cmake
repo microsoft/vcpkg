@@ -19,7 +19,6 @@ vcpkg_cmake_configure(
         -DNSYNC_ENABLE_TESTS=OFF
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-nsync CONFIG_PATH share/unofficial-nsync)
 

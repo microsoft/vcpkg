@@ -39,7 +39,6 @@ vcpkg_cmake_configure(
     )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 file(READ "${CURRENT_PACKAGES_DIR}/include/pcre2.h" PCRE2_H)
 if(BUILD_STATIC)

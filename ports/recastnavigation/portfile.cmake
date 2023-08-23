@@ -22,7 +22,6 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/recastnavigation)
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

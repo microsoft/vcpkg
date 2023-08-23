@@ -25,7 +25,6 @@ vcpkg_configure_meson(
 )
 
 vcpkg_install_meson()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

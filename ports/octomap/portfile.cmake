@@ -40,6 +40,5 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/octomap/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()

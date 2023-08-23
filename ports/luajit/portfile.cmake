@@ -41,8 +41,7 @@ if(VCPKG_DETECTED_MSVC)
         configure_file("${CMAKE_CURRENT_LIST_DIR}/luajit.pc.win.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/luajit.pc" @ONLY)
     endif()
 
-    vcpkg_copy_pdbs()
-else()
+    else()
     vcpkg_list(SET options)
     if(VCPKG_CROSSCOMPILING)
         list(APPEND options

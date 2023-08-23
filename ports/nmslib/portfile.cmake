@@ -14,7 +14,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 # Move headers into separate folder
 set(SUBFOLDERS factory method space)

@@ -31,7 +31,6 @@ vcpkg_cmake_configure(
         -DVULKAN_HEADERS_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include
 )
 
-vcpkg_copy_pdbs()
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/RenderGraph)
 

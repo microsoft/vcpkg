@@ -1,7 +1,7 @@
 {
   "name": "opusfile",
   "version": "0.12+20221121",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Stand-alone decoder library for .opus streams",
   "homepage": "https://github.com/xiph/opusfile",
   "license": "BSD-3-Clause",

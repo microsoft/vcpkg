@@ -62,7 +62,6 @@ vcpkg_cmake_configure(
         -DOGRE_CMAKE_DIR=share/ogre-next
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup()
 

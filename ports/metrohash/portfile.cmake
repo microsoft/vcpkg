@@ -17,7 +17,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
-vcpkg_copy_pdbs()
 
 if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/metrohash128crc.h")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/metrohash.h"

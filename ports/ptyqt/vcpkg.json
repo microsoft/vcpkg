@@ -1,6 +1,7 @@
 {
   "name": "ptyqt",
   "version": "0.6.5",
+  "port-version": 1,
   "description": "PtyQt - C++ library for work with PseudoTerminals",
   "supports": "!uwp",
   "dependencies": [

@@ -35,7 +35,6 @@ if("pybind11" IN_LIST FEATURES)
     vcpkg_cmake_build(TARGET onnx_opt_cpp2py_export)
 endif()
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME ONNXOptimizer CONFIG_PATH lib/cmake/ONNXOptimizer)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

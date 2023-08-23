@@ -25,7 +25,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME eclipse-paho-mqtt-c CONFIG_PATH lib/cmake/eclipse-paho-mqtt-c)
-vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_copy_tools(TOOL_NAMES MQTTVersion AUTO_CLEAN)

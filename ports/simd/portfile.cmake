@@ -54,8 +54,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPK
   	RELEASE_CONFIGURATION "Release"
   	DEBUG_CONFIGURATION "Debug"
   )
-  vcpkg_copy_pdbs()
-  file(GLOB SIMD_HEADERS "${SOURCE_PATH}/src/Simd/*.hpp" "${SOURCE_PATH}/src/Simd/*.h")
+    file(GLOB SIMD_HEADERS "${SOURCE_PATH}/src/Simd/*.hpp" "${SOURCE_PATH}/src/Simd/*.h")
   file(COPY ${SIMD_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Simd")
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -68,8 +67,7 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     )
     vcpkg_cmake_install()
     vcpkg_cmake_config_fixup()
-    vcpkg_copy_pdbs()
-  
+      
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
   endif()
 else()
@@ -78,8 +76,7 @@ else()
   )
   vcpkg_cmake_install()
   vcpkg_cmake_config_fixup()
-  vcpkg_copy_pdbs()
-  
+    
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 endif()
 

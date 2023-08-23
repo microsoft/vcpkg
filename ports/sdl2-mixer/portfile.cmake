@@ -46,7 +46,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME "SDL2_mixer"
     CONFIG_PATH "lib/cmake/SDL2_mixer"

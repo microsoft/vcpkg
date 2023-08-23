@@ -20,7 +20,6 @@ else()
     vcpkg_cmake_config_fixup(PACKAGE_NAME SDL2_net CONFIG_PATH lib/cmake/SDL2_net)
 endif()
 
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/share"

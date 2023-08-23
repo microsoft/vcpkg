@@ -109,7 +109,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     )
 endif()
 
-vcpkg_copy_pdbs()
 set(packages protobuf protobuf-lite)
 foreach(_package IN LISTS packages)
     set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${_package}.pc")

@@ -20,7 +20,6 @@ vcpkg_cmake_configure(
         -DSMPEG_SKIP_HEADERS=ON
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-smpeg2)
 file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-smpeg2/unofficial-smpeg2-config.cmake" config)

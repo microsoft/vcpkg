@@ -27,7 +27,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME yarpl CONFIG_PATH lib/cmake/yarpl DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rsocket)

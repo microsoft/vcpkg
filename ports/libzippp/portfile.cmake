@@ -21,7 +21,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH "cmake/libzippp")

@@ -1,7 +1,7 @@
 {
   "name": "smpeg2",
   "version": "2.0.0",
-  "port-version": 10,
+  "port-version": 11,
   "description": "SDL MPEG Player Library",
   "homepage": "https://www.libsdl.org/projects/smpeg/",
   "license": null,

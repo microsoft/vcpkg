@@ -48,7 +48,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_tools(TOOL_NAMES cjpeg djpeg jpegtran tjbench AUTO_CLEAN)
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 # Remove empty folders after static build
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)

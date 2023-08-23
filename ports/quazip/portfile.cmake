@@ -20,7 +20,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/QuaZip-Qt6-1.4 PACKAGE_NAME quazip-qt6)
-vcpkg_copy_pdbs()
 # Qt6 pkg-config files not installed https://github.com/microsoft/vcpkg/issues/25988
 # vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")

@@ -1,6 +1,7 @@
 {
   "name": "rendergraph",
   "version": "1.3.0",
+  "port-version": 1,
   "description": "Vulkan render graph implementation.",
   "homepage": "https://github.com/DragonJoker/RenderGraph",
   "license": "MIT",

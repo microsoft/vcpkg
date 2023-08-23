@@ -1,7 +1,7 @@
 {
   "name": "nuspell",
   "version-semver": "5.1.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": [
     "Nuspell is a fast and safe spelling checker software program.",
     "It is designed for languages with rich morphology and complex word compounding.",

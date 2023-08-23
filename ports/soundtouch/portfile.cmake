@@ -25,7 +25,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SoundTouch)
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 if(SOUNDSTRETCH)
   vcpkg_copy_tools(TOOL_NAMES soundstretch AUTO_CLEAN)

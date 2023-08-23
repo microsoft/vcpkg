@@ -25,4 +25,3 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mman/sys/mman.h" "__declspec(dllimport)" "")
 endif()
 
-vcpkg_copy_pdbs()

@@ -130,7 +130,6 @@ vcpkg_cmake_configure(
         ${plugin_vars}
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-osg-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-osg/unofficial-osg-config.cmake" @ONLY)
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-osg)
 

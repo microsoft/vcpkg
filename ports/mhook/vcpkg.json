@@ -1,7 +1,7 @@
 {
   "name": "mhook",
   "version": "2.5.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": "A Windows API hooking library.",
   "supports": "windows & !uwp & !arm",
   "dependencies": [

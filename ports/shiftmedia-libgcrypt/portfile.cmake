@@ -98,7 +98,6 @@ if(NOT VCPKG_BUILD_TYPE)
 endif()
 
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/src/libgcrypt.m4" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libgcrypt/aclocal/")
 

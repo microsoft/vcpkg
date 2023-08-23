@@ -25,7 +25,6 @@ vcpkg_cmake_install()
 vcpkg_copy_tools(TOOL_NAMES proxygen_curl proxygen_echo proxygen_proxy proxygen_push proxygen_static AUTO_CLEAN)
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/proxygen)
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

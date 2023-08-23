@@ -1,6 +1,7 @@
 {
   "name": "quantlib",
   "version": "1.31.1",
+  "port-version": 1,
   "description": "The QuantLib C++ library",
   "homepage": "https://www.quantlib.org/",
   "license": "BSD-3-Clause",

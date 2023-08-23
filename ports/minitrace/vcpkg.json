@@ -1,6 +1,7 @@
 {
   "name": "minitrace",
   "version-date": "2023-04-23",
+  "port-version": 1,
   "description": "Simple C/C++ library for producing JSON traces suitable for Chrome's built-in trace viewer.",
   "dependencies": [
     {

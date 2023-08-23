@@ -1,7 +1,7 @@
 {
   "name": "sparsepp",
   "version": "1.22",
-  "port-version": 4,
+  "port-version": 5,
   "description": "A fast, memory efficient hash map for C++",
   "dependencies": [
     {

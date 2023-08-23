@@ -31,7 +31,6 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
 
     vcpkg_cmake_install()
     vcpkg_cmake_config_fixup()
-    vcpkg_copy_pdbs()
-endif()
+    endif()
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

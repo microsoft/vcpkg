@@ -14,8 +14,7 @@ vcpkg_cmake_configure(
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_install()
-    vcpkg_copy_pdbs()
-
+    
     set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
     set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

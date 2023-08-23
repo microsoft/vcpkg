@@ -1,7 +1,7 @@
 {
   "name": "nghttp2-asio",
   "version-date": "2022-08-11",
-  "port-version": 1,
+  "port-version": 2,
   "description": "High level abstraction API to build HTTP/2 applications with nghttp2 and boost asio.",
   "homepage": "https://github.com/nghttp2/nghttp2-asio",
   "license": "MIT",

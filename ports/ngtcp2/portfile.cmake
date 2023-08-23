@@ -23,7 +23,6 @@ vcpkg_cmake_configure(
         -DCMAKE_INSTALL_DOCDIR=share/ngtcp2
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-ngtcp2)
 

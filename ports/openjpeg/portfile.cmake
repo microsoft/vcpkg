@@ -80,4 +80,3 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/include/openjpeg.h" "${OPENJPEG_H}")
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-vcpkg_copy_pdbs()

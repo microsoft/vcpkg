@@ -54,7 +54,6 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES pango-view pango-list pango-segmentation AUTO_CLEAN)
 

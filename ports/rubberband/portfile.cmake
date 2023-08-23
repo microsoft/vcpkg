@@ -42,7 +42,6 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/rubberband-program${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
   # Rubberband uses a different executable name when compiled with msvc

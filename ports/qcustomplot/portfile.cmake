@@ -28,7 +28,6 @@ vcpkg_qmake_configure(
 )
 vcpkg_qmake_install()
 
-vcpkg_copy_pdbs()
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/GPL.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

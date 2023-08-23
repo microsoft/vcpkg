@@ -73,8 +73,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         PLATFORM ${BUILD_ARCH}
     )
 
-    vcpkg_copy_pdbs()
-    
+        
     file(GLOB HEADERS "${SOURCE_PATH}/Include/*.h")
     file(COPY ${HEADERS} "${SOURCE_PATH}/PC/pyconfig.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
     

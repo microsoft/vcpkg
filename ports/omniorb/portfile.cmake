@@ -175,7 +175,6 @@ endif()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LIB") # Lib is LGPL
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin" RENAME copyright) # Tools etc are GPL
 
-vcpkg_copy_pdbs()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 file(COPY

@@ -1,7 +1,7 @@
 {
   "name": "libxmlmm",
   "version": "0.6.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Libxmlmm is a C++ wrapper for libxml 2.0 that only relies on standard C++ and libxml2.",
   "homepage": "https://github.com/rioki/libxmlmm",
   "license": "MIT",

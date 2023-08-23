@@ -53,7 +53,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
 	file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/common/fw")
 	file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/common/fw/fw.res" DESTINATION "${CURRENT_PACKAGES_DIR}/common/fw")
 endif()
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

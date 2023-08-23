@@ -25,7 +25,6 @@ vcpkg_cmake_configure(
         -DOPENEXR_INSTALL_TOOLS=OFF
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenEXR)
 vcpkg_fixup_pkgconfig()

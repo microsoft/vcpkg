@@ -1,6 +1,7 @@
 {
   "name": "rubberband",
   "version": "3.3.0",
+  "port-version": 1,
   "description": "A high quality software library for audio time-stretching and pitch-shifting.",
   "homepage": "https://www.breakfastquay.com/rubberband/",
   "license": "GPL-2.0-or-later",

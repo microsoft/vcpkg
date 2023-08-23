@@ -19,6 +19,5 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-readline-win32)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

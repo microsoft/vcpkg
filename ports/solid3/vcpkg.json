@@ -1,7 +1,7 @@
 {
   "name": "solid3",
   "version": "3.5.8",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Software Library for Interference Detection",
   "license": "GPL-2.0-only OR QPL-1.0",
   "dependencies": [

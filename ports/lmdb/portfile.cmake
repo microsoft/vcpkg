@@ -20,4 +20,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/libraries/liblmdb/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/lmdb" RENAME copyright)
 
-vcpkg_copy_pdbs()

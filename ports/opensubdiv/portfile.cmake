@@ -117,7 +117,6 @@ if ("tutorials" IN_LIST FEATURES)
     endif()
 endif()
 
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME OpenSubdiv CONFIG_PATH lib/cmake/OpenSubdiv)
 vcpkg_fixup_pkgconfig()
 
