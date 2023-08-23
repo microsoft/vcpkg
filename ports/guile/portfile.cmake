@@ -12,7 +12,6 @@ vcpkg_configure_make(
     AUTOCONFIG
   )
 vcpkg_install_make()
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

@@ -20,6 +20,5 @@ endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

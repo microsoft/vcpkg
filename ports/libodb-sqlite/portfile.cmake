@@ -30,6 +30,5 @@ if(NOT VCPKG_BUILD_TYPE)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

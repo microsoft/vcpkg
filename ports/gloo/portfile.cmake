@@ -23,7 +23,6 @@ vcpkg_cmake_configure(
   OPTIONS ${GLOO_FEATURE_OPTIONS}
   )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Gloo)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -101,7 +101,6 @@ vcpkg_cmake_configure(
         QHULL_LIBRARY
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gdal)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdal/GDALConfig.cmake"

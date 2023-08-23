@@ -20,7 +20,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME KF5KCMUtils CONFIG_PATH lib/cmake/KF5KCMUtils)
-vcpkg_copy_pdbs()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(LIBEXEC_FOLDER "lib/libexec")

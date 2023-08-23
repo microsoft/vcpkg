@@ -21,7 +21,6 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME lcms2)
 vcpkg_cmake_config_fixup() # provides old PACKAGE_NAME lcms
 vcpkg_fixup_pkgconfig()

@@ -33,7 +33,6 @@ if(WITH_UTILITIES)
     vcpkg_copy_tools(TOOL_NAMES applygeo geotifcp listgeo makegeo AUTO_CLEAN)
 endif()
 
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME GeoTIFF)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

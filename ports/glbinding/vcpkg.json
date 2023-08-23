@@ -1,7 +1,7 @@
 {
   "name": "glbinding",
   "version": "3.1.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "glbinding is an MIT licensed, cross-platform C++ binding for the OpenGL API",
   "homepage": "https://github.com/cginternals/glbinding",
   "license": "MIT",

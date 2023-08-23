@@ -14,7 +14,6 @@ vcpkg_cmake_configure(
         -DBUILD_TOOLS=OFF)
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_cmake_config_fixup(

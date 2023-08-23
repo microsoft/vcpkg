@@ -38,7 +38,6 @@ vcpkg_configure_make(
 )
 vcpkg_install_make()
 
-vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
 

@@ -43,7 +43,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Service CONFIG_PATH lib/cmake/KF5Service)
-vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
      TOOL_NAMES kbuildsycoca5

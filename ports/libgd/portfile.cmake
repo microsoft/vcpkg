@@ -46,7 +46,6 @@ vcpkg_cmake_configure(
         -DENABLE_TOOLS=OFF
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 if(BUILD_STATIC)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gd.h" "ifdef NONDLL" "if 1")

@@ -23,7 +23,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibOFX CONFIG_PATH lib/cmake/libofx)
-vcpkg_copy_pdbs()
 
 list(REMOVE_ITEM FEATURES core iconv)
 if(FEATURES)

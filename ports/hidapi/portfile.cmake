@@ -20,7 +20,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 if ("pp-data-dump" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES pp_data_dump AUTO_CLEAN)

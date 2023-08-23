@@ -26,4 +26,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${SOURCE_PATH}/librtmp/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(INSTALL "${SOURCE_PATH}/librtmp/librtmp.3.html" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-vcpkg_copy_pdbs()

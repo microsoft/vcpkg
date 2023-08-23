@@ -1,7 +1,7 @@
 {
   "name": "libsamplerate",
   "version": "0.2.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Sample Rate Converter for audio",
   "homepage": "http://libsndfile.github.io/libsamplerate/",
   "license": "BSD-2-Clause",

@@ -38,7 +38,6 @@ vcpkg_cmake_configure(
         -DBUILD_EXECUTABLES=OFF # supports [tools] feature to enable this option?
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 # There is no LICENSE file, but README containes some legal text.
 file(INSTALL "${SOURCE_PATH}/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

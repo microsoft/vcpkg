@@ -33,7 +33,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME iDynTree
     CONFIG_PATH lib/cmake/iDynTree)
-vcpkg_copy_pdbs()
 
 set(TOOL_NAMES_LIST idyntree-model-info)
 if ("assimp" IN_LIST FEATURES)

@@ -114,7 +114,6 @@ foreach(file IN LISTS makefiles)
 endforeach()
 
 vcpkg_install_make(SUBPATH intl)
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

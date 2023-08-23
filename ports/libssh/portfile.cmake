@@ -37,7 +37,6 @@ vcpkg_cmake_configure(
         -DWITH_SYMBOL_VERSIONING=OFF)
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 #Fixup pthread naming
 if(NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_IS_WINDOWS)
     if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")

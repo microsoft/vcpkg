@@ -46,7 +46,6 @@ vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/p
 vcpkg_host_path_list(APPEND ENV{LIB} "${CURRENT_INSTALLED_DIR}/lib")
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
-vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 

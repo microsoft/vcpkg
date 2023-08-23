@@ -1,6 +1,7 @@
 {
   "name": "gperftools",
   "version": "2.10",
+  "port-version": 1,
   "description": "A set of tools for performance profiling and memory checking",
   "homepage": "https://github.com/gperftools/gperftools",
   "supports": "!(arm & windows) & !uwp & !android",

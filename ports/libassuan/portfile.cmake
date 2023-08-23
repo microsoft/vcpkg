@@ -33,7 +33,6 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
 if(NOT VCPKG_BUILD_TYPE)

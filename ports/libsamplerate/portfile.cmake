@@ -24,4 +24,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
-vcpkg_copy_pdbs()

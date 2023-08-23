@@ -77,7 +77,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
 set(debug_suffix debug)

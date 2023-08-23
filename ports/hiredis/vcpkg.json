@@ -1,6 +1,7 @@
 {
   "name": "hiredis",
   "version": "1.2.0",
+  "port-version": 1,
   "description": "Hiredis is a minimalistic C client library for the Redis database.",
   "homepage": "https://github.com/redis/hiredis",
   "license": "BSD-3-Clause",

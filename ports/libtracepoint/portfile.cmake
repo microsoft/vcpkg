@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
         -DBUILD_TESTS=OFF)
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

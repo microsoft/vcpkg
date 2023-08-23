@@ -26,7 +26,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
-vcpkg_copy_pdbs()
 
 ## _IMPORT_PREFIX needs to go up one extra level in the directory tree.
 file(GLOB_RECURSE TARGET_CMAKES "${CURRENT_PACKAGES_DIR}/*-export.cmake")

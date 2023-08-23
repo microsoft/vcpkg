@@ -41,7 +41,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/gazebo")
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/gazebo-11/gazebo/test")
 

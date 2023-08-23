@@ -37,4 +37,3 @@ endif()
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Copy pdb files
-vcpkg_copy_pdbs()

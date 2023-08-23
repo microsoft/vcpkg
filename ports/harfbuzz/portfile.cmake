@@ -71,7 +71,6 @@ vcpkg_configure_meson(
 )
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_TARGET_IS_WINDOWS)

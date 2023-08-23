@@ -24,7 +24,6 @@ endif()
 
 file(INSTALL ${SOURCE_PATH}/udns.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

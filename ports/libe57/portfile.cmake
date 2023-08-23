@@ -22,7 +22,6 @@ endif()
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
-vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
     TOOL_NAMES e57fields e57unpack e57validate e57xmldump las2e57

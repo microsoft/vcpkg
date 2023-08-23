@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 if(NOT DISABLE_INSTALL_TOOLS)
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/liblinear")

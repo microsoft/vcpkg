@@ -15,7 +15,6 @@ vcpkg_cmake_configure(
     -DLEXBOR_BUILD_STATIC=${BUILD_STATIC}
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" 
     "${CURRENT_PACKAGES_DIR}/include/lexbor/html/tree/insertion_mode"

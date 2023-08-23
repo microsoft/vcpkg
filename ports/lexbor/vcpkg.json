@@ -1,6 +1,7 @@
 {
   "name": "lexbor",
   "version": "2.2.0",
+  "port-version": 1,
   "description": "Lexbor is development of an open source HTML Renderer library.",
   "homepage": "https://github.com/lexbor/lexbor",
   "supports": "!uwp",

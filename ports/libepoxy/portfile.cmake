@@ -35,7 +35,6 @@ vcpkg_configure_meson(
         -Dtests=false
 )
 vcpkg_install_meson()
-vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 

@@ -198,7 +198,6 @@ if(DUMMY_DLLS)
     file(REMOVE ${DUMMY_DLLS})
 endif()
 
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../")

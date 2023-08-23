@@ -46,7 +46,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/contrib ${CURRENT_PACKAGES_DIR
                     ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/tools/libmesh/debug
                     ${CURRENT_PACKAGES_DIR}/Make.common ${CURRENT_PACKAGES_DIR}/debug/Make.common)
 
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${CURRENT_PORT_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

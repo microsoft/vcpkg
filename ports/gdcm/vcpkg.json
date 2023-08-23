@@ -1,6 +1,7 @@
 {
   "name": "gdcm",
   "version": "3.0.22",
+  "port-version": 1,
   "description": "Grassroots DICOM library",
   "homepage": "https://github.com/malaterre/GDCM",
   "license": "BSD-3-Clause",

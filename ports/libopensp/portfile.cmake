@@ -46,7 +46,6 @@ endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/opensp.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opensp.pc" @ONLY)
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

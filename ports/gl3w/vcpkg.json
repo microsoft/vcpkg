@@ -1,7 +1,7 @@
 {
   "name": "gl3w",
   "version-date": "2018-05-31",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Simple OpenGL core profile loading",
   "homepage": "https://github.com/skaslev/gl3w",
   "dependencies": [

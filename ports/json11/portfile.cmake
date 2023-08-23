@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 file(INSTALL "${CURRENT_PORT_DIR}/json11-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 

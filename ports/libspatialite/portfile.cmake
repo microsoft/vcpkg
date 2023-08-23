@@ -95,8 +95,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "LINK_FLAGS=/debug"
     )
 
-    vcpkg_copy_pdbs()
-
+    
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

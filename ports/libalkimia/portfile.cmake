@@ -34,7 +34,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibAlkimia5 CONFIG_PATH lib/cmake/LibAlkimia5-8.1)
-vcpkg_copy_pdbs()
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES onlinequoteseditor5 AUTO_CLEAN)

@@ -43,8 +43,7 @@ foreach(datatype IN LISTS datatypes)
 
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/kissfft")
 
-    vcpkg_copy_pdbs()
-endforeach()
+    endforeach()
 
 vcpkg_fixup_pkgconfig()
 

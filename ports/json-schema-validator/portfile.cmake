@@ -17,7 +17,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME nlohmann_json_schema_validator CONFIG_PATH lib/cmake/nlohmann_json_schema_validator)
 
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

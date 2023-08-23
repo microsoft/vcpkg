@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT} CONFIG_PATH share/unofficial-${PORT})
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

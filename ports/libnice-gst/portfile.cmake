@@ -33,7 +33,6 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson()
 
-vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # Move plugin pkg-config file

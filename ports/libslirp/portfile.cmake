@@ -22,6 +22,5 @@ vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libslirp" RENAME copyright)

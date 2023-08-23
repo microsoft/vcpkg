@@ -39,7 +39,6 @@ vcpkg_cmake_configure(
         -DENABLE_ZSTD=OFF
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME bson-1.0 CONFIG_PATH "lib/cmake/bson-1.0" DO_NOT_DELETE_PARENT_CONFIG_PATH)

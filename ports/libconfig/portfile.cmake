@@ -27,7 +27,6 @@ endif()
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 
 if (VCPKG_USE_HEAD_VERSION)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

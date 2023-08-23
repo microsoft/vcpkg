@@ -157,7 +157,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_build(TARGET __aten_op_header_gen LOGFILE_BASE build-header_gen) # explicit codegen is required
 vcpkg_cmake_build(TARGET torch_cpu  LOGFILE_BASE build-torch_cpu)
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 # Traverse the folder and remove "some" empty folders
 function(cleanup_once folder)

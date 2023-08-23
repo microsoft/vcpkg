@@ -1,6 +1,7 @@
 {
   "name": "kf5parts",
   "version": "5.98.0",
+  "port-version": 1,
   "description": "Plugin framework for user interface component",
   "homepage": "https://api.kde.org/frameworks/kparts/html/index.html",
   "license": "LGPL-2.0-or-later",

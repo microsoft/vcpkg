@@ -1,7 +1,7 @@
 {
   "name": "liblinear",
   "version": "243",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A Library for Large Linear Classification",
   "homepage": "https://github.com/cjlin1/liblinear",
   "supports": "!uwp",

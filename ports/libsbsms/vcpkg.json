@@ -1,6 +1,7 @@
 {
   "name": "libsbsms",
   "version-semver": "2.3.0",
+  "port-version": 1,
   "description": "libsbsms is a library for high quality time and pitch scale modification of digital audio. It uses octave subband sinusoidal modeling.",
   "homepage": "https://github.com/claytonotey/libsbsms",
   "license": "GPL-2.0-or-later",

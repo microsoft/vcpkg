@@ -78,7 +78,6 @@ foreach(dir IN ITEMS "${TARGET_TRIPLET}-dbg" "${TARGET_TRIPLET}-rel")
 endforeach()
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
-vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 

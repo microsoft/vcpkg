@@ -50,7 +50,6 @@ vcpkg_configure_meson(
         -Dxattr=false
 )
 vcpkg_install_meson(ADD_BIN_TO_PATH)
-vcpkg_copy_pdbs()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 set(GLIB_SCRIPTS

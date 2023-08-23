@@ -1,6 +1,7 @@
 {
   "name": "libideviceactivation",
   "version": "1.3.17",
+  "port-version": 1,
   "description": "A library to handle the activation process of iOS devices",
   "dependencies": [
     "curl",

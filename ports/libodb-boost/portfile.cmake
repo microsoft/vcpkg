@@ -22,7 +22,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 if(NOT VCPKG_BUILD_TYPE)
     file(READ "${CURRENT_PACKAGES_DIR}/debug/share/odb/odb_boostConfig-debug.cmake" LIBODB_DEBUG_TARGETS)

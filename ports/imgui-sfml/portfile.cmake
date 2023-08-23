@@ -17,7 +17,6 @@ vcpkg_cmake_configure(
         -DCMAKE_CXX_STANDARD=11
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ImGui-SFML)
 file(READ "${CURRENT_PACKAGES_DIR}/share/imgui-sfml/ImGui-SFMLConfig.cmake" cmake_config)

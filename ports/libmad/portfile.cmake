@@ -27,7 +27,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

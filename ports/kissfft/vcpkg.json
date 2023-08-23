@@ -1,6 +1,7 @@
 {
   "name": "kissfft",
   "version": "131.1.0",
+  "port-version": 1,
   "description": "A Fast Fourier Transform (FFT) library that tries to Keep it Simple, Stupid",
   "homepage": "https://github.com/mborgerding/kissfft",
   "license": "BSD-3-Clause",

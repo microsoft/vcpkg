@@ -1,7 +1,7 @@
 {
   "name": "gherkin-c",
   "version-date": "2019-10-07",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Gherkin parser/compiler in C",
   "dependencies": [
     {

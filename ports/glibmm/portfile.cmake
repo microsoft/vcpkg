@@ -19,7 +19,6 @@ vcpkg_configure_meson(
 )
 
 vcpkg_install_meson()
-vcpkg_copy_pdbs()
 
 # intentionally 2.68 - glib does not install glibmm-2.7x files
 file(REMOVE_RECURSE

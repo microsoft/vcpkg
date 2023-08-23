@@ -69,7 +69,6 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libevent/LibeventTargets-${_t
 )
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libevent/LibeventConfig.cmake "${SOURCE_PATH}/include;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include" "")
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 #Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

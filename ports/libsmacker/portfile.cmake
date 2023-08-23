@@ -24,7 +24,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libsmacker)
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/share"

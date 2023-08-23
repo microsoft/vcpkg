@@ -27,7 +27,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unifex CONFIG_PATH lib/cmake/unifex)
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt"

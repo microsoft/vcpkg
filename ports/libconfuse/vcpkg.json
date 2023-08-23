@@ -1,7 +1,7 @@
 {
   "name": "libconfuse",
   "version-date": "2019-07-14",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Small configuration file parser library for C",
   "homepage": "https://github.com/martinh/libconfuse",
   "dependencies": [

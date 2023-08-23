@@ -53,7 +53,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if(JPEGXL_ENABLE_TOOLS)

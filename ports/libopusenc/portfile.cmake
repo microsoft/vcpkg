@@ -16,7 +16,6 @@ vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}"
         -DOPUSENC_SKIP_HEADERS=ON)
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 # make includes work with MSBuild integration
 file(READ "${CURRENT_PACKAGES_DIR}/include/opus/opusenc.h" OPUSENC_H)

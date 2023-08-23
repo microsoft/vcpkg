@@ -35,4 +35,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 # License and man
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${LIB_NAME}" RENAME copyright)
 
-vcpkg_copy_pdbs()

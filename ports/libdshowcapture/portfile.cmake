@@ -22,4 +22,3 @@ file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libdshowcapture.li
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libdshowcapture.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 file(INSTALL "${SOURCE_PATH}/dshowcapture.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-vcpkg_copy_pdbs()

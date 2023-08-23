@@ -38,7 +38,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME KF5KIO CONFIG_PATH lib/cmake/KF5KIO)
-vcpkg_copy_pdbs()
 
 set(LIBEXEC_TOOLS kio_http_cache_cleaner kiod5 kioexec kioslave5)
 

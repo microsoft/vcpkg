@@ -35,7 +35,6 @@ vcpkg_cmake_configure(
         CREATE_LZMA_SYMLINKS
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")

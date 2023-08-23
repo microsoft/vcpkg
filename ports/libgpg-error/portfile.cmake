@@ -41,7 +41,6 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig() 
-vcpkg_copy_pdbs()
 
 if(NOT VCPKG_CROSSCOMPILING)
     file(INSTALL

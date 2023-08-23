@@ -33,4 +33,3 @@ include(\${CMAKE_CURRENT_LIST_DIR}/globjects-export.cmake)
 # Handle copyright
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
 
-vcpkg_copy_pdbs()

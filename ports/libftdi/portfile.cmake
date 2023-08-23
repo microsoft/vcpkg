@@ -43,7 +43,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_
 file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libftdi")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/libftdi/LICENSE" "${CURRENT_PACKAGES_DIR}/share/libftdi/copyright")
 
-vcpkg_copy_pdbs()
 
 # Delete pkgconfig files for ftdipp since we did -DFTDIPP=OFF above
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ftdipp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ftdipp.pc")

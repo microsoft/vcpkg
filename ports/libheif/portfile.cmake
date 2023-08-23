@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libheif/)
 # libheif's pc file assumes libstdc++, which isn't always true.

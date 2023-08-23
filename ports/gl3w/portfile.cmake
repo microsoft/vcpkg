@@ -26,7 +26,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

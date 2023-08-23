@@ -21,7 +21,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES lslver AUTO_CLEAN)
 vcpkg_cmake_config_fixup(PACKAGE_NAME LSL CONFIG_PATH lib/cmake/LSL)
 

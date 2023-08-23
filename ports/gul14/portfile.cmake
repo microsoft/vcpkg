@@ -18,7 +18,6 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_pdbs()
 
 # Install copyright file
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")

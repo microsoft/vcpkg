@@ -64,7 +64,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     endforeach()
 endif()
 
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

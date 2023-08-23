@@ -1,7 +1,7 @@
 {
   "name": "liblbfgs",
   "version": "1.10",
-  "port-version": 2,
+  "port-version": 3,
   "description": "libLBFGS: a library of Limited-memory Broyden-Fletcher-Goldfarb-Shanno (L-BFGS)",
   "homepage": "http://www.chokkan.org/software/liblbfgs/",
   "dependencies": [

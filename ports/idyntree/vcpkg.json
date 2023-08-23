@@ -1,7 +1,7 @@
 {
   "name": "idyntree",
   "version": "9.0.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Multibody Dynamics Library designed for Free Floating Robots.",
   "homepage": "https://github.com/robotology/idyntree",
   "license": "LGPL-2.1-or-later",

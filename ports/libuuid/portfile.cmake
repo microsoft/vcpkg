@@ -37,4 +37,3 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
-vcpkg_copy_pdbs()

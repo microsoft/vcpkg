@@ -19,7 +19,6 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" [[set( PLUGIN_INSTALL_DIR $
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Grantlee5)
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

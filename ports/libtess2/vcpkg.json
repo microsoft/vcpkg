@@ -1,6 +1,7 @@
 {
   "name": "libtess2",
   "version-date": "2021-12-27",
+  "port-version": 1,
   "description": "Game and tools oriented refactored version of GLU tesselator.",
   "homepage": "https://github.com/memononen/libtess2",
   "dependencies": [

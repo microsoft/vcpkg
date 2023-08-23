@@ -26,7 +26,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-gainput CONFIG_PATH share/unofficial-gainput)
 

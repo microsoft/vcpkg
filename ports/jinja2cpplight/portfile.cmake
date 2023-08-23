@@ -23,7 +23,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 
 
 file(GLOB_RECURSE JINJA2CPPLIGHT_EXES "${CURRENT_PACKAGES_DIR}/bin/jinja2cpplight_unittests*")
