@@ -22,7 +22,7 @@ index c926c49..a0502cc 100644
 +find_dependency(OpenGL)
 +
 +if(@USE_EIGEN@)
-+  find_dependency(Eigen3 REQUIRED)
++  find_dependency(Eigen3)
 +endif()
 +
  # Import OpenCASCADE compile definitions, C and C++ flags for each installed configuration.
