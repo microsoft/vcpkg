@@ -54,4 +54,6 @@ function(vcpkg_install_nmake)
         ENABLE_INSTALL
         LOGFILE_ROOT install
         ${extra_args})
+
+    vcpkg_copy_pdbs()
 endfunction()

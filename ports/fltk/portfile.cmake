@@ -53,7 +53,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup()
 
-vcpkg_copy_pdbs()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/fltk-config")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")

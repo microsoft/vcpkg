@@ -33,7 +33,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT (VCPKG_LIBRARY_LINKAGE STREQUAL static))
     endif()
 endif()
 
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")

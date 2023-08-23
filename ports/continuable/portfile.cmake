@@ -21,7 +21,6 @@ vcpkg_cmake_configure(
         -DCTI_CONTINUABLE_WITH_CPP_LATEST=ON # requires cxx_std_17
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" 

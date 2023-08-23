@@ -23,7 +23,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES cppcms_scale cppcms_make_key cppcms_config_find_param AUTO_CLEAN)
 

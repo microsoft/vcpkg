@@ -39,7 +39,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_copy_pdbs()
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME ShaderWriter CONFIG_PATH lib/cmake/shaderwriter)
 

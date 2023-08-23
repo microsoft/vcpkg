@@ -1,6 +1,7 @@
 {
   "name": "thor",
   "version-date": "2022-04-16",
+  "port-version": 1,
   "description": "Extends the multimedia library SFML with higher-level features",
   "homepage": "https://bromeon.ch/libraries/thor/",
   "license": "Zlib",

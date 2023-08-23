@@ -1,6 +1,7 @@
 {
   "name": "dumb",
   "version": "2.0.3",
+  "port-version": 1,
   "description": "Module/tracker based music format parser and player library",
   "homepage": "https://github.com/kode54/dumb",
   "license": null,

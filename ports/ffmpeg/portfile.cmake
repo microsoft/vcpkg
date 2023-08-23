@@ -695,7 +695,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-vcpkg_copy_pdbs()
 
 if (VCPKG_TARGET_IS_WINDOWS)
     set(_dirs "/")

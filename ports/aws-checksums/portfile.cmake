@@ -34,6 +34,5 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib/${PORT}"
 )
 
-vcpkg_copy_pdbs()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

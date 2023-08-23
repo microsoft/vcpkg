@@ -85,7 +85,6 @@ if("buildtools" IN_LIST FEATURES)
 endif()
 vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

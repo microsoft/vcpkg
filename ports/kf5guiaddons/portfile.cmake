@@ -32,7 +32,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME KF5GuiAddons CONFIG_PATH lib/cmake/KF5GuiAddons)
-vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
     TOOL_NAMES kde-geo-uri-handler

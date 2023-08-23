@@ -39,7 +39,6 @@ ${cmake_config}
 ")
 endif()
 
-vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES avrogencpp AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

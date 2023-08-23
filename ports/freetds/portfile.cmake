@@ -34,7 +34,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES bsqldb bsqlodbc datacopy defncopy freebcp tdspool tsql AUTO_CLEAN)

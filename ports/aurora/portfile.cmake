@@ -7,4 +7,3 @@ vcpkg_from_github(
 )
 file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR})
 file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/aurora RENAME copyright)
-vcpkg_copy_pdbs()

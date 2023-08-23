@@ -1,7 +1,7 @@
 {
   "name": "anyrpc",
   "version-date": "2021-08-24",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A multiprotocol remote procedure call system for C++.",
   "homepage": "https://github.com/sgieseking/anyrpc",
   "dependencies": [

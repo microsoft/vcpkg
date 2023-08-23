@@ -42,7 +42,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 include("${CMAKE_CURRENT_LIST_DIR}/install-pc-files.cmake")
 

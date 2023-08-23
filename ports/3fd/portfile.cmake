@@ -51,5 +51,3 @@ file(INSTALL
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${SOURCE_PATH}/Acknowledgements.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/3fd")
-
-vcpkg_copy_pdbs()

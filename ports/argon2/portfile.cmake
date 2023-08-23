@@ -27,7 +27,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-argon2-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-argon2")
 vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-argon2 PACKAGE_NAME unofficial-argon2)

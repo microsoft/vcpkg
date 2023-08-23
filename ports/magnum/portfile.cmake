@@ -80,7 +80,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 
 # Copy tools into vcpkg's tools directory
 set(_TOOL_EXEC_NAMES "")

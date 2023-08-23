@@ -78,7 +78,6 @@ vcpkg_cmake_configure(
         -DENABLE_DEBUG=ON
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 if ("tool" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES curl AUTO_CLEAN)

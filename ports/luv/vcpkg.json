@@ -1,7 +1,7 @@
 {
   "name": "luv",
   "version-semver": "1.44.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Bare libuv bindings for lua",
   "homepage": "https://github.com/luvit/luv",
   "license": "Apache-2.0",

@@ -26,7 +26,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SFML)
-vcpkg_copy_pdbs()
 
 # move sfml-main to manual link dir
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib")

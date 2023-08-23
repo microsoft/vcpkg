@@ -18,6 +18,5 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/debug_assert PACKAGE_NAME debug_a
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

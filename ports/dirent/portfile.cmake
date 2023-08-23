@@ -12,6 +12,5 @@ vcpkg_from_github(
 )
 file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-vcpkg_copy_pdbs()
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)

@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Config CONFIG_PATH lib/cmake/KF5Config)
-vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
     TOOL_NAMES kreadconfig5 kwriteconfig5

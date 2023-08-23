@@ -39,7 +39,6 @@ vcpkg_install_nmake(
         LIBPATH="${CURRENT_INSTALLED_DIR}/lib/"
 )
 
-vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES epsilon SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")

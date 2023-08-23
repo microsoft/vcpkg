@@ -1,6 +1,7 @@
 {
   "name": "uchardet",
   "version": "0.0.8",
+  "port-version": 1,
   "description": "An encoding detector library ported from Mozilla.",
   "homepage": "https://cgit.freedesktop.org/uchardet/uchardet/",
   "license": "GPL-2.0 AND MPL-1.1",

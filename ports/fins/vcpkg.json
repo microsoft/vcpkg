@@ -2,6 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "fins",
   "version-date": "2023-07-31",
+  "port-version": 1,
   "maintainers": "Lammert Bies",
   "description": "LibFINS is an MIT licensed library written in C implementing the FINS/TCP protocol used for communication between Omron PLCs. The library contains all the documented client FINS functions. This open source library is a spin-off of a larger project which also implements FINS/UDP client communication and a FINS server engine.",
   "homepage": "https://www.libfins.org",

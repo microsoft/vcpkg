@@ -49,7 +49,6 @@ vcpkg_cmake_configure(
         WITH_SYSTEMD_USERUNITDIR
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "DBus1" CONFIG_PATH "lib/cmake/DBus1")
 vcpkg_fixup_pkgconfig() 
 

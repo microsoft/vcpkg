@@ -27,7 +27,6 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 # Define static macro
 file(READ "${CURRENT_PACKAGES_DIR}/include/fribidi/fribidi-common.h" FRIBIDI_COMMON_H)

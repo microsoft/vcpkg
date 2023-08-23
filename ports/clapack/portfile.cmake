@@ -52,7 +52,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 #TODO: fix the official exported targets, since they are broken (luckily it seems that no-one uses them for now)
 vcpkg_cmake_config_fixup(CONFIG_PATH share/clapack)

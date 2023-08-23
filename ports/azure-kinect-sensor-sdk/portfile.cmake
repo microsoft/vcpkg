@@ -44,7 +44,6 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/share")
 vcpkg_cmake_config_fixup(PACKAGE_NAME k4a CONFIG_PATH share/k4a)
 vcpkg_cmake_config_fixup(PACKAGE_NAME k4arecord CONFIG_PATH share/k4arecord)
 
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

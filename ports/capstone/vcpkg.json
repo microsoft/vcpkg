@@ -1,7 +1,7 @@
 {
   "name": "capstone",
   "version": "5.0.0-rc2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Multi-architecture disassembly framework",
   "homepage": "https://github.com/capstone-engine/capstone",
   "dependencies": [

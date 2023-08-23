@@ -18,4 +18,6 @@ function(vcpkg_cmake_install)
         LOGFILE_BASE install
         TARGET install
     )
+
+    vcpkg_copy_pdbs()
 endfunction()

@@ -29,8 +29,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 
     vcpkg_cmake_install()
-    vcpkg_copy_pdbs()
-
+    
     # Upstream include/apu.h.in has:
     # ```
     #elif defined(APU_DECLARE_STATIC)

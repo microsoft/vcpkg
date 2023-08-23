@@ -26,7 +26,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME KF5IconThemes CONFIG_PATH lib/cmake/KF5IconThemes)
-vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
     TOOL_NAMES kiconfinder5

@@ -30,7 +30,6 @@ vcpkg_cmake_configure(
         -DINSTALL_PDB=OFF # Installing pdbs failed on debug static. So, disable it and let vcpkg_copy_pdbs() do it
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeGLUT)
 vcpkg_fixup_pkgconfig()
 file(COPY_FILE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glut.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freeglut.pc")

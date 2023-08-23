@@ -463,7 +463,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
-vcpkg_copy_pdbs()
 
 if (NOT VCPKG_BUILD_TYPE)
   # Update debug paths for libs in Android builds (e.g. sdk/native/staticlibs/armeabi-v7a)

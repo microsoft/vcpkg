@@ -25,7 +25,6 @@ vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
 )
 vcpkg_install_make()
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share"

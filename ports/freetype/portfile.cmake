@@ -36,7 +36,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/freetype)
 
 # Rename for easy usage (VS integration; CMake and autotools will not care)

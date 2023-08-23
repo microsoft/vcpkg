@@ -15,7 +15,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(DLL_IMPORT "1 && defined(_MSC_VER)")

@@ -22,7 +22,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/dumb.pc" "-llibdumb" "-ldumb")
 if(NOT VCPKG_BUILD_TYPE)

@@ -45,7 +45,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 if (VCPKG_TARGET_IS_WINDOWS AND COOLPROP_SHARED_LIBRARY)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/CoolPropLib.h

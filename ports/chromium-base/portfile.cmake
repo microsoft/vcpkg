@@ -145,7 +145,6 @@ endforeach()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/chromium-baseConfig.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/chromium-baseConfig.cmake" @ONLY)
 
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/third_party/ced/LICENSE"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"

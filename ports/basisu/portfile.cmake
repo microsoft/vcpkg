@@ -17,7 +17,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES "basisu_tool" AUTO_CLEAN)
 

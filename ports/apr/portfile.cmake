@@ -34,8 +34,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     # There is no way to suppress installation of the headers in debug builds.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-    vcpkg_copy_pdbs()
-else()
+    else()
     # To cross-compile you will need a triplet file that locates the tool chain and sets --host and --cache parameters of "./configure".
     # The ${VCPKG_PLATFORM_TOOLSET}.cache file must have been generated on the targeted host using "./configure -C".
     # For example, to target aarch64-linux-gnu, triplets/aarch64-linux-gnu.cmake should contain (beyond the standard content):

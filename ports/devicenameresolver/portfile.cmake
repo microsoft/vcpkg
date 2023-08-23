@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/DeviceNameResolver.h" "__declspec(dllexport)" "")
 

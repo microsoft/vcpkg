@@ -58,7 +58,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/bond)
 
-vcpkg_copy_pdbs()
 
 cmake_path(NATIVE_PATH SOURCE_PATH native_source_path)
 foreach(header bond_apply.h bond_const_apply.h bond_const_enum.h bond_const_reflection.h bond_const_types.h bond_enum.h bond_reflection.h bond_types.h)

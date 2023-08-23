@@ -30,7 +30,6 @@ vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_copy_pdbs()
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES aubiomfcc aubionotes aubioonset aubiopitch aubioquiet aubiotrack
         SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools/aubio

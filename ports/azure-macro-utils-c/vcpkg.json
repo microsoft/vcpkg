@@ -1,7 +1,7 @@
 {
   "name": "azure-macro-utils-c",
   "version-date": "2022-01-21",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A library of macros for the Azure IoT SDK Suite",
   "license": "MIT",
   "dependencies": [

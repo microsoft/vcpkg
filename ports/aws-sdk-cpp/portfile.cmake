@@ -53,7 +53,6 @@ foreach(TARGET IN LISTS BUILD_ONLY)
 endforeach()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "AWSSDK" CONFIG_PATH "lib/cmake/AWSSDK")
 
-vcpkg_copy_pdbs()
 
 file(GLOB_RECURSE AWS_TARGETS "${CURRENT_PACKAGES_DIR}/share/*/*-targets-*.cmake")
 foreach(AWS_TARGET IN LISTS AWS_TARGETS)

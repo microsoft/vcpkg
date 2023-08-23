@@ -1,6 +1,7 @@
 {
   "name": "distorm",
   "version-string": "3.5.2b",
+  "port-version": 1,
   "description": "Powerful Disassembler Library For x86/AMD64",
   "dependencies": [
     {

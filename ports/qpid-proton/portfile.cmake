@@ -43,7 +43,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 # qpid-proton installs tests into share/proton; this is not desireable
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/proton")

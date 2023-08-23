@@ -1,7 +1,7 @@
 {
   "name": "butteraugli",
   "version-date": "2019-05-08",
-  "port-version": 4,
+  "port-version": 5,
   "description": "butteraugli estimates the psychovisual difference between two images",
   "homepage": "https://github.com/google/butteraugli",
   "dependencies": [

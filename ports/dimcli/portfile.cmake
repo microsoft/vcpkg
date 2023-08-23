@@ -21,7 +21,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 # Remove includes from ${CMAKE_INSTALL_PREFIX}/debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

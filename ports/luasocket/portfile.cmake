@@ -12,7 +12,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 # Remove debug share
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

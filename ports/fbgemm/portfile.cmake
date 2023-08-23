@@ -19,7 +19,6 @@ vcpkg_cmake_configure(
         -DPYTHON_EXECUTABLE=${PYTHON3} # inject the path instead of find_package(Python)
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME fbgemmLibrary CONFIG_PATH share/cmake/${PORT})
 
 # this internal header is required by pytorch

@@ -44,6 +44,5 @@ endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-breakpad)
 
-vcpkg_copy_pdbs()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -40,4 +40,3 @@ file(INSTALL
     "${SOURCE_PATH}/LICENSE-MIT"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/docopt" RENAME copyright)
 
-vcpkg_copy_pdbs()

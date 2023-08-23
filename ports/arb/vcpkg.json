@@ -1,7 +1,7 @@
 {
   "name": "arb",
   "version": "2.21.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "a C library for arbitrary-precision interval arithmetic",
   "homepage": "https://github.com/fredrik-johansson/arb",
   "license": "LGPL-2.1",

@@ -112,4 +112,6 @@ function(vcpkg_gn_install)
             TARGETS ${arg_TARGETS}
         )
     endif()
+
+    vcpkg_copy_pdbs()
 endfunction()

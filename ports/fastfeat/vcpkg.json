@@ -1,7 +1,7 @@
 {
   "name": "fastfeat",
   "version-string": "391d5e9",
-  "port-version": 4,
+  "port-version": 5,
   "description": "FAST feature detectors in C",
   "dependencies": [
     {

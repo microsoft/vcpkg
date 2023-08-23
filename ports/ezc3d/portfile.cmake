@@ -14,7 +14,6 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLE=OFF
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH "CMake")

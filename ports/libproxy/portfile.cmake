@@ -43,7 +43,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Modules)
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_tools(TOOL_NAMES proxy AUTO_CLEAN)

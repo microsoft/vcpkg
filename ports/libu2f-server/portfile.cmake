@@ -28,7 +28,6 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libu2f-server/u2f-server.h
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_copy_pdbs()
 
 # Handle copyright
 configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

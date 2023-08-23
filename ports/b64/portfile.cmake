@@ -21,7 +21,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-b64)
 
-vcpkg_copy_pdbs()
 
 
 # handle copyright

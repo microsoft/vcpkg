@@ -42,7 +42,6 @@ elseif(EXISTS "${CURRENT_PACKAGES_DIR}/share/foonathan_memory/cmake")
     vcpkg_cmake_config_fixup(CONFIG_PATH share/foonathan_memory/cmake PACKAGE_NAME foonathan_memory)
 endif()
 
-vcpkg_copy_pdbs()
 
 # Place header files into the right folders
 # The original layout is not a problem for CMake-based project.

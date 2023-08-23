@@ -28,7 +28,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT})
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/blosc-config.cmake"

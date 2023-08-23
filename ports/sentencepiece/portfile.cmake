@@ -28,6 +28,5 @@ endif()
 
 configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 
-vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()

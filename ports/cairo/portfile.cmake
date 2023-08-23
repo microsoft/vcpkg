@@ -71,7 +71,6 @@ else()
 endif()
 file(WRITE ${_file} "${CAIRO_H}")
 
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 #TODO: Fix script

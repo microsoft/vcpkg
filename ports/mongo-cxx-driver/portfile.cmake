@@ -32,7 +32,6 @@ vcpkg_cmake_configure(
         CMAKE_DISABLE_FIND_PACKAGE_Boost
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME "bsoncxx" CONFIG_PATH "lib/cmake/bsoncxx-${VERSION}" DO_NOT_DELETE_PARENT_CONFIG_PATH)

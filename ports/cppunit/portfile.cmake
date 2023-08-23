@@ -46,7 +46,6 @@ else()
     vcpkg_install_make()
 endif()
 
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 # Handle copyright

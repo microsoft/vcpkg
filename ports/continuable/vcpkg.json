@@ -1,6 +1,7 @@
 {
   "name": "continuable",
   "version": "4.2.0",
+  "port-version": 1,
   "description": "C++14 asynchronous allocation aware futures (supporting then, exception handling, coroutines and connections)",
   "homepage": "https://naios.github.io/continuable/",
   "license": "MIT",

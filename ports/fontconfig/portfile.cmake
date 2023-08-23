@@ -36,7 +36,6 @@ endif()
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
-vcpkg_copy_pdbs()
 #Fix missing libintl static dependency
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(NOT VCPKG_BUILD_TYPE)

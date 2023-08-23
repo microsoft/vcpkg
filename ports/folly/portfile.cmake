@@ -69,7 +69,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-vcpkg_copy_pdbs()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 

@@ -85,7 +85,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/bin"
 )
 
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

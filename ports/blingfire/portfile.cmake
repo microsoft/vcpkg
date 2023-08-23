@@ -22,7 +22,6 @@ foreach(BIN ${BINS})
     file(INSTALL "${BIN}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 endforeach()
 
-vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

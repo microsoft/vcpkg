@@ -70,7 +70,6 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

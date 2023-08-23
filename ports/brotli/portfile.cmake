@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
         -DBROTLI_EMSCRIPTEN=OFF
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-brotli-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-brotli")

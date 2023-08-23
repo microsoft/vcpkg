@@ -62,7 +62,6 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_copy_tools(TOOL_NAMES thrift1 AUTO_CLEAN)
-vcpkg_copy_pdbs()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake" 

@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_pdbs()
 
 if(FLECS_STATIC_LIBS)
     vcpkg_replace_string(

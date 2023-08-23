@@ -19,7 +19,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/Makefile.am")
 

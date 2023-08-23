@@ -35,8 +35,6 @@ if (VCPKG_TARGET_IS_LINUX)
     file(RENAME "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/decaf" "${CURRENT_PACKAGES_DIR}/include/decaf")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}")
 
-    vcpkg_copy_pdbs()
-
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/activemqcpp-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
     if(NOT VCPKG_BUILD_TYPE)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/activemqcpp-config" "${CURRENT_INSTALLED_DIR}/debug" "`dirname $0`/../../../..")

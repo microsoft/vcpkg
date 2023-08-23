@@ -49,8 +49,7 @@ foreach(package_name IN LISTS package_names)
         LOGFILE_BASE "install-${package_name}"
         TARGET install
     )
-    vcpkg_copy_pdbs()
-
+    
     vcpkg_cmake_config_fixup(PACKAGE_NAME "${package_name}" CONFIG_PATH "lib/cmake/${package_name}")
 endforeach()
 vcpkg_fixup_pkgconfig()

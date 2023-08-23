@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
         -DINCLUDE_INSTALL_DIR=include
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME ut CONFIG_PATH lib/cmake/ut-${VERSION})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug"

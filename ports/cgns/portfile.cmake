@@ -40,7 +40,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 # Moves all *.cmake files from /debug/lib/cmake/cgns/ to /share/cgns/
 # See /docs/maintainers/ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md for more details

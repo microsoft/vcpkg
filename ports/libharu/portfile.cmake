@@ -57,6 +57,5 @@ else()
 endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" "${_contents}")
 
-vcpkg_copy_pdbs()
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

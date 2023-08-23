@@ -188,7 +188,6 @@ if(BUILD_RTK) # Remote Modules are only downloaded on configure.
     vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch rtk/Add-missing-include-for-Cuda.patch)
 endif()
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
 if(TOOL_NAMES)

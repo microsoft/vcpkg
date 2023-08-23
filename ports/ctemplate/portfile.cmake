@@ -20,4 +20,3 @@ vcpkg_cmake_install()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ctemplate" RENAME copyright)
 
-vcpkg_copy_pdbs()
