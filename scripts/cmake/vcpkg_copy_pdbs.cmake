@@ -12,8 +12,6 @@ function(vcpkg_copy_pdbs)
         )
     endif()
 
-    set(dlls_without_matching_pdbs "")
-
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         file(GLOB_RECURSE dlls ${arg_BUILD_PATHS})
 
@@ -32,18 +30,10 @@ function(vcpkg_copy_pdbs)
                 set(pdb_path "${CMAKE_MATCH_1}")
                 cmake_path(GET dll PARENT_PATH dll_dir)
                 file(COPY "${pdb_path}" DESTINATION "${dll_dir}")
-            else()
-                list(APPEND dlls_without_matching_pdbs "${dll}")
             endif()
         endforeach()
 
         set(ENV{VSLANG} "${vslang_backup}")
-
-        if(NOT dlls_without_matching_pdbs STREQUAL "")
-            list(JOIN dlls_without_matching_pdbs "\n    " message)
-            message(WARNING "Could not find a matching pdb file for:
-    ${message}\n")
-        endif()
     endif()
 
 endfunction()
