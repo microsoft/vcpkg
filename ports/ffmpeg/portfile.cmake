@@ -310,6 +310,10 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libfdk-aac")
 endif()
 
+if("file" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-protocol=file")
+endif()
+
 if("fontconfig" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfontconfig")
 else()
@@ -326,6 +330,10 @@ if("fribidi" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfribidi")
 else()
     set(OPTIONS "${OPTIONS} --disable-libfribidi")
+endif()
+
+if("h264" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-decoder=h264 --enable-parser=h264 --enable-demuxer=h264")
 endif()
 
 if("iconv" IN_LIST FEATURES)
