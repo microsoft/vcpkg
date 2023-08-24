@@ -195,6 +195,7 @@
     },
     "enable-mlir-python-bindings": {
       "description": "Build MLIR Python bindings.",
+      "supports": "!(windows & static)",
       "dependencies": [
         {
           "name": "llvm",
