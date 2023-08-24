@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependency.patch
         fix-del-install-file.patch
-        fix-func-param.patch
+        fix-func-param.patch #https://github.com/AcademySoftwareFoundation/OpenColorIO/pull/1806
         fix-pkgconfig.patch
 )
 
@@ -67,4 +67,4 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
