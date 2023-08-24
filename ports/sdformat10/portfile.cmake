@@ -6,6 +6,7 @@ vcpkg_from_github(
     SHA512 df8ec1cc5341be57d687dfb664a9d0ff085725906e8c43d8c843b83371beaaaf0830b1447158995942c67de5700e6795fa6ccd96f0a3ee9467f33ee1cc57c38a
     HEAD_REF sdf10
     PATCHES
+        no-absolute.patch
         cmake-config.patch
 )
 
