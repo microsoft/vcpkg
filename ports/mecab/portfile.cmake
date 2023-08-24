@@ -10,7 +10,7 @@ vcpkg_from_github(
 	HEAD_REF master
 	PATCHES
 		fix_wpath_unsigned.patch
-        fix-missing-functional.patch
+		fix-missing-functional.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/mecab/src")
