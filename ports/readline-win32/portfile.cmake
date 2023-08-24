@@ -8,14 +8,16 @@ vcpkg_from_github(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/config.h" DESTINATION "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src")
-
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/readline.pc.in" DESTINATION "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src"
 )
 
+
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-readline-win32)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
