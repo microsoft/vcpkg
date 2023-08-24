@@ -2870,7 +2870,7 @@
     },
     "ginkgo": {
       "baseline": "1.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "gklib": {
       "baseline": "2022-07-27",
@@ -2917,8 +2917,8 @@
       "port-version": 2
     },
     "glm": {
-      "baseline": "0.9.9.8",
-      "port-version": 2
+      "baseline": "2023-06-08",
+      "port-version": 0
     },
     "globjects": {
       "baseline": "1.1.0",
@@ -3009,8 +3009,8 @@
       "port-version": 3
     },
     "graphicsmagick": {
-      "baseline": "1.3.37",
-      "port-version": 4
+      "baseline": "1.3.41",
+      "port-version": 0
     },
     "graphite2": {
       "baseline": "1.3.14",
@@ -4649,8 +4649,8 @@
       "port-version": 4
     },
     "libsrtp": {
-      "baseline": "2.4.2",
-      "port-version": 3
+      "baseline": "2.5.0",
+      "port-version": 0
     },
     "libssh": {
       "baseline": "0.10.5",
@@ -6078,7 +6078,7 @@
     },
     "openmvs": {
       "baseline": "2.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openni2": {
       "baseline": "2.2.0.33",
@@ -7596,6 +7596,10 @@
       "baseline": "6.1.4",
       "port-version": 9
     },
+    "si": {
+      "baseline": "2.5.1",
+      "port-version": 0
+    },
     "signalrclient": {
       "baseline": "1.0.0-beta1-9",
       "port-version": 5
@@ -8574,7 +8578,7 @@
     },
     "vcpkg-tool-ninja": {
       "baseline": "2022-03-31",
-      "port-version": 1
+      "port-version": 2
     },
     "vcpkg-tool-nodejs": {
       "baseline": "16.18.0",
@@ -8635,6 +8639,10 @@
     "vsg": {
       "baseline": "1.0.8",
       "port-version": 1
+    },
+    "vsgxchange": {
+      "baseline": "1.0.4",
+      "port-version": 0
     },
     "vtk": {
       "baseline": "9.2.0-pv5.11.0",
@@ -9038,7 +9046,7 @@
     },
     "zeroc-ice": {
       "baseline": "3.7.9",
-      "port-version": 1
+      "port-version": 2
     },
     "zeromq": {
       "baseline": "2023-06-20",

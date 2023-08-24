@@ -8,10 +8,7 @@
     {
       "name": "corrade",
       "host": true,
-      "default-features": false,
-      "features": [
-        "utility"
-      ]
+      "default-features": false
     },
     {
       "name": "vcpkg-cmake",

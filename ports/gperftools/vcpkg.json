@@ -15,7 +15,7 @@
   "features": {
     "override": {
       "description": "Override allocators",
-      "supports": "windows"
+      "supports": "windows & staticcrt"
     },
     "tools": {
       "description": "Build gperftools CLI tools",

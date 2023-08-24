@@ -35,6 +35,10 @@
             "arm64",
             "x86"
           ]
+        },
+        {
+          "name": "tbb",
+          "platform": "!windows"
         }
       ]
     },
@@ -58,7 +62,11 @@
           "platform": "!windows"
         },
         "freetype",
-        "glfw3"
+        "glfw3",
+        {
+          "name": "tbb",
+          "platform": "!windows"
+        }
       ]
     },
     "on-demand": {

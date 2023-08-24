@@ -38,8 +38,7 @@
           "default-features": false,
           "features": [
             "ssl"
-          ],
-          "version>=": "7.48.0"
+          ]
         }
       ]
     },

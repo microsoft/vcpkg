@@ -42,6 +42,7 @@ vcpkg_cmake_configure(
         -DBUILD_STATIC=${BUILD_STATIC}
     MAYBE_UNUSED_VARIABLES
         CORRADE_RC_EXECUTABLE
+        UTILITY_USE_ANSI_COLORS
 )
 
 vcpkg_cmake_install()
@@ -51,13 +52,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # corrade-rc is not built when CMAKE_CROSSCOMPILING
-if("utility" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES "corrade-rc" AUTO_CLEAN)
-endif()
+vcpkg_copy_tools(TOOL_NAMES "corrade-rc" AUTO_CLEAN)
 
 # Ensure no empty folders are left behind
-if(NOT FEATURES)
-    # No features, no binaries (only Corrade.h).
+if(FEATURES STREQUAL "core")
+    # No features, no libs (only Corrade.h).
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/lib"
