@@ -1766,7 +1766,7 @@
     },
     "corrade": {
       "baseline": "2020.06",
-      "port-version": 5
+      "port-version": 6
     },
     "cpp-async": {
       "baseline": "1.0.1",
