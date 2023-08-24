@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2d5d071..833411e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -27,6 +27,8 @@ else()
+     IgnURDFDOM::IgnURDFDOM)
+ endif()
+ 
++install(TARGETS using_parser_urdf EXPORT ${PROJECT_LIBRARY_TARGET_NAME} COMPONENT libraries)
++
+ if (BUILD_TESTING)
+   # Build this test file only if Ignition Tools is installed.
+   if (NOT IGN_PROGRAM)
