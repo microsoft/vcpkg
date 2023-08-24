@@ -4,6 +4,14 @@
   "description": "Compact Language Detector v3",
   "homepage": "https://github.com/google/cld3",
   "dependencies": [
-    "protobuf"
+    "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
