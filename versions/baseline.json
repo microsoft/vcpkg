@@ -5022,7 +5022,7 @@
     },
     "llhttp": {
       "baseline": "8.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "llvm": {
       "baseline": "15.0.7",
