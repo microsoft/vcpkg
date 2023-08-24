@@ -4334,7 +4334,7 @@
     },
     "libmicrodns": {
       "baseline": "0.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libmicrohttpd": {
       "baseline": "0.9.77",
