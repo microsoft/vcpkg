@@ -23,6 +23,12 @@ file(REMOVE "${SOURCE_PATH}/build/Modules/FindCERES.cmake")
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindCGAL.cmake")
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindEIGEN.cmake")
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(USE_SSE ON)
+else()
+    set(USE_SSE OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
@@ -33,6 +39,7 @@ vcpkg_cmake_configure(
         -DOpenMVS_USE_OPENGL=ON
         -DOpenMVS_USE_BREAKPAD=OFF
         -DOpenMVS_ENABLE_TESTS=OFF
+        -DOpenMVS_USE_SSE=${USE_SSE}
     OPTIONS_RELEASE
         -DOpenMVS_BUILD_TOOLS=ON
     OPTIONS_DEBUG
