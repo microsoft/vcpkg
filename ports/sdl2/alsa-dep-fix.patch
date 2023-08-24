@@ -11,15 +11,3 @@ index cc8bcf26d..ead829767 100644
    sdlFindALSA()
  endif()
  unset(SDL_ALSA)
-diff --git a/cmake/sdlfind.cmake b/cmake/sdlfind.cmake
-index a8145484f..41aa9274c 100644
---- a/cmake/sdlfind.cmake
-+++ b/cmake/sdlfind.cmake
-@@ -1,6 +1,6 @@
- 
- macro(sdlFindALSA)
--  find_package(ALSA MODULE)
-+  find_package(ALSA MODULE REQUIRED)
-   if(ALSA_FOUND AND (NOT TARGET ALSA::ALSA) )
-     add_Library(ALSA::ALSA UNKNOWN IMPORTED)
-     set_property(TARGET ALSA::ALSA PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${ALSA_INCLUDE_DIRS})
