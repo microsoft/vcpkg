@@ -2962,7 +2962,7 @@
     },
     "gobject-introspection": {
       "baseline": "1.72.0",
-      "port-version": 4
+      "port-version": 5
     },
     "google-cloud-cpp": {
       "baseline": "2.14.0",
@@ -4094,7 +4094,7 @@
     },
     "libffi": {
       "baseline": "3.4.4",
-      "port-version": 2
+      "port-version": 3
     },
     "libfido2": {
       "baseline": "1.13.0",
@@ -5026,7 +5026,7 @@
     },
     "llvm": {
       "baseline": "15.0.7",
-      "port-version": 3
+      "port-version": 4
     },
     "lmdb": {
       "baseline": "0.9.29",
@@ -6614,7 +6614,7 @@
     },
     "python3": {
       "baseline": "3.11.4",
-      "port-version": 3
+      "port-version": 4
     },
     "qca": {
       "baseline": "2.3.5",
