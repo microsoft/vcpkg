@@ -1,21 +1,20 @@
-set(OptiX_PREV_MODULE_PATH ${CMAKE_MODULE_PATH})
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
-find_package(OptiX ${VERSION})
-set(CMAKE_MODULE_PATH ${OptiX_PREV_MODULE_PATH})
+include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_find_optix.cmake")
 
-if(NOT OptiX_FOUND)
-  message(FATAL_ERROR "Could not find OptiX. Before continuing, please download and install OptiX (v${VERSION} or higher) from:"
-                      "\n    https://developer.nvidia.com/designworks/optix/download\n"
-                      "If you are certain that OptiX is already installed, please set the OptiX_INSTALL_DIR environment variable to its location.\n")
-elseif(OptiX_VERSION VERSION_LESS VERSION)
-  message(FATAL_ERROR "OptiX v${OptiX_VERSION} found, but v${VERSION} or higher is required. Please download and install a more recent version of OptiX from:"
-                      "\n    https://developer.nvidia.com/designworks/optix/download\n"
-                      "If you are certain that the necessary version is already installed, please set the OptiX_INSTALL_DIR environment variable to its location.\n")
-endif()
+vcpkg_find_optix(
+  OUT_OPTIX_DIR OPTIX_DIR
+  OUT_OPTIX_VERSION OPTIX_VERSION
+)
 
-message(STATUS "Found OptiX v${OptiX_VERSION}: (include ${OptiX_INCLUDE_DIR})")
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+file(COPY "${OPTIX_DIR}/include/" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-file(INSTALL "${CURRENT_PORT_DIR}/FindOptiX.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(
+  PACKAGE_NAME unofficial-${PORT}
+  CONFIG_PATH share/unofficial-${PORT}
+)
+
+file(INSTALL "${VCPKG_ROOT_DIR}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
