@@ -4,9 +4,7 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/vcpkg-make-common.cmake")
 
 function(vcpkg_run_autoreconf bash_cmd work_dir)
 # TODO:
-# - Run autoreconf
-# - Deal with tools like autopoint etc.
-# does it make sense to parse configure.ac ?
+# Check: does it make sense to parse configure.ac ?
     find_program(AUTORECONF autoreconf) # find_file instead ? autoreconf is a perl script. 
     if(NOT AUTORECONF)
         message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
@@ -154,6 +152,11 @@ function(z_vcpkg_make_get_build_triplet out)
 endfunction()
 
 function(vcpkg_make_prepare_env config)
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "ADD_BIN_TO_PATH"
+        ""
+        ""
+    )
     # Used by CL 
     vcpkg_host_path_list(PREPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
     # Used by GCC
@@ -182,12 +185,6 @@ function(vcpkg_make_prepare_env config)
             set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
         endif()
     endif()
-    foreach(ENV_VAR ${arg_CONFIG_DEPENDENT_ENVIRONMENT})
-        if(DEFINED ENV{${ENV_VAR}})
-            set(backup_config_${ENV_VAR} "$ENV{${ENV_VAR}}")
-        endif()
-        set(ENV{${ENV_VAR}} "${${ENV_VAR}_${config}}")
-    endforeach()
 
     # Setup environment
     set(ENV{CPPFLAGS} "${CPPFLAGS_${config}}")
@@ -215,10 +212,11 @@ function(vcpkg_make_prepare_env config)
     endif()
 
     if(LINK_ENV_${config})
-        set(link_config_backup "$ENV{_LINK_}")
         set(ENV{_LINK_} "${LINK_ENV_${config}}")
-    else()
-        unset(link_config_backup)
+    endif()
+
+    if(arg_ADD_BIN_TO_PATH AND NOT VCPKG_CROSSCOMPILING)
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${path_suffix}/bin")
     endif()
 
     vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH) # LD_LIBRARY_PATH)
@@ -230,28 +228,16 @@ function(vcpkg_make_prepare_env config)
             vcpkg_host_path_list(PREPEND ENV{${lib_env_var}} "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib/manual-link")
         endif()
     endforeach()
-    unset(lib_env_vars)
 endfunction()
 
 function(vcpkg_make_restore_env)
     # Only variables which are inspected in vcpkg_make_prepare_env need to be restored here.
     # Rest is restored add the end of configure. 
+    # TODO: check how vcpkg_restore_env_variables actually works!
     vcpkg_restore_env_variables(VARS 
          LIBRARY_PATH LIB LIBPATH
+         PATH
     )
-    if(DEFINED link_config_backup)
-        set(ENV{_LINK_} "${link_config_backup}")
-    endif()
-
-
-    # Restore environment (config dependent)
-    foreach(ENV_VAR IN LISTS ${arg_CONFIG_DEPENDENT_ENVIRONMENT})
-        if(backup_config_${ENV_VAR})
-            set(ENV{${ENV_VAR}} "${backup_config_${ENV_VAR}}")
-        else()
-            unset(ENV{${ENV_VAR}})
-        endif()
-    endforeach()
 endfunction()
 
 function(vcpkg_make_run_configure)
@@ -263,7 +249,12 @@ function(vcpkg_make_run_configure)
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
     vcpkg_prepare_pkgconfig("${arg_CONFIG}")
-    vcpkg_make_prepare_env("${arg_CONFIG}")
+
+    set(prepare_env_opts "")
+    if(arg_ADD_BIN_TO_PATH)
+        set(prepare_env_opts ADD_BIN_TO_PATH)
+    endif()
+    vcpkg_make_prepare_env("${arg_CONFIG}" ${prepare_env_opts})
 
     vcpkg_list(SET tmp)
     foreach(element IN LISTS arg_OPTIONS)
@@ -271,11 +262,6 @@ function(vcpkg_make_run_configure)
         vcpkg_list(APPEND tmp "\"${element}\"")
     endforeach()
     vcpkg_list(JOIN tmp " " "arg_OPTIONS")
-
-    if(arg_ADD_BIN_TO_PATH AND NOT VCPKG_CROSSCOMPILING)
-        set(path_backup $ENV{PATH})
-        vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}${path_suffix_${arg_CONFIG}}/bin")
-    endif()
 
     set(command "${configure_env} ${arg_CONFIGURE_PATH} ${arg_CONFIGURE_PATH} ${arg_OPTIONS}")
 
@@ -294,9 +280,6 @@ function(vcpkg_make_run_configure)
             string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
             file(WRITE "${lt_file}" "${_contents}")
         endforeach()
-    endif()
-    if(arg_ADD_BIN_TO_PATH AND NOT VCPKG_CROSSCOMPILING)
-        set(ENV{PATH} "${path_backup}")
     endif()
     #message(STATUS "Finished: Configuring ${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}")
 

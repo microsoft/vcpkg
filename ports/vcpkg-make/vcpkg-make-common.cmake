@@ -355,7 +355,7 @@ function(z_vcpkg_make_prepare_program_flags)
     endif()
 endfunction()
 
-function(z_vcpkg_make_prepare_flags)
+function(vcpkg_make_prepare_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "NO_CPP;NO_WRAPPERS" 
         "LIBS_OUT;FRONTEND_VARIANT_OUT;C_COMPILER_NAME"
@@ -367,7 +367,14 @@ function(z_vcpkg_make_prepare_flags)
         # list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=C\;CXX\;ASM") ASM compiler will point to CL with MSVC
         list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${arg_LANGUAGES};-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
     endif()
-    vcpkg_cmake_get_vars(cmake_vars_file)
+
+    z_vcpkg_get_global_property(has_cmake_vars_file "make_cmake_vars_file" SET)
+    if(NOT has_cmake_vars_file)
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        z_vcpkg_set_global_property(make_cmake_vars_file "${cmake_vars_file}")
+    else()
+        z_vcpkg_get_global_property(cmake_vars_file "make_cmake_vars_file")
+    endif()
     include("${cmake_vars_file}")
 
     # ==== LIBS

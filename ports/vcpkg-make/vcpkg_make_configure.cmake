@@ -23,7 +23,6 @@ function(vcpkg_make_configure) #
     #z_vcpkg_conflicting_args(arg_USE_WRAPPERS arg_NO_WRAPPERS)
     z_vcpkg_conflicting_args(arg_BUILD_TRIPLET arg_NO_CONFIGURE_TRIPLET)
 
-
     # Can be set in the triplet to append options for configure
     if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS)
         list(APPEND arg_OPTIONS ${VCPKG_MAKE_CONFIGURE_OPTIONS})
@@ -43,7 +42,11 @@ function(vcpkg_make_configure) #
     if(arg_NO_WRAPPERS)
         set(prepare_flags_opts "NO_WRAPPERS")
     endif()
-    z_vcpkg_make_prepare_flags(${prepare_flags_opts} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
+    if(arg_NO_CPP)
+        list(APPEND prepare_flags_opts "NO_CPP")
+    endif()
+    z_vcpkg_set_global_property(make_prepare_flags_opts "${prepare_flags_opts}")
+    vcpkg_make_prepare_flags(${prepare_flags_opts} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
 
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
@@ -86,6 +89,8 @@ function(vcpkg_make_configure) #
     list(TRANSFORM cm_FLAGS APPEND "FLAGS")
     vcpkg_backup_env_variables(VARS 
         ${cm_FLAGS}
+    # General backup
+        PATH
     # Used by gcc/linux
         C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH
     # Used by cl
@@ -93,12 +98,7 @@ function(vcpkg_make_configure) #
     )
     z_vcpkg_make_set_common_vars()
 
-    set(build_configs RELEASE)
-    if(NOT VCPKG_BUILD_TYPE)
-        list(PREPEND build_configs DEBUG)
-    endif()
-
-    foreach(config IN LISTS build_configs)
+    foreach(config IN LISTS buildtypes)
         set(target_dir "${work_dir_${config_up}}")
         file(REMOVE_RECURSE "${target_dir}")
         file(MAKE_DIRECTORY "${target_dir}")
