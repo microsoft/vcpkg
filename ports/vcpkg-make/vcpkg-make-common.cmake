@@ -1,12 +1,11 @@
 include_guard(GLOBAL)
 
-
-macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
+macro(z_vcpkg_append_to_configure_environment inoutlist var defaultval)
     # Allows to overwrite settings in custom triplets via the environment on windows
     if(CMAKE_HOST_WIN32 AND DEFINED ENV{${var}})
-        string(APPEND "${inoutstring}" " ${var}='$ENV{${var}}'")
+        list(APPEND "${inoutstring}" " ${var}='$ENV{${var}}'")
     else()
-        string(APPEND "${inoutstring}" " ${var}='${defaultval}'")
+        list(APPEND "${inoutstring}" " ${var}='${defaultval}'")
     endif()
 endmacro()
 
@@ -19,6 +18,10 @@ macro(z_vcpkg_make_set_common_vars)
     foreach(config IN ITEMS RELEASE DEBUG)
         set("workdir_${config}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${config}}")
     endforeach()
+    set(buildtypes release)
+    if(NOT VCPKG_BUILD_TYPE)
+        list(APPEND buildtypes)
+    endif()
 endmacro()
 
 ####
@@ -61,12 +64,13 @@ function(z_vcpkg_make_determine_target_arch out_var)
     set("${out_var}" "${${out_var}}" PARENT_SCOPE)
 endfunction()
 
-function(z_vcpkg_make_prepare_compile_flags var_suffix)
+function(z_vcpkg_make_prepare_compile_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "NO_CPP;NO_FLAG_ESCAPING;USES_WRAPPERS" 
         "COMPILER_FRONTEND;CONFIG"
         "LANGUAGES"
     )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
     # TODO: Deal with LANGUAGES
     # TODO: Check params
 
@@ -78,7 +82,9 @@ function(z_vcpkg_make_prepare_compile_flags var_suffix)
     separate_arguments(CXXFLAGS NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${var_suffix}}")
     separate_arguments(LDFLAGS NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
     separate_arguments(ARFLAGS NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
-    foreach(var IN ITEMS CFLAGS CXXFLAGS LDFLAGS ARFLAGS)
+    set(RCFLAGS "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${var_suffix}}")
+
+    foreach(var IN ITEMS CFLAGS CXXFLAGS LDFLAGS ARFLAGS RCFLAGS)
         vcpkg_list(APPEND flags ${${var}})
     endforeach()
 
@@ -198,7 +204,7 @@ function(z_vcpkg_make_prepare_compile_flags var_suffix)
         vcpkg_list(PREPEND ARFLAGS "cr")
     endif()
 
-    foreach(var IN ITEMS ABIFLAGS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS ARFLAGS)
+    foreach(var IN ITEMS ABIFLAGS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS ARFLAGS RCFLAGS)
         list(JOIN ${var} " " string)
         set(${var}_${var_suffix} "${string}" PARENT_SCOPE)
     endforeach()
@@ -206,14 +212,15 @@ function(z_vcpkg_make_prepare_compile_flags var_suffix)
     # TODO Forward required vars;
 endfunction()
 
-
-
 function(z_vcpkg_make_prepare_program_flags)
     # Remove full filepaths due to spaces and prepend filepaths to PATH (cross-compiling tools are unlikely on path by default)
     if (VCPKG_TARGET_IS_WINDOWS)
-        set(progs   VCPKG_DETECTED_CMAKE_C_COMPILER VCPKG_DETECTED_CMAKE_CXX_COMPILER VCPKG_DETECTED_CMAKE_AR
-                    VCPKG_DETECTED_CMAKE_LINKER VCPKG_DETECTED_CMAKE_RANLIB VCPKG_DETECTED_CMAKE_OBJDUMP
-                    VCPKG_DETECTED_CMAKE_STRIP VCPKG_DETECTED_CMAKE_NM VCPKG_DETECTED_CMAKE_DLLTOOL VCPKG_DETECTED_CMAKE_RC_COMPILER)
+        # TODO More languages ?
+        set(progs   C_COMPILER CXX_COMPILER AR
+                    LINKER RANLIB OBJDUMP
+                    STRIP NM DLLTOOL RC_COMPILER)
+        list(TRANSFORM progs PREPEND "VCPKG_DETECTED_CMAKE_")
+        ### TODO: This should be its own function
         foreach(prog IN LISTS progs)
             set(filepath "${${prog}}")
             if(filepath MATCHES " ")
@@ -225,6 +232,7 @@ function(z_vcpkg_make_prepare_program_flags)
                 endif()
             endif()
         endforeach()
+        ### 
         if (arg_USE_WRAPPERS)
             z_vcpkg_append_to_configure_environment(configure_env CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
@@ -312,10 +320,12 @@ function(z_vcpkg_make_prepare_program_flags)
                     string(APPEND prog " ${ARGN}")
                 endif()
                 set(z_vcm_all_tools "${z_vcm_all_tools}" PARENT_SCOPE)
-                set(ENV{${envvar}} "${prog}")
+                set(ENV{${envvar}} "${prog}") 
+                # Should probably create an env string like windows. This would be easier to return to the caller. 
             endif()
         endfunction()
         z_vcpkg_make_set_env(CC C_COMPILER)
+        z_vcpkg_make_set_env(CXX CXX_COMPILER)
         if(NOT arg_BUILD_TRIPLET MATCHES "--host")
             z_vcpkg_make_set_env(CC_FOR_BUILD C_COMPILER)
             z_vcpkg_make_set_env(CPP_FOR_BUILD C_COMPILER "-E")
@@ -325,7 +335,6 @@ function(z_vcpkg_make_prepare_program_flags)
             set(ENV{CPP_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
             set(ENV{CXX_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
         endif()
-        z_vcpkg_make_set_env(CXX CXX_COMPILER)
         z_vcpkg_make_set_env(NM NM)
         z_vcpkg_make_set_env(RC RC)
         z_vcpkg_make_set_env(WINDRES RC)
@@ -348,8 +357,8 @@ endfunction()
 
 function(z_vcpkg_make_prepare_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "NO_CPP" 
-        "LIBS_OUT"
+        "NO_CPP;NO_WRAPPERS" 
+        "LIBS_OUT;FRONTEND_VARIANT_OUT;C_COMPILER_NAME"
         "LANGUAGES"
     )
     if(DEFINED arg_LANGUAGES)
@@ -361,26 +370,149 @@ function(z_vcpkg_make_prepare_flags)
     vcpkg_cmake_get_vars(cmake_vars_file)
     include("${cmake_vars_file}")
 
+    # ==== LIBS
+    # TODO: Figure out what to do with other Languages like Fortran
+    # Remove outer quotes from cmake variables which will be forwarded via makefile/shell variables
+    # substituted into makefile commands (e.g. Android NDK has "--sysroot=...")
+    separate_arguments(c_libs_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
+    separate_arguments(cxx_libs_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
+    list(REMOVE_ITEM cxx_libs_list ${c_libs_list})
+    set(all_libs_list ${cxx_libs_list} ${c_libs_list})
+    #Do lib list transformation from name.lib to -lname if necessary
+    set(x_vcpkg_transform_libs ON)
+    if(VCPKG_TARGET_IS_UWP)
+        set(x_vcpkg_transform_libs OFF)
+        # Avoid libtool choke: "Warning: linker path does not have real file for library -lWindowsApp."
+        # The problem with the choke is that libtool always falls back to built a static library even if a dynamic was requested. 
+        # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows. 
+        # It even does unix/dos-short/unix transformation with the path to get rid of spaces. 
+    endif()
+    if(x_vcpkg_transform_libs)
+        list(TRANSFORM all_libs_list REPLACE "[.](dll[.]lib|lib|a|so)$" "")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            list(REMOVE_ITEM all_libs_list "uuid")
+        endif()
+        list(TRANSFORM all_libs_list REPLACE "^([^-].*)" "-l\\1")
+        if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            # libtool must be told explicitly that there is no dynamic linkage for uuid.
+            # The "-Wl,..." syntax is understood by libtool and gcc, but no by ld.
+            list(TRANSFORM all_libs_list REPLACE "^-luuid\$" "-Wl,-Bstatic,-luuid,-Bdynamic")
+        endif()
+    endif()
+    if(all_libs_list)
+        list(JOIN all_libs_list " " all_libs_string)
+        if(DEFINED ENV{LIBS})
+            set(ENV{LIBS} "$ENV{LIBS} ${all_libs_string}")
+        else()
+            set(ENV{LIBS} "${all_libs_string}")
+        endif()
+    endif()
+
+    set("${arg_LIBS_OUT}" "${all_libs_string}" PARENT_SCOPE)
+
+     # ==== /LIBS
+
+     if(VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_backup_env_variables(VARS _CL_ _LINK_)
+        # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
+        if(VCPKG_TARGET_IS_UWP)
+            # Be aware that configure thinks it is crosscompiling due to: 
+            # error while loading shared libraries: VCRUNTIME140D_APP.dll: 
+            # cannot open shared object file: No such file or directory
+            # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper 
+            # is to use the CL and LINK environment variables !!!
+            # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
+            file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" VCToolsInstallDir)
+            set(_replacement -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG "${VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE "${VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE}")
+            # Can somebody please check if CMake's compiler flags for UWP are correct?
+            set(ENV{_CL_} "$ENV{_CL_} -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
+            set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
+        endif()
+    endif()
+
+    ####
+    set(flags_opts "")
+    if(DEFINED arg_LANGUAGES)
+        set(flags_opts "LANGUAGES;${arg_LANGUAGES}")
+    endif()
+    if(arg_NO_CPP)
+        list(APPEND flags_opts NO_CPP)
+    endif()
+
+    if(NOT arg_NO_WRAPPERS)
+        list(APPEND flags_opts USES_WRAPPERS)
+    endif()
+
+    z_vcpkg_make_prepare_compile_flags(
+        CONFIG RELEASE
+        COMPILER_FRONTEND "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" 
+        ${flags_opts}
+    )
+    if(NOT DEFINED VCPKG_BUILD_TYPE)
+        list(APPEND all_buildtypes DEBUG)
+        z_vcpkg_make_prepare_compile_flags(
+            CONFIG DEBUG 
+            COMPILER_FRONTEND "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" 
+            ${flags_opts}
+        )
+    endif()
+
+    #list(FILTER z_vcm_all_flags INCLUDE REGEX " ") # TODO: Figure out where this warning belongs to. 
+    #if(z_vcm_all_flags)
+    #    list(REMOVE_DUPLICATES z_vcm_all_flags)
+    #    list(JOIN z_vcm_all_flags "\n   " flags)
+    #    message(STATUS "Warning: Arguments with embedded space may be handled incorrectly by configure:\n   ${flags}")
+    #endif()
+
     #TODO: parent scope requiered vars
-
+    cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER FILENAME cname)
+    set("${C_COMPILER_NAME}" "${cname}" PARENT_SCOPE) # needed by z_vcpkg_make_get_build_triplet
+    set("${arg_FRONTEND_VARIANT_OUT}" "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" PARENT_SCOPE)
 endfunction()
 
-function(z_vcpkg_make_prepare_environment_common)
-endfunction()
-
-function(vcpkg_make_default_path_parameters out_var)
+function(vcpkg_make_default_path_and_configure_options out_var)
     # THIS IS TODO
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "" 
-        "CONFIG"
+        "AUTOMAKE" 
+        "CONFIG;EXCLUDE_FILTER;INCLUDE_FILTER"
         ""
     )
+
+    set(opts "")
+    string(TOUPPER "${arg_CONFIG}" arg_CONFIG)
+
+    z_vcpkg_make_set_common_vars()
+
+    list(APPEND opts lt_cv_deplibs_check_method=pass_all)
+
+    # Pre-processing windows configure requirements
+    if (VCPKG_TARGET_IS_WINDOWS)
+        # Other maybe interesting variables to control
+        # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line. 
+        # LINK This is the command used to actually link a C program.
+        # CXXCOMPILE The command used to actually compile a C++ source file. The file name is appended to form the complete command line. 
+        # CXXLINK  The command used to actually link a C++ program. 
+
+        # Variables not correctly detected by configure. In release builds.
+        list(APPEND opts gl_cv_double_slash_root=yes
+                         ac_cv_func_memmove=yes
+            )
+
+        if(VCPKG_TARGET_ARCHITECTURE MATCHES "^[Aa][Rr][Mm]64$")
+            list(APPEND opts gl_cv_host_cpu_c_abi=no)
+        endif()
+    endif()
+
     # Set configure paths
-    vcpkg_list(APPEND arg_OPTIONS_RELEASE "--prefix=${current_installed_dir_msys}")
-    vcpkg_list(APPEND arg_OPTIONS_DEBUG "--prefix=${current_installed_dir_msys}${path_suffix_DEBUG}")
-    if(NOT arg_NO_ADDITIONAL_PATHS)
+    vcpkg_list(APPEND opts "--prefix=${current_installed_dir_msys}${path_suffix_${arg_CONFIG}}")
+
+    if(arg_CONFIG STREQUAL "RELEASE")
         # ${prefix} has an extra backslash to prevent early expansion when calling `bash -c configure "..."`.
-        vcpkg_list(APPEND arg_OPTIONS_RELEASE
+        vcpkg_list(APPEND opts
                             # Important: These should all be relative to prefix!
                             "--bindir=\\\${prefix}/tools/${PORT}/bin"
                             "--sbindir=\\\${prefix}/tools/${PORT}/sbin"
@@ -389,7 +521,8 @@ function(vcpkg_make_default_path_parameters out_var)
                             "--mandir=\\\${prefix}/share/${PORT}"
                             "--docdir=\\\${prefix}/share/${PORT}"
                             "--datarootdir=\\\${prefix}/share/${PORT}")
-        vcpkg_list(APPEND arg_OPTIONS_DEBUG
+    else()
+        vcpkg_list(APPEND opts
                             # Important: These should all be relative to prefix!
                             "--bindir=\\\${prefix}/../tools/${PORT}${path_suffix_DEBUG}/bin"
                             "--sbindir=\\\${prefix}/../tools/${PORT}${path_suffix_DEBUG}/sbin"
@@ -400,15 +533,25 @@ function(vcpkg_make_default_path_parameters out_var)
                             "--datarootdir=\\\${prefix}/share/${PORT}")
     endif()
     # Setup common options
-    if(NOT arg_DISABLE_VERBOSE_FLAGS)
-        list(APPEND arg_OPTIONS --disable-silent-rules --verbose)
+    if(NOT arg_AUTOMAKE)
+        vcpkg_list(APPEND opts --disable-silent-rules --verbose)
     endif()
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        list(APPEND arg_OPTIONS --enable-shared --disable-static)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_list(APPEND opts --enable-shared --disable-static)
     else()
-        list(APPEND arg_OPTIONS --disable-shared --enable-static)
+        vcpkg_list(APPEND opts --disable-shared --enable-static)
     endif()
+
+    if(DEFINED arg_EXCLUDE_FILTER)
+        list(FILTER opts EXCLUDE REGEX "${arg_EXCLUDE_FILTER}")
+    endif()
+
+    if(DEFINED arg_INCLUDE_FILTER)
+        list(FILTER opts INCLUDE REGEX "${arg_INCLUDE_FILTER}")
+    endif()
+
+    set("${out_var}" ${opts} PARENT_SCOPE)
 endfunction()
 
 
