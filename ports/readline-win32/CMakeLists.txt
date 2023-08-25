@@ -64,3 +64,10 @@ install(TARGETS readline
 install(EXPORT unofficial-readline-win32-config
     NAMESPACE unofficial::readline-win32::
     DESTINATION share/unofficial-readline-win32)
+
+Set(prefix "${CMAKE_INSTALL_PREFIX}")
+Set(exec_prefix "\${prefix}")
+Set(libdir "\${prefix}/lib")
+Set(includedir "\${prefix}/include")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/readline.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/readline.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/readline.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
