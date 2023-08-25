@@ -107,11 +107,11 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     # the bin directory ends up with bat files that are noise, let's clean that up
     file(GLOB BATS "${CURRENT_PACKAGES_DIR}/bin/*.bat")
     file(REMOVE_RECURSE ${BATS})
+
+    vcpkg_copy_tools(TOOL_NAMES ExpToCasExe AUTO_CLEAN)
 else()
     # remove scripts in bin dir
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-
-vcpkg_copy_tools(TOOL_NAMES ExpToCasExe AUTO_CLEAN)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt")
