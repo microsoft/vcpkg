@@ -16,16 +16,3 @@ index b672037..f9a6a15 100644
  message(STATUS "CMAKE_VS_PLATFORM_NAME=" ${CMAKE_VS_PLATFORM_NAME})
  string(COMPARE EQUAL "${CMAKE_VS_PLATFORM_NAME}" Win32 BUILD_ARC_X8632)
  string(COMPARE EQUAL "${CMAKE_VS_PLATFORM_NAME}" x64 BUILD_ARC_X8664)
-diff --git a/tools/shellcode-generator/CMakeLists.txt b/tools/shellcode-generator/CMakeLists.txt
-index 61131c7..dc704cb 100644
---- a/tools/shellcode-generator/CMakeLists.txt
-+++ b/tools/shellcode-generator/CMakeLists.txt
-@@ -42,7 +42,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
- 
- # install lib and header files
- install(TARGETS ${PROJECT_NAME}
--    RUNTIME DESTINATION tools
-+    RUNTIME DESTINATION bin
- )
- 
- if (BUILD_ARC_X8632)
