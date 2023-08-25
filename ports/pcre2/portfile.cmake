@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         pcre2-10.35_fix-uwp.patch
         no-static-suffix.patch
+        fix-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -40,26 +41,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
-file(READ "${CURRENT_PACKAGES_DIR}/include/pcre2.h" PCRE2_H)
-if(BUILD_STATIC)
-    string(REPLACE "defined(PCRE2_STATIC)" "1" PCRE2_H "${PCRE2_H}")
-else()
-    string(REPLACE "defined(PCRE2_STATIC)" "0" PCRE2_H "${PCRE2_H}")
-endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/pcre2.h" "${PCRE2_H}")
-
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-# The cmake file provided by pcre2 has some problems, so don't use it for now.
-#vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/cmake")
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/man")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/man"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/man"
+    "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(BUILD_STATIC)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
