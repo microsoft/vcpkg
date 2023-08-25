@@ -106,8 +106,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 
     # the bin directory ends up with bat files that are noise, let's clean that up
     file(GLOB BATS "${CURRENT_PACKAGES_DIR}/bin/*.bat")
-    file(GLOB EXE_FILES  "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-    file(REMOVE_RECURSE ${BATS} ${EXE_FILES})
+    file(REMOVE_RECURSE ${BATS})
 else()
     # remove scripts in bin dir
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
