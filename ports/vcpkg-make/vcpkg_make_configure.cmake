@@ -52,7 +52,7 @@ function(vcpkg_make_configure) #
         set(arg_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
     endif()
     if(NOT DEFINED arg_BUILD_TRIPLET AND NOT arg_NO_CONFIGURE_TRIPLET)
-        z_vcpkg_make_get_build_triplet(arg_BUILD_TRIPLET COMPILER_NAME ccname)
+        z_vcpkg_make_get_configure_triplets(arg_BUILD_TRIPLET COMPILER_NAME ccname)
     endif()
 
 

@@ -477,7 +477,7 @@ function(vcpkg_make_prepare_flags)
 
     #TODO: parent scope requiered vars
     cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER FILENAME cname)
-    set("${C_COMPILER_NAME}" "${cname}" PARENT_SCOPE) # needed by z_vcpkg_make_get_build_triplet
+    set("${C_COMPILER_NAME}" "${cname}" PARENT_SCOPE) # needed by z_vcpkg_make_get_configure_triplets
     set("${arg_FRONTEND_VARIANT_OUT}" "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" PARENT_SCOPE)
 endfunction()
 
