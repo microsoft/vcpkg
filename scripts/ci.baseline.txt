@@ -1267,12 +1267,6 @@ stxxl:x64-windows-static-md=skip
 systemc:arm64-windows=fail
 systemc:arm-uwp=fail
 systemc:x64-uwp=fail
-tcl:arm-neon-android=fail
-tcl:arm-uwp=fail
-tcl:arm64-android=fail
-tcl:arm64-windows=fail
-tcl:x64-android=fail
-tcl:x64-uwp=fail
 teemo:x64-android=fail
 
 # tensorflow does not support VS2022
