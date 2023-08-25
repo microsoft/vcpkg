@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 ec45b620338cf36a8dbdf7aaf54d7c3a49a1be4ae1a1ef95f1531094fec670870713969bbc23476769d374c7a71d93f6540ab64c46fb5f66f4402bb2d15c7d87
     HEAD_REF master
     PATCHES
-        fix_win32_dllname.pacth
+        fix_win32_dllname.pacth #https://github.com/glfw/glfw/pull/2386
 )
 
 if(VCPKG_TARGET_IS_LINUX)
