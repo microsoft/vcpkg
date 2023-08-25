@@ -1,7 +1,7 @@
 {
   "name": "wt",
   "version": "4.9.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Wt is a C++ library for developing web applications",
   "homepage": "https://github.com/emweb/wt",
   "license": "GPL-2.0-only",
@@ -35,17 +35,16 @@
     "boost-tuple",
     "boost-ublas",
     "boost-variant",
-    "glew",
+    {
+      "name": "glew",
+      "platform": "!(android | ios)"
+    },
     {
       "name": "harfbuzz",
       "platform": "!windows"
     },
     "libharu",
     "libpng",
-    {
-      "name": "pango",
-      "platform": "!windows"
-    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -66,7 +65,10 @@
     "graphicsmagick": {
       "description": "WRasterImage support on non-Windows based on GraphicsMagick",
       "dependencies": [
-        "graphicsmagick"
+        {
+          "name": "graphicsmagick",
+          "platform": "!(android | ios)"
+        }
       ]
     },
     "openssl": {
@@ -75,10 +77,22 @@
         "openssl"
       ]
     },
+    "pango": {
+      "description": "For improved font support in the WPdfImage and WRasterImage paint devices.",
+      "dependencies": [
+        {
+          "name": "pango",
+          "platform": "!windows"
+        }
+      ]
+    },
     "postgresql": {
       "description": "Wt::Dbo PostgreSQL backend",
       "dependencies": [
-        "libpq",
+        {
+          "name": "libpq",
+          "platform": "!(android | ios)"
+        },
         {
           "name": "wt",
           "features": [

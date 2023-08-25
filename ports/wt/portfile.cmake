@@ -8,6 +8,7 @@ vcpkg_from_github(
         0002-link-glew.patch
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
+        0007-android_c.patch          # https://github.com/emweb/wt/pull/206
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
@@ -21,17 +22,16 @@ vcpkg_check_features(
         sqlite3    ENABLE_SQLITE
         sqlserver  ENABLE_MSSQLSERVER
         openssl    ENABLE_SSL
+        pango      ENABLE_PANGO
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(WT_PLATFORM_SPECIFIC_OPTIONS
         -DWT_WRASTERIMAGE_IMPLEMENTATION=Direct2D
-        -DCONNECTOR_ISAPI=ON
-        -DENABLE_PANGO=OFF)
+        -DCONNECTOR_ISAPI=ON)
 else()
     set(WT_PLATFORM_SPECIFIC_OPTIONS
         -DCONNECTOR_FCGI=OFF
-        -DENABLE_PANGO=ON
         -DHARFBUZZ_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/harfbuzz)
 
     if ("graphicsmagick" IN_LIST FEATURES)
