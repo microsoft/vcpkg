@@ -48,8 +48,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencascade)
 
-vcpkg_copy_tools(TOOL_NAMES ExpToCasExe AUTO_CLEAN)
-
 #make occt includes relative to source_file
 list(APPEND ADDITIONAL_HEADERS 
       "ExprIntrp.tab.h"
@@ -108,11 +106,13 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 
     # the bin directory ends up with bat files that are noise, let's clean that up
     file(GLOB BATS "${CURRENT_PACKAGES_DIR}/bin/*.bat")
-    file(GLOB EXE_FILES  "${CURRENT_PACKAGES_DIR}/debug/bin/*.${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    file(GLOB EXE_FILES  "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
     file(REMOVE_RECURSE ${BATS} ${EXE_FILES})
 else()
     # remove scripts in bin dir
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
+
+vcpkg_copy_tools(TOOL_NAMES ExpToCasExe AUTO_CLEAN)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt")
