@@ -8,6 +8,7 @@ vcpkg_from_github(
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
+        Fix-quote-variable.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -81,6 +82,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Arrow=ON
         -DGDAL_USE_INTERNAL_LIBS=OFF
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON

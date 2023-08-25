@@ -33,7 +33,7 @@ vcpkg_add_to_path(${NASM_EXE_PATH})
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
-    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp")
 
     if(VCPKG_CRT_LINKAGE STREQUAL static)
         set(LIBVPX_CRT_LINKAGE --enable-static-msvcrt)
@@ -83,7 +83,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
 
     message(STATUS "Generating makefile")
-    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
+    file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp")
     vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc
@@ -92,47 +92,27 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             ${LIBVPX_CRT_LINKAGE}
             ${OPTIONS}
             --as=nasm
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp"
         LOGNAME configure-${TARGET_TRIPLET})
 
     message(STATUS "Generating MSBuild projects")
     vcpkg_execute_required_process(
         COMMAND
             ${BASH} --noprofile --norc -c "make dist"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp"
         LOGNAME generate-${TARGET_TRIPLET})
 
-    vcpkg_build_msbuild(
-        PROJECT_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx.vcxproj"
-        OPTIONS /p:UseEnv=True
+    vcpkg_msbuild_install(
+        SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp"
+        PROJECT_SUBPATH vpx.vcxproj
     )
 
-    # note: pdb file names are hardcoded in the lib file, cannot rename
-    set(LIBVPX_OUTPUT_PREFIX "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}")
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-        if (EXISTS "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.pdb")
-            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-        else()
-            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-        endif()
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-        if (EXISTS "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.pdb")
-            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-        else()
-            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-        endif()
-    endif()
-
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nopost-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
+        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nopost-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
     elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nopost-nomt-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
+        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nopost-nomt-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
     else()
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/vpx-vp8-vp9-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
+        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${LIBVPX_VERSION}/include/vpx")
     endif()
     file(
         INSTALL

@@ -1,0 +1,28 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 41a672e8..1311c856 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -182,7 +182,7 @@ target_include_directories(exiv2lib SYSTEM PRIVATE
+ )
+ 
+ if (EXIV2_ENABLE_XMP OR EXIV2_ENABLE_EXTERNAL_XMP)
+     target_include_directories(exiv2lib PRIVATE ${EXPAT_INCLUDE_DIR})
+-    target_link_libraries(exiv2lib PRIVATE EXPAT::EXPAT)
++    target_link_libraries(exiv2lib PRIVATE expat::expat)
+     list(APPEND requires_private_list "expat")
+ endif()
+ 
+ if (EXIV2_ENABLE_XMP)
+diff --git a/xmpsdk/CMakeLists.txt b/xmpsdk/CMakeLists.txt
+index 9c148a61..0fed7cde 100644
+--- a/xmpsdk/CMakeLists.txt
++++ b/xmpsdk/CMakeLists.txt
+@@ -28,7 +28,7 @@ add_library(exiv2-xmp OBJECT
+ 
+ target_link_libraries(exiv2-xmp
+     PRIVATE 
+-    EXPAT::EXPAT
++    expat::expat
+ )
+ 
+ target_include_directories(exiv2-xmp SYSTEM

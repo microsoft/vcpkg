@@ -1,7 +1,7 @@
 vcpkg_download_distfile(WINDOWS_SYMBOLS_PATCH
-    URLS https://github.com/ginkgo-project/ginkgo/commit/7481b2fffb51d73492ef9017045450b29b820f81.diff
+    URLS https://github.com/ginkgo-project/ginkgo/commit/7481b2fffb51d73492ef9017045450b29b820f81.diff?full_index=1
     FILENAME 7481b2fffb51d73492ef9017045450b29b820f81.diff
-    SHA512 f81c57aacc30680383ccfb21ca08987d8ea19a23c0c7bbc5ae590c3c7eca4eed72cea84410357e080e5bb35f08f6b57834b3cdace6d91cc3fde0a1930aa4270a
+    SHA512 f2997dc1af55db2a152092b70097238af77d7345329b9033a19301cfc4d8d494c5c41fbbd9a63b3303697764fc5f799dfe93647bafbbefae8981a978ecaa6a68
 )
 
 vcpkg_from_github(
