@@ -27,4 +27,4 @@ vcpkg_copy_tools(TOOL_NAMES mmloader-shellcode-generator AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License")
