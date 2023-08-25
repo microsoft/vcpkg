@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
-    REF bb368e271e24f63078129283148ce83db6b9670a #V7.6.2
-    SHA512 500c7ff804eb6b202bef48e1be904fe43a3c0137e9a402affe128b3b75a1adbb20bfe383cee82503b13efc083a95eb97425f1afb1f66bae38543d29f871a91f9
+    REF cec1ecd0c9f3b3d2572c47035d11949e8dfa85e2 #V7_7_2
+    SHA512 2fe98eadd7f9b922729bf80b56f260729d1c257c41392e4be4f070667ee77e94e2b286a873430b41ea61076acf1388aee7ba8b91789aa6199db56066796bb2d3
     HEAD_REF master
     PATCHES
         fix-pdb-find.patch
@@ -10,6 +10,7 @@ vcpkg_from_github(
         install-include-dir.patch
         fix-depend-freetype.patch
         fix-dependence.patch
+        fix-find-tbb.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -45,6 +46,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+vcpkg_copy_tools(TOOL_NAMES ExpToCasExe AUTO_CLEAN)
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencascade)
 
