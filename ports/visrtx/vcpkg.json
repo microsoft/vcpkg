@@ -1,0 +1,22 @@
+{
+  "name": "visrtx",
+  "version": "0.6.0",
+  "description": "Experimental, scientific visualization-focused implementation of the Khronos ANARI standard.",
+  "homepage": "https://github.com/NVIDIA/VisRTX",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "anari",
+    "cuda",
+    "glm",
+    "opengl",
+    "optix",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
