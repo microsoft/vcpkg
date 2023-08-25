@@ -19,7 +19,7 @@ set(HEADERS
   mztools.h
 )
 if(WIN32)
-  list(APPEND SRC iowin32.c)
+  list(APPEND SRC iowin32.c minizip-win32.def)
   list(APPEND HEADERS iowin32.h)
 endif()
 

@@ -4,9 +4,7 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/vcpkg-make-common.cmake")
 
 function(vcpkg_run_autoreconf bash_cmd work_dir)
 # TODO:
-# - Run autoreconf
-# - Deal with tools like autopoint etc.
-# does it make sense to parse configure.ac ?
+# Check: does it make sense to parse configure.ac ?
     find_program(AUTORECONF autoreconf) # find_file instead ? autoreconf is a perl script. 
     if(NOT AUTORECONF)
         message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
@@ -25,19 +23,25 @@ function(vcpkg_run_bash)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "" 
         "WORKING_DIRECTORY;LOGNAME"
-        "BASH;COMMAND"
+        "BASH;COMMAND;SAVE_LOG_FILES"
     )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
+    if(arg_SAVE_LOG_FILES)
+        set(extra_opts SAVE_LOG_FILES ${arg_SAVE_LOG_FILES})
+    endif()
     if (CMAKE_HOST_WIN32)
         vcpkg_execute_required_process(
             COMMAND ${arg_BASH} -c "${arg_COMMAND}"
             WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
             LOGNAME "${arg_LOGNAME}"
+            ${extra_opts}
         )
     else()
         vcpkg_execute_required_process(
             COMMAND ${arg_COMMAND}
             WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
             LOGNAME "${arg_LOGNAME}"
+            ${extra_opts}
         )
     endif()
 endfunction()
@@ -56,10 +60,7 @@ endfunction()
 function(vcpkg_make_get_shell out_var)
     set(bash_options "")
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        vcpkg_make_setup_win_msys("${arg_ADDITIONAL_MSYS_PACKAGES}")
-        if(arg_USE_WRAPPERS AND NOT arg_NO_WRAPPERS)
-            vcpkg_prepare_win_compile_wrappers(msys_root)
-        endif()
+        vcpkg_make_setup_win_msys(msys_root PACKAGES "${arg_ADDITIONAL_MSYS_PACKAGES}")
         set(bash_options --noprofile --norc --debug)
         set(bash_cmd "${msys_root}/usr/bin/bash.exe" CACHE STRING "")
     endif()
@@ -67,16 +68,51 @@ function(vcpkg_make_get_shell out_var)
     set("${out_var}" "{bash_cmd}" ${bash_options} PARENT_SCOPE)
 endfunction()
 
-function(vcpkg_prepare_compile_flags)
+function(vcpkg_prepare_pkgconfig config)
+    set(subdir "")
+    if(config MATCHES "(DEBUG|debug)")
+        set(subdir "/debug")
+    endif()
 
+    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
+        if(DEFINED ENV{${envvar}})
+            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}" "$ENV{${envvar}}")
+        else()
+            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}")
+        endif()
+    endforeach()
+
+    vcpkg_find_acquire_program(PKGCONFIG)
+    get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
+    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} 
+                            "${CURRENT_INSTALLED_DIR}/share/pkgconfig/"
+                            "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig/"
+                            "${CURRENT_PACKAGES_DIR}/share/pkgconfig/"
+                            "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig/"
+                        )
 endfunction()
 
-function(vcpkg_prepare_win_compile_wrappers)
+function(vcpkg_restore_pkgconfig)
+    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
+        z_vcpkg_get_global_property(has_backup "make-pkg-config-backup-${envvar}" SET)
+        if(has_backup)
+            z_vcpkg_get_global_property(backup "make-pkg-config-backup-${envvar}")
+            set("ENV{${envvar}}" "${backup}")
+            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}")
+        else()
+            unset("ENV{${envvar}}")
+        endif()
+    endforeach()
 endfunction()
-
-
 
 function(z_vcpkg_make_get_build_triplet out)
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        ""
+        "COMPILER_NAME"
+        ""
+    )
     # --build: the machine you are building on
     # --host: the machine you are building for
     # --target: the machine that CC will produce binaries for
@@ -85,190 +121,172 @@ function(z_vcpkg_make_get_build_triplet out)
     z_vcpkg_make_determine_target_arch(TARGET_ARCH)
     z_vcpkg_make_determine_host_arch(BUILD_ARCH)
 
-    set(build_opt "")
+    set(build_triplet_opt "")
     if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS)
         # This is required since we are running in a msys
         # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
-        set(build_opt "--build=${BUILD_ARCH}-pc-mingw32") 
+        set(build_triplet_opt "--build=${BUILD_ARCH}-pc-mingw32") 
     endif()
 
-    set(host_opt "")
+    set(host_triplet "")
     if(VCPKG_CROSSCOMPILING)
         if(VCPKG_TARGET_IS_WINDOWS)
             if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}" OR NOT CMAKE_HOST_WIN32)
-                set(host_opt "--host=${TARGET_ARCH}-pc-mingw32")
+                set(host_triplet_opt "--host=${TARGET_ARCH}-pc-mingw32")
             elseif(VCPKG_TARGET_IS_UWP)
                 # Needs to be different from --build to enable cross builds.
-                set(host_opt "--host=${TARGET_ARCH}-unknown-mingw32")
+                set(host_triplet_opt "--host=${TARGET_ARCH}-unknown-mingw32")
             endif()
         elseif(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX AND NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
-            set(host_opt "--host=${TARGET_ARCH}-apple-darwin")
+            set(host_triplet_opt "--host=${TARGET_ARCH}-apple-darwin")
         elseif(VCPKG_TARGET_IS_LINUX) 
-            # TODO: Use a different approach here
-            if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1)
-                set(host_opt "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+            if("${arg_COMPILER_NAME}" MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1)
+                set(host_triplet_opt "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
         endif()
     endif()
 
-    set(output "${build_opt} ${host_opt}")
+    set(output "${build_triplet_opt} ${host_triplet_opt}")
     string(STRIP "${output}" output)
     set("${out}" "${output}" PARENT_SCOPE)
 endfunction()
 
 function(vcpkg_make_prepare_env config)
-# TODO
-# - Setup the environment variables for make giving <config>
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "ADD_BIN_TO_PATH"
+        ""
+        ""
+    )
+    # Used by CL 
+    vcpkg_host_path_list(PREPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
+    # Used by GCC
+    vcpkg_host_path_list(PREPEND ENV{C_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
+    vcpkg_host_path_list(PREPEND ENV{CPLUS_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
+    
+    # Flags should be set in the toolchain instead (Setting this up correctly requires a function named vcpkg_determined_cmake_compiler_flags which can also be used to setup CC and CXX etc.)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_backup_env_variables(VARS _CL_ _LINK_)
+        # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
+        if(VCPKG_TARGET_IS_UWP)
+            # Be aware that configure thinks it is crosscompiling due to: 
+            # error while loading shared libraries: VCRUNTIME140D_APP.dll: 
+            # cannot open shared object file: No such file or directory
+            # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper 
+            # is to use the CL and LINK environment variables !!!
+            # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
+            file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" VCToolsInstallDir)
+            set(_replacement -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG "${VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE "${VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE}")
+            # Can somebody please check if CMake's compiler flags for UWP are correct?
+            set(ENV{_CL_} "$ENV{_CL_} -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
+            set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
+        endif()
+    endif()
+
+    # Setup environment
+    set(ENV{CPPFLAGS} "${CPPFLAGS_${config}}")
+    set(ENV{CPPFLAGS_FOR_BUILD} "${CPPFLAGS_${config}}")
+    set(ENV{CFLAGS} "${CFLAGS_${config}}")
+    set(ENV{CFLAGS_FOR_BUILD} "${CFLAGS_${config}}")
+    set(ENV{CXXFLAGS} "${CXXFLAGS_${config}}")
+    #set(ENV{CXXFLAGS_FOR_BUILD} "${CXXFLAGS_${current_buildtype}}") -> doesn't exist officially
+    set(ENV{RCFLAGS} "${RCFLAGS_${config}}")
+    set(ENV{LDFLAGS} "${LDFLAGS_${config}}")
+    set(ENV{LDFLAGS_FOR_BUILD} "${LDFLAGS_${config}}")
+    if(ARFLAGS_${config} AND NOT (arg_USE_WRAPPERS AND VCPKG_TARGET_IS_WINDOWS))
+        # Target windows with wrappers enabled cannot forward ARFLAGS since it breaks the wrapper
+        set(ENV{ARFLAGS} "${ARFLAGS_${config}}")
+    endif()
+
+    # VCPKG_ABIFLAGS isn't standard, but can be useful to reinject these flags into other variables
+    #set(ENV{VCPKG_ABIFLAGS} "${ABIFLAGS_${config}}") # Needs another way.
+    if(ABIFLAGS_${config})
+        # libtool removes some flags which are needed for configure tests.
+        set(ENV{CC} "$ENV{CC} ${ABIFLAGS_${config}}")
+        set(ENV{CXX} "$ENV{CXX} ${ABIFLAGS_${config}}")
+        set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} ${ABIFLAGS_${config}}")
+        set(ENV{CXX_FOR_BUILD} "$ENV{CXX_FOR_BUILD} ${ABIFLAGS_${config}}")
+    endif()
+
+    if(LINK_ENV_${config})
+        set(ENV{_LINK_} "${LINK_ENV_${config}}")
+    endif()
+
+    if(arg_ADD_BIN_TO_PATH AND NOT VCPKG_CROSSCOMPILING)
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${path_suffix}/bin")
+    endif()
+
+    vcpkg_list(APPEND lib_env_vars LIB LIBPATH LIBRARY_PATH) # LD_LIBRARY_PATH)
+    foreach(lib_env_var IN LISTS lib_env_vars)
+        if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib")
+            vcpkg_host_path_list(PREPEND ENV{${lib_env_var}} "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib")
+        endif()
+        if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib/manual-link")
+            vcpkg_host_path_list(PREPEND ENV{${lib_env_var}} "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/lib/manual-link")
+        endif()
+    endforeach()
 endfunction()
 
 function(vcpkg_make_restore_env)
-
-endfunction()
-
-function(vcpkg_make_default_configure_options config)
-endfunction()
-
-function(vcpkg_copy_source config)
-endfunction()
-
-function(vcpkg_make_run_configure config)
-    cmake_parse_arguments(PARSE_ARGV 0 arg
-        "COPY_SOURCE" 
-        "BASH;SOURCE_PATH;CONFIGURE_SUBPATH"
-        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
-    )
-    vcpkg_prepare_pkgconfig("${config}")
-    vcpkg_make_prepare_env("${config}")
-    vcpkg_run_bash() # TODO: Add options. 
-    vcpkg_make_restore_env()
-    vcpkg_restore_pkgconfig()
-endfunction()
-
-function(vcpkg_make_configure) #
-# Replacement for vcpkg_configure_make
-# z_vcpkg_is_autoconf
-# z_vcpkg_is_automake
-    # Old signature
-    #cmake_parse_arguments(PARSE_ARGV 0 arg
-    #"AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;NO_DEBUG;USE_WRAPPERS;NO_WRAPPERS;DETERMINE_BUILD_TRIPLET"
-    #"SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
-    #"OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
-    #)
-
-
-    cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;COPY_SOURCE;;NO_WRAPPERS;NO_CPP;NO_CONFIGURE_TRIPLET"
-        "SOURCE_PATH;CONFIGURE_SUBPATH;BUILD_TRIPLET"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES;RUN_SCRIPTS"
-    )
-
-    z_vcpkg_unparsed_args(FATAL_ERROR)
-    #z_vcpkg_conflicting_args(arg_USE_WRAPPERS arg_NO_WRAPPERS)
-    z_vcpkg_conflicting_args(arg_BUILD_TRIPLET arg_NO_CONFIGURE_TRIPLET)
-
-    if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
-        set(arg_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
-    endif()
-    if(NOT DEFINED arg_BUILD_TRIPLET AND NOT arg_NO_CONFIGURE_TRIPLET)
-        z_vcpkg_make_get_build_triplet(arg_BUILD_TRIPLET) # <- Needs to know the compiler
-    endif()
-
-    # Can be set in the triplet to append options for configure
-    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS)
-        list(APPEND arg_OPTIONS ${VCPKG_MAKE_CONFIGURE_OPTIONS})
-    endif()
-    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE)
-        list(APPEND arg_OPTIONS_RELEASE ${VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE})
-    endif()
-    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG)
-        list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG})
-    endif()
-
-    set(src_dir "${arg_SOURCE_PATH}/${arg_CONFIGURE_SUBPATH}")
-
-    z_vcpkg_warn_path_with_spaces()
-
-    if(arg_USE_WRAPPERS AND VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
-        # Lets assume that wrappers are only required for MSVC like frontends.
-        vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/wrappers")
-    endif()
-
-    vcpkg_make_get_shell(shell_cmd)
-
-    if(arg_AUTOCONFIG)
-        vcpkg_run_autoreconf("${shell_cmd}" "${src_dir}")
-    endif()
-
-    if(arg_RUN_SCRIPTS)
-        message(STATUS "Running scripts for ${TARGET_TRIPLET} ${arg_RUN_SCRIPT}")
-        set(run_index 0)
-        foreach(script IN LISTS arg_RUN_SCRIPTS)
-            message(STATUS "Running script:'${script}'")
-            vcpkg_run_bash(
-                BASH "${shell_cmd}"
-                COMMAND "${script}"
-                WORKING_DIRECTORY "${src_dir}"
-                LOGNAME "run-script-${run_index}-${TARGET_TRIPLET}"
-            )
-            math(EXPR run_index "${run_index}+1")
-        endforeach()
-        message(STATUS "Finished running scripts for ${TARGET_TRIPLET}")
-    endif()
-
-    # Backup environment variables
-    # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
-    set(cm_FLAGS AR AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
-    list(TRANSFORM cm_FLAGS APPEND "FLAGS")
-    vcpkg_backup_env_variables(VARS 
-        ${cm_FLAGS}
-    # Used by gcc/linux
-        C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH
-    # Used by cl
-        INCLUDE LIB LIBPATH _CL_ _LINK_
-    )
-    z_vcpkg_make_set_common_vars()
-    z_vcpkg_make_prepare_compiler_flags()
-    z_vcpkg_make_prepare_environment_common()
-
-    set(build_configs RELEASE)
-    if(NOT VCPKG_BUILD_TYPE)
-        list(PREPEND build_configs DEBUG)
-    endif()
-
-    foreach(config IN LISTS build_configs)
-        set(target_dir "${work_dir_${config_up}}")
-        file(REMOVE_RECURSE "${target_dir}")
-        file(MAKE_DIRECTORY "${target_dir}")
-        file(RELATIVE_PATH relative_build_path "${target_dir}" "${src_dir}")
-        if(arg_COPY_SOURCE)
-            file(COPY "${src_dir}/" DESTINATION "${target_dir}")
-            set(relative_build_path ".")
-        endif()
-        vcpkg_make_run_configure("${config}")
-    endforeach()
-
-    # Restore environment
+    # Only variables which are inspected in vcpkg_make_prepare_env need to be restored here.
+    # Rest is restored add the end of configure. 
+    # TODO: check how vcpkg_restore_env_variables actually works!
     vcpkg_restore_env_variables(VARS 
-        ${cm_FLAGS} 
-        C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH
-        INCLUDE LIB LIBPATH _CL_ _LINK_
+         LIBRARY_PATH LIB LIBPATH
+         PATH
     )
-
 endfunction()
 
-function(vcpkg_make_install)
-# Replacement for vcpkg_(install|build)_make
-# Needs to know if vcpkg_make_configure is a autoconf project
-
-    # old signature
+function(vcpkg_make_run_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL"
-        "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET"
+        "ADD_BIN_TO_PATH" 
+        "CONFIG;BASH;WORKING_DIRECTORY;CONFIGURE_PATH"
         "OPTIONS"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
+    vcpkg_prepare_pkgconfig("${arg_CONFIG}")
+
+    set(prepare_env_opts "")
+    if(arg_ADD_BIN_TO_PATH)
+        set(prepare_env_opts ADD_BIN_TO_PATH)
+    endif()
+    vcpkg_make_prepare_env("${arg_CONFIG}" ${prepare_env_opts})
+
+    vcpkg_list(SET tmp)
+    foreach(element IN LISTS arg_OPTIONS)
+        string(REPLACE [["]] [[\"]] element "${element}")
+        vcpkg_list(APPEND tmp "\"${element}\"")
+    endforeach()
+    vcpkg_list(JOIN tmp " " "arg_OPTIONS")
+
+    set(command "${configure_env} ${arg_CONFIGURE_PATH} ${arg_CONFIGURE_PATH} ${arg_OPTIONS}")
+
+    message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}")
+    vcpkg_run_bash(
+        WORKING_DIRECTORY "{arg_WORKING_DIRECTORY}"
+        LOGNAME "config-${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}"
+        SAVE_LOG_FILES config.log
+        BASH "${arg_BASH}"
+        COMMAND "V=1 ${command}"
+    )
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        file(GLOB_RECURSE libtool_files "${arg_WORKING_DIRECTORY}*/libtool")
+        foreach(lt_file IN LISTS libtool_files)
+            file(READ "${lt_file}" _contents)
+            string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
+            file(WRITE "${lt_file}" "${_contents}")
+        endforeach()
+    endif()
+    #message(STATUS "Finished: Configuring ${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}")
+
+    vcpkg_make_restore_env()
+    vcpkg_restore_pkgconfig()
 endfunction()
+
 
 # Make config dependent injections possible via cmake_language(CALL)
 # z_vcpkg_make_prepare_<CONFIG>_commands
