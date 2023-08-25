@@ -2962,7 +2962,7 @@
     },
     "gobject-introspection": {
       "baseline": "1.72.0",
-      "port-version": 5
+      "port-version": 6
     },
     "google-cloud-cpp": {
       "baseline": "2.14.0",
@@ -6018,7 +6018,7 @@
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 5
+      "port-version": 6
     },
     "opendnp3": {
       "baseline": "3.1.1",
