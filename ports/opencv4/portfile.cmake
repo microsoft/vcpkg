@@ -71,6 +71,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "nonfree"   OPENCV_ENABLE_NONFREE
  "openexr"   WITH_OPENEXR
  "opengl"    WITH_OPENGL
+ "ovis"      CMAKE_REQUIRE_FIND_PACKAGE_OGRE
  "png"       WITH_PNG
  "quirc"     WITH_QUIRC
  "sfm"       BUILD_opencv_sfm
@@ -183,6 +184,7 @@ if("contrib" IN_LIST FEATURES)
       0007-fix-hdf5.patch
       0016-fix-freetype-contrib.patch
       0018-fix-depend-tesseract.patch
+      0019-fix-ogre-dependency.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 

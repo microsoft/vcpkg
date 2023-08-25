@@ -23,6 +23,7 @@
       "name": "gobject-introspection",
       "host": true
     },
+    "libffi",
     "python3",
     {
       "name": "vcpkg-tool-meson",

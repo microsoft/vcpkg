@@ -5009,8 +5009,8 @@
       "port-version": 2
     },
     "live555": {
-      "baseline": "2023-06-20",
-      "port-version": 1
+      "baseline": "2023-07-24",
+      "port-version": 0
     },
     "llfio": {
       "baseline": "2023-03-13",
@@ -5026,7 +5026,7 @@
     },
     "llvm": {
       "baseline": "15.0.7",
-      "port-version": 3
+      "port-version": 4
     },
     "lmdb": {
       "baseline": "0.9.29",
@@ -5397,8 +5397,8 @@
       "port-version": 0
     },
     "minizip": {
-      "baseline": "1.2.13",
-      "port-version": 4
+      "baseline": "1.3",
+      "port-version": 0
     },
     "minizip-ng": {
       "baseline": "4.0.0",
@@ -6614,7 +6614,7 @@
     },
     "python3": {
       "baseline": "3.11.4",
-      "port-version": 3
+      "port-version": 4
     },
     "qca": {
       "baseline": "2.3.5",
@@ -9065,8 +9065,8 @@
       "port-version": 4
     },
     "zlib": {
-      "baseline": "1.2.13",
-      "port-version": 1
+      "baseline": "1.3",
+      "port-version": 0
     },
     "zlib-ng": {
       "baseline": "2.0.7",
