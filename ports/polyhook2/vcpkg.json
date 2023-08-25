@@ -13,7 +13,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zydis"
   ],
   "default-features": [
     "detours",
@@ -27,8 +28,7 @@
       "description": "Implement detour functionality",
       "dependencies": [
         "asmjit",
-        "asmtk",
-        "zydis"
+        "asmtk"
       ]
     },
     "exception": {

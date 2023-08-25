@@ -1,6 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.8.0",
+  "port-version": 5,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -102,6 +103,12 @@
     "dnn": {
       "description": "Enable dnn module",
       "dependencies": [
+        "flatbuffers",
+        {
+          "name": "flatbuffers",
+          "host": true,
+          "default-features": false
+        },
         "protobuf"
       ]
     },
