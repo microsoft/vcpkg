@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1bacca1a..ad3a390d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -731,7 +731,7 @@ endif()
+ if (NOT DEFINED ANDROID AND CAN_USE_TBB)
+   if (USE_TBB)
+     add_definitions (-DHAVE_TBB)
+-    OCCT_INCLUDE_CMAKE_FILE ("adm/cmake/tbb")
++    find_package(TBB CONFIG REQUIRED)
+   else()
+     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_TBB")
+     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_TBBMALLOC")
+@@ -875,6 +875,14 @@ if (3RDPARTY_LIBRARY_DIRS)
+   list (REMOVE_DUPLICATES 3RDPARTY_LIBRARY_DIRS)
+   string (REGEX REPLACE ";" "\n\t" 3RDPARTY_LIBRARY_DIRS_WITH_ENDS "${3RDPARTY_LIBRARY_DIRS}")
+   message (STATUS "Info: The directories of 3rdparty libraries: \n\t${3RDPARTY_LIBRARY_DIRS_WITH_ENDS}")
++
++  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++     get_filename_component(LIB_BASE_PATH ${3RDPARTY_LIBRARY_DIRS} DIRECTORY)
++     list(APPEND 3RDPARTY_LIBRARY_DIRS_DEBUG "${LIB_BASE_PATH}/debug/lib")
++     message (STATUS "Info: The directories of 3rdparty libraries: \n\t${3RDPARTY_LIBRARY_DIRS_DEBUG}")
++     link_directories (${3RDPARTY_LIBRARY_DIRS} ${3RDPARTY_LIBRARY_DIRS_DEBUG})
++  endif()
++
+   link_directories (${3RDPARTY_LIBRARY_DIRS})
+ endif()
+ 
+diff --git a/adm/cmake/occt_csf.cmake b/adm/cmake/occt_csf.cmake
+index bee8ba78..692f6232 100644
+--- a/adm/cmake/occt_csf.cmake
++++ b/adm/cmake/occt_csf.cmake
+@@ -12,7 +12,7 @@ endif()
+ 
+ # TBB
+ if (USE_TBB)
+-  set (CSF_TBB "tbb tbbmalloc")
++  set (CSF_TBB "tbb12 tbbmalloc")
+ else()
+   set (CSF_TBB)
+ endif()
