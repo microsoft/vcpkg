@@ -9,14 +9,14 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 
 install(
   TARGETS ${PROJECT_NAME} 
-  EXPORT unofficial-${PROJECT_NAME}-target
+  EXPORT ${PROJECT_NAME}-target
 )
 install(
   DIRECTORY include/ 
   DESTINATION include
 )
 install(
-  EXPORT unofficial-${PROJECT_NAME}-target 
+  EXPORT ${PROJECT_NAME}-target 
   NAMESPACE unofficial::${PROJECT_NAME}:: 
   FILE unofficial-${PROJECT_NAME}-config.cmake
   DESTINATION share/unofficial-${PROJECT_NAME}
