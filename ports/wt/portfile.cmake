@@ -9,6 +9,9 @@ vcpkg_from_github(
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
         0007-android_c.patch          # https://github.com/emweb/wt/pull/206
+        0008-fixed-reserve.diff       # https://github.com/emweb/wt/pull/206
+        0009-fix-memory-leak.diff     # https://github.com/emweb/wt/pull/206
+        
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
