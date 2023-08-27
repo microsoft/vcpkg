@@ -507,6 +507,7 @@ function(vcpkg_make_default_path_and_configure_options out_var)
         # Variables not correctly detected by configure. In release builds.
         list(APPEND opts gl_cv_double_slash_root=yes
                          ac_cv_func_memmove=yes
+                         ac_cv_func_memset=yes
             )
 
         if(VCPKG_TARGET_ARCHITECTURE MATCHES "^[Aa][Rr][Mm]64$")

@@ -14,7 +14,7 @@ function(vcpkg_make_configure) #
 
 
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;COPY_SOURCE;NO_WRAPPERS;NO_CPP;NO_CONFIGURE_TRIPLET;ADD_BIN_TO_PATH"
+        "AUTOCONFIG;COPY_SOURCE;NO_WRAPPERS;NO_CPP;NO_CONFIGURE_TRIPLET;ADD_BIN_TO_PATH;NO_CONFIGURE_CACHE"
         "SOURCE_PATH;CONFIGURE_SUBPATH;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;POST_CONFIGURE_CMAKE_COMMANDS;ADDITIONAL_MSYS_PACKAGES;RUN_SCRIPTS"
     )
@@ -110,6 +110,10 @@ function(vcpkg_make_configure) #
 
         set(opts "")
         vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${config}") # TODO: figure out outmake
+        set(opts_cache "")
+        if(NOT arg_NO_CONFIGURE_CACHE)
+            vcpkg_make_prepare_configure_cache(opts_cache CONFIG "${config}" WORKING_DIRECTORY "${target_dir}")
+        endif()
         vcpkg_list(APPEND arg_OPTIONS ${opts})
 
         set(configure_path_from_wd "./${relative_build_path}/configure")
@@ -124,6 +128,7 @@ function(vcpkg_make_configure) #
                                  CONFIGURE_PATH
                                     "${configure_path_from_wd}"
                                  OPTIONS 
+                                    ${opts_cache}
                                     ${arg_BUILD_TRIPLET}
                                     ${arg_OPTIONS} 
                                     ${arg_OPTIONS_${config_up}}

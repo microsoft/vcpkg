@@ -287,7 +287,33 @@ function(vcpkg_make_run_configure)
     vcpkg_restore_pkgconfig()
 endfunction()
 
+function(vcpkg_make_prepare_configure_cache out_opt)
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "" 
+        "WORKING_DIRECTORY;CONFIG"
+        ""
+    )
+    set(configure_cache "")
+    set(current_buildtype "${arg_CONFIG}")
 
+    if(NOT arg_NO_CONFIGURE_CACHE)
+        set(cache_file "${arg_WORKING_DIRECTORY}/${TARGET_TRIPLET}-${suffix_${current_buildtype}}.cache")
+        if(DEFINED VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype} AND NOT "${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}" STREQUAL "")
+            if(NOT EXISTS "${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}")
+                message(FATAL_ERROR "VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}:'${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}' needs to be a valid and exisiting file path!")
+            endif()
+            file(COPY_FILE  "${VCPKG_MAKE_CONFIGURE_CACHE_${current_buildtype}}" "${cache_file}")
+            set(configure_cache "--cache-file='${cache_file}'")
+        elseif(DEFINED VCPKG_MAKE_CONFIGURE_CACHE AND NOT "${VCPKG_MAKE_CONFIGURE_CACHE}" STREQUAL "")
+            if(NOT EXISTS "${VCPKG_MAKE_CONFIGURE_CACHE}")
+                message(FATAL_ERROR "VCPKG_MAKE_CONFIGURE_CACHE:'${VCPKG_MAKE_CONFIGURE_CACHE}' needs to be a valid and exisiting file path!")
+            endif()
+            file(COPY_FILE  "${VCPKG_MAKE_CONFIGURE_CACHE}" "${cache_file}")
+            set(configure_cache "--cache-file='${cache_file}'")
+        endif()
+    endif()
+    set("${out_opt}" "${configure_cache}")
+endfunction()
 # Make config dependent injections possible via cmake_language(CALL)
 # z_vcpkg_make_prepare_<CONFIG>_commands
 # z_vcpkg_make_restore_commands
