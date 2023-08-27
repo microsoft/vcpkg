@@ -25,7 +25,7 @@ jobs:
       - uses: actions/stale@v6
         with:
           stale-issue-message: "This is an automated message. Per our repo policy, stale issues get closed if there has been no activity in the past 180 days. The issue will be automatically closed in 14 days. If you wish to keep this issue open, please add a new comment."
-          exempt-issue-labels: 'no-stale'
+          exempt-issue-labels: 'no-stale,category:new-port,category:question,requires:repro,requires:more-information'
           days-before-issue-stale: 180
           days-before-pr-stale: -1
           days-before-close: 14
