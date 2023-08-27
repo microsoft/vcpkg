@@ -58,7 +58,7 @@ vcpkg 团队和贡献者可以在这里看到它，
 - [Visual Studio][getting-started:visual-studio] 2015 Update 3 或更新的版本（**包含英文语言包**）
 
 首先，**请使用 `git clone vcpkg`** 并执行 bootstrap.bat 脚本。
-您可以将 vcpkg 安装在任何地方，但是通常我们建议您使用 vcpkg 作为 CMake 项目的子模块，并将其全局安装到 Visual Studio 项目中。
+您可以将 vcpkg 安装在任何地方，但是通常我们建议您使用 vcpkg 作为 CMake 项目的子模块。你也可以将它安装到全局，
 我们建议您使用例如 `C:\src\vcpkg` 或 `C:\dev\vcpkg` 的安装目录，否则您可能遇到某些库构建系统的路径问题。
 
 ```cmd
