@@ -2608,6 +2608,10 @@
       "baseline": "2.3.3",
       "port-version": 0
     },
+    "flux": {
+      "baseline": "2023-08-25",
+      "port-version": 0
+    },
     "fmem": {
       "baseline": "c-libs-2ccee3d2fb",
       "port-version": 3
