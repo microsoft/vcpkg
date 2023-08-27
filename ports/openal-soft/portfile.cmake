@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       c12ada68951ea67a59bef7d4fcdf22334990c12a.patch # Merged upstream, remove in next version
+      fix-cmake-deprecated-warning.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
