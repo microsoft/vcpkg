@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         make_list_cpu_features_optional.patch
-        windows-x86-fix.patch
+        fix-windows.patch
 )
 
 # If feature "tools" is not specified, disable building/exporting executable targets.
