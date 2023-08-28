@@ -1,7 +1,7 @@
 {
   "name": "libzip",
   "version": "1.9.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A library for reading, creating, and modifying zip archives.",
   "homepage": "https://github.com/nih-at/libzip",
   "license": "BSD-3-Clause",

@@ -13,18 +13,16 @@ vcpkg_from_github(
 )
 
 # Build:
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") # UWP:
-    vcpkg_install_msbuild(
+if (VCPKG_TARGET_IS_UWP) # UWP:
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "3FD/3FD.WinRT.UWP.vcxproj"
-        USE_VCPKG_INTEGRATION
     )
-elseif (NOT VCPKG_CMAKE_SYSTEM_NAME) # Win32:
-    vcpkg_install_msbuild(
+elseif (VCPKG_TARGET_IS_WINDOWS) # Win32:
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "3FD/3FD.vcxproj"
         TARGET Build
-        USE_VCPKG_INTEGRATION
     )
 else()
     message(FATAL_ERROR "Unsupported system: 3FD is not currently ported to VCPKG in ${VCPKG_CMAKE_SYSTEM_NAME}!")
@@ -34,24 +32,24 @@ endif()
 file(GLOB HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/3FD/*.h")
 file(INSTALL
     ${HEADER_FILES}
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/3FD
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/3FD"
     PATTERN "*_impl*.h" EXCLUDE
     PATTERN "*example*.h" EXCLUDE
     PATTERN "stdafx.h" EXCLUDE
     PATTERN "targetver.h" EXCLUDE
 )
 
-file(INSTALL ${SOURCE_PATH}/btree  DESTINATION ${CURRENT_PACKAGES_DIR}/include/3FD)
-file(INSTALL ${SOURCE_PATH}/OpenCL/CL DESTINATION ${CURRENT_PACKAGES_DIR}/include/3FD)
+file(INSTALL "${SOURCE_PATH}/btree"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/3FD")
+file(INSTALL "${SOURCE_PATH}/OpenCL/CL" DESTINATION "${CURRENT_PACKAGES_DIR}/include/3FD")
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/3FD)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/3FD")
 file(INSTALL
-    ${SOURCE_PATH}/3FD/3fd-config-template.xml
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/3FD
+    "${SOURCE_PATH}/3FD/3fd-config-template.xml"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/3FD"
 )
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/3fd RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/Acknowledgements.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/3fd)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${SOURCE_PATH}/Acknowledgements.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/3fd")
 
 vcpkg_copy_pdbs()

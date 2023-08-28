@@ -1,6 +1,7 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.13.0",
+  "version": "2.14.0",
+  "port-version": 1,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -295,6 +296,18 @@
         }
       ]
     },
+    "commerce": {
+      "description": "Cloud Commerce C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "composer": {
       "description": "Cloud Composer C++ Client Library",
       "dependencies": [
@@ -534,6 +547,20 @@
             "grpc-common"
           ]
         }
+      ]
+    },
+    "experimental-opentelemetry": {
+      "description": "OpenTelemetry C++ GCP Exporter Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "rest-common",
+            "trace"
+          ]
+        },
+        "opentelemetry-cpp"
       ]
     },
     "experimental-storage-grpc": {
@@ -984,6 +1011,18 @@
         }
       ]
     },
+    "rest-common": {
+      "description": "Dependencies used by all REST-based libraries",
+      "dependencies": [
+        {
+          "name": "curl",
+          "features": [
+            "ssl"
+          ]
+        },
+        "nlohmann-json"
+      ]
+    },
     "retail": {
       "description": "Retail API C++ Client Library",
       "dependencies": [
@@ -1133,12 +1172,12 @@
       "dependencies": [
         "crc32c",
         {
-          "name": "curl",
+          "name": "google-cloud-cpp",
+          "default-features": false,
           "features": [
-            "ssl"
+            "rest-common"
           ]
-        },
-        "nlohmann-json"
+        }
       ]
     },
     "storageinsights": {
