@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO g-truc/glm
-    REF bf71a834948186f4097caa076cd2663c69a10e1e #v0.9.9.8
-    SHA512 226266c02af616a96fb19ee32cf3f98347daa43a4fde5d618d36b38709dce1280de126c542524d40725ecf70359edcc5b60660554c65ce246514501fb4c9c87c
+    REF 5c46b9c07008ae65cb81ab79cd677ecc1934b903 # commit on 2023-06-08
+    SHA512 17315dd05059accf3d4084d35dd037d4001f88a1d91da9a6fd5cedecab652c8bef8efa89cd45e21cd227f964a03408401edc2384c22e50caa449abf71b23fd6a
     HEAD_REF master
 )
 
@@ -19,5 +19,5 @@ vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-# Put the license file where vcpkg expects it
-file(INSTALL "${SOURCE_PATH}/copying.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/copying.txt")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
