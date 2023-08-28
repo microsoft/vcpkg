@@ -1,0 +1,13 @@
+diff --git a/libs/helide/external/embree/CMakeLists.txt b/libs/helide/external/embree/CMakeLists.txt
+index 8bc9d00..14a0c34 100644
+--- a/libs/helide/external/embree/CMakeLists.txt
++++ b/libs/helide/external/embree/CMakeLists.txt
+@@ -30,7 +30,7 @@ set(EMBREE_TASKING_SYSTEM "INTERNAL" CACHE STRING "" FORCE)
+ anari_sdk_fetch_project(
+   NAME anari_helide_embree
+   URL "https://github.com/embree/embree/archive/refs/tags/v3.13.5.zip"
+-  MD5 d87ce56557a38e332cb3e0fa5cac8cfd
++  MD5 5df9e14b67612bc17bbca6b285471258
+   ADD_SUBDIR
+ )
+ 

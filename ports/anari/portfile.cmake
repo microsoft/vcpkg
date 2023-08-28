@@ -4,6 +4,7 @@ vcpkg_from_github(
   REF "v${VERSION}"
   SHA512 51937d160a9508c56cf123eda13002c705acff501366710f83da1c62d875f8427cec27f10ea2d05f4637be141fb9a87935f4b0b9f0fabb6bd6a7cca6a4f48ee1
   HEAD_REF main
+  PATCHES fix-hash.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
