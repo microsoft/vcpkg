@@ -9,9 +9,12 @@ function(vcpkg_run_bash)
         "BASH;COMMAND;SAVE_LOG_FILES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
+    z_vcpkg_required_args(BASH WORKINK_DIRECTORY COMMAND LOGNAME)
+
     if(arg_SAVE_LOG_FILES)
         set(extra_opts SAVE_LOG_FILES ${arg_SAVE_LOG_FILES})
     endif()
+
     if (CMAKE_HOST_WIN32)
         vcpkg_execute_required_process(
             COMMAND ${arg_BASH} -c "${arg_COMMAND}"
@@ -32,14 +35,14 @@ endfunction()
 function(vcpkg_run_autoreconf bash_cmd work_dir)
 # TODO:
 # Check: does it make sense to parse configure.ac ?
-    find_program(AUTORECONF autoreconf) # find_file instead ? autoreconf is a perl script. 
+    find_program(AUTORECONF NAMES autoreconf) # find_file instead ? autoreconf is a perl script.
     if(NOT AUTORECONF)
         message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
     endif()
     message(STATUS "Generating configure for ${TARGET_TRIPLET}")
     vcpkg_run_bash(
-        BASH "${bash_cmd}"
-        COMMAND "autoreconf -vfi"
+        BASH ${bash_cmd}
+        COMMAND "${AUTORECONF} -vfi"
         WORKING_DIRECTORY "${work_dir}"
         LOGNAME "autoconf-${TARGET_TRIPLET}"
     )
@@ -47,7 +50,7 @@ function(vcpkg_run_autoreconf bash_cmd work_dir)
 endfunction()
 
 function(vcpkg_make_setup_win_msys msys_out)
-    cmake_parse_arguments(PARSE_ARGV 0 arg
+    cmake_parse_arguments(PARSE_ARGV 1 arg
         "" 
         ""
         "PACKAGES"
@@ -59,14 +62,19 @@ function(vcpkg_make_setup_win_msys msys_out)
 endfunction()
 
 function(vcpkg_make_get_shell out_var)
+    cmake_parse_arguments(PARSE_ARGV 1 arg
+        "" 
+        ""
+        "ADDITIONAL_PACKAGES"
+    )
     set(bash_options "")
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        vcpkg_make_setup_win_msys(msys_root PACKAGES "${arg_ADDITIONAL_MSYS_PACKAGES}")
+        vcpkg_make_setup_win_msys(msys_root PACKAGES "${arg_ADDITIONAL_PACKAGES}")
         set(bash_options --noprofile --norc --debug)
         set(bash_cmd "${msys_root}/usr/bin/bash.exe" CACHE STRING "")
     endif()
     find_program(bash_cmd NAMES bash sh REQUIRED)
-    set("${out_var}" "{bash_cmd}" ${bash_options} PARENT_SCOPE)
+    set("${out_var}" "${bash_cmd}" ${bash_options} PARENT_SCOPE)
 endfunction()
 
 function(vcpkg_prepare_pkgconfig config)
@@ -84,7 +92,7 @@ function(vcpkg_prepare_pkgconfig config)
         if(DEFINED ENV{${envvar}})
             z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}" "$ENV{${envvar}}")
         else()
-            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}")
+            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}" "")
         endif()
     endforeach()
 
@@ -113,8 +121,8 @@ function(vcpkg_restore_pkgconfig)
     endforeach()
 endfunction()
 
-function(z_vcpkg_make_get_build_triplet out)
-    cmake_parse_arguments(PARSE_ARGV 0 arg
+function(z_vcpkg_make_get_configure_triplets out)
+    cmake_parse_arguments(PARSE_ARGV 1 arg
         ""
         "COMPILER_NAME"
         ""
@@ -159,7 +167,7 @@ function(z_vcpkg_make_get_build_triplet out)
 endfunction()
 
 function(vcpkg_make_prepare_env config)
-    cmake_parse_arguments(PARSE_ARGV 0 arg
+    cmake_parse_arguments(PARSE_ARGV 1 arg
         "ADD_BIN_TO_PATH"
         ""
         ""
@@ -255,6 +263,7 @@ function(vcpkg_make_run_configure)
         "OPTIONS"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
+    z_vcpkg_required_args(BASH CONFIG WORKING_DIRECTORY CONFIGURE_PATH)
 
     vcpkg_prepare_pkgconfig("${arg_CONFIG}")
 
@@ -276,10 +285,10 @@ function(vcpkg_make_run_configure)
 
     message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}")
     vcpkg_run_bash(
-        WORKING_DIRECTORY "{arg_WORKING_DIRECTORY}"
+        WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
         LOGNAME "config-${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}"
         SAVE_LOG_FILES config.log
-        BASH "${arg_BASH}"
+        BASH ${arg_BASH}
         COMMAND "V=1 ${command}"
     )
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -297,7 +306,7 @@ function(vcpkg_make_run_configure)
 endfunction()
 
 function(vcpkg_make_prepare_configure_cache out_opt)
-    cmake_parse_arguments(PARSE_ARGV 0 arg
+    cmake_parse_arguments(PARSE_ARGV 1 arg
         "" 
         "WORKING_DIRECTORY;CONFIG"
         ""

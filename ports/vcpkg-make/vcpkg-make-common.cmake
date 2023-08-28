@@ -3,9 +3,9 @@ include_guard(GLOBAL)
 macro(z_vcpkg_append_to_configure_environment inoutlist var defaultval)
     # Allows to overwrite settings in custom triplets via the environment on windows
     if(CMAKE_HOST_WIN32 AND DEFINED ENV{${var}})
-        list(APPEND "${inoutstring}" " ${var}='$ENV{${var}}'")
+        list(APPEND "${inoutlist}" "${var}='$ENV{${var}}'")
     else()
-        list(APPEND "${inoutstring}" " ${var}='${defaultval}'")
+        list(APPEND "${inoutlist}" "${var}='${defaultval}'")
     endif()
 endmacro()
 
@@ -20,7 +20,7 @@ macro(z_vcpkg_make_set_common_vars)
     endforeach()
     set(buildtypes release)
     if(NOT VCPKG_BUILD_TYPE)
-        list(APPEND buildtypes)
+        list(APPEND buildtypes debug)
     endif()
 endmacro()
 
@@ -39,9 +39,9 @@ endmacro()
 
 ####
 function(z_vcpkg_make_determine_arch out_var value)
-    if(${value} MATCHES "(amd|AMD)64")
+    if(${value} MATCHES "^(amd|AMD|x)64$")
         set(${out_var} x86_64 PARENT_SCOPE)
-    elseif(${value} MATCHES "(x|X)86")
+    elseif(${value} MATCHES "^(x|X)86$")
         set(${out_var} i686 PARENT_SCOPE)
     elseif(${value} MATCHES "^(ARM|arm)64$")
         set(${out_var} aarch64 PARENT_SCOPE)
@@ -99,7 +99,11 @@ function(z_vcpkg_make_prepare_compile_flags)
     # separate_aruments is needed to remove outer quotes from detected cmake variables.
     # (e.g. Android NDK has "--sysroot=...")
     foreach(lang IN LISTS arg_LANGUAGES)
-        separate_arguments(${lang}FLAGS NATIVE_COMMAND "${VCPKG_COMBINED_${lang}_FLAGS_${var_suffix}}")
+        if(NOT "${VCPKG_COMBINED_${lang}_FLAGS_${var_suffix}}" STREQUAL "")
+            separate_arguments(${lang}FLAGS NATIVE_COMMAND "${VCPKG_COMBINED_${lang}_FLAGS_${var_suffix}}")
+        else()
+            set(${lang}FLAGS "")
+        endif()
         vcpkg_list(APPEND flags ${lang}FLAGS)
     endforeach()
     separate_arguments(LDFLAGS NATIVE_COMMAND "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${var_suffix}}")
@@ -234,7 +238,7 @@ function(z_vcpkg_make_prepare_compile_flags)
 endfunction()
 
 function(z_vcpkg_make_prepare_programs out_env)
-    cmake_parse_arguments(PARSE_ARGV 0 arg
+    cmake_parse_arguments(PARSE_ARGV 1 arg
         "NO_CPP;NO_WRAPPERS" 
         ""
         "LANGUAGES"
@@ -242,6 +246,7 @@ function(z_vcpkg_make_prepare_programs out_env)
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
     z_vcpkg_make_get_cmake_vars()
+    set(configure_env "")
 
     # Remove full filepaths due to spaces and prepend filepaths to PATH (cross-compiling tools are unlikely on path by default)
     if (VCPKG_TARGET_IS_WINDOWS)
@@ -354,7 +359,7 @@ function(z_vcpkg_make_prepare_programs out_env)
                 set(ccas "${CLANG} ${asmflags}")
             endif() 
             z_vcpkg_append_to_configure_environment(configure_env CCAS "${ccas}")
-            z_vcpkg_append_to_configure_environment(configure_env AS "{ccas}")
+            z_vcpkg_append_to_configure_environment(configure_env AS "${ccas}")
         endif()
 
         #foreach(_env IN LISTS arg_CONFIGURE_ENVIRONMENT_VARIABLES)
@@ -408,6 +413,7 @@ function(z_vcpkg_make_prepare_programs out_env)
             message(STATUS "Warning: Tools with embedded space may be handled incorrectly by configure:\n   ${tools}")
         endif()
     endif()
+    list(JOIN configure_env " " configure_env)
     set("${out_env}" "${configure_env}" PARENT_SCOPE)
 endfunction()
 
@@ -423,7 +429,7 @@ function(vcpkg_make_prepare_flags) # Hmm change name?
         # What a nice trick to get more output from vcpkg_cmake_get_vars if required
         # But what will it return for ASM on windows? TODO: Needs actual testing
         # list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=C\;CXX\;ASM") ASM compiler will point to CL with MSVC
-        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${arg_LANGUAGES};-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=\"${arg_LANGUAGES}\";-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
     endif()
 
     z_vcpkg_make_get_cmake_vars()
@@ -534,7 +540,7 @@ endfunction()
 
 function(vcpkg_make_default_path_and_configure_options out_var)
     # THIS IS TODO
-    cmake_parse_arguments(PARSE_ARGV 0 arg
+    cmake_parse_arguments(PARSE_ARGV 1 arg
         "AUTOMAKE" 
         "CONFIG;EXCLUDE_FILTER;INCLUDE_FILTER"
         ""
@@ -648,15 +654,23 @@ macro(z_vcpkg_conflicting_args)
     unset(z_vcpkg_conflicting_args_index)
 endmacro()
 
+macro(z_vcpkg_required_args arg)
+    foreach(arg IN ITEMS ${ARGN})
+        if(NOT DEFINED arg_${arg})
+            message("FATAL_ERROR" "${CMAKE_CURRENT_FUNCTION} requires argument: ${arg}")
+        endif()
+    endforeach()
+endmacro()
+
 function(z_vcpkg_set_global_property property value)
-    if(DEFINED ARGN AND NOT ARGN MATCHES "^APPEND(_STRING)?$")
+    if(NOT ARGN STREQUAL "" AND NOT ARGN MATCHES "^APPEND(_STRING)?$")
         message(FATAL_ERROR "'${CMAKE_CURRENT_FUNCTION}' called with invalid arguments '${ARGN}'")
     endif()
     set_property(GLOBAL ${ARGN} PROPERTY "z_vcpkg_global_property_${property}" ${value})
 endfunction()
 
 function(z_vcpkg_get_global_property outvar property)
-    if(DEFINED ARGN AND NOT ARGN STREQUAL "SET")
+    if(NOT ARGN STREQUAL "" AND NOT ARGN STREQUAL "SET")
         message(FATAL_ERROR "'${CMAKE_CURRENT_FUNCTION}' called with invalid arguments '${ARGN}'")
     endif()
     get_property(outprop GLOBAL PROPERTY "z_vcpkg_global_property_${property}" ${ARGN})
@@ -720,13 +734,13 @@ function(vcpkg_insert_into_path)
 endfunction()
 
 function(vcpkg_insert_msys_into_path msys_out)
-    cmake_parse_arguments(PARSE_ARGV 0 arg
+    cmake_parse_arguments(PARSE_ARGV 1 arg
         "" 
         "PATH_OUT"
         "PACKAGES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${arg_ADDITIONAL_PACKAGES})
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${arg_PACKAGES})
     cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
     cmake_path(CONVERT "$ENV{LOCALAPPDATA}" TO_CMAKE_PATH_LIST local_app_data NORMALIZE)
     file(REAL_PATH "${system_root}" system_root)

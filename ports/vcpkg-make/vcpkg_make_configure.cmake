@@ -51,12 +51,12 @@ function(vcpkg_make_configure) #
         z_vcpkg_make_get_configure_triplets(arg_BUILD_TRIPLET COMPILER_NAME ccname)
     endif()
 
-    if(arg_USE_WRAPPERS AND NOT arg_NO_WRAPPERS AND "${frontend}" STREQUAL "MSVC" )
+    if(NOT arg_NO_WRAPPERS AND "${frontend}" STREQUAL "MSVC" )
         # Lets assume that wrappers are only required for MSVC like frontends.
         vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/wrappers")
     endif()
 
-    vcpkg_make_get_shell(shell_cmd)
+    vcpkg_make_get_shell(shell_cmd ADDITIONAL_PACKAGES ${arg_ADDITIONAL_MSYS_PACKAGES})
 
     if(arg_AUTOCONFIG)
         vcpkg_run_autoreconf("${shell_cmd}" "${src_dir}")
@@ -96,7 +96,8 @@ function(vcpkg_make_configure) #
     z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts})
 
     foreach(config IN LISTS buildtypes)
-        set(target_dir "${work_dir_${config_up}}")
+        string(TOUPPER "${config}" configup)
+        set(target_dir "${workdir_${configup}}")
         file(REMOVE_RECURSE "${target_dir}")
         file(MAKE_DIRECTORY "${target_dir}")
         file(RELATIVE_PATH relative_build_path "${target_dir}" "${src_dir}")
@@ -106,10 +107,10 @@ function(vcpkg_make_configure) #
         endif()
 
         set(opts "")
-        vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${config}") # TODO: figure out outmake
+        vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}") # TODO: figure out outmake
         set(opts_cache "")
         if(NOT arg_NO_CONFIGURE_CACHE)
-            vcpkg_make_prepare_configure_cache(opts_cache CONFIG "${config}" WORKING_DIRECTORY "${target_dir}")
+            vcpkg_make_prepare_configure_cache(opts_cache CONFIG "${configup}" WORKING_DIRECTORY "${target_dir}")
         endif()
         vcpkg_list(APPEND arg_OPTIONS ${opts})
 
@@ -118,10 +119,12 @@ function(vcpkg_make_configure) #
             set(extra_configure_opts ADD_BIN_TO_PATH)
         endif()
         foreach(cmd IN LISTS arg_PRE_CONFIGURE_CMAKE_COMMANDS)
-            cmake_language(CALL ${cmd} ${config})
+            cmake_language(CALL ${cmd} ${configup})
         endforeach()
-        vcpkg_make_run_configure(CONFIG  #configure_env
-                                    "${config}"
+        vcpkg_make_run_configure(BASH 
+                                    "${shell_cmd}"
+                                 CONFIG  #configure_env
+                                    "${configup}"
                                  CONFIGURE_ENV
                                     "${configure_env}"
                                  CONFIGURE_PATH
@@ -130,13 +133,13 @@ function(vcpkg_make_configure) #
                                     ${opts_cache}
                                     ${arg_BUILD_TRIPLET}
                                     ${arg_OPTIONS} 
-                                    ${arg_OPTIONS_${config_up}}
+                                    ${arg_OPTIONS_${configup}}
                                  WORKING_DIRECTORY 
                                     "${target_dir}" 
                                  ${extra_configure_opts}
                                 )
         foreach(cmd IN LISTS arg_POST_CONFIGURE_CMAKE_COMMANDS)
-            cmake_language(CALL ${cmd} ${config})
+            cmake_language(CALL ${cmd} ${configup})
         endforeach()
     endforeach()
 
