@@ -80,7 +80,7 @@ endfunction()
 function(z_vcpkg_make_prepare_compile_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "NO_CPP;NO_FLAG_ESCAPING;USES_WRAPPERS" 
-        "COMPILER_FRONTEND;CONFIG"
+        "COMPILER_FRONTEND;CONFIG;FLAGS_OUT"
         "LANGUAGES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
@@ -192,8 +192,8 @@ function(z_vcpkg_make_prepare_compile_flags)
         set(compiler_flag_escape "-Xcompiler") # TODO: Check why this had a trailing space? We are using lists so it shouldn't be necessary here
     endif()
     if(compiler_flag_escape)
-        list(TRANSFORM CFLAGS PREPEND "${compiler_flag_escape}")
-        list(TRANSFORM CXXFLAGS PREPEND "${compiler_flag_escape}")
+        list(TRANSFORM CFLAGS PREPEND "${compiler_flag_escape};")
+        list(TRANSFORM CXXFLAGS PREPEND "${compiler_flag_escape};")
     endif()
 
     set(library_path_flag "${VCPKG_DETECTED_CMAKE_LIBRARY_PATH_FLAG}")
@@ -233,8 +233,10 @@ function(z_vcpkg_make_prepare_compile_flags)
 
     foreach(var IN LISTS flags)
         list(JOIN ${var} " " string)
-        set(${var}_${var_suffix} "${string}" PARENT_SCOPE)
+        set("${var}_${var_suffix}" "${string}" PARENT_SCOPE)
+        list(APPEND flags_out "${var}_${var_suffix}")
     endforeach()
+    set("${arg_FLAGS_OUT}" "${flags_out}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_make_prepare_programs out_env)
@@ -342,11 +344,11 @@ function(z_vcpkg_make_prepare_programs out_env)
             set(ccas "${VCPKG_DETECTED_CMAKE_ASM_COMPILER}")
             if(VCPKG_DETECTED_CMAKE_ASM_COMPILER_ID STREQUAL "MSVC")
                 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-                    set(asmflags " --target=i686-pc-windows-msvc -m32")
+                    set(asmflags "--target=i686-pc-windows-msvc -m32")
                 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-                    set(asmflags " --target=x86_64-pc-windows-msvc")
+                    set(asmflags "--target=x86_64-pc-windows-msvc")
                 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-                    set(asmflags " --target=arm64-pc-windows-msvc")
+                    set(asmflags "--target=arm64-pc-windows-msvc")
                 endif()
                 vcpkg_find_acquire_program(CLANG)
                 set(ccas "${CLANG}")
@@ -358,8 +360,8 @@ function(z_vcpkg_make_prepare_programs out_env)
                 endif()
                 set(ccas "${CLANG} ${asmflags}")
             endif() 
-            z_vcpkg_append_to_configure_environment(configure_env CCAS "${ccas}")
-            z_vcpkg_append_to_configure_environment(configure_env AS "${ccas}")
+            z_vcpkg_append_to_configure_environment(configure_env CCAS "${ccas} -c")
+            z_vcpkg_append_to_configure_environment(configure_env AS "${ccas} -c")
         endif()
 
         #foreach(_env IN LISTS arg_CONFIGURE_ENVIRONMENT_VARIABLES)
@@ -429,7 +431,9 @@ function(vcpkg_make_prepare_flags) # Hmm change name?
         # What a nice trick to get more output from vcpkg_cmake_get_vars if required
         # But what will it return for ASM on windows? TODO: Needs actual testing
         # list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=C\;CXX\;ASM") ASM compiler will point to CL with MSVC
-        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=\"${arg_LANGUAGES}\";-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
+        string(REPLACE ";" "\;" langs "${arg_LANGUAGES}")
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${langs};-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
+        unset(langs)
     endif()
 
     z_vcpkg_make_get_cmake_vars()
@@ -514,6 +518,7 @@ function(vcpkg_make_prepare_flags) # Hmm change name?
     z_vcpkg_make_prepare_compile_flags(
         CONFIG RELEASE
         COMPILER_FRONTEND "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" 
+        FLAGS_OUT release_flags_list
         ${flags_opts}
     )
     if(NOT DEFINED VCPKG_BUILD_TYPE)
@@ -521,10 +526,14 @@ function(vcpkg_make_prepare_flags) # Hmm change name?
         z_vcpkg_make_prepare_compile_flags(
             CONFIG DEBUG 
             COMPILER_FRONTEND "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" 
+            FLAGS_OUT debug_flags_list
             ${flags_opts}
         )
     endif()
 
+    foreach(flag IN LISTS release_flags_list debug_flags_list)
+        set("${flag}" "${${flag}}" PARENT_SCOPE)
+    endforeach()
     #list(FILTER z_vcm_all_flags INCLUDE REGEX " ") # TODO: Figure out where this warning belongs to. 
     #if(z_vcm_all_flags)
     #    list(REMOVE_DUPLICATES z_vcm_all_flags)

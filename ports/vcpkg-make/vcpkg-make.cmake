@@ -283,6 +283,8 @@ function(vcpkg_make_run_configure)
     set(command "${arg_CONFIGURE_ENV} ${arg_CONFIGURE_PATH} ${arg_OPTIONS}")
     string(STRIP "${command}" command)
 
+    message(STATUS "ENV{CFLAGS}:$ENV{CFLAGS}")
+
     message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}")
     vcpkg_run_bash(
         WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
