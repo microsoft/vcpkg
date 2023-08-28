@@ -1,7 +1,7 @@
 {
   "name": "libmicrodns",
   "version": "0.2.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Minimal mDNS resolver (and announcer) library",
   "homepage": "https://github.com/videolabs/libmicrodns",
   "license": "LGPL-2.1-or-later",
