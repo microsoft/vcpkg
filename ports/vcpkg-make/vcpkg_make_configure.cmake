@@ -5,22 +5,13 @@ function(vcpkg_make_configure) #
 # Replacement for vcpkg_configure_make
 # z_vcpkg_is_autoconf
 # z_vcpkg_is_automake
-    # Old signature
-    #cmake_parse_arguments(PARSE_ARGV 0 arg
-    #"AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;NO_DEBUG;USE_WRAPPERS;NO_WRAPPERS;DETERMINE_BUILD_TRIPLET"
-    #"SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
-    #"OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
-    #)
-
-
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "AUTOCONFIG;COPY_SOURCE;NO_WRAPPERS;NO_CPP;NO_CONFIGURE_TRIPLET;ADD_BIN_TO_PATH;NO_CONFIGURE_CACHE"
         "SOURCE_PATH;CONFIGURE_SUBPATH;BUILD_TRIPLET"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;POST_CONFIGURE_CMAKE_COMMANDS;ADDITIONAL_MSYS_PACKAGES;RUN_SCRIPTS"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;POST_CONFIGURE_CMAKE_COMMANDS;ADDITIONAL_MSYS_PACKAGES;RUN_SCRIPTS;LANGUAGES"
     )
 
     z_vcpkg_unparsed_args(FATAL_ERROR)
-    #z_vcpkg_conflicting_args(arg_USE_WRAPPERS arg_NO_WRAPPERS)
     z_vcpkg_conflicting_args(arg_BUILD_TRIPLET arg_NO_CONFIGURE_TRIPLET)
 
     # Can be set in the triplet to append options for configure
@@ -40,10 +31,15 @@ function(vcpkg_make_configure) #
 
     set(prepare_flags_opts "")
     if(arg_NO_WRAPPERS)
-        set(prepare_flags_opts "NO_WRAPPERS")
+        list(APPEND prepare_flags_opts "NO_WRAPPERS")
+    else()
+        
     endif()
     if(arg_NO_CPP)
         list(APPEND prepare_flags_opts "NO_CPP")
+    endif()
+    if(DEFINED arg_LANGUAGES)
+        list(APPEND prepare_flags_opts "LANGUAGES" "${arg_LANGUAGES}")
     endif()
     z_vcpkg_set_global_property(make_prepare_flags_opts "${prepare_flags_opts}")
     vcpkg_make_prepare_flags(${prepare_flags_opts} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
@@ -54,7 +50,6 @@ function(vcpkg_make_configure) #
     if(NOT DEFINED arg_BUILD_TRIPLET AND NOT arg_NO_CONFIGURE_TRIPLET)
         z_vcpkg_make_get_configure_triplets(arg_BUILD_TRIPLET COMPILER_NAME ccname)
     endif()
-
 
     if(arg_USE_WRAPPERS AND NOT arg_NO_WRAPPERS AND "${frontend}" STREQUAL "MSVC" )
         # Lets assume that wrappers are only required for MSVC like frontends.
@@ -98,6 +93,8 @@ function(vcpkg_make_configure) #
     )
     z_vcpkg_make_set_common_vars()
 
+    z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts})
+
     foreach(config IN LISTS buildtypes)
         set(target_dir "${work_dir_${config_up}}")
         file(REMOVE_RECURSE "${target_dir}")
@@ -123,8 +120,10 @@ function(vcpkg_make_configure) #
         foreach(cmd IN LISTS arg_PRE_CONFIGURE_CMAKE_COMMANDS)
             cmake_language(CALL ${cmd} ${config})
         endforeach()
-        vcpkg_make_run_configure(CONFIG 
-                                    "${config}" 
+        vcpkg_make_run_configure(CONFIG  #configure_env
+                                    "${config}"
+                                 CONFIGURE_ENV
+                                    "${configure_env}"
                                  CONFIGURE_PATH
                                     "${configure_path_from_wd}"
                                  OPTIONS 
@@ -153,5 +152,4 @@ function(vcpkg_make_configure) #
     #    find_program(Z_VCPKG_MAKE make PATHS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
     #endif()
     find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
-
 endfunction()

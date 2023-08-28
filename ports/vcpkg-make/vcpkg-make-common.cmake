@@ -24,6 +24,19 @@ macro(z_vcpkg_make_set_common_vars)
     endif()
 endmacro()
 
+
+###
+macro(z_vcpkg_make_get_cmake_vars)
+    z_vcpkg_get_global_property(has_cmake_vars_file "make_cmake_vars_file" SET)
+    if(NOT has_cmake_vars_file)
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        z_vcpkg_set_global_property(make_cmake_vars_file "${cmake_vars_file}")
+    else()
+        z_vcpkg_get_global_property(cmake_vars_file "make_cmake_vars_file")
+    endif()
+    include("${cmake_vars_file}")
+endmacro()
+
 ####
 function(z_vcpkg_make_determine_arch out_var value)
     if(${value} MATCHES "(amd|AMD)64")
@@ -71,22 +84,32 @@ function(z_vcpkg_make_prepare_compile_flags)
         "LANGUAGES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
-    # TODO: Deal with LANGUAGES
+
+    if(NOT DEFINED arg_LANGUAGES)
+        set(arg_LANGUAGES "C;CXX")
+    endif()
+
     # TODO: Check params
 
     set(var_suffix "${arg_CONFIG}")
 
+    set(CFLAGS "")
+    set(CXXFLAGS "")
+
     # separate_aruments is needed to remove outer quotes from detected cmake variables.
     # (e.g. Android NDK has "--sysroot=...")
-    separate_arguments(CFLAGS NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_C_FLAGS_${var_suffix}}")
-    separate_arguments(CXXFLAGS NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${var_suffix}}")
-    separate_arguments(LDFLAGS NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
-    separate_arguments(ARFLAGS NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
-    set(RCFLAGS "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${var_suffix}}")
+    foreach(lang IN LISTS arg_LANGUAGES)
+        separate_arguments(${lang}FLAGS NATIVE_COMMAND "${VCPKG_COMBINED_${lang}_FLAGS_${var_suffix}}")
+        vcpkg_list(APPEND flags ${lang}FLAGS)
+    endforeach()
+    separate_arguments(LDFLAGS NATIVE_COMMAND "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${var_suffix}}")
+    separate_arguments(ARFLAGS NATIVE_COMMAND "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${var_suffix}}")
+    set(RCFLAGS "${VCPKG_COMBINED_RC_FLAGS_${var_suffix}}")
 
-    foreach(var IN ITEMS CFLAGS CXXFLAGS LDFLAGS ARFLAGS RCFLAGS)
+    foreach(var IN ITEMS LDFLAGS ARFLAGS RCFLAGS)
         vcpkg_list(APPEND flags ${${var}})
     endforeach()
+
 
     set(abiflags "")
     set(pattern "")
@@ -101,7 +124,7 @@ function(z_vcpkg_make_prepare_compile_flags)
         else()
             continue()
         endif()
-        vcpkg_list(APPEND abiflags ${pattern})
+        #vcpkg_list(APPEND ABIFLAGS ${pattern})
         list(REMOVE_ITEM CFLAGS "${pattern}")
         list(REMOVE_ITEM CXXFLAGS "${pattern}")
         list(REMOVE_ITEM LDFLAGS "${pattern}")
@@ -180,9 +203,9 @@ function(z_vcpkg_make_prepare_compile_flags)
             set(linker_flag_escape "-Xlinker -Xlinker -Xlinker ")
         endif()
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-            string(STRIP "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}" LINK_ENV)
+            string(STRIP "$ENV{_LINK_} ${VCPKG_COMBINED_STATIC_LINKER_FLAGS_${var_suffix}}" LINK_ENV)
         else()
-            string(STRIP "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}" LINK_ENV)
+            string(STRIP "$ENV{_LINK_} ${VCPKG_COMBINED_SHARED_LINKER_FLAGS_${var_suffix}}" LINK_ENV)
         endif()
     endif()
     if(linker_flag_escape)
@@ -204,15 +227,22 @@ function(z_vcpkg_make_prepare_compile_flags)
         vcpkg_list(PREPEND ARFLAGS "cr")
     endif()
 
-    foreach(var IN ITEMS ABIFLAGS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS ARFLAGS RCFLAGS)
+    foreach(var IN LISTS flags)
         list(JOIN ${var} " " string)
         set(${var}_${var_suffix} "${string}" PARENT_SCOPE)
     endforeach()
-
-    # TODO Forward required vars;
 endfunction()
 
-function(z_vcpkg_make_prepare_program_flags)
+function(z_vcpkg_make_prepare_programs out_env)
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "NO_CPP;NO_WRAPPERS" 
+        ""
+        "LANGUAGES"
+    )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
+
+    z_vcpkg_make_get_cmake_vars()
+
     # Remove full filepaths due to spaces and prepend filepaths to PATH (cross-compiling tools are unlikely on path by default)
     if (VCPKG_TARGET_IS_WINDOWS)
         # TODO More languages ?
@@ -220,20 +250,16 @@ function(z_vcpkg_make_prepare_program_flags)
                     LINKER RANLIB OBJDUMP
                     STRIP NM DLLTOOL RC_COMPILER)
         list(TRANSFORM progs PREPEND "VCPKG_DETECTED_CMAKE_")
-        ### TODO: This should be its own function
         foreach(prog IN LISTS progs)
             set(filepath "${${prog}}")
-            if(filepath MATCHES " ")
+            if(filepath MATCHES " ") 
+                # CHECK: Uncertain if the compile wrappers work with absolute paths containing C:\\ 
                 cmake_path(GET filepath FILENAME ${prog})
-                find_program(z_vcm_prog_found NAMES "${${prog}}" PATHS ENV PATH NO_DEFAULT_PATH NO_CACHE)
-                if(NOT z_vcm_prog_found STREQUAL filepath)
-                    cmake_path(GET filepath PARENT_PATH dir)
-                    vcpkg_add_to_path(PREPEND "${dir}")
-                endif()
+                vcpkg_insert_program_into_path("${filepath}")
             endif()
         endforeach()
         ### 
-        if (arg_USE_WRAPPERS)
+        if (NOT arg_NO_WRAPPERS)
             z_vcpkg_append_to_configure_environment(configure_env CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env CXX "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")        
@@ -303,12 +329,37 @@ function(z_vcpkg_make_prepare_program_flags)
         else()
             z_vcpkg_append_to_configure_environment(configure_env DLLTOOL "link.exe -verbose -dll")
         endif()
-        z_vcpkg_append_to_configure_environment(configure_env CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
-        z_vcpkg_append_to_configure_environment(configure_env AS ":")   # If required set the ENV variable AS in the portfile correctly
 
-        foreach(_env IN LISTS arg_CONFIGURE_ENVIRONMENT_VARIABLES)
-            z_vcpkg_append_to_configure_environment(configure_env ${_env} "${${_env}}")
-        endforeach()
+        if(NOT "ASM" IN_LIST arg_LANGUAGES )
+            z_vcpkg_append_to_configure_environment(configure_env CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
+            z_vcpkg_append_to_configure_environment(configure_env AS ":")   # If required set the ENV variable AS in the portfile correctly
+        else()
+            set(ccas "${VCPKG_DETECTED_CMAKE_ASM_COMPILER}")
+            if(VCPKG_DETECTED_CMAKE_ASM_COMPILER_ID STREQUAL "MSVC")
+                if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+                    set(asmflags " --target=i686-pc-windows-msvc -m32")
+                elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+                    set(asmflags " --target=x86_64-pc-windows-msvc")
+                elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+                    set(asmflags " --target=arm64-pc-windows-msvc")
+                endif()
+                vcpkg_find_acquire_program(CLANG)
+                set(ccas "${CLANG}")
+                if(ccas MATCHES " ")
+                    cmake_path(GET ccas PARENT_PATH ccas_dir)
+                    cmake_path(GET ccas FILENAME ccas_filename)
+                    vcpkg_insert_program_into_path("${ccas_dir}")
+                    set(ccas "${ccas_filename}")
+                endif()
+                set(ccas "${CLANG} ${asmflags}")
+            endif() 
+            z_vcpkg_append_to_configure_environment(configure_env CCAS "${ccas}")
+            z_vcpkg_append_to_configure_environment(configure_env AS "{ccas}")
+        endif()
+
+        #foreach(_env IN LISTS arg_CONFIGURE_ENVIRONMENT_VARIABLES)
+        #    z_vcpkg_append_to_configure_environment(configure_env ${_env} "${${_env}}")
+        #endforeach()
     else()
         # OSX dosn't like CMAKE_C(XX)_COMPILER (cc) in CC/CXX and rather wants to have gcc/g++
         vcpkg_list(SET z_vcm_all_tools)
@@ -335,6 +386,10 @@ function(z_vcpkg_make_prepare_program_flags)
             set(ENV{CPP_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
             set(ENV{CXX_FOR_BUILD} "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
         endif()
+        if("ASM" IN_LIST arg_LANGUAGES )
+            z_vcpkg_make_set_env(CCAS ASM_COMPILER)
+            z_vcpkg_make_set_env(AS ASM_COMPILER)
+        endif()
         z_vcpkg_make_set_env(NM NM)
         z_vcpkg_make_set_env(RC RC)
         z_vcpkg_make_set_env(WINDRES RC)
@@ -353,14 +408,17 @@ function(z_vcpkg_make_prepare_program_flags)
             message(STATUS "Warning: Tools with embedded space may be handled incorrectly by configure:\n   ${tools}")
         endif()
     endif()
+    set("${out_env}" "${configure_env}" PARENT_SCOPE)
 endfunction()
 
-function(vcpkg_make_prepare_flags)
+function(vcpkg_make_prepare_flags) # Hmm change name?
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "NO_CPP;NO_WRAPPERS" 
         "LIBS_OUT;FRONTEND_VARIANT_OUT;C_COMPILER_NAME"
         "LANGUAGES"
     )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
+
     if(DEFINED arg_LANGUAGES)
         # What a nice trick to get more output from vcpkg_cmake_get_vars if required
         # But what will it return for ASM on windows? TODO: Needs actual testing
@@ -368,14 +426,7 @@ function(vcpkg_make_prepare_flags)
         list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${arg_LANGUAGES};-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
     endif()
 
-    z_vcpkg_get_global_property(has_cmake_vars_file "make_cmake_vars_file" SET)
-    if(NOT has_cmake_vars_file)
-        vcpkg_cmake_get_vars(cmake_vars_file)
-        z_vcpkg_set_global_property(make_cmake_vars_file "${cmake_vars_file}")
-    else()
-        z_vcpkg_get_global_property(cmake_vars_file "make_cmake_vars_file")
-    endif()
-    include("${cmake_vars_file}")
+    z_vcpkg_make_get_cmake_vars()
 
     # ==== LIBS
     # TODO: Figure out what to do with other Languages like Fortran
@@ -431,10 +482,10 @@ function(vcpkg_make_prepare_flags)
             # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
             file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" VCToolsInstallDir)
             set(_replacement -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\")
-            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG}")
-            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG "${VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG}")
-            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE}")
-            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE "${VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
+            string(REPLACE "${_replacement}" "" VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
             # Can somebody please check if CMake's compiler flags for UWP are correct?
             set(ENV{_CL_} "$ENV{_CL_} -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
             set(ENV{_LINK_} "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES} ${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
@@ -488,6 +539,7 @@ function(vcpkg_make_default_path_and_configure_options out_var)
         "CONFIG;EXCLUDE_FILTER;INCLUDE_FILTER"
         ""
     )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
 
     set(opts "")
     string(TOUPPER "${arg_CONFIG}" arg_CONFIG)
@@ -562,10 +614,7 @@ function(vcpkg_make_default_path_and_configure_options out_var)
     set("${out_var}" ${opts} PARENT_SCOPE)
 endfunction()
 
-
-
 ### General helper scripts (should maybe be moved to a seperate port)
-
 function(z_vcpkg_convert_to_msys_path outvar invar)
     if(CMAKE_HOST_WIN32)
         string(REGEX REPLACE "^([a-zA-Z]):/" "/\\1/" current_installed_dir_msys "${invar}")
@@ -633,15 +682,51 @@ function(z_vcpkg_warn_path_with_spaces)
     endif()
 endfunctioN()
 
-###
+function(vcpkg_insert_into_path)
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "" 
+        "PATH_OUT;APPENDED_OUT"
+        "BEFORE;INSERT"
+    )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
+    cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
+
+    string(TOUPPER "${arg_BEFORE}" before_upper)
+
+    set(index 0)
+    set(appending TRUE)
+    foreach(item IN LISTS path_list)
+        string(TOUPPER "${item}" item_upper)
+        if(item IN_LIST arg_BEFORE OR item_upper IN_LIST before_upper)
+            set(appending FALSE)
+            break()
+        endif()
+        math(EXPR index "${index} + 1")
+    endforeach()
+
+    vcpkg_list(INSERT path_list "${index}" ${arg_INSERT})
+
+
+    cmake_path(CONVERT "${path_list}" TO_NATIVE_PATH_LIST native_path_list)
+    set(ENV{PATH} "${native_path_list}")
+    if(DEFINED arg_PATH_OUT)
+        set("${arg_PATH_OUT}" "${path_list}" PARENT_SCOPE)
+    endif()
+    if(appending)
+        set("${arg_APPENDED_OUT}" "TRUE" PARENT_SCOPE)
+    else()
+        set("${arg_APPENDED_OUT}" "FALSE" PARENT_SCOPE)
+    endif()
+endfunction()
+
 function(vcpkg_insert_msys_into_path msys_out)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "" 
         "PATH_OUT"
         "PACKAGES"
     )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${arg_ADDITIONAL_PACKAGES})
-    cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
     cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
     cmake_path(CONVERT "$ENV{LOCALAPPDATA}" TO_CMAKE_PATH_LIST local_app_data NORMALIZE)
     file(REAL_PATH "${system_root}" system_root)
@@ -655,29 +740,34 @@ function(vcpkg_insert_msys_into_path msys_out)
         "${local_app_data}/Microsoft/WindowsApps/"
     )
 
-    string(TOUPPER "${find_system_dirs}" find_system_dirs_upper)
-
-    set(index 0)
-    set(appending TRUE)
-    foreach(item IN LISTS path_list)
-        if(item IN_LIST find_system_dirs OR item IN_LIST find_system_dirs_upper)
-            set(appending FALSE)
-            break()
-        endif()
-        math(EXPR index "${index} + 1")
-    endforeach()
+    vcpkg_insert_into_path(
+        INSERT "${MSYS_ROOT}/usr/bin"
+        BEFORE ${find_system_dirs}
+        PATH_OUT path_out
+        APPENDED_OUT appending
+    )
 
     if(appending)
         message(WARNING "Unable to find system dir in the PATH variable! Appending required msys paths!")
     endif()
-    vcpkg_list(INSERT path_list "${index}" "${MSYS_ROOT}/usr/bin")
-
-    cmake_path(CONVERT "${path_list}" TO_NATIVE_PATH_LIST native_path_list)
-    set(ENV{PATH} "${native_path_list}") # Should this be backed up?
 
     if(DEFINED arg_PATH_OUT)
-        set("${arg_PATH_OUT}" "${path_list}" PARENT_SCOPE)
+        set("${arg_PATH_OUT}" "${path_out}" PARENT_SCOPE)
     endif()
 
     set("${msys_out}" "${MSYS_ROOT}" PARENT_SCOPE)
+endfunction()
+
+function(vcpkg_insert_program_into_path prog)
+    set(filepath "${prog}")
+    cmake_path(GET filepath FILENAME ${prog})
+    find_program(z_vcm_prog_found NAMES "${${prog}}" PATHS ENV PATH NO_DEFAULT_PATH NO_CACHE)
+    if(NOT z_vcm_prog_found STREQUAL filepath)
+        cmake_path(GET z_vcm_prog_found PARENT_PATH before_dir)
+        cmake_path(GET filepath PARENT_PATH dir)
+        vcpkg_insert_into_path(
+            INSERT "${dir}"
+            BEFORE "${before_dir}"
+        )
+    endif()
 endfunction()

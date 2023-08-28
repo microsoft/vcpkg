@@ -2,23 +2,6 @@
 include_guard(GLOBAL)
 include("${CMAKE_CURRENT_SOURCE_DIR}/vcpkg-make-common.cmake")
 
-function(vcpkg_run_autoreconf bash_cmd work_dir)
-# TODO:
-# Check: does it make sense to parse configure.ac ?
-    find_program(AUTORECONF autoreconf) # find_file instead ? autoreconf is a perl script. 
-    if(NOT AUTORECONF)
-        message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
-    endif()
-    message(STATUS "Generating configure for ${TARGET_TRIPLET}")
-    vcpkg_run_bash(
-        BASH "${bash_cmd}"
-        COMMAND "autoreconf -vfi"
-        WORKING_DIRECTORY "${work_dir}"
-        LOGNAME "autoconf-${TARGET_TRIPLET}"
-    )
-    message(STATUS "Finished generating configure for ${TARGET_TRIPLET}")
-endfunction()
-
 function(vcpkg_run_bash)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "" 
@@ -46,12 +29,30 @@ function(vcpkg_run_bash)
     endif()
 endfunction()
 
+function(vcpkg_run_autoreconf bash_cmd work_dir)
+# TODO:
+# Check: does it make sense to parse configure.ac ?
+    find_program(AUTORECONF autoreconf) # find_file instead ? autoreconf is a perl script. 
+    if(NOT AUTORECONF)
+        message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
+    endif()
+    message(STATUS "Generating configure for ${TARGET_TRIPLET}")
+    vcpkg_run_bash(
+        BASH "${bash_cmd}"
+        COMMAND "autoreconf -vfi"
+        WORKING_DIRECTORY "${work_dir}"
+        LOGNAME "autoconf-${TARGET_TRIPLET}"
+    )
+    message(STATUS "Finished generating configure for ${TARGET_TRIPLET}")
+endfunction()
+
 function(vcpkg_make_setup_win_msys msys_out)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "" 
         ""
         "PACKAGES"
     )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
     list(APPEND msys_require_packages autoconf-wrapper automake-wrapper binutils libtool make which)
     vcpkg_insert_msys_into_path(msys PACKAGES ${msys_require_packages} ${arg_PACKAGES})
     set("${msys_out}" "${msys}" PARENT_SCOPE)
@@ -72,6 +73,11 @@ function(vcpkg_prepare_pkgconfig config)
     set(subdir "")
     if(config MATCHES "(DEBUG|debug)")
         set(subdir "/debug")
+    endif()
+
+    z_vcpkg_get_global_property(has_backup "make-pkg-config-backup-${envvar}" SET)
+    if(has_backup)
+        message(FATAL_ERROR "'${CMAKE_CURRENT_FUNCTION}' does not (yet) support recursive backups. Need to restore previous state first!")
     endif()
 
     foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
@@ -113,6 +119,7 @@ function(z_vcpkg_make_get_build_triplet out)
         "COMPILER_NAME"
         ""
     )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
     # --build: the machine you are building on
     # --host: the machine you are building for
     # --target: the machine that CC will produce binaries for
@@ -157,6 +164,7 @@ function(vcpkg_make_prepare_env config)
         ""
         ""
     )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
     # Used by CL 
     vcpkg_host_path_list(PREPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
     # Used by GCC
@@ -243,7 +251,7 @@ endfunction()
 function(vcpkg_make_run_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ADD_BIN_TO_PATH" 
-        "CONFIG;BASH;WORKING_DIRECTORY;CONFIGURE_PATH"
+        "CONFIG;BASH;WORKING_DIRECTORY;CONFIGURE_PATH;CONFIGURE_ENV"
         "OPTIONS"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
@@ -263,7 +271,8 @@ function(vcpkg_make_run_configure)
     endforeach()
     vcpkg_list(JOIN tmp " " "arg_OPTIONS")
 
-    set(command "${configure_env} ${arg_CONFIGURE_PATH} ${arg_CONFIGURE_PATH} ${arg_OPTIONS}")
+    set(command "${arg_CONFIGURE_ENV} ${arg_CONFIGURE_PATH} ${arg_OPTIONS}")
+    string(STRIP "${command}" command)
 
     message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}")
     vcpkg_run_bash(
@@ -293,6 +302,8 @@ function(vcpkg_make_prepare_configure_cache out_opt)
         "WORKING_DIRECTORY;CONFIG"
         ""
     )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
+
     set(configure_cache "")
     set(current_buildtype "${arg_CONFIG}")
 
@@ -314,6 +325,3 @@ function(vcpkg_make_prepare_configure_cache out_opt)
     endif()
     set("${out_opt}" "${configure_cache}")
 endfunction()
-# Make config dependent injections possible via cmake_language(CALL)
-# z_vcpkg_make_prepare_<CONFIG>_commands
-# z_vcpkg_make_restore_commands
