@@ -54,7 +54,7 @@
         "command": "${workspaceFolder}/vcpkg",
         "args" : [
           "install",
-          "vcpkg-make-test",
+          "gmp",
           "--binarysource=clear",
           "--x-cmake-args=--debugger",
           "--x-cmake-args=--debugger-pipe=\\\\.\\pipe\\vcpkg-cmake-debugging"
