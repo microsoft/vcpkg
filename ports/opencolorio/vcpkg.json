@@ -26,7 +26,8 @@
       "description": "Installs tools",
       "dependencies": [
         "glew",
-        "lcms"
+        "lcms",
+        "openexr"
       ]
     }
   }

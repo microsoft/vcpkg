@@ -10,10 +10,6 @@
     "cairo",
     "libsigcpp",
     {
-      "name": "pkgconf",
-      "host": true
-    },
-    {
       "name": "vcpkg-tool-meson",
       "host": true
     }
