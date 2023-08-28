@@ -6461,8 +6461,8 @@
       "port-version": 12
     },
     "polyhook2": {
-      "baseline": "2023-05-16",
-      "port-version": 2
+      "baseline": "2023-08-11",
+      "port-version": 0
     },
     "polymorphic-value": {
       "baseline": "1.3.0",
