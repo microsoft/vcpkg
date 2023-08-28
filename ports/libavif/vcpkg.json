@@ -18,7 +18,10 @@
   ],
   "features": {
     "aom": {
-      "description": "AV1 codec library"
+      "description": "AV1 codec library",
+      "dependencies": [
+        "aom"
+      ]
     }
   }
 }
