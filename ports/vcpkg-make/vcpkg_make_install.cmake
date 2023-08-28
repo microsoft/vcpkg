@@ -99,12 +99,11 @@ function(vcpkg_make_install)
                         LOGNAME "${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}"
                 )
             endif()
+            file(READ "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}-out.log" logdata) 
+            if(logdata MATCHES "Warning: linker path does not have real file for library")
+                message(FATAL_ERROR "libtool could not find a file being linked against!")
+            endif()
         endforeach()
-
-        file(READ "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}-${short_buildtype}-out.log" logdata) 
-        if(logdata MATCHES "Warning: linker path does not have real file for library")
-            message(FATAL_ERROR "libtool could not find a file being linked against!")
-        endif()
 
         vcpkg_make_restore_env()
 
