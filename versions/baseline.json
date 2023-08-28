@@ -397,7 +397,7 @@
       "port-version": 1
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.132",
+      "baseline": "1.11.149",
       "port-version": 0
     },
     "azmq": {
@@ -1390,7 +1390,7 @@
     },
     "cairomm": {
       "baseline": "1.17.1",
-      "port-version": 0
+      "port-version": 1
     },
     "calceph": {
       "baseline": "3.5.2",
@@ -2910,7 +2910,7 @@
     },
     "glib": {
       "baseline": "2.76.3",
-      "port-version": 2
+      "port-version": 3
     },
     "glibmm": {
       "baseline": "2.76.0",
@@ -3474,11 +3474,11 @@
     },
     "ixwebsocket": {
       "baseline": "11.4.4",
-      "port-version": 0
+      "port-version": 1
     },
     "jack2": {
       "baseline": "1.9.21",
-      "port-version": 0
+      "port-version": 1
     },
     "jaeger-client-cpp": {
       "baseline": "0.7.0",
@@ -3837,7 +3837,7 @@
       "port-version": 0
     },
     "lazy-importer": {
-      "baseline": "2022-02-09",
+      "baseline": "2023-08-03",
       "port-version": 0
     },
     "lcm": {
@@ -4334,7 +4334,7 @@
     },
     "libmicrodns": {
       "baseline": "0.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libmicrohttpd": {
       "baseline": "0.9.77",
@@ -5402,7 +5402,7 @@
     },
     "minizip-ng": {
       "baseline": "4.0.0",
-      "port-version": 2
+      "port-version": 3
     },
     "mio": {
       "baseline": "2023-03-03",
@@ -5974,7 +5974,7 @@
     },
     "opencascade": {
       "baseline": "7.6.2",
-      "port-version": 6
+      "port-version": 7
     },
     "opencc": {
       "baseline": "1.1.6",
@@ -5990,7 +5990,7 @@
     },
     "opencolorio": {
       "baseline": "2.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "opencolorio-tools": {
       "baseline": "1.1.1",
@@ -7150,7 +7150,7 @@
     },
     "readline": {
       "baseline": "0",
-      "port-version": 4
+      "port-version": 5
     },
     "readline-osx": {
       "baseline": "2020-01-04",
@@ -7162,7 +7162,7 @@
     },
     "readline-win32": {
       "baseline": "5.0",
-      "port-version": 5
+      "port-version": 6
     },
     "readosm": {
       "baseline": "1.1.0a",
@@ -7443,6 +7443,10 @@
     "sdformat10": {
       "baseline": "10.0.0",
       "port-version": 3
+    },
+    "sdformat13": {
+      "baseline": "13.5.0",
+      "port-version": 0
     },
     "sdformat6": {
       "baseline": "6.2.0",
@@ -8050,7 +8054,7 @@
     },
     "tcl": {
       "baseline": "core-9-0-a1",
-      "port-version": 5
+      "port-version": 6
     },
     "tclap": {
       "baseline": "1.2.5",
@@ -8737,7 +8741,7 @@
       "port-version": 2
     },
     "wil": {
-      "baseline": "2023-04-11",
+      "baseline": "2023-08-24",
       "port-version": 0
     },
     "wildmidi": {
