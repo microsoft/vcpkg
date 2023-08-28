@@ -31,7 +31,6 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_list(APPEND OPTIONS
-        "ac_cv_func_memset=yes"
         "gmp_cv_asm_w32=.word"
         "gmp_cv_check_libm_for_build=no"
     )
