@@ -1554,7 +1554,7 @@
     },
     "cityhash": {
       "baseline": "2013-01-08",
-      "port-version": 2
+      "port-version": 3
     },
     "civetweb": {
       "baseline": "1.15",
