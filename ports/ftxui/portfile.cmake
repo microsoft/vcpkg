@@ -21,9 +21,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-#file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-#file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ftxui.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ftxui.pc")
-#file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ftxui.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ftxui.pc")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
