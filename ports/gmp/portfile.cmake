@@ -64,7 +64,7 @@ endif()
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
-    LANGUAGES "${languages}"
+    LANGUAGES ${languages}
     OPTIONS
         ${OPTIONS}
         --enable-cxx
