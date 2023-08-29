@@ -7,7 +7,6 @@ index e87b3c7..c6239f0 100644
      DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/.."
      PATTERN "build2file" EXCLUDE
 -)
-\ No newline at end of file
 +)
 +
 +#
