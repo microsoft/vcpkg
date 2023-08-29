@@ -1,6 +1,6 @@
 {
   "name": "visrtx",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Experimental, scientific visualization-focused implementation of the Khronos ANARI standard.",
   "homepage": "https://github.com/NVIDIA/VisRTX",
   "license": "BSD-3-Clause",

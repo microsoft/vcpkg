@@ -1,0 +1,64 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7efaf51..d3dbc5d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -75,13 +75,13 @@ find_package(anari ${ANARI_REQUIRED_VERSION} REQUIRED)
+ 
+ # CUDA
+ find_package(CUDAToolkit 11.3.1)
+-find_package(OptiX7)
++find_package(unofficial-OptiX)
+ 
+ # OpenGL
+ find_package(OpenGL)
+ 
+ # glm (locally included)
+-set(glm_DIR ${CMAKE_CURRENT_LIST_DIR}/external/glm/lib/cmake/glm)
++# set(glm_DIR ${CMAKE_CURRENT_LIST_DIR}/external/glm/lib/cmake/glm)
+ find_package(glm REQUIRED)
+ mark_as_advanced(glm_DIR)
+ add_library(glm_visrtx INTERFACE IMPORTED)
+diff --git a/devices/CMakeLists.txt b/devices/CMakeLists.txt
+index 77e6835..03b22ca 100644
+--- a/devices/CMakeLists.txt
++++ b/devices/CMakeLists.txt
+@@ -28,7 +28,7 @@
+ # POSSIBILITY OF SUCH DAMAGE.
+ 
+ option(VISRTX_BUILD_RTX_DEVICE "Build CUDA/OptiX device" ON)
+-if (VISRTX_BUILD_RTX_DEVICE AND CUDAToolkit_FOUND AND OptiX7_FOUND)
++if (VISRTX_BUILD_RTX_DEVICE AND CUDAToolkit_FOUND)
+   add_subdirectory(rtx)
+ endif()
+ 
+diff --git a/devices/rtx/CMakeLists.txt b/devices/rtx/CMakeLists.txt
+index 1cacbca..e4f1a05 100644
+--- a/devices/rtx/CMakeLists.txt
++++ b/devices/rtx/CMakeLists.txt
+@@ -42,7 +42,7 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
+ ## Find dependencies ##
+ 
+ find_package(CUDAToolkit 11.3.1 REQUIRED)
+-find_package(OptiX7 REQUIRED)
++find_package(unofficial-OptiX CONFIG REQUIRED)
+ 
+ include(EmbedPTX)
+ 
+@@ -176,7 +176,7 @@ PUBLIC
+ PRIVATE
+   anari::helium
+   glm_visrtx
+-  OptiX7::OptiX7
++  unofficial::OptiX::OptiX
+   CUDA::cuda_driver
+   CUDA::curand
+   $<$<BOOL:${VISRTX_ENABLE_NVTX}>:CUDA::nvToolsExt>
+@@ -209,7 +209,7 @@ function(GenerateEmbeddedPTX DIR BASE_NAME)
+     anari::anari
+     anari::helium
+     glm_visrtx
+-    OptiX7::OptiX7
++    unofficial::OptiX::OptiX
+     CUDA::curand
+   )
+   target_include_directories(${INPUT_TARGET}
