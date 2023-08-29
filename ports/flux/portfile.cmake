@@ -8,6 +8,8 @@ vcpkg_from_github(
         targets-fixup.patch
 )
 
+set(VCPKG_BUILD_TYPE release) # header-only port
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
