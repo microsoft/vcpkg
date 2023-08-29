@@ -1,6 +1,5 @@
 set(program_name 7z)
 set(tool_subdirectory "23.01")
-set(paths_to_search "")
 set(paths_to_search "${DOWNLOADS}/tools/7zip_msi-${tool_subdirectory}-windows/Files/7-Zip") # vcpkg fetch 7zip_msi path
 list(APPEND paths_to_search "${DOWNLOADS}/tools/7z/${tool_subdirectory}/Files/7-Zip")
 set(download_urls "https://7-zip.org/a/7z2301.msi")
