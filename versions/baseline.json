@@ -7101,7 +7101,7 @@
       "port-version": 0
     },
     "rapidfuzz": {
-      "baseline": "1.8.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "rapidjson": {
