@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
     REF "${VERSION}"
-    SHA512 0efb7ce16333f4f3556b889bdd83b0f91697ce1645cbfb13db0c8a93ef47dd9cb0805c7160edaf946d4d54faf30a33bae90800c189e8b4bd44fcf3ce98179115
+    SHA512 bcd946eed0fb3712eae2485d300d5e2b84596b1c8cfd4e944902bb141125d411b727024f054e2ad6c23855d06a02dcb926696f05cb107869a7b81814d4cfcaeb
     HEAD_REF master
     PATCHES
         add-options-for-exes-docs-headers.patch
@@ -36,13 +36,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         jpeg7 WITH_JPEG7
         jpeg8 WITH_JPEG8
 )
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(COMPILE_THREAD DISABLE_PARALLEL_CONFIGURE)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    ${COMPILE_THREAD}
     OPTIONS
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
@@ -57,7 +53,12 @@ vcpkg_cmake_configure(
         WITH_CRT_DLL
 )
 
-vcpkg_cmake_install()
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_cmake_install(DISABLE_PARALLEL)
+else()
+    vcpkg_cmake_install()
+endif()
+
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
