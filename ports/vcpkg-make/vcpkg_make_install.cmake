@@ -54,7 +54,7 @@ function(vcpkg_make_install)
         string(REGEX REPLACE [[([a-zA-Z]):/]] [[/\1/]] destdir "${vcpkg_package_prefix}")
     endif()
 
-    vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH CPPFLAGS CFLAGS CXXFLAGS RCFLAGS)
+    vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH CPPFLAGS CFLAGS CXXFLAGS RCFLAGS PATH)
 
     z_vcpkg_make_set_common_vars()
     z_vcpkg_get_global_property(prepare_flags_opts "make_prepare_flags_opts")
