@@ -450,8 +450,8 @@ qt5-base:arm64-windows=fail
 qt5-canvas3d=skip # Skip deprecated Qt module (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-wayland:x64-osx=fail # Missing system libraries
 qt5-webengine = fail # Missing prerequisites for CI success
-qt5-x11extras(windows)=fail # Missing libraries
 qt5-x11extras(osx)=fail # Missing system libraries
+qt5-x11extras(windows)=fail # Missing libraries
 qtvirtualkeyboard[t9write] = skip # depends on the port 't9write' that does not exists
 qtwayland(osx)=fail # Missing system libraries
 quantlib:x64-windows-static-md=fail
@@ -1446,7 +1446,6 @@ openmama:x64-uwp = cascade
 openmvg:arm64-uwp = cascade
 openmvg:x64-uwp = cascade
 openmvg[software]:arm64-windows = cascade
-openmvs:arm64-osx = cascade
 openmvs:arm64-uwp = cascade
 openmvs:arm64-windows = cascade
 openmvs:x64-uwp = cascade
@@ -2095,7 +2094,6 @@ xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not
 xtensor[xsimd] = feature-fails # xsimd is already at version 11 but 10 is required. See https://github.com/microsoft/vcpkg/issues/33045
 yyjson[writer](osx) = feature-fails # error: call to undeclared function 'digi_is_digit'
 zeroc-ice[glacier2router,iceboxtools,icebridge,icegridtools,icestormtools](windows) = feature-fails # Missing include? See https://github.com/microsoft/vcpkg/issues/33326
-nanopb[generator](windows) = feature-fails # error while installation. See https://github.com/microsoft/vcpkg/issues/33339
 
 # skip
 entt[experimental] = skip # required head build
