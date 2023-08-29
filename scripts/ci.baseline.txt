@@ -770,8 +770,6 @@ minifb:arm64-android=fail
 minifb:x64-android=fail
 minio-cpp:arm-neon-android=fail
 miniply:arm-neon-android=fail
-miniupnpc:arm-uwp=fail
-miniupnpc:x64-uwp=fail
 # Conflicts with signalrclient
 microsoft-signalr:arm64-windows=skip
 microsoft-signalr:arm-uwp=skip
