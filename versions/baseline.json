@@ -1554,7 +1554,7 @@
     },
     "cityhash": {
       "baseline": "2013-01-08",
-      "port-version": 4
+      "port-version": 5
     },
     "civetweb": {
       "baseline": "1.15",
@@ -3382,7 +3382,7 @@
     },
     "imgui": {
       "baseline": "1.89.7",
-      "port-version": 2
+      "port-version": 3
     },
     "imgui-sfml": {
       "baseline": "2.5",
@@ -5390,7 +5390,7 @@
     },
     "miniupnpc": {
       "baseline": "2.1",
-      "port-version": 6
+      "port-version": 7
     },
     "miniz": {
       "baseline": "3.0.2",
@@ -5634,7 +5634,7 @@
     },
     "nanopb": {
       "baseline": "0.4.7",
-      "port-version": 3
+      "port-version": 4
     },
     "nanoprintf": {
       "baseline": "0.3.4",
