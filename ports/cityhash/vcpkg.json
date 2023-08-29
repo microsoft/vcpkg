@@ -16,7 +16,8 @@
   ],
   "features": {
     "sse": {
-      "description": "Build CityHash variants that depend on the _mm_crc32_u64 intrinsic."
+      "description": "Build CityHash variants that depend on the _mm_crc32_u64 intrinsic.",
+      "supports": "x64 | (x86 & !windows)"
     }
   }
 }

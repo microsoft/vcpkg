@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 90858ae8c5fdddd5e13724e05ad0970e11bbab1df8a0201c3f4ce354dc6018e5d4ab7279402a263c716aacdaa52745f78531dc225d48d790ee9307e2f6198695
+    SHA512 d4ddc1abf84f09b9d2357b5bf2adc224a693767c170a6b778283c2783436d940aee4db4c9628776de28de6c499bbfb04b65f9d9210f4670525248ce5b0d31bee
     HEAD_REF main
     PATCHES
         deps.patch
+        alsa-dep-fix.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
