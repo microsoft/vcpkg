@@ -16,6 +16,7 @@
       "host": true
     },
     "vulkan",
+    "vulkan-headers",
     "vulkan-memory-allocator",
     {
       "name": "wayland",
