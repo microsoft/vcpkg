@@ -28,6 +28,19 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/sdformat13")
 vcpkg_fixup_pkgconfig()
 
+# fix dependency urdfdom
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/sdformat13-config.cmake" "find_package(TINYXML2" [[
+find_package(urdfdom CONFIG ${gz_package_quiet} ${gz_package_required})
+add_library(GzURDFDOM::GzURDFDOM INTERFACE IMPORTED)
+target_link_libraries(GzURDFDOM::GzURDFDOM
+  INTERFACE
+    urdfdom::urdfdom_model
+    urdfdom::urdfdom_world
+    urdfdom::urdfdom_sensor
+    urdfdom::urdfdom_model_state
+)
+find_package(TINYXML2]])
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
