@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         no-absolute.patch
         cmake-config.patch
+        fix-find-urdfdom.patch
 )
 
 # Ruby is required by the sdformat build process
@@ -20,7 +21,6 @@ vcpkg_cmake_configure(
         -DSKIP_PYBIND11=ON
         -DUSE_INTERNAL_URDF=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
-        -DCMAKE_REQUIRE_FIND_PACKAGE_GzURDFDOM=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
 )
 
