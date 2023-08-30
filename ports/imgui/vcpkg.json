@@ -1,6 +1,7 @@
 {
   "name": "imgui",
   "version": "1.89.7",
+  "port-version": 1,
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -69,7 +70,8 @@
       "supports": "osx"
     },
     "opengl2-binding": {
-      "description": "Make available OpenGL (legacy) binding"
+      "description": "Make available OpenGL (legacy) binding",
+      "supports": "!uwp"
     },
     "opengl3-binding": {
       "description": "Make available OpenGL3/ES/ES2 (modern) binding"
@@ -101,7 +103,7 @@
     },
     "win32-binding": {
       "description": "Make available Win32 binding",
-      "supports": "windows"
+      "supports": "windows & !uwp"
     }
   }
 }

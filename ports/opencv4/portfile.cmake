@@ -2,8 +2,8 @@ set(USE_QT_VERSION "6")
 
 # https://github.com/opencv/opencv/pull/24043
 vcpkg_download_distfile(ARM64_WINDOWS_FIX
-  URLS https://github.com/opencv/opencv/commit/e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch
-  SHA512 b91b45ac49994c3f4481d5ca04d708d9b063239fd2105e2eb1aae26cc70361ff042e99c51edd67beb9463624147ba77fd562097ab20676bba3b8ce068d455dbc
+  URLS https://github.com/opencv/opencv/commit/e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch?full_index=1
+  SHA512 8ae2544e4a7ece19efe21261acc183f91202ac5352c1ac42fb86bf33d698352eff1b8962422b092240f4e8c7a691e9aa5ef20d6070adcd37e92bb94c6010ce56
   FILENAME opencv4-e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch
 )
 
@@ -71,6 +71,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "nonfree"   OPENCV_ENABLE_NONFREE
  "openexr"   WITH_OPENEXR
  "opengl"    WITH_OPENGL
+ "ovis"      CMAKE_REQUIRE_FIND_PACKAGE_OGRE
  "png"       WITH_PNG
  "quirc"     WITH_QUIRC
  "sfm"       BUILD_opencv_sfm
@@ -183,6 +184,7 @@ if("contrib" IN_LIST FEATURES)
       0007-fix-hdf5.patch
       0016-fix-freetype-contrib.patch
       0018-fix-depend-tesseract.patch
+      0019-fix-ogre-dependency.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
