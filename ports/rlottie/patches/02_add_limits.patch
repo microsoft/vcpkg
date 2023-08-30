@@ -1,0 +1,12 @@
+diff --git a/src/vector/vrle.cpp b/src/vector/vrle.cpp
+index c7a520f..379f8ed 100644
+--- a/src/vector/vrle.cpp
++++ b/src/vector/vrle.cpp
+@@ -27,6 +27,7 @@
+ #include <array>
+ #include <cstdlib>
+ #include <cstring>
++#include <limits>
+ #include <vector>
+ #include "vdebug.h"
+ #include "vglobal.h"
