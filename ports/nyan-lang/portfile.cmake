@@ -11,13 +11,10 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(FLEX)
 
-cmake_path(GET FLEX PARENT_PATH FLEX_PATH)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DFLEX_ROOT=${FLEX_PATH}"
-        -DCMAKE_POLICY_DEFAULT_CMP0074=NEW
+        "-DFLEX_EXECUTABLE=${FLEX}"
 )
 
 vcpkg_cmake_install()
