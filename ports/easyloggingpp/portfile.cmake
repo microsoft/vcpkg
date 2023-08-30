@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001_add_cmake_options.patch
+        fix_build_uwp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,12 +17,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 		thread-safe     thread_safe
 		no-defaultfile  no_default_logfile
 )
-
+if(VCPKG_TARGET_IS_UWP)
+    set(TARGET_IS_UWP ON)
+endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -Dbuild_static_lib=ON
+        -Dis_uwp=${TARGET_IS_UWP}
 )
 vcpkg_cmake_install()
 
