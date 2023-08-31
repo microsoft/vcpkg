@@ -77,50 +77,6 @@ function(vcpkg_make_get_shell out_var)
     set("${out_var}" "${bash_cmd}" ${bash_options} PARENT_SCOPE)
 endfunction()
 
-function(vcpkg_prepare_pkgconfig config)
-    set(subdir "")
-    if(config MATCHES "(DEBUG|debug)")
-        set(subdir "/debug")
-    endif()
-
-    z_vcpkg_get_global_property(has_backup "make-pkg-config-backup-${envvar}" SET)
-    if(has_backup)
-        message(FATAL_ERROR "'${CMAKE_CURRENT_FUNCTION}' does not (yet) support recursive backups. Need to restore previous state first!")
-    endif()
-
-    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
-        if(DEFINED ENV{${envvar}})
-            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}" "$ENV{${envvar}}")
-        else()
-            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}" "")
-        endif()
-    endforeach()
-
-    vcpkg_find_acquire_program(PKGCONFIG)
-    get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
-    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
-
-    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} 
-                            "${CURRENT_INSTALLED_DIR}/share/pkgconfig/"
-                            "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig/"
-                            "${CURRENT_PACKAGES_DIR}/share/pkgconfig/"
-                            "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig/"
-                        )
-endfunction()
-
-function(vcpkg_restore_pkgconfig)
-    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
-        z_vcpkg_get_global_property(has_backup "make-pkg-config-backup-${envvar}" SET)
-        if(has_backup)
-            z_vcpkg_get_global_property(backup "make-pkg-config-backup-${envvar}")
-            set("ENV{${envvar}}" "${backup}")
-            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}")
-        else()
-            unset("ENV{${envvar}}")
-        endif()
-    endforeach()
-endfunction()
-
 function(z_vcpkg_make_get_configure_triplets out)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         ""
@@ -155,7 +111,7 @@ function(z_vcpkg_make_get_configure_triplets out)
         elseif(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX AND NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
             set(host_triplet_opt "--host=${TARGET_ARCH}-apple-darwin")
         elseif(VCPKG_TARGET_IS_LINUX) 
-            if("${arg_COMPILER_NAME}" MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1)
+            if("${arg_COMPILER_NAME}" MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1 AND NOT CMAKE_MATCH_1 MATCHES "^gcc")
                 set(host_triplet_opt "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
         endif()
@@ -166,7 +122,7 @@ function(z_vcpkg_make_get_configure_triplets out)
     set("${out}" "${output}" PARENT_SCOPE)
 endfunction()
 
-function(vcpkg_make_prepare_env config)
+function(z_vcpkg_make_prepare_env config)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "ADD_BIN_TO_PATH"
         ""
@@ -246,7 +202,7 @@ function(vcpkg_make_prepare_env config)
     endforeach()
 endfunction()
 
-function(vcpkg_make_restore_env)
+function(z_vcpkg_make_restore_env)
     # Only variables which are inspected in vcpkg_make_prepare_env need to be restored here.
     # Rest is restored add the end of configure. 
     # TODO: check how vcpkg_restore_env_variables actually works!
@@ -271,7 +227,7 @@ function(vcpkg_make_run_configure)
     if(arg_ADD_BIN_TO_PATH)
         set(prepare_env_opts ADD_BIN_TO_PATH)
     endif()
-    vcpkg_make_prepare_env("${arg_CONFIG}" ${prepare_env_opts})
+    z_vcpkg_make_prepare_env("${arg_CONFIG}" ${prepare_env_opts})
 
     vcpkg_list(SET tmp)
     foreach(element IN LISTS arg_OPTIONS)
@@ -299,13 +255,11 @@ function(vcpkg_make_run_configure)
             file(WRITE "${lt_file}" "${_contents}")
         endforeach()
     endif()
-    #message(STATUS "Finished: Configuring ${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}")
-
-    vcpkg_make_restore_env()
+    z_vcpkg_make_restore_env()
     vcpkg_restore_pkgconfig()
 endfunction()
 
-function(vcpkg_make_prepare_configure_cache out_opt)
+function(z_vcpkg_make_prepare_configure_cache out_opt)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "" 
         "WORKING_DIRECTORY;CONFIG"

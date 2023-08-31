@@ -1,3 +1,4 @@
+include_guard(GLOBAL)
 function(vcpkg_insert_into_path)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "" 
@@ -138,4 +139,48 @@ function(z_vcpkg_get_global_property outvar property)
     endif()
     get_property(outprop GLOBAL PROPERTY "z_vcpkg_global_property_${property}" ${ARGN})
     set(${outvar} "${outprop}" PARENT_SCOPE)
+endfunction()
+
+function(vcpkg_prepare_pkgconfig config)
+    set(subdir "")
+    if(config MATCHES "(DEBUG|debug)")
+        set(subdir "/debug")
+    endif()
+
+    z_vcpkg_get_global_property(has_backup "make-pkg-config-backup-${envvar}" SET)
+    if(has_backup)
+        message(FATAL_ERROR "'${CMAKE_CURRENT_FUNCTION}' does not (yet) support recursive backups. Need to restore previous state first!")
+    endif()
+
+    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
+        if(DEFINED ENV{${envvar}})
+            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}" "$ENV{${envvar}}")
+        else()
+            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}" "")
+        endif()
+    endforeach()
+
+    vcpkg_find_acquire_program(PKGCONFIG)
+    get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
+    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} 
+                            "${CURRENT_INSTALLED_DIR}/share/pkgconfig/"
+                            "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig/"
+                            "${CURRENT_PACKAGES_DIR}/share/pkgconfig/"
+                            "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig/"
+                        )
+endfunction()
+
+function(vcpkg_restore_pkgconfig)
+    foreach(envvar IN ITEMS PKG_CONFIG PKG_CONFIG_PATH)
+        z_vcpkg_get_global_property(has_backup "make-pkg-config-backup-${envvar}" SET)
+        if(has_backup)
+            z_vcpkg_get_global_property(backup "make-pkg-config-backup-${envvar}")
+            set("ENV{${envvar}}" "${backup}")
+            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}")
+        else()
+            unset("ENV{${envvar}}")
+        endif()
+    endforeach()
 endfunction()
