@@ -5808,6 +5808,10 @@
       "baseline": "2019-08-10",
       "port-version": 3
     },
+    "ntf-core": {
+      "baseline": "2.1.0",
+      "port-version": 0
+    },
     "nu-book-zxing-cpp": {
       "baseline": "2.1.0",
       "port-version": 0
