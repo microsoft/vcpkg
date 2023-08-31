@@ -1,0 +1,38 @@
+From 84743903977ac54bdb0598369c96f685d2183fb6 Mon Sep 17 00:00:00 2001
+From: Brandon Taylor <brandon.taylor221@gmail.com>
+Date: Tue, 29 Aug 2023 11:35:41 +0100
+Subject: [PATCH] change windows plugin folder
+
+---
+ CMakeLists.txt | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a3ae97d2d..cc54076d9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -245,12 +245,19 @@ elseif(NOT DEFINED LIBRARY_INSTALL_DIR)
+ endif()
+ message(STATUS "LIBRARY INSTALL DIR: ${LIBRARY_INSTALL_DIR}")
+ 
++# on windows, plugins are dll executables
++if (WIN32)
++    set(PLUGINS_BASE_FOLDER "${EXECUTABLE_INSTALL_DIR}")
++else()
++    set(PLUGINS_BASE_FOLDER "${LIBRARY_INSTALL_DIR}")
++endif()
++
+ if(USE_DOUBLE)
+     message(STATUS "Building with 64-bit floats")
+-    set(PLUGIN_INSTALL_DIR "${LIBRARY_INSTALL_DIR}/csound/plugins64-${APIVERSION}")
++    set(PLUGIN_INSTALL_DIR "${PLUGINS_BASE_FOLDER}/csound/plugins64-${APIVERSION}")
+ else()
+     message(STATUS "Building with 32-bit floats")
+-    set(PLUGIN_INSTALL_DIR "${LIBRARY_INSTALL_DIR}/csound/plugins-${APIVERSION}")
++    set(PLUGIN_INSTALL_DIR "${PLUGINS_BASE_FOLDER}/csound/plugins-${APIVERSION}")
+ endif()
+ 
+ if(WIN32 AND NOT MSVC)
+-- 
+2.39.2
+

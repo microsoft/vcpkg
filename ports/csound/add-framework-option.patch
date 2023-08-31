@@ -1,0 +1,89 @@
+From 7552acc22040e441a5100b09253753d37e62e014 Mon Sep 17 00:00:00 2001
+From: Brandon Taylor <brandon.taylor221@gmail.com>
+Date: Tue, 29 Aug 2023 11:54:37 +0100
+Subject: [PATCH] add framework option
+
+---
+ CMakeLists.txt         | 18 ++++++++++++------
+ include/CMakeLists.txt |  2 +-
+ 2 files changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cc54076d9..bc1dd2a7f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -185,6 +185,7 @@ option(BUILD_TESTS "Build tests" ON)
+ option(USE_GIT_COMMIT "Show the git commit in version information" ON)
+ option(REQUIRE_PTHREADS "For non-Windows systems, set whether Csound will use threads or not" ON)
+ option(DEBUG_ERROR_ON_WARNING "Error on compiler warning" ON)
++option(APPLE_FRAMEWORK "Build framework on Apple" ON)
+ 
+ # Include this after the install path definitions so we can override them here.
+ # Also after function definitions so we can use them there
+@@ -369,14 +370,14 @@ endif()
+ 
+ # Set plugins install directory
+ if(USE_DOUBLE)
+-    if(APPLE)
++    if(APPLE AND APPLE_FRAMEWORK)
+         set(CSOUNDLIB "CsoundLib64")
+         set(PLUGIN_INSTALL_DIR "${CS_FRAMEWORK_DEST}/${CSOUNDLIB}.framework/Versions/${APIVERSION}/Resources/Opcodes64")
+     else()
+         set(CSOUNDLIB "csound64")
+     endif()
+ else()
+-    if(APPLE)
++    if(APPLE AND APPLE_FRAMEWORK)
+         set(CSOUNDLIB "CsoundLib")
+         set(PLUGIN_INSTALL_DIR "${CS_FRAMEWORK_DEST}/${CSOUNDLIB}.framework/Versions/${APIVERSION}/Resources/Opcodes")
+     else()
+@@ -392,8 +393,13 @@ if(APPLE)
+         get_filename_component(CS_FRAMEWORK_FULL_PATH ${PLUGIN_INSTALL_DIR} ABSOLUTE)
+     endif()
+ 
+-    add_definitions("-DCS_DEFAULT_PLUGINDIR=\"${CS_FRAMEWORK_FULL_PATH}\"")
+-    set(DEFAULT_OPCODEDIR ${CS_FRAMEWORK_FULL_PATH})
++    if (APPLE_FRAMEWORK)
++        add_definitions("-DCS_DEFAULT_PLUGINDIR=\"${CS_FRAMEWORK_FULL_PATH}\"")
++        set(DEFAULT_OPCODEDIR ${CS_FRAMEWORK_FULL_PATH})
++    else()
++        set(DEFAULT_OPCODEDIR "${PLUGIN_INSTALL_DIR}")
++        add_definitions("-DCS_DEFAULT_PLUGINDIR=\"${PLUGIN_INSTALL_DIR}\"")
++    endif()
+ 
+     # dir relative to $HOME
+     if(USE_DOUBLE)
+@@ -1124,7 +1130,7 @@ if(INIT_STATIC_MODULES)
+     set_target_properties(${CSOUNDLIB} PROPERTIES COMPILE_FLAGS "-DINIT_STATIC_MODULES")
+ endif()
+ 
+-if(APPLE)
++if(APPLE AND APPLE_FRAMEWORK)
+     set_target_properties(${CSOUNDLIB} PROPERTIES FRAMEWORK YES)
+     set_target_properties(${CSOUNDLIB} PROPERTIES FRAMEWORK_VERSION "${APIVERSION}")
+     set_target_properties(${CSOUNDLIB} PROPERTIES PUBLIC_HEADER
+@@ -1448,7 +1454,7 @@ install(FILES ${CMAKE_SOURCE_DIR}/cmake/Modules/FindCsound.cmake
+         DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/Csound")
+ 
+ # install samples
+-if(APPLE)
++if(APPLE AND APPLE_FRAMEWORK)
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/samples
+           DESTINATION  ${CS_FRAMEWORK_DEST}/${CSOUNDLIB}.framework/Versions/${APIVERSION})
+ else()
+diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
+index 32413a89e..d4b8200f9 100644
+--- a/include/CMakeLists.txt
++++ b/include/CMakeLists.txt
+@@ -19,7 +19,7 @@ list(APPEND csheaders
+     ../interfaces/csPerfThread.hpp)
+ 
+ 
+-if(NOT APPLE)
++if(NOT (APPLE AND APPLE_FRAMEWORK))
+     INSTALL(FILES ${csheaders} DESTINATION ${HEADER_INSTALL_DIR})
+     INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/float-version.h
+      DESTINATION ${HEADER_INSTALL_DIR})
+-- 
+2.39.2
+

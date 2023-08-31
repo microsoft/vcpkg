@@ -1,0 +1,132 @@
+From e1bd6ec564601e52643c1f38064a03cd3c50e82b Mon Sep 17 00:00:00 2001
+From: Brandon Taylor <brandon.taylor221@gmail.com>
+Date: Thu, 31 Aug 2023 01:11:03 +0100
+Subject: [PATCH] link plugins to csound
+
+---
+ CMakeLists.txt         |  8 +++++++-
+ InOut/CMakeLists.txt   | 22 +++++++++++-----------
+ Opcodes/CMakeLists.txt | 12 ++++++------
+ 3 files changed, 24 insertions(+), 18 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index af1f0591c..833159191 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1181,10 +1181,16 @@ function(make_plugin libname srcs)
+ 
+     set(i 2)
+     while( ${i} LESS ${ARGC} )
+-        target_link_libraries(${libname} ${ARGV${i}})
++        target_link_libraries(${libname} PRIVATE ${ARGV${i}})
+         math(EXPR i "${i}+1")
+     endwhile()
+ 
++    if (BUILD_STATIC_LIBRARY)
++        target_link_libraries(${libname} PRIVATE ${CSOUNDLIB_STATIC})
++    else()
++        target_link_libraries(${libname} PRIVATE ${CSOUNDLIB})
++    endif()
++
+     set_target_properties(${libname} PROPERTIES
+         RUNTIME_OUTPUT_DIRECTORY ${BUILD_PLUGINS_DIR}
+         LIBRARY_OUTPUT_DIRECTORY ${BUILD_PLUGINS_DIR}
+diff --git a/InOut/CMakeLists.txt b/InOut/CMakeLists.txt
+index 0a1986476..b10e5afca 100644
+--- a/InOut/CMakeLists.txt
++++ b/InOut/CMakeLists.txt
+@@ -99,10 +99,10 @@ if(APPLE)
+ #   check_deps(USE_AUDIOUNIT APPLE COREAUDIO_INCLUDE_PATH COREAUDIO_LIBRARY AUDIOUNIT_INCLUDE_PATH AUDIOUNIT_LIBRARY COREFOUNDATION_LIBRARY)
+         make_plugin(cmidi cmidi.c)
+         target_include_directories(cmidi PRIVATE ${COREMIDI_INCLUDE_PATH})
+-        target_link_libraries(cmidi ${COREMIDI_LIBRARY} ${COREFOUNDATION_LIBRARY})
++        target_link_libraries(cmidi PRIVATE ${COREMIDI_LIBRARY} ${COREFOUNDATION_LIBRARY})
+         make_plugin(rtauhal rtauhal.c)
+         target_include_directories(rtauhal PRIVATE ${AUDIOUNIT_INCLUDE_PATH})
+-        target_link_libraries(rtauhal ${AUDIOUNIT_LIBRARY} ${COREFOUNDATION_LIBRARY} ${COREAUDIO_LIBRARY})
++        target_link_libraries(rtauhal PRIVATE ${AUDIOUNIT_LIBRARY} ${COREFOUNDATION_LIBRARY} ${COREAUDIO_LIBRARY})
+ endif()
+ 
+ check_deps(USE_ALSA ALSA_HEADER ALSA_LIBRARY PTHREAD_LIBRARY)
+@@ -116,9 +116,9 @@ if(WIN32)
+     message(STATUS "Building Windows MME plugin(rtwinmm).")
+     if(MSVC)
+       make_plugin(rtwinmm rtwinmm.c)
+-      target_link_libraries(rtwinmm winmm.lib)
+-      target_link_libraries(rtwinmm gdi32)
+-      target_link_libraries(rtwinmm kernel32)
++      target_link_libraries(rtwinmm PRIVATE winmm.lib)
++      target_link_libraries(rtwinmm PRIVATE gdi32)
++      target_link_libraries(rtwinmm PRIVATE kernel32)
+     else()
+       set(rtwinmm_LIBS
+           winmm gdi32 kernel32) # should probably do checks for these libs
+@@ -149,7 +149,7 @@ if(PORTAUDIO_FOUND OR (TARGET portaudio_static) OR (TARGET portaudio))
+         target_link_libraries(rtpa PRIVATE ${PORTAUDIO_LIBRARIES})
+     else()
+         target_include_directories(rtpa PRIVATE ${PORTAUDIO_INCLUDE_DIRS})
+-        target_link_libraries(rtpa ${PORTAUDIO_LIBRARIES})
++        target_link_libraries(rtpa PRIVATE ${PORTAUDIO_LIBRARIES})
+     endif()
+ else()
+   message(STATUS "Not building Portaudio Driver...")
+@@ -162,11 +162,11 @@ if(USE_PORTMIDI AND (PORTMIDI_FOUND OR PortMidi_FOUND))
+         target_link_libraries(pmidi PRIVATE PortMidi::portmidi)
+     else()
+         target_include_directories(pmidi PRIVATE ${PORTMIDI_INCLUDE_DIRS})
+-        target_link_libraries(pmidi ${PORTMIDI_LIBRARIES})
++        target_link_libraries(pmidi PRIVATE ${PORTMIDI_LIBRARIES})
+         if(WIN32)
+-            target_link_libraries(pmidi ${CSOUND_WINDOWS_LIBRARIES})
++            target_link_libraries(pmidi PRIVATE ${CSOUND_WINDOWS_LIBRARIES})
+         elseif(LINUX AND ALSA_LIBRARY)
+-            target_link_libraries(pmidi ${ALSA_LIBRARY})
++            target_link_libraries(pmidi PRIVATE ${ALSA_LIBRARY})
+         endif()
+     endif()
+ endif()
+@@ -205,8 +205,8 @@ if(HAIKU)
+ 	find_library(HAIKU_MIDI_LIBRARY midi2)
+ 	set(haiku_SRCS rthaiku.cpp HaikuAudio.cpp HaikuMidi.cpp)
+ 	make_plugin(rthaiku "${haiku_SRCS}")
+-    target_link_libraries(rthaiku ${HAIKU_MEDIA_LIBRARY})
+-    target_link_libraries(rthaiku ${HAIKU_MIDI_LIBRARY})
++    target_link_libraries(rthaiku PRIVATE ${HAIKU_MEDIA_LIBRARY})
++    target_link_libraries(rthaiku PRIVATE ${HAIKU_MIDI_LIBRARY})
+ endif()
+ 
+ 
+diff --git a/Opcodes/CMakeLists.txt b/Opcodes/CMakeLists.txt
+index 6ea32794f..e6fba5717 100644
+--- a/Opcodes/CMakeLists.txt
++++ b/Opcodes/CMakeLists.txt
+@@ -120,20 +120,20 @@ find_package(LIBLO)
+ if(BUILD_OSC_OPCODES AND LIBLO_FOUND)
+     make_plugin(osc OSC.c)
+     if(WIN32)
+-      target_link_libraries(osc ${LIBLO_LIBRARIES})
++      target_link_libraries(osc PRIVATE ${LIBLO_LIBRARIES})
+ 	  # FIXME how to build a static version of this?
+       if(BUILD_STATIC_LIBRARY AND NOT MSVC)
+         add_library(pthread_static STATIC IMPORTED)
+         set_target_properties(pthread_static PROPERTIES IMPORTED_LOCATION ${PTHREAD_LIBRARY})
+-        target_link_libraries(osc pthread_static)
++        target_link_libraries(osc PRIVATE pthread_static)
+       elseif(NOT MSVC)
+-        target_link_libraries(osc ${PTHREAD_LIBRARY})
++        target_link_libraries(osc PRIVATE ${PTHREAD_LIBRARY})
+       endif()
+-      target_link_libraries(osc wsock32 ws2_32 iphlpapi)
++      target_link_libraries(osc PRIVATE wsock32 ws2_32 iphlpapi)
+     elseif(HAIKU)
+-      target_link_libraries(osc ${LIBLO_LIBRARIES})
++      target_link_libraries(osc PRIVATE ${LIBLO_LIBRARIES})
+     else()
+-      target_link_libraries(osc ${LIBLO_LIBRARIES} pthread)
++      target_link_libraries(osc PRIVATE ${LIBLO_LIBRARIES} pthread)
+     endif()
+ endif()
+ 
+-- 
+2.39.2
+

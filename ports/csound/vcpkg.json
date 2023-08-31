@@ -1,0 +1,46 @@
+{
+  "name": "csound",
+  "version": "6.18.1",
+  "description": "Csound is a sound and music computing system which was originally developed by Barry Vercoe in 1985 at MIT Media Lab.",
+  "homepage": "https://csound.com/",
+  "license": "LGPL-2.1-only",
+  "dependencies": [
+    {
+      "name": "dirent",
+      "platform": "windows"
+    },
+    {
+      "name": "libsndfile",
+      "features": [
+        "external-libs",
+        "mpeg"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "portaudio",
+    "portmidi"
+  ],
+  "features": {
+    "portaudio": {
+      "description": "Enable PortAudio real-time audio",
+      "dependencies": [
+        "portaudio"
+      ]
+    },
+    "portmidi": {
+      "description": "Enable PortMidi midi",
+      "dependencies": [
+        "portmidi"
+      ]
+    }
+  }
+}

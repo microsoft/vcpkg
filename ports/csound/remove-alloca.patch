@@ -1,0 +1,44 @@
+From b2e32cd876bef9491480a4d7b71cc9fc34759ca1 Mon Sep 17 00:00:00 2001
+From: Brandon Taylor <brandon.taylor221@gmail.com>
+Date: Tue, 29 Aug 2023 11:25:44 +0100
+Subject: [PATCH] remove alloca
+
+---
+ Engine/envvar.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/Engine/envvar.c b/Engine/envvar.c
+index ac35b1427..5c421dd9f 100644
+--- a/Engine/envvar.c
++++ b/Engine/envvar.c
+@@ -1031,12 +1031,13 @@ void *csoundFileOpenWithType(CSOUND *csound, void *fd, int type,
+ #if defined(WIN32)
+       /* To handle Widows errors in file name characters. */
+       size_t sz = 2 * MultiByteToWideChar(CP_UTF8, 0, name, -1, NULL, 0);
+-      wchar_t *wfname = alloca(sz);
++      // alloca not available on all platforms
++      wchar_t *wfname = malloc(sz);
+       wchar_t *wmode = 0;
+ 
+       MultiByteToWideChar(CP_UTF8, 0, name, -1, wfname, sz);
+       sz = 2 * MultiByteToWideChar(CP_UTF8, 0, param, -1, NULL, 0);
+-      wmode = alloca(sz);
++      wmode = malloc(sz);
+       MultiByteToWideChar(CP_UTF8, 0, param, -1, wmode, sz);
+       if (type == CSFILE_STD) {
+         tmp_f = _wfopen(wfname, wmode);
+@@ -1047,6 +1048,11 @@ void *csoundFileOpenWithType(CSOUND *csound, void *fd, int type,
+         }
+         fullName = (char*) name;
+       }
++      free(wfname);
++      free(wmode);
++      // so we can resume with an else still
++      if (type == CSFILE_STD) {
++      }
+ #else
+       if (type == CSFILE_STD) {
+         fullName = (char*) name;
+-- 
+2.39.2
+

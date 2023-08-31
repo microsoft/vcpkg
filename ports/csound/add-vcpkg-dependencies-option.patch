@@ -1,0 +1,244 @@
+From ca5bccc2d35086e63752bbc37ac86c1cde025fb6 Mon Sep 17 00:00:00 2001
+From: Brandon Taylor <brandon.taylor221@gmail.com>
+Date: Thu, 31 Aug 2023 01:07:22 +0100
+Subject: [PATCH] add vcpkg dependencies option
+
+---
+ CMakeLists.txt            | 50 ++++++++++++++++++++++++++++-----------
+ InOut/CMakeLists.txt      | 44 +++++++++++++++++++++++-----------
+ interfaces/CMakeLists.txt |  7 +++++-
+ util/CMakeLists.txt       |  7 +++++-
+ 4 files changed, 78 insertions(+), 30 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0eb997c02..af1f0591c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -198,6 +198,7 @@ option(USE_GIT_COMMIT "Show the git commit in version information" ON)
+ option(REQUIRE_PTHREADS "For non-Windows systems, set whether Csound will use threads or not" ON)
+ option(DEBUG_ERROR_ON_WARNING "Error on compiler warning" ON)
+ option(APPLE_FRAMEWORK "Build framework on Apple" ON)
++option(USE_VCPKG_DEPENDENCIES "Use dependencies from vcpkg" OFF)
+ 
+ # Include this after the install path definitions so we can override them here.
+ # Also after function definitions so we can use them there
+@@ -485,7 +486,7 @@ SET(BUILD_SHARED_LIBS ON)
+ 
+ ## HEADER/LIBRARY/OTHER CHECKS ##
+ # First, required stuff
+-if(MSVC)
++if(MSVC OR USE_VCPKG_DEPENDENCIES)
+     find_package(SndFile CONFIG REQUIRED)
+ else()
+     find_library(LIBSNDFILE_LIBRARY NAMES sndfile libsndfile-1 libsndfile)
+@@ -498,11 +499,13 @@ endif()
+ if(EMSCRIPTEN)
+   include_directories(emscripten/deps/libsndfile-1.0.25/src/)
+ endif()
+-find_path(SNDFILE_H_PATH sndfile.h)
+-if(SNDFILE_H_PATH)
+-    include_directories(${SNDFILE_H_PATH})
+-else()
+-    message(FATAL_ERROR "Could not find sndfile.h")
++if (NOT USE_VCPKG_DEPENDENCIES)
++    find_path(SNDFILE_H_PATH sndfile.h)
++    if(SNDFILE_H_PATH)
++        include_directories(${SNDFILE_H_PATH})
++    else()
++        message(FATAL_ERROR "Could not find sndfile.h")
++    endif()
+ endif()
+ 
+ SET(CMAKE_REQUIRED_LIBRARIES ${LIBSNDFILE_LIBRARY})
+@@ -702,7 +705,9 @@ if(REQUIRE_PTHREADS AND (PTHREAD_LIBRARY OR HAIKU))
+   endif()
+ endif()
+ 
+-include_directories(${LIBSNDFILE_INCLUDE_DIRECTORY})
++if (NOT USE_VCPKG_DEPENDENCIES)
++    include_directories(${LIBSNDFILE_INCLUDE_DIRECTORY})
++endif()
+ # get the git hash and pass it to csound
+ SET(git_hash_values "none")
+ if(USE_GIT_COMMIT)
+@@ -1207,8 +1212,11 @@ else()
+     FRAMEWORK DESTINATION "${CS_FRAMEWORK_DEST}")
+ endif()
+ 
+-
+-set(libcsound_LIBS ${LIBSNDFILE_LIBRARY})
++if (USE_VCPKG_DEPENDENCIES)
++    set(libcsound_LIBS "")
++else()
++    set(libcsound_LIBS ${LIBSNDFILE_LIBRARY})
++endif()
+ 
+ if(REQUIRE_PTHREADS AND PTHREAD_LIBRARY)
+   list(APPEND libcsound_LIBS ${PTHREAD_LIBRARY})
+@@ -1220,7 +1228,9 @@ endif()
+ 
+ if(WIN32)
+     list(APPEND libcsound_LIBS "${CSOUND_WINDOWS_LIBRARIES}")
+-    list(APPEND libcsound_LIBS "${LIBSNDFILE_SUPPORT_LIBS}")
++    if (NOT USE_VCPKG_DEPENDENCIES)
++        list(APPEND libcsound_LIBS "${LIBSNDFILE_SUPPORT_LIBS}")
++    endif()
+ endif()
+ 
+ if(USE_CURL AND CURL_FOUND)
+@@ -1366,9 +1376,15 @@ endif()
+ 
+ target_compile_options(${CSOUNDLIB} PRIVATE ${libcsound_CFLAGS})
+ if(MSVC)
+-    target_link_libraries(${CSOUNDLIB} PRIVATE SndFile::sndfile ws2_32)
++    target_link_libraries(${CSOUNDLIB} PUBLIC SndFile::sndfile)
++    target_link_libraries(${CSOUNDLIB} PRIVATE ws2_32)
+ else()
+-    target_link_libraries(${CSOUNDLIB} PRIVATE ${libcsound_LIBS})
++    if (USE_VCPKG_DEPENDENCIES)
++        target_link_libraries(${CSOUNDLIB} PUBLIC SndFile::sndfile)
++        target_link_libraries(${CSOUNDLIB} PRIVATE ${libcsound_LIBS})
++    else()
++        target_link_libraries(${CSOUNDLIB} PRIVATE ${libcsound_LIBS})
++    endif()
+ endif()
+ 
+ set_target_properties(${CSOUNDLIB} PROPERTIES
+@@ -1387,9 +1403,15 @@ if(BUILD_STATIC_LIBRARY)
+     endif()
+ 
+     if(MSVC)
+-        target_link_libraries(${CSOUNDLIB_STATIC} PRIVATE SndFile::sndfile ${CSOUND_WINDOWS_LIBRARIES})
++        target_link_libraries(${CSOUNDLIB_STATIC} PUBLIC SndFile::sndfile)
++        target_link_libraries(${CSOUNDLIB_STATIC} PRIVATE ${CSOUND_WINDOWS_LIBRARIES})
+     else()
+-        target_link_libraries(${CSOUNDLIB_STATIC} ${libcsound_LIBS})
++        if (USE_VCPKG_DEPENDENCIES)
++            target_link_libraries(${CSOUNDLIB_STATIC} PUBLIC SndFile::sndfile)
++            target_link_libraries(${CSOUNDLIB_STATIC} PRIVATE ${libcsound_LIBS})
++        else()
++            target_link_libraries(${CSOUNDLIB_STATIC} ${libcsound_LIBS})
++        endif()
+     endif()
+ 
+     set_target_properties(${CSOUNDLIB_STATIC} PROPERTIES
+diff --git a/InOut/CMakeLists.txt b/InOut/CMakeLists.txt
+index 8a3fe7737..0a1986476 100644
+--- a/InOut/CMakeLists.txt
++++ b/InOut/CMakeLists.txt
+@@ -23,11 +23,11 @@ if(USE_ALSA AND LINUX)
+ endif()
+ if(USE_PORTAUDIO)
+     # FIXME the msvc branch should use the VCPKG config file for portaudio but it's currently broken
+-    # if(MSVC)
+-        # find_package(PORTAUDIO CONFIG REQUIRED)
+-    # else()
++    if(USE_VCPKG_DEPENDENCIES)
++        find_package(portaudio CONFIG)
++    else()
+         find_package(PORTAUDIO)
+-    # endif()
++    endif()
+     
+     # find_path(PORTAUDIO_INCLUDE_PATH portaudio.h)
+     # find_library(PORTAUDIO_LIBRARY NAMES portaudio portaudio_x64)
+@@ -46,7 +46,12 @@ if(USE_PORTAUDIO)
+     # endif()
+ endif()
+ if(USE_PORTMIDI)
+-    find_package(PORTMIDI)
++    if(USE_VCPKG_DEPENDENCIES)
++        find_package(Threads)
++        find_package(PortMidi CONFIG)  
++    else()
++        find_package(PORTMIDI)
++    endif()
+ endif()
+ if(USE_JACK)
+     find_library(JACK_LIBRARY jack)
+@@ -127,11 +132,18 @@ if(USE_PULSEAUDIO)
+     make_plugin(rtpulse rtpulse.c ${PULSEAUDIO_LIBRARY} ${PULSESIMPLE_LIBRARY})
+ endif()
+ 
+-if(PORTAUDIO_FOUND)
++if(PORTAUDIO_FOUND OR (TARGET portaudio_static) OR (TARGET portaudio))
+     message(STATUS "Building rtpa module.")
+     make_plugin(rtpa rtpa.c)
+ 
+-    if(MSVC)
++    if (USE_VCPKG_DEPENDENCIES)
++        # make sure we link the right target
++        if (TARGET portaudio_static)
++            target_link_libraries(rtpa PRIVATE portaudio_static)
++        else()
++            target_link_libraries(rtpa PRIVATE portaudio)
++        endif()
++    elseif(MSVC)
+         # FIXME should be able to use VCPKG export but not working currently
+         # target_link_libraries(rtpa PRIVATE portaudio portaudio_static)
+         target_link_libraries(rtpa PRIVATE ${PORTAUDIO_LIBRARIES})
+@@ -144,14 +156,18 @@ else()
+   message(STATUS "Portaudio v19 Found: ${PORTAUDIO_V19}.")
+ endif()
+ 
+-if(USE_PORTMIDI AND PORTMIDI_FOUND)
++if(USE_PORTMIDI AND (PORTMIDI_FOUND OR PortMidi_FOUND))
+     make_plugin(pmidi pmidi.c)
+-    target_include_directories(pmidi PRIVATE ${PORTMIDI_INCLUDE_DIRS})
+-    target_link_libraries(pmidi ${PORTMIDI_LIBRARIES})
+-    if(WIN32)
+-      target_link_libraries(pmidi ${CSOUND_WINDOWS_LIBRARIES})
+-    elseif(LINUX AND ALSA_LIBRARY)
+-      target_link_libraries(pmidi ${ALSA_LIBRARY})
++    if (USE_VCPKG_DEPENDENCIES)
++        target_link_libraries(pmidi PRIVATE PortMidi::portmidi)
++    else()
++        target_include_directories(pmidi PRIVATE ${PORTMIDI_INCLUDE_DIRS})
++        target_link_libraries(pmidi ${PORTMIDI_LIBRARIES})
++        if(WIN32)
++            target_link_libraries(pmidi ${CSOUND_WINDOWS_LIBRARIES})
++        elseif(LINUX AND ALSA_LIBRARY)
++            target_link_libraries(pmidi ${ALSA_LIBRARY})
++        endif()
+     endif()
+ endif()
+ 
+diff --git a/interfaces/CMakeLists.txt b/interfaces/CMakeLists.txt
+index 19ad3d1df..9c6c1b41e 100644
+--- a/interfaces/CMakeLists.txt
++++ b/interfaces/CMakeLists.txt
+@@ -38,7 +38,12 @@ if(BUILD_CXX_INTERFACE)
+     set(libcsnd6_CFLAGS "")
+     list(APPEND libcsnd6_LIBS ${CSOUNDLIB})
+ 
+-    target_link_libraries(libcsnd6 ${libcsnd6_LIBS})
++    if (USE_VCPKG_DEPENDENCIES)
++        target_link_libraries(libcsnd6 PUBLIC ${CSOUNDLIB} SndFile::sndfile)
++    else()
++        target_link_libraries(libcsnd6 ${libcsnd6_LIBS})
++    endif()
++
+     # users of this lib will need this dir included
+     target_include_directories(libcsnd6 INTERFACE
+         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+diff --git a/util/CMakeLists.txt b/util/CMakeLists.txt
+index ad34fdb1b..2d9df21e6 100644
+--- a/util/CMakeLists.txt
++++ b/util/CMakeLists.txt
+@@ -12,7 +12,12 @@ if(MSVC)
+     set(LIBSNDFILE_LIBRARY SndFile::sndfile)
+ endif()
+ 
+-make_plugin(stdutil "${stdutil_SRCS}" ${MATH_LIBRARY} ${LIBSNDFILE_LIBRARY} ${LIBSNDFILE_SUPPORT_LIBS})
++if (USE_VCPKG_DEPENDENCIES)
++    make_plugin(stdutil "${stdutil_SRCS}")
++    target_link_libraries(stdutil PRIVATE ${MATH_LIBRARY} SndFile::sndfile)
++else()
++    make_plugin(stdutil "${stdutil_SRCS}" ${MATH_LIBRARY} ${LIBSNDFILE_LIBRARY} ${LIBSNDFILE_SUPPORT_LIBS})
++endif()
+ 
+ if(BUILD_UTILITIES)
+     make_utility(atsa        atsa_main.c)
+-- 
+2.39.2
+

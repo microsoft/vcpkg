@@ -1,0 +1,113 @@
+From d16d44071bd6fa54fbb48f56c8d9db1745b3d6f6 Mon Sep 17 00:00:00 2001
+From: Brandon Taylor <brandon.taylor221@gmail.com>
+Date: Tue, 29 Aug 2023 11:59:06 +0100
+Subject: [PATCH] cmake exports
+
+---
+ CMakeLists.txt            | 13 +++++++++++--
+ interfaces/CMakeLists.txt |  4 ++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bc1dd2a7f..de5d25c4d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -108,6 +108,7 @@ function(make_executable name srcs libs)
+             OUTPUT_NAME ${ARGV3})
+     endif()
+     install(TARGETS ${name}
++    EXPORT CSoundExports
+ 	RUNTIME DESTINATION "${EXECUTABLE_INSTALL_DIR}" )
+ endfunction(make_executable)
+ 
+@@ -1168,6 +1169,7 @@ function(make_plugin libname srcs)
+         ARCHIVE_OUTPUT_DIRECTORY ${BUILD_PLUGINS_DIR})
+ 
+     install(TARGETS ${libname}
++        EXPORT CSoundExports
+         LIBRARY DESTINATION "${PLUGIN_INSTALL_DIR}"
+         ARCHIVE DESTINATION "${PLUGIN_INSTALL_DIR}" )
+ 
+@@ -1176,11 +1178,13 @@ endfunction(make_plugin)
+ # Add the install target
+ if(WIN32)
+   install(TARGETS ${CSOUNDLIB}
++    EXPORT CSoundExports
+     RUNTIME DESTINATION "${EXECUTABLE_INSTALL_DIR}"
+     ARCHIVE DESTINATION "${LIBRARY_INSTALL_DIR}"
+     FRAMEWORK DESTINATION "${CS_FRAMEWORK_DEST}")
+ else()
+   install(TARGETS ${CSOUNDLIB}
++    EXPORT CSoundExports
+     LIBRARY DESTINATION "${LIBRARY_INSTALL_DIR}"
+     ARCHIVE DESTINATION "${LIBRARY_INSTALL_DIR}"
+     FRAMEWORK DESTINATION "${CS_FRAMEWORK_DEST}")
+@@ -1378,6 +1382,7 @@ if(BUILD_STATIC_LIBRARY)
+ 
+     # Add the install target
+     install(TARGETS ${CSOUNDLIB_STATIC}
++        EXPORT CSoundExports
+         LIBRARY DESTINATION "${LIBRARY_INSTALL_DIR}"
+         ARCHIVE DESTINATION "${LIBRARY_INSTALL_DIR}")
+ endif()
+@@ -1385,6 +1390,7 @@ endif()
+ # VL -- this seems to be a duplicate instruction
+ # and it's breaking the build. See lines 1088-95
+ #install(TARGETS ${CSOUNDLIB}
++#    EXPORT CSoundExports
+ #    LIBRARY DESTINATION "${LIBRARY_INSTALL_DIR}"
+ #   ARCHIVE DESTINATION "${LIBRARY_INSTALL_DIR}")
+ 
+@@ -1450,8 +1456,11 @@ if(DOXYGEN_FOUND)
+ endif(DOXYGEN_FOUND)
+ 
+ # install CMake module
+-install(FILES ${CMAKE_SOURCE_DIR}/cmake/Modules/FindCsound.cmake
+-        DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/Csound")
++install(EXPORT CSoundExports
++    FILE "CSoundConfig.cmake"
++    NAMESPACE "CSound::"
++    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/csound"
++)
+ 
+ # install samples
+ if(APPLE AND APPLE_FRAMEWORK)
+diff --git a/interfaces/CMakeLists.txt b/interfaces/CMakeLists.txt
+index cf4d123aa..d6fb1dd8a 100644
+--- a/interfaces/CMakeLists.txt
++++ b/interfaces/CMakeLists.txt
+@@ -60,6 +60,7 @@ if(BUILD_CXX_INTERFACE)
+ 
+ 
+     install(TARGETS libcsnd6
++        EXPORT CSoundExports
+         LIBRARY DESTINATION "${LIBRARY_INSTALL_DIR}"
+         ARCHIVE DESTINATION "${LIBRARY_INSTALL_DIR}")
+ 
+@@ -80,6 +81,7 @@ if(BUILD_STATIC_LIBRARY)
+ 
+     # Add the install target
+     install(TARGETS libcsnd6-static
++        EXPORT CSoundExports
+         LIBRARY DESTINATION "${LIBRARY_INSTALL_DIR}"
+         ARCHIVE DESTINATION "${LIBRARY_INSTALL_DIR}")
+ endif()
+@@ -209,6 +211,7 @@ if(BUILD_JAVA_INTERFACE OR BUILD_LUA_INTERFACE)
+          endif()
+ 
+         install(TARGETS _jcsound6
++            EXPORT CSoundExports
+             LIBRARY DESTINATION "${JAVA_MODULE_INSTALL_DIR}"
+             ARCHIVE DESTINATION "${JAVA_MODULE_INSTALL_DIR}")
+         install(FILES ${BUILD_LIB_DIR}/csnd6.jar
+@@ -255,6 +258,7 @@ if(BUILD_JAVA_INTERFACE OR BUILD_LUA_INTERFACE)
+         endif()
+ 
+         install(TARGETS luaCsnd6
++            EXPORT CSoundExports
+             LIBRARY DESTINATION "${LUA_MODULE_INSTALL_DIR}"
+             ARCHIVE DESTINATION "${LUA_MODULE_INSTALL_DIR}")
+ 
+-- 
+2.39.2
+

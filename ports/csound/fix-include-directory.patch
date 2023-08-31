@@ -1,0 +1,28 @@
+From 48873e9d7a48b8252aa60fb65babc383fce1746b Mon Sep 17 00:00:00 2001
+From: Brandon Taylor <brandon.taylor221@gmail.com>
+Date: Tue, 29 Aug 2023 12:16:33 +0100
+Subject: [PATCH] fix include directory
+
+---
+ interfaces/CMakeLists.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/interfaces/CMakeLists.txt b/interfaces/CMakeLists.txt
+index d6fb1dd8a..19ad3d1df 100644
+--- a/interfaces/CMakeLists.txt
++++ b/interfaces/CMakeLists.txt
+@@ -40,7 +40,10 @@ if(BUILD_CXX_INTERFACE)
+ 
+     target_link_libraries(libcsnd6 ${libcsnd6_LIBS})
+     # users of this lib will need this dir included
+-    target_include_directories(libcsnd6 INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
++    target_include_directories(libcsnd6 INTERFACE
++        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
++        "$<INSTALL_INTERFACE:include>"
++    )
+     set_target_properties(libcsnd6 PROPERTIES
+         SOVERSION ${APIVERSION}
+         OUTPUT_NAME csnd6
+-- 
+2.39.2
+

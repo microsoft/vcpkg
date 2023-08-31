@@ -1,0 +1,39 @@
+From 07803dc12bdbda04b05213a09502e1146c44ad4e Mon Sep 17 00:00:00 2001
+From: Brandon Taylor <brandon.taylor221@gmail.com>
+Date: Tue, 29 Aug 2023 11:31:54 +0100
+Subject: [PATCH] error on warning option
+
+---
+ CMakeLists.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c333e83aa..a3ae97d2d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -184,6 +184,7 @@ option(BUILD_INSTALLER "Build installer" OFF)
+ option(BUILD_TESTS "Build tests" ON)
+ option(USE_GIT_COMMIT "Show the git commit in version information" ON)
+ option(REQUIRE_PTHREADS "For non-Windows systems, set whether Csound will use threads or not" ON)
++option(DEBUG_ERROR_ON_WARNING "Error on compiler warning" ON)
+ 
+ # Include this after the install path definitions so we can override them here.
+ # Also after function definitions so we can use them there
+@@ -212,8 +213,12 @@ if(NOT MSVC AND NOT WASM)
+     set(CMAKE_CXX_FLAGS_RELEASE "-O3 ")
+     set(CMAKE_C_FLAGS_RELEASE "-O3 ")
+     if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
+-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wall -Werror -Wno-missing-field-initializers")
+-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -Wno-missing-field-initializers")
++        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wall -Wno-missing-field-initializers")
++        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-missing-field-initializers")
++        if (DEBUG_ERROR_ON_WARNING)
++            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
++            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
++        endif()
+     endif()
+ endif()
+ 
+-- 
+2.39.2
+

@@ -1,0 +1,34 @@
+From d4d5905e92f1c1c074015a301bb4be3030b674df Mon Sep 17 00:00:00 2001
+From: Brandon Taylor <brandon.taylor221@gmail.com>
+Date: Thu, 31 Aug 2023 01:09:35 +0100
+Subject: [PATCH] add dirent to ftsamplebank
+
+---
+ Opcodes/CMakeLists.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Opcodes/CMakeLists.txt b/Opcodes/CMakeLists.txt
+index 82327ed3d..6ea32794f 100644
+--- a/Opcodes/CMakeLists.txt
++++ b/Opcodes/CMakeLists.txt
+@@ -23,12 +23,17 @@ message(STATUS "## Building Plugin Opcodes ##")
+ make_plugin(doppler doppler.cpp)
+ make_plugin(fractalnoise tl/fractalnoise.cpp)
+ make_plugin(ftsamplebank ftsamplebank.cpp)
++find_path(DIRENT_INCLUDE_DIRS "dirent.h" REQUIRED)
++target_include_directories(ftsamplebank PRIVATE ${DIRENT_INCLUDE_DIRS})
++
+ make_plugin(lfsr lfsr.cpp)
+ make_plugin(bformdec2 bformdec2.cpp)
+ make_plugin(mixer mixer.cpp)
+ make_plugin(signalflowgraph signalflowgraph.cpp)
+ make_plugin(ampmidid ampmidid.cpp)
+ 
++
++
+ if(APPLE)
+    make_plugin(arrayops arrayops.cpp)
+    make_plugin(pvsops pvsops.cpp)
+-- 
+2.39.2
+

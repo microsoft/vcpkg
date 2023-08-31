@@ -1,0 +1,42 @@
+From ee58eb8e5c2ee72fb7c71574753cd34f9261c69b Mon Sep 17 00:00:00 2001
+From: Brandon Taylor <brandon.taylor221@gmail.com>
+Date: Tue, 29 Aug 2023 11:21:24 +0100
+Subject: [PATCH] add python option
+
+---
+ interfaces/CMakeLists.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/interfaces/CMakeLists.txt b/interfaces/CMakeLists.txt
+index aff6e8fec..cf4d123aa 100644
+--- a/interfaces/CMakeLists.txt
++++ b/interfaces/CMakeLists.txt
+@@ -6,6 +6,7 @@ option(BUILD_CXX_INTERFACE "Build the C++ interface library" ON)
+ option(BUILD_JAVA_INTERFACE "Build the Java interface (needs BUILD_CXX_INTERFACE)" ON)
+ option(BUILD_LUA_INTERFACE "Build the Lua interface (needs
+ BUILD_CXX_INTERFACE)" ON)
++option(BUILD_PYTHON_INTERFACE "Build the Python interface" ON)
+ 
+ if(BUILD_CXX_INTERFACE)
+     message(STATUS "Building C++ interface library.")
+@@ -109,7 +110,7 @@ check_deps(BUILD_LUA_INTERFACE SWIG_FOUND BUILD_CXX_INTERFACE
+ LUA_LIBRARY LUA_H_PATH)
+ 
+ 
+-if(NOT APPLE)
++if(BUILD_PYTHON_INTERFACE AND NOT APPLE)
+       execute_process (
+            COMMAND python3 -c
+            "import site, sys; sys.stdout.write(site.getsitepackages()[0])"
+@@ -123,7 +124,7 @@ if(NOT APPLE)
+         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/ctcsound.py
+             DESTINATION ${PYTHON3_MODULE_INSTALL_DIR})
+       endif()
+-endif(NOT APPLE)
++endif()
+ 
+ 
+ if(BUILD_JAVA_INTERFACE OR BUILD_LUA_INTERFACE)
+-- 
+2.39.2
+

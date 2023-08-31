@@ -1,0 +1,34 @@
+To use in cmake:
+
+    find_package(CSound CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE CSound::csound64 CSound::libcsnd6)
+    install(IMPORTED_RUNTIME_ARTIFACTS 
+        CSound::ampmidid
+        CSound::arrayops
+        CSound::bformdec2
+        CSound::control # available on linux and osx
+        CSound::deprecated
+        CSound::doppler
+        CSound::fractalnoise
+        CSound::ftsamplebank
+        CSound::ipmidi
+        CSound::joystick # available on linux
+        CSound::lfsr 
+        CSound::mixer
+        CSound::padsynth
+        CSound::pmidi
+        CSound::pvsops
+        CSound::rtauhal # available on osx
+        CSound::rtpa
+        CSound::rtwinmm # available on windows
+        CSound::scansyn
+        CSound::signalflowgraph
+        CSound::stdutil
+        CSound::trigenvsegs
+        CSound::urandom # available on linux and osx
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/csound/plugins64-6.0"
+    )
+
+To use the plugins, set this environmental variable before running a binary, perhaps in a shell script.
+
+    OPCODE6DIR64="${CMAKE_INSTALL_PREFIX}/csound/plugins64-6.0"

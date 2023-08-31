@@ -1,0 +1,54 @@
+From 42ded1980a2eccac98d322ad6352a49c2c964622 Mon Sep 17 00:00:00 2001
+From: Brandon Taylor <brandon.taylor221@gmail.com>
+Date: Tue, 29 Aug 2023 12:09:56 +0100
+Subject: [PATCH] install rpath
+
+---
+ CMakeLists.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index de5d25c4d..0eb997c02 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,6 +4,10 @@ cmake_minimum_required(VERSION 3.5)
+ set(CMAKE_MACOSX_RPATH 1)
+ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+ 
++if (UNIX)
++    set(CMAKE_INSTALL_RPATH "$ORIGIN")
++endif()
++
+ 
+ option(USE_VCPKG "Use VCPKG to download and manage dependencies" OFF)
+ 
+@@ -102,6 +106,13 @@ function(make_executable name srcs libs)
+     target_link_libraries (${name} ${libs})
+     set_target_properties(${name} PROPERTIES
+         RUNTIME_OUTPUT_DIRECTORY ${BUILD_BIN_DIR})
++    
++    if(UNIX)
++        # out of bin
++        set_target_properties(${name} PROPERTIES
++            INSTALL_RPATH "$ORIGIN/../lib"
++        )
++    endif()
+ 
+     if(${ARGC} EQUAL 4)
+         set_target_properties(${name} PROPERTIES
+@@ -1157,6 +1168,12 @@ function(make_plugin libname srcs)
+         add_library(${libname} MODULE ${srcs})
+     endif()
+ 
++    if (UNIX)
++        set_target_properties(${libname} PROPERTIES
++            INSTALL_RPATH "$ORIGIN/../../../lib"
++        )
++    endif()
++
+     set(i 2)
+     while( ${i} LESS ${ARGC} )
+         target_link_libraries(${libname} ${ARGV${i}})
+-- 
+2.39.2
+
