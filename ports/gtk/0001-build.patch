@@ -1,29 +1,13 @@
 diff --git a/meson.build b/meson.build
-index 13517714b7..2132611c88 100644
+index 5efd8a9..d51af19 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -857,15 +857,15 @@ subdir('po')
+@@ -857,7 +857,7 @@ subdir('po')
  
  subdir('docs/reference')
  
 -if not meson.is_cross_build()
--  gnome.post_install(
--    glib_compile_schemas: true,
--    gio_querymodules: gio_module_dirs,
--    gtk_update_icon_cache: get_option('demos'),
--  )
--else
--  message('Not executing post-install steps automatically when cross compiling')
--endif
-+#if not meson.is_cross_build()
-+   gnome.post_install(
-+     glib_compile_schemas: true,
-+     gio_querymodules: gio_module_dirs,
-+     gtk_update_icon_cache: get_option('demos'),
-+   )
-+#else
-+#  message('Not executing post-install steps automatically when cross compiling')
-+#endif
- 
- if not meson.is_subproject()
-     meson.add_dist_script('build-aux/meson/dist-data.py')
++if false
+   gnome.post_install(
+     glib_compile_schemas: true,
+     gio_querymodules: gio_module_dirs,

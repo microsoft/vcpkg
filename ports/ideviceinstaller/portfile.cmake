@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/ideviceinstaller
@@ -9,11 +7,13 @@ vcpkg_from_github(
     PATCHES Add-missing-lib.patch
 )
 
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH ideviceinstaller.vcxproj
-    LICENSE_SUBPATH COPYING
-    USE_VCPKG_INTEGRATION
+    DEPENDENT_PKGCONFIG libimobiledevice-1.0 libzip
+    ADDITIONAL_LIBS getopt.lib
 )
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
