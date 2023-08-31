@@ -1932,6 +1932,10 @@
       "baseline": "4.3.0",
       "port-version": 1
     },
+    "csound": {
+      "baseline": "6.18.1",
+      "port-version": 0
+    },
     "cspice": {
       "baseline": "67",
       "port-version": 3
