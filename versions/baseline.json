@@ -8850,7 +8850,7 @@
     },
     "x265": {
       "baseline": "3.4",
-      "port-version": 9
+      "port-version": 10
     },
     "x86-simd-sort": {
       "baseline": "2023-03-04",
