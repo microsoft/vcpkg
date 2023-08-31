@@ -2,6 +2,8 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/Ipotrick/Daxa
     REF 14d5378a6157b3530c3ff826182706126be135bd
+    PATCHES
+        fix_find_VulkanMemoryAllocator.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
