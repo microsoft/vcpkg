@@ -1,0 +1,7 @@
+{
+  "name": "vcpkg-scripts",
+  "version-date": "2023-08-31",
+  "documentation": "https://vcpkg.io/en/docs/maintainers/ports/vcpkg-scripts.html",
+  "license": "MIT",
+  "supports": "native"
+}

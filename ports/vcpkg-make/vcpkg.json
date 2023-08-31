@@ -10,6 +10,7 @@
       "host" : true,
       "platform" : "windows"
     },
-    "vcpkg-cmake-get-vars"
+    "vcpkg-cmake-get-vars",
+    "vcpkg-scripts"
   ]
 }
