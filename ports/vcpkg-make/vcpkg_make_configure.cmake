@@ -1,5 +1,5 @@
 include_guard(GLOBAL)
-include("${CMAKE_CURRENT_LIST_DIR}/vcpkg-make.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 
 function(vcpkg_make_configure) #
 # Replacement for vcpkg_configure_make

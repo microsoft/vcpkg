@@ -1,6 +1,6 @@
 # Be aware of https://github.com/microsoft/vcpkg/pull/31228
 include_guard(GLOBAL)
-include("${CMAKE_CURRENT_LIST_DIR}/vcpkg-make-common.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make_common.cmake")
 
 function(vcpkg_run_bash)
     cmake_parse_arguments(PARSE_ARGV 0 arg
