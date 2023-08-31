@@ -16,9 +16,14 @@ vcpkg_from_github(
     PATCHES
         toolchain_fixes.patch
         fix_find_package_sdl2.patch
+        avoid-name-clashes.patch
+        fix-error-c2039.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
+if(EXISTS "${SOURCE_PATH}/CMake/FeatureSummary.cmake")
+    file(RENAME "${SOURCE_PATH}/CMake/FeatureSummary.cmake" "${SOURCE_PATH}/CMake/OgreFeatureSummary.cmake")
+endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(OGRE_STATIC ON)
@@ -26,22 +31,12 @@ else()
     set(OGRE_STATIC OFF)
 endif()
 
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        d3d9    OGRE_BUILD_RENDERSYSTEM_D3D9
-        java    OGRE_BUILD_COMPONENT_JAVA
-        python  OGRE_BUILD_COMPONENT_PYTHON
-        csharp  OGRE_BUILD_COMPONENT_CSHARP
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DOGRE_BUILD_DEPENDENCIES=OFF
         -DOGRE_COPY_DEPENDENCIES=OFF
-        -DOGRE_BUILD_SAMPLES=OFF
+        -DOGRE_BUILD_SAMPLES2=OFF
         -DOGRE_BUILD_TESTS=OFF
         -DOGRE_BUILD_TOOLS=OFF
         -DOGRE_BUILD_MSVC_MP=ON
@@ -113,7 +108,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
