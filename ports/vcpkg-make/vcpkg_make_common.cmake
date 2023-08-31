@@ -24,7 +24,6 @@ macro(z_vcpkg_make_set_common_vars)
     endif()
 endmacro()
 
-
 ###
 macro(z_vcpkg_make_get_cmake_vars)
     z_vcpkg_get_global_property(has_cmake_vars_file "make_cmake_vars_file" SET)
@@ -419,7 +418,7 @@ function(z_vcpkg_make_prepare_programs out_env)
     set("${out_env}" "${configure_env}" PARENT_SCOPE)
 endfunction()
 
-function(vcpkg_make_prepare_flags) # Hmm change name?
+function(z_vcpkg_make_prepare_flags) # Hmm change name?
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "NO_CPP;NO_WRAPPERS" 
         "LIBS_OUT;FRONTEND_VARIANT_OUT;C_COMPILER_NAME"
@@ -547,7 +546,7 @@ function(vcpkg_make_prepare_flags) # Hmm change name?
     set("${arg_FRONTEND_VARIANT_OUT}" "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" PARENT_SCOPE)
 endfunction()
 
-function(vcpkg_make_default_path_and_configure_options out_var)
+function(z_vcpkg_make_default_path_and_configure_options out_var)
     # THIS IS TODO
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "AUTOMAKE" 

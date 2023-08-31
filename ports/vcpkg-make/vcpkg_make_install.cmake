@@ -58,7 +58,7 @@ function(vcpkg_make_install)
 
     z_vcpkg_make_set_common_vars()
     z_vcpkg_get_global_property(prepare_flags_opts "make_prepare_flags_opts")
-    vcpkg_make_prepare_flags(${prepare_flags_opts})
+    z_vcpkg_make_prepare_flags(${prepare_flags_opts})
 
     set(prepare_env_opts "")
     if(arg_ADD_BIN_TO_PATH)
@@ -74,7 +74,7 @@ function(vcpkg_make_install)
         message(STATUS "Building/Installing ${TARGET_TRIPLET}-${short_buildtype}")
 
         # Setup environment
-        vcpkg_make_prepare_env("${cmake_buildtype}" ${prepare_env_opts})
+        z_vcpkg_make_prepare_env("${cmake_buildtype}" ${prepare_env_opts})
 
         set(destdir_opt "")
         if(NOT arg_NO_DESTDIR)
@@ -105,7 +105,7 @@ function(vcpkg_make_install)
             endif()
         endforeach()
 
-        vcpkg_make_restore_env()
+        z_vcpkg_make_restore_env()
 
         vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH)
     endforeach()

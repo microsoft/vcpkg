@@ -42,7 +42,7 @@ function(vcpkg_make_configure) #
         list(APPEND prepare_flags_opts "LANGUAGES" "${arg_LANGUAGES}")
     endif()
     z_vcpkg_set_global_property(make_prepare_flags_opts "${prepare_flags_opts}")
-    vcpkg_make_prepare_flags(${prepare_flags_opts} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
+    z_vcpkg_make_prepare_flags(${prepare_flags_opts} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
 
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
@@ -107,10 +107,10 @@ function(vcpkg_make_configure) #
         endif()
 
         set(opts "")
-        vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}") # TODO: figure out outmake
+        z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}") # TODO: figure out outmake
         set(opts_cache "")
         if(NOT arg_NO_CONFIGURE_CACHE)
-            vcpkg_make_prepare_configure_cache(opts_cache CONFIG "${configup}" WORKING_DIRECTORY "${target_dir}")
+            z_vcpkg_make_prepare_configure_cache(opts_cache CONFIG "${configup}" WORKING_DIRECTORY "${target_dir}")
         endif()
         vcpkg_list(APPEND arg_OPTIONS ${opts})
 
