@@ -414,7 +414,7 @@
     },
     "azure-core-cpp": {
       "baseline": "1.10.2",
-      "port-version": 3
+      "port-version": 4
     },
     "azure-core-tracing-opentelemetry-cpp": {
       "baseline": "1.0.0-beta.4",
@@ -1446,7 +1446,7 @@
     },
     "cctag": {
       "baseline": "1.0.2",
-      "port-version": 4
+      "port-version": 5
     },
     "cctz": {
       "baseline": "2.3",
@@ -2065,7 +2065,7 @@
       "port-version": 0
     },
     "daxa": {
-      "baseline": "1.0.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "dbg-macro": {
@@ -2290,7 +2290,7 @@
     },
     "easyloggingpp": {
       "baseline": "9.97.0",
-      "port-version": 3
+      "port-version": 4
     },
     "eathread": {
       "baseline": "1.32.09",
@@ -3438,7 +3438,7 @@
     },
     "intel-mkl": {
       "baseline": "2023.0.0",
-      "port-version": 2
+      "port-version": 3
     },
     "intelrdfpmathlib": {
       "baseline": "20U2",
@@ -4250,7 +4250,7 @@
     },
     "libjpeg-turbo": {
       "baseline": "3.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libjuice": {
       "baseline": "1.0.6",
@@ -5309,8 +5309,8 @@
       "port-version": 6
     },
     "meshoptimizer": {
-      "baseline": "0.18",
-      "port-version": 1
+      "baseline": "0.19",
+      "port-version": 0
     },
     "metis": {
       "baseline": "2022-07-27",
@@ -5807,6 +5807,10 @@
     "nt-wrapper": {
       "baseline": "2019-08-10",
       "port-version": 3
+    },
+    "ntf-core": {
+      "baseline": "2.1.0",
+      "port-version": 0
     },
     "nu-book-zxing-cpp": {
       "baseline": "2.1.0",
@@ -7446,7 +7450,7 @@
     },
     "sdformat13": {
       "baseline": "13.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sdformat6": {
       "baseline": "6.2.0",
@@ -8850,7 +8854,7 @@
     },
     "x265": {
       "baseline": "3.4",
-      "port-version": 9
+      "port-version": 10
     },
     "x86-simd-sort": {
       "baseline": "2023-03-04",
