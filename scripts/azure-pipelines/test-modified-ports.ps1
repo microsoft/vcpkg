@@ -167,7 +167,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
         Write-Host "CI baseline was modified, not using parent hashes"
     }
     Write-Host "Running CI for HEAD"
-    & git reset --hard HEAD | Out-Null
+    & git reset 2>&1
 }
 
 # The vcpkg.cmake toolchain file is not part of ABI hashing,
