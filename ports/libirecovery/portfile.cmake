@@ -20,6 +20,16 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT})
 vcpkg_fixup_pkgconfig()
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libirecovery.h"
+        "#ifdef IRECV_STATIC" "#if 1"
+    )
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libirecovery.h"
+        "#ifdef IRECV_STATIC" "#if 0"
+    )
+endif()
+
 file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake" cmake_config)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake"
 "include(CMakeFindDependencyMacro)
