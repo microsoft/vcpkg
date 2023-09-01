@@ -8,6 +8,7 @@ vcpkg_from_git(
         disable-msvc-env-setup.patch
         uwp.patch
         core-opengl32.patch
+        disable-dev-test.patch
 )
 
 # these following aren't available in vcpkg
@@ -277,7 +278,7 @@ endif()
 
 vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS "${OPTIONS} skia_use_lua=false skia_enable_tools=false skia_enable_spirv_validation=false is_skia_dev_build=false"
+    OPTIONS "${OPTIONS} skia_use_lua=false skia_enable_tools=false skia_enable_spirv_validation=false"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
