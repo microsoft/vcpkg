@@ -1,6 +1,11 @@
 function(vcpkg_copy_pdbs)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "" "BUILD_PATHS")
 
+    if(Z_VCPKG_DID_COPY_PDBS)
+        message(WARNING "'vcpkg_copy_pdbs' was already called. skip.")
+        return()
+    endif()
+
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
@@ -45,5 +50,7 @@ function(vcpkg_copy_pdbs)
     ${message}\n")
         endif()
     endif()
+
+    set(Z_VCPKG_DID_COPY_PDBS TRUE PARENT_SCOPE)
 
 endfunction()
