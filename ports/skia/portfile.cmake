@@ -114,7 +114,7 @@ elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
 elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     string(APPEND OPTIONS " target_os=\"win\"")
     if(VCPKG_TARGET_IS_UWP)
-        string(APPEND OPTIONS " skia_enable_winuwp=true skia_enable_fontmgr_win=false skia_use_xps=false is_skia_dev_build=false")
+        string(APPEND OPTIONS " skia_enable_winuwp=true skia_enable_fontmgr_win=false skia_use_xps=false ")
     endif()
 endif()
 
@@ -277,7 +277,7 @@ endif()
 
 vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS "${OPTIONS} skia_use_lua=false skia_enable_tools=false skia_enable_spirv_validation=false"
+    OPTIONS "${OPTIONS} skia_use_lua=false skia_enable_tools=false skia_enable_spirv_validation=false is_skia_dev_build=false"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
