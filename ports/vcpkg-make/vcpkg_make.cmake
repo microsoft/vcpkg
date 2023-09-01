@@ -15,22 +15,14 @@ function(vcpkg_run_bash)
         set(extra_opts SAVE_LOG_FILES ${arg_SAVE_LOG_FILES})
     endif()
 
-    if (CMAKE_HOST_WIN32)
-        list(JOIN arg_COMMAND " " cmd)
-        vcpkg_execute_required_process(
-            COMMAND ${arg_BASH} -c "${cmd}"
-            WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
-            LOGNAME "${arg_LOGNAME}"
-            ${extra_opts}
-        )
-    else()
-        vcpkg_execute_required_process(
-            COMMAND ${arg_COMMAND}
-            WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
-            LOGNAME "${arg_LOGNAME}"
-            ${extra_opts}
-        )
-    endif()
+    list(JOIN arg_COMMAND " " cmd)
+    vcpkg_execute_required_process(
+        COMMAND ${arg_BASH} -c "${cmd}"
+        WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
+        LOGNAME "${arg_LOGNAME}"
+        ${extra_opts}
+    )
+
 endfunction()
 
 function(vcpkg_run_autoreconf bash_cmd work_dir)
@@ -237,8 +229,7 @@ function(vcpkg_make_run_configure)
     endforeach()
     vcpkg_list(JOIN tmp " " "arg_OPTIONS")
 
-    set(command "${arg_CONFIGURE_ENV} ${arg_CONFIGURE_PATH} ${arg_OPTIONS}")
-    string(STRIP "${command}" command)
+    set(command ${arg_CONFIGURE_ENV} ${arg_CONFIGURE_PATH} ${arg_OPTIONS})
 
     message(STATUS "Configuring ${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}")
     vcpkg_run_bash(
@@ -246,7 +237,7 @@ function(vcpkg_make_run_configure)
         LOGNAME "config-${TARGET_TRIPLET}-${suffix_${arg_CONFIG}}"
         SAVE_LOG_FILES config.log
         BASH ${arg_BASH}
-        COMMAND "V=1 ${command}"
+        COMMAND V=1 ${command}
     )
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(GLOB_RECURSE libtool_files "${arg_WORKING_DIRECTORY}*/libtool")

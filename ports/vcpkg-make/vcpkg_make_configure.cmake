@@ -69,7 +69,7 @@ function(vcpkg_make_configure) #
             message(STATUS "Running script:'${script}'")
             vcpkg_run_bash(
                 BASH "${shell_cmd}"
-                COMMAND "${script}"
+                COMMAND ${script}
                 WORKING_DIRECTORY "${src_dir}"
                 LOGNAME "run-script-${run_index}-${TARGET_TRIPLET}"
             )
