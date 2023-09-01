@@ -1,7 +1,6 @@
 {
   "name": "catch2",
-  "version-semver": "3.3.2",
-  "port-version": 1,
+  "version-semver": "3.4.0",
   "description": "A modern, header-only test framework for unit testing.",
   "homepage": "https://github.com/catchorg/Catch2",
   "license": "BSL-1.0",

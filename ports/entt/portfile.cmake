@@ -1,38 +1,26 @@
-if ("experimental" IN_LIST FEATURES)
-    vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO skypjack/entt
-        HEAD_REF experimental
-    )
-else()
-    vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO skypjack/entt
-        REF "v${VERSION}"
-        SHA512 51fe70e68cbb7d3a5a9ca6b5ff974d324e34248a13a1c828b6c5876461a173861ab26f1bfd0bac7287f8499d07b93bdb73622b579d11a65c916aad7b642dc6e0
-        HEAD_REF master
-    )
-endif()
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO skypjack/entt
+    REF "v${VERSION}"
+    SHA512 8382092339476fa187e0110ec4ba9a0ff93966a31263b28d9edb25068705815d120520b55c640bc3ced852a91762abed6da2bd9a50eaf274272605a8b5b493b9
+    HEAD_REF master
+)
+
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DENTT_BUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/EnTT/cmake)
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/EnTT/cmake)
-endif()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 # Install natvis files
 file(INSTALL "${SOURCE_PATH}/natvis/entt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/natvis")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

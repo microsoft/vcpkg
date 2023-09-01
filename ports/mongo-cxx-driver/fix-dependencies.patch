@@ -1,8 +1,8 @@
 diff --git a/src/bsoncxx/CMakeLists.txt b/src/bsoncxx/CMakeLists.txt
-index d87d588..16ba095 100644
+index f30aea836..50610ffb1 100644
 --- a/src/bsoncxx/CMakeLists.txt
 +++ b/src/bsoncxx/CMakeLists.txt
-@@ -218,6 +221,9 @@ if(BSONCXX_BUILD_STATIC)
+@@ -215,6 +215,9 @@ if(BSONCXX_BUILD_STATIC)
      bsoncxx_install_deprecated_cmake(bsoncxx-static)
      list(APPEND bsoncxx_target_list bsoncxx_static)
      set(bsoncxx_pkg_dep "find_dependency(bson-1.0 REQUIRED)")
@@ -10,5 +10,5 @@ index d87d588..16ba095 100644
 +        string(APPEND bsoncxx_pkg_dep "\nfind_dependency(Boost)")
 +    endif()
  endif()
- bsoncxx_install("${bsoncxx_target_list}" "${bsoncxx_pkg_dep}")
- 
+ if(BSONCXX_POLY_USE_BOOST)
+     set(bsoncxx_boost_pkg_dep "find_dependency(Boost 1.56.0 REQUIRED)")
