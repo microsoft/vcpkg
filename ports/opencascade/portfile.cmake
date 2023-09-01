@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
-    REF bb368e271e24f63078129283148ce83db6b9670a #V7.6.2
-    SHA512 500c7ff804eb6b202bef48e1be904fe43a3c0137e9a402affe128b3b75a1adbb20bfe383cee82503b13efc083a95eb97425f1afb1f66bae38543d29f871a91f9
+    REF cec1ecd0c9f3b3d2572c47035d11949e8dfa85e2 #V7.7.2
+    SHA512 2fe98eadd7f9b922729bf80b56f260729d1c257c41392e4be4f070667ee77e94e2b286a873430b41ea61076acf1388aee7ba8b91789aa6199db56066796bb2d3
     HEAD_REF master
     PATCHES
         fix-pdb-find.patch
@@ -23,10 +23,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "freeimage"  USE_FREEIMAGE
         "tbb"        USE_TBB
         "rapidjson"  USE_RAPIDJSON
-        "samples"    INSTALL_SAMPLES 
+        "samples"    INSTALL_SAMPLES
+        "vtk"        USE_VTK
 )
 
-# VTK option in opencascade not currently supported because only 6.1.0 is supported but vcpkg has >= 9.0
+if(USE_VTK)
+    get_filename_component(VTK_DIR "${CURRENT_PACKAGES_DIR}/../vtk_${TARGET_TRIPLET}" ABSOLUTE)
+    list(APPEND FEATURE_OPTIONS
+                    -D3RDPARTY_VTK_DIR="${VTK_DIR}"
+                    -D3RDPARTY_VTK_INCLUDE_DIR="${VTK_DIR}/include/vtk-9.2"
+                    -D3RDPARTY_VTK_LIBRARY_DIR="${VTK_DIR}/lib"
+                    -D3RDPARTY_VTK_DLL_DIR="${VTK_DIR}/bin"
+        )
+endif()
 
 # We turn off BUILD_MODULE_Draw as it requires TCL 8.6 and TK 8.6 specifically which conflicts with vcpkg only having TCL 9.0 
 # And pre-built ActiveTCL binaries are behind a marketing wall :(
