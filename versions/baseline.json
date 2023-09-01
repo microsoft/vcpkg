@@ -7516,6 +7516,10 @@
       "baseline": "4.1.1",
       "port-version": 0
     },
+    "seasocks": {
+      "baseline": "1.4.5",
+      "port-version": 0
+    },
     "secp256k1": {
       "baseline": "2022-07-11",
       "port-version": 1
