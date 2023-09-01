@@ -98,7 +98,6 @@ if (NOT VCPKG_BUILD_TYPE)
         "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingAlgorithmsTargets-debug.cmake"
         "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingDataTargets-debug.cmake"
         "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEVisualizationTargets-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEDEToolsTargets-debug.cmake"
     )
 
     foreach(TARGET_FILE IN LISTS TARGET_FILES)
