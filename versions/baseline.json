@@ -1474,7 +1474,7 @@
     },
     "cfitsio": {
       "baseline": "3.49",
-      "port-version": 3
+      "port-version": 4
     },
     "cgal": {
       "baseline": "5.6",
