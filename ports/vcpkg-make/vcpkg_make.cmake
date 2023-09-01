@@ -16,8 +16,9 @@ function(vcpkg_run_bash)
     endif()
 
     if (CMAKE_HOST_WIN32)
+        list(JOIN arg_COMMAND " " cmd)
         vcpkg_execute_required_process(
-            COMMAND ${arg_BASH} -c "${arg_COMMAND}"
+            COMMAND ${arg_BASH} -c "${cmd}"
             WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
             LOGNAME "${arg_LOGNAME}"
             ${extra_opts}
@@ -42,7 +43,7 @@ function(vcpkg_run_autoreconf bash_cmd work_dir)
     message(STATUS "Generating configure for ${TARGET_TRIPLET}")
     vcpkg_run_bash(
         BASH ${bash_cmd}
-        COMMAND "${AUTORECONF} -vfi"
+        COMMAND ${AUTORECONF} -vfi
         WORKING_DIRECTORY "${work_dir}"
         LOGNAME "autoconf-${TARGET_TRIPLET}"
     )
