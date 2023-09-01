@@ -110,7 +110,7 @@ function(z_vcpkg_make_get_configure_triplets out)
         endif()
     endif()
 
-    set(output "${build_triplet_opt} ${host_triplet_opt}")
+    set(output "${build_triplet_opt};${host_triplet_opt}")
     string(STRIP "${output}" output)
     set("${out}" "${output}" PARENT_SCOPE)
 endfunction()
