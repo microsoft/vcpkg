@@ -114,7 +114,7 @@ elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
 elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     string(APPEND OPTIONS " target_os=\"win\"")
     if(VCPKG_TARGET_IS_UWP)
-        string(APPEND OPTIONS " skia_enable_winuwp=true skia_enable_fontmgr_win=false skia_use_xps=false ")
+        string(APPEND OPTIONS " skia_enable_winuwp=true skia_enable_fontmgr_win=false skia_use_xps=false")
     endif()
 endif()
 
