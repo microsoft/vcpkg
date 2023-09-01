@@ -10,12 +10,17 @@ vcpkg_from_github(
         find-dependency.patch # from https://github.com/AOMediaCodec/libavif/pull/1339
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        aom AVIF_CODEC_AOM
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DAVIF_CODEC_AOM=ON
         -DAVIF_BUILD_APPS=OFF
         -DCMAKE_REQUIRE_FIND_PACKAGE_libyuv=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

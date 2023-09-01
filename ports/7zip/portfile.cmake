@@ -1,8 +1,8 @@
-set(7ZIP_VERSION "2201")
+set(7ZIP_VERSION "2301")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.7-zip.org/a/7z${7ZIP_VERSION}-src.7z"
     FILENAME "7z${7ZIP_VERSION}-src.7z"
-    SHA512 c37cede4b7253b8dc4372e9e011ef0fee0c1cd53cf9705bf106672a455e7ce1e5a0a288c763d73d3c28b2a41fb860c9bacb702b01d9192eed810787c7da1e0d8
+    SHA512 45038fc49b0be8e7435939a79ad9f46f360b43b651148a8cde74fafdb8536f51a4be3b1ea91e06203267e5121267f6601f8ae6678feaf18e4b7a4f79a16730e7
 )
 
 vcpkg_extract_source_archive(

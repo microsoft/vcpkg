@@ -48,6 +48,7 @@ vcpkg_configure_make(
     OPTIONS
         --enable-portable-binary
         --disable-docs
+        --disable-multi-os-directory
         ${options}
 )
 

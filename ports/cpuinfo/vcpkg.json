@@ -18,7 +18,8 @@
   ],
   "features": {
     "tools": {
-      "description": "Build cpuinfo command-line tools"
+      "description": "Build cpuinfo command-line tools",
+      "supports": "!uwp"
     }
   }
 }
