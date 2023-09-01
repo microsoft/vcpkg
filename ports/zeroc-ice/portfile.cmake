@@ -135,6 +135,12 @@ if("icediscovery" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "IceDiscovery")
 endif()
 
+# IceLocatorDiscovery
+if("icelocatordiscovery" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icelocatordiscovery++11")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "IceLocatorDiscovery")
+endif()
+
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     # Clean up for the first round (important for install --editable)
     vcpkg_execute_build_process(

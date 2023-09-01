@@ -9062,7 +9062,7 @@
     },
     "zeroc-ice": {
       "baseline": "3.7.9",
-      "port-version": 2
+      "port-version": 3
     },
     "zeromq": {
       "baseline": "2023-06-20",
