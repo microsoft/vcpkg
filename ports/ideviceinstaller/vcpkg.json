@@ -4,7 +4,7 @@
   "description": "Manage apps of iOS devices",
   "homepage": "https://libimobiledevice.org/",
   "license": "LGPL-2.0-or-later",
-  "supports": "!uwp & !android & !ios",
+  "supports": "!uwp & !android & !ios & !xbox",
   "dependencies": [
     "dirent",
     {

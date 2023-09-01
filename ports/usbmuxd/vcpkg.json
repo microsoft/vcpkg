@@ -4,7 +4,7 @@
   "description": "A socket daemon to multiplex connections from and to iOS devices",
   "homepage": "http://www.libimobiledevice.org",
   "license": "LGPL-2.0-or-later",
-  "supports": "!uwp & !android & !ios",
+  "supports": "!uwp & !android & !ios & !xbox",
   "dependencies": [
     "dirent",
     {
