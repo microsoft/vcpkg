@@ -1,7 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.14.0",
-  "port-version": 1,
+  "version": "2.15.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -441,6 +440,18 @@
         }
       ]
     },
+    "datastore": {
+      "description": "Cloud Datastore API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "datastream": {
       "description": "Datastream API C++ Client Library",
       "dependencies": [
@@ -491,6 +502,18 @@
     },
     "dialogflow-es": {
       "description": "Cloud Dialogflow ES API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "discoveryengine": {
+      "description": "Discovery Engine API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -893,6 +916,18 @@
     },
     "oslogin": {
       "description": "Cloud OS Login API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "policysimulator": {
+      "description": "Policy Simulator API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
