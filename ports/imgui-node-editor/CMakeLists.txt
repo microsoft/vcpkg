@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(imgui-node-editor)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 find_package(imgui CONFIG REQUIRED)
 get_target_property(IMGUI_INCLUDE_DIRS imgui::imgui
