@@ -48,7 +48,7 @@ if (NOT IMGUI_NODE_EDITOR_SKIP_HEADERS)
             imgui_node_editor.h
             imgui_node_editor_internal.h
             imgui_node_editor_internal.inl
-        DESTINATION include
+        DESTINATION include/${PROJECT_NAME}
     )
 endif()
 
