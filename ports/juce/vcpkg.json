@@ -4,11 +4,8 @@
   "description": "Open-source cross-platform C++ application framework for desktop and mobile applications.",
   "homepage": "https://juce.com",
   "license": null,
+  "supports": "!android",
   "dependencies": [
-    {
-      "name": "freetype",
-      "platform": "android | linux"
-    },
     {
       "name": "vcpkg-cmake",
       "host": true
