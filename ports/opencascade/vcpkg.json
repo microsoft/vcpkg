@@ -42,7 +42,12 @@
     "vtk": {
       "description": "Enable optional usage of vtk",
       "dependencies": [
-        "vtk"
+        {
+          "name": "vtk",
+          "features": [
+            "opengl"
+          ]
+        }
       ]
     }
   }
