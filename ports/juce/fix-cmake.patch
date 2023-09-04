@@ -45,19 +45,3 @@ index 9eaacd22b..8a71d7d6a 100644
          if(NOT icon_args)
              return()
          endif()
-diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
-index 245f47f1b..e3b42498b 100644
---- a/extras/Build/juceaide/CMakeLists.txt
-+++ b/extras/Build/juceaide/CMakeLists.txt
-@@ -107,6 +107,11 @@ else()
- 
-     message(STATUS "Configuring juceaide")
- 
-+    list(APPEND extra_compiler_flag_arguments
-+        "-DCMAKE_SYSTEM_NAME=${CMAKE_HOST_SYSTEM_NAME}"
-+        "-DCMAKE_SYSTEM_VERSION=${CMAKE_HOST_SYSTEM_VERSION}"
-+        "-DCMAKE_SYSTEM_PROCESSOR=${CMAKE_HOST_SYSTEM_PROCESSOR}")
-+
-     # Looks like we're bootstrapping, reinvoke CMake
-     execute_process(COMMAND "${CMAKE_COMMAND}"
-             "."

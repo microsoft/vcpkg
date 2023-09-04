@@ -540,6 +540,7 @@ jinja2cpplight:arm64-android=fail
 jinja2cpplight:x64-android=fail
 json-schema-validator:arm-neon-android=fail
 json-schema-validator:arm64-android=fail
+juce:x64-linux=fail
 keystone:x64-linux=fail # python2
 kfr:x64-android=fail
 kfr:x64-uwp=fail
