@@ -35,6 +35,11 @@ vcpkg_from_github(
 
 ################################### Build ###################################
 
+if(FEATURES STREQUAL "core")
+  # header only when only building core
+  set(VCPKG_BUILD_TYPE release)
+endif()
+
 # Default flags
 set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DBUILD_TESTING=OFF
@@ -80,6 +85,7 @@ vcpkg_check_features(
 # Build and install
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
+  DISABLE_PARALLEL_CONFIGURE
   OPTIONS
     ${AF_DEFAULT_VCPKG_CMAKE_FLAGS}
     ${AF_BACKEND_FEATURE_OPTIONS}
