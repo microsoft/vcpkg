@@ -7,8 +7,8 @@ index 245f47f1b..ef7f1429b 100644
          juce::juce_recommended_warning_flags)
  
 +    if (ANDROID OR LINUX)
-+        find_package(freetype REQUIRED)
-+        target_link_libraries(juceaide PRIVATE freetype)
++        find_package(Freetype CONFIG REQUIRED)
++        target_link_libraries(juceaide PRIVATE Freetype::Freetype)
 +    endif()
 +
      set_target_properties(juceaide PROPERTIES
