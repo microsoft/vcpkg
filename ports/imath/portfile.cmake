@@ -11,6 +11,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DIMATH_INSTALL_SYM_LINK=OFF
         -DBUILD_TESTING=OFF
+        -DIMATH_INSTALL_PKG_CONFIG=ON
 )
 
 vcpkg_cmake_install()
