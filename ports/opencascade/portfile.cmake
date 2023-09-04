@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-install-prefix-path.patch
         install-include-dir.patch
         fix-depend-freetype.patch
+        fix-depend-vtk.patch
         fix-dependence.patch
 )
 
@@ -26,16 +27,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "samples"    INSTALL_SAMPLES
         "vtk"        USE_VTK
 )
-
-if(USE_VTK)
-    get_filename_component(VTK_DIR "${CURRENT_PACKAGES_DIR}/../vtk_${TARGET_TRIPLET}" ABSOLUTE)
-    list(APPEND FEATURE_OPTIONS
-                    -D3RDPARTY_VTK_DIR="${VTK_DIR}"
-                    -D3RDPARTY_VTK_INCLUDE_DIR="${VTK_DIR}/include/vtk-9.2"
-                    -D3RDPARTY_VTK_LIBRARY_DIR="${VTK_DIR}/lib"
-                    -D3RDPARTY_VTK_DLL_DIR="${VTK_DIR}/bin"
-        )
-endif()
 
 # We turn off BUILD_MODULE_Draw as it requires TCL 8.6 and TK 8.6 specifically which conflicts with vcpkg only having TCL 9.0 
 # And pre-built ActiveTCL binaries are behind a marketing wall :(
