@@ -32,20 +32,3 @@ index b8ff58e73..c2f336980 100644
          install(EXPORT VST3_HELPER NAMESPACE juce:: DESTINATION "${JUCE_INSTALL_DESTINATION}")
      endif()
  endif()
-diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
-index 245f47f1b..bf6f9fd0d 100644
---- a/extras/Build/juceaide/CMakeLists.txt
-+++ b/extras/Build/juceaide/CMakeLists.txt
-@@ -105,6 +105,12 @@ else()
-             "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}")
-     endif()
- 
-+    if (WINDOWS_STORE)
-+        list(APPEND extra_compiler_flag_arguments 
-+            "-DCMAKE_SYSTEM_NAME=${CMAKE_HOST_SYSTEM_NAME}"
-+            "-DCMAKE_SYSTEM_VERSION=${CMAKE_HOST_SYSTEM_VERSION}")
-+    endif()
-+
-     message(STATUS "Configuring juceaide")
- 
-     # Looks like we're bootstrapping, reinvoke CMake
