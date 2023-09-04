@@ -9,6 +9,7 @@ $VisualStudioBootstrapperUrl = 'https://aka.ms/vs/17/release/vs_enterprise.exe'
 $Workloads = @(
   'Microsoft.VisualStudio.Workload.NativeDesktop',
   'Microsoft.VisualStudio.Workload.Universal',
+  'Microsoft.VisualStudio.Component.UWP.VC.ARM64',
   'Microsoft.VisualStudio.Component.VC.Tools.x86.x64',
   'Microsoft.VisualStudio.Component.VC.Tools.ARM',
   'Microsoft.VisualStudio.Component.VC.Tools.ARM64',
