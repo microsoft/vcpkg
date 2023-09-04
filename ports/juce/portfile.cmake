@@ -31,7 +31,7 @@ vcpkg_copy_tools(
   SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin/${PORT}-${VERSION}"
   AUTO_CLEAN
 )
-if (BUILD_EXTRAS)
+if (JUCE_BUILD_EXTRAS)
   list(APPEND JUCE_EXTRA_TOOLS AudioPerformanceTest AudioPluginHost BinaryBuilder Projucer)
   foreach(JUCE_EXTRA_TOOL IN LISTS JUCE_EXTRA_TOOLS)
     vcpkg_copy_tools(
