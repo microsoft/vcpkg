@@ -7,7 +7,7 @@
   "dependencies": [
     {
       "name": "freetype",
-      "platform": "linux"
+      "platform": "android | linux"
     },
     {
       "name": "vcpkg-cmake",

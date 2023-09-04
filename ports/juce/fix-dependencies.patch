@@ -1,0 +1,16 @@
+diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
+index 245f47f1b..ef7f1429b 100644
+--- a/extras/Build/juceaide/CMakeLists.txt
++++ b/extras/Build/juceaide/CMakeLists.txt
+@@ -42,6 +42,11 @@ if(JUCE_BUILD_HELPER_TOOLS)
+         juce::juce_recommended_lto_flags
+         juce::juce_recommended_warning_flags)
+ 
++    if (ANDROID OR LINUX)
++        find_package(Freetype REQUIRED)
++        target_link_libraries(juceaide PRIVATE Freetype::Freetype)
++    endif()
++
+     set_target_properties(juceaide PROPERTIES
+         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ 
