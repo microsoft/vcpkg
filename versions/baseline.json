@@ -104,6 +104,10 @@
       "baseline": "1.4.29",
       "port-version": 0
     },
+    "amd-rdf": {
+      "baseline": "1.1.2",
+      "port-version": 0
+    },
     "ampl-asl": {
       "baseline": "2020-11-11",
       "port-version": 3
