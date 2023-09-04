@@ -4,7 +4,7 @@ vcpkg_from_github(
   REF "${VERSION}"
   SHA512 3182f54d5003c58a237f1aecf35b25ee76dd8c9d4026f14f218c79f8a8954e393ac821f009fcae1f535fe61c11fea4e6a263b4069d89a8ca9dbc644fd2139c4f
   HEAD_REF master
-  PATCHES fix-references.patch fix-dependencies.patch
+  PATCHES fix-cmake.patch
 )
 
 vcpkg_cmake_configure(
