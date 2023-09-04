@@ -10,7 +10,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-    -DJUCE_BUILD_EXTRAS=ON
+    -DJUCE_BUILD_EXTRAS=OFF
     -DJUCE_ENABLE_MODULE_SOURCE_GROUPS=ON
 )
 
