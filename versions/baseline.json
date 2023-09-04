@@ -3560,6 +3560,10 @@
       "baseline": "0.18.0",
       "port-version": 1
     },
+    "juce": {
+      "baseline": "7.0.7",
+      "port-version": 0
+    },
     "jwt-cpp": {
       "baseline": "0.6.0",
       "port-version": 0
