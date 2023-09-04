@@ -3353,7 +3353,7 @@
       "port-version": 0
     },
     "igraph": {
-      "baseline": "0.10.6",
+      "baseline": "0.10.7",
       "port-version": 0
     },
     "iir1": {
