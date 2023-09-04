@@ -5,7 +5,10 @@
   "homepage": "https://juce.com",
   "license": null,
   "dependencies": [
-    "freetype",
+    {
+      "name": "freetype",
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
