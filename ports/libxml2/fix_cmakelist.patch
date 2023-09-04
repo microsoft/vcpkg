@@ -104,5 +104,5 @@ index 88e3963b..0d1706c9 100644
 -Libs.private: @XML_PRIVATE_LIBS@ @LIBS@
 +Requires.private: @ICU_LIBS@ @Z_LIBS@ @LZMA_LIBS@
 +Libs: -L${libdir} -l@XML_LIB_NAME@
-+Libs.private: @THREAD_LIBS@ @ICONV_LIBS@ @LIBM@ @WIN32_EXTRA_LIBADD@ @LIBS@
++Libs.private: @THREAD_LIBS@ @ICONV_LIBS@ @LIBM@ @WINSOCK_LIBS@ @LIBS@
  Cflags: @XML_INCLUDEDIR@ @XML_CFLAGS@

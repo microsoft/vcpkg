@@ -1,9 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 834b35d3..9701bdc0 100644
+index f922d5ab..70466bc7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -571,16 +571,6 @@ if(LIBXML2_WITH_PYTHON)
- 	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2.py DESTINATION ${LIBXML2_PYTHON_INSTALL_DIR} COMPONENT runtime)
+@@ -599,15 +599,5 @@ if(LIBXML2_WITH_PYTHON)
  endif()
  
 -install(FILES doc/xml2-config.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
