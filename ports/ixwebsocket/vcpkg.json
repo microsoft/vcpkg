@@ -1,6 +1,7 @@
 {
   "name": "ixwebsocket",
   "version-semver": "11.4.4",
+  "port-version": 1,
   "description": "Lightweight WebSocket Client and Server + HTTP Client and Server",
   "homepage": "https://github.com/machinezone/IXWebSocket",
   "license": "BSD-3-Clause",
@@ -32,7 +33,8 @@
       ]
     },
     "sectransp": {
-      "description": "SSL support (sectransp)"
+      "description": "SSL support (sectransp)",
+      "supports": "osx | ios"
     },
     "ssl": {
       "description": "Default SSL backend",
@@ -40,16 +42,16 @@
         {
           "name": "ixwebsocket",
           "features": [
-            "sectransp"
+            "mbedtls"
           ],
-          "platform": "osx"
+          "platform": "windows"
         },
         {
           "name": "ixwebsocket",
           "features": [
-            "mbedtls"
+            "sectransp"
           ],
-          "platform": "windows"
+          "platform": "osx | ios"
         },
         {
           "name": "ixwebsocket",
@@ -63,7 +65,7 @@
           "features": [
             "openssl"
           ],
-          "platform": "!uwp & !windows & !osx"
+          "platform": "!uwp & !windows & !osx & !ios"
         }
       ]
     }

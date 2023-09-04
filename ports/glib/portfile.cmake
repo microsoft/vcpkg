@@ -13,6 +13,10 @@ vcpkg_extract_source_archive(SOURCE_PATH
         fix-build-race-on-gio.patch # https://gitlab.gnome.org/GNOME/glib/-/merge_requests/3512
 )
 
+if(APPLE)
+    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_ENABLE_OBJC=1")
+endif()
+
 vcpkg_list(SET OPTIONS)
 if (selinux IN_LIST FEATURES)
     if(NOT EXISTS "/usr/include/selinux")
@@ -38,6 +42,7 @@ endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    LANGUAGES C CXX OBJC OBJCXX
     ADDITIONAL_BINARIES
         ${ADDITIONAL_BINARIES}
     OPTIONS
