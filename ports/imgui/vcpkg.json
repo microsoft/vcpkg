@@ -46,6 +46,18 @@
         "freetype"
       ]
     },
+    "freetype-lunasvg": {
+      "description": "Add support to render OpenType SVG fonts using LunaSVG",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "freetype"
+          ]
+        },
+        "lunasvg"
+      ]
+    },
     "glfw-binding": {
       "description": "Make available GLFW binding",
       "dependencies": [
