@@ -2,7 +2,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
-    REF v2.11.5
+    REF "v${VERSION}"
     SHA512 527e66f6260a399318cfacc06db3ede4b16178ef17492ed0d515884aa00fce685f9e6932cd117df0d83e2440b5a5392c3d5fbe187b601cf19769b495e0865c87
     HEAD_REF master
     PATCHES
