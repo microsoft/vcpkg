@@ -5,6 +5,7 @@
   "homepage": "https://juce.com",
   "license": null,
   "dependencies": [
+    "freetype",
     {
       "name": "vcpkg-cmake",
       "host": true
