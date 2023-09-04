@@ -33,7 +33,7 @@ index b8ff58e73..c2f336980 100644
      endif()
  endif()
 diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
-index 245f47f1b..220a23a34 100644
+index 245f47f1b..16ace87e2 100644
 --- a/extras/Build/juceaide/CMakeLists.txt
 +++ b/extras/Build/juceaide/CMakeLists.txt
 @@ -36,6 +36,10 @@ if(JUCE_BUILD_HELPER_TOOLS)
@@ -47,3 +47,16 @@ index 245f47f1b..220a23a34 100644
      target_link_libraries(juceaide PRIVATE
          juce::juce_build_tools
          juce::juce_recommended_config_flags
+@@ -105,6 +109,12 @@ else()
+             "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}")
+     endif()
+ 
++    if (WINDOWS_STORE)
++        list(APPEND extra_compiler_flag_arguments 
++            "-DCMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME}"
++            "-DCMAKE_SYSTEM_VERSION=${CMAKE_SYSTEM_VERSION}")
++    endif()
++
+     message(STATUS "Configuring juceaide")
+ 
+     # Looks like we're bootstrapping, reinvoke CMake
