@@ -1262,9 +1262,6 @@ tensorflow-cc:x64-windows-static-md=fail
 tensorflow-cc:x64-windows-static=fail
 tensorflow-cc:x64-windows=fail
 
-tesseract:arm-neon-android=fail
-tesseract:arm64-android=fail
-tesseract:x64-android=fail
 thorvg:arm-neon-android=fail
 thorvg:arm64-android=fail
 thorvg:x64-android=fail
