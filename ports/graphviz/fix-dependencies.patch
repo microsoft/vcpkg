@@ -1,5 +1,5 @@
 diff --git a/cmake/FindCAIRO.cmake b/cmake/FindCAIRO.cmake
-index a92916e..799fa68 100644
+index 65bb42f..a80ba50 100644
 --- a/cmake/FindCAIRO.cmake
 +++ b/cmake/FindCAIRO.cmake
 @@ -1,6 +1,6 @@
@@ -7,11 +7,11 @@ index a92916e..799fa68 100644
  
 -if(WIN32)
 +if(0)
-   find_path(CAIRO_INCLUDE_DIR cairo/cairo.h)
- 
-   find_library(CAIRO_LIBRARY NAMES cairo)
+   find_path(
+     CAIRO_INCLUDE_DIR cairo.h
+     PATH_SUFFIXES cairo
 diff --git a/cmake/FindGD.cmake b/cmake/FindGD.cmake
-index d7e0cc9..2322fcd 100644
+index 0deb5e6..ef42889 100644
 --- a/cmake/FindGD.cmake
 +++ b/cmake/FindGD.cmake
 @@ -1,3 +1,11 @@
@@ -27,13 +27,13 @@ index d7e0cc9..2322fcd 100644
  find_library(GD_LIBRARY NAMES gd libgd)
  find_program(GD_RUNTIME_LIBRARY libgd.dll)
 diff --git a/cmake/FindLTDL.cmake b/cmake/FindLTDL.cmake
-index a1ee8c2..08b7f50 100644
+index e955b74..64440a0 100644
 --- a/cmake/FindLTDL.cmake
 +++ b/cmake/FindLTDL.cmake
-@@ -16,3 +16,6 @@ mark_as_advanced(LTDL_INCLUDE_DIR LTDL_LIBRARY)
- 
- set(LTDL_INCLUDE_DIRS ${LTDL_INCLUDE_DIR})
- set(LTDL_LIBRARIES ${LTDL_LIBRARY})
+@@ -18,3 +18,6 @@ set(LTDL_INCLUDE_DIRS ${LTDL_INCLUDE_DIR})
+ if(NOT WIN32 OR MINGW)
+   set(LTDL_LIBRARIES ${LTDL_LIBRARY})
+ endif()
 +if(CMAKE_DL_LIBS AND NOT BUILD_SHARED_LIBS)
 +  set(LTDL_LIBRARIES "${LTDL_LIBRARIES};${CMAKE_DL_LIBS}")
 +endif()

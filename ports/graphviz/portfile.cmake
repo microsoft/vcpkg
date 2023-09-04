@@ -5,7 +5,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphviz/graphviz
     REF "${VERSION}"
-    SHA512 5872db8aefb9bebf6fea91dbe96759c42fa82dbe811238c7d6de8db5a0c6af77749083af60fc21f8e42c4fc159a2cbfefcc304967edda3d2832ef396c457530a
+    SHA512 e88af2c56e665804e31107655f2f9b4ee342628e420876e5378943dc1de4bde78d271787845eb7631544e5440fca951d05d31d8fb261e562a03220ee6a50c08b
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
