@@ -7,16 +7,18 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 e96d91daeba30a5caf1772a1fbcdd4011e42e112cd560652d23d61089ef751f88c305abc41b17f45652b44090a3b4e8d853acc1bc32ce8f6f46b3ad410028e9f
     HEAD_REF master
+    PATCHES
+        fix_gcc_48.patch
 )
 
-set(CM_COMMIT_HASH fe41e86552046c3df9ba73a40bf3d755df028c1e)
+set(CM_COMMIT_HASH 9059c98181f944aec83b90a677c96f3b43bd1047)
 
 # Get cmake scripts for c4core
 vcpkg_download_distfile(
     CMAKE_ARCHIVE
     URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
     FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 7292f9856d9c41581f2731e73fdf08880e0f4353b757da38a13ec89b62c5c8cb52b9efc1a9ff77336efa0b6809727c17649e607d8ecacc965a9b2a7a49925237
+    SHA512 57512b1ba58aa4baff876fc06cde238e410311e98c5fbb8cb4b6707026a2f947a52241f6e495ef3e21fd2d4995ff112008e77050363ad50878d561a21a0d251a
 )
 
 vcpkg_extract_source_archive(
