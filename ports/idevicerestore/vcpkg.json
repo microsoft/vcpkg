@@ -8,10 +8,7 @@
   "dependencies": [
     "curl",
     "dirent",
-    {
-      "name": "getopt",
-      "platform": "windows"
-    },
+    "getopt",
     "libimobiledevice",
     "libimobiledevice-glue",
     "libirecovery",

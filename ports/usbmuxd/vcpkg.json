@@ -7,17 +7,11 @@
   "supports": "!uwp & !android & !ios & !xbox",
   "dependencies": [
     "dirent",
-    {
-      "name": "getopt",
-      "platform": "windows"
-    },
+    "getopt",
     "libimobiledevice",
     "libimobiledevice-glue",
     "libusb",
-    {
-      "name": "pthreads",
-      "platform": "windows"
-    },
+    "pthreads",
     {
       "name": "vcpkg-cmake",
       "host": true

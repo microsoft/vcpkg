@@ -7,10 +7,7 @@
   "supports": "!uwp & !android & !ios & !xbox",
   "dependencies": [
     "dirent",
-    {
-      "name": "getopt",
-      "platform": "windows"
-    },
+    "getopt",
     "libimobiledevice",
     "libzip",
     {
