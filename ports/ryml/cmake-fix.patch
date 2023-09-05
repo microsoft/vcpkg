@@ -25,3 +25,15 @@ index d18407c..db19e0b 100644
      )
  
  if(RYML_WITH_TAB_TOKENS)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f6c18ce..7ca8f0b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -76,7 +76,6 @@ endif()
+
+ c4_install_target(ryml)
+ c4_install_exports(DEPENDENCIES c4core)
+-c4_pack_project()
+
+
+ #-------------------------------------------------------

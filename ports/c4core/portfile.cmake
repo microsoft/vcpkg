@@ -11,14 +11,14 @@ vcpkg_from_github(
         fix_gcc_48.patch
 )
 
-set(CM_COMMIT_HASH 9059c98181f944aec83b90a677c96f3b43bd1047)
+set(CM_COMMIT_HASH 95b2410e31ebf28b56a4fffffef52c7d13d657ad)
 
 # Get cmake scripts for c4core
 vcpkg_download_distfile(
     CMAKE_ARCHIVE
     URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
     FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 57512b1ba58aa4baff876fc06cde238e410311e98c5fbb8cb4b6707026a2f947a52241f6e495ef3e21fd2d4995ff112008e77050363ad50878d561a21a0d251a
+    SHA512 9aa0d0803f4fd5c9726d3e2a48dd20dfadbde1097dbb3da31c5bef6d50dd3da949b2dd6d0d36f97f3733662590bca0fe508ba00c0c5019a5fbaa899feaf46403
 )
 
 vcpkg_extract_source_archive(
@@ -30,13 +30,13 @@ vcpkg_extract_source_archive(
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
 file(RENAME "${SOURCE_PATH_CMAKE}" "${SOURCE_PATH}/cmake")
 
-set(DB_COMMIT_HASH 78e525c6e74df6d62d782864a52c0d279dcee24f)
+set(DB_COMMIT_HASH 5dcbe41d2bd4712c8014aa7e843723ad7b40fd74)
 
 vcpkg_download_distfile(
     DEBUGBREAK_ARCHIVE
     URLS "https://github.com/biojppm/debugbreak/archive/${DB_COMMIT_HASH}.zip"
     FILENAME "debugbreak-${DB_COMMIT_HASH}.zip"
-    SHA512 25f3d45b09ce362f736fac0f6d6a6c7f2053fec4975b32b0565288893e4658fd0648a7988c3a5fe0e373e92705d7a3970eaa7cfc053f375ffb75e80772d0df64
+    SHA512 a4735225058b48031e68c91853c71d3cc31c8f2bfc3592cfc7a9a16f406224a814535ecade81ab4ead76458eeab8752e7e7cd521d893db5791dd4aaac3ba20d9
 )
 
 vcpkg_extract_source_archive(
@@ -48,13 +48,13 @@ vcpkg_extract_source_archive(
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/c4/ext/debugbreak")
 file(RENAME "${SOURCE_PATH_DEBUGBREAK}" "${SOURCE_PATH}/src/c4/ext/debugbreak")
 
-set(FF_COMMIT_HASH 8159e8bcf63c1b92f5a51fb550f966e56624b209)
+set(FF_COMMIT_HASH 052975dd5f8166d0f9e4a215fa75a349d5985b91)
 
 vcpkg_download_distfile(
     FAST_FLOAT_ARCHIVE
     URLS "https://github.com/biojppm/fast_float/archive/${FF_COMMIT_HASH}.zip"
     FILENAME "fast_float-${FF_COMMIT_HASH}.zip"
-    SHA512 ae71f74d3bae782f62f037c034bea4e7f45462188c8285971c2959c6b2884d3bb58826681c0989f4290f26fa33237c1b63ceed77ed94f9e97c1cd01b4aa21cd3
+    SHA512 af63cbf1d6620cda87a5f0ca06dcaf46ddfe63658ae5ba91232a2416e8179cba3b2b3d06ff53c1ab2ba3745ae39b0cb787e04be3a9dbe1287605704c2ed13019
 )
 
 vcpkg_extract_source_archive(

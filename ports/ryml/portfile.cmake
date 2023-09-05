@@ -10,14 +10,14 @@ vcpkg_from_github(
     PATCHES cmake-fix.patch
 )
 
-set(CM_COMMIT_HASH fe41e86552046c3df9ba73a40bf3d755df028c1e)
+set(CM_COMMIT_HASH 95b2410e31ebf28b56a4fffffef52c7d13d657ad)
 
 # Get cmake scripts for rapidyaml
 vcpkg_download_distfile(
     CMAKE_ARCHIVE
     URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
     FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 7292f9856d9c41581f2731e73fdf08880e0f4353b757da38a13ec89b62c5c8cb52b9efc1a9ff77336efa0b6809727c17649e607d8ecacc965a9b2a7a49925237
+    SHA512 9aa0d0803f4fd5c9726d3e2a48dd20dfadbde1097dbb3da31c5bef6d50dd3da949b2dd6d0d36f97f3733662590bca0fe508ba00c0c5019a5fbaa899feaf46403
 )
 
 vcpkg_extract_source_archive(
