@@ -39,5 +39,10 @@ target_link_libraries(ideviceinstaller PRIVATE
     libzip::zip
 )
 
+if(WIN32)
+    find_package(unofficial-getopt-win32 REQUIRED)
+    target_link_libraries(ideviceinstaller PRIVATE unofficial::getopt-win32::getopt)
+endif()
+
 install(TARGETS ideviceinstaller
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
