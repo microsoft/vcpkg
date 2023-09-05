@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArashPartow/exprtk
     REF f46bffcd6966d38a09023fb37ba9335214c9b959 
-    SHA512 
+    SHA512 5d4f1cc49e035860d9b2410a9b48e1adf8784c6301a31b2c7462c2dbfa64ca6763a832354e57414919df7b7d23975f5f7759d0984becaf25b39fb0aede6b716f
     HEAD_REF master
 )
 
