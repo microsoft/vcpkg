@@ -1,5 +1,7 @@
-if("tools" IN_LIST FEATURES AND "tiff" IN_LIST FEATURES)
-    set(fix-patch "fix-tool-with-tiff.patch")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    if("tools" IN_LIST FEATURES AND "tiff" IN_LIST FEATURES)
+        set(fix-patch "fix-tool-with-tiff.patch")
+    endif()
 endif()
 
 vcpkg_from_github(
