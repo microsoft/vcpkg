@@ -1362,7 +1362,7 @@
     },
     "c4core": {
       "baseline": "0.1.11",
-      "port-version": 0
+      "port-version": 1
     },
     "c89stringutils": {
       "baseline": "0.0.2",
