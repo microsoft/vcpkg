@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-depend-freetype.patch
         fix-depend-vtk.patch
         fix-dependence.patch
+        fix-find-tbb.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
