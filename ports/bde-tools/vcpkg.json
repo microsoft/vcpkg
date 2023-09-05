@@ -1,0 +1,13 @@
+{
+  "name": "bde-tools",
+  "version": "3.123.0.0",
+  "description": "A CMake package supporting the BDE build system",
+  "homepage": "https://github.com/bloomberg/bde-tools",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
