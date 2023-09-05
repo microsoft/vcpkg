@@ -1,0 +1,41 @@
+diff --git a/include/fastrtps/utils/TimedMutex.hpp b/include/fastrtps/utils/TimedMutex.hpp
+index b1982f5..cac1adb 100644
+--- a/include/fastrtps/utils/TimedMutex.hpp
++++ b/include/fastrtps/utils/TimedMutex.hpp
+@@ -90,11 +90,11 @@ public:
+             nsecs -= secs;
+             max_wait.tv_sec += secs.count();
+             max_wait.tv_nsec = (long)nsecs.count();
+-            return (_Thrd_success == _Mtx_timedlock(mutex_, (xtime*)&max_wait));
++            return (0 == static_cast<int>(_Mtx_timedlock(mutex_, (xtime*)&max_wait)));
+         }
+         else
+         {
+-            return (_Thrd_success == _Mtx_trylock(mutex_));
++            return (0 == static_cast<int>(_Mtx_trylock(mutex_)));
+         }
+     }
+ 
+@@ -139,7 +139,7 @@ public:
+ 
+     bool try_lock()
+     {
+-        return (_Thrd_success == _Mtx_trylock(mutex_));
++        return (0 == static_cast<int>(_Mtx_trylock(mutex_)));
+     }
+ 
+     template <class Rep, class Period>
+@@ -165,11 +165,11 @@ public:
+             nsecs -= secs;
+             max_wait.tv_sec += secs.count();
+             max_wait.tv_nsec = (long)nsecs.count();
+-            return (_Thrd_success == _Mtx_timedlock(mutex_, (xtime*)&max_wait));
++            return (0 == static_cast<int>(_Mtx_timedlock(mutex_, (xtime*)&max_wait)));
+         }
+         else
+         {
+-            return (_Thrd_success == _Mtx_trylock(mutex_));
++            return (0 == static_cast<int>(_Mtx_trylock(mutex_)));
+         }
+     }
+ 
