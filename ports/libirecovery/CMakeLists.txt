@@ -26,14 +26,10 @@ if(WIN32)
 endif()
 
 find_package(unofficial-libimobiledevice-glue CONFIG REQUIRED)
-if(NOT WIN32 AND NOT APPLE)
-    find_package(libusb CONFIG REQUIRED)
-endif()
 
 add_library(libirecovery ${LIBIRECOVERY_SOURCE})
 target_include_directories(libirecovery
     PRIVATE
-        ${LIBUSB_INCLUDE_DIRS}
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
     PUBLIC
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
@@ -41,9 +37,13 @@ target_include_directories(libirecovery
 target_compile_definitions(libirecovery PRIVATE ${DEFINITIONS})
 target_link_libraries(libirecovery
     PRIVATE
-        ${LIBUSB_LIBRARIES}
         unofficial::libimobiledevice-glue::libimobiledevice-glue
 )
+if(NOT WIN32 AND NOT APPLE)
+    find_package(libusb CONFIG REQUIRED)
+    target_include_directories(libirecovery PRIVATE ${LIBUSB_INCLUDE_DIRS})
+    target_link_libraries(libirecovery PRIVATE ${LIBUSB_LIBRARIES})
+endif()
 set_target_properties(libirecovery PROPERTIES OUTPUT_NAME irecovery-1.0)
 
 if(WIN32)

@@ -33,12 +33,10 @@ find_package(unofficial-libirecovery CONFIG REQUIRED)
 find_package(libzip CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(ZLIB REQUIRED)
-find_path(GETOPT_INCLUDE_DIR getopt.h REQUIRED)
 find_path(DIRENT_INCLUDE_DIR dirent.h REQUIRED)
 
 add_executable(idevicerestore ${IDEVICERESTORE_SOURCE})
 target_include_directories(idevicerestore PRIVATE
-    ${GETOPT_INCLUDE_DIR}
     ${DIRENT_INCLUDE_DIR}
 )
 target_compile_definitions(idevicerestore PRIVATE ${DEFINITIONS})
@@ -52,6 +50,10 @@ target_link_libraries(idevicerestore PRIVATE
     OpenSSL::Crypto
     ZLIB::ZLIB
 )
+if(WIN32)
+    find_package(unofficial-getopt-win32 REQUIRED)
+    target_link_libraries(idevicerestore PRIVATE unofficial::getopt-win32::getopt)
+endif()
 
 install(TARGETS idevicerestore
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")

@@ -26,22 +26,14 @@ if(WIN32)
     list(APPEND DEFINITIONS -DWIN32)
 endif()
 
-set(ADDITIONAL_LIBRARIES)
-
 find_package(unofficial-libimobiledevice CONFIG REQUIRED)
 find_package(unofficial-libimobiledevice-glue CONFIG REQUIRED)
 find_package(libusb CONFIG REQUIRED)
-find_path(GETOPT_INCLUDE_DIR getopt.h REQUIRED)
 find_path(DIRENT_INCLUDE_DIR dirent.h REQUIRED)
-if(WIN32)
-    find_package(PThreads4W REQUIRED)
-    list(APPEND ADDITIONAL_LIBRARIES PThreads4W::PThreads4W)
-endif()
 
 add_executable(usbmuxd ${USBMUXD_SOURCE})
 target_include_directories(usbmuxd PRIVATE
     ${LIBUSB_INCLUDE_DIRS}
-    ${GETOPT_INCLUDE_DIR}
     ${DIRENT_INCLUDE_DIR}
 )
 target_compile_definitions(usbmuxd PRIVATE ${DEFINITIONS})
@@ -49,8 +41,12 @@ target_link_libraries(usbmuxd PRIVATE
     unofficial::libimobiledevice::libimobiledevice
     unofficial::libimobiledevice-glue::libimobiledevice-glue
     ${LIBUSB_LIBRARIES}
-    ${ADDITIONAL_LIBRARIES}
 )
+if(WIN32)
+    find_package(PThreads4W REQUIRED)
+    find_package(unofficial-getopt-win32 REQUIRED)
+    target_link_libraries(usbmuxd PRIVATE PThreads4W::PThreads4W unofficial::getopt-win32::getopt)
+endif()
 
 install(TARGETS usbmuxd
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")

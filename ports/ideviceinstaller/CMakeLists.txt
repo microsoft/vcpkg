@@ -25,12 +25,10 @@ endif()
 
 find_package(unofficial-libimobiledevice CONFIG REQUIRED)
 find_package(libzip CONFIG REQUIRED)
-find_path(GETOPT_INCLUDE_DIR getopt.h REQUIRED)
 find_path(DIRENT_INCLUDE_DIR dirent.h REQUIRED)
 
 add_executable(ideviceinstaller ${IDEVICEINSTALLER_SOURCE})
 target_include_directories(ideviceinstaller PRIVATE
-    ${GETOPT_INCLUDE_DIR}
     ${DIRENT_INCLUDE_DIR}
 )
 target_compile_definitions(ideviceinstaller PRIVATE ${DEFINITIONS})
