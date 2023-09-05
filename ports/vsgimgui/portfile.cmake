@@ -7,6 +7,8 @@ vcpkg_from_github(
     PATCHES devendor.patch
 )
 
+file(REMOVE "${SOURCE_PATH}/include/vsgImGui/imgui.h")
+
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "vsgImGui" CONFIG_PATH "lib/cmake/vsgImGui")
