@@ -9,6 +9,7 @@ vcpkg_from_github(
     SHA512 f46e45bdba27c9f89953ba23186b694486fd3010bd370ea2de71a4649a2816e716a6520c9baa96936f1884437ef03f92b21c0b1fb5b757beba5a05fed30b2bfc
     HEAD_REF master
     PATCHES enable-runtimelibrary-toggle.patch
+            fix-static-include-files.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
