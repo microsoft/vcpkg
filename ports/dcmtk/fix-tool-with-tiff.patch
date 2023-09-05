@@ -1,0 +1,28 @@
+diff --git a/CMake/3rdparty.cmake b/CMake/3rdparty.cmake
+index 2c974e8..4818672 100644
+--- a/CMake/3rdparty.cmake
++++ b/CMake/3rdparty.cmake
+@@ -34,7 +34,7 @@ if(DCMTK_USE_FIND_PACKAGE)
+         message(STATUS "Info: DCMTK TIFF support will be enabled")
+         include_directories(${TIFF_INCLUDE_DIR} ${JPEG_INCLUDE_DIR})
+       endif()
+-      set(LIBTIFF_LIBS ${TIFF_LIBRARY} ${TIFF_EXTRA_LIBS_STATIC} ${JPEG_LIBRARY})
++      set(LIBTIFF_LIBS ${TIFF_LIBRARY} ${TIFF_EXTRA_LIBS_STATIC})
+     endif()
+   endif()
+ 
+diff --git a/CMake/dcmtkPrepare.cmake b/CMake/dcmtkPrepare.cmake
+index 5162a44..bb17714 100644
+--- a/CMake/dcmtkPrepare.cmake
++++ b/CMake/dcmtkPrepare.cmake
+@@ -135,7 +135,9 @@ else()
+     set(OPENJPEG_EXTRA_LIBS_STATIC)
+     set(OPENSSL_EXTRA_LIBS_STATIC)
+     set(SNDFILE_EXTRA_LIBS_STATIC)
+-    set(TIFF_EXTRA_LIBS_STATIC)
++    get_static_library("STATIC_LZMA" "liblzma.a")
++    get_static_library("STATIC_ZLIB" "libz.a")
++    set(TIFF_EXTRA_LIBS_STATIC "STATIC_LZMA" "STATIC_ZLIB")
+     set(WRAP_EXTRA_LIBS_STATIC)
+ endif()
+ 

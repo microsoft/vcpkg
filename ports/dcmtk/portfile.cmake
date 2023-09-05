@@ -1,3 +1,7 @@
+if("tools" IN_LIST FEATURES AND "tiff" IN_LIST FEATURES)
+    set(fix-patch "fix-tool-with-tiff.patch")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DCMTK/dcmtk
@@ -8,6 +12,7 @@ vcpkg_from_github(
         dcmtk.patch
         windows-patch.patch
         fix-pc-format.patch
+        ${fix-patch}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
