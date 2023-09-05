@@ -2322,6 +2322,7 @@ gstreamer[sndfile](osx) = feature-fails # see https://github.com/microsoft/vcpkg
 gstreamer[x11-bad](osx) = feature-fails # no x11 on macOS
 hdf5[core,cpp,fortran,map,parallel,szip,threadsafe,tools,utils,zlib](!windows & arm) = combination-fails # some features are mutually exclusive
 hdf5[fortran](windows) = feature-fails # No fortan compiler
+hunspell[tools](windows) = feature-fails # error C2065: 'mode_t': undeclared identifier. See https://github.com/microsoft/vcpkg/issues/30633
 igraph[openmp](osx) = feature-fails # openmp setup needed
 irrlicht[tools](osx) = feature-fails # X11 installation required
 itk[python](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31042
