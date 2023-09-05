@@ -22,7 +22,7 @@ index 5162a44..bb17714 100644
 -    set(TIFF_EXTRA_LIBS_STATIC)
 +    get_static_library("STATIC_LZMA" "liblzma.a")
 +    get_static_library("STATIC_ZLIB" "libz.a")
-+    set(TIFF_EXTRA_LIBS_STATIC "STATIC_LZMA" "STATIC_ZLIB")
++    set(TIFF_EXTRA_LIBS_STATIC "${STATIC_LZMA}" "${STATIC_ZLIB}")
      set(WRAP_EXTRA_LIBS_STATIC)
  endif()
  
