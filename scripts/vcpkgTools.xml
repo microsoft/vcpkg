@@ -131,18 +131,18 @@
         <archiveName>installer-framework-opensource-src-4.4.0.zip</archiveName>
     </tool>
     <tool name="7zip_msi" os="windows">
-        <version>21.07</version>
+        <version>23.01</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7z2107-x64.msi</url>
-        <sha512>d55b44f1255d1b0e629719383a600a7e83dc6378d470096337b886ce24684d26bcc2b04f9cea39ad888179edce23ad2bd0e8e1863ddc40106c176adece8c012d</sha512>
-        <archiveName>7z2107-x64.msi</archiveName>
+        <url>https://www.7-zip.org/a/7z2301-x64.msi</url>
+        <sha512>09e3ce970ea8383e8c736a51ebb61e3036e655c81d59bc64c5eecb041abdad2cbce2f400fcf4478e22f56fe40f8d912c639f550a5f990e24abfd4e86cdd3755c</sha512>
+        <archiveName>7z2301-x64.msi</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>21.07</version>
+        <version>23.01</version>
         <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7z2107-extra.7z</url>
-        <sha512>648d894940bcc29951752d7a8fd18c770ee8d4fd944e17f1a52588e51ca8f58375ba48514538f2e1387786fd812bb86f75fd6bdd0892685cdcafb2989942c848</sha512>
-        <archiveName>7z2107-extra.7z</archiveName>
+        <url>https://www.7-zip.org/a/7z2301-extra.7z</url>
+        <sha512>c849c2cb489cf5b6eeb92bfbc27dcb37d0349c36971e1bc7ef32c7cde1b659e19e8b46d734ba90f47affe07fdfd5b4774cbfa0fdf4b681e9f60bb46bba1f7f9b</sha512>
+        <archiveName>7z2301-extra.7z</archiveName>
      </tool>
     <tool name="aria2" os="windows">
         <version>1.35.0</version>
