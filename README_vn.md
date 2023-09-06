@@ -55,7 +55,7 @@ Yêu cầu:
 - [Visual Studio][getting-started:visual-studio] 2015 Update 3 trở lên với gói ngôn ngữ Tiếng Anh
 
 Đầu tiên, tải và khởi động vcpkg; nó có thể được cài đặt bất kỳ đâu, nhưng
-chúng tôi khuyến cáo sử dụng vcpkg như một submoudle cho các project CMake,
+chúng tôi khuyến cáo sử dụng vcpkg như một submodule cho các project CMake,
 và cài đặt nó toàn máy cho các project Visual Studio.
 Chúng tôi gợi ý cài ở những nơi như `C:\src\vcpkg` hoặc `C:\dev\vcpkg`,
 bởi vì nếu cài những nơi khác bạn có thể gặp các lỗi đường dẫn đối với
@@ -126,7 +126,7 @@ Yêu cầu cho macOS:
 - [Apple Developer Tools][getting-started:macos-dev-tools]
 
 Đầu tiên, tải và khởi động vcpkg; nó có thể được cài đặt bất kỳ đâu, nhưng
-chúng tôi khuyến cáo sử dụng vcpkg như một submoudle cho các project CMake.
+chúng tôi khuyến cáo sử dụng vcpkg như một module cho các project CMake.
 
 ```sh
 $ git clone https://github.com/microsoft/vcpkg
@@ -178,7 +178,7 @@ $ scl enable devtoolset-7 bash
 
 Cho bất kỳ phiên bản nào khác, hãy chắc chắn rằng bạn cài đặt g++ 6 trở lên.
 Nếu bạn muốn thêm hướng dẫn cho phiên bản của bạn,
-[xin hãy mở một PR][contributing:submit-pr]!
+[xin hãy mở một PR][contributing:mit-pr]!
 
 ## Cài đặt Developer Tools cho macOS
 
@@ -230,9 +230,9 @@ Sau đó, trong `CMake options`, thên dòng sau đây:
 
 Bạn phải thêm dòng này vào mỗi profile khác nhau.
 
-### Vcpkg dưới dạng Submodule
+### Vcpkg dưới dạng module
 
-Khi sử dụng vcpkg như một submodule cho project của bạn,
+Khi sử dụng vcpkg như một module cho project của bạn,
 bạn có thể thêm dòng sau đây vào file CMakeLists.txt trước dòng `project()` đầu tiên,
 thay vì phải sự dụng lệnh `CMAKE_TOOLCHAIN_FILE`.
 
@@ -289,8 +289,8 @@ Xem [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw) dài 4 phút.
 Vcpkg là một dự án mã nguồn mở, và được xây dụng từ sự đóng góp của các bạn.
 Sau đây là các cách mà bạn có thể đóng góp:
 
-* [Tạo Issues][contributing:submit-issue] về vcpkg hoặc các package.
-* [Sửa lỗi và Thêm các package mới][contributing:submit-pr]
+* [Tạo Issues][contributing:mit-issue] về vcpkg hoặc các package.
+* [Sửa lỗi và Thêm các package mới][contributing:mit-pr]
 
 Xin hãy xem chi tiết trong [Hướng dẫn Đóng góp](CONTRIBUTING.md).
 
