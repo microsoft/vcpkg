@@ -4,17 +4,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 99beff9ee6f8c26f16ea53f03ba6209a119099cbe361701b0d5f4df9d5cc5f2f0da7c994c899a4cec876da8428564dc7a8e798226a9ba8b5c18a3ef8b181d39e
+    SHA512 4d191154cf0cf988e84a1a114b9cac1eb399c96478be44e89e308d9b11ed7560de400b734aa71fbd746a71bd7384b9d425ba266a6b39cab3017ab2f40f6555b6
     HEAD_REF main
     PATCHES
-        0001-Fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
-        0002-Fix-DR-1734.patch
-        0003-Fix-tools-path.patch
-        0004-Fix-compiler-rt-install-path.patch
-        0005-Fix-tools-install-path.patch
-        0007-Fix-install-bolt.patch
-        0008-llvm_assert.patch
-        0009-disable-libomp-aliases.patch
+        0001-fix-install-package-dir.patch
+        0002-fix-tools-install-dir.patch
+        0003-fix-llvm-config.patch
+        0004-disable-libomp-aliases.patch
 )
 
 vcpkg_check_features(
@@ -100,9 +96,16 @@ endif()
 set(LLVM_ENABLE_PROJECTS)
 if("bolt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "bolt")
+    list(APPEND FEATURE_OPTIONS
+        -DBOLT_TOOLS_INSTALL_DIR:PATH=tools/llvm
+    )
 endif()
 if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang")
+    list(APPEND FEATURE_OPTIONS
+        -DCLANG_INSTALL_PACKAGE_DIR:PATH=share/clang
+        -DCLANG_TOOLS_INSTALL_DIR:PATH=tools/llvm
+    )
     if("disable-clang-static-analyzer" IN_LIST FEATURES)
         list(APPEND FEATURE_OPTIONS
             # Disable ARCMT
@@ -111,10 +114,10 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
             -DCLANG_ENABLE_STATIC_ANALYZER=OFF
         )
     endif()
-    # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (LLVM_TOOLS_INSTALL_DIR=tools/llvm)
-    # 2) Clang resource files are relocated from ./lib/clang/<version> to ./tools/llvm/lib/clang/<version> (see patch 0007-fix-compiler-rt-install-path.patch)
-    # So, the relative path should be changed from ../lib/clang/<version> to ./lib/clang/<version>
-    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${VERSION})
+    # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (CLANG_TOOLS_INSTALL_DIR=tools/llvm)
+    # 2) Clang resource files should be relocated from lib/clang/<major_version> to ../tools/llvm/lib/clang/<major_version>
+    string(REGEX MATCH "^[0-9]+" CLANG_VERSION_MAJOR ${VERSION})
+    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=../tools/llvm/lib/clang/${CLANG_VERSION_MAJOR})
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
@@ -128,6 +131,10 @@ if("flang" IN_LIST FEATURES)
     endif()
     list(APPEND LLVM_ENABLE_PROJECTS "flang")
     list(APPEND FEATURE_OPTIONS
+        -DFLANG_INSTALL_PACKAGE_DIR:PATH=share/flang
+        -DFLANG_TOOLS_INSTALL_DIR:PATH=tools/llvm
+    )
+    list(APPEND FEATURE_OPTIONS
         # Flang requires C++17
         -DCMAKE_CXX_STANDARD=17
     )
@@ -137,6 +144,10 @@ if("libclc" IN_LIST FEATURES)
 endif()
 if("lld" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "lld")
+    list(APPEND FEATURE_OPTIONS
+        -DLLD_INSTALL_PACKAGE_DIR:PATH=share/lld
+        -DLLD_TOOLS_INSTALL_DIR:PATH=tools/llvm
+    )
 endif()
 if("lldb" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "lldb")
@@ -146,9 +157,18 @@ if("lldb" IN_LIST FEATURES)
 endif()
 if("mlir" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "mlir")
+    list(APPEND FEATURE_OPTIONS
+        -DMLIR_INSTALL_PACKAGE_DIR:PATH=share/mlir
+        -DMLIR_TOOLS_INSTALL_DIR:PATH=tools/llvm
+    )
 endif()
 if("openmp" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "openmp")
+    list(APPEND FEATURE_OPTIONS
+        -DLIBOMP_INSTALL_ALIASES=OFF
+        -DOPENMP_ENABLE_LIBOMPTARGET=OFF # Currently libomptarget cannot be compiled on Windows or MacOS X.
+        -DOPENMP_ENABLE_OMPT_TOOLS=OFF # Currently tools are not tested well on Windows or MacOS X.
+    )
     # Perl is required for the OpenMP run-time
     vcpkg_find_acquire_program(PERL)
     get_filename_component(PERL_PATH ${PERL} DIRECTORY)
@@ -158,6 +178,9 @@ if("openmp" IN_LIST FEATURES)
 endif()
 if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")
+    list(APPEND FEATURE_OPTIONS
+        -DPOLLY_INSTALL_PACKAGE_DIR:PATH=share/polly
+    )
 endif()
 if("pstl" IN_LIST FEATURES)
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -192,6 +215,7 @@ set(known_llvm_targets
     BPF
     Hexagon
     Lanai
+    LoongArch
     Mips
     MSP430
     NVPTX
@@ -215,7 +239,12 @@ endforeach()
 
 # this is for experimental targets
 set(known_llvm_experimental_targets
-    SPRIV
+    ARC
+    CSKY
+    DirectX
+    M68k
+    SPIRV
+    Xtensa
 )
 
 set(LLVM_EXPERIMENTAL_TARGETS_TO_BUILD "")
@@ -244,27 +273,19 @@ vcpkg_cmake_configure(
         -DLLVM_BUILD_TESTS=OFF
         -DLLVM_INCLUDE_BENCHMARKS=OFF
         -DLLVM_BUILD_BENCHMARKS=OFF
-        -DLIBOMP_INSTALL_ALIASES=OFF
         # Force TableGen to be built with optimization. This will significantly improve build time.
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
         "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
         "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
-
         -DPACKAGE_VERSION=${VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
+        -DLLVM_INSTALL_PACKAGE_DIR:PATH=share/llvm
         -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
-        -DCLANG_TOOLS_INSTALL_DIR:PATH=tools/llvm
-        -DLLD_TOOLS_INSTALL_DIR:PATH=tools/llvm
-        -DMLIR_TOOLS_INSTALL_DIR:PATH=tools/llvm
-        -DBOLT_TOOLS_INSTALL_DIR:PATH=tools/llvm # all others are strings
-        -DOPENMP_TOOLS_INSTALL_DIR:PATH=tools/llvm
     MAYBE_UNUSED_VARIABLES 
         COMPILER_RT_ENABLE_IOS
-        OPENMP_TOOLS_INSTALL_DIR
-        MLIR_TOOLS_INSTALL_DIR
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -301,10 +322,10 @@ llvm_cmake_package_config_fixup("llvm")
 
 set(empty_dirs)
 
-if("clang-tools-extra" IN_LIST FEATURES)
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/misc/ConfusableTable")
-endif()
+#if("clang-tools-extra" IN_LIST FEATURES)
+#    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
+#    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/misc/ConfusableTable")
+#endif()
 
 if("pstl" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/lib/cmake")

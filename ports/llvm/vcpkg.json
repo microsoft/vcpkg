@@ -1,7 +1,6 @@
 {
   "name": "llvm",
-  "version": "15.0.7",
-  "port-version": 4,
+  "version": "17.0.0-rc4",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -101,13 +100,6 @@
     "default-targets": {
       "description": "Build with platform-specific default targets.",
       "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "target-spirv"
-          ]
-        },
         {
           "name": "llvm",
           "default-features": false,
@@ -346,11 +338,16 @@
           "features": [
             "target-aarch64",
             "target-amdgpu",
+            "target-arc",
             "target-arm",
             "target-avr",
             "target-bpf",
+            "target-csky",
+            "target-directx",
             "target-hexagon",
             "target-lanai",
+            "target-loongarch",
+            "target-m68k",
             "target-mips",
             "target-msp430",
             "target-nvptx",
@@ -362,13 +359,17 @@
             "target-ve",
             "target-webassembly",
             "target-x86",
-            "target-xcore"
+            "target-xcore",
+            "target-xtensa"
           ]
         }
       ]
     },
     "target-amdgpu": {
       "description": "Build with AMDGPU backend."
+    },
+    "target-arc": {
+      "description": "Build with ARC backend (experemental)."
     },
     "target-arm": {
       "description": "Build with ARM backend."
@@ -379,11 +380,23 @@
     "target-bpf": {
       "description": "Build with BPF backend."
     },
+    "target-csky": {
+      "description": "Build with CSKY backend (experemental)."
+    },
+    "target-directx": {
+      "description": "Build with DirectX backend (experemental)."
+    },
     "target-hexagon": {
       "description": "Build with Hexagon backend."
     },
     "target-lanai": {
       "description": "Build with Lanai backend."
+    },
+    "target-loongarch": {
+      "description": "Build with LoongArch backend."
+    },
+    "target-m68k": {
+      "description": "Build with M68k backend (experemental)."
     },
     "target-mips": {
       "description": "Build with Mips backend."
@@ -404,7 +417,7 @@
       "description": "Build with Sparc backend."
     },
     "target-spirv": {
-      "description": "Build with Spriv backend."
+      "description": "Build with SPRIV backend (experemental)."
     },
     "target-systemz": {
       "description": "Build with SystemZ backend."
@@ -420,6 +433,9 @@
     },
     "target-xcore": {
       "description": "Build with XCore backend."
+    },
+    "target-xtensa": {
+      "description": "Build with Xtensa backend (experemental)."
     },
     "tools": {
       "description": "Build LLVM tools.",
