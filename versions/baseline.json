@@ -6258,7 +6258,7 @@
     },
     "paraview": {
       "baseline": "5.11.0",
-      "port-version": 3
+      "port-version": 4
     },
     "parmetis": {
       "baseline": "2022-07-27",
