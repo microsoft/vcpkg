@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.82.0",
+    $version = "1.83.0",
     $portsDir = $null
 )
 
@@ -22,11 +22,8 @@ else {
 }
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 2
+$defaultPortVersion = 0
 $portVersions = @{
-    "boost-atomic" = 3;
-    "boost-modular-build-helper" = 4;
-    "boost-ublas" = 3;
 }
 
 function Get-PortVersion {
