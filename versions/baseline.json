@@ -9046,7 +9046,7 @@
     },
     "yyjson": {
       "baseline": "0.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "z3": {
       "baseline": "4.12.2",
