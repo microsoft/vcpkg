@@ -16,6 +16,7 @@ vcpkg_from_github(
         0008-llvm_assert.patch
         0009-disable-libomp-aliases.patch
         0010-remove-numpy.patch
+        0011-missing-include.patch
 )
 
 vcpkg_check_features(

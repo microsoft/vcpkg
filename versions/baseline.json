@@ -1401,7 +1401,7 @@
       "port-version": 0
     },
     "capnproto": {
-      "baseline": "0.10.3",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "capstone": {
@@ -1882,7 +1882,7 @@
     },
     "cpu-features": {
       "baseline": "0.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cpuid": {
       "baseline": "0.6.2",
@@ -2161,7 +2161,7 @@
       "port-version": 3
     },
     "discordcoreapi": {
-      "baseline": "1.80",
+      "baseline": "1.90",
       "port-version": 0
     },
     "discount": {
@@ -2494,7 +2494,7 @@
     },
     "fastrtps": {
       "baseline": "2.7.0",
-      "port-version": 2
+      "port-version": 3
     },
     "fawdlstty-libfv": {
       "baseline": "0.0.8",
@@ -2790,7 +2790,7 @@
     },
     "gdal": {
       "baseline": "3.7.1",
-      "port-version": 3
+      "port-version": 4
     },
     "gdcm": {
       "baseline": "3.0.22",
@@ -3061,8 +3061,8 @@
       "port-version": 0
     },
     "gtk": {
-      "baseline": "4.10.4",
-      "port-version": 2
+      "baseline": "4.10.5",
+      "port-version": 0
     },
     "gtk3": {
       "baseline": "3.24.38",
@@ -3201,7 +3201,7 @@
       "port-version": 0
     },
     "highway": {
-      "baseline": "1.0.6",
+      "baseline": "1.0.7",
       "port-version": 0
     },
     "hikogui": {
@@ -3353,7 +3353,7 @@
       "port-version": 0
     },
     "igraph": {
-      "baseline": "0.10.6",
+      "baseline": "0.10.7",
       "port-version": 0
     },
     "iir1": {
@@ -3381,8 +3381,8 @@
       "port-version": 1
     },
     "imgui": {
-      "baseline": "1.89.7",
-      "port-version": 1
+      "baseline": "1.89.9",
+      "port-version": 0
     },
     "imgui-sfml": {
       "baseline": "2.5",
@@ -3553,7 +3553,7 @@
       "port-version": 0
     },
     "jsonifier": {
-      "baseline": "0.9.6",
+      "baseline": "0.9.7",
       "port-version": 0
     },
     "jsonnet": {
@@ -4889,8 +4889,8 @@
       "port-version": 2
     },
     "libxml2": {
-      "baseline": "2.10.3",
-      "port-version": 1
+      "baseline": "2.11.5",
+      "port-version": 0
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -5026,7 +5026,7 @@
     },
     "llvm": {
       "baseline": "15.0.7",
-      "port-version": 4
+      "port-version": 5
     },
     "lmdb": {
       "baseline": "0.9.29",
@@ -5278,7 +5278,7 @@
     },
     "mdl-sdk": {
       "baseline": "2021.1.2",
-      "port-version": 2
+      "port-version": 3
     },
     "mdns": {
       "baseline": "1.4.2",
@@ -5389,8 +5389,8 @@
       "port-version": 0
     },
     "miniupnpc": {
-      "baseline": "2.1",
-      "port-version": 5
+      "baseline": "2.2.5",
+      "port-version": 0
     },
     "miniz": {
       "baseline": "3.0.2",
@@ -5721,8 +5721,8 @@
       "port-version": 0
     },
     "ngspice": {
-      "baseline": "39",
-      "port-version": 1
+      "baseline": "41",
+      "port-version": 0
     },
     "ngtcp2": {
       "baseline": "0.18.0",
@@ -6102,7 +6102,7 @@
     },
     "openssl": {
       "baseline": "3.1.2",
-      "port-version": 2
+      "port-version": 3
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -6290,7 +6290,7 @@
     },
     "pcl": {
       "baseline": "1.13.1",
-      "port-version": 0
+      "port-version": 1
     },
     "pcre": {
       "baseline": "8.45",
@@ -7281,7 +7281,7 @@
       "port-version": 0
     },
     "rocksdb": {
-      "baseline": "8.3.2",
+      "baseline": "8.5.3",
       "port-version": 0
     },
     "rpclib": {
@@ -9062,7 +9062,7 @@
     },
     "zeroc-ice": {
       "baseline": "3.7.9",
-      "port-version": 3
+      "port-version": 4
     },
     "zeromq": {
       "baseline": "2023-06-20",
