@@ -8782,7 +8782,7 @@
     },
     "winsock2": {
       "baseline": "0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "winsparkle": {
       "baseline": "0.7.0",
