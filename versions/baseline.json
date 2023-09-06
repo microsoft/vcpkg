@@ -118,7 +118,7 @@
     },
     "anari": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "anax": {
       "baseline": "2.1.0",
