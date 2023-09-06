@@ -2168,7 +2168,6 @@ sqlpp11[mysql]:arm64-windows = cascade
 sqlpp11[mysql]:x86-windows = cascade
 srpc:arm64-uwp = cascade
 srpc:x64-uwp = cascade
-symengine:x64-uwp = cascade
 symengine[llvm,tcmalloc]:arm64-windows = cascade
 tensorpipe[cuda](osx) = cascade
 tgbot-cpp:arm64-uwp = cascade
