@@ -315,8 +315,8 @@ cung cấp bởi các port được cấp phép theo các điều khoản của 
 Hầu hết các port đều build các thư viện liên quan sử dụng các hệ thống build gốc được khuyến cáo
 bởi tác giả gốc của các thư viện đó, và tải mã nguồn và công cụ build từ nguồn chính thức của họ.
 Để sử dụng dưới tường lửa, các quyền truy cập nhất định sẽ dựa vào port nào đang được cài đặt.
-Nếu bạn buộc phải cài đặt trong một môi trường "cách ly không khí", xin hãy cân nhắc việc cài đặt
-một lần trong môi trường không "cách ly không khí", để tạo [asset cache](https://learn.microsoft.com/vcpkg/users/assetcaching) được chia sẻ với môi trường "cách ly không khí" kia.
+Nếu bạn buộc phải cài đặt trong một môi trường "bị cô lập khỏi mạng (disconnected network)", xin hãy cân nhắc việc cài đặt
+một lần trong môi trường không "bị cô lập khỏi mạng (disconnected network)", để tạo [asset cache](https://learn.microsoft.com/vcpkg/users/assetcaching) được chia sẻ với môi trường "bị cô lập khỏi mạng (disconnected network)" kia.
 
 # Thu Thập Dữ Liệu
 
