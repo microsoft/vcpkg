@@ -1882,7 +1882,7 @@
     },
     "cpu-features": {
       "baseline": "0.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cpuid": {
       "baseline": "0.6.2",
