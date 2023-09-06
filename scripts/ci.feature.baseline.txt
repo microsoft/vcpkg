@@ -2383,7 +2383,7 @@ restc-cpp[threaded-ctx](osx) = combination-fails # Fixed on master: error: copyi
 rubberband[cli](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32360
 sqlpp11-connector-mysql[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
 sqlpp11[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
-symengine[tcmalloc](windows) # feature-fails # tcmalloc not found. See https://github.com/microsoft/vcpkg/issues/33576
+symengine[tcmalloc](windows) = feature-fails # tcmalloc not found. See https://github.com/microsoft/vcpkg/issues/33576
 tgui[sdl2] = options # At least one of the backend features must be selected: sdl2 sfml
 vlpp[tools](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32143 (error: inconsistent begin/end types in range-based ‘for’ statement)
 vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
