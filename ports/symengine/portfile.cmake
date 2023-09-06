@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 e73f62a87d20b676cac66ce82ac93308b688ed2ac18ebdb6884bae1ae66868e1033e33908e797f86a1906f91b975e8607a02e8932db8550a677f6b41373b7934
     HEAD_REF master
+    PATCHES
+        fix-find-tcmalloc.patch
 )
 
 vcpkg_check_features(
@@ -18,6 +20,10 @@ vcpkg_check_features(
 
 if(integer-class-flint IN_LIST FEATURES)
     set(INTEGER_CLASS flint)
+endif()
+
+if(tcmalloc IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DTCMALLOC_TARGETS="${CURRENT_INSTALLED_DIR}/lib/libtcmalloc_minimal.lib")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
