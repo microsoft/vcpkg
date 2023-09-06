@@ -1393,3 +1393,6 @@ vcpkg-ci-wxwidgets:x64-windows-static-md=pass
 vcpkg-ci-wxwidgets:x64-windows-static=pass
 vcpkg-ci-wxwidgets:x64-windows=pass
 vcpkg-ci-wxwidgets:x86-windows=pass
+cld3:arm-neon-android=fail
+cld3:arm64-android=fail
+cld3:x64-android=fail
