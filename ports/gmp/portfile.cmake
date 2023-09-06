@@ -102,3 +102,5 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/COPYINGv3"
         "${SOURCE_PATH}/COPYINGv2"
 )
+
+message(FATAL_ERROR)
