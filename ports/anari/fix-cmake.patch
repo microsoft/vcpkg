@@ -1,0 +1,22 @@
+diff --git a/libs/helide/external/embree/CMakeLists.txt b/libs/helide/external/embree/CMakeLists.txt
+index 8bc9d00..fed81ac 100644
+--- a/libs/helide/external/embree/CMakeLists.txt
++++ b/libs/helide/external/embree/CMakeLists.txt
+@@ -27,15 +27,10 @@ option(EMBREE_TUTORIALS            "" OFF)
+ option(EMBREE_TUTORIALS_GLFW       "" OFF)
+ set(EMBREE_TASKING_SYSTEM "INTERNAL" CACHE STRING "" FORCE)
+ 
+-anari_sdk_fetch_project(
+-  NAME anari_helide_embree
+-  URL "https://github.com/embree/embree/archive/refs/tags/v3.13.5.zip"
+-  MD5 d87ce56557a38e332cb3e0fa5cac8cfd
+-  ADD_SUBDIR
+-)
++find_package(embree 3 CONFIG REQUIRED)
+ 
+ project_add_library(INTERFACE)
+-project_link_libraries(INTERFACE embree tasking)
++project_link_libraries(INTERFACE embree)
+ project_compile_definitions(INTERFACE TASKING_INTERNAL)
+ project_include_directories(INTERFACE ${anari_helide_embree_LOCATION}/common)
+ if (WIN32)
