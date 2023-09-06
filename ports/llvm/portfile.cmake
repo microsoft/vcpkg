@@ -17,6 +17,7 @@ vcpkg_from_github(
         0009-disable-libomp-aliases.patch
         0010-remove-numpy.patch
         0011-missing-include.patch
+        0012-create-destination-mlir-directory.patch
 )
 
 vcpkg_check_features(
@@ -149,11 +150,9 @@ endif()
 if("mlir" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "mlir")
     if("enable-mlir-python-bindings" IN_LIST FEATURES)
-        vcpkg_find_acquire_program(PYTHON3)
         list(APPEND FEATURE_OPTIONS
             -DMLIR_ENABLE_BINDINGS_PYTHON=ON
-            -DPYTHON_EXECUTABLE:FILEPATH=${PYTHON3}
-            -DPython3_EXECUTABLE:FILEPATH=${PYTHON3}
+            "-Dpybind11_DIR=${CURRENT_INSTALLED_DIR}/share/pybind11"
         )
     endif()
 endif()
