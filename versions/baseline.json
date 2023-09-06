@@ -7281,7 +7281,7 @@
       "port-version": 0
     },
     "rocksdb": {
-      "baseline": "8.3.2",
+      "baseline": "8.5.3",
       "port-version": 0
     },
     "rpclib": {
