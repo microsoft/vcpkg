@@ -7726,7 +7726,7 @@
     },
     "soci": {
       "baseline": "4.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "socket-io-client": {
       "baseline": "2023-02-14",
