@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_find_zstd.patch
+        fix-pkgconfig.patch
 )
 
 vcpkg_check_features(
