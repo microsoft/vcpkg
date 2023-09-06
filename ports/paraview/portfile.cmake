@@ -197,6 +197,14 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
+file(GLOB FILES "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake")
+
+foreach(FILE ${FILES})
+    file(READ "${FILE}" file_contents)
+    STRING(REPLACE "pv5.11d.exe" "pv5.11.exe" file_contents "${file_contents}")
+    file(WRITE "${FILE}" "${file_contents}")
+endforeach()   
+ 
 # The plugins also work without these files
 file(REMOVE "${CURRENT_PACKAGES_DIR}/Applications/paraview.app/Contents/Resources/paraview.conf")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/Applications/paraview.app/Contents/Resources/paraview.conf")
