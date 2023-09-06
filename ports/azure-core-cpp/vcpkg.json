@@ -1,7 +1,7 @@
 {
   "name": "azure-core-cpp",
   "version-semver": "1.10.2",
-  "port-version": 4,
+  "port-version": 5,
   "description": [
     "Microsoft Azure Core SDK for C++",
     "This library provides shared primitives, abstractions, and helpers for modern Azure SDK client libraries written in the C++."
@@ -9,6 +9,22 @@
   "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/core/azure-core",
   "license": "MIT",
   "dependencies": [
+    {
+      "name": "azure-core-cpp",
+      "default-features": false,
+      "features": [
+        "curl"
+      ],
+      "platform": "!windows | uwp"
+    },
+    {
+      "name": "azure-core-cpp",
+      "default-features": false,
+      "features": [
+        "winhttp"
+      ],
+      "platform": "windows & !uwp"
+    },
     {
       "name": "openssl",
       "platform": "!windows & !uwp"
@@ -20,23 +36,15 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "wil",
-      "platform": "windows"
     }
   ],
   "default-features": [
-    "http"
+    "curl"
   ],
   "features": {
     "curl": {
       "description": "Libcurl HTTP transport implementation",
       "dependencies": [
-        {
-          "name": "azure-core-cpp",
-          "default-features": false
-        },
         {
           "name": "curl",
           "default-features": false,
@@ -46,30 +54,12 @@
         }
       ]
     },
-    "http": {
-      "description": "All HTTP transport implementations available on the platform",
-      "dependencies": [
-        {
-          "name": "azure-core-cpp",
-          "default-features": false,
-          "features": [
-            "curl"
-          ]
-        },
-        {
-          "name": "azure-core-cpp",
-          "default-features": false,
-          "features": [
-            "curl",
-            "winhttp"
-          ],
-          "platform": "windows & !uwp"
-        }
-      ]
-    },
     "winhttp": {
       "description": "WinHTTP HTTP transport implementation",
-      "supports": "windows"
+      "supports": "windows & !uwp",
+      "dependencies": [
+        "wil"
+      ]
     }
   }
 }
