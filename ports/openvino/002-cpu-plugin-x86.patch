@@ -1,0 +1,39 @@
+diff --git a/src/plugins/intel_cpu/src/nodes/subgraph.cpp b/src/plugins/intel_cpu/src/nodes/subgraph.cpp
+index ce0216b4fd..090a08608e 100644
+--- a/src/plugins/intel_cpu/src/nodes/subgraph.cpp
++++ b/src/plugins/intel_cpu/src/nodes/subgraph.cpp
+@@ -519,7 +519,11 @@ Snippet::SnippetJitExecutor::SnippetJitExecutor(const SnippetAttrs& attrs, bool
+         snippet_for_generation->set_friendly_name(snippetAttrs.snippet->get_friendly_name());
+         auto host_isa = dnnl::impl::cpu::x64::mayiuse(dnnl::impl::cpu::x64::avx512_core) ?
+             dnnl::impl::cpu::x64::avx512_core : dnnl::impl::cpu::x64::avx2;
++#if defined(OPENVINO_ARCH_X86_64)
+         snippet_for_generation->set_generator(std::make_shared<CPUGenerator>(host_isa));
++#else
++        IE_THROW(NotImplemented) << "CPU plugin: code-generation is not supported on non-x64 platforms";
++#endif  // OPENVINO_ARCH_X86_64
+     };
+ 
+     // is_canonicalized is ture means just reshape canonicalized graph with new input shapes, and get updated master shape,
+@@ -696,9 +700,9 @@ void Snippet::SnippetJitExecutor::generate(const jit_snippets_compile_args* jcp)
+     using PassPosition = snippets::pass::Manager::PassPosition;
+     using Place = snippets::pass::Manager::PassPosition::Place;
+     std::vector<Manager::PositionedPass> backend_passes;
+-
+-#define SNIPPETS_REGISTER_PASS(PASS_POS, PASS, ...) \
+-            backend_passes.emplace_back(PASS_POS, std::make_shared<PASS>(__VA_ARGS__))
++#if defined(OPENVINO_ARCH_X86_64)
++#    define SNIPPETS_REGISTER_PASS(PASS_POS, PASS, ...) \
++        backend_passes.emplace_back(PASS_POS, std::make_shared<PASS>(__VA_ARGS__))
+ 
+     SNIPPETS_REGISTER_PASS(PassPosition(Place::PipelineStart), ConvertToSwishCPU);
+     if (enforceBF16 && snippet_for_generation->has_domain_sensitive_ops()) {
+@@ -715,7 +719,8 @@ void Snippet::SnippetJitExecutor::generate(const jit_snippets_compile_args* jcp)
+     SNIPPETS_REGISTER_PASS(PassPosition(Place::PipelineEnd), ov::intel_cpu::pass::RemoveConverts);
+     SNIPPETS_REGISTER_PASS(PassPosition(Place::PipelineEnd), ov::intel_cpu::pass::MulAddToFMA);
+ 
+-#undef SNIPPETS_REGISTER_PASS
++#    undef SNIPPETS_REGISTER_PASS
++#endif
+ 
+     ov::snippets::lowered::pass::PassPipeline control_flow_markup_pipeline;
+     CPU_REGISTER_PASS_X64(control_flow_markup_pipeline, ov::intel_cpu::pass::BrgemmBlocking);

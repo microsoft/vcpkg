@@ -1,8 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "openvino",
-  "version-date": "2023-06-11",
-  "port-version": 6,
+  "version": "2023.2.0",
   "maintainers": "OpenVINO Developers <openvino@intel.com>",
   "summary": "This is a port for Open Visual Inference And Optimization toolkit for AI inference",
   "description": [
@@ -16,22 +15,15 @@
   "documentation": "https://docs.openvino.ai/latest/index.html",
   "license": "Apache-2.0",
   "dependencies": [
-    "ade",
     {
       "name": "pkgconf",
       "host": true
     },
     "pugixml",
+    "rapidjson",
     {
       "name": "tbb",
-      "default-features": false,
-      "features": [
-        {
-          "name": "hwloc",
-          "platform": "!static & !osx"
-        }
-      ],
-      "version>=": "2021.9.0#2"
+      "version>=": "2021.10.0#2"
     },
     {
       "name": "vcpkg-cmake",
@@ -53,14 +45,9 @@
   ],
   "default-features": [
     "auto",
-    "auto-batch",
-    {
-      "name": "cpu",
-      "platform": "!(windows & arm)"
-    },
     {
       "name": "gpu",
-      "platform": "x64 & !(osx | uwp) & !static"
+      "platform": "x64 & !(osx | uwp)"
     },
     "hetero",
     "ir",
@@ -83,7 +70,7 @@
     },
     "gpu": {
       "description": "Enables GPU plugin for inference",
-      "supports": "x64 & !(osx | uwp) & !static",
+      "supports": "x64 & !(osx | uwp)",
       "dependencies": [
         "opencl"
       ]
