@@ -16,10 +16,10 @@ index de1ed08..e4ecceb 100644
  echo copying outputs from %tgt_dir% to %bin_dir%
  if not exist %bin_dir% md %bin_dir%
 diff --git a/build.vc15/lib_mpir_cxx/lib_mpir_cxx.vcxproj b/build.vc15/lib_mpir_cxx/lib_mpir_cxx.vcxproj
-index 3a23f01..499fe1f 100644
+index 3a23f01..1f44b22 100644
 --- a/build.vc15/lib_mpir_cxx/lib_mpir_cxx.vcxproj
 +++ b/build.vc15/lib_mpir_cxx/lib_mpir_cxx.vcxproj
-@@ -70,10 +70,17 @@
+@@ -70,6 +70,11 @@
      <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">mpirxx</TargetName>
    </PropertyGroup>
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -31,13 +31,7 @@ index 3a23f01..499fe1f 100644
      <ClCompile>
        <AdditionalIncludeDirectories>..\..\</AdditionalIncludeDirectories>
        <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-     </ClCompile>
-+    <Link>
-+    </Link>
- 
-     <PostBuildEvent>
-       <Command>cd ..\..\build.vc
-@@ -82,10 +89,17 @@ postbuild "$(TargetPath)" 15
+@@ -82,6 +87,11 @@ postbuild "$(TargetPath)" 15
      </PostBuildEvent>
    </ItemDefinitionGroup>
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -49,13 +43,7 @@ index 3a23f01..499fe1f 100644
      <ClCompile>
        <AdditionalIncludeDirectories>..\..\</AdditionalIncludeDirectories>
        <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-     </ClCompile>
-+    <Link>
-+    </Link>
- 
-     <PostBuildEvent>
-       <Command>cd ..\..\build.vc
-@@ -94,10 +108,17 @@ postbuild "$(TargetPath)" 15
+@@ -94,6 +104,11 @@ postbuild "$(TargetPath)" 15
      </PostBuildEvent>
    </ItemDefinitionGroup>
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -67,13 +55,7 @@ index 3a23f01..499fe1f 100644
      <ClCompile>
        <AdditionalIncludeDirectories>..\..\</AdditionalIncludeDirectories>
        <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;HAVE_CONFIG_H;_WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-     </ClCompile>
-+    <Link>
-+    </Link>
- 
-     <PostBuildEvent>
-       <Command>cd ..\..\build.vc
-@@ -106,10 +127,17 @@ postbuild "$(TargetPath)" 15
+@@ -106,6 +121,11 @@ postbuild "$(TargetPath)" 15
      </PostBuildEvent>
    </ItemDefinitionGroup>
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -85,9 +67,3 @@ index 3a23f01..499fe1f 100644
      <ClCompile>
        <AdditionalIncludeDirectories>..\..\</AdditionalIncludeDirectories>
        <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;HAVE_CONFIG_H;_WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-     </ClCompile>
-+    <Link>
-+    </Link>
- 
-     <PostBuildEvent>
-       <Command>cd ..\..\build.vc
