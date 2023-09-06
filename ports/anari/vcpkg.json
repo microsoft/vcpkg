@@ -5,7 +5,6 @@
   "homepage": "https://www.khronos.org/anari",
   "license": "Apache-2.0",
   "dependencies": [
-    "embree3",
     "glm",
     "python3",
     {
