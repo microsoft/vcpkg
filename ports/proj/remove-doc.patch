@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 4c9744e6..a6d5e4eb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -318,15 +335,12 @@ include_directories(${PROJ_SOURCE_DIR}/src)
+@@ -339,7 +339,6 @@ include_directories(${PROJ_SOURCE_DIR}/src)
  add_subdirectory(data)
  add_subdirectory(include)
  add_subdirectory(src)
@@ -10,12 +10,13 @@ index 4c9744e6..a6d5e4eb 100644
  add_subdirectory(cmake)
  if(BUILD_TESTING)
    add_subdirectory(test)
+@@ -350,9 +349,6 @@
+   add_subdirectory(examples)
  endif()
  
 -set(docfiles COPYING NEWS AUTHORS)
 -install(FILES ${docfiles}
 -        DESTINATION ${CMAKE_INSTALL_DOCDIR})
-+
  
  ################################################################################
  # pkg-config support
