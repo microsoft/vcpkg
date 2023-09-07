@@ -1,4 +1,4 @@
-set(DIRECTXTK_TAG jun2023)
+set(DIRECTXTK_TAG sept2023)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
     REF ${DIRECTXTK_TAG}
-    SHA512 de98429af5851fafdab4b24b38d0230798eab38c5fee291ea43ef46dabe275e3476d1449f94ebead53d5a4f361257218b165af37f96114cec5890403a044d600
+    SHA512 b5b9ea976b1318bbf29915a10cbb11368e0c16d19247bdb3c2da9e733ef6a3db50e530e59e7c5aa0191c372530f22b1edd3f67a1d0a3647e50c09784b9d1e93a
     HEAD_REF main
 )
 
@@ -24,9 +24,11 @@ vcpkg_check_features(
         xaudio2redist BUILD_XAUDIO_WIN7
 )
 
+set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS} -DBUILD_TESTING=OFF
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -38,7 +40,7 @@ if("tools" IN_LIST FEATURES)
     MAKESPRITEFONT_EXE
     URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/MakeSpriteFont.exe"
     FILENAME "makespritefont-${DIRECTXTK_TAG}.exe"
-    SHA512 1b78df0fe1f1de0e3796c8ac3b3b99f7d44dc955ebd107791bda637a27a94a364cbf974a240a5ac02a79ff8bcc8ee74528bca502e71666d0d99ce28a0cb88fd1
+    SHA512 1c4b282482e931c0b5b97bf7359e11889428f35458e65c751521240f15e04915400084d1a28693d8ffe5cd29bc8dd084a5818ecbff4e036de21368c119145d66
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
@@ -53,7 +55,7 @@ if("tools" IN_LIST FEATURES)
       XWBTOOL_EXE
       URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/XWBTool.exe"
       FILENAME "xwbtool-${DIRECTXTK_TAG}.exe"
-      SHA512 b200690f7b81cdf902ec8c84a2be315858796c7ce01fbf9971377a08b8f7e0211415bc4829944041b57ed6a786f2ace0f4991cc8f51241bb7351defcfc9c34de
+      SHA512 36e060b67390a1798cb5f96142d63b83051cfb60a9330932cd69a4b43f50d4e29fd5bbe6b036a7c64a8eb8c9018481ee406951f0777f30497672ff8eeba79498
     )
 
     file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
@@ -66,7 +68,7 @@ if("tools" IN_LIST FEATURES)
       XWBTOOL_EXE
       URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/XWBTool_arm64.exe"
       FILENAME "xwbtool-${DIRECTXTK_TAG}-arm64.exe"
-      SHA512 ba338c19e4a224cac3b31ed82bf5174f072186845ba5d70aa50a5c485faf6e463559613da213a55c8859e7b6615bfaa8819dd9e79bf955df67973e68fbefcad0
+      SHA512 bd594dd0e172a7002e92abf6e01e2efe30fa1cae3ee5ae87254da4443c964aa4fb653c26f145004abcd91135adc4e19fe1b8a752e1a8acb675a8ddc42191e7d6
     )
 
     file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
