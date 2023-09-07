@@ -2117,8 +2117,8 @@
       "port-version": 0
     },
     "directx-dxc": {
-      "baseline": "2023-03-01",
-      "port-version": 2
+      "baseline": "2023-08-14",
+      "port-version": 0
     },
     "directx-headers": {
       "baseline": "1.610.2",
@@ -2137,15 +2137,15 @@
       "port-version": 7
     },
     "directxtex": {
-      "baseline": "2023-06-13",
-      "port-version": 1
+      "baseline": "2023-09-01",
+      "port-version": 0
     },
     "directxtk": {
-      "baseline": "2023-06-13",
+      "baseline": "2023-09-01",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2023-06-13",
+      "baseline": "2023-09-01",
       "port-version": 0
     },
     "dirent": {
