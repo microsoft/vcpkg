@@ -172,6 +172,10 @@ function(z_vcpkg_make_prepare_env config)
         # libtool removes some flags which are needed for configure tests.
         set(ENV{CC} "$ENV{CC} ${ABIFLAGS_${config}}")
         set(ENV{CXX} "$ENV{CXX} ${ABIFLAGS_${config}}")
+        if("$ENV{CC}" MATCHES "$ENV{CCAS}") #TODO: better check 
+            set(ENV{CCAS} "$ENV{CCAS} ${ABIFLAGS_${config}}")
+            set(ENV{AS} "$ENV{AS} ${ABIFLAGS_${config}}")
+        endif()
         set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} ${ABIFLAGS_${config}}")
         set(ENV{CXX_FOR_BUILD} "$ENV{CXX_FOR_BUILD} ${ABIFLAGS_${config}}")
     endif()
