@@ -1,6 +1,7 @@
 {
   "name": "blend2d",
   "version-date": "2023-06-16",
+  "port-version": 1,
   "description": "Beta 2D Vector Graphics Powered by a JIT Compiler",
   "homepage": "https://github.com/blend2d/blend2d",
   "documentation": "https://blend2d.com/doc/index.html",
@@ -17,24 +18,17 @@
     }
   ],
   "default-features": [
-    "futex",
     "jit",
     "logging",
     "tls"
   ],
   "features": {
-    "futex": {
-      "description": "Default feature. Enables use of futex."
-    },
     "jit": {
       "description": "Default feature. Enables jit pipeline compilation.",
       "dependencies": [
         {
           "name": "blend2d",
           "default-features": false,
-          "features": [
-            "futex"
-          ],
           "platform": "windows"
         }
       ]
@@ -57,9 +51,6 @@
         {
           "name": "blend2d",
           "default-features": false,
-          "features": [
-            "futex"
-          ],
           "platform": "windows"
         }
       ]

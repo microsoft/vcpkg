@@ -15,6 +15,7 @@ vcpkg_from_github(
         0007-Fix-install-bolt.patch
         0008-llvm_assert.patch
         0009-disable-libomp-aliases.patch
+        0010-missing-include.patch
 )
 
 vcpkg_check_features(
