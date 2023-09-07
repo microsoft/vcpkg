@@ -1610,7 +1610,7 @@
     },
     "clipper2": {
       "baseline": "1.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "clockutils": {
       "baseline": "1.1.1",
