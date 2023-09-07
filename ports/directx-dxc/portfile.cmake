@@ -11,7 +11,7 @@ if (VCPKG_TARGET_IS_LINUX)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/${DIRECTX_DXC_TAG}/linux_dxc_${DIRECTX_DXC_VERSION}.x86_64.tar.gz"
         FILENAME "linux_dxc_${DIRECTX_DXC_VERSION}.tar.gz"
-        SHA512 1a191c945a0128d02f2a374defca30965d3fe064ef18c111cdb90a763333a69f4eefc5dbd6b8373b2f70276e5022f38e2b48a4f29675f7c10656388f833bca95
+        SHA512 7f1fb252b27fb00b9ffeadafb47921757c5e4d7df806283fe7629b866d2873896d7a7d599032aa2389f047d9791a447aabb22e3e8e7e1f3f76142675d831b738
     )
 else()
     vcpkg_download_distfile(ARCHIVE
