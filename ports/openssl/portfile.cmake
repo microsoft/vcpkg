@@ -21,6 +21,7 @@ vcpkg_from_github(
     REF "openssl-${VERSION}"
     SHA512 c48ad86265b0fee18b23863b645a286d131a863a3418c7d2ed6c819eebb822ad0f2985ba3ecbf4def32515442f0eb40aba08f3146d113247e86ec80fbddca1c1
     PATCHES
+        arm64-asm.patch
         disable-apps.patch
         disable-install-docs.patch
         script-prefix.patch
