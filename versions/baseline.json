@@ -8561,7 +8561,7 @@
       "port-version": 0
     },
     "vcpkg-pkgconfig-get-modules": {
-      "baseline": "2023-02-28",
+      "baseline": "2023-09-06",
       "port-version": 0
     },
     "vcpkg-qmake": {
