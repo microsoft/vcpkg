@@ -377,12 +377,11 @@ function(z_vcpkg_make_prepare_programs out_env)
                     string(APPEND prog " ${ARGN}")
                 endif()
                 set(z_vcm_all_tools "${z_vcm_all_tools}" PARENT_SCOPE)
-                #set(ENV{${envvar}} "${prog}") 
-                z_vcpkg_append_to_configure_environment(configure_env "${envvar}" "${prog}")
-                # Should probably create an env string like windows. This would be easier to return to the caller.
-            else()
-
+                #set(ENV{${envvar}} "${prog}")                 
+                # Should probably create an env string like windows. This would be easier to return to the caller
             endif()
+            z_vcpkg_append_to_configure_environment(configure_env "${envvar}" "${prog}")
+            set(configure_env "${configure_env}" PARENT_SCOPE)
         endfunction()
         z_vcpkg_make_set_env(CC C_COMPILER)
         z_vcpkg_make_set_env(CXX CXX_COMPILER)
