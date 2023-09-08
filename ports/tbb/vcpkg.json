@@ -25,7 +25,7 @@
   ],
   "features": {
     "hwloc": {
-      "description": "Builds TBB with TBBBind support for Hibrid CPUs or NUMA architectures.",
+      "description": "Builds TBB with TBBBind support for Hybrid CPUs or NUMA architectures.",
       "supports": "!static & !osx",
       "dependencies": [
         "hwloc"
