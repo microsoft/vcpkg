@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-foonathan-memory-include-install-dir.patch
+        fix-tool-dup-libs.patch
 )
 
 vcpkg_from_github(

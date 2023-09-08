@@ -1,0 +1,13 @@
+diff --git a/tool/CMakeLists.txt b/tool/CMakeLists.txt
+index a7a650e..8c49552 100644
+--- a/tool/CMakeLists.txt
++++ b/tool/CMakeLists.txt
+@@ -7,7 +7,7 @@ add_executable(foonathan_memory_node_size_debugger test_types.hpp node_size_debu
+ if (CMAKE_CROSSCOMPILING)
+     # statically link when cross compiling so emulator doesn't need library paths
+     if (MSVC)
+-        set_target_properties(foonathan_memory_node_size_debugger PROPERTIES LINK_FLAGS "/WHOLEARCHIVE")
++       # set_target_properties(foonathan_memory_node_size_debugger PROPERTIES LINK_FLAGS "/WHOLEARCHIVE")
+     else()
+         set_target_properties(foonathan_memory_node_size_debugger PROPERTIES LINK_FLAGS "-static")
+     endif()
