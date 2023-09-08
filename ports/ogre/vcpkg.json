@@ -1,9 +1,11 @@
 {
   "name": "ogre",
   "version": "14.0.1",
+  "port-version": 1,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "pugixml",
     {
