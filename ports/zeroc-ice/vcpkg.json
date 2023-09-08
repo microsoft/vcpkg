@@ -1,7 +1,7 @@
 {
   "name": "zeroc-ice",
   "version": "3.7.9",
-  "port-version": 4,
+  "port-version": 5,
   "maintainers": "Benjamin Oldenburg <benjamin.oldenburg@ordis.co.th>",
   "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
   "homepage": "https://github.com/zeroc-ice/ice",
@@ -11,7 +11,6 @@
     "bzip2",
     "expat",
     "lmdb",
-    "mcpp",
     {
       "name": "openssl",
       "platform": "!windows"
@@ -21,6 +20,7 @@
       "host": true,
       "platform": "windows"
     },
+    "zeroc-ice-mcpp",
     "zlib"
   ],
   "default-features": [

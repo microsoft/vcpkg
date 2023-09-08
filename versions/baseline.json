@@ -5286,7 +5286,7 @@
     },
     "mcpp": {
       "baseline": "2.7.2.14",
-      "port-version": 5
+      "port-version": 6
     },
     "mdl-sdk": {
       "baseline": "2021.1.2",
@@ -9074,7 +9074,11 @@
     },
     "zeroc-ice": {
       "baseline": "3.7.9",
-      "port-version": 4
+      "port-version": 5
+    },
+    "zeroc-ice-mcpp": {
+      "baseline": "2023-09-08",
+      "port-version": 0
     },
     "zeromq": {
       "baseline": "2023-06-20",

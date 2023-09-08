@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 547a4f6..1dfd146 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,7 +30,6 @@ target_sources(mcpp PUBLIC
+ 	"${CMAKE_CURRENT_SOURCE_DIR}/mcpp_out.h"
+ )
+ 
+-if(UNIX)
+ 	include(GNUInstallDirs)
+     
+ 	set_property(TARGET mcpp PROPERTY PUBLIC_HEADER 
+@@ -38,7 +37,6 @@ if(UNIX)
+ 		"mcpp_out.h"
+ 	)
+ 
+-	target_compile_options(mcpp PRIVATE "-O2")
+ 
+ 	if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+ 		set_property(TARGET mcpp PROPERTY POSITION_INDEPENDENT_CODE ON)
+@@ -51,9 +49,10 @@ if(UNIX)
+ 
+ 	install(TARGETS mcpp
+ 		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 		PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+ 	)
+-elseif(WIN32)
++if(WIN32)
+ 	# define character set - not set, per shipped project files
+ 	add_definitions(-D_SBCS)
+     
+@@ -77,4 +76,3 @@ elseif(WIN32)
+ 		)
+ 	endif()
+ endif()
+-install(TARGETS mcpp DESTINATION lib)

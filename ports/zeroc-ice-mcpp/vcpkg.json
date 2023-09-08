@@ -1,0 +1,16 @@
+{
+  "name": "zeroc-ice-mcpp",
+  "version-date": "2023-09-08",
+  "description": [
+    "Fork of mcpp, a C/C++ preprocessor",
+    "A simplified version of mcpp 2.7.2 plus various fixes, tailored to the Slice compilers requirements."
+  ],
+  "homepage": "https://github.com/zeroc-ice/mcpp",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
