@@ -58,7 +58,8 @@
       "description": "Enable the SESSION extension"
     },
     "tool": {
-      "description": "Build sqlite3 executable"
+      "description": "Build sqlite3 executable",
+      "supports": "!uwp"
     },
     "zlib": {
       "description": "Build sqlite3 command line tool with zlib support; has no effect on the library itself",
