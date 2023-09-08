@@ -23,7 +23,6 @@
     "libjpeg-turbo",
     "libpng",
     "openexr",
-    "python3",
     "robin-map",
     "tiff",
     {
@@ -100,7 +99,8 @@
     "pybind11": {
       "description": "Enable Python bindings support for openimageio",
       "dependencies": [
-        "pybind11"
+        "pybind11",
+        "python3"
       ]
     },
     "tools": {
