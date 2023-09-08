@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-11-12",
+  "version-date": "2023-09-08",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "license": "MIT",
   "default-features": [
@@ -166,6 +166,10 @@
           "name": "wxwidgets",
           "default-features": false,
           "platform": "!uwp"
+        },
+        {
+          "$package": "Ice",
+          "name": "zeroc-ice"
         },
         {
           "$package": "ZLIB",
