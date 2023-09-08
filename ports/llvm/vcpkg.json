@@ -369,7 +369,7 @@
       "description": "Build with AMDGPU backend."
     },
     "target-arc": {
-      "description": "Build with ARC backend (experemental)."
+      "description": "Build with ARC backend (experimental)."
     },
     "target-arm": {
       "description": "Build with ARM backend."
@@ -381,10 +381,10 @@
       "description": "Build with BPF backend."
     },
     "target-csky": {
-      "description": "Build with CSKY backend (experemental)."
+      "description": "Build with CSKY backend (experimental)."
     },
     "target-directx": {
-      "description": "Build with DirectX backend (experemental)."
+      "description": "Build with DirectX backend (experimental)."
     },
     "target-hexagon": {
       "description": "Build with Hexagon backend."
@@ -396,7 +396,7 @@
       "description": "Build with LoongArch backend."
     },
     "target-m68k": {
-      "description": "Build with M68k backend (experemental)."
+      "description": "Build with M68k backend (experimental)."
     },
     "target-mips": {
       "description": "Build with Mips backend."
@@ -417,7 +417,7 @@
       "description": "Build with Sparc backend."
     },
     "target-spirv": {
-      "description": "Build with SPRIV backend (experemental)."
+      "description": "Build with SPRIV backend (experimental)."
     },
     "target-systemz": {
       "description": "Build with SystemZ backend."
@@ -435,7 +435,7 @@
       "description": "Build with XCore backend."
     },
     "target-xtensa": {
-      "description": "Build with Xtensa backend (experemental)."
+      "description": "Build with Xtensa backend (experimental)."
     },
     "tools": {
       "description": "Build LLVM tools.",
