@@ -70,11 +70,12 @@ Prerrequisitos:
 - [Git][getting-started:git]
 - [Visual Studio][getting-started:visual-studio] 2015 Update 3 o superior con el paquete Inglés de Visual Studio.
 
-Primero, descargue y compile vcpkg; puede ser instalado en cualquier lugar,
-pero generalmente recomendamos usar vcpkg como submódulo para proyectos de CMake,
-e instalándolo globalmente para Proyectos de Visual Studio.
-recomendamos un lugar como `C:\src\vcpkg` o `C:\dev\vcpkg`,
-ya que de otra forma puede encontrarse problemas de ruta para algunos sistemas de port.
+Primero, descargue y compile vcpkg; puede ser instalado en cualquier lugar, pero por lo general recomendamos usar vcpkg  
+como submódulo, asi el repositorio que lo consume puede permanecer autónomo.
+Alternativamente vcpkg puede ser instalado globalmente;
+recomendamos que sea en un lugar como `C:\src\vcpkg` o `C:\dev\vcpkg`, 
+
+ya que de otra forma puede encontrarse problemas de ruta para algunos sistemas de port. 
 
 ```cmd
 > git clone https://github.com/microsoft/vcpkg
@@ -130,8 +131,8 @@ Prerrequisitos para macOS:
 
 - [Herramientas de desarrollo de Apple][getting-started:macos-dev-tools]
 
-Primero, descargue y compile vcpkg, puede ser instalado donde sea,
-pero recomendamos usar vcpkg como submodulo para proyectos de CMake.
+Primero, descargue y compile vcpkg, puede ser instalado donde lo desee,
+pero recomendamos usar vcpkg como un submodulo.
 
 ```sh
 $ git clone https://github.com/microsoft/vcpkg

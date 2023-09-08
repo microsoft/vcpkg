@@ -1,7 +1,3 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
-
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     message(FATAL_ERROR "unicorn can currently only be built with /MT or /MTd (static CRT linkage)")
 endif()

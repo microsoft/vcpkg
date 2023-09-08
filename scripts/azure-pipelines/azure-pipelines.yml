@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  android-pool: 'PrAnd-2023-07-12'
+  android-pool: 'PrAnd-1ES-Pool'
   linux-pool: 'PrLin-1ES-Pool'
-  windows-pool: 'PrWin-2023-07-12'
+  windows-pool: 'PrWin-2023-08-09'
   osx-pool: 'PrOsx-2022-02-04'
   linux-docker-image: 'andcontainerregistry.azurecr.io/vcpkg-android:2023-04-20'
 

@@ -1,0 +1,57 @@
+diff --git a/src/plugins/intel_cpu/CMakeLists.txt b/src/plugins/intel_cpu/CMakeLists.txt
+index d1150fdab0..cb2881301f 100644
+--- a/src/plugins/intel_cpu/CMakeLists.txt
++++ b/src/plugins/intel_cpu/CMakeLists.txt
+@@ -85,11 +85,11 @@ endif()
+ 
+ ie_mark_target_as_cc(${TARGET_NAME})
+ 
+-target_link_libraries(${TARGET_NAME} PRIVATE dnnl
++target_link_libraries(${TARGET_NAME} PRIVATE ${DNNL_LIBRARY_NAME}
+                                              ov_shape_inference
+                                              inference_engine_snippets)
+ 
+-target_include_directories(${TARGET_NAME} SYSTEM PRIVATE $<TARGET_PROPERTY:dnnl,INCLUDE_DIRECTORIES>)
++target_include_directories(${TARGET_NAME} SYSTEM PRIVATE $<TARGET_PROPERTY:${DNNL_LIBRARY_NAME},INCLUDE_DIRECTORIES>)
+ target_compile_definitions(${TARGET_NAME} PRIVATE IMPLEMENT_INFERENCE_EXTENSION_API)
+ target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+ 
+@@ -119,7 +119,7 @@ set_target_properties(${TARGET_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION_REL
+ 
+ if(BUILD_SHARED_LIBS)
+     add_library(${TARGET_NAME}_obj OBJECT ${SOURCES} ${HEADERS})
+-    link_system_libraries(${TARGET_NAME}_obj PUBLIC dnnl openvino::pugixml)
++    link_system_libraries(${TARGET_NAME}_obj PUBLIC ${DNNL_LIBRARY_NAME} openvino::pugixml)
+ 
+     ov_add_version_defines(src/plugin.cpp ${TARGET_NAME}_obj)
+ 
+@@ -133,7 +133,7 @@ if(BUILD_SHARED_LIBS)
+             ${CMAKE_CURRENT_SOURCE_DIR}/src
+             $<TARGET_PROPERTY:openvino::conditional_compilation,INTERFACE_INCLUDE_DIRECTORIES>)
+ 
+-    target_include_directories(${TARGET_NAME}_obj SYSTEM PUBLIC $<TARGET_PROPERTY:dnnl,INCLUDE_DIRECTORIES>)
++    target_include_directories(${TARGET_NAME}_obj SYSTEM PUBLIC $<TARGET_PROPERTY:${DNNL_LIBRARY_NAME},INCLUDE_DIRECTORIES>)
+ 
+     set_ie_threading_interface_for(${TARGET_NAME}_obj)
+ 
+diff --git a/src/plugins/intel_cpu/thirdparty/CMakeLists.txt b/src/plugins/intel_cpu/thirdparty/CMakeLists.txt
+index 19e453d6b4..f25b7d3db7 100644
+--- a/src/plugins/intel_cpu/thirdparty/CMakeLists.txt
++++ b/src/plugins/intel_cpu/thirdparty/CMakeLists.txt
+@@ -36,6 +36,7 @@ function(ov_add_onednn)
+     # select needed primitives
+     set(DNNL_ENABLE_PRIMITIVE "CONVOLUTION;DECONVOLUTION;CONCAT;LRN;INNER_PRODUCT;MATMUL;POOLING;REDUCTION;REORDER;RNN;SOFTMAX" CACHE STRING "" FORCE)
+     set(DNNL_ENABLE_WORKLOAD "INFERENCE" CACHE STRING "" FORCE)
++    set(DNNL_LIBRARY_NAME "onednn_cpu" CACHE STRING "" FORCE)
+ 
+     # Allow to enable oneDNN verbose with CPU_DEBUG_CAPS and rely on oneDNN default configuration otherwise
+     if(ENABLE_CPU_DEBUG_CAPS)
+@@ -116,7 +117,7 @@ function(ov_add_onednn)
+     add_subdirectory(onednn EXCLUDE_FROM_ALL)
+ 
+     # install static libraries
+-    ov_install_static_lib(dnnl cpu)
++    ov_install_static_lib(${DNNL_LIBRARY_NAME} cpu)
+ 
+     if(DNNL_USE_ACL AND NOT BUILD_SHARED_LIBS)
+         # use ACLConfig.cmake in OpenVINOConfig.cmake in case of static build

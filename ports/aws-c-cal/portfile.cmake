@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-cal
     REF "v${VERSION}"
-    SHA512 da1768cc6d55ae906b390f4a47c68f5f20d2173a4f27ce5e2eb9c5924db1c62ca488a86c0ad5d44821ffc949c4cf1e72ed664c2543bbe5a1c9bb1cd13367194b
+    SHA512 3f0b3f85faa857b00af81c3339c8016f50d2ce9e2fa4d2a7be079feb40fc37ab1589d7dbbca2813416bb2c175ccf66dbe4718f2ce42909a507432cfb19133ec6
     HEAD_REF master
     PATCHES remove-libcrypto-messages.patch
 )
