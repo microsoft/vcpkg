@@ -169,7 +169,8 @@
         },
         {
           "$package": "Ice",
-          "name": "zeroc-ice"
+          "name": "zeroc-ice",
+          "platform": "!android & !uwp & !(windows & arm) & !wasm32"
         },
         {
           "$package": "ZLIB",

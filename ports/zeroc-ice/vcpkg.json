@@ -6,7 +6,7 @@
   "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
   "homepage": "https://github.com/zeroc-ice/ice",
   "license": null,
-  "supports": "!uwp & !(windows & arm) & !wasm32",
+  "supports": "!android & !uwp & !(windows & arm) & !wasm32",
   "dependencies": [
     "bzip2",
     "expat",
