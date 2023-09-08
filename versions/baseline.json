@@ -2018,7 +2018,7 @@
     },
     "czmq": {
       "baseline": "4.2.1",
-      "port-version": 2
+      "port-version": 3
     },
     "d3d12-memory-allocator": {
       "baseline": "2021-05-05",
