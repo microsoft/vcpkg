@@ -11,8 +11,8 @@ vcpkg_from_github(
         0002-fix-tools-install-dir.patch
         0003-fix-llvm-config.patch
         0004-disable-libomp-aliases.patch
-        0010-remove-numpy.patch
-        0012-create-destination-mlir-directory.patch
+        0005-remove-numpy.patch
+        0006-create-destination-mlir-directory.patch
 )
 
 vcpkg_check_features(

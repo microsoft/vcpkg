@@ -1,17 +1,11 @@
-From 80300a7f4533fdfc75ec60b0d1dc1c5d5a6b9e3c Mon Sep 17 00:00:00 2001
-From: Ankur Verma <ankurv@microsoft.com>
-Date: Fri, 14 Jul 2023 09:45:22 -0700
-Subject: [PATCH] remove_numpy
-
----
  mlir/cmake/modules/MLIRDetectPythonEnv.cmake | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mlir/cmake/modules/MLIRDetectPythonEnv.cmake b/mlir/cmake/modules/MLIRDetectPythonEnv.cmake
-index 9c8966591514..35c94f0d1acc 100644
+index 0a486c1bbb54..c07c55b1e17a 100644
 --- a/mlir/cmake/modules/MLIRDetectPythonEnv.cmake
 +++ b/mlir/cmake/modules/MLIRDetectPythonEnv.cmake
-@@ -26,7 +26,7 @@ macro(mlir_configure_python_dev_packages)
+@@ -19,7 +19,7 @@ macro(mlir_configure_python_dev_packages)
    set(_python_development_component Development.Module)
  
    find_package(Python3 ${LLVM_MINIMUM_PYTHON_VERSION}
@@ -20,6 +14,3 @@ index 9c8966591514..35c94f0d1acc 100644
    unset(_python_development_component)
    message(STATUS "Found python include dirs: ${Python3_INCLUDE_DIRS}")
    message(STATUS "Found python libraries: ${Python3_LIBRARIES}")
--- 
-2.41.0.windows.2
-
