@@ -1,7 +1,7 @@
 {
   "name": "llvm",
   "version": "15.0.7",
-  "port-version": 4,
+  "port-version": 6,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -191,6 +191,21 @@
       "description": "Build with LibXml2.",
       "dependencies": [
         "libxml2"
+      ]
+    },
+    "enable-mlir-python-bindings": {
+      "description": "Build MLIR Python bindings.",
+      "supports": "!(windows & static)",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "mlir"
+          ]
+        },
+        "pybind11",
+        "python3"
       ]
     },
     "enable-rtti": {
