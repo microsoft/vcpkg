@@ -185,6 +185,21 @@
         "libxml2"
       ]
     },
+    "enable-mlir-python-bindings": {
+      "description": "Build MLIR Python bindings.",
+      "supports": "!(windows & static)",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "mlir"
+          ]
+        },
+        "pybind11",
+        "python3"
+      ]
+    },
     "enable-rtti": {
       "description": "Build LLVM with run-time type information."
     },

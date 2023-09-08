@@ -11,6 +11,8 @@ vcpkg_from_github(
         0002-fix-tools-install-dir.patch
         0003-fix-llvm-config.patch
         0004-disable-libomp-aliases.patch
+        0010-remove-numpy.patch
+        0012-create-destination-mlir-directory.patch
 )
 
 vcpkg_check_features(
@@ -161,6 +163,12 @@ if("mlir" IN_LIST FEATURES)
         -DMLIR_INSTALL_PACKAGE_DIR:PATH=share/mlir
         -DMLIR_TOOLS_INSTALL_DIR:PATH=tools/llvm
     )
+    if("enable-mlir-python-bindings" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS
+            -DMLIR_ENABLE_BINDINGS_PYTHON=ON
+            "-Dpybind11_DIR=${CURRENT_INSTALLED_DIR}/share/pybind11"
+        )
+    endif()
 endif()
 if("openmp" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "openmp")
