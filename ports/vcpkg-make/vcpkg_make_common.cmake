@@ -1,14 +1,5 @@
 include_guard(GLOBAL)
 
-macro(z_vcpkg_append_to_configure_environment inoutlist var defaultval)
-    # Allows to overwrite settings in custom triplets via the environment on windows
-    if(CMAKE_HOST_WIN32 AND DEFINED ENV{${var}})
-        list(APPEND "${inoutlist}" "${var}='$ENV{${var}}'")
-    else()
-        list(APPEND "${inoutlist}" "${var}='${defaultval}'")
-    endif()
-endmacro()
-
 ### Mapping variables
 macro(z_vcpkg_make_set_common_vars)
     set(path_suffix_RELEASE "")
@@ -127,7 +118,7 @@ function(z_vcpkg_make_prepare_compile_flags)
         else()
             continue()
         endif()
-        #vcpkg_list(APPEND ABIFLAGS ${pattern})
+        vcpkg_list(APPEND ABIFLAGS "${pattern}")
         list(REMOVE_ITEM CFLAGS "${pattern}")
         list(REMOVE_ITEM CXXFLAGS "${pattern}")
         list(REMOVE_ITEM LDFLAGS "${pattern}")
@@ -241,14 +232,24 @@ endfunction()
 function(z_vcpkg_make_prepare_programs out_env)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "NO_CPP;NO_WRAPPERS" 
-        ""
+        "CONFIG"
         "LANGUAGES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
     z_vcpkg_make_get_cmake_vars()
-    set(configure_env "")
 
+    
+    macro(z_vcpkg_append_to_configure_environment inoutlist var defaultval)
+        # Allows to overwrite settings in custom triplets via the environment on windows
+        if(CMAKE_HOST_WIN32 AND DEFINED ENV{${var}})
+            list(APPEND "${inoutlist}" "${var}='$ENV{${var}}'")
+        else()
+            list(APPEND "${inoutlist}" "${var}='${defaultval}'")
+        endif()
+    endmacro()
+
+    set(configure_env "")
     # Remove full filepaths due to spaces and prepend filepaths to PATH (cross-compiling tools are unlikely on path by default)
     if (VCPKG_TARGET_IS_WINDOWS)
         # TODO More languages ?
@@ -383,20 +384,20 @@ function(z_vcpkg_make_prepare_programs out_env)
             z_vcpkg_append_to_configure_environment(configure_env "${envvar}" "${prog}")
             set(configure_env "${configure_env}" PARENT_SCOPE)
         endfunction()
-        z_vcpkg_make_set_env(CC C_COMPILER)
-        z_vcpkg_make_set_env(CXX CXX_COMPILER)
+        z_vcpkg_make_set_env(CC C_COMPILER ${ABIFLAGS_${arg_CONFIG}})
+        z_vcpkg_make_set_env(CXX CXX_COMPILER ${ABIFLAGS_${arg_CONFIG}})
         if(NOT arg_BUILD_TRIPLET MATCHES "--host")
-            z_vcpkg_make_set_env(CC_FOR_BUILD C_COMPILER)
-            z_vcpkg_make_set_env(CPP_FOR_BUILD C_COMPILER "-E")
-            z_vcpkg_make_set_env(CXX_FOR_BUILD C_COMPILER)
+            z_vcpkg_make_set_env(CC_FOR_BUILD C_COMPILER ${ABIFLAGS_${arg_CONFIG}})
+            z_vcpkg_make_set_env(CPP_FOR_BUILD C_COMPILER "-E" ${ABIFLAGS_${arg_CONFIG}})
+            z_vcpkg_make_set_env(CXX_FOR_BUILD CXX_COMPILER ${ABIFLAGS_${arg_CONFIG}})
         else()
             set(ENV{CC_FOR_BUILD} "umask 0 | touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
             set(ENV{CPP_FOR_BUILD} "umask 0 | touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
             set(ENV{CXX_FOR_BUILD} "umask 0 | touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
         endif()
         if("ASM" IN_LIST arg_LANGUAGES )
-            z_vcpkg_make_set_env(CCAS ASM_COMPILER "-c")
-            z_vcpkg_make_set_env(AS ASM_COMPILER "-c")
+            z_vcpkg_make_set_env(CCAS ASM_COMPILER "-c" ${ABIFLAGS_${arg_CONFIG}})
+            z_vcpkg_make_set_env(AS ASM_COMPILER "-c" ${ABIFLAGS_${arg_CONFIG}})
         endif()
         z_vcpkg_make_set_env(NM NM)
         z_vcpkg_make_set_env(RC RC)

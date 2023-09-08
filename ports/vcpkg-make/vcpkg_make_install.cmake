@@ -65,6 +65,8 @@ function(vcpkg_make_install)
         set(prepare_env_opts ADD_BIN_TO_PATH)
     endif()
 
+    vcpkg_make_get_shell(shell_cmd ADDITIONAL_PACKAGES ${arg_ADDITIONAL_MSYS_PACKAGES})
+
     foreach(buildtype IN LISTS buildtypes)
         string(TOUPPER "${buildtype}" cmake_buildtype)
         set(short_buildtype "${suffix_${cmake_buildtype}}")
@@ -75,6 +77,7 @@ function(vcpkg_make_install)
 
         # Setup environment
         z_vcpkg_make_prepare_env("${cmake_buildtype}" ${prepare_env_opts})
+        z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}")
 
         set(destdir_opt "")
         if(NOT arg_NO_DESTDIR)
@@ -86,17 +89,20 @@ function(vcpkg_make_install)
             vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j 1 --trace -f ${arg_MAKEFILE} ${target} ${destdir_opt})
             message(STATUS "Making target '${target}' for ${TARGET_TRIPLET}-${short_buildtype}")
             if (arg_DISABLE_PARALLEL)
-                vcpkg_execute_build_process(
-                        COMMAND ${no_parallel_make_cmd_line}
-                        WORKING_DIRECTORY "${working_directory}"
-                        LOGNAME "${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}"
+                vcpkg_run_bash_as_build(
+                    WORKING_DIRECTORY "${working_directory}"
+                    LOGNAME "${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}"
+                    BASH ${shell_cmd}
+                    #COMMAND ${configure_env} ${no_parallel_make_cmd_line}
+                    NO_PARALLEL_COMMAND ${configure_env} ${no_parallel_make_cmd_line}
                 )
             else()
-                vcpkg_execute_build_process(
-                        COMMAND ${make_cmd_line}
-                        NO_PARALLEL_COMMAND ${no_parallel_make_cmd_line}
-                        WORKING_DIRECTORY "${working_directory}"
-                        LOGNAME "${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}"
+                vcpkg_run_bash_as_build(
+                    WORKING_DIRECTORY "${working_directory}"
+                    LOGNAME "${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}"
+                    BASH ${shell_cmd}
+                    COMMAND ${configure_env} ${no_parallel_make_cmd_line}
+                    NO_PARALLEL_COMMAND ${configure_env} ${no_parallel_make_cmd_line}
                 )
             endif()
             file(READ "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}-out.log" logdata) 

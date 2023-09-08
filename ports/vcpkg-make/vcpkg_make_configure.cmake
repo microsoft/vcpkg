@@ -91,9 +91,7 @@ function(vcpkg_make_configure) #
     # Used by cl
         INCLUDE LIB LIBPATH _CL_ _LINK_
     )
-    z_vcpkg_make_set_common_vars()
-
-    z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts})
+    z_vcpkg_make_set_common_vars()    
 
     foreach(config IN LISTS buildtypes)
         string(TOUPPER "${config}" configup)
@@ -105,6 +103,8 @@ function(vcpkg_make_configure) #
             file(COPY "${src_dir}/" DESTINATION "${target_dir}")
             set(relative_build_path ".")
         endif()
+
+        z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}")
 
         set(opts "")
         z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}") # TODO: figure out outmake

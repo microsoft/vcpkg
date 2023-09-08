@@ -22,7 +22,30 @@ function(vcpkg_run_bash)
         LOGNAME "${arg_LOGNAME}"
         ${extra_opts}
     )
+endfunction()
 
+function(vcpkg_run_bash_as_build)
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "" 
+        "WORKING_DIRECTORY;LOGNAME"
+        "BASH;COMMAND;NO_PARALLEL_COMMAND;SAVE_LOG_FILES"
+    )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
+    z_vcpkg_required_args(BASH WORKINK_DIRECTORY COMMAND LOGNAME)
+
+    if(arg_SAVE_LOG_FILES)
+        set(extra_opts SAVE_LOG_FILES ${arg_SAVE_LOG_FILES})
+    endif()
+
+    list(JOIN arg_COMMAND " " cmd)
+    list(JOIN arg_NO_PARALLEL_COMMAND " " no_par_cmd)
+    vcpkg_execute_build_process(
+        COMMAND ${arg_BASH} -c "${cmd}"
+        NO_PARALLEL_COMMAND ${arg_BASH} -c "${no_par_cmd}"
+        WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
+        LOGNAME "${arg_LOGNAME}"
+        ${extra_opts}
+    )
 endfunction()
 
 function(vcpkg_run_autoreconf bash_cmd work_dir)
