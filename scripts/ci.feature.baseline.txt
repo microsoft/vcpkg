@@ -2403,7 +2403,6 @@ wayland[force-build] = feature-fails # error: To build wayland libraries the `fo
 wpilib(osx) = fail # See https://github.com/microsoft/vcpkg/issues/32395
 xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
 xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not 32
-yyjson[writer](osx) = feature-fails # error: call to undeclared function 'digi_is_digit'
 
 # skip
 entt[experimental] = skip # required head build
