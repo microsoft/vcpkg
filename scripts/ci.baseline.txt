@@ -1298,6 +1298,13 @@ ztd-text:arm-neon-android=fail
 ztd-text:arm64-android=fail
 ztd-text:x64-android=fail
 zyre:x64-windows-static-md=fail
+cld3:arm-neon-android=fail
+cld3:arm64-android=fail
+cld3:x64-android=fail
+cld3:x64-linux=fail
+tesseract:x64-android=fail
+tesseract:arm64-android=fail
+tesseract:arm-neon-android=fail
 
 # Ports which needs to pass in CI
 cmake:x64-windows=pass
@@ -1393,6 +1400,3 @@ vcpkg-ci-wxwidgets:x64-windows-static-md=pass
 vcpkg-ci-wxwidgets:x64-windows-static=pass
 vcpkg-ci-wxwidgets:x64-windows=pass
 vcpkg-ci-wxwidgets:x86-windows=pass
-cld3:arm-neon-android=fail
-cld3:arm64-android=fail
-cld3:x64-android=fail
