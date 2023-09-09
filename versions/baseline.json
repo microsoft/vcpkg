@@ -8468,6 +8468,10 @@
       "baseline": "23.5",
       "port-version": 3
     },
+    "usearch": {
+      "baseline": "2.3.2",
+      "port-version": 0
+    },
     "usockets": {
       "baseline": "0.8.6",
       "port-version": 1
