@@ -5037,8 +5037,8 @@
       "port-version": 2
     },
     "llvm": {
-      "baseline": "15.0.7",
-      "port-version": 6
+      "baseline": "17.0.0-rc4",
+      "port-version": 0
     },
     "lmdb": {
       "baseline": "0.9.29",
@@ -8030,7 +8030,7 @@
     },
     "symengine": {
       "baseline": "0.10.1",
-      "port-version": 1
+      "port-version": 2
     },
     "systemc": {
       "baseline": "2.3.3",
