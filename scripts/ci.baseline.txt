@@ -46,7 +46,6 @@ allegro5:arm-neon-android=fail
 allegro5:arm64-android=fail
 allegro5:x64-android=fail
 ampl-asl:x64-android=fail
-anari:arm64-windows=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
 apr:x64-android=fail
