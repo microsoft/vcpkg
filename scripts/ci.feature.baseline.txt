@@ -2333,6 +2333,7 @@ keystone(osx) = fail # requires python 2
 kfr(uwp) = fail # CMake Error: try_run() invoked in cross-compiling mode
 kfr[capi,dft](windows & !uwp) = feature-fails # internal compiler error
 kissfft[openmp](osx) = feature-fails # No openmp on osx
+ktx[tools](uwp) = feature-fails # build error. See https://github.com/microsoft/vcpkg/issues/33687
 lapack-reference[core,cblas,noblas] = options # Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas.
 libadlmidi[dosbox-emulator] = options # You have to select at least one emulator
 libalkimia[tools](linux) = feature-fails # link errors. See https://github.com/microsoft/vcpkg/issues/32361
