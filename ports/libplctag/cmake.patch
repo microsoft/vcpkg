@@ -1,0 +1,124 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4d64d1a..e1599b2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -390,45 +390,64 @@ FOREACH( lib_src ${libplctag_SRCS} )
+     set_source_files_properties(${lib_src} PROPERTIES COMPILE_FLAGS "${C99_FLAGS} ${BASE_C_FLAGS} ${C11_CHECK}")
+ ENDFOREACH()
+ 
++if(LIBPLCTAG_BUILD_SHARED)
+ # shared library
+ add_library(plctag_dyn SHARED ${libplctag_SRCS} )
+ 
+ # set various properties on them
+ set_target_properties(plctag_dyn PROPERTIES SOVERSION "${libplctag_VERSION_MAJOR}.${libplctag_VERSION_MINOR}" OUTPUT_NAME "plctag")
++    set(tool_lib "plctag_dyn")
++    if(WIN32)
++        target_compile_definitions(plctag_dyn PUBLIC -DLIBPLCTAGDLL_EXPORTS=1)
++    endif()
+ 
+ if(BASE_LINK_FLAGS)
+     set_target_properties(plctag_dyn PROPERTIES LINK_FLAGS "${BASE_LINK_FLAGS}")
+ endif()
++endif()
+ 
+-if(UNIX)
++if(UNIX AND LIBPLCTAG_BUILD_STATIC)
+ 	# static library
+ 	add_library(plctag_static STATIC ${libplctag_SRCS} )
+     set_target_properties(plctag_static PROPERTIES LINK_FLAGS "${BASE_LINK_FLAGS}")
+ 	set_target_properties(plctag_static PROPERTIES VERSION "${libplctag_VERSION_MAJOR}.${libplctag_VERSION_MINOR}" OUTPUT_NAME "plctag")
+-
+-	set(tool_lib "plctag_dyn")
+-elseif(WIN32)
++elseif(WIN32 AND LIBPLCTAG_BUILD_STATIC)
+     # static library
+ 	add_library(plctag_static STATIC ${libplctag_SRCS} )
+ 	set_target_properties(plctag_static PROPERTIES LINK_FLAGS "${BASE_LINK_FLAGS}")
+-	set_target_properties(plctag_static PROPERTIES VERSION "${libplctag_VERSION_MAJOR}.${libplctag_VERSION_MINOR}" OUTPUT_NAME "plctag_static")
+-
+-    target_compile_definitions(plctag_dyn PUBLIC -DLIBPLCTAGDLL_EXPORTS=1)
+-	set(tool_lib "plctag_dyn")
++	set_target_properties(plctag_static PROPERTIES VERSION "${libplctag_VERSION_MAJOR}.${libplctag_VERSION_MINOR}" OUTPUT_NAME "plctag")
++        set_target_properties(plctag_static PROPERTIES COMPILE_DEFINITIONS LIBPLCTAG_STATIC)
+ endif()
+ 
+ # make sure we link with the threading library.
+ if (UNIX)
+     if(CMAKE_THREAD_LIBS_INIT)
++      if(LIBPLCTAG_BUILD_SHARED)
+       target_link_libraries(plctag_dyn "${CMAKE_THREAD_LIBS_INIT}")
++      endif()
++      if(LIBPLCTAG_BUILD_STATIC)
+       target_link_libraries(plctag_static "${CMAKE_THREAD_LIBS_INIT}")
++      endif()
+     endif()
+ endif()
+ 
++# Ensure PkgConfig file adds correct LDFLAGS
++if (NOT MSVC)
++    set(PTHREAD_LDFLAGS "-pthread")
++endif()
++# WIN32 builds need to link the WINSOCK library
++if (WIN32)
++    set(WINSOCK_LDFLAGS "-lws2_32")
++endif()
++
+ # Windows needs to link the library to the WINSOCK library
+ if (WIN32)
++    if(LIBPLCTAG_BUILD_SHARED)
+     target_link_libraries(plctag_dyn ws2_32)
++    endif()
++    if(LIBPLCTAG_BUILD_STATIC)
+     target_link_libraries(plctag_static ws2_32)
++    endif()
+ endif()
+ 
+ # add the examples and tests
+@@ -537,9 +556,6 @@ elseif (BUILD_EXAMPLES)
+         set_target_properties(simple_cpp PROPERTIES LINK_FLAGS "${BASE_LINK_FLAGS}")
+     endif()
+ 
+-    # Generate files from templates
+-    CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/libplctag.pc.in" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libplctag.pc" @ONLY)
+-
+     # build the GitHub Actions config file
+     CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/ci.yml.in" "${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/ci.yml" @ONLY)
+ 
+@@ -609,21 +625,32 @@ endif(ANDROID_BUILD)
+ 
+ # for installation
+ if(UNIX)
++    if(LIBPLCTAG_BUILD_SHARED)
+ 	install(TARGETS plctag_dyn DESTINATION lib${LIB_SUFFIX})
++    endif()
++    if(LIBPLCTAG_BUILD_STATIC)
+ 	install(TARGETS plctag_static DESTINATION lib${LIB_SUFFIX})
++    endif()
+ elseif(WIN32)
+-	install(TARGETS plctag_dyn DESTINATION lib${LIB_SUFFIX})
++    if(LIBPLCTAG_BUILD_SHARED)
++	install(TARGETS plctag_dyn)
++    endif()
++    if(LIBPLCTAG_BUILD_STATIC)
+ 	install(TARGETS plctag_static DESTINATION lib${LIB_SUFFIX})
++    endif()
+ endif()
+ 
+-if(ANDROID_BUILD)
++if(ANDROID_BUILD AND 0)
+     message("Skipping package config and header file copy for Android build.")
+ else()
++    # Generate files from templates
++    CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/libplctag.pc.in" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libplctag.pc" @ONLY)
++
+     install(FILES "${lib_SRC_PATH}/libplctag.h" DESTINATION include)
+     if(EXISTS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libplctag.pc")
+         install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libplctag.pc" DESTINATION "lib${LIB_SUFFIX}/pkgconfig")
+     endif()
+-endif(ANDROID_BUILD)
++endif(ANDROID_BUILD AND 0)
+ 
+ macro(print_all_variables)
+     message(STATUS "print_all_variables------------------------------------------{")
+

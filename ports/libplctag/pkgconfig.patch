@@ -1,0 +1,14 @@
+diff --git a/libplctag.pc.in b/libplctag.pc.in
+index 0ea8ff6..3fca384 100644
+--- a/libplctag.pc.in
++++ b/libplctag.pc.in
+@@ -7,5 +7,6 @@ Name: libplctag
+ Description: Portable and simple API for accessing Allen-Bradley PLC data over Ethernet
+ Version: @VERSION@
+ 
+-Libs: -L${libdir} -lplctag -pthread
+-Cflags: -I${includedir}
++Libs: -L${libdir} -lplctag @PTHREAD_LDFLAGS@ @WINSOCK_LDFLAGS@
++Cflags: -I${includedir} @STATIC_CFLAGS@
++Cflags.private: -DLIBPLCTAG_STATIC
+
