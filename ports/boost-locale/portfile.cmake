@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF boost-1.83.0
     SHA512 8d30de6f2a02768716a109b8784f573e6fdd75fe0ba50fabbe1edf6cd65fb0ec92eccf6929102130d464bfbcdc3a677b53f0ac57ab82464a4f0b8cbbd3d644a6
     HEAD_REF master
-    PATCHES fix-dependencies.patch
+    PATCHES
+        0001-fix-build-error-on-MSVC.patch
+        fix-dependencies.patch
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
