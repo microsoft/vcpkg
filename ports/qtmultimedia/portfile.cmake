@@ -61,7 +61,7 @@ endif()
 if("ffmpeg" IN_LIST FEATURES)
     # Note: Requires pulsadio on linux and wmfsdk on windows
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='yes'")
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
         list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='no'")
     else()
         list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='yes'")

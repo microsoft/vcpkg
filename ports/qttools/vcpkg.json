@@ -1,7 +1,6 @@
 {
   "name": "qttools",
-  "version": "6.4.2",
-  "port-version": 2,
+  "version": "6.5.2",
   "description": "Qt Tools",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -77,7 +76,14 @@
     "qdoc": {
       "description": "Build QDoc.",
       "dependencies": [
-        "llvm"
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "enable-rtti"
+          ]
+        }
       ]
     },
     "qml": {

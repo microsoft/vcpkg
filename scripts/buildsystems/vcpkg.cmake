@@ -56,12 +56,13 @@ if(VCPKG_PREFER_SYSTEM_LIBS)
 endif()
 
 # Manifest options and settings
+set(Z_VCPKG_MANIFEST_DIR_INITIAL_VALUE "${VCPKG_MANIFEST_DIR}")
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
     if(EXISTS "${CMAKE_SOURCE_DIR}/vcpkg.json")
-        set(VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}")
+        set(Z_VCPKG_MANIFEST_DIR_INITIAL_VALUE "${CMAKE_SOURCE_DIR}")
     endif()
 endif()
-set(VCPKG_MANIFEST_DIR "${VCPKG_MANIFEST_DIR}"
+set(VCPKG_MANIFEST_DIR "${Z_VCPKG_MANIFEST_DIR_INITIAL_VALUE}"
     CACHE PATH "The path to the vcpkg manifest directory." FORCE)
 
 if(DEFINED VCPKG_MANIFEST_DIR AND NOT VCPKG_MANIFEST_DIR STREQUAL "")
@@ -326,6 +327,10 @@ else()
 	    set(Z_VCPKG_TARGET_TRIPLET_ARCH riscv32)
 	elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "riscv64")
 	    set(Z_VCPKG_TARGET_TRIPLET_ARCH riscv64)
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "loongarch32")
+            set(Z_VCPKG_TARGET_TRIPLET_ARCH loongarch32)
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "loongarch64")
+            set(Z_VCPKG_TARGET_TRIPLET_ARCH loongarch64)
         else()
             if(Z_VCPKG_CMAKE_IN_TRY_COMPILE)
                 message(STATUS "Unable to determine target architecture, continuing without vcpkg.")
@@ -359,6 +364,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_
     endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT freebsd)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Android" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Android"))
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT android)
 endif()
 
 if(EMSCRIPTEN)
@@ -392,16 +399,16 @@ if(NOT Z_VCPKG_ROOT_DIR)
 endif()
 
 if(DEFINED VCPKG_INSTALLED_DIR)
-    # do nothing
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${VCPKG_INSTALLED_DIR}")
 elseif(DEFINED _VCPKG_INSTALLED_DIR)
-    set(VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}")
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${_VCPKG_INSTALLED_DIR}")
 elseif(VCPKG_MANIFEST_MODE)
-    set(VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${CMAKE_BINARY_DIR}/vcpkg_installed")
 else()
-    set(VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
+    set(Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE "${Z_VCPKG_ROOT_DIR}/installed")
 endif()
 
-set(VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
+set(VCPKG_INSTALLED_DIR "${Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE}"
     CACHE PATH
     "The directory which contains the installed libraries for each triplet" FORCE)
 set(_VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
@@ -519,7 +526,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
                 "--x-wait-for-lock"
                 "--x-manifest-root=${VCPKG_MANIFEST_DIR}"
                 "--x-install-root=${_VCPKG_INSTALLED_DIR}"
-                "${Z_VCPKG_FEATURE_FLAGS}"
+                ${Z_VCPKG_FEATURE_FLAGS}
                 ${Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
                 ${VCPKG_INSTALL_OPTIONS}
             OUTPUT_VARIABLE Z_VCPKG_MANIFEST_INSTALL_LOGTEXT
@@ -741,7 +748,7 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
                 if(last_command STREQUAL "DESTINATION" AND (modifier STREQUAL "" OR modifier STREQUAL "RUNTIME"))
                     set(destination "${arg}")
                 endif()
-                if(last_command STREQUAL "COMPONENT")
+                if(last_command STREQUAL "COMPONENT" AND (modifier STREQUAL "" OR modifier STREQUAL "RUNTIME"))
                     set(component_param "COMPONENT" "${arg}")
                 endif()
             endforeach()

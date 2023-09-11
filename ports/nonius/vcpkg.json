@@ -1,7 +1,7 @@
 {
   "name": "nonius",
-  "version-string": "2019-04-20",
-  "port-version": 3,
+  "version-date": "2019-04-20",
+  "port-version": 4,
   "description": "A C++ micro-benchmarking framework",
   "dependencies": [
     "boost-algorithm",

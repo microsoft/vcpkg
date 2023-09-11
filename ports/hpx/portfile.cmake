@@ -6,13 +6,11 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" HPX_WITH_STATIC_LINKING
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
-    REF f48c81865800ae72618b40b4e79d4168cfb0bd56
-    SHA512 06d1384615b327194d871145c1899317bd350c43a072be2cbfdc773f7869b71aafce3e9cabf835a8fe902a13d7050d5e0400a76f74023985575347a645196b1d
+    REF "v${VERSION}"
+    SHA512 a7972beada950cf6ef3b61f20496a08b220e4f48c28c11d57c20683906ca5124a9f36ac2552318883a5ab1db6efdbf63d1141b6e0c484c560a8c1311ae2d7090
     HEAD_REF stable
     PATCHES
         fix-dependency-hwloc.patch
-        format.patch
-        fix-export.patch
         fix-debug.patch
         fix_output_name_clash.patch
 )
@@ -92,9 +90,11 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/hpxcxx" "${CURRENT_PACKAGES_DIR}/debug/bin/hpxcxx")
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/hpxrun.py" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/hpxrun.py")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/hpxrun.py" "'${CURRENT_INSTALLED_DIR}/tools/openmpi/bin/mpiexec'" "'mpiexec'")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/hpxrun.py")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/hpxrun.py" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/hpxrun.py")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/hpxrun.py" "'${CURRENT_INSTALLED_DIR}/tools/openmpi/bin/mpiexec'" "'mpiexec'")
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

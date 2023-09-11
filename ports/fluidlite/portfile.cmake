@@ -1,32 +1,38 @@
-if(EXISTS "${CURRENT_PACKAGES_DIR}/share/fluidsynth/copyright")
-    message(FATAL_ERROR "Can't build fluidlite if fluidsynth is installed. Please remove fluidsynth, and try to install fluidlite again if you need it.")
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO divideconcept/FluidLite
-    REF fdd05bad03cdb24d1f78b5fe3453842890c1b0e8
-    SHA512 8118bec2cb5ee48b8064ed2111610f1917ee8e6f1dc213121b2311d056da21d7f618ef50735e7653d2cccf1e96652f3ccf026101fccb9863448008918add53e0
-    HEAD_REF master
+    REF d59d2328818f913b7d1a6a59aed695c47a8ce388
+    SHA512 d08ddd0b61dc16c26e5ebc8e54e2efef163f8d0b4da6ce4a040b49756feb105220d48ec6238568b00c68dfa244fac0ab53e3c59c066d4b92dc248df3715c388c
+    PATCHES
+        fix-dependencies.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" FLUIDLITE_BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" FLUIDLITE_BUILD_SHARED)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        sf3     ENABLE_SF3
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DFLUIDLITE_BUILD_STATIC=${FLUIDLITE_BUILD_STATIC}
-        -DFLUIDLITE_BUILD_SHARED=${FLUIDLITE_BUILD_SHARED}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME fluidlite
+    CONFIG_PATH lib/cmake/fluidlite
+)
+
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE 
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

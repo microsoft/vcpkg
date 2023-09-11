@@ -1,0 +1,38 @@
+From fb7cbb0648948b51f71aefaa6b2354846f72439f Mon Sep 17 00:00:00 2001
+From: Nikita Vakula <programmistov.programmist@gmail.com>
+Date: Mon, 1 May 2023 23:12:09 +0200
+Subject: [PATCH 1/2] Use correct rdkafka .pc
+
+Signed-off-by: Nikita Vakula <programmistov.programmist@gmail.com>
+---
+ CMakeLists.txt       | 1 +
+ cmake/cppkafka.pc.in | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c4e44e6..e34c071 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -92,6 +92,7 @@ endif()
+ 
+ if (CPPKAFKA_RDKAFKA_STATIC_LIB)
+     add_definitions("-DLIBRDKAFKA_STATICLIB")
++    set(RDKAFKA_STATIC "-static")
+ endif()
+ 
+ if (NOT CPPKAFKA_CONFIG_DIR)
+diff --git a/cmake/cppkafka.pc.in b/cmake/cppkafka.pc.in
+index b5d432c..4e50860 100644
+--- a/cmake/cppkafka.pc.in
++++ b/cmake/cppkafka.pc.in
+@@ -9,6 +9,6 @@ Url: https://github.com/mfontanini/cppkafka
+ Description: C++ wrapper library on top of RdKafka
+ Version: @CPPKAFKA_VERSION@
+ Requires:
+-Requires.private: rdkafka >= 0.9.4
++Requires.private: rdkafka@RDKAFKA_STATIC@ >= 0.9.4
+ Libs: -L${libdir} -L${sharedlibdir} -lcppkafka
+ Cflags: -I${includedir} -I${includedir}/cppkafka -I@Boost_INCLUDE_DIRS@
+-- 
+2.37.1 (Apple Git-137.1)
+

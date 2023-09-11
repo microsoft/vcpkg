@@ -1,7 +1,7 @@
 {
   "name": "p-ranav-csv",
-  "version-string": "2019-07-11",
-  "port-version": 2,
+  "version-date": "2019-07-11",
+  "port-version": 3,
   "description": "[deprecated] CSV for modern C++",
   "homepage": "https://github.com/p-ranav/csv",
   "dependencies": [

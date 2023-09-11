@@ -1,7 +1,7 @@
 {
   "name": "libmagic",
-  "version-string": "5.40",
-  "port-version": 1,
+  "version": "5.40",
+  "port-version": 2,
   "description": "This library can be used to classify files according to magic number tests.",
   "homepage": "https://github.com/file/file",
   "dependencies": [

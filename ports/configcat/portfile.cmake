@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO configcat/cpp-sdk
-    REF v1.0.0
-    SHA512 4727f72583bb2216160c1607f699b5b4efc957158b783dc3d944a07b27d5400dc4738adc87fe11a0bc819f0d0bde32bd2f39ed04f20bdc103de4a62175281f36
+    REF "v${VERSION}"
+    SHA512 cb86f575e1917edf10ec423d4ae85b47c979370bdb4381e1eecdb32bc64637f5088b3a3d91fa1b0aa2604fb0fe3011bc0964b3a45e5aa32aba1d53ba0da99fd5
     HEAD_REF master
 )
 

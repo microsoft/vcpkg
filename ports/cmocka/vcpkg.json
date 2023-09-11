@@ -1,7 +1,7 @@
 {
   "name": "cmocka",
-  "version-string": "2020-08-01",
-  "port-version": 2,
+  "version-date": "2020-08-01",
+  "port-version": 3,
   "description": "An elegant unit testing framework for C with support for mock objects",
   "homepage": "https://cmocka.org/",
   "license": "Apache-2.0",

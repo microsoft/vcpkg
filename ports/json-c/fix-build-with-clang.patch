@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 11b3970..66e9d0a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -293,7 +293,7 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL
+     set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} -Wwrite-strings")
+     set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} -Wno-unused-parameter")
+     if (NOT WIN32)
+-        set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} -Wstrict-prototypes")
++        set(CMAKE_C_FLAGS           "${CMAKE_C_FLAGS} -Wno-strict-prototypes")
+     endif()
+ 
+     add_definitions(-D_GNU_SOURCE)

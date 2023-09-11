@@ -1,8 +1,9 @@
+string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF curl-7_88_1
-    SHA512 c5caa1f95580ddbf2041c9c4b885f84d4f5c5fcb905a5ea59f9dbb58a98fc292260f95cb935e963bf83d7dcecf98561deef5ce3ff91cdcb29a080559cff0ed64
+    REF "${curl_version}"
+    SHA512 7b0aef4f1cb93d446017a337e752d43254db92e02561875d1eb88eb3020a3efaf5d3f7fdfb1ff12dfd561d526789b284a10bef35af81bd6d9cfb2c3dc325815b
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -12,7 +13,7 @@ vcpkg_from_github(
         0022-deduplicate-libs.patch
         mbedtls-ws2_32.patch
         export-components.patch
-        0023-fix-find-cares.patch
+        dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -33,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         winidn      USE_WIN32_IDN
         winldap     USE_WIN32_LDAP
         websockets  ENABLE_WEBSOCKETS
+        zstd        CURL_ZSTD
     INVERTED_FEATURES
         non-http    HTTP_ONLY
         winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
@@ -71,6 +73,7 @@ vcpkg_cmake_configure(
         -DENABLE_MANUAL=OFF
         -DCURL_CA_FALLBACK=ON
         -DCURL_USE_LIBPSL=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     OPTIONS_DEBUG
         -DENABLE_DEBUG=ON
 )

@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.81.0",
+    $version = "1.82.0",
     $portsDir = $null
 )
 
@@ -24,12 +24,9 @@ else {
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 2
 $portVersions = @{
-    #e.g. "boost-asio" = 1;
-    "boost" = 3;
-    "boost-build" = 3;
-    "boost-locale" = 3;
+    "boost-atomic" = 3;
     "boost-modular-build-helper" = 4;
-    "boost-vcpkg-helpers" = 3;
+    "boost-ublas" = 3;
 }
 
 function Get-PortVersion {
@@ -182,17 +179,6 @@ function GeneratePortDependency() {
     }
 }
 
-function MakePortVersionString() {
-    param (
-        [string]$PortName
-    )
-    $thisPortVersion = Get-PortVersion $PortName
-    if ($thisPortVersion -ne 0) {
-        return $version + '#' + $thisPortVersion
-    }
-
-    return $version
-}
 
 function AddBoostVersionConstraints() {
     param (
@@ -203,14 +189,14 @@ function AddBoostVersionConstraints() {
     foreach ($dependency in $Dependencies) {
         if ($dependency.Contains("name")) {
             if ($dependency.name.StartsWith("boost")) {
-                $dependency["version>="] = MakePortVersionString $dependency.name
+                $dependency["version>="] = $version
             }
         }
         else {
             if ($dependency.StartsWith("boost")) {
                 $dependency = @{
                     "name"       = $dependency
-                    "version>="  = MakePortVersionString $dependency
+                    "version>="  = $version
                 }
             }
         }
@@ -595,6 +581,7 @@ foreach ($library in $libraries) {
         # break unnecessary dependencies
         $deps = @($deps | ? {
             -not (
+                ($library -eq 'ublas' -and $_ -eq 'compute') -or # PR #29325
                 ($library -eq 'gil' -and $_ -eq 'filesystem') # PR #20575
             )
         })

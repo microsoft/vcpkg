@@ -1,11 +1,11 @@
 {
   "name": "gstreamer",
   "version": "1.20.5",
-  "port-version": 2,
+  "port-version": 11,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
-  "supports": "!uwp",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     "glib",
     {
@@ -40,6 +40,7 @@
     },
     "alsa": {
       "description": "Enable support for ALSA (Advanced Linux Sound Architecture)",
+      "supports": "linux",
       "dependencies": [
         {
           "name": "alsa",
@@ -81,6 +82,32 @@
           ]
         },
         "libass"
+      ]
+    },
+    "bzip2-bad": {
+      "description": "Enable bzip2 stream compression in bad plugins",
+      "dependencies": [
+        "bzip2",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        }
+      ]
+    },
+    "bzip2-good": {
+      "description": "Enable bzip2 stream compression in good plugins",
+      "dependencies": [
+        "bzip2",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-good"
+          ]
+        }
       ]
     },
     "cairo": {
@@ -223,6 +250,7 @@
     },
     "fluidsynth": {
       "description": "Enable support for the Fluidsynth MIDI decoder",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "fluidsynth",
@@ -250,6 +278,18 @@
         }
       ]
     },
+    "ges": {
+      "description": "Enable support for GStreamer Editing Services",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
+      ]
+    },
     "gl-graphene": {
       "description": "Use Graphene in OpenGL plugin",
       "dependencies": [
@@ -264,7 +304,16 @@
       ]
     },
     "gpl": {
-      "description": "Allow build of plugins that have (A)GPL-licensed dependencies"
+      "description": "Allow build of plugins that have (A)GPL-licensed dependencies",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
+      ]
     },
     "jpeg": {
       "description": "Enable support for the JPEG file format",
@@ -278,6 +327,22 @@
           ]
         },
         "libjpeg-turbo"
+      ]
+    },
+    "libav": {
+      "description": "libav plugins",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
       ]
     },
     "libde265": {
@@ -308,6 +373,7 @@
     },
     "modplug": {
       "description": "Enable support for the ModPlug audio decoder",
+      "supports": "!uwp",
       "dependencies": [
         {
           "name": "gstreamer",
@@ -345,6 +411,13 @@
           "default-features": false,
           "features": [
             "tools"
+          ]
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
           ]
         }
       ]

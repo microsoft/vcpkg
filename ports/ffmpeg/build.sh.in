@@ -130,13 +130,13 @@ build_ffmpeg() {
 
 cd "$PATH_TO_BUILD_DIR"
 
-if [ $OSX_ARCH_COUNT -gt 1 ]; then
+if [ $OSX_ARCH_COUNT -gt 0 ]; then
     for ARCH in $OSX_ARCHS; do
         echo "=== CLEANING FOR $ARCH ==="
 
         make clean && make distclean
 
-        build_ffmpeg $ARCH --enable-cross-compile --extra-cflags=-arch --extra-cflags=$ARCH --extra-ldflags=-arch --extra-ldflags=$ARCH
+        build_ffmpeg $ARCH --extra-cflags=-arch --extra-cflags=$ARCH --extra-ldflags=-arch --extra-ldflags=$ARCH
 
         echo "=== COLLECTING BINARIES FOR $ARCH ==="
 

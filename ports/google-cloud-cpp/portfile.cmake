@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v2.8.0
-    SHA512 d764793c66e06afc9a91622ec32808088b2a0cfedac7876682caded967a06f9f8b0dbebe9dadd36cf75350027dcd1aeed631072d4b8610f1793caf49c2f50f1c
+    REF "v${VERSION}"
+    SHA512 eda4e409771f4f9eb076ce6e6454546f35cecc329c3277c6db5fd5a205d6d6d3182a0743820208b9e672a56e94e61a2c43427c9c54837808df5d789bd1129eae
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
@@ -14,8 +14,10 @@ vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
-# This feature does not exist, but allows us to simplify the vcpkg.json file.
+# This feature does not exist, but allows us to simplify the vcpkg.json
+# file.
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "grpc-common")
+list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "rest-common")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "googleapis")
 # google-cloud-cpp uses dialogflow_cx and dialogflow_es. Underscores
 # are invalid in `vcpkg` features, we use dashes (`-`) as a separator
@@ -40,6 +42,10 @@ vcpkg_cmake_configure(
         -DGOOGLE_CLOUD_CPP_ENABLE_CCACHE=OFF
         -DGOOGLE_CLOUD_CPP_ENABLE_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
+        # This is needed by the `experimental-storage-grpc` feature until vcpkg
+        # gets Protobuf >= 4.23.0.  It has no effect for other features, so
+        # it is simpler to just always turn it on.
+        -DGOOGLE_CLOUD_CPP_ENABLE_CTYPE_CORD_WORKAROUND=ON
 )
 
 vcpkg_cmake_install()
@@ -59,7 +65,7 @@ foreach(feature IN LISTS FEATURES)
 endforeach()
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils rest_internal dialogflow_cx dialogflow_es)
+foreach(suffix common googleapis grpc_utils rest_internal opentelemetry dialogflow_cx dialogflow_es)
     set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()

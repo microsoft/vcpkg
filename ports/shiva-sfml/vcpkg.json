@@ -1,7 +1,7 @@
 {
   "name": "shiva-sfml",
-  "version-string": "1.0",
-  "port-version": 3,
+  "version": "1.0",
+  "port-version": 4,
   "description": "shiva-sfml plugins of shiva C++ engine",
   "dependencies": [
     {

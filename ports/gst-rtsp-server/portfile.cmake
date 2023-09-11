@@ -24,16 +24,21 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB DBG_BINS ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.dll
-                       ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}*${CMAKE_SHARED_LIBRARY_SUFFIX}"
+                           "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb"
+        )
+        file(COPY ${DBG_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer")
+    endif()
+    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}*${CMAKE_SHARED_LIBRARY_SUFFIX}"
+                       "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb"
     )
-    file(COPY ${DBG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(GLOB REL_BINS ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.dll
-                       ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb
-    )
-    file(COPY ${REL_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/gstreamer")
     file(REMOVE ${DBG_BINS} ${REL_BINS})
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0" "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0")
+    endif()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

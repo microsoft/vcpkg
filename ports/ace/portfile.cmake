@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12)
-
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
@@ -10,14 +8,14 @@ if("tao" IN_LIST FEATURES)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE%2BTAO-src-${VERSION}.tar.gz"
         FILENAME "ACE-TAO-${VERSION}.tar.gz"
-        SHA512 7210091f0512fa9c7ba2ea9e3f805a2ba0aab4d848a8e9e5651a824dcac65ddd50b95c98f4da86900487fa0a79aede126d021f4eb109f224224fc88a58133f79
+        SHA512 ab1317e626f1b312cd72e6c10f7b51088e5de4db8fa3bca013a98b07aad4edfb5e1f42a4f58c970f968417852b305f298a34e0fde053a1f52754ebe3761f314c
     )
 else()
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
         FILENAME "ACE-src-${VERSION}.tar.gz"
-        SHA512 6e8b63ee8fa691656544a7a9e5887b499a8791f25766a8081df1d64e911f667a95fed26c1eb6355f6ce1233694f8ef11c1a986ca16a686e21fb1e375035a29ed
+        SHA512 1605fdf7a78bfce090bc8b14137f9aafd23019712672f6cd041284656ce2bae0baff954124166aeb16a0565887e1d87b2d10dc2ec5981c4e38fc8d0b39a97934
     )
 endif()
 
@@ -64,12 +62,6 @@ list(JOIN ACE_FEATURE_LIST "," ACE_FEATURES)
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_PATH}")
-
-if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    set(MSBUILD_PLATFORM "Win32")
-else ()
-    set(MSBUILD_PLATFORM "${TRIPLET_SYSTEM_ARCH}")
-endif()
 
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
@@ -122,28 +114,10 @@ if("xml" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
-    file(WRITE "${SOURCE_PATH}/Directory.Build.props" "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                                                     <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
-                                                     <ItemDefinitionGroup>
-                                                     <ClCompile>
-                                                     <AdditionalOptions>/MP</AdditionalOptions>
-                                                     <AdditionalIncludeDirectories>${ACE_ROOT}</AdditionalIncludeDirectories>
-                                                     </ClCompile>
-                                                     <Link>
-                                                     <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib;${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/debug/lib</AdditionalLibraryDirectories>
-                                                     </Link>
-                                                     </ItemDefinitionGroup>
-                                                     </Project>")
-  endif()
-
   file(RELATIVE_PATH PROJECT_SUBPATH "${SOURCE_PATH}" "${WORKSPACE}.sln")
-  vcpkg_install_msbuild(
+  vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH ${PROJECT_SUBPATH}
-    LICENSE_SUBPATH COPYING
-    PLATFORM ${MSBUILD_PLATFORM}
-    SKIP_CLEAN
+    PROJECT_SUBPATH "${PROJECT_SUBPATH}"
   )
 
   # ACE itself does not define an install target, so it is not clear which
@@ -165,8 +139,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
   endfunction()
 
-  get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-  set(SOURCE_COPY_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}")
+  set(SOURCE_COPY_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
   # Install headers in subdirectory
   set(ACE_INCLUDE_FOLDERS
@@ -281,12 +254,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
   if("xml" IN_LIST FEATURES)
     file(RELATIVE_PATH PROJECT_SUBPATH_XML "${SOURCE_PATH}" "${ACE_ROOT}/ACEXML/ACEXML.sln")
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
       SOURCE_PATH "${SOURCE_PATH}"
-      PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
-      LICENSE_SUBPATH COPYING
-      PLATFORM ${MSBUILD_PLATFORM}
-      SKIP_CLEAN
+      PROJECT_SUBPATH "${PROJECT_SUBPATH_XML}"
     )
 
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/common"
@@ -304,8 +274,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb")
     endif()
   endif()
-
-  vcpkg_clean_msbuild()
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
@@ -412,12 +380,11 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   # Restore `PWD` environment variable
   set($ENV{PWD} _prev_env)
 
-  # Handle copyright
-  file(INSTALL "${ACE_ROOT}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/ace/bin/MakeProjectCreator")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/share/ace/ace-devel.sh")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/share/tao/tao-devel.sh")
 endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 vcpkg_fixup_pkgconfig()

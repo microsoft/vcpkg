@@ -15,27 +15,37 @@ vcpkg_from_gitlab(
     SHA512 e7907b1be9d85b02e1a1703cf001765119a7d07b1873148a0fbfe6945c519d85b1f9bc66b24f90d88759c2b32965304e1639f2ff136448be64fc88f81a0d4c2d
     HEAD_REF ec53dae89f6b037e9e640af5340d7bf67d84d278
 )
-
 file(GLOB CMAKEMOD_FILES "${CMAKEMOD_SOURCE_PATH}/*")
 file(COPY ${CMAKEMOD_FILES} DESTINATION "${SOURCE_PATH}/cmake/modules")
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools   ENABLE_UTILITIES
+)
+
+set(VCPKG_BUILD_TYPE release) # no lib binaries
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE # writes to include/dv-processing/version.hpp
     OPTIONS
+        ${FEATURE_OPTIONS}
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_lz4=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_zstd=ON
         -DENABLE_TESTS=OFF
         -DENABLE_SAMPLES=OFF
         -DENABLE_PYTHON=OFF
-        -DENABLE_UTILITIES=OFF
         -DBUILD_CONFIG_VCPKG=ON
 )
-
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "dv-processing" CONFIG_PATH "share/dv-processing")
+if(ENABLE_UTILITIES)
+    vcpkg_copy_tools(TOOL_NAMES dv-filestat dv-imu-bias-estimation dv-list-devices dv-tcpstat AUTO_CLEAN)
+endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib") # pkgconfig only, but incomplete
 
-vcpkg_fixup_pkgconfig(SKIP_CHECK)
-
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,0 +1,78 @@
+diff --git a/mk/mklib.mk b/mk/mklib.mk
+index fb83cf391..9b28a314b 100644
+--- a/mk/mklib.mk
++++ b/mk/mklib.mk
+@@ -100,6 +100,10 @@ $(shlib): $(patsubst %, shared/%, $(LIB_OBJS) $(LIB_SHARED_ONLY_OBJS))
+ 	@(namespec="$(namespec)" extralibs="$(imps) $(extralibs)"; \
+          $(MakeCXXSharedLibrary))
+ 
++ifdef Win32Platform
++$(shlib): | $(staticlib)
++endif
++
+ export:: $(shlib)
+ 	@(namespec="$(namespec)"; \
+           $(ExportSharedLibrary))
+@@ -209,6 +211,10 @@ $(dbugshlib): $(patsubst %, shareddebug/%, $(LIB_OBJS) $(LIB_SHARED_ONLY_OBJS))
+ 	(namespec="$(namespec)" debug=1 extralibs="$(dbugimps) $(extralibs)"; \
+          $(MakeCXXSharedLibrary))
+ 
++ifdef Win32Platform
++$(dbugshlib): | $(dbuglib)
++endif
++
+ export:: $(dbugshlib)
+ 	@(namespec="$(namespec)" debug=1; \
+           $(ExportSharedLibrary))
+diff --git a/src/services/mklib/stublib/dir.mk b/src/services/mklib/stublib/dir.mk
+index ce46f6c5f..eb619e5c5 100644
+--- a/src/services/mklib/stublib/dir.mk
++++ b/src/services/mklib/stublib/dir.mk
+@@ -92,6 +92,10 @@ $(skshared): $(patsubst %, shared/%, $(COS_SK_OBJS))
+ 	@(namespec="$(sknamespec)"; extralibs="$(imps) $(extralibs)"; \
+          $(MakeCXXSharedLibrary))
+ 
++ifdef Win32Platform
++$(skshared): | $(sk)
++endif
++
+ export:: $(skshared)
+ 	@(namespec="$(sknamespec)"; \
+          $(ExportSharedLibrary))
+@@ -168,6 +170,10 @@ $(skshareddbug): $(patsubst %, shareddebug/%, $(COS_SK_OBJS))
+ 	(namespec="$(sknamespec)"; debug=1; extralibs="$(dbugimps) $(extralibs)"; \
+          $(MakeCXXSharedLibrary))
+ 
++ifdef Win32Platform
++$(skshareddbug): | $(skdbug)
++endif
++
+ export:: $(skshareddbug)
+ 	@(namespec="$(sknamespec)" debug=1; \
+          $(ExportSharedLibrary))
+diff --git a/src/services/mklib/dynstublib/dir.mk b/src/services/mklib/dynstublib/dir.mk
+index f2e1448b3..9134e8aba 100644
+--- a/src/services/mklib/dynstublib/dir.mk
++++ b/src/services/mklib/dynstublib/dir.mk
+@@ -92,6 +92,10 @@ $(dynskshared): $(skshared) $(patsubst %, shared/%, $(COS_DYNSK_OBJS))
+ 	@(namespec="$(dynsknamespec)"; extralibs="$(dynimps)"; \
+          $(MakeCXXSharedLibrary))
+ 
++ifdef Win32Platform
++$(dynskshared): | $(dynsk)
++endif
++
+ export:: $(dynskshared)
+ 	@(namespec="$(dynsknamespec)"; \
+          $(ExportSharedLibrary))
+@@ -169,6 +171,10 @@ $(dynskshareddbug): $(patsubst %, shareddebug/%, $(COS_DYNSK_OBJS))
+ 	@(namespec="$(dynsknamespec)"; debug=1; extralibs="$(skshareddbug) $(dbugimps) $(extralibs)"; \
+          $(MakeCXXSharedLibrary))
+ 
++ifdef Win32Platform
++$(dynskshareddbug): | $(dynskdbug)
++endif
++
+ export:: $(dynskshareddbug)
+ 	@(namespec="$(dynsknamespec)" debug=1; \
+          $(ExportSharedLibrary))

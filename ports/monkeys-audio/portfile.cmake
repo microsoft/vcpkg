@@ -1,11 +1,11 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-set(MA_VERSION 904)
+set(MA_VERSION 1008)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://monkeysaudio.com/files/MAC_${MA_VERSION}_SDK.zip"
     FILENAME "MAC_${MA_VERSION}_SDK.zip"
-    SHA512 d104421e9bfa8c36dee89bd292c06629ff39a33e84569a5578f4a255432238a0cf09a7d03c5f7df3daf0e41d5cf3ac88f3b58581daf09a94935de91056334681
+    SHA512 0c96b6fa8da9d412679e8c9b43e98d475a650899694a9d085c3b0272775cf229bb09c7c4f24a18ab7ee5516d2d34f7acd59e4216aca8fe08ed04f75e33e29322
 )
 
 vcpkg_extract_source_archive(
@@ -14,6 +14,7 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
     PATCHES
         remove-certificate-step.patch
+        fix-outdir.patch
 )
 
 file(REMOVE_RECURSE
@@ -49,13 +50,15 @@ foreach(VCXPROJ IN ITEMS
 endforeach()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_install_msbuild(
+    list(APPEND VCPKG_C_FLAGS "-D_AFXDLL")
+    list(APPEND VCPKG_CXX_FLAGS "-D_AFXDLL")
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "Source/Projects/VS2022/MACDll/MACDll.vcxproj"
         PLATFORM ${PLATFORM}
     )
 else()
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "Source/Projects/VS2022/MACLib/MACLib.vcxproj"
         PLATFORM ${PLATFORM}
@@ -63,7 +66,7 @@ else()
 endif()
 
 if ("tools" IN_LIST FEATURES)
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "Source/Projects/VS2022/Console/Console.vcxproj"
         PLATFORM ${PLATFORM}
@@ -71,17 +74,11 @@ if ("tools" IN_LIST FEATURES)
 
     file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/Console.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/Console.lib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/tools/monkeys-audio/Console.exe" "${CURRENT_PACKAGES_DIR}/tools/monkeys-audio/mac.exe")
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    file(COPY "${CURRENT_PACKAGES_DIR}/bin/MACDll.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(COPY "${CURRENT_PACKAGES_DIR}/lib/MACDll.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    file(COPY "${CURRENT_PACKAGES_DIR}/bin/MACDll64.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(COPY "${CURRENT_PACKAGES_DIR}/lib/MACDll64.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-endif()
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib" "${CURRENT_PACKAGES_DIR}/lib")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/MACLib.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/MACLib.lib")
 endif()
 
 

@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/pytorch
-    REF v1.12.1
+    REF "v${VERSION}"
     SHA512 afeb551904ebd9b5901ae623a98eadbb3045115247cedf8006a940742cfad04e5ce24cfaf363336a9ed88d7ce6a4ac53dbb6a5c690aef6efdf20477c3a22c7ca
     HEAD_REF master
     PATCHES
@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-c10-glog.patch
         use-flatbuffers2.patch # check with codegen-flatc-mobile_bytecode
         fix-windows.patch # https://github.com/pytorch/pytorch/issues/87957
+        fix_werror.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
@@ -158,26 +159,42 @@ vcpkg_cmake_build(TARGET torch_cpu  LOGFILE_BASE build-torch_cpu)
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
-                    "${CURRENT_PACKAGES_DIR}/debug/share"
-                    "${CURRENT_PACKAGES_DIR}/share"
-                    "${CURRENT_PACKAGES_DIR}/include/c10/test/core/impl"
-                    "${CURRENT_PACKAGES_DIR}/include/c10/hip"
-                    "${CURRENT_PACKAGES_DIR}/include/c10/benchmark"
-                    "${CURRENT_PACKAGES_DIR}/include/c10/test"
-                    "${CURRENT_PACKAGES_DIR}/include/c10/cuda"
-                    "${CURRENT_PACKAGES_DIR}/include/c10d/quantization"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/ideep/operators/quantization"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/python"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/share/contrib/depthwise"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/share/contrib/nnpack"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/mobile"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/experiments/python"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/test"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/utils/hip"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/opt/nql/tests"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/contrib"
-                    "${CURRENT_PACKAGES_DIR}/include/caffe2/core/nomnigraph/Representations"
-                    "${CURRENT_PACKAGES_DIR}/include/torch/csrc"
+# Traverse the folder and remove "some" empty folders
+function(cleanup_once folder)
+    if(NOT IS_DIRECTORY "${folder}")
+        return()
+    endif()
+    file(GLOB paths LIST_DIRECTORIES true "${folder}/*")
+    list(LENGTH paths count)
+    # 1. remove if the given folder is empty
+    if(count EQUAL 0)
+        file(REMOVE_RECURSE "${folder}")
+        message(STATUS "Removed ${folder}")
+        return()
+    endif()
+    # 2. repeat the operation for hop 1 sub-directories 
+    foreach(path ${paths})
+        cleanup_once(${path})
+    endforeach()
+endfunction()
+
+# Some folders may contain empty folders. They will become empty after `cleanup_once`.
+# Repeat given times to delete new empty folders.
+function(cleanup_repeat folder repeat)
+    if(NOT IS_DIRECTORY "${folder}")
+        return()
+    endif()
+    while(repeat GREATER_EQUAL 1)
+        math(EXPR repeat "${repeat} - 1" OUTPUT_FORMAT DECIMAL)   
+        cleanup_once("${folder}")
+    endwhile()
+endfunction()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/cmake/ATen"
 )
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+cleanup_repeat("${CURRENT_PACKAGES_DIR}/include" 5)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

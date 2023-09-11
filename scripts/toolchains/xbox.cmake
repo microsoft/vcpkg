@@ -1,6 +1,7 @@
 if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
 set(_VCPKG_WINDOWS_TOOLCHAIN 1)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>" CACHE STRING "")
+set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "")
 
 set(CMAKE_SYSTEM_NAME Windows CACHE STRING "")
 
@@ -12,18 +13,17 @@ endif()
 
 if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
     set(CMAKE_SYSTEM_VERSION "${VCPKG_CMAKE_SYSTEM_VERSION}" CACHE STRING "" FORCE)
+else()
+    set(CMAKE_SYSTEM_VERSION "10.0" CACHE STRING "" FORCE)
 endif()
 
 set(CMAKE_CROSSCOMPILING ON CACHE STRING "")
-
-if(NOT DEFINED CMAKE_SYSTEM_VERSION)
-    set(CMAKE_SYSTEM_VERSION "${CMAKE_HOST_SYSTEM_VERSION}" CACHE STRING "")
-endif()
 
 # Add the Microsoft GDK if present
 if (DEFINED ENV{GRDKLatest})
     cmake_path(SET _vcpkg_grdk "$ENV{GRDKLatest}")
 
+    list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_grdk}/gameKit/Include")
     include_directories(BEFORE SYSTEM "${_vcpkg_grdk}/gameKit/Include")
     cmake_path(CONVERT "${_vcpkg_grdk}/gameKit/Include" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
 
@@ -36,12 +36,14 @@ if (DEFINED ENV{GXDKLatest})
     cmake_path(SET _vcpkg_gxdk "$ENV{GXDKLatest}")
 
     if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
+        list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/Scarlett")
         include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/Scarlett")
         cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
 
         link_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett")
         cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Lib/amd64;${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
     elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+        list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/XboxOne")
         include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/XboxOne")
         cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/XboxOne" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
 
@@ -64,8 +66,13 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     set(_vcpkg_core_libs onecore_apiset.lib)
     set(_vcpkg_default_lib onecore_apiset.lib)
 
+    set(MP_BUILD_FLAG "")
+    if(NOT (CMAKE_CXX_COMPILER MATCHES "clang-cl.exe"))
+        set(MP_BUILD_FLAG "/MP")
+    endif()
+
     set(_vcpkg_cpp_flags "/DWIN32 /D_WINDOWS /D_UNICODE /DUNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_GAMES /D_WIN32_WINNT=0x0A00 /D_ATL_NO_DEFAULT_LIBS /D__WRL_NO_DEFAULT_LIB__ /D__WRL_CLASSIC_COM_STRICT__ /D_UITHREADCTXT_SUPPORT=0 /D_CRT_USE_WINAPI_PARTITION_APP")
-    set(_vcpkg_common_flags "/nologo /Z7 /MP /GS /Gd /W3 /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc /utf-8")
+    set(_vcpkg_common_flags "/nologo /Z7 ${MP_BUILD_FLAG} /GS /Gd /W3 /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc /utf-8")
 
     # Add the Microsoft GDK if present
     if (DEFINED _vcpkg_grdk)
@@ -134,6 +141,7 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     # Some upstream projects don't respect STANDARD_LIBRARIES_INIT and rely on default libs instead.
     set(_vcpkg_common_lflags "/MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG /MANIFESTUAC:NO /SUBSYSTEM:WINDOWS,10.0 /DEFAULTLIB:${_vcpkg_default_lib}")
 
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS " ${_vcpkg_common_lflags} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
     string(APPEND CMAKE_SHARED_LINKER_FLAGS " ${_vcpkg_common_lflags} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
     string(APPEND CMAKE_EXE_LINKER_FLAGS " ${_vcpkg_common_lflags} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
 
@@ -142,9 +150,11 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     unset(_vcpkg_default_lib)
     unset(_vcpkg_common_lflags)
 
+    set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
     set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
     string(APPEND CMAKE_STATIC_LINKER_FLAGS_DEBUG_INIT " /nologo ")
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS_DEBUG_INIT " /nologo ")
     string(APPEND CMAKE_SHARED_LINKER_FLAGS_DEBUG_INIT " /nologo ")
     string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG_INIT " /nologo ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_DEBUG} ")
 endif()

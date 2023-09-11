@@ -26,7 +26,7 @@ diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
 index 4d416c589e..ede9868a8f 100644
 --- a/PCbuild/pcbuild.proj
 +++ b/PCbuild/pcbuild.proj
-@@ -49,17 +49,17 @@
+@@ -60,17 +60,17 @@
      <!-- python3.dll -->
      <Projects Include="python3dll.vcxproj" />
      <!-- py[w].exe -->
@@ -49,7 +49,7 @@ index 4d416c589e..ede9868a8f 100644
 +    <!-- _ssl will NOT build _socket as well -->
 +    <ExtensionModules Include="_socket" Condition="true" />
 +    <ExternalModules Include="_ssl;_hashlib" Condition="true" />
-     <ExternalModules Include="_tkinter" Condition="$(IncludeTkinter) and $(Platform) != 'ARM' and $(Platform) != 'ARM64'" />
+     <ExternalModules Include="_tkinter" Condition="$(IncludeTkinter)" />
      <ExtensionModules Include="@(ExternalModules->'%(Identity)')" Condition="$(IncludeExternals)" />
      <Projects Include="@(ExtensionModules->'%(Identity).vcxproj')" Condition="$(IncludeExtensions)" />
 -- 

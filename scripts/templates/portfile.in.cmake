@@ -13,7 +13,6 @@
 #   VCPKG_TOOLCHAIN           = ON OFF
 #   TRIPLET_SYSTEM_ARCH       = arm x86 x64
 #   BUILD_ARCH                = "Win32" "x64" "ARM"
-#   MSBUILD_PLATFORM          = "Win32"/"x64"/${TRIPLET_SYSTEM_ARCH}
 #   DEBUG_CONFIG              = "Debug Static" "Debug Dll"
 #   RELEASE_CONFIG            = "Release Static"" "Release DLL"
 #   VCPKG_TARGET_IS_WINDOWS
@@ -47,7 +46,7 @@ vcpkg_extract_source_archive_ex(
     # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
     # REF 1.0.0
     # (Optional) Read the docs for how to generate patches at:
-    # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
+    # https://github.com/microsoft/vcpkg-docs/blob/main/vcpkg/examples/patching.md
     # PATCHES
     #   001_port_fixes.patch
     #   002_more_port_fixes.patch

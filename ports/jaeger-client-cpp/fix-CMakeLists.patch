@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d9bf7b5..eb2692c 100644
+index 53e4598..4220910 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -60,7 +60,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
@@ -10,6 +10,15 @@ index d9bf7b5..eb2692c 100644
 +find_package(Thrift CONFIG REQUIRED)
  if(HUNTER_ENABLED)
    list(APPEND LIBS thrift::thrift_static)
+ else()
+@@ -74,7 +74,7 @@ hunter_add_package(opentracing-cpp)
+ # OpenTracingConfig.cmake file
+ find_package(OpenTracing CONFIG REQUIRED)
+ # Under Windows, link dynamically with OpenTracing
+-if (WIN32)
++if (TARGET OpenTracing::opentracing)
+   list(APPEND LIBS OpenTracing::opentracing)
+   set(OPENTRACING_LIB OpenTracing::opentracing)
  else()
 @@ -273,6 +273,9 @@ if(JAEGERTRACING_PLUGIN)
    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/export.map

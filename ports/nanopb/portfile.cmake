@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         fix-cmakelist-and-pb-header.patch
+        fix-install-location.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" nanopb_BUILD_STATIC_LIBS)
@@ -30,6 +31,7 @@ vcpkg_cmake_configure(
         -Dnanopb_MSVC_STATIC_RUNTIME=${nanopb_STATIC_LINKING}
         -Dnanopb_PROTOC_PATH="${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         ${FEATURE_OPTIONS}
+        -DCMAKE_INSTALL_DATADIR=share/${PORT}
 )
 vcpkg_cmake_install()
 
@@ -37,13 +39,13 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(nanopb_BUILD_GENERATOR)
     file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/nanopb_generator.py" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     if(WIN32)
         file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/protoc-gen-nanopb.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-        file(INSTALL "${CURRENT_PACKAGES_DIR}/Lib/site-packages/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/site-packages")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/proto/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/proto")
     else()
         file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/protoc-gen-nanopb" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     endif()
