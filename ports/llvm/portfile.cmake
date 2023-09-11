@@ -162,6 +162,7 @@ if("mlir" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS
         -DMLIR_INSTALL_PACKAGE_DIR:PATH=share/mlir
         -DMLIR_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        -DMLIR_INSTALL_AGGREGATE_OBJECTS=OFF # Disables installation of object files in lib/objects-{CMAKE_BUILD_TYPE}.
     )
     if("enable-mlir-python-bindings" IN_LIST FEATURES)
         list(APPEND FEATURE_OPTIONS
