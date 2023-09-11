@@ -1302,9 +1302,6 @@ cld3:arm-neon-android=fail
 cld3:arm64-android=fail
 cld3:x64-android=fail
 cld3:x64-linux=fail
-tesseract:x64-android=fail
-tesseract:arm64-android=fail
-tesseract:arm-neon-android=fail
 
 # Ports which needs to pass in CI
 cmake:x64-windows=pass
