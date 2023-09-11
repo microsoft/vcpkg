@@ -184,9 +184,6 @@ chromium-base:x64-linux=skip
 #  because the first attempt to build it fails, but subsequent attempts succeed
 chromium-base:x64-osx=skip
 
-civetweb:arm64-windows      = skip
-civetweb:arm-uwp            = skip
-civetweb:x64-uwp            = skip
 clamav:arm64-windows=fail
 
 # clapack is replaced by lapack-reference on the platforms lapack-reference supports
