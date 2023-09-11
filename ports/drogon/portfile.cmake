@@ -10,7 +10,13 @@ vcpkg_from_github(
         003_fix_gcc13.patch #https://github.com/drogonframework/drogon/pull/1563
         004_deps_redis.patch
         005_drogon_ctl.patch
+        006_drogon_cross_compile.patch
 )
+
+set(DROGON_CTL_TOOL "")
+if(VCPKG_CROSSCOMPILING)
+    set(DROGON_CTL_TOOL "${CURRENT_HOST_INSTALLED_DIR}/tools/drogon/drogon_ctl${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -34,7 +40,8 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
         -DUSE_SUBMODULE=OFF
-        ${FEATURE_OPTIONS}
+        "-DDROGON_CTL_TOOL=${DROGON_CTL_TOOL}"
+        ${FEATURE_OPTIONS}        
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_Boost
 )
