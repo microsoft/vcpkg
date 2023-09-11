@@ -2356,6 +2356,7 @@ libproxy[bindings-csharp](!windows) = feature-fails # No C# compiler installed
 libraw[openmp](osx) = feature-fails # requires openmp (works with right setup)
 libsbml[expat, libxml2] = options # have to select excatly one xml lib(they are features)
 libssh[core,openssl,mbedtls] = options # we have to select feature openssl or mbedtls
+libwebp(windows & arm) = fail # linker errors. See https://github.com/microsoft/vcpkg/issues/33603
 libwebp[anim,cwebp,dwebp,extras,img2webp](uwp) = feature-fails # linker error. See https://github.com/microsoft/vcpkg/issues/33603
 llvm[core,libcxx,libunwind] = options # Exclude libcxx and libunwind from all
 llvm[libcxxabi] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31038
