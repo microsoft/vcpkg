@@ -2209,7 +2209,7 @@
       "port-version": 1
     },
     "dpp": {
-      "baseline": "10.0.24",
+      "baseline": "10.0.25",
       "port-version": 0
     },
     "draco": {
