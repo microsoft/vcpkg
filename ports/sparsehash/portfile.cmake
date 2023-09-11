@@ -1,3 +1,7 @@
+if(EXISTS ${CURRENT_INSTALLED_DIR}/share/sparsehash-c11/copyright)
+    message(FATAL_ERROR "'${PORT}' conflicts with 'sparsehash-c11'. Please remove sparsehash-c11:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sparsehash/sparsehash

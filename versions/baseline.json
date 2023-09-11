@@ -7802,7 +7802,11 @@
     },
     "sparsehash": {
       "baseline": "2.0.4",
-      "port-version": 2
+      "port-version": 3
+    },
+    "sparsehash-c11": {
+      "baseline": "2.11.1",
+      "port-version": 0
     },
     "sparsepp": {
       "baseline": "1.22",

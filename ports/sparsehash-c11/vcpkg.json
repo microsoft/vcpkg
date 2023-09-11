@@ -1,0 +1,7 @@
+{
+  "name": "sparsehash-c11",
+  "version": "2.11.1",
+  "description": "Experimental C++11 version of sparsehash",
+  "homepage": "https://github.com/sparsehash/sparsehash-c11",
+  "license": "BSD-3-Clause"
+}
