@@ -1,6 +1,6 @@
 {
   "name": "unicorn",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Unicorn is a lightweight multi-platform, multi-architecture CPU emulator framework",
   "homepage": "https://github.com/unicorn-engine/unicorn",
   "license": "GPL-2.0-only",
@@ -8,10 +8,6 @@
   "dependencies": [
     {
       "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]
