@@ -9122,7 +9122,7 @@
     },
     "zstd": {
       "baseline": "1.5.5",
-      "port-version": 0
+      "port-version": 1
     },
     "zstr": {
       "baseline": "1.0.7",
