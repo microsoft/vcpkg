@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    REF "v${VERSION}"
+    REF b704abd3c7ee6feb27fb81fa7f724b44552e60fb
     SHA512 4fc5253ad0e8fca2fd347ef139c8c150e2fb5dd2351da2b13adb9e00530a9d55943bc4952c1d42706a9ffbb57f81ed2854536d9e2f32dfab0dfc741696cc7e61
     HEAD_REF main
 )
