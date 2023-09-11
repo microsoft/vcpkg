@@ -32,18 +32,6 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(READ "${SOURCE_PATH}/LICENSE-1.MPL" mpl)
-file(READ "${SOURCE_PATH}/LICENSE-2.LGPL" lgpl)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
-"${PORT} is released under a dual MPL / LGPL license.
-
----
-
-${mpl}
-
----
-
-${lgpl}
-")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE-1.MPL" "${SOURCE_PATH}/LICENSE-2.LGPL" COMMENT "LIBPLCTAG is released under a dual MPL / LGPL license")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
