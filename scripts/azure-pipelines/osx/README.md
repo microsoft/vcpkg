@@ -53,7 +53,7 @@ Follow the Parallels process for creating a macOS VM:
       $ brew install hashicorp/tap/hashicorp-vagrant
       $ vagrant plugin install vagrant-parallels
       ```
-3. Update your MacOS machine.
+3. Update your MacOS host.
 4. Run parallels, and select 'Other Options' -> 'Install macOS 13.5.2 Using the Recovery Partition' (version number to change :))
 5. Install MacOS like you would on real hardware.
     * Apple ID: 'Set Up Later' / Skip
@@ -222,10 +222,5 @@ You can now copy this token and use it to allow machines to join.
     ```sh
     $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
     $ brew install hashicorp/tap/hashicorp-vagrant
+    $ vagrant plugin install vagrant-parallels
     ```
-
-Then, we need to download the `vcpkg` repository:
-
-```sh
-$ git clone https://github.com/microsoft/vcpkg
-```
