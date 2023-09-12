@@ -3138,7 +3138,7 @@
     },
     "halide": {
       "baseline": "16.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "happly": {
       "baseline": "2021-03-19",
@@ -5313,8 +5313,8 @@
       "port-version": 3
     },
     "mesa": {
-      "baseline": "23.0.1",
-      "port-version": 1
+      "baseline": "23.2.0-rc3",
+      "port-version": 0
     },
     "meschach": {
       "baseline": "1.2b",
