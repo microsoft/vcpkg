@@ -5132,6 +5132,10 @@
       "baseline": "3.1.0",
       "port-version": 0
     },
+    "luau": {
+      "baseline": "0.594",
+      "port-version": 0
+    },
     "luminoengine": {
       "baseline": "0.10.1",
       "port-version": 1

@@ -1,10 +1,10 @@
 {
   "name": "luau",
-  "version-string": "0.594",
+  "version": "0.594",
   "description": "A fast, small, safe, gradually typed embeddable scripting language derived from Lua",
-  "license": "MIT",
   "homepage": "https://luau-lang.org",
-  "supports": "!x86 && !uwp && !arm32",
+  "license": "MIT",
+  "supports": "!x86 & !uwp & !arm32",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
