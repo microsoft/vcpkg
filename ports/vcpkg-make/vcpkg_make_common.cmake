@@ -101,7 +101,7 @@ function(z_vcpkg_make_prepare_compile_flags)
     set(RCFLAGS "${VCPKG_COMBINED_RC_FLAGS_${var_suffix}}")
 
     foreach(var IN ITEMS ABIFLAGS LDFLAGS ARFLAGS RCFLAGS)
-        vcpkg_list(APPEND flags ${${var}})
+        vcpkg_list(APPEND flags ${var})
     endforeach()
 
 
