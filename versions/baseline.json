@@ -3802,7 +3802,7 @@
     },
     "ktx": {
       "baseline": "4.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kubazip": {
       "baseline": "0.2.4",
