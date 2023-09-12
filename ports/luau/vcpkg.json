@@ -4,6 +4,7 @@
   "description": "A fast, small, safe, gradually typed embeddable scripting language derived from Lua",
   "license": "MIT",
   "homepage": "https://luau-lang.org",
+  "supports": "!x86 && !uwp && !arm32",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
