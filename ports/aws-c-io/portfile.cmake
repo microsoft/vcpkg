@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-io
-    REF cfe553a770e9c2d1c93b8cdfb870b9f2a46b436e # v0.10.22
-    SHA512 7a741f5b1c895ceb11f73b67828fd3623c180cb8a3863f3b63a67ac1437d2c47911d50510777b13ee66fd0a009ab09a8c83fd036a0fca2f25a0835f48f023de7
+    REF "v${VERSION}"
+    SHA512 19587a7ae7218ca1b10caa15ee934ea72c4cfe8a8a84de8a2eb8a38a24469822d85f4c98607ae23c90f9b126c68e93815f1dcd7de01858402a06a316aa7a8e7f
     HEAD_REF master
-    PATCHES fix-cmake-target-path.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,17 +15,18 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-c-io/cmake)
+string(REPLACE "dynamic" "shared" subdir "${VCPKG_LIBRARY_LINKAGE}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/${PORT}/cmake/${subdir}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/${PORT}/cmake")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" [[/${type}/]] "/")
 
 file(REMOVE_RECURSE
-	"${CURRENT_PACKAGES_DIR}/debug/include"
-	"${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-io"
-	"${CURRENT_PACKAGES_DIR}/lib/aws-c-io"
-	)
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/lib/${PORT}"
+)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE	"${CURRENT_PACKAGES_DIR}/debug/share")
-
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

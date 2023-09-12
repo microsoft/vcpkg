@@ -8,9 +8,9 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 b8fba2bd12e93776c55228acf3487bef36ee40b1abdc7f681b827780ac94a8bfa1f59b0c30d60fa5a1fea2f610de78b9e52029f411128067808f17eb6374cdc5
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-g-ir-tool-template.in.patch
         0002-cross-build.patch
@@ -29,15 +29,12 @@ if(VCPKG_CROSSCOMPILING AND
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
-    ADDITIONAL_NATIVE_BINARIES
-        flex='${FLEX}'
-        bison='${BISON}'
-    ADDITIONAL_CROSS_BINARIES
+    ADDITIONAL_BINARIES
         flex='${FLEX}'
         bison='${BISON}'
         g-ir-annotation-tool='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-annotation-tool'
@@ -52,8 +49,6 @@ vcpkg_install_meson(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
-
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 set(GI_TOOLS
         g-ir-compiler
@@ -77,8 +72,13 @@ foreach(script IN LISTS GI_SCRIPTS)
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")
 endforeach()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB _pyd_lib_files "${CURRENT_PACKAGES_DIR}/lib/gobject-introspection/giscanner/_giscanner.*.lib")
+    file(REMOVE ${_pyd_lib_files})
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 
-set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) # _giscanner.lib
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

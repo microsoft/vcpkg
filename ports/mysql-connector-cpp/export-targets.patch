@@ -7,7 +7,7 @@ index e734714..6d665dc 100644
  
  merge_libraries(connector xapi devapi)
 -target_include_directories(connector PUBLIC "${PROJECT_SOURCE_DIR}/include")
-+target_include_directories(connector PRIVATE "${PROJECT_SOURCE_DIR}/include")
++target_include_directories(connector PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
  
  
  #

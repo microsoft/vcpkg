@@ -2,6 +2,7 @@ file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" _contents)
 string(JSON OPENCV_VERSION GET "${_contents}" version)
 
 set(USE_QT_VERSION "5")
+set(ENABLE_CXX11 ON)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -21,6 +22,7 @@ vcpkg_from_github(
       0010-fix-uwp-tiff-imgcodecs.patch
       0011-remove-python2.patch
       0012-fix-zlib.patch
+      0019-missing-include.patch
       fix-tbb-error.patch
 )
 # Disallow accidental build of vendored copies
@@ -282,6 +284,7 @@ if("ffmpeg" IN_LIST FEATURES)
 endif()
 
 if("halide" IN_LIST FEATURES)
+  set(ENABLE_CXX11 OFF)
   list(APPEND ADDITIONAL_BUILD_FLAGS
     # Halide 13 requires C++17
     "-DCMAKE_CXX_STANDARD=17"
@@ -369,7 +372,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         # ENABLE
-        -DENABLE_CXX11=ON
+        -DENABLE_CXX11=${ENABLE_CXX11}
         ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
@@ -398,6 +401,7 @@ vcpkg_cmake_configure(
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
         -DBUILD_IPP_IW=${WITH_IPP}
+        -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
 )
 
 vcpkg_cmake_install()
@@ -524,6 +528,12 @@ if(VCPKG_TARGET_IS_ANDROID)
 endif()
 
 vcpkg_fixup_pkgconfig()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv.pc" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/" "\${prefix}")
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv.pc" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/" "\${prefix}")
+endif()
 
 configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 

@@ -1,8 +1,8 @@
 diff --git a/src/read.c b/src/read.c
-index 8d39b07..6289fa4 100644
+index e45db4e..0ddb05a 100644
 --- a/src/read.c
 +++ b/src/read.c
-@@ -940,7 +940,7 @@ static avifResult avifDecoderItemMaxExtent(const avifDecoderItem * item, const a
+@@ -945,7 +945,7 @@ static avifResult avifDecoderItemMaxExtent(const avifDecoderItem * item, const a
                      return AVIF_RESULT_BMFF_PARSE_FAILED;
                  }
                  startOffset += remainingOffset;
@@ -11,12 +11,12 @@ index 8d39b07..6289fa4 100644
                  remainingOffset = 0;
              }
          }
-@@ -3085,7 +3085,7 @@ static avifResult avifDecoderPrepareSample(avifDecoder * decoder, avifDecodeSamp
- 
-             avifDecoderItem * item = avifMetaFindItem(decoder->data->meta, sample->itemID);
-             avifROData itemContents;
--            avifResult readResult = avifDecoderItemRead(item, decoder->io, &itemContents, sample->offset, bytesToRead, &decoder->diag);
-+            avifResult readResult = avifDecoderItemRead(item, decoder->io, &itemContents, (size_t)sample->offset, bytesToRead, &decoder->diag);
+@@ -3147,7 +3147,7 @@ static avifResult avifDecoderPrepareSample(avifDecoder * decoder, avifDecodeSamp
+             if ((decoder->io->sizeHint > 0) && (sample->offset > decoder->io->sizeHint)) {
+                 return AVIF_RESULT_BMFF_PARSE_FAILED;
+             }
+-            avifResult readResult = decoder->io->read(decoder->io, 0, sample->offset, bytesToRead, &sampleContents);
++            avifResult readResult = decoder->io->read(decoder->io, 0, (size_t)sample->offset, bytesToRead, &sampleContents);
              if (readResult != AVIF_RESULT_OK) {
                  return readResult;
              }

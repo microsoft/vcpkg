@@ -1,5 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a56294f29..d784c4d5f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -44,8 +44,8 @@ set(SqliteOrm_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+ add_library(sqlite_orm INTERFACE)
+ add_library(sqlite_orm::sqlite_orm ALIAS sqlite_orm)
+ 
+-find_package(SQLite3 REQUIRED)
+-target_link_libraries(sqlite_orm INTERFACE SQLite::SQLite3)
++find_package(unofficial-sqlite3 CONFIG REQUIRED)
++target_link_libraries(sqlite_orm INTERFACE unofficial::sqlite3::sqlite3)
+ 
+ target_sources(sqlite_orm INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/sqlite_orm/sqlite_orm.h>)
+ 
 diff --git a/cmake/SqliteOrmConfig.cmake.in b/cmake/SqliteOrmConfig.cmake.in
-index e0635d2..30403cd 100644
+index e0635d28a..30403cd41 100644
 --- a/cmake/SqliteOrmConfig.cmake.in
 +++ b/cmake/SqliteOrmConfig.cmake.in
 @@ -1,4 +1,4 @@

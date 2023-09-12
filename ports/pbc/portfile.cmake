@@ -1,17 +1,15 @@
-set(PBC_VERSION 0.5.14)
-
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(
         ARCHIVE
-        URLS "https://crypto.stanford.edu/pbc/files/pbc-${PBC_VERSION}.tar.gz"
-        FILENAME pbc-${PBC_VERSION}.tar.gz
+        URLS "https://crypto.stanford.edu/pbc/files/pbc-${VERSION}.tar.gz"
+        FILENAME pbc-${VERSION}.tar.gz
         SHA512 d75d4ceb3f67ee62c7ca41e2a91ee914fbffaeb70256675aed6734d586950ea8e64e2f16dc069d71481eddb703624df8d46497005fb58e75cf098dd7e7961333
     )
 
-    vcpkg_extract_source_archive_ex(
-        OUT_SOURCE_PATH SOURCE_PATH
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
         ARCHIVE ${ARCHIVE}
-        REF ${PBC_VERSION}
+        SOURCE_BASE "${VERSION}"
         PATCHES linux.patch
     )
 
@@ -27,7 +25,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS ${SHARED_STATIC} LEX=${FLEX} YACC=${BISON}\ -y)
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         COPY_SOURCE
         OPTIONS
@@ -36,8 +34,8 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_install_make()
 
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/info)
-    file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/info")
+    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 else()
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
     vcpkg_from_github(
@@ -48,9 +46,6 @@ else()
         HEAD_REF master
         PATCHES windows.patch
     )
-
-    set(CMAKE_FIND_LIBRARY_PREFIXES "")
-    set(CMAKE_FIND_LIBRARY_SUFFIXES "")
 
     find_path(MPIR_INCLUDE_DIR "gmp.h" HINTS ${CURRENT_INSTALLED_DIR} PATH_SUFFIXES include)
     if(NOT MPIR_INCLUDE_DIR)
@@ -75,12 +70,6 @@ else()
         set(ConfigurationSuffix " DLL")
     endif()
 
-    if(VCPKG_CRT_LINKAGE STREQUAL "static")
-        set(RuntimeLibraryExt "")
-    else()
-        set(RuntimeLibraryExt "DLL")
-    endif()
-
     if(TRIPLET_SYSTEM_ARCH STREQUAL "x86")
         set(Platform "Win32")
     else()
@@ -96,18 +85,16 @@ else()
     file(COPY ${FILES} ${MPIR_LIBRARIES_DBG} DESTINATION "${SOURCE_PATH_PARENT}/mpir/${LibrarySuffix}/${Platform}/Debug")
 
     get_filename_component(SOURCE_PATH_SUFFIX ${SOURCE_PATH} NAME)
-    vcpkg_install_msbuild(SOURCE_PATH ${SOURCE_PATH_PARENT}
+    vcpkg_msbuild_install(SOURCE_PATH ${SOURCE_PATH_PARENT}
         PROJECT_SUBPATH ${SOURCE_PATH_SUFFIX}/pbcwin/projects/pbclib.vcxproj
-        INCLUDES_SUBPATH ${SOURCE_PATH_SUFFIX}/include
-        LICENSE_SUBPATH ${SOURCE_PATH_SUFFIX}/COPYING
         RELEASE_CONFIGURATION "Release${ConfigurationSuffix}"
         DEBUG_CONFIGURATION "Debug${ConfigurationSuffix}"
-        OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
-        OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
         OPTIONS /p:SolutionDir=../
-        ALLOW_ROOT_INCLUDES ON
     )
 
+    vcpkg_install_copyright(FILE_LIST " ${SOURCE_PATH}/COPYING")
+    file(COPY "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
     # clean up mpir stuff
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/mpir.lib ${CURRENT_PACKAGES_DIR}/debug/lib/mpir.lib)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/mpir.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/mpir.lib")
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-pbc-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
 endif()

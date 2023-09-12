@@ -84,7 +84,7 @@ else()
     set(Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL "WARNING")
 endif()
 
-vcpkg_minimum_required(VERSION 2021-11-02)
+vcpkg_minimum_required(VERSION 2022-10-12)
 
 file(TO_CMAKE_PATH "${BUILDTREES_DIR}" BUILDTREES_DIR)
 file(TO_CMAKE_PATH "${PACKAGES_DIR}" PACKAGES_DIR)
@@ -129,17 +129,17 @@ if(CMD STREQUAL "BUILD")
 
     include("${CMAKE_TRIPLET_FILE}")
 
-    if (DEFINED VCPKG_PORT_CONFIGS)
-        foreach(VCPKG_PORT_CONFIG IN LISTS VCPKG_PORT_CONFIGS)
-            include("${VCPKG_PORT_CONFIG}")
-        endforeach()
-    endif()
-
     set(HOST_TRIPLET "${_HOST_TRIPLET}")
     set(CURRENT_HOST_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}" CACHE PATH "Location to install final packages for the host")
 
     set(TRIPLET_SYSTEM_ARCH "${VCPKG_TARGET_ARCHITECTURE}")
     include("${SCRIPTS}/cmake/vcpkg_common_definitions.cmake")
+
+    if (DEFINED VCPKG_PORT_CONFIGS)
+        foreach(VCPKG_PORT_CONFIG IN LISTS VCPKG_PORT_CONFIGS)
+            include("${VCPKG_PORT_CONFIG}")
+        endforeach()
+    endif()
 
     set(Z_VCPKG_ERROR_LOG_COLLECTION_FILE "${CURRENT_BUILDTREES_DIR}/error-logs-${TARGET_TRIPLET}.txt")
     file(REMOVE "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}")

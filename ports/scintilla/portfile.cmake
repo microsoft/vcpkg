@@ -12,17 +12,17 @@ if(VCPKG_CRT_LINKAGE STREQUAL "static")
   list(APPEND PATCHES 0002-static-crt.patch)
 endif()
 
-vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+  SOURCE_PATH
   ARCHIVE ${ARCHIVE}
-  REF 4.4.6
+  SOURCE_BASE 4.4.6
   PATCHES ${PATCHES}
 )
 
 vcpkg_install_msbuild(
-  SOURCE_PATH ${SOURCE_PATH}
+  SOURCE_PATH "${SOURCE_PATH}"
   PROJECT_SUBPATH Win32/SciLexer.vcxproj
-  LICENSE_SUBPATH License.txt
 )
 
-file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT} FILES_MATCHING PATTERN "*.*")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")
+file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}" FILES_MATCHING PATTERN "*.*")

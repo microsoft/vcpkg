@@ -1,0 +1,53 @@
+{
+  "name": "daxa",
+  "version": "2.0.0",
+  "description": "Daxa C++ Vulkan Abstraction",
+  "homepage": "https://github.com/Ipotrick/Daxa",
+  "license": "MIT",
+  "supports": "(windows | linux) & !x86",
+  "dependencies": [
+    "fmt",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "vulkan",
+    "vulkan-headers",
+    "vulkan-memory-allocator",
+    {
+      "name": "wayland",
+      "default-features": false,
+      "platform": "linux"
+    }
+  ],
+  "features": {
+    "utils-imgui": {
+      "description": "The ImGUI Daxa utility",
+      "dependencies": [
+        "imgui"
+      ]
+    },
+    "utils-mem": {
+      "description": "The Mem Daxa utility"
+    },
+    "utils-pipeline-manager-glslang": {
+      "description": "Build with glslang",
+      "dependencies": [
+        "glslang"
+      ]
+    },
+    "utils-pipeline-manager-spirv-validation": {
+      "description": "Build with SPIR-V validation",
+      "dependencies": [
+        "spirv-tools"
+      ]
+    },
+    "utils-task-graph": {
+      "description": "The Task-Graph Daxa utility"
+    }
+  }
+}

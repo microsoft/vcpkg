@@ -36,6 +36,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${CGNS_BUILD_OPTS}
+        -DCGNS_ENABLE_SCOPING:BOOL=ON
 )
 
 vcpkg_cmake_install()
@@ -56,10 +57,12 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
+set(TOOLS "cgnsupdate")
+if("hdf5" IN_LIST FEATURES)
+    list(APPEND TOOLS "adf2hdf" "hdf2adf")
+endif()
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(TOOLS "adf2hdf.bat" "hdf2adf.bat" "cgnsupdate.bat")
-elseif(VCPKG_TARGET_IS_LINUX)
-    set(TOOLS "adf2hdf" "hdf2adf" "cgnsupdate")
+    list(TRANSFORM TOOLS APPEND ".bat")
 endif()
 
 foreach(TOOL ${TOOLS})
@@ -78,6 +81,10 @@ endif()
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs" "${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h")
 file(INSTALL "${CURRENT_PORT_DIR}/cgnsconfig.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include") # the include is all that is needed
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cgnslib.h" "defined(USE_DLL)" "1")
+endif()
 
 # Handle copyright
 configure_file("${SOURCE_PATH}/license.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

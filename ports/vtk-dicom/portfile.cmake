@@ -12,20 +12,27 @@ else()
     set(USE_GDCM                      OFF )
 endif()
 
-
 if(USE_GDCM)
     list(APPEND ADDITIONAL_OPTIONS
         -DUSE_GDCM=ON
         -DUSE_DCMTK=OFF
     )
 endif()
-vcpkg_find_acquire_program(PYTHON3)
+
+set(python_ver "")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
+    string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
+    set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
+    set(python_ver "3.${PYTHON_VERSION_MINOR}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_PROGRAMS=OFF
         -DBUILD_EXAMPLES=OFF
-        "-DPython3_EXECUTABLE=${PYTHON3}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
         ${ADDITIONAL_OPTIONS}
 )
 
@@ -36,5 +43,5 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")
+

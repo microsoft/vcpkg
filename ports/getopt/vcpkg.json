@@ -1,7 +1,7 @@
 {
   "name": "getopt",
-  "version-string": "0",
-  "port-version": 2,
+  "version": "0",
+  "port-version": 3,
   "description": "The getopt and getopt_long functions automate some of the chore involved in parsing typical unix command line options.",
   "supports": "!uwp",
   "dependencies": [

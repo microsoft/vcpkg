@@ -1,16 +1,17 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.live555.com/liveMedia/public/live.2022.12.01.tar.gz"
-    FILENAME "live.2022.12.01.tar.gz"
-    SHA512 bb5dc80b5b1621e04fb8a100bd3deff190efb757da10e6cfc652d6eaa878f6a3e063b2f2219d5d83d6fb6892b55be55eafe2dd43f42a559e1f931130b45584b1
+    URLS "http://live555.com/liveMedia/public/live.2023.07.24.tar.gz"
+    FILENAME "live.2023.07.24.tar.gz"
+SHA512 d0708a087d9252b2f13d7b2e14c47e24e895ac329d5dd640a00756e92c846c57573198f6cc79e88272567babf5b0bb8cb268e750685efe8b9693fd9aec384e70 
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE "${ARCHIVE}" 
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-RTSPClient.patch
+        fix_operator_overload.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
@@ -33,4 +34,3 @@ file(GLOB HEADERS
 
 file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-

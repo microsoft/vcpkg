@@ -5,9 +5,10 @@ vcpkg_from_git(
     URL https://github.com/google/skia
     REF f86f242886692a18f5adc1cf9cbd6740cd0870fd
     PATCHES
-        python-executable.patch
         disable-msvc-env-setup.patch
         uwp.patch
+        core-opengl32.patch
+        disable-dev-test.patch
 )
 
 # these following aren't available in vcpkg
@@ -77,11 +78,6 @@ declare_external_from_git(tint
     REF "200492e32b94f042d9942154fb4fa7f93bb8289a"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(vulkan-headers
-    URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Headers"
-    REF "c896e2f920273bfee852da9cca2a356bc1c2031e"
-    LICENSE_FILE LICENSE.txt
-)
 declare_external_from_git(vulkan-tools
     URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Tools"
     REF "d55c7aaf041af331bee8c22fb448a6ff4c797f73"
@@ -97,6 +93,8 @@ declare_external_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES
 declare_external_from_pkgconfig(libpng)
 declare_external_from_pkgconfig(libwebp MODULES libwebpdecoder libwebpdemux libwebpmux libwebp)
 declare_external_from_pkgconfig(zlib)
+
+declare_external_from_vcpkg(vulkan_headers PATH third_party/externals/vulkan-headers)
 
 set(known_cpus x86 x64 arm arm64 wasm)
 if(NOT VCPKG_TARGET_ARCHITECTURE IN_LIST known_cpus)
@@ -178,7 +176,17 @@ if("metal" IN_LIST FEATURES)
 endif()
 
 if("vulkan" IN_LIST FEATURES)
-    string(APPEND OPTIONS "${OPTIONS} skia_use_vulkan=true")
+    list(APPEND required_externals
+        vulkan_headers
+        vulkan-tools
+    )
+    string(APPEND OPTIONS " skia_use_vulkan=true")
+    file(COPY "${CURRENT_INSTALLED_DIR}/include/vk_mem_alloc.h" DESTINATION "${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include")
+    # Cf. third_party/vulkanmemoryallocator/GrVulkanMemoryAllocator.h:25
+    vcpkg_replace_string("${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include/vk_mem_alloc.h"
+        "#include <vulkan/vulkan.h>"
+        "#ifndef VULKAN_H_\n    #include <vulkan/vulkan.h>\n#endif"
+    )
 endif()
 
 if("direct3d" IN_LIST FEATURES)
@@ -213,8 +221,8 @@ They can be installed on Debian based systems via
         tint
         jinja2
         markupsafe
+        vulkan_headers
 ## Remove
-        vulkan-headers
         vulkan-tools
         abseil-cpp
 ## REMOVE ^
@@ -239,7 +247,8 @@ if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_gene
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
-string(APPEND OPTIONS " script_executable=\"${PYTHON3}\"")
+vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
+vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "python3 " "\\\"${PYTHON3}\\\" ")
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
@@ -247,7 +256,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     string(REGEX REPLACE "[\\]\$" "" WIN_VC "$ENV{VCINSTALLDIR}")
     string(APPEND OPTIONS " win_vc=\"${WIN_VC}\"")
 else()
-    string(APPEND OPTIONS_DBG " \
+    string(APPEND OPTIONS " \
         cc=\"${VCPKG_DETECTED_CMAKE_C_COMPILER}\" \
         cxx=\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\"")
 endif()
@@ -267,7 +276,7 @@ if(VCPKG_TARGET_IS_UWP)
     string(APPEND OPTIONS " extra_ldflags=${SKIA_LD_FLAGS}")
 endif()
 
-vcpkg_configure_gn(
+vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS "${OPTIONS} skia_use_lua=false skia_enable_tools=false skia_enable_spirv_validation=false"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
@@ -293,7 +302,7 @@ if(NOT VCPKG_BUILD_TYPE)
     file(READ "${CURRENT_BUILDTREES_DIR}/desc-${TARGET_TRIPLET}-dbg-out.log" desc_debug)
 endif()
 
-vcpkg_install_gn(
+vcpkg_gn_install(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS ${SKIA_TARGETS}
 )

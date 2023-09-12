@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/wave
-    REF boost-1.81.0
-    SHA512 70d2d946bff83f081a1b87c95ac2fe9686000cee68b1233e122aa7302f59dce6ed718ebbaa9cdfa413e385b4d3762f5a71a4c6d402eee57ae4e7876da4644266
+    REF boost-1.82.0
+    SHA512 598f7052b66f54d00949f59107ddbfa8a9fcca9ca5c7aa3c60b3d9611edd69797211a0a32d4048b1c78262ddade0e011c6bc01001b12c195950aa3d6ce6fb0d7
     HEAD_REF master
 )
 

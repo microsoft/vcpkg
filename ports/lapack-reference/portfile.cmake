@@ -12,6 +12,7 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 include(vcpkg_find_fortran)
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -36,7 +37,7 @@ if("cblas" IN_LIST FEATURES)
     endif()
 endif()
 
-set(USE_OPTIMIZED_BLAS OFF) 
+set(USE_OPTIMIZED_BLAS OFF)
 if("noblas" IN_LIST FEATURES)
     set(USE_OPTIMIZED_BLAS ON)
     set(pcfile "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/openblas.pc")
@@ -52,10 +53,10 @@ endif()
 set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
 vcpkg_find_fortran(FORTRAN_CMAKE)
 if(VCPKG_USE_INTERNAL_Fortran)
-    if(VCPKG_CRT_LINKAGE_BACKUP STREQUAL "static") 
+    if(VCPKG_CRT_LINKAGE_BACKUP STREQUAL "static")
     # If openblas has been built with static crt linkage we cannot use it with gfortran!
-        set(USE_OPTIMIZED_BLAS OFF) 
-        #Cannot use openblas from vcpkg if we are building with gfortran here. 
+        set(USE_OPTIMIZED_BLAS OFF)
+        #Cannot use openblas from vcpkg if we are building with gfortran here.
         if("noblas" IN_LIST FEATURES)
             message(FATAL_ERROR "Feature 'noblas' cannot be used without supplying an external fortran compiler")
         endif()
@@ -143,4 +144,3 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake" DESTINATION "${CURRENT_PA
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-

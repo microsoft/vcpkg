@@ -7,17 +7,14 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.4.1)
+set(QT_VERSION 6.5.2)
+set(QT_DEV_BRANCH 0)
 
 set(QT_UPDATE_VERSION 0)
 
 if(PORT MATCHES "(qtquickcontrols2)")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     return()
-endif()
-
-if(PORT MATCHES "qtlocation") # No 6.3.1 tag/branch
-    set(QT_VERSION 6.3.0)
 endif()
 
 ### Setting up the git tag.
@@ -57,7 +54,7 @@ if(QT_VERSION VERSION_GREATER_EQUAL 6.2)
              ## New in 6.2
              qtconnectivity
              qtpositioning
-             qtlocation
+             qtlocation # back in 6.5 as tech preview
              qtmultimedia
              qtremoteobjects
              qtsensors
@@ -74,19 +71,32 @@ if(QT_VERSION VERSION_GREATER_EQUAL 6.2.2)
              qtinterfaceframework
              qtapplicationmanager)
 endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.3.0)
+    list(APPEND QT_PORTS
+             ## New in 6.3.0
+             qtlanguageserver)
+endif()
 if(QT_VERSION VERSION_GREATER_EQUAL 6.4.0)
     list(APPEND QT_PORTS
              ## New in 6.4.0
              qthttpserver
-             qtquick3dphysics)
+             qtquick3dphysics
+             qtspeech)
+endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.5.0)
+    list(APPEND QT_PORTS
+             ## New in 6.5.0
+             qtgrpc
+             qtquickeffectmaker
+             )
 endif()
 # 1. By default, modules come from the official release
 # 2. These modules are mirrored to github and have tags matching the release
-set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager qthttpserver)
+set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager)
 # 3. These modules are mirrored to github and have branches matching the release
-set(QT_FROM_GITHUB_BRANCH qtdeviceutilities qtlocation)
+set(QT_FROM_GITHUB_BRANCH qtdeviceutilities)
 # 4. These modules are not mirrored to github and not part of the release
-set(QT_FROM_QT_GIT qtinterfaceframework qtquick3dphysics)
+set(QT_FROM_QT_GIT qtinterfaceframework)
 # For beta releases uncomment the next two lines and comment the lines with QT_FROM_GITHUB, QT_FROM_GITHUB_BRANCH, QT_FROM_QT_GIT
 #set(QT_FROM_QT_GIT ${QT_PORTS})
 #list(POP_FRONT QT_FROM_QT_GIT)
@@ -100,7 +110,11 @@ function(qt_get_url_filename qt_port out_url out_filename)
         set(filename "qt-${qt_port}-${QT_VERSION}.tar.gz")
     else()
         string(SUBSTRING "${QT_VERSION}" 0 3 qt_major_minor)
-        set(url "https://download.qt.io/archive/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        if(NOT QT_DEV_BRANCH)
+            set(url "https://download.qt.io/archive/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        else()
+            set(url "https://download.qt.io/development_releases/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        endif()
         set(filename "${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
     endif()
     set(${out_url} "${url}" PARENT_SCOPE)

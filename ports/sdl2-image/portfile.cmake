@@ -1,12 +1,10 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_image
-    REF release-${VERSION}
-    SHA512 8ecf26a13ffc00b9941bf0befb669c1fd2f2d2e9ca1dcf7210cb93eb18f49cf749af1f491f85627eed7030d1e603051720c9470bfed9b031b0219e3a47d06622
+    REF "release-${VERSION}"
+    SHA512 ffd0f838525e17a43d03ea5d4a094b0c79b2627bdbfb4589645abfb606c594773d60184de31bda45999421da75a69f1987ed696b255991212e498161102972b1
     HEAD_REF main
-    PATCHES
-        fix-pkgconfig.patch
+    PATCHES fix-pkgconfig.patch fix-findwebp.patch
 )
 
 vcpkg_check_features(

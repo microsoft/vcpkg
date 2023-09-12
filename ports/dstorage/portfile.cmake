@@ -1,10 +1,11 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+# Set VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY instead of using `vcpkg_check_linkage` because
+# these DLLs don't link with a CRT.
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.DirectStorage/${VERSION}"
     FILENAME "directstorage.${VERSION}.zip"
-    SHA512 2c2cf6486220f99e7447c1a4406cea6fcaea69edccf790df6887acfde9a684e102547016adadd1ca23f17f8f02bfbd39095892ed63fba3e806bfa44ca9fe0fe6
+    SHA512 5be6219888c89c5f590709d1528b3e6854eabd7b733af5c8f665aa9d7e987fa3bac34472362f845eb902b88d2d6e8afbbcead15e892d72678861a14b0bc13c41
 )
 
 vcpkg_extract_source_archive(

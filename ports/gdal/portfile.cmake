@@ -1,17 +1,21 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 799baabe3e992a9e9c5f80261a84e7b70ce0790bfe77a1634d5ae26dc32d43e77cc64aab2c7d2a2205525869d389d3dbaa29c8945450cce4b29757c0f9bdec9a
+    SHA512 38d488a5c70f0f4b6a3b99a14c747760574680f1f7fc5c6e4c373e3599a03c3227bb1bdefc14c7770f15b5087ff706362ed5a0fc0f5623835f006561f5db9595
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        libkml.patch
+        Fix-quote-variable.patch
+        fix-jpeg.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
+
+# Avoid abseil, no matter if vcpkg or system
+vcpkg_replace_string("${SOURCE_PATH}/ogr/ogrsf_frmts/flatgeobuf/flatbuffers/base.h" [[__has_include("absl/strings/string_view.h")]] "(0)")
 
 # Cf. cmake/helpers/CheckDependentLibraries.cmake
 # The default for all `GDAL_USE_<PKG>` dependencies is `OFF`.
@@ -31,7 +35,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         jpeg             GDAL_USE_JPEG
         core             GDAL_USE_JSONC
         lerc             GDAL_USE_LERC
-        libkml           GDAL_USE_LIBKML  # TODO, needs policy patches to FindLibKML.cmake
+        libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
         libxml2          GDAL_USE_LIBXML2
         mysql-libmariadb GDAL_USE_MYSQL 
@@ -53,6 +57,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         core             GDAL_USE_ZLIB
         zstd             GDAL_USE_ZSTD
         tools            BUILD_APPS
+    INVERTED_FEATURES
+        libspatialite    CMAKE_DISABLE_FIND_PACKAGE_SPATIALITE
 )
 if(GDAL_USE_ICONV AND VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_OPTIONS -D_ICONV_SECOND_ARGUMENT_IS_NOT_CONST=ON)
@@ -77,6 +83,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Arrow=ON
         -DGDAL_USE_INTERNAL_LIBS=OFF
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
@@ -89,6 +96,7 @@ vcpkg_cmake_configure(
         -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
         "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
         "-DQHULL_LIBRARY=${qhull_target}"
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
     MAYBE_UNUSED_VARIABLES
@@ -137,6 +145,7 @@ if (BUILD_APPS)
             gdalmdimtranslate
             gnmanalyse
             gnmmanage
+            sozip
         AUTO_CLEAN
     )
 endif()

@@ -39,6 +39,11 @@
       "description": "Ports to be tested via find_package($package)",
       "dependencies": [
         {
+          "$package": "Boost",
+          "name":"boost",
+          "platform": "!uwp"
+        },
+        {
           "$package": "BZip2",
           "name": "bzip2"
         },
@@ -58,19 +63,6 @@
           "platform": "!mingw & !uwp"
         },
         {
-          "$package": "Freetype",
-          "name": "freetype",
-          "default-features": false
-        },
-        {
-          "$package": "Intl",
-          "name": "gettext"
-        },
-        {
-          "$package": "GIF",
-          "name": "giflib"
-        },
-        {
           "$comment": "CMake 3.13 for debug postfix support",
           "$package": "GLUT",
           "$since": "3.13",
@@ -78,9 +70,35 @@
           "platform": "!uwp & !osx"
         },
         {
+          "$package": "Freetype",
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "$comment": "CMake 3.9 for find_dependency forwarding extra arguments",
+          "$package": "GDAL",
+          "$since": "3.9",
+          "name": "gdal",
+          "default-features": false,
+          "platform": "!uwp"
+        },
+        {
+          "$package": "Intl",
+          "name": "gettext-libintl"
+        },
+        {
+          "$package": "GIF",
+          "name": "giflib"
+        },
+        {
           "$package": "ICU",
           "name": "icu",
           "platform": "!uwp"
+        },
+        {
+          "$package": "LAPACK",
+          "name": "lapack",
+          "platform": "!(uwp & arm)"
         },
         {
           "$package": "Iconv",
@@ -90,11 +108,6 @@
         {
           "$package": "JPEG",
           "name": "libjpeg-turbo"
-        },
-        {
-          "$package": "LAPACK",
-          "name": "lapack",
-          "platform": "!(uwp & arm)"
         },
         {
           "$package": "LibLZMA",
@@ -124,6 +137,15 @@
           "name": "libxslt",
           "default-features": false,
           "platform": "!uwp & !mingw"
+        },
+        {
+          "$package": "Curses",
+          "name": "ncurses",
+          "platform": "!windows | mingw"
+        },
+        {
+          "$package": "PhysFS",
+          "name": "physfs"
         },
         {
           "$package": "SQLite3",

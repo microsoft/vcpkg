@@ -1,6 +1,26 @@
 {
   "name": "coinutils",
-  "version-string": "2.11.4",
+  "version-date": "2023-02-02",
   "port-version": 1,
-  "description": "CoinUtils (Coin-or Utilities) is an open-source collection of classes and functions that are generally useful to more than one COIN-OR project"
+  "description": "CoinUtils (Coin-or Utilities) is an open-source collection of classes and functions that are generally useful to more than one COIN-OR project",
+  "homepage": "https://www.coin-or.org/",
+  "license": "EPL-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "bzip2",
+    "coin-or-buildtools",
+    "lapack",
+    "zlib"
+  ],
+  "features": {
+    "glpk": {
+      "description": "Build with Glpk",
+      "dependencies": [
+        {
+          "name": "glpk",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

@@ -209,8 +209,9 @@ if(NOT lfs_version_result)
         WORKING_DIRECTORY "${git_test_repo}"
         LOGNAME "git-lfs-install"
     )
-
     file(WRITE "${git_test_repo}/.gitattributes" "* text=auto\n*.bin filter=lfs diff=lfs merge=lfs -text\n")
+
+    # test fetching with the same Git and LFS urls
     file(WRITE "${git_test_repo}/lfs_file.bin" "fourth commit")
     vcpkg_execute_required_process(
         COMMAND ${git} add ".gitattributes" "lfs_file.bin"
@@ -260,6 +261,85 @@ if(NOT lfs_version_result)
         message(FATAL_ERROR "Failed to checkout the fourth commit. Contents were:
 ${contents}
     ")
+    endif()
+
+    # test fetching from different Git and LFS urls
+    # requires LFS 3.0.0 or later for "--force" on prune
+    string(REGEX MATCH "git-lfs/([0-9\\.]+) " lfs_version "${lfs_version_output}")
+    set(lfs_version "${CMAKE_MATCH_1}")
+    if(lfs_version VERSION_GREATER_EQUAL "3.0.0")
+        file(WRITE "${git_test_repo}/lfs_file2.bin" "fifth commit")
+        vcpkg_execute_required_process(
+            COMMAND ${git} add "lfs_file2.bin"
+            WORKING_DIRECTORY "${git_test_repo}"
+            LOGNAME "git-lfs-add.2"
+        )
+        vcpkg_execute_required_process(
+            COMMAND ${git} commit -m "fifth commit"
+            WORKING_DIRECTORY "${git_test_repo}"
+            LOGNAME "git-lfs-commit.2"
+        )
+        vcpkg_execute_in_download_mode(
+            COMMAND ${git} rev-parse HEAD
+            OUTPUT_VARIABLE ref
+            RESULT_VARIABLE error_code
+            WORKING_DIRECTORY "${git_test_repo}"
+        )
+        if(NOT "${error_code}" EQUAL "0")
+            message(FATAL_ERROR "Failed to rev-parse HEAD: ${error_code}")
+        endif()
+        string(STRIP "${ref}" ref)
+
+        set(git_test_repo_2 "${CURRENT_BUILDTREES_DIR}/test-git-repo-2")
+        file(REMOVE_RECURSE "${git_test_repo_2}")
+        set(git_remote_2 "file:///${git_test_repo_2}")
+        vcpkg_execute_required_process(
+            COMMAND ${git} init --bare "test-git-repo-2"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+            LOGNAME "git-init.2"
+        )
+        # note: LFS won't prune "unpushed" files, which is checked using the "origin" remote by default.
+        # If there is no remote then files are never considered to be "pushed", and so are never pruned.
+        vcpkg_execute_required_process(
+            COMMAND ${git} remote add origin "${git_remote_2}"
+            WORKING_DIRECTORY "${git_test_repo}"
+            LOGNAME "git-remote-add"
+        )
+        vcpkg_execute_required_process(
+            COMMAND ${git} push --all origin
+            WORKING_DIRECTORY "${git_test_repo}"
+            LOGNAME "git-push"
+        )
+
+        vcpkg_execute_in_download_mode(
+            COMMAND ${git} lfs prune --force --verbose
+            OUTPUT_VARIABLE lfs_prune
+            RESULT_VARIABLE error_code
+            WORKING_DIRECTORY "${git_test_repo}"
+        )
+        if(NOT "${error_code}" EQUAL "0")
+            message(FATAL_ERROR "Failed to prune LFS files: ${error_code}")
+        endif()
+        if(NOT "${lfs_prune}" MATCHES "0 retained")
+            message(FATAL_ERROR "LFS prune did not delete all files:\n${lfs_prune}")
+        endif()
+
+        set(VCPKG_USE_HEAD_VERSION OFF)
+        vcpkg_from_git(
+            OUT_SOURCE_PATH source_path
+            URL "${git_remote}"
+            REF "${ref}"
+            HEAD_REF main
+            LFS "${git_remote_2}"
+        )
+        file(READ "${source_path}/lfs_file2.bin" contents)
+        if(NOT "${contents}" STREQUAL "fifth commit")
+            message(FATAL_ERROR "Failed to checkout the fifth commit. Contents were:
+    ${contents}
+        ")
+        endif()
+    else()
+        message(NOTICE "Git LFS version is older than 3.0.0: some tests were skipped")
     endif()
 else()
     message(NOTICE "Git LFS is not available: some tests were skipped")

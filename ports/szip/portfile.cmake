@@ -5,16 +5,16 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ada6406efb096cd8a2daf8f9217fe9111a96dcae87e29d1c31f58ddd2ad2aa7bac03f23c7205dc9360f3b62d259461759330c7189ef0c2fe559704b1ea9d40dd
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF "szip-${SZIP_VERSION}"
+    SOURCE_BASE "szip-${SZIP_VERSION}"
     PATCHES
         fix-linkage-config.patch
         mingw-lib-names.patch
 )
 
-if (VCPKG_TARGET_IS_IOS)
+if (VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
     # when cross-compiling, try_run will not work.
     # LFS "large file support" is keyed on 
     # 1) 64-bit off_t (https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/64bitPorting/transition/transition.html table 2-1)
@@ -22,6 +22,8 @@ if (VCPKG_TARGET_IS_IOS)
     set(extra_opts 
         -DTEST_LFS_WORKS_RUN=TRUE
         -DTEST_LFS_WORKS_RUN__TRYRUN_OUTPUT=""
+        -DHAVE_DEFAULT_SOURCE_RUN=0
+        -DHAVE_DEFAULT_SOURCE_RUN__TRYRUN_OUTPUT=""
     )
 endif()
 

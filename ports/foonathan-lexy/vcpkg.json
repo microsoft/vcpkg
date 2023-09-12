@@ -1,6 +1,6 @@
 {
   "name": "foonathan-lexy",
-  "version": "2022.12.0",
+  "version": "2022.12.1",
   "description": "C++ parsing DSL",
   "homepage": "https://github.com/foonathan/lexy",
   "license": "BSL-1.0",

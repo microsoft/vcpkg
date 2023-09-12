@@ -1,7 +1,7 @@
 {
   "name": "jxrlib",
   "version": "2019.10.9",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Open source implementation of the jpegxr image format standard.",
   "homepage": "https://github.com/4creators/jxrlib",
   "license": "BSD-2-Clause",

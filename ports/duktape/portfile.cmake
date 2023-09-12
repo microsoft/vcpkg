@@ -10,9 +10,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/duktapeConfig.cmake.in DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/duktapeConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 if (VCPKG_TARGET_IS_WINDOWS)
     set(EXECUTABLE_SUFFIX ".exe")
@@ -26,8 +26,8 @@ vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON2_DIR}")
 
-if(NOT EXISTS ${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX})
-    if(NOT EXISTS ${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX})
+if(NOT EXISTS "${PYTHON2_DIR}/easy_install${EXECUTABLE_SUFFIX}")
+    if(NOT EXISTS "${PYTHON2_DIR}/Scripts/pip${EXECUTABLE_SUFFIX}")
         vcpkg_from_github(
             OUT_SOURCE_PATH PYFILE_PATH
             REPO pypa/get-pip
@@ -50,27 +50,26 @@ vcpkg_execute_required_process(
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(DUK_CONFIG_H_PATH "${SOURCE_PATH}/src/duk_config.h")
-  file(READ ${DUK_CONFIG_H_PATH} CONTENT)
+  file(READ "${DUK_CONFIG_H_PATH}" CONTENT)
   string(REPLACE "#undef DUK_F_DLL_BUILD" "#define DUK_F_DLL_BUILD" CONTENT "${CONTENT}")
-  file(WRITE ${DUK_CONFIG_H_PATH} "${CONTENT}")
+  file(WRITE "${DUK_CONFIG_H_PATH}" "${CONTENT}")
 else()
   set(DUK_CONFIG_H_PATH "${SOURCE_PATH}/src/duk_config.h")
-  file(READ ${DUK_CONFIG_H_PATH} CONTENT)
+  file(READ "${DUK_CONFIG_H_PATH}" CONTENT)
   string(REPLACE "#define DUK_F_DLL_BUILD" "#undef DUK_F_DLL_BUILD" CONTENT "${CONTENT}")
-  file(WRITE ${DUK_CONFIG_H_PATH} "${CONTENT}")
+  file(WRITE "${DUK_CONFIG_H_PATH}" "${CONTENT}")
 endif()
 
-vcpkg_configure_cmake(
-    PREFER_NINJA
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jarro2783/cxxopts
-    REF v3.0.0
-    SHA512 239479a3b35ddef6fc380ac9371e1cf7e3aea066f03e1ea538151fa2fff4296838daa976d55e988d8f87f40c0ae027767bcb214754177499413af1081315565c
+    REF "v${VERSION}"
+    SHA512 248e54e23564660467c7ecf50676b86d3cd10ade89e0ac1d23deb71334cb89cc5eb50f624b385d5119a43ca68ff8b1c74af82dc699b5ccfae54d6dcad4fd9447
     HEAD_REF master
 )
 
@@ -22,4 +22,4 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/cxxopts" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,0 +1,44 @@
+diff --git a/cachelib/cachebench/cache/ItemRecords.h b/cachelib/cachebench/cache/ItemRecords.h
+index 80fe7489..e581d78e 100644
+--- a/cachelib/cachebench/cache/ItemRecords.h
++++ b/cachelib/cachebench/cache/ItemRecords.h
+@@ -102,11 +102,11 @@ class ItemRecords {
+     }
+     if (record.destructCount != 0) {
+       XLOGF(ERR, "unexpected destructCount {} for item {}, context {}|{}",
+-            record.destructCount, item.getKey(), data.context, record.context);
++            record.destructCount, item.getKey().data(), data.context, record.context);
+     }
+     if (record.version != ptr->getVersion()) {
+       XLOGF(ERR, "unexpected version {}|{} for item {}", record.version,
+-            ptr->getVersion(), item.getKey());
++            ptr->getVersion(), item.getKey().data());
+     }
+     ++record.destructCount;
+ 
+diff --git a/cachelib/cachebench/runner/FastShutdown.cpp b/cachelib/cachebench/runner/FastShutdown.cpp
+index 82c878eb..5ceb342d 100644
+--- a/cachelib/cachebench/runner/FastShutdown.cpp
++++ b/cachelib/cachebench/runner/FastShutdown.cpp
+@@ -27,7 +27,7 @@ namespace cachebench {
+ FastShutdownStressor::FastShutdownStressor(const CacheConfig& cacheConfig,
+                                            uint64_t numOps)
+     : numOps_(numOps),
+-      cacheDir_{folly::sformat("/tmp/cache_bench_fss_{}", getpid())},
++      cacheDir_{folly::sformat("/tmp/cache_bench_fss_{}", std::to_string(getpid()))},
+       cache_(std::make_unique<Cache<LruAllocator>>(
+           cacheConfig, nullptr, cacheDir_)) {}
+ 
+diff --git a/cachelib/navy/admission_policy/DynamicRandomAP.cpp b/cachelib/navy/admission_policy/DynamicRandomAP.cpp
+index 3a8a1aa0..2ab0fa45 100644
+--- a/cachelib/navy/admission_policy/DynamicRandomAP.cpp
++++ b/cachelib/navy/admission_policy/DynamicRandomAP.cpp
+@@ -189,7 +189,7 @@ void DynamicRandomAP::updateThrottleParamsLocked(std::chrono::seconds curTime) {
+     XLOGF(INFO,
+           "max write rate {} will be used because target current write rate {} "
+           "exceeds it.",
+-          maxRate_, curTargetRate);
++          maxRate_.load(std::memory_order_relaxed), curTargetRate);
+     curTargetRate = maxRate_;
+   }
+   writeStats_.curTargetRate = curTargetRate;

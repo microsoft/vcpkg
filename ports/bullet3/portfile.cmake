@@ -1,11 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bulletphysics/bullet3
     REF "${VERSION}"
-    SHA512 edacf643ca9621523812effe69a7499716bc65282c58c1f5b4eb4f17b2b1ab55a4f71b06a73483f57e57a5b032c234d09ba5fab9881321f2cbc3c27b43fdc95d
+    SHA512 7086e5fcf69635801bb311261173cb8d173b712ca1bd78be03df48fad884674e85512861190e45a1a62d5627aaad65cde08c175c44a3be9afa410d3dfd5358d4
     HEAD_REF master
     PATCHES
         cmake-fix.patch
@@ -15,6 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         multithreading       BULLET2_MULTITHREADING
         double-precision     USE_DOUBLE_PRECISION
+        extras               BUILD_EXTRAS
     INVERTED_FEATURES
         rtti                 USE_MSVC_DISABLE_RTTI
 )
@@ -27,7 +27,6 @@ vcpkg_cmake_configure(
         -DBUILD_BULLET2_DEMOS=OFF
         -DBUILD_OPENGL3_DEMOS=OFF
         -DBUILD_BULLET3=OFF
-        -DBUILD_EXTRAS=ON
         -DBUILD_BULLET_ROBOTICS_GUI_EXTRA=OFF
         -DBUILD_BULLET_ROBOTICS_EXTRA=OFF
         -DBUILD_GIMPACTUTILS_EXTRA=OFF        

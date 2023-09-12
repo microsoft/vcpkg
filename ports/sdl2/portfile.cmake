@@ -1,12 +1,12 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
-    REF release-${VERSION}
-    SHA512 c4cffa32d4d43de64cc47ada80a657a9db53f4c60da3684f96a036527fdc12b0e459e9e638cab6c7eb796de29fd60ee5a8c73b56bccd8483024e225c81469961
+    REF "release-${VERSION}"
+    SHA512 d4ddc1abf84f09b9d2357b5bf2adc224a693767c170a6b778283c2783436d940aee4db4c9628776de28de6c499bbfb04b65f9d9210f4670525248ce5b0d31bee
     HEAD_REF main
     PATCHES
         deps.patch
+        alsa-dep-fix.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -19,6 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         x11      SDL_X11
         wayland  SDL_WAYLAND
         samplerate SDL_LIBSAMPLERATE
+        ibus     SDL_IBUS
 )
 
 if ("x11" IN_LIST FEATURES)
@@ -26,6 +27,9 @@ if ("x11" IN_LIST FEATURES)
 endif()
 if ("wayland" IN_LIST FEATURES)
     message(WARNING "You will need to install Wayland dependencies to use feature wayland:\nsudo apt install libwayland-dev libxkbcommon-dev libegl1-mesa-dev\n")
+endif()
+if ("ibus" IN_LIST FEATURES)
+    message(WARNING "You will need to install ibus dependencies to use feature ibus:\nsudo apt install libibus-1.0-dev\n")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
@@ -41,7 +45,6 @@ vcpkg_cmake_configure(
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
         -DSDL_TEST=OFF
-        -DSDL_IBUS=OFF
         -DSDL_INSTALL_CMAKEDIR="cmake"
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DSDL_LIBSAMPLERATE_SHARED=OFF

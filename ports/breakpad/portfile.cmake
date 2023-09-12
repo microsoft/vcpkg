@@ -16,24 +16,34 @@ if(VCPKG_HOST_IS_LINUX OR VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
         URL https://chromium.googlesource.com/linux-syscall-support
         REF 7bde79cc274d06451bf65ae82c012a5d3e476b5a
     )
-    
+
     file(RENAME "${LSS_SOURCE_PATH}" "${SOURCE_PATH}/src/third_party/lss")
 endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" "${CMAKE_CURRENT_LIST_DIR}/check_getcontext.cc" DESTINATION "${SOURCE_PATH}")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "tools" INSTALL_TOOLS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
+    OPTIONS_RELEASE
         -DINSTALL_HEADERS=ON
 )
 
 vcpkg_cmake_install()
-   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/client/linux/data" "${CURRENT_PACKAGES_DIR}/include/client/linux/sender")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/client/linux/data" "${CURRENT_PACKAGES_DIR}/include/client/linux/sender")
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-breakpad CONFIG_PATH share/unofficial-breakpad)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES microdump_stackwalk minidump_dump minidump_stackwalk core2md pid2md dump_syms minidump-2-core minidump_upload sym_upload core_handler AUTO_CLEAN)
+endif()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-breakpad)
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

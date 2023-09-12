@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES 
         00001-fix-build.patch
         use-complex-header.patch
+        fix-missing-headers.patch # https://github.com/woollybah/gppanel/pull/5
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

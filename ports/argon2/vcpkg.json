@@ -1,6 +1,7 @@
 {
   "name": "argon2",
   "version": "20190702",
+  "port-version": 1,
   "description": "Password-hashing library.",
   "homepage": "https://github.com/P-H-C/phc-winner-argon2",
   "license": "Apache-2.0 OR CC0-1.0",
@@ -16,7 +17,11 @@
   ],
   "features": {
     "hwopt": {
-      "description": "Enable SSE2/AVX2/AVX512 optimizations if supported on architecture"
+      "description": "Enable SSE2/AVX2/AVX512 optimizations",
+      "supports": "x86 | x64"
+    },
+    "tool": {
+      "description": "Install the argon2 tool"
     }
   }
 }

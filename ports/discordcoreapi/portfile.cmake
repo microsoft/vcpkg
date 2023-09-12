@@ -3,13 +3,11 @@ if(VCPKG_TARGET_IS_LINUX)
 endif()
 
 vcpkg_from_github(
-	OUT_SOURCE_PATH SOURCE_PATH
-	REPO RealTimeChris/DiscordCoreAPI
-	REF c8591ab721b76a7649cb5b45944fab1c5c798242
-	SHA512 943d2a77dc3d297b4ec84d6b4808554aec9a89c33a242e5f6401a9831f674ff948f53d3e877737a40517a393b3b2a9bd873c6007a193892743c88c2fdb58341a
-	HEAD_REF main
-    PATCHES
-        0001-Add-extern-C-to-avcodec.patch
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO RealTimeChris/DiscordCoreAPI
+    REF "v${VERSION}"
+    SHA512 9fe9ed365b8eb0b8d86094a1cc52e68fa6616378719bb7e6c02375c1d3f762141472f40fc95dba04e8f175256b220a6839fb9ac9c576483656916ad76a87079a
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
@@ -26,8 +24,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(
-	INSTALL "${SOURCE_PATH}/License.md"
-	DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-	RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.md")

@@ -1,6 +1,6 @@
 {
   "name": "angle",
-  "version-string": "chromium_4472",
+  "version-string": "chromium_5414",
   "port-version": 7,
   "description": [
     "A conformant OpenGL ES implementation for Windows, Mac and Linux.",

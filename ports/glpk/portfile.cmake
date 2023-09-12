@@ -24,6 +24,7 @@ endif()
 
 if("gmp" IN_LIST FEATURES)
     vcpkg_list(APPEND CONFIGURE_OPTIONS --with-gmp)
+    string(APPEND requires " gmp")
 else()
     vcpkg_list(APPEND CONFIGURE_OPTIONS --without-gmp)
 endif()
@@ -33,12 +34,14 @@ if("mysql" IN_LIST FEATURES)
         --enable-mysql
         "CPPFLAGS=-I${CURRENT_INSTALLED_DIR}/include/mysql \$CPPFLAGS"
     )
+    string(APPEND requires " mysql")
 else()
     vcpkg_list(APPEND CONFIGURE_OPTIONS --disable-mysql)
 endif()
 
 if("odbc" IN_LIST FEATURES)
     vcpkg_list(APPEND CONFIGURE_OPTIONS --enable-odbc)
+    string(APPEND requires " odbc")
 else()
     vcpkg_list(APPEND CONFIGURE_OPTIONS --disable-odbc)
 endif()
@@ -53,7 +56,13 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+set(libname glpk)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/glpk.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glpk.pc" @ONLY)
+if(NOT VCPKG_BUILD_TYPE)
+  configure_file("${CMAKE_CURRENT_LIST_DIR}/glpk.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glpk.pc" @ONLY)
+endif()
 vcpkg_fixup_pkgconfig()
+
 vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES glpsol AUTO_CLEAN)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

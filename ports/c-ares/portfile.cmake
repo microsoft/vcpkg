@@ -1,12 +1,17 @@
+string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" _c_ares_version "${VERSION}")
+set(_c_ares_version_major "${CMAKE_MATCH_1}")
+set(_c_ares_version_minor "${CMAKE_MATCH_2}")
+set(_c_ares_version_patch "${CMAKE_MATCH_3}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
-    REF cares-1_18_1
-    SHA512 9f5f9d5a22a4643aef8701c4abfd4b28e0bded2479bab462d2dfc63a8f84348f02d3cfbd7c85cc1e06a154a3e4206721cb6669c7c61538ecdcd44268e4ce073e
+    REF "cares-${_c_ares_version_major}_${_c_ares_version_minor}_${_c_ares_version_patch}"
+    SHA512 73b5ee9d7e5ada6dd95dc32606821ea1307f30552242491e738f673d1ab9de1fdb3360d7a67c66a4a801b0e81ffb7382bfd93dbca836460dae515dd631ec6b91
     HEAD_REF main
     PATCHES
         avoid-docs.patch
-        guard-imported-lib.patch
+        fix-uwp.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)

@@ -1,14 +1,3 @@
-# Build-Depends: From X Window PR: zstd, drm (!windows), elfutils (!windows), wayland (!windows), wayland-protocols (!windows), xdamage, xshmfence (!windows), x11, xcb, xfixes, xext, xxf86vm, xrandr, xv, xvmc (!windows), egl-registry, opengl-registry, tool-meson
-# Required LLVM modules: LLVM (modules: bitwriter, core, coroutines, engine, executionengine, instcombine, mcdisassembler, mcjit, scalaropts, transformutils) found: YES 
-
-# Patches are from https://github.com/pal1000/mesa-dist-win/tree/master/patches
-set(PATCHES
-    # Fix symbols exporting for MinGW GCC x86
-    def-fixes.patch
-    # Clover build on Windows
-    clover.patch
-)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # some parts of this port can only build as a shared library.
@@ -18,13 +7,11 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-22.1.7
-    SHA512 41302fc55ef429c14b1595832db3a898380230f86d2b84ac1ae3bd453d0aad87ec7ad310004dc64fcf34f58d8ea2736c13971c04eba056bcc549a4e3cc7c9470
+    REF b590fd1951a1949e5fe2bbfd61f0814c402af263 # mesa-23.0.1
+    SHA512 7a66a587ef01fb58b51f3ebea584b40f70114844484df528d38ad1caa071fac7d6e23f1ed80309847f7e28468071571294bb8812a9882c0b86c89cf5a4144fe9
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
-    PATCHES ${PATCHES}
-) 
-
+)
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako )
 
@@ -117,24 +104,38 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    # installed by egl-registry
+    "${CURRENT_PACKAGES_DIR}/include/KHR"
+    "${CURRENT_PACKAGES_DIR}/include/EGL"
+    # installed by opengl-registry
+    "${CURRENT_PACKAGES_DIR}/include/GL"
+    "${CURRENT_PACKAGES_DIR}/include/GLES"
+    "${CURRENT_PACKAGES_DIR}/include/GLES2"
+    "${CURRENT_PACKAGES_DIR}/include/GLES3"
+)
+file(GLOB remaining "${CURRENT_PACKAGES_DIR}/include/*")
+if(NOT remaining)
+    # All headers to be provided by egl-registry and/or opengl-registry
+    set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
+endif()
 
-#installed by egl-registry
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/egl.h")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglext.h")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/EGL/eglplatform.h")
-#installed by opengl-registry
-set(_double_files include/GL/glcorearb.h include/GL/glext.h include/GL/glxext.h 
-    include/GLES/egl.h include/GLES/gl.h include/GLES/glext.h include/GLES/glplatform.h 
-    include/GLES2/gl2.h include/GLES2/gl2ext.h include/GLES2/gl2platform.h
-    include/GLES3/gl3.h  include/GLES3/gl31.h include/GLES3/gl32.h include/GLES3/gl3platform.h)
-list(TRANSFORM _double_files PREPEND "${CURRENT_PACKAGES_DIR}/")
-file(REMOVE ${_double_files})
+if(VCPKG_TARGET_IS_WINDOWS)
+    # opengl32.lib is already installed by port opengl.
+    # Mesa claims to provide a drop-in replacement of opengl32.dll.
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/opengl32.lib")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32.lib")
+    endif()
+endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/GLES2")
-# Handle copyright
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+if(FEATURES STREQUAL "core")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/license.rst")

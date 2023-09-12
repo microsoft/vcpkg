@@ -5,16 +5,15 @@ vcpkg_from_github(
     SHA512 ad270be66b3d5f96cb0305f0e086807aee1c909dd022c19ca99e5f7a72d5116f2ecb4b67fcb80e8bdb4f98925387d95bdc0bcc450a10b97c61f9b92c681f95b5
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE 
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} 
+file(INSTALL "${SOURCE_PATH}/LICENSE"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
      RENAME copyright
 )
