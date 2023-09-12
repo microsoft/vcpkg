@@ -385,3 +385,6 @@ endif()
 # * LTO.dll
 # * Remarks.dll
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+
+# TODO: validate generated binaries
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
