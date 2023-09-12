@@ -191,6 +191,7 @@ function(z_vcpkg_make_prepare_env config)
 
     # VCPKG_ABIFLAGS isn't standard, but can be useful to reinject these flags into other variables
     #set(ENV{VCPKG_ABIFLAGS} "${ABIFLAGS_${config}}") # Needs another way.
+    message(STATUS "${CMAKE_CURRENT_FUNCTION} ABIFLAGS_${config}:${ABIFLAGS_${config}}")
     if(ABIFLAGS_${config})
         # libtool removes some flags which are needed for configure tests.
         set(ENV{CC} "$ENV{CC} ${ABIFLAGS_${config}}")
