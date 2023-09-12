@@ -45,6 +45,8 @@ vcpkg_configure_make(
         ${OPTIONS}
         --disable-db-install
         --enable-pc-files
+        --enable-overwrite
+        --enable-widec
         --without-ada
         --without-debug # "lib model"
         --without-manpages
@@ -57,10 +59,28 @@ vcpkg_install_make()
 
 vcpkg_fixup_pkgconfig()
 
+set(suffix "a")
+if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "shared")
+	set(suffix "so")
+endif()
+
+# Install non-wide pkgconfig files to fool packages that need them.
+foreach(file "ncurses" "ncurses++" "form" "panel" "menu")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/lib/lib${file}.${suffix}" "INPUT(-l${file}w)\n")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/lib${file}.${suffix}" "INPUT(-l${file}w)\n")
+    file(COPY_FILE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${file}w.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${file}.pc")
+endforeach()
+foreach(file "tic" "tinfo")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/lib/lib${file}.${suffix}" "INPUT(-lncursesw)\n")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/lib${file}.${suffix}" "INPUT(-lncursesw)\n")
+    file(COPY_FILE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ncursesw.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${file}.pc")
+endforeach()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
