@@ -124,7 +124,7 @@ function(z_vcpkg_make_prepare_compile_flags)
         list(REMOVE_ITEM LDFLAGS "${pattern}")
         set(pattern "")
     endforeach()
-
+    message(STATUS "ABIFLAGS:${ABIFLAGS}")
     # Filter common CPPFLAGS out of CFLAGS and CXXFLAGS
     if(NOT arg_NO_CPP)
         set(CPPFLAGS "")
