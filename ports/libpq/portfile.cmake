@@ -8,6 +8,7 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        unix/installdirs.patch
         unix/fix-configure.patch
         unix/single-linkage.patch
         unix/no-server-tools.patch

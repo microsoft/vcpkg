@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCLIPPER2_EXAMPLES=OFF
         -DCLIPPER2_TESTS=OFF
-        -DCLIPPER2_UTILS=OFF
+        -DCLIPPER2_UTILS=ON
 )
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
