@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 15a1b8a..9ed385c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -92,6 +96,22 @@ target_include_directories(isocline PUBLIC extern/isocline/include)
+ 
+ target_include_directories(Luau.VM.Internals INTERFACE VM/src)
+ 
++install(
++    TARGETS Luau.VM Luau.CodeGen Luau.Common Luau.Ast Luau.Analysis Luau.Compiler
++    EXPORT LuauTargets
++)
++install(
++    DIRECTORY "${CMAKE_SOURCE_DIR}/VM/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/CodeGen/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/Common/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/Ast/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/Analysis/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/Compiler/include/"
++    DESTINATION "include/luau"
++    FILES_MATCHING
++    PATTERN "*.h"
++)
++
+ set(LUAU_OPTIONS)
+ 
+ if(MSVC)
