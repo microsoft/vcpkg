@@ -20,6 +20,11 @@
       "host": true,
       "platform": "windows"
     },
+    {
+      "name": "zeroc-ice",
+      "host": true,
+      "default-features": false
+    },
     "zeroc-ice-mcpp",
     "zlib"
   ],
