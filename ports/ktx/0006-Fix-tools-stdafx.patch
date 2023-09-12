@@ -1,0 +1,48 @@
+ utils/stdafx.h | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/utils/stdafx.h b/utils/stdafx.h
+index 30d7ff4675..155ccdb773 100644
+--- a/utils/stdafx.h
++++ b/utils/stdafx.h
+@@ -8,14 +8,28 @@
+ #define _CRT_SECURE_NO_WARNINGS // For _WIN32. Must be before <stdio.h>.
+ #include <assert.h>
+ #include <stdio.h>
+-#ifdef _WIN32
++
++#ifdef UNICODE
++#undef UNICODE
++#endif
++
++#if WIN32
++  #include <io.h>
++  #if _MSC_VER < 1900
++    #define snprintf _snprintf
++  #endif
++#endif
++
++#if 0
+   #include <io.h>
+   #include <tchar.h>
+   #if _MSC_VER < 1900
+     #define snprintf _snprintf
+   #endif
+ #else
+-  #include <unistd.h>
++  #ifndef WIN32
++    #include <unistd.h>
++  #endif
+ 
+   #define _setmode(x, y) 0
+   #define _tmain main
+@@ -35,6 +49,8 @@
+   #define _trename rename
+   #define _tunlink unlink
+   #define _T(x) x
++  #define _tfopen_s fopen_s
++  #define _tmktemp_s _mktemp_s
+ #endif
+ #include <fcntl.h>
+ #include <errno.h>
+  

@@ -1,0 +1,24 @@
+ utils/argparser.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/utils/argparser.h b/utils/argparser.h
+index 4ed86d7187..de5e248b30 100644
+--- a/utils/argparser.h
++++ b/utils/argparser.h
+@@ -13,13 +13,13 @@
+ #include <sstream>
+ #include <string>
+ #include <vector>
+-#if defined(_WIN32)
++#if 0
+   #include <tchar.h>
+ #else
+   #define _TCHAR char
+   #define _T(x) x
+ #endif
+-#if defined(_UNICODE)
++#if 0
+   #define _tstring std::wstring
+ #else
+   #define _tstring std::string
+  

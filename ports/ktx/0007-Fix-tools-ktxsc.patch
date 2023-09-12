@@ -1,0 +1,17 @@
+ tools/ktxsc/ktxsc.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/ktxsc/ktxsc.cpp b/tools/ktxsc/ktxsc.cpp
+index 3c306f020d..4c2b599d6b 100644
+--- a/tools/ktxsc/ktxsc.cpp
++++ b/tools/ktxsc/ktxsc.cpp
+@@ -308,7 +308,7 @@ ktxSupercompressor::main(int argc, _TCHAR* argv[])
+                     assert(tmpfile.size() > 0 && infile.length());
+ #if defined(_WIN32)
+                     // Windows' rename() fails if the destination file exists!
+-                    if (!MoveFileEx(tmpfile.c_str(), infile.c_str(),
++                    if (!MoveFileExA(tmpfile.c_str(), infile.c_str(),
+                                     MOVEFILE_REPLACE_EXISTING))
+ #else
+                     if (_trename(tmpfile.c_str(), infile.c_str()))
+  
