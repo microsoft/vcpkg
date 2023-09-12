@@ -269,7 +269,7 @@
       "port-version": 0
     },
     "async-mqtt": {
-      "baseline": "1.0.9",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "asynch": {
