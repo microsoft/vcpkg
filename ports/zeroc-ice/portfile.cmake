@@ -315,5 +315,5 @@ list(FILTER PDLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
 list(FILTER PRLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
 file(REMOVE ${PDLIBS} ${PRLIBS})
 
-# Handle copyright
+file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ice")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
