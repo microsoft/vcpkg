@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1ce60b1..14c9de0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -165,6 +165,8 @@ endif()
+ # this is going to be true for anything lacking pkg-config/CMake support.
+ # unigbrk.h was introduced in libunistring 0.9.4, 2010-02-14.
+ unset(HAVE_UNISTRING_H CACHE)
++find_path(UNISTRING_INCLUDE unigbrk.h)
++set(CMAKE_REQUIRED_INCLUDES ${UNISTRING_INCLUDE})
+ check_include_file("unigbrk.h" HAVE_UNISTRING_H)
+ if(NOT "${HAVE_UNISTRING_H}")
+   message(FATAL_ERROR "Couldn't find unigbrk.h from GNU libunistring")

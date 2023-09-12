@@ -1,0 +1,36 @@
+{
+  "name": "notcurses",
+  "version": "3.0.9",
+  "description": "blingful character graphics/TUI library. definitely not curses.",
+  "homepage": "https://github.com/dankamongmen/notcurses",
+  "license": "Apache-2.0",
+  "supports": "!android & (!windows | mingw)",
+  "dependencies": [
+    "libdeflate",
+    "libunistring",
+    "ncurses",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "ffmpeg": {
+      "description": "Use ffmpeg as multimedia backend.",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat"
+          ]
+        }
+      ]
+    }
+  }
+}

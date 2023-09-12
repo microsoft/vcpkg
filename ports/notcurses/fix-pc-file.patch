@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 14c9de0..00808eb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -104,7 +104,10 @@ find_package(PkgConfig REQUIRED)
+ pkg_search_module(TERMINFO REQUIRED tinfo>=6.1 ncursesw>=6.1)
+ set_property(GLOBAL APPEND PROPERTY PACKAGES_FOUND terminfo)
+ set_package_properties(terminfo PROPERTIES TYPE REQUIRED)
+-set(PKGCONF_REQ_PRIV "${TERMINFO_LIBRARIES}")
++set(PKGCONF_REQ_PRIV "ncursesw")
++if(${USE_STATIC})
++set(CORE_DL_LIB "-dl")
++endif()
+ if(${USE_FFMPEG})
+ pkg_check_modules(AVCODEC REQUIRED libavcodec>=57.0)
+ pkg_check_modules(AVFORMAT REQUIRED libavformat>=57.0)
+diff --git a/tools/notcurses-core.pc.in b/tools/notcurses-core.pc.in
+index 2d0942c..2ad3dc5 100644
+--- a/tools/notcurses-core.pc.in
++++ b/tools/notcurses-core.pc.in
+@@ -10,5 +10,5 @@ Version: @PROJECT_VERSION@
+ Requires:
+ Requires.private: @PKGCONF_REQ_PRIV@
+ Libs: -L${libdir} -lnotcurses-core
+-Libs.private: -lunistring -lm
++Libs.private: -lunistring -lm @CORE_DL_LIB@
+ Cflags: -I${includedir}

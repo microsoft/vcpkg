@@ -5796,6 +5796,10 @@
       "baseline": "2019-04-20",
       "port-version": 4
     },
+    "notcurses": {
+      "baseline": "3.0.9",
+      "port-version": 0
+    },
     "nowide": {
       "baseline": "11.3.0",
       "port-version": 0
