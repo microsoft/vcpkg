@@ -24,6 +24,7 @@ else {
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
+    'boost' = 1;
     'boost-fiber' = 1;
 }
 
