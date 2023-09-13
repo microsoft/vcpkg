@@ -2314,6 +2314,7 @@ flashlight-sequence[openmp](osx) = feature-fails # No openmp on osx
 foonathan-memory[tool](uwp) = feature-fails # WindowsApp.lib(api-ms-win-appmodel-runtime-l1-1-1.dll) : error LNK2005: __NULL_IMPORT_DESCRIPTOR already defined in WindowsApp.lib(api-ms-win-appmodel-runtime-l1-1-0.dll)
 freeglut(osx) = fail # fatal error: 'GL/glx.h' file not found
 freerdp[server](osx) = feature-fails # ld: library not found for -lwinpr-tools. See https://github.com/microsoft/vcpkg/issues/33042
+gdal[netcdf](windows & arm) = feature-fails # gdal_target_link_libraries(): PRIVATE is a mandatory argument. See https://github.com/microsoft/vcpkg/issues/33753
 gdk-pixbuf[introspection](windows & arm) = feature-fails # ERROR: Dependency "gobject-introspection-1.0" not found. See https://github.com/microsoft/vcpkg/issues/33751
 geogram[graphics] = feature-fails # imgui not found. See https://github.com/microsoft/vcpkg/issues/32421
 ginkgo[openmp](osx) = feature-fails # No openmp on osx
