@@ -8,6 +8,9 @@ vcpkg_from_github(
     REF ${OATPP_VERSION}
     SHA512 574f0440cbb2cd2bc14ad89e33538a1a300ad23ecc941629b74aa8ccb9aeae5158b1b57e2f1af09d7a6b9b97430a5685354677002dab2261120afa9c6ea74381
     HEAD_REF master
+    PATCHES
+        missing-find_dependency.patch
+        fix-usage.patch
 )
 
 vcpkg_cmake_configure(
