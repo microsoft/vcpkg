@@ -3065,7 +3065,7 @@
       "port-version": 11
     },
     "gtest": {
-      "baseline": "1.13.0",
+      "baseline": "1.14.0",
       "port-version": 0
     },
     "gtk": {
