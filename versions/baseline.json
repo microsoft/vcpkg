@@ -7026,7 +7026,7 @@
     },
     "qtwayland": {
       "baseline": "6.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtwebchannel": {
       "baseline": "6.5.2",
