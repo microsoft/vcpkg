@@ -34,6 +34,8 @@ vcpkg_cmake_configure(
       -DWOLFSSL_CRL=yes
       -DWOLFSSL_DES3=yes
       -DWOLFSSL_DTLS=${ENABLE_DTLS}
+      -DWOLFSSL_DTLS13=${ENABLE_DTLS}
+      -DWOLFSSL_DTLS_CID=${ENABLE_DTLS}
       -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
     OPTIONS_DEBUG
       -DWOLFSSL_DEBUG=yes)
