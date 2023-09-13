@@ -11,20 +11,12 @@ vcpkg_from_github(
 	fix_static.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-	set(LIBPLCTAG_BUILD_STATIC 1)
-else()
-	set(LIBPLCTAG_BUILD_SHARED 1)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DUSE_SANITIZERS=OFF
-	-DLIBPLCTAG_BUILD_STATIC=${LIBPLCTAG_BUILD_STATIC}
-	-DLIBPLCTAG_BUILD_SHARED=${LIBPLCTAG_BUILD_SHARED}
 )
 
 vcpkg_cmake_install()
