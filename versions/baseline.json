@@ -6925,12 +6925,12 @@
       "port-version": 0
     },
     "qtkeychain": {
-      "baseline": "0.13.2",
-      "port-version": 4
+      "baseline": "0.14.1",
+      "port-version": 0
     },
     "qtkeychain-qt6": {
-      "baseline": "0.13.2",
-      "port-version": 1
+      "baseline": "0.14.1",
+      "port-version": 0
     },
     "qtlanguageserver": {
       "baseline": "6.5.2",
