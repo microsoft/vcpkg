@@ -5,7 +5,10 @@
   "license": "MPL-2.0 OR LGPL-2.0-or-later",
   "supports": "!uwp",
   "dependencies": [
-    "pthreads",
+    {
+      "name": "pthreads",
+      "platform": "!windows"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
