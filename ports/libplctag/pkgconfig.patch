@@ -7,8 +7,7 @@ index 0ea8ff6..3fca384 100644
  Version: @VERSION@
  
 -Libs: -L${libdir} -lplctag -pthread
--Cflags: -I${includedir}
 +Libs: -L${libdir} -lplctag @PTHREAD_LDFLAGS@ @WINSOCK_LDFLAGS@
-+Cflags: -I${includedir} @STATIC_CFLAGS@
+ Cflags: -I${includedir}
 +Cflags.private: -DLIBPLCTAG_STATIC
 
