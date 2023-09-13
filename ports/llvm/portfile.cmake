@@ -379,12 +379,15 @@ if("mlir" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "\${MLIR_INCLUDE_DIRS}")
 endif()
 
-# LLVM still generates a few DLLs in the static build:
-# * LLVM-C.dll
-# * libclang.dll
-# * LTO.dll
-# * Remarks.dll
-set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-
-# TODO: validate generated binaries
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+if(VCPKG_TARGET_IS_WINDOWS)
+    # LLVM still generates a few DLLs in the static build:
+    # * LLVM-C.dll
+    # * libclang.dll
+    # * LTO.dll
+    # * Remarks.dll
+    set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
+endif()
