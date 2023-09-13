@@ -233,6 +233,7 @@ concurrencpp:x64-android=fail
 coroutine:arm-neon-android=fail
 coroutine:arm64-android=fail
 coroutine:x64-android=fail
+coroutine:x64-osx=fail
 cpp-ipc:arm-neon-android=fail
 cpp-ipc:arm64-android=fail
 cpp-ipc:x64-android=fail
