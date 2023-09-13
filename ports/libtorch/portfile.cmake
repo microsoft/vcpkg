@@ -1,7 +1,7 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(
-    ARCHIVE LIBCPP_15_PATCH
+    LIBCPP_15_PATCH
     URLS https://github.com/pytorch/pytorch/commit/9590cf6d791feab51e7e7c594df1eba0d02283c2.patch?full_index=1
     FILENAME libtorch-libcpp15-fix.patch
     SHA512 f0bc5dec25364912b37c310c155008f3211e6397ae77138ef95bd732659eb0d91b590f02627adc758550c4e577c7c7fdd8ba52dcde32b3c6f0c89f8126d02072
