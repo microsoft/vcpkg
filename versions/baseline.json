@@ -2253,8 +2253,8 @@
       "port-version": 0
     },
     "dv-processing": {
-      "baseline": "1.7.8",
-      "port-version": 1
+      "baseline": "1.7.9",
+      "port-version": 0
     },
     "dx": {
       "baseline": "1.0.1",
