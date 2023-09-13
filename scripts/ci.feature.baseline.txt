@@ -2359,6 +2359,7 @@ libssh[core,openssl,mbedtls] = options # we have to select feature openssl or mb
 libwebp(windows & arm) = fail # linker errors. See https://github.com/microsoft/vcpkg/issues/33603
 libwebp[anim,cwebp,dwebp,extras,img2webp](uwp) = feature-fails # linker error. See https://github.com/microsoft/vcpkg/issues/33603
 libxau(windows) = fail # configure:22353: error: possibly undefined macro: _AC_FINAL. See https://github.com/microsoft/vcpkg/issues/33750
+libxdmcp(windows) = fail # configure:22353: error: possibly undefined macro: _AC_FINAL. See https://github.com/microsoft/vcpkg/issues/33750
 llvm[core,libcxx,libunwind] = options # Exclude libcxx and libunwind from all
 llvm[libcxxabi] = feature-fails # see https://github.com/microsoft/vcpkg/issues/31038
 magnum-plugins[meshoptimizersceneconverter](!uwp) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31112
