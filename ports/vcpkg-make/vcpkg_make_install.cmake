@@ -77,7 +77,7 @@ function(vcpkg_make_install)
 
         # Setup environment
         z_vcpkg_make_prepare_env("${cmake_buildtype}" ${prepare_env_opts})
-        z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}")
+        z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${cmake_buildtype}")
 
         set(destdir_opt "")
         if(NOT arg_NO_DESTDIR)
