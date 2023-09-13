@@ -589,7 +589,7 @@
       "port-version": 0
     },
     "bitserializer": {
-      "baseline": "0.50",
+      "baseline": "0.65",
       "port-version": 0
     },
     "bitserializer-cpprestjson": {
