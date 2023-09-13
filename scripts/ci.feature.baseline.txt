@@ -2317,6 +2317,7 @@ freerdp[server](osx) = feature-fails # ld: library not found for -lwinpr-tools. 
 gdk-pixbuf[introspection](windows & arm) = feature-fails # ERROR: Dependency "gobject-introspection-1.0" not found. See https://github.com/microsoft/vcpkg/issues/33751
 geogram[graphics] = feature-fails # imgui not found. See https://github.com/microsoft/vcpkg/issues/32421
 ginkgo[openmp](osx) = feature-fails # No openmp on osx
+glpk[odbc](windows) = feature-fails # configure:22353: error: possibly undefined macro: _AC_FINAL. See https://github.com/microsoft/vcpkg/issues/33751
 google-cloud-cpp[storagetransfer](osx) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32149
 grpc[codegen](uwp) = feature-fails # linker errors. See https://github.com/microsoft/vcpkg/issues/33622
 gstreamer[chromaprint](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31109
