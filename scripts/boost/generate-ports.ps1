@@ -24,6 +24,7 @@ else {
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
+    'boost-fiber' = 1;
 }
 
 function Get-PortVersion {
@@ -32,7 +33,7 @@ function Get-PortVersion {
     )
 
     $nonDefault = $portVersions[$PortName]
-    if ($nonDefault -ne $null) {
+    if ($null -ne $nonDefault) {
         return $nonDefault
     }
 
@@ -58,7 +59,7 @@ $portData = @{
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
     "boost-fiber"            = @{
-        "supports" = "!uwp & !arm & !emscripten";
+        "supports" = "!uwp & !(arm & windows) & !emscripten";
         "features" = @{
             "numa" = @{
                 "description" = "Enable NUMA support";

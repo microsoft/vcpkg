@@ -160,7 +160,7 @@
     },
     {
       "name": "boost-fiber",
-      "platform": "!uwp & !arm & !emscripten",
+      "platform": "!uwp & !(arm & windows) & !emscripten",
       "version>=": "1.83.0"
     },
     {
