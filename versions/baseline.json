@@ -269,7 +269,7 @@
       "port-version": 0
     },
     "async-mqtt": {
-      "baseline": "1.0.9",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "asynch": {
@@ -2209,7 +2209,7 @@
       "port-version": 1
     },
     "dpp": {
-      "baseline": "10.0.24",
+      "baseline": "10.0.25",
       "port-version": 0
     },
     "draco": {
@@ -5930,7 +5930,7 @@
     },
     "ogre": {
       "baseline": "14.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ogre-next": {
       "baseline": "2.3.1",
@@ -8070,7 +8070,7 @@
     },
     "tbb": {
       "baseline": "2021.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tcb-span": {
       "baseline": "2022-06-15",
@@ -8409,8 +8409,8 @@
       "port-version": 0
     },
     "unicorn": {
-      "baseline": "1.0.3",
-      "port-version": 1
+      "baseline": "2.0.1",
+      "port-version": 0
     },
     "unicorn-lib": {
       "baseline": "2022-01-24",
