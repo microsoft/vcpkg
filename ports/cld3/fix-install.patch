@@ -1,14 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2fa3908..de5d149 100644
+index 2fa3908..bb3ea76 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -21,12 +21,11 @@ my_protobuf_generate_cpp(cld_3/protos PROTO_SRCS PROTO_HDRS src/feature_extracto
- message(STATUS "PROTO_HDRS= ${PROTO_HDRS}")
- 
+@@ -23,10 +23,11 @@ message(STATUS "PROTO_HDRS= ${PROTO_HDRS}")
  add_definitions(-fPIC) # Position Independant Code
--add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
--add_definitions(-std=c++11) # Needed for std::to_string(), ...
-+set (CMAKE_CXX_STANDARD 20)
+ add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+ add_definitions(-std=c++11) # Needed for std::to_string(), ...
++set (CMAKE_CXX_STANDARD 11)
  
  include_directories(${CMAKE_CURRENT_BINARY_DIR} ${Protobuf_INCLUDE_DIRS}) # needed to include generated pb headers
  
@@ -17,7 +15,7 @@ index 2fa3908..de5d149 100644
  	${PROTO_SRCS} ${PROTO_HDRS}
  	src/base.cc
  	src/embedding_feature_extractor.cc
-@@ -67,3 +66,65 @@ target_link_libraries(getonescriptspan_test cld3 ${Protobuf_LITE_LIBRARIES})
+@@ -67,3 +68,65 @@ target_link_libraries(getonescriptspan_test cld3 ${Protobuf_LITE_LIBRARIES})
  
  add_executable(language_identifier_features_test src/language_identifier_features_test.cc)
  target_link_libraries(language_identifier_features_test cld3 ${Protobuf_LITE_LIBRARIES})
@@ -83,3 +81,19 @@ index 2fa3908..de5d149 100644
 +install(FILES ${PUBLIC_HEADER} DESTINATION "${INSTALL_INC_DIR}")
 +install(FILES ${HEADERS_SCRIPT_SPAN} DESTINATION "${INSTALL_INC_DIR}/script_span")
 +install(FILES ${HEADERS_PROTO} DESTINATION "${INSTALL_INC_DIR}/cld_3/protos")
+diff --git a/src/sentence_features.cc b/src/sentence_features.cc
+index 70d64f4..71ba073 100644
+--- a/src/sentence_features.cc
++++ b/src/sentence_features.cc
+@@ -22,8 +22,9 @@ namespace chrome_lang_id {
+ // Define registry for the whole Sentence feature functions.  NOTE: this is not
+ // yet set to anything meaningful.  It will be set so in NNetLanguageIdentifier
+ // constructor, *before* we use any feature.
++#if defined(COMPILER_MSVC)
+ template <>
+ WholeSentenceFeature::Registry*
+     RegisterableClass<WholeSentenceFeature>::registry_ = nullptr;
+-
++#endif
+ }  // namespace chrome_lang_id
+\ No newline at end of file
