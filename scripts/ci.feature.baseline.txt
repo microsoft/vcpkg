@@ -2343,6 +2343,7 @@ libcanberra[core](osx) = combination-fails # see https://github.com/microsoft/vc
 libcanberra[gtk3](osx) = combination-fails # No package 'systemd' found # See https://github.com/microsoft/vcpkg/issues/31032
 libcanberra[oss](osx) = feature-fails # oss not installed
 libcanberra[pulse](osx) = feature-fails # pulseaudio not installed
+libfontenc(windows) = fail # configure:22353: error: possibly undefined macro: _AC_FINAL. See https://github.com/microsoft/vcpkg/issues/33750
 libgit2[core,openssl,winhttp,sectransp,mbedtls] = options # only one TLS backend is allowed
 libgit2[pcre,pcre2] = options # have to select pcre xor pcre2
 libgit2[winhttp](!windows) = feature-fails
