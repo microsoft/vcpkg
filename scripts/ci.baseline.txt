@@ -53,6 +53,8 @@ apsi:arm-neon-android=fail
 apsi:x64-android=fail
 # Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
 arrayfire:x64-linux=fail
+# Appears to trigger some form of malformed code on XCode 14.3.1
+arrayfire:x64-osx=fail
 # Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
 allegro5:arm64-windows=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
@@ -72,11 +74,11 @@ bento4:arm-neon-android=fail
 berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
 berkeleydb:x64-android=fail
-bgfx:x64-osx=fail  # MacOSX12.1.sdk doesn't define MTLGPUFamilyApple8
 binlog:arm-neon-android=fail
 bitserializer:arm64-osx=fail
 blitz:x64-android=fail
-blitz:x64-linux=fail # python2
+blitz:x64-linux=fail # python2 
+blitz:x64-osx=fail
 boinc:arm-neon-android=fail
 boinc:arm64-android=fail
 boinc:x64-android=fail
@@ -228,7 +230,6 @@ coin-or-ipopt:x64-linux=fail
 concurrencpp:arm-neon-android=fail
 concurrencpp:arm64-android=fail
 concurrencpp:x64-android=fail
-concurrencpp:x64-osx=fail
 coroutine:arm-neon-android=fail
 coroutine:arm64-android=fail
 coroutine:x64-android=fail
@@ -538,6 +539,7 @@ jinja2cpplight:x64-android=fail
 json-schema-validator:arm-neon-android=fail
 json-schema-validator:arm64-android=fail
 keystone:x64-linux=fail # python2
+keystone:x64-osx=fail
 kfr:x64-android=fail
 kfr:x64-uwp=fail
 lastools:arm-neon-android=fail
@@ -1248,6 +1250,13 @@ tensorflow-cc:x64-android=fail
 tensorflow-cc:x64-windows-static-md=fail
 tensorflow-cc:x64-windows-static=fail
 tensorflow-cc:x64-windows=fail
+# tensorflow is broken with system libraries on macOS 13.5
+# Also skipping because our macOS machines are relatively underpowered and this saves 8 hours of CI
+# time for a relatively unpopular library / system combo.
+tensorflow:x64-osx=skip
+tensorflow:arm-osx=skip
+tensorflow-cc:x64-osx=skip
+tensorflow-cc:arm-osx=skip
 
 thorvg:arm-neon-android=fail
 thorvg:arm64-android=fail
