@@ -121,7 +121,7 @@ function(vcpkg_make_configure) #
         foreach(cmd IN LISTS arg_PRE_CONFIGURE_CMAKE_COMMANDS)
             cmake_language(CALL ${cmd} ${configup})
         endforeach()
-        message(STATUS "CONFIGURE_ENV:${configure_env}")
+
         vcpkg_make_run_configure(BASH 
                                     "${shell_cmd}"
                                  CONFIG  #configure_env

@@ -84,9 +84,15 @@ function(vcpkg_make_install)
             set(destdir_opt "DESTDIR=${destdir}")
         endif()
 
+        set(extra_opts "") # Use --environment-overrides as default?
+        if(NOT VCPKG_TARGET_IS_OSX)
+            set(extra_opts --trace)
+            # TODO: Introspect the found make for available options?
+        endif()
+
         foreach(target IN LISTS arg_TARGETS)
-            vcpkg_list(SET make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${target} ${destdir_opt})
-            vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j 1 --trace -f ${arg_MAKEFILE} ${target} ${destdir_opt})
+            vcpkg_list(SET make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j ${VCPKG_CONCURRENCY} ${extra_opts} -f ${arg_MAKEFILE} ${target} ${destdir_opt})
+            vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j 1 ${extra_opts} -f ${arg_MAKEFILE} ${target} ${destdir_opt})
             message(STATUS "Making target '${target}' for ${TARGET_TRIPLET}-${short_buildtype}")
             if (arg_DISABLE_PARALLEL)
                 vcpkg_run_bash_as_build(

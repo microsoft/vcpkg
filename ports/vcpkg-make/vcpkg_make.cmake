@@ -189,21 +189,6 @@ function(z_vcpkg_make_prepare_env config)
         set(ENV{ARFLAGS} "${ARFLAGS_${config}}")
     endif()
 
-    # VCPKG_ABIFLAGS isn't standard, but can be useful to reinject these flags into other variables
-    #set(ENV{VCPKG_ABIFLAGS} "${ABIFLAGS_${config}}") # Needs another way.
-    message(STATUS "${CMAKE_CURRENT_FUNCTION} ABIFLAGS_${config}:${ABIFLAGS_${config}}")
-    if(ABIFLAGS_${config})
-        # libtool removes some flags which are needed for configure tests.
-        #set(ENV{CC} "$ENV{CC} ${ABIFLAGS_${config}}")
-        #set(ENV{CXX} "$ENV{CXX} ${ABIFLAGS_${config}}")
-        #if("$ENV{CC}" MATCHES "$ENV{CCAS}") #TODO: better check 
-        #    set(ENV{CCAS} "$ENV{CCAS} ${ABIFLAGS_${config}}")
-        #    set(ENV{AS} "$ENV{AS} ${ABIFLAGS_${config}}")
-        #endif()
-        #set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} ${ABIFLAGS_${config}}")
-        #set(ENV{CXX_FOR_BUILD} "$ENV{CXX_FOR_BUILD} ${ABIFLAGS_${config}}")
-    endif()
-
     if(LINK_ENV_${config})
         set(ENV{_LINK_} "${LINK_ENV_${config}}")
     endif()

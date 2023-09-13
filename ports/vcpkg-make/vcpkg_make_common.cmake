@@ -104,8 +104,7 @@ function(z_vcpkg_make_prepare_compile_flags)
         vcpkg_list(APPEND flags ${var})
     endforeach()
 
-
-    set(ABIFLAGS "")
+    set(ABIFLAGS "") # TODO: Investigate if vcpkg should simply pass all flags in CC/CXX without any filtering and ignore CFLAGS etc. 
     set(pattern "")
     foreach(arg IN LISTS CFLAGS)
         if(NOT pattern STREQUAL "")
@@ -124,7 +123,7 @@ function(z_vcpkg_make_prepare_compile_flags)
         list(REMOVE_ITEM LDFLAGS "${pattern}")
         set(pattern "")
     endforeach()
-    message(STATUS "ABIFLAGS:${ABIFLAGS}")
+
     # Filter common CPPFLAGS out of CFLAGS and CXXFLAGS
     if(NOT arg_NO_CPP)
         set(CPPFLAGS "")
@@ -384,7 +383,7 @@ function(z_vcpkg_make_prepare_programs out_env)
             z_vcpkg_append_to_configure_environment(configure_env "${envvar}" "${prog}")
             set(configure_env "${configure_env}" PARENT_SCOPE)
         endfunction()
-        message(STATUS "ABIFLAGS_${arg_CONFIG}:${ABIFLAGS_${arg_CONFIG}}")
+
         z_vcpkg_make_set_env(CC C_COMPILER ${ABIFLAGS_${arg_CONFIG}})
         z_vcpkg_make_set_env(CXX CXX_COMPILER ${ABIFLAGS_${arg_CONFIG}})
         if(NOT arg_BUILD_TRIPLET MATCHES "--host")
