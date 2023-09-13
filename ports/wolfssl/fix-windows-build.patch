@@ -1,0 +1,49 @@
+diff --git a/wolfcrypt/src/chacha20_poly1305.c b/wolfcrypt/src/chacha20_poly1305.c
+index e4ebd10165f..0c37de747af 100644
+--- a/wolfcrypt/src/chacha20_poly1305.c
++++ b/wolfcrypt/src/chacha20_poly1305.c
+@@ -355,9 +355,9 @@ static WC_INLINE int wc_XChaCha20Poly1305_crypt_oneshot(
+     int isEncrypt)
+ {
+     int ret;
+-    ssize_t dst_len = isEncrypt ?
+-        (ssize_t)src_len + POLY1305_DIGEST_SIZE :
+-        (ssize_t)src_len - POLY1305_DIGEST_SIZE;
++    long int dst_len = isEncrypt ?
++        (long int)src_len + POLY1305_DIGEST_SIZE :
++        (long int)src_len - POLY1305_DIGEST_SIZE;
+     const byte *src_i;
+     byte *dst_i;
+     size_t src_len_rem;
+@@ -375,7 +375,7 @@ static WC_INLINE int wc_XChaCha20Poly1305_crypt_oneshot(
+         goto out;
+     }
+ 
+-    if ((ssize_t)dst_space < dst_len) {
++    if ((long int)dst_space < dst_len) {
+         ret = BUFFER_E;
+         goto out;
+     }
+diff --git a/wolfssl/wolfcrypt/settings.h b/wolfssl/wolfcrypt/settings.h
+index 47e3b7363af..feeefe4a2ce 100644
+--- a/wolfssl/wolfcrypt/settings.h
++++ b/wolfssl/wolfcrypt/settings.h
+@@ -1876,11 +1876,13 @@ extern void uITRON4_free(void *p) ;
+     #endif
+ #endif
+ 
+-#ifdef _MSC_VER
+-    #ifndef HAVE_SSIZE_T
+-        #include <BaseTsd.h>
+-        typedef SSIZE_T ssize_t;
+-    #endif
++#if defined(NO_WC_SSIZE_TYPE) || defined(ssize_t)
++    /* ssize_t comes from system headers or user_settings.h */
++#elif defined(WC_SSIZE_TYPE)
++    typedef WC_SSIZE_TYPE ssize_t;
++#elif defined(_MSC_VER)
++    #include <BaseTsd.h>
++    typedef SSIZE_T ssize_t;
+ #endif
+ 
+ /* If DCP is used without SINGLE_THREADED, enforce WOLFSSL_CRYPT_HW_MUTEX */
