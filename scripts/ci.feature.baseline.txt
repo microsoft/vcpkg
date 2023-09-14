@@ -2383,6 +2383,7 @@ openmvg(windows & arm) = fail # nmmintrin.h(17): fatal error C1189: #error:  Thi
 openscap(osx) = fail # Waits for https://github.com/microsoft/vcpkg/pull/27348
 pangolin[core,eigen,examples,ffmpeg,gui,jpeg,lz4,module,openexr,png,pybind11,realsense,test,tiff,tools,vars,video,zstd](!(arm & windows)) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31304
 poco[core,mariadb,mysql] = options # You can not install mariadb and mysql at the same time
+protobuf-c[tools,test](uwp) = feature-fails # Protobuf_PROTOC_LIBRARY used in this project, but they are set to NOTFOUND. See https://github.com/microsoft/vcpkg/issues/33778
 qt3d[animation] = options # is a requirement, see https://github.com/microsoft/vcpkg/issues/31336
 qt3d[extras] = options # is a requirement, see https://github.com/microsoft/vcpkg/issues/31336
 qt5compat[iconv](!uwp) = feature-fails # requires qtbase without icu
