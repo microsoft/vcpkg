@@ -677,6 +677,7 @@ libtins:arm64-android=fail
 libtins:x64-android=fail
 libtomcrypt:arm64-windows=fail
 libtomcrypt:arm-uwp=fail
+libtorch:x64-osx=fail
 libusb:arm-neon-android=fail
 libusb:arm64-android=fail
 libusb:x64-android=fail

@@ -1,12 +1,5 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-vcpkg_download_distfile(
-    LIBCPP_15_PATCH
-    URLS https://github.com/pytorch/pytorch/commit/9590cf6d791feab51e7e7c594df1eba0d02283c2.patch?full_index=1
-    FILENAME libtorch-libcpp15-fix.patch
-    SHA512 f0bc5dec25364912b37c310c155008f3211e6397ae77138ef95bd732659eb0d91b590f02627adc758550c4e577c7c7fdd8ba52dcde32b3c6f0c89f8126d02072
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/pytorch
@@ -21,9 +14,7 @@ vcpkg_from_github(
         use-flatbuffers2.patch # check with codegen-flatc-mobile_bytecode
         fix-windows.patch # https://github.com/pytorch/pytorch/issues/87957
         fix_werror.patch
-        "${LIBCPP_15_PATCH}"
 )
-
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
 # Editing ${SOURCE_PATH}/cmake/Dependencies.cmake makes HORRIBLE readability...
