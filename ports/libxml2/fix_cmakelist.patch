@@ -102,7 +102,7 @@ index 9701bdc..39e96ee 100644
 +set(prefix "\$(cd \"\$(dirname \"\$0\")\"; pwd -P)/..")
  configure_file(xml2-config.in xml2-config @ONLY)
  install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/xml2-config DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT development)
- 
+
 diff --git a/libxml-2.0.pc.in b/libxml-2.0.pc.in
 index 88e3963b..0d1706c9 100644
 --- a/libxml-2.0.pc.in
@@ -117,4 +117,3 @@ index 88e3963b..0d1706c9 100644
 +Libs: -L${libdir} -l@XML_LIB_NAME@
 +Libs.private: @THREAD_LIBS@ @ICONV_LIBS@ @LIBM@ @WINSOCK_LIBS@ @LIBS@
  Cflags: @XML_INCLUDEDIR@ @XML_CFLAGS@
- 
