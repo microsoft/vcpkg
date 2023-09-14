@@ -4,7 +4,7 @@
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "license": "MIT AND BSL-1.0 AND SGI-B-2.0",
-  "supports": "!(windows & arm) & !staticcrt",
+  "supports": "!(windows & arm) & !staticcrt & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-get-python-packages",

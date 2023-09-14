@@ -9,7 +9,9 @@ vcpkg_from_github(
     # Updator's note: cpp-netlib has many templates that are not fully instantiated when not building examples.
     # This patch specifically fixes one of those issues
     # To test updates, enable building examples below (may also require patching out uses of cxxopts)
-    PATCHES stream-handler-executor.patch
+    PATCHES
+        fix-compatibility-with-boost-1.83.patch
+        stream-handler-executor.patch
 )
 
 vcpkg_cmake_configure(
@@ -29,4 +31,4 @@ else()
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cppnetlib PACKAGE_NAME cppnetlib)
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE_1_0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")
