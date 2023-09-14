@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 17e188d..c6c5ff5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -341,11 +341,7 @@ if (NOT BUILD_SHARED_LIBS)
+ 
+     # Install custom Find modules.
+     install(FILES
+-        ${CMAKE_CURRENT_LIST_DIR}/share/cmake/modules/Findexpat.cmake
+-        ${CMAKE_CURRENT_LIST_DIR}/share/cmake/modules/FindImath.cmake
+-        ${CMAKE_CURRENT_LIST_DIR}/share/cmake/modules/Findpystring.cmake
+         ${CMAKE_CURRENT_LIST_DIR}/share/cmake/modules/Findminizip-ng.cmake
+-        ${CMAKE_CURRENT_LIST_DIR}/share/cmake/modules/Findyaml-cpp.cmake
+         DESTINATION ${OCIO_CUSTOM_FIND_MODULE_DIR}
+     )
+ endif()

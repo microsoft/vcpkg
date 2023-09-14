@@ -3,9 +3,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/unordered
-    REF boost-1.82.0
-    SHA512 209ed0ef79f55782cf3a1440125c7b9448240a7a64abe940274346d16f116dba5df0da0438a2881be4813977a03348760bdcb03b1d8d282da93ae6acaca59fb6
+    REF boost-1.83.0
+    SHA512 52a36f1d279c6fd9e6b480267aa3cb6cab64e3c996230b0bf585973067bf845711f30a8f79402263236420ebbb6e856bbc9e1c6c2dd72e416f571bff150f858a
     HEAD_REF master
+    PATCHES 0001-unordered-fix-copy-assign.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       warning-and-include.patch
+      fix-windows-build.patch # From https://github.com/wolfSSL/wolfssl/pull/6509
     )
 
 if ("dtls" IN_LIST FEATURES)

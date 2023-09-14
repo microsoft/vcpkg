@@ -153,6 +153,13 @@ if(subdirs)
     vcpkg_install_make()
     vcpkg_copy_pdbs()
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+    file(GLOB unix_runtime LIST_DIRECTORIES false
+        "${CURRENT_PACKAGES_DIR}/lib/libgettext*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}*"
+        "${CURRENT_PACKAGES_DIR}/lib/libtextstyle*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}*"
+    )
+    if(unix_runtime)
+        file(INSTALL ${unix_runtime} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+    endif()
     file(GLOB link_libs LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/lib/*" "${CURRENT_PACKAGES_DIR}/bin/*.dll")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include" ${link_libs})
 endif()

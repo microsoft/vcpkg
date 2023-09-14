@@ -46,7 +46,6 @@ allegro5:arm-neon-android=fail
 allegro5:arm64-android=fail
 allegro5:x64-android=fail
 ampl-asl:x64-android=fail
-anari:arm64-windows=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
 apr:x64-android=fail
@@ -185,9 +184,6 @@ chromium-base:x64-linux=skip
 #  because the first attempt to build it fails, but subsequent attempts succeed
 chromium-base:x64-osx=skip
 
-civetweb:arm64-windows      = skip
-civetweb:arm-uwp            = skip
-civetweb:x64-uwp            = skip
 clamav:arm64-windows=fail
 
 # clapack is replaced by lapack-reference on the platforms lapack-reference supports
@@ -316,8 +312,6 @@ duktape:arm64-osx=skip
 duktape:x64-linux=fail
 
 eastl:arm-uwp=fail
-easyloggingpp:arm-uwp=fail
-easyloggingpp:x64-uwp=fail
 eathread:x64-android=fail
 elfio:arm-neon-android=fail
 elfio:arm64-android=fail
@@ -612,22 +606,7 @@ libmariadb:x64-windows        = skip
 libmariadb:x64-windows-static = skip
 libmariadb:x64-windows-static-md=skip
 # libmesh installs tons of problematic files that conflict with other ports (boost, eigen, etc)
-libmesh:arm-neon-android=skip
-libmesh:arm64-android=skip
-libmesh:arm64-windows=skip
-libmesh:arm-uwp=skip
-libmesh:x64-android=skip
-libmesh:x64-uwp=skip
-libmesh:x64-windows=skip
-libmesh:x64-windows-static=skip
-libmesh:x64-windows-static-md=skip
-libmesh:x86-windows=skip
-libmesh:x64-osx=skip
-libmesh:arm64-osx=skip
 libmesh:x64-linux=skip
-# Build fails since PIC is not enabled and some configuration tests do not work properly on UWP
-libmicrodns:arm-uwp=fail
-libmicrodns:x64-uwp=fail
 libmikmod:arm-neon-android=fail
 libmikmod:arm64-android=fail
 libmikmod:x64-android=fail
@@ -773,8 +752,6 @@ minifb:arm64-android=fail
 minifb:x64-android=fail
 minio-cpp:arm-neon-android=fail
 miniply:arm-neon-android=fail
-miniupnpc:arm-uwp=fail
-miniupnpc:x64-uwp=fail
 # Conflicts with signalrclient
 microsoft-signalr:arm64-windows=skip
 microsoft-signalr:arm-uwp=skip
@@ -1217,11 +1194,6 @@ slikenet:x64-android=fail
 soem:arm-neon-android=fail
 soem:arm64-android=fail
 soem:x64-android=fail
-soil2:arm-neon-android=fail
-soil2:arm-uwp=fail
-soil2:arm64-android=fail
-soil2:x64-android=fail
-soil2:x64-uwp=fail
 soil:arm-neon-android=fail
 soil:arm64-android=fail
 soil:x64-android=fail
@@ -1262,12 +1234,6 @@ stxxl:x64-windows-static-md=skip
 systemc:arm64-windows=fail
 systemc:arm-uwp=fail
 systemc:x64-uwp=fail
-tcl:arm-neon-android=fail
-tcl:arm-uwp=fail
-tcl:arm64-android=fail
-tcl:arm64-windows=fail
-tcl:x64-android=fail
-tcl:x64-uwp=fail
 teemo:x64-android=fail
 
 # tensorflow does not support VS2022
@@ -1280,9 +1246,6 @@ tensorflow-cc:x64-windows-static-md=fail
 tensorflow-cc:x64-windows-static=fail
 tensorflow-cc:x64-windows=fail
 
-tesseract:arm-neon-android=fail
-tesseract:arm64-android=fail
-tesseract:x64-android=fail
 thorvg:arm-neon-android=fail
 thorvg:arm64-android=fail
 thorvg:x64-android=fail
@@ -1386,11 +1349,10 @@ workflow:arm-uwp=fail
 workflow:arm64-android=fail
 workflow:x64-android=fail
 workflow:x64-uwp=fail
-wpilib:arm-neon-android=fail
-wpilib:arm64-android=fail
-wpilib:arm64-windows=fail
-wpilib:x64-android=fail
-wpilib:x64-linux=fail
+wpilib:arm-neon-android=fail # requires full c++20 support
+wpilib:arm64-android=fail # requires full c++20 support
+wpilib:x64-android=fail # requires full c++20 support
+wpilib:x64-osx=fail # requires full c++20 support
 x264:arm-neon-android=fail
 x264:arm64-android=fail
 x265:arm-neon-android=fail
