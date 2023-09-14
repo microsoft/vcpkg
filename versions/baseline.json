@@ -2629,7 +2629,7 @@
       "port-version": 2
     },
     "fmt": {
-      "baseline": "10.1.0",
+      "baseline": "10.1.1",
       "port-version": 0
     },
     "folly": {
