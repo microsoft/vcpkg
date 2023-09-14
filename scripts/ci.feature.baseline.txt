@@ -2316,6 +2316,7 @@ gdal[netcdf](windows & arm) = feature-fails # gdal_target_link_libraries(): PRIV
 gdk-pixbuf[introspection](windows & arm) = feature-fails # ERROR: Dependency "gobject-introspection-1.0" not found. See https://github.com/microsoft/vcpkg/issues/33751
 geogram[graphics] = feature-fails # imgui not found. See https://github.com/microsoft/vcpkg/issues/32421
 ginkgo[openmp](osx) = feature-fails # No openmp on osx
+ginkgo[openmp](windows) = feature-fails # needs openmp 3.0 support but msvc only supports openmp 2.0
 glpk[odbc](windows) = feature-fails # configure:22353: error: possibly undefined macro: _AC_FINAL. See https://github.com/microsoft/vcpkg/issues/33751
 google-cloud-cpp[storagetransfer](osx) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32149
 grpc[codegen](uwp) = feature-fails # linker errors. See https://github.com/microsoft/vcpkg/issues/33622
