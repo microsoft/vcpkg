@@ -2393,6 +2393,7 @@ realsense2[tools](osx) = feature-fails # Could NOT find Threads (missing: Thread
 restc-cpp[core,boost-log,openssl,threaded-ctx,zlib](osx) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31027
 restc-cpp[threaded-ctx](osx) = combination-fails # Fixed on master: error: copying member subobject of type 'std::atomic_bool' (aka 'atomic<bool>') invokes deleted constructor
 rubberband[cli](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32360
+skia[freetype](windows) = feature-fails # src\ports\SkFontHost_FreeType.cpp(79): fatal error C1083: Cannot open include file: 'dlfcn.h': No such file or directory. See https://github.com/microsoft/vcpkg/issues/33770
 sqlite-orm[test](uwp) = feature-fails # error LNK2019: unresolved external symbol main referenced in function "int __cdecl invoke_main(void)". See https://github.com/microsoft/vcpkg/issues/33769
 sqlpp11-connector-mysql[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
 sqlpp11[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
