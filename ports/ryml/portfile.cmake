@@ -10,20 +10,15 @@ vcpkg_from_github(
     PATCHES cmake-fix.patch
 )
 
-set(CM_COMMIT_HASH 95b2410e31ebf28b56a4fffffef52c7d13d657ad)
-
 # Get cmake scripts for rapidyaml
-vcpkg_download_distfile(
-    CMAKE_ARCHIVE
-    URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
-    FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 9aa0d0803f4fd5c9726d3e2a48dd20dfadbde1097dbb3da31c5bef6d50dd3da949b2dd6d0d36f97f3733662590bca0fe508ba00c0c5019a5fbaa899feaf46403
-)
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH_CMAKE
+    REPO biojppm/cmake
+    REF 95b2410e31ebf28b56a4fffffef52c7d13d657ad
+    SHA512 0aede5089f1db81f976860b20e76f759ddb2c8dceb3b13d3521db65d67b5355083aa370eec245fe7810f3e6702c7ab0e42cae63b0b979c2118c09bf2ae8567ea
+    HEAD_REF master
+    PATCHES fix_no_find_git.patch
 
-vcpkg_extract_source_archive(
-    SOURCE_PATH_CMAKE
-    ARCHIVE ${CMAKE_ARCHIVE}
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext/c4core/cmake")

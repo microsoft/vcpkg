@@ -1,0 +1,13 @@
+diff --git a/c4Project.cmake b/c4Project.cmake
+index 60c8717..22ea7fd 100644
+--- a/c4Project.cmake
++++ b/c4Project.cmake
+@@ -1039,7 +1039,7 @@ function(c4_proj_get_version dir tag_o full_o major_o minor_o patch_o tweak_o)
+     if("${dir}" STREQUAL "")
+         set(dir ${CMAKE_CURRENT_LIST_DIR})
+     endif()
+-    find_program(GIT git REQUIRED)
++    find_program(GIT git)
+     function(_c4pgv_get_cmd outputvar)
+         execute_process(COMMAND ${ARGN}
+             WORKING_DIRECTORY ${dir}
