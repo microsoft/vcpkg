@@ -1,0 +1,19 @@
+diff --git a/src/glue.c b/src/glue.c
+index 7970679..bad3269 100644
+--- a/src/glue.c
++++ b/src/glue.c
+@@ -29,6 +29,8 @@
+ #include "common.h"
+ #include "libimobiledevice-glue/thread.h"
+ 
++#ifndef LIBIMOBILEDEVICEGLUE_STATIC  // disable dll constructor
++
+ extern void term_colors_init();
+ 
+ static void internal_glue_init(void)
+@@ -78,3 +80,5 @@ BOOL WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
+ #else
+ #warning No compiler support for constructor/destructor attributes, some features might not be available.
+ #endif
++
++#endif  // disable dll constructor
