@@ -48,7 +48,6 @@ endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_find_acquire_program(PYTHON3)
-message(WARNING  ${CURRENT_INSTALLED_DIR}/share/poppler)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
