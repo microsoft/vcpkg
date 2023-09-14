@@ -5,7 +5,7 @@
   "description": "Persistent Memory Development Kit",
   "homepage": "https://github.com/pmem/pmdk",
   "license": "BSD-3-Clause",
-  "supports": "!(linux |arm | x86)",
+  "supports": "!(linux | arm | x86)",
   "dependencies": [
     "getopt",
     {
