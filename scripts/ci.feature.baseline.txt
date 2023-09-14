@@ -2098,7 +2098,6 @@ sdl1-net:x64-uwp = cascade
 sdl1-net(osx) = cascade
 sdl2-mixer-ext[fluidsynth,libmodplug,opusfile,wavpack]:arm64-uwp = cascade
 sdl2-mixer-ext[wavpack]:arm64-windows = cascade
-sdl2-mixer:x64-uwp = cascade
 sdl2-mixer[fluidsynth,libmodplug,opusfile]:arm64-uwp = cascade
 sdl2-net:x64-uwp = cascade
 sdl2-ttf[harfbuzz]:arm64-uwp = cascade
