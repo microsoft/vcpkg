@@ -1461,7 +1461,7 @@
       "port-version": 0
     },
     "celero": {
-      "baseline": "2.8.5",
+      "baseline": "2.9.0",
       "port-version": 0
     },
     "cello": {
