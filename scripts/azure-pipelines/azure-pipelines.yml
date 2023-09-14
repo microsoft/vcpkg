@@ -69,8 +69,8 @@ jobs:
 
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: arm-uwp
-    jobName: arm_uwp
+    triplet: arm64-uwp
+    jobName: arm64_uwp
     poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
