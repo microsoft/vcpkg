@@ -1,0 +1,11 @@
+{
+    "name": "poppler-data",
+    "version-string": "0.4.12",
+    "description": "poppler-data poppler data depends.",
+    "dependencies": [
+        {
+          "name": "vcpkg-cmake",
+          "host": true
+        }
+      ]
+  }

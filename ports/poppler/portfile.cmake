@@ -1,4 +1,4 @@
-string(REGEX REPLACE "^([0-9]+)[.]([0-9][.])" "\\1.0\\2" POPPLER_VERSION "${VERSION}")
+﻿string(REGEX REPLACE "^([0-9]+)[.]([0-9][.])" "\\1.0\\2" POPPLER_VERSION "${VERSION}")
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -48,7 +48,7 @@ endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_find_acquire_program(PYTHON3)
-
+message(WARNING  ${CURRENT_INSTALLED_DIR}/share/poppler)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -75,6 +75,7 @@ vcpkg_cmake_configure(
         -DCMAKE_REQUIRE_FIND_PACKAGE_Boost=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GObjectIntrospection=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GTK=ON
+		"-DPOPPLER_DATADIR=${CURRENT_INSTALLED_DIR}/share/poppler"
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_GObjectIntrospection

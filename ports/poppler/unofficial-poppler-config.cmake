@@ -1,4 +1,4 @@
-include(CMakeFindDependencyMacro)
+﻿include(CMakeFindDependencyMacro)
 cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0057 NEW)
 set(features "@FEATURES@")

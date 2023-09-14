@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "poppler",
   "version": "23.1.0",
   "port-version": 4,
@@ -6,24 +6,25 @@
   "homepage": "https://poppler.freedesktop.org/",
   "license": "GPL-2.0-or-later",
   "supports": "!uwp & !xbox",
-  "dependencies": [
-    "boost-container",
-    "boost-move",
-    "freetype",
-    "libiconv",
-    "libjpeg-turbo",
-    "libpng",
-    "openjpeg",
-    "tiff",
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
-  ],
+    "dependencies": [
+        "boost-container",
+        "boost-move",
+        "freetype",
+        "libiconv",
+        "libjpeg-turbo",
+        "libpng",
+        "openjpeg",
+        "tiff",
+        "poppler-data",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        },
+        {
+            "name": "vcpkg-cmake-config",
+            "host": true
+        }
+    ],
   "default-features": [
     "font-configuration",
     "zlib"
@@ -108,6 +109,12 @@
       "description": "zlib for poppler",
       "dependencies": [
         "zlib"
+      ]
+    },
+    "poppler-data":{
+      "description":"popper-data",
+      "dependencies":[
+        "poppler-data"
       ]
     }
   }
