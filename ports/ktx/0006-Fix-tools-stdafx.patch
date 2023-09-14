@@ -11,9 +11,9 @@ index 30d7ff4675..155ccdb773 100644
  #include <stdio.h>
 -#ifdef _WIN32
 +
-+#ifdef UNICODE
-+#undef UNICODE
-+#endif
++
++
++
 +
 +#if WIN32
 +  #include <io.h>
