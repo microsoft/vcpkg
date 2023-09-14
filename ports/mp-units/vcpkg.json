@@ -1,10 +1,10 @@
 {
   "name": "mp-units",
-  "version-semver": "0.7.0",
+  "version": "0.8.0",
   "description": "mp-units - A Units Library for C++",
   "homepage": "https://github.com/mpusz/units",
+  "license": "MIT",
   "dependencies": [
-    "fmt",
     "gsl-lite",
     {
       "name": "vcpkg-cmake",
@@ -14,5 +14,35 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform specific default features",
+      "dependencies": [
+        {
+          "name": "mp-units",
+          "features": [
+            "install-range-v3",
+            "use-libfmt"
+          ],
+          "platform": "osx"
+        }
+      ]
+    },
+    "install-range-v3": {
+      "description": "Provide range-v3 for compilers not supporting std::ranges",
+      "dependencies": [
+        "range-v3"
+      ]
+    },
+    "use-libfmt": {
+      "description": "Use libfmt instead of std::format",
+      "dependencies": [
+        "fmt"
+      ]
+    }
+  }
 }

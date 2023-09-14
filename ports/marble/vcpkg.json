@@ -1,10 +1,11 @@
 {
   "name": "marble",
-  "version-string": "19.08.2",
-  "port-version": 3,
+  "version-string": "22.04.0",
+  "port-version": 2,
   "description": "Marble KDE library",
   "homepage": "https://marble.kde.org",
-  "supports": "windows & x64 & !static",
+  "license": "LGPL-2.1-or-later",
+  "supports": "windows & x64 & !static & !xbox",
   "dependencies": [
     "qt5-base",
     "qt5-quickcontrols",

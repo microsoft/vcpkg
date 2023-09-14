@@ -1,7 +1,4 @@
 The package arrow provides CMake targets:
 
     find_package(Arrow CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE ${ARROW_LIBRARIES})
-
-    find_package(Parquet CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE ${PARQUET_LIBRARIES})
+    target_link_libraries(main PRIVATE "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>")

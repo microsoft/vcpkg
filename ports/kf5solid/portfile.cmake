@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/solid
-    REF v5.89.0
-    SHA512 18d3c709756476870b6495bd5a99d70ec291a71a2f79dae954ce434953fb6299033c2dc85c68adf81031b03b70bf2e4798b7428da99c2ac28ddd6070cc413592
+    REF v5.98.0
+    SHA512 9f0aed7f8ea29a6132ca9c99c4c744ca5580bb3f7be1712e27d1fc3ae47b2edac26a5ce20abddef4d9998612f2386e1cc6915504c02897f2b3ebcec01cd26208
     HEAD_REF master
     PATCHES
         fix-libmount.patch
@@ -38,12 +38,13 @@ file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: fa
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   INVERTED_FEATURES
-    "libmount"          CMAKE_DISABLE_FIND_PACKAGE_LibMount
+    "libmount" CMAKE_DISABLE_FIND_PACKAGE_LibMount
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBUILD_DEVICE_BACKEND_imobile=OFF
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_QMLDIR=qml
 )
@@ -55,7 +56,7 @@ vcpkg_copy_pdbs()
 vcpkg_copy_tools(
     TOOL_NAMES solid-hardware5
     AUTO_CLEAN
- )
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -64,4 +65,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+

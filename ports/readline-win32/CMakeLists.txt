@@ -50,7 +50,24 @@ add_library(readline
 	mbutil.c
     support/wcwidth.c)
 
+file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+install(FILES ${headers} DESTINATION include/readline)
+
+target_include_directories(readline PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
+
 install(TARGETS readline
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib)
+    EXPORT unofficial-readline-win32-config
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(EXPORT unofficial-readline-win32-config
+    NAMESPACE unofficial::readline-win32::
+    DESTINATION share/unofficial-readline-win32)
+
+Set(prefix "${CMAKE_INSTALL_PREFIX}")
+Set(exec_prefix "\${prefix}")
+Set(libdir "\${prefix}/lib")
+Set(includedir "\${prefix}/include")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/readline.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/readline.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/readline.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")

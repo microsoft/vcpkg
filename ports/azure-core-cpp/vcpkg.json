@@ -1,6 +1,7 @@
 {
   "name": "azure-core-cpp",
-  "version-semver": "1.6.0",
+  "version-semver": "1.10.2",
+  "port-version": 4,
   "description": [
     "Microsoft Azure Core SDK for C++",
     "This library provides shared primitives, abstractions, and helpers for modern Azure SDK client libraries written in the C++."
@@ -10,8 +11,7 @@
   "dependencies": [
     {
       "name": "openssl",
-      "platform": "!windows & !uwp",
-      "version>=": "1.1.1n"
+      "platform": "!windows & !uwp"
     },
     {
       "name": "vcpkg-cmake",
@@ -20,6 +20,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "wil",
+      "platform": "windows"
     }
   ],
   "default-features": [
@@ -65,12 +69,7 @@
     },
     "winhttp": {
       "description": "WinHTTP HTTP transport implementation",
-      "dependencies": [
-        {
-          "name": "azure-core-cpp",
-          "default-features": false
-        }
-      ]
+      "supports": "windows"
     }
   }
 }

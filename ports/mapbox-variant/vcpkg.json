@@ -1,6 +1,6 @@
 {
   "name": "mapbox-variant",
-  "version-string": "1.2.0",
-  "port-version": 1,
+  "version": "1.2.0",
+  "port-version": 2,
   "description": "C++11/C++14 Variant"
 }

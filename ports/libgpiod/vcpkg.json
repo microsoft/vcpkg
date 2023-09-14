@@ -1,14 +1,19 @@
 {
   "name": "libgpiod",
-  "version": "1.6.3",
+  "version": "2.0.1",
   "description": "C library and tools for interacting with the linux GPIO character device",
   "homepage": "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git",
   "license": "LGPL-2.1-or-later",
-  "supports": "linux & (x64 | arm64)",
+  "supports": "linux & (x64 | arm)",
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
+      "name": "vcpkg-cmake-get-vars",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "cxx-bindings": {
+      "description": "Make available cxx bindings"
+    }
+  }
 }

@@ -1,6 +1,6 @@
 {
   "name": "qt5-androidextras",
-  "version": "5.15.3",
+  "version": "5.15.10",
   "description": "Qt5 androidextras Module;",
   "license": null,
   "supports": "android",

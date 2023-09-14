@@ -1,0 +1,21 @@
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO twig-energy/stronk
+  REF 60144eb738f234a99d3bbdd31353ee4f5366125d
+  HEAD_REF main
+  SHA512 3440f16d226c732076f951c211ae6d511ae6a8ec1858e1e23c91b347ec5967e702095d978989ec28e4fc3907a7e34bb09d37681cbb486ea151f189d5e882b850
+)
+
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+  "-DCMAKE_INSTALL_INCLUDEDIR=${CURRENT_PACKAGES_DIR}/include"
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

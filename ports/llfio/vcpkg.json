@@ -1,8 +1,14 @@
 {
   "name": "llfio",
-  "version-string": "2.0-20220112",
+  "version-date": "2023-03-13",
+  "port-version": 1,
+  "maintainers": [
+    "Niall Douglas <s_github@nedprod.com>",
+    "Henrik Gaßmann <henrik@gassmann.onl>"
+  ],
   "description": "P1031 low level file i/o and filesystem library for the C++ standard",
   "homepage": "https://github.com/ned14/llfio",
+  "license": "Apache-2.0 OR BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
     "outcome",
@@ -16,33 +22,47 @@
     }
   ],
   "features": {
-    "cxx17": {
-      "description": "Do not polyfill C++17 entities",
-      "dependencies": [
-        {
-          "name": "ned14-internal-quickcpplib",
-          "default-features": false,
-          "features": [
-            "cxx17"
-          ]
-        }
-      ]
-    },
-    "cxx20": {
-      "description": "Do not polyfill C++20 entities",
+    "polyfill-cxx17": {
+      "description": "Polyfill C++17 entities",
       "dependencies": [
         {
           "name": "llfio",
           "default-features": false,
           "features": [
-            "cxx17"
+            "polyfill-cxx20"
           ]
         },
         {
           "name": "ned14-internal-quickcpplib",
           "default-features": false,
           "features": [
-            "cxx20"
+            "polyfill-cxx17"
+          ]
+        },
+        {
+          "name": "outcome",
+          "default-features": false,
+          "features": [
+            "polyfill-cxx17"
+          ]
+        }
+      ]
+    },
+    "polyfill-cxx20": {
+      "description": "Polyfill C++20 entities",
+      "dependencies": [
+        {
+          "name": "ned14-internal-quickcpplib",
+          "default-features": false,
+          "features": [
+            "polyfill-cxx20"
+          ]
+        },
+        {
+          "name": "outcome",
+          "default-features": false,
+          "features": [
+            "polyfill-cxx20"
           ]
         }
       ]

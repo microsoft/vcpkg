@@ -1,0 +1,12 @@
+The package libxslt is compatible with built-in CMake targets:
+
+    # xslt library
+    find_package(LibXslt REQUIRED)
+    target_link_libraries(main PRIVATE LibXslt::LibXslt)
+
+    # exslt library
+    find_package(LibXslt REQUIRED)
+    target_link_libraries(main PRIVATE LibXslt::LibExslt)
+
+In order to use modules, you must set environment variable LIBXSLT_PLUGINS_PATH
+at runtime.

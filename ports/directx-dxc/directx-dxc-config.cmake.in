@@ -1,0 +1,31 @@
+
+get_filename_component(_dxc_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_dxc_root "${_dxc_root}" PATH)
+get_filename_component(_dxc_root "${_dxc_root}" PATH)
+
+set(_dxc_exe "${_dxc_root}/@tool_path@")
+if (EXISTS "${_dxc_exe}")
+
+   add_library(Microsoft::DirectXShaderCompiler SHARED IMPORTED)
+   set_target_properties(Microsoft::DirectXShaderCompiler PROPERTIES
+      IMPORTED_LOCATION_RELEASE            "${_dxc_root}/@dll_dir@/@dll_name_dxc@; ${_dxc_root}/@dll_dir@/@dll_name_dxil@"
+      IMPORTED_LOCATION_DEBUG              "${_dxc_root}/@dll_dir@/@dll_name_dxc@; ${_dxc_root}/@dll_dir@/@dll_name_dxil@"
+      IMPORTED_IMPLIB_RELEASE              "${_dxc_root}/lib/@lib_name@"
+      IMPORTED_IMPLIB_DEBUG                "${_dxc_root}/lib/@lib_name@"
+      IMPORTED_SONAME_RELEASE              "@lib_name@"
+      IMPORTED_SONAME_DEBUG                "@lib_name@"
+      INTERFACE_INCLUDE_DIRECTORIES        "${_dxc_root}/include/directx-dxc"
+      IMPORTED_CONFIGURATIONS              "Debug;Release"
+      IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
+
+    set(directx-dxc_FOUND TRUE)
+    set(DIRECTX_DXC_TOOL ${_dxc_exe})
+
+else()
+
+    set(directx-dxc_FOUND FALSE)
+
+endif()
+
+unset(_dxc_exe)
+unset(_dxc_root)

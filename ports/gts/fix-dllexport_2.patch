@@ -1,0 +1,13 @@
+diff --git a/src/gts.h b/src/gts.h
+index 1b76915..ae1d888 100644
+--- a/src/gts.h
++++ b/src/gts.h
+@@ -38,7 +38,7 @@ extern "C" {
+  * we prefix variable declarations so they can
+  * properly get exported in windows dlls.
+  */
+-#ifdef NATIVE_WIN32
++#if 1
+ #  ifdef GTS_COMPILATION
+ #    define GTS_C_VAR __declspec(dllexport)
+ #  else /* not GTS_COMPILATION */

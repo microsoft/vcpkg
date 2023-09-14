@@ -1,0 +1,44 @@
+diff --git a/src/libbson/CMakeLists.txt b/src/libbson/CMakeLists.txt
+index 61e926747..6b4c5a911 100644
+--- a/src/libbson/CMakeLists.txt
++++ b/src/libbson/CMakeLists.txt
+@@ -205,6 +205,7 @@ set (HEADERS_FORWARDING
+    ${PROJECT_SOURCE_DIR}/src/bson/forwarding/bson.h
+ )
+
++if(NOT MONGOC_ENABLE_STATIC_BUILD)
+ add_library (bson_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+ if (MSVC AND MSVC_VERSION VERSION_LESS 1900)
+    message (STATUS "Disabling warning C4756 for VS 2013 and older")
+@@ -282,6 +283,7 @@ if (WIN32)
+    # must be handled specially since we can't resolve them
+    set (BSON_SYSTEM_LIBRARIES ${BSON_SYSTEM_LIBRARIES} ws2_32)
+ endif ()
++endif()
+
+ if (MONGOC_ENABLE_STATIC_BUILD)
+    add_library (bson_static STATIC ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+@@ -367,7 +369,7 @@ set (BSON_HEADER_INSTALL_DIR
+ )
+
+ if (MONGOC_ENABLE_STATIC_INSTALL)
+-   set (TARGETS_TO_INSTALL bson_shared bson_static)
++   set (TARGETS_TO_INSTALL bson_static)
+ else ()
+    set (TARGETS_TO_INSTALL bson_shared)
+ endif ()
+@@ -418,12 +420,14 @@ configure_file (
+    ${CMAKE_CURRENT_BINARY_DIR}/src/libbson-1.0.pc
+    @ONLY)
+
++if(NOT MONGOC_ENABLE_STATIC_INSTALL)
+ install (
+    FILES
+       ${CMAKE_CURRENT_BINARY_DIR}/src/libbson-1.0.pc
+    DESTINATION
+       ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+ )
++endif()
+
+ if (MONGOC_ENABLE_STATIC_INSTALL)
+    configure_file (

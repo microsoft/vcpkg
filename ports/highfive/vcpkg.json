@@ -1,6 +1,6 @@
 {
   "name": "highfive",
-  "version": "2.3",
+  "version": "2.6.2",
   "port-version": 2,
   "description": "HighFive is a modern header-only C++/C++11 friendly interface for libhdf5",
   "homepage": "https://github.com/BlueBrain/HighFive",
@@ -35,13 +35,7 @@
     "tests": {
       "description": "Build unit tests",
       "dependencies": [
-        "boost-test",
-        {
-          "name": "highfive",
-          "features": [
-            "boost"
-          ]
-        }
+        "catch2"
       ]
     },
     "xtensor": {

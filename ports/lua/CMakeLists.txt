@@ -7,35 +7,18 @@
 #     - This is a source-incompatible change because extern "C" is chosen by the including application.
 # - The lua.hpp header will not be available.
 
-PROJECT ( lua )
+CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
 
-
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-
-SET (HDR_LIBLUA
-src/lapi.h src/lauxlib.h src/lcode.h src/lctype.h src/ldebug.h src/ldo.h src/lfunc.h
-src/lgc.h src/llex.h src/llimits.h src/lmem.h src/lobject.h src/lopcodes.h src/lparser.h
-src/lstate.h src/lstring.h src/ltable.h src/ltm.h src/lua.h src/luaconf.h src/lualib.h
-src/lundump.h src/lvm.h src/lzio.h
-)
+PROJECT(lua)
 
 # Build Libraries
-SET (SRC_LIBLUA
-src/lapi.c src/lauxlib.c src/lbaselib.c src/lcode.c src/lcorolib.c
-src/lctype.c src/ldblib.c src/ldebug.c src/ldo.c src/ldump.c src/lfunc.c src/lgc.c
-src/linit.c src/liolib.c src/llex.c src/lmathlib.c src/lmem.c src/loadlib.c src/lobject.c
-src/lopcodes.c src/loslib.c src/lparser.c src/lstate.c src/lstring.c src/lstrlib.c
-src/ltable.c src/ltablib.c src/ltm.c src/lundump.c src/lutf8lib.c src/lvm.c src/lzio.c
-)
+FILE(GLOB HDR_LIBLUA "${CMAKE_SOURCE_DIR}/src/*.h")
+# For luac.c
+LIST(REMOVE_ITEM HDR_LIBLUA "${CMAKE_SOURCE_DIR}/src/lopnames.h")
 
-IF (COMPILE_AS_CPP)
-    SET_SOURCE_FILES_PROPERTIES(${SRC_LIBLUA} src/lua.c src/luac.c PROPERTIES LANGUAGE CXX)
-ELSE ()
-    SET (CMAKE_C_STANDARD 99)
-ENDIF ()
-
-# append headers to sources to make them show up in MSVC GUI
-LIST(APPEND SRC_LIBLUA ${HDR_LIBLUA})
+FILE(GLOB SRC_LIBLUA "${CMAKE_SOURCE_DIR}/src/*.c")
+# Executables luac and luai
+LIST(REMOVE_ITEM SRC_LIBLUA "${CMAKE_SOURCE_DIR}/src/luac.c" "${CMAKE_SOURCE_DIR}/src/lua.c")
 
 IF (WIN32)
     # remove warnings
@@ -45,14 +28,15 @@ ENDIF ()
 IF (UNIX)
     ADD_DEFINITIONS (-DLUA_USE_POSIX)
     FIND_LIBRARY (LIB_MATH NAMES m)
-    IF (LIB_MATH)
-        LINK_LIBRARIES (${LIB_MATH})
-    ENDIF ()
 ENDIF ()
 
-#DLL
-ADD_LIBRARY ( lua ${SRC_LIBLUA} )
+# C library
+SET (CMAKE_C_STANDARD 99)
+SET(SRC_LIBLUAC ${SRC_LIBLUA})
+ADD_LIBRARY ( lua ${SRC_LIBLUAC} ${HDR_LIBLUA} )
+TARGET_INCLUDE_DIRECTORIES(lua PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> PUBLIC $<INSTALL_INTERFACE:include>)
 SET_PROPERTY (TARGET lua PROPERTY POSITION_INDEPENDENT_CODE ON)
+SET_SOURCE_FILES_PROPERTIES(${SRC_LIBLUAC} PROPERTIES LANGUAGE C)
 
 IF (BUILD_SHARED_LIBS AND WIN32)
     TARGET_COMPILE_DEFINITIONS (lua PUBLIC -DLUA_BUILD_AS_DLL )
@@ -65,52 +49,35 @@ IF (UNIX)
         FIND_LIBRARY (LIB_DLOPEN NAMES dl)
         IF (LIB_DLOPEN)
             TARGET_COMPILE_DEFINITIONS (lua PUBLIC -DLUA_USE_DLOPEN)
-            TARGET_LINK_LIBRARIES (lua ${LIB_DLOPEN})
+            TARGET_LINK_LIBRARIES (lua ${CMAKE_DL_LIBS})
+        ENDIF ()
+        IF (LIB_MATH)
+            TARGET_LINK_LIBRARIES (lua m)
         ENDIF ()
     ENDIF ()
 ENDIF ()
 
 INSTALL ( TARGETS lua
     EXPORT unofficial-lua-config
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
 )
 
 install(EXPORT unofficial-lua-config DESTINATION share/unofficial-lua)
 
+# CXX library
 IF (COMPILE_AS_CPP)
-    ADD_LIBRARY ( lua-cpp ${SRC_LIBLUA} )
-    SET_TARGET_PROPERTIES(lua-cpp PROPERTIES OUTPUT_NAME "lua-c++")
-    IF (BUILD_SHARED_LIBS AND WIN32)
-        TARGET_COMPILE_DEFINITIONS (lua-cpp PUBLIC -DLUA_BUILD_AS_DLL )
-    ENDIF ()
-    IF (UNIX)
-        IF (APPLE)
-            TARGET_COMPILE_DEFINITIONS (lua-cpp PUBLIC -DLUA_USE_DLOPEN)
-        ELSE ()
-            FIND_LIBRARY (LIB_DLOPEN NAMES dl)
-            IF (LIB_DLOPEN)
-                TARGET_COMPILE_DEFINITIONS (lua-cpp PUBLIC -DLUA_USE_DLOPEN)
-                TARGET_LINK_LIBRARIES (lua-cpp ${LIB_DLOPEN})
-            ENDIF ()
-        ENDIF ()
-    ENDIF ()
-
-    INSTALL ( TARGETS lua-cpp
-        EXPORT unofficial-lua-cpp-config
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-    )
-    
-    install(EXPORT unofficial-lua-cpp-config DESTINATION share/unofficial-lua-cpp)
+    ADD_SUBDIRECTORY(cpp)
 ENDIF()
 
 IF (INSTALL_TOOLS)
-    ADD_EXECUTABLE ( luac src/luac.c ${SRC_LIBLUA} ) # compiler uses non-exported APIs, so must include sources directly.
-    ADD_EXECUTABLE ( luai src/lua.c )  # interpreter
-    TARGET_LINK_LIBRARIES ( luai lua )
+    # compiler uses non-exported APIs, so must include sources directly.
+    ADD_EXECUTABLE ( luac ${CMAKE_SOURCE_DIR}/src/luac.c ${SRC_LIBLUA} ${CMAKE_SOURCE_DIR}/src/lopnames.h )
+    ADD_EXECUTABLE ( luai ${CMAKE_SOURCE_DIR}/src/lua.c )  # interpreter
+
+    TARGET_INCLUDE_DIRECTORIES(luac PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
+    TARGET_LINK_LIBRARIES ( luai PRIVATE lua )
     SET_TARGET_PROPERTIES ( luai PROPERTIES OUTPUT_NAME lua PDB_NAME luai )
     IF (UNIX)
         IF (CMAKE_SYSTEM_NAME STREQUAL FreeBSD)
@@ -121,13 +88,17 @@ IF (INSTALL_TOOLS)
         FIND_LIBRARY (LIB_READLINE NAMES ${_LIB_READLINE_NAME})
         IF (LIB_READLINE)
             TARGET_COMPILE_DEFINITIONS (luai PUBLIC -DLUA_USE_READLINE)
-            TARGET_LINK_LIBRARIES(luai ${LIB_READLINE})
+            TARGET_LINK_LIBRARIES(luai PRIVATE ${LIB_READLINE})
             IF (_LIB_READLINE_NAME STREQUAL edit)
                 TARGET_INCLUDE_DIRECTORIES (luai PUBLIC /usr/include/edit)
             ENDIF ()
         ENDIF ()
+        
+        IF (LIB_MATH)
+            TARGET_LINK_LIBRARIES (luac m)
+        ENDIF ()
     ENDIF ()
-    INSTALL ( TARGETS luai luac RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools/lua )
+    INSTALL ( TARGETS luai luac RUNTIME DESTINATION tools/lua )
 ENDIF ()
 
 IF (NOT SKIP_INSTALL_HEADERS)

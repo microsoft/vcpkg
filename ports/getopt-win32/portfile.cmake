@@ -1,7 +1,3 @@
-if(VCPKG_CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "getopt-win32 only supports building on Windows Desktop")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/getopt
@@ -11,38 +7,28 @@ vcpkg_from_github(
     PATCHES getopt.h.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    list(APPEND OPTIONS "/p:ConfigurationType=StaticLibrary")
-else()
-    list(APPEND OPTIONS "/p:ConfigurationType=DynamicLibrary")
-endif()
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-set(_file "${SOURCE_PATH}/getopt.vcxproj")
-file(READ "${_file}" _contents)
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    string(REPLACE "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" _contents "${_contents}")
-    string(REPLACE "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" _contents "${_contents}")
-else()
-    string(REPLACE "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" _contents "${_contents}")
-    string(REPLACE "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"  "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" _contents "${_contents}")
-endif()
-file(WRITE "${_file}" "${_contents}")
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 
+file(COPY "${SOURCE_PATH}/getopt.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-
-vcpkg_install_msbuild(
-    SOURCE_PATH ${SOURCE_PATH}
-    PROJECT_SUBPATH getopt.vcxproj
-    LICENSE_SUBPATH LICENSE
-    OPTIONS ${OPTIONS}
-)
-
-# Copy header
-file(COPY "${SOURCE_PATH}/getopt.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/getopt.h"
-        "	#define __GETOPT_H_" "	#define __GETOPT_H_\n	#define STATIC_GETOPT"
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/getopt.h"
+        "	#define __GETOPT_H_"
+        "	#define __GETOPT_H_\n	#define STATIC_GETOPT"
     )
 endif()
 
-set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
+vcpkg_cmake_config_fixup(
+    CONFIG_PATH  "share/unofficial-getopt-win32"
+    PACKAGE_NAME "unofficial-getopt-win32"
+)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS "enabled")

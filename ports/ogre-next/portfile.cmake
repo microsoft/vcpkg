@@ -10,15 +10,20 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre-next
-    REF 10b56694f33fd6ead1c501eb90379bcac671d841 #v2.3.0
-    SHA512 b2f1c55655582b2844b7c10cce965cc5268829a0702b09abcfe04fba8db00ad032f605d683c88811f77f9b7b4fb8a1095079f1a1c96bbe9fd022621f4ff4cf81 
+    REF e4c5f0f6d36c07af594e3ef143d017bda1581442 #v2.3.1
+    SHA512 263a50b64defa7345a109a068cc17c347a696f83f64abc071256bb46571ed6b2ef94ee3480d90938cdb7f745d36a4c4890d82677d357c62c9a2956eae8d4ac15
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
         fix_find_package_sdl2.patch
+        avoid-name-clashes.patch
+        fix-error-c2039.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
+if(EXISTS "${SOURCE_PATH}/CMake/FeatureSummary.cmake")
+    file(RENAME "${SOURCE_PATH}/CMake/FeatureSummary.cmake" "${SOURCE_PATH}/CMake/OgreFeatureSummary.cmake")
+endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(OGRE_STATIC ON)
@@ -26,22 +31,12 @@ else()
     set(OGRE_STATIC OFF)
 endif()
 
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        d3d9    OGRE_BUILD_RENDERSYSTEM_D3D9
-        java    OGRE_BUILD_COMPONENT_JAVA
-        python  OGRE_BUILD_COMPONENT_PYTHON
-        csharp  OGRE_BUILD_COMPONENT_CSHARP
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DOGRE_BUILD_DEPENDENCIES=OFF
         -DOGRE_COPY_DEPENDENCIES=OFF
-        -DOGRE_BUILD_SAMPLES=OFF
+        -DOGRE_BUILD_SAMPLES2=OFF
         -DOGRE_BUILD_TESTS=OFF
         -DOGRE_BUILD_TOOLS=OFF
         -DOGRE_BUILD_MSVC_MP=ON
@@ -113,7 +108,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

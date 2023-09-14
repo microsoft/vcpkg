@@ -1,6 +1,4 @@
-include(${CURRENT_INSTALLED_DIR}/share/ignitionmodularscripts/ignition_modular_library.cmake)
-
 ignition_modular_library(NAME math
-                         VERSION "6.6.0"
-                         SHA512 1b5f59b45256daa81cbfb7da4727200d0d6cb4a75fbc3b83b512c18ec6307b5bd78b8ee7a84f0f8a8c334717a1480766f62658bd213e9021c09c0ed22caa921d
-                         PATCHES fix-isspace.patch)
+                         VERSION "6.14.0"
+                         SHA512 ad95160cc1cd137779b9da589c47994d04f829af10865071e9ead4d55c4399d04d5398287d3b294e3f67230205656e1fe243129673e1f8e73f62f3933c314802
+                         )

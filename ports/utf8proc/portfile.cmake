@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO JuliaLang/utf8proc
-    REF 3203baa7374d67132384e2830b2183c92351bffc # v2.6.1
-    SHA512 582831c4c2d118f1c6f9e6de812878b96428d8fa1b9a2bbca32633a3853cb1981c917c724d2a8db51282ed13fd1654ca45f5d227731f5b90b17e7fc3acc93b07
+    REF 8ca6144c85c165987cb1c5d8395c7314e13d4cd7 # v2.7.0
+    SHA512 a33e2335e9978e7a49bc0ecf9128abd93466d9daffb052f9db88097e771588547df6ba07b6028c77621e60f3b85eab78a368d9b8266ecb97ad7bdfae2b4866fc
     PATCHES
         export-cmake-targets.patch
 )
@@ -29,5 +29,7 @@ else()
     string(REPLACE "defined UTF8PROC_SHARED" "1" UTF8PROC_H "${UTF8PROC_H}")
 endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/utf8proc.h" "${UTF8PROC_H}")
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

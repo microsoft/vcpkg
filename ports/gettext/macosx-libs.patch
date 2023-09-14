@@ -1,0 +1,13 @@
+diff --git a/gettext-runtime/configure b/gettext-runtime/configure
+index c21955a..902729a 100755
+--- a/gettext-runtime/configure
++++ b/gettext-runtime/configure
+@@ -26819,7 +26819,7 @@ else $as_nop
+   gt_save_CPPFLAGS="$CPPFLAGS"
+             CPPFLAGS="$CPPFLAGS $INCINTL"
+             gt_save_LIBS="$LIBS"
+-            LIBS="$LIBS $LIBINTL"
++            LIBS="$LIBS $LIBINTL $INTL_MACOSX_LIBS"
+                         cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 

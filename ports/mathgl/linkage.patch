@@ -1,0 +1,187 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a316984..920a099 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -71,6 +71,14 @@ macro(mgl_po_src)
+ 	set(po_files ${po_files} ${l_files} PARENT_SCOPE)
+ endmacro(mgl_po_src)
+ 
++if(BUILD_SHARED_LIBS)
++	set(link_type "")
++	set(excluded_type "-static")
++else()
++	set(link_type "-static")
++	set(excluded_type "")
++endif()
++
+ function(mgl_add_lib mgl_tmp_lib)
+ 	if(${mgl_tmp_lib} MATCHES mgl)
+ 		set(mgllib mgl)
+@@ -113,8 +121,10 @@ function(mgl_add_lib mgl_tmp_lib)
+ 			set_target_properties(${mgllib}-static PROPERTIES OUTPUT_NAME "${mgllib}${mgl_lib_static}${mgl_lib_end}")
+ 	endif(enable-mgl2)
+ 
++	target_compile_definitions(${mgllib} PRIVATE BUILDING_${mgllib}_LIB)
++	set_target_properties(${mgllib}${excluded_type} PROPERTIES EXCLUDE_FROM_ALL 1)
+ 	install(
+-			TARGETS ${mgllib} ${mgllib}-static
++			TARGETS ${mgllib}${link_type}
+ 			EXPORT MathGLTargets
+ 			RUNTIME DESTINATION ${MathGL_INSTALL_BIN_DIR}
+ 			ARCHIVE DESTINATION ${MathGL_INSTALL_LIB_DIR}
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index 0263910..186d95b 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -4,7 +4,7 @@ file(COPY ${CMAKE_SOURCE_DIR}/examples/Equirectangular-projection.jpg DESTINATIO
+ file(COPY ${CMAKE_SOURCE_DIR}/examples/samples.cpp DESTINATION ${CMAKE_BINARY_DIR}/examples)
+ file(COPY ${CMAKE_SOURCE_DIR}/examples/wnd_samples.cpp DESTINATION ${CMAKE_BINARY_DIR}/examples)
+ add_executable(mgl_example wnd_samples.cpp full_test.cpp samples.cpp)
+-target_link_libraries(mgl_example mgl-static ${getopt_lib-static})
++target_link_libraries(mgl_example mgl${link_type} ${getopt_lib-static})
+ if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX AND enable-lcov)
+ 	setup_target_for_coverage(
+ 	    NAME mgl_coverage
+@@ -16,25 +16,25 @@ endif(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX AND enable-
+ if(MGL_HAVE_FLTK)
+ 	include_directories(${FLTK_INCLUDE_DIR})
+ 	add_executable(mgl_fltk_example wnd_samples.cpp fltk_example.cpp)
+-	target_link_libraries(mgl_fltk_example mgl-fltk)
++	target_link_libraries(mgl_fltk_example mgl-fltk${link_type})
+ endif(MGL_HAVE_FLTK)
+ 
+ if(MGL_HAVE_GLUT)
+ 	add_executable(mgl_glut_example wnd_samples.cpp glut_example.cpp)
+-	target_link_libraries(mgl_glut_example mgl-glut)
++	target_link_libraries(mgl_glut_example mgl-glut${link_type})
+ endif(MGL_HAVE_GLUT)
+ 
+ if(MGL_HAVE_WX)
+ 	include(${wxWidgets_USE_FILE})
+ 	add_executable(mgl_wx_example wnd_samples.cpp wx_example.cpp)
+-	target_link_libraries(mgl_wx_example mgl-wx)
++	target_link_libraries(mgl_wx_example mgl-wx${link_type})
+ endif(MGL_HAVE_WX)
+ 
+ if(QT_ENABLED)
+ 	add_executable(mgl_qt_example wnd_samples.cpp qt_example.cpp)
+ 	if(enable-qt5)
+ 		include(../scripts/qt5.cmake)
+-		target_link_libraries(mgl_qt_example mgl-qt5)
++		target_link_libraries(mgl_qt_example mgl-qt5${link_type})
+ 	else(enable-qt5)
+ 		include(../scripts/qt4.cmake)
+ 		target_link_libraries(mgl_qt_example mgl-qt4)
+@@ -43,7 +43,7 @@ if(QT_ENABLED)
+ 	if(MGL_HAVE_OPENGL)
+ 		add_executable(mgl_qgl_example wnd_samples.cpp qgl_example.cpp)
+ 		if(enable-qt5)
+-			target_link_libraries(mgl_qgl_example mgl ${MGL_QT5_LIBS})
++			target_link_libraries(mgl_qgl_example mgl${link_type} ${MGL_QT5_LIBS})
+ 		else(enable-qt5)
+ 			target_link_libraries(mgl_qgl_example mgl ${MGL_QT4_LIBS})
+ 		endif(enable-qt5)
+@@ -52,11 +52,11 @@ endif(QT_ENABLED)
+ 
+ if(MGL_HAVE_LTDL)
+ 	add_library(mgl_module MODULE mgl_module.cpp)
+-	target_link_libraries(mgl_module mgl)	# for compatibility with win32
++	target_link_libraries(mgl_module mgl${link_type})	# for compatibility with win32
+ endif(MGL_HAVE_LTDL)
+ 
+ if(MGL_HAVE_MPI)
+ 	add_executable(mgl_mpi_example mpi_test.cpp)
+-	target_link_libraries(mgl_mpi_example mgl-mpi mgl ${MPI_LIBRARIES})
++	target_link_libraries(mgl_mpi_example mgl-mpi${link_type} mgl${link_type} ${MPI_LIBRARIES})
+ 	target_include_directories(mgl_mpi_example SYSTEM PUBLIC ${MPI_CXX_INCLUDE_PATH})
+ endif(MGL_HAVE_MPI)
+diff --git a/include/mgl2/abstract.h b/include/mgl2/abstract.h
+index da27869..b1e6761 100644
+--- a/include/mgl2/abstract.h
++++ b/include/mgl2/abstract.h
+@@ -20,6 +20,15 @@
+ #ifndef _MGL_ABSTRACT_H_
+ #define _MGL_ABSTRACT_H_
+ 
++#include "mgl2/dllexport.h"
++#if defined(BUILDING_mgl_LIB) || !defined mgl_EXPORTS
++#define MGL_CORE_EXPORT MGL_EXPORT
++#elif defined(_WIN32) && !defined(MGL_STATIC_DEFINE)
++#define MGL_CORE_EXPORT __declspec(dllimport)
++#else
++#define MGL_CORE_EXPORT 
++#endif
++
+ #include "mgl2/define.h"
+ //-----------------------------------------------------------------------------
+ #ifdef __cplusplus
+@@ -209,11 +218,11 @@ cmdual MGL_EXPORT mgl_cexpr_eval_v(HAEX ex, mdual *vars);
+ 
+ //-----------------------------------------------------------------------------
+ /// Callback function for asking user a question. Result shouldn't exceed 1024.
+-extern MGL_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
++extern MGL_CORE_EXPORT void (*mgl_ask_func)(const wchar_t *quest, wchar_t *res);
+ /// Console function for asking user a question. Result shouldn't exceed 1024.
+ void MGL_EXPORT mgl_ask_gets(const wchar_t *quest, wchar_t *res);
+ /// Callback function for displaying progress of something.
+-extern MGL_EXPORT void (*mgl_progress_func)(int value, int maximal, HMGL gr);
++extern MGL_CORE_EXPORT void (*mgl_progress_func)(int value, int maximal, HMGL gr);
+ /// Console function for displaying progress of something.
+ void MGL_EXPORT mgl_progress_txt(int value, int maximal, HMGL gr);
+ /// Display progress of something.
+@@ -404,7 +413,7 @@ struct MGL_EXPORT mglColorID
+ 	char id;
+ 	mglColor col;
+ };
+-MGL_EXPORT extern mglColorID mglColorIds[31];
++MGL_CORE_EXPORT extern mglColorID mglColorIds[31];
+ // MGL_EXPORT extern std::string mglGlobalMess;	///< Buffer for receiving global messages
+ //-----------------------------------------------------------------------------
+ #endif
+diff --git a/mgllab/CMakeLists.txt b/mgllab/CMakeLists.txt
+index 1649104..41c2e6a 100644
+--- a/mgllab/CMakeLists.txt
++++ b/mgllab/CMakeLists.txt
+@@ -38,7 +38,7 @@ if(MGL_HAVE_FLTK)
+ 		set(mgllab_src ${mgllab_src} mgllab.rc)
+ 	endif(WIN32)
+ 	add_executable(mgllab ${mgllab_src} ${mgllab_hdr})
+-	target_link_libraries(mgllab mgl mgl-fltk ${FLTK_LIBRARIES})
++	target_link_libraries(mgllab mgl${link_type} mgl-fltk${link_type} ${getopt_lib-static} ${FLTK_LIBRARIES})
+ 	install(
+ 		TARGETS mgllab
+ 		RUNTIME DESTINATION bin	)
+diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
+index 3e10fa7..0281859 100644
+--- a/utils/CMakeLists.txt
++++ b/utils/CMakeLists.txt
+@@ -1,11 +1,5 @@
+ add_executable(make_pas make_pas.cpp)
+ 
+-if(MSVC)
+-set(link_type -static)
+-else(MSVC)
+-set(link_type)
+-endif(MSVC)
+-
+ add_executable(mgltask mgltask.cpp)
+ target_link_libraries(mgltask mgl${link_type} ${getopt_lib-static})
+ install(
+@@ -23,7 +17,7 @@ install(
+ )
+ 
+ add_executable(mgl.cgi mglcgi.cpp)
+-target_link_libraries(mgl.cgi mgl-static)
++target_link_libraries(mgl.cgi mgl${link_type})
+ install(
+ 	TARGETS mgl.cgi
+ 	EXPORT MathGLTargets
+@@ -36,7 +30,7 @@ mgl_po_src(mglconv.cpp mglview.cpp mglcgi.cpp mgltask.cpp)
+ if(MGL_HAVE_FLTK)
+ 	add_definitions(-DUSE_FLTK)
+ 	add_executable(mglview mglview.cpp)
+-	target_link_libraries(mglview mgl-fltk ${getopt_lib-static} ${FLTK_LIBRARIES})
++	target_link_libraries(mglview mgl-fltk${link_type} ${getopt_lib-static} ${FLTK_LIBRARIES})
+ 	install(
+ 		TARGETS mglview
+ 		EXPORT MathGLTargets

@@ -1,6 +1,6 @@
 {
   "name": "tomlplusplus",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Header-only TOML config file parser and serializer for modern C++.",
   "homepage": "https://marzer.github.io/tomlplusplus/",
   "license": "MIT",

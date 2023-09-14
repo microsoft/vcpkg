@@ -1,48 +1,39 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF 35a6d7b15fedfdb5198bb6c28b31cda33b2c2a76 #v3.1.6-final
-    SHA512 f42b97a695e037130da9935e3abf117c0720325f194fcdabace95fa16a5ca06d49e35db9616bb0ef16600044397739459551a6276f3c239bd4fc160ecb6cdc16
+    REF "v${VERSION}"
+    SHA512 8ff645fe7ee97bf6358b3619efd737ef8f9eb0235ca481e921a64d451c45eb9671ee4e2807fea285153bc0bb434266234f6f4ab15f396bb8290f262fa879e9b3
     HEAD_REF master
     PATCHES
         install-layout.patch
         relocatable-wx-config.patch
         nanosvg-ext-depend.patch
         fix-libs-export.patch
+        fix-pcre2.patch
+        gtk3-link-libraries.patch
+        sdl2.patch
+        fix_include.patch
+        fix-nanosvg.patch
 )
-
-if(VCPKG_TARGET_IS_LINUX)
-    message(WARNING [[
-Port wxwidgets currently requires the following packages from the system package manager:
-    pkg-config
-    GTK 3
-    libsecret
-    libgcrypt
-    libsystemd
-These development packages can be installed on Ubuntu systems via
-    sudo apt-get install pkg-config libgtk-3-dev libsecret-1-dev libgcrypt20-dev libsystemd-dev
-]])
-    foreach(conflicting_port IN ITEMS freetype glib)
-        if(EXISTS "${CURRENT_INSTALLED_DIR}/share/${conflicting_port}/copyright")
-            message(FATAL_ERROR "Port ${conflicting_port} must not be installed when building ${PORT}:${TARGET_TRIPLET}.")
-        endif()
-    endforeach()
-endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        fonts   wxUSE_PRIVATE_FONTS
+        media   wxUSE_MEDIACTRL
         sound   wxUSE_SOUND
+        webview wxUSE_WEBVIEW
+        webview wxUSE_WEBVIEW_EDGE
 )
 
-set(OPTIONS "")
-if(VCPKG_TARGET_IS_OSX)
-    list(APPEND OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
+set(OPTIONS_RELEASE "")
+if(NOT "debug-support" IN_LIST FEATURES)
+    list(APPEND OPTIONS_RELEASE "-DwxBUILD_DEBUG_LEVEL=0")
 endif()
 
+set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm"))
     list(APPEND OPTIONS
-        -DwxUSE_OPENGL=OFF
         -DwxUSE_STACKWALKER=OFF
     )
 endif()
@@ -53,17 +44,7 @@ else()
     list(APPEND OPTIONS -DwxUSE_WEBREQUEST_CURL=ON)
 endif()
 
-# wxWidgets on Linux currently needs to find the system's `gtk+-3.0.pc`.
-# vcpkg's port pkgconf would prevent this lookup.
-if(VCPKG_TARGET_IS_LINUX AND NOT VCPKG_CROSSCOMPILING AND NOT DEFINED ENV{PKG_CONFIG})
-    find_program(system_pkg_config NAMES pkg-config)
-    if(system_pkg_config)
-        set(ENV{PKG_CONFIG} "${system_pkg_config}")
-    endif()
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND OPTIONS -DPKG_CONFIG_ARGN=--static)
-    endif()
-endif()
+vcpkg_find_acquire_program(PKGCONFIG)
 
 # This may be set to ON by users in a custom triplet.
 # The use of 'wxUSE_STL' and 'WXWIDGETS_USE_STD_CONTAINERS' (ON or OFF) are not API compatible
@@ -86,17 +67,40 @@ vcpkg_cmake_configure(
         -DwxUSE_LIBJPEG=sys
         -DwxUSE_LIBPNG=sys
         -DwxUSE_LIBTIFF=sys
-        -DwxBUILD_DISABLE_PLATFORM_LIB_DIR=ON
+        -DwxUSE_NANOSVG=sys
+        -DwxUSE_GLCANVAS=ON
+        -DwxUSE_LIBGNOMEVFS=OFF
+        -DwxUSE_LIBNOTIFY=OFF
+        -DwxUSE_SECRETSTORE=OFF
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
         -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
+        -DwxUSE_UIACTIONSIMULATOR=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_GSPELL=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_MSPACK=ON
         ${OPTIONS}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        # The minimum cmake version requirement for Cotire is 2.8.12.
+        # however, we need to declare that the minimum cmake version requirement is at least 3.1 to use CMAKE_PREFIX_PATH as the path to find .pc.
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+    OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_GSPELL
+        CMAKE_DISABLE_FIND_PACKAGE_MSPACK
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/wxWidgets)
+
+# The CMake export is not ready for use: It lacks a config file.
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/lib/cmake
+    ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
+)
 
 set(tools wxrc)
-if(VCPKG_TARGET_IS_MINGW OR NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND tools wxrc-3.1)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND tools wxrc-3.2)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/wx-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wx-config")
     if(NOT VCPKG_BUILD_TYPE)
@@ -164,6 +168,14 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h")
     file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h"
         DESTINATION "${CURRENT_PACKAGES_DIR}/lib/mswud/wx"
     )
+endif()
+
+if(NOT "debug-support" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
+    else()
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx-3.2/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
+    endif()
 endif()
 
 if("example" IN_LIST FEATURES)

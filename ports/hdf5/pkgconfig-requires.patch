@@ -22,7 +22,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index b75fdd2..a2e88fd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -750,6 +750,9 @@ if (H5_HAVE_PARALLEL)
+@@ -711,5 +711,8 @@ if (H5_HAVE_PARALLEL)
    if (MPI_C_LINK_FLAGS)
      set (CMAKE_EXE_LINKER_FLAGS "${MPI_C_LINK_FLAGS} ${CMAKE_EXE_LINKER_FLAGS}")
    endif ()
@@ -31,14 +31,24 @@ index b75fdd2..a2e88fd 100644
 +  endif()
  endif ()
  
- #option (DEFAULT_API_VERSION "Enable v1.12 API (v16, v18, v110, v112)" "v112")
+diff --git a/config/cmake/HDFMacros.cmake b/config/cmake/HDFMacros.cmake
+index 1af513b47..05d56ccce 100644
+--- a/config/cmake/HDFMacros.cmake
++++ b/config/cmake/HDFMacros.cmake
+@@ -425,7 +425,7 @@ macro (HDF_DIR_PATHS package_prefix)
+   endif ()
+ 
+   #set the default debug suffix for all library targets
+-  if(NOT CMAKE_DEBUG_POSTFIX)
++  if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
+     if (WIN32)
+       set (CMAKE_DEBUG_POSTFIX "_D")
+     else ()
 diff --git a/c++/src/CMakeLists.txt b/c++/src/CMakeLists.txt
 index 835d422..9a7176f 100644
 --- a/c++/src/CMakeLists.txt
 +++ b/c++/src/CMakeLists.txt
-@@ -188,14 +188,14 @@ set (_PKG_CONFIG_VERSION "${HDF5_PACKAGE_VERSION}")
- set (_PKG_CONFIG_LIBS_PRIVATE)
- 
+@@ -188,10 +188,10 @@ set (_PKG_CONFIG_VERSION "${HDF5_PACKAGE_VERSION}")
  if (NOT ONLY_SHARED_LIBS)
 -  set (_PKG_CONFIG_LIBS "${_PKG_CONFIG_LIBS} -l${HDF5_CPP_LIB_CORENAME}")
 +  set (_PKG_CONFIG_LIBS "${_PKG_CONFIG_LIBS} -l${HDF5_CPP_LIB_CORENAME}${CMAKE_DEBUG_POSTFIX}")
@@ -48,31 +58,16 @@ index 835d422..9a7176f 100644
 +  set (_PKG_CONFIG_SH_LIBS "${_PKG_CONFIG_SH_LIBS} -l${HDF5_CPP_LIB_CORENAME}${CMAKE_DEBUG_POSTFIX}")
  endif ()
  
--set (_PKG_CONFIG_REQUIRES "${HDF5_LIB_CORENAME}-${HDF5_PACKAGE_VERSION}")
--set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_LIB_CORENAME}-${HDF5_PACKAGE_VERSION}")
+-set (_PKG_CONFIG_REQUIRES "${HDF5_LIB_CORENAME} = ${HDF5_PACKAGE_VERSION}")
+-set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_LIB_CORENAME} = ${HDF5_PACKAGE_VERSION}")
 +set (_PKG_CONFIG_REQUIRES "${HDF5_LIB_CORENAME}")
 +set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_LIB_CORENAME}")
  
- configure_file (
-     ${HDF_CONFIG_DIR}/libhdf5.pc.in
-diff --git a/config/cmake_ext_mod/HDFMacros.cmake b/config/cmake_ext_mod/HDFMacros.cmake
-index ae0ebca..095fae4 100644
---- a/config/cmake_ext_mod/HDFMacros.cmake
-+++ b/config/cmake_ext_mod/HDFMacros.cmake
-@@ -384,7 +384,7 @@ macro (HDF_DIR_PATHS package_prefix)
-   endif ()
- 
-   #set the default debug suffix for all library targets
--    if(NOT CMAKE_DEBUG_POSTFIX)
-+    if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
-       if (WIN32)
-         set (CMAKE_DEBUG_POSTFIX "_D")
-       else ()
 diff --git a/fortran/src/CMakeLists.txt b/fortran/src/CMakeLists.txt
 index e59a829..8da64dd 100644
 --- a/fortran/src/CMakeLists.txt
 +++ b/fortran/src/CMakeLists.txt
-@@ -545,14 +545,14 @@ set (_PKG_CONFIG_VERSION "${HDF5_PACKAGE_VERSION}")
+@@ -549,13 +549,13 @@
  set (_PKG_CONFIG_LIBS_PRIVATE)
  
  if (NOT ONLY_SHARED_LIBS)
@@ -84,18 +79,17 @@ index e59a829..8da64dd 100644
 +  set (_PKG_CONFIG_SH_LIBS "${_PKG_CONFIG_SH_LIBS} -l${HDF5_F90_LIB_CORENAME}${CMAKE_DEBUG_POSTFIX}")
  endif ()
  
--set (_PKG_CONFIG_REQUIRES "${HDF5_LIB_CORENAME}-${HDF5_PACKAGE_VERSION}")
--set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_LIB_CORENAME}-${HDF5_PACKAGE_VERSION}")
+-set (_PKG_CONFIG_REQUIRES "${HDF5_LIB_CORENAME} = ${HDF5_PACKAGE_VERSION}")
+-set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_LIB_CORENAME} = ${HDF5_PACKAGE_VERSION}")
 +set (_PKG_CONFIG_REQUIRES "${HDF5_LIB_CORENAME}")
 +set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_LIB_CORENAME}")
  
  configure_file (
-     ${HDF_CONFIG_DIR}/libhdf5.pc.in
 diff --git a/hl/c++/src/CMakeLists.txt b/hl/c++/src/CMakeLists.txt
 index c516df1..89bd31f 100644
 --- a/hl/c++/src/CMakeLists.txt
 +++ b/hl/c++/src/CMakeLists.txt
-@@ -99,14 +99,14 @@ set (_PKG_CONFIG_VERSION "${HDF5_PACKAGE_VERSION}")
+@@ -99,13 +99,13 @@ set (_PKG_CONFIG_VERSION "${HDF5_PACKAGE_VERSION}")
  set (_PKG_CONFIG_LIBS_PRIVATE)
  
  if (NOT ONLY_SHARED_LIBS)
@@ -107,20 +101,17 @@ index c516df1..89bd31f 100644
 +  set (_PKG_CONFIG_SH_LIBS "${_PKG_CONFIG_SH_LIBS} -l${HDF5_HL_CPP_LIB_CORENAME}${CMAKE_DEBUG_POSTFIX}")
  endif ()
  
--set (_PKG_CONFIG_REQUIRES "${HDF5_HL_LIB_CORENAME}-${HDF5_PACKAGE_VERSION}")
--set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_HL_LIB_CORENAME}-${HDF5_PACKAGE_VERSION}")
+-set (_PKG_CONFIG_REQUIRES "${HDF5_HL_LIB_CORENAME} = ${HDF5_PACKAGE_VERSION}")
+-set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_HL_LIB_CORENAME} = ${HDF5_PACKAGE_VERSION}")
 +set (_PKG_CONFIG_REQUIRES "${HDF5_HL_LIB_CORENAME}")
 +set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_HL_LIB_CORENAME}")
  
  configure_file (
-     ${HDF_CONFIG_DIR}/libhdf5.pc.in
 diff --git a/hl/fortran/src/CMakeLists.txt b/hl/fortran/src/CMakeLists.txt
 index 973299f..8eadfe5 100644
 --- a/hl/fortran/src/CMakeLists.txt
 +++ b/hl/fortran/src/CMakeLists.txt
-@@ -332,14 +332,14 @@ set (_PKG_CONFIG_VERSION "${HDF5_PACKAGE_VERSION}")
- set (_PKG_CONFIG_LIBS_PRIVATE)
- 
+@@ -334,11 +334,11 @@
  if (NOT ONLY_SHARED_LIBS)
 -  set (_PKG_CONFIG_LIBS "${_PKG_CONFIG_LIBS} -l${HDF5_HL_F90_LIB_CORENAME}")
 +  set (_PKG_CONFIG_LIBS "${_PKG_CONFIG_LIBS} -l${HDF5_HL_F90_LIB_CORENAME}${CMAKE_DEBUG_POSTFIX}")
@@ -130,20 +121,17 @@ index 973299f..8eadfe5 100644
 +  set (_PKG_CONFIG_SH_LIBS "${_PKG_CONFIG_SH_LIBS} -l${HDF5_HL_F90_LIB_CORENAME}${CMAKE_DEBUG_POSTFIX}")
  endif ()
  
--set (_PKG_CONFIG_REQUIRES "${HDF5_F90_LIB_CORENAME}-${HDF5_PACKAGE_VERSION}")
--set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_F90_LIB_CORENAME}-${HDF5_PACKAGE_VERSION}")
+-set (_PKG_CONFIG_REQUIRES "${HDF5_F90_LIB_CORENAME} = ${HDF5_PACKAGE_VERSION}")
+-set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_F90_LIB_CORENAME} = ${HDF5_PACKAGE_VERSION}")
 +set (_PKG_CONFIG_REQUIRES "${HDF5_F90_LIB_CORENAME}")
 +set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_F90_LIB_CORENAME}")
  
  configure_file (
-     ${HDF_CONFIG_DIR}/libhdf5.pc.in
 diff --git a/hl/src/CMakeLists.txt b/hl/src/CMakeLists.txt
 index 7678de8..2d398cc 100644
 --- a/hl/src/CMakeLists.txt
 +++ b/hl/src/CMakeLists.txt
-@@ -131,14 +131,14 @@ set (_PKG_CONFIG_VERSION "${HDF5_PACKAGE_VERSION}")
- set (_PKG_CONFIG_LIBS_PRIVATE)
- 
+@@ -132,11 +132,11 @@
  if (NOT ONLY_SHARED_LIBS)
 -  set (_PKG_CONFIG_LIBS "${_PKG_CONFIG_LIBS} -l${HDF5_HL_LIB_CORENAME}")
 +  set (_PKG_CONFIG_LIBS "${_PKG_CONFIG_LIBS} -l${HDF5_HL_LIB_CORENAME}${CMAKE_DEBUG_POSTFIX}")
@@ -153,13 +141,12 @@ index 7678de8..2d398cc 100644
 +  set (_PKG_CONFIG_SH_LIBS "${_PKG_CONFIG_SH_LIBS} -l${HDF5_HL_LIB_CORENAME}${CMAKE_DEBUG_POSTFIX}")
  endif ()
  
--set (_PKG_CONFIG_REQUIRES "${HDF5_LIB_CORENAME}-${HDF5_PACKAGE_VERSION}")
--set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_LIB_CORENAME}-${HDF5_PACKAGE_VERSION}")
+-set (_PKG_CONFIG_REQUIRES "${HDF5_LIB_CORENAME} = ${HDF5_PACKAGE_VERSION}")
+-set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_LIB_CORENAME} = ${HDF5_PACKAGE_VERSION}")
 +set (_PKG_CONFIG_REQUIRES "${HDF5_LIB_CORENAME}")
 +set (_PKG_CONFIG_REQUIRES_PRIVATE "${HDF5_LIB_CORENAME}")
  
  configure_file (
-     ${HDF_CONFIG_DIR}/libhdf5.pc.in
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index b3c2226..ea80d60 100644
 --- a/src/CMakeLists.txt

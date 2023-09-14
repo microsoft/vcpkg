@@ -1,9 +1,8 @@
 {
   "name": "ilmbase",
-  "version-string": "2.3.0",
-  "port-version": 1,
-  "description": "empty package, linking to newer one",
+  "version": "3",
+  "description": "Obsolete, use port imath instead",
   "dependencies": [
-    "openexr"
+    "imath"
   ]
 }

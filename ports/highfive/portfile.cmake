@@ -1,12 +1,19 @@
+# Must be removed on next release
+vcpkg_download_distfile(CATCH2_PATCH
+    URLS https://github.com/BlueBrain/HighFive/commit/be9285ee4661ff4154830989899a2a050d6fbc64.patch?full_index=1
+    FILENAME ${PORT}-669-be9285ee.diff
+    SHA512 d4b085557fdcfaed195efaa25e02358714e6ccb00cc532594592183e934d99e3b80883991fcac1d073fbedb5773d76a5e9a58da4328b71215dd30b259df1eba3
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BlueBrain/HighFive
-    REF v2.3
-    SHA512 5bf8bc6d3a57be39a4fd15f28f8c839706e2c8d6e2270f45ea39c28a2ac1e3c7f31ed2f48390a45a868c714c85f03f960a0bc8fad945c80b41f495e6f4aca36a
+    REF v2.6.2
+    SHA512 80deb3d7f0b2e8e8c660ee37b189d1a4993e23b5ada30c72f3ef4fef80020f8564c8a5a507a34f891cec6c5db0d75d7c7de89040defaf91a3b1cec2018d1bf9e
     HEAD_REF master
-    PATCHES 
-        fix-dependency-hdf5.patch
+    PATCHES
         fix-error-C1128.patch
+        ${CATCH2_PATCH}
 )
 
 vcpkg_check_features(
@@ -26,11 +33,16 @@ vcpkg_cmake_configure(
         -DHIGHFIVE_BUILD_DOCS=OFF
 )
 
-vcpkg_cmake_install()
+set(add_bin "")
+if("tests" IN_LIST FEATURES)
+    set(add_bin ADD_BIN_TO_PATH) # Seems to run tests as part of the build?
+endif()
+
+vcpkg_cmake_install(${add_bin})
 
 if("tests" IN_LIST FEATURES)
     vcpkg_copy_tools(
-        TOOL_NAMES 
+        TOOL_NAMES
             tests_high_five_base
             tests_high_five_easy
             tests_high_five_multi_dims

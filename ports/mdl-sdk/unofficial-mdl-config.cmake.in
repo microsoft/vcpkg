@@ -1,0 +1,10 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(Boost)
+find_dependency(freeimage CONFIG)
+find_dependency(OpenGL)
+
+include("@PACKAGE_PATH_EXPORT_TARGETS@")
+check_required_components("@PROJECT_NAME@")

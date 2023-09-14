@@ -1,13 +1,17 @@
 {
   "name": "tiff",
-  "version": "4.3.0",
-  "port-version": 8,
+  "version": "4.5.1",
+  "port-version": 2,
   "description": "A library that supports the manipulation of TIFF image files",
   "homepage": "https://libtiff.gitlab.io/libtiff/",
-  "license": null,
+  "license": "libtiff",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],
@@ -18,8 +22,7 @@
   ],
   "features": {
     "cxx": {
-      "description": "Build C++ libtiffxx library",
-      "supports": "!arm"
+      "description": "Build C++ libtiffxx library"
     },
     "jpeg": {
       "description": "Support JPEG compression in TIFF image files",

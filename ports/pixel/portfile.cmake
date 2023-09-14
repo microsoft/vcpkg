@@ -1,5 +1,5 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message(WARNING"${PORT} currently requires libglu1-mesa from the system package manager:
+    message(WARNING "${PORT} currently requires libglu1-mesa from the system package manager:
     This can be installed on Ubuntu systems via sudo apt install libglu1-mesa-dev")
 endif()
 

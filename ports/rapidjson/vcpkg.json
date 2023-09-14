@@ -1,9 +1,9 @@
 {
   "name": "rapidjson",
-  "version-date": "2020-09-14",
-  "port-version": 2,
+  "version-date": "2023-04-27",
   "description": "A fast JSON parser/generator for C++ with both SAX/DOM style API <http://rapidjson.org/>",
   "homepage": "http://rapidjson.org/",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

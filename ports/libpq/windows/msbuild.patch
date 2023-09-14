@@ -1,0 +1,428 @@
+diff --git a/src/tools/msvc/Install.pm b/src/tools/msvc/Install.pm
+index 8de79c6..3bc677d 100644
+--- a/src/tools/msvc/Install.pm
++++ b/src/tools/msvc/Install.pm
+@@ -53,6 +53,11 @@ sub Install
+ 	my $target = shift;
+ 	$insttype = shift;
+ 	$insttype = "all" unless ($insttype);
++	if ($insttype eq 'core')
++	{
++		$insttype = 'client';
++		@client_program_files = ( 'libecpg','libecpg_compat', 'libpgtypes', 'libpq' );
++	}
+ 
+ 	# if called from vcregress, the config will be passed to us
+ 	# so no need to re-include these
+@@ -89,7 +94,7 @@ sub Install
+ 	my $majorver = DetermineMajorVersion();
+ 	print "Installing version $majorver for $conf in $target\n";
+ 
+-	my @client_dirs = ('bin', 'lib', 'share', 'symbols');
++	my @client_dirs = ('bin', 'lib', 'share', 'tools', 'share/libpq', 'tools/libpq');
+ 	my @all_dirs = (
+ 		@client_dirs, 'doc', 'doc/contrib', 'doc/extension', 'share/contrib',
+ 		'share/extension', 'share/timezonesets', 'share/tsearch_data');
+@@ -117,11 +122,11 @@ sub Install
+ 			}
+ 		},
+ 		@top_dir);
+-	CopySetOfFiles('config files', $sample_files, $target . '/share/');
++	CopySetOfFiles('config files', $sample_files, $target . '/share/libpq/');
+ 	CopyFiles(
+ 		'Import libraries',
+ 		$target . '/lib/',
+-		"$conf\\", "postgres\\postgres.lib", "libpgcommon\\libpgcommon.lib",
++		"$conf\\", "libpgcommon\\libpgcommon.lib",
+ 		"libpgport\\libpgport.lib");
+ 	CopyContribFiles($config, $target);
+ 	CopyIncludeFiles($target);
+@@ -293,7 +298,16 @@ sub CopySolutionOutput
+ 		{
+ 			if ($1 == 1)
+ 			{
+-				push(@{ $install_list{'bin'} }, "exe");
++				push(@{ $install_list{'tools\\libpq'} }, "exe");
++			}
++			elsif ($1 == 2)
++			{
++				push(@{ $install_list{'bin'} }, "dll");
++				push(@{ $install_list{'lib'} }, "lib") if $is_sharedlib; # not for plugins
++			}
++			elsif ($is_sharedlib) # forced to static lib by vcpkg triplet
++			{
++				push(@{ $install_list{'lib'} }, "lib");
+ 			}
+ 			elsif ($1 == 2)
+ 			{
+@@ -317,7 +331,16 @@ sub CopySolutionOutput
+ 		{
+ 			if ($1 eq 'Application')
+ 			{
+-				push(@{ $install_list{'bin'} }, "exe");
++				push(@{ $install_list{'tools\\libpq'} }, "exe");
++			}
++			elsif ($1 eq 'DynamicLibrary')
++			{
++				push(@{ $install_list{'bin'} }, "dll");
++				push(@{ $install_list{'lib'} }, "lib") if $is_sharedlib; # not for plugins
++			}
++			elsif ($is_sharedlib) # forced to static lib by vcpkg triplet
++			{
++				push(@{ $install_list{'lib'} }, "lib");
+ 			}
+ 			elsif ($1 eq 'DynamicLibrary')
+ 			{
+@@ -350,7 +373,8 @@ sub CopySolutionOutput
+ 				  || croak "Could not copy $pf.$ext\n";
+ 			}
+ 		}
+-		lcopy("$conf\\$pf\\$pf.pdb", "$target\\symbols\\$pf.pdb")
++		$1 ne 'DynamicLibrary' ||
++		lcopy("$conf\\$pf\\$pf.pdb", "$target\\bin\\$pf.pdb")
+ 		  || croak "Could not copy $pf.pdb\n";
+ 		print ".";
+ 	}
+@@ -482,7 +506,7 @@ sub CopySubdirFiles
+ 		foreach my $f (split /\s+/, $flist)
+ 		{
+ 			lcopy("$subdir/$module/$f.control",
+-				"$target/share/extension/$f.control")
++				"$target/share/libpq/extension/$f.control")
+ 			  || croak("Could not copy file $f.control in contrib $module");
+ 			print '.';
+ 		}
+@@ -500,7 +524,7 @@ sub CopySubdirFiles
+ 		foreach my $f (split /\s+/, $flist)
+ 		{
+ 			lcopy("$subdir/$module/$f",
+-				"$target/share/$moduledir/" . basename($f))
++				"$target/share/libpq/$moduledir/" . basename($f))
+ 			  || croak("Could not copy file $f in contrib $module");
+ 			print '.';
+ 		}
+@@ -515,7 +539,7 @@ sub CopySubdirFiles
+ 		foreach my $f (split /\s+/, $flist)
+ 		{
+ 			lcopy("$subdir/$module/$f",
+-				"$target/share/tsearch_data/" . basename($f))
++				"$target/share/libpq/tsearch_data/" . basename($f))
+ 			  || croak("Could not copy file $f in $subdir $module");
+ 			print '.';
+ 		}
+@@ -578,7 +602,7 @@ sub CopySubdirFiles
+ 		  if ($module eq 'spi');
+ 		foreach my $f (split /\s+/, $flist)
+ 		{
+-			lcopy("$subdir/$module/$f", "$target/doc/$moduledir/$f")
++			lcopy("$subdir/$module/$f", "$target/share/libpq/doc/$moduledir/$f")
+ 			  || croak("Could not copy file $f in contrib $module");
+ 			print '.';
+ 		}
+@@ -708,7 +732,7 @@ sub GenerateNLSFiles
+ 	my $majorver = shift;
+ 
+ 	print "Installing NLS files...";
+-	EnsureDirectories($target, "share/locale");
++	EnsureDirectories($target, "share/libpq/locale");
+ 	my @flist;
+ 	File::Find::find(
+ 		{
+@@ -730,12 +754,12 @@ sub GenerateNLSFiles
+ 			next unless /([^\/]+)\.po/;
+ 			$lang = $1;
+ 
+-			EnsureDirectories($target, "share/locale/$lang",
+-				"share/locale/$lang/LC_MESSAGES");
++			EnsureDirectories($target, "share/libpq/locale/$lang",
++				"share/libpq/locale/$lang/LC_MESSAGES");
+ 			my @args = (
+-				"$nlspath\\bin\\msgfmt",
++				"msgfmt",
+ 				'-o',
+-				"$target\\share\\locale\\$lang\\LC_MESSAGES\\$prgm-$majorver.mo",
++				"$target\\share\\libpq\\locale\\$lang\\LC_MESSAGES\\$prgm-$majorver.mo",
+ 				$_);
+ 			system(@args) && croak("Could not run msgfmt on $dir\\$_");
+ 			print ".";
+diff --git a/src/tools/msvc/MSBuildProject.pm b/src/tools/msvc/MSBuildProject.pm
+index f24d9e5..356cc31 100644
+--- a/src/tools/msvc/MSBuildProject.pm
++++ b/src/tools/msvc/MSBuildProject.pm
+@@ -81,13 +81,14 @@ EOF
+   </PropertyGroup>
+ EOF
+ 
++	my $maybe_dll = $self->{solution}->{options}->{VCPKG_CRT_LINKAGE} eq 'dynamic' ? "DLL" : '';
+ 	$self->WriteItemDefinitionGroup(
+ 		$f, 'Debug',
+ 		{
+ 			defs    => "_DEBUG;DEBUG=1",
+ 			opt     => 'Disabled',
+ 			strpool => 'false',
+-			runtime => 'MultiThreadedDebugDLL'
++			runtime => 'MultiThreadedDebug' . $maybe_dll
+ 		});
+ 	$self->WriteItemDefinitionGroup(
+ 		$f,
+@@ -96,7 +97,7 @@ EOF
+ 			defs    => "",
+ 			opt     => 'Full',
+ 			strpool => 'true',
+-			runtime => 'MultiThreadedDLL'
++			runtime => 'MultiThreaded' . $maybe_dll
+ 		});
+ 	return;
+ }
+@@ -266,6 +267,8 @@ sub WriteConfigurationPropertyGroup
+ 	  ($self->{type} eq "exe")
+ 	  ? 'Application'
+ 	  : ($self->{type} eq "dll" ? 'DynamicLibrary' : 'StaticLibrary');
++	if ($self->{solution}->{options}->{VCPKG_LIBRARY_LINKAGE} eq 'static')
++	  { $cfgtype =~ s/DynamicLibrary/StaticLibrary/; }
+ 
+ 	print $f <<EOF;
+   <PropertyGroup Condition="'\$(Configuration)|\$(Platform)'=='$cfgname|$self->{platform}'" Label="Configuration">
+@@ -311,7 +314,9 @@ sub WriteItemDefinitionGroup
+ 	my $libs = $self->GetAdditionalLinkerDependencies($cfgname, ';');
+ 
+ 	my $targetmachine =
+-	  $self->{platform} eq 'Win32' ? 'MachineX86' : 'MachineX64';
++	  'Machine' . uc($self->{platform});
++	$targetmachine =~ s/WIN32/X86/;
++	my $randomizebase = ($self->{platform} =~ /^ARM/) ? 'true' : 'false';
+ 
+ 	my $includes = join ';', @{ $self->{includes} }, "";
+ 
+@@ -347,7 +352,7 @@ sub WriteItemDefinitionGroup
+       <ProgramDatabaseFile>.\\$cfgname\\$self->{name}\\$self->{name}.pdb</ProgramDatabaseFile>
+       <GenerateMapFile>false</GenerateMapFile>
+       <MapFileName>.\\$cfgname\\$self->{name}\\$self->{name}.map</MapFileName>
+-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
++      <RandomizedBaseAddress>$randomizebase</RandomizedBaseAddress>
+       <!-- Permit links to MinGW-built, 32-bit DLLs (default before VS2012). -->
+       <ImageHasSafeExceptionHandlers/>
+       <SubSystem>Console</SubSystem>
+diff --git a/src/tools/msvc/Mkvcbuild.pm b/src/tools/msvc/Mkvcbuild.pm
+index ef0a33c..dd68424 100644
+--- a/src/tools/msvc/Mkvcbuild.pm
++++ b/src/tools/msvc/Mkvcbuild.pm
+@@ -114,8 +114,10 @@ sub mkvcbuild
+ 
+ 	if ($vsVersion >= '9.00')
+ 	{
++		if ($solution->{platform} !~ /^ARM/) {
+ 		push(@pgportfiles, 'pg_crc32c_sse42_choose.c');
+ 		push(@pgportfiles, 'pg_crc32c_sse42.c');
++		}
+ 		push(@pgportfiles, 'pg_crc32c_sb8.c');
+ 	}
+ 	else
+@@ -196,6 +198,7 @@ sub mkvcbuild
+ 		'syncrep_gram.y');
+ 	$postgres->AddFiles('src/backend/utils/adt', 'jsonpath_scan.l',
+ 		'jsonpath_gram.y');
++	($config->{VCPKG_LIBRARY_LINKAGE} eq 'dynamic') &&
+ 	$postgres->AddDefine('BUILDING_DLL');
+ 	$postgres->AddLibrary('secur32.lib');
+ 	$postgres->AddLibrary('ws2_32.lib');
+@@ -240,12 +243,13 @@ sub mkvcbuild
+ 		$pltcl->AddIncludeDir($solution->{options}->{tcl} . '/include');
+ 		$pltcl->AddReference($postgres);
+ 
+-		for my $tclver (qw(86t 86 85 84))
++		my $v = $solution->{options}->{tcl_version};
++		for my $tclver ( ("${v}","${v}s","${v}sx") )
+ 		{
+ 			my $tcllib = $solution->{options}->{tcl} . "/lib/tcl$tclver.lib";
+ 			if (-e $tcllib)
+ 			{
+-				$pltcl->AddLibrary($tcllib);
++				$pltcl->AddLibrary("\$(VcpkgTcl${tclver}Libs)");
+ 				$found = 1;
+ 				last;
+ 			}
+@@ -500,8 +504,7 @@ sub mkvcbuild
+ 		  . "print(str(sys.version_info[0])+str(sys.version_info[1]))";
+ 		my $prefixcmd =
+ 		  qq("$solution->{options}->{python}\\python" -c "$pythonprog");
+-		my $pyout = `$prefixcmd`;
+-		die "Could not query for python version!\n" if $?;
++		my $pyout = "$solution->{options}->{python}\n$solution->{options}->{python_version}";
+ 		my ($pyprefix, $pyver) = split(/\r?\n/, $pyout);
+ 
+ 		# Sometimes (always?) if python is not present, the execution
+@@ -517,8 +520,8 @@ sub mkvcbuild
+ 
+ 		my $plpython = $solution->AddProject('plpython' . $pymajorver,
+ 			'dll', 'PLs', 'src/pl/plpython');
+-		$plpython->AddIncludeDir($pyprefix . '/include');
+-		$plpython->AddLibrary($pyprefix . "/Libs/python$pyver.lib");
++		$plpython->AddIncludeDir($pyprefix . "/include/python$pyver");
++		$plpython->AddLibrary('$(VcpkgPythonLibs)');
+ 		$plpython->AddReference($postgres);
+ 
+ 		# Add transform modules dependent on plpython
+diff --git a/src/tools/msvc/Project.pm b/src/tools/msvc/Project.pm
+index 570bab5..2d51abe 100644
+--- a/src/tools/msvc/Project.pm
++++ b/src/tools/msvc/Project.pm
+@@ -167,6 +167,11 @@ sub AddReference
+ 		}
+ 		$self->AddLibrary(
+ 			"__CFGNAME__/" . $ref->{name} . "/" . $ref->{name} . ".lib");
++
++		if ($self->{solution}->{options}->{VCPKG_LIBRARY_LINKAGE} eq 'static')
++		{
++			map { $self->AddLibrary($_) } @{ $ref->{libraries} };
++		}
+ 	}
+ 	return;
+ }
+diff --git a/src/tools/msvc/Solution.pm b/src/tools/msvc/Solution.pm
+index d30e8fc..231275b 100644
+--- a/src/tools/msvc/Solution.pm
++++ b/src/tools/msvc/Solution.pm
+@@ -63,6 +63,11 @@ sub DeterminePlatform
+ 	my $self = shift;
+ 
+ 	if ($^O eq "MSWin32")
++	{
++		$self->{platform} = uc($self->{options}->{VCPKG_TARGET_ARCHITECTURE});
++		$self->{platform} =~ s/^X86$/Win32/;
++	}
++	elsif (0)
+ 	{
+ 		# Examine CL help output to determine if we are in 32 or 64-bit mode.
+ 		my $output = `cl /help 2>&1`;
+@@ -124,6 +129,9 @@ sub copyFile
+ sub GetOpenSSLVersion
+ {
+ 	my $self = shift;
++	if ($self->{options}->{openssl_version} =~ /(\d+)\.(\d+)\.(\d+)/m) {
++		return ($1, $2, $3);
++	}
+ 
+ 	# Attempt to get OpenSSL version and location.  This assumes that
+ 	# openssl.exe is in the specified directory.
+@@ -148,7 +156,7 @@ sub GetOpenSSLVersion
+ sub GenerateFiles
+ {
+ 	my $self          = shift;
+-	my $bits          = $self->{platform} eq 'Win32' ? 32 : 64;
++	my $bits          = $self->{platform} =~ /64/ ? 64 : 32;
+ 	my $ac_init_found = 0;
+ 	my $package_name;
+ 	my $package_version;
+@@ -502,7 +510,7 @@ sub GenerateFiles
+ 		USE_PAM                    => undef,
+ 		USE_SLICING_BY_8_CRC32C    => undef,
+ 		USE_SSE42_CRC32C           => undef,
+-		USE_SSE42_CRC32C_WITH_RUNTIME_CHECK => 1,
++		USE_SSE42_CRC32C_WITH_RUNTIME_CHECK => $self->{platform} =~ /^ARM/ ? undef : 1,
+ 		USE_SYSTEMD                         => undef,
+ 		USE_SYSV_SEMAPHORES                 => undef,
+ 		USE_SYSV_SHARED_MEMORY              => undef,
+@@ -760,14 +768,14 @@ sub GenerateFiles
+ 		  || confess "Could not open pg_config_paths.h";
+ 		print $o <<EOF;
+ #define PGBINDIR "/bin"
+-#define PGSHAREDIR "/share"
++#define PGSHAREDIR "/share/libpq"
+ #define SYSCONFDIR "/etc"
+ #define INCLUDEDIR "/include"
+ #define PKGINCLUDEDIR "/include"
+ #define INCLUDEDIRSERVER "/include/server"
+ #define LIBDIR "/lib"
+ #define PKGLIBDIR "/lib"
+-#define LOCALEDIR "/share/locale"
++#define LOCALEDIR "/share/libpq/locale"
+ #define DOCDIR "/doc"
+ #define HTMLDIR "/doc"
+ #define MANDIR "/man"
+@@ -952,11 +960,15 @@ sub AddProject
+ 	if ($self->{options}->{zlib})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{zlib} . '\include');
+-		$proj->AddLibrary($self->{options}->{zlib} . '\lib\zdll.lib');
++		$proj->AddLibrary('$(VcpkgZlibLibs)');
+ 	}
+ 	if ($self->{options}->{openssl})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{openssl} . '\include');
++		$proj->AddLibrary('$(VcpkgOpensslLibs)');
++	}
++	elsif (0)
++	{
+ 		my ($digit1, $digit2, $digit3) = $self->GetOpenSSLVersion();
+ 
+ 		# Starting at version 1.1.0 the OpenSSL installers have
+@@ -1027,7 +1039,7 @@ sub AddProject
+ 	if ($self->{options}->{nls})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{nls} . '\include');
+-		$proj->AddLibrary($self->{options}->{nls} . '\lib\libintl.lib');
++		$proj->AddLibrary('$(VcpkgNlsLibs)');
+ 	}
+ 	if ($self->{options}->{gss})
+ 	{
+@@ -1060,6 +1072,10 @@ sub AddProject
+ 	if ($self->{options}->{icu})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{icu} . '\include');
++		$proj->AddLibrary('$(VcpkgIcuLibs)');
++	}
++	elsif (0)
++	{
+ 		if ($self->{platform} eq 'Win32')
+ 		{
+ 			$proj->AddLibrary($self->{options}->{icu} . '\lib\icuin.lib');
+@@ -1077,22 +1093,22 @@ sub AddProject
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{xml} . '\include');
+ 		$proj->AddIncludeDir($self->{options}->{xml} . '\include\libxml2');
+-		$proj->AddLibrary($self->{options}->{xml} . '\lib\libxml2.lib');
++		$proj->AddLibrary('$(VcpkgXmlLibs)');
+ 	}
+ 	if ($self->{options}->{xslt})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{xslt} . '\include');
+-		$proj->AddLibrary($self->{options}->{xslt} . '\lib\libxslt.lib');
++		$proj->AddLibrary('$(VcpkgXsltLibs)');
+ 	}
+ 	if ($self->{options}->{lz4})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{lz4} . '\include');
+-		$proj->AddLibrary($self->{options}->{lz4} . '\lib\liblz4.lib');
++		$proj->AddLibrary('$(VcpkgLz4Libs)');
+ 	}
+ 	if ($self->{options}->{zstd})
+ 	{
+ 		$proj->AddIncludeDir($self->{options}->{zstd} . '\include');
+-		$proj->AddLibrary($self->{options}->{zstd} . '\lib\libzstd.lib');
++		$proj->AddLibrary('$(VcpkgZstdLibs)');
+ 	}
+ 	if ($self->{options}->{uuid})
+ 	{
+diff --git a/src/tools/msvc/gendef.pl b/src/tools/msvc/gendef.pl
+index b8c514a..1fb7619 100644
+--- a/src/tools/msvc/gendef.pl
++++ b/src/tools/msvc/gendef.pl
+@@ -122,7 +122,7 @@ sub writedef
+ 
+ 		# Strip the leading underscore for win32, but not x64
+ 		$f =~ s/^_//
+-		  unless ($platform eq "x64");
++		  if ($platform eq "Win32");
+ 
+ 		# Emit just the name if it's a function symbol, or emit the name
+ 		# decorated with the DATA option for variables.
+@@ -150,7 +150,7 @@ sub usage
+ usage()
+   unless scalar(@ARGV) == 2
+   && ( ($ARGV[0] =~ /\\([^\\]+$)/)
+-	&& ($ARGV[1] eq 'Win32' || $ARGV[1] eq 'x64'));
++	&& ($ARGV[1] ne ''));
+ my $defname  = uc $1;
+ my $deffile  = "$ARGV[0]/$defname.def";
+ my $platform = $ARGV[1];

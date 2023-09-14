@@ -1,9 +1,11 @@
 {
   "name": "dcmtk",
-  "version": "3.6.6",
-  "port-version": 3,
+  "version": "3.6.7",
+  "port-version": 5,
   "description": "This DICOM ToolKit (DCMTK) package consists of source code, documentation and installation instructions for a set of software libraries and applications implementing part of the DICOM/MEDICOM Standard.",
-  "supports": "!arm",
+  "homepage": "https://github.com/DCMTK/dcmtk",
+  "license": "BSD-3-Clause OR BSD-2-Clause OR libtiff OR MIT OR Zlib OR Libpng",
+  "supports": "!(windows & arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -13,5 +15,52 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "iconv": {
+      "description": "Enable Iconv support",
+      "dependencies": [
+        "libiconv"
+      ]
+    },
+    "icu": {
+      "description": "Enable ICU support",
+      "dependencies": [
+        "icu"
+      ]
+    },
+    "openssl": {
+      "description": "Enable OpenSSL",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "png": {
+      "description": "Enable PNG support",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "tiff": {
+      "description": "Enable TIFF support",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "tools": {
+      "description": "Build apps"
+    },
+    "xml2": {
+      "description": "Enable XML support",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
+    "zlib": {
+      "description": "Enable zlib support",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
 }

@@ -1,29 +1,3 @@
-#[===[.md:
-# vcpkg_copy_pdbs
-
-Automatically locate pdbs in the build tree and copy them adjacent to all DLLs.
-
-```cmake
-vcpkg_copy_pdbs(
-    [BUILD_PATHS <glob>...])
-```
-
-The `<glob>`s are patterns which will be passed to `file(GLOB_RECURSE)`,
-for locating DLLs. It defaults to using:
-
-- `${CURRENT_PACKAGES_DIR}/bin/*.dll`
-- `${CURRENT_PACKAGES_DIR}/debug/bin/*.dll`
-
-since that is generally where DLLs are located.
-
-## Notes
-This command should always be called by portfiles after they have finished rearranging the binary output.
-
-## Examples
-
-* [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
-* [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
-#]===]
 function(vcpkg_copy_pdbs)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "" "BUILD_PATHS")
 

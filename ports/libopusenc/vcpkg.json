@@ -1,11 +1,15 @@
 {
   "name": "libopusenc",
-  "version-string": "0.2.1",
-  "port-version": 1,
+  "version": "0.2.1",
+  "port-version": 3,
   "description": "Library for encoding .opus audio files and live streams.",
   "homepage": "https://github.com/xiph/libopusenc",
   "supports": "!uwp",
   "dependencies": [
-    "opus"
+    "opus",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

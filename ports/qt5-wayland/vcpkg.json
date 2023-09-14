@@ -1,6 +1,6 @@
 {
   "name": "qt5-wayland",
-  "version": "5.15.3",
+  "version": "5.15.10",
   "description": "Qt5 wayland Module;",
   "license": null,
   "supports": "linux",

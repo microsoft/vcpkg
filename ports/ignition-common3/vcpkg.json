@@ -1,9 +1,9 @@
 {
   "name": "ignition-common3",
-  "version-string": "3.9.0",
-  "port-version": 2,
+  "version": "3.14.1",
   "description": "Common libraries for robotics applications",
   "homepage": "https://ignitionrobotics.org/libs/common",
+  "license": null,
   "dependencies": [
     {
       "name": "dlfcn-win32",
@@ -14,7 +14,10 @@
     "gts",
     "ignition-cmake2",
     "ignition-math6",
-    "ignition-modularscripts",
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    },
     {
       "name": "libuuid",
       "platform": "!windows & !uwp & !osx"

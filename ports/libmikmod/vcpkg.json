@@ -1,10 +1,16 @@
 {
   "name": "libmikmod",
-  "version-string": "3.3.11.1",
-  "port-version": 10,
+  "version": "3.3.11.1",
+  "port-version": 12,
   "description": "Mikmod is a module player and library supporting many formats, including mod, s3m, it, and xm.",
   "homepage": "https://sourceforge.net/projects/mikmod/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!(osx | uwp | xbox)",
   "dependencies": [
-    "openal-soft"
+    "openal-soft",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

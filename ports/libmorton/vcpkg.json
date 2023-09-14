@@ -1,6 +1,6 @@
 {
   "name": "libmorton",
-  "version": "0.2.8",
+  "version": "0.2.11",
   "description": "Header-only library for encoding/decoding Morton codes in/from 2D/3D coordinates",
   "dependencies": [
     {

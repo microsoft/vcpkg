@@ -1,0 +1,13 @@
+diff --git a/src/gts.h b/src/gts.h
+index 1b7691531..1e87167bc 100644
+--- a/src/gts.h
++++ b/src/gts.h
+@@ -40,7 +40,7 @@ extern "C" {
+  */
+ #if 1
+ #  ifdef GTS_COMPILATION
+-#    define GTS_C_VAR __declspec(dllexport)
++#    define GTS_C_VAR extern __declspec(dllexport)
+ #  else /* not GTS_COMPILATION */
+ #    define GTS_C_VAR extern __declspec(dllimport)
+ #  endif /* not GTS_COMPILATION */

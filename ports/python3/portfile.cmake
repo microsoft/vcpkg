@@ -3,21 +3,30 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
-set(PYTHON_VERSION_MAJOR  3)
-set(PYTHON_VERSION_MINOR  10)
-set(PYTHON_VERSION_PATCH  2)
-set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
+string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" PYTHON_VERSION "${VERSION}")
+set(PYTHON_VERSION_MAJOR "${CMAKE_MATCH_1}")
+set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_2}")
+set(PYTHON_VERSION_PATCH "${CMAKE_MATCH_3}")
 
 set(PATCHES
-    0002-use-vcpkg-zlib.patch
-    0003-devendor-external-dependencies.patch
-    0004-dont-copy-vcruntime.patch
-    0005-only-build-required-projects.patch
-    0009-python.pc.patch
-    0010-bz2d.patch
+    0001-only-build-required-projects.patch
+    0003-use-vcpkg-zlib.patch
+    0004-devendor-external-dependencies.patch
+    0005-dont-copy-vcruntime.patch
+    0008-python.pc.patch
+    0010-dont-skip-rpath.patch
+    0012-force-disable-curses.patch
+    0014-fix-get-python-inc-output.patch
+    0015-dont-use-WINDOWS-def.patch
 )
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(PREPEND PATCHES 0001-static-library.patch)
+    list(APPEND PATCHES 0002-static-library.patch)
+endif()
+
+# Fix build failures with GCC for built-in modules (https://github.com/microsoft/vcpkg/issues/26573)
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND PATCHES 0011-gcc-ldflags-fix.patch)
 endif()
 
 # Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
@@ -29,11 +38,17 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
     message(FATAL_ERROR "python3 requires the feature deprecated-win7-support when building on Windows 7.")
 endif()
 
-# The Windows 11 SDK has a problem that causes it to error on the resource files, so we patch that.
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_WINDOWS)
+    string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PYTHON_ALLOW_EXTENSIONS)
+    # The Windows 11 SDK has a problem that causes it to error on the resource files, so we patch that.
     vcpkg_get_windows_sdk(WINSDK_VERSION)
     if("${WINSDK_VERSION}" VERSION_GREATER_EQUAL "10.0.22000")
         list(APPEND PATCHES "0007-workaround-windows-11-sdk-rc-compiler-error.patch")
+    endif()
+    if(VCPKG_CROSSCOMPILING)
+        list(APPEND PATCHES "0016-fix-win-cross.patch")
+    else()
+        list(APPEND PATCHES "0017-fix-win.patch")
     endif()
 endif()
 
@@ -41,7 +56,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 14f0d1847d4361fa075adbe4dbf7339fb62be91d5419cf506abdf46b36dc5273564792d35e5a5e0608a8fa877a870152a593743c3b70a98c739d5bd028be9e18
+    SHA512 63c1cc817844584c9ea880be0277ebcc18182c5050f59ebbb8dd42c971979bb2cee0f09af6a1e62a6c8c23143dfa6ff21fc1aba25ef50a425fdea46ff3e35896
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -67,39 +82,43 @@ function(make_python_pkgconfig)
     file(WRITE ${out_full_path} "${pkgconfig_file}")
 endfunction()
 
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_WINDOWS)
     # Due to the way Python handles C extension modules on Windows, a static python core cannot
     # load extension modules.
-    string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" PYTHON_ALLOW_EXTENSIONS)
     if(PYTHON_ALLOW_EXTENSIONS)
         find_library(BZ2_RELEASE NAMES bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(BZ2_DEBUG NAMES bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_RELEASE NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_DEBUG NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(EXPAT_RELEASE NAMES libexpat libexpatMD PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-        find_library(EXPAT_DEBUG NAMES libexpatd libexpatdMD PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(FFI_RELEASE NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-        find_library(FFI_DEBUG NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(EXPAT_RELEASE NAMES libexpat libexpatMD libexpatMT PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(EXPAT_DEBUG NAMES libexpatd libexpatdMD libexpatdMT PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(FFI_RELEASE NAMES ffi PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(FFI_DEBUG NAMES ffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(LZMA_RELEASE NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(LZMA_DEBUG NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(SQLITE_DEBUG NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(SSL_RELEASE NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(SSL_DEBUG NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE_RELEASE}")
+        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE_DEBUG}")
     else()
         message(STATUS "WARNING: Static builds of Python will not have C extension modules available.")
     endif()
     find_library(ZLIB_RELEASE NAMES zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
     find_library(ZLIB_DEBUG NAMES zlib zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+    list(APPEND add_libs_rel "${ZLIB_RELEASE}")
+    list(APPEND add_libs_dbg "${ZLIB_DEBUG}")
 
     configure_file("${SOURCE_PATH}/PC/pyconfig.h" "${SOURCE_PATH}/PC/pyconfig.h")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in" "${SOURCE_PATH}/PCbuild/python_vcpkg.props")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/openssl.props.in" "${SOURCE_PATH}/PCbuild/openssl.props")
     file(WRITE "${SOURCE_PATH}/PCbuild/libffi.props"
-        "<?xml version='1.0' encoding='utf-8'?>
-        <Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' />"
+        "<?xml version='1.0' encoding='utf-8'?>"
+        "<Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' />"
     )
 
+    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_SET_CHARSET_FLAG=OFF")
     if(PYTHON_ALLOW_EXTENSIONS)
         set(OPTIONS
             "/p:IncludeExtensions=true"
@@ -129,30 +148,39 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         list(APPEND OPTIONS "/p:_VcpkgPythonLinkage=StaticLibrary")
     endif()
 
-    # _freeze_importlib.exe is run as part of the build process, so make sure the required dynamic libs are available.
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/bin")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    set(ENV{PythonForBuild} "${PYTHON3_DIR}/python.exe") # PythonForBuild is what's used on windows, despite the readme
+
+    if(VCPKG_CROSSCOMPILING)
+        vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
     endif()
 
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "PCbuild/pcbuild.proj"
+        ADD_BIN_TO_PATH
         OPTIONS ${OPTIONS}
-        LICENSE_SUBPATH "LICENSE"
-        TARGET_PLATFORM_VERSION "${WINSDK_VERSION}"
-        SKIP_CLEAN
+        ADDITIONAL_LIBS_RELEASE ${add_libs_rel}
+        ADDITIONAL_LIBS_DEBUG ${add_libs_dbg}
     )
+
+    if(NOT VCPKG_CROSSCOMPILING)
+        file(GLOB_RECURSE freeze_module "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/PCbuild/**/_freeze_module.exe")
+        file(COPY "${freeze_module}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+    endif()
 
     # The extension modules must be placed in the DLLs directory, so we can't use vcpkg_copy_tools()
     if(PYTHON_ALLOW_EXTENSIONS)
-        file(GLOB_RECURSE PYTHON_EXTENSIONS "${CURRENT_BUILDTREES_DIR}/*.pyd")
-        list(FILTER PYTHON_EXTENSIONS EXCLUDE REGEX [[.*_d\.pyd]])
-        file(COPY ${PYTHON_EXTENSIONS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs")
+        file(GLOB_RECURSE PYTHON_EXTENSIONS_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.pyd")
+        file(COPY ${PYTHON_EXTENSIONS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+        file(COPY ${PYTHON_EXTENSIONS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs")
         vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll")
+
+        file(GLOB_RECURSE PYTHON_EXTENSIONS_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.pyd")
+        file(COPY ${PYTHON_EXTENSIONS_DEBUG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 
     file(COPY "${SOURCE_PATH}/Include/" "${SOURCE_PATH}/PC/pyconfig.h"
@@ -171,15 +199,6 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(GLOB PYTHON_INSTALLERS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wininst-*.exe")
     file(REMOVE ${PYTHON_LIBS} ${PYTHON_INSTALLERS})
 
-    # The generated python executable must match the host arch
-    if(PYTHON_ALLOW_EXTENSIONS AND NOT VCPKG_CROSSCOMPILING)
-        message(STATUS "Bootstrapping pip")
-        vcpkg_execute_required_process(COMMAND python -m ensurepip
-            WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
-            LOGNAME "ensurepip-${TARGET_TRIPLET}"
-        )
-    endif()
-
     # pkg-config files
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         make_python_pkgconfig(FILE python.pc INSTALL_ROOT ${CURRENT_PACKAGES_DIR}
@@ -197,8 +216,6 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
 
     vcpkg_fixup_pkgconfig()
 
-    vcpkg_clean_msbuild()
-    
     # Remove static library belonging to executable
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/python.lib")
@@ -213,9 +230,14 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         endif()
     endif()
 else()
+    # The Python Stable ABI, `libpython3.so` is not produced by the upstream build system with --with-pydebug option
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT VCPKG_BUILD_TYPE)
+        set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
+    endif()
+
     set(OPTIONS
         "--with-openssl=${CURRENT_INSTALLED_DIR}"
-        "--with-ensurepip"
+        "--without-ensurepip"
         "--with-suffix="
         "--with-system-expat"
         "--without-readline"
@@ -225,10 +247,23 @@ else()
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()
 
+    # The version of the build Python must match the version of the cross compiled host Python.
+    # https://docs.python.org/3/using/configure.html#cross-compiling-options
+    if(VCPKG_CROSSCOMPILING)
+        set(_python_for_build "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+        list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS ${OPTIONS}
-        OPTIONS_DEBUG "--with-pydebug"
+        AUTOCONFIG
+        OPTIONS
+            ${OPTIONS}
+        OPTIONS_DEBUG
+            "--with-pydebug"
+            "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/debug/lib"
+        OPTIONS_RELEASE
+            "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/lib"
     )
     vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
 
@@ -250,12 +285,43 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 
-    file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
-
     vcpkg_fixup_pkgconfig()
+
+    # Perform some post-build checks on modules
+    file(GLOB python_libs_dynload_debug LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/lib-dynload/*.so*")
+    file(GLOB python_libs_dynload_release LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/lib-dynload/*.so*")
+    set(python_libs_dynload_failed_debug ${python_libs_dynload_debug})
+    set(python_libs_dynload_failed_release ${python_libs_dynload_release})
+    list(FILTER python_libs_dynload_failed_debug INCLUDE REGEX ".*_failed\.so.*")
+    list(FILTER python_libs_dynload_failed_release INCLUDE REGEX ".*_failed\.so.*")
+    if(python_libs_dynload_failed_debug OR python_libs_dynload_failed_release)
+        list(JOIN python_libs_dynload_failed_debug "\n" python_libs_dynload_failed_debug_str)
+        list(JOIN python_libs_dynload_failed_release "\n" python_libs_dynload_failed_release_str)
+        message(FATAL_ERROR "There should be no modules with \"_failed\" suffix:\n${python_libs_dynload_failed_debug_str}\n${python_libs_dynload_failed_release_str}")
+    endif()
+    if(NOT VCPKG_BUILD_TYPE)
+        list(LENGTH python_libs_dynload_release python_libs_dynload_release_length)
+        list(LENGTH python_libs_dynload_debug python_libs_dynload_debug_length)
+        if(NOT python_libs_dynload_release_length STREQUAL python_libs_dynload_debug_length)
+            message(FATAL_ERROR "Mismatched number of modules: ${python_libs_dynload_debug_length} in debug, ${python_libs_dynload_release_length} in release")
+        endif()
+    endif()
 endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(PYTHON_ALLOW_EXTENSIONS)
+        file(READ "${CMAKE_CURRENT_LIST_DIR}/usage.win" usage_extra)
+    else()
+        set(usage_extra "")
+    endif()
+else()
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage.unix" usage_extra)
+endif()
+string(REPLACE "@PYTHON_VERSION_MINOR@" "${PYTHON_VERSION_MINOR}" usage_extra "${usage_extra}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage}\n${usage_extra}")
 
 function(_generate_finder)
     cmake_parse_arguments(PythonFinder "NO_OVERRIDE" "DIRECTORY;PREFIX" "" ${ARGN})
@@ -274,6 +340,7 @@ _generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     function(replace_dirs_in_config_file python_config_file)
         vcpkg_replace_string("${python_config_file}" "${CURRENT_INSTALLED_DIR}" "' + _base + '")
+        vcpkg_replace_string("${python_config_file}" "${CURRENT_HOST_INSTALLED_DIR}" "' + _base + '/../${HOST_TRIPLET}")
         vcpkg_replace_string("${python_config_file}" "${CURRENT_PACKAGES_DIR}" "' + _base + '")
         vcpkg_replace_string("${python_config_file}" "${CURRENT_BUILDTREES_DIR}" "not/existing")
     endfunction()

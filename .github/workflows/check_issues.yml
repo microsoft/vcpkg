@@ -1,0 +1,44 @@
+name: Check For Common Issues
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  check-for-common-issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            let issue_query = {
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            };
+            let issue = await github.rest.issues.get(issue_query)
+
+            // missing-windows-sdk-issue
+            let reg = /RC Pass 1: command "rc .*" failed \(exit code 0\) with the following output:/;
+            if (reg.test(issue.data.body)){
+              await github.rest.issues.removeAllLabels(issue_query);
+              await github.rest.issues.setLabels({...issue_query, labels: ["category:question"]});
+              let body = "Thanks for posting this issue. Please make sure you have the following installed.\n" +
+                         "- Visual Studio Desktop development with C++.\n" +
+                         "- Windows 10 SDK or Windows 11 SDK.";
+              await github.rest.issues.createComment({...issue_query, body}); 
+              // Close the issue? 
+            }
+
+            // msys2 download fails => old vcpkg version
+            reg = /error: https:\/\/repo\.msys2\.org\/.*: failed: status code 404/;
+            if (reg.test(issue.data.body)){
+              await github.rest.issues.removeAllLabels(issue_query);
+              await github.rest.issues.setLabels({...issue_query, labels: ["category:question"]});
+              let body = "Try updating your vcpkg version via `git pull` to resolve this issue. MSYS2 downloads are removed from the upstream servers from time to time, so using an up-to-date vcpkg version is necessary."
+              await github.rest.issues.createComment({...issue_query, body}); 
+              // Close the issue? 
+            }

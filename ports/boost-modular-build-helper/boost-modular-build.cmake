@@ -1,10 +1,11 @@
 include_guard(GLOBAL)
 include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake/vcpkg-port-config.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg-cmake-get-vars/vcpkg-port-config.cmake")
 
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
 get_filename_component(BOOST_BUILD_INSTALLED_DIR "${BOOST_BUILD_INSTALLED_DIR}" DIRECTORY)
 
-set(BOOST_VERSION 1.79.0)
+set(BOOST_VERSION "${VERSION}")
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" BOOST_VERSION_MATCH "${BOOST_VERSION}")
 if("${CMAKE_MATCH_3}" GREATER 0)
     set(BOOST_VERSION_ABI_TAG "${CMAKE_MATCH_1}_${CMAKE_MATCH_2}_${CMAKE_MATCH_3}")
@@ -37,7 +38,6 @@ function(boost_modular_build)
     else()
         message(FATAL_ERROR "Could not find b2 in ${BOOST_BUILD_PATH}")
     endif()
-
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(BOOST_LIB_PREFIX)
         if(VCPKG_PLATFORM_TOOLSET MATCHES "v14.")
@@ -52,7 +52,10 @@ function(boost_modular_build)
         endif()
     else()
         set(BOOST_LIB_PREFIX lib)
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+            set(BOOST_LIB_RELEASE_SUFFIX .a)
+            set(BOOST_LIB_DEBUG_SUFFIX .a)
+        elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
             set(BOOST_LIB_RELEASE_SUFFIX .a)
             set(BOOST_LIB_DEBUG_SUFFIX .a)
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -98,7 +101,7 @@ function(boost_modular_build)
         string(REPLACE "." "" PYTHON_VERSION_TAG "${python3_version}")
     endif()
 
-    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam.in ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
+    configure_file("${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/Jamroot.jam.in" "${_bm_SOURCE_PATH}/Jamroot.jam" @ONLY)
 
     set(configure_options)
     if(_bm_BOOST_CMAKE_FRAGMENT)
@@ -115,7 +118,7 @@ function(boost_modular_build)
     )
 
     vcpkg_cmake_configure(
-        SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
+        SOURCE_PATH "${BOOST_BUILD_INSTALLED_DIR}/share/boost-build"
         GENERATOR Ninja
         OPTIONS
             "-DPORT=${PORT}"
@@ -127,6 +130,7 @@ function(boost_modular_build)
             "-DBOOST_BUILD_PATH=${BOOST_BUILD_PATH}"
             "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
             "-DVCPKG_CMAKE_VARS_FILE=${cmake_vars_file}"
+            "-DVCPKG_CONCURRENCY=${VCPKG_CONCURRENCY}"
             ${configure_options}
         MAYBE_UNUSED_VARIABLES
             FEATURES
@@ -153,6 +157,7 @@ function(boost_modular_build)
         string(REPLACE "-vc143-" "-vc140-" NEW_FILENAME ${NEW_FILENAME}) # To merge VS2022 and VS2015 binaries
         string(REPLACE "-sgd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
         string(REPLACE "-sgyd-" "-gyd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs
+        string(REPLACE "-gyd-" "-gd-" NEW_FILENAME ${NEW_FILENAME}) # For Debug libs with python debugging
         string(REPLACE "-x32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
@@ -193,5 +198,5 @@ function(boost_modular_build)
         message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
     endif()
 
-    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage COPYONLY)
+    configure_file("${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 endfunction()

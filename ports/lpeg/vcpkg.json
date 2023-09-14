@@ -1,10 +1,14 @@
 {
   "name": "lpeg",
-  "version-string": "1.0.2",
-  "port-version": 2,
+  "version": "1.0.2",
+  "port-version": 4,
   "description": "LPeg is a pattern-matching library for Lua, based on Parsing Expression Grammars (PEGs).",
   "homepage": "https://www.inf.puc-rio.br/~roberto/lpeg",
   "dependencies": [
-    "lua"
+    "lua",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }

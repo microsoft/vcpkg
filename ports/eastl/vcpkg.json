@@ -1,7 +1,7 @@
 {
   "name": "eastl",
   "version-string": "3.18.00",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Electronic Arts Standard Template Library. It is a C++ template library of containers, algorithms, and iterators useful for runtime and tool development across multiple platforms. It is a fairly extensive and robust implementation of such a library and has an emphasis on high performance above all other considerations.",
   "homepage": "https://github.com/electronicarts/EASTL",
   "license": "BSD-3-Clause",

@@ -1,0 +1,32 @@
+diff --git a/coin.m4 b/coin.m4
+index 46501b207..a0ff20a6f 100644
+--- a/coin.m4
++++ b/coin.m4
+@@ -1312,11 +1312,11 @@ AC_DEFUN([AC_COIN_CHK_ZLIB],
+   if test x$coin_enable_zlib = xyes ; then
+     AC_CHECK_HEADER([zlib.h],[coin_has_zlib=yes])
+     if test x$coin_has_zlib = xyes ; then
+-      AC_CHECK_LIB([z],[gzopen],[],[coin_has_zlib=no])
++      AC_SEARCH_LIBS([gzopen],[z zlib zlibd],[],[coin_has_zlib=no])
+     fi
+     if test x$coin_has_zlib = xyes ; then
+       m4_foreach_w([myvar],[$1],
+-        [m4_toupper(myvar)_LFLAGS="-lz $m4_toupper(myvar)_LFLAGS"
++        [m4_toupper(myvar)_LFLAGS="-l$ac_cv_search_gzopen $m4_toupper(myvar)_LFLAGS"
+         ])
+       AC_DEFINE(m4_toupper(AC_PACKAGE_NAME)_HAS_ZLIB,[1],[Define to 1 if zlib is available])
+     fi
+@@ -1353,11 +1353,11 @@ AC_DEFUN([AC_COIN_CHK_BZLIB],
+   if test $coin_enable_bzlib = yes ; then
+     AC_CHECK_HEADER([bzlib.h],[coin_has_bzlib=yes])
+     if test $coin_has_bzlib = yes ; then
+-      AC_CHECK_LIB([bz2],[BZ2_bzReadOpen],[],[coin_has_bzlib=no])
++      AC_SEARCH_LIBS([BZ2_bzReadOpen],[bz2 bz2d],[],[coin_has_bzlib=no])
+     fi
+     if test $coin_has_bzlib = yes ; then
+       m4_foreach_w([myvar],[$1],
+-        [m4_toupper(myvar)_LFLAGS="-lbz2 $m4_toupper(myvar)_LFLAGS"
++        [m4_toupper(myvar)_LFLAGS="-l$ac_cv_search_BZ2_bzReadOpen $m4_toupper(myvar)_LFLAGS"
+         ])
+       AC_DEFINE(m4_toupper(AC_PACKAGE_NAME)_HAS_BZLIB,[1],[Define to 1 if bzlib is available])
+     fi

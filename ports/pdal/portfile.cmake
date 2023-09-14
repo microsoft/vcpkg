@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PDAL/PDAL
-    REF 2.4.0
-    SHA512 fd1314058404a1d15e308cee5682dcf3f1c6277884f200069b293b929ddfcd1d0d29bc74353bb08b1d163d3e776c8b036ba62d7c8599470b755128dacfe2f032
+    REF "${VERSION}"
+    SHA512 cefc610682f8dafd5c186ed612edc2db904690c3a53d5111ece0965d197053b064bd8cbd9adab293c47ec1894949b5e33623b0f0e6b6cad35617a20f0039bd79
     HEAD_REF master
     PATCHES
         fix-dependency.patch
@@ -12,6 +12,9 @@ vcpkg_from_github(
         fix-find-library-suffix.patch
         no-pkgconfig-requires.patch
         no-rpath.patch
+        fix-gcc-13-build.patch  #upstream PR: https://github.com/PDAL/PDAL/pull/4039
+        gdal-3.7.patch
+        mingw.patch
 )
 
 # Prefer pristine CMake find modules + wrappers and config files from vcpkg.
@@ -23,16 +26,16 @@ endforeach()
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/vendor/nanoflann"
     "${SOURCE_PATH}/vendor/nlohmann"
+    "${SOURCE_PATH}/pdal/JsonFwd.hpp"
 )
 file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nanoflann.hpp" DESTINATION "${SOURCE_PATH}/vendor/nanoflann")
 file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nlohmann/json.hpp" DESTINATION "${SOURCE_PATH}/vendor/nlohmann/nlohmann")
 file(APPEND "${SOURCE_PATH}/vendor/nlohmann/nlohmann/json.hpp" "namespace NL = nlohmann;\n")
+file(INSTALL "${CURRENT_INSTALLED_DIR}/include/nlohmann/json_fwd.hpp" DESTINATION "${SOURCE_PATH}/pdal")
+file(RENAME "${SOURCE_PATH}/pdal/json_fwd.hpp" "${SOURCE_PATH}/pdal/JsonFwd.hpp")
+file(APPEND "${SOURCE_PATH}/pdal/JsonFwd.hpp" "namespace NL = nlohmann;\n")
 
 unset(ENV{OSGEO4W_HOME})
-
-if("laszip" IN_LIST FEATURES)
-    message(WARNING "The 'laszip' feature is obsolete and will be removed in the future.")
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -44,10 +47,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         pgpointcloud BUILD_PLUGIN_PGPOINTCLOUD
         zstd        WITH_ZSTD
 )
-if(BUILD_PLUGIN_DRACO)
-    vcpkg_find_acquire_program(PKGCONFIG)
-endif()
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -59,6 +59,8 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Libexecinfo:BOOL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libunwind:BOOL=ON
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
 )
 
 vcpkg_cmake_install()
@@ -93,8 +95,6 @@ file(READ "${SOURCE_PATH}/vendor/kazhdan/PoissonRecon.h" kazhdan_license)
 string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" kazhdan_license "${kazhdan_license}")
 file(READ "${SOURCE_PATH}/vendor/lazperf/lazperf.hpp" lazperf_license)
 string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" lazperf_license "${lazperf_license}")
-file(READ "${SOURCE_PATH}/vendor/lazperf/detail/field_xyz.hpp" lazperf_detail_license)
-string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" lazperf_detail_license "${lazperf_detail_license}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
 "${pdal_license}
 ---
@@ -114,17 +114,12 @@ Files in vendor/lazperf/:
 ${lazperf_license}
 ---
 
-Files in vendor/lazperf/detail/:
-
-${lazperf_detail_license}
----
-
 Files in vendor/eigen:
 
 Most Eigen source code is subject to the terms of the Mozilla Public License
 v. 2.0. You can obtain a copy the MPL 2.0 at http://mozilla.org/MPL/2.0/.
 
-Some files included in Eigen are under of the following licenses:
+Some files included in Eigen are under one of the following licenses:
  - Apache License, Version 2.0 
  - BSD 3-Clause \"New\" or \"Revised\" License
 ")

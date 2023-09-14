@@ -1,6 +1,7 @@
 {
   "name": "pngpp",
-  "version-string": "0.2.10",
+  "version": "0.2.10",
+  "port-version": 2,
   "description": "A C++ wrapper for libpng library.",
   "dependencies": [
     "libpng"

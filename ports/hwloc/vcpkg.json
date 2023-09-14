@@ -1,6 +1,6 @@
 {
   "name": "hwloc",
-  "version": "2.7.0",
+  "version": "2.9.0",
   "maintainers": "bgoglin<Brice.Goglin@inria.fr>",
   "description": [
     "Portable Hardware Locality (hwloc)",

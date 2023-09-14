@@ -1,13 +1,23 @@
 {
   "name": "lcm",
   "version": "1.4.0",
-  "port-version": 2,
+  "port-version": 6,
   "description": [
     "Lightweight Communications and Marshalling (LCM)",
     "LCM is a set of libraries and tools for message passing and data marshalling, targeted at real-time systems where high-bandwidth and low latency are critical. It provides a publish/subscribe message passing model and automatic marshalling/unmarshalling code generation with bindings for applications in a variety of programming languages."
   ],
   "homepage": "https://github.com/lcm-proj/lcm",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!osx & !xbox",
   "dependencies": [
-    "glib"
+    "glib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

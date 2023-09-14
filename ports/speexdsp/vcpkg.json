@@ -1,7 +1,14 @@
 {
   "name": "speexdsp",
-  "version": "1.2.0",
-  "port-version": 7,
+  "version": "1.2.1",
+  "port-version": 1,
   "description": "A patent-free, Open Source/Free Software DSP library.",
-  "homepage": "https://speex.org/"
+  "homepage": "https://speex.org/",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

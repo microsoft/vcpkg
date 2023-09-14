@@ -1,10 +1,11 @@
 {
   "name": "kf5archive",
-  "version": "5.89.0",
+  "version": "5.98.0",
   "port-version": 1,
   "description": "File compression",
   "homepage": "https://api.kde.org/frameworks/karchive/html/index.html",
   "license": "LGPL-2.0-or-later",
+  "supports": "!xbox",
   "dependencies": [
     "ecm",
     "qt5-base",

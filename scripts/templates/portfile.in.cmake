@@ -13,7 +13,6 @@
 #   VCPKG_TOOLCHAIN           = ON OFF
 #   TRIPLET_SYSTEM_ARCH       = arm x86 x64
 #   BUILD_ARCH                = "Win32" "x64" "ARM"
-#   MSBUILD_PLATFORM          = "Win32"/"x64"/${TRIPLET_SYSTEM_ARCH}
 #   DEBUG_CONFIG              = "Debug Static" "Debug Dll"
 #   RELEASE_CONFIG            = "Release Static"" "Release DLL"
 #   VCPKG_TARGET_IS_WINDOWS
@@ -29,6 +28,12 @@
 #
 # 	See additional helpful variables in /docs/maintainers/vcpkg_common_definitions.md
 
+# Also consider vcpkg_from_* functions if you can; the generated code here is for any web accessable
+# source archive.
+#  vcpkg_from_github
+#  vcpkg_from_gitlab
+#  vcpkg_from_bitbucket
+#  vcpkg_from_sourceforge
 vcpkg_download_distfile(ARCHIVE
     URLS "@URL@"
     FILENAME "@FILENAME@"
@@ -37,11 +42,11 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
     # REF 1.0.0
     # (Optional) Read the docs for how to generate patches at:
-    # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
+    # https://github.com/microsoft/vcpkg-docs/blob/main/vcpkg/examples/patching.md
     # PATCHES
     #   001_port_fixes.patch
     #   002_more_port_fixes.patch
@@ -72,7 +77,8 @@ vcpkg_cmake_install()
 #    "name": "vcpkg-cmake-config",
 #    "host": true
 #}
-# vcpkg_cmake_config_fixup(CONFIG_PATH cmake TARGET_PATH share/@PORT@)
+# vcpkg_cmake_config_fixup()
 
-# # Handle copyright
-# file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/@PORT@" RENAME copyright)
+# Uncomment the line below if necessary to install the license file for the port
+# as a file named `copyright` to the directory `${CURRENT_PACKAGES_DIR}/share/${PORT}`
+# vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

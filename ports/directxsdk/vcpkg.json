@@ -1,10 +1,11 @@
 {
   "name": "directxsdk",
   "version-string": "jun10",
-  "port-version": 5,
+  "port-version": 7,
   "description": "Legacy DirectX SDK",
   "homepage": "https://docs.microsoft.com/en-us/windows/win32/directx-sdk--august-2009-",
-  "supports": "windows & !uwp & !arm",
+  "license": null,
+  "supports": "windows & !uwp & !xbox & !arm",
   "features": {
     "xaudio2-7": {
       "description": "Include headers/libs for legacy XAudio 2.7 (prefer use of XAudio2Redist)"

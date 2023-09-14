@@ -1,16 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kiconthemes
-    REF v5.89.0
-    SHA512 d876f4a67d667a881820280c51fac8ddcdb99414f8c810422dd20be370173c036abcec3168495009242d479520a379be0c8ee4bea637023584e52c9452d9b3b7
+    REF v5.98.0
+    SHA512 822deb6e4469e69541e057b72f2ce27258f5cdb893f1cc8d37d900bb5aa4694706de051a905a939ac2f6fa474f69f4e05f24c87053699b205e6a58e18d56aaf1
     HEAD_REF master
 )
 
 vcpkg_check_features(
-     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-     FEATURES
-         designerplugin BUILD_DESIGNERPLUGIN
- )
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        designerplugin BUILD_DESIGNERPLUGIN
+)
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
@@ -34,10 +34,7 @@ vcpkg_copy_tools(
 )
 
 if(VCPKG_TARGET_IS_OSX)
-    vcpkg_copy_tools(
-        TOOL_NAMES ksvg2icns
-        AUTO_CLEAN
-    )
+    vcpkg_copy_tools(TOOL_NAMES ksvg2icns AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -46,4 +43,7 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+

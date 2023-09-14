@@ -1,10 +1,19 @@
 {
   "name": "libtheora",
   "version-string": "1.2.0alpha1-20170719",
-  "port-version": 3,
+  "port-version": 6,
   "description": "Theora is a free and open video compression format from the Xiph.org Foundation.",
   "homepage": "https://github.com/xiph/theora",
+  "license": null,
   "dependencies": [
-    "libogg"
+    "libogg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

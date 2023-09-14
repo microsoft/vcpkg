@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arun11299/cpp-jwt
-    REF 0d662241daf54d8b9911bf8f54784bd2da5a3d19
-    SHA512 06a508872f0920ed078b5f9250fe1d5011ad41773c4b8631d7c7947d9f9be4d5e24ca4a7d98c79eb8cd14118effa8893a862089bdc90af6d75031bbb9fc2ee5f
+    REF 4b66cf74e5ece16e7f7e8c3d8c0c63d01b4cc9aa
+    SHA512 b66c6f482feb03621926ee6739d081b7f03dcc963a57ba59fce62fb61a3f5082d4eb75db682b567d299ea6e80f37078c033b31c966cbad6f4c234850b0b81cd0
     HEAD_REF master
 )
 
@@ -16,8 +16,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,21 +1,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/glog
-    REF v0.5.0
-    SHA512 445e4338f3d81cd0b065f2da9c6ce343c243263ca144cea424ef97531a4e9e09c06ffd6942ac01c5213a8003c75cfbbede3c4028d12f0134f23ff29314769c1a
+    REF v0.6.0
+    SHA512 fd2c42583d0dd72c790a8cf888f328a64447c5fb9d99b2e2a3833d70c102cb0eb9ae874632c2732424cc86216c8a076a3e24b23a793eaddb5da8a1dc52ba9226
     HEAD_REF master
     PATCHES
-       glog_disable_debug_postfix.patch
-       fix_glog_CMAKE_MODULE_PATH.patch
-       fix_log_every_n.patch
-       nogdi-nominmax.patch
-       fix_crosscompile_symbolize.patch
-
+      fix_glog_CMAKE_MODULE_PATH.patch
+      glog_disable_debug_postfix.patch
+      fix_crosscompile_symbolize.patch
+      fix_cplusplus_macro.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    unwind     WITH_UNWIND
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        unwind          WITH_UNWIND
+        customprefix    WITH_CUSTOM_PREFIX
 )
+file(REMOVE "${SOURCE_PATH}/glog-modules.cmake.in")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

@@ -1,26 +1,24 @@
- CMakeLists.txt | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index e90fcdd..17c79e8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -17,7 +17,7 @@ add_library(LercLib ${SOURCES})
- target_link_libraries (LercLib)
+@@ -26,12 +26,19 @@ add_library(LercLib ${SOURCES})
+ endif()
  
  install(
--    TARGETS LercLib
-+    TARGETS LercLib EXPORT LercTargets
+     TARGETS Lerc
++    EXPORT LercTargets
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -28,3 +28,9 @@ install(
-     FILES "include/Lerc_types.h" "include/Lerc_c_api.h"
-     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
  )
-+
++target_include_directories(Lerc PUBLIC "$<INSTALL_INTERFACE:include>")
 +install(EXPORT LercTargets
-+  FILE lercConfig.cmake
-+  NAMESPACE Esri::
-+  DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/lerc"
++  FILE unofficial-lerc-config.cmake
++  NAMESPACE unofficial::Lerc::
++  DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-lerc"
 +)
+ 
+ # Configure and install pkgconfig file
+ configure_file(Lerc.pc.in ${CMAKE_CURRENT_BINARY_DIR}/Lerc.pc @ONLY)

@@ -1,6 +1,6 @@
 {
   "name": "qt5-websockets",
-  "version": "5.15.3",
+  "version": "5.15.10",
   "description": "Qt5 Web Sockets Module - provides WebSocket communication compliant with RFC 6455",
   "license": null,
   "dependencies": [

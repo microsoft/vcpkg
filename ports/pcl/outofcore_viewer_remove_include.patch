@@ -1,0 +1,12 @@
+diff --git a/outofcore/tools/outofcore_viewer.cpp b/outofcore/tools/outofcore_viewer.cpp
+index 6ec57e09359..795e03d7598 100644
+--- a/outofcore/tools/outofcore_viewer.cpp
++++ b/outofcore/tools/outofcore_viewer.cpp
+@@ -112,7 +112,6 @@ using AlignedPointT = Eigen::aligned_allocator<PointT>;
+ #include <vtkLODActor.h>
+ #include <vtkMath.h>
+ #include <vtkMatrix4x4.h>
+-#include <vtkMutexLock.h>
+ #include <vtkObjectFactory.h>
+ #include <vtkPolyData.h>
+ #include <vtkProperty.h>

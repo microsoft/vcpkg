@@ -1,31 +1,3 @@
-# DEPRECATED BY ports/vcpkg-gn/vcpkg_gn_install
-#[===[.md:
-# vcpkg_install_gn
-
-Installs a GN project.
-
-In order to build a GN project without installing, use [`vcpkg_build_ninja()`].
-
-## Usage:
-```cmake
-vcpkg_install_gn(
-     SOURCE_PATH <SOURCE_PATH>
-     [TARGETS <target>...]
-)
-```
-
-## Parameters:
-### SOURCE_PATH
-The path to the source directory
-
-### TARGETS
-Only install the specified targets.
-
-Note: includes must be handled separately
-
-[`vcpkg_build_ninja()`]: vcpkg_build_ninja.md
-#]===]
-
 function(z_vcpkg_install_gn_get_target_type out_var)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "SOURCE_PATH;BUILD_DIR;TARGET" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -110,6 +82,8 @@ endfunction()
 function(vcpkg_install_gn)
     if(Z_VCPKG_GN_INSTALL_GUARD)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-gn; using both vcpkg-gn and vcpkg_install_gn in the same port is unsupported.")
+    else()
+        message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}" "This function 'vcpkg_install_gn' is obsolete. Use 'vcpkg_gn_install' in port 'vcpkg-gn'.")
     endif()
 
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH" "TARGETS")

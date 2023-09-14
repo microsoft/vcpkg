@@ -1,6 +1,6 @@
 {
   "name": "curl",
-  "version": "7.83.0",
+  "version": "8.2.1",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": null,
@@ -89,6 +89,7 @@
     },
     "schannel": {
       "description": "SSL support (Secure Channel)",
+      "supports": "windows & !uwp",
       "dependencies": [
         {
           "name": "curl",
@@ -100,7 +101,8 @@
       ]
     },
     "sectransp": {
-      "description": "SSL support (sectransp)"
+      "description": "SSL support (sectransp)",
+      "supports": "osx | ios"
     },
     "ssh": {
       "description": "SSH support via libssh2",
@@ -131,7 +133,7 @@
           "features": [
             "sectransp"
           ],
-          "platform": "osx"
+          "platform": "osx | ios"
         },
         {
           "name": "curl",
@@ -147,21 +149,28 @@
           "features": [
             "openssl"
           ],
-          "platform": "(uwp | !windows) & !osx & !mingw"
+          "platform": "(uwp | !windows) & !(osx | ios) & !mingw"
         }
       ]
     },
     "sspi": {
-      "description": "SSPI support"
+      "description": "SSPI support",
+      "supports": "windows & !uwp"
     },
     "tool": {
-      "description": "Builds curl executable"
+      "description": "Builds curl executable",
+      "supports": "!uwp"
+    },
+    "websockets": {
+      "description": "WebSocket support (experimental)"
     },
     "winidn": {
-      "description": "WinIDN support"
+      "description": "WinIDN support",
+      "supports": "windows"
     },
     "winldap": {
       "description": "LDAP support (WinLDAP). This feature does not include LDAPS support.",
+      "supports": "windows & !uwp",
       "dependencies": [
         {
           "name": "curl",
@@ -174,6 +183,7 @@
     },
     "winssl": {
       "description": "Legacy name for schannel",
+      "supports": "windows & !uwp",
       "dependencies": [
         {
           "name": "curl",
@@ -182,6 +192,18 @@
             "schannel"
           ]
         }
+      ]
+    },
+    "wolfssl": {
+      "description": "SSL support (wolfSSL)",
+      "dependencies": [
+        "wolfssl"
+      ]
+    },
+    "zstd": {
+      "description": "ZStandard support (zstd)",
+      "dependencies": [
+        "zstd"
       ]
     }
   }

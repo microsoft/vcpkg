@@ -1,15 +1,18 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO memononen/nanosvg
-    REF 03042a6297399379198f98eb625ff8902bd84784
-    SHA512 163f205e81e830e8b2512ec1faa15ebaf82138fc8bd881ccfc5f19896df75e8cf77ccd20892fccd0fd3e5d6358438e6f3075fd4e6a4c4b064107451265c9f874
+    REF 9da543e8329fdd81b64eb48742d8ccb09377aed1
+    SHA512 9c91df8ac67dbd1a920d5287c6d267c6163d28b6ff75899452ca49097bbe881655799d4b003e667422062d0b7e6aa6bd6bf4c3d941d0301cbc23c6459d8d25d7
     HEAD_REF master
+    PATCHES fltk.patch # from fltk/nanosvg
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
-set(VCPKG_BUILD_TYPE "release") # header-only
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/NanoSVG PACKAGE_NAME NanoSVG)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

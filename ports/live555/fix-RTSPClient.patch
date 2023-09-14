@@ -1,13 +1,13 @@
 diff --git a/liveMedia/RTSPClient.cpp b/liveMedia/RTSPClient.cpp
-index 02c46c7..6127698 100644
+index 66e0c79..13255af 100644
 --- a/liveMedia/RTSPClient.cpp
 +++ b/liveMedia/RTSPClient.cpp
-@@ -1939,7 +1939,7 @@ int RTSPClient::write(const u_int8_t* data, unsigned count) {
-       if (fTLS.isNeeded) {
- 	return fTLS.write(data, count);
+@@ -2029,7 +2029,7 @@ int RTSPClient::write(const char* data, unsigned count) {
+       if (fOutputTLS->isNeeded) {
+ 	return fOutputTLS->write(data, count);
        } else {
--	return send(fOutputSocketNum, data, count, 0);
-+	return send(fOutputSocketNum, (const char *)data, count, 0);
+-	return send(fOutputSocketNum, data, count, MSG_NOSIGNAL);
++	return send(fOutputSocketNum, (const char *)data, count, MSG_NOSIGNAL);
        }
  }
  

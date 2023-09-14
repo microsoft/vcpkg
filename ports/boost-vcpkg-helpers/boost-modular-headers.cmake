@@ -7,14 +7,19 @@ function(boost_modular_headers)
 
     message(STATUS "Copying headers")
     file(
-        COPY ${_bm_SOURCE_PATH}/include/boost
-        DESTINATION ${CURRENT_PACKAGES_DIR}/include
+        COPY "${_bm_SOURCE_PATH}/include/boost"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     )
     message(STATUS "Copying headers done")
 
     file(INSTALL
-        ${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/usage
-        ${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/copyright
-        DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+        "${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/usage"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+    )
+    
+    file(INSTALL
+        "${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost_LICENSE_1_0.txt"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+        RENAME copyright
     )
 endfunction()

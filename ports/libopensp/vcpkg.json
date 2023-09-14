@@ -1,8 +1,10 @@
 {
   "name": "libopensp",
   "version": "1.5.2",
+  "port-version": 2,
   "description": "SGML parser algorithm",
   "homepage": "http://openjade.sourceforge.net",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "gettext",

@@ -1,4 +1,3 @@
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_gn_configure.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_gn_install.cmake")
-
-file(REAL_PATH "${CMAKE_CURRENT_LIST_DIR}/../../tools/vcpkg-gn/gn${CMAKE_EXECUTABLE_SUFFIX}" VCPKG_GN)
+include("${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_gn_fixup_path.cmake")

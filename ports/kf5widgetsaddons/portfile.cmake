@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwidgetsaddons
-    REF v5.89.0
-    SHA512 5e83ffeefe3130f3a43768cbc777a81be9e43c029598f12ee48353f787e5ab4a97d0a92f6f3c41987fe021f1e92ac01a05601c642bbd508fbbd780925dd6c03b
+    REF v5.98.0
+    SHA512 cfc8dc0fb44a03897ee595abd32e0f5977a16ea5d36235c51ea1a548f2fe160308838aefa3fc7c4b0edeb12e626cdd46f58c7fc2a72cbaf59e2c4286aecc5ba3
     HEAD_REF master
 )
 
@@ -27,4 +27,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+

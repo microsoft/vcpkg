@@ -1,15 +1,11 @@
 {
   "name": "qt5-base",
-  "version": "5.15.3",
-  "port-version": 3,
+  "version": "5.15.10",
+  "port-version": 5,
   "description": "Qt5 Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
-    {
-      "name": "angle",
-      "platform": "!windows"
-    },
     "double-conversion",
     "egl-registry",
     {
@@ -18,12 +14,12 @@
     },
     "freetype",
     "harfbuzz",
-    {
-      "name": "icu",
-      "platform": "!uwp"
-    },
     "libjpeg-turbo",
     "libpng",
+    {
+      "name": "opengl",
+      "platform": "!windows"
+    },
     "openssl",
     "pcre2",
     {
@@ -33,6 +29,10 @@
     },
     "sqlite3",
     {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     },
@@ -40,8 +40,17 @@
     "zstd"
   ],
   "features": {
+    "icu": {
+      "description": "Enable ICU support",
+      "dependencies": [
+        {
+          "name": "icu",
+          "platform": "!uwp"
+        }
+      ]
+    },
     "latest": {
-      "description": "Build latest qt version (5.15.2) instead of LTS (latest and LTS are currently the same)"
+      "description": "(deprecated)"
     },
     "mysqlplugin": {
       "description": "Build the sql plugin for connecting to mysql databases",

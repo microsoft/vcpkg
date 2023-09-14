@@ -1,0 +1,29 @@
+diff --git a/wolfcrypt/src/asn.c b/wolfcrypt/src/asn.c
+index 96f27928d90..51e6205cf9d 100644
+--- a/wolfcrypt/src/asn.c
++++ b/wolfcrypt/src/asn.c
+@@ -30431,9 +30431,9 @@ int wc_SetCustomExtension(Cert *cert, int critical, const char *oid,
+ 
+     ext = &cert->customCertExt[cert->customCertExtCount];
+ 
+-    ext->oid = oid;
++    ext->oid = (char*)oid;
+     ext->crit = (critical == 0) ? 0 : 1;
+-    ext->val = der;
++    ext->val = (byte*)der;
+     ext->valSz = derSz;
+ 
+     cert->customCertExtCount++;
+diff --git a/wolfssl/wolfio.h b/wolfssl/wolfio.h
+index 8c323840584..a7d70e01fbf 100644
+--- a/wolfssl/wolfio.h
++++ b/wolfssl/wolfio.h
+@@ -26,6 +26,8 @@
+ #ifndef WOLFSSL_IO_H
+ #define WOLFSSL_IO_H
+ 
++#include <wolfssl/ssl.h>
++
+ #ifdef __cplusplus
+     extern "C" {
+ #endif

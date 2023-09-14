@@ -3,9 +3,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chriskohlhoff/asio
-    REF asio-1-22-1
-    SHA512 7658293f2be1f5ea659a424614b2f3092954df45802fbb0031b7983d11762f4f68d18eab076e14954df3a24ce89ff26bd4bebea88b9a3dc680387252efec8398
+    REF asio-1-28-0
+    SHA512 0d635c40a28b6427e2cb6b9c89ab53dba7d3a237df2279148ca05fa899d6f8039a131929230e5ca1dbc7477be784e3da9a6cb68456cbf194178510621556e467
     HEAD_REF master
+    PATCHES fix_coro_compile_error_msvc.patch #upstream PR: https://github.com/chriskohlhoff/asio/pull/1313
 )
 
 # Always use "ASIO_STANDALONE" to avoid boost dependency

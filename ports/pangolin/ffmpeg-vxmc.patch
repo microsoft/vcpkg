@@ -1,0 +1,13 @@
+--- a/components/pango_video/include/pangolin/video/drivers/ffmpeg_common.h
++++ b/components/pango_video/include/pangolin/video/drivers/ffmpeg_common.h
+@@ -55,10 +55,6 @@ inline std::string FfmpegFmtToString(const AVPixelFormat fmt)
+     TEST_PIX_FMT_RETURN(YUVJ420P);
+     TEST_PIX_FMT_RETURN(YUVJ422P);
+     TEST_PIX_FMT_RETURN(YUVJ444P);
+-#ifdef FF_API_XVMC
+-    TEST_PIX_FMT_RETURN(XVMC_MPEG2_MC);
+-    TEST_PIX_FMT_RETURN(XVMC_MPEG2_IDCT);
+-#endif
+     TEST_PIX_FMT_RETURN(UYVY422);
+     TEST_PIX_FMT_RETURN(UYYVYY411);
+     TEST_PIX_FMT_RETURN(BGR8);

@@ -3,18 +3,27 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO socketio/socket.io-client-cpp
-    REF 3.1.0
-    SHA512 a0adaa06ddb24297686a40b1e71a55bbab437093f828f76040c376b4adccb7d8b06eff4d8569dbde9b2e071257b3290e7e2bffd6354b33ecf67378ffa1d0cc13
+    REF b10474e3eaa6b27e75dbc1382ac9af74fdf3fa85
+    SHA512 d0529c1fb293bd0a468d224f14e176fc80226dd665d2a947253beabc8fbe1b0b0a939778bce45a2d8f68d10583920329cf404f41d6fd5ccf2d176cec733e8996
     HEAD_REF master
-    PATCHES
-        fix-file-not-found.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DUSE_SUBMODULES=OFF
+        -DCMAKE_INSTALL_INCLUDEDIR=include
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME sioclient CONFIG_PATH lib/cmake/sioclient)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/sioclient/sioclientConfig.cmake"
+    "include(CMakeFindDependencyMacro)"
+    [[include(CMakeFindDependencyMacro)
+find_dependency(websocketpp CONFIG)
+find_dependency(asio CONFIG)
+find_dependency(RapidJSON CONFIG)
+find_dependency(OpenSSL)]])
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

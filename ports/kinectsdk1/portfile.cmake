@@ -1,4 +1,13 @@
 set(KINECTSDK10_VERSION "v1.8")
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(ARCHITECTURE x86)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(ARCHITECTURE amd64)
+else()
+    message(FATAL_ERROR "This port does not currently support architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+endif()
+
 vcpkg_download_distfile(KINECTSDK10_INSTALLER
     URLS "https://download.microsoft.com/download/E/1/D/E1DEC243-0389-4A23-87BF-F47DE869FC1A/KinectSDK-${KINECTSDK10_VERSION}-Setup.exe"
     FILENAME "KinectSDK-${KINECTSDK10_VERSION}-Setup.exe"
@@ -10,23 +19,22 @@ vcpkg_find_acquire_program(DARK)
 set(KINECTSDK10_WIX_INSTALLER "${KINECTSDK10_INSTALLER}")
 set(KINECTSDK10_WIX_EXTRACT_DIR "${CURRENT_BUILDTREES_DIR}/src/installer/wix")
 vcpkg_execute_required_process(
-    COMMAND ${DARK} -x ${KINECTSDK10_WIX_EXTRACT_DIR} ${KINECTSDK10_WIX_INSTALLER}
+    COMMAND "${DARK}" -x "${KINECTSDK10_WIX_EXTRACT_DIR}" "${KINECTSDK10_WIX_INSTALLER}"
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
-    LOGNAME extract_wix_installer
+    LOGNAME extract-wix-${TARGET_TRIPLET}
 )
 
-file(TO_NATIVE_PATH "${KINECTSDK10_WIX_EXTRACT_DIR}/AttachedContainer/KinectSDK-${KINECTSDK10_VERSION}-${VCPKG_TARGET_ARCHITECTURE}.msi" KINECTSDK10_MSI_INSTALLER)
-file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/src/installer/msi/${VCPKG_TARGET_ARCHITECTURE}" KINECTSDK10_MSI_EXTRACT_DIR)
-file(TO_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/msiexec.log" MSIEXEC_LOG_PATH)
-set(BATCH_FILE ${CURRENT_BUILDTREES_DIR}/msiextract-msmpi.bat)
-file(WRITE ${BATCH_FILE} "msiexec.exe /a \"${KINECTSDK10_MSI_INSTALLER}\" /qn /log \"${MSIEXEC_LOG_PATH}\" TARGETDIR=\"${KINECTSDK10_MSI_EXTRACT_DIR}\"")
+file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/src/KinectSDK-${KINECTSDK10_VERSION}-${VCPKG_TARGET_ARCHITECTURE}")
+set(KINECTSDK10_MSI_INSTALLER "installer\\wix\\AttachedContainer\\KinectSDK-${KINECTSDK10_VERSION}-${VCPKG_TARGET_ARCHITECTURE}.msi")
 vcpkg_execute_required_process(
-    COMMAND ${BATCH_FILE}
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
-    LOGNAME extract_msi_installer_${VCPKG_TARGET_ARCHITECTURE}
+    COMMAND
+        "${LESSMSI}"
+        x
+        "${KINECTSDK10_MSI_INSTALLER}"
+    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src"
+    LOGNAME extract-msi-${TARGET_TRIPLET}
 )
-
-set(KINECTSDK10_DIR "${CURRENT_BUILDTREES_DIR}/src/installer/msi/${VCPKG_TARGET_ARCHITECTURE}/Microsoft SDKs/Kinect/${KINECTSDK10_VERSION}")
+set(KINECTSDK10_DIR "${CURRENT_BUILDTREES_DIR}/src/KinectSDK-${KINECTSDK10_VERSION}-${VCPKG_TARGET_ARCHITECTURE}/SourceDir/Microsoft SDKs/Kinect/${KINECTSDK10_VERSION}")
 
 file(
     INSTALL
@@ -35,30 +43,24 @@ file(
         "${KINECTSDK10_DIR}/inc/NuiSensor.h"
         "${KINECTSDK10_DIR}/inc/NuiSkeleton.h"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include
-)
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(ARCHITECTURE x86)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(ARCHITECTURE amd64)
-else()
-    message(FATAL_ERROR "This port does not currently support architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-endif()
-
-file(
-    INSTALL
-        "${KINECTSDK10_DIR}/lib/${ARCHITECTURE}/Kinect10.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib
+        "${CURRENT_PACKAGES_DIR}/include"
 )
 
 file(
     INSTALL
         "${KINECTSDK10_DIR}/lib/${ARCHITECTURE}/Kinect10.lib"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/lib
+        "${CURRENT_PACKAGES_DIR}/lib"
 )
+
+file(
+    INSTALL
+        "${KINECTSDK10_DIR}/lib/${ARCHITECTURE}/Kinect10.lib"
+    DESTINATION
+        "${CURRENT_PACKAGES_DIR}/debug/lib"
+)
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake" @ONLY)
 
 # Handle copyright
-file(INSTALL ${KINECTSDK10_DIR}/SDKEula.rtf DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${KINECTSDK10_DIR}/SDKEula.rtf" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,9 +1,9 @@
 {
   "name": "luasocket",
-  "version-date": "2020-09-14",
-  "port-version": 2,
+  "version": "3.1.0",
   "description": "LuaSocket is a Lua extension library that is composed by two parts: a C core that provides support for the TCP and UDP transport layers, and a set of Lua modules that add support for functionality commonly needed by applications that deal with the Internet.",
-  "homepage": "https://github.com/diegonehab/luasocket",
+  "homepage": "https://lunarmodules.github.io/luasocket/",
+  "license": "MIT",
   "supports": "windows",
   "dependencies": [
     "lua",

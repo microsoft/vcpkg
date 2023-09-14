@@ -1,0 +1,25 @@
+diff --git a/src/MagnumPlugins/AnyAudioImporter/CMakeLists.txt b/src/MagnumPlugins/AnyAudioImporter/CMakeLists.txt
+index 64371a4..375ca58 100644
+--- a/src/MagnumPlugins/AnyAudioImporter/CMakeLists.txt
++++ b/src/MagnumPlugins/AnyAudioImporter/CMakeLists.txt
+@@ -24,6 +24,7 @@
+ #
+ 
+ find_package(Corrade REQUIRED PluginManager)
++find_package(OpenAL CONFIG REQUIRED)
+ 
+ if(BUILD_PLUGINS_STATIC)
+     set(MAGNUM_ANYAUDIOIMPORTER_BUILD_STATIC 1)
+diff --git a/src/MagnumPlugins/WavAudioImporter/CMakeLists.txt b/src/MagnumPlugins/WavAudioImporter/CMakeLists.txt
+index f4172d4..bdfd9da 100644
+--- a/src/MagnumPlugins/WavAudioImporter/CMakeLists.txt
++++ b/src/MagnumPlugins/WavAudioImporter/CMakeLists.txt
+@@ -24,6 +24,8 @@
+ #
+
+ find_package(Corrade REQUIRED PluginManager)
++include(CMakeFindDependencyMacro)
++find_dependency(OpenAL)
+
+ if(BUILD_PLUGINS_STATIC)
+     set(MAGNUM_WAVAUDIOIMPORTER_BUILD_STATIC 1)

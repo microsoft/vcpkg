@@ -1,12 +1,13 @@
 {
   "name": "qt5-webglplugin",
-  "version": "5.15.3",
-  "description": "Qt5 webglplugin Module;",
+  "version": "5.15.10",
+  "description": "Qt5 Webglplugin Module",
   "license": null,
   "dependencies": [
     {
       "name": "qt5-base",
       "default-features": false
-    }
+    },
+    "qt5-websockets"
   ]
 }

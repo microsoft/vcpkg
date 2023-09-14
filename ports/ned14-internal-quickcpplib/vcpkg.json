@@ -1,11 +1,14 @@
 {
   "name": "ned14-internal-quickcpplib",
-  "version-string": "0.0.0-cad832c8",
+  "version-date": "2023-03-13",
+  "maintainers": [
+    "Niall Douglas <s_github@nedprod.com>",
+    "Henrik Gaßmann <henrik@gassmann.onl>"
+  ],
   "description": "NOT FOR EXTERNAL CONSUMPTION, a set of internal scripts used by ned14's libraries.",
   "homepage": "https://github.com/ned14/quickcpplib",
+  "license": "Apache-2.0 OR BSL-1.0",
   "dependencies": [
-    "byte-lite",
-    "gsl-lite",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -16,19 +19,23 @@
     }
   ],
   "features": {
-    "cxx17": {
-      "description": "Do not polyfill C++17 entities"
-    },
-    "cxx20": {
-      "description": "Do not polyfill C++20 entities",
+    "polyfill-cxx17": {
+      "description": "Polyfill std::byte with byte-lite",
       "dependencies": [
+        "byte-lite",
         {
           "name": "ned14-internal-quickcpplib",
           "default-features": false,
           "features": [
-            "cxx17"
+            "polyfill-cxx20"
           ]
         }
+      ]
+    },
+    "polyfill-cxx20": {
+      "description": "Polyfill std::span with span-lite",
+      "dependencies": [
+        "span-lite"
       ]
     }
   }
