@@ -1,5 +1,4 @@
-libimobiledevice provides usage:
+libimobiledevice provides CMake targets:
 
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(LIBIMOBILEDEVICE REQUIRED IMPORTED_TARGET libimobiledevice-1.0)
-    target_link_libraries(main PRIVATE PkgConfig::LIBIMOBILEDEVICE)
+    find_package(unofficial-libimobiledevice CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::libimobiledevice::libimobiledevice)

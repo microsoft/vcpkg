@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 044f8ce9d195f83eb90412e76e9f381559ed6565f956a3cdf1da26b0540df85d1dc51b4a6bcca2f8fcb48a4a1f2e5535ef6d786dfaf63d68ce5fe70ea6f2f2f9
+    SHA512 6e6c56196157e1ccddbfb4717b15fb15821e43f0ebaf7de1d5c0d41ff5d2a58f9ada56bac0472e1a8f4abe8e9cf325fcda33b0b287ed7c1a41c0fc8854f8d36e
     HEAD_REF master
 )
 

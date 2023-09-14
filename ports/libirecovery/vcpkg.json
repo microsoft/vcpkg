@@ -1,18 +1,23 @@
 {
   "name": "libirecovery",
-  "version": "1.0.25",
-  "port-version": 8,
+  "version-date": "2023-05-13",
   "description": "Library and utility to talk to iBoot/iBSS via USB on Mac OS X, Windows, and Linux",
-  "license": "LGPL-2.1-only",
-  "supports": "windows & !arm64 & !static & !staticcrt & !xbox",
+  "homepage": "https://libimobiledevice.org/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!uwp",
   "dependencies": [
-    "getopt",
-    "libusbmuxd",
-    "readline",
+    "libimobiledevice-glue",
     {
-      "name": "vcpkg-msbuild",
-      "host": true,
-      "platform": "windows"
+      "name": "libusb",
+      "platform": "!windows & !osx"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ]
 }
