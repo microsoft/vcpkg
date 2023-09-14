@@ -1,6 +1,7 @@
 {
   "name": "sdl2-mixer-ext",
   "version-date": "2023-05-04",
+  "port-version": 1,
   "description": "An audio mixer library based on the SDL library, a fork of SDL_mixer",
   "homepage": "https://wohlsoft.github.io/SDL-Mixer-X",
   "license": "Zlib OR LGPL-2.1-or-later OR GPL-2.0-or-later OR GPL-3.0-or-later",
@@ -100,7 +101,7 @@
     },
     "nativemidi": {
       "description": "Use Native MIDI Player to play MIDI audio format.",
-      "supports": "windows | osx"
+      "supports": "(windows & !uwp) | osx"
     },
     "opusfile": {
       "description": "Use opusfile to play Opus audio format.",
