@@ -14,7 +14,7 @@
     },
     "ableton-link": {
       "baseline": "3.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "abseil": {
       "baseline": "20230802.0",
