@@ -17,8 +17,6 @@ vcpkg_from_github(
     REF 95b2410e31ebf28b56a4fffffef52c7d13d657ad
     SHA512 0aede5089f1db81f976860b20e76f759ddb2c8dceb3b13d3521db65d67b5355083aa370eec245fe7810f3e6702c7ab0e42cae63b0b979c2118c09bf2ae8567ea
     HEAD_REF master
-    PATCHES fix_no_find_git.patch
-
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext/c4core/cmake")
@@ -30,10 +28,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dbg           RYML_DBG
 )
 
+vcpkg_find_acquire_program(GIT)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        "-DGIT=${GIT}"
 )
 
 vcpkg_cmake_install()
