@@ -48,9 +48,10 @@ function GetDescription($dir, $modulename)
 }
 
 $featureDependencies = @{}
-Select-String -Path "$ExtractedSources\cmake\sdksCommon.cmake" -Pattern "list\(APPEND SDK_DEPENDENCY_LIST `"([\w-]+):([\w-,]+)`"\)" -AllMatches
-| ForEach-Object { $_.Matches }
-| ForEach-Object { $featureDependencies[$_.Groups[1].Value] = @($_.Groups[2].Value -split "," | Where-Object { $_ -ne "core" }) }
+Select-String -Path "$ExtractedSources\cmake\sdksCommon.cmake" -Pattern "list\(APPEND SDK_DEPENDENCY_LIST `"([\w-]+):([\w-,]+)`"\)" -AllMatches `
+| ForEach-Object { $_.Matches } `
+| ForEach-Object { $featureDependencies[$_.Groups[1].Value] = @($_.Groups[2].Value -split "," `
+| Where-Object { $_ -ne "core" }) }
 
 foreach ($subfolder in $subfolders)
 {
