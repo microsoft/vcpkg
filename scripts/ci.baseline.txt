@@ -1298,9 +1298,6 @@ ztd-text:arm-neon-android=fail
 ztd-text:arm64-android=fail
 ztd-text:x64-android=fail
 zyre:x64-windows-static-md=fail
-cld3:arm-neon-android=fail
-cld3:arm64-android=fail
-cld3:x64-android=fail
 
 # Ports which needs to pass in CI
 cmake:x64-windows=pass
