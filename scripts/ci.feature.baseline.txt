@@ -2382,6 +2382,7 @@ opencv3[halide](osx) = feature-fails # Same as opencv4[halide]
 opencv3[vtk](osx) = feature-fails # vtk version not compatible. See https://github.com/microsoft/vcpkg/issues/32228
 openmvg(windows & arm) = fail # nmmintrin.h(17): fatal error C1189: #error:  This header is specific to X86, X64, ARM64, and ARM64EC targets. See https://github.com/microsoft/vcpkg/issues/33746
 openscap(osx) = fail # Waits for https://github.com/microsoft/vcpkg/pull/27348
+opentelemetry-cpp[jaeger](osx) = feature-fails # error: no type named 'close' in the global namespace. See https://github.com/microsoft/vcpkg/issues/33800
 openvdb[ax] = feature-fails # ax requires llvm version <= 14. Work when using a baseline + overwrite
 pangolin[core,eigen,examples,ffmpeg,gui,jpeg,lz4,module,openexr,png,pybind11,realsense,test,tiff,tools,vars,video,zstd](!(arm & windows)) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31304
 poco[core,mariadb,mysql] = options # You can not install mariadb and mysql at the same time
