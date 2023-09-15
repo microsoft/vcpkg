@@ -184,7 +184,6 @@ function(test_cmake_project)
                 ${base_options}
                 ${arg_OPTIONS}
                 "-DFIND_PACKAGES=${package}"
-                --trace-expand
             OUTPUT_FILE "${log_out}"
             ERROR_FILE "${log_err}"
             RESULT_VARIABLE package_result

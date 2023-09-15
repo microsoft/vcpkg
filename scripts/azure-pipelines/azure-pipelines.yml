@@ -16,7 +16,7 @@ parameters:
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring'
     type: string
-    default: 'x64-windows'
+    default: '-'
 
 jobs:
 - template: windows/azure-pipelines.yml
