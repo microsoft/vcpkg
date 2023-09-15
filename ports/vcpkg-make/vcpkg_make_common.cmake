@@ -204,7 +204,7 @@ function(z_vcpkg_make_prepare_compile_flags)
     if(linker_flag_escape)
         string(STRIP "${linker_flag_escape}" linker_flag_escape_stripped)
         string(REPLACE " " ";" linker_flag_escape_stripped "${linker_flag_escape_stripped}")
-        list(TRANSFORM LDFLAGS PREPEND "${linker_flag_escape_stripped}")
+        list(TRANSFORM LDFLAGS PREPEND "${linker_flag_escape_stripped};")
     endif()
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
         vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib/manual-link")
@@ -213,11 +213,14 @@ function(z_vcpkg_make_prepare_compile_flags)
         vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib")
     endif()
 
-    if(ARFLAGS)
+    if(ARFLAGS AND NOT arg_COMPILER_FRONTEND STREQUAL "MSVC")
         # ARFLAGS need to know the command for creating an archive (Maybe needs user customization?)
         # or extract it from CMake via CMAKE_${lang}_ARCHIVE_CREATE ?
         # or from CMAKE_${lang}_${rule} with rule being one of CREATE_SHARED_MODULE CREATE_SHARED_LIBRARY LINK_EXECUTABLE
         vcpkg_list(PREPEND ARFLAGS "cr")
+    elseif(arg_USES_WRAPPERS AND arg_COMPILER_FRONTEND STREQUAL "MSVC")
+        # The wrapper needs an action and that action needs to be defined AFTER all flags
+        vcpkg_list(APPEND ARFLAGS "cr")
     endif()
 
     foreach(var IN LISTS flags)

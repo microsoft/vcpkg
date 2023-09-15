@@ -40,9 +40,7 @@ function(vcpkg_make_install)
         string(REPLACE " " "\ " Z_VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
     endif()
 
-    if(NOT DEFINED Z_VCPKG_MAKE AND CMAKE_HOST_WIN32) # TODO: use a different approach here?
-        vcpkg_make_setup_win_msys(msys_root)
-    endif()
+    vcpkg_make_get_shell(shell_cmd)
     find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
     set(make_command "${Z_VCPKG_MAKE}")
 
@@ -64,8 +62,6 @@ function(vcpkg_make_install)
     if(arg_ADD_BIN_TO_PATH)
         set(prepare_env_opts ADD_BIN_TO_PATH)
     endif()
-
-    vcpkg_make_get_shell(shell_cmd ADDITIONAL_PACKAGES ${arg_ADDITIONAL_MSYS_PACKAGES})
 
     foreach(buildtype IN LISTS buildtypes)
         string(TOUPPER "${buildtype}" cmake_buildtype)
