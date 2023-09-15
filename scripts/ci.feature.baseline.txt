@@ -599,7 +599,6 @@ winreg:x64-osx=fail
 workflow:arm-uwp=fail
 workflow:x64-uwp=fail
 wpilib:arm64-windows=fail
-wpilib:x64-osx=fail
 wxchartdir:x64-osx=fail
 x265:arm-uwp=fail
 x265:arm64-windows=fail
@@ -2300,7 +2299,6 @@ dcmtk[core,iconv,icu,openssl,png,tiff,tools,xml2,zlib](osx) = combination-fails 
 dcmtk[xml2](windows) = feature-fails # fatal error C1083: Cannot open include file: 'iconv.h'. See https://github.com/microsoft/vcpkg/issues/33473
 dmlc[openmp](osx) = feature-fails # No openmp on osx
 duktape(osx) = fail # requires python2
-dv-processing[tools](osx) = feature-fails # requires c++20
 dv-processing[tools](windows & !uwp) = feature-fails # fmtlib error. See https://github.com/microsoft/vcpkg/issues/33474
 embree3[core,avx,avx2,avx512,default-features,sse2,sse42](osx) = combination-fails # CMake Error at CMakeLists.txt:447 (MESSAGE):   Using Embree as static library is not supported with AppleClang >= 9.0 when multiple ISAs are selected.  Please either build a shared library or enable only one ISA.
 ffmpeg[vpx](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31118
@@ -2383,6 +2381,7 @@ opencv3[halide](osx) = feature-fails # Same as opencv4[halide]
 opencv3[vtk](osx) = feature-fails # vtk version not compatible. See https://github.com/microsoft/vcpkg/issues/32228
 openmvg(windows & arm) = fail # nmmintrin.h(17): fatal error C1189: #error:  This header is specific to X86, X64, ARM64, and ARM64EC targets. See https://github.com/microsoft/vcpkg/issues/33746
 openscap(osx) = fail # Waits for https://github.com/microsoft/vcpkg/pull/27348
+openvdb[ax] = feature-fails # ax requires llvm version <= 14. Work when using a baseline + overwrite
 pangolin[core,eigen,examples,ffmpeg,gui,jpeg,lz4,module,openexr,png,pybind11,realsense,test,tiff,tools,vars,video,zstd](!(arm & windows)) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31304
 poco[core,mariadb,mysql] = options # You can not install mariadb and mysql at the same time
 protobuf-c[tools,test](uwp) = feature-fails # Protobuf_PROTOC_LIBRARY used in this project, but they are set to NOTFOUND. See https://github.com/microsoft/vcpkg/issues/33778
@@ -2412,7 +2411,6 @@ vxl(linux) = fail # missing include. See https://github.com/microsoft/vcpkg/issu
 vxl(windows) = fail # error C2665: 'vsl_b_read': no overloaded function could convert all the argument types. See https://github.com/vxl/vxl/issues/868
 wasmedge[aot] = feature-fails # ar: /libzstd.a: No such file or directory. See https://github.com/microsoft/vcpkg/issues/32146
 wayland[force-build] = feature-fails # error: To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.
-wpilib(osx) = fail # See https://github.com/microsoft/vcpkg/issues/32395
 xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
 xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not 32
 
