@@ -2329,6 +2329,7 @@ hdf5[fortran](windows) = feature-fails # No fortan compiler
 hunspell[tools](windows) = feature-fails # error C2065: 'mode_t': undeclared identifier. See https://github.com/microsoft/vcpkg/issues/30633
 igraph[openmp](osx) = feature-fails # openmp setup needed
 imgui[core,sdl2-binding](uwp) = options # sdl2-binding fails to build when build together with docking-experimental => exclude from all
+imgui[freetype-lunasvg] = feature-fails # error: object expression of non-scalar type 'void' cannot be used in a pseudo-destructor expression. See https://github.com/microsoft/vcpkg/issues/33802
 irrlicht[tools](osx) = feature-fails # X11 installation required
 itk[python](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31042
 ixwebsocket[core,mbedtls,openssl,sectransp,ssl] = options # you can only choose one ssl backend or none
