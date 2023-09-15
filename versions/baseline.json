@@ -3029,8 +3029,8 @@
       "port-version": 4
     },
     "graphviz": {
-      "baseline": "7.0.0",
-      "port-version": 2
+      "baseline": "9.0.0",
+      "port-version": 0
     },
     "greatest": {
       "baseline": "1.5.0",
