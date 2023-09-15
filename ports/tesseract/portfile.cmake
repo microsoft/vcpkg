@@ -57,9 +57,6 @@ if("training-tools" IN_LIST FEATURES)
         wordlist2dawg combine_lang_model lstmeval lstmtraining
         set_unicharset_properties unicharset_extractor merge_unicharsets
         )
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        list(APPEND TRAINING_TOOLS text2image)
-    endif()
     vcpkg_copy_tools(TOOL_NAMES ${TRAINING_TOOLS} AUTO_CLEAN)
 endif()
 
