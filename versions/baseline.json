@@ -290,7 +290,7 @@
     },
     "atk": {
       "baseline": "2.38.0",
-      "port-version": 7
+      "port-version": 8
     },
     "atkmm": {
       "baseline": "2.36.1",
@@ -2810,7 +2810,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.10",
-      "port-version": 1
+      "port-version": 2
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -3070,11 +3070,11 @@
     },
     "gtk": {
       "baseline": "4.10.5",
-      "port-version": 0
+      "port-version": 1
     },
     "gtk3": {
       "baseline": "3.24.38",
-      "port-version": 0
+      "port-version": 1
     },
     "gtkmm": {
       "baseline": "4.10.0",
@@ -3154,7 +3154,7 @@
     },
     "harfbuzz": {
       "baseline": "8.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hash-library": {
       "baseline": "8",
@@ -6258,7 +6258,7 @@
     },
     "pango": {
       "baseline": "1.50.14",
-      "port-version": 3
+      "port-version": 4
     },
     "pangolin": {
       "baseline": "0.8",
