@@ -76,6 +76,19 @@ foreach(dir IN ITEMS "${TARGET_TRIPLET}-dbg" "${TARGET_TRIPLET}-rel")
         vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${dir}/build.ninja" "/${dir}/../src/" "/src/")
     endif()
 endforeach()
+
+# Temporary mitigation for build being stuck for unclear reasons,
+# https://github.com/microsoft/vcpkg/issues/29018
+if(EXISTS "${SCRIPTS}/cmake/vcpkg_install_meson.cmake")
+    file(READ "${SCRIPTS}/cmake/vcpkg_install_meson.cmake" install_meson)
+    string(REPLACE [[COMMAND "${NINJA}"]] [[
+        TIMEOUT 18000 # 5 h
+        COMMAND "${NINJA}"]]
+        install_meson "${install_meson}"
+    )
+    file(WRITE "${CURRENT_BUILDTREES_DIR}/gtk3_install_meson.cmake" "${install_meson}")
+    include("${CURRENT_BUILDTREES_DIR}/gtk3_install_meson.cmake")
+endif()
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
