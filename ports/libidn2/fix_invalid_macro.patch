@@ -1,0 +1,89 @@
+diff --git a/gl/stdint.in.h b/gl/stdint.in.h
+index eaa7874..8828d78 100644
+--- a/gl/stdint.in.h
++++ b/gl/stdint.in.h
+@@ -85,12 +85,21 @@
+ 
+ /* Override WINT_MIN and WINT_MAX if gnulib's <wchar.h> or <wctype.h> overrides
+    wint_t.  */
++#ifdef __linux__
+ #if @GNULIBHEADERS_OVERRIDE_WINT_T@
+ # undef WINT_MIN
+ # undef WINT_MAX
+ # define WINT_MIN 0x0U
+ # define WINT_MAX 0xffffffffU
+ #endif
++#else
++#if 0
++# undef WINT_MIN
++# undef WINT_MAX
++# define WINT_MIN 0x0U
++# define WINT_MAX 0xffffffffU
++#endif
++#endif
+ 
+ #if ! @HAVE_C99_STDINT_H@
+ 
+diff --git a/unistring/stdint.in.h b/unistring/stdint.in.h
+index eaa7874..8828d78 100644
+--- a/unistring/stdint.in.h
++++ b/unistring/stdint.in.h
+@@ -85,12 +85,21 @@
+ 
+ /* Override WINT_MIN and WINT_MAX if gnulib's <wchar.h> or <wctype.h> overrides
+    wint_t.  */
++#ifdef __linux__
+ #if @GNULIBHEADERS_OVERRIDE_WINT_T@
+ # undef WINT_MIN
+ # undef WINT_MAX
+ # define WINT_MIN 0x0U
+ # define WINT_MAX 0xffffffffU
+ #endif
++#else
++#if 0
++# undef WINT_MIN
++# undef WINT_MAX
++# define WINT_MIN 0x0U
++# define WINT_MAX 0xffffffffU
++#endif
++#endif
+ 
+ #if ! @HAVE_C99_STDINT_H@
+ 
+diff --git a/unistring/wchar.in.h b/unistring/wchar.in.h
+index 3558adf..7a0411a 100644
+--- a/unistring/wchar.in.h
++++ b/unistring/wchar.in.h
+@@ -140,6 +140,7 @@
+ /* mingw and MSVC define wint_t as 'unsigned short' in <crtdefs.h> or
+    <stddef.h>.  This is too small: ISO C 99 section 7.24.1.(2) says that
+    wint_t must be "unchanged by default argument promotions".  Override it.  */
++#ifdef __linux__
+ # if @GNULIBHEADERS_OVERRIDE_WINT_T@
+ #  if !GNULIB_defined_wint_t
+ #   if @HAVE_CRTDEFS_H@
+@@ -156,6 +157,24 @@ typedef unsigned int rpl_wint_t;
+ # ifndef WEOF
+ #  define WEOF ((wint_t) -1)
+ # endif
++#else
++# if 0
++#  if !GNULIB_defined_wint_t
++#   if @HAVE_CRTDEFS_H@
++#    include <crtdefs.h>
++#   else
++#    include <stddef.h>
++#   endif
++typedef unsigned int rpl_wint_t;
++#   undef wint_t
++#   define wint_t rpl_wint_t
++#   define GNULIB_defined_wint_t 1
++#  endif
++# endif
++# ifndef WEOF
++#  define WEOF ((wint_t) -1)
++# endif
++#endif
+ #endif
+ 
+ 
