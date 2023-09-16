@@ -2354,7 +2354,6 @@ libgit2[winhttp](!windows) = feature-fails
 libgwenhywfar[qt5](osx) = feature-fails # See https://github.com/microsoft/vcpkg/issues/31216
 libidn2[nls](osx) = feature-fails # https://github.com/microsoft/vcpkg/issues/31011
 libidn2[nls](windows) = feature-fails # error: possibly undefined macro: _AC_FINAL. See https://github.com/microsoft/vcpkg/issues/31011
-libmesh(osx) = fail # build failure
 libofx[ofx2qif,ofxdump](osx) = feature-fails # gettext link error. See https://github.com/microsoft/vcpkg/issues/33043
 libopnmidi[gens-emulator] = options # You have to select at least one emulator
 libproxy[bindings-csharp](!windows) = feature-fails # No C# compiler installed
