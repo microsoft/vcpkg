@@ -345,10 +345,6 @@ else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
 endif()
 
-if("libpng" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-decoder=png --enable-encoder=png")
-endif()
-
 if("mp3lame" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libmp3lame")
 else()
