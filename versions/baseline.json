@@ -4993,7 +4993,7 @@
       "port-version": 2
     },
     "libzippp": {
-      "baseline": "6.1-1.9.2",
+      "baseline": "7.0-1.10.1",
       "port-version": 0
     },
     "licensepp": {
