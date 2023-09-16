@@ -208,7 +208,7 @@ index fe9ad53..b06ed7e 100644
  
      # https://github.com/Dav1dde/glad
 -    find_package(GLAD QUIET)
-+    find_package(GLAD name glad CONFIG REQUIRED)
++    find_package(GLAD NAMES glad CONFIG REQUIRED)
      if (NOT GLAD_FOUND AND NOT TARGET glad)
          # Use CPM only if not found, to avoid ODR violations
          # find_package(GLAD REQUIRE) would suffice if it worked well
@@ -217,7 +217,7 @@ index fe9ad53..b06ed7e 100644
  
      # https://github.com/glfw/glfw
 -    find_package(glfw3 QUIET)
-+    find_package(GLFW3 name glfw3 CONFIG REQUIRED)
++    find_package(GLFW3 NAMES glfw3 CONFIG REQUIRED)
      if (NOT GLFW3_FOUND AND NOT TARGET glfw)
          # Use CPM only if not found, to avoid ODR violations
          # find_package(glfw3 REQUIRE) would suffice if it worked well

@@ -41,6 +41,7 @@
             "bzip2",
             "freetype",
             "iconv",
+            "libpng",
             "lzma",
             "mp3lame",
             "openjpeg",
@@ -440,6 +441,19 @@
       "description": "iLBC de/encoding via libilbc",
       "dependencies": [
         "libilbc"
+      ]
+    },
+    "libpng": {
+      "description": "PNG de/encoding via libpng",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "zlib"
+          ]
+        },
+        "libpng"
       ]
     },
     "lzma": {

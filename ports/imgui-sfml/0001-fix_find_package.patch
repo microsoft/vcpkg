@@ -2,10 +2,13 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 3a974c4..8a1c6cd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -41,34 +41,14 @@ if (IMGUI_SFML_FIND_SFML)
- 	if (NOT BUILD_SHARED_LIBS)
- 		set(SFML_STATIC_LIBRARIES ON)
- 	endif()
+@@ -38,37 +38,14 @@ set(IMGUI_SFML_CONFIG_INSTALL_DIR "" CACHE PATH "Path where user's config header
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+ 
+ if (IMGUI_SFML_FIND_SFML)
+-	if (NOT BUILD_SHARED_LIBS)
+-		set(SFML_STATIC_LIBRARIES ON)
+-	endif()
 -	find_package(SFML 2.5 COMPONENTS graphics system window)
 +	find_package(SFML COMPONENTS graphics system window)
  
@@ -39,11 +42,10 @@ index 3a974c4..8a1c6cd 100644
  
  if (IMGUI_SFML_IMGUI_DEMO)
      list(APPEND IMGUI_SOURCES ${IMGUI_DEMO_SOURCES})
-@@ -92,7 +72,7 @@ add_library(ImGui-SFML
- add_library(ImGui-SFML::ImGui-SFML ALIAS ImGui-SFML)
+@@ -93,6 +70,7 @@ add_library(ImGui-SFML
  
  target_link_libraries(ImGui-SFML
--  PUBLIC
+   PUBLIC
 +    imgui::imgui
      sfml-graphics
      sfml-system

@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.11.0",
+  "version": "2.15.1",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -295,6 +295,18 @@
         }
       ]
     },
+    "commerce": {
+      "description": "Cloud Commerce C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "composer": {
       "description": "Cloud Composer C++ Client Library",
       "dependencies": [
@@ -380,6 +392,18 @@
         }
       ]
     },
+    "datafusion": {
+      "description": "Cloud Data Fusion API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "datamigration": {
       "description": "Database Migration API C++ Client Library",
       "dependencies": [
@@ -406,6 +430,18 @@
     },
     "dataproc": {
       "description": "Cloud Dataproc API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "datastore": {
+      "description": "Cloud Datastore API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -476,6 +512,18 @@
         }
       ]
     },
+    "discoveryengine": {
+      "description": "Discovery Engine API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "dlp": {
       "description": "Cloud Data Loss Prevention (DLP) API C++ Client Library",
       "dependencies": [
@@ -522,6 +570,20 @@
             "grpc-common"
           ]
         }
+      ]
+    },
+    "experimental-opentelemetry": {
+      "description": "OpenTelemetry C++ GCP Exporter Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "rest-common",
+            "trace"
+          ]
+        },
+        "opentelemetry-cpp"
       ]
     },
     "experimental-storage-grpc": {
@@ -732,6 +794,30 @@
         }
       ]
     },
+    "metastore": {
+      "description": "Dataproc Metastore API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "migrationcenter": {
+      "description": "Migration Center API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "monitoring": {
       "description": "Cloud Monitoring API C++ Client Library",
       "dependencies": [
@@ -758,6 +844,18 @@
     },
     "networkmanagement": {
       "description": "Network Management API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "networksecurity": {
+      "description": "Secure Web Proxy API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -828,6 +926,18 @@
         }
       ]
     },
+    "policysimulator": {
+      "description": "Policy Simulator API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "policytroubleshooter": {
       "description": "Policy Troubleshooter API C++ Client Library",
       "dependencies": [
@@ -866,6 +976,18 @@
     },
     "pubsub": {
       "description": "The Google Cloud Bigtable C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "rapidmigrationassessment": {
+      "description": "Rapid Migration Assessment C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -922,6 +1044,18 @@
             "grpc-common"
           ]
         }
+      ]
+    },
+    "rest-common": {
+      "description": "Dependencies used by all REST-based libraries",
+      "dependencies": [
+        {
+          "name": "curl",
+          "features": [
+            "ssl"
+          ]
+        },
+        "nlohmann-json"
       ]
     },
     "retail": {
@@ -1073,12 +1207,12 @@
       "dependencies": [
         "crc32c",
         {
-          "name": "curl",
+          "name": "google-cloud-cpp",
+          "default-features": false,
           "features": [
-            "ssl"
+            "rest-common"
           ]
-        },
-        "nlohmann-json"
+        }
       ]
     },
     "storageinsights": {

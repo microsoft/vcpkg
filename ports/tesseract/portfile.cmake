@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         ${tesseract_patch}
         fix_static_link_icu.patch
+        fix-aarch64-mfpu-not-available.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -56,9 +57,6 @@ if("training-tools" IN_LIST FEATURES)
         wordlist2dawg combine_lang_model lstmeval lstmtraining
         set_unicharset_properties unicharset_extractor merge_unicharsets
         )
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        list(APPEND TRAINING_TOOLS text2image)
-    endif()
     vcpkg_copy_tools(TOOL_NAMES ${TRAINING_TOOLS} AUTO_CLEAN)
 endif()
 

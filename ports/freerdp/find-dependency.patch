@@ -1,0 +1,44 @@
+diff --git a/client/FreeRDP-ClientConfig.cmake.in b/client/FreeRDP-ClientConfig.cmake.in
+index 779374c..35b74c1 100644
+--- a/client/FreeRDP-ClientConfig.cmake.in
++++ b/client/FreeRDP-ClientConfig.cmake.in
+@@ -1,3 +1,6 @@
++include(CMakeFindDependencyMacro)
++find_dependency(WinPR @FREERDP_VERSION@)
++find_dependency(FreeRDP @FREERDP_VERSION@)
+ 
+ @PACKAGE_INIT@
+ 
+diff --git a/libfreerdp/FreeRDPConfig.cmake.in b/libfreerdp/FreeRDPConfig.cmake.in
+index a2321e7..4c8379e 100644
+--- a/libfreerdp/FreeRDPConfig.cmake.in
++++ b/libfreerdp/FreeRDPConfig.cmake.in
+@@ -1,3 +1,5 @@
++include(CMakeFindDependencyMacro)
++find_dependency(WinPR @FREERDP_VERSION@)
+ 
+ @PACKAGE_INIT@
+ 
+diff --git a/server/FreeRDP-ServerConfig.cmake.in b/server/FreeRDP-ServerConfig.cmake.in
+index b9edb55..db7cb44 100644
+--- a/server/FreeRDP-ServerConfig.cmake.in
++++ b/server/FreeRDP-ServerConfig.cmake.in
+@@ -1,3 +1,6 @@
++include(CMakeFindDependencyMacro)
++find_dependency(WinPR @FREERDP_VERSION@)
++find_dependency(FreeRDP @FREERDP_VERSION@)
+ 
+ @PACKAGE_INIT@
+ 
+diff --git a/server/shadow/FreeRDP-ShadowConfig.cmake.in b/server/shadow/FreeRDP-ShadowConfig.cmake.in
+index 1eb11e0..9b6f24c 100644
+--- a/server/shadow/FreeRDP-ShadowConfig.cmake.in
++++ b/server/shadow/FreeRDP-ShadowConfig.cmake.in
+@@ -1,3 +1,7 @@
++include(CMakeFindDependencyMacro)
++find_dependency(WinPR @FREERDP_VERSION@)
++find_dependency(FreeRDP @FREERDP_VERSION@)
++find_dependency(FreeRDP-Server @FREERDP_VERSION@)
+ 
+ @PACKAGE_INIT@
+ 

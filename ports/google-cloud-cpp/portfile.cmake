@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v${VERSION}
-    SHA512 d8515906b81e5bb8babe76bdbcba9462eeb9906e7099772d47d871483fa26fbc86943c41c1a916003c0bce767d15ebbbf870699ef75f2fdbcb61f9879d8b4017
+    REF "v${VERSION}"
+    SHA512 225202a8e799f630f0b07c392bf305c28e21b99ef8dc5a670238a6d08e0e2816cd8ca1c43d7b252bcf5d289f875e64c16413085f63663265169807fd59977e43
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
@@ -14,8 +14,10 @@ vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
-# This feature does not exist, but allows us to simplify the vcpkg.json file.
+# This feature does not exist, but allows us to simplify the vcpkg.json
+# file.
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "grpc-common")
+list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "rest-common")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "googleapis")
 # google-cloud-cpp uses dialogflow_cx and dialogflow_es. Underscores
 # are invalid in `vcpkg` features, we use dashes (`-`) as a separator
@@ -63,7 +65,7 @@ foreach(feature IN LISTS FEATURES)
 endforeach()
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils rest_internal dialogflow_cx dialogflow_es)
+foreach(suffix common googleapis grpc_utils rest_internal opentelemetry dialogflow_cx dialogflow_es)
     set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()

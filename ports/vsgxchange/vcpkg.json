@@ -1,0 +1,50 @@
+{
+  "name": "vsgxchange",
+  "version": "1.0.5",
+  "description": "Utility library for converting 3rd party images, models and fonts formats to/from VulkanSceneGraph.",
+  "homepage": "https://github.com/vsg-dev/vsgXchange",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "vsg"
+  ],
+  "features": {
+    "assimp": {
+      "description": "Enable support for reading 3D model formats as vsg::Node via Assimp",
+      "dependencies": [
+        "assimp"
+      ]
+    },
+    "curl": {
+      "description": "Enable support for reading image and model files from http:// and https://",
+      "dependencies": [
+        "curl"
+      ]
+    },
+    "freetype": {
+      "description": "Enable support for reading fonts as vsg::Font via Freetype",
+      "dependencies": [
+        "freetype"
+      ]
+    },
+    "gdal": {
+      "description": "Enable support for reading geospatial data formats as vsg::Data via GDAL",
+      "dependencies": [
+        "gdal"
+      ]
+    },
+    "openexr": {
+      "description": "Enable support for reading EXR files as vsg::Data",
+      "dependencies": [
+        "openexr"
+      ]
+    }
+  }
+}

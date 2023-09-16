@@ -1,7 +1,7 @@
 {
   "name": "paraview",
   "version": "5.11.0",
-  "port-version": 2,
+  "port-version": 4,
   "description": "VTK-based Data Analysis and Visualization Application",
   "homepage": "https://www.paraview.org/",
   "license": "BSD-3-Clause",
