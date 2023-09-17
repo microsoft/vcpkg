@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -92,3 +92,14 @@ configure_file(libsocketConfig.cmake.in
+ configure_file(libsocketConfigVersion.cmake.in
+   "${PROJECT_BINARY_DIR}/libsocketConfigVersion.cmake" @ONLY)
+ 
++install(TARGETS socket++ socket_int
++  EXPORT libsocketTargets)
++
++INSTALL(EXPORT libsocketTargets
++  DESTINATION share/libsocket)
++
++install(
++  FILES "${CMAKE_CURRENT_BINARY_DIR}/libsocketConfig.cmake"
++        "${CMAKE_CURRENT_BINARY_DIR}/libsocketConfigVersion.cmake"
++  DESTINATION "share/libsocket")
++
+diff --git a/libsocketConfig.cmake.in b/libsocketConfig.cmake.in
+--- a/libsocketConfig.cmake.in
++++ b/libsocketConfig.cmake.in
+@@ -1,6 +1,6 @@
+-set(libsocket_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
++set(libsocket_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR@")
+ 
+-set(libsocket_BINARY_DIR "@PROJECT_BINARY_DIR@")
++set(libsocket_BINARY_DIR "@INSTALL_BIN_DIR@")
+ 
+ include(${libsocket_BINARY_DIR}/libsocketTargets.cmake)
+ 
+
