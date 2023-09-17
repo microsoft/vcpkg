@@ -350,7 +350,7 @@
     },
     "aws-c-cal": {
       "baseline": "0.6.2",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-common": {
       "baseline": "0.9.3",
