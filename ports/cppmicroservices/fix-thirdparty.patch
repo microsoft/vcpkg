@@ -12,7 +12,7 @@ index 2bec34f..5740b6e 100644
  #-----------------------------------------------------------------------------
  
 diff --git a/tools/rc/CMakeLists.txt b/tools/rc/CMakeLists.txt
-index 5c49432..c04247a 100755
+index 5c49432..1f5e98c 100755
 --- a/tools/rc/CMakeLists.txt
 +++ b/tools/rc/CMakeLists.txt
 @@ -19,9 +19,8 @@ set_property(TARGET ${US_RCC_EXECUTABLE_TARGET} PROPERTY OUTPUT_NAME ${US_RCC_EX
@@ -22,13 +22,13 @@ index 5c49432..c04247a 100755
 -
 -target_link_libraries(${US_RCC_EXECUTABLE_TARGET} nowide::nowide)
 -target_include_directories(${US_RCC_EXECUTABLE_TARGET} PRIVATE ${CppMicroServices_SOURCE_DIR}/third_party/boost/nowide/include)
-+    find_package(Boost REQUIRED nowide)
-+    target_link_libraries(${US_RCC_EXECUTABLE_TARGET} PRIVATE Boost::boost Boost::nowide)
++find_package(Boost REQUIRED nowide)
++target_link_libraries(${US_RCC_EXECUTABLE_TARGET} Boost::boost Boost::nowide)
  
  set_property(TARGET ${US_RCC_EXECUTABLE_TARGET} APPEND PROPERTY
               COMPILE_DEFINITIONS "MINIZ_NO_ARCHIVE_READING_API;MINIZ_NO_ZLIB_COMPATIBLE_NAMES")
 diff --git a/tools/rc/ResourceCompiler.cpp b/tools/rc/ResourceCompiler.cpp
-index 622ef9c..d50971d 100755
+index 622ef9c..e4547d5 100755
 --- a/tools/rc/ResourceCompiler.cpp
 +++ b/tools/rc/ResourceCompiler.cpp
 @@ -35,12 +35,12 @@
