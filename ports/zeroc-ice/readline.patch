@@ -1,0 +1,47 @@
+diff --git a/config/Make.rules.Linux b/config/Make.rules.Linux
+index ef4b5f8..d4862d3 100644
+--- a/config/Make.rules.Linux
++++ b/config/Make.rules.Linux
+@@ -187,8 +187,8 @@ endif
+ IceSSL_system_libs                              = -lssl -lcrypto
+ Glacier2CryptPermissionsVerifier_system_libs    = -lcrypt
+ 
+-icegridadmin_system_libs                        = -ledit
+-icestormadmin_system_libs                       = -ledit
++icegridadmin_system_libs                        = $(readline_libs)
++icestormadmin_system_libs                       = $(readline_libs)
+ 
+ #
+ # On supported platforms and if Bluez and DBus are installed, we set the IceBT
+diff --git a/cpp/src/IceGrid/Parser.cpp b/cpp/src/IceGrid/Parser.cpp
+index edcf11e..d99384b 100644
+--- a/cpp/src/IceGrid/Parser.cpp
++++ b/cpp/src/IceGrid/Parser.cpp
+@@ -13,7 +13,10 @@
+ #include <IceGrid/DescriptorHelper.h>
+ #include <IceBox/IceBox.h>
+ 
+-#if defined(__APPLE__) || defined(__linux__)
++#if defined(__linux__)
++#    include <readline/history.h>
++#    include <readline/readline.h>
++#elif defined(__APPLE__)
+ #    include <editline/readline.h>
+ #endif
+ 
+diff --git a/cpp/src/IceStorm/Parser.cpp b/cpp/src/IceStorm/Parser.cpp
+index 0629ca0..412dcfc 100644
+--- a/cpp/src/IceStorm/Parser.cpp
++++ b/cpp/src/IceStorm/Parser.cpp
+@@ -9,7 +9,10 @@
+ #include <IceStorm/IceStormInternal.h>
+ #include <algorithm>
+ 
+-#if defined(__APPLE__) || defined(__linux__)
++#if defined(__linux__)
++#    include <readline/history.h>
++#    include <readline/readline.h>
++#elif defined(__APPLE__)
+ #    include <editline/readline.h>
+ #endif
+ 

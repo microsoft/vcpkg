@@ -1,0 +1,12 @@
+diff --git a/config/Make.rules.Linux b/config/Make.rules.Linux
+index b1d819e..ef4b5f8 100644
+--- a/config/Make.rules.Linux
++++ b/config/Make.rules.Linux
+@@ -135,6 +135,7 @@ shared_cppflags = $(if $(filter-out program,$($1_target)),-fPIC,-fPIE) -fvisibil
+ shared_ldflags      = $(if $(filter-out program,$($1_target)),\
+         $(if $(filter yes,$(allow-undefined-symbols)),,-Wl$(comma)--no-undefined),\
+         -pie $(if $(filter yes,$(new_dtags)),-Wl$(comma)--enable-new-dtags,-Wl$(comma)--disable-new-dtags) \
++        $(call rpath-link-ldflag,$(prefix)/lib) \
+         $$(call unique,$$(foreach d,$($4_dependencies),$$(call make-rpath-link-ldflags,$$d,$($4_dependencies)))))
+ 
+ cppflags        = -Wall -Wextra -Wredundant-decls -Wshadow -Wdeprecated -Werror -pthread $(if $(filter yes,$(OPTIMIZE)),-DNDEBUG,-g)

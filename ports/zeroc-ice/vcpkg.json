@@ -101,6 +101,10 @@
       "dependencies": [
         "expat",
         {
+          "name": "readline",
+          "platform": "linux"
+        },
+        {
           "name": "zeroc-ice",
           "features": [
             "glacier2lib",
@@ -142,6 +146,10 @@
       "supports": "!(windows & static)",
       "dependencies": [
         "lmdb",
+        {
+          "name": "readline",
+          "platform": "linux"
+        },
         {
           "name": "zeroc-ice",
           "features": [
