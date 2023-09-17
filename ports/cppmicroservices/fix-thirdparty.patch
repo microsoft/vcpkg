@@ -1,0 +1,70 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2bec34f..5740b6e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -649,7 +649,7 @@ endif()
+ #-----------------------------------------------------------------------------
+ add_subdirectory(third_party/absl)
+ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+-add_subdirectory(third_party/boost/nowide)
++#add_subdirectory(third_party/boost/nowide)
+ set(BUILD_SHARED_LIBS ${_us_build_shared} CACHE BOOL "Build shared libraries" FORCE)
+ #-----------------------------------------------------------------------------
+ 
+diff --git a/tools/rc/CMakeLists.txt b/tools/rc/CMakeLists.txt
+index 5c49432..c04247a 100755
+--- a/tools/rc/CMakeLists.txt
++++ b/tools/rc/CMakeLists.txt
+@@ -19,9 +19,8 @@ set_property(TARGET ${US_RCC_EXECUTABLE_TARGET} PROPERTY OUTPUT_NAME ${US_RCC_EX
+ if(WIN32)
+     target_link_libraries(${US_RCC_EXECUTABLE_TARGET} Shlwapi)
+ endif()
+-
+-target_link_libraries(${US_RCC_EXECUTABLE_TARGET} nowide::nowide)
+-target_include_directories(${US_RCC_EXECUTABLE_TARGET} PRIVATE ${CppMicroServices_SOURCE_DIR}/third_party/boost/nowide/include)
++    find_package(Boost REQUIRED nowide)
++    target_link_libraries(${US_RCC_EXECUTABLE_TARGET} PRIVATE Boost::boost Boost::nowide)
+ 
+ set_property(TARGET ${US_RCC_EXECUTABLE_TARGET} APPEND PROPERTY
+              COMPILE_DEFINITIONS "MINIZ_NO_ARCHIVE_READING_API;MINIZ_NO_ZLIB_COMPATIBLE_NAMES")
+diff --git a/tools/rc/ResourceCompiler.cpp b/tools/rc/ResourceCompiler.cpp
+index 622ef9c..d50971d 100755
+--- a/tools/rc/ResourceCompiler.cpp
++++ b/tools/rc/ResourceCompiler.cpp
+@@ -35,12 +35,12 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <nowide/args.hpp>
+-#include <nowide/fstream.hpp>
++#include <boost/nowide/args.hpp>
++#include <boost/nowide/fstream.hpp>
+ 
+ #include "optionparser.h"
+ #include "json/json.h"
+-
++namespace nowide = boost::nowide;
+ // ---------------------------------------------------------------------------------
+ // --------------------------    PLATFORM SPECIFIC CODE    -------------------------
+ // ---------------------------------------------------------------------------------
+diff --git a/util/src/FileSystem.cpp b/util/src/FileSystem.cpp
+index 868f9b7..c0442a4 100644
+--- a/util/src/FileSystem.cpp
++++ b/util/src/FileSystem.cpp
+@@ -28,6 +28,7 @@
+ #include <stdexcept>
+ #include <string>
+ #include <vector>
++#include <cstdint>
+ 
+ #ifdef US_PLATFORM_POSIX
+ #    include <cerrno>
+@@ -124,7 +125,7 @@ namespace cppmicroservices
+         std::string
+         GetExecutablePath()
+         {
+-            uint32_t bufsize = MAXPATHLEN;
++            std::uint32_t bufsize = MAXPATHLEN;
+ #ifdef US_PLATFORM_WINDOWS
+             std::vector<wchar_t> wbuf(bufsize + 1, '\0');
+             if (GetModuleFileNameW(nullptr, wbuf.data(), bufsize) == 0 || GetLastError() == ERROR_INSUFFICIENT_BUFFER)

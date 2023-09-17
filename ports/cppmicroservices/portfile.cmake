@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CppMicroServices/CppMicroservices
-    REF v3.6.0
-    SHA512 C1407E1D3C2FD31675C32D8C00F7D005C09B03A835D5B09411B0043DDEAF5E3A1A0C7A5FA34FA04D5A643169D222D0E8D3A3C31CDA69FB64CDF1A8CCA276BE18
+    REF "v${VERSION}"
+    SHA512 4743846a8ba45e6bd320c93bb3bd443b5dac16ea0bbf55bda6212e9200a40ee29031fd74c6141de4c6b5ef9ad3e70789d13fda25b40638547782d386a12dd7e2
     HEAD_REF development
     PATCHES
         werror.patch
-        fix-dependency-gtest.patch
-        fix-warning-c4834.patch
+        fix-thirdparty.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,6 +15,7 @@ vcpkg_cmake_configure(
         -DTOOLS_INSTALL_DIR:STRING=tools/cppmicroservices
         -DAUXILIARY_INSTALL_DIR:STRING=share/cppmicroservices
         -DUS_USE_SYSTEM_GTEST=TRUE
+        -DUS_BUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
