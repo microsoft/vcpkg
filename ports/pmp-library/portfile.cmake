@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
         -DPMP_BUILD_TESTS=OFF
         -DPMP_BUILD_DOCS=OFF
         -DPMP_BUILD_VIS=OFF
+        -DPMP_STRICT_COMPILATION=OFF
 )
 
 vcpkg_cmake_install()
