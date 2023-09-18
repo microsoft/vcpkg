@@ -18,9 +18,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "tools"
-  ],
   "features": {
     "tools": {
       "description": "build command line tool",
