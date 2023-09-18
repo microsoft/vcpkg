@@ -1,9 +1,5 @@
-require 'json'
-
-configuration = JSON.parse(File.read("#{__dir__}/vagrant-box-configuration.json"))
-
 Vagrant.configure('2') do |config|
-  config.vm.box = 'vcpkg/macos-base'
+  config.vm.box = 'macos-13-5'
   config.vm.synced_folder '.', '/Users/vagrant/shared'
 
   config.vm.provision 'shell',
@@ -30,6 +26,6 @@ Vagrant.configure('2') do |config|
   config.vm.provision 'shell',
     run: 'once',
     name: 'Install brew applications',
-    inline: "brew install #{configuration['brew'].join(' ')} && brew install --cask #{configuration['brew-cask'].join(' ')}",
+    inline: "brew install autoconf-archive autoconf automake bison cmake gettext gfortran gperf gtk-doc libtool meson mono nasm ninja pkg-config powershell texinfo yasm",
     privileged: false
 end
