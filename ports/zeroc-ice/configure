@@ -43,11 +43,13 @@ VCPKG_MAKE_OPTS = \\
 	embedded_runpath=no \\
 	linux_id=vcpkg \\
 	prefix="${ICE_PREFIX}" \\
+	MCPP_HOME="${ICE_PREFIX}" \\
+	LMDB_HOME="${ICE_PREFIX}" \\
 	${ICE_SLICE2CPP} \\
 	CONFIGS="${ICE_LINKAGE} cpp11-${ICE_LINKAGE}" \\
 	${ICE_OPTIMIZE} \\
 	USR_DIR_INSTALL=yes \\
-	V=1
+	CXX="\$(CXX) \$(CPPFLAGS) \$(CXXFLAGS)"
 
 VCPKG_BUILD_OPTS = \\
 	bz2_ldflags="${ICE_BZIP2_LIBS}" \\

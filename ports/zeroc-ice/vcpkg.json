@@ -67,8 +67,7 @@
       ]
     },
     "icebox": {
-      "description": "IceBox is a framework for Ice application services.",
-      "supports": "!(windows & static)"
+      "description": "IceBox is a framework for Ice application services."
     },
     "iceboxlib": {
       "description": "Deprecated. Use feature icebox instead.",
