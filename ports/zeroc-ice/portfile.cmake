@@ -180,6 +180,15 @@ else()
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
     vcpkg_list(SET options)
+    if(VCPKG_TARGET_IS_OSX)
+        vcpkg_list(APPEND options build-platform=macosx)
+    elseif(VCPKG_TARGET_IS_IOS AND CMAKE_OSX_SYSROOT MATCHES "iphonesimulator")
+        vcpkg_list(APPEND options build-platform=iphonesimulator)
+    elseif(VCPKG_TARGET_IS_IOS)
+        vcpkg_list(APPEND options build-platform=iphoneos)
+    else()
+        vcpkg_list(APPEND options build-platform=linux)
+    endif()
     if(VCPKG_CROSSCOMPILING)
         vcpkg_list(APPEND options
             "slice2cpp_path=${CURRENT_HOST_INSTALLED_DIR}/tools/zeroc-ice/slice2cpp${VCPKG_HOST_EXECUTABLE_SUFFIX}"

@@ -4,6 +4,7 @@ set -e
 
 echo "$0" "$*"
 
+ICE_BUILD_PLATFORM=
 ICE_BZIP2_LIBS=$(${PKG_CONFIG:-pkg-config} --libs bzip2)
 ICE_COMPONENTS=Ice
 ICE_LINKAGE=static
@@ -20,6 +21,9 @@ for OPTION; do
 	--prefix=*)
 		ICE_PREFIX="${OPTION#--prefix=}"
 		;;
+	build-platform=*)
+		ICE_BUILD_PLATFORM="${OPTION#build-platform=}"
+		;;
 	COMPONENTS=*)
 		ICE_COMPONENTS="${OPTION#COMPONENTS=}"
 		;;
@@ -35,7 +39,7 @@ done
 cat > Makefile.vcpkg <<END_MAKEFILE ;
 
 VCPKG_MAKE_OPTS = \\
-	build-platform=vcpkg-target \\
+	build-platform=${ICE_BUILD_PLATFORM} \\
 	embedded_runpath=no \\
 	linux_id=vcpkg \\
 	prefix="${ICE_PREFIX}" \\
