@@ -9,7 +9,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-makefiles.patch
-        fix-linux-configure.patch
+	fix-linux-configure.patch
         gaiaconfig-msvc.patch
         fix-mingw.patch
         fix-utf8-source.patch
@@ -176,6 +176,13 @@ else()
     else()
         set(TARGET_ALIAS "")
     endif()
+    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+      if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(OPTIONS_RELEASE "LDFLAGS=-Wl,-rpath ${CURRENT_INSTALLED_DIR}/lib")
+      else()
+        set(OPTIONS_DEBUG "LDFLAGS=-Wl,-rpath ${CURRENT_INSTALLED_DIR}/debug/lib")
+      endif()
+    endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
@@ -188,10 +195,13 @@ else()
             ${RTTOPO_OPTION}
             "--disable-examples"
             "--disable-minizip"
+	    "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/bin/geos-config"
         OPTIONS_DEBUG
             "LIBS=${PKGCONFIG_LIBS_DEBUG} ${SYSTEM_LIBS}"
+	    "${OPTIONS_DEBUG}"
         OPTIONS_RELEASE
             "LIBS=${PKGCONFIG_LIBS_RELEASE} ${SYSTEM_LIBS}"
+	    "${OPTIONS_RELEASE}"
     )
 
     # automake adds the basedir of the generated config to `DEFAULT_INCLUDES`,
