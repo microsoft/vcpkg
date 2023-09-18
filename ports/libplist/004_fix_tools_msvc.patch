@@ -1,5 +1,5 @@
 diff --git a/tools/plistutil.c b/tools/plistutil.c
-index 8121a7d..e59faf9 100644
+index 8121a7d..98b440e 100644
 --- a/tools/plistutil.c
 +++ b/tools/plistutil.c
 @@ -32,10 +32,13 @@
@@ -12,7 +12,7 @@ index 8121a7d..e59faf9 100644
  
  #ifdef _MSC_VER
  #pragma warning(disable:4996)
-+#define STDIN_FILENO 0
++#define STDIN_FILENO _fileno(stdin)
  #endif
  
  typedef struct _options
