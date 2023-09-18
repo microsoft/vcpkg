@@ -3,17 +3,16 @@
   "version": "3.7.9",
   "port-version": 5,
   "maintainers": "Benjamin Oldenburg <benjamin.oldenburg@ordis.co.th>",
-  "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
+  "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more. (This port only covers C++.)",
   "homepage": "https://github.com/zeroc-ice/ice",
   "license": null,
-  "supports": "!android & !uwp & !(windows & arm) & !wasm32",
+  "supports": "linux | osx | (windows & !mingw & !uwp & !xbox)",
   "dependencies": [
     "bzip2",
-    "expat",
-    "lmdb",
     {
+      "$comment": "Used by src/Ice/SHA1.cpp",
       "name": "openssl",
-      "platform": "!windows"
+      "platform": "!osx & !windows"
     },
     {
       "name": "vcpkg-msbuild",
@@ -25,112 +24,170 @@
       "host": true,
       "default-features": false
     },
-    "zeroc-ice-mcpp",
-    "zlib"
+    {
+      "name": "zeroc-ice-mcpp",
+      "platform": "native"
+    }
   ],
   "default-features": [
-    "glacier2lib",
-    "icegridlib",
-    "icestormlib"
+    "glacier2",
+    "icebox",
+    "icegrid",
+    "icessl",
+    "icestorm"
   ],
   "features": {
-    "glacier2lib": {
-      "description": "Glacier2 libraries"
+    "glacier2": {
+      "description": "Glacier2 is a lightweight firewall traversal solution for Ice applications."
     },
-    "glacier2router": {
-      "description": "Glacier2Router",
-      "supports": "!(windows & static)",
+    "glacier2lib": {
+      "description": "Deprecated. Use feature glacier2 instead.",
       "dependencies": [
         {
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "glacier2lib",
+            "glacier2"
+          ]
+        }
+      ]
+    },
+    "glacier2router": {
+      "description": "The Glacier2 router daemon.",
+      "supports": "!static",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "default-features": false,
+          "features": [
+            "glacier2",
             "icessl"
           ]
         }
       ]
     },
+    "icebox": {
+      "description": "IceBox is a framework for Ice application services.",
+      "supports": "!(windows & static)"
+    },
     "iceboxlib": {
-      "description": "IceBox libraries and runtime",
-      "supports": "!(windows & static)"
-    },
-    "iceboxtools": {
-      "description": "IceBox tools",
-      "supports": "!(windows & static)"
-    },
-    "icebridge": {
-      "description": "IceBridge",
-      "supports": "!(windows & static)",
+      "description": "Deprecated. Use feature icebox instead.",
       "dependencies": [
         {
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "iceboxlib"
+            "icebox"
           ]
         }
       ]
     },
-    "icediscovery": {
-      "description": "IceDiscovery",
+    "iceboxtools": {
+      "description": "The IceBox server and administration programs.",
+      "supports": "!static",
       "dependencies": [
         {
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "glacier2lib",
-            "iceboxlib",
-            "icessl",
-            "icestormlib"
+            "icebox"
+          ]
+        }
+      ]
+    },
+    "icebridge": {
+      "description": "IceBridge is an Ice service that acts as a bridge between one or more clients and a server.",
+      "supports": "!static"
+    },
+    "icediscovery": {
+      "description": "IceDiscovery provides a location service using UDP multicast that enables Ice applications to discover objects and object adapters."
+    },
+    "icegrid": {
+      "description": "IceGrid is a location and activation service for Ice applications.",
+      "dependencies": [
+        "lmdb",
+        {
+          "name": "zeroc-ice",
+          "default-features": false,
+          "features": [
+            "glacier2"
           ]
         }
       ]
     },
     "icegridlib": {
-      "description": "IceGrid library",
+      "description": "Deprecated. Use feature icegrid instead.",
       "dependencies": [
         {
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "glacier2lib"
+            "icegrid"
           ]
         }
       ]
     },
     "icegridtools": {
-      "description": "IceGrid tools",
-      "supports": "!(windows & static)",
+      "description": "IceGrid tools.",
+      "supports": "!static",
       "dependencies": [
         "expat",
+        "lmdb",
         {
           "name": "readline",
           "platform": "linux"
         },
         {
+          "$more_features": "IceXML IcePatch2 IceDB $(local_dependencies)",
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "glacier2lib",
-            "iceboxlib",
-            "icegridlib",
-            "icessl"
+            "glacier2",
+            "icebox",
+            "icegrid",
+            "icelocatordiscovery",
+            "icepatch2",
+            "icessl",
+            "icestorm"
           ]
         }
       ]
     },
     "icelocatordiscovery": {
-      "description": "IceLocatorDiscovery",
+      "description": "IceLocatorDiscovery is an Ice plug-in that enables the discovery of IceGrid and custom locators via UDP multicast.",
       "dependencies": [
         {
           "name": "zeroc-ice",
           "features": [
-            "glacier2lib",
-            "iceboxlib",
+            "glacier2",
+            "icebox",
             "icessl",
-            "icestormlib"
+            "icestorm"
+          ]
+        }
+      ]
+    },
+    "icepatch2": {
+      "description": "IcePatch2 is the Ice solution for secure replication of a directory tree.",
+      "supports": "!windows",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "icepatch2tools": {
+      "description": "IcePatch2 tools.",
+      "supports": "!static",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "icepatch2"
           ]
         }
       ]
     },
     "icessl": {
-      "description": "IceSSL",
+      "description": "IceSSL is a plug-in that provides security capabilities using the Transport Layer Security (TLS) protocol.",
       "dependencies": [
         {
           "name": "openssl",
@@ -138,12 +195,35 @@
         }
       ]
     },
+    "icestorm": {
+      "description": "IceStorm is an efficient publish/subscribe service for Ice applications.",
+      "dependencies": [
+        "lmdb",
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2",
+            "icebox",
+            "icegrid"
+          ]
+        }
+      ]
+    },
     "icestormlib": {
-      "description": "IceStorm library"
+      "description": "Deprecated. Use feature icestorm instead.",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "default-features": false,
+          "features": [
+            "icestorm"
+          ]
+        }
+      ]
     },
     "icestormtools": {
       "description": "IceStorm tools",
-      "supports": "!(windows & static)",
+      "supports": "!static",
       "dependencies": [
         "lmdb",
         {
@@ -153,10 +233,11 @@
         {
           "name": "zeroc-ice",
           "features": [
-            "glacier2lib",
-            "iceboxlib",
-            "icegridlib",
-            "icestormlib"
+            "glacier2",
+            "icebox",
+            "icegrid",
+            "icepatch2",
+            "icestorm"
           ]
         }
       ]
