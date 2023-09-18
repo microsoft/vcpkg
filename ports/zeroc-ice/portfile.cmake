@@ -42,6 +42,7 @@ set(ICE_COMPONENTS_MSBUILD "")
 set(ICE_COMPONENTS_MAKE "Ice")
 set(ICE_PROGRAMS_MAKE "")
 set(pkgconfig_packages "")
+set(msbuild_additional_libs "")
 
 if("icepatch2" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IcePatch2")
@@ -89,6 +90,8 @@ if("icegrid" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_INCLUDE_SUB_DIRECTORIES "IceGrid")
     vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icegrid++11")
     vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IceGrid")
+    vcpkg_list(APPEND msbuild_additional_libs "lmdb.lib")
+
 endif()
 
 if("icegridtools" IN_LIST FEATURES)
@@ -154,9 +157,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         OPTIONS
             ${MSBUILD_OPTIONS}
         DEPENDENT_PKGCONFIG bzip2 ${pkgconfig_packages}
-        ADDITIONAL_LIBS lmdb.lib
-        ADDITIONAL_LIBS_RELEASE mcpp.lib ${libs_rel}
-        ADDITIONAL_LIBS_DEBUG mcppd.lib ${libs_dbg}
+        ADDITIONAL_LIBS ${msbuild_additional_libs}
+        ADDITIONAL_LIBS_RELEASE mcpp.lib
+        ADDITIONAL_LIBS_DEBUG mcppd.lib
     )
 
     install_includes("${WIN_RELEASE_BUILD_DIR}/cpp/include" "${ICE_INCLUDE_SUB_DIRECTORIES}")
