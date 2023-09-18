@@ -38,6 +38,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "default-targets",
             "tools"
           ]
         }
@@ -50,6 +51,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "default-targets",
             "tools"
           ]
         }
@@ -281,6 +283,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "default-targets",
             "tools"
           ]
         }
@@ -307,6 +310,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "default-targets",
             "tools"
           ]
         }
@@ -332,6 +336,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "default-targets",
             "tools",
             "utils"
           ]
@@ -459,6 +464,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "default-targets",
             "enable-threads"
           ]
         }

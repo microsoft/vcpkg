@@ -214,6 +214,11 @@ endif()
 if("libunwind" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libunwind")
 endif()
+if(LLVM_ENABLE_RUNTIMES)
+    list(APPEND FEATURE_OPTIONS
+        "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
+    )
+endif()
 
 # this is for normal targets
 set(known_llvm_targets
@@ -238,13 +243,19 @@ set(known_llvm_targets
     XCore
 )
 
-set(LLVM_TARGETS_TO_BUILD "")
+set(LLVM_TARGETS_TO_BUILD)
 foreach(llvm_target IN LISTS known_llvm_targets)
     string(TOLOWER "target-${llvm_target}" feature_name)
     if(feature_name IN_LIST FEATURES)
         list(APPEND LLVM_TARGETS_TO_BUILD "${llvm_target}")
     endif()
 endforeach()
+
+if(LLVM_TARGETS_TO_BUILD)
+    list(APPEND FEATURE_OPTIONS
+        "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
+    )
+endif()
 
 # this is for experimental targets
 set(known_llvm_experimental_targets
@@ -256,13 +267,19 @@ set(known_llvm_experimental_targets
     Xtensa
 )
 
-set(LLVM_EXPERIMENTAL_TARGETS_TO_BUILD "")
+set(LLVM_EXPERIMENTAL_TARGETS_TO_BUILD)
 foreach(llvm_target IN LISTS known_llvm_experimental_targets)
     string(TOLOWER "target-${llvm_target}" feature_name)
     if(feature_name IN_LIST FEATURES)
         list(APPEND LLVM_EXPERIMENTAL_TARGETS_TO_BUILD "${llvm_target}")
     endif()
 endforeach()
+
+if(LLVM_EXPERIMENTAL_TARGETS_TO_BUILD)
+    list(APPEND FEATURE_OPTIONS
+        "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
+    )
+endif()
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
@@ -275,7 +292,6 @@ file(REMOVE "${SOURCE_PATH}/llvm/cmake/modules/Findzstd.cmake")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
-        ${FEATURE_OPTIONS}
         -DLLVM_INCLUDE_EXAMPLES=OFF
         -DLLVM_BUILD_EXAMPLES=OFF
         -DLLVM_INCLUDE_TESTS=OFF
@@ -284,15 +300,13 @@ vcpkg_cmake_configure(
         -DLLVM_BUILD_BENCHMARKS=OFF
         # Force TableGen to be built with optimization. This will significantly improve build time.
         -DLLVM_OPTIMIZED_TABLEGEN=ON
-        "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
-        "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
-        "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
-        "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
         -DPACKAGE_VERSION=${VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
         -DLLVM_INSTALL_PACKAGE_DIR:PATH=share/llvm
         -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
+        ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES 
         COMPILER_RT_ENABLE_IOS
 )
