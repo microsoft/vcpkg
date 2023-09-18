@@ -233,4 +233,10 @@ endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-ci-IceConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vcpkg-ci/cmake-user")
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ice")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(READ "${SOURCE_PATH}/README.md" readme)
+string(REGEX REPLACE "^.*## Copyright and License(.*)##.*\$" "\\1" comment "${readme}")
+vcpkg_install_copyright(
+    COMMENT "${comment}"
+    FILE_LIST "${SOURCE_PATH}/ICE_LICENSE" "${SOURCE_PATH}/LICENSE"
+)
