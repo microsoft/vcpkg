@@ -28,6 +28,7 @@ endfunction()
 
 # install_slices
 function(install_slices ORIGINAL_PATH RELATIVE_PATHS)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/ice/slice")
     foreach(RELATIVE_PATH ${RELATIVE_PATHS})
         file(GLOB HEADER_FILES ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.ice)
         if(EXISTS ${ORIGINAL_PATH}/${RELATIVE_PATH})
@@ -158,19 +159,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         ADDITIONAL_LIBS_DEBUG mcppd.lib ${libs_dbg}
     )
 
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/zeroc.icebuilder.msbuild.dll")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/zeroc.icebuilder.msbuild.dll")
-    endif()
-
     install_includes("${WIN_RELEASE_BUILD_DIR}/cpp/include" "${ICE_INCLUDE_SUB_DIRECTORIES}")
     install_includes("${WIN_RELEASE_BUILD_DIR}/cpp/include/generated/cpp11/${TRIPLET_SYSTEM_ARCH}/Release" "${ICE_INCLUDE_SUB_DIRECTORIES}")
 
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/ice/slice")
     install_slices("${SOURCE_PATH}/slice" "${ICE_INCLUDE_SUB_DIRECTORIES}")
 
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/zeroc.icebuilder.msbuild.dll")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
