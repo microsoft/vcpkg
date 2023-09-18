@@ -1362,7 +1362,6 @@ workflow:x64-uwp=fail
 wpilib:arm-neon-android=fail # requires full c++20 support
 wpilib:arm64-android=fail # requires full c++20 support
 wpilib:x64-android=fail # requires full c++20 support
-wpilib:x64-osx=fail # requires full c++20 support
 x264:arm-neon-android=fail
 x264:arm64-android=fail
 x265:arm-neon-android=fail
