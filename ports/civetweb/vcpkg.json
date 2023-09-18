@@ -1,10 +1,10 @@
 {
   "name": "civetweb",
   "version": "1.15",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Easy to use, powerful, C/C++ embeddable web server.",
   "homepage": "https://github.com/civetweb/civetweb",
-  "supports": "!uwp & !(arm & windows)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
