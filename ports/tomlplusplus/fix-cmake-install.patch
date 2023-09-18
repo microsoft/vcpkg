@@ -1,0 +1,77 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1179d37..7b1c51e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,6 +26,7 @@ target_include_directories(
+   ${tomlplusplus_warning_guard} # unquoted for list expansion
+   INTERFACE
+   "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
++  "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+ )
+ 
+ target_compile_features(tomlplusplus_tomlplusplus INTERFACE cxx_std_17)
+diff --git a/cmake/install-rules.cmake b/cmake/install-rules.cmake
+index 2218025..889f4b4 100644
+--- a/cmake/install-rules.cmake
++++ b/cmake/install-rules.cmake
+@@ -16,7 +16,7 @@ install(
+ install(
+     TARGETS tomlplusplus_tomlplusplus
+     EXPORT tomlplusplusTargets
+-    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++    DESTINATION lib
+ )
+ 
+ write_basic_package_version_file(
+@@ -26,7 +26,7 @@ write_basic_package_version_file(
+ )
+ 
+ set(
+-    tomlplusplus_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/tomlplusplus"
++    tomlplusplus_INSTALL_CMAKEDIR lib/cmake/tomlplusplus
+     CACHE STRING "CMake package config location relative to the install prefix"
+ )
+ 
+@@ -43,6 +43,7 @@ install(
+ install(
+     EXPORT tomlplusplusTargets
+     NAMESPACE tomlplusplus::
++    FILE tomlplusplusTargets.cmake
+     DESTINATION "${tomlplusplus_INSTALL_CMAKEDIR}"
+     COMPONENT tomlplusplus_Development
+ )
+diff --git a/cmake/tomlplusplusConfig.cmake.meson.in b/cmake/tomlplusplusConfig.cmake.meson.in
+index b007b68..c83a7d7 100644
+--- a/cmake/tomlplusplusConfig.cmake.meson.in
++++ b/cmake/tomlplusplusConfig.cmake.meson.in
+@@ -1,29 +1,3 @@
+ @PACKAGE_INIT@
+ 
+-# If tomlplusplus::tomlplusplus target is not defined it will be included
+-if(NOT TARGET tomlplusplus::tomlplusplus)
+-
+-  if (@compile_library@)
+-    set(imported_type UNKNOWN)
+-  else()
+-    set(imported_type INTERFACE)
+-  endif()
+-
+-  # Import tomlplusplus interface library
+-  add_library(tomlplusplus::tomlplusplus ${imported_type} IMPORTED)
+-  set_target_properties(tomlplusplus::tomlplusplus PROPERTIES
+-    INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/@includedir@")
+-
+-  # Require C++17
+-  target_compile_features(tomlplusplus::tomlplusplus INTERFACE cxx_std_17)
+-
+-  # Set the path to the installed library so that users can link to it
+-  if (@compile_library@)
+-    set_target_properties(tomlplusplus::tomlplusplus PROPERTIES
+-      IMPORTED_LOCATION "${PACKAGE_PREFIX_DIR}/@libdir@/@lib_name@"
+-    )
+-    # compile_options not quoted on purpose
+-    target_compile_options(tomlplusplus::tomlplusplus INTERFACE @compile_options@)
+-  endif()
+-
+-endif()
++include ( "${CMAKE_CURRENT_LIST_DIR}/tomlplusplusTargets.cmake" )
