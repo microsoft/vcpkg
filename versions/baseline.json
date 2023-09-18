@@ -6424,6 +6424,10 @@
       "baseline": "1.12.0",
       "port-version": 0
     },
+    "pmp-library": {
+      "baseline": "3.0.0",
+      "port-version": 2
+    },
     "pngpp": {
       "baseline": "0.2.10",
       "port-version": 2
