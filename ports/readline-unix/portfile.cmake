@@ -21,7 +21,10 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/tools"
+)
 
 vcpkg_fixup_pkgconfig()
 
