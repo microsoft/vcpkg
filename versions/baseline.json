@@ -4037,7 +4037,7 @@
       "port-version": 2
     },
     "libdeflate": {
-      "baseline": "1.18",
+      "baseline": "1.19",
       "port-version": 0
     },
     "libdisasm": {
