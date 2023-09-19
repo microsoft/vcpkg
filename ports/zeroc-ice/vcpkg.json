@@ -32,7 +32,10 @@
   "default-features": [
     "glacier2",
     "icebox",
+    "icediscovery",
     "icegrid",
+    "icelocatordiscovery",
+    "icepatch2",
     "icessl",
     "icestorm"
   ],
@@ -168,7 +171,6 @@
     },
     "icepatch2": {
       "description": "IcePatch2 is the Ice solution for secure replication of a directory tree.",
-      "supports": "!windows",
       "dependencies": [
         "bzip2"
       ]
