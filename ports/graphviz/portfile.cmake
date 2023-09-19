@@ -1,4 +1,5 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # for plugins
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)  # for plugins
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
@@ -12,7 +13,6 @@ vcpkg_from_gitlab(
         no-absolute-paths.patch
         select-plugins.patch
         static-linkage.patch
-        cpp-error.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
