@@ -25,11 +25,11 @@
   "features": {
     "codegen": {
       "description": "Build code generator machinery",
+      "supports": "!uwp",
       "dependencies": [
         "abseil",
         "protobuf"
-      ],
-      "supports": "!uwp"
+      ]
     }
   }
 }
