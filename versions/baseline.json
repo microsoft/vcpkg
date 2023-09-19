@@ -8129,8 +8129,8 @@
       "port-version": 0
     },
     "tesseract": {
-      "baseline": "5.3.1",
-      "port-version": 3
+      "baseline": "5.3.2",
+      "port-version": 0
     },
     "tfhe": {
       "baseline": "1.0.1",
