@@ -4,7 +4,9 @@
   "description": "High-level C++ D-Bus library for Linux designed to provide easy-to-use yet powerful API in modern C++",
   "homepage": "https://github.com/Kistler-Group/sdbus-cpp",
   "license": "LGPL-2.1",
+  "supports": "!uwp & !staticcrt",
   "dependencies": [
+    "dbus",
     {
       "name": "vcpkg-cmake",
       "host": true
