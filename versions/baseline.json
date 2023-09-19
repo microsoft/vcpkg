@@ -4266,7 +4266,7 @@
     },
     "libirecovery": {
       "baseline": "2023-05-13",
-      "port-version": 0
+      "port-version": 1
     },
     "libjpeg-turbo": {
       "baseline": "3.0.0",
@@ -7190,7 +7190,7 @@
     },
     "readline-win32": {
       "baseline": "5.0",
-      "port-version": 6
+      "port-version": 7
     },
     "readosm": {
       "baseline": "1.1.0a",
