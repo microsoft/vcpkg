@@ -438,7 +438,7 @@
     },
     "azure-messaging-eventhubs-cpp": {
       "baseline": "1.0.0-beta.2",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-attestation-cpp": {
       "baseline": "1.1.0",
