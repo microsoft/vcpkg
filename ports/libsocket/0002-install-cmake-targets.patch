@@ -26,6 +26,7 @@ diff --git a/libsocketConfig.cmake.in b/libsocketConfig.cmake.in
 -set(libsocket_BINARY_DIR "@PROJECT_BINARY_DIR@")
 +set(libsocket_BINARY_DIR "@INSTALL_BIN_DIR@")
  
- include(${libsocket_BINARY_DIR}/libsocketTargets.cmake)
+-include(${libsocket_BINARY_DIR}/libsocketTargets.cmake)
++include(share/libsocket/libsocketTargets.cmake)
  
 
