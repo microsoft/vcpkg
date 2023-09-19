@@ -29,6 +29,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
         -DLeptonica_DIR=YES
         -DSW_BUILD=OFF
+        -DLEPT_TIFF_RESULT=ON
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_OpenCL
 )
