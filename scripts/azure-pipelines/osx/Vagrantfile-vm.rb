@@ -1,19 +1,15 @@
-require 'json'
-
-configuration = JSON.parse(File.read("#{__dir__}/vagrant-configuration.json"))
-
 server = {
-  :machine_name => configuration['machine_name'],
-  :box => configuration['box_name'],
-  :box_version => configuration['box_version'],
+  :machine_name => 'vcpkg-eg-mac-11',
+  :box => 'vcpkg-macos-2023-09-11',
+  :box_version => '0',
   :ram => 24000,
-  :cpu => 11
+  :cpu => 12
 }
 
-azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/2.198.3/vsts-agent-osx-x64-2.198.3.tar.gz'
-devops_url = configuration['devops_url']
-agent_pool = configuration['agent_pool']
-pat = configuration['pat']
+azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/3.225.0/vsts-agent-osx-x64-3.225.0.tar.gz'
+devops_url = 'https://dev.azure.com/vcpkg'
+agent_pool = 'PrOsx-2023-09-11'
+pat = '<replace with PAT>'
 
 Vagrant.configure('2') do |config|
   config.vm.box = server[:box]
