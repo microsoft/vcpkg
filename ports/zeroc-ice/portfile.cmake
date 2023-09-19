@@ -39,7 +39,7 @@ endfunction()
 
 set(ICE_INCLUDE_SUB_DIRECTORIES "Ice" "IceUtil")
 set(ICE_COMPONENTS_MSBUILD "/t:C++98\\ice")
-set(ICE_COMPONENTS_MAKE "Ice")
+set(ICE_COMPONENTS_MAKE "IceUtil Ice")
 set(ICE_PROGRAMS_MAKE "")
 set(pkgconfig_packages "")
 set(msbuild_additional_libs "")
@@ -185,6 +185,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/zeroc.icebuilder.msbuild.dll")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/IceUtil/Config.h" " NAME ICE_SO_VERSION " " NAME ")
     endif()
 
     # Don't leave C++98 libs side-by-side with C++11 libs
