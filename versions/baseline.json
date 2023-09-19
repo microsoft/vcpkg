@@ -4049,7 +4049,7 @@
       "port-version": 1
     },
     "libdjinterop": {
-      "baseline": "0.19.2",
+      "baseline": "0.20.0",
       "port-version": 0
     },
     "libdmx": {
