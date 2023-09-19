@@ -3,6 +3,7 @@
   "version": "4.0",
   "description": "A modern C++ MIDI real-time & file I/O library",
   "homepage": "https://github.com/jcelerier/libremidi",
+  "license": "BSD-2-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
