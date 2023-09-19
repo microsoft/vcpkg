@@ -6,7 +6,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 8f4cb9ae88b1ec0db0bcc27e131fcb9ad8a8bc88e39721b3b73f63e057bae4cd36619894e25114ccddb1a8e6c21db2f80adcabb3263ff5d8b34b72af7563afe2
     PATCHES
-        pic.patch
+        pic.patch # can be dropped once https://github.com/Kistler-Group/sdbus-cpp/pull/361 is merged+released
 )
 
 
