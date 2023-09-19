@@ -5922,7 +5922,7 @@
     },
     "octomap": {
       "baseline": "1.9.6",
-      "port-version": 0
+      "port-version": 1
     },
     "ode": {
       "baseline": "0.16.3",
