@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 project(libplist C CXX)
 
+option(BUILD_TOOLS "Build tools." OFF)
+
 include(GNUInstallDirs)
 
 file(GLOB_RECURSE LIBCNARY_SOURCE libcnary/node.c libcnary/node_list.c)
@@ -26,13 +28,11 @@ if(WIN32)
 endif()
 
 add_library(libplist ${LIBPLIST_SOURCE} ${LIBCNARY_SOURCE})
-target_include_directories(libplist
-    PRIVATE
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/libcnary/include>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src>"
-    PUBLIC
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+target_include_directories(libplist PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/libcnary/include>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 target_compile_definitions(libplist PRIVATE ${DEFINITIONS})
 set_target_properties(libplist PROPERTIES OUTPUT_NAME plist-2.0)
@@ -41,13 +41,11 @@ if(UNIX AND NOT APPLE)
 endif()
 
 add_library(libplist++ STATIC ${LIBPLISTPP_SOURCE} ${LIBCNARY_SOURCE})
-target_include_directories(libplist++
-    PRIVATE
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/libcnary/include>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src>"
-    PUBLIC
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+target_include_directories(libplist++ PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/libcnary/include>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 target_compile_definitions(libplist++ PRIVATE ${DEFINITIONS})
 target_link_libraries(libplist++ PUBLIC libplist)
@@ -85,3 +83,21 @@ foreach(PLIST_PKGCONFIG libplist-2.0.pc libplist++-2.0.pc)
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
     )
 endforeach()
+
+if(BUILD_TOOLS)
+    add_executable(plistutil "tools/plistutil.c")
+    target_compile_definitions(plistutil PRIVATE
+        -DPACKAGE_VERSION="2.3.0"
+        -DPACKAGE_URL="https://github.com/libimobiledevice/libplist"
+        -DPACKAGE_BUGREPORT="https://github.com/libimobiledevice/libplist/issues"
+    )
+    if(NOT BUILD_SHARED_LIBS)
+        target_compile_definitions(plistutil PRIVATE -DLIBPLIST_STATIC)
+    endif()
+    target_link_libraries(plistutil PRIVATE libplist)
+
+    install(
+        TARGETS plistutil
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    )
+endif()

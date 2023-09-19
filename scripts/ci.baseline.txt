@@ -725,7 +725,6 @@ luafilesystem:arm64-uwp=fail
 luafilesystem:x64-uwp=fail
 magnum:arm-neon-android=fail
 magnum:arm64-android=fail
-magnum:arm64-windows=skip
 magnum:x64-android=fail
 mchehab-zbar:arm-neon-android=fail
 mchehab-zbar:arm64-android=fail
