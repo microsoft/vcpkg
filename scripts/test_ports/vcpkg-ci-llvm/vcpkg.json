@@ -12,7 +12,6 @@
         "clang",
         "default-targets",
         "disable-assertions",
-        "disable-clang-static-analyzer",
         "enable-abi-breaking-checks",
         "enable-bindings",
         "enable-eh",
