@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 4d191154cf0cf988e84a1a114b9cac1eb399c96478be44e89e308d9b11ed7560de400b734aa71fbd746a71bd7384b9d425ba266a6b39cab3017ab2f40f6555b6
+    SHA512 ad75af49394b8cf2e6152ded55754901f48dc8f4efacfdc6d0651d3b5532893630773571c4fda5e853b9784a8a8a9d286a6a89511a8319726d774b801166ac33
     HEAD_REF main
     PATCHES
         0001-fix-install-package-dir.patch
@@ -107,15 +107,11 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS
         -DCLANG_INSTALL_PACKAGE_DIR:PATH=share/clang
         -DCLANG_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        # Disable ARCMT
+        -DCLANG_ENABLE_ARCMT=OFF
+        # Disable static analyzer
+        -DCLANG_ENABLE_STATIC_ANALYZER=OFF
     )
-    if("disable-clang-static-analyzer" IN_LIST FEATURES)
-        list(APPEND FEATURE_OPTIONS
-            # Disable ARCMT
-            -DCLANG_ENABLE_ARCMT=OFF
-            # Disable static analyzer
-            -DCLANG_ENABLE_STATIC_ANALYZER=OFF
-        )
-    endif()
     # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (CLANG_TOOLS_INSTALL_DIR=tools/llvm)
     # 2) Clang resource files should be relocated from lib/clang/<major_version> to ../tools/llvm/lib/clang/<major_version>
     string(REGEX MATCH "^[0-9]+" CLANG_VERSION_MAJOR ${VERSION})

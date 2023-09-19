@@ -1,6 +1,6 @@
 {
   "name": "llvm",
-  "version": "17.0.0-rc4",
+  "version": "17.0.1",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -89,7 +89,6 @@
           "default-features": false,
           "features": [
             "disable-assertions",
-            "disable-clang-static-analyzer",
             "enable-bindings",
             "enable-terminfo",
             "enable-threads",
@@ -138,9 +137,6 @@
     },
     "disable-assertions": {
       "description": "Build LLVM without assertions."
-    },
-    "disable-clang-static-analyzer": {
-      "description": "Build without static analyzer."
     },
     "enable-abi-breaking-checks": {
       "description": "Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_ON."
