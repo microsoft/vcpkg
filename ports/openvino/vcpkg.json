@@ -1,8 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "openvino",
-  "version-date": "2023-06-11",
-  "port-version": 6,
+  "version": "2023.1.0",
   "maintainers": "OpenVINO Developers <openvino@intel.com>",
   "summary": "This is a port for Open Visual Inference And Optimization toolkit for AI inference",
   "description": [
@@ -16,7 +15,6 @@
   "documentation": "https://docs.openvino.ai/latest/index.html",
   "license": "Apache-2.0",
   "dependencies": [
-    "ade",
     {
       "name": "pkgconf",
       "host": true
@@ -24,14 +22,7 @@
     "pugixml",
     {
       "name": "tbb",
-      "default-features": false,
-      "features": [
-        {
-          "name": "hwloc",
-          "platform": "!static & !osx"
-        }
-      ],
-      "version>=": "2021.9.0#2"
+      "version>=": "2021.10.0#2"
     },
     {
       "name": "vcpkg-cmake",
