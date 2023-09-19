@@ -1,0 +1,13 @@
+diff --git a/Configurations/15-android.conf b/Configurations/15-android.conf
+index 41ad9223e0..ed51af0678 100644
+--- a/Configurations/15-android.conf
++++ b/Configurations/15-android.conf
+@@ -222,6 +222,8 @@ my %targets = (
+         # Newer NDK versions reportedly require additional -latomic.
+         #
+         inherit_from     => [ "android" ],
++        cflags           => add("-fPIC"),
++        cxxflags         => add("-fPIC"),
+         bn_ops           => add("RC4_CHAR"),
+         asm_arch         => 'armv4',
+         perlasm_scheme   => "void",

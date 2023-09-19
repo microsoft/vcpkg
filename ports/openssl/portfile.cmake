@@ -30,6 +30,7 @@ vcpkg_from_github(
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
         unix/no-static-libs-for-shared.patch
+        unix/arm_neon_android_with_fpic.patch
 )
 
 vcpkg_list(SET CONFIGURE_OPTIONS
