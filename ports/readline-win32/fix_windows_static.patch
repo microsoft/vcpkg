@@ -1,0 +1,644 @@
+diff --git a/src/readline/5.0/readline-5.0-src/history.h b/src/readline/5.0/readline-5.0-src/history.h
+index fafe224..abb1dc9 100644
+--- a/src/readline/5.0/readline-5.0-src/history.h
++++ b/src/readline/5.0/readline-5.0-src/history.h
+@@ -238,26 +238,26 @@ READLINE_DLL_IMPEXP char *get_history_event PARAMS((const char *, int *, int));
+ READLINE_DLL_IMPEXP char **history_tokenize PARAMS((const char *));
+ 
+ /* Exported history variables. */
+-READLINE_DLL_IMPEXP int history_base;
+-READLINE_DLL_IMPEXP int history_length;
+-READLINE_DLL_IMPEXP int history_max_entries;
+-READLINE_DLL_IMPEXP char history_expansion_char;
+-READLINE_DLL_IMPEXP char history_subst_char;
+-READLINE_DLL_IMPEXP char *history_word_delimiters;
+-READLINE_DLL_IMPEXP char history_comment_char;
+-READLINE_DLL_IMPEXP char *history_no_expand_chars;
+-READLINE_DLL_IMPEXP char *history_search_delimiter_chars;
+-READLINE_DLL_IMPEXP int history_quotes_inhibit_expansion;
+-
+-READLINE_DLL_IMPEXP int history_write_timestamps;
++READLINE_EXTERN int history_base;
++READLINE_EXTERN int history_length;
++READLINE_EXTERN int history_max_entries;
++READLINE_EXTERN char history_expansion_char;
++READLINE_EXTERN char history_subst_char;
++READLINE_EXTERN char *history_word_delimiters;
++READLINE_EXTERN char history_comment_char;
++READLINE_EXTERN char *history_no_expand_chars;
++READLINE_EXTERN char *history_search_delimiter_chars;
++READLINE_EXTERN int history_quotes_inhibit_expansion;
++
++READLINE_EXTERN int history_write_timestamps;
+ 
+ /* Backwards compatibility */
+-READLINE_DLL_IMPEXP int max_input_history;
++READLINE_EXTERN int max_input_history;
+ 
+ /* If set, this function is called to decide whether or not a particular
+    history expansion should be treated as a special case for the calling
+    application and not expanded. */
+-READLINE_DLL_IMPEXP rl_linebuf_func_t *history_inhibit_expansion_function;
++READLINE_EXTERN rl_linebuf_func_t *history_inhibit_expansion_function;
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/src/readline/5.0/readline-5.0-src/readline.h b/src/readline/5.0/readline-5.0-src/readline.h
+index 4940189..6d6dee4 100644
+--- a/src/readline/5.0/readline-5.0-src/readline.h
++++ b/src/readline/5.0/readline-5.0-src/readline.h
+@@ -51,6 +51,8 @@ extern "C" {
+ # define READLINE_DLL_IMPEXP  
+ #endif
+ 
++#define READLINE_EXTERN extern
++
+ #if defined (READLINE_LIBRARY)
+ #  include "rlstdc.h"
+ #  include "rltypedefs.h"
+@@ -87,7 +89,7 @@ typedef struct undo_list {
+ } UNDO_LIST;
+ 
+ /* The current undo list for RL_LINE_BUFFER. */
+-READLINE_DLL_IMPEXP UNDO_LIST *rl_undo_list;
++READLINE_EXTERN UNDO_LIST *rl_undo_list;
+ 
+ /* The data structure for mapping textual names to code addresses. */
+ typedef struct _funmap {
+@@ -95,7 +97,7 @@ typedef struct _funmap {
+   rl_command_func_t *function;
+ } FUNMAP;
+ 
+-READLINE_DLL_IMPEXP FUNMAP **funmap;
++READLINE_EXTERN FUNMAP **funmap;
+ 
+ /* **************************************************************** */
+ /*								    */
+@@ -488,131 +490,131 @@ READLINE_DLL_IMPEXP char *filename_completion_function PARAMS((const char *, int
+ /* **************************************************************** */
+ 
+ /* The version of this incarnation of the readline library. */
+-READLINE_DLL_IMPEXP const char *rl_library_version;		/* e.g., "4.2" */
+-READLINE_DLL_IMPEXP int rl_readline_version;			/* e.g., 0x0402 */
++READLINE_EXTERN const char *rl_library_version;		/* e.g., "4.2" */
++READLINE_EXTERN int rl_readline_version;			/* e.g., 0x0402 */
+ 
+ /* True if this is real GNU readline. */
+-READLINE_DLL_IMPEXP int rl_gnu_readline_p;
++READLINE_EXTERN int rl_gnu_readline_p;
+ 
+ /* Flags word encapsulating the current readline state. */
+-READLINE_DLL_IMPEXP int rl_readline_state;
++READLINE_EXTERN int rl_readline_state;
+ 
+ /* Says which editing mode readline is currently using.  1 means emacs mode;
+    0 means vi mode. */
+-READLINE_DLL_IMPEXP int rl_editing_mode;
++READLINE_EXTERN int rl_editing_mode;
+ 
+ /* Insert or overwrite mode for emacs mode.  1 means insert mode; 0 means
+    overwrite mode.  Reset to insert mode on each input line. */
+-READLINE_DLL_IMPEXP int rl_insert_mode;
++READLINE_EXTERN int rl_insert_mode;
+ 
+ /* The name of the calling program.  You should initialize this to
+    whatever was in argv[0].  It is used when parsing conditionals. */
+-READLINE_DLL_IMPEXP const char *rl_readline_name;
++READLINE_EXTERN const char *rl_readline_name;
+ 
+ /* The prompt readline uses.  This is set from the argument to
+    readline (), and should not be assigned to directly. */
+-READLINE_DLL_IMPEXP char *rl_prompt;
++READLINE_EXTERN char *rl_prompt;
+ 
+ /* The line buffer that is in use. */
+-READLINE_DLL_IMPEXP char *rl_line_buffer;
++READLINE_EXTERN char *rl_line_buffer;
+ 
+ /* The location of point, and end. */
+-READLINE_DLL_IMPEXP int rl_point;
+-READLINE_DLL_IMPEXP int rl_end;
++READLINE_EXTERN int rl_point;
++READLINE_EXTERN int rl_end;
+ 
+ /* The mark, or saved cursor position. */
+-READLINE_DLL_IMPEXP int rl_mark;
++READLINE_EXTERN int rl_mark;
+ 
+ /* Flag to indicate that readline has finished with the current input
+    line and should return it. */
+-READLINE_DLL_IMPEXP int rl_done;
++READLINE_EXTERN int rl_done;
+ 
+ /* If set to a character value, that will be the next keystroke read. */
+-READLINE_DLL_IMPEXP int rl_pending_input;
++READLINE_EXTERN int rl_pending_input;
+ 
+ /* Non-zero if we called this function from _rl_dispatch().  It's present
+    so functions can find out whether they were called from a key binding
+    or directly from an application. */
+-READLINE_DLL_IMPEXP int rl_dispatching;
++READLINE_EXTERN int rl_dispatching;
+ 
+ /* Non-zero if the user typed a numeric argument before executing the
+    current function. */
+-READLINE_DLL_IMPEXP int rl_explicit_arg;
++READLINE_EXTERN int rl_explicit_arg;
+ 
+ /* The current value of the numeric argument specified by the user. */
+-READLINE_DLL_IMPEXP int rl_numeric_arg;
++READLINE_EXTERN int rl_numeric_arg;
+ 
+ /* The address of the last command function Readline executed. */
+-READLINE_DLL_IMPEXP rl_command_func_t *rl_last_func;
++READLINE_EXTERN rl_command_func_t *rl_last_func;
+ 
+ /* The name of the terminal to use. */
+-READLINE_DLL_IMPEXP const char *rl_terminal_name;
++READLINE_EXTERN const char *rl_terminal_name;
+ 
+ /* The input and output streams. */
+-READLINE_DLL_IMPEXP FILE *rl_instream;
+-READLINE_DLL_IMPEXP FILE *rl_outstream;
++READLINE_EXTERN FILE *rl_instream;
++READLINE_EXTERN FILE *rl_outstream;
+ 
+ /* If non-zero, then this is the address of a function to call just
+    before readline_internal () prints the first prompt. */
+-READLINE_DLL_IMPEXP rl_hook_func_t *rl_startup_hook;
++READLINE_EXTERN rl_hook_func_t *rl_startup_hook;
+ 
+ /* If non-zero, this is the address of a function to call just before
+    readline_internal_setup () returns and readline_internal starts
+    reading input characters. */
+-READLINE_DLL_IMPEXP rl_hook_func_t *rl_pre_input_hook;
++READLINE_EXTERN rl_hook_func_t *rl_pre_input_hook;
+       
+ /* The address of a function to call periodically while Readline is
+    awaiting character input, or NULL, for no event handling. */
+-READLINE_DLL_IMPEXP rl_hook_func_t *rl_event_hook;
++READLINE_EXTERN rl_hook_func_t *rl_event_hook;
+ 
+ /* The address of the function to call to fetch a character from the current
+    Readline input stream */
+-READLINE_DLL_IMPEXP rl_getc_func_t *rl_getc_function;
++READLINE_EXTERN rl_getc_func_t *rl_getc_function;
+ 
+-READLINE_DLL_IMPEXP rl_voidfunc_t *rl_redisplay_function;
++READLINE_EXTERN rl_voidfunc_t *rl_redisplay_function;
+ 
+-READLINE_DLL_IMPEXP rl_vintfunc_t *rl_prep_term_function;
+-READLINE_DLL_IMPEXP rl_voidfunc_t *rl_deprep_term_function;
++READLINE_EXTERN rl_vintfunc_t *rl_prep_term_function;
++READLINE_EXTERN rl_voidfunc_t *rl_deprep_term_function;
+ 
+ /* Dispatch variables. */
+-READLINE_DLL_IMPEXP Keymap rl_executing_keymap;
+-READLINE_DLL_IMPEXP Keymap rl_binding_keymap;
++READLINE_EXTERN Keymap rl_executing_keymap;
++READLINE_EXTERN Keymap rl_binding_keymap;
+ 
+ /* Display variables. */
+ /* If non-zero, readline will erase the entire line, including any prompt,
+    if the only thing typed on an otherwise-blank line is something bound to
+    rl_newline. */
+-READLINE_DLL_IMPEXP int rl_erase_empty_line;
++READLINE_EXTERN int rl_erase_empty_line;
+ 
+ /* If non-zero, the application has already printed the prompt (rl_prompt)
+    before calling readline, so readline should not output it the first time
+    redisplay is done. */
+-READLINE_DLL_IMPEXP int rl_already_prompted;
++READLINE_EXTERN int rl_already_prompted;
+ 
+ /* A non-zero value means to read only this many characters rather than
+    up to a character bound to accept-line. */
+-READLINE_DLL_IMPEXP int rl_num_chars_to_read;
++READLINE_EXTERN int rl_num_chars_to_read;
+ 
+ /* The text of a currently-executing keyboard macro. */
+-READLINE_DLL_IMPEXP char *rl_executing_macro;
++READLINE_EXTERN char *rl_executing_macro;
+ 
+ /* Variables to control readline signal handling. */
+ /* If non-zero, readline will install its own signal handlers for
+    SIGINT, SIGTERM, SIGQUIT, SIGALRM, SIGTSTP, SIGTTIN, and SIGTTOU. */
+-READLINE_DLL_IMPEXP int rl_catch_signals;
++READLINE_EXTERN int rl_catch_signals;
+ 
+ /* If non-zero, readline will install a signal handler for SIGWINCH
+    that also attempts to call any calling application's SIGWINCH signal
+    handler.  Note that the terminal is not cleaned up before the
+    application's signal handler is called; use rl_cleanup_after_signal()
+    to do that. */
+-READLINE_DLL_IMPEXP int rl_catch_sigwinch;
++READLINE_EXTERN int rl_catch_sigwinch;
+ 
+ /* Completion variables. */
+ /* Pointer to the generator function for completion_matches ().
+    NULL means to use rl_filename_completion_function (), the default
+    filename completer. */
+-READLINE_DLL_IMPEXP rl_compentry_func_t *rl_completion_entry_function;
++READLINE_EXTERN rl_compentry_func_t *rl_completion_entry_function;
+ 
+ /* If rl_ignore_some_completions_function is non-NULL it is the address
+    of a function to call after all of the possible matches have been
+@@ -620,7 +622,7 @@ READLINE_DLL_IMPEXP rl_compentry_func_t *rl_completion_entry_function;
+    The function is called with one argument; a NULL terminated array
+    of (char *).  If your function removes any of the elements, they
+    must be free()'ed. */
+-READLINE_DLL_IMPEXP rl_compignore_func_t *rl_ignore_some_completions_function;
++READLINE_EXTERN rl_compignore_func_t *rl_ignore_some_completions_function;
+ 
+ /* Pointer to alternative function to create matches.
+    Function is called with TEXT, START, and END.
+@@ -629,46 +631,46 @@ READLINE_DLL_IMPEXP rl_compignore_func_t *rl_ignore_some_completions_function;
+    If this function exists and returns NULL then call the value of
+    rl_completion_entry_function to try to match, otherwise use the
+    array of strings returned. */
+-READLINE_DLL_IMPEXP rl_completion_func_t *rl_attempted_completion_function;
++READLINE_EXTERN rl_completion_func_t *rl_attempted_completion_function;
+ 
+ /* The basic list of characters that signal a break between words for the
+    completer routine.  The initial contents of this variable is what
+    breaks words in the shell, i.e. "n\"\\'`@$>". */
+-READLINE_DLL_IMPEXP const char *rl_basic_word_break_characters;
++READLINE_EXTERN const char *rl_basic_word_break_characters;
+ 
+ /* The list of characters that signal a break between words for
+    rl_complete_internal.  The default list is the contents of
+    rl_basic_word_break_characters.  */
+-READLINE_DLL_IMPEXP /*const*/ char *rl_completer_word_break_characters;
++READLINE_EXTERN /*const*/ char *rl_completer_word_break_characters;
+ 
+ /* Hook function to allow an application to set the completion word
+    break characters before readline breaks up the line.  Allows
+    position-dependent word break characters. */
+-READLINE_DLL_IMPEXP rl_cpvfunc_t *rl_completion_word_break_hook;
++READLINE_EXTERN rl_cpvfunc_t *rl_completion_word_break_hook;
+ 
+ /* List of characters which can be used to quote a substring of the line.
+    Completion occurs on the entire substring, and within the substring   
+    rl_completer_word_break_characters are treated as any other character,
+    unless they also appear within this list. */
+-READLINE_DLL_IMPEXP const char *rl_completer_quote_characters;
++READLINE_EXTERN const char *rl_completer_quote_characters;
+ 
+ /* List of quote characters which cause a word break. */
+-READLINE_DLL_IMPEXP const char *rl_basic_quote_characters;
++READLINE_EXTERN const char *rl_basic_quote_characters;
+ 
+ /* List of characters that need to be quoted in filenames by the completer. */
+-READLINE_DLL_IMPEXP const char *rl_filename_quote_characters;
++READLINE_EXTERN const char *rl_filename_quote_characters;
+ 
+ /* List of characters that are word break characters, but should be left
+    in TEXT when it is passed to the completion function.  The shell uses
+    this to help determine what kind of completing to do. */
+-READLINE_DLL_IMPEXP const char *rl_special_prefixes;
++READLINE_EXTERN const char *rl_special_prefixes;
+ 
+ /* If non-zero, then this is the address of a function to call when
+    completing on a directory name.  The function is called with
+    the address of a string (the current directory name) as an arg.  It
+    changes what is displayed when the possible completions are printed
+    or inserted. */
+-READLINE_DLL_IMPEXP rl_icppfunc_t *rl_directory_completion_hook;
++READLINE_EXTERN rl_icppfunc_t *rl_directory_completion_hook;
+ 
+ /* If non-zero, this is the address of a function to call when completing
+    a directory name.  This function takes the address of the directory name
+@@ -677,7 +679,7 @@ READLINE_DLL_IMPEXP rl_icppfunc_t *rl_directory_completion_hook;
+    when the possible completions are printed or inserted.  It is called
+    before rl_directory_completion_hook.  I'm not happy with how this works
+    yet, so it's undocumented. */
+-READLINE_DLL_IMPEXP rl_icppfunc_t *rl_directory_rewrite_hook;
++READLINE_EXTERN rl_icppfunc_t *rl_directory_rewrite_hook;
+ 
+ /* Backwards compatibility with previous versions of readline. */
+ #define rl_symbolic_link_hook rl_directory_completion_hook
+@@ -689,70 +691,70 @@ READLINE_DLL_IMPEXP rl_icppfunc_t *rl_directory_rewrite_hook;
+    where MATCHES is the array of strings that matched, NUM_MATCHES is the
+    number of strings in that array, and MAX_LENGTH is the length of the
+    longest string in that array. */
+-READLINE_DLL_IMPEXP rl_compdisp_func_t *rl_completion_display_matches_hook;
++READLINE_EXTERN rl_compdisp_func_t *rl_completion_display_matches_hook;
+ 
+ /* Non-zero means that the results of the matches are to be treated
+    as filenames.  This is ALWAYS zero on entry, and can only be changed
+    within a completion entry finder function. */
+-READLINE_DLL_IMPEXP int rl_filename_completion_desired;
++READLINE_EXTERN int rl_filename_completion_desired;
+ 
+ /* Non-zero means that the results of the matches are to be quoted using
+    double quotes (or an application-specific quoting mechanism) if the
+    filename contains any characters in rl_word_break_chars.  This is
+    ALWAYS non-zero on entry, and can only be changed within a completion
+    entry finder function. */
+-READLINE_DLL_IMPEXP int rl_filename_quoting_desired;
++READLINE_EXTERN int rl_filename_quoting_desired;
+ 
+ /* Set to a function to quote a filename in an application-specific fashion.
+    Called with the text to quote, the type of match found (single or multiple)
+    and a pointer to the quoting character to be used, which the function can
+    reset if desired. */
+-READLINE_DLL_IMPEXP rl_quote_func_t *rl_filename_quoting_function;
++READLINE_EXTERN rl_quote_func_t *rl_filename_quoting_function;
+ 
+ /* Function to call to remove quoting characters from a filename.  Called
+    before completion is attempted, so the embedded quotes do not interfere
+    with matching names in the file system. */
+-READLINE_DLL_IMPEXP rl_dequote_func_t *rl_filename_dequoting_function;
++READLINE_EXTERN rl_dequote_func_t *rl_filename_dequoting_function;
+ 
+ /* Function to call to decide whether or not a word break character is
+    quoted.  If a character is quoted, it does not break words for the
+    completer. */
+-READLINE_DLL_IMPEXP rl_linebuf_func_t *rl_char_is_quoted_p;
++READLINE_EXTERN rl_linebuf_func_t *rl_char_is_quoted_p;
+ 
+ /* Non-zero means to suppress normal filename completion after the
+    user-specified completion function has been called. */
+-READLINE_DLL_IMPEXP int rl_attempted_completion_over;
++READLINE_EXTERN int rl_attempted_completion_over;
+ 
+ /* Set to a character describing the type of completion being attempted by
+    rl_complete_internal; available for use by application completion
+    functions. */
+-READLINE_DLL_IMPEXP int rl_completion_type;
++READLINE_EXTERN int rl_completion_type;
+ 
+ /* Up to this many items will be displayed in response to a
+    possible-completions call.  After that, we ask the user if she
+    is sure she wants to see them all.  The default value is 100. */
+-READLINE_DLL_IMPEXP int rl_completion_query_items;
++READLINE_EXTERN int rl_completion_query_items;
+ 
+ /* Character appended to completed words when at the end of the line.  The
+    default is a space.  Nothing is added if this is '\0'. */
+-READLINE_DLL_IMPEXP int rl_completion_append_character;
++READLINE_EXTERN int rl_completion_append_character;
+ 
+ /* If set to non-zero by an application completion function,
+    rl_completion_append_character will not be appended. */
+-READLINE_DLL_IMPEXP int rl_completion_suppress_append;
++READLINE_EXTERN int rl_completion_suppress_append;
+ 
+ /* Set to any quote character readline thinks it finds before any application
+    completion function is called. */
+-READLINE_DLL_IMPEXP int rl_completion_quote_character;
++READLINE_EXTERN int rl_completion_quote_character;
+ 
+ /* Set to a non-zero value if readline found quoting anywhere in the word to
+    be completed; set before any application completion function is called. */
+-READLINE_DLL_IMPEXP int rl_completion_found_quote;
++READLINE_EXTERN int rl_completion_found_quote;
+ 
+ /* If non-zero, the completion functions don't append any closing quote.
+    This is set to 0 by rl_complete_internal and may be changed by an
+    application-specific completion function. */
+-READLINE_DLL_IMPEXP int rl_completion_suppress_quote;
++READLINE_EXTERN int rl_completion_suppress_quote;
+ 
+ /* If non-zero, a slash will be appended to completed filenames that are
+    symbolic links to directory names, subject to the value of the
+@@ -763,14 +765,14 @@ READLINE_DLL_IMPEXP int rl_completion_suppress_quote;
+    rl_complete_internal before any application-specific completion
+    function is called, so without that function doing anything, the user's
+    preferences are honored. */
+-READLINE_DLL_IMPEXP int rl_completion_mark_symlink_dirs;
++READLINE_EXTERN int rl_completion_mark_symlink_dirs;
+ 
+ /* If non-zero, then disallow duplicates in the matches. */
+-READLINE_DLL_IMPEXP int rl_ignore_completion_duplicates;
++READLINE_EXTERN int rl_ignore_completion_duplicates;
+ 
+ /* If this is non-zero, completion is (temporarily) inhibited, and the
+    completion character will be inserted as any other. */
+-READLINE_DLL_IMPEXP int rl_inhibit_completion;
++READLINE_EXTERN int rl_inhibit_completion;
+ 
+ /* Definitions available for use by readline clients. */
+ #define RL_PROMPT_START_IGNORE	'\001'
+diff --git a/src/readline/5.0/readline-5.0-src/rlmbutil.h b/src/readline/5.0/readline-5.0-src/rlmbutil.h
+index 1508527..5f8e9d0 100644
+--- a/src/readline/5.0/readline-5.0-src/rlmbutil.h
++++ b/src/readline/5.0/readline-5.0-src/rlmbutil.h
+@@ -122,6 +122,6 @@ READLINE_DLL_IMPEXP int _rl_is_mbchar_matched PARAMS((char *, int, int, char *,
+ 
+ #endif /* !HANDLE_MULTIBYTE */
+ 
+-READLINE_DLL_IMPEXP int rl_byte_oriented;
++READLINE_EXTERN int rl_byte_oriented;
+ 
+ #endif /* _RL_MBUTIL_H_ */
+diff --git a/src/readline/5.0/readline-5.0-src/rlprivate.h b/src/readline/5.0/readline-5.0-src/rlprivate.h
+index 2944788..e000042 100644
+--- a/src/readline/5.0/readline-5.0-src/rlprivate.h
++++ b/src/readline/5.0/readline-5.0-src/rlprivate.h
+@@ -41,24 +41,24 @@
+  *************************************************************************/
+ 
+ /* complete.c */
+-READLINE_DLL_IMPEXP int rl_complete_with_tilde_expansion;
++READLINE_EXTERN int rl_complete_with_tilde_expansion;
+ #if defined (VISIBLE_STATS)
+-READLINE_DLL_IMPEXP int rl_visible_stats;
++READLINE_EXTERN int rl_visible_stats;
+ #endif /* VISIBLE_STATS */
+ 
+ /* readline.c */
+-READLINE_DLL_IMPEXP int rl_line_buffer_len;
+-READLINE_DLL_IMPEXP int rl_arg_sign;
+-READLINE_DLL_IMPEXP int rl_visible_prompt_length;
+-READLINE_DLL_IMPEXP int readline_echoing_p;
+-READLINE_DLL_IMPEXP int rl_key_sequence_length;
+-READLINE_DLL_IMPEXP int rl_byte_oriented;
++READLINE_EXTERN int rl_line_buffer_len;
++READLINE_EXTERN int rl_arg_sign;
++READLINE_EXTERN int rl_visible_prompt_length;
++READLINE_EXTERN int readline_echoing_p;
++READLINE_EXTERN int rl_key_sequence_length;
++READLINE_EXTERN int rl_byte_oriented;
+ 
+ /* display.c */
+-READLINE_DLL_IMPEXP int rl_display_fixed;
++READLINE_EXTERN int rl_display_fixed;
+ 
+ /* parens.c */
+-READLINE_DLL_IMPEXP int rl_blink_matching_paren;
++READLINE_EXTERN int rl_blink_matching_paren;
+ 
+ /*************************************************************************
+  *									 *
+@@ -214,75 +214,75 @@ READLINE_DLL_IMPEXP void _rl_vi_done_inserting PARAMS((void));
+  *************************************************************************/
+ 
+ /* bind.c */
+-READLINE_DLL_IMPEXP const char *_rl_possible_control_prefixes[];
+-READLINE_DLL_IMPEXP const char *_rl_possible_meta_prefixes[];
++READLINE_EXTERN const char *_rl_possible_control_prefixes[];
++READLINE_EXTERN const char *_rl_possible_meta_prefixes[];
+ 
+ /* complete.c */
+-READLINE_DLL_IMPEXP int _rl_complete_show_all;
+-READLINE_DLL_IMPEXP int _rl_complete_show_unmodified;
+-READLINE_DLL_IMPEXP int _rl_complete_mark_directories;
+-READLINE_DLL_IMPEXP int _rl_complete_mark_symlink_dirs;
+-READLINE_DLL_IMPEXP int _rl_print_completions_horizontally;
+-READLINE_DLL_IMPEXP int _rl_completion_case_fold;
+-READLINE_DLL_IMPEXP int _rl_match_hidden_files;
+-READLINE_DLL_IMPEXP int _rl_page_completions;
++READLINE_EXTERN int _rl_complete_show_all;
++READLINE_EXTERN int _rl_complete_show_unmodified;
++READLINE_EXTERN int _rl_complete_mark_directories;
++READLINE_EXTERN int _rl_complete_mark_symlink_dirs;
++READLINE_EXTERN int _rl_print_completions_horizontally;
++READLINE_EXTERN int _rl_completion_case_fold;
++READLINE_EXTERN int _rl_match_hidden_files;
++READLINE_EXTERN int _rl_page_completions;
+ 
+ /* display.c */
+-READLINE_DLL_IMPEXP int _rl_vis_botlin;
+-READLINE_DLL_IMPEXP int _rl_last_c_pos;
+-READLINE_DLL_IMPEXP int _rl_suppress_redisplay;
+-READLINE_DLL_IMPEXP char *rl_display_prompt;
++READLINE_EXTERN int _rl_vis_botlin;
++READLINE_EXTERN int _rl_last_c_pos;
++READLINE_EXTERN int _rl_suppress_redisplay;
++READLINE_EXTERN char *rl_display_prompt;
+ 
+ /* isearch.c */
+-READLINE_DLL_IMPEXP char *_rl_isearch_terminators;
++READLINE_EXTERN char *_rl_isearch_terminators;
+ 
+ /* macro.c */
+-READLINE_DLL_IMPEXP char *_rl_executing_macro;
++READLINE_EXTERN char *_rl_executing_macro;
+ 
+ /* misc.c */
+-READLINE_DLL_IMPEXP int _rl_history_preserve_point;
+-READLINE_DLL_IMPEXP int _rl_history_saved_point;
++READLINE_EXTERN int _rl_history_preserve_point;
++READLINE_EXTERN int _rl_history_saved_point;
+ 
+ /* readline.c */
+-READLINE_DLL_IMPEXP int _rl_horizontal_scroll_mode;
+-READLINE_DLL_IMPEXP int _rl_mark_modified_lines;
+-READLINE_DLL_IMPEXP int _rl_bell_preference;
+-READLINE_DLL_IMPEXP int _rl_meta_flag;
+-READLINE_DLL_IMPEXP int _rl_convert_meta_chars_to_ascii;
+-READLINE_DLL_IMPEXP int _rl_output_meta_chars;
+-READLINE_DLL_IMPEXP char *_rl_comment_begin;
+-READLINE_DLL_IMPEXP unsigned char _rl_parsing_conditionalized_out;
+-READLINE_DLL_IMPEXP Keymap _rl_keymap;
+-READLINE_DLL_IMPEXP FILE *_rl_in_stream;
+-READLINE_DLL_IMPEXP FILE *_rl_out_stream;
+-READLINE_DLL_IMPEXP int _rl_last_command_was_kill;
+-READLINE_DLL_IMPEXP int _rl_eof_char;
+-READLINE_DLL_IMPEXP procenv_t readline_top_level;
++READLINE_EXTERN int _rl_horizontal_scroll_mode;
++READLINE_EXTERN int _rl_mark_modified_lines;
++READLINE_EXTERN int _rl_bell_preference;
++READLINE_EXTERN int _rl_meta_flag;
++READLINE_EXTERN int _rl_convert_meta_chars_to_ascii;
++READLINE_EXTERN int _rl_output_meta_chars;
++READLINE_EXTERN char *_rl_comment_begin;
++READLINE_EXTERN unsigned char _rl_parsing_conditionalized_out;
++READLINE_EXTERN Keymap _rl_keymap;
++READLINE_EXTERN FILE *_rl_in_stream;
++READLINE_EXTERN FILE *_rl_out_stream;
++READLINE_EXTERN int _rl_last_command_was_kill;
++READLINE_EXTERN int _rl_eof_char;
++READLINE_EXTERN procenv_t readline_top_level;
+ 
+ /* terminal.c */
+-READLINE_DLL_IMPEXP int _rl_enable_keypad;
+-READLINE_DLL_IMPEXP int _rl_enable_meta;
+-READLINE_DLL_IMPEXP char *_rl_term_clreol;
+-READLINE_DLL_IMPEXP char *_rl_term_clrpag;
+-READLINE_DLL_IMPEXP char *_rl_term_im;
+-READLINE_DLL_IMPEXP char *_rl_term_ic;
+-READLINE_DLL_IMPEXP char *_rl_term_ei;
+-READLINE_DLL_IMPEXP char *_rl_term_DC;
+-READLINE_DLL_IMPEXP char *_rl_term_up;
+-READLINE_DLL_IMPEXP char *_rl_term_dc;
+-READLINE_DLL_IMPEXP char *_rl_term_cr;
+-READLINE_DLL_IMPEXP char *_rl_term_IC;
+-READLINE_DLL_IMPEXP int _rl_screenheight;
+-READLINE_DLL_IMPEXP int _rl_screenwidth;
+-READLINE_DLL_IMPEXP int _rl_screenchars;
+-READLINE_DLL_IMPEXP int _rl_terminal_can_insert;
+-READLINE_DLL_IMPEXP int _rl_term_autowrap;
++READLINE_EXTERN int _rl_enable_keypad;
++READLINE_EXTERN int _rl_enable_meta;
++READLINE_EXTERN char *_rl_term_clreol;
++READLINE_EXTERN char *_rl_term_clrpag;
++READLINE_EXTERN char *_rl_term_im;
++READLINE_EXTERN char *_rl_term_ic;
++READLINE_EXTERN char *_rl_term_ei;
++READLINE_EXTERN char *_rl_term_DC;
++READLINE_EXTERN char *_rl_term_up;
++READLINE_EXTERN char *_rl_term_dc;
++READLINE_EXTERN char *_rl_term_cr;
++READLINE_EXTERN char *_rl_term_IC;
++READLINE_EXTERN int _rl_screenheight;
++READLINE_EXTERN int _rl_screenwidth;
++READLINE_EXTERN int _rl_screenchars;
++READLINE_EXTERN int _rl_terminal_can_insert;
++READLINE_EXTERN int _rl_term_autowrap;
+ 
+ /* undo.c */
+-READLINE_DLL_IMPEXP int _rl_doing_an_undo;
+-READLINE_DLL_IMPEXP int _rl_undo_group_level;
++READLINE_EXTERN int _rl_doing_an_undo;
++READLINE_EXTERN int _rl_undo_group_level;
+ 
+ /* vi_mode.c */
+-READLINE_DLL_IMPEXP int _rl_vi_last_command;
++READLINE_EXTERN int _rl_vi_last_command;
+ 
+ #endif /* _RL_PRIVATE_H_ */
+diff --git a/src/readline/5.0/readline-5.0-src/rlstdc.h b/src/readline/5.0/readline-5.0-src/rlstdc.h
+index dd3f386..d7da7a6 100644
+--- a/src/readline/5.0/readline-5.0-src/rlstdc.h
++++ b/src/readline/5.0/readline-5.0-src/rlstdc.h
+@@ -66,4 +66,6 @@
+ # define READLINE_DLL_IMPEXP  
+ #endif
+ 
++#define READLINE_EXTERN extern
++
+ #endif /* !_RL_STDC_H_ */
+diff --git a/src/readline/5.0/readline-5.0-src/tilde.h b/src/readline/5.0/readline-5.0-src/tilde.h
+index 947a8c8..c9f59bb 100644
+--- a/src/readline/5.0/readline-5.0-src/tilde.h
++++ b/src/readline/5.0/readline-5.0-src/tilde.h
+@@ -52,23 +52,23 @@ typedef char *tilde_hook_func_t PARAMS((char *));
+    wants called before trying the standard tilde expansions.  The function
+    is called with the text sans tilde, and returns a malloc()'ed string
+    which is the expansion, or a NULL pointer if the expansion fails. */
+-READLINE_DLL_IMPEXP tilde_hook_func_t *tilde_expansion_preexpansion_hook;
++READLINE_EXTERN tilde_hook_func_t *tilde_expansion_preexpansion_hook;
+ 
+ /* If non-null, this contains the address of a function to call if the
+    standard meaning for expanding a tilde fails.  The function is called
+    with the text (sans tilde, as in "foo"), and returns a malloc()'ed string
+    which is the expansion, or a NULL pointer if there is no expansion. */
+-READLINE_DLL_IMPEXP tilde_hook_func_t *tilde_expansion_failure_hook;
++READLINE_EXTERN tilde_hook_func_t *tilde_expansion_failure_hook;
+ 
+ /* When non-null, this is a NULL terminated array of strings which
+    are duplicates for a tilde prefix.  Bash uses this to expand
+    `=~' and `:~'. */
+-READLINE_DLL_IMPEXP char **tilde_additional_prefixes;
++READLINE_EXTERN char **tilde_additional_prefixes;
+ 
+ /* When non-null, this is a NULL terminated array of strings which match
+    the end of a username, instead of just "/".  Bash sets this to
+    `:' and `=~'. */
+-READLINE_DLL_IMPEXP char **tilde_additional_suffixes;
++READLINE_EXTERN char **tilde_additional_suffixes;
+ 
+ /* Return a new string which is the result of tilde expanding STRING. */
+ READLINE_DLL_IMPEXP char *tilde_expand PARAMS((const char *));

@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF ea414b4e98475e3976198738061824e8a8379a50
     SHA512 82d54ab3e19fb2673fe97eff07117d36704791669baa283ec737c704635f872e4c7cd30485a6648d445cb2912e4364286e664e9425444f456a4c862b9e4de843
     HEAD_REF master
+    PATCHES
+        fix_windows_static.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src")
@@ -17,6 +19,34 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-readline-win32)
 vcpkg_fixup_pkgconfig()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/readline/readline.h"
+        "defined (USE_READLINE_STATIC)" "1"
+    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/readline/rlstdc.h"
+        "defined (USE_READLINE_STATIC)" "1"
+    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/readline/readline.h"
+        "defined (USE_READLINE_DLL)" "0"
+    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/readline/rlstdc.h"
+        "defined (USE_READLINE_DLL)" "0"
+    )
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/readline/readline.h"
+        "defined (USE_READLINE_STATIC)" "0"
+    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/readline/rlstdc.h"
+        "defined (USE_READLINE_STATIC)" "0"
+    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/readline/readline.h"
+        "defined (USE_READLINE_DLL)" "1"
+    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/readline/rlstdc.h"
+        "defined (USE_READLINE_DLL)" "1"
+    )
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
