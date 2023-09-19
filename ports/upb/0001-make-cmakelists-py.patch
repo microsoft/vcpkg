@@ -1,16 +1,15 @@
 diff --git a/cmake/make_cmakelists.py b/cmake/make_cmakelists.py
-index d64c14f..e5f76b2 100644
+index d64c14f6..ad3597c3 100755
 --- a/cmake/make_cmakelists.py
 +++ b/cmake/make_cmakelists.py
-@@ -315,11 +315,135 @@ class Converter(object):
-     elseif(UNIX)
+@@ -316,10 +316,136 @@ class Converter(object):
        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
      endif()
-+    
+ 
 +    if (MSVC)
 +      add_compile_options(/wd4146 /wd4703 -D_CRT_SECURE_NO_WARNINGS)
 +    endif()
- 
++
      enable_testing()
  
 +    set(CMAKE_CXX_STANDARD 11)
@@ -49,6 +48,7 @@ index d64c14f..e5f76b2 100644
 +        absl::flat_hash_map
 +        absl::strings
 +        protobuf::libprotobuf
++        protobuf::libprotoc
 +      )
 +
 +      add_executable(protoc-gen-upb
@@ -64,6 +64,7 @@ index d64c14f..e5f76b2 100644
 +        absl::flat_hash_set
 +        absl::strings
 +        protobuf::libprotobuf
++        protobuf::libprotoc
 +      )
 +
 +      set(PROTOC_PROGRAM "\$<TARGET_FILE:protobuf::protoc>")
