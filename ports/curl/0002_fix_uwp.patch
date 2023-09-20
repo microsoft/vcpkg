@@ -1,5 +1,5 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 9bb8f0b..9f94ad2 100644
+index 9bb8f0b..a82f425 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
 @@ -219,6 +219,10 @@ endif()
@@ -7,7 +7,7 @@ index 9bb8f0b..9f94ad2 100644
  add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_SELECTED})
  
 +if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-+  set_property(TARGET ${LIB_NAME} APPEND PROPERTY COMPILE_DEFINITIONS "_WINSOCK_DEPRECATED_NO_WARNINGS")
++  set_property(TARGET ${LIB_SELECTED} APPEND PROPERTY COMPILE_DEFINITIONS "_WINSOCK_DEPRECATED_NO_WARNINGS")
 +endif()
 +
  if(CURL_ENABLE_EXPORT_TARGET)
