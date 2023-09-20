@@ -2244,6 +2244,10 @@
       "baseline": "2019-04-28",
       "port-version": 5
     },
+    "dukglue": {
+      "baseline": "2022-11-08",
+      "port-version": 0
+    },
     "duktape": {
       "baseline": "2.5.0",
       "port-version": 4
