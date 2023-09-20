@@ -41,12 +41,6 @@
         {
           "name": "kf5solid",
           "features": [
-            "imobile"
-          ]
-        },
-        {
-          "name": "kf5solid",
-          "features": [
             "libmount"
           ],
           "platform": "linux"
