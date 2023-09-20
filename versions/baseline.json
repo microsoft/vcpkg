@@ -3968,6 +3968,10 @@
       "baseline": "0.30",
       "port-version": 4
     },
+    "libcap": {
+      "baseline": "2.69",
+      "port-version": 0
+    },
     "libcbor": {
       "baseline": "0.10.2",
       "port-version": 0
@@ -4692,6 +4696,10 @@
       "baseline": "3.25",
       "port-version": 1
     },
+    "libsystemd": {
+      "baseline": "254",
+      "port-version": 0
+    },
     "libtar": {
       "baseline": "1.2.20",
       "port-version": 0
@@ -4850,6 +4858,10 @@
     },
     "libxcomposite": {
       "baseline": "0.4.5",
+      "port-version": 0
+    },
+    "libxcrypt": {
+      "baseline": "4.4.36",
       "port-version": 0
     },
     "libxcvt": {
