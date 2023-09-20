@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 86cf0320f9ee50bc1aa2b7a8b254fb0df25d1bd1f5f01ebc3630ab7fe2f6ca5e53ca8e042518b4e7096dbb102c0b880e9a25fcdf5f668d24ff57d9247237bf62
+    SHA512 906df3cd44d88f7846231bc14c7305b9c6d9ee22ebd5a0cce21d6da1d7d62e72efe6101a2518d969a238eb3d6bbdf75e8017d7ab42edc0409391700973602006
     HEAD_REF main
     PATCHES
         # Use the compiler's default C++ version. Picking a version with
@@ -27,7 +27,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         prometheus WITH_PROMETHEUS
         elasticsearch WITH_ELASTICSEARCH
         jaeger WITH_JAEGER
-        otlp WITH_OTLP
         otlp-http WITH_OTLP_HTTP
         zpages WITH_ZPAGES
         otlp-grpc WITH_OTLP_GRPC
@@ -62,6 +61,8 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         WITH_OTLP_GRPC
+        WITH_JAEGER
+        WITH_LOGS_PREVIEW
 )
 
 vcpkg_cmake_install()
