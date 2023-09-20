@@ -6650,7 +6650,7 @@
     },
     "qcustomplot": {
       "baseline": "2.1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "qhttpengine": {
       "baseline": "1.0.2",
@@ -6678,7 +6678,7 @@
     },
     "qscintilla": {
       "baseline": "2.13.4",
-      "port-version": 2
+      "port-version": 3
     },
     "qt": {
       "baseline": "6.5.2",
@@ -7086,7 +7086,7 @@
     },
     "qwt": {
       "baseline": "6.2.0+20220616",
-      "port-version": 1
+      "port-version": 2
     },
     "qwtw": {
       "baseline": "3.1.0",
@@ -8597,7 +8597,7 @@
       "port-version": 0
     },
     "vcpkg-qmake": {
-      "baseline": "2023-03-22",
+      "baseline": "2023-09-20",
       "port-version": 0
     },
     "vcpkg-tool-bazel": {

@@ -1,18 +1,34 @@
 {
   "name": "vcpkg-qmake",
-  "version-date": "2023-03-22",
+  "version-date": "2023-09-20",
   "documentation": "https://vcpkg.io/en/docs/README.html",
   "license": "MIT",
   "supports": "native",
   "dependencies": [
     "pkgconf",
     {
-      "name": "qtbase",
-      "default-features": false
-    },
-    {
       "name": "vcpkg-cmake-get-vars",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "qt5": {
+      "description": "Support for Qt5.",
+      "dependencies": [
+        {
+          "name": "qt5-base",
+          "default-features": false
+        }
+      ]
+    },
+    "qt6": {
+      "description": "Support for Qt6.",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

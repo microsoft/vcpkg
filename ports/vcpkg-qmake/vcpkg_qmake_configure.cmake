@@ -54,14 +54,13 @@ function(vcpkg_qmake_configure)
         set(VCPKG_QMAKE_COMMAND "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/qmake${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     endif()
 
+    # Get Qt version
+    execute_process(
+        COMMAND ${VCPKG_QMAKE_COMMAND} -query QT_VERSION
+        OUTPUT_VARIABLE QT_VERSION
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
     if(VCPKG_TARGET_IS_OSX)
-        # Get Qt version
-        execute_process(
-            COMMAND ${VCPKG_QMAKE_COMMAND} -query QT_VERSION
-            OUTPUT_VARIABLE QT_VERSION
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-
         if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
             vcpkg_list(APPEND arg_QMAKE_OPTIONS "QMAKE_MACOSX_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
         elseif(${QT_VERSION} VERSION_GREATER_EQUAL 6)
@@ -133,7 +132,11 @@ function(vcpkg_qmake_configure)
 
         # Setup qt.conf
         if(NOT VCPKG_QT_CONF_${buildtype})
-            set(VCPKG_QT_CONF_${buildtype} "${CURRENT_INSTALLED_DIR}/tools/Qt6/qt_${lowerbuildtype}.conf")
+            if(${QT_VERSION} VERSION_GREATER_EQUAL 6)
+                set(VCPKG_QT_CONF_${buildtype} "${CURRENT_INSTALLED_DIR}/tools/Qt6/qt_${lowerbuildtype}.conf")
+            else()
+                set(VCPKG_QT_CONF_${buildtype} "${CURRENT_INSTALLED_DIR}/tools/Qt5/qt_${lowerbuildtype}.conf")
+	    endif()
         else()
             # Let a supplied qt.conf override everything.
             # The file will still be configured so users might use the variables within this scope.
