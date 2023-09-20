@@ -5,7 +5,8 @@ vcpkg_from_github(
     SHA512 9f0aed7f8ea29a6132ca9c99c4c744ca5580bb3f7be1712e27d1fc3ae47b2edac26a5ce20abddef4d9998612f2386e1cc6915504c02897f2b3ebcec01cd26208
     HEAD_REF master
     PATCHES
-        fix-libmount.patch
+        001_fix_libmount.patch
+        002_fix_imobile.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -39,12 +40,12 @@ file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: fa
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   INVERTED_FEATURES
     "libmount" CMAKE_DISABLE_FIND_PACKAGE_LibMount
+    "imobile" CMAKE_DISABLE_FIND_PACKAGE_unofficial-libimobiledevice
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_DEVICE_BACKEND_imobile=OFF
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_QMLDIR=qml
 )
