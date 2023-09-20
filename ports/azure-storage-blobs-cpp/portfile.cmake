@@ -5,8 +5,10 @@ vcpkg_from_github(
     SHA512 10126fa8f34357d941cc7ac031c7811cdbf5fe998d2b6741e9e97325c67df5ed9c490ec42034d9b1ba56716e7de3b7283eb9059554d32b2f4d907e839b64b59f
 )
 
+file(RENAME ${SOURCE_PATH}/sdk/storage/azure-storage-blobs/ ${SOURCE_PATH}/sdk/storage/blobs/)
+
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/sdk/storage/azure-storage-blobs/"
+    SOURCE_PATH "${SOURCE_PATH}/sdk/storage/blobs/"
     OPTIONS
         -DWARNINGS_AS_ERRORS=OFF
         -DBUILD_TESTING=OFF
