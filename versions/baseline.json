@@ -2244,6 +2244,10 @@
       "baseline": "2019-04-28",
       "port-version": 5
     },
+    "dukglue": {
+      "baseline": "2022-11-08",
+      "port-version": 0
+    },
     "duktape": {
       "baseline": "2.5.0",
       "port-version": 4
@@ -3061,8 +3065,8 @@
       "port-version": 2
     },
     "gstreamer": {
-      "baseline": "1.20.5",
-      "port-version": 11
+      "baseline": "1.22.5",
+      "port-version": 0
     },
     "gtest": {
       "baseline": "1.14.0",
@@ -3116,13 +3120,33 @@
       "baseline": "3.0.1",
       "port-version": 0
     },
+    "gz-common5": {
+      "baseline": "5.4.1",
+      "port-version": 0
+    },
+    "gz-fuel-tools8": {
+      "baseline": "8.1.0",
+      "port-version": 0
+    },
     "gz-math7": {
       "baseline": "7.0.2",
       "port-version": 1
     },
+    "gz-msgs9": {
+      "baseline": "9.5.0",
+      "port-version": 0
+    },
+    "gz-plugin2": {
+      "baseline": "2.0.1",
+      "port-version": 0
+    },
     "gz-tools2": {
       "baseline": "2.0.0",
       "port-version": 1
+    },
+    "gz-transport12": {
+      "baseline": "12.2.0",
+      "port-version": 0
     },
     "gz-utils2": {
       "baseline": "2.0.0",
@@ -3301,7 +3325,7 @@
       "port-version": 3
     },
     "ignition-common3": {
-      "baseline": "3.14.1",
+      "baseline": "3.16.0",
       "port-version": 0
     },
     "ignition-fuel-tools1": {
@@ -3890,7 +3914,7 @@
     },
     "leveldb": {
       "baseline": "1.22",
-      "port-version": 6
+      "port-version": 7
     },
     "levmar": {
       "baseline": "2.6",
@@ -3967,6 +3991,10 @@
     "libcanberra": {
       "baseline": "0.30",
       "port-version": 4
+    },
+    "libcap": {
+      "baseline": "2.69",
+      "port-version": 0
     },
     "libcbor": {
       "baseline": "0.10.2",
@@ -4049,7 +4077,7 @@
       "port-version": 1
     },
     "libdjinterop": {
-      "baseline": "0.19.2",
+      "baseline": "0.20.0",
       "port-version": 0
     },
     "libdmx": {
@@ -4330,7 +4358,7 @@
     },
     "libmad": {
       "baseline": "0.15.1",
-      "port-version": 12
+      "port-version": 13
     },
     "libmagic": {
       "baseline": "5.40",
@@ -4692,6 +4720,10 @@
       "baseline": "3.25",
       "port-version": 1
     },
+    "libsystemd": {
+      "baseline": "254",
+      "port-version": 0
+    },
     "libtar": {
       "baseline": "1.2.20",
       "port-version": 0
@@ -4850,6 +4882,10 @@
     },
     "libxcomposite": {
       "baseline": "0.4.5",
+      "port-version": 0
+    },
+    "libxcrypt": {
+      "baseline": "4.4.36",
       "port-version": 0
     },
     "libxcvt": {
@@ -5917,8 +5953,8 @@
       "port-version": 3
     },
     "ocilib": {
-      "baseline": "4.7.5",
-      "port-version": 3
+      "baseline": "4.7.6",
+      "port-version": 0
     },
     "octomap": {
       "baseline": "1.9.6",
@@ -6046,7 +6082,7 @@
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 5
+      "port-version": 6
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6206,7 +6242,7 @@
     },
     "osg": {
       "baseline": "3.6.5",
-      "port-version": 21
+      "port-version": 22
     },
     "osg-qt": {
       "baseline": "Qt5",
@@ -7190,7 +7226,7 @@
     },
     "readline-win32": {
       "baseline": "5.0",
-      "port-version": 6
+      "port-version": 7
     },
     "readosm": {
       "baseline": "1.1.0a",
@@ -8129,8 +8165,8 @@
       "port-version": 0
     },
     "tesseract": {
-      "baseline": "5.3.1",
-      "port-version": 3
+      "baseline": "5.3.2",
+      "port-version": 0
     },
     "tfhe": {
       "baseline": "1.0.1",
@@ -8458,7 +8494,7 @@
     },
     "upb": {
       "baseline": "2022-06-21",
-      "port-version": 0
+      "port-version": 1
     },
     "urdfdom": {
       "baseline": "3.1.1",
