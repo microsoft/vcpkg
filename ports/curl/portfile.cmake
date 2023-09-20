@@ -3,11 +3,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF "${curl_version}"
-    SHA512 7b0aef4f1cb93d446017a337e752d43254db92e02561875d1eb88eb3020a3efaf5d3f7fdfb1ff12dfd561d526789b284a10bef35af81bd6d9cfb2c3dc325815b
+    SHA512 f4a6a629e42bf635f5fd01e25b6b8c750cd5db20f63d7f2bada4de08851deb4b58135019da8b76028db7f32475d11ae8a53486fb6927a6257a889468da604ce4
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
-        0005_remove_imp_suffix.patch
         0012-fix-dependency-idn2.patch
         0020-fix-pc-file.patch
         0022-deduplicate-libs.patch

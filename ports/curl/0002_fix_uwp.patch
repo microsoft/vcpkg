@@ -1,15 +1,15 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 8cea346c3..967312905 100644
+index 9bb8f0b..4cfbf1f 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -118,6 +118,10 @@ if(CURL_HAS_LTO)
-     INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO TRUE)
+@@ -98,6 +98,10 @@ int main(int argc, char **argv)
+       HAVE_WRITABLE_ARGV)
  endif()
  
 +if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
 +  set_property(TARGET ${LIB_NAME} APPEND PROPERTY COMPILE_DEFINITIONS "_WINSOCK_DEPRECATED_NO_WARNINGS")
 +endif()
 +
- if(WIN32)
-   if(BUILD_SHARED_LIBS)
-     if(MSVC)
+ ## Library definition
+ 
+ # Add "_imp" as a suffix before the extension to avoid conflicting with
