@@ -1099,10 +1099,6 @@ rply:arm64-windows=skip
 rply:x64-linux=skip
 rply:x64-osx=skip
 rply:x64-windows-static-md=skip
-rsm-bsa:arm-neon-android=fail
-rsm-bsa:arm64-android=fail
-rsm-bsa:x64-android=fail
-
 rttr:arm-neon-android=fail
 rttr:arm64-android=fail
 rttr:x64-android=fail
