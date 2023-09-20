@@ -3061,8 +3061,8 @@
       "port-version": 2
     },
     "gstreamer": {
-      "baseline": "1.20.5",
-      "port-version": 11
+      "baseline": "1.22.5",
+      "port-version": 0
     },
     "gtest": {
       "baseline": "1.14.0",
