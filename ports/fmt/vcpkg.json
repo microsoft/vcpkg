@@ -1,6 +1,6 @@
 {
   "name": "fmt",
-  "version": "10.0.0",
+  "version": "10.1.1",
   "description": "Formatting library for C++. It can be used as a safe alternative to printf or as a fast alternative to IOStreams.",
   "homepage": "https://github.com/fmtlib/fmt",
   "license": "MIT",

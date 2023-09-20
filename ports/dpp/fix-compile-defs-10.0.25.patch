@@ -1,0 +1,29 @@
+diff --git a/library-vcpkg/CMakeLists.txt b/library-vcpkg/CMakeLists.txt
+index a33b18cc..8f80b419 100644
+--- a/library-vcpkg/CMakeLists.txt
++++ b/library-vcpkg/CMakeLists.txt
+@@ -18,15 +18,21 @@ endif()
+ target_compile_definitions(
+ 	"${LIB_NAME}" PUBLIC
+ 	"DPP_BUILD"
+-	"$<$<PLATFORM_ID:Windows>:$<$<CONFIG:Debug>:/sdl;/std:c++17;/Od;/DEBUG;/sdl;/MP;/DFD_SETSIZE=1024;/Zc:preprocessor>>"
++	"$<$<PLATFORM_ID:Windows>:$<$<CONFIG:Debug>:/sdl;/std:c++17;/Od;/DEBUG;/MP;/DFD_SETSIZE=1024;/Zc:preprocessor>>"
+ 	"$<$<PLATFORM_ID:Windows>:$<$<CONFIG:Release>:/std:c++17;/O2;/Oi;/Oy;/GL;/Gy;/sdl;/MP;/DFD_SETSIZE=1024;/Zc:preprocessor>>"
+-	"${AVX_TYPE}"
+ )
+ 
++add_compile_definitions(OPENSSL_SYS_WIN32)
++add_compile_definitions(_WINSOCK_DEPRECATED_NO_WARNINGS)
++add_compile_definitions(WIN32_LEAN_AND_MEAN)
++add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
++add_compile_definitions(_CRT_NONSTDC_NO_DEPRECATE)
++add_compile_definitions(T_fallback)
++
+ target_compile_options(
+ 	"${LIB_NAME}" PUBLIC
+ 	"$<$<PLATFORM_ID:Windows>:/bigobj>"
+- 	"$<$<PLATFORM_ID:Windows>:$<$<CONFIG:Debug>:/sdl;/std:c++17;/Od;/DEBUG;/sdl;/MP;/DFD_SETSIZE=1024;/Zc:preprocessor>>"
++ 	"$<$<PLATFORM_ID:Windows>:$<$<CONFIG:Debug>:/sdl;/std:c++17;/Od;/DEBUG;/MP;/DFD_SETSIZE=1024;/Zc:preprocessor>>"
+ 	"$<$<PLATFORM_ID:Windows>:$<$<CONFIG:Release>:/std:c++17;/O2;/Oi;/Oy;/GL;/Gy;/sdl;/MP;/DFD_SETSIZE=1024;/Zc:preprocessor>>"
+ 	"$<$<PLATFORM_ID:Linux>:$<$<CONFIG:Debug>:-std=c++17;-Wall;-Wempty-body;-Wno-psabi;-Wunknown-pragmas;-Wignored-qualifiers;-Wimplicit-fallthrough;-Wmissing-field-initializers;-Wsign-compare;-Wtype-limits;-Wuninitialized;-Wshift-negative-value;-pthread;-g;-Og;-fPIC>>"
+ 	"$<$<PLATFORM_ID:Linux>:$<$<CONFIG:Release>:-std=c++17;-Wall;-Wempty-body;-Wno-psabi;-Wunknown-pragmas;-Wignored-qualifiers;-Wimplicit-fallthrough;-Wmissing-field-initializers;-Wsign-compare;-Wtype-limits;-Wuninitialized;-Wshift-negative-value;-pthread;-O3;-fPIC>>"

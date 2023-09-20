@@ -62,11 +62,7 @@ file(COPY
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
-if ("tool" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES zmakecert)
-endif()
-
-vcpkg_clean_executables_in_bin(FILE_NAMES zmakecert)
+vcpkg_copy_tools(TOOL_NAMES zmakecert AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
@@ -84,4 +80,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
