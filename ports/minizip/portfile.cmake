@@ -12,13 +12,12 @@ vcpkg_from_github(
         android-fileapi.patch
 )
 
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
-
 # Maintainer switch: Temporarily set this to 1 to re-generate the lists
 # of exported symbols. This is needed when the version is bumped.
 set(GENERATE_SYMBOLS 0)
 if(GENERATE_SYMBOLS)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
         vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
     else()
