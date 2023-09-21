@@ -8401,7 +8401,7 @@
       "port-version": 5
     },
     "trompeloeil": {
-      "baseline": "43",
+      "baseline": "45",
       "port-version": 0
     },
     "tsl-hopscotch-map": {
