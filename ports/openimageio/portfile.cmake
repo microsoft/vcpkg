@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
     REF "v${VERSION}"
-    SHA512 e8b232bb3c1bb66cc6c4f023dcf6e29633a1aee64c49a2860c2157c0885960c40114ee3988d4f132e6e55670b8b1e01b5b4cd4462651ae047a89d22de527581c 
+    SHA512 59c38667ae792f5c5cc6f7f9655159e9b0e048d99f1232766407c01ab635a319ad4ba28cd3c6a115924ea0e4ec994d4c1bdb2f6301fbb9ae11b2820768bd1ff1
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -11,7 +11,6 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
-        fix-msvc-build.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")

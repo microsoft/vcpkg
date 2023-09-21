@@ -2,7 +2,7 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.cairographics.org/releases/cairomm-${VERSION}.tar.xz"
     FILENAME "cairomm-${VERSION}.tar.xz"
-    SHA512 61dc639eabe8502e1262c53c92fe57c5647e5ab9931f86ed51e657df1b7d0e3e58c2571910a05236cc0dca8d52f1f693aed99a553430f14d0fb87be1832a6b62
+    SHA512 5484ccefc255b2e8886722c483cde011043c98b8e7ae17ce642f1b67effa236a8499c332771104fa7e547a9066c168fcfbbff6249caa73df3860823b355567d9
 )
 
 vcpkg_extract_source_archive(
@@ -26,8 +26,9 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cairommconfig.h" "# define CAIROMM_DLL 1" "# undef CAIROMM_DLL\n# define CAIROMM_STATIC_LIB 1")
 endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

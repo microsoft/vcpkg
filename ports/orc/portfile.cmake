@@ -1,12 +1,13 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/orc
-    REF 7ff749a4234c3db58d272a8fc1c7cc1860245692  # rel/release-1.7.6
-    SHA512 1e7f0366530b691d7ea7ce671aa1e1a655cde2feb0fb0c3639da36ef565aceaf6f05e49a39c3c0ab7417dc324dc2cbb6e8babbf21f899ccb4cf5f0e63217afbf
-    HEAD_REF master
-    PATCHES
-        0003-dependencies-from-vcpkg.patch
-        fix-linux-error.patch
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO apache/orc
+  REF "v${VERSION}"
+  SHA512 e79eea2d7a318354d3c6d0a7d0961f6356a590ba53c54911a478a88c63dd1117d6fc3760cae2b2071144fe0418f6ed3aab5ae6f5f093da8a4ddf804964f87e25
+  HEAD_REF master
+  PATCHES
+    fix-cmake.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindGTest.cmake")
@@ -51,7 +52,19 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-orc)
 vcpkg_copy_pdbs()
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-orc/unofficial-orc-config.cmake" cmake_config)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-orc/unofficial-orc-config.cmake"
+"include(CMakeFindDependencyMacro)
+find_dependency(Snappy CONFIG)
+find_dependency(ZLIB)
+find_dependency(zstd CONFIG)
+find_dependency(lz4 CONFIG)
+find_dependency(Protobuf CONFIG)
+${cmake_config}
+")
 
 file(GLOB TOOLS ${CURRENT_PACKAGES_DIR}/bin/orc-*)
 if(TOOLS)
@@ -67,6 +80,5 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

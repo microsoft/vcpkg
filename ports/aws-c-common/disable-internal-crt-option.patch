@@ -1,20 +1,20 @@
 diff --git a/cmake/AwsCFlags.cmake b/cmake/AwsCFlags.cmake
-index 249b7d5..41a31e2 100644
+index 470f6db..537536b 100644
 --- a/cmake/AwsCFlags.cmake
 +++ b/cmake/AwsCFlags.cmake
-@@ -38,15 +38,6 @@ function(aws_set_common_properties target)
+@@ -82,15 +82,6 @@ function(aws_set_common_properties target)
              list(APPEND AWS_C_FLAGS /DAWS_SUPPORT_WIN7=1)
          endif()
- 
--        string(TOUPPER "${CMAKE_BUILD_TYPE}" _CMAKE_BUILD_TYPE)
--        if(STATIC_CRT)
--            string(REPLACE "/MD" "/MT" _FLAGS "${CMAKE_C_FLAGS_${_CMAKE_BUILD_TYPE}}")
+
+-        # Set MSVC runtime libary.
+-        # Note: there are other ways of doing this if we bump our CMake minimum to 3.14+
+-        # See: https://cmake.org/cmake/help/latest/policy/CMP0091.html
+-        if (AWS_STATIC_MSVC_RUNTIME_LIBRARY OR STATIC_CRT)
+-            list(APPEND AWS_C_FLAGS "/MT$<$<CONFIG:Debug>:d>")
 -        else()
--            string(REPLACE "/MT" "/MD" _FLAGS "${CMAKE_C_FLAGS_${_CMAKE_BUILD_TYPE}}")
+-            list(APPEND AWS_C_FLAGS "/MD$<$<CONFIG:Debug>:d>")
 -        endif()
--        string(REPLACE " " ";" _FLAGS "${_FLAGS}")
--        list(APPEND AWS_C_FLAGS "${_FLAGS}")
 -
      else()
          list(APPEND AWS_C_FLAGS -Wall -Wstrict-prototypes)
- 
+

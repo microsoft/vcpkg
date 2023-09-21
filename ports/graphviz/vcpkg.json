@@ -1,7 +1,6 @@
 {
   "name": "graphviz",
-  "version-semver": "7.0.0",
-  "port-version": 2,
+  "version-semver": "9.0.0",
   "description": "Graph Visualization Tools",
   "homepage": "https://graphviz.org/",
   "license": "EPL-1.0",
@@ -12,6 +11,7 @@
       "default-features": false
     },
     "getopt",
+    "gts",
     {
       "name": "libgd",
       "default-features": false,
@@ -23,6 +23,7 @@
         "tiff"
       ]
     },
+    "librsvg",
     "pango",
     {
       "name": "pkgconf",

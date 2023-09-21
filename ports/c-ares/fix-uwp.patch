@@ -20,8 +20,8 @@ index 7940ecd..aacfa52 100644
                                         unsigned short port,
                                         struct ares_addrinfo_node **nodes)
  {
--#if defined(_WIN32) && defined(_WIN32_WINNT) && _WIN32_WINNT >= 0x0600
-+#if defined(_WIN32) && defined(_WIN32_WINNT) && _WIN32_WINNT >= 0x0600 && !defined(WINRT)
+-#if defined(_WIN32) && defined(_WIN32_WINNT) && _WIN32_WINNT >= 0x0600 && !defined(__WATCOMC__)
++#if defined(_WIN32) && defined(_WIN32_WINNT) && _WIN32_WINNT >= 0x0600 && !defined(__WATCOMC__) && !defined(WINRT)
    PMIB_UNICASTIPADDRESS_TABLE table;
    unsigned int i;
    int status;
@@ -74,21 +74,12 @@ diff --git a/src/lib/ares_init.c b/src/lib/ares_init.c
 index 3f9cec6..63143e0 100644
 --- a/src/lib/ares_init.c
 +++ b/src/lib/ares_init.c
-@@ -745,6 +745,9 @@ static ULONG getBestRouteMetric(IF_LUID * const luid, /* Can't be const :( */
-                                 const SOCKADDR_INET * const dest,
+@@ -745,7 +745,7 @@ static ULONG getBestRouteMetric(IF_LUID * const luid, /* Can't be const :( */
                                  const ULONG interfaceMetric)
  {
-+#ifdef WINRT
-+  return (ULONG)-1;
-+#else
    /* On this interface, get the best route to that destination. */
-   MIB_IPFORWARD_ROW2 row;
-   SOCKADDR_INET ignored;
-@@ -778,6 +781,7 @@ static ULONG getBestRouteMetric(IF_LUID * const luid, /* Can't be const :( */
-    * which describes the combination as a "sum".
-    */
-   return row.Metric + interfaceMetric;
-+#endif
- }
- 
- /*
+-#if defined(__WATCOMC__)
++#if defined(__WATCOMC__) || defined(WINRT)
+   /* OpenWatcom's builtin Windows SDK does not have a definition for
+    * MIB_IPFORWARD_ROW2, and also does not allow the usage of SOCKADDR_INET
+    * as a variable. Let's work around this by returning the worst possible
