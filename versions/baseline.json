@@ -6198,7 +6198,7 @@
     },
     "openvino": {
       "baseline": "2023.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openvpn3": {
       "baseline": "3.7.0",
