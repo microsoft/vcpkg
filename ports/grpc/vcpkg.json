@@ -13,7 +13,6 @@
     },
     {
       "name": "grpc",
-      "host": false,
       "features": [
         "codegen"
       ]
