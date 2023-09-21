@@ -13,7 +13,7 @@
     },
     {
       "name": "grpc",
-      "host": true,
+      "host": false,
       "features": [
         "codegen"
       ]
@@ -35,9 +35,6 @@
       "host": true
     },
     "zlib"
-  ],
-  "default-features": [
-    "codegen"
   ],
   "features": {
     "absl-sync": {
