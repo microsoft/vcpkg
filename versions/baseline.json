@@ -410,19 +410,19 @@
     },
     "azure-core-amqp-cpp": {
       "baseline": "1.0.0-beta.3",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-core-cpp": {
       "baseline": "1.10.2",
-      "port-version": 4
+      "port-version": 5
     },
     "azure-core-tracing-opentelemetry-cpp": {
       "baseline": "1.0.0-beta.4",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-identity-cpp": {
       "baseline": "1.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-iot-sdk-c": {
       "baseline": "2023-08-07",
@@ -442,23 +442,23 @@
     },
     "azure-security-attestation-cpp": {
       "baseline": "1.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-administration-cpp": {
       "baseline": "4.0.0-beta.3",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-certificates-cpp": {
       "baseline": "4.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-keys-cpp": {
       "baseline": "4.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-secrets-cpp": {
       "baseline": "4.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-blobs-cpp": {
       "baseline": "12.9.0",
