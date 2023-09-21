@@ -1,0 +1,13 @@
+diff --git a/libcap/Makefile b/libcap/Makefile
+index f5dde3e..4eb13aa 100644
+--- a/libcap/Makefile
++++ b/libcap/Makefile
+@@ -25,7 +25,7 @@ CFLAGS += -fPIC
+ # executable
+ MAGIC=-Wl,-e,__so_start
+ 
+-INCLS=libcap.h cap_names.h $(INCS)
++INCLS=libcap.h $(INCS)
+ GPERF_OUTPUT = _caps_output.gperf
+ 
+ CAPOBJS=$(addsuffix .o, $(CAPFILES))

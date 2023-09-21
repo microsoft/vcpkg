@@ -1,0 +1,13 @@
+diff --git a/plugins/input/csv/csv_utils.cpp b/plugins/input/csv/csv_utils.cpp
+index 382b1ce..c0256de 100644
+--- a/plugins/input/csv/csv_utils.cpp
++++ b/plugins/input/csv/csv_utils.cpp
+@@ -40,6 +40,8 @@
+ #include <cstdio>
+ #include <algorithm>
+ 
++#include <boost/algorithm/string/trim.hpp>
++
+ namespace csv_utils {
+ namespace detail {
+ 

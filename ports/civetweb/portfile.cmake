@@ -15,6 +15,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ssl CIVETWEB_ENABLE_SSL
 )
 
+# Fixes arm64-windows build. CIVETWEB_ARCHITECTURE is used only for CPack, which is not used by vcpkg
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "determine_target_architecture(CIVETWEB_ARCHITECTURE)" "")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
