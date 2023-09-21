@@ -2,13 +2,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO madler/zlib
-    REF v${VERSION}
+    REF "v${VERSION}"
     SHA512 78eecf335b14af1f7188c039a4d5297b74464d61156e4f12a485c74beec7d62c4159584ad482a07ec57ae2616d58873e45b09cb8ea822bb5b17e43d163df84e9
     HEAD_REF master
     PATCHES
         0001-remove-ifndef-NOUNCRYPT.patch
         0002-add-declaration-for-mkdir.patch
         pkgconfig.patch
+        android-fileapi.patch
 )
 
 vcpkg_cmake_get_vars(cmake_vars_file)
