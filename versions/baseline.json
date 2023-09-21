@@ -2914,7 +2914,7 @@
     },
     "glfw3": {
       "baseline": "3.3.8",
-      "port-version": 2
+      "port-version": 3
     },
     "gli": {
       "baseline": "2021-07-06",
