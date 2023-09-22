@@ -2,7 +2,7 @@ diff --git a/Build/CMakeLists.txt b/Build/CMakeLists.txt
 index e4fddc50..d5749af2 100644
 --- a/Build/CMakeLists.txt
 +++ b/Build/CMakeLists.txt
-@@ -201,6 +201,12 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
+@@ -201,6 +201,12 @@
  		install(FILES ${SRC_FILE} DESTINATION include/${DESTINATION_PATH})
  	endif()
  endforeach()
