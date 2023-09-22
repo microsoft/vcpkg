@@ -1,8 +1,8 @@
 diff --git a/Build/CMakeLists.txt b/Build/CMakeLists.txt
-index e4fddc50..9e5462ec 100644
+index e4fddc50..49f57c04 100644
 --- a/Build/CMakeLists.txt
 +++ b/Build/CMakeLists.txt
-@@ -47,13 +47,6 @@ include(CMakeDependentOption)
+@@ -47,13 +47,6 @@
  # Windows Store only supports the DLL version
  cmake_dependent_option(USE_STATIC_MSVC_RUNTIME_LIBRARY "Use the static MSVC runtime library" ON "MSVC;NOT WINDOWS_STORE" OFF)
  
@@ -93,7 +93,7 @@ index e4fddc50..9e5462ec 100644
 +)
 +
 +install(FILES 
-+  joltphysics-targets.cmake 
++  joltphysics-config.cmake 
 +  DESTINATION share/joltphysics
 +)
 +
