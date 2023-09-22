@@ -1,1 +1,51 @@
 #!/bin/sh
+
+set -e
+
+libcap=libcap.so
+linkage=shared
+prefix=
+for OPTION; do
+    case "${OPTION}" in
+    --prefix=*)
+        prefix="${OPTION#--prefix=}"
+        ;;
+    --enable-static)
+        libcap=libcap.a
+        linkage=static
+        ;;
+    esac
+done
+
+cat > Makefile.vcpkg <<END_MAKEFILE ;
+
+ifeq ($(linkage),shared)
+libs := libcap.so libpsx.so
+else
+libs := libcap.a libpsx.a
+endif
+
+BUILD_OPTIONS = \
+    "CC=$CC" \
+    "AR=$AR" \
+    "RANLIB=$RANLIB" \
+    "inc_prefix=$prefix" \
+    "lib=lib" \
+    "linkage=$linkage" \
+    "prefix=$prefix"
+
+all: libcap/cap_names.h
+	\$(MAKE) -C libcap pcs \$(libs) \$(BUILD_OPTIONS) -d
+
+libcap/cap_names.h:
+	\$(MAKE) -C libcap cap_names.h \$(BUILD_OPTIONS) -d
+
+install: install-cap_names
+	\$(MAKE) -C libcap install-$linkage \$(BUILD_OPTIONS)
+
+install-cap_names:
+	mkdir -p -m 0755 "\$(DESTDIR)$prefix/include/sys/libcap-private"
+	install -m 0644 libcap/cap_names.h "\$(DESTDIR)$prefix/include/sys/libcap-private"
+	install -m 0644 libcap/cap_names.list.h "\$(DESTDIR)$prefix/include/sys/libcap-private"
+
+END_MAKEFILE
