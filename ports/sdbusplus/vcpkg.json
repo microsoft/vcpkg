@@ -1,0 +1,26 @@
+{
+  "name": "sdbusplus",
+  "version-date": "2023-09-14",
+  "description": "The sdbusplus library builds on top of the sd-bus library to create a modern C++ API for D-Bus.",
+  "homepage": "https://github.com/openbmc/sdbusplus",
+  "license": "Apache-2.0",
+  "supports": "linux",
+  "dependencies": [
+    "boost-asio",
+    "boost-callable-traits",
+    "libsystemd",
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "features": {
+    "asio-only": {
+      "description": "Use only boost asio for the event loop"
+    }
+  }
+}

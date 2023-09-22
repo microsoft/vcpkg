@@ -1,0 +1,16 @@
+diff --git a/meson.build b/meson.build
+index 448d167..3002fa2 100644
+--- a/meson.build
++++ b/meson.build
+@@ -46,11 +46,6 @@ libsdbusplus = library(
+ )
+
+ boost_compile_args = [
+-    '-DBOOST_ASIO_DISABLE_THREADS',
+-    '-DBOOST_ALL_NO_LIB',
+-    '-DBOOST_SYSTEM_NO_DEPRECATED',
+-    '-DBOOST_ERROR_CODE_HEADER_ONLY',
+-    '-DBOOST_COROUTINES_NO_DEPRECATION_WARNING',
+ ]
+
+ boost_dep = declare_dependency(

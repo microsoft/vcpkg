@@ -1,0 +1,43 @@
+diff --git a/meson.build b/meson.build
+index 52e330a..674bda9 100644
+--- a/meson.build
++++ b/meson.build
+@@ -6,9 +6,9 @@ project('sdbusplus', 'cpp', 'c',
+       'werror=true',
+       'tests=' + (meson.is_subproject() ? 'disabled' : 'auto'),
+       'examples=' + (meson.is_subproject() ? 'disabled' : 'auto'),
++      'async=enabled',
+     ],
+     version: '1.0.0',
+-    meson_version: '>=1.1.1',
+ )
+ 
+ libsystemd_pkg = dependency('libsystemd')
+@@ -24,8 +24,6 @@ endif
+ root_inc = include_directories('include')
+ 
+ libsdbusplus_src = files(
+-    'src/async/context.cpp',
+-    'src/async/match.cpp',
+     'src/bus.cpp',
+     'src/bus/match.cpp',
+     'src/event.cpp',
+@@ -36,6 +34,10 @@ libsdbusplus_src = files(
+     'src/server/transaction.cpp',
+ )
+ 
++if get_option('async').enabled()
++  libsdbusplus_src += files('src/async/context.cpp', 'src/async/match.cpp')
++endif
++
+ libsdbusplus = library(
+     'sdbusplus',
+     libsdbusplus_src,
+diff --git a/meson.options b/meson.options
+index f4c22c4..7cc5965 100644
+--- a/meson.options
++++ b/meson.options
+@@ -1,2 +1,3 @@
+ option('tests', type: 'feature', description: 'Build tests')
+ option('examples', type: 'feature', description: 'Build examples')
++option('async', type: 'feature', description: 'Build async interface')
