@@ -35,3 +35,13 @@ index 7e8a282..f550c2d 100644
      $<INSTALL_INTERFACE:include>
 -    $<INSTALL_INTERFACE:Boost::yomm2>
    )
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -36,5 +36,6 @@
+ install(TARGETS yomm2
+   EXPORT YOMM2Targets
+   LIBRARY DESTINATION lib
+   ARCHIVE DESTINATION lib
++  RUNTIME DESTINATION bin
+ )
