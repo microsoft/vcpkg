@@ -3042,7 +3042,7 @@
     },
     "grpc": {
       "baseline": "1.51.1",
-      "port-version": 1
+      "port-version": 2
     },
     "grppi": {
       "baseline": "0.4.0",
