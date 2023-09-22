@@ -1,5 +1,5 @@
 diff --git a/Build/CMakeLists.txt b/Build/CMakeLists.txt
-index e4fddc50..49f57c04 100644
+index e4fddc50..fefb14a7 100644
 --- a/Build/CMakeLists.txt
 +++ b/Build/CMakeLists.txt
 @@ -47,13 +47,6 @@
@@ -66,12 +66,9 @@ index e4fddc50..49f57c04 100644
  # Set repository root
  set(PHYSICS_REPO_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../)
  
-@@ -192,8 +154,14 @@ if (IOS)
- 	set_property(TARGET Jolt PROPERTY XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS[arch=x86_64] "$(inherited) -msse4.2 -mpopcnt") 
+@@ -193,7 +155,11 @@ if (IOS)
  endif()
  
-+set_target_properties(Jolt PROPERTIES INTERFACE_INCLUDE_DIRECTORIES $<INSTALL_INTERFACE:include> )
-+
  # Install Jolt library and includes
 -install(TARGETS Jolt DESTINATION lib)
 +install(TARGETS Jolt
@@ -82,7 +79,7 @@ index e4fddc50..49f57c04 100644
  foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  	string(REPLACE ${PHYSICS_REPO_ROOT} "" RELATIVE_SRC_FILE ${SRC_FILE})
  	get_filename_component(DESTINATION_PATH ${RELATIVE_SRC_FILE} DIRECTORY)
-@@ -202,6 +170,21 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
+@@ -202,6 +168,21 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  	endif()
  endforeach()
  
@@ -105,10 +102,18 @@ index e4fddc50..49f57c04 100644
  if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
  	# Ability to turn ON/OFF individual applications
 diff --git a/Jolt/Jolt.cmake b/Jolt/Jolt.cmake
-index 176a7578..282e8928 100644
+index 176a7578..542da9d1 100644
 --- a/Jolt/Jolt.cmake
 +++ b/Jolt/Jolt.cmake
-@@ -435,10 +435,6 @@ target_include_directories(Jolt PUBLIC ${PHYSICS_REPO_ROOT})
+@@ -431,14 +431,13 @@ source_group(TREE ${JOLT_PHYSICS_ROOT} FILES ${JOLT_PHYSICS_SRC_FILES})
+ 
+ # Create Jolt lib
+ add_library(Jolt STATIC ${JOLT_PHYSICS_SRC_FILES})
+-target_include_directories(Jolt PUBLIC ${PHYSICS_REPO_ROOT})
++target_include_directories(Jolt PUBLIC
++  $<BUILD_INTERFACE:${PHYSICS_REPO_ROOT}>
++  $<INSTALL_INTERFACE:include>
++)
  target_precompile_headers(Jolt PRIVATE ${JOLT_PHYSICS_ROOT}/Jolt.h)
  target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:Debug>:_DEBUG;JPH_PROFILE_ENABLED;JPH_DEBUG_RENDERER>")
  target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:Release>:NDEBUG;JPH_PROFILE_ENABLED;JPH_DEBUG_RENDERER>")
