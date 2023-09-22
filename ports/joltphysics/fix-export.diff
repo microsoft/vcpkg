@@ -1,5 +1,5 @@
 diff --git a/Build/CMakeLists.txt b/Build/CMakeLists.txt
-index e4fddc50..998e918d 100644
+index e4fddc50..03cbed10 100644
 --- a/Build/CMakeLists.txt
 +++ b/Build/CMakeLists.txt
 @@ -47,13 +47,6 @@
@@ -66,7 +66,7 @@ index e4fddc50..998e918d 100644
  # Set repository root
  set(PHYSICS_REPO_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../)
  
-@@ -192,8 +154,14 @@ if (IOS)
+@@ -192,8 +154,13 @@ if (IOS)
  	set_property(TARGET Jolt PROPERTY XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS[arch=x86_64] "$(inherited) -msse4.2 -mpopcnt") 
  endif()
  
@@ -74,19 +74,22 @@ index e4fddc50..998e918d 100644
 +
  # Install Jolt library and includes
 -install(TARGETS Jolt DESTINATION lib)
-+install(TARGETS Jolt 
-+        EXPORT Jolt_target
++install(TARGETS Jolt
 +        ARCHIVE DESTINATION lib
 +        LIBRARY DESTINATION lib
 +        RUNTIME DESTINATION bin)
  foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  	string(REPLACE ${PHYSICS_REPO_ROOT} "" RELATIVE_SRC_FILE ${SRC_FILE})
  	get_filename_component(DESTINATION_PATH ${RELATIVE_SRC_FILE} DIRECTORY)
-@@ -202,6 +170,15 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
+@@ -202,6 +169,19 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  	endif()
  endforeach()
  
-+install(FILES joltphysics-config.cmake DESTINATION share/joltphysics)
++export(EXPORT Jolt_target
++  FILE "${CMAKE_CURRENT_BINARY_DIR}/joltphysics-targets.cmake"
++)
++
++install(FILES joltphysics-targets.cmake DESTINATION share/joltphysics)
 +
 +install(
 +    EXPORT Jolt_target
