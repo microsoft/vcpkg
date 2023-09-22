@@ -4294,7 +4294,7 @@
     },
     "libirecovery": {
       "baseline": "2023-05-13",
-      "port-version": 0
+      "port-version": 1
     },
     "libjpeg-turbo": {
       "baseline": "3.0.0",

@@ -1,6 +1,7 @@
 {
   "name": "libirecovery",
   "version-date": "2023-05-13",
+  "port-version": 1,
   "description": "Library and utility to talk to iBoot/iBSS via USB on Mac OS X, Windows, and Linux",
   "homepage": "https://libimobiledevice.org/",
   "license": "LGPL-2.1-or-later",
@@ -19,5 +20,15 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "build command line tool",
+      "supports": "!android & !ios & !xbox",
+      "dependencies": [
+        "getopt",
+        "readline"
+      ]
+    }
+  }
 }
