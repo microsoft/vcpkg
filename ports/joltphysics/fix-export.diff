@@ -102,7 +102,7 @@ index e4fddc50..fefb14a7 100644
  if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
  	# Ability to turn ON/OFF individual applications
 diff --git a/Jolt/Jolt.cmake b/Jolt/Jolt.cmake
-index 176a7578..c4e38176 100644
+index 176a7578..1a7fa85a 100644
 --- a/Jolt/Jolt.cmake
 +++ b/Jolt/Jolt.cmake
 @@ -431,14 +431,13 @@ source_group(TREE ${JOLT_PHYSICS_ROOT} FILES ${JOLT_PHYSICS_SRC_FILES})
@@ -121,7 +121,7 @@ index 176a7578..c4e38176 100644
 -target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:ReleaseASAN>:NDEBUG;JPH_PROFILE_ENABLED;JPH_DISABLE_TEMP_ALLOCATOR;JPH_DISABLE_CUSTOM_ALLOCATOR;JPH_DEBUG_RENDERER>")
 -target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:ReleaseUBSAN>:NDEBUG;JPH_PROFILE_ENABLED;JPH_DEBUG_RENDERER>")
 -target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:ReleaseCoverage>:NDEBUG>")
-+target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:Release>:NDEBUG")
++target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:Release>:NDEBUG>")
  
  # Setting floating point exceptions
  if (FLOATING_POINT_EXCEPTIONS_ENABLED AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
