@@ -1,10 +1,13 @@
 diff --git a/Build/CMakeLists.txt b/Build/CMakeLists.txt
-index e4fddc50..f11a5adb 100644
+index e4fddc50..8c6acc82 100644
 --- a/Build/CMakeLists.txt
 +++ b/Build/CMakeLists.txt
-@@ -193,7 +193,11 @@
+@@ -192,8 +192,14 @@
+ 	set_property(TARGET Jolt PROPERTY XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS[arch=x86_64] "$(inherited) -msse4.2 -mpopcnt") 
  endif()
  
++set_target_properties(Jolt PROPERTIES INTERFACE_INCLUDE_DIRECTORIES $<INSTALL_INTERFACE:include> )
++
  # Install Jolt library and includes
 -install(TARGETS Jolt DESTINATION lib)
 +install(TARGETS Jolt 
@@ -15,7 +18,7 @@ index e4fddc50..f11a5adb 100644
  foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  	string(REPLACE ${PHYSICS_REPO_ROOT} "" RELATIVE_SRC_FILE ${SRC_FILE})
  	get_filename_component(DESTINATION_PATH ${RELATIVE_SRC_FILE} DIRECTORY)
-@@ -201,6 +205,12 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
+@@ -201,6 +207,12 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  		install(FILES ${SRC_FILE} DESTINATION include/${DESTINATION_PATH})
  	endif()
  endforeach()
