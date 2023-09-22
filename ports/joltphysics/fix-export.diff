@@ -1,8 +1,52 @@
 diff --git a/Build/CMakeLists.txt b/Build/CMakeLists.txt
-index e4fddc50..78ff6be9 100644
+index e4fddc50..8791f63b 100644
 --- a/Build/CMakeLists.txt
 +++ b/Build/CMakeLists.txt
-@@ -192,8 +192,14 @@
+@@ -49,9 +49,9 @@
+ 
+ # Determine which configurations exist
+ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+-	set(CMAKE_CONFIGURATION_TYPES "Debug;Release;Distribution")
++	set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo;Release;Distribution")
+ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+-	set(CMAKE_CONFIGURATION_TYPES "Debug;Release;ReleaseASAN;ReleaseUBSAN;ReleaseCoverage;Distribution")
++	set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo;Release;ReleaseASAN;ReleaseUBSAN;ReleaseCoverage;Distribution")
+ endif()
+ 
+ if (("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows" OR "${CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore") AND NOT MINGW)
+@@ -92,6 +92,7 @@ if (("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows" OR "${CMAKE_SYSTEM_NAME}" STREQUA
+ 
+ 	# Set compiler flags for various configurations
+ 	set(CMAKE_CXX_FLAGS_DEBUG "/GS /Od /Ob0 /RTC1")
++  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/GS- /Zi /Gy /O2 /Oi /Ot")
+ 	set(CMAKE_CXX_FLAGS_RELEASE "/GS- /Gy /O2 /Oi /Ot")
+ 	set(CMAKE_CXX_FLAGS_DISTRIBUTION "/GS- /Gy /O2 /Oi /Ot")
+ 	set(CMAKE_CXX_FLAGS_RELEASEASAN "-fsanitize=address /Od")
+@@ -149,6 +150,7 @@ elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" OR "${CMAKE_SYSTEM_NAME}" STREQU
+ 
+ 	# Set compiler flags for various configurations
+ 	set(CMAKE_CXX_FLAGS_DEBUG "")
++  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3")
+ 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+ 	set(CMAKE_CXX_FLAGS_DISTRIBUTION "-O3")
+ 	set(CMAKE_CXX_FLAGS_RELEASEASAN "-fsanitize=address")
+@@ -164,6 +166,7 @@ set(CMAKE_EXE_LINKER_FLAGS_DISTRIBUTION "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
+ 
+ # Enable link time optimization in Release and Distribution mode if requested and available
+ function(SET_INTERPROCEDURAL_OPTIMIZATION)
++  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO OFF PARENT_SCOPE)
+ 	set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE OFF PARENT_SCOPE)
+ 	set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_DISTRIBUTION OFF PARENT_SCOPE)
+ 
+@@ -173,6 +176,7 @@ function(SET_INTERPROCEDURAL_OPTIMIZATION)
+ 		check_ipo_supported(RESULT IS_IPO_SUPPORTED OUTPUT IPO_CHECK_OUTPUT)
+ 
+ 		if (IS_IPO_SUPPORTED)
++      set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO ON PARENT_SCOPE)
+ 			set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON PARENT_SCOPE)
+ 			set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_DISTRIBUTION ON PARENT_SCOPE)
+ 		else()
+@@ -192,8 +196,14 @@ if (IOS)
  	set_property(TARGET Jolt PROPERTY XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS[arch=x86_64] "$(inherited) -msse4.2 -mpopcnt") 
  endif()
  
@@ -18,7 +62,7 @@ index e4fddc50..78ff6be9 100644
  foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  	string(REPLACE ${PHYSICS_REPO_ROOT} "" RELATIVE_SRC_FILE ${SRC_FILE})
  	get_filename_component(DESTINATION_PATH ${RELATIVE_SRC_FILE} DIRECTORY)
-@@ -202,6 +208,15 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
+@@ -202,6 +212,15 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  	endif()
  endforeach()
  
