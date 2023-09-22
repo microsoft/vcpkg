@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
       {
-        "label": "Remove-vcpkg-make-test",
+        "label": "Remove-vcpkg-make",
         "type": "shell",  
         "command": "${workspaceFolder}/vcpkg remove vcpkg-make --recurse",
       },
@@ -12,14 +12,15 @@
         "label": "Debug CMake configure within vcpkg",
         "type": "shell",
         "dependsOn" : [
-          "Remove-vcpkg-make-test"
+          "Remove-vcpkg-make"
         ],
         "command": "${workspaceFolder}/vcpkg",
         "args" : [
           "install",
-          "vcpkg-make-test",
+          "vcpkg-make",
           "--binarysource=clear",
-          "--x-cmake-args=-DVCPKG_CMAKE_CONFIGURE_OPTIONS=--debugger;--debugger-pipe=\\\\.\\pipe\\vcpkg-cmake-debugging"
+          "--x-cmake-port-debug",
+          "\\\\.\\pipe\\vcpkg-cmake-debugging"
         ],
         "isBackground": true,
         "group": "none",
@@ -49,15 +50,15 @@
         "label": "Debug portfile execution",
         "type": "shell",
         "dependsOn" : [
-          "Remove-vcpkg-make-test"
+          "Remove-vcpkg-make"
         ],
         "command": "${workspaceFolder}/vcpkg",
         "args" : [
           "install",
           "gmp",
           "--binarysource=clear",
-          "--x-cmake-args=--debugger",
-          "--x-cmake-args=--debugger-pipe=\\\\.\\pipe\\vcpkg-cmake-debugging"
+          "--x-cmake-debug",
+          "\\\\.\\pipe\\vcpkg-cmake-debugging"
         ],
         "isBackground": true,
         "group": "none",
