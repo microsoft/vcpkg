@@ -1,0 +1,17 @@
+diff --git a/Build/CMakeLists.txt b/Build/CMakeLists.txt
+index cc4cf1d3..e49a253c 100644
+--- a/Build/CMakeLists.txt
++++ b/Build/CMakeLists.txt
+@@ -213,6 +213,12 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
+ 		install(FILES ${SRC_FILE} DESTINATION include/${DESTINATION_PATH})
+ 	endif()
+ endforeach()
++install(
++    EXPORT Jolt
++    NAMESPACE ${PROJECT_NAME}::
++    FILE ${PROJECT_NAME}-targets.cmake
++    DESTINATION share/${PROJECT_NAME}
++)
+ 
+ # Check if we're the root CMakeLists.txt, if not we are included by another CMake file and we should disable everything except for the main library
+ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
