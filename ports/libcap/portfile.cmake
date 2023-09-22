@@ -17,6 +17,7 @@ endif()
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     COPY_SOURCE
+    DETERMINE_BUILD_TRIPLET
 )
 vcpkg_install_make(
     MAKEFILE "Makefile.vcpkg"

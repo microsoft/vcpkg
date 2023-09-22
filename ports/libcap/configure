@@ -2,7 +2,6 @@
 
 set -e
 
-libcap=libcap.so
 linkage=shared
 prefix=
 for OPTION; do
@@ -11,7 +10,6 @@ for OPTION; do
         prefix="${OPTION#--prefix=}"
         ;;
     --enable-static)
-        libcap=libcap.a
         linkage=static
         ;;
     esac
@@ -19,26 +17,27 @@ done
 
 cat > Makefile.vcpkg <<END_MAKEFILE ;
 
-ifeq ($(linkage),shared)
-libs := libcap.so libpsx.so
-else
-libs := libcap.a libpsx.a
-endif
-
 BUILD_OPTIONS = \
-    "CC=$CC" \
     "AR=$AR" \
+    "BUILD_CC=$CC_FOR_BUILD" \
+    "CC=$CC" \
     "RANLIB=$RANLIB" \
-    "inc_prefix=$prefix" \
     "lib=lib" \
-    "linkage=$linkage" \
     "prefix=$prefix"
 
+ifeq ($linkage,shared)
+libs := libcap.so libpsx.so
+BUILD_OPTIONS += SHARED=yes
+else
+libs := libcap.a libpsx.a
+BUILD_OPTIONS += SHARED=no
+endif
+
 all: libcap/cap_names.h
-	\$(MAKE) -C libcap pcs \$(libs) \$(BUILD_OPTIONS) -d
+	\$(MAKE) -C libcap pcs \$(libs) \$(BUILD_OPTIONS)
 
 libcap/cap_names.h:
-	\$(MAKE) -C libcap cap_names.h \$(BUILD_OPTIONS) -d
+	\$(MAKE) -C libcap cap_names.h \$(BUILD_OPTIONS)
 
 install: install-cap_names
 	\$(MAKE) -C libcap install-$linkage \$(BUILD_OPTIONS)
