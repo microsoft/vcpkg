@@ -25,23 +25,11 @@ vcpkg_cmake_configure(
         -DCMAKE_BUILD_TYPE=Distribution
 )
 
-vcpkg_cmake_build()
+vcpkg_cmake_install()
 
-file(
-    INSTALL "${SOURCE_PATH}/Jolt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-    FILES_MATCHING
-        PATTERN "*.h"
-        PATTERN "*.inl"
-)
+vcpkg_copy_pdbs()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Jolt.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Jolt.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-else()
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libJolt.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libJolt.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
