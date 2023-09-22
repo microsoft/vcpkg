@@ -1845,8 +1845,8 @@
       "port-version": 0
     },
     "cppmicroservices": {
-      "baseline": "3.6.0",
-      "port-version": 1
+      "baseline": "3.7.6",
+      "port-version": 0
     },
     "cpprestsdk": {
       "baseline": "2.10.18",
