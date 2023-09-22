@@ -27,8 +27,6 @@ vcpkg_cmake_configure(
         -DCROSS_PLATFORM_DETERMINISTIC=OFF
         -DUSE_STATIC_MSVC_RUNTIME_LIBRARY=${USE_STATIC_CRT}
         -DENABLE_ALL_WARNINGS=OFF
-    OPTIONS_RELEASE
-        -DCMAKE_BUILD_TYPE=Distribution
 )
 
 vcpkg_cmake_install()
