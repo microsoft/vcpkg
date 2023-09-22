@@ -2946,7 +2946,7 @@
     },
     "glpk": {
       "baseline": "5.0",
-      "port-version": 2
+      "port-version": 3
     },
     "glslang": {
       "baseline": "12.2.0",
