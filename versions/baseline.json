@@ -521,7 +521,7 @@
       "port-version": 0
     },
     "bde": {
-      "baseline": "3.117.0.0",
+      "baseline": "3.123.0.0",
       "port-version": 0
     },
     "bdwgc": {
