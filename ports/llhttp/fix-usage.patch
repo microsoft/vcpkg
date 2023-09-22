@@ -7,8 +7,8 @@ index bdef288..72555c6 100644
      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/llhttp
    )
 +  target_include_directories(${target}
-+     PRIVATE include ${CMAKE_CURRENT_BINARY_DIR}
-+     INTERFACE $<INSTALL_INTERFACE:include>
++    PRIVATE include ${CMAKE_CURRENT_BINARY_DIR}
++    INTERFACE $<INSTALL_INTERFACE:include>
 +  )
  endfunction(config_library target)
  
