@@ -4270,7 +4270,7 @@
     },
     "libideviceactivation": {
       "baseline": "2023-05-01",
-      "port-version": 0
+      "port-version": 1
     },
     "libidn2": {
       "baseline": "2.3.4",
