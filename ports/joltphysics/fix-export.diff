@@ -1,5 +1,5 @@
 diff --git a/Build/CMakeLists.txt b/Build/CMakeLists.txt
-index e4fddc50..03cbed10 100644
+index e4fddc50..01e409ff 100644
 --- a/Build/CMakeLists.txt
 +++ b/Build/CMakeLists.txt
 @@ -47,13 +47,6 @@
@@ -85,17 +85,17 @@ index e4fddc50..03cbed10 100644
  	endif()
  endforeach()
  
-+export(EXPORT Jolt_target
-+  FILE "${CMAKE_CURRENT_BINARY_DIR}/joltphysics-targets.cmake"
-+)
-+
-+install(FILES joltphysics-targets.cmake DESTINATION share/joltphysics)
-+
 +install(
 +    EXPORT Jolt_target
 +    NAMESPACE joltphysics::
 +    FILE joltphysics-targets.cmake
 +    DESTINATION share/joltphysics
++)
++
++install(FILES joltphysics-targets.cmake DESTINATION share/joltphysics)
++
++export(EXPORT Jolt_target
++  FILE "${CMAKE_CURRENT_BINARY_DIR}/joltphysics-targets.cmake"
 +)
 +
  # Check if we're the root CMakeLists.txt, if not we are included by another CMake file and we should disable everything except for the main library 
