@@ -1,5 +1,5 @@
 diff --git a/Build/CMakeLists.txt b/Build/CMakeLists.txt
-index e4fddc50..8c6acc82 100644
+index e4fddc50..78ff6be9 100644
 --- a/Build/CMakeLists.txt
 +++ b/Build/CMakeLists.txt
 @@ -192,8 +192,14 @@
@@ -18,16 +18,19 @@ index e4fddc50..8c6acc82 100644
  foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  	string(REPLACE ${PHYSICS_REPO_ROOT} "" RELATIVE_SRC_FILE ${SRC_FILE})
  	get_filename_component(DESTINATION_PATH ${RELATIVE_SRC_FILE} DIRECTORY)
-@@ -201,6 +207,12 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
- 		install(FILES ${SRC_FILE} DESTINATION include/${DESTINATION_PATH})
+@@ -202,6 +208,15 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  	endif()
  endforeach()
+ 
++install(FILES joltphysics-config.cmake DESTINATION share/joltphysics)
++
 +install(
 +    EXPORT Jolt_target
 +    NAMESPACE joltphysics::
 +    FILE joltphysics-targets.cmake
 +    DESTINATION share/joltphysics
 +)
- 
++
  # Check if we're the root CMakeLists.txt, if not we are included by another CMake file and we should disable everything except for the main library 
  if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+ 	# Ability to turn ON/OFF individual applications
