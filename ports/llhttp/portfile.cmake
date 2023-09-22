@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nodejs/llhttp
-    REF refs/tags/release/v8.1.0
-    SHA512 3b79555f734a6a200a790f04f10be6d3ce5bd999c027a43c0900bb408e7d64be38fe4bbe9f15e57e389f07ba26b8089fc6ba5eef3b497742484f0719e92e9722
+    REF refs/tags/release/v${VERSION}
+    SHA512 d3e2c45f631e8bbc5b4b72f931a1af3e7b4f9d2851856a3c797577a3c261c7da15606efe41ff6b4f26713274f44eb3086019711461cb6bbe04e561b20af40a6f
     PATCHES
         fix-usage.patch
 )
