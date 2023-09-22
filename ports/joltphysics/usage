@@ -1,4 +1,4 @@
-The package comms provides CMake targets:
+The package joltphysics provides CMake targets:
 
     find_package(Jolt CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Jolt)
+    target_link_libraries(main PRIVATE joltphysics::Jolt)
