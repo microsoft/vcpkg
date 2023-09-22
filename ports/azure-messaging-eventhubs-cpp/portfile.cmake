@@ -5,8 +5,18 @@ vcpkg_from_github(
     SHA512 3677edf50218c39e378a968661c0ec0600b8760d3af33f204f3267e104449c0aef42b9520cb63b5e5810b89bf91f06979d009ffdd6d6d04d2c14e1a21f0e111f
 )
 
+if(EXISTS "${SOURCE_PATH}/sdk/eventhubs/azure-messaging-eventhubs")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/eventhubs/_")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/_")
+
+  file(RENAME "${SOURCE_PATH}/sdk/eventhubs/azure-messaging-eventhubs" "${SOURCE_PATH}/sdk/eventhubs/_")
+  file(RENAME "${SOURCE_PATH}/sdk/eventhubs" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
+endif()
+
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/sdk/eventhubs/azure-messaging-eventhubs/"
+    SOURCE_PATH "${SOURCE_PATH}/_/_/_"
     OPTIONS
         -DWARNINGS_AS_ERRORS=OFF
         -DBUILD_TESTING=OFF
