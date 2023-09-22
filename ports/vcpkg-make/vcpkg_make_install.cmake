@@ -40,9 +40,7 @@ function(vcpkg_make_install)
         string(REPLACE " " "\ " Z_VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
     endif()
 
-    if(NOT DEFINED Z_VCPKG_MAKE AND CMAKE_HOST_WIN32) # TODO: use a different approach here?
-        vcpkg_make_setup_win_msys(msys_root)
-    endif()
+    vcpkg_make_get_shell(shell_cmd)
     find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
     set(make_command "${Z_VCPKG_MAKE}")
 
@@ -65,8 +63,6 @@ function(vcpkg_make_install)
         set(prepare_env_opts ADD_BIN_TO_PATH)
     endif()
 
-    vcpkg_make_get_shell(shell_cmd ADDITIONAL_PACKAGES ${arg_ADDITIONAL_MSYS_PACKAGES})
-
     foreach(buildtype IN LISTS buildtypes)
         string(TOUPPER "${buildtype}" cmake_buildtype)
         set(short_buildtype "${suffix_${cmake_buildtype}}")
@@ -77,16 +73,22 @@ function(vcpkg_make_install)
 
         # Setup environment
         z_vcpkg_make_prepare_env("${cmake_buildtype}" ${prepare_env_opts})
-        z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}")
+        z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${cmake_buildtype}")
 
         set(destdir_opt "")
         if(NOT arg_NO_DESTDIR)
             set(destdir_opt "DESTDIR=${destdir}")
         endif()
 
+        set(extra_opts "") # Use --environment-overrides as default?
+        if(NOT VCPKG_TARGET_IS_OSX)
+            set(extra_opts --trace)
+            # TODO: Introspect the found make for available options?
+        endif()
+
         foreach(target IN LISTS arg_TARGETS)
-            vcpkg_list(SET make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${target} ${destdir_opt})
-            vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j 1 --trace -f ${arg_MAKEFILE} ${target} ${destdir_opt})
+            vcpkg_list(SET make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j ${VCPKG_CONCURRENCY} ${extra_opts} -f ${arg_MAKEFILE} ${target} ${destdir_opt})
+            vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j 1 ${extra_opts} -f ${arg_MAKEFILE} ${target} ${destdir_opt})
             message(STATUS "Making target '${target}' for ${TARGET_TRIPLET}-${short_buildtype}")
             if (arg_DISABLE_PARALLEL)
                 vcpkg_run_bash_as_build(

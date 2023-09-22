@@ -11,6 +11,7 @@ function(vcpkg_run_bash)
     z_vcpkg_unparsed_args(FATAL_ERROR)
     z_vcpkg_required_args(BASH WORKINK_DIRECTORY COMMAND LOGNAME)
 
+    set(extra_opts "")
     if(arg_SAVE_LOG_FILES)
         set(extra_opts SAVE_LOG_FILES ${arg_SAVE_LOG_FILES})
     endif()
@@ -33,6 +34,7 @@ function(vcpkg_run_bash_as_build)
     z_vcpkg_unparsed_args(FATAL_ERROR)
     z_vcpkg_required_args(BASH WORKINK_DIRECTORY COMMAND LOGNAME)
 
+    set(extra_opts "")
     if(arg_SAVE_LOG_FILES)
         set(extra_opts SAVE_LOG_FILES ${arg_SAVE_LOG_FILES})
     endif()
@@ -74,6 +76,7 @@ function(vcpkg_make_setup_win_msys msys_out)
     z_vcpkg_unparsed_args(FATAL_ERROR)
     list(APPEND msys_require_packages autoconf-wrapper automake-wrapper binutils libtool make which)
     vcpkg_insert_msys_into_path(msys PACKAGES ${msys_require_packages} ${arg_PACKAGES})
+    find_program(PKGCONFIG NAMES pkgconf NAMES_PER_DIR PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf" NO_DEFAULT_PATH)
     set("${msys_out}" "${msys}" PARENT_SCOPE)
 endfunction()
 
@@ -84,7 +87,7 @@ function(vcpkg_make_get_shell out_var)
         "ADDITIONAL_PACKAGES"
     )
     set(bash_options "")
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND NOT DEFINED bash_cmd)
         vcpkg_make_setup_win_msys(msys_root PACKAGES "${arg_ADDITIONAL_PACKAGES}")
         set(bash_options --noprofile --norc --debug)
         set(bash_cmd "${msys_root}/usr/bin/bash.exe" CACHE STRING "")
@@ -187,21 +190,6 @@ function(z_vcpkg_make_prepare_env config)
     if(ARFLAGS_${config} AND NOT (arg_USE_WRAPPERS AND VCPKG_TARGET_IS_WINDOWS))
         # Target windows with wrappers enabled cannot forward ARFLAGS since it breaks the wrapper
         set(ENV{ARFLAGS} "${ARFLAGS_${config}}")
-    endif()
-
-    # VCPKG_ABIFLAGS isn't standard, but can be useful to reinject these flags into other variables
-    #set(ENV{VCPKG_ABIFLAGS} "${ABIFLAGS_${config}}") # Needs another way.
-    message(STATUS "${CMAKE_CURRENT_FUNCTION} ABIFLAGS_${config}:${ABIFLAGS_${config}}")
-    if(ABIFLAGS_${config})
-        # libtool removes some flags which are needed for configure tests.
-        #set(ENV{CC} "$ENV{CC} ${ABIFLAGS_${config}}")
-        #set(ENV{CXX} "$ENV{CXX} ${ABIFLAGS_${config}}")
-        #if("$ENV{CC}" MATCHES "$ENV{CCAS}") #TODO: better check 
-        #    set(ENV{CCAS} "$ENV{CCAS} ${ABIFLAGS_${config}}")
-        #    set(ENV{AS} "$ENV{AS} ${ABIFLAGS_${config}}")
-        #endif()
-        #set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} ${ABIFLAGS_${config}}")
-        #set(ENV{CXX_FOR_BUILD} "$ENV{CXX_FOR_BUILD} ${ABIFLAGS_${config}}")
     endif()
 
     if(LINK_ENV_${config})
