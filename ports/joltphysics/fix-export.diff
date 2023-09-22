@@ -1,8 +1,8 @@
 diff --git a/Build/CMakeLists.txt b/Build/CMakeLists.txt
-index e4fddc50..01e409ff 100644
+index e4fddc50..9e5462ec 100644
 --- a/Build/CMakeLists.txt
 +++ b/Build/CMakeLists.txt
-@@ -47,13 +47,6 @@
+@@ -47,13 +47,6 @@ include(CMakeDependentOption)
  # Windows Store only supports the DLL version
  cmake_dependent_option(USE_STATIC_MSVC_RUNTIME_LIBRARY "Use the static MSVC runtime library" ON "MSVC;NOT WINDOWS_STORE" OFF)
  
@@ -66,7 +66,7 @@ index e4fddc50..01e409ff 100644
  # Set repository root
  set(PHYSICS_REPO_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../)
  
-@@ -192,8 +154,13 @@ if (IOS)
+@@ -192,8 +154,14 @@ if (IOS)
  	set_property(TARGET Jolt PROPERTY XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS[arch=x86_64] "$(inherited) -msse4.2 -mpopcnt") 
  endif()
  
@@ -75,26 +75,29 @@ index e4fddc50..01e409ff 100644
  # Install Jolt library and includes
 -install(TARGETS Jolt DESTINATION lib)
 +install(TARGETS Jolt
++        EXPORT joltphysics-targets
 +        ARCHIVE DESTINATION lib
 +        LIBRARY DESTINATION lib
 +        RUNTIME DESTINATION bin)
  foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  	string(REPLACE ${PHYSICS_REPO_ROOT} "" RELATIVE_SRC_FILE ${SRC_FILE})
  	get_filename_component(DESTINATION_PATH ${RELATIVE_SRC_FILE} DIRECTORY)
-@@ -202,6 +169,19 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
+@@ -202,6 +170,21 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
  	endif()
  endforeach()
  
-+install(
-+    EXPORT Jolt_target
++install(EXPORT joltphysics-targets
 +    NAMESPACE joltphysics::
 +    FILE joltphysics-targets.cmake
 +    DESTINATION share/joltphysics
 +)
 +
-+install(FILES joltphysics-targets.cmake DESTINATION share/joltphysics)
++install(FILES 
++  joltphysics-targets.cmake 
++  DESTINATION share/joltphysics
++)
 +
-+export(EXPORT Jolt_target
++export(EXPORT joltphysics-targets
 +  FILE "${CMAKE_CURRENT_BINARY_DIR}/joltphysics-targets.cmake"
 +)
 +
