@@ -1,4 +1,4 @@
-The package joltphysics provides CMake targets:
+ joltphysics provides CMake targets:
 
-    find_package(Jolt CONFIG REQUIRED)
+    find_package(unofficial-joltphysics CONFIG REQUIRED)
     target_link_libraries(main PRIVATE unofficial::joltphysics::Jolt)
