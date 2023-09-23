@@ -18,20 +18,6 @@ index b93a141..c3763a7 100644
  
  # Define a test flag for have curl library
  IF(Zip_FOUND)
-diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
-index b3be259..72b4b25 100644
---- a/netCDFConfig.cmake.in
-+++ b/netCDFConfig.cmake.in
-@@ -15,6 +15,9 @@ set(netCDF_LIBRARIES netCDF::netcdf)
- include(CMakeFindDependencyMacro)
- find_dependency(HDF5 CONFIG)
- find_dependency(CURL CONFIG)
-+if(@ENABLE_NCZARR_ZIP@)
-+    find_dependency(libzip CONFIG)
-+endif()
- include("${CMAKE_CURRENT_LIST_DIR}/netCDFTargets.cmake")
- 
- # Compiling Options
 diff --git a/liblib/CMakeLists.txt b/liblib/CMakeLists.txt
 index 1363d35..31dbbda 100644
 --- a/liblib/CMakeLists.txt
@@ -91,3 +77,19 @@ index 31dbbda..eb497cc 100644
  
  IF(ENABLE_S3_SDK)
    TARGET_LINK_DIRECTORIES(netcdf PUBLIC ${AWSSDK_LIB_DIR})
+diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
+index 9d68eec..1e80afc 100644
+--- a/netCDFConfig.cmake.in
++++ b/netCDFConfig.cmake.in
+@@ -11,6 +11,11 @@ set_and_check(netCDF_LIB_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
+
+ set(netCDF_LIBRARIES netCDF::netcdf)
+
++include(CMakeFindDependencyMacro)
++find_dependency(CURL CONFIG)
++if(@ENABLE_NCZARR_ZIP@)
++    find_dependency(libzip CONFIG)
++endif()
+ # include target information
+ include("${CMAKE_CURRENT_LIST_DIR}/netCDFTargets.cmake")
+
