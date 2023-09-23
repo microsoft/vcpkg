@@ -12,7 +12,7 @@ vcpkg_from_github(
 
 # Need to provide this library a config
 # The fix-export.diff should install this
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/joltphysics-config.cmake" DESTINATION "${SOURCE_PATH}/Build")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-joltphysics-config.cmake" DESTINATION "${SOURCE_PATH}/Build")
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_CRT)
 
