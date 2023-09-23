@@ -1,20 +1,59 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO libimobiledevice-win32/libirecovery
-    REF 1.0.25
-    SHA512 0dd91d4fe3ded2bc1bbd91aea964e31e7f59bce18be01aa096e974f37dc1be281644d6c44e3f9b49470dd961e3df2e3ff8a09bcc6b803a959073e7d7d9a8d3e7
-    HEAD_REF msvc-master
+    REPO libimobiledevice/libirecovery
+    REF c7b488fbf2a9ab95e451df1319e68662fff7b9b7 # commits on 2023-05-13
+    SHA512 a8638b71789c0cedf5913a877ca42fef079c968592b6149dfa578d2dc7840f63c1d1fadd934d7cfbd5139cea2b3a4249886a88b69c3edb19dbd3f893c266f665
+    HEAD_REF master
+    PATCHES
+        001_fix_static_build.patch
+        002_fix_api.patch
+        003_fix_msvc.patch
+        004_fix_tools_msvc.patch
 )
 
-vcpkg_install_msbuild(
-    SOURCE_PATH ${SOURCE_PATH}
-    PROJECT_SUBPATH libirecovery.sln
-    INCLUDES_SUBPATH include
-    LICENSE_SUBPATH COPYING
-    USE_VCPKG_INTEGRATION
-    ALLOW_ROOT_INCLUDES
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools BUILD_TOOLS
 )
 
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/Makefile.am)
+if("tools" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT})
+vcpkg_fixup_pkgconfig()
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES irecovery AUTO_CLEAN)
+endif()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libirecovery.h"
+        "#ifdef IRECV_STATIC" "#if 1"
+    )
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libirecovery.h"
+        "#ifdef IRECV_STATIC" "#if 0"
+    )
+endif()
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake" cmake_config)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake"
+"include(CMakeFindDependencyMacro)
+find_dependency(unofficial-libimobiledevice-glue CONFIG)
+${cmake_config}
+")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

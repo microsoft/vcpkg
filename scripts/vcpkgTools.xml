@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.10.7</version>
+        <version>3.11.5</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.10.7/python-3.10.7-embed-win32.zip</url>
-        <sha512>a69445906a909ce5f2554c544fe4251a8ab9c5028b531975b8c78fa8e98295b2bf06e1840f346a3c0edf485a7792c40c9d318bffd36b9c7829ac72b7cf8697bc</sha512>
-        <archiveName>python-3.10.7-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.11.5/python-3.11.5-embed-win32.zip</url>
+        <sha512>d5412c5bc2a0664f86e504a536c201789c8fd8b97c641bbb7b254c87c2f13504d25fa9d0b74e27a1c54c2d9fb592f9546d8c1e82c506dc9c76a21774c4c3ea75</sha512>
+        <archiveName>python-3.11.5-embed-win32.zip</archiveName>
     </tool>
     <tool name="python3_with_venv" os="windows">
-        <version>3.10.7</version>
+        <version>3.11.5</version>
         <exeRelativePath>tools\python.exe</exeRelativePath>
-        <url>https://www.nuget.org/api/v2/package/python/3.10.7</url>
-        <sha512>dc763c4f3e9594619173a99740a6b54686c768c240efe316d4d3f8914383bd06420c0802781baf983ea840c49412b8330c1af93f31d2c73eb0ea22a55e71aa13</sha512>
-        <archiveName>python-3.10.7.nupkg.zip</archiveName>
+        <url>https://www.nuget.org/api/v2/package/python/3.11.5</url>
+        <sha512>d2f0557c7ebe5f3e8cc2a2102fc061abed6aeeb49a2e315241c453346750e3f725261dcac4efb171da9eb44c7b9f791d7a6b59b5072902b1007939e8596a2426</sha512>
+        <archiveName>python-3.11.5.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
         <version>3.27.1</version>
@@ -131,18 +131,18 @@
         <archiveName>installer-framework-opensource-src-4.4.0.zip</archiveName>
     </tool>
     <tool name="7zip_msi" os="windows">
-        <version>21.07</version>
+        <version>23.01</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7z2107-x64.msi</url>
-        <sha512>d55b44f1255d1b0e629719383a600a7e83dc6378d470096337b886ce24684d26bcc2b04f9cea39ad888179edce23ad2bd0e8e1863ddc40106c176adece8c012d</sha512>
-        <archiveName>7z2107-x64.msi</archiveName>
+        <url>https://www.7-zip.org/a/7z2301-x64.msi</url>
+        <sha512>09e3ce970ea8383e8c736a51ebb61e3036e655c81d59bc64c5eecb041abdad2cbce2f400fcf4478e22f56fe40f8d912c639f550a5f990e24abfd4e86cdd3755c</sha512>
+        <archiveName>7z2301-x64.msi</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>21.07</version>
+        <version>23.01</version>
         <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7z2107-extra.7z</url>
-        <sha512>648d894940bcc29951752d7a8fd18c770ee8d4fd944e17f1a52588e51ca8f58375ba48514538f2e1387786fd812bb86f75fd6bdd0892685cdcafb2989942c848</sha512>
-        <archiveName>7z2107-extra.7z</archiveName>
+        <url>https://www.7-zip.org/a/7z2301-extra.7z</url>
+        <sha512>c849c2cb489cf5b6eeb92bfbc27dcb37d0349c36971e1bc7ef32c7cde1b659e19e8b46d734ba90f47affe07fdfd5b4774cbfa0fdf4b681e9f60bb46bba1f7f9b</sha512>
+        <archiveName>7z2301-extra.7z</archiveName>
      </tool>
     <tool name="aria2" os="windows">
         <version>1.35.0</version>

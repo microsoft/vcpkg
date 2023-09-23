@@ -19,10 +19,10 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-        FEATURES
-            on-demand TRACY_ON_DEMAND
-        INVERTED_FEATURES
-            crash-handler TRACY_NO_CRASH_HANDLER
+    FEATURES
+        on-demand TRACY_ON_DEMAND
+    INVERTED_FEATURES
+        crash-handler TRACY_NO_CRASH_HANDLER
 )
 
 vcpkg_cmake_configure(
@@ -31,41 +31,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-if(VCPKG_TARGET_IS_LINUX)
-    set(any_tracy_tool_requested OFF)
-    if(profiler IN_LIST FEATURES)
-        message(WARNING
-"Tracy currently requires the following libraries from the system package manager to build its tools:
-    gtk+-3.0
-    tbb
-
-These can be installed on Ubuntu systems via sudo apt install libgtk-3-dev libtbb-dev")
-        set(any_tracy_tool_requested ON)
-    else()
-        foreach(CLI_TOOL capture csvexport import-chrome update)
-            if(${CLI_TOOL} IN_LIST FEATURES)
-                message(WARNING
-"Tracy currently requires the following libraries from the system package manager to build its tools:
-    tbb
-
-These can be installed on Ubuntu systems via sudo apt install libtbb-dev")
-                set(any_tracy_tool_requested ON)
-                break()
-            endif()
-        endforeach()
-    endif()
-
-endif()
-
-vcpkg_list(SET tracy_tools)
-if("cli-tools" IN_LIST FEATURES)
-    vcpkg_list(APPEND tracy_tools capture csvexport import-chrome update)
-endif()
-if("gui-tools" IN_LIST FEATURES)
-    vcpkg_list(APPEND tracy_tools profiler)
-endif()
-
-function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
+function(tracy_tool_install_unix tracy_TOOL tracy_TOOL_NAME)
     foreach(buildtype IN ITEMS "debug" "release")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
             if("${buildtype}" STREQUAL "debug")
@@ -97,66 +63,45 @@ function(tracy_tool_install_make tracy_TOOL tracy_TOOL_NAME)
             )
             vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
 
-            file(INSTALL "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}/${tracy_TOOL_NAME}-${buildtype}" DESTINATION "${CURRENT_PACKAGES_DIR}${path_suffix}/tools/${PORT}" RENAME "${tracy_TOOL_NAME}")
+            file(INSTALL "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}/${tracy_TOOL_NAME}-${buildtype}"
+                DESTINATION "${CURRENT_PACKAGES_DIR}${path_suffix}/tools/${PORT}"
+                RENAME "${tracy_TOOL_NAME}"
+                USE_SOURCE_PERMISSIONS)
         endif()
     endforeach()
 endfunction()
 
 function(tracy_tool_install_win32 tracy_TOOL tracy_TOOL_NAME)
-  vcpkg_install_msbuild(
-    SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH "${tracy_TOOL}/build/win32/${tracy_TOOL_NAME}.sln"
-    USE_VCPKG_INTEGRATION
-  )
+    vcpkg_install_msbuild(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH "${tracy_TOOL}/build/win32/${tracy_TOOL_NAME}.sln"
+        USE_VCPKG_INTEGRATION
+    )
 endfunction()
 
-if("capture" IN_LIST tracy_tools)
+function(tracy_tool_install tracy_TOOL tracy_TOOL_NAME)
     if(VCPKG_TARGET_IS_WINDOWS)
-        tracy_tool_install_win32(capture capture)
+        tracy_tool_install_win32("${tracy_TOOL}" "${tracy_TOOL_NAME}")
     else()
-        tracy_tool_install_make(capture capture)
+        tracy_tool_install_unix("${tracy_TOOL}" "${tracy_TOOL_NAME}")
     endif()
-endif()
+endfunction()
 
-if("csvexport" IN_LIST tracy_tools)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        tracy_tool_install_win32(csvexport csvexport)
-    else()
-        tracy_tool_install_make(csvexport csvexport)
-    endif()
+if("cli-tools" IN_LIST FEATURES)
+    tracy_tool_install(capture capture)
+    tracy_tool_install(csvexport csvexport)
+    tracy_tool_install(import-chrome import-chrome)
+    tracy_tool_install(update update)
 endif()
-
-if("import-chrome" IN_LIST tracy_tools)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        tracy_tool_install_win32(import-chrome import-chrome)
-    else()
-        tracy_tool_install_make(import-chrome import-chrome)
-    endif()
-endif()
-
-if("profiler" IN_LIST tracy_tools)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        tracy_tool_install_win32(profiler Tracy)
-    else()
-        tracy_tool_install_make(profiler Tracy)
-    endif()
-endif()
-
-if("update" IN_LIST tracy_tools)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        tracy_tool_install_win32(update update)
-    else()
-        tracy_tool_install_make(update update)
-    endif()
+if("gui-tools" IN_LIST FEATURES)
+    tracy_tool_install(profiler Tracy)
 endif()
 
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
 vcpkg_fixup_pkgconfig()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-# Cleanup
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -11,10 +11,6 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CMARK_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CMARK_SHARED)
 
-if ("tools" IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
-    message(FATAL_ERROR "${PORT} does no support to build tools on UWP")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools BUILD_TOOLS

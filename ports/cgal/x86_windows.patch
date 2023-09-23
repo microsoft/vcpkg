@@ -1,0 +1,24 @@
+diff --git a/Number_types/include/CGAL/boost_mp.h b/Number_types/include/CGAL/boost_mp.h
+index 3dcaadcad21..b98980acbc5 100644
+--- a/Number_types/include/CGAL/boost_mp.h
++++ b/Number_types/include/CGAL/boost_mp.h
+@@ -20,8 +20,18 @@
+ // easy solution.
+ // MSVC had trouble with versions <= 1.69:
+ // https://github.com/boostorg/multiprecision/issues/98
++//
++// Disable also on Windows 32 bits
++// because CGAL/cpp_float.h assumes _BitScanForward64 is available
++// See https://learn.microsoft.com/en-us/cpp/intrinsics/bitscanforward-bitscanforward64
++//
++// Disable also with PowerPC processors, with Boost<1.80 because of that bug:
++// https://github.com/boostorg/multiprecision/pull/421
++//
+ #if !defined CGAL_DO_NOT_USE_BOOST_MP && \
+-    (!defined _MSC_VER || BOOST_VERSION >= 107000)
++    (!defined _MSC_VER || BOOST_VERSION >= 107000) && \
++    (!defined _WIN32 || defined _WIN64) && \
++    (BOOST_VERSION >= 108000 || (!defined _ARCH_PPC && !defined _ARCH_PPC64))
+ #define CGAL_USE_BOOST_MP 1
+ 
+ #include <CGAL/Quotient.h>
