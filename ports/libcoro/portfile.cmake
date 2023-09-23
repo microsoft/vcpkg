@@ -2,16 +2,28 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jbaldwin/libcoro
     REF "v${VERSION}"
-    SHA512 5e9a820ac6623bd12e04090eb61eecf1e26bd230b0106ab5af13568d12f20ea39e58b2f126ae1262233c1141b23d9466397e8ee42b5342a500d8cca26a34d81c
+    SHA512 9554fcaf721188e2475933fb8fe6b35f879479af9acb8b011545d66e588a98811f69100a4392e62c3c8bf05e8177760778c44ed4357d40d0a6349833a93fb8e8
     HEAD_REF master
     PATCHES
         0001-allow-shared-lib.patch
         0002-disable-git-config.patch
 )
 
+if("ssl" IN_LIST FEATURES AND NOT "networking" IN_LIST FEATURES)
+    message(FATAL_ERROR "The ssl feature depends on the networking feature.")
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        networking   LIBCORO_FEATURE_NETWORKING
+        ssl          LIBCORO_FEATURE_SSL
+        threading    LIBCORO_FEATURE_THREADING
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DLIBCORO_EXTERNAL_DEPENDENCIES=ON
         -DLIBCORO_BUILD_TESTS=OFF
         -DLIBCORO_BUILD_EXAMPLES=OFF
