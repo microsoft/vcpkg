@@ -5,7 +5,7 @@
   "description": "A simple and easy-to-use library to enjoy videogames programming",
   "homepage": "https://github.com/raysan5/raylib",
   "license": "Zlib",
-  "supports": "!(arm | uwp)",
+  "supports": "!(uwp)",
   "dependencies": [
     {
       "name": "glfw3",
