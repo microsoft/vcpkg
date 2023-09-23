@@ -35,9 +35,6 @@ list(APPEND FEATURE_OPTIONS -Dfreetype=enabled) #Enable freetype interop helpers
 #endif()
 
 if("introspection" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Feature introspection currently only supports dynamic build.")
-    endif()
     list(APPEND OPTIONS_DEBUG -Dgobject=enabled -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dgobject=enabled -Dintrospection=enabled)
 else()

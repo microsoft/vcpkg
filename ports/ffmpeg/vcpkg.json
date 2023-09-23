@@ -633,6 +633,13 @@
     "vpx": {
       "description": "VP8 and VP9 de/encoding via libvpx",
       "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec"
+          ]
+        },
         "libvpx"
       ]
     },
