@@ -129,4 +129,20 @@ endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+
+file(READ "${SOURCE_PATH}/lib/krb5.c" krb5_c)
+string(REGEX REPLACE "#i.*" "" krb5_c "${krb5_c}")
+set(krb5_copyright "${CURRENT_BUILDTREES_DIR}/krb5.c Notice")
+file(WRITE "${krb5_copyright}" "${krb5_c}")
+
+file(READ "${SOURCE_PATH}/lib/inet_ntop.c" inet_ntop_c)
+string(REGEX REPLACE "#i.*" "" inet_ntop_c "${inet_ntop_c}")
+set(inet_ntop_copyright "${CURRENT_BUILDTREES_DIR}/inet_ntop.c and inet_pton.c Notice")
+file(WRITE "${inet_ntop_copyright}" "${inet_ntop_c}")
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${krb5_copyright}"
+        "${inet_ntop_copyright}"
+)
