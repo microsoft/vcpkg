@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
-    REF v5.2.5
-    SHA512 ac0dc4243f9d1ff077966f0037187b4374075ac97e75e1a3cd6bdc1caf5f8e4d40953d9a8a316480969c09524d87daa9d3ed75e6ac6f037dd5b1c5f25fce3afb
+    REF v${VERSION}
+    SHA512 805842736a4129c5afec5327b04e9795e99a0252ef2bbafbd018cf4d3351fffd95a10f93348adb48f2765bd4264741b8a3888cfda27dda72ded21cc2c2c7bce5
     HEAD_REF master
     PATCHES
         build_fixes.patch
@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 file(REMOVE "${SOURCE_PATH}/cmake-modules/FindZLIB.cmake")
 
-#file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/clipper") # https://github.com/assimp/assimp/issues/788
+file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/clipper")
 file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/draco")
 file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/gtest")
 #file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/Open3DGC")      #TODO
