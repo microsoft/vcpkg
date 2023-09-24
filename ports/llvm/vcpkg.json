@@ -25,8 +25,13 @@
   ],
   "default-features": [
     "clang",
-    "default-options",
     "default-targets",
+    "disable-assertions",
+    "enable-bindings",
+    "enable-terminfo",
+    "enable-threads",
+    "enable-zlib",
+    "enable-zstd",
     "lld",
     "tools"
   ],
@@ -51,6 +56,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "compiler-rt",
             "default-targets",
             "tools"
           ]
@@ -77,23 +83,6 @@
           "default-features": false,
           "features": [
             "clang"
-          ]
-        }
-      ]
-    },
-    "default-options": {
-      "description": "Build with default options.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "disable-assertions",
-            "enable-bindings",
-            "enable-terminfo",
-            "enable-threads",
-            "enable-zlib",
-            "enable-zstd"
           ]
         }
       ]
@@ -243,7 +232,8 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "libcxxabi"
+            "libcxxabi",
+            "tools"
           ]
         }
       ]
@@ -255,6 +245,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "libcxx",
             "tools"
           ]
         }
@@ -293,6 +284,7 @@
           "default-features": false,
           "features": [
             "clang",
+            "default-targets",
             "enable-terminfo",
             "tools"
           ]
