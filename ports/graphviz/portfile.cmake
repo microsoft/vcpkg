@@ -1,4 +1,5 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # for plugins
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled) # kitty and vt plugin not ready yet?
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
