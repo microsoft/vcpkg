@@ -4,11 +4,11 @@
   "documentation": "https://vcpkg.io/en/docs/maintainers/ports/vcpkg-make.html",
   "license": "MIT",
   "supports": "native",
-  "dependencies" : [
+  "dependencies": [
     {
-      "name" : "pkgconf",
-      "host" : true,
-      "platform" : "windows"
+      "name": "pkgconf",
+      "host": true,
+      "platform": "windows"
     },
     "vcpkg-cmake-get-vars",
     "vcpkg-scripts"
