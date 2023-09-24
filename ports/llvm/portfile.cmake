@@ -210,11 +210,6 @@ endif()
 if("libunwind" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libunwind")
 endif()
-if(LLVM_ENABLE_RUNTIMES)
-    list(APPEND FEATURE_OPTIONS
-        "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
-    )
-endif()
 
 # this is for normal targets
 set(known_llvm_targets
@@ -247,12 +242,6 @@ foreach(llvm_target IN LISTS known_llvm_targets)
     endif()
 endforeach()
 
-if(LLVM_TARGETS_TO_BUILD)
-    list(APPEND FEATURE_OPTIONS
-        "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
-    )
-endif()
-
 # this is for experimental targets
 set(known_llvm_experimental_targets
     ARC
@@ -270,12 +259,6 @@ foreach(llvm_target IN LISTS known_llvm_experimental_targets)
         list(APPEND LLVM_EXPERIMENTAL_TARGETS_TO_BUILD "${llvm_target}")
     endif()
 endforeach()
-
-if(LLVM_EXPERIMENTAL_TARGETS_TO_BUILD)
-    list(APPEND FEATURE_OPTIONS
-        "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
-    )
-endif()
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
@@ -302,6 +285,9 @@ vcpkg_cmake_configure(
         -DLLVM_INSTALL_PACKAGE_DIR:PATH=share/llvm
         -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
+        "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
+        "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
+        "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES 
         COMPILER_RT_ENABLE_IOS
