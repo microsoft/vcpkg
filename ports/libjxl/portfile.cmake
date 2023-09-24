@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependencies.patch
         trim-shared-build.patch
+        fix_static_suffix.patch #https://github.com/libjxl/libjxl/pull/2754
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
