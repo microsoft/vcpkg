@@ -13,13 +13,11 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/config.h.linux" "${SOURCE_PATH}/config.h.linux" COPYONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" "${CMAKE_CURRENT_LIST_DIR}/config.h.linux" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE 
     OPTIONS
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )

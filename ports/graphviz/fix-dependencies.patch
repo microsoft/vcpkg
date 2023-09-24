@@ -152,19 +152,3 @@ index d2ea435..3b068b0 100644
    target_link_libraries(dot_builtins PRIVATE ${SOCKET})
  endif()
  
-diff --git a/plugin/rsvg/gvloadimage_rsvg.c b/plugin/rsvg/gvloadimage_rsvg.c
-index 71948ba..4c1748e 100644
---- a/plugin/rsvg/gvloadimage_rsvg.c
-+++ b/plugin/rsvg/gvloadimage_rsvg.c
-@@ -18,9 +18,9 @@
- 
- #ifdef HAVE_PANGOCAIRO
- #ifdef HAVE_RSVG
--#include <librsvg/rsvg.h>
-+#include <librsvg-2.0/rsvg.h>
- #ifndef RSVG_CAIRO_H
--#include <librsvg/rsvg-cairo.h>
-+#include <librsvg-2.0/rsvg-cairo.h>
- #endif
- #include <cairo-svg.h>
- 
