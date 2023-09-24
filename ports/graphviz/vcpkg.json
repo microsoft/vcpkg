@@ -25,6 +25,7 @@
       ]
     },
     "librsvg",
+    "libwebp",
     "pango",
     {
       "name": "pkgconf",
