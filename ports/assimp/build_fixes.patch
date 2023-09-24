@@ -78,7 +78,6 @@ index 6551dcb..0796448 100644
 +include(CMakeFindDependencyMacro)
 +
 +find_dependency(pugixml CONFIG)
-+find_dependency(utf8cpp CONFIG) # https://github.com/assimp/assimp/issues/5247
 +if(NOT @BUILD_SHARED_LIBS@)
 +    find_dependency(kubazip CONFIG)
 +    find_dependency(minizip CONFIG)
@@ -87,6 +86,7 @@ index 6551dcb..0796448 100644
 +    find_dependency(polyclipping CONFIG)
 +    find_dependency(RapidJSON CONFIG)
 +    find_dependency(Stb MODULE)
++    find_dependency(utf8cpp CONFIG)
 +    find_dependency(ZLIB)
 +endif()
 +
@@ -386,11 +386,10 @@ index 5339454..45e07c0 100644
        minizip::minizip
 -      ZLIB::zlib
 -      RapidJSON::rapidjson
--      utf8cpp
 +      ZLIB::ZLIB
 +      rapidjson
+       utf8cpp
 +      PUBLIC
-+      utf8cpp # https://github.com/assimp/assimp/issues/5247
        pugixml
 -      stb::stb
    )
@@ -520,12 +519,14 @@ diff --git a/include/assimp/types.h b/include/assimp/types.h
 index 72e3d5c..b9d770c 100644
 --- a/include/assimp/types.h
 +++ b/include/assimp/types.h
-@@ -73,7 +73,7 @@
+@@ -73,8 +73,8 @@
  
  #ifdef __cplusplus
  
 -#ifdef ASSIMP_USE_HUNTER
+-#   include <utf8.h>
 +#if 1
- #   include <utf8.h>
++//#   include <utf8.h>
  #else
  #   include "../contrib/utf8cpp/source/utf8.h"
+ #endif
