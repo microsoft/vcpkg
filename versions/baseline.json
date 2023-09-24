@@ -5089,8 +5089,8 @@
       "port-version": 6
     },
     "lmdb": {
-      "baseline": "0.9.29",
-      "port-version": 2
+      "baseline": "0.9.31",
+      "port-version": 0
     },
     "lockpp": {
       "baseline": "1.0.2",
