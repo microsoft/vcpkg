@@ -8,6 +8,7 @@ vcpkg_from_gitlab(
     SHA512 1edcf6aa232d38d1861a344c1a4a88aac51fd4656d667783ca1608ac694025199595a72a293c4eee2f7c7326ce54f22b787a5b7f4c44946f2de6096bd8f0e79d
     HEAD_REF main
     PATCHES
+        disable-pragma-lib.patch
         fix-dependencies.patch
         no-absolute-paths.patch
         select-plugins.patch
