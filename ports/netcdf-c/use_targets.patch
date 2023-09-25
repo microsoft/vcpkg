@@ -125,13 +125,17 @@ diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
 index 9d68eec..b3be259 100644
 --- a/netCDFConfig.cmake.in
 +++ b/netCDFConfig.cmake.in
-@@ -12,6 +12,9 @@ set_and_check(netCDF_LIB_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
+@@ -12,6 +12,13 @@ set_and_check(netCDF_LIB_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
  set(netCDF_LIBRARIES netCDF::netcdf)
  
  # include target information
 +include(CMakeFindDependencyMacro)
-+find_dependency(HDF5 CONFIG)
-+find_dependency(CURL CONFIG)
++if("@USE_HDF5@")
++  find_dependency(HDF5 CONFIG)
++endif()
++if("@FOUND_CURL@")
++  find_dependency(CURL CONFIG)
++endif()
  include("${CMAKE_CURRENT_LIST_DIR}/netCDFTargets.cmake")
  
  # Compiling Options
