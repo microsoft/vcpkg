@@ -36,9 +36,6 @@
     },
     "zlib"
   ],
-  "default-features": [
-    "codegen"
-  ],
   "features": {
     "absl-sync": {
       "description": "Deprecated."
