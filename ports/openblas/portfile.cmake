@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF v{VERSION}
-    SHA512 d79ae7ba4f9146f0bcacdef9b9cf4cd287e5eb2e3891f7deb4b3992b742a557ca094ac2f258420a16cfe6bbda7ca82addf415aecd7ced425a02374847c0b6013
+    REF v${VERSION}
+    SHA512 fe66e3a258ca1720764ed243f6d61017d6ef14bd33b76f20b19b34754096ec2be9fbeb1a78743f38ee71381746d6af9a1c16a8f3982e423afec422fcb50852d0
     HEAD_REF develop
     PATCHES
         uwp.patch
