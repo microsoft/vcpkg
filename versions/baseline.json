@@ -7504,6 +7504,10 @@
       "baseline": "2018-08-26-16e6f435",
       "port-version": 3
     },
+    "sdbusplus": {
+      "baseline": "2023-09-14",
+      "port-version": 0
+    },
     "sdformat10": {
       "baseline": "10.0.0",
       "port-version": 3
