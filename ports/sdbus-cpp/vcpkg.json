@@ -7,6 +7,7 @@
   "supports": "linux",
   "dependencies": [
     "dbus",
+    "libsystemd",
     {
       "name": "vcpkg-cmake",
       "host": true
