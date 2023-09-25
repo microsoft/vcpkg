@@ -68,7 +68,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/OpenBLAS)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenBLAS)
 
 if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES getarch AUTO_CLEAN)
