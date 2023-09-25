@@ -103,6 +103,7 @@ target_compile_definitions(${LIBRSVG_TARGET} PRIVATE
     -DRSVG_COMPILATION
     -D_CRT_SECURE_NO_WARNINGS
     -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}"
+    $<$<BOOL:${MINGW}>:HAVE_STRTOK_R>
 )
 target_include_directories(${LIBRSVG_TARGET}
     PRIVATE
