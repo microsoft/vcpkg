@@ -414,7 +414,7 @@ vcpkg ($($StartDate.ToString('yyyy.MM.dd')) - $((($EndDate).AddSeconds(-1)).ToSt
 |x64-windows-static-md|NUM|
 |x64-uwp|NUM|
 |arm64-windows|NUM|
-|arm-uwp|NUM|
+|arm64-uwp|NUM|
 |**x64-osx**|NUM|
 |**x64-linux**|NUM|
 

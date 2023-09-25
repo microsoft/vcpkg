@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 76d2e9b..f29b043 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -438,6 +438,11 @@ if(LEVELDB_INSTALL)
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb
+   )
+ 
++  file(GLOB HEADER_UTIL "${PROJECT_SOURCE_DIR}/util/*.h" )
++  file(GLOB HEADER_TABLE "${PROJECT_SOURCE_DIR}/table/*.h" )
++  install(FILES ${HEADER_UTIL} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb/util)
++  install(FILES ${HEADER_TABLE} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb/table)
++
+   include(CMakePackageConfigHelpers)
+   write_basic_package_version_file(
+       "${PROJECT_BINARY_DIR}/leveldbConfigVersion.cmake"
