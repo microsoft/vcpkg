@@ -102,7 +102,7 @@ add_library(${LIBRSVG_TARGET} ${LIBRSVG_SOURCES})
 target_compile_definitions(${LIBRSVG_TARGET} PRIVATE
     -DRSVG_COMPILATION
     -D_CRT_SECURE_NO_WARNINGS
-    -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}"
+    -DSRCDIR=""
     $<$<BOOL:${MINGW}>:HAVE_STRTOK_R>
 )
 target_include_directories(${LIBRSVG_TARGET}
@@ -150,7 +150,7 @@ target_include_directories(pixbufloader-svg
 target_compile_definitions(pixbufloader-svg PRIVATE
     -DRSVG_COMPILATION
     -D_CRT_SECURE_NO_WARNINGS
-    -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}"
+    -DSRCDIR=""
     -DGDK_PIXBUF_ENABLE_BACKEND
     -DG_LOG_DOMAIN="libpixbufloader-svg"
 )
