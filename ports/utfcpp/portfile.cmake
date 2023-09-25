@@ -1,10 +1,8 @@
-vcpkg_minimum_required(VERSION 2022-12-14)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nemtrif/utfcpp
     REF v${VERSION}
-    SHA512 760977df613abfb34fb7864cbbe90e8f2cf1f42b8502427a5e9c2a756ce87655120b7490ebdaa6c926a2cb56caef9ead0e0e10fb7cb732cf99a5b43c0cca411b
+    SHA512 5135b13a03ee814cb35e04459b2d91b8fbe91cd518a604c41062b4ad42b739fce1acf946b01904309e0edffb874f5e81f69d28afdc8b6f759ef2d675ca0c0db0
     HEAD_REF master
 )
 
