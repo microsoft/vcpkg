@@ -1,6 +1,6 @@
 {
   "name": "igraph",
-  "version": "0.10.5",
+  "version": "0.10.7",
   "description": "igraph is a C library for network analysis and graph theory, with an emphasis on efficiency portability and ease of use.",
   "homepage": "https://igraph.org/",
   "license": "GPL-2.0-or-later",

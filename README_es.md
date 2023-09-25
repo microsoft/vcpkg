@@ -20,7 +20,7 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
 * este programa en: [vcpkg-tool GitHub](https://github.com/microsoft/vcpkg-tool)
 * [Slack](https://cppalliance.org/slack/), en el canal #vcpkg
 * Discord: [\#include \<C++\>](https://www.includecpp.org), en el canal #🌏vcpkg
-* Docs: [Documentación](docs/README.md)
+* Docs: [Documentación](https://learn.microsoft.com/vcpkg)
 
 ## Tabla de contenido
 
@@ -55,7 +55,7 @@ puede [abrir una incidencia en el repositorio de GitHub][contributing:submit-iss
 donde el equipo de vcpkg y la comunidad pueden verlo, y potencialmente hacer un port a vcpkg.
 
 Después de tener Vcpkg instalado y funcionando,
-puede que desee añadir [completado con tab](#Completado-TabAuto-Completado) en su terminal.
+puede que desee añadir [completado con tab](#Completado-TabAutoCompletado) en su terminal.
 
 Finalmente, si está interesado en el futuro de Vcpkg,
 puede ver la guía de [archivos de manifiesto][getting-started:manifest-spec]!
@@ -70,11 +70,12 @@ Prerrequisitos:
 - [Git][getting-started:git]
 - [Visual Studio][getting-started:visual-studio] 2015 Update 3 o superior con el paquete Inglés de Visual Studio.
 
-Primero, descargue y compile vcpkg; puede ser instalado en cualquier lugar,
-pero generalmente recomendamos usar vcpkg como submódulo para proyectos de CMake,
-e instalándolo globalmente para Proyectos de Visual Studio.
-recomendamos un lugar como `C:\src\vcpkg` o `C:\dev\vcpkg`,
-ya que de otra forma puede encontrarse problemas de ruta para algunos sistemas de port.
+Primero, descargue y compile vcpkg; puede ser instalado en cualquier lugar, pero por lo general recomendamos usar vcpkg  
+como submódulo, asi el repositorio que lo consume puede permanecer autónomo.
+Alternativamente vcpkg puede ser instalado globalmente;
+recomendamos que sea en un lugar como `C:\src\vcpkg` o `C:\dev\vcpkg`, 
+
+ya que de otra forma puede encontrarse problemas de ruta para algunos sistemas de port. 
 
 ```cmd
 > git clone https://github.com/microsoft/vcpkg
@@ -119,9 +120,6 @@ Con CMake, todavía necesitara `find_package` y las configuraciones adicionales 
 Revise la [Sección de Cmake](#usando-vcpkg-con-cmake) para más información,
 incluyendo el uso de CMake con un IDE.
 
-Para cualquier otra herramienta, incluyendo Visual Studio Code,
-reviste la [guía de integración][getting-started:integration].
-
 ### Inicio rápido: Unix
 
 Prerrequisitos para Linux:
@@ -133,8 +131,8 @@ Prerrequisitos para macOS:
 
 - [Herramientas de desarrollo de Apple][getting-started:macos-dev-tools]
 
-Primero, descargue y compile vcpkg, puede ser instalado donde sea,
-pero recomendamos usar vcpkg como submodulo para proyectos de CMake.
+Primero, descargue y compile vcpkg, puede ser instalado donde lo desee,
+pero recomendamos usar vcpkg como un submodulo.
 
 ```sh
 $ git clone https://github.com/microsoft/vcpkg
@@ -318,14 +316,13 @@ puede usar un simple `vcpkg install --feature-flags=manifests`
 
 Para más información, revise la especificación de [manifiesto][getting-started:manifest-spec]
 
-[getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/buildsystems/integration.md
+[getting-started:using-a-package]: https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #Instalando-Herramientas-de-desarrollo-en-Linux
 [getting-started:macos-dev-tools]: #Instalando-Herramientas-de-desarrollo-en-macOS
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
-[getting-started:manifest-spec]: docs/specifications/manifests.md
+[getting-started:manifest-spec]: https://learn.microsoft.com/en-us/vcpkg/users/manifests
 
 ## Completado-Tab/Autocompletado
 
@@ -347,10 +344,10 @@ según la terminal que use, luego reinicie la consola.
 
 ## Ejemplos
 
-ver la [documentación](docs/README.md) para tutoriales específicos, incluyendo
-[instalando y usando un paquete](docs/examples/installing-and-using-packages.md),
-[agregando un nuevo paquete desde un archivo comprimido](docs/examples/packaging-zipfiles.md),
-[agregando un nuevo paquete desde un repositorio en GitHub](docs/examples/packaging-github-repos.md).
+ver la [documentación](https://learn.microsoft.com/vcpkg) para tutoriales específicos, incluyendo
+[instalando y usando un paquete](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages),
+[agregando un nuevo paquete desde un archivo comprimido](https://learn.microsoft.com/vcpkg/examples/packaging-zipfiles),
+[agregando un nuevo paquete desde un repositorio en GitHub](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos).
 
 Nuestra documentación también esta disponible en nuestro sitio web [vcpkg.io](https://vcpkg.io/).
 Si necesita ayuda puede [crear un incidente](https://github.com/vcpkg/vcpkg.github.io/issues).
@@ -390,7 +387,7 @@ La mayoría de los `ports` en vcpkg construyen las bibliotecas usando su sistema
 por los autores originales de las bibliotecas, y descargan el código fuente asi como las herramientas de compilación
 de sus ubicaciones de distribucion oficiales. Para aquellos que usan un firewall, el acceso dependerá de cuales `ports`
 están siendo instalados. Si tiene que instalarlos en un entorno aislado, puede instalarlos previamente en un entorno
-no aislado, generando un [caché del paquete](docs/users/assetcaching.md) compartido con el entorno aislado.
+no aislado, generando un [caché del paquete](https://learn.microsoft.com/vcpkg/users/assetcaching) compartido con el entorno aislado.
 
 ## Telemetría
 

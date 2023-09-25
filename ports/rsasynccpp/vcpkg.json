@@ -1,11 +1,18 @@
 {
   "name": "rsasynccpp",
   "version": "0.0.7",
-  "port-version": 2,
+  "port-version": 3,
   "maintainers": "Rene Stein <rene@renestein.net>",
   "description": "Task Parallel Library (TPL)/dataflow/actors/async primitives for C++ based on C++ 20 coroutines.",
   "homepage": "https://github.com/renestein/Rstein.AsyncCpp",
   "supports": "windows & !arm",
+  "dependencies": [
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
+  ],
   "features": {
     "lib-cl-win-legacy-await": {
       "description": "Legacy coroutines (/await switch, std::experimental namespace)."

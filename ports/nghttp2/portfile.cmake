@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nghttp2/nghttp2
     REF v${VERSION}
-    SHA512 0ec50178068276cde624c47a634beda0b96ef1529970fddb20cf7a9b4b30d792827ffe16f16f5b7e210d0b7913be5d25e6c6704f6f7fb9a1b5a85f63aeaba6bc
+    SHA512 ba143045220f4d1fbbefa6c3944b0a2cd3535b9d4b07ea05fe08cbbaaa2f7eb1f0ff7a65e8e13a5711a3f88855de36ecada54470e583099be14b77ec360a3084
     HEAD_REF master
 )
 

@@ -19,15 +19,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH ECSUtil.sln
-    PLATFORM "${TRIPLET_SYSTEM_ARCH}"
-    LICENSE_SUBPATH license.txt
+    PLATFORM "${TRIPLET_SYSTEM_ARCH}" # This means x86 as platform config instead of Win32
     TARGET ECSUtil
     RELEASE_CONFIGURATION "${ECSUtil_CONFIGURATION_RELEASE}"
     DEBUG_CONFIGURATION "${ECSUtil_CONFIGURATION_DEBUG}"
 )
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

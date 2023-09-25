@@ -1,11 +1,19 @@
 {
   "name": "libssh2",
   "version": "1.11.0",
+  "port-version": 1,
   "description": "libssh2 is a client-side C library implementing the SSH2 protocol.",
   "homepage": "https://www.libssh2.org",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "openssl",
+    {
+      "name": "libssh2",
+      "default-features": false,
+      "features": [
+        "openssl"
+      ],
+      "platform": "!windows"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -16,11 +24,18 @@
     }
   ],
   "default-features": [
+    "openssl",
     "zlib"
   ],
   "features": {
+    "openssl": {
+      "description": "Use the openssl crypto backend",
+      "dependencies": [
+        "openssl"
+      ]
+    },
     "zlib": {
-      "description": "Use compressing via zlib",
+      "description": "Use compression via zlib",
       "dependencies": [
         "zlib"
       ]
