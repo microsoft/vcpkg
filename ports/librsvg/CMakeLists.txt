@@ -11,9 +11,6 @@ Set(exec_prefix "\${prefix}")
 Set(libdir "\${prefix}/lib")
 Set(includedir "\${prefix}/include")
 
-# pc file missing in vcpkg
-find_package(unofficial-libcroco CONFIG REQUIRED)
-
 # Public required modules (cf. headers and librsvg.pc)
 set(librsvg_pc_requires glib-2.0 gio-2.0 gdk-pixbuf-2.0 cairo)
 # Other required modules from configure.ac
@@ -22,6 +19,7 @@ set(librsvg_pc_requires_private
     pangocairo
     pangoft2
     cairo-png
+    libcroco-0.6
     gthread-2.0
     gmodule-2.0
     gobject-2.0
@@ -118,10 +116,8 @@ target_link_libraries(${LIBRSVG_TARGET}
         PkgConfig::LIBRSVG_LINK_PUBLIC
     PRIVATE
         PkgConfig::LIBRSVG_LINK_PRIVATE
-        unofficial::libcroco::croco-0.6
 )
 install(TARGETS ${LIBRSVG_TARGET}
-    EXPORT librsvg-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
@@ -163,30 +159,10 @@ target_link_libraries(pixbufloader-svg
         PkgConfig::GDK_PIXBUF
 )
 install(TARGETS pixbufloader-svg
-    EXPORT librsvg-targets
     RUNTIME DESTINATION "${GDK_PIXBUF_MODULEDIR}"
     LIBRARY DESTINATION "${GDK_PIXBUF_MODULEDIR}"
 )
 
-
-install(
-    EXPORT librsvg-targets
-    NAMESPACE unofficial::librsvg::
-    FILE unofficial-librsvg-targets.cmake
-    DESTINATION share/unofficial-librsvg
-)
-
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-librsvg-config.cmake "
-include(CMakeFindDependencyMacro)
-find_dependency(unofficial-libcroco CONFIG)
-find_dependency(PkgConfig)
-pkg_check_modules(LIBRSVG_LINK_PUBLIC ${librsvg_pc_requires} IMPORTED_TARGET)
-pkg_check_modules(LIBRSVG_LINK_PRIVATE ${librsvg_pc_requires_private} IMPORTED_TARGET)
-pkg_check_modules(GDK_PIXBUF ${gdk_pixbuf_pc_requires_private} IMPORTED_TARGET)
-
-include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-librsvg-targets.cmake)
-")
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-librsvg-config.cmake DESTINATION share/unofficial-librsvg)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/librsvg.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/librsvg.pc" @ONLY)
 file(READ "${CMAKE_CURRENT_BINARY_DIR}/librsvg.pc" librsvg_pc)
