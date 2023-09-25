@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "LMDB_${VERSION}"
     SHA512 a5763ff94af0b5bbc2406c52890797e6232e77593bacdb240441ed30c8634e4e6de6eba206880475544e21561ccd0be2dee16733d6ec35483eb1dbbb81913a8d
     HEAD_REF master
+    PATCHES
+        getopt-win32.diff
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/cmake/" DESTINATION "${SOURCE_PATH}/libraries/liblmdb")
 

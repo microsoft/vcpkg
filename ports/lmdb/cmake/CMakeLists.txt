@@ -46,9 +46,14 @@ install(EXPORT unofficial-lmdb-targets
 )
 
 if(LMDB_BUILD_TOOLS)
+    set(getopt_libs "")
+    if(WIN32 AND NOT MINGW)
+        find_package(unofficial-getopt-win32 REQUIRED)
+        set(getopt_libs "unofficial::getopt-win32::getopt")
+    endif()
     foreach(tool IN ITEMS mdb_copy mdb_dump mdb_load mdb_stat)
         add_executable(${tool} ${tool}.c)
-        target_link_libraries(${tool} lmdb)
+        target_link_libraries(${tool} lmdb ${getopt_libs})
         install(TARGETS ${tool}
             RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
         )
