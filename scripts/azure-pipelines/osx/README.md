@@ -11,8 +11,6 @@
     - [Running the VM](#running-the-vm)
   - [Getting an Azure Pipelines PAT](#getting-an-azure-pipelines-pat)
   - [Setting up a new macOS machine](#setting-up-a-new-macos-machine)
-  - [Troubleshooting](#troubleshooting)
-  - [(Internal) Accessing the macOS fileshare](#internal-accessing-the-macos-fileshare)
 
 ## Basic Usage
 
@@ -41,18 +39,31 @@ You'll need some prerequisites:
 
 - An Xcode installer - you can get this from Apple's developer website,
   although you'll need to sign in first: <https://developer.apple.com/downloads>
-- The software installed by `Install-Prerequisites.ps1`
 
 If you're updating the CI pool, make sure you update macOS.
 
 First, you'll need to create a base VM;
 this is where you determine what version of macOS is installed.
-Follow the Parallels process for creating a macOS VM; this involves
-updating to whatever version, and then scrolling right until you find
-"Install macOS from recovery partition".
+Follow the Parallels process for creating a macOS VM:
 
-Once you've done this, you can run through the installation of macOS onto a new VM.
-You should set the username to `vagrant`.
+1. Get a machine with matching version of Parallels.
+2. If you haven't already, install Vagrant and vagrant-parallels:
+      ```sh
+      $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+      $ brew install hashicorp/tap/hashicorp-vagrant
+      $ vagrant plugin install vagrant-parallels
+      ```
+3. Update your MacOS host.
+4. Run parallels, and select 'Other Options' -> 'Install macOS 13.5.2 Using the Recovery Partition' (version number to change :))
+5. Install MacOS like you would on real hardware.
+    * Apple ID: 'Set Up Later' / Skip
+    * Account name: vagrant
+    * Account password: vagrant
+6. Install Parallels Tools
+7. Shut down the VM
+8. Open Parallels Control Center, right click the VM, and make the following edits:
+    * 12 processors
+    * 24000 MB of memory
 
 Once it's finished installing, make sure to turn on the SSH server.
 Open System Preferences, then go to Sharing > Remote Login,
@@ -71,73 +82,57 @@ $ curl -fsSL 'https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub' 
 $ chmod 0600 ~/.ssh/authorized_keys
 ```
 
-Finally, you'll need to install the Parallel Tools.
-From your host, in the top bar,
-go to Actions > Install Parallels Tools...,
-and then follow the instructions.
-
 Now, let's package the VM into a base box.
 (The following instructions are adapted from
 [these official instructions][base-box-instructions]).
 
-Run the following commands:
+Shut down the VM cleanly. On the host, run the following commands:
 
 ```sh
 $ cd ~/Parallels
 $ echo '{ "provider": "parallels" }' >metadata.json
-$ tar zcvf <macos version>.box ./metadata.json ./<name of VM>.pvm
+$ prl_disk_tool compact --hdd ./<name of VM>.pvm/harddisk.hdd
+$ tar zcvf <name-of-box>.box ./metadata.json ./<name of VM>.pvm
+$ rm ./metadata.json
 ```
 
 This will create a box file which contains all the necessary data.
-You can delete the `metadata.json` file after.
-
-Once you've done that, you can upload it to the fileshare,
-under `share/boxes/macos-base`, add it to `share/boxes/macos-base.json`,
-and finally add it to vagrant:
 
 ```sh
-$ vagrant box add ~/vagrant/share/boxes/macos-base.json
+$ vagrant box add <name-of-box>.box --name <name-of-box>
 ```
 
 Then, we'll create the final box,
 which contains all the necessary programs for doing CI work.
-Copy `configuration/Vagrantfile-box.rb` as `Vagrantfile`, and
-`configuration/vagrant-box-configuration.json`
-into a new directory; into that same directory,
-download the Xcode command line tools dmg, and name it `clt.dmg`.
+Copy `Vagrantfile-box.rb` as `Vagrantfile`
+into a new directory. Edit the config.vm.box line to <name-of-box>.
+Into that same directory, download the Xcode command line tools dmg, typically from
+https://developer.apple.com/download/all/ , and name it `clt.dmg`.
 Then, run the following in that directory:
 
 ```sh
 $ vagrant up
 $ vagrant package
+$ vagrant destroy
 ```
 
 This will create a `package.box`, which is the box file for the base VM.
-Once you've created this box, if you're making it the new box for the CI,
-upload it to the fileshare, under `share/boxes/macos-ci`.
-Then, add the metadata about the box (the name and version) to
-`share/boxes/macos-ci.json`.
+Once you've created this box, log in to the Azure Portal, and upload the box to
+vcpkg-image-minting/vcpkgvagrantboxes/boxes. (You might need to use scp to copy the box to
+a machine that can see the Portal)
+
 Once you've done that, add the software versions under [VM Software Versions](#vm-software-versions).
 
 [base-box-instructions]: https://parallels.github.io/vagrant-parallels/docs/boxes/base.html
 
 #### VM Software Versions
 
+* 2023-09-11
+  * macOS: 13.5
+  * Xcode CLTs: 14.3.1
 * 2022-02-04 (minor update to 2022-01-03)
   * macOS: 12.1
   * Xcode CLTs: 13.2
-* 2022-01-03:
-  * macOS: 12.1
-  * Xcode CLTs: 13.2
-* 2021-07-27:
-  * macOS: 11.5.1
-  * Xcode CLTs: 12.5.1
-* 2021-04-16:
-  * macOS: 11.2.3
-  * Xcode CLTs: 12.4
-* 2020-09-28:
-  * macOS: 10.15.6
-  * Xcode CLTs: 12
 
 ### Creating a New Azure Agent Pool
 
@@ -156,26 +151,53 @@ to the pool!
 
 ### Running the VM
 
-First, make sure that your software is up to date:
+First, make sure that your software is up to date, first by checking in
+
+* macOS system settings
+* Parallels' UI
+* homebrew:
+    ```sh
+    $ brew update
+    $ brew upgrade
+    ```
+
+If this machine has been used before, you might have to remove an existing boxes:
+
 ```sh
-$ cd ~/vcpkg
-$ git fetch
-$ git switch -d origin/master
-$ ./scripts/azure-pipelines/osx/Install-Prerequisites.ps1
+$ cd ~/vagrant/vcpkg-ec-mac
+$ vagrant halt
+$ vagrant destroy
+$ cd ~
+$ rm -rf ~/vagrant
+$ mkdir ~/vagrant
 ```
 
-as well as checking to make sure macOS is up to date.
+[grab a PAT], mint a SAS token to vcpkg-image-minting/vcpkgvagrantboxes/boxes, and pull the box:
 
-Then, follow the instructions for [accessing ~/vagrant/share][access-fileshare].
-
-And finally, [grab a PAT], update the vagrant box, set up the VM, and run it:
 ```sh
-$ vagrant box remove -f vcpkg/macos-ci # This won't do anything if the machine never had a box before
-$ vagrant box add ~/vagrant/share/boxes/macos-ci.json
-$ ~/vcpkg/scripts/azure-pipelines/osx/Setup-VagrantMachines.ps1 -Date <box version YYYY-MM-DD> -DevopsPat <PAT>
-$ cd ~/vagrant/vcpkg-eg-mac
-$ vagrant up # if this fails, reboot through the kvm and/or log in interactively, then come back here
+$ vagrant box list
+$ vagrant box remove <any boxes listed by previous command>
+$ vagrant box add 'https://vcpkgvagrantboxes.blob.core.windows.net/boxes/<name of box>.box?<SAS token>' --name <name of box>
 ```
+
+Copy the contents of Vagrantfile-vm.rb to ~/vagrant/Vagrantfile, and edit the values at the top
+to match this particular machine:
+
+* machine_name
+* box
+* azure_agent_url should be changed to the latest version
+* agent_pool
+* pat
+
+Then:
+
+```sh
+$ cd ~/vagrant
+$ vagrant up
+```
+
+If the `vagrant up` fails you might need to `vagrant halt` and rerun from within the KVM as
+sometimes over SSH this fails.
 
 [grab a PAT]: #getting-an-azure-pipelines-pat
 
@@ -195,64 +217,10 @@ You can now copy this token and use it to allow machines to join.
 
 ## Setting up a new macOS machine
 
-Before anything else, one must download `brew` and `powershell`.
-
-```sh
-$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-$ brew cask install powershell
-```
-
-Then, we need to download the `vcpkg` repository:
-
-```sh
-$ git clone https://github.com/microsoft/vcpkg
-```
-
-Then, we need to mint an SSH key:
-
-```sh
-$ ssh-keygen
-$ cat .ssh/id_rsa.pub
-```
-
-Add that SSH key to `authorized_keys` on the file share machine with the base box.
-
-Next, install prerequisites:
-```sh
-$ cd vcpkg/scripts/azure-pipelines/osx
-$ ./Install-Prerequisites.ps1 -Force
-```
-
-And finally, make sure you can [access ~/vagrant/share][access-fileshare].
-
-## Troubleshooting
-
-The following are issues that we've run into:
-
-- (with a Parallels box) `vagrant up` doesn't work, and vagrant gives the error that the VM is `'stopped'`.
-  - Try logging into the GUI with the KVM, and retrying `vagrant up`.
-- (when running a powershell script) The error `Failed to initialize CoreCLR, HRESULT: 0x8007001F` is printed.
-  - Reboot the machine; run
-  ```sh
-  $ sudo shutdown -r now
-  ```
-  and wait for the machine to start back up. Then, start again from where the error was emitted.
-
-## (Internal) Accessing the macOS fileshare
-
-The fileshare is located on `vcpkgmm-01`, under the `fileshare` user, in the `share` directory.
-In order to get `sshfs` working on the physical machine,
-You can run `Install-Prerequisites.ps1` to grab the right software, then either:
-
-```sh
-$ mkdir -p ~/vagrant/share
-$ sshfs fileshare@vcpkgmm-01:share ~/vagrant/share
-```
-
-If you get an error, that means that gatekeeper has prevented the kernel extension from loading,
-so you'll need to access the GUI of the machine, go to System Preferences,
-Security & Privacy, General, unlock the settings,
-and allow system extensions from the osxfuse developer to run.
-Then, you'll be able to add ~/vagrant/share as an sshfs.
-
-[access-fileshare]: #internal-accessing-the-macos-fileshare
+* Install Parallels
+* Install Homebrew
+    ```sh
+    $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+    $ brew install hashicorp/tap/hashicorp-vagrant
+    $ vagrant plugin install vagrant-parallels
+    ```
