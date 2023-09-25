@@ -1,0 +1,25 @@
+From 0552ffc29ff11e4fe130b7143ea6ac2bee7b15c6 Mon Sep 17 00:00:00 2001
+From: wevsty <ty@wevs.org>
+Date: Sat, 12 Aug 2023 22:13:48 +0800
+Subject: [PATCH] fix build error on MSVC
+
+---
+ include/boost/locale/util/string.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/boost/locale/util/string.hpp b/include/boost/locale/util/string.hpp
+index 9ab9521..ba066bd 100644
+--- a/include/boost/locale/util/string.hpp
++++ b/include/boost/locale/util/string.hpp
+@@ -38,7 +38,7 @@ namespace boost { namespace locale { namespace util {
+     /// Cast an unsigned char to a (possibly signed) char avoiding implementation defined behavior
+     constexpr char to_char(unsigned char c)
+     {
+-        return static_cast<char>((c - std::numeric_limits<char>::min()) + std::numeric_limits<char>::min());
++        return static_cast<char>((c - (std::numeric_limits<char>::min)()) + (std::numeric_limits<char>::min)());
+     }
+ 
+ }}} // namespace boost::locale::util
+-- 
+2.38.1.windows.1
+

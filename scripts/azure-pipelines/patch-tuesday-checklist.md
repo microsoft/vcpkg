@@ -18,3 +18,5 @@
       refs/pull/NUMBER/head
 * [ ] Run `generate-sas-tokens.ps1` and update the relevant libraries on dev.azure.com/vcpkg and
       devdiv.visualstudio.com.
+* [ ] Mint a new macOS base box.
+* [ ] Deploy the new base box to all hosts.

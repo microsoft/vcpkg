@@ -33,7 +33,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
     - [Visual Studio Code with CMake Tools](#visual-studio-code-with-cmake-tools)
     - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
     - [Vcpkg with CLion](#vcpkg-with-clion)
-    - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
+    - [Vcpkg as a Submodule](#vcpkg-as-a-submodule-with-cmake)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
 - [Examples](#examples)
 - [Contributing](#contributing)

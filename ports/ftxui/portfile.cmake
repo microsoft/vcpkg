@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArthurSonzogni/FTXUI
     REF "v${VERSION}"
-    SHA512 14de98770e8a23707455f9197e9ef3b41effc1b5b8a594a7270b1378034720f58b5a81b99653d8b1f04e003565ae4778a1e5a3d756c8cbf297e2d09e327f608e
+    SHA512 be5ed7f2b3c90a7de874115a131c75c69ad9dd6db4c3bc0cfd7036cfe449b8d16af3df8f1aa1bcb057347bd726837e3f1c42e30a06cf3ad34b50e7bd26ba4883
     HEAD_REF master
 )
 
@@ -21,9 +21,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ftxui.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ftxui.pc")
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ftxui.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ftxui.pc")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
