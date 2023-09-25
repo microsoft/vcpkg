@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_LINUX)
+  message("Warning: `sdbusplus` requires GCC 13+")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openbmc/sdbusplus
