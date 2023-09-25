@@ -19,15 +19,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 c48ad86265b0fee18b23863b645a286d131a863a3418c7d2ed6c819eebb822ad0f2985ba3ecbf4def32515442f0eb40aba08f3146d113247e86ec80fbddca1c1
+    SHA512 248353b000ef6b9a3434bf808b147eb4672c82f36968b2995c159373680f80208183bb70c02effa36ae4a1705fe5a5e315960075e8899352c4e84069d6c651c2
     PATCHES
-        arm64-asm.patch
         disable-apps.patch
         disable-install-docs.patch
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
-        windows/perlasm-scheme.patch
         unix/android-cc.patch
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch

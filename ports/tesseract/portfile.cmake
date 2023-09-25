@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
     REF "${VERSION}"
-    SHA512 1744106d76eafd0786b99b517707afdd22b7b5cb3dfd7f0af02954539715c981ff0f12d142ee103113ba38dac8476052d6880b81d4c8050de650bf1cee6ba06c
+    SHA512 92db2a513f00b931a0207cc705020bee9fea4ff7fa93c57a6f446b5777713864cce19121b316ef8b78b6bd625ee7e6fd473352515f98c4a2187569cbd0a9713a
     PATCHES
         ${tesseract_patch}
         fix_static_link_icu.patch
@@ -29,6 +29,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
         -DLeptonica_DIR=YES
         -DSW_BUILD=OFF
+        -DLEPT_TIFF_RESULT=ON
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_OpenCL
 )
@@ -102,4 +103,4 @@ file(GLOB WORDREC_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/wordre
 file(INSTALL ${WORDREC_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/wordrec")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
