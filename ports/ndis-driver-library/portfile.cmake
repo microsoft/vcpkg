@@ -8,4 +8,4 @@ vcpkg_from_github(
 
 file(COPY "${SOURCE_PATH}/src/include/ndis" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
