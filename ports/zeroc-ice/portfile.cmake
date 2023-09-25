@@ -4,7 +4,10 @@ vcpkg_from_github(
     REPO zeroc-ice/ice
     REF "v${VERSION}"
     SHA512 07d7c439fbe1f69d808d05a11f32e09cdd8d4df2a93b6f253496304e0a521d417212ae688e316b4450dae406b59d1a460025b51ecd0614c69e48d86c0a6f81c5
-    PATCHES mcppd_fix.patch no-werror.patch
+    PATCHES
+        mcppd_fix.patch
+        no-werror.patch
+        fix-missing-functional.patch
 )
 
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
@@ -37,6 +40,7 @@ endfunction()
 vcpkg_list(SET ICE_INCLUDE_SUB_DIRECTORIES
   "Glacier2"
   "Ice"
+  "IceUtil"
   "IceBT"
   "IceBox"
   "IceBT"
@@ -130,6 +134,12 @@ endif()
 if("icediscovery" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icediscovery++11")
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "IceDiscovery")
+endif()
+
+# IceLocatorDiscovery
+if("icelocatordiscovery" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icelocatordiscovery++11")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "IceLocatorDiscovery")
 endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

@@ -8,7 +8,7 @@ vcpkg_from_sourceforge(
     REPO ngspice/ng-spice-rework
     REF ${VERSION}
     FILENAME "ngspice-${VERSION}.tar.gz"
-    SHA512 724415cea3249d049d796360f5f59ec5e68edb1899e82b0fbd68455791863c274abe1a505b7148ef96adbb485bc677d38432fa4effe4069bbdfe284ff3e59921
+    SHA512 fb0960cc9fcde1871fad82571cacebb1f5cce09ee3297cc938a24b88173ed102a2cb3f246599cdfbde7275e45e3d551edd0368e3ba6e79c592937c4cc466325e
     PATCHES
         use-winbison-sharedspice.patch
         use-winbison-vngspice.patch
