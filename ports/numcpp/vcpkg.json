@@ -5,6 +5,7 @@
   "homepage": "https://dpilger26.github.io/NumCpp",
   "license": "MIT",
   "dependencies": [
+    "boost",
     "boost-algorithm",
     "boost-date-time",
     "boost-endian",
