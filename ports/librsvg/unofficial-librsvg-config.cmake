@@ -6,9 +6,9 @@ find_dependency(PkgConfig)
 pkg_check_modules(VCPKG_LIBRSVG librsvg-2.0 IMPORTED_TARGET)
 if(NOT VCPKG_LIBRSVG_FOUND)
     set(${CMAKE_FIND_PACKAGE_NAME}_FOUND 0)
-elseif(NOT TARGET unofficial::librsvg::rsvg-2.0)
-    add_library(unofficial::librsvg::rsvg-2.0 INTERFACE IMPORTED)
-    set_target_properties(unofficial::librsvg::rsvg-2.0 PROPERTIES
+elseif(NOT TARGET unofficial::librsvg::rsvg-2)
+    add_library(unofficial::librsvg::rsvg-2 INTERFACE IMPORTED)
+    set_target_properties(unofficial::librsvg::rsvg-2 PROPERTIES
         INTERFACE_LINK_LIBRARIES PkgConfig::VCPKG_LIBRSVG
     )
 endif()
