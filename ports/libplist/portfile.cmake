@@ -1,46 +1,47 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO libimobiledevice-win32/libplist
-    REF bbba7cabb78aad180a7a982ada5e1f21ff0ba873 # v1.3.6
-    SHA512 4cd59ed87c647259d0da99a20a05e01aa880f01f6b5cecd29e4247029a3d29f0f68b4552571eb3fd3c5549b4cb357801ffe43338b8ff34d44d6be5393d2e6b9d
-    HEAD_REF msvc-master
+    REPO libimobiledevice/libplist
+    REF 2d8d7ef272db06783989f77ba1ed80aa0f4d2dfd # commits on 2023-06-15
+    SHA512 ec7c723ffb0492fe9901ee3854df16465e1b5b051cc8a716d89ff8fbf8f782134b7dda4d3a9656016fcf15c7cdf0eef7c80551b38a62317a11f056500e5c9ef4
+    HEAD_REF master
     PATCHES
-        dllexport.patch
-        fix_static_build.patch
+        001_fix_static_build.patch
+        002_fix_api.patch
+        003_fix_msvc.patch
+        004_fix_tools_msvc.patch
 )
 
-configure_file("${CURRENT_PORT_DIR}/CMakeLists.txt" "${SOURCE_PATH}/CMakeLists.txt" COPYONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools BUILD_TOOLS
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT})
 vcpkg_fixup_pkgconfig()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-set(pcfile "libplist-2.0.pc")
-set(pcfiletarget "libplist.pc")
-set(basepath "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/")
-if(EXISTS "${basepath}${pcfile}")
-    file(CREATE_LINK "${basepath}${pcfile}" "${basepath}${pcfiletarget}" COPY_ON_ERROR)
-endif()
-set(basepath "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/")
-if(EXISTS "${basepath}${pcfile}")
-    file(CREATE_LINK "${basepath}${pcfile}" "${basepath}${pcfiletarget}" COPY_ON_ERROR)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES plistutil AUTO_CLEAN)
 endif()
 
-set(pcfile "libplist++-2.0.pc")
-set(pcfiletarget "libplist++.pc")
-set(basepath "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/")
-if(EXISTS "${basepath}${pcfile}")
-    file(CREATE_LINK "${basepath}${pcfile}" "${basepath}${pcfiletarget}" COPY_ON_ERROR)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/plist/plist.h"
+        "#ifdef LIBPLIST_STATIC" "#if 1"
+    )
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/plist/plist.h"
+        "#ifdef LIBPLIST_STATIC" "#if 0"
+    )
 endif()
-set(basepath "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/")
-if(EXISTS "${basepath}${pcfile}")
-    file(CREATE_LINK "${basepath}${pcfile}" "${basepath}${pcfiletarget}" COPY_ON_ERROR)
-endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

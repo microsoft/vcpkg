@@ -1,10 +1,10 @@
 {
   "name": "seasocks",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "description": "Simple, small, C++ embeddable webserver with WebSockets support",
   "homepage": "https://github.com/mattgodbolt/seasocks",
   "license": "BSD-2-Clause",
-  "supports": "!windows & !osx & !android",
+  "supports": "!osx & !android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
