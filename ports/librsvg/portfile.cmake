@@ -26,7 +26,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_IS_MINGW)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(GLOB_RECURSE pc_files "${CURRENT_PACKAGES_DIR}/*.pc")
     foreach(pc_file IN LISTS pc_files)
         vcpkg_replace_string("${pc_file}" " -lm" "")

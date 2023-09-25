@@ -12,7 +12,7 @@ index 12fd424..11371df 100644
 +  #pkg_check_modules(POPPLER poppler-glib IMPORTED_TARGET REQUIRED)
 +  set(POPPLER_LIBRARIES PkgConfig::POPPLER)
 +  set(POPPLER_FOUND 0)
-+  pkg_check_modules(RSVG librsvg IMPORTED_TARGET REQUIRED)
++  pkg_check_modules(RSVG librsvg-2.0 IMPORTED_TARGET REQUIRED)
 +  set(RSVG_LIBRARIES PkgConfig::RSVG)
 +  pkg_check_modules(WEBP libwebp IMPORTED_TARGET REQUIRED)
 +  set(WEBP_LIBRARIES PkgConfig::WEBP)
