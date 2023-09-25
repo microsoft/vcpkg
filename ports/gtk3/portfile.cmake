@@ -46,7 +46,8 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
-        -Dwayland_backend=false
+        -Dx11_backend=true
+        -Dwayland_backend=true
         -Ddemos=false
         -Dexamples=false
         -Dtests=false
