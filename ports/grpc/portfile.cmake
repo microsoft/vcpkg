@@ -2,6 +2,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
+if(TARGET_TRIPLET STREQUAL "x86-windows")
+    message(status "If you need grpc++_reflection.lib and grpcpp_channelz.lib, please install codegen feature.")
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc

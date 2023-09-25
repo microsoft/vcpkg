@@ -5,7 +5,6 @@
   "description": "Caffe2 is a lightweight, modular, and scalable deep learning framework.",
   "homepage": "https://github.com/caffe2/caffe2",
   "license": "Apache-2.0",
-  "supports": "(windows & !static) | osx | linux",
   "dependencies": [
     {
       "name": "libtorch",
