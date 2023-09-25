@@ -1965,7 +1965,7 @@
       "port-version": 2
     },
     "ctre": {
-      "baseline": "3.7.2",
+      "baseline": "3.8",
       "port-version": 0
     },
     "cub": {
