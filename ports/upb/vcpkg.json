@@ -1,6 +1,7 @@
 {
   "name": "upb",
   "version-date": "2022-06-21",
+  "port-version": 1,
   "description": "μpb (often written 'upb') is a small protobuf implementation written in C.",
   "homepage": "https://github.com/protocolbuffers/upb/",
   "license": "BSD-2-Clause",
@@ -24,6 +25,7 @@
   "features": {
     "codegen": {
       "description": "Build code generator machinery",
+      "supports": "!uwp",
       "dependencies": [
         "abseil",
         "protobuf"
