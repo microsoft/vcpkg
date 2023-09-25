@@ -1,0 +1,37 @@
+diff --git a/src/libusbmuxd.c b/src/libusbmuxd.c
+index 95e322f..c5c8f09 100644
+--- a/src/libusbmuxd.c
++++ b/src/libusbmuxd.c
+@@ -49,7 +49,9 @@
+ #define ECONNREFUSED 107
+ #endif
+ 
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <signal.h>
+ 
+ #ifdef WIN32
+@@ -91,6 +93,10 @@ static char* stpncpy(char *dst, const char *src, size_t len)
+ }
+ #endif
+ 
++#ifdef _MSC_VER
++#define strcasecmp _stricmp
++#endif
++
+ #include <plist/plist.h>
+ #define PLIST_CLIENT_VERSION_STRING PACKAGE_STRING
+ #define PLIST_LIBUSBMUX_VERSION 3
+@@ -1590,7 +1596,11 @@ USBMUXD_API int usbmuxd_send(int sfd, const char *data, uint32_t len, uint32_t *
+ 	num_sent = socket_send(sfd, (void*)data, len);
+ 	if (num_sent < 0) {
+ 		*sent_bytes = 0;
++#ifdef WIN32
++		num_sent = WSAGetLastError();
++#else
+ 		num_sent = errno;
++#endif
+ 		LIBUSBMUXD_DEBUG(1, "%s: Error %d when sending: %s\n", __func__, num_sent, strerror(num_sent));
+ 		return -num_sent;
+ 	}

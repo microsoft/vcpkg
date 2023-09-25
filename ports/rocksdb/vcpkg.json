@@ -1,6 +1,6 @@
 {
   "name": "rocksdb",
-  "version": "8.3.2",
+  "version": "8.5.3",
   "description": "A library that provides an embeddable, persistent key-value store for fast storage",
   "homepage": "https://github.com/facebook/rocksdb",
   "license": "GPL-2.0-only OR Apache-2.0",
@@ -16,7 +16,6 @@
     }
   ],
   "default-features": [
-    "liburing",
     "zlib"
   ],
   "features": {
@@ -28,6 +27,7 @@
     },
     "liburing": {
       "description": "build with liburing",
+      "supports": "linux",
       "dependencies": [
         {
           "name": "liburing",

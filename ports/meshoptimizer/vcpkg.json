@@ -1,6 +1,6 @@
 {
   "name": "meshoptimizer",
-  "version": "0.18",
+  "version": "0.19",
   "port-version": 1,
   "description": "Mesh optimization library that makes meshes smaller and faster to render",
   "homepage": "https://github.com/zeux/meshoptimizer",
@@ -17,7 +17,8 @@
   ],
   "features": {
     "gltfpack": {
-      "description": "Build gltfpack tool"
+      "description": "Build gltfpack tool",
+      "supports": "!uwp"
     }
   }
 }
