@@ -537,7 +537,6 @@ kfr:x64-uwp=fail
 lastools:arm-neon-android=fail
 lastools:arm64-android=fail
 lastools:x64-android=fail
-launch-darkly-server:arm-neon-android=fail
 lcm:x64-windows-static=fail
 lcm:x64-windows-static-md=fail
 lcm:arm-neon-android=fail
