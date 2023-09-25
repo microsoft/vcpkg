@@ -10,7 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmake-usage.patch # Remove this patch in the next update
-        fix-cmake-install.patch
+        fix-cmake-install.patch # Remove this patch in the next update
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
