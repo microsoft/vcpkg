@@ -1,0 +1,29 @@
+{
+  "name": "libdecor",
+  "version": "0.2.0",
+  "description": "Library to help Wayland clients draw window decorations.",
+  "homepage": "https://gitlab.freedesktop.org/libdecor/libdecor",
+  "license": "MIT",
+  "supports": "linux",
+  "dependencies": [
+    "dbus",
+    "harfbuzz",
+    "pango",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    "wayland-protocols"
+  ],
+  "default-features": [
+    "gtk"
+  ],
+  "features": {
+    "gtk": {
+      "description": "Gtk decorations plugin",
+      "dependencies": [
+        "gtk3"
+      ]
+    }
+  }
+}

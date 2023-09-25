@@ -4160,6 +4160,10 @@
       "baseline": "1.0.11",
       "port-version": 2
     },
+    "libdecor": {
+      "baseline": "0.2.0",
+      "port-version": 0
+    },
     "libdeflate": {
       "baseline": "1.19",
       "port-version": 0
