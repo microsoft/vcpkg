@@ -5,13 +5,14 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphviz/graphviz
     REF "${VERSION}"
-    SHA512 5872db8aefb9bebf6fea91dbe96759c42fa82dbe811238c7d6de8db5a0c6af77749083af60fc21f8e42c4fc159a2cbfefcc304967edda3d2832ef396c457530a
+    SHA512 1edcf6aa232d38d1861a344c1a4a88aac51fd4656d667783ca1608ac694025199595a72a293c4eee2f7c7326ce54f22b787a5b7f4c44946f2de6096bd8f0e79d
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
         no-absolute-paths.patch
         select-plugins.patch
         static-linkage.patch
+        cpp-error.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -63,6 +64,7 @@ vcpkg_cmake_configure(
         -DCMAKE_REQUIRE_FIND_PACKAGE_GD=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_LTDL=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_PANGOCAIRO=ON
+        -Dwith_gvedit=OFF
         ${OPTIONS}
     MAYBE_UNUSED_VARIABLES
         install_win_dependency_dlls
@@ -84,7 +86,41 @@ foreach(script_or_link IN ITEMS "dot2gxl${VCPKG_TARGET_EXECUTABLE_SUFFIX}" gvmap
     endif()
 endforeach()
 vcpkg_copy_tools(
-    TOOL_NAMES acyclic bcomps ccomps circo diffimg dijkstra dot edgepaint fdp gc gml2gv graphml2gv gv2gml gvcolor gvgen gvmap gvpack gvpr gxl2gv mm2gv neato nop osage patchwork sccmap sfdp tred twopi unflatten
+    TOOL_NAMES
+        acyclic
+        bcomps
+        ccomps
+        circo
+        diffimg
+        dijkstra
+        dot
+        edgepaint
+        fdp
+        gc
+        gml2gv
+        graphml2gv
+        gv2gml
+        gvcolor
+        gvgen
+        gvmap
+        gvpack
+        gvpr
+        gxl2gv
+        mm2gv
+        neato
+        nop
+        osage
+        patchwork
+        sccmap
+        sfdp
+        tred
+        twopi
+        unflatten
+        cluster
+        dot_builtins
+        gv2gxl
+        gxl2dot
+        prune
     AUTO_CLEAN
 )
 

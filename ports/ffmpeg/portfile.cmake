@@ -21,6 +21,7 @@ vcpkg_from_github(
         0015-Fix-xml2-detection.patch
         0020-fix-aarch64-libswscale.patch
         0022-fix-iconv.patch
+        0024-fix-gcc13-binutils.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -343,6 +344,10 @@ if("lzma" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-lzma")
 else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
+endif()
+
+if("libpng" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-decoder=png --enable-encoder=png")
 endif()
 
 if("mp3lame" IN_LIST FEATURES)

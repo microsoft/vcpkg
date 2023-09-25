@@ -101,6 +101,7 @@ vcpkg_from_github(
         008-build-static-llvm.patch
         009-include-priority-vendored-llvm.patch
         010-workaround-gcc-bit.patch
+        011-fix-python.patch
 )
 
 string(COMPARE NOTEQUAL "${VCPKG_CRT_LINKAGE}" "static" _MVSC_CRT_LINKAGE_OPTION)

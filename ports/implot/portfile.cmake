@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO epezent/implot
     REF v${VERSION}
-    SHA512 75d5f7e429aaf6eaa3a7eaedf5bcb54ac78fd04121baa8d0fff76bf9a87a52bd27f59bc07df7f81807619f75f570e1f5be70f35a34376f7e7b1f0bf0722b899a
+    SHA512 117cb08122d900e7db857897bfec4c9ac3300a1d429c8f0303415bc693840baa9bbbb91ca3f13853d8efd3a6ebf538b7114401d4fbfe0d067256e58cbdbd4919
     HEAD_REF master
 )
 

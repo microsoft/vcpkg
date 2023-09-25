@@ -9,7 +9,6 @@ vcpkg_from_github(
     PATCHES
         0001-fix_find_package.patch
         0002-fix-imgui-dependency.patch
-        004-fix-find-sfml.patch
 )
 
 vcpkg_cmake_configure(
@@ -20,7 +19,14 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME ImGui-SFML CONFIG_PATH lib/cmake/ImGui-SFML)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ImGui-SFML)
+file(READ "${CURRENT_PACKAGES_DIR}/share/imgui-sfml/ImGui-SFMLConfig.cmake" cmake_config)
+string(PREPEND cmake_config [[
+include(CMakeFindDependencyMacro)
+find_dependency(imgui CONFIG)
+find_dependency(SFML COMPONENTS graphics system window)
+]])
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/imgui-sfml/ImGui-SFMLConfig.cmake" "${cmake_config}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

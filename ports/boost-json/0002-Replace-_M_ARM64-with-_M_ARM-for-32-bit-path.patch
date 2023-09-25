@@ -1,0 +1,25 @@
+From 0c1b4692f9b1c43830c12244bf402c7a2bce23d9 Mon Sep 17 00:00:00 2001
+From: Matt Borland <matt@mattborland.com>
+Date: Wed, 16 Aug 2023 08:06:45 -0400
+Subject: [PATCH 2/2] Replace _M_ARM64 with _M_ARM for 32 bit path
+
+---
+ include/boost/json/detail/charconv/detail/emulated128.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/boost/json/detail/charconv/detail/emulated128.hpp b/include/boost/json/detail/charconv/detail/emulated128.hpp
+index 6eadbc7..7840d51 100644
+--- a/include/boost/json/detail/charconv/detail/emulated128.hpp
++++ b/include/boost/json/detail/charconv/detail/emulated128.hpp
+@@ -58,7 +58,7 @@ struct uint128
+ 
+ static inline std::uint64_t umul64(std::uint32_t x, std::uint32_t y) noexcept
+ {
+-    #if defined(BOOST_JSON_HAS_MSVC_32BIT_INTRINSICS) && !defined(_M_ARM64)
++    #if defined(BOOST_JSON_HAS_MSVC_32BIT_INTRINSICS) && !defined(_M_ARM)
+ 
+     return __emulu(x, y);
+ 
+-- 
+2.38.1.windows.1
+

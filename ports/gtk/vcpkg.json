@@ -1,6 +1,6 @@
 {
   "name": "gtk",
-  "version": "4.10.4",
+  "version": "4.10.5",
   "port-version": 1,
   "description": "Portable library for creating graphical user interfaces.",
   "homepage": "https://www.gtk.org/",
@@ -73,14 +73,6 @@
           "features": [
             "introspection"
           ]
-        },
-        {
-          "name": "gobject-introspection",
-          "host": true
-        },
-        {
-          "name": "gobject-introspection",
-          "platform": "windows & x86"
         },
         {
           "name": "graphene",
