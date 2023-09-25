@@ -3878,7 +3878,7 @@
     },
     "launch-darkly-server": {
       "baseline": "2.8.6",
-      "port-version": 0
+      "port-version": 1
     },
     "lazy-importer": {
       "baseline": "2023-08-03",
