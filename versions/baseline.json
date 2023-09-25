@@ -5885,7 +5885,7 @@
       "port-version": 1
     },
     "numcpp": {
-      "baseline": "2.10.1",
+      "baseline": "2.11.0",
       "port-version": 0
     },
     "nuspell": {
