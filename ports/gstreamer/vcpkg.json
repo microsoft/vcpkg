@@ -1,7 +1,6 @@
 {
   "name": "gstreamer",
-  "version": "1.20.5",
-  "port-version": 11,
+  "version": "1.22.5",
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",

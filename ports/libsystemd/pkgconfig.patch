@@ -1,0 +1,11 @@
+diff --git a/src/libsystemd/libsystemd.pc.in b/src/libsystemd/libsystemd.pc.in
+index da6e4e667e..3786238ccb 100644
+--- a/src/libsystemd/libsystemd.pc.in
++++ b/src/libsystemd/libsystemd.pc.in
+@@ -17,4 +17,6 @@ Description: systemd Library
+ URL: {{PROJECT_URL}}
+ Version: {{PROJECT_VERSION}}
+ Libs: -L${libdir} -lsystemd
++Libs.private: -lrt
++Requires.private: libcap libcrypt liblz4 liblzma libzstd mount
+ Cflags: -I${includedir}

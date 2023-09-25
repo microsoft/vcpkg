@@ -23,17 +23,3 @@ index 45ff6f2..d9ff1e6 100644
  struct irecv_client_private {
  	int debug;
  	int usb_config;
-diff --git a/tools/irecovery.c b/tools/irecovery.c
-index 34e80bf..deffe89 100644
---- a/tools/irecovery.c
-+++ b/tools/irecovery.c
-@@ -27,7 +27,9 @@
- 
- #include <stdio.h>
- #include <stdlib.h>
-+#ifndef _MSC_VER
- #include <unistd.h>
-+#endif
- #include <string.h>
- #include <getopt.h>
- #include <inttypes.h>
