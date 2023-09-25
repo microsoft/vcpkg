@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 6ab2de83b7fc44de40e58a47c28a9507bf7c50fa9b08925b5a6d48958868a86e6790aff684d29ceb50ad18905e3832840719e1b7bfec3b8a0c00b15bb0f70f38
     HEAD_REF master
+    PATCHES
+        fix-android-fileapi.patch
 )
 
 vcpkg_configure_meson(
