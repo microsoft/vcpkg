@@ -23,7 +23,7 @@ if (-not (Test-Path $ExtractedSources)) {
 Write-Host "Using sources directory: $ExtractedSources"
 
 
-$subfolders = Get-Item $ExtractedSources\aws-cpp-sdk-*
+$subfolders = Get-ChildItem -Path "$ExtractedSources\generated\src\aws-cpp-sdk-*", "$ExtractedSources\src\aws-cpp-sdk*" | Sort-Object -Property Name
 
 $manifest = Get-Content $ManifestIn | ConvertFrom-Json
 $manifest | Add-Member `
@@ -47,6 +47,12 @@ function GetDescription($dir, $modulename)
     else { "C++ SDK for the AWS $modulename service" }
 }
 
+$featureDependencies = @{}
+Select-String -Path "$ExtractedSources\cmake\sdksCommon.cmake" -Pattern "list\(APPEND SDK_DEPENDENCY_LIST `"([\w-]+):([\w-,]+)`"\)" -AllMatches `
+| ForEach-Object { $_.Matches } `
+| ForEach-Object { $featureDependencies[$_.Groups[1].Value] = @($_.Groups[2].Value -split "," `
+| Where-Object { $_ -ne "core" }) }
+
 foreach ($subfolder in $subfolders)
 {
     $modulename = $subfolder.name -replace "^aws-cpp-sdk-",""
@@ -56,7 +62,13 @@ foreach ($subfolder in $subfolders)
 
     $lowermodulename = $modulename.ToLower()
 
-    $manifest.features.Add("$lowermodulename", @{ description=(GetDescription $subfolder $modulename) })
+    $featureObj = @{ description = (GetDescription $subfolder $modulename) }
+
+    if ($featureDependencies.ContainsKey($lowermodulename)) {
+        $featureObj.dependencies = ,@{ name = "aws-sdk-cpp"; "default-features" = $false; "features" = $featureDependencies[$lowermodulename] }
+    }
+
+    $manifest.features.Add("$lowermodulename", $featureObj)
 
     $cmakefragmenttext += @(
         "if(`"$lowermodulename`" IN_LIST FEATURES)",
@@ -65,7 +77,7 @@ foreach ($subfolder in $subfolders)
     )
 }
 
-[IO.File]::WriteAllText($ManifestOut, (ConvertTo-Json -Depth 5 -InputObject $manifest))
+[IO.File]::WriteAllText($ManifestOut, (ConvertTo-Json -Depth 10 -InputObject $manifest))
 
 Write-Verbose ($cmakefragmenttext -join "`n")
 [IO.File]::WriteAllText($CMakeFragmentFile, ($cmakefragmenttext -join "`n") +"`n")

@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
-    REF llvmorg-${VERSION}
+    REF "llvmorg-${VERSION}"
     SHA512 99beff9ee6f8c26f16ea53f03ba6209a119099cbe361701b0d5f4df9d5cc5f2f0da7c994c899a4cec876da8428564dc7a8e798226a9ba8b5c18a3ef8b181d39e
     HEAD_REF main
     PATCHES
@@ -12,10 +12,12 @@ vcpkg_from_github(
         0003-Fix-tools-path.patch
         0004-Fix-compiler-rt-install-path.patch
         0005-Fix-tools-install-path.patch
-        0006-Fix-libffi.patch
         0007-Fix-install-bolt.patch
         0008-llvm_assert.patch
         0009-disable-libomp-aliases.patch
+        0010-remove-numpy.patch
+        0011-missing-include.patch
+        0012-create-destination-mlir-directory.patch
 )
 
 vcpkg_check_features(
@@ -147,6 +149,12 @@ if("lldb" IN_LIST FEATURES)
 endif()
 if("mlir" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "mlir")
+    if("enable-mlir-python-bindings" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS
+            -DMLIR_ENABLE_BINDINGS_PYTHON=ON
+            "-Dpybind11_DIR=${CURRENT_INSTALLED_DIR}/share/pybind11"
+        )
+    endif()
 endif()
 if("openmp" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "openmp")

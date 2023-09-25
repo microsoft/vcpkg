@@ -1,12 +1,11 @@
 {
   "name": "aws-c-event-stream",
-  "version": "0.2.18",
+  "version": "0.3.2",
   "description": "C99 implementation of the vnd.amazon.event-stream content-type.",
   "homepage": "https://github.com/awslabs/aws-c-event-stream",
   "license": "Apache-2.0",
   "supports": "!(windows & arm) & !uwp",
   "dependencies": [
-    "aws-c-cal",
     "aws-c-common",
     "aws-c-io",
     "aws-checksums",

@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
-    REF client_release/7.22/7.22.1
-    SHA512 8b3efc68fe8df8f95a674d9deddbe355da2070a960b1768ee7f9c2afdd8a373e97297715dec5d7daf131d4b5c478afbc4476e152ec516080620f66e1a1f785af
+    REF client_release/7.24/7.24.1
+    SHA512 7dad36900c13b69a89b5a173fc283130bc4cf15c781ed31ed72ce0b6ba0db4895a12314d0f302c7a91c2762333b7c162f20f32e67ed5e2e7a4099e1f2238c255
     HEAD_REF master
-    PATCHES
-        fix-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -32,8 +30,15 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
     endif()
 endif()
 
+set(build_options "")
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND build_options "-DHAVE_STRCASECMP=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        ${build_options}
 )
 
 vcpkg_cmake_install()

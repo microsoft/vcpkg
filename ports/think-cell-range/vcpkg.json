@@ -1,9 +1,9 @@
 {
   "name": "think-cell-range",
-  "version-string": "498839d",
-  "port-version": 2,
+  "version": "2023.1",
   "description": "think-cell's range library",
-  "homepage": "https://github.com/think-cell/range",
+  "homepage": "https://github.com/think-cell/think-cell-library",
+  "license": "BSL-1.0",
   "dependencies": [
     "boost"
   ]

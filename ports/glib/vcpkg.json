@@ -1,10 +1,10 @@
 {
   "name": "glib",
-  "version": "2.76.2",
+  "version": "2.76.5",
   "description": "Portable, general-purpose utility library.",
   "homepage": "https://developer.gnome.org/glib/",
   "license": "LGPL-2.1-or-later",
-  "supports": "!uwp",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     "dirent",
     "gettext",
