@@ -66,9 +66,22 @@ if(ASSIMP_DBG)
     get_filename_component(ASSIMP_NAME_DBG "${ASSIMP_DBG}" NAME_WLE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/assimp.pc" "-lassimp" "-l${ASSIMP_NAME_DBG}")
 endif()
-vcpkg_fixup_pkgconfig() # Probably requires more fixing for static builds. See qt5-3d and the config changes below
+
+if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+    set(assimp_PC_REQUIRES "draco polyclipping pugixml minizip")
+    set(assimp_LIBS_REQUIRES "-lpoly2tri")
+
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/assimp.pc" "Libs:" "Requires.private: ${assimp_PC_REQUIRES}\nLibs:")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/assimp.pc" "Libs.private:" "Libs.private: ${assimp_LIBS_REQUIRES}")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/assimp.pc" "Libs:" "Requires.private: ${assimp_PC_REQUIRES}\nLibs:")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/assimp.pc" "Libs.private:" "Libs.private: ${assimp_LIBS_REQUIRES}")
+    endif()
+endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
