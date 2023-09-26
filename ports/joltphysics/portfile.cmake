@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jrouwe/JoltPhysics
@@ -28,6 +26,8 @@ vcpkg_cmake_configure(
         -DINTERPROCEDURAL_OPTIMIZATION=OFF
         -DUSE_STATIC_MSVC_RUNTIME_LIBRARY=${USE_STATIC_CRT}
         -DENABLE_ALL_WARNINGS=OFF
+    OPTIONS_RELEASE
+        -DGENERATE_DEBUG_SYMBOLS=OFF
 )
 
 vcpkg_cmake_install()
