@@ -2005,7 +2005,7 @@
       "port-version": 0
     },
     "cyclonedds": {
-      "baseline": "0.10.3",
+      "baseline": "0.10.4",
       "port-version": 0
     },
     "cyclonedds-cxx": {
