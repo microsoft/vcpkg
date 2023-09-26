@@ -3038,7 +3038,7 @@
     },
     "graphviz": {
       "baseline": "9.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "greatest": {
       "baseline": "1.5.0",
@@ -4038,7 +4038,7 @@
     },
     "libcroco": {
       "baseline": "0.6.13",
-      "port-version": 5
+      "port-version": 6
     },
     "libcsv": {
       "baseline": "3.0.3",
@@ -4598,7 +4598,7 @@
     },
     "librsvg": {
       "baseline": "2.40.20",
-      "port-version": 9
+      "port-version": 10
     },
     "librsync": {
       "baseline": "2.3.2",
