@@ -800,10 +800,6 @@
       "baseline": "1.83.0",
       "port-version": 0
     },
-    "boost-di": {
-      "baseline": "1.2.0",
-      "port-version": 0
-    },
     "boost-dll": {
       "baseline": "1.83.0",
       "port-version": 0
@@ -1492,10 +1488,6 @@
       "baseline": "3.2.19",
       "port-version": 7
     },
-    "cgl": {
-      "baseline": "0.60.3",
-      "port-version": 0
-    },
     "cglm": {
       "baseline": "0.8.8",
       "port-version": 0
@@ -1622,10 +1614,6 @@
     },
     "clockutils": {
       "baseline": "1.1.1",
-      "port-version": 1
-    },
-    "clp": {
-      "baseline": "1.17.6",
       "port-version": 1
     },
     "clrng": {
@@ -2662,10 +2650,6 @@
     },
     "foonathan-memory": {
       "baseline": "0.7.3",
-      "port-version": 0
-    },
-    "forest": {
-      "baseline": "12.1.0",
       "port-version": 0
     },
     "forge": {
@@ -3806,11 +3790,11 @@
     },
     "kinectsdk1": {
       "baseline": "1.8",
-      "port-version": 7
+      "port-version": 8
     },
     "kinectsdk2": {
       "baseline": "2.0",
-      "port-version": 6
+      "port-version": 7
     },
     "kissfft": {
       "baseline": "131.1.0",
@@ -5322,7 +5306,7 @@
     },
     "matroska": {
       "baseline": "1.7.1",
-      "port-version": 1
+      "port-version": 2
     },
     "mbedtls": {
       "baseline": "2.28.1",
@@ -6060,10 +6044,6 @@
       "baseline": "2.2.1",
       "port-version": 1
     },
-    "opencolorio-tools": {
-      "baseline": "1.1.1",
-      "port-version": 0
-    },
     "opencsg": {
       "baseline": "1.4.2",
       "port-version": 4
@@ -6202,7 +6182,7 @@
     },
     "openvino": {
       "baseline": "2023.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openvpn3": {
       "baseline": "3.7.0",
@@ -6254,10 +6234,6 @@
     },
     "osgearth": {
       "baseline": "3.4",
-      "port-version": 1
-    },
-    "osi": {
-      "baseline": "0.108.6",
       "port-version": 1
     },
     "osmanip": {
@@ -6908,10 +6884,6 @@
       "baseline": "6.5.2",
       "port-version": 0
     },
-    "qt6betablock": {
-      "baseline": "6.2.0-beta",
-      "port-version": 0
-    },
     "qtactiveqt": {
       "baseline": "6.5.2",
       "port-version": 0
@@ -7070,7 +7042,7 @@
     },
     "qtvirtualkeyboard": {
       "baseline": "6.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtwayland": {
       "baseline": "6.5.2",
@@ -7923,10 +7895,6 @@
     "spirv-tools": {
       "baseline": "2022.4",
       "port-version": 1
-    },
-    "spix": {
-      "baseline": "0.5",
-      "port-version": 0
     },
     "spout2": {
       "baseline": "2.007.010",
