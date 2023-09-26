@@ -3,33 +3,31 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
 endif()
 
 vcpkg_find_acquire_program(PERL)
-get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-vcpkg_add_to_path(${PERL_EXE_PATH})
+get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
+vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-vcpkg_add_to_path(${NASM_EXE_PATH})
+get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
+vcpkg_add_to_path("${NASM_EXE_PATH}")
 
 vcpkg_find_acquire_program(GO)
-get_filename_component(GO_EXE_PATH ${GO} DIRECTORY)
-vcpkg_add_to_path(${GO_EXE_PATH})
+get_filename_component(GO_EXE_PATH "${GO}" DIRECTORY)
+vcpkg_add_to_path("${GO_EXE_PATH}")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/boringssl
-  REF bcecc7d834fc44ad257b2f23f88e1cf597ab2736
-  SHA512 29850de6927b76917044fe99922fe0ec6a6288effa574047e391d83cc9d4f8138d0f575f77c9f6c5e0f69a6a9cb8a795a612f9df622acf308ac1b475954b0662
+  REF cfcb954901e264edb9915e501de64a81732c5edd
+  SHA512 6fc7fff24c85ed580fb362f788b216ef04ca16976656c68c75d3fd72c84e28ed39a3ab8fcb064b7c7061f93a4d37d5426e36d259e1714fa62d90b99659a3ddc2
   HEAD_REF master
   PATCHES
-    0001-vcpkg.patch
+    0001-static-gtest.patch
     0002-remove-WX-Werror.patch
     0003-fix-shared-symbol-visibility.patch
 )
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
-  OPTIONS
-    ${FEATURE_OPTIONS}
   OPTIONS_DEBUG
     # the FindOpenSSL.cmake script differentiates debug and release binaries using this suffix.
     -DCMAKE_DEBUG_POSTFIX=d
