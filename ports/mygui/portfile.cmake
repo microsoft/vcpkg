@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         fix-generation.patch
         Install-tools.patch
+        opengl.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
