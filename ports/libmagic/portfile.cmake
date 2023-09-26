@@ -42,7 +42,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(EXTRA_ARGS "ADD_BIN_TO_PATH")
 endif()
 
-vcpkg_install_make(${EXTRA_ARGS})
+vcpkg_install_make(${EXTRA_ARGS} SUBPATH src)
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
 vcpkg_fixup_pkgconfig()
