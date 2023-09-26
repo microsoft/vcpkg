@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4ea1fb066..351fe6c3f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -351,8 +351,10 @@ endif(HAS_QT5)
+ # --------------------------------------------------------
+ # ecal rec addon sdk
+ # --------------------------------------------------------
++if (BUILD_APPS)
+ add_subdirectory(app/rec/rec_addon_core)
+ add_subdirectory(app/rec/rec_addon_dummy)
++endif()
+ 
+ # --------------------------------------------------------
+ # ecal time

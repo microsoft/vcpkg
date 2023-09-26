@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "openvino",
   "version": "2023.1.0",
-  "port-version": 1,
+  "port-version": 2,
   "maintainers": "OpenVINO Developers <openvino@intel.com>",
   "summary": "This is a port for Open Visual Inference And Optimization toolkit for AI inference",
   "description": [
@@ -95,12 +95,12 @@
         },
         {
           "name": "protobuf",
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         },
         {
           "name": "protobuf",
           "host": true,
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         }
       ]
     },
@@ -109,12 +109,12 @@
       "dependencies": [
         {
           "name": "protobuf",
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         },
         {
           "name": "protobuf",
           "host": true,
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         }
       ]
     },
@@ -126,12 +126,12 @@
       "dependencies": [
         {
           "name": "protobuf",
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         },
         {
           "name": "protobuf",
           "host": true,
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         },
         "snappy"
       ]
