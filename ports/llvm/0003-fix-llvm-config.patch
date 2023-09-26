@@ -14,4 +14,3 @@ index e86eb2b44b10..04e00944f891 100644
  
    // Check to see if we are inside a development tree by comparing to possible
    // locations (prefix style or CMake style).
-   

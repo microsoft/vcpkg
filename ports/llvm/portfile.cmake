@@ -13,6 +13,8 @@ vcpkg_from_github(
         0004-disable-libomp-aliases.patch
         0005-remove-numpy.patch
         0006-create-destination-mlir-directory.patch
+        0007-fix-compiler-rt-warnings.patch
+        0008-fix-compiler-rt-build-error.patch
 )
 
 vcpkg_check_features(
@@ -281,7 +283,7 @@ vcpkg_cmake_configure(
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         -DPACKAGE_VERSION=${VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
-        "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
+        -DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}
         -DLLVM_INSTALL_PACKAGE_DIR:PATH=share/llvm
         -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"

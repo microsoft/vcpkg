@@ -30,4 +30,3 @@ index bb5822264514..340cef14df89 100644
  else()
  
    install(TARGETS omp ${export_to_llvmexports} ${LIBOMP_INSTALL_KIND} DESTINATION "${OPENMP_INSTALL_LIBDIR}")
-   
