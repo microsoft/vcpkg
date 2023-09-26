@@ -3,7 +3,7 @@ all:
 	@echo _LINK_ = $(_LINK_)
 	cd src && .\msvcbuild.bat $(MSVCBUILD_OPTIONS)
 
-install: src/luajit.exe
+install: src\luajit.exe
 	-mkdir "$(INSTALLDIR)"
 	-mkdir "$(INSTALLDIR)\bin"
 	copy src\luajit.exe "$(INSTALLDIR)\bin\"
