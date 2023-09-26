@@ -4580,6 +4580,10 @@
       "baseline": "0.12.5.5178",
       "port-version": 1
     },
+    "libremidi": {
+      "baseline": "4.1.0",
+      "port-version": 0
+    },
     "libressl": {
       "baseline": "3.6.2",
       "port-version": 1
