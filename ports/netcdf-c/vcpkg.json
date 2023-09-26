@@ -16,9 +16,12 @@
   ],
   "default-features": [
     "dap",
+    {
+      "name": "hdf5",
+      "platform": "!uwp & !(arm64 & windows)"
+    },
     "nczarr",
-    "netcdf-4",
-    "platform-default-features"
+    "netcdf-4"
   ],
   "features": {
     "dap": {
@@ -87,20 +90,6 @@
     },
     "netcdf-4": {
       "description": "Build with netCDF-4 support"
-    },
-    "platform-default-features": {
-      "$comment": "Break vcpkg CI cascade.",
-      "description": "Enable platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "netcdf-c",
-          "default-features": false,
-          "features": [
-            "hdf5"
-          ],
-          "platform": "!uwp & !(arm64 & windows)"
-        }
-      ]
     },
     "tools": {
       "description": "Build utilities"
