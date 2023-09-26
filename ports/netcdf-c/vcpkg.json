@@ -57,6 +57,10 @@
       "description": "Build with NCZarr cloud storage access support",
       "dependencies": [
         {
+          "name": "curl",
+          "default-features": false
+        },
+        {
           "name": "netcdf-c",
           "default-features": false,
           "features": [
