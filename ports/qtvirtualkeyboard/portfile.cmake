@@ -8,11 +8,13 @@ if("hunspell" IN_LIST FEATURES)
 else()
     list(APPEND FEATURE_OPTIONS -DINPUT_vkb_hunspell=no)
 endif()
-if("t9write" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DINPUT_vkb_handwriting=t9write)
-else()
-    list(APPEND FEATURE_OPTIONS -DINPUT_vkb_handwriting=no)
-endif()
+
+#
+# To use t9write, overlay this port with the following line changed to:
+# list(APPEND FEATURE_OPTIONS -DINPUT_vkb_handwriting=t9write)
+# and add t9write as a dependency.
+#
+list(APPEND FEATURE_OPTIONS -DINPUT_vkb_handwriting=no)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
