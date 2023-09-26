@@ -1,6 +1,7 @@
 {
   "name": "graphviz",
   "version-semver": "9.0.0",
+  "port-version": 1,
   "description": "Graph Visualization Tools",
   "homepage": "https://graphviz.org/",
   "license": "EPL-1.0",
@@ -24,6 +25,7 @@
       ]
     },
     "librsvg",
+    "libwebp",
     "pango",
     {
       "name": "pkgconf",
