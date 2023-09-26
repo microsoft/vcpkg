@@ -2525,12 +2525,12 @@
       "port-version": 7
     },
     "ffmpeg": {
-      "baseline": "5.1.2",
-      "port-version": 10
+      "baseline": "6.0",
+      "port-version": 0
     },
     "ffnvcodec": {
-      "baseline": "11.1.5.0",
-      "port-version": 1
+      "baseline": "11.1.5.2",
+      "port-version": 0
     },
     "fftw3": {
       "baseline": "3.3.10",
@@ -2689,7 +2689,7 @@
       "port-version": 7
     },
     "freerdp": {
-      "baseline": "2.10.0",
+      "baseline": "2.11.1",
       "port-version": 0
     },
     "freetds": {
@@ -5378,7 +5378,7 @@
     },
     "mfx-dispatch": {
       "baseline": "1.35.1",
-      "port-version": 1
+      "port-version": 2
     },
     "mgnlibs": {
       "baseline": "2019-09-29",
