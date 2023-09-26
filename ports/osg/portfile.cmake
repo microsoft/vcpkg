@@ -136,10 +136,12 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-osg)
 
 # Add debug folder prefix for plugin targets. vcpkg_cmake_config_fixup only handles this for targets in bin/ and lib/.
 set(osg_plugins_debug_targets "${CURRENT_PACKAGES_DIR}/share/unofficial-osg/osg-plugins-debug.cmake")
-file(READ "${osg_plugins_debug_targets}" contents)
-string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" contents "${contents}")
-string(REPLACE "\${_IMPORT_PREFIX}/plugins" "\${_IMPORT_PREFIX}/debug/plugins" contents "${contents}")
-file(WRITE "${osg_plugins_debug_targets}" "${contents}")
+if(EXISTS "${osg_plugins_debug_targets}")
+    file(READ "${osg_plugins_debug_targets}" contents)
+    string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" contents "${contents}")
+    string(REPLACE "\${_IMPORT_PREFIX}/plugins" "\${_IMPORT_PREFIX}/debug/plugins" contents "${contents}")
+    file(WRITE "${osg_plugins_debug_targets}" "${contents}")
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/osg/Config" "#ifndef OSG_LIBRARY_STATIC\n#define OSG_LIBRARY_STATIC 1\n#endif\n")
