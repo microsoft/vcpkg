@@ -7169,7 +7169,7 @@
       "port-version": 4
     },
     "raygui": {
-      "baseline": "3.6",
+      "baseline": "4.0",
       "port-version": 0
     },
     "raylib": {
