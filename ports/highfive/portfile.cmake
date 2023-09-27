@@ -28,14 +28,12 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DHIGHFIVE_EXAMPLES=OFF
         -DHIGHFIVE_BUILD_DOCS=OFF
+        -DCMAKE_CATCH_DISCOVER_TESTS_DISCOVERY_MODE=PRE_TEST
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_CATCH_DISCOVER_TESTS_DISCOVERY_MODE
 )
 
-set(add_bin "")
-if("tests" IN_LIST FEATURES)
-    set(add_bin ADD_BIN_TO_PATH) # Seems to run tests as part of the build?
-endif()
-
-vcpkg_cmake_install(${add_bin})
+vcpkg_cmake_install()
 
 if("tests" IN_LIST FEATURES)
     vcpkg_copy_tools(
