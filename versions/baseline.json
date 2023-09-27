@@ -641,7 +641,7 @@
       "port-version": 5
     },
     "blosc": {
-      "baseline": "1.21.3",
+      "baseline": "1.21.5",
       "port-version": 0
     },
     "blpapi": {
