@@ -2452,6 +2452,10 @@
       "baseline": "2.3.0",
       "port-version": 0
     },
+    "fameta-counter": {
+      "baseline": "2021-02-13",
+      "port-version": 0
+    },
     "fann": {
       "baseline": "2.2.0",
       "port-version": 3
