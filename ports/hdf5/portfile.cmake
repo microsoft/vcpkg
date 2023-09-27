@@ -11,9 +11,7 @@ vcpkg_from_github(
         hdf5_config.patch
         szip.patch
         pkgconfig-requires.patch
-        #Upstream: pkgconfig-link-order.patch
-        #Upstream: fix-parallel.patch
-        )
+)
 
 set(ALLOW_UNSUPPORTED OFF)
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
