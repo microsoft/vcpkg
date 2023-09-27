@@ -17,6 +17,11 @@ vcpkg_check_features(
         eigen3  HIGHFIVE_USE_EIGEN
 )
 
+if(HDF5_WITH_PARALLEL)
+    message(STATUS "${HDF5_WITH_PARALLEL} Enabling HIGHFIVE_PARALLEL_HDF5.")
+    list(APPEND FEATURE_OPTIONS "-DHIGHFIVE_PARALLEL_HDF5=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
