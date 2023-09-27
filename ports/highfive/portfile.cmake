@@ -42,10 +42,13 @@ if("tests" IN_LIST FEATURES)
     )
 endif()
 
-# Use PACKAGE_NAME to avoid folder HighFive and highfive are exist at same time
-vcpkg_cmake_config_fixup(PACKAGE_NAME HighFive CONFIG_PATH share/HighFive/CMake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/HighFive/CMake)
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/share/HighFive/HighFiveConfig.cmake")
+    # left over with mixed case
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/HighFive")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
