@@ -15,6 +15,7 @@ vcpkg_from_gitlab(
     PATCHES
         0001-build.patch
         cairo-cpp-linkage.patch
+        fix-modules-dir.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -42,6 +43,20 @@ else()
     list(APPEND OPTIONS -Dintrospection=false)
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(GTK_PLUGIN_DIR "/usr/lib/x86_64-linux-gnu/gtk-3.0")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(GTK_PLUGIN_DIR "/usr/lib/aarch64-linux-gnu/gtk-3.0")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set(GTK_PLUGIN_DIR "/usr/lib/arm-linux-gnueabihf/gtk-3.0")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "s390x")
+    set(GTK_PLUGIN_DIR "/usr/lib/s390x-linux-gnu/gtk-3.0")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ppc64le")
+    set(GTK_PLUGIN_DIR "/usr/lib/powerpc64le-linux-gnu/gtk-3.0")
+else()
+    set(GTK_PLUGIN_DIR "/usr/lib/gtk-3.0")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -52,6 +67,7 @@ vcpkg_configure_meson(
         -Dtests=false
         -Dgtk_doc=false
         -Dman=false
+        -Dgtk_plugin_dir=${GTK_PLUGIN_DIR}
         -Dxinerama=no               # Enable support for the X11 Xinerama extension
         -Dcloudproviders=false      # Enable the cloudproviders support
         -Dprofiler=false            # include tracing support for sysprof
