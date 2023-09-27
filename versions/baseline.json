@@ -3217,8 +3217,8 @@
       "port-version": 0
     },
     "highfive": {
-      "baseline": "2.6.2",
-      "port-version": 2
+      "baseline": "2.7.1",
+      "port-version": 0
     },
     "highs": {
       "baseline": "1.5.1",
