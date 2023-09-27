@@ -1,0 +1,7 @@
+{
+  "name": "make-vector",
+  "version-date": "2019-02-09",
+  "description": "C++ helper for making vectors.",
+  "homepage": "https://gist.github.com/tcbrindle/e55bea06d4e3ac1f603f9989d44dceb9",
+  "license": "BSL-1.0"
+}
