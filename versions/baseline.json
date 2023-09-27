@@ -93,8 +93,8 @@
       "port-version": 1
     },
     "alsa": {
-      "baseline": "1.2.8",
-      "port-version": 1
+      "baseline": "1.2.10",
+      "port-version": 0
     },
     "amd-adl-sdk": {
       "baseline": "17.1",
