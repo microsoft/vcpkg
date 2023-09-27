@@ -5638,7 +5638,7 @@
     },
     "murmurhash": {
       "baseline": "2016-01-09",
-      "port-version": 6
+      "port-version": 7
     },
     "mvfst": {
       "baseline": "2023-05-18",
