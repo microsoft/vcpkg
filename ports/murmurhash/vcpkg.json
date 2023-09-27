@@ -4,7 +4,7 @@
   "port-version": 6,
   "description": "MurmurHash a family of hash functions.",
   "homepage": "https://github.com/aappleby/smhasher",
-  "supports": "!uwp & !arm",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
