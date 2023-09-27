@@ -9,10 +9,6 @@ vcpkg_from_github(
         0002-disable-git-config.patch
 )
 
-if("ssl" IN_LIST FEATURES AND NOT "networking" IN_LIST FEATURES)
-    message(FATAL_ERROR "The ssl feature depends on the networking feature.")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         networking   LIBCORO_FEATURE_NETWORKING
