@@ -1,8 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ed753b9..7509855 100644
 --- a/CMakeLists.txt
-+++ a/CMakeLists.txt
-@@ -115,3 +115,4 @@
-+target_compile_features(caf_internal INTERFACE cxx_std_17)
- # TODO: simply set CXX_STANDARD when switching to CMake ≥ 3.9.6
--if(NOT CMAKE_CROSSCOMPILING)
-+if(0)
-   try_compile(caf_has_cxx_17
++++ b/CMakeLists.txt
+@@ -131,7 +131,7 @@ endif()
+ 
+ if(NOT DEFINED CAF_USE_STD_FORMAT)
+   set(CAF_USE_STD_FORMAT OFF CACHE BOOL "Enable std::format support" FORCE)
+-  if(NOT CMAKE_CROSSCOMPILING)
++  if(0)
+     set(snippet "#include <format>
+                  #include <iostream>
+                  int main() { std::cout << std::format(\"{}\", \"ok\"); }")
