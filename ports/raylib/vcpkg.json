@@ -1,11 +1,11 @@
 {
   "name": "raylib",
   "version-semver": "4.5.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A simple and easy-to-use library to enjoy videogames programming",
   "homepage": "https://github.com/raysan5/raylib",
   "license": "Zlib",
-  "supports": "!(arm | uwp)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "glfw3",
