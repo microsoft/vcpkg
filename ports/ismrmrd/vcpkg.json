@@ -6,8 +6,6 @@
   "license": "BSD-3-Clause",
   "supports": "!(x86 | arm | wasm32)",
   "dependencies": [
-    "boost",
-    "fftw3",
     "hdf5",
     "pugixml",
     {
