@@ -1,0 +1,16 @@
+diff --git a/src/civetweb.c b/src/civetweb.c
+index 9e321ed..c6e9894 100644
+--- a/src/civetweb.c
++++ b/src/civetweb.c
+@@ -652,7 +652,10 @@ typedef const char *SOCK_OPT_TYPE;
+ #define close(x) (_close(x))
+ #define dlsym(x, y) (GetProcAddress((HINSTANCE)(x), (y)))
+ #define RTLD_LAZY (0)
+-#define fseeko(x, y, z) ((_lseeki64(_fileno(x), (y), (z)) == -1) ? -1 : 0)
++#if defined(__ANDROID_API__) && __ANDROID_API__ < 24
++    // Cf. https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md#32_bit-and
++    #define fseeko(x, y, z) fseek
++#endif
+ #define fdopen(x, y) (_fdopen((x), (y)))
+ #define write(x, y, z) (_write((x), (y), (unsigned)z))
+ #define read(x, y, z) (_read((x), (y), (unsigned)z))
