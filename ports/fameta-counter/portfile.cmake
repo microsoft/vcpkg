@@ -6,6 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/include/fameta/counter.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/fameta-counter)
+file(COPY "${SOURCE_PATH}/include/fameta/counter.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/fameta-counter")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
