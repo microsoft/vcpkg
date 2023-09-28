@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     PATCHES
         0001-msvc-fix-ssize_t.patch
         0002-cmake-fixes.patch
+        0003-fix-usage.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} dynamic LIBGIG_BUILD_SHARED)
