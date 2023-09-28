@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ed753b9..7509855 100644
+index ed753b9..7b6c8d6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -131,7 +131,7 @@ endif()
@@ -11,3 +11,12 @@ index ed753b9..7509855 100644
      set(snippet "#include <format>
                   #include <iostream>
                   int main() { std::cout << std::format(\"{}\", \"ok\"); }")
+@@ -373,7 +373,7 @@ endfunction()
+ 
+ add_subdirectory(libcaf_core)
+ 
+-add_subdirectory(libcaf_test)
++#add_subdirectory(libcaf_test)
+ 
+ if(CAF_ENABLE_NET_MODULE)
+   add_subdirectory(libcaf_net)
