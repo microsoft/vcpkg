@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         000-fix-deps.patch
+        0002-fix-integral-type.patch
 )
 
 vcpkg_cmake_configure(
