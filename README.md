@@ -184,6 +184,12 @@ $ sudo yum install devtoolset-7
 $ scl enable devtoolset-7 bash
 ```
 
+- Arch Linux based distributions:
+
+```sh
+$ sudo pacman -Syu base-devel curl zip unzip tar cmake ninja
+```
+
 For any other distributions, make sure you're installing g++ 6 or above.
 If you want to add instructions for your specific distro,
 [please open a PR][contributing:submit-pr]!

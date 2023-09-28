@@ -4,6 +4,7 @@
 [English](README.md)
 [한국어](README_ko_KR.md)
 [Français](README_fr.md)
+[Tiếng Việt](README_vn.md)
 
 Vcpkg ayuda a manejar bibliotecas de C y C++ en Windows, Linux y MacOS.
 Esta herramienta y ecosistema se encuentran en constante evolución ¡Siempre apreciamos contribuciones nuevas!
@@ -195,6 +196,12 @@ $ sudo apt-get install build-essential tar curl zip unzip
 $ sudo yum install centos-release-scl
 $ sudo yum install devtoolset-7
 $ scl enable devtoolset-7 bash
+```
+
+- Distribuciones basadas en Arch Linux
+
+```sh
+$ sudo pacman -Syu base-devel curl zip unzip tar cmake ninja
 ```
 
 Para cualquier otra distribución, asegúrese que dispone de g++ 6 o superior.
