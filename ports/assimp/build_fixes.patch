@@ -515,18 +515,3 @@ index 3d5c72e..770cb9d 100644
  #endif
  
  namespace Assimp {
-diff --git a/include/assimp/types.h b/include/assimp/types.h
-index 72e3d5c..b9d770c 100644
---- a/include/assimp/types.h
-+++ b/include/assimp/types.h
-@@ -73,8 +73,8 @@
- 
- #ifdef __cplusplus
- 
--#ifdef ASSIMP_USE_HUNTER
--#   include <utf8.h>
-+#if 1
-+//#   include <utf8.h>
- #else
- #   include "../contrib/utf8cpp/source/utf8.h"
- #endif
