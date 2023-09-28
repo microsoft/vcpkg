@@ -1745,7 +1745,7 @@
       "port-version": 3
     },
     "continuable": {
-      "baseline": "4.2.2",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "convectionkernels": {
