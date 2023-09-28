@@ -39,6 +39,11 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/civetweb)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/civetweb.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/civetweb.pc")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/civetweb-cpp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/civetweb-cpp.pc")
+vcpkg_fixup_pkgconfig()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
