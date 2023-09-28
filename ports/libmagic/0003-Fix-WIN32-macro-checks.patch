@@ -1,29 +1,12 @@
-diff --git a/src/cdf.h b/src/cdf.h
-index 0505666..5de662a 100644
---- a/src/cdf.h
-+++ b/src/cdf.h
-@@ -35,7 +35,7 @@
- #ifndef _H_CDF_
- #define _H_CDF_
- 
--#ifdef WIN32
-+#ifdef _WIN32
- #include <winsock2.h>
- #define timespec timeval
- #define tv_nsec tv_usec
-diff --git a/src/compress.c b/src/compress.c
-index 9f65e4f..3b4c0e8 100644
---- a/src/compress.c
-+++ b/src/compress.c
-@@ -51,7 +51,7 @@ FILE_RCSID("@(#)$File: compress.c,v 1.129 2020/12/08 21:26:00 christos Exp $")
- #ifndef HAVE_SIG_T
- typedef void (*sig_t)(int);
- #endif /* HAVE_SIG_T */
--#if !defined(__MINGW32__) && !defined(WIN32) && !defined(__MINGW64__)
-+#if !defined(__MINGW32__) && !defined(_WIN32) && !defined(__MINGW64__)
- #include <sys/ioctl.h>
- #endif
- #ifdef HAVE_SYS_WAIT_H
+From 2fffeb273ea46c1e91536f3d660982de785c8d49 Mon Sep 17 00:00:00 2001
+From: Long Nguyen <nguyen.long.908132@gmail.com>
+Date: Sat, 8 May 2021 20:52:59 +0700
+Subject: [PATCH 03/14] Fix WIN32 macro checks
+
+---
+ src/file.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
 diff --git a/src/file.h b/src/file.h
 index 299ac0c..2c365a6 100644
 --- a/src/file.h
@@ -55,114 +38,6 @@ index 299ac0c..2c365a6 100644
  #define public  __attribute__ ((__visibility__("default")))
  #ifndef protected
  #define protected __attribute__ ((__visibility__("hidden")))
-diff --git a/src/fmtcheck.c b/src/fmtcheck.c
-index fcad436..ae9d631 100644
---- a/src/fmtcheck.c
-+++ b/src/fmtcheck.c
-@@ -91,7 +91,7 @@ get_next_format_from_precision(const char **pf)
- 		f++;
- 		longdouble = 1;
- 		break;
--#ifdef WIN32
-+#ifdef _WIN32
- 	case 'I':
- 		f++;
- 		if (!*f) RETURN(pf,f,FMTCHECK_UNKNOWN);
-diff --git a/src/fsmagic.c b/src/fsmagic.c
-index 5204f20..60736fd 100644
---- a/src/fsmagic.c
-+++ b/src/fsmagic.c
-@@ -56,7 +56,7 @@ FILE_RCSID("@(#)$File: fsmagic.c,v 1.81 2019/07/16 13:30:32 christos Exp $")
- /* Might be defined in sys/types.h.  */
- # define HAVE_MAJOR
- #endif
--#ifdef WIN32
-+#ifdef _WIN32
- # define WIN32_LEAN_AND_MEAN
- # include <windows.h>
- #endif
-@@ -129,7 +129,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
- #endif
- 	ret = stat(fn, sb);	/* don't merge into if; see "ret =" above */
- 
--#ifdef WIN32
-+#ifdef _WIN32
- 	{
- 		HANDLE hFile = CreateFile((LPCSTR)fn, 0, FILE_SHARE_DELETE |
- 		    FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0,
-diff --git a/src/magic.c b/src/magic.c
-index 81a0840..bf0c9ba 100644
---- a/src/magic.c
-+++ b/src/magic.c
-@@ -25,7 +25,7 @@
-  * SUCH DAMAGE.
-  */
- 
--#ifdef WIN32
-+#ifdef _WIN32
- #include <windows.h>
- #include <shlwapi.h>
- #endif
-@@ -81,7 +81,7 @@ private const char *file_or_fd(struct magic_set *, const char *, int);
- #define	STDIN_FILENO	0
- #endif
- 
--#ifdef WIN32
-+#ifdef _WIN32
- /* HINSTANCE of this shared library. Needed for get_default_magic() */
- static HINSTANCE _w32_dll_instance = NULL;
- 
-@@ -176,7 +176,7 @@ get_default_magic(void)
- 	static char *default_magic;
- 	char *home, *hmagicpath;
- 
--#ifndef WIN32
-+#ifndef _WIN32
- 	struct stat st;
- 
- 	if (default_magic) {
-@@ -430,7 +430,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
- 		goto done;
- 	}
- 
--#ifdef WIN32
-+#ifdef _WIN32
- 	/* Place stdin in binary mode, so EOF (Ctrl+Z) doesn't stop early. */
- 	if (fd == STDIN_FILENO)
- 		_setmode(STDIN_FILENO, O_BINARY);
-@@ -442,7 +442,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
- 			okstat = stat(inname, &sb) == 0;
- 			if (okstat && S_ISFIFO(sb.st_mode))
- 				ispipe = 1;
--#ifdef WIN32
-+#ifdef _WIN32
- 			/*
- 			 * Can't stat, can't open.  It may have been opened in
- 			 * fsmagic, so if the user doesn't have read permission,
-@@ -498,7 +498,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
- 	} else if (fd != -1) {
- 		/* Windows refuses to read from a big console buffer. */
- 		size_t howmany =
--#if defined(WIN32)
-+#if defined(_WIN32)
- 		    _isatty(fd) ? 8 * 1024 :
- #endif
- 		    ms->bytes_max;
-diff --git a/src/vasprintf.c b/src/vasprintf.c
-index 9b2cecb..3788fa5 100644
---- a/src/vasprintf.c
-+++ b/src/vasprintf.c
-@@ -632,11 +632,11 @@ int vasprintf(char **ptr, const char *format_string, va_list vargs)
- # ifdef __va_copy
-   __va_copy (s.vargs, vargs);
- # else
--#  ifdef WIN32
-+#  ifdef _WIN32
-   s.vargs = vargs;
- #  else
-   memcpy (&s.vargs, &vargs, sizeof (s.va_args));
--#  endif /* WIN32 */
-+#  endif /* _WIN32 */
- # endif /* __va_copy */
- #endif /* va_copy */
-   s.maxlen = (size_t)INT_MAX;
+-- 
+2.29.2.windows.2
+

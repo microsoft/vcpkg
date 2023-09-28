@@ -1,0 +1,177 @@
+diff --git a/src/compress.c b/src/compress.c
+index f89b956..4ab64f3 100644
+--- a/src/compress.c
++++ b/src/compress.c
+@@ -51,7 +51,7 @@ FILE_RCSID("@(#)$File: compress.c,v 1.129 2020/12/08 21:26:00 christos Exp $")
+ #ifndef HAVE_SIG_T
+ typedef void (*sig_t)(int);
+ #endif /* HAVE_SIG_T */
+-#if !defined(__MINGW32__) && !defined(WIN32) && !defined(__MINGW64__)
++#if !defined(__MINGW32__) && !defined(_WIN32) && !defined(__MINGW64__)
+ #include <sys/ioctl.h>
+ #endif
+ #ifdef HAVE_SYS_WAIT_H
+@@ -380,7 +380,7 @@ protected ssize_t
+ sread(int fd, void *buf, size_t n, int canbepipe __attribute__((__unused__)))
+ {
+ 	ssize_t rv;
+-#if defined(FIONREAD) && !defined(__MINGW32__) && !defined(WIN32)
++#if defined(FIONREAD) && !defined(__MINGW32__) && !defined(_WIN32)
+ 	int t = 0;
+ #endif
+ 	size_t rn = n;
+@@ -388,7 +388,7 @@ sread(int fd, void *buf, size_t n, int canbepipe __attribute__((__unused__)))
+ 	if (fd == STDIN_FILENO)
+ 		goto nocheck;
+ 
+-#if defined(FIONREAD) && !defined(__MINGW32__) && !defined(WIN32)
++#if defined(FIONREAD) && !defined(__MINGW32__) && !defined(_WIN32)
+ 	if (canbepipe && (ioctl(fd, FIONREAD, &t) == -1 || t == 0)) {
+ #ifdef FD_ZERO
+ 		ssize_t cnt;
+diff --git a/src/fmtcheck.c b/src/fmtcheck.c
+index fcad436..ae9d631 100644
+--- a/src/fmtcheck.c
++++ b/src/fmtcheck.c
+@@ -91,7 +91,7 @@ get_next_format_from_precision(const char **pf)
+ 		f++;
+ 		longdouble = 1;
+ 		break;
+-#ifdef WIN32
++#ifdef _WIN32
+ 	case 'I':
+ 		f++;
+ 		if (!*f) RETURN(pf,f,FMTCHECK_UNKNOWN);
+diff --git a/src/fsmagic.c b/src/fsmagic.c
+index 7244841..33ad47e 100644
+--- a/src/fsmagic.c
++++ b/src/fsmagic.c
+@@ -56,7 +56,7 @@ FILE_RCSID("@(#)$File: fsmagic.c,v 1.81 2019/07/16 13:30:32 christos Exp $")
+ /* Might be defined in sys/types.h.  */
+ # define HAVE_MAJOR
+ #endif
+-#ifdef WIN32
++#ifdef _WIN32
+ # define WIN32_LEAN_AND_MEAN
+ # include <windows.h>
+ #endif
+@@ -66,7 +66,7 @@ FILE_RCSID("@(#)$File: fsmagic.c,v 1.81 2019/07/16 13:30:32 christos Exp $")
+ # define minor(dev)  ((dev) & 0xff)
+ #endif
+ #undef HAVE_MAJOR
+-#if S_IFLNK != 0
++#if S_IFLNK != 0 && ! defined(_WIN32)
+ private int
+ bad_link(struct magic_set *ms, int err, char *buf)
+ {
+@@ -108,7 +108,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 	int ret, did = 0;
+ 	int mime = ms->flags & MAGIC_MIME;
+ 	int silent = ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION);
+-#if S_IFLNK != 0
++#if S_IFLNK != 0 && ! defined(_WIN32)
+ 	char buf[BUFSIZ+4];
+ 	ssize_t nch;
+ 	struct stat tstatbuf;
+@@ -122,14 +122,14 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 	 * Fstat is cheaper but fails for files you don't have read perms on.
+ 	 * On 4.2BSD and similar systems, use lstat() to identify symlinks.
+ 	 */
+-#if S_IFLNK != 0
++#if S_IFLNK != 0 && ! defined(_WIN32)
+ 	if ((ms->flags & MAGIC_SYMLINK) == 0)
+ 		ret = lstat(fn, sb);
+ 	else
+ #endif
+ 	ret = stat(fn, sb);	/* don't merge into if; see "ret =" above */
+ 
+-#ifdef WIN32
++#ifdef _WIN32 && ! defined(_WIN32)
+ 	{
+ 		HANDLE hFile = CreateFile((LPCSTR)fn, 0, FILE_SHARE_DELETE |
+ 		    FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0,
+@@ -290,7 +290,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
+ 			return -1;
+ 		break;
+ #endif
+-#if S_IFLNK != 0
++#if S_IFLNK != 0 && ! defined(_WIN32)
+ 	case S_IFLNK:
+ 		if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
+ 			if (ms->flags & MAGIC_ERROR) {
+diff --git a/src/magic.c b/src/magic.c
+index 382bd96..d4fa91a 100644
+--- a/src/magic.c
++++ b/src/magic.c
+@@ -25,7 +25,7 @@
+  * SUCH DAMAGE.
+  */
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+ #include <windows.h>
+ #include <shlwapi.h>
+ #endif
+@@ -83,7 +83,7 @@ private const char *file_or_fd(struct magic_set *, const char *, int);
+ #define	STDIN_FILENO	0
+ #endif
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+ /* HINSTANCE of this shared library. Needed for get_default_magic() */
+ static HINSTANCE _w32_dll_instance = NULL;
+ 
+@@ -178,7 +178,7 @@ get_default_magic(void)
+ 	static char *default_magic;
+ 	char *home, *hmagicpath;
+ 
+-#ifndef WIN32
++#ifndef _WIN32
+ 	struct stat st;
+ 
+ 	if (default_magic) {
+@@ -432,7 +432,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
+ 		goto done;
+ 	}
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+ 	/* Place stdin in binary mode, so EOF (Ctrl+Z) doesn't stop early. */
+ 	if (fd == STDIN_FILENO)
+ 		_setmode(STDIN_FILENO, O_BINARY);
+@@ -444,7 +444,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
+ 			okstat = stat(inname, &sb) == 0;
+ 			if (okstat && S_ISFIFO(sb.st_mode))
+ 				ispipe = 1;
+-#ifdef WIN32
++#ifdef _WIN32
+ 			/*
+ 			 * Can't stat, can't open.  It may have been opened in
+ 			 * fsmagic, so if the user doesn't have read permission,
+@@ -500,7 +500,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
+ 	} else if (fd != -1) {
+ 		/* Windows refuses to read from a big console buffer. */
+ 		size_t howmany =
+-#if defined(WIN32)
++#if defined(_WIN32)
+ 		    _isatty(fd) ? 8 * 1024 :
+ #endif
+ 		    ms->bytes_max;
+diff --git a/src/vasprintf.c b/src/vasprintf.c
+index 9b2cecb..3788fa5 100644
+--- a/src/vasprintf.c
++++ b/src/vasprintf.c
+@@ -632,11 +632,11 @@ int vasprintf(char **ptr, const char *format_string, va_list vargs)
+ # ifdef __va_copy
+   __va_copy (s.vargs, vargs);
+ # else
+-#  ifdef WIN32
++#  ifdef _WIN32
+   s.vargs = vargs;
+ #  else
+   memcpy (&s.vargs, &vargs, sizeof (s.va_args));
+-#  endif /* WIN32 */
++#  endif /* _WIN32 */
+ # endif /* __va_copy */
+ #endif /* va_copy */
+   s.maxlen = (size_t)INT_MAX;

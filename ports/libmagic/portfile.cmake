@@ -15,6 +15,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "0013-Check-for-backslash-in-argv-0-on-Windows.patch"
         "0014-Define-POSIX-macros-if-missing.patch"
         "0015-MSYS2-Remove-ioctl-call.patch"
+        "0016-Fix-file_famagic-function.patch"
     )
 endif()
 
