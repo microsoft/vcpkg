@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 eb782d48240cf2fa8cc3cddd699dce3a362eb480b3ca58a97d54cd3595a0c969e51fe14374b91136036e8e29c8f745efbd5a4d1aaed2c17f23cb89fb756645d0
     HEAD_REF main
+    PATCHES
+        fix-windows-arm-build-error.patch
 )
 
 vcpkg_cmake_configure(
