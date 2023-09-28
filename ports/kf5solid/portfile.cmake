@@ -8,12 +8,14 @@ vcpkg_from_github(
         001_fix_libmount.patch
         002_fix_imobile.patch
 )
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 if(VCPKG_TARGET_IS_OSX)
     # On Darwin platform, the bundled version of 'bison' may be too old (< 3.0).
     vcpkg_find_acquire_program(BISON)
     execute_process(
-        COMMAND ${BISON} --version
+        COMMAND "${BISON}" --version
         OUTPUT_VARIABLE BISON_OUTPUT
     )
     string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" BISON_VERSION "${BISON_OUTPUT}")
@@ -28,19 +30,16 @@ endif()
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
 
-get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
-get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
 
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
-# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  INVERTED_FEATURES
-    "libmount" CMAKE_DISABLE_FIND_PACKAGE_LibMount
-    "imobile" CMAKE_DISABLE_FIND_PACKAGE_unofficial-libimobiledevice
+    INVERTED_FEATURES
+        libmount    CMAKE_DISABLE_FIND_PACKAGE_LibMount
+        imobile     CMAKE_DISABLE_FIND_PACKAGE_unofficial-libimobiledevice
 )
 
 vcpkg_cmake_configure(
@@ -52,7 +51,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Solid CONFIG_PATH lib/cmake/KF5Solid)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Solid)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
@@ -60,13 +59,8 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-
