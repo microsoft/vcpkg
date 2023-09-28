@@ -1,0 +1,47 @@
+diff --git a/src/corelib/global/qcompilerdetection.h b/src/corelib/global/qcompilerdetection.h
+index f121893..70fa7f6 100644
+--- a/src/corelib/global/qcompilerdetection.h
++++ b/src/corelib/global/qcompilerdetection.h
+@@ -895,16 +895,22 @@
+ #   endif // !_HAS_CONSTEXPR
+ #  endif // !__GLIBCXX__ && !_LIBCPP_VERSION
+ # endif // Q_OS_QNX
+-# if defined(Q_CC_CLANG) && defined(Q_OS_MAC) && defined(__GNUC_LIBSTD__) \
+-    && ((__GNUC_LIBSTD__-0) * 100 + __GNUC_LIBSTD_MINOR__-0 <= 402)
++# if defined(Q_CC_CLANG) && defined(Q_OS_MAC)
++#  if defined(__GNUC_LIBSTD__) && ((__GNUC_LIBSTD__-0) * 100 + __GNUC_LIBSTD_MINOR__-0 <= 402)
+ // Apple has not updated libstdc++ since 2007, which means it does not have
+ // <initializer_list> or std::move. Let's disable these features
+-#  undef Q_COMPILER_INITIALIZER_LISTS
+-#  undef Q_COMPILER_RVALUE_REFS
+-#  undef Q_COMPILER_REF_QUALIFIERS
++#   undef Q_COMPILER_INITIALIZER_LISTS
++#   undef Q_COMPILER_RVALUE_REFS
++#   undef Q_COMPILER_REF_QUALIFIERS
+ // Also disable <atomic>, since it's clearly not there
+-#  undef Q_COMPILER_ATOMICS
+-# endif
++#   undef Q_COMPILER_ATOMICS
++#  endif
++#  if defined(__cpp_lib_memory_resource) \
++    && ((defined(__MAC_OS_X_VERSION_MIN_REQUIRED)  && __MAC_OS_X_VERSION_MIN_REQUIRED  < 140000) \
++     || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED < 170000))
++#   undef __cpp_lib_memory_resource // Only supported on macOS 14 and iOS 17
++#  endif
++# endif // defined(Q_CC_CLANG) && defined(Q_OS_DARWIN)
+ #endif
+ 
+ // Don't break code that is already using Q_COMPILER_DEFAULT_DELETE_MEMBERS
+diff --git a/src/corelib/tools/qduplicatetracker_p.h b/src/corelib/tools/qduplicatetracker_p.h
+index 9502201..23465ec 100644
+--- a/src/corelib/tools/qduplicatetracker_p.h
++++ b/src/corelib/tools/qduplicatetracker_p.h
+@@ -16,7 +16,7 @@
+ 
+ #include <private/qglobal_p.h>
+ 
+-#if __has_include(<memory_resource>)
++#ifdef __cpp_lib_memory_resource
+ #  include <unordered_set>
+ #  include <memory_resource>
+ #  include <qhash.h> // for the hashing helpers
