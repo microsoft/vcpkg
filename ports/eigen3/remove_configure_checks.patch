@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f3e69b845..12fb2188d 100644
+index c16044af7..10639629e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -66,12 +66,14 @@ option(EIGEN_TEST_CXX11 "Enable testing with C++11 and C++11 features (e.g. Tens
- 
+@@ -91,12 +91,14 @@ include(CMakeDependentOption)
+ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
  
  macro(ei_add_cxx_compiler_flag FLAG)
 +  if(FALSE) # Since eigen3 is header only and vcpkg does not build tests this can be disabled by default. 
@@ -16,8 +16,8 @@ index f3e69b845..12fb2188d 100644
 +  endif()
  endmacro()
  
- check_cxx_compiler_flag("-std=c++11" EIGEN_COMPILER_SUPPORT_CPP11)
-@@ -142,7 +144,7 @@ endif()
+ function(ei_maybe_separate_arguments variable mode args)
+@@ -171,7 +173,7 @@ endif()
  
  set(EIGEN_TEST_MAX_SIZE "320" CACHE STRING "Maximal matrix/vector size, default is 320")
  
@@ -26,7 +26,7 @@ index f3e69b845..12fb2188d 100644
    # We assume that other compilers are partly compatible with GNUCC
  
    # clang outputs some warnings for unknown flags that are not caught by check_cxx_compiler_flag
-@@ -330,7 +332,7 @@ if(NOT MSVC)
+@@ -347,7 +349,7 @@ if(NOT MSVC)
      endif()
    endif()
  
