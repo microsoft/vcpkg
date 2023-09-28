@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 60172b0d..1dfe6e8a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -55,18 +55,26 @@ set_package_properties(BISON PROPERTIES
+@@ -55,13 +55,25 @@ set_package_properties(BISON PROPERTIES
      PURPOSE "Required for the Predicate parser"
  )
  
@@ -30,7 +30,6 @@ index 60172b0d..1dfe6e8a 100644
  set_package_properties(PList PROPERTIES
                         TYPE OPTIONAL
                         PURPOSE "Needed to build the iOS device support backend"
-                       )
 diff --git a/KF5SolidConfig.cmake.in b/KF5SolidConfig.cmake.in
 index 6fc15eeb..a6250ce6 100644
 --- a/KF5SolidConfig.cmake.in
