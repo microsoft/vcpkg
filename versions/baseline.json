@@ -2022,7 +2022,7 @@
     },
     "d3d12-memory-allocator": {
       "baseline": "2021-05-05",
-      "port-version": 0
+      "port-version": 1
     },
     "d3dx12": {
       "baseline": "may2021",
