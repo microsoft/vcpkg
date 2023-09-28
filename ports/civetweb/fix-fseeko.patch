@@ -9,7 +9,7 @@ index 9e321ed..c6e9894 100644
 -#define fseeko(x, y, z) ((_lseeki64(_fileno(x), (y), (z)) == -1) ? -1 : 0)
 +#if defined(__ANDROID_API__) && __ANDROID_API__ < 24
 +    // Cf. https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md#32_bit-and
-+    #define fseeko(x, y, z) fseek
++    #define fseeko fseek
 +#endif
  #define fdopen(x, y) (_fdopen((x), (y)))
  #define write(x, y, z) (_write((x), (y), (unsigned)z))
