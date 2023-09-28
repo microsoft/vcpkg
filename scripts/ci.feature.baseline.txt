@@ -2289,6 +2289,7 @@ cgns[core,fortran,hdf5,legacy,lfs,lfsselector,mpi,tests,tools](osx) = combinatio
 cgns[fortran](windows) = feature-fails # No fortran compiler installed
 coroutine(osx) = fail # requires c++20
 cppslippi(osx) = fail # requires c++20
+openmpi(osx) = fail # objdump: error: 'conftest.o': Invalid/Unsupported object file format. See https://github.com/microsoft/vcpkg/issues/34114
 crashrpt(windows) = fail # precompiled header errors. See https://github.com/microsoft/vcpkg/issues/33470
 ctbench(osx) = fail # requires C++ 20
 curl[brotli,c-ares,http2,idn,idn2,mbedtls,non-http,openssl,sectransp,ssh,ssl,tool,websockets,wolfssl](osx) = combination-fails
@@ -2298,10 +2299,8 @@ daxa(windows) = fail #  Could not find a package configuration file provided by 
 dcmtk[core,iconv,icu,openssl,png,tiff,tools,xml2,zlib](osx) = combination-fails # missing symbols from libtiff. See https://github.com/microsoft/vcpkg/issues/33512
 dcmtk[xml2](windows) = feature-fails # fatal error C1083: Cannot open include file: 'iconv.h'. See https://github.com/microsoft/vcpkg/issues/33473
 dmlc[openmp](osx) = feature-fails # No openmp on osx
-duktape(osx) = fail # requires python2
 dv-processing[tools](windows & !uwp) = feature-fails # fmtlib error. See https://github.com/microsoft/vcpkg/issues/33474
 embree3[core,avx,avx2,avx512,default-features,sse2,sse42](osx) = combination-fails # CMake Error at CMakeLists.txt:447 (MESSAGE):   Using Embree as static library is not supported with AppleClang >= 9.0 when multiple ISAs are selected.  Please either build a shared library or enable only one ISA.
-ffmpeg[vpx](osx) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31118
 ffmpeg[vpx](windows) = feature-fails # see https://github.com/microsoft/vcpkg/issues/33777
 fftw3[openmp](osx) = feature-fails # waits for https://github.com/microsoft/vcpkg/pull/30833
 fftw3[openmp](windows) = feature-fails # Linker missing symbols. See https://github.com/microsoft/vcpkg/issues/33322
@@ -2372,7 +2371,6 @@ mesa[llvm](!uwp) = feature-fails # ERROR: Neither a subproject directory nor a l
 ms-quic(windows) = fail # fixed upstream. See https://github.com/microsoft/vcpkg/issues/29459
 msdfgen[core,extensions,geometry-preprocessing,openmp,tools](osx) = combination-fails # requires openmp (works with right setup)
 msdfgen[openmp](osx) = feature-fails # No openmp on osx
-openblas[dynamic-arch](arm) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31494
 opencv2[ffmpeg] = feature-fails # ffmpeg5+ is not supported under opencv2. See https://github.com/microsoft/vcpkg/issues/32151
 opencv2[python](osx) = feature-fails # requires python2
 opencv2[world] = feature-fails # See https://github.com/microsoft/vcpkg/issues/29943
@@ -2381,7 +2379,6 @@ opencv3[halide](osx) = feature-fails # Same as opencv4[halide]
 opencv3[vtk](osx) = feature-fails # vtk version not compatible. See https://github.com/microsoft/vcpkg/issues/32228
 openmvg(windows & arm) = fail # nmmintrin.h(17): fatal error C1189: #error:  This header is specific to X86, X64, ARM64, and ARM64EC targets. See https://github.com/microsoft/vcpkg/issues/33746
 openscap(osx) = fail # Waits for https://github.com/microsoft/vcpkg/pull/27348
-opentelemetry-cpp[jaeger](osx) = feature-fails # error: no type named 'close' in the global namespace. See https://github.com/microsoft/vcpkg/issues/33800
 openvdb[ax] = feature-fails # ax requires llvm version <= 14. Work when using a baseline + overwrite
 pangolin[core,eigen,examples,ffmpeg,gui,jpeg,lz4,module,openexr,png,pybind11,realsense,test,tiff,tools,vars,video,zstd](!(arm & windows)) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31304
 poco[core,mariadb,mysql] = options # You can not install mariadb and mysql at the same time
@@ -2414,6 +2411,7 @@ wasmedge[aot] = feature-fails # ar: /libzstd.a: No such file or directory. See h
 wayland[force-build] = feature-fails # error: To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.
 xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
 xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not 32
+openvino[cpu](osx) = feature-fails # error: reference to 'bfloat16_t' is ambiguous. See 
 
 # skip
 entt[experimental] = skip # required head build
