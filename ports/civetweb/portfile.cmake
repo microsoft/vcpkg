@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO civetweb/civetweb
-    REF eefb26f82b233268fc98577d265352720d477ba4 # v1.15
-    SHA512 5ce962e31b3c07b7110cbc645458dba9c0e26e693fbe3b4a7ffe8a28563827049a22fc5596a911fbcea4d88a9adbef3f82000ff61027ff4387f40e4a4045c26d
+    REF "v${VERSION}"
+    SHA512 a0b943dfc76d7fd47f5a7d2c834fd38ddd4cf01a11730cf2f7cfaf32fea9698f59672f3a0f86ac80e0abc315d94d2367a500d37013f305c87d45e84cf39ca816
     HEAD_REF master
     PATCHES
         disable_warnings.patch # cl will simply ignore the other invalid options. 
