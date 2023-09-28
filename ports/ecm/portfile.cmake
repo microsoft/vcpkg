@@ -11,8 +11,10 @@ vcpkg_from_github(
     PATCHES
         fix_generateqmltypes.patch # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/201
         fix-wrong-version.patch
+        # Adjust default installation dirs to vcpkg layout, reduce cross-platform variation
         uniform-dataroot-dir.patch
         uniform-libexec-dir.patch
+        uniform-plugin-dir.patch
 )
 
 vcpkg_cmake_configure(
