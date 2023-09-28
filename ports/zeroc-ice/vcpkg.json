@@ -6,7 +6,7 @@
   "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more. (This port only covers C++.)",
   "homepage": "https://github.com/zeroc-ice/ice",
   "license": null,
-  "supports": "linux | osx | (windows & !mingw & !uwp & !xbox)",
+  "supports": "linux | osx | (windows & !arm & !mingw & !uwp & !xbox)",
   "dependencies": [
     "bzip2",
     {
