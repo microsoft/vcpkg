@@ -78,7 +78,6 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
-# Maybe unused`??
 set(debug_suffix debug)
 if(VCPKG_TARGET_IS_WINDOWS)
     set(debug_suffix D)
