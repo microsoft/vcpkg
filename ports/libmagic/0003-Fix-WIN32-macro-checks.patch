@@ -25,11 +25,11 @@ index 9f65e4f..3b4c0e8 100644
  #endif
  #ifdef HAVE_SYS_WAIT_H
 diff --git a/src/file.h b/src/file.h
-index c548e97..f02a7b1 100644
+index 299ac0c..2c365a6 100644
 --- a/src/file.h
 +++ b/src/file.h
 @@ -82,7 +82,7 @@
- #include <regex.h>
+ #include <tre/regex.h>
  #include <time.h>
  #include <sys/types.h>
 -#ifndef WIN32
