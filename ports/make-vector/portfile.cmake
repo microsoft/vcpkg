@@ -7,7 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/make_vector.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include/make-vector)
+file(COPY "${SOURCE_PATH}/make_vector.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/make-vector")
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" [[As of 2023-09-27, according to
 https://gist.github.com/tcbrindle/e55bea06d4e3ac1f603f9989d44dceb9
