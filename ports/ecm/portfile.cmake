@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         fix_generateqmltypes.patch # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/201
         fix-wrong-version.patch
+        uniform-dataroot-dir.patch
 )
 
 vcpkg_cmake_configure(

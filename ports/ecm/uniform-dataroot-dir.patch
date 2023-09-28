@@ -1,0 +1,13 @@
+diff --git a/kde-modules/KDEInstallDirsCommon.cmake b/kde-modules/KDEInstallDirsCommon.cmake
+index aae70d6..623cee7 100644
+--- a/kde-modules/KDEInstallDirsCommon.cmake
++++ b/kde-modules/KDEInstallDirsCommon.cmake
+@@ -265,7 +265,7 @@ _define_absolute(LOCALSTATEDIR "var"
+ _define_absolute(SHAREDSTATEDIR "com"
+     "modifiable architecture-independent data")
+ 
+-if (WIN32)
++if (0)
+     _define_relative(DATAROOTDIR BINDIR "data"
+         "read-only architecture-independent data root"
+         SHARE_INSTALL_PREFIX)
