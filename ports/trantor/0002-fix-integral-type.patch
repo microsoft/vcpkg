@@ -1,0 +1,45 @@
+diff --git a/trantor/utils/MsgBuffer.h b/trantor/utils/MsgBuffer.h
+index 19d42e2..0c20056 100644
+--- a/trantor/utils/MsgBuffer.h
++++ b/trantor/utils/MsgBuffer.h
+@@ -13,6 +13,7 @@
+  */
+ 
+ #pragma once
++#include <cstdint>
+ #include <trantor/utils/NonCopyable.h>
+ #include <trantor/exports.h>
+ #include <vector>
+@@ -21,10 +22,17 @@
+ #include <stdio.h>
+ #include <assert.h>
+ #include <string.h>
++using std::int8_t;
++using std::int16_t;
++using std::int32_t;
++using std::int64_t;
++using std::uint8_t;
++using std::uint16_t;
++using std::uint32_t;
++using std::uint64_t;
+ #ifdef _WIN32
+ using ssize_t = std::intptr_t;
+ #endif
+-
+ namespace trantor
+ {
+ static constexpr size_t kBufferDefaultLength{2048};
+diff --git a/trantor/utils/Utilities.cc b/trantor/utils/Utilities.cc
+index 978dac8..1a7657d 100644
+--- a/trantor/utils/Utilities.cc
++++ b/trantor/utils/Utilities.cc
+@@ -25,7 +25,8 @@
+ #include <codecvt>
+ #endif  // __cplusplus
+ #endif  // _WIN32
+-
++#include <cstdint>
++using std::intmax_t;
+ namespace trantor
+ {
+ namespace utils
