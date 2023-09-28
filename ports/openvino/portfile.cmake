@@ -8,6 +8,7 @@ vcpkg_from_github(
         003-fix-find-onnx.patch
         004-compilation-with-cpp17.patch
         005-tflite-search.patch
+        007-macos-14.patch # from https://github.com/openvinotoolkit/openvino/pull/19946
     HEAD_REF master)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
