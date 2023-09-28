@@ -18,7 +18,10 @@
     }
   ],
   "default-features": [
-    "platform-default-features"
+    {
+      "name": "libmount",
+      "platform": "linux"
+    }
   ],
   "features": {
     "imobile": {
@@ -33,18 +36,6 @@
       "supports": "linux",
       "dependencies": [
         "libmount"
-      ]
-    },
-    "platform-default-features": {
-      "description": "Enable platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "kf5solid",
-          "features": [
-            "libmount"
-          ],
-          "platform": "linux"
-        }
       ]
     }
   }

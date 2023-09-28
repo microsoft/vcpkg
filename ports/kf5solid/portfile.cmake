@@ -37,9 +37,14 @@ vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        libmount    CMAKE_REQUIRE_FIND_PACKAGE_LibMount
+        imobile     CMAKE_REQUIRE_FIND_PACKAGE_IMobileDevice
+        imobile     CMAKE_REQUIRE_FIND_PACKAGE_PList
     INVERTED_FEATURES
         libmount    CMAKE_DISABLE_FIND_PACKAGE_LibMount
-        imobile     CMAKE_DISABLE_FIND_PACKAGE_unofficial-libimobiledevice
+        imobile     CMAKE_DISABLE_FIND_PACKAGE_IMobileDevice
+        imobile     CMAKE_DISABLE_FIND_PACKAGE_PList
 )
 
 vcpkg_cmake_configure(
