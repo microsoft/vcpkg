@@ -5,11 +5,10 @@ vcpkg_from_github(
     SHA512 4ca09f52fde3b080255c0938d510ea5592ec30e4ea9b7648a7ea1b528c9f096e1c1534647d5bf93d7923b43106227c6c1c3b67f238becbd6da15e8acecbf4c5c
     HEAD_REF master
     PATCHES
-        001_vcpkg.patch
-        002_drogon_config.patch
-        003_fix_gcc13.patch #https://github.com/drogonframework/drogon/pull/1563
-        004_deps_redis.patch
-        005_drogon_ctl.patch
+         0001-vcpkg.patch
+         0002-drogon-config.patch
+         0003-deps-redis.patch
+         0004-drogon-ctl.patch
 )
 
 vcpkg_check_features(
