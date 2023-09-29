@@ -7,7 +7,8 @@ vcpkg_from_github(
   SHA512 d266732fe50a4cd5c55f9ff838649157e48994744f39d9eda9feee640dd400a5bb35ca620386ca65c9f1cdcb1adc923c34809dcb025bd6fc052baa9df57a4a6f
   HEAD_REF master
   PATCHES
-      fix_eigen.patch 
+      restore_eigen_include_dir.patch 
+      remove_check_template_params.patch
 )
 
 vcpkg_from_github(
