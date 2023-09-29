@@ -4282,7 +4282,7 @@
     },
     "libimobiledevice": {
       "baseline": "2023-07-05",
-      "port-version": 0
+      "port-version": 1
     },
     "libimobiledevice-glue": {
       "baseline": "2023-05-13",
