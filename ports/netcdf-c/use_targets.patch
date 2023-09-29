@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 507eb4c..1113c7b 100644
+index 507eb4c..1516d0c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -433,7 +433,6 @@ IF(NC_EXTRA_DEPS)
@@ -64,14 +64,12 @@ index 507eb4c..1113c7b 100644
        FIND_LIBRARY(SZIP PATH NAMES szip sz)
        SET(SZIP_LIBRARY ${SZIP})
        IF(NOT SZIP)
-@@ -847,12 +852,14 @@ IF(USE_HDF5)
- ENDIF(USE_HDF5)
+@@ -848,11 +853,14 @@ ENDIF(USE_HDF5)
  
  # See if we have libcurl
--FIND_PACKAGE(CURL)
+ FIND_PACKAGE(CURL)
 -ADD_DEFINITIONS(-DCURL_STATICLIB=1)
--INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIRS})
-+FIND_PACKAGE(CURL CONFIG)
+ INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIRS})
  
  # Define a test flag for have curl library
 -IF(CURL_LIBRARIES OR CURL_LIBRARY)
@@ -83,7 +81,7 @@ index 507eb4c..1113c7b 100644
    SET(FOUND_CURL TRUE)
  ELSE()
    SET(FOUND_CURL FALSE)
-@@ -2089,10 +2096,9 @@ IF(NC_LIBS)
+@@ -2089,10 +2097,9 @@ IF(NC_LIBS)
    STRING(REPLACE "-lhdf5::hdf5_hl-static" "-lhdf5_hl" NC_LIBS ${NC_LIBS})
  ENDIF()
  
