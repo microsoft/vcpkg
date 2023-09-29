@@ -15,7 +15,11 @@
   ],
   "features": {
     "tool": {
-      "description": "Build ShaderTranspiler"
+      "description": "Build ShaderTranspiler",
+      "dependencies": [
+        "glslang",
+        "spirv-cross"
+      ]
     },
     "vulkan": {
       "description": "Build vulkan modules",

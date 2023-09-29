@@ -1,0 +1,98 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a451f71..30cb2da 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.15)
+ # The project's name
+ project(LLGI)
+ 
++include(GNUInstallDirs)
+ include(ExternalProject)
+ 
+ # linux flag
+@@ -239,19 +240,19 @@ if(BUILD_VULKAN_COMPILER OR BUILD_TOOL)
+ endif()
+ 
+ if(BUILD_VULKAN)
+-  add_definitions(-DENABLE_VULKAN)
++  add_compile_definitions(ENABLE_VULKAN)
+ 
+   if(GLSLANG_WITHOUT_INSTALL)
+-    add_compile_definitions(LLGI PRIVATE ENABLE_GLSLANG_WITHOUT_INSTALL)
++    add_compile_definitions(ENABLE_GLSLANG_WITHOUT_INSTALL)
+   endif()
+ 
+   if(BUILD_VULKAN_COMPILER)
+-    add_definitions(-DENABLE_VULKAN_COMPILER)
++    add_compile_definitions(ENABLE_VULKAN_COMPILER)
+   endif()
+ endif()
+ 
+ if(APPLE)
+-  add_definitions(-DENABLE_METAL)
++  add_compile_definitions(ENABLE_METAL)
+ endif()
+ 
+ add_subdirectory("src")
+diff --git a/tools/ShaderTranspilerCore/CMakeLists.txt b/tools/ShaderTranspilerCore/CMakeLists.txt
+index 3e1724a..4ce40d4 100644
+--- a/tools/ShaderTranspilerCore/CMakeLists.txt
++++ b/tools/ShaderTranspilerCore/CMakeLists.txt
+@@ -35,9 +35,9 @@ else()
+ endif()
+ 
+ if(GLSLANG_WITHOUT_INSTALL)
+-  add_compile_definitions(ShaderTranspilerCore ENABLE_GLSLANG_WITHOUT_INSTALL)
++  target_compile_definitions(ShaderTranspilerCore PRIVATE ENABLE_GLSLANG_WITHOUT_INSTALL)
+ endif()
+ 
+ if(SPIRVCROSS_WITHOUT_INSTALL)
+-  add_compile_definitions(ShaderTranspilerCore ENABLE_SPIRVCROSS_WITHOUT_INSTALL)
++  target_compile_definitions(ShaderTranspilerCore PRIVATE ENABLE_SPIRVCROSS_WITHOUT_INSTALL)
+ endif()
+\ No newline at end of file
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index e5e6f15..5b6fb41 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -1,2 +1,4 @@
+ add_subdirectory(ShaderTranspilerCore)
+ add_subdirectory(ShaderTranspiler)
++
++install(TARGETS ShaderTranspiler DESTINATION ${CMAKE_INSTALL_BINDIR})
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 30cb2da..319aa55 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -232,9 +232,13 @@ if(BUILD_VULKAN_COMPILER OR BUILD_TOOL)
+       spirv-cross-util)
+ 
+   else()
+-    list(APPEND LLGI_THIRDPARTY_INCLUDES ${GLSLANG_INCLUDE_DIR}
+-         ${SPIRVCROSS_INCLUDE_DIR})
+-
++    # from vcpkg
++    find_package(glslang CONFIG REQUIRED)
++    find_package(spirv_cross_core CONFIG REQUIRED)
++    find_package(spirv_cross_glsl CONFIG REQUIRED)
++    find_package(spirv_cross_hlsl CONFIG REQUIRED)
++    find_package(spirv_cross_msl CONFIG REQUIRED)
++    find_package(spirv_cross_cpp CONFIG REQUIRED)
+   endif()
+ 
+ endif()
+diff --git a/tools/ShaderTranspilerCore/CMakeLists.txt b/tools/ShaderTranspilerCore/CMakeLists.txt
+index 4ce40d4..10aa3ee 100644
+--- a/tools/ShaderTranspilerCore/CMakeLists.txt
++++ b/tools/ShaderTranspilerCore/CMakeLists.txt
+@@ -8,6 +8,10 @@ target_compile_features(ShaderTranspilerCore PUBLIC cxx_std_14)
+ target_include_directories(ShaderTranspilerCore
+                            PUBLIC ${LLGI_THIRDPARTY_INCLUDES})
+ 
++target_link_libraries(ShaderTranspilerCore PUBLIC
++  glslang::glslang glslang::SPIRV glslang::OSDependent glslang::MachineIndependent glslang::GenericCodeGen glslang::glslang-default-resource-limits glslang::OGLCompiler glslang::SPVRemapper glslang::HLSL
++  spirv-cross-cpp spirv-cross-glsl spirv-cross-msl spirv-cross-hlsl
++)
+ if(USE_THIRDPARTY_DIRECTORY)
+   target_link_libraries(ShaderTranspilerCore
+                         PUBLIC ${LLGI_THIRDPARTY_LIBRARIES})
