@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 4ad66808d7c88911d4c6d63368240ece2d0cbc73d89a95d32261b95dc551c47c46b3a34cc81b8cb0e03fe3f9ea61cb304e028780357bcf332d660824b066fd1e
     HEAD_REF master
     PATCHES
-        0001-fix-installation.patch
-        0002-fix-uwp-build.patch
+        fix-installation.patch
+        fix-uwp-build.patch
 )
 
 set(INSTALL_BASE_DIR_DBG "${CURRENT_PACKAGES_DIR}/debug")
