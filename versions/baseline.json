@@ -3949,7 +3949,7 @@
       "port-version": 0
     },
     "libassuan": {
-      "baseline": "2.5.5",
+      "baseline": "2.5.6",
       "port-version": 0
     },
     "libatomic-ops": {
