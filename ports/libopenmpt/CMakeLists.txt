@@ -4,8 +4,10 @@ project(libopenmpt)
 if(MSVC)
   add_compile_options(
     /W3 /wd4005 /wd4267 /wd4244 /wd4996 /wd4100 /wd4018
-    -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE
-    -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_WARNINGS
+  )
+  add_compile_definitions(
+    _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE
+    _CRT_SECURE_NO_DEPRECATE _CRT_NONSTDC_NO_WARNINGS
   )
 endif()
 
@@ -47,16 +49,16 @@ add_library(libopenmpt ${SOURCES})
 set_target_properties(libopenmpt PROPERTIES OUTPUT_NAME openmpt)
 
 target_compile_definitions(libopenmpt PRIVATE
-  -DMPT_WITH_MPG123 -DMPT_WITH_OGG
-  -DMPT_WITH_VORBIS -DMPT_WITH_VORBISFILE
-  -DMPT_WITH_ZLIB -DMPT_BUILD_VCPKG
-  -DLIBOPENMPT_BUILD
+  MPT_WITH_MPG123 MPT_WITH_OGG
+  MPT_WITH_VORBIS MPT_WITH_VORBISFILE
+  MPT_WITH_ZLIB MPT_BUILD_VCPKG
+  LIBOPENMPT_BUILD
 )
 
 if(BUILD_SHARED_LIBS)
   target_compile_definitions(
     libopenmpt
-    PRIVATE -DLIBOPENMPT_BUILD_DLL
+    PRIVATE LIBOPENMPT_BUILD_DLL
   )
 endif()
 
@@ -74,6 +76,9 @@ target_link_libraries(
     Vorbis::vorbis
     ZLIB::ZLIB
 )
+if(APPLE)
+  target_link_libraries(libopenmpt PRIVATE c++)
+endif()
 
 set(LIBOPENMPT_REQUIRES_PRIVATE "zlib vorbis vorbisfile libmpg123")
 set(LIBOPENMPT_LIBS_PRIVATE "")
