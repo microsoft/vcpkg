@@ -27,7 +27,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" USE_DYNAMIC_RUNTIME)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
@@ -39,8 +39,8 @@ vcpkg_configure_cmake(
         -DGLSLANG_WITHOUT_INSTALL=OFF
         -DSPIRVCROSS_WITHOUT_INSTALL=OFF
 )
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake")
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake")
 
 if("tool" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ShaderTranspiler AUTO_CLEAN)
