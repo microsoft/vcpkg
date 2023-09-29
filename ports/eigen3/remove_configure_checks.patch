@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index de9169203..5b54f20e6 100644
+index afa52ef7f..746f8eac5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -82,12 +82,14 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+@@ -92,12 +92,14 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
  option(EIGEN_TEST_CXX11 "Enable testing of unsupported CXX11 tests (i.e. those starting with cxx11_)." OFF)
  
  macro(ei_add_cxx_compiler_flag FLAG)
-+  if(FALSE) # Since eigen3 is header only and vcpkg does not build tests this can be disabled by default. 
++  if(FALSE) # Since eigen3 is header only and vcpkg does not build tests this can be disabled by default.
    string(REGEX REPLACE "-" "" SFLAG1 ${FLAG})
    string(REGEX REPLACE "\\+" "p" SFLAG ${SFLAG1})
    check_cxx_compiler_flag(${FLAG} COMPILER_SUPPORT_${SFLAG})
@@ -17,7 +17,7 @@ index de9169203..5b54f20e6 100644
  endmacro()
  
  # Determine if we should build shared libraries on this platform.
-@@ -144,7 +146,7 @@ endif()
+@@ -152,7 +154,7 @@ endif()
  
  set(EIGEN_TEST_MAX_SIZE "320" CACHE STRING "Maximal matrix/vector size, default is 320")
  
@@ -26,7 +26,7 @@ index de9169203..5b54f20e6 100644
    # We assume that other compilers are partly compatible with GNUCC
  
    # clang outputs some warnings for unknown flags that are not caught by check_cxx_compiler_flag
-@@ -314,7 +316,7 @@ if(NOT MSVC)
+@@ -322,7 +324,7 @@ if(NOT MSVC)
      endif()
    endif()
  
