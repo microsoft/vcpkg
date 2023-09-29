@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libfann/fann
-    REF 2.2.0
-    SHA512 b307539a39d93078a489710ac77aa8c6e324f3cf5ef80299ce257d10c043913764abef83aceac5278a5bd243b1ee245b4e8331a9e13c774aa63c9cb604f86bdd
+    REF 8409b42d308bf9428b9d3e60927595e53a797bbc
+    SHA512 4ad66808d7c88911d4c6d63368240ece2d0cbc73d89a95d32261b95dc551c47c46b3a34cc81b8cb0e03fe3f9ea61cb304e028780357bcf332d660824b066fd1e
     HEAD_REF master
     PATCHES
-        fix-installation.patch
-        fix-uwp-build.patch
+        0001-fix-installation.patch
+        0002-fix-uwp-build.patch
 )
 
 set(INSTALL_BASE_DIR_DBG "${CURRENT_PACKAGES_DIR}/debug")
@@ -50,12 +50,11 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-
-file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

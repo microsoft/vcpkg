@@ -2453,8 +2453,8 @@
       "port-version": 0
     },
     "fann": {
-      "baseline": "2.2.0",
-      "port-version": 3
+      "baseline": "2023-01-26",
+      "port-version": 0
     },
     "farmhash": {
       "baseline": "1.1",

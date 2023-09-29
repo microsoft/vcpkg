@@ -1,8 +1,64 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 12ea06c..0b8bce4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ IF(BIICODE)
+ 	# Initializes block variables
+ 	INIT_BIICODE_BLOCK()
+-	
++
+ 	# Output folder for binaries
+ 	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../bin/fann/examples)
+ 	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG  ${CMAKE_CURRENT_SOURCE_DIR}/../bin/fann/examples)
+@@ -18,11 +18,11 @@ IF(BIICODE)
+ 	LIST(FIND BII_BLOCK_EXES examples_parallel_train examples_present)
+ 	SET(examples_present (NOT ${examples_present} EQUAL "-1")) # Depending on examples
+ 	IF(${examples_present} AND NOT WIN32 AND NOT APPLE) # Linux doesn't have GetTickCount
+-		LIST(REMOVE_ITEM BII_BLOCK_EXES examples_parallel_train)		
++		LIST(REMOVE_ITEM BII_BLOCK_EXES examples_parallel_train)
+ 	ENDIF()
+ 
+ 	ADD_BIICODE_TARGETS()
+-	
++
+ 	IF(${examples_present})
+ 	   # This example needs CPP11
+            ACTIVATE_CPP11(lasote_fann_examples_xor_sample)
+@@ -82,7 +82,7 @@ configure_file (cmake/fann.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/fann.pc @ONLY)
+ 
+ install (FILES ${CMAKE_CURRENT_BINARY_DIR}/fann.pc DESTINATION ${PKGCONFIG_INSTALL_DIR})
+ 
+-ADD_SUBDIRECTORY( src ) 
++ADD_SUBDIRECTORY( src )
+ 
+ ################# cpack ################
+ 
+@@ -95,7 +95,7 @@ SET(CPACK_PACKAGE_VERSION_MINOR "${FANN_VERSION_MINOR}")
+ SET(CPACK_PACKAGE_VERSION_PATCH "${FANN_VERSION_PATCH}")
+ SET(CPACK_GENERATOR "TGZ;ZIP")
+ SET(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
+-SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Steffen Nissen") 
++SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Steffen Nissen")
+ SET(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}")
+ IF(WIN32 AND NOT UNIX)
+   # There is a bug in NSI that does not handle full unix paths properly. Make
+@@ -156,10 +156,5 @@ install (FILES
+ 
+ ################# compile tests ################
+ 
+-ADD_SUBDIRECTORY( lib/googletest )
+-
+-if(COMPILER_SUPPORTS_CXX11)
+-  ADD_SUBDIRECTORY( tests )
+-endif()
+ 
+ ENDIF()
 diff --git a/cmake/Modules/DefineInstallationPaths.cmake b/cmake/Modules/DefineInstallationPaths.cmake
-index 644cf1b..81e7c74 100644
+index 2969533..bbcd0ba 100644
 --- a/cmake/Modules/DefineInstallationPaths.cmake
 +++ b/cmake/Modules/DefineInstallationPaths.cmake
-@@ -3,7 +3,7 @@ if (UNIX)
+@@ -3,7 +3,7 @@ if (UNIX OR MINGW OR WIN32)
          MESSAGE(STATUS "${PROJECT_NAME} is used as APPLICATION_NAME")
          SET(APPLICATION_NAME ${PROJECT_NAME})
      ENDIF (NOT APPLICATION_NAME)
@@ -11,60 +67,36 @@ index 644cf1b..81e7c74 100644
      # Suffix for Linux
      SET(LIB_SUFFIX
          CACHE STRING "Define suffix of directory name (32/64)"
-@@ -122,9 +122,10 @@ if (UNIX)
+@@ -122,12 +122,13 @@ if (UNIX OR MINGW OR WIN32)
          CACHE PATH "The ${APPLICATION_NAME} info install dir (default prefix/info)"
          FORCE
      )
 +endif()
- endif (UNIX)
  
--if (WIN32)
+   set (CMAKE_CONFIG_DIR "${LIB_INSTALL_DIR}/cmake/fann" CACHE PATH "config dir" FORCE)
+   set (PKGCONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/pkgconfig" CACHE PATH "pkgconfig dir" FORCE)
+ endif ()
+ 
+-if (MSCV)
 +if (0)
  	# Same same
  	SET(BIN_INSTALL_DIR .)
  	SET(SBIN_INSTALL_DIR .)
-@@ -134,5 +135,5 @@ if (WIN32)
+@@ -137,5 +138,5 @@ if (MSCV)
  	SET(ICON_INSTALL_DIR .)
  	SET(SOUND_INSTALL_DIR .)
  	SET(LOCALE_INSTALL_DIR lang)
--endif (WIN32)
-+endif (0)
+-endif (MSCV)
++endif ()
  
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index fade00c..a4e6c3f 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -14,7 +14,7 @@ floatfann.c
- ADD_LIBRARY(floatfann SHARED ${floatfann_LIB_SRCS})
+diff --git a/src/include/CMakeLists.txt b/src/include/CMakeLists.txt
+index 056868b..19c4936 100644
+--- a/src/include/CMakeLists.txt
++++ b/src/include/CMakeLists.txt
+@@ -6,5 +6,5 @@ ELSE(NOT OPENMP_FOUND OR DISABLE_PARALLEL_FANN)
+   SET(PARALLEL_INCLUDES parallel_fann.h parallel_fann.hpp)
+ ENDIF(NOT OPENMP_FOUND OR DISABLE_PARALLEL_FANN)
  
- SET_TARGET_PROPERTIES(floatfann PROPERTIES VERSION ${VERSION} SOVERSION 2 )
--INSTALL(TARGETS floatfann DESTINATION ${LIB_INSTALL_DIR} )
-+INSTALL(TARGETS floatfann RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib )
- 
- 
- ########### next target ###############
-@@ -26,7 +26,7 @@ doublefann.c
- ADD_LIBRARY(doublefann SHARED ${doublefann_LIB_SRCS})
- 
- SET_TARGET_PROPERTIES(doublefann PROPERTIES VERSION ${VERSION} SOVERSION 2 )
--INSTALL(TARGETS doublefann DESTINATION ${LIB_INSTALL_DIR} )
-+INSTALL(TARGETS doublefann RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib )
- 
- 
- ########### next target ###############
-@@ -38,7 +38,7 @@ fixedfann.c
- ADD_LIBRARY(fixedfann SHARED ${fixedfann_LIB_SRCS})
- 
- SET_TARGET_PROPERTIES(fixedfann PROPERTIES VERSION ${VERSION} SOVERSION 2 )
--INSTALL(TARGETS fixedfann DESTINATION ${LIB_INSTALL_DIR} )
-+INSTALL(TARGETS fixedfann RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib )
- 
- 
- ########### next target ###############
-@@ -50,5 +50,5 @@ floatfann.c
- ADD_LIBRARY(fann SHARED ${fann_LIB_SRCS})
- 
- SET_TARGET_PROPERTIES(fann PROPERTIES VERSION ${VERSION} SOVERSION 2 )
--INSTALL(TARGETS fann DESTINATION ${LIB_INSTALL_DIR} )
-+INSTALL(TARGETS fann RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib )
+-install (FILES fann.h doublefann.h fann_internal.h floatfann.h fann_data.h fixedfann.h fann_activation.h fann_cascade.h fann_error.h fann_train.h fann_io.h fann_cpp.h fann_data_cpp.h fann_training_data_cpp.h ${PARALLEL_INCLUDES} DESTINATION ${INCLUDE_INSTALL_DIR})
++install (FILES fann.h doublefann.h fann_internal.h floatfann.h fann_data.h fixedfann.h fann_activation.h fann_cascade.h fann_error.h fann_train.h fann_io.h fann_cpp.h fann_data_cpp.h fann_training_data_cpp.h ${PARALLEL_INCLUDES} DESTINATION include/fann/)
  
