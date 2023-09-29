@@ -6,6 +6,8 @@ vcpkg_from_github(
   REF 6e92742d469efaf59ec2503882693b621f41eca8
   SHA512 d266732fe50a4cd5c55f9ff838649157e48994744f39d9eda9feee640dd400a5bb35ca620386ca65c9f1cdcb1adc923c34809dcb025bd6fc052baa9df57a4a6f
   HEAD_REF master
+  PATCHES
+      fix_eigen.patch 
 )
 
 vcpkg_from_github(
