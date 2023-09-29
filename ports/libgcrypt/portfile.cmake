@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${tarball}"
     PATCHES
         cross-tools.patch
+        upstream-fa21ddc1.patch
 )
 
 if(VCPKG_CROSSCOMPILING)
