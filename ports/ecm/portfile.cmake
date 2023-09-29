@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/extra-cmake-modules
-    REF v5.98.0
-    SHA512 355bf2010dd4c736981d0f708ab7245c0925104e19da01acee0482494f815088e5d7aed9aa968251f13c2c5b8cbfd67dc8bb147dec46050fea0881c00f456d9d
+    REF "v${VERSION}"
+    SHA512 fc0c6e323fcc8862c4e093ced9571647108708fbdab474ef34dbc751ac5373d9b107bec53e56e09ede62dc56b36dad096d55f08f03f1f29f634219347df7d06f
     HEAD_REF master
     PATCHES
         fix_canberra.patch         # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/187
