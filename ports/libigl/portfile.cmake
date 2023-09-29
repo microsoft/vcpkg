@@ -1,13 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libigl/libigl
-    REF  66b3ef2253e765d0ce0db74cec91bd706e5ba176 #2.4.0
-    SHA512 7014ffdaa160bfa2509fc283cb7176d7994a37f51509c7374659292efad076c8fb594f9f6990bab1aa5562d1f66e93403ea35a5bf2a924436560a2d4669ffcfd
+    REF  fdaac01bcc52888994f7afd029dcc045dd408484 #2.5.0
+    SHA512 214f6af92026987d9ee3bad5e1849ef96d8455b1de38a03d068b7d7ab88b66a08f3a1f7c11b0cabc8d0744c19855ee2fdd544ac15ad826d117ef1ba97a318a2f
     HEAD_REF master
-    PATCHES
-        dependencies.patch
-        upstream_fixes.patch
-        install-extra-targets.patch
 )
 file(REMOVE
     "${SOURCE_PATH}/cmake/find/FindGMP.cmake"
