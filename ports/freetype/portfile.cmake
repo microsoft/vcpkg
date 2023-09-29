@@ -1,10 +1,8 @@
-set(FT_VERSION 2.12.1)
-
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO freetype/freetype2
-    REF ${FT_VERSION}
-    FILENAME freetype-${FT_VERSION}.tar.xz
+    REF ${VERSION}
+    FILENAME freetype-${VERSION}.tar.xz
     SHA512 6482de1748dc2cc01e033d21a3b492dadb1f039d13d9179685fdcf985e24d7f587cbca4c27ed8a7fdb7d9ad59612642ac5f4db062443154753295363f45c052f
     PATCHES
         0003-Fix-UWP.patch
