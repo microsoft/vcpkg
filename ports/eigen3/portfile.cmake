@@ -5,7 +5,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libeigen/eigen
     REF d0e3791b1a0e2db9edd5f1d1befdb2ac5a40efe0
-    SHA512 bf79b8901e28157f8475f7e5a5348e10ccd040c7d43b1d8e998ae6dda0a41a5da99ea7695ecee928d46000e197ccae73026f6624647a46c151dab4770d43329a
+    SHA512 881d7bd7f0b77a2c7e43749b221c9f8a7d4900c676e285b5dcc139aea943878b617ceb6e7d4af65e485069c4cca6b6206ccf73b82ce8da7150acc48b7f32f94b
     HEAD_REF master
     PATCHES
         remove_configure_checks.patch # This removes unnecessary configure checks. Eigen3 just installs headers not anything more.
