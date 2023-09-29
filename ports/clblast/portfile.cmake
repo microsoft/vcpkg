@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CNugteren/CLBlast
-    REF 1.5.2
-    SHA512 6693704321bb7623a632ebfc71dcf07bbe4ba6c6f03a2ecf52bc10b401ae546bf82cdd3f6cc28aa9ea10f40dc7b2e86a6530f32cfbd522e24d4cf6a75c8c1100
+    REF "${VERSION}"
+    SHA512 3114b2499f13a8b12dc5dfaf3633d4a25c953da63bea3c2f09a99699ee49239c28a1db0033619ef74234af56068f94413aae8c721d1af6114b862670a32cdb8d
     HEAD_REF master
     PATCHES
         fix_install_path.patch
@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CLBLast)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CLBlast)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
