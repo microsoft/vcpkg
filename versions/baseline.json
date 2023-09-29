@@ -2785,8 +2785,8 @@
       "port-version": 4
     },
     "gaussianlib": {
-      "baseline": "2019-08-04",
-      "port-version": 2
+      "baseline": "2023-02-17",
+      "port-version": 0
     },
     "gazebo": {
       "baseline": "2022-01-20",
