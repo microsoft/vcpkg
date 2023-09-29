@@ -1,6 +1,6 @@
 {
   "name": "llgi",
-  "version-date": "2023-09-12",
+  "version-date": "2023-09-29",
   "description": "",
   "homepage": "https://github.com/altseed/LLGI",
   "dependencies": [
@@ -14,6 +14,9 @@
     }
   ],
   "features": {
+    "tool": {
+      "description": "Build ShaderTranspiler"
+    },
     "vulkan": {
       "description": "Build vulkan modules",
       "supports": "windows | linux",
