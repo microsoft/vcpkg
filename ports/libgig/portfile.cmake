@@ -31,8 +31,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 if("extra-tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES dlsdump gigdump gigmerge korg2gig korgdump rifftree sf2dump
-        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin"
-        AUTO_CLEAN)
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin")
 endif()
 vcpkg_cmake_config_fixup()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
