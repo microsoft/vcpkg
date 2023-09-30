@@ -1,17 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a9a8572..7d7ffb4 100644
+index 39536fc..648de6d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -5,7 +5,7 @@
- cmake_minimum_required(VERSION 3.9)
- # Keep the version below in sync with the one in db.h
- project(leveldb VERSION 1.23.0 LANGUAGES C CXX)
--
-+include(CMakePackageConfigHelpers)
- # C standard can be overridden when this is used as a sub-project.
- if(NOT CMAKE_C_STANDARD)
-   # This project can use C11, but will gracefully decay down to C89.
-@@ -483,6 +483,11 @@ if(LEVELDB_INSTALL)
+@@ -477,6 +477,11 @@ if(LEVELDB_INSTALL)
      DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/leveldb"
    )
  
