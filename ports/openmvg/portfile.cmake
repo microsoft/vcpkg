@@ -16,6 +16,7 @@ vcpkg_from_github(
         build_fixes.patch
         0001-eigen_3.4.0.patch
         0002-eigen-3.4.patch
+        0003-eigen_include_dir.patch
         no-absolute-paths.patch
         fix-coinutils.patch
 )

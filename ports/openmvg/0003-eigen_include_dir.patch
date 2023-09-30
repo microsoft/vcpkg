@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 5d909ec7..a362118d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -261,7 +261,7 @@ if (NOT Eigen3_FOUND)
+   set(OpenMVG_USE_INTERNAL_EIGEN ON)
+   find_package(Eigen QUIET)
+ else()
+-  set(EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
++  link_libraries(Eigen3::Eigen)
+ endif()
+ 
+ # ==============================================================================

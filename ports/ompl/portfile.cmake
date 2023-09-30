@@ -18,6 +18,7 @@ vcpkg_from_github(
     PATCHES
         0001_Export_targets.patch
         0002_Fix_config.patch
+        0003_fix_eigen_include_dir.patch
 )
 
 # Based on selected features different files get downloaded, so use the following command instead of patch.
