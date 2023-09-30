@@ -1,0 +1,19 @@
+diff --git a/Eigen/src/Core/util/ConfigureVectorization.h b/Eigen/src/Core/util/ConfigureVectorization.h
+index dd6d45171..0fc61f203 100644
+--- a/Eigen/src/Core/util/ConfigureVectorization.h
++++ b/Eigen/src/Core/util/ConfigureVectorization.h
+@@ -442,9 +442,11 @@
+   // We can use the optimized fp16 to float and float to fp16 conversion routines
+   #define EIGEN_HAS_FP16_C
+ 
+-  #if EIGEN_COMP_CLANG
+-    // Workaround for clang: The FP16C intrinsics for clang are included by
+-    // immintrin.h, as opposed to emmintrin.h as suggested by Intel:
++  #if EIGEN_COMP_GNUC
++    // Make sure immintrin.h is included, even if e.g. vectorization is
++    // explicitly disabled (see also issue #2395).
++    // Note that FP16C intrinsics for gcc and clang are included by immintrin.h,
++    // as opposed to emmintrin.h as suggested by Intel:
+     // https://software.intel.com/sites/landingpage/IntrinsicsGuide/#othertechs=FP16C&expand=1711
+     #include <immintrin.h>
+   #endif

@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         remove_configure_checks.patch # This removes unnecessary configure checks. Eigen3 just installs headers not anything more.
+        fix_fp16.patch
 )
 
 vcpkg_cmake_configure(
