@@ -4,10 +4,9 @@ vcpkg_from_github(
     REF d2dbdf89e543624be8351fd52308a9cf73374dbc
     SHA512 15d56bf0dca2e4bfb9128b8552a6aa01ed6b1431ab9c152ed51473f6fa237c31fbf3d5baa22523e3786d14fd716acb5436ed26fe89d46812ba9375e2417bc67a
     HEAD_REF main
+    PATCHES fix-build-flags.patch
 )
 
-#header-only library
-set(VCPKG_BUILD_TYPE release)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
