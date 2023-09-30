@@ -7,7 +7,7 @@ index c9956cf6..34edae05 100644
   
  find_package(Eigen3 REQUIRED)
 -set(EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
-+link_libraries(Eigen3::Eigen)
++set(EIGEN_INCLUDE_DIRS $<TARGET_PROPERTY:Eigen3::Eigen,INTERFACE_INCLUDE_DIRECTORIES>)
  
  # ==============================================================================
  # Ceres
