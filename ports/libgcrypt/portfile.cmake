@@ -27,7 +27,6 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-doc
-        --disable-silent-rules
         "AS=${VCPKG_DETECTED_CMAKE_ASM_COMPILER}"
         "GPG_ERROR_CONFIG=no"
     OPTIONS_RELEASE

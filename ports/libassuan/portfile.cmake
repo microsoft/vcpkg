@@ -22,7 +22,6 @@ vcpkg_configure_make(
     AUTOCONFIG
     OPTIONS
         --disable-doc
-        --disable-silent-rules
         "GPG_ERROR_CONFIG=no"
     OPTIONS_RELEASE
         "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"

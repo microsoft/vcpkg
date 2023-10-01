@@ -34,7 +34,6 @@ vcpkg_configure_make(
         ${options}
         --disable-tests
         --disable-doc
-        --disable-silent-rules
 )
 
 vcpkg_install_make()
