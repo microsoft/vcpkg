@@ -23,10 +23,11 @@ vcpkg_configure_make(
     OPTIONS
         --disable-doc
         --disable-silent-rules
-        OPTIONS_RELEASE
-            "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpg-error-config"
-        OPTIONS_DEBUG
-            "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpg-error-config"
+        "GPG_ERROR_CONFIG=no"
+    OPTIONS_RELEASE
+        "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"
+    OPTIONS_DEBUG
+        "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config"
 )
 
 vcpkg_install_make()

@@ -29,10 +29,11 @@ vcpkg_configure_make(
         --disable-doc
         --disable-silent-rules
         "AS=${VCPKG_DETECTED_CMAKE_ASM_COMPILER}"
+        "GPG_ERROR_CONFIG=no"
     OPTIONS_RELEASE
-        "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpg-error-config"
+        "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"
     OPTIONS_DEBUG
-        "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpg-error-config"
+        "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config"
 )
 
 vcpkg_install_make(OPTIONS "CCAS=${VCPKG_DETECTED_CMAKE_ASM_COMPILER}")
