@@ -2997,7 +2997,7 @@
       "port-version": 1
     },
     "gpgme": {
-      "baseline": "1.18.0",
+      "baseline": "1.22.0",
       "port-version": 0
     },
     "gpgmm": {
