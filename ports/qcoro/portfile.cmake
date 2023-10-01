@@ -47,11 +47,13 @@ endif()
 if (QCORO_WITH_QTTEST)
     vcpkg_cmake_config_fixup(PACKAGE_NAME QCoro6Test DO_NOT_DELETE_PARENT_CONFIG_PATH CONFIG_PATH lib/cmake/QCoro6Test)
 endif()
+vcpkg_cmake_config_fixup(PACKAGE_NAME QCoro6Coro DO_NOT_DELETE_PARENT_CONFIG_PATH CONFIG_PATH lib/cmake/QCoro6Coro)
 vcpkg_cmake_config_fixup(PACKAGE_NAME QCoro6 DO_NOT_DELETE_PARENT_CONFIG_PATH CONFIG_PATH lib/cmake/QCoro6)
 vcpkg_cmake_config_fixup(PACKAGE_NAME QCoro6Core CONFIG_PATH lib/cmake/QCoro6Core)
 
-# Remove debug includes
+# Remove debug includes and CMake macros
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
