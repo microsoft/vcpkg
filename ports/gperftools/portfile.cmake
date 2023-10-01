@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gperftools/gperftools
-    REF gperftools-2.10
-    SHA512 4400711723be9401f519d85b3b69c026e4715473cbed48ab0573df17abdf895fb971ee969875fe5127a2e8b9aba90d858285e50c8e012384c2c36d5a76b1f0c4
+    REF "gperftools-${VERSION}"
+    SHA512 8c68539f852ed9b24b0ae055098eba4056a5915b3be54bd62310c84c0080913e5b6faba4fc79da29e8e118df8cbad4bd7e40fe534333d4af1e8b709fde85fef0
     HEAD_REF master
 )
 
