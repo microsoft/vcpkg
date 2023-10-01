@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${tarball}"
     PATCHES
         cross-tools.patch
+        gpgrt-config.patch
         pkgconfig-libintl.patch
 )
 
@@ -34,7 +35,6 @@ vcpkg_configure_make(
         --disable-tests
         --disable-doc
         --disable-silent-rules
-        --enable-install-gpg-error-config # still used downstream
 )
 
 vcpkg_install_make()
@@ -49,11 +49,6 @@ if(NOT VCPKG_CROSSCOMPILING)
         USE_SOURCE_PERMISSIONS
     )
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
-endif()
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
-if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/gpg-error-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

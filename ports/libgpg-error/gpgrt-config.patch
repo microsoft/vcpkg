@@ -1,0 +1,37 @@
+diff --git a/src/gpgrt-config.in b/src/gpgrt-config.in
+index bada0f2..82efac5 100644
+--- a/src/gpgrt-config.in
++++ b/src/gpgrt-config.in
+@@ -166,7 +166,7 @@ read_config_file () {
+ 	fi
+ 	exit 1
+     fi
+-    read_config_from_stdin $RESULT < $RESULT
++    VAR_pcfiledir="${RESULT%/*}" read_config_from_stdin $RESULT < $RESULT
+ }
+ 
+ cleanup_vars_attrs () {
+@@ -458,8 +458,11 @@ determine_gpgrt_libdir () {
+     GPGRT_CONFIG="$0"
+     #
+     # Get the prefix of gpgrt-config assuming it's something like:
+-    #   <PREFIX>/bin/gpgrt-config
+-    gpgrt_prefix=${GPGRT_CONFIG%/*/*}
++    #   <PREFIX>/tools/libgpg-error[/debug]/bin/gpgrt-config
++    case "$GPGRT_CONFIG" in
++    */debug/bin/gpgrt-config) gpgrt_prefix=${GPGRT_CONFIG%/*/*/*/*/*} ;;
++    *)                        gpgrt_prefix=${GPGRT_CONFIG%/*/*/*/*} ;;
++    esac
+     possible_libdir1=${gpgrt_prefix}/lib
+     # Determine by using system libdir-format with CC, it's like:
+     #   Normal style: /usr/lib
+@@ -598,7 +601,8 @@ output=""
+ 
+ mt="no"
+ 
+-VAR_list=VAR_pc_sysrootdir
++VAR_list="VAR_pcfiledir VAR_pc_sysrootdir"
++VAR_pcfiledir=""
+ if [ -z "$PKG_CONFIG_SYSROOT_DIR" ]; then
+     VAR_pc_sysrootdir="/"
+ else
