@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_download_distfile(tarball
     URLS
         "https://gnupg.org/ftp/gcrypt/gpgme/gpgme-${VERSION}.tar.bz2"
@@ -29,18 +27,20 @@ vcpkg_configure_make(
         --disable-gpgsm-test
         --disable-g13-test
         --enable-languages=${LANGUAGES}
-        --with-libgpg-error-prefix=${CURRENT_INSTALLED_DIR}/tools/libgpg-error
-        --with-libassuan-prefix=${CURRENT_INSTALLED_DIR}/tools/libassuan
+    OPTIONS_RELEASE
+        "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"
+    OPTIONS_DEBUG
+        "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config"
 )
 
 vcpkg_install_make()
-# CMake config needs work for linkage and build type
-# vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Gpgmepp PACKAGE_NAME Gpgmepp)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 vcpkg_copy_pdbs() 
-# We have no dependency on glib, so remove this extra .pc file
-file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gpgme-glib.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gpgme-glib.pc")
 vcpkg_fixup_pkgconfig()
+
+# CMake config needs work for linkage and build type.
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+# This port doesn't support the windows-only glib integration.
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gpgme-glib.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gpgme-glib.pc")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gpgme/bin/gpgme-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
 if (NOT VCPKG_BUILD_TYPE)
