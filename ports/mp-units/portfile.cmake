@@ -19,7 +19,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
     OPTIONS
-      -DUNITS_USE_LIBFMT=${USE_LIBFMT}
+      -DMP_UNITS_USE_LIBFMT=${USE_LIBFMT}
 )
 
 vcpkg_cmake_install()
