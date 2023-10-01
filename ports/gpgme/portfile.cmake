@@ -6,15 +6,13 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/gpgme/gpgme-${VERSION}.tar.bz2"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gpgme/gpgme-${VERSION}.tar.bz2"
     FILENAME "gpgme-${VERSION}.tar.bz2"
-    SHA512 c0cb0b337d017793a15dd477a7f5eaef24587fcda3d67676bf746bb342398d04792c51abe3c26ae496e799c769ce667d4196d91d86e8a690d02c6718c8f6b4ac
+    SHA512 17053053fa885f01416433e43072ac716b5d5db0c3edf45b2d6e90e6384d127626e6ae3ce421abba8f449f5ca7e8963f3d62f3565d295847170bc998d1ec1a70
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${tarball}"
     PATCHES
-        disable-tests.patch
         disable-docs.patch
-        fix-c++11.patch # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpgme.git;a=commit;h=f02c20cc9c5756690b07abfd02a43533547ba2ef
  )
 
 vcpkg_list(SET LANGUAGES)
