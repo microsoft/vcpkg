@@ -5537,7 +5537,7 @@
       "port-version": 0
     },
     "mp-units": {
-      "baseline": "0.8.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "mp3lame": {
