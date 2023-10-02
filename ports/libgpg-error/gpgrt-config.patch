@@ -1,7 +1,16 @@
 diff --git a/src/gpgrt-config.in b/src/gpgrt-config.in
-index bada0f2..e774751 100644
+index bada0f2..8c03a05 100644
 --- a/src/gpgrt-config.in
 +++ b/src/gpgrt-config.in
+@@ -78,7 +78,7 @@ substitute_vars () {
+ 	esac
+     done
+ 
+-    echo "$__result"
++    echo "$__result" | sed -e 's,",,g'
+ }
+ 
+ #
 @@ -132,7 +132,6 @@ EOF2
  		*:|*:\ ) ;;
  		*)
