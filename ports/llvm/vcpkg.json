@@ -410,7 +410,7 @@
       "description": "Build with Sparc backend."
     },
     "target-spirv": {
-      "description": "Build with SPRIV backend (experimental)."
+      "description": "Build with SPIRV backend (experimental)."
     },
     "target-systemz": {
       "description": "Build with SystemZ backend."
