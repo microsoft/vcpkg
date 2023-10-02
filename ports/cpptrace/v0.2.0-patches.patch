@@ -1,21 +1,7 @@
-diff --git a/src/unwind/unwind_with_dbghelp.cpp b/src/unwind/unwind_with_dbghelp.cpp
-index c6f035a..375ee2e 100644
---- a/src/unwind/unwind_with_dbghelp.cpp
-+++ b/src/unwind/unwind_with_dbghelp.cpp
-@@ -121,7 +121,7 @@ namespace detail {
-                     // On x86/x64/arm, as far as I can tell, the frame return address is always one after the call
-                     // So we just decrement to get the pc back inside the `call` / `bl`
-                     // This is done with _Unwind too but conditionally based on info from _Unwind_GetIPInfo.
--                    trace.push_back(frame.AddrPC.Offset - 1);
-+                    trace.push_back(static_cast<uintptr_t>(frame.AddrPC.Offset) - 1);
-                 }
-             } else {
-                 // base
-/mnt/c/Users/rifkin/home/projects/cpptrace !10856 › git diff HEAD~2..HEAD                                                                                                                                                                                                                                                                      rifkin  falcon
-diff --git a/src/unwind/unwind_with_dbghelp.cpp b/src/unwind/unwind_with_dbghelp.cpp
+diff --git src/unwind/unwind_with_dbghelp.cpp src/unwind/unwind_with_dbghelp.cpp
 index c6f035a..7474c4b 100644
---- a/src/unwind/unwind_with_dbghelp.cpp
-+++ b/src/unwind/unwind_with_dbghelp.cpp
+--- src/unwind/unwind_with_dbghelp.cpp
++++ src/unwind/unwind_with_dbghelp.cpp
 @@ -21,6 +21,8 @@
 
  namespace cpptrace {
@@ -41,3 +27,4 @@ index c6f035a..7474c4b 100644
 +    #pragma warning(pop)
  }
  }
+
