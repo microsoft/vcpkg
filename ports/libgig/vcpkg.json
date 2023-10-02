@@ -15,16 +15,16 @@
     }
   ],
   "features": {
-    "tools": {
-      "description": "Build extra tools",
-      "dependencies": [
-        "libsndfile"
-      ]
-    },
     "tests": {
       "description": "Build test cases",
       "dependencies": [
         "cppunit"
+      ]
+    },
+    "tools": {
+      "description": "Build extra tools",
+      "dependencies": [
+        "libsndfile"
       ]
     }
   }
