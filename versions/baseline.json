@@ -6626,7 +6626,7 @@
     },
     "ptc-print": {
       "baseline": "1.4.1",
-      "port-version": 2
+      "port-version": 1
     },
     "ptex": {
       "baseline": "2.3.2",
