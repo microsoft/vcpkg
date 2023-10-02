@@ -4016,6 +4016,10 @@
       "baseline": "2.2.0",
       "port-version": 0
     },
+    "libcoro": {
+      "baseline": "0.9",
+      "port-version": 0
+    },
     "libcorrect": {
       "baseline": "2018-10-11",
       "port-version": 0
