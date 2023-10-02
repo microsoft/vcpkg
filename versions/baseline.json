@@ -3277,7 +3277,7 @@
       "port-version": 0
     },
     "hypre": {
-      "baseline": "2.23.0",
+      "baseline": "2.29.0",
       "port-version": 0
     },
     "iceoryx": {
