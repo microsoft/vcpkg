@@ -1,15 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f45a7dc..039ee53 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -37,11 +37,11 @@ if (UUID_TIME_GENERATOR)
+@@ -43,11 +43,11 @@ if (UUID_TIME_GENERATOR)
  endif()
  
  # Using span from std
 -if (NOT UUID_USING_CXX20_SPAN)
 -    target_include_directories(${PROJECT_NAME} INTERFACE
--            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gsl>
--            $<INSTALL_INTERFACE:include/gsl>)
+-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+-            $<INSTALL_INTERFACE:include>)
 -    install(DIRECTORY gsl DESTINATION include)
 +if (UUID_USING_CXX20_SPAN)
 +    target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
@@ -18,9 +17,8 @@ index f45a7dc..039ee53 100644
 +    target_link_libraries(${PROJECT_NAME} INTERFACE Microsoft.GSL::GSL)
  endif ()
  
- # Install step and imported target
+ if(UUID_ENABLE_INSTALL)
 diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
-index 7217b72..fb981d2 100644
 --- a/cmake/Config.cmake.in
 +++ b/cmake/Config.cmake.in
 @@ -9,6 +9,10 @@ if (@UUID_SYSTEM_GENERATOR@)

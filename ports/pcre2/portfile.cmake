@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         pcre2-10.35_fix-uwp.patch
         no-static-suffix.patch
+        fix-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -31,11 +32,11 @@ vcpkg_cmake_configure(
         -DPCRE2_SUPPORT_UNICODE=ON
         -DPCRE2_BUILD_TESTS=OFF
         -DPCRE2_BUILD_PCRE2GREP=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_BZip2=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Readline=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Editline=ON
         -DINSTALL_MSVC_PDB=${INSTALL_PDB}
-        -DCMAKE_REQUIRE_FIND_PACKAGE_BZip2=ON
-        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
     )
 
 vcpkg_cmake_install()
@@ -50,16 +51,14 @@ endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/pcre2.h" "${PCRE2_H}")
 
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-# The cmake file provided by pcre2 has some problems, so don't use it for now.
-#vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/cmake")
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/man")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/man"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/man"
+    "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(BUILD_STATIC)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -70,4 +69,5 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

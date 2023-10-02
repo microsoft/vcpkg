@@ -1,6 +1,7 @@
 {
   "name": "octomap",
   "version": "1.9.6",
+  "port-version": 1,
   "description": "An Efficient Probabilistic 3D Mapping Framework Based on Octrees",
   "homepage": "https://octomap.github.io/",
   "license": "BSD-3-Clause",

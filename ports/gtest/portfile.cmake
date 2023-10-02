@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF v1.13.0
-    SHA512 70c0cfb1b4147bdecb467ecb22ae5b5529eec0abc085763213a796b7cdbd81d1761d12b342060539b936fa54f345d33f060601544874d6213fdde79111fa813e
+    REF "v${VERSION}"
+    SHA512 765c326ccc1b87a01027385e69238266e356361cd4ee3e18e3c9d137a5d11fa5d657c164d02dd1be8fe693c8e10f2b580588dbfa57d27f070e2750f50d3e662c
     HEAD_REF main
     PATCHES
         001-fix-UWP-death-test.patch

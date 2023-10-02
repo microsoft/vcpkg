@@ -1,19 +1,29 @@
-# When this port is updated, the minizip port should be updated at the same time
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
+# When zlib updated, the minizip port should be updated at the same time
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO madler/zlib
-    REF v1.2.13
-    SHA512 44b834fbfb50cca229209b8dbe1f96b258f19a49f5df23b80970b716371d856a4adf525edb4c6e0e645b180ea949cb90f5365a1d896160f297f56794dd888659
+    REF "v${VERSION}"
+    SHA512 78eecf335b14af1f7188c039a4d5297b74464d61156e4f12a485c74beec7d62c4159584ad482a07ec57ae2616d58873e45b09cb8ea822bb5b17e43d163df84e9
     HEAD_REF master
     PATCHES
         0001-remove-ifndef-NOUNCRYPT.patch
         0002-add-declaration-for-mkdir.patch
-        0003-no-io64.patch
         pkgconfig.patch
+        android-fileapi.patch
 )
+
+# Maintainer switch: Temporarily set this to 1 to re-generate the lists
+# of exported symbols. This is needed when the version is bumped.
+set(GENERATE_SYMBOLS 0)
+if(GENERATE_SYMBOLS)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+        vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    else()
+        set(GENERATE_SYMBOLS 0)
+    endif()
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -23,6 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+          "${CMAKE_CURRENT_LIST_DIR}/minizip-win32.def"
           "${CMAKE_CURRENT_LIST_DIR}/unofficial-minizipConfig.cmake.in"
     DESTINATION "${SOURCE_PATH}/contrib/minizip"
 )
@@ -56,3 +67,8 @@ endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/minizipConfig.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/minizipConfig.cmake" @ONLY)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/contrib/minizip/MiniZip64_info.txt")
+
+if(GENERATE_SYMBOLS)
+    include("${CMAKE_CURRENT_LIST_DIR}/lib-to-def.cmake")
+    lib_to_def(BASENAME minizip REGEX "(call|fill|unz|win32|zip)")
+endif()
