@@ -2513,7 +2513,7 @@
       "port-version": 0
     },
     "fbthrift": {
-      "baseline": "2023.07.03.00",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "fcl": {
@@ -2557,7 +2557,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2023.07.03.00",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "flann": {
@@ -2637,7 +2637,7 @@
       "port-version": 0
     },
     "folly": {
-      "baseline": "2023.07.03.00",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "font-chef": {
@@ -4813,8 +4813,8 @@
       "port-version": 0
     },
     "liburing": {
-      "baseline": "2.3",
-      "port-version": 1
+      "baseline": "2.4",
+      "port-version": 0
     },
     "libusb": {
       "baseline": "1.0.26.11791",
@@ -5649,7 +5649,7 @@
       "port-version": 6
     },
     "mvfst": {
-      "baseline": "2023-05-18",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "mygui": {
@@ -6621,7 +6621,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2023.07.03.00",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "psimd": {
@@ -8765,7 +8765,7 @@
       "port-version": 5
     },
     "wangle": {
-      "baseline": "2023.07.03.00",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "wasmedge": {
