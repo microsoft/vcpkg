@@ -8,8 +8,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
-    REF 1.20.5
-    SHA512 2a996d8ac0f70c34dbbc02c875026df6e89346f0844fbaa25475075bcb6e57c81ceb7d71e729c3259eace851e3d7222cb3fe395e375d93eb45b1262a6ede1fdb
+    REF ${VERSION}
+    SHA512 0d69896d0a83452320df0d0f56c710df1365a259cd3f48dc7cd4df18d45b27caea7174aafa15ae5eb8637ccdef192c1047185b369b7232db4eaacbc57ffaaa22
     HEAD_REF master
     PATCHES
         fix-clang-cl.patch

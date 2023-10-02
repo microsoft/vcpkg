@@ -1,24 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
-    REF 50c85f01ab44b2470f08b0f8824cced109628fc6
-    SHA512 1673cdab4f0d73ba5e3d0ac1e8a7b136d25df59704575a468016650c3c6c0dcba0bdc0a2306f61a14d49792651b21e9233d166610e0b463624b309758f1b1c04
+    REF "${VERSION}"
+    SHA512 29ee621c1428808607ce499e527b5943b8a2172769cb7315ef25253db818f54f2da4bbf5539198c012e25e78c8c830205b46f6e6a83032e732e82a7d00d46312
     PATCHES
         001-disable-tools.patch
-        002-typo-in-default-option-value.patch
         003-fix-find-onnx.patch
+        004-compilation-with-cpp17.patch
+        005-tflite-search.patch
     HEAD_REF master)
-
-function(ov_checkout_in_path PATH REPO REF SHA512)
-    vcpkg_from_github(
-        OUT_SOURCE_PATH DEP_SOURCE_PATH
-        REPO ${REPO}
-        REF ${REF}
-        SHA512 ${SHA512}
-    )
-
-    file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/${PATH}")
-endfunction()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -45,12 +35,14 @@ if(ENABLE_INTEL_GPU)
             "Please, consider using VCPKG_LIBRARY_LINKAGE=\"dynamic\".")
         list(APPEND FEATURE_OPTIONS "-DENABLE_ONEDNN_FOR_GPU=OFF")
     else()
-        ov_checkout_in_path(
-            src/plugins/intel_gpu/thirdparty/onednn_gpu
-            oneapi-src/oneDNN
-            f27dedbfc093f51032a4580198bb80579440dc15
-            882eb42e31490df1b35b5e55bef1be8452b710b7a16f5ad648961510abd288e16dbd783e0163aab9dd161fd3a9bd836b0f4afc82b14043d80d1dad9c3400af1b
+        vcpkg_from_github(
+            OUT_SOURCE_PATH DEP_SOURCE_PATH
+            REPO oneapi-src/oneDNN
+            REF ec0b2ee85fc2a2dbdeec10035c5ef5813d8fb5ea
+            SHA512 abc09c9ab190cc043ba675fdcaf2da0069eacce14aad6e788a9957d8b6704cfcefe5a707e78d544d25acac35bc83217660ee64528150311f577d2ccbdd165de1
+            PATCHES 006-onednn-gpu-build.patch
         )
+        file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
     endif()
 
     list(APPEND FEATURE_OPTIONS
@@ -59,12 +51,21 @@ if(ENABLE_INTEL_GPU)
 endif()
 
 if(ENABLE_INTEL_CPU)
-    ov_checkout_in_path(
-        src/plugins/intel_cpu/thirdparty/onednn
-        openvinotoolkit/oneDNN
-        48bf41e04ba8cdccb1e7ad166fecfb329f5f84a1
-        8a5ef1ce07545bc28328d1cfd49a8ee8f2ff13c2e393623cb842982b83963881f3d096230805d2a187100c68a2ca30c99add5a975f3f623d9f4a51517c2d585f
+    vcpkg_from_github(
+        OUT_SOURCE_PATH DEP_SOURCE_PATH
+        REPO openvinotoolkit/oneDNN
+        REF a1aa20ca8f19465dc2fd18389953ed83798b2fd3
+        SHA512 0ff5b235a6f349ad94f52a3b8282f5c825eac7275ad784986d7f533863ace7a4ed71094b9f5cac85d473d2678e197727c1cb33dee5cf75cd793ded7be58f946e
     )
+    file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
+
+    vcpkg_from_github(
+        OUT_SOURCE_PATH DEP_SOURCE_PATH
+        REPO openvinotoolkit/mlas
+        REF c7c8a631315000f17c650af34431009d2f22129c
+        SHA512 4146598ce6b30a3eaea544d6703b949061118398e67b773aa11a3c0f3e8fbcc446d09ea893b9879f8869e977162bcada0d4895cb225cf2e2469fb71cd5942e53
+    )
+    file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/mlas")
 
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
         # scons (python tool) is required for ARM Compute Library building
@@ -77,12 +78,13 @@ if(ENABLE_INTEL_CPU)
             OUT_PYTHON_VAR OV_PYTHON_WITH_SCONS
         )
 
-        ov_checkout_in_path(
-            src/plugins/intel_cpu/thirdparty/ComputeLibrary
-            ARM-software/ComputeLibrary
-            v23.02.1
-            ee9439e0804bacd365f079cedc548ffe2c12b0d4a86780e0783186884eb5a6d7aa7ceac11c504e242bedc55c3d026b826c90adaafbdbd3e5cfa2562a1c4ee04d
+        vcpkg_from_github(
+            OUT_SOURCE_PATH DEP_SOURCE_PATH
+            REPO ARM-software/ComputeLibrary
+            REF v23.02.1
+            SHA512 ee9439e0804bacd365f079cedc548ffe2c12b0d4a86780e0783186884eb5a6d7aa7ceac11c504e242bedc55c3d026b826c90adaafbdbd3e5cfa2562a1c4ee04d
         )
+        file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
     endif()
 endif()
 
@@ -109,7 +111,6 @@ vcpkg_cmake_configure(
         "-DENABLE_NCC_STYLE=OFF"
         "-DENABLE_CPPLINT=OFF"
         "-DENABLE_SAMPLES=OFF"
-        "-DENABLE_COMPILE_TOOL=OFF"
         "-DENABLE_TEMPLATE=OFF"
         "-DENABLE_INTEL_GNA=OFF"
         "-DENABLE_PYTHON=OFF"
@@ -122,6 +123,8 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup()
 
+vcpkg_copy_pdbs()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
@@ -129,7 +132,6 @@ vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
         "${SOURCE_PATH}/licensing/third-party-programs.txt"
-        "${SOURCE_PATH}/licensing/tbb_third-party-programs.txt"
         "${SOURCE_PATH}/licensing/onednn_third-party-programs.txt"
         "${SOURCE_PATH}/licensing/runtime-third-party-programs.txt"
     COMMENT

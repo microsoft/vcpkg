@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 
 set(duktape_MAJOR_VERSION 2)
-set(duktape_MINOR_VERSION 4)
+set(duktape_MINOR_VERSION 7)
 set(duktape_PATCH_VERSION 0)
 set(duktape_VERSION ${duktape_MAJOR_VERSION}.${duktape_MINOR_VERSION}.${duktape_PATCH_VERSION})
 

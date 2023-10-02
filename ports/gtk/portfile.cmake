@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  55bc7808cc7796b06c27b1e64f608cd83b9b18ec #v4.10.4
-    SHA512 70859173ffc52e4fad4997157c6eb59cdb4dd8395cad8fa24931f0bf5396a800c20de09be88355c2c5e7c055bddb54f6e7cb92cc1b9c77c2da0896f52a39dceb
+    REF ${VERSION}
+    SHA512 f219ddc6f46061f516f99a3845f344269d51d7fc2554773f7d4cee7833c5be26ce809262466d18c2804559834eb595f0d802b6fc80d77b7e8bf046e4c1293d64
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
@@ -33,9 +33,6 @@ list(APPEND OPTIONS -Dwin32-backend=${win32}) #Enable the Windows gdk backend (o
 list(APPEND OPTIONS -Dmacos-backend=${osx}) #Enable the macOS gdk backend (only when building on macOS)
 
 if("introspection" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Feature introspection currently only supports dynamic build.")
-    endif()
     list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
 else()
@@ -88,7 +85,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 set(TOOL_NAMES gtk4-builder-tool
                gtk4-encode-symbolic-svg

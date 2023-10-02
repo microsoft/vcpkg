@@ -16,7 +16,7 @@ function(x_vcpkg_pkgconfig_get_modules)
         set(msvc "--msvc-syntax")
     endif()
 
-    set(PKGCONFIG "${CURRENT_INSTALLED_DIR}/../@HOST_TRIPLET@/tools/pkgconf/pkgconf@VCPKG_HOST_EXECUTABLE_SUFFIX@")
+    set(PKGCONFIG "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf@VCPKG_HOST_EXECUTABLE_SUFFIX@")
 
     set(backup_PKG_CONFIG_PATH "$ENV{PKG_CONFIG_PATH}")
 
