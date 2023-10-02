@@ -25,6 +25,7 @@ vcpkg_check_features(
         utils LLVM_BUILD_UTILS
         utils LLVM_INCLUDE_UTILS
         utils LLVM_INSTALL_UTILS
+        enable-assertions LLVM_ENABLE_ASSERTIONS
         enable-rtti LLVM_ENABLE_RTTI
         enable-ffi LLVM_ENABLE_FFI
         enable-terminfo LLVM_ENABLE_TERMINFO
@@ -41,7 +42,7 @@ include("${cmake_vars_file}")
 # LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
 # See https://developercommunity.visualstudio.com/content/problem/845933/miscompile-boolean-condition-deduced-to-be-always.html
 # and thread "[llvm-dev] Longstanding failing tests - clang-tidy, MachO, Polly" on llvm-dev Jan 21-23 2020.
-if(VCPKG_DETECTED_MSVC_VERSION LESS "1925" AND VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND VCPKG_DETECTED_MSVC_VERSION LESS "1925")
     list(APPEND FEATURE_OPTIONS
         -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
     )
@@ -66,19 +67,6 @@ foreach(external_library IN LISTS llvm_external_libraries)
         )
     endif()
 endforeach()
-
-# By default assertions are enabled for Debug configuration only.
-if("enable-assertions" IN_LIST FEATURES)
-    # Force enable assertions for all configurations.
-    list(APPEND FEATURE_OPTIONS
-        -DLLVM_ENABLE_ASSERTIONS=ON
-    )
-elseif("disable-assertions" IN_LIST FEATURES)
-    # Force disable assertions for all configurations.
-    list(APPEND FEATURE_OPTIONS
-        -DLLVM_ENABLE_ASSERTIONS=OFF
-    )
-endif()
 
 # LLVM_ABI_BREAKING_CHECKS can be WITH_ASSERTS (default), FORCE_ON or FORCE_OFF.
 # By default in LLVM, abi-breaking checks are enabled if assertions are enabled.
@@ -191,22 +179,25 @@ if("polly" IN_LIST FEATURES)
 endif()
 if("pstl" IN_LIST FEATURES)
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        message(FATAL_ERROR "Building pstl with MSVC is not supported. Disable it until issues are fixed.")
+        message(FATAL_ERROR "Building pstl with MSVC is not supported.")
     endif()
     list(APPEND LLVM_ENABLE_PROJECTS "pstl")
 endif()
 
 set(LLVM_ENABLE_RUNTIMES)
+if("libc" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "libc")
+endif()
 if("libcxx" IN_LIST FEATURES)
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        message(FATAL_ERROR "Building libcxx with MSVC is not supported, as cl doesn't support the #include_next extension.")
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND VCPKG_DETECTED_MSVC_VERSION LESS "1914")
+        # libcxx supports being built with clang-cl, but not with MSVC’s cl.exe, as cl doesn’t support the #include_next extension.
+        # Furthermore, VS 2017 or newer (19.14) is required.
+        # More info: https://releases.llvm.org/17.0.1/projects/libcxx/docs/BuildingLibcxx.html#support-for-windows
+        message(FATAL_ERROR "libcxx requiries MSVC 19.14 or newer.")
     endif()
     list(APPEND LLVM_ENABLE_RUNTIMES "libcxx")
 endif()
 if("libcxxabi" IN_LIST FEATURES)
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        message(FATAL_ERROR "Building libcxxabi with MSVC is not supported. Disable it until issues are fixed.")
-    endif()
     list(APPEND LLVM_ENABLE_RUNTIMES "libcxxabi")
 endif()
 if("libunwind" IN_LIST FEATURES)
@@ -266,9 +257,17 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-set(LLVM_LINK_JOBS 1)
-
 file(REMOVE "${SOURCE_PATH}/llvm/cmake/modules/Findzstd.cmake")
+
+# At least one runtime must be specified, otherwise default to "all".
+if("${LLVM_ENABLE_RUNTIMES}" STREQUAL "")
+    set(LLVM_ENABLE_RUNTIMES "all")
+endif()
+
+# At least one target must be specified, otherwise default to "all".
+if("${LLVM_TARGETS_TO_BUILD}" STREQUAL "")
+    set(LLVM_TARGETS_TO_BUILD "all")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
@@ -283,7 +282,7 @@ vcpkg_cmake_configure(
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         -DPACKAGE_VERSION=${VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
-        -DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}
+        -DLLVM_PARALLEL_LINK_JOBS=1
         -DLLVM_INSTALL_PACKAGE_DIR:PATH=share/llvm
         -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"

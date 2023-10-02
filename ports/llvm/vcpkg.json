@@ -26,7 +26,6 @@
   "default-features": [
     "clang",
     "default-targets",
-    "disable-assertions",
     "enable-bindings",
     "enable-terminfo",
     "enable-threads",
@@ -43,7 +42,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "default-targets",
             "tools"
           ]
         }
@@ -57,7 +55,6 @@
           "default-features": false,
           "features": [
             "compiler-rt",
-            "default-targets",
             "tools"
           ]
         }
@@ -113,19 +110,8 @@
             "target-arm"
           ],
           "platform": "arm & !arm64"
-        },
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "target-all"
-          ],
-          "platform": "!x86 & !x64 & !arm & !arm64"
         }
       ]
-    },
-    "disable-assertions": {
-      "description": "Build LLVM without assertions."
     },
     "enable-abi-breaking-checks": {
       "description": "Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_ON."
@@ -222,6 +208,10 @@
         }
       ]
     },
+    "libc": {
+      "description": "Include libc library.",
+      "supports": "linux"
+    },
     "libclc": {
       "description": "Include OpenCL library."
     },
@@ -232,7 +222,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "libcxxabi",
             "tools"
           ]
         }
@@ -270,7 +259,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "default-targets",
             "tools"
           ]
         }
@@ -284,7 +272,6 @@
           "default-features": false,
           "features": [
             "clang",
-            "default-targets",
             "enable-terminfo",
             "tools"
           ]
@@ -298,7 +285,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "default-targets",
             "tools"
           ]
         }
@@ -324,7 +310,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "default-targets",
             "tools",
             "utils"
           ]
@@ -452,7 +437,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "default-targets",
             "enable-threads"
           ]
         }
