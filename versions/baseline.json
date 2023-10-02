@@ -2993,7 +2993,7 @@
       "port-version": 1
     },
     "gpgme": {
-      "baseline": "1.18.0",
+      "baseline": "1.22.0",
       "port-version": 0
     },
     "gpgmm": {
@@ -4214,7 +4214,7 @@
     },
     "libgwenhywfar": {
       "baseline": "5.6.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libgxps": {
       "baseline": "0.3.2",
