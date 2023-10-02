@@ -1,7 +1,7 @@
-diff --git src/unwind/unwind_with_dbghelp.cpp src/unwind/unwind_with_dbghelp.cpp
+diff --git a/src/unwind/unwind_with_dbghelp.cpp b/src/unwind/unwind_with_dbghelp.cpp
 index c6f035a..7474c4b 100644
---- src/unwind/unwind_with_dbghelp.cpp
-+++ src/unwind/unwind_with_dbghelp.cpp
+--- a/src/unwind/unwind_with_dbghelp.cpp
++++ b/src/unwind/unwind_with_dbghelp.cpp
 @@ -21,6 +21,8 @@
 
  namespace cpptrace {
