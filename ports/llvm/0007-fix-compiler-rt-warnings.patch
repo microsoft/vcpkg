@@ -4,7 +4,7 @@
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/compiler-rt/lib/asan/CMakeLists.txt b/compiler-rt/lib/asan/CMakeLists.txt
-index 08fd68ab7acb..bbace507dd9a 100644
+index 1bfc6f0c5e37..f35c385c379a 100644
 --- a/compiler-rt/lib/asan/CMakeLists.txt
 +++ b/compiler-rt/lib/asan/CMakeLists.txt
 @@ -92,7 +92,7 @@ append_rtti_flag(OFF ASAN_CFLAGS)
@@ -42,3 +42,4 @@ index 520a024fbede..75b0b12b9da2 100644
  endif()
  
  set(UBSAN_LINK_FLAGS ${SANITIZER_COMMON_LINK_FLAGS})
+ 

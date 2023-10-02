@@ -13,8 +13,8 @@ vcpkg_from_github(
         0004-disable-libomp-aliases.patch
         0005-remove-numpy.patch
         0006-create-destination-mlir-directory.patch
-        0007-fix-compiler-rt-warnings.patch
-        0008-fix-compiler-rt-build-error.patch
+        0007-fix-compiler-rt-warnings.patch # fixed in upstream
+        0008-fix-compiler-rt-build-error.patch # fixed in upstream
 )
 
 vcpkg_check_features(

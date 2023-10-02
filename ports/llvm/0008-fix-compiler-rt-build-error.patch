@@ -1,17 +1,23 @@
- compiler-rt/CMakeLists.txt             | 11 ++++++
- llvm/cmake/modules/ChooseMSVCCRT.cmake | 62 +++++++++++++++++++++++++++++-----
- 2 files changed, 65 insertions(+), 8 deletions(-)
+ compiler-rt/CMakeLists.txt | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/compiler-rt/CMakeLists.txt b/compiler-rt/CMakeLists.txt
-index 1545340aa8a8..fd0430e76c7e 100644
+index 1545340aa8a8..cfa97023d281 100644
 --- a/compiler-rt/CMakeLists.txt
 +++ b/compiler-rt/CMakeLists.txt
-@@ -389,6 +389,17 @@ endif()
+@@ -389,6 +389,25 @@ endif()
  if(MSVC)
    # FIXME: In fact, sanitizers should support both /MT and /MD, see PR20214.
    set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded)
++
 +  # Remove any /M[DT][d] flags, and strip any definitions of _DEBUG.
-+  # TODO: We probably could remove this altogether.
++  # Since we're using CMAKE_MSVC_RUNTIME_LIBRARY (CMP0091 set to NEW),
++  # these options shouldn't be included in these flags variables. However,
++  # package managers that don't know which mechanism is used for passing
++  # CRT choice flags might be passing them both ways - which leads to
++  # duplicate CRT choice options. Thus make sure to strip out these flags
++  # from these variables, when we're forcing a CRT choice other than what
++  # the user requested here.
 +  foreach(flag_var
 +    CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
 +    CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
@@ -19,95 +25,10 @@ index 1545340aa8a8..fd0430e76c7e 100644
 +    CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
 +    string(REGEX REPLACE "[/-]M[DT]d" "" ${flag_var} "${${flag_var}}")
 +    string(REGEX REPLACE "[/-]MD" "" ${flag_var} "${${flag_var}}")
++    string(REGEX REPLACE "[/-]D_DEBUG" "" ${flag_var} "${${flag_var}}")
 +  endforeach()
-+  remove_definitions(-D_DEBUG)
++
    append_list_if(COMPILER_RT_HAS_Oy_FLAG /Oy- SANITIZER_COMMON_CFLAGS)
    append_list_if(COMPILER_RT_HAS_GS_FLAG /GS- SANITIZER_COMMON_CFLAGS)
  
-diff --git a/llvm/cmake/modules/ChooseMSVCCRT.cmake b/llvm/cmake/modules/ChooseMSVCCRT.cmake
-index 6d52ac97bac2..0305b6209985 100644
---- a/llvm/cmake/modules/ChooseMSVCCRT.cmake
-+++ b/llvm/cmake/modules/ChooseMSVCCRT.cmake
-@@ -4,14 +4,52 @@
- #
- # The macro is invoked at the end of the file.
- #
--# This mechanism is deprecated, but kept for transitioning users.
--#
--# This reads the LLVM_USE_CRT_<CONFIG> options and sets
--# CMAKE_MSVC_RUNTIME_LIBRARY accordingly. The previous mechanism allowed
--# setting different choices for different build configurations (for
--# multi-config generators), but translating multiple differing choices to
--# the corresponding CMAKE_MSVC_RUNTIME_LIBRARY generator expression isn't
--# supported by this transitional helper.
-+# CMake already sets CRT flags in the CMAKE_CXX_FLAGS_* and
-+# CMAKE_C_FLAGS_* variables by default. To let the user
-+# override that for each build type:
-+# 1. Detect which CRT is already selected, and reflect this in
-+# LLVM_USE_CRT_* so the user can have a better idea of what
-+# changes they're making.
-+# 2. Replace the flags in both variables with the new flag via a regex.
-+# 3. set() the variables back into the cache so the changes
-+# are user-visible.
-+
-+### Helper macros: ###
-+macro(make_crt_regex regex crts)
-+  set(${regex} "")
-+  foreach(crt ${${crts}})
-+    # Trying to match the beginning or end of the string with stuff
-+    # like [ ^]+ didn't work, so use a bunch of parentheses instead.
-+    set(${regex} "${${regex}}|(^| +)/${crt}($| +)")
-+  endforeach(crt)
-+  string(REGEX REPLACE "^\\|" "" ${regex} "${${regex}}")
-+endmacro(make_crt_regex)
-+
-+macro(get_current_crt crt_current regex flagsvar)
-+  # Find the selected-by-CMake CRT for each build type, if any.
-+  # Strip off the leading slash and any whitespace.
-+  string(REGEX MATCH "${${regex}}" ${crt_current} "${${flagsvar}}")
-+  string(REPLACE "/" " " ${crt_current} "${${crt_current}}")
-+  string(STRIP "${${crt_current}}" ${crt_current})
-+endmacro(get_current_crt)
-+
-+# Replaces or adds a flag to a variable.
-+# Expects 'flag' to be padded with spaces.
-+macro(set_flag_in_var flagsvar regex flag)
-+  string(REGEX MATCH "${${regex}}" current_flag "${${flagsvar}}")
-+  if("${current_flag}" STREQUAL "")
-+    set(${flagsvar} "${${flagsvar}}${${flag}}")
-+  else()
-+    string(REGEX REPLACE "${${regex}}" "${${flag}}" ${flagsvar} "${${flagsvar}}")
-+  endif()
-+  string(STRIP "${${flagsvar}}" ${flagsvar})
-+  # Make sure this change gets reflected in the cache/gui.
-+  # CMake requires the docstring parameter whenever set() touches the cache,
-+  # so get the existing docstring and re-use that.
-+  get_property(flagsvar_docs CACHE ${flagsvar} PROPERTY HELPSTRING)
-+  set(${flagsvar} "${${flagsvar}}" CACHE STRING "${flagsvar_docs}" FORCE)
-+endmacro(set_flag_in_var)
-+
- 
- macro(choose_msvc_crt MSVC_CRT)
-   if(LLVM_USE_CRT)
-@@ -20,6 +58,8 @@ macro(choose_msvc_crt MSVC_CRT)
- variables (LLVM_USE_CRT_DEBUG, etc) instead.")
-   endif()
- 
-+  make_crt_regex(MSVC_CRT_REGEX ${MSVC_CRT})
-+
-   foreach(build_type ${CMAKE_CONFIGURATION_TYPES} ${CMAKE_BUILD_TYPE})
-     string(TOUPPER "${build_type}" build)
-     if (NOT "${LLVM_USE_CRT_${build}}" STREQUAL "")
-@@ -43,6 +83,12 @@ variables (LLVM_USE_CRT_DEBUG, etc) instead.")
-       message(STATUS "Using VC++ CRT: ${CMAKE_MSVC_RUNTIME_LIBRARY}")
-       set(runtime_library_set 1)
-     endif()
-+    foreach(lang C CXX)
-+      # Clear any potentially manually set options from these variables.
-+      # Kept as temporary backwards compat (unsure if necessary).
-+      # TODO: We probably should remove it.
-+      set_flag_in_var(CMAKE_${lang}_FLAGS_${build} MSVC_CRT_REGEX "")
-+    endforeach(lang)
-   endforeach(build_type)
- endmacro(choose_msvc_crt MSVC_CRT)
  
