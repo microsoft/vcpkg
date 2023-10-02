@@ -1,0 +1,25 @@
+From b236da4a0bd0701a128944d2db35a97e3e4acac3 Mon Sep 17 00:00:00 2001
+From: Jeremy <51220084+jeremy-rifkin@users.noreply.github.com>
+Date: Mon, 2 Oct 2023 17:30:06 -0400
+Subject: [PATCH] Patch for compilation on 32-bit msvc
+
+---
+ src/unwind/unwind_with_dbghelp.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/unwind/unwind_with_dbghelp.cpp b/src/unwind/unwind_with_dbghelp.cpp
+index c6f035a..375ee2e 100644
+--- a/src/unwind/unwind_with_dbghelp.cpp
++++ b/src/unwind/unwind_with_dbghelp.cpp
+@@ -121,7 +121,7 @@ namespace detail {
+                     // On x86/x64/arm, as far as I can tell, the frame return address is always one after the call
+                     // So we just decrement to get the pc back inside the `call` / `bl`
+                     // This is done with _Unwind too but conditionally based on info from _Unwind_GetIPInfo.
+-                    trace.push_back(frame.AddrPC.Offset - 1);
++                    trace.push_back(static_cast<uintptr_t>(frame.AddrPC.Offset) - 1);
+                 }
+             } else {
+                 // base
+--
+2.25.1
+
