@@ -8,6 +8,7 @@ vcpkg_from_github(
         remove-register.patch
         fix-zstd-zlib-dependency.patch
         fix-dependency.patch
+        #        fix-build-warning.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -28,5 +29,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/proxygen)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
