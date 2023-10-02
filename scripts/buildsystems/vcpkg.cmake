@@ -268,7 +268,7 @@ else()
         set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
     elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 17 2022")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
-    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND APPLE)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_OSX_ARCHITECTURES)
         list(LENGTH CMAKE_OSX_ARCHITECTURES Z_VCPKG_OSX_ARCH_COUNT)
         if(Z_VCPKG_OSX_ARCH_COUNT EQUAL "0")
             message(WARNING "Unable to determine target architecture. "
