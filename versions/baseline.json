@@ -7189,8 +7189,8 @@
       "port-version": 2
     },
     "rbdl": {
-      "baseline": "3.2.0",
-      "port-version": 4
+      "baseline": "3.3.0",
+      "port-version": 5
     },
     "rbdl-orb": {
       "baseline": "3.2.0",
