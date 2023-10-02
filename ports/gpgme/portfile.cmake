@@ -27,6 +27,7 @@ vcpkg_configure_make(
         --disable-gpgsm-test
         --disable-g13-test
         --enable-languages=${LANGUAGES}
+        GPG_ERROR_CONFIG=/ # fake absolute path; gpgrt-config is used instead
     OPTIONS_RELEASE
         "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"
     OPTIONS_DEBUG
