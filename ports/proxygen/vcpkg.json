@@ -21,6 +21,7 @@
       "name": "gperf",
       "host": true
     },
+    "mvfst",
     "openssl",
     {
       "name": "vcpkg-cmake",
@@ -30,7 +31,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "mvfst",
     "wangle",
     "zlib",
     "zstd"
