@@ -39,13 +39,19 @@ vcpkg_configure_make(
         --disable-silent-rules
         --disable-binreloc
         --with-guis=${GUIS}
-        --with-libgpg-error-prefix=${CURRENT_INSTALLED_DIR}/tools/libgpg-error
-        --with-libgcrypt-prefix=${CURRENT_INSTALLED_DIR}/tools/libgcrypt
         --with-qt5-qmake=${CURRENT_INSTALLED_DIR}/tools/qt5/bin/qmake
         --with-qt5-moc=${CURRENT_INSTALLED_DIR}/tools/qt5/bin/moc
         --with-qt5-uic=${CURRENT_INSTALLED_DIR}/tools/qt5/bin/uic
         ${WITH_LIBXML2_CODE}
         "LDFLAGS=${LDFLAGS}"
+    OPTIONS_RELEASE
+        "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"
+        "gpg_error_config_args=gpg-error"
+        "LIBGCRYPT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgcrypt/bin/libgcrypt-config"
+    OPTIONS_DEBUG
+        "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config"
+        "gpg_error_config_args=gpg-error"
+        "LIBGCRYPT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgcrypt/debug/bin/libgcrypt-config"
 )
 
 vcpkg_install_make()
