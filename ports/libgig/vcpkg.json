@@ -15,7 +15,7 @@
     }
   ],
   "features": {
-    "extra-tools": {
+    "tools": {
       "description": "Build extra tools",
       "dependencies": [
         "libsndfile"

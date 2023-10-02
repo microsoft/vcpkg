@@ -29,7 +29,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-if("extra-tools" IN_LIST FEATURES)
+if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES dlsdump gigdump gigmerge korg2gig korgdump rifftree sf2dump
         SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin")
 endif()
