@@ -35,12 +35,13 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 vcpkg_copy_pdbs() 
+
+# This port doesn't support the windows-only glib integration.
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gpgme-glib.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gpgme-glib.pc")
 vcpkg_fixup_pkgconfig()
 
 # CMake config needs work for linkage and build type.
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
-# This port doesn't support the windows-only glib integration.
-file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gpgme-glib.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gpgme-glib.pc")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/gpgme/bin/gpgme-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
 if (NOT VCPKG_BUILD_TYPE)
