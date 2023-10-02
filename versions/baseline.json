@@ -1853,7 +1853,7 @@
       "port-version": 3
     },
     "cpptrace": {
-      "baseline": "v0.2",
+      "baseline": "0.2.0",
       "port-version": 0
     },
     "cppunit": {
