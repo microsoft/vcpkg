@@ -3625,7 +3625,7 @@
       "port-version": 0
     },
     "kdbindings": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.3",
       "port-version": 0
     },
     "kddockwidgets": {
