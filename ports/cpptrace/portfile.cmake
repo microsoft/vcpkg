@@ -7,9 +7,17 @@ vcpkg_from_github(
     PATCHES v0.2.0-patches.patch
 )
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  vcpkg_cmake_configure(
+      SOURCE_PATH "${SOURCE_PATH}"
+      OPTIONS -DCPPTRACE_STATIC=On
+  )
+else()
+  vcpkg_cmake_configure(
+      SOURCE_PATH "${SOURCE_PATH}"
+  )
+endif()
+
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME "cpptrace"
@@ -20,7 +28,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-if(WIN32)
+if(WIN32 AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
   file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cpptrace.dll" "${CURRENT_PACKAGES_DIR}/bin/cpptrace.dll")
