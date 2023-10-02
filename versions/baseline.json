@@ -1845,7 +1845,7 @@
       "port-version": 2
     },
     "cpptrace": {
-      "baseline": "v0.1",
+      "baseline": "v0.2",
       "port-version": 0
     },
     "cppunit": {

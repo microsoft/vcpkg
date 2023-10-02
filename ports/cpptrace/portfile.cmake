@@ -1,14 +1,13 @@
 vcpkg_from_github(
-	OUT_SOURCE_PATH SOURCE_PATH
-	REPO jeremy-rifkin/cpptrace
-	REF 4b11b87e4d905d003d0325a53994441cc767017a
-	SHA512
-7800f38e765bf667abf6b91dff88041ec9f3d6bc94a98f0745c90cfa575b6694adbe9f620de9518ebab1b1cb65d2c3c16fc58d8fae23084a94d3806cd7901c5b
-	HEAD_REF main
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO jeremy-rifkin/cpptrace
+    REF "v${VERSION}"
+    SHA512 75a91d29868d366df860412eeee34546cb4b9fdc448b330e695643593483fdd2ae4f959efb7bac8c7f832e2cc21f5423f907663231f9517ecf11155339498752
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
-	SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
