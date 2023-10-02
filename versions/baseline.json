@@ -3525,8 +3525,8 @@
       "port-version": 2
     },
     "jbig2dec": {
-      "baseline": "0.19",
-      "port-version": 3
+      "baseline": "0.20",
+      "port-version": 0
     },
     "jbigkit": {
       "baseline": "2.1",
