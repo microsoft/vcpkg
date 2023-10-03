@@ -2205,7 +2205,7 @@
       "port-version": 1
     },
     "dpp": {
-      "baseline": "10.0.25",
+      "baseline": "10.0.26",
       "port-version": 0
     },
     "draco": {
