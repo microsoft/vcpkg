@@ -1,0 +1,4 @@
+The package eCAL provides CMake targets:
+
+    find_package(eCAL CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE eCAL::core eCAL::core_c eCAL::core_pb eCAL::hdf5)
