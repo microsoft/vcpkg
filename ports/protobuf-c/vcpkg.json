@@ -1,7 +1,6 @@
 {
   "name": "protobuf-c",
-  "version-semver": "1.4.0",
-  "port-version": 2,
+  "version-semver": "1.4.1",
   "description": "This is protobuf-c, a C implementation of the Google Protocol Buffers data serialization format.",
   "homepage": "https://github.com/protobuf-c/protobuf-c",
   "dependencies": [
