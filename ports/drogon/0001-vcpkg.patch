@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4406362..0595ab8 100755
+index fbe2288..d7218a6 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -360,11 +360,10 @@ endif (NOT WIN32)
+@@ -367,11 +367,10 @@ endif (NOT WIN32)
  
  if (BUILD_POSTGRESQL)
      # find postgres
@@ -18,7 +18,7 @@ index 4406362..0595ab8 100755
          set(DROGON_SOURCES
              ${DROGON_SOURCES}
              orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc
-@@ -394,7 +393,7 @@ if (BUILD_POSTGRESQL)
+@@ -401,7 +400,7 @@ if (BUILD_POSTGRESQL)
                  ${private_headers}
                  orm_lib/src/postgresql_impl/PgConnection.h)
          endif (libpq_supports_batch)
@@ -27,20 +27,3 @@ index 4406362..0595ab8 100755
  endif (BUILD_POSTGRESQL)
  
  if (BUILD_MYSQL)
-
-index 9f2f1e7..76bd2ec 100755
---- a/drogon_ctl/CMakeLists.txt
-+++ b/drogon_ctl/CMakeLists.txt
-@@ -19,7 +19,11 @@ add_executable(_drogon_ctl
- target_link_libraries(_drogon_ctl ${PROJECT_NAME})
- if (WIN32 AND BUILD_SHARED_LIBS)
-   set(DROGON_FILE $<TARGET_FILE:drogon>)
--  set(TRANTOR_FILE $<TARGET_FILE:trantor>)
-+  if (USE_SUBMODULE)
-+    set(TRANTOR_FILE $<TARGET_FILE:trantor>)
-+  else()
-+    set(TRANTOR_FILE $<TARGET_FILE:Trantor::Trantor>)
-+  endif()
-   add_custom_command(TARGET _drogon_ctl POST_BUILD
-           COMMAND ${CMAKE_COMMAND}
-           -DCTL_FILE=${DROGON_FILE}

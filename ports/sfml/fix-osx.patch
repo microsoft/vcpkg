@@ -1,0 +1,13 @@
+diff --git a/cmake/Macros.cmake b/cmake/Macros.cmake
+index e0118eb..76a4dcc 100644
+--- a/cmake/Macros.cmake
++++ b/cmake/Macros.cmake
+@@ -24,8 +24,6 @@ function(sfml_set_stdlib target)
+         if (${CMAKE_GENERATOR} MATCHES "Xcode")
+             sfml_set_xcode_property(${target} CLANG_CXX_LIBRARY "libc++")
+         else()
+-            target_compile_options(${target} PRIVATE "-stdlib=libc++")
+-            target_link_libraries(${target} PRIVATE "-stdlib=libc++")
+         endif()
+     endif()
+ endfunction()
