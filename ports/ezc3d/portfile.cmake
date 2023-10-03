@@ -16,11 +16,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH "CMake")
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/ezc3d")
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/ezc3d")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
