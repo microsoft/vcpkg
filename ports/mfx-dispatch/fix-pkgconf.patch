@@ -24,9 +24,16 @@ diff --git a/libmfx.pc.cmake b/libmfx.pc.cmake
 index fabb541..5d248fe 100644
 --- a/libmfx.pc.cmake
 +++ b/libmfx.pc.cmake
-@@ -11,4 +11,4 @@ Requires.private:
+@@ -6,9 +6,9 @@ Requires.private:
+ Name: libmfx
+ Description: Intel Media SDK Dispatched static library
+-Version: 2013
++Version: 1.35
+ Requires:
+ Requires.private:
  Conflicts:
- Libs: -L${libdir} -lsupc++ ${libdir}/libmfx.lib
+-Libs: -L${libdir} -lsupc++ ${libdir}/libmfx.lib
++Libs: -L${libdir} -llibmfx
  Libs.private:
 -Cflags: -I${includedir} -I@INTELMEDIASDK_PATH@
 +Cflags: -I${includedir}

@@ -1,10 +1,9 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF n${VERSION}
-    SHA512 1b90c38b13149f2de7618ad419adc277afd5e65bbf52b849a7245aec0f92f73189c8547599dba8408b8828a767c1120f132727b57cd6231cd8b81de2471a4b8b
+    SHA512 da1b836c8f51cf69f95db750d5da5191a71d534fa7b0f019d6d6454f8dd6db5598789576b4fe5ad983dcd0197b9a7e8f9d43f10707b6d40ac31425da23da35b2
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -155,10 +154,18 @@ if(VCPKG_DETECTED_CMAKE_AR)
     list(APPEND prog_env "${AR_path}")
 endif()
 
+if(VCPKG_DETECTED_CMAKE_RANLIB)
+    get_filename_component(RANLIB_path "${VCPKG_DETECTED_CMAKE_RANLIB}" DIRECTORY)
+    get_filename_component(RANLIB_filename "${VCPKG_DETECTED_CMAKE_RANLIB}" NAME)
+    set(ENV{RANLIB} "${RANLIB_filename}")
+    string(APPEND OPTIONS " --ranlib=${RANLIB_filename}")
+    list(APPEND prog_env "${RANLIB_path}")
+endif()
+
 list(REMOVE_DUPLICATES prog_env)
 vcpkg_add_to_path(PREPEND ${prog_env})
 
-# More? RANLIB OBJCC STRIP BIN2C
+# More? OBJCC STRIP BIN2C
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
@@ -344,10 +351,6 @@ if("lzma" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-lzma")
 else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
-endif()
-
-if("libpng" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-decoder=png --enable-encoder=png")
 endif()
 
 if("mp3lame" IN_LIST FEATURES)

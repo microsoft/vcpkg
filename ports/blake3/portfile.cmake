@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BLAKE3-team/BLAKE3
     REF "${VERSION}"
-    SHA512 e2a3a4811a0a8c88492efb74123dcbe26176fd307e1ba527b67001ae076970a36fd26282d4cd728c875ab228827962564a00ff0c3a8d99e2f12a29bbf431c547
+    SHA512 eb782d48240cf2fa8cc3cddd699dce3a362eb480b3ca58a97d54cd3595a0c969e51fe14374b91136036e8e29c8f745efbd5a4d1aaed2c17f23cb89fb756645d0
     HEAD_REF main
+    PATCHES
+        fix-windows-arm-build-error.patch
 )
 
 vcpkg_cmake_configure(

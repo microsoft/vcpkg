@@ -301,15 +301,6 @@ drogon:arm-neon-android=fail
 drogon:arm64-android=fail
 drogon:x64-android=fail
 
-# requires python@2 from brew, but that no longer exists
-# python2 EOL yay!
-duktape:arm-neon-android=fail
-duktape:arm64-android=fail
-duktape:x64-android=fail
-duktape:x64-osx=skip
-duktape:arm64-osx=skip
-duktape:x64-linux=fail
-
 eathread:x64-android=fail
 elfio:arm-neon-android=fail
 elfio:arm64-android=fail
@@ -550,6 +541,10 @@ libcanberra:arm-neon-android=fail
 libcanberra:arm64-android=fail
 libcanberra:x64-android=fail
 libcerf:x64-windows-static-md=fail
+libcoro:arm-neon-android=fail
+libcoro:arm64-android=fail
+libcoro:x64-android=fail
+libcoro:x64-osx=fail
 libcpplocate:arm-neon-android=fail
 libcpplocate:arm64-android=fail
 libcpplocate:x64-android=fail
