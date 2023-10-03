@@ -2973,7 +2973,7 @@
       "port-version": 5
     },
     "google-cloud-cpp": {
-      "baseline": "2.15.1",
+      "baseline": "2.16.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
