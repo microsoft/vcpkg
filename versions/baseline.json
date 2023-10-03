@@ -3062,7 +3062,7 @@
     },
     "gstreamer": {
       "baseline": "1.22.5",
-      "port-version": 0
+      "port-version": 1
     },
     "gtest": {
       "baseline": "1.14.0",
