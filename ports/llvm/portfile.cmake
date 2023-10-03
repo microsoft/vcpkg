@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 ad75af49394b8cf2e6152ded55754901f48dc8f4efacfdc6d0651d3b5532893630773571c4fda5e853b9784a8a8a9d286a6a89511a8319726d774b801166ac33
+    SHA512 362ddb94fdd22d05bd11c950f1711eafbd47424f6da0b1b061da012ef1b39dd8f7efeb91b53c036ea0708aa3845893fe39d1fb529ac3b928df738b88717d1aee
     HEAD_REF main
     PATCHES
         0001-fix-install-package-dir.patch
@@ -14,7 +14,6 @@ vcpkg_from_github(
         0005-remove-numpy.patch
         0006-create-destination-mlir-directory.patch
         0007-fix-compiler-rt-warnings.patch # fixed in upstream
-        0008-fix-compiler-rt-build-error.patch # fixed in upstream
 )
 
 vcpkg_check_features(
