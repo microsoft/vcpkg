@@ -28,7 +28,6 @@ vcpkg_check_features(
         enable-rtti LLVM_ENABLE_RTTI
         enable-ffi LLVM_ENABLE_FFI
         enable-terminfo LLVM_ENABLE_TERMINFO
-        enable-threads LLVM_ENABLE_THREADS
         enable-ios COMPILER_RT_ENABLE_IOS
         enable-eh LLVM_ENABLE_EH
         enable-bindings LLVM_ENABLE_BINDINGS
@@ -341,11 +340,12 @@ if("pstl" IN_LIST FEATURES)
 endif()
 
 if("flang" IN_LIST FEATURES)
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Config")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/CMakeFiles")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Config")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/CMakeFiles")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/CodeGen/CMakeFiles")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Dialect/CMakeFiles")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/HLFIR/CMakeFiles")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Transforms/CMakeFiles")
 endif()
 

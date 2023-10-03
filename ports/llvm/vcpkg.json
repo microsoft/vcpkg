@@ -28,7 +28,6 @@
     "default-targets",
     "enable-bindings",
     "enable-terminfo",
-    "enable-threads",
     "enable-zlib",
     "enable-zstd",
     "lld",
@@ -179,9 +178,6 @@
     "enable-terminfo": {
       "description": "Use terminfo database if available."
     },
-    "enable-threads": {
-      "description": "Use threads if available."
-    },
     "enable-zlib": {
       "description": "Build with ZLib.",
       "dependencies": [
@@ -210,7 +206,16 @@
     },
     "libc": {
       "description": "Include libc library.",
-      "supports": "linux"
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     },
     "libclc": {
       "description": "Include OpenCL library."
@@ -431,16 +436,7 @@
       "description": "Build with Xtensa backend (experimental)."
     },
     "tools": {
-      "description": "Build LLVM tools.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "enable-threads"
-          ]
-        }
-      ]
+      "description": "Build LLVM tools."
     },
     "utils": {
       "description": "Build LLVM utils."
