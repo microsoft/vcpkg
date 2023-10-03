@@ -2957,8 +2957,8 @@
       "port-version": 6
     },
     "gmmlib": {
-      "baseline": "21.3.2",
-      "port-version": 1
+      "baseline": "22.3.12",
+      "port-version": 0
     },
     "gmp": {
       "baseline": "6.2.1",
