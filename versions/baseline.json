@@ -2161,8 +2161,8 @@
       "port-version": 0
     },
     "discount": {
-      "baseline": "2.2.6",
-      "port-version": 3
+      "baseline": "3.0.0a",
+      "port-version": 0
     },
     "discreture": {
       "baseline": "2020-01-29",
