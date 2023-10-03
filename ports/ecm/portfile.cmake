@@ -4,10 +4,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 fc0c6e323fcc8862c4e093ced9571647108708fbdab474ef34dbc751ac5373d9b107bec53e56e09ede62dc56b36dad096d55f08f03f1f29f634219347df7d06f
     HEAD_REF master
-    PATCHES
-        fix_canberra.patch         # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/187
-        fix_libmount.patch         # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/200
-        fix_generateqmltypes.patch # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/201
 )
 
 vcpkg_cmake_configure(
