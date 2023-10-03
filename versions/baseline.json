@@ -3633,8 +3633,8 @@
       "port-version": 0
     },
     "kealib": {
-      "baseline": "1.4.14",
-      "port-version": 1
+      "baseline": "1.5.2",
+      "port-version": 0
     },
     "kenlm": {
       "baseline": "20230531",
