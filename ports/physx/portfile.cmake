@@ -9,8 +9,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA-Omniverse/PhysX
-    REF 105.0-physx-5.2.1 # newest tag
-    SHA512 d1c27d79d9c54a6ea0a79f5fa3ccd0b7821a48116c765b185442809d21fdd20086e2bfd6408d8a87e1507e0b951f1d9efb794f33d53bc05ab017fa50a41ba770
+    REF 105.1-physx-5.3.0 # newest tag
+    SHA512 fa3897738aed583f0498587365aafc77107351d72888058d0b725bd39de1c33b37c99294b6346be165eaf3aa3c6228ca7ddb0a3b18e522c1fb79e2559d70b551
     HEAD_REF main
 )
 
@@ -65,12 +65,14 @@ endif()
 
 set($ENV{PM_PATHS} "")
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%40105.0-5.2.498.33012328-public-signed.7z"
-    FILENAME "PhysXGpu.7z"
-    SHA512 b834d4e0ed7d015d33d03862e30ad8296974e605bd4de49d9cfa168958d8e3b67a9b52cc1f2169f25c32211e1880de1ff7f76edae4d4a1b1f12dc6d1873c2d8e
-)
 if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_download_distfile(ARCHIVE
+        URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%40105.1-5.3.4207.33265367-windows-public.7z"
+        FILENAME "PhysXGpu.7z"
+        SHA512 010b4c135026a15710b2e0d0d503197456f8f9d2eb291b32df65aa3dbeff09ba0877c52af1724f7a9384af727657d247cabf9c330e11c7ae1e1be5d1b89dce81
+    )
+
+    # 7z might not be preinstalled on Win machines
     vcpkg_find_acquire_program(7Z)
     set(ENV{PM_PhysXGpu_PATH} "${CURRENT_BUILDTREES_DIR}/PhysXGpu_dep")
     file(MAKE_DIRECTORY "$ENV{PM_PhysXGpu_PATH}")
@@ -80,6 +82,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         LOGNAME "extract-PhysXGpu"
     )
 else()
+    vcpkg_download_distfile(ARCHIVE
+        URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXGpu%40105.1-5.3.4207.33265367-linux-x86_64-public.7z"
+        FILENAME "PhysXGpu.7z"
+        SHA512 a6209a7d4218e80c3cbeec10a80ca3aaa08793469ddcf01ed8bc4582beef0b13697e1bb91f3a59cfdbdfe9652fe22d7569be4de9f0d08a9525a60951c2989acd
+    )
+
     vcpkg_extract_source_archive(PHYSXGPU_SOURCE_PATH
         NO_REMOVE_ONE_LEVEL
         ARCHIVE "${ARCHIVE}"
@@ -90,12 +98,13 @@ endif()
 message(STATUS "Extracted dependency to $ENV{PM_PhysXGpu_PATH}")
 list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXGpu_PATH})
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXDevice%4018.12.7.4.7z"
-    FILENAME "PhysXDevice.7z"
-    SHA512 c20eb2f1e0dcb9d692cb718ca7e3a332291e72a09614f37080f101e5ebc1591033029f0f1e6fba33a17d4c9f59f13e561f3fc81cee34cd53d50b579c01dd3f3c
-)
 if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_download_distfile(ARCHIVE
+        URLS "https://d4i3qtqj3r0z5.cloudfront.net/PhysXDevice%4018.12.7.4.7z"
+        FILENAME "PhysXDevice.7z"
+        SHA512 c20eb2f1e0dcb9d692cb718ca7e3a332291e72a09614f37080f101e5ebc1591033029f0f1e6fba33a17d4c9f59f13e561f3fc81cee34cd53d50b579c01dd3f3c
+    )
+
     set(ENV{PM_PhysXDevice_PATH} "${CURRENT_BUILDTREES_DIR}/PhysXDevice_dep")
     file(MAKE_DIRECTORY "$ENV{PM_PhysXDevice_PATH}")
     vcpkg_find_acquire_program(7Z)
@@ -104,13 +113,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         WORKING_DIRECTORY "$ENV{PM_PhysXDevice_PATH}"
         LOGNAME "extract-PhysXDevice"
     )
-else()
-    vcpkg_extract_source_archive(PHYSXDEVICE_SOURCE_PATH
-        NO_REMOVE_ONE_LEVEL
-        ARCHIVE "${ARCHIVE}"
-        BASE_DIRECTORY PhysXDevice_dep
-    )
-    set(ENV{PM_PhysXDevice_PATH} "${PHYSXDEVICE_SOURCE_PATH}")
 endif()
 message(STATUS "Extracted dependency to $ENV{PM_PhysXDevice_PATH}")
 list(APPEND ENV{PM_PATHS} $ENV{PM_PhysXDevice_PATH})
@@ -153,7 +155,7 @@ elseif(targetPlatform STREQUAL "vc17win64") # Again: this will work for any Win6
 endif()
 
 # Also make sure the packman-downloaded GPU driver is found as a binary
-list(APPEND platformCMakeParams -DPHYSX_PHYSXGPU_PATH=${PM_PhysXGpu_PATH}/bin)
+list(APPEND platformCMakeParams -DPHYSX_PHYSXGPU_PATH=$ENV{PM_PhysXGpu_PATH}/bin)
 
 # Anyway the above only works for clang, see
 # source/compiler/cmake/linux/CMakeLists.txt:164

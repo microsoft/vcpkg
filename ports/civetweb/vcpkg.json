@@ -1,7 +1,6 @@
 {
   "name": "civetweb",
-  "version": "1.15",
-  "port-version": 4,
+  "version": "1.16",
   "description": "Easy to use, powerful, C/C++ embeddable web server.",
   "homepage": "https://github.com/civetweb/civetweb",
   "supports": "!uwp",
