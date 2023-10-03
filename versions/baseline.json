@@ -6782,7 +6782,7 @@
     },
     "qt5-imageformats": {
       "baseline": "5.15.10",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-location": {
       "baseline": "5.15.10",
