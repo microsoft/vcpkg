@@ -46,4 +46,16 @@ else()
     list(APPEND CORE_OPTIONS -no-webp)
 endif()
 
-qt_submodule_installation(BUILD_OPTIONS ${CORE_OPTIONS} BUILD_OPTIONS_RELEASE ${OPT_REL} BUILD_OPTIONS_DEBUG ${OPT_DBG})
+qt_submodule_installation(
+    BUILD_OPTIONS ${CORE_OPTIONS} 
+    BUILD_OPTIONS_RELEASE ${OPT_REL} 
+    BUILD_OPTIONS_DEBUG ${OPT_DBG} 
+    OUT_SOURCE_PATH SOURCE_PATH
+)
+
+# Remove vendored dependencies to ensure they are not picked up by the build
+foreach(DEPENDENCY libtiff libwebp)
+    if(EXISTS ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
+        file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
+    endif()
+endforeach()
