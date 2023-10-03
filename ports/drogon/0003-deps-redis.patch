@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0595ab8..373e11e 100755
+index d7218a6..ccd08cb 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -460,10 +460,10 @@ if (BUILD_SQLITE)
+@@ -467,10 +467,10 @@ if (BUILD_SQLITE)
  endif (BUILD_SQLITE)
  
  if (BUILD_REDIS)

@@ -1,11 +1,11 @@
 diff --git a/src/mp-unitsConfig.cmake b/src/mp-unitsConfig.cmake
-index 668fd97d..0eebeded 100644
+index 10f82a82..ea637abd 100644
 --- a/src/mp-unitsConfig.cmake
 +++ b/src/mp-unitsConfig.cmake
 @@ -42,10 +42,10 @@ endfunction()
  include(CMakeFindDependencyMacro)
  
- if(UNITS_USE_LIBFMT)
+ if(MP_UNITS_USE_LIBFMT)
 -    find_dependency(fmt)
 +    find_dependency(fmt CONFIG)
  endif()
