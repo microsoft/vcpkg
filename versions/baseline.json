@@ -512,6 +512,10 @@
       "baseline": "1.2.0",
       "port-version": 1
     },
+    "bext-mp": {
+      "baseline": "2023-03-02",
+      "port-version": 0
+    },
     "bext-sml": {
       "baseline": "1.1.5",
       "port-version": 0
@@ -763,10 +767,6 @@
     "boost-exception": {
       "baseline": "1.81.0",
       "port-version": 2
-    },
-    "boost-ext-mp": {
-      "baseline": "2023-03-02",
-      "port-version": 0
     },
     "boost-fiber": {
       "baseline": "1.81.0",
