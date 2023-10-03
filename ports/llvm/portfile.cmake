@@ -258,9 +258,12 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 
 file(REMOVE "${SOURCE_PATH}/llvm/cmake/modules/Findzstd.cmake")
 
-# At least one runtime must be specified, otherwise default to "all".
 if("${LLVM_ENABLE_RUNTIMES}" STREQUAL "")
-    set(LLVM_ENABLE_RUNTIMES "all")
+    list(APPEND FEATURE_OPTIONS
+        -DLLVM_INCLUDE_RUNTIMES=OFF
+        -DLLVM_BUILD_RUNTIMES=OFF
+        -DLLVM_BUILD_RUNTIME=OFF
+    )
 endif()
 
 # At least one target must be specified, otherwise default to "all".
