@@ -10,8 +10,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre-next
-    REF e4c5f0f6d36c07af594e3ef143d017bda1581442 #v2.3.1
-    SHA512 263a50b64defa7345a109a068cc17c347a696f83f64abc071256bb46571ed6b2ef94ee3480d90938cdb7f745d36a4c4890d82677d357c62c9a2956eae8d4ac15
+    REF v${VERSION}
+    SHA512 62c721680ed77e74b6e1649ab7324bd49fc3c7c2e60ad76a62ec5f899f327d65a140462d75300eac4f41567a8903a748d07a760dc376eddcadf0aeea5a3ca5a7
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
@@ -30,6 +30,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
     set(OGRE_STATIC OFF)
 endif()
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        planar-reflections  OGRE_BUILD_COMPONENT_PLANAR_REFLECTIONS
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -89,6 +95,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
         else()
             file(RENAME "${CURRENT_PACKAGES_DIR}/lib/release/OgreMainStatic.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMainStatic.lib")
         endif()
+        file(GLOB LIBS "${CURRENT_PACKAGES_DIR}/lib/release/*")
+        file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/bin/release/*")
+        file(COPY ${LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/release/" "${CURRENT_PACKAGES_DIR}/bin/release/")
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
@@ -97,6 +108,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
         else()
             file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/debug/OgreMainStatic_d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMainStatic_d.lib")
         endif()
+        file(GLOB LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/debug/*")
+        file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/debug/bin/debug/*")
+        file(COPY ${LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/debug/" "${CURRENT_PACKAGES_DIR}/debug/bin/debug/")
     endif()
 
     file(GLOB SHARE_FILES "${CURRENT_PACKAGES_DIR}/share/ogre-next/*.cmake")
@@ -112,3 +128,5 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_fixup_pkgconfig()

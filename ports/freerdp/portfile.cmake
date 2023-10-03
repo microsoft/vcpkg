@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 a6c5b395424e730096b992fc2786369a78113819eddb5117bf45e5174286f36a22701c69fdd96b3d03c1aa3c2087bc97e2bfa2a5548236080fdbebcb01ffc4c7
+    SHA512 722d95d7591b5ce6a7e8a3b6ac8999df278dbcfc286a532f56bcbc4a3881e75b02c7e3cd4b296e67bc19d1165020acdcca198bf4bcc92aea5611760037fcc57f
     HEAD_REF master
     PATCHES
         DontInstallSystemRuntimeLibs.patch
