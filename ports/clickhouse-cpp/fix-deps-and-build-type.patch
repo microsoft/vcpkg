@@ -1,37 +1,32 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index aed0d85..296aa78 100644
+index aed0d85..b5f36e2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -62,26 +62,9 @@ PROJECT (CLICKHOUSE-CLIENT)
-         SET (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcc_s")
+@@ -63,21 +63,21 @@ PROJECT (CLICKHOUSE-CLIENT)
      ENDIF ()
  
--    IF (WITH_SYSTEM_ABSEIL)
+     IF (WITH_SYSTEM_ABSEIL)
 -        FIND_PACKAGE(absl REQUIRED)
--    ELSE ()
--        INCLUDE_DIRECTORIES (contrib/absl)
--        SUBDIRS (contrib/absl/absl)
--    ENDIF ()
--
--    IF (WITH_SYSTEM_LZ4)
--        FIND_PACKAGE(lz4 REQUIRED)
--    ELSE ()
--        INCLUDE_DIRECTORIES (contrib/lz4/lz4)
--        SUBDIRS (contrib/lz4/lz4)
--    ENDIF ()
--
--    IF (WITH_SYSTEM_CITYHASH)
--        FIND_PACKAGE(cityhash REQUIRED)
--    ELSE ()
--        INCLUDE_DIRECTORIES (contrib/cityhash/cityhash)
--        SUBDIRS (contrib/cityhash/cityhash)
--    ENDIF ()
-+    find_package(absl CONFIG REQUIRED)
-+    find_package(cityhash CONFIG REQUIRED)
-+    find_package(lz4 CONFIG REQUIRED)
++        FIND_PACKAGE(absl CONFIG REQUIRED)
+     ELSE ()
+         INCLUDE_DIRECTORIES (contrib/absl)
+         SUBDIRS (contrib/absl/absl)
+     ENDIF ()
  
-     SUBDIRS (
-         clickhouse
+     IF (WITH_SYSTEM_LZ4)
+-        FIND_PACKAGE(lz4 REQUIRED)
++        FIND_PACKAGE(lz4 CONFIG REQUIRED)
+     ELSE ()
+         INCLUDE_DIRECTORIES (contrib/lz4/lz4)
+         SUBDIRS (contrib/lz4/lz4)
+     ENDIF ()
+ 
+     IF (WITH_SYSTEM_CITYHASH)
+-        FIND_PACKAGE(cityhash REQUIRED)
++        FIND_PACKAGE(cityhash CONFIG REQUIRED)
+     ELSE ()
+         INCLUDE_DIRECTORIES (contrib/cityhash/cityhash)
+         SUBDIRS (contrib/cityhash/cityhash)
 diff --git a/clickhouse/CMakeLists.txt b/clickhouse/CMakeLists.txt
 index 67663ec..e67ba81 100644
 --- a/clickhouse/CMakeLists.txt
