@@ -93,8 +93,8 @@
       "port-version": 1
     },
     "alsa": {
-      "baseline": "1.2.8",
-      "port-version": 1
+      "baseline": "1.2.10",
+      "port-version": 0
     },
     "amd-adl-sdk": {
       "baseline": "17.1",
@@ -401,7 +401,7 @@
       "port-version": 0
     },
     "azmq": {
-      "baseline": "1.0.3",
+      "baseline": "2023-03-23",
       "port-version": 0
     },
     "azure-c-shared-utility": {
@@ -505,8 +505,8 @@
       "port-version": 1
     },
     "baresip-libre": {
-      "baseline": "3.2.0",
-      "port-version": 2
+      "baseline": "3.3.0",
+      "port-version": 0
     },
     "basisu": {
       "baseline": "1.11",
@@ -2513,7 +2513,7 @@
       "port-version": 0
     },
     "fbthrift": {
-      "baseline": "2023.07.03.00",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "fcl": {
@@ -2557,7 +2557,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2023.07.03.00",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "flann": {
@@ -2597,7 +2597,7 @@
       "port-version": 0
     },
     "flecs": {
-      "baseline": "3.2.4",
+      "baseline": "3.2.7",
       "port-version": 0
     },
     "flint": {
@@ -2637,7 +2637,7 @@
       "port-version": 0
     },
     "folly": {
-      "baseline": "2023.07.03.00",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "font-chef": {
@@ -3209,7 +3209,7 @@
       "port-version": 0
     },
     "hffix": {
-      "baseline": "1.2.1",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "hfsm2": {
@@ -3221,11 +3221,11 @@
       "port-version": 0
     },
     "highfive": {
-      "baseline": "2.6.2",
-      "port-version": 2
+      "baseline": "2.7.1",
+      "port-version": 0
     },
     "highs": {
-      "baseline": "1.5.1",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "highway": {
@@ -3261,11 +3261,11 @@
       "port-version": 3
     },
     "hunspell": {
-      "baseline": "1.7.1",
-      "port-version": 4
+      "baseline": "1.7.2",
+      "port-version": 0
     },
     "hwloc": {
-      "baseline": "2.9.0",
+      "baseline": "2.9.3",
       "port-version": 0
     },
     "hyperscan": {
@@ -3277,7 +3277,7 @@
       "port-version": 0
     },
     "hypre": {
-      "baseline": "2.23.0",
+      "baseline": "2.29.0",
       "port-version": 0
     },
     "iceoryx": {
@@ -3509,8 +3509,8 @@
       "port-version": 2
     },
     "jack2": {
-      "baseline": "1.9.21",
-      "port-version": 1
+      "baseline": "1.9.22",
+      "port-version": 0
     },
     "jaeger-client-cpp": {
       "baseline": "0.7.0",
@@ -3525,8 +3525,8 @@
       "port-version": 2
     },
     "jbig2dec": {
-      "baseline": "0.19",
-      "port-version": 3
+      "baseline": "0.20",
+      "port-version": 0
     },
     "jbigkit": {
       "baseline": "2.1",
@@ -3625,7 +3625,7 @@
       "port-version": 0
     },
     "kdbindings": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.3",
       "port-version": 0
     },
     "kddockwidgets": {
@@ -3909,8 +3909,8 @@
       "port-version": 3
     },
     "leveldb": {
-      "baseline": "1.22",
-      "port-version": 7
+      "baseline": "1.23",
+      "port-version": 0
     },
     "levmar": {
       "baseline": "2.6",
@@ -4014,6 +4014,10 @@
     },
     "libcopp": {
       "baseline": "2.2.0",
+      "port-version": 0
+    },
+    "libcoro": {
+      "baseline": "0.9",
       "port-version": 0
     },
     "libcorrect": {
@@ -4189,7 +4193,7 @@
       "port-version": 0
     },
     "libgnutls": {
-      "baseline": "3.7.8",
+      "baseline": "3.8.1",
       "port-version": 0
     },
     "libgo": {
@@ -4493,7 +4497,7 @@
       "port-version": 4
     },
     "libosmium": {
-      "baseline": "2.19.0",
+      "baseline": "2.20.0",
       "port-version": 0
     },
     "libosmscout": {
@@ -4809,8 +4813,8 @@
       "port-version": 0
     },
     "liburing": {
-      "baseline": "2.3",
-      "port-version": 1
+      "baseline": "2.4",
+      "port-version": 0
     },
     "libusb": {
       "baseline": "1.0.26.11791",
@@ -5533,7 +5537,7 @@
       "port-version": 0
     },
     "mp-units": {
-      "baseline": "0.8.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "mp3lame": {
@@ -5549,8 +5553,8 @@
       "port-version": 0
     },
     "mpfr": {
-      "baseline": "4.2.0",
-      "port-version": 1
+      "baseline": "4.2.1",
+      "port-version": 0
     },
     "mpg123": {
       "baseline": "1.31.3",
@@ -5645,7 +5649,7 @@
       "port-version": 6
     },
     "mvfst": {
-      "baseline": "2023-05-18",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "mygui": {
@@ -6449,7 +6453,7 @@
       "port-version": 1
     },
     "plf-colony": {
-      "baseline": "6.33",
+      "baseline": "7.3.1",
       "port-version": 0
     },
     "plf-hive": {
@@ -6617,7 +6621,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2023.07.03.00",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "psimd": {
@@ -6625,7 +6629,7 @@
       "port-version": 2
     },
     "ptc-print": {
-      "baseline": "1.4.0",
+      "baseline": "1.4.1",
       "port-version": 1
     },
     "ptex": {
@@ -7185,8 +7189,8 @@
       "port-version": 2
     },
     "rbdl": {
-      "baseline": "3.2.0",
-      "port-version": 4
+      "baseline": "3.3.0",
+      "port-version": 5
     },
     "rbdl-orb": {
       "baseline": "3.2.0",
@@ -7245,8 +7249,8 @@
       "port-version": 0
     },
     "refl-cpp": {
-      "baseline": "0.12.3",
-      "port-version": 1
+      "baseline": "0.12.4",
+      "port-version": 0
     },
     "refprop-headers": {
       "baseline": "2022-12-07",
@@ -7289,8 +7293,8 @@
       "port-version": 0
     },
     "rhash": {
-      "baseline": "1.4.2",
-      "port-version": 1
+      "baseline": "1.4.4",
+      "port-version": 0
     },
     "rhasheq": {
       "baseline": "2023-06-17",
@@ -7477,8 +7481,8 @@
       "port-version": 0
     },
     "scnlib": {
-      "baseline": "1.0",
-      "port-version": 1
+      "baseline": "1.1.2",
+      "port-version": 0
     },
     "scope-guard": {
       "baseline": "1.1.0",
@@ -8761,7 +8765,7 @@
       "port-version": 5
     },
     "wangle": {
-      "baseline": "2023.07.03.00",
+      "baseline": "2023.10.02.00",
       "port-version": 0
     },
     "wasmedge": {
