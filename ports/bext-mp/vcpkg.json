@@ -1,5 +1,5 @@
 {
-  "name": "boost-ext-mp",
+  "name": "bext-mp",
   "version-date": "2023-03-02",
   "description": "C++20 ~~Template~~ Meta-Programming",
   "homepage": "https://boost-ext.github.io/mp/",
