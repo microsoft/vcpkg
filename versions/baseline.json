@@ -4590,7 +4590,7 @@
     },
     "libremidi": {
       "baseline": "4.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libressl": {
       "baseline": "3.6.2",
