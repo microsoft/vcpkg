@@ -1,6 +1,6 @@
 {
   "name": "frugally-deep",
-  "version-semver": "0.15.19-p0",
+  "version-semver": "0.15.24",
   "description": "Header-only library for using Keras models in C++.",
   "homepage": "https://github.com/Dobiasd/frugally-deep",
   "license": "MIT",
