@@ -4969,7 +4969,7 @@
       "port-version": 1
     },
     "libxpm": {
-      "baseline": "3.5.14",
+      "baseline": "3.5.16",
       "port-version": 0
     },
     "libxpresent": {
