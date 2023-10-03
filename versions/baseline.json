@@ -6409,7 +6409,7 @@
       "port-version": 1
     },
     "physx": {
-      "baseline": "5.2.1",
+      "baseline": "5.3.0",
       "port-version": 0
     },
     "picojson": {
