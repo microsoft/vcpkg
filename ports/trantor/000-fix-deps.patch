@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 83bd458..ad56a27 100755
+index efa0434..b87a1a3 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -135,7 +135,7 @@ endif()
+@@ -190,7 +190,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE TRANTOR_TLS_PROVIDER=${TRANTO
  
  set(HAVE_C-ARES NO)
  if (BUILD_C-ARES)
@@ -11,7 +11,7 @@ index 83bd458..ad56a27 100755
      if(c-ares_FOUND)
        message(STATUS "c-ares found!")
        set(HAVE_C-ARES TRUE)
-@@ -143,7 +143,7 @@ if (BUILD_C-ARES)
+@@ -198,7 +198,7 @@ if (BUILD_C-ARES)
  endif ()
  
  if(HAVE_C-ARES)
@@ -21,11 +21,11 @@ index 83bd458..ad56a27 100755
        ${TRANTOR_SOURCES}
        trantor/net/inner/AresResolver.cc)
 diff --git a/cmake/templates/TrantorConfig.cmake.in b/cmake/templates/TrantorConfig.cmake.in
-index e18652d..6dad38e 100644
+index 8c62924..dd243d0 100644
 --- a/cmake/templates/TrantorConfig.cmake.in
 +++ b/cmake/templates/TrantorConfig.cmake.in
-@@ -14,7 +14,7 @@ if(@OpenSSL_FOUND@)
-   find_dependency(OpenSSL)
+@@ -17,7 +17,7 @@ if(@Botan_FOUND@)
+   find_dependency(Botan)
  endif()
  if(@c-ares_FOUND@)
 -  find_dependency(c-ares)
