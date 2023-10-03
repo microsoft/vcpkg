@@ -7,10 +7,6 @@
   "license": "BSD-2-Clause",
   "dependencies": [
     {
-      "name": "alsa",
-      "platform": "linux"
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     },
