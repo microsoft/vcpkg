@@ -5,9 +5,6 @@
   "description": "A stub package that ensures Visual Studio has ATL/MFC installed.",
   "supports": "windows",
   "dependencies": [
-    {
-      "name": "atl",
-      "platform": "windows"
-    }
+    "atl"
   ]
 }
