@@ -15,6 +15,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS    
         -DSTRING_ENCODING_TYPE=${STRING_ENCODING_TYPE}
+        -DGTEST_NANO=ON
 )
 
 vcpkg_cmake_install()
