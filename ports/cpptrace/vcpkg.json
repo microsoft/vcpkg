@@ -1,7 +1,7 @@
 {
   "name": "cpptrace",
   "version": "0.2.0",
-  "description": "Lightweight, zero-configuration-required, and cross-platform stacktrace library for C++",
+  "description": "Simple, portable, and self-contained stacktrace library for C++11 and newer",
   "homepage": "https://github.com/jeremy-rifkin/cpptrace",
   "license": "MIT",
   "supports": "!uwp",
