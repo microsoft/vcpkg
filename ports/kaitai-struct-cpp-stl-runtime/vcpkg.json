@@ -6,6 +6,7 @@
   "documentation": "https://doc.kaitai.io/lang_cpp_stl.html",
   "license": "MIT",
   "dependencies": [
+    "gtest",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -14,7 +15,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "gtest",
     "zlib"
   ],
   "default-features": [
