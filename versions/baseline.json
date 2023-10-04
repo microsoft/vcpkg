@@ -3493,8 +3493,8 @@
       "port-version": 0
     },
     "ismrmrd": {
-      "baseline": "1.13.2",
-      "port-version": 1
+      "baseline": "1.13.7",
+      "port-version": 0
     },
     "itk": {
       "baseline": "5.2.1",
@@ -3633,8 +3633,8 @@
       "port-version": 0
     },
     "kealib": {
-      "baseline": "1.4.14",
-      "port-version": 1
+      "baseline": "1.5.2",
+      "port-version": 0
     },
     "kenlm": {
       "baseline": "20230531",
@@ -4590,7 +4590,7 @@
     },
     "libremidi": {
       "baseline": "4.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libressl": {
       "baseline": "3.6.2",

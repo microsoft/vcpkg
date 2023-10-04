@@ -114,7 +114,6 @@ caf:arm64-android=fail
 caf:x64-android=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
-caffe2:arm64-windows=fail
 cairo:x64-android=fail
 # file conflict with dbg-macro
 c-dbg-macro:x86-windows=skip
@@ -445,7 +444,6 @@ gstreamer:x64-android=fail
 # upstream issue https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/1629.
 gstreamer:x64-windows-static = skip
 gstreamer:x64-windows-static-md = skip
-gtk:x64-windows-static=fail
 gtk:x64-windows-static-md=fail
 gts:arm-neon-android=fail
 gts:arm64-android=fail
@@ -952,7 +950,6 @@ plib:arm64-android=fail
 plib:x64-android=fail
 plplot:arm64-windows=fail
 pmdk:x64-android=fail
-pmdk:x64-linux=fail
 pmdk:x64-osx=fail
 pmdk:x64-windows-static=fail
 popsift:x64-windows-static-md=fail
