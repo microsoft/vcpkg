@@ -1385,7 +1385,7 @@
       "port-version": 0
     },
     "caf": {
-      "baseline": "0.19.1",
+      "baseline": "0.19.3",
       "port-version": 0
     },
     "caffe2": {
@@ -2981,7 +2981,7 @@
       "port-version": 5
     },
     "google-cloud-cpp": {
-      "baseline": "2.15.1",
+      "baseline": "2.16.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -6206,7 +6206,7 @@
     },
     "openvdb": {
       "baseline": "10.0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "openvino": {
       "baseline": "2023.1.0",
