@@ -1,7 +1,7 @@
-diff --git CMakeLists.txt CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
 index ea088e9..f94ecb1 100644
---- CMakeLists.txt
-+++ CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -202,8 +202,6 @@ endif()
 
  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -30,10 +30,10 @@ index ea088e9..f94ecb1 100644
    $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /permissive->
  )
 
-diff --git bundled/libdwarf/CMakeLists.txt bundled/libdwarf/CMakeLists.txt
+diff --git a/bundled/libdwarf/CMakeLists.txt b/bundled/libdwarf/CMakeLists.txt
 index bc30c88..b272e94 100644
---- bundled/libdwarf/CMakeLists.txt
-+++ bundled/libdwarf/CMakeLists.txt
+--- a/bundled/libdwarf/CMakeLists.txt
++++ b/bundled/libdwarf/CMakeLists.txt
 @@ -421,12 +421,10 @@ set(
 
  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -49,10 +49,10 @@ index bc30c88..b272e94 100644
 
  target_compile_definitions(dwarf PUBLIC LIBDWARF_BUILD)
 
-diff --git src/symbols/symbols_with_libdwarf.cpp src/symbols/symbols_with_libdwarf.cpp
+diff --git a/src/symbols/symbols_with_libdwarf.cpp b/src/symbols/symbols_with_libdwarf.cpp
 index ea52632..314a402 100644
---- src/symbols/symbols_with_libdwarf.cpp
-+++ src/symbols/symbols_with_libdwarf.cpp
+--- a/src/symbols/symbols_with_libdwarf.cpp
++++ b/src/symbols/symbols_with_libdwarf.cpp
 @@ -458,7 +458,8 @@ namespace libdwarf {
                      &table_count,
                      &line_context
@@ -73,10 +73,10 @@ index ea52632..314a402 100644
                  }
              } catch(...) {
                  if(!should_absorb_trace_exceptions()) {
-diff --git src/unwind/unwind_with_dbghelp.cpp src/unwind/unwind_with_dbghelp.cpp
+diff --git a/src/unwind/unwind_with_dbghelp.cpp b/src/unwind/unwind_with_dbghelp.cpp
 index c6f035a..995cdd3 100644
---- src/unwind/unwind_with_dbghelp.cpp
-+++ src/unwind/unwind_with_dbghelp.cpp
+--- a/src/unwind/unwind_with_dbghelp.cpp
++++ b/src/unwind/unwind_with_dbghelp.cpp
 @@ -21,6 +21,10 @@
 
  namespace cpptrace {
