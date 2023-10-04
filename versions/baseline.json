@@ -5236,10 +5236,6 @@
       "baseline": "0.21.0",
       "port-version": 2
     },
-    "make-vector": {
-      "baseline": "2019-02-09",
-      "port-version": 0
-    },
     "makeid": {
       "baseline": "1.0.2",
       "port-version": 0
