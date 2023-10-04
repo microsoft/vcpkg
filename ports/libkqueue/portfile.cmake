@@ -31,8 +31,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 else()
-file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/kqueue_static.lib")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/kqueue_static.lib")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/kqueue_static.lib")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/kqueue_static.lib")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
