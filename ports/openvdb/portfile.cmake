@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 92301bf675d700fedb0a2b3c4653158eeda6105e70623e5e4bda15d73391427cf0295a0426204888e2fe062847025542717bff34ceb923e51cffa1721e9d4105
     PATCHES
         0003-fix-cmake.patch
+        fix_nanovdb.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindTBB.cmake")
@@ -20,7 +21,18 @@ vcpkg_check_features(
     FEATURES
         "tools" OPENVDB_BUILD_TOOLS
         "ax"    OPENVDB_BUILD_AX
+        "nanovdb" OPENVDB_BUILD_NANOVDB
 )
+
+if (OPENVDB_BUILD_NANOVDB)
+    set(NANOVDB_OPTIONS
+    -DNANOVDB_BUILD_TOOLS=OFF
+    -DNANOVDB_USE_INTRINSICS=ON
+    -DNANOVDB_USE_CUDA=ON
+    -DNANOVDB_CUDA_KEEP_PTX=ON
+    -DNANOVDB_USE_OPENVDB=ON
+)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -37,10 +49,12 @@ vcpkg_cmake_configure(
         -DOPENVDB_BUILD_VDB_RENDER=${OPENVDB_BUILD_TOOLS}
         -DOPENVDB_BUILD_VDB_LOD=${OPENVDB_BUILD_TOOLS}
         -DUSE_PKGCONFIG=OFF
-        -DOPENVDB_BUILD_AX=${OPENVDB_BUILD_AX}
+        ${FEATURE_OPTIONS}
         -DUSE_EXPLICIT_INSTANTIATION=OFF
+        ${NANOVDB_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         OPENVDB_3_ABI_COMPATIBLE
+        OPENVDB_BUILD_TOOLS
 )
 
 vcpkg_cmake_install()
