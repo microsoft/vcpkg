@@ -1385,7 +1385,7 @@
       "port-version": 0
     },
     "caf": {
-      "baseline": "0.19.1",
+      "baseline": "0.19.3",
       "port-version": 0
     },
     "caffe2": {
