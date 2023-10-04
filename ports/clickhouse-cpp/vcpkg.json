@@ -1,6 +1,6 @@
 {
   "name": "clickhouse-cpp",
-  "version": "2.2.1",
+  "version": "2.4.0",
   "description": "C++ client for Yandex ClickHouse",
   "homepage": "https://github.com/ClickHouse/clickhouse-cpp",
   "license": "Apache-2.0",

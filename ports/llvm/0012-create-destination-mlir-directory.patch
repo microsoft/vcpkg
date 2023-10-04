@@ -1,0 +1,13 @@
+diff --git a/mlir/python/CMakeLists.txt b/mlir/python/CMakeLists.txt
+index 7eb6e05e4..b9e1a096a 100644
+--- a/mlir/python/CMakeLists.txt
++++ b/mlir/python/CMakeLists.txt
+@@ -483,6 +483,8 @@ add_mlir_python_common_capi_library(MLIRPythonCAPI
+     ${_ADDL_TEST_SOURCES}
+ )
+ 
++file(MAKE_DIRECTORY "${MLIR_BINARY_DIR}/python_packages/mlir_core/mlir/_mlir_libs")
++
+ ################################################################################
+ # The fully assembled package of modules.
+ # This must come last.

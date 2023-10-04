@@ -3,9 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO capnproto/capnproto
-    REF v0.10.3
-    SHA512 d8f699220f0738a456238f0e3e638940a340c005f378d6845c805d0e4935d19dc21ba1701710963edb59d8982fefe00aae5e834f912cb734e68cdee10154be01
+    REF v1.0.1
+    SHA512 189d8c483bded3889e903e3998d32d022b5a7bf45d519dc551dc9b2d7909a45a8816a09f4a817aa0fbb14c86c32b838a0c26457c2e89c33ec0eb93bbb93391c0
     HEAD_REF master
+    PATCHES
+        disable-C-20-co-routines.patch
+        undef-KJ_USE_EPOLL-for-ANDROID_PLATFORM-23.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
