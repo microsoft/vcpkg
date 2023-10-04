@@ -83,7 +83,7 @@ index ea52632..314a402 100644
              } catch(...) {
                  if(!should_absorb_trace_exceptions()) {
 diff --git a/src/unwind/unwind_with_dbghelp.cpp b/src/unwind/unwind_with_dbghelp.cpp
-index c6f035a..995cdd3 100644
+index c6f035a..83f5fc0 100644
 --- a/src/unwind/unwind_with_dbghelp.cpp
 +++ b/src/unwind/unwind_with_dbghelp.cpp
 @@ -21,6 +21,10 @@
@@ -97,6 +97,63 @@ index c6f035a..995cdd3 100644
      CPPTRACE_FORCE_NO_INLINE
      std::vector<uintptr_t> capture_frames(size_t skip, size_t max_depth) {
          skip++;
+@@ -30,9 +34,10 @@ namespace detail {
+         // GetThreadContext cannot be used on the current thread.
+         // RtlCaptureContext doesn't work on i386
+         CONTEXT context;
+-        #ifdef _M_IX86
++        #if defined(_M_IX86) || defined(__i386__)
+         ZeroMemory(&context, sizeof(CONTEXT));
+         context.ContextFlags = CONTEXT_CONTROL;
++        #if IS_MSVC
+         __asm {
+             label:
+             mov [context.Ebp], ebp;
+@@ -41,13 +46,25 @@ namespace detail {
+             mov [context.Eip], eax;
+         }
+         #else
++        asm(
++            "label:\n\t"
++            "mov{l %%ebp, %[cEbp] | %[cEbp], ebp};\n\t"
++            "mov{l %%esp, %[cEsp] | %[cEsp], esp};\n\t"
++            "mov{l $label, %%eax | eax, label};\n\t"
++            "mov{l %%eax, %[cEip] | %[cEip], eax};\n\t"
++            : [cEbp] "=r" (context.Ebp),
++              [cEsp] "=r" (context.Esp),
++              [cEip] "=r" (context.Eip)
++        );
++        #endif
++        #else
+         RtlCaptureContext(&context);
+         #endif
+         // Setup current frame
+         STACKFRAME64 frame;
+         ZeroMemory(&frame, sizeof(STACKFRAME64));
+         DWORD machine_type;
+-        #ifdef _M_IX86
++        #if defined(_M_IX86) || defined(__i386__)
+         machine_type           = IMAGE_FILE_MACHINE_I386;
+         frame.AddrPC.Offset    = context.Eip;
+         frame.AddrPC.Mode      = AddrModeFlat;
+@@ -55,7 +72,7 @@ namespace detail {
+         frame.AddrFrame.Mode   = AddrModeFlat;
+         frame.AddrStack.Offset = context.Esp;
+         frame.AddrStack.Mode   = AddrModeFlat;
+-        #elif _M_X64
++        #elif defined(_M_X64) || defined(__x86_64__)
+         machine_type           = IMAGE_FILE_MACHINE_AMD64;
+         frame.AddrPC.Offset    = context.Rip;
+         frame.AddrPC.Mode      = AddrModeFlat;
+@@ -63,7 +80,7 @@ namespace detail {
+         frame.AddrFrame.Mode   = AddrModeFlat;
+         frame.AddrStack.Offset = context.Rsp;
+         frame.AddrStack.Mode   = AddrModeFlat;
+-        #elif _M_IA64
++        #elif defined(_M_IA64) || defined(__aarch64__)
+         machine_type           = IMAGE_FILE_MACHINE_IA64;
+         frame.AddrPC.Offset    = context.StIIP;
+         frame.AddrPC.Mode      = AddrModeFlat;
 @@ -121,7 +138,7 @@ namespace detail {
                      // On x86/x64/arm, as far as I can tell, the frame return address is always one after the call
                      // So we just decrement to get the pc back inside the `call` / `bl`
