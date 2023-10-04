@@ -13,10 +13,8 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS    
         -DSTRING_ENCODING_TYPE=${STRING_ENCODING_TYPE}
-        -DBUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
 )
 
 vcpkg_cmake_install()
