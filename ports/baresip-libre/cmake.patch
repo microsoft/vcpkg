@@ -1,6 +1,6 @@
 diff -Naur --exclude='*.rej' re-3.4.0-orig/CMakeLists.txt re-3.4.0/CMakeLists.txt
 --- re-3.4.0-orig/CMakeLists.txt	2023-08-09 09:53:10.000000000 +0200
-+++ re-3.4.0/CMakeLists.txt	2023-10-03 10:01:11.000000000 +0200
++++ re-3.4.0/CMakeLists.txt	2023-10-04 08:48:23.000000000 +0200
 @@ -93,7 +93,7 @@
  endif()
  
@@ -10,7 +10,26 @@ diff -Naur --exclude='*.rej' re-3.4.0-orig/CMakeLists.txt re-3.4.0/CMakeLists.tx
  
  list(APPEND RE_DEFINITIONS
    -DRE_VERSION="${PROJECT_VERSION_FULL}"
-@@ -714,6 +714,28 @@
+@@ -694,7 +694,7 @@
+ if(LIBRE_BUILD_STATIC)
+   list(APPEND RE_INSTALL_TARGETS re)
+   add_library(re STATIC $<TARGET_OBJECTS:re-objs>)
+-  target_link_libraries(re PUBLIC ${LINKLIBS})
++  target_link_libraries(re PRIVATE ${LINKLIBS})
+   target_include_directories(re PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+   )
+@@ -702,6 +702,9 @@
+ 
+   if(MSVC)
+     set_target_properties(re PROPERTIES OUTPUT_NAME "re-static")
++    if(NOT LIBRE_BUILD_SHARED)
++      set(PC_LIBNAME "re-static")
++    endif()
+   endif()
+ endif()
+ 
+@@ -714,6 +717,28 @@
    add_subdirectory(packaging)
  endif()
  
@@ -39,7 +58,7 @@ diff -Naur --exclude='*.rej' re-3.4.0-orig/CMakeLists.txt re-3.4.0/CMakeLists.tx
  configure_file(packaging/libre.pc.in libre.pc @ONLY)
  
  
-@@ -725,6 +747,9 @@
+@@ -725,6 +750,9 @@
  
  install(TARGETS ${RE_INSTALL_TARGETS}
    EXPORT libre
@@ -49,7 +68,7 @@ diff -Naur --exclude='*.rej' re-3.4.0-orig/CMakeLists.txt re-3.4.0/CMakeLists.tx
    LIBRARY
      DESTINATION ${CMAKE_INSTALL_LIBDIR}
      COMPONENT Libraries
-@@ -743,7 +768,9 @@
+@@ -743,7 +771,9 @@
  
  install(EXPORT libre
    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libre
@@ -59,7 +78,7 @@ diff -Naur --exclude='*.rej' re-3.4.0-orig/CMakeLists.txt re-3.4.0/CMakeLists.tx
  )
  
  if(LIBRE_BUILD_SHARED)
-@@ -755,12 +782,8 @@
+@@ -755,12 +785,8 @@
    )
  endif()
  

@@ -9,7 +9,7 @@ vcpkg_from_github(
     SHA512 97ea35e4d4f36a9b3e47bb942497d495247e01106bcceef98fba4ab8e36061acaca88d12568990f9c8014b1061941ea5e2c6e8c0287e6dcd83a60a70400b083d
     HEAD_REF main
     PATCHES
-        wip.patch
+        cmake.patch
         use-c11.patch
 )
 
