@@ -1,8 +1,53 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ea088e9..47ec5bd 100644
+index ea088e9..580d95a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -202,8 +202,6 @@ endif()
+@@ -97,13 +97,12 @@ if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+   check_support(HAS_CXXABI has_cxxabi.cpp "" "" "")
+ endif()
+
+-if(NOT WIN32) # No need to bother checking in msvc, but do check in minngw
++if(NOT WIN32)
+   check_support(HAS_UNWIND has_unwind.cpp "" "" "")
+   check_support(HAS_EXECINFO has_execinfo.cpp "" "" "")
+   check_support(HAS_BACKTRACE has_backtrace.cpp "" "backtrace" "${CPPTRACE_BACKTRACE_PATH_DEFINITION}")
+   check_support(HAS_DL has_dl.cpp "" "dl" "")
+   set(STACKTRACE_LINK_LIB "stdc++_libbacktrace")
+-  check_support(HAS_STACKTRACE has_stacktrace.cpp "" "${STACKTRACE_LINK_LIB}" "")
+   if(APPLE)
+     find_program(ADDR2LINE_PATH atos PATHS ENV PATH)
+   else()
+@@ -114,6 +113,8 @@ if(NOT WIN32) # No need to bother checking in msvc, but do check in minngw
+   else()
+     set(HAS_ADDR2LINE TRUE)
+   endif()
++else()
++  check_support(HAS_STACKWALK has_stackwalk.cpp "" "dbghelp" "")
+ endif()
+
+ # =============================================== Autoconfig unwinding ===============================================
+@@ -139,12 +140,14 @@ if(
+       set(CPPTRACE_UNWIND_WITH_NOTHING On)
+       message(FATAL_ERROR "Cpptrace auto config: No unwinding back-end seems to be supported, stack tracing will not work. To compile anyway set CPPTRACE_UNWIND_WITH_NOTHING.")
+     endif()
+-  elseif(MINGW)
+-    set(CPPTRACE_UNWIND_WITH_DBGHELP On)
+-    message(STATUS "Cpptrace auto config: Using dbghelp for unwinding")
+-  elseif(WIN32)
+-    set(CPPTRACE_UNWIND_WITH_DBGHELP On)
+-    message(STATUS "Cpptrace auto config: Using dbghelp for unwinding")
++  elseif(MINGW OR WIN32)
++    if(HAS_STACKWALK)
++      set(CPPTRACE_UNWIND_WITH_DBGHELP On)
++      message(STATUS "Cpptrace auto config: Using dbghelp for unwinding")
++    else()
++      set(CPPTRACE_UNWIND_WITH_WINAPI On)
++      message(STATUS "Cpptrace auto config: Using winapi for unwinding")
++    endif()
+   endif()
+ else()
+   #message(STATUS "MANUAL CONFIG SPECIFIED")
+@@ -202,8 +205,6 @@ endif()
 
  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
@@ -11,7 +56,7 @@ index ea088e9..47ec5bd 100644
  set(
    sources
    src/cpptrace.cpp
-@@ -228,6 +226,7 @@ if(CPPTRACE_STATIC)
+@@ -228,6 +229,7 @@ if(CPPTRACE_STATIC)
    add_library(cpptrace STATIC ${sources} include/cpptrace/cpptrace.hpp)
  else()
    add_library(cpptrace SHARED ${sources} include/cpptrace/cpptrace.hpp)
@@ -19,7 +64,7 @@ index ea088e9..47ec5bd 100644
  endif()
 
  target_include_directories(
-@@ -250,9 +249,8 @@ set_target_properties(
+@@ -250,9 +252,8 @@ set_target_properties(
  target_compile_options(
    cpptrace
    PRIVATE
@@ -30,7 +75,7 @@ index ea088e9..47ec5bd 100644
    $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /permissive->
  )
 
-@@ -387,7 +385,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
+@@ -387,7 +388,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
 
    if(CPPTRACE_STATIC)
      install(
@@ -58,6 +103,127 @@ index bc30c88..b272e94 100644
 
  target_compile_definitions(dwarf PUBLIC LIBDWARF_BUILD)
 
+diff --git a/cmake/has_stacktrace.cpp b/cmake/has_stacktrace.cpp
+deleted file mode 100644
+index df60219..0000000
+--- a/cmake/has_stacktrace.cpp
++++ /dev/null
+@@ -1,8 +0,0 @@
+-#include <stacktrace>
+-
+-int main() {
+-    std::stacktrace trace = std::stacktrace::current();
+-    for(const auto entry : trace) {
+-        (void)entry;
+-    }
+-}
+diff --git a/cmake/has_stackwalk.cpp b/cmake/has_stackwalk.cpp
+new file mode 100644
+index 0000000..eff05b9
+--- /dev/null
++++ b/cmake/has_stackwalk.cpp
+@@ -0,0 +1,101 @@
++#include <windows.h>
++#include <dbghelp.h>
++
++#define IS_CLANG 0
++#define IS_GCC 0
++#define IS_MSVC 0
++
++#if defined(__clang__)
++ #undef IS_CLANG
++ #define IS_CLANG 1
++#elif defined(__GNUC__) || defined(__GNUG__)
++ #undef IS_GCC
++ #define IS_GCC 1
++#elif defined(_MSC_VER)
++ #undef IS_MSVC
++ #define IS_MSVC 1
++#else
++ #error "Unsupported compiler"
++#endif
++
++int main() {
++    HANDLE proc = GetCurrentProcess();
++    HANDLE thread = GetCurrentThread();
++    // https://jpassing.com/2008/03/12/walking-the-stack-of-the-current-thread/
++
++    // Get current thread context
++    // GetThreadContext cannot be used on the current thread.
++    // RtlCaptureContext doesn't work on i386
++    CONTEXT context;
++    #if defined(_M_IX86) || defined(__i386__)
++    ZeroMemory(&context, sizeof(CONTEXT));
++    context.ContextFlags = CONTEXT_CONTROL;
++    #if IS_MSVC
++    __asm {
++        label:
++        mov [context.Ebp], ebp;
++        mov [context.Esp], esp;
++        mov eax, [label];
++        mov [context.Eip], eax;
++    }
++    #else
++    asm(
++        "label:\n\t"
++        "mov{l %%ebp, %[cEbp] | %[cEbp], ebp};\n\t"
++        "mov{l %%esp, %[cEsp] | %[cEsp], esp};\n\t"
++        "mov{l $label, %%eax | eax, label};\n\t"
++        "mov{l %%eax, %[cEip] | %[cEip], eax};\n\t"
++        : [cEbp] "=r" (context.Ebp),
++            [cEsp] "=r" (context.Esp),
++            [cEip] "=r" (context.Eip)
++    );
++    #endif
++    #else
++    RtlCaptureContext(&context);
++    #endif
++    // Setup current frame
++    STACKFRAME64 frame;
++    ZeroMemory(&frame, sizeof(STACKFRAME64));
++    DWORD machine_type;
++    #if defined(_M_IX86) || defined(__i386__)
++    machine_type           = IMAGE_FILE_MACHINE_I386;
++    frame.AddrPC.Offset    = context.Eip;
++    frame.AddrPC.Mode      = AddrModeFlat;
++    frame.AddrFrame.Offset = context.Ebp;
++    frame.AddrFrame.Mode   = AddrModeFlat;
++    frame.AddrStack.Offset = context.Esp;
++    frame.AddrStack.Mode   = AddrModeFlat;
++    #elif defined(_M_X64) || defined(__x86_64__)
++    machine_type           = IMAGE_FILE_MACHINE_AMD64;
++    frame.AddrPC.Offset    = context.Rip;
++    frame.AddrPC.Mode      = AddrModeFlat;
++    frame.AddrFrame.Offset = context.Rsp;
++    frame.AddrFrame.Mode   = AddrModeFlat;
++    frame.AddrStack.Offset = context.Rsp;
++    frame.AddrStack.Mode   = AddrModeFlat;
++    #elif defined(_M_IA64) || defined(__aarch64__)
++    machine_type           = IMAGE_FILE_MACHINE_IA64;
++    frame.AddrPC.Offset    = context.StIIP;
++    frame.AddrPC.Mode      = AddrModeFlat;
++    frame.AddrFrame.Offset = context.IntSp;
++    frame.AddrFrame.Mode   = AddrModeFlat;
++    frame.AddrBStore.Offset= context.RsBSP;
++    frame.AddrBStore.Mode  = AddrModeFlat;
++    frame.AddrStack.Offset = context.IntSp;
++    frame.AddrStack.Mode   = AddrModeFlat;
++    #else
++    #error "Cpptrace: StackWalk64 not supported for this platform yet"
++    #endif
++    ZeroMemory(&context, sizeof(CONTEXT));
++    StackWalk64(
++        machine_type,
++        proc,
++        thread,
++        &frame,
++        machine_type == IMAGE_FILE_MACHINE_I386 ? NULL : &context,
++        NULL,
++        SymFunctionTableAccess64,
++        SymGetModuleBase64,
++        NULL
++    );
++}
 diff --git a/src/symbols/symbols_with_libdwarf.cpp b/src/symbols/symbols_with_libdwarf.cpp
 index ea52632..314a402 100644
 --- a/src/symbols/symbols_with_libdwarf.cpp
