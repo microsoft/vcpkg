@@ -4,7 +4,7 @@
   "description": "A user space implementation of the kqueue(2) kernel event notification mechanism libkqueue acts as a translator between the kevent structure and the native kernel facilities on Linux, Android, Solaris, and Windows.",
   "homepage": "https://github.com/mheily/libkqueue/",
   "license": "0BSD",
-  "supports": "windows",
+  "supports": "windows & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
