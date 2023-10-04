@@ -552,6 +552,10 @@
       "baseline": "1.2.0",
       "port-version": 1
     },
+    "bext-mp": {
+      "baseline": "2023-03-02",
+      "port-version": 0
+    },
     "bext-sml": {
       "baseline": "1.1.5",
       "port-version": 0
