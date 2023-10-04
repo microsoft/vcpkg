@@ -66,6 +66,7 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/mysql_plugin_include.patch #Fix include path of mysql plugin
                             patches/mysql-configure.patch      #Fix mysql project
                             patches/cocoa.patch                #Fix missing include on macOS Monterrey, https://code.qt.io/cgit/qt/qtbase.git/commit/src/plugins/platforms/cocoa?id=dece6f5840463ae2ddf927d65eb1b3680e34a547
+                            patches/xcode-15.patch             #From https://codereview.qt-project.org/c/qt/qtbase/+/503172
                             #patches/static_opengl.patch       #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static).
                                                                #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the
                                                                #the windows supplied gl.h header and the angle gl.h otherwise.
