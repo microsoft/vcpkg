@@ -20,6 +20,21 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/kqueue.dll ${CURRENT_PACKAGES_DIR}/debug/bin/kqueue.dll)
 endif()
 
+# The upstream package always creates a kqueue and kqueuestatic library; remove the static/shared library
+# depending on the build type
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/kqueue.lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/kqueue_static.lib" "${CURRENT_PACKAGES_DIR}/lib/kqueue.lib")
+
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/kqueue.lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/kqueue_static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/kqueue.lib")
+    
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+else()
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/kqueue_static.lib")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/kqueue_static.lib")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
