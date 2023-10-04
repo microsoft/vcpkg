@@ -11,16 +11,12 @@ index d20b4928..257d005a 100644
  endif()
  
  if(NANOVDB_USE_ZLIB AND NOT TARGET ZLIB::ZLIB)
-@@ -224,7 +224,11 @@ if(NANOVDB_USE_TBB)
+@@ -224,7 +224,7 @@ if(NANOVDB_USE_TBB)
  endif()
  
  if(NANOVDB_USE_BLOSC)
 -  target_link_libraries(nanovdb INTERFACE Blosc::blosc)
-+  if(BUILD_SHARED_LIBS)
-+    target_link_libraries(nanovdb INTERFACE blosc_shared)
-+  else()
-+    target_link_libraries(nanovdb INTERFACE blosc_static)
-+  endif()
++  target_link_libraries(nanovdb INTERFACE $<IF:$<TARGET_EXISTS:blosc_shared>,blosc_shared,blosc_static>)
    target_compile_definitions(nanovdb INTERFACE -DNANOVDB_USE_BLOSC)
  endif()
  

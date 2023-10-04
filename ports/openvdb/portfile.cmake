@@ -1,30 +1,11 @@
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        "tools" OPENVDB_BUILD_TOOLS
-        "ax"    OPENVDB_BUILD_AX
-        "nanovdb" OPENVDB_BUILD_NANOVDB
-)
-
-set(PATCH_LIST 0003-fix-cmake.patch)
-
-if (OPENVDB_BUILD_NANOVDB)
-    list(APPEND PATCH_LIST fix_nanovdb.patch)
-    set(NANOVDB_OPTIONS
-    -DNANOVDB_BUILD_TOOLS=OFF
-    -DNANOVDB_USE_INTRINSICS=ON
-    -DNANOVDB_USE_CUDA=ON
-    -DNANOVDB_CUDA_KEEP_PTX=ON
-    -DNANOVDB_USE_OPENVDB=ON
-)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
     REF be0e7a78861d2b7d9643f7a0cab04f3ab5951686 # v10.0.0
     SHA512 92301bf675d700fedb0a2b3c4653158eeda6105e70623e5e4bda15d73391427cf0295a0426204888e2fe062847025542717bff34ceb923e51cffa1721e9d4105
-    PATCHES ${PATCH_LIST}
+    PATCHES
+        0003-fix-cmake.patch
+        fix_nanovdb.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindTBB.cmake")
@@ -34,6 +15,24 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindOpenEXR.cmake")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OPENVDB_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPENVDB_SHARED)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "tools" OPENVDB_BUILD_TOOLS
+        "ax"    OPENVDB_BUILD_AX
+        "nanovdb" OPENVDB_BUILD_NANOVDB
+)
+
+if (OPENVDB_BUILD_NANOVDB)
+    set(NANOVDB_OPTIONS
+    -DNANOVDB_BUILD_TOOLS=OFF
+    -DNANOVDB_USE_INTRINSICS=ON
+    -DNANOVDB_USE_CUDA=ON
+    -DNANOVDB_CUDA_KEEP_PTX=ON
+    -DNANOVDB_USE_OPENVDB=ON
+)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
