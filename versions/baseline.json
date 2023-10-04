@@ -5113,8 +5113,8 @@
       "port-version": 0
     },
     "log4cplus": {
-      "baseline": "2.0.7",
-      "port-version": 1
+      "baseline": "2.1.0",
+      "port-version": 0
     },
     "log4cpp-log4cpp": {
       "baseline": "1.1.4",
