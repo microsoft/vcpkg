@@ -34,3 +34,4 @@ if(WIN32 AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cpptrace.dll" "${CURRENT_PACKAGES_DIR}/bin/cpptrace.dll")
   file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/cpptrace.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/cpptrace.dll")
 endif()
+
