@@ -552,6 +552,10 @@
       "baseline": "1.2.0",
       "port-version": 1
     },
+    "bext-mp": {
+      "baseline": "2023-03-02",
+      "port-version": 0
+    },
     "bext-sml": {
       "baseline": "1.1.5",
       "port-version": 0
@@ -1381,7 +1385,7 @@
       "port-version": 0
     },
     "caf": {
-      "baseline": "0.19.1",
+      "baseline": "0.19.3",
       "port-version": 0
     },
     "caffe2": {
@@ -1597,7 +1601,7 @@
       "port-version": 0
     },
     "clickhouse-cpp": {
-      "baseline": "2.2.1",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "clipboardxx": {
@@ -1818,6 +1822,10 @@
     },
     "cppcoro": {
       "baseline": "2022-10-25",
+      "port-version": 0
+    },
+    "cppdap": {
+      "baseline": "1.58.0-a",
       "port-version": 0
     },
     "cppfs": {
@@ -2429,7 +2437,7 @@
       "port-version": 2
     },
     "ezc3d": {
-      "baseline": "1.4.7",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "ezfoundation": {
@@ -2997,7 +3005,7 @@
       "port-version": 1
     },
     "gpgme": {
-      "baseline": "1.18.0",
+      "baseline": "1.22.0",
       "port-version": 0
     },
     "gpgmm": {
@@ -3193,8 +3201,8 @@
       "port-version": 0
     },
     "hdf5": {
-      "baseline": "1.14.0",
-      "port-version": 1
+      "baseline": "1.14.2",
+      "port-version": 0
     },
     "healpix": {
       "baseline": "1.12.10",
@@ -3222,7 +3230,7 @@
     },
     "highfive": {
       "baseline": "2.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "highs": {
       "baseline": "1.6.0",
@@ -3425,8 +3433,8 @@
       "port-version": 1
     },
     "immer": {
-      "baseline": "0.8.0",
-      "port-version": 1
+      "baseline": "0.8.1",
+      "port-version": 0
     },
     "implot": {
       "baseline": "0.16",
@@ -3493,8 +3501,8 @@
       "port-version": 0
     },
     "ismrmrd": {
-      "baseline": "1.13.2",
-      "port-version": 1
+      "baseline": "1.13.7",
+      "port-version": 0
     },
     "itk": {
       "baseline": "5.2.1",
@@ -3633,8 +3641,8 @@
       "port-version": 0
     },
     "kealib": {
-      "baseline": "1.4.14",
-      "port-version": 1
+      "baseline": "1.5.2",
+      "port-version": 0
     },
     "kenlm": {
       "baseline": "20230531",
@@ -3953,7 +3961,7 @@
       "port-version": 0
     },
     "libassuan": {
-      "baseline": "2.5.5",
+      "baseline": "2.5.6",
       "port-version": 0
     },
     "libatomic-ops": {
@@ -4173,8 +4181,8 @@
       "port-version": 4
     },
     "libgcrypt": {
-      "baseline": "1.10.1",
-      "port-version": 1
+      "baseline": "1.10.2",
+      "port-version": 0
     },
     "libgd": {
       "baseline": "2.3.3",
@@ -4201,7 +4209,7 @@
       "port-version": 5
     },
     "libgpg-error": {
-      "baseline": "1.46",
+      "baseline": "1.47",
       "port-version": 0
     },
     "libgpiod": {
@@ -4222,7 +4230,7 @@
     },
     "libgwenhywfar": {
       "baseline": "5.6.0",
-      "port-version": 3
+      "port-version": 4
     },
     "libgxps": {
       "baseline": "0.3.2",
@@ -4590,7 +4598,7 @@
     },
     "libremidi": {
       "baseline": "4.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libressl": {
       "baseline": "3.6.2",
@@ -5105,8 +5113,8 @@
       "port-version": 0
     },
     "log4cplus": {
-      "baseline": "2.0.7",
-      "port-version": 1
+      "baseline": "2.1.0",
+      "port-version": 0
     },
     "log4cpp-log4cpp": {
       "baseline": "1.1.4",
@@ -5754,7 +5762,7 @@
     },
     "netcdf-c": {
       "baseline": "4.8.1",
-      "port-version": 3
+      "port-version": 4
     },
     "netcdf-cxx4": {
       "baseline": "4.3.1",
@@ -6198,7 +6206,7 @@
     },
     "openvdb": {
       "baseline": "10.0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "openvino": {
       "baseline": "2023.1.0",
@@ -6746,7 +6754,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.10",
-      "port-version": 6
+      "port-version": 7
     },
     "qt5-canvas3d": {
       "baseline": "0",
