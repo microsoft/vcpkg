@@ -3601,7 +3601,7 @@
       "port-version": 6
     },
     "kaitai-struct-cpp-stl-runtime": {
-      "baseline": "0.10",
+      "baseline": "0.10.1",
       "port-version": 0
     },
     "kangaru": {
