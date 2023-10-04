@@ -7,7 +7,7 @@ index d20b4928..257d005a 100644
  
  if(NANOVDB_USE_BLOSC AND NOT TARGET Blosc::blosc)
 -  find_package(Blosc REQUIRED)
-+  find_package(blosc CONFIG REQUIRED)
++  find_package(Blosc REQUIRED NAMES blosc)
  endif()
  
  if(NANOVDB_USE_ZLIB AND NOT TARGET ZLIB::ZLIB)
