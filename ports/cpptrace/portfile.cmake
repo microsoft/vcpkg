@@ -7,16 +7,15 @@ vcpkg_from_github(
     PATCHES v0.2.0-patches.patch
 )
 
+vcpkg_list(SET options)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  vcpkg_cmake_configure(
-      SOURCE_PATH "${SOURCE_PATH}"
-      OPTIONS -DCPPTRACE_STATIC=On
-  )
-else()
-  vcpkg_cmake_configure(
-      SOURCE_PATH "${SOURCE_PATH}"
-  )
+  vcpkg_list(APPEND options -DCPPTRACE_STATIC=On)
 endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${options}
+)
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
