@@ -4,6 +4,7 @@
   "description": "Lightweight, zero-configuration-required, and cross-platform stacktrace library for C++",
   "homepage": "https://github.com/jeremy-rifkin/cpptrace",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
