@@ -55,6 +55,7 @@ vcpkg_cmake_configure(
         ${NANOVDB_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         OPENVDB_3_ABI_COMPATIBLE
+        OPENVDB_BUILD_TOOLS
 )
 
 vcpkg_cmake_install()

@@ -40,7 +40,10 @@
       ]
     },
     "nanovdb": {
-      "description": "A lightweight GPU friendly version of VDB initially targeting rendering applications"
+      "description": "A lightweight GPU friendly version of VDB initially targeting rendering applications",
+      "dependencies": [
+        "cuda"
+      ]
     },
     "tools": {
       "description": "OpenVDB utilities: view, print and render",
