@@ -1965,7 +1965,7 @@
       "port-version": 0
     },
     "cub": {
-      "baseline": "1.16.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "cubeb": {
