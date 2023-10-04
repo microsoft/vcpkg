@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ea088e9..f94ecb1 100644
+index ea088e9..47ec5bd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -202,8 +202,6 @@ endif()
@@ -30,6 +30,15 @@ index ea088e9..f94ecb1 100644
    $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /permissive->
  )
 
+@@ -387,7 +385,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
+
+   if(CPPTRACE_STATIC)
+     install(
+-      TARGETS cpptrace dwarf
++      TARGETS cpptrace
+       EXPORT cpptrace_targets
+       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 diff --git a/bundled/libdwarf/CMakeLists.txt b/bundled/libdwarf/CMakeLists.txt
 index bc30c88..b272e94 100644
 --- a/bundled/libdwarf/CMakeLists.txt
