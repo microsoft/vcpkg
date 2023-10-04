@@ -6,6 +6,6 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-file(COPY "${SOURCE_PATH}/include/make_vector.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/tcbrindle-make-vector")
+file(COPY "${SOURCE_PATH}/include/make_vector.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/make-vector")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
