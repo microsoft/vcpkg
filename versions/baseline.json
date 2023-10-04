@@ -6126,7 +6126,7 @@
     },
     "openimageio": {
       "baseline": "2.4.14.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openjpeg": {
       "baseline": "2.5.0",
