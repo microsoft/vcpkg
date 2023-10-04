@@ -1820,6 +1820,10 @@
       "baseline": "2022-10-25",
       "port-version": 0
     },
+    "cppdap": {
+      "baseline": "1.58.0-a",
+      "port-version": 0
+    },
     "cppfs": {
       "baseline": "1.3.0",
       "port-version": 3
