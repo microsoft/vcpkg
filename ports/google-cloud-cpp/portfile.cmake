@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
     REF "v${VERSION}"
-    SHA512 225202a8e799f630f0b07c392bf305c28e21b99ef8dc5a670238a6d08e0e2816cd8ca1c43d7b252bcf5d289f875e64c16413085f63663265169807fd59977e43
+    SHA512 a7767e37f0c4997e0d8493ea12e144b22ef529e23da54eb2a2f82848d9535bce23080948be80e5ef6697b55bbfc3ee11225f7ea83fe8fa5f622df7dc45144744
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
@@ -65,7 +65,7 @@ foreach(feature IN LISTS FEATURES)
 endforeach()
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils rest_internal opentelemetry dialogflow_cx dialogflow_es)
+foreach(suffix common googleapis grpc_utils rest_internal rest_protobuf_internal dialogflow_cx dialogflow_es)
     set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()
