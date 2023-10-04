@@ -1,5 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 12fd424..11371df 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -126,9 +126,13 @@ endif()
+ find_package(PANGOCAIRO)
+ find_package(PkgConfig)
+ if(PkgConfig_FOUND)
+-  pkg_check_modules(POPPLER poppler-glib)
+-  pkg_check_modules(RSVG librsvg-2.0)
+-  pkg_check_modules(WEBP libwebp)
++  #pkg_check_modules(POPPLER poppler-glib IMPORTED_TARGET REQUIRED)
++  set(POPPLER_LIBRARIES PkgConfig::POPPLER)
++  set(POPPLER_FOUND 0)
++  pkg_check_modules(RSVG librsvg-2.0 IMPORTED_TARGET REQUIRED)
++  set(RSVG_LIBRARIES PkgConfig::RSVG)
++  pkg_check_modules(WEBP libwebp IMPORTED_TARGET REQUIRED)
++  set(WEBP_LIBRARIES PkgConfig::WEBP)
+ else()
+   set(POPPLER_FOUND 0)
+   set(RSVG_FOUND 0)
 diff --git a/cmake/FindCAIRO.cmake b/cmake/FindCAIRO.cmake
-index a92916e..799fa68 100644
+index 65bb42f..47949f6 100644
 --- a/cmake/FindCAIRO.cmake
 +++ b/cmake/FindCAIRO.cmake
 @@ -1,6 +1,6 @@
@@ -7,11 +28,22 @@ index a92916e..799fa68 100644
  
 -if(WIN32)
 +if(0)
-   find_path(CAIRO_INCLUDE_DIR cairo/cairo.h)
+   find_path(
+     CAIRO_INCLUDE_DIR cairo.h
+     PATH_SUFFIXES cairo
+@@ -39,7 +39,9 @@ if(WIN32)
+   )
+ else()
+   find_package(PkgConfig)
+-  pkg_check_modules(CAIRO cairo)
++  pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
++  set(CAIRO_LIBRARIES PkgConfig::CAIRO)
++  set(CAIRO_LINK_LIBRARIES PkgConfig::CAIRO)
  
-   find_library(CAIRO_LIBRARY NAMES cairo)
+   find_package_handle_standard_args(CAIRO DEFAULT_MSG
+     CAIRO_INCLUDE_DIRS
 diff --git a/cmake/FindGD.cmake b/cmake/FindGD.cmake
-index d7e0cc9..2322fcd 100644
+index 0deb5e6..ef42889 100644
 --- a/cmake/FindGD.cmake
 +++ b/cmake/FindGD.cmake
 @@ -1,3 +1,11 @@
@@ -26,19 +58,41 @@ index d7e0cc9..2322fcd 100644
  find_path(GD_INCLUDE_DIR gd.h)
  find_library(GD_LIBRARY NAMES gd libgd)
  find_program(GD_RUNTIME_LIBRARY libgd.dll)
+diff --git a/cmake/FindGTS.cmake b/cmake/FindGTS.cmake
+index 8e544e9..88dd849 100644
+--- a/cmake/FindGTS.cmake
++++ b/cmake/FindGTS.cmake
+@@ -1,5 +1,5 @@
+ include(FindPackageHandleStandardArgs)
+-if(WIN32)
++if(0)
+   find_path(GTS_INCLUDE_DIR gts.h)
+   find_path(GLIB_INCLUDE_DIR glib.h PATH_SUFFIXES glib-2.0)
+   find_path(GLIBCONFIG_INCLUDE_DIR glibconfig.h
+@@ -40,7 +40,8 @@ if(WIN32)
+   )
+ else()
+   find_package(PkgConfig)
+-  pkg_check_modules(GTS gts)
++  pkg_check_modules(GTS gts IMPORTED_TARGET)
++  set(GTS_LINK_LIBRARIES PkgConfig::GTS)
+ 
+   find_package_handle_standard_args(GTS DEFAULT_MSG
+     GTS_INCLUDE_DIRS
 diff --git a/cmake/FindLTDL.cmake b/cmake/FindLTDL.cmake
-index a1ee8c2..08b7f50 100644
+index e955b74..046e9e8 100644
 --- a/cmake/FindLTDL.cmake
 +++ b/cmake/FindLTDL.cmake
-@@ -16,3 +16,6 @@ mark_as_advanced(LTDL_INCLUDE_DIR LTDL_LIBRARY)
- 
+@@ -17,4 +17,7 @@ mark_as_advanced(LTDL_INCLUDE_DIR LTDL_LIBRARY)
  set(LTDL_INCLUDE_DIRS ${LTDL_INCLUDE_DIR})
- set(LTDL_LIBRARIES ${LTDL_LIBRARY})
-+if(CMAKE_DL_LIBS AND NOT BUILD_SHARED_LIBS)
-+  set(LTDL_LIBRARIES "${LTDL_LIBRARIES};${CMAKE_DL_LIBS}")
-+endif()
+ if(NOT WIN32 OR MINGW)
+   set(LTDL_LIBRARIES ${LTDL_LIBRARY})
++  if(CMAKE_DL_LIBS AND NOT BUILD_SHARED_LIBS)
++    set(LTDL_LIBRARIES "${LTDL_LIBRARIES};${CMAKE_DL_LIBS}")
++  endif()
+ endif()
 diff --git a/cmake/FindPANGOCAIRO.cmake b/cmake/FindPANGOCAIRO.cmake
-index b92e5be..225589e 100644
+index b92e5be..01c4cc7 100644
 --- a/cmake/FindPANGOCAIRO.cmake
 +++ b/cmake/FindPANGOCAIRO.cmake
 @@ -1,6 +1,6 @@
@@ -49,13 +103,52 @@ index b92e5be..225589e 100644
    find_path(PANGOCAIRO_INCLUDE_DIR pango/pangocairo.h PATH_SUFFIXES pango-1.0)
    find_path(GLIB_INCLUDE_DIR glib.h PATH_SUFFIXES glib-2.0)
    find_path(GLIBCONFIG_INCLUDE_DIR glibconfig.h
-@@ -78,7 +78,8 @@ if(WIN32)
+@@ -78,7 +78,9 @@ if(WIN32)
    )
  else()
    find_package(PkgConfig)
 -  pkg_check_modules(PANGOCAIRO pangocairo)
 +  pkg_check_modules(PANGOCAIRO pangocairo IMPORTED_TARGET)
++  set(PANGOCAIRO_LIBRARIES PkgConfig::PANGOCAIRO)
 +  set(PANGOCAIRO_LINK_LIBRARIES PkgConfig::PANGOCAIRO) # https://gitlab.kitware.com/cmake/cmake/-/issues/16154
  
    find_package_handle_standard_args(PANGOCAIRO DEFAULT_MSG
      PANGOCAIRO_INCLUDE_DIRS
+diff --git a/cmd/dot/CMakeLists.txt b/cmd/dot/CMakeLists.txt
+index d2ea435..3b068b0 100644
+--- a/cmd/dot/CMakeLists.txt
++++ b/cmd/dot/CMakeLists.txt
+@@ -73,22 +73,20 @@ endif()
+ 
+ find_package(PkgConfig)
+ if(PkgConfig_FOUND)
+-  pkg_check_modules(GTS gts)
+   if(GTS_FOUND)
+     target_include_directories(dot_builtins SYSTEM PRIVATE ${GTS_INCLUDE_DIRS})
+     target_link_libraries(dot_builtins PRIVATE ${GTS_LINK_LIBRARIES})
+   endif()
+ 
+   pkg_check_modules(LASI lasi)
+-  if(LASI_FOUND)
++  if(TARGET gvplugin_lasi)
+     target_link_libraries(dot_builtins PRIVATE gvplugin_lasi)
+   endif()
+ endif()
+ 
+ if(PANGOCAIRO_FOUND)
+   target_link_libraries(dot_builtins PRIVATE gvplugin_pango)
+-  if(PkgConfig_FOUND)
+-    pkg_check_modules(WEBP libwebp)
++  if(TARGET gvplugin_webp)
+     if(WEBP_FOUND)
+       target_link_libraries(dot_builtins PRIVATE gvplugin_webp)
+     endif()
+@@ -96,7 +94,7 @@ if(PANGOCAIRO_FOUND)
+ endif()
+ 
+ find_library(SOCKET socket)
+-if(SOCKET)
++if(0)
+   target_link_libraries(dot_builtins PRIVATE ${SOCKET})
+ endif()
+ 
