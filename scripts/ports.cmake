@@ -1,5 +1,26 @@
 cmake_minimum_required(VERSION 3.21)
 
+# Remove CMAKE_ variables from the script call
+foreach(i RANGE 0 "${CMAKE_ARGC}")
+    unset(CMAKE_ARGV${i})
+endforeach()
+unset(CMAKE_ARGN)
+unset(CMAKE_ARGC)
+unset(i)
+# These don't make sense in script context
+unset(CMAKE_BINARY_DIR)
+unset(CMAKE_SOURCE_DIR)
+unset(CMAKE_CURRENT_BINARY_DIR)
+unset(CMAKE_CURRENT_SOURCE_DIR)
+unset(CMAKE_FILES_DIRECTORY)
+# Minimum CMake version is forced within vcpkg
+unset(CMAKE_MINIMUM_REQUIRED_VERSION)
+# CMAKE_VERSION is enough for doing version checks
+unset(CMAKE_MAJOR_VERSION)
+unset(CMAKE_MINOR_VERSION)
+unset(CMAKE_PATCH_VERSION)
+unset(CMAKE_TWEAK_VERSION)
+
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Location to stored scripts")
 list(APPEND CMAKE_MODULE_PATH "${SCRIPTS}/cmake")
 include("${SCRIPTS}/cmake/execute_process.cmake")

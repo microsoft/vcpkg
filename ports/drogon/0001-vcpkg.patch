@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fbe2288..d7218a6 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -367,11 +367,10 @@ endif (NOT WIN32)
+ 
+ if (BUILD_POSTGRESQL)
+     # find postgres
+-    find_package(pg)
+-    if (pg_FOUND)
+-        message(STATUS "libpq inc path:" ${PG_INCLUDE_DIRS})
+-        message(STATUS "libpq lib:" ${PG_LIBRARIES})
+-        target_link_libraries(${PROJECT_NAME} PRIVATE pg_lib)
++    find_package(PostgreSQL REQUIRED)
++    if(PostgreSQL_FOUND)
++        set(pg_FOUND true)
++        target_link_libraries(${PROJECT_NAME} PRIVATE PostgreSQL::PostgreSQL)
+         set(DROGON_SOURCES
+             ${DROGON_SOURCES}
+             orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc
+@@ -401,7 +400,7 @@ if (BUILD_POSTGRESQL)
+                 ${private_headers}
+                 orm_lib/src/postgresql_impl/PgConnection.h)
+         endif (libpq_supports_batch)
+-    endif (pg_FOUND)
++    endif (PostgreSQL_FOUND)
+ endif (BUILD_POSTGRESQL)
+ 
+ if (BUILD_MYSQL)

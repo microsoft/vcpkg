@@ -28,6 +28,7 @@ vcpkg_from_github(
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
       0019-missing-include.patch
+      0020-fix-compat-cuda12.2.patch
       "${ARM64_WINDOWS_FIX}"
 )
 # Disallow accidental build of vendored copies
