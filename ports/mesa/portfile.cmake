@@ -8,9 +8,12 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
     REF mesa-${VERSION}
-    SHA512 e4422e368c9ea169d9878fac603e01d2bd163853cd85edae951bff9db59927f54b826f2f6a4836f3fb772861ce1f0d0597763464da73c9fe449718d89c8a7401
+    SHA512 96f7602c98d532a269116bd5d3f9cbe87ca4425b309467cc19f83277a0faaa9804edea72dcaeb6f7774cac17790d5d76b58c357ef639cb6064e7480d93b861bf
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
+    PATCHES
+        gallium-fix-build-with-llvm-17.patch
+        clover-llvm-move-to-modern-pass-manager.patch
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako)
