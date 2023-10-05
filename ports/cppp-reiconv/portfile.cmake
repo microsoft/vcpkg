@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/cppp-project/cppp-reiconv/releases/download/v2.1.0/cppp-reiconv-v2.1.0.zip"
     FILENAME "cppp-reiconv-v2.1.0.zip"
-    SHA512 32a17e9931cbd329c15f34efe95a435857eb0b5ceeda862d0cf81a29141aa91da3329de5e21d0d718e37dadece3c5bfdc42efe7d3be46a593760540cb7240585
+    SHA512 56294d63a71818842ec3f4a513bdc022ea3f472b582e16d377ec61282005965e7a08d619b9620cc036feb391e5b2eab3bfb4a1a21dcc860df89234e847048678
 )
 
 vcpkg_extract_source_archive_ex(
