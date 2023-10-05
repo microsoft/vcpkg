@@ -3,15 +3,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO a-e-k/canvas_ity
-    REF f32fbb37e2fe7c0fcaee6ebdc02d3e5385603fd5
-    SHA512 37111c445ce36705f43ebd9c5acd68fc7dd1ddaf9ffd1b857a936ff7c0f861fdad26ad5af5c841f72898f561447e5efeb70814e928b961ecb68ac6ae39cae5b9
+    REF fc5c115d8ca8be0cf81c2247270cc955f78b6138
+    SHA512 19560fa09e8a8eeb09c05b26cf562dc506e6c88e1e66767a2214d2310188cb52ffe03294bd6448531703bd972e2a1995446a3cc20684c9d617ebe65ac93dd37a
     HEAD_REF master
 )
 
 file(INSTALL "${SOURCE_PATH}/src/canvas_ity.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-file(READ "${SOURCE_PATH}/src/canvas_ity.hpp" CANVAS_ITY_CODE)
-if(NOT CANVAS_ITY_CODE MATCHES "ISC license")
-    message(FATAL_ERROR "Please check license for this port")
-endif()
-vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
