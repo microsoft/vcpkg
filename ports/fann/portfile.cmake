@@ -50,10 +50,9 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/pkgconfig/fann.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/fann.pc")
 vcpkg_fixup_pkgconfig()
-#file(REMOVE_RECURSE empty directories left by the above renames)
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
