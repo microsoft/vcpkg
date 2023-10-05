@@ -1,27 +1,27 @@
-vcpkg_download_distfile(WINDOWS_SYMBOLS_PATCH
-    URLS https://github.com/ginkgo-project/ginkgo/commit/7481b2fffb51d73492ef9017045450b29b820f81.diff?full_index=1
-    FILENAME 7481b2fffb51d73492ef9017045450b29b820f81.diff
-    SHA512 f2997dc1af55db2a152092b70097238af77d7345329b9033a19301cfc4d8d494c5c41fbbd9a63b3303697764fc5f799dfe93647bafbbefae8981a978ecaa6a68
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ginkgo-project/ginkgo
-    REF v1.4.0
-    SHA512 9bfcb2c415c7a1a70cf8e49f20adf62d02cab83bb23b6fcecfeaeeb322b2d4e1ad8d8fa6582735073753f9a05eac8688b9bd1ff1d4203957c1a80702d117e807
+    REF v1.5.0
+    SHA512 5b76e240d27c24cbcd7292638da4748cfba39494784894fcffce63e0aff2cd7c5c24155ccd6fc6cdfab413b627afd1b2f9dc09a58d1e01bd4d5a25169f357041
     HEAD_REF master
-    PATCHES
-        ${WINDOWS_SYMBOLS_PATCH}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     openmp    GINKGO_BUILD_OMP
     cuda      GINKGO_BUILD_CUDA
+    mpi       GINKGO_BUILD_MPI
 )
+
+set(ADDITIONAL_FLAGS)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(ADDITIONAL_FLAGS "-DCMAKE_CXX_FLAGS_DEBUG='/MDd /Zi /Ob1 /O1 /Od /RTC1'")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    WINDOWS_USE_MSBUILD
     OPTIONS
         -DGINKGO_BUILD_REFERENCE=ON
         -DGINKGO_BUILD_TESTS=OFF
@@ -33,8 +33,8 @@ vcpkg_cmake_configure(
         -DGINKGO_DEVEL_TOOLS=OFF
         -DGINKGO_SKIP_DEPENDENCY_UPDATE=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
-        -DGinkgo_NAME=ginkgo
         ${FEATURE_OPTIONS}
+        ${ADDITIONAL_FLAGS}
 )
 
 vcpkg_cmake_install()
