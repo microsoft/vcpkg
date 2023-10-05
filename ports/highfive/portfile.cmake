@@ -1,4 +1,3 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BlueBrain/HighFive
@@ -18,20 +17,23 @@ vcpkg_check_features(
         eigen3  HIGHFIVE_USE_EIGEN
 )
 
+if(HDF5_WITH_PARALLEL)
+    message(STATUS "${HDF5_WITH_PARALLEL} Enabling HIGHFIVE_PARALLEL_HDF5.")
+    list(APPEND FEATURE_OPTIONS "-DHIGHFIVE_PARALLEL_HDF5=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DHIGHFIVE_EXAMPLES=OFF
         -DHIGHFIVE_BUILD_DOCS=OFF
+        -DCMAKE_CATCH_DISCOVER_TESTS_DISCOVERY_MODE=PRE_TEST
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_CATCH_DISCOVER_TESTS_DISCOVERY_MODE
 )
 
-set(add_bin "")
-if("tests" IN_LIST FEATURES)
-    set(add_bin ADD_BIN_TO_PATH) # Seems to run tests as part of the build?
-endif()
-
-vcpkg_cmake_install(${add_bin})
+vcpkg_cmake_install()
 
 if("tests" IN_LIST FEATURES)
     vcpkg_copy_tools(
@@ -43,10 +45,13 @@ if("tests" IN_LIST FEATURES)
     )
 endif()
 
-# Use PACKAGE_NAME to avoid folder HighFive and highfive are exist at same time
-vcpkg_cmake_config_fixup(PACKAGE_NAME HighFive CONFIG_PATH share/HighFive/CMake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/HighFive/CMake)
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/share/HighFive/HighFiveConfig.cmake")
+    # left over with mixed case
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/HighFive")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
