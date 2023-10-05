@@ -1,49 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 12ea06c..0b8bce4 100644
+index 428b55c..cb2a4e2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,7 +1,7 @@
- IF(BIICODE)
- 	# Initializes block variables
- 	INIT_BIICODE_BLOCK()
--	
-+
- 	# Output folder for binaries
- 	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../bin/fann/examples)
- 	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG  ${CMAKE_CURRENT_SOURCE_DIR}/../bin/fann/examples)
-@@ -18,11 +18,11 @@ IF(BIICODE)
- 	LIST(FIND BII_BLOCK_EXES examples_parallel_train examples_present)
- 	SET(examples_present (NOT ${examples_present} EQUAL "-1")) # Depending on examples
- 	IF(${examples_present} AND NOT WIN32 AND NOT APPLE) # Linux doesn't have GetTickCount
--		LIST(REMOVE_ITEM BII_BLOCK_EXES examples_parallel_train)		
-+		LIST(REMOVE_ITEM BII_BLOCK_EXES examples_parallel_train)
- 	ENDIF()
- 
- 	ADD_BIICODE_TARGETS()
--	
-+
- 	IF(${examples_present})
- 	   # This example needs CPP11
-            ACTIVATE_CPP11(lasote_fann_examples_xor_sample)
-@@ -82,7 +82,7 @@ configure_file (cmake/fann.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/fann.pc @ONLY)
- 
- install (FILES ${CMAKE_CURRENT_BINARY_DIR}/fann.pc DESTINATION ${PKGCONFIG_INSTALL_DIR})
- 
--ADD_SUBDIRECTORY( src ) 
-+ADD_SUBDIRECTORY( src )
- 
- ################# cpack ################
- 
-@@ -95,7 +95,7 @@ SET(CPACK_PACKAGE_VERSION_MINOR "${FANN_VERSION_MINOR}")
- SET(CPACK_PACKAGE_VERSION_PATCH "${FANN_VERSION_PATCH}")
- SET(CPACK_GENERATOR "TGZ;ZIP")
- SET(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
--SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Steffen Nissen") 
-+SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Steffen Nissen")
- SET(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}")
- IF(WIN32 AND NOT UNIX)
-   # There is a bug in NSI that does not handle full unix paths properly. Make
-@@ -156,10 +156,5 @@ install (FILES
+@@ -160,10 +160,5 @@ install (FILES
  
  ################# compile tests ################
  
@@ -55,7 +14,7 @@ index 12ea06c..0b8bce4 100644
  
  ENDIF()
 diff --git a/cmake/Modules/DefineInstallationPaths.cmake b/cmake/Modules/DefineInstallationPaths.cmake
-index 2969533..bbcd0ba 100644
+index bbcd0ba..7cf8714 100644
 --- a/cmake/Modules/DefineInstallationPaths.cmake
 +++ b/cmake/Modules/DefineInstallationPaths.cmake
 @@ -3,7 +3,7 @@ if (UNIX OR MINGW OR WIN32)
@@ -73,8 +32,10 @@ index 2969533..bbcd0ba 100644
      )
 +endif()
  
-   set (CMAKE_CONFIG_DIR "${LIB_INSTALL_DIR}/cmake/fann" CACHE PATH "config dir" FORCE)
-   set (PKGCONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/pkgconfig" CACHE PATH "pkgconfig dir" FORCE)
+-  set (CMAKE_CONFIG_DIR "${LIB_INSTALL_DIR}/cmake/fann" CACHE PATH "config dir" FORCE)
+-  set (PKGCONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/pkgconfig" CACHE PATH "pkgconfig dir" FORCE)
++  set (CMAKE_CONFIG_DIR "lib/cmake/fann" CACHE PATH "config dir" FORCE)
++  set (PKGCONFIG_INSTALL_DIR "lib/pkgconfig/" CACHE PATH "pkgconfig dir" FORCE)
  endif ()
  
 -if (MSCV)
