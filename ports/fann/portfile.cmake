@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-installation.patch
         fix-uwp-build.patch
+        fix-build_type.patch
 )
 
 set(INSTALL_BASE_DIR_DBG "${CURRENT_PACKAGES_DIR}/debug")
