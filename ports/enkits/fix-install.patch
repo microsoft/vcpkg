@@ -1,0 +1,50 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7f8572e..8f84548 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0)
+ 
+ project( enkiTS )
+ 
++include(GNUInstallDirs)
++
+ option( ENKITS_BUILD_C_INTERFACE    "Build C interface" ON )
+ option( ENKITS_BUILD_EXAMPLES       "Build example applications" ON )
+ option( ENKITS_BUILD_SHARED         "Build shared library" OFF )
+@@ -9,8 +11,6 @@ option( ENKITS_INSTALL              "Generate installation target" OFF )
+ 
+ set( ENKITS_TASK_PRIORITIES_NUM "3" CACHE STRING "Number of task priorities, 1-5, 0 for defined by defaults in source" ) 
+ 
+-include_directories( "${PROJECT_SOURCE_DIR}/src" )
+-
+ set( ENKITS_HEADERS
+     src/LockLessMultiReadPipe.h
+     src/TaskScheduler.h
+@@ -45,6 +45,9 @@ else()
+     add_library( enkiTS STATIC ${ENKITS_SRC} )
+ endif()
+ 
++target_include_directories( enkiTS PUBLIC
++    PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
++           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> )
+ 
+ if( ENKITS_TASK_PRIORITIES_NUM GREATER "0" )
+     target_compile_definitions( enkiTS PUBLIC "ENKITS_TASK_PRIORITIES_NUM=${ENKITS_TASK_PRIORITIES_NUM}" )    
+@@ -60,8 +63,15 @@ if( UNIX )
+ endif()
+ 
+ if( ENKITS_INSTALL )
+-    install(TARGETS enkiTS DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/enkiTS")
+-    install(FILES ${ENKITS_HEADERS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/enkiTS")
++    install(
++        TARGETS enkiTS
++        EXPORT enkiTS-config
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    install(FILES ${ENKITS_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++    install(
++        EXPORT enkiTS-config
++        NAMESPACE enkiTS::
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/enkiTS)
+ endif()
+ 
+ if( UNIX )
