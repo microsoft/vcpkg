@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(breakpad CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_definitions(
@@ -102,6 +102,7 @@ list(APPEND TARGETS libbreakpad_client)
 
 if(INSTALL_TOOLS)
     if(LINUX)
+        find_package(ZLIB)
         add_executable(microdump_stackwalk
                 src/processor/microdump_stackwalk.cc)
         target_link_libraries(microdump_stackwalk PRIVATE libbreakpad libbreakpad_client)
@@ -150,7 +151,7 @@ if(INSTALL_TOOLS)
             src/common/linux/memory_mapped_file.cc
             src/common/linux/safe_readlink.cc
             src/tools/linux/dump_syms/dump_syms.cc)
-        target_link_libraries(dump_syms PRIVATE libbreakpad_client)
+        target_link_libraries(dump_syms PRIVATE libbreakpad_client ZLIB::ZLIB)
         install(TARGETS dump_syms DESTINATION bin)
 
         add_executable(minidump-2-core
