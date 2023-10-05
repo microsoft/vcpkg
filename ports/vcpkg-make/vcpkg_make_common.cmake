@@ -315,7 +315,7 @@ function(z_vcpkg_make_prepare_programs out_env)
         if(VCPKG_DETECTED_CMAKE_RANLIB)
             z_vcpkg_append_to_configure_environment(configure_env RANLIB "${VCPKG_DETECTED_CMAKE_RANLIB}") # Trick to ignore the RANLIB call
         else()
-            z_vcpkg_append_to_configure_environment(configure_env RANLIB ":")
+            z_vcpkg_append_to_configure_environment(configure_env RANLIB ": RANLIB-disabled")
         endif()
         if(VCPKG_DETECTED_CMAKE_OBJDUMP) #Objdump is required to make shared libraries. Otherwise define lt_cv_deplibs_check_method=pass_all
             z_vcpkg_append_to_configure_environment(configure_env OBJDUMP "${VCPKG_DETECTED_CMAKE_OBJDUMP}") # Trick to ignore the RANLIB call
@@ -323,7 +323,7 @@ function(z_vcpkg_make_prepare_programs out_env)
         if(VCPKG_DETECTED_CMAKE_STRIP) # If required set the ENV variable STRIP in the portfile correctly
             z_vcpkg_append_to_configure_environment(configure_env STRIP "${VCPKG_DETECTED_CMAKE_STRIP}") 
         else()
-            z_vcpkg_append_to_configure_environment(configure_env STRIP ":")
+            z_vcpkg_append_to_configure_environment(configure_env STRIP ": STRIP-disabled")
             list(APPEND arg_OPTIONS ac_cv_prog_ac_ct_STRIP=:)
         endif()
         if(VCPKG_DETECTED_CMAKE_NM) # If required set the ENV variable NM in the portfile correctly
@@ -340,8 +340,9 @@ function(z_vcpkg_make_prepare_programs out_env)
         endif()
 
         if(NOT "ASM" IN_LIST arg_LANGUAGES )
-            z_vcpkg_append_to_configure_environment(configure_env CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
-            z_vcpkg_append_to_configure_environment(configure_env AS ":")   # If required set the ENV variable AS in the portfile correctly
+            z_vcpkg_append_to_configure_environment(configure_env CCAS ": CCAS-disabled")   # If required set the ENV variable CCAS in the portfile correctly
+            z_vcpkg_append_to_configure_environment(configure_env AS ": AS-disabled")   # If required set the ENV variable AS in the portfile correctly
+
         else()
             set(ccas "${VCPKG_DETECTED_CMAKE_ASM_COMPILER}")
             if(VCPKG_DETECTED_CMAKE_ASM_COMPILER_ID STREQUAL "MSVC")
