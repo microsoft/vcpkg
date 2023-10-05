@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DBIN_INSTALL_DIR=${INSTALL_BASE_DIR_DBG}/bin
         -DSBIN_INSTALL_DIR=${INSTALL_BASE_DIR_DBG}/sbin
-        -DLIB_INSTALL_DIR=${INSTALL_BASE_DIR_DBG}/bin
+        -DLIB_INSTALL_DIR=${INSTALL_BASE_DIR_DBG}/lib
         -DEXEC_INSTALL_PREFIX=${INSTALL_BASE_DIR_DBG}/tools/${PORT}
         -DXDG_APPS_DIR=${INSTALL_BASE_DIR_DBG}/tools/${PORT}
         -DPLUGIN_INSTALL_DIR=${INSTALL_BASE_DIR_DBG}/tools/${PORT}
@@ -32,7 +32,7 @@ vcpkg_cmake_configure(
     OPTIONS_RELEASE
         -DBIN_INSTALL_DIR=${INSTALL_BASE_DIR_REL}/bin
         -DSBIN_INSTALL_DIR=${INSTALL_BASE_DIR_REL}/sbin
-        -DLIB_INSTALL_DIR=${INSTALL_BASE_DIR_REL}/bin
+        -DLIB_INSTALL_DIR=${INSTALL_BASE_DIR_REL}/lib
         -DEXEC_INSTALL_PREFIX=${INSTALL_BASE_DIR_REL}/tools/${PORT}
         -DXDG_APPS_DIR=${INSTALL_BASE_DIR_REL}/tools/${PORT}
         -DPLUGIN_INSTALL_DIR=${INSTALL_BASE_DIR_REL}/tools/${PORT}
@@ -55,9 +55,6 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
