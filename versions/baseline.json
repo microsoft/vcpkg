@@ -5361,7 +5361,7 @@
       "port-version": 3
     },
     "mesa": {
-      "baseline": "23.2.0-rc3",
+      "baseline": "23.2.1",
       "port-version": 0
     },
     "meschach": {
@@ -8073,8 +8073,8 @@
       "port-version": 0
     },
     "symengine": {
-      "baseline": "0.10.1",
-      "port-version": 2
+      "baseline": "0.11.1",
+      "port-version": 0
     },
     "systemc": {
       "baseline": "2.3.3",
