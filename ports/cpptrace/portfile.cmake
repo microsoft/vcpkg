@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES v0.2.1-patches.patch
 )
 
-vcpkg_list(SET options)
+vcpkg_list(SET options -DCMAKE_DWARF_FINDPACKAGE_Z=On)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   vcpkg_list(APPEND options -DCPPTRACE_STATIC=On)
 endif()
