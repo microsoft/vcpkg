@@ -15,11 +15,15 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        vulkan   SDL_VULKAN
-        x11      SDL_X11
-        wayland  SDL_WAYLAND
-        samplerate SDL_LIBSAMPLERATE
+        alsa     SDL_ALSA
+        alsa     CMAKE_REQUIRE_FIND_PACKAGE_ALSA
         ibus     SDL_IBUS
+        samplerate SDL_LIBSAMPLERATE
+        vulkan   SDL_VULKAN
+        wayland  SDL_WAYLAND
+        x11      SDL_X11
+    INVERTED_FEATURES
+        alsa     CMAKE_DISABLE_FIND_PACKAGE_ALSA
 )
 
 if ("x11" IN_LIST FEATURES)
