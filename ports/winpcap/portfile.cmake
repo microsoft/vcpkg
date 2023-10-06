@@ -37,6 +37,9 @@ vcpkg_extract_source_archive(
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/wpcap/libpcap/rpcapd/win32-pthreads") # avoid copying pthreadVC.lib; TODO: maybe should also use libpcap headers instead of this vendored stuff
 
+vcpkg_replace_string("${SOURCE_PATH}/wpcap/PRJ/wpcap.vcproj" "DebugInformationFormat=\"4\"" "")
+vcpkg_replace_string("${SOURCE_PATH}/wpcap/PRJ/wpcap.vcproj" "DebugInformationFormat=\"3\"" "")
+
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(PLATFORM Win32)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
