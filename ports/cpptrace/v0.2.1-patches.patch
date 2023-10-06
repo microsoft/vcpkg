@@ -1,17 +1,24 @@
-diff --git a/bundled/libdwarf/CMakeLists.txt b/bundled/libdwarf/CMakeLists.txt
-index 148e5df..1c87cfe 100644
---- a/bundled/libdwarf/CMakeLists.txt
-+++ b/bundled/libdwarf/CMakeLists.txt
-@@ -292,7 +292,8 @@ if(NOT CMAKE_DWARF_FINDPACKAGE_Z)
-     set(DW_FZSTD "zstd")
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ccc959e..d3e5d09 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -391,7 +391,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
+       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-      RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
++      RUNTIME DESTINATION bin
+     )
+   else()
+     install(
+@@ -400,7 +400,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
+       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-      RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
++      RUNTIME DESTINATION bin
+     )
    endif()
- else()
--  find_package(ZLIB REQUIRED)
-+  include(CMakeFindDependencyMacro)
-+  find_dependency(ZLIB)
-   set(DW_FZLIB "ZLIB")
-   set(HAVE_ZLIB TRUE)
-   set(HAVE_ZLIB_H TRUE)
 diff --git a/src/platform/utils.hpp b/src/platform/utils.hpp
 index 7853960..51395fe 100644
 --- a/src/platform/utils.hpp

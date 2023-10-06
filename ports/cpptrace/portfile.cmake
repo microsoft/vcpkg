@@ -26,10 +26,3 @@ vcpkg_cmake_config_fixup(
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-if(WIN32 AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cpptrace.dll" "${CURRENT_PACKAGES_DIR}/bin/cpptrace.dll")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/cpptrace.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/cpptrace.dll")
-endif()
