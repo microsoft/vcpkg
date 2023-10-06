@@ -45,11 +45,13 @@ endif()
 vcpkg_find_acquire_program(BISON)
 cmake_path(GET BISON PARENT_PATH BISON_DIR)
 vcpkg_add_to_path("${BISON_DIR}")
-
+message(STATUS "BISON:${BISON}")
+message(STATUS "BISON_DIR:${BISON_DIR}")
 vcpkg_find_acquire_program(FLEX)
 cmake_path(GET FLEX PARENT_PATH FLEX_DIR)
 vcpkg_add_to_path("${FLEX_DIR}")
-
+message(STATUS "FLEX:${FLEX}")
+message(STATUS "FLEX_DIR:${FLEX_DIR}")
 message(STATUS "Building Packet.sln")
 
 vcpkg_execute_required_process(
@@ -128,3 +130,4 @@ file(INSTALL
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pcap-stdinc.h" "#define inline __inline" "#ifndef __cplusplus\n#define inline __inline\n#endif")
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "The latest license is available in https://www.winpcap.org/misc/copyright.htm and in the header files.")
+message(FATAL_ERROR)
