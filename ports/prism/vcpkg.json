@@ -1,0 +1,14 @@
+{
+  "name": "prism",
+  "version": "1.0.0",
+  "description": "a static reflect library of c++",
+  "homepage": "https://github.com/nocanstillbb/prism",
+  "supports": "(windows & !arm & !uwp) | osx | (linux & !arm)",
+  "dependencies": [
+    "catch2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
