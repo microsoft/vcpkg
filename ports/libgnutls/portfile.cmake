@@ -26,6 +26,16 @@ if ("openssl" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-openssl-compatibility")
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+    cmake_path(GET ccas PARENT_PATH ccas_dir)
+    vcpkg_add_to_path("${ccas_dir}")
+    cmake_path(GET ccas FILENAME ccas_command)
+    vcpkg_list(APPEND options "CCAS=${ccas_command}")
+endif()
+
 set(ENV{GTKDOCIZE} true) # true, the program
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"

@@ -12,6 +12,11 @@
     "libtasn1",
     "libunistring",
     "nettle",
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true,
+      "platform": "!native"
+    },
     "zlib"
   ],
   "features": {
