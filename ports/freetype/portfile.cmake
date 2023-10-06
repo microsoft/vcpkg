@@ -11,7 +11,6 @@ vcpkg_from_sourceforge(
         brotli-static.patch
         bzip2.patch
         fix-exports.patch
-        error-strings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
