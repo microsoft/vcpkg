@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 428b55c..cb2a4e2 100644
+index 12ea06c..6c33c25 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -160,10 +160,5 @@ install (FILES
+@@ -156,10 +156,5 @@ install (FILES
  
  ################# compile tests ################
  
@@ -14,28 +14,11 @@ index 428b55c..cb2a4e2 100644
  
  ENDIF()
 diff --git a/cmake/Modules/DefineInstallationPaths.cmake b/cmake/Modules/DefineInstallationPaths.cmake
-index bbcd0ba..7cf8714 100644
+index 2969533..e70c4b7 100644
 --- a/cmake/Modules/DefineInstallationPaths.cmake
 +++ b/cmake/Modules/DefineInstallationPaths.cmake
-@@ -3,7 +3,7 @@ if (UNIX OR MINGW OR WIN32)
-         MESSAGE(STATUS "${PROJECT_NAME} is used as APPLICATION_NAME")
-         SET(APPLICATION_NAME ${PROJECT_NAME})
-     ENDIF (NOT APPLICATION_NAME)
--
-+if (0)
-     # Suffix for Linux
-     SET(LIB_SUFFIX
-         CACHE STRING "Define suffix of directory name (32/64)"
-@@ -122,12 +122,13 @@ if (UNIX OR MINGW OR WIN32)
-         CACHE PATH "The ${APPLICATION_NAME} info install dir (default prefix/info)"
-         FORCE
-     )
-+endif()
- 
--  set (CMAKE_CONFIG_DIR "${LIB_INSTALL_DIR}/cmake/fann" CACHE PATH "config dir" FORCE)
--  set (PKGCONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/pkgconfig" CACHE PATH "pkgconfig dir" FORCE)
-+  set (CMAKE_CONFIG_DIR "lib/cmake/fann" CACHE PATH "config dir" FORCE)
-+  set (PKGCONFIG_INSTALL_DIR "lib/pkgconfig/" CACHE PATH "pkgconfig dir" FORCE)
+@@ -127,7 +127,7 @@ if (UNIX OR MINGW OR WIN32)
+   set (PKGCONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/pkgconfig" CACHE PATH "pkgconfig dir" FORCE)
  endif ()
  
 -if (MSCV)
@@ -43,7 +26,7 @@ index bbcd0ba..7cf8714 100644
  	# Same same
  	SET(BIN_INSTALL_DIR .)
  	SET(SBIN_INSTALL_DIR .)
-@@ -137,5 +138,5 @@ if (MSCV)
+@@ -137,5 +137,5 @@ if (MSCV)
  	SET(ICON_INSTALL_DIR .)
  	SET(SOUND_INSTALL_DIR .)
  	SET(LOCALE_INSTALL_DIR lang)
