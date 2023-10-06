@@ -53,7 +53,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "compiler-rt",
             "tools"
           ]
         }
@@ -227,6 +226,8 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "clang",
+            "libcxxabi",
             "tools"
           ]
         }
@@ -239,6 +240,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "clang",
             "libcxx",
             "tools"
           ]
@@ -322,7 +324,16 @@
       ]
     },
     "pstl": {
-      "description": "Include pstl (Parallel STL) library."
+      "description": "Include pstl (Parallel STL) library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     },
     "target-aarch64": {
       "description": "Build with AArch64 backend."
