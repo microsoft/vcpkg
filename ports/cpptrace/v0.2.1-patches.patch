@@ -6,8 +6,8 @@ index ea1e009..148e5df 100644
      set(DW_FZSTD "zstd")
    endif()
  else()
--  find_dependency(ZLIB)
-+  find_package(ZLIB REQUIRED)
+-  find_package(ZLIB REQUIRED)
++  find_dependency(ZLIB)
    set(DW_FZLIB "ZLIB")
    set(HAVE_ZLIB TRUE)
    set(HAVE_ZLIB_H TRUE)
@@ -19,8 +19,8 @@ index 51395fe..7853960 100644
          return static_cast<unsigned long long>(t);
      }
      template<typename T>
--    uintptr_t to_uintptr(T t) {
-+    unsigned long long to_uintptr(T t) {
+-    unsigned long long to_uintptr(T t) {
++    uintptr_t to_uintptr(T t) {
          return static_cast<uintptr_t>(t);
      }
 
