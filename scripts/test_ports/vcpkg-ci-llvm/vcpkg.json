@@ -10,6 +10,7 @@
       "default-features": false,
       "features": [
         "clang",
+        "compiler-rt",
         "default-targets",
         "enable-abi-breaking-checks",
         "enable-bindings",
