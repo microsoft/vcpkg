@@ -26,6 +26,10 @@ if ("openssl" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-openssl-compatibility")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_list(APPEND options "LIBS=\$LIBS -liconv -lcharset") # for libunistring
+endif()
+
 if(VCPKG_CROSSCOMPILING)
     vcpkg_cmake_get_vars(cmake_vars_file)
     include("${cmake_vars_file}")
