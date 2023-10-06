@@ -6592,6 +6592,10 @@
       "baseline": "1.3",
       "port-version": 7
     },
+    "pravila00-make-vector": {
+      "baseline": "2023-04-10",
+      "port-version": 0
+    },
     "presentmon": {
       "baseline": "1.7.0",
       "port-version": 2
