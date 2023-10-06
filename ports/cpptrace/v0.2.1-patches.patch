@@ -1,18 +1,19 @@
 diff --git a/bundled/libdwarf/CMakeLists.txt b/bundled/libdwarf/CMakeLists.txt
-index ea1e009..148e5df 100644
+index 148e5df..1c87cfe 100644
 --- a/bundled/libdwarf/CMakeLists.txt
 +++ b/bundled/libdwarf/CMakeLists.txt
-@@ -292,7 +292,7 @@ if(NOT CMAKE_DWARF_FINDPACKAGE_Z)
+@@ -292,7 +292,8 @@ if(NOT CMAKE_DWARF_FINDPACKAGE_Z)
      set(DW_FZSTD "zstd")
    endif()
  else()
 -  find_package(ZLIB REQUIRED)
++  include(CMakeFindDependencyMacro)
 +  find_dependency(ZLIB)
    set(DW_FZLIB "ZLIB")
    set(HAVE_ZLIB TRUE)
    set(HAVE_ZLIB_H TRUE)
 diff --git a/src/platform/utils.hpp b/src/platform/utils.hpp
-index 51395fe..7853960 100644
+index 7853960..51395fe 100644
 --- a/src/platform/utils.hpp
 +++ b/src/platform/utils.hpp
 @@ -334,7 +334,7 @@ namespace detail {
