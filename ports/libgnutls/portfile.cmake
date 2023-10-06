@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" GNUTLS_BRANCH "${VERSION}")
 vcpkg_download_distfile(tarball
     URLS
@@ -28,10 +26,6 @@ if ("openssl" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-openssl-compatibility")
 endif()
 
-if(VCPKG_TARGET_IS_OSX)
-    vcpkg_list(APPEND options "LDFLAGS=\$LDFLAGS -framework CoreFoundation")
-endif()
-
 set(ENV{GTKDOCIZE} true) # true, the program
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -42,7 +36,6 @@ vcpkg_configure_make(
         --disable-guile
         --disable-libdane
         --disable-maintainer-mode
-        --disable-silent-rules
         --disable-rpath
         --disable-tests
         --with-brotli=no
