@@ -19,6 +19,7 @@ index ccc959e..d3e5d09 100644
 +      RUNTIME DESTINATION bin
      )
    endif()
+
 diff --git a/src/platform/utils.hpp b/src/platform/utils.hpp
 index 7853960..51395fe 100644
 --- a/src/platform/utils.hpp
