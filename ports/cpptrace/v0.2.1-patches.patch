@@ -20,6 +20,17 @@ index ccc959e..d3e5d09 100644
      )
    endif()
 
+diff --git a/cmake/cpptrace-config.cmake.in b/cmake/cpptrace-config.cmake.in
+index c84bed9..e4c6dc7 100644
+--- a/cmake/cpptrace-config.cmake.in
++++ b/cmake/cpptrace-config.cmake.in
+@@ -1,3 +1,5 @@
+ @PACKAGE_INIT@
+
+ include(${CMAKE_CURRENT_LIST_DIR}/cpptrace_targets.cmake)
++
++find_dependency(ZLIB)
+
 diff --git a/src/platform/utils.hpp b/src/platform/utils.hpp
 index 7853960..51395fe 100644
 --- a/src/platform/utils.hpp
