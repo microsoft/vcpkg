@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" GNUTLS_BRANCH "${VERSION}")
 vcpkg_download_distfile(tarball
     URLS
@@ -28,8 +26,18 @@ if ("openssl" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-openssl-compatibility")
 endif()
 
-if(VCPKG_TARGET_IS_OSX)
-    vcpkg_list(APPEND options "LDFLAGS=\$LDFLAGS -framework CoreFoundation")
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_list(APPEND options "LIBS=\$LIBS -liconv -lcharset") # for libunistring
+endif()
+
+if(VCPKG_CROSSCOMPILING)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+    cmake_path(GET ccas PARENT_PATH ccas_dir)
+    vcpkg_add_to_path("${ccas_dir}")
+    cmake_path(GET ccas FILENAME ccas_command)
+    vcpkg_list(APPEND options "CCAS=${ccas_command}")
 endif()
 
 set(ENV{GTKDOCIZE} true) # true, the program
@@ -42,7 +50,6 @@ vcpkg_configure_make(
         --disable-guile
         --disable-libdane
         --disable-maintainer-mode
-        --disable-silent-rules
         --disable-rpath
         --disable-tests
         --with-brotli=no
@@ -57,6 +64,7 @@ vcpkg_configure_make(
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
