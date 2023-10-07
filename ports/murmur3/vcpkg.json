@@ -1,0 +1,17 @@
+{
+  "name": "murmur3",
+  "version-date": "2015-05-02",
+  "description": "Murmur3 hash in C",
+  "homepage": "https://github.com/PeterScott/murmur3",
+  "license": "CC0-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
