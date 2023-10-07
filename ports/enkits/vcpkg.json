@@ -4,7 +4,6 @@
   "description": "A permissively licensed C and C++ Task Scheduler for creating parallel programs. Requires C++11 support.",
   "homepage": "https://github.com/dougbinks/enkiTS",
   "license": "Zlib",
-  "supports": "!android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
