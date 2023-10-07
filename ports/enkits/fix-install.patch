@@ -40,7 +40,7 @@ index 7f8572e..8f84548 100644
 +        TARGETS enkiTS
 +        EXPORT unofficial-enkiTS-config
 +        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+    install(FILES ${ENKITS_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++    install(FILES ${ENKITS_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/enkiTS)
 +    install(
 +        EXPORT unofficial-enkiTS-config
 +        NAMESPACE unofficial::enkiTS::
