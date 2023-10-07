@@ -6,7 +6,6 @@
   "license": "Zlib",
   "supports": "!android",
   "dependencies": [
-    "imgui",
     {
       "name": "vcpkg-cmake",
       "host": true
