@@ -38,13 +38,13 @@ index 7f8572e..8f84548 100644
 -    install(FILES ${ENKITS_HEADERS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/enkiTS")
 +    install(
 +        TARGETS enkiTS
-+        EXPORT enkiTS-config
++        EXPORT unofficial-enkiTS-config
 +        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +    install(FILES ${ENKITS_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 +    install(
-+        EXPORT enkiTS-config
-+        NAMESPACE enkiTS::
-+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/enkiTS)
++        EXPORT unofficial-enkiTS-config
++        NAMESPACE unofficial::enkiTS::
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-enkiTS)
  endif()
  
  if( UNIX )
