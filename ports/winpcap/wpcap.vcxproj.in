@@ -165,7 +165,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <AdditionalDependencies>ws2_32.lib;packet.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -252,7 +252,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <AdditionalDependencies>ws2_32.lib;packet.lib;%(AdditionalDependencies)</AdditionalDependencies>
