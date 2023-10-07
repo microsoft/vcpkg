@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 98b87dc..76d2e9b 100644
+index f8285b8..39536fc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -35,8 +35,14 @@ include(CheckIncludeFile)
+@@ -38,8 +38,14 @@ include(CheckIncludeFile)
  check_include_file("unistd.h" HAVE_UNISTD_H)
  
  include(CheckLibraryExists)
@@ -19,7 +19,7 @@ index 98b87dc..76d2e9b 100644
  check_library_exists(tcmalloc malloc "" HAVE_TCMALLOC)
  
  include(CheckCXXSymbolExists)
-@@ -246,10 +252,10 @@ if(HAVE_CLANG_THREAD_SAFETY)
+@@ -268,10 +274,10 @@ if(HAVE_CLANG_THREAD_SAFETY)
  endif(HAVE_CLANG_THREAD_SAFETY)
  
  if(HAVE_CRC32C)
