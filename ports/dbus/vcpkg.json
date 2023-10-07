@@ -9,6 +9,10 @@
   "dependencies": [
     "expat",
     {
+      "name": "libsystemd",
+      "platform": "linux"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },

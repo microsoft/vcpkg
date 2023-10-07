@@ -12,6 +12,7 @@ vcpkg_from_gitlab(
         pkgconfig.patch
         getpeereid.patch # missing check from configure.ac
 ) 
+vcpkg_replace_string("${SOURCE_PATH}/dbus/CMakeLists.txt" "SYSTEMD_LIBRARIES" "SYSTEMD_LINK_LIBRARIES")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
