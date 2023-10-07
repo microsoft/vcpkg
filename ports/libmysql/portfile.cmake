@@ -2,31 +2,19 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
     message(FATAL_ERROR "FATAL ERROR: ${PORT} and libmariadb are incompatible.")
 endif()
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    message(WARNING "'autoconf-archive' must be installed via your system package manager (brew, apt, etc.).")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
     REF mysql-${VERSION}
-    SHA512 8b9f15b301b158e6ffc99dd916b9062968d36f6bdd7b898636fa61badfbe68f7328d4a39fa3b8b3ebef180d3aec1aee353bd2dac9ef1594e5772291390e17ac0
+    SHA512 5df45c1ce1e2c620856b9274666cf56738d6a0308c33c9c96583b494c987fb0e862e676301109b9e4732070d54e6086596a62ad342f35adc59ca9f749e37b561
     HEAD_REF master
     PATCHES
-        ignore-boost-version.patch
-        system-libs.patch
-        export-cmake-targets.patch
-        Add-target-include-directories.patch
-        homebrew.patch
+        dependencies.patch
+        install-exports.patch
         fix_dup_symbols.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/boost_1_70_0")
-
-set(STACK_DIRECTION "")
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(STACK_DIRECTION -DSTACK_DIRECTION=-1)
-endif()
 
 #Skip the version check for Visual Studio
 set(FORCE_UNSUPPORTED_COMPILER "")
@@ -46,7 +34,6 @@ vcpkg_cmake_configure(
         -DENABLED_PROFILING=OFF
         -DENABLE_TESTING=OFF
         -DWIX_DIR=OFF
-        ${STACK_DIRECTION}
         -DIGNORE_BOOST_VERSION=ON
         -DWITH_SYSTEMD=OFF
         -DWITH_TEST_TRACE_PLUGIN=OFF
