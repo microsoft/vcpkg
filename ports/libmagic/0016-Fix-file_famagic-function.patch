@@ -86,7 +86,7 @@ index 7244841..33ad47e 100644
  	ret = stat(fn, sb);	/* don't merge into if; see "ret =" above */
  
 -#ifdef WIN32
-+#ifdef _WIN32 && ! defined(_WIN32)
++#ifdef _WIN32
  	{
  		HANDLE hFile = CreateFile((LPCSTR)fn, 0, FILE_SHARE_DELETE |
  		    FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0,
