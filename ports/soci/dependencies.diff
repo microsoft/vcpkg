@@ -28,12 +28,13 @@ diff --git a/cmake/dependencies/PostgreSQL.cmake b/cmake/dependencies/PostgreSQL
 index c6f2154..ef6bfcd 100644
 --- a/cmake/dependencies/PostgreSQL.cmake
 +++ b/cmake/dependencies/PostgreSQL.cmake
-@@ -1,5 +1,7 @@
+@@ -1,5 +1,8 @@
  set(PostgreSQL_FIND_QUIETLY TRUE)
  
 -find_package(PostgreSQL)
 +find_package(PostgreSQL REQUIRED)
 +set(POSTGRESQL_FOUND TRUE)
++set(POSTGRESQL_INCLUDE_DIRS "${PostgreSQL_INCLUDE_DIRS}")
 +set(POSTGRESQL_LIBRARIES "${PostgreSQL_LIBRARIES}")
  
  boost_external_report(PostgreSQL INCLUDE_DIRS LIBRARIES VERSION)
