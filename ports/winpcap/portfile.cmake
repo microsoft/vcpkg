@@ -18,8 +18,10 @@ endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(LIBRARY_LINKAGE "4")
+    set(lib_type StaticLibrary)
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(LIBRARY_LINKAGE "2")
+    set(lib_type DynamicLibrary)
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/packetNtx.patch.in" "${CURRENT_BUILDTREES_DIR}/src/packetNtx.patch" @ONLY)
