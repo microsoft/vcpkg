@@ -33,3 +33,17 @@ index 4ce40d4..d4950ce 100644
  if(USE_THIRDPARTY_DIRECTORY)
    add_dependencies(ShaderTranspilerCore EP_glslang EP_SPIRV-Cross)
  endif()
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dbc051b..b898b4c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,9 +27,6 @@ option(SPIRVCROSS_WITHOUT_INSTALL "Compile with spirv-cross without install"
+        OFF)
+ option(USE_CREATE_COMPILER_FUNCTION "Whether LLGI::CreateCompiler is used." ON)
+ 
+-if(LINUX)
+-  set(BUILD_VULKAN TRUE)
+-endif()
+ 
+ option(USE_MSVC_RUNTIME_LIBRARY_DLL "compile as multithreaded DLL" ON)
+ 

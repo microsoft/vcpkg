@@ -16,6 +16,7 @@ vcpkg_from_github(
     PATCHES
         ${LLGI_PR_150_PATCH}
         fix-cmake-use-vcpkg.patch
+        fix-sources.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,6 +28,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" USE_DYNAMIC_RUNTIME)
 
+# linux build requires x11-xcb
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -38,6 +40,8 @@ vcpkg_cmake_configure(
         -DUSE_MSVC_RUNTIME_LIBRARY_DLL:BOOL=${USE_DYNAMIC_RUNTIME}
         -DGLSLANG_WITHOUT_INSTALL=OFF
         -DSPIRVCROSS_WITHOUT_INSTALL=OFF
+    MAYBE_UNUSED_VARIABLES
+        USE_MSVC_RUNTIME_LIBRARY_DLL
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake")
