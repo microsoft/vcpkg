@@ -29,6 +29,7 @@ index c84bed9..e4c6dc7 100644
 
  include(${CMAKE_CURRENT_LIST_DIR}/cpptrace_targets.cmake)
 +
++include(CMakeFindDependencyMacro)
 +find_dependency(ZLIB)
 
 diff --git a/src/platform/utils.hpp b/src/platform/utils.hpp
