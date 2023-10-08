@@ -47,6 +47,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     if(VCPKG_CROSSCOMPILING)
         list(APPEND PATCHES "0016-fix-win-cross.patch")
+    else()
+        list(APPEND PATCHES "0017-fix-win.patch")
     endif()
 endif()
 
@@ -54,7 +56,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 de64f0d09bf2c08873bb3d99bb95c0b675895ed05f8ac5f7bc071322c051ad537c61ea9df9b65bb67d74c4e5b3ab8a75f83da101b22046ee41ba4f77cf0bc549
+    SHA512 63c1cc817844584c9ea880be0277ebcc18182c5050f59ebbb8dd42c971979bb2cee0f09af6a1e62a6c8c23143dfa6ff21fc1aba25ef50a425fdea46ff3e35896
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -90,8 +92,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         find_library(CRYPTO_DEBUG NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(EXPAT_RELEASE NAMES libexpat libexpatMD libexpatMT PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(EXPAT_DEBUG NAMES libexpatd libexpatdMD libexpatdMT PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(FFI_RELEASE NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-        find_library(FFI_DEBUG NAMES libffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(FFI_RELEASE NAMES ffi PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(FFI_DEBUG NAMES ffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(LZMA_RELEASE NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(LZMA_DEBUG NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
