@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
     REF "v${VERSION}"
-    SHA512 129e7d4b3aaffed1acf639c99ab4150f5234e021b8b2be81250059995a57383d700c139b062f954b0cd1f409ff4ad3161ad93793dfe7086c5118050637f32184
+    SHA512 1b551558ba5a0d03ddc44f15845fdcccead9aec8cdc12751b73ce459373cb5681addcb0318b6c7c4ff9820fc750faee02a9e25b936d28523b5c958f64172f25a
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -86,8 +86,6 @@ else()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
-
-message(STATUS "111******gRPC_BUILD_CODEGEN=${gRPC_BUILD_CODEGEN}")
 
 vcpkg_copy_pdbs()
 if (VCPKG_TARGET_IS_WINDOWS)
