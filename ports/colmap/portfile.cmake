@@ -1,4 +1,4 @@
-set(COLMAP_REF "a97b8461e81c5aaaf86719972bafd72f7c08f648") # Aug 20, 2023
+set(COLMAP_REF "9c704e89ff0a80e797725e112011f9f69e5aa28f") # Oct 1, 2023
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -72,7 +72,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/include/colmap/exe"
-    "${CURRENT_PACKAGES_DIR}/include/colmap/lib/Graclus/multilevelLib"
     "${CURRENT_PACKAGES_DIR}/include/colmap/tools"
     "${CURRENT_PACKAGES_DIR}/include/colmap/ui/media"
     "${CURRENT_PACKAGES_DIR}/include/colmap/ui/shaders"
