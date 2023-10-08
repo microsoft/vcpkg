@@ -1,0 +1,13 @@
+diff --git a/CMake/curl-config.cmake.in b/CMake/curl-config.cmake.in
+index 056907c4f..56f7c9dd9 100644
+--- a/CMake/curl-config.cmake.in
++++ b/CMake/curl-config.cmake.in
+@@ -35,4 +35,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
+ check_required_components("@PROJECT_NAME@")
+ 
+ # Alias for either shared or static library
+-add_library(@PROJECT_NAME@::libcurl ALIAS @PROJECT_NAME@::@LIB_SELECTED@)
++if(NOT TARGET @PROJECT_NAME@::libcurl)
++  add_library(@PROJECT_NAME@::libcurl INTERFACE IMPORTED)
++  set_target_properties(@PROJECT_NAME@::libcurl PROPERTIES INTERFACE_LINK_LIBRARIES @PROJECT_NAME@::@LIB_SELECTED@)
++endif()

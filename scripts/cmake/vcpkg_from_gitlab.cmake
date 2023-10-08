@@ -18,7 +18,7 @@ endfunction()
 function(vcpkg_from_gitlab)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;GITLAB_URL;REPO;REF;SHA512;HEAD_REF;FILE_DISAMBIGUATOR"
+        "OUT_SOURCE_PATH;GITLAB_URL;REPO;REF;SHA512;HEAD_REF;FILE_DISAMBIGUATOR;AUTHORIZATION_TOKEN"
         "PATCHES")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -45,27 +45,22 @@ function(vcpkg_from_gitlab)
 
     set(headers_param "")
     if(DEFINED arg_AUTHORIZATION_TOKEN)
-        set(headers_param "HEADERS" "Authorization: token ${arg_AUTHORIZATION_TOKEN}")
+        set(headers_param "HEADERS" "PRIVATE-TOKEN: ${arg_AUTHORIZATION_TOKEN}")
     endif()
 
     if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)
         message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified.")
     endif()
 
-    if(arg_REPO MATCHES [[^([^/]*)/([^/]*)$]]) # 2 elements
-        set(org_name "${CMAKE_MATCH_1}")
-        set(repo_name "${CMAKE_MATCH_2}")
-        set(gitlab_link "${arg_GITLAB_URL}/${org_name}/${repo_name}")
-    elseif(arg_REPO MATCHES [[^([^/]*)/([^/]*)/([^/]*)$]]) # 3 elements
-        set(org_name "${CMAKE_MATCH_1}")
-        set(group_name "${CMAKE_MATCH_2}")
-        set(repo_name "${CMAKE_MATCH_3}")
-        set(gitlab_link "${arg_GITLAB_URL}/${org_name}/${group_name}/${repo_name}")
-    else()
+    if (NOT arg_REPO MATCHES [[^([^/;]+/)+([^/;]+)$]])
         message(FATAL_ERROR "REPO (${arg_REPO}) is not a valid repo name. It must be:
     - an organization name followed by a repository name separated by a single slash, or
-    - an organization name, group name, and repository name separated by slashes.")
+    - an organization name, group name, subgroup names and repository name separated by slashes.")
     endif()
+    set(gitlab_link "${arg_GITLAB_URL}/${arg_REPO}")
+    string(REPLACE "/" "-" downloaded_file_name_base "${arg_REPO}")
+    string(REPLACE "/" ";" repo_parts "${arg_REPO}")
+    list(GET repo_parts -1 repo_name)
 
     set(redownload_param "")
     set(working_directory_param "")
@@ -88,9 +83,9 @@ function(vcpkg_from_gitlab)
     # we assume that no one will name a ref "foo_-bar"
     string(REPLACE "/" "_-" sanitized_ref "${ref_to_use}")
     if(DEFINED arg_FILE_DISAMBIGUATOR AND NOT VCPKG_USE_HEAD_VERSION)
-        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}-${arg_FILE_DISAMBIGUATOR}.tar.gz")
+        set(downloaded_file_name "${downloaded_file_name_base}-${sanitized_ref}-${arg_FILE_DISAMBIGUATOR}.tar.gz")
     else()
-        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}.tar.gz")
+        set(downloaded_file_name "${downloaded_file_name_base}-${sanitized_ref}.tar.gz")
     endif()
 
 

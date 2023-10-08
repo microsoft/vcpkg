@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/avro
-    REF e44b680621328c4e6524bd2983af1ce11afeebed
-    SHA512 932f642f272997b5c0be467d3a3ccc354c6edf425c36b33aa7e61984f67312c712bb1d74cb1a5fd8066169104851e73830f0ed3fdb450e005a5c5bef33c34f20
+    REF "release-${VERSION}"
+    SHA512 728609f562460e1115366663ede2c5d4acbdd6950c1ee3e434ffc65d28b72e3a43c3ebce93d0a8459f0c4f6c492ebb9444e2127a0385f38eb7cdf74b28f0c3ed
     HEAD_REF master
     PATCHES
         fix-cmake.patch

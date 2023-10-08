@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1bacca1a48..9c7d924769 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -731,6 +731,13 @@ endif()
+ if (NOT DEFINED ANDROID AND CAN_USE_TBB)
+   if (USE_TBB)
+     add_definitions (-DHAVE_TBB)
++    if (NOT DEFINED 3RDPARTY_TBB_DIR)
++      find_package(TBB REQUIRED)
++      get_target_property(TBB_INCLUDE_DIR TBB::tbb INTERFACE_INCLUDE_DIRECTORIES)
++      get_filename_component(MY_DIRECTORY ${TBB_INCLUDE_DIR} DIRECTORY)
++      message(STATUS "TBB_INCLUDE_DIR: ${TBB_INCLUDE_DIR} ${TBB_FOUND} ${MY_DIRECTORY}")
++      set(3RDPARTY_TBB_DIR ${MY_DIRECTORY})
++    endif()
+     OCCT_INCLUDE_CMAKE_FILE ("adm/cmake/tbb")
+   else()
+     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_TBB")

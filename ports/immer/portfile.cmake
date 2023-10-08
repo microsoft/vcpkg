@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arximboldi/immer
     REF "v${VERSION}"
-    SHA512 fc34242d36efdb9faa1f22ccc7591c1ace34c2b383e1266a290346baedc154e3d4a682d6dd5094460b75e123347194710072e996d19165cc5fd23c922fdfc4e8
+    SHA512 3a9aafeb5daad1881d00fb999b78f86b1c8f0e8ef2d6befe9025d8eea10392557ce7186f14878b36cbce0f2f5d38c8ffb39c9115a9496803acfc0ef2289f5cbf
     HEAD_REF master
-    PATCHES
-        fix-ExportConfigVersion.patch # Upstream PR https://github.com/arximboldi/immer/pull/250 has been merged, this patch need to be removed in next update.
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
