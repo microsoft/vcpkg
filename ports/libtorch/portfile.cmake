@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-c10-glog.patch
         use-flatbuffers2.patch # check with codegen-flatc-mobile_bytecode
         fix-windows.patch # https://github.com/pytorch/pytorch/issues/87957
+        fix_werror.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 

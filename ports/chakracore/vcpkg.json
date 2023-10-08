@@ -1,11 +1,11 @@
 {
   "name": "chakracore",
   "version-date": "2022-11-09",
-  "port-version": 3,
+  "port-version": 5,
   "description": "Core part of the Chakra Javascript engine",
   "homepage": "https://github.com/Microsoft/ChakraCore",
   "license": "MIT",
-  "supports": "!osx & !uwp & (linux | (!static & !staticcrt))",
+  "supports": "!osx & !uwp & (linux | !static)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -14,6 +14,14 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "features": [
+        "pkg-config"
+      ],
+      "platform": "windows"
     }
   ]
 }

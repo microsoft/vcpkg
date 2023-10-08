@@ -1,7 +1,6 @@
 {
   "name": "sqlcipher",
-  "version": "4.5.3",
-  "port-version": 1,
+  "version": "4.5.4",
   "description": "SQLCipher extends the SQLite database library to add security enhancements that make it more suitable for encrypted local data storage.",
   "homepage": "https://www.zetetic.net/sqlcipher",
   "license": null,

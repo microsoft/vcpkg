@@ -61,16 +61,18 @@ if(VCPKG_DETECTED_MSVC)
         set(USER_CONFIG_TOOLSET clang-win)
     else()
         set(USER_CONFIG_TOOLSET msvc)
-    endif()
-    if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
-    else()
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
+        if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
+        else()
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
+        endif()
     endif()
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
     set(USER_CONFIG_TOOLSET emscripten)
 elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(USER_CONFIG_TOOLSET clang)
+elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "NVHPC")
+    set(USER_CONFIG_TOOLSET pgi)
 else()
     set(USER_CONFIG_TOOLSET gcc)
 endif()
@@ -144,7 +146,7 @@ if(CFLAGS MATCHES "-Zi" OR CXXFLAGS MATCHES "-Zi")
         )
 endif()
 
-if(USER_CONFIG_TOOLSET STREQUAL "msvc")
+if(USER_CONFIG_TOOLSET MATCHES "^(msvc|clang-win)$")
     file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <setup>\"${NOTHING_BAT}\"\n"
@@ -171,7 +173,7 @@ if(NOT LDFLAGS STREQUAL "")
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS "    <linkflags>\"${LDFLAGS}\"\n")
 endif()
 
-if(WIN32 AND NOT USER_CONFIG_TOOLSET STREQUAL "msvc")
+if(WIN32 AND NOT USER_CONFIG_TOOLSET MATCHES "^(msvc|clang-win)$")
     # MINGW here causes b2 to not run cygpath
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <flavor>mingw\n"
@@ -291,10 +293,10 @@ add_custom_target(boost ALL
         threading=multi
 
         stage
-    WORKING_DIRECTORY ${SOURCE_PATH}/build
+    WORKING_DIRECTORY "${SOURCE_PATH}/build"
 )
 
-set(SUBDIR ${CMAKE_CURRENT_BINARY_DIR}/stage/lib)
+set(SUBDIR "${CMAKE_CURRENT_BINARY_DIR}/stage/lib")
 install(
     CODE "
 file(GLOB LIBS \"${SUBDIR}/*.so.*\" \"${SUBDIR}/*.so\" \"${SUBDIR}/*.a\" \"${SUBDIR}/*.dylib\" \"${SUBDIR}/*.dylib.*\" \"${SUBDIR}/*.lib\")

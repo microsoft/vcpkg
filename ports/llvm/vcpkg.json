@@ -1,11 +1,16 @@
 {
   "name": "llvm",
   "version": "15.0.7",
+  "port-version": 6,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
+    {
+      "name": "atlmfc",
+      "platform": "windows & !mingw"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -46,7 +51,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "compiler-rt",
             "tools"
           ]
         }
@@ -65,7 +69,16 @@
       ]
     },
     "compiler-rt": {
-      "description": "Include compiler's runtime libraries."
+      "description": "Include compiler's runtime libraries.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang"
+          ]
+        }
+      ]
     },
     "default-options": {
       "description": "Build with default options.",
@@ -180,6 +193,21 @@
         "libxml2"
       ]
     },
+    "enable-mlir-python-bindings": {
+      "description": "Build MLIR Python bindings.",
+      "supports": "!(windows & static)",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "mlir"
+          ]
+        },
+        "pybind11",
+        "python3"
+      ]
+    },
     "enable-rtti": {
       "description": "Build LLVM with run-time type information."
     },
@@ -231,10 +259,28 @@
       ]
     },
     "libcxxabi": {
-      "description": "Include libcxxabi library."
+      "description": "Include libcxxabi library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     },
     "libunwind": {
-      "description": "Include libunwind library."
+      "description": "Include libunwind library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     },
     "lld": {
       "description": "Include LLVM linker.",
@@ -255,6 +301,8 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "clang",
+            "enable-terminfo",
             "tools"
           ]
         }
@@ -279,6 +327,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "clang",
             "utils"
           ]
         }

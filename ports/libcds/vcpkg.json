@@ -1,7 +1,7 @@
 {
   "name": "libcds",
   "version": "2.3.3",
-  "port-version": 3,
+  "port-version": 4,
   "description": "a collection of concurrent containers that don't require external (manual) synchronization for shared access, and safe memory reclamation (SMR) algorithms like Hazard Pointer and user-space RCU that is used as an epoch-based SMR.",
   "homepage": "https://github.com/khizmax/libcds",
   "license": "BSL-1.0",

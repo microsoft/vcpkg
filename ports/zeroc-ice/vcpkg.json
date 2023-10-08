@@ -1,6 +1,6 @@
 {
   "name": "zeroc-ice",
-  "version": "3.7.7",
+  "version": "3.7.9",
   "port-version": 4,
   "maintainers": "Benjamin Oldenburg <benjamin.oldenburg@ordis.co.th>",
   "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
@@ -16,7 +16,17 @@
       "name": "openssl",
       "platform": "!windows"
     },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    },
     "zlib"
+  ],
+  "default-features": [
+    "glacier2lib",
+    "icegridlib",
+    "icestormlib"
   ],
   "features": {
     "glacier2lib": {
@@ -24,6 +34,7 @@
     },
     "glacier2router": {
       "description": "Glacier2Router",
+      "supports": "!(windows & static)",
       "dependencies": [
         {
           "name": "zeroc-ice",
@@ -35,13 +46,16 @@
       ]
     },
     "iceboxlib": {
-      "description": "IceBox libraries and runtime"
+      "description": "IceBox libraries and runtime",
+      "supports": "!(windows & static)"
     },
     "iceboxtools": {
-      "description": "IceBox tools"
+      "description": "IceBox tools",
+      "supports": "!(windows & static)"
     },
     "icebridge": {
       "description": "IceBridge",
+      "supports": "!(windows & static)",
       "dependencies": [
         {
           "name": "zeroc-ice",
@@ -78,6 +92,7 @@
     },
     "icegridtools": {
       "description": "IceGrid tools",
+      "supports": "!(windows & static)",
       "dependencies": [
         "expat",
         {
@@ -87,6 +102,20 @@
             "iceboxlib",
             "icegridlib",
             "icessl"
+          ]
+        }
+      ]
+    },
+    "icelocatordiscovery": {
+      "description": "IceLocatorDiscovery",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib",
+            "iceboxlib",
+            "icessl",
+            "icestormlib"
           ]
         }
       ]
@@ -105,6 +134,7 @@
     },
     "icestormtools": {
       "description": "IceStorm tools",
+      "supports": "!(windows & static)",
       "dependencies": [
         "lmdb",
         {

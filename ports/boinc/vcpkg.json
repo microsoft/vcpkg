@@ -1,10 +1,10 @@
 {
   "name": "boinc",
-  "version": "7.22.0",
+  "version": "7.24.1",
   "description": "Open-source software for volunteer computing and grid computing.",
   "homepage": "https://boinc.berkeley.edu/",
   "license": "LGPL-3.0-or-later",
-  "supports": "!(windows & arm) & !uwp",
+  "supports": "!(windows & arm) & !uwp & !xbox",
   "dependencies": [
     "openssl",
     {

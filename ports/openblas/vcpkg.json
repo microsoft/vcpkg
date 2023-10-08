@@ -1,11 +1,10 @@
 {
   "name": "openblas",
-  "version": "0.3.21",
-  "port-version": 2,
+  "version": "0.3.24",
   "description": "OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.",
   "homepage": "https://github.com/xianyi/OpenBLAS",
   "license": "BSD-3-Clause",
-  "supports": "!(arm & uwp)",
+  "supports": "!arm | arm64 | !uwp",
   "dependencies": [
     {
       "name": "openblas",

@@ -2,13 +2,11 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  73bea05c3386075528542c2714790199f2bb5861 #v4.6.8
-    SHA512 5e7b994d1e26a4d97bd5788b61ca3a43a04c96c10161d29e185d5854b925e07b1bba5f1e35509d4df078f918bb6cc7149bcb720aaec8c04e5d8254280c0076ed
+    REF ${VERSION}
+    SHA512 f219ddc6f46061f516f99a3845f344269d51d7fc2554773f7d4cee7833c5be26ce809262466d18c2804559834eb595f0d802b6fc80d77b7e8bf046e4c1293d64
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
-        0002-windows-build.patch
-        0004-macos-build.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -35,9 +33,6 @@ list(APPEND OPTIONS -Dwin32-backend=${win32}) #Enable the Windows gdk backend (o
 list(APPEND OPTIONS -Dmacos-backend=${osx}) #Enable the macOS gdk backend (only when building on macOS)
 
 if("introspection" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        message(FATAL_ERROR "Feature introspection currently only supports dynamic build.")
-    endif()
     list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
 else()
@@ -55,9 +50,9 @@ vcpkg_configure_meson(
     OPTIONS
         ${OPTIONS}
         -Ddemos=false
+        -Dbuild-testsuite=false
         -Dbuild-examples=false
         -Dbuild-tests=false
-        -Dinstall-tests=false
         -Dgtk_doc=false
         -Dman-pages=false
         -Dmedia-ffmpeg=disabled     # Build the ffmpeg media backend
@@ -68,6 +63,7 @@ vcpkg_configure_meson(
         -Dsysprof=disabled          # include tracing support for sysprof
         -Dtracker=disabled          # Enable Tracker3 filechooser search
         -Dcolord=disabled           # Build colord support for the CUPS printing backend
+        -Df16c=disabled             # Enable F16C fast paths (requires F16C)
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
@@ -85,45 +81,11 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
-# If somebody finds out how to access and forward env variables to
-# the meson install script be my guest. Nevertheless the script still
-# needs manual execution in the crosscompiling case.
-vcpkg_find_acquire_program(PYTHON3)
-foreach(_config release debug)
-    if(_config STREQUAL "release")
-        set(_short rel)
-        set(_path_suffix)
-    else()
-        set(_short dbg)
-        set(_path_suffix /debug)
-    endif()
-    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib")
-        continue()
-    endif()
-    message(STATUS "Running post install script: ${TARGET_TRIPLET}-${_short}")
-
-    set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}${_path_suffix}/lib/pkgconfig/")
-    set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/media")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/immodules")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/printbackends")
-    vcpkg_execute_required_process(
-        COMMAND "${PYTHON3}" "${SOURCE_PATH}/build-aux/meson/post-install.py" 4.0 4.0.0 "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib" "${CURRENT_PACKAGES_DIR}${_path_suffix}/share" "${CURRENT_PACKAGES_DIR}${_path_suffix}/bin"
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME post-install-${TARGET_TRIPLET}-${_short}
-    )
-    unset(ENV{PKG_CONFIG_PATH})
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/bin/gtk-4.0")
-    #file(RENAME "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/" "${CURRENT_PACKAGES_DIR}${_path_suffix}/bin/gtk-4.0")
-    message(STATUS "Post install ${TARGET_TRIPLET}-${_short} done")
-endforeach()
-
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 set(TOOL_NAMES gtk4-builder-tool
                gtk4-encode-symbolic-svg

@@ -1,5 +1,5 @@
 vcpkg_download_distfile(gazebo3211
-    URLS "https://patch-diff.githubusercontent.com/raw/osrf/gazebo/pull/3211.diff"
+    URLS "https://patch-diff.githubusercontent.com/raw/osrf/gazebo/pull/3211.diff?full_index=1"
     FILENAME "gazebo3211.diff"
     SHA512 761e254866d4705acc0b81479285f979c436b3b611739a207a575031d8a8daba48de4fc0c8de5edb9a9f89725586c5caeef9e6e1e3d63a2d961ca09df974f7de
 )

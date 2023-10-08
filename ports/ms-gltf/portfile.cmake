@@ -10,7 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-install.patch
-        fix-apple-filesystem.patch
 )
 
 # note: Test/Sample executables won't be installed
@@ -37,4 +36,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

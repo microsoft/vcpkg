@@ -1,5 +1,5 @@
 diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
-index 64bf93b..843b035 100644
+index 64eec10..6c5a934 100644
 --- a/fizz/CMakeLists.txt
 +++ b/fizz/CMakeLists.txt
 @@ -50,10 +50,9 @@ find_package(folly CONFIG REQUIRED)
@@ -57,11 +57,11 @@ index 64bf93b..843b035 100644
 -  list(APPEND FIZZ_INCLUDE_DIRECTORIES ${LIBEVENT_INCLUDE_DIR})
 -endif()
  
- set(FIZZ_HEADER_DIRS
-   client
-@@ -237,30 +216,25 @@ target_include_directories(
-   PUBLIC
+ configure_file(fizz-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/generated/fizz/fizz-config.h)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/generated/fizz/fizz-config.h DESTINATION ${INCLUDE_INSTALL_DIR}/fizz/)
+@@ -243,30 +222,25 @@ target_include_directories(
      $<BUILD_INTERFACE:${FIZZ_BASE_DIR}>
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>
      $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
 -    ${FOLLY_INCLUDE_DIR}
 -    ${OPENSSL_INCLUDE_DIR}
@@ -97,7 +97,7 @@ index 64bf93b..843b035 100644
      ${CMAKE_DL_LIBS}
      ${LIBRT_LIBRARIES})
  
-@@ -317,8 +291,7 @@ ENDIF(CMAKE_CROSSCOMPILING)
+@@ -323,8 +297,7 @@ ENDIF(CMAKE_CROSSCOMPILING)
  SET(FIZZ_TEST_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
  
  if(BUILD_TESTS)
@@ -107,7 +107,7 @@ index 64bf93b..843b035 100644
  endif()
  
  add_library(fizz_test_support
-@@ -331,21 +304,9 @@ add_library(fizz_test_support
+@@ -337,21 +310,9 @@ add_library(fizz_test_support
  target_link_libraries(fizz_test_support
    PUBLIC
      fizz
@@ -130,7 +130,7 @@ index 64bf93b..843b035 100644
  
  # export fizz headers and targets for unit tests utils
  # since other projects such as mvfst and proxygen use them
-@@ -369,14 +330,13 @@ macro(add_gtest test_source test_name)
+@@ -375,14 +336,13 @@ macro(add_gtest test_source test_name)
    add_executable(${test_name} ${test_source} test/CMakeTestMain.cpp)
  
    set_property(TARGET ${test_name} PROPERTY ENABLE_EXPORTS true)

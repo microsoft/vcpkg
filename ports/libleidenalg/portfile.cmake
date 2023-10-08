@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO theAeon/libleidenalg
-    REF 748dfca386b997fe5a140e21b9ef0f78a6e95ee6
-    SHA512 c88f0d9912981b8179d58c7084761e9123e2d7fdd4d971c348f1c0ec066b77914cf5592e0cdff21e371262fd28bbb50f2a09b06404adf2a1468f2f20c228a42f
+    REPO vtraag/libleidenalg
+    REF "${VERSION}"
+    SHA512 a3077592b68cb6fd9bc24127898a64576982b608ff3c123e8b1c7ea1b8da2dfb302123fba64cbf93c16b9310ab42199ddc8de5efa5b6606dd49ee47f074f7f2f
     HEAD_REF main
 )
 

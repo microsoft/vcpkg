@@ -11,7 +11,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 # MSBuild performs in-source builds, so to ensure reliability we must clear them each time
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
+file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/src")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(CRT_LINKAGE "MT")
@@ -30,7 +30,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/wpcap.patch.in" "${CURRENT_BUILDTREES_
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     SOURCE_BASE ${WINPCAP_VERSION}
     PATCHES
         "${CURRENT_BUILDTREES_DIR}/src/packetNtx.patch"
@@ -56,11 +56,12 @@ vcpkg_execute_required_process(
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY "${CURRENT_PORT_DIR}/Packet.vcxproj" DESTINATION "${SOURCE_PATH}/packetNtx/Dll/Project/")
+    configure_file("${CURRENT_PORT_DIR}/Packet.vcxproj.in" "${SOURCE_PATH}/packetNtx/Dll/Project/Packet.vcxproj" COPYONLY)
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH "${SOURCE_PATH}/packetNtx/Dll/Project/Packet.sln"
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "packetNtx/Dll/Project/Packet.sln"
     RELEASE_CONFIGURATION "Release"
     DEBUG_CONFIGURATION "Debug"
     PLATFORM ${PLATFORM}
@@ -70,8 +71,8 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
 
 vcpkg_execute_required_process(
-    COMMAND ${SOURCE_PATH}/wpcap/PRJ/build_scanner_parser.bat
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    COMMAND "${SOURCE_PATH}/wpcap/PRJ/build_scanner_parser.bat"
+    WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME build_scanner_parser-${TARGET_TRIPLET}
 )
 
@@ -79,24 +80,25 @@ vcpkg_execute_required_process(
     COMMAND "devenv.exe"
             "wpcap.sln"
             /Upgrade
-    WORKING_DIRECTORY ${SOURCE_PATH}/wpcap/PRJ
+    WORKING_DIRECTORY "${SOURCE_PATH}/wpcap/PRJ"
     LOGNAME upgrade-wpcap-${TARGET_TRIPLET}
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY "${CURRENT_PORT_DIR}/wpcap.vcxproj" DESTINATION "${SOURCE_PATH}/wpcap/PRJ/")
+    configure_file("${CURRENT_PORT_DIR}/wpcap.vcxproj.in" "${SOURCE_PATH}/wpcap/PRJ/wpcap.vcxproj" COPYONLY)
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH "${SOURCE_PATH}/wpcap/PRJ/wpcap.sln"
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "wpcap/PRJ/wpcap.sln"
     RELEASE_CONFIGURATION "Release - No AirPcap"
     DEBUG_CONFIGURATION "Debug - No AirPcap"
     PLATFORM ${PLATFORM}
 )
 
 vcpkg_execute_required_process(
-    COMMAND ${SOURCE_PATH}/create_include.bat
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    COMMAND "${SOURCE_PATH}/create_include.bat"
+    WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME create_include-${TARGET_TRIPLET}
 )
 
@@ -123,8 +125,8 @@ file(INSTALL
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/pcap")
 
 vcpkg_execute_required_process(
-    COMMAND ${SOURCE_PATH}/create_lib.bat
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    COMMAND "${SOURCE_PATH}/create_lib.bat"
+    WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME create_lib-${TARGET_TRIPLET}
 )
 
@@ -168,5 +170,4 @@ endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pcap-stdinc.h" "#define inline __inline" "#ifndef __cplusplus\n#define inline __inline\n#endif")
 
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "The latest license is available in https://www.winpcap.org/misc/copyright.htm and in the header files.
-")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "The latest license is available in https://www.winpcap.org/misc/copyright.htm and in the header files.")

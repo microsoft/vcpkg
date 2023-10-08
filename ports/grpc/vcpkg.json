@@ -40,7 +40,8 @@
       "description": "Deprecated."
     },
     "codegen": {
-      "description": "Build code generator machinery"
+      "description": "Build code generator machinery",
+      "supports": "!uwp"
     }
   }
 }

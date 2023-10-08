@@ -1,7 +1,7 @@
 {
   "name": "h5py-lzf",
   "version-date": "2019-12-04",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The LZF filter is an alternative DEFLATE-style compressor for HDF5 datasets, using the free LZF library by Marc Alexander Lehmann.",
   "homepage": "https://github.com/h5py/h5py/tree/master/lzf",
   "dependencies": [

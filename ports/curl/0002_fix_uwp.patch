@@ -1,15 +1,15 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 8cea346c3..967312905 100644
+index 9bb8f0b..7678f43 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -118,6 +118,10 @@ if(CURL_HAS_LTO)
-     INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO TRUE)
+@@ -216,6 +216,10 @@ if(BUILD_SHARED_LIBS)
+     $<BUILD_INTERFACE:${CURL_SOURCE_DIR}/include>)
  endif()
  
 +if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-+  set_property(TARGET ${LIB_NAME} APPEND PROPERTY COMPILE_DEFINITIONS "_WINSOCK_DEPRECATED_NO_WARNINGS")
++  set_property(TARGET ${LIB_SELECTED} APPEND PROPERTY COMPILE_DEFINITIONS "_WINSOCK_DEPRECATED_NO_WARNINGS")
 +endif()
 +
- if(WIN32)
-   if(BUILD_SHARED_LIBS)
-     if(MSVC)
+ add_library(${LIB_NAME} ALIAS ${LIB_SELECTED})
+ add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_SELECTED})
+ 

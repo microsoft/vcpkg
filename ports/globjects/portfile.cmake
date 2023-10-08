@@ -10,7 +10,7 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DOPTION_BUILD_TESTS=OFF
         -DOPTION_BUILD_GPU_TESTS=OFF
@@ -21,9 +21,9 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH share/globjects/cmake/globjects)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/globjects/globjects-config.cmake "include(CMakeFindDependencyMacro)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/globjects/globjects-config.cmake" "include(CMakeFindDependencyMacro)
 find_dependency(glm)
 find_dependency(glbinding)
 
@@ -31,6 +31,6 @@ include(\${CMAKE_CURRENT_LIST_DIR}/globjects-export.cmake)
 ")
 
 # Handle copyright
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/globjects/LICENSE ${CURRENT_PACKAGES_DIR}/share/globjects/copyright)
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
 
 vcpkg_copy_pdbs()

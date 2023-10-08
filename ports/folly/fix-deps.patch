@@ -57,7 +57,7 @@ index 4b78e9f..ac83c99 100644
      thread
    REQUIRED
  )
-+set (Boost_LIBRARIES Boost::context Boost::filesystem Boost::program_options Boost::regex  Boost::system Boost::thread
++set (Boost_LIBRARIES Boost::boost Boost::context Boost::filesystem Boost::program_options Boost::regex  Boost::system Boost::thread
 +  )
  list(APPEND FOLLY_LINK_LIBRARIES ${Boost_LIBRARIES})
 -list(APPEND FOLLY_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})

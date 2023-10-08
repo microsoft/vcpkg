@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SanderMertens/flecs
     REF "v${VERSION}"
-    SHA512 9de0a2d37df14db322ef5efc0270e940d1c7cffaa780a3e6fc91a3671dfde5428bc46608065d0fc25268527774c846efdc7756e4bf17a83d8242ed34ce8a4ee7
+    SHA512 d32628828eacc42646887de5a72a593ea42158d5f09e4ed789f86dff60f98f5be45c3a4a049c2b1173e2ab4da0313f544271eacd8f14a8c561815c51eebf8529
     HEAD_REF master
 )
 
@@ -31,6 +31,7 @@ endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

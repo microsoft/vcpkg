@@ -1,0 +1,266 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 634f242..c8e2f1e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -28,7 +28,6 @@ endif()
+ 
+ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+-set(BUILD_SHARED_LIBS OFF) # to force usrsctp to be built static
+ 
+ if(WIN32)
+ 	add_definitions(-DWIN32_LEAN_AND_MEAN)
+@@ -202,12 +201,14 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+ find_package(Threads REQUIRED)
+ 
+-set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
+-add_subdirectory(deps/plog EXCLUDE_FROM_ALL)
++find_library(USRSCTP_LIBRARY usrsctp REQUIRED)
++find_path(PLOG_INCLUDE_DIRS "plog/Appenders/AndroidAppender.h")
+ 
+ if(SCTP_DEBUG)
+ 	add_definitions(-DSCTP_DEBUG)
+ endif()
++
++if(0)
+ option(sctp_build_shared_lib OFF)
+ option(sctp_build_programs OFF)
+ option(sctp_inet OFF)
+@@ -221,7 +222,9 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+     target_compile_options(usrsctp PRIVATE -Wno-error=format-truncation)
+ endif()
+ add_library(Usrsctp::Usrsctp ALIAS usrsctp)
++endif()
+ 
++if(BUILD_SHARED_LIBS)
+ add_library(datachannel SHARED
+ 	${LIBDATACHANNEL_SOURCES}
+ 	${LIBDATACHANNEL_HEADERS}
+@@ -234,7 +237,8 @@ set_target_properties(datachannel PROPERTIES
+ 	CXX_VISIBILITY_PRESET default)
+ target_compile_definitions(datachannel PRIVATE RTC_EXPORTS)
+ 
+-add_library(datachannel-static STATIC EXCLUDE_FROM_ALL
++elseif(BUILD_STATIC_LIBS)
++add_library(datachannel-static STATIC
+ 	${LIBDATACHANNEL_SOURCES}
+ 	${LIBDATACHANNEL_HEADERS}
+ 	${LIBDATACHANNEL_IMPL_SOURCES}
+@@ -244,42 +248,63 @@ set_target_properties(datachannel-static PROPERTIES
+ 	CXX_STANDARD 17)
+ target_compile_definitions(datachannel-static PRIVATE RTC_EXPORTS)
+ target_compile_definitions(datachannel-static PUBLIC RTC_STATIC)
++endif()
+ 
++if(BUILD_SHARED_LIBS)
+ target_include_directories(datachannel PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+     $<INSTALL_INTERFACE:include>)
+ target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
+ target_include_directories(datachannel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
++target_include_directories(datachannel PRIVATE ${PLOG_INCLUDE_DIRS})
+ target_link_libraries(datachannel PRIVATE Threads::Threads)
+-target_link_libraries(datachannel PRIVATE Usrsctp::Usrsctp plog::plog)
++target_link_libraries(datachannel PRIVATE ${USRSCTP_LIBRARY})
+ 
++elseif(BUILD_STATIC_LIBS)
+ target_include_directories(datachannel-static PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+     $<INSTALL_INTERFACE:include>)
+ target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
+ target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
++target_include_directories(datachannel-static PRIVATE ${PLOG_INCLUDE_DIRS})
+ target_link_libraries(datachannel-static PRIVATE Threads::Threads)
+-target_link_libraries(datachannel-static PRIVATE Usrsctp::Usrsctp plog::plog)
++target_link_libraries(datachannel-static PRIVATE ${USRSCTP_LIBRARY})
++endif()
+ 
+ if(WIN32)
++	if(BUILD_SHARED_LIBS)
+ 	target_link_libraries(datachannel PUBLIC ws2_32) # winsock2
++	elseif(BUILD_STATIC_LIBS)
+ 	target_link_libraries(datachannel-static PUBLIC ws2_32) # winsock2
++	endif()
+ endif()
+ 
+ if (NO_WEBSOCKET)
++	if(BUILD_SHARED_LIBS)
+ 	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_WEBSOCKET=0)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_WEBSOCKET=0)
++	endif()
+ else()
++	if(BUILD_SHARED_LIBS)
+ 	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_WEBSOCKET=1)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_WEBSOCKET=1)
++	endif()
+ endif()
+ 
+ if(NO_MEDIA)
++	if(BUILD_SHARED_LIBS)
+ 	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_MEDIA=0)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_MEDIA=0)
++	endif()
+ else()
++	if(BUILD_SHARED_LIBS)
+ 	target_compile_definitions(datachannel PUBLIC RTC_ENABLE_MEDIA=1)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_MEDIA=1)
++	endif()
+ 	if(USE_SYSTEM_SRTP)
+ 		find_package(libSRTP REQUIRED)
+ 		if(NOT TARGET libSRTP::srtp2)
+@@ -289,10 +314,16 @@ else()
+ 				IMPORTED_LINK_INTERFACE_LANGUAGES C
+ 				IMPORTED_LOCATION ${SRTP_LIBRARIES})
+ 		endif()
++		if(BUILD_SHARED_LIBS)
+ 		target_compile_definitions(datachannel PRIVATE RTC_SYSTEM_SRTP=1)
++		elseif(BUILD_STATIC_LIBS)
+ 		target_compile_definitions(datachannel-static PRIVATE RTC_SYSTEM_SRTP=1)
++		endif()
++		if(BUILD_SHARED_LIBS)
+ 		target_link_libraries(datachannel PRIVATE libSRTP::srtp2)
++		elseif(BUILD_STATIC_LIBS)
+ 		target_link_libraries(datachannel-static PRIVATE libSRTP::srtp2)
++		endif()
+ 	else()
+ 		add_subdirectory(deps/libsrtp EXCLUDE_FROM_ALL)
+ 		target_compile_definitions(datachannel PRIVATE RTC_SYSTEM_SRTP=0)
+@@ -312,15 +343,24 @@ if (USE_GNUTLS)
+ 			IMPORTED_LINK_INTERFACE_LANGUAGES C
+ 			IMPORTED_LOCATION "${GNUTLS_LIBRARIES}")
+ 	endif()
++	if(BUILD_SHARED_LIBS)
+ 	target_compile_definitions(datachannel PRIVATE USE_GNUTLS=1)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_compile_definitions(datachannel-static PRIVATE USE_GNUTLS=1)
++	endif()
++	if(BUILD_SHARED_LIBS)
+ 	target_link_libraries(datachannel PRIVATE GnuTLS::GnuTLS)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_link_libraries(datachannel-static PRIVATE GnuTLS::GnuTLS)
++	endif()
+ 	if (NOT NO_WEBSOCKET)
+ 		# Needed for SHA1, it should be present as GnuTLS cryptography backend
+ 		find_package(Nettle REQUIRED)
++		if(BUILD_SHARED_LIBS)
+ 		target_link_libraries(datachannel PRIVATE Nettle::Nettle)
++		elseif(BUILD_STATIC_LIBS)
+ 		target_link_libraries(datachannel-static PRIVATE Nettle::Nettle)
++		endif()
+ 	endif()
+ else()
+ 	if(APPLE)
+@@ -340,27 +380,48 @@ else()
+ 		endif()
+ 	endif()
+ 	find_package(OpenSSL REQUIRED)
++	if(BUILD_SHARED_LIBS)
+ 	target_compile_definitions(datachannel PRIVATE USE_GNUTLS=0)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_compile_definitions(datachannel-static PRIVATE USE_GNUTLS=0)
++	endif()
++	if(BUILD_SHARED_LIBS)
+ 	target_link_libraries(datachannel PRIVATE OpenSSL::SSL)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_link_libraries(datachannel-static PRIVATE OpenSSL::SSL)
++	endif()
+ endif()
+ 
+ if (USE_NICE)
+ 	find_package(LibNice REQUIRED)
++	if(BUILD_SHARED_LIBS)
+ 	target_compile_definitions(datachannel PRIVATE USE_NICE=1)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_compile_definitions(datachannel-static PRIVATE USE_NICE=1)
++	endif()
++	if(BUILD_SHARED_LIBS)
+ 	target_link_libraries(datachannel PRIVATE LibNice::LibNice)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_link_libraries(datachannel-static PRIVATE LibNice::LibNice)
++	endif()
+ else()
++	if(BUILD_SHARED_LIBS)
+ 	target_compile_definitions(datachannel PRIVATE USE_NICE=0)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_compile_definitions(datachannel-static PRIVATE USE_NICE=0)
++	endif()
+ 	if(USE_SYSTEM_JUICE)
+ 		find_package(LibJuice REQUIRED)
++		if(BUILD_SHARED_LIBS)
+ 		target_compile_definitions(datachannel PRIVATE RTC_SYSTEM_JUICE=1)
++		elseif(BUILD_STATIC_LIBS)
+ 		target_compile_definitions(datachannel-static PRIVATE RTC_SYSTEM_JUICE=1)
++		endif()
++		if(BUILD_SHARED_LIBS)
+ 		target_link_libraries(datachannel PRIVATE LibJuice::LibJuice)
++		elseif(BUILD_STATIC_LIBS)
+ 		target_link_libraries(datachannel-static PRIVATE LibJuice::LibJuice)
++		endif()
+ 	else()
+ 		add_subdirectory(deps/libjuice EXCLUDE_FROM_ALL)
+ 		target_compile_definitions(datachannel PRIVATE RTC_SYSTEM_JUICE=0)
+@@ -371,36 +432,58 @@ else()
+ endif()
+ 
+ if(CAPI_STDCALL)
++	if(BUILD_SHARED_LIBS)
+ 	target_compile_definitions(datachannel PUBLIC CAPI_STDCALL)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_compile_definitions(datachannel-static PUBLIC CAPI_STDCALL)
++	endif()
+ endif()
+ 
++if(BUILD_SHARED_LIBS)
+ set_target_properties(datachannel PROPERTIES EXPORT_NAME LibDataChannel)
+ add_library(LibDataChannel::LibDataChannel ALIAS datachannel)
+-
++elseif(BUILD_STATIC_LIBS)
+ set_target_properties(datachannel-static PROPERTIES EXPORT_NAME LibDataChannelStatic)
+ add_library(LibDataChannel::LibDataChannelStatic ALIAS datachannel-static)
++endif()
+ 
+ if(NOT MSVC)
++	if(BUILD_SHARED_LIBS)
+ 	target_compile_options(datachannel PRIVATE -Wall -Wextra)
++	elseif(BUILD_STATIC_LIBS)
+ 	target_compile_options(datachannel-static PRIVATE -Wall -Wextra)
++	endif()
+ endif()
+ 
+ if(WARNINGS_AS_ERRORS)
+ 	if(MSVC)
++		if(BUILD_SHARED_LIBS)
+ 		target_compile_options(datachannel PRIVATE /WX)
++		elseif(BUILD_STATIC_LIBS)
+ 		target_compile_options(datachannel-static PRIVATE /WX)
++		endif()
+ 	else()
++		if(BUILD_SHARED_LIBS)
+ 		target_compile_options(datachannel PRIVATE -Werror)
++		elseif(BUILD_STATIC_LIBS)
+ 		target_compile_options(datachannel-static PRIVATE -Werror)
++		endif()
+ 	endif()
+ endif()
+ 
++if(BUILD_SHARED_LIBS)
+ install(TARGETS datachannel EXPORT LibDataChannelTargets
+ 	RUNTIME DESTINATION bin
+ 	LIBRARY DESTINATION lib
+ 	ARCHIVE DESTINATION lib
+ )
++elseif(BUILD_STATIC_LIBS)
++install(TARGETS datachannel-static EXPORT LibDataChannelTargets
++	RUNTIME DESTINATION bin
++	LIBRARY DESTINATION lib
++	ARCHIVE DESTINATION lib
++)
++endif()
+ 
+ install(FILES ${LIBDATACHANNEL_HEADERS}
+ 	DESTINATION include/rtc

@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PDAL/PDAL
-    REF 2.4.3
-    SHA512 0293760c778be88e98e9c056730674c4e25bdba9094ff590e439a1ed1f61c880b7c03449b9cbc92190e12b3c0894cb337d93b2534c954f91277a0ee5cde5c78a
+    REF "${VERSION}"
+    SHA512 cefc610682f8dafd5c186ed612edc2db904690c3a53d5111ece0965d197053b064bd8cbd9adab293c47ec1894949b5e33623b0f0e6b6cad35617a20f0039bd79
     HEAD_REF master
     PATCHES
         fix-dependency.patch
@@ -12,7 +12,10 @@ vcpkg_from_github(
         fix-find-library-suffix.patch
         no-pkgconfig-requires.patch
         no-rpath.patch
-        fix-gcc8-compatibility.patch #Upstream PR: https://github.com/PDAL/PDAL/pull/3864
+        fix-gcc-13-build.patch  #upstream PR: https://github.com/PDAL/PDAL/pull/4039
+        gdal-3.7.patch
+        mingw.patch
+        install-dimbuilder.patch
 )
 
 # Prefer pristine CMake find modules + wrappers and config files from vcpkg.
@@ -35,10 +38,6 @@ file(APPEND "${SOURCE_PATH}/pdal/JsonFwd.hpp" "namespace NL = nlohmann;\n")
 
 unset(ENV{OSGEO4W_HOME})
 
-if("laszip" IN_LIST FEATURES)
-    message(WARNING "The 'laszip' feature is obsolete and will be removed in the future.")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         draco       BUILD_PLUGIN_DRACO
@@ -49,10 +48,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         pgpointcloud BUILD_PLUGIN_PGPOINTCLOUD
         zstd        WITH_ZSTD
 )
-if(BUILD_PLUGIN_DRACO)
-    vcpkg_find_acquire_program(PKGCONFIG)
+
+if(VCPKG_CROSSCOMPILING)
+    set(DIMBUILDER_EXECUTABLE "-DDIMBUILDER_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pdal/dimbuilder${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -64,6 +65,9 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Libexecinfo:BOOL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libunwind:BOOL=ON
         ${FEATURE_OPTIONS}
+        ${DIMBUILDER_EXECUTABLE}
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
 )
 
 vcpkg_cmake_install()
@@ -80,7 +84,7 @@ file(GLOB pdal_unsupported
     "${CURRENT_PACKAGES_DIR}/debug/bin/pdal-config"
 )
 file(REMOVE ${pdal_unsupported})
-vcpkg_copy_tools(TOOL_NAMES pdal AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES pdal dimbuilder AUTO_CLEAN)
 
 # Post-install clean-up
 file(REMOVE_RECURSE
