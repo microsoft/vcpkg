@@ -43,6 +43,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         WORKING_DIRECTORY ${SOURCE_PATH}/mswin32
         LOGNAME upgrade-Packet-${TARGET_TRIPLET}
     )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/mswin32/Lib")
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH mswin32/nmap.vcxproj
