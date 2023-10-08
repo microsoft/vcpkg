@@ -2,7 +2,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 # see https://github.com/altseed/LLGI/pull/150
 vcpkg_download_distfile(LLGI_PR_150_PATCH
-    URLS "https://patch-diff.githubusercontent.com/raw/altseed/LLGI/pull/150.diff"
+    URLS "https://patch-diff.githubusercontent.com/raw/altseed/LLGI/pull/150.diff?full_index=1"
     FILENAME llgi-pr-150.patch
     SHA512 31ad021726875b4477e2ed41379d48d1563091bc27e3fbaa78b3fb841b162cd4c827be5ca96e0ba5ce63862d011b1cb4b783232bdc59757fa2b3f0afae845dca
 )
