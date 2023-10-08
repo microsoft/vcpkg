@@ -2289,7 +2289,6 @@ cgns[core,fortran,hdf5,legacy,lfs,lfsselector,mpi,tests,tools](osx) = combinatio
 cgns[fortran](windows) = feature-fails # No fortran compiler installed
 coroutine(osx) = fail # requires c++20
 cppslippi(osx) = fail # requires c++20
-openmpi(osx) = fail # objdump: error: 'conftest.o': Invalid/Unsupported object file format. See https://github.com/microsoft/vcpkg/issues/34114
 crashrpt(windows) = fail # precompiled header errors. See https://github.com/microsoft/vcpkg/issues/33470
 ctbench(osx) = fail # requires C++ 20
 curl[brotli,c-ares,http2,idn,idn2,mbedtls,non-http,openssl,sectransp,ssh,ssl,tool,websockets,wolfssl](osx) = combination-fails
@@ -2346,6 +2345,7 @@ libcanberra[core](osx) = combination-fails # see https://github.com/microsoft/vc
 libcanberra[gtk3](osx) = combination-fails # No package 'systemd' found # See https://github.com/microsoft/vcpkg/issues/31032
 libcanberra[oss](osx) = feature-fails # oss not installed
 libcanberra[pulse](osx) = feature-fails # pulseaudio not installed
+libcoro(osx) = fail # does not support clang
 libfontenc(windows) = fail # configure:22353: error: possibly undefined macro: _AC_FINAL. See https://github.com/microsoft/vcpkg/issues/33750
 libgit2[core,openssl,winhttp,sectransp,mbedtls] = options # only one TLS backend is allowed
 libgit2[pcre,pcre2] = options # have to select pcre xor pcre2
@@ -2377,9 +2377,11 @@ opencv2[world] = feature-fails # See https://github.com/microsoft/vcpkg/issues/2
 opencv3[ffmpeg] = feature-fails # ffmpeg5+ is not supported under opencv3. See https://github.com/microsoft/vcpkg/issues/32150
 opencv3[halide](osx) = feature-fails # Same as opencv4[halide]
 opencv3[vtk](osx) = feature-fails # vtk version not compatible. See https://github.com/microsoft/vcpkg/issues/32228
+openmpi(osx) = fail # objdump: error: 'conftest.o': Invalid/Unsupported object file format. See https://github.com/microsoft/vcpkg/issues/34114
 openmvg(windows & arm) = fail # nmmintrin.h(17): fatal error C1189: #error:  This header is specific to X86, X64, ARM64, and ARM64EC targets. See https://github.com/microsoft/vcpkg/issues/33746
 openscap(osx) = fail # Waits for https://github.com/microsoft/vcpkg/pull/27348
 openvdb[ax] = feature-fails # ax requires llvm version <= 14. Work when using a baseline + overwrite
+openvino[cpu](osx) = feature-fails # error: reference to 'bfloat16_t' is ambiguous.
 pangolin[core,eigen,examples,ffmpeg,gui,jpeg,lz4,module,openexr,png,pybind11,realsense,test,tiff,tools,vars,video,zstd](!(arm & windows)) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31304
 poco[core,mariadb,mysql] = options # You can not install mariadb and mysql at the same time
 protobuf-c[tools,test](uwp) = feature-fails # Protobuf_PROTOC_LIBRARY used in this project, but they are set to NOTFOUND. See https://github.com/microsoft/vcpkg/issues/33778
@@ -2411,7 +2413,6 @@ wasmedge[aot] = feature-fails # ar: /libzstd.a: No such file or directory. See h
 wayland[force-build] = feature-fails # error: To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.
 xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
 xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not 32
-openvino[cpu](osx) = feature-fails # error: reference to 'bfloat16_t' is ambiguous. See 
 
 # skip
 entt[experimental] = skip # required head build
