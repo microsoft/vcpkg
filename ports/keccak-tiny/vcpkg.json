@@ -1,0 +1,17 @@
+{
+  "name": "keccak-tiny",
+  "version-date": "2014-09-08",
+  "description": "A tiny implementation of SHA-3, SHAKE, Keccak, and sha3sum",
+  "homepage": "https://github.com/coruus/keccak-tiny",
+  "license": "CC0-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
