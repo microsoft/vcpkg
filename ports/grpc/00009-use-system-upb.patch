@@ -1,18 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1a92462..40c26ef 100644
+index 220f251..12fed24 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -95,6 +95,9 @@ endif()
- set(gRPC_ABSL_PROVIDER "module" CACHE STRING "Provider of absl library")
- set_property(CACHE gRPC_ABSL_PROVIDER PROPERTY STRINGS "module" "package")
+@@ -82,6 +82,9 @@ set_property(CACHE gRPC_SSL_PROVIDER PROPERTY STRINGS "module" "package")
+ set(gRPC_PROTOBUF_PROVIDER "module" CACHE STRING "Provider of protobuf library")
+ set_property(CACHE gRPC_PROTOBUF_PROVIDER PROPERTY STRINGS "module" "package")
  
 +set(gRPC_UPB_PROVIDER "module" CACHE STRING "Provider of upb library")
 +set_property(CACHE gRPC_UPB_PROVIDER PROPERTY STRINGS "module" "package")
 +
- set(gRPC_ABSL_USED_TARGETS
-   absl_algorithm
-   absl_algorithm_container
-@@ -1536,6 +1539,7 @@ target_link_libraries(gpr
+ if(gRPC_BUILD_TESTS)
+   set(gRPC_BENCHMARK_PROVIDER "module" CACHE STRING "Provider of benchmark library")
+   set_property(CACHE gRPC_BENCHMARK_PROVIDER PROPERTY STRINGS "module" "package")
+@@ -1681,6 +1684,7 @@ target_link_libraries(gpr
    absl::time
    absl::optional
    absl::variant
@@ -20,38 +20,23 @@ index 1a92462..40c26ef 100644
  )
  if(_gRPC_PLATFORM_ANDROID)
    target_link_libraries(gpr
-@@ -2417,7 +2421,6 @@ target_link_libraries(grpc
-   gpr
-   ${_gRPC_SSL_LIBRARIES}
-   address_sorting
--  upb
- )
- if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
-   target_link_libraries(grpc "-framework CoreFoundation")
-@@ -3059,7 +3062,6 @@ target_link_libraries(grpc_unsecure
-   absl::utility
-   gpr
-   address_sorting
--  upb
- )
- if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
-   target_link_libraries(grpc_unsecure "-framework CoreFoundation")
-@@ -4821,6 +4823,7 @@ endif()
+@@ -3403,7 +3407,7 @@ target_link_libraries(gtest
  
  endif()
  
+-
 +if (gRPC_UPB_PROVIDER STREQUAL "module")
- add_library(upb
-   third_party/utf8_range/naive.c
-   third_party/utf8_range/range2-neon.c
-@@ -4918,6 +4921,7 @@ if(gRPC_INSTALL)
+ add_library(upb ${_gRPC_STATIC_WIN32}
+   third_party/upb/upb/base/status.c
+   third_party/upb/upb/collections/array.c
+@@ -3744,6 +3748,7 @@ if(gRPC_INSTALL)
+     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
    )
  endif()
- 
 +endif()
  
  if(gRPC_BUILD_TESTS)
- if(_gRPC_PLATFORM_LINUX OR _gRPC_PLATFORM_MAC OR _gRPC_PLATFORM_POSIX)
+ 
 diff --git a/cmake/gRPCConfig.cmake.in b/cmake/gRPCConfig.cmake.in
 index 98d8c6d..7cad2ab 100644
 --- a/cmake/gRPCConfig.cmake.in
@@ -65,7 +50,7 @@ index 98d8c6d..7cad2ab 100644
  # Targets
  include(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets.cmake)
 diff --git a/cmake/upb.cmake b/cmake/upb.cmake
-index 72630fe..4530004 100644
+index 72630fe..e31216e 100644
 --- a/cmake/upb.cmake
 +++ b/cmake/upb.cmake
 @@ -12,9 +12,19 @@
@@ -88,4 +73,3 @@ index 72630fe..4530004 100644
 +    set(_gRPC_UPB_INCLUDE_DIR)
 +    set(_gRPC_FIND_UPB "if(NOT upb_FOUND)\n  find_package(upb CONFIG REQUIRED)\nendif()")
 +endif()
-\ No newline at end of file
