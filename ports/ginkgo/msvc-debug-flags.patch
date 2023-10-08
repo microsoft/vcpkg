@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d7940e7f4..1af5df21b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,2 +15,7 @@
+ set(PROJECT_VERSION_TAG ${Ginkgo_VERSION_TAG})
++if(MSVC)
++    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /O1 /Ob1")
++    string(REPLACE /RTC1 "" CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG})
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4996")
++endif()
+ 
