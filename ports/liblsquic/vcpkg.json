@@ -1,7 +1,6 @@
 {
   "name": "liblsquic",
-  "version": "3.1.1",
-  "port-version": 2,
+  "version": "3.3.2",
   "description": "An implementation of the QUIC and HTTP/3 protocols.",
   "homepage": "https://github.com/litespeedtech/lsquic",
   "license": "MIT AND BSD-3-Clause",
