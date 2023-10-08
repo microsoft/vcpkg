@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512  35d869f79b278ae219d61e0ae3b01902c5df5457d2ced7bfd109cf0e75f3f7835ce3d4751c34838d134531f6483dc89b7d67d5ecab6e8af42b4b735284573db4
     HEAD_REF master
-    PATCHES "fix_find_boost.patch"
+    PATCHES "fix_install.patch"
 )
 
 set(YOMM2_SHARED OFF)
