@@ -211,6 +211,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "clang",
             "tools"
           ]
         }
