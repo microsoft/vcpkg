@@ -1,0 +1,22 @@
+diff --git a/nanovdb/nanovdb/CMakeLists.txt b/nanovdb/nanovdb/CMakeLists.txt
+index d20b4928..257d005a 100644
+--- a/nanovdb/nanovdb/CMakeLists.txt
++++ b/nanovdb/nanovdb/CMakeLists.txt
+@@ -128,7 +128,7 @@ if(NANOVDB_USE_TBB AND NOT TARGET TBB::tbb)
+ endif()
+ 
+ if(NANOVDB_USE_BLOSC AND NOT TARGET Blosc::blosc)
+-  find_package(Blosc REQUIRED)
++  find_package(Blosc REQUIRED NAMES blosc)
+ endif()
+ 
+ if(NANOVDB_USE_ZLIB AND NOT TARGET ZLIB::ZLIB)
+@@ -224,7 +224,7 @@ if(NANOVDB_USE_TBB)
+ endif()
+ 
+ if(NANOVDB_USE_BLOSC)
+-  target_link_libraries(nanovdb INTERFACE Blosc::blosc)
++  target_link_libraries(nanovdb INTERFACE $<IF:$<TARGET_EXISTS:blosc_shared>,blosc_shared,blosc_static>)
+   target_compile_definitions(nanovdb INTERFACE -DNANOVDB_USE_BLOSC)
+ endif()
+ 

@@ -9,10 +9,13 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DLIBREMIDI_NO_ALSA=ON
+        -DLIBREMIDI_NO_BOOST=ON
+        -DLIBREMIDI_NO_JACK=ON
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libremidi PACKAGE_NAME libremidi)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
-
