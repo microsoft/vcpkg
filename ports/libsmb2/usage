@@ -1,4 +1,4 @@
-The package libsmb2 provides CMake targets:
+libsmb2 can be used from CMake via:
 
     find_package(SMB2 REQUIRED)
     target_include_directories(main PRIVATE ${SMB2_INCLUDE_DIRS})
