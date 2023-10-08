@@ -1,0 +1,12 @@
+diff --git a/src/meson.build b/src/meson.build
+index 4d63ecf..266c213 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -561,6 +561,7 @@ version = '0.@0@.0'.format(hb_version_int)
+ 
+ extra_hb_cpp_args = []
+ if cpp.get_argument_syntax() == 'msvc'
++  extra_hb_cpp_args += ['/bigobj']
+   if get_option('default_library') != 'static'
+     extra_hb_cpp_args += '-DHB_DLL_EXPORT'
+   endif
