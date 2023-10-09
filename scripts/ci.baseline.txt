@@ -287,6 +287,7 @@ directxsdk:x64-windows=skip
 directxsdk:x64-windows-static-md=skip
 discord-rpc:arm64-uwp=fail
 discord-rpc:x64-uwp=fail
+discordcoreapi:x64-osx=fail
 discount:x64-android=fail
 dlib:arm64-uwp=fail
 dlib:x64-uwp=fail
