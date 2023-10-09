@@ -7825,8 +7825,8 @@
       "port-version": 1
     },
     "sokol": {
-      "baseline": "2019-09-09",
-      "port-version": 2
+      "baseline": "2023-10-07",
+      "port-version": 0
     },
     "sol2": {
       "baseline": "3.3.0",
