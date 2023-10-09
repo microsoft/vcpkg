@@ -1295,6 +1295,9 @@ wasmedge:arm64-android=fail
 wasmedge:x64-android=fail
 wavpack:arm-neon-android=fail
 wavpack:x64-android=fail
+# Collides with libpcap -> similar headers
+winpcap:x64-windows = skip
+winpcap:x86-windows = skip
 wordnet:arm-neon-android=fail
 wordnet:arm64-android=fail
 wordnet:x64-android=fail
