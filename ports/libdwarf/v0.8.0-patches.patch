@@ -148,7 +148,7 @@ index 28076ee4..4ebc3a4c 100644
 +# endif()
 +
 +find_package(ZLIB REQUIRED)
-+set(DW_FZLIB "ZLIB")
++set(DW_FZLIB "z")
 +set(HAVE_ZLIB TRUE)
 +set(HAVE_ZLIB_H TRUE)
  
@@ -165,14 +165,3 @@ index 28076ee4..4ebc3a4c 100644
  	add_subdirectory(src/bin/dwarfexample)
 diff --git a/src/lib/libdwarf/CMakeLists.txt b/src/lib/libdwarf/CMakeLists.txt
 index 09908bba..8a45d171 100644
---- a/src/lib/libdwarf/CMakeLists.txt
-+++ b/src/lib/libdwarf/CMakeLists.txt
-@@ -89,7 +89,7 @@ list(LENGTH DWARF_TARGETS targetCount)
- math(EXPR targetCount "${targetCount} - 1")
- list(APPEND DWARF_LIBS ${LIBELF_LIBRARIES})
- if (DW_FZLIB)
--    list(APPEND DWARF_LIBS z)
-+    list(APPEND DWARF_LIBS ZLIB::ZLIB)
- endif()
- if (DW_FZSTD)
-     list(APPEND DWARF_LIBS zstd)
