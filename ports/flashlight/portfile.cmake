@@ -24,6 +24,9 @@ vcpkg_cmake_configure(
         -DFL_BUILD_EXAMPLES=OFF
         -DFL_BUILD_STANDALONE=OFF
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        FL_ARRAYFIRE_USE_CUDA
+        FL_ARRAYFIRE_USE_CPU
     OPTIONS_DEBUG
         "-DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/debug/share/flashlight"
     OPTIONS_RELEASE
@@ -36,6 +39,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-# # FIXME:
-# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/flashlight/fl/common/backward")
