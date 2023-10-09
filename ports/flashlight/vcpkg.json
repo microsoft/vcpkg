@@ -31,7 +31,6 @@
     "cudnn": {
       "description": "Use cuDNN for autograd computation",
       "dependencies": [
-        "cuda",
         "cudnn"
       ]
     },
@@ -49,7 +48,6 @@
     "nccl": {
       "description": "Build with NCCL for distributed communication",
       "dependencies": [
-        "cuda",
         "nccl"
       ]
     },
