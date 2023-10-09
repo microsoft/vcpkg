@@ -2230,7 +2230,7 @@
     },
     "drogon": {
       "baseline": "1.8.7",
-      "port-version": 0
+      "port-version": 1
     },
     "dstorage": {
       "baseline": "1.2.0",
