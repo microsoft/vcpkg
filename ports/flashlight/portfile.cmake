@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO flashlight/flashlight
-    REF 4044ef03e25483eabb10dfd15dce926d1f0ba3ba
-    SHA512 f68e2004c7e71d7835826494417dab5b0d04bb400d7f28fe2d3f018d8ca6b9810a214e8eac99903730f88efe7bc9ae83db2f3f53558f75d864e80670b31bac7b
+    REF 6653536c24f31ba515d425ad834faddef4a64adb
+    SHA512 0
     HEAD_REF main
 )
 
