@@ -4173,8 +4173,8 @@
       "port-version": 1
     },
     "libfreenect2": {
-      "baseline": "0.2.0",
-      "port-version": 10
+      "baseline": "0.2.1",
+      "port-version": 0
     },
     "libfs": {
       "baseline": "1.0.8",
