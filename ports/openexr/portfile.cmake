@@ -1,61 +1,46 @@
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-  message(FATAL_ERROR "UWP build not supported")
-endif()
-
 vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO openexr/openexr
-  REF ed64d5467dee9763f28baf300f7699e6288b9f5f
-  SHA512 549d37ed1ef4d1ff7e732d583f7213ee15c7f92625aea9fd65345e4c5b854902c02e5940d0692b1af5ae0a02abf46aaefea2662db2389d1b2fb4264a373baac2
-  HEAD_REF master
-  PATCHES
-    0001-remove_find_package_macro.patch
-    0002-fixup_cmake_exports_path.patch
-    0003-remove_symlinks.patch
-    0004-Fix-pkg-config-lib-suffix-for-cmake-debug-builds.patch  # https://github.com/AcademySoftwareFoundation/openexr/pull/1032
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO AcademySoftwareFoundation/openexr
+    REF "v${VERSION}"
+    SHA512 ec60e79341695452e05f50bbcc0d55e0ce00fbb64cdec01a83911189c8643eb28a8046b14ee4230e5f438f018f2f1d0714f691983474d7979befd199f3f34758
+    HEAD_REF master
+    PATCHES
+        fix-arm64-windows-build.patch # https://github.com/AcademySoftwareFoundation/openexr/pull/1447
 )
 
-vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
-  OPTIONS
-    -DCMAKE_DEBUG_POSTFIX=_d
-    -DPYILMBASE_ENABLE=FALSE
+vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
+    FEATURES
+        tools   OPENEXR_BUILD_TOOLS
+        tools   OPENEXR_INSTALL_TOOLS
 )
-
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/ilmbase TARGET_PATH share/ilmbase)
-vcpkg_fixup_cmake_targets()
-vcpkg_fixup_pkgconfig()
-
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrenvmap${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrheader${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrmakepreview${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrmaketiled${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrmultipart${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrmultiview${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrstdattr${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exr2aces${VCPKG_HOST_EXECUTABLE_SUFFIX})
-
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/openexr/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/exrenvmap${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/openexr/exrenvmap${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/exrheader${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/openexr/exrheader${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/exrmakepreview${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/openexr/exrmakepreview${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/exrmaketiled${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/openexr/exrmaketiled${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/exrmultipart${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/openexr/exrmultipart${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/exrmultiview${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/openexr/exrmultiview${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/exrstdattr${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/openexr/exrstdattr${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/exr2aces${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/openexr/exr2aces${VCPKG_HOST_EXECUTABLE_SUFFIX})
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openexr)
-
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${OPTIONS}
+        -DBUILD_TESTING=OFF
+        -DOPENEXR_INSTALL_EXAMPLES=OFF
+        -DBUILD_DOCS=OFF
+    OPTIONS_DEBUG
+        -DOPENEXR_BUILD_TOOLS=OFF
+        -DOPENEXR_INSTALL_TOOLS=OFF
+)
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-if (VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenEXR)
+vcpkg_fixup_pkgconfig()
+
+if(OPENEXR_INSTALL_TOOLS)
+    vcpkg_copy_tools(
+        TOOL_NAMES exrenvmap exrheader exrinfo exrmakepreview exrmaketiled exrmultipart exrmultiview exrstdattr exr2aces
+        AUTO_CLEAN
+    )
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

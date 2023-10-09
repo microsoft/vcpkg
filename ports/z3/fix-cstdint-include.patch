@@ -1,0 +1,12 @@
+diff --git a/src/util/tptr.h b/src/util/tptr.h
+index 6213b2efa..2a35af535 100644
+--- a/src/util/tptr.h
++++ b/src/util/tptr.h
+@@ -20,6 +20,7 @@ Revision History:
+ #pragma once
+
+ #include "util/machine.h"
++#include <cstdint>
+
+ #define TAG_SHIFT        PTR_ALIGNMENT
+ #define ALIGNMENT_VALUE  (1 << PTR_ALIGNMENT)

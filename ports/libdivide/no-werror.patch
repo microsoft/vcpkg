@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7800a13..f01a139 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,10 +15,10 @@ include(CMakeSanitize)
+ 
+ # Maximum warnings level & warnings as error
+ add_compile_options(
+-    "$<$<CXX_COMPILER_ID:MSVC>:/W4;/WX>"
+-    "$<$<CXX_COMPILER_ID:GNU>:-Wall;-Wextra;-pedantic;-Werror>"
+-    "$<$<CXX_COMPILER_ID:Clang>:-Wall;-Wextra;-pedantic;-Werror>"
+-    "$<$<CXX_COMPILER_ID:AppleClang>:-Wall;-Wextra;-pedantic;-Werror>"
++    "$<$<CXX_COMPILER_ID:MSVC>:/W4>"
++    "$<$<CXX_COMPILER_ID:GNU>:-Wall;-Wextra;-pedantic>"
++    "$<$<CXX_COMPILER_ID:Clang>:-Wall;-Wextra;-pedantic>"
++    "$<$<CXX_COMPILER_ID:AppleClang>:-Wall;-Wextra;-pedantic>"
+ )
+ 
+ # Build options ################################################

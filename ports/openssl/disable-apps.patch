@@ -1,0 +1,12 @@
+diff --git a/Configure b/Configure
+index 5ac4b52..ad638e8 100755
+--- a/Configure
++++ b/Configure
+@@ -401,6 +401,7 @@ my @dtls = qw(dtls1 dtls1_2);
+ my @disablables = (
+     "acvp-tests",
+     "afalgeng",
++    "apps",
+     "aria",
+     "asan",
+     "asm",

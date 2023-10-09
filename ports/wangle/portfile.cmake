@@ -3,13 +3,24 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/wangle
-    REF v2022.03.21.00
-    SHA512 069fe7758ccb2f33665f53109047f2e0158e248fda8c760eddd978afd6980acbc6421db60721bf320deca557369377c8757f13c67f8685e3a98394324e75e72e
+    REF "v${VERSION}"
+    SHA512 d5e44265e9e609d6fa42e7d3b71598e23460b4157eb45adeb1552077d30390775e6523d58d7d52446ea59509cbfdd7906f295220b70994df0c4f24128932cff4
     HEAD_REF master
     PATCHES
         fix-config-cmake.patch
         fix_dependency.patch
 )
+
+file(REMOVE
+  "${SOURCE_PATH}/wangle/cmake/FindDoubleConversion.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGflags.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGlog.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake"
+  "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake"
+)
+
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/wangle"
@@ -38,4 +49,4 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

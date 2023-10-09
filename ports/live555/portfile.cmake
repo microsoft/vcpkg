@@ -1,16 +1,17 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.live555.com/liveMedia/public/live.2022.04.26.tar.gz"
-    FILENAME "live.2022.04.26.tar.gz"
-    SHA512 0226a451129df1d47d10bc96ef2a9ab8ffb0116fd0daac8b16a1dd57b319b9058b587955a01bc4a939c3f64659915815fe182c8c7b02cb286313ff132dcbe144
+    URLS "http://live555.com/liveMedia/public/live.2023.07.24.tar.gz"
+    FILENAME "live.2023.07.24.tar.gz"
+SHA512 d0708a087d9252b2f13d7b2e14c47e24e895ac329d5dd640a00756e92c846c57573198f6cc79e88272567babf5b0bb8cb268e750685efe8b9693fd9aec384e70 
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE} 
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-RTSPClient.patch
+        fix_operator_overload.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
@@ -20,6 +21,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-live555)
 
 file(GLOB HEADERS
     "${SOURCE_PATH}/BasicUsageEnvironment/include/*.h*"
@@ -29,6 +33,4 @@ file(GLOB HEADERS
 )
 
 file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

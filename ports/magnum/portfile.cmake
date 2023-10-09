@@ -7,6 +7,8 @@ vcpkg_from_github(
     PATCHES
         002-sdl-includes.patch
         003-fix-FindGLFW.patch
+        004-fix-FindOpenAL.patch
+        005-fix-find-sdl2.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -66,10 +68,15 @@ endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES ${_COMPONENTS})
 
+if(VCPKG_CROSSCOMPILING)
+    set(CORRADE_RC_EXECUTABLE "-DCORRADE_RC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/corrade/corrade-rc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${CORRADE_RC_EXECUTABLE}
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d

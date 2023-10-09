@@ -1,10 +1,11 @@
 {
   "name": "libdc1394",
   "version": "2.2.6",
+  "port-version": 1,
   "description": "libdc1394 is a library that provides a complete high level application programming interface (API) for developers who wish to control IEEE 1394 based cameras that conform to the 1394-based Digital Camera Specifications (also known as the IIDC or DCAM Specifications).",
   "homepage": "https://damien.douxchamps.net/ieee1394/libdc1394",
   "supports": "!windows",
   "dependencies": [
-    "sdl1"
+    "libusb"
   ]
 }

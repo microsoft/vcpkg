@@ -1,10 +1,9 @@
 {
   "name": "nu-book-zxing-cpp",
-  "version": "1.2.0",
+  "version": "2.1.0",
   "description": "Barcode detection and decoding library.",
-  "homepage": "https://github.com/nu-book/zxing-cpp",
+  "homepage": "https://github.com/zxing-cpp/zxing-cpp",
   "license": "Apache-2.0",
-  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

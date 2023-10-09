@@ -1,0 +1,18 @@
+{
+  "name": "joltphysics",
+  "version": "3.0.1",
+  "port-version": 1,
+  "description": "A multi core friendly rigid body physics and collision detection library suitable for games and VR applications",
+  "homepage": "https://github.com/jrouwe/JoltPhysics",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

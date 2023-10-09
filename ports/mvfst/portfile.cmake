@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO facebookincubator/mvfst
-    REF 7c52380a5c445fe478096d7ca10e92797747ae87
-    SHA512 5ccebec9652e7a481b599b20a07b0d6585d300cdde3e6b62985c5ce448c0890d537bced6c9dbd77009f89c16311c56fde1f2131064ff5cc3fcb34bf69cb11f06
+    REPO facebook/mvfst
+    REF "v${VERSION}"
+    SHA512 074ad8201e2c35b51bde0f8eaeb22bfe87af80fd9f3dc6c3de343b19d4b3d7738780a208d4719ee4fbd9d3f2f8a1a95b4858e8dc3fad16c26e4a859ecab75eca
     HEAD_REF main
 )
 
@@ -15,10 +15,10 @@ vcpkg_cmake_configure(
 
 # Prefer installed config files
 file(REMOVE
-    ${SOURCE_PATH}/fizz/cmake/FindGMock.cmake
-    ${SOURCE_PATH}/fizz/cmake/FindGflags.cmake
-    ${SOURCE_PATH}/fizz/cmake/FindGlog.cmake
-    ${SOURCE_PATH}/fizz/cmake/FindLibevent.cmake
+    "${SOURCE_PATH}/fizz/cmake/FindGMock.cmake"
+    "${SOURCE_PATH}/fizz/cmake/FindGflags.cmake"
+    "${SOURCE_PATH}/fizz/cmake/FindGlog.cmake"
+    "${SOURCE_PATH}/fizz/cmake/FindLibevent.cmake"
 )
 
 vcpkg_cmake_install()

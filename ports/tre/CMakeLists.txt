@@ -25,6 +25,9 @@ set (SRCS
 
 include_directories(win32 include/tre)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS -DHAVE_CONFIG_H)
+if (WIN32)
+  add_definitions(-DHAVE_MALLOC_H)
+endif()
 add_library(tre ${SRCS})
 
 install(

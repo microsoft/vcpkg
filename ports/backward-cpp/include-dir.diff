@@ -1,0 +1,16 @@
+diff --git a/BackwardConfig.cmake b/BackwardConfig.cmake
+index a982adc..0c549f3 100644
+--- a/BackwardConfig.cmake
++++ b/BackwardConfig.cmake
+@@ -198,6 +198,11 @@ if(WIN32)
+ endif()
+ 
+ set(BACKWARD_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}")
++if(NOT PROJECT_NAME STREQUAL "backward")
++	get_filename_component(BACKWARD_INCLUDE_DIR "${BACKWARD_INCLUDE_DIR}" DIRECTORY)
++	get_filename_component(BACKWARD_INCLUDE_DIR "${BACKWARD_INCLUDE_DIR}" DIRECTORY)
++	set(BACKWARD_INCLUDE_DIR "${BACKWARD_INCLUDE_DIR}/include")
++endif()
+ 
+ set(BACKWARD_HAS_EXTERNAL_LIBRARIES FALSE)
+ set(FIND_PACKAGE_REQUIRED_VARS BACKWARD_INCLUDE_DIR)

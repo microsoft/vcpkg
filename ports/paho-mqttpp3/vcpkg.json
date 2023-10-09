@@ -1,10 +1,20 @@
 {
   "name": "paho-mqttpp3",
   "version": "1.2.0",
+  "port-version": 1,
   "description": "Paho project provides open-source C++ wrapper for Paho C library",
   "homepage": "https://github.com/eclipse/paho.mqtt.cpp",
+  "license": "EPL-1.0",
   "dependencies": [
-    "paho-mqtt"
+    "paho-mqtt",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "default-features": [
     "ssl"

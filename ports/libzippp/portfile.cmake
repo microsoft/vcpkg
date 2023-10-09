@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ctabin/libzippp
-    REF 0e907d7ef8de46822602cb7633a5bc6fc0cc36de #v5.0-1.8.0 with CXX std version c++11
-    SHA512 f91724b0225bddcaf705e7e1493ad415b534096cfe3636d50995245982984e7420148206f4e24d72e596d75eac570d7b512c5aa836eaf4a8951e27737bcee9eb
+    REF 7bc5e5d7de8808acd0a00fc2f993bf9141086c22 #v7.0-1.10.1 with CXX std version c++11
+    SHA512 f84aaab7ccf3d2f90ed1b49e9d71059c045e8aab08bc185a2d63f2ff6ba106c185e7d8938fe653fe96797e9f4f36fb04c12927a4339250ac431eed01ebf900bb
     HEAD_REF master
-    PATCHES fix-find-lzma.patch
 )
 
 vcpkg_check_features( 
@@ -12,9 +11,8 @@ vcpkg_check_features(
         FEATURES    
         encryption LIBZIPPP_ENABLE_ENCRYPTION)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLIBZIPPP_BUILD_TESTS=OFF
@@ -22,16 +20,16 @@ vcpkg_configure_cmake(
         -DLIBZIPPP_INSTALL_HEADERS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake/libzippp")
+    vcpkg_cmake_config_fixup(CONFIG_PATH "cmake/libzippp")
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/libzippp")
+    vcpkg_cmake_config_fixup(CONFIG_PATH "share/libzippp")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

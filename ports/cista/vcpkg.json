@@ -1,0 +1,17 @@
+{
+  "name": "cista",
+  "version": "0.14",
+  "description": "Cista is a simple, high-performance, zero-copy C++ serialization & reflection library.",
+  "homepage": "https://github.com/felixguendling/cista",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

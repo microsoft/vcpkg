@@ -1,7 +1,7 @@
 {
   "name": "arrow",
-  "version": "7.0.0",
-  "port-version": 3,
+  "version": "13.0.0",
+  "port-version": 1,
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",
@@ -13,7 +13,6 @@
     "brotli",
     "bzip2",
     "gflags",
-    "glog",
     "lz4",
     "openssl",
     "re2",
@@ -28,6 +27,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    "xsimd",
     "zlib",
     "zstd"
   ],
@@ -38,6 +38,9 @@
     "parquet"
   ],
   "features": {
+    "acero": {
+      "description": "Acero support"
+    },
     "csv": {
       "description": "CSV support"
     },
@@ -49,6 +52,9 @@
     },
     "dataset": {
       "description": "Dataset support"
+    },
+    "example": {
+      "description": "Install the minimal example (source code)"
     },
     "filesystem": {
       "description": "Filesystem support"
@@ -62,8 +68,21 @@
         "protobuf"
       ]
     },
+    "gcs": {
+      "description": "GCS support",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "storage"
+          ]
+        }
+      ]
+    },
     "jemalloc": {
-      "description": "jemalloc allocator"
+      "description": "jemalloc allocator",
+      "supports": "!windows"
     },
     "json": {
       "description": "JSON support",
@@ -72,7 +91,8 @@
       ]
     },
     "mimalloc": {
-      "description": "mimalloc allocator"
+      "description": "mimalloc allocator",
+      "supports": "windows"
     },
     "orc": {
       "description": "ORC support",
@@ -85,10 +105,6 @@
       "dependencies": [
         "rapidjson"
       ]
-    },
-    "plasma": {
-      "description": "Plasma support",
-      "supports": "!windows"
     },
     "s3": {
       "description": "S3 support",

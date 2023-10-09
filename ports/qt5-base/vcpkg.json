@@ -1,14 +1,11 @@
 {
   "name": "qt5-base",
-  "version": "5.15.4",
+  "version": "5.15.11",
+  "port-version": 1,
   "description": "Qt5 Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
-    {
-      "name": "angle",
-      "platform": "!windows"
-    },
     "double-conversion",
     "egl-registry",
     {
@@ -17,12 +14,12 @@
     },
     "freetype",
     "harfbuzz",
-    {
-      "name": "icu",
-      "platform": "!uwp"
-    },
     "libjpeg-turbo",
     "libpng",
+    {
+      "name": "opengl",
+      "platform": "!windows"
+    },
     "openssl",
     "pcre2",
     {
@@ -32,6 +29,10 @@
     },
     "sqlite3",
     {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     },
@@ -39,6 +40,15 @@
     "zstd"
   ],
   "features": {
+    "icu": {
+      "description": "Enable ICU support",
+      "dependencies": [
+        {
+          "name": "icu",
+          "platform": "!uwp"
+        }
+      ]
+    },
     "latest": {
       "description": "(deprecated)"
     },

@@ -1,0 +1,33 @@
+diff --git a/bdftruncate.c b/bdftruncate.c
+index 2b317c0b0..3ab84978f 100644
+--- a/bdftruncate.c	
++++ b/bdftruncate.c
+@@ -40,7 +40,13 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-
++#if defined(_MSC_VER)
++# if defined(_M_X64) || defined(_M_ARM64)
++#  define SSIZE_MAX LLONG_MAX
++# else
++#  define SSIZE_MAX LONG_MAX
++# endif
++#endif
+ #if (defined(__GNUC__) && ((__GNUC__ * 100 + __GNUC_MINOR__) >= 205))	\
+         || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590))
+ # define ATTR_NORETURN __attribute((noreturn))
+diff --git a/ucs2any.c b/ucs2any.c
+index 1f575d14f..75b662b3d 100644
+--- a/ucs2any.c	
++++ b/ucs2any.c
+@@ -49,7 +49,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ 
+ /* global variable for argv[0] */
+ static const char *my_name = NULL;

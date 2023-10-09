@@ -2,36 +2,13 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 81328ea..c735419 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -755,8 +755,6 @@ ELSE()
+@@ -755,7 +755,8 @@ ELSE()
      FIND_PACKAGE(GStreamer COMPONENTS app pbutils)
      FIND_PACKAGE(GLIB COMPONENTS gobject)
      FIND_PACKAGE(DirectShow)
 -    FIND_PACKAGE(SDL2)
--    FIND_PACKAGE(SDL)
-     FIND_PACKAGE(Poppler-glib)
-     FIND_PACKAGE(RSVG)
-     FIND_PACKAGE(GtkGl)
-@@ -775,6 +773,10 @@ ELSE()
-             FIND_PACKAGE(Lua51)
-         ENDIF()
-     ENDIF()
-+    
-+    find_package(SDL)
 +    find_package(SDL2 CONFIG)
 +    set(SDL2_LIBRARY SDL2::SDL2 SDL2::SDL2main)
- 
-     # V8 and Python plugins are tests for linking against these libraries but aren't functionality beyond this.
-     # FIND_PACKAGE(V8)
-diff --git a/examples/osgmovie/osgmovie.cpp b/examples/osgmovie/osgmovie.cpp
-index 9de15b1..ae96e11 100644
---- a/examples/osgmovie/osgmovie.cpp
-+++ b/examples/osgmovie/osgmovie.cpp
-@@ -691,7 +691,7 @@ int main(int argc, char** argv)
- 
- #if USE_SDL || USE_SDL2
- 
--#include "SDL.h"
-+#include <SDL/SDL.h>
- 
- static void soundReadCallback(void * user_data, uint8_t * data, int datalen)
- {
+     FIND_PACKAGE(SDL)
+     FIND_PACKAGE(Poppler-glib)
+     FIND_PACKAGE(RSVG)

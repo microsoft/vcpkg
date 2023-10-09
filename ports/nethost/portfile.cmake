@@ -1,17 +1,20 @@
-set(COMMIT_HASH 188427d7e18102c45fc6d0e20c135e226f215992)
+set(COMMIT_HASH v7.0.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dotnet/runtime
     REF ${COMMIT_HASH}
-    SHA512 5a93c66c87e2113f733702d938efd39456c99fb74b383097b8d877df21536fcbcba901606aa70db6c8f1a16421ea8f06822c5b0ab1d882631b6daecbed8d03cc
+    SHA512 59210df1d9541018a21a7e89e0f552ad35c849f49be31cf47e2a85086363cdabd2bf8ce652d2024479977ae059d658c3bd18de3bdaeb8cb3ddd71f2413f266bc
     HEAD_REF master
     PATCHES
         0001-nethost-cmakelists.patch
-        0002-settings-cmake.patch
 )
 
-set(PRODUCT_VERSION "5.0.0")
+set(PRODUCT_VERSION "7.0.0")
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+  execute_process(COMMAND sh -c "mkdir -p ${SOURCE_PATH}/artifacts/obj && ${SOURCE_PATH}/eng/native/version/copy_version_files.sh")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
   set(RID_PLAT "win")
@@ -41,9 +44,10 @@ endif()
 
 set(BASE_RID "${RID_PLAT}-${RID_ARCH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/src/installer/corehost/cli/nethost
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/src/native/corehost/nethost/"
+    # vcpkg's /utf-8 is incompatible with dotnet's own /source-charset:utf-8
+    NO_CHARSET_FLAG
     OPTIONS
         "-DSKIP_VERSIONING=1"
         "-DCLI_CMAKE_HOST_POLICY_VER:STRING=${PRODUCT_VERSION}"
@@ -52,15 +56,26 @@ vcpkg_configure_cmake(
         "-DCLI_CMAKE_COMMON_HOST_VER:STRING=${PRODUCT_VERSION}"
         "-DCLI_CMAKE_PKG_RID:STRING=${BASE_RID}"
         "-DCLI_CMAKE_COMMIT_HASH:STRING=${COMMIT_HASH}"
-        "-DCLI_CMAKE_PLATFORM_ARCH_${ARCH_NAME}=1"
-        "-DCMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION=10.0"
+        "-DCLR_CMAKE_TARGET_ARCH_${ARCH_NAME}=1"
+        "-DCLR_CMAKE_TARGET_ARCH=${RID_ARCH}"
+        "-DCLR_CMAKE_HOST_ARCH=${RID_ARCH}"
+    MAYBE_UNUSED_VARIABLES
+        SKIP_VERSIONING # only used on WIN32
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-nethost)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/nethost.h" "#ifdef NETHOST_USE_AS_STATIC" "#if 1")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/nethost.h" "#ifdef NETHOST_USE_AS_STATIC" "#if 0")
+endif()
+
+file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -1,33 +1,4 @@
-#[===[.md:
-# vcpkg_gn_install
-
-Installs a GN project.
-
-In order to build a GN project without installing, use [`vcpkg_build_ninja()`].
-
-## Usage:
-```cmake
-vcpkg_gn_install(
-     SOURCE_PATH <SOURCE_PATH>
-     [TARGETS <target>...]
-)
-```
-
-## Parameters:
-### SOURCE_PATH
-The path to the source directory
-
-### TARGETS
-Only install the specified targets.
-
-Note: includes must be handled separately
-
-[`vcpkg_build_ninja()`]: vcpkg_build_ninja.md
-#]===]
-if(Z_VCPKG_GN_INSTALL_GUARD)
-    return()
-endif()
-set(Z_VCPKG_GN_INSTALL_GUARD ON CACHE INTERNAL "guard variable")
+include_guard(GLOBAL)
 
 function(z_vcpkg_gn_install_get_target_type out_var)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "SOURCE_PATH;BUILD_DIR;TARGET" "")
@@ -36,7 +7,7 @@ function(z_vcpkg_gn_install_get_target_type out_var)
     endif()
 
     execute_process(
-        COMMAND "${VCPKG_GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}"
+        COMMAND "${GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         OUTPUT_VARIABLE output
         OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -55,7 +26,7 @@ function(z_vcpkg_gn_install_get_desc out_var)
     endif()
 
     execute_process(
-        COMMAND "${VCPKG_GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}" "${arg_WHAT_TO_DISPLAY}"
+        COMMAND "${GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}" "${arg_WHAT_TO_DISPLAY}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         OUTPUT_VARIABLE output
         OUTPUT_STRIP_TRAILING_WHITESPACE

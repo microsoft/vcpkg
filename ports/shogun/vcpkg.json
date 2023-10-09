@@ -1,7 +1,7 @@
 {
   "name": "shogun",
-  "version-string": "6.1.4",
-  "port-version": 7,
+  "version": "6.1.4",
+  "port-version": 9,
   "description": "Unified and efficient Machine Learning",
   "homepage": "https://github.com/shogun-toolbox/shogun",
   "dependencies": [
@@ -17,6 +17,14 @@
     "protobuf",
     "rxcpp",
     "snappy",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ]
 }

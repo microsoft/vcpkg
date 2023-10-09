@@ -1,21 +1,14 @@
 vcpkg_buildpath_length_warning(37)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(QT_OPENSSL_LINK_DEFAULT ON)
-else()
-    set(QT_OPENSSL_LINK_DEFAULT OFF)
-endif()
-option(QT_OPENSSL_LINK "Link against OpenSSL at compile-time." ${QT_OPENSSL_LINK_DEFAULT})
-
-if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING "qt5-base currently requires some packages from the system package manager, see https://doc.qt.io/qt-5/linux-requirements.html")
-    message(WARNING 
-[[
-qt5-base for qt5-x11extras requires several libraries from the system package manager. Please refer to
-  https://github.com/microsoft/vcpkg/blob/master/scripts/azure-pipelines/linux/provision-image.sh
-  for a complete list of them.
-]]
+if(VCPKG_TARGET_IS_LINUX)
+    message(WARNING "qt5-base currently requires some packages from the system package manager. "
+    "They can be installed on Ubuntu systems via "
+    "sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libgl1-mesa-dev libxrender-dev "
+    "libxi-dev libxkbcommon-dev libxkbcommon-x11-dev. For more information, see "
+    "https://doc.qt.io/qt-5/linux.html and https://doc.qt.io/qt-5/linux-requirements.html"
     )
+elseif(VCPKG_TARGET_IS_MINGW AND CMAKE_HOST_WIN32)
+    find_program(MINGW32_MAKE mingw32-make PATHS ENV PATH NO_DEFAULT_PATH REQUIRED)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
@@ -29,9 +22,6 @@ endif()
 set(WITH_MYSQL_PLUGIN OFF)
 if ("mysqlplugin" IN_LIST FEATURES)
     set(WITH_MYSQL_PLUGIN  ON)
-endif()
-if(WITH_MYSQL_PLUGIN AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(WARNING "${PORT} is currently not setup to support feature 'mysqlplugin' on platforms other than windows. Feel free to open up a PR to fix it!")
 endif()
 
 include(qt_port_functions)
@@ -56,16 +46,28 @@ endif()
 
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
+                            # CVE fixes from https://download.qt.io/official_releases/qt/5.15/
+                            patches/CVE-2023-24607-qtbase-5.15.diff
+                            patches/CVE-2023-32762-qtbase-5.15.diff
+                            patches/CVE-2023-32763-qtbase-5.15.diff
+                            patches/CVE-2023-33285-qtbase-5.15.diff
+                            patches/CVE-2023-34410-qtbase-5.15.diff
+                            patches/CVE-2023-37369-qtbase-5.15.diff
+                            patches/CVE-2023-38197-qtbase-5.15.diff
+                            patches/CVE-2023-43114-5.15.patch
+
                             patches/winmain_pro.patch          #Moves qtmain to manual-link
                             patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
                             patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.
                             patches/gui_configure.patch        #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
-                            patches/icu.patch                  #Help configure find static icu builds in vcpkg on windows
                             patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
                             patches/egl.patch                  #Fix egl detection logic.
+                            patches/qtbug_96392.patch          #Backport fix for QTBUG-96392
                             patches/mysql_plugin_include.patch #Fix include path of mysql plugin
                             patches/mysql-configure.patch      #Fix mysql project
                             patches/cocoa.patch                #Fix missing include on macOS Monterrey, https://code.qt.io/cgit/qt/qtbase.git/commit/src/plugins/platforms/cocoa?id=dece6f5840463ae2ddf927d65eb1b3680e34a547
+                            patches/xcode-15.patch             #From https://codereview.qt-project.org/c/qt/qtbase/+/503172
+                            patches/patch-qtbase-memory_resource.diff # From https://bugreports.qt.io/browse/QTBUG-114316
                             #patches/static_opengl.patch       #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static).
                                                                #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the
                                                                #the windows supplied gl.h header and the angle gl.h otherwise.
@@ -74,7 +76,8 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/Qt5PluginTarget.patch
                             patches/create_cmake.patch
                             patches/Qt5GuiConfigExtras.patch   # Patches the library search behavior for EGL since angle is not build with Qt
-                            patches/limits_include.patch       # Add missing includes to build with gcc 11
+                            patches/fix_angle.patch            # Failed to create OpenGL context for format QSurfaceFormat ...
+                            patches/mingw9.patch               # Fix compile with MinGW-W64 9.0.0: Redefinition of 'struct _FILE_ID_INFO'
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
@@ -87,9 +90,6 @@ endforeach()
 
 #########################
 ## Setup Configure options
-
-# This fixes issues on machines with default codepages that are not ASCII compatible, such as some CJK encodings
-set(ENV{_CL_} "/utf-8")
 
 set(CORE_OPTIONS
     -confirm-license
@@ -113,14 +113,10 @@ list(APPEND CORE_OPTIONS
     -system-doubleconversion
     -system-sqlite
     -system-harfbuzz
-    -icu
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
+    -openssl-linked
     )
-
-if(QT_OPENSSL_LINK)
-    list(APPEND CORE_OPTIONS -openssl-linked)
-endif()
 
 if(WITH_PGSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-psql)
@@ -175,8 +171,6 @@ find_library(BROTLI_DEC_DEBUG NAMES brotlidec brotlidec-static brotlidecd brotli
 
 find_library(ICUUC_RELEASE NAMES icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ICUUC_DEBUG NAMES icuucd libicuucd icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(ICUTU_RELEASE NAMES icutu libicutu PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(ICUTU_DEBUG NAMES icutud libicutud icutu libicutu PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 # Was installed in WSL but not on CI machine
 #    find_library(ICULX_RELEASE NAMES iculx libiculx PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -188,11 +182,11 @@ find_library(ICUIN_RELEASE NAMES icui18n libicui18n icuin PATHS "${CURRENT_INSTA
 find_library(ICUIN_DEBUG NAMES icui18nd libicui18nd icui18n libicui18n icuin icuind PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(ICUDATA_RELEASE NAMES icudata libicudata icudt PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ICUDATA_DEBUG NAMES icudatad libicudatad icudata libicudata icudtd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-set(ICU_RELEASE "${ICUIN_RELEASE} ${ICUTU_RELEASE} ${ICULX_RELEASE} ${ICUUC_RELEASE} ${ICUIO_RELEASE} ${ICUDATA_RELEASE}")
-set(ICU_DEBUG "${ICUIN_DEBUG} ${ICUTU_DEBUG} ${ICULX_DEBUG} ${ICUUC_DEBUG} ${ICUIO_DEBUG} ${ICUDATA_DEBUG}")
+set(ICU_RELEASE "${ICUIN_RELEASE} ${ICULX_RELEASE} ${ICUUC_RELEASE} ${ICUIO_RELEASE} ${ICUDATA_RELEASE}")
+set(ICU_DEBUG "${ICUIN_DEBUG} ${ICULX_DEBUG} ${ICUUC_DEBUG} ${ICUIO_DEBUG} ${ICUDATA_DEBUG}")
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(ICU_RELEASE "${ICU_RELEASE} Advapi32.lib")
-    set(ICU_DEBUG "${ICU_DEBUG} Advapi32.lib" )
+    set(ICU_RELEASE "${ICU_RELEASE} -ladvapi32")
+    set(ICU_DEBUG "${ICU_DEBUG} -ladvapi32" )
 endif()
 
 find_library(FONTCONFIG_RELEASE NAMES fontconfig PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -222,10 +216,8 @@ set(RELEASE_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "PCRE2_LIBS=${PCRE2_RELEASE}"
             "FREETYPE_LIBS=${FREETYPE_RELEASE_ALL}"
-            "ICU_LIBS=${ICU_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_RELEASE}"
             )
 set(DEBUG_OPTIONS
@@ -234,12 +226,30 @@ set(DEBUG_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "PCRE2_LIBS=${PCRE2_DEBUG}"
             "FREETYPE_LIBS=${FREETYPE_DEBUG_ALL}"
-            "ICU_LIBS=${ICU_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
+
+if("icu" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS -icu)
+
+    # This if/else corresponds to icu setup in src/corelib/configure.json.
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        list(APPEND CORE_OPTIONS
+            "ICU_LIBS_RELEASE=${ICU_RELEASE}"
+            "ICU_LIBS_DEBUG=${ICU_DEBUG}"
+        )
+    else()
+        list(APPEND RELEASE_OPTIONS "ICU_LIBS=${ICU_RELEASE}")
+        list(APPEND DEBUG_OPTIONS "ICU_LIBS=${ICU_DEBUG}")
+    endif()
+
+    list(APPEND RELEASE_OPTIONS "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}")
+    list(APPEND DEBUG_OPTIONS "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}")
+else()
+    list(APPEND CORE_OPTIONS -no-icu)
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_IS_UWP)
@@ -250,31 +260,24 @@ if(VCPKG_TARGET_IS_WINDOWS)
     else()
         list(APPEND CORE_OPTIONS -opengl dynamic) # other possible option without moving angle dlls: "-opengl desktop". "-opengel es2" only works with commented patch
     endif()
+    set(ADDITIONAL_WINDOWS_LIBS "-lws2_32 -lsecur32 -ladvapi32 -lshell32 -lcrypt32 -luser32 -lgdi32")
     list(APPEND RELEASE_OPTIONS
             "SQLITE_LIBS=${SQLITE_RELEASE}"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"
-            "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
+            "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} ${ADDITIONAL_WINDOWS_LIBS}"
         )
 
     list(APPEND DEBUG_OPTIONS
             "SQLITE_LIBS=${SQLITE_DEBUG}"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_DEBUG}"
-            "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
+            "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ${ADDITIONAL_WINDOWS_LIBS}"
         )
     if(WITH_PGSQL_PLUGIN)
-        list(APPEND RELEASE_OPTIONS "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib")
-        list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib")
+        list(APPEND RELEASE_OPTIONS "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ${ADDITIONAL_WINDOWS_LIBS} -lwldap32")
+        list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${ADDITIONAL_WINDOWS_LIBS} -lwldap32")
     endif()
-    if (WITH_MYSQL_PLUGIN)
-        list(APPEND RELEASE_OPTIONS "MYSQL_LIBS=${MYSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ${ZLIB_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib")
-        list(APPEND DEBUG_OPTIONS "MYSQL_LIBS=${MYSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${ZLIB_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib")
-    endif(WITH_MYSQL_PLUGIN)
-
 elseif(VCPKG_TARGET_IS_LINUX)
     list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -xcb -linuxfb)
-    if (NOT EXISTS "/usr/include/GL/glu.h")
-        message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
-    endif()
     list(APPEND RELEASE_OPTIONS
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"
@@ -292,6 +295,14 @@ elseif(VCPKG_TARGET_IS_LINUX)
         list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_TYPES_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread")
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        # Avoid frameworks for vcpkg
+        list(APPEND CORE_OPTIONS -no-framework)
+        # Such that Qt executables like moc find their libs. The default path is ../Frameworks
+        list(APPEND DEBUG_OPTIONS -R ${CURRENT_INSTALLED_DIR}/debug/lib)
+        list(APPEND RELEASE_OPTIONS -R ${CURRENT_INSTALLED_DIR}/lib)
+    endif()
+
     list(APPEND CORE_OPTIONS -fontconfig)
     if("${VCPKG_TARGET_ARCHITECTURE}" MATCHES "arm64")
         FILE(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)
@@ -302,32 +313,49 @@ elseif(VCPKG_TARGET_IS_OSX)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     else()
         execute_process(COMMAND xcrun --show-sdk-version
-                            OUTPUT_FILE OSX_SDK_VER.txt
-                            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-        FILE(STRINGS "${CURRENT_BUILDTREES_DIR}/OSX_SDK_VER.txt" OSX_SDK_VERSION REGEX "^[0-9][0-9]\.[0-9][0-9]*")
+                OUTPUT_VARIABLE OSX_SDK_VERSION
+                OUTPUT_STRIP_TRAILING_WHITESPACE)
         message(STATUS "Detected OSX SDK Version: ${OSX_SDK_VERSION}")
-        string(REGEX MATCH "^[0-9][0-9]\.[0-9][0-9]*" OSX_SDK_VERSION ${OSX_SDK_VERSION})
+        string(REGEX MATCH "^([0-9]+)\\.([0-9]+)" OSX_SDK_VERSION "${OSX_SDK_VERSION}")
         message(STATUS "Major.Minor OSX SDK Version: ${OSX_SDK_VERSION}")
 
         execute_process(COMMAND sw_vers -productVersion
-                            OUTPUT_FILE OSX_SYS_VER.txt
-                            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR})
-        FILE(STRINGS "${CURRENT_BUILDTREES_DIR}/OSX_SYS_VER.txt" VCPKG_OSX_DEPLOYMENT_TARGET REGEX "^[0-9][0-9]\.[0-9][0-9]*")
+                OUTPUT_VARIABLE VCPKG_OSX_DEPLOYMENT_TARGET
+                OUTPUT_STRIP_TRAILING_WHITESPACE)
         message(STATUS "Detected OSX system Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
-        string(REGEX MATCH "^[0-9][0-9]\.[0-9][0-9]*" VCPKG_OSX_DEPLOYMENT_TARGET ${VCPKG_OSX_DEPLOYMENT_TARGET})
+        string(REGEX MATCH "^([0-9]+)\\.([0-9]+)" VCPKG_OSX_DEPLOYMENT_TARGET "${VCPKG_OSX_DEPLOYMENT_TARGET}")
         message(STATUS "Major.Minor OSX system Version: ${VCPKG_OSX_DEPLOYMENT_TARGET}")
 
-        set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
-        if(${VCPKG_OSX_DEPLOYMENT_TARGET} GREATER "10.15") # Max Version supported by QT. This version is defined in mkspecs/common/macx.conf as QT_MAC_SDK_VERSION_MAX
-            message(STATUS "Qt ${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER} only support OSX_DEPLOYMENT_TARGET up to 10.15")
-            set(VCPKG_OSX_DEPLOYMENT_TARGET "10.15")
+        # Parse mkspecs/common/macx.conf
+        file(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" QT_MK_MAC_CONTENT)
+        string(REGEX MATCHALL "QT_MAC_SDK_VERSION_MIN[ \t]*=[ \t]*(([0-9]+)(\\.([0-9]+))*)" KEY_VALUE "${QT_MK_MAC_CONTENT}")
+        if(${CMAKE_MATCH_COUNT} LESS 2)
+            message(FATAL_ERROR "Error parse QT_MAC_SDK_VERSION_MIN")
         endif()
+        set(QT_MAC_SDK_VERSION_MIN "${CMAKE_MATCH_1}")
+        string(REGEX MATCHALL "QT_MAC_SDK_VERSION_MAX[ \t]*=[ \t]*(([0-9]+)(\\.([0-9]+))*)" KEY_VALUE "${QT_MK_MAC_CONTENT}")
+        if(${CMAKE_MATCH_COUNT} LESS 2)
+            message(FATAL_ERROR "Error parse QT_MAC_SDK_VERSION_MAX")
+        endif()
+        set(QT_MAC_SDK_VERSION_MAX "${CMAKE_MATCH_1}")
+
+        message(STATUS "QT_MAC_SDK_VERSION_MIN: ${QT_MAC_SDK_VERSION_MIN}")
+        message(STATUS "QT_MAC_SDK_VERSION_MAX: ${QT_MAC_SDK_VERSION_MAX}")
+
+        # clamp(VCPKG_OSX_DEPLOYMENT_TARGET, QT_MAC_SDK_VERSION_MIN, QT_MAC_SDK_VERSION_MAX)
+        if("${VCPKG_OSX_DEPLOYMENT_TARGET}" VERSION_GREATER "${QT_MAC_SDK_VERSION_MAX}")
+            set(VCPKG_OSX_DEPLOYMENT_TARGET "${QT_MAC_SDK_VERSION_MAX}")
+        endif()
+        if("${VCPKG_OSX_DEPLOYMENT_TARGET}" VERSION_LESS "${QT_MAC_SDK_VERSION_MIN}")
+            set(VCPKG_OSX_DEPLOYMENT_TARGET "${QT_MAC_SDK_VERSION_MIN}")
+        endif()
+
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
-        message(STATUS "Enviromnent OSX SDK Version: $ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET}")
-        FILE(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)
-        string(REPLACE "QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.13" "QMAKE_MACOSX_DEPLOYMENT_TARGET = ${VCPKG_OSX_DEPLOYMENT_TARGET}" _tmp_contents ${_tmp_contents})
-        FILE(WRITE "${SOURCE_PATH}/mkspecs/common/macx.conf" ${_tmp_contents})
     endif()
+    message(STATUS "Enviromnent OSX SDK Version: $ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET}")
+    file(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)
+    string(REPLACE "QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.13" "QMAKE_MACOSX_DEPLOYMENT_TARGET = ${VCPKG_OSX_DEPLOYMENT_TARGET}" _tmp_contents ${_tmp_contents})
+    file(WRITE "${SOURCE_PATH}/mkspecs/common/macx.conf" ${_tmp_contents})
     #list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${TARGET_MKSPEC})
     list(APPEND RELEASE_OPTIONS
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
@@ -347,6 +375,11 @@ elseif(VCPKG_TARGET_IS_OSX)
         list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_TYPES_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread")
     endif()
 endif()
+
+if (WITH_MYSQL_PLUGIN)
+    list(APPEND RELEASE_OPTIONS "MYSQL_LIBS=${MYSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ${ZLIB_RELEASE} ${ADDITIONAL_WINDOWS_LIBS}")
+    list(APPEND DEBUG_OPTIONS "MYSQL_LIBS=${MYSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${ZLIB_DEBUG} ${ADDITIONAL_WINDOWS_LIBS}")
+endif(WITH_MYSQL_PLUGIN)
 
 ## Do not build tests or examples
 list(APPEND CORE_OPTIONS

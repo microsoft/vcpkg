@@ -1,0 +1,13 @@
+diff --git a/src/session_win32_file_storage.cpp b/src/session_win32_file_storage.cpp
+index ce3fba330..a5e54be84 100644
+--- a/src/session_win32_file_storage.cpp
++++ b/src/session_win32_file_storage.cpp
+@@ -186,7 +186,7 @@ void session_file_storage::save_to_file(HANDLE h,time_t timeout,std::string cons
+ 		int64_t timeout;
+ 		uint32_t crc;
+ 		uint32_t size;
+-	} tmp = { timeout, 0, in.size() };
++	} tmp = { timeout, 0, static_cast<uint32_t>(in.size()) };
+ 	impl::crc32_calc crc_calc;
+ 	crc_calc.process_bytes(in.data(),in.size());
+ 	tmp.crc=crc_calc.checksum();

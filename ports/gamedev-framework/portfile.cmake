@@ -6,28 +6,29 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GamedevFramework/gf
     HEAD_REF master
-    REF v0.20.0
-    SHA512 57b0e87f8713268d7bd4e68fb65f57715af6617582e3ce342a10a66f2ebfeeacdd11e1df0abbd13a2d1d9e6222def94bcf7b522ef5411043668e4c6f0fea1dd7
+    REF v1.2.0
+    SHA512 2043d0b015af7127887df44a9e2e035000c93c20a713d7297736fb05e46923684e330c7a541a115c110ea8737f0ddbfb0c0ef13498102732cfb2a4b243fd22cd
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DGF_VCPKG=ON
         -DGF_USE_EMBEDDED_LIBS=OFF
         -DGF_BUILD_GAMES=OFF
         -DGF_BUILD_EXAMPLES=OFF
         -DGF_BUILD_DOCUMENTATION=OFF
-        -DGF_SINGLE_COMPILTATION_UNIT=ON
         -DBUILD_TESTING=OFF
+        -DCMAKE_UNITY_BUILD=ON
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
     OPTIONS_RELEASE -DGF_DEBUG=OFF
     OPTIONS_DEBUG -DGF_DEBUG=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gf TARGET_PATH share/gf)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME gf
+    CONFIG_PATH lib/cmake/gf
+)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE

@@ -1,8 +1,10 @@
 {
   "name": "vulkan-hpp",
-  "version": "1.2.203",
-  "description": "Header only C++ bindings for the Vulkan C API",
+  "version-string": "deprecated",
+  "description": "[deprecated] Header only C++ bindings for the Vulkan C API",
+  "license": null,
+  "supports": "!uwp & !xbox",
   "dependencies": [
-    "vulkan"
+    "vulkan-headers"
   ]
 }

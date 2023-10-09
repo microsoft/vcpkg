@@ -1,0 +1,5 @@
+The package open-dis-cpp provides CMake targets:
+
+    find_package(OpenDIS CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE OpenDIS::OpenDIS6)
+    target_link_libraries(main PRIVATE OpenDIS::OpenDIS7)

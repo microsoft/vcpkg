@@ -1,6 +1,6 @@
 {
   "name": "kf5textwidgets",
-  "version": "5.89.0",
+  "version": "5.98.0",
   "description": "Text editing widgets",
   "homepage": "https://api.kde.org/frameworks/ktextwidgets/html/index.html",
   "dependencies": [

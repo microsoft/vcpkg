@@ -1,10 +1,16 @@
 {
   "name": "libepoxy",
-  "version-semver": "1.5.9",
-  "port-version": 1,
+  "version": "1.5.10",
+  "port-version": 2,
   "description": "Epoxy is a library for handling OpenGL function pointer management for you",
   "homepage": "https://github.com/anholt/libepoxy",
+  "license": "MIT",
+  "supports": "!uwp & !(windows & staticcrt)",
   "dependencies": [
+    {
+      "name": "egl-registry",
+      "platform": "!osx & !windows"
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true

@@ -5,17 +5,19 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/jsonnet
-  REF v0.17.0
-  SHA512 D3EE6947163D8ABCED504FF37ECF365C0311164CBF243D4C635D34944F0831CA9FCE2470ACF00EB9A218F82A2E553B3F885DB9BD21BB9DCEFBD707FA0202925D
+  REF "v${VERSION}"
+  SHA512 d46d2521d4389d05f91a16ecd9f181be1853f674a9264e9fac23e413f1084dee947e80682af59603e15e443061a0beb50a30c14c858853e10ed1ae7187d09730
   HEAD_REF master
   PATCHES
     001-enable-msvc.patch
     002-fix-dependency-and-install.patch
     0003-use-upstream-nlohmann-json.patch
     0004-incorporate-md5.patch
+    0005-use-upstream-rapidyaml.patch
+    0006-use-cxx17.patch
 )
 
-# see https://github.com/google/jsonnet/blob/v0.17.0/Makefile#L214
+# see https://github.com/google/jsonnet/blob/v0.18.0/Makefile#L220
 if(VCPKG_TARGET_IS_WINDOWS)
   find_program(PWSH_PATH pwsh)
   vcpkg_execute_required_process(
@@ -31,13 +33,8 @@ else()
   )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(BUILD_SHARED ON)
-    set(BUILD_STATIC OFF)
-else()
-    set(BUILD_SHARED OFF)
-    set(BUILD_STATIC ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -48,6 +45,7 @@ vcpkg_cmake_configure(
     -DBUILD_JSONNETFMT=OFF
     -DBUILD_TESTS=OFF
     -DUSE_SYSTEM_JSON=ON
+    -DUSE_SYSTEM_RYML=ON
 )
 
 vcpkg_cmake_install()

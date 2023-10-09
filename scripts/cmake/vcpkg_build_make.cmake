@@ -1,58 +1,3 @@
-#[===[.md:
-# vcpkg_build_make
-
-Build a linux makefile project.
-
-## Usage:
-```cmake
-vcpkg_build_make([BUILD_TARGET <target>]
-                 [INSTALL_TARGET <target>]
-                 [ADD_BIN_TO_PATH]
-                 [ENABLE_INSTALL]
-                 [MAKEFILE <makefileName>]
-                 [LOGFILE_ROOT <logfileroot>]
-                 [DISABLE_PARALLEL]
-                 [SUBPATH <path>])
-```
-
-### BUILD_TARGET
-The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
-be passed.
-
-### INSTALL_TARGET
-The target passed to the make build command (`./make <target>`) if `ENABLE_INSTALL` is used. Defaults to 'install'.
-
-### ADD_BIN_TO_PATH
-Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
-
-### ENABLE_INSTALL
-IF the port supports the install target use vcpkg_install_make() instead of vcpkg_build_make()
-
-### MAKEFILE
-Specifies the Makefile as a relative path from the root of the sources passed to `vcpkg_configure_make()`
-
-### LOGFILE_ROOT
-Specifies a log file prefix.
-
-### DISABLE_PARALLEL
-The underlying buildsystem will be instructed to not parallelize
-
-### SUBPATH
-Additional subdir to invoke make in. Useful if only parts of a port should be built. 
-
-## Notes:
-This command should be preceded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
-You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
-"install" target
-
-## Examples
-
-* [x264](https://github.com/Microsoft/vcpkg/blob/master/ports/x264/portfile.cmake)
-* [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
-* [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
-* [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
-#]===]
-
 function(vcpkg_build_make)
     z_vcpkg_get_cmake_vars(cmake_vars_file)
     include("${cmake_vars_file}")
@@ -100,12 +45,13 @@ function(vcpkg_build_make)
             find_program(Z_VCPKG_MAKE make PATHS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
         endif()
         set(make_command "${Z_VCPKG_MAKE}")
-        vcpkg_list(SET make_opts ${arg_OPTIONS} ${arg_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
-        vcpkg_list(SET no_parallel_make_opts ${arg_OPTIONS} ${arg_MAKE_OPTIONS} -j 1 --trace -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
+        vcpkg_list(SET make_opts ${arg_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
+        vcpkg_list(SET no_parallel_make_opts ${arg_OPTIONS} -j 1 --trace -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
 
         string(REPLACE " " [[\ ]] vcpkg_package_prefix "${CURRENT_PACKAGES_DIR}")
         string(REGEX REPLACE [[([a-zA-Z]):/]] [[/\1/]] vcpkg_package_prefix "${vcpkg_package_prefix}")
         vcpkg_list(SET install_opts -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${vcpkg_package_prefix})
+        vcpkg_list(SET no_parallel_install_opts -j 1 --trace -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${vcpkg_package_prefix})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
 
     else()
@@ -115,9 +61,10 @@ function(vcpkg_build_make)
             find_program(Z_VCPKG_MAKE make REQUIRED)
         endif()
         set(make_command "${Z_VCPKG_MAKE}")
-        vcpkg_list(SET make_opts ${arg_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
-        vcpkg_list(SET no_parallel_make_opts ${arg_MAKE_OPTIONS} V=1 -j 1 -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
+        vcpkg_list(SET make_opts ${arg_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
+        vcpkg_list(SET no_parallel_make_opts ${arg_OPTIONS} V=1 -j 1 -f ${arg_MAKEFILE} ${arg_BUILD_TARGET})
         vcpkg_list(SET install_opts -j ${VCPKG_CONCURRENCY} -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${CURRENT_PACKAGES_DIR})
+        vcpkg_list(SET no_parallel_install_opts -j 1 -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
@@ -182,6 +129,8 @@ function(vcpkg_build_make)
             if(LINK_ENV_${cmake_buildtype})
                 set(config_link_backup "$ENV{_LINK_}")
                 set(ENV{_LINK_} "${LINK_ENV_${cmake_buildtype}}")
+            else()
+                unset(config_link_backup)
             endif()
 
             if(arg_ADD_BIN_TO_PATH)
@@ -215,16 +164,17 @@ function(vcpkg_build_make)
             if (arg_ENABLE_INSTALL)
                 message(STATUS "Installing ${TARGET_TRIPLET}${short_buildtype}")
                 vcpkg_list(SET make_cmd_line ${make_command} ${install_opts})
+                vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${no_parallel_install_opts})
                 vcpkg_execute_build_process(
                     COMMAND ${make_cmd_line}
+                    NO_PARALLEL_COMMAND ${no_parallel_make_cmd_line}
                     WORKING_DIRECTORY "${working_directory}"
                     LOGNAME "install-${TARGET_TRIPLET}${short_buildtype}"
                 )
             endif()
 
-            if(config_link_backup)
+            if(DEFINED config_link_backup)
                 set(ENV{_LINK_} "${config_link_backup}")
-                unset(config_link_backup)
             endif()
 
             if(arg_ADD_BIN_TO_PATH)

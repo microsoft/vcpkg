@@ -7,10 +7,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/constexpr/LICENSE)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/constexpr/LICENSE ${CURRENT_PACKAGES_DIR}/share/constexpr/copyright)
-
 # Copy the constexpr header files
-file(GLOB HEADER_FILES ${SOURCE_PATH}/src/include/*.h)
-file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(GLOB HEADER_FILES "${SOURCE_PATH}/src/include/*.h")
+file(COPY ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

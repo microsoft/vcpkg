@@ -1,0 +1,23 @@
+{
+  "name": "dpp",
+  "version": "10.0.26",
+  "description": "D++ Extremely Lightweight C++ Discord Library.",
+  "homepage": "https://dpp.dev/",
+  "license": "Apache-2.0",
+  "supports": "(windows & !static & !uwp) | linux | osx",
+  "dependencies": [
+    "libsodium",
+    "nlohmann-json",
+    "openssl",
+    "opus",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

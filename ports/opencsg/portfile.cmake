@@ -11,14 +11,13 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS -DUNICODE=1 -D_UNICODE=1
     # OPTIONS_RELEASE -DOPTIMIZE=1
     OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,9 +1,17 @@
 {
   "name": "cppmicroservices",
-  "version": "3.6.0",
+  "version": "3.7.6",
   "description": "An OSGi-like C++ dynamic module system and service registry",
   "homepage": "https://github.com/CppMicroServices/CppMicroServices",
   "dependencies": [
-    "gtest"
+    "gtest",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

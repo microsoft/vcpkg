@@ -42,6 +42,8 @@ function(vcpkg_find_cuda)
             endif()
         endforeach()
 
+        vcpkg_list(APPEND CUDA_PATHS /usr/bin)
+
         find_program(NVCC
             NAMES nvcc
             PATHS

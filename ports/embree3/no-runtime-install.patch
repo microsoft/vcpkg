@@ -1,0 +1,13 @@
+diff --git a/common/cmake/package.cmake b/common/cmake/package.cmake
+index 5429436..8c89f5b 100644
+--- a/common/cmake/package.cmake
++++ b/common/cmake/package.cmake
+@@ -24,7 +24,7 @@ ENDIF()
+ # Install MSVC runtime
+ ##############################################################
+ 
+-IF (WIN32)
++IF (0)
+   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP TRUE)
+   INCLUDE(InstallRequiredSystemLibraries)
+   LIST(FILTER CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS INCLUDE REGEX ".*msvcp[0-9]+\.dll|.*vcruntime[0-9]+\.dll|.*vcruntime[0-9]+_[0-9]+\.dll")

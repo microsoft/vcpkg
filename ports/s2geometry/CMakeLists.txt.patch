@@ -1,15 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5ecd280..9859890 100644
+index f080b4b..ba80cbc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -20,16 +20,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
+@@ -26,16 +26,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
  
  list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/third_party/cmake")
  
 -option(WITH_GFLAGS "Use gflags to change command line flags." OFF)
 -add_feature_info(GFLAGS WITH_GFLAGS
 -                 "allows changing command line flags.")
- 
+-
 -# glog option can only be turned on if gflags is on.
 -cmake_dependent_option(WITH_GLOG "Use glog for logging." ON
 -                       "WITH_GFLAGS" OFF)
@@ -20,7 +20,7 @@ index 5ecd280..9859890 100644
  add_feature_info(SHARED_LIBS BUILD_SHARED_LIBS
                   "builds shared libraries instead of static.")
  
-@@ -37,26 +29,19 @@ option(BUILD_EXAMPLES "Build s2 documentation examples." ON)
+@@ -46,26 +37,19 @@ add_feature_info(PYTHON WITH_PYTHON "provides python interface to S2")
  
  feature_summary(WHAT ALL)
  
@@ -55,17 +55,18 @@ index 5ecd280..9859890 100644
  endif()
 +add_definitions(-DS2_USE_GFLAGS)
  
+ find_package(absl REQUIRED)
  find_package(OpenSSL REQUIRED)
- # pthreads isn't used directly, but this is still required for std::thread.
-@@ -204,14 +189,18 @@ add_library(s2testing STATIC
-             src/s2/s2testing.cc)
- target_link_libraries(
-     s2
--    ${GFLAGS_LIBRARIES} ${GLOG_LIBRARIES} ${OPENSSL_LIBRARIES}
-+    gflags::gflags glog::glog OpenSSL::SSL OpenSSL::Crypto
-     ${CMAKE_THREAD_LIBS_INIT})
+@@ -101,7 +85,7 @@ endif()
+ # something like:
+ # OPENSSL_ROOT_DIR=/usr/local/opt/openssl cmake ..
+ include_directories(
+-    ${GFLAGS_INCLUDE_DIRS} ${GLOG_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
++    gflags::gflags glog::glog OpenSSL::SSL OpenSSL::Crypto)
  
- # Allow other CMake projects to use this one with:
+ if (WITH_PYTHON)
+     include_directories(${Python3_INCLUDE_DIRS})
+@@ -253,7 +237,10 @@ endif()
  # list(APPEND CMAKE_MODULE_PATH "<path_to_s2geometry_dir>/third_party/cmake")
  # add_subdirectory(<path_to_s2geometry_dir> s2geometry)
  # target_link_libraries(<target_name> s2)
@@ -74,22 +75,14 @@ index 5ecd280..9859890 100644
 +  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 +  $<INSTALL_INTERFACE:include>
 +)
-+
  
- # We don't need to install all headers, only those
- # transitively included by s2 headers we are exporting.
-@@ -407,7 +396,18 @@ install(FILES src/s2/util/math/mathutil.h
- install(FILES src/s2/util/units/length-units.h
-               src/s2/util/units/physical-units.h
-         DESTINATION include/s2/util/units)
--install(TARGETS s2 s2testing DESTINATION lib)
-+ install(TARGETS s2 s2testing
-+         RUNTIME DESTINATION bin
-+         ARCHIVE DESTINATION lib
-+         LIBRARY DESTINATION lib)
-+install(TARGETS s2 
-+        EXPORT unofficial-s2Targets
-+        )
+ # Add version information to the target
+ set_target_properties(s2 PROPERTIES
+@@ -427,6 +414,12 @@ install(TARGETS ${S2_TARGETS}
+         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++install(TARGETS s2 EXPORT unofficial-s2Targets)
 +install(EXPORT unofficial-s2Targets
 +  NAMESPACE unofficial-s2
 +  FILE unofficial-s2Targets.cmake
@@ -98,11 +91,10 @@ index 5ecd280..9859890 100644
  
  message("GTEST_ROOT: ${GTEST_ROOT}")
  if (GTEST_ROOT)
-@@ -534,3 +534,17 @@ endif()
- if (${SWIG_FOUND} AND ${PYTHONLIBS_FOUND})
+@@ -569,3 +562,13 @@ endif()
+ if (${SWIG_FOUND} AND ${Python3_FOUND})
    add_subdirectory("src/python" python)
  endif()
-+
 +
 +include(CMakePackageConfigHelpers)
 +# generate the config file that is includes the exports
@@ -111,8 +103,5 @@ index 5ecd280..9859890 100644
 +  INSTALL_DESTINATION "share/unofficial-s2/"
 +  NO_SET_AND_CHECK_MACRO
 +  NO_CHECK_REQUIRED_COMPONENTS_MACRO
-+  )
-+  install(FILES
-+  ${CMAKE_CURRENT_BINARY_DIR}/unofficial-s2Config.cmake
-+  DESTINATION "share/unofficial-s2/"
-+  )
++)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-s2Config.cmake DESTINATION "share/unofficial-s2/")

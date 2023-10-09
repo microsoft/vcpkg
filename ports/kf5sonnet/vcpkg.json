@@ -1,6 +1,6 @@
 {
   "name": "kf5sonnet",
-  "version": "5.89.0",
+  "version": "5.98.0",
   "description": "Multi-language spell checker",
   "homepage": "https://api.kde.org/frameworks/sonnet/html/index.html",
   "dependencies": [
@@ -15,5 +15,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "hunspell": {
+      "description": "Spell checking support via Hunspell",
+      "dependencies": [
+        "hunspell"
+      ]
+    }
+  }
 }

@@ -1,6 +1,7 @@
 {
   "name": "libdivide",
   "version": "5.0",
+  "port-version": 1,
   "description": "libdivide.h is a header-only C/C++ library for optimizing integer division.",
   "homepage": "https://github.com/ridiculousfish/libdivide",
   "dependencies": [

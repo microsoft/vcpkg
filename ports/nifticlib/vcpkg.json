@@ -1,11 +1,20 @@
 {
   "name": "nifticlib",
-  "version-string": "2020-04-30",
-  "port-version": 1,
+  "version-date": "2020-04-30",
+  "port-version": 4,
   "description": "Nifticlib is a C I/O library for reading and writing files in the nifti-1 data format.",
-  "homepage": "NIFTI-Imaging/nifti_clib",
+  "homepage": "https://github.com/NIFTI-Imaging/nifti_clib",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
@@ -14,22 +23,19 @@
   ],
   "features": {
     "cifti": {
-      "description": "Build cifti libraries and tools"
+      "description": "Build cifti libraries"
     },
     "fsl": {
-      "description": "Build fsl libraries and tools"
+      "description": "Build fsl libraries"
     },
     "nifti2": {
-      "description": "Build nifti2 libraries and tools"
+      "description": "Build nifti2 libraries"
     },
     "nifticdf": {
-      "description": "Build nifticdf libraries and tools"
-    },
-    "tests": {
-      "description": "Build tests"
+      "description": "Build nifticdf libraries"
     },
     "tools": {
-      "description": "Build tools"
+      "description": "Builds the core tool and the tools for 'nifti2' and 'nifticdf' if selected"
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "opencv3",
-  "version": "3.4.16",
-  "port-version": 8,
+  "version": "3.4.18",
+  "port-version": 11,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -50,10 +50,17 @@
         "cudnn",
         {
           "name": "opencv3",
+          "default-features": false,
           "features": [
             "contrib"
           ]
         }
+      ]
+    },
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
       ]
     },
     "default-features": {
@@ -117,6 +124,13 @@
       "description": "opencv_flann module",
       "dependencies": [
         "protobuf"
+      ]
+    },
+    "freetype": {
+      "description": "Freetype support for opencv",
+      "dependencies": [
+        "freetype",
+        "harfbuzz"
       ]
     },
     "gdcm": {
@@ -190,12 +204,16 @@
         "opengl"
       ]
     },
+    "openmp": {
+      "description": "Enable openmp support for opencv"
+    },
     "ovis": {
       "description": "opencv_ovis module",
       "dependencies": [
         "ogre",
         {
           "name": "opencv3",
+          "default-features": false,
           "features": [
             "contrib"
           ]
@@ -209,7 +227,17 @@
       ]
     },
     "python": {
-      "description": "Python wrapper support for opencv"
+      "description": "Python wrapper support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "flann"
+          ]
+        },
+        "python3"
+      ]
     },
     "qt": {
       "description": "Qt GUI support for opencv",
@@ -230,13 +258,20 @@
       "description": "opencv_sfm module",
       "dependencies": [
         "ceres",
-        "eigen3",
         "gflags",
         "glog",
         {
           "name": "opencv3",
+          "default-features": false,
           "features": [
             "contrib"
+          ]
+        },
+        {
+          "name": "opencv3",
+          "default-features": false,
+          "features": [
+            "eigen"
           ]
         }
       ]
@@ -256,6 +291,12 @@
     "vtk": {
       "description": "vtk support for opencv",
       "dependencies": [
+        {
+          "name": "opencv3",
+          "features": [
+            "contrib"
+          ]
+        },
         "vtk"
       ]
     },

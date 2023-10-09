@@ -1,77 +1,7 @@
-#[===[.md:
-# vcpkg_build_nmake
-
-Build a msvc makefile project.
-
-## Usage:
-```cmake
-vcpkg_build_nmake(
-    SOURCE_PATH <${SOURCE_PATH}>
-    [NO_DEBUG]
-    [ENABLE_INSTALL]
-    [TARGET <all>]
-    [PROJECT_SUBPATH <${SUBPATH}>]
-    [PROJECT_NAME <${MAKEFILE_NAME}>]
-    [PRERUN_SHELL <${SHELL_PATH}>]
-    [PRERUN_SHELL_DEBUG <${SHELL_PATH}>]
-    [PRERUN_SHELL_RELEASE <${SHELL_PATH}>]
-    [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-    [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-    [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-    [TARGET <target>])
-```
-
-## Parameters
-### SOURCE_PATH
-Specifies the directory containing the source files.
-By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-
-### PROJECT_SUBPATH
-Specifies the sub directory containing the `makefile.vc`/`makefile.mak`/`makefile.msvc` or other msvc makefile.
-
-### PROJECT_NAME
-Specifies the name of msvc makefile name.
-Default is `makefile.vc`
-
-### ENABLE_INSTALL
-Install binaries after build.
-
-### PRERUN_SHELL
-Script that needs to be called before build
-
-### PRERUN_SHELL_DEBUG
-Script that needs to be called before debug build
-
-### PRERUN_SHELL_RELEASE
-Script that needs to be called before release build
-
-### OPTIONS
-Additional options passed to generate during the generation.
-
-### OPTIONS_RELEASE
-Additional options passed to generate during the Release generation. These are in addition to `OPTIONS`.
-
-### OPTIONS_DEBUG
-Additional options passed to generate during the Debug generation. These are in addition to `OPTIONS`.
-
-### TARGET
-The target passed to the nmake build command (`nmake/nmake install`). If not specified, no target will
-be passed.
-
-## Notes:
-You can use the alias [`vcpkg_install_nmake()`](vcpkg_install_nmake.md) function if your makefile supports the
-"install" target
-
-## Examples
-
-* [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
-* [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
-#]===]
-
 function(vcpkg_build_nmake)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
-        "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT"
+        "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG;PREFER_JOM"
+        "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT;CL_LANGUAGE"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE;TARGET"
     )
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -98,27 +28,41 @@ function(vcpkg_build_nmake)
     if(NOT DEFINED arg_PROJECT_NAME)
         set(arg_PROJECT_NAME makefile.vc)
     endif()
+
     if(NOT DEFINED arg_TARGET)
         vcpkg_list(SET arg_TARGET all)
     endif()
+    if(arg_ENABLE_INSTALL)
+        vcpkg_list(APPEND arg_TARGET install)
+    endif()
+
+    if(NOT DEFINED arg_CL_LANGUAGE)
+        vcpkg_list(SET arg_CL_LANGUAGE CXX)
+    endif()
 
     find_program(NMAKE nmake REQUIRED)
-    get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
+    get_filename_component(NMAKE_EXE_PATH "${NMAKE}" DIRECTORY)
     # Load toolchains
-    if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-    endif()
-    include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
+    z_vcpkg_get_cmake_vars(cmake_vars_file)
+    debug_message("Including cmake vars from: ${cmake_vars_file}")
+    include("${cmake_vars_file}")
     # Set needed env
     set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
-    # Set make command and install command
-    vcpkg_list(SET make_command ${NMAKE} /NOLOGO /G /U)
-    vcpkg_list(SET make_opts_base -f "${arg_PROJECT_NAME}" ${arg_TARGET})
-    if(arg_ENABLE_INSTALL)
-        vcpkg_list(APPEND make_opts_base install)
-    endif()
+    # Set make options
+    vcpkg_list(SET make_opts_base /NOLOGO /G /U /F "${arg_PROJECT_NAME}" ${arg_TARGET})
 
+    if(arg_PREFER_JOM AND VCPKG_CONCURRENCY GREATER "1")
+        vcpkg_find_acquire_program(JOM)
+        get_filename_component(JOM_EXE_PATH "${JOM}" DIRECTORY)
+        vcpkg_add_to_path("${JOM_EXE_PATH}")
+        if(arg_CL_LANGUAGE AND "${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_COMPILER_ID}" STREQUAL "MSVC")
+            string(REGEX REPLACE " [/-]MP[0-9]* " " " VCPKG_COMBINED_${arg_CL_LANGUAGE}_FLAGS_DEBUG " ${VCPKG_COMBINED_${arg_CL_LANGUAGE}_FLAGS_DEBUG} /FS")
+            string(REGEX REPLACE " [/-]MP[0-9]* " " " VCPKG_COMBINED_${arg_CL_LANGUAGE}_FLAGS_RELEASE " ${VCPKG_COMBINED_${arg_CL_LANGUAGE}_FLAGS_RELEASE} /FS")
+        endif()
+    else()
+        set(arg_PREFER_JOM FALSE)
+    endif()
 
     # Add subpath to work directory
     if(DEFINED arg_PROJECT_SUBPATH)
@@ -127,7 +71,7 @@ function(vcpkg_build_nmake)
         set(project_subpath "")
     endif()
 
-    vcpkg_backup_env_variables(VARS CL)
+    vcpkg_backup_env_variables(VARS _CL_ LINK)
     cmake_path(NATIVE_PATH CURRENT_PACKAGES_DIR NORMALIZE install_dir_native)
     foreach(build_type IN ITEMS debug release)
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL build_type)
@@ -140,7 +84,10 @@ function(vcpkg_build_nmake)
                     vcpkg_list(APPEND make_opts "INSTALLDIR=${install_dir_native}\\debug")
                 endif()
                 vcpkg_list(APPEND make_opts ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
-                set(ENV{CL} "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
+                if(NOT arg_CL_LANGUAGE STREQUAL "NONE")
+                    set(ENV{_CL_} "${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_FLAGS_DEBUG}")
+                endif()
+                set(ENV{_LINK_} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
 
                 set(prerun_variable_name arg_PRERUN_SHELL_DEBUG)
             else()
@@ -152,7 +99,10 @@ function(vcpkg_build_nmake)
                 endif()
                 vcpkg_list(APPEND make_opts ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
 
-                set(ENV{CL} "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
+                if(NOT arg_CL_LANGUAGE STREQUAL "NONE")
+                    set(ENV{_CL_} "${VCPKG_DETECTED_CMAKE_${arg_CL_LANGUAGE}_FLAGS_RELEASE}")
+                endif()
+                set(ENV{_LINK_} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
                 set(prerun_variable_name arg_PRERUN_SHELL_RELEASE)
             endif()
 
@@ -185,13 +135,32 @@ function(vcpkg_build_nmake)
                 message(STATUS "Building and installing ${triplet_and_build_type}")
             endif()
 
-            vcpkg_execute_build_process(
-                COMMAND ${make_command} ${make_opts}
-                WORKING_DIRECTORY "${object_dir}${project_subpath}"
-                LOGNAME "${arg_LOGFILE_ROOT}-${triplet_and_build_type}"
-            )
+            set(run_nmake TRUE)
+            set(tool_suffix "")
+            if(arg_PREFER_JOM)
+                execute_process(
+                    COMMAND "${JOM}" /K /J ${VCPKG_CONCURRENCY} ${make_opts}
+                    WORKING_DIRECTORY "${object_dir}${project_subpath}"
+                    OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${triplet_and_build_type}-jom-out.log"
+                    ERROR_FILE "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${triplet_and_build_type}-jom-err.log"
+                    RESULT_VARIABLE error_code
+                )
+                if(error_code EQUAL "0")
+                    set(run_nmake FALSE)
+                else()
+                    message(STATUS "Restarting build without parallelism")
+                    set(tool_suffix "-nmake")
+                endif()
+            endif()
+            if(run_nmake)
+                vcpkg_execute_build_process(
+                    COMMAND "${NMAKE}" ${make_opts}
+                    WORKING_DIRECTORY "${object_dir}${project_subpath}"
+                    LOGNAME "${arg_LOGFILE_ROOT}-${triplet_and_build_type}${tool_suffix}"
+                )
+            endif()
 
-            vcpkg_restore_env_variables(VARS CL)
+            vcpkg_restore_env_variables(VARS _CL_ LINK)
         endif()
     endforeach()
 endfunction()

@@ -3,28 +3,33 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO syoyo/tinyobjloader
-    REF v2.0.0-rc2
-    SHA512 936f7897a87fe00d474231ad5f69816da127f14296c3591144c26c6058bd11ea1490c2db6b8c4a8adf629ae148423705d0c4020f4ed034921f0f2f711498f3bb
+    REF v2.0.0rc9
+    SHA512 e188d6077cb19f9044da9c98c2c4284cad09f4ee745f4746d0df5b22a379d3b32fe20aa998151d6dc08e7f113f50abf80a7509d63c36de46547ce43b5fe1fa54
     HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    double     TINYOBJLOADER_USE_DOUBLE
+    FEATURES
+        double TINYOBJLOADER_USE_DOUBLE
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DCMAKE_INSTALL_DOCDIR:STRING=share/tinyobjloader
         # FEATURES
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/tinyobjloader/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/tinyobjloader/cmake)
 
+if("double" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/tiny_obj_loader.h" "#ifdef TINYOBJLOADER_USE_DOUBLE" "#if 1")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/tiny_obj_loader.h" "#ifdef TINYOBJLOADER_USE_DOUBLE" "#if 0")
+endif()
 file(
     REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include

@@ -1,9 +1,9 @@
 {
   "name": "cpuid",
-  "version": "0.5.1",
-  "port-version": 3,
+  "version": "0.6.2",
   "description": "Provides CPU identification for the x86 (and x86_64)",
   "homepage": "https://github.com/anrieff/libcpuid",
+  "license": "MIT",
   "supports": "(x86 | x64) & !uwp",
   "dependencies": [
     {

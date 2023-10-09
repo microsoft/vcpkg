@@ -1,8 +1,9 @@
 {
   "name": "qt5-x11extras",
-  "version": "5.15.4",
+  "version": "5.15.11",
   "description": "Qt5 x11extras Module;",
   "license": null,
+  "supports": "!windows",
   "dependencies": [
     {
       "name": "qt5-base",

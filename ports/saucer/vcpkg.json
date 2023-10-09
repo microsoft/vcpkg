@@ -1,0 +1,36 @@
+{
+  "name": "saucer",
+  "version": "1.0.1",
+  "port-version": 3,
+  "description": "Next-gen desktop apps with web-frontend in C++",
+  "homepage": "https://saucer.github.io/",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "ereignis",
+    "fmt",
+    "lockpp",
+    "nlohmann-json",
+    {
+      "name": "qtwebchannel",
+      "platform": "!windows"
+    },
+    {
+      "name": "qtwebengine",
+      "platform": "!windows"
+    },
+    "tl-expected",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "webview2",
+      "platform": "windows"
+    },
+    {
+      "name": "wil",
+      "platform": "windows"
+    }
+  ]
+}

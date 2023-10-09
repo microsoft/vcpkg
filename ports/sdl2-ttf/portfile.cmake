@@ -1,31 +1,38 @@
-set(VERSION 2.0.15)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-${VERSION}.tar.gz"
-    FILENAME "SDL2_ttf-${VERSION}.tar.gz"
-    SHA512 30d685932c3dd6f2c94e2778357a5c502f0421374293d7102a64d92f9c7861229bf36bedf51c1a698b296a58c858ca442d97afb908b7df1592fc8d4f8ae8ddfd
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${VERSION}
+    REPO  libsdl-org/SDL_ttf
+    REF "release-${VERSION}"
+    SHA512 ea059fce879f8ddb3b36f8364d65ef922c389db67383d8a5c42c0ebf8a407d55adce42620b4d04caa0b297847362cc733a9d3d9acb843897a535c875fd0c471f
+    HEAD_REF main
+    PATCHES
+        fix-pkgconfig.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        harfbuzz SDL2TTF_HARFBUZZ
+)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS_DEBUG
-        -DSDL_TTF_SKIP_HEADERS=ON)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DSDL2TTF_VENDORED=OFF
+        -DSDL2TTF_SAMPLES=OFF
+        ${FEATURE_OPTIONS}
+)
 
-vcpkg_install_cmake()
-vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
+    vcpkg_cmake_config_fixup(PACKAGE_NAME SDL2_ttf CONFIG_PATH cmake)
+else()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME SDL2_ttf CONFIG_PATH lib/cmake/SDL2_ttf)
+endif()
+
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/licenses")
 
-file(COPY ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sdl2-ttf)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/sdl2-ttf/COPYING.txt ${CURRENT_PACKAGES_DIR}/share/sdl2-ttf/copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

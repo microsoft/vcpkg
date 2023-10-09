@@ -25,7 +25,7 @@
 include(FindPackageHandleStandardArgs)
 
 find_path(CUDNN_INCLUDE_DIR NAMES cudnn.h cudnn_v8.h cudnn_v7.h
-  HINTS $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} /usr/include
+  HINTS $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} /usr/include /usr/include/x86_64-linux-gnu/
   PATH_SUFFIXES cuda/include include)
 find_library(CUDNN_LIBRARY NAMES cudnn cudnn8 cudnn7
   HINTS $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} /usr/lib/x86_64-linux-gnu/ /usr/

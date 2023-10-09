@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sqlcipher/sqlcipher
-    REF v4.5.1
-    SHA512 157ab90e1b80ae9ae85c68c6b77008fe8ab5b526cbb2604297a5ba54279286b4cac1fecd0db552e0113a75ff61a198f649611b8bde4dec5156c443e7b7fbe0c3
+    REF "v${VERSION}"
+    SHA512 deb592d6f27e7cc02bd641bb8f6e07b242f0dc6c7d8732e7a1e70e457eadd487add7d95c881fe9afbff516f4641a6e603473e47c63afa8396a0ddf007a5818fd
     HEAD_REF master
 )
 
@@ -38,47 +38,48 @@ message(STATUS "Pre-building ${TARGET_TRIPLET}")
 vcpkg_execute_required_process(
 	COMMAND ${NMAKE} -f Makefile.msc /A /NOLOGO clean tcl
 	${NMAKE_OPTIONS}
-	WORKING_DIRECTORY ${SOURCE_PATH}
+	WORKING_DIRECTORY "${SOURCE_PATH}"
 	LOGNAME pre-build-${TARGET_TRIPLET}
 )
 message(STATUS "Pre-building ${TARGET_TRIPLET} done")
 
 # The rest of the build process with the CMakeLists.txt is merely a copy of sqlite3
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    geopoly WITH_GEOPOLY
-    json1 WITH_JSON1
+        geopoly WITH_GEOPOLY
+        json1 WITH_JSON1
+        fts5 WITH_FTS5
     INVERTED_FEATURES
-    tool SQLITE3_SKIP_TOOLS
+        tool SQLITE3_SKIP_TOOLS
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DSQLITE3_SKIP_TOOLS=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT} TARGET_PATH share/${PORT})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME ${PORT} CONFIG_PATH share/${PORT})
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(NOT SQLITE3_SKIP_TOOLS AND EXISTS ${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher-bin${VCPKG_HOST_EXECUTABLE_SUFFIX})
-    file(RENAME ${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher-bin${VCPKG_HOST_EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher${VCPKG_HOST_EXECUTABLE_SUFFIX})
+if(NOT SQLITE3_SKIP_TOOLS AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher-bin${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher-bin${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/sqlcipher${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
 configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/sqlcipher-config.in.cmake
-    ${CURRENT_PACKAGES_DIR}/share/${PORT}/sqlcipher-config.cmake
+    "${CMAKE_CURRENT_LIST_DIR}/sqlcipher-config.in.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/sqlcipher-config.cmake"
     @ONLY
 )
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+vcpkg_fixup_pkgconfig()

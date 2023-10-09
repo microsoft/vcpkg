@@ -1,6 +1,6 @@
 {
   "name": "kealib",
-  "version": "1.4.14",
+  "version": "1.5.2",
   "description": "KEALib provides an implementation of the GDAL data model using HDF5.",
   "homepage": "https://github.com/ubarsc/kealib",
   "dependencies": [
@@ -12,6 +12,10 @@
     },
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO urho3d/Urho3D
     REF fff115a0c0cd50b8a34dfa20b4c5f33eb4f765c8
-    SHA512 4bddcd1d4165b74134a499616710c382d0463db24382aaa3111b8b38e82818053144d4ecb0ba7156589da1e18d85c0f20e0d847237291685ea80957f0bf7f8be
+    SHA512 d13d310dc4711a305b3d8ee3497e4d3169f0219714f9658dcdc0c771a1834092aa7f2bc1778bc7cb41bd01ab0e52edc061c1a79d1163d454e56b2b8377b8fcea
     HEAD_REF master
     PATCHES
         asm_files.patch
@@ -33,6 +33,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DURHO3D_LIB_TYPE=${URHO3D_LIB_TYPE}
         -DURHO3D_PCH=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON
 )
 
 vcpkg_cmake_install()
@@ -53,11 +54,11 @@ if ("tools" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_ANDROID)
         SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/urho3d"
         AUTO_CLEAN
     )
-    
+
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/tool" "${CURRENT_PACKAGES_DIR}/debug/bin/tool")
-    
+
     vcpkg_copy_tools(TOOL_NAMES Urho3DPlayer AUTO_CLEAN)
-    
+
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/Urho3DPlayer_d${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
 endif()
 
@@ -71,7 +72,7 @@ if ("examples" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_ANDROID)
         endif()
     endforeach()
     vcpkg_copy_tools(TOOL_NAMES ${URHO3D_TOOLS} AUTO_CLEAN)
-    
+
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         foreach(URHO3D_TOOL IN_LIST ${URHO3D_TOOLS})
             file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${URHO3D_TOOL}_d${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
@@ -116,4 +117,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

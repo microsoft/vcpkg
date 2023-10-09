@@ -1,8 +1,10 @@
+# WinReg - Header-only library
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GiovanniDicanio/WinReg
-    REF 4ac74bfec290ec4376100372f59dbc2554e54692 #v5.1.0
-    SHA512 3d25725c9fc781ffdfa1bbd3ed143a8381d40a1613d4786861e13b180098a5ce92ff193cf25d7490be0096c2eafcace45e6a2f94fbfaa28964d12b80b55d0637
+    REF ba6b74972038778d0bf5ffa6de705ec6e2768735 #v6.1.0
+    SHA512 1b7ac1ef4322c2e1c80be840d4117424263c4ad02050926f1ebdd3fbb4978a02d12f485ccb0aff46ca4acc4188f48f7522ac4d6d663517d7bad71147224accc7
     HEAD_REF master
 )
 

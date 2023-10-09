@@ -1,12 +1,13 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/orc
-    REF 23ecc03e87548f6d6783c2d8af2b46672c52214c  # rel/release-1.6.4
-    SHA512 907984c7e036ddaa90e7cbfabb9af4f6fd3520820b9a8732b304f2213030f7d67cef89ad87d50e028a51bff06f68ff359345ad6894850e299b2fca343d7c0c3e
-    HEAD_REF master
-    PATCHES
-        0003-dependencies-from-vcpkg.patch
-        0005-disable-tzdata.patch
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO apache/orc
+  REF "v${VERSION}"
+  SHA512 21ae89915acb731b19f2cba10b35731c5d0993a44160a7afd063f04fa5cc714e1fe3984282214d1fe8a19944969f28d5e6d67a33ac6dafcbc2cecf30d34b752f
+  HEAD_REF master
+  PATCHES
+    fix-cmake.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindGTest.cmake")
@@ -51,7 +52,19 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-orc)
 vcpkg_copy_pdbs()
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-orc/unofficial-orc-config.cmake" cmake_config)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-orc/unofficial-orc-config.cmake"
+"include(CMakeFindDependencyMacro)
+find_dependency(Snappy CONFIG)
+find_dependency(ZLIB)
+find_dependency(zstd CONFIG)
+find_dependency(lz4 CONFIG)
+find_dependency(Protobuf CONFIG)
+${cmake_config}
+")
 
 file(GLOB TOOLS ${CURRENT_PACKAGES_DIR}/bin/orc-*)
 if(TOOLS)
@@ -64,9 +77,12 @@ if(NOT BINS)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

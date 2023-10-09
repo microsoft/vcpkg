@@ -1,4 +1,4 @@
 ignition_modular_library(NAME math
-                         VERSION "6.6.0"
-                         SHA512 6c0a6e7098f31b3dc9abbcd8714808669eca10e385748d4c1b44aa06dcfa5701906bea0277a99c3132fdd1a8c9a8e9c593099ac0eedfe5dec370018b2b63bfec
-                         PATCHES fix-isspace.patch)
+                         VERSION "6.14.0"
+                         SHA512 ad95160cc1cd137779b9da589c47994d04f829af10865071e9ead4d55c4399d04d5398287d3b294e3f67230205656e1fe243129673e1f8e73f62f3933c314802
+                         )

@@ -1,35 +1,27 @@
-set(VERSION 4.9.3)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
-    FILENAME "antlr4-cpp-runtime-${VERSION}-source.zip"
-    SHA512 23995a6fa661ff038142fa7220a195db3a9a26744d516011dedc3192f152b06a8e31f6cc8f969f8927b86392a960d03e89572e753f033f950839a5bd38d4c722
-)
-
-# license not exist in antlr folder.
-vcpkg_download_distfile(LICENSE
-    URLS https://raw.githubusercontent.com/antlr/antlr4/${VERSION}/LICENSE.txt
-    FILENAME "antlr4-copyright-${VERSION}"
-    SHA512 1e8414de5fdc211e3188a8ec3276c6b3c55235f5edaf48522045ae18fa79fd9049719cb8924d25145016f223ac9a178defada1eeb983ccff598a08b0c0f67a3b
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    NO_REMOVE_ONE_LEVEL
-    REF ${VERSION}
+    REPO antlr/antlr4
+    HEAD_REF dev
+    REF "${VERSION}"
+    SHA512 79ac3cdfc8f2368c647d06aec85d87507629a75527205ff2cbf7d9802989b0c6e6a8fac76148ad101f539c9ef922e431e22ba489f899f847ccc3d3d889bb2b70
     PATCHES
-        fixed_build.patch
-        uuid_discovery_fix.patch
-        export_guid.patch
+        set-export-macro-define-as-private.patch
 )
+
+set(RUNTIME_PATH "${SOURCE_PATH}/runtime/Cpp")
+
+message(INFO "Configure at '${RUNTIME_PATH}'")
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH "${RUNTIME_PATH}"
     OPTIONS
+        -DANTLR_BUILD_STATIC=${BUILD_STATIC}
+        -DANTLR_BUILD_SHARED=${BUILD_SHARED}
         -DANTLR4_INSTALL=ON
-    OPTIONS_DEBUG -DLIB_OUTPUT_DIR=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/dist
-    OPTIONS_RELEASE -DLIB_OUTPUT_DIR=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/dist
+        -DANTLR_BUILD_CPP_TESTS=OFF
 )
 
 vcpkg_cmake_install()
@@ -40,4 +32,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${LICENSE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

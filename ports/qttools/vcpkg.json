@@ -1,11 +1,11 @@
 {
   "name": "qttools",
-  "version": "6.3.0",
-  "port-version": 1,
+  "version": "6.5.3",
   "description": "Qt Tools",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    "litehtml",
     {
       "name": "qtbase",
       "default-features": false
@@ -29,7 +29,9 @@
           "default-features": false,
           "features": [
             "network",
-            "sql-sqlite"
+            "png",
+            "sql-sqlite",
+            "widgets"
           ]
         }
       ]
@@ -58,10 +60,30 @@
         }
       ]
     },
+    "qdbus": {
+      "description": "Build qdbusviewer",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "dbus",
+            "widgets"
+          ]
+        }
+      ]
+    },
     "qdoc": {
       "description": "Build QDoc.",
       "dependencies": [
-        "llvm"
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "enable-rtti"
+          ]
+        }
       ]
     },
     "qml": {

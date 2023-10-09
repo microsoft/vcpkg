@@ -1,36 +1,5 @@
-#[===[.md:
-# vcpkg_gn_configure
-
-Generate Ninja (GN) targets
-
-## Usage:
-```cmake
-vcpkg_gn_configure(
-    SOURCE_PATH <SOURCE_PATH>
-    [OPTIONS <OPTIONS>]
-    [OPTIONS_DEBUG <OPTIONS_DEBUG>]
-    [OPTIONS_RELEASE <OPTIONS_RELEASE>]
-)
-```
-
-## Parameters:
-### SOURCE_PATH (required)
-The path to the GN project.
-
-### OPTIONS
-Options to be passed to both the debug and release targets.
-Note: Must be provided as a space-separated string.
-
-### OPTIONS_DEBUG (space-separated string)
-Options to be passed to the debug target.
-
-### OPTIONS_RELEASE (space-separated string)
-Options to be passed to the release target.
-#]===]
-if(Z_VCPKG_GN_CONFIGURE_GUARD)
-    return()
-endif()
-set(Z_VCPKG_GN_CONFIGURE_GUARD ON CACHE INTERNAL "guard variable")
+include_guard(GLOBAL)
+include("${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_gn_fixup_path.cmake")
 
 function(z_vcpkg_gn_configure_generate)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;CONFIG;ARGS" "")
@@ -40,7 +9,7 @@ function(z_vcpkg_gn_configure_generate)
 
     message(STATUS "Generating build (${arg_CONFIG})...")
     vcpkg_execute_required_process(
-        COMMAND "${VCPKG_GN}" gen "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}" "${arg_ARGS}"
+        COMMAND "${GN}" gen "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}" "${arg_ARGS}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         LOGNAME "generate-${arg_CONFIG}"
     )
@@ -56,9 +25,9 @@ function(vcpkg_gn_configure)
         message(FATAL_ERROR "SOURCE_PATH must be specified.")
     endif()
 
-    vcpkg_find_acquire_program(PYTHON2)
-    get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-    vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
     vcpkg_find_acquire_program(GN)
 
@@ -77,4 +46,6 @@ function(vcpkg_gn_configure)
             ARGS "--args=${arg_OPTIONS} ${arg_OPTIONS_RELEASE}"
         )
     endif()
+
+    z_vcpkg_gn_fixup_path()
 endfunction()

@@ -2,8 +2,8 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
-        bump-cmake-version.patch
         wrapper-fixes.patch
+        stack-walker-arm64.patch
     )
 
 set(TOOL_NAMES appman
@@ -24,6 +24,7 @@ set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 qt_cmake_configure(${_opt} 
                    OPTIONS
+                        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                         -DINPUT_libarchive=system
                         -DINPUT_libyaml=system
                         -DFEATURE_am_system_libyaml=ON

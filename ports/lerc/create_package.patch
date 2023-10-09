@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index e90fcdd..17c79e8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,9 +26,16 @@ add_library(LercLib ${SOURCES})
+@@ -26,12 +26,19 @@ add_library(LercLib ${SOURCES})
  endif()
  
  install(
@@ -19,3 +19,6 @@ index e90fcdd..17c79e8 100644
 +  NAMESPACE unofficial::Lerc::
 +  DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-lerc"
 +)
+ 
+ # Configure and install pkgconfig file
+ configure_file(Lerc.pc.in ${CMAKE_CURRENT_BINARY_DIR}/Lerc.pc @ONLY)

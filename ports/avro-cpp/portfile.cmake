@@ -1,36 +1,49 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/avro
-    REF 2ab8fa85d05f04387bd5d63b10ad1c8fd2243616
-    SHA512 fd21f0919b0e5e884bdf4d66c4d5ba056f04c426b309ec0b5ab26642a5f6b00d46f4dd965431b10130bc5f0d81699e2195780e90e127f63049ee5763403ef7c8
+    REF "release-${VERSION}"
+    SHA512 728609f562460e1115366663ede2c5d4acbdd6950c1ee3e434ffc65d28b72e3a43c3ebce93d0a8459f0c4f6c492ebb9444e2127a0385f38eb7cdf74b28f0c3ed
     HEAD_REF master
     PATCHES
-        install.patch
-        fix-windows-build.patch
+        fix-cmake.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
-    snappy     CMAKE_DISABLE_FIND_PACKAGE_Snappy
+        snappy             CMAKE_DISABLE_FIND_PACKAGE_Snappy
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/lang/c++
-    PREFER_NINJA
-    DISABLE_PARALLEL_CONFIGURE
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/lang/c++"
     OPTIONS
         -DBUILD_TESTING=OFF
         ${FEATURE_OPTIONS}
-    OPTIONS_DEBUG
-        -DAVRO_ADD_PROTECTOR_FLAGS=1
 )
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT})
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-avro-cpp/unofficial-avro-cpp-config.cmake" cmake_config)
+if("snappy" IN_LIST FEATURES)
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-avro-cpp/unofficial-avro-cpp-config.cmake"
+"include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
+find_dependency(Snappy)
+${cmake_config}
+")
+else()
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-avro-cpp/unofficial-avro-cpp-config.cmake"
+"include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
+${cmake_config}
+")
+endif()
 
 vcpkg_copy_pdbs()
+vcpkg_copy_tools(TOOL_NAMES avrogencpp AUTO_CLEAN)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/lang/c++/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/lang/c++/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

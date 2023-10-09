@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index efa0434..b87a1a3 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -190,7 +190,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE TRANTOR_TLS_PROVIDER=${TRANTO
+ 
+ set(HAVE_C-ARES NO)
+ if (BUILD_C-ARES)
+-    find_package(c-ares)
++    find_package(c-ares CONFIG)
+     if(c-ares_FOUND)
+       message(STATUS "c-ares found!")
+       set(HAVE_C-ARES TRUE)
+@@ -198,7 +198,7 @@ if (BUILD_C-ARES)
+ endif ()
+ 
+ if(HAVE_C-ARES)
+-  target_link_libraries(${PROJECT_NAME} PRIVATE c-ares_lib)
++  target_link_libraries(${PROJECT_NAME} PRIVATE c-ares::cares)
+   set(TRANTOR_SOURCES
+       ${TRANTOR_SOURCES}
+       trantor/net/inner/AresResolver.cc)
+diff --git a/cmake/templates/TrantorConfig.cmake.in b/cmake/templates/TrantorConfig.cmake.in
+index 8c62924..dd243d0 100644
+--- a/cmake/templates/TrantorConfig.cmake.in
++++ b/cmake/templates/TrantorConfig.cmake.in
+@@ -17,7 +17,7 @@ if(@Botan_FOUND@)
+   find_dependency(Botan)
+ endif()
+ if(@c-ares_FOUND@)
+-  find_dependency(c-ares)
++  find_dependency(c-ares CONFIG)
+ endif()
+ find_dependency(Threads)
+ # Compute paths

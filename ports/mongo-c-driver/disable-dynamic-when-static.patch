@@ -1,0 +1,72 @@
+diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
+index bf95bd0c1..c9900b7fa 100644
+--- a/src/libmongoc/CMakeLists.txt
++++ b/src/libmongoc/CMakeLists.txt
+@@ -745,6 +745,7 @@ if (MONGOC_ENABLE_STATIC_BUILD)
+    set_target_properties (mcd_rpc PROPERTIES OUTPUT_NAME "mcd-rpc")
+ endif ()
+
++if (NOT MONGOC_ENABLE_STATIC_BUILD)
+ add_library (mongoc_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+ set_target_properties (mongoc_shared PROPERTIES CMAKE_CXX_VISIBILITY_PRESET hidden)
+ target_link_libraries (mongoc_shared PRIVATE ${LIBRARIES} PUBLIC ${BSON_LIBRARIES})
+@@ -786,7 +787,7 @@ target_include_directories (
+ set_target_properties (mongoc_shared PROPERTIES VERSION 0.0.0 SOVERSION 0)
+ set_target_properties (mongoc_shared PROPERTIES OUTPUT_NAME "${MONGOC_OUTPUT_BASENAME}-${MONGOC_API_VERSION}")
+
+-if (MONGOC_ENABLE_STATIC_BUILD)
++else()
+    add_library (mongoc_static STATIC ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+    if(ENABLE_COVERAGE)
+       target_compile_options(mongoc_static PRIVATE --coverage)
+@@ -840,7 +841,11 @@ if (ENABLE_APPLE_FRAMEWORK)
+ endif ()
+
+ add_executable (mongoc-stat ${PROJECT_SOURCE_DIR}/../../src/tools/mongoc-stat.c)
++if (NOT MONGOC_ENABLE_STATIC_BUILD)
+ target_link_libraries (mongoc-stat mongoc_shared ${LIBRARIES})
++else()
++target_link_libraries (mongoc-stat mongoc_static ${LIBRARIES})
++endif()
+
+ # mongoc-stat works if shared memory performance counters are enabled.
+ if (ENABLE_SHM_COUNTERS)
+@@ -1161,7 +1166,7 @@ file (COPY ${PROJECT_SOURCE_DIR}/tests/x509gen DESTINATION ${PROJECT_BINARY_DIR}
+ file (COPY ${PROJECT_SOURCE_DIR}/tests/release_files DESTINATION ${PROJECT_BINARY_DIR}/tests)
+ 
+ if (MONGOC_ENABLE_STATIC_INSTALL)
+-   set (TARGETS_TO_INSTALL mongoc_shared mongoc_static)
++   set (TARGETS_TO_INSTALL mongoc_static)
+ else ()
+    set (TARGETS_TO_INSTALL mongoc_shared)
+ endif ()
+@@ -1226,10 +1231,12 @@ configure_file (
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/libmongoc-1.0.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/src/libmongoc-1.0.pc
+ @ONLY)
++if(NOT MONGOC_ENABLE_STATIC_INSTALL)
+ install (
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/src/libmongoc-1.0.pc
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+ )
++endif()
+ if (MONGOC_ENABLE_STATIC_INSTALL)
+    configure_file (
+       ${CMAKE_CURRENT_SOURCE_DIR}/src/libmongoc-static-1.0.pc.in
+@@ -1239,7 +1246,7 @@ if (MONGOC_ENABLE_STATIC_INSTALL)
+       FILES ${CMAKE_CURRENT_BINARY_DIR}/src/libmongoc-static-1.0.pc
+       DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+    )
+-endif ()
++else()
+ # Deprecated alias for libmongoc-1.0.pc, see CDRIVER-2086.
+ if (MONGOC_ENABLE_SSL)
+    configure_file (
+@@ -1251,6 +1258,7 @@ if (MONGOC_ENABLE_SSL)
+       DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+    )
+ endif ()
++endif()
+ 
+ include (CMakePackageConfigHelpers)
+ set (INCLUDE_INSTALL_DIRS "${MONGOC_HEADER_INSTALL_DIR}")

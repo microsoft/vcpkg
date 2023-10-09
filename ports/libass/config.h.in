@@ -1,1 +1,14 @@
-#define CONFIG_SOURCEVERSION "tarball: 0.15.1"
+#define CONFIG_SOURCEVERSION "tarball: @LIBASS_VERSION@"
+
+#cmakedefine CONFIG_ICONV
+#cmakedefine CONFIG_FREETYPE
+#cmakedefine CONFIG_FRIBIDI
+#cmakedefine CONFIG_HARFBUZZ
+#cmakedefine CONFIG_LIBPNG
+#cmakedefine CONFIG_UNIBREAK
+#cmakedefine CONFIG_FONTCONFIG
+#cmakedefine CONFIG_CORETEXT
+#cmakedefine CONFIG_DIRECTWRITE
+#cmakedefine01 CONFIG_ASM
+#cmakedefine01 ARCH_X86
+#cmakedefine01 CONFIG_LARGE_TILES

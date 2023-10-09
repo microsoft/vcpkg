@@ -9,7 +9,7 @@ set(USER_CONFIG_TOOLSET_OPTIONS "")
 set(USER_CONFIG_EXTRA_LINES "")
 set(USER_CONFIG_REQUIREMENTS "")
 
-set(B2_OPTIONS)
+set(B2_OPTIONS "")
 
 include("${VCPKG_CMAKE_VARS_FILE}")
 
@@ -38,27 +38,41 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STR
     list(APPEND B2_OPTIONS architecture=arm)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ppc64le")
     list(APPEND B2_OPTIONS architecture=power)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch")
+    list(APPEND B2_OPTIONS architecture=loongarch)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "mips64")
+    list(APPEND B2_OPTIONS architecture=mips64)
+elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "riscv")
+    list(APPEND B2_OPTIONS architecture=riscv)
+elseif("arm64" IN_LIST VCPKG_TARGET_ARCHITECTURE AND "x86_64" IN_LIST VCPKG_TARGET_ARCHITECTURE)
+    list(APPEND B2_OPTIONS architecture=arm+x86)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+    # do nothing
 else()
     list(APPEND B2_OPTIONS architecture=x86)
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND WIN32)
-    list(APPEND B2_OPTIONS "asmflags=/safeseh")
-endif()
-
 if(VCPKG_DETECTED_MSVC)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        list(APPEND B2_OPTIONS "asmflags=/safeseh")
+    endif()
+
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         set(USER_CONFIG_TOOLSET clang-win)
     else()
         set(USER_CONFIG_TOOLSET msvc)
+        if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
+        else()
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
+        endif()
     endif()
-    if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
-    else()
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
-    endif()
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+    set(USER_CONFIG_TOOLSET emscripten)
 elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(USER_CONFIG_TOOLSET clang)
+elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "NVHPC")
+    set(USER_CONFIG_TOOLSET pgi)
 else()
     set(USER_CONFIG_TOOLSET gcc)
 endif()
@@ -66,9 +80,15 @@ endif()
 if(WIN32)
     list(APPEND B2_OPTIONS target-os=windows)
 elseif(APPLE)
-    list(APPEND B2_OPTIONS target-os=darwin)
+    if(IOS)
+        list(APPEND B2_OPTIONS target-os=iphone)
+    else()
+        list(APPEND B2_OPTIONS target-os=darwin)
+    endif()
 elseif(ANDROID)
     list(APPEND B2_OPTIONS target-os=android)
+elseif(VCPKG_DETECTED_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    list(APPEND B2_OPTIONS target-os=freebsd)
 else()
     list(APPEND B2_OPTIONS target-os=linux)
 endif()
@@ -98,7 +118,7 @@ if(VCPKG_DETECTED_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     list(JOIN libpath_args " " libpath_arg)
     string(APPEND COMPILEFLAGS " ${libpath_arg} /D_WIN32_WINNT=0x0A00")
     list(APPEND B2_OPTIONS windows-api=store)
-    list(APPEND B2_OPTIONS linkflags=WindowsApp.lib)
+    list(APPEND B2_OPTIONS linkflags=WindowsApp.lib) # TODO: Fix this; Probably should use a VCPKG_DETECTED_ variable and also be applied in the !store case
 endif()
 
 set(USER_CONFIG_TOOLSET_INVOCATION_COMMAND "\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\"")
@@ -109,11 +129,24 @@ string(APPEND CFLAGS "${COMPILEFLAGS}")
 foreach(var CXXFLAGS CFLAGS LDFLAGS ARFLAGS)
     string(REPLACE [[\]] [[\\]] ${var} "${${var}}")
     string(REPLACE [["]] [[\"]] ${var} "${${var}}")
+    if(WIN32)
+        # env variables need extra %%var%% to be not expanded early
+        string(REGEX REPLACE [[(%[^%]+%)]] [[%\1%]] ${var} "${${var}}")
+        # remove PDB flag, until the pdb install rule of boost-build can be deactivated. 
+        string(REGEX REPLACE "-PDB:[^ ]+" "" ${var} "${${var}}") 
+    endif()
     string(REGEX REPLACE "[ \t\r\n]+" " " ${var} "${${var}}")
     string(STRIP "${${var}}" ${var})
 endforeach()
 
-if(USER_CONFIG_TOOLSET STREQUAL "msvc")
+if(CFLAGS MATCHES "-Zi" OR CXXFLAGS MATCHES "-Zi")
+    list(APPEND B2_OPTIONS
+            debug-store=database
+            pch=off
+        )
+endif()
+
+if(USER_CONFIG_TOOLSET MATCHES "^(msvc|clang-win)$")
     file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <setup>\"${NOTHING_BAT}\"\n"
@@ -140,7 +173,7 @@ if(NOT LDFLAGS STREQUAL "")
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS "    <linkflags>\"${LDFLAGS}\"\n")
 endif()
 
-if(WIN32 AND NOT USER_CONFIG_TOOLSET STREQUAL "msvc")
+if(WIN32 AND NOT USER_CONFIG_TOOLSET MATCHES "^(msvc|clang-win)$")
     # MINGW here causes b2 to not run cygpath
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <flavor>mingw\n"
@@ -163,11 +196,6 @@ if(NOT WIN32)
     list(APPEND B2_OPTIONS "--layout=system")
 endif()
 
-include(ProcessorCount)
-ProcessorCount(NUMBER_OF_PROCESSORS)
-if(NOT NUMBER_OF_PROCESSORS)
-    set(NUMBER_OF_PROCESSORS 1)
-endif()
 
 # Handle ICU
 if(WIN32)
@@ -202,6 +230,15 @@ if(WITH_PYTHON3)
     list(APPEND python_versions "${python3_version}")
 endif()
 
+if(NOT python_versions STREQUAL "")
+    list(JOIN python_versions "," python_versions)
+    list(APPEND B2_OPTIONS "python=${python_versions}")
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        list(APPEND B2_OPTIONS "python-debugging=on")
+    endif()
+endif()
+
 if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
     string(APPEND USER_CONFIG_EXTRA_LINES
         "using mpi : : <library-path>\"${CURRENT_INSTALLED_DIR}/lib\"\n"
@@ -216,11 +253,6 @@ if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
             "   <find-shared-library>openmpi ;\n"
         )
     endif()
-endif()
-
-if(NOT python_versions STREQUAL "")
-    list(JOIN python_versions "," python_versions)
-    list(APPEND B2_OPTIONS "python=${python_versions}")
 endif()
 
 # Include port specific CMake fragment
@@ -245,7 +277,7 @@ add_custom_target(boost ALL
         --with-system
         --with-thread
         --with-chrono
-        -j${NUMBER_OF_PROCESSORS}
+        -j ${VCPKG_CONCURRENCY}
         -sBOOST_ROOT=${BOOST_BUILD_PATH}
         -sBOOST_BUILD_PATH=${BOOST_BUILD_PATH}
         --debug-configuration
@@ -261,10 +293,10 @@ add_custom_target(boost ALL
         threading=multi
 
         stage
-    WORKING_DIRECTORY ${SOURCE_PATH}/build
+    WORKING_DIRECTORY "${SOURCE_PATH}/build"
 )
 
-set(SUBDIR ${CMAKE_CURRENT_BINARY_DIR}/stage/lib)
+set(SUBDIR "${CMAKE_CURRENT_BINARY_DIR}/stage/lib")
 install(
     CODE "
 file(GLOB LIBS \"${SUBDIR}/*.so.*\" \"${SUBDIR}/*.so\" \"${SUBDIR}/*.a\" \"${SUBDIR}/*.dylib\" \"${SUBDIR}/*.dylib.*\" \"${SUBDIR}/*.lib\")

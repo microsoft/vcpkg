@@ -1,0 +1,43 @@
+diff --git a/gst/meson.build b/gst/meson.build
+index 572c6ab..325a3d5 100644
+--- a/gst/meson.build
++++ b/gst/meson.build
+@@ -13,12 +13,12 @@ libgstnice = library('gstnice',
+   c_args : gst_nice_args,
+   include_directories: nice_incs,
+   dependencies: [nice_deps, gst_dep],
+-  link_with: libnice,
+   install_dir: gst_plugins_install_dir,
+   install: true)
+ plugins = [libgstnice]
+ 
+ # Generate pc files for static plugins if we build static plugins
+ if get_option('default_library') != 'shared'
++  pkg = import('pkgconfig')
+   pkg.generate(libgstnice, install_dir: join_paths(gst_plugins_install_dir, 'pkgconfig'))
+ endif
+diff --git a/meson.build b/meson.build
+index 60ca250..05fc8c7 100644
+--- a/meson.build
++++ b/meson.build
+@@ -90,6 +90,7 @@ version_conf.set('NICE_VERSION_MINOR', version_minor)
+ version_conf.set('NICE_VERSION_MICRO', version_micro)
+ version_conf.set('NICE_VERSION_NANO', version_nano)
+ nice_version_h = configure_file(output: 'nice-version.h',
++  install: false,
+   install_dir: get_option('includedir') / 'nice',
+   configuration: version_conf)
+ 
+@@ -298,11 +299,7 @@ endif
+ 
+ gir = find_program('g-ir-scanner', required : get_option('introspection'))
+ 
+-subdir('agent')
+-subdir('stun')
+-subdir('socket')
+-subdir('random')
+-subdir('nice')
++nice_deps += [dependency('nice', version: '= @0@'.format(meson.project_version()), required: true)]
+ 
+ if gst_dep.found()
+   subdir('gst')

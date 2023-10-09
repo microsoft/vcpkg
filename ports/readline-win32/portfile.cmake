@@ -1,26 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lltcggie/readline
-    REF ea414b4e98475e3976198738061824e8a8379a50
-    SHA512 82d54ab3e19fb2673fe97eff07117d36704791669baa283ec737c704635f872e4c7cd30485a6648d445cb2912e4364286e664e9425444f456a4c862b9e4de843
+    REPO xiaozhuai/readline-win32
+    REF 8f141e9a77f81fae5b67f915621988aef116e9ae
+    SHA512 2eb88a2fa3780df1bb8fa5dfc0be197113d3789cd7b494c0c30509099a6c4818cf14d8301d312747107b2b4f8e52e5a2ed93d3fe5fbbd6b796f780e2f1e0f729
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h DESTINATION ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src)
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-# Copy headers
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include/readline)
-file(GLOB headers "${SOURCE_PATH}/src/readline/5.0/readline-5.0-src/*.h")
-file(COPY ${headers} DESTINATION ${CURRENT_PACKAGES_DIR}/include/readline)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-readline-win32)
+vcpkg_fixup_pkgconfig()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/readline/rlstdc.h"
+        "defined(USE_READLINE_STATIC)" "1"
+    )
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/src/readline/5.0/readline-5.0-src/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

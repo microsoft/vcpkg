@@ -1,12 +1,11 @@
 {
   "$comment": "x86-windows is not within the upstream support matrix of Qt6",
   "name": "qtwebengine",
-  "version": "6.3.0",
-  "port-version": 1,
+  "version": "6.5.3",
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "!static & !((arm | x86) & windows)",
+  "supports": "!static & !((x86 | arm) & windows)",
   "dependencies": [
     {
       "name": "ffmpeg",
@@ -23,6 +22,10 @@
     {
       "name": "glib",
       "platform": "!windows"
+    },
+    {
+      "name": "gperf",
+      "host": true
     },
     {
       "name": "harfbuzz",
@@ -60,7 +63,7 @@
       "name": "minizip",
       "platform": "!windows"
     },
-    "opengl-registry",
+    "opengl",
     {
       "name": "opus",
       "platform": "!windows"
@@ -77,10 +80,6 @@
         "network",
         "widgets"
       ]
-    },
-    {
-      "name": "qtdeclarative",
-      "default-features": false
     },
     {
       "name": "qtdeclarative",
