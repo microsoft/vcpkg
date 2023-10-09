@@ -5826,7 +5826,7 @@
     },
     "nmap": {
       "baseline": "7.70",
-      "port-version": 10
+      "port-version": 11
     },
     "nmslib": {
       "baseline": "2.1.1",
@@ -7814,7 +7814,7 @@
     },
     "soem": {
       "baseline": "2023-06-09",
-      "port-version": 0
+      "port-version": 1
     },
     "soil": {
       "baseline": "2021-04-22",
