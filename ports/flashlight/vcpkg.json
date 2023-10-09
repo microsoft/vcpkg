@@ -1,0 +1,63 @@
+{
+  "name": "flashlight",
+  "version": "0.0.4",
+  "description": "Flashlight is a fast, flexible machine learning in C++.",
+  "homepage": "https://github.com/facebookresearch/flashlight",
+  "license": "MIT",
+  "dependencies": [
+    "backward-cpp",
+    "cereal",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "afcuda": {
+      "description": "Use the ArrayFire CUDA Tensor backend",
+      "dependencies": [
+        {
+          "name": "arrayfire",
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    "cudnn": {
+      "description": "Use cuDNN for autograd computation",
+      "dependencies": [
+        "cuda",
+        "cudnn"
+      ]
+    },
+    "gloo": {
+      "description": "Build with Gloo for distributed communication",
+      "dependencies": [
+        {
+          "name": "gloo",
+          "features": [
+            "mpi"
+          ]
+        }
+      ]
+    },
+    "nccl": {
+      "description": "Build with NCCL for distributed communication",
+      "dependencies": [
+        "cuda",
+        "nccl"
+      ]
+    },
+    "onednn": {
+      "description": "Use the oneDNN Tensor backend",
+      "dependencies": [
+        "onednn"
+      ]
+    }
+  }
+}
