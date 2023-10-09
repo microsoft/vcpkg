@@ -3784,6 +3784,10 @@
       "baseline": "5.98.0",
       "port-version": 0
     },
+    "kf5texteditor": {
+      "baseline": "5.98.0",
+      "port-version": 0
+    },
     "kf5textwidgets": {
       "baseline": "5.98.0",
       "port-version": 0
