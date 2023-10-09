@@ -2580,6 +2580,10 @@
       "baseline": "2.4",
       "port-version": 1
     },
+    "flashlight": {
+      "baseline": "0.0.4",
+      "port-version": 0
+    },
     "flashlight-cpu": {
       "baseline": "0.3",
       "port-version": 5
