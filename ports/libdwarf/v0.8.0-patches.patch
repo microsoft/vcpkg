@@ -1,0 +1,178 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 28076ee4..4ebc3a4c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -193,77 +193,80 @@ check_c_source_compiles([=[
+   }]=] HAVE_STDAFX_H)
+ #message(STATUS "Checking have windows stdafx.h... ${HAVE_STDAFX_H}")
+ 
+-set(CMAKE_REQUIRED_LIBRARIES z)
+-check_c_source_compiles( [=[
+-  #include "zlib.h"
+-  int main()
+-  {
+-      Bytef dest[100];
+-      uLongf destlen = 100;
+-      Bytef *src = 0;
+-      uLong srclen = 3;
+-      int res = uncompress(dest,&destlen,src,srclen);
+-      if (res == Z_OK) {
+-           /* ALL IS WELL */
+-      }
+-      return 0;
+-  } ]=]  HAVE_ZLIB )
+-check_c_source_compiles( [=[
+-  #include "zlib.h"
+-  int main()
+-  {
+-      Bytef dest[100];
+-      uLongf destlen = 100;
+-      Bytef *src = 0;
+-      uLong srclen = 3;
+-      int res = uncompress(dest,&destlen,src,srclen);
+-      if (res == Z_OK) {
+-           /* ALL IS WELL */
+-      }
+-      return 0;
+-  } ]=]  HAVE_ZLIB_H )
+-set(CMAKE_REQUIRED_LIBRARIES)
+-if (HAVE_ZLIB) 
+-  # For linking in libz
+-  set(DW_FZLIB "z")
+-endif()
+-
+-set(CMAKE_REQUIRED_LIBRARIES zstd )
+-check_c_source_compiles( [=[
+-  #include "zstd.h"
+-  int main()
+-  {
+-      char * dest[100];
+-      size_t destlen = 100;
+-      char *src = 0;
+-      size_t srclen = 3;
+-      size_t res = ZSTD_decompress(dest,destlen,src,srclen);
+-      if (res == destlen) {
+-           /* ALL IS WELL */
+-      }
+-      return 0;
+-  } ]=]  HAVE_ZSTD )
+-check_c_source_compiles( [=[
+-  #include "zstd.h"
+-  int main()
+-  {
+-      char * dest[100];
+-      size_t destlen = 100;
+-      char *src = 0;
+-      size_t srclen = 3;
+-      size_t res = ZSTD_decompress(dest,destlen,src,srclen);
+-      if (res == destlen) {
+-           /* ALL IS WELL */
+-      }
+-      return 0;
+-  } ]=]  HAVE_ZSTD_H )
+-set(CMAKE_REQUIRED_LIBRARIES)
+-if (HAVE_ZSTD)
+-  # For linking in libzstd
+-  set(DW_FZSTD "zstd")
+-endif()
+-
+-
++# set(CMAKE_REQUIRED_LIBRARIES z)
++# check_c_source_compiles( [=[
++#   #include "zlib.h"
++#   int main()
++#   {
++#       Bytef dest[100];
++#       uLongf destlen = 100;
++#       Bytef *src = 0;
++#       uLong srclen = 3;
++#       int res = uncompress(dest,&destlen,src,srclen);
++#       if (res == Z_OK) {
++#            /* ALL IS WELL */
++#       }
++#       return 0;
++#   } ]=]  HAVE_ZLIB )
++# check_c_source_compiles( [=[
++#   #include "zlib.h"
++#   int main()
++#   {
++#       Bytef dest[100];
++#       uLongf destlen = 100;
++#       Bytef *src = 0;
++#       uLong srclen = 3;
++#       int res = uncompress(dest,&destlen,src,srclen);
++#       if (res == Z_OK) {
++#            /* ALL IS WELL */
++#       }
++#       return 0;
++#   } ]=]  HAVE_ZLIB_H )
++# set(CMAKE_REQUIRED_LIBRARIES)
++# if (HAVE_ZLIB) 
++#   # For linking in libz
++#   set(DW_FZLIB "z")
++# endif()
++
++# set(CMAKE_REQUIRED_LIBRARIES zstd )
++# check_c_source_compiles( [=[
++#   #include "zstd.h"
++#   int main()
++#   {
++#       char * dest[100];
++#       size_t destlen = 100;
++#       char *src = 0;
++#       size_t srclen = 3;
++#       size_t res = ZSTD_decompress(dest,destlen,src,srclen);
++#       if (res == destlen) {
++#            /* ALL IS WELL */
++#       }
++#       return 0;
++#   } ]=]  HAVE_ZSTD )
++# check_c_source_compiles( [=[
++#   #include "zstd.h"
++#   int main()
++#   {
++#       char * dest[100];
++#       size_t destlen = 100;
++#       char *src = 0;
++#       size_t srclen = 3;
++#       size_t res = ZSTD_decompress(dest,destlen,src,srclen);
++#       if (res == destlen) {
++#            /* ALL IS WELL */
++#       }
++#       return 0;
++#   } ]=]  HAVE_ZSTD_H )
++# set(CMAKE_REQUIRED_LIBRARIES)
++# if (HAVE_ZSTD)
++#   # For linking in libzstd
++#   set(DW_FZSTD "zstd")
++# endif()
++
++find_package(ZLIB REQUIRED)
++set(DW_FZLIB "ZLIB")
++set(HAVE_ZLIB TRUE)
++set(HAVE_ZLIB_H TRUE)
+ 
+ check_c_source_compiles([=[
+ #include <stdint.h>
+@@ -333,7 +336,7 @@ else()
+ endif()
+ 
+ add_subdirectory(src/lib/libdwarf)
+-add_subdirectory(src/bin/dwarfdump)
++# add_subdirectory(src/bin/dwarfdump)
+ 
+ if ( BUILD_DWARFEXAMPLE )
+ 	add_subdirectory(src/bin/dwarfexample)
+diff --git a/src/lib/libdwarf/CMakeLists.txt b/src/lib/libdwarf/CMakeLists.txt
+index 09908bba..8a45d171 100644
+--- a/src/lib/libdwarf/CMakeLists.txt
++++ b/src/lib/libdwarf/CMakeLists.txt
+@@ -89,7 +89,7 @@ list(LENGTH DWARF_TARGETS targetCount)
+ math(EXPR targetCount "${targetCount} - 1")
+ list(APPEND DWARF_LIBS ${LIBELF_LIBRARIES})
+ if (DW_FZLIB)
+-    list(APPEND DWARF_LIBS z)
++    list(APPEND DWARF_LIBS ZLIB::ZLIB)
+ endif()
+ if (DW_FZSTD)
+     list(APPEND DWARF_LIBS zstd)
