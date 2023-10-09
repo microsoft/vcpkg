@@ -5,12 +5,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
-    REF ${VERSION}
+    REF "${VERSION}"
     SHA512 0d69896d0a83452320df0d0f56c710df1365a259cd3f48dc7cd4df18d45b27caea7174aafa15ae5eb8637ccdef192c1047185b369b7232db4eaacbc57ffaaa22
-    HEAD_REF master
+    HEAD_REF main
     PATCHES
         fix-clang-cl.patch
         fix-clang-cl-gstreamer.patch
