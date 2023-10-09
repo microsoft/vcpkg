@@ -1978,7 +1978,7 @@
     },
     "cubeb": {
       "baseline": "2023-09-26",
-      "port-version": 0
+      "port-version": 1
     },
     "cuda": {
       "baseline": "10.1",
