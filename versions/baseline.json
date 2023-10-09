@@ -573,7 +573,7 @@
       "port-version": 2
     },
     "bext-wintls": {
-      "baseline": "0.9.5",
+      "baseline": "0.9.7",
       "port-version": 0
     },
     "bfgroup-lyra": {
@@ -4206,7 +4206,7 @@
     },
     "libgnutls": {
       "baseline": "3.8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libgo": {
       "baseline": "3.1",
@@ -6762,7 +6762,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.11",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -7181,7 +7181,7 @@
       "port-version": 0
     },
     "rapidjson": {
-      "baseline": "2023-04-27",
+      "baseline": "2023-07-17",
       "port-version": 0
     },
     "rapidxml": {
@@ -8221,8 +8221,8 @@
       "port-version": 0
     },
     "tiff": {
-      "baseline": "4.5.1",
-      "port-version": 2
+      "baseline": "4.6.0",
+      "port-version": 0
     },
     "tinkerforge": {
       "baseline": "2.1.25",
@@ -8281,7 +8281,7 @@
       "port-version": 0
     },
     "tinygltf": {
-      "baseline": "2.8.4",
+      "baseline": "2.8.17",
       "port-version": 0
     },
     "tinynpy": {
@@ -8601,7 +8601,7 @@
       "port-version": 0
     },
     "vc": {
-      "baseline": "1.4.3",
+      "baseline": "1.4.4",
       "port-version": 0
     },
     "vcglib": {
