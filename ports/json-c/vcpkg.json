@@ -1,7 +1,6 @@
 {
   "name": "json-c",
-  "version-date": "2022-06-26",
-  "port-version": 3,
+  "version-date": "2023-08-12",
   "description": "A JSON implementation in C",
   "homepage": "https://github.com/json-c/json-c",
   "license": "MIT",
