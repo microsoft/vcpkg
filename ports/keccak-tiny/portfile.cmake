@@ -19,11 +19,8 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT})
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "CC0-1.0")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" [=[
-${PORT} provides CMake targets:
-    find_package(unofficial-${PORT} CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::${PORT}::${PORT})
-]=])
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/include")

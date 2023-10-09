@@ -1,0 +1,3 @@
+keccak-tiny provides CMake targets:
+    find_package(unofficial-keccak-tiny CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::keccak-tiny::keccak-tiny)
