@@ -4088,6 +4088,10 @@
       "baseline": "0.6.0",
       "port-version": 3
     },
+    "libdwarf": {
+      "baseline": "0.8.0",
+      "port-version": 0
+    },
     "libe57": {
       "baseline": "1.1.332",
       "port-version": 4
