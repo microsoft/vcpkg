@@ -29,8 +29,8 @@ else()
     set(rpath "\$ORIGIN")
 endif()
 
-set(BUILD_ONLY core)
-include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
+set(BUILD_ONLY core ${FEATURES})
+string(TOLOWER ${BUILD_ONLY} BUILD_ONLY)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
