@@ -163,5 +163,3 @@ index 28076ee4..4ebc3a4c 100644
  
  if ( BUILD_DWARFEXAMPLE )
  	add_subdirectory(src/bin/dwarfexample)
-diff --git a/src/lib/libdwarf/CMakeLists.txt b/src/lib/libdwarf/CMakeLists.txt
-index 09908bba..8a45d171 100644
