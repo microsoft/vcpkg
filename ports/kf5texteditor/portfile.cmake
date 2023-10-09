@@ -11,9 +11,17 @@ file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: fa
 
 # A trick for `kcoreaddons_desktop_to_json` (see KF5CoreAddonsMacros.cmake) to generate katepart.desktop
 # The copied *.desktop files should be removed after vcpkg_cmake_install
-file(COPY "${CURRENT_INSTALLED_DIR}/share/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share")
-file(COPY "${CURRENT_INSTALLED_DIR}/share/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/share")
-file(GLOB TEMP_DESKTOP_FILES "${CURRENT_PACKAGES_DIR}/share/kservicetypes5/*")
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(COPY "${CURRENT_INSTALLED_DIR}/bin/data/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/data")
+    file(GLOB TEMP_DESKTOP_FILES_DBG "${CURRENT_PACKAGES_DIR}/debug/bin/data/kservicetypes5/*")
+    file(COPY "${CURRENT_INSTALLED_DIR}/bin/data/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/data")
+    file(GLOB TEMP_DESKTOP_FILES_REL "${CURRENT_PACKAGES_DIR}/bin/data/kservicetypes5/*")
+else()
+    file(COPY "${CURRENT_INSTALLED_DIR}/share/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(GLOB TEMP_DESKTOP_FILES_DBG "${CURRENT_PACKAGES_DIR}/debug/share/kservicetypes5/*")
+    file(COPY "${CURRENT_INSTALLED_DIR}/share/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/share")
+    file(GLOB TEMP_DESKTOP_FILES_REL "${CURRENT_PACKAGES_DIR}/share/kservicetypes5/*")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -33,7 +41,7 @@ endif()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    ${TEMP_DESKTOP_FILES}
+    ${TEMP_DESKTOP_FILES_DBG} ${TEMP_DESKTOP_FILES_REL}
 )
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
