@@ -2098,7 +2098,7 @@
     },
     "dbus": {
       "baseline": "1.15.8",
-      "port-version": 0
+      "port-version": 1
     },
     "dcmtk": {
       "baseline": "3.6.7",
