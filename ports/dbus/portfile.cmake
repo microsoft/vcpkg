@@ -13,7 +13,7 @@ vcpkg_from_gitlab(
         getpeereid.patch # missing check from configure.ac
 ) 
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
         x11     DBUS_BUILD_X11
         x11     CMAKE_REQUIRE_FIND_PACKAGE_X11
@@ -36,6 +36,7 @@ vcpkg_cmake_configure(
         "-DCMAKE_INSTALL_SYSCONFDIR=${CURRENT_PACKAGES_DIR}/etc/${PORT}"
         "-DWITH_SYSTEMD_SYSTEMUNITDIR=lib/systemd/system"
         "-DWITH_SYSTEMD_USERUNITDIR=lib/systemd/user"
+        ${options}
     OPTIONS_RELEASE
         -DDBUS_DISABLE_ASSERT=OFF
         -DDBUS_ENABLE_STATS=OFF

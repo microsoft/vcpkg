@@ -12,6 +12,7 @@ vcpkg_cmake_configure(
         -DUSE_SANITIZERS=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
+        -DDOXYGEN_EXECUTABLE= # Prevents the generation of documentation
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cubeb)
