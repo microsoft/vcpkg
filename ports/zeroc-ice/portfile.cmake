@@ -37,6 +37,59 @@ function(install_slices ORIGINAL_PATH RELATIVE_PATHS)
     endforeach()
 endfunction()
 
+set(components
+    IceUtil
+    Ice
+    IcePatch2
+    IceSSL
+    Glacier2
+    Glacier2CryptPermissionsVerifier
+    IceBox
+    IceGrid
+    IceStorm
+    IceStormService
+    IceDiscovery
+    IceLocatorDiscovery
+)
+
+set(tools
+    icepatch2calc
+    icepatch2client
+    icepatch2server
+    glacier2router
+    icebox
+    iceboxadmin
+    icegridadmin
+    icegriddb
+    icegridnode
+    icegridregistry
+    icestormadmin
+    icestormdb
+    icebridge
+)
+
+set(ICE_COMPONENTS_MAKE "${components}")
+set(ICE_INCLUDE_SUB_DIRECTORIES "${components}")
+set(ICE_PROGRAMS_MAKE "")
+set(pkgconfig_packages "expat")
+set(msbuild_additional_libs "lmdb.lib")
+
+string(TOLOWER "${components}" ICE_COMPONENTS_MSBUILD)
+if("tools" IN_LIST FEATURES)
+    list(APPEND ICE_COMPONENTS_MSBUILD ${tools})
+    list(APPEND ICE_PROGRAMS_MAKE ${tools})
+endif()
+list(TRANSFORM ICE_COMPONENTS_MSBUILD PREPEND "/t:C++98\\")
+
+if("cxx11" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\glacier2++11")
+    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icessl++11")
+    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icebox++11")
+    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icegrid++11")
+    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icediscovery++11")
+endif()
+
+if(0)
 set(ICE_INCLUDE_SUB_DIRECTORIES "Ice" "IceUtil")
 set(ICE_COMPONENTS_MSBUILD "/t:C++98\\ice")
 set(ICE_COMPONENTS_MAKE "IceUtil Ice")
@@ -62,7 +115,6 @@ endif()
 if("icessl" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_INCLUDE_SUB_DIRECTORIES "IceSSL")
     vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icessl")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icessl++11")
     vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IceSSL")
 endif()
 
@@ -149,6 +201,7 @@ if("icelocatordiscovery" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icelocatordiscovery++11")
     vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IceLocatorDiscovery")
 endif()
+endif(0)
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 

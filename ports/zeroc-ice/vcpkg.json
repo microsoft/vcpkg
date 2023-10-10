@@ -10,7 +10,6 @@
   "dependencies": [
     "bzip2",
     {
-      "$comment": "Used by src/Ice/SHA1.cpp",
       "name": "openssl",
       "platform": "!osx & !windows"
     },
@@ -30,218 +29,146 @@
     }
   ],
   "default-features": [
-    "glacier2",
-    "icebox",
-    "icediscovery",
-    "icegrid",
-    "icelocatordiscovery",
-    "icepatch2",
-    "icessl",
-    "icestorm"
+    "cxx11"
   ],
   "features": {
-    "glacier2": {
-      "description": "Glacier2 is a lightweight firewall traversal solution for Ice applications."
+    "cxx11": {
+      "description": "Build the C++11 API."
     },
     "glacier2lib": {
-      "description": "Deprecated. Use feature glacier2 instead.",
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
         {
           "name": "zeroc-ice",
           "default-features": false,
           "features": [
-            "glacier2"
+            "cxx11"
           ]
         }
       ]
     },
     "glacier2router": {
       "description": "The Glacier2 router daemon.",
-      "supports": "!static",
       "dependencies": [
         {
           "name": "zeroc-ice",
           "default-features": false,
           "features": [
-            "glacier2",
-            "icessl"
+            "tools"
           ]
         }
       ]
     },
-    "icebox": {
-      "description": "IceBox is a framework for Ice application services."
-    },
     "iceboxlib": {
-      "description": "Deprecated. Use feature icebox instead.",
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
         {
           "name": "zeroc-ice",
           "default-features": false,
           "features": [
-            "icebox"
+            "cxx11"
           ]
         }
       ]
     },
     "iceboxtools": {
-      "description": "The IceBox server and administration programs.",
-      "supports": "!static",
+      "description": "Deprecated. Included in tools.",
       "dependencies": [
         {
           "name": "zeroc-ice",
           "default-features": false,
           "features": [
-            "icebox"
+            "tools"
           ]
         }
       ]
     },
-    "icebridge": {
-      "description": "IceBridge is an Ice service that acts as a bridge between one or more clients and a server.",
-      "supports": "!static"
-    },
     "icediscovery": {
-      "description": "IceDiscovery provides a location service using UDP multicast that enables Ice applications to discover objects and object adapters."
-    },
-    "icegrid": {
-      "description": "IceGrid is a location and activation service for Ice applications.",
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
-        "lmdb",
         {
           "name": "zeroc-ice",
           "default-features": false,
           "features": [
-            "glacier2"
+            "cxx11"
           ]
         }
       ]
     },
     "icegridlib": {
-      "description": "Deprecated. Use feature icegrid instead.",
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
         {
           "name": "zeroc-ice",
           "default-features": false,
           "features": [
-            "icegrid"
+            "cxx11"
           ]
         }
       ]
     },
     "icegridtools": {
-      "description": "IceGrid tools.",
-      "supports": "!static",
+      "description": "Deprecated. Included in tools.",
       "dependencies": [
-        "expat",
-        "lmdb",
         {
-          "name": "readline",
-          "platform": "linux"
-        },
-        {
-          "$more_features": "IceXML IcePatch2 IceDB $(local_dependencies)",
           "name": "zeroc-ice",
           "default-features": false,
           "features": [
-            "glacier2",
-            "icebox",
-            "icegrid",
-            "icelocatordiscovery",
-            "icepatch2",
-            "icessl",
-            "icestorm"
+            "tools"
           ]
         }
       ]
     },
     "icelocatordiscovery": {
-      "description": "IceLocatorDiscovery is an Ice plug-in that enables the discovery of IceGrid and custom locators via UDP multicast.",
-      "dependencies": [
-        {
-          "name": "zeroc-ice",
-          "features": [
-            "glacier2",
-            "icebox",
-            "icessl",
-            "icestorm"
-          ]
-        }
-      ]
-    },
-    "icepatch2": {
-      "description": "IcePatch2 is the Ice solution for secure replication of a directory tree.",
-      "dependencies": [
-        "bzip2"
-      ]
-    },
-    "icepatch2tools": {
-      "description": "IcePatch2 tools.",
-      "supports": "!static",
-      "dependencies": [
-        {
-          "name": "zeroc-ice",
-          "features": [
-            "icepatch2"
-          ]
-        }
-      ]
-    },
-    "icessl": {
-      "description": "IceSSL is a plug-in that provides security capabilities using the Transport Layer Security (TLS) protocol.",
-      "dependencies": [
-        {
-          "name": "openssl",
-          "platform": "!windows"
-        }
-      ]
-    },
-    "icestorm": {
-      "description": "IceStorm is an efficient publish/subscribe service for Ice applications.",
-      "dependencies": [
-        "lmdb",
-        {
-          "name": "zeroc-ice",
-          "features": [
-            "glacier2",
-            "icebox",
-            "icegrid"
-          ]
-        }
-      ]
-    },
-    "icestormlib": {
-      "description": "Deprecated. Use feature icestorm instead.",
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
         {
           "name": "zeroc-ice",
           "default-features": false,
           "features": [
-            "icestorm"
+            "cxx11"
+          ]
+        }
+      ]
+    },
+    "icessl": {
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "default-features": false,
+          "features": [
+            "cxx11"
+          ]
+        }
+      ]
+    },
+    "icestormlib": {
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "default-features": false,
+          "features": [
+            "cxx11"
           ]
         }
       ]
     },
     "icestormtools": {
-      "description": "IceStorm tools",
-      "supports": "!static",
+      "description": "Deprecated. Included in tools.",
       "dependencies": [
-        "lmdb",
-        {
-          "name": "readline",
-          "platform": "linux"
-        },
         {
           "name": "zeroc-ice",
           "features": [
-            "glacier2",
-            "icebox",
-            "icegrid",
-            "icepatch2",
-            "icestorm"
+            "tools"
           ]
         }
       ]
+    },
+    "tools": {
+      "description": "Build tools",
+      "supports": "!static"
     }
   }
 }
