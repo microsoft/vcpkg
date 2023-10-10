@@ -1,7 +1,7 @@
-diff --git CMakeLists.txt CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 28076ee4..68583f92 100644
---- CMakeLists.txt
-+++ CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -193,77 +193,81 @@ check_c_source_compiles([=[
    }]=] HAVE_STDAFX_H)
  #message(STATUS "Checking have windows stdafx.h... ${HAVE_STDAFX_H}")
