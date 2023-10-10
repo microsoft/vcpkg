@@ -14,32 +14,34 @@ else()
 endif()
 
 # Debug build
-vcpkg_execute_build_process(
-    COMMAND nmake -f Makefile
-    WORKING_DIRECTORY "${SOURCE_PATH}/c/make/c${LFLAG}d/win32/msvc"
-    LOGNAME build-${TARGET_TRIPLET}-dbg
-)
+if (NOT VCPKG_BUILD_TYPE)
+    vcpkg_execute_build_process(
+        COMMAND nmake -f Makefile
+        WORKING_DIRECTORY "${SOURCE_PATH}/c/make/c${LFLAG}d/win32/msvc"
+        LOGNAME build-${TARGET_TRIPLET}-dbg
+    )
 
-file(
-    INSTALL "${SOURCE_PATH}/c/lib/ta_abstract_c${LFLAG}d.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    RENAME ta_abstract.lib
-)
-file(
-    INSTALL "${SOURCE_PATH}/c/lib/ta_libc_c${LFLAG}d.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    RENAME ta_libc.lib
-)
-file(
-    INSTALL "${SOURCE_PATH}/c/lib/ta_func_c${LFLAG}d.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    RENAME ta_func.lib
-)
-file(
-    INSTALL "${SOURCE_PATH}/c/lib/ta_common_c${LFLAG}d.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    RENAME ta_common.lib
-)
+    file(
+        INSTALL "${SOURCE_PATH}/c/lib/ta_abstract_c${LFLAG}d.lib"
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+        RENAME ta_abstract.lib
+    )
+    file(
+        INSTALL "${SOURCE_PATH}/c/lib/ta_libc_c${LFLAG}d.lib"
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+        RENAME ta_libc.lib
+    )
+    file(
+        INSTALL "${SOURCE_PATH}/c/lib/ta_func_c${LFLAG}d.lib"
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+        RENAME ta_func.lib
+    )
+    file(
+        INSTALL "${SOURCE_PATH}/c/lib/ta_common_c${LFLAG}d.lib"
+        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
+        RENAME ta_common.lib
+    )
+endif()
 
 # Release build
 vcpkg_execute_build_process(
@@ -76,4 +78,4 @@ file(
 )
 
 # License file
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.TXT") 
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.TXT")
