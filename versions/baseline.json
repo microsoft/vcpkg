@@ -6681,7 +6681,7 @@
       "port-version": 0
     },
     "pugixml": {
-      "baseline": "1.13.0",
+      "baseline": "1.14",
       "port-version": 0
     },
     "pulzed-mini": {
