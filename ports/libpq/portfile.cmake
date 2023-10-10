@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
     FILENAME "postgresql-${VERSION}.tar.bz2"
-    SHA512 cac97edeb40df1e8f2162f401b465751132929d7249495ef001e950645a2db46343bd732e7bd6504a7f795e25aea66724f2f4ab0065e3d9331b36db4b3a3bec6
+    SHA512 c66b72d2d9bc503b9ad19c67384517ae921c494b2916f32157c2528dcbb38aefeb4a8cd5003fd40ba8a19612ea64511d534ff5d99e7a1b266024232f983bcf39
 )
 
 vcpkg_extract_source_archive(
