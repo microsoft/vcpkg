@@ -29,12 +29,12 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 #file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(
-        REMOVE_RECURSE
-        "${CURRENT_PACKAGES_DIR}/debug/lib"
-        "${CURRENT_PACKAGES_DIR}/lib"
-    )
-endif()
+#if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND WIN32)
+#    file(
+#        REMOVE_RECURSE
+#        "${CURRENT_PACKAGES_DIR}/debug/lib"
+#        "${CURRENT_PACKAGES_DIR}/lib"
+#    )
+#endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
