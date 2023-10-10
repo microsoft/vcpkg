@@ -164,6 +164,31 @@ index 28076ee4..68583f92 100644
  
  if ( BUILD_DWARFEXAMPLE )
  	add_subdirectory(src/bin/dwarfexample)
+diff --git a/src/bin/dwarfdump/CMakeLists.txt b/src/bin/dwarfdump/CMakeLists.txt
+index 1b8aa3ae..72819160 100644
+--- a/src/bin/dwarfdump/CMakeLists.txt
++++ b/src/bin/dwarfdump/CMakeLists.txt
+@@ -65,7 +65,7 @@ target_compile_options(dwarfdump PRIVATE ${DW_FWALL})
+ 
+ target_link_libraries(dwarfdump PRIVATE ${dwarf-target} ${DW_FZLIB} ${DW_FZSTD} ) 
+ 
+-if(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
++if(0)
+ 	set(SUFFIX 64)
+ endif()
+ set(LIBDIR lib${SUFFIX})
+diff --git a/src/lib/libdwarf/CMakeLists.txt b/src/lib/libdwarf/CMakeLists.txt
+index 09908bba..91a14479 100644
+--- a/src/lib/libdwarf/CMakeLists.txt
++++ b/src/lib/libdwarf/CMakeLists.txt
+@@ -109,7 +109,6 @@ foreach(i RANGE ${targetCount})
+ 	
+ 	set_target_properties(${target} PROPERTIES OUTPUT_NAME dwarf)
+ 
+-	set(SUFFIX $<$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>:64>)
+ 	set(LIBDIR lib${SUFFIX})
+ 	set(BINDIR bin${SUFFIX})
+ 
 diff --git a/src/lib/libdwarf/libdwarf_private.h b/src/lib/libdwarf/libdwarf_private.h
 index b37ae994..7fa89256 100644
 --- a/src/lib/libdwarf/libdwarf_private.h
