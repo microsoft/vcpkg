@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 6383280f12f7fc75b958a4354da2a5b3dfe4364eb7f65354546c5f9e95492c0f5da721a39dc9b90cdd91fdcea0153b153cdf31c0cd635e74786d23828d4184b0
+    SHA512 3199e535033c8728bd12b97931d5c5d7a7dcc9b0f502109ff722982601b6fbb00995d71cbaab7d3b780c738deece235ef76ab1963ce946084c482c2d31a4abe8
     HEAD_REF main
     PATCHES
         deps.patch
@@ -51,6 +51,7 @@ vcpkg_cmake_configure(
         -DSDL_LIBSAMPLERATE_SHARED=OFF
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
+        PKG_CONFIG_USE_CMAKE_PREFIX_PATH
 )
 
 vcpkg_cmake_install()
