@@ -35,6 +35,7 @@ file(
     "${CURRENT_PACKAGES_DIR}/debug/lib64"
     "${CURRENT_PACKAGES_DIR}/lib"
     "${CURRENT_PACKAGES_DIR}/lib64"
+    "${CURRENT_PACKAGES_DIR}/debug"
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
