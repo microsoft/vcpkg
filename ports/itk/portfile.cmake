@@ -3,7 +3,7 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
-    REF 95800fd4d4b08678a6c0ebb63eb242893025b660 #5.2.1
+    REF v5.3-rc02
     SHA512 fe703bc6ed681cb9983d7d6e21c8ffa7650337e470c09a7241de58a463c23e315516b1a81a18c14f682706056a0ec66932b63d2e24945bdcea03169bc1122bb2
     HEAD_REF master
     PATCHES
@@ -15,6 +15,7 @@ vcpkg_from_github(
         opencl.patch
         use-the-lrintf-intrinsic.patch
         dont-build-gtest.patch
+        cxx17.patch # See https://github.com/InsightSoftwareConsortium/ITK/issues/4213#issuecomment-1722547712
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

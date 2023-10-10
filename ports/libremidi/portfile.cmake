@@ -3,14 +3,21 @@ vcpkg_from_github(
     REPO jcelerier/libremidi
     REF "v${VERSION}"
 
-    SHA512 7b73d5e1a565e9f85ac28fba041c66a151537a9205b4f3605fa70e18d5e651fa0562329853c7e08bf8e620f9d83d08d167b746d30c39bffcd325fbd6338d0538 
+    SHA512 de7092c70af6fc0a23c8e6018fbd9f380632ac9dec8794171726fda9a6e7ba45479a8e8317919ba7a8a0267524bab8d5430782a54bc50a914658cf277e18145b
     HEAD_REF master
 )
+
+vcpkg_list(SET options)
+if(VCPKG_TARGET_IS_LINUX)
+    vcpkg_list(APPEND options -DLIBREMIDI_NO_ALSA=OFF)
+else()
+    vcpkg_list(APPEND options -DLIBREMIDI_NO_ALSA=ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DLIBREMIDI_NO_ALSA=ON
+        ${options}
         -DLIBREMIDI_NO_BOOST=ON
         -DLIBREMIDI_NO_JACK=ON
 )

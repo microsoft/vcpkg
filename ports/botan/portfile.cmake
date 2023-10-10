@@ -3,16 +3,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 0f99ef4026e5180dd65dc0e935ba2cabaf750862c651699294b3521053463b7e65a90847fef6f0d640eb9f9eb5efce64b13e999aa9c215310998817d13bd5332
+    SHA512 fb6be83b0292bb28319061721fe10ea16776a942b381780a8d4bece9b86e3525a0f533e3572e54c6498b08c4dc421a746bff8f0302f3ea0d810e266811331a65
     HEAD_REF master
     PATCHES
-        fix-generate-build-path.patch
         embed-debug-info.patch
-        arm64-windows.patch
         pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
-        fix-objectfile-list.patch # https://github.com/randombit/botan/pull/3069
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
@@ -147,13 +144,13 @@ else()
     vcpkg_copy_tools(TOOL_NAMES botan AUTO_CLEAN)
 endif()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-2/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-3/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
 
 if(pkgconfig_requires)
     list(JOIN pkgconfig_requires ", " pkgconfig_requires)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/botan-2.pc" "Requires.private: ${pkgconfig_requires}")
+    file(APPEND "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/botan-3.pc" "Requires.private: ${pkgconfig_requires}")
     if(NOT VCPKG_BUILD_TYPE)
-        file(APPEND "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-2.pc" "Requires.private: ${pkgconfig_requires}")
+        file(APPEND "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/botan-3.pc" "Requires.private: ${pkgconfig_requires}")
     endif()
 endif()
 vcpkg_fixup_pkgconfig()
@@ -161,7 +158,7 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/include/botan-2"
+    "${CURRENT_PACKAGES_DIR}/include/botan-3"
 )
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_PREFIX R\"(${CURRENT_PACKAGES_DIR})\"" "")
@@ -169,4 +166,4 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BO
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "--prefix=${CURRENT_PACKAGES_DIR}" "")
 
-file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")

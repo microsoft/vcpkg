@@ -287,6 +287,7 @@ directxsdk:x64-windows=skip
 directxsdk:x64-windows-static-md=skip
 discord-rpc:arm64-uwp=fail
 discord-rpc:x64-uwp=fail
+discordcoreapi:x64-osx=fail
 discount:x64-android=fail
 dlib:arm64-uwp=fail
 dlib:x64-uwp=fail
@@ -959,6 +960,8 @@ python3:x64-android=fail
 # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
 qbittorrent:x64-linux=fail
+# Triggers ICE in release build.
+qcoro:x64-osx=fail
 qpid-proton:arm-neon-android=fail
 qpid-proton:arm64-uwp=fail
 qpid-proton:arm64-android=fail
@@ -1100,8 +1103,6 @@ sdformat9:x64-windows-static-md=fail
 sdl1:arm-neon-android=fail
 sdl1:arm64-android=fail
 sdl1:x64-android=fail
-sdl2-net:arm64-uwp=fail
-sdl2-net:x64-uwp=fail
 sentencepiece:arm-neon-android=fail
 sentencepiece:arm64-android=fail
 sentencepiece:x64-android=fail
