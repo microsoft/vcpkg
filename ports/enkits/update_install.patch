@@ -27,7 +27,7 @@ index 7f8572e..f42ec18 100644
 +    install(
 +        EXPORT enkiTS-config
 +        NAMESPACE enkiTS::
-+        DESTINATION ${CMAKE_INSTALL_DATADIR}/enkiTS)
++        DESTINATION ${DATADIR}/enkiTS)
  endif()
  
  if( UNIX )
