@@ -1,0 +1,24 @@
+diff --git a/sdk/core/azure-core/inc/azure/core/uuid.hpp b/sdk/core/azure-core/inc/azure/core/uuid.hpp
+index 1fe0788..ba32fd3 100644
+--- a/sdk/core/azure-core/inc/azure/core/uuid.hpp
++++ b/sdk/core/azure-core/inc/azure/core/uuid.hpp
+@@ -14,6 +14,7 @@
+ #include <cstdint>
+ #include <cstring>
+ #include <string>
++#include <stdint.h>
+ 
+ namespace Azure { namespace Core {
+   /**
+diff --git a/sdk/core/azure-core/src/base64.cpp b/sdk/core/azure-core/src/base64.cpp
+index e1a3a2e..d58ee41 100644
+--- a/sdk/core/azure-core/src/base64.cpp
++++ b/sdk/core/azure-core/src/base64.cpp
+@@ -7,6 +7,7 @@
+ 
+ #include <string>
+ #include <vector>
++#include <stdint.h>
+ 
+ namespace {
+ 
