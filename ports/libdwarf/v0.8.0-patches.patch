@@ -1,8 +1,8 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 28076ee4..4ebc3a4c 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -193,77 +193,80 @@ check_c_source_compiles([=[
+diff --git CMakeLists.txt CMakeLists.txt
+index 28076ee4..68583f92 100644
+--- CMakeLists.txt
++++ CMakeLists.txt
+@@ -193,77 +193,81 @@ check_c_source_compiles([=[
    }]=] HAVE_STDAFX_H)
  #message(STATUS "Checking have windows stdafx.h... ${HAVE_STDAFX_H}")
  
@@ -148,13 +148,14 @@ index 28076ee4..4ebc3a4c 100644
 +# endif()
 +
 +find_package(ZLIB REQUIRED)
++add_library(z ALIAS ZLIB::ZLIB)
 +set(DW_FZLIB "z")
 +set(HAVE_ZLIB TRUE)
 +set(HAVE_ZLIB_H TRUE)
  
  check_c_source_compiles([=[
  #include <stdint.h>
-@@ -333,7 +336,7 @@ else()
+@@ -333,7 +337,7 @@ else()
  endif()
  
  add_subdirectory(src/lib/libdwarf)
