@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7f8572e..23f66c2 100644
+index 7f8572e..891a1b6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0)
@@ -11,10 +11,11 @@ index 7f8572e..23f66c2 100644
  option( ENKITS_BUILD_C_INTERFACE    "Build C interface" ON )
  option( ENKITS_BUILD_EXAMPLES       "Build example applications" ON )
  option( ENKITS_BUILD_SHARED         "Build shared library" OFF )
-@@ -60,8 +62,15 @@ if( UNIX )
+@@ -59,9 +61,17 @@ if( UNIX )
+     target_link_libraries( enkiTS ${CMAKE_THREAD_LIBS_INIT} )
  endif()
  
-target_include_directories(enkiTS PUBLIC "$<INSTALL_INTERFACE:include>")
++target_include_directories(enkiTS PUBLIC "$<INSTALL_INTERFACE:include>")
  if( ENKITS_INSTALL )
 -    install(TARGETS enkiTS DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/enkiTS")
 -    install(FILES ${ENKITS_HEADERS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/enkiTS")
@@ -26,7 +27,7 @@ target_include_directories(enkiTS PUBLIC "$<INSTALL_INTERFACE:include>")
 +    install(
 +        EXPORT enkiTS-config
 +        NAMESPACE enkiTS::
-+        DESTINATION ${CMAKE_INSTALL_DATADIR}/enkiTS)
++        DESTINATION ${DATADIR}/enkiTS)
  endif()
  
  if( UNIX )
