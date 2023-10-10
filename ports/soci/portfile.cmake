@@ -55,4 +55,12 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+set(backends ${FEATURES})
+list(REMOVE_ITEM backends core boost)
+if(backends STREQUAL "")
+    message(STATUS "Attention:\n\nThis soci build doesn't include any backends.\n")
+    set(backends "none")
+endif()
+configure_file("${CURRENT_PORT_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")
