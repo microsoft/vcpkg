@@ -4294,7 +4294,7 @@
     },
     "libidn2": {
       "baseline": "2.3.4",
-      "port-version": 2
+      "port-version": 3
     },
     "libigl": {
       "baseline": "2.4.0",
