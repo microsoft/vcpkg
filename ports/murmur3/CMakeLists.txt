@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
-project(murmur3 VERSION 2015.05.02 LANGUAGES C)
+project(murmur3 LANGUAGES C)
+set(PROJECT_VERSION "${VERSION}")
 
 set(Header_Files "${PROJECT_NAME}.h")
 set(Source_Files "${PROJECT_NAME}.c")
