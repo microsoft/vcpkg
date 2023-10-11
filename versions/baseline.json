@@ -8128,6 +8128,10 @@
       "baseline": "1.13.1",
       "port-version": 1
     },
+    "talib": {
+      "baseline": "0.4.0",
+      "port-version": 0
+    },
     "taocpp-json": {
       "baseline": "2020-09-14",
       "port-version": 3
