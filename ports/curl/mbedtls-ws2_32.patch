@@ -1,8 +1,8 @@
 diff --git a/CMake/FindMbedTLS.cmake b/CMake/FindMbedTLS.cmake
-index 7bdb197..c8c5a73 100644
+index 814bd97..8b17eac 100644
 --- a/CMake/FindMbedTLS.cmake
 +++ b/CMake/FindMbedTLS.cmake
-@@ -26,6 +26,9 @@ find_library(MBEDX509_LIBRARY mbedx509)
+@@ -28,6 +28,9 @@ find_library(MBEDX509_LIBRARY mbedx509)
  find_library(MBEDCRYPTO_LIBRARY mbedcrypto)
  
  set(MBEDTLS_LIBRARIES "${MBEDTLS_LIBRARY}" "${MBEDX509_LIBRARY}" "${MBEDCRYPTO_LIBRARY}")
