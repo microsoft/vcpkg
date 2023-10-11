@@ -2371,6 +2371,7 @@ mesa[llvm](!uwp) = feature-fails # ERROR: Neither a subproject directory nor a l
 ms-quic(windows) = fail # fixed upstream. See https://github.com/microsoft/vcpkg/issues/29459
 msdfgen[core,extensions,geometry-preprocessing,openmp,tools](osx) = combination-fails # requires openmp (works with right setup)
 msdfgen[openmp](osx) = feature-fails # No openmp on osx
+mygui[tools](osx) = feature-fails # Linker errors undefined symbols. See https://github.com/microsoft/vcpkg/issues/34416
 opencv2[ffmpeg] = feature-fails # ffmpeg5+ is not supported under opencv2. See https://github.com/microsoft/vcpkg/issues/32151
 opencv2[python](osx) = feature-fails # requires python2
 opencv2[world] = feature-fails # See https://github.com/microsoft/vcpkg/issues/29943
