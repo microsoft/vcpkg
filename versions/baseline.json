@@ -9170,7 +9170,7 @@
     },
     "zoe": {
       "baseline": "3.0",
-      "port-version": 1
+      "port-version": 0
     },
     "zookeeper": {
       "baseline": "3.5.6",
