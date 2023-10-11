@@ -1,5 +1,6 @@
 ## First time machine setup:
 * [ ] Install Azure PowerShell: https://docs.microsoft.com/en-us/powershell/azure/install-az-ps
+* [ ] Run `Connect-AzAccount -Subscription CPP_GITHUB`
 * [ ] Install Docker
 
 ## Each Patch Tuesday:
