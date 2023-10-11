@@ -1709,8 +1709,8 @@
       "port-version": 10
     },
     "colmap": {
-      "baseline": "2023-03-12",
-      "port-version": 1
+      "baseline": "2023-10-01",
+      "port-version": 0
     },
     "color-console": {
       "baseline": "2022-03-20",
@@ -4561,8 +4561,8 @@
       "port-version": 16
     },
     "libpq": {
-      "baseline": "15.3",
-      "port-version": 2
+      "baseline": "16.0",
+      "port-version": 0
     },
     "libpqxx": {
       "baseline": "7.8.1",
@@ -5834,7 +5834,7 @@
     },
     "nmap": {
       "baseline": "7.70",
-      "port-version": 10
+      "port-version": 11
     },
     "nmslib": {
       "baseline": "2.1.1",
@@ -6681,7 +6681,7 @@
       "port-version": 0
     },
     "pugixml": {
-      "baseline": "1.13.0",
+      "baseline": "1.14",
       "port-version": 0
     },
     "pulzed-mini": {
@@ -7561,8 +7561,8 @@
       "port-version": 6
     },
     "sdl2": {
-      "baseline": "2.28.3",
-      "port-version": 1
+      "baseline": "2.28.4",
+      "port-version": 0
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -7818,7 +7818,7 @@
     },
     "soci": {
       "baseline": "4.0.3",
-      "port-version": 1
+      "port-version": 2
     },
     "socket-io-client": {
       "baseline": "2023-02-14",
@@ -7830,7 +7830,7 @@
     },
     "soem": {
       "baseline": "2023-06-09",
-      "port-version": 0
+      "port-version": 1
     },
     "soil": {
       "baseline": "2021-04-22",
@@ -8127,6 +8127,10 @@
     "taglib": {
       "baseline": "1.13.1",
       "port-version": 1
+    },
+    "talib": {
+      "baseline": "0.4.0",
+      "port-version": 0
     },
     "taocpp-json": {
       "baseline": "2020-09-14",
@@ -8862,7 +8866,7 @@
     },
     "winpcap": {
       "baseline": "4.1.3",
-      "port-version": 11
+      "port-version": 12
     },
     "winpty": {
       "baseline": "0.4.3",

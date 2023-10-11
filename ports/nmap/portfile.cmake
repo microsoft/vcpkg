@@ -18,9 +18,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
     list(APPEND DEL_PROJS "libpcap" "libpcre" "libssh2" "libz")
     foreach (DEL_PROJ ${DEL_PROJS})
-        file(REMOVE_RECURSE ${SOURCE_PATH}/${DEL_PROJ})
+        file(REMOVE_RECURSE "${SOURCE_PATH}/${DEL_PROJ}")
     endforeach()
-    
+
+  if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/bin/Packet.dll")
+    vcpkg_replace_string("${SOURCE_PATH}/mswin32/pcap-include/pcap/export-defs.h" "#define PCAP_API_DEF	__declspec(dllimport)" "#define PCAP_API_DEF		")
+  else() # editable
+    vcpkg_replace_string("${SOURCE_PATH}/mswin32/pcap-include/pcap/export-defs.h" "#define PCAP_API_DEF		" "#define PCAP_API_DEF	__declspec(dllimport)")
+  endif()
+
     # Clear
     vcpkg_execute_required_process(
         COMMAND "devenv.exe"
@@ -28,7 +34,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
                 /Clean
         WORKING_DIRECTORY ${SOURCE_PATH}/mswin32
     )
-    
     # Uprade
     message(STATUS "Upgrade solution...")
     vcpkg_execute_required_process(
@@ -38,10 +43,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         WORKING_DIRECTORY ${SOURCE_PATH}/mswin32
         LOGNAME upgrade-Packet-${TARGET_TRIPLET}
     )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/mswin32/Lib")
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH mswin32/nmap.vcxproj
         PLATFORM ${MSBUILD_PLATFORM}
+        ADDITIONAL_LIBS Packet.lib wpcap.lib User32.lib Crypt32.lib
     )
 else()
     set(ENV{LDFLAGS} "$ENV{LDFLAGS} -pthread")
