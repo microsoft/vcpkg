@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "opentelemetry-proto",
+  "version-semver": "0.14.0",
+  "port-version": 1,
+  "description": [
+    "OpenTelemetry protocol (OTLP) specification and Protobuf definitions",
+    "The OpenTelemetry Protocol (OTLP) specification describes the encoding, transport, and delivery mechanism of telemetry data between telemetry sources, intermediate nodes such as collectors and telemetry backends."
+  ],
+  "homepage": "https://github.com/open-telemetry/opentelemetry-proto",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "abseil",
+    "protobuf",
+    "grpc"
+  ]
+}
