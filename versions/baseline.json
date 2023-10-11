@@ -2546,7 +2546,7 @@
     },
     "ffmpeg": {
       "baseline": "6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ffnvcodec": {
       "baseline": "11.1.5.2",
