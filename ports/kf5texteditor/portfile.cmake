@@ -23,9 +23,31 @@ else()
     file(GLOB TEMP_DESKTOP_FILES_REL "${CURRENT_PACKAGES_DIR}/share/kservicetypes5/*")
 endif()
 
+find_program(MSGMERGE NAMES msgmerge
+    PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/gettext"
+          "${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin"
+    REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH
+)
+message(STATUS "Using msgmerge: ${MSGMERGE}")
+
+find_program(MSGFMT NAMES msgfmt
+    PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/gettext"
+          "${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin"
+    REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH
+)
+message(STATUS "Using msgfmt: ${MSGFMT}")
+
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND HOST_TOOL_OPTIONS
+        -DGETTEXT_MSGMERGE_EXECUTABLE:FILEPATH="${MSGMERGE}"
+        -DGETTEXT_MSGFMT_EXECUTABLE:FILEPATH="${MSGFMT}"
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${HOST_TOOL_OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_KAUTH_DEFAULT=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins

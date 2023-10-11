@@ -6,6 +6,13 @@
   "dependencies": [
     "ecm",
     "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
     "kf5archive",
     "kf5config",
     "kf5guiaddons",
