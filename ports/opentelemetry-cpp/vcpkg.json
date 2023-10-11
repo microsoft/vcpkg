@@ -38,7 +38,14 @@
     "otlp": {
       "description": "Whether to include the OpenTelemetry Protocol in the SDK",
       "dependencies": [
-        "protobuf"
+        {
+          "name": "opentelemetry-cpp",
+          "default-features": false,
+          "features": [
+            "otlp-grpc",
+            "otlp-http"
+          ]
+        }
       ]
     },
     "otlp-grpc": {
