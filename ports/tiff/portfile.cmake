@@ -69,22 +69,9 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRE
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES
-        fax2ps
-        fax2tiff
-        pal2rgb
-        ppm2tiff
-        raw2tiff
-        tiff2bw
-        tiff2pdf
-        tiff2ps
-        tiff2rgba
-        tiffcmp
         tiffcp
-        tiffcrop
-        tiffdither
         tiffdump
         tiffinfo
-        tiffmedian
         tiffset
         tiffsplit
         AUTO_CLEAN
