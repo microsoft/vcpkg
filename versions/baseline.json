@@ -2666,7 +2666,7 @@
     },
     "fontconfig": {
       "baseline": "2.14.2",
-      "port-version": 0
+      "port-version": 1
     },
     "foonathan-lexy": {
       "baseline": "2022.12.1",
