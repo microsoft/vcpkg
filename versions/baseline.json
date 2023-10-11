@@ -8192,6 +8192,10 @@
       "baseline": "2023.1",
       "port-version": 0
     },
+    "thomasmonkman-filewatch": {
+      "baseline": "2023-01-16",
+      "port-version": 0
+    },
     "thor": {
       "baseline": "2022-04-16",
       "port-version": 0
