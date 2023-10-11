@@ -6818,7 +6818,7 @@
     },
     "qt5-multimedia": {
       "baseline": "5.15.11",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-networkauth": {
       "baseline": "5.15.11",
