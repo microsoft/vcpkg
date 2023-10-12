@@ -5,11 +5,11 @@
   "homepage": "https://github.com/qtrest/qtrest",
   "supports": "!uwp",
   "dependencies": [
+    "qt5-base",
     {
       "name": "vcpkg-cmake",
       "host": true
-    },
-	"qt5-base"
+    }
   ],
   "features": {
     "qml": {
