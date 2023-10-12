@@ -1,0 +1,42 @@
+From cda32e18a08fa2f2289a7409f37f44d5643e6aea Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 23 Jun 2023 01:20:38 -0700
+Subject: [PATCH] gallium: Fix build with llvm 17
+
+These headers are not available for C files in llvm 17+
+and they seem to be not needed to compile after all with llvm 17
+so add conditions to exclude them for llvm >= 17
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ src/gallium/auxiliary/gallivm/lp_bld_init.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/gallium/auxiliary/gallivm/lp_bld_init.c b/src/gallium/auxiliary/gallivm/lp_bld_init.c
+index cd2108f3a088d..b1a4d0388a6a0 100644
+--- a/src/gallium/auxiliary/gallivm/lp_bld_init.c
++++ b/src/gallium/auxiliary/gallivm/lp_bld_init.c
+@@ -46,15 +46,19 @@
+ #if GALLIVM_USE_NEW_PASS == 1
+ #include <llvm-c/Transforms/PassBuilder.h>
+ #elif GALLIVM_HAVE_CORO == 1
++#if LLVM_VERSION_MAJOR < 17
+ #include <llvm-c/Transforms/Scalar.h>
+-#if LLVM_VERSION_MAJOR >= 7
++#endif
++#if LLVM_VERSION_MAJOR >= 7 && LLVM_VERSION_MAJOR < 17
+ #include <llvm-c/Transforms/Utils.h>
+ #endif
+ #if LLVM_VERSION_MAJOR <= 8 && (DETECT_ARCH_AARCH64 || DETECT_ARCH_ARM || DETECT_ARCH_S390 || DETECT_ARCH_MIPS64)
+ #include <llvm-c/Transforms/IPO.h>
+ #endif
++#if LLVM_VERSION_MAJOR < 17
+ #include <llvm-c/Transforms/Coroutines.h>
+ #endif
++#endif
+ 
+ unsigned gallivm_perf = 0;
+ 
+-- 
+GitLab
+
