@@ -6180,6 +6180,10 @@
       "baseline": "2.0.0",
       "port-version": 0
     },
+    "opentelemetry-proto": {
+      "baseline": "0.14.0",
+      "port-version": 1
+    },
     "opentracing": {
       "baseline": "1.6.0",
       "port-version": 4
