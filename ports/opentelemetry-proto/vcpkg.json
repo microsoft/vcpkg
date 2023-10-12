@@ -10,6 +10,7 @@
   "homepage": "https://github.com/open-telemetry/opentelemetry-proto",
   "license": "Apache-2.0",
   "dependencies": [
+    "abseil",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,8 +19,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "abseil",
-    "protobuf",
-    "grpc"
-  ]
+    "protobuf"
+  ],
+  "features": {
+    "otlp-grpc": {
+      "description": "Whether to include OTLP gRPC.",
+      "dependencies": [
+        "grpc"
+      ]
+    }
+  }
 }

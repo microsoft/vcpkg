@@ -1,5 +1,3 @@
-set(VERSION "0.14.0")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-PROTO
@@ -9,13 +7,23 @@ vcpkg_from_github(
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/tools.cmake" DESTINATION "${SOURCE_PATH}")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        otlp-grpc WITH_OTLP_GRPC
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
-        -DWITH_OTLP_GRPC=ON
+    OPTIONS
+        -DWITH_ABSEIL=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+
+# Remove the duplicated header files in the debug directory
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
