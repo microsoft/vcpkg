@@ -5529,7 +5529,7 @@
       "port-version": 0
     },
     "mongoose": {
-      "baseline": "7.11",
+      "baseline": "7.12",
       "port-version": 0
     },
     "monkeys-audio": {
