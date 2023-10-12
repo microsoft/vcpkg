@@ -4,9 +4,9 @@
 variables:
   android-pool: 'PrAnd-1ES-Pool'
   linux-pool: 'PrLin-1ES-Pool'
-  windows-pool: 'PrWin-2023-09-13'
+  windows-pool: 'PrWin-2023-10-11'
   osx-pool: 'PrOsx-2023-09-11'
-  linux-docker-image: 'andcontainerregistry.azurecr.io/vcpkg-android:2023-09-13'
+  linux-docker-image: 'andcontainerregistry.azurecr.io/vcpkg-android:2023-10-11'
 
 parameters:
   - name: vcpkgToolSha
