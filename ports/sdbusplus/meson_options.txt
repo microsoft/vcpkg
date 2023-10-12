@@ -1,3 +1,0 @@
-option('tests', type: 'feature', description: 'Build tests')
-option('examples', type: 'feature', description: 'Build examples')
-option('async', type: 'feature', description: 'Build async interface')
