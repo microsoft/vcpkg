@@ -1,6 +1,6 @@
 {
   "name": "cmark",
-  "version-semver": "0.30.1",
+  "version-semver": "0.30.3",
   "description": "CommonMark parsing and rendering library",
   "homepage": "https://github.com/commonmark/cmark",
   "dependencies": [
@@ -15,7 +15,8 @@
   ],
   "features": {
     "tools": {
-      "description": "Build tools"
+      "description": "Build tools",
+      "supports": "!uwp"
     }
   }
 }
