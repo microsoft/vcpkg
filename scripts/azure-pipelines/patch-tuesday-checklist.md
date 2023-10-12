@@ -5,8 +5,11 @@
 
 ## Each Patch Tuesday:
 * [ ] Check for depends:vm-update PRs and make relevant changes if possible.
-* [ ] Check for Service 360 alerts about vulnerable software we are installing in the VMs and
-      update that. (Most often PowerShell needs to be updated to the current 7.2.x release)
+* [ ] Check for Service 360 alerts (possibly at https://aka.ms/s360 ?) against the service named
+      "C++ VCPKG Validation" about vulnerable software we are installing in the VMs and update that.
+      (Most often PowerShell needs to be updated)
+* [ ] Check for any other software for the Windows images we wish to update and make the edits to do
+      so in `scripts/azure-pipelines/windows`
 * [ ] Run android/create-docker-image.ps1
 * [ ] Update azure-pipelines.yml to point to the new linux docker image from Azure Container Registry
 * [ ] Run windows/create-image.ps1
@@ -17,7 +20,8 @@
 * [ ] Submit PR with those changes.
 * [ ] Submit a full CI rebuild with those changes: https://dev.azure.com/vcpkg/public/_build?definitionId=29  
       refs/pull/NUMBER/head
+* [ ] Update the managed image for compiler testing and delete unused images.
 * [ ] Run `generate-sas-tokens.ps1` and update the relevant libraries on dev.azure.com/vcpkg and
       devdiv.visualstudio.com.
-* [ ] Mint a new macOS base box.
+* [ ] Mint a new macOS base box.  (See instructions in `scripts/azure-pipelines/osx/README.md`)
 * [ ] Deploy the new base box to all hosts.
