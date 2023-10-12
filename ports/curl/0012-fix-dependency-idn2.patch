@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9f6de81..6702845 100644
+index 1b19c68..bb5fba9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -632,6 +632,7 @@ endif()
+@@ -839,7 +839,8 @@ endif()
  # Check for idn2
  option(USE_LIBIDN2 "Use libidn2 for IDN support" ON)
  if(USE_LIBIDN2)

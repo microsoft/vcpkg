@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 874a237..3974956 100644
+index 7e513f6..049ac34 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1617,8 +1617,17 @@ if(CURL_ENABLE_EXPORT_TARGET)
+@@ -1727,8 +1727,17 @@ if(CURL_ENABLE_EXPORT_TARGET)
    )
  endif()
  
