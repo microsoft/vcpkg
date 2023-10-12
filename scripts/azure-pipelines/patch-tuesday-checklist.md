@@ -16,6 +16,7 @@
 * [ ] Run windows/create-vmss.ps1
 * [ ] Create new pools for these in Azure DevOps: https://dev.azure.com/vcpkg/public/_settings/agentqueues
     * Windows: 22 agents
+    * Make sure to check 'Grant access permission to all pipelines'
 * [ ] Update azure-pipelines.yml to point to the new pools.
 * [ ] Submit PR with those changes.
 * [ ] Submit a full CI rebuild with those changes: https://dev.azure.com/vcpkg/public/_build?definitionId=29  
