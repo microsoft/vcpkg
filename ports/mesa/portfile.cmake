@@ -7,19 +7,22 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF b590fd1951a1949e5fe2bbfd61f0814c402af263 # mesa-23.0.1
-    SHA512 7a66a587ef01fb58b51f3ebea584b40f70114844484df528d38ad1caa071fac7d6e23f1ed80309847f7e28468071571294bb8812a9882c0b86c89cf5a4144fe9
+    REF mesa-${VERSION}
+    SHA512 96f7602c98d532a269116bd5d3f9cbe87ca4425b309467cc19f83277a0faaa9804edea72dcaeb6f7774cac17790d5d76b58c357ef639cb6064e7480d93b861bf
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
+    PATCHES
+        gallium-fix-build-with-llvm-17.patch
+        clover-llvm-move-to-modern-pass-manager.patch
 )
 
-x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako )
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako)
 
 vcpkg_find_acquire_program(FLEX)
-get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_find_acquire_program(BISON)
-get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 if(WIN32) # WIN32 HOST probably has win_flex and win_bison!

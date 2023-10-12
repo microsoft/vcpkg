@@ -5,6 +5,7 @@ vcpkg_from_sourceforge(
     FILENAME "mpg123-${VERSION}.tar.bz2"
     SHA512 5dd550e06f5d0d432cac1b7e546215e56378b44588c1a98031498473211e08bc4228de45be41f7ba764f7f6c0eb752a6501235bcc3712c9a8d8852ae3c607d98
     PATCHES
+        fix-checktypesize.patch
         fix-modulejack.patch
         fix-m1-build.patch
 )

@@ -960,8 +960,6 @@ python3:x64-android=fail
 # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
 qbittorrent:x64-linux=fail
-# Triggers ICE in release build.
-qcoro:x64-osx=fail
 qpid-proton:arm-neon-android=fail
 qpid-proton:arm64-uwp=fail
 qpid-proton:arm64-android=fail
