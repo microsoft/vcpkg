@@ -15,7 +15,7 @@ vcpkg_from_github(
 )
 
 # Hack to work with old meson version
-file(INSTALL "${SOURCE_PATH}/meson.options" DESTINATION "${SOURCE_PATH}" RENAME meson_options.txt)
+file(COPY_FILE "${SOURCE_PATH}/meson.options" "${SOURCE_PATH}/meson_options.txt")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
