@@ -5,7 +5,7 @@
   "homepage": "https://api.kde.org/frameworks/ktexteditor/html/",
   "dependencies": [
     "ecm",
-    "gettext",
+    "gettext-libintl",
     {
       "name": "gettext",
       "host": true,
