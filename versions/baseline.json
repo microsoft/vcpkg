@@ -5549,7 +5549,7 @@
       "port-version": 3
     },
     "mosquitto": {
-      "baseline": "2.0.14",
+      "baseline": "2.0.18",
       "port-version": 0
     },
     "mozjpeg": {
