@@ -268,7 +268,8 @@ index 5339454..45e07c0 100644
 -  hunter_add_package(minizip)
 +IF(1)
 +  #hunter_add_package(minizip)
-   find_package(minizip CONFIG REQUIRED)
+-  find_package(minizip CONFIG REQUIRED)
++  find_package(unofficial-minizip CONFIG REQUIRED)
  ELSE()
    SET( unzip_SRCS
 @@ -969,9 +969,9 @@ ENDIF()
@@ -383,7 +384,8 @@ index 5339454..45e07c0 100644
 +      ${OPENDDL_PARSER_LIBRARIES}
 -      #poly2tri::poly2tri
 +      poly2tri::poly2tri
-       minizip::minizip
+-      minizip::minizip
++      unofficial::minizip::minizip
 -      ZLIB::zlib
 -      RapidJSON::rapidjson
 +      ZLIB::ZLIB

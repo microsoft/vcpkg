@@ -266,7 +266,7 @@
     },
     "assimp": {
       "baseline": "5.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "async-mqtt": {
       "baseline": "2.0.0",
