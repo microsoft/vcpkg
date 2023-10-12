@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://archive.apache.org/dist/apr/apr-util-1.6.1.tar.bz2"
-    FILENAME "apr-util-1.6.1.tar.bz2"
-    SHA512 40eff8a37c0634f7fdddd6ca5e596b38de15fd10767a34c30bbe49c632816e8f3e1e230678034f578dd5816a94f246fb5dfdf48d644829af13bf28de3225205d
+  URLS "https://archive.apache.org/dist/apr/apr-util-${VERSION}.tar.bz2"
+    FILENAME "apr-util-${VERSION}.tar.bz2"
+    SHA512 8050a481eeda7532ef3751dbd8a5aa6c48354d52904a856ef9709484f4b0cc2e022661c49ddf55ec58253db22708ee0607dfa7705d9270e8fee117ae4f06a0fe
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

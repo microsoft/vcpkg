@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 abba38b2451459f86735c010a9492875a70aa9935978a2032a7882b3d37a136c17bc7ffcd70aff617539e5602302df2957ba153f8fc8dcae866e9baf364261a2
+    SHA512 8730c2ecfeccf221e746df9f8e449d31934fd7e6f7861631d4c38e891cfc7b5ab07ffb48b56048031820f771966d6435bee2996738934bca9324548aeba5b30d
     HEAD_REF master
     PATCHES 
         fix-glog.patch
@@ -38,6 +38,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/transport/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/util/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/detail/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/debug_thrift_data_difference/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/common/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/test"
