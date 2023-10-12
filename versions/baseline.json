@@ -1993,7 +1993,7 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.3.0",
+      "baseline": "8.4.0",
       "port-version": 0
     },
     "curlpp": {
