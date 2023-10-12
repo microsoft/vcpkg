@@ -11,6 +11,7 @@
   "license": "Apache-2.0",
   "dependencies": [
     "abseil",
+    "protobuf",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,8 +19,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "protobuf"
+    }
   ],
   "features": {
     "otlp-grpc": {
