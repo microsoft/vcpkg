@@ -1,11 +1,13 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ginkgo-project/ginkgo
     REF v1.6.0
     SHA512 507a17bc9ad010c235c4ae49ac4bef3f4d5b65b4ea02bfa5cad5ea578fa65d28f564d1faf0a1f5618a6e72d744217f58bdff68c5f1fffc9cfb484800f7f84c50
     HEAD_REF master
-    PATCHES
-        msvc-debug-flags.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
