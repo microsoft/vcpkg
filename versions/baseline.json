@@ -517,8 +517,8 @@
       "port-version": 0
     },
     "basisu": {
-      "baseline": "1.11",
-      "port-version": 7
+      "baseline": "1.16.4",
+      "port-version": 0
     },
     "bcg729": {
       "baseline": "1.1.1",
