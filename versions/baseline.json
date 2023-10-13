@@ -3133,7 +3133,7 @@
       "port-version": 6
     },
     "gz-cmake3": {
-      "baseline": "3.0.1",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "gz-common5": {
@@ -3606,7 +3606,7 @@
     },
     "jsoncpp": {
       "baseline": "1.9.5",
-      "port-version": 0
+      "port-version": 1
     },
     "jsonifier": {
       "baseline": "0.9.9",
