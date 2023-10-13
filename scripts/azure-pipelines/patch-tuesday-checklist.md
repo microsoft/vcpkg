@@ -24,6 +24,12 @@
 * [ ] Look at that and compare with recent build and resolve anything that's not an existing baseline issue.
 * [ ] Merge the PR.
 * [ ] Update the managed image for compiler testing and delete unused images.
+     * CPP_GITHUB\vcpkg-image-minting\PrWinEA
+     * Standard HDD LRS
+         * East Asia, 1 Replica
+         * West US 2, 1 Replica
+         * West US 3, 1 Replica
+* [ ] After the last build finishes on the previous pool, delete it in the Azure Devops *Organization* UI and its Resource Group. ( https://dev.azure.com/vcpkg/_settings/agentpools ?)
 * [ ] Run `generate-sas-tokens.ps1` and update the relevant libraries on dev.azure.com/vcpkg and
       devdiv.visualstudio.com.
 * [ ] Mint a new macOS base box.  (See instructions in `scripts/azure-pipelines/osx/README.md`)
