@@ -97,14 +97,6 @@
       "name": "ffmpeg",
       "default-features": false,
       "features": [
-        "x265"
-      ],
-      "platform": "!uwp & !(arm & windows)"
-    },
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
         "aom"
       ],
       "platform": "!(windows & arm & !uwp)"
@@ -116,6 +108,14 @@
         "dav1d"
       ],
       "platform": "!(uwp | arm | x86 | osx)"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "x265"
+      ],
+      "platform": "!uwp & !(arm & windows)"
     },
     {
       "name": "ffmpeg",
