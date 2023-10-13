@@ -960,8 +960,6 @@ python3:x64-android=fail
 # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
 qbittorrent:x64-linux=fail
-# Triggers ICE in release build.
-qcoro:x64-osx=fail
 qpid-proton:arm-neon-android=fail
 qpid-proton:arm64-uwp=fail
 qpid-proton:arm64-android=fail
@@ -1296,13 +1294,9 @@ wasmedge:arm64-android=fail
 wasmedge:x64-android=fail
 wavpack:arm-neon-android=fail
 wavpack:x64-android=fail
-winpcap:arm64-windows      = skip
-winpcap:arm64-uwp            = skip
-winpcap:x64-uwp            = skip
-winpcap:x64-windows        = skip
-winpcap:x64-windows-static = skip
-winpcap:x64-windows-static-md=skip
-winpcap:x86-windows        = skip
+# Collides with libpcap -> similar headers
+winpcap:x64-windows = skip
+winpcap:x86-windows = skip
 wordnet:arm-neon-android=fail
 wordnet:arm64-android=fail
 wordnet:x64-android=fail
@@ -1418,6 +1412,11 @@ vcpkg-ci-paraview:x64-windows-static-md=pass
 vcpkg-ci-paraview:x64-windows-static=pass
 vcpkg-ci-paraview:x64-windows=pass
 vcpkg-ci-paraview:x86-windows=pass
+vcpkg-ci-soci:x64-linux=pass
+vcpkg-ci-soci:x64-osx=pass
+vcpkg-ci-soci:x64-windows=pass
+vcpkg-ci-soci:x64-windows-static=pass
+vcpkg-ci-soci:x64-windows-static-md=pass
 vcpkg-ci-wxwidgets:arm64-windows=pass
 vcpkg-ci-wxwidgets:x64-linux=pass
 vcpkg-ci-wxwidgets:x64-osx=pass

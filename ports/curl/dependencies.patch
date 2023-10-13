@@ -1,8 +1,8 @@
 diff --git a/CMake/curl-config.cmake.in b/CMake/curl-config.cmake.in
-index dbe4ed2..edf87fa 100644
+index 056907c..c89c686 100644
 --- a/CMake/curl-config.cmake.in
 +++ b/CMake/curl-config.cmake.in
-@@ -31,5 +31,15 @@ if(@USE_ZLIB@)
+@@ -31,6 +31,16 @@ if(@USE_ZLIB@)
    find_dependency(ZLIB @ZLIB_VERSION_MAJOR@)
  endif()
  
@@ -18,11 +18,12 @@ index dbe4ed2..edf87fa 100644
 +
  include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
  check_required_components("@PROJECT_NAME@")
+ 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ad3a63d..917cdbf 100644
+index 049ac34..cc0fe19 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -151,7 +151,8 @@ set(CURL_LIBS "")
+@@ -178,7 +178,8 @@ set(CURL_LIBS "")
  
  if(ENABLE_ARES)
    set(USE_ARES 1)
@@ -32,7 +33,7 @@ index ad3a63d..917cdbf 100644
    list(APPEND CURL_LIBS ${CARES_LIBRARY})
  endif()
  
-@@ -524,7 +525,9 @@ endif()
+@@ -590,7 +591,9 @@ endif()
  option(CURL_BROTLI "Set to ON to enable building curl with brotli support." OFF)
  set(HAVE_BROTLI OFF)
  if(CURL_BROTLI)
@@ -43,7 +44,7 @@ index ad3a63d..917cdbf 100644
    if(BROTLI_FOUND)
      set(HAVE_BROTLI ON)
      set(CURL_LIBS "${BROTLI_LIBRARIES};${CURL_LIBS}")  # For 'ld' linker. Emulate `list(PREPEND ...)` to stay compatible with <v3.15 CMake.
-@@ -796,7 +799,13 @@ mark_as_advanced(CURL_USE_LIBSSH2)
+@@ -873,7 +876,13 @@ mark_as_advanced(CURL_USE_LIBSSH2)
  set(USE_LIBSSH2 OFF)
  
  if(CURL_USE_LIBSSH2)
