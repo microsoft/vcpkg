@@ -1,7 +1,7 @@
 diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
 --- a/CMake/Dependencies.cmake
 +++ b/CMake/Dependencies.cmake
-@@ -73,23 +73,26 @@
+@@ -73,23 +73,27 @@
  # Core dependencies
  #######################################################################
  
@@ -13,7 +13,8 @@ diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
  if (ZLIB_FOUND)
    # Find zziplib
 -  find_package(ZZip)
-+  find_package(ZZip NAMES unofficial-zziplib CONFIG REQUIRED)
++  find_package(ZZip NAMES unofficial-zziplib REQUIRED)
++  find_path(ZZip_INCLUDE_DIRS NAMES zzip/zzip.h)
 +  set(ZZip_LIBRARIES unofficial::zziplib::libzzip)
    macro_log_feature(ZZip_FOUND "zziplib" "Extract data from zip archives" "http://zziplib.sourceforge.net" FALSE "" "")
  endif ()
