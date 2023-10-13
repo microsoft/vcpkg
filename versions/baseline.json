@@ -4526,7 +4526,7 @@
     },
     "libosip2": {
       "baseline": "5.2.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libosmium": {
       "baseline": "2.20.0",
@@ -8142,7 +8142,7 @@
     },
     "talib": {
       "baseline": "0.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "taocpp-json": {
       "baseline": "2020-09-14",
