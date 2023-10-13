@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qtrest/qtrest
-    REF 0.3.0
-    SHA512 380b724e8dff1dda7a337dc37654b6c11f4f8816f43f5316168f16e8c97ae546b9e4b553b0064380b50c1a823b62a60a9c02fbbcddfb0adda7e9e33613989f3c	
+    REF ${VERSION}
+    SHA512 2bdbbdde7c4f7a27943c93a2a26abe89e087e6b7c32d0e481422a8ad3e78c66c6921ef00c1cbf17f3b61db8a678685371c819218d10576ac9ec1548262415c04	
     HEAD_REF master
 )
 
@@ -12,25 +12,24 @@ else()
     set(BUILD_TYPE STATIC)
 endif()
 
-list(APPEND CORE_OPTIONS
-    -DBUILD_TYPE=${BUILD_TYPE}
-    -DBUILD_EXAMPLE=0
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        qml WITH_QML_SUPPORT
 )
-
-if("qml" IN_LIST FEATURES)
-    list(APPEND CORE_OPTIONS -DWITH_QML_SUPPORT=1)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${CORE_OPTIONS}
+    OPTIONS
+        -DBUILD_TYPE=${BUILD_TYPE}
+        -DBUILD_EXAMPLE=0
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
