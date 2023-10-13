@@ -31,7 +31,6 @@ vcpkg_cmake_configure(
         -DGINKGO_SKIP_DEPENDENCY_UPDATE=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         ${FEATURE_OPTIONS}
-        ${ADDITIONAL_FLAGS}
 )
 
 vcpkg_cmake_install()
