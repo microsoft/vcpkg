@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Esri/lerc
-    REF  v4.0.0
-    SHA512 36fe453b6e732f6bed554d1c1c5cd4668aec63593d6de11f12b659c7b9cbc059ac9aaacc6cea483b3257d522f1b07e13c299914d08b1f8aeb0bb2cde42ba47cf
+    REF "js_v${VERSION}"
+    SHA512 e7389576210e1fcc122b93194c20e5ea9c514514283695b8d770c3133ea1fdffdc06729552041aab2840c5aade676762b0d86e79bfc018fd57578987ad18e43a
     HEAD_REF master
     PATCHES
         "create_package.patch"
