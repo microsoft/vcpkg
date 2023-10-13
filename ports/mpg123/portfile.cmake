@@ -15,11 +15,17 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     yasm_tool_helper(APPEND_TO_PATH)
 endif()
 
+vcpkg_list(SET options)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_list(APPEND options "-DLIBMPG123_LIBS=-lshlwapi")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/ports/cmake"
     OPTIONS
         -DUSE_MODULES=OFF
         -DBUILD_PROGRAMS=OFF
+        ${options}
     MAYBE_UNUSED_VARIABLES
         BUILD_PROGRAMS
 )
