@@ -50,4 +50,10 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/nifti/NIFTITargets.cmake"
+    [[INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/nifti"]]
+    [[INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;${_IMPORT_PREFIX}/include/nifti"]]
+    )
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
