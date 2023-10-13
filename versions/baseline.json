@@ -1945,7 +1945,7 @@
       "port-version": 0
     },
     "cryptopp": {
-      "baseline": "8.8.0",
+      "baseline": "8.9.0",
       "port-version": 0
     },
     "cserialport": {
