@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.1)
 
-project(OtlpProtoLib CXX)
+project(opentelemetry_proto CXX)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/tools.cmake")
 
