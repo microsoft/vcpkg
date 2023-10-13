@@ -7056,10 +7056,6 @@
       "baseline": "6.5.3",
       "port-version": 0
     },
-    "qtrest": {
-      "baseline": "0.3.0",
-      "port-version": 0
-    },
     "qtscxml": {
       "baseline": "6.5.3",
       "port-version": 0
