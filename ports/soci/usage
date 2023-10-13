@@ -1,7 +1,5 @@
 soci provides CMake targets:
 
-    find_package(soci CONFIG REQUIRED)
+    find_package(SOCI CONFIG REQUIRED)
+    # Using core (loading backends at runtime)
     target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:SOCI::soci_core>,SOCI::soci_core,SOCI::soci_core_static>)
-
-    # Linking specific backends (enabled: @backends@)
-    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:SOCI::soci_<BACKEND>,SOCI::soci_<BACKEND>,SOCI::soci_<BACKEND>_static>)
