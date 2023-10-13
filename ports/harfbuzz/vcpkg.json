@@ -24,7 +24,10 @@
     "cairo": {
       "description": "Enable Cairo graphics library support",
       "dependencies": [
-        "cairo"
+        {
+          "name": "cairo",
+          "default-features": false
+        }
       ]
     },
     "coretext": {
