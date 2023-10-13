@@ -23,6 +23,7 @@
         "mp3lame",
         "nonfree",
         "openjpeg",
+        "openmpt",
         "openssl",
         "opus",
         "postproc",
