@@ -5830,7 +5830,7 @@
     },
     "nifticlib": {
       "baseline": "2020-04-30",
-      "port-version": 4
+      "port-version": 5
     },
     "nlohmann-fifo-map": {
       "baseline": "2018.05.07",
