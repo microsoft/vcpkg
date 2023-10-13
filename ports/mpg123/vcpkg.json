@@ -16,8 +16,12 @@
       "host": true
     },
     {
-      "name": "yasm-tool-helper",
-      "platform": "windows"
+      "name": "yasm",
+      "host": true,
+      "features": [
+        "tools"
+      ],
+      "platform": "windows & !mingw"
     }
   ]
 }
