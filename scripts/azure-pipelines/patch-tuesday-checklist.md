@@ -21,6 +21,8 @@
 * [ ] Submit PR with those changes.
 * [ ] Submit a full CI rebuild with those changes: https://dev.azure.com/vcpkg/public/_build?definitionId=29  
       refs/pull/NUMBER/head
+* [ ] Look at that and compare with recent build and resolve anything that's not an existing baseline issue.
+* [ ] Merge the PR.
 * [ ] Update the managed image for compiler testing and delete unused images.
 * [ ] Run `generate-sas-tokens.ps1` and update the relevant libraries on dev.azure.com/vcpkg and
       devdiv.visualstudio.com.
