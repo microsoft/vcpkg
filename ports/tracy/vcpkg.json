@@ -1,7 +1,7 @@
 {
   "name": "tracy",
   "version-semver": "0.9.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications.",
   "homepage": "https://github.com/wolfpld/tracy",
   "license": "BSD-3-Clause",
