@@ -4778,7 +4778,7 @@
     },
     "libtins": {
       "baseline": "4.3",
-      "port-version": 6
+      "port-version": 7
     },
     "libtomcrypt": {
       "baseline": "1.18.2",
