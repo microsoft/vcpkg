@@ -5668,6 +5668,10 @@
       "baseline": "2.3.4",
       "port-version": 0
     },
+    "murmur3": {
+      "baseline": "2015-05-02",
+      "port-version": 0
+    },
     "murmurhash": {
       "baseline": "2016-01-09",
       "port-version": 7
