@@ -24,6 +24,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 # Must specify args due to case sensitivity on some filesystems
 vcpkg_cmake_config_fixup(PACKAGE_NAME enkiTS CONFIG_PATH share/enkiTS)
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/enkiTS/enkiTS-config.cmake" "${CURRENT_PACKAGES_DIR}/share/enkiTS/enkiTSConfig.cmake")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
