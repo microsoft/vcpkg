@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 23d6abbd270885d7ae1ebb3c981f0c331a48d891e23caffe9e254f5e7e205bb0348add7b371526166a49b336f8076f92c11ef76ca81f48a6fd9f58812ec96d79
     HEAD_REF master
+    PATCHES
+        fix-win32-build.patch
 )
 
 if("icu" IN_LIST FEATURES)
