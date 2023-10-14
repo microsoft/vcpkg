@@ -4509,7 +4509,7 @@
       "port-version": 1
     },
     "libopenmpt": {
-      "baseline": "0.6.7",
+      "baseline": "0.6.12",
       "port-version": 0
     },
     "libopensp": {
