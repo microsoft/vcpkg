@@ -8,12 +8,16 @@ vcpkg_from_github(
         fix-hconfig-path.patch
         fix-cmake-output.patch
         fix-threads.patch
+        fix-compiler.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DFAST_BUILD=ON
+        -DBUILD_TESTING=OFF
+        -DBUILD_EXAMPLES=OFF
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
 )
 
 vcpkg_cmake_install()
@@ -22,4 +26,3 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/highs")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
