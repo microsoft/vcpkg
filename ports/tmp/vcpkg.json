@@ -4,8 +4,5 @@
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "!static & !((x86 | arm) & windows)",
-  "dependencies": [
-    "qtwebengine"
-  ]
+  "supports": "!static & !((x86 | arm) & windows)"
 }
