@@ -4145,11 +4145,11 @@
       "port-version": 0
     },
     "libeventheader-decode": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libeventheader-tracepoint": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libevhtp": {
@@ -4801,15 +4801,15 @@
       "port-version": 0
     },
     "libtracepoint": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libtracepoint-control": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libtracepoint-decode": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libu2f-server": {
