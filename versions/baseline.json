@@ -7266,7 +7266,7 @@
     },
     "readline-win32": {
       "baseline": "5.0",
-      "port-version": 7
+      "port-version": 8
     },
     "readosm": {
       "baseline": "1.1.0a",
