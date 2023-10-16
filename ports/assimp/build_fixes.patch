@@ -80,7 +80,7 @@ index 6551dcb..0796448 100644
 +find_dependency(pugixml CONFIG)
 +if(NOT @BUILD_SHARED_LIBS@)
 +    find_dependency(kubazip CONFIG)
-+    find_dependency(minizip CONFIG)
++    find_dependency(unofficial-minizip CONFIG)
 +    #find_dependency(openddlparser CONFIG)
 +    find_dependency(poly2tri CONFIG)
 +    find_dependency(polyclipping CONFIG)
