@@ -26,7 +26,10 @@
       "dependencies": [
         {
           "name": "cairo",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
         }
       ]
     },
