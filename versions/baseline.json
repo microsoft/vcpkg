@@ -5976,6 +5976,10 @@
       "baseline": "1.3.0",
       "port-version": 2
     },
+    "oboe": {
+      "baseline": "1.7.0",
+      "port-version": 0
+    },
     "observer-ptr-lite": {
       "baseline": "0.4.0",
       "port-version": 3
