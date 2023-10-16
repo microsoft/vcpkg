@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
-    REF v0.10.1
-    SHA512 8a105f4d854829995799016bb2837ec3c80da1cca0bc1833069a04928d6104677568d1e80fac02a4aa86d1b79b837586366fa28e2d21d43211f31bbb0e79399c
+    REF v0.11.0
+    SHA512 abca41b95152d30fc20fd51383447958347e19b123c798b321bcc3ab6850c4f70edd1cd89dc60fdce866afa3f8ffe50a913cdfb4ffbf2d3c1384937cf80183d8
     HEAD_REF master
     PATCHES
         install-tools.patch

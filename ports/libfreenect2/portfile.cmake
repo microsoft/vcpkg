@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenKinect/libfreenect2
-    REF v0.2.0
-    SHA512 3525e3f21462cecd3b198f64545786ffddc2cafdfd8146e5a46f0300b83f29f1ad0739618a07ab195c276149d7e2e909f7662e2d379a2880593cac75942b0666
+    REF "v${VERSION}"
+    SHA512 0fcee5471deb013d2b57581ef8d8838f652dfed2f457c4240d5b754674e949c59337a167ac74ad04b25ace69af470a7e014e0474a688d930a3323946feadee67
     HEAD_REF master
     PATCHES
         fix-dependency-libusb.patch
@@ -37,6 +37,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/GPL2" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/GPL2")
 
 vcpkg_fixup_pkgconfig()
