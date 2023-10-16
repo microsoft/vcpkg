@@ -6,9 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
+    list(APPEND OPTIONS -DENABLE_LIBCXX=OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${OPTIONS}
         -DCPPTOML_BUILD_EXAMPLES=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
