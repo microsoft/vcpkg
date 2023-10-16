@@ -1,5 +1,5 @@
 diff --git a/meson.build b/meson.build
-index 65e6ab51..87e2ed38 100644
+index 363b8c3b..a3cc862d 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -1,6 +1,6 @@
@@ -7,6 +7,6 @@ index 65e6ab51..87e2ed38 100644
          'cpp',
 -        default_options : ['buildtype=debugoptimized', 'b_sanitize=none', 'werror=false', 'optimization=s', 'cpp_std=c++14', 'strip=true'],
 +        default_options : ['buildtype=debugoptimized', 'b_sanitize=none', 'werror=false', 'optimization=s', 'cpp_std=c++14'],
-         version : '0.11.0',
+         version : '0.11.1',
          license : 'MIT')
  
