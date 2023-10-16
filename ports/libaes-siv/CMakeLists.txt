@@ -3,9 +3,7 @@ project(libaes-siv LANGUAGES C)
 set(PROJECT_VERSION "${VERSION}")
 
 set(Header_Files "aes_siv.h")
-set(Source_Files "aes_siv.c"
-        "bench.c"
-        "demo.c")
+set(Source_Files "aes_siv.c")
 
 add_library("${PROJECT_NAME}" "${Header_Files}" "${Source_Files}")
 
@@ -20,6 +18,22 @@ target_include_directories(
 target_compile_features("${PROJECT_NAME}" PRIVATE c_std_99)
 set(config_file "${CMAKE_BINARY_DIR}/include/aes_siv_config.h")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" "${config_file}")
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    set(CMAKE_C_FLAGS_DEBUG "-Wall -Wextra -Wstrict-prototypes -Wconversion -Og -ggdb3 -ftree-vectorize")
+    set(CMAKE_C_FLAGS_RELEASE "-Wall -Wextra -Wstrict-prototypes -Wconversion -O3 -fomit-frame-pointer -funroll-loops -ftree-vectorize -DNDEBUG")
+    set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Wall -Wextra -Wstrict-prototypes -Wconversion  -ggdb3 -O3 -funroll-loops -ftree-vectorize -DNDEBUG")
+    set(CMAKE_C_FLAGS_MINSIZEREL "-Wall -Wextra -Wstrict-prototypes -Wconversion -Os -fomit-frame-pointer -ftree-vectorize -DNDEBUG")
+endif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+
+if(CMAKE_C_COMPILER_ID STREQUAL Clang OR CMAKE_C_COMPILER_ID STREQUAL AppleClang)
+    set(CMAKE_C_FLAGS_DEBUG "-Wall -Wextra -Wstrict-prototypes -Wconversion -O0 -ggdb3 -ftree-vectorize")
+    set(CMAKE_C_FLAGS_RELEASE "-Wall -Wextra -Wstrict-prototypes -Wconversion -O3 -fomit-frame-pointer -funroll-loops -ftree-vectorize -DNDEBUG")
+    set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Wall -Wextra -Wstrict-prototypes -Wconversion -ggdb3 -O3 -funroll-loops -ftree-vectorize -DNDEBUG")
+    set(CMAKE_C_FLAGS_MINSIZEREL "-Wall -Wextra -Wstrict-prototypes -Wconversion -Os -fomit-frame-pointer -ftree-vectorize -DNDEBUG")
+endif(CMAKE_C_COMPILER_ID STREQUAL Clang OR CMAKE_C_COMPILER_ID STREQUAL AppleClang)
+
+find_package(OpenSSL REQUIRED COMPONENTS Crypto)
+target_link_libraries("${PROJECT_NAME}" PRIVATE OpenSSL::Crypto)
 
 install(
   TARGETS                   "${PROJECT_NAME}"
