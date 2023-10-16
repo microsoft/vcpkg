@@ -4018,7 +4018,7 @@
     },
     "libcap": {
       "baseline": "2.69",
-      "port-version": 1
+      "port-version": 2
     },
     "libcbor": {
       "baseline": "0.10.2",
@@ -4238,7 +4238,7 @@
     },
     "libgpiod": {
       "baseline": "2.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libgpod": {
       "baseline": "2019-08-29",
