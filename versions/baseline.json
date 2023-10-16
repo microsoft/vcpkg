@@ -6618,6 +6618,7 @@
     },
     "pravila00-enum-string": {
       "baseline": "2023-16-10",
+      "port-version": 0
     },
     "pravila00-make-vector": {
       "baseline": "2023-04-10",
