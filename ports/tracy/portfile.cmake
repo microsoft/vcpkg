@@ -12,7 +12,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-fix-vcxproj-vcpkg.patch
-        002-fix-capstone-5.patch
         003-fix-imgui-path.patch
         004-fix-missing-threads-dep.patch # https://github.com/wolfpld/tracy/pull/562
         005-fix-imgui-path-legacy.patch
