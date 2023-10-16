@@ -1,4 +1,6 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(WIN32)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
