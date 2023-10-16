@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
-    REF v0.11.0
-    SHA512 abca41b95152d30fc20fd51383447958347e19b123c798b321bcc3ab6850c4f70edd1cd89dc60fdce866afa3f8ffe50a913cdfb4ffbf2d3c1384937cf80183d8
+    REF v0.11.1
+    SHA512 388c3d8bd5099c1e35911dc75ffa6aafc6ea9f1219845ea29dbef91db8c75b2e22b091df4340acc2b44d948cb18fcf8f3a511045ce6ff959a078b350c9a13756
     HEAD_REF master
     PATCHES
-        install-tools.patch
         windows-build-option.patch
 )
 

@@ -266,7 +266,7 @@
     },
     "assimp": {
       "baseline": "5.3.1",
-      "port-version": 1
+      "port-version": 2
     },
     "async-mqtt": {
       "baseline": "2.0.0",
@@ -3141,7 +3141,7 @@
       "port-version": 6
     },
     "gz-cmake3": {
-      "baseline": "3.4.0",
+      "baseline": "3.4.1",
       "port-version": 0
     },
     "gz-common5": {
@@ -3254,7 +3254,7 @@
     },
     "highs": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "highway": {
       "baseline": "1.0.7",
@@ -3441,7 +3441,7 @@
       "port-version": 0
     },
     "imgui-node-editor": {
-      "baseline": "0.9.2",
+      "baseline": "0.9.3",
       "port-version": 0
     },
     "imgui-sfml": {
@@ -4018,7 +4018,7 @@
     },
     "libcap": {
       "baseline": "2.69",
-      "port-version": 1
+      "port-version": 2
     },
     "libcbor": {
       "baseline": "0.10.2",
@@ -4145,11 +4145,11 @@
       "port-version": 0
     },
     "libeventheader-decode": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libeventheader-tracepoint": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libevhtp": {
@@ -4238,7 +4238,7 @@
     },
     "libgpiod": {
       "baseline": "2.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libgpod": {
       "baseline": "2019-08-29",
@@ -4405,7 +4405,7 @@
       "port-version": 3
     },
     "libmediainfo": {
-      "baseline": "23.4",
+      "baseline": "23.10",
       "port-version": 0
     },
     "libmesh": {
@@ -4509,7 +4509,7 @@
       "port-version": 1
     },
     "libopenmpt": {
-      "baseline": "0.6.7",
+      "baseline": "0.6.12",
       "port-version": 0
     },
     "libopensp": {
@@ -4801,15 +4801,15 @@
       "port-version": 0
     },
     "libtracepoint": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libtracepoint-control": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libtracepoint-decode": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libu2f-server": {
@@ -5833,8 +5833,8 @@
       "port-version": 1
     },
     "nifticlib": {
-      "baseline": "2020-04-30",
-      "port-version": 4
+      "baseline": "2022-07-04",
+      "port-version": 0
     },
     "nlohmann-fifo-map": {
       "baseline": "2018.05.07",
@@ -7266,7 +7266,7 @@
     },
     "readline-win32": {
       "baseline": "5.0",
-      "port-version": 7
+      "port-version": 8
     },
     "readosm": {
       "baseline": "1.1.0a",
@@ -7578,7 +7578,7 @@
     },
     "sdl2": {
       "baseline": "2.28.4",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -8241,7 +8241,7 @@
       "port-version": 0
     },
     "thorvg": {
-      "baseline": "0.11.0",
+      "baseline": "0.11.1",
       "port-version": 0
     },
     "threadpool": {
@@ -8258,7 +8258,7 @@
     },
     "tiff": {
       "baseline": "4.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tinkerforge": {
       "baseline": "2.1.25",
