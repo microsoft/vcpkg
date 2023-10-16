@@ -32,7 +32,9 @@ target_include_directories(
 target_compile_features("${PROJECT_NAME}" PRIVATE c_std_90)
 set_target_properties("${PROJECT_NAME}" PROPERTIES C_VISIBILITY_PRESET hidden
                       PUBLIC_HEADER "${Header_Files}")
-
+if (BUILD_SHARED_LIBS)
+    target_compile_definitions("${PROJECT_NAME}" PUBLIC ED25519_BUILD_DLL=1)
+endif (BUILD_SHARED_LIBS)
 install(
   TARGETS                   "${PROJECT_NAME}"
   EXPORT                    "unofficial-${PROJECT_NAME}Config"
