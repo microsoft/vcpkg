@@ -318,10 +318,11 @@ file(COPY
 file(CONFIGURE OUTPUT "${CURRENT_PACKAGES_DIR}/share/${PORT}/port_status.cmake" CONTENT "set(qtbase_with_icu ${FEATURE_icu})\n")
 
 set(other_files qt-cmake
-                 qt-cmake-private
-                 qt-cmake-standalone-test
-                 qt-configure-module
-                 qt-internal-configure-tests
+                qt-cmake-private
+                qt-cmake-standalone-test
+                qt-configure-module
+                qt-internal-configure-tests
+                qt-cmake-create
                  )
 if(CMAKE_HOST_WIN32)
     set(script_suffix .bat)
