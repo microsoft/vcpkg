@@ -66,6 +66,7 @@ jobs:
                     break;
                   }
                   for (comment of data) {
+                    console.log(comment, comment.type)
                     if (comment.type === "Bot") {
                       console.log("Found comment to update")
                       github.rest.issues.updateComment({
