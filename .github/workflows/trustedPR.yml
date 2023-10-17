@@ -67,6 +67,7 @@ jobs:
                   }
                   for (comment of data) {
                     if (comment.type === "Bot") {
+                      console.log("Found comment to update")
                       github.rest.issues.updateComment({
                         ...context.repo,
                         comment_id: comment.id,
@@ -79,6 +80,7 @@ jobs:
                   page++;
                 }
                 if (!comment_updated) {
+                  console.log("Create a new comment")
                   github.rest.issues.createComment({
                     ...context.repo,
                     issue_number,
