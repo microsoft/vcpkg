@@ -1,4 +1,4 @@
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
