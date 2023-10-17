@@ -34,7 +34,9 @@ list(APPEND CONFIGURE_OPTIONS_RELEASE --disable-debug --enable-release)
 list(APPEND CONFIGURE_OPTIONS_DEBUG  --enable-debug --disable-release)
 
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
-set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
+endif()
 
 if("tools" IN_LIST FEATURES)
   list(APPEND CONFIGURE_OPTIONS --enable-tools)
