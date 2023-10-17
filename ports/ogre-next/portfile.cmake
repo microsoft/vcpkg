@@ -18,6 +18,7 @@ vcpkg_from_github(
         fix_find_package_sdl2.patch
         avoid-name-clashes.patch
         fix-error-c2039.patch
+        fix-dependencies.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
