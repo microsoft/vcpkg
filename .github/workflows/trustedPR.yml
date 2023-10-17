@@ -66,8 +66,7 @@ jobs:
                     break;
                   }
                   for (comment of data) {
-                    console.log(comment, comment.type)
-                    if (comment.type === "Bot") {
+                    if (comment.user.type === "Bot") {
                       console.log("Found comment to update")
                       github.rest.issues.updateComment({
                         ...context.repo,
@@ -106,7 +105,7 @@ jobs:
                   break;
                 }
                 for (comment of data) {
-                  if (comment.type === "Bot") {
+                  if (comment.user.type === "Bot") {
                     github.rest.issues.deleteComment({
                       ...context.repo,
                       comment_id: comment.id,

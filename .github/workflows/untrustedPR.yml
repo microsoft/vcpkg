@@ -80,7 +80,6 @@ jobs:
               var add_version_output = '';
               add_version_output += "PRs must add only one version, and must not modify any published versions.\n";
               add_version_output += "When making any changes to a library, the `version` or `port-version` in `vcpkg.json` must be modified, and the version database updated.\n";
-              add_version_output += "Making the following changes will fix this problem:\n";
               add_version_output += "```diff\n" + add_version_out + "\n```\n\n";
               full_output += add_version_output
               approve = false;
