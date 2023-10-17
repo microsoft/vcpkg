@@ -71,7 +71,7 @@ jobs:
               format_output += "All vcpkg.json files must be formatted. To fix this problem, run:\n";
               format_output += "`./vcpkg format-manifest --all`\n";
               format_output += "\n";
-              format_output += "<details><summary>It should make the following changes:</summary>";
+              format_output += "<details><summary>It should make the following changes:</summary>\n";
               format_output += "```diff\n" + format + "\n```\n</details>\n\n";
               full_output += format_output;
               approve = false;
@@ -80,7 +80,7 @@ jobs:
               var add_version_output = '';
               add_version_output += "PRs must add only one version, and must not modify any published versions.\n";
               add_version_output += "When making any changes to a library, the `version` or `port-version` in `vcpkg.json` must be modified, and the version database updated.\n";
-              add_version_output += "Making the following changes will fix this problem:";
+              add_version_output += "Making the following changes will fix this problem:\n";
               add_version_output += "```diff\n" + add_version_out + "\n```\n\n";
               full_output += add_version_output
               approve = false;
@@ -182,4 +182,4 @@ jobs:
           name: pr
           path: pr/
 
-      - run: grep -q "pr/event" "APPROVE"
+      - run: grep -q "APPROVE" "pr/event"
