@@ -175,12 +175,11 @@ jobs:
             }
             console.log(full_output)
             await fs.writeFile("pr/body", full_output)
-
-            if (!approve) {
-              process.exitCode = 1;
-            }
+            await fs.writeFile("pr/event", approve ? "APPROVE" : "ERROR")
 
       - uses: actions/upload-artifact@v3
         with:
           name: pr
           path: pr/
+
+      - run: grep -q "pr/event" "APPROVE"
