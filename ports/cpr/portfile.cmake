@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcpr/cpr
-    REF 3b15fa82ea74739b574d705fea44959b58142eb8 #1.10.5
+    REF ${VERSION}
     SHA512 aad193202ce0f24ed12c3992914c9a374f12fe9d84d5a375fc6e9ec6215cca6abf50372b71a11284aea039e00dd35b528fe5285667671dbb43b1b1fe4b7a74ef
     HEAD_REF master
     PATCHES
