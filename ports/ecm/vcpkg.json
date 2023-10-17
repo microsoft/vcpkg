@@ -1,8 +1,10 @@
 {
   "name": "ecm",
   "version": "5.98.0",
+  "port-version": 1,
   "description": "Extra CMake Modules (ECM), extra modules and scripts for CMake",
   "homepage": "https://github.com/KDE/extra-cmake-modules",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
