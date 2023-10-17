@@ -68,7 +68,8 @@ jobs:
                     break;
                   }
                   for (comment of data) {
-                    if (comment.user.login === github.context.actor) {
+                    console.log(comment.user.login, context)
+                    if (comment.user.login === context.actor) {
                       github.rest.issues.updateComment({
                         ...context.repo,
                         comment_id: comment.id,
