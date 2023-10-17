@@ -83,6 +83,10 @@ $commonArgs = @(
     "--overlay-ports=scripts/test_ports"
 )
 $cachingArgs = @()
+$cmakeArgs = @(
+    "--cmake-args=-DVCPKG_AMBIGUOUS_SYSTEM_VARIABLES=ANDROID;APPLE;BSD;IOS;LINUX;MINGW;MSVC;UNIX;WIN32"
+)
+
 
 $skipFailuresArg = @()
 if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
@@ -174,7 +178,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 # but changes must trigger at least some testing.
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
+& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg @cmakeArgs
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"

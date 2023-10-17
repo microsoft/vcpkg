@@ -155,6 +155,7 @@ if(CMD STREQUAL "BUILD")
 
     set(TRIPLET_SYSTEM_ARCH "${VCPKG_TARGET_ARCHITECTURE}")
     include("${SCRIPTS}/cmake/vcpkg_common_definitions.cmake")
+    include("${SCRIPTS}/cmake/z_vcpkg_catch_ambiguous_system_variables.cmake")
 
     if (DEFINED VCPKG_PORT_CONFIGS)
         foreach(VCPKG_PORT_CONFIG IN LISTS VCPKG_PORT_CONFIGS)
