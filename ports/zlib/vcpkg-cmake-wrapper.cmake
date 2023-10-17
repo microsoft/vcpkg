@@ -10,3 +10,13 @@ if(CMAKE_VERSION VERSION_LESS 3.4)
     unset(ZLIB_FOUND)
 endif()
 _find_package(${ARGS})
+
+# To conform with cmake's find script interface,
+# ensure that not just
+#   ZLIB_INCLUDE_DIR
+# is set, but also
+#   ZLIB_INCLUDE_DIRS
+if (NOT DEFINED ${ZLIB_INCLUDE_DIRS})
+    set(ZLIB_INCLUDE_DIRS ${ZLIB_INCLUDE_DIR})
+endif()
+
