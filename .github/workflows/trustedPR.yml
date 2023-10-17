@@ -1,0 +1,118 @@
+# Modelled after https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+
+name: Post Check For Common Mistakes
+
+on:
+  workflow_run:
+    workflows: ["Check For Common Mistakes"]
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  comment:
+    permissions:
+      pull-requests: write
+    runs-on: ubuntu-22.04
+    if: >
+      ${{ github.event.workflow_run.event == 'pull_request' }}
+
+    steps:
+      - name: 'Download artifact'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{github.event.workflow_run.id }},
+            });
+            console.log(artifacts.data)
+            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "pr"
+            })[0];
+            console.log(matchArtifact)
+            var download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
+      - run: unzip pr.zip
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const { promises: fs } = require('fs')
+            const body = (await fs.readFile('body', 'utf8')).trim()
+            const issue_number = Number(await fs.readFile('./NR'));
+
+            if (body.length > 0) {
+              try {
+                let page = 1;
+                let comment_updated = false;
+
+                while (!comment_updated) {
+                  const { data } = await github.rest.issues.listComments({
+                    ...context.repo,
+                    issue_number,
+                    page: page,
+                    per_page: 100, // Maximum comments per page
+                  });
+
+                  if (data.length === 0) {
+                    break;
+                  }
+                  for (comment of data) {
+                    if (comment.user.login === github.context.actor) {
+                      github.rest.issues.updateComment({
+                        ...context.repo,
+                        comment_id: comment.id,
+                        body: body,
+                      });
+                      comment_updated = true;
+                      break;
+                    }
+                  }
+                  page++;
+                }
+                if (!comment_updated) {
+                  github.rest.issues.createComment({
+                    ...context.repo,
+                    issue_number,
+                    body: body,
+                  });
+                }
+              } catch (error) {
+                core.setFailed(error.message);
+              }
+            } else {
+              // Delete old comments
+              let page = 1;
+              while (true) {
+                const { data } = await github.rest.issues.listComments({
+                  ...context.repo,
+                  issue_number,
+                  page: page,
+                  per_page: 100, // Maximum comments per page
+                });
+
+                if (data.length === 0) {
+                  break;
+                }
+                for (comment of data) {
+                  if (comment.user.login === github.context.actor) {
+                    github.rest.issues.deleteComment({
+                      ...context.repo,
+                      comment_id: comment.id,
+                    });
+                  }
+                }
+                page++;
+              }
+            }
+
