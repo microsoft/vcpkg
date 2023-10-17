@@ -1,15 +1,13 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.21.12
-    SHA512 152f8441c325e808b942153c15e82fdb533d5273b50c25c28916ec568ada880f79242bb61ee332ac5fb0d20f21239ed6f8de02ef6256cc574b1fc354d002c6b0
+    REF "v${VERSION}"
+    SHA512 19b8aa89647fa14b4716cfeed289233bed65be2417d9f7e2b1082975a4753e5a1f091eb36ad7cff159d125b01bfe005e2911ebda896f15cba58299e340487518
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
-        compile_options.patch
+        fix-dependencies.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -42,6 +40,7 @@ vcpkg_cmake_configure(
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
+        -Dprotobuf_ABSL_PROVIDER="package"
         ${FEATURE_OPTIONS}
 )
 
@@ -115,8 +114,17 @@ foreach(_package IN LISTS packages)
     set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${_package}.pc")
     if(EXISTS "${_file}")
         vcpkg_replace_string(${_file} "-l${_package}" "-l${_package}d")
+        vcpkg_replace_string(${_file} "absl_abseil_dll" "abseil_dll") # Use abseil in vcpkg, which is named abseil_dll
+        vcpkg_replace_string(${_file} "utf8_range" "protobuf_utf8_range") # Add prefix protobuf_ to utr8_range to prevent conflicts with other ports
+    endif()
+    set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${_package}.pc")
+    if(EXISTS "${_file}")
+        vcpkg_replace_string(${_file} "absl_abseil_dll" "abseil_dll")
+        vcpkg_replace_string(${_file} "utf8_range" "protobuf_utf8_range")
     endif()
 endforeach()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake" "${CURRENT_PACKAGES_DIR}/lib/cmake")
 
 vcpkg_fixup_pkgconfig()
 
@@ -125,4 +133,4 @@ if(NOT protobuf_BUILD_PROTOC_BINARIES)
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

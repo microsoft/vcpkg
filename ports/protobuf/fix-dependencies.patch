@@ -1,0 +1,23 @@
+diff --git a/third_party/utf8_range/CMakeLists.txt b/third_party/utf8_range/CMakeLists.txt
+index 344952d..72fae0f 100644
+--- a/third_party/utf8_range/CMakeLists.txt
++++ b/third_party/utf8_range/CMakeLists.txt
+@@ -21,6 +21,9 @@ add_library (utf8_range STATIC
+ # A heavier-weight C++ wrapper that supports Abseil.
+ add_library (utf8_validity STATIC utf8_validity.cc)
+ 
++set_target_properties(utf8_range PROPERTIES OUTPUT_NAME protobuf_utf8_range)
++set_target_properties(utf8_validity PROPERTIES OUTPUT_NAME protobuf_utf8_validity)
++
+ # Load Abseil dependency.
+ if (NOT TARGET absl::strings)
+   if (NOT ABSL_ROOT_DIR)
+@@ -77,7 +80,7 @@ if (utf8_range_ENABLE_INSTALL)
+                  ${CMAKE_CURRENT_BINARY_DIR}/utf8_range.pc @ONLY)
+   install(
+     FILES ${CMAKE_CURRENT_BINARY_DIR}/utf8_range.pc
+-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
++    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig" RENAME protobuf_utf8_range.pc)
+ 
+   # Install public headers explicitly.
+   install(FILES utf8_range.h utf8_validity.h
