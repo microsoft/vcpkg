@@ -3325,8 +3325,8 @@
       "port-version": 0
     },
     "idyntree": {
-      "baseline": "9.0.0",
-      "port-version": 1
+      "baseline": "10.0.0",
+      "port-version": 0
     },
     "if97": {
       "baseline": "2.1.3",
