@@ -29,11 +29,9 @@ jobs:
                repo: context.repo.repo,
                run_id: ${{github.event.workflow_run.id }},
             });
-            console.log(artifacts.data)
             var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "pr"
             })[0];
-            console.log(matchArtifact)
             var download = await github.rest.actions.downloadArtifact({
                owner: context.repo.owner,
                repo: context.repo.repo,
@@ -68,7 +66,6 @@ jobs:
                     break;
                   }
                   for (comment of data) {
-                    console.log(JSON.stringify(comment.user), context)
                     if (comment.type === "Bot") {
                       github.rest.issues.updateComment({
                         ...context.repo,
