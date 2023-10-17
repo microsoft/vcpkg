@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.19)
 project(ed25519 LANGUAGES C)
 set(PROJECT_VERSION "${VERSION}")
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ed25519.h" "#elif defined(ED25519_DLL)" "#elif 1")
+endif()
 set(Header_Files "src/ed25519.h"
         "src/fe.h"
         "src/fixedint.h"
@@ -31,10 +34,8 @@ target_include_directories(
 )
 target_compile_features("${PROJECT_NAME}" PRIVATE c_std_90)
 set_target_properties("${PROJECT_NAME}" PROPERTIES C_VISIBILITY_PRESET hidden
-                      PUBLIC_HEADER "${Header_Files}")
-if (BUILD_SHARED_LIBS)
-    target_compile_definitions("${PROJECT_NAME}" PUBLIC ED25519_BUILD_DLL=1)
-endif (BUILD_SHARED_LIBS)
+                      PUBLIC_HEADER "src/ed25519.h")
+
 install(
   TARGETS                   "${PROJECT_NAME}"
   EXPORT                    "unofficial-${PROJECT_NAME}Config"
@@ -52,7 +53,7 @@ write_basic_package_version_file(
         COMPATIBILITY SameMajorVersion
 )
 install(FILES "${VERSION_FILE_PATH}" DESTINATION "share/unofficial-${PROJECT_NAME}")
-install(FILES ${Header_Files} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+install(FILES "src/ed25519.h" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 install(
   EXPORT      "unofficial-${PROJECT_NAME}Config"
