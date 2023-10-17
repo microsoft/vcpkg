@@ -6,6 +6,6 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-file(COPY "${SOURCE_PATH}/EnumString.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/enum-string")
+file(COPY "${SOURCE_PATH}/EnumString.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
