@@ -4600,6 +4600,10 @@
       "baseline": "4.1.1",
       "port-version": 2
     },
+    "libqtrest": {
+      "baseline": "0.4.0",
+      "port-version": 0
+    },
     "librabbitmq": {
       "baseline": "0.11.0",
       "port-version": 2
