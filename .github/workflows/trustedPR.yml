@@ -69,7 +69,7 @@ jobs:
                   }
                   for (comment of data) {
                     console.log(JSON.stringify(comment.user), context)
-                    if (comment.user.login === context.actor) {
+                    if (comment.type === "Bot") {
                       github.rest.issues.updateComment({
                         ...context.repo,
                         comment_id: comment.id,
@@ -106,7 +106,7 @@ jobs:
                   break;
                 }
                 for (comment of data) {
-                  if (comment.user.login === github.context.actor) {
+                  if (comment.type === "Bot") {
                     github.rest.issues.deleteComment({
                       ...context.repo,
                       comment_id: comment.id,
