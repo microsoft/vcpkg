@@ -7,7 +7,7 @@ index 180ec33..a03e3b1 100644
  
      get_target_property(type "${target}" TYPE)
 -    if (type STREQUAL EXECUTABLE)
-+    if (type STREQUAL EXECUTABLE AND NOT DEFINED QT_HOST_PATH)
++    if (type STREQUAL EXECUTABLE AND NOT QT_HOST_PATH)
          add_executable("${versionless_alias}" ALIAS "${target}")
          add_executable("${versionfull_alias}" ALIAS "${target}")
 -    else()
