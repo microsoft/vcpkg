@@ -20,6 +20,7 @@ set(${PORT}_PATCHES
         GLIB2-static.patch # alternative is to force pkg-config
         clang-cl_source_location.patch
         clang-cl_QGADGET_fix.diff
+        fix-host-aliasing.patch
         )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
