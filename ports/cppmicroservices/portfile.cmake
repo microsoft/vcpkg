@@ -37,7 +37,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "share/cppmicroservices/cmake")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cppmicroservices/CppMicroServicesConfig.cmake" "cppmicroservices/cmake" "cppmicroservices")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_copy_tools(TOOL_NAMES SCRCodeGen3)
+    vcpkg_copy_tools(TOOL_NAMES SCRCodeGen3 AUTO_CLEAN)
 endif()
 vcpkg_copy_tools(TOOL_NAMES jsonschemavalidator usResourceCompiler3 usShell3 AUTO_CLEAN)
 
