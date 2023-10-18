@@ -1,3 +1,7 @@
+if(CMAKE_SCRIPT_MODE_FILE)
+    return()
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(lib_path_suffix lib)
 else()

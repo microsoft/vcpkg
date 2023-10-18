@@ -12,7 +12,7 @@ function(vcpkg_find_fortran out_var)
 
     if(NOT CMAKE_Fortran_COMPILER AND "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" STREQUAL "")
         # If a user uses their own VCPKG_CHAINLOAD_TOOLCHAIN_FILE, they _must_ figure out fortran on their own.
-        if(WIN32)
+        if(CMAKE_HOST_WIN32)
             message(STATUS "No Fortran compiler found on the PATH. Using MinGW gfortran!")
             # If no Fortran compiler is on the path we switch to use gfortan from MinGW within vcpkg
             if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")

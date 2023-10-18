@@ -1,7 +1,7 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO LibreDWG/libredwg
-  REF ${VERSION}
+  REF "${VERSION}"
   SHA512 8696289ea7ff542bd48d4e1f0e959b95574a7741ba0c80238ad31aff28f1861f0c00dfb1dc78e998b043a4300ff976ba324f5a41195f799f9d31e2b5be288bc7
   HEAD_REF master
   PATCHES
@@ -17,19 +17,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # libredwg will read the version
-file(WRITE "${SOURCE_PATH}/.version" ${VERSION})
+file(WRITE "${SOURCE_PATH}/.version" "${VERSION}")
 
 # Fix https://github.com/LibreDWG/libredwg/issues/652#issuecomment-1454035167
-if(APPLE)
-  vcpkg_replace_string("${SOURCE_PATH}/src/common.h"
+vcpkg_replace_string("${SOURCE_PATH}/src/common.h"
     [[defined(COMMON_TEST_C)]]
-    [[1]]
-  )
-  vcpkg_replace_string("${SOURCE_PATH}/src/common.c"
+    [[(defined COMMON_TEST_C || defined __APPLE__)]]
+)
+vcpkg_replace_string("${SOURCE_PATH}/src/common.c"
     [[defined(COMMON_TEST_C)]]
-    [[1]]
-  )
-endif()
+    [[(defined COMMON_TEST_C || defined __APPLE__)]]
+)
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -46,7 +44,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libredwg CONFIG_PATH share/unof
 
 if("tools" IN_LIST FEATURES)
   vcpkg_copy_tools(TOOL_NAMES dwg2dxf dwg2SVG dwgbmp dwggrep dwglayers dwgread dwgrewrite dwgwrite dxf2dwg AUTO_CLEAN)
-  vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/libredwg")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
