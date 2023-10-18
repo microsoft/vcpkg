@@ -29,12 +29,16 @@ file(RENAME "${NOWIDE_SOURCE_PATH}" "${SOURCE_PATH}/third_party/boost/nowide")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DAUXILIARY_INSTALL_DIR:STRING=share/${PORT}"
+        "-DAUXILIARY_INSTALL_DIR:STRING=share/cppmicroservices"
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "share/cppmicroservices/cmake")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cppmicroservices/CppMicroServicesConfig.cmake" "cppmicroservices/cmake" "cppmicroservices")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_copy_tools(TOOL_NAMES SCRCodeGen3)
+endif()
 vcpkg_copy_tools(TOOL_NAMES jsonschemavalidator usResourceCompiler3 usShell3 AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
