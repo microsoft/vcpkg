@@ -1897,7 +1897,7 @@
       "port-version": 0
     },
     "cpr": {
-      "baseline": "1.10.2+3",
+      "baseline": "1.10.5",
       "port-version": 0
     },
     "cpu-features": {
