@@ -8,6 +8,7 @@ vcpkg_from_github(
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
+        gtiff-deadlock-fix.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
