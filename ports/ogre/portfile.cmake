@@ -10,6 +10,15 @@ if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
+if(VCPKG_TARGET_IS_OSX)
+      file(GLOB_RECURSE llvm_files "${VCPKG_ROOT_DIR}/buildtrees/llvm/*")
+      if(NOT llvm_files STREQUAL "")
+          file(REMOVE_RECURSE "${VCPKG_ROOT_DIR}/buildtrees/llvm/")
+          file(REMOVE_RECURSE "${CURRENT_INSTALLED_DIR}/tools/llvm/")
+          file(REMOVE_RECURSE "${VCPKG_ROOT_DIR}/packages/llvm_${TARGET_TRIPLET}/")
+      endif()
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
