@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martin-olivier/dylib
     REF "v${VERSION}"
-    SHA512 27de389778f431b9e473aa3a072e7232988748f445743ec4a7b9373d809b3f55be1a4d323bbca1cf76493d84f126de9d38cdb00c823702125b93498971cfc327
+    SHA512 8e691c1bc73f381ce8ec50d85165c122ba55167b050e696c8b26ccf1ba14999ca8129fb6c5b6c3320166f606acb2c21867d0786347c341d1267815580beb5c0a
     HEAD_REF main
 )
 
@@ -12,7 +12,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME dylib CONFIG_PATH lib/CMakeLists.txt)
+vcpkg_cmake_config_fixup(PACKAGE_NAME dylib CONFIG_PATH lib/cmake/dylib)
 
 vcpkg_fixup_pkgconfig()
 
