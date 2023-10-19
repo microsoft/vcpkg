@@ -5,6 +5,8 @@ ignition_modular_library(
     REF ${PORT}_${VERSION}
     VERSION ${VERSION}
     SHA512 30cf5aa69674bdc1a99762fc45d134b99da5e2faf846749392697ae41463a5304a43022bb0c2ca1b373af4171135d686fdd736573fe6e1cc26dc2cecc8333e69
+    PATCHES
+        dependencies.patch
 )
 
 # Install custom usage
