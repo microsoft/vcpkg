@@ -132,6 +132,10 @@
       "baseline": "chromium_5414",
       "port-version": 7
     },
+    "ankurvdev-embedresource": {
+      "baseline": "0.0.10",
+      "port-version": 0
+    },
     "annoy": {
       "baseline": "1.17.2",
       "port-version": 0
