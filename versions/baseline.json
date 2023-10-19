@@ -2957,8 +2957,8 @@
       "port-version": 1
     },
     "glm": {
-      "baseline": "2023-06-08",
-      "port-version": 0
+      "baseline": "0.9.9.8",
+      "port-version": 2
     },
     "globjects": {
       "baseline": "1.1.0",
