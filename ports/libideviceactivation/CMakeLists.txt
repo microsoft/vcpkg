@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 project(libideviceactivation C)
 
+option(BUILD_TOOLS "Build tools." OFF)
+
 include(GNUInstallDirs)
 
 file(GLOB_RECURSE LIBIDEVICEACTIVATION_HEADER include/*.h)
@@ -18,6 +20,7 @@ endif()
 
 if(WIN32)
     list(APPEND DEFINITIONS -D_CRT_SECURE_NO_WARNINGS)
+    list(APPEND DEFINITIONS -DWIN32_LEAN_AND_MEAN)
     list(APPEND DEFINITIONS -DWIN32)
 endif()
 
@@ -27,11 +30,9 @@ find_package(CURL CONFIG REQUIRED)
 find_package(LibXml2 CONFIG REQUIRED)
 
 add_library(libideviceactivation ${LIBIDEVICEACTIVATION_SOURCE})
-target_include_directories(libideviceactivation
-    PRIVATE
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
-    PUBLIC
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+target_include_directories(libideviceactivation PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 target_compile_definitions(libideviceactivation PRIVATE ${DEFINITIONS})
 target_link_libraries(libideviceactivation
@@ -78,3 +79,25 @@ install(
     FILES "${CMAKE_CURRENT_BINARY_DIR}/libideviceactivation-1.0.pc"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
 )
+
+if(BUILD_TOOLS)
+    add_executable(ideviceactivation "tools/ideviceactivation.c")
+    target_compile_definitions(ideviceactivation PRIVATE
+        -DPACKAGE_VERSION="1.1.1"
+        -DPACKAGE_URL="https://github.com/libimobiledevice/libideviceactivation"
+        -DPACKAGE_BUGREPORT="https://github.com/libimobiledevice/libideviceactivation/issues"
+    )
+    if(WIN32)
+        target_compile_definitions(ideviceactivation PRIVATE
+            -D_CRT_SECURE_NO_WARNINGS
+            -DWIN32_LEAN_AND_MEAN
+            -DWIN32
+        )
+    endif()
+    target_link_libraries(ideviceactivation PRIVATE libideviceactivation)
+
+    install(
+        TARGETS ideviceactivation
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    )
+endif()

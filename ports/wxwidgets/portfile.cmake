@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
     REF "v${VERSION}"
-    SHA512 8ff645fe7ee97bf6358b3619efd737ef8f9eb0235ca481e921a64d451c45eb9671ee4e2807fea285153bc0bb434266234f6f4ab15f396bb8290f262fa879e9b3
+    SHA512 d9cfad429c5c160944cd9c23c3a32ca72740e2d25d7392a06c22374bcbdd099affee5f541d59ac4a9983fb3d82f90bda7eaf92a93a1e8b5ace2c5bf29962ed53
     HEAD_REF master
     PATCHES
         install-layout.patch
@@ -12,8 +12,6 @@ vcpkg_from_github(
         fix-pcre2.patch
         gtk3-link-libraries.patch
         sdl2.patch
-        fix_include.patch
-        fix-nanosvg.patch
 )
 
 vcpkg_check_features(
@@ -191,4 +189,4 @@ endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/docs/licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/licence.txt")

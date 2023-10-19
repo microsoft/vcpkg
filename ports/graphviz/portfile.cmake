@@ -1,4 +1,5 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # for plugins
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled) # kitty and vt plugin not ready yet?
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
@@ -8,11 +9,11 @@ vcpkg_from_gitlab(
     SHA512 1edcf6aa232d38d1861a344c1a4a88aac51fd4656d667783ca1608ac694025199595a72a293c4eee2f7c7326ce54f22b787a5b7f4c44946f2de6096bd8f0e79d
     HEAD_REF main
     PATCHES
+        disable-pragma-lib.patch
         fix-dependencies.patch
         no-absolute-paths.patch
         select-plugins.patch
         static-linkage.patch
-        cpp-error.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -46,7 +47,6 @@ vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         "-DVERSION=${VERSION}"
         "-DBISON_EXECUTABLE=${BISON}"
@@ -57,6 +57,7 @@ vcpkg_cmake_configure(
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -Dinstall_win_dependency_dlls=OFF
         -Duse_win_pre_inst_libs=OFF
+        -Dwith_gvedit=OFF
         -Dwith_smyrna=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_ANN=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_CAIRO=ON
@@ -64,7 +65,6 @@ vcpkg_cmake_configure(
         -DCMAKE_REQUIRE_FIND_PACKAGE_GD=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_LTDL=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_PANGOCAIRO=ON
-        -Dwith_gvedit=OFF
         ${OPTIONS}
     MAYBE_UNUSED_VARIABLES
         install_win_dependency_dlls
@@ -91,36 +91,36 @@ vcpkg_copy_tools(
         bcomps
         ccomps
         circo
+        cluster
         diffimg
         dijkstra
         dot
+        dot_builtins
         edgepaint
         fdp
         gc
         gml2gv
         graphml2gv
         gv2gml
+        gv2gxl
         gvcolor
         gvgen
         gvmap
         gvpack
         gvpr
+        gxl2dot
         gxl2gv
         mm2gv
         neato
         nop
         osage
         patchwork
+        prune
         sccmap
         sfdp
         tred
         twopi
         unflatten
-        cluster
-        dot_builtins
-        gv2gxl
-        gxl2dot
-        prune
     AUTO_CLEAN
 )
 

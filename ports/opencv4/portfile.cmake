@@ -28,6 +28,7 @@ vcpkg_from_github(
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
       0019-missing-include.patch
+      0020-fix-compat-cuda12.2.patch
       "${ARM64_WINDOWS_FIX}"
 )
 # Disallow accidental build of vendored copies
@@ -532,7 +533,7 @@ find_dependency(Tesseract)")
     string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
   endif()
   if(BUILD_opencv_ovis)
-    string(APPEND DEPS_STRING "\nfind_dependency(Ogre)")
+    string(APPEND DEPS_STRING "\nfind_dependency(OGRE)")
   endif()
   if("quirc" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(quirc)")

@@ -15,7 +15,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         set(additional_options NO_TOOLCHAIN_PROPS) # don't know how to fix the linker error about __guard_check_icall_thunk 
     endif()
-    set(CHAKRA_RUNTIME_LIB "static_library") # ChakraCore only supports static CRT linkage
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
         set(PLATFORM_ARG PLATFORM x86) # it's x86, not Win32 in sln file
     endif()
@@ -25,7 +24,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         PROJECT_SUBPATH Build/Chakra.Core.sln
         OPTIONS
             "/p:CustomBeforeMicrosoftCommonTargets=${CMAKE_CURRENT_LIST_DIR}/no-warning-as-error.props"
-            "/p:RuntimeLib=${CHAKRA_RUNTIME_LIB}"
         ${PLATFORM_ARG}
         ${additional_options}
     )
