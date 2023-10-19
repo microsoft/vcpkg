@@ -66,16 +66,6 @@
       "port-version": 0
     },
     {
-      "git-tree": "ffce764b880d8cc24e3b00328aa3861f15bae91d",
-      "version-string": "beta_2020-07-31",
-      "port-version": 0
-    },
-    {
-      "git-tree": "03a43f03eb0cab95aac27a77b71273fc4aa2e94d",
-      "version-string": "beta_2020-07-09",
-      "port-version": 0
-    },
-    {
       "git-tree": "4b67e6ac18485e7209ec86219d16ce3659446e8a",
       "version-string": "beta_2020-06-01",
       "port-version": 0

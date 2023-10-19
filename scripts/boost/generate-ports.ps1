@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.82.0",
+    $version = "1.83.0",
     $portsDir = $null
 )
 
@@ -22,11 +22,10 @@ else {
 }
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 2
+$defaultPortVersion = 0
 $portVersions = @{
-    "boost-atomic" = 3;
-    "boost-modular-build-helper" = 4;
-    "boost-ublas" = 3;
+    'boost' = 1;
+    'boost-fiber' = 1;
 }
 
 function Get-PortVersion {
@@ -35,7 +34,7 @@ function Get-PortVersion {
     )
 
     $nonDefault = $portVersions[$PortName]
-    if ($nonDefault -ne $null) {
+    if ($null -ne $nonDefault) {
         return $nonDefault
     }
 
@@ -61,7 +60,7 @@ $portData = @{
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
     "boost-fiber"            = @{
-        "supports" = "!uwp & !arm & !emscripten";
+        "supports" = "!uwp & !(arm & windows) & !emscripten";
         "features" = @{
             "numa" = @{
                 "description" = "Enable NUMA support";

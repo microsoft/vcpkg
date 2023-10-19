@@ -1,10 +1,10 @@
-vcpkg_minimum_required(VERSION 2022-12-14)
+set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nemtrif/utfcpp
-    REF v${VERSION}
-    SHA512 760977df613abfb34fb7864cbbe90e8f2cf1f42b8502427a5e9c2a756ce87655120b7490ebdaa6c926a2cb56caef9ead0e0e10fb7cb732cf99a5b43c0cca411b
+    REF "v${VERSION}"
+    SHA512 1ce12c8158a2f3bcddec104ceacedaea4031b4c88fc0fa1f1fae8dfa8df81c846861df9d01e8f294d79b9e4ab8c51bd1289f404eed24d07abc760688fee13090
     HEAD_REF master
 )
 
@@ -22,9 +22,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_cmake_config_fixup(PACKAGE_NAME utf8cpp CONFIG_PATH cmake)
 else()
     vcpkg_cmake_config_fixup(PACKAGE_NAME utf8cpp CONFIG_PATH lib/cmake/utf8cpp)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 endif()
-
-# Header only
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

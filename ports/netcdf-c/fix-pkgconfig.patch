@@ -17,7 +17,7 @@ index 390ac0a..4bcd909 100644
 +replace_pkgconfig_module("-lhdf5_hl"   "hdf5_hl")
 +replace_pkgconfig_module("-lhdf5"      "hdf5")
 +replace_pkgconfig_module("-lmpi"       "ompi-c")
-+replace_pkgconfig_module("-lzip"       "libzip")
++replace_pkgconfig_module("-lzip::zip"  "libzip")
 +replace_pkgconfig_module("-lCURL[^ ]*" "libcurl")
 +replace_pkgconfig_module("-lZLIB[^ ]*" "zlib")
 +

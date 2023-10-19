@@ -1,0 +1,68 @@
+diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
+--- a/CMake/Dependencies.cmake
++++ b/CMake/Dependencies.cmake
+@@ -73,23 +73,26 @@
+ # Core dependencies
+ #######################################################################
+ 
+ # Find zlib
+-find_package(ZLIB)
++find_package(ZLIB REQUIRED)
+ macro_log_feature(ZLIB_FOUND "zlib" "Simple data compression library" "http://www.zlib.net" FALSE "" "")
+ 
+ if (ZLIB_FOUND)
+   # Find zziplib
+-  find_package(ZZip)
++  find_package(ZZip NAMES unofficial-zziplib CONFIG REQUIRED)
++  set(ZZip_LIBRARIES unofficial::zziplib::libzzip)
+   macro_log_feature(ZZip_FOUND "zziplib" "Extract data from zip archives" "http://zziplib.sourceforge.net" FALSE "" "")
+ endif ()
+ 
+ # Find FreeImage
+-find_package(FreeImage)
++find_package(FreeImage NAMES freeimage REQUIRED)
++set(FreeImage_LIBRARIES freeimage::FreeImage)
+ macro_log_feature(FreeImage_FOUND "freeimage" "Support for commonly used graphics image formats" "http://freeimage.sourceforge.net" FALSE "" "")
+ 
+ # Find FreeType
+-find_package(Freetype)
++find_package(FREETYPE NAMES freetype REQUIRED)
++set(FREETYPE_LIBRARIES freetype)
+ macro_log_feature(FREETYPE_FOUND "freetype" "Portable font engine" "http://www.freetype.org" FALSE "" "")
+ 
+ find_package(Vulkan)
+ macro_log_feature(Vulkan_FOUND "vulkan-sdk" "Vulkan SDK" "https://vulkan.lunarg.com/" FALSE "" "")
+diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
+--- a/CMake/CMakeLists.txt
++++ b/CMake/CMakeLists.txt
+@@ -43,14 +43,10 @@
+ endif ()
+ 
+ set(STATIC_INST_FILES
+   Packages/FindDirectX.cmake
+-  Packages/FindFreeImage.cmake
+-  Packages/FindFreetype.cmake
+   Packages/FindOpenGLES.cmake
+   Packages/FindOpenGLES2.cmake
+-  Packages/FindZLIB.cmake
+-  Packages/FindZZip.cmake
+   Packages/FindSoftimage.cmake
+ )
+ if (WIN32)
+   set(INST_FILES ${INST_FILES}
+diff --git a/CMake/Packages/FindZLIB.cmake b/CMake/Packages/FindZLIB_NOTUSE.cmake
+similarity index 100%
+rename from CMake/Packages/FindZLIB.cmake
+rename to CMake/Packages/FindZLIB_NOTUSE.cmake
+diff --git a/CMake/Packages/FindZZip.cmake b/CMake/Packages/FindZZip_NOTUSE.cmake
+similarity index 100%
+rename from CMake/Packages/FindZZip.cmake
+rename to CMake/Packages/FindZZip_NOTUSE.cmake
+diff --git a/CMake/Packages/FindFreeImage.cmake b/CMake/Packages/FindFreeImage_NOTUSE.cmake
+similarity index 100%
+rename from CMake/Packages/FindFreeImage.cmake
+rename to CMake/Packages/FindFreeImage_NOTUSE.cmake
+diff --git a/CMake/Packages/FindFreetype.cmake b/CMake/Packages/FindFreetype_NOTUSE.cmake
+similarity index 100%
+rename from CMake/Packages/FindFreetype.cmake
+rename to CMake/Packages/FindFreetype_NOTUSE.cmake

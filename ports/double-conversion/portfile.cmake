@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/double-conversion
-    REF af09fd65fcf24eee95dc62813ba9123414635428 #v3.2.1
-    SHA512 721d736a2d065b8ff6058345afe6990ab568174e202361abc7ce36c16931c05128df4fd5034f98f114a7b01972eda3b98bfc209ef45394d0b5d4bbce8140b28a
+    REF "v${VERSION}"
+    SHA512 51e84eb7a5c407f7bc8f8b8ca19932ece5c9d8ac18aedff7b7620fc67369d9b2aa8c5a6b133e7f8633d7cc5e3788bad6e60b0e48ac08d0a4bc5e4abe7cee1334
     HEAD_REF master
 )
 

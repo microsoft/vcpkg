@@ -1,0 +1,10 @@
+diff --git a/generated/src/aws-cpp-sdk-AWSMigrationHub/CMakeLists.txt b/generated/src/aws-cpp-sdk-AWSMigrationHub/CMakeLists.txt
+index a8a888d..574b985 100644
+--- a/generated/src/aws-cpp-sdk-AWSMigrationHub/CMakeLists.txt
++++ b/generated/src/aws-cpp-sdk-AWSMigrationHub/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-add_project(aws-cpp-sdk-AWSMigrationHub "C++ SDK for the AWS AWSMigrationHub service" aws-cpp-sdk-core)
++add_project(aws-cpp-sdk-awsmigrationhub "C++ SDK for the AWS AWSMigrationHub service" aws-cpp-sdk-core)
+ 
+ file(GLOB AWS_AWSMIGRATIONHUB_HEADERS
+     "include/aws/AWSMigrationHub/*.h"

@@ -1,13 +1,11 @@
 {
   "name": "ismrmrd",
-  "version": "1.13.2",
+  "version": "1.13.7",
   "description": "ISMRM Raw Data Format",
   "homepage": "https://github.com/ismrmrd/ismrmrd",
   "license": "BSD-3-Clause",
   "supports": "!(x86 | arm | wasm32)",
   "dependencies": [
-    "boost",
-    "fftw3",
     "hdf5",
     "pugixml",
     {
