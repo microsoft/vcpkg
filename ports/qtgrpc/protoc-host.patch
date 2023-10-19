@@ -17,7 +17,7 @@ index 82972c8f18..08335fa746 100644
  
 -if(NOT __WrapProtoc_protoc_imported_location)
 +if(1)
-    if(CMAKE_CROSSCOMPILING OR NOT "${VCPKG_TARGET_TRIPLET}" STREQUAL "${VCPKG_HOST_TRIPLET}")
+    if(CMAKE_CROSSCOMPILING)
          set(__WrapProtoc_extra_prefix_paths "${QT_ADDITIONAL_HOST_PACKAGES_PREFIX_PATH}")
      endif()
      find_program(__WrapProtoc_protoc_imported_location
