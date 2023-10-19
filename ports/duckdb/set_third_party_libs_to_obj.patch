@@ -1,0 +1,155 @@
+diff --git a/third_party/fastpforlib/CMakeLists.txt b/third_party/fastpforlib/CMakeLists.txt
+index 432deb3205..d6203f34f0 100644
+--- a/third_party/fastpforlib/CMakeLists.txt
++++ b/third_party/fastpforlib/CMakeLists.txt
+@@ -2,7 +2,7 @@ if(POLICY CMP0063)
+     cmake_policy(SET CMP0063 NEW)
+ endif()
+ 
+-add_library(duckdb_fastpforlib STATIC bitpacking.cpp)
++add_library(duckdb_fastpforlib OBJECT bitpacking.cpp)
+ 
+ target_include_directories(
+         duckdb_fastpforlib
+diff --git a/third_party/fmt/CMakeLists.txt b/third_party/fmt/CMakeLists.txt
+index 829bb1d03e..8a4a5f2ee4 100644
+--- a/third_party/fmt/CMakeLists.txt
++++ b/third_party/fmt/CMakeLists.txt
+@@ -2,7 +2,7 @@ if(POLICY CMP0063)
+     cmake_policy(SET CMP0063 NEW)
+ endif()
+ 
+-add_library(duckdb_fmt STATIC format.cc)
++add_library(duckdb_fmt OBJECT format.cc)
+ 
+ target_include_directories(duckdb_fmt PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+ set_target_properties(duckdb_fmt PROPERTIES EXPORT_NAME duckdb_fmt)
+diff --git a/third_party/fsst/CMakeLists.txt b/third_party/fsst/CMakeLists.txt
+index 72e04ae21c..d015bca703 100644
+--- a/third_party/fsst/CMakeLists.txt
++++ b/third_party/fsst/CMakeLists.txt
+@@ -26,7 +26,7 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+ #    )
+ #endif()
+ 
+-add_library(duckdb_fsst STATIC libfsst.cpp fsst_avx512.cpp fsst_avx512_unroll1.inc fsst_avx512_unroll2.inc fsst_avx512_unroll3.inc fsst_avx512_unroll4.inc)
++add_library(duckdb_fsst OBJECT libfsst.cpp fsst_avx512.cpp fsst_avx512_unroll1.inc fsst_avx512_unroll2.inc fsst_avx512_unroll3.inc fsst_avx512_unroll4.inc)
+ 
+ target_include_directories(duckdb_fsst PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+ set_target_properties(duckdb_fsst PROPERTIES EXPORT_NAME duckdb_fsst)
+diff --git a/third_party/hyperloglog/CMakeLists.txt b/third_party/hyperloglog/CMakeLists.txt
+index f1e4c98d38..2e25d93d81 100644
+--- a/third_party/hyperloglog/CMakeLists.txt
++++ b/third_party/hyperloglog/CMakeLists.txt
+@@ -2,7 +2,7 @@ if(POLICY CMP0063)
+     cmake_policy(SET CMP0063 NEW)
+ endif()
+ 
+-add_library(duckdb_hyperloglog STATIC hyperloglog.cpp sds.cpp)
++add_library(duckdb_hyperloglog OBJECT hyperloglog.cpp sds.cpp)
+ 
+ target_include_directories(
+   duckdb_hyperloglog
+diff --git a/third_party/imdb/CMakeLists.txt b/third_party/imdb/CMakeLists.txt
+index 2875dd87ff..29cf137e3e 100644
+--- a/third_party/imdb/CMakeLists.txt
++++ b/third_party/imdb/CMakeLists.txt
+@@ -9,6 +9,6 @@ project(imdb CXX)
+ include_directories(include)
+ 
+ set(CMAKE_BUILD_TYPE "Release")
+-add_library(imdb STATIC imdb.cpp ${ALL_OBJECT_FILES})
++add_library(imdb OBJECT imdb.cpp ${ALL_OBJECT_FILES})
+ 
+ disable_target_warnings(imdb)
+diff --git a/third_party/libpg_query/CMakeLists.txt b/third_party/libpg_query/CMakeLists.txt
+index cb1e13d071..183e649d5a 100644
+--- a/third_party/libpg_query/CMakeLists.txt
++++ b/third_party/libpg_query/CMakeLists.txt
+@@ -6,7 +6,7 @@ if(POLICY CMP0063)
+ endif()
+ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+ 
+-add_library(duckdb_pg_query STATIC
++add_library(duckdb_pg_query OBJECT
+             postgres_parser.cpp
+             pg_functions.cpp
+             src_backend_parser_parser.cpp
+diff --git a/third_party/mbedtls/CMakeLists.txt b/third_party/mbedtls/CMakeLists.txt
+index 78eea4ae09..196a3e00fd 100644
+--- a/third_party/mbedtls/CMakeLists.txt
++++ b/third_party/mbedtls/CMakeLists.txt
+@@ -6,7 +6,7 @@ include_directories(include)
+ 
+ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+ 
+-add_library(duckdb_mbedtls STATIC mbedtls_wrapper.cpp library/sha256.cpp library/rsa.cpp library/rsa_alt_helpers.cpp  library/md.cpp library/bignum.cpp library/oid.cpp library/constant_time.cpp library/platform_util.cpp library/base64.cpp library/pkparse.cpp library/pk.cpp library/pk_wrap.cpp library/asn1parse.cpp library/pem.cpp)
++add_library(duckdb_mbedtls OBJECT mbedtls_wrapper.cpp library/sha256.cpp library/rsa.cpp library/rsa_alt_helpers.cpp  library/md.cpp library/bignum.cpp library/oid.cpp library/constant_time.cpp library/platform_util.cpp library/base64.cpp library/pkparse.cpp library/pk.cpp library/pk_wrap.cpp library/asn1parse.cpp library/pem.cpp)
+ 
+ set_property(TARGET duckdb_mbedtls PROPERTY C_STANDARD 99)
+ 
+diff --git a/third_party/miniz/CMakeLists.txt b/third_party/miniz/CMakeLists.txt
+index 3d72e498d3..a3b1431d39 100644
+--- a/third_party/miniz/CMakeLists.txt
++++ b/third_party/miniz/CMakeLists.txt
+@@ -2,7 +2,7 @@ if(POLICY CMP0063)
+     cmake_policy(SET CMP0063 NEW)
+ endif()
+ 
+-add_library(duckdb_miniz STATIC miniz.cpp)
++add_library(duckdb_miniz OBJECT miniz.cpp)
+ 
+ target_include_directories(
+   duckdb_miniz
+diff --git a/third_party/re2/CMakeLists.txt b/third_party/re2/CMakeLists.txt
+index e7a7f586c7..934fe8b249 100644
+--- a/third_party/re2/CMakeLists.txt
++++ b/third_party/re2/CMakeLists.txt
+@@ -86,7 +86,7 @@ set(RE2_SOURCES
+     util/rune.cc
+     util/strutil.cc)
+ 
+-add_library(duckdb_re2 STATIC ${RE2_SOURCES})
++add_library(duckdb_re2 OBJECT ${RE2_SOURCES})
+ 
+ target_include_directories(
+   duckdb_re2
+diff --git a/third_party/snowball/CMakeLists.txt b/third_party/snowball/CMakeLists.txt
+index d55517d2b0..d8701f841d 100644
+--- a/third_party/snowball/CMakeLists.txt
++++ b/third_party/snowball/CMakeLists.txt
+@@ -7,7 +7,7 @@ project(Snowball)
+ include_directories(libstemmer runtime src_c)
+ 
+ add_library(
+-  snowball STATIC
++  snowball OBJECT
+   libstemmer/libstemmer.c
+   runtime/utilities.c
+   runtime/api.c
+diff --git a/third_party/tpce-tool/CMakeLists.txt b/third_party/tpce-tool/CMakeLists.txt
+index ba9a37a1f1..538279a93d 100644
+--- a/third_party/tpce-tool/CMakeLists.txt
++++ b/third_party/tpce-tool/CMakeLists.txt
+@@ -11,7 +11,7 @@ add_subdirectory(utilities)
+ 
+ add_definitions(-DCOMPILE_FLAT_FILE_LOAD)
+ 
+-add_library(tpce STATIC
++add_library(tpce OBJECT
+             ${TPCE_OBJECT_FILES}
+             duckdb_interface.cpp
+             tpce.cpp
+diff --git a/third_party/utf8proc/CMakeLists.txt b/third_party/utf8proc/CMakeLists.txt
+index 1824f60d0c..f9399ccc34 100644
+--- a/third_party/utf8proc/CMakeLists.txt
++++ b/third_party/utf8proc/CMakeLists.txt
+@@ -4,7 +4,7 @@ endif()
+ 
+ include_directories(include)
+ 
+-add_library(duckdb_utf8proc STATIC utf8proc.cpp utf8proc_wrapper.cpp)
++add_library(duckdb_utf8proc OBJECT utf8proc.cpp utf8proc_wrapper.cpp)
+ 
+ 
+ install(TARGETS duckdb_utf8proc
