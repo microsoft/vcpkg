@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kaitai-io/kaitai_struct_cpp_stl_runtime
-    REF 1f92566e02071ad12ba37486a3d3b3d518f857f6
+    REF ${VERSION}
     SHA512 4efc2aa36662e35f6e23e2dbe300163c79740eb8b741742ee7c6a2510a4d5e1b336a711a59d6bac587456a031c4512155db5e311357fc49ad49cd5130761d2c0
     HEAD_REF master
 )
