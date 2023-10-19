@@ -80,7 +80,7 @@ index 6551dcb..0796448 100644
 +find_dependency(pugixml CONFIG)
 +if(NOT @BUILD_SHARED_LIBS@)
 +    find_dependency(kubazip CONFIG)
-+    find_dependency(minizip CONFIG)
++    find_dependency(unofficial-minizip CONFIG)
 +    #find_dependency(openddlparser CONFIG)
 +    find_dependency(poly2tri CONFIG)
 +    find_dependency(polyclipping CONFIG)
@@ -268,7 +268,8 @@ index 5339454..45e07c0 100644
 -  hunter_add_package(minizip)
 +IF(1)
 +  #hunter_add_package(minizip)
-   find_package(minizip CONFIG REQUIRED)
+-  find_package(minizip CONFIG REQUIRED)
++  find_package(unofficial-minizip CONFIG REQUIRED)
  ELSE()
    SET( unzip_SRCS
 @@ -969,9 +969,9 @@ ENDIF()
@@ -383,7 +384,8 @@ index 5339454..45e07c0 100644
 +      ${OPENDDL_PARSER_LIBRARIES}
 -      #poly2tri::poly2tri
 +      poly2tri::poly2tri
-       minizip::minizip
+-      minizip::minizip
++      unofficial::minizip::minizip
 -      ZLIB::zlib
 -      RapidJSON::rapidjson
 +      ZLIB::ZLIB

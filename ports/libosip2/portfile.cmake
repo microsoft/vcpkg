@@ -34,7 +34,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PROJECT_SUBPATH "platform/vsnet/osip2.vcxproj"
     )
 
-    file(COPY "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+    file(COPY "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include" PATTERN Makefile.* EXCLUDE)
 
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
