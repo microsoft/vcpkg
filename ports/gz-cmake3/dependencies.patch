@@ -1,0 +1,22 @@
+diff --git a/cmake/FindGzBullet.cmake b/cmake/FindGzBullet.cmake
+--- a/cmake/FindGzBullet.cmake
++++ b/cmake/FindGzBullet.cmake
+@@ -30,16 +30,17 @@
+ 
+ # Bullet. Force MODULE mode to use the FindBullet.cmake file distributed with
+ # CMake. Otherwise, we may end up using the BulletConfig.cmake file distributed
+ # with Bullet, which uses relative paths and may break transitive dependencies.
+-find_package(Bullet MODULE ${gz_quiet_arg})
++find_package(Bullet CONFIG REQUIRED)
+ 
+ set(GzBullet_FOUND false)
+ # create Bullet target
+ if(BULLET_FOUND)
+   set(GzBullet_FOUND true)
+ 
+   gz_import_target(GzBullet
++    INTERFACE
+     TARGET_NAME GzBullet::GzBullet
+     LIB_VAR BULLET_LIBRARIES
+     INCLUDE_VAR BULLET_INCLUDE_DIRS
+   )
