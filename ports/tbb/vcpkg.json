@@ -2,11 +2,11 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "tbb",
   "version": "2021.10.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Intel's Threading Building Blocks.",
   "homepage": "https://github.com/oneapi-src/oneTBB",
   "license": "Apache-2.0",
-  "supports": "!uwp",
+  "supports": "(windows & !uwp) | linux | osx | ios | android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
