@@ -10,6 +10,7 @@ vcpkg_from_github(
             fix_config_file_path.patch
             set_third_party_libs_to_obj.patch
             add_version_pass_through.patch
+            add_template_specialization.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DUCKDB_BUILD_STATIC)
@@ -29,9 +30,6 @@ endif()
 if(NOT "parquet" IN_LIST FEATURES)
     set(SKIP_PARQUET_FLAG "-DSKIP_EXTENSIONS=parquet")
 endif()
-if(NOT "cli" IN_LIST FEATURES)
-    set(DONT_BUILD_SHELL_FLAG "-DBUILD_SHELL=FALSE")
-endif()
 
 vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
@@ -39,9 +37,9 @@ vcpkg_cmake_configure(
             -DDUCKDB_OVERWRITE_COMMIT_ID=${DUCKDB_SHORT_HASH}
             -DDUCKDB_OVERWRITE_VERSION=${DUCKDB_VERSION}
             -DBUILD_UNITTESTS=OFF
+            -DBUILD_SHELL=FALSE
             "${SKIP_PARQUET_FLAG}"
             "${LOAD_EXTENSIONS_FLAG}"
-            "${DONT_BUILD_SHELL_FLAG}"
             -DENABLE_EXTENSION_AUTOLOADING=1
             -DENABLE_EXTENSION_AUTOINSTALL=1
 )
@@ -53,6 +51,10 @@ elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/DuckDB")
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/DuckDB")
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

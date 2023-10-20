@@ -4,7 +4,7 @@
   "description": "High-performance in-process analytical database system",
   "homepage": "https://duckdb.org",
   "license": "MIT",
-  "supports": "x64 | (arm64 & !windows)",
+  "supports": "!(uwp | android | (windows & arm64))",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -22,9 +22,6 @@
     "autocomplete": {
       "description": "Statically link the autocomplete extension into DuckDB"
     },
-    "cli": {
-      "description": "Build the DuckDB cli"
-    },
     "fts": {
       "description": "Statically link the FTS extension into DuckDB"
     },
@@ -32,7 +29,7 @@
       "description": "Statically link the httpfs extension into DuckDB"
     },
     "icu": {
-      "description": "ICU support"
+      "description": "Statically link the icu extension into DuckDB"
     },
     "inet": {
       "description": "Statically link the inet extension into DuckDB"
