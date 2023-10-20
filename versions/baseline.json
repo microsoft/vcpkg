@@ -3157,8 +3157,8 @@
       "port-version": 0
     },
     "gz-math7": {
-      "baseline": "7.0.2",
-      "port-version": 1
+      "baseline": "7.3.0",
+      "port-version": 0
     },
     "gz-msgs9": {
       "baseline": "9.5.0",
