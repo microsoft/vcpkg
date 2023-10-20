@@ -4,7 +4,7 @@
   "maintainers": "winsoft666 <winsoft666@outlook.com>",
   "description": "A crash reporting system for Windows applications.",
   "homepage": "https://github.com/winsoft666/CrashRptLite",
-  "supports": "!osx & !linux & !uwp & (x86 | x64)",
+  "supports": "!osx & !linux & !uwp & !android & (x86 | x64)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
