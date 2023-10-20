@@ -1,8 +1,0 @@
-{
-  "name": "tmp",
-  "version": "6.6.0",
-  "description": "Qt WebEngine",
-  "homepage": "https://www.qt.io/",
-  "license": null,
-  "supports": "!static & !((x86 | arm) & windows)"
-}
