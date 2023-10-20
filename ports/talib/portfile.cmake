@@ -75,6 +75,7 @@ file(
 file(
     INSTALL "${SOURCE_PATH}/c/include"
     DESTINATION ${CURRENT_PACKAGES_DIR}
+    PATTERN Makefile.* EXCLUDE
 )
 
 # License file

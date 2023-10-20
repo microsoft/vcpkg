@@ -55,12 +55,20 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+file(READ "${CURRENT_PORT_DIR}/usage" usage)
 set(backends ${FEATURES})
 list(REMOVE_ITEM backends core boost)
 if(backends STREQUAL "")
-    message(STATUS "Attention:\n\nThis soci build doesn't include any backends.\n")
-    set(backends "none")
+    string(APPEND usage "
+This soci build doesn't include any backend and may not be useful.
+")
 endif()
-configure_file("${CURRENT_PORT_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
+foreach(backend IN LISTS backends)
+    string(APPEND usage "
+    # Using the ${backend} backend directly
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:SOCI::soci_${backend}>,SOCI::soci_${backend},SOCI::soci_${backend}_static>)
+")
+endforeach()
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")
