@@ -1,7 +1,6 @@
 {
   "name": "libpcap",
-  "version-semver": "1.10.1",
-  "port-version": 3,
+  "version-semver": "1.10.4",
   "description": "A portable C/C++ library for network traffic capture",
   "homepage": "https://www.tcpdump.org/",
   "license": "BSD-3-Clause",
