@@ -14,8 +14,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO the-tcpdump-group/libpcap
-    REF c7642e2cc0c5bd65754685b160d25dc23c76c6bd #1.10.1
-    SHA512 ed46095863aaee79ca2833d26438f6c837cc3e64acb73efd5a388a11ff7d0d1245d23e5404070a9f2c2c77840c93c09328746761e4481e9a530593a5cbf2ad6f
+    REF "libpcap-${VERSION}"
+    SHA512 7352ff4d5bded916c0802e4a846fcb6b26e3ea8025dbbf58543abd9d9f6e8f7f5d60e03bcadb222d20434b7e052f663a560d7487af4b81fba74cf5aea040d733
     HEAD_REF master
     PATCHES 
         install-pc-on-msvc.patch
