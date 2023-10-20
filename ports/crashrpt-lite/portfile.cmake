@@ -9,7 +9,7 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CRASHREPORT_BUILD_SHARED_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" CRASHREPORT_USE_STATIC_CRT)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DCRASHREPORT_BUILD_SHARED_LIBS:BOOL=${CRASHREPORT_BUILD_SHARED_LIBS}
@@ -17,7 +17,7 @@ vcpkg_configure_cmake(
         -DCRASHREPORT_BUILD_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(INSTALL ${SOURCE_PATH}/CrashRpt_License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
