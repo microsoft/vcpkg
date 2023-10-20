@@ -1,10 +1,11 @@
 {
   "name": "xbyak",
   "version": "6.69",
+  "port-version": 1,
   "description": "Xbyak is a JIT assembler for x86(IA-32)/x64(AMD64, x86-64).",
   "homepage": "https://github.com/herumi/xbyak",
   "license": "BSD-3-Clause",
-  "supports": "!(arm | uwp)",
+  "supports": "!arm",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
