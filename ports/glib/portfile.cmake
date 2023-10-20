@@ -13,7 +13,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         suppress-libelf-dependency.patch
 )
 
-if(APPLE)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_ENABLE_OBJC=1")
 endif()
 
