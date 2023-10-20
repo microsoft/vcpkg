@@ -1,5 +1,5 @@
 {
-  "name": "JavaScriptCore",
+  "name": "javascriptcore",
   "version": "6.0",
   "description": "JavaScriptCore is the built-in JavaScript engine for WebKit, which implements ECMAScript as in ECMA-262 specification.",
   "dependencies": [
