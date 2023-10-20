@@ -46,7 +46,14 @@ vcpkg_cmake_configure(
             -DENABLE_EXTENSION_AUTOINSTALL=1
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/CMake")
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/DuckDB")
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/DuckDB")
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
