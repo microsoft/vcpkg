@@ -43,10 +43,6 @@ if (WITH_EXPAT AND WITH_LIBXML)
     set(WITH_EXPAT OFF)
 endif()
 
-if ("test" IN_LIST FEATURES AND WIN32)
-    message(FATAL_ERROR "Feature test only support UNIX.")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
