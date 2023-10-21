@@ -7,13 +7,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
-    REF v0.9.1
-    SHA512 988f492501e5a449ecc89b98d4e8cb6164b65dfe2b5daf17ccc3035f1a477162b77ce7a2cc4c62d7b8a8d530d80f2b439c779319a6bd15b6d37b4a36406d8f4c
+    REF v0.10
+    SHA512 3fc406a42380f6ebe671d560482733f3cdbca16dd7721ac2fce8f1cdefb96ba87701714c2ee8161d65d9e185bc5f9a0fe587a3843eb75f851b10eb895358cb64
     HEAD_REF master
     PATCHES
         001-fix-vcxproj-vcpkg.patch
         003-fix-imgui-path.patch
-        004-fix-missing-threads-dep.patch # https://github.com/wolfpld/tracy/pull/562
         005-fix-imgui-path-legacy.patch
 )
 
