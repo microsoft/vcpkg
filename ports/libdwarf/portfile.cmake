@@ -9,7 +9,7 @@ vcpkg_from_github(
 
 vcpkg_list(SET options)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  vcpkg_list(APPEND options -DBUILD_NON_SHARED=Off)
+  vcpkg_list(APPEND options -DBUILD_NON_SHARED=On)
 else()
   vcpkg_list(APPEND options -DBUILD_NON_SHARED=On)
 endif()
