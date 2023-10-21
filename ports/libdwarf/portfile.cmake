@@ -7,12 +7,9 @@ vcpkg_from_github(
     PATCHES v0.8.0-patches.patch
 )
 
-vcpkg_list(SET options)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  vcpkg_list(APPEND options -DBUILD_NON_SHARED=On)
-else()
-  vcpkg_list(APPEND options -DBUILD_NON_SHARED=On)
-endif()
+# Apparently -DBUILD_NON_SHARED=On is the right option regardless of VCPKG_LIBRARY_LINKAGE being static or not. I'm very
+# confused what the libdwarf cmake script is doing.
+vcpkg_list(SET options -DBUILD_NON_SHARED=On)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -28,13 +25,5 @@ vcpkg_cmake_config_fixup(
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-#file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-#if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND WIN32)
-#    file(
-#        REMOVE_RECURSE
-#        "${CURRENT_PACKAGES_DIR}/debug/lib"
-#        "${CURRENT_PACKAGES_DIR}/lib"
-#    )
-#endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
