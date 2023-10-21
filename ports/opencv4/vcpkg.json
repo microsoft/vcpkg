@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.8.0",
-  "port-version": 8,
+  "port-version": 9,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -109,7 +109,10 @@
           "host": true,
           "default-features": false
         },
-        "openvino",
+        {
+          "name": "openvino",
+          "platform": "!uwp"
+        },
         "protobuf"
       ]
     },
