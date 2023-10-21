@@ -7,10 +7,8 @@
   - [Basic Usage](#basic-usage)
     - [Creating a new Vagrant box](#creating-a-new-vagrant-box)
       - [VM Software Versions](#vm-software-versions)
-    - [Creating a New Azure Agent Pool](#creating-a-new-azure-agent-pool)
     - [Running the VM](#running-the-vm)
   - [Getting an Azure Pipelines PAT](#getting-an-azure-pipelines-pat)
-  - [Setting up a new macOS machine](#setting-up-a-new-macos-machine)
 
 ## Basic Usage
 
@@ -20,9 +18,9 @@ It should take all of three steps, assuming the machine is
 already set up (or read [these instructions] for how to set up a machine):
 
 1. [Create a new vagrant box](#creating-a-new-vagrant-box)
-2. [Create a new agent pool](#creating-a-new-azure-agent-pool)
-3. [Setup and run the vagrant VM](#running-the-vm)
-4. Update `azure-pipelines.yml` and `azure-pipelines-osx.yml` to point to the new macOS pool.
+1. [Create a new agent pool](#creating-a-new-azure-agent-pool)
+1. [Setup and run the vagrant VM](#running-the-vm)
+1. Update `azure-pipelines.yml` and `azure-pipelines-osx.yml` to point to the new macOS pool.
 
 [these instructions]: #setting-up-a-new-macos-machine
 
@@ -37,167 +35,196 @@ you can set up your own vagrant boxes that are the same as ours by doing the fol
 
 You'll need some prerequisites:
 
-- An Xcode installer - you can get this from Apple's developer website,
+- [ ] A Parallels license
+- [ ] An Xcode installer - you can get this from Apple's developer website,
   although you'll need to sign in first: <https://developer.apple.com/downloads>
 
-If you're updating the CI pool, make sure you update macOS.
+If you are doing this from a local macos box, you can skip to the "update the macos host" step.
 
-First, you'll need to create a base VM;
-this is where you determine what version of macOS is installed.
-Follow the Parallels process for creating a macOS VM:
+- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues , pick the current osx queue,
+      and delete one of the agents that are idle.
+- [ ] Go to that machine in the KVM. (Passwords are stored as secrets in the CPP_GITHUB\vcpkg\vcpkgmm-passwords key vault)
+- [ ] Open a terminal, and run:
 
-1. Get a machine with matching version of Parallels.
-2. If you haven't already, install Vagrant and vagrant-parallels:
       ```sh
-      $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-      $ brew install hashicorp/tap/hashicorp-vagrant
-      $ vagrant plugin install vagrant-parallels
+      $ cd ~/vagrant
+      $ vagrant destroy
+      $ vagrant box list # note what the name of the box is
+      $ vagrant box remove vcpkg-macos-2023-09-11
       ```
-3. Update your MacOS host.
-4. Run parallels, and select 'Other Options' -> 'Install macOS 13.5.2 Using the Recovery Partition' (version number to change :))
-5. Install MacOS like you would on real hardware.
-    * Apple ID: 'Set Up Later' / Skip
-    * Account name: vagrant
-    * Account password: vagrant
-6. Install Parallels Tools
-7. Shut down the VM
-8. Open Parallels Control Center, right click the VM, and make the following edits:
-    * 12 processors
-    * 24000 MB of memory
 
-Once it's finished installing, make sure to turn on the SSH server.
-Open System Preferences, then go to Sharing > Remote Login,
-and turn it on.
-You'll then want to add the vagrant SSH keys to the VM's vagrant user.
-Open the terminal application and run the following:
+- [ ] Update the macos host
+- [ ] Update or install parallels
+- [ ] If this is the first time this machine has been used, install Homebrew by running:
+    ```sh
+    $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+    $ brew install hashicorp/tap/hashicorp-vagrant
+    $ vagrant plugin install vagrant-parallels
+    ```
 
-```sh
-$ # basic stuff
-$ date | sudo tee '/etc/vagrant_box_build_time'
-$ printf 'vagrant\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/vagrant'
-$ sudo chmod 0440 '/etc/sudoers.d/vagrant'
-$ # then install vagrant keys
-$ mkdir -p ~/.ssh
-$ curl -fsSL 'https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub' >~/.ssh/authorized_keys
-$ chmod 0600 ~/.ssh/authorized_keys
-```
+  otherwise, update homebrew by running:
 
-Now, let's package the VM into a base box.
-(The following instructions are adapted from
-[these official instructions][base-box-instructions]).
-
-Shut down the VM cleanly. On the host, run the following commands:
-
-```sh
-$ cd ~/Parallels
-$ echo '{ "provider": "parallels" }' >metadata.json
-$ prl_disk_tool compact --hdd ./<name of VM>.pvm/harddisk.hdd
-$ tar zcvf <name-of-box>.box ./metadata.json ./<name of VM>.pvm
-$ rm ./metadata.json
-```
-
-This will create a box file which contains all the necessary data.
-
-```sh
-$ vagrant box add <name-of-box>.box --name <name-of-box>
-```
-
-Then, we'll create the final box,
-which contains all the necessary programs for doing CI work.
-Copy `Vagrantfile-box.rb` as `Vagrantfile`
-into a new directory. Edit the config.vm.box line to <name-of-box>.
-Into that same directory, download the Xcode command line tools dmg, typically from
-https://developer.apple.com/download/all/ , and name it `clt.dmg`.
-Then, run the following in that directory:
-
-```sh
-$ vagrant up
-$ vagrant package
-$ vagrant destroy
-```
-
-This will create a `package.box`, which is the box file for the base VM.
-Once you've created this box, log in to the Azure Portal, and upload the box to
-vcpkg-image-minting/vcpkgvagrantboxes/boxes. (You might need to use scp to copy the box to
-a machine that can see the Portal)
-
-Once you've done that, add the software versions under [VM Software Versions](#vm-software-versions).
-
-[base-box-instructions]: https://parallels.github.io/vagrant-parallels/docs/boxes/base.html
-
-#### VM Software Versions
-
-* 2023-09-11
-  * macOS: 13.5
-  * Xcode CLTs: 14.3.1
-* 2022-02-04 (minor update to 2022-01-03)
-  * macOS: 12.1
-  * Xcode CLTs: 13.2
-
-### Creating a New Azure Agent Pool
-
-When updating the macOS machines to a new version, you'll need to create
-a new agent pool for the machines to join. The standard for this is to
-name it `PrOsx-YYYY-MM-DD`, with `YYYY-MM-DD` the day that the process
-is started.
-
-In order to create a new agent pool, go to the `vcpkg/public` project;
-go to `Project settings`, then go to `Agent pools` under `Pipelines`.
-Add a new self-hosted pool, name it as above, and make certain to check
-the box for "Grant access permission to all pipelines".
-
-Once you've done this, you are done; you can start adding new machines
-to the pool!
-
-### Running the VM
-
-First, make sure that your software is up to date, first by checking in
-
-* macOS system settings
-* Parallels' UI
-* homebrew:
     ```sh
     $ brew update
     $ brew upgrade
     ```
 
-If this machine has been used before, you might have to remove an existing boxes:
+- [ ] Run parallels, and select 'Other Options' -> 'Install macOS 14.0 Using the Recovery Partition' (version number to change :))
+- [ ] Install MacOS like you would on real hardware.
+    * Apple ID: 'Set Up Later' / Skip
+    * Account name: vagrant
+    * Account password: vagrant
+- [ ] Install Parallels Tools
+- [ ] Shut down the VM
+- [ ] Open Parallels Control Center, right click the VM, and make the following edits:
+    * 12 processors
+    * 24000 MB of memory
+- [ ] Restart the VM
+- [ ] Turn on the SSH server in the VM by opening system preferences, going to Sharing > Remote Login, and turning it on.
+- [ ] Add the vagrant SSH keys to the VM's vagrant user, by opening a terminal and running the following:
 
-```sh
-$ cd ~/vagrant/vcpkg-ec-mac
-$ vagrant halt
-$ vagrant destroy
-$ cd ~
-$ rm -rf ~/vagrant
-$ mkdir ~/vagrant
-```
+    ```sh
+    $ # basic stuff
+    $ date | sudo tee '/etc/vagrant_box_build_time'
+    $ printf 'vagrant\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/vagrant'
+    $ sudo chmod 0440 '/etc/sudoers.d/vagrant'
+    $ # then install vagrant keys
+    $ mkdir -p ~/.ssh
+    $ curl -fsSL 'https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub' >~/.ssh/authorized_keys
+    $ chmod 0600 ~/.ssh/authorized_keys
+    ```
 
-[grab a PAT], mint a SAS token to vcpkg-image-minting/vcpkgvagrantboxes/boxes, and pull the box:
+- [ ] Shut down the VM cleanly.
+- [ ] On the host, open the terminal and run the following to package the VM into a base box. Name the box after the version of macOS in question, such as macos-14-0.box. (The following instructions are adapted from
+[these official instructions][base-box-instructions]).
 
-```sh
-$ vagrant box list
-$ vagrant box remove <any boxes listed by previous command>
-$ vagrant box add 'https://vcpkgvagrantboxes.blob.core.windows.net/boxes/<name of box>.box?<SAS token>' --name <name of box>
-```
+    ```sh
+    $ cd ~/Parallels
+    $ echo '{ "provider": "parallels" }' >metadata.json
+    $ prl_disk_tool compact --hdd ./<name of VM>.pvm/harddisk.hdd
+    $ tar zcvf <name-of-box>.box ./metadata.json ./<name of VM>.pvm
+    $ rm ./metadata.json
+    ```
 
-Copy the contents of Vagrantfile-vm.rb to ~/vagrant/Vagrantfile, and edit the values at the top
-to match this particular machine:
+- [ ] Delete the VM in Parallels and make sure the original .pvm directory is gone.
+- [ ] Add the base box to Vagrant by running the following. `<name-of-customized-box>` should be macos-YYYY-MM-DD.
 
-* machine_name
-* box
-* azure_agent_url should be changed to the latest version
-* agent_pool
-* pat
+    ```sh
+    $ vagrant box add <name-of-box>.box --name <name-of-box>
+    $ rm <name-of-box>.box
+    $ mkdir -p ~/<name-of-customized-box>
+    ```
 
-Then:
+- [ ] In `Vagrantfile-box.rb`, the config.vm.box line to <name-of-box>.
+- [ ] Copy `Vagrantfile-box.rb` as `Vagrantfile` into ~/<name-of-customized-box>. For instance, from your local machine you can do
 
-```sh
-$ cd ~/vagrant
-$ vagrant up
-```
+    ```console
+    $ scp Vagrantfile-box.rb vcpkg@<DNS of the machine>:/Users/vcpkg/<name-of-customized-box>/Vagrantfile
+    ```
 
-If the `vagrant up` fails you might need to `vagrant halt` and rerun from within the KVM as
-sometimes over SSH this fails.
+- [ ] Copy the XCode command line tools DMG you want to use, typically from
+https://developer.apple.com/download/all/ , and name it `clt.dmg`.
+For instance, from your local machine you can do
+
+    ```console
+    scp Command_Line_Tools_for_Xcode_15.dmg vcpkg@<DNS of the machine>:/Users/vcpkg/<name-of-customized-box>/clt.dmg
+    ```
+
+- [ ] Go back to the macOS machine, and run the following to create the box:
+
+    ```sh
+    $ vagrant up
+    $ vagrant package
+    $ vagrant destroy
+    $ vagrant box remove <name-of-box>
+    ```
+
+- [ ] If this machine is also borrowed from the pool add the resulting customized .box back. If so, skip the `vagrant box add` parts of the steps when running the "Running the VM" steps on this machine.
+
+    ```sh
+    $ vagrant box add ./package.box --name <name-of-customized-box>
+    ```
+
+- [ ] Copy `package.box` to locally. Name it based on the current date, such as `macos-2023-10-20.box`
+
+    ```console
+    scp vcpkg@<DNS of the machine>:/Users/vcpkg/<name-of-customized-box>/package.box <name-of-customized-box>.box
+    ```
+
+- [ ] Delete the temporary directory:
+
+    ```sh
+    $ rm --rf ~/<name-of-customized-box>
+    ```
+
+- [ ] Log in to the Azure Portal, and upload the box to
+vcpkg-image-minting/vcpkg-image-minting/boxes.
+- [ ] Change the N-2th box to the 'Archive' tier, and the the N-1th box to the 'Cool' tier.
+- [ ] Generate a SAS'd link to the new box to use in the "Running the VM" steps below.
+- [ ] Update the software versions under [VM Software Versions](#vm-software-versions) below
+- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-YYYY-MM-DD` based on the current date. Check 'Grant access permission to all pipelines.'
+- [ ] Get the current Agent version by pressing 'New Agent', and update Vagrantfile-vm.rb with this version number.
+- [ ] Update Vagrantfile-vm.rb with the right dates for the box and pool.
+- [ ] Update azure-pipelines.yml with the new pool, and commit all of this.
+- [ ] Follow the "Running the VM" steps below for each machine in the fleet.
+
+[base-box-instructions]: https://parallels.github.io/vagrant-parallels/docs/boxes/base.html
+
+#### VM Software Versions
+
+* macOS: 14.0
+* Xcode CLTs: 15.0
+
+### Running the VM
+
+Run these steps on each machine to add to the fleet. Skip steps that were done implicitly above if this machine was used to build a box.
+
+- [ ] If this machine was used before, delete it from the pool of which it is a member from https://dev.azure.com/vcpkg/public/_settings/agentqueues
+- [ ] Log in to the machine using the KVM.
+- [ ] Open a terminal and destroy any old vagrant VMs or boxes
+
+    ```sh
+    $ cd ~/vagrant
+    $ vagrant halt
+    $ vagrant destroy
+    $ vagrant box list
+    $ vagrant box remove <any boxes listed by previous command except the one to use>
+    ```
+
+- [ ] Check for software updates in macOS system settings
+- [ ] Check for software updates in Parallels' UI
+- [ ] Update homebrew dependencies
+
+    ```sh
+    $ brew update
+    $ brew upgrade
+    ```
+
+- [ ] Mint a SAS token URI to the box to use from the Azure portal if you don't already have one, and pull the box. <name-of-customized-box> should be macos-YYYY-MM-DD.
+
+    ```sh
+    $ vagrant box add '<SAS URI>' --name <name-of-customized-box>
+    ```
+
+- [ ] [grab a PAT], and update the contents of `Vagrantfile-vm.rb`. DO NOT COMMIT THIS EDIT.
+- [ ] Update the machine name in `Vagrantfile-vm.rb`
+- [ ] Copy Vagrantfile-vm.rb as `~/vagrant/Vagrantfile`
+
+    ```console
+    $ scp Vagrantfile-vm.rb vcpkg@<DNS of the machine>:/Users/vcpkg/vagrant/Vagrantfile
+    ```
+
+- [ ] Back on the macOS machine, fire up the VM:
+
+    ```sh
+    $ cd ~/vagrant
+    $ vagrant up
+    ```
+
+  If the `vagrant up` fails you might need to `vagrant halt` and rerun from within the KVM as sometimes over SSH this fails.
+
+- [ ] Check that the machine shows up in the pool, and log out of the vcpkg user.
+- [ ] Update the "vcpkg Macs" spreadsheet line for the machine with the new pool.
 
 [grab a PAT]: #getting-an-azure-pipelines-pat
 
@@ -214,13 +241,3 @@ and give it a custom defined scope that includes the
 "Agent pools: Read & manage" permission (you'll need to "Show all scopes"
 to access this).
 You can now copy this token and use it to allow machines to join.
-
-## Setting up a new macOS machine
-
-* Install Parallels
-* Install Homebrew
-    ```sh
-    $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-    $ brew install hashicorp/tap/hashicorp-vagrant
-    $ vagrant plugin install vagrant-parallels
-    ```

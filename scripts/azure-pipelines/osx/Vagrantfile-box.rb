@@ -1,5 +1,5 @@
 Vagrant.configure('2') do |config|
-  config.vm.box = 'macos-13-5'
+  config.vm.box = 'macos-14-0'
   config.vm.synced_folder '.', '/Users/vagrant/shared'
 
   config.vm.provision 'shell',

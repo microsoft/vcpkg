@@ -1,14 +1,14 @@
 server = {
   :machine_name => 'vcpkg-eg-mac-11',
-  :box => 'vcpkg-macos-2023-09-11',
+  :box => 'macos-2023-10-20',
   :box_version => '0',
   :ram => 24000,
   :cpu => 12
 }
 
-azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/3.225.0/vsts-agent-osx-x64-3.225.0.tar.gz'
+azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/3.227.2/vsts-agent-osx-x64-3.227.2.tar.gz'
 devops_url = 'https://dev.azure.com/vcpkg'
-agent_pool = 'PrOsx-2023-09-11'
+agent_pool = 'PrOsx-2023-10-20'
 pat = '<replace with PAT>'
 
 Vagrant.configure('2') do |config|
