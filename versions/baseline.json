@@ -4665,8 +4665,8 @@
       "port-version": 1
     },
     "libsbml": {
-      "baseline": "5.20.0",
-      "port-version": 1
+      "baseline": "5.20.2",
+      "port-version": 0
     },
     "libsbsms": {
       "baseline": "2.3.0",
