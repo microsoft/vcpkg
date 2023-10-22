@@ -784,10 +784,10 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN "${ARGN}")
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars "")
 
-    string(REGEX MATCH "^REQUIRED$" z_vcpkg_package_required "${z_vcpkg_find_package_ARGN}")
-
-    if(NOT z_vcpkg_package_required AND NOT (CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name} OR CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}))
-        message(Warning "[VCPKG_IMPLICIT_DEPENDENCY] ${z_vcpkg_find_package_package_name} is not controlled explicitly.")
+    string(FIND "${z_vcpkg_find_package_ARGN}" "REQUIRED" z_vcpkg_package_required)
+    
+    if(z_vcpkg_package_required EQUAL -1 AND NOT (CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name} OR CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}))
+        message(WARNING "[VCPKG_IMPLICIT_DEPENDENCY] ${z_vcpkg_find_package_package_name} is not controlled explicitly.")
     endif()
 
     # Workaround to set the ROOT_PATH until upstream CMake stops overriding
