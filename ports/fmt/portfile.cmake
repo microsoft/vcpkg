@@ -10,9 +10,9 @@ vcpkg_from_github(
 )
 
 if ("modules" IN_LIST FEATURES)
-	set(CXX_MODULES enabled)
+    set(CXX_MODULES ON)
 else()
-	set(CXX_MODULES disabled)
+    set(CXX_MODULES OFF)
 endif()
 
 vcpkg_cmake_configure(
@@ -36,7 +36,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
