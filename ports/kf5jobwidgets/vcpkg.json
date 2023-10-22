@@ -1,7 +1,6 @@
 {
   "name": "kf5jobwidgets",
-  "version": "5.89.0",
-  "port-version": 1,
+  "version": "5.98.0",
   "description": "Widgets for showing progress of asynchronous jobs",
   "homepage": "https://api.kde.org/frameworks/kjobwidgets/html/index.html",
   "dependencies": [

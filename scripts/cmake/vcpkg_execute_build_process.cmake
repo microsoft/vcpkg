@@ -53,7 +53,10 @@ function(vcpkg_execute_build_process)
         ERROR_FILE "${log_err}"
         RESULT_VARIABLE error_code
     )
-
+    if (NOT error_code MATCHES "^[0-9]+$")
+        list(JOIN arg_COMMAND " " command)
+        message(FATAL_ERROR "Failed to execute command \"${command}\" in working directory \"${arg_WORKING_DIRECTORY}\": ${error_code}")
+    endif()
     if(NOT error_code EQUAL "0")
         file(READ "${log_out}" out_contents)
         file(READ "${log_err}" err_contents)
@@ -83,7 +86,7 @@ function(vcpkg_execute_build_process)
                     RESULT_VARIABLE error_code
                 )
             endif()
-        elseif(all_contents MATCHES "mt : general error c101008d: ")
+        elseif(all_contents MATCHES "mt(\\.exe)? : general error c101008d: ")
             # Antivirus workaround - occasionally files are locked and cause mt.exe to fail
             message(STATUS "mt.exe has failed. This may be the result of anti-virus. Disabling anti-virus on the buildtree folder may improve build speed")
             foreach(iteration RANGE 1 3)

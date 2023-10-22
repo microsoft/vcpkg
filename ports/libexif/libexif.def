@@ -48,6 +48,7 @@ EXPORTS
     exif_entry_unref
     exif_format_get_name
     exif_format_get_size
+    exif_get_gps_tag_info
     exif_get_long
     exif_get_rational
     exif_get_short
@@ -82,6 +83,7 @@ EXPORTS
     exif_mem_realloc
     exif_mem_ref
     exif_mem_unref
+    exif_mnote_data_apple_new
     exif_mnote_data_canon_new
     exif_mnote_data_construct
     exif_mnote_data_count
@@ -116,6 +118,10 @@ EXPORTS
     exif_tag_table_count
     exif_tag_table_get_name
     exif_tag_table_get_tag
+    mnote_apple_entry_get_value
+    mnote_apple_tag_get_description
+    mnote_apple_tag_get_name
+    mnote_apple_tag_get_title
     mnote_canon_entry_get_value
     mnote_canon_tag_get_description
     mnote_canon_tag_get_name

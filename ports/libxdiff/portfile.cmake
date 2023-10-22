@@ -11,19 +11,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS -DBUILD_SHARED=${KEYSTONE_BUILD_SHARED}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/xdiff.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/xdiff.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/xdiff.dll")
     endif()
 endif()
@@ -31,13 +30,13 @@ endif()
 
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/xdiff.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/xdiff.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/xdiff.dll")
     endif()
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/XDiff TARGET_PATH share/XDiff)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/XDiff PACKAGE_NAME XDiff)

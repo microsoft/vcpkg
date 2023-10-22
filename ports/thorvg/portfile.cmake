@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO Samsung/thorvg
-    REF v0.8.2
-    SHA512 f59e227f776fed2e0489fe33ff64008a728adf1795c58107f17ed92caa809f6f5fd0604fde91d0c1735ea82b0b9e91da36d325e492e4a9802647469b06ebafd2
+    REPO thorvg/thorvg
+    REF v0.11.1
+    SHA512 388c3d8bd5099c1e35911dc75ffa6aafc6ea9f1219845ea29dbef91db8c75b2e22b091df4340acc2b44d948cb18fcf8f3a511045ce6ff959a078b350c9a13756
     HEAD_REF master
     PATCHES
-        install-tools.patch
+        windows-build-option.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -15,9 +15,6 @@ else()
 endif()
 
 if ("tools" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "This feature doesn't support Windows platform")
-    endif()
     list(APPEND BUILD_OPTIONS -Dtools=all)
 endif()
 

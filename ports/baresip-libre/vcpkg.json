@@ -1,0 +1,20 @@
+{
+  "name": "baresip-libre",
+  "version": "3.3.0",
+  "description": "Generic library for real-time communications with async IO support",
+  "homepage": "https://github.com/baresip/re",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

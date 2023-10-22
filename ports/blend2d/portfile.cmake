@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO blend2d/blend2d
-  REF 0ca46df1d8ec7d8bc5250329ce281d82cfc96b99
-  SHA512 fbe54a59b0dc9fd0397619e3f6b1d336d3f906322a06583fe4f90bbb8bd95188f39f162b8ee66cc464050f6f40e856b72a80f37ac190a4a584fda71e2ce73689
+  REF 7f292c15bafd8a7d92791f421cecb2ce84a75da8 # commited on 2023-06-16
+  SHA512 dfd97a27b88bd94753b1404cbe63989186185bb6700b5c65a22b48e14fec7392038e328f30ea71a893c7bbee376f6017b4cdc2bf596259146be601d934c4fbdf
   HEAD_REF master
 )
 
@@ -10,7 +10,6 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLEND2D_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   INVERTED_FEATURES
-    futex      BLEND2D_NO_FUTEX
     jit        BLEND2D_NO_JIT
     logging    BLEND2D_NO_JIT_LOGGING
     tls        BLEND2D_NO_TLS
@@ -20,40 +19,40 @@ if(NOT BLEND2D_NO_JIT)
   vcpkg_from_github(
     OUT_SOURCE_PATH ASMJIT_SOURCE_PATH
     REPO asmjit/asmjit
-    REF a4e1e88374142f4a842892f9c4bd0b0776fdcd0a
-    SHA512 c8588e2185502c9d045a63ebf722d1cf14eb7373423ef36f0e410525837430f117ad6c841aac16af17246c4d348c3e9094a848b917985de3f677098c1e32606f
+    REF 3577608cab0bc509f856ebf6e41b2f9d9f71acc4 # commited on 2023-04-28
+    SHA512 36557af5c82ccc8e5ef2d4effe22b75e22c2bf1f4504daae3ff813e907449be6e7b25678af071cb9dede7c6e02dc5c8ad2fc2a3da011aa660eb7f5c75ab23042
     HEAD_REF master
   )
 
-  file(REMOVE_RECURSE ${SOURCE_PATH}/3rdparty/asmjit)
+  file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/asmjit")
 
-  get_filename_component(ASMJIT_SOURCE_DIR_NAME ${ASMJIT_SOURCE_PATH} NAME)
-  file(COPY ${ASMJIT_SOURCE_PATH} DESTINATION ${SOURCE_PATH}/3rdparty)
-  file(RENAME ${SOURCE_PATH}/3rdparty/${ASMJIT_SOURCE_DIR_NAME} ${SOURCE_PATH}/3rdparty/asmjit)
+  get_filename_component(ASMJIT_SOURCE_DIR_NAME "${ASMJIT_SOURCE_PATH}" NAME)
+  file(COPY "${ASMJIT_SOURCE_PATH}" DESTINATION "${SOURCE_PATH}/3rdparty")
+  file(RENAME "${SOURCE_PATH}/3rdparty/${ASMJIT_SOURCE_DIR_NAME}" "${SOURCE_PATH}/3rdparty/asmjit")
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBLEND2D_STATIC=${BLEND2D_STATIC}
+        "-DBLEND2D_STATIC=${BLEND2D_STATIC}"
+        "-DBLEND2D_NO_FUTEX=OFF"
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if(BLEND2D_STATIC)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 
 if(BLEND2D_STATIC)
-  # Install usage
-  configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage_static.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME usage)
+else()
+  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()

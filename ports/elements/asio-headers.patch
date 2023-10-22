@@ -1,0 +1,14 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index e8179fbe..29b420c7 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -288,7 +288,8 @@ endif()
+ 
+ ###############################################################################
+ # Asio headers
+-target_include_directories(elements PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/asio/asio/include)
++find_path(ASIO_INCLUDE_DIR asio.hpp)
++target_include_directories(elements PUBLIC ${ASIO_INCLUDE_DIR})
+ 
+ ###############################################################################
+ # Global options

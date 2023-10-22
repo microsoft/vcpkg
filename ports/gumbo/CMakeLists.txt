@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.8.0)
 
 project(gumbo)
 
+set(gumbo_public_headers
+  src/gumbo.h 
+  src/tag_enum.h
+)
+
 set(gumbo_srcs
   src/attribute.c
   src/char_ref.c
@@ -23,11 +28,22 @@ endif (MSVC)
 
 add_library(gumbo ${gumbo_srcs})
 
+set_target_properties(gumbo PROPERTIES
+    C_STANDARD 99
+    PUBLIC_HEADER "${gumbo_public_headers}"
+)
+
+target_include_directories(gumbo PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include/>)
+
 install(
   TARGETS gumbo  EXPORT unofficial-gumbo-config
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
+  PUBLIC_HEADER DESTINATION include
 )
 
 install(EXPORT unofficial-gumbo-config
@@ -37,6 +53,4 @@ install(EXPORT unofficial-gumbo-config
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gumbo.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/lib/pkgconfig/gumbo.pc" @ONLY)
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/pkgconfig/gumbo.pc" DESTINATION "lib/pkgconfig")
-if(NOT DISABLE_INSTALL_HEADERS)
-  install(FILES  src/gumbo.h src/tag_enum.h DESTINATION include)
-endif()
+

@@ -94,7 +94,7 @@ function resolve([string]$targetBinary) {
     $targetBinaryDir = Split-Path $targetBinaryPath -parent
 
     if (Get-Command "dumpbin" -ErrorAction SilentlyContinue) {
-        $a = $(dumpbin /DEPENDENTS $targetBinary | ? { $_ -match "^    [^ ].*\.dll" } | % { $_ -replace "^    ","" })
+        $a = $(dumpbin /DEPENDENTS $targetBinaryPath| ? { $_ -match "^    [^ ].*\.dll" } | % { $_ -replace "^    ","" })
     } elseif (Get-Command "llvm-objdump" -ErrorAction SilentlyContinue) {
         $a = $(llvm-objdump -p $targetBinary| ? { $_ -match "^ {4}DLL Name: .*\.dll" } | % { $_ -replace "^ {4}DLL Name: ","" })
     } elseif (Get-Command "objdump" -ErrorAction SilentlyContinue) {

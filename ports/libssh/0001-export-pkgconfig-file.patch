@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7bc3331..5c7275d 100644
+index 741dc61..42f0e8f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -124,8 +124,28 @@ add_subdirectory(include)
@@ -7,7 +7,7 @@ index 7bc3331..5c7275d 100644
  
  # pkg-config file
 -if (UNIX OR MINGW)
- configure_file(libssh.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc)
+ configure_file(libssh.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc @ONLY)
 +  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "Requires:")
 +  if (WITH_ZLIB)
 +    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " zlib")
@@ -18,7 +18,7 @@ index 7bc3331..5c7275d 100644
 +    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -lmbedcrypto -lpthread")
 +  else ()
 +    if (WIN32)
-+      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -llibcrypto -lUser32 -lCrypt32")
++      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -llibcrypto -luser32 -lcrypt32")
 +    else ()
 +      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " libcrypto\nLibs.private:")
 +    endif ()
@@ -27,7 +27,7 @@ index 7bc3331..5c7275d 100644
 +    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " -lpthread")
 +  endif ()
 +  if (WIN32)
-+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " -lws2_32 -lShell32 -lAdvapi32")
++    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " -lws2_32 -lshell32 -ladvapi32")
 +  endif ()
  install(
    FILES

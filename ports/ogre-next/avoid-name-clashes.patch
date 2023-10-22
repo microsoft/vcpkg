@@ -1,0 +1,11 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 800e956..436c3d3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -678,5 +678,5 @@ include(Packaging)
+ 
+ 
+ # Show feature summary
+-include(FeatureSummary)
++include(OgreFeatureSummary)
+ 

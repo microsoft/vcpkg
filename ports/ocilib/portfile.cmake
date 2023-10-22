@@ -1,31 +1,25 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrogier/ocilib
-    REF v4.7.3
-    SHA512 80cf1f76420b506789b1f7edd9af826801236499dd0757be3438e3cdf286b95ddd7dd35909622b3862244f6b535a8744f0b25989fb3740a4a0fd984410fb420b
+    REF "v${VERSION}"
+    SHA512 5982b17d04ebbcb281848a998b3f2f35c5a83bc6d14cd6fecb8eef695300b577fb8dcc1377e9a8827587ac06d58441328cb0d55b19ae65788c2fce8da7ce702a
     HEAD_REF master
     PATCHES fix-DisableWC4191.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(PLATFORM x86)
-    else()
-        set(PLATFORM x64)
-    endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
     # There is no debug configuration
     # As it is a C library, build the release configuration and copy its output to the debug folder
     set(VCPKG_BUILD_TYPE release)
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH proj/dll/ocilib_dll_vs2019.sln
-        INCLUDES_SUBPATH include
-        LICENSE_SUBPATH LICENSE
+        PROJECT_SUBPATH proj/dll/ocilib_dll.sln
         RELEASE_CONFIGURATION "Release - ANSI"
-        PLATFORM ${PLATFORM}
-        USE_VCPKG_INTEGRATION
-        ALLOW_ROOT_INCLUDES)
+        PLATFORM ${VCPKG_TARGET_ARCHITECTURE}
+    )
+
+    file(COPY "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug")
     file(COPY "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
@@ -47,5 +41,6 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/${PORT}" "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
-    file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

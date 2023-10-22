@@ -1,15 +1,16 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeGLUTProject/freeglut
-    REF v3.2.2
-    SHA512 caaed8af95c2d0ecbc785229e26433978a0f606ae2b9f0b3cd794bb5bb70a1cc54d21f941a1a03e20c7e0fa3eba9d54a21d6e23e44f243899c0fdf146066cf29
+    REF "v${VERSION}"
+    SHA512 4bb6d6c086bac7a9c0ec78062dce58987555785abe6375f462ee249f65210a964a28fb10ba7ee8a42d7fafb00eb8d196eb403d65d255f02f88467369c187228b
     HEAD_REF master
     PATCHES 
         x11-dependencies-export.patch
-        macOS_Xquartz.patch
         fix-debug-macro.patch
         no_x64_enforcement.patch
-        windows-static-output-name.patch
+        windows-output-name.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -24,6 +25,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DFREEGLUT_BUILD_STATIC_LIBS=${FREEGLUT_STATIC}
         -DFREEGLUT_BUILD_SHARED_LIBS=${FREEGLUT_DYNAMIC}
+        -DFREEGLUT_REPLACE_GLUT=ON
         -DFREEGLUT_BUILD_DEMOS=OFF
         -DINSTALL_PDB=OFF # Installing pdbs failed on debug static. So, disable it and let vcpkg_copy_pdbs() do it
 )
@@ -31,8 +33,14 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeGLUT)
 vcpkg_fixup_pkgconfig()
+file(COPY_FILE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glut.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freeglut.pc")
+if(NOT VCPKG_BUILD_TYPE)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" " -lfreeglut" " -lfreeglutd")
+    endif()
+    file(COPY_FILE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freeglut.pc")
+endif()
 
-# Rename static lib (otherwise it's incompatible with FindGLUT.cmake)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/include/GL/freeglut_std.h"
@@ -42,7 +50,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Clean
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/glut")
 

@@ -11,9 +11,18 @@ vcpkg_from_github(
         fix-source-generation.patch
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(BACKEND_OPTION "-Dsaucer_backend=WebView2")
+else()
+    set(BACKEND_OPTION "-Dsaucer_backend=Qt6")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH} 
-    OPTIONS -Dsaucer_prefer_remote=OFF -Dsaucer_remote_webview2=OFF
+    OPTIONS
+        ${BACKEND_OPTION}
+        -Dsaucer_prefer_remote=OFF
+        -Dsaucer_remote_webview2=OFF
 )
 
 vcpkg_cmake_install()

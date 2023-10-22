@@ -1,0 +1,42 @@
+diff --git a/meson.build b/meson.build
+index 85d8da7..7f97dbc 100644
+--- a/meson.build
++++ b/meson.build
+@@ -3,7 +3,7 @@ project('libzim', ['c', 'cpp'],
+   license : 'GPL2',
+   default_options : ['c_std=c11', 'cpp_std=c++11'])
+ 
+-if build_machine.system() != 'windows'
++if host_machine.system() != 'windows' or meson.get_compiler('cpp').get_id() == 'gcc'
+   add_project_arguments('-D_LARGEFILE64_SOURCE=1', '-D_FILE_OFFSET_BITS=64', language: 'cpp')
+ endif
+ 
+@@ -56,8 +56,8 @@ private_conf.set('ENABLE_XAPIAN', xapian_dep.found())
+ public_conf.set('LIBZIM_WITH_XAPIAN', xapian_dep.found())
+ 
+ pkg_requires = ['liblzma', 'libzstd']
+-if build_machine.system() == 'windows'
+-    extra_link_args = ['-lRpcrt4', '-lWs2_32', '-lwinmm', '-licuuc', '-licuin']
++if host_machine.system() == 'windows'
++    extra_link_args = ['-lrpcrt4', '-lws2_32', '-lwinmm']
+     extra_cpp_args = ['-DSORTPP_PASS']
+ else
+     extra_link_args = []
+@@ -65,7 +65,7 @@ else
+ endif
+ 
+ compiler = meson.get_compiler('cpp')
+-if (compiler.get_id() == 'gcc' and build_machine.system() == 'linux') or host_machine.system() == 'freebsd'
++if (compiler.get_id() == 'gcc' and host_machine.system() == 'linux') or host_machine.system() == 'freebsd'
+   # C++ std::thread is implemented using pthread on linux by gcc
+   thread_dep = dependency('threads')
+ else
+@@ -74,6 +74,8 @@ endif
+ 
+ if xapian_dep.found()
+     pkg_requires += ['xapian-core']
++endif
++if true
+     icu_dep = dependency('icu-i18n', static:static_linkage)
+     pkg_requires += ['icu-i18n']
+ else

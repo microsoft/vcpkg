@@ -2,7 +2,7 @@ vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.osgeo.org/geos/geos-${VERSION}.tar.bz2"
     FILENAME "geos-${VERSION}.tar.bz2"
-    SHA512 708500aba9b04208ee46a531d55ddf63a213dfaa2922dae937b524300b2b46c95143ed6cd3ff1414e9099f2be95e5df5a2e0b49df43acf93a9478215259f20d3
+    SHA512 b5df5b773bef595335e1be6c6d3325f932f1577e2a4b8bdfa8cf26f09c7d41ed5e0695ca15826d1f95bc4a45b777839c2be8a96a8af5415c8bcf58cc804eb1ec
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         disable-warning-4996.patch
         fix-exported-config.patch
         fix-dll-builds.patch
+        gcc-13-fix-backport.patch
 )
 
 vcpkg_cmake_configure(

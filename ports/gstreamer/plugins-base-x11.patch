@@ -1,7 +1,7 @@
-diff --git a/meson.build b/meson.build
+diff --git a/subprojects/gst-plugins-base/meson.build b/subprojects/gst-plugins-base/meson.build
 index 9b00253a0f..e3c3a0d920 100644
---- a/meson.build
-+++ b/meson.build
+--- a/subprojects/gst-plugins-base/meson.build
++++ b/subprojects/gst-plugins-base/meson.build
 @@ -316,7 +316,7 @@ else
    gtk_quartz_dep = dependency('', required : false)
  endif

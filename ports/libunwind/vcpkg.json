@@ -1,0 +1,14 @@
+{
+  "name": "libunwind",
+  "version": "1.7.2",
+  "description": "Unix libray for portable stack unwinding",
+  "homepage": "https://www.nongnu.org/libunwind",
+  "license": "MIT",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

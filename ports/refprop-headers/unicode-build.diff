@@ -1,0 +1,13 @@
+diff --git a/REFPROP_lib.h b/REFPROP_lib.h
+index 60fb64a..df10d2c 100644
+--- a/REFPROP_lib.h
++++ b/REFPROP_lib.h
+@@ -762,7 +762,7 @@ extern "C" {
+                     #ifndef UNICODE
+                         msg = dllPath;
+                     #else
+-                        std::wstring wStr = t;
++                        std::wstring wStr = dllPath;
+                         msg = std::string(wStr.begin(), wStr.end());
+                     #endif
+                     RPPath_loaded = msg;

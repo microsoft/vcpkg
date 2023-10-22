@@ -25,10 +25,10 @@ vcpkg_download_distfile(
     SHA512 6e534b3a623efa5f473977deeed4d24669ef0e0e3ac5fcadc88c5cf2d6ad0852a07c68cd70ac748d7f9a3793704ce1a54a7d17114458a8c1f2e42d410681c340
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH GNULIB_SOURCE_PATH
+vcpkg_extract_source_archive(
+    GNULIB_SOURCE_PATH
     ARCHIVE "${GNULIB_SNAPSHOT}"
-    REF ${GNULIB_REF}
+    SOURCE_BASE ${GNULIB_REF}
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/gnulib")

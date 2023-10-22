@@ -1,9 +1,8 @@
 {
   "name": "portsmf",
-  "version": "0.238",
-  "port-version": 1,
+  "version": "239",
   "description": "Portsmf is 'Port Standard MIDI File', a cross-platform, C++ library for reading and writing Standard MIDI Files.",
-  "homepage": "https://github.com/tenacityteam/portsmf",
+  "homepage": "https://codeberg.org/tenacityteam/portsmf",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [

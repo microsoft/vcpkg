@@ -1,0 +1,26 @@
+{
+  "name": "qtspeech",
+  "version": "6.5.3",
+  "description": "Qt Speech support",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "supports": "!(windows & x86)",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui",
+        "widgets"
+      ]
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false
+    }
+  ]
+}

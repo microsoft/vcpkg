@@ -1,0 +1,4 @@
+libvault provides CMake targets:
+
+    find_package(libvault CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE libvault::vault)

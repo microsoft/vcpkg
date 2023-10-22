@@ -1,9 +1,9 @@
 {
   "name": "avcpp",
-  "version-date": "2021-06-14",
-  "port-version": 1,
+  "version": "2.1.0",
   "description": "Wrapper for the FFmpeg that simplify usage it from C++ projects.",
   "homepage": "https://github.com/h4tr3d/avcpp",
+  "license": "LGPL-2.1-only OR BSD-3-Clause",
   "dependencies": [
     {
       "name": "ffmpeg",
@@ -17,6 +17,10 @@
         "swresample",
         "swscale"
       ]
+    },
+    {
+      "name": "pkgconf",
+      "host": true
     },
     {
       "name": "vcpkg-cmake",

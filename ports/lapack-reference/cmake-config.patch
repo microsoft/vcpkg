@@ -1,0 +1,21 @@
+diff --git a/CMAKE/lapack-config-install.cmake.in b/CMAKE/lapack-config-install.cmake.in
+index 7760960..102eb92 100644
+--- a/CMAKE/lapack-config-install.cmake.in
++++ b/CMAKE/lapack-config-install.cmake.in
+@@ -12,8 +12,14 @@ unset(_LAPACK_TARGET)
+ set(LAPACK_Fortran_COMPILER_ID "@CMAKE_Fortran_COMPILER_ID@")
+ 
+ # Report the blas and lapack raw or imported libraries.
+-set(LAPACK_blas_LIBRARIES "@BLAS_LIBRARIES@")
++if("@USE_OPTIMIZED_BLAS@")
++  include(CMakeFindDependencyMacro)
++  find_dependency(BLAS) # For current build type
++  set(LAPACK_blas_LIBRARIES "${BLAS_LIBRARIES}")
++else()
++  set(LAPACK_blas_LIBRARIES "@BLASLIB@") # target carries link libraries
++endif()
+ set(LAPACK_lapack_LIBRARIES "@LAPACK_LIBRARIES@")
+-set(LAPACK_LIBRARIES ${LAPACK_blas_LIBRARIES} ${LAPACK_lapack_LIBRARIES})
++set(LAPACK_LIBRARIES ${LAPACK_lapack_LIBRARIES}) # target carries link libraries
+ 
+ unset(_LAPACK_SELF_DIR)

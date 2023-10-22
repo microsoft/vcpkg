@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f4fa064..a868106 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -126,21 +126,6 @@ endif()
+ option(OPENTELEMETRY_INSTALL "Whether to install opentelemetry targets"
+        ${OPENTELEMETRY_INSTALL_default})
+ 
+-if(NOT DEFINED CMAKE_CXX_STANDARD)
+-  if(WITH_STL)
+-    # Require at least C++17. C++20 is needed to avoid gsl::span
+-    if(CMAKE_VERSION VERSION_GREATER 3.11.999)
+-      # Ask for 20, may get anything below
+-      set(CMAKE_CXX_STANDARD 20)
+-    else()
+-      # Ask for 17, may get anything below
+-      set(CMAKE_CXX_STANDARD 17)
+-    endif()
+-  else()
+-    set(CMAKE_CXX_STANDARD 11)
+-  endif()
+-endif()
+-
+ if(WITH_STL)
+   # These definitions are needed for test projects that do not link against
+   # opentelemetry-api library directly. We ensure that variant implementation

@@ -8,6 +8,7 @@ vcpkg_from_github(
         control-build.patch
         fix-dependencies.cmake
         fix_msvc_build.patch
+        fix-static-usage.patch
 )
 
 # Delete vendored Find modules
@@ -40,12 +41,16 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_STATIC_LIBS=${BUILD_STATIC}
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
     OPTIONS_DEBUG
         -DENABLE_TOOLS=OFF
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
+if(BUILD_STATIC)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gd.h" "ifdef NONDLL" "if 1")
+endif()
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     string(REPLACE "_dynamic" "" suffix "_${VCPKG_LIBRARY_LINKAGE}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gdlib.pc" " -lgd" " -llibgd${suffix}")

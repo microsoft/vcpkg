@@ -1,7 +1,7 @@
 {
   "name": "ponder",
-  "version-string": "3.0.0",
-  "port-version": 4,
+  "version": "3.0.0",
+  "port-version": 5,
   "description": "A C++ multi-purpose reflection library.",
   "homepage": "https://github.com/billyquith/ponder",
   "dependencies": [

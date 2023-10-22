@@ -19,9 +19,9 @@ if("basisimporter" IN_LIST FEATURES OR "basisimageconverter" IN_LIST FEATURES)
         # A commit that's before the UASTC support (which is not implemented yet)
         vcpkg_download_distfile(
             _BASIS_UNIVERSAL_PATCHES
-            URLS "https://github.com/BinomialLLC/basis_universal/commit/e9c55faac7745ebf38d08cd3b4f71aaf542f8191.diff"
+            URLS "https://github.com/BinomialLLC/basis_universal/commit/e9c55faac7745ebf38d08cd3b4f71aaf542f8191.diff?full_index=1"
             FILENAME "e9c55faac7745ebf38d08cd3b4f71aaf542f8191.patch"
-            SHA512 e5dda11de2ba8cfd39728e69c74a7656bb522e509786fe5673c94b26be9bd4bee897510096479ee6323f5276d34cba1c44c60804a515c0b35ff7b6ac9d625b88
+            SHA512 1121d5fa6cce617cfc393b48ac13f21e7f977522746702b3968f5fc86c58de6a3b91e4371692e8566747a975cb46de5421ab1cf635d3904fd74c07bbdfcaa78e
         )
         set(_BASIS_VERSION "8565af680d1bd2ad56ab227ca7d96c56dfbe93ed")
         set(_BASIS_SHA512 "65062ab3ba675c46760f56475a7528189ed4097fb9bab8316e25d9e23ffec2a9560eb9a6897468baf2a6ab2bd698b5907283e96deaeaef178085a47f9d371bb2")
@@ -74,10 +74,15 @@ endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES ${_COMPONENTS})
 
+if(VCPKG_CROSSCOMPILING)
+    set(CORRADE_RC_EXECUTABLE "-DCORRADE_RC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/corrade/corrade-rc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${CORRADE_RC_EXECUTABLE}
         -DBUILD_STATIC=${BUILD_PLUGINS_STATIC}
         -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
@@ -129,8 +134,6 @@ else()
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 vcpkg_copy_pdbs()

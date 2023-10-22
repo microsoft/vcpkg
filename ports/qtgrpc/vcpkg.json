@@ -1,0 +1,26 @@
+{
+  "name": "qtgrpc",
+  "version": "6.5.3",
+  "description": "Qt framework based gRPC clients and services.",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "grpc",
+      "default-features": false
+    },
+    {
+      "name": "protobuf",
+      "default-features": false
+    },
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtgrpc",
+      "host": true,
+      "default-features": false
+    }
+  ]
+}

@@ -1,8 +1,8 @@
-diff --git a/ext/dts/meson.build b/ext/dts/meson.build
-index 8ab3fc917..c19aa2264 100644
---- a/ext/dts/meson.build
-+++ b/ext/dts/meson.build
-@@ -15,7 +15,7 @@ if not dca_dep.found()
+diff --git a/subprojects/gst-plugins-bad/ext/dts/meson.build b/subprojects/gst-plugins-bad/ext/dts/meson.build
+index c4868a4..6b34cb7 100644
+--- a/subprojects/gst-plugins-bad/ext/dts/meson.build
++++ b/subprojects/gst-plugins-bad/ext/dts/meson.build
+@@ -20,7 +20,7 @@ if not dca_dep.found()
  endif
  
  no_warn_c_args = []
@@ -11,11 +11,11 @@ index 8ab3fc917..c19aa2264 100644
    # autotools didn't use the libdca pkg-config cflags, and they
    # can point to a non-existing location (/usr/include/dca)
    no_warn_c_args = ['-Wno-missing-include-dirs']
-diff --git a/gst-libs/gst/d3d11/meson.build b/gst-libs/gst/d3d11/meson.build
-index 4a844ef75..cd97e8f7a 100644
---- a/gst-libs/gst/d3d11/meson.build
-+++ b/gst-libs/gst/d3d11/meson.build
-@@ -174,7 +174,7 @@ endif
+diff --git a/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build b/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build
+index 160080a..6acf110 100644
+--- a/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build
++++ b/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build
+@@ -158,7 +158,7 @@ endif
  
  # MinGW 32bits compiler seems to be complaining about redundant-decls
  # when ComPtr is in use. Let's just disable the warning
@@ -24,23 +24,24 @@ index 4a844ef75..cd97e8f7a 100644
    extra_args = cc.get_supported_arguments([
      '-Wno-redundant-decls',
    ])
-diff --git a/meson.build b/meson.build
-index 7cab556e0..35531110b 100644
---- a/meson.build
-+++ b/meson.build
-@@ -45,7 +45,7 @@ endif
- 
+diff --git a/subprojects/gst-plugins-bad/meson.build b/subprojects/gst-plugins-bad/meson.build
+index 84eeb17..1743f41 100644
+--- a/subprojects/gst-plugins-bad/meson.build
++++ b/subprojects/gst-plugins-bad/meson.build
+@@ -54,7 +54,7 @@ endif
+
  cdata = configuration_data()
+ cdata.set('ENABLE_NLS', 1)
  
 -if cc.get_id() == 'msvc'
 +if cc.get_argument_syntax() == 'msvc'
    msvc_args = [
        # Ignore several spurious warnings for things gstreamer does very commonly
        # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
-diff --git a/sys/asio/meson.build b/sys/asio/meson.build
-index 3006d26ce..1afbd0022 100644
---- a/sys/asio/meson.build
-+++ b/sys/asio/meson.build
+diff --git a/subprojects/gst-plugins-bad/sys/asio/meson.build b/subprojects/gst-plugins-bad/sys/asio/meson.build
+index c61ad4e..b30793c 100644
+--- a/subprojects/gst-plugins-bad/sys/asio/meson.build
++++ b/subprojects/gst-plugins-bad/sys/asio/meson.build
 @@ -15,7 +15,7 @@ endif
  
  # FIXME: non-msvc is not tested, and unlikely supported yet because of
@@ -50,11 +51,11 @@ index 3006d26ce..1afbd0022 100644
    if asio_option.enabled()
      error('asio plugin can only be built with MSVC')
    else
-diff --git a/sys/d3d11/meson.build b/sys/d3d11/meson.build
-index 43f213d9c..9c9e9b535 100644
---- a/sys/d3d11/meson.build
-+++ b/sys/d3d11/meson.build
-@@ -102,7 +102,7 @@ endif
+diff --git a/subprojects/gst-plugins-bad/sys/d3d11/meson.build b/subprojects/gst-plugins-bad/sys/d3d11/meson.build
+index 1368b79..8dd3b30 100644
+--- a/subprojects/gst-plugins-bad/sys/d3d11/meson.build
++++ b/subprojects/gst-plugins-bad/sys/d3d11/meson.build
+@@ -96,7 +96,7 @@ endif
  
  # MinGW 32bits compiler seems to be complaining about redundant-decls
  # when ComPtr is in use. Let's just disable the warning
@@ -63,10 +64,10 @@ index 43f213d9c..9c9e9b535 100644
    extra_mingw_args = cc.get_supported_arguments([
      '-Wno-redundant-decls',
    ])
-diff --git a/sys/decklink/meson.build b/sys/decklink/meson.build
+diff --git a/subprojects/gst-plugins-bad/sys/decklink/meson.build b/subprojects/gst-plugins-bad/sys/decklink/meson.build
 index d869e79a4..c7b37a7c6 100644
---- a/sys/decklink/meson.build
-+++ b/sys/decklink/meson.build
+--- a/subprojects/gst-plugins-bad/sys/decklink/meson.build
++++ b/subprojects/gst-plugins-bad/sys/decklink/meson.build
 @@ -18,7 +18,7 @@ decklink_libs = []
  
  if host_system == 'windows'
@@ -76,11 +77,11 @@ index d869e79a4..c7b37a7c6 100644
      # FIXME: Use commsuppwd.lib for debug builds?
      comutil_dep = cxx.find_library('comsuppw', required : get_option('decklink'))
      if comutil_dep.found()
-diff --git a/sys/mediafoundation/meson.build b/sys/mediafoundation/meson.build
-index 828954909..af570f9ff 100644
---- a/sys/mediafoundation/meson.build
-+++ b/sys/mediafoundation/meson.build
-@@ -48,7 +48,7 @@ if host_system != 'windows' or mf_option.disabled()
+diff --git a/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build b/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
+index 6b9a059..40713ce 100644
+--- a/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
++++ b/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
+@@ -54,7 +54,7 @@ if host_system != 'windows' or mf_option.disabled()
    subdir_done()
  endif
  
@@ -89,11 +90,11 @@ index 828954909..af570f9ff 100644
    if mf_option.enabled()
      error('mediafoundation plugin can only be built with MSVC')
    endif
-diff --git a/sys/msdk/meson.build b/sys/msdk/meson.build
-index a77160049..7c834d8ed 100644
---- a/sys/msdk/meson.build
-+++ b/sys/msdk/meson.build
-@@ -139,13 +139,13 @@ if have_mfx_ver134
+diff --git a/subprojects/gst-plugins-bad/sys/msdk/meson.build b/subprojects/gst-plugins-bad/sys/msdk/meson.build
+index 659b96c..92e6bc4 100644
+--- a/subprojects/gst-plugins-bad/sys/msdk/meson.build
++++ b/subprojects/gst-plugins-bad/sys/msdk/meson.build
+@@ -176,12 +176,12 @@ if use_onevpl and have_mfx_ver205
  endif
  
  if host_machine.system() == 'windows'
@@ -102,10 +103,9 @@ index a77160049..7c834d8ed 100644
      error('msdk plugin can only be built with MSVC')
    endif
    legacy_stdio_dep = cc.find_library('legacy_stdio_definitions', required: get_option('msdk'))
-   d3d11_dep = cc.find_library('d3d11', required: get_option('msdk'))
-   msdk_deps = declare_dependency(dependencies: [d3d11_dep, legacy_stdio_dep])
--  msdk_deps_found = d3d11_dep.found() and legacy_stdio_dep.found() and cc.get_id() == 'msvc'
+   msdk_deps = declare_dependency(dependencies: [gstd3d11_dep, legacy_stdio_dep])
+-  msdk_deps_found = gstd3d11_dep.found() and legacy_stdio_dep.found() and cc.get_id() == 'msvc'
 +  msdk_deps_found = d3d11_dep.found() and legacy_stdio_dep.found() and cc.get_argument_syntax() == 'msvc'
  else
-   libva_dep = dependency('libva', required: get_option('msdk'))
-   libva_drm_dep = dependency('libva-drm', required: get_option('msdk'))
+   libdl_dep = cc.find_library('dl', required: get_option('msdk'))
+   libgudev_dep = dependency('gudev-1.0', required: get_option('msdk'))

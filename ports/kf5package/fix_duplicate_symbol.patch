@@ -1,0 +1,76 @@
+From f922c9e1a353ea82a5c8a87095e46f503c8e9ceb Mon Sep 17 00:00:00 2001
+From: Alexander Lohnau <alexander.lohnau@gmx.de>
+Date: Wed, 14 Sep 2022 15:57:22 +0200
+Subject: [PATCH] Fix duplicate symbol in static builds
+
+BUG: 459099
+---
+ src/kpackage/CMakeLists.txt     | 9 +++++++--
+ src/kpackagetool/CMakeLists.txt | 4 +---
+ 2 files changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/src/kpackage/CMakeLists.txt b/src/kpackage/CMakeLists.txt
+index 6880965..be16714 100644
+--- a/src/kpackage/CMakeLists.txt
++++ b/src/kpackage/CMakeLists.txt
+@@ -15,8 +15,6 @@ target_sources(KF5Package PRIVATE
+     packageloader.cpp
+     private/packages.cpp
+     private/packagejob.cpp
+-    private/packagejobthread.cpp
+-    private/versionparser.cpp
+     version.cpp
+     kpackage.qrc
+ )
+@@ -42,6 +40,9 @@ ecm_generate_export_header(KF5Package
+     EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
+ )
+ 
++add_library(kpackage_common_STATIC STATIC private/packagejobthread.cpp private/versionparser.cpp)
++target_link_libraries(kpackage_common_STATIC PRIVATE Qt${QT_VERSION_MAJOR}::Core KF5::CoreAddons KF5::Archive KF5::I18n)
++
+ target_link_libraries(KF5Package
+ PUBLIC
+      KF5::CoreAddons
+@@ -49,6 +50,7 @@ PRIVATE
+      Qt${QT_MAJOR_VERSION}::DBus
+      KF5::Archive
+      KF5::I18n
++     kpackage_common_STATIC
+ )
+ 
+ target_include_directories(KF5Package PUBLIC
+@@ -90,6 +92,9 @@ install(FILES
+ 
+ 
+ install(TARGETS KF5Package EXPORT KF5PackageTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
++if (NOT BUILD_SHARED_LIBS)
++    install(TARGETS kpackage_common_STATIC EXPORT KF5PackageTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
++endif()
+ 
+ if(BUILD_QCH)
+     ecm_add_qch(
+diff --git a/src/kpackagetool/CMakeLists.txt b/src/kpackagetool/CMakeLists.txt
+index 10d58f8..c6d088a 100644
+--- a/src/kpackagetool/CMakeLists.txt
++++ b/src/kpackagetool/CMakeLists.txt
+@@ -6,8 +6,6 @@ ecm_mark_nongui_executable(kpackagetool5)
+ target_sources(kpackagetool5 PRIVATE
+     main.cpp
+     kpackagetool.cpp
+-    ../kpackage/private/packagejobthread.cpp
+-    ../kpackage/private/versionparser.cpp
+     kpackagetool.qrc
+ )
+ ecm_qt_declare_logging_category(kpackagetool5
+@@ -15,6 +13,6 @@ ecm_qt_declare_logging_category(kpackagetool5
+     IDENTIFIER KPACKAGE_LOG
+     CATEGORY_NAME kf.package
+ )
+-target_link_libraries(kpackagetool5 KF5::Archive KF5::Package KF5::I18n KF5::CoreAddons)
++target_link_libraries(kpackagetool5 kpackage_common_STATIC KF5::Archive KF5::Package KF5::I18n KF5::CoreAddons)
+ 
+ install(TARGETS kpackagetool5 EXPORT KF5PackageToolsTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
+-- 
+GitLab
+

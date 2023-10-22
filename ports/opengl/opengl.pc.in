@@ -3,7 +3,7 @@ libdir=${prefix}/lib
 includedir=${prefix}/include
 
 Name: OpenGL
-Description: OpenGL library and headers.
+Description: Windows OpenGL library
 Version: @WINDOWS_SDK_SEMVER@
-Libs: -L${libdir} -lOpenGL32
-Cflags: -I${includedir}
+Libs: -L${libdir} -lopengl32
+Cflags: @WINDOWS_GL_CFLAGS@

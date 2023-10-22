@@ -1,0 +1,62 @@
+From 4ca6d9846bfc39c4aa98d6a41f298078b4bebf8d Mon Sep 17 00:00:00 2001
+From: Sean Farrell <sean.farrell@rioki.org>
+Date: Thu, 23 Feb 2023 08:15:37 +0100
+Subject: [PATCH] Use vcpkg's gumbo
+
+---
+ CMakeLists.txt             | 8 ++------
+ cmake/litehtmlConfig.cmake | 2 +-
+ src/document.cpp           | 2 +-
+ 3 files changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fe71729..21e77c8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,11 +10,7 @@ enable_testing()
+ set(PROJECT_MAJOR 0)
+ set(PROJECT_MINOR 0)
+ 
+-option(EXTERNAL_GUMBO "Link against external gumbo instead of shipping a bundled copy" OFF)
+-
+-if(NOT EXTERNAL_GUMBO)
+-    add_subdirectory(src/gumbo)
+-endif()
++find_package(unofficial-gumbo CONFIG REQUIRED)
+ 
+ set(SOURCE_LITEHTML
+     src/background.cpp
+@@ -153,7 +149,7 @@ if (LITEHTML_UTF8)
+ endif()
+ 
+ # Gumbo
+-target_link_libraries(${PROJECT_NAME} PUBLIC gumbo)
++target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::gumbo::gumbo)
+ 
+ # install and export
+ install(TARGETS ${PROJECT_NAME}
+diff --git a/cmake/litehtmlConfig.cmake b/cmake/litehtmlConfig.cmake
+index 5eedcf4..1027913 100644
+--- a/cmake/litehtmlConfig.cmake
++++ b/cmake/litehtmlConfig.cmake
+@@ -1,3 +1,3 @@
+ include(CMakeFindDependencyMacro)
+-find_dependency(gumbo)
++find_dependency(unofficial-gumbo)
+ include(${CMAKE_CURRENT_LIST_DIR}/litehtmlTargets.cmake)
+diff --git a/src/document.cpp b/src/document.cpp
+index 8bd1ea8..51a9d42 100644
+--- a/src/document.cpp
++++ b/src/document.cpp
+@@ -26,7 +26,7 @@
+ #include <cstdio>
+ #include <algorithm>
+ #include <functional>
+-#include "gumbo.h"
++#include <gumbo.h>
+ #include "utf8_strings.h"
+ 
+ litehtml::document::document(litehtml::document_container* objContainer, litehtml::context* ctx)
+-- 
+2.33.0.windows.2
+

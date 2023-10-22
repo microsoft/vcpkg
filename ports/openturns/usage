@@ -1,0 +1,4 @@
+openturns provides CMake targets:
+
+    find_package(OpenTURNS CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE OT)

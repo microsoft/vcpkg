@@ -1,6 +1,6 @@
 {
   "name": "protobuf",
-  "version": "3.21.8",
+  "version": "3.21.12",
   "description": "Protocol Buffers - Google's data interchange format",
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "license": "BSD-3-Clause",

@@ -1,0 +1,69 @@
+--- a/src/assistant/qlitehtml/src/CMakeLists.txt
++++ b/src/assistant/qlitehtml/src/CMakeLists.txt
+@@ -15,45 +15,11 @@
+ set(QLITEHTML_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+ set(QLITEHTML_VERSION_COMPAT ${QLITEHTML_VERSION} CACHE STRING "qlitehtml compat version number.")
+ 
+-find_package(litehtml QUIET)
+-if(NOT TARGET litehtml AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/litehtml/CMakeLists.txt)
+-    set(ORIG_FPIC ${CMAKE_POSITION_INDEPENDENT_CODE})
+-    set(ORIG_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+-    if (WIN32)
+-      set(LITEHTML_UTF8 ON CACHE BOOL "")
+-    endif()
+-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+-    set(BUILD_SHARED_LIBS OFF)
+-
+-    add_subdirectory(3rdparty/litehtml EXCLUDE_FROM_ALL)
+-
+-    # suppress compiler warnings from litehtml
+-    set_target_properties(
+-      litehtml
+-      PROPERTIES
+-        QT_COMPILE_OPTIONS_DISABLE_WARNINGS ON
+-    )
+-    set_target_properties(
+-      gumbo
+-      PROPERTIES
+-        QT_COMPILE_OPTIONS_DISABLE_WARNINGS ON
+-    )
+-
+-    set(CMAKE_POSITION_INDEPENDENT_CODE "${ORIG_FPIC}")
+-    set(BUILD_SHARED_LIBS ${ORIG_BUILD_SHARED_LIBS})
+-    # force optimized litehtml even in debug
+-    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+-      # except for windows
+-      if (NOT WIN32)
+-        target_compile_options(gumbo PRIVATE -O2)
+-        target_compile_options(litehtml PRIVATE -O2)
+-      endif()
+-    endif()
+-endif()
++find_package(litehtml CONFIG REQUIRED)
+ 
+ # TODO error if litehtml was not found?
+ 
+-if(TARGET litehtml)
++
+   set(PUBLIC_HEADERS
+       container_qpainter.h
+       container_qpainter_p.h
+@@ -155,5 +121,3 @@
+         ${_DEVEL_COMPONENT}
+         OPTIONAL)
+   endif()
+-
+-endif()
+diff --git a/src/assistant/CMakeLists.txt b/src/assistant/CMakeLists.txt
+index 5d2bf2b67c..abd9b513d3 100644
+--- a/src/assistant/CMakeLists.txt
++++ b/src/assistant/CMakeLists.txt
+@@ -34,7 +34,7 @@ if(TARGET qlitehtml)
+     # but found in the system, because they are imported only to the subdirectory scope
+     # where find_package was called. But that's fine, we wouldn't be able to set compiler flags
+     # on them anyway.
+-    if(TARGET litehtml)
++    if(0)
+         qt_internal_set_exceptions_flags(litehtml OFF)
+         qt_disable_warnings(litehtml)
+     endif()

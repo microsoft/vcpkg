@@ -1,0 +1,21 @@
+diff --git a/src/sail-codecs/avif/CMakeLists.txt b/src/sail-codecs/avif/CMakeLists.txt
+index 3f36e0c8..7a24ad25 100644
+--- a/src/sail-codecs/avif/CMakeLists.txt
++++ b/src/sail-codecs/avif/CMakeLists.txt
+@@ -1,7 +1,6 @@
+-find_library(AVIF_LIBRARY avif          ${SAIL_CODEC_AVIF_REQUIRED_OPTION})
+-find_path(AVIF_INCLUDE_DIRS avif/avif.h ${SAIL_CODEC_AVIF_REQUIRED_OPTION})
++find_package(libavif CONFIG ${SAIL_CODEC_AVIF_REQUIRED_OPTION})
+ 
+-if (NOT AVIF_LIBRARY OR NOT AVIF_INCLUDE_DIRS)
++if (NOT libavif_FOUND)
+     return()
+ endif()
+ 
+@@ -18,5 +17,4 @@ set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "find_depende
+ sail_codec(NAME avif
+             SOURCES helpers.h helpers.c io.h io.c avif.c
+             ICON avif.png
+-            DEPENDENCY_INCLUDE_DIRS ${AVIF_INCLUDE_DIRS}
+-            DEPENDENCY_LIBS ${AVIF_LIBRARY})
++            DEPENDENCY_LIBS avif)

@@ -1,6 +1,6 @@
 {
   "name": "icu",
-  "version": "71.1",
+  "version": "73.1",
   "description": "Mature and widely used Unicode and localization library.",
   "homepage": "https://icu.unicode.org/home",
   "license": "ICU",
@@ -8,7 +8,15 @@
   "dependencies": [
     {
       "name": "icu",
-      "host": true
+      "host": true,
+      "features": [
+        "tools"
+      ]
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools"
+    }
+  }
 }

@@ -16,6 +16,7 @@ vcpkg_from_github(
       0006-fix-jasper.patch
       0007-fix-config.patch
       0019-fix-openexr.patch
+      0020-missing-include.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
@@ -111,6 +112,7 @@ vcpkg_cmake_configure(
         -DWITH_ZLIB=ON
         -WITH_GTK=${WITH_GTK}
         -DWITH_CUBLAS=OFF   # newer libcublas cannot be found by the old cuda cmake script in opencv2, requires a fix
+        -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
 )
 
 vcpkg_cmake_install()
@@ -161,6 +163,6 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/LICENSE")
 
 vcpkg_fixup_pkgconfig()
 
-configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
+configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

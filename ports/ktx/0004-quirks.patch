@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 068c6bb..84fa624 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -215,7 +215,7 @@ if(MSVC)
+     # With /W4 VS2015 (V19.0) issues many warnings that VS2017 & 2019 don't
+     # so only increase warning level for recent versions.
+     add_compile_options($<$<VERSION_GREATER_EQUAL:${CMAKE_CXX_COMPILER_VERSION},19.16>:/W4>)
+-    add_compile_options( $<IF:$<CONFIG:Debug>,/Gz,/O2> )
++    add_compile_options( $<IF:$<CONFIG:Debug>,,/O2> )
+ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU"
+        OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+     add_compile_options(-Wall -Wextra)
+@@ -801,6 +801,7 @@ if(EMSCRIPTEN)
+ endif()
+ 
+ add_library( objUtil STATIC
++    EXCLUDE_FROM_ALL
+     utils/argparser.cpp
+     utils/argparser.h
+     utils/ktxapp.h

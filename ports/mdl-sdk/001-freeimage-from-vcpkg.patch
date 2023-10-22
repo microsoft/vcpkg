@@ -66,3 +66,16 @@ index b11573a..703458e 100644
      # error if dependencies can not be resolved
      if(NOT EXISTS ${_FREEIMAGE_INCLUDE} OR (WINDOWS AND NOT EXISTS ${_FREEIMAGE_LIB}) OR NOT EXISTS ${_FREEIMAGE_SHARED})
          message(STATUS "FREEIMAGE_DIR: ${FREEIMAGE_DIR}")
+diff --git a/src/shaders/plugin/freeimage/CMakeLists.txt b/src/shaders/plugin/freeimage/CMakeLists.txt
+index a28b50e..910141e 100644
+--- a/src/shaders/plugin/freeimage/CMakeLists.txt
++++ b/src/shaders/plugin/freeimage/CMakeLists.txt
+@@ -69,7 +69,7 @@ add_library(mdl::nv_freeimage ALIAS ${PROJECT_NAME})
+ # add dependencies other dependencies
+ target_add_dependencies(TARGET ${PROJECT_NAME} 
+     DEPENDS
+-        freeimage
++        freeimage::FreeImage
+         mdl::base-system-version
+     )
+ 

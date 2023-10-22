@@ -65,12 +65,12 @@ index 6eff1eb14..8827f6ac6 100644
 +      echo -L${libdir} -lgeos $(if test "@BUILD_SHARED_LIBS@" != "ON"; then echo "@EXTRA_LIBS@"; fi)
        ;;
      --static-clibs)
--      echo -L${libdir} -lgeos_c -lgeos -lm
-+      echo -L${libdir} -lgeos_c -lgeos @EXTRA_LIBS@
+-      echo -L${libdir} -lgeos_c -lgeos -lstdc++ -lm
++      echo -L${libdir} -lgeos_c -lgeos -lstdc++ @EXTRA_LIBS@
        ;;
      --static-cclibs)
--      echo -L${libdir} -lgeos -lm
-+      echo -L${libdir} -lgeos @EXTRA_LIBS@
+-      echo -L${libdir} -lgeos -lstdc++ -lm
++      echo -L${libdir} -lgeos -lstdc++ @EXTRA_LIBS@
        ;;
      --cflags)
        echo -I${includedir}

@@ -8,10 +8,18 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 a6e90ccef56cfd0b37e3333ab3594bb3cec7ca42a138ca8c4f4ce142da208fa792f6c78ca00c01001c2bc02831abcbaf1cf9bcc346a5290fd7b30708f5a462f3
 )
 
+vcpkg_list(SET patches)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Fix linking static libidn2 into shared library
+    # https://gitlab.com/libidn/libidn2/-/issues/80
+    vcpkg_list(APPEND patches "fix-static-into-shared-linking.patch")
+endif()
+
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "v${VERSION}"
     PATCHES
+        ${patches}
         disable-subdirs.patch
         fix-msvc.patch
         fix-uwp.patch
@@ -21,9 +29,9 @@ vcpkg_list(SET options)
 if("nls" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-nls")
 else()
-    set(ENV{AUTOPOINT} true) # true, the program
     vcpkg_list(APPEND options "--disable-nls")
 endif()
+set(ENV{AUTOPOINT} true) # true, the program
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_list(APPEND options "CPPFLAGS=\$CPPFLAGS -DIDN2_STATIC")

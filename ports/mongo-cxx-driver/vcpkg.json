@@ -1,6 +1,6 @@
 {
   "name": "mongo-cxx-driver",
-  "version": "3.7.0",
+  "version": "3.8.0",
   "description": "MongoDB C++ Driver.",
   "homepage": "https://github.com/mongodb/mongo-cxx-driver",
   "license": "Apache-2.0",

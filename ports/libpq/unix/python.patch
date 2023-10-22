@@ -1,0 +1,25 @@
+diff --git a/configure.ac b/configure.ac
+index a35395e..3c1b3e2 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1176,7 +1176,19 @@ fi
+ 
+ if test "$with_python" = yes; then
+   PGAC_PATH_PYTHON
+-  PGAC_CHECK_PYTHON_EMBED_SETUP
++  python_majorversion=3
++  python_version=3.REPLACEME
++  PKG_CHECK_MODULES(PYTHON_EMBED, python-${python_version}-embed)
++  python_includespec="${PYTHON_EMBED_CFLAGS}"
++  python_libdir=[$(echo " ${PYTHON_EMBED_LIBS}" | sed -e 's/\( -L[^ ]*\).*/\1/' -e 's/^.* -L//')]
++  python_libspec="${PYTHON_EMBED_LIBS}"
++  python_additional_libs=""
++  AC_SUBST(python_majorversion)
++  AC_SUBST(python_version)
++  AC_SUBST(python_includespec)
++  AC_SUBST(python_libdir)
++  AC_SUBST(python_libspec)
++  AC_SUBST(python_additional_libs)
+ fi
+ 
+ if test x"$cross_compiling" = x"yes" && test -z "$with_system_tzdata"; then

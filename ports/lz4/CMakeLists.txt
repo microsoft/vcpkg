@@ -13,6 +13,7 @@ set(INSTALL_INCLUDE_DIR  "include"                   CACHE PATH "Path where head
 set(INSTALL_CMAKE_DIR    "share/lz4"                 CACHE PATH "Path where cmake configs will be installed")
 
 file(GLOB LZ4_HEADERS lib/*.h)
+list(REMOVE_ITEM LZ4_HEADERS "${CMAKE_CURRENT_LIST_DIR}/lib/xxhash.h")
 
 add_library(lz4
     ${LZ4_HEADERS}
@@ -23,7 +24,7 @@ add_library(lz4
 )
 
 target_include_directories(lz4 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/lib> $<INSTALL_INTERFACE:include>)
-set_target_properties(lz4 PROPERTIES PUBLIC_HEADER ${LZ4_HEADERS})
+set_target_properties(lz4 PROPERTIES PUBLIC_HEADER "${LZ4_HEADERS}")
 
 install(TARGETS lz4
     EXPORT lz4Config
@@ -53,5 +54,5 @@ file(STRINGS "lib/lz4.h" LZ4_H REGEX "^#define LZ4_VERSION_(MAJOR|MINOR|RELEASE)
 string(REGEX REPLACE "^.*MAJOR +([0-9]+).*MINOR +([0-9]+).*RELEASE +([0-9]+).*$" "\\1.\\2.\\3" VERSION "${LZ4_H}")
 set(INCLUDEDIR [[${prefix}/include]])
 set(LIBDIR [[${prefix}/lib]])
-configure_file(lib/liblz4.pc.in lib/liblz4.pc)
+configure_file(lib/liblz4.pc.in lib/liblz4.pc @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/liblz4.pc" DESTINATION "lib/pkgconfig")

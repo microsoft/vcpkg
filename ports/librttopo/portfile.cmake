@@ -8,9 +8,9 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ${LIBRTTOPO_PACKAGE_SUM}
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-makefiles.patch
         geos-config.patch

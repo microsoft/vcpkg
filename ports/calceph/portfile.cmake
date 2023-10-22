@@ -1,14 +1,13 @@
-set(CALCEPH_VERSION "3.5.1")
-set(CALCEPH_HASH 5e83bb46b92a0b53f2cae717363cb4497d5c9cb57b3903e70d9e2c50176ca7d234212d0209fd3fcb5feebfd0980313be17e2ad4e69482504bfe8686f93216b67)
+set(CALCEPH_HASH 4e0b702494c9fc05f6a192671bccdc0f8002b5706cba4bd7ff50d9e8754203b4a78e3759ccc3003809123584c9bca1434411e111357852dbc58e4d1903c1879e)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-${CALCEPH_VERSION}.tar.gz"
-    FILENAME "calceph-${CALCEPH_VERSION}.tar.gz"
+    URLS "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-${VERSION}.tar.gz"
+    FILENAME "calceph-${VERSION}.tar.gz"
     SHA512 ${CALCEPH_HASH}
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
 )
 

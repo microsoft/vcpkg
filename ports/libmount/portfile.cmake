@@ -8,10 +8,10 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 d0f7888f457592067938e216695871ce6475a45d83a092cc3fd72b8cf8fca145ca5f3a99122f1744ef60b4f773055cf4e178dc6c59cd30837172aee0b5597e8c
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    REF ${VERSION}
+    SOURCE_BASE ${VERSION}
 )
 
 set(ENV{GTKDOCIZE} true)

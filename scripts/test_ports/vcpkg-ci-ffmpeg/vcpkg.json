@@ -23,6 +23,7 @@
         "mp3lame",
         "nonfree",
         "openjpeg",
+        "openmpt",
         "openssl",
         "opus",
         "postproc",
@@ -81,8 +82,7 @@
       "name": "ffmpeg",
       "default-features": false,
       "features": [
-        "ssh",
-        "x265"
+        "ssh"
       ],
       "platform": "!(uwp | arm)"
     },
@@ -109,6 +109,14 @@
         "dav1d"
       ],
       "platform": "!(uwp | arm | x86 | osx)"
+    },
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "x265"
+      ],
+      "platform": "!uwp & !(arm & windows)"
     },
     {
       "name": "ffmpeg",

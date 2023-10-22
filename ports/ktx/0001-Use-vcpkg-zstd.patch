@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f1d37cf7..9cf43c75 100644
+index bc679fd1..c726fa71 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -174,7 +174,6 @@ set(KTX_MAIN_SRC
+@@ -185,7 +185,6 @@ set(KTX_MAIN_SRC
      lib/basisu/transcoder/basisu_transcoder.cpp
      lib/basisu/transcoder/basisu_transcoder.h
      lib/basisu/transcoder/basisu.h
@@ -10,7 +10,7 @@ index f1d37cf7..9cf43c75 100644
      lib/checkheader.c
      lib/dfdutils/createdfd.c
      lib/dfdutils/colourspaces.c
-@@ -284,7 +283,6 @@ macro(commom_lib_settings lib write)
+@@ -304,7 +303,6 @@ macro(commom_lib_settings lib write)
          $<INSTALL_INTERFACE:lib/basisu/transcoder>
  
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/basisu/zstd>
@@ -18,7 +18,7 @@ index f1d37cf7..9cf43c75 100644
  
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/other_include>
          $<INSTALL_INTERFACE:other_include>
-@@ -370,6 +368,10 @@ macro(commom_lib_settings lib write)
+@@ -390,6 +388,10 @@ macro(commom_lib_settings lib write)
          target_compile_definitions(${lib} PUBLIC KTX_FEATURE_KTX2)
      endif()
  
@@ -29,8 +29,23 @@ index f1d37cf7..9cf43c75 100644
      if(WIN32)
          # By wrapping in generator expression we force multi configuration
          # generators (like Visual Studio) to take the exact path and not
+diff --git a/cmake/KtxConfig.cmake b/cmake/KtxConfig.cmake
+index 6386ba2f..537bf4f2 100644
+--- a/cmake/KtxConfig.cmake
++++ b/cmake/KtxConfig.cmake
+@@ -1,7 +1,8 @@
+ # Copyright 2015-2020 The Khronos Group Inc.
+ # SPDX-License-Identifier: Apache-2.0
+ 
+-# include(CMakeFindDependencyMacro)
+-# find_dependency()
++include(CMakeFindDependencyMacro)
++find_dependency(Threads)
++find_dependency(zstd CONFIG)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KtxTargets.cmake")
 diff --git a/lib/basisu/CMakeLists.txt b/lib/basisu/CMakeLists.txt
-index 492233a..8786d16 100644
+index 492233ae..8786d16c 100644
 --- a/lib/basisu/CMakeLists.txt
 +++ b/lib/basisu/CMakeLists.txt
 @@ -146,7 +146,7 @@ set(BASISU_SRC_LIST ${COMMON_SRC_LIST}
@@ -54,7 +69,7 @@ index 492233a..8786d16 100644
  	# For Non-Windows builds, let cmake try and find the system OpenCL headers/libs for us.
  	if (OPENCL_FOUND)
 diff --git a/lib/basisu/webgl/encoder/CMakeLists.txt b/lib/basisu/webgl/encoder/CMakeLists.txt
-index 588d91b..0b38012 100644
+index 588d91b4..0b380129 100644
 --- a/lib/basisu/webgl/encoder/CMakeLists.txt
 +++ b/lib/basisu/webgl/encoder/CMakeLists.txt
 @@ -34,9 +34,7 @@ if (EMSCRIPTEN)
@@ -80,7 +95,7 @@ index 588d91b..0b38012 100644
        OUTPUT_NAME "basis_encoder"
        SUFFIX ".js"
 diff --git a/lib/basisu/webgl/transcoder/CMakeLists.txt b/lib/basisu/webgl/transcoder/CMakeLists.txt
-index 372653d..f75e3a3 100644
+index 372653de..f75e3a35 100644
 --- a/lib/basisu/webgl/transcoder/CMakeLists.txt
 +++ b/lib/basisu/webgl/transcoder/CMakeLists.txt
 @@ -28,9 +28,7 @@ if (EMSCRIPTEN)

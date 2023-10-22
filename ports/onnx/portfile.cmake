@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/onnx
-    REF v1.10.2
-    SHA512 7519d326cd2b2b13a269ec0d01af07c32115d183dae6e1eaae55f5b23b6c92b2aadbb2b1e555557f4201bbcf921fa563d09d45d7f1d3bd2399c1a94a6ef63303
+    REF "v${VERSION}"
+    SHA512 8a525b365fd203f0a59bcf82fa7f2e29d7e0563885ebe38269c596cd4eb949bcfc65d848b92b7abafa7ddecedcfc019f8779097ffcb5087f06037cace24462fc
     PATCHES
         fix-cmakelists.patch
         fix-dependency-protobuf.patch
@@ -63,7 +63,7 @@ endif()
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ONNX)
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -92,4 +92,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_ml"
     "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_data"
     "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_operators_ml"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/reference/ops"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/reference"
 )

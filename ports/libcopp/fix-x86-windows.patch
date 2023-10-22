@@ -1,9 +1,8 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 95ebe36..658c5e1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -11,12 +11,17 @@
-   libcopp
-   VERSION "1.4.1"
-   DESCRIPTION "Cross-platform coroutine library in C++ ."
+@@ -25,6 +25,11 @@ project(
    HOMEPAGE_URL "https://libcopp.atframe.work"
    LANGUAGES C CXX ASM)
  
@@ -14,7 +13,4 @@
 +
  # ######################################################################################################################
  include("${PROJECT_SOURCE_DIR}/project/cmake/ProjectBuildOption.cmake")
- 
- # # #############################################################################
- echowithcolor(COLOR GREEN "-- Build Type: ${CMAKE_BUILD_TYPE}")
  

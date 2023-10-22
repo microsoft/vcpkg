@@ -1,0 +1,121 @@
+{
+  "name": "sdl2-mixer-ext",
+  "version-date": "2023-05-04",
+  "description": "An audio mixer library based on the SDL library, a fork of SDL_mixer",
+  "homepage": "https://wohlsoft.github.io/SDL-Mixer-X",
+  "license": "Zlib OR LGPL-2.1-or-later OR GPL-2.0-or-later OR GPL-3.0-or-later",
+  "dependencies": [
+    "sdl2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "cmd": {
+      "description": "Use external command for playing music (Linux only).",
+      "supports": "linux"
+    },
+    "ffmpeg": {
+      "description": "Use FFMPEG to play WMA and AAC audio formats.",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false
+        }
+      ]
+    },
+    "fluidsynth": {
+      "description": "Use FluidSynth to play MIDI audio format.",
+      "dependencies": [
+        {
+          "name": "fluidsynth",
+          "default-features": false
+        }
+      ]
+    },
+    "libadlmidi": {
+      "description": "Use libADLMIDI to play XMI, MUS, IMF and regular MIDI audio format with OPL3 (YMF262) emulator.",
+      "dependencies": [
+        {
+          "name": "libadlmidi",
+          "default-features": false
+        }
+      ]
+    },
+    "libflac": {
+      "description": "Use libflac to play FLAC audio format.",
+      "dependencies": [
+        "libflac"
+      ]
+    },
+    "libgme": {
+      "description": "Use libgme to play chip music (AY, GBS, GYM, HES, KSS, NSF/NSFE, SAP, SPC, VGM/VGZ).",
+      "dependencies": [
+        {
+          "name": "libgme",
+          "default-features": false
+        }
+      ]
+    },
+    "libmodplug": {
+      "description": "Use libmodplug to play tracker music including exclusive formats (AMS, DMF, DSM, MT2).",
+      "dependencies": [
+        "libmodplug"
+      ]
+    },
+    "libopnmidi": {
+      "description": "Use libOPNMIDI to play MIDI and RMI audio format with OPN2 (YM2612) emulator.",
+      "dependencies": [
+        {
+          "name": "libopnmidi",
+          "default-features": false
+        }
+      ]
+    },
+    "libvorbis": {
+      "description": "Use libvorbis to play OGG audio format.",
+      "dependencies": [
+        "libvorbis"
+      ]
+    },
+    "libxmp": {
+      "description": "Use libxmp to play tracker music including exclusive formats (ABK, DIGI, DTM, EMOD, FLX, FNK, GDM, IMF, J2B, LIQ, M15, MFP, MGT, MMDC, MTN, RTM, SFX, SPM, STIM, STX, WOW).",
+      "dependencies": [
+        {
+          "name": "libxmp",
+          "default-features": false
+        }
+      ]
+    },
+    "mpg123": {
+      "description": "Use mpg123 to play MP3 audio format.",
+      "dependencies": [
+        "mpg123"
+      ]
+    },
+    "nativemidi": {
+      "description": "Use Native MIDI Player to play MIDI audio format.",
+      "supports": "windows | osx"
+    },
+    "opusfile": {
+      "description": "Use opusfile to play Opus audio format.",
+      "dependencies": [
+        "opusfile"
+      ]
+    },
+    "timidity": {
+      "description": "Use Timidity to play MIDI audio format."
+    },
+    "wavpack": {
+      "description": "Use wavpack to play VW audio format.",
+      "dependencies": [
+        "wavpack"
+      ]
+    }
+  }
+}

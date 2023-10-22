@@ -3,23 +3,16 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zxing-cpp/zxing-cpp
-    REF v1.4.0
-    SHA512 05c5b9282f13b76fa0897b21e5b73cb7df0c52e62f1a2d9760fe774aa0378fde97f5f9896690b65b28b4b96ba6ad2703bed53ffaf9d3784636d29cbe860d4bad
+    REF "v${VERSION}"
+    SHA512 a00778c1fb7bb664176f7035aa96db4bab3e7ca28b5be2862182cb591d18edd4c3dfcbd34b4af08e0797bb4af893299d523f98aa84d266b68e4c766410e2e26d
     HEAD_REF master
 )
 
-if (VCPKG_TARGET_IS_UWP)
-   set(ENV{CL} "$ENV{CL} -wd4996")
-endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_BLACKBOX_TESTS=OFF
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_SYSTEM_DEPS=ALWAYS
-    MAYBE_UNUSED_VARIABLES
-        # Currently no dependencies, but this defends against future additions
-        BUILD_SYSTEM_DEPS
 )
 
 vcpkg_cmake_install()
@@ -31,6 +24,12 @@ vcpkg_cmake_config_fixup(
     PACKAGE_NAME ZXing
 )
 
+file(READ "${CURRENT_PACKAGES_DIR}/share/ZXing/ZXingConfig.cmake" _contents)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/ZXing/ZXingConfig.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+${_contents}")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/nu-book-zxing-cpp" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

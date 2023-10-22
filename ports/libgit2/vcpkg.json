@@ -1,8 +1,10 @@
 {
   "name": "libgit2",
-  "version-semver": "1.4.2",
-  "description": "Git linkable library",
+  "version-semver": "1.6.4",
+  "port-version": 1,
+  "description": "A C library implementing the Git core methods with a solid API",
   "homepage": "https://github.com/libgit2/libgit2",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     "http-parser",
@@ -23,6 +25,7 @@
   "features": {
     "mbedtls": {
       "description": "SSL support (mbedTLS)",
+      "supports": "!windows",
       "dependencies": [
         "mbedtls"
       ]
@@ -46,18 +49,12 @@
       ]
     },
     "sectransp": {
-      "description": "SSL support (sectransp)"
+      "description": "SSL support (sectransp)",
+      "supports": "osx"
     },
     "ssh": {
       "description": "SSH support via libssh2",
       "dependencies": [
-        {
-          "name": "libgit2",
-          "default-features": false,
-          "features": [
-            "openssl"
-          ]
-        },
         "libssh2"
       ]
     },
@@ -90,8 +87,12 @@
         }
       ]
     },
+    "tools": {
+      "description": "Build CLI tools"
+    },
     "winhttp": {
-      "description": "SSL support (WinHTTP)"
+      "description": "SSL support (WinHTTP)",
+      "supports": "windows & !uwp"
     }
   }
 }

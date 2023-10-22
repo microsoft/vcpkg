@@ -45,7 +45,7 @@ else()
 
 	# on macos arm64 use conda miniforge
 	if (VCPKG_HOST_IS_OSX)
-		EXEC_PROGRAM(uname ARGS -m OUTPUT_VARIABLE HOST_ARCH)
+		EXEC_PROGRAM(uname ARGS -m OUTPUT_VARIABLE HOST_ARCH OUTPUT_STRIP_TRAILING_WHITESPACE)
 		if(HOST_ARCH STREQUAL "arm64")
 			message(STATUS "Using python from miniforge3 ")
 
