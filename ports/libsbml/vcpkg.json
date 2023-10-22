@@ -22,8 +22,7 @@
     "groups",
     "layout",
     "libxml2",
-    "render",
-    "test"
+    "render"
   ],
   "features": {
     "bzip2": {

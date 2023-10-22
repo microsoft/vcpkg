@@ -26,7 +26,7 @@ vcpkg_configure_make(
 vcpkg_install_make()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/")
-if(CMAKE_HOST_WIN32)
+if(NOT CMAKE_HOST_WIN32)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal/")
 endif()
 
