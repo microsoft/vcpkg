@@ -85,7 +85,7 @@ index a8af3a4..3926b68 100644
  endif()
  if (WITH_EXPAT)
 -set (PRIVATE_LIBS "${LIBEXPAT_LIBRARY} ${PRIVATE_LIBS}")
-+    string(APPEND PRIVATE_REQUIRES " exxpat")
++    string(APPEND PRIVATE_REQUIRES " expat")
  endif()
  if (WITH_XERCES)
  set (PRIVATE_LIBS "${XERCES_LIBRARY} ${PRIVATE_LIBS}")
