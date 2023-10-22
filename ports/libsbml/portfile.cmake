@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF development
     PATCHES
         dependencies.diff
+        dirent.diff
         no-docs.diff
         test-shared.diff
 )

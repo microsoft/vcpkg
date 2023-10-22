@@ -79,7 +79,8 @@
     "test": {
       "description": "Unit testing of libSBMLs implementation",
       "dependencies": [
-        "check"
+        "check",
+        "dirent"
       ]
     },
     "zlib": {
