@@ -12,11 +12,12 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCHECK_ENABLE_TESTS=OFF
         -DBUILD_TESTING=OFF
         -DCHECK_ENABLE_GCOV=OFF
-        -DENABLE_MEMORY_LEAKING_TESTS=OFF
+        -DCHECK_ENABLE_TESTS=OFF
         -DCHECK_ENABLE_TIMEOUT_TESTS=OFF
+        -DENABLE_MEMORY_LEAKING_TESTS=OFF
+        -DINSTALL_CHECKMK=OFF
 )
 
 vcpkg_cmake_install()
