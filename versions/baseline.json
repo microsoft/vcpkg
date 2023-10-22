@@ -130,7 +130,7 @@
     },
     "angle": {
       "baseline": "chromium_5414",
-      "port-version": 7
+      "port-version": 8
     },
     "ankurvdev-embedresource": {
       "baseline": "0.0.10",
@@ -838,7 +838,7 @@
     },
     "boost-fiber": {
       "baseline": "1.83.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-filesystem": {
       "baseline": "1.83.0",
@@ -930,7 +930,7 @@
     },
     "boost-iostreams": {
       "baseline": "1.83.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-iterator": {
       "baseline": "1.83.0",
@@ -938,7 +938,7 @@
     },
     "boost-json": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-lambda": {
       "baseline": "1.83.0",
@@ -978,7 +978,7 @@
     },
     "boost-math": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-metaparse": {
       "baseline": "1.83.0",
@@ -1026,7 +1026,7 @@
     },
     "boost-nowide": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-numeric-conversion": {
       "baseline": "1.83.0",
@@ -1134,7 +1134,7 @@
     },
     "boost-regex": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-safe-numerics": {
       "baseline": "1.83.0",
@@ -1194,7 +1194,7 @@
     },
     "boost-thread": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-throw-exception": {
       "baseline": "1.83.0",
@@ -2390,7 +2390,7 @@
     },
     "embree3": {
       "baseline": "3.13.5",
-      "port-version": 2
+      "port-version": 3
     },
     "enet": {
       "baseline": "1.3.17",
@@ -2950,7 +2950,7 @@
     },
     "glib": {
       "baseline": "2.78.0",
-      "port-version": 0
+      "port-version": 1
     },
     "glibmm": {
       "baseline": "2.76.0",
@@ -2978,7 +2978,7 @@
     },
     "glslang": {
       "baseline": "13.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -3122,7 +3122,7 @@
     },
     "gtsam": {
       "baseline": "4.2a9",
-      "port-version": 0
+      "port-version": 1
     },
     "guetzli": {
       "baseline": "2020-09-14",
@@ -3210,7 +3210,7 @@
     },
     "hash-library": {
       "baseline": "8",
-      "port-version": 2
+      "port-version": 3
     },
     "hashids": {
       "baseline": "1.2.1",
@@ -3670,7 +3670,7 @@
     },
     "keccak-tiny": {
       "baseline": "2014-09-08",
-      "port-version": 0
+      "port-version": 1
     },
     "kenlm": {
       "baseline": "20230531",
@@ -4630,7 +4630,7 @@
     },
     "libredwg": {
       "baseline": "0.12.5.5178",
-      "port-version": 1
+      "port-version": 2
     },
     "libremidi": {
       "baseline": "4.2.3",
@@ -4666,7 +4666,7 @@
     },
     "libsbml": {
       "baseline": "5.20.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libsbsms": {
       "baseline": "2.3.0",
@@ -5058,7 +5058,7 @@
     },
     "libyaml": {
       "baseline": "0.2.5",
-      "port-version": 4
+      "port-version": 5
     },
     "libyuv": {
       "baseline": "1857",
@@ -5270,7 +5270,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 14
+      "port-version": 15
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -5282,7 +5282,7 @@
     },
     "magnum-plugins": {
       "baseline": "2020.06",
-      "port-version": 11
+      "port-version": 12
     },
     "mailio": {
       "baseline": "0.21.0",
@@ -5406,7 +5406,7 @@
     },
     "mesa": {
       "baseline": "23.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "meschach": {
       "baseline": "1.2b",
@@ -6098,7 +6098,7 @@
     },
     "opencascade": {
       "baseline": "7.7.2",
-      "port-version": 1
+      "port-version": 2
     },
     "opencc": {
       "baseline": "1.1.6",
@@ -7138,7 +7138,7 @@
     },
     "qtwebengine": {
       "baseline": "6.5.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtwebsockets": {
       "baseline": "6.5.3",
@@ -7750,7 +7750,7 @@
     },
     "simbody": {
       "baseline": "2023-01-10",
-      "port-version": 0
+      "port-version": 1
     },
     "simd": {
       "baseline": "5.3.128",
@@ -8698,7 +8698,7 @@
     },
     "vcpkg-qmake": {
       "baseline": "2023-03-22",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",
@@ -8850,7 +8850,7 @@
     },
     "wavpack": {
       "baseline": "5.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "wayland": {
       "baseline": "1.21.0",
@@ -9082,7 +9082,7 @@
     },
     "xorg-macros": {
       "baseline": "1.19.3",
-      "port-version": 0
+      "port-version": 1
     },
     "xorstr": {
       "baseline": "2021-11-20",
@@ -9130,7 +9130,7 @@
     },
     "xtrans": {
       "baseline": "1.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "xxhash": {
       "baseline": "0.8.2",

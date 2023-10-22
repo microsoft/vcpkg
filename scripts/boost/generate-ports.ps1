@@ -25,9 +25,14 @@ else {
 $defaultPortVersion = 0
 $portVersions = @{
     'boost' = 1;
-    'boost-fiber' = 1;
-    'boost-iostreams' = 1;
+    'boost-fiber' = 2;
+    'boost-iostreams' = 2;
+    'boost-json' = 1;
+    'boost-math' = 1;
+    'boost-nowide' = 1;
     'boost-modular-build-helper' = 1;
+    'boost-regex' = 1;
+    'boost-thread' = 1;
 }
 
 function Get-PortVersion {
