@@ -9,12 +9,19 @@ vcpkg_from_github(
         fix-format-conflict.patch
 )
 
+if ("modules" IN_LIST FEATURES)
+	set(CXX_MODULES enabled)
+else()
+	set(CXX_MODULES disabled)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DFMT_CMAKE_DIR=share/fmt
         -DFMT_TEST=OFF
         -DFMT_DOC=OFF
+	-DFMT_MODULE=${CXX_MODULES}
 )
 
 vcpkg_cmake_install()
