@@ -5,6 +5,7 @@
 [한국어](README_ko_KR.md)
 [Français](README_fr.md)
 [Tiếng Việt](README_vn.md)
+[हिन्दी](README_hd_IN.md)
 
 Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS.
 This tool and ecosystem are constantly evolving, and we always appreciate contributions!
@@ -33,7 +34,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
     - [Visual Studio Code with CMake Tools](#visual-studio-code-with-cmake-tools)
     - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
     - [Vcpkg with CLion](#vcpkg-with-clion)
-    - [Vcpkg as a Submodule](#vcpkg-as-a-submodule-with-cmake)
+    - [Vcpkg as a Submodule with CMake](#vcpkg-as-a-submodule-with-cmake)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
 - [Examples](#examples)
 - [Contributing](#contributing)
