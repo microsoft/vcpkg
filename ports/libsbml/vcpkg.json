@@ -21,8 +21,7 @@
     "groups",
     "layout",
     "libxml2",
-    "render",
-    "test"
+    "render"
   ],
   "features": {
     "bzip2": {
@@ -78,6 +77,7 @@
     },
     "test": {
       "description": "Unit testing of libSBMLs implementation",
+      "supports": "!windows | mingw | (windows & static)",
       "dependencies": [
         "check",
         "dirent"
