@@ -31,7 +31,7 @@ elseif(CMAKE_HOST_WIN32)
                 NO_DEFAULT_PACKAGES
                 DIRECT_PACKAGES
                     "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-pkgconf-1~1.8.0-2-any.pkg.tar.zst"
-                    637cfb4594cdabe09f419a58c2727e11c61930f2949d904bcc3dcd45de238d23e1c547e0b2b364bd405501014d1cc971cbfe006ace0991a0498eeca24af98c97
+                    e5217d9c55ede4c15706b4873761cc6e987eabc1308120a3e8406571ae2993907f3776f2b2bba18d7aaec80ef97227696058cedc1b67a773530dc1e6077b95e6
             )
             set("${program}" "${PKGCONFIG_ROOT}/mingw32/bin/pkg-config.exe" CACHE INTERNAL "")
         endif()
