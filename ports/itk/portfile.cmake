@@ -3,8 +3,8 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InsightSoftwareConsortium/ITK
-    REF v5.3-rc02
-    SHA512 fe703bc6ed681cb9983d7d6e21c8ffa7650337e470c09a7241de58a463c23e315516b1a81a18c14f682706056a0ec66932b63d2e24945bdcea03169bc1122bb2
+    REF "v${VERSION}"
+    SHA512 48e38864d7cd20b4ff23cfca1a29b4cbf453ce842e037ca473ce5c7e9a5b1c0bf6b12e4c544c812bff2b4bb9feca409587175b6570929c9ac172cb4402d679da
     HEAD_REF master
     PATCHES
         double-conversion.patch
