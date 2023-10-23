@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 430cee4..9775c89 100644
+index 0653da5..1265f3d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -265,7 +265,6 @@ set(KTX_MAIN_SRC
@@ -18,13 +18,14 @@ index 430cee4..9775c89 100644
  
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/other_include>
          $<INSTALL_INTERFACE:other_include>
-@@ -538,6 +536,10 @@ macro(common_libktx_settings target enable_write library_type)
+@@ -538,6 +536,11 @@ macro(common_libktx_settings target enable_write library_type)
          target_compile_definitions(${target} PUBLIC KTX_FEATURE_KTX2)
      endif()
  
 +    # Use vcpkg zstd
 +    find_package(zstd CONFIG REQUIRED)
-+    target_link_libraries(${target} PRIVATE $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
++    set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
++    target_link_libraries(${target} PRIVATE ${ZSTD_LIBRARIES})
 +
      if(WIN32)
          if(MINGW)
