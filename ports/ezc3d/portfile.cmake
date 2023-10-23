@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pyomeca/ezc3d
-    REF Release_1.4.7
-    SHA512 ba234be76b5d95b9527952c7e1bf67d9725fc280bf991f45e7cbd68f1aeeab7e963c8c4d928e720d02ebc02ec2b0e41f1c28036cd728ccb4c5a77c6fa81a74ad
+    REF "Release_${VERSION}"
+    SHA512 19f2602be04ea4b0d65d7c26cc6b5c687f65ef5bceae104d7bcddec1e8db05cc65db2cb37ac8133b7bbda99cd097ead08fd7dcdaf470f710f5cc68cd73edb150
     HEAD_REF dev
 )
 
@@ -16,11 +16,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH "CMake")
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/ezc3d")
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/ezc3d")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

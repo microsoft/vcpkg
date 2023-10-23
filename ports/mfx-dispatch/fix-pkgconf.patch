@@ -33,7 +33,7 @@ index fabb541..5d248fe 100644
  Requires.private:
  Conflicts:
 -Libs: -L${libdir} -lsupc++ ${libdir}/libmfx.lib
-+Libs: -L${libdir} ${libdir}/libmfx.lib
++Libs: -L${libdir} -llibmfx
  Libs.private:
 -Cflags: -I${includedir} -I@INTELMEDIASDK_PATH@
 +Cflags: -I${includedir}

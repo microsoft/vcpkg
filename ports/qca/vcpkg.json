@@ -1,7 +1,6 @@
 {
   "name": "qca",
-  "version": "2.3.5",
-  "port-version": 2,
+  "version": "2.3.7",
   "description": "Qt Cryptographic Architecture (QCA).",
   "homepage": "https://userbase.kde.org/QCA",
   "dependencies": [

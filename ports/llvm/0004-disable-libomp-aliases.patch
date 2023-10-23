@@ -1,0 +1,32 @@
+ openmp/runtime/src/CMakeLists.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/openmp/runtime/src/CMakeLists.txt b/openmp/runtime/src/CMakeLists.txt
+index bb5822264514..340cef14df89 100644
+--- a/openmp/runtime/src/CMakeLists.txt
++++ b/openmp/runtime/src/CMakeLists.txt
+@@ -215,7 +215,7 @@ endif()
+ set(LIBOMP_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)
+ 
+ # Add symbolic links to libomp
+-if(NOT WIN32)
++if(0)
+   add_custom_command(TARGET omp POST_BUILD
+     COMMAND ${CMAKE_COMMAND} -E create_symlink ${LIBOMP_LIB_FILE}
+       libgomp${LIBOMP_LIBRARY_SUFFIX}
+@@ -367,6 +367,7 @@ if(WIN32)
+   install(TARGETS omp ${export_to_llvmexports} RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+   install(TARGETS ${LIBOMP_IMP_LIB_TARGET} ARCHIVE DESTINATION "${OPENMP_INSTALL_LIBDIR}")
+   # Create aliases (regular copies) of the library for backwards compatibility
++  if(0)
+   set(LIBOMP_ALIASES "libiomp5md")
+   foreach(alias IN LISTS LIBOMP_ALIASES)
+     install(CODE "execute_process(COMMAND \"\${CMAKE_COMMAND}\" -E copy \"${LIBOMP_LIB_FILE}\"
+@@ -375,6 +376,7 @@ if(WIN32)
+     install(CODE "execute_process(COMMAND \"\${CMAKE_COMMAND}\" -E copy \"${LIBOMP_IMP_LIB_FILE}\"
+       \"${alias}${CMAKE_STATIC_LIBRARY_SUFFIX}\" WORKING_DIRECTORY \"${outdir}\")")
+   endforeach()
++  endif()
+ else()
+ 
+   install(TARGETS omp ${export_to_llvmexports} ${LIBOMP_INSTALL_KIND} DESTINATION "${OPENMP_INSTALL_LIBDIR}")
