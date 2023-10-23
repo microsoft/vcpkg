@@ -8,7 +8,11 @@ pkg_check_modules(GLIB2 glib-2.0 IMPORTED_TARGET)
 if(WIN32)
     add_definitions(-DNATIVE_WIN32 -D_USE_MATH_DEFINES)
 else()
-    add_definitions(-DHAVE_FPU_CONTROL_H)
+    include(CheckIncludeFile)
+    check_include_file("fpu_control.h" HAVE_FPU_CONTROL_H)
+    if(HAVE_FPU_CONTROL_H)
+        add_definitions(-DHAVE_FPU_CONTROL_H)
+    endif()
 endif()
 
 add_definitions(
