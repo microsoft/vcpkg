@@ -23,7 +23,7 @@
     },
     {
       "name": "libuuid",
-      "platform": "!windows & !uwp & !osx"
+      "platform": "!windows & !osx"
     },
     {
       "name": "pkgconf",
