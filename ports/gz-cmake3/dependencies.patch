@@ -20,3 +20,16 @@ diff --git a/cmake/FindGzBullet.cmake b/cmake/FindGzBullet.cmake
      LIB_VAR BULLET_LIBRARIES
      INCLUDE_VAR BULLET_INCLUDE_DIRS
    )
+diff --git a/cmake/GzFindPackage.cmake b/cmake/GzFindPackage.cmake
+index 4eb7a0d..231725b 100644
+--- a/cmake/GzFindPackage.cmake
++++ b/cmake/GzFindPackage.cmake
+@@ -388,7 +388,7 @@ macro(gz_find_package PACKAGE_NAME_)
+       # ${component}_CMAKE_DEPENDENCIES variables that are specific to those
+       # componenets
+       foreach(component ${gz_find_package_REQUIRED_BY})
+-        if(NOT ${component}_${PACKAGE_NAME}_PRIVATE)
++        if(NOT ${component}_${PACKAGE_NAME}_PRIVATE OR NOT BUILD_SHARED_LIBS)
+           gz_string_append(${component}_CMAKE_DEPENDENCIES "${${PACKAGE_NAME}_find_dependency}" DELIM "\n")
+         endif()
+       endforeach()
