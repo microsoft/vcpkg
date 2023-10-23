@@ -449,8 +449,8 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
         DEPS coreutils libxcrypt sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/pkgconf-2.0.2-2-x86_64.pkg.tar.zst"
-        SHA512 a2e79b647f003e7a807acedfd8f97a61e7f837a4ff2b543774d06b1403ff1dcf9b381c1b555d95207fd13441f01f4b6e486eea60a69dc207eb99fdc7983a6910
+        URL "https://mirror.msys2.org/msys/x86_64/pkgconf-1.9.4-1-x86_64.pkg.tar.zst"
+        SHA512 0a5f0d69eec591a00d1aee985458dd855100184ec845b076d8f22ca51ba106964b8cf5b0061df288cdd611aa6a6e5fcb98eafded1c46536a0d17253240966f15
         PROVIDES pkg-config
     )
     z_vcpkg_acquire_msys_declare_package(
