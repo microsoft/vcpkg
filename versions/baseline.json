@@ -5592,6 +5592,10 @@
       "baseline": "3.100",
       "port-version": 11
     },
+    "mpark-patterns": {
+      "baseline": "2019-10-03",
+      "port-version": 0
+    },
     "mpark-variant": {
       "baseline": "1.4.0",
       "port-version": 3
