@@ -21,6 +21,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        "-DVERSION=${VERSION}"
 )
 
 vcpkg_cmake_install()
