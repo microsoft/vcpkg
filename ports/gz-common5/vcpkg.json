@@ -25,6 +25,11 @@
       "name": "libuuid",
       "platform": "!windows & !uwp & !osx"
     },
+    {
+      "name": "pkgconf",
+      "host": true,
+      "default-features": false
+    },
     "tinyxml2"
   ]
 }
