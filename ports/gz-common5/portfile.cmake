@@ -9,6 +9,5 @@ ignition_modular_library(
       -DBUILD_TESTING=OFF
       -DUSE_EXTERNAL_TINYXML2=ON
    PATCHES
-      fix_dependencies.patch
       gz_remotery_vis.patch
 )
