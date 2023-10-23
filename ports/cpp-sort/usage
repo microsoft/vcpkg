@@ -1,0 +1,4 @@
+The package bext-mp provides CMake targets:
+
+    find_package(cpp-sort CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE cpp-sort::cpp-sort)
