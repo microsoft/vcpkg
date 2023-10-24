@@ -5,8 +5,8 @@
   "homepage": "https://github.com/libigl/libigl",
   "license": null,
   "dependencies": [
-    "stb",
     "eigen3",
+    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true
