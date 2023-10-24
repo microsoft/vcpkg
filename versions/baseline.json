@@ -8629,7 +8629,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "20.45.0",
+      "baseline": "20.47.0",
       "port-version": 0
     },
     "v-hacd": {
