@@ -21,7 +21,7 @@ vcpkg_extract_source_archive(
         windows/spin_delay.patch
 )
 
-if(NOT VCPKG_TARGET_IS_MINGW)
+if("python" IN_LIST FEATURES)
 # The problem is actually that on MinGW, CMake's file(WRITE) command converts
 # configure.ac line endings from UNIX-style (LF) to Windows-style (CRLF) and this
 # breaks autoconf.
