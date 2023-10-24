@@ -8997,7 +8997,7 @@
       "port-version": 10
     },
     "x86-simd-sort": {
-      "baseline": "2023-03-04",
+      "baseline": "3.0",
       "port-version": 0
     },
     "xapian": {
