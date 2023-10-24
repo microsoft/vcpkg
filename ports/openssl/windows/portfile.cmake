@@ -44,8 +44,13 @@ endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     vcpkg_find_acquire_program(CLANG)
+    set(clang "${CLANG}")
+    cmake_path(GET clang PARENT_PATH clang_path)
+    vcpkg_add_to_path("${clang_path}")
+
     set(as clang-cl)
     set(cc clang-cl)
+
     vcpkg_list(APPEND CONFIGURE_OPTIONS "ASFLAGS=--target=aarch64-win32-msvc")
     string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " --target=aarch64-win32-msvc")
     string(APPEND VCPKG_COMBINED_C_FLAGS_RELEASE " --target=aarch64-win32-msvc")
