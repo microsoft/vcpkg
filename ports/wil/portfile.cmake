@@ -7,6 +7,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# WIL is header-only, so we don't need to build it in both modes
+set(VCPKG_BUILD_TYPE release)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
