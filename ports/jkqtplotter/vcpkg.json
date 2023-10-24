@@ -11,9 +11,9 @@
       "features": [
         "gui",
         "jpeg",
+        "opengl",
         "png",
-        "widgets",
-        "opengl"
+        "widgets"
       ]
     },
     "qtsvg",
