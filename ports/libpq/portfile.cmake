@@ -21,10 +21,15 @@ vcpkg_extract_source_archive(
         windows/spin_delay.patch
 )
 
+if(NOT VCPKG_TARGET_IS_MINGW)
+# The problem is actually that on MinGW, CMake's file(WRITE) command converts
+# configure.ac line endings from UNIX-style (LF) to Windows-style (CRLF) and this
+# breaks autoconf.
 file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
 string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp "${_py3_include_path}")
 set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
 vcpkg_replace_string("${SOURCE_PATH}/configure.ac" "python_version=3.REPLACEME" "python_version=3.${PYTHON_VERSION_MINOR}")
+endif()
 
 if("client" IN_LIST FEATURES)
     set(HAS_TOOLS TRUE)
