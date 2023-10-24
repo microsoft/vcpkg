@@ -4,6 +4,9 @@ vcpkg_from_github(
     REF  fdaac01bcc52888994f7afd029dcc045dd408484 #2.5.0
     SHA512 214f6af92026987d9ee3bad5e1849ef96d8455b1de38a03d068b7d7ab88b66a08f3a1f7c11b0cabc8d0744c19855ee2fdd544ac15ad826d117ef1ba97a318a2f
     HEAD_REF master
+    PATCHES
+        dependencies.patch
+        install-extra-targets.patch
 )
 file(REMOVE
     "${SOURCE_PATH}/cmake/find/FindGMP.cmake"
@@ -54,6 +57,7 @@ vcpkg_cmake_configure(
         -DLIBIGL_RESTRICTED_MOSEK=OFF
         -DLIBIGL_USE_STATIC_LIBRARY=OFF
         -DHUNTER_ENABLED=OFF
+        -DENABLE_CLANG_FORMAT=OFF
         ${ADDITIONAL_OPTIONS}
 )
 
