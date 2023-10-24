@@ -26,6 +26,7 @@ file(REMOVE
     "${SOURCE_PATH}/cmake/recipes/external/mpfr.cmake"
     "${SOURCE_PATH}/cmake/recipes/external/stb.cmake"
     "${SOURCE_PATH}/cmake/recipes/external/tinyxml2.cmake"
+    "${SOURCE_PATH}/cmake/recipes/external/spectra.cmake"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -35,7 +36,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         glfw            LIBIGL_GLFW
         imgui           LIBIGL_IMGUI
         opengl          LIBIGL_OPENGL
-        png             LIBIGL_PNG
         xml             LIBIGL_XML
         # Features removed: missing binary libs / separate ports
         comiso          LIBIGL_COPYLEFT_COMISO
@@ -57,7 +57,7 @@ vcpkg_cmake_configure(
         -DLIBIGL_RESTRICTED_MOSEK=OFF
         -DLIBIGL_USE_STATIC_LIBRARY=OFF
         -DHUNTER_ENABLED=OFF
-        -DENABLE_CLANG_FORMAT=OFF
+        -DLIBIGL_SPECTRA=OFF
         ${ADDITIONAL_OPTIONS}
 )
 
