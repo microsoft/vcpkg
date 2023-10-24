@@ -3576,6 +3576,10 @@
       "baseline": "2018-05-08",
       "port-version": 3
     },
+    "jkqtplotter": {
+      "baseline": "2023-10-24",
+      "port-version": 0
+    },
     "joltphysics": {
       "baseline": "3.0.1",
       "port-version": 1
