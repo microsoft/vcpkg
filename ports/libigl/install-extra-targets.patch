@@ -164,7 +164,7 @@ index 20607ec..5bc3211 100644
  
  # 4. Dependencies
 -include(stb)
-+find_package(stb REQUIRED)
++find_package(Stb REQUIRED)
  target_link_libraries(igl_stb ${IGL_SCOPE}
      igl::core
      stb::stb
