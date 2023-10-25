@@ -124,6 +124,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc" "${CURRENT_PACKAGES_DIR}/debug/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST 
   "${SOURCE_PATH}/LICENSE" 
   "${SOURCE_PATH}/lib/jkqtmathtext/resources/firaMath/LICENSE"
