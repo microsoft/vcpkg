@@ -390,7 +390,10 @@
       "description": "Thread support; provides QThread and related classes."
     },
     "vulkan": {
-      "description": "Enable Vulkan support"
+      "description": "Enable Vulkan support",
+      "dependencies": [
+        "vulkan-headers"
+      ]
     },
     "widgets": {
       "description": "Qt Widgets",
