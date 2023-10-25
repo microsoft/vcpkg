@@ -2,7 +2,7 @@
   "name": "mpark-patterns",
   "version-date": "2019-10-03",
   "description": "MPark.Patterns is an experimental pattern matching library for C++17.",
-  "homepage": "https://github.com/mpack/patterns/",
+  "homepage": "https://github.com/mpack/patterns",
   "license": "BSL-1.0",
   "dependencies": [
     {

@@ -6,15 +6,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(VCPKG_BUILD_TYPE release) #header-only library
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME mpark-patterns CONFIG_PATH "lib/cmake/mpark_patterns")
+vcpkg_cmake_config_fixup(PACKAGE_NAME mpark_patterns CONFIG_PATH "lib/cmake/mpark_patterns")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 
