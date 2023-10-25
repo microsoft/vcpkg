@@ -39,6 +39,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         webp        USE_WEBP
         libheif     USE_LIBHEIF
         pybind11    USE_PYTHON
+        tools       OIIO_BUILD_TOOLS
         viewer      USE_QT
 )
 
@@ -48,7 +49,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DOIIO_BUILD_TESTS=OFF
-        -DOIIO_BUILD_TOOLS=ON
         -DUSE_DCMTK=OFF
         -DUSE_NUKE=OFF
         -DUSE_OpenVDB=OFF
@@ -73,10 +73,12 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 
-vcpkg_copy_tools(
-    TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool
-    AUTO_CLEAN
-)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool
+        AUTO_CLEAN
+    )
+endif()
 
 if("viewer" IN_LIST FEATURES)
     vcpkg_copy_tools(

@@ -103,10 +103,19 @@
         "python3"
       ]
     },
+    "tools": {
+      "description": "Build openimageio tools"
+    },
     "viewer": {
       "description": "Build openimageio viewer",
       "dependencies": [
         "opengl",
+        {
+          "name": "openimageio",
+          "features": [
+            "tools"
+          ]
+        },
         {
           "name": "qtbase",
           "default-features": false
