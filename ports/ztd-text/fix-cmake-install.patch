@@ -1,0 +1,99 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f9cc5d6..63c911e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,11 +34,6 @@ cmake_policy(VERSION 3.16)
+ # Includes a bunch of basic flags and utilities shared across projects
+ # See more at the github repository link below
+ include(FetchContent)
+-FetchContent_Declare(ztd.cmake
+-	GIT_REPOSITORY https://github.com/soasis/cmake
+-	GIT_TAG main)
+-FetchContent_MakeAvailable(ztd.cmake)
+-set(CMAKE_PROJECT_INCLUDE ${ZTD_CMAKE_PROJECT_PRELUDE})
+ 
+ # # Project declaration
+ # informs about the project, gives a description, version and MOST IMPORTANTLY
+@@ -49,6 +44,8 @@ project(ztd.text
+ 	HOMEPAGE_URL "https://ztdtext.readthedocs.io/en/latest/"
+ 	LANGUAGES C CXX)
+ 
++include(GNUInstallDirs)
++include(CMakePackageConfigHelpers)
+ if (ZTD_TEXT_READTHEDOCS)
+ 	# ReadTheDocs seems unable to handle the include at the project level: something must be going wrong?
+ 	include(CheckCXXCompilerFlag)
+@@ -122,10 +119,7 @@ option(ZTD_TEXT_USE_STATIC_LIBICONV "Use libiconv and link against it even if it
+ 
+ # # Dependencies
+ # ztd.idk
+-FetchContent_Declare(ztd.idk
+-	GIT_REPOSITORY https://github.com/soasis/idk.git
+-	GIT_TAG main)
+-FetchContent_MakeAvailable(ztd.idk)
++find_package(ztd.idk CONFIG)
+ 
+ # ztd.cuneicode
+ if (ZTD_TEXT_USE_CUNEICODE)
+@@ -193,8 +187,6 @@ string(CONCAT ztd-text-dynamic-libiconv-define
+ 	>
+ )
+ 
+-# Main library declarations
+-file(GLOB_RECURSE ztd.text.includes CONFIGURE_DEPENDS include/*.hpp)
+ 
+ add_library(ztd.text INTERFACE)
+ add_library(ztd::text ALIAS ztd.text)
+@@ -202,7 +194,6 @@ target_include_directories(ztd.text
+ 	INTERFACE
+ 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+ 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+-target_sources(ztd.text INTERFACE ${ztd.text.includes})
+ target_compile_definitions(ztd.text
+ 	INTERFACE
+ 	${ztd-text-libiconv-define}
+@@ -219,6 +210,9 @@ target_link_libraries(ztd.text
+ install(DIRECTORY include/
+ 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
++install(TARGETS ztd.text
++        EXPORT ztd.text-targets
++        DESTINATION lib)
+ # # Config / Version packaging
+ # Version configurations
+ configure_package_config_file(
+@@ -236,6 +230,15 @@ export(TARGETS ztd.text
+ 	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.text/ztd.text-targets.cmake")
+ 
+ 
++install(FILES
++  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.text/ztd.text-config.cmake
++  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.text/ztd.text-config-version.cmake
++  DESTINATION share/ztd.text
++  )
++install(EXPORT ztd.text-targets
++  FILE ztd.text-targets.cmake
++  DESTINATION share/ztd.text
++)
+ if (ZTD_TEXT_GENERATE_SINGLE)
+ 	add_subdirectory(single)
+ endif()
+diff --git a/cmake/ztd.text-config.cmake.in b/cmake/ztd.text-config.cmake.in
+index 92a09a1..3673766 100644
+--- a/cmake/ztd.text-config.cmake.in
++++ b/cmake/ztd.text-config.cmake.in
+@@ -1,5 +1,9 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(ztd.idk CONFIG) 
++include(${CMAKE_CURRENT_LIST_DIR}/ztd.text-targets.cmake)
++if(0)
+ if (TARGET ztd::text)
+ 	get_target_property(ZTD_TEXT_INCLUDE_DIRS
+ 		ztd.text INTERFACE_INCLUDE_DIRECTORIES)
+@@ -21,3 +25,4 @@ if(TARGET ztd::text::single)
+ 		set(ZTD_TEXT_LIBRARIES_SINGLE ztd::text::single)
+ 	endif()
+ endif()
++endif()
