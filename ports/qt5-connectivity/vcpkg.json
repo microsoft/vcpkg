@@ -1,6 +1,6 @@
 {
   "name": "qt5-connectivity",
-  "version": "5.15.10",
+  "version": "5.15.11",
   "description": "Qt5 Connectivity module - Provides access to Bluetooth and NFC hardware",
   "license": null,
   "dependencies": [

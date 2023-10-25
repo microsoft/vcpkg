@@ -1,7 +1,7 @@
 {
   "name": "sfml",
   "version": "2.6.0",
-  "port-version": 17,
+  "port-version": 19,
   "description": "Simple and fast multimedia library",
   "homepage": "https://github.com/SFML/SFML",
   "license": "Zlib",

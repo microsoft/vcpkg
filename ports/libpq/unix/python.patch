@@ -8,7 +8,7 @@ index a35395e..3c1b3e2 100644
    PGAC_PATH_PYTHON
 -  PGAC_CHECK_PYTHON_EMBED_SETUP
 +  python_majorversion=3
-+  python_version=3.10
++  python_version=3.REPLACEME
 +  PKG_CHECK_MODULES(PYTHON_EMBED, python-${python_version}-embed)
 +  python_includespec="${PYTHON_EMBED_CFLAGS}"
 +  python_libdir=[$(echo " ${PYTHON_EMBED_LIBS}" | sed -e 's/\( -L[^ ]*\).*/\1/' -e 's/^.* -L//')]

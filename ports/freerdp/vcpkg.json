@@ -1,10 +1,10 @@
 {
   "name": "freerdp",
-  "version": "2.9.0",
+  "version": "2.11.2",
   "description": "A free implementation of the Remote Desktop Protocol (RDP)",
   "homepage": "https://github.com/FreeRDP/FreeRDP",
   "license": "Apache-2.0",
-  "supports": "!(arm | uwp)",
+  "supports": "!uwp & !(arm & windows)",
   "dependencies": [
     {
       "name": "glib",
@@ -18,16 +18,58 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "zlib",
+      "platform": "!windows"
     }
   ],
   "features": {
+    "client-mac": {
+      "description": "Build native mac client. Requires XCode.",
+      "supports": "osx"
+    },
+    "ffmpeg": {
+      "description": "Enable image scaling, video and audio with ffmpeg",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "swresample",
+            "swscale"
+          ]
+        }
+      ]
+    },
     "server": {
-      "description": "With server"
+      "description": "Build server components",
+      "supports": "!android & !ios & !uwp"
     },
     "urbdrc": {
       "description": "USB redirection channel support",
       "dependencies": [
         "libusb"
+      ]
+    },
+    "wayland": {
+      "description": "Enable wayland support",
+      "supports": "!windows & !android & !ios & !osx & !openbsd",
+      "dependencies": [
+        "wayland"
+      ]
+    },
+    "winpr-tools": {
+      "description": "Build winpr tools",
+      "supports": "!android & !ios & !uwp"
+    },
+    "x11": {
+      "description": "Enable X11 support",
+      "supports": "!windows & !android & !ios",
+      "dependencies": [
+        "xcb"
       ]
     }
   }

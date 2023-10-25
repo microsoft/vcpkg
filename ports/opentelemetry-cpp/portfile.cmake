@@ -18,6 +18,7 @@ vcpkg_from_github(
         add-missing-dependencies.patch
         # Missing find_dependency for Abseil
         add-missing-find-dependency.patch
+        add-missing-include-file.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

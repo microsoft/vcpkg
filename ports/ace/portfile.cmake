@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12)
-
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
@@ -116,27 +114,10 @@ if("xml" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  if("tao" IN_LIST FEATURES OR "xml" IN_LIST FEATURES)
-    file(WRITE "${SOURCE_PATH}/Directory.Build.props" "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                                                     <Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
-                                                     <ItemDefinitionGroup>
-                                                     <ClCompile>
-                                                     <AdditionalOptions>/MP</AdditionalOptions>
-                                                     <AdditionalIncludeDirectories>${ACE_ROOT}</AdditionalIncludeDirectories>
-                                                     </ClCompile>
-                                                     <Link>
-                                                     <AdditionalLibraryDirectories>${CURRENT_PACKAGES_DIR}/lib;${CURRENT_PACKAGES_DIR}/debug/lib;${CURRENT_INSTALLED_DIR}/lib;${CURRENT_INSTALLED_DIR}/debug/lib</AdditionalLibraryDirectories>
-                                                     </Link>
-                                                     </ItemDefinitionGroup>
-                                                     </Project>")
-  endif()
-
   file(RELATIVE_PATH PROJECT_SUBPATH "${SOURCE_PATH}" "${WORKSPACE}.sln")
-  vcpkg_install_msbuild(
+  vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH ${PROJECT_SUBPATH}
-    LICENSE_SUBPATH COPYING
-    SKIP_CLEAN
+    PROJECT_SUBPATH "${PROJECT_SUBPATH}"
   )
 
   # ACE itself does not define an install target, so it is not clear which
@@ -158,8 +139,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
   endfunction()
 
-  get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-  set(SOURCE_COPY_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}")
+  set(SOURCE_COPY_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
   # Install headers in subdirectory
   set(ACE_INCLUDE_FOLDERS
@@ -274,11 +254,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
   if("xml" IN_LIST FEATURES)
     file(RELATIVE_PATH PROJECT_SUBPATH_XML "${SOURCE_PATH}" "${ACE_ROOT}/ACEXML/ACEXML.sln")
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
       SOURCE_PATH "${SOURCE_PATH}"
-      PROJECT_SUBPATH ${PROJECT_SUBPATH_XML}
-      LICENSE_SUBPATH COPYING
-      SKIP_CLEAN
+      PROJECT_SUBPATH "${PROJECT_SUBPATH_XML}"
     )
 
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/common"
@@ -296,8 +274,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb")
     endif()
   endif()
-
-  vcpkg_clean_msbuild()
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
@@ -404,12 +380,11 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   # Restore `PWD` environment variable
   set($ENV{PWD} _prev_env)
 
-  # Handle copyright
-  file(INSTALL "${ACE_ROOT}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/ace/bin/MakeProjectCreator")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/share/ace/ace-devel.sh")
   file(REMOVE "${CURRENT_PACKAGES_DIR}/share/tao/tao-devel.sh")
 endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 vcpkg_fixup_pkgconfig()

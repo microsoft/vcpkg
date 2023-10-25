@@ -1,0 +1,203 @@
+diff --git a/channels/CMakeLists.txt b/channels/CMakeLists.txt
+index 882fef7..4ae7737 100644
+--- a/channels/CMakeLists.txt
++++ b/channels/CMakeLists.txt
+@@ -213,6 +213,7 @@ macro(add_channel_client_library _module_prefix _module_name _channel_name _dyna
+       client_channel_install(${_module_name}  ${FREERDP_ADDIN_PATH})
+     endif()
+   endif()
++  target_include_directories(${_module_name} INTERFACE $<INSTALL_INTERFACE:include>)
+ endmacro(add_channel_client_library)
+ 
+ macro(add_channel_client_subsystem_library _module_prefix _module_name _channel_name _type _dynamic _entry)
+@@ -253,6 +254,7 @@ macro(add_channel_client_subsystem_library _module_prefix _module_name _channel_
+       client_channel_install(${_module_name}  ${FREERDP_ADDIN_PATH})
+     endif()
+   endif()
++  target_include_directories(${_module_name} INTERFACE $<INSTALL_INTERFACE:include>)
+ endmacro(add_channel_client_subsystem_library)
+ 
+ macro(add_channel_server_library _module_prefix _module_name _channel_name _dynamic _entry)
+@@ -290,6 +292,7 @@ macro(add_channel_server_library _module_prefix _module_name _channel_name _dyna
+ 			server_channel_install(${_module_name}  ${FREERDP_ADDIN_PATH})
+ 		endif()
+ 	endif()
++	target_include_directories(${_module_name} INTERFACE $<INSTALL_INTERFACE:include>)
+ endmacro(add_channel_server_library)
+ 
+ set(FILENAME "ChannelOptions.cmake")
+diff --git a/channels/server/CMakeLists.txt b/channels/server/CMakeLists.txt
+index 1f49c3b..67d361f 100644
+--- a/channels/server/CMakeLists.txt
++++ b/channels/server/CMakeLists.txt
+@@ -29,6 +29,7 @@ foreach(STATIC_MODULE ${CHANNEL_STATIC_SERVER_MODULES})
+ endforeach()
+ 
+ add_library(${MODULE_NAME} STATIC ${${MODULE_PREFIX}_SRCS})
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ if (WITH_LIBRARY_VERSIONING)
+   set_target_properties(${MODULE_NAME} PROPERTIES VERSION ${FREERDP_VERSION} SOVERSION ${FREERDP_API_VERSION})
+diff --git a/client/Android/CMakeLists.txt b/client/Android/CMakeLists.txt
+index b3473a9..5537033 100644
+--- a/client/Android/CMakeLists.txt
++++ b/client/Android/CMakeLists.txt
+@@ -51,4 +51,5 @@ set(${MODULE_PREFIX}_LIBS ${${MODULE_PREFIX}_LIBS} jnigraphics)
+ #set_target_properties(${MODULE_NAME} PROPERTIES OUTPUT_NAME ${MODULE_NAME}${FREERDP_API_VERSION})
+ 
+ target_link_libraries(${MODULE_NAME} ${${MODULE_PREFIX}_LIBS})
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ install(TARGETS ${MODULE_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries EXPORT AndroidTargets)
+diff --git a/client/Mac/CMakeLists.txt b/client/Mac/CMakeLists.txt
+index b3eb591..f6f756b 100644
+--- a/client/Mac/CMakeLists.txt
++++ b/client/Mac/CMakeLists.txt
+@@ -95,6 +95,7 @@ set(${MODULE_PREFIX}_LIBS ${${MODULE_PREFIX}_LIBS} ${EXTRA_LIBS} freerdp-client)
+ set(${MODULE_PREFIX}_LIBS ${${MODULE_PREFIX}_LIBS} winpr freerdp)
+ 
+ target_link_libraries(${MODULE_NAME} ${${MODULE_PREFIX}_LIBS})
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ # Set a list of the dependent targets used by the application. There should be a way to get this list automatically
+ # from cmake, but for now I put it down manually. I got the references by calling "otool -L MacFreeRDP-client"
+diff --git a/client/Windows/CMakeLists.txt b/client/Windows/CMakeLists.txt
+index b0a5d27..278b0fc 100644
+--- a/client/Windows/CMakeLists.txt
++++ b/client/Windows/CMakeLists.txt
+@@ -80,6 +80,7 @@ set(${MODULE_PREFIX}_LIBS ${${MODULE_PREFIX}_LIBS} freerdp-client)
+ set(${MODULE_PREFIX}_LIBS ${${MODULE_PREFIX}_LIBS} winpr freerdp)
+ set(${MODULE_PREFIX}_LIBS ${${MODULE_PREFIX}_LIBS} msimg32)
+ target_link_libraries(${MODULE_NAME} ${${MODULE_PREFIX}_LIBS})
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ if(WITH_CLIENT_INTERFACE)
+ 	install(TARGETS ${MODULE_NAME} COMPONENT libraries)
+diff --git a/client/X11/CMakeLists.txt b/client/X11/CMakeLists.txt
+index 869652c..d170277 100644
+--- a/client/X11/CMakeLists.txt
++++ b/client/X11/CMakeLists.txt
+@@ -238,6 +238,8 @@ if(WITH_IPP)
+     target_link_libraries(${MODULE_NAME} ${PRIVATE_KEYWORD} ${IPP_LIBRARY_LIST})
+ endif()
+ 
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
++
+ if(WITH_CLIENT_INTERFACE)
+ 	install(TARGETS ${MODULE_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries)
+ 	add_subdirectory(cli)
+diff --git a/client/common/CMakeLists.txt b/client/common/CMakeLists.txt
+index 1de7461..acb6ecf 100644
+--- a/client/common/CMakeLists.txt
++++ b/client/common/CMakeLists.txt
+@@ -77,6 +77,7 @@ else()
+ 	target_link_libraries(${MODULE_NAME} ${PUBLIC_KEYWORD} ${${MODULE_PREFIX}_LIBS})
+ endif()
+ 
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ install(TARGETS ${MODULE_NAME} COMPONENT libraries EXPORT FreeRDP-ClientTargets)
+ 
+diff --git a/libfreerdp/CMakeLists.txt b/libfreerdp/CMakeLists.txt
+index 7e9a63d..b9b0ab0 100644
+--- a/libfreerdp/CMakeLists.txt
++++ b/libfreerdp/CMakeLists.txt
+@@ -395,6 +395,7 @@ endif()
+ 
+ 
+ target_link_libraries(${MODULE_NAME} ${PRIVATE_KEYWORD} ${LIBFREERDP_LIBS} winpr)
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ install(TARGETS ${MODULE_NAME} COMPONENT libraries EXPORT FreeRDPTargets)
+ if (WITH_DEBUG_SYMBOLS AND MSVC AND BUILD_SHARED_LIBS)
+diff --git a/rdtk/librdtk/CMakeLists.txt b/rdtk/librdtk/CMakeLists.txt
+index 000e6d2..a84ce5e 100644
+--- a/rdtk/librdtk/CMakeLists.txt
++++ b/rdtk/librdtk/CMakeLists.txt
+@@ -42,6 +42,7 @@ list(APPEND ${MODULE_PREFIX}_LIBS winpr)
+ list(APPEND ${MODULE_PREFIX}_LIBS freerdp)
+ 
+ target_link_libraries(${MODULE_NAME} ${PRIVATE_KEYWORD} ${${MODULE_PREFIX}_LIBS})
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ set_property(TARGET ${MODULE_NAME} PROPERTY FOLDER "RdTk")
+ 
+diff --git a/server/Windows/CMakeLists.txt b/server/Windows/CMakeLists.txt
+index 4086542..976bd86 100644
+--- a/server/Windows/CMakeLists.txt
++++ b/server/Windows/CMakeLists.txt
+@@ -96,6 +96,7 @@ set(${MODULE_PREFIX}_LIBS ${${MODULE_PREFIX}_LIBS} dsound)
+ set(${MODULE_PREFIX}_LIBS ${${MODULE_PREFIX}_LIBS} freerdp-server freerdp)
+ 
+ target_link_libraries(${MODULE_NAME} ${${MODULE_PREFIX}_LIBS})
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ if(WITH_SERVER_INTERFACE)
+ 	install(TARGETS ${MODULE_NAME} COMPONENT libraries)
+diff --git a/server/common/CMakeLists.txt b/server/common/CMakeLists.txt
+index 7c533b7..8503928 100644
+--- a/server/common/CMakeLists.txt
++++ b/server/common/CMakeLists.txt
+@@ -62,6 +62,7 @@ endif()
+ 
+ target_link_libraries(${MODULE_NAME} ${PRIVATE_KEYWORD} ${FREERDP_CHANNELS_SERVER_LIBS})
+ target_link_libraries(${MODULE_NAME} ${PUBLIC_KEYWORD} winpr freerdp)
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ install(TARGETS ${MODULE_NAME} COMPONENT libraries EXPORT FreeRDP-ServerTargets)
+ if (WITH_DEBUG_SYMBOLS AND MSVC AND BUILD_SHARED_LIBS)
+diff --git a/server/shadow/CMakeLists.txt b/server/shadow/CMakeLists.txt
+index 0daa245..583c0a4 100644
+--- a/server/shadow/CMakeLists.txt
++++ b/server/shadow/CMakeLists.txt
+@@ -80,6 +80,7 @@ list(APPEND ${MODULE_PREFIX}_LIBS winpr-tools)
+ list(APPEND ${MODULE_PREFIX}_LIBS rdtk)
+ 
+ target_link_libraries(${MODULE_NAME} ${PRIVATE_KEYWORD} ${${MODULE_PREFIX}_LIBS})
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ set_target_properties(${MODULE_NAME} PROPERTIES OUTPUT_NAME ${MODULE_NAME}${FREERDP_VERSION_MAJOR})
+ if (WITH_LIBRARY_VERSIONING)
+@@ -285,6 +286,7 @@ add_library(${MODULE_NAME} ${${MODULE_PREFIX}_SRCS})
+ set(${MODULE_PREFIX}_LIBS ${${MODULE_PREFIX}_LIBS} freerdp-shadow freerdp winpr)
+ 
+ target_link_libraries(${MODULE_NAME} ${PRIVATE_KEYWORD} ${${MODULE_PREFIX}_LIBS})
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ set_target_properties(${MODULE_NAME} PROPERTIES OUTPUT_NAME ${MODULE_NAME}${FREERDP_API_VERSION})
+ if (WITH_LIBRARY_VERSIONING)
+diff --git a/uwac/libuwac/CMakeLists.txt b/uwac/libuwac/CMakeLists.txt
+index f66a8c4..ea08bed 100644
+--- a/uwac/libuwac/CMakeLists.txt
++++ b/uwac/libuwac/CMakeLists.txt
+@@ -81,6 +81,7 @@ if (HAVE_PIXMAN_REGION)
+ else()
+ 	target_link_libraries(${MODULE_NAME} PRIVATE freerdp)
+ endif()
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include/uwac0>)
+ 
+ install(TARGETS ${MODULE_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} EXPORT uwac)
+ 
+diff --git a/winpr/libwinpr/CMakeLists.txt b/winpr/libwinpr/CMakeLists.txt
+index 2616439..1f4688e 100644
+--- a/winpr/libwinpr/CMakeLists.txt
++++ b/winpr/libwinpr/CMakeLists.txt
+@@ -144,6 +144,7 @@ endif()
+ 
+ add_definitions(${WINPR_DEFINITIONS})
+ target_link_libraries(${MODULE_NAME} ${PRIVATE_KEYWORD} ${WINPR_LIBS_PRIVATE} ${PUBLIC_KEYWORD} ${WINPR_LIBS_PUBLIC})
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ install(TARGETS ${MODULE_NAME} COMPONENT libraries EXPORT WinPRTargets)
+ if (WITH_DEBUG_SYMBOLS AND MSVC AND BUILD_SHARED_LIBS)
+     get_target_property(OUTPUT_FILENAME ${MODULE_NAME} OUTPUT_NAME)
+diff --git a/winpr/tools/CMakeLists.txt b/winpr/tools/CMakeLists.txt
+index 13f4c13..4a73333 100644
+--- a/winpr/tools/CMakeLists.txt
++++ b/winpr/tools/CMakeLists.txt
+@@ -111,6 +111,7 @@ endif()
+ 
+ add_definitions(${WINPR_DEFINITIONS})
+ target_link_libraries(${MODULE_NAME} ${PRIVATE_KEYWORD} ${WINPR_TOOLS_LIBS})
++target_include_directories(${MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ install(TARGETS ${MODULE_NAME} COMPONENT libraries EXPORT WinPRTargets)
+ if (WITH_DEBUG_SYMBOLS AND MSVC AND BUILD_SHARED_LIBS)

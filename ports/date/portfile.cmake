@@ -13,7 +13,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     0001-fix-uwp.patch
-    0002-fix-cmake-3.14.patch
+    0002-fix-cmake-install.patch
     fix-uninitialized-values.patch  #Update the new version please remove this patch
 )
 
@@ -30,15 +30,11 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
-else()
-  vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/date)
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/date)
 
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

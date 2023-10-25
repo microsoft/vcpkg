@@ -1,6 +1,7 @@
 {
   "name": "azure-storage-queues-cpp",
-  "version-semver": "12.0.0",
+  "version-semver": "12.1.0",
+  "port-version": 1,
   "description": [
     "Microsoft Azure Storage Queues SDK for C++",
     "This library provides Azure Storage Queues SDK."
@@ -11,7 +12,7 @@
     {
       "name": "azure-storage-common-cpp",
       "default-features": false,
-      "version>=": "12.2.3"
+      "version>=": "12.4.0"
     },
     {
       "name": "vcpkg-cmake",

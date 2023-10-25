@@ -8,10 +8,12 @@ vcpkg_from_github(
         fix-find-package-asio.patch
         disable-symlink.patch
         fix-xtime.patch
+        fix_thread.patch #https://github.com/eProsima/Fast-DDS/pull/3904
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE # due to fix-xtime.patch
 )
 
 vcpkg_cmake_install()

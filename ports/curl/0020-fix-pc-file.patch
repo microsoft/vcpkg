@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8b2e428..ea430f4 100644
+index bb5fba9..9919fd3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1505,7 +1505,9 @@ set(includedir              "\${prefix}/include")
+@@ -1624,7 +1624,9 @@ set(includedir              "\${prefix}/include")
  set(LDFLAGS                 "${CMAKE_SHARED_LINKER_FLAGS}")
  set(LIBCURL_LIBS            "")
  set(libdir                  "${CMAKE_INSTALL_PREFIX}/lib")

@@ -1,7 +1,7 @@
 {
   "name": "libsodium",
   "version": "1.0.18",
-  "port-version": 8,
+  "port-version": 9,
   "description": "A modern and easy-to-use crypto library",
   "homepage": "https://github.com/jedisct1/libsodium",
   "license": "ISC",

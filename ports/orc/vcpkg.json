@@ -1,11 +1,11 @@
 {
   "name": "orc",
-  "version": "1.7.6",
+  "version": "1.9.1",
   "description": "The smallest, fastest columnar storage for Hadoop workloads.",
   "homepage": "https://orc.apache.org/",
   "license": "Apache-2.0",
+  "supports": "!uwp",
   "dependencies": [
-    "gtest",
     "lz4",
     "protobuf",
     {
@@ -15,6 +15,10 @@
     "snappy",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     },
     "zlib",

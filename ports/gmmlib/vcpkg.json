@@ -1,7 +1,6 @@
 {
   "name": "gmmlib",
-  "version": "21.3.2",
-  "port-version": 1,
+  "version": "22.3.12",
   "description": "Intel(R) Graphics Memory Management Library",
   "homepage": "https://github.com/intel/gmmlib",
   "license": "MIT",
