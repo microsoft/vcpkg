@@ -43,7 +43,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "cmake")
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake")
+endif()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
