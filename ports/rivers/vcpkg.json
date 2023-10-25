@@ -13,5 +13,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "fmt": {
+      "description": "Use fmt as rivers fommatter",
+      "dependencies": [
+        "fmt"
+      ]
+    }
+  }
 }
