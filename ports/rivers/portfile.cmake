@@ -7,6 +7,8 @@ vcpkg_from_github(
     PATCHES add-install-configuration.patch
 )
 
+set(VCPKG_BUILD_TYPE release) # header-only
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         fmt RVR_IMPORT_FMT
@@ -21,8 +23,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT} CONFIG_PATH "lib/cmake/unofficial-rivers")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
