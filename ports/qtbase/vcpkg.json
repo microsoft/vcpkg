@@ -392,7 +392,7 @@
     "vulkan": {
       "description": "Enable Vulkan support",
       "dependencies": [
-        "vulkan-headers"
+        "vulkan"
       ]
     },
     "widgets": {
