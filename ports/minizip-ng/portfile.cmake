@@ -17,7 +17,6 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         pkcrypt MZ_PKCRYPT
-        signing MZ_SIGNING
         wzaes MZ_WZAES
         openssl MZ_OPENSSL
         bzip2 MZ_BZIP2
