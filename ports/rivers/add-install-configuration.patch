@@ -61,12 +61,13 @@ index 981ef20..89c5a6e 100644
 +
 diff --git a/cmake/unofficial-rivers-config.cmake.in b/cmake/unofficial-rivers-config.cmake.in
 new file mode 100644
-index 0000000..b6c63ec
+index 0000000..a347972
 --- /dev/null
 +++ b/cmake/unofficial-rivers-config.cmake.in
-@@ -0,0 +1,8 @@
+@@ -0,0 +1,9 @@
 +
 +@PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
 +
 +include("${CMAKE_CURRENT_LIST_DIR}/unofficial-rivers-targets.cmake")
 +if(@RVR_IMPORT_FMT@)
