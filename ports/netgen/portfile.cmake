@@ -46,7 +46,7 @@ vcpkg_cmake_install()
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH "cmake")
 else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake")
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/netgen")
 endif()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
@@ -59,8 +59,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/nglib.h" "define NGLIB" "define NGLIB\n#define OCCGEOMETRY\n#define JPEGLIB\n#define FFMPEG\n")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/core/ngcore_api.hpp" "!defined(NGSTATIC_BUILD)" "0")
 endif()
-file(GLOB_RECURSE share "${CURRENT_PACKAGES_DIR}/share/netgen/*")
-message(STATUS "${share}" )
+
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/netgen/NetgenConfig.cmake" "${SOURCE_PATH}" "NOT-USABLE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
