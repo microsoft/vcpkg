@@ -2,6 +2,21 @@ diff --git a/cmake/FindCImg.cmake b/cmake/FindCImg.cmake
 index 38a929e7a..3e8424a9f 100644
 --- a/cmake/FindCImg.cmake
 +++ b/cmake/FindCImg.cmake
+@@ -83,10 +83,10 @@ if (CIMG_FOUND)
+             endif (X11_Xrandr_FOUND)
+             
+     ### PThread is required when using X11 display engine ###
+-            find_package (PTHREAD QUIET)
+-            if (PTHREAD_FOUND)
+-                set (CIMG_INCLUDE_DIRS ${CIMG_INCLUDE_DIRS} ${PTHREAD_INCLUDE_DIRS})
+-                set (CIMG_LIBRARIES ${CIMG_LIBRARIES} ${PTHREAD_LIBRARIES})
++            find_package (Threads QUIET)
++            if (Threads_FOUND)
++                set (CIMG_INCLUDE_DIRS ${CIMG_INCLUDE_DIRS})
++                set (CIMG_LIBRARIES ${CIMG_LIBRARIES} Threads::Threads)
+                 message(STATUS "FindCImg.cmake: pthread found")
+             else (PTHREAD_FOUND)
+                 message(STATUS "!!! FindCIMG.cmake !!! pthread NOT found. pthread required by cimg for running X11.")
 @@ -100,15 +100,15 @@ if (CIMG_FOUND)
          endif (X11_FOUND)
      else (UNIX OR APPLE)
