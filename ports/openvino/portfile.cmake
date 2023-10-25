@@ -4,11 +4,22 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 29ee621c1428808607ce499e527b5943b8a2172769cb7315ef25253db818f54f2da4bbf5539198c012e25e78c8c830205b46f6e6a83032e732e82a7d00d46312
     PATCHES
+        # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
         001-disable-tools.patch
+        # from https://github.com/openvinotoolkit/openvino/pull/18359
         003-fix-find-onnx.patch
+        # from https://github.com/openvinotoolkit/openvino/pull/19629
         004-compilation-with-cpp17.patch
+        # from https://github.com/openvinotoolkit/openvino/pull/19599
         005-tflite-search.patch
-        007-macos-14.patch # from https://github.com/openvinotoolkit/openvino/pull/19946
+        # # from https://github.com/openvinotoolkit/openvino/pull/19946
+        007-macos-14.patch
+        # from https://github.com/openvinotoolkit/openvino/pull/19758
+        # and https://github.com/openvinotoolkit/openvino/pull/20612
+        008-dynamic-protubuf.patch
+        # from https://github.com/openvinotoolkit/openvino/pull/20588
+        # and https://github.com/openvinotoolkit/openvino/pull/20636
+        009-tensorflow-proto-odr.patch
     HEAD_REF master)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

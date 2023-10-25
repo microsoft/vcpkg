@@ -517,7 +517,7 @@
       "port-version": 1
     },
     "baresip-libre": {
-      "baseline": "3.3.0",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "basisu": {
@@ -1542,7 +1542,7 @@
     },
     "check": {
       "baseline": "0.15.2",
-      "port-version": 4
+      "port-version": 5
     },
     "chipmunk": {
       "baseline": "7.0.3",
@@ -1582,7 +1582,7 @@
     },
     "civetweb": {
       "baseline": "1.16",
-      "port-version": 0
+      "port-version": 1
     },
     "cjson": {
       "baseline": "1.7.16",
@@ -1819,6 +1819,10 @@
     "cpp-redis": {
       "baseline": "4.3.1",
       "port-version": 5
+    },
+    "cpp-sort": {
+      "baseline": "1.15.0",
+      "port-version": 0
     },
     "cpp-taskflow": {
       "baseline": "2.6.0",
@@ -2074,7 +2078,7 @@
     },
     "dav1d": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "daw-header-libraries": {
       "baseline": "2.96.1",
@@ -2562,7 +2566,7 @@
     },
     "ffmpeg": {
       "baseline": "6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "ffnvcodec": {
       "baseline": "11.1.5.2",
@@ -2929,7 +2933,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "1.5.1",
+      "baseline": "1.5.4",
       "port-version": 0
     },
     "glbinding": {
@@ -3094,7 +3098,7 @@
     },
     "gstreamer": {
       "baseline": "1.22.5",
-      "port-version": 3
+      "port-version": 4
     },
     "gtest": {
       "baseline": "1.14.0",
@@ -3529,8 +3533,8 @@
       "port-version": 0
     },
     "itk": {
-      "baseline": "5.3-rc02",
-      "port-version": 6
+      "baseline": "5.3rc02",
+      "port-version": 0
     },
     "itpp": {
       "baseline": "4.3.1",
@@ -3861,7 +3865,7 @@
       "port-version": 0
     },
     "ktx": {
-      "baseline": "4.1.0",
+      "baseline": "4.3.0-alpha3",
       "port-version": 0
     },
     "kubazip": {
@@ -4042,7 +4046,7 @@
     },
     "libconfig": {
       "baseline": "1.7.3",
-      "port-version": 3
+      "port-version": 4
     },
     "libconfuse": {
       "baseline": "2019-07-14",
@@ -4554,7 +4558,7 @@
     },
     "libpcap": {
       "baseline": "1.10.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libpff": {
       "baseline": "2021-11-14",
@@ -4665,8 +4669,8 @@
       "port-version": 1
     },
     "libsbml": {
-      "baseline": "5.20.0",
-      "port-version": 1
+      "baseline": "5.20.2",
+      "port-version": 0
     },
     "libsbsms": {
       "baseline": "2.3.0",
@@ -4705,8 +4709,8 @@
       "port-version": 0
     },
     "libsndfile": {
-      "baseline": "1.2.0",
-      "port-version": 2
+      "baseline": "1.2.2",
+      "port-version": 0
     },
     "libsnoretoast": {
       "baseline": "0.8.0",
@@ -5354,7 +5358,7 @@
     },
     "matio": {
       "baseline": "1.5.23",
-      "port-version": 2
+      "port-version": 3
     },
     "matplotlib-cpp": {
       "baseline": "2020-08-27",
@@ -6085,8 +6089,8 @@
       "port-version": 0
     },
     "open62541": {
-      "baseline": "1.3.5",
-      "port-version": 1
+      "baseline": "1.3.8",
+      "port-version": 0
     },
     "openal-soft": {
       "baseline": "1.23.1",
@@ -6189,8 +6193,8 @@
       "port-version": 1
     },
     "openmpi": {
-      "baseline": "4.1.3",
-      "port-version": 2
+      "baseline": "4.1.6",
+      "port-version": 0
     },
     "openmvg": {
       "baseline": "2.0",
@@ -6254,7 +6258,7 @@
     },
     "openvino": {
       "baseline": "2023.1.0",
-      "port-version": 3
+      "port-version": 4
     },
     "openvpn3": {
       "baseline": "3.7.0",
@@ -6477,7 +6481,7 @@
       "port-version": 2
     },
     "pipewire": {
-      "baseline": "0.3.62",
+      "baseline": "0.3.83",
       "port-version": 0
     },
     "pistache": {
@@ -7153,7 +7157,7 @@
       "port-version": 0
     },
     "quantlib": {
-      "baseline": "1.31.1",
+      "baseline": "1.32",
       "port-version": 0
     },
     "quaternions": {
@@ -7265,7 +7269,7 @@
       "port-version": 0
     },
     "reactiveplusplus": {
-      "baseline": "0.2.2",
+      "baseline": "0.2.3",
       "port-version": 0
     },
     "readerwriterqueue": {
@@ -7841,11 +7845,11 @@
       "port-version": 2
     },
     "so5extra": {
-      "baseline": "1.6.0",
+      "baseline": "1.6.1",
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.8.0.1",
+      "baseline": "5.8.1",
       "port-version": 0
     },
     "soci": {
@@ -8182,7 +8186,7 @@
     },
     "tbb": {
       "baseline": "2021.10.0",
-      "port-version": 2
+      "port-version": 3
     },
     "tcb-span": {
       "baseline": "2022-06-15",
@@ -8629,7 +8633,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "20.45.0",
+      "baseline": "20.47.0",
       "port-version": 0
     },
     "v-hacd": {
@@ -8886,7 +8890,7 @@
     },
     "wil": {
       "baseline": "2023-08-24",
-      "port-version": 0
+      "port-version": 1
     },
     "wildmidi": {
       "baseline": "0.4.5",
@@ -8997,7 +9001,7 @@
       "port-version": 10
     },
     "x86-simd-sort": {
-      "baseline": "2023-03-04",
+      "baseline": "3.0",
       "port-version": 0
     },
     "xapian": {
@@ -9013,7 +9017,7 @@
       "port-version": 0
     },
     "xbyak": {
-      "baseline": "6.69",
+      "baseline": "6.73",
       "port-version": 0
     },
     "xcb": {

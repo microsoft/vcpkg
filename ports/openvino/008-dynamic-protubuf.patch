@@ -1,0 +1,156 @@
+diff --git a/src/frontends/common/src/manager.cpp b/src/frontends/common/src/manager.cpp
+index fa917dadb1..6194fca758 100644
+--- a/src/frontends/common/src/manager.cpp
++++ b/src/frontends/common/src/manager.cpp
+@@ -20,11 +20,6 @@ class FrontEndManager::Impl {
+     std::mutex m_loading_mutex;
+     std::vector<PluginInfo> m_plugins;
+ 
+-    /// \brief map of shared object per frontend <frontend_name, frontend_so_ptr>
+-    static std::unordered_map<std::string, std::shared_ptr<void>> m_shared_objects_map;
+-    /// \brief Mutex to guard access the shared object map
+-    static std::mutex m_shared_objects_map_mutex;
+-
+ public:
+     Impl() {
+         search_all_plugins();
+@@ -36,10 +31,6 @@ public:
+         auto fe_obj = std::make_shared<FrontEnd>();
+         fe_obj->m_shared_object = std::make_shared<FrontEndSharedData>(plugin.get_so_pointer());
+         fe_obj->m_actual = plugin.get_creator().m_creator();
+-
+-        std::lock_guard<std::mutex> guard(m_shared_objects_map_mutex);
+-        m_shared_objects_map.emplace(plugin.get_creator().m_name, fe_obj->m_shared_object);
+-
+         return fe_obj;
+     }
+ 
+@@ -128,8 +119,8 @@ public:
+     }
+ 
+     static void shutdown() {
+-        std::lock_guard<std::mutex> guard(m_shared_objects_map_mutex);
+-        m_shared_objects_map.clear();
++        std::lock_guard<std::mutex> guard(get_shared_objects_mutex());
++        get_shared_objects_map().clear();
+     }
+ 
+ private:
+@@ -154,6 +145,7 @@ private:
+             {".xml", {"ir", "ir"}},
+             {".onnx", {"onnx", "onnx"}},
+             {".pb", {"tf", "tensorflow"}},
++            {".pbtxt", {"tf", "tensorflow"}},
+             {".tflite", {"tflite", "tensorflow_lite"}},
+             {".pdmodel", {"paddle", "paddle"}},
+             // {".ts", {"pytorch", "pytorch"}},
+@@ -224,9 +216,6 @@ private:
+     }
+ };
+ 
+-std::unordered_map<std::string, std::shared_ptr<void>> FrontEndManager::Impl::m_shared_objects_map{};
+-std::mutex FrontEndManager::Impl::m_shared_objects_map_mutex{};
+-
+ FrontEndManager::FrontEndManager() : m_impl(new Impl()) {}
+ 
+ FrontEndManager::FrontEndManager(FrontEndManager&&) noexcept = default;
+diff --git a/src/frontends/common/src/plugin_loader.cpp b/src/frontends/common/src/plugin_loader.cpp
+index a044152d8d..a98eff766b 100644
+--- a/src/frontends/common/src/plugin_loader.cpp
++++ b/src/frontends/common/src/plugin_loader.cpp
+@@ -16,17 +16,32 @@
+ 
+ #include <sys/stat.h>
+ 
+-#include <openvino/util/log.hpp>
+ #include <string>
+ #include <vector>
+ 
+ #include "openvino/util/file_util.hpp"
++#include "openvino/util/log.hpp"
+ #include "openvino/util/shared_object.hpp"
+ #include "plugin_loader.hpp"
+ 
+ using namespace ov;
+ using namespace ov::frontend;
+ 
++// Note, static methods below are required to create an order of initialization of static variables
++// e.g. if users (not encouraged) created ov::Model globally, we need to ensure proper order of initialization
++
++/// \return map of shared object per frontend <frontend_name, frontend_so_ptr>
++std::unordered_map<std::string, std::shared_ptr<void>>& ov::frontend::get_shared_objects_map() {
++    static std::unordered_map<std::string, std::shared_ptr<void>> shared_objects_map;
++    return shared_objects_map;
++}
++
++/// \return Mutex to guard access the shared object map
++std::mutex& ov::frontend::get_shared_objects_mutex() {
++    static std::mutex shared_objects_map_mutex;
++    return shared_objects_map_mutex;
++}
++
+ #ifdef OPENVINO_STATIC_LIBRARY
+ 
+ #    include "ov_frontends.hpp"
+@@ -131,6 +146,10 @@ bool PluginInfo::load() {
+         m_load_failed = true;
+         return false;
+     }
++
++    std::lock_guard<std::mutex> guard(get_shared_objects_mutex());
++    get_shared_objects_map().emplace(get_creator().m_name, get_so_pointer());
++
+     return true;
+ }
+ 
+diff --git a/src/frontends/common/src/plugin_loader.hpp b/src/frontends/common/src/plugin_loader.hpp
+index 93e6a5cc2e..dccf8ddf7a 100644
+--- a/src/frontends/common/src/plugin_loader.hpp
++++ b/src/frontends/common/src/plugin_loader.hpp
+@@ -4,7 +4,12 @@
+ 
+ #pragma once
+ 
+-#include <openvino/frontend/manager.hpp>
++#include <memory>
++#include <mutex>
++#include <string>
++#include <unordered_map>
++
++#include "openvino/frontend/manager.hpp"
+ 
+ #ifdef _WIN32
+ static const char PathSeparator[] = ";";
+@@ -15,6 +20,9 @@ static const char PathSeparator[] = ":";
+ namespace ov {
+ namespace frontend {
+ 
++std::unordered_map<std::string, std::shared_ptr<void>>& get_shared_objects_map();
++std::mutex& get_shared_objects_mutex();
++
+ /// \brief Internal data structure holding by each frontend. Includes library handle and extensions.
+ class FrontEndSharedData {
+     friend inline void add_extension_to_shared_data(std::shared_ptr<void>& obj,
+diff --git a/thirdparty/dependencies.cmake b/thirdparty/dependencies.cmake
+index 12b72d52a2..111eea7c28 100644
+--- a/thirdparty/dependencies.cmake
++++ b/thirdparty/dependencies.cmake
+@@ -415,14 +415,14 @@ if(ENABLE_OV_PADDLE_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_TF_FRONTEND
+         if(CMAKE_VERBOSE_MAKEFILE)
+             set(Protobuf_DEBUG ON)
+         endif()
+-        if(OV_VCPKG_BUILD)
+-            set(protobuf_config CONFIG)
+-        endif()
+         # try to find newer version first (major is changed)
+         # see https://protobuf.dev/support/version-support/ and
+         # https://github.com/protocolbuffers/protobuf/commit/d61f75ff6db36b4f9c0765f131f8edc2f86310fa
+-        find_package(Protobuf 4.22.0 QUIET ${protobuf_config})
++        find_package(Protobuf 4.22.0 QUIET CONFIG)
+         if(NOT Protobuf_FOUND)
++            if(OV_VCPKG_BUILD)
++                set(protobuf_config CONFIG)
++            endif()
+             # otherwise, fallback to existing default
+             find_package(Protobuf 3.20.3 REQUIRED ${protobuf_config})
+         endif()
