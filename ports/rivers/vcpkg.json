@@ -14,6 +14,9 @@
       "host": true
     }
   ],
+  "default-features": [
+    "fmt"
+  ],
   "features": {
     "fmt": {
       "description": "Use fmt as rivers fommatter",
