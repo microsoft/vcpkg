@@ -150,6 +150,12 @@ function(analyze_package_list list_var script)
     set(max_age 365) # days
     math(EXPR minimum_builddate "${now} - 6 * 30 * 24 * 3600")
     foreach(name IN LISTS ${list_var})
+        # Here, the package list in vcpkg_acquire_msys.cmake is used to match the packages in https://repo.msys2.org/msys/x86_64/msys.files.
+        # Because the latest msys.files does not contain the libcrypt package, the matching of this package is skipped.
+        if(name STREQUAL "libcrypt")
+            continue()
+        endif()
+
         if(Z_VCPKG_MSYS_${name}_DIRECT)
             message(STATUS "${name} (DIRECT)")
         elseif("DIRECT_ONLY" IN_LIST ARGN)
