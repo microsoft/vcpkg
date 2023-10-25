@@ -1,6 +1,7 @@
 {
   "name": "cpr",
-  "version-semver": "1.10.2+3",
+  "version-semver": "1.10.5",
+  "port-version": 1,
   "description": "C++ Requests is a simple wrapper around libcurl inspired by the excellent Python Requests project.",
   "homepage": "https://github.com/libcpr/cpr",
   "license": "MIT",
