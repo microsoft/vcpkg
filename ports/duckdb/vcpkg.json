@@ -26,7 +26,10 @@
       "description": "Statically link the FTS extension into DuckDB"
     },
     "httpfs": {
-      "description": "Statically link the httpfs extension into DuckDB"
+      "description": "Statically link the httpfs extension into DuckDB",
+      "dependencies": [
+        "openssl"
+      ]
     },
     "icu": {
       "description": "Statically link the icu extension into DuckDB"

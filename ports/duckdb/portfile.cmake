@@ -1,9 +1,8 @@
-set(DUCKDB_VERSION v0.9.1)
 set(DUCKDB_SHORT_HASH 401c8061c6)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
-        REF ${DUCKDB_VERSION}
+        REF v${VERSION}
         SHA512 5905d9f619618ba3d0d729424659a81b82809603747582aad9d568e2db1dc719a4e1d336e4a8f602ee0b01ab2b28caa99c242db4b13444150ca593f1d1e4006a
         HEAD_REF master
         PATCHES
@@ -35,7 +34,7 @@ vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             -DDUCKDB_OVERWRITE_COMMIT_ID=${DUCKDB_SHORT_HASH}
-            -DDUCKDB_OVERWRITE_VERSION=${DUCKDB_VERSION}
+            -DDUCKDB_OVERWRITE_VERSION=v${VERSION}
             -DBUILD_UNITTESTS=OFF
             -DBUILD_SHELL=FALSE
             "${SKIP_PARQUET_FLAG}"
