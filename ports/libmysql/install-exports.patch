@@ -1,5 +1,5 @@
 diff --git a/cmake/install_macros.cmake b/cmake/install_macros.cmake
-index baf49cd5..4d175ec0 100644
+index baf49cd5..57f5823b 100644
 --- a/cmake/install_macros.cmake
 +++ b/cmake/install_macros.cmake
 @@ -97,7 +97,7 @@ ENDFUNCTION()
@@ -11,16 +11,17 @@ index baf49cd5..4d175ec0 100644
      ""
      ${ARGN}
      )
-@@ -113,10 +113,24 @@ FUNCTION(MYSQL_INSTALL_TARGET target_arg)
+@@ -113,10 +113,25 @@ FUNCTION(MYSQL_INSTALL_TARGET target_arg)
    IF(ARG_NAMELINK_SKIP)
      SET(LIBRARY_INSTALL_ARGS NAMELINK_SKIP)
    ENDIF()
 +  if(ARG_EXPORT)
 +    FILE(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${ARG_EXPORT}-config.cmake"
 +"include(CMakeFindDependencyMacro)
-+find_dependency(ZLIB)
 +find_dependency(OpenSSL)
 +find_dependency(Threads)
++find_dependency(ZLIB)
++find_dependency(zstd CONFIG)
 +include(\"\${CMAKE_CURRENT_LIST_DIR}/${ARG_EXPORT}-targets.cmake\")
 +")
 +    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${ARG_EXPORT}-config.cmake" DESTINATION "share/${ARG_EXPORT}")
@@ -40,7 +41,7 @@ index baf49cd5..4d175ec0 100644
    INSTALL_DEBUG_SYMBOLS(${target})
    SET(INSTALL_LOCATION)
 diff --git a/cmake/libutils.cmake b/cmake/libutils.cmake
-index a5333987..1414417d 100644
+index a5333987..bb7f3733 100644
 --- a/cmake/libutils.cmake
 +++ b/cmake/libutils.cmake
 @@ -385,8 +385,14 @@ MACRO(MERGE_LIBRARIES_SHARED TARGET_ARG)
@@ -50,7 +51,7 @@ index a5333987..1414417d 100644
 +    if(INSTALL_STATIC_LIBRARIES)
 +      set_target_properties(${TARGET} PROPERTIES EXCLUDE_FROM_ALL 1)
 +    else()
-+    TARGET_INCLUDE_DIRECTORIES(${TARGET} INTERFACE $<INSTALL_INTERFACE:include>)
++    target_include_directories(${TARGET} INTERFACE $<INSTALL_INTERFACE:include>)
      MYSQL_INSTALL_TARGET(${TARGET} DESTINATION "${DESTINATION}" ${COMP}
 +      EXPORT unofficial-libmysql
        ${INSTALL_ARGS})
@@ -63,70 +64,69 @@ index a5333987..1414417d 100644
      ENDIF()
      IF(INSTALL_STATIC_LIBRARIES)
 -      MYSQL_INSTALL_TARGET(${TARGET} DESTINATION "${INSTALL_LIBDIR}" ${COMP})
-+      TARGET_INCLUDE_DIRECTORIES(${TARGET} INTERFACE $<INSTALL_INTERFACE:include>)
-+      MYSQL_INSTALL_TARGET(${TARGET} EXPORT unofficial-libmysql DESTINATION "${INSTALL_LIBDIR}" ${COMP})
++      target_include_directories(${TARGET} INTERFACE $<INSTALL_INTERFACE:include>)
++      mysql_install_target(${TARGET} EXPORT unofficial-libmysql DESTINATION "${INSTALL_LIBDIR}" ${COMP})
 +    else()
 +      set_target_properties(${TARGET} PROPERTIES EXCLUDE_FROM_ALL 1)
      ENDIF()
    ENDIF()
  ENDMACRO(MERGE_CONVENIENCE_LIBRARIES)
-diff --git a/libmysql/CMakeLists.txt b/libmysql/CMakeLists.txt
-index 8e224532..9c30fe80 100644
---- a/libmysql/CMakeLists.txt
-+++ b/libmysql/CMakeLists.txt
-@@ -283,6 +283,14 @@ ENDIF()
- # LDAP authentication SASL client plug-in
- ADD_SUBDIRECTORY(authentication_ldap)
- 
-+IF (BUILD_SHARED_LIBS)
-+  set(INSTALL_SHARED )
-+  set(INSTALL_STATIC SKIP_INSTALL)
-+ELSE()
-+  set(INSTALL_SHARED SKIP_INSTALL)
-+  set(INSTALL_STATIC )
-+ENDIF()
-+
- # FIDO authentication client plugin
- ADD_SUBDIRECTORY(authentication_fido)
- 
-@@ -293,7 +301,7 @@ ADD_SUBDIRECTORY(authentication_kerberos)
- ADD_SUBDIRECTORY(authentication_oci_client)
- 
- # Merge several convenience libraries into one big mysqlclient
--MERGE_CONVENIENCE_LIBRARIES(mysqlclient ${LIBS_TO_MERGE}
-+MERGE_CONVENIENCE_LIBRARIES(mysqlclient ${LIBS_TO_MERGE} ${INSTALL_STATIC}
-   COMPONENT Development
-   LINK_LIBRARIES ${LIBS_TO_LINK}
-   )
-@@ -385,6 +393,9 @@ ENDIF()
- #
- #  Basic application for testing linking against dynamic client library.
- #
-+IF (NOT ENABLE_TESTING)
-+  RETURN()
-+endif()
- 
- #
- # Generate a comma separated list of C API functions which is used
 diff --git a/scripts/CMakeLists.txt b/scripts/CMakeLists.txt
-index c4ef5694..84e7b578 100644
+index c4ef5694..8e933877 100644
 --- a/scripts/CMakeLists.txt
 +++ b/scripts/CMakeLists.txt
-@@ -347,13 +347,13 @@ MACRO(EXTRACT_LINK_LIBRARIES target var)
-   STRING(REGEX REPLACE "^[ ]+" "" ${var} "${${var}}")
-   STRING(REGEX REPLACE "[ ]+$" "" ${var} "${${var}}")
- ENDMACRO()
--
-+IF (NOT BUILD_SHARED_LIBS)
- EXTRACT_LINK_LIBRARIES(mysqlclient CLIENT_LIBS)
--
--IF(MSVC)
-+ENDIF()
-+IF(MSVC AND NOT BUILD_SHARED_LIBS)
+@@ -315,10 +315,14 @@ MACRO(EXTRACT_LINK_LIBRARIES target var)
+     FOREACH(lib ${TARGET_LIB_DEPENDS})
+       IF (lib MATCHES "^\\-l")
+         SET(${var} "${${var}} ${lib} ")
++      elseif(lib MATCHES "^ext::(openssl|zlib|zstd)" AND NOT WIN32)
++        list(APPEND ext_targets "${CMAKE_MATCH_1}")
+       ELSEIF (lib MATCHES "^ext::")
+         STRING(REGEX MATCH "ext::([a-z]+)" MATCH_LIB "${lib}")
+         SET(SYSTEM_LIB ${CMAKE_MATCH_1})
+         SET(${var} "${${var}} -l${SYSTEM_LIB} ")
++      elseif(TARGET "${lib}" AND NOT WIN32)
++        # merged or shared, not external
+       ELSEIF (lib MATCHES "^\\-L")
+         # Search directory. Test on FreeBSD: -L/usr/local/lib -lunwind
+         SET(${var} "${${var}} ${lib} ")
+@@ -354,6 +358,7 @@ IF(MSVC)
    GET_TARGET_PROPERTY(LIBMYSQL_OS_SHLIB_VERSION mysqlclient VERSION)
    GET_TARGET_PROPERTY(LIBMYSQL_OS_OUTPUT_NAME mysqlclient OUTPUT_NAME)
--ELSE()
-+ELSEIF(BUILD_SHARED_LIBS)
+ ELSE()
++  EXTRACT_LINK_LIBRARIES(libmysql CLIENT_LIBS)
    GET_TARGET_PROPERTY(LIBMYSQL_OS_SHLIB_VERSION libmysql VERSION)
    GET_TARGET_PROPERTY(LIBMYSQL_OS_OUTPUT_NAME libmysql OUTPUT_NAME)
  ENDIF()
+@@ -373,6 +378,10 @@ IF (WITH_SSL STREQUAL "system")
+       "${CONFIG_LIBS_PRIVATE}")
+   ENDIF()
+ ENDIF()
++list(APPEND CONFIG_REQUIRES_PRIVATE ${ext_targets})
++list(REMOVE_DUPLICATES CONFIG_REQUIRES_PRIVATE)
++list(JOIN CONFIG_REQUIRES_PRIVATE " " CONFIG_REQUIRES_PRIVATE)
++string(REPLACE "zstd" "libzstd" CONFIG_REQUIRES_PRIVATE "${CONFIG_REQUIRES_PRIVATE}" )
+ 
+ MESSAGE(STATUS "CONFIG_CLIENT_LIBS ${CONFIG_CLIENT_LIBS}")
+ MESSAGE(STATUS "CONFIG_LIBS_PRIVATE ${CONFIG_LIBS_PRIVATE}")
+diff --git a/scripts/mysql_config.sh b/scripts/mysql_config.sh
+index 6e8520be..bf1a45af 100644
+--- a/scripts/mysql_config.sh
++++ b/scripts/mysql_config.sh
+@@ -119,6 +119,16 @@ fi
+ # Create options 
+ libs="-L$pkglibdir@RPATH_OPTION@"
+ libs="$libs -l@LIBMYSQL_OS_OUTPUT_NAME@ @CONFIG_CLIENT_LIBS@"
++if test -z "${PKG_CONFIG}" ; then
++  if pkg-config --version >/dev/null 2>&1 ; then
++    PKG_CONFIG=pkg-config
++  elif pkgconf --version >/dev/null 2>&1 ; then
++    PKG_CONFIG=pkgconf
++  else
++    PKG_CONFIG=false
++  fi
++fi
++libs="$libs $(${PKG_CONFIG} --libs @CONFIG_REQUIRES_PRIVATE@)"
+ 
+ cflags="-I$pkgincludedir @CFLAGS@"
+ cxxflags="-I$pkgincludedir @CXXFLAGS@"
