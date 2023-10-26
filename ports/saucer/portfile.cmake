@@ -12,11 +12,7 @@ vcpkg_from_github(
 )
 
 set(BACKEND_OPTION)
-if(VCPKG_TARGET_IS_WINDOWS)
-    if("webview2" IN_LIST FEATURES)
-        set(BACKEND_OPTION "-Dsaucer_backend=WebView2")
-    endif()
-else()
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     if("qt6" IN_LIST FEATURES)
         set(BACKEND_OPTION "-Dsaucer_backend=Qt6")
     endif()
