@@ -6,10 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO baresip/re
     REF "v${VERSION}"
-    SHA512 9813f66e73df80e00f1947c8c2af0f9dc6afe8d197a453b622458f80d522edd5b420bfc783161d311b36936947764a7a1733038c121210ab65f8621a3502d372
+    SHA512 97ea35e4d4f36a9b3e47bb942497d495247e01106bcceef98fba4ab8e36061acaca88d12568990f9c8014b1061941ea5e2c6e8c0287e6dcd83a60a70400b083d
     HEAD_REF main
     PATCHES
-        wip.patch
+        fix-static-library-build.patch
         use-c11.patch
 )
 
