@@ -1,7 +1,7 @@
 {
   "name": "saucer",
   "version": "1.0.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Next-gen desktop apps with web-frontend in C++",
   "homepage": "https://saucer.github.io/",
   "license": "MIT",
@@ -32,5 +32,13 @@
       "name": "wil",
       "platform": "windows"
     }
-  ]
+  ],
+  "features": {
+    "qt6": {
+      "description": "The backend to use Qt6"
+    },
+    "webview2": {
+      "description": "The backend to use WebView2"
+    }
+  }
 }

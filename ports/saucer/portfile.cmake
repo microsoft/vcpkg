@@ -11,10 +11,15 @@ vcpkg_from_github(
         fix-source-generation.patch
 )
 
+set(BACKEND_OPTION)
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(BACKEND_OPTION "-Dsaucer_backend=WebView2")
+    if("webview2" IN_LIST FEATURES)
+        set(BACKEND_OPTION "-Dsaucer_backend=WebView2")
+    endif()
 else()
-    set(BACKEND_OPTION "-Dsaucer_backend=Qt6")
+    if("qt6" IN_LIST FEATURES)
+        set(BACKEND_OPTION "-Dsaucer_backend=Qt6")
+    endif()
 endif()
 
 vcpkg_cmake_configure(
@@ -28,4 +33,4 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
