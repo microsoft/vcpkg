@@ -43,6 +43,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         viewer      USE_QT
 )
 
+if(NOT "viewer" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DUSE_QT=BOOL:OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
