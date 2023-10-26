@@ -1,11 +1,6 @@
-vcpkg_from_github(
-  OUT_SOURCE_PATH ZTD_CMAKE_PATH
-  REPO soasis/cmake
-  REF 4277edaf7bf237de07c4a9833f6546872ab9f151
-  SHA512 f05143068a1f22bd46aa0d8c250afb04b29ffbc0f32d746093bfb61f274d0e212ff9786a5163608097ed989b5b212d73811179f311a37d2b2eedce89cc75ee94
-  HEAD_REF main
-)
-
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO soasis/idk
@@ -17,9 +12,6 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
-  OPTIONS
-    -DFETCHCONTENT_FULLY_DISCONNECTED=ON
-    -DFETCHCONTENT_SOURCE_DIR_ZTD.CMAKE=${ZTD_CMAKE_PATH}
 )
 vcpkg_cmake_install()
 

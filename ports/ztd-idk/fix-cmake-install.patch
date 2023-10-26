@@ -1,16 +1,29 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 746afa7..7020e11 100644
+index 746afa7..8585cd6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -50,6 +50,7 @@ project(ztd.idk
+@@ -34,11 +34,6 @@ cmake_policy(VERSION 3.21)
+ # # Project kickstart
+ # Includes a bunch of basic flags and utilities shared across projects
+ # See more at the github repository link below
+-include(FetchContent)
+-FetchContent_Declare(ztd.cmake
+-	GIT_REPOSITORY https://github.com/soasis/cmake.git
+-	GIT_TAG main)
+-FetchContent_MakeAvailable(ztd.cmake)
+ set(CMAKE_PROJECT_INCLUDE ${ZTD_CMAKE_PROJECT_PRELUDE})
+ 
+ # # Project declaration
+@@ -50,6 +45,8 @@ project(ztd.idk
  	HOMEPAGE_URL "https://ztdidk.rtfd.io/"
  	LANGUAGES CXX C)
  
 +include(GNUInstallDirs)
++include(CMakePackageConfigHelpers)
  if(ZTD_IDK_READTHEDOCS)
  	# ReadTheDocs seems unable to handle the include at the project level: something must be going wrong?
  	include(CheckCXXCompilerFlag)
-@@ -89,9 +90,6 @@ if(ZTD_IDK_IS_TOP_LEVEL_PROJECT)
+@@ -89,9 +86,6 @@ if(ZTD_IDK_IS_TOP_LEVEL_PROJECT)
  	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
  	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
  
@@ -20,7 +33,7 @@ index 746afa7..7020e11 100644
  
  	if(NOT DEFINED CMAKE_C_STANDARD)
  		set(CMAKE_C_STANDARD 11)
-@@ -133,6 +131,7 @@ endif()
+@@ -133,6 +127,7 @@ endif()
  # ztd.version
  add_library(ztd.version INTERFACE)
  add_library(ztd::version ALIAS ztd.version)
@@ -28,7 +41,7 @@ index 746afa7..7020e11 100644
  target_include_directories(ztd.version
  	INTERFACE
  	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-@@ -143,20 +142,32 @@ install(DIRECTORY include/
+@@ -143,20 +138,32 @@ install(DIRECTORY include/
  	${CMAKE_INSTALL_INCLUDEDIR}
  )
  
@@ -62,7 +75,7 @@ index 746afa7..7020e11 100644
  
  # ztd.tag_invoke
  file(GLOB_RECURSE ztd.tag_invoke.includes
-@@ -166,6 +177,7 @@ file(GLOB_RECURSE ztd.tag_invoke.includes
+@@ -166,6 +173,7 @@ file(GLOB_RECURSE ztd.tag_invoke.includes
  )
  
  add_library(ztd.tag_invoke INTERFACE)
@@ -70,7 +83,7 @@ index 746afa7..7020e11 100644
  add_library(ztd::tag_invoke ALIAS ztd.tag_invoke)
  target_include_directories(ztd.tag_invoke
  	INTERFACE
-@@ -179,10 +191,14 @@ install(DIRECTORY include/
+@@ -179,10 +187,14 @@ install(DIRECTORY include/
  	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
  )
  
@@ -86,7 +99,7 @@ index 746afa7..7020e11 100644
  	NO_CHECK_REQUIRED_COMPONENTS_MACRO
  )
  write_basic_package_version_file(
-@@ -193,6 +209,16 @@ export(TARGETS ztd.tag_invoke
+@@ -193,6 +205,16 @@ export(TARGETS ztd.tag_invoke
  	FILE
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.tag_invoke/ztd.tag_invoke-targets.cmake"
  )
@@ -103,7 +116,7 @@ index 746afa7..7020e11 100644
  
  # ztd.idk
  file(GLOB_RECURSE ztd.idk.includes
-@@ -241,15 +267,17 @@ if(ZTD_IDK_IS_TOP_LEVEL_PROJECT)
+@@ -241,15 +263,17 @@ if(ZTD_IDK_IS_TOP_LEVEL_PROJECT)
  	)
  endif()
  
@@ -123,7 +136,7 @@ index 746afa7..7020e11 100644
  	NO_CHECK_REQUIRED_COMPONENTS_MACRO
  )
  write_basic_package_version_file(
-@@ -261,11 +289,17 @@ export(TARGETS ztd.idk
+@@ -261,11 +285,17 @@ export(TARGETS ztd.idk
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.idk/ztd.idk-targets.cmake"
  )
  
