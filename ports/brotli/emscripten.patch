@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0589fc1..9b32b60 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -153,10 +153,8 @@ foreach(lib ${BROTLI_LIBRARIES_CORE})
+   set_property(TARGET ${lib} APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${BROTLI_INCLUDE_DIRS}>" $<INSTALL_INTERFACE:include>)
+ endforeach()
+ 
+-if(NOT BROTLI_EMSCRIPTEN)
+ target_link_libraries(brotlidec brotlicommon)
+ target_link_libraries(brotlienc brotlicommon)
+-endif()
+ 
+ # For projects stuck on older versions of CMake, this will set the
+ # BROTLI_INCLUDE_DIRS and BROTLI_LIBRARIES variables so they still

@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c5368c0..c297861 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -614,6 +614,10 @@ configure_package_config_file(
+   PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR CIVETWEB_ENABLE_CXX
+ )
+ 
++set(PROJECT_VERSION "${VERSION}")
++if(CIVETWEB_ENABLE_SSL)
++  set(REQUIRES_OPENSSL openssl)
++endif()
+ configure_file(
+   cmake/${PROJECT_NAME}.pc.in
+   ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.pc
+@@ -629,13 +633,13 @@ configure_file(
+ install(
+   FILES 
+     "${PROJECT_BINARY_DIR}/${PROJECT_NAME}.pc"
+-    DESTINATION "${CMAKE_INSTALL_DATADIR}/pkgconfig"
++    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+ )
+ 
+ install(
+   FILES 
+     "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-cpp.pc"
+-    DESTINATION "${CMAKE_INSTALL_DATADIR}/pkgconfig"
++    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+ )
+ 
+ write_basic_package_version_file(${PROJECT_NAME}-config-version.cmake
+diff --git a/cmake/civetweb-cpp.pc.in b/cmake/civetweb-cpp.pc.in
+index ca1232c..495da46 100644
+--- a/cmake/civetweb-cpp.pc.in
++++ b/cmake/civetweb-cpp.pc.in
+@@ -10,3 +10,4 @@ Requires:
+ Libs: -L${libdir} -l@PROJECT_NAME@-cpp
+ Cflags: -I${includedir}
+ 
++Requires.private: civetweb
+diff --git a/cmake/civetweb.pc.in b/cmake/civetweb.pc.in
+index 27cea8f..0826f61 100644
+--- a/cmake/civetweb.pc.in
++++ b/cmake/civetweb.pc.in
+@@ -11,3 +11,4 @@ Libs: -L${libdir} -l@PROJECT_NAME@
+ Cflags: -I${includedir}
+ 
+ 
++Requires.private: @REQUIRES_OPENSSL@

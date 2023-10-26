@@ -4,13 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
     REF "v${VERSION}"
-    SHA512 a7767e37f0c4997e0d8493ea12e144b22ef529e23da54eb2a2f82848d9535bce23080948be80e5ef6697b55bbfc3ee11225f7ea83fe8fa5f622df7dc45144744
+    SHA512 a3d84785b024e31e909592bca5a6589873bcd342848fae9520a9e7715bcb736db71184eeedbcbf6086105e6145937cabdd731a80879fd177f80895fdf09c3b46
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
 )
 
-vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
+if ("grpc-common" IN_LIST FEATURES)
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
+endif ()
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")

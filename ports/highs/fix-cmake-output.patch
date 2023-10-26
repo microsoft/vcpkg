@@ -10,15 +10,11 @@ index 605a1e2..148c006 100644
              return 0;
          }"
      HIGHS_HAVE_BITSCAN_REVERSE)
-@@ -568,9 +569,9 @@ else(FAST_BUILD)
-   endif()
- 
+@@ -570,7 +572,6 @@ else(FAST_BUILD)
    # Add tests in examples/tests
--  add_subdirectory(examples)
-+  #add_subdirectory(examples)
+   add_subdirectory(examples)
  
 -  add_subdirectory(app)
-+  #add_subdirectory(app)
  
    if(EXP)
      add_executable(doctest)
