@@ -9269,11 +9269,11 @@
       "port-version": 0
     },
     "ztd-platform": {
-      "baseline": "2023-07-19",
+      "baseline": "2022-12-30",
       "port-version": 0
     },
     "ztd-static-containers": {
-      "baseline": "2022-08-02",
+      "baseline": "2022-12-12",
       "port-version": 0
     },
     "ztd-text": {

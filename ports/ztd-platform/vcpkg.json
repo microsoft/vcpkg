@@ -1,6 +1,6 @@
 {
   "name": "ztd-platform",
-  "version-date": "2023-07-19",
+  "version-date": "2022-12-30",
   "description": "A library for messing with platfom-dependent configurations and libraries, and sometimes hiding their cores.",
   "homepage": "https://github.com/soasis/platform",
   "license": "Apache-2.0",

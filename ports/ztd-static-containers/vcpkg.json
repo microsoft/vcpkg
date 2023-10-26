@@ -1,6 +1,6 @@
 {
   "name": "ztd-static-containers",
-  "version-date": "2022-08-02",
+  "version-date": "2022-12-12",
   "description": "Containers of fixed capacity",
   "homepage": "https://github.com/soasis/static_containers",
   "license": "CC0-1.0",
