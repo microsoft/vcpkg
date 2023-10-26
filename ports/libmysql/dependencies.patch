@@ -64,7 +64,7 @@ index 10e7e8c8..7f95ec06 100644
      NAMES lz4frame.h)
    FIND_LIBRARY(LZ4_SYSTEM_LIBRARY
 -    NAMES lz4)
-+    NAMES lz4d lz4)
++    NAMES lz4d lz4 NAMES_PER_DIR)
    IF (LZ4_INCLUDE_DIR AND LZ4_SYSTEM_LIBRARY)
      SET(SYSTEM_LZ4_FOUND 1 CACHE INTERNAL "")
      ADD_LIBRARY(lz4_interface INTERFACE)
@@ -72,7 +72,7 @@ diff --git a/cmake/ssl.cmake b/cmake/ssl.cmake
 index 04e3af87..a8816fc1 100644
 --- a/cmake/ssl.cmake
 +++ b/cmake/ssl.cmake
-@@ -273,7 +273,16 @@ MACRO (MYSQL_CHECK_SSL)
+@@ -273,7 +273,18 @@ MACRO (MYSQL_CHECK_SSL)
      FIND_ALTERNATIVE_SYSTEM_SSL()
    ENDIF()
  
@@ -86,6 +86,8 @@ index 04e3af87..a8816fc1 100644
 +    set(SSL_DEFINES "-DHAVE_OPENSSL")
 +    add_library(ext::OpenSSL ALIAS OpenSSL::SSL)
 +    set(SSL_LIBRARIES ext::OpenSSL)
++    set(OPENSSL_APPLINK_C "${OPENSSL_APPLINK_SOURCE}")
++    include_directories(SYSTEM ${OPENSSL_INCLUDE_DIR})
 +  ELSEIF(WITH_SSL STREQUAL "system" OR WITH_SSL_PATH OR ALTERNATIVE_SYSTEM_SSL)
      IF((APPLE OR WIN32) AND WITH_SSL STREQUAL "system")
        # FindOpenSSL.cmake knows about
@@ -103,13 +105,3 @@ index 3781fe09..ac312ad0 100644
  
    IF(ZLIB_VERSION VERSION_LESS MIN_ZLIB_VERSION_REQUIRED)
      MESSAGE(FATAL_ERROR
-diff --git a/vio/CMakeLists.txt b/vio/CMakeLists.txt
-index 474e307e..b4d0f17a 100644
---- a/vio/CMakeLists.txt
-+++ b/vio/CMakeLists.txt
-@@ -36,4 +36,4 @@ IF(WIN32)
-   )
- ENDIF()
- 
--ADD_CONVENIENCE_LIBRARY(vio ${VIO_SOURCES} LINK_LIBRARIES ${LIBSOCKET})
-+ADD_CONVENIENCE_LIBRARY(vio ${VIO_SOURCES} LINK_LIBRARIES ${LIBSOCKET} ext::OpenSSL)
