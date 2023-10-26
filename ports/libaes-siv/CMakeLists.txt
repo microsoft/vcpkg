@@ -44,13 +44,16 @@ install(
   LIBRARY       DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}-config.cmake.in"
-        [[include(CMakeFindDependencyMacro)
+set(cmake_config_file "${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}-config.cmake")
+file(CONFIGURE
+        OUTPUT  "${cmake_config_file}"
+        CONTENT [[
+include(CMakeFindDependencyMacro)
 find_dependency(OpenSSL)
-include("${CMAKE_CURRENT_LIST_DIR}/unofficial-${PROJECT_NAME}Targets.cmake")
-]])
-configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}-config.cmake.in"
-               "${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}-config.cmake" @ONLY)
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-@PROJECT_NAME@Targets.cmake")
+]]
+        @ONLY
+)
 
 include(CMakePackageConfigHelpers)
 set(VERSION_FILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}ConfigVersion.cmake")
