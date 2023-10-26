@@ -5,7 +5,6 @@
   "homepage": "http://ztdcuneicode.rtfd.io/",
   "license": "Apache-2.0",
   "dependencies": [
-    "ztd-encoding-tables",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,6 +12,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "ztd-encoding-tables"
   ]
 }
