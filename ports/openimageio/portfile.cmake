@@ -40,12 +40,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libheif     USE_LIBHEIF
         pybind11    USE_PYTHON
         tools       OIIO_BUILD_TOOLS
-        viewer      USE_QT
+        viewer      ENABLE_IV
 )
-
-if(NOT "viewer" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DUSE_QT=OFF)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
