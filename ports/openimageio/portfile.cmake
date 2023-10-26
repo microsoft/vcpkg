@@ -44,7 +44,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if(NOT "viewer" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DUSE_QT=BOOL:OFF)
+    list(APPEND FEATURE_OPTIONS -DUSE_QT=OFF)
 endif()
 
 vcpkg_cmake_configure(
