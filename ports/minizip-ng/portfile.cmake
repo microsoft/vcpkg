@@ -38,7 +38,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/minizip-ng)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
