@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
     -DFETCHCONTENT_FULLY_DISCONNECTED=ON
+    -DITSY_BITSY_SINGLE=OFF
 )
 
 vcpkg_cmake_install()
