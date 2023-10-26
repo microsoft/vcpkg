@@ -2416,6 +2416,7 @@ freerdp[x11](osx) = skip # No x11 on osx
 glad[glx](osx) = skip # No x11 on osx
 libhdfs3 = skip # never worked https://github.com/microsoft/vcpkg/pull/10021#issuecomment-1595343157
 magnum-plugins[cgltfimporter,glslangshaderconverter,ktximageconverter,ktximporter,openexrimageconverter,openexrimporter,spirvtoolsshaderconverter,stbdxtimageconverter] = skip # only available in head build
+magnum[anyshaderconverter,shadertools,shaderconverter,vk-info] = skip # only available in head build
 openjpeg[tools] = skip # fails and is deprecated
 qtbase[xcb,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](osx) = skip # no x11 on macOS
 s2n = skip # builds to slow
