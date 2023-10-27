@@ -11,12 +11,6 @@ vcpkg_from_github(
         fix-source-generation.patch
 )
 
-set(BACKEND_OPTION)
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    if("qt6" IN_LIST FEATURES)
-        set(BACKEND_OPTION "-Dsaucer_backend=Qt6")
-    endif()
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH} 

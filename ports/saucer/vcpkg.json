@@ -32,10 +32,5 @@
       "name": "wil",
       "platform": "windows"
     }
-  ],
-  "features": {
-    "qt6": {
-      "description": "The backend to use Qt6"
-    }
-  }
+  ]
 }
