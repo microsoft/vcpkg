@@ -48,28 +48,17 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man5")
 
-if(VCPKG_CROSSCOMPILING)
-    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/libmagic/bin")
-elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(EXTRA_ARGS "ADD_BIN_TO_PATH")
+if(NOT VCPKG_CROSSCOMPILING)
+    # Generate magic.mgc
+    vcpkg_execute_required_process(
+        COMMAND "${CURRENT_PACKAGES_DIR}/tools/${PORT}/file" -C -m magic
+        WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/misc"
+        LOGNAME file-generate-${HOST_TRIPLET}
+    )
 endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/misc/magic")
 
 set(UNOFFICIAL_PORT unofficial-${PORT})
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${UNOFFICIAL_PORT}/share/misc")
-        file(COPY "${CURRENT_PACKAGES_DIR}/share/${UNOFFICIAL_PORT}/magic.mgc" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${UNOFFICIAL_PORT}/share/misc")
-    endif()
-    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${UNOFFICIAL_PORT}/debug/share/misc")
-        file(COPY "${CURRENT_PACKAGES_DIR}/share/${UNOFFICIAL_PORT}/magic.mgc" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${UNOFFICIAL_PORT}/debug/share/misc")
-    endif()
-endif()
 
 # Handle copyright and usage
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

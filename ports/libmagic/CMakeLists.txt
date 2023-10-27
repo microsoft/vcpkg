@@ -131,20 +131,13 @@ foreach(MAGIC_FRAGMENT ${MAGIC_FRAGMENTS})
   unset(MAGIC_FRAGMENT_CONTENTS)
 endforeach()
 
-add_custom_command(OUTPUT magic.mgc
-  COMMAND file -C -m magic
-  COMMENT "Compiling magic file"
-)
-
-add_custom_target(magic_mgc ALL DEPENDS magic.mgc)
-
 # Include module with function 'configure_package_config_file'
 include(CMakePackageConfigHelpers)
 
 set(PORT_NAME unofficial-libmagic)
 set(TARGETS_EXPORT_NAME ${PORT_NAME}-targets)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/magic.mgc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PORT_NAME})
+install(FILES ${MAGIC_FRAGMENTS_FILE} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/libmagic/misc)
 
 install(FILES ${LIBMAGIC_SOURCE_DIR}/magic.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
