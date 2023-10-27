@@ -8,12 +8,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "0006-Remove-Wrap-POSIX-headers.patch"
         "0007-Substitute-unistd-macros-for-MSVC.patch"
         "0008-Add-FILENO-defines.patch"
-        "0009-No-fcntl-in-magic.c.patch"
         "0010-Properly-check-for-the-presence-of-bitmasks.patch"
         "0011-Remove-pipe-related-functions-in-funcs.c.patch"
         "0012-Convert-MSYS2-paths-to-Windows-paths.patch"
         "0013-Check-for-backslash-in-argv-0-on-Windows.patch"
-        "0014-Define-POSIX-macros-if-missing.patch"
         "0015-MSYS2-Remove-ioctl-call.patch"
         "0016-Fix-file_famagic-function.patch"
     )
