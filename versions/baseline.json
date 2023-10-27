@@ -3122,7 +3122,7 @@
     },
     "gts": {
       "baseline": "0.7.6",
-      "port-version": 7
+      "port-version": 8
     },
     "gtsam": {
       "baseline": "4.2a9",
