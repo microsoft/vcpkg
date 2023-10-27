@@ -424,7 +424,7 @@
     },
     "nvcodec": {
       "description": "Enable support for the NVCODEC encoders and decoders",
-      "supports": "!(osx & arm) & !ios & !android & !emscripten",
+      "supports": "!osx & !ios & !android & !emscripten",
       "dependencies": [
         {
           "name": "gstreamer",
