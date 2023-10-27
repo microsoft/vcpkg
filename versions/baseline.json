@@ -7626,7 +7626,7 @@
     },
     "sdl2-mixer-ext": {
       "baseline": "2023-05-04",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-net": {
       "baseline": "2.2.0",
