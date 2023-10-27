@@ -1,4 +1,0 @@
-The package bloomberg-quantum provides CMake targets:
-
-    find_package(unofficial-bloomberg-quantum CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial-bloomberg-quantum::quantum)
