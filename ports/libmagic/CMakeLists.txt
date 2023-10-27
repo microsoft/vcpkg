@@ -97,6 +97,10 @@ target_include_directories(libmagic
     "$<INSTALL_INTERFACE:include>"
 )
 
+if(WIN32)
+  target_link_libraries(libmagic PRIVATE shlwapi)
+endif()
+
 # 'file' CLI
 add_executable(file ${LIBMAGIC_SOURCE_DIR}/file.c)
 set(targets ${targets} file)
