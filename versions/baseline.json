@@ -2982,7 +2982,7 @@
     },
     "glslang": {
       "baseline": "13.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -4638,7 +4638,7 @@
     },
     "libremidi": {
       "baseline": "4.2.3",
-      "port-version": 1
+      "port-version": 2
     },
     "libressl": {
       "baseline": "3.6.2",
@@ -5509,8 +5509,8 @@
       "port-version": 1
     },
     "minizip-ng": {
-      "baseline": "4.0.0",
-      "port-version": 4
+      "baseline": "4.0.1",
+      "port-version": 0
     },
     "mio": {
       "baseline": "2023-03-03",
@@ -6678,6 +6678,10 @@
     },
     "protozero": {
       "baseline": "1.7.1",
+      "port-version": 0
+    },
+    "proxsuite": {
+      "baseline": "0.5.0",
       "port-version": 0
     },
     "proxy": {
