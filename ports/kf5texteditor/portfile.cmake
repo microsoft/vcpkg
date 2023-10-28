@@ -12,10 +12,15 @@ file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: fa
 # A trick for `kcoreaddons_desktop_to_json` (see KF5CoreAddonsMacros.cmake) to generate katepart.desktop
 # The copied *.desktop files should be removed after vcpkg_cmake_install
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(COPY "${CURRENT_INSTALLED_DIR}/bin/data/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/data")
-    file(GLOB TEMP_DESKTOP_FILES_DBG "${CURRENT_PACKAGES_DIR}/debug/bin/data/kservicetypes5/*")
-    file(COPY "${CURRENT_INSTALLED_DIR}/bin/data/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/data")
-    file(GLOB TEMP_DESKTOP_FILES_REL "${CURRENT_PACKAGES_DIR}/bin/data/kservicetypes5/*")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        set(DATAROOT "bin/data") # maybe ADD_BIN_TO_PATH can work in this case...
+    elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        set(DATAROOT "share")
+    endif()
+    file(COPY "${CURRENT_INSTALLED_DIR}/${DATAROOT}/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/data")
+    file(GLOB TEMP_DESKTOP_FILES_DBG "${CURRENT_PACKAGES_DIR}/debug/${DATAROOT}/kservicetypes5/*")
+    file(COPY "${CURRENT_INSTALLED_DIR}/${DATAROOT}/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/data")
+    file(GLOB TEMP_DESKTOP_FILES_REL "${CURRENT_PACKAGES_DIR}/${DATAROOT}/kservicetypes5/*")
 else()
     file(COPY "${CURRENT_INSTALLED_DIR}/share/kservicetypes5" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share")
     file(GLOB TEMP_DESKTOP_FILES_DBG "${CURRENT_PACKAGES_DIR}/debug/share/kservicetypes5/*")
