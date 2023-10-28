@@ -10,6 +10,12 @@ vcpkg_list(SET ignored_updates
     https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-ca-certificates-20211016-3-any.pkg.tar.zst
 )
 
+# Known removals that shall not be reported as errors
+# (Packages to be removed from vcpkg scripts ASAP.)
+vcpkg_list(SET known_delisted
+    libcrypt
+)
+
 # Ignore these dependencies (e.g. interactive or effectively optional)
 vcpkg_list(SET ignored_dependencies
     autoconf2.13 autoconf2.69
@@ -262,7 +268,7 @@ function(analyze_package_list list_var script)
                 endif()
             endif()
         endforeach()
-        if(NOT found)
+        if(NOT found AND NOT name IN_LIST known_delisted)
             vcpkg_list(APPEND vanished "${name}")
             get_vcpkg_builddate(vcpkg_builddate "${name}")
             age_in_days(vcpkg_age "${vcpkg_builddate}")
