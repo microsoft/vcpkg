@@ -15,16 +15,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
-        fix_find_package_sdl2.patch
         avoid-name-clashes.patch
         fix-error-c2039.patch
         fix-dependencies.patch
 )
-
-file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
-if(EXISTS "${SOURCE_PATH}/CMake/FeatureSummary.cmake")
-    file(RENAME "${SOURCE_PATH}/CMake/FeatureSummary.cmake" "${SOURCE_PATH}/CMake/OgreFeatureSummary.cmake")
-endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(OGRE_STATIC ON)
@@ -67,8 +61,6 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup()
-
-
 
 file(GLOB REL_CFGS "${CURRENT_PACKAGES_DIR}/bin/*.cfg")
 if(REL_CFGS)
