@@ -1,7 +1,7 @@
 {
   "name": "gstreamer",
   "version": "1.22.5",
-  "port-version": 4,
+  "port-version": 5,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
@@ -424,7 +424,7 @@
     },
     "nvcodec": {
       "description": "Enable support for the NVCODEC encoders and decoders",
-      "supports": "!uwp",
+      "supports": "!osx & !ios & !android & !emscripten",
       "dependencies": [
         {
           "name": "gstreamer",
