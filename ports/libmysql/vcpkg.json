@@ -4,7 +4,7 @@
   "description": "A MySQL client library for C development",
   "homepage": "https://github.com/mysql/mysql-server",
   "license": "GPL-2.0-or-later",
-  "supports": "!(windows & x86) & !uwp & !xbox",
+  "supports": "!mingw & !uwp & !xbox",
   "dependencies": [
     "boost-algorithm",
     "boost-functional",
