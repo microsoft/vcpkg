@@ -10,7 +10,7 @@
     },
     {
       "name": "xcb",
-      "platform": "linux"
+      "platform": "linux | freebsd | openbsd | android"
     }
   ]
 }
