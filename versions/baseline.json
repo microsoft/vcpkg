@@ -660,6 +660,10 @@
       "baseline": "2020-03-25",
       "port-version": 5
     },
+    "bloomberg-quantum": {
+      "baseline": "2023-02-03",
+      "port-version": 0
+    },
     "blosc": {
       "baseline": "1.21.5",
       "port-version": 0
