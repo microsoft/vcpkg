@@ -3762,7 +3762,7 @@
     },
     "kf5parts": {
       "baseline": "5.98.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5plotting": {
       "baseline": "5.98.0",
