@@ -26,9 +26,17 @@ endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  BUILD_STATIC_LIBS)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static"  STATIC_CRT_LINKAGE)
 
+set(cross_options "")
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND cross_options
+        -DHAVE_RAPIDJSON_WITH_STD_REGEX=1 # required, skip try_run
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${cross_options}
         -DINSTALL_INCLUDEDIR=include/mysql
         -DINSTALL_DOCDIR=share/${PORT}/doc
         -DINSTALL_MANDIR=share/${PORT}/doc
