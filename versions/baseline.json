@@ -3154,11 +3154,11 @@
     },
     "gz-cmake3": {
       "baseline": "3.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "gz-common5": {
       "baseline": "5.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-fuel-tools8": {
       "baseline": "8.1.0",
