@@ -112,6 +112,12 @@ if(IMGUI_FREETYPE)
     target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_FREETYPE)
 endif()
 
+if(IMGUI_FREETYPE_LUNASVG)
+    find_package(unofficial-lunasvg CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC unofficial::lunasvg::lunasvg)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_FREETYPE_LUNASVG)
+endif()
+
 if(IMGUI_USE_WCHAR32)
     target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_USE_WCHAR32)
 endif()

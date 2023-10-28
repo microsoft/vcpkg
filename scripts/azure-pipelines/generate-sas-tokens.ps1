@@ -34,7 +34,7 @@ $assetSas = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-asset-cache -Stor
 # Read, Create, List, Write
 $binarySas = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycache -ContainerName cache -Permission rclw
 $binaryEASas = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycacheeastasia -ContainerName cache -Permission rclw
-$binaryWUS3as = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycacheewus3 -ContainerName cache -Permission rclw
+$binaryWUS3as = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycachewus3 -ContainerName cache -Permission rclw
 
 $response = "Asset Cache SAS: Update`n" + `
     "https://dev.azure.com/vcpkg/public/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=6&path=vcpkg-asset-caching-credentials`n" + `

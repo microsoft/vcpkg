@@ -1,16 +1,17 @@
 diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
-index c926c499..2fbc4023 100644
+index c926c49..a0502cc 100644
 --- a/adm/templates/OpenCASCADEConfig.cmake.in
 +++ b/adm/templates/OpenCASCADEConfig.cmake.in
-@@ -4,6 +4,7 @@
- #
+@@ -5,6 +5,8 @@
  # This file is configured by OpenCASCADE.
  #
-+include(CMakeFindDependencyMacro)
  
++include(CMakeFindDependencyMacro)
++
  if(OpenCASCADE_ALREADY_INCLUDED)
    return()
-@@ -71,6 +72,13 @@ set (OpenCASCADE_WITH_GLES2     @USE_GLES2@)
+ endif()
+@@ -71,6 +73,16 @@ set (OpenCASCADE_WITH_GLES2     @USE_GLES2@)
  @SET_OpenCASCADE_WITH_D3D@
  @SET_OpenCASCADE_WITH_GLX@
  
@@ -19,7 +20,10 @@ index c926c499..2fbc4023 100644
 +endif()
 +
 +find_dependency(OpenGL)
-+find_dependency(Eigen3 REQUIRED)
++
++if(@USE_EIGEN@)
++  find_dependency(Eigen3)
++endif()
 +
  # Import OpenCASCADE compile definitions, C and C++ flags for each installed configuration.
  file(GLOB CONFIG_FILES "${CMAKE_CURRENT_LIST_DIR}/OpenCASCADECompileDefinitionsAndFlags-*.cmake")

@@ -1,6 +1,7 @@
 {
   "name": "msdfgen",
   "version": "1.10.0",
+  "port-version": 1,
   "description": "Multi-channel signed distance field generator",
   "homepage": "https://github.com/Chlumsky/msdfgen",
   "license": "MIT",
@@ -47,7 +48,8 @@
       "description": "Build with OpenMP support for multi-threaded code."
     },
     "tools": {
-      "description": "Generates an executable inside the tools folder. Not supported on UWP.",
+      "description": "Generates an executable inside the tools folder.",
+      "supports": "!uwp",
       "dependencies": [
         {
           "name": "msdfgen",

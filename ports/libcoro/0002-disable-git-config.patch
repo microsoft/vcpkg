@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,9 +7,9 @@
+ 
+ # Set the githooks directory to auto format and update the readme.
+-message("${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR} -> git config --local core.hooksPath .githooks")
+-execute_process(
+-    COMMAND git config --local core.hooksPath .githooks
+-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+-)
++#message("${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR} -> git config --local core.hooksPath .githooks")
++#execute_process(
++#    COMMAND git config --local core.hooksPath .githooks
++#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
++#)
+ 
+ option(LIBCORO_EXTERNAL_DEPENDENCIES "Use Cmake find_package to resolve dependencies instead of embedded libraries, Default=OFF." OFF)

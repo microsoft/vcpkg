@@ -1,9 +1,9 @@
 {
   "name": "mecab",
   "version-date": "2019-09-25",
-  "port-version": 4,
+  "port-version": 5,
   "description": "A morphological analysis engine based on CRF",
-  "supports": "!(uwp | arm | arm64)",
+  "supports": "!uwp & !(arm & windows)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

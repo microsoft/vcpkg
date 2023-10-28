@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO log4cplus/log4cplus
-    REF REL_2_0_7
-    SHA512 FE5FCEB346AC19A6D953661A20E8AA02AB48E872F427D958EA99C62F534DDF1FA4511FFD67A662605B1F225E3A6C06B0EE2C1B0EB62DE3AA0316F47F778DF06D
+    REF REL_2_1_0
+    SHA512 fd26ae73e898af6896046e5e567bfc664bc8e81568c8cdbe5ff6316054b875af7fa946f7b1f011a96b0d3b53dc3f7f9411cbc2ffa07b674777cb0def2743ede8
     HEAD_REF master
 )
 
@@ -40,7 +40,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/log4cplus)
 
 vcpkg_copy_pdbs()

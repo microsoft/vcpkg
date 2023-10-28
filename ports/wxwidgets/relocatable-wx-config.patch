@@ -1,17 +1,8 @@
 diff --git a/wx-config.in b/wx-config.in
-index 441f88c..b326867 100755
+index 4df8571..a90db3d 100644
 --- a/wx-config.in
 +++ b/wx-config.in
-@@ -91,7 +91,7 @@ EOF
- 
- 
- # Contentious tools determined by configure.
--EGREP="@EGREP@"
-+EGREP="grep -E" # no absolute path from host
- 
- 
- # For the people who know what they want, or think they do:
-@@ -402,8 +402,23 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
+@@ -398,8 +398,23 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
  
  
  # Determine the base directories we require.
@@ -37,7 +28,7 @@ index 441f88c..b326867 100755
  wxconfdir="@libdir@/wx/config"
  
  installed_configs=`cd "$wxconfdir" 2> /dev/null && ls | grep -v "^inplace-"`
-@@ -940,6 +949,9 @@ prefix=${this_prefix-$prefix}
+@@ -936,6 +951,9 @@ prefix=${this_prefix-$prefix}
  exec_prefix=${this_exec_prefix-$exec_prefix}
  
  includedir="@includedir@"

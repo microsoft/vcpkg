@@ -1,14 +1,14 @@
 {
   "name": "breakpad",
   "version-date": "2022-07-12",
-  "port-version": 5,
+  "port-version": 6,
   "description": "a set of client and server components which implement a crash-reporting system.",
   "homepage": "https://github.com/google/breakpad",
   "license": "BSD-3-Clause",
   "supports": "!uwp & (!windows | !arm) & (!windows | !arm64)",
   "dependencies": [
     {
-      "name": "atlmfc",
+      "name": "atl",
       "platform": "windows"
     },
     "libdisasm",

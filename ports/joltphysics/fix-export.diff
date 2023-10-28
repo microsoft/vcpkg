@@ -1,0 +1,77 @@
+diff --git a/Build/CMakeLists.txt b/Build/CMakeLists.txt
+index e4fddc50..655cdc80 100644
+--- a/Build/CMakeLists.txt
++++ b/Build/CMakeLists.txt
+@@ -91,8 +91,8 @@ if (("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows" OR "${CMAKE_SYSTEM_NAME}" STREQUA
+ 	endif()
+ 
+ 	# Set compiler flags for various configurations
+-	set(CMAKE_CXX_FLAGS_DEBUG "/GS /Od /Ob0 /RTC1")
+-	set(CMAKE_CXX_FLAGS_RELEASE "/GS- /Gy /O2 /Oi /Ot")
++	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /GS /Od /Ob0 /RTC1")
++	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GS- /Gy /O2 /Oi /Ot")
+ 	set(CMAKE_CXX_FLAGS_DISTRIBUTION "/GS- /Gy /O2 /Oi /Ot")
+ 	set(CMAKE_CXX_FLAGS_RELEASEASAN "-fsanitize=address /Od")
+ 	set(CMAKE_CXX_FLAGS_RELEASEUBSAN "-fsanitize=undefined,implicit-conversion,float-divide-by-zero,local-bounds -fno-sanitize-recover=all")
+@@ -148,8 +148,8 @@ elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" OR "${CMAKE_SYSTEM_NAME}" STREQU
+ 	endif()
+ 
+ 	# Set compiler flags for various configurations
+-	set(CMAKE_CXX_FLAGS_DEBUG "")
+-	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
++	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
++	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+ 	set(CMAKE_CXX_FLAGS_DISTRIBUTION "-O3")
+ 	set(CMAKE_CXX_FLAGS_RELEASEASAN "-fsanitize=address")
+ 	set(CMAKE_CXX_FLAGS_RELEASEUBSAN "-fsanitize=undefined,implicit-conversion,float-divide-by-zero,local-bounds -fno-sanitize-recover=all")
+@@ -193,7 +193,11 @@ if (IOS)
+ endif()
+ 
+ # Install Jolt library and includes
+-install(TARGETS Jolt DESTINATION lib)
++install(TARGETS Jolt
++        EXPORT unofficial-joltphysics-targets
++        ARCHIVE DESTINATION lib
++        LIBRARY DESTINATION lib
++        RUNTIME DESTINATION bin)
+ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
+ 	string(REPLACE ${PHYSICS_REPO_ROOT} "" RELATIVE_SRC_FILE ${SRC_FILE})
+ 	get_filename_component(DESTINATION_PATH ${RELATIVE_SRC_FILE} DIRECTORY)
+@@ -202,6 +206,17 @@ foreach(SRC_FILE ${JOLT_PHYSICS_SRC_FILES})
+ 	endif()
+ endforeach()
+ 
++install(EXPORT unofficial-joltphysics-targets
++    NAMESPACE unofficial::joltphysics::
++    FILE unofficial-joltphysics-targets.cmake
++    DESTINATION share/unofficial-joltphysics
++)
++
++install(FILES 
++  unofficial-joltphysics-config.cmake 
++  DESTINATION share/unofficial-joltphysics
++)
++
+ # Check if we're the root CMakeLists.txt, if not we are included by another CMake file and we should disable everything except for the main library 
+ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+ 	# Ability to turn ON/OFF individual applications
+diff --git a/Jolt/Jolt.cmake b/Jolt/Jolt.cmake
+index 176a7578..b31b2417 100644
+--- a/Jolt/Jolt.cmake
++++ b/Jolt/Jolt.cmake
+@@ -431,10 +431,13 @@ source_group(TREE ${JOLT_PHYSICS_ROOT} FILES ${JOLT_PHYSICS_SRC_FILES})
+ 
+ # Create Jolt lib
+ add_library(Jolt STATIC ${JOLT_PHYSICS_SRC_FILES})
+-target_include_directories(Jolt PUBLIC ${PHYSICS_REPO_ROOT})
++target_include_directories(Jolt PUBLIC
++  $<BUILD_INTERFACE:${PHYSICS_REPO_ROOT}>
++  $<INSTALL_INTERFACE:include>
++)
+ target_precompile_headers(Jolt PRIVATE ${JOLT_PHYSICS_ROOT}/Jolt.h)
+ target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:Debug>:_DEBUG;JPH_PROFILE_ENABLED;JPH_DEBUG_RENDERER>")
+-target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:Release>:NDEBUG;JPH_PROFILE_ENABLED;JPH_DEBUG_RENDERER>")
++target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:Release>:NDEBUG>")
+ target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:Distribution>:NDEBUG>")
+ target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:ReleaseASAN>:NDEBUG;JPH_PROFILE_ENABLED;JPH_DISABLE_TEMP_ALLOCATOR;JPH_DISABLE_CUSTOM_ALLOCATOR;JPH_DEBUG_RENDERER>")
+ target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:ReleaseUBSAN>:NDEBUG;JPH_PROFILE_ENABLED;JPH_DEBUG_RENDERER>")

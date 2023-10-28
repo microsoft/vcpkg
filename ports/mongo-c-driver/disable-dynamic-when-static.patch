@@ -1,36 +1,36 @@
 diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index 7fcdd86..1b32e6c 100644
+index bf95bd0c1..c9900b7fa 100644
 --- a/src/libmongoc/CMakeLists.txt
 +++ b/src/libmongoc/CMakeLists.txt
-@@ -758,6 +758,7 @@ if (MONGOC_ENABLE_MONGODB_AWS_AUTH)
-    endif()
+@@ -745,6 +745,7 @@ if (MONGOC_ENABLE_STATIC_BUILD)
+    set_target_properties (mcd_rpc PROPERTIES OUTPUT_NAME "mcd-rpc")
  endif ()
- 
+
 +if (NOT MONGOC_ENABLE_STATIC_BUILD)
  add_library (mongoc_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
  set_target_properties (mongoc_shared PROPERTIES CMAKE_CXX_VISIBILITY_PRESET hidden)
  target_link_libraries (mongoc_shared PRIVATE ${LIBRARIES} PUBLIC ${BSON_LIBRARIES})
-@@ -796,7 +797,7 @@ target_include_directories (
+@@ -786,7 +787,7 @@ target_include_directories (
  set_target_properties (mongoc_shared PROPERTIES VERSION 0.0.0 SOVERSION 0)
  set_target_properties (mongoc_shared PROPERTIES OUTPUT_NAME "${MONGOC_OUTPUT_BASENAME}-${MONGOC_API_VERSION}")
- 
+
 -if (MONGOC_ENABLE_STATIC_BUILD)
-+else ()
++else()
     add_library (mongoc_static STATIC ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
-    target_link_libraries (mongoc_static PUBLIC ${STATIC_LIBRARIES} ${BSON_STATIC_LIBRARIES})
-    if (NOT WIN32 AND ENABLE_PIC)
-@@ -847,7 +848,11 @@ if (ENABLE_APPLE_FRAMEWORK)
+    if(ENABLE_COVERAGE)
+       target_compile_options(mongoc_static PRIVATE --coverage)
+@@ -840,7 +841,11 @@ if (ENABLE_APPLE_FRAMEWORK)
  endif ()
- 
+
  add_executable (mongoc-stat ${PROJECT_SOURCE_DIR}/../../src/tools/mongoc-stat.c)
 +if (NOT MONGOC_ENABLE_STATIC_BUILD)
  target_link_libraries (mongoc-stat mongoc_shared ${LIBRARIES})
 +else()
 +target_link_libraries (mongoc-stat mongoc_static ${LIBRARIES})
 +endif()
- 
+
  # mongoc-stat works if shared memory performance counters are enabled.
- if (ENABLE_SHM_COUNTERS STREQUAL "ON")
+ if (ENABLE_SHM_COUNTERS)
 @@ -1161,7 +1166,7 @@ file (COPY ${PROJECT_SOURCE_DIR}/tests/x509gen DESTINATION ${PROJECT_BINARY_DIR}
  file (COPY ${PROJECT_SOURCE_DIR}/tests/release_files DESTINATION ${PROJECT_BINARY_DIR}/tests)
  

@@ -2,15 +2,19 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
     REF "v${VERSION}"
-    SHA512 7d7121770a9394efd31acb74709583e587351fc48c485a2f684cacce4ed19a2d07a6cb1cea986c16bf64851fd53b22a7277c1e1ae1a6cd69a5761afae3c5c731
+    SHA512 35e483c6123f099167ed8647fae7c6e5512434c24d0afe684180ba6a5114068d5678280a01c8e6cfee0d1e555e1dc2a1606989d46950ce3ef1a3859caeed4dad
     HEAD_REF master
     PATCHES
         fix-find_expat.patch
+        fix-inih.patch
+        fix-brotli.patch
+        fix-expat.patch
+        dont-find-python.patch
+        ios.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        unicode EXIV2_ENABLE_WIN_UNICODE
         xmp     EXIV2_ENABLE_XMP
         video   EXIV2_ENABLE_VIDEO
         png     EXIV2_ENABLE_PNG
@@ -31,12 +35,10 @@ vcpkg_cmake_configure(
         -DEXIV2_BUILD_SAMPLES=OFF
         -DEXIV2_BUILD_DOC=OFF
         -DEXIV2_ENABLE_EXTERNAL_XMP=OFF
-        -DEXIV2_ENABLE_PRINTUCS2=OFF
         -DEXIV2_ENABLE_LENSDATA=ON
         -DEXIV2_ENABLE_DYNAMIC_RUNTIME=${EXIV2_CRT_DYNAMIC}
         -DEXIV2_ENABLE_WEBREADY=OFF
         -DEXIV2_ENABLE_CURL=OFF
-        -DEXIV2_ENABLE_SSH=OFF
         -DEXIV2_TEAM_EXTRA_WARNINGS=OFF
         -DEXIV2_TEAM_WARNINGS_AS_ERRORS=OFF
         -DEXIV2_TEAM_PACKAGING=OFF
@@ -64,3 +66,5 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)

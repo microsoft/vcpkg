@@ -1,6 +1,6 @@
 {
   "name": "libflac",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Library for manipulating FLAC files",
   "homepage": "https://xiph.org/flac/",
   "license": "BSD-3-Clause",

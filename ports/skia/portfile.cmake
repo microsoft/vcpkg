@@ -8,6 +8,7 @@ vcpkg_from_git(
         disable-msvc-env-setup.patch
         uwp.patch
         core-opengl32.patch
+        disable-dev-test.patch
 )
 
 # these following aren't available in vcpkg
