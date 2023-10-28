@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f251471..c7f1245 100644
+index f251471..7c59fa4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,6 @@
@@ -143,7 +143,7 @@ index f251471..c7f1245 100644
 +    COPYONLY
 +)
 +
-+set(ConfigPackageLocation lib/cmake/LibClipboard)
++set(ConfigPackageLocation share/LibClipboard)
 +install(EXPORT LibClipboardTargets
 +    FILE
 +        LibClipboardTargets.cmake
