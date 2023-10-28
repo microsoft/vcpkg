@@ -6,7 +6,7 @@ set(mingw32_repo_url "https://mirror.msys2.org/mingw/mingw32")
 set(clangarm64_repo_url "https://mirror.msys2.org/mingw/clangarm64")
 
 # Ignore these updates (e.g. for known problems)
-vcpkg_list(SET ignored_packages
+vcpkg_list(SET ignored_updates
     https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-ca-certificates-20211016-3-any.pkg.tar.zst
 )
 
@@ -183,7 +183,7 @@ function(analyze_package_list list_var script)
             set(found 1)
             set(current_url "${${repo}_repo_url}/${CMAKE_MATCH_1}")
             # Check the URL
-            if(NOT vcpkg_url STREQUAL current_url AND NOT current_url IN_LIST ignored_packages)
+            if(NOT vcpkg_url STREQUAL current_url AND NOT current_url IN_LIST ignored_updates)
                 get_vcpkg_builddate(vcpkg_builddate "${name}")
                 age_in_days(vcpkg_age "${vcpkg_builddate}")
                 pretty_age(vcpkg_age_pretty "${vcpkg_age}")
