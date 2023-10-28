@@ -20,7 +20,7 @@ if (ENABLE_GLSLANG_BINARIES)
     vcpkg_add_to_path("${PYTHON_PATH}")
 endif ()
 
-if (WIN32)
+if (VCPKG_TARGET_IS_WINDOWS)
     set(PLATFORM_OPTIONS "-DOVERRIDE_MSVCCRT=OFF")
 endif ()
 
@@ -46,6 +46,9 @@ vcpkg_copy_pdbs()
 
 if (ENABLE_GLSLANG_BINARIES)
     vcpkg_copy_tools(TOOL_NAMES glslangValidator spirv-remap AUTO_CLEAN)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_copy_tools(TOOL_NAMES glslang AUTO_CLEAN)
+    endif()
 endif ()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
