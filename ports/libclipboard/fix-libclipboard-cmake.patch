@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f251471..845893c 100644
+index f251471..aff497c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,6 @@
@@ -62,7 +62,7 @@ index f251471..845893c 100644
 -if (LIBCLIPBOARD_ADD_SOVERSION)
 -    # Not by default because my file system doesn't support symlinks
 -    set_target_properties(clipboard PROPERTIES SOVERSION ${LIBCLIPBOARD_VERSION} VERSION ${LIBCLIPBOARD_VERSION})
-+if(APPLE
++if(APPLE)
 +list(APPEND SOURCE src/clipboard_cocoa.m)
  endif()
  
