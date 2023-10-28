@@ -1,0 +1,174 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f251471..c7f1245 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ # libclipboard cmake configuration file
+ 
+-cmake_minimum_required(VERSION 2.8)
++cmake_minimum_required(VERSION 3.14)
+ project(libclipboard)
+ 
+ # Defines and options
+@@ -35,6 +35,7 @@ endif()
+ 
+ if ((APPLE OR LIBCLIPBOARD_FORCE_COCOA) AND NOT (LIBCLIPBOARD_FORCE_WIN32 OR LIBCLIPBOARD_FORCE_X11))
+     set(LIBCLIPBOARD_BUILD_COCOA TRUE)
++    enable_language(OBJC)
+ endif()
+ 
+ if (NOT (LIBCLIPBOARD_BUILD_WIN32 OR LIBCLIPBOARD_BUILD_X11 OR LIBCLIPBOARD_BUILD_COCOA))
+@@ -57,24 +58,6 @@ if (CMAKE_COMPILER_IS_GNUCXX OR LIBCLIPBOARD_BUILD_COCOA)
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -g")
+ endif()
+ 
+-# Dependencies
+-if (LIBCLIPBOARD_BUILD_COCOA)
+-    set_source_files_properties(src/clipboard_cocoa.c PROPERTIES COMPILE_FLAGS "-x objective-c")
+-    set(LIBCLIPBOARD_PRIVATE_LIBS ${LIBCLIPBOARD_PRIVATE_LIBS} "-framework Cocoa")
+-elseif(LIBCLIPBOARD_BUILD_X11)
+-    include(FindPkgConfig REQUIRED)
+-    pkg_check_modules(X11 xcb REQUIRED)
+-    find_package(Threads REQUIRED)
+-
+-    include_directories(${X11_INCLUDE_DIRS})
+-    link_directories(${X11_LIBRARY_DIRS})
+-    set(LIBCLIPBOARD_PRIVATE_LIBS ${LIBCLIPBOARD_PRIVATE_LIBS} ${X11_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+-endif()
+-
+-# Include directories
+-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
+-include_directories("${CMAKE_CURRENT_BINARY_DIR}/include")
+-
+ # Configure header
+ configure_file("include/libclipboard-config.h.in" "include/libclipboard-config.h")
+ 
+@@ -91,62 +74,72 @@ set(SOURCE
+     src/clipboard_common.c
+ )
+ 
+-# Set the output folders
+-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
++install(
++    FILES
++        ${HEADERS}
++    DESTINATION
++        include
++    COMPONENT
++        Devel
++)
+ 
+ # Make the library
+ add_library(clipboard ${HEADERS} ${SOURCE})
+-target_link_libraries(clipboard LINK_PRIVATE ${LIBCLIPBOARD_PRIVATE_LIBS})
+-if (LIBCLIPBOARD_ADD_SOVERSION)
+-    # Not by default because my file system doesn't support symlinks
+-    set_target_properties(clipboard PROPERTIES SOVERSION ${LIBCLIPBOARD_VERSION} VERSION ${LIBCLIPBOARD_VERSION})
+-endif()
+-
+-# Testing mode?
+-if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest/googletest)
+-    # gtest does not play well with pthreads and mingw
+-    if (gtest_disable_pthreads)
+-        set(LIBCLIPBOARD_USE_PTHREADS_INIT ${CMAKE_USE_PTHREADS_INIT})
+-        unset(CMAKE_USE_PTHREADS_INIT)
+-    endif()
+-
+-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest EXCLUDE_FROM_ALL)
+-    enable_testing()
+-    include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
+-
+-    set(CMAKE_USE_PTHREADS_INIT ${LIBCLIPBOARD_USE_PTHREADS_INIT})
+-else()
++# Not by default because my file system doesn't support symlinks
++set_target_properties(clipboard PROPERTIES SOVERSION ${LIBCLIPBOARD_VERSION} VERSION ${LIBCLIPBOARD_VERSION})
++target_include_directories(clipboard PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_BINARY_DIR}/include)
++target_include_directories(clipboard INTERFACE $<INSTALL_INTERFACE:include/clipboard>)
+ 
+-endif()
+-
+-# Build sample executables
+-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/samples)
+-
+-# Pkgconfig
+-include(FindPkgConfig QUIET)
+-if (PKGCONFIG_FOUND)
+-    string(REPLACE "-l" "" LIBCLIPBOARD_PRIVATE_LIBS_LIST "${LIBCLIPBOARD_PRIVATE_LIBS}")
+-    string(REPLACE ";" " -l" LIBCLIPBOARD_PRIVATE_LIBS_LIST "${LIBCLIPBOARD_PRIVATE_LIBS_LIST}")
+-    string(STRIP "${LIBCLIPBOARD_PRIVATE_LIBS_LIST}" LIBCLIPBOARD_PRIVATE_LIBS_LIST)
+-    configure_file("libclipboard.pc.in" "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/pkgconfig/libclipboard.pc" @ONLY)
+-    install(FILES "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/pkgconfig/libclipboard.pc" DESTINATION "lib/pkgconfig")
++# Dependencies
++if (LIBCLIPBOARD_BUILD_COCOA)
++    target_link_libraries(clipboard PRIVATE "-framework Cocoa")
++elseif(LIBCLIPBOARD_BUILD_X11)
++    include(FindPkgConfig REQUIRED)
++    pkg_check_modules(xcb REQUIRED IMPORTED_TARGET xcb)
++    find_package(Threads REQUIRED)
++    target_link_libraries(clipboard PRIVATE PkgConfig::xcb Threads::Threads)
+ endif()
+ 
+ # Install options
+-install(TARGETS clipboard
++install(TARGETS clipboard EXPORT LibClipboardTargets
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib
+-        ARCHIVE DESTINATION lib)
+-install(FILES ${HEADERS} DESTINATION include)
++        ARCHIVE DESTINATION lib
++    	INCLUDES DESTINATION include)
++
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file(
++    "${CMAKE_CURRENT_BINARY_DIR}/LibClipboard/LibClipboardConfigVersion.cmake"
++    VERSION 1.1
++    COMPATIBILITY AnyNewerVersion
++)
++
++export(EXPORT LibClipboardTargets
++    FILE "${CMAKE_CURRENT_BINARY_DIR}/LibClipboard/LibClipboardTargets.cmake"
++    NAMESPACE LibClipboard::
++)
+ 
+-# Uninstall target
+-configure_file(
+-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+-    IMMEDIATE @ONLY)
++configure_file(cmake/LibClipboardConfig.cmake
++	"${CMAKE_CURRENT_BINARY_DIR}/LibClipboard/LibClipboardConfig.cmake"
++    COPYONLY
++)
++
++set(ConfigPackageLocation lib/cmake/LibClipboard)
++install(EXPORT LibClipboardTargets
++    FILE
++        LibClipboardTargets.cmake
++    NAMESPACE
++        LibClipboard::
++    DESTINATION
++        ${ConfigPackageLocation}
++)
++install(
++    FILES
++        cmake/LibClipboardConfig.cmake
++	"${CMAKE_CURRENT_BINARY_DIR}/LibClipboard/LibClipboardConfigVersion.cmake"
++    DESTINATION
++        ${ConfigPackageLocation}
++    COMPONENT
++        Devel
++)
+ 
+-add_custom_target(uninstall
+-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+\ No newline at end of file
+diff --git a/cmake/LibClipboardConfig.cmake b/cmake/LibClipboardConfig.cmake
+new file mode 100644
+index 0000000..9d48704
+--- /dev/null
++++ b/cmake/LibClipboardConfig.cmake
+@@ -0,0 +1 @@
++include("${CMAKE_CURRENT_LIST_DIR}/libclipboardTargets.cmake")
