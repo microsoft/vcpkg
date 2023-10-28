@@ -7400,6 +7400,10 @@
       "baseline": "0.2.1",
       "port-version": 0
     },
+    "rivers": {
+      "baseline": "2022-05-16",
+      "port-version": 0
+    },
     "rkcommon": {
       "baseline": "1.10.0",
       "port-version": 0
