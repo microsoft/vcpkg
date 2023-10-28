@@ -72,4 +72,3 @@ install(
   NAMESPACE   "unofficial::${PROJECT_NAME}::"
   DESTINATION "share/unofficial-${PROJECT_NAME}")
 
-export(PACKAGE "${PROJECT_NAME}")
