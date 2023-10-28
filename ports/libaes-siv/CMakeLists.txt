@@ -62,7 +62,7 @@ write_basic_package_version_file(
         VERSION       "${PROJECT_VERSION}"
         COMPATIBILITY SameMajorVersion
 )
-install(FILES "${VERSION_FILE_PATH}" DESTINATION "share/unofficial-${PROJECT_NAME}")
+install(FILES "${cmake_config_file}" "${VERSION_FILE_PATH}" DESTINATION "share/unofficial-${PROJECT_NAME}")
 install(FILES ${Header_Files} "${config_file}"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
