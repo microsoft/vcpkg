@@ -107,35 +107,6 @@ index 6b6d7fa..3667b8b 100644
 +make_library_set(POCO_XML)
  findpkg_finish(POCO_XML)
  
-diff --git a/CMake/Packages/FindTBB.cmake b/CMake/Packages/FindTBB.cmake
-index 4200aa0..35e4ea3 100644
---- a/CMake/Packages/FindTBB.cmake
-+++ b/CMake/Packages/FindTBB.cmake
-@@ -104,7 +104,7 @@ findpkg_framework(TBB)
- find_path(TBB_INCLUDE_DIR NAMES tbb/tbb.h HINTS ${TBB_INC_SEARCH_PATH} ${TBB_PKGC_INCLUDE_DIRS})
- find_library(TBB_LIBRARY_REL NAMES ${TBB_LIBRARY_NAMES} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
- find_library(TBB_LIBRARY_DBG NAMES ${TBB_LIBRARY_NAMES_DBG} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
--make_library_set(TBB_LIBRARY)
-+make_library_set(TBB)
- 
- findpkg_finish(TBB)
- 
-@@ -120,7 +120,7 @@ get_debug_names(TBB_MALLOC_LIBRARY_NAMES)
- find_path(TBB_MALLOC_INCLUDE_DIR NAMES tbb/tbb.h HINTS ${TBB_INCLUDE_DIR} ${TBB_INC_SEARCH_PATH} ${TBB_PKGC_INCLUDE_DIRS} )
- find_library(TBB_MALLOC_LIBRARY_REL NAMES ${TBB_MALLOC_LIBRARY_NAMES} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS} )
- find_library(TBB_MALLOC_LIBRARY_DBG NAMES ${TBB_MALLOC_LIBRARY_NAMES_DBG} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS} )
--make_library_set(TBB_MALLOC_LIBRARY)
-+make_library_set(TBB_MALLOC)
- findpkg_finish(TBB_MALLOC)
- 
- # Look for TBB's malloc proxy package
-@@ -130,5 +130,5 @@ get_debug_names(TBB_MALLOC_PROXY_LIBRARY_NAMES)
- find_path(TBB_MALLOC_PROXY_INCLUDE_DIR NAMES tbb/tbbmalloc_proxy.h HINTS ${TBB_INCLUDE_DIR} ${TBB_INC_SEARCH_PATH} ${TBB_PKGC_INCLUDE_DIRS})
- find_library(TBB_MALLOC_PROXY_LIBRARY_REL NAMES ${TBB_MALLOC_PROXY_LIBRARY_NAMES} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
- find_library(TBB_MALLOC_PROXY_LIBRARY_DBG NAMES ${TBB_MALLOC_PROXY_LIBRARY_NAMES_DBG} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
--make_library_set(TBB_MALLOC_PROXY_LIBRARY)
-+make_library_set(TBB_MALLOC_PROXY)
- findpkg_finish(TBB_MALLOC_PROXY)
 diff --git a/CMake/Utils/FindPkgMacros.cmake b/CMake/Utils/FindPkgMacros.cmake
 index 53111e0..8dffbbc 100644
 --- a/CMake/Utils/FindPkgMacros.cmake
