@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f251471..7c59fa4 100644
+index f251471..845893c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,6 @@
@@ -43,7 +43,11 @@ index f251471..7c59fa4 100644
  # Configure header
  configure_file("include/libclipboard-config.h.in" "include/libclipboard-config.h")
  
-@@ -91,62 +74,72 @@ set(SOURCE
+@@ -87,66 +70,79 @@ set(HEADERS
+ set(SOURCE
+     src/clipboard_win32.c
+     src/clipboard_x11.c
+-    src/clipboard_cocoa.c
      src/clipboard_common.c
  )
  
@@ -51,23 +55,17 @@ index f251471..7c59fa4 100644
 -set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 -set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 -set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-+install(
-+    FILES
-+        ${HEADERS}
-+    DESTINATION
-+        include
-+    COMPONENT
-+        Devel
-+)
- 
- # Make the library
- add_library(clipboard ${HEADERS} ${SOURCE})
+-
+-# Make the library
+-add_library(clipboard ${HEADERS} ${SOURCE})
 -target_link_libraries(clipboard LINK_PRIVATE ${LIBCLIPBOARD_PRIVATE_LIBS})
 -if (LIBCLIPBOARD_ADD_SOVERSION)
 -    # Not by default because my file system doesn't support symlinks
 -    set_target_properties(clipboard PROPERTIES SOVERSION ${LIBCLIPBOARD_VERSION} VERSION ${LIBCLIPBOARD_VERSION})
--endif()
--
++if(APPLE
++list(APPEND SOURCE src/clipboard_cocoa.m)
+ endif()
+ 
 -# Testing mode?
 -if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest/googletest)
 -    # gtest does not play well with pthreads and mingw
@@ -83,13 +81,23 @@ index f251471..7c59fa4 100644
 -
 -    set(CMAKE_USE_PTHREADS_INIT ${LIBCLIPBOARD_USE_PTHREADS_INIT})
 -else()
++install(
++    FILES
++        ${HEADERS}
++    DESTINATION
++        include
++    COMPONENT
++        Devel
++)
+ 
+-endif()
++# Make the library
++add_library(clipboard ${HEADERS} ${SOURCE})
 +# Not by default because my file system doesn't support symlinks
 +set_target_properties(clipboard PROPERTIES SOVERSION ${LIBCLIPBOARD_VERSION} VERSION ${LIBCLIPBOARD_VERSION})
 +target_include_directories(clipboard PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_BINARY_DIR}/include)
 +target_include_directories(clipboard INTERFACE $<INSTALL_INTERFACE:include/clipboard>)
  
--endif()
--
 -# Build sample executables
 -add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/samples)
 -
