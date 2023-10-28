@@ -3,7 +3,7 @@
   "version": "1.1",
   "description": "A cross-platform clipboard library.",
   "license": "MIT",
-  "supports": "windows | osx | linux",
+  "supports": "(windows & !uwp) | osx | linux",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
