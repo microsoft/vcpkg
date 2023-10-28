@@ -68,7 +68,7 @@ install(FILES ${Header_Files} "${config_file}"
 
 install(
   EXPORT      "unofficial-${PROJECT_NAME}Config"
-  FILE        "unofficial-${PROJECT_NAME}Config.cmake"
+  FILE        "unofficial-${PROJECT_NAME}Targets.cmake"
   NAMESPACE   "unofficial::${PROJECT_NAME}::"
   DESTINATION "share/unofficial-${PROJECT_NAME}")
 
