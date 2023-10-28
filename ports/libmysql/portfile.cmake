@@ -113,7 +113,7 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${MYSQL_CONFIG_FILE}" "'${CURRENT_PACKAGES_DIR}" "\"\$basedir\"\'")
 endif()
 
-file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CURRENT_PORT_DIR}/libmysql-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 set(libedit_copying "${SOURCE_PATH}/COPYING for libedit")
