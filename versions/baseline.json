@@ -2308,6 +2308,10 @@
       "baseline": "2.2.1",
       "port-version": 0
     },
+    "dyno": {
+      "baseline": "2019-11-13",
+      "port-version": 0
+    },
     "eabase": {
       "baseline": "2.09.12",
       "port-version": 3
