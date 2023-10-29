@@ -1,0 +1,143 @@
+diff --git a/include/ztd/cuneicode/mcstate.h b/include/ztd/cuneicode/mcstate.h
+index cf457dc..d689b95 100644
+--- a/include/ztd/cuneicode/mcstate.h
++++ b/include/ztd/cuneicode/mcstate.h
+@@ -44,12 +44,12 @@
+ #endif
+ #if ZTD_IS_ON(ZTD_CWCHAR)
+ #include <cwchar>
+-#elif ZTD_IS_ON(ZTD_WCHAR)
++#elif ZTD_IS_ON(ZTD_WCHAR_H)
+ #include <wchar.h>
+ #endif
+ #if ZTD_IS_ON(ZTD_CUCHAR)
+ #include <cuchar>
+-#elif ZTD_IS_ON(ZTD_UCHAR)
++#elif ZTD_IS_ON(ZTD_UCHAR_H)
+ ZTD_EXTERN_C_OPEN_I_
+ #include <uchar.h>
+ ZTD_EXTERN_C_CLOSE_I_
+@@ -117,7 +117,7 @@ typedef union cnc_mcstate_t {
+ 		/// access.
+ 		unsigned int __paddding : ((sizeof(cnc_mcstate_indicator) * CHAR_BIT) - CHAR_BIT) - 1;
+ 	} header;
+-#if ZTD_IS_ON(ZTD_CWCHAR) || ZTD_IS_ON(ZTD_WCHAR) || ZTD_IS_ON(ZTD_CUCHAR) || ZTD_IS_ON(ZTD_UCHAR)
++#if ZTD_IS_ON(ZTD_CWCHAR) || ZTD_IS_ON(ZTD_WCHAR_H) || ZTD_IS_ON(ZTD_CUCHAR) || ZTD_IS_ON(ZTD_UCHAR_H)
+ 	//////
+ 	/// @brief Private, do not access.
+ 	struct __locale_t {
+diff --git a/source/include/ztd/cuneicode/detail/core_mcharn.hpp b/source/include/ztd/cuneicode/detail/core_mcharn.hpp
+index eb78d05..d591c37 100644
+--- a/source/include/ztd/cuneicode/detail/core_mcharn.hpp
++++ b/source/include/ztd/cuneicode/detail/core_mcharn.hpp
+@@ -43,14 +43,14 @@
+ 
+ #if ZTD_IS_ON(ZTD_CUCHAR)
+ #include <cuchar>
+-#elif ZTD_IS_ON(ZTD_UCHAR)
++#elif ZTD_IS_ON(ZTD_UCHAR_H)
+ ZTD_EXTERN_C_OPEN_I_
+ #include <uchar.h>
+ ZTD_EXTERN_C_CLOSE_I_
+ #endif
+ #if ZTD_IS_ON(ZTD_CWCHAR)
+ #include <cwchar>
+-#elif ZTD_IS_ON(ZTD_WCHAR)
++#elif ZTD_IS_ON(ZTD_WCHAR_H)
+ ZTD_EXTERN_C_OPEN_I_
+ #include <wchar.h>
+ ZTD_EXTERN_C_CLOSE_I_
+@@ -241,7 +241,7 @@ namespace cnc {
+ 					     __p_state);
+ 				}
+ 			}
+-#if (ZTD_IS_ON(ZTD_CUCHAR) || ZTD_IS_ON(ZTD_UCHAR)) && ZTD_IS_OFF(ZTD_PLATFORM_MAC_OS)
++#if (ZTD_IS_ON(ZTD_CUCHAR) || ZTD_IS_ON(ZTD_UCHAR_H)) && ZTD_IS_OFF(ZTD_PLATFORM_MAC_OS)
+ 			if constexpr (_SourceChecks) {
+ 				if (__p_src == nullptr || *__p_src == nullptr) {
+ 					return cnc_mcerr_ok;
+@@ -259,7 +259,7 @@ namespace cnc {
+ 			char __multibyte_intermediate[(MB_LEN_MAX * __max_accumulated_writeouts)] {};
+ 			for (size_t __src_idx = 0; __src_idx < __max_accumulated_writeouts; ++__src_idx) {
+ 				const ztd_char32_t& __c32 = __src[__src_idx];
+-				size_t __res              = ZTD_UCHAR_ACCESSOR_I_ c32rtomb(
++				size_t __res              = ZTD_UCHAR_SCOPE_I_ c32rtomb(
+                          __multibyte_intermediate, __c32, &__p_state->__locale.__state1);
+ 				if (__res == ::cnc::__cnc_detail::__stdc_ret_err_invalid) {
+ 					return cnc_mcerr_invalid_sequence;
+@@ -740,7 +740,7 @@ namespace cnc {
+ 					}
+ 				}
+ 			}
+-#if ZTD_IS_ON(ZTD_WCHAR) || ZTD_IS_ON(ZTD_CWCHAR)
++#if ZTD_IS_ON(ZTD_WCHAR_H) || ZTD_IS_ON(ZTD_CWCHAR)
+ 			if constexpr (_SourceChecks) {
+ 				if (__p_src == nullptr || *__p_src == nullptr) {
+ 					return cnc_mcerr_ok;
+@@ -761,7 +761,7 @@ namespace cnc {
+ 			// can only output one, but we leave space anyhow
+ 			ztd_wchar_t __intermediate_destination[4] {};
+ 			ztd_wchar_t* __dst = _IsCounting ? __intermediate_destination : __p_maybe_dst[0];
+-			size_t __c_err     = ZTD_WCHAR_ACCESSOR_I_ mbrtowc(
++			size_t __c_err     = ZTD_WCHAR_SCOPE_I_ mbrtowc(
+                     __dst, __src, __src_len, &__p_state->__locale.__state0);
+ 			switch (__c_err) {
+ 			case ::cnc::__cnc_detail::__stdc_ret_err_invalid:
+@@ -822,7 +822,7 @@ namespace cnc {
+ 					}
+ 				}
+ 			}
+-#if ZTD_IS_ON(ZTD_WCHAR) || ZTD_IS_ON(ZTD_CWCHAR)
++#if ZTD_IS_ON(ZTD_WCHAR_H) || ZTD_IS_ON(ZTD_CWCHAR)
+ 			if constexpr (_SourceChecks) {
+ 				if (__p_src == nullptr || *__p_src == nullptr) {
+ 					return cnc_mcerr_ok;
+@@ -845,7 +845,7 @@ namespace cnc {
+ 			char __multibyte_intermediate[(MB_LEN_MAX * __max_accumulated_writeouts)] {};
+ 			for (size_t __src_idx = 0; __src_idx < __max_accumulated_writeouts; ++__src_idx) {
+ 				const ztd_wchar_t& __wc = __src[__src_idx];
+-				size_t __res            = ZTD_WCHAR_ACCESSOR_I_ wcrtomb(
++				size_t __res            = ZTD_WCHAR_SCOPE_I_ wcrtomb(
+                          __multibyte_intermediate, __wc, &__p_state->__locale.__state1);
+ 				if (__res == ::cnc::__cnc_detail::__stdc_ret_err_invalid) {
+ 					return cnc_mcerr_invalid_sequence;
+@@ -949,7 +949,7 @@ namespace cnc {
+ 					     reinterpret_cast<const ztd_char8_t**>(__p_src), __p_state);
+ 				}
+ 			}
+-#if (ZTD_IS_ON(ZTD_CUCHAR) || ZTD_IS_ON(ZTD_UCHAR)) && ZTD_IS_OFF(ZTD_PLATFORM_MAC_OS)
++#if (ZTD_IS_ON(ZTD_CUCHAR) || ZTD_IS_ON(ZTD_UCHAR_H)) && ZTD_IS_OFF(ZTD_PLATFORM_MAC_OS)
+ 			if constexpr (_SourceChecks) {
+ 				if (__p_src == nullptr || *__p_src == nullptr) {
+ 					return cnc_mcerr_ok;
+@@ -967,7 +967,7 @@ namespace cnc {
+ 			ztd_char32_t __c32_intermediate[__max_writeout_attempts] {};
+ 			ztd_char32_t* __p_c32_intermediate = __c32_intermediate;
+ 			for (size_t __src_idx = 0; __src_idx < __max_writeout_attempts; ++__src_idx) {
+-				size_t __res = ZTD_UCHAR_ACCESSOR_I_ mbrtoc32(
++				size_t __res = ZTD_UCHAR_SCOPE_I_ mbrtoc32(
+ 				     __p_c32_intermediate, __src, __src_len, &__p_state->__locale.__state0);
+ 				if (__res == ::cnc::__cnc_detail::__stdc_ret_err_invalid) {
+ 					return cnc_mcerr_invalid_sequence;
+@@ -975,7 +975,7 @@ namespace cnc {
+ 				else if (__res == ::cnc::__cnc_detail::__stdc_ret_err_incomplete_input) {
+ 					return cnc_mcerr_incomplete_input;
+ 				}
+-				else if (ZTD_UCHAR_ACCESSOR_I_ mbsinit(&__p_state->__locale.__state0) == 0) {
++				else if (ZTD_UCHAR_SCOPE_I_ mbsinit(&__p_state->__locale.__state0) == 0) {
+ 					++__p_c32_intermediate;
+ 					continue;
+ 				}
+diff --git a/source/ztd/cuneicode/mcstate.cpp b/source/ztd/cuneicode/mcstate.cpp
+index 50f8658..ff8791e 100644
+--- a/source/ztd/cuneicode/mcstate.cpp
++++ b/source/ztd/cuneicode/mcstate.cpp
+@@ -61,7 +61,7 @@ ZTD_C_LANGUAGE_LINKAGE_I_ ZTD_CUNEICODE_API_LINKAGE_I_ bool cnc_mcstate_is_compl
+ 	}
+ 	switch (__state->raw.indicator) {
+ 	case __mc_s_i_locale:
+-#if ZTD_IS_ON(ZTD_CWCHAR) || ZTD_IS_ON(ZTD_WCHAR) || ZTD_IS_ON(ZTD_CUCHAR) || ZTD_IS_ON(ZTD_UCHAR)
++#if ZTD_IS_ON(ZTD_CWCHAR) || ZTD_IS_ON(ZTD_WCHAR_H) || ZTD_IS_ON(ZTD_CUCHAR) || ZTD_IS_ON(ZTD_UCHAR_H)
+ 		return ::std::mbsinit(::std::addressof(__state->__locale.__state0)) != 0
+ 		     && ::std::mbsinit(::std::addressof(__state->__locale.__state1)) != 0;
+ #else
