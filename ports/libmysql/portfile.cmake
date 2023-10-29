@@ -12,6 +12,7 @@ vcpkg_from_github(
         dependencies.patch
         install-exports.patch
         fix_dup_symbols.patch
+        cross-build.patch
 )
 file(GLOB third_party "${SOURCE_PATH}/extra/*" "${SOURCE_PATH}/include/boost_1_70_0")
 list(REMOVE_ITEM third_party "${SOURCE_PATH}/extra/libedit")
@@ -30,7 +31,15 @@ set(cross_options "")
 if(VCPKG_CROSSCOMPILING)
     list(APPEND cross_options
         -DHAVE_RAPIDJSON_WITH_STD_REGEX=1 # required, skip try_run
+        "-DHOST_SHARE_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/${PORT}"
     )
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND cross_options
+            -DHAVE_SETNS=0
+            -DHAVE_CLOCK_GETTIME=1
+            -DHAVE_CLOCK_REALTIME=1
+        )
+    endif()
 endif()
 
 vcpkg_cmake_configure(

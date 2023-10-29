@@ -11,6 +11,10 @@
     "boost-geometry",
     "boost-graph",
     "boost-optional",
+    {
+      "name": "libmysql",
+      "host": true
+    },
     "lz4",
     {
       "name": "ncurses",
