@@ -51,35 +51,36 @@ index aaba3575..a0e52652 100644
    COMMENT "Generating Sys Schema C code"
  )
 diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
-index 28cde40e..78383f9d 100644
+index 28cde40e..be916cbc 100644
 --- a/share/CMakeLists.txt
 +++ b/share/CMakeLists.txt
 @@ -47,8 +47,12 @@ SET(dirs
    ukrainian
    )
  
-+set(src_dir ${CMAKE_BINARY_DIR}/${INSTALL_MYSQLSHAREDIR})
-+if(HOST_SHARE_DIR)
-+  set(src_dir ${HOST_SHARE_DIR})
-+endif()
- FOREACH (dir ${dirs})
+-FOREACH (dir ${dirs})
 -  INSTALL(DIRECTORY ${CMAKE_BINARY_DIR}/${INSTALL_MYSQLSHAREDIR}/${dir}
++  set(src_dir ${CMAKE_BINARY_DIR}/share/libmysql)
++  if(CMAKE_CROSSCOMPILING)
++    set(src_dir ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql)
++  endif()
++  FOREACH (dir ${dirs})
 +  INSTALL(DIRECTORY ${src_dir}/${dir}
      DESTINATION ${INSTALL_MYSQLSHAREDIR}
      COMPONENT Server
      )
 diff --git a/strings/CMakeLists.txt b/strings/CMakeLists.txt
-index 665b35da..1214d597 100644
+index 665b35da..88f0743b 100644
 --- a/strings/CMakeLists.txt
 +++ b/strings/CMakeLists.txt
 @@ -69,6 +69,13 @@ SET(ZH_HANS_SRC_FILE ${CMAKE_SOURCE_DIR}/strings/lang_data/zh_hans.txt)
  SET(ZH_HANS_DST_FILE ${CMAKE_BINARY_DIR}/strings/uca900_zh_tbls.cc)
  SET(JA_HANS_SRC_FILE ${CMAKE_SOURCE_DIR}/strings/lang_data/ja_hans.txt)
  SET(JA_HANS_DST_FILE ${CMAKE_BINARY_DIR}/strings/uca900_ja_tbls.cc)
-+if(HOST_SHARE_DIR)
++if(CMAKE_CROSSCOMPILING)
 +  file(COPY
-+    "${HOST_SHARE_DIR}/${PROJECT_VERSION}/uca900_zh_tbls.cc"
-+    "${HOST_SHARE_DIR}/${PROJECT_VERSION}/uca900_ja_tbls.cc"
++    "${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/uca900_zh_tbls.cc"
++    "${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/uca900_ja_tbls.cc"
 +    DESTINATION "${CMAKE_BINARY_DIR}/strings"
 +  )
 +else()
@@ -96,24 +97,24 @@ index 665b35da..1214d597 100644
  SET_SOURCE_FILES_PROPERTIES(
    ${JA_HANS_DST_FILE} ${ZH_HANS_DST_FILE}
 diff --git a/utilities/CMakeLists.txt b/utilities/CMakeLists.txt
-index da34524c..f4b149ff 100644
+index da34524c..dc397dae 100644
 --- a/utilities/CMakeLists.txt
 +++ b/utilities/CMakeLists.txt
 @@ -39,6 +39,21 @@ MYSQL_ADD_EXECUTABLE(comp_client_err
    SKIP_INSTALL
    )
  
-+if(HOST_SHARE_DIR)
++if(CMAKE_CROSSCOMPILING)
 +  file(COPY
-+    ${HOST_SHARE_DIR}/${PROJECT_VERSION}/mysqlclient_ername.h
-+    ${HOST_SHARE_DIR}/../../include/mysql/mysqld_error.h
-+    ${HOST_SHARE_DIR}/${PROJECT_VERSION}/mysqld_ername.h
-+    ${HOST_SHARE_DIR}/${PROJECT_VERSION}/mysqld_errmsg.h
++    ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/include/mysql/mysqld_error.h
++    ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/mysqlclient_ername.h
++    ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/mysqld_ername.h
++    ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/mysqld_errmsg.h
 +    DESTINATION ${PROJECT_BINARY_DIR}/include
 +  )
 +  file(COPY
-+    ${HOST_SHARE_DIR}/${PROJECT_VERSION}/errmsg.sys
-+    DESTINATION ${PROJECT_BINARY_DIR}/${INSTALL_MYSQLSHAREDIR}/english
++    ${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share/libmysql/${PROJECT_VERSION}/errmsg.sys
++    DESTINATION ${PROJECT_BINARY_DIR}/share/libmysql/english
 +  )
 +  add_custom_target(GenClientError)
 +  add_custom_target(GenError)
@@ -130,7 +131,7 @@ index da34524c..f4b149ff 100644
 +      ${PROJECT_BINARY_DIR}/include/mysqlclient_ername.h
 +      ${PROJECT_BINARY_DIR}/include/mysqld_ername.h
 +      ${PROJECT_BINARY_DIR}/include/mysqld_errmsg.h
-+      ${PROJECT_BINARY_DIR}/${INSTALL_MYSQLSHAREDIR}/english/errmsg.sys
++      ${PROJECT_BINARY_DIR}/share/libmysql/english/errmsg.sys
 +    DESTINATION share/libmysql/${PROJECT_VERSION}
 +  )
 +endif()

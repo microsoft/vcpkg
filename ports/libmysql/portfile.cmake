@@ -30,14 +30,20 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static"  STATIC_CRT_LINKAGE)
 set(cross_options "")
 if(VCPKG_CROSSCOMPILING)
     list(APPEND cross_options
-        -DHAVE_RAPIDJSON_WITH_STD_REGEX=1 # required, skip try_run
-        "-DHOST_SHARE_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/${PORT}"
+        -DCMAKE_CROSSCOMPILING=1
+        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
+        # required, skip try_run
+        -DHAVE_RAPIDJSON_WITH_STD_REGEX=1
     )
     if(NOT VCPKG_TARGET_IS_WINDOWS)
         list(APPEND cross_options
-            -DHAVE_SETNS=0
+            # optimistic, skip try_run
             -DHAVE_CLOCK_GETTIME=1
             -DHAVE_CLOCK_REALTIME=1
+            # pessimistic, skip try_run
+            -DHAVE_C_FLOATING_POINT_FUSED_MADD=1
+            -DHAVE_CXX_FLOATING_POINT_FUSED_MADD=1
+            -DHAVE_SETNS=0
         )
     endif()
 endif()
@@ -85,8 +91,7 @@ vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmysql)
 vcpkg_fixup_pkgconfig()
 
-list(APPEND MYSQL_TOOLS
-    comp_err
+set(MYSQL_TOOLS
     my_print_defaults
     mysql
     mysql_config_editor
@@ -105,7 +110,11 @@ list(APPEND MYSQL_TOOLS
     perror
     zlib_decompress
 )
-
+if (NOT VCPKG_CROSSCOMPILING)
+    list(APPEND MYSQL_TOOLS
+        comp_err
+    )
+endif()
 if (VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MYSQL_TOOLS
         echo
