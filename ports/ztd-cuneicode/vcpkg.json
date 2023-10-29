@@ -1,6 +1,6 @@
 {
   "name": "ztd-cuneicode",
-  "version-date": "2023-07-19",
+  "version-date": "2023-10-29",
   "description": "Shared tables between C and C++ for encoding infrastructure",
   "homepage": "http://ztdcuneicode.rtfd.io/",
   "license": "Apache-2.0",
