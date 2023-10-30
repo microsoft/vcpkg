@@ -34,10 +34,12 @@ vcpkg_cmake_configure(
         -DCIMG_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenCV:BOOL=ON # only used for some examples
         -DOpenCV_FOUND:BOOL=FALSE # wrong find_package call with QUITE instead of QUIET
+    MAYBE_UNUSED_VARIABLES
+        OpenCV_FOUND
 )
 vcpkg_cmake_install()
-# Not going to deal with how jkqtplotter decided to name the xConfig.cmake dependent on shared/static builds
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake PACKAGE_NAME cmake)
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
 vcpkg_copy_pdbs()
 set(tools "")
