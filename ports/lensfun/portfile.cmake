@@ -31,24 +31,16 @@ vcpkg_cmake_configure(
         ${LENSFUN_EXTRA_OPTS}
         -DBUILD_STATIC=${LENSFUN_STATIC_LIB}
         -DBUILD_WITH_MSVC_STATIC_RUNTIME=${LENSFUN_STATIC_CRT}
-        -DSCN_TESTS=OFF
+        -BUILD_TESTS=OFF
         -DBUILD_DOC=OFF
         -DINSTALL_PYTHON_MODULE=ON
-        -DINSTALL_HELPER_SCRIPTS=ON
+        -DINSTALL_HELPER_SCRIPTS=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
-
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/g-lensfun-update-data" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/g-lensfun-update-data")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/lensfun-add-adapter" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lensfun-add-adapter")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/lensfun-update-data" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lensfun-update-data")
-
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/g-lensfun-update-data"
-    "${CURRENT_PACKAGES_DIR}/debug/bin/lensfun-add-adapter"
-    "${CURRENT_PACKAGES_DIR}/debug/bin/lensfun-update-data")
 
 if (LENSFUN_STATIC_LIB)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
