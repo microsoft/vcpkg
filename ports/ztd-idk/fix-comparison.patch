@@ -1,0 +1,21 @@
+diff --git a/include/ztd/idk/detail/span.implementation.hpp b/include/ztd/idk/detail/span.implementation.hpp
+index 093f62c..8ec8bf9 100644
+--- a/include/ztd/idk/detail/span.implementation.hpp
++++ b/include/ztd/idk/detail/span.implementation.hpp
+@@ -1466,6 +1466,7 @@ namespace nonstd {
+ 	using span_lite::with_container;
+ 
+ #if span_FEATURE(COMPARISON)
++#error  spanlite compararsion
+ #if span_FEATURE(SAME)
+ 	using span_lite::same;
+ #endif
+@@ -1476,6 +1477,8 @@ namespace nonstd {
+ 	using span_lite::operator<=;
+ 	using span_lite::operator>;
+ 	using span_lite::operator>=;
++#else
++#error fail notdefine compararsion
+ #endif
+ 
+ #if span_HAVE(BYTE)
