@@ -42,6 +42,18 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/g-lensfun-update-data" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/g-lensfun-update-data")
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/lensfun-add-adapter" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lensfun-add-adapter")
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/lensfun-update-data" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lensfun-update-data")
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/g-lensfun-update-data"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/lensfun-add-adapter"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/lensfun-update-data")
+
+if (LENSFUN_STATIC_LIB)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
