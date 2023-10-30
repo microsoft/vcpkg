@@ -9,6 +9,7 @@ vcpkg_from_github(
   HEAD_REF main
   PATCHES 
       fix-cmake-install.patch
+      fix-c32_state-alignment.patch
 )
 
 vcpkg_cmake_configure(

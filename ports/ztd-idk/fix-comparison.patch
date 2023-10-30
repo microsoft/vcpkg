@@ -1,21 +1,16 @@
 diff --git a/include/ztd/idk/detail/span.implementation.hpp b/include/ztd/idk/detail/span.implementation.hpp
-index 093f62c..8ec8bf9 100644
+index 5b6c2ec..001881c 100644
 --- a/include/ztd/idk/detail/span.implementation.hpp
 +++ b/include/ztd/idk/detail/span.implementation.hpp
-@@ -1466,6 +1466,7 @@ namespace nonstd {
- 	using span_lite::with_container;
- 
- #if span_FEATURE(COMPARISON)
-+#error  spanlite compararsion
- #if span_FEATURE(SAME)
- 	using span_lite::same;
- #endif
-@@ -1476,6 +1477,8 @@ namespace nonstd {
- 	using span_lite::operator<=;
- 	using span_lite::operator>;
- 	using span_lite::operator>=;
-+#else
-+#error fail notdefine compararsion
+@@ -211,10 +211,7 @@
+ #define span_HAVE_STD_SPAN 0
  #endif
  
- #if span_HAVE(BYTE)
+-#define span_USES_STD_SPAN                       \
+-	((span_CONFIG_SELECT_SPAN == span_SPAN_STD) \
+-	     || ((span_CONFIG_SELECT_SPAN == span_SPAN_DEFAULT) && span_HAVE_STD_SPAN))
+-
++#define span_USES_STD_SPAN ZTD_IS_ON(ZTD_STD_LIBRARY_SPAN)
+ //
+ // Use C++20 std::span:
+ //
