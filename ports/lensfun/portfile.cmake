@@ -51,9 +51,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-file(INSTALL "${SOURCE_PATH}/docs/gpl-3.0.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright)
-
-file(INSTALL "${SOURCE_PATH}/docs/lgpl-3.0.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/gpl-3.0.txt" "${SOURCE_PATH}/docs/lgpl-3.0.txt")
