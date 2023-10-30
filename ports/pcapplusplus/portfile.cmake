@@ -1,10 +1,13 @@
 # At the moment PcapPlusPlus doesn't support dynamic linkage on Windows
 set(VCPKG_LIBRARY_LINKAGE static)
 
+# Convert PcapPlusPlus to add leading zero 23.9 => 23.09
+string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" PCAPPLUSPLUS_VERSION "${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO seladb/PcapPlusPlus
-    REF "v${VERSION}"
+    REF "v${PCAPPLUSPLUS_VERSION}"
     SHA512 e7dc1dbd85c9f0d2f9c5d3e436456c2cd183fb508c869fa8fb83f46aac99b868a16283204e5d57a0bfd7587f6ac2582b3e14c6098683fad4501708c8fededd6a
     HEAD_REF master
 )
