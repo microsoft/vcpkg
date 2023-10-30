@@ -253,7 +253,7 @@
       "port-version": 0
     },
     "asio-grpc": {
-      "baseline": "2.6.0",
+      "baseline": "2.7.0",
       "port-version": 0
     },
     "asiosdk": {
@@ -2245,7 +2245,7 @@
       "port-version": 1
     },
     "dpp": {
-      "baseline": "10.0.26",
+      "baseline": "10.0.27",
       "port-version": 0
     },
     "draco": {
@@ -2418,7 +2418,7 @@
     },
     "enkits": {
       "baseline": "1.11",
-      "port-version": 0
+      "port-version": 1
     },
     "ensmallen": {
       "baseline": "2.19.1",
@@ -3338,7 +3338,7 @@
     },
     "icu": {
       "baseline": "73.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ideviceinstaller": {
       "baseline": "2023-07-21",
@@ -4421,8 +4421,8 @@
       "port-version": 13
     },
     "libmagic": {
-      "baseline": "5.40",
-      "port-version": 3
+      "baseline": "5.45",
+      "port-version": 0
     },
     "libmariadb": {
       "baseline": "3.3.1",
@@ -6081,7 +6081,7 @@
       "port-version": 5
     },
     "onednn": {
-      "baseline": "3.1.1",
+      "baseline": "3.3",
       "port-version": 0
     },
     "oniguruma": {
@@ -8265,7 +8265,7 @@
       "port-version": 5
     },
     "tgbot-cpp": {
-      "baseline": "1.6",
+      "baseline": "1.7.2",
       "port-version": 0
     },
     "tgc": {
@@ -9274,7 +9274,7 @@
     },
     "zstd": {
       "baseline": "1.5.5",
-      "port-version": 1
+      "port-version": 2
     },
     "zstr": {
       "baseline": "1.0.7",
