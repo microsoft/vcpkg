@@ -235,22 +235,15 @@ function(vcpkg_configure_make)
         cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
         cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
         cmake_path(CONVERT "$ENV{LOCALAPPDATA}" TO_CMAKE_PATH_LIST local_app_data NORMALIZE)
+        string(TOUPPER "${local_app_data}" local_app_data_upper)
         file(REAL_PATH "${system_root}" system_root)
         string(TOUPPER "${system_root}" system_root_upper)
 
         message(DEBUG "path_list:${path_list}") # Just to have --trace-expand output
 
         vcpkg_list(SET find_system_dirs 
-            "${system_root}/system32"
-            "${system_root}/System32"
-            "${system_root}/system32/"
-            "${system_root}/System32/"
-            "${system_root_upper}/system32"
-            "${system_root_upper}/System32"
-            "${system_root_upper}/system32/"
-            "${system_root_upper}/System32/"
-            "${local_app_data}/Microsoft/WindowsApps"
-            "${local_app_data}/Microsoft/WindowsApps/"
+            "${system_root_upper}/SYSTEM32"
+            "${local_app_data_upper}/MICROSOFT/WINDOWSAPPS"
         )
 
         string(TOUPPER "${find_system_dirs}" find_system_dirs_upper)
@@ -258,7 +251,8 @@ function(vcpkg_configure_make)
         set(index 0)
         set(appending TRUE)
         foreach(item IN LISTS path_list)
-            if(item IN_LIST find_system_dirs OR item IN_LIST find_system_dirs_upper)
+            string(TOUPPER "${item}" item_upper)
+            if(item_upper IN_LIST find_system_dirs_upper OR "${item_upper}/" IN_LIST find_system_dirs_upper)
                 set(appending FALSE)
                 break()
             endif()
