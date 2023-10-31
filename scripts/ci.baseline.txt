@@ -656,6 +656,7 @@ libvmdk:arm64=skip
 libvmdk:x64-linux=skip
 libvmdk:x64-osx=skip
 libvmdk:arm64-osx=skip
+libvpx:arm-neon-android=fail
 libwandio:arm-neon-android=fail
 libwandio:arm64-android=fail
 libwandio:x64-android=fail
