@@ -8,6 +8,7 @@ vcpkg_from_github(
         dependencies.diff
         msvc-runtime.diff
         no-suffix.diff
+        off_t.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_NON_SHARED)
