@@ -30,6 +30,7 @@ vcpkg_cmake_configure(
         -DINSTALL_HELPER_SCRIPTS=OFF
         -DBUILD_LENSTOOL=OFF
         -DBUILD_FOR_SSE=OFF
+        -DBUILD_FOR_SSE2=OFF
 )
 
 vcpkg_cmake_install()
