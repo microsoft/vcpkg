@@ -29,6 +29,7 @@ vcpkg_cmake_configure(
         -DINSTALL_PYTHON_MODULE=ON
         -DINSTALL_HELPER_SCRIPTS=OFF
         -DBUILD_LENSTOOL=OFF
+        -DBUILD_FOR_SSE=OFF
 )
 
 vcpkg_cmake_install()
