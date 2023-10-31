@@ -1,5 +1,6 @@
-# At the moment PcapPlusPlus doesn't support dynamic linkage on Windows
-set(VCPKG_LIBRARY_LINKAGE static)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 # Convert PcapPlusPlus to add leading zero 23.9 => 23.09
 string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" PCAPPLUSPLUS_VERSION "${VERSION}")
@@ -19,7 +20,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME PcapPlusPlus CONFIG_PATH lib/cmake/pcapplusplus)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/pcapplusplus)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
