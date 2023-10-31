@@ -1,7 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.5.3",
-  "port-version": 1,
+  "version": "6.6.0",
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -391,7 +390,10 @@
       "description": "Thread support; provides QThread and related classes."
     },
     "vulkan": {
-      "description": "Enable Vulkan support"
+      "description": "Enable Vulkan support",
+      "dependencies": [
+        "vulkan"
+      ]
     },
     "widgets": {
       "description": "Qt Widgets",

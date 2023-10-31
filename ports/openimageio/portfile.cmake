@@ -40,7 +40,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libheif     USE_LIBHEIF
         pybind11    USE_PYTHON
         tools       OIIO_BUILD_TOOLS
-        tools       USE_QT
+        viewer      ENABLE_IV
 )
 
 vcpkg_cmake_configure(
@@ -75,7 +75,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
-        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool iv
+        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool
+        AUTO_CLEAN
+    )
+endif()
+
+if("viewer" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES iv
         AUTO_CLEAN
     )
 endif()
