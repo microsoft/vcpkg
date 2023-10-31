@@ -131,13 +131,13 @@ index f251471..aff497c 100644
 +
 +include(CMakePackageConfigHelpers)
 +write_basic_package_version_file(
-+    "${CMAKE_CURRENT_BINARY_DIR}/LibClipboard/LibClipboardConfigVersion.cmake"
++    "${CMAKE_CURRENT_BINARY_DIR}/libclipboard/LibClipboardConfigVersion.cmake"
 +    VERSION 1.1
 +    COMPATIBILITY AnyNewerVersion
 +)
 +
 +export(EXPORT LibClipboardTargets
-+    FILE "${CMAKE_CURRENT_BINARY_DIR}/LibClipboard/LibClipboardTargets.cmake"
++    FILE "${CMAKE_CURRENT_BINARY_DIR}/libclipboard/LibClipboardTargets.cmake"
 +    NAMESPACE LibClipboard::
 +)
  
@@ -147,7 +147,7 @@ index f251471..aff497c 100644
 -    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
 -    IMMEDIATE @ONLY)
 +configure_file(cmake/LibClipboardConfig.cmake
-+	"${CMAKE_CURRENT_BINARY_DIR}/LibClipboard/LibClipboardConfig.cmake"
++	"${CMAKE_CURRENT_BINARY_DIR}/libclipboard/LibClipboardConfig.cmake"
 +    COPYONLY
 +)
 +
@@ -163,7 +163,7 @@ index f251471..aff497c 100644
 +install(
 +    FILES
 +        cmake/LibClipboardConfig.cmake
-+	"${CMAKE_CURRENT_BINARY_DIR}/LibClipboard/LibClipboardConfigVersion.cmake"
++	"${CMAKE_CURRENT_BINARY_DIR}/libclipboard/LibClipboardConfigVersion.cmake"
 +    DESTINATION
 +        ${ConfigPackageLocation}
 +    COMPONENT
@@ -179,7 +179,7 @@ index 0000000..9d48704
 --- /dev/null
 +++ b/cmake/LibClipboardConfig.cmake
 @@ -0,0 +1 @@
-+include("${CMAKE_CURRENT_LIST_DIR}/libclipboardTargets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/LibClipboardTargets.cmake")
 diff --git a/src/clipboard_cocoa.c b/src/clipboard_cocoa.m
 similarity index 100%
 rename from src/clipboard_cocoa.c
