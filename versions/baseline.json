@@ -25,8 +25,8 @@
       "port-version": 3
     },
     "ace": {
-      "baseline": "7.1.1",
-      "port-version": 2
+      "baseline": "7.1.2",
+      "port-version": 0
     },
     "acl": {
       "baseline": "2.3.1",
@@ -249,7 +249,7 @@
       "port-version": 0
     },
     "asio": {
-      "baseline": "1.28.1",
+      "baseline": "1.28.2",
       "port-version": 0
     },
     "asio-grpc": {
@@ -422,7 +422,7 @@
     },
     "azure-core-cpp": {
       "baseline": "1.10.3",
-      "port-version": 1
+      "port-version": 2
     },
     "azure-core-tracing-opentelemetry-cpp": {
       "baseline": "1.0.0-beta.4",
@@ -517,7 +517,7 @@
       "port-version": 1
     },
     "baresip-libre": {
-      "baseline": "3.4.0",
+      "baseline": "3.5.1",
       "port-version": 0
     },
     "basisu": {
@@ -1325,7 +1325,7 @@
       "port-version": 1
     },
     "brpc": {
-      "baseline": "1.6.0",
+      "baseline": "1.6.1",
       "port-version": 0
     },
     "brunocodutra-metal": {
@@ -2364,6 +2364,10 @@
       "baseline": "1.0.7.15",
       "port-version": 5
     },
+    "ed25519": {
+      "baseline": "2017-02-10",
+      "port-version": 0
+    },
     "edflib": {
       "baseline": "1.24",
       "port-version": 0
@@ -3166,7 +3170,7 @@
     },
     "gz-cmake3": {
       "baseline": "3.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "gz-common5": {
       "baseline": "5.4.1",
@@ -3184,8 +3188,16 @@
       "baseline": "9.5.0",
       "port-version": 0
     },
+    "gz-physics6": {
+      "baseline": "6.5.1",
+      "port-version": 0
+    },
     "gz-plugin2": {
       "baseline": "2.0.1",
+      "port-version": 0
+    },
+    "gz-rendering7": {
+      "baseline": "7.4.1",
       "port-version": 0
     },
     "gz-tools2": {
@@ -3657,7 +3669,7 @@
       "port-version": 6
     },
     "kaitai-struct-cpp-stl-runtime": {
-      "baseline": "0.10",
+      "baseline": "0.10.1",
       "port-version": 0
     },
     "kangaru": {
@@ -3806,7 +3818,7 @@
     },
     "kf5parts": {
       "baseline": "5.98.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5plotting": {
       "baseline": "5.98.0",
@@ -3814,7 +3826,7 @@
     },
     "kf5service": {
       "baseline": "5.98.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5solid": {
       "baseline": "5.98.0",
@@ -3825,6 +3837,10 @@
       "port-version": 0
     },
     "kf5syntaxhighlighting": {
+      "baseline": "5.98.0",
+      "port-version": 0
+    },
+    "kf5texteditor": {
       "baseline": "5.98.0",
       "port-version": 0
     },
@@ -3950,6 +3966,10 @@
     },
     "lemon-parser-generator": {
       "baseline": "3.39.3",
+      "port-version": 0
+    },
+    "lensfun": {
+      "baseline": "0.3.4",
       "port-version": 0
     },
     "leptonica": {
@@ -4144,6 +4164,10 @@
       "baseline": "0.6.0",
       "port-version": 3
     },
+    "libdwarf": {
+      "baseline": "0.8.0",
+      "port-version": 0
+    },
     "libe57": {
       "baseline": "1.1.332",
       "port-version": 4
@@ -4305,7 +4329,7 @@
       "port-version": 0
     },
     "libhv": {
-      "baseline": "1.3.1",
+      "baseline": "1.3.2",
       "port-version": 0
     },
     "libhydrogen": {
@@ -4645,7 +4669,7 @@
       "port-version": 2
     },
     "librdkafka": {
-      "baseline": "2.2.0",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "libredwg": {
@@ -4653,8 +4677,8 @@
       "port-version": 1
     },
     "libremidi": {
-      "baseline": "4.2.3",
-      "port-version": 2
+      "baseline": "4.2.4",
+      "port-version": 0
     },
     "libressl": {
       "baseline": "3.6.2",
@@ -4701,7 +4725,7 @@
       "port-version": 0
     },
     "libsigcpp": {
-      "baseline": "3.4.0",
+      "baseline": "3.6.0",
       "port-version": 0
     },
     "libsigcpp-3": {
@@ -5373,8 +5397,8 @@
       "port-version": 5
     },
     "matio": {
-      "baseline": "1.5.23",
-      "port-version": 3
+      "baseline": "1.5.24",
+      "port-version": 0
     },
     "matplotlib-cpp": {
       "baseline": "2020-08-27",
@@ -5473,7 +5497,7 @@
       "port-version": 6
     },
     "mimalloc": {
-      "baseline": "2.1.1",
+      "baseline": "2.1.2",
       "port-version": 0
     },
     "minc": {
@@ -5525,7 +5549,7 @@
       "port-version": 1
     },
     "minizip-ng": {
-      "baseline": "4.0.1",
+      "baseline": "4.0.2",
       "port-version": 0
     },
     "mio": {
@@ -5641,7 +5665,7 @@
       "port-version": 0
     },
     "mqtt-cpp": {
-      "baseline": "13.1.0",
+      "baseline": "13.2.1",
       "port-version": 0
     },
     "ms-angle": {
@@ -5845,7 +5869,7 @@
       "port-version": 4
     },
     "nghttp2": {
-      "baseline": "1.57.0",
+      "baseline": "1.58.0",
       "port-version": 0
     },
     "nghttp2-asio": {
@@ -6409,7 +6433,7 @@
       "port-version": 9
     },
     "pcapplusplus": {
-      "baseline": "22.11",
+      "baseline": "23.9",
       "port-version": 1
     },
     "pcg": {
@@ -7681,8 +7705,8 @@
       "port-version": 6
     },
     "sentencepiece": {
-      "baseline": "0.1.97",
-      "port-version": 2
+      "baseline": "0.1.99",
+      "port-version": 0
     },
     "sentry-native": {
       "baseline": "0.6.6",
