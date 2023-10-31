@@ -2437,7 +2437,7 @@
       "port-version": 8
     },
     "ereignis": {
-      "baseline": "1.1",
+      "baseline": "2.3",
       "port-version": 0
     },
     "esaxx": {
@@ -5157,7 +5157,7 @@
       "port-version": 0
     },
     "lockpp": {
-      "baseline": "1.0.2",
+      "baseline": "2.5",
       "port-version": 0
     },
     "lodepng": {
