@@ -83,6 +83,11 @@ declare_external_from_git(vulkan-tools
     REF "d55c7aaf041af331bee8c22fb448a6ff4c797f73"
     LICENSE_FILE LICENSE.txt
 )
+declare_external_from_git(wuffs
+    URL "https://skia.googlesource.com/external/github.com/google/wuffs-mirror-release-c.git"
+    REF "e3f919ccfe3ef542cfc983a82146070258fb57f8"
+    LICENSE_FILE LICENSE
+)
 
 declare_external_from_pkgconfig(expat)
 declare_external_from_pkgconfig(fontconfig PATH "third_party")
@@ -135,6 +140,7 @@ set(required_externals
     piex
     sfntly
     zlib
+    wuffs
 )
 
 if("fontconfig" IN_LIST FEATURES)
