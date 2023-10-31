@@ -9,6 +9,7 @@ vcpkg_from_github(
         uwp.patch
         core-opengl32.patch
         disable-dev-test.patch
+        support-x86-MSVC-build.patch
 )
 
 # these following aren't available in vcpkg
