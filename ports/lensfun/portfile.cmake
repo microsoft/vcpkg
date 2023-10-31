@@ -14,7 +14,6 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" LENSFUN_STATIC_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    tool    BUILD_LENSTOOL
     sse     BUILD_FOR_SSE
     sse2    BUILD_FOR_SSE2
 )
@@ -35,6 +34,7 @@ vcpkg_cmake_configure(
         -DBUILD_DOC=OFF
         -DINSTALL_PYTHON_MODULE=ON
         -DINSTALL_HELPER_SCRIPTS=OFF
+        -DBUILD_LENSTOOL=OFF
 )
 
 vcpkg_cmake_install()

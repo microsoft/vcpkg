@@ -22,12 +22,6 @@
     },
     "sse2": {
       "description": "Build with support for SSE2"
-    },
-    "tool": {
-      "description": "Build the lenstool",
-      "dependencies": [
-        "libpng"
-      ]
     }
   }
 }
