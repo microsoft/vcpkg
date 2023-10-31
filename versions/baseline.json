@@ -3810,7 +3810,7 @@
     },
     "kf5parts": {
       "baseline": "5.98.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5plotting": {
       "baseline": "5.98.0",
@@ -3818,7 +3818,7 @@
     },
     "kf5service": {
       "baseline": "5.98.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5solid": {
       "baseline": "5.98.0",
@@ -3829,6 +3829,10 @@
       "port-version": 0
     },
     "kf5syntaxhighlighting": {
+      "baseline": "5.98.0",
+      "port-version": 0
+    },
+    "kf5texteditor": {
       "baseline": "5.98.0",
       "port-version": 0
     },

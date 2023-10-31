@@ -1,9 +1,8 @@
 {
-  "name": "kf5service",
+  "name": "kf5texteditor",
   "version": "5.98.0",
-  "port-version": 1,
-  "description": "Plugin framework for desktop services",
-  "homepage": "https://api.kde.org/frameworks/kservice/html/index.html",
+  "description": "Full text editor component",
+  "homepage": "https://api.kde.org/frameworks/ktexteditor/html/",
   "dependencies": [
     "ecm",
     {
@@ -13,16 +12,15 @@
         "tools"
       ]
     },
+    "gettext-libintl",
+    "kf5archive",
     "kf5config",
-    "kf5coreaddons",
-    {
-      "name": "kf5dbusaddons",
-      "platform": "!android"
-    },
+    "kf5guiaddons",
     "kf5i18n",
-    "libiconv",
-    "qt5-base",
-    "qt5-tools",
+    "kf5kio",
+    "kf5parts",
+    "kf5sonnet",
+    "kf5syntaxhighlighting",
     {
       "name": "vcpkg-cmake",
       "host": true
