@@ -1,4 +1,4 @@
 The package libclipboard provides CMake targets:
 
-    find_package(LibClipboard CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE LibClipboard::clipboard)
+    find_package(unofficial-libclipboard CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::libclipboard::clipboard)
