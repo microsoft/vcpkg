@@ -1,8 +1,44 @@
+diff --git a/cmake/FindFreeImage.cmake b/cmake/FindFreeImage.cmake
+index 8a5836e..7f926cc 100644
+--- a/cmake/FindFreeImage.cmake
++++ b/cmake/FindFreeImage.cmake
+@@ -23,7 +23,17 @@ set(minor_version ${FreeImage_FIND_VERSION_MINOR})
+ # Set the full version number
+ set(full_version ${major_version}.${minor_version})
+ 
+-if (NOT WIN32)
++if(FreeImage_FOUND)
++  # done  
++elseif(1)
++  find_package(freeimage CONFIG)
++  if(freeimage_FOUND)
++    set(FreeImage_FOUND 1)
++    set(FreeImage_LIBRARIES freeimage::FreeImage)
++    include(GzImportTarget)
++    gz_import_target(FreeImage INTERFACE)
++  endif()
++elseif(0)
+   include(GzPkgConfig)
+   gz_pkg_config_library_entry(FreeImage freeimage)
+ 
+diff --git a/cmake/FindGTS.cmake b/cmake/FindGTS.cmake
+index b400483..77f1247 100644
+--- a/cmake/FindGTS.cmake
++++ b/cmake/FindGTS.cmake
+@@ -16,7 +16,7 @@
+ ########################################
+ # Find GNU Triangulation Surface Library
+ 
+-if (NOT WIN32)
++if (1)
+   # Configuration using pkg-config modules
+   include(GzPkgConfig)
+   gz_pkg_check_modules(GTS gts)
 diff --git a/cmake/FindGzBullet.cmake b/cmake/FindGzBullet.cmake
+index 798d239..e7ee87c 100644
 --- a/cmake/FindGzBullet.cmake
 +++ b/cmake/FindGzBullet.cmake
-@@ -30,16 +30,17 @@
- 
+@@ -31,7 +31,7 @@ endif()
  # Bullet. Force MODULE mode to use the FindBullet.cmake file distributed with
  # CMake. Otherwise, we may end up using the BulletConfig.cmake file distributed
  # with Bullet, which uses relative paths and may break transitive dependencies.
@@ -11,7 +47,7 @@ diff --git a/cmake/FindGzBullet.cmake b/cmake/FindGzBullet.cmake
  
  set(GzBullet_FOUND false)
  # create Bullet target
- if(BULLET_FOUND)
+@@ -39,6 +39,7 @@ if(BULLET_FOUND)
    set(GzBullet_FOUND true)
  
    gz_import_target(GzBullet
@@ -19,4 +55,56 @@ diff --git a/cmake/FindGzBullet.cmake b/cmake/FindGzBullet.cmake
      TARGET_NAME GzBullet::GzBullet
      LIB_VAR BULLET_LIBRARIES
      INCLUDE_VAR BULLET_INCLUDE_DIRS
-   )
+diff --git a/cmake/FindTINYXML2.cmake b/cmake/FindTINYXML2.cmake
+index 5a5a147..68ba2a3 100644
+--- a/cmake/FindTINYXML2.cmake
++++ b/cmake/FindTINYXML2.cmake
+@@ -18,11 +18,16 @@
+ 
+ include(GzPkgConfig)
+ 
+-# Use pkg_check_modules to start
+-gz_pkg_check_modules_quiet(TINYXML2 tinyxml2)
+ 
+ # If that failed, then fall back to manual detection (necessary for MacOS)
+ if(NOT TINYXML2_FOUND)
++  find_package(TINYXML2 NAMES tinyxml2)
++  if(TINYXML2_FOUND)
++    set(TINYXML2_LIBRARIES tinyxml2::tinyxml2)
++    include(GzImportTarget)
++    gz_import_target(TINYXML2 INTERFACE)
++  endif()
++elseif(0)
+ 
+   if(NOT TINYXML2_FIND_QUIETLY)
+     message(STATUS "Attempting manual search for tinyxml2")
+diff --git a/cmake/GzFindPackage.cmake b/cmake/GzFindPackage.cmake
+index 4eb7a0d..11dae8a 100644
+--- a/cmake/GzFindPackage.cmake
++++ b/cmake/GzFindPackage.cmake
+@@ -178,6 +178,7 @@ macro(gz_find_package PACKAGE_NAME_)
+     _gz_cmake_parse_arguments(gz_find_package "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+   endif()
+ 
++  include("${CMAKE_CURRENT_LIST_DIR}/vcpkg/${PACKAGE_NAME}.cmake" OPTIONAL)
+   #------------------------------------
+   # Construct the arguments to pass to find_package
+   set(${PACKAGE_NAME}_find_package_args ${PACKAGE_NAME})
+@@ -192,6 +193,8 @@ macro(gz_find_package PACKAGE_NAME_)
+ 
+   if(gz_find_package_EXACT)
+     list(APPEND ${PACKAGE_NAME}_find_package_args EXACT)
++  elseif(gz_find_package_VERSION AND NOT gz_find_package_PKGCONFIG_VER_COMPARISON)
++    set(gz_find_package_PKGCONFIG_VER_COMPARISON >=)
+   endif()
+ 
+   if(gz_find_package_CONFIG)
+@@ -388,7 +391,7 @@ macro(gz_find_package PACKAGE_NAME_)
+       # ${component}_CMAKE_DEPENDENCIES variables that are specific to those
+       # componenets
+       foreach(component ${gz_find_package_REQUIRED_BY})
+-        if(NOT ${component}_${PACKAGE_NAME}_PRIVATE)
++        if(NOT ${component}_${PACKAGE_NAME}_PRIVATE OR NOT BUILD_SHARED_LIBS)
+           gz_string_append(${component}_CMAKE_DEPENDENCIES "${${PACKAGE_NAME}_find_dependency}" DELIM "\n")
+         endif()
+       endforeach()
