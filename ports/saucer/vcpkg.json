@@ -6,8 +6,10 @@
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
+    "boost-callable-traits",
     "ereignis",
     "fmt",
+    "glaze",
     "lockpp",
     "nlohmann-json",
     {
@@ -30,8 +32,6 @@
     {
       "name": "wil",
       "platform": "windows"
-    },
-    "boost-callable-traits",
-    "glaze"
+    }
   ]
 }
