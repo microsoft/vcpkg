@@ -15,13 +15,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "sse": {
-      "description": "Build with support for SSE"
-    },
-    "sse2": {
-      "description": "Build with support for SSE2"
-    }
-  }
+  ]
 }
