@@ -3170,7 +3170,7 @@
     },
     "gz-cmake3": {
       "baseline": "3.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "gz-common5": {
       "baseline": "5.4.1",
@@ -3194,6 +3194,10 @@
     },
     "gz-plugin2": {
       "baseline": "2.0.1",
+      "port-version": 0
+    },
+    "gz-rendering7": {
+      "baseline": "7.4.1",
       "port-version": 0
     },
     "gz-tools2": {
