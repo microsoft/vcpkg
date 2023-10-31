@@ -1,12 +1,12 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-set(OpenMPI_FULL_VERSION "4.1.3")
+set(OpenMPI_FULL_VERSION "4.1.6")
 set(OpenMPI_SHORT_VERSION "4.1")
 
 vcpkg_download_distfile(ARCHIVE
   URLS "https://download.open-mpi.org/release/open-mpi/v${OpenMPI_SHORT_VERSION}/openmpi-${OpenMPI_FULL_VERSION}.tar.gz"
   FILENAME "openmpi-${OpenMPI_FULL_VERSION}.tar.gz"
-  SHA512 f7b177121863ef79df6106639d18a89c028442b1314340638273b12025c4dc2cf9b5316cb7e6ecca8b65a51ee40a306a6b0970d7cce727fbb269a14f89af3161
+  SHA512 6fb38cafa75021f12a9674a05056d25cc9bb5e6dd88f26fee73a89736fb741bbfb37efee31e07edb372f21583144ccc2c03cd7861e9055e87699a22740173e0b
 )
 
 vcpkg_extract_source_archive(
