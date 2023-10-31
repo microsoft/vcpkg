@@ -1,0 +1,5 @@
+A C++20 library that provides (opt-in) bit-wise operations for arbitrary `enum class`es.
+
+If you use flagpp in an application, an acknowledgement would be appreciated, but is not mandatory. If you make corrections or enhancements to flagpp , please forward them to the current maintainer for the benefit of other users.
+
+This software is provided AS IS with NO WARRANTY whatsoever.
