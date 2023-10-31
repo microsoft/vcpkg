@@ -10,6 +10,7 @@ vcpkg_from_github(
         0002-Fix-nasm-debug-format-flag.patch
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
+        0005-fix-arm64-build.patch # Upstream commit: https://github.com/webmproject/libvpx/commit/858a8c611f4c965078485860a6820e2135e6611b
 )
 
 vcpkg_find_acquire_program(PERL)
