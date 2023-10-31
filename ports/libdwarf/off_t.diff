@@ -12,5 +12,5 @@ index b37ae994..7fa89256 100644
  typedef long off_t;
 -#endif
  #endif /* _MSC_VER */
-
+ 
  #ifndef TRUE
