@@ -1,7 +1,6 @@
 {
   "name": "libremidi",
-  "version": "4.2.3",
-  "port-version": 2,
+  "version": "4.2.4",
   "description": "A modern C++ MIDI real-time & file I/O library",
   "homepage": "https://github.com/jcelerier/libremidi",
   "license": "BSD-2-Clause",
