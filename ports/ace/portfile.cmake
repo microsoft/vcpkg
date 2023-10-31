@@ -15,7 +15,7 @@ else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
         FILENAME "ACE-src-${VERSION}.tar.gz"
-        SHA512 a06cae5a5770d12f3bfbaabf54ed8c6400dc766abc530f37a7defb18a7c12a8d775d549014872e1e7c0fe18bd2d6f823e488b16a1f66cc84a41e7f8344a26601
+        SHA512 b08c8cf98b622248cfbf167ca91c8314284c84c4dcb1c48fedb9180be2bc354c1d647372eb046e75d426ac4f2ad0318a8dd9e3f233d36bc30f744d5f9e37c5ec
     )
 endif()
 
