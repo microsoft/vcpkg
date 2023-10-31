@@ -1,7 +1,6 @@
 {
   "name": "saucer",
-  "version": "1.0.1",
-  "port-version": 4,
+  "version": "2.0.0",
   "description": "Next-gen desktop apps with web-frontend in C++",
   "homepage": "https://saucer.github.io/",
   "license": "MIT",
@@ -31,6 +30,8 @@
     {
       "name": "wil",
       "platform": "windows"
-    }
+    },
+    "boost-callable-traits",
+    "glaze"
   ]
 }
