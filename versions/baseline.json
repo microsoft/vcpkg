@@ -4305,7 +4305,7 @@
       "port-version": 0
     },
     "libhv": {
-      "baseline": "1.3.1",
+      "baseline": "1.3.2",
       "port-version": 0
     },
     "libhydrogen": {
