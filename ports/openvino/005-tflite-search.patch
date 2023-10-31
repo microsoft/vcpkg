@@ -1,0 +1,12 @@
+diff --git a/src/frontends/common/src/manager.cpp b/src/frontends/common/src/manager.cpp
+index 2fa59398b1..fa917dadb1 100644
+--- a/src/frontends/common/src/manager.cpp
++++ b/src/frontends/common/src/manager.cpp
+@@ -49,6 +49,7 @@ public:
+             {"ir", "ir"},
+             {"onnx", "onnx"},
+             {"tf", "tensorflow"},
++            {"tflite", "tensorflow_lite"},
+             {"paddle", "paddle"},
+             {"pytorch", "pytorch"},
+         };

@@ -27,10 +27,22 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+set(prefix "${CURRENT_INSTALLED_DIR}")
+set(exec_prefix [[${prefix}]])
+set(libdir [[${prefix}/lib]])
+set(includedir [[${prefix}/include]])
+configure_file("${SOURCE_PATH}/matio.pc.in" "${SOURCE_PATH}/matio.pc" @ONLY)
+file(INSTALL "${SOURCE_PATH}/matio.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+if(NOT VCPKG_BUILD_TYPE)
+    set(includedir [[${prefix}/../include]])
+    file(INSTALL "${SOURCE_PATH}/matio.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+endif()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_tools(TOOL_NAMES matdump AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,16 @@
+diff --git a/include/boost/unordered/detail/foa/core.hpp b/include/boost/unordered/detail/foa/core.hpp
+index 239d05d3..7ae9f2c8 100644
+--- a/include/boost/unordered/detail/foa/core.hpp
++++ b/include/boost/unordered/detail/foa/core.hpp
+@@ -1870,9 +1870,10 @@ private:
+ 
+   void fast_copy_elements_from(const table_core& x)
+   {
+-    if(arrays.elements){
++    if(arrays.elements&&x.arrays.elements){
+       copy_elements_array_from(x);
+       copy_groups_array_from(x);
++      size_ctrl.ml=std::size_t(x.size_ctrl.ml);
+       size_ctrl.size=std::size_t(x.size_ctrl.size);
+     }
+   }

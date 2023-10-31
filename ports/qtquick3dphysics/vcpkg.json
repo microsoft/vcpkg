@@ -1,6 +1,6 @@
 {
   "name": "qtquick3dphysics",
-  "version": "6.5.1",
+  "version": "6.6.0",
   "description": "Physics engine integration for Qt Quick 3D",
   "homepage": "https://www.qt.io/",
   "license": null,

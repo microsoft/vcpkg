@@ -1,10 +1,9 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF n${VERSION}
-    SHA512 1b90c38b13149f2de7618ad419adc277afd5e65bbf52b849a7245aec0f92f73189c8547599dba8408b8828a767c1120f132727b57cd6231cd8b81de2471a4b8b
+    SHA512 da1b836c8f51cf69f95db750d5da5191a71d534fa7b0f019d6d6454f8dd6db5598789576b4fe5ad983dcd0197b9a7e8f9d43f10707b6d40ac31425da23da35b2
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -21,6 +20,7 @@ vcpkg_from_github(
         0015-Fix-xml2-detection.patch
         0020-fix-aarch64-libswscale.patch
         0022-fix-iconv.patch
+        0024-fix-gcc13-binutils.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -33,18 +33,9 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
     vcpkg_add_to_path("${NASM_EXE_PATH}")
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    #We're assuming that if we're building for Windows we're using MSVC
-    set(INCLUDE_VAR "INCLUDE")
-    set(LIB_PATH_VAR "LIB")
-else()
-    set(INCLUDE_VAR "CPATH")
-    set(LIB_PATH_VAR "LIBRARY_PATH")
-endif()
-
 set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect --disable-autodetect")
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_HOST_IS_WINDOWS)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake1.16)
     set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
     vcpkg_add_to_path("${MSYS_ROOT}/usr/share/automake-1.16")
@@ -93,8 +84,6 @@ string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -I \"${CURRENT_INSTALLED_DIR}/inclu
 string(APPEND VCPKG_COMBINED_C_FLAGS_RELEASE " -I \"${CURRENT_INSTALLED_DIR}/include\"")
 
 ## Setup vcpkg toolchain
-
-set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
 
 set(prog_env "")
 
@@ -154,10 +143,18 @@ if(VCPKG_DETECTED_CMAKE_AR)
     list(APPEND prog_env "${AR_path}")
 endif()
 
+if(VCPKG_DETECTED_CMAKE_RANLIB)
+    get_filename_component(RANLIB_path "${VCPKG_DETECTED_CMAKE_RANLIB}" DIRECTORY)
+    get_filename_component(RANLIB_filename "${VCPKG_DETECTED_CMAKE_RANLIB}" NAME)
+    set(ENV{RANLIB} "${RANLIB_filename}")
+    string(APPEND OPTIONS " --ranlib=${RANLIB_filename}")
+    list(APPEND prog_env "${RANLIB_path}")
+endif()
+
 list(REMOVE_DUPLICATES prog_env)
 vcpkg_add_to_path(PREPEND ${prog_env})
 
-# More? RANLIB OBJCC STRIP BIN2C
+# More? OBJCC STRIP BIN2C
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
@@ -566,8 +563,12 @@ message(STATUS "Building Options: ${OPTIONS}")
 
 # Release build
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    if (VCPKG_DETECTED_MSVC)
+        set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-ldflags=-libpath:\"${CURRENT_INSTALLED_DIR}/lib\"")
+    else()
+        set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-ldflags=-L\"${CURRENT_INSTALLED_DIR}/lib\"")
+    endif()
     message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
-    set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
     message(STATUS "Building ${PORT} for Release")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
@@ -603,8 +604,12 @@ endif()
 
 # Debug build
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if (VCPKG_DETECTED_MSVC)
+        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-ldflags=-libpath:\"${CURRENT_INSTALLED_DIR}/debug/lib\"")
+    else()
+        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-ldflags=-L\"${CURRENT_INSTALLED_DIR}/debug/lib\"")
+    endif()
     message(STATUS "Building Debug Options: ${OPTIONS_DEBUG}")
-    set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
     set(ENV{LDFLAGS} "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
     set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
     message(STATUS "Building ${PORT} for Debug")

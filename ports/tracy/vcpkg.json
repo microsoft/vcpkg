@@ -1,7 +1,6 @@
 {
   "name": "tracy",
-  "version-semver": "0.9.1",
-  "port-version": 1,
+  "version-semver": "0.10.0",
   "description": "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications.",
   "homepage": "https://github.com/wolfpld/tracy",
   "license": "BSD-3-Clause",
@@ -35,6 +34,10 @@
             "arm64",
             "x86"
           ]
+        },
+        {
+          "name": "tbb",
+          "platform": "!windows"
         }
       ]
     },
@@ -53,8 +56,16 @@
             "x86"
           ]
         },
+        {
+          "name": "dbus",
+          "platform": "!windows"
+        },
         "freetype",
-        "glfw3"
+        "glfw3",
+        {
+          "name": "tbb",
+          "platform": "!windows"
+        }
       ]
     },
     "on-demand": {

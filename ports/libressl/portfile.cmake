@@ -58,6 +58,8 @@ vcpkg_copy_pdbs()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
+vcpkg_fixup_pkgconfig()
+
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(GLOB_RECURSE LIBS "${CURRENT_PACKAGES_DIR}/*.lib")
     foreach(LIB ${LIBS})

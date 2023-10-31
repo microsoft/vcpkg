@@ -1,21 +1,14 @@
-cmake_minimum_required(VERSION 2.6)
-project(SMPEG2 CXX)
+cmake_minimum_required(VERSION 3.25)
+project(smpeg2 CXX)
 
-find_path(SDL_INCLUDE_DIR SDL2/SDL.h)
 find_package(SDL2 CONFIG REQUIRED)
-
-include_directories(${SDL_INCLUDE_DIR})
-include_directories(${SDL_INCLUDE_DIR}/SDL2)
-include_directories(${CMAKE_SOURCE_DIR})
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    # some c++ code just assumes memset is available
+    add_definitions(-FIstring.h)
 endif()
 add_definitions(-DNOCONTROLS -DTHREADED_AUDIO)
-
-# some c++ code just assumes memset is available
-file(WRITE ${CMAKE_SOURCE_DIR}/declare_memset.h "#include <string.h>\n")
-add_definitions(-FIdeclare_memset.h)
 
 add_library(smpeg2
     audio/bitwindow.cpp
@@ -45,21 +38,34 @@ add_library(smpeg2
     MPEGsystem.cpp
     smpeg.cpp)
 
-set_target_properties(smpeg2 PROPERTIES DEFINE_SYMBOL DLL_EXPORT)
-if(BUILD_SHARED_LIBS)
+if(WIN32 AND BUILD_SHARED_LIBS)
+    target_compile_definitions(smpeg2 PRIVATE -DDLL_EXPORT)
+endif()
+
+target_include_directories(smpeg2 PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+    $<INSTALL_INTERFACE:include>
+)
+
+
+if(TARGET SDL2::SDL2)
     target_link_libraries(smpeg2 SDL2::SDL2)
 else()
     target_link_libraries(smpeg2 SDL2::SDL2-static)
 endif()
 
 install(TARGETS smpeg2
+    EXPORT smpeg2-targets
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
 
+install(EXPORT smpeg2-targets
+    FILE unofficial-smpeg2-config.cmake
+    NAMESPACE unofficial::smpeg2::
+    DESTINATION share/unofficial-smpeg2
+)
+
 if(NOT DEFINED SMPEG_SKIP_HEADERS)
     install(FILES smpeg.h MPEGframe.h DESTINATION include)
 endif()
-
-message(STATUS "Link-time dependencies:")
-message(STATUS "  " ${SDL_LIBRARY})

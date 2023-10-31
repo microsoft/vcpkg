@@ -123,4 +123,9 @@ function(qt_build_submodule SOURCE_PATH)
         endif()
     endif()
 
+    # Remove duplicate flags from qmodule.pri issue -> https://github.com/microsoft/vcpkg/issues/28835
+    file(READ "${CURRENT_INSTALLED_DIR}/tools/qt5/mkspecs/qmodule.pri" QMODULE_PRI_CONTENT)
+    string(REGEX REPLACE "QMAKE_CXXFLAGS_RELEASE\\+=[^\n]*\n" "QMAKE_CXXFLAGS_RELEASE=\n" QMODULE_PRI_CONTENT ${QMODULE_PRI_CONTENT})
+    file(WRITE "${CURRENT_INSTALLED_DIR}/tools/qt5/mkspecs/qmodule.pri" "${QMODULE_PRI_CONTENT}")
+
 endfunction()

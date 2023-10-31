@@ -1,16 +1,11 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
   REF "v${VERSION}"
-  SHA512 2f6fb50c5bb506665950520347104f666fcc29c7df5d806ccdf8c682f10043a0ea3c57b889871812951c5a5101ea8cf318b42b16383e5e6223e8c70e8a55e127
+  SHA512 2039a4afa9e6ee7d01aba3287f27f43cb48baf55be98b5be06f0b54982f7e28c1032ec1dbd1f10d946554c3c93a93686e7b51aab0d92f731ad4dd7d7c62bed74
   HEAD_REF main
   PATCHES
-    0002-only-build-one-flavor.patch
-    0003-use-find-package.patch
-    0004-fix-dependency-in-config.patch
-    0005-do-not-install-cmake-modules.patch
+    0001-fix-dependencies.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)
@@ -18,14 +13,14 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ROCKSDB_BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-      "lz4"     WITH_LZ4
-      "snappy"  WITH_SNAPPY
-      "zlib"    WITH_ZLIB
-      "zstd"    WITH_ZSTD
-      "bzip2"   WITH_BZ2
-      "tbb"     WITH_TBB
-  INVERTED_FEATURES
-      "tbb"     CMAKE_DISABLE_FIND_PACKAGE_TBB
+    "liburing" WITH_LIBURING
+    "snappy" WITH_SNAPPY
+    "lz4" WITH_LZ4
+    "zlib" WITH_ZLIB
+    "zstd" WITH_ZSTD
+    "bzip2" WITH_BZ2
+    "numa" WITH_NUMA
+    "tbb" WITH_TBB
 )
 
 vcpkg_cmake_configure(
@@ -35,22 +30,19 @@ vcpkg_cmake_configure(
     -DWITH_TESTS=OFF
     -DWITH_BENCHMARK_TOOLS=OFF
     -DWITH_TOOLS=OFF
-    -DUSE_RTTI=1
+    -DUSE_RTTI=ON
     -DROCKSDB_INSTALL_ON_WINDOWS=ON
     -DFAIL_ON_WARNINGS=OFF
     -DWITH_MD_LIBRARY=${WITH_MD_LIBRARY}
-    -DPORTABLE=ON
-    -DCMAKE_DEBUG_POSTFIX=d
+    -DPORTABLE=1 # Minimum CPU arch to support, or 0 = current CPU, 1 = baseline CPU
     -DROCKSDB_BUILD_SHARED=${ROCKSDB_BUILD_SHARED}
-    -DCMAKE_DISABLE_FIND_PACKAGE_NUMA=TRUE
-    -DCMAKE_DISABLE_FIND_PACKAGE_gtest=TRUE
     -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
     ${FEATURE_OPTIONS}
-  MAYBE_UNUSED_VARIABLES
-    CMAKE_DISABLE_FIND_PACKAGE_NUMA
-    CMAKE_DISABLE_FIND_PACKAGE_gtest
-    CMAKE_DISABLE_FIND_PACKAGE_TBB
-    CMAKE_DEBUG_POSTFIX
+  OPTIONS_DEBUG
+    -DCMAKE_DEBUG_POSTFIX=d
+    -DWITH_RUNTIME_DEBUG=ON
+  OPTIONS_RELEASE
+    -DWITH_RUNTIME_DEBUG=OFF
 )
 
 vcpkg_cmake_install()

@@ -1,0 +1,4 @@
+The DXUT for Direct3D 11 package is compatible with built-in CMake targets:
+
+    find_package(dxut CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Microsoft::DXUTOpt Microsoft::DXUT)

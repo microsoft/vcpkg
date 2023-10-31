@@ -1,11 +1,11 @@
 {
   "name": "libmysql",
   "version": "8.0.32",
-  "port-version": 4,
+  "port-version": 6,
   "description": "A MySQL client library for C development",
   "homepage": "https://github.com/mysql/mysql-server",
   "license": "GPL-2.0-or-later",
-  "supports": "!(windows & x86) & !uwp",
+  "supports": "!(windows & x86) & !uwp & !xbox",
   "dependencies": [
     "boost-algorithm",
     "boost-functional",

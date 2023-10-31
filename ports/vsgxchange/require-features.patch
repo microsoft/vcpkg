@@ -1,0 +1,66 @@
+diff --git a/src/assimp/build_vars.cmake b/src/assimp/build_vars.cmake
+index 1e413fc..49d77d4 100644
+--- a/src/assimp/build_vars.cmake
++++ b/src/assimp/build_vars.cmake
+@@ -1,7 +1,6 @@
+ # add assimp if available
+-find_package(assimp 5.1 QUIET)
+-if(NOT assimp_FOUND)
+-find_package(assimp 5.0 QUIET)
++if (VSGXCHANGE_WITH_ASSIMP)
++find_package(assimp REQUIRED)
+ endif()
+ 
+ 
+diff --git a/src/curl/build_vars.cmake b/src/curl/build_vars.cmake
+index 015b68c..a4afc8a 100644
+--- a/src/curl/build_vars.cmake
++++ b/src/curl/build_vars.cmake
+@@ -1,5 +1,7 @@
+ # add CURL if available
+-find_package(CURL)
++if(VSGXCHANGE_WITH_CURL)
++find_package(CURL REQUIRED)
++endif()
+ 
+ if(CURL_FOUND)
+     OPTION(vsgXchange_curl "Optional CURL support provided" ON)
+diff --git a/src/freetype/build_vars.cmake b/src/freetype/build_vars.cmake
+index cb63a8b..327db9e 100644
+--- a/src/freetype/build_vars.cmake
++++ b/src/freetype/build_vars.cmake
+@@ -1,5 +1,7 @@
+ # add freetype if available
+-find_package(Freetype)
++if(VSGXCHANGE_WITH_FREETYPE)
++find_package(Freetype REQUIRED)
++endif()
+ 
+ if(FREETYPE_FOUND)
+     OPTION(vsgXchange_freetype "Freetype support provided" ON)
+diff --git a/src/gdal/build_vars.cmake b/src/gdal/build_vars.cmake
+index dd240b0..227c6b7 100644
+--- a/src/gdal/build_vars.cmake
++++ b/src/gdal/build_vars.cmake
+@@ -1,5 +1,7 @@
+ # add GDAL if available
+-find_package(GDAL QUIET)
++if(VSGXCHANGE_WITH_GDAL)
++find_package(GDAL REQUIRED)
++endif()
+ 
+ if(GDAL_FOUND)
+     OPTION(vsgXchange_GDAL "GDAL support provided" ON)
+diff --git a/src/openexr/build_vars.cmake b/src/openexr/build_vars.cmake
+index c4c880a..3ab27c8 100644
+--- a/src/openexr/build_vars.cmake
++++ b/src/openexr/build_vars.cmake
+@@ -1,5 +1,7 @@
+ # add openexr if available
+-find_package(OpenEXR QUIET)
++if(VSGXCHANGE_WITH_OPENEXR)
++find_package(OpenEXR REQUIRED)
++endif()
+ 
+ if(OpenEXR_FOUND)
+     OPTION(vsgXchange_openexr "Optional OpenEXR support provided" ON)

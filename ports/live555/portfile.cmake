@@ -1,9 +1,9 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://live555.com/liveMedia/public/live.2023.05.10.tar.gz"
-    FILENAME "live.2023.05.10.tar.gz"
-    SHA512 2997305d5b338466ba765c2969f7fab59907e6e4cabf5fa6d12b1c2b450f9dd543dc59936717352e9a3fc98d6a9bdf316d3a67fc690eebbf62482c21f21634ea
+    URLS "http://live555.com/liveMedia/public/live.2023.07.24.tar.gz"
+    FILENAME "live.2023.07.24.tar.gz"
+SHA512 d0708a087d9252b2f13d7b2e14c47e24e895ac329d5dd640a00756e92c846c57573198f6cc79e88272567babf5b0bb8cb268e750685efe8b9693fd9aec384e70 
 )
 
 vcpkg_extract_source_archive(
@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-RTSPClient.patch
+        fix_operator_overload.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

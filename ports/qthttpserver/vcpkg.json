@@ -1,6 +1,6 @@
 {
   "name": "qthttpserver",
-  "version": "6.5.1",
+  "version": "6.6.0",
   "description": "Qt Extension: Qt HTTP Server",
   "homepage": "https://www.qt.io/",
   "license": null,

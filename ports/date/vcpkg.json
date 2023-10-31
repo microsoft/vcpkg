@@ -1,9 +1,10 @@
 {
   "name": "date",
   "version": "3.0.1",
-  "port-version": 2,
+  "port-version": 5,
   "description": "A date and time library based on the C++17 <chrono> header",
   "homepage": "https://github.com/HowardHinnant/date",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -17,6 +18,7 @@
   "features": {
     "remote-api": {
       "description": "support automatic download of tz data",
+      "supports": "!uwp",
       "dependencies": [
         "curl"
       ]

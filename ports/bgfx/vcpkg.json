@@ -1,6 +1,6 @@
 {
   "name": "bgfx",
-  "version": "1.118.8417-415",
+  "version": "1.121.8534-453",
   "maintainers": "Sandy Carter <bwrsandman@users.noreply.github.com>",
   "description": "Cross-platform, graphics API agnostic, Bring Your Own Engine/Framework style rendering library.",
   "homepage": "https://bkaradzic.github.io/bgfx/overview.html",
@@ -20,15 +20,30 @@
     }
   ],
   "default-features": [
-    "multithreaded"
+    "platform-default-features"
   ],
   "features": {
     "multithreaded": {
-      "description": "Encode and render on different threads"
+      "description": "Encode and render on different threads",
+      "supports": "!emscripten"
+    },
+    "platform-default-features": {
+      "description": "Enables default features per platform",
+      "dependencies": [
+        {
+          "$comment": "bgfx does not support multithreading on emscripten",
+          "name": "bgfx",
+          "features": [
+            "multithreaded"
+          ],
+          "platform": "!emscripten"
+        }
+      ]
     },
     "tools": {
-      "$comment": "Use '\"host\": true' in dependencies of vcpkg.json to prevent cross compiling the tools.",
-      "description": "Shader, Texture and Geometry compilers for bgfx."
+      "$comment": "Use '\"host\": true' in dependencies of vcpkg.json in manifest mode.",
+      "description": "Shader, Texture and Geometry compilers for bgfx.",
+      "supports": "native"
     }
   }
 }

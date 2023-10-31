@@ -1,9 +1,9 @@
 {
   "name": "curl",
-  "version": "8.1.2",
+  "version": "8.4.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
-  "license": null,
+  "license": "curl AND ISC AND BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -198,6 +198,12 @@
       "description": "SSL support (wolfSSL)",
       "dependencies": [
         "wolfssl"
+      ]
+    },
+    "zstd": {
+      "description": "ZStandard support (zstd)",
+      "dependencies": [
+        "zstd"
       ]
     }
   }

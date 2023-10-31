@@ -1,7 +1,6 @@
 {
   "name": "rhash",
-  "version": "1.4.2",
-  "port-version": 1,
+  "version": "1.4.4",
   "description": "C library for computing a wide variety of hash sums",
   "homepage": "https://github.com/rhash/RHash",
   "license": "0BSD",

@@ -4,13 +4,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/glslang
     REF "${VERSION}"
-    SHA512 999ee0a4324263f6c12126b76bb098fc7009ea444be5cb052bd3fd7109589b52180acd8e7a90735ef7dc4be1e29aab5d98845e1aeae874b7d2ccc9279063ab50
+    SHA512 678df76a6f23b9da93f111fc7e6db57b7f6bf34661b077f9259a0a77d6c023b4d2e3c1cd60b3f9fc15fe69f25cdcb19877e88a50771d3d5275e32574eaefc056
     HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools ENABLE_GLSLANG_BINARIES
+        rtti ENABLE_RTTI
 )
 
 if (ENABLE_GLSLANG_BINARIES)
@@ -19,7 +20,7 @@ if (ENABLE_GLSLANG_BINARIES)
     vcpkg_add_to_path("${PYTHON_PATH}")
 endif ()
 
-if (WIN32)
+if (VCPKG_TARGET_IS_WINDOWS)
     set(PLATFORM_OPTIONS "-DOVERRIDE_MSVCCRT=OFF")
 endif ()
 
@@ -45,6 +46,9 @@ vcpkg_copy_pdbs()
 
 if (ENABLE_GLSLANG_BINARIES)
     vcpkg_copy_tools(TOOL_NAMES glslangValidator spirv-remap AUTO_CLEAN)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_copy_tools(TOOL_NAMES glslang AUTO_CLEAN)
+    endif()
 endif ()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

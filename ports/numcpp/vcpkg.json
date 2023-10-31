@@ -1,10 +1,11 @@
 {
   "name": "numcpp",
-  "version": "2.10.1",
+  "version": "2.11.0",
   "description": "C++ implementation of the Python Numpy library",
   "homepage": "https://dpilger26.github.io/NumCpp",
   "license": "MIT",
   "dependencies": [
+    "boost",
     "boost-algorithm",
     "boost-date-time",
     "boost-endian",

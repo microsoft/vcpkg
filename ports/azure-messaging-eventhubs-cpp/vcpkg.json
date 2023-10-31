@@ -1,0 +1,25 @@
+{
+  "name": "azure-messaging-eventhubs-cpp",
+  "version-semver": "1.0.0-beta.3",
+  "description": [
+    "Microsoft Azure Messaging Event Hubs SDK for C++",
+    "This library provides Azure Messaging Event Hubs SDK."
+  ],
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/eventhubs/azure-messaging-eventhubs",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "azure-core-amqp-cpp",
+      "default-features": false,
+      "version>=": "1.0.0-beta.2"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

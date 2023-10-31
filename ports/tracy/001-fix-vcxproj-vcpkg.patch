@@ -15,7 +15,7 @@ index 7be39025..ddb49fbc 100644
        <FloatingPointModel>Fast</FloatingPointModel>
      </ClCompile>
      <Link>
--      <AdditionalDependencies>brotlicommon-static.lib;brotlidec-static.lib;ws2_32.lib;freetyped.lib;glfw3.lib;libpng16d.lib;zlibd.lib;bz2d.lib;capstone.lib;%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies>brotlicommon.lib;brotlidec.lib;ws2_32.lib;freetyped.lib;glfw3.lib;libpng16d.lib;zlibd.lib;bz2d.lib;capstone.lib;%(AdditionalDependencies)</AdditionalDependencies>
 +      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <SubSystem>Windows</SubSystem>
 -      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\vcpkg_installed\$(VcpkgTriplet)\debug\lib</AdditionalLibraryDirectories>
@@ -35,7 +35,7 @@ index 7be39025..ddb49fbc 100644
      <Link>
        <EnableCOMDATFolding>true</EnableCOMDATFolding>
        <OptimizeReferences>true</OptimizeReferences>
--      <AdditionalDependencies>brotlicommon-static.lib;brotlidec-static.lib;ws2_32.lib;freetype.lib;glfw3.lib;libpng16.lib;zlib.lib;bz2.lib;capstone.lib;%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies>brotlicommon.lib;brotlidec.lib;ws2_32.lib;freetype.lib;glfw3.lib;libpng16.lib;zlib.lib;bz2.lib;capstone.lib;%(AdditionalDependencies)</AdditionalDependencies>
 +      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <SubSystem>Windows</SubSystem>
 -      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\vcpkg_installed\$(VcpkgTriplet)\lib</AdditionalLibraryDirectories>
