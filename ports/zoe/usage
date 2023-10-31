@@ -1,4 +1,0 @@
-zoe provides CMake targets:
-
-  find_package(zoe CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE zoe::zoe)
