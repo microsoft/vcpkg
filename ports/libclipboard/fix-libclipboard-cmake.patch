@@ -96,7 +96,7 @@ index f251471..aff497c 100644
 +# Not by default because my file system doesn't support symlinks
 +set_target_properties(clipboard PROPERTIES SOVERSION ${LIBCLIPBOARD_VERSION} VERSION ${LIBCLIPBOARD_VERSION})
 +target_include_directories(clipboard PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_BINARY_DIR}/include)
-+target_include_directories(clipboard INTERFACE $<INSTALL_INTERFACE:include/clipboard>)
++target_include_directories(clipboard INTERFACE $<INSTALL_INTERFACE:include>)
  
 -# Build sample executables
 -add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/samples)
@@ -131,13 +131,13 @@ index f251471..aff497c 100644
 +
 +include(CMakePackageConfigHelpers)
 +write_basic_package_version_file(
-+    "${CMAKE_CURRENT_BINARY_DIR}/libclipboard/LibClipboardConfigVersion.cmake"
++    "${CMAKE_CURRENT_BINARY_DIR}/libclipboard/libclipboard-config-version.cmake"
 +    VERSION 1.1
 +    COMPATIBILITY AnyNewerVersion
 +)
 +
 +export(EXPORT LibClipboardTargets
-+    FILE "${CMAKE_CURRENT_BINARY_DIR}/libclipboard/LibClipboardTargets.cmake"
++    FILE "${CMAKE_CURRENT_BINARY_DIR}/libclipboard/libclipboard-targets.cmake"
 +    NAMESPACE LibClipboard::
 +)
  
@@ -146,15 +146,15 @@ index f251471..aff497c 100644
 -    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
 -    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
 -    IMMEDIATE @ONLY)
-+configure_file(cmake/LibClipboardConfig.cmake
-+	"${CMAKE_CURRENT_BINARY_DIR}/libclipboard/LibClipboardConfig.cmake"
++configure_file(cmake/libclipboard-config.cmake
++	"${CMAKE_CURRENT_BINARY_DIR}/libclipboard/libclipboard-config.cmake"
 +    COPYONLY
 +)
 +
-+set(ConfigPackageLocation share/LibClipboard)
++set(ConfigPackageLocation share/libclipboard)
 +install(EXPORT LibClipboardTargets
 +    FILE
-+        LibClipboardTargets.cmake
++        libclipboard-targets.cmake
 +    NAMESPACE
 +        LibClipboard::
 +    DESTINATION
@@ -162,8 +162,8 @@ index f251471..aff497c 100644
 +)
 +install(
 +    FILES
-+        cmake/LibClipboardConfig.cmake
-+	"${CMAKE_CURRENT_BINARY_DIR}/libclipboard/LibClipboardConfigVersion.cmake"
++        cmake/libclipboard-config.cmake
++	"${CMAKE_CURRENT_BINARY_DIR}/libclipboard/libclipboard-config-version.cmake"
 +    DESTINATION
 +        ${ConfigPackageLocation}
 +    COMPONENT
@@ -173,13 +173,19 @@ index f251471..aff497c 100644
 -add_custom_target(uninstall
 -    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 \ No newline at end of file
-diff --git a/cmake/LibClipboardConfig.cmake b/cmake/LibClipboardConfig.cmake
+diff --git a/cmake/libclipboard-config.cmake b/cmake/libclipboard-config.cmake
 new file mode 100644
 index 0000000..9d48704
 --- /dev/null
-+++ b/cmake/LibClipboardConfig.cmake
-@@ -0,0 +1 @@
-+include("${CMAKE_CURRENT_LIST_DIR}/LibClipboardTargets.cmake")
++++ b/cmake/libclipboard-config.cmake
+@@ -0,0 +0,7 @@
++include(CMakeFindDependencyMacro)
++find_dependency(PkgConfig REQUIRED)
++if(UNIX AND NOT APPLE)
++pkg_check_modules(xcb REQUIRED IMPORTED_TARGET xcb)
++endif()
++find_dependency(Threads REQUIRED)
++include("${CMAKE_CURRENT_LIST_DIR}/libclipboard-targets.cmake")
 diff --git a/src/clipboard_cocoa.c b/src/clipboard_cocoa.m
 similarity index 100%
 rename from src/clipboard_cocoa.c
