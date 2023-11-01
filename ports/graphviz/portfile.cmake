@@ -19,7 +19,7 @@ vcpkg_from_gitlab(
 if(VCPKG_TARGET_IS_OSX)
     message("${PORT} currently requires the following libraries from the system package manager:\n    libtool\n\nThey can be installed with brew install libtool")
 elseif(VCPKG_TARGET_IS_LINUX)
-    message("${PORT} currently requires the following libraries from the system package manager:\n    libtool\n\nThey can be installed with apt-get install libtool")
+    message("${PORT} currently requires the following libraries from the system package manager:\n    libtool\n\nThey can be install with `apt-get install libtool` on Ubuntu systems or `dnf install libtool-ltdl-devel` on Fedora systems")
 endif()
 
 vcpkg_list(SET OPTIONS)
