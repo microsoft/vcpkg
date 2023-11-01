@@ -67,7 +67,7 @@ foreach(feature IN LISTS FEATURES)
 endforeach()
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils rest_internal rest_protobuf_internal dialogflow_cx dialogflow_es)
+foreach(suffix common compute_protos googleapis grpc_utils iam_v2 logging_type rest_internal rest_protobuf_internal dialogflow_cx dialogflow_es)
     set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()

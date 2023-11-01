@@ -1,0 +1,13 @@
+diff --git a/src/platform/utils.hpp b/src/platform/utils.hpp
+index ccc959e..d3e5d09 100644
+--- a/src/platform/utils.hpp
++++ b/src/platform/utils.hpp
+@@ -334,7 +334,7 @@ namespace detail {
+         return static_cast<unsigned long long>(t);
+     }
+     template<typename T>
+-    unsigned long long to_uintptr(T t) {
++    uintptr_t to_uintptr(T t) {
+         return static_cast<uintptr_t>(t);
+     }
+
