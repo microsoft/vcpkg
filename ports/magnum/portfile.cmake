@@ -14,43 +14,16 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_PLUGINS_STATIC)
 
-# Remove platform-specific feature that are not available
-# on current target platform from all features.
-
-# For documentation on VCPKG_CMAKE_SYSTEM_NAME see
-# https://github.com/microsoft/vcpkg/blob/master/docs/users/triplets.md#vcpkg_cmake_system_name
-
 set(ALL_SUPPORTED_FEATURES ${ALL_FEATURES})
-# Windows Desktop
-if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES wglcontext windowlesswglapplication)
-endif()
-
-# Universal Windows Platform
-if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
-    # No UWP specific features
-endif()
-
-# Mac OSX
-if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES cglcontext windowlesscglapplication)
-endif()
-
-# Linux
-if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES glxcontext windowlessglxapplication)
-endif()
-
-# WebAssembly / Linux
-if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" MATCHES "(Emscripten|Linux)")
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES eglcontext windowlesseglapplication)
-endif()
 
 # Head only features
 if(NOT VCPKG_USE_HEAD_VERSION)
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES anyshaderconverter shadertools shaderconverter
-        vk-info)
-    message(WARNING "Features anyshaderconverter, shadertools, shaderconverter and vk-info are not avaliable when building non-head version.")
+    foreach(_feature anyshaderconverter shadertools shaderconverter vk-info)
+        if("${_feature}" IN_LIST FEATURES)
+            message(FATAL_ERROR "Features anyshaderconverter, shadertools, shaderconverter and vk-info are not avaliable when building non-head version.")
+        endif()
+    endforeach()
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES anyshaderconverter shadertools shaderconverter vk-info)
 endif()
 
 set(_COMPONENTS "")
@@ -97,9 +70,7 @@ set(_TOOLS
     imageconverter
     sceneconverter)
 if(VCPKG_USE_HEAD_VERSION)
-list(APPEND _TOOLS
-    shaderconverter
-    vk-info)
+    list(APPEND _TOOLS shaderconverter vk-info)
 endif()
 foreach(_tool IN LISTS _TOOLS)
     if("${_tool}" IN_LIST FEATURES)
