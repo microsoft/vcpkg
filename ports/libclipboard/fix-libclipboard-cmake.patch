@@ -18,13 +18,14 @@ index f251471..aff497c 100644
  endif()
  
  if (NOT (LIBCLIPBOARD_BUILD_WIN32 OR LIBCLIPBOARD_BUILD_X11 OR LIBCLIPBOARD_BUILD_COCOA))
-@@ -57,24 +58,6 @@ if (CMAKE_COMPILER_IS_GNUCXX OR LIBCLIPBOARD_BUILD_COCOA)
+@@ -57,24 +58,9 @@ if (CMAKE_COMPILER_IS_GNUCXX OR LIBCLIPBOARD_BUILD_COCOA)
      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -g")
  endif()
  
 -# Dependencies
--if (LIBCLIPBOARD_BUILD_COCOA)
+ if (LIBCLIPBOARD_BUILD_COCOA)
 -    set_source_files_properties(src/clipboard_cocoa.c PROPERTIES COMPILE_FLAGS "-x objective-c")
++    set_source_files_properties(src/clipboard_cocoa.c PROPERTIES LANGUAGE OBJC)
 -    set(LIBCLIPBOARD_PRIVATE_LIBS ${LIBCLIPBOARD_PRIVATE_LIBS} "-framework Cocoa")
 -elseif(LIBCLIPBOARD_BUILD_X11)
 -    include(FindPkgConfig REQUIRED)
@@ -34,7 +35,7 @@ index f251471..aff497c 100644
 -    include_directories(${X11_INCLUDE_DIRS})
 -    link_directories(${X11_LIBRARY_DIRS})
 -    set(LIBCLIPBOARD_PRIVATE_LIBS ${LIBCLIPBOARD_PRIVATE_LIBS} ${X11_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
--endif()
+ endif()
 -
 -# Include directories
 -include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -62,8 +63,8 @@ index f251471..aff497c 100644
 -if (LIBCLIPBOARD_ADD_SOVERSION)
 -    # Not by default because my file system doesn't support symlinks
 -    set_target_properties(clipboard PROPERTIES SOVERSION ${LIBCLIPBOARD_VERSION} VERSION ${LIBCLIPBOARD_VERSION})
-+if(APPLE)
-+list(APPEND SOURCE src/clipboard_cocoa.m)
++if(LIBCLIPBOARD_BUILD_COCOA)
++list(APPEND SOURCE src/clipboard_cocoa.c)
  endif()
  
 -# Testing mode?
@@ -146,12 +147,12 @@ index f251471..aff497c 100644
 -    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
 -    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
 -    IMMEDIATE @ONLY)
-+configure_file(cmake/unofficial-libclipboard-config.cmake
++set(ConfigPackageLocation share/unofficial-libclipboard)
++configure_package_config_file(cmake/unofficial-libclipboard-config.cmake.in
 +	"${CMAKE_CURRENT_BINARY_DIR}/unofficial-libclipboard/unofficial-libclipboard-config.cmake"
-+    COPYONLY
++    INSTALL_DESTINATION ${ConfigPackageLocation}
 +)
 +
-+set(ConfigPackageLocation share/unofficial-libclipboard)
 +install(EXPORT LibClipboardTargets
 +    FILE
 +        unofficial-libclipboard-targets.cmake
@@ -162,7 +163,7 @@ index f251471..aff497c 100644
 +)
 +install(
 +    FILES
-+        cmake/unofficial-libclipboard-config.cmake
++   "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libclipboard/unofficial-libclipboard-config.cmake"
 +	"${CMAKE_CURRENT_BINARY_DIR}/unofficial-libclipboard/unofficial-libclipboard-config-version.cmake"
 +    DESTINATION
 +        ${ConfigPackageLocation}
@@ -173,20 +174,17 @@ index f251471..aff497c 100644
 -add_custom_target(uninstall
 -    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 \ No newline at end of file
-diff --git a/cmake/unofficial-libclipboard-config.cmake b/cmake/unofficial-libclipboard-config.cmake
+diff --git a/cmake/unofficial-libclipboard-config.cmake b/cmake/unofficial-libclipboard-config.cmake.in
 new file mode 100644
 index 0000000..9d48704
 --- /dev/null
-+++ b/cmake/unofficial-libclipboard-config.cmake
-@@ -0,0 +0,7 @@
++++ b/cmake/unofficial-libclipboard-config.cmake.in
+@@ -0,0 +0,8 @@
++@PACKAGE_INIT@
 +include(CMakeFindDependencyMacro)
 +find_dependency(PkgConfig REQUIRED)
-+if(UNIX AND NOT APPLE)
++if(@LIBCLIPBOARD_BUILD_X11@)
 +pkg_check_modules(xcb REQUIRED IMPORTED_TARGET xcb)
 +endif()
 +find_dependency(Threads REQUIRED)
 +include("${CMAKE_CURRENT_LIST_DIR}/unofficial-libclipboard-targets.cmake")
-diff --git a/src/clipboard_cocoa.c b/src/clipboard_cocoa.m
-similarity index 100%
-rename from src/clipboard_cocoa.c
-rename to src/clipboard_cocoa.m
