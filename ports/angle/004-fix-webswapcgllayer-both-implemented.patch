@@ -1,0 +1,53 @@
+diff --git a/src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h b/src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h
+index 7101cd271..707d899f7 100644
+--- a/src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h
++++ b/src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h
+@@ -18,7 +18,7 @@ struct __IOSurface;
+ typedef __IOSurface *IOSurfaceRef;
+ 
+ // WebKit's build process requires that every Objective-C class name has the prefix "Web".
+-@class WebSwapCGLLayer;
++@class SwapCGLLayer;
+ 
+ namespace rx
+ {
+@@ -89,7 +89,7 @@ class WindowSurfaceCGL : public SurfaceGL
+                                      gl::Framebuffer *framebuffer) override;
+ 
+   private:
+-    WebSwapCGLLayer *mSwapLayer;
++    SwapCGLLayer *mSwapLayer;
+     SharedSwapState mSwapState;
+     uint64_t mCurrentSwapId;
+ 
+diff --git a/src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm b/src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm
+index 27990e9c2..9c5e1934f 100644
+--- a/src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm
++++ b/src/libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm
+@@ -24,7 +24,7 @@
+ #    include "libANGLE/renderer/gl/StateManagerGL.h"
+ #    include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
+ 
+-@interface WebSwapCGLLayer : CAOpenGLLayer {
++@interface SwapCGLLayer : CAOpenGLLayer {
+     CGLContextObj mDisplayContext;
+ 
+     bool initialized;
+@@ -38,7 +38,7 @@
+             withFunctions:(const rx::FunctionsGL *)functions;
+ @end
+ 
+-@implementation WebSwapCGLLayer
++@implementation SwapCGLLayer
+ - (id)initWithSharedState:(rx::SharedSwapState *)swapState
+               withContext:(CGLContextObj)displayContext
+             withFunctions:(const rx::FunctionsGL *)functions
+@@ -220,7 +220,7 @@ egl::Error WindowSurfaceCGL::initialize(const egl::Display *display)
+     mSwapState.lastRendered   = &mSwapState.textures[1];
+     mSwapState.beingPresented = &mSwapState.textures[2];
+ 
+-    mSwapLayer = [[WebSwapCGLLayer alloc] initWithSharedState:&mSwapState
++    mSwapLayer = [[SwapCGLLayer alloc] initWithSharedState:&mSwapState
+                                                   withContext:mContext
+                                                 withFunctions:mFunctions];
+     [mLayer addSublayer:mSwapLayer];
