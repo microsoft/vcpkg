@@ -20,13 +20,13 @@ endif()
 if ("opengl" IN_LIST FEATURES)
     list(APPEND BUILD_OPTIONS -Dengines=gl_beta)
 endif()
+list(APPEND BUILD_OPTIONS -Dengines=sw)
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${BUILD_OPTIONS}
         # see ${SOURCE_PATH}/meson_options.txt
-        -Dengines=sw
         -Dloaders=all
         -Dsavers=tvg
         -Dvector=true
