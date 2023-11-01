@@ -18,7 +18,7 @@ index ccc959e..d3e5d09 100644
  
    if(CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF)
 -    set(CPPTRACE_STATIC_EXPORT_TARGETS cpptrace dwarf)
-+    set(CPPTRACE_STATIC_EXPORT_TARGETS cpptrace $<IF:$<TARGET_EXISTS:libdwarf::dwarf-static>,libdwarf::dwarf-static,libdwarf::dwarf-shared>)
++    set(CPPTRACE_STATIC_EXPORT_TARGETS cpptrace)
    else()
      set(CPPTRACE_STATIC_EXPORT_TARGETS cpptrace)
    endif()
