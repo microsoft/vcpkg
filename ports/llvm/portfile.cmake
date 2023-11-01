@@ -103,7 +103,7 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
     # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (CLANG_TOOLS_INSTALL_DIR=tools/llvm)
     # 2) Clang resource files should be relocated from lib/clang/<major_version> to ../tools/llvm/lib/clang/<major_version>
     string(REGEX MATCH "^[0-9]+" CLANG_VERSION_MAJOR ${VERSION})
-    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=../tools/llvm/lib/clang/${CLANG_VERSION_MAJOR})
+    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${CLANG_VERSION_MAJOR})
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
@@ -366,7 +366,11 @@ if(empty_dirs)
     endforeach()
 endif()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/lib")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/lib" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib")
+endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
