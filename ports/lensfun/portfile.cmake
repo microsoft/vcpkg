@@ -12,11 +12,6 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LENSFUN_STATIC_LIB)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" LENSFUN_STATIC_CRT)
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-    sse     BUILD_FOR_SSE
-    sse2    BUILD_FOR_SSE2
-)
 
 set(LENSFUN_EXTRA_OPTS "")
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -26,7 +21,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
         ${LENSFUN_EXTRA_OPTS}
         -DBUILD_STATIC=${LENSFUN_STATIC_LIB}
         -DBUILD_WITH_MSVC_STATIC_RUNTIME=${LENSFUN_STATIC_CRT}
@@ -35,6 +29,8 @@ vcpkg_cmake_configure(
         -DINSTALL_PYTHON_MODULE=ON
         -DINSTALL_HELPER_SCRIPTS=OFF
         -DBUILD_LENSTOOL=OFF
+        -DBUILD_FOR_SSE=OFF
+        -DBUILD_FOR_SSE2=OFF
 )
 
 vcpkg_cmake_install()
