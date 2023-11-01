@@ -12,4 +12,4 @@ vcpkg_cmake_install()
 
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
