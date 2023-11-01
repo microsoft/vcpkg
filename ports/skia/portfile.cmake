@@ -1,14 +1,15 @@
 include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 
-vcpkg_from_git(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://github.com/google/skia
-    REF f86f242886692a18f5adc1cf9cbd6740cd0870fd
+    REPO google/skia
+    REF "canvaskit/${VERSION}"
+    SHA512 4672cfef8c92f37418e27df30a4e3fd6f7ca6273521e9d6b7755d9285800ad1ea6eff66639a17f591e6921ec8b78aa828500399a83295f9984ab58ebaff0ec24
     PATCHES
-        disable-msvc-env-setup.patch
         uwp.patch
         core-opengl32.patch
         disable-dev-test.patch
+        support-x86-MSVC-build.patch
 )
 
 # these following aren't available in vcpkg
@@ -83,6 +84,11 @@ declare_external_from_git(vulkan-tools
     REF "d55c7aaf041af331bee8c22fb448a6ff4c797f73"
     LICENSE_FILE LICENSE.txt
 )
+declare_external_from_git(wuffs
+    URL "https://skia.googlesource.com/external/github.com/google/wuffs-mirror-release-c.git"
+    REF "e3f919ccfe3ef542cfc983a82146070258fb57f8"
+    LICENSE_FILE LICENSE
+)
 
 declare_external_from_pkgconfig(expat)
 declare_external_from_pkgconfig(fontconfig PATH "third_party")
@@ -135,6 +141,7 @@ set(required_externals
     piex
     sfntly
     zlib
+    wuffs
 )
 
 if("fontconfig" IN_LIST FEATURES)

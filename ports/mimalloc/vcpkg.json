@@ -1,6 +1,6 @@
 {
   "name": "mimalloc",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Compact general purpose allocator with excellent performance",
   "homepage": "https://github.com/microsoft/mimalloc",
   "license": "MIT",
