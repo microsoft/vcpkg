@@ -6604,6 +6604,10 @@
       "baseline": "0.7.0",
       "port-version": 5
     },
+    "pocketfft": {
+      "baseline": "2023-09-25",
+      "port-version": 0
+    },
     "poco": {
       "baseline": "1.12.4",
       "port-version": 4
