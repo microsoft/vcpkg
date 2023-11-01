@@ -1,7 +1,7 @@
 {
   "name": "openimageio",
   "version": "2.4.14.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
   "license": "BSD-3-Clause",
@@ -104,9 +104,18 @@
       ]
     },
     "tools": {
-      "description": "Build openimageio tools",
+      "description": "Build openimageio tools"
+    },
+    "viewer": {
+      "description": "Build openimageio viewer",
       "dependencies": [
         "opengl",
+        {
+          "name": "openimageio",
+          "features": [
+            "tools"
+          ]
+        },
         {
           "name": "qtbase",
           "default-features": false

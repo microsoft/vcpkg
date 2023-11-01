@@ -1,0 +1,746 @@
+diff --git a/cmake/developer_package/frontends/frontends.cmake b/cmake/developer_package/frontends/frontends.cmake
+index df3586474b..ed603ca765 100644
+--- a/cmake/developer_package/frontends/frontends.cmake
++++ b/cmake/developer_package/frontends/frontends.cmake
+@@ -125,19 +125,26 @@ macro(ov_add_frontend)
+     source_group("public include" FILES ${LIBRARY_PUBLIC_HEADERS})
+ 
+     # Generate protobuf file on build time for each '.proto' file in src/proto
+-    file(GLOB proto_files ${frontend_root_dir}/src/proto/*.proto)
++    set(protofiles_root_dir "${frontend_root_dir}/src/proto")
++    file(GLOB_RECURSE proto_files ${protofiles_root_dir}/*.proto)
+ 
+-    foreach(INFILE IN LISTS proto_files)
+-        get_filename_component(FILE_DIR ${INFILE} DIRECTORY)
+-        get_filename_component(FILE_WE ${INFILE} NAME_WE)
+-        set(OUTPUT_PB_SRC ${CMAKE_CURRENT_BINARY_DIR}/${FILE_WE}.pb.cc)
+-        set(OUTPUT_PB_HEADER ${CMAKE_CURRENT_BINARY_DIR}/${FILE_WE}.pb.h)
+-        set(GENERATED_PROTO ${INFILE})
++    foreach(proto_file IN LISTS proto_files)
++        # filter out standard google proto files
++        if(proto_file MATCHES ".*google.*")
++            continue()
++        endif()
++
++        file(RELATIVE_PATH proto_file_relative "${CMAKE_SOURCE_DIR}" "${proto_file}")
++        get_filename_component(FILE_WE ${proto_file} NAME_WE)
++        file(RELATIVE_PATH relative_path ${protofiles_root_dir} ${proto_file})
++        get_filename_component(relative_path ${relative_path} DIRECTORY)
++        set(OUTPUT_PB_SRC ${CMAKE_CURRENT_BINARY_DIR}/${relative_path}/${FILE_WE}.pb.cc)
++        set(OUTPUT_PB_HEADER ${CMAKE_CURRENT_BINARY_DIR}/${relative_path}/${FILE_WE}.pb.h)
+         add_custom_command(
+                 OUTPUT "${OUTPUT_PB_SRC}" "${OUTPUT_PB_HEADER}"
+-                COMMAND ${PROTOC_EXECUTABLE} ARGS --cpp_out ${CMAKE_CURRENT_BINARY_DIR} -I ${FILE_DIR} ${FILE_WE}.proto
+-                DEPENDS ${PROTOC_DEPENDENCY} ${GENERATED_PROTO}
+-                COMMENT "Running C++ protocol buffer compiler (${PROTOC_EXECUTABLE}) on ${GENERATED_PROTO}"
++                COMMAND ${PROTOC_EXECUTABLE} ARGS --cpp_out ${CMAKE_CURRENT_BINARY_DIR} -I ${protofiles_root_dir} ${proto_file}
++                DEPENDS ${PROTOC_DEPENDENCY} ${proto_file}
++                COMMENT "Running C++ protocol buffer compiler (${PROTOC_EXECUTABLE}) on ${proto_file_relative}"
+                 VERBATIM
+                 COMMAND_EXPAND_LISTS)
+         list(APPEND PROTO_SRCS "${OUTPUT_PB_SRC}")
+diff --git a/src/frontends/tensorflow/src/checkpoint_v1_reader.cpp b/src/frontends/tensorflow/src/checkpoint_v1_reader.cpp
+index b51b8c91b3..f8a85bf4f5 100644
+--- a/src/frontends/tensorflow/src/checkpoint_v1_reader.cpp
++++ b/src/frontends/tensorflow/src/checkpoint_v1_reader.cpp
+@@ -7,7 +7,7 @@
+ #include "checkpoint_utils.hpp"
+ #include "openvino/frontend/exception.hpp"
+ #include "openvino/util/file_util.hpp"
+-#include "saved_tensor_slice.pb.h"
++#include "ov_tensorflow/saved_tensor_slice.pb.h"
+ #include "tf_utils.hpp"
+ 
+ #ifdef ENABLE_SNAPPY_COMPRESSION
+diff --git a/src/frontends/tensorflow/src/checkpoint_v1_reader.hpp b/src/frontends/tensorflow/src/checkpoint_v1_reader.hpp
+index bfae3b139a..1171fd6a68 100644
+--- a/src/frontends/tensorflow/src/checkpoint_v1_reader.hpp
++++ b/src/frontends/tensorflow/src/checkpoint_v1_reader.hpp
+@@ -12,9 +12,9 @@
+ #include "checkpoint_utils.hpp"
+ #include "openvino/core/any.hpp"
+ #include "openvino/frontend/exception.hpp"
+-#include "saved_tensor_slice.pb.h"
+-#include "tensor_shape.pb.h"
+-#include "types.pb.h"
++#include "ov_tensorflow/saved_tensor_slice.pb.h"
++#include "ov_tensorflow/tensor_shape.pb.h"
++#include "ov_tensorflow/types.pb.h"
+ 
+ namespace ov {
+ namespace frontend {
+diff --git a/src/frontends/tensorflow/src/decoder_argdef.cpp b/src/frontends/tensorflow/src/decoder_argdef.cpp
+index 3430bcbe5e..ce7fc44a91 100644
+--- a/src/frontends/tensorflow/src/decoder_argdef.cpp
++++ b/src/frontends/tensorflow/src/decoder_argdef.cpp
+@@ -5,11 +5,11 @@
+ #include "decoder_argdef.hpp"
+ 
+ #include "decoder_proto.hpp"
+-#include "op_def.pb.h"
++#include "ov_tensorflow/op_def.pb.h"
+ #include "openvino/frontend/tensorflow/node_context.hpp"
+ #include "openvino/frontend/tensorflow/special_types.hpp"
+ #include "tf_utils.hpp"
+-#include "types.pb.h"
++#include "ov_tensorflow/types.pb.h"
+ 
+ namespace ov {
+ namespace frontend {
+diff --git a/src/frontends/tensorflow/src/decoder_proto.cpp b/src/frontends/tensorflow/src/decoder_proto.cpp
+index 2488973c10..cf6049cdbc 100644
+--- a/src/frontends/tensorflow/src/decoder_proto.cpp
++++ b/src/frontends/tensorflow/src/decoder_proto.cpp
+@@ -4,12 +4,12 @@
+ 
+ #include "decoder_proto.hpp"
+ 
+-#include "attr_value.pb.h"
+-#include "node_def.pb.h"
++#include "ov_tensorflow/attr_value.pb.h"
++#include "ov_tensorflow/node_def.pb.h"
+ #include "openvino/frontend/tensorflow/node_context.hpp"
+ #include "openvino/frontend/tensorflow/special_types.hpp"
+ #include "tf_utils.hpp"
+-#include "types.pb.h"
++#include "ov_tensorflow/types.pb.h"
+ 
+ namespace ov {
+ namespace frontend {
+diff --git a/src/frontends/tensorflow/src/decoder_proto.hpp b/src/frontends/tensorflow/src/decoder_proto.hpp
+index 338bfdecce..9d22e273e1 100644
+--- a/src/frontends/tensorflow/src/decoder_proto.hpp
++++ b/src/frontends/tensorflow/src/decoder_proto.hpp
+@@ -9,7 +9,7 @@
+ 
+ #include "openvino/core/type/element_type.hpp"
+ #include "openvino/frontend/tensorflow/decoder.hpp"
+-#include "types.pb.h"
++#include "ov_tensorflow/types.pb.h"
+ 
+ namespace tensorflow {
+ class GraphDef;
+diff --git a/src/frontends/tensorflow/src/graph_iterator_meta.cpp b/src/frontends/tensorflow/src/graph_iterator_meta.cpp
+index 8bc41fbaef..06f2d31f38 100644
+--- a/src/frontends/tensorflow/src/graph_iterator_meta.cpp
++++ b/src/frontends/tensorflow/src/graph_iterator_meta.cpp
+@@ -10,8 +10,8 @@
+ #include <string>
+ 
+ #include "openvino/core/type/element_type.hpp"
+-#include "tensor_bundle.pb.h"
+-#include "trackable_object_graph.pb.h"
++#include "ov_tensorflow/tensor_bundle.pb.h"
++#include "ov_tensorflow/trackable_object_graph.pb.h"
+ 
+ namespace ov {
+ namespace frontend {
+diff --git a/src/frontends/tensorflow/src/graph_iterator_proto.hpp b/src/frontends/tensorflow/src/graph_iterator_proto.hpp
+index 8b073b0837..85d9a3767a 100644
+--- a/src/frontends/tensorflow/src/graph_iterator_proto.hpp
++++ b/src/frontends/tensorflow/src/graph_iterator_proto.hpp
+@@ -10,7 +10,7 @@
+ #include "checkpoint_v1_reader.hpp"
+ #include "decoder_argdef.hpp"
+ #include "decoder_proto.hpp"
+-#include "graph.pb.h"
++#include "ov_tensorflow/graph.pb.h"
+ #include "openvino/frontend/exception.hpp"
+ #include "openvino/frontend/graph_iterator.hpp"
+ #include "openvino/frontend/tensorflow/decoder.hpp"
+diff --git a/src/frontends/tensorflow/src/graph_iterator_saved_model.cpp b/src/frontends/tensorflow/src/graph_iterator_saved_model.cpp
+index ece0148d19..803e7d694b 100644
+--- a/src/frontends/tensorflow/src/graph_iterator_saved_model.cpp
++++ b/src/frontends/tensorflow/src/graph_iterator_saved_model.cpp
+@@ -10,8 +10,8 @@
+ #include <string>
+ 
+ #include "openvino/core/type/element_type.hpp"
+-#include "tensor_bundle.pb.h"
+-#include "trackable_object_graph.pb.h"
++#include "ov_tensorflow/tensor_bundle.pb.h"
++#include "ov_tensorflow/trackable_object_graph.pb.h"
+ 
+ namespace ov {
+ namespace frontend {
+diff --git a/src/frontends/tensorflow/src/graph_iterator_saved_model.hpp b/src/frontends/tensorflow/src/graph_iterator_saved_model.hpp
+index 511f2a0a5b..4cb385e66f 100644
+--- a/src/frontends/tensorflow/src/graph_iterator_saved_model.hpp
++++ b/src/frontends/tensorflow/src/graph_iterator_saved_model.hpp
+@@ -8,7 +8,7 @@
+ 
+ #include "graph_iterator_proto.hpp"
+ #include "openvino/util/file_util.hpp"
+-#include "saved_model.pb.h"
++#include "ov_tensorflow/saved_model.pb.h"
+ #include "variables_index.hpp"
+ 
+ namespace ov {
+diff --git a/src/frontends/tensorflow/src/op/var_handle.cpp b/src/frontends/tensorflow/src/op/var_handle.cpp
+index 50a5b73c44..0c86041440 100644
+--- a/src/frontends/tensorflow/src/op/var_handle.cpp
++++ b/src/frontends/tensorflow/src/op/var_handle.cpp
+@@ -10,7 +10,7 @@
+ #include "ngraph/runtime/shared_buffer.hpp"
+ #include "openvino/opsets/opset8.hpp"
+ #include "openvino/util/mmap_object.hpp"
+-#include "tensor_bundle.pb.h"
++#include "ov_tensorflow/tensor_bundle.pb.h"
+ 
+ using namespace std;
+ using namespace ov::opset8;
+diff --git a/src/frontends/tensorflow/src/proto/any.proto b/src/frontends/tensorflow/src/proto/google/protobuf/any.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/any.proto
+rename to src/frontends/tensorflow/src/proto/google/protobuf/any.proto
+diff --git a/src/frontends/tensorflow/src/proto/wrappers.proto b/src/frontends/tensorflow/src/proto/google/protobuf/wrappers.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/wrappers.proto
+rename to src/frontends/tensorflow/src/proto/google/protobuf/wrappers.proto
+diff --git a/src/frontends/tensorflow/src/proto/allocation_description.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/allocation_description.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/allocation_description.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/allocation_description.proto
+diff --git a/src/frontends/tensorflow/src/proto/api_def.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/api_def.proto
+similarity index 99%
+rename from src/frontends/tensorflow/src/proto/api_def.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/api_def.proto
+index 810aabc5a2..cbb581973d 100644
+--- a/src/frontends/tensorflow/src/proto/api_def.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/api_def.proto
+@@ -21,7 +21,7 @@ option java_outer_classname = "ApiDefProtos";
+ option java_multiple_files = true;
+ option java_package = "org.tensorflow.framework";
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/framework/api_def_go_proto";
+-import "attr_value.proto";
++import "ov_tensorflow/attr_value.proto";
+ 
+ // Used to specify and override the default API & behavior in the
+ // generated code for client languages, from what you would get from
+diff --git a/src/frontends/tensorflow/src/proto/attr_value.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/attr_value.proto
+similarity index 96%
+rename from src/frontends/tensorflow/src/proto/attr_value.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/attr_value.proto
+index 3028176c02..b903c30cf9 100644
+--- a/src/frontends/tensorflow/src/proto/attr_value.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/attr_value.proto
+@@ -14,9 +14,9 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "tensor.proto";
+-import "tensor_shape.proto";
+-import "types.proto";
++import "ov_tensorflow/tensor.proto";
++import "ov_tensorflow/tensor_shape.proto";
++import "ov_tensorflow/types.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "AttrValueProtos";
+diff --git a/src/frontends/tensorflow/src/proto/cost_graph.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/cost_graph.proto
+similarity index 97%
+rename from src/frontends/tensorflow/src/proto/cost_graph.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/cost_graph.proto
+index dad93a029b..8e4d9788f4 100644
+--- a/src/frontends/tensorflow/src/proto/cost_graph.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/cost_graph.proto
+@@ -14,8 +14,8 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "tensor_shape.proto";
+-import "types.proto";
++import "ov_tensorflow/tensor_shape.proto";
++import "ov_tensorflow/types.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "CostGraphProtos";
+diff --git a/src/frontends/tensorflow/src/proto/dataset_options.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/dataset_options.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/dataset_options.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/dataset_options.proto
+diff --git a/src/frontends/tensorflow/src/proto/device_attributes.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/device_attributes.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/device_attributes.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/device_attributes.proto
+diff --git a/src/frontends/tensorflow/src/proto/function.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/function.proto
+similarity index 98%
+rename from src/frontends/tensorflow/src/proto/function.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/function.proto
+index 65a2acb3b9..9e84731c98 100644
+--- a/src/frontends/tensorflow/src/proto/function.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/function.proto
+@@ -14,9 +14,9 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "attr_value.proto";
+-import "node_def.proto";
+-import "op_def.proto";
++import "ov_tensorflow/attr_value.proto";
++import "ov_tensorflow/node_def.proto";
++import "ov_tensorflow/op_def.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "FunctionProtos";
+diff --git a/src/frontends/tensorflow/src/proto/graph.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/graph.proto
+similarity index 95%
+rename from src/frontends/tensorflow/src/proto/graph.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/graph.proto
+index c52e84022f..e047abeafe 100644
+--- a/src/frontends/tensorflow/src/proto/graph.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/graph.proto
+@@ -14,9 +14,9 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "function.proto";
+-import "node_def.proto";
+-import "versions.proto";
++import "ov_tensorflow/function.proto";
++import "ov_tensorflow/node_def.proto";
++import "ov_tensorflow/versions.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "GraphProtos";
+diff --git a/src/frontends/tensorflow/src/proto/graph_transfer_info.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/graph_transfer_info.proto
+similarity index 98%
+rename from src/frontends/tensorflow/src/proto/graph_transfer_info.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/graph_transfer_info.proto
+index e42c135369..9e7d598e34 100644
+--- a/src/frontends/tensorflow/src/proto/graph_transfer_info.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/graph_transfer_info.proto
+@@ -14,7 +14,7 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "types.proto";
++import "ov_tensorflow/types.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "GraphTransferInfoProto";
+diff --git a/src/frontends/tensorflow/src/proto/kernel_def.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/kernel_def.proto
+similarity index 98%
+rename from src/frontends/tensorflow/src/proto/kernel_def.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/kernel_def.proto
+index 5e6b839d31..88142d3de9 100644
+--- a/src/frontends/tensorflow/src/proto/kernel_def.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/kernel_def.proto
+@@ -14,7 +14,7 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "attr_value.proto";
++import "ov_tensorflow/attr_value.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "KernelDefProtos";
+diff --git a/src/frontends/tensorflow/src/proto/log_memory.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/log_memory.proto
+similarity index 98%
+rename from src/frontends/tensorflow/src/proto/log_memory.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/log_memory.proto
+index 96dac4c9ca..62489f0e0b 100644
+--- a/src/frontends/tensorflow/src/proto/log_memory.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/log_memory.proto
+@@ -14,7 +14,7 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "tensor_description.proto";
++import "ov_tensorflow/tensor_description.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "LogMemoryProtos";
+diff --git a/src/frontends/tensorflow/src/proto/meta_graph.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/meta_graph.proto
+similarity index 97%
+rename from src/frontends/tensorflow/src/proto/meta_graph.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/meta_graph.proto
+index b6918fa853..255fb6efeb 100644
+--- a/src/frontends/tensorflow/src/proto/meta_graph.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/meta_graph.proto
+@@ -14,14 +14,14 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "any.proto";
+-import "graph.proto";
+-import "op_def.proto";
+-import "tensor_shape.proto";
+-import "types.proto";
+-import "saved_object_graph.proto";
+-import "saver.proto";
+-import "struct.proto";
++import "google/protobuf/any.proto";
++import "ov_tensorflow/graph.proto";
++import "ov_tensorflow/op_def.proto";
++import "ov_tensorflow/tensor_shape.proto";
++import "ov_tensorflow/types.proto";
++import "ov_tensorflow/saved_object_graph.proto";
++import "ov_tensorflow/saver.proto";
++import "ov_tensorflow/struct.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "MetaGraphProtos";
+diff --git a/src/frontends/tensorflow/src/proto/model.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/model.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/model.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/model.proto
+diff --git a/src/frontends/tensorflow/src/proto/node_def.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/node_def.proto
+similarity index 99%
+rename from src/frontends/tensorflow/src/proto/node_def.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/node_def.proto
+index 573d0f901d..b8f3a017a3 100644
+--- a/src/frontends/tensorflow/src/proto/node_def.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/node_def.proto
+@@ -14,7 +14,7 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "attr_value.proto";
++import "ov_tensorflow/attr_value.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "NodeProto";
+diff --git a/src/frontends/tensorflow/src/proto/op_def.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/op_def.proto
+similarity index 98%
+rename from src/frontends/tensorflow/src/proto/op_def.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/op_def.proto
+index 4d5c66c39e..31493fed26 100644
+--- a/src/frontends/tensorflow/src/proto/op_def.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/op_def.proto
+@@ -18,9 +18,10 @@ option java_outer_classname = "OpDefProtos";
+ option java_multiple_files = true;
+ option java_package = "org.tensorflow.framework";
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/framework/op_def_go_proto";
+-import "attr_value.proto";
+-import "types.proto";
+-import "resource_handle.proto";
++
++import "ov_tensorflow/attr_value.proto";
++import "ov_tensorflow/types.proto";
++import "ov_tensorflow/resource_handle.proto";
+ 
+ // Defines an operation. A NodeDef in a GraphDef specifies an Op by
+ // using the "op" field which should match the name of a OpDef.
+diff --git a/src/frontends/tensorflow/src/proto/reader_base.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/reader_base.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/reader_base.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/reader_base.proto
+diff --git a/src/frontends/tensorflow/src/proto/remote_fused_graph_execute_info.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/remote_fused_graph_execute_info.proto
+similarity index 94%
+rename from src/frontends/tensorflow/src/proto/remote_fused_graph_execute_info.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/remote_fused_graph_execute_info.proto
+index abfcfdbec0..3b17878e12 100644
+--- a/src/frontends/tensorflow/src/proto/remote_fused_graph_execute_info.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/remote_fused_graph_execute_info.proto
+@@ -14,9 +14,9 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "graph.proto";
+-import "tensor_shape.proto";
+-import "types.proto";
++import "ov_tensorflow/graph.proto";
++import "ov_tensorflow/tensor_shape.proto";
++import "ov_tensorflow/types.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "RemoteFusedGraphExecuteInfoProto";
+diff --git a/src/frontends/tensorflow/src/proto/resource_handle.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/resource_handle.proto
+similarity index 96%
+rename from src/frontends/tensorflow/src/proto/resource_handle.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/resource_handle.proto
+index 4d872b6d9d..19b4dcc3b8 100644
+--- a/src/frontends/tensorflow/src/proto/resource_handle.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/resource_handle.proto
+@@ -14,8 +14,8 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "tensor_shape.proto";
+-import "types.proto";
++import "ov_tensorflow/tensor_shape.proto";
++import "ov_tensorflow/types.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "ResourceHandle";
+diff --git a/src/frontends/tensorflow/src/proto/saved_model.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/saved_model.proto
+similarity index 97%
+rename from src/frontends/tensorflow/src/proto/saved_model.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/saved_model.proto
+index 0034fdfd46..f866065522 100644
+--- a/src/frontends/tensorflow/src/proto/saved_model.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/saved_model.proto
+@@ -14,7 +14,7 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "meta_graph.proto";
++import "ov_tensorflow/meta_graph.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "SavedModelProtos";
+diff --git a/src/frontends/tensorflow/src/proto/saved_object_graph.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/saved_object_graph.proto
+similarity index 97%
+rename from src/frontends/tensorflow/src/proto/saved_object_graph.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/saved_object_graph.proto
+index 671441075c..d0b2170044 100644
+--- a/src/frontends/tensorflow/src/proto/saved_object_graph.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/saved_object_graph.proto
+@@ -14,13 +14,13 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "any.proto";
+-import "tensor_shape.proto";
+-import "types.proto";
+-import "variable.proto";
+-import "versions.proto";
+-import "struct.proto";
+-import "trackable_object_graph.proto";
++import "google/protobuf/any.proto";
++import "ov_tensorflow/tensor_shape.proto";
++import "ov_tensorflow/types.proto";
++import "ov_tensorflow/variable.proto";
++import "ov_tensorflow/versions.proto";
++import "ov_tensorflow/struct.proto";
++import "ov_tensorflow/trackable_object_graph.proto";
+ 
+ option cc_enable_arenas = true;
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
+diff --git a/src/frontends/tensorflow/src/proto/saved_tensor_slice.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/saved_tensor_slice.proto
+similarity index 94%
+rename from src/frontends/tensorflow/src/proto/saved_tensor_slice.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/saved_tensor_slice.proto
+index 4645b2bdca..9e628752bb 100644
+--- a/src/frontends/tensorflow/src/proto/saved_tensor_slice.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/saved_tensor_slice.proto
+@@ -35,11 +35,11 @@ option java_outer_classname = "SavedTensorSliceProtos";
+ option java_multiple_files = true;
+ option java_package = "org.tensorflow.util";
+ 
+-import "tensor_shape.proto";
+-import "tensor_slice.proto";
+-import "tensor.proto";
+-import "types.proto";
+-import "versions.proto";
++import "ov_tensorflow/tensor_shape.proto";
++import "ov_tensorflow/tensor_slice.proto";
++import "ov_tensorflow/tensor.proto";
++import "ov_tensorflow/types.proto";
++import "ov_tensorflow/versions.proto";
+ 
+ // Metadata describing the set of slices of the same tensor saved in a
+ // checkpoint file.
+diff --git a/src/frontends/tensorflow/src/proto/saver.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/saver.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/saver.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/saver.proto
+diff --git a/src/frontends/tensorflow/src/proto/step_stats.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/step_stats.proto
+similarity index 97%
+rename from src/frontends/tensorflow/src/proto/step_stats.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/step_stats.proto
+index 04e0864a5a..027a1d79ee 100644
+--- a/src/frontends/tensorflow/src/proto/step_stats.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/step_stats.proto
+@@ -14,8 +14,8 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "allocation_description.proto";
+-import "tensor_description.proto";
++import "ov_tensorflow/allocation_description.proto";
++import "ov_tensorflow/tensor_description.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "StepStatsProtos";
+diff --git a/src/frontends/tensorflow/src/proto/struct.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/struct.proto
+similarity index 98%
+rename from src/frontends/tensorflow/src/proto/struct.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/struct.proto
+index d03201b685..4126bd98c4 100644
+--- a/src/frontends/tensorflow/src/proto/struct.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/struct.proto
+@@ -14,9 +14,9 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "tensor.proto";
+-import "tensor_shape.proto";
+-import "types.proto";
++import "ov_tensorflow/tensor.proto";
++import "ov_tensorflow/tensor_shape.proto";
++import "ov_tensorflow/types.proto";
+ 
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
+ 
+diff --git a/src/frontends/tensorflow/src/proto/summary.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/summary.proto
+similarity index 99%
+rename from src/frontends/tensorflow/src/proto/summary.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/summary.proto
+index 9e4b95f4bc..ce32617694 100644
+--- a/src/frontends/tensorflow/src/proto/summary.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/summary.proto
+@@ -14,7 +14,7 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "tensor.proto";
++import "ov_tensorflow/tensor.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "SummaryProtos";
+diff --git a/src/frontends/tensorflow/src/proto/tensor.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/tensor.proto
+similarity index 96%
+rename from src/frontends/tensorflow/src/proto/tensor.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/tensor.proto
+index c2e1fd7eb6..42f063536e 100644
+--- a/src/frontends/tensorflow/src/proto/tensor.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/tensor.proto
+@@ -14,9 +14,9 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "resource_handle.proto";
+-import "tensor_shape.proto";
+-import "types.proto";
++import "ov_tensorflow/resource_handle.proto";
++import "ov_tensorflow/tensor_shape.proto";
++import "ov_tensorflow/types.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "TensorProtos";
+diff --git a/src/frontends/tensorflow/src/proto/tensor_bundle.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/tensor_bundle.proto
+similarity index 94%
+rename from src/frontends/tensorflow/src/proto/tensor_bundle.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/tensor_bundle.proto
+index 43fea749b4..21af38195c 100644
+--- a/src/frontends/tensorflow/src/proto/tensor_bundle.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/tensor_bundle.proto
+@@ -14,10 +14,10 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "tensor_shape.proto";
+-import "tensor_slice.proto";
+-import "types.proto";
+-import "versions.proto";
++import "ov_tensorflow/tensor_shape.proto";
++import "ov_tensorflow/tensor_slice.proto";
++import "ov_tensorflow/types.proto";
++import "ov_tensorflow/versions.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "TensorBundleProtos";
+diff --git a/src/frontends/tensorflow/src/proto/tensor_description.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/tensor_description.proto
+similarity index 90%
+rename from src/frontends/tensorflow/src/proto/tensor_description.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/tensor_description.proto
+index 3ab9c310a6..c03e1311c1 100644
+--- a/src/frontends/tensorflow/src/proto/tensor_description.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/tensor_description.proto
+@@ -14,9 +14,9 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "allocation_description.proto";
+-import "tensor_shape.proto";
+-import "types.proto";
++import "ov_tensorflow/allocation_description.proto";
++import "ov_tensorflow/tensor_shape.proto";
++import "ov_tensorflow/types.proto";
+ 
+ option cc_enable_arenas = true;
+ option java_outer_classname = "TensorDescriptionProtos";
+diff --git a/src/frontends/tensorflow/src/proto/tensor_shape.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/tensor_shape.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/tensor_shape.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/tensor_shape.proto
+diff --git a/src/frontends/tensorflow/src/proto/tensor_slice.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/tensor_slice.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/tensor_slice.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/tensor_slice.proto
+diff --git a/src/frontends/tensorflow/src/proto/trackable_object_graph.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/trackable_object_graph.proto
+similarity index 98%
+rename from src/frontends/tensorflow/src/proto/trackable_object_graph.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/trackable_object_graph.proto
+index f4a8e4da34..f0a9617432 100644
+--- a/src/frontends/tensorflow/src/proto/trackable_object_graph.proto
++++ b/src/frontends/tensorflow/src/proto/ov_tensorflow/trackable_object_graph.proto
+@@ -14,7 +14,7 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ 
+-import "wrappers.proto";
++import "google/protobuf/wrappers.proto";
+ 
+ option cc_enable_arenas = true;
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
+diff --git a/src/frontends/tensorflow/src/proto/types.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/types.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/types.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/types.proto
+diff --git a/src/frontends/tensorflow/src/proto/variable.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/variable.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/variable.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/variable.proto
+diff --git a/src/frontends/tensorflow/src/proto/versions.proto b/src/frontends/tensorflow/src/proto/ov_tensorflow/versions.proto
+similarity index 100%
+rename from src/frontends/tensorflow/src/proto/versions.proto
+rename to src/frontends/tensorflow/src/proto/ov_tensorflow/versions.proto
+diff --git a/src/frontends/tensorflow/src/tf_utils.hpp b/src/frontends/tensorflow/src/tf_utils.hpp
+index a7a80a522b..5c4a97a5da 100644
+--- a/src/frontends/tensorflow/src/tf_utils.hpp
++++ b/src/frontends/tensorflow/src/tf_utils.hpp
+@@ -4,8 +4,8 @@
+ 
+ #pragma once
+ 
+-#include "attr_value.pb.h"
+-#include "node_def.pb.h"
++#include "ov_tensorflow/attr_value.pb.h"
++#include "ov_tensorflow/node_def.pb.h"
+ #include "openvino/core/node.hpp"
+ #include "openvino/core/partial_shape.hpp"
+ #include "openvino/core/runtime_attribute.hpp"
+@@ -13,9 +13,9 @@
+ #include "openvino/core/type/element_type.hpp"
+ #include "openvino/frontend/node_context.hpp"
+ #include "openvino/runtime/tensor.hpp"
+-#include "tensor.pb.h"
+-#include "tensor_shape.pb.h"
+-#include "types.pb.h"
++#include "ov_tensorflow/tensor.pb.h"
++#include "ov_tensorflow/tensor_shape.pb.h"
++#include "ov_tensorflow/types.pb.h"
+ 
+ namespace ov {
+ namespace frontend {
+diff --git a/src/frontends/tensorflow/src/variables_index.cpp b/src/frontends/tensorflow/src/variables_index.cpp
+index c24ffd8112..2dcf3faf9e 100644
+--- a/src/frontends/tensorflow/src/variables_index.cpp
++++ b/src/frontends/tensorflow/src/variables_index.cpp
+@@ -11,8 +11,8 @@
+ #include "graph_iterator_saved_model.hpp"
+ #include "openvino/core/type/element_type.hpp"
+ #include "openvino/util/mmap_object.hpp"
+-#include "tensor_bundle.pb.h"
+-#include "trackable_object_graph.pb.h"
++#include "ov_tensorflow/tensor_bundle.pb.h"
++#include "ov_tensorflow/trackable_object_graph.pb.h"
+ 
+ #ifdef ENABLE_SNAPPY_COMPRESSION
+ #    include "snappy.h"
+diff --git a/src/frontends/tensorflow/src/variables_index.hpp b/src/frontends/tensorflow/src/variables_index.hpp
+index df852a6279..aa805b264b 100644
+--- a/src/frontends/tensorflow/src/variables_index.hpp
++++ b/src/frontends/tensorflow/src/variables_index.hpp
+@@ -9,7 +9,7 @@
+ #include "graph_iterator_proto.hpp"
+ #include "openvino/util/file_util.hpp"
+ #include "openvino/util/mmap_object.hpp"
+-#include "saved_model.pb.h"
++#include "ov_tensorflow/saved_model.pb.h"
+ 
+ namespace ov {
+ namespace frontend {
