@@ -22,36 +22,6 @@ index ccc959e..d3e5d09 100644
    else()
      set(CPPTRACE_STATIC_EXPORT_TARGETS cpptrace)
    endif()
-@@ -391,7 +391,7 @@
-       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-       INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
--      RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+      RUNTIME DESTINATION bin
-     )
-   else()
-     install(
-@@ -400,7 +400,7 @@
-       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-       INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
--      RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+      RUNTIME DESTINATION bin
-     )
-   endif()
- 
-
---- a/src/platform/utils.hpp
-+++ b/src/platform/utils.hpp
-@@ -334,7 +334,7 @@ namespace detail {
-         return static_cast<unsigned long long>(t);
-     }
-     template<typename T>
--    unsigned long long to_uintptr(T t) {
-+    uintptr_t to_uintptr(T t) {
-         return static_cast<uintptr_t>(t);
-     }
-
 diff --git a/src/symbols/symbols_with_libdwarf.cpp b/src/symbols/symbols_with_libdwarf.cpp
 index ce5dbcf..085a1aa 100644
 --- a/src/symbols/symbols_with_libdwarf.cpp
