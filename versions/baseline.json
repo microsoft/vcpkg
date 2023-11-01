@@ -1790,7 +1790,7 @@
     },
     "corrade": {
       "baseline": "2020.06",
-      "port-version": 7
+      "port-version": 8
     },
     "cpp-async": {
       "baseline": "1.1.0",
@@ -5318,7 +5318,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 14
+      "port-version": 15
     },
     "magnum-extras": {
       "baseline": "2020.06",
