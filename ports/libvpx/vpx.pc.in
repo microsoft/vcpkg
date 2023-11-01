@@ -1,5 +1,4 @@
 prefix=@LIBVPX_PREFIX@
-# pkg-config file from libvpx v1.13.1
 exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=${prefix}/include
