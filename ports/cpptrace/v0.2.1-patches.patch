@@ -52,3 +52,34 @@ index ccc959e..d3e5d09 100644
          return static_cast<uintptr_t>(t);
      }
 
+diff --git a/src/symbols/symbols_with_libdwarf.cpp b/src/symbols/symbols_with_libdwarf.cpp
+index ce5dbcf..085a1aa 100644
+--- a/src/symbols/symbols_with_libdwarf.cpp
++++ b/src/symbols/symbols_with_libdwarf.cpp
+@@ -20,8 +20,8 @@
+ #include <unordered_map>
+ #include <vector>
+
+-#include <libdwarf.h>
+-#include <dwarf.h>
++#include <libdwarf/libdwarf.h>
++#include <libdwarf/dwarf.h>
+
+ // It's been tricky to piece together how to handle all this dwarf stuff. Some resources I've used are
+ // https://www.prevanders.net/libdwarf.pdf
+
+diff --git a/src/platform/dwarf.hpp b/src/platform/dwarf.hpp
+index ce5dbcf..085a1aa 100644
+--- a/src/platform/dwarf.hpp
++++ b/src/platform/dwarf.hpp
+@@ -9,8 +9,8 @@
+ #include <stdexcept>
+ #include <type_traits>
+
+-#include <libdwarf.h>
+-#include <dwarf.h>
++#include <libdwarf/libdwarf.h>
++#include <libdwarf/dwarf.h>
+
+ namespace cpptrace {
+ namespace detail {
