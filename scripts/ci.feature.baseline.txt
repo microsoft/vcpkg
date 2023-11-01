@@ -2119,7 +2119,6 @@ shiva-sfml:x64-windows-static-md = cascade
 shiva:arm64-uwp = cascade
 shiva:arm64-windows = cascade
 shiva:x64-uwp = cascade
-signalrclient:x64-uwp = cascade
 skia[dawn,fontconfig,harfbuzz,icu,vulkan]:arm64-uwp = cascade
 skia[dawn,fontconfig,harfbuzz,icu,vulkan]:x64-uwp = cascade
 skia[dawn,fontconfig,harfbuzz,icu,vulkan]:x64-uwp = cascade
