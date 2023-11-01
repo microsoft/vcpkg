@@ -294,89 +294,94 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   get_filename_component(WORKING_DIR "${WORKSPACE}" DIRECTORY)
   set(ENV{PWD} "${WORKING_DIR}")
 
-  message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-  vcpkg_execute_build_process(
-    COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
-    WORKING_DIRECTORY "${WORKING_DIR}"
-    LOGNAME make-${TARGET_TRIPLET}-dbg
-  )
-  if("xml" IN_LIST FEATURES)
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
-      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
-      LOGNAME make-xml-${TARGET_TRIPLET}-dbg
+      WORKING_DIRECTORY "${WORKING_DIR}"
+      LOGNAME make-${TARGET_TRIPLET}-dbg
     )
-  endif()
-  message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
-  message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
-  vcpkg_execute_build_process(
-    COMMAND make ${_ace_makefile_macros} install
-    WORKING_DIRECTORY "${WORKING_DIR}"
-    LOGNAME install-${TARGET_TRIPLET}-dbg
-  )
-  if("xml" IN_LIST FEATURES)
+    if("xml" IN_LIST FEATURES)
+      vcpkg_execute_build_process(
+        COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
+        WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
+        LOGNAME make-xml-${TARGET_TRIPLET}-dbg
+      )
+    endif()
+    message(STATUS "Building ${TARGET_TRIPLET}-dbg done")
+    message(STATUS "Packaging ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
-      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
-      LOGNAME install-xml-${TARGET_TRIPLET}-dbg
+      WORKING_DIRECTORY "${WORKING_DIR}"
+      LOGNAME install-${TARGET_TRIPLET}-dbg
     )
-  endif()
-
-  file(COPY "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
-
-  file(GLOB _pkg_components "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
-  foreach(_pkg_comp ${_pkg_components})
-    file(READ ${_pkg_comp} _content)
-    string(REPLACE "libdir=${CURRENT_PACKAGES_DIR}/lib" "libdir=${CURRENT_PACKAGES_DIR}/debug/lib" _content ${_content})
-    file(WRITE ${_pkg_comp} ${_content})
-  endforeach()
-  message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
-
-  vcpkg_execute_build_process(
-    COMMAND make ${_ace_makefile_macros} realclean
-    WORKING_DIRECTORY "${WORKING_DIR}"
-    LOGNAME realclean-${TARGET_TRIPLET}-dbg
-  )
-  if("xml" IN_LIST FEATURES)
+    if("xml" IN_LIST FEATURES)
+      vcpkg_execute_build_process(
+        COMMAND make ${_ace_makefile_macros} install
+        WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
+        LOGNAME install-xml-${TARGET_TRIPLET}-dbg
+      )
+    endif()
+  
+    file(COPY "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
+  
+    file(GLOB _pkg_components "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+    foreach(_pkg_comp ${_pkg_components})
+      file(READ ${_pkg_comp} _content)
+      string(REPLACE "libdir=${CURRENT_PACKAGES_DIR}/lib" "libdir=${CURRENT_PACKAGES_DIR}/debug/lib" _content ${_content})
+      file(WRITE ${_pkg_comp} ${_content})
+    endforeach()
+    message(STATUS "Packaging ${TARGET_TRIPLET}-dbg done")
+  
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} realclean
-      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
-      LOGNAME realclean-xml-${TARGET_TRIPLET}-dbg
+      WORKING_DIRECTORY "${WORKING_DIR}"
+      LOGNAME realclean-${TARGET_TRIPLET}-dbg
     )
+    if("xml" IN_LIST FEATURES)
+      vcpkg_execute_build_process(
+        COMMAND make ${_ace_makefile_macros} realclean
+        WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
+        LOGNAME realclean-xml-${TARGET_TRIPLET}-dbg
+      )
+    endif()
   endif()
-
-  message(STATUS "Building ${TARGET_TRIPLET}-rel")
-  vcpkg_execute_build_process(
-    COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
-    WORKING_DIRECTORY "${WORKING_DIR}"
-    LOGNAME make-${TARGET_TRIPLET}-rel
-  )
-  if("xml" IN_LIST FEATURES)
+  
+  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    message(STATUS "Building ${TARGET_TRIPLET}-rel")
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
-      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
-      LOGNAME make-xml-${TARGET_TRIPLET}-rel
+      WORKING_DIRECTORY "${WORKING_DIR}"
+      LOGNAME make-${TARGET_TRIPLET}-rel
     )
-  endif()
-  message(STATUS "Building ${TARGET_TRIPLET}-rel done")
-  message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
-  vcpkg_execute_build_process(
-    COMMAND make ${_ace_makefile_macros} install
-    WORKING_DIRECTORY "${WORKING_DIR}"
-    LOGNAME install-${TARGET_TRIPLET}-rel
-  )
-  if("xml" IN_LIST FEATURES)
+    if("xml" IN_LIST FEATURES)
+      vcpkg_execute_build_process(
+        COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
+        WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
+        LOGNAME make-xml-${TARGET_TRIPLET}-rel
+      )
+    endif()
+    message(STATUS "Building ${TARGET_TRIPLET}-rel done")
+    message(STATUS "Packaging ${TARGET_TRIPLET}-rel")
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
-      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
-      LOGNAME install-xml-${TARGET_TRIPLET}-rel
+      WORKING_DIRECTORY "${WORKING_DIR}"
+      LOGNAME install-${TARGET_TRIPLET}-rel
     )
+    if("xml" IN_LIST FEATURES)
+      vcpkg_execute_build_process(
+        COMMAND make ${_ace_makefile_macros} install
+        WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
+        LOGNAME install-xml-${TARGET_TRIPLET}-rel
+      )
+    endif()
+    if("tao" IN_LIST FEATURES)
+      file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
+      file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    endif()
+    message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
   endif()
-  if("tao" IN_LIST FEATURES)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-  endif()
-  message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
+  
   # Restore `PWD` environment variable
   set($ENV{PWD} _prev_env)
 
