@@ -2541,8 +2541,8 @@
       "port-version": 4
     },
     "fastgltf": {
-      "baseline": "0.5.0",
-      "port-version": 1
+      "baseline": "0.6.0",
+      "port-version": 0
     },
     "fastio": {
       "baseline": "2023-07-06",
