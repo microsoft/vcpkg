@@ -11,7 +11,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre-next
     REF v${VERSION}
-    SHA512 62c721680ed77e74b6e1649ab7324bd49fc3c7c2e60ad76a62ec5f899f327d65a140462d75300eac4f41567a8903a748d07a760dc376eddcadf0aeea5a3ca5a7
+    SHA512 fbc1969244db07d013118fbce12b319e83cdae93a822cb2d90bbd12108ac3ce48d1f5437b4375b3daf5640b9ec6f1764daeef742161a101f77c3e25ccaf4b154
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
@@ -56,6 +56,7 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
         -DOGRE_CMAKE_DIR=share/ogre-next
+        -DOGRE_USE_NEW_PROJECT_NAME=ON
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -78,15 +79,15 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-#Remove OgreMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
+#Remove OgreNextMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
 #manual-link subfolder is here to the rescue!
 if(VCPKG_TARGET_IS_WINDOWS)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/release/OgreMain.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMain.lib")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/release/OgreNextMain.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreNextMain.lib")
         else()
-            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/release/OgreMainStatic.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreMainStatic.lib")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/release/OgreNextMainStatic.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreNextMainStatic.lib")
         endif()
         file(GLOB LIBS "${CURRENT_PACKAGES_DIR}/lib/release/*")
         file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/bin/release/*")
@@ -97,9 +98,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/debug/OgreMain_d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMain_d.lib")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/debug/OgreNextMain_d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreNextMain_d.lib")
         else()
-            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/debug/OgreMainStatic_d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreMainStatic_d.lib")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/debug/OgreNextMainStatic_d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreNextMainStatic_d.lib")
         endif()
         file(GLOB LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/debug/*")
         file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/debug/bin/debug/*")
@@ -111,7 +112,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB SHARE_FILES "${CURRENT_PACKAGES_DIR}/share/ogre-next/*.cmake")
     foreach(SHARE_FILE ${SHARE_FILES})
         file(READ "${SHARE_FILE}" _contents)
-        string(REPLACE "lib/OgreMain" "lib/manual-link/OgreMain" _contents "${_contents}")
+        string(REPLACE "lib/OgreNextMain" "lib/manual-link/OgreNextMain" _contents "${_contents}")
         file(WRITE "${SHARE_FILE}" "${_contents}")
     endforeach()
 endif()
