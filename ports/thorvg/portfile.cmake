@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
     REF "v${VERSION}"
-    SHA512 388c3d8bd5099c1e35911dc75ffa6aafc6ea9f1219845ea29dbef91db8c75b2e22b091df4340acc2b44d948cb18fcf8f3a511045ce6ff959a078b350c9a13756
+    SHA512 cc73f7e01755141a245eecd1dc8fa6754e21b342e3734f1200e859c2360474fc9931a934eb49968c65b15c537812b81fa1f3f82ac12f9e00e3959748cf1e286f
     HEAD_REF master
-    PATCHES
-        windows-build-option.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -17,16 +15,13 @@ endif()
 if ("tools" IN_LIST FEATURES)
     list(APPEND BUILD_OPTIONS -Dtools=all)
 endif()
-if ("opengl" IN_LIST FEATURES)
-    list(APPEND BUILD_OPTIONS -Dengines=gl_beta)
-endif()
-list(APPEND BUILD_OPTIONS -Dengines=sw)
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${BUILD_OPTIONS}
         # see ${SOURCE_PATH}/meson_options.txt
+        -Dengines=sw
         -Dloaders=all
         -Dsavers=tvg
         -Dvector=true
