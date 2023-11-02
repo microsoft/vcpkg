@@ -1,43 +1,21 @@
-diff --git a/build/cmake/FindResSearch.cmake b/build/cmake/FindResSearch.cmake
-index fcd791b..346f715 100644
---- a/build/cmake/FindResSearch.cmake
-+++ b/build/cmake/FindResSearch.cmake
-@@ -2,7 +2,7 @@ include (CheckSymbolExists)
+diff --git a/build/cmake/ResSearch.cmake b/build/cmake/ResSearch.cmake
+index b3eecf3..f3131ec 100644
+--- a/build/cmake/ResSearch.cmake
++++ b/build/cmake/ResSearch.cmake
+@@ -9,7 +9,7 @@ set(RESOLVE_LIB_NAME)
+ set(resolve_is_libc FALSE)
  
- if (ENABLE_SRV STREQUAL ON OR ENABLE_SRV STREQUAL AUTO)
-    if (WIN32)
--      set (RESOLV_LIBRARIES Dnsapi)
-+      set (RESOLV_LIBRARIES dnsapi)
-       set (MONGOC_HAVE_DNSAPI 1)
-       set (MONGOC_HAVE_RES_NSEARCH 0)
-       set (MONGOC_HAVE_RES_NDESTROY 0)
-diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index 2e1f854..95e6b6b 100644
---- a/src/libmongoc/CMakeLists.txt
-+++ b/src/libmongoc/CMakeLists.txt
-@@ -688,7 +688,7 @@ if (NOT ENABLE_SSL STREQUAL OFF)
-          ${PROJECT_SOURCE_DIR}/src/mongoc/mongoc-stream-tls-secure-channel.c
-          ${PROJECT_SOURCE_DIR}/src/mongoc/mongoc-secure-channel.c
-       )
--      set (SSL_LIBRARIES secur32.lib crypt32.lib Bcrypt.lib)
-+      set (SSL_LIBRARIES secur32.lib crypt32.lib bcrypt.lib)
-    elseif (LIBRESSL)
-       message (STATUS "Compiling against LibreSSL")
-       set (SOURCES ${SOURCES}
-@@ -714,7 +714,7 @@ if (MONGOC_ENABLE_SASL)
-       message (STATUS "Compiling against Windows SSPI")
-       set (SOURCES ${SOURCES} ${PROJECT_SOURCE_DIR}/src/mongoc/mongoc-cluster-sspi.c)
-       set (SOURCES ${SOURCES} ${PROJECT_SOURCE_DIR}/src/mongoc/mongoc-sspi.c)
--      set (SASL_LIBRARIES secur32.lib crypt32.lib Shlwapi.lib)
-+      set (SASL_LIBRARIES secur32.lib crypt32.lib shlwapi.lib)
-    endif ()
- else ()
-    message (STATUS "SASL disabled")
+ if(WIN32)
+-    set(RESOLVE_LIB_NAME Dnsapi)
++    set(RESOLV_LIBRARIES dnsapi)
+     set(_MONGOC_HAVE_DNSAPI 1)
+ else()
+     # Try to find the search functions for various configurations.
 diff --git a/src/libmongoc/src/mongoc/mongoc-client.c b/src/libmongoc/src/mongoc/mongoc-client.c
-index 457c841..7b6d585 100644
+index 15517e6..bd762d0 100644
 --- a/src/libmongoc/src/mongoc/mongoc-client.c
 +++ b/src/libmongoc/src/mongoc/mongoc-client.c
-@@ -19,8 +19,8 @@
+@@ -18,8 +18,8 @@
  #include "mongoc-config.h"
  #ifdef MONGOC_HAVE_DNSAPI
  /* for DnsQuery_UTF8 */
@@ -49,7 +27,7 @@ index 457c841..7b6d585 100644
  #else
  #if defined(MONGOC_HAVE_RES_NSEARCH) || defined(MONGOC_HAVE_RES_SEARCH)
 diff --git a/src/libmongoc/src/mongoc/mongoc-socket.c b/src/libmongoc/src/mongoc/mongoc-socket.c
-index e085adb..592bc89 100644
+index e7840d2..3bac0d9 100644
 --- a/src/libmongoc/src/mongoc/mongoc-socket.c
 +++ b/src/libmongoc/src/mongoc/mongoc-socket.c
 @@ -25,7 +25,7 @@

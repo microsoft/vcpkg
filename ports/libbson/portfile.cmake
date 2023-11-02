@@ -1,17 +1,13 @@
 # This port needs to be updated at the same time as mongo-c-driver
 
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
     REF "${VERSION}"
-    SHA512 242416638bf6722ccda67ecc15cf78f8531f1a4ae0e89fd66cde74221d7b98b859442f5b70628802972961e69156fd7afcc916d7a83cc134d5723eb0b6e15cc9
+    SHA512 e35878eed6fe56a383eeb07795bcb6bfbaa29cd3d63c0efd67748e10982c9c1294c2de2127471b1f154ea658747c3a98e8d9f9a1cbcf1f5bf4ec6aa6e7b276a6
     HEAD_REF master
     PATCHES
-        disable-dynamic-when-static.patch
         fix-include-directory.patch # vcpkg legacy decision
-        fix-missing-header.patch  # for building mongo-c-driver
 )
 file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")
 
