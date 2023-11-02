@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tbeu/matio
-    REF e9e063e08ef2a27fcc22b1e526258fea5a5de329 # v1.5.23
-    SHA512 78b13f4796870158f5cf2b8234c0ab6dc8b449cba49608ce40c51a3f91994c33c29b8a6de1ceed94a81fc7faa798d8c3a45a275f3a3abba70a0cd7be731e1d9c
+    REF b07ee6c1512ab788f91e71910d07fc3ea954f812 # v1.5.24
+    SHA512 b9a1abe88565bb01db9aa826248b63927e8576d4e9b72665dee53cc29e0baf6c7af232f298fb6a22b3b96d820cb692ff29f98e2d0d751edc22a5f1ee884fc2df
     HEAD_REF master
     PATCHES fix-dependencies.patch
 )
@@ -27,10 +27,22 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+set(prefix "${CURRENT_INSTALLED_DIR}")
+set(exec_prefix [[${prefix}]])
+set(libdir [[${prefix}/lib]])
+set(includedir [[${prefix}/include]])
+configure_file("${SOURCE_PATH}/matio.pc.in" "${SOURCE_PATH}/matio.pc" @ONLY)
+file(INSTALL "${SOURCE_PATH}/matio.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+if(NOT VCPKG_BUILD_TYPE)
+    set(includedir [[${prefix}/../include]])
+    file(INSTALL "${SOURCE_PATH}/matio.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+endif()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_tools(TOOL_NAMES matdump AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,0 +1,24 @@
+diff --git a/src/bin/dwarfdump/CMakeLists.txt b/src/bin/dwarfdump/CMakeLists.txt
+index 1b8aa3a..c77d2f0 100644
+--- a/src/bin/dwarfdump/CMakeLists.txt
++++ b/src/bin/dwarfdump/CMakeLists.txt
+@@ -66,7 +66,6 @@ target_compile_options(dwarfdump PRIVATE ${DW_FWALL})
+ target_link_libraries(dwarfdump PRIVATE ${dwarf-target} ${DW_FZLIB} ${DW_FZSTD} ) 
+ 
+ if(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+-	set(SUFFIX 64)
+ endif()
+ set(LIBDIR lib${SUFFIX})
+ set(BINDIR bin${SUFFIX})
+diff --git a/src/lib/libdwarf/CMakeLists.txt b/src/lib/libdwarf/CMakeLists.txt
+index 09908bb..91a1447 100644
+--- a/src/lib/libdwarf/CMakeLists.txt
++++ b/src/lib/libdwarf/CMakeLists.txt
+@@ -109,7 +109,6 @@ foreach(i RANGE ${targetCount})
+ 	
+ 	set_target_properties(${target} PROPERTIES OUTPUT_NAME dwarf)
+ 
+-	set(SUFFIX $<$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>:64>)
+ 	set(LIBDIR lib${SUFFIX})
+ 	set(BINDIR bin${SUFFIX})
+ 

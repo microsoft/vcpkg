@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-gdal-target-interfaces.patch
         libkml.patch
         fix-jpeg.patch
+        upstream-b5858ed.diff
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
