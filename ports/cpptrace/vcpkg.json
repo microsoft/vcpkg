@@ -1,0 +1,19 @@
+{
+  "name": "cpptrace",
+  "version": "0.2.1",
+  "description": "Simple, portable, and self-contained stacktrace library for C++11 and newer",
+  "homepage": "https://github.com/jeremy-rifkin/cpptrace",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "libdwarf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

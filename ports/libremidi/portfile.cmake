@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jcelerier/libremidi
     REF "v${VERSION}"
-    SHA512 de7092c70af6fc0a23c8e6018fbd9f380632ac9dec8794171726fda9a6e7ba45479a8e8317919ba7a8a0267524bab8d5430782a54bc50a914658cf277e18145b
+    SHA512 ed07f8553155fe7c643033e67e12f1eaf64c11240bb387d9dc2c7e5c54af95cf5b9a78472b2281c7f2f4ef27a8f06ae981705f1fa2321f1322842becc1406247
     HEAD_REF master
-    PATCHES
-        fix-install.patch
 )
 
 vcpkg_list(SET options)

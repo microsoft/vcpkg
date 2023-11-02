@@ -108,3 +108,104 @@ index 4eb7a0d..11dae8a 100644
            gz_string_append(${component}_CMAKE_DEPENDENCIES "${${PACKAGE_NAME}_find_dependency}" DELIM "\n")
          endif()
        endforeach()
+diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
+--- a/cmake/FindGzOGRE2.cmake
++++ b/cmake/FindGzOGRE2.cmake
+@@ -143,11 +143,11 @@
+   endif ()
+ endmacro()
+ 
+ find_package(PkgConfig QUIET)
+-if (PkgConfig_FOUND)
++if (NOT WIN32)
+   set(PKG_CONFIG_PATH_ORIGINAL $ENV{PKG_CONFIG_PATH})
+-  foreach (GZ_OGRE2_PROJECT_NAME "OGRE2" "OGRE-Next")
++  foreach (GZ_OGRE2_PROJECT_NAME "OGRE")
+     message(STATUS "Looking for OGRE using the name: ${GZ_OGRE2_PROJECT_NAME}")
+     if (GZ_OGRE2_PROJECT_NAME STREQUAL "OGRE2")
+       set(OGRE2_INSTALL_PATH "OGRE-2.${GzOGRE2_FIND_VERSION_MINOR}")
+       # For OGRE 2.3 debs built via OpenRobotics buildfarms, we use OgreNext
+@@ -159,10 +159,10 @@
+         set(OGRE2LIBNAME "Ogre")
+       endif()
+     else()
+       # This matches OGRE2.2 debs built in upstream Ubuntu
+-      set(OGRE2_INSTALL_PATH "OGRE-Next")
+-      set(OGRE2LIBNAME "OgreNext")
++      set(OGRE2_INSTALL_PATH "OGRE")
++      set(OGRE2LIBNAME "Ogre")
+     endif()
+ 
+     # Note: OGRE2 installed from debs is named OGRE-2.2 while the version
+     # installed from source does not have the 2.2 suffix
+@@ -172,8 +172,9 @@
+     if (${GZ_OGRE2_PROJECT_NAME}_FOUND)
+       set(GZ_PKG_NAME ${OGRE2_INSTALL_PATH})
+       set(OGRE2_FOUND ${${GZ_OGRE2_PROJECT_NAME}_FOUND})  # sync possible OGRE-Next to OGRE2
+       fix_pkgconfig_prefix_jammy_bug("${${GZ_OGRE2_PROJECT_NAME}_LIBRARY_DIRS}" OGRE2_LIBRARY_DIRS)
++      set(OGRE2_LIBRARY_DIRS ${${GZ_OGRE2_PROJECT_NAME}_LIBRARY_DIRS})
+       set(OGRE2_LIBRARIES ${${GZ_OGRE2_PROJECT_NAME}_LIBRARIES})  # sync possible Ogre-Next ot OGRE2
+     else()
+       # look for OGRE2 installed from source
+       set(PKG_CONFIG_PATH_TMP ${PKG_CONFIG_PATH_ORIGINAL})
+@@ -308,8 +309,10 @@
+           "${OGRE2LIBNAME}${component}_d.${OGRE2_VERSION}"
+           "${OGRE2LIBNAME}${component}_d"
+           "${OGRE2LIBNAME}${component}.${OGRE2_VERSION}"
+           "${OGRE2LIBNAME}${component}"
++          "${OGRE2LIBNAME}${component}Static"
++          "${OGRE2LIBNAME}${component}Static_d"          
+         HINTS ${OGRE2_LIBRARY_DIRS})
+       if (NOT "${OGRE2-${component}}" STREQUAL "OGRE2-${component}-NOTFOUND")
+         message(STATUS "  + component ${component}: found")
+         # create a new target for each component
+@@ -403,15 +406,24 @@
+   set(OGRE2_SEARCH_VER "OGRE-${GzOGRE2_FIND_VERSION_MAJOR}.${GzOGRE2_FIND_VERSION_MINOR}")
+   set(OGRE2_PATHS "")
+   set(OGRE2_INC_PATHS "")
+   foreach(_rootPath ${VCPKG_CMAKE_FIND_ROOT_PATH})
+-      list(APPEND OGRE2_PATHS "${_rootPath}/lib/${OGRE2_SEARCH_VER}/")
+-      list(APPEND OGRE2_PATHS "${_rootPath}/lib/${OGRE2_SEARCH_VER}/manual-link/")
+-      list(APPEND OGRE2_INC_PATHS "${_rootPath}/include/${OGRE2_SEARCH_VER}")
++      get_filename_component(debug_dir "${_rootPath}" NAME)
++      if(debug_dir MATCHES "debug" AND CMAKE_BUILD_TYPE MATCHES Debug OR NOT debug_dir MATCHES "debug" AND CMAKE_BUILD_TYPE MATCHES Release)
++        list(APPEND OGRE2_PATHS "${_rootPath}/lib/")
++        list(APPEND OGRE2_PATHS "${_rootPath}/lib/manual-link/")
++      endif()
++      list(APPEND OGRE2_INC_PATHS "${_rootPath}/include/OGRE")
+   endforeach()
+ 
++  if(CMAKE_BUILD_TYPE MATCHES Debug)
++    set(OGRE_MAIN_LIB "OgreMain_d")
++  else()
++    set(OGRE_MAIN_LIB "OgreMain")
++  endif()
++
+   find_library(OGRE2_LIBRARY
+-    NAMES "OgreMain"
++    NAMES "${OGRE_MAIN_LIB}"
+     HINTS ${OGRE2_PATHS}
+     NO_DEFAULT_PATH)
+ 
+   find_path(OGRE2_INCLUDE
+@@ -509,8 +521,9 @@
+ 
+   ogre_find_plugin(Plugin_ParticleFX OgreParticleFXPrerequisites.h PlugIns/ParticleFX/include)
+   ogre_find_plugin(RenderSystem_GL3Plus OgreGL3PlusRenderSystem.h RenderSystems/GL3Plus/include)
+   ogre_find_plugin(RenderSystem_Direct3D11 OgreD3D11RenderSystem.h RenderSystems/Direct3D11/include)
++  ogre_find_component(PlanarReflections OgrePlanarReflections.h PlanarReflections)
+ 
+   foreach(component ${GzOGRE2_FIND_COMPONENTS})
+     set(PREFIX OGRE2_${component})
+     if(${PREFIX}_FOUND)
+@@ -520,9 +533,9 @@
+       string(FIND ${component} "Hlms" HLMS_POS)
+       if(${HLMS_POS} GREATER -1)
+         foreach (dir ${OGRE2_INCLUDE_DIRS})
+           get_filename_component(dir_name "${dir}" NAME)
+-          if ("${dir_name}" STREQUAL "OGRE-${OGRE2_VERSION_MAJOR}.${OGRE2_VERSION_MINOR}")
++          if ("${dir_name}" STREQUAL "OGRE")
+             set(dir_include "${dir}/Hlms/Common")
+             if (EXISTS ${dir_include})
+               list(APPEND component_INCLUDE_DIRS ${dir_include})
+             endif()

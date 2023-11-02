@@ -1,14 +1,15 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index 71d19dd..3691123 100644
+index 577dd00..07f9882 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -1393,6 +1393,9 @@ skia_component("skia") {
- 
-   defines = [ "SK_HAS_ANDROID_CODEC" ]
+@@ -1478,6 +1478,10 @@ skia_component("skia") {
+   defines = []
    libs = []
+ 
 +  if (is_win && target_cpu != "arm64" && !skia_enable_winuwp) {
 +    libs += [ "OpenGL32.lib" ] # for src/utils/win/SkWGL_win.cpp
 +  }
- 
++
    if (skia_enable_sksl) {
-     deps += [ ":dehydrate_sksl" ]
+     deps += [ ":minify_sksl" ]
+     sources += skia_sksl_sources
