@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 cc73f7e01755141a245eecd1dc8fa6754e21b342e3734f1200e859c2360474fc9931a934eb49968c65b15c537812b81fa1f3f82ac12f9e00e3959748cf1e286f
     HEAD_REF master
-    PATCHES
-        windows-build-option.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -30,6 +28,7 @@ vcpkg_configure_meson(
         -Dbindings=capi
         -Dtests=false
         -Dexamples=false
+        -Dstrip=false
     OPTIONS_DEBUG
         -Dlog=true
         -Dbindir=${CURRENT_PACKAGES_DIR}/debug/bin
