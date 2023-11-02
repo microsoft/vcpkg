@@ -1885,7 +1885,7 @@
       "port-version": 4
     },
     "cppslippi": {
-      "baseline": "1.1.3.14",
+      "baseline": "1.2.3.14",
       "port-version": 0
     },
     "cpptoml": {
