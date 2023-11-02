@@ -8222,7 +8222,7 @@
     },
     "tacopie": {
       "baseline": "3.2.0",
-      "port-version": 5
+      "port-version": 6
     },
     "taglib": {
       "baseline": "1.13.1",
