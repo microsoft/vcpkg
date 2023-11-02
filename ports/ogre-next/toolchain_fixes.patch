@@ -13,7 +13,7 @@ diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
 +  if(WIN32 OR APPLE)
 +    set(OGRE_CMAKE_DIR "CMake")
 +  else()
-+    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
++    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/${OGRE_NEXT_PREFIX}/cmake")
 +  endif()
  endif()
 diff --git a/CMake/Packages/FindGLSLOptimizer.cmake b/CMake/Packages/FindGLSLOptimizer.cmake
