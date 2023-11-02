@@ -8530,7 +8530,7 @@
     },
     "triton": {
       "baseline": "0.9",
-      "port-version": 5
+      "port-version": 6
     },
     "trompeloeil": {
       "baseline": "45",
