@@ -7,6 +7,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
 
 set(unofficial-libmagic_VERSION @CMAKE_PROJECT_VERSION@)
 set(unofficial-libmagic_FOUND true)
-set(unofficial-libmagic_DICTIONARY "${CMAKE_CURRENT_LIST_DIR}/magic.mgc")
+get_filename_component(unofficial-libmagic_DICTIONARY "${CMAKE_CURRENT_LIST_DIR}/../libmagic/misc/magic.mgc" ABSOLUTE)
 
 check_required_components("unofficial-libmagic")
