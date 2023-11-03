@@ -105,7 +105,6 @@ function(vcpkg_find_acquire_program program)
     set(rename_binary_to "")
     set(tool_subdirectory "")
     set(interpreter "")
-    set(supported_on_unix "")
     set(post_install_command "")
     set(paths_to_search "")
     set(version_command "")
@@ -153,7 +152,7 @@ function(vcpkg_find_acquire_program program)
         )
     endif()
     if(NOT ${program})
-        if(NOT VCPKG_HOST_IS_WINDOWS AND NOT supported_on_unix)
+        if("${download_urls}" STREQUAL "" AND "${sourceforge_args}" STREQUAL "")
             set(example ".")
             if(NOT "${brew_package_name}" STREQUAL "" AND VCPKG_HOST_IS_OSX)
                 set(example ":\n    brew install ${brew_package_name}")
@@ -178,18 +177,18 @@ function(vcpkg_find_acquire_program program)
         endif()
         if(raw_executable)
             file(MAKE_DIRECTORY "${full_subdirectory}")
-            if(NOT "${rename_binary_to}" STREQUAL "")
-                file(INSTALL "${archive_path}"
+            if("${rename_binary_to}" STREQUAL "")
+                file(COPY "${archive_path}"
                     DESTINATION "${full_subdirectory}"
-                    RENAME "${rename_binary_to}"
                     FILE_PERMISSIONS
                         OWNER_READ OWNER_WRITE OWNER_EXECUTE
                         GROUP_READ GROUP_EXECUTE
                         WORLD_READ WORLD_EXECUTE
                 )
             else()
-                file(COPY "${archive_path}"
+                file(INSTALL "${archive_path}"
                     DESTINATION "${full_subdirectory}"
+                    RENAME "${rename_binary_to}"
                     FILE_PERMISSIONS
                         OWNER_READ OWNER_WRITE OWNER_EXECUTE
                         GROUP_READ GROUP_EXECUTE
