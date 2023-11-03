@@ -18,11 +18,11 @@
       "name": "libmagic",
       "host": true
     },
-    "pcre2",
     {
       "name": "libmagic",
       "host": true
     },
+    "pcre2",
     {
       "name": "vcpkg-cmake",
       "host": true
