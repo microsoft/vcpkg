@@ -1005,6 +1005,7 @@ gtsam:x64-uwp = cascade
 gz-fuel-tools8(osx) = cascade
 gz-physics6(arm|android) = cascade
 gz-rendering7(arm|android) = cascade
+gz-sensors7(arm | android) = cascade
 gz-transport12(osx) = cascade
 h5py-lzf:arm64-uwp = cascade
 h5py-lzf:arm64-windows = cascade
