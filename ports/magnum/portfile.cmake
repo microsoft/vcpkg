@@ -142,6 +142,18 @@ else()
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum/fontconverters")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/fonts")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/fontconverters")
+
+        # remove maybe empty dirs
+        file(GLOB maybe_empty "${CURRENT_PACKAGES_DIR}/lib/magnum/importers/*")
+        if(maybe_empty STREQUAL "")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum/importers")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/importers")
+            file(GLOB maybe_empty "${CURRENT_PACKAGES_DIR}/lib/magnum/*")
+            if(maybe_empty STREQUAL "")
+                file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum")
+                file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d")
+            endif()
+        endif()
     endif()
 
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/magnum")
