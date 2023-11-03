@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF c04dfdbc37882f298d3178b3875cd67c38ea7d78 # poco-1.12.5-release
+    REF "poco-${VERSION}-release"
     SHA512 a9dfe8981ba15049a0824ce5dbe79df5032d96bf204e7780719f987ef86b21cde5bb8a19340c5d5c34a33d60955341a386057f14a6f16bad9657e8880b12294d
     HEAD_REF master
     PATCHES
