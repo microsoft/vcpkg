@@ -4,12 +4,11 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO soasis/cuneicode
-  REF 05f89cbc2ba2b8e8a9136693151235e49ce91119
-  SHA512 ac768e5173cba55695e273c2244e97a3a4e839700b108bea52111389655b26147275a545f210d1975748aa4775c1868d1bd128ebe9a5f556c1e38adcaf03fb85
+  REF 093041aa934b7b09e7ee7300abdc3f54bb57e389
+  SHA512 0066fee5cf75fa07dc97934153e4206e4add69f15602526c1953b0302d5a6f8b56256e837a73acee187b0e02e676fba1350ad39b162c4901c624b12fa4e0fb03
   HEAD_REF main
   PATCHES 
       fix-cmake-install.patch
-      fix-c32_state-alignment.patch
 )
 
 vcpkg_cmake_configure(

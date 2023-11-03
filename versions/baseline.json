@@ -9257,7 +9257,7 @@
       "port-version": 0
     },
     "ztd-cuneicode": {
-      "baseline": "2023-10-29",
+      "baseline": "2023-11-03",
       "port-version": 0
     },
     "ztd-encoding-tables": {
@@ -9265,7 +9265,7 @@
       "port-version": 0
     },
     "ztd-idk": {
-      "baseline": "2023-10-29",
+      "baseline": "2023-11-03",
       "port-version": 0
     },
     "ztd-platform": {
@@ -9277,7 +9277,7 @@
       "port-version": 0
     },
     "ztd-text": {
-      "baseline": "2023-08-10",
+      "baseline": "2023-11-03",
       "port-version": 0
     },
     "zug": {

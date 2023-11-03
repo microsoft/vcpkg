@@ -4,12 +4,11 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO soasis/idk
-  REF 00c82f4fd3b119ace0ea5e654945e9b7f3fd0b20 
-  SHA512 14c33d97ef45da3f5f4d7064ed9de7e89a03b10d0537ee54c11b456561845e52cf95d034ef951e51d3eeb96e9d4b8db0175fa5ef59d8bb53bcc01fe3935742aa
+  REF ad64a1759a506bb0761c7b20c40da8c91865f50e
+  SHA512 b6f1afa78b23331ba19116101667bb9dd070deafb9d685f99f165c75ec30d7bfe90443034b6f1882c3186c490f3fc4ed648cdc3fff6fa8450375676d8e9c4727
   HEAD_REF main
   PATCHES 
       fix-cmake-install.patch
-      fix-comparison.patch
 )
 
 vcpkg_cmake_configure(
