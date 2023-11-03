@@ -44,7 +44,7 @@ index c548e97..299ac0c 100644
  #include <errno.h>
  #include <fcntl.h>	/* For open and flags */
 -#include <regex.h>
-+#include <tre/regex.h>
++#include <pcre2posix.h>
  #include <time.h>
  #include <sys/types.h>
  #ifndef WIN32

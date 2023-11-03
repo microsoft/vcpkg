@@ -1,0 +1,20 @@
+LIBRARY   libmagic  
+EXPORTS  
+    magic_open
+    magic_close
+    magic_getpath
+    magic_file
+    magic_descriptor
+    magic_buffer
+    magic_error
+    magic_setflags
+    magic_version
+    magic_load
+    magic_load_buffers
+    magic_compile
+    magic_check
+    magic_list
+    magic_errno
+    magic_setparam
+    magic_getparam
+    getline

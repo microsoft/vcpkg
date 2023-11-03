@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(PCRE2 COMPONENTS 8BIT POSIX)
+
+include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
+
+set(unofficial-libmagic_VERSION @CMAKE_PROJECT_VERSION@)
+set(unofficial-libmagic_FOUND true)
+set(unofficial-libmagic_DICTIONARY "${CMAKE_CURRENT_LIST_DIR}/magic.mgc")
+
+check_required_components("unofficial-libmagic")

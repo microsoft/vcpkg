@@ -12,7 +12,7 @@ index 299ac0c..2c365a6 100644
 --- a/src/file.h
 +++ b/src/file.h
 @@ -82,7 +82,7 @@
- #include <tre/regex.h>
+ #include <pcre2posix.h>
  #include <time.h>
  #include <sys/types.h>
 -#ifndef WIN32

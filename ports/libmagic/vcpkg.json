@@ -1,6 +1,7 @@
 {
   "name": "libmagic",
   "version": "5.45",
+  "port-version": 1,
   "description": "This library can be used to classify files according to magic number tests.",
   "homepage": "https://github.com/file/file",
   "dependencies": [
@@ -10,15 +11,20 @@
     },
     {
       "name": "getopt",
-      "platform": "windows"
+      "platform": "windows & !mingw"
     },
     {
       "name": "libmagic",
       "host": true
     },
+    "pcre2",
     {
-      "name": "tre",
-      "platform": "windows | mingw"
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ]
 }
