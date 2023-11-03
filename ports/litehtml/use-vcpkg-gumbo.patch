@@ -1,16 +1,5 @@
-From 4ca6d9846bfc39c4aa98d6a41f298078b4bebf8d Mon Sep 17 00:00:00 2001
-From: Sean Farrell <sean.farrell@rioki.org>
-Date: Thu, 23 Feb 2023 08:15:37 +0100
-Subject: [PATCH] Use vcpkg's gumbo
-
----
- CMakeLists.txt             | 8 ++------
- cmake/litehtmlConfig.cmake | 2 +-
- src/document.cpp           | 2 +-
- 3 files changed, 4 insertions(+), 8 deletions(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fe71729..21e77c8 100644
+index 34d6b15..fb1996a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -10,11 +10,7 @@ enable_testing()
@@ -25,9 +14,9 @@ index fe71729..21e77c8 100644
 +find_package(unofficial-gumbo CONFIG REQUIRED)
  
  set(SOURCE_LITEHTML
-     src/background.cpp
-@@ -153,7 +149,7 @@ if (LITEHTML_UTF8)
- endif()
+     src/codepoint.cpp
+@@ -160,7 +156,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
+ target_include_directories(${PROJECT_NAME} PRIVATE include/${PROJECT_NAME})
  
  # Gumbo
 -target_link_libraries(${PROJECT_NAME} PUBLIC gumbo)
@@ -45,18 +34,15 @@ index 5eedcf4..1027913 100644
 +find_dependency(unofficial-gumbo)
  include(${CMAKE_CURRENT_LIST_DIR}/litehtmlTargets.cmake)
 diff --git a/src/document.cpp b/src/document.cpp
-index 8bd1ea8..51a9d42 100644
+index 8623bff..3435eeb 100644
 --- a/src/document.cpp
 +++ b/src/document.cpp
-@@ -26,7 +26,7 @@
+@@ -24,7 +24,7 @@
+ #include <cmath>
  #include <cstdio>
  #include <algorithm>
- #include <functional>
 -#include "gumbo.h"
 +#include <gumbo.h>
  #include "utf8_strings.h"
+ #include "render_item.h"
  
- litehtml::document::document(litehtml::document_container* objContainer, litehtml::context* ctx)
--- 
-2.33.0.windows.2
-
