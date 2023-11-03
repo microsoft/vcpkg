@@ -11,6 +11,10 @@ function(vcpkg_extract_archive)
         endif()
     endforeach()
 
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "Unrecognized arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+
     if(EXISTS "${arg_DESTINATION}")
         message(FATAL_ERROR "${arg_DESTINATION} was an extraction target, but it already exists.")
     endif()
