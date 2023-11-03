@@ -26,7 +26,8 @@ vcpkg_install(
         DISPLAY_NAME "nanoJSON"
 )
 
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/COPYRIGHT.txt" DESTINATION "${vcpkg_installed_dir}/share/doc/nanojson")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/COPYRIGHT.txt" DESTINATION "${vcpkg_installed_dir}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # Set the version of the library
 set(VCPKG_TARGET_TRIPLET ${VCPKG_TARGET_TRIPLET} PARENT_SCOPE)
