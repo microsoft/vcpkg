@@ -345,8 +345,8 @@
       "port-version": 2
     },
     "avro-c": {
-      "baseline": "1.11.0",
-      "port-version": 3
+      "baseline": "1.11.3",
+      "port-version": 0
     },
     "avro-cpp": {
       "baseline": "1.11.3",
@@ -401,8 +401,8 @@
       "port-version": 0
     },
     "aws-lambda-cpp": {
-      "baseline": "0.2.8",
-      "port-version": 1
+      "baseline": "0.2.9",
+      "port-version": 0
     },
     "aws-sdk-cpp": {
       "baseline": "1.11.169",
@@ -517,7 +517,7 @@
       "port-version": 1
     },
     "baresip-libre": {
-      "baseline": "3.5.1",
+      "baseline": "3.6.0",
       "port-version": 0
     },
     "basisu": {
@@ -1885,7 +1885,7 @@
       "port-version": 4
     },
     "cppslippi": {
-      "baseline": "1.1.3.14",
+      "baseline": "1.2.3.14",
       "port-version": 0
     },
     "cpptoml": {
@@ -2169,7 +2169,7 @@
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2023-06-13",
+      "baseline": "2023-10-28",
       "port-version": 0
     },
     "directxsdk": {
@@ -2177,16 +2177,16 @@
       "port-version": 7
     },
     "directxtex": {
-      "baseline": "2023-09-01",
+      "baseline": "2023-10-28",
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2023-09-01",
-      "port-version": 1
+      "baseline": "2023-10-28",
+      "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2023-09-01",
-      "port-version": 1
+      "baseline": "2023-10-28",
+      "port-version": 0
     },
     "dirent": {
       "baseline": "1.24",
@@ -2777,8 +2777,8 @@
       "port-version": 0
     },
     "fribidi": {
-      "baseline": "1.0.12",
-      "port-version": 1
+      "baseline": "1.0.13",
+      "port-version": 0
     },
     "frozen": {
       "baseline": "1.1.1",
@@ -2961,7 +2961,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "1.5.4",
+      "baseline": "1.5.6",
       "port-version": 0
     },
     "glbinding": {
@@ -3206,6 +3206,10 @@
     },
     "gz-rendering7": {
       "baseline": "7.4.1",
+      "port-version": 0
+    },
+    "gz-sensors7": {
+      "baseline": "7.3.0",
       "port-version": 0
     },
     "gz-tools2": {
@@ -4697,8 +4701,8 @@
       "port-version": 10
     },
     "librsync": {
-      "baseline": "2.3.2",
-      "port-version": 1
+      "baseline": "2.3.4",
+      "port-version": 0
     },
     "librtmp": {
       "baseline": "2019-11-11",
@@ -4853,8 +4857,8 @@
       "port-version": 3
     },
     "libtommath": {
-      "baseline": "1.2.0",
-      "port-version": 3
+      "baseline": "1.2.1",
+      "port-version": 0
     },
     "libtorch": {
       "baseline": "1.12.1",
@@ -4893,8 +4897,8 @@
       "port-version": 3
     },
     "libunibreak": {
-      "baseline": "5.0",
-      "port-version": 1
+      "baseline": "5.1",
+      "port-version": 0
     },
     "libunifex": {
       "baseline": "0.3.0",
@@ -8222,7 +8226,7 @@
     },
     "tacopie": {
       "baseline": "3.2.0",
-      "port-version": 5
+      "port-version": 6
     },
     "taglib": {
       "baseline": "1.13.1",
@@ -8329,7 +8333,7 @@
       "port-version": 0
     },
     "thorvg": {
-      "baseline": "0.11.1",
+      "baseline": "0.11.3",
       "port-version": 0
     },
     "threadpool": {
@@ -8689,7 +8693,7 @@
       "port-version": 2
     },
     "uvatlas": {
-      "baseline": "2023-06-13",
+      "baseline": "2023-10-31",
       "port-version": 0
     },
     "uvw": {
@@ -9005,8 +9009,8 @@
       "port-version": 0
     },
     "wolfssl": {
-      "baseline": "5.6.3",
-      "port-version": 1
+      "baseline": "5.6.4",
+      "port-version": 0
     },
     "wolftpm": {
       "baseline": "2.7.0",

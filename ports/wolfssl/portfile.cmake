@@ -1,12 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolfssl
-    REF v5.6.3-stable
-    SHA512 7c3b5c06ade7826031db089d50ec45c36970555499b6be94d1939b3002369fc98e503418128c6b2e253df7e92f86a71647d37f2cd27d57ac201e5aba32b879dc
+    REF v5.6.4-stable
+    SHA512 12d9dd264e005f04854d71ded629b20b9563a42b04bfbfd2879c4e3b121902edf2ac4349de27498cddd75d4d9fd742e8f78b82cd319c240485f69b4828e2c80c
     HEAD_REF master
     PATCHES
-      warning-and-include.patch
-      fix-windows-build.patch # From https://github.com/wolfSSL/wolfssl/pull/6509
     )
 
 vcpkg_cmake_configure(
