@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fd8e1c8..516767f 100644
+index fd8e1c8..332f5fe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -35,13 +35,6 @@ cmake_policy(VERSION 3.21)
@@ -87,8 +87,10 @@ index fd8e1c8..516767f 100644
  	INTERFACE
 -	ztd::idk
 -	ztd::static_containers
- 	ztd::platform
- 	ztd::cuneicode)
+-	ztd::platform
+-	ztd::cuneicode)
++	unoffical-ztd::ztd.platform
++	unoffical-ztd::ztd.cuneicode)
  install(DIRECTORY include/
  	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
  
@@ -98,7 +100,7 @@ index fd8e1c8..516767f 100644
  # # Config / Version packaging
  # Version configurations
  configure_package_config_file(
-@@ -213,6 +187,15 @@ export(TARGETS ztd.text
+@@ -213,6 +187,16 @@ export(TARGETS ztd.text
  	FILE
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.text/ztd.text-targets.cmake")
  
@@ -108,6 +110,7 @@ index fd8e1c8..516767f 100644
 +  DESTINATION share/ztd.text
 +  )
 +install(EXPORT ztd.text-targets
++	NAMESPACE unoffical-ztd::
 +  FILE ztd.text-targets.cmake
 +  DESTINATION share/ztd.text
 +)
@@ -115,13 +118,15 @@ index fd8e1c8..516767f 100644
  	add_subdirectory(single)
  endif()
 diff --git a/cmake/ztd.text-config.cmake.in b/cmake/ztd.text-config.cmake.in
-index a526740..caa2914 100644
+index a526740..3833cf7 100644
 --- a/cmake/ztd.text-config.cmake.in
 +++ b/cmake/ztd.text-config.cmake.in
-@@ -1,4 +1,6 @@
+@@ -1,5 +1,8 @@
  @PACKAGE_INIT@
 +include(CMakeFindDependencyMacro)
 +find_dependency(ztd.platform CONFIG)
  
++include (${CMAKE_CURRENT_LIST_DIR}/ztd.text-targets.cmake)
  if (TARGET ztd::text)
  	get_target_property(ZTD_TEXT_INCLUDE_DIRS
+ 		ztd.text INTERFACE_INCLUDE_DIRECTORIES)

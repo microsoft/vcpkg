@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c7b2e2a..74118eb 100644
+index 32371d4..452356c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -17,11 +17,8 @@ cmake_minimum_required(VERSION 3.20.0)
+@@ -20,12 +20,9 @@ cmake_policy(VERSION 3.21)
  # Includes a bunch of basic flags and utilities shared across projects
  # See more at the github repository link below
  include(FetchContent)
@@ -11,12 +11,13 @@ index c7b2e2a..74118eb 100644
 -	GIT_TAG main)
 -FetchContent_MakeAvailable(ztd.cmake)
 -set(CMAKE_PROJECT_INCLUDE ${ZTD_CMAKE_PROJECT_PRELUDE})
+ 
 +include(CMakePackageConfigHelpers)
 +include(GNUInstallDirs)
- 
  # # Project declaration
  # informs about the project, gives a description, version and MOST IMPORTANTLY
-@@ -100,10 +97,7 @@ option(ITSY_BITSY_EXAMPLES "Enable build of examples" OFF)
+ # the languages the project is going to use. Required.
+@@ -113,10 +110,7 @@ option(ZTD_STATIC_CONTAINERS_BENCHMARKS "Enable build of benchmarks" OFF)
  
  # # Dependencies
  # ztd.idk
@@ -26,58 +27,50 @@ index c7b2e2a..74118eb 100644
 -FetchContent_MakeAvailable(ztd.idk)
 +find_package(ztd.idk CONFIG REQUIRED)
  
- # # itsy.bitsy Target
- # Build Target
-@@ -135,7 +129,11 @@ write_basic_package_version_file(
- export(TARGETS itsy.bitsy FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/itsy.bitsy-targets.cmake")
+ file(GLOB_RECURSE ztd.static_containers.sources
+ 	LIST_DIRECTORIES FALSE
+@@ -126,10 +120,9 @@ file(GLOB_RECURSE ztd.static_containers.sources
  
- install(TARGETS itsy.bitsy
--	EXPORT itsy.bitsy)
-+	EXPORT itsy.bitsy-targets)
-+install(EXPORT itsy.bitsy-targets
-+  FILE itsy.bitsy-targets.cmake
-+  DESTINATION lib/cmake/itsy.bitsy
+ add_library(ztd.static_containers INTERFACE)
+ add_library(ztd::static_containers ALIAS ztd.static_containers)
+-target_sources(ztd.static_containers INTERFACE ${ztd.static_containers.sources})
+ target_link_libraries(ztd.static_containers
+ 	INTERFACE
+-	ztd::idk
++	unofficial-ztd::ztd.idk
+ )
+ target_include_directories(ztd.static_containers INTERFACE
+ 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+@@ -155,6 +148,19 @@ export(TARGETS ztd.static_containers
+ 	FILE
+ 	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.static_containers/ztd.static_containers-targets.cmake")
+ 
++install(TARGETS ztd.static_containers
++	EXPORT ztd.static_containers-targets)
++install(EXPORT ztd.static_containers-targets
++	NAMESPACE unofficial-ztd::
++  FILE ztd.static_containers-targets.cmake
++  DESTINATION share/ztd.static_containers
 +)
- 
- install(DIRECTORY include/itsy
- 	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
-@@ -145,16 +143,6 @@ install(FILES
- 	"${CMAKE_CURRENT_BINARY_DIR}/cmake/itsy.bitsy-config-version.cmake"
- 	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/itsy.bitsy")
- 
--# pkg-config support, except on Windows
--if(NOT WIN32 OR NOT CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
--	set(PKGCONFIG_INSTALL_DIR
--		"${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig"
--		CACHE PATH "Path where itsy.bitsy.pc is installed")
--	
--	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/itsy.bitsy.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/itsy.bitsy.pc" @ONLY)
--	install(FILES "${CMAKE_CURRENT_BINARY_DIR}/itsy.bitsy.pc" DESTINATION "${PKGCONFIG_INSTALL_DIR}")
--endif()
--
- if (ITSY_BITSY_SINGLE)
- 	add_subdirectory(single)
- endif()
-diff --git a/cmake/itsy.bitsy-config.cmake.in b/cmake/itsy.bitsy-config.cmake.in
-index 9f87935..9a9fa65 100644
---- a/cmake/itsy.bitsy-config.cmake.in
-+++ b/cmake/itsy.bitsy-config.cmake.in
-@@ -9,9 +9,12 @@
- #  See https://github.com/ThePhD/itsy_bitsy#using-the-library for documentation.
- 
++install(FILES
++  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.static_containers/ztd.static_containers-config.cmake
++  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.static_containers/ztd.static_containers-config-version.cmake
++  DESTINATION share/ztd.static_containers
++)
++ 
+ # # Benchmarks, Tests, Examples
+ if(ZTD_STATIC_CONTAINERS_TESTS)
+ 	enable_testing()
+diff --git a/cmake/ztd.static_containers-config.cmake.in b/cmake/ztd.static_containers-config.cmake.in
+index f96ace2..a538f81 100644
+--- a/cmake/ztd.static_containers-config.cmake.in
++++ b/cmake/ztd.static_containers-config.cmake.in
+@@ -1,5 +1,7 @@
  @PACKAGE_INIT@
+-
 +include(CMakeFindDependencyMacro)
 +find_dependency(ztd.idk CONFIG)
-+include("${CMAKE_CURRENT_LIST_DIR}/itsy.bitsy-targets.cmake")
- 
--include("${CMAKE_CURRENT_LIST_DIR}/sol2-targets.cmake")
- 
-+if(0)
- MESSAGE(STATUS ${CMAKE_CURRENT_LIST_DIR})
- 
- if (TARGET sol2)
-@@ -27,3 +30,4 @@ if(TARGET sol2_single)
-     set_and_check(SOL2_INCLUDE_DIRS "${SOL2_SINGLE_INCLUDE_DIRS}")
-     set(SOL2_LIBRARIES_SINGLE sol2_single)
- endif()
-+endif()
++include("${CMAKE_CURRENT_LIST_DIR}/ztd.static_containers-targets.cmake")
+ if (TARGET ztd::static_containers)
+ 	get_target_property(ZTD_STATIC_CONTAINERS_INCLUDE_DIRS
+ 		ztd.static_containers INTERFACE_INCLUDE_DIRECTORIES)

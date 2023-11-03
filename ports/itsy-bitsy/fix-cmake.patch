@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c7b2e2a..74118eb 100644
+index c7b2e2a..f1b6451 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -17,11 +17,8 @@ cmake_minimum_required(VERSION 3.20.0)
@@ -28,20 +28,30 @@ index c7b2e2a..74118eb 100644
  
  # # itsy.bitsy Target
  # Build Target
-@@ -135,7 +129,11 @@ write_basic_package_version_file(
+@@ -115,7 +109,7 @@ add_library(itsy.bitsy INTERFACE)
+ add_library(itsy::bitsy ALIAS itsy.bitsy)
+ target_link_libraries(itsy.bitsy
+ 	INTERFACE
+-	ztd::idk)
++	unofficial-ztd::ztd.idk)
+ target_include_directories(itsy.bitsy INTERFACE
+ 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+ 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+@@ -135,7 +129,12 @@ write_basic_package_version_file(
  export(TARGETS itsy.bitsy FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/itsy.bitsy-targets.cmake")
  
  install(TARGETS itsy.bitsy
 -	EXPORT itsy.bitsy)
 +	EXPORT itsy.bitsy-targets)
 +install(EXPORT itsy.bitsy-targets
++	NAMESPACE unofficial-itsy::
 +  FILE itsy.bitsy-targets.cmake
 +  DESTINATION lib/cmake/itsy.bitsy
 +)
  
  install(DIRECTORY include/itsy
  	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
-@@ -145,16 +143,6 @@ install(FILES
+@@ -145,16 +144,6 @@ install(FILES
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/itsy.bitsy-config-version.cmake"
  	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/itsy.bitsy")
  

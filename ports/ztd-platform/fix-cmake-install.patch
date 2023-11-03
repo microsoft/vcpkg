@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 57c97c4..9ec9c1e 100644
+index 57c97c4..66acfde 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -33,12 +33,6 @@ cmake_policy(VERSION 3.21)
@@ -36,6 +36,15 @@ index 57c97c4..9ec9c1e 100644
  
  # encoding_c
  if (ZTD_PLATFORM_USE_ENCODING_C)
+@@ -382,7 +375,7 @@ target_compile_definitions(ztd.platform
+ )
+ target_link_libraries(ztd.platform
+ 	PUBLIC
+-		ztd::idk
++		unofficial-ztd::ztd.idk
+ 		$<$<BOOL:${ZTD_PLATFORM_USE_LIBICONV}>:$<$<TARGET_EXISTS:Iconv::Iconv>:Iconv::Iconv>>
+ 		$<$<BOOL:${ZTD_PLATFORM_USE_ICU}>:$<$<TARGET_EXISTS:ICU::uc>:ICU::uc>>
+ 		$<$<BOOL:${ZTD_PLATFORM_USE_ICU}>:$<$<TARGET_EXISTS:ICU::i18n>:ICU::i18n>>
 @@ -408,11 +401,8 @@ install(DIRECTORY include/
  	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
  )
@@ -50,7 +59,7 @@ index 57c97c4..9ec9c1e 100644
  
  # # Config / Version packaging
  # Version configurations
-@@ -430,6 +420,15 @@ export(TARGETS ztd.platform
+@@ -430,6 +420,16 @@ export(TARGETS ztd.platform
  	FILE
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.platform/ztd.platform-targets.cmake")
  
@@ -60,6 +69,7 @@ index 57c97c4..9ec9c1e 100644
 +  DESTINATION share/ztd.platform
 +  )
 +install(EXPORT ztd.platform-targets
++	NAMESPACE unofficial-ztd::
 +  FILE ztd.platform-targets.cmake
 +  DESTINATION share/ztd.platform
 +)
