@@ -163,41 +163,41 @@ function(vcpkg_find_acquire_program program)
             message(FATAL_ERROR "Could not find ${program_name}. Please install it via your package manager${example}")
         endif()
 
-        if(NOT "${sourceforge_args}" STREQUAL "")
-            # Locally change editable to suppress re-extraction each time
-            set(_VCPKG_EDITABLE 1)
-            vcpkg_from_sourceforge(OUT_SOURCE_PATH SFPATH ${sourceforge_args})
-            unset(_VCPKG_EDITABLE)
-        else()
+        if("${sourceforge_args}" STREQUAL "")
             vcpkg_download_distfile(archive_path
                 URLS ${download_urls}
                 SHA512 "${download_sha512}"
                 FILENAME "${download_filename}"
             )
-
-            if(raw_executable)
-                file(MAKE_DIRECTORY "${full_subdirectory}")
-                if(NOT "${rename_binary_to}" STREQUAL "")
-                    file(INSTALL "${archive_path}"
-                        DESTINATION "${full_subdirectory}"
-                        RENAME "${rename_binary_to}"
-                        FILE_PERMISSIONS
-                            OWNER_READ OWNER_WRITE OWNER_EXECUTE
-                            GROUP_READ GROUP_EXECUTE
-                            WORLD_READ WORLD_EXECUTE
-                    )
-                else()
-                    file(COPY "${archive_path}"
-                        DESTINATION "${full_subdirectory}"
-                        FILE_PERMISSIONS
-                            OWNER_READ OWNER_WRITE OWNER_EXECUTE
-                            GROUP_READ GROUP_EXECUTE
-                            WORLD_READ WORLD_EXECUTE
-                    )
-                endif()
+        else()
+            vcpkg_download_sourceforge(archive_path
+                ${sourceforge_args}
+                SHA512 "${download_sha512}"
+                FILENAME "${download_filename}"
+            )
+        endif()
+        if(raw_executable)
+            file(MAKE_DIRECTORY "${full_subdirectory}")
+            if(NOT "${rename_binary_to}" STREQUAL "")
+                file(INSTALL "${archive_path}"
+                    DESTINATION "${full_subdirectory}"
+                    RENAME "${rename_binary_to}"
+                    FILE_PERMISSIONS
+                        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                        GROUP_READ GROUP_EXECUTE
+                        WORLD_READ WORLD_EXECUTE
+                )
             else()
-                vcpkg_extract_archive(ARCHIVE "${archive_path}" DESTINATION "${full_subdirectory}")
+                file(COPY "${archive_path}"
+                    DESTINATION "${full_subdirectory}"
+                    FILE_PERMISSIONS
+                        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                        GROUP_READ GROUP_EXECUTE
+                        WORLD_READ WORLD_EXECUTE
+                )
             endif()
+        else()
+            vcpkg_extract_archive(ARCHIVE "${archive_path}" DESTINATION "${full_subdirectory}")
         endif()
 
         if(NOT "${post_install_command}" STREQUAL "")
