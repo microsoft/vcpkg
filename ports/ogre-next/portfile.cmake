@@ -18,6 +18,7 @@ vcpkg_from_github(
         avoid-name-clashes.patch
         fix-error-c2039.patch
         fix-dependencies.patch
+        fix-pc-file.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
