@@ -18,6 +18,7 @@ set(PATCHES
     0012-force-disable-curses.patch
     0014-fix-get-python-inc-output.patch
     0015-dont-use-WINDOWS-def.patch
+    0018-fix-sysconfig-include.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
