@@ -144,9 +144,9 @@ install(EXPORT unofficial-theora-targets
 )
 
 set(prefix "${CMAKE_INSTALL_PREFIX}")
-set(libdir "${CMAKE_INSTALL_LIBDIR}")
-set(exec_prefix "${CMAKE_INSTALL_LIBDIR}/libexec")
-set(includedir "${CMAKE_INSTALL_INCLUDEDIR}")
+set(libdir "\${prefix}/lib")
+set(exec_prefix "\${prefix}")
+set(includedir "\${prefix}/include")
 set(VERSION "1.2.0-alpha1")
 configure_file(theora.pc.in theora.pc @ONLY)
 configure_file(theoradec.pc.in theoradec.pc @ONLY)
