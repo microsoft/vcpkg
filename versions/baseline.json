@@ -3188,6 +3188,10 @@
       "baseline": "8.1.0",
       "port-version": 0
     },
+    "gz-gui7": {
+      "baseline": "7.2.1",
+      "port-version": 0
+    },
     "gz-math7": {
       "baseline": "7.3.0",
       "port-version": 0
@@ -3198,7 +3202,7 @@
     },
     "gz-physics6": {
       "baseline": "6.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-plugin2": {
       "baseline": "2.0.1",
