@@ -1,20 +1,12 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-# see https://github.com/altseed/LLGI/pull/150
-vcpkg_download_distfile(LLGI_PR_150_PATCH
-    URLS "https://patch-diff.githubusercontent.com/raw/altseed/LLGI/pull/150.diff?full_index=1"
-    FILENAME llgi-pr-150.patch
-    SHA512 49353263a6d3b4676833356e1c6869b38052f4a8cc8dcc9286dbdca3fa8c2886881f3ce72d7e9b23d12799e2cb7048f13ac5b4cb4d083d3ae66543427f3d45cb
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO altseed/LLGI
-    REF 008fe7fc7d1c427f476c2e8ca654c590cd38c39a
-    SHA512 6d4e284bec2b5ef166fe1c12c235e8c41c03a2994756b434a3d1c902450b380fda8d3251424c1fe5200559e7d4285009563d6922f9e9278fdbaa8340576308eb
+    REF 1b6b59b9f5bc9f81b4c2af2333d69f6e23670b3e
+    SHA512 c9011dee560897caf5ae53d8fa58869b774bd3bc7ce2e0cc4696ac034fc89a36adf3f5285e82cffe6430ca61f6509fd7fbadf5c77aef896c74e8d70e70ff4312
     HEAD_REF master
     PATCHES
-        ${LLGI_PR_150_PATCH}
         fix-cmake-use-vcpkg.patch
         fix-sources.patch
 )
