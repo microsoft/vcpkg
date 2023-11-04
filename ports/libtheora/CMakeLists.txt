@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(theora LANGUAGES C)
+include(GNUInstallDirs)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
 find_package(Ogg CONFIG REQUIRED)
@@ -140,4 +141,18 @@ install(TARGETS theora theoraenc theoradec
 install(EXPORT unofficial-theora-targets
   NAMESPACE unofficial::theora::
   DESTINATION "lib/unofficial-theora"
+)
+
+set(prefix "${CMAKE_INSTALL_PREFIX}")
+set(libdir "${CMAKE_INSTALL_LIBDIR}")
+set(exec_prefix "${CMAKE_INSTALL_LIBDIR}/libexec")
+set(includedir "${CMAKE_INSTALL_INCLUDEDIR}")
+set(VERSION "1.2.0-alpha1")
+configure_file(theora.pc.in theora.pc @ONLY)
+configure_file(theoradec.pc.in theoradec.pc @ONLY)
+configure_file(theoraenc.pc.in theoraenc.pc @ONLY)
+
+install(
+  FILES ${PROJECT_BINARY_DIR}/theora.pc ${PROJECT_BINARY_DIR}/theoradec.pc ${PROJECT_BINARY_DIR}/theoraenc.pc
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
