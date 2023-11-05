@@ -8420,6 +8420,10 @@
       "baseline": "2.0.0-rc9",
       "port-version": 0
     },
+    "tinyorm": {
+      "baseline": "0.36.5",
+      "port-version": 0
+    },
     "tinyply": {
       "baseline": "2.3.4",
       "port-version": 0
