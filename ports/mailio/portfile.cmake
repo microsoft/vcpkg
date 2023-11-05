@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 e1eee9f5b80dab16017af475b8c13f8278fa3d73e1c446e507dc122cb3df5b984b41c04d753e36cf848dd15029524f95cf48e050cee265c8933b0be1ea500a5d
     HEAD_REF master
+    PATCHES fix-library-type.patch
 )
 
 vcpkg_cmake_configure(
@@ -11,6 +12,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DMAILIO_BUILD_DOCUMENTATION=OFF
         -DMAILIO_BUILD_EXAMPLES=OFF
+        -DMAILIO_BUILD_TESTS=OFF
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(

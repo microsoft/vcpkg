@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e3b30fd..0c4b367 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -123,7 +123,7 @@ if (MAILIO_BUILD_SHARED_LIBRARY)
+ else()
+     set(LIBRARY_TYPE "STATIC")
+ endif()
+-add_library(${PROJECT_NAME} ${LIBRARY_TYPE} ${project_sources} ${project_headers})
++add_library(${PROJECT_NAME} ${project_sources} ${project_headers})
+ 
+ 
+ # pkg-config support
