@@ -4,7 +4,6 @@
   "description": "C++14 Asynchronous Low Latency Logging Library",
   "homepage": "https://github.com/odygrd/quill/",
   "license": "MIT",
-  "supports": "!android",
   "dependencies": [
     "fmt",
     {
