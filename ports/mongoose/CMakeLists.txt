@@ -22,7 +22,7 @@ endif()
 if (ENABLE_MBEDTLS)
      find_package(mbedtls REQUIRED)
      target_compile_options(mongoose PRIVATE -DMG_TLS=1) ##define MG_TLS_MBED 1     // mbedTLS
-     target_link_libraries(mongoose PRIVATE mbedtls mbedtls_crypto)
+     target_link_libraries(mongoose PRIVATE mbedtls mbedcrypto mbedx509)
 endif()
 
 install(TARGETS mongoose EXPORT unofficial-mongoose-config)
