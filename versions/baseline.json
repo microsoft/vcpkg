@@ -6342,7 +6342,7 @@
     },
     "opus": {
       "baseline": "1.4",
-      "port-version": 0
+      "port-version": 1
     },
     "opusfile": {
       "baseline": "0.12+20221121",
