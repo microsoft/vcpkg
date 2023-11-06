@@ -12,6 +12,7 @@ vcpkg_from_github(
       "cmakefiles.patch"
       "curl.patch"
       "mspack.patch"
+      "isnt.patch"
 )
 
 vcpkg_cmake_configure(
