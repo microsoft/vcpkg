@@ -576,7 +576,6 @@ libmariadb:x64-uwp            = skip
 libmariadb:x64-windows        = skip
 libmariadb:x64-windows-static = skip
 libmariadb:x64-windows-static-md=skip
-libmariadb:x86-windows        =skip
 # libmesh installs tons of problematic files that conflict with other ports (boost, eigen, etc)
 libmesh:x64-linux=skip
 libmikmod:arm-neon-android=fail
@@ -586,6 +585,7 @@ libmodman:x64-windows-static=fail
 libmpeg2:arm-neon-android=fail
 libmpeg2:arm64-android=fail
 libmpeg2:x64-android=fail
+libmysql:x86-windows=skip
 libodb:x64-linux=fail # dynamic exception specifications
 libopensp:arm-neon-android=fail
 libopensp:arm64-android=fail
