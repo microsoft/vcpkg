@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
-    REF v0.9.0-relca4
-    SHA512 ae28bf04c72d2a0c652e06fe9468974c58d934a764393dc26f40b6020a34121440c12120b00b27d874f9e64f62f2d1d6f3c701d73382632deece301b8e7b81f3
+    REF v${VERSION}
+    SHA512 9d2e783a597bea5923db4eb822985488a24c5337376384f69bedeb2952d23e84005639c0e1aa243b81b40e87e428da470895ce30418fc31e0f1b60bc71b17d09
     HEAD_REF master
 )
 
 # Enable selected codecs
 set(ONLY_CODECS "")
 
-foreach(CODEC avif bmp gif ico jpeg jpeg2000 jpegxl pcx png psd qoi svg tga tiff wal webp xbm)
+foreach(CODEC avif bmp gif ico jpeg jpeg2000 jpegxl pcx png psd qoi tga tiff wal webp xbm)
     if (${CODEC} IN_LIST FEATURES)
         list(APPEND ONLY_CODECS ${CODEC})
     endif()
