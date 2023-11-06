@@ -11,10 +11,21 @@ vcpkg_from_github(
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/config-public-compiler.h.in" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/config-internal-compiler.h.in" DESTINATION "${SOURCE_PATH}")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cxx20 LIBPQXX_USE_CXX20
+)
+
+if (LIBPQXX_USE_CXX20)
+    set(LIBPQXX_USE_CXX20_OPTION "-DCMAKE_CXX_STANDARD=20")
+    message(STATUS "Force CMAKE_CXX_STANDARD to 20")
+endif ()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSKIP_BUILD_TEST=ON
+        ${LIBPQXX_USE_CXX20_OPTION}  
 )
 
 vcpkg_cmake_install()
