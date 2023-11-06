@@ -814,17 +814,6 @@ offscale-libetcd-cpp:arm64-uwp=fail
 offscale-libetcd-cpp:x64-uwp=fail
 ogdf:arm64-android=fail
 ogre:arm64-osx=fail
-# Conflicts with ogre
-ogre-next:arm64-windows      = skip
-ogre-next:arm64-uwp            = skip
-ogre-next:x64-osx            = skip
-ogre-next:arm64-osx          = skip
-ogre-next:x64-linux          = skip
-ogre-next:x64-uwp            = skip
-ogre-next:x64-windows        = skip
-ogre-next:x64-windows-static = skip
-ogre-next:x64-windows-static-md=skip
-ogre-next:x86-windows        = skip
 ois:x64-android=fail
 # ompl is vulnerable to some form of race in its dependent ports, and adding 'ode' as a dependency
 # does not resolve the issue
