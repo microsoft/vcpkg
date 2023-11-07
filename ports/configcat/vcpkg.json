@@ -5,8 +5,19 @@
   "homepage": "https://configcat.com/",
   "license": "MIT",
   "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false,
+      "features": [
+        "ssl"
+      ]
+    },
     "hash-library",
     "nlohmann-json",
+    {
+      "name": "openssl",
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -15,17 +26,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "z4kn4fein-semver",
-    {
-      "name": "curl",
-      "default-features": false,
-      "features": [
-        "ssl"
-      ]
-    },
-    {
-      "name": "openssl",
-      "platform": "linux"
-    }
+    "z4kn4fein-semver"
   ]
 }
