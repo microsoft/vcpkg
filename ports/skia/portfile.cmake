@@ -6,10 +6,10 @@ vcpkg_from_github(
     REF "canvaskit/${VERSION}"
     SHA512 4672cfef8c92f37418e27df30a4e3fd6f7ca6273521e9d6b7755d9285800ad1ea6eff66639a17f591e6921ec8b78aa828500399a83295f9984ab58ebaff0ec24
     PATCHES
+        disable-msvc-env-setup.patch
         uwp.patch
         core-opengl32.patch
         disable-dev-test.patch
-        support-x86-MSVC-build.patch
 )
 
 # these following aren't available in vcpkg
