@@ -58,8 +58,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dllfio_IS_DEPENDENCY=On
-        "-Dquickcpplib_DIR=${CURRENT_INSTALLED_DIR}/share/quickcpplib"
-        "-Dstatus-code_DIR=${CURRENT_INSTALLED_DIR}/share/status-code"
+        "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}"
         ${LLFIO_FEATURE_OPTIONS}
         -DLLFIO_FORCE_OPENSSL_OFF=ON
         -DLLFIO_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles

@@ -38,8 +38,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Doutcome_IS_DEPENDENCY=ON
-        "-Dquickcpplib_DIR=${CURRENT_INSTALLED_DIR}/share/quickcpplib"
-        "-Dstatus-code_DIR=${CURRENT_INSTALLED_DIR}/share/status-code"
+        "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}"
         -DOUTCOME_BUNDLE_EMBEDDED_STATUS_CODE=OFF
         -DOUTCOME_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
