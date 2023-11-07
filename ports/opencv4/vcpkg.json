@@ -212,12 +212,6 @@
         "jasper"
       ]
     },
-    "openjpeg": {
-      "description": "JPEG 2000 support for opencv",
-      "dependencies": [
-        "openjpeg"
-      ]
-    },    
     "jpeg": {
       "description": "JPEG support for opencv",
       "dependencies": [
@@ -244,6 +238,12 @@
       "description": "opengl support for opencv",
       "dependencies": [
         "opengl"
+      ]
+    },
+    "openjpeg": {
+      "description": "JPEG 2000 support for opencv",
+      "dependencies": [
+        "openjpeg"
       ]
     },
     "openmp": {
