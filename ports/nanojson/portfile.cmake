@@ -10,4 +10,4 @@ vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
 
 vcpkg_cmake_install()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/nanojson" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
