@@ -1,0 +1,106 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "tinyorm",
+  "version-semver": "0.36.5",
+  "maintainers": "Silver Zachara <silver.zachara@gmail.com>",
+  "description": "Modern C++ ORM library for Qt framework",
+  "homepage": "https://github.com/silverqx/TinyORM",
+  "documentation": "https://www.tinyorm.org",
+  "license": "MIT",
+  "supports": "!(uwp | arm | android | emscripten | osx | ios | xbox | freebsd | openbsd | wasm32)",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "sql"
+      ]
+    },
+    "range-v3",
+    "tabulate",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "orm",
+    "sql-sqlite",
+    "tom"
+  ],
+  "features": {
+    "disable-thread-local": {
+      "description": "Remove all thread_local storage duration specifiers (disables multi-threading support)"
+    },
+    "inline-constants": {
+      "description": "Use inline constants instead of extern constants in shared builds"
+    },
+    "mysql-ping": {
+      "description": "Install MySQL C client library (libmysql) to support the mysql_ping()",
+      "dependencies": [
+        "libmysql"
+      ]
+    },
+    "orm": {
+      "description": "Enable ORM-related source code (without it only the query builder is compiled)"
+    },
+    "sql-mysql": {
+      "description": "Build Qt SQL Driver for MySQL",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql-mysql"
+          ]
+        }
+      ]
+    },
+    "sql-psql": {
+      "description": "Build Qt SQL Driver for PostgreSQL",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql-psql"
+          ]
+        }
+      ]
+    },
+    "sql-sqlite": {
+      "description": "Build Qt SQL Driver for SQLite",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql-sqlite"
+          ]
+        }
+      ]
+    },
+    "strict-mode": {
+      "description": "Propagate strict compiler/linker options and Qt definitions"
+    },
+    "tom": {
+      "description": "Enable Tom-related source code (command-line interface)"
+    },
+    "tom-example": {
+      "description": "Build Tom command-line application example",
+      "dependencies": [
+        {
+          "name": "tinyorm",
+          "default-features": false,
+          "features": [
+            "tom"
+          ]
+        }
+      ]
+    }
+  }
+}

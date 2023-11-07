@@ -1,0 +1,13 @@
+diff --git a/sdk/storage/azure-storage-common/CMakeLists.txt b/sdk/storage/azure-storage-common/CMakeLists.txt
+index 9e419922..ba77ab26 100644
+--- a/sdk/storage/azure-storage-common/CMakeLists.txt
++++ b/sdk/storage/azure-storage-common/CMakeLists.txt
+@@ -97,8 +97,6 @@ target_link_libraries(azure-storage-common PUBLIC Azure::azure-core)
+ 
+ if(WIN32)
+     target_link_libraries(azure-storage-common PRIVATE bcrypt webservices)
+-    # C28020 and C28204 are introduced by nlohmann/json
+-    target_compile_options(azure-storage-common PUBLIC /wd28204 /wd28020)
+ else()
+     find_package(LibXml2 REQUIRED)
+     target_include_directories(azure-storage-common SYSTEM PRIVATE ${LIBXML2_INCLUDE_DIRS})

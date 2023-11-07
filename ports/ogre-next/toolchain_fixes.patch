@@ -1,24 +1,21 @@
 diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
-index f3a62f2..b53df6f 100644
 --- a/CMake/CMakeLists.txt
 +++ b/CMake/CMakeLists.txt
-@@ -13,10 +13,12 @@
+@@ -13,8 +13,10 @@
  # directory, but can also be used for custom projects.
  #############################################################
  
 -if(WIN32 OR APPLE)
 -	set(OGRE_CMAKE_DIR "CMake")
 -else()
--	set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
+-  set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/${OGRE_NEXT_PREFIX}/cmake")
 +if(NOT DEFINED OGRE_CMAKE_DIR)
 +  if(WIN32 OR APPLE)
 +    set(OGRE_CMAKE_DIR "CMake")
 +  else()
-+    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
++    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/${OGRE_NEXT_PREFIX}/cmake")
 +  endif()
  endif()
- 
- set(INST_FILES
 diff --git a/CMake/Packages/FindGLSLOptimizer.cmake b/CMake/Packages/FindGLSLOptimizer.cmake
 index dd4b179..6f158fc 100644
 --- a/CMake/Packages/FindGLSLOptimizer.cmake
@@ -156,15 +153,23 @@ index 48af55b..b18ac57 100644
      string(REGEX REPLACE "(\r?\n)+$" "" CMAKE_OSX_SYSROOT "${CMAKE_OSX_SYSROOT}")
    else()
 diff --git a/OgreMain/CMakeLists.txt b/OgreMain/CMakeLists.txt
-index 0424ebb..b019269 100644
 --- a/OgreMain/CMakeLists.txt
 +++ b/OgreMain/CMakeLists.txt
-@@ -434,8 +434,6 @@ if (APPLE)
-     set_target_properties(OgreMain PROPERTIES
+@@ -438,7 +438,5 @@ if (APPLE)
+     set_target_properties(${OGRE_NEXT}Main PROPERTIES
          LINK_FLAGS "-framework IOKit -framework Cocoa -framework Carbon -framework OpenGL -framework CoreVideo"
      )
 -
 -    set(OGRE_OSX_BUILD_CONFIGURATION "$(PLATFORM_NAME)/$(CONFIGURATION)")
    
-   	add_custom_command(TARGET OgreMain POST_BUILD
- 		COMMAND mkdir ARGS -p ${OGRE_BINARY_DIR}/lib/${OGRE_OSX_BUILD_CONFIGURATION}/Ogre.framework/Headers/Threading
+ 	add_custom_command(TARGET ${OGRE_NEXT}Main POST_BUILD
+diff --git a/RenderSystems/Direct3D11/CMakeLists.txt b/RenderSystems/Direct3D11/CMakeLists.txt
+--- a/RenderSystems/Direct3D11/CMakeLists.txt
++++ b/RenderSystems/Direct3D11/CMakeLists.txt
+@@ -60,5 +60,5 @@
+   target_link_libraries(RenderSystem_Direct3D11 ${AMDAGS_LIBRARIES})
+ endif()
+ 
+ ogre_config_plugin(RenderSystem_Direct3D11)
+-install(FILES ${HEADER_FILES} DESTINATION include/OGRE/RenderSystems/Direct3D11)
++install(FILES ${HEADER_FILES} DESTINATION include/${OGRE_NEXT_PREFIX}/RenderSystems/Direct3D11)
