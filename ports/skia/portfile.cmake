@@ -39,11 +39,6 @@ declare_external_from_git(jinja2
     REF "ee69aa00ee8536f61db6a451f3858745cf587de6"
     LICENSE_FILE LICENSE.rst
 )
-declare_external_from_git(libgifcodec
-    URL "https://skia.googlesource.com/libgifcodec"
-    REF "fd59fa92a0c86788dcdd84d091e1ce81eda06a77"
-    LICENSE_FILE LICENSE.md
-)
 declare_external_from_git(markupsafe
     URL "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
     REF "0944e71f4b2cb9a871bcbe353f95e889b64a611a"
@@ -134,7 +129,6 @@ endif()
 set(required_externals
     dng_sdk
     expat
-    libgifcodec
     libjpeg
     libpng
     libwebp
