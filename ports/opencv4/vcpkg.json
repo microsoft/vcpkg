@@ -207,11 +207,17 @@
       "description": "Enable Intel Integrated Performance Primitives"
     },
     "jasper": {
-      "description": "JPEG 2000 support for opencv",
+      "description": "JPEG 2000 support for opencv (deprecated)",
       "dependencies": [
         "jasper"
       ]
     },
+    "openjpeg": {
+      "description": "JPEG 2000 support for opencv",
+      "dependencies": [
+        "openjpeg"
+      ]
+    },    
     "jpeg": {
       "description": "JPEG support for opencv",
       "dependencies": [
