@@ -6,9 +6,9 @@
   "license": "MIT",
   "maintainers" : [ "Saad Shams" ],
   "dependencies" : [
-      {
+    {
       "name": "vcpkg-cmake",
       "host": true
     }
-    ]
+  ]
 }
