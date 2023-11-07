@@ -16,7 +16,7 @@ vcpkg_from_github(
 # to update, visit the DEPS file in Skia's root directory
 declare_external_from_git(abseil-cpp
     URL "https://skia.googlesource.com/external/github.com/abseil/abseil-cpp.git"
-    REF "c5a424a2a21005660b182516eb7a079cd8021699"
+    REF "cb436cf0142b4cbe47aae94223443df7f82e2920"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(d3d12allocator
