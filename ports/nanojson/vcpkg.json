@@ -5,5 +5,10 @@
   "homepage" : "https://github.com/saadshams/nanojson",
   "license": "MIT",
   "maintainers" : [ "Saad Shams" ],
-  "dependencies" : [ ]
+  "dependencies" : [
+      {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+    ]
 }
