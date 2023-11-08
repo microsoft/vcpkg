@@ -1,5 +1,5 @@
 {
-  "name": "ctpl",
+  "name": "vit-vit-ctpl",
   "version": "0.0.2",
   "description": "Modern and efficient C++ Thread Pool Library",
   "homepage": "https://github.com/vit-vit/ctpl",

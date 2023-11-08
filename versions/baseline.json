@@ -1996,10 +1996,6 @@
       "baseline": "1.3.7",
       "port-version": 2
     },
-    "ctpl": {
-      "baseline": "0.0.2",
-      "port-version": 0
-    },
     "ctre": {
       "baseline": "3.8",
       "port-version": 0
@@ -8838,6 +8834,10 @@
     },
     "visit-struct": {
       "baseline": "1.1.0",
+      "port-version": 0
+    },
+    "vit-vit-ctpl": {
+      "baseline": "0.0.2",
       "port-version": 0
     },
     "vk-bootstrap": {
