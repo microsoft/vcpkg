@@ -14,7 +14,7 @@ vcpkg_from_github(
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
 declare_external_from_git(abseil-cpp
-    URL "https://skia.googlesource.com/external/github.com/abseil/abseil-cpp.git"
+    URL "https://github.com/abseil/abseil-cpp.git"
     REF "cb436cf0142b4cbe47aae94223443df7f82e2920"
     LICENSE_FILE LICENSE
 )
@@ -27,6 +27,8 @@ declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
     REF "6e25bf7674bbcb1d1e613dc0700c958830950037"
     LICENSE_FILE LICENSE
+    PATCHES
+        dawn-dedup-native-proc-gen.patch
 )
 declare_external_from_git(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
@@ -222,7 +224,12 @@ They can be installed on Debian based systems via
 ## REMOVE ^
         dawn
     )
-    string(APPEND OPTIONS " skia_use_dawn=true")
+    # cf. external dawn/src/dawn/native/BUILD.gn
+    string(APPEND OPTIONS " skia_use_dawn=true dawn_use_angle=false dawn_use_swiftshader=false")
+    string(APPEND OPTIONS_REL " is_debug=false")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        string(APPEND OPTIONS " dawn_complete_static_libs=true")
+    endif()
     string(REPLACE "dynamic" "shared" DAWN_LINKAGE "${VCPKG_LIBRARY_LINKAGE}")
     vcpkg_list(APPEND SKIA_TARGETS
         "third_party/externals/dawn/src/dawn:proc_${DAWN_LINKAGE}"
@@ -232,7 +239,7 @@ They can be installed on Debian based systems via
 endif()
 
 get_externals(${required_externals})
-if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py")
+if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn")
     vcpkg_find_acquire_program(GIT)
     vcpkg_replace_string("${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py"
         "get_git()," 
