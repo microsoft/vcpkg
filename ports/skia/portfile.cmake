@@ -21,7 +21,7 @@ declare_external_from_git(d3d12allocator
 )
 declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
-    REF "30fa0d8d2ced43e44baa522dd4bd4684b14a3099"
+    REF "6e25bf7674bbcb1d1e613dc0700c958830950037"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(dng_sdk
