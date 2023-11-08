@@ -1,10 +1,13 @@
 [cmdletbinding()]
-param([string]$targetBinary, [string]$installedDir, [string]$tlogFile, [string]$copiedFilesLog)
+param(
+    [string]$tlogFile,
+    [string]$copiedFilesLog,
+    [string]$targetBinary,
+    [Parameter(Mandatory, Position = 0, ValueFromRemainingArguments)]
+    [string[]]$installedDirs
+)
 
 $g_searched = @{}
-# Note: installedDir is actually the bin\ directory.
-$g_install_root = Split-Path $installedDir -parent
-$g_is_debug = (Split-Path $g_install_root -leaf) -eq 'debug'
 
 # Ensure we create the copied files log, even if we don't end up copying any files
 if ($copiedFilesLog)
@@ -102,35 +105,41 @@ function resolve([string]$targetBinary) {
     } else {
         Write-Error "Neither dumpbin, llvm-objdump nor objdump could be found. Can not take care of dll dependencies."
     }
-    $a | % {
-        if ([string]::IsNullOrEmpty($_)) {
-            return
+    foreach ($installedItem in $a) {
+        if ([string]::IsNullOrEmpty($installedItem)) {
+            continue
         }
-        if ($g_searched.ContainsKey($_)) {
-            Write-Verbose "  ${_}: previously searched - Skip"
-            return
+        if ($g_searched.ContainsKey($installedItem)) {
+            Write-Verbose "  ${installedItem}: previously searched - Skip"
+            continue
         }
-        $g_searched.Set_Item($_, $true)
-        $installedItemFilePath = Join-Path $installedDir $_
-        $targetItemFilePath = Join-Path $targetBinaryDir $_
-        if (Test-Path $installedItemFilePath) {
-            deployBinary $baseTargetBinaryDir $installedDir "$_"
-            if (Test-Path function:\deployPluginsIfQt) { deployPluginsIfQt $baseTargetBinaryDir (Join-Path $g_install_root 'plugins') "$_" }
-            if (Test-Path function:\deployOpenNI2) { deployOpenNI2 $targetBinaryDir "$g_install_root" "$_" }
-            if (Test-Path function:\deployPluginsIfMagnum) {
-                if ($g_is_debug) {
-                    deployPluginsIfMagnum $targetBinaryDir (Join-Path (Join-Path "$g_install_root" 'bin') 'magnum-d') "$_"
-                } else {
-                    deployPluginsIfMagnum $targetBinaryDir (Join-Path (Join-Path "$g_install_root" 'bin') 'magnum') "$_"
+        $g_searched.Set_Item($installedItem, $true)
+        foreach ($installedDir in $installedDirs) {
+            # Note: installedDir is actually the bin\ directory.
+            $installRoot = Split-Path $installedDir -parent
+            $installedItemFilePath = Join-Path $installedDir $installedItem
+            $targetItemFilePath = Join-Path $targetBinaryDir $installedItem
+            if (Test-Path $installedItemFilePath) {
+                deployBinary $baseTargetBinaryDir $installedDir "$installedItem"
+                if (Test-Path function:\deployPluginsIfQt) { deployPluginsIfQt $baseTargetBinaryDir (Join-Path $installRoot 'plugins') "$installedItem" }
+                if (Test-Path function:\deployOpenNI2) { deployOpenNI2 $targetBinaryDir "$installRoot" "$installedItem" }
+                if (Test-Path function:\deployPluginsIfMagnum) {
+                    if ((Split-Path $installRoot -leaf) -eq 'debug') {
+                        deployPluginsIfMagnum $targetBinaryDir (Join-Path (Join-Path "$installRoot" 'bin') 'magnum-d') "$installedItem"
+                    } else {
+                        deployPluginsIfMagnum $targetBinaryDir (Join-Path (Join-Path "$installRoot" 'bin') 'magnum') "$installedItem"
+                    }
                 }
+                if (Test-Path function:\deployAzureKinectSensorSDK) { deployAzureKinectSensorSDK $targetBinaryDir "$installRoot" "$installedItem" }
+                resolve (Join-Path $baseTargetBinaryDir "$installedItem")
+                break
+            } elseif (Test-Path $targetItemFilePath) {
+                Write-Verbose "  ${installedItem}: $installedItem not found in $installRoot; locally deployed"
+                resolve "$targetItemFilePath"
+                break
+            } else {
+                Write-Verbose "  ${installedItem}: $installedItemFilePath not found"
             }
-            if (Test-Path function:\deployAzureKinectSensorSDK) { deployAzureKinectSensorSDK $targetBinaryDir "$g_install_root" "$_" }
-            resolve (Join-Path $baseTargetBinaryDir "$_")
-        } elseif (Test-Path $targetItemFilePath) {
-            Write-Verbose "  ${_}: $_ not found in $g_install_root; locally deployed"
-            resolve "$targetItemFilePath"
-        } else {
-            Write-Verbose "  ${_}: $installedItemFilePath not found"
         }
     }
     Write-Verbose "Done Resolving $targetBinary."
@@ -138,25 +147,42 @@ function resolve([string]$targetBinary) {
 
 # Note: This is a hack to make Qt5 work.
 # Introduced with Qt package version 5.7.1-7
-if (Test-Path "$g_install_root\plugins\qtdeploy.ps1") {
-    . "$g_install_root\plugins\qtdeploy.ps1"
+foreach ($installedDir in $installedDirs) {
+    $installedRoot = Split-Path $installedDir -parent
+    if (Test-Path "$installedDir\plugins\qtdeploy.ps1") {
+        . "$g_install_root\plugins\qtdeploy.ps1"
+        break
+    }
 }
 
 # Note: This is a hack to make OpenNI2 work.
-if (Test-Path "$g_install_root\bin\OpenNI2\openni2deploy.ps1") {
-    . "$g_install_root\bin\OpenNI2\openni2deploy.ps1"
+foreach ($installedDir in $installedDirs) {
+    $installedRoot = Split-Path $installedDir -parent
+    if (Test-Path "$g_install_root\bin\OpenNI2\openni2deploy.ps1") {
+        . "$g_install_root\bin\OpenNI2\openni2deploy.ps1"
+        break
+    }
 }
 
 # Note: This is a hack to make Magnum work.
-if (Test-Path "$g_install_root\bin\magnum\magnumdeploy.ps1") {
-    . "$g_install_root\bin\magnum\magnumdeploy.ps1"
-} elseif (Test-Path "$g_install_root\bin\magnum-d\magnumdeploy.ps1") {
-    . "$g_install_root\bin\magnum-d\magnumdeploy.ps1"
+foreach ($installedDir in $installedDirs) {
+    $installedRoot = Split-Path $installedDir -parent
+    if (Test-Path "$g_install_root\bin\magnum\magnumdeploy.ps1") {
+        . "$g_install_root\bin\magnum\magnumdeploy.ps1"
+        break
+    } elseif (Test-Path "$g_install_root\bin\magnum-d\magnumdeploy.ps1") {
+        . "$g_install_root\bin\magnum-d\magnumdeploy.ps1"
+        break
+    }
 }
 
 # Note: This is a hack to make Azure Kinect Sensor SDK work.
-if (Test-Path "$g_install_root\tools\azure-kinect-sensor-sdk\k4adeploy.ps1") {
-    . "$g_install_root\tools\azure-kinect-sensor-sdk\k4adeploy.ps1"
+foreach ($installedDir in $installedDirs) {
+    $installedRoot = Split-Path $installedDir -parent
+    if (Test-Path "$g_install_root\tools\azure-kinect-sensor-sdk\k4adeploy.ps1") {
+        . "$g_install_root\tools\azure-kinect-sensor-sdk\k4adeploy.ps1"
+        break
+    }
 }
 
 resolve($targetBinary)

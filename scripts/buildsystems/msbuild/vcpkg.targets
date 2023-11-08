@@ -199,7 +199,7 @@
           Condition="'$(_ZVcpkgClassicOrManifest)' == 'true' and '$(VcpkgApplocalDeps)' == 'true' and '$(LinkSkippedExecution)' != 'true'">
     <Message Text="[vcpkg] Starting VcpkgApplocalDeps" Importance="low" />
     <PropertyGroup>
-      <_ZVcpkgAppLocalPowerShellCommonArguments>-ExecutionPolicy Bypass -noprofile -File "$(MSBuildThisFileDirectory)applocal.ps1" "$(TargetPath)" "$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)bin" "$(TLogLocation)$(ProjectName).write.1u.tlog" "$(IntDir)vcpkg.applocal.log"</_ZVcpkgAppLocalPowerShellCommonArguments>
+      <_ZVcpkgAppLocalPowerShellCommonArguments>-ExecutionPolicy Bypass -noprofile -File "$(MSBuildThisFileDirectory)applocal.ps1" -tlogFile "$(TLogLocation)$(ProjectName).write.1u.tlog" -copiedFilesLog "$(IntDir)vcpkg.applocal.log" -targetBinary "$(TargetPath)" "$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)bin"</_ZVcpkgAppLocalPowerShellCommonArguments>
     </PropertyGroup>
     <!-- Search %PATH% for pwsh.exe if it is available. -->
     <Exec
