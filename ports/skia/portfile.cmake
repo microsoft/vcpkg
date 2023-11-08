@@ -64,11 +64,6 @@ declare_external_from_git(spirv-tools
     REF "93c13345e176f3f8bdb4b07e59c5e3365b3dbf44"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(tint
-    URL "https://dawn.googlesource.com/tint"
-    REF "200492e32b94f042d9942154fb4fa7f93bb8289a"
-    LICENSE_FILE LICENSE
-)
 declare_external_from_git(vulkan-tools
     URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Tools"
     REF "d55c7aaf041af331bee8c22fb448a6ff4c797f73"
@@ -215,7 +210,6 @@ They can be installed on Debian based systems via
         spirv-cross
         spirv-headers
         spirv-tools
-        tint
         jinja2
         markupsafe
         vulkan_headers
