@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jrouwe/JoltPhysics
-    REF "v${VERSION}"
-    SHA512 367e5b945e8f91a0c0c9eb699db6f49351aa39b0af9b8fd0be5f474d65b28a7244880eedad10cbd2db0e031daa28bbabb5f9fb8bf9af653dd1f86904bfde44a2
+    REF 4e038d190b7e97df01e6a81c8f74551fe487a09d # Commited on 2023-11-04
+    SHA512 d80383ac0dfadda6ff353bd241c3af9ab879de4f6cba04db7dc0e82ede2a4f120b1af9baca63000cefb06778447105bfd6bd26a9a6b8fa36fc5daaa75772bdf2
     HEAD_REF master
     PATCHES
       fix-export.diff
