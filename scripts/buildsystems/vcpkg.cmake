@@ -21,6 +21,24 @@ This `Z_VCPKG_HAS_FATAL_ERROR` must be checked before any filesystem operations 
 since otherwise you might be doing something with bad variables set up.
 #]===]
 # this is defined above everything else so that it can be used.
+
+set(VCPKG_TARGET_ARCHITECTURE arm64)
+set(VCPKG_CRT_LINKAGE dynamic)
+set(VCPKG_LIBRARY_LINKAGE dynamic)
+
+set(VCPKG_CMAKE_SYSTEM_NAME iOS)
+set(VCPKG_OSX_ARCHITECTURES arm64)
+set(VCPKG_CMAKE_OSX_ARCHITECTURES arm64)
+
+#set(VCPKG_ENV_PASSTHROUGH_UNTRACKED VCPKG_ROOT)
+
+set(VCPKG_BUILD_TYPE release)
+
+#set(VCPKG_C_FLAGS -mmacosx-version-min=11.0)
+#set(VCPKG_CXX_FLAGS -mmacosx-version-min=11.0)
+#set(VCPKG_LINKER_FLAGS -mmacosx-version-min=11.0)
+
+
 set(Z_VCPKG_FATAL_ERROR)
 set(Z_VCPKG_HAS_FATAL_ERROR OFF)
 function(z_vcpkg_add_fatal_error ERROR)
@@ -205,6 +223,8 @@ endfunction()
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(Z_VCPKG_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
 
+message("XAJM - vcpkg.cmake VCPKG_TARGET_ARCHITECTURE is ${VCPKG_TARGET_ARCHITECTURE}")
+message("XAJM - VCPKG_CHAINLOAD_TOOLCHAIN_FILE is ${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
     include("${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
 endif()
@@ -230,6 +250,7 @@ if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
     endif()
 endif()
 
+message("XAJM - VCPKG_TARGET_TRIPLET is ${VCPKG_TARGET_TRIPLET}")
 if(VCPKG_TARGET_TRIPLET)
     # This is required since a user might do: 'set(VCPKG_TARGET_TRIPLET somevalue)' [no CACHE] before the first project() call
     # Latter within the toolchain file we do: 'set(VCPKG_TARGET_TRIPLET somevalue CACHE STRING "")' which
@@ -351,6 +372,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HO
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT osx)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    message("XAJM - new 1")
     set(Z_VCPKG_TARGET_TRIPLET_PLAT ios)
 elseif(MINGW)
     set(Z_VCPKG_TARGET_TRIPLET_PLAT mingw-dynamic)
@@ -376,6 +398,7 @@ endif()
 set(VCPKG_TARGET_TRIPLET "${Z_VCPKG_TARGET_TRIPLET_ARCH}-${Z_VCPKG_TARGET_TRIPLET_PLAT}" CACHE STRING "Vcpkg target triplet (ex. x86-windows)")
 set(Z_VCPKG_TOOLCHAIN_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
+message("XAJM - new zz VCPKG_TARGET_TRIPLET = ${VCPKG_TARGET_TRIPLET}")
 # Detect .vcpkg-root to figure VCPKG_ROOT_DIR
 set(Z_VCPKG_ROOT_DIR_CANDIDATE "${CMAKE_CURRENT_LIST_DIR}")
 while(NOT DEFINED Z_VCPKG_ROOT_DIR)
@@ -789,6 +812,7 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     # See https://gitlab.kitware.com/cmake/cmake/merge_requests/3273
     # Fixed in CMake 3.15
     if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+        message("XAJM - new 2")
         list(APPEND z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars "CMAKE_FIND_ROOT_PATH")
         if(DEFINED CMAKE_FIND_ROOT_PATH)
             set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_CMAKE_FIND_ROOT_PATH "${CMAKE_FIND_ROOT_PATH}")

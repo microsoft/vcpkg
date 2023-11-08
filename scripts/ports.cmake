@@ -150,8 +150,9 @@ if(CMD STREQUAL "BUILD")
     endif()
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}" "${CURRENT_PACKAGES_DIR}")
 
+    message("XAJM - got file ${CMAKE_TRIPLET_FILE}")
     include("${CMAKE_TRIPLET_FILE}")
-
+    message("Got VCPKG_CMAKE_SYSTEM_NAME ${VCPKG_CMAKE_SYSTEM_NAME}")
     set(HOST_TRIPLET "${_HOST_TRIPLET}")
     set(CURRENT_HOST_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}" CACHE PATH "Location to install final packages for the host")
 

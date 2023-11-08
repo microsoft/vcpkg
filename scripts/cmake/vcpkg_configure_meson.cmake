@@ -148,7 +148,7 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
 
         if(MACHINE MATCHES "arm64|aarch64")
             set(build_cpu_fam aarch64)
-            set(build_cpu armv8)
+            set(build_cpu arm64)
         elseif(MACHINE MATCHES "armv7h?l")
             set(build_cpu_fam arm)
             set(build_cpu ${MACHINE})
@@ -347,7 +347,7 @@ function(vcpkg_configure_meson)
         set(meson_input_file_${buildname} "${CURRENT_BUILDTREES_DIR}/meson-${TARGET_TRIPLET}-${suffix_${buildname}}.log")
     endif()
 
-    vcpkg_list(APPEND arg_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
+    vcpkg_list(APPEND arg_OPTIONS --buildtype plain --backend ninja --wrap-mode default)
 
     z_vcpkg_get_build_and_host_system(MESON_HOST_MACHINE MESON_BUILD_MACHINE IS_CROSS)
 

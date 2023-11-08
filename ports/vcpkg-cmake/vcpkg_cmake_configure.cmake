@@ -159,10 +159,11 @@ function(vcpkg_cmake_configure)
         z_vcpkg_select_default_vcpkg_chainload_toolchain()
     endif()
 
+    message("XAJM - IDK is this where we call vcpkg.cmake with ${TARGET_TRIPLET}")
     list(JOIN VCPKG_TARGET_ARCHITECTURE "\;" target_architecture_string)
     vcpkg_list(APPEND arg_OPTIONS
-        "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
         "-DVCPKG_SET_CHARSET_FLAG=${VCPKG_SET_CHARSET_FLAG}"
         "-DVCPKG_PLATFORM_TOOLSET=${VCPKG_PLATFORM_TOOLSET}"
         "-DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON"

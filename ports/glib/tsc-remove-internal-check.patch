@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index 6ed945967..be2bf0250 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2116,7 +2116,7 @@ if libintl.found()
+   have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset', dependencies: libintl_deps)
+ else
+   libintl = dependency('intl', allow_fallback: true)
+-  assert(libintl.type_name() == 'internal')
++  #assert(libintl.type_name() == 'internal')
+   libintl_deps = [libintl]
+   have_bind_textdomain_codeset = true  # proxy-libintl supports it
+ endif

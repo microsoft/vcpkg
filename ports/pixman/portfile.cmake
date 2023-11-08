@@ -37,7 +37,15 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
                 )
 endif()
 
+message("XAJM - VCPKG_TARGET_IS_OSX = ${VCPKG_TARGET_IS_OSX}")
+message("XAJM - VCPKG_TARGET_IS_IOS = ${VCPKG_TARGET_IS_IOS}")
 if(VCPKG_TARGET_IS_OSX)
+    # https://github.com/microsoft/vcpkg/issues/29168
+    list(APPEND OPTIONS -Da64-neon=disabled)
+endif()
+
+if(VCPKG_TARGET_IS_IOS)
+message("XAJM - VCPKG_TARGET_IS_IOS = ${VCPKG_TARGET_IS_IOS} huzzah")
     # https://github.com/microsoft/vcpkg/issues/29168
     list(APPEND OPTIONS -Da64-neon=disabled)
 endif()
