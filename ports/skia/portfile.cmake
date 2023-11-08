@@ -14,7 +14,7 @@ vcpkg_from_github(
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
 declare_external_from_git(d3d12allocator
-    URL "https://skia.googlesource.com/external/github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
+    URL "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
     REF "169895d529dfce00390a20e69c2f516066fe7a3b"
     LICENSE_FILE LICENSE.txt
 )
@@ -44,32 +44,32 @@ declare_external_from_git(piex
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(sfntly
-    URL "https://github.com/googlefonts/sfntly.git"
+    URL "https://github.com/googlei18n/sfntly.git"
     REF "b55ff303ea2f9e26702b514cf6a3196a2e3e2974"
     LICENSE_FILE README.md
 )
 declare_external_from_git(spirv-cross
-    URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
+    URL "https://github.com/KhronosGroup/SPIRV-Cross"
     REF "030d0be28c35bafebd20660c112852b1d8c8c6ca"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-headers
-    URL "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
+    URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
     REF "8e2ad27488ed2f87c068c01a8f5e8979f7086405"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
-    URL "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
+    URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
     REF "93c13345e176f3f8bdb4b07e59c5e3365b3dbf44"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(vulkan-tools
-    URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Tools"
+    URL "https://github.com/KhronosGroup/Vulkan-Tools"
     REF "2c83dd6cb2ef710bab843b69776997d6f2c12ba4"
     LICENSE_FILE LICENSE.txt
 )
 declare_external_from_git(wuffs
-    URL "https://skia.googlesource.com/external/github.com/google/wuffs-mirror-release-c.git"
+    URL "https://github.com/google/wuffs-mirror-release-c.git"
     REF "a0041ac0310b3156b963e2f2bea09245f25ec073"
     LICENSE_FILE LICENSE
 )
