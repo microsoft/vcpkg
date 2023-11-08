@@ -11,6 +11,7 @@
   "license": null,
   "supports": "!(windows & arm32)",
   "dependencies": [
+    "abseil",
     "expat",
     "libjpeg-turbo",
     "libpng",

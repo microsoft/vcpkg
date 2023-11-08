@@ -14,11 +14,6 @@ vcpkg_from_github(
 
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
-declare_external_from_git(abseil-cpp
-    URL "https://skia.googlesource.com/external/github.com/abseil/abseil-cpp.git"
-    REF "cb436cf0142b4cbe47aae94223443df7f82e2920"
-    LICENSE_FILE LICENSE
-)
 declare_external_from_git(d3d12allocator
     URL "https://skia.googlesource.com/external/github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
     REF "169895d529dfce00390a20e69c2f516066fe7a3b"
@@ -85,6 +80,7 @@ declare_external_from_git(wuffs
     LICENSE_FILE LICENSE
 )
 
+declare_external_from_pkgconfig(abseil-cpp MODULES absl_config)
 declare_external_from_pkgconfig(expat)
 declare_external_from_pkgconfig(fontconfig PATH "third_party")
 declare_external_from_pkgconfig(freetype2)
