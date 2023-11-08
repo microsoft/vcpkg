@@ -66,7 +66,7 @@ declare_external_from_git(spirv-tools
 )
 declare_external_from_git(vulkan-tools
     URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Tools"
-    REF "d55c7aaf041af331bee8c22fb448a6ff4c797f73"
+    REF "2c83dd6cb2ef710bab843b69776997d6f2c12ba4"
     LICENSE_FILE LICENSE.txt
 )
 declare_external_from_git(wuffs
