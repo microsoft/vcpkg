@@ -493,8 +493,8 @@
       "port-version": 0
     },
     "azure-storage-queues-cpp": {
-      "baseline": "12.1.0",
-      "port-version": 1
+      "baseline": "12.2.0",
+      "port-version": 0
     },
     "azure-uamqp-c": {
       "baseline": "2023-08-07",
