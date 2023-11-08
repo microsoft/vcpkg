@@ -51,17 +51,17 @@ declare_external_from_git(sfntly
 )
 declare_external_from_git(spirv-cross
     URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Cross"
-    REF "61c603f3baa5270e04bcfb6acf83c654e3c57679"
+    REF "030d0be28c35bafebd20660c112852b1d8c8c6ca"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-headers
     URL "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "0bcc624926a25a2a273d07877fd25a6ff5ba1cfb"
+    REF "8e2ad27488ed2f87c068c01a8f5e8979f7086405"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://skia.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "0073a1fa36f7c52ad3d58059cb5d5de8efa825ad"
+    REF "93c13345e176f3f8bdb4b07e59c5e3365b3dbf44"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(tint
