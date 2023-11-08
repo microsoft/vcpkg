@@ -76,7 +76,7 @@ declare_external_from_git(vulkan-tools
 )
 declare_external_from_git(wuffs
     URL "https://skia.googlesource.com/external/github.com/google/wuffs-mirror-release-c.git"
-    REF "e3f919ccfe3ef542cfc983a82146070258fb57f8"
+    REF "a0041ac0310b3156b963e2f2bea09245f25ec073"
     LICENSE_FILE LICENSE
 )
 
