@@ -1,6 +1,6 @@
 {
   "name": "discordcoreapi",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A Discord bot library written in C++ using custom asynchronous coroutines.",
   "homepage": "https://discordcoreapi.com",
   "license": "MIT",

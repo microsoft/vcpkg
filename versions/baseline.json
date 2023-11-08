@@ -237,7 +237,7 @@
       "port-version": 5
     },
     "arrow": {
-      "baseline": "13.0.0",
+      "baseline": "14.0.0",
       "port-version": 1
     },
     "arsenalgear": {
@@ -270,7 +270,7 @@
     },
     "assimp": {
       "baseline": "5.3.1",
-      "port-version": 2
+      "port-version": 3
     },
     "async-mqtt": {
       "baseline": "2.0.0",
@@ -2201,7 +2201,7 @@
       "port-version": 3
     },
     "discordcoreapi": {
-      "baseline": "2.0.1",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "discount": {
@@ -2249,7 +2249,7 @@
       "port-version": 1
     },
     "dpp": {
-      "baseline": "10.0.27",
+      "baseline": "10.0.28",
       "port-version": 0
     },
     "draco": {
@@ -3665,7 +3665,7 @@
       "port-version": 1
     },
     "jsonifier": {
-      "baseline": "0.9.9",
+      "baseline": "0.9.91",
       "port-version": 0
     },
     "jsonnet": {
@@ -8685,7 +8685,7 @@
       "port-version": 1
     },
     "utfcpp": {
-      "baseline": "3.2.5",
+      "baseline": "4.0.2",
       "port-version": 0
     },
     "utfz": {
