@@ -8836,6 +8836,10 @@
       "baseline": "1.1.0",
       "port-version": 0
     },
+    "vit-vit-ctpl": {
+      "baseline": "0.0.2",
+      "port-version": 0
+    },
     "vk-bootstrap": {
       "baseline": "0.7",
       "port-version": 1
