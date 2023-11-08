@@ -8,7 +8,6 @@ vcpkg_from_github(
     PATCHES
         disable-msvc-env-setup.patch
         uwp.patch
-        core-opengl32.patch
         disable-dev-test.patch
 )
 
