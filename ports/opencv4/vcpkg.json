@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.8.0",
-  "port-version": 5,
+  "port-version": 9,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -242,6 +242,37 @@
     },
     "openmp": {
       "description": "Enable openmp support for opencv"
+    },
+    "openvino": {
+      "description": "OpenVINO support for OpenCV DNN",
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dnn"
+          ]
+        },
+        {
+          "name": "openvino",
+          "default-features": false,
+          "features": [
+            "auto",
+            "cpu",
+            "hetero"
+          ],
+          "platform": "!uwp"
+        },
+        {
+          "name": "openvino",
+          "default-features": false,
+          "features": [
+            "gpu"
+          ],
+          "platform": "x64 & !(osx | uwp) & !static"
+        }
+      ]
     },
     "ovis": {
       "description": "opencv_ovis module",

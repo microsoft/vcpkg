@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 3314d79ef20ac2cfc63f2c16fafb30c3f6187c10c6f5ea6ff036f6db766621d7c65401d85bf1e979bd0ecf831fbb0a785467642792d6bf77016f9807243c064e
+    SHA512 9e1f8179e37279a47baa3587c66d8b385362478d998601b5f0a8bb2f360ec8cdb954705f397dac413ac1411e72d4dd740e3785823cc063ca35eb80585d2eedf2
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -88,6 +88,14 @@ if("acero" IN_LIST FEATURES)
     )
 endif()
 
+if("flight" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME ArrowFlight
+        CONFIG_PATH lib/cmake/ArrowFlight
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
 if("parquet" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
         PACKAGE_NAME parquet
@@ -109,6 +117,11 @@ endif()
 if("acero" IN_LIST FEATURES)
     file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-acero" usage-acero)
     file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-acero}")
+endif()
+
+if("flight" IN_LIST FEATURES)
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-flight" usage-flight)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flight}")
 endif()
 
 if("example" IN_LIST FEATURES)

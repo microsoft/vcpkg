@@ -1,11 +1,18 @@
 {
   "name": "magnum",
   "version-string": "2020.06",
-  "port-version": 13,
+  "port-version": 16,
   "description": "C++11/C++14 graphics middleware for games and data visualization",
   "homepage": "https://magnum.graphics/",
   "license": null,
   "dependencies": [
+    {
+      "name": "corrade",
+      "host": true,
+      "features": [
+        "utility"
+      ]
+    },
     {
       "name": "corrade",
       "features": [
@@ -23,7 +30,6 @@
     "anyimageimporter",
     "anysceneconverter",
     "anysceneimporter",
-    "anyshaderconverter",
     "debugtools",
     "gl",
     "meshtools",
@@ -31,7 +37,6 @@
     "scenegraph",
     "sdl2application",
     "shaders",
-    "shadertools",
     "text",
     "texturetools",
     "trade"
@@ -54,6 +59,7 @@
       "dependencies": [
         {
           "name": "corrade",
+          "default-features": false,
           "features": [
             "pluginmanager"
           ]
@@ -135,6 +141,7 @@
     },
     "cglcontext": {
       "description": "CglContext library",
+      "supports": "osx",
       "dependencies": [
         {
           "name": "magnum",
@@ -150,6 +157,7 @@
     },
     "distancefieldconverter": {
       "description": "magnum-distancefieldconverter utility",
+      "supports": "!ios & !android",
       "dependencies": [
         {
           "name": "magnum",
@@ -164,6 +172,7 @@
     },
     "eglcontext": {
       "description": "EglContext library",
+      "supports": "!windows & !osx",
       "dependencies": [
         {
           "name": "magnum",
@@ -176,6 +185,7 @@
     },
     "fontconverter": {
       "description": "magnum-fontconverter utility",
+      "supports": "!ios & !android",
       "dependencies": [
         {
           "name": "magnum",
@@ -189,10 +199,12 @@
       ]
     },
     "gl": {
-      "description": "GL library"
+      "description": "GL library",
+      "supports": "!uwp"
     },
     "gl-info": {
       "description": "gl-info utility",
+      "supports": "!ios",
       "dependencies": [
         {
           "name": "magnum",
@@ -211,6 +223,7 @@
     },
     "glxcontext": {
       "description": "GlxContext library",
+      "supports": "!windows & !osx",
       "dependencies": [
         {
           "name": "magnum",
@@ -224,6 +237,13 @@
     "imageconverter": {
       "description": "magnum-imageconverter utility",
       "dependencies": [
+        {
+          "name": "corrade",
+          "default-features": false,
+          "features": [
+            "dynamic-pluginmanager"
+          ]
+        },
         {
           "name": "magnum",
           "default-features": false,
@@ -293,6 +313,7 @@
       "dependencies": [
         {
           "name": "corrade",
+          "default-features": false,
           "features": [
             "testsuite"
           ]
@@ -313,6 +334,7 @@
           "name": "magnum",
           "default-features": false,
           "features": [
+            "meshtools",
             "trade"
           ]
         }
@@ -321,6 +343,13 @@
     "sceneconverter": {
       "description": "magnum-sceneconverter utility",
       "dependencies": [
+        {
+          "name": "corrade",
+          "default-features": false,
+          "features": [
+            "dynamic-pluginmanager"
+          ]
+        },
         {
           "name": "magnum",
           "default-features": false,
@@ -372,6 +401,7 @@
       "dependencies": [
         {
           "name": "corrade",
+          "default-features": false,
           "features": [
             "pluginmanager"
           ]
@@ -424,6 +454,7 @@
       "dependencies": [
         {
           "name": "corrade",
+          "default-features": false,
           "features": [
             "pluginmanager"
           ]
@@ -462,6 +493,7 @@
     },
     "wglcontext": {
       "description": "WglContext library",
+      "supports": "windows & !uwp",
       "dependencies": [
         {
           "name": "magnum",
@@ -474,6 +506,7 @@
     },
     "windowlesscglapplication": {
       "description": "WindowlessCglApplication library",
+      "supports": "osx",
       "dependencies": [
         {
           "name": "magnum",
@@ -486,6 +519,7 @@
     },
     "windowlesseglapplication": {
       "description": "WindowlessEglApplication library",
+      "supports": "!windows & !osx & !ios",
       "dependencies": [
         {
           "name": "magnum",
@@ -498,6 +532,7 @@
     },
     "windowlessglxapplication": {
       "description": "WindowlessGlxApplication library",
+      "supports": "!windows & !osx & !ios",
       "dependencies": [
         {
           "name": "magnum",
@@ -510,6 +545,7 @@
     },
     "windowlesswglapplication": {
       "description": "WindowlessWglApplication library",
+      "supports": "windows & !uwp",
       "dependencies": [
         {
           "name": "magnum",

@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" GNUTLS_BRANCH "${VERSION}")
 vcpkg_download_distfile(tarball
     URLS
@@ -7,7 +5,7 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
     FILENAME "gnutls-${VERSION}.tar.xz"
-    SHA512 4199bcf7c9e3aab2f52266aadceefc563dfe2d938d0ea1f3ec3be95d66f4a8c8e5494d3a800c03dd02ad386dec1738bd63e1fe0d8b394a2ccfc7d6c6a0cc9359
+    SHA512 22e78db86b835843df897d14ad633d8a553c0f9b1389daa0c2f864869c6b9ca889028d434f9552237dc4f1b37c978fbe0cce166e3768e5d4e8850ff69a6fc872
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${tarball}"
@@ -28,8 +26,18 @@ if ("openssl" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-openssl-compatibility")
 endif()
 
-if(VCPKG_TARGET_IS_OSX)
-    vcpkg_list(APPEND options "LDFLAGS=\$LDFLAGS -framework CoreFoundation")
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_list(APPEND options "LIBS=\$LIBS -liconv -lcharset") # for libunistring
+endif()
+
+if(VCPKG_CROSSCOMPILING)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+    cmake_path(GET ccas PARENT_PATH ccas_dir)
+    vcpkg_add_to_path("${ccas_dir}")
+    cmake_path(GET ccas FILENAME ccas_command)
+    vcpkg_list(APPEND options "CCAS=${ccas_command}")
 endif()
 
 set(ENV{GTKDOCIZE} true) # true, the program
@@ -42,7 +50,6 @@ vcpkg_configure_make(
         --disable-guile
         --disable-libdane
         --disable-maintainer-mode
-        --disable-silent-rules
         --disable-rpath
         --disable-tests
         --with-brotli=no
@@ -57,6 +64,7 @@ vcpkg_configure_make(
 )
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
