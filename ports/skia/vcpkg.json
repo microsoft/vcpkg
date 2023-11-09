@@ -39,52 +39,40 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    {
+      "name": "direct3d",
+      "platform": "uwp"
+    },
+    {
+      "name": "direct3d",
+      "platform": "uwp"
+    },
+    {
+      "name": "fontconfig",
+      "platform": "linux"
+    },
+    {
+      "name": "freetype",
+      "platform": "!(windows | osx | ios)"
+    },
+    {
+      "name": "gl",
+      "platform": "!uwp"
+    },
+    {
+      "name": "harfbuzz",
+      "platform": "!uwp"
+    },
+    {
+      "name": "icu",
+      "platform": "!uwp"
+    }
   ],
   "features": {
     "dawn": {
       "description": "dawn support for skia",
       "dependencies": [
         "vulkan-headers"
-      ]
-    },
-    "default-features": {
-      "description": "Default feature configuration",
-      "dependencies": [
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "direct3d"
-          ],
-          "platform": "uwp"
-        },
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "fontconfig"
-          ],
-          "platform": "linux"
-        },
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "gl",
-            "harfbuzz",
-            "icu"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "freetype"
-          ],
-          "platform": "!(windows | osx | ios)"
-        }
       ]
     },
     "direct3d": {
