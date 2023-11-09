@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO mohabouje/WinToast
-  REF v1.2.0
-  SHA512 d8bd44439100772929eb8a4eb4aebfd66fa54562c838eb4c081a382dc1d73c545faa6d9675e320864d9b533e4a0c4a673e44058c7f643ccd56ec90830cdfaf45
+  REF "v${VERSION}"
+  SHA512 b9e34595049851754dafe506681af494f59edf94a4324c20aaeadea25b9ed0abac87e93384d2080c327dbbdd22441800e9af7c5ce6728d7cc1464796a83cffbd
   HEAD_REF master
 )
 
@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_RELEASE -DINSTALL_HEADERS=ON
     OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
-    
+
 )
 
 vcpkg_cmake_install()
