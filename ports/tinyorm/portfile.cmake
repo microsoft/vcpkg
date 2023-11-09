@@ -27,6 +27,7 @@ vcpkg_cmake_configure(
         -DTINY_PORT:STRING=${PORT}
         -DTINY_VCPKG:BOOL=ON
         -DVERBOSE_CONFIGURE:BOOL=ON
+        -DWARNINGS_AS_ERRORS=FALSE
         ${FEATURE_OPTIONS}
 )
 
