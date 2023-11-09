@@ -24,7 +24,6 @@
     },
     "protobuf",
     "pthreads",
-    "spdlog",
     "sqlite3",
     "tinyxml",
     {
