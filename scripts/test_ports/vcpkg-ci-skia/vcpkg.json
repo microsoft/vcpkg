@@ -10,7 +10,10 @@
     },
     {
       "name": "skia",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "skparagraph"
+      ]
     }
   ]
 }
