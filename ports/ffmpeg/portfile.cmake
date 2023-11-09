@@ -539,6 +539,11 @@ if(VCPKG_TARGET_IS_UWP)
     string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
 endif()
 
+
+if(VCPKG_TARGET_IS_IOS)
+    string(APPEND OPTIONS " --extra-ldflags=-Wl,-ld_classic")
+endif()
+
 set(OPTIONS_DEBUG "--debug --disable-optimizations")
 set(OPTIONS_RELEASE "--enable-optimizations")
 
