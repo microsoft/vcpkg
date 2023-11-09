@@ -107,7 +107,7 @@ vcpkg_list(SET SKIA_TARGETS
     # modules/skottie:skottie,  skia_enable_skottie=true : !(windows & !static)
     # modules/sksg:sksg
     modules/skshaper:skshaper
-    modules/svg:svg
+    # modules/svg:svg
 )
 
 if(VCPKG_TARGET_IS_ANDROID)
