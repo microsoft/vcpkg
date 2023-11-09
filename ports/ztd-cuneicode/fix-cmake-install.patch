@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 00aa8b6..d49889b 100644
+index 00aa8b6..9acbf4b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -39,6 +39,12 @@ FetchContent_Declare(ztd.cmake
@@ -41,26 +41,17 @@ index 00aa8b6..d49889b 100644
  
  # # Main Library
  file(GLOB ztd.cuneicode.includes CONFIGURE_DEPENDS include/*.hpp)
-@@ -187,15 +187,12 @@ target_compile_options(ztd.cuneicode PUBLIC
+@@ -187,6 +187,9 @@ target_compile_options(ztd.cuneicode PUBLIC
  	${--enable-conforming-preprocessor}
  )
  
 +install(TARGETS ztd.cuneicode
 +        EXPORT ztd.cuneicode-targets
-+        DESTINATION lib)
++        )
  install(DIRECTORY include/
  	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
  )
--install(TARGETS ztd.cuneicode
--	PUBLIC_HEADER
--	RUNTIME
--	ARCHIVE
--	LIBRARY
--)
- 
- # # Config / Version packaging
- # Version configurations
-@@ -213,6 +210,15 @@ export(TARGETS ztd.cuneicode
+@@ -213,6 +216,15 @@ export(TARGETS ztd.cuneicode
  	FILE
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.cuneicode/ztd.cuneicode-targets.cmake")
  
