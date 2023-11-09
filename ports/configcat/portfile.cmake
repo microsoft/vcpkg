@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO configcat/cpp-sdk
     REF "v${VERSION}"
-    SHA512 cb86f575e1917edf10ec423d4ae85b47c979370bdb4381e1eecdb32bc64637f5088b3a3d91fa1b0aa2604fb0fe3011bc0964b3a45e5aa32aba1d53ba0da99fd5
+    SHA512 f5a2217e0b451cb2390091dfec4e89e0fb3abfa22d74ed75e1038e060fe3009d0e114bf6f6556949e6574c3e82ca72bc6aad8be8fb5d3f0dea36a867f992d27f
     HEAD_REF master
 )
 
