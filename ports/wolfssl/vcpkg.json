@@ -1,6 +1,7 @@
 {
   "name": "wolfssl",
   "version": "5.6.4",
+  "port-version": 1,
   "description": "TLS and Cryptographic library for many platforms",
   "homepage": "https://wolfssl.com",
   "license": "GPL-2.0-or-later",
@@ -13,6 +14,18 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
     }
-  ]
+  ],
+  "features": {
+    "dtls": {
+      "description": "DTLS support"
+    },
+    "secret-callback": {
+      "description": "Enables callback to provide TLS keys for debugging"
+    }
+  }
 }
