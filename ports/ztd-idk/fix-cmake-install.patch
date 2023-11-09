@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 746afa7..a56641c 100644
+index 746afa7..803b82e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -34,11 +34,6 @@ cmake_policy(VERSION 3.21)
@@ -47,7 +47,7 @@ index 746afa7..a56641c 100644
  
 +install(TARGETS ztd.version
 +        EXPORT ztd.version-targets
-+        )
++        DESTINATION lib)
  configure_package_config_file(
  	cmake/ztd.version-config.cmake.in
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.version/ztd.version-config.cmake"
@@ -89,7 +89,7 @@ index 746afa7..a56641c 100644
  
 +install(TARGETS ztd.tag_invoke
 +        EXPORT ztd.tag_invoke-targets
-+        )
++        DESTINATION lib)
 +
  configure_package_config_file(
  	cmake/ztd.tag_invoke-config.cmake.in
@@ -123,7 +123,7 @@ index 746afa7..a56641c 100644
 -install(TARGETS ztd.idk)
 +install(TARGETS ztd.idk
 +        EXPORT ztd.idk-targets
-+        )
++        DESTINATION lib)
  install(DIRECTORY include/
  	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
  )

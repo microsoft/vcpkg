@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 57c97c4..9cc8bb8 100644
+index 57c97c4..d0e0da9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -49,6 +49,8 @@ project(ztd.platform
@@ -23,15 +23,21 @@ index 57c97c4..9cc8bb8 100644
  
  # encoding_c
  if (ZTD_PLATFORM_USE_ENCODING_C)
-@@ -408,6 +407,7 @@ install(DIRECTORY include/
+@@ -408,11 +407,8 @@ install(DIRECTORY include/
  	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
  )
  install(TARGETS ztd.platform
+-	PUBLIC_HEADER
+-	RUNTIME
+-	ARCHIVE
+-	LIBRARY
+-)
 +        EXPORT ztd.platform-targets
- 	PUBLIC_HEADER
- 	RUNTIME
- 	ARCHIVE
-@@ -430,6 +430,15 @@ export(TARGETS ztd.platform
++        DESTINATION lib)
+ 
+ # # Config / Version packaging
+ # Version configurations
+@@ -430,6 +426,15 @@ export(TARGETS ztd.platform
  	FILE
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.platform/ztd.platform-targets.cmake")
  

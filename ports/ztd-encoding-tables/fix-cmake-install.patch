@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7612c6c..806f1c0 100644
+index 7612c6c..8d2233d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -50,6 +50,8 @@ project(ztd.encoding_tables
@@ -30,7 +30,7 @@ index 7612c6c..806f1c0 100644
 -install(TARGETS ztd.encoding_tables)
 +install(TARGETS ztd.encoding_tables
 +        EXPORT ztd.encoding_tables-targets
-+        )
++        DESTINATION lib)
  install(DIRECTORY include/
  	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
  )
