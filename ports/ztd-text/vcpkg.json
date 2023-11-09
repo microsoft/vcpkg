@@ -10,6 +10,7 @@
       "name": "vcpkg-cmake",
       "host": true
     },
-    "ztd-platform"
+    "ztd-platform",
+    "ztd-static-containers"
   ]
 }
