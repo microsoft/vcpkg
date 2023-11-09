@@ -49,7 +49,7 @@
   </BoolProperty>
 
   <BoolProperty Name="VcpkgUseBuiltInApplocalDeps" DisplayName="Use built-in app-local deployment" Category="General" Default="false"
-                Description="When copying DLL dependencies, use the experimental built-in-to-vcpkg implementation rather than PowerShell script.">
+                Description="(experimental) When copying DLL dependencies, use built-in-to-vcpkg implementation rather than PowerShell script.">
     <BoolProperty.DataSource>
       <DataSource Persistence="ProjectFile" Label="Vcpkg" HasConfigurationCondition="false" />
     </BoolProperty.DataSource>
