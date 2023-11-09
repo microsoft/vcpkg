@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
         no-etc-symlinks.patch
         libgetopt.patch
         fix-preprocessor-clang-cl.patch
+        force-pkgconfig-installation-path.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
@@ -40,11 +41,6 @@ endif()
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
-
-file(INSTALL "${CURRENT_PACKAGES_DIR}/libdata/pkgconfig/fontconfig.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/libdata/pkgconfig/fontconfig.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/libdata")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/libdata")
 
 #Fix missing libintl static dependency
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
