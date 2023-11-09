@@ -182,8 +182,7 @@
           Importance="High" />
     <Exec Command="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(_ZVcpkgRoot)\%22 %22--x-manifest-root=$(_ZVcpkgManifestRoot)\%22 %22--x-install-root=$(_ZVcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
           StandardOutputImportance="High"
-          IgnoreStandardErrorWarningFormat="true"
-          CustomWarningRegularExpression="([Ee]rror|[Ww]arning):"
+          StandardErrorImportance="High"
           UseUtf8Encoding="Always"
           StdOutEncoding="utf-8"
           StdErrEncoding="utf-8"
@@ -219,9 +218,7 @@
       StdOutEncoding="utf-8"
       StdErrEncoding="utf-8"
       UseCommandProcessor="false"
-      IgnoreStandardErrorWarningFormat="true"
-      IgnoreExitCode="true"
-      CustomWarningRegularExpression="([Ee]rror|[Ww]arning):">
+      IgnoreExitCode="true">
       <Output TaskParameter="ExitCode"
               PropertyName="_ZVcpkgAppLocalExitCode" />
     </Exec>
