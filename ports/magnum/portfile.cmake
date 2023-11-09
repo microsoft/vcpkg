@@ -128,36 +128,40 @@ else()
             file(REMOVE ${LIB_TO_REMOVE})
         endif()
 
-        file(GLOB_RECURSE LIB_TO_REMOVE_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*")
-        file(GLOB_RECURSE LIB_TO_KEEP_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*Any*")
+        if (VCPKG_TARGET_IS_UWP)
+            set(debug_dir "magnum")
+        else()
+            set(debug_dir "magnum-d")
+        endif()
+
+        file(GLOB_RECURSE LIB_TO_REMOVE_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/${debug_dir}/*")
+        file(GLOB_RECURSE LIB_TO_KEEP_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/${debug_dir}/*Any*")
         if(LIB_TO_KEEP_DBG)
             list(REMOVE_ITEM LIB_TO_REMOVE_DBG ${LIB_TO_KEEP_DBG})
         endif()
         if(LIB_TO_REMOVE_DBG)
             file(REMOVE ${LIB_TO_REMOVE_DBG})
         endif()
-
-        # fonts and fontconverters don't have Any* plugins
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum/fonts")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum/fontconverters")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/fonts")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/fontconverters")
-
+        
         # remove maybe empty dirs
-        file(GLOB maybe_empty "${CURRENT_PACKAGES_DIR}/lib/magnum/importers/*")
-        if(maybe_empty STREQUAL "")
-            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum/importers")
-            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/importers")
-            file(GLOB maybe_empty "${CURRENT_PACKAGES_DIR}/lib/magnum/*")
+        foreach(subdir "fonts" "importers" "fontconverters" "imageconverters" "audioimporters")
+            file(GLOB maybe_empty "${CURRENT_PACKAGES_DIR}/lib/magnum/${subdir}/*")
             if(maybe_empty STREQUAL "")
-                file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum")
-                file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d")
+                file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum/${subdir}")
+                file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${debug_dir}/${subdir}")
             endif()
+        endforeach()
+
+        file(GLOB maybe_empty "${CURRENT_PACKAGES_DIR}/lib/magnum/*")
+        if(maybe_empty STREQUAL "")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${debug_dir}")
         endif()
+        
     endif()
 
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/magnum")
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/magnum-d")
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/${debug_dir}")
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
