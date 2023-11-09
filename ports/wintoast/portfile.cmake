@@ -1,4 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -8,18 +9,18 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_RELEASE -DINSTALL_HEADERS=ON
-    OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
-
+    OPTIONS
+        -DWINTOASTLIB_BUILD_EXAMPLES=OFF
+        -DWINTOASTLIB_QT_ENABLED=OFF
 )
 
-vcpkg_cmake_install()
+vcpkg_cmake_build(TARGET WinToast)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+# WinToast does not support CMake-based install; copy headers and libraries manually.
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/WinToast.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/WinToast.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${SOURCE_PATH}/include/wintoastlib.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# Install license
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
