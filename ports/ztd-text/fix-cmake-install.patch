@@ -91,13 +91,14 @@ index fd8e1c8..c92aaa5 100644
  	add_subdirectory(single)
  endif()
 diff --git a/cmake/ztd.text-config.cmake.in b/cmake/ztd.text-config.cmake.in
-index a526740..0fea6fb 100644
+index a526740..e11ce0c 100644
 --- a/cmake/ztd.text-config.cmake.in
 +++ b/cmake/ztd.text-config.cmake.in
-@@ -1,6 +1,10 @@
+@@ -1,6 +1,11 @@
  @PACKAGE_INIT@
 +include(CMakeFindDependencyMacro)
 +find_dependency(ztd.platform CONFIG)
++find_dependency(ztd.static_containers CONFIG)
  
 -if (TARGET ztd::text)
 +include (${CMAKE_CURRENT_LIST_DIR}/ztd.text-targets.cmake)
