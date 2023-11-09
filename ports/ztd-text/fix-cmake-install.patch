@@ -1,22 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fd8e1c8..332f5fe 100644
+index fd8e1c8..43aa5c6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -35,13 +35,6 @@ cmake_policy(VERSION 3.21)
- # Includes a bunch of basic flags and utilities shared across projects
- # See more at the github repository link below
- include(FetchContent)
--FetchContent_Declare(ztd.cmake
--	GIT_REPOSITORY https://github.com/soasis/cmake
--	GIT_SHALLOW    ON
--	GIT_TAG        main)
--FetchContent_MakeAvailable(ztd.cmake)
--set(CMAKE_PROJECT_INCLUDE ${ZTD_CMAKE_PROJECT_PRELUDE})
--
- # # Project declaration
- # informs about the project, gives a description, version and MOST IMPORTANTLY
- # the languages the project is going to use. Required.
-@@ -51,6 +44,8 @@ project(ztd.text
+@@ -51,6 +51,8 @@ project(ztd.text
  	HOMEPAGE_URL "https://ztdtext.readthedocs.io/en/latest/"
  	LANGUAGES C CXX)
  
@@ -25,7 +11,7 @@ index fd8e1c8..332f5fe 100644
  if(ZTD_TEXT_READTHEDOCS)
  	# ReadTheDocs seems unable to handle the include at the project level: something must be going wrong?
  	include(CheckCXXCompilerFlag)
-@@ -139,64 +134,43 @@ option(ZTD_TEXT_BOOST.TEXT "Enable usage of Boost.Text benchmarks and examples"
+@@ -139,40 +141,17 @@ option(ZTD_TEXT_BOOST.TEXT "Enable usage of Boost.Text benchmarks and examples"
  
  # # Dependencies
  # ztd.idk
@@ -34,7 +20,6 @@ index fd8e1c8..332f5fe 100644
 -	GIT_SHALLOW    ON
 -	GIT_TAG        main)
 -FetchContent_MakeAvailable(ztd.idk)
-+#find_package(ztd.idk CONFIG REQUIRED)
  
  # ztd.static_containers
 -FetchContent_Declare(ztd.static_containers
@@ -42,7 +27,7 @@ index fd8e1c8..332f5fe 100644
 -	GIT_SHALLOW    ON
 -	GIT_TAG        main)
 -FetchContent_MakeAvailable(ztd.static_containers)
-+find_path(ZTD_STATIC_CONTAINERS_INCLUDE_DIRS "ztd/static_containers.hpp")
++find_package(ztd.static_containers CONFIG REQUIRED)
  
  # ztd.encoding_tables
 -FetchContent_Declare(ztd.encoding_tables
@@ -50,7 +35,6 @@ index fd8e1c8..332f5fe 100644
 -	GIT_SHALLOW    ON
 -	GIT_TAG        main)
 -FetchContent_MakeAvailable(ztd.encoding_tables)
-+#find_package(ztd.encoding_tables CONFIG REQUIRED)
  
  # ztd.cuneicode
  set(ZTD_CUNEICODE_SIMDUTF_SHARED ${ZTD_TEXT_BENCHMARKS})
@@ -70,27 +54,14 @@ index fd8e1c8..332f5fe 100644
  
  if (ZTD_TEXT_BENCHAMRKS OR ZTD_TEXT_GENERATE_SINGLE OR ZTD_TEXT_DOCUMENTATION)
  	find_package(Python3 REQUIRED COMPONENTS Interpreter)
- endif()
- 
- # Main library declarations
--file(GLOB_RECURSE ztd.text.includes CONFIGURE_DEPENDS include/*.hpp)
- 
- add_library(ztd.text INTERFACE)
- add_library(ztd::text ALIAS ztd.text)
- target_include_directories(ztd.text
- 	INTERFACE
-+	$<BUILD_INTERFACE:${ZTD_STATIC_CONTAINERS_INCLUDE_DIRS}>
- 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
- 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
--target_sources(ztd.text INTERFACE ${ztd.text.includes})
+@@ -190,13 +169,15 @@ target_include_directories(ztd.text
+ target_sources(ztd.text INTERFACE ${ztd.text.includes})
  target_link_libraries(ztd.text
  	INTERFACE
 -	ztd::idk
--	ztd::static_containers
--	ztd::platform
--	ztd::cuneicode)
-+	unoffical-ztd::ztd.platform
-+	unoffical-ztd::ztd.cuneicode)
+ 	ztd::static_containers
+ 	ztd::platform
+ 	ztd::cuneicode)
  install(DIRECTORY include/
  	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
  
@@ -100,7 +71,7 @@ index fd8e1c8..332f5fe 100644
  # # Config / Version packaging
  # Version configurations
  configure_package_config_file(
-@@ -213,6 +187,16 @@ export(TARGETS ztd.text
+@@ -213,6 +194,15 @@ export(TARGETS ztd.text
  	FILE
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.text/ztd.text-targets.cmake")
  
@@ -110,7 +81,6 @@ index fd8e1c8..332f5fe 100644
 +  DESTINATION share/ztd.text
 +  )
 +install(EXPORT ztd.text-targets
-+	NAMESPACE unoffical-ztd::
 +  FILE ztd.text-targets.cmake
 +  DESTINATION share/ztd.text
 +)
@@ -118,15 +88,18 @@ index fd8e1c8..332f5fe 100644
  	add_subdirectory(single)
  endif()
 diff --git a/cmake/ztd.text-config.cmake.in b/cmake/ztd.text-config.cmake.in
-index a526740..3833cf7 100644
+index a526740..0fea6fb 100644
 --- a/cmake/ztd.text-config.cmake.in
 +++ b/cmake/ztd.text-config.cmake.in
-@@ -1,5 +1,8 @@
+@@ -1,6 +1,10 @@
  @PACKAGE_INIT@
 +include(CMakeFindDependencyMacro)
 +find_dependency(ztd.platform CONFIG)
  
+-if (TARGET ztd::text)
 +include (${CMAKE_CURRENT_LIST_DIR}/ztd.text-targets.cmake)
- if (TARGET ztd::text)
++if (TARGET ztd.text)
++	add_library(ztd::text ALIAS ztd.text)
  	get_target_property(ZTD_TEXT_INCLUDE_DIRS
  		ztd.text INTERFACE_INCLUDE_DIRECTORIES)
+ 	set_and_check(ZTD_TEXT_INCLUDE_DIRS "${ZTD_TEXT_INCLUDE_DIRS}")

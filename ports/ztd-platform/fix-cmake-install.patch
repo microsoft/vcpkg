@@ -1,21 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 57c97c4..66acfde 100644
+index 57c97c4..d0e0da9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -33,12 +33,6 @@ cmake_policy(VERSION 3.21)
- # # Project kickstart
- # Includes a bunch of basic flags and utilities shared across projects
- # See more at the github repository link below
--include(FetchContent)
--FetchContent_Declare(ztd.cmake
--	GIT_REPOSITORY https://github.com/soasis/cmake
--	GIT_TAG main)
--FetchContent_MakeAvailable(ztd.cmake)
--set(CMAKE_PROJECT_INCLUDE ${ZTD_CMAKE_PROJECT_PRELUDE})
- 
- # # Project declaration
- # informs about the project, gives a description, version and MOST IMPORTANTLY
-@@ -49,6 +43,8 @@ project(ztd.platform
+@@ -49,6 +49,8 @@ project(ztd.platform
  	HOMEPAGE_URL "https://ztdplatform.readthedocs.io/en/latest/"
  	LANGUAGES C CXX)
  
@@ -24,7 +11,7 @@ index 57c97c4..66acfde 100644
  if(ZTD_PLATFORM_READTHEDOCS)
  	# ReadTheDocs seems unable to handle the include at the project level: something must be going wrong?
  	include(CheckCXXCompilerFlag)
-@@ -121,10 +117,7 @@ option(ZTD_PLATFORM_USE_ENCODING_C "Enable encoding_rs's C bindings with ztd::pl
+@@ -121,10 +123,7 @@ option(ZTD_PLATFORM_USE_ENCODING_C "Enable encoding_rs's C bindings with ztd::pl
  
  # # Dependencies
  # ztd.idk
@@ -36,16 +23,7 @@ index 57c97c4..66acfde 100644
  
  # encoding_c
  if (ZTD_PLATFORM_USE_ENCODING_C)
-@@ -382,7 +375,7 @@ target_compile_definitions(ztd.platform
- )
- target_link_libraries(ztd.platform
- 	PUBLIC
--		ztd::idk
-+		unofficial-ztd::ztd.idk
- 		$<$<BOOL:${ZTD_PLATFORM_USE_LIBICONV}>:$<$<TARGET_EXISTS:Iconv::Iconv>:Iconv::Iconv>>
- 		$<$<BOOL:${ZTD_PLATFORM_USE_ICU}>:$<$<TARGET_EXISTS:ICU::uc>:ICU::uc>>
- 		$<$<BOOL:${ZTD_PLATFORM_USE_ICU}>:$<$<TARGET_EXISTS:ICU::i18n>:ICU::i18n>>
-@@ -408,11 +401,8 @@ install(DIRECTORY include/
+@@ -408,11 +407,8 @@ install(DIRECTORY include/
  	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
  )
  install(TARGETS ztd.platform
@@ -59,7 +37,7 @@ index 57c97c4..66acfde 100644
  
  # # Config / Version packaging
  # Version configurations
-@@ -430,6 +420,16 @@ export(TARGETS ztd.platform
+@@ -430,6 +426,15 @@ export(TARGETS ztd.platform
  	FILE
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.platform/ztd.platform-targets.cmake")
  
@@ -69,7 +47,6 @@ index 57c97c4..66acfde 100644
 +  DESTINATION share/ztd.platform
 +  )
 +install(EXPORT ztd.platform-targets
-+	NAMESPACE unofficial-ztd::
 +  FILE ztd.platform-targets.cmake
 +  DESTINATION share/ztd.platform
 +)
@@ -77,16 +54,19 @@ index 57c97c4..66acfde 100644
  if(ZTD_PLATFORM_TESTS)
  	include(CTest)
 diff --git a/cmake/ztd.platform-config.cmake.in b/cmake/ztd.platform-config.cmake.in
-index 37629fc..9779c8b 100644
+index 37629fc..5d5886c 100644
 --- a/cmake/ztd.platform-config.cmake.in
 +++ b/cmake/ztd.platform-config.cmake.in
-@@ -1,5 +1,9 @@
+@@ -1,6 +1,11 @@
  @PACKAGE_INIT@
  
+-if (TARGET ztd::platform)
 +include(CMakeFindDependencyMacro)
 +find_dependency(ztd.idk CONFIG)
 +
 +include(${CMAKE_CURRENT_LIST_DIR}/ztd.platform-targets.cmake)
- if (TARGET ztd::platform)
++if (TARGET ztd.platform)
++	add_library(ztd::platform ALIAS ztd.platform)
  	get_target_property(ZTD_PLATFORM_INCLUDE_DIRS
  		ztd.platform INTERFACE_INCLUDE_DIRECTORIES)
+ 	set_and_check(ZTD_PLATFORM_INCLUDE_DIRS "${ZTD_PLATFORM_INCLUDE_DIRS}")

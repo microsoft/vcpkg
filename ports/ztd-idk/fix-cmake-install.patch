@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 746afa7..2170537 100644
+index 746afa7..803b82e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -34,11 +34,6 @@ cmake_policy(VERSION 3.21)
@@ -41,7 +41,7 @@ index 746afa7..2170537 100644
  target_include_directories(ztd.version
  	INTERFACE
  	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-@@ -143,20 +138,33 @@ install(DIRECTORY include/
+@@ -143,20 +138,32 @@ install(DIRECTORY include/
  	${CMAKE_INSTALL_INCLUDEDIR}
  )
  
@@ -69,14 +69,13 @@ index 746afa7..2170537 100644
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.version/ztd.version-targets.cmake"
  )
 +install(EXPORT ztd.version-targets
-+  NAMESPACE unofficial-ztd::
 +  FILE ztd.version-targets.cmake
 +  DESTINATION share/ztd.version
 +)
  
  # ztd.tag_invoke
  file(GLOB_RECURSE ztd.tag_invoke.includes
-@@ -166,6 +174,7 @@ file(GLOB_RECURSE ztd.tag_invoke.includes
+@@ -166,6 +173,7 @@ file(GLOB_RECURSE ztd.tag_invoke.includes
  )
  
  add_library(ztd.tag_invoke INTERFACE)
@@ -84,7 +83,7 @@ index 746afa7..2170537 100644
  add_library(ztd::tag_invoke ALIAS ztd.tag_invoke)
  target_include_directories(ztd.tag_invoke
  	INTERFACE
-@@ -179,10 +188,14 @@ install(DIRECTORY include/
+@@ -179,10 +187,14 @@ install(DIRECTORY include/
  	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
  )
  
@@ -100,7 +99,7 @@ index 746afa7..2170537 100644
  	NO_CHECK_REQUIRED_COMPONENTS_MACRO
  )
  write_basic_package_version_file(
-@@ -193,6 +206,17 @@ export(TARGETS ztd.tag_invoke
+@@ -193,6 +205,16 @@ export(TARGETS ztd.tag_invoke
  	FILE
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.tag_invoke/ztd.tag_invoke-targets.cmake"
  )
@@ -108,9 +107,8 @@ index 746afa7..2170537 100644
 +  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.tag_invoke/ztd.tag_invoke-config.cmake
 +  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.tag_invoke/ztd.tag_invoke-config-version.cmake
 +  DESTINATION share/ztd.tag_invoke
-+  )
++)
 +install(EXPORT ztd.tag_invoke-targets
-+  NAMESPACE unofficial-ztd::
 +  FILE ztd.tag_invoke-targets.cmake
 +  DESTINATION share/ztd.tag_invoke
 +)
@@ -118,18 +116,18 @@ index 746afa7..2170537 100644
  
  # ztd.idk
  file(GLOB_RECURSE ztd.idk.includes
-@@ -241,15 +265,17 @@ if(ZTD_IDK_IS_TOP_LEVEL_PROJECT)
+@@ -241,7 +263,9 @@ if(ZTD_IDK_IS_TOP_LEVEL_PROJECT)
  	)
  endif()
  
 -install(TARGETS ztd.idk)
- install(DIRECTORY include/
- 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
- )
 +install(TARGETS ztd.idk
 +        EXPORT ztd.idk-targets
 +        DESTINATION lib)
- 
+ install(DIRECTORY include/
+ 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+ )
+@@ -249,7 +273,7 @@ install(DIRECTORY include/
  configure_package_config_file(
  	cmake/ztd.idk-config.cmake.in
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.idk/ztd.idk-config.cmake"
@@ -138,7 +136,7 @@ index 746afa7..2170537 100644
  	NO_CHECK_REQUIRED_COMPONENTS_MACRO
  )
  write_basic_package_version_file(
-@@ -261,11 +287,18 @@ export(TARGETS ztd.idk
+@@ -261,11 +285,17 @@ export(TARGETS ztd.idk
  	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.idk/ztd.idk-targets.cmake"
  )
  
@@ -151,7 +149,6 @@ index 746afa7..2170537 100644
 +  DESTINATION share/ztd.idk/
 +  )
 +install(EXPORT ztd.idk-targets
-+  NAMESPACE unofficial-ztd::
 +  FILE ztd.idk-targets.cmake
 +  DESTINATION share/ztd.idk/
  )
