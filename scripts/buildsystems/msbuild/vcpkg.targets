@@ -212,8 +212,6 @@
     <Exec
       Condition="'$(VcpkgUseBuiltInApplocalDeps)' == 'true'"
       Command="%22$(_ZVcpkgExecutable)%22 z-applocal $(_ZVcpkgApplocalBuiltinArguments)"
-      StandardOutputImportance="Normal"
-      StandardErrorImportance="Normal"
       UseUtf8Encoding="Always"
       StdOutEncoding="utf-8"
       StdErrEncoding="utf-8"
@@ -229,8 +227,6 @@
     <Exec
       Condition="'$(VcpkgUseBuiltInApplocalDeps)' != 'true'"
       Command="pwsh.exe $(_ZVcpkgAppLocalPowerShellCommonArguments)"
-      StandardOutputImportance="Normal"
-      StandardErrorImportance="Normal"
       IgnoreExitCode="true"
       UseCommandProcessor="false">
       <Output TaskParameter="ExitCode"
@@ -241,8 +237,6 @@
              Condition="$(_ZVcpkgAppLocalExitCode) == 9009" />
     <Exec
       Command="%22$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe%22 $(_ZVcpkgAppLocalPowerShellCommonArguments)"
-      StandardOutputImportance="Normal"
-      StandardErrorImportance="Normal"
       IgnoreExitCode="true"
       UseCommandProcessor="false"
       Condition="$(_ZVcpkgAppLocalExitCode) == 9009 and '$(VcpkgUseBuiltInApplocalDeps)' != 'true'">
