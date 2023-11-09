@@ -98,13 +98,13 @@ if(NOT VCPKG_TARGET_ARCHITECTURE IN_LIST known_cpus)
     message(WARNING "Unknown target cpu '${VCPKG_TARGET_ARCHITECTURE}'.")
 endif()
 
-set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" skia_enable_skottie=true skia_enable_svg=true")
+set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" skia_enable_svg=true")
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "is_official_build=true")
 vcpkg_list(SET SKIA_TARGETS
     :skia
     modules/skcms:skcms
-    modules/skottie:skottie
+    # modules/skottie:skottie,  skia_enable_skottie=true : !(windows & !static)
     # modules/sksg:sksg
     modules/skshaper:skshaper
     modules/svg:svg
