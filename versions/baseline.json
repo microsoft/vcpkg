@@ -9230,7 +9230,7 @@
     },
     "yara": {
       "baseline": "4.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "yas": {
       "baseline": "7.1.0",
