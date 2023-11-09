@@ -8426,7 +8426,7 @@
     },
     "tinyorm": {
       "baseline": "0.36.5",
-      "port-version": 0
+      "port-version": 1
     },
     "tinyply": {
       "baseline": "2.3.4",
