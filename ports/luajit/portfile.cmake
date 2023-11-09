@@ -106,3 +106,4 @@ vcpkg_copy_tools(TOOL_NAMES luajit AUTO_CLEAN)
 vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
