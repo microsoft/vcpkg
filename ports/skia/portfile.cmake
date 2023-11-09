@@ -101,7 +101,15 @@ endif()
 set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "is_official_build=true")
-vcpkg_list(SET SKIA_TARGETS ":skia")
+vcpkg_list(SET SKIA_TARGETS
+    :skia
+    modules/skcms:skcms
+    modules/skottie:skottie
+    modules/skresources:skresources
+    modules/sksg:sksg
+    modules/skshaper:skshaper
+    modules/svg:svg
+)
 
 if(VCPKG_TARGET_IS_ANDROID)
     string(APPEND OPTIONS " target_os=\"android\"")
@@ -158,6 +166,7 @@ endif()
 if("icu" IN_LIST FEATURES)
     list(APPEND required_externals icu)
     string(APPEND OPTIONS " skia_use_icu=true")
+    vcpkg_list(APPEND SKIA_TARGETS modules/skunicode:skunicode)
 else()
     string(APPEND OPTIONS " skia_use_icu=false")
 endif()
@@ -170,6 +179,10 @@ endif()
 
 if("metal" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_use_metal=true")
+endif()
+
+if("skparagraph" IN_LIST FEATURES)
+    vcpkg_list(APPEND SKIA_TARGETS modules/skparagraph:skparagraph)
 endif()
 
 if("vulkan" IN_LIST FEATURES)
@@ -323,14 +336,22 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/core/SkTypes.
 # vcpkg legacy layout omits "include/" component. Just duplicate.
 file(COPY "${CURRENT_PACKAGES_DIR}/include/skia/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia")
 
-get_definitions(SKIA_DEFINITIONS_REL "${desc_release}" "//:skia")
-get_link_libs(SKIA_DEP_REL "${desc_release}" "//:skia")
-if(NOT VCPKG_BUILD_TYPE)
-    get_definitions(SKIA_DEFINITIONS_DBG "${desc_debug}" "//:skia")
-    get_link_libs(SKIA_DEP_DBG "${desc_debug}" "//:skia")
-endif()
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/unofficial-skia")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-skia-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-skia/unofficial-skia-config.cmake" @ONLY)
+foreach(target IN LISTS SKIA_TARGETS)
+    set(SKIA_CONFIGURATIONS RELEASE)
+    get_target_name(name "${desc_release}" "//${target}")
+    get_library(SKIA_LIB_REL "${desc_release}" "//${target}")
+    get_definitions(SKIA_DEFINITIONS_REL "${desc_release}" "//${target}")
+    get_link_libs(SKIA_DEP_REL "${desc_release}" "//${target}")
+    if(NOT VCPKG_BUILD_TYPE)
+        list(APPEND SKIA_CONFIGURATIONS DEBUG)
+        get_library(SKIA_LIB_DBG "${desc_debug}" "//${target}")
+        get_definitions(SKIA_DEFINITIONS_DBG "${desc_debug}" "//${target}")
+        get_link_libs(SKIA_DEP_DBG "${desc_debug}" "//${target}")
+    endif()
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-skia-targets.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-skia/unofficial-skia-targets-${name}.cmake" @ONLY)
+endforeach()
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-skia-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-skia")
 # vcpkg legacy
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/skiaConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/skia")
 

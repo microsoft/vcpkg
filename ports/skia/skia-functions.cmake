@@ -194,6 +194,26 @@ function(list_from_json out_var json) # <path>
     set("${out_var}" "${list}" PARENT_SCOPE)
 endfunction()
 
+function(get_target_name out_var desc_json target)
+    if(target MATCHES [[([a-zA-Z]+)$]])
+        set(name "${CMAKE_MATCH_1}")
+    else()
+        string(MAKE_C_IDENTIFIER "${target}" name)
+    endif()
+    set("${out_var}" "${name}" PARENT_SCOPE)
+endfunction()
+
+# Put the target's SK_<...> definitions in out_var
+function(get_library out_var desc_json target)
+    list_from_json(filepath "${desc_json}" "${target}" "outputs")
+    if(filepath MATCHES ";")
+        message(WARNING "Dropping secondary outputs from ${output}")
+        list(GET filepath 0 filepath)
+    endif()
+    cmake_path(GET filepath FILENAME filename)
+    set("${out_var}" "${filename}" PARENT_SCOPE)
+endfunction()
+
 # Put the target's SK_<...> definitions in out_var
 function(get_definitions out_var desc_json target)
     list_from_json(output "${desc_json}" "${target}" "defines")
