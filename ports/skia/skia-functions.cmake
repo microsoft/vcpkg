@@ -194,6 +194,7 @@ function(list_from_json out_var json) # <path>
     set("${out_var}" "${list}" PARENT_SCOPE)
 endfunction()
 
+# Provide a cmake target name candidate (w/o namespace) in out_var
 function(get_target_name out_var desc_json target)
     if(target MATCHES [[([a-zA-Z]+)$]])
         set(name "${CMAKE_MATCH_1}")
@@ -203,7 +204,7 @@ function(get_target_name out_var desc_json target)
     set("${out_var}" "${name}" PARENT_SCOPE)
 endfunction()
 
-# Put the target's SK_<...> definitions in out_var
+# Put the target's library filename in out_var
 function(get_library out_var desc_json target)
     list_from_json(filepath "${desc_json}" "${target}" "outputs")
     if(filepath MATCHES ";")
