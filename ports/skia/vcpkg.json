@@ -44,10 +44,6 @@
       "platform": "uwp"
     },
     {
-      "name": "direct3d",
-      "platform": "uwp"
-    },
-    {
       "name": "fontconfig",
       "platform": "linux"
     },
