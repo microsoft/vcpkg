@@ -1,8 +1,8 @@
 if(NOT _VCPKG_IOS_TOOLCHAIN)
     set(_VCPKG_IOS_TOOLCHAIN 1)
 
-    set(CMAKE_CXX_COMPILER /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang)
-    set(CMAKE_C_COMPILER /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang)
+    #set(CMAKE_CXX_COMPILER /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang)
+    #set(CMAKE_C_COMPILER /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang)
     
     message("XAJM - here 1")
     # Set the CMAKE_SYSTEM_NAME for try_compile calls.
