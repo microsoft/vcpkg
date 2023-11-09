@@ -105,7 +105,6 @@ vcpkg_list(SET SKIA_TARGETS
     :skia
     modules/skcms:skcms
     modules/skottie:skottie
-    modules/skresources:skresources
     modules/sksg:sksg
     modules/skshaper:skshaper
     modules/svg:svg
@@ -128,6 +127,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     string(APPEND OPTIONS " is_component_build=true")
 else()
     string(APPEND OPTIONS " is_component_build=false")
+    vcpkg_list(APPEND SKIA_TARGETS modules/skresources:skresources)
 endif()
 
 set(required_externals
