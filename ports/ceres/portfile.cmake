@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ceres-solver/ceres-solver
-    REF f68321e7de8929fbcdb95dd42877531e64f72f66 #2.1.0
-    SHA512 67bbd8a9385a40fe69d118fbc84da0fcc9aa1fbe14dd52f5403ed09686504213a1d931e95a1a0148d293b27ab5ce7c1d618fbf2e8fed95f2bbafab851a1ef449
+    REF "${VERSION}"
+    SHA512 d4cefe5851e25bd3c7b76352092d8d549eb371af2e35a325736554c54fe58a3523658697c3e2d65af660fe6895ae3d96fe31bd1875870474fc4b6fed3bbdfae9
     HEAD_REF master
     PATCHES
         0001_cmakelists_fixes.patch
@@ -19,21 +19,17 @@ vcpkg_from_github(
         find-package-required.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/cmake/FindCXSparse.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake/FindEigen.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindMETIS.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "suitesparse"       SUITESPARSE
-        "cxsparse"          CXSPARSE
         "lapack"            LAPACK
         "eigensparse"       EIGENSPARSE
         "tools"             GFLAGS
-        "cuda"              CUDA
+        "cuda"              USE_CUDA
 )
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND FEATURE_OPTIONS -DMINIGLOG=ON)
@@ -58,10 +54,12 @@ vcpkg_cmake_configure(
         -DBUILD_BENCHMARKS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
-        -DBUILD_BENCHMARKS=OFF
         -DPROVIDE_UNINSTALL_TARGET=OFF
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
         -DLIB_SUFFIX=${LIB_SUFFIX}
+    MAYBE_UNUSED_VARIABLES
+        MSVC_USE_STATIC_CRT
+        LIB_SUFFIX
 )
 
 vcpkg_cmake_install()
@@ -73,4 +71,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
