@@ -1,6 +1,7 @@
 {
   "name": "llhttp",
   "version": "9.1.3",
+  "port-version": 1,
   "description": "Port of http_parser to llparse.",
   "homepage": "https://github.com/nodejs/llhttp",
   "license": "MIT",

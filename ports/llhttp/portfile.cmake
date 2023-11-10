@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nodejs/llhttp
@@ -7,6 +5,7 @@ vcpkg_from_github(
     SHA512 971ec2cb403942bc43e4b67a6dd392bca10d4233a25f453550d9f2bfbcb9572df309bde77af030e94e2af840aec1d96de164df0cbb1183bb2f5623e8fcf3162c
     PATCHES
         fix-usage.patch
+        fix-export.patch
 )
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LLHTTP_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LLHTTP_BUILD_SHARED)

@@ -1,0 +1,13 @@
+diff --git a/include/llhttp.h b/include/llhttp.h
+index bdef288..72555c6 100644
+--- a/include/llhttp.h
++++ b/include/llhttp.h
+@@ -547,6 +547,8 @@ extern "C" {
+ 
+ #if defined(__wasm__)
+ #define LLHTTP_EXPORT __attribute__((visibility("default")))
++#elif defined(_WIN32)
++#define LLHTTP_EXPORT __declspec(dllexport)
+ #else
+ #define LLHTTP_EXPORT
+ #endif
