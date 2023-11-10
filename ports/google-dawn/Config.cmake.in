@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(absl CONFIG)
+
+if (@DAWN_BUILD_GLFW_LIB@)
+	find_dependency(glfw3 CONFIG)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+check_required_components(@PROJECT_NAME@)

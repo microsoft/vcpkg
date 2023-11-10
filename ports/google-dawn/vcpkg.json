@@ -1,0 +1,60 @@
+{
+  "name": "google-dawn",
+  "version-string": "chromium_6097",
+  "description": [
+    "Dawn is an open-source and cross-platform implementation of the WebGPU standard.",
+    "Note: Vulkan has been disabled in the meantime, due to missing libraries and Dawn's usage of some Vulkan library internals.",
+    "Tint is also unavailable because there is no public API for it yet"
+  ],
+  "dependencies": [
+    {
+      "name": "abseil",
+      "features": [
+        "cxx17"
+      ],
+      "version>=": "20230802.1"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    }
+  ],
+  "features": {
+    "glfw": {
+      "description": "Enable GLFW windowing support library",
+      "dependencies": [
+        "glfw3"
+      ]
+    },
+    "opengl": {
+      "description": "Enable Desktop OpenGL backend",
+      "dependencies": [
+        {
+          "name": "dawn",
+          "features": [
+            "glfw"
+          ]
+        }
+      ]
+    },
+    "opengles": {
+      "description": "Enable OpenGL ES backend",
+      "dependencies": [
+        {
+          "name": "dawn",
+          "features": [
+            "glfw"
+          ]
+        }
+      ]
+    }
+  }
+}

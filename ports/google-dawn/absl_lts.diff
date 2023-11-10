@@ -1,0 +1,15 @@
+diff --git a/src/dawn/native/ObjectBase.h b/src/dawn/native/ObjectBase.h
+index c98861e72..075e16858 100644
+--- a/src/dawn/native/ObjectBase.h
++++ b/src/dawn/native/ObjectBase.h
+@@ -36,10 +36,6 @@
+ #include "dawn/common/RefCounted.h"
+ #include "dawn/native/Forward.h"
+
+-namespace absl {
+-class FormatSink;
+-}
+-
+ namespace dawn::native {
+
+ class ApiObjectBase;

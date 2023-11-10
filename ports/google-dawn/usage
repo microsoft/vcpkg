@@ -1,0 +1,7 @@
+The package dawn provides CMake targets:
+
+    find_package(Dawn CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE dawn::cpp dawn::proc dawn::native dawn::wire)
+
+    dawn::glfw is also available when enabling the required feature
+

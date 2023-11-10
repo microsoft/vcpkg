@@ -1,0 +1,560 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 137cde17b..a433312d6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,6 +38,7 @@ project(
+     Dawn
+     DESCRIPTION "Dawn, a WebGPU implementation"
+     LANGUAGES C CXX
++    VERSION 1.0.0
+ )
+ enable_testing()
+
+@@ -369,7 +370,7 @@ if (NOT ${TINT_LIB_FUZZING_ENGINE_LINK_OPTIONS} STREQUAL "")
+ endif()
+
+ message(STATUS "Using python3")
+-find_package(PythonInterp 3 REQUIRED)
++find_package(Python3 REQUIRED)
+
+ ################################################################################
+ # common_compile_options - sets compiler and linker options common for dawn and
+@@ -435,16 +436,21 @@ endif()
+
+ # The public config contains only the include paths for the Dawn headers.
+ add_library(dawn_public_config INTERFACE)
++add_library(dawn::public_config ALIAS dawn_public_config)
++set_property(TARGET dawn_public_config PROPERTY EXPORT_NAME public_config)
+ target_include_directories(dawn_public_config INTERFACE
+-    "${DAWN_INCLUDE_DIR}"
+-    "${DAWN_BUILD_GEN_DIR}/include"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}>"
++    "$<BUILD_INTERFACE:${DAWN_BUILD_GEN_DIR}/include>"
++    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+ )
+
+ # The internal config conatins additional path but includes the dawn_public_config include paths
+ add_library(dawn_internal_config INTERFACE)
++add_library(dawn::internal_config ALIAS dawn_internal_config)
++set_property(TARGET dawn_internal_config PROPERTY EXPORT_NAME internal_config)
+ target_include_directories(dawn_internal_config INTERFACE
+-    "${DAWN_SRC_DIR}"
+-    "${DAWN_BUILD_GEN_DIR}/src"
++    "$<BUILD_INTERFACE:${DAWN_SRC_DIR}>"
++    "$<BUILD_INTERFACE:${DAWN_BUILD_GEN_DIR}/src>"
+ )
+ target_link_libraries(dawn_internal_config INTERFACE dawn_public_config)
+
+@@ -489,15 +495,13 @@ if (WIN32)
+     target_compile_definitions(dawn_internal_config INTERFACE "NOMINMAX" "WIN32_LEAN_AND_MEAN")
+ endif()
+
+-set(CMAKE_CXX_STANDARD "17")
+-
+ ################################################################################
+ # Tint
+ ################################################################################
+
+ set(TINT_LIB_FUZZING_ENGINE_LINK_OPTIONS "" CACHE STRING "Used by OSS-Fuzz to control, via link options, which fuzzing engine should be used")
+
+-set(TINT_ROOT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
++set(TINT_ROOT_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
+ set(TINT_SPIRV_HEADERS_DIR ${DAWN_SPIRV_HEADERS_DIR})
+ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
+
+@@ -568,7 +572,32 @@ endif()
+ # Run on all subdirectories
+ ################################################################################
+
+-add_subdirectory(third_party)
++find_package(absl CONFIG REQUIRED)
++#find_package(SPIRV-Tools CONFIG REQUIRED)
++#find_package(SPIRV-Tools-opt CONFIG REQUIRED)
++
++if (DAWN_USE_GLFW)
++    find_package(glfw3 CONFIG REQUIRED)
++endif()
++
++include(GNUInstallDirs)
++
++function(add_includes_list HEADERS ROOT_DIR)
++    foreach(header ${HEADERS})
++        file(TO_CMAKE_PATH "${header}" FIXED_HEADER)
++        file(RELATIVE_PATH header_file_path "${ROOT_DIR}" "${FIXED_HEADER}")
++        get_filename_component(header_directory_path "${header_file_path}" DIRECTORY)
++        install(
++                FILES ${FIXED_HEADER}
++                DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${header_directory_path}"
++        )
++    endforeach()
++endfunction()
++
++function(add_includes_glob GLOB ROOT_DIR)
++    file(GLOB_RECURSE public_headers ${GLOB})
++    add_includes_list("${public_headers}" "${ROOT_DIR}")
++endfunction()
+
+ # TODO(crbug.com/tint/455): Tint does not currently build with CMake when
+ # BUILD_SHARED_LIBS=1, so always build it as static for now.
+@@ -612,3 +641,121 @@ if (DAWN_EMIT_COVERAGE)
+     VERBATIM)
+ endif()
+
++
++# install the target and create export-set
++# TODO: Many of these are internal targets we actually don't want to expose. Create at least separate export sets for them
++install(TARGETS
++        dawn_native dawncpp dawn_headers dawncpp_headers dawn_common dawn_platform dawn_public_config dawn_internal_config
++        tint_api
++
++        tint_api_common
++        tint_api_options
++        tint_lang_core
++        tint_lang_core_constant
++        tint_lang_core_ir
++        tint_lang_core_type
++        tint_lang_hlsl_writer_common
++        tint_lang_spirv_reader_common
++        tint_lang_wgsl
++        tint_lang_wgsl_ast
++        tint_lang_wgsl_program
++        tint_lang_wgsl_sem
++        tint_utils_containers
++        tint_utils_diagnostic
++        tint_utils_ice
++        tint_utils_id
++        tint_utils_macros
++        tint_utils_math
++        tint_utils_memory
++        tint_utils_reflection
++        tint_utils_result
++        tint_utils_rtti
++        tint_utils_symbol
++        tint_utils_text
++        tint_utils_traits
++        tint_lang_hlsl_writer
++        tint_lang_wgsl_reader
++        tint_lang_wgsl_writer
++
++        # extra?
++        tint_lang_core_intrinsic
++        tint_utils_debug
++        tint_lang_wgsl_ast_transform
++        tint_lang_hlsl_writer_ast_printer
++        tint_lang_hlsl_writer_ast_raise
++        tint_lang_wgsl_reader_lower
++        tint_lang_wgsl_resolver
++        tint_lang_wgsl_reader_parser
++        tint_lang_wgsl_reader_program_to_ir
++        tint_lang_wgsl_writer_ir_to_program
++        tint_lang_wgsl_writer_raise
++        tint_lang_wgsl_writer_syntax_tree_printer
++        tint_utils_generator
++        tint_lang_wgsl_writer_ast_printer
++
++        tint_lang_wgsl_helpers
++        tint_lang_wgsl_intrinsic
++        tint_lang_wgsl_ir
++        tint_utils_strconv
++
++        tint_lang_wgsl_inspector
++
++        dawn_proc dawn_wire
++        EXPORT "${PROJECT_NAME}Targets"
++        # these get default values from GNUInstallDirs, no need to set them
++        #RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
++        #LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
++        #ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
++        # except for public headers, as we want them to be inside a library folder
++        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME} # include/SomeLibrary
++        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
++        )
++
++if (DAWN_USE_GLFW)
++    # install the target and create export-set
++    install(TARGETS dawn_glfw
++            EXPORT "${PROJECT_NAME}Targets"
++            # these get default values from GNUInstallDirs, no need to set them
++            #RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
++            #LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
++            #ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
++            # except for public headers, as we want them to be inside a library folder
++            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME} # include/SomeLibrary
++            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
++            )
++endif()
++
++# generate and install export file
++install(EXPORT "${PROJECT_NAME}Targets"
++        FILE "${PROJECT_NAME}Targets.cmake"
++        NAMESPACE dawn::
++        DESTINATION cmake
++        )
++
++add_includes_glob(${PROJECT_SOURCE_DIR}/include/*.h "${CMAKE_CURRENT_SOURCE_DIR}/include")
++add_includes_glob(${PROJECT_SOURCE_DIR}/src/tint/*.h "${CMAKE_CURRENT_SOURCE_DIR}/src")
++
++include(CMakePackageConfigHelpers)
++
++# generate the version file for the config file
++write_basic_package_version_file(
++        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
++        VERSION "${version}"
++        COMPATIBILITY AnyNewerVersion
++)
++# create config file
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
++        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
++        INSTALL_DESTINATION cmake
++        )
++# install config files
++install(FILES
++        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
++        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
++        DESTINATION cmake
++        )
++# generate the export targets for the build tree
++export(EXPORT "${PROJECT_NAME}Targets"
++        FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Targets.cmake"
++        NAMESPACE ${namespace}::
++        )
+diff --git a/generator/CMakeLists.txt b/generator/CMakeLists.txt
+index bcfefcefb..8fa86240b 100644
+--- a/generator/CMakeLists.txt
++++ b/generator/CMakeLists.txt
+@@ -25,14 +25,14 @@
+ # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-find_package(PythonInterp REQUIRED)
+-message(STATUS "Dawn: using python at ${PYTHON_EXECUTABLE}")
++find_package(Python3 REQUIRED)
++message(STATUS "Dawn: using python at ${Python3_EXECUTABLE}")
+
+ # Check for Jinja2
+ if (NOT DAWN_JINJA2_DIR)
+     message(STATUS "Dawn: Using system jinja2")
+     execute_process(
+-        COMMAND ${PYTHON_EXECUTABLE} -c "import jinja2"
++        COMMAND ${Python3_EXECUTABLE} -c "import jinja2"
+         RESULT_VARIABLE RET
+     )
+     if (NOT RET EQUAL 0)
+@@ -55,7 +55,7 @@ function(DawnGenerator)
+
+     # Build the set of args common to all invocation of that generator.
+     set(BASE_ARGS
+-        ${PYTHON_EXECUTABLE}
++        ${Python3_EXECUTABLE}
+         ${G_SCRIPT}
+         --template-dir
+         "${DAWN_TEMPLATE_DIR}"
+diff --git a/src/dawn/CMakeLists.txt b/src/dawn/CMakeLists.txt
+index f4e194d97..3ef986b3b 100644
+--- a/src/dawn/CMakeLists.txt
++++ b/src/dawn/CMakeLists.txt
+@@ -75,6 +75,7 @@ DawnJSONGenerator(
+     PRINT_NAME "Dawn headers"
+     RESULT_VARIABLE "DAWN_HEADERS_GEN_SOURCES"
+ )
++add_includes_list("${DAWN_HEADERS_GEN_SOURCES}" "${DAWN_BUILD_GEN_DIR}/include")
+
+ # Headers only INTERFACE library with generated headers don't work in CMake
+ # because the GENERATED property is local to a directory. Instead we make a
+@@ -85,9 +86,12 @@ DawnJSONGenerator(
+ # directory, they don't see the GENERATED property and fail to configure
+ # because the file doesn't exist on disk.
+ add_library(dawn_headers STATIC ${DAWN_PLACEHOLDER_FILE})
++add_library(dawn::headers ALIAS dawn_headers)
++set_property(TARGET dawn_headers PROPERTY EXPORT_NAME headers)
++
+ common_compile_options(dawn_headers)
+ target_sources(dawn_headers INTERFACE
+-    "${DAWN_INCLUDE_DIR}/webgpu/webgpu.h"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/webgpu/webgpu.h>"
+     PRIVATE
+     ${DAWN_HEADERS_GEN_SOURCES}
+ )
+@@ -103,14 +107,18 @@ DawnJSONGenerator(
+     PRINT_NAME "Dawn C++ headers"
+     RESULT_VARIABLE "DAWNCPP_HEADERS_GEN_SOURCES"
+ )
++add_includes_list("${DAWNCPP_HEADERS_GEN_SOURCES}" "${DAWN_BUILD_GEN_DIR}/include")
+
+ # This headers only library needs to be a STATIC library, see comment for
+ # dawn_headers above.
+ add_library(dawncpp_headers STATIC ${DAWN_PLACEHOLDER_FILE})
++add_library(dawn::cpp_headers ALIAS dawncpp_headers)
++set_property(TARGET dawncpp_headers PROPERTY EXPORT_NAME cpp_headers)
++
+ common_compile_options(dawncpp_headers)
+ target_sources(dawncpp_headers INTERFACE
+-    "${DAWN_INCLUDE_DIR}/webgpu/webgpu_cpp.h"
+-    "${DAWN_INCLUDE_DIR}/dawn/EnumClassBitmasks.h"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/webgpu/webgpu_cpp.h>"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/EnumClassBitmasks.h>"
+     PRIVATE
+     ${DAWNCPP_HEADERS_GEN_SOURCES}
+ )
+@@ -127,6 +135,8 @@ DawnJSONGenerator(
+ )
+
+ add_library(dawncpp STATIC ${DAWN_PLACEHOLDER_FILE})
++add_library(dawn::cpp ALIAS dawncpp)
++set_property(TARGET dawncpp PROPERTY EXPORT_NAME cpp)
+ common_compile_options(dawncpp)
+ target_sources(dawncpp PRIVATE ${DAWNCPP_GEN_SOURCES})
+ target_link_libraries(dawncpp PUBLIC dawncpp_headers)
+@@ -146,6 +156,9 @@ DawnJSONGenerator(
+ )
+
+ add_library(dawn_proc ${DAWN_PLACEHOLDER_FILE})
++add_library(dawn::proc ALIAS dawn_proc)
++set_property(TARGET dawn_proc PROPERTY EXPORT_NAME proc)
++
+ common_compile_options(dawn_proc)
+ target_compile_definitions(dawn_proc PRIVATE "WGPU_IMPLEMENTATION")
+ if(BUILD_SHARED_LIBS)
+@@ -153,8 +166,8 @@ if(BUILD_SHARED_LIBS)
+ endif()
+ target_sources(dawn_proc
+   INTERFACE
+-    "${DAWN_INCLUDE_DIR}/dawn/dawn_thread_dispatch_proc.h"
+-    "${DAWN_INCLUDE_DIR}/dawn/dawn_proc.h"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/dawn_thread_dispatch_proc.h>"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/dawn_proc.h>"
+   PRIVATE
+     ${DAWNPROC_GEN_SOURCES}
+ )
+diff --git a/src/dawn/common/CMakeLists.txt b/src/dawn/common/CMakeLists.txt
+index 4d4a878c4..48baae5a0 100644
+--- a/src/dawn/common/CMakeLists.txt
++++ b/src/dawn/common/CMakeLists.txt
+@@ -42,6 +42,9 @@ DawnGenerator(
+ )
+
+ add_library(dawn_common STATIC ${DAWN_PLACEHOLDER_FILE})
++add_library(dawn::common ALIAS dawn_common)
++set_property(TARGET dawn_common PROPERTY EXPORT_NAME common)
++
+ common_compile_options(dawn_common)
+ target_sources(dawn_common PRIVATE
+     ${DAWN_VERSION_AUTOGEN_SOURCES}
+diff --git a/src/dawn/glfw/CMakeLists.txt b/src/dawn/glfw/CMakeLists.txt
+index ff2c890d0..8caf32f81 100644
+--- a/src/dawn/glfw/CMakeLists.txt
++++ b/src/dawn/glfw/CMakeLists.txt
+@@ -28,6 +28,9 @@
+ if(DAWN_USE_GLFW)
+
+ add_library(dawn_glfw STATIC ${DAWN_PLACEHOLDER_FILE})
++add_library(dawn::glfw ALIAS dawn_glfw)
++set_property(TARGET dawn_glfw PROPERTY EXPORT_NAME glfw)
++
+ common_compile_options(dawn_glfw)
+ target_sources(dawn_glfw
+   INTERFACE
+diff --git a/src/dawn/native/CMakeLists.txt b/src/dawn/native/CMakeLists.txt
+index 190c1ee9e..856d0be91 100644
+--- a/src/dawn/native/CMakeLists.txt
++++ b/src/dawn/native/CMakeLists.txt
+@@ -32,6 +32,8 @@ DawnJSONGenerator(
+ )
+
+ add_library(dawn_native ${DAWN_PLACEHOLDER_FILE})
++add_library(dawn::native ALIAS dawn_native)
++set_property(TARGET dawn_native PROPERTY EXPORT_NAME native)
+ common_compile_options(dawn_native)
+
+ target_compile_definitions(dawn_native PRIVATE "DAWN_NATIVE_IMPLEMENTATION")
+@@ -41,8 +43,8 @@ endif()
+
+ target_sources(dawn_native
+   INTERFACE
+-    "${DAWN_INCLUDE_DIR}/dawn/native/DawnNative.h"
+-    "${DAWN_INCLUDE_DIR}/dawn/native/dawn_native_export.h"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/native/DawnNative.h>"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/native/dawn_native_export.h>"
+   PRIVATE
+     ${DAWN_NATIVE_UTILS_GEN_SOURCES}
+     "Adapter.h"
+@@ -248,13 +250,10 @@ target_link_libraries(dawn_native
+             dawn_platform
+             dawn_internal_config
+             libtint
+-            SPIRV-Tools-opt
+-            absl_strings
+-            absl_str_format_internal
++            absl::strings
++            absl::str_format_internal
+ )
+
+-target_include_directories(dawn_native PRIVATE ${DAWN_ABSEIL_DIR})
+-
+ if (DAWN_USE_X11)
+     target_include_directories(dawn_native PRIVATE ${X11_INCLUDE_DIR})
+     target_sources(dawn_native PRIVATE
+@@ -284,7 +283,7 @@ endif()
+ if (DAWN_ENABLE_D3D11 OR DAWN_ENABLE_D3D12)
+     target_sources(dawn_native
+       INTERFACE
+-        "${DAWN_INCLUDE_DIR}/dawn/native/D3DBackend.h"
++        "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/native/D3DBackend.h>"
+       PRIVATE
+         "d3d/BackendD3D.cpp"
+         "d3d/BackendD3D.h"
+@@ -323,7 +322,7 @@ endif()
+ if (DAWN_ENABLE_D3D11)
+     target_sources(dawn_native
+       INTERFACE
+-        "${DAWN_INCLUDE_DIR}/dawn/native/D3D11Backend.h"
++        "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/native/D3D11Backend.h>"
+       PRIVATE
+         "d3d11/BackendD3D11.cpp"
+         "d3d11/BackendD3D11.h"
+@@ -380,7 +379,7 @@ endif()
+ if (DAWN_ENABLE_D3D12)
+     target_sources(dawn_native
+       INTERFACE
+-        "${DAWN_INCLUDE_DIR}/dawn/native/D3D12Backend.h"
++        "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/native/D3D12Backend.h>"
+       PRIVATE
+         "d3d12/BackendD3D12.cpp"
+         "d3d12/BackendD3D12.h"
+@@ -467,7 +466,7 @@ endif()
+ if (DAWN_ENABLE_METAL)
+     target_sources(dawn_native
+       INTERFACE
+-        "${DAWN_INCLUDE_DIR}/dawn/native/MetalBackend.h"
++        "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/native/MetalBackend.h>"
+       PRIVATE
+         "Surface_metal.mm"
+         "metal/BackendMTL.h"
+@@ -524,7 +523,7 @@ endif()
+ if (DAWN_ENABLE_NULL)
+     target_sources(dawn_native
+       INTERFACE
+-        "${DAWN_INCLUDE_DIR}/dawn/native/NullBackend.h"
++        "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/native/NullBackend.h>"
+       PRIVATE
+         "null/DeviceNull.cpp"
+         "null/DeviceNull.h"
+@@ -552,7 +551,7 @@ if (DAWN_ENABLE_OPENGL)
+
+     target_sources(dawn_native
+       INTERFACE
+-        "${DAWN_INCLUDE_DIR}/dawn/native/OpenGLBackend.h"
++        "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/native/OpenGLBackend.h>"
+       PRIVATE
+         ${DAWN_NATIVE_OPENGL_AUTOGEN_SOURCES}
+         "opengl/BackendGL.cpp"
+@@ -618,7 +617,7 @@ endif()
+ if (DAWN_ENABLE_VULKAN)
+     target_sources(dawn_native PRIVATE
+        INTERFACE
+-        "${DAWN_INCLUDE_DIR}/dawn/native/VulkanBackend.h"
++        "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/native/VulkanBackend.h>"
+       PRIVATE
+         "vulkan/BackendVk.cpp"
+         "vulkan/BackendVk.h"
+@@ -690,7 +689,7 @@ if (DAWN_ENABLE_VULKAN)
+         "vulkan/external_semaphore/SemaphoreServiceImplementation.h"
+     )
+
+-    target_link_libraries(dawn_native PUBLIC Vulkan-Headers)
++    target_link_libraries(dawn_native PUBLIC Vulkan::Headers)
+     target_include_directories(dawn_native PRIVATE ${DAWN_VULKAN_UTILITY_LIBRARIES_DIR}/include)
+
+     if (ANDROID)
+diff --git a/src/dawn/platform/CMakeLists.txt b/src/dawn/platform/CMakeLists.txt
+index 4610f7edb..2925df14d 100644
+--- a/src/dawn/platform/CMakeLists.txt
++++ b/src/dawn/platform/CMakeLists.txt
+@@ -26,6 +26,8 @@
+ # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+ add_library(dawn_platform ${DAWN_PLACEHOLDER_FILE})
++add_library(dawn::platform ALIAS dawn_platform)
++set_property(TARGET dawn_platform PROPERTY EXPORT_NAME platform)
+ common_compile_options(dawn_platform)
+
+ target_compile_definitions(dawn_platform PRIVATE "DAWN_PLATFORM_IMPLEMENTATION")
+@@ -33,10 +35,10 @@ if(BUILD_SHARED_LIBS)
+     target_compile_definitions(dawn_platform PRIVATE "DAWN_PLATFORM_SHARED_LIBRARY")
+ endif()
+
+-target_sources(dawn_platform PRIVATE
++target_sources(dawn_platform
+   PUBLIC
+-    "${DAWN_INCLUDE_DIR}/dawn/platform/DawnPlatform.h"
+-    "${DAWN_INCLUDE_DIR}/dawn/platform/dawn_platform_export.h"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/platform/DawnPlatform.h>"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/platform/dawn_platform_export.h>"
+   PRIVATE
+     "DawnPlatform.cpp"
+     "WorkerThread.cpp"
+diff --git a/src/dawn/utils/CMakeLists.txt b/src/dawn/utils/CMakeLists.txt
+index 496d8d8e7..c19e7b5de 100644
+--- a/src/dawn/utils/CMakeLists.txt
++++ b/src/dawn/utils/CMakeLists.txt
+@@ -56,7 +56,7 @@ target_link_libraries(dawn_utils
+             dawn_native
+             dawn_proc
+             dawn_wire
+-            SPIRV-Tools-opt
++#            SPIRV-Tools-opt
+ )
+
+ if(WIN32 AND NOT WINDOWS_STORE)
+diff --git a/src/dawn/wire/CMakeLists.txt b/src/dawn/wire/CMakeLists.txt
+index ab63f046d..e2965cfed 100644
+--- a/src/dawn/wire/CMakeLists.txt
++++ b/src/dawn/wire/CMakeLists.txt
+@@ -32,6 +32,9 @@ DawnJSONGenerator(
+ )
+
+ add_library(dawn_wire ${DAWN_PLACEHOLDER_FILE})
++add_library(dawn::wire ALIAS dawn_wire)
++set_property(TARGET dawn_wire PROPERTY EXPORT_NAME wire)
++
+ common_compile_options(dawn_wire)
+
+ target_compile_definitions(dawn_wire PRIVATE "DAWN_WIRE_IMPLEMENTATION")
+@@ -41,10 +44,10 @@ endif()
+
+ target_sources(dawn_wire PRIVATE
+   INTERFACE
+-    "${DAWN_INCLUDE_DIR}/dawn/wire/Wire.h"
+-    "${DAWN_INCLUDE_DIR}/dawn/wire/WireClient.h"
+-    "${DAWN_INCLUDE_DIR}/dawn/wire/WireServer.h"
+-    "${DAWN_INCLUDE_DIR}/dawn/wire/dawn_wire_export.h"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/wire/Wire.h>"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/wire/WireClient.h>"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/wire/WireServer.h>"
++    "$<BUILD_INTERFACE:${DAWN_INCLUDE_DIR}/dawn/wire/dawn_wire_export.h>"
+   PRIVATE
+     ${DAWN_WIRE_GEN_SOURCES}
+     "BufferConsumer.h"
+diff --git a/src/tint/CMakeLists.txt b/src/tint/CMakeLists.txt
+index 3a47bd1a2..0f6e56c0b 100644
+--- a/src/tint/CMakeLists.txt
++++ b/src/tint/CMakeLists.txt
+@@ -45,8 +45,7 @@ endif()
+ # Helper functions
+ ################################################################################
+ function(tint_core_compile_options TARGET)
+-  target_include_directories(${TARGET} PUBLIC "${TINT_ROOT_SOURCE_DIR}")
+-  target_include_directories(${TARGET} PUBLIC "${TINT_ROOT_SOURCE_DIR}/include")
++  target_include_directories(${TARGET} PUBLIC "$<BUILD_INTERFACE:${TINT_ROOT_SOURCE_DIR}>")
+   target_compile_definitions(${TARGET} PUBLIC -DTINT_BUILD_SPV_READER=$<BOOL:${TINT_BUILD_SPV_READER}>)
+   target_compile_definitions(${TARGET} PUBLIC -DTINT_BUILD_WGSL_READER=$<BOOL:${TINT_BUILD_WGSL_READER}>)
+   target_compile_definitions(${TARGET} PUBLIC -DTINT_BUILD_GLSL_WRITER=$<BOOL:${TINT_BUILD_GLSL_WRITER}>)
+@@ -468,7 +467,7 @@ function(tint_target_add_external_dependencies TARGET KIND)
+   foreach(DEPENDENCY ${DEPENDENCIES})  # Each external dependency requires special handling...
+     if(${DEPENDENCY} STREQUAL "abseil")
+       target_link_libraries(${TARGET} PRIVATE
+-        absl_strings
++        absl::strings
+       )
+     elseif(${DEPENDENCY} STREQUAL "glslang")
+       target_link_libraries(${TARGET} PRIVATE glslang)
