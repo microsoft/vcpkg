@@ -7070,7 +7070,7 @@
     },
     "qtdeclarative": {
       "baseline": "6.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtdeviceutilities": {
       "baseline": "6.6.0",
