@@ -1,4 +1,3 @@
-message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}" "vcpkg_find_acquire_program(GN) is deprecated in favor of the tool port vcpkg-tool-gn")
 set(program_name gn)
 set(rename_binary_to "gn")
 if(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/share/gn/version.txt")

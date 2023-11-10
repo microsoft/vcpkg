@@ -1,4 +1,3 @@
-message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}" "vcpkg_find_acquire_program(PYTHON3) is deprecated in favor of the tool port vcpkg-tool-python3-interpreter")
 if(CMAKE_HOST_WIN32)
     set(program_name python)
     set(program_version 3.11.5)
