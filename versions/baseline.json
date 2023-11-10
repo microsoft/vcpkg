@@ -6,7 +6,7 @@
     },
     "7zip": {
       "baseline": "23.01",
-      "port-version": 0
+      "port-version": 1
     },
     "ableton": {
       "baseline": "3.0.6",
@@ -201,7 +201,7 @@
       "port-version": 1
     },
     "argparse": {
-      "baseline": "2.9",
+      "baseline": "3.0",
       "port-version": 0
     },
     "args": {
@@ -237,7 +237,7 @@
       "port-version": 5
     },
     "arrow": {
-      "baseline": "13.0.0",
+      "baseline": "14.0.0",
       "port-version": 1
     },
     "arsenalgear": {
@@ -270,7 +270,7 @@
     },
     "assimp": {
       "baseline": "5.3.1",
-      "port-version": 2
+      "port-version": 3
     },
     "async-mqtt": {
       "baseline": "2.0.0",
@@ -417,7 +417,7 @@
       "port-version": 0
     },
     "azure-core-amqp-cpp": {
-      "baseline": "1.0.0-beta.4",
+      "baseline": "1.0.0-beta.5",
       "port-version": 0
     },
     "azure-core-cpp": {
@@ -449,7 +449,7 @@
       "port-version": 0
     },
     "azure-messaging-eventhubs-cpp": {
-      "baseline": "1.0.0-beta.3",
+      "baseline": "1.0.0-beta.4",
       "port-version": 0
     },
     "azure-security-attestation-cpp": {
@@ -473,28 +473,28 @@
       "port-version": 1
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.9.0",
-      "port-version": 1
+      "baseline": "12.10.0",
+      "port-version": 0
     },
     "azure-storage-common-cpp": {
-      "baseline": "12.4.0",
-      "port-version": 2
+      "baseline": "12.5.0",
+      "port-version": 0
     },
     "azure-storage-cpp": {
       "baseline": "7.5.0",
       "port-version": 6
     },
     "azure-storage-files-datalake-cpp": {
-      "baseline": "12.8.0",
-      "port-version": 1
+      "baseline": "12.9.0",
+      "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
-      "baseline": "12.7.0",
-      "port-version": 1
+      "baseline": "12.8.0",
+      "port-version": 0
     },
     "azure-storage-queues-cpp": {
-      "baseline": "12.1.0",
-      "port-version": 1
+      "baseline": "12.2.0",
+      "port-version": 0
     },
     "azure-uamqp-c": {
       "baseline": "2023-08-07",
@@ -1885,7 +1885,7 @@
       "port-version": 4
     },
     "cppslippi": {
-      "baseline": "1.2.3.14",
+      "baseline": "1.3.3.14",
       "port-version": 0
     },
     "cpptoml": {
@@ -1946,7 +1946,7 @@
     },
     "crc32c": {
       "baseline": "1.1.2",
-      "port-version": 1
+      "port-version": 2
     },
     "crfsuite": {
       "baseline": "2020-08-27",
@@ -2078,7 +2078,7 @@
     },
     "dartsim": {
       "baseline": "6.12.2",
-      "port-version": 2
+      "port-version": 3
     },
     "dataframe": {
       "baseline": "2.1.0",
@@ -2201,7 +2201,7 @@
       "port-version": 3
     },
     "discordcoreapi": {
-      "baseline": "2.0.1",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "discount": {
@@ -2249,7 +2249,7 @@
       "port-version": 1
     },
     "dpp": {
-      "baseline": "10.0.27",
+      "baseline": "10.0.28",
       "port-version": 0
     },
     "draco": {
@@ -2445,7 +2445,7 @@
       "port-version": 8
     },
     "ereignis": {
-      "baseline": "1.1",
+      "baseline": "2.3",
       "port-version": 0
     },
     "esaxx": {
@@ -2981,7 +2981,7 @@
       "port-version": 2
     },
     "glib": {
-      "baseline": "2.78.0",
+      "baseline": "2.78.1",
       "port-version": 0
     },
     "glibmm": {
@@ -3037,8 +3037,8 @@
       "port-version": 5
     },
     "google-cloud-cpp": {
-      "baseline": "2.17.0",
-      "port-version": 2
+      "baseline": "2.18.0",
+      "port-version": 0
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -3188,6 +3188,10 @@
       "baseline": "8.1.0",
       "port-version": 0
     },
+    "gz-gui7": {
+      "baseline": "7.2.1",
+      "port-version": 0
+    },
     "gz-math7": {
       "baseline": "7.3.0",
       "port-version": 0
@@ -3198,7 +3202,7 @@
     },
     "gz-physics6": {
       "baseline": "6.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-plugin2": {
       "baseline": "2.0.1",
@@ -3665,7 +3669,7 @@
       "port-version": 1
     },
     "jsonifier": {
-      "baseline": "0.9.9",
+      "baseline": "0.9.91",
       "port-version": 0
     },
     "jsonnet": {
@@ -5193,7 +5197,7 @@
       "port-version": 0
     },
     "lockpp": {
-      "baseline": "1.0.2",
+      "baseline": "2.6",
       "port-version": 0
     },
     "lodepng": {
@@ -5326,7 +5330,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 16
+      "port-version": 17
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -5521,7 +5525,7 @@
       "port-version": 4
     },
     "miniaudio": {
-      "baseline": "0.11.14",
+      "baseline": "0.11.19",
       "port-version": 0
     },
     "minifb": {
@@ -5633,7 +5637,7 @@
       "port-version": 0
     },
     "mozjpeg": {
-      "baseline": "4.1.1",
+      "baseline": "4.1.5",
       "port-version": 0
     },
     "mp-units": {
@@ -6198,7 +6202,7 @@
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 9
+      "port-version": 10
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -7569,8 +7573,8 @@
       "port-version": 0
     },
     "sail": {
-      "baseline": "0.9.0-rc3",
-      "port-version": 2
+      "baseline": "0.9.0",
+      "port-version": 0
     },
     "sajson": {
       "baseline": "2018-09-21",
@@ -7593,8 +7597,8 @@
       "port-version": 0
     },
     "saucer": {
-      "baseline": "1.0.1",
-      "port-version": 3
+      "baseline": "2.1.0",
+      "port-version": 0
     },
     "sbp": {
       "baseline": "3.4.10",
@@ -8081,7 +8085,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.43.1",
+      "baseline": "3.43.2",
       "port-version": 0
     },
     "sqlitecpp": {
@@ -8317,7 +8321,7 @@
       "port-version": 4
     },
     "tgui": {
-      "baseline": "0.9.5",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "theia": {
@@ -8426,7 +8430,7 @@
     },
     "tinyorm": {
       "baseline": "0.36.5",
-      "port-version": 0
+      "port-version": 1
     },
     "tinyply": {
       "baseline": "2.3.4",
@@ -8685,7 +8689,7 @@
       "port-version": 1
     },
     "utfcpp": {
-      "baseline": "3.2.5",
+      "baseline": "4.0.2",
       "port-version": 0
     },
     "utfz": {
@@ -8834,6 +8838,10 @@
     },
     "visit-struct": {
       "baseline": "1.1.0",
+      "port-version": 0
+    },
+    "vit-vit-ctpl": {
+      "baseline": "0.0.2",
       "port-version": 0
     },
     "vk-bootstrap": {
@@ -9018,7 +9026,7 @@
     },
     "wolfssl": {
       "baseline": "5.6.4",
-      "port-version": 0
+      "port-version": 1
     },
     "wolftpm": {
       "baseline": "2.7.0",
@@ -9029,8 +9037,8 @@
       "port-version": 3
     },
     "workflow": {
-      "baseline": "0.10.5",
-      "port-version": 1
+      "baseline": "0.10.9",
+      "port-version": 0
     },
     "wpilib": {
       "baseline": "2023-08-24",
@@ -9298,7 +9306,7 @@
     },
     "zlib-ng": {
       "baseline": "2.1.3",
-      "port-version": 0
+      "port-version": 1
     },
     "zlmediakit": {
       "baseline": "2023-08-12",

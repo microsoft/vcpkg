@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.8.0",
-  "port-version": 9,
+  "port-version": 10,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -207,7 +207,7 @@
       "description": "Enable Intel Integrated Performance Primitives"
     },
     "jasper": {
-      "description": "JPEG 2000 support for opencv",
+      "description": "JPEG 2000 support for opencv (deprecated)",
       "dependencies": [
         "jasper"
       ]
@@ -238,6 +238,12 @@
       "description": "opengl support for opencv",
       "dependencies": [
         "opengl"
+      ]
+    },
+    "openjpeg": {
+      "description": "JPEG 2000 support for opencv",
+      "dependencies": [
+        "openjpeg"
       ]
     },
     "openmp": {
