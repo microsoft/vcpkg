@@ -6,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_find_acquire_python3_interpreter(PYTHON3 MIN_VERSION 3.7)
-
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     NO_PKG_CONFIG
