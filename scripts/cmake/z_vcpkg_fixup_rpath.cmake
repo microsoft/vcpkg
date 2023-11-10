@@ -53,3 +53,5 @@ function(z_vcpkg_fixup_rpath_in_dir)
         endforeach()
     endforeach()
 endfunction()
+
+z_vcpkg_fixup_rpath_in_dir()
