@@ -126,12 +126,26 @@
     },
     "skparagraph": {
       "description": "Build skparagraph module",
+      "supports": "!(windows & !static)",
       "dependencies": [
         {
           "name": "skia",
           "default-features": false,
           "features": [
             "harfbuzz",
+            "skunicode"
+          ]
+        }
+      ]
+    },
+    "skunicode": {
+      "description": "Build skunicode module",
+      "supports": "!(windows & !static)",
+      "dependencies": [
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
             "icu"
           ]
         }

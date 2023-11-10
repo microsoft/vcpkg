@@ -98,17 +98,23 @@ if(NOT VCPKG_TARGET_ARCHITECTURE IN_LIST known_cpus)
     message(WARNING "Unknown target cpu '${VCPKG_TARGET_ARCHITECTURE}'.")
 endif()
 
-set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" skia_enable_svg=true")
+set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "is_official_build=true")
 vcpkg_list(SET SKIA_TARGETS
     :skia
     modules/skcms:skcms
-    # modules/skottie:skottie,  skia_enable_skottie=true : !(windows & !static)
-    # modules/sksg:sksg
     modules/skshaper:skshaper
-    # modules/svg:svg
 )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
+    string(APPEND OPTIONS " skia_enable_skottie=true skia_enable_svg=true")
+    vcpkg_list(APPEND SKIA_TARGETS
+        modules/skottie:skottie
+        modules/skresources:skresources
+        modules/sksg:sksg
+        modules/svg:svg
+    )
+endif()
 
 if(VCPKG_TARGET_IS_ANDROID)
     string(APPEND OPTIONS " target_os=\"android\"")
@@ -127,7 +133,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     string(APPEND OPTIONS " is_component_build=true")
 else()
     string(APPEND OPTIONS " is_component_build=false")
-    vcpkg_list(APPEND SKIA_TARGETS modules/skresources:skresources)
 endif()
 
 set(required_externals
@@ -166,7 +171,6 @@ endif()
 if("icu" IN_LIST FEATURES)
     list(APPEND required_externals icu)
     string(APPEND OPTIONS " skia_use_icu=true")
-    vcpkg_list(APPEND SKIA_TARGETS modules/skunicode:skunicode)
 else()
     string(APPEND OPTIONS " skia_use_icu=false")
 endif()
@@ -183,6 +187,10 @@ endif()
 
 if("skparagraph" IN_LIST FEATURES)
     vcpkg_list(APPEND SKIA_TARGETS modules/skparagraph:skparagraph)
+endif()
+
+if("skunicode" IN_LIST FEATURES)
+    vcpkg_list(APPEND SKIA_TARGETS modules/skunicode:skunicode)
 endif()
 
 if("vulkan" IN_LIST FEATURES)

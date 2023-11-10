@@ -4,16 +4,19 @@
   "description": "Builds an app in order to validate the skia port.",
   "license": "BSD-3-Clause",
   "dependencies": [
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
+    "skia",
     {
       "name": "skia",
       "default-features": false,
       "features": [
-        "skparagraph"
-      ]
+        "skparagraph",
+        "skunicode"
+      ],
+      "platform": "!(windows & !static)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }
