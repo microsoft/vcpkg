@@ -101,20 +101,7 @@ endif()
 set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "is_official_build=true")
-vcpkg_list(SET SKIA_TARGETS
-    :skia
-    modules/skcms:skcms
-    modules/skshaper:skshaper
-)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
-    string(APPEND OPTIONS " skia_enable_skottie=true skia_enable_svg=true")
-    vcpkg_list(APPEND SKIA_TARGETS
-        modules/skottie:skottie
-        modules/skresources:skresources
-        modules/sksg:sksg
-        modules/svg:svg
-    )
-endif()
+vcpkg_list(SET SKIA_TARGETS :skia)
 
 if(VCPKG_TARGET_IS_ANDROID)
     string(APPEND OPTIONS " target_os=\"android\"")
@@ -185,12 +172,18 @@ if("metal" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_use_metal=true")
 endif()
 
-if("skparagraph" IN_LIST FEATURES)
-    vcpkg_list(APPEND SKIA_TARGETS modules/skparagraph:skparagraph)
-endif()
-
-if("skunicode" IN_LIST FEATURES)
-    vcpkg_list(APPEND SKIA_TARGETS modules/skunicode:skunicode)
+if("modules" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_enable_skottie=true skia_enable_svg=true")
+    vcpkg_list(APPEND SKIA_TARGETS
+        modules/skcms:skcms
+        modules/skottie:skottie
+        modules/skparagraph:skparagraph
+        modules/skresources:skresources
+        modules/sksg:sksg
+        modules/skshaper:skshaper
+        modules/skunicode:skunicode
+        modules/svg:svg
+    )
 endif()
 
 if("vulkan" IN_LIST FEATURES)

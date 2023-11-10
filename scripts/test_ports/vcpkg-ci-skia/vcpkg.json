@@ -4,13 +4,15 @@
   "description": "Builds an app in order to validate the skia port.",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "skia",
+    {
+      "name": "skia",
+      "default-features": false
+    },
     {
       "name": "skia",
       "default-features": false,
       "features": [
-        "skparagraph",
-        "skunicode"
+        "modules",
       ],
       "platform": "!(windows & !static)"
     },

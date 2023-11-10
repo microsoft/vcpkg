@@ -115,7 +115,7 @@
       ]
     },
     "icu": {
-      "description": "Use icu. Required for the skunicode module.",
+      "description": "Use icu.",
       "dependencies": [
         "icu"
       ]
@@ -124,8 +124,8 @@
       "description": "Metal support for skia",
       "supports": "ios, osx"
     },
-    "skparagraph": {
-      "description": "Build skparagraph module",
+    "modules": {
+      "description": "Build modules skottie, skparagraph, skresources, sksg, skshaper, skunicode, svg",
       "supports": "!(windows & !static)",
       "dependencies": [
         {
@@ -133,19 +133,6 @@
           "default-features": false,
           "features": [
             "harfbuzz",
-            "skunicode"
-          ]
-        }
-      ]
-    },
-    "skunicode": {
-      "description": "Build skunicode module",
-      "supports": "!(windows & !static)",
-      "dependencies": [
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
             "icu"
           ]
         }
