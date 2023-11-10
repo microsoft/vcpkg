@@ -1,7 +1,6 @@
 {
   "name": "exiv2",
-  "version": "0.28.0",
-  "port-version": 1,
+  "version": "0.28.1",
   "description": "Image metadata library and tools",
   "homepage": "https://exiv2.org",
   "license": "GPL-2.0-or-later",
@@ -47,9 +46,6 @@
         "libpng",
         "zlib"
       ]
-    },
-    "video": {
-      "description": "Build video support into library"
     },
     "xmp": {
       "description": "Build with XMP metadata support",
