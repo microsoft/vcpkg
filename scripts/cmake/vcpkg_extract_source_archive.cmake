@@ -2,7 +2,7 @@ function(z_vcpkg_extract_source_archive_deprecated_mode archive working_director
     cmake_path(GET archive FILENAME archive_filename)
     if(NOT EXISTS "${working_directory}/${archive_filename}.extracted")
         message(STATUS "Extracting source ${archive}")
-        z_vcpkg_extract_archive(ARCHIVE "${archive}" DESTINATION "${working_directory}")
+        vcpkg_extract_archive(ARCHIVE "${archive}" DESTINATION "${working_directory}")
         file(TOUCH "${working_directory}/${archive_filename}.extracted")
     endif()
 endfunction()
