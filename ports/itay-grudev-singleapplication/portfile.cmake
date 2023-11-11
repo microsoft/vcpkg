@@ -32,8 +32,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_build(TARGET SingleApplication)
 
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/SingleApplication.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/SingleApplication.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/SingleApplication${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/SingleApplication${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 file(INSTALL "${SOURCE_PATH}/singleapplication.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" @ONLY)
