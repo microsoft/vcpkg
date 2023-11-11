@@ -5938,7 +5938,7 @@
     },
     "nng": {
       "baseline": "1.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "nngpp": {
       "baseline": "1.3.0",
