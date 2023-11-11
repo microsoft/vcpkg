@@ -24,11 +24,11 @@
     }
   ],
   "features": {
-    "qguiapplication": {
-      "description": "SingleApplication class inherits from QGuiApplication"
-    },
     "qapplication": {
       "description": "SingleApplication class inherits from QApplication"
+    },
+    "qguiapplication": {
+      "description": "SingleApplication class inherits from QGuiApplication"
     }
   }
 }
