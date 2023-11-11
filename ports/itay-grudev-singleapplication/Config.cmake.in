@@ -1,0 +1,19 @@
+if(NOT TARGET itay-grudev-singleapplication)
+    add_library(itay-grudev-singleapplication STATIC IMPORTED)
+
+    find_path(SingleApplication_INCLUDE_DIR NAMES singleapplication.h)
+
+    set_target_properties(itay-grudev-singleapplication PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${SingleApplication_INCLUDE_DIR}"
+    )
+
+    find_library(SingleApplication_LIBRARY_RELEASE NAMES SingleApplication PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH REQUIRED)
+    find_library(SingleApplication_LIBRARY_DEBUG NAMES SingleApplication PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH REQUIRED)
+
+    set_target_properties(itay-grudev-singleapplication PROPERTIES
+        IMPORTED_LOCATION_DEBUG "${SingleApplication_LIBRARY_DEBUG}"
+        IMPORTED_LOCATION_RELEASE "${SingleApplication_LIBRARY_RELEASE}"
+        IMPORTED_CONFIGURATIONS "Release;Debug"
+        INTERFACE_COMPILE_DEFINITIONS QAPPLICATION_CLASS=@QAPPLICATION_CLASS@
+    )
+endif()
