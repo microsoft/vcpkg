@@ -6,15 +6,6 @@
   "license": "MIT",
   "dependencies": [
     {
-      "name": "qtbase",
-      "default-features": false,
-      "features": [
-        "gui",
-        "network",
-        "widgets"
-      ]
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -23,12 +14,47 @@
       "host": true
     }
   ],
+  "default-features": [
+    "qcoreapplication"
+  ],
   "features": {
     "qapplication": {
-      "description": "SingleApplication class inherits from QApplication"
+      "description": "SingleApplication class inherits from QApplication.",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network",
+            "widgets"
+          ]
+        }
+      ]
+    },
+    "qcoreapplication": {
+      "description": "SingleApplication class inherits from QCoreApplication.",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
+        }
+      ]
     },
     "qguiapplication": {
-      "description": "SingleApplication class inherits from QGuiApplication"
+      "description": "SingleApplication class inherits from QGuiApplication.",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui",
+            "network"
+          ]
+        }
+      ]
     }
   }
 }

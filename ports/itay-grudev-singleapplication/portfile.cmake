@@ -8,14 +8,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if("qguiapplication" IN_LIST FEATURES AND "qapplication" IN_LIST FEATURES)
-    message(FATAL_ERROR "Invalid feature set specified: ${FEATURES}")
+list(LENGTH FEATURES num_features)
+if(num_features GREATER "2")
+    message(FATAL_ERROR "Can not select multiple Qt classes to inherit from. Disable default features to disable the default QCoreApplication inheritance.")
 endif()
 
 if("qguiapplication" IN_LIST FEATURES)
     set(QAPPLICATION_CLASS QGuiApplication)
 elseif("qapplication" IN_LIST FEATURES)
     set(QAPPLICATION_CLASS QApplication)
+elseif("qcoreapplication" IN_LIST FEATURES)
+    set(QAPPLICATION_CLASS QCoreApplication)
 else()
     set(QAPPLICATION_CLASS QCoreApplication)
 endif()
