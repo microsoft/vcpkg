@@ -6001,8 +6001,8 @@
       "port-version": 0
     },
     "numactl": {
-      "baseline": "2.0.14",
-      "port-version": 1
+      "baseline": "2.0.16",
+      "port-version": 0
     },
     "numcpp": {
       "baseline": "2.11.0",
