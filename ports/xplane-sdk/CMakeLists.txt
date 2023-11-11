@@ -1,61 +1,56 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.21)
 project(xplane-sdk LANGUAGES C CXX)
 
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
-  add_library(xplm SHARED IMPORTED)
-  add_library(xpwidgets SHARED IMPORTED)
-  target_link_libraries(xpwidgets PUBLIC xplm)
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-  set_target_properties(
-    xplm PROPERTIES IMPORTED_IMPLIB
-                    "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Win/XPLM_64.lib")
-  set_target_properties(
-    xpwidgets
-    PROPERTIES IMPORTED_IMPLIB
-               "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Win/XPWidgets_64.lib")
-  target_compile_definitions(xplm PUBLIC
-    -DIBM=1
-    -DAPL=0
-    -DLIN=0
-  )
-elseif(VCPKG_TARGET_IS_OSX)
-  set_target_properties(
-    xplm
-    PROPERTIES IMPORTED_LOCATION
-               "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Mac/XPLM.framework/XPLM")
-  set_target_properties(
-    xpwidgets
-    PROPERTIES
-      IMPORTED_LOCATION
-      "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Mac/XPWidgets.framework/XPWidgets")
-  target_compile_definitions(xplm PUBLIC
-    -DIBM=0
-    -DAPL=1
-    -DLIN=0
-  )
+if(WIN32 OR APPLE)
+  add_library(unofficial::xplane-sdk::xplm SHARED IMPORTED)
+  if(WIN32)
+    set_target_properties(
+      unofficial::xplane-sdk::xplm
+      PROPERTIES IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Win/XPLM_64.lib")
+    set_target_properties(
+      unofficial::xplane-sdk::xplm PROPERTIES INTERFACE_COMPILE_DEFINITIONS
+                                              "-DIBM=1;-DAPL=0;-DLIN=0")
+  else()
+    set_target_properties(
+      unofficial::xplane-sdk::xplm
+      PROPERTIES IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Mac/XPLM.framework/XPLM")
+    set_target_properties(
+      unofficial::xplane-sdk::xplm PROPERTIES INTERFACE_COMPILE_DEFINITIONS
+                                              "-DIBM=0;-DAPL=1;-DLIN=0")
+  endif()
 else()
-  add_library(xplm INTERFACE)
-  add_library(xpwidgets INTERFACE)
-  target_link_libraries(xpwidgets INTERFACE xplm)
-  target_compile_definitions(xplm INTERFACE
-    -DIBM=0
-    -DAPL=0
-    -DLIN=1
-  )
+  add_library(unofficial::xplane-sdk::xplm INTERFACE IMPORTED)
+  set_target_properties(
+    unofficial::xplane-sdk::xplm PROPERTIES INTERFACE_COMPILE_DEFINITIONS
+                                            "-DIBM=0;-DAPL=0;-DLIN=1")
 endif()
+set_target_properties(
+  unofficial::xplane-sdk::xplm PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
+                                          "${CMAKE_CURRENT_SOURCE_DIR}/CHeaders/XPLM")
 
-target_include_directories(
-  xplm INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CHeaders/XPLM>
-                 $<INSTALL_INTERFACE:include/xplane-sdk/XPLM>)
+if(WIN32 OR APPLE)
+  add_library(unofficial::xplane-sdk::xpwidgets SHARED IMPORTED)
+  if(WIN32)
+    set_target_properties(
+      unofficial::xplane-sdk::xpwidgets
+      PROPERTIES IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Win/XPWidgets_64.lib")
+  else()
+    set_target_properties(
+      unofficial::xplane-sdk::xpwidgets
+      PROPERTIES IMPORTED_IMPLIB
+                 "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Mac/XPWidgets.framework/XPWidgets")
+  endif()
+else()
+  add_library(unofficial::xplane-sdk::xpwidgets INTERFACE IMPORTED)
+endif()
+set_target_properties(
+  unofficial::xplane-sdk::xpwidgets PROPERTIES INTERFACE_LINK_LIBRARIES
+                                               "unofficial::xplane-sdk::xplm")
+set_target_properties(
+  unofficial::xplane-sdk::xpwidgets
+  PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/CHeaders/Widgets")
 
-target_include_directories(
-  xpwidgets
-  INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CHeaders/Widgets>
-            $<INSTALL_INTERFACE:include/xplane-sdk/Widgets>)
-
-add_library(xplm_cpp)
+add_library(xplm_cpp STATIC)
 
 target_sources(
   xplm_cpp
@@ -71,13 +66,13 @@ target_include_directories(
   INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CHeaders/Wrappers>
             $<INSTALL_INTERFACE:include/xplane-sdk/Wrappers>)
 
-target_link_libraries(xplm_cpp PUBLIC xplm xpwidgets)
+target_link_libraries(xplm_cpp PUBLIC unofficial::xplane-sdk::xplm
+                                      unofficial::xplane-sdk::xpwidgets)
 
 install(
-  TARGETS xplm xpwidgets xplm_cpp
+  TARGETS xplm_cpp
   EXPORT xplm-targets
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib)
+  ARCHIVE DESTINATION lib)
 
 file(GLOB HEADERS "${CMAKE_CURRENT_LIST_DIR}/CHeaders/XPLM/*.h")
 install(FILES ${HEADERS} DESTINATION "include/xplane-sdk/XPLM")
