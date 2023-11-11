@@ -3584,6 +3584,10 @@
       "baseline": "4.3.1",
       "port-version": 10
     },
+    "itsy-bitsy": {
+      "baseline": "2022-08-02",
+      "port-version": 0
+    },
     "ixwebsocket": {
       "baseline": "11.4.4",
       "port-version": 2
@@ -9340,8 +9344,28 @@
       "baseline": "1.0.7",
       "port-version": 0
     },
+    "ztd-cuneicode": {
+      "baseline": "2023-11-03",
+      "port-version": 0
+    },
+    "ztd-encoding-tables": {
+      "baseline": "2023-06-10",
+      "port-version": 0
+    },
+    "ztd-idk": {
+      "baseline": "2023-11-03",
+      "port-version": 0
+    },
+    "ztd-platform": {
+      "baseline": "2022-12-30",
+      "port-version": 0
+    },
+    "ztd-static-containers": {
+      "baseline": "2022-12-12",
+      "port-version": 0
+    },
     "ztd-text": {
-      "baseline": "2022-03-21",
+      "baseline": "2023-11-03",
       "port-version": 0
     },
     "zug": {
