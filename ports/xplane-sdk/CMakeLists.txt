@@ -13,7 +13,7 @@ if(WIN32 OR APPLE)
   else()
     set_target_properties(
       unofficial::xplane-sdk::xplm
-      PROPERTIES IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Mac/XPLM.framework/XPLM")
+      PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Mac/XPLM.framework/XPLM")
     set_target_properties(
       unofficial::xplane-sdk::xplm PROPERTIES INTERFACE_COMPILE_DEFINITIONS
                                               "-DIBM=0;-DAPL=1;-DLIN=0")
@@ -37,7 +37,7 @@ if(WIN32 OR APPLE)
   else()
     set_target_properties(
       unofficial::xplane-sdk::xpwidgets
-      PROPERTIES IMPORTED_IMPLIB
+      PROPERTIES IMPORTED_LOCATION
                  "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Mac/XPWidgets.framework/XPWidgets")
   endif()
 else()

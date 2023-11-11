@@ -16,7 +16,7 @@ if(NOT TARGET unofficial::xplane-sdk::xplm)
     else()
       set_target_properties(
         unofficial::xplane-sdk::xplm
-        PROPERTIES IMPORTED_IMPLIB "${ROOT}/lib/xplane-sdk/XPLM.framework/XPLM")
+        PROPERTIES IMPORTED_LOCATION "${ROOT}/lib/xplane-sdk/XPLM.framework/XPLM")
       set_target_properties(
         unofficial::xplane-sdk::xplm PROPERTIES INTERFACE_COMPILE_DEFINITIONS
                                                 "-DIBM=0;-DAPL=1;-DLIN=0")
@@ -42,7 +42,7 @@ if(NOT TARGET unofficial::xplane-sdk::xpwidgets)
     else()
       set_target_properties(
         unofficial::xplane-sdk::xpwidgets
-        PROPERTIES IMPORTED_IMPLIB
+        PROPERTIES IMPORTED_LOCATION
                    "${ROOT}/lib/xplane-sdk/XPWidgets.framework/XPWidgets")
     endif()
   else()
