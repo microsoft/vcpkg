@@ -1,0 +1,19 @@
+{
+  "name": "zimpl",
+  "version": "3.5.3",
+  "description": "Zuse Institut Mathematical Programming Language",
+  "homepage": "http://zimpl.zib.de/",
+  "license": "LGPL-3.0-or-later",
+  "dependencies": [
+    "gmp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}
