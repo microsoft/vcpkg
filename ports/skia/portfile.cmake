@@ -9,6 +9,7 @@ vcpkg_from_github(
         disable-msvc-env-setup.patch
         uwp.patch
         disable-dev-test.patch
+        skdebug-stdio.patch
 )
 
 # these following aren't available in vcpkg
