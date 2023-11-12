@@ -1,0 +1,16 @@
+{
+  "name": "vcpkg-ci-nanobind",
+  "version": "0.0.1",
+  "description": "A nanobind example project",
+  "homepage": "https://nanobind.readthedocs.io/en/latest/",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "nanobind",
+    "python3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
+

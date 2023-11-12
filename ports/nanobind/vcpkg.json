@@ -1,0 +1,14 @@
+{
+  "name": "nanobind",
+  "version-date": "2023-12-16",
+  "description": "Tiny and efficient C++/Python bindings",
+  "homepage": "https://nanobind.readthedocs.io/en/latest/",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "robin-map",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
