@@ -8,21 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-list(LENGTH FEATURES num_features)
-if(num_features GREATER "2")
-    message(FATAL_ERROR "Can not select multiple Qt classes to inherit from. Disable default features to disable the default QCoreApplication inheritance.")
-endif()
-
-if("qguiapplication" IN_LIST FEATURES)
-    set(QAPPLICATION_CLASS QGuiApplication)
-elseif("qapplication" IN_LIST FEATURES)
-    set(QAPPLICATION_CLASS QApplication)
-elseif("qcoreapplication" IN_LIST FEATURES)
-    set(QAPPLICATION_CLASS QCoreApplication)
-else()
-    set(QAPPLICATION_CLASS QCoreApplication)
-endif()
-
+set(QAPPLICATION_CLASS QGuiApplication)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
