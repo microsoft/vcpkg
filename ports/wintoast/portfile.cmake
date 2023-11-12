@@ -17,9 +17,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_build(TARGET WinToast)
 
-# WinToast does not support CMake-based install; copy headers and libraries manually.
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/WinToast.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/WinToast.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}WinToast${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}WinToast${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 file(INSTALL "${SOURCE_PATH}/include/wintoastlib.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" @ONLY)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

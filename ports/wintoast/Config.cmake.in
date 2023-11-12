@@ -1,0 +1,18 @@
+if(NOT TARGET wintoast)
+    add_library(wintoast STATIC IMPORTED)
+
+    find_path(WinToast_INCLUDE_DIR NAMES wintoastlib.h)
+
+    set_target_properties(wintoast PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${WinToast_INCLUDE_DIR}"
+    )
+
+    find_library(WinToast_LIBRARY_RELEASE NAMES WinToast PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH REQUIRED)
+    find_library(WinToast_LIBRARY_DEBUG NAMES WinToast PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH REQUIRED)
+
+    set_target_properties(wintoast PROPERTIES
+        IMPORTED_LOCATION_DEBUG "${WinToast_LIBRARY_DEBUG}"
+        IMPORTED_LOCATION_RELEASE "${WinToast_LIBRARY_RELEASE}"
+        IMPORTED_CONFIGURATIONS "Release;Debug"
+    )
+endif()
