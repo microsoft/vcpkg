@@ -72,9 +72,9 @@ foreach(file_name IN LISTS files)
 endforeach()
 
 # Remove libd to lib, libd just has cmake files we dont want too
-if( WIN32 )
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libd" "${CURRENT_PACKAGES_DIR}/debug/lib")
+if(WIN32 AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libd" "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -103,8 +103,10 @@ endif()
 
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     # debug creates libd and bind directories that need moving
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bind" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bind" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif ()
 
     # the bin directory ends up with bat files that are noise, let's clean that up
     file(GLOB BATS "${CURRENT_PACKAGES_DIR}/bin/*.bat")
