@@ -8,21 +8,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "0006-Remove-Wrap-POSIX-headers.patch"
         "0007-Substitute-unistd-macros-for-MSVC.patch"
         "0008-Add-FILENO-defines.patch"
-        "0009-No-fcntl-in-magic.c.patch"
         "0010-Properly-check-for-the-presence-of-bitmasks.patch"
         "0011-Remove-pipe-related-functions-in-funcs.c.patch"
         "0012-Convert-MSYS2-paths-to-Windows-paths.patch"
         "0013-Check-for-backslash-in-argv-0-on-Windows.patch"
-        "0014-Define-POSIX-macros-if-missing.patch"
         "0015-MSYS2-Remove-ioctl-call.patch"
+        "0016-Fix-file_famagic-function.patch"
     )
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO file/file
-    REF FILE5_40
-    SHA512 d76bfe5326e1b40368e055c2e049a24b4ffdbd727371f4f3aa1dd3f53787d16b88550b3cc71ecf02151e2fb3e567eb2598e4707badab8c391eb71113c2dcc319
+    REF FILE5_45
+    SHA512 fdd4c5d13d5ea1d25686c76d8ebc3252c54040c4871e3f0f623c4548b3841795d4e36050292a9453eedf0fbf932573890e9d6ac9fa63ccf577215598ae84b9ea
     HEAD_REF master
     PATCHES ${PATCHES}
 )

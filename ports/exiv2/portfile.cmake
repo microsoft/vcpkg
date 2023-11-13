@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-brotli.patch
         fix-expat.patch
         dont-find-python.patch
+        ios.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

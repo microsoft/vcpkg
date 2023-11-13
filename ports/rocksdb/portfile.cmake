@@ -2,13 +2,10 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
   REF "v${VERSION}"
-  SHA512 6640deb2aeef493a36125a081c0a1f5fa0e15636ad824088d26c03bacee95af742d833bb7e601952aa0d278563025934049a8195ab14c1cd18e29636fe5f64d7
+  SHA512 2039a4afa9e6ee7d01aba3287f27f43cb48baf55be98b5be06f0b54982f7e28c1032ec1dbd1f10d946554c3c93a93686e7b51aab0d92f731ad4dd7d7c62bed74
   HEAD_REF main
   PATCHES
-    0002-only-build-one-flavor.patch
-    0003-use-find-package.patch
-    0004-fix-dependency-in-config.patch
-    0005-do-not-install-cmake-modules.patch
+    0001-fix-dependencies.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)

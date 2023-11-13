@@ -7,7 +7,7 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "src/D3D12MemAlloc.h")
-#target_include_directories(${PROJECT_NAME} PRIVATE "src/")
+target_include_directories(${PROJECT_NAME} INTERFACE PUBLIC $<INSTALL_INTERFACE:include>)
 
 install(
     TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-config

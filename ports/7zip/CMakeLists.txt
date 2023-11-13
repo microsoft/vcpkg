@@ -401,6 +401,7 @@ target_compile_definitions(7zip
 target_include_directories(7zip
     INTERFACE
         $<INSTALL_INTERFACE:include>/7zip/CPP
+        $<INSTALL_INTERFACE:include>/7zip/C
 )
 
 install(

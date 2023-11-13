@@ -1,7 +1,7 @@
 {
   "name": "openvdb",
   "version": "10.0.0",
-  "port-version": 3,
+  "port-version": 6,
   "description": "Sparse volume data structure and tools",
   "homepage": "https://github.com/dreamworksanimation/openvdb",
   "license": "MPL-2.0",
@@ -30,7 +30,20 @@
   ],
   "features": {
     "ax": {
-      "description": "Provides a powerful and easy way of interacting with OpenVDB volume and point data."
+      "description": "Provides a powerful and easy way of interacting with OpenVDB volume and point data.",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false
+        }
+      ]
+    },
+    "nanovdb": {
+      "description": "A lightweight GPU friendly version of VDB initially targeting rendering applications",
+      "dependencies": [
+        "cuda"
+      ]
     },
     "tools": {
       "description": "OpenVDB utilities: view, print and render",

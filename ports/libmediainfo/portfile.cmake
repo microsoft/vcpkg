@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MediaArea/MediaInfoLib
     REF "v${MEDIAINFO_VERSION}"
-    SHA512 6bc58f98ac1fc9637db0e8dd3a2e15b62036a2d33763e148cde425fceea798324f7c5f53cd51fc698d5b5b05fe1fc0fbfc4f391d2ec135eba6763eedfa5bd101
+    SHA512 1407f5690415ccb7997cc9bcbe7d90980a52b1d06e543a446a0da8e4cb3f09ba8fcfbf6be80b043d7f76eeb2ba219242da1c34f3225e0f0bfe044b2394c0c3ae
     HEAD_REF master
     PATCHES
         msvc-arm.diff

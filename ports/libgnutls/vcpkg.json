@@ -1,6 +1,7 @@
 {
   "name": "libgnutls",
-  "version": "3.7.8",
+  "version": "3.8.1",
+  "port-version": 1,
   "description": "A secure communications library implementing the SSL, TLS and DTLS protocols.",
   "homepage": "https://www.gnutls.org/",
   "license": null,
@@ -11,20 +12,25 @@
     "libtasn1",
     "libunistring",
     "nettle",
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true,
+      "platform": "!native"
+    },
     "zlib"
   ],
   "features": {
     "nls": {
       "description": "Enable native language support.",
       "dependencies": [
-        "gettext",
         {
           "name": "gettext",
           "host": true,
           "features": [
             "tools"
           ]
-        }
+        },
+        "gettext-libintl"
       ]
     },
     "openssl": {
