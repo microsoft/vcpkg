@@ -32,7 +32,7 @@ if(NOT z_vcpkg_skia_lib_debug)
     set(z_vcpkg_skia_config_debug "0")
 endif()
 
-file(GLOB z_vcpkg_skia_config_files "${CMAKE_CURRENT_LIST_DIR}/unofficial-skia-targets-*.cmake")
+file(GLOB z_vcpkg_skia_config_files "${CMAKE_CURRENT_LIST_DIR}/unofficial-skia-*-target.cmake")
 foreach(z_vcpkg_skia_config_file IN LISTS z_vcpkg_skia_config_files)
     include("${z_vcpkg_skia_config_file}")
 endforeach()

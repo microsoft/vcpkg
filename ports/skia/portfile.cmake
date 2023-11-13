@@ -102,7 +102,7 @@ endif()
 set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "is_official_build=true")
-vcpkg_list(SET SKIA_TARGETS :skia)
+vcpkg_list(SET SKIA_TARGETS //:skia)
 
 if(VCPKG_TARGET_IS_ANDROID)
     string(APPEND OPTIONS " target_os=\"android\"")
@@ -175,16 +175,7 @@ endif()
 
 if("modules" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_enable_skottie=true skia_enable_svg=true")
-    vcpkg_list(APPEND SKIA_TARGETS
-        modules/skcms:skcms
-        modules/skottie:skottie
-        modules/skparagraph:skparagraph
-        modules/skresources:skresources
-        modules/sksg:sksg
-        modules/skshaper:skshaper
-        modules/skunicode:skunicode
-        modules/svg:svg
-    )
+    vcpkg_list(APPEND SKIA_TARGETS //:modules)
 endif()
 
 if("vulkan" IN_LIST FEATURES)
@@ -247,9 +238,9 @@ They can be installed on Debian based systems via
     endif()
     string(REPLACE "dynamic" "shared" DAWN_LINKAGE "${VCPKG_LIBRARY_LINKAGE}")
     vcpkg_list(APPEND SKIA_TARGETS
-        "third_party/externals/dawn/src/dawn:proc_${DAWN_LINKAGE}"
-        "third_party/externals/dawn/src/dawn/native:${DAWN_LINKAGE}"
-        "third_party/externals/dawn/src/dawn/platform:${DAWN_LINKAGE}"
+        "//third_party/externals/dawn/src/dawn:proc_${DAWN_LINKAGE}"
+        "//third_party/externals/dawn/src/dawn/native:${DAWN_LINKAGE}"
+        "//third_party/externals/dawn/src/dawn/platform:${DAWN_LINKAGE}"
     )
 endif()
 
@@ -318,6 +309,10 @@ if(NOT VCPKG_BUILD_TYPE)
     file(READ "${CURRENT_BUILDTREES_DIR}/desc-${TARGET_TRIPLET}-dbg-out.log" desc_debug)
 endif()
 
+expand_gn_targets(SKIA_TARGETS desc_release)
+export_cmake(SKIA_TARGETS desc_release desc_debug)
+
+transform_targets_for_install(SKIA_TARGETS desc_release)
 vcpkg_gn_install(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS ${SKIA_TARGETS}
@@ -338,22 +333,6 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/core/SkTypes.
 # vcpkg legacy layout omits "include/" component. Just duplicate.
 file(COPY "${CURRENT_PACKAGES_DIR}/include/skia/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia")
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/unofficial-skia")
-foreach(target IN LISTS SKIA_TARGETS)
-    set(SKIA_CONFIGURATIONS RELEASE)
-    get_target_name(name "${desc_release}" "//${target}")
-    get_library(SKIA_LIB_REL "${desc_release}" "//${target}")
-    get_definitions(SKIA_DEFINITIONS_REL "${desc_release}" "//${target}")
-    get_link_libs(SKIA_DEP_REL "${desc_release}" "//${target}")
-    if(NOT VCPKG_BUILD_TYPE)
-        list(APPEND SKIA_CONFIGURATIONS DEBUG)
-        get_library(SKIA_LIB_DBG "${desc_debug}" "//${target}")
-        get_definitions(SKIA_DEFINITIONS_DBG "${desc_debug}" "//${target}")
-        get_link_libs(SKIA_DEP_DBG "${desc_debug}" "//${target}")
-    endif()
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-skia-targets.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-skia/unofficial-skia-targets-${name}.cmake" @ONLY)
-endforeach()
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-skia-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-skia")
 # vcpkg legacy
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/skiaConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/skia")
 

@@ -8,3 +8,7 @@ add_executable(main convert-to-nia.cpp)
 
 find_package(unofficial-skia CONFIG REQUIRED)
 target_link_libraries(main PRIVATE unofficial::skia::skia)
+
+if("skparagraph" IN_LIST FEATURES)
+    target_link_libraries(main PRIVATE unofficial::skia::modules::skparagraph)
+endif()
