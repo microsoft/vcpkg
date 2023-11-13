@@ -72,7 +72,7 @@ foreach(file_name IN LISTS files)
 endforeach()
 
 # Remove libd to lib, libd just has cmake files we dont want too
-if(WIN32 AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libd" "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
@@ -102,8 +102,8 @@ if (NOT VCPKG_BUILD_TYPE)
 endif()
 
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    # debug creates libd and bind directories that need moving
-    if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+  # debug creates libd and bind directories that need moving (mingw does not)
+  if (NOT VCPKG_TARGET_IS_MINGW)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bind" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif ()
