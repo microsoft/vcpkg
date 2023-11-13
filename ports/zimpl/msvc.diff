@@ -1,5 +1,5 @@
 diff --git a/zimpl/CMakeLists.txt b/zimpl/CMakeLists.txt
-index 7cf9d85..c7fa41a 100644
+index 7cf9d85..2fd0b12 100644
 --- a/zimpl/CMakeLists.txt
 +++ b/zimpl/CMakeLists.txt
 @@ -4,7 +4,7 @@ project(ZIMPL
@@ -11,3 +11,17 @@ index 7cf9d85..c7fa41a 100644
      # if changing these flags, also update GCCWARN/GXXWARN in make/make.project
      set(ADD_C_FLAGS -Wall -Wextra -Wno-unknown-pragmas -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wmissing-noreturn -Wmissing-declarations -fno-omit-frame-pointer)
  
+@@ -128,9 +128,11 @@ if(ZLIB_FOUND)
+     include_directories(${ZLIB_INCLUDE_DIRS})
+ else()
+     add_definitions(-DWITHOUT_ZLIB)
++endif()
+ 
+-    # look for pcre if ZLIB could not be found
+-    find_package(PCRE)
++if(MSVC)
++    find_package(PCRE NAMES pcre2 REQUIRED)
++    set(PCRE_LIBRARIES "$<TARGET_NAME:PCRE2::POSIX>")
+     if(PCRE_FOUND)
+         add_definitions(-DWITH_PCRE)
+         add_definitions(-DPCRE2_STATIC)

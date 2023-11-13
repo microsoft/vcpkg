@@ -8,6 +8,10 @@
   "dependencies": [
     "gmp",
     {
+      "name": "pcre2",
+      "platform": "windows & !mingw"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
