@@ -1,7 +1,6 @@
 {
   "name": "imgui",
-  "version": "1.89.7",
-  "port-version": 1,
+  "version": "1.89.9",
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -45,6 +44,18 @@
       "description": "Build font atlases using FreeType instead of stb_truetype",
       "dependencies": [
         "freetype"
+      ]
+    },
+    "freetype-lunasvg": {
+      "description": "Add support to render OpenType SVG fonts using LunaSVG",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "freetype"
+          ]
+        },
+        "lunasvg"
       ]
     },
     "glfw-binding": {

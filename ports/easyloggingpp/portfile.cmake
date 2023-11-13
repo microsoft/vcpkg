@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abumq/easyloggingpp
     REF "v${VERSION}"
-    SHA512 e45789edaf7a43ad6a73861840d24ccce9b9d6bba1aaacf93c6ac26ff7449957251d2ca322c9da85130b893332dd305b13a2499eaffc65ecfaaafa3e11f8d63d
+    SHA512 3df813f7f9796c81c974ba794624db2602253e14b938370deb4c851fe8725f5c7ebf71d7ae0277fcb770b043ccf8f04bbf8e770d14565f4cb704328973473387
     HEAD_REF master
     PATCHES
         0001_add_cmake_options.patch

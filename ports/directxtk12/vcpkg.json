@@ -1,6 +1,6 @@
 {
   "name": "directxtk12",
-  "version-date": "2023-06-13",
+  "version-date": "2023-10-28",
   "description": "A collection of helper classes for writing DirectX 12 code in C++.",
   "homepage": "https://github.com/Microsoft/DirectXTK12",
   "documentation": "https://github.com/microsoft/DirectXTK12/wiki",
@@ -47,10 +47,7 @@
     "xaudio2redist": {
       "description": "Build with XAudio2Redist",
       "dependencies": [
-        {
-          "name": "xaudio2redist",
-          "platform": "!uwp & !arm & !xbox"
-        }
+        "xaudio2redist"
       ]
     }
   }

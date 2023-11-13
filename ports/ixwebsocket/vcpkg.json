@@ -1,7 +1,7 @@
 {
   "name": "ixwebsocket",
   "version-semver": "11.4.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Lightweight WebSocket Client and Server + HTTP Client and Server",
   "homepage": "https://github.com/machinezone/IXWebSocket",
   "license": "BSD-3-Clause",
@@ -28,6 +28,7 @@
     },
     "openssl": {
       "description": "SSL support (OpenSSL)",
+      "supports": "!uwp",
       "dependencies": [
         "openssl"
       ]
