@@ -1294,9 +1294,6 @@ yara:x64-uwp=fail
 zeroc-ice:arm-neon-android=fail
 zeroc-ice:arm64-android=fail
 zeroc-ice:x64-android=fail
-ztd-text:arm-neon-android=fail
-ztd-text:arm64-android=fail
-ztd-text:x64-android=fail
 zyre:x64-windows-static-md=fail
 
 # Ports which needs to pass in CI
