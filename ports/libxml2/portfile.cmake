@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
-    REF f507d167f1755b7eaea09fb1a44d29aab828b6d1
-    SHA512 2ac3dcab31111f608a3fe33dde492c9653ad2bd49a792373acdd03d2787e1a4ef70eeb7a3d47cf67eefd43aee2ab75ec50b36cdcd124445ca206de924abb6021
+    REF "v${VERSION}"
+    SHA512 527e66f6260a399318cfacc06db3ede4b16178ef17492ed0d515884aa00fce685f9e6932cd117df0d83e2440b5a5392c3d5fbe187b601cf19769b495e0865c87
     HEAD_REF master
     PATCHES
         disable-docs.patch
@@ -39,7 +39,6 @@ vcpkg_cmake_configure(
         -DLIBXML2_WITH_PYTHON=OFF
         -DLIBXML2_WITH_READER=ON
         -DLIBXML2_WITH_REGEXPS=ON
-        -DLIBXML2_WITH_RUN_DEBUG=OFF
         -DLIBXML2_WITH_SAX1=ON
         -DLIBXML2_WITH_SCHEMAS=ON
         -DLIBXML2_WITH_SCHEMATRON=ON
@@ -87,4 +86,4 @@ file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/usage"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
-file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright")

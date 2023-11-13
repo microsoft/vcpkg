@@ -1,0 +1,44 @@
+{
+  "name": "libcoro",
+  "version": "0.9",
+  "description": "C++20 coroutine library",
+  "homepage": "https://github.com/jbaldwin/libcoro",
+  "license": "Apache-2.0",
+  "supports": "!windows",
+  "dependencies": [
+    "tl-expected",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "networking",
+    "ssl",
+    "threading"
+  ],
+  "features": {
+    "networking": {
+      "description": "Include networking features.",
+      "dependencies": [
+        "c-ares"
+      ]
+    },
+    "ssl": {
+      "description": "Include SSL features.",
+      "dependencies": [
+        {
+          "name": "libcoro",
+          "default-features": false,
+          "features": [
+            "networking"
+          ]
+        },
+        "openssl"
+      ]
+    },
+    "threading": {
+      "description": "Include multithreading features."
+    }
+  }
+}

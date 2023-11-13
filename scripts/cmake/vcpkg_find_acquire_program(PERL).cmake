@@ -1,11 +1,11 @@
 set(program_name perl)
-set(program_version 5.32.1.1)
+set(program_version 5.38.0.1)
 set(tool_subdirectory ${program_version})
 set(paths_to_search ${DOWNLOADS}/tools/perl/${tool_subdirectory}/perl/bin)
 set(brew_package_name "perl")
 set(apt_package_name "perl")
 set(download_urls
-    "https://strawberryperl.com/download/${program_version}/strawberry-perl-${program_version}-32bit.zip"
+    "https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_5380_5361/strawberry-perl-5.38.0.1-64bit-portable.zip"
 )
-set(download_filename "strawberry-perl-${program_version}-32bit.zip")
-set(download_sha512 936381254fea2e596db6a16c23b08ced25c4081fda484e1b8c4356755016e4b956bd00f3d2ee651d5f41a7695e9998f6c1ac3f4a237212b9c55aca8c5fea14e9)
+set(download_filename "strawberry-perl-5.38.0.1-64bit-portable.zip")
+set(download_sha512 9b604f19e245a809bd18857bd91ebaec81ca031394ec69a3369df64d3590d2c9d557326d8aa10f91e78b1f1d56689aa57a8ec3a8cad4d2e542c96eb714a3831d)

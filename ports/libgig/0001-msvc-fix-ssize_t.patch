@@ -1,0 +1,16 @@
+diff --git a/src/Serialization.h b/src/Serialization.h
+index cccfc54..91a8fa4 100644
+--- a/src/Serialization.h
++++ b/src/Serialization.h
+@@ -40,6 +40,11 @@
+ #include <assert.h>
+ #include <functional>
+
++#ifdef _MSC_VER
++#include <BaseTsd.h>
++using ssize_t = SSIZE_T;
++#endif
++
+ #ifndef __has_extension
+ # define __has_extension(x) 0
+ #endif

@@ -1,7 +1,7 @@
 {
   "name": "plplot",
   "version-semver": "5.15.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "PLplot is a cross-platform software package for creating scientific plots whose (UTF-8) plot symbols and text are limited in practice only by what Unicode-aware system fonts are installed on a user's computer.",
   "homepage": "http://plplot.org/",
   "license": null,

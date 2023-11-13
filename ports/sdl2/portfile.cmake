@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 d4ddc1abf84f09b9d2357b5bf2adc224a693767c170a6b778283c2783436d940aee4db4c9628776de28de6c499bbfb04b65f9d9210f4670525248ce5b0d31bee
+    SHA512 3199e535033c8728bd12b97931d5c5d7a7dcc9b0f502109ff722982601b6fbb00995d71cbaab7d3b780c738deece235ef76ab1963ce946084c482c2d31a4abe8
     HEAD_REF main
     PATCHES
         deps.patch
@@ -15,11 +15,15 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        vulkan   SDL_VULKAN
-        x11      SDL_X11
-        wayland  SDL_WAYLAND
-        samplerate SDL_LIBSAMPLERATE
+        alsa     SDL_ALSA
+        alsa     CMAKE_REQUIRE_FIND_PACKAGE_ALSA
         ibus     SDL_IBUS
+        samplerate SDL_LIBSAMPLERATE
+        vulkan   SDL_VULKAN
+        wayland  SDL_WAYLAND
+        x11      SDL_X11
+    INVERTED_FEATURES
+        alsa     CMAKE_DISABLE_FIND_PACKAGE_ALSA
 )
 
 if ("x11" IN_LIST FEATURES)
@@ -47,9 +51,11 @@ vcpkg_cmake_configure(
         -DSDL_TEST=OFF
         -DSDL_INSTALL_CMAKEDIR="cmake"
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
         -DSDL_LIBSAMPLERATE_SHARED=OFF
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
+        PKG_CONFIG_USE_CMAKE_PREFIX_PATH
 )
 
 vcpkg_cmake_install()
