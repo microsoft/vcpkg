@@ -1,8 +1,8 @@
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO GPUOpen-Drivers/libamdrdf
-        REF v1.1.3
-        SHA512 ea59264906475781a1f1ac1b1dd9e36274d1eef7f2fc5dcc30416639373a1b02323d073fcbe34ad6b313941fbe6c8f0420860b2c72c62880f759cdd79aa9d4ef
+        REF v1.2.0
+        SHA512 f003efbb621ac130174cbd5165e30c20f5c39482
         HEAD_REF master
 )
 
