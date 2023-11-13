@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AviSynth/AviSynthPlus
-    REF v3.7.3
+    REF "v${VERSION}"
     SHA512 0e0daa83e3ab729fdc35a52c60c23c9142f1229187af893d0dbbd36f88eced36f63a3e8c767a3dc825edaa5395a49a5aad726f6b61de8f6b291557eec20de426
     HEAD_REF master
 )
