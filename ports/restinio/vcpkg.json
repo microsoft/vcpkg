@@ -6,9 +6,9 @@
   "license": "BSD-3-Clause",
   "dependencies": [
     "asio",
+    "expected-lite",
     "fmt",
     "llhttp",
-    "expected-lite",
     {
       "name": "vcpkg-cmake",
       "host": true
