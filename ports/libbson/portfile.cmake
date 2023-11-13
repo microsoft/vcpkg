@@ -15,8 +15,11 @@ file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")
 
 # Cannot use string(COMPARE EQUAL ...)
 set(ENABLE_STATIC OFF)
+set(ENABLE_SHARED OFF)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(ENABLE_STATIC ON)
+else()
+    set(ENABLE_SHARED ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -31,6 +34,7 @@ vcpkg_cmake_configure(
         -DENABLE_SRV=OFF
         -DENABLE_SSL=OFF
         -DENABLE_STATIC=${ENABLE_STATIC}
+        -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_TESTS=OFF
         -DENABLE_UNINSTALL=OFF
         -DENABLE_ZLIB=SYSTEM

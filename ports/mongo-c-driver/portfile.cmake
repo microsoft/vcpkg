@@ -54,6 +54,8 @@ vcpkg_cmake_configure(
         -DENABLE_UNINSTALL=OFF
         -DENABLE_ZLIB=SYSTEM
         -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
+    MAYBE_UNUSED_VARIABLES
+        ENABLE_ICU 
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
