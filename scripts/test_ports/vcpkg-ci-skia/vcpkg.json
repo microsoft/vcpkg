@@ -14,7 +14,10 @@
     }
   ],
   "default-features": [
-    "skparagraph"
+    {
+      "name": "skparagraph",
+      "platform": "!(windows & !static)"
+    }
   ],
   "features": {
     "skparagraph": {
