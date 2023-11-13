@@ -1,0 +1,15 @@
+diff --git a/example/thrown_exception.cpp b/example/thrown_exception.cpp
+index 268ff55..4ec98cd 100644
+--- a/example/thrown_exception.cpp
++++ b/example/thrown_exception.cpp
+@@ -29,7 +29,9 @@ http://www.boost.org/LICENSE_1_0.txt)
+ 
+ #include <exception>
+ #include <mutex>
+-
++#include <stdexcept>
++#include <system_error>
++#include <new>
+ static constexpr size_t max_exception_ptrs = 16;
+ 
+ 

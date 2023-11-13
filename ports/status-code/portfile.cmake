@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         add-missing-include.patch
+        fix-example.patch
 )
 
 # Because status-code's deployed files are header-only, the debug build is not necessary
