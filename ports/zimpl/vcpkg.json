@@ -4,6 +4,7 @@
   "description": "Zuse Institut Mathematical Programming Language",
   "homepage": "http://zimpl.zib.de/",
   "license": "LGPL-3.0-or-later",
+  "supports": "!uwp",
   "dependencies": [
     "gmp",
     {

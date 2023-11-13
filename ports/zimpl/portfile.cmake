@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         libm.diff
+        msvc.diff
 )
 
 vcpkg_find_acquire_program(BISON)

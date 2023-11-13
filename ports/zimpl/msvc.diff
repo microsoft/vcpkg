@@ -1,0 +1,13 @@
+diff --git a/zimpl/CMakeLists.txt b/zimpl/CMakeLists.txt
+index 7cf9d85..c7fa41a 100644
+--- a/zimpl/CMakeLists.txt
++++ b/zimpl/CMakeLists.txt
+@@ -4,7 +4,7 @@ project(ZIMPL
+     VERSION 3.5.3
+     LANGUAGES C)
+ 
+-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT MSVC)
+     # if changing these flags, also update GCCWARN/GXXWARN in make/make.project
+     set(ADD_C_FLAGS -Wall -Wextra -Wno-unknown-pragmas -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wmissing-noreturn -Wmissing-declarations -fno-omit-frame-pointer)
+ 
