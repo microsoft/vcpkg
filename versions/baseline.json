@@ -8682,7 +8682,7 @@
     },
     "usrsctp": {
       "baseline": "0.9.5.0",
-      "port-version": 1
+      "port-version": 2
     },
     "utf8h": {
       "baseline": "2021-11-18",
