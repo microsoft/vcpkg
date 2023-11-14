@@ -2295,6 +2295,7 @@ ctbench(osx) = fail # requires C++ 20
 curl[brotli,c-ares,http2,idn,idn2,mbedtls,non-http,openssl,sectransp,ssh,ssl,tool,websockets,wolfssl](osx) = combination-fails
 curl[core,openssl,wolfssl] = options # openssl and wolfssl are exclusive ssl backends
 date[remote-api](uwp) = feature-fails # error C2065: 'FOLDERID_ProgramFiles': undeclared identifier. See https://github.com/microsoft/vcpkg/issues/33610
+dcmtk(uwp) = fail # Please set the C++ runtime location (required for running applications targeting Windows). See https://github.com/microsoft/vcpkg/issues/35112
 dcmtk[core,iconv,icu,openssl,png,tiff,tools,xml2,zlib](osx) = combination-fails # missing symbols from libtiff. See https://github.com/microsoft/vcpkg/issues/33512
 dcmtk[xml2](windows) = feature-fails # fatal error C1083: Cannot open include file: 'iconv.h'. See https://github.com/microsoft/vcpkg/issues/33473
 dmlc[openmp](osx) = feature-fails # No openmp on osx
