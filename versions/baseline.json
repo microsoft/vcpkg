@@ -7370,7 +7370,7 @@
     },
     "realsense2": {
       "baseline": "2.54.2",
-      "port-version": 0
+      "port-version": 1
     },
     "recast": {
       "baseline": "deprecated",
