@@ -1,9 +1,11 @@
 {
   "name": "nng",
   "version-semver": "1.5.2",
+  "port-version": 1,
   "description": "nanomsg-next-gen, lightweight messaging library",
   "homepage": "https://nng.nanomsg.org",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
