@@ -31,8 +31,8 @@
          * West US 3, 1 Replica
 * [ ] After the last build finishes on the previous pool, delete it in the Azure Devops *Organization* UI and its Resource Group. ( https://dev.azure.com/vcpkg/_settings/agentpools ?)
 * [ ] Run `generate-sas-tokens.ps1 -KeyNumber N`, where N is whether the month is even
-      (Jan = 1, Feb = 2, Mar = 1, and so on)and update the relevant libraries on dev.azure.com/vcpkg
-      and devdiv.visualstudio.com
+      (Jan = 1, Feb = 2, Mar = 1, and so on) and update the relevant libraries on
+      dev.azure.com/vcpkg and devdiv.visualstudio.com
 * [ ] After builds using those SAS tokens complete, run `roll-sas-tokens.ps1 -KeyNumber N` where
       this N is the other key. (Jan = 2, Feb = 1, Mar = 2, and so on)
 * [ ] Mint a new macOS base box.  (See instructions in `scripts/azure-pipelines/osx/README.md`)
