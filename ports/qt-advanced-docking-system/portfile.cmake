@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 2da93dfecdccf494ab051dd42c79ade681534530914ad4ddfc38ec77c32b3c1e56242bef7dd1bfe8b14bc63564c485d59da2518bf6d6b76c3be905accfe6297c
     HEAD_REF master
-    PATCHES
-        qt.patch
 )
 
 if(VCPKG_CROSSCOMPILING)
