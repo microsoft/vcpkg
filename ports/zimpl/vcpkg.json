@@ -9,7 +9,7 @@
     "gmp",
     {
       "name": "pcre2",
-      "platform": "windows & !mingw"
+      "platform": "windows"
     },
     {
       "name": "vcpkg-cmake",
