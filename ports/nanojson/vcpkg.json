@@ -3,7 +3,7 @@
   "version" : "1.0.0",
   "description" : "Event-Driven JSON Parser for C/C++",
   "homepage" : "https://github.com/saadshams/nanojson",
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "maintainers" : [ "Saad Shams" ],
   "dependencies" : [
     {
