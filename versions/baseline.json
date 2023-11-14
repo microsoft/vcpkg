@@ -5981,8 +5981,8 @@
       "port-version": 2
     },
     "nsync": {
-      "baseline": "1.24.0",
-      "port-version": 1
+      "baseline": "1.26.0",
+      "port-version": 0
     },
     "nt-wrapper": {
       "baseline": "2019-08-10",
