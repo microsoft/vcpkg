@@ -89,8 +89,8 @@
       "port-version": 0
     },
     "alpaka": {
-      "baseline": "0.9.0",
-      "port-version": 1
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "alsa": {
       "baseline": "1.2.10",
