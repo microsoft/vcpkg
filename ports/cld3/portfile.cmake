@@ -12,6 +12,15 @@ vcpkg_from_github(
       fix-build.patch
 )
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+  vcpkg_cmake_get_vars(cmake_vars_file)
+  include("${cmake_vars_file}")
+  if (VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -DCOMPILER_MSVC")
+    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -DCOMPILER_MSVC")
+  endif()
+endif()
+
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS ${FEATURE_OPTIONS}
