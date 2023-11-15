@@ -8,17 +8,17 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-include-path.patch
-        fix_enable_test.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DUTPP_INCLUDE_TESTS_IN_BUILD=OFF
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/UnitTest++)
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/unittest-cpp" "${CURRENT_PACKAGES_DIR}/share/unittest++")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/UnitTest++ PACKAGE_NAME unittest++)
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
