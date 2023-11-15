@@ -171,7 +171,7 @@ index ca37ba1..2ce7bdd 100644
  #  include <utf8.h>
  #else
 -#  include "../contrib/utf8cpp/source/utf8.h"
-+#  include <utf8.h>
++#  include <utf8cpp/utf8.h>
  #endif
  #include <assimp/Exceptional.h>
  
@@ -184,7 +184,7 @@ index 7b66afa..5adbe1d 100644
  #include <utf8.h>
  #else
 -#include "../contrib/utf8cpp/source/utf8.h"
-+#include <utf8.h>
++#include <utf8cpp/utf8.h>
  #endif
  #include <assimp/importerdesc.h>
  #include <assimp/scene.h>
@@ -197,7 +197,7 @@ index d4456e6..812f29b 100644
  #  include <utf8.h>
  #else
 -#  include <contrib/utf8cpp/source/utf8.h>
-+#  include <utf8.h>
++#  include <utf8cpp/utf8.h>
  #endif
  
  #include <memory>
@@ -390,7 +390,8 @@ index 5339454..45e07c0 100644
 -      RapidJSON::rapidjson
 +      ZLIB::ZLIB
 +      rapidjson
-       utf8cpp
+-      utf8cpp
++      utf8cpp::utf8cpp
 +      PUBLIC
        pugixml
 -      stb::stb
@@ -500,7 +501,7 @@ index 383300e..03fdd9a 100644
  #include <utf8.h>
  #else
 -#include "../contrib/utf8cpp/source/utf8.h"
-+#include <utf8.h>
++#include <utf8cpp/utf8.h>
  #endif
  
  // ------------------------------------------------------------------------------------------------

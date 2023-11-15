@@ -1,6 +1,6 @@
 {
   "name": "kdalgorithms",
-  "version-date": "2023-02-11",
+  "version": "1.2",
   "description": "KDAB's algorithm helpers for C++14 and up",
   "homepage": "https://github.com/KDAB/KDAlgorithms",
   "license": "MIT"
