@@ -3,60 +3,60 @@
 get_filename_component(ROOT "${CMAKE_CURRENT_LIST_DIR}" PATH)
 get_filename_component(ROOT "${ROOT}" PATH)
 
-if(NOT TARGET unofficial::xplane-sdk::xplm)
+if(NOT TARGET unofficial::x-plane-sdk::xplm)
   if(WIN32 OR APPLE)
-    add_library(unofficial::xplane-sdk::xplm SHARED IMPORTED)
+    add_library(unofficial::x-plane-sdk::xplm SHARED IMPORTED)
     if(WIN32)
       set_target_properties(
-        unofficial::xplane-sdk::xplm
-        PROPERTIES IMPORTED_IMPLIB "${ROOT}/lib/xplane-sdk/XPLM_64.lib")
+        unofficial::x-plane-sdk::xplm
+        PROPERTIES IMPORTED_IMPLIB "${ROOT}/lib/x-plane-sdk/XPLM_64.lib")
       set_target_properties(
-        unofficial::xplane-sdk::xplm PROPERTIES INTERFACE_COMPILE_DEFINITIONS
+        unofficial::x-plane-sdk::xplm PROPERTIES INTERFACE_COMPILE_DEFINITIONS
                                                 "-DIBM=1;-DAPL=0;-DLIN=0")
     else()
       set_target_properties(
-        unofficial::xplane-sdk::xplm
-        PROPERTIES IMPORTED_LOCATION "${ROOT}/lib/xplane-sdk/XPLM.framework/XPLM")
+        unofficial::x-plane-sdk::xplm
+        PROPERTIES IMPORTED_LOCATION "${ROOT}/lib/x-plane-sdk/XPLM.framework/XPLM")
       set_target_properties(
-        unofficial::xplane-sdk::xplm PROPERTIES INTERFACE_COMPILE_DEFINITIONS
+        unofficial::x-plane-sdk::xplm PROPERTIES INTERFACE_COMPILE_DEFINITIONS
                                                 "-DIBM=0;-DAPL=1;-DLIN=0")
     endif()
   else()
-    add_library(unofficial::xplane-sdk::xplm INTERFACE IMPORTED)
+    add_library(unofficial::x-plane-sdk::xplm INTERFACE IMPORTED)
     set_target_properties(
-      unofficial::xplane-sdk::xplm PROPERTIES INTERFACE_COMPILE_DEFINITIONS
+      unofficial::x-plane-sdk::xplm PROPERTIES INTERFACE_COMPILE_DEFINITIONS
                                               "-DIBM=0;-DAPL=0;-DLIN=1")
   endif()
   set_target_properties(
-    unofficial::xplane-sdk::xplm PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
-                                            "${ROOT}/include/xplane-sdk/XPLM")
+    unofficial::x-plane-sdk::xplm PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
+                                            "${ROOT}/include/x-plane-sdk/XPLM")
 endif()
 
-if(NOT TARGET unofficial::xplane-sdk::xpwidgets)
+if(NOT TARGET unofficial::x-plane-sdk::xpwidgets)
   if(WIN32 OR APPLE)
-    add_library(unofficial::xplane-sdk::xpwidgets SHARED IMPORTED)
+    add_library(unofficial::x-plane-sdk::xpwidgets SHARED IMPORTED)
     if(WIN32)
       set_target_properties(
-        unofficial::xplane-sdk::xpwidgets
-        PROPERTIES IMPORTED_IMPLIB "${ROOT}/lib/xplane-sdk/XPWidgets_64.lib")
+        unofficial::x-plane-sdk::xpwidgets
+        PROPERTIES IMPORTED_IMPLIB "${ROOT}/lib/x-plane-sdk/XPWidgets_64.lib")
     else()
       set_target_properties(
-        unofficial::xplane-sdk::xpwidgets
+        unofficial::x-plane-sdk::xpwidgets
         PROPERTIES IMPORTED_LOCATION
-                   "${ROOT}/lib/xplane-sdk/XPWidgets.framework/XPWidgets")
+                   "${ROOT}/lib/x-plane-sdk/XPWidgets.framework/XPWidgets")
     endif()
   else()
-    add_library(unofficial::xplane-sdk::xpwidgets INTERFACE IMPORTED)
+    add_library(unofficial::x-plane-sdk::xpwidgets INTERFACE IMPORTED)
   endif()
   set_target_properties(
-    unofficial::xplane-sdk::xpwidgets PROPERTIES INTERFACE_LINK_LIBRARIES
-                                                 "unofficial::xplane-sdk::xplm")
+    unofficial::x-plane-sdk::xpwidgets PROPERTIES INTERFACE_LINK_LIBRARIES
+                                                 "unofficial::x-plane-sdk::xplm")
   set_target_properties(
-    unofficial::xplane-sdk::xpwidgets
+    unofficial::x-plane-sdk::xpwidgets
     PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
-               "${ROOT}/include/xplane-sdk/Widgets")
+               "${ROOT}/include/x-plane-sdk/Widgets")
 endif()
 
-include("${CMAKE_CURRENT_LIST_DIR}/unofficial-xplane-sdk-targets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-x-plane-sdk-targets.cmake")
 
-check_required_components(unofficial-xplane-sdk)
+check_required_components(unofficial-x-plane-sdk)
