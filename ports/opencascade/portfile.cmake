@@ -78,11 +78,6 @@ endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if (INSTALL_SAMPLES)
-    foreach(dir "Tutorial" "FuncDemo" "IESample" "OCCTOverview")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencascade/samples/qt/${dir}/env.sh" "${CURRENT_PACKAGES_DIR}/bin/env.sh" "<not/existing>")
-    endforeach()
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencascade/samples/qt")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt")
