@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
       target_fix.patch
       runtime_destination.patch
-      libdwarf.patch
 )
 
 vcpkg_list(SET options -DASSERT_USE_EXTERNAL_CPPTRACE=On)
