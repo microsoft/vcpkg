@@ -7,7 +7,6 @@
   "supports": "!uwp",
   "dependencies": [
     "cpptrace",
-    "libdwarf",
     {
       "name": "vcpkg-cmake",
       "host": true
