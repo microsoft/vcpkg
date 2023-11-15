@@ -24,11 +24,11 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "freeimage"  USE_FREEIMAGE
-        "tbb"        USE_TBB
-        "rapidjson"  USE_RAPIDJSON
-        "samples"    INSTALL_SAMPLES
-        "vtk"        USE_VTK
+        freeimage   USE_FREEIMAGE
+        rapidjson   USE_RAPIDJSON
+        samples     INSTALL_SAMPLES
+        tbb         USE_TBB
+        vtk         USE_VTK
 )
 
 # We turn off BUILD_MODULE_Draw as it requires TCL 8.6 and TK 8.6 specifically which conflicts with vcpkg only having TCL 9.0 
@@ -40,14 +40,13 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DBUILD_LIBRARY_TYPE=${BUILD_TYPE}
         -DBUILD_MODULE_Draw=OFF
+        -DBUILD_DOC_Overview=OFF
+        -DBUILD_MODULE_DETools=OFF
         -DINSTALL_DIR_LAYOUT=Unix
         -DINSTALL_DIR_DOC=share/trash
         -DINSTALL_DIR_SCRIPT=share/trash # not relocatable
-        -DBUILD_SAMPLES_MFC=OFF
-        -DBUILD_SAMPLES_QT=OFF
-        -DBUILD_DOC_Overview=OFF
         -DINSTALL_TEST_CASES=OFF
-        -DBUILD_MODULE_DETools=OFF
+        -DUSE_TK=OFF
     OPTIONS_DEBUG
         -DINSTALL_SAMPLES=OFF
 )
