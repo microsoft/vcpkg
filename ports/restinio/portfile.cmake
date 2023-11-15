@@ -26,5 +26,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-# vim:expandtab:ts=4:sw=4:sts:
-
