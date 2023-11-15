@@ -32,9 +32,21 @@ add_library(tre ${SRCS})
 
 install(
   TARGETS tre
+  EXPORT unofficial-tre-targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
+
+install(
+  EXPORT unofficial-tre-targets
+  NAMESPACE unofficial::tre::
+  DESTINATION share/unofficial-tre)
+
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-tre-config.cmake
+  "include(\"\${CMAKE_CURRENT_LIST_DIR}/unofficial-tre-targets.cmake\")")
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-tre-config.cmake
+  DESTINATION share/unofficial-tre)
 
 install(FILES ${HEADERS} DESTINATION include/tre)
