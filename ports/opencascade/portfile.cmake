@@ -45,6 +45,8 @@ vcpkg_cmake_configure(
         -DBUILD_DOC_Overview=OFF
         -DINSTALL_TEST_CASES=OFF
         -DBUILD_MODULE_DETools=OFF
+    OPTIONS_DEBUG
+        -DINSTALL_SAMPLES=OFF
 )
 
 vcpkg_cmake_install()
