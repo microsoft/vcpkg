@@ -1,0 +1,4 @@
+dartsim provides CMake targets:
+
+    find_package(DART CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Eigen3::Eigen Boost::system ccd fcl assimp::assimp)
