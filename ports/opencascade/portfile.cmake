@@ -1,8 +1,9 @@
+string(REPLACE "." "_" VERSION_STR "V${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
-    REF cec1ecd0c9f3b3d2572c47035d11949e8dfa85e2 #V7.7.2
-    SHA512 2fe98eadd7f9b922729bf80b56f260729d1c257c41392e4be4f070667ee77e94e2b286a873430b41ea61076acf1388aee7ba8b91789aa6199db56066796bb2d3
+    REF "${VERSION_STR}"
+    SHA512 d9e882d44bb65616f8cfce68ebdcd5765669b84e3d82cfb2d1bc22b71b0e878442c079bacc37e9d54f28ce98a7c23bf81f2a3e3e7bbeeec38927ca739f423dee
     HEAD_REF master
     PATCHES
         fix-pdb-find.patch
