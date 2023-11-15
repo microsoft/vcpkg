@@ -6072,10 +6072,6 @@
       "baseline": "1.3.0",
       "port-version": 2
     },
-    "obfuscate": {
-      "baseline": "2023-03-23",
-      "port-version": 0
-    },
     "oboe": {
       "baseline": "1.8.0",
       "port-version": 0
