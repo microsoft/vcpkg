@@ -1,16 +1,16 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/libyuv/libyuv
-    REF 0faf8dd0e004520a61a603a4d2996d5ecc80dc3f
+    REF fb6341d326846fbbe669ad5173e520f66b339621
     # Check https://chromium.googlesource.com/libyuv/libyuv/+/refs/heads/main/include/libyuv/version.h for a version!
     PATCHES
         fix-cmakelists.patch
 )
 
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
+
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${BUILD_OPTIONS}
     OPTIONS_DEBUG
@@ -22,11 +22,21 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libyuv)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/libyuv-config.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT} COPYONLY)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(GLOB EXE "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+file(GLOB DEBUG_EXE "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
+if(EXE OR DEBUG_EXE)
+    file(REMOVE ${EXE} ${DEBUG_EXE})
+endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/libyuv-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
