@@ -6,7 +6,6 @@ vcpkg_from_github(
     SHA512 d9e882d44bb65616f8cfce68ebdcd5765669b84e3d82cfb2d1bc22b71b0e878442c079bacc37e9d54f28ce98a7c23bf81f2a3e3e7bbeeec38927ca739f423dee
     HEAD_REF master
     PATCHES
-        dont-install-scripts.patch
         drop-bin-letter-d.patch
         fix-pdb-find.patch
         fix-install-prefix-path.patch
@@ -42,6 +41,8 @@ vcpkg_cmake_configure(
         -DBUILD_LIBRARY_TYPE=${BUILD_TYPE}
         -DBUILD_MODULE_Draw=OFF
         -DINSTALL_DIR_LAYOUT=Unix
+        -DINSTALL_DIR_DOC=share/trash
+        -DINSTALL_DIR_SCRIPT=share/trash # not relocatable
         -DBUILD_SAMPLES_MFC=OFF
         -DBUILD_SAMPLES_QT=OFF
         -DBUILD_DOC_Overview=OFF
@@ -72,5 +73,6 @@ endforeach()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencascade/samples/qt")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/trash")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt")
