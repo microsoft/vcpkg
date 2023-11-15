@@ -4552,6 +4552,10 @@
       "baseline": "2021-11-03",
       "port-version": 0
     },
+    "libobfuscate": {
+      "baseline": "2023-03-23",
+      "port-version": 0
+    },
     "libodb": {
       "baseline": "2.4.0",
       "port-version": 10
