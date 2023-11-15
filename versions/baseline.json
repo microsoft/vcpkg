@@ -7560,6 +7560,10 @@
       "baseline": "1.3.34",
       "port-version": 0
     },
+    "saadshams-nanojson": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "safeint": {
       "baseline": "3.0.26",
       "port-version": 0
