@@ -8,6 +8,10 @@
   "supports": "!xbox",
   "dependencies": [
     {
+      "name": "angle",
+      "platform": "uwp"
+    },
+    {
       "name": "opengl",
       "platform": "!(android | ios | uwp | wasm32)"
     },

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1bacca1a..a80e39e6 100644
+index d2c4e570..8eac318c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -244,7 +244,6 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}" CACHE INTERNAL "" FORCE)
@@ -10,6 +10,14 @@ index 1bacca1a..a80e39e6 100644
  elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
    set (BIN_LETTER "i")
  endif()
+@@ -917,6 +916,7 @@ if (WIN32)
+   set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE        "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin")
+   set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bini")
+   set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG          "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bind")
++  set (CMAKE_PDB_OUTPUT_DIRECTORY_DEBUG              "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin")
+ endif()
+ 
+ string(TIMESTAMP CURRENT_TIME "%H:%M:%S")
 diff --git a/adm/cmake/occt_macros.cmake b/adm/cmake/occt_macros.cmake
 index 9fd3ec4c..dc9ff18b 100644
 --- a/adm/cmake/occt_macros.cmake
