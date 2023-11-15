@@ -6,6 +6,7 @@ vcpkg_from_github(
     SHA512 d9e882d44bb65616f8cfce68ebdcd5765669b84e3d82cfb2d1bc22b71b0e878442c079bacc37e9d54f28ce98a7c23bf81f2a3e3e7bbeeec38927ca739f423dee
     HEAD_REF master
     PATCHES
+        drop-bin-letter-d.patch
         fix-pdb-find.patch
         fix-install-prefix-path.patch
         install-include-dir.patch
@@ -74,41 +75,10 @@ foreach(file_name IN LISTS files)
     file(WRITE "${file_name}" "${filedata}")
 endforeach()
 
-# Remove libd to lib, libd just has cmake files we dont want too
-if( WIN32 )
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
-file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libd" "${CURRENT_PACKAGES_DIR}/debug/lib")
-endif()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if (NOT VCPKG_BUILD_TYPE)
-    # fix paths in target files
-    list(APPEND TARGET_FILES 
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEApplicationFrameworkTargets-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADECompileDefinitionsAndFlags-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEDataExchangeTargets-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEFoundationClassesTargets-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingAlgorithmsTargets-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingDataTargets-debug.cmake"
-        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEVisualizationTargets-debug.cmake"
-    )
-
-    foreach(TARGET_FILE IN LISTS TARGET_FILES)
-        file(READ "${TARGET_FILE}" filedata)
-        string(REGEX REPLACE "/libd" "/lib" filedata "${filedata}")
-        string(REGEX REPLACE "/bind" "/bin" filedata "${filedata}")
-        file(WRITE "${TARGET_FILE}" "${filedata}")
-    endforeach()
-
-endif()
-
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    # debug creates libd and bind directories that need moving
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bind" "${CURRENT_PACKAGES_DIR}/debug/bin")
-
     # the bin directory ends up with bat files that are noise, let's clean that up
     file(GLOB BATS "${CURRENT_PACKAGES_DIR}/bin/*.bat")
     file(REMOVE_RECURSE ${BATS})
