@@ -8981,8 +8981,8 @@
       "port-version": 2
     },
     "wil": {
-      "baseline": "2023-08-24",
-      "port-version": 1
+      "baseline": "2023-10-28",
+      "port-version": 0
     },
     "wildmidi": {
       "baseline": "0.4.5",
