@@ -6,6 +6,7 @@ vcpkg_from_github(
     SHA512 d9e882d44bb65616f8cfce68ebdcd5765669b84e3d82cfb2d1bc22b71b0e878442c079bacc37e9d54f28ce98a7c23bf81f2a3e3e7bbeeec38927ca739f423dee
     HEAD_REF master
     PATCHES
+        dont-install-scripts.patch
         drop-bin-letter-d.patch
         fix-pdb-find.patch
         fix-install-prefix-path.patch
@@ -77,15 +78,6 @@ endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    # the bin directory ends up with bat files that are noise, let's clean that up
-    file(GLOB BATS "${CURRENT_PACKAGES_DIR}/bin/*.bat")
-    file(REMOVE_RECURSE ${BATS})
-else()
-    # remove scripts in bin dir
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 if (INSTALL_SAMPLES)
     foreach(dir "Tutorial" "FuncDemo" "IESample" "OCCTOverview")
