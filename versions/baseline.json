@@ -3921,7 +3921,7 @@
       "port-version": 0
     },
     "kubazip": {
-      "baseline": "0.2.4",
+      "baseline": "0.2.6",
       "port-version": 0
     },
     "kubernetes": {
