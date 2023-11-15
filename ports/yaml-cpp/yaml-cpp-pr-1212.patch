@@ -46,12 +46,11 @@ index 46dc180..5055c24 100644
  
  if(YAML_CPP_BUILD_TESTS)
    add_subdirectory(test)
-
 diff --git a/yaml-cpp-config.cmake.in b/yaml-cpp-config.cmake.in
-index 799b9b418..f71e13b8f 100644
+index 799b9b4..cbbc773 100644
 --- a/yaml-cpp-config.cmake.in
 +++ b/yaml-cpp-config.cmake.in
-@@ -11,12 +11,20 @@ set_and_check(YAML_CPP_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+@@ -11,12 +11,23 @@ set_and_check(YAML_CPP_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
  set_and_check(YAML_CPP_LIBRARY_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
  
  # Are we building shared libraries?
@@ -66,12 +65,15 @@ index 799b9b418..f71e13b8f 100644
  set(YAML_CPP_LIBRARIES "@EXPORT_TARGETS@")
  
 -check_required_components(@EXPORT_TARGETS@)
-+add_library(yaml-cpp INTERFACE IMPORTED)
-+target_link_libraries(yaml-cpp INTERFACE yaml-cpp::yaml-cpp)
-+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.17)
-+  set_target_properties(yaml-cpp PROPERTIES 
-+    DEPRECATION "The target yaml-cpp is deprecated and will be removed in version 0.10.0. Use the yaml-cpp::yaml-cpp target instead."
-+  )
++# Protect against multiple inclusion, which would fail when already imported targets are added once more.
++if(NOT TARGET yaml-cpp)
++  add_library(yaml-cpp INTERFACE IMPORTED)
++  target_link_libraries(yaml-cpp INTERFACE yaml-cpp::yaml-cpp)
++  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.17)
++    set_target_properties(yaml-cpp PROPERTIES
++      DEPRECATION "The target yaml-cpp is deprecated and will be removed in version 0.10.0. Use the yaml-cpp::yaml-cpp target instead."
++    )
++  endif()
 +endif()
 +
 +check_required_components(yaml-cpp)
