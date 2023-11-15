@@ -9076,6 +9076,10 @@
       "baseline": "3.0.3",
       "port-version": 2
     },
+    "x-plane-sdk": {
+      "baseline": "4.0.1",
+      "port-version": 0
+    },
     "x264": {
       "baseline": "0.164.3107",
       "port-version": 0
@@ -9178,10 +9182,6 @@
     },
     "xpack": {
       "baseline": "1.0.5",
-      "port-version": 0
-    },
-    "xplane-sdk": {
-      "baseline": "4.0.1",
       "port-version": 0
     },
     "xproperty": {

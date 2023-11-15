@@ -1,5 +1,0 @@
-xplane-sdk provides CMake targets:
-
-    find_package(unofficial-xplane-sdk CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::xplane-sdk::xplm unofficial::xplane-sdk::xpwidgets unofficial::xplane-sdk::xplm_cpp)
-

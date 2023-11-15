@@ -1,5 +1,5 @@
 {
-  "name": "xplane-sdk",
+  "name": "x-plane-sdk",
   "version": "4.0.1",
   "license": "MIT",
   "supports": "(windows & !uwp & x64) | (osx & (x64 | arm64)) | (linux & x64)",
