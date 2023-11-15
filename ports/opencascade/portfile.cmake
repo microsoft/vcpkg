@@ -75,4 +75,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencascade/samples/qt")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/trash")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE_LGPL_21.txt"
+        "${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt"
+)
