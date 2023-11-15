@@ -1,0 +1,13 @@
+diff --git a/mkspecs/features/toolchain.prf b/mkspecs/features/toolchain.prf
+index 0c505fc..7c3be04 100644
+--- a/mkspecs/features/toolchain.prf
++++ b/mkspecs/features/toolchain.prf
+@@ -324,6 +324,8 @@ isEmpty($${target_prefix}.INCDIRS) {
+         hostArch = $$QMAKE_HOST.arch
+         equals(hostArch, x86_64): \
+             hostArch = amd64
++        contains(hostArch, arm64): \
++            hostArch = arm64
+         !equals(arch, $$hostArch): \
+             arch = $${hostArch}_$$arch
+ 
