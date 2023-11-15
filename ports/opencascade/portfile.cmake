@@ -48,6 +48,7 @@ vcpkg_cmake_configure(
         -DINSTALL_DIR_SCRIPT=share/trash # not relocatable
         -DINSTALL_TEST_CASES=OFF
         -DUSE_TK=OFF
+        --trace-expand
     OPTIONS_DEBUG
         -DINSTALL_SAMPLES=OFF
 )
