@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         disable-dynamic-when-static.patch
         fix-dependencies.patch
+        fix-include-directory.patch
         fix-mingw.patch
 )
 file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")

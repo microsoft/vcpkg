@@ -1,48 +1,7 @@
 diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index 61cae9c..ca1dc87 100644
+index 61cae9c..5f553c5 100644
 --- a/src/libmongoc/CMakeLists.txt
 +++ b/src/libmongoc/CMakeLists.txt
-@@ -50,7 +50,7 @@ endif ()
- set (ZLIB_INCLUDE_DIRS "")
- if (ENABLE_ZLIB MATCHES "SYSTEM|AUTO")
-    message (STATUS "Searching for zlib CMake packages")
--   include (FindZLIB)
-+   find_package(ZLIB REQUIRED)
-    if (ZLIB_FOUND)
-       message (STATUS "   zlib found version \"${ZLIB_VERSION_STRING}\"")
-       message (STATUS "   zlib include path \"${ZLIB_INCLUDE_DIRS}\"")
-@@ -189,7 +189,7 @@ endfunction()
- # Per-backend link libs/options:
- set(SecureTransport/LINK_LIBRARIES "-framework CoreFoundation" "-framework Security")
- set(SecureTransport/pkg_config_LIBS -framework Corefoundation -framework Security)
--set(SecureChannel/LINK_LIBRARIES secur32.lib crypt32.lib Bcrypt.lib)
-+set(SecureChannel/LINK_LIBRARIES secur32.lib crypt32.lib bcrypt.lib)
- set(SecureChannel/pkg_config_LIBS ${SecureChannel/LINK_LIBRARIES})
- set(LibreSSL/LINK_LIBRARIES LibreSSL::TLS LibreSSL::Crypto)
- set(LibreSSL/pkg_config_LIBS -ltls -lcrypto)
-@@ -340,7 +340,7 @@ function(_use_sasl libname)
-    target_link_libraries(_mongoc-dependencies INTERFACE _mongoc-sasl_backend)
-    install(TARGETS _mongoc-sasl_backend EXPORT mongoc-targets)
-    if(libname STREQUAL "SSPI")
--      target_link_libraries(_mongoc-sasl_backend INTERFACE secur32.lib crypt32.lib Shlwapi.lib)
-+      target_link_libraries(_mongoc-sasl_backend INTERFACE secur32.lib crypt32.lib shlwapi.lib)
-       set(backend "SSPI")
-    elseif(libname STREQUAL "CYRUS")
-       find_package(SASL2 2.0 REQUIRED)
-@@ -468,10 +468,10 @@ else ()
- endif ()
- 
- # Sets SNAPPY_LIBRARIES and SNAPPY_INCLUDE_DIRS.
--include (FindSnappy)
--if (SNAPPY_INCLUDE_DIRS)
-+if(ENABLE_SNAPPY)
-+   find_package(Snappy CONFIG REQUIRED)
-+   set(SNAPPY_LIBRARIES Snappy::snappy)
-    set (MONGOC_ENABLE_COMPRESSION 1)
--   include_directories ("${SNAPPY_INCLUDE_DIRS}")
- endif ()
- 
- mongo_bool01 (MONGOC_ENABLE_SHM_COUNTERS ENABLE_SHM_COUNTERS)
 @@ -812,6 +812,7 @@ if (MONGOC_ENABLE_STATIC_BUILD)
     set_target_properties (mcd_rpc PROPERTIES OUTPUT_NAME "mcd-rpc")
  endif ()
@@ -73,7 +32,7 @@ index 61cae9c..ca1dc87 100644
  
  # mongoc-stat works if shared memory performance counters are enabled.
  if (ENABLE_SHM_COUNTERS)
-@@ -1244,13 +1249,13 @@ file (COPY ${PROJECT_SOURCE_DIR}/tests/x509gen DESTINATION ${PROJECT_BINARY_DIR}
+@@ -1244,7 +1249,7 @@ file (COPY ${PROJECT_SOURCE_DIR}/tests/x509gen DESTINATION ${PROJECT_BINARY_DIR}
  file (COPY ${PROJECT_SOURCE_DIR}/tests/release_files DESTINATION ${PROJECT_BINARY_DIR}/tests)
  
  if (MONGOC_ENABLE_STATIC_INSTALL)
@@ -82,13 +41,6 @@ index 61cae9c..ca1dc87 100644
  else ()
     set (TARGETS_TO_INSTALL mongoc_shared)
  endif ()
- 
- set (MONGOC_HEADER_INSTALL_DIR
--   "${CMAKE_INSTALL_INCLUDEDIR}/libmongoc-${MONGOC_API_VERSION}"
-+   "${CMAKE_INSTALL_INCLUDEDIR}"
- )
- 
- install (
 @@ -1299,6 +1304,7 @@ endif()
  # Relative include-path will be given the install prefix:
  set_property(TARGET ${TARGETS_TO_INSTALL} APPEND PROPERTY pkg_config_INCLUDE_DIRECTORIES "${MONGOC_HEADER_INSTALL_DIR}")
@@ -101,7 +53,7 @@ index 61cae9c..ca1dc87 100644
        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
     )
  endif ()
-+endif()
++endif ()
  
  include (CMakePackageConfigHelpers)
  
