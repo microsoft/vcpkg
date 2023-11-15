@@ -1,7 +1,6 @@
 {
   "name": "sail",
-  "version-semver": "0.9.0-rc3",
-  "port-version": 2,
+  "version-semver": "0.9.0",
   "description": "The missing small and fast image decoding library for humans (not for machines)",
   "homepage": "https://github.com/HappySeaFox/sail",
   "license": "MIT",
@@ -17,7 +16,7 @@
     }
   ],
   "default-features": [
-    "high-priority"
+    "highest-priority"
   ],
   "features": {
     "all": {
@@ -27,6 +26,7 @@
           "name": "sail",
           "features": [
             "high-priority",
+            "highest-priority",
             "low-priority",
             "lowest-priority",
             "medium-priority"
@@ -50,12 +50,22 @@
       ]
     },
     "high-priority": {
-      "description": "Enable high priority codecs such as JPEG or PNG",
+      "description": "Enable high priority codecs such as BMP",
       "dependencies": [
         {
           "name": "sail",
           "features": [
-            "bmp",
+            "bmp"
+          ]
+        }
+      ]
+    },
+    "highest-priority": {
+      "description": "Enable highest priority codecs such as JPEG or PNG",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
             "gif",
             "jpeg",
             "png",
@@ -77,6 +87,12 @@
       "description": "Enable JPEG2000 codec",
       "dependencies": [
         "jasper"
+      ]
+    },
+    "jpegxl": {
+      "description": "Enable JPEG XL codec",
+      "dependencies": [
+        "libjxl"
       ]
     },
     "low-priority": {
@@ -114,6 +130,7 @@
           "features": [
             "avif",
             "jpeg2000",
+            "jpegxl",
             "webp"
           ]
         }
