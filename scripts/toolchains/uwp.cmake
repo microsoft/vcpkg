@@ -58,13 +58,11 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     set(_vcpkg_winmd_flag "")
     if(VCPKG_MSVC_CXX_WINRT_EXTENSIONS)
         file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" _vcpkg_vctools)
-        set(ENV{_CL_} "/FU\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\" $ENV{_CL_}")
-        # CMake has problems to correctly pass this in the compiler test so probably need special care in get_cmake_vars
-        #set(_vcpkg_winmd_flag "/FU\\\\\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\\\\\"") # VS normally passes /ZW for Apps
+        set(_vcpkg_winmd_flag "/FU\\\\\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\\\\\"") # VS normally passes /ZW for Apps
     endif()
 
     set(CMAKE_CXX_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${CHARSET_FLAG} ${VCPKG_CXX_FLAGS}" CACHE STRING "")
-    set(CMAKE_C_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${CHARSET_FLAG} ${VCPKG_C_FLAGS}" CACHE STRING "")
+    set(CMAKE_C_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${CHARSET_FLAG} ${VCPKG_C_FLAGS}" CACHE STRING "")
     set(CMAKE_RC_FLAGS "-c65001 ${_vcpkg_cpp_flags}" CACHE STRING "")
 
     unset(CHARSET_FLAG)
