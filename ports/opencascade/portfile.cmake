@@ -56,23 +56,16 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencascade)
 
 #make occt includes relative to source_file
-list(APPEND ADDITIONAL_HEADERS 
-      "ExprIntrp.tab.h"
-      "FlexLexer.h"
-      "glext.h"
-      "igesread.h"
-      "NCollection_Haft.h"
-      "OSD_PerfMeter.h"
-      "Standard_values.h"
-    )
-
-file(GLOB files "${CURRENT_PACKAGES_DIR}/include/opencascade/[a-zA-Z0-9_]*\.[hgl]xx")
+file(GLOB extra_headers
+    LIST_DIRECTORIES false
+    RELATIVE "${CURRENT_PACKAGES_DIR}/include/opencascade"
+    "${CURRENT_PACKAGES_DIR}/include/opencascade/*.h"
+)
+list(JOIN extra_headers "|" extra_headers)
+file(GLOB files "${CURRENT_PACKAGES_DIR}/include/opencascade/*.[hgl]xx")
 foreach(file_name IN LISTS files)
     file(READ "${file_name}" filedata)
-    string(REGEX REPLACE "# *include \<([a-zA-Z0-9_]*\.[hgl]xx)\>" "#include \"\\1\"" filedata "${filedata}")
-    foreach(extra_header IN LISTS ADDITIONAL_HEADERS)
-        string(REGEX REPLACE "# *include \<${extra_header}\>" "#include \"${extra_header}\"" filedata "${filedata}")
-    endforeach()
+    string(REGEX REPLACE "(# *include) <([a-zA-Z0-9_]*[.][hgl]xx|${extra_headers})>" [[\1 "\2"]] filedata "${filedata}")
     file(WRITE "${file_name}" "${filedata}")
 endforeach()
 
