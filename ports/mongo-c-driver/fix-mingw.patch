@@ -48,3 +48,16 @@ index a77d805..15d39b4 100644
  #include <process.h>
  #endif
  
+diff --git a/src/libmongoc/src/mongoc/mongoc-sspi-private.h b/src/libmongoc/src/mongoc/mongoc-sspi-private.h
+index 60996fc..3745eff 100644
+--- a/src/libmongoc/src/mongoc/mongoc-sspi-private.h
++++ b/src/libmongoc/src/mongoc/mongoc-sspi-private.h
+@@ -28,7 +28,7 @@ BSON_BEGIN_DECLS
+ 
+ #define SECURITY_WIN32 1 /* Required for SSPI */
+ 
+-#include <Windows.h>
++#include <windows.h>
+ #include <limits.h>
+ #include <sspi.h>
+ #include <string.h>
