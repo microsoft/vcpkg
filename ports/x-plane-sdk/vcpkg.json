@@ -1,7 +1,7 @@
 {
   "name": "x-plane-sdk",
   "version": "4.0.1",
-  "license": "MIT",
+  "license": null,
   "supports": "(windows & !uwp & x64) | (osx & (x64 | arm64)) | (linux & x64)",
   "dependencies": [
     {
