@@ -47,6 +47,9 @@
         "zlib"
       ]
     },
+    "video": {
+      "description": "Deprecated. it will be removed in the future."
+    },
     "xmp": {
       "description": "Build with XMP metadata support",
       "dependencies": [
