@@ -6097,8 +6097,8 @@
       "port-version": 0
     },
     "ode": {
-      "baseline": "0.16.3",
-      "port-version": 1
+      "baseline": "0.16.4",
+      "port-version": 0
     },
     "offscale-libetcd-cpp": {
       "baseline": "2019-07-10",
