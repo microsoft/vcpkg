@@ -6,12 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES pkgconfig.patch
             fix-clang-cl.patch
+            fix-cmakelists.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" JSON_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" JSON_BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DBUILD_STATIC_LIBS=${JSON_BUILD_STATIC}
+        -DBUILD_SHARED_LIBS=${JSON_BUILD_SHARED}
 )
 
 vcpkg_cmake_install()
