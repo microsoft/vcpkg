@@ -115,34 +115,33 @@ list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
 if (BUILD_APPS)
     vcpkg_copy_tools(
         TOOL_NAMES
-            gdalinfo
-            gdalbuildvrt
-            gdaladdo
-            gdal_grid
-            gdal_translate
-            gdal_rasterize
-            gdalsrsinfo
-            gdalenhance
-            gdalmanage
-            gdaltransform
-            gdaltindex
-            gdaldem
-            gdal_create
-            gdal_viewshed
-            nearblack
-            ogrlineref
-            ogrtindex
-            gdalwarp
             gdal_contour
+            gdal_create
+            gdal_footprint
+            gdal_grid
+            gdal_rasterize
+            gdal_translate
+            gdal_viewshed
+            gdaladdo
+            gdalbuildvrt
+            gdaldem
+            gdalenhance
+            gdalinfo
             gdallocationinfo
-            ogrinfo
-            ogr2ogr
-            ogrlineref
-            nearblack
+            gdalmanage
             gdalmdiminfo
             gdalmdimtranslate
+            gdalsrsinfo
+            gdaltindex
+            gdaltransform
+            gdalwarp
             gnmanalyse
             gnmmanage
+            nearblack
+            ogr2ogr
+            ogrinfo
+            ogrlineref
+            ogrtindex
             sozip
         AUTO_CLEAN
     )
