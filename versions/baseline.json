@@ -2370,7 +2370,7 @@
     },
     "ed25519": {
       "baseline": "2017-02-10",
-      "port-version": 0
+      "port-version": 1
     },
     "edflib": {
       "baseline": "1.24",
