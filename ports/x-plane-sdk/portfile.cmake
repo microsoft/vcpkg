@@ -19,11 +19,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(
-    INSTALL "${SOURCE_PATH}/license.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 
