@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3a0debc..bf57bdf 100644
+index 3a0debc..6997dac 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -270,7 +270,7 @@ if (NOT USE_CUDA)
@@ -11,18 +11,17 @@ index 3a0debc..bf57bdf 100644
    if (LAPACK_FOUND)
      message("-- Found LAPACK library: ${LAPACK_LIBRARIES}")
    else (LAPACK_FOUND)
-@@ -292,27 +292,26 @@ if (SUITESPARSE)
+@@ -292,8 +292,7 @@ if (SUITESPARSE)
    # built with SuiteSparse support.
  
    # Check for SuiteSparse and dependencies.
 -  find_package(SuiteSparse 4.5.6 COMPONENTS CHOLMOD SPQR
 -    OPTIONAL_COMPONENTS Partition)
--  if (SuiteSparse_FOUND)
-+  find_package(suitesparse CONFIG REQUIRED)
-+  if (suitesparse_FOUND)
++  find_package(SuiteSparse NAMES suitesparse REQUIRED)
+   if (SuiteSparse_FOUND)
      set(SuiteSparse_DEPENDENCY "find_dependency(SuiteSparse ${SuiteSparse_VERSION})")
      # By default, if all of SuiteSparse's dependencies are found, Ceres is
-     # built with SuiteSparse support.
+@@ -301,11 +300,11 @@ if (SUITESPARSE)
      message("-- Found SuiteSparse ${SuiteSparse_VERSION}, "
              "building with SuiteSparse.")
  
@@ -32,30 +31,20 @@ index 3a0debc..bf57bdf 100644
                      ${Ceres_SOURCE_DIR}/cmake/FindMETIS.cmake
                DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
 -    endif (SuiteSparse_NO_CMAKE OR NOT SuiteSparse_DIR)
--  else (SuiteSparse_FOUND)
 +    endif ()
-+  else (suitesparse_FOUND)
+   else (SuiteSparse_FOUND)
      # Disable use of SuiteSparse if it cannot be found and continue.
      message("-- Did not find all SuiteSparse dependencies, disabling "
-       "SuiteSparse support.")
-     update_cache_variable(SUITESPARSE OFF)
-     list(APPEND CERES_COMPILE_OPTIONS CERES_NO_SUITESPARSE)
--  endif (SuiteSparse_FOUND)
-+  endif (suitesparse_FOUND)
- else (SUITESPARSE)
-   message("-- Building without SuiteSparse.")
-   list(APPEND CERES_COMPILE_OPTIONS CERES_NO_SUITESPARSE)
-@@ -323,23 +322,23 @@ if (NOT SuiteSparse_Partition_FOUND)
+@@ -323,7 +322,7 @@ if (NOT SuiteSparse_Partition_FOUND)
  endif (NOT SuiteSparse_Partition_FOUND)
  
  if (EIGENMETIS)
 -  find_package (METIS)
--  if (METIS_FOUND)
-+  find_package(metis CONFIG REQUIRED)
-+  if (metis_FOUND)
++  find_package(METIS NAMES metis REQUIRED)
+   if (METIS_FOUND)
      # Since METIS is a private dependency of Ceres, it requires access to the
      # link-only METIS::METIS target to avoid undefined linker errors in projects
-     # relying on Ceres. We do not actually need to propagate anything besides
+@@ -331,10 +330,10 @@ if (EIGENMETIS)
      # the link libraries (such as include directories.)
      set(METIS_DEPENDENCY "find_dependency(METIS ${METIS_VERSION})")
      # METIS find module must be installed unless a package config is being used.
@@ -64,17 +53,10 @@ index 3a0debc..bf57bdf 100644
        install(FILES ${Ceres_SOURCE_DIR}/cmake/FindMETIS.cmake
                DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
 -    endif (NOT METIS_DIR)
--  else (METIS_FOUND)
-+    endif (0)
-+  else (metis_FOUND)
++    endif ()
+   else (METIS_FOUND)
      message("-- Did not find METIS, disabling Eigen METIS support.")
      update_cache_variable(EIGENMETIS OFF)
-     list (APPEND CERES_COMPILE_OPTIONS CERES_NO_EIGEN_METIS)
--  endif (METIS_FOUND)
-+  endif (metis_FOUND)
- else (EIGENMETIS)
-   message("-- Building without Eigen METIS support.")
-   list (APPEND CERES_COMPILE_OPTIONS CERES_NO_EIGEN_METIS)
 @@ -395,9 +394,9 @@ endif()
  # GFlags.
  if (GFLAGS)
