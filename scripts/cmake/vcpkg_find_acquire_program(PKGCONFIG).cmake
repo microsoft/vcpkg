@@ -1,12 +1,11 @@
 set(program_name pkg-config)
-if(DEFINED ENV{PKG_CONFIG})
+if(DEFINED "ENV{PKG_CONFIG}")
     debug_message(STATUS "PKG_CONFIG found in ENV! Using $ENV{PKG_CONFIG}")
     set(PKGCONFIG "$ENV{PKG_CONFIG}" CACHE INTERNAL "")
     set(PKGCONFIG "${PKGCONFIG}" PARENT_SCOPE)
     return()
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD")
     # As of 6.8, the OpenBSD specific pkg-config doesn't support {pcfiledir}
-    set(supported_on_unix ON)
     set(rename_binary_to "pkg-config")
     set(program_version 0.29.2.1)
     set(raw_executable ON)
