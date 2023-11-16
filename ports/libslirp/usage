@@ -1,0 +1,5 @@
+slirp can be imported via CMake FindPkgConfig module:
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(Slirp REQUIRED IMPORTED_TARGET slirp)
+    target_link_libraries(slirp-test PRIVATE PkgConfig::Slirp)

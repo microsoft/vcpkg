@@ -5,6 +5,8 @@ vcpkg_from_gitlab(
     REF v4.7.0
     SHA512 387f4a6dad240ce633df2640bb49c6cb0041c8b3afc8d0ef38186d385f00dd9e4ef4443e93e1b71dbf05e22892b6f2771a87a202e815d8ec899ab5c147a1f09f
     HEAD_REF master
+    PATCHES
+        fix-osx.patch
 )
 
 if(VCPKG_HOST_IS_WINDOWS)
@@ -24,4 +26,5 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libslirp" RENAME copyright)

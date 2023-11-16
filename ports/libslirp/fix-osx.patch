@@ -1,0 +1,15 @@
+diff --git a/meson.build b/meson.build
+index 5605dc9..bcbcd16 100644
+--- a/meson.build
++++ b/meson.build
+@@ -117,6 +117,10 @@ if cc.has_link_argument(vflag_test)
+   vflag += vflag_test
+ endif
+ 
++if host_system == 'darwin'
++    vflag += '-framework CoreFoundation -framework AppKit -framework Carbon'
++endif()
++
+ install_devel = not meson.is_subproject()
+ 
+ configure_file(
