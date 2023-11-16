@@ -18,6 +18,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         jit   PCRE2_SUPPORT_JIT
+        utf   CMAKE_CXX_FLAGS=-DPCRE2_UTF
 )
 
 vcpkg_cmake_configure(
