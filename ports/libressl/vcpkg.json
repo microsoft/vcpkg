@@ -1,10 +1,9 @@
 {
   "name": "libressl",
   "version": "3.6.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "LibreSSL is a version of the TLS/crypto stack forked from OpenSSL in 2014, with goals of modernizing the codebase, improving security, and applying best practice development processes.",
   "license": "ISC",
-  "supports": "!(uwp | arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
