@@ -7429,7 +7429,7 @@
       "port-version": 0
     },
     "restinio": {
-      "baseline": "0.6.19",
+      "baseline": "0.7.0",
       "port-version": 0
     },
     "rexo": {
