@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d3ec71b..5161864 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -141,6 +141,9 @@ if(DBUS_LINUX)
+     if(ENABLE_SYSTEMD AND SYSTEMD_FOUND)
+         set(DBUS_BUS_ENABLE_SYSTEMD ON)
+         set(HAVE_SYSTEMD ${SYSTEMD_FOUND})
++        set(SYSTEMD_LIBRARIES "${SYSTEMD_LINK_LIBRARIES}" CACHE INTERNAL "")
++    else()
++        set(SYSTEMD_LIBRARIES "" CACHE INTERNAL "")
+     endif()
+     option(ENABLE_USER_SESSION "enable user-session semantics for session bus under systemd" OFF)
+     set(DBUS_ENABLE_USER_SESSION ${ENABLE_USER_SESSION})
