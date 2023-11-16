@@ -4754,7 +4754,7 @@
     },
     "libslirp": {
       "baseline": "4.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libsm": {
       "baseline": "1.2.3",
