@@ -6,14 +6,11 @@ vcpkg_from_github(
     SHA512 d9e882d44bb65616f8cfce68ebdcd5765669b84e3d82cfb2d1bc22b71b0e878442c079bacc37e9d54f28ce98a7c23bf81f2a3e3e7bbeeec38927ca739f423dee
     HEAD_REF master
     PATCHES
+        dependencies.patch
         drop-bin-letter-d.patch
         fix-pdb-find.patch
         fix-install-prefix-path.patch
         install-include-dir.patch
-        fix-depend-freetype.patch
-        fix-depend-vtk.patch
-        fix-dependence.patch
-        fix-find-tbb.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
