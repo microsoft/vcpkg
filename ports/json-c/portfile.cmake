@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES pkgconfig.patch
             fix-clang-cl.patch
-            fix-cmakelists.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" JSON_BUILD_STATIC)
