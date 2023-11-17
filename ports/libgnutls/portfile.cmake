@@ -41,6 +41,8 @@ if(VCPKG_CROSSCOMPILING)
 endif()
 
 set(ENV{GTKDOCIZE} true) # true, the program
+set(ENV{CFLAGS} " -D_POSIX_C_SOURCE -Wno-int-conversion")
+set(ENV{CXXFLAGS} " -D_POSIX_C_SOURCE -Wno-int-conversion")
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
@@ -57,6 +59,7 @@ vcpkg_configure_make(
         --with-tpm=no
         --with-tpm2=no
         --with-zstd=no
+        --disable-hardware-acceleration
         ${options}
         YACC=false # false, the program - not used here
     OPTIONS_DEBUG
