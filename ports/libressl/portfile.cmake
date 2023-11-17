@@ -15,6 +15,9 @@ vcpkg_download_distfile(
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${LIBRESSL_SOURCE_ARCHIVE}"
+    PATCHES
+        0001-enable-ocspcheck-on-msvc.patch
+        0002-suppress-msvc-warnings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
