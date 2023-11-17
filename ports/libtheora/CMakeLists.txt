@@ -152,6 +152,6 @@ configure_file(theoradec.pc.in theoradec.pc @ONLY)
 configure_file(theoraenc.pc.in theoraenc.pc @ONLY)
 
 install(
-  FILES ${PROJECT_BINARY_DIR}/theora.pc ${PROJECT_BINARY_DIR}/theoradec.pc ${PROJECT_BINARY_DIR}/theoraenc.pc
+  FILES "${PROJECT_BINARY_DIR}/theora.pc" "${PROJECT_BINARY_DIR}/theoradec.pc" "${PROJECT_BINARY_DIR}/theoraenc.pc"
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
