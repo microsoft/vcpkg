@@ -21,7 +21,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DVERSION:STRING="${VERSION}"
+        "-DVERSION:STRING=${VERSION}"
         -DUSE_X86=${THEORA_X86_OPT}
 )
 
