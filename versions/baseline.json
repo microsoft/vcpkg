@@ -5189,7 +5189,7 @@
       "port-version": 2
     },
     "live555": {
-      "baseline": "2023-07-24",
+      "baseline": "2023-11-08",
       "port-version": 0
     },
     "llfio": {
