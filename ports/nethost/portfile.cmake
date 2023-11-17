@@ -72,5 +72,5 @@ else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/nethost.h" "#ifdef NETHOST_USE_AS_STATIC" "#if 0")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.TXT")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
