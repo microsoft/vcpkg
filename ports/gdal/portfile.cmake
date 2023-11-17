@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 db23c751aa1bfc9f9f80c4dc900e86fb19579251d3577ef5bd06f9ddf76ba8c74aa404b5477ced5649d011e2111ca8df38d5acc87de6723f7e50f3bb22c9ee8f
+    SHA512 ae0238b2741c673927f80b3d0765fbb0eb2ddb8699441564e67dd7bb6a429b45e4eac57f9c4e93ecea7a4525f28c05e6f3097828c40d5af6a66dda83d2245242
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
@@ -115,34 +115,33 @@ list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
 if (BUILD_APPS)
     vcpkg_copy_tools(
         TOOL_NAMES
-            gdalinfo
-            gdalbuildvrt
-            gdaladdo
-            gdal_grid
-            gdal_translate
-            gdal_rasterize
-            gdalsrsinfo
-            gdalenhance
-            gdalmanage
-            gdaltransform
-            gdaltindex
-            gdaldem
-            gdal_create
-            gdal_viewshed
-            nearblack
-            ogrlineref
-            ogrtindex
-            gdalwarp
             gdal_contour
+            gdal_create
+            gdal_footprint
+            gdal_grid
+            gdal_rasterize
+            gdal_translate
+            gdal_viewshed
+            gdaladdo
+            gdalbuildvrt
+            gdaldem
+            gdalenhance
+            gdalinfo
             gdallocationinfo
-            ogrinfo
-            ogr2ogr
-            ogrlineref
-            nearblack
+            gdalmanage
             gdalmdiminfo
             gdalmdimtranslate
+            gdalsrsinfo
+            gdaltindex
+            gdaltransform
+            gdalwarp
             gnmanalyse
             gnmmanage
+            nearblack
+            ogr2ogr
+            ogrinfo
+            ogrlineref
+            ogrtindex
             sozip
         AUTO_CLEAN
     )
