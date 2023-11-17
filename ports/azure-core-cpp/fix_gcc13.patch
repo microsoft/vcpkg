@@ -1,0 +1,115 @@
+diff --git a/CMakePresets.json b/CMakePresets.json
+index eb862b0..2331864 100644
+--- a/CMakePresets.json
++++ b/CMakePresets.json
+@@ -370,6 +370,24 @@
+         "rhs": "Linux"
+       }
+     },
++    {
++      "name": "linux-basic-clang-13",
++      "displayName": "Linux clang-13",
++      "description": "Using compilers: C = /usr/bin/clang-13, CXX = /usr/bin/clang++-13",
++      "binaryDir": "${sourceDir}/out/build/${presetName}",
++      "generator": "Ninja",
++      "hidden": true,
++      "cacheVariables": {
++        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
++        "CMAKE_C_COMPILER": "/usr/bin/clang-13",
++        "CMAKE_CXX_COMPILER": "/usr/bin/clang++-13"
++      },
++      "condition": {
++        "type": "equals",
++        "lhs": "${hostSystemName}",
++        "rhs": "Linux"
++      }
++    },
+     {
+       "name": "linux-basic-g++",
+       "displayName": "Linux G++",
+@@ -403,9 +421,19 @@
+       "inherits": [ "linux-basic-clang-11", "debug-build" ]
+     },
+     {
+-      "name": "linux-clang-11-debug-tests",
+-      "inherits": [ "linux-basic-clang-11", "debug-build", "enable-tests" ],
+-      "displayName": "Linux clang 11 Debug+Tests"
++      "name": "linux-clang-13-debug-tests",
++      "inherits": [ "linux-basic-clang-13", "debug-build", "enable-tests" ],
++      "displayName": "Linux clang 13 Debug+Tests"
++    },
++    {
++      "name": "linux-clang-11-debug",
++      "displayName": "Linux clang 11 Debug",
++      "inherits": [ "linux-basic-clang-11", "debug-build" ]
++    },
++    {
++      "name": "linux-clang-13-debug-tests",
++      "inherits": [ "linux-basic-clang-13", "debug-build", "enable-tests" ],
++      "displayName": "Linux clang 13 Debug+Tests"
+     },
+     {
+       "name": "linux-g++-debug",
+diff --git a/sdk/core/azure-core/inc/azure/core/base64.hpp b/sdk/core/azure-core/inc/azure/core/base64.hpp
+index 97d01ce..97264cb 100644
+--- a/sdk/core/azure-core/inc/azure/core/base64.hpp
++++ b/sdk/core/azure-core/inc/azure/core/base64.hpp
+@@ -10,8 +10,9 @@
+ #pragma once
+ 
+ #include <algorithm>
+-#include <cstdint>
++#include <cstdint> // defines std::uint8_t
+ #include <stdexcept>
++#include <stdint.h> // deprecated, defines uint8_t in global namespace. TODO: Remove when uint8_t in the global namespace is removed.
+ #include <string>
+ #include <vector>
+ 
+diff --git a/sdk/core/azure-core/inc/azure/core/uuid.hpp b/sdk/core/azure-core/inc/azure/core/uuid.hpp
+index 1fe0788..d2acb48 100644
+--- a/sdk/core/azure-core/inc/azure/core/uuid.hpp
++++ b/sdk/core/azure-core/inc/azure/core/uuid.hpp
+@@ -11,8 +11,9 @@
+ #include "azure/core/platform.hpp"
+ 
+ #include <array>
+-#include <cstdint>
++#include <cstdint> // defines std::uint8_t
+ #include <cstring>
++#include <stdint.h> // deprecated, defines uint8_t in global namespace. TODO: Remove in the future when references to uint8_t and friends are removed.
+ #include <string>
+ 
+ namespace Azure { namespace Core {
+diff --git a/eng/pipelines/templates/stages/platform-matrix.json b/eng/pipelines/templates/stages/platform-matrix.json
+index e0ac5ae..af17184 100644
+--- a/eng/pipelines/templates/stages/platform-matrix.json
++++ b/eng/pipelines/templates/stages/platform-matrix.json
+@@ -148,6 +148,16 @@
+           "AptDependencies": "g++-9",
+           "CC": "/usr/bin/gcc-9",
+           "CXX": "/usr/bin/g++-9"
++        },
++         "clang-13": {
++          "AptDependencies": "clang-13",
++          "CC": "/usr/bin/clang-13",
++          "CXX": "/usr/bin/clang++-13"
++        },
++        "clang-15": {
++          "AptDependencies": "clang-15",
++          "CC": "/usr/bin/clang-15",
++          "CXX": "/usr/bin/clang++-15"
+         },
+         "included_coverage": {
+           "AptDependencies": "gcovr lcov",
+@@ -156,6 +166,11 @@
+           "CODE_COVERAGE": "enabled",
+           "PublishMapFiles": "true"
+         },
++        "included_debug": {
++          "CMAKE_BUILD_TYPE": "Debug",
++          "CmakeArgs": " -DBUILD_TESTING=ON -DBUILD_PERFORMANCE_TESTS=ON -DRUN_LONG_UNIT_TESTS=ON",
++          "PublishMapFiles": "true"
++        },
+         "included_release": {
+           "CMAKE_BUILD_TYPE": "Release",
+           "CmakeArgs": " -DBUILD_TESTING=ON -DBUILD_PERFORMANCE_TESTS=ON -DRUN_LONG_UNIT_TESTS=ON",

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-io
     REF "v${VERSION}"
-    SHA512 19587a7ae7218ca1b10caa15ee934ea72c4cfe8a8a84de8a2eb8a38a24469822d85f4c98607ae23c90f9b126c68e93815f1dcd7de01858402a06a316aa7a8e7f
+    SHA512 286090cb04fa75e98e8bf33a665f9a1dce8601d543af330b0a610f10ddddc211408db56bdcc125a2b399181530bd56fb102cddcba32fb885d1ab6bd6ab666be2
     HEAD_REF master
 )
 

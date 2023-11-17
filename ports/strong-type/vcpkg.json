@@ -1,6 +1,6 @@
 {
   "name": "strong-type",
-  "version": "8",
+  "version": "12",
   "description": "An additive strong typedef library for C++14/17/20",
   "homepage": "https://github.com/rollbear/strong_type",
   "license": "BSL-1.0",

@@ -1,0 +1,106 @@
+diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
+--- a/CMake/Dependencies.cmake
++++ b/CMake/Dependencies.cmake
+@@ -76,17 +76,20 @@
+ # Find zlib
+-find_package(ZLIB)
++find_package(ZLIB REQUIRED)
+ macro_log_feature(ZLIB_FOUND "zlib" "Simple data compression library" "http://www.zlib.net" FALSE "" "")
+ 
+ if (ZLIB_FOUND)
+   # Find zziplib
+-  find_package(ZZip)
++  find_package(ZZip NAMES unofficial-zziplib CONFIG REQUIRED)
++  set(ZZip_LIBRARIES unofficial::zziplib::libzzip)
+   macro_log_feature(ZZip_FOUND "zziplib" "Extract data from zip archives" "http://zziplib.sourceforge.net" FALSE "" "")
+ endif ()
+ 
+ # Find FreeImage
+-find_package(FreeImage)
++find_package(FreeImage NAMES freeimage REQUIRED)
++set(FreeImage_LIBRARIES freeimage::FreeImage)
+ macro_log_feature(FreeImage_FOUND "freeimage" "Support for commonly used graphics image formats" "http://freeimage.sourceforge.net" FALSE "" "")
+ 
+ # Find FreeType
+-find_package(Freetype)
++find_package(FREETYPE NAMES freetype REQUIRED)
++set(FREETYPE_LIBRARIES freetype)
+ macro_log_feature(FREETYPE_FOUND "freetype" "Portable font engine" "http://www.freetype.org" FALSE "" "")
+@@ -107,3 +111,3 @@
+ # Find rapidjson
+-find_package(Rapidjson)
++find_package(Rapidjson NAMES RapidJSON CONFIG REQUIRED)
+ macro_log_feature(Rapidjson_FOUND "rapidjson" "C++ JSON parser" "https://rapidjson.org/" FALSE "" "")
+@@ -257,3 +261,3 @@
+ # ThreadingBuildingBlocks
+-find_package(TBB)
++find_package(TBB CONFIG REQUIRED)
+ macro_log_feature(TBB_FOUND "tbb" "Threading Building Blocks" "http://www.threadingbuildingblocks.org/" FALSE "" "")
+@@ -279,5 +283,5 @@
+ # Find sdl2
+-find_package(SDL2)
++find_package(SDL2 CONFIG REQUIRED)
+ macro_log_feature(SDL2_FOUND "SDL2" "Simple DirectMedia Library" "https://www.libsdl.org/" FALSE "" "")
+ 
+ #######################################################################
+diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
+--- a/CMake/CMakeLists.txt
++++ b/CMake/CMakeLists.txt
+@@ -21,9 +21,7 @@
+ 
+ set(INST_FILES
+-  Packages/FindRapidjson.cmake
+   Packages/FindRemotery.cmake
+-  Packages/FindSDL2.cmake
+   Packages/FindOGRE.cmake
+   Utils/FindPkgMacros.cmake
+   Utils/MacroLogFeature.cmake
+   Utils/PreprocessorUtils.cmake
+@@ -37,18 +35,12 @@
+ if (OGRE_CONFIG_THREAD_PROVIDER STREQUAL "poco")
+   set(INST_FILES ${INST_FILES} Packages/FindPOCO.cmake)
+ endif ()
+ 
+-if (OGRE_CONFIG_THREAD_PROVIDER STREQUAL "tbb")
+-  set(INST_FILES ${INST_FILES} Packages/FindTBB.cmake)
+-endif ()
+ 
++
+ set(STATIC_INST_FILES
+   Packages/FindDirectX.cmake
+-  Packages/FindFreeImage.cmake
+-  Packages/FindFreetype.cmake
+   Packages/FindOpenGLES.cmake
+   Packages/FindOpenGLES2.cmake
+-  Packages/FindZLIB.cmake
+-  Packages/FindZZip.cmake
+   Packages/FindSoftimage.cmake
+ )
+diff --git a/CMake/Packages/FindZLIB.cmake b/CMake/Packages/FindZLIB_NOTUSE.cmake
+similarity index 100%
+rename from CMake/Packages/FindZLIB.cmake
+rename to CMake/Packages/FindZLIB_NOTUSE.cmake
+diff --git a/CMake/Packages/FindZZip.cmake b/CMake/Packages/FindZZip_NOTUSE.cmake
+similarity index 100%
+rename from CMake/Packages/FindZZip.cmake
+rename to CMake/Packages/FindZZip_NOTUSE.cmake
+diff --git a/CMake/Packages/FindFreeImage.cmake b/CMake/Packages/FindFreeImage_NOTUSE.cmake
+similarity index 100%
+rename from CMake/Packages/FindFreeImage.cmake
+rename to CMake/Packages/FindFreeImage_NOTUSE.cmake
+diff --git a/CMake/Packages/FindFreetype.cmake b/CMake/Packages/FindFreetype_NOTUSE.cmake
+similarity index 100%
+rename from CMake/Packages/FindFreetype.cmake
+rename to CMake/Packages/FindFreetype_NOTUSE.cmake
+diff --git a/CMake/Packages/FindSDL2.cmake b/CMake/Packages/FindSDL2_NOTUSE.cmake
+similarity index 100%
+rename from CMake/Packages/FindSDL2.cmake
+rename to CMake/Packages/FindSDL2_NOTUSE.cmake
+diff --git a/CMake/Packages/FindTBB.cmake b/CMake/Packages/FindTBB_NOTUSE.cmake
+similarity index 100%
+rename from CMake/Packages/FindTBB.cmake
+rename to CMake/Packages/FindTBB_NOTUSE.cmake
+diff --git a/CMake/Packages/FindRapidjson.cmake b/CMake/Packages/FindRapidjson_NOTUSE.cmake
+similarity index 100%
+rename from CMake/Packages/FindRapidjson.cmake
+rename to CMake/Packages/FindRapidjson_NOTUSE.cmake

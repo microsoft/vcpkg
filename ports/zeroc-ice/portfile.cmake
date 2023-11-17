@@ -40,6 +40,7 @@ endfunction()
 vcpkg_list(SET ICE_INCLUDE_SUB_DIRECTORIES
   "Glacier2"
   "Ice"
+  "IceUtil"
   "IceBT"
   "IceBox"
   "IceBT"

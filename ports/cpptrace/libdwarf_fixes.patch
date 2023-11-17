@@ -1,0 +1,55 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ccc959e..d3e5d09 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -297,8 +297,8 @@
+ if(CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF)
+   target_compile_definitions(cpptrace PUBLIC CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF)
+   if(CPPTRACE_USE_SYSTEM_LIBDWARF)
+-    find_package(libdwarf REQUIRED)
+-    target_link_libraries(cpptrace PRIVATE libdwarf)
++    find_package(libdwarf CONFIG REQUIRED)
++    target_link_libraries(cpptrace PRIVATE $<IF:$<TARGET_EXISTS:libdwarf::dwarf-static>,libdwarf::dwarf-static,libdwarf::dwarf-shared>)
+   else()
+     add_subdirectory(bundled/libdwarf)
+     target_link_libraries(cpptrace PRIVATE dwarf)
+@@ -379,7 +379,7 @@
+   include(CMakePackageConfigHelpers)
+ 
+   if(CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF)
+-    set(CPPTRACE_STATIC_EXPORT_TARGETS cpptrace dwarf)
++    set(CPPTRACE_STATIC_EXPORT_TARGETS cpptrace)
+   else()
+     set(CPPTRACE_STATIC_EXPORT_TARGETS cpptrace)
+   endif()
+diff --git a/src/symbols/symbols_with_libdwarf.cpp b/src/symbols/symbols_with_libdwarf.cpp
+index ce5dbcf..085a1aa 100644
+--- a/src/symbols/symbols_with_libdwarf.cpp
++++ b/src/symbols/symbols_with_libdwarf.cpp
+@@ -20,8 +20,8 @@
+ #include <unordered_map>
+ #include <vector>
+
+-#include <libdwarf.h>
+-#include <dwarf.h>
++#include <libdwarf/libdwarf.h>
++#include <libdwarf/dwarf.h>
+
+ // It's been tricky to piece together how to handle all this dwarf stuff. Some resources I've used are
+ // https://www.prevanders.net/libdwarf.pdf
+
+diff --git a/src/platform/dwarf.hpp b/src/platform/dwarf.hpp
+index ce5dbcf..085a1aa 100644
+--- a/src/platform/dwarf.hpp
++++ b/src/platform/dwarf.hpp
+@@ -9,8 +9,8 @@
+ #include <stdexcept>
+ #include <type_traits>
+
+-#include <libdwarf.h>
+-#include <dwarf.h>
++#include <libdwarf/libdwarf.h>
++#include <libdwarf/dwarf.h>
+
+ namespace cpptrace {
+ namespace detail {

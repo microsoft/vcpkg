@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a645ad6e..fbc2bdba 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1159,6 +1159,9 @@ else()
+ endif()
+ 
+ set(ZLIB_PC ${CMAKE_CURRENT_BINARY_DIR}/zlib${SUFFIX}.pc)
++if(WITH_GZFILEOP)
++    set(PKG_CONFIG_CFLAGS "-DWITH_GZFILEOP")
++endif()
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/zlib.pc.cmakein
+     ${ZLIB_PC} @ONLY)
+ configure_file(${CMAKE_CURRENT_BINARY_DIR}/zconf${SUFFIX}.h.cmakein
+diff --git a/zlib.pc.cmakein b/zlib.pc.cmakein
+index 3d440ce6..df8bf9f0 100644
+--- a/zlib.pc.cmakein
++++ b/zlib.pc.cmakein
+@@ -11,4 +11,4 @@ Version: @ZLIB_FULL_VERSION@
+ 
+ Requires:
+ Libs: -L${libdir} -L${sharedlibdir} -lz@SUFFIX@
+-Cflags: -I${includedir}
++Cflags: -I${includedir} @PKG_CONFIG_CFLAGS@

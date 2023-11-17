@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/ncnn
-    REF 20221128
-    SHA512 589e52b63eabfac1f8e47acc34bef6a87ce365851a5c4d551665c321938a2d8e622ab211babac38771695b9f4443516577ba1634409a55c2436498a7d28d8218
+    REF "${VERSION}"
+    SHA512 722966b3b30c5a4df81c6d45237b1821acc69db0c78350a41e3bc60e3f40c3dc64587ae0ab223635c468314c665e477ee7e0c2d3d4cccbc72bb15aeb56dcda6c
     HEAD_REF master
 )
 
@@ -26,4 +26,4 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
