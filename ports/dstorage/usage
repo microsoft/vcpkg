@@ -1,0 +1,4 @@
+The DirectStorage package is compatible with built-in CMake targets:
+
+    find_package(dstorage CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Microsoft::DirectStorage)
