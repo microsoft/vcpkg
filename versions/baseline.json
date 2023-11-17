@@ -6417,8 +6417,8 @@
       "port-version": 2
     },
     "paho-mqtt": {
-      "baseline": "1.3.12",
-      "port-version": 1
+      "baseline": "1.3.13",
+      "port-version": 0
     },
     "paho-mqttpp3": {
       "baseline": "1.2.0",
