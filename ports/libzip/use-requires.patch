@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 94d0366..05c9b7a 100644
+index b2e7724..0af7929 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -43,12 +43,14 @@ endif()
@@ -58,8 +58,8 @@ index 94d0366..05c9b7a 100644
 +string(REGEX REPLACE "-lBZip2::BZip2" "" LIBS ${LIBS})
 +string(REGEX REPLACE "-lLibLZMA::LibLZMA" "" LIBS ${LIBS})
  if(ENABLE_ZSTD)
--  string(REGEX REPLACE "-l$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>" "-lzstd" LIBS ${LIBS})
-+  string(REGEX REPLACE "-l$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>" "" LIBS ${LIBS})
+-  string(REGEX REPLACE "-l${zstd_TARGET}" "-lzstd" LIBS ${LIBS})
++  string(REGEX REPLACE "-l${zstd_TARGET}" "" LIBS ${LIBS})
  endif()
 -string(REGEX REPLACE "-lOpenSSL::Crypto" "-lssl -lcrypto" LIBS ${LIBS})
 -string(REGEX REPLACE "-lZLIB::ZLIB" ${zlib_link_name} LIBS ${LIBS})
