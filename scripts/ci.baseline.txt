@@ -581,6 +581,7 @@ libmodman:x64-windows-static=fail
 libmpeg2:arm-neon-android=fail
 libmpeg2:arm64-android=fail
 libmpeg2:x64-android=fail
+libmysql:x86-windows=skip
 libodb:x64-linux=fail # dynamic exception specifications
 libopensp:arm-neon-android=fail
 libopensp:arm64-android=fail
