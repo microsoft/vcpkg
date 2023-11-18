@@ -8,11 +8,16 @@ vcpkg_from_github(
         0001-nethost-cmakelists.patch
 )
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-  execute_process(COMMAND "sh" "-c" "mkdir -p ${SOURCE_PATH}/artifacts/obj && ${SOURCE_PATH}/eng/native/version/copy_version_files.sh")
-else()
-  execute_process(COMMAND "cmd.exe" "/c" "mkdir artifacts\\obj && eng\\native\\version\\copy_version_files.cmd" WORKING_DIRECTORY "${SOURCE_PATH}")
+file(MAKE_DIRECTORY "${SOURCE_PATH}/artifacts/obj")
+set(copy_version_files  sh -c "${SOURCE_PATH}/eng/native/version/copy_version_files.sh")
+if(VCPKG_HOST_IS_WINDOWS)
+  set(copy_version_files  cmd /C "eng\\native\\version\\copy_version_files.cmd")
 endif()
+vcpkg_execute_required_process(
+  COMMAND ${copy_version_files}
+  WORKING_DIRECTORY "${SOURCE_PATH}"
+  LOGNAME "copy_version_files-${TARGET_TRIPLET}"
+)
 
 if(VCPKG_TARGET_IS_WINDOWS)
   set(RID_PLAT "win")
