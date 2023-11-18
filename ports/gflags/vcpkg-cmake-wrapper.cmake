@@ -1,15 +1,7 @@
-set(z_vcpkg_gflag_legacy_targets "")
 if(NOT DEFINED GFLAGS_USE_TARGET_NAMESPACE)
-    set(z_vcpkg_gflag_legacy_targets gflags gflags_shared gflags_static)
+    # vcpkg legacy
+    set(GFLAGS_USE_TARGET_NAMESPACE ON)
+    _find_package(${ARGS})
+    unset(GFLAGS_USE_TARGET_NAMESPACE)
 endif()
-
 _find_package(${ARGS})
-
-foreach(z_vcpkg_gflag_target IN LISTS z_vcpkg_gflag_legacy_targets)
-    if (TARGET ${z_vcpkg_gflag_target} AND NOT TARGET gflags::${z_vcpkg_gflag_target})
-        add_library(gflags::${z_vcpkg_gflag_target} INTERFACE IMPORTED)
-        target_link_libraries(gflags::${z_vcpkg_gflag_target} INTERFACE ${z_vcpkg_gflag_target})
-    endif() 
-endforeach()
-unset(z_vcpkg_gflag_target)
-unset(z_vcpkg_gflag_legacy_targets)
