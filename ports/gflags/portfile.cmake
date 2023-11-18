@@ -24,7 +24,10 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gflags)
-vcpkg_fixup_pkgconfig()
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fixup_pkgconfig()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gflags.pc" "-lgflags" "-lgflags_debug")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
