@@ -3,4 +3,4 @@ skia provides CMake targets:
     find_package(unofficial-skia CONFIG REQUIRED)
     target_link_libraries(main PRIVATE unofficial::skia::skia)
 
-    # Similar for additional modules, e.g. unofficial::skia::skcms
+    # Similar for optional components, e.g. unofficial::skia::modules::skparagraph

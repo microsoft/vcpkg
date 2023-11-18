@@ -102,7 +102,7 @@ endif()
 set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "is_official_build=true")
-vcpkg_list(SET SKIA_TARGETS //:skia)
+vcpkg_list(SET SKIA_TARGETS :skia)
 
 if(VCPKG_TARGET_IS_ANDROID)
     string(APPEND OPTIONS " target_os=\"android\"")
@@ -175,7 +175,7 @@ endif()
 
 if("modules" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_enable_skottie=true skia_enable_svg=true")
-    vcpkg_list(APPEND SKIA_TARGETS //:modules)
+    vcpkg_list(APPEND SKIA_TARGETS :modules)
 endif()
 
 if("vulkan" IN_LIST FEATURES)
@@ -236,12 +236,6 @@ They can be installed on Debian based systems via
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         string(APPEND OPTIONS " dawn_complete_static_libs=true")
     endif()
-    string(REPLACE "dynamic" "shared" DAWN_LINKAGE "${VCPKG_LIBRARY_LINKAGE}")
-    vcpkg_list(APPEND SKIA_TARGETS
-        "//third_party/externals/dawn/src/dawn:proc_${DAWN_LINKAGE}"
-        "//third_party/externals/dawn/src/dawn/native:${DAWN_LINKAGE}"
-        "//third_party/externals/dawn/src/dawn/platform:${DAWN_LINKAGE}"
-    )
 endif()
 
 get_externals(${required_externals})
@@ -290,30 +284,7 @@ vcpkg_gn_configure(
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
 
-# desc json output is dual-use: logging and further processing
-vcpkg_find_acquire_program(GN)
-vcpkg_execute_required_process(
-    COMMAND "${GN}" desc --format=json --all --testonly=false "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "*"
-    WORKING_DIRECTORY "${SOURCE_PATH}"
-    LOGNAME "desc-${TARGET_TRIPLET}-rel"
-    OUTPUT_VARIABLE desc_release
-)
-file(READ "${CURRENT_BUILDTREES_DIR}/desc-${TARGET_TRIPLET}-rel-out.log" desc_release)
-if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_execute_required_process(
-        COMMAND "${GN}" desc --format=json --all --testonly=false "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "*"
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME "desc-${TARGET_TRIPLET}-dbg"
-        OUTPUT_VARIABLE desc_debug
-    )
-    file(READ "${CURRENT_BUILDTREES_DIR}/desc-${TARGET_TRIPLET}-dbg-out.log" desc_debug)
-endif()
-
-expand_gn_targets(SKIA_TARGETS desc_release)
-export_cmake(SKIA_TARGETS desc_release desc_debug)
-
-transform_targets_for_install(SKIA_TARGETS desc_release)
-vcpkg_gn_install(
+skia_gn_install(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS ${SKIA_TARGETS}
 )
