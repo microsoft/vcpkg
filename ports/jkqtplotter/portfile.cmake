@@ -1,5 +1,3 @@
-
-#vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" JKQtPlotter_BUILD_SHARED_LIBS)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  JKQtPlotter_BUILD_STATIC_LIBS)
 
@@ -22,8 +20,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tools"          JKQtPlotter_BUILD_TOOLS
 )
 
-
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -45,9 +41,9 @@ vcpkg_copy_pdbs()
 set(tools "")
 if("tools" IN_LIST FEATURES)
   list(APPEND tools
-                      jkqtmathtext_render
-                      jkqtplotter_doc_imagegenerator
-)
+      jkqtmathtext_render
+      jkqtplotter_doc_imagegenerator
+  )
 endif()
 if("examples" IN_LIST FEATURES)
   list(APPEND tools
@@ -112,7 +108,7 @@ if("examples" IN_LIST FEATURES)
       jkqtptest_scatter
       jkqtptest_scatter_customsymbol
       jkqtptest_second_axis
-      )
+  )
 endif()
 
 
@@ -127,7 +123,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc" "${CURRENT_PACKAGES_DIR}/debug/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-vcpkg_install_copyright(FILE_LIST 
+
+vcpkg_install_copyright(FILE_LIST
   "${SOURCE_PATH}/LICENSE" 
   "${SOURCE_PATH}/lib/jkqtmathtext/resources/firaMath/LICENSE"
   "${SOURCE_PATH}/lib/jkqtmathtext/resources/xits/OFL.txt"
