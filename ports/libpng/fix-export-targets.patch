@@ -13,5 +13,5 @@ index e355e4d..3e2f346 100644
 +  ")
 +  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libpng-config.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/libpng")
  endif()
-
+ 
  # TODO: Create MSVC import lib for MinGW-compiled shared lib.

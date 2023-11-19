@@ -9,5 +9,5 @@ index e355e4d..6dfe543 100644
 -  set(PNG_STATIC_OUTPUT_NAME "libpng${PNGLIB_ABI_VERSION}_static")
 +  set(PNG_STATIC_OUTPUT_NAME "libpng${PNGLIB_ABI_VERSION}")
  endif()
-
+ 
  if(PNG_SHARED)
