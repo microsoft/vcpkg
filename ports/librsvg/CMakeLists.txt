@@ -136,6 +136,7 @@ install(
 set(gdk_pixbuf_pc_requires_private gdk-pixbuf-2.0)
 pkg_check_modules(GDK_PIXBUF ${gdk_pixbuf_pc_requires_private} IMPORTED_TARGET REQUIRED)
 pkg_get_variable(GDK_PIXBUF_MODULEDIR ${gdk_pixbuf_pc_requires_private} gdk_pixbuf_moduledir)
+pkg_get_variable(GDK_PIXBUF_LIBDIR ${gdk_pixbuf_pc_requires_private} libdir)
 
 set(PIXBUFLOADERSVG_SOURCES
     gdk-pixbuf-loader/io-svg.c
@@ -159,9 +160,14 @@ target_link_libraries(pixbufloader-svg
         ${LIBRSVG_TARGET}
         PkgConfig::GDK_PIXBUF
 )
+
+# Extract the GdkPixbuf module dir in the lib dir to install the plugin in the package directory of librsvg.
+# Installing into the GDK_PIXBUF_MODULEDIR breaks the caching mechanism.
+string(REPLACE "${GDK_PIXBUF_LIBDIR}" "" GDK_PIXBUF_LOADER_DIR "${GDK_PIXBUF_MODULEDIR}")
+set(LOADER_DIR "lib${GDK_PIXBUF_LOADER_DIR}")
 install(TARGETS pixbufloader-svg
-    RUNTIME DESTINATION "${GDK_PIXBUF_MODULEDIR}"
-    LIBRARY DESTINATION "${GDK_PIXBUF_MODULEDIR}"
+    RUNTIME DESTINATION "${LOADER_DIR}"
+    LIBRARY DESTINATION "${LOADER_DIR}"
 )
 
 
