@@ -8,9 +8,6 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-    -UCMAKE_INSTALL_LIBDIR
-    -DCMAKE_INSTALL_LIBDIR=share
 )
 
 vcpkg_cmake_install()
