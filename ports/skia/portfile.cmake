@@ -174,7 +174,6 @@ if("metal" IN_LIST FEATURES)
 endif()
 
 if("modules" IN_LIST FEATURES)
-    string(APPEND OPTIONS " skia_enable_skottie=true skia_enable_svg=true")
     vcpkg_list(APPEND SKIA_TARGETS :modules)
 endif()
 

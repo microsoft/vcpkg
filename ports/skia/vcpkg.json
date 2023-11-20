@@ -129,8 +129,7 @@
       "supports": "ios, osx"
     },
     "modules": {
-      "description": "Build modules skottie, skparagraph, skresources, sksg, skshaper, skunicode, svg",
-      "supports": "!(windows & !static)",
+      "description": "Build optional modules (platform-dependent subset of: skottie, skparagraph, sksg, skshaper, skunicode, svg)",
       "dependencies": [
         {
           "name": "skia",

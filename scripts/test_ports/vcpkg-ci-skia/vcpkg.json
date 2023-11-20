@@ -15,8 +15,7 @@
   ],
   "default-features": [
     {
-      "name": "skparagraph",
-      "platform": "!(windows & !static)"
+      "name": "skparagraph"
     }
   ],
   "features": {
@@ -28,8 +27,7 @@
           "default-features": false,
           "features": [
             "modules"
-          ],
-          "platform": "!(windows & !static)"
+          ]
         }
       ]
     }
