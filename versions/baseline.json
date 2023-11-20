@@ -3010,7 +3010,7 @@
     },
     "glslang": {
       "baseline": "13.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -4165,8 +4165,8 @@
       "port-version": 1
     },
     "libde265": {
-      "baseline": "1.0.11",
-      "port-version": 2
+      "baseline": "1.0.12",
+      "port-version": 0
     },
     "libdeflate": {
       "baseline": "1.19",
@@ -4349,7 +4349,7 @@
       "port-version": 5
     },
     "libheif": {
-      "baseline": "1.17.1",
+      "baseline": "1.17.3",
       "port-version": 0
     },
     "libhsplasma": {
@@ -5069,8 +5069,8 @@
       "port-version": 2
     },
     "libxml2": {
-      "baseline": "2.11.5",
-      "port-version": 1
+      "baseline": "2.11.6",
+      "port-version": 0
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -8069,16 +8069,16 @@
       "port-version": 2
     },
     "spirv-headers": {
-      "baseline": "1.3.231.1",
-      "port-version": 1
+      "baseline": "1.3.246.1",
+      "port-version": 0
     },
     "spirv-reflect": {
       "baseline": "1.3.236.0",
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "2022.4",
-      "port-version": 1
+      "baseline": "2023.2",
+      "port-version": 0
     },
     "spout2": {
       "baseline": "2.007.010",
@@ -8550,7 +8550,7 @@
     },
     "tree-sitter": {
       "baseline": "0.20.6",
-      "port-version": 0
+      "port-version": 1
     },
     "treehh": {
       "baseline": "3.18",
@@ -9329,8 +9329,8 @@
       "port-version": 0
     },
     "zlib-ng": {
-      "baseline": "2.1.3",
-      "port-version": 1
+      "baseline": "2.1.4",
+      "port-version": 0
     },
     "zlmediakit": {
       "baseline": "2023-08-12",
