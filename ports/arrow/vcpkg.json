@@ -1,6 +1,6 @@
 {
   "name": "arrow",
-  "version": "14.0.0",
+  "version": "14.0.1",
   "port-version": 1,
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
