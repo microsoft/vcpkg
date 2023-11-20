@@ -8969,7 +8969,7 @@
       "port-version": 1
     },
     "wcslib": {
-      "baseline": "7.12",
+      "baseline": "8.2.1",
       "port-version": 0
     },
     "websocketpp": {
