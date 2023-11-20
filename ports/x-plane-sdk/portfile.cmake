@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 set(XPSDK_VERSION "401")
 vcpkg_download_distfile(
     XPLANE_SDK_ZIP
@@ -18,6 +20,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-x-plane-sdk)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")
 
