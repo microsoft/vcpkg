@@ -174,6 +174,9 @@ if("metal" IN_LIST FEATURES)
 endif()
 
 if("modules" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        string(APPEND OPTIONS " skia_enable_skparagraph=false")
+    endif()
     vcpkg_list(APPEND SKIA_TARGETS :modules)
 endif()
 
