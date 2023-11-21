@@ -1,8 +1,9 @@
+set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO dtschump/CImg
-    REF d6c022169271fa3c73abf94002a557c4e6f8327f #v3.3.2
-    SHA512 0cb2e0cc41902bdb3a21bac079104d4c49bbf51ae0eef6497fdb645934311aa75480bffcc2fc9d11c5b54912397fb4910c4c20ccd766a83e317a8e861b9b513b
+    REF "v.${VERSION}"
+    SHA512 c38910e8b93bcb65fbfd7fe11a036bae9f22e229d903cd044c26223473b02ec48ec46b3ad398e2cc02f25184e16a2e27a687f18479d3ae7edaee2bab69028ae9
     HEAD_REF master
 )
 
@@ -13,10 +14,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-# Move cmake files, ensuring they will be 3 directories up the import prefix
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(
     FILE_LIST 
