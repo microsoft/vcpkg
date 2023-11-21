@@ -1,0 +1,17 @@
+{
+  "name": "cts-traffic",
+  "version-string": "2.0.3.1",
+  "description": "ctsTraffic is a highly scalable client/server networking tool giving detailed performance and reliability analytics.",
+  "homepage": "https://github.com/microsoft/ctsTraffic/",
+  "license": "Apache-2.0",
+  "supports": "windows",
+  "dependencies": [
+    {
+      "name": "vcpkg-msbuild",
+      "host": true
+    },
+    {
+      "name": "wil"
+    }
+  ]
+}
