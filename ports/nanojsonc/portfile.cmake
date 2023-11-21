@@ -4,7 +4,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO saadshams/nanojsonc
         REF "${VERSION}"
-        SHA512 6c1b4c5b43f04b01c94983e89ff6ebcc78cfe8ce060a89a7e2afb8059e50ecd6f3e345189061370f3af7a4cead15da9a29dc8f10f95c88bbce8d195b76936742
+        SHA512 a434c0090926e6dd6d78f5b6d839539ed517f1d133d7078bfbdc118c43edd3e354a4a045632cb64d53af06bca34041aff972700541d4131bb45d70601311af4c
         HEAD_REF main
 )
 
