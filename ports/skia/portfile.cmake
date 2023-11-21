@@ -86,7 +86,7 @@ declare_external_from_pkgconfig(expat)
 declare_external_from_pkgconfig(fontconfig PATH "third_party")
 declare_external_from_pkgconfig(freetype2)
 declare_external_from_pkgconfig(harfbuzz MODULES harfbuzz harfbuzz-subset)
-declare_external_from_pkgconfig(icu MODULES icu-uc DEFINES "U_USING_ICU_NAMESPACE=0")
+declare_external_from_pkgconfig(icu MODULES icu-uc)
 declare_external_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES libturbojpeg libjpeg)
 declare_external_from_pkgconfig(libpng)
 declare_external_from_pkgconfig(libwebp MODULES libwebpdecoder libwebpdemux libwebpmux libwebp)
@@ -99,7 +99,16 @@ if(NOT VCPKG_TARGET_ARCHITECTURE IN_LIST known_cpus)
     message(WARNING "Unknown target cpu '${VCPKG_TARGET_ARCHITECTURE}'.")
 endif()
 
-set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
+string(JOIN " " OPTIONS
+    "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\""
+    skia_enable_android_utils=false
+    skia_enable_spirv_validation=false
+    skia_enable_tools=false
+    skia_enable_gpu_debug_layers=false
+    skia_use_jpeg_gainmaps=false
+    skia_use_libheif=false
+    skia_use_lua=false
+)
 set(OPTIONS_DBG "is_debug=true")
 set(OPTIONS_REL "is_official_build=true")
 vcpkg_list(SET SKIA_TARGETS :skia)
@@ -234,7 +243,6 @@ They can be installed on Debian based systems via
     )
     # cf. external dawn/src/dawn/native/BUILD.gn
     string(APPEND OPTIONS " skia_use_dawn=true dawn_use_angle=false dawn_use_swiftshader=false")
-    string(APPEND OPTIONS_REL " is_debug=false")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         string(APPEND OPTIONS " dawn_complete_static_libs=true")
     endif()
@@ -281,7 +289,7 @@ endif()
 
 vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS "${OPTIONS} skia_use_lua=false skia_enable_tools=false skia_enable_spirv_validation=false"
+    OPTIONS "${OPTIONS}"
     OPTIONS_DEBUG "${OPTIONS_DBG}"
     OPTIONS_RELEASE "${OPTIONS_REL}"
 )
