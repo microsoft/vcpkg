@@ -5642,7 +5642,7 @@
     },
     "moos-core": {
       "baseline": "10.4.0",
-      "port-version": 9
+      "port-version": 10
     },
     "moos-essential": {
       "baseline": "10.0.1",
