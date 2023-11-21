@@ -2,18 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jeremy-rifkin/cpptrace
     REF "v${VERSION}"
-    SHA512 207b01d8b9114806a98f04b769082ba9ef3c66bad11972279b337ec794a14839715aee9b1f22883208e42b23289f1c8b7c842f2ac1c9973d8e2de48621623760
+    SHA512 e85c6482c9d24a0ad9e53c63239a089ff7091af995d339add0268ee091b9357220f8c028b541c4bdeab996b7a71c11ca41d0ad6d8db607be7185289699574fbc
     HEAD_REF main
-    PATCHES
-      libdwarf_fixes.patch
-      uintptr_fix.patch
-      runtime_destination.patch
+    # PATCHES
+    #   libdwarf_fixes.patch
+    #   uintptr_fix.patch
+    #   runtime_destination.patch
 )
 
-vcpkg_list(SET options -DCPPTRACE_USE_SYSTEM_LIBDWARF=On)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  vcpkg_list(APPEND options -DCPPTRACE_STATIC=On)
-endif()
+vcpkg_list(SET options -DCPPTRACE_USE_EXTERNAL_LIBDWARF=On)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
