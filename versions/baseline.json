@@ -2265,7 +2265,7 @@
       "port-version": 1
     },
     "dstorage": {
-      "baseline": "1.2.0",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "dtl": {
@@ -4866,7 +4866,7 @@
     },
     "libtheora": {
       "baseline": "1.2.0alpha1-20170719",
-      "port-version": 6
+      "port-version": 7
     },
     "libtins": {
       "baseline": "4.5",
@@ -7265,7 +7265,7 @@
       "port-version": 9
     },
     "quill": {
-      "baseline": "3.4.0",
+      "baseline": "3.4.1",
       "port-version": 0
     },
     "quirc": {
@@ -8969,7 +8969,7 @@
       "port-version": 1
     },
     "wcslib": {
-      "baseline": "7.12",
+      "baseline": "8.2.1",
       "port-version": 0
     },
     "websocketpp": {
