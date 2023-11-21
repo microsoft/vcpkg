@@ -1,5 +1,5 @@
---- a/tools/meson/mesonbuild/modules/pkgconfig.py
-+++ b/tools/meson/mesonbuild/modules/pkgconfig.py
+--- a/mesonbuild/modules/pkgconfig.py
++++ b/mesonbuild/modules/pkgconfig.py
 @@ -583,12 +583,8 @@ class PkgConfigModule(ExtensionModule):
          pcfile = filebase + '.pc'
          pkgroot = pkgroot_name = kwargs.get('install_dir', default_install_dir)
