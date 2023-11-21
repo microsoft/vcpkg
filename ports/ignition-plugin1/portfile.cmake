@@ -1,5 +1,5 @@
-set(PACKAGE_VERSION "1.1.0")
+set(PACKAGE_VERSION "1.4.0")
 ignition_modular_library(NAME plugin
                          VERSION ${PACKAGE_VERSION}
                          REF "ignition-plugin_${PACKAGE_VERSION}"
-                         SHA512 e932dd7e7b042e9fb4c0569cb8b4028e54c394228aadf6523fa60ab1b9f7f9a17d14c79886a76365e2c47423c221aaef9ca77df638d87e2b6edb82eea10c0a3d)
+                         SHA512 bc8d8012ae2a5f4cee26560323f65e40873fb9d1d014a9946317bf941953a7e5018bc08763f87fc624792cb02aebe289286265796697559eeaf41e28e9b05abb)

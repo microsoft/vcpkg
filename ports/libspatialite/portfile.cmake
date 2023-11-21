@@ -1,8 +1,7 @@
-set(LIBSPATIALITE_VERSION_STR "5.0.1")
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
-    FILENAME "libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
-    SHA512 c2552994bc30d69d1e80aa274760f048cd384f71e8350a1e48a47cb8222ba71a1554a69c6534eedde9a09dc582c39c089967bcc1c57bf158cc91a3e7b1840ddf
+    URLS "https://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-${VERSION}.tar.gz"
+    FILENAME "libspatialite-${VERSION}.tar.gz"
+    SHA512 2745b373e31cea58623224def6090c491b58409803bb71231450dfa2cfdf3aafc3fc6f680585d55d085008f8cf362c3062ae67ffc7d80257775a22eb81ef1e57
 )
 
 vcpkg_extract_source_archive(
@@ -13,6 +12,7 @@ vcpkg_extract_source_archive(
         fix-linux-configure.patch
         gaiaconfig-msvc.patch
         fix-mingw.patch
+        fix-utf8-source.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS unused
@@ -116,7 +116,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
 
     set(infile "${SOURCE_PATH}/spatialite.pc.in")
-    set(VERSION "${LIBSPATIALITE_VERSION_STR}")
     set(libdir [[${prefix}/lib]])
     set(exec_prefix [[${prefix}]])
     list(JOIN pkg_config_modules " " requires_private)

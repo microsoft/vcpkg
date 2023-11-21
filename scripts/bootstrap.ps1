@@ -63,7 +63,7 @@ if ($LASTEXITCODE -ne 0)
     throw
 }
 
-& "$vcpkgRootDir\vcpkg.exe" version
+& "$vcpkgRootDir\vcpkg.exe" version --disable-metrics
 
 if ($disableMetrics)
 {

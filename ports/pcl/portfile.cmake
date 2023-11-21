@@ -117,5 +117,11 @@ if(BUILD_tools OR BUILD_apps OR BUILD_examples)
     vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 endif()
 
+# pcl_apps.dll is only build for release but not used at all since BUILD_apps_3d_rec_framework is OFF.
+# Because it is not copied to the tool folder and there is no debug variant, we get an post build check error.
+# Since the lib is not needed. Delete it:
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/pcl_apps.dll" "${CURRENT_PACKAGES_DIR}/bin/pcl_apps.pdb"
+            "${CURRENT_PACKAGES_DIR}/lib/pcl_apps.lib" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/pcl_apps.pc")
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

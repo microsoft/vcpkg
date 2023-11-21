@@ -1,7 +1,6 @@
 {
   "name": "podofo",
-  "version": "0.10.0",
-  "port-version": 2,
+  "version": "0.10.1",
   "description": "PoDoFo is a library to work with the PDF file format",
   "homepage": "https://github.com/podofo/podofo",
   "license": "LGPL-2.0-or-later",

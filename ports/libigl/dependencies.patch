@@ -1,29 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 232bc03..8143963 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -64,7 +64,7 @@ set(MATLAB_ADDITIONAL_VERSIONS
- set(LIBIGL_DEFAULT_MATLAB ${LIBIGL_TOPLEVEL_PROJECT})
- set(LIBIGL_DEFAULT_MOSEK ${LIBIGL_TOPLEVEL_PROJECT})
- if(LIBIGL_TOPLEVEL_PROJECT)
--    if(NOT WIN32)
-+    if(0)
-         find_package(GMP QUIET)
-         find_package(MPFR QUIET)
-         if(NOT (TARGET gmp::gmp AND TARGET mpfr::mpfr))
-diff --git a/cmake/igl/libigl-config.cmake.in b/cmake/igl/libigl-config.cmake.in
-index 359e314..6e04af6 100644
---- a/cmake/igl/libigl-config.cmake.in
-+++ b/cmake/igl/libigl-config.cmake.in
-@@ -1,3 +1,8 @@
- @PACKAGE_INIT@
- 
-+include(CMakeFindDependencyMacro)
-+find_dependency(Eigen3)
-+find_dependency(Threads)
-+include("${CMAKE_CURRENT_LIST_DIR}/LibiglConfigTargets.cmake")
-+
- check_required_components(Libigl)
 diff --git a/cmake/igl/modules/copyleft/cgal.cmake b/cmake/igl/modules/copyleft/cgal.cmake
 index f6abe8c..7ee7d84 100644
 --- a/cmake/igl/modules/copyleft/cgal.cmake
@@ -74,10 +48,10 @@ index 6f22319..de85066 100644
  
  # 5. Unit tests
 diff --git a/cmake/igl/modules/glfw.cmake b/cmake/igl/modules/glfw.cmake
-index 151338e..f42d22a 100644
+index 79c2126..6d06775 100644
 --- a/cmake/igl/modules/glfw.cmake
 +++ b/cmake/igl/modules/glfw.cmake
-@@ -14,10 +14,10 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/*.cpp")
+@@ -14,12 +14,12 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/*.cpp")
  igl_target_sources(igl_glfw ${INC_FILES} ${SRC_FILES})
  
  # 4. Dependencies
@@ -90,6 +64,8 @@ index 151338e..f42d22a 100644
 -    glfw::glfw
 +    $<TARGET_NAME:glfw>
  )
+ 
+ # 5. Unit tests
 diff --git a/cmake/igl/modules/imgui.cmake b/cmake/igl/modules/imgui.cmake
 index d7ffb9d..f331854 100644
 --- a/cmake/igl/modules/imgui.cmake
@@ -123,19 +99,6 @@ index 4580c03..dfadb38 100644
 +find_package(glad CONFIG REQUIRED)
  find_package(OpenGL REQUIRED OPTIONAL_COMPONENTS OpenGL)
  target_link_libraries(igl_opengl ${IGL_SCOPE}
-     igl::core
-diff --git a/cmake/igl/modules/png.cmake b/cmake/igl/modules/png.cmake
-index b267deb..8d8decc 100644
---- a/cmake/igl/modules/png.cmake
-+++ b/cmake/igl/modules/png.cmake
-@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/png/*.cpp")
- igl_target_sources(igl_png ${INC_FILES} ${SRC_FILES})
- 
- # 4. Dependencies
--include(stb)
-+find_package(Stb REQUIRED)
- igl_include(opengl)
- target_link_libraries(igl_png ${IGL_SCOPE}
      igl::core
 diff --git a/cmake/igl/modules/xml.cmake b/cmake/igl/modules/xml.cmake
 index 3763b77..31ab979 100644

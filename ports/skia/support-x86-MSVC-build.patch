@@ -1,0 +1,13 @@
+diff --git a/gn/toolchain/BUILD.gn b/gn/toolchain/BUILD.gn
+index dcf79cc..599629a 100644
+--- a/gn/toolchain/BUILD.gn
++++ b/gn/toolchain/BUILD.gn
+@@ -89,7 +89,7 @@ toolchain("msvc") {
+   if (target_cpu == "x86") {
+     # Toolchain asset includes a script that configures for x86 building.
+     # We don't support x86 builds with local MSVC installations.
+-    env_setup = "$shell $win_sdk/bin/SetEnv.cmd /x86 && "
++    env_setup = "$shell set \"PATH=%PATH%;$win_vc\\Tools\\MSVC\\$win_toolchain_version\\bin\\HostX64\\x86\" && "
+   } else if (target_cpu == "arm64") {
+     # ARM64 compiler is incomplete - it relies on DLLs located in the host toolchain directory.
+     env_setup = "$shell set \"PATH=%PATH%;$win_vc\\Tools\\MSVC\\$win_toolchain_version\\bin\\HostX64\\x64\" && "

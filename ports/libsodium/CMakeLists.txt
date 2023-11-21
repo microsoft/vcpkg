@@ -44,6 +44,14 @@ if (ENABLE_MINIMAL)
     set(SODIUM_LIBRARY_MINIMAL_DEF "#define SODIUM_LIBRARY_MINIMAL 1")
 endif ()
 
+set(prefix "${CMAKE_INSTALL_PREFIX}")
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(includedir "\${prefix}/include")
+
+set(PACKAGE_NAME "${PROJECT_NAME}")
+set(PACKAGE_VERSION "${VERSION}")
+
 configure_file(
     src/libsodium/include/sodium/version.h.in
     ${CMAKE_BINARY_DIR}/sodium/version.h
@@ -1080,6 +1088,9 @@ if (BUILD_TESTING)
         )
     endforeach ()
 endif ()
+
+configure_file ("${CMAKE_SOURCE_DIR}/libsodium.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libsodium.pc" @ONLY)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/libsodium.pc" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
 
 install(DIRECTORY src/libsodium/include/
     DESTINATION include/

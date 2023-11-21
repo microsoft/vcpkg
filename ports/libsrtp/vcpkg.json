@@ -1,10 +1,9 @@
 {
   "name": "libsrtp",
-  "version": "2.4.2",
-  "port-version": 3,
+  "version": "2.5.0",
   "description": "This package provides an implementation of the Secure Real-time Transport Protocol (SRTP), the Universal Security Transform (UST), and a supporting cryptographic kernel.",
   "homepage": "https://github.com/cisco/libsrtp/",
-  "license": null,
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

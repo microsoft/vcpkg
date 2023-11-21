@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES 
         fix-find-openssl.patch
         fix_narrowing.patch
+        fix-uwp.patch
 )
 
 set(OPTIONS)

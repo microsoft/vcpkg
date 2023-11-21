@@ -1,7 +1,7 @@
 {
   "name": "mdl-sdk",
   "version": "2021.1.2",
-  "port-version": 1,
+  "port-version": 3,
   "description": "NVIDIA Material Definition Language SDK",
   "homepage": "https://github.com/NVIDIA/MDL-SDK",
   "license": "BSD-3-Clause",

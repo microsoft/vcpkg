@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneTBB
     REF "v${VERSION}"
-    SHA512 2ece7f678ad7c8968c0ad5cda9f987e4b318c6d9735169e1039beb0ff8dfca18815835875211acc6c7068913d9b0bdd4c9ded22962b0bb48f4a0ce0f7b78f31c
+    SHA512 d71cf317e7f78948c1ea20977cfcfba1eff72cb20c457c87e624cb3aaa3215a1c24eeeec11ed6ed99cf118c577d956234202458bb5e0215c9c317099d9c3b732
     HEAD_REF onetbb_2021
 )
 
@@ -30,7 +30,11 @@ if(NOT VCPKG_BUILD_TYPE)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|arm|wasm32)$")
         set(arch_suffix "32")
     endif()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tbb${arch_suffix}.pc" "-ltbb12" "-ltbb12_debug")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tbb${arch_suffix}.pc" "-ltbb12" "-ltbb12_debug")
+    else()
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tbb${arch_suffix}.pc" "-ltbb" "-ltbb_debug")
+    endif()
     unset(arch_suffix)
 endif()
 vcpkg_fixup_pkgconfig()

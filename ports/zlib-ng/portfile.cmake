@@ -1,11 +1,11 @@
-set(ZLIB_FULL_VERSION 2.0.7)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zlib-ng/zlib-ng
-    REF "${ZLIB_FULL_VERSION}"
-    SHA512 1c19a62bb00727ac49049c299fb70060da95b5fafa448144ae4133372ec8c3da15cef6c1303485290f269b23c580696554ca0383dba3e1f9609f65c332981988
+    REF "${VERSION}"
+    SHA512 5afda5ea4be84f7d7b016416a6eed18e2aab6c698f006cdfbc8f8b43ce3dc73c7994ab9d1ca090c1b93cb1aadc8747bfd8216afb22b44633d49127f01b77cfa2
     HEAD_REF develop
+    PATCHES
+        fix-cflags.patch
 )
 
 vcpkg_cmake_configure(

@@ -1,6 +1,6 @@
 {
   "name": "dpp",
-  "version": "10.0.24",
+  "version": "10.0.28",
   "description": "D++ Extremely Lightweight C++ Discord Library.",
   "homepage": "https://dpp.dev/",
   "license": "Apache-2.0",

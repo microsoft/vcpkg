@@ -4,18 +4,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 99beff9ee6f8c26f16ea53f03ba6209a119099cbe361701b0d5f4df9d5cc5f2f0da7c994c899a4cec876da8428564dc7a8e798226a9ba8b5c18a3ef8b181d39e
+    SHA512 362ddb94fdd22d05bd11c950f1711eafbd47424f6da0b1b061da012ef1b39dd8f7efeb91b53c036ea0708aa3845893fe39d1fb529ac3b928df738b88717d1aee
     HEAD_REF main
     PATCHES
-        0001-Fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
-        0002-Fix-DR-1734.patch
-        0003-Fix-tools-path.patch
-        0004-Fix-compiler-rt-install-path.patch
-        0005-Fix-tools-install-path.patch
-        0006-Fix-libffi.patch
-        0007-Fix-install-bolt.patch
-        0008-llvm_assert.patch
-        0009-disable-libomp-aliases.patch
+        0001-fix-install-package-dir.patch
+        0002-fix-tools-install-dir.patch
+        0003-fix-llvm-config.patch
+        0004-disable-libomp-aliases.patch
+        0005-remove-numpy.patch
+        0006-create-destination-mlir-directory.patch
+        0007-fix-compiler-rt-warnings.patch # fixed in upstream
 )
 
 vcpkg_check_features(
@@ -26,10 +24,10 @@ vcpkg_check_features(
         utils LLVM_BUILD_UTILS
         utils LLVM_INCLUDE_UTILS
         utils LLVM_INSTALL_UTILS
+        enable-assertions LLVM_ENABLE_ASSERTIONS
         enable-rtti LLVM_ENABLE_RTTI
         enable-ffi LLVM_ENABLE_FFI
         enable-terminfo LLVM_ENABLE_TERMINFO
-        enable-threads LLVM_ENABLE_THREADS
         enable-ios COMPILER_RT_ENABLE_IOS
         enable-eh LLVM_ENABLE_EH
         enable-bindings LLVM_ENABLE_BINDINGS
@@ -42,7 +40,7 @@ include("${cmake_vars_file}")
 # LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
 # See https://developercommunity.visualstudio.com/content/problem/845933/miscompile-boolean-condition-deduced-to-be-always.html
 # and thread "[llvm-dev] Longstanding failing tests - clang-tidy, MachO, Polly" on llvm-dev Jan 21-23 2020.
-if(VCPKG_DETECTED_MSVC_VERSION LESS "1925" AND VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND VCPKG_DETECTED_MSVC_VERSION LESS "1925")
     list(APPEND FEATURE_OPTIONS
         -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
     )
@@ -68,19 +66,6 @@ foreach(external_library IN LISTS llvm_external_libraries)
     endif()
 endforeach()
 
-# By default assertions are enabled for Debug configuration only.
-if("enable-assertions" IN_LIST FEATURES)
-    # Force enable assertions for all configurations.
-    list(APPEND FEATURE_OPTIONS
-        -DLLVM_ENABLE_ASSERTIONS=ON
-    )
-elseif("disable-assertions" IN_LIST FEATURES)
-    # Force disable assertions for all configurations.
-    list(APPEND FEATURE_OPTIONS
-        -DLLVM_ENABLE_ASSERTIONS=OFF
-    )
-endif()
-
 # LLVM_ABI_BREAKING_CHECKS can be WITH_ASSERTS (default), FORCE_ON or FORCE_OFF.
 # By default in LLVM, abi-breaking checks are enabled if assertions are enabled.
 # however, this breaks linking with the debug versions, since the option is
@@ -101,21 +86,24 @@ endif()
 set(LLVM_ENABLE_PROJECTS)
 if("bolt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "bolt")
+    list(APPEND FEATURE_OPTIONS
+        -DBOLT_TOOLS_INSTALL_DIR:PATH=tools/llvm
+    )
 endif()
 if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang")
-    if("disable-clang-static-analyzer" IN_LIST FEATURES)
-        list(APPEND FEATURE_OPTIONS
-            # Disable ARCMT
-            -DCLANG_ENABLE_ARCMT=OFF
-            # Disable static analyzer
-            -DCLANG_ENABLE_STATIC_ANALYZER=OFF
-        )
-    endif()
-    # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (LLVM_TOOLS_INSTALL_DIR=tools/llvm)
-    # 2) Clang resource files are relocated from ./lib/clang/<version> to ./tools/llvm/lib/clang/<version> (see patch 0007-fix-compiler-rt-install-path.patch)
-    # So, the relative path should be changed from ../lib/clang/<version> to ./lib/clang/<version>
-    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${VERSION})
+    list(APPEND FEATURE_OPTIONS
+        -DCLANG_INSTALL_PACKAGE_DIR:PATH=share/clang
+        -DCLANG_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        # Disable ARCMT
+        -DCLANG_ENABLE_ARCMT=OFF
+        # Disable static analyzer
+        -DCLANG_ENABLE_STATIC_ANALYZER=OFF
+    )
+    # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (CLANG_TOOLS_INSTALL_DIR=tools/llvm)
+    # 2) Clang resource files should be relocated from lib/clang/<major_version> to ../tools/llvm/lib/clang/<major_version>
+    string(REGEX MATCH "^[0-9]+" CLANG_VERSION_MAJOR ${VERSION})
+    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${CLANG_VERSION_MAJOR})
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
@@ -129,6 +117,10 @@ if("flang" IN_LIST FEATURES)
     endif()
     list(APPEND LLVM_ENABLE_PROJECTS "flang")
     list(APPEND FEATURE_OPTIONS
+        -DFLANG_INSTALL_PACKAGE_DIR:PATH=share/flang
+        -DFLANG_TOOLS_INSTALL_DIR:PATH=tools/llvm
+    )
+    list(APPEND FEATURE_OPTIONS
         # Flang requires C++17
         -DCMAKE_CXX_STANDARD=17
     )
@@ -138,6 +130,10 @@ if("libclc" IN_LIST FEATURES)
 endif()
 if("lld" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "lld")
+    list(APPEND FEATURE_OPTIONS
+        -DLLD_INSTALL_PACKAGE_DIR:PATH=share/lld
+        -DLLD_TOOLS_INSTALL_DIR:PATH=tools/llvm
+    )
 endif()
 if("lldb" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "lldb")
@@ -147,9 +143,25 @@ if("lldb" IN_LIST FEATURES)
 endif()
 if("mlir" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "mlir")
+    list(APPEND FEATURE_OPTIONS
+        -DMLIR_INSTALL_PACKAGE_DIR:PATH=share/mlir
+        -DMLIR_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        -DMLIR_INSTALL_AGGREGATE_OBJECTS=OFF # Disables installation of object files in lib/objects-{CMAKE_BUILD_TYPE}.
+    )
+    if("enable-mlir-python-bindings" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS
+            -DMLIR_ENABLE_BINDINGS_PYTHON=ON
+            "-Dpybind11_DIR=${CURRENT_INSTALLED_DIR}/share/pybind11"
+        )
+    endif()
 endif()
 if("openmp" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "openmp")
+    list(APPEND FEATURE_OPTIONS
+        -DLIBOMP_INSTALL_ALIASES=OFF
+        -DOPENMP_ENABLE_LIBOMPTARGET=OFF # Currently libomptarget cannot be compiled on Windows or MacOS X.
+        -DOPENMP_ENABLE_OMPT_TOOLS=OFF # Currently tools are not tested well on Windows or MacOS X.
+    )
     # Perl is required for the OpenMP run-time
     vcpkg_find_acquire_program(PERL)
     get_filename_component(PERL_PATH ${PERL} DIRECTORY)
@@ -159,29 +171,35 @@ if("openmp" IN_LIST FEATURES)
 endif()
 if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")
-endif()
-if("pstl" IN_LIST FEATURES)
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        message(FATAL_ERROR "Building pstl with MSVC is not supported. Disable it until issues are fixed.")
-    endif()
-    list(APPEND LLVM_ENABLE_PROJECTS "pstl")
+    list(APPEND FEATURE_OPTIONS
+        -DPOLLY_INSTALL_PACKAGE_DIR:PATH=share/polly
+    )
 endif()
 
 set(LLVM_ENABLE_RUNTIMES)
+if("libc" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "libc")
+endif()
 if("libcxx" IN_LIST FEATURES)
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        message(FATAL_ERROR "Building libcxx with MSVC is not supported, as cl doesn't support the #include_next extension.")
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND VCPKG_DETECTED_MSVC_VERSION LESS "1914")
+        # libcxx supports being built with clang-cl, but not with MSVC’s cl.exe, as cl doesn’t support the #include_next extension.
+        # Furthermore, VS 2017 or newer (19.14) is required.
+        # More info: https://releases.llvm.org/17.0.1/projects/libcxx/docs/BuildingLibcxx.html#support-for-windows
+        message(FATAL_ERROR "libcxx requiries MSVC 19.14 or newer.")
     endif()
     list(APPEND LLVM_ENABLE_RUNTIMES "libcxx")
 endif()
 if("libcxxabi" IN_LIST FEATURES)
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        message(FATAL_ERROR "Building libcxxabi with MSVC is not supported. Disable it until issues are fixed.")
-    endif()
     list(APPEND LLVM_ENABLE_RUNTIMES "libcxxabi")
 endif()
 if("libunwind" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libunwind")
+endif()
+if("pstl" IN_LIST FEATURES)
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        message(FATAL_ERROR "Building pstl with MSVC is not supported.")
+    endif()
+    list(APPEND LLVM_ENABLE_RUNTIMES "pstl")
 endif()
 
 # this is for normal targets
@@ -193,6 +211,7 @@ set(known_llvm_targets
     BPF
     Hexagon
     Lanai
+    LoongArch
     Mips
     MSP430
     NVPTX
@@ -206,7 +225,7 @@ set(known_llvm_targets
     XCore
 )
 
-set(LLVM_TARGETS_TO_BUILD "")
+set(LLVM_TARGETS_TO_BUILD)
 foreach(llvm_target IN LISTS known_llvm_targets)
     string(TOLOWER "target-${llvm_target}" feature_name)
     if(feature_name IN_LIST FEATURES)
@@ -216,10 +235,15 @@ endforeach()
 
 # this is for experimental targets
 set(known_llvm_experimental_targets
-    SPRIV
+    ARC
+    CSKY
+    DirectX
+    M68k
+    SPIRV
+    Xtensa
 )
 
-set(LLVM_EXPERIMENTAL_TARGETS_TO_BUILD "")
+set(LLVM_EXPERIMENTAL_TARGETS_TO_BUILD)
 foreach(llvm_target IN LISTS known_llvm_experimental_targets)
     string(TOLOWER "target-${llvm_target}" feature_name)
     if(feature_name IN_LIST FEATURES)
@@ -231,41 +255,44 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-set(LLVM_LINK_JOBS 1)
-
 file(REMOVE "${SOURCE_PATH}/llvm/cmake/modules/Findzstd.cmake")
+
+if("${LLVM_ENABLE_RUNTIMES}" STREQUAL "")
+    list(APPEND FEATURE_OPTIONS
+        -DLLVM_INCLUDE_RUNTIMES=OFF
+        -DLLVM_BUILD_RUNTIMES=OFF
+        -DLLVM_BUILD_RUNTIME=OFF
+    )
+endif()
+
+# At least one target must be specified, otherwise default to "all".
+if("${LLVM_TARGETS_TO_BUILD}" STREQUAL "")
+    set(LLVM_TARGETS_TO_BUILD "all")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
-        ${FEATURE_OPTIONS}
         -DLLVM_INCLUDE_EXAMPLES=OFF
         -DLLVM_BUILD_EXAMPLES=OFF
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_BUILD_TESTS=OFF
         -DLLVM_INCLUDE_BENCHMARKS=OFF
         -DLLVM_BUILD_BENCHMARKS=OFF
-        -DLIBOMP_INSTALL_ALIASES=OFF
         # Force TableGen to be built with optimization. This will significantly improve build time.
         -DLLVM_OPTIMIZED_TABLEGEN=ON
+        -DPACKAGE_VERSION=${VERSION}
+        # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
+        -DLLVM_PARALLEL_LINK_JOBS=1
+        -DLLVM_INSTALL_PACKAGE_DIR:PATH=share/llvm
+        -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
         "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
         "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
-
-        -DPACKAGE_VERSION=${VERSION}
-        # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
-        "-DLLVM_PARALLEL_LINK_JOBS=${LLVM_LINK_JOBS}"
-        -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
-        -DCLANG_TOOLS_INSTALL_DIR:PATH=tools/llvm
-        -DLLD_TOOLS_INSTALL_DIR:PATH=tools/llvm
-        -DMLIR_TOOLS_INSTALL_DIR:PATH=tools/llvm
-        -DBOLT_TOOLS_INSTALL_DIR:PATH=tools/llvm # all others are strings
-        -DOPENMP_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES 
         COMPILER_RT_ENABLE_IOS
-        OPENMP_TOOLS_INSTALL_DIR
-        MLIR_TOOLS_INSTALL_DIR
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -309,26 +336,29 @@ endif()
 
 if("pstl" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/lib/cmake")
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+    endif()
 endif()
 
 if("flang" IN_LIST FEATURES)
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Config")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/CMakeFiles")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Config")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/CMakeFiles")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/CodeGen/CMakeFiles")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Dialect/CMakeFiles")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/HLFIR/CMakeFiles")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Transforms/CMakeFiles")
 endif()
 
 if(empty_dirs)
     foreach(empty_dir IN LISTS empty_dirs)
         if(NOT EXISTS "${empty_dir}")
-            message(SEND_ERROR "Directory '${empty_dir}' is not exist. Please remove it from the checking.")
+            message(WARNING "Directory '${empty_dir}' does not exist. Please remove it from the list of empty directories.")
         else()
             file(GLOB_RECURSE files_in_dir "${empty_dir}/*")
             if(files_in_dir)
-                message(SEND_ERROR "Directory '${empty_dir}' is not empty. Please remove it from the checking.")
+                message(WARNING "Directory '${empty_dir}' is not empty. Please remove it from the list of empty directories.")
             else()
                 file(REMOVE_RECURSE "${empty_dir}")
             endif()
@@ -336,7 +366,11 @@ if(empty_dirs)
     endforeach()
 endif()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/lib")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/lib" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib")
+endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -350,9 +384,15 @@ if("mlir" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "\${MLIR_INCLUDE_DIRS}")
 endif()
 
-# LLVM still generates a few DLLs in the static build:
-# * LLVM-C.dll
-# * libclang.dll
-# * LTO.dll
-# * Remarks.dll
-set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+if(VCPKG_TARGET_IS_WINDOWS)
+    # LLVM still generates a few DLLs in the static build:
+    # * LLVM-C.dll
+    # * libclang.dll
+    # * LTO.dll
+    # * Remarks.dll
+    set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
+endif()
