@@ -7,71 +7,31 @@ index 19768d6..c735365 100644
  OPTION(ENABLE_NCZARR_ZIP "Enable NCZarr ZIP support." OFF)
  IF (ENABLE_NCZARR_ZIP)
 -  FIND_PACKAGE(Zip REQUIRED)
-+  find_package(libzip CONFIG REQUIRED)
-+  set(Zip_LIBRARIES zip)
++  find_package(Zip NAMES libzip REQUIRED)
++  set(Zip_LIBRARIES libzip::zip)
    INCLUDE_DIRECTORIES(${Zip_INCLUDE_DIRS})
  ENDIF ()
  
-@@ -2500,6 +2501,10 @@ replace_pkgconfig_module("-lzip"       "libzip")
- replace_pkgconfig_module("-lCURL[^ ]*" "libcurl")
- replace_pkgconfig_module("-lZLIB[^ ]*" "zlib")
- 
-+IF(ENABLE_NCZARR_ZIP)
-+  string(APPEND NC_REQUIRES_PRIVATE " libzip")
-+ENDIF()
-+
- configure_file(
-   ${netCDF_SOURCE_DIR}/netcdf.pc.in
-   ${netCDF_BINARY_DIR}/netcdf.pc @ONLY)
-diff --git a/liblib/CMakeLists.txt b/liblib/CMakeLists.txt
-index 4ca661b..09da3f5 100644
---- a/liblib/CMakeLists.txt
-+++ b/liblib/CMakeLists.txt
-@@ -98,10 +98,6 @@ IF(HAVE_LIBDL)
-   SET(TLL_LIBS ${LIBDL} ${TLL_LIBS})
- ENDIF()
- 
--IF(ENABLE_NCZARR_ZIP)
--  SET(TLL_LIBS ${TLL_LIBS} ${Zip_LIBRARIES})
--ENDIF()
--
- IF(USE_HDF5)
-   if(TARGET hdf5::hdf5-shared)
-     SET(TLL_LIBS ${TLL_LIBS} hdf5::hdf5-shared hdf5::hdf5_hl-shared)
-@@ -168,6 +164,10 @@ ENDIF()
- 
- TARGET_LINK_LIBRARIES(netcdf ${TLL_LIBS})
- 
-+if(ENABLE_NCZARR_ZIP)
-+  target_link_libraries(netcdf libzip::zip)
-+endif()
-+
- SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${TLL_LIBS})
- IF(MSVC)
-   SET_TARGET_PROPERTIES(netcdf PROPERTIES
 diff --git a/libnczarr/CMakeLists.txt b/libnczarr/CMakeLists.txt
-index 59a3c0d..e8d0382 100644
+index 59a3c0d..2c074fe 100644
 --- a/libnczarr/CMakeLists.txt
 +++ b/libnczarr/CMakeLists.txt
-@@ -61,6 +61,10 @@ add_library(nczarr OBJECT ${libnczarr_SOURCES})
+@@ -58,6 +58,7 @@ ENDIF()
+ # the netCDF library.
+ 
+ add_library(nczarr OBJECT ${libnczarr_SOURCES})
++target_link_libraries(nczarr PRIVATE ${Zip_LIBRARIES})
  
  TARGET_INCLUDE_DIRECTORIES(nczarr PUBLIC ../libncpoco)
  
-+IF(ENABLE_NCZARR_ZIP)
-+    target_link_libraries(nczarr PRIVATE libzip::zip)
-+ENDIF()
-+
- IF(MPI_C_INCLUDE_PATH)
-     target_include_directories(nczarr PUBLIC ${MPI_C_INCLUDE_PATH})
- ENDIF(MPI_C_INCLUDE_PATH)
 diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
-index b3be259..72b4b25 100644
+index 715e33e..2b426e9 100644
 --- a/netCDFConfig.cmake.in
 +++ b/netCDFConfig.cmake.in
-@@ -15,6 +15,9 @@ set(netCDF_LIBRARIES netCDF::netcdf)
- include(CMakeFindDependencyMacro)
- find_dependency(HDF5 CONFIG)
- find_dependency(CURL CONFIG)
+@@ -19,6 +19,9 @@ endif()
+ if("@FOUND_CURL@")
+   find_dependency(CURL CONFIG)
+ endif()
 +if(@ENABLE_NCZARR_ZIP@)
 +    find_dependency(libzip CONFIG)
 +endif()
