@@ -2000,6 +2000,10 @@
       "baseline": "3.8",
       "port-version": 0
     },
+    "cts-traffic": {
+      "baseline": "2.0.3.1",
+      "port-version": 0
+    },
     "cub": {
       "baseline": "2.1.0",
       "port-version": 0
