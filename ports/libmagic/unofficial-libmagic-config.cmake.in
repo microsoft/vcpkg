@@ -41,7 +41,7 @@ macro(add_library_config config prefix)
             set(library_dir "${_IMPORT_PREFIX}/${prefix}bin/")
             set(soversion_suffix "-1")
             set_target_properties(unofficial::libmagic::libmagic PROPERTIES
-                IMPORTED_IMPLIB_${config} "${library_dir}@VCPKG_TARGET_IMPORT_LIBRARY_PREFIX@magic@VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX@"
+                IMPORTED_IMPLIB_${config} "${_IMPORT_PREFIX}/${prefix}/lib/@VCPKG_TARGET_IMPORT_LIBRARY_PREFIX@magic@VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX@"
             )
         else()
             set(library_dir "${_IMPORT_PREFIX}/${prefix}lib/")
