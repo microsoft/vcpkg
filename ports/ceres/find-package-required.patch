@@ -57,18 +57,6 @@ index 3a0debc..6997dac 100644
    else (METIS_FOUND)
      message("-- Did not find METIS, disabling Eigen METIS support.")
      update_cache_variable(EIGENMETIS OFF)
-@@ -395,9 +394,9 @@ endif()
- # GFlags.
- if (GFLAGS)
-   # Don't search with REQUIRED as we can continue without gflags.
--  find_package(gflags 2.2.0)
-+  find_package(gflags CONFIG REQUIRED)
-   if (gflags_FOUND)
--    if (TARGET gflags)
-+    if (TARGET gflags::gflags)
-       message("-- Found Google Flags (gflags) version ${gflags_VERSION}: ${gflags_DIR}")
-     else()
-       message("-- Detected version of gflags: ${gflags_VERSION} does not define "
 diff --git a/internal/ceres/CMakeLists.txt b/internal/ceres/CMakeLists.txt
 index 0aaabe4..0035a70 100644
 --- a/internal/ceres/CMakeLists.txt
@@ -93,21 +81,3 @@ index 0aaabe4..0035a70 100644
  endif (SuiteSparse_Partition_FOUND OR EIGENMETIS)
  
  if (ACCELERATESPARSE AND AccelerateSparse_FOUND)
-@@ -396,7 +396,7 @@ if (BUILD_TESTING AND GFLAGS)
-   if (CMAKE_SYSTEM_NAME MATCHES "QNX")
-     target_link_libraries(gtest PUBLIC regex)
-   endif()
--  target_link_libraries(gtest PRIVATE Ceres::ceres gflags)
-+  target_link_libraries(gtest PRIVATE Ceres::ceres gflags::gflags)
- 
-   add_library(test_util STATIC
-               evaluator_test_utils.cc
-@@ -404,7 +404,7 @@ if (BUILD_TESTING AND GFLAGS)
-               test_util.cc)
- 
-   target_include_directories(test_util PUBLIC ${Ceres_SOURCE_DIR}/internal)
--  target_link_libraries (test_util PUBLIC ceres_static gflags gtest)
-+  target_link_libraries (test_util PUBLIC ceres_static gflags::gflags gtest)
- 
-   macro (CERES_TEST NAME)
-     add_executable(${NAME}_test ${NAME}_test.cc)

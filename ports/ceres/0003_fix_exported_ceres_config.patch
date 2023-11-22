@@ -32,7 +32,7 @@ index ceb7e26..9ed95c9 100644
 +  find_dependency(CUDA)
 +endif()
 +if (@GFLAGS@)
-+  find_dependency(gflags CONFIG)
++  find_dependency(gflags)
 +endif()
  
  # Import exported Ceres targets, if they have not already been imported.
