@@ -633,6 +633,8 @@ libtcod:arm64-android=fail
 libtcod:x64-android=fail
 libtomcrypt:arm64-windows=fail
 libtomcrypt:arm64-uwp=fail
+# libtorch ICEs MSVC 19.38.33130
+libtorch:x64-windows=fail
 libtorch:x64-osx=fail
 libusb:arm-neon-android=fail
 libusb:arm64-android=fail
