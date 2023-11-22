@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         fix-cmake.patch
         fix-cmake2.patch
+        force-qt6.patch
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(doc)" "")

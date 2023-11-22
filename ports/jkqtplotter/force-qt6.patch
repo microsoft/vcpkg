@@ -1,0 +1,13 @@
+diff --git a/cmake/jkqtplotter_common_qtsettings.cmake b/cmake/jkqtplotter_common_qtsettings.cmake
+index 150b1d0..f391b89 100644
+--- a/cmake/jkqtplotter_common_qtsettings.cmake
++++ b/cmake/jkqtplotter_common_qtsettings.cmake
+@@ -4,7 +4,7 @@ set(CMAKE_AUTOMOC ON)
+ set(CMAKE_AUTORCC ON)
+ set(CMAKE_AUTOUIC ON)
+ 
+-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
++find_package(QT NAMES Qt6 COMPONENTS Core REQUIRED)
+ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui Widgets Svg Xml OpenGL REQUIRED)
+ if(${QT_VERSION_MAJOR} VERSION_GREATER_EQUAL "6")
+     find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS OpenGLWidgets)
