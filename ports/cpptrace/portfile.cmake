@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jeremy-rifkin/cpptrace
     REF "v${VERSION}"
-    SHA512 b69104f5812da84f33a62b8e82dc6a36f7dc5dfdb7e438eadfb53499570d05903dd00b2dfa54005f5cb23f49066d31d2083d41231fefd7c6a3e7c2063a21a82e
+    SHA512 5eec01196cb1adc16e9b596e1a6375b7cf91c7756ff271cb32331f17a54d4216efc32ccf624367ee014621ba44f0fde557eeba40089b2b64d0f108749af218d8
     HEAD_REF main
     # PATCHES
     #   libdwarf_fixes.patch
