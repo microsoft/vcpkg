@@ -28,6 +28,16 @@ $portVersions = @{
     'boost-fiber' = 1;
     'boost-iostreams' = 1;
     'boost-modular-build-helper' = 1;
+    'boost-mp11' = 1;
+    'boost-pfr' = 1;
+    'boost-predef' = 1;
+    'boost-preprocessor' = 1;
+    'boost-qvm' = 1;
+    'boost-callable-traits' = 1;
+    'boost-compatibility' = 1;
+    'boost-hof' = 1;
+    'boost-lambda2' = 1;
+    'boost-leaf' = 1;
 }
 
 function Get-PortVersion {
