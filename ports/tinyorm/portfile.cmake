@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v0.36.5
     SHA512 ba3bf73972a6265663122e2c260354cf213dcdcf7bfd1f7a6a7eb43eb11e06fbed581b3f6ce28898eb60a85d0c9bfe45bfaa9596d92b62ca40702ede9856b183
     HEAD_REF main
+    PATCHES
+        force-qt6.patch
 )
 
 vcpkg_check_features(
@@ -27,7 +29,6 @@ vcpkg_cmake_configure(
         -DTINY_PORT:STRING=${PORT}
         -DTINY_VCPKG:BOOL=ON
         -DVERBOSE_CONFIGURE:BOOL=ON
-        -DWARNINGS_AS_ERRORS=FALSE
         ${FEATURE_OPTIONS}
 )
 
