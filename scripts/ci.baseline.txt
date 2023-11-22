@@ -1129,8 +1129,6 @@ stx:arm-neon-android=fail
 stx:arm64-android=fail
 stx:x64-android=fail
 stxxl:arm-neon-android=fail
-stxxl:arm64-uwp=fail
-stxxl:x64-uwp=fail
 # upstream issue https://github.com/stxxl/stxxl/issues/99
 stxxl:x86-windows=skip
 stxxl:x64-windows=skip
