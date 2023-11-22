@@ -262,6 +262,8 @@ include("${cmake_vars_file}")
 if(VCPKG_TARGET_IS_WINDOWS)
     string(REGEX REPLACE "[\\]\$" "" WIN_VC "$ENV{VCINSTALLDIR}")
     string(APPEND OPTIONS " win_vc=\"${WIN_VC}\"")
+elseif(VCPKG_TARGET_IS_ANDROID)
+    string(APPEND OPTIONS " ndk=\"${VCPKG_DETECTED_CMAKE_ANDROID_NDK}\" ndk_api=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}")
 else()
     string(APPEND OPTIONS " \
         cc=\"${VCPKG_DETECTED_CMAKE_C_COMPILER}\" \
