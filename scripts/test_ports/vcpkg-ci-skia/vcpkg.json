@@ -14,13 +14,11 @@
     }
   ],
   "default-features": [
-    {
-      "name": "skparagraph"
-    }
+    "modules"
   ],
   "features": {
-    "skparagraph": {
-      "description": "Link to skparagraph",
+    "modules": {
+      "description": "Link to a module",
       "dependencies": [
         {
           "name": "skia",

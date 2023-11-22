@@ -65,7 +65,7 @@
     },
     {
       "name": "icu",
-      "platform": "!uwp"
+      "platform": "!uwp & !(windows & !static)"
     }
   ],
   "features": {
@@ -120,6 +120,7 @@
     },
     "icu": {
       "description": "Use icu.",
+      "supports": "!(windows & !static)",
       "dependencies": [
         "icu"
       ]
@@ -135,9 +136,16 @@
           "name": "skia",
           "default-features": false,
           "features": [
-            "harfbuzz",
-            "icu"
+            "harfbuzz"
           ]
+        },
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "icu"
+          ],
+          "platform": "!(windows & !static)"
         }
       ]
     },
