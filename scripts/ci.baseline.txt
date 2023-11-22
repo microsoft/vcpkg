@@ -244,6 +244,12 @@ cppslippi:x64-android=fail
 cppslippi:x64-linux=fail
 cppslippi:x64-osx=fail
 cppcoro:x64-linux=fail
+# https://developercommunity.visualstudio.com/t/MSVC-1938331290-preview-fails-to-comp/10505565
+cpptrace:arm64-windows=fail
+cpptrace:x64-windows=fail
+cpptrace:x64-windows-static=fail
+cpptrace:x64-windows-static-md=fail
+cpptrace:x86-windows=fail
 cpputest:arm-neon-android=fail
 crashpad:x64-linux=fail
 cserialport:arm-neon-android=fail
