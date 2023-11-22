@@ -10,8 +10,4 @@ target_link_libraries(legacy PRIVATE skia)
 
 add_executable(main convert-to-nia.cpp)
 find_package(unofficial-skia CONFIG REQUIRED)
-target_link_libraries(main PRIVATE unofficial::skia::skia)
-
-if("modules" IN_LIST FEATURES)
-    target_link_libraries(main PRIVATE unofficial::skia::modules::skshaper)
-endif()
+target_link_libraries(main PRIVATE unofficial::skia::skia unofficial::skia::modules::skshaper)

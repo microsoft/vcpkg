@@ -12,22 +12,5 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ],
-  "default-features": [
-    "modules"
-  ],
-  "features": {
-    "modules": {
-      "description": "Link to a module",
-      "dependencies": [
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "modules"
-          ]
-        }
-      ]
-    }
-  }
+  ]
 }

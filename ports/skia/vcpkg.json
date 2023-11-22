@@ -9,7 +9,7 @@
   ],
   "homepage": "https://skia.org",
   "license": null,
-  "supports": "!(windows & arm32)",
+  "supports": "!(windows & arm32) & !mingw",
   "dependencies": [
     "expat",
     "libjpeg-turbo",
@@ -128,26 +128,6 @@
     "metal": {
       "description": "Metal support for skia",
       "supports": "ios, osx"
-    },
-    "modules": {
-      "description": "Build optional modules (platform-dependent subset of: skottie, skparagraph, sksg, skshaper, skunicode, svg)",
-      "dependencies": [
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "harfbuzz"
-          ]
-        },
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "icu"
-          ],
-          "platform": "!(windows & !static)"
-        }
-      ]
     },
     "vulkan": {
       "description": "Vulkan support for skia",
