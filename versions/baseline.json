@@ -5885,7 +5885,7 @@
       "port-version": 1
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "2023-11-06",
+      "baseline": "2023-11-22",
       "port-version": 0
     },
     "neon2sse": {
