@@ -639,8 +639,6 @@ libusb:arm64-android=fail
 libusb:x64-android=fail
 libusb-win32:arm64-uwp=fail
 libusb-win32:x64-uwp=fail
-libuv:arm64-uwp=fail
-libuv:x64-uwp=fail
 #Skip detection to avoid upstream remove older releases
 libvmdk:x86-windows=skip
 libvmdk:x64-windows=skip

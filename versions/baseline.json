@@ -4962,7 +4962,7 @@
     },
     "libuv": {
       "baseline": "1.46.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libuvc": {
       "baseline": "2020-11-24",
