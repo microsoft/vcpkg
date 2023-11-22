@@ -5806,7 +5806,7 @@
     },
     "nana": {
       "baseline": "1.7.4",
-      "port-version": 4
+      "port-version": 5
     },
     "nano-signal-slot": {
       "baseline": "2.0.1",
