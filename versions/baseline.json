@@ -8406,7 +8406,7 @@
     },
     "tiny-process-library": {
       "baseline": "2.0.4",
-      "port-version": 2
+      "port-version": 3
     },
     "tiny-regex-c": {
       "baseline": "2019-07-31",
