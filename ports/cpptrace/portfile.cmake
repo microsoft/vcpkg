@@ -8,7 +8,7 @@ vcpkg_from_github(
     #   libdwarf_fixes.patch
 )
 
-vcpkg_list(SET options -DCPPTRACE_USE_EXTERNAL_LIBDWARF=On)
+vcpkg_list(SET options -DCPPTRACE_USE_EXTERNAL_LIBDWARF=On -DCPPTRACE_VCPKG=On)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
