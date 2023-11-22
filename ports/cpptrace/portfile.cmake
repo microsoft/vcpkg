@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 5eec01196cb1adc16e9b596e1a6375b7cf91c7756ff271cb32331f17a54d4216efc32ccf624367ee014621ba44f0fde557eeba40089b2b64d0f108749af218d8
     HEAD_REF main
-    # PATCHES
-    #   libdwarf_fixes.patch
 )
 
 vcpkg_list(SET options -DCPPTRACE_USE_EXTERNAL_LIBDWARF=On -DCPPTRACE_VCPKG=On)
