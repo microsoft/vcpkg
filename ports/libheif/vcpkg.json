@@ -1,7 +1,7 @@
 {
   "name": "libheif",
-  "version": "1.17.1",
-  "description": "Open h.265 video codec implementation.",
+  "version": "1.17.3",
+  "description": "libheif is an HEIF and AVIF file format decoder and encoder.",
   "homepage": "http://www.libheif.org/",
   "license": "LGPL-3.0-only",
   "supports": "!xbox",
