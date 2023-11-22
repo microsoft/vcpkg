@@ -30,9 +30,11 @@ if(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
 endif()
 
 macro(add_library_config config prefix)
+    set_property(TARGET unofficial::libmagic::libmagic APPEND PROPERTY IMPORTED_CONFIGURATIONS ${config})
     if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
         set_target_properties(unofficial::libmagic::libmagic PROPERTIES
             IMPORTED_LOCATION_${config} "${_IMPORT_PREFIX}/${prefix}lib/@VCPKG_TARGET_STATIC_LIBRARY_PREFIX@magic@VCPKG_TARGET_STATIC_LIBRARY_SUFFIX@"
+            IMPORTED_LINK_INTERFACE_LANGUAGES_${config} "C"
         )
     else()
         if(WIN32)
