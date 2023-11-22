@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ginkgo-project/ginkgo
     REF "v${VERSION}"
-    SHA512 507a17bc9ad010c235c4ae49ac4bef3f4d5b65b4ea02bfa5cad5ea578fa65d28f564d1faf0a1f5618a6e72d744217f58bdff68c5f1fffc9cfb484800f7f84c50
+    SHA512 a7e71eaae8dc62e0b670f0db82f82e23b82860b3f6a5428e28f4652ed2a496f53d04238039b95f43cdf465cf86d2724ed88113a65e5e761ab839244e1b58ea46
     HEAD_REF master
 )
 
