@@ -8546,7 +8546,7 @@
     },
     "tre": {
       "baseline": "0.8.0",
-      "port-version": 5
+      "port-version": 6
     },
     "tree-similarity": {
       "baseline": "0.1.1",
