@@ -2930,7 +2930,7 @@
     },
     "gflags": {
       "baseline": "2.2.2",
-      "port-version": 7
+      "port-version": 8
     },
     "ghc-filesystem": {
       "baseline": "1.5.14",
