@@ -742,7 +742,7 @@
     },
     "boost-callable-traits": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-chrono": {
       "baseline": "1.83.0",
@@ -758,7 +758,7 @@
     },
     "boost-compatibility": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-compute": {
       "baseline": "1.83.0",
@@ -906,7 +906,7 @@
     },
     "boost-hof": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-icl": {
       "baseline": "1.83.0",
@@ -950,11 +950,11 @@
     },
     "boost-lambda2": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-leaf": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-lexical-cast": {
       "baseline": "1.83.0",
@@ -998,7 +998,7 @@
     },
     "boost-mp11": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-mpi": {
       "baseline": "1.83.0",
@@ -1058,7 +1058,7 @@
     },
     "boost-pfr": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-phoenix": {
       "baseline": "1.83.0",
@@ -1078,11 +1078,11 @@
     },
     "boost-predef": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-preprocessor": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-process": {
       "baseline": "1.83.0",
@@ -1118,7 +1118,7 @@
     },
     "boost-qvm": {
       "baseline": "1.83.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-random": {
       "baseline": "1.83.0",
