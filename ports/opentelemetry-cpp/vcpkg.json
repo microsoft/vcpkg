@@ -51,7 +51,6 @@
     },
     "otlp-grpc": {
       "description": "Whether to include the OTLP gRPC exporter in the SDK",
-      "supports": "!uwp",
       "dependencies": [
         "grpc",
         {
