@@ -1596,6 +1596,10 @@
       "baseline": "0.103.0",
       "port-version": 4
     },
+    "clap-cleveraudio": {
+      "baseline": "1.1.10",
+      "port-version": 0
+    },
     "clapack": {
       "baseline": "3.2.1",
       "port-version": 22
@@ -2126,7 +2130,7 @@
     },
     "dbus": {
       "baseline": "1.15.8",
-      "port-version": 1
+      "port-version": 2
     },
     "dcmtk": {
       "baseline": "3.6.7",
@@ -2758,7 +2762,7 @@
     },
     "freerdp": {
       "baseline": "2.11.2",
-      "port-version": 0
+      "port-version": 1
     },
     "freetds": {
       "baseline": "1.3.10",
@@ -2926,7 +2930,7 @@
     },
     "gflags": {
       "baseline": "2.2.2",
-      "port-version": 7
+      "port-version": 8
     },
     "ghc-filesystem": {
       "baseline": "1.5.14",
@@ -3627,6 +3631,10 @@
     "jinja2cpplight": {
       "baseline": "2018-05-08",
       "port-version": 3
+    },
+    "jkqtplotter": {
+      "baseline": "2023-10-24",
+      "port-version": 0
     },
     "joltphysics": {
       "baseline": "4.0.0",
@@ -4349,7 +4357,7 @@
       "port-version": 5
     },
     "libheif": {
-      "baseline": "1.17.3",
+      "baseline": "1.17.5",
       "port-version": 0
     },
     "libhsplasma": {
@@ -4649,8 +4657,8 @@
       "port-version": 1
     },
     "libpng": {
-      "baseline": "1.6.39",
-      "port-version": 1
+      "baseline": "1.6.40",
+      "port-version": 0
     },
     "libpopt": {
       "baseline": "1.16",
@@ -5893,7 +5901,7 @@
       "port-version": 5
     },
     "nethost": {
-      "baseline": "7.0.0",
+      "baseline": "8.0.0",
       "port-version": 0
     },
     "nettle": {
@@ -6182,7 +6190,7 @@
     },
     "opencascade": {
       "baseline": "7.7.2",
-      "port-version": 1
+      "port-version": 2
     },
     "opencc": {
       "baseline": "1.1.6",
@@ -6754,7 +6762,7 @@
     },
     "protobuf-c": {
       "baseline": "1.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "protopuf": {
       "baseline": "2.2.1",
@@ -8542,7 +8550,7 @@
     },
     "tre": {
       "baseline": "0.8.0",
-      "port-version": 5
+      "port-version": 6
     },
     "tree-similarity": {
       "baseline": "0.1.1",
