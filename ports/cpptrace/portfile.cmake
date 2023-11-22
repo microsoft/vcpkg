@@ -8,6 +8,7 @@ vcpkg_from_github(
       libdwarf_fixes.patch
       uintptr_fix.patch
       runtime_destination.patch
+      config-dependency.patch
 )
 
 vcpkg_list(SET options -DCPPTRACE_USE_SYSTEM_LIBDWARF=On)

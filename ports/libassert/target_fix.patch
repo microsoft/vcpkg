@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e52096f..09fe6e5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -71,7 +71,7 @@ target_compile_options(
+ 
+ if(ASSERT_USE_EXTERNAL_CPPTRACE)
+   find_package(cpptrace REQUIRED)
+-  target_link_libraries(assert PRIVATE cpptrace::cpptrace)
++  set(ASSERT_CPPTRACE_TARGET_NAME cpptrace::cpptrace)
+ else()
+   FetchContent_Declare(
+     cpptrace
+@@ -79,8 +79,9 @@ else()
+     GIT_TAG        v0.2.1
+   )
+   FetchContent_MakeAvailable(cpptrace)
+-  target_link_libraries(assert PRIVATE cpptrace)
++  set(ASSERT_CPPTRACE_TARGET_NAME cpptrace)
+ endif()
++target_link_libraries(assert PRIVATE ${ASSERT_CPPTRACE_TARGET_NAME})
+ 
+ if(ASSERT_DECOMPOSE_BINARY_LOGICAL)
+   target_compile_definitions(assert PUBLIC ASSERT_DECOMPOSE_BINARY_LOGICAL)
+@@ -165,7 +166,7 @@ if(PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+     add_custom_command(
+       TARGET assert POST_BUILD
+       COMMAND ${CMAKE_COMMAND} -E copy_if_different
+-      $<TARGET_FILE:cpptrace>
++      $<TARGET_FILE:${ASSERT_CPPTRACE_TARGET_NAME}>
+       $<TARGET_FILE_DIR:assert>
+     )
+   endif()
