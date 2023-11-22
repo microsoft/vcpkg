@@ -1,6 +1,6 @@
 @PACKAGE_INIT@
 
-if(WIN32)
+if(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     include(CMakeFindDependencyMacro)
     find_dependency(unofficial-tre)
 endif()
@@ -13,7 +13,7 @@ if(_IMPORT_PREFIX STREQUAL "/")
     set(_IMPORT_PREFIX "")
 endif()
 
-if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL static)
+if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     add_library(unofficial::libmagic::libmagic STATIC IMPORTED)
 else()
     add_library(unofficial::libmagic::libmagic SHARED IMPORTED)
@@ -23,14 +23,14 @@ set_target_properties(unofficial::libmagic::libmagic PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
 )
 
-if(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL static)
+if(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     set_target_properties(unofficial::libmagic::libmagic PROPERTIES
         INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:unofficial::tre::tre>"
     )
 endif()
 
 macro(add_library_config config prefix)
-    if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL static)
+    if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
         set_target_properties(unofficial::libmagic::libmagic PROPERTIES
             IMPORTED_LOCATION_${config} "${_IMPORT_PREFIX}/${prefix}lib/@VCPKG_TARGET_STATIC_LIBRARY_PREFIX@magic@VCPKG_TARGET_STATIC_LIBRARY_SUFFIX@"
         )
@@ -52,11 +52,11 @@ macro(add_library_config config prefix)
     endif()
 endmacro()
 
-if("@VCPKG_BUILD_TYPE@" STREQUAL "" OR "@VCPKG_BUILD_TYPE@" STREQUAL debug)
+if("@VCPKG_BUILD_TYPE@" STREQUAL "" OR "@VCPKG_BUILD_TYPE@" STREQUAL "debug")
     add_library_config(DEBUG "debug/")
 endif()
 
-if("@VCPKG_BUILD_TYPE@" STREQUAL "" OR "@VCPKG_BUILD_TYPE@" STREQUAL release)
+if("@VCPKG_BUILD_TYPE@" STREQUAL "" OR "@VCPKG_BUILD_TYPE@" STREQUAL "release")
     add_library_config(RELEASE "")
 endif()
 
