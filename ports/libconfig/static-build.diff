@@ -1,0 +1,31 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 233c89f..740de2c 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -36,6 +36,7 @@ endif()
+ 
+ add_library(${libname} ${libsrc} ${libinc})
+ add_library(${libname}++ ${libsrc_cpp} ${libinc_cpp})
++target_link_libraries(${libname}++ PRIVATE ${libname})
+ 
+ set_target_properties(${libname}
+     PROPERTIES LINKER_LANGUAGE C
+@@ -55,7 +56,6 @@ set_target_properties(${libname}++
+ #check_symbol_exists(freelocale "locale.h" HAVE_FREELOCALE)
+ 
+ if(BUILD_SHARED_LIBS)
+-    target_compile_definitions(${libname}++ PRIVATE LIBCONFIG_STATIC)
+ else()
+     target_compile_definitions(${libname} PUBLIC LIBCONFIG_STATIC)
+     target_compile_definitions(${libname}++ PUBLIC LIBCONFIGXX_STATIC)
+@@ -91,8 +91,8 @@ if(MSVC)
+ endif()
+ 
+ if(WIN32)
+-    target_link_libraries(${libname} shlwapi)
+-    target_link_libraries(${libname}++ shlwapi)
++    target_link_libraries(${libname} PRIVATE  shlwapi)
++    target_link_libraries(${libname}++ PRIVATE shlwapi)
+ endif()
+ 
+ target_include_directories(${libname}
