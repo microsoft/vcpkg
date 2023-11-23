@@ -5,6 +5,7 @@
   "homepage": "https://github.com/jeremy-rifkin/libassert",
   "license": "MIT",
   "supports": "!uwp",
+  "builtin-baseline": "ff30334f3d5f5ef415753974a939643bb47ea6e9",
   "dependencies": [
     "cpptrace",
     {
@@ -16,5 +17,10 @@
       "host": true
     }
   ],
-  "builtin-baseline": "ff30334f3d5f5ef415753974a939643bb47ea6e9"
+  "overrides": [
+    {
+      "name": "cpptrace",
+      "version": "0.2.1"
+    }
+  ]
 }
