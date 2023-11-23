@@ -35,6 +35,12 @@
         "libiconv"
       ]
     },
+    "icu": {
+      "description": "Add ICU support",
+      "dependencies": [
+        "icu"
+      ]
+    },
     "legacy": {
       "description": "Add deprecated APIs for compatibility"
     },
@@ -42,12 +48,6 @@
       "description": "Use LZMA",
       "dependencies": [
         "liblzma"
-      ]
-    },
-    "icu": {
-      "description": "Add ICU support",
-      "dependencies": [
-        "icu"
       ]
     },
     "tools": {
