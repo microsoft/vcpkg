@@ -6,11 +6,9 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_list(SET options -DCPPTRACE_USE_EXTERNAL_LIBDWARF=On -DCPPTRACE_VCPKG=On)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${options}
+    OPTIONS -DCPPTRACE_USE_EXTERNAL_LIBDWARF=ON -DCPPTRACE_VCPKG=ON
 )
 
 vcpkg_cmake_install()
