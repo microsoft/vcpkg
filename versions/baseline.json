@@ -406,7 +406,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.11.201",
-      "port-version": 0
+      "port-version": 1
     },
     "azmq": {
       "baseline": "2023-03-23",
@@ -2930,7 +2930,7 @@
     },
     "gflags": {
       "baseline": "2.2.2",
-      "port-version": 7
+      "port-version": 8
     },
     "ghc-filesystem": {
       "baseline": "1.5.14",
@@ -2965,7 +2965,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "1.6.0",
+      "baseline": "1.6.1",
       "port-version": 0
     },
     "glbinding": {
@@ -3632,6 +3632,10 @@
       "baseline": "2018-05-08",
       "port-version": 3
     },
+    "jkqtplotter": {
+      "baseline": "2023-10-24",
+      "port-version": 0
+    },
     "joltphysics": {
       "baseline": "4.0.0",
       "port-version": 0
@@ -4060,6 +4064,10 @@
       "baseline": "0.17.1",
       "port-version": 0
     },
+    "libassert": {
+      "baseline": "1.2.1",
+      "port-version": 0
+    },
     "libassuan": {
       "baseline": "2.5.6",
       "port-version": 0
@@ -4169,7 +4177,7 @@
       "port-version": 1
     },
     "libde265": {
-      "baseline": "1.0.12",
+      "baseline": "1.0.14",
       "port-version": 0
     },
     "libdeflate": {
@@ -4353,7 +4361,7 @@
       "port-version": 5
     },
     "libheif": {
-      "baseline": "1.17.3",
+      "baseline": "1.17.5",
       "port-version": 0
     },
     "libhsplasma": {
@@ -4958,7 +4966,7 @@
     },
     "libuv": {
       "baseline": "1.46.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libuvc": {
       "baseline": "2020-11-24",
@@ -5294,7 +5302,7 @@
     },
     "luafilesystem": {
       "baseline": "1.8.0",
-      "port-version": 4
+      "port-version": 5
     },
     "luajit": {
       "baseline": "2023-01-04",
@@ -5642,7 +5650,7 @@
     },
     "moos-core": {
       "baseline": "10.4.0",
-      "port-version": 9
+      "port-version": 10
     },
     "moos-essential": {
       "baseline": "10.0.1",
@@ -5802,7 +5810,7 @@
     },
     "nana": {
       "baseline": "1.7.4",
-      "port-version": 4
+      "port-version": 5
     },
     "nano-signal-slot": {
       "baseline": "2.0.1",
@@ -5881,7 +5889,7 @@
       "port-version": 1
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "2023-11-06",
+      "baseline": "2023-11-22",
       "port-version": 0
     },
     "neon2sse": {
@@ -5897,7 +5905,7 @@
       "port-version": 5
     },
     "nethost": {
-      "baseline": "7.0.0",
+      "baseline": "8.0.0",
       "port-version": 0
     },
     "nettle": {
@@ -6106,11 +6114,11 @@
     },
     "octomap": {
       "baseline": "1.9.8",
-      "port-version": 0
+      "port-version": 1
     },
     "ode": {
       "baseline": "0.16.4",
-      "port-version": 0
+      "port-version": 1
     },
     "offscale-libetcd-cpp": {
       "baseline": "2019-07-10",
@@ -6186,7 +6194,7 @@
     },
     "opencascade": {
       "baseline": "7.7.2",
-      "port-version": 1
+      "port-version": 2
     },
     "opencc": {
       "baseline": "1.1.6",
@@ -6758,7 +6766,7 @@
     },
     "protobuf-c": {
       "baseline": "1.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "protopuf": {
       "baseline": "2.2.1",
@@ -8162,7 +8170,7 @@
     },
     "status-code": {
       "baseline": "2023-11-06",
-      "port-version": 0
+      "port-version": 1
     },
     "status-value-lite": {
       "baseline": "1.1.0",
@@ -8222,7 +8230,7 @@
     },
     "stxxl": {
       "baseline": "2018-11-15",
-      "port-version": 6
+      "port-version": 7
     },
     "suitesparse": {
       "baseline": "5.8.0",
@@ -8402,7 +8410,7 @@
     },
     "tiny-process-library": {
       "baseline": "2.0.4",
-      "port-version": 2
+      "port-version": 3
     },
     "tiny-regex-c": {
       "baseline": "2019-07-31",
@@ -8546,7 +8554,7 @@
     },
     "tre": {
       "baseline": "0.8.0",
-      "port-version": 5
+      "port-version": 6
     },
     "tree-similarity": {
       "baseline": "0.1.1",
