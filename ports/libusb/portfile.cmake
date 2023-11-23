@@ -41,9 +41,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libusb-1.0.pc" " -lusb-1.0" " -llibusb-1.0")
   endif()
 else()
+    set(host_options "")
+    if(VCPKG_TARGET_IS_EMSCRIPTEN)
+        set(host_options BUILD_TRIPLET --host=wasm32)
+    endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
+        ${host_options}
     )
     vcpkg_install_make()
 endif()
