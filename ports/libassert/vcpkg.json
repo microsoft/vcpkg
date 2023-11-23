@@ -15,5 +15,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "builtin-baseline": "ff30334f3d5f5ef415753974a939643bb47ea6e9"
 }
