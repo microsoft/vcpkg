@@ -6,7 +6,10 @@
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
-    "libdwarf",
+    {
+      "name": "libdwarf",
+      "platform": "!windows | mingw"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
