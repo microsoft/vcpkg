@@ -6,7 +6,6 @@
   "homepage": "https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home",
   "license": "MIT",
   "dependencies": [
-    "icu",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -43,6 +42,12 @@
       "description": "Use LZMA",
       "dependencies": [
         "liblzma"
+      ]
+    },
+    "icu": {
+      "description": "Add ICU support",
+      "dependencies": [
+        "icu"
       ]
     },
     "tools": {
