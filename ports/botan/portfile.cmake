@@ -100,6 +100,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "--prefix=${CURRENT_PACKAGES_DIR}/debug"
             "--msvc-runtime=${BOTAN_MSVC_RUNTIME}d"
             "--with-external-libdir=${CURRENT_INSTALLED_DIR}/debug/lib"
+            "--library-suffix=d"
             --debug-mode
         OPTIONS_RELEASE
             "ZLIB_LIBS=${ZLIB_LIBS_RELEASE}"
