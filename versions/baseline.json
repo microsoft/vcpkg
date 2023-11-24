@@ -1788,6 +1788,10 @@
       "baseline": "6.4.3",
       "port-version": 3
     },
+    "copypp": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "coroutine": {
       "baseline": "1.5.0",
       "port-version": 5
