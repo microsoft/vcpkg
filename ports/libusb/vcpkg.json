@@ -12,5 +12,10 @@
       "host": true,
       "platform": "windows"
     }
-  ]
+  ],
+  "features": {
+    "disable-udev":{
+      "description": "Disable udev"
+    }
+  }
 }

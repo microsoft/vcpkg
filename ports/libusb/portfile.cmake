@@ -11,6 +11,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    "disable-udev" DISABLE_UDEV
+)
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -41,9 +46,15 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libusb-1.0.pc" " -lusb-1.0" " -llibusb-1.0")
   endif()
 else()
+    if(${DISABLE_UDEV})
+        set(MAKE_OPTIONS "--disable-udev")
+    else()
+        set(MAKE_OPTIONS "--enable-udev")
+    endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
+        OPTIONS ${MAKE_OPTIONS}
     )
     vcpkg_install_make()
 endif()

@@ -8,7 +8,7 @@ select_library_configurations(LIBUSB)
 
 set(LIBUSB_INCLUDE_DIRS "${LIBUSB_INCLUDE_DIR}")
 
-if (@VCPKG_TARGET_IS_LINUX@)
+if (@VCPKG_TARGET_IS_LINUX@ AND NOT ${DISABLE_UDEV})
     list(APPEND LIBUSB_LIBRARIES udev)
 endif()
 
