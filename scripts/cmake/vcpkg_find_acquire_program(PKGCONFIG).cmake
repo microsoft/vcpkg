@@ -21,16 +21,16 @@ elseif(CMAKE_HOST_WIN32)
             vcpkg_acquire_msys(PKGCONFIG_ROOT
                 NO_DEFAULT_PACKAGES
                 DIRECT_PACKAGES
-                    "https://mirror.msys2.org/mingw/clangarm64/mingw-w64-clang-aarch64-pkgconf-1~1.8.0-2-any.pkg.tar.zst"
-                    f682bbeb4588a169a26d3c9c1ce258c0022954fa11a64e05cd803bcbb8c4e2442022c0c6bc7e54d3324359c80ea67904187d4cb3b682914f5f14a03251daae7c
+                    "https://mirror.msys2.org/mingw/clangarm64/mingw-w64-clang-aarch64-pkgconf-1~2.1.0-1-any.pkg.tar.zst"
+                    d988b6a9d3704d63d0dfa21f5388b3de8b74d84533491e2facc2ce4e67e8efac611ebf4df422e90476ec2624fe766da441ad7b0fe0a3ee99ff9fd3ae84b18292
             )
             set("${program}" "${PKGCONFIG_ROOT}/clangarm64/bin/pkg-config.exe" CACHE INTERNAL "")
         else()
             vcpkg_acquire_msys(PKGCONFIG_ROOT
                 NO_DEFAULT_PACKAGES
                 DIRECT_PACKAGES
-                    "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-pkgconf-1~1.8.0-2-any.pkg.tar.zst"
-                    e5217d9c55ede4c15706b4873761cc6e987eabc1308120a3e8406571ae2993907f3776f2b2bba18d7aaec80ef97227696058cedc1b67a773530dc1e6077b95e6
+                    "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-pkgconf-1~2.1.0-1-any.pkg.tar.zst"
+                    55626f0b7a6c950da75c4f7579b94859027f127c075042ab1f65b5387659eceb9e4c73dd3b79f54227772bd39a5759fbe10aa024cd38c8ac76677d0aec8458c1
             )
             set("${program}" "${PKGCONFIG_ROOT}/mingw32/bin/pkg-config.exe" CACHE INTERNAL "")
         endif()
