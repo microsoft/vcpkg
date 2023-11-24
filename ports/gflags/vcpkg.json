@@ -1,9 +1,10 @@
 {
   "name": "gflags",
   "version": "2.2.2",
-  "port-version": 7,
+  "port-version": 8,
   "description": "A C++ library that implements commandline flags processing",
   "homepage": "https://github.com/gflags/gflags",
+  "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
     {
