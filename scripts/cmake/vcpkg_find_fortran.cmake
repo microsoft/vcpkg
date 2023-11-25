@@ -26,7 +26,7 @@ function(vcpkg_find_fortran out_var)
                         4820fbd4d927f8378a6e801496364c9bba2e48527a6bff547d6d0b8e248a794f960220827cfb99441eaf97395a18a557cdbb9a337dc52f6af44d4bc32397916b
                         # dependencies, alphabetically
                         "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-binutils-2.41-2-any.pkg.tar.zst"
-                        2f67e5caf6d5ee8995772831bf6cf7a8a24a824d36cc3cb0d4c147bb10261b67f0ec611ef9dc6f9f9642be596973ed0480232
+                        2f67e5caf6d5ee8995772831bf6cf7a8a24a824d36cc3cb0d4c147bb10261b67f0ec611ef9dc6f9f9642be596973ed04802322101b05afa8f41fcbe3f63bc1c7
                         "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-crt-git-11.0.0.r404.g3a137bd87-1-any.pkg.tar.zst"
                         0f96ab127d9579728d608057a9940682fd6ccfdb153750e8a9b132bac8ee2e87fa6a406b389f319eec2ca7317e97c0dc604f7b1d0697bf07f9c3fb54b2732966
                         "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-gcc-13.2.0-2-any.pkg.tar.zst"
