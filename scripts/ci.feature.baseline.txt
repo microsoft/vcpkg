@@ -570,7 +570,6 @@ unicorn-lib:x64-uwp=fail
 unicorn:x64-windows-static-md=fail
 unittest-cpp:arm-uwp=fail
 unittest-cpp:arm64-windows=fail
-unittest-cpp:x64-uwp=fail
 usbmuxd:x64-windows-static-md=fail
 usd=skip # USD has set official policy that they will not update to be compatible with TBB in the near term (https://github.com/PixarAnimationStudios/USD/issues/1600)
 uthenticode:arm-uwp=fail
