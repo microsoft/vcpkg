@@ -1,5 +1,6 @@
 vcpkg_buildpath_length_warning(37)
 
+block(SCOPE_FOR VARIABLES PROPAGATE SOURCE_PATH)
 set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_from_gitlab(
@@ -26,6 +27,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
+endblock()
+
+if(NOT VCPKG_BUILD_TYPE)
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/eigen3.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(GLOB INCLUDES "${CURRENT_PACKAGES_DIR}/include/eigen3/*")
