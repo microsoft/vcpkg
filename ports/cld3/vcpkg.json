@@ -9,11 +9,6 @@
     {
       "name": "vcpkg-cmake",
       "host": true
-    },
-    {
-      "name": "vcpkg-cmake-get-vars",
-      "host": true,
-      "platform": "windows & !mingw"
     }
   ]
 }
