@@ -1,14 +1,12 @@
+set(VCPKG_BUILD_TYPE release)
+
 vcpkg_from_github(
-  OUT_SOURCE_PATH
-  SOURCE_PATH
-  REPO
-  i-curve/copypp
-  REF
-  0c54fe4175064c0e5e545a725a851a050a430c67 
-  SHA512
-  cd20275b6c823df4dd2e27b0e7fa74094ac73d5e77b69cdeb5746a9943088daffee26f5e00b57f33d486e1b4afbf5f5c5a34dcab3faa53f35774f873cdc14d6d
-  HEAD_REF
-  main)
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO i-curve/copypp
+    REF "v${VERSION}"
+    SHA512 a13a3ee105b3802f585c086846dbce7d5e9c23d11bf55fcc0c63e1a4b21fc6798f1a324cfb3da66b715dfc22a4f1f7ba51a2f4e10db331f7d4fd6b20a9be6d41
+    HEAD_REF main
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -19,8 +17,8 @@ vcpkg_cmake_install()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/copypp)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
