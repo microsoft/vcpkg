@@ -2062,7 +2062,7 @@
     },
     "czmq": {
       "baseline": "4.2.1",
-      "port-version": 3
+      "port-version": 4
     },
     "d3d12-memory-allocator": {
       "baseline": "2021-05-05",
@@ -5822,7 +5822,7 @@
     },
     "nanodbc": {
       "baseline": "2.13.0",
-      "port-version": 7
+      "port-version": 8
     },
     "nanoflann": {
       "baseline": "1.5.0",
