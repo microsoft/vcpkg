@@ -1,4 +1,4 @@
-set(VCPKG_BUILD_TYPE release)
+set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
