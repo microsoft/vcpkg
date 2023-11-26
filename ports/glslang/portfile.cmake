@@ -45,10 +45,7 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/glslang-config.cmake
 vcpkg_copy_pdbs()
 
 if (ENABLE_GLSLANG_BINARIES)
-    vcpkg_copy_tools(TOOL_NAMES glslangValidator spirv-remap AUTO_CLEAN)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_copy_tools(TOOL_NAMES glslang AUTO_CLEAN)
-    endif()
+    vcpkg_copy_tools(TOOL_NAMES glslang glslangValidator spirv-remap AUTO_CLEAN)
 endif ()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
