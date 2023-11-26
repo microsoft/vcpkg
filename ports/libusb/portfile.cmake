@@ -11,11 +11,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-#     FEATURES
-#     "disable-udev" DISABLE_UDEV
-# )
-
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
