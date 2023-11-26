@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 ad49e169970921175728705c6f5fe8062e74900a601ea25e9f836840a221175bfbb3169717787b1ca7e2e1a0b26630690dcef9bc91c0123877b856ea927e9e68
     HEAD_REF main
+    PATCHES
+        fix-find-seal.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
