@@ -16,7 +16,7 @@ elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD")
     set(version_command --version)
 elseif(CMAKE_HOST_WIN32)
     if(NOT EXISTS "${PKGCONFIG}")
-        set(program_version 1.8.0)
+        set(program_version 2.1.0)
         if("$ENV{PROCESSOR_ARCHITECTURE}" STREQUAL "ARM64")
             vcpkg_acquire_msys(PKGCONFIG_ROOT
                 NO_DEFAULT_PACKAGES
