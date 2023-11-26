@@ -6154,7 +6154,7 @@
     },
     "ogre-next": {
       "baseline": "2.3.3",
-      "port-version": 0
+      "port-version": 1
     },
     "ois": {
       "baseline": "1.5.1",

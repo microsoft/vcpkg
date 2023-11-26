@@ -1,22 +1,21 @@
 {
   "name": "ogre-next",
   "version": "2.3.3",
+  "port-version": 1,
   "description": "Ogre 2.1 & 2.2 - scene-oriented, flexible 3D engine written in C++",
   "homepage": "https://github.com/OGRECave/ogre-next",
   "license": "MIT",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     "boost-date-time",
     "boost-thread",
     "freeimage",
-    "freetype",
     {
-      "name": "openvr",
-      "platform": "!osx"
+      "name": "freetype",
+      "default-features": false
     },
-    "pkgconf",
     "poco",
     "rapidjson",
-    "sdl2",
     "tbb",
     "tinyxml",
     {
@@ -30,9 +29,45 @@
     "zlib",
     "zziplib"
   ],
+  "default-features": [
+    {
+      "name": "d3d11",
+      "platform": "windows"
+    },
+    {
+      "name": "gl3plus",
+      "platform": "!ios & !osx & !windows"
+    },
+    {
+      "name": "metal",
+      "platform": "ios | osx"
+    },
+    {
+      "name": "vulkan",
+      "platform": "windows"
+    }
+  ],
   "features": {
+    "d3d11": {
+      "description": "Direct3D 11 render system",
+      "supports": "windows"
+    },
+    "gl3plus": {
+      "description": "OpenGL 3+ render system",
+      "supports": "!(arm & windows)"
+    },
+    "metal": {
+      "description": "Metal render system",
+      "supports": "osx | ios"
+    },
     "planar-reflections": {
       "description": "Component to use planar reflections, can be used by both HlmsPbs and HlmsUnlit"
+    },
+    "vulkan": {
+      "description": "Vulkan render system",
+      "dependencies": [
+        "vulkan"
+      ]
     }
   }
 }
