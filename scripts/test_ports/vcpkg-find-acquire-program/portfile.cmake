@@ -2,8 +2,14 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 # For each vcpkg_find_acquire_program(NAME).cmake script,
 # there must be a literal call to vcpkg_find_acquire_program(NAME).cmake
+# Using a wrapper to collect the names of the variables to be checked.
+set(variables "")
+macro(vcpkg_find_acquire_program program)
+    list(APPEND variables "${program}")
+    message(STATUS "Checking ${program}...")
+    _vcpkg_find_acquire_program(${ARGV})
+endmacro()
 
-set(variables BAZEL BISON FLEX GIT GN NINJA PERL PKGCONFIG PYTHON3 YASM)
 vcpkg_find_acquire_program(BAZEL)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
@@ -17,17 +23,14 @@ vcpkg_find_acquire_program(YASM)
 
 if(NOT VCPKG_TARGET_IS_OSX)
     # System python too old (3.9; meson needs 3.10)
-    list(APPEND variables MESON)
     vcpkg_find_acquire_program(MESON)
 endif()
 
 if(VCPKG_HOST_IS_LINUX)
-    list(APPEND variables PATCHELF)
     vcpkg_find_acquire_program(PATCHELF)
 endif()
 
 if(VCPKG_HOST_IS_WINDOWS)
-    list(APPEND variables 7Z ARIA2 CLANG DARK DOXYGEN GASPREPROCESSOR GO GPERF JOM NASM NUGET PYTHON2 RUBY SCONS SWIG VSCLANG)
     vcpkg_find_acquire_program(7Z)
     vcpkg_find_acquire_program(ARIA2)
     vcpkg_find_acquire_program(CLANG)
