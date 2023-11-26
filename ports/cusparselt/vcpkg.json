@@ -1,0 +1,9 @@
+{
+  "name": "cusparselt",
+  "version": "0.5.0.1",
+  "description": "cuSPARSELt: A High-Performance CUDA Library for Sparse Matrix-Matrix Multiplication",
+  "homepage": "https://docs.nvidia.com/cuda/cusparselt/index.html",
+  "dependencies": [
+    "cuda"
+  ]
+}
