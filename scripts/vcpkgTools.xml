@@ -15,25 +15,25 @@
         <archiveName>python-3.11.5.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.28.0-rc2</version>
-        <exeRelativePath>cmake-3.28.0-rc2-windows-i386/bin/cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.28.0-rc2/cmake-3.28.0-rc2-windows-i386.zip</url>
-        <sha512>89a1303ae6aae921b3b084a26980d973a7837a601f2cfd4a778672bd773946e953c97076d468f0847a9763375334a07344fbeccc62e6c1c1d05a10ef5b5707bd</sha512>
-        <archiveName>cmake-3.28.0-rc2-windows-i386.zip</archiveName>
+        <version>3.28.0-rc5</version>
+        <exeRelativePath>cmake-3.28.0-rc5-windows-x86_64/bin/cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.28.0-rc5/cmake-3.28.0-rc5-windows-x86_64.zip</url>
+        <sha512>33dc3abb231457571f9ed965e98e3cdc21690f79d96c66845cda71565e3a025e1933b396c7d63c9d2b51aeecc559a24097d4ca35da11e8fbc0b2f2071aa2487b</sha512>
+        <archiveName>cmake-3.28.0-rc5-windows-x86_64.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.28.0-rc2</version>
-        <exeRelativePath>cmake-3.28.0-rc2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.28.0-rc2/cmake-3.28.0-rc2-macos-universal.tar.gz</url>
-        <sha512>78e639b93786eb994bdbc6263afc48267d42d9305c1cb1cb9482adf012e7b4f45934e744a98eaf93d8361f154e642cada13398cca064c1700f009a7795746fe7</sha512>
-        <archiveName>cmake-3.28.0-rc2-macos-universal.tar.gz</archiveName>
+        <version>3.28.0-rc5</version>
+        <exeRelativePath>cmake-3.28.0-rc5-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.28.0-rc5/cmake-3.28.0-rc5-macos-universal.tar.gz</url>
+        <sha512>6b0f2190bacc09148cb3f862dbd920d11892fe4023dc232f45a63b3e950a28ff69220cbc821197f6a73a6bbe24d7edfbd3cdde44bed179210938254b0a643a49</sha512>
+        <archiveName>cmake-3.28.0-rc5-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.28.0-rc2</version>
-        <exeRelativePath>cmake-3.28.0-rc2-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.28.0-rc2/cmake-3.28.0-rc2-linux-x86_64.tar.gz</url>
-        <sha512>192374a68e2971f04974a194645726196d9b8ee7abd650d1e6f65f7aa2ccc9b186c3edb473bb4958c764532edcdd42f4182ee1fcb86b17d78b0bcd6305ce3df1</sha512>
-        <archiveName>cmake-3.28.0-rc2-linux-x86_64.tar.gz</archiveName>
+        <version>3.28.0-rc5</version>
+        <exeRelativePath>cmake-3.28.0-rc5-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.28.0-rc5/cmake-3.28.0-rc5-linux-x86_64.tar.gz</url>
+        <sha512>f36e5d954cf8a5137ad78a51ff20719ab9abffd38b50ea94d260894445524d7dac0c49edf083df2056157832544dc6c314524d0949e6b8a932b4503ef5746e9a</sha512>
+        <archiveName>cmake-3.28.0-rc5-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
         <version>2.7.4</version>
