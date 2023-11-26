@@ -13,6 +13,7 @@ vcpkg_from_github(
         pr-7060-jni-onload.patch
         find-dependency.patch
         export-include.patch
+        rename-tls-functions.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindOpenSSL.cmake")
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
