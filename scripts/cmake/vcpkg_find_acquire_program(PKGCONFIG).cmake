@@ -17,7 +17,13 @@ elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD")
 elseif(CMAKE_HOST_WIN32)
     if(NOT EXISTS "${PKGCONFIG}")
         set(program_version 2.1.0)
-        if("$ENV{PROCESSOR_ARCHITECTURE}" STREQUAL "ARM64")
+        if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
+            set(host_arch "$ENV{PROCESSOR_ARCHITEW6432}")
+        else()
+            set(host_arch "$ENV{PROCESSOR_ARCHITECTURE}")
+        endif()
+
+        if("${host_arch}" STREQUAL "ARM64")
             vcpkg_acquire_msys(PKGCONFIG_ROOT
                 NO_DEFAULT_PACKAGES
                 DIRECT_PACKAGES
@@ -25,6 +31,14 @@ elseif(CMAKE_HOST_WIN32)
                     d988b6a9d3704d63d0dfa21f5388b3de8b74d84533491e2facc2ce4e67e8efac611ebf4df422e90476ec2624fe766da441ad7b0fe0a3ee99ff9fd3ae84b18292
             )
             set("${program}" "${PKGCONFIG_ROOT}/clangarm64/bin/pkg-config.exe" CACHE INTERNAL "")
+        elseif("${host_arch}" MATCHES "64")
+            vcpkg_acquire_msys(PKGCONFIG_ROOT
+                NO_DEFAULT_PACKAGES
+                DIRECT_PACKAGES
+                    "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-pkgconf-1~2.1.0-1-any.pkg.tar.zst"
+                    1567ba9fc947b3a1a983f5a23dcc0982950190cd92d7527684ba219253c5fa4b340b315f25ee695be1cdf6bfbb2cc5c3bdf7a5758b1d66b761748b5aad9afe39
+            )
+            set("${program}" "${PKGCONFIG_ROOT}/mingw64/bin/pkg-config.exe" CACHE INTERNAL "")
         else()
             vcpkg_acquire_msys(PKGCONFIG_ROOT
                 NO_DEFAULT_PACKAGES
