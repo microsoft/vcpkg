@@ -11,30 +11,3 @@ index 78d54a6..4d3f338 100644
  if(NOT SEAL_FOUND)
      message(FATAL_ERROR "Microsoft SEAL: not found")
  else()
-diff --git a/cmake/DetectArch.cmake b/cmake/DetectArch.cmake
-index 484fda9..2da2d93 100644
---- a/cmake/DetectArch.cmake
-+++ b/cmake/DetectArch.cmake
-@@ -4,14 +4,14 @@
- set(CMAKE_REQUIRED_QUIET_OLD ${CMAKE_REQUIRED_QUIET})
- set(CMAKE_REQUIRED_QUIET ON)
- if(MSVC)
--    check_cxx_source_runs("
--        #if defined(_M_ARM64)
--            int main() {
--                return 0;
--            }
--        #else
--            #error
--        #endif
-+    check_cxx_source_runs("\
-+        #if defined(_M_ARM64)\
-+            int main() {\
-+                return 0;\
-+            }\
-+        #else\
-+            #error\
-+        #endif\
-         "
-         APSI_FOURQ_ARM64
-     )
