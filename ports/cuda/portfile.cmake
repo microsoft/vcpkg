@@ -16,7 +16,7 @@ else()
     set(platform linux)
 endif()
 
-set(components 
+set(components
         cccl # < contains cmake files
         cudart
         nvtx
@@ -27,7 +27,7 @@ set(components
         #sanitizer_api
 )
 
-set(libs         
+set(libs
         libcublas
         libcufft
         libcurand
@@ -43,7 +43,7 @@ set(util
         #nsight_systems
 )
 
-set(tools 
+set(tools
         cuobjdump 
         cupti 
         cuxxfilt # has some extra API
@@ -63,12 +63,12 @@ endif()
 
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND libs 
-            fabricmanager 
-            libnvidia_nscq 
-            nvidia_driver
+            fabricmanager
+            libnvidia_nscq
+            #nvidia_driver
             libcufile
     )
-    list(APPEND util 
+    list(APPEND util
             nvidia_fs
     )
     list(APPEND util 
@@ -87,8 +87,6 @@ endif()
 
 list(TRANSFORM components PREPEND "cuda_")
 list(TRANSFORM tools PREPEND "cuda_")
-
-
 
 set(update_opt "")
 #set(cuda_updating 1)
@@ -168,16 +166,27 @@ foreach(comp IN LISTS components libs util tools)
         file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}"
             PATTERN "*docs*" EXCLUDE
             PATTERN "*samples*" EXCLUDE
-            PATTERN "*exsample*" EXCLUDE
+            PATTERN "*example*" EXCLUDE
             PATTERN "src/*" EXCLUDE
             PATTERN "LICENSE" EXCLUDE
+            PATTERN "kernel" EXCLUDE
+            PATTERN "kernel-open" EXCLUDE
+            PATTERN "lib32" EXCLUDE
+            PATTERN "man" EXCLUDE
+            PATTERN "sbin" EXCLUDE
+            PATTERN "systemd" EXCLUDE
+            PATTERN "tests" EXCLUDE
+            PATTERN "wine" EXCLUDE
+            PATTERN "firmware" EXCLUDE
         )
         # Need a duplicate since nvcc won't magically add new unknown search paths for stuff
         file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cuda"
             PATTERN "*docs*" EXCLUDE
             PATTERN "*samples*" EXCLUDE
-            PATTERN "*exsample*" EXCLUDE
+            PATTERN "*example*" EXCLUDE
             PATTERN "LICENSE" EXCLUDE
+            PATTERN "tests" EXCLUDE
+            PATTERN "wine" EXCLUDE
         )
     else()
         file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cuda"
@@ -208,9 +217,23 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib-tmp" "${CURRENT_PACKAGES_DIR}/lib")
 endif()
 
+if(EXISTS "${CURRENT_PACKAGES_DIR}/pkg-config")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/pkg-config" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/cuda/pkg-config")
+  file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
+  foreach(pc_file IN LISTS pc_files)
+    file(READ "${pc_file}" contents)
+    string(REGEX REPLACE "cudaroot=[^\n]+" "cudaroot=\${prefix}" contents "${contents}")
+    string(REGEX REPLACE "/targets/x86_64-linux" "" contents "${contents}")
+    file(WRITE "${pc_file}" "${contents}")
+  endforeach()
+endif()
+
+
+
 if(NOT VCPKG_BUILD_TYPE)
-    file(COPY "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(COPY "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(COPY "${CURRENT_PACKAGES_DIR}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(COPY "${CURRENT_PACKAGES_DIR}/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
 
 file(REMOVE_RECURSE 
@@ -222,9 +245,18 @@ file(REMOVE_RECURSE
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/tools/cuda/include/cub/cmake"
     "${CURRENT_PACKAGES_DIR}/tools/cuda/include/thrust/cmake"
+    "${CURRENT_PACKAGES_DIR}/MANIFEST"
+    "${CURRENT_PACKAGES_DIR}/third-party-notices.txt"
+    "${CURRENT_PACKAGES_DIR}/README"
+    "${CURRENT_PACKAGES_DIR}/CHANGELOG"
 )
 
 vcpkg_install_copyright(FILE_LIST ${licenses})
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg_find_cuda.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}//vcpkg_find_cuda.cmake" @ONLY)
+
+vcpkg_fixup_pkgconfig()
+
+set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
