@@ -13,9 +13,16 @@
       "platform": "windows"
     }
   ],
+  "default-features": [
+    {
+      "name": "udev",
+      "platform": "linux"
+    }
+  ],
   "features": {
-    "disable-udev":{
-      "description": "Disable udev"
+    "udev": {
+      "description": "Enable udev",
+      "supports": "linux"
     }
   }
 }
