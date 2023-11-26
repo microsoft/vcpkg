@@ -5910,7 +5910,7 @@
     },
     "nettle": {
       "baseline": "3.8.1",
-      "port-version": 1
+      "port-version": 2
     },
     "networkdirect-sdk": {
       "baseline": "2.0.1",
