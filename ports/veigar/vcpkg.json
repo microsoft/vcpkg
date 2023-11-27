@@ -4,6 +4,7 @@
   "maintainers": "winsoft666 <winsoft666@outlook.com>",
   "description": "Cross platform RPC library using shared memory.",
   "homepage": "https://github.com/winsoft666/veigar",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
