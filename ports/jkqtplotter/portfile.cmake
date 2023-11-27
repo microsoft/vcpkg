@@ -26,7 +26,7 @@ vcpkg_cmake_configure(
         -DJKQtPlotter_BUILD_SHARED_LIBS=${JKQtPlotter_BUILD_SHARED_LIBS}
         -DJKQtPlotter_BUILD_STATIC_LIBS=${JKQtPlotter_BUILD_STATIC_LIBS}
         ${FEATURE_OPTIONS}
-        -DQT_VERSION_MAJOR=6
+        -DCMAKE_IGNORE_PATH=${CURRENT_INSTALLED_DIR}/share/cmake/Qt5
         -DCIMG_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenCV:BOOL=ON # only used for some examples
         -DOpenCV_FOUND:BOOL=FALSE # wrong find_package call with QUITE instead of QUIET
