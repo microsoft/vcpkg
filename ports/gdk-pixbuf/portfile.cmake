@@ -28,6 +28,14 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     #list(APPEND OPTIONS -Dnative_windows_loaders=true) # Use Windows system components to handle BMP, EMF, GIF, ICO, JPEG, TIFF and WMF images, overriding jpeg and tiff.  To build this into gdk-pixbuf, pass in windows" with the other loaders to build in or use "all" with the builtin_loaders option
 endif()
+# whether relocation support can be turned on depends on whether relocation
+# support is available by the macro branching of
+#   gdk_pixbuf_get_toplevel() in gdk-pixbuf/gdk-pixbuf-io.c
+#
+# On windows, it is enabled IFF the the target is non-static, independend of the meson parameter setting
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) 
+    list(APPEND OPTIONS -Drelocatable=true)
+endif()
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -37,7 +45,6 @@ vcpkg_configure_meson(
         -Dpng=enabled               # Enable PNG loader (requires libpng)
         -Dtiff=enabled              # Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used
         -Djpeg=enabled              # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
-        -Drelocatable=true          # Whether to enable application bundle relocation support
         -Dtests=false
         -Dinstalled_tests=false
         -Dgio_sniffing=false        # Perform file type detection using GIO (Unused on MacOS and Windows)
