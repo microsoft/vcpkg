@@ -1,27 +1,14 @@
 diff --git a/cmake/module-config.cmake.in b/cmake/module-config.cmake.in
-index 5cc12b0..abf0ed9 100644
+index 5cc12b0..5d94df8 100644
 --- a/cmake/module-config.cmake.in
 +++ b/cmake/module-config.cmake.in
 @@ -1,5 +1,9 @@
  @PACKAGE_INIT@
  
 +include(CMakeFindDependencyMacro)
-+find_dependency(oatpp)
++find_dependency(oatpp REQUIRED)
 +find_dependency(unofficial-sqlite3 REQUIRED)
 +
  if(NOT TARGET oatpp::@OATPP_MODULE_NAME@)
      include("${CMAKE_CURRENT_LIST_DIR}/@OATPP_MODULE_NAME@Targets.cmake")
  endif()
-diff --git a/cmake/module-utils.cmake b/cmake/module-utils.cmake
-index 8f1d35a..cade49d 100644
---- a/cmake/module-utils.cmake
-+++ b/cmake/module-utils.cmake
-@@ -5,7 +5,7 @@ macro(target_link_oatpp target)
-         message("target_link_oatpp(${target}) to installed oatpp lib")
- 
-         target_link_libraries(${target}
--                PRIVATE oatpp::oatpp
-+                PUBLIC oatpp::oatpp
-                 PRIVATE oatpp::oatpp-test
-         )
- 
