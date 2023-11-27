@@ -7678,7 +7678,7 @@
     },
     "sdbus-cpp": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sdformat10": {
       "baseline": "10.0.0",
