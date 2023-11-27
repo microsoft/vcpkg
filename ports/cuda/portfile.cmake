@@ -240,6 +240,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/cub/cmake"
     "${CURRENT_PACKAGES_DIR}/include/thrust/cmake"
     "${CURRENT_PACKAGES_DIR}/src"
+    "${CURRENT_PACKAGES_DIR}/nvml"
+    "${CURRENT_PACKAGES_DIR}/tools/cuda/nvml"
 )
 
 file(REMOVE_RECURSE 
