@@ -4,7 +4,7 @@ index 537af1f89..43d7febf2 100644
 +++ b/tools/meson/mesonbuild/dependencies/misc.py
 @@ -610,7 +610,8 @@ iconv_factory = DependencyFactory(
  
- intl_factory = DependencyFactory(
+ packages['intl'] = intl_factory = DependencyFactory(
      'intl',
 +    [DependencyMethods.BUILTIN, DependencyMethods.SYSTEM, DependencyMethods.CMAKE],
 +    cmake_name='Intl',
