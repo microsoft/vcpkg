@@ -6,10 +6,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(CUDA_ARCHITECTURES "native")
+
 vcpkg_cmake_configure(
 	SOURCE_PATH "${SOURCE_PATH}"
 	OPTIONS
 	-DCAW_BUILD_EXAMPLES=OFF
+    -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
 	)
 
 vcpkg_cmake_install()
