@@ -1,12 +1,15 @@
 {
   "name": "highfive",
-  "version": "2.6.2",
-  "port-version": 2,
+  "version": "2.7.1",
+  "port-version": 1,
   "description": "HighFive is a modern header-only C++/C++11 friendly interface for libhdf5",
   "homepage": "https://github.com/BlueBrain/HighFive",
   "license": "BSL-1.0",
   "dependencies": [
-    "hdf5",
+    {
+      "name": "hdf5",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

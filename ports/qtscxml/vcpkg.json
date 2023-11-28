@@ -1,6 +1,6 @@
 {
   "name": "qtscxml",
-  "version": "6.5.1",
+  "version": "6.6.0",
   "description": "SCXML (state machine notation) compiler and related tools",
   "homepage": "https://www.qt.io/",
   "license": null,

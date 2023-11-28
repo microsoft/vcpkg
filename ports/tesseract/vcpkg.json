@@ -1,11 +1,15 @@
 {
   "name": "tesseract",
-  "version": "5.3.1",
+  "version": "5.3.3",
   "description": "An OCR Engine that was developed at HP Labs between 1985 and 1995... and now at Google.",
   "homepage": "https://github.com/tesseract-ocr/tesseract",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "cpu-features",
+      "platform": "android"
+    },
     {
       "name": "curl",
       "default-features": false

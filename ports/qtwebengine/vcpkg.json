@@ -1,7 +1,7 @@
 {
   "$comment": "x86-windows is not within the upstream support matrix of Qt6",
   "name": "qtwebengine",
-  "version": "6.5.1",
+  "version": "6.6.0",
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
   "license": null,

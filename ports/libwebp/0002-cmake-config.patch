@@ -2,9 +2,9 @@ diff --git a/cmake/WebPConfig.cmake.in b/cmake/WebPConfig.cmake.in
 index f334739..43f10e0 100644
 --- a/cmake/WebPConfig.cmake.in
 +++ b/cmake/WebPConfig.cmake.in
-@@ -12,5 +12,12 @@ include ("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+@@ -12,5 +12,12 @@ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
  
- set(WebP_INCLUDE_DIRS "@CMAKE_INSTALL_FULL_INCLUDEDIR@")
+ set_and_check(WebP_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
  set(WEBP_INCLUDE_DIRS ${WebP_INCLUDE_DIRS})
 -set(WebP_LIBRARIES "@INSTALLED_LIBRARIES@")
 +set(WebP_LIBRARIES "")

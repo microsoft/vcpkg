@@ -1,4 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 string(REGEX MATCH "^[0-9]*" ICU_VERSION_MAJOR "${VERSION}")
 string(REPLACE "." "_" VERSION2 "${VERSION}")
 string(REPLACE "." "-" VERSION3 "${VERSION}")
@@ -7,7 +6,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 848c341b37c0ff077e34a95d92c6200d5aaddd0ee5e06134101a74e04deb08256a5e817c8aefab020986abe810b7827dd7b2169a60dacd250c298870518dcae8
+    SHA512 e788e372716eecebc39b56bbc88f3a458e21c3ef20631c2a3d7ef05794a678fe8dad482a03a40fdb9717109a613978c7146682e98ee16fade5668d641d5c48f8
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -34,8 +33,11 @@ list(APPEND CONFIGURE_OPTIONS --disable-samples --disable-tests --disable-layout
 list(APPEND CONFIGURE_OPTIONS_RELEASE --disable-debug --enable-release)
 list(APPEND CONFIGURE_OPTIONS_DEBUG  --enable-debug --disable-release)
 
-set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
-set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
+set(CONFIG_TRIPLETS)
+list(APPEND CONFIG_TRIPLETS ${TARGET_TRIPLET}-rel)
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  list(APPEND CONFIG_TRIPLETS ${TARGET_TRIPLET}-dbg)
+endif()
 
 if("tools" IN_LIST FEATURES)
   list(APPEND CONFIGURE_OPTIONS --enable-tools)
@@ -90,7 +92,7 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     endif()
 
     #31680: Fix @rpath in both debug and release build
-    foreach(CONFIG_TRIPLE IN ITEMS ${DEBUG_TRIPLET} ${RELEASE_TRIPLET})
+    foreach(CONFIG_TRIPLE IN LISTS CONFIG_TRIPLETS)
         # add ID_PREFIX to libicudata libicui18n libicuio libicutu libicuuc
         foreach(LIB_NAME IN ITEMS libicudata libicui18n libicuio ${LIBICUTU_RPATH} libicuuc)
             vcpkg_execute_build_process(
@@ -179,7 +181,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/tools/icu/debug")
 
 # To cross compile, we need some files at specific positions. So lets copy them
-file(GLOB CROSS_COMPILE_DEFS "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/config/icucross.*")
+file(GLOB CROSS_COMPILE_DEFS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config/icucross.*")
 file(INSTALL ${CROSS_COMPILE_DEFS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/config")
 
 file(GLOB RELEASE_DLLS "${CURRENT_PACKAGES_DIR}/lib/*icu*${ICU_VERSION_MAJOR}.dll")
@@ -205,4 +207,4 @@ vcpkg_fixup_pkgconfig()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

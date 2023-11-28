@@ -67,6 +67,14 @@ if(NOT SQLITE3_SKIP_TOOLS)
     )
 endif()
 
+SET(prefix "${CMAKE_INSTALL_PREFIX}")
+SET(exec_prefix "\${prefix}")
+SET(libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
+SET(includedir "\${prefix}/include")
+SET(PACKAGE_VERSION "4.5.3")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/sqlcipher.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/sqlcipher.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sqlcipher.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+
 install(
     TARGETS sqlcipher
     EXPORT sqlcipher-targets

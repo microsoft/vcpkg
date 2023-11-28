@@ -1,13 +1,15 @@
 include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 
-vcpkg_from_git(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://github.com/google/skia
-    REF f86f242886692a18f5adc1cf9cbd6740cd0870fd
+    REPO google/skia
+    REF "canvaskit/${VERSION}"
+    SHA512 4672cfef8c92f37418e27df30a4e3fd6f7ca6273521e9d6b7755d9285800ad1ea6eff66639a17f591e6921ec8b78aa828500399a83295f9984ab58ebaff0ec24
     PATCHES
-        disable-msvc-env-setup.patch
         uwp.patch
         core-opengl32.patch
+        disable-dev-test.patch
+        support-x86-MSVC-build.patch
 )
 
 # these following aren't available in vcpkg
@@ -77,15 +79,15 @@ declare_external_from_git(tint
     REF "200492e32b94f042d9942154fb4fa7f93bb8289a"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(vulkan-headers
-    URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Headers"
-    REF "c896e2f920273bfee852da9cca2a356bc1c2031e"
-    LICENSE_FILE LICENSE.txt
-)
 declare_external_from_git(vulkan-tools
     URL "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Tools"
     REF "d55c7aaf041af331bee8c22fb448a6ff4c797f73"
     LICENSE_FILE LICENSE.txt
+)
+declare_external_from_git(wuffs
+    URL "https://skia.googlesource.com/external/github.com/google/wuffs-mirror-release-c.git"
+    REF "e3f919ccfe3ef542cfc983a82146070258fb57f8"
+    LICENSE_FILE LICENSE
 )
 
 declare_external_from_pkgconfig(expat)
@@ -97,6 +99,8 @@ declare_external_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES
 declare_external_from_pkgconfig(libpng)
 declare_external_from_pkgconfig(libwebp MODULES libwebpdecoder libwebpdemux libwebpmux libwebp)
 declare_external_from_pkgconfig(zlib)
+
+declare_external_from_vcpkg(vulkan_headers PATH third_party/externals/vulkan-headers)
 
 set(known_cpus x86 x64 arm arm64 wasm)
 if(NOT VCPKG_TARGET_ARCHITECTURE IN_LIST known_cpus)
@@ -137,6 +141,7 @@ set(required_externals
     piex
     sfntly
     zlib
+    wuffs
 )
 
 if("fontconfig" IN_LIST FEATURES)
@@ -178,8 +183,17 @@ if("metal" IN_LIST FEATURES)
 endif()
 
 if("vulkan" IN_LIST FEATURES)
+    list(APPEND required_externals
+        vulkan_headers
+        vulkan-tools
+    )
     string(APPEND OPTIONS " skia_use_vulkan=true")
-    file(COPY "${CURRENT_INSTALLED_DIR}/include/vk_mem_alloc.h" DESTINATION "${SOURCE_PATH}/third_party/vulkanmemoryallocator")
+    file(COPY "${CURRENT_INSTALLED_DIR}/include/vk_mem_alloc.h" DESTINATION "${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include")
+    # Cf. third_party/vulkanmemoryallocator/GrVulkanMemoryAllocator.h:25
+    vcpkg_replace_string("${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include/vk_mem_alloc.h"
+        "#include <vulkan/vulkan.h>"
+        "#ifndef VULKAN_H_\n    #include <vulkan/vulkan.h>\n#endif"
+    )
 endif()
 
 if("direct3d" IN_LIST FEATURES)
@@ -214,8 +228,8 @@ They can be installed on Debian based systems via
         tint
         jinja2
         markupsafe
+        vulkan_headers
 ## Remove
-        vulkan-headers
         vulkan-tools
         abseil-cpp
 ## REMOVE ^

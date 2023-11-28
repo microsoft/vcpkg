@@ -1,10 +1,9 @@
 {
   "name": "c89stringutils",
-  "version": "0.0.1",
-  "port-version": 1,
+  "version": "0.0.2",
   "description": "string functions from newer standards / common non-standards for C89",
+  "homepage": "https://github.com/offscale/c89stringutils",
   "license": "Apache-2.0 OR MIT",
-  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

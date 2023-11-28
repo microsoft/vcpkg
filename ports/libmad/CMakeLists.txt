@@ -41,9 +41,37 @@ add_library(
 )
 
 target_compile_definitions(mad
-    PRIVATE _LIB _MBCS ASO_ZEROCHECK HAVE_CONFIG_H FPM_DEFAULT
+    PRIVATE _LIB _MBCS ASO_ZEROCHECK HAVE_CONFIG_H
     PRIVATE _CRT_SECURE_NO_WARNINGS
 )
+
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "(^i.86$)")
+    target_compile_definitions(mad
+        PRIVATE FPM_INTEL
+    )
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86_64)|(AMD64|amd64)|^(aarch64|arm64)")
+    target_compile_definitions(mad
+        PRIVATE FPM_64BIT
+    )
+# This fails with "error: invalid instruction" on armv7-a 
+#elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
+#    target_compile_definitions(mad
+#        PRIVATE FPM_ARM
+#    )
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^mips")
+    target_compile_definitions(mad
+        PRIVATE FPM_MIPS
+    )
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
+    target_compile_definitions(mad
+        PRIVATE FPM_PPC
+    )
+else()
+    target_compile_definitions(mad
+        PRIVATE FPM_DEFAULT
+    )
+    message(WARNING "CMAKE_SYSTEM_PROCESSOR = ${CMAKE_SYSTEM_PROCESSOR} unknown. Fall back to FPM_DEFAULT, loosing significant accuracy")
+endif()
 
 install(
     TARGETS mad

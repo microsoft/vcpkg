@@ -1,6 +1,6 @@
 {
   "name": "onnx",
-  "version-semver": "1.13.1",
+  "version-semver": "1.14.0",
   "description": "Open standard for machine learning interoperability",
   "homepage": "https://onnx.ai",
   "license": "Apache-2.0",

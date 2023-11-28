@@ -1,7 +1,6 @@
 {
   "name": "skia",
-  "version": "0.36.0",
-  "port-version": 7,
+  "version": "0.38.2",
   "description": [
     "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
     "It serves as the graphics engine for Google Chrome and Chrome OS, Android, Mozilla Firefox and Firefox OS, and many other products.",
@@ -43,7 +42,10 @@
   ],
   "features": {
     "dawn": {
-      "description": "dawn support for skia"
+      "description": "dawn support for skia",
+      "dependencies": [
+        "vulkan-headers"
+      ]
     },
     "default-features": {
       "description": "Default feature configuration",
@@ -105,6 +107,10 @@
       "description": "Freetype support",
       "dependencies": [
         {
+          "name": "dlfcn-win32",
+          "platform": "windows"
+        },
+        {
           "name": "freetype",
           "default-features": false
         }
@@ -136,7 +142,7 @@
     "vulkan": {
       "description": "Vulkan support for skia",
       "dependencies": [
-        "vulkan",
+        "vulkan-headers",
         "vulkan-memory-allocator"
       ]
     }

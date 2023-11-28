@@ -1,0 +1,19 @@
+diff --git a/examples/message_server/message_subscriber.cc b/examples/message_server/message_subscriber.cc
+index ba40a332..4ac75ef7 100644
+--- a/examples/message_server/message_subscriber.cc
++++ b/examples/message_server/message_subscriber.cc
+@@ -7,13 +7,9 @@
+ 
+ #include "wampcc/kernel.h"
+ #include "wampcc/data_model.h"
+-#include "wampcc/tcp_socket.h"
+-#include "wampcc/wamp_session.h"
+ #include "wampcc/rawsocket_protocol.h"
+ 
+-#include <memory>
+-#include <iostream>
+-
++#include <thread>
+ 
+ void on_string_change(const wampcc::string_subscription& sub)
+ {

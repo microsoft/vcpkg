@@ -1,53 +1,46 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.10.7</version>
+        <version>3.11.5</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.10.7/python-3.10.7-embed-win32.zip</url>
-        <sha512>a69445906a909ce5f2554c544fe4251a8ab9c5028b531975b8c78fa8e98295b2bf06e1840f346a3c0edf485a7792c40c9d318bffd36b9c7829ac72b7cf8697bc</sha512>
-        <archiveName>python-3.10.7-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.11.5/python-3.11.5-embed-win32.zip</url>
+        <sha512>d5412c5bc2a0664f86e504a536c201789c8fd8b97c641bbb7b254c87c2f13504d25fa9d0b74e27a1c54c2d9fb592f9546d8c1e82c506dc9c76a21774c4c3ea75</sha512>
+        <archiveName>python-3.11.5-embed-win32.zip</archiveName>
     </tool>
     <tool name="python3_with_venv" os="windows">
-        <version>3.10.7</version>
+        <version>3.11.5</version>
         <exeRelativePath>tools\python.exe</exeRelativePath>
-        <url>https://www.nuget.org/api/v2/package/python/3.10.7</url>
-        <sha512>dc763c4f3e9594619173a99740a6b54686c768c240efe316d4d3f8914383bd06420c0802781baf983ea840c49412b8330c1af93f31d2c73eb0ea22a55e71aa13</sha512>
-        <archiveName>python-3.10.7.nupkg.zip</archiveName>
+        <url>https://www.nuget.org/api/v2/package/python/3.11.5</url>
+        <sha512>d2f0557c7ebe5f3e8cc2a2102fc061abed6aeeb49a2e315241c453346750e3f725261dcac4efb171da9eb44c7b9f791d7a6b59b5072902b1007939e8596a2426</sha512>
+        <archiveName>python-3.11.5.nupkg.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.25.1</version>
-        <exeRelativePath>cmake-3.25.1-windows-i386\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-windows-i386.zip</url>
-        <sha512>4a84abdb53781178a99046aa09cf6a6b2bfe159d6b6bbdd2449839d2f50b872b4cc783c44774343b6122ec9400bcfdec65fffd4a246575ba55d178bc180f6adc</sha512>
-        <archiveName>cmake-3.25.1-windows-i386.zip</archiveName>
+        <version>3.27.1</version>
+        <exeRelativePath>cmake-3.27.1-windows-i386/bin/cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-windows-i386.zip</url>
+        <sha512>a847f636fb27ba41ba9e6eaafa56937c614bcb39c6d0c9723241c229a9b0a77b4d00ebee88639561035d43f9aa64895f387eab56c628990c01191da57839cda0</sha512>
+        <archiveName>cmake-3.27.1-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.25.1</version>
-        <exeRelativePath>cmake-3.25.1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-macos-universal.tar.gz</url>
-        <sha512>6009ff799ee516c1ca3bf3a31bacdd59fc48f772a03c822f49e1e9b6a6582e64d75c6005a90574539d61b7094dfe36bfe4b4c1560a4fb7d1287be472c0fd146a</sha512>
-        <archiveName>cmake-3.25.1-macos-universal.tar.gz</archiveName>
+        <version>3.27.1</version>
+        <exeRelativePath>cmake-3.27.1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-macos-universal.tar.gz</url>
+        <sha512>78e639b93786eb994bdbc6263afc48267d42d9305c1cb1cb9482adf012e7b4f45934e744a98eaf93d8361f154e642cada13398cca064c1700f009a7795746fe7</sha512>
+        <archiveName>cmake-3.27.1-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.25.1</version>
-        <exeRelativePath>cmake-3.25.1-linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-linux-x86_64.tar.gz</url>
-        <sha512>df456fafa9e63ab0105a6355cc3f66d0567c43172fb424ba75b364f65c6da100dbb303ddd11abd68b42b3b52a90805dfda36aae2468c64c204446f4befda0c78</sha512>
-        <archiveName>cmake-3.25.1-linux-x86_64.tar.gz</archiveName>
-    </tool>
-    <tool name="cmake" os="freebsd">
-        <version>3.20.4</version>
-        <exeRelativePath>usr/local/bin/cmake</exeRelativePath>
-        <url>https://pkg.freebsd.org/FreeBSD:13:amd64/quarterly/All/cmake-3.20.4.txz</url>
-        <sha512>3e5b675d7ff924f92996d912e2365582e687375109ef99c9073fb8196bb329243a406b218cf1358d7cc518988b311ce9e5bf87de4d64f2e6377b7c2bc8894475</sha512>
-        <archiveName>cmake-3.20.4.txz</archiveName>
+        <version>3.27.1</version>
+        <exeRelativePath>cmake-3.27.1-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-linux-x86_64.tar.gz</url>
+        <sha512>192374a68e2971f04974a194645726196d9b8ee7abd650d1e6f65f7aa2ccc9b186c3edb473bb4958c764532edcdd42f4182ee1fcb86b17d78b0bcd6305ce3df1</sha512>
+        <archiveName>cmake-3.27.1-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="git" os="windows">
         <version>2.7.4</version>
         <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.35.1.windows.2/PortableGit-2.35.1.2-32-bit.7z.exe</url>
-        <sha512>f98df16641a615bbc36c5c319c78abb780d824ff35ed5f2a095e2d5fce2acacfc7f6532c96f1c81d3d3cd8a642858cbd9de0e0e5fcde9ca11e6ad9f6598bb82f</sha512>
-        <archiveName>PortableGit-2.35.1.2-32-bit.7z.exe</archiveName>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.41.0.windows.1/PortableGit-2.41.0-32-bit.7z.exe</url>
+        <sha512>e483a890e77b427c20785e7528279338c7d99651e0afbf704bf2ff3cde23d0895c07e961603d133d5d78aea2308a2994e532974de41674e4f334423b1b47bd0e</sha512>
+        <archiveName>PortableGit-2.41.0-32-bit.7z.exe</archiveName>
     </tool>
     <tool name="git" os="linux">
         <version>2.7.4</version>
@@ -138,18 +131,18 @@
         <archiveName>installer-framework-opensource-src-4.4.0.zip</archiveName>
     </tool>
     <tool name="7zip_msi" os="windows">
-        <version>21.07</version>
+        <version>23.01</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7z2107-x64.msi</url>
-        <sha512>d55b44f1255d1b0e629719383a600a7e83dc6378d470096337b886ce24684d26bcc2b04f9cea39ad888179edce23ad2bd0e8e1863ddc40106c176adece8c012d</sha512>
-        <archiveName>7z2107-x64.msi</archiveName>
+        <url>https://www.7-zip.org/a/7z2301-x64.msi</url>
+        <sha512>09e3ce970ea8383e8c736a51ebb61e3036e655c81d59bc64c5eecb041abdad2cbce2f400fcf4478e22f56fe40f8d912c639f550a5f990e24abfd4e86cdd3755c</sha512>
+        <archiveName>7z2301-x64.msi</archiveName>
     </tool>
     <tool name="7zip" os="windows">
-        <version>21.07</version>
+        <version>23.01</version>
         <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7z2107-extra.7z</url>
-        <sha512>648d894940bcc29951752d7a8fd18c770ee8d4fd944e17f1a52588e51ca8f58375ba48514538f2e1387786fd812bb86f75fd6bdd0892685cdcafb2989942c848</sha512>
-        <archiveName>7z2107-extra.7z</archiveName>
+        <url>https://www.7-zip.org/a/7z2301-extra.7z</url>
+        <sha512>c849c2cb489cf5b6eeb92bfbc27dcb37d0349c36971e1bc7ef32c7cde1b659e19e8b46d734ba90f47affe07fdfd5b4774cbfa0fdf4b681e9f60bb46bba1f7f9b</sha512>
+        <archiveName>7z2301-extra.7z</archiveName>
      </tool>
     <tool name="aria2" os="windows">
         <version>1.35.0</version>
@@ -166,32 +159,25 @@
         <archiveName>aria2-1.35.0-osx-darwin.tar.bz2</archiveName>
     </tool>
     <tool name="ninja" os="windows">
-        <version>1.10.2</version>
+        <version>1.11.1</version>
         <exeRelativePath>ninja.exe</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-win.zip</url>
-        <sha512>6004140d92e86afbb17b49c49037ccd0786ce238f340f7d0e62b4b0c29ed0d6ad0bab11feda2094ae849c387d70d63504393714ed0a1f4d3a1f155af7a4f1ba3</sha512>
-        <archiveName>ninja-win-1.10.2.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip</url>
+        <sha512>a700e794c32eb67b9f87040db7f1ba3a8e891636696fc54d416b01661c2421ff46fa517c97fd904adacdf8e621df3e68ea380105b909ae8b6651a78ae7eb3199</sha512>
+        <archiveName>ninja-win-1.11.1.zip</archiveName>
     </tool>
     <tool name="ninja" os="linux">
-        <version>1.10.2</version>
+        <version>1.11.1</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-linux.zip</url>
-        <sha512>93e802e9c17fb59636cddde4bad1ddaadad624f4ecfee00d5c78790330a4e9d433180e795718cda27da57215ce643c3929cf72c85337ee019d868c56f2deeef3</sha512>
-        <archiveName>ninja-linux-1.10.2.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip</url>
+        <sha512>6403dac9196baffcff614fa73ea530752997c8db6bbfbaa0446b4b09d7327e2aa6e8615d1283c961d3bf0df497e85ba86604149f1505ee75f89d600245a45dde</sha512>
+        <archiveName>ninja-linux-1.11.1.zip</archiveName>
     </tool>
     <tool name="ninja" os="osx">
-        <version>1.10.2</version>
+        <version>1.11.1</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-mac.zip</url>
-        <sha512>bcd12f6a3337591306d1b99a7a25a6933779ba68db79f17c1d3087d7b6308d245daac08df99087ff6be8dc7dd0dcdbb3a50839a144745fa719502b3a7a07260b</sha512>
-        <archiveName>ninja-mac-1.10.2.zip</archiveName>
-    </tool>
-    <tool name="ninja" os="freebsd">
-        <version>1.8.2</version>
-        <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ivysnow/ninja/releases/download/v1.8.2/ninja-freebsd.zip</url>
-        <sha512>56a55ae9a6b5dfad4f28f9fe9b8114f1475c999d2f07fff7efa7375f987e74b498e9b63c41fc6c577756f15f3a1459c6d5d367902de3bedebdf9a9fd49089a86</sha512>
-        <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-mac.zip</url>
+        <sha512>dad33b0918c60bbf5107951a936175b1610b4894a408f4ba4b47a2f5b328fc982a52a2aed6a0cb75028ee4765af5083bea66611c37516826eb0c851366bb4427</sha512>
+        <archiveName>ninja-mac-1.11.1.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
         <version>7.2.11</version>

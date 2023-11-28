@@ -1,6 +1,7 @@
 {
   "name": "harfbuzz",
-  "version": "7.3.0",
+  "version": "8.2.1",
+  "port-version": 3,
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "license": "MIT-Modern-Variant",
@@ -20,6 +21,18 @@
     }
   ],
   "features": {
+    "cairo": {
+      "description": "Enable Cairo graphics library support",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        }
+      ]
+    },
     "coretext": {
       "description": "Enable CoreText shaper backend on macOS",
       "supports": "osx"
@@ -50,14 +63,7 @@
       "description": "build with introspection",
       "dependencies": [
         "glib",
-        {
-          "name": "gobject-introspection",
-          "host": true
-        },
-        {
-          "name": "gobject-introspection",
-          "platform": "windows & x86"
-        }
+        "gobject-introspection"
       ]
     }
   }

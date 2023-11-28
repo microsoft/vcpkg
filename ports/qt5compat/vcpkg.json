@@ -1,6 +1,6 @@
 {
   "name": "qt5compat",
-  "version": "6.5.1",
+  "version": "6.6.0",
   "description": "The module contains unsupported Qt 5 APIs",
   "homepage": "https://www.qt.io/",
   "license": null,

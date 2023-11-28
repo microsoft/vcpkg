@@ -1,6 +1,7 @@
 {
   "name": "zeroc-ice",
   "version": "3.7.9",
+  "port-version": 4,
   "maintainers": "Benjamin Oldenburg <benjamin.oldenburg@ordis.co.th>",
   "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
   "homepage": "https://github.com/zeroc-ice/ice",
@@ -14,6 +15,11 @@
     {
       "name": "openssl",
       "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
     },
     "zlib"
   ],
@@ -96,6 +102,20 @@
             "iceboxlib",
             "icegridlib",
             "icessl"
+          ]
+        }
+      ]
+    },
+    "icelocatordiscovery": {
+      "description": "IceLocatorDiscovery",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "glacier2lib",
+            "iceboxlib",
+            "icessl",
+            "icestormlib"
           ]
         }
       ]
