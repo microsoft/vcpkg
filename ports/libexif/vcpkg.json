@@ -12,6 +12,9 @@
       "host": true
     }
   ],
+  "default-features": [
+    "nls"
+  ],
   "features": {
     "nls": {
       "description": "Enable native language support.",
