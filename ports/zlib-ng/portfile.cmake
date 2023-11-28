@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zlib-ng/zlib-ng
     REF "${VERSION}"
-    SHA512 5afda5ea4be84f7d7b016416a6eed18e2aab6c698f006cdfbc8f8b43ce3dc73c7994ab9d1ca090c1b93cb1aadc8747bfd8216afb22b44633d49127f01b77cfa2
+    SHA512 9212d87c63a2da4e5355a7a1c75380aeba40fbd0ea3d71d3784cb3eac94237f9bea2a1b7993a08f39d4197725c4c133087d3a9d213d3944aa48a7559de2be920
     HEAD_REF develop
-    PATCHES
-        fix-cflags.patch
 )
 
 vcpkg_cmake_configure(
