@@ -6,8 +6,8 @@ index 5cc12b0..5d94df8 100644
  @PACKAGE_INIT@
  
 +include(CMakeFindDependencyMacro)
-+find_dependency(oatpp REQUIRED)
-+find_dependency(unofficial-sqlite3 REQUIRED)
++find_dependency(oatpp CONFIG)
++find_dependency(unofficial-sqlite3 CONFIG)
 +
  if(NOT TARGET oatpp::@OATPP_MODULE_NAME@)
      include("${CMAKE_CURRENT_LIST_DIR}/@OATPP_MODULE_NAME@Targets.cmake")
