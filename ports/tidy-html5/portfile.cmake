@@ -8,6 +8,7 @@ vcpkg_from_github(
         disable-doc.patch
         static-vs-shared.patch
         debug-postfix.patch
+        fix_unsupport_func_uwp.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIB)
@@ -19,7 +20,6 @@ vcpkg_cmake_configure(
         -DTIDY_CONSOLE_SHARED=${BUILD_SHARED_LIB}
 )
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
