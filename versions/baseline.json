@@ -2265,8 +2265,8 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.8.7",
-      "port-version": 1
+      "baseline": "1.9.1",
+      "port-version": 0
     },
     "dstorage": {
       "baseline": "1.2.2",
@@ -2658,7 +2658,7 @@
     },
     "flatbuffers": {
       "baseline": "23.5.26",
-      "port-version": 0
+      "port-version": 1
     },
     "flatbush": {
       "baseline": "1.2.0",
@@ -2847,6 +2847,10 @@
     "gamma": {
       "baseline": "gamma-2018-01-27",
       "port-version": 6
+    },
+    "gapp": {
+      "baseline": "0.2.0",
+      "port-version": 0
     },
     "gasol": {
       "baseline": "2018-01-04",
@@ -3682,7 +3686,7 @@
     },
     "jsoncpp": {
       "baseline": "1.9.5",
-      "port-version": 1
+      "port-version": 2
     },
     "jsonifier": {
       "baseline": "0.9.91",
@@ -3941,8 +3945,8 @@
       "port-version": 1
     },
     "kuku": {
-      "baseline": "2.1",
-      "port-version": 3
+      "baseline": "2.1.0",
+      "port-version": 0
     },
     "kvasir-mpl": {
       "baseline": "2019-08-06",
@@ -5925,7 +5929,7 @@
       "port-version": 1
     },
     "nghttp3": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "ngspice": {
@@ -5933,7 +5937,7 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.0.1",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "nifly": {
@@ -6082,7 +6086,7 @@
     },
     "oatpp-sqlite": {
       "baseline": "1.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "oatpp-ssdp": {
       "baseline": "1.3.0",
@@ -7277,7 +7281,7 @@
       "port-version": 9
     },
     "quill": {
-      "baseline": "3.4.1",
+      "baseline": "3.5.0",
       "port-version": 0
     },
     "quirc": {
@@ -7353,8 +7357,8 @@
       "port-version": 0
     },
     "raylib": {
-      "baseline": "4.5.0",
-      "port-version": 2
+      "baseline": "5.0",
+      "port-version": 0
     },
     "rbdl": {
       "baseline": "3.3.0",
@@ -7678,7 +7682,7 @@
     },
     "sdbus-cpp": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sdformat10": {
       "baseline": "10.0.0",
@@ -7746,7 +7750,7 @@
     },
     "seal": {
       "baseline": "4.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "seasocks": {
       "baseline": "1.4.6",
@@ -8549,7 +8553,7 @@
       "port-version": 0
     },
     "trantor": {
-      "baseline": "1.5.14",
+      "baseline": "1.5.15",
       "port-version": 0
     },
     "tre": {
@@ -9341,7 +9345,7 @@
       "port-version": 0
     },
     "zlib-ng": {
-      "baseline": "2.1.4",
+      "baseline": "2.1.5",
       "port-version": 0
     },
     "zlmediakit": {
