@@ -52,6 +52,7 @@
       "platform": "linux"
     },
     "qtdoc",
+    "qtgraphs",
     "qtgrpc",
     {
       "name": "qtimageformats",
