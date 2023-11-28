@@ -19,7 +19,18 @@
     }
   ],
   "default-features": [
-    "base"
+    {
+      "name": "ibus",
+      "platform": "linux"
+    },
+    {
+      "name": "wayland",
+      "platform": "linux"
+    },
+    {
+      "name": "x11",
+      "platform": "!windows"
+    }
   ],
   "features": {
     "alsa": {
@@ -27,21 +38,6 @@
       "dependencies": [
         {
           "name": "alsa",
-          "platform": "linux"
-        }
-      ]
-    },
-    "base": {
-      "description": "Base functionality for SDL",
-      "dependencies": [
-        {
-          "name": "sdl2",
-          "default-features": false,
-          "features": [
-            "ibus",
-            "wayland",
-            "x11"
-          ],
           "platform": "linux"
         }
       ]
