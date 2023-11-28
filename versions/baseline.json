@@ -2658,7 +2658,7 @@
     },
     "flatbuffers": {
       "baseline": "23.5.26",
-      "port-version": 0
+      "port-version": 1
     },
     "flatbush": {
       "baseline": "1.2.0",
