@@ -1,17 +1,10 @@
 set(USE_QT_VERSION "6")
 
-# https://github.com/opencv/opencv/pull/24043
-vcpkg_download_distfile(ARM64_WINDOWS_FIX
-  URLS https://github.com/opencv/opencv/commit/e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch?full_index=1
-  SHA512 8ae2544e4a7ece19efe21261acc183f91202ac5352c1ac42fb86bf33d698352eff1b8962422b092240f4e8c7a691e9aa5ef20d6070adcd37e92bb94c6010ce56
-  FILENAME opencv4-e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 48738c3e7460a361274357aef1dd427082ccd59f749d6317d92a414b3741ce6116ea15ed4fedd2d47a25e456c705f3ba114357558646097bfc0e6dba9b3b865c
+    SHA512 b98d89b8e7b8ae8138bce00c5226816b761b53fbeb8f28ca516e08c5d130f216f9388a81785cd6684034530f768e097cbe12f19a9361f362b7d2048bfc427a65
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -30,7 +23,6 @@ vcpkg_from_github(
       0019-missing-include.patch
       0020-fix-compat-cuda12.2.patch
       0021-static-openvino.patch # https://github.com/opencv/opencv/pull/23963
-      "${ARM64_WINDOWS_FIX}"
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
@@ -182,7 +174,7 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF ${VERSION}
-    SHA512 81cc41cfe1ea03e60b0657edeaa76a90926e5e79a9f93a482e17bc9edbf1b5ce36b13d108fd8fb097f2fb3d6381fbeb102811f44bfc761c2de7f69bf3c5298a1
+    SHA512 e3df49e6a1411f55eebbc02f4534ddefabff961b4f63c69b21fe06ff3df894773a8643ab0cb123b83c2bdc8fa02698b332d3c243e8546c894e6c6c8ecaa65500
     HEAD_REF master
     PATCHES
       0007-fix-hdf5.patch
