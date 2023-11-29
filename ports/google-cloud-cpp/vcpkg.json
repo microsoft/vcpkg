@@ -1,13 +1,13 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.16.0",
+  "version": "2.18.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     "abseil",
-    "grpc",
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -321,6 +321,7 @@
     },
     "compute": {
       "description": "Compute Engine C++ Client Library",
+      "supports": "!windows",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -489,18 +490,6 @@
         }
       ]
     },
-    "debugger": {
-      "description": "Stackdriver Debugger API C++ Client Library",
-      "dependencies": [
-        {
-          "name": "google-cloud-cpp",
-          "default-features": false,
-          "features": [
-            "grpc-common"
-          ]
-        }
-      ]
-    },
     "deploy": {
       "description": "Google Cloud Deploy API C++ Client Library",
       "dependencies": [
@@ -634,18 +623,6 @@
         }
       ]
     },
-    "gameservices": {
-      "description": "Game Services API C++ Client Library",
-      "dependencies": [
-        {
-          "name": "google-cloud-cpp",
-          "default-features": false,
-          "features": [
-            "grpc-common"
-          ]
-        }
-      ]
-    },
     "gkehub": {
       "description": "GKE Hub C++ Client Library",
       "dependencies": [
@@ -723,18 +700,6 @@
     },
     "ids": {
       "description": "Cloud IDS API C++ Client Library",
-      "dependencies": [
-        {
-          "name": "google-cloud-cpp",
-          "default-features": false,
-          "features": [
-            "grpc-common"
-          ]
-        }
-      ]
-    },
-    "iot": {
-      "description": "Cloud IoT API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1145,6 +1110,18 @@
     },
     "secretmanager": {
       "description": "The Google Cloud Secret Manager C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "securesourcemanager": {
+      "description": "Secure Source Manager API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

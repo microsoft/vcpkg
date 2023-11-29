@@ -5,12 +5,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
-    REF ${VERSION}
+    REF "${VERSION}"
     SHA512 0d69896d0a83452320df0d0f56c710df1365a259cd3f48dc7cd4df18d45b27caea7174aafa15ae5eb8637ccdef192c1047185b369b7232db4eaacbc57ffaaa22
-    HEAD_REF master
+    HEAD_REF main
     PATCHES
         fix-clang-cl.patch
         fix-clang-cl-gstreamer.patch
@@ -21,6 +21,7 @@ vcpkg_from_gitlab(
         gstreamer-disable-no-unused.patch
         srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
+        base-must-be-enabled.patch
         ${PATCHES}
 )
 
@@ -93,6 +94,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libde265        gst-plugins-bad:libde265
         microdns        gst-plugins-bad:microdns
         modplug         gst-plugins-bad:modplug
+        nvcodec         gst-plugins-bad:nvcodec
         openal          gst-plugins-bad:openal
         openh264        gst-plugins-bad:openh264
         openjpeg        gst-plugins-bad:openjpeg
@@ -248,7 +250,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:msdk=disabled
         -Dgst-plugins-bad:musepack=disabled
         -Dgst-plugins-bad:neon=disabled
-        -Dgst-plugins-bad:nvcodec=disabled
         -Dgst-plugins-bad:onnx=disabled # libonnxruntime not found
         -Dgst-plugins-bad:openaptx=disabled
         -Dgst-plugins-bad:opencv=disabled # opencv not found

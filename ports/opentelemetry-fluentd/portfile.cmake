@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF 7afa91952f08aad1fa79b8992f20a4b0cdaadaff  # Maps to 2.0.0
     HEAD_REF main
     SHA512 b28415c867aee5efe99f7521a145b5c402ac555d83be75a8b1d2760aed226ac109a6d092e86d7afedcc2ed8dc848d9662ac6505133d32f99b810f51e2748d1fc
+    PATCHES
+        fix_include_path.patch
 )
 
 vcpkg_cmake_configure(
