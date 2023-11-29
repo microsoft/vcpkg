@@ -2,6 +2,7 @@
   "$comment": "x86-windows is not within the upstream support matrix of Qt6",
   "name": "qtwebengine",
   "version": "6.6.0",
+  "port-version": 1,
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -57,6 +58,9 @@
     },
     {
       "name": "libxml2",
+      "features": [
+        "icu"
+      ],
       "platform": "!windows"
     },
     {
