@@ -6,6 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# nvidia driver check
+find_program(NVIDIA_SMI "nvidia-smi")
+
+if(NOT NVIDIA_SMI)
+    message(FATAL_ERROR "NVIDIA driver not found")
+endif()
+
+# cuda toolkit check
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
 message(STATUS "CUDA_TOOLKIT_ROOT ${CUDA_TOOLKIT_ROOT}")
 
