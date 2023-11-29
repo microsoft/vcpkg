@@ -341,9 +341,7 @@ fmi4cpp:arm64-uwp=fail
 fmi4cpp:x64-uwp=fail
 folly:arm64-android=fail
 folly:x64-android=fail
-freeglut:arm-neon-android=fail
-freeglut:arm64-android=fail
-freeglut:x64-android=fail
+# Needs XQuartz
 freeglut:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm-neon-android=fail
