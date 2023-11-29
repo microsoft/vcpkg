@@ -6,13 +6,14 @@ function(vcpkg_make_configure) #
 # z_vcpkg_is_autoconf
 # z_vcpkg_is_automake
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;COPY_SOURCE;NO_WRAPPERS;NO_CPP;NO_CONFIGURE_TRIPLET;ADD_BIN_TO_PATH;NO_CONFIGURE_CACHE"
+        "AUTOCONFIG;COPY_SOURCE;NO_WRAPPERS;NO_CPP;NO_CONFIGURE_TRIPLET;ADD_BIN_TO_PATH;NO_CONFIGURE_CACHE;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING"
         "SOURCE_PATH;CONFIGURE_SUBPATH;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;POST_CONFIGURE_CMAKE_COMMANDS;ADDITIONAL_MSYS_PACKAGES;RUN_SCRIPTS;LANGUAGES"
     )
 
     z_vcpkg_unparsed_args(FATAL_ERROR)
     z_vcpkg_conflicting_args(arg_BUILD_TRIPLET arg_NO_CONFIGURE_TRIPLET)
+    z_vcpkg_conflicting_args(arg_NO_CONFIGURE_CACHE arg_NO_DEFAULT_OPTIONS) # NO_DEFAULT_OPTIONS implies NO_CONFIGURE_CACHE
 
     # Can be set in the triplet to append options for configure
     if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS)
@@ -41,8 +42,13 @@ function(vcpkg_make_configure) #
     if(DEFINED arg_LANGUAGES)
         list(APPEND prepare_flags_opts "LANGUAGES" "${arg_LANGUAGES}")
     endif()
+
+    set(escaping "")
+    if(arg_NO_MSVC_FLAG_ESCAPING)
+      set(escaping NO_FLAG_ESCAPING)
+    endif()
     z_vcpkg_set_global_property(make_prepare_flags_opts "${prepare_flags_opts}")
-    z_vcpkg_make_prepare_flags(${prepare_flags_opts} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
+    z_vcpkg_make_prepare_flags(${prepare_only_flags_opts} ${escaping} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
 
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
@@ -91,7 +97,7 @@ function(vcpkg_make_configure) #
     # Used by cl
         INCLUDE LIB LIBPATH _CL_ _LINK_
     )
-    z_vcpkg_make_set_common_vars()    
+    z_vcpkg_make_set_common_vars()
 
     foreach(config IN LISTS buildtypes)
         string(TOUPPER "${config}" configup)
@@ -107,12 +113,14 @@ function(vcpkg_make_configure) #
         z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}")
 
         set(opts "")
-        z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}") # TODO: figure out outmake
         set(opts_cache "")
-        if(NOT arg_NO_CONFIGURE_CACHE)
-            z_vcpkg_make_prepare_configure_cache(opts_cache CONFIG "${configup}" WORKING_DIRECTORY "${target_dir}")
+        if(NOT arg_NO_DEFAULT_OPTIONS)
+          z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}") # TODO: figure out outmake
+          if(NOT arg_NO_CONFIGURE_CACHE)
+              z_vcpkg_make_prepare_configure_cache(opts_cache CONFIG "${configup}" WORKING_DIRECTORY "${target_dir}")
+          endif()
+          vcpkg_list(APPEND arg_OPTIONS ${opts})
         endif()
-        vcpkg_list(APPEND arg_OPTIONS ${opts})
 
         set(configure_path_from_wd "./${relative_build_path}/configure")
         if(arg_ADD_BIN_TO_PATH)

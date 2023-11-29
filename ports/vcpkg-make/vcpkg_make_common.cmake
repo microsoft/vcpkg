@@ -207,11 +207,23 @@ function(z_vcpkg_make_prepare_compile_flags)
         string(REPLACE " " ";" linker_flag_escape_stripped "${linker_flag_escape_stripped}")
         list(TRANSFORM LDFLAGS PREPEND "${linker_flag_escape_stripped};")
     endif()
+    string(REPLACE " " "\\ " current_installed_dir_escaped "${CURRENT_INSTALLED_DIR}")
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
         vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib/manual-link")
     endif()
     if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
         vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib")
+    endif()
+
+    if(arg_COMPILER_FRONTEND STREQUAL "MSVC" AND arg_NO_FLAG_ESCAPING)
+      #Configure normally uses $(CC) $(CPPFLAGS) $(CCFLAGS) $(LDFLAGS) (SOURCE)
+      
+      #so make sure there is a -link option at the end of CC and CXX flags.
+      #It is not added to the begin of LDFLAGS because that could be directly
+      #passed to link.exe which does not know that option
+      #vcpkg_list(APPEND CFLAGS "-link") # <--- does not work. # Requires response files -> https://learn.microsoft.com/en-us/cpp/build/reference/cl-command-files?view=msvc-170
+      #vcpkg_list(APPEND CXXFLAGS "-link")
+      # TODO this also needs MSYS path exclusions. Otherwise options with : will be separated like the PATH variable
     endif()
 
     if(ARFLAGS AND NOT arg_COMPILER_FRONTEND STREQUAL "MSVC")
@@ -428,7 +440,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_flags) # Hmm change name?
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "NO_CPP;NO_WRAPPERS" 
+        "NO_CPP;NO_WRAPPERS;NO_FLAG_ESCAPING" 
         "LIBS_OUT;FRONTEND_VARIANT_OUT;C_COMPILER_NAME"
         "LANGUAGES"
     )
@@ -455,6 +467,9 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
     set(all_libs_list ${cxx_libs_list} ${c_libs_list})
     #Do lib list transformation from name.lib to -lname if necessary
     set(x_vcpkg_transform_libs ON)
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" AND (arg_NO_FLAG_ESCAPING))
+      set(x_vcpkg_transform_libs OFF)
+    endif()
     if(VCPKG_TARGET_IS_UWP)
         set(x_vcpkg_transform_libs OFF)
         # Avoid libtool choke: "Warning: linker path does not have real file for library -lWindowsApp."
@@ -467,6 +482,7 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
         if(VCPKG_TARGET_IS_WINDOWS)
             list(REMOVE_ITEM all_libs_list "uuid")
         endif()
+        
         list(TRANSFORM all_libs_list REPLACE "^([^-].*)" "-l\\1")
         if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             # libtool must be told explicitly that there is no dynamic linkage for uuid.
@@ -520,6 +536,10 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
 
     if(NOT arg_NO_WRAPPERS)
         list(APPEND flags_opts USES_WRAPPERS)
+    endif()
+
+    if(arg_NO_FLAG_ESCAPING)
+        list(APPEND flags_opts NO_FLAG_ESCAPING)
     endif()
 
     z_vcpkg_make_prepare_compile_flags(
