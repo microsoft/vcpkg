@@ -6,19 +6,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# head only library
+set(VCPKG_BUILD_TYPE release) 
+
 # cuda toolkit check
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
 message(STATUS "CUDA_TOOLKIT_ROOT ${CUDA_TOOLKIT_ROOT}")
 
-# windows nvcc compiler path
-if (WIN32)
-    set(CMAKE_CUDA_COMPILER "${CUDA_TOOLKIT_ROOT}/bin/nvcc.exe")
-endif()
-
-# unix nvcc compiler path
-if (UNIX)
-    set(CMAKE_CUDA_COMPILER "${CUDA_TOOLKIT_ROOT}/bin/nvcc")
-endif()
+# nvcc compiler path
+set(CMAKE_CUDA_COMPILER "${CUDA_TOOLKIT_ROOT}/bin/nvcc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
 set(CUDA_ARCHITECTURES "native")
 
@@ -26,30 +22,16 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCAW_BUILD_EXAMPLES=OFF
-        -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
-        -DCMAKE_CUDA_COMPILER=${CMAKE_CUDA_COMPILER}
+        "-DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}"
+        "-DCMAKE_CUDA_COMPILER=${CMAKE_CUDA_COMPILER}"
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME cuda-api-wrappers
-    CONFIG_PATH lib/cmake
-)
-
-set(CAW_CMAKE_PACKAGE_FILES_DIR "${CURRENT_PACKAGES_DIR}/share/cuda-api-wrappers")
-
-file(GLOB packageFiles ${CAW_CMAKE_PACKAGE_FILES_DIR}/cuda-api-wrappers/*)
-foreach(pkgFile ${packageFiles})
-    get_filename_component(fileName ${pkgFile} NAME)
-    file(RENAME ${pkgFile} ${CAW_CMAKE_PACKAGE_FILES_DIR}/${fileName})
-endforeach()
+vcpkg_cmake_config_fixup(CONFIG_PATH "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CAW_CMAKE_PACKAGE_FILES_DIR}/cuda-api-wrappers")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib" "${CURRENT_PACKAGES_DIR}/lib")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
