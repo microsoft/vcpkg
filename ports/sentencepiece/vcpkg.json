@@ -10,13 +10,5 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ],
-  "features": {
-    "absl": {
-      "description": "Use external abseil"
-    },
-    "protobuf": {
-      "description": "Use built-in protobuf"
-    }
-  }
+  ]
 }

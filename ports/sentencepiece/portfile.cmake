@@ -10,17 +10,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        protobuf SPM_USE_BUILTIN_PROTOBUF
-        absl SPM_USE_EXTERNAL_ABSL
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSPM_ENABLE_SHARED=OFF
+        -DSPM_USE_BUILTIN_PROTOBUF=ON
+        -DSPM_USE_EXTERNAL_ABSL=OFF
 )
 
 vcpkg_cmake_install()
