@@ -9,7 +9,8 @@ function(vcpkg_run_bash)
         "BASH;COMMAND;SAVE_LOG_FILES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
-    z_vcpkg_required_args(BASH WORKINK_DIRECTORY COMMAND LOGNAME)
+    z_vcpkg_required_args(BASH WORKING_DIRECTORY COMMAND LOGNAME)
+
 
     set(extra_opts "")
     if(arg_SAVE_LOG_FILES)

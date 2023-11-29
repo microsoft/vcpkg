@@ -170,7 +170,8 @@ function(z_vcpkg_make_prepare_compile_flags)
         endforeach()
     endif()
 
-    # libtool tries to filter CFLAGS passed to the link stage via a whitelist.
+    # libtool tries to filter CFLAGS passed to the link stage via a allow list.
+
     # This approach is flawed since it fails to pass flags unknown to libtool
     # but required for linking to the link stage (e.g. -fsanitize=<x>).
     # libtool has an -R option so we need to guard against -RTC by using -Xcompiler.
