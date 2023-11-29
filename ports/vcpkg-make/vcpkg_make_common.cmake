@@ -439,10 +439,10 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
         # But what will it return for ASM on windows? TODO: Needs actual testing
         # list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=C\;CXX\;ASM") ASM compiler will point to CL with MSVC
         string(REPLACE ";" "\;" langs "${arg_LANGUAGES}")
-        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${langs};-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${langs}")
         unset(langs)
     endif()
-
+    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
     z_vcpkg_make_get_cmake_vars()
 
     # ==== LIBS
