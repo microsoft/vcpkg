@@ -6242,7 +6242,7 @@
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 10
+      "port-version": 11
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6357,8 +6357,8 @@
       "port-version": 6
     },
     "openvino": {
-      "baseline": "2023.1.0",
-      "port-version": 4
+      "baseline": "2023.2.0",
+      "port-version": 0
     },
     "openvpn3": {
       "baseline": "3.7.0",
