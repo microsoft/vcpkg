@@ -2000,7 +2000,7 @@
       "baseline": "3.8",
       "port-version": 0
     },
-    "cts-traffic": {
+    "ctstraffic": {
       "baseline": "2.0.3.2",
       "port-version": 0
     },
