@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO realtimechris/jsonifier
-    REF "v${VERSION}"
-    SHA512 e2611b116cd6d73426b32fea11b3b52527466e7e59d8e8c842ccca9dac2b42679457d7ad77e11512c15fb319e650c74bbee0dce3ae7d24c127b756790eebf020
+    REF "v${VERSION}"    
+    SHA512 436dc66699ef924ca953e4d05b035ff7279fbbae932e74902eed0c6b9fd3e2bf282425c82f0d7d65392307602b5c603cf956d513df4c080c76566d4d9c61b373
     HEAD_REF main
     PATCHES
         uninstall-head.patch
