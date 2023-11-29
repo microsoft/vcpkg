@@ -1,11 +1,10 @@
 {
   "name": "kfr",
-  "version-semver": "5.0.1",
-  "port-version": 1,
+  "version-semver": "5.2.0",
   "description": "Fast, modern C++ DSP framework.",
   "homepage": "https://www.kfr.dev/",
   "license": "GPL-2.0",
-  "supports": "!(arm | linux | xbox)",
+  "supports": "!xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
