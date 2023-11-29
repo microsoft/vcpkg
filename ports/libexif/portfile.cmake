@@ -8,11 +8,11 @@ vcpkg_from_github(
         fix-ssize.patch
 )
 
+set(ENV{AUTOPOINT} true) # true, the program
 vcpkg_list(SET options)
 if("nls" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-nls")
 else()
-    set(ENV{AUTOPOINT} true) # true, the program
     vcpkg_list(APPEND options "--disable-nls")
 endif()
 

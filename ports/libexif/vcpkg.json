@@ -19,7 +19,7 @@
     "nls": {
       "description": "Enable native language support.",
       "dependencies": [
-        "gettext",
+        "gettext-libintl",
         {
           "name": "gettext",
           "host": true,
