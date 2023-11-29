@@ -1,37 +1,48 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f3e69b845..12fb2188d 100644
+index f3e69b8..f32ffee 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -66,12 +66,14 @@ option(EIGEN_TEST_CXX11 "Enable testing with C++11 and C++11 features (e.g. Tens
+@@ -59,6 +59,7 @@ include(CheckCXXCompilerFlag)
+ include(GNUInstallDirs)
+ include(CMakeDependentOption)
+ 
++if(0)
+ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
  
  
- macro(ei_add_cxx_compiler_flag FLAG)
-+  if(FALSE) # Since eigen3 is header only and vcpkg does not build tests this can be disabled by default. 
-   string(REGEX REPLACE "-" "" SFLAG1 ${FLAG})
-   string(REGEX REPLACE "\\+" "p" SFLAG ${SFLAG1})
-   check_cxx_compiler_flag(${FLAG} COMPILER_SUPPORT_${SFLAG})
-   if(COMPILER_SUPPORT_${SFLAG})
-     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLAG}")
+@@ -419,6 +420,7 @@ endif()
+ set(EIGEN_CUDA_COMPUTE_ARCH 30 CACHE STRING "The CUDA compute architecture level to target when compiling CUDA code")
+ 
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++endif()
+ 
+ # Backward compatibility support for EIGEN_INCLUDE_INSTALL_DIR
+ if(EIGEN_INCLUDE_INSTALL_DIR)
+@@ -495,6 +497,7 @@ if(BUILD_TESTING)
+   add_subdirectory(failtest)
+ endif()
+ 
++if(0)
+ if(EIGEN_LEAVE_TEST_IN_ALL_TARGET)
+   add_subdirectory(blas)
+   add_subdirectory(lapack)
+@@ -532,9 +535,11 @@ if(EIGEN_TEST_SYCL)
+     add_definitions(-DEIGEN_DONT_VECTORIZE_SYCL=1)
    endif()
-+  endif()
- endmacro()
+ endif()
++endif()
  
- check_cxx_compiler_flag("-std=c++11" EIGEN_COMPILER_SUPPORT_CPP11)
-@@ -142,7 +144,7 @@ endif()
+ add_subdirectory(unsupported)
  
- set(EIGEN_TEST_MAX_SIZE "320" CACHE STRING "Maximal matrix/vector size, default is 320")
++if(0)
+ add_subdirectory(demos EXCLUDE_FROM_ALL)
  
--if(NOT MSVC)
-+if(NOT MSVC AND FALSE)
-   # We assume that other compilers are partly compatible with GNUCC
+ # must be after test and unsupported, for configuring buildtests.in
+@@ -554,6 +559,7 @@ configure_file(scripts/cdashtesting.cmake.in cdashtesting.cmake @ONLY)
+ if(BUILD_TESTING)
+   ei_testing_print_summary()
+ endif()
++endif()
  
-   # clang outputs some warnings for unknown flags that are not caught by check_cxx_compiler_flag
-@@ -330,7 +332,7 @@ if(NOT MSVC)
-     endif()
-   endif()
- 
--else()
-+elseif(FALSE)
- 
-   # C4127 - conditional expression is constant
-   # C4714 - marked as __forceinline not inlined (I failed to deactivate it selectively)
+ message(STATUS "")
+ message(STATUS "Configured Eigen ${EIGEN_VERSION_NUMBER}")
