@@ -5382,7 +5382,7 @@
     },
     "magnum-plugins": {
       "baseline": "2020.06",
-      "port-version": 11
+      "port-version": 12
     },
     "mailio": {
       "baseline": "0.23.0",
