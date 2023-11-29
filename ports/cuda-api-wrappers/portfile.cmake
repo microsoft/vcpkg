@@ -27,10 +27,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-
-file(REMOVE_RECURSE "${CAW_CMAKE_PACKAGE_FILES_DIR}/cuda-api-wrappers")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
