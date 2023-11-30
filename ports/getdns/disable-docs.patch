@@ -2,15 +2,6 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 9170be7..def3758 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -955,7 +955,7 @@ if (BUILD_TESTING)
-     message(WARNING "Test programs require libcheck and so do not build on Windows, skipping.")
-   else ()
-     find_package(Check "0.9.6" REQUIRED)
--    set(GETDNS_TEST_SOURCE_FILES 
-+    set(GETDNS_TEST_SOURCE_FILES
-       src/test/check_getdns_common.c
-       src/test/check_getdns_context_set_timeout.c
-       src/test/check_getdns_transport.c
 @@ -1036,9 +1036,9 @@ configure_file(src/version.c.in version.c)
  
  set(version ${PACKAGE_VERSION})
