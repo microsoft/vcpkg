@@ -24,6 +24,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        --trace-expand
         -DENABLE_BSON=ON
         -DENABLE_EXAMPLES=OFF
         -DENABLE_ICU=OFF
