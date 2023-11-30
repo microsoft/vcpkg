@@ -22,7 +22,6 @@ vcpkg_msbuild_install(
     ${MSBUILD_OPTIONS}
 )
 
-
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
