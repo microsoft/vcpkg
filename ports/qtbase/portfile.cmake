@@ -40,6 +40,9 @@ if(VCPKG_TARGET_IS_LINUX)
     "They can be installed on Ubuntu systems via sudo apt-get install " 
     "'^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev "
     "libxkbcommon-x11-dev.")
+    list(APPEND ${PORT}_PATCHES 
+        fix-xkbcommon160.patch
+    )
 endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
