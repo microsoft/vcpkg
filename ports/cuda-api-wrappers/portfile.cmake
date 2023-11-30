@@ -6,13 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Get the PATH environment variable
-set(ENV_PATH "$ENV{PATH}")
-
-message(STATUS "env_path ENV_PATH")
+if(WIN32)
+    set(nvidia_driver_path "ENV:{SystemRoot}/System32/")
+else()
+    set(nvidia_driver_path "/usr/bin/")
+endif()
 
 # Try to find the nvidia-smi executable in the current PATH
-find_program(NVIDIA_DRIVER_EXECUTABLE NAME nvidia-smi PATHS ${ENV_PATH} NO_DEFAULT_PATH)
+find_program(NVIDIA_DRIVER_EXECUTABLE NAME nvidia-smi PATHS nvidia_driver_path)
 
 # Check if nvidia-smi was found
 if(NOT NVIDIA_DRIVER_EXECUTABLE)
