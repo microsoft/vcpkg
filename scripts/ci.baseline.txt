@@ -612,7 +612,7 @@ libqcow:x64-linux=skip
 libqcow:x86-windows=skip
 libqcow:arm64-windows=skip
 # needs ftello
-libraw:arm-neon-android
+libraw:arm-neon-android=fail
 # Conflicts with openssl
 libressl:arm-neon-android=skip
 libressl:arm64-android=skip
