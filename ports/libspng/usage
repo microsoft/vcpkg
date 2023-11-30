@@ -1,4 +1,4 @@
 libspng provides CMake targets:
 
-    find_package(spng CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE spng::spng)
+    find_package(SPNG CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:spng::spng>,spng::spng,spng::spng_static>) 
