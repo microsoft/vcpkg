@@ -6,19 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(WIN32)
-    set(nvidia_driver_path "$ENV{SystemRoot}/System32")
-else()
-    set(nvidia_driver_path /usr/bin)
-endif()
-
-# Try to find the nvidia-smi executable in the current PATH
-find_program(nvidia_smi "${nvidia_driver_path}/nvidia-smi${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-
-# Check if nvidia-smi was found
-if(NOT nvidia_smi)
-    message(FATAL_ERROR "not found nvidia-smi")
-endif()
 # head only library
 set(VCPKG_BUILD_TYPE release) 
 
