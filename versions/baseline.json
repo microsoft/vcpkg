@@ -2008,6 +2008,10 @@
       "baseline": "3.8",
       "port-version": 0
     },
+    "ctstraffic": {
+      "baseline": "2.0.3.2",
+      "port-version": 0
+    },
     "cub": {
       "baseline": "2.1.0",
       "port-version": 0
