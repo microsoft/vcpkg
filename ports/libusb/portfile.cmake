@@ -41,9 +41,18 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libusb-1.0.pc" " -lusb-1.0" " -llibusb-1.0")
   endif()
 else()
+    vcpkg_list(SET MAKE_OPTIONS)
+    vcpkg_list(SET LIBUSB_LINK_LIBRARIES)
+    if("udev" IN_LIST FEATURES)
+        vcpkg_list(APPEND MAKE_OPTIONS "--enable-udev")
+        vcpkg_list(APPEND LIBUSB_LINK_LIBRARIES udev)
+    else()
+        vcpkg_list(APPEND MAKE_OPTIONS "--disable-udev")
+    endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
+        OPTIONS ${MAKE_OPTIONS}
     )
     vcpkg_install_make()
 endif()

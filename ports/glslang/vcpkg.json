@@ -1,7 +1,7 @@
 {
   "name": "glslang",
   "version": "13.0.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Khronos-reference front end for GLSL/ESSL, partial front end for HLSL, and a SPIR-V generator.",
   "homepage": "https://github.com/KhronosGroup/glslang",
   "license": "Apache-2.0 AND BSD-3-Clause AND MIT AND GPL-3.0-or-later",

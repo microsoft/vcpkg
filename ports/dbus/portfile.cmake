@@ -11,10 +11,12 @@ vcpkg_from_gitlab(
         cmake.dep.patch
         pkgconfig.patch
         getpeereid.patch # missing check from configure.ac
+        libsystemd.patch
 ) 
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
+        systemd ENABLE_SYSTEMD
         x11     DBUS_BUILD_X11
         x11     CMAKE_REQUIRE_FIND_PACKAGE_X11
 )
@@ -30,7 +32,6 @@ vcpkg_cmake_configure(
         -DDBUS_INSTALL_SYSTEM_LIBS=OFF
         #-DDBUS_SERVICE=ON
         -DDBUS_WITH_GLIB=OFF
-        -DENABLE_SYSTEMD=ON
         -DTHREADS_PREFER_PTHREAD_FLAG=ON
         -DXSLTPROC_EXECUTABLE=FALSE
         "-DCMAKE_INSTALL_SYSCONFDIR=${CURRENT_PACKAGES_DIR}/etc/${PORT}"

@@ -1,6 +1,7 @@
 {
   "name": "skia",
   "version": "0.38.2",
+  "port-version": 1,
   "description": [
     "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
     "It serves as the graphics engine for Google Chrome and Chrome OS, Android, Mozilla Firefox and Firefox OS, and many other products.",
@@ -8,7 +9,7 @@
   ],
   "homepage": "https://skia.org",
   "license": null,
-  "supports": "!(windows & arm & !arm64)",
+  "supports": "!(windows & arm32) & !mingw",
   "dependencies": [
     "expat",
     "libjpeg-turbo",
@@ -18,6 +19,10 @@
       "name": "opengl",
       "default-features": false,
       "platform": "windows & !arm64 & !uwp"
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     },
     {
       "name": "vcpkg-cmake-get-vars",
@@ -38,52 +43,36 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    {
+      "name": "direct3d",
+      "platform": "uwp"
+    },
+    {
+      "name": "fontconfig",
+      "platform": "linux"
+    },
+    {
+      "name": "freetype",
+      "platform": "!(windows | osx | ios)"
+    },
+    {
+      "name": "gl",
+      "platform": "!uwp"
+    },
+    {
+      "name": "harfbuzz",
+      "platform": "!uwp"
+    },
+    {
+      "name": "icu",
+      "platform": "!uwp & !(windows & !static)"
+    }
   ],
   "features": {
     "dawn": {
       "description": "dawn support for skia",
       "dependencies": [
         "vulkan-headers"
-      ]
-    },
-    "default-features": {
-      "description": "Default feature configuration",
-      "dependencies": [
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "direct3d"
-          ],
-          "platform": "uwp"
-        },
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "fontconfig"
-          ],
-          "platform": "linux"
-        },
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "gl",
-            "harfbuzz",
-            "icu"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "freetype"
-          ],
-          "platform": "!(windows | osx | ios)"
-        }
       ]
     },
     "direct3d": {
@@ -130,7 +119,8 @@
       ]
     },
     "icu": {
-      "description": "Use icu",
+      "description": "Use icu.",
+      "supports": "!(windows & !static)",
       "dependencies": [
         "icu"
       ]
