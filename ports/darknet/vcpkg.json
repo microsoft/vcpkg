@@ -65,6 +65,13 @@
       "description": "Build darknet with support for latest version of CUDA-enabled OpenCV",
       "dependencies": [
         {
+          "name": "darknet",
+          "features": [
+            "cuda",
+            "cudnn"
+          ]
+        },
+        {
           "name": "opencv",
           "features": [
             "contrib",
