@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         libconfig++-cmake-export.diff
+        static-build.diff
 )
 
 vcpkg_cmake_configure(
