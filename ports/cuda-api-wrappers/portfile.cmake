@@ -6,6 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# for the debug only, i wiil remove this line
+message(STATUS "env_path $ENV{PATH}")
+
 # Find nvidia-smi program
 find_program(nvidia_driver_executable NAME nvidia-smi PATHS "$ENV{PATH}")
 
