@@ -6,11 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(unix)
-    FIND_PROGRAM(nvidia_smi "/usr/bin/nvidia-smi")
-    if(NOT nvidia_smi)
-        message(FATAL_ERROR "nvidia-smi not found")
-    endif()
+# Set the driver path based on the operating system
+set(nvidia_driver_path $<IF:$<PLATFORM_ID:Windows>,${SystemRoot}/System32/,/usr/bin/>)
+
+# Find nvidia-smi program
+find_program(nvidia_driver_executable NAME "nvidia-smi${VCPKG_HOST_EXECUTABLE_SUFFIX}" PATHS "${nvidia_driver_path}" NO_DEFAULT_PATH)
+
+if (NOT nvidia_driver_executable)
+    message(FATAL_ERROR "nvidia-smi not found!!")
 endif()
 
 # head only library
