@@ -42,7 +42,7 @@ if(VCPKG_TARGET_IS_LINUX)
     "libxkbcommon-x11-dev.")
     list(APPEND ${PORT}_PATCHES 
         fix-xkbcommon160.patch
-    )
+    ) # Upstream bug: https://bugreports.qt.io/browse/QTBUG-117950
 endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
