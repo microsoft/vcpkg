@@ -33,6 +33,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RT)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DDISABLE_NETMAP=ON
         -DDISABLE_BLUETOOTH=ON
@@ -48,7 +49,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 # On Windows 64-bit, libpcap 1.10.1 installs the libraries in a x64 subdirectory of the usual directories
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")

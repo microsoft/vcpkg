@@ -10,7 +10,7 @@ index f98816cb..71a3b4f9 100644
 -libdir=@LIBDIR@
 -includedir=@INCLUDEDIR@
 +prefix=@CMAKE_INSTALL_PREFIX@
-+libdir=${prefix}@/lib
++libdir=${prefix}/lib
 +includedir=${prefix}/include
  
  Name: tree-sitter

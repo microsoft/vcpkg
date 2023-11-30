@@ -1,10 +1,12 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
-    REF 206648d0e4634e5c61dcf9370676630268290b59  #v4.1.1
-    SHA512 8aa2dd06766bbc482c0e10d1c8a8379b3cd9bdc08ed93ae24f5c996ff2417f2df228e576309c521e2bd2c452d50014376f8183d2272c3af74bcc6f292ae7408b
+    REF "v${VERSION}"
+    SHA512 717393b2428cd0b88a0cf75dbee6abfc92a89935664b7606dd18c17fa573c8053f24e08d530f2d63a3730e7737c0f2ca91d0002bc02a1cfecd19cf1521312823
     HEAD_REF main
     PATCHES
         shared-zstd.patch
@@ -28,23 +30,23 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        "-DSEAL_BUILD_DEPS=OFF"
-        "-DSEAL_BUILD_EXAMPLES=OFF"
-        "-DSEAL_BUILD_TESTS=OFF"
-        "-DSEAL_BUILD_SEAL_C=OFF"
+        -DSEAL_BUILD_DEPS=OFF
+        -DSEAL_BUILD_EXAMPLES=OFF
+        -DSEAL_BUILD_TESTS=OFF
+        -DSEAL_BUILD_SEAL_C=OFF
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/SEAL-4.1")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SEAL-4.1)
 
-vcpkg_fixup_pkgconfig()
+# provides pkgconfig files only on UNIX
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fixup_pkgconfig()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
-
-vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
