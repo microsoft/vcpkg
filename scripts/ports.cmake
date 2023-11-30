@@ -78,6 +78,7 @@ include("${SCRIPTS}/cmake/vcpkg_install_qmake.cmake")
 include("${SCRIPTS}/cmake/vcpkg_list.cmake")
 include("${SCRIPTS}/cmake/vcpkg_minimum_required.cmake")
 include("${SCRIPTS}/cmake/vcpkg_replace_string.cmake")
+include("${SCRIPTS}/cmake/vcpkg_set_if_not_defined.cmake")
 include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
 
 include("${SCRIPTS}/cmake/z_vcpkg_apply_patches.cmake")
