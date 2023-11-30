@@ -8122,7 +8122,7 @@
     },
     "sqlite-orm": {
       "baseline": "1.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlite3": {
       "baseline": "3.43.2",
