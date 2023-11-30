@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
         utf8proc.patch
         thrift.patch
         fix-ci-error.patch
+        fix-cmake-path.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

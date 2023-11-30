@@ -1,0 +1,26 @@
+diff --git a/cpp/cmake_modules/ThirdpartyToolchain.cmake b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+index 559ddf1..e9947d6 100644
+--- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+@@ -964,6 +964,8 @@ set(EP_COMMON_CMAKE_ARGS
+ 
+ # Enable s/ccache if set by parent.
+ if(CMAKE_C_COMPILER_LAUNCHER AND CMAKE_CXX_COMPILER_LAUNCHER)
++  file(TO_CMAKE_PATH "${CMAKE_C_COMPILER_LAUNCHER}" CMAKE_C_COMPILER_LAUNCHER)
++  file(TO_CMAKE_PATH "${CMAKE_CXX_COMPILER_LAUNCHER}" CMAKE_CXX_COMPILER_LAUNCHER)
+   list(APPEND EP_COMMON_CMAKE_ARGS
+        -DCMAKE_C_COMPILER_LAUNCHER=${CMAKE_C_COMPILER_LAUNCHER}
+        -DCMAKE_CXX_COMPILER_LAUNCHER=${CMAKE_CXX_COMPILER_LAUNCHER})
+diff --git a/python/cmake_modules/ThirdpartyToolchain.cmake b/python/cmake_modules/ThirdpartyToolchain.cmake
+index 559ddf1..e9947d6 100644
+--- a/python/cmake_modules/ThirdpartyToolchain.cmake
++++ b/python/cmake_modules/ThirdpartyToolchain.cmake
+@@ -964,6 +964,8 @@ set(EP_COMMON_CMAKE_ARGS
+ 
+ # Enable s/ccache if set by parent.
+ if(CMAKE_C_COMPILER_LAUNCHER AND CMAKE_CXX_COMPILER_LAUNCHER)
++  file(TO_CMAKE_PATH "${CMAKE_C_COMPILER_LAUNCHER}" CMAKE_C_COMPILER_LAUNCHER)
++  file(TO_CMAKE_PATH "${CMAKE_CXX_COMPILER_LAUNCHER}" CMAKE_CXX_COMPILER_LAUNCHER)
+   list(APPEND EP_COMMON_CMAKE_ARGS
+        -DCMAKE_C_COMPILER_LAUNCHER=${CMAKE_C_COMPILER_LAUNCHER}
+        -DCMAKE_CXX_COMPILER_LAUNCHER=${CMAKE_CXX_COMPILER_LAUNCHER})
