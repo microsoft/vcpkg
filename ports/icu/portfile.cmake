@@ -39,11 +39,14 @@ if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   list(APPEND CONFIG_TRIPLETS ${TARGET_TRIPLET}-dbg)
 endif()
 
-if("tools" IN_LIST FEATURES)
-  list(APPEND CONFIGURE_OPTIONS --enable-tools)
-else()
-  list(APPEND CONFIGURE_OPTIONS --disable-tools)
+if(VCPKG_TARGET_IS_IOS)
+    if("tools" IN_LIST FEATURES)
+      list(APPEND CONFIGURE_OPTIONS --enable-tools)
+    else()
+      list(APPEND CONFIGURE_OPTIONS --disable-tools)
+    endif()
 endif()
+
 if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_MINGW AND NOT HOST_TRIPLET MATCHES "mingw")
     # Assuming no cross compiling because the host (windows) pkgdata tool doesn't
     # use the '/' path separator when creating compiler commands for mingw bash.
