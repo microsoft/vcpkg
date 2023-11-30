@@ -6,16 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# for the debug only, i wiil remove this line
-message(STATUS "env_path $ENV{PATH}")
+# Get the PATH environment variable
+set(ENV_PATH "$ENV{PATH}")
 
-# Find nvidia-smi program
-find_program(nvidia_driver_executable NAME nvidia-smi PATHS "$ENV{PATH}")
+message(STATUS "env_path ENV_PATH")
 
-if (NOT nvidia_driver_executable)
-    message(FATAL_ERROR "nvidia-smi not found!!")
+# Try to find the nvidia-smi executable in the current PATH
+find_program(NVIDIA_DRIVER_EXECUTABLE NAME nvidia-smi PATHS ${ENV_PATH} NO_DEFAULT_PATH)
+
+# Check if nvidia-smi was found
+if(NOT NVIDIA_DRIVER_EXECUTABLE)
+    message(FATAL_ERROR "not found nvidia-smi")
 endif()
-
 # head only library
 set(VCPKG_BUILD_TYPE release) 
 
