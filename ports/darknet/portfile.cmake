@@ -40,12 +40,17 @@ vcpkg_cmake_configure(
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
     -DENABLE_OPENCV:BOOL=${ENABLE_OPENCV}
+    
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet uselib)
+
 if ("opencv-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
+  list(APPEND FEATURE_OPTIONS -DBUILD_USELIB_TRACK=ON)
   vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES uselib_track)
+elseif()
+  list(APPEND FEATURE_OPTIONS -DBUILD_USELIB_TRACK=OFF)
 endif()
 
 file(COPY "${SOURCE_PATH}/cfg" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
