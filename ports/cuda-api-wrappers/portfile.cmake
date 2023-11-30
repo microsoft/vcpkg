@@ -6,6 +6,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(unix)
+    FIND_PROGRAM(nvidia_smi "/usr/bin/nvidia-smi")
+    if(NOT nvidia_smi)
+        message(FATAL_ERROR "nvidia-smi not found")
+    endif()
+endif()
+
 # head only library
 set(VCPKG_BUILD_TYPE release) 
 
