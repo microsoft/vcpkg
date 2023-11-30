@@ -58,6 +58,7 @@
     },
     {
       "name": "libxml2",
+      "default-features": false,
       "features": [
         "icu"
       ],
