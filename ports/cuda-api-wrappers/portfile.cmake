@@ -9,7 +9,7 @@ vcpkg_from_github(
 if(WIN32)
     set(nvidia_driver_path "$ENV{SystemRoot}/System32")
 else()
-    set(nvidia_driver_path "/usr/bin")
+    set(nvidia_driver_path /usr/bin)
 endif()
 
 # Try to find the nvidia-smi executable in the current PATH
