@@ -1,0 +1,10 @@
+function(vcpkg_set_if_not_defined)
+    if(ARGC LESS 2)
+        message(FATAL_ERROR "vcpkg_set_if_not_defined not passed enough arguments: ${ARGN}")
+    endif()
+
+    list(POP_FRONT ARGV var_name)
+    if(NOT DEFINED ${var_name})
+        set(${var_name} "${ARGV}" PARENT_SCOPE)
+    endif()
+endfunction()
