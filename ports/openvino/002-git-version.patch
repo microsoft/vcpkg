@@ -1,0 +1,31 @@
+diff --git a/cmake/developer_package/version.cmake b/cmake/developer_package/version.cmake
+index 1b71befe44..b78f44995a 100644
+--- a/cmake/developer_package/version.cmake
++++ b/cmake/developer_package/version.cmake
+@@ -5,7 +5,7 @@
+ find_package(Git QUIET)
+ 
+ function(ov_branch_name VAR REPO_ROOT)
+-    if(GIT_FOUND)
++    if(GIT_FOUND AND EXISTS "${REPO_ROOT}/.git")
+         execute_process(
+                 COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+                 WORKING_DIRECTORY ${REPO_ROOT}
+@@ -16,7 +16,7 @@ function(ov_branch_name VAR REPO_ROOT)
+ endfunction()
+ 
+ function(ov_commit_hash VAR REPO_ROOT)
+-    if(GIT_FOUND)
++    if(GIT_FOUND AND EXISTS "${REPO_ROOT}/.git")
+         execute_process(
+                 COMMAND ${GIT_EXECUTABLE} rev-parse --short=11 HEAD
+                 WORKING_DIRECTORY ${REPO_ROOT}
+@@ -27,7 +27,7 @@ function(ov_commit_hash VAR REPO_ROOT)
+ endfunction()
+ 
+ function(ov_commit_number VAR REPO_ROOT)
+-    if(GIT_FOUND)
++    if(GIT_FOUND AND EXISTS "${REPO_ROOT}/.git")
+         execute_process(
+                 COMMAND ${GIT_EXECUTABLE} rev-list --count --first-parent HEAD
+                 WORKING_DIRECTORY ${REPO_ROOT}
