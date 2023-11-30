@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(VCPKG_BUILD_TYPE release) # Windows port only includes tools.
+
 include("${CURRENT_PORT_DIR}/prepare_for_build.cmake")
 prepare_for_build("${SOURCE_PATH}")
 
@@ -20,7 +22,6 @@ vcpkg_msbuild_install(
     ${MSBUILD_OPTIONS}
 )
 
-vcpkg_copy_pdbs()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
