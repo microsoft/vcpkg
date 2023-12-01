@@ -81,9 +81,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/JUCE-${VERSION}")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-# Copy juceaide tools
-vcpkg_copy_tools(TOOL_NAMES juceaide SEARCH_DIR
-                 "${CURRENT_PACKAGES_DIR}/bin/JUCE-${VERSION}" AUTO_CLEAN)
+# Copy tools
+set(JUCE_TOOLS "juceaide" "juce_lv2_helper" "juce_vst3_helper")
+foreach(JUCE_TOOL IN LISTS JUCE_TOOLS)
+  vcpkg_copy_tools(
+    TOOL_NAMES ${JUCE_TOOL}
+    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin/JUCE-${VERSION}" AUTO_CLEAN
+  )
+endforeach()
 
 # Copy extras tools
 if(JUCE_BUILD_EXTRAS)
@@ -94,10 +99,8 @@ if(JUCE_BUILD_EXTRAS)
       continue()
     endif()
     vcpkg_copy_tools(
-      TOOL_NAMES
-      ${JUCE_EXTRA_TOOL}
-      SEARCH_DIR
-      "${JUCE_EXTRA_BUILD_DIR}/${JUCE_EXTRA_TOOL}/${JUCE_EXTRA_TOOL}_artefacts/Release"
+      TOOL_NAMES ${JUCE_EXTRA_TOOL}
+      SEARCH_DIR "${JUCE_EXTRA_BUILD_DIR}/${JUCE_EXTRA_TOOL}/${JUCE_EXTRA_TOOL}_artefacts/Release"
     )
   endforeach()
 endif()
@@ -108,14 +111,18 @@ foreach(JUCE_MODULE_FOLDER IN LISTS JUCE_MODULES_FOLDERS)
   file(COPY "${JUCE_MODULE_FOLDER}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 endforeach()
 
+# Remove duplicate tools directories
+file(REMOVE_RECURSE
+"${CURRENT_PACKAGES_DIR}/bin"
+"${CURRENT_PACKAGES_DIR}/debug/bin"
+)
+
 # Remove duplicate debug files
 file(REMOVE_RECURSE
-"${CURRENT_PACKAGES_DIR}/debug/include"
-"${CURRENT_PACKAGES_DIR}/debug/share"
+"${CURRENT_PACKAGES_DIR}/debug/"
 )
 # Remove empty directories
 file(REMOVE_RECURSE
-"${CURRENT_PACKAGES_DIR}/debug/lib"
 "${CURRENT_PACKAGES_DIR}/lib"
 )
 
