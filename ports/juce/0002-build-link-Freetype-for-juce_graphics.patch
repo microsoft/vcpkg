@@ -17,7 +17,7 @@ index e18dd5e08..1c6d24cd4 100644
      endif()
  
 +    if((${module_name} STREQUAL "juce_graphics"))
-+        if(DEFINED JUCE_USE_FREETYPE AND JUCE_USE_FREETYPE AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
++        if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 +            find_package(Freetype)
 +            if(TARGET Freetype::Freetype)
 +                target_link_libraries(${module_name} INTERFACE Freetype::Freetype)
@@ -36,7 +36,7 @@ index 163f203cc..321666de3 100644
      set(JUCE_TOOL_INSTALL_DIR "bin/JUCE-${JUCE_VERSION}" CACHE STRING
          "The location, relative to the install prefix, where juceaide will be installed")
  
-+    if(DEFINED JUCE_USE_FREETYPE AND JUCE_USE_FREETYPE AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
++    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 +        find_package(Freetype)
 +        if(TARGET Freetype::Freetype)
 +            target_link_libraries(juceaide INTERFACE Freetype::Freetype)
