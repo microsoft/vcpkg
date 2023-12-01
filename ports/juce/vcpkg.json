@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "juce",
   "version": "7.0.9",
   "description": "Open-source cross-platform C++ application framework for desktop and mobile applications.",
