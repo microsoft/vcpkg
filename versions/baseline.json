@@ -2758,7 +2758,7 @@
     },
     "freeglut": {
       "baseline": "3.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "freeimage": {
       "baseline": "3.18.0",
@@ -2966,7 +2966,7 @@
     },
     "gl2ps": {
       "baseline": "1.4.2",
-      "port-version": 3
+      "port-version": 4
     },
     "gl3w": {
       "baseline": "2018-05-31",
@@ -3030,7 +3030,7 @@
     },
     "glui": {
       "baseline": "2019-11-30",
-      "port-version": 3
+      "port-version": 4
     },
     "gmime": {
       "baseline": "3.2.6",
@@ -5490,7 +5490,7 @@
     },
     "mdl-sdk": {
       "baseline": "2021.1.2",
-      "port-version": 3
+      "port-version": 4
     },
     "mdns": {
       "baseline": "1.4.3",

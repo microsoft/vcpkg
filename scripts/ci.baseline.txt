@@ -338,9 +338,7 @@ fmi4cpp:arm64-uwp=fail
 fmi4cpp:x64-uwp=fail
 folly:arm64-android=fail
 folly:x64-android=fail
-freeglut:arm-neon-android=fail
-freeglut:arm64-android=fail
-freeglut:x64-android=fail
+# Needs XQuartz
 freeglut:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm-neon-android=fail
@@ -610,6 +608,8 @@ libqcow:x64-windows=skip
 libqcow:x64-linux=skip
 libqcow:x86-windows=skip
 libqcow:arm64-windows=skip
+# needs ftello
+libraw:arm-neon-android=fail
 # Conflicts with openssl
 libressl:arm-neon-android=skip
 libressl:arm64-android=skip
