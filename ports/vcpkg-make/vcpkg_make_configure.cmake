@@ -48,7 +48,7 @@ function(vcpkg_make_configure) #
       set(escaping NO_FLAG_ESCAPING)
     endif()
     z_vcpkg_set_global_property(make_prepare_flags_opts "${prepare_flags_opts}")
-    z_vcpkg_make_prepare_flags(${prepare_only_flags_opts} ${escaping} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
+    z_vcpkg_make_prepare_flags(${prepare_flags_opts} ${escaping} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
 
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
