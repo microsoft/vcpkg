@@ -1,12 +1,13 @@
 diff --git a/CMake/3rdparty.cmake b/CMake/3rdparty.cmake
-index 2c974e8..36201a0 100644
+index 2c974e8..90707bd 100644
 --- a/CMake/3rdparty.cmake
 +++ b/CMake/3rdparty.cmake
-@@ -95,6 +95,7 @@ if(DCMTK_USE_FIND_PACKAGE)
+@@ -94,7 +94,7 @@ if(DCMTK_USE_FIND_PACKAGE)
+     else()
        message(STATUS "Info: DCMTK XML support will be enabled")
        set(WITH_LIBXML 1)
-       include_directories(${LIBXML2_INCLUDE_DIR})
-+      set(LIBXML2_LIBRARIES LibXml2::LibXml2)
+-      include_directories(${LIBXML2_INCLUDE_DIR})
++      include_directories(${LIBXML2_INCLUDE_DIRS})
        set(LIBXML_LIBS ${LIBXML2_LIBRARIES} ${LIBXML2_EXTRA_LIBS_STATIC})
      endif()
    endif()
