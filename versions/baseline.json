@@ -4262,7 +4262,7 @@
     },
     "libexif": {
       "baseline": "0.6.24",
-      "port-version": 0
+      "port-version": 1
     },
     "libfabric": {
       "baseline": "1.13.2",
