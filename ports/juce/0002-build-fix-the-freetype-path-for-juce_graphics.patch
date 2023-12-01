@@ -1,22 +1,16 @@
 diff --git a/extras/Build/CMake/JUCEModuleSupport.cmake b/extras/Build/CMake/JUCEModuleSupport.cmake
-index e18dd5e08..d0d56c3b4 100644
+index e18dd5e08..096bea42c 100644
 --- a/extras/Build/CMake/JUCEModuleSupport.cmake
 +++ b/extras/Build/CMake/JUCEModuleSupport.cmake
-@@ -542,6 +542,21 @@ function(juce_add_module module_path)
+@@ -542,6 +542,15 @@ function(juce_add_module module_path)
          target_link_libraries(${module_name} INTERFACE oboe)
      endif()
 
 +    if(${module_name} STREQUAL "juce_graphics")
-+        if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
++        if((CMAKE_SYSTEM_NAME STREQUAL "Linux") OR (CMAKE_SYSTEM_NAME MATCHES ".*BSD"))
 +            find_package(Freetype)
 +            if(TARGET Freetype::Freetype)
 +                target_link_libraries(${module_name} INTERFACE Freetype::Freetype)
-+            endif()
-+            find_path(FREETYPE_ft2build "ft2build.h"
-+                HINTS "${FREETYPE_INCLUDE_DIRS}" "${FREETYPE_INCLUDE_DIR}"
-+                      "${FREETYPE_INCLUDE_DIR_freetype2}" "${FREETYPE_INCLUDE_DIR_ft2build}")
-+            if(FREETYPE_ft2build)
-+                target_include_directories(${module_name} INTERFACE "${FREETYPE_ft2build}")
 +            endif()
 +        endif()
 +    endif()
@@ -25,28 +19,16 @@ index e18dd5e08..d0d56c3b4 100644
          set(platform_supports_gl3 0)
 
 diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
-index 163f203cc..84e89e83a 100644
+index 163f203cc..08a98d68f 100644
 --- a/extras/Build/juceaide/CMakeLists.txt
 +++ b/extras/Build/juceaide/CMakeLists.txt
-@@ -148,6 +148,19 @@ else()
-     set(JUCE_TOOL_INSTALL_DIR "bin/JUCE-${JUCE_VERSION}" CACHE STRING
-         "The location, relative to the install prefix, where juceaide will be installed")
-
-+    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-+        find_package(Freetype)
-+        if(TARGET Freetype::Freetype)
-+            target_link_libraries(juceaide INTERFACE Freetype::Freetype)
-+        endif()
-+        find_path(FREETYPE_ft2build "ft2build.h"
-+            HINTS "${FREETYPE_INCLUDE_DIRS}" "${FREETYPE_INCLUDE_DIR}"
-+                  "${FREETYPE_INCLUDE_DIR_freetype2}" "${FREETYPE_INCLUDE_DIR_ft2build}")
-+        if(FREETYPE_ft2build)
-+            target_include_directories(juceaide INTERFACE "${FREETYPE_ft2build}")
-+        endif()
-+    endif()
-+
-     install(PROGRAMS "${imported_location}" DESTINATION "${JUCE_TOOL_INSTALL_DIR}")
-
-     get_filename_component(binary_name "${imported_location}" NAME)
+@@ -35,6 +35,7 @@ if(JUCE_BUILD_HELPER_TOOLS)
+     target_compile_definitions(juceaide PRIVATE
+         JUCE_DISABLE_JUCE_VERSION_PRINTING=1
+         JUCE_USE_CURL=0
++        JUCE_USE_FREETYPE=${JUCE_USE_FREETYPE}
+         # This is a temporary workaround to allow builds to complete on Xcode 15.
+         # Add -Wl,-ld_classic to the OTHER_LDFLAGS build setting if you need to
+         # deploy to older versions of macOS.
 --
 2.34.1
