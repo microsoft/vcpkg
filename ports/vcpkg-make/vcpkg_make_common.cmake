@@ -17,10 +17,23 @@ endmacro()
 
 ###
 macro(z_vcpkg_make_get_cmake_vars)
+    cmake_parse_arguments(vmgcv_arg # Not just arg since macros don't define their own var scope. 
+        "" "" "LANGUAGES" ${ARGN}
+    )
     z_vcpkg_get_global_property(has_cmake_vars_file "make_cmake_vars_file" SET)
     if(NOT has_cmake_vars_file)
+        if(vmgcv_arg_LANGUAGES)
+          # What a nice trick to get more output from vcpkg_cmake_get_vars if required
+          # But what will it return for ASM on windows? TODO: Needs actual testing
+          # list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=C\;CXX\;ASM") ASM compiler will point to CL with MSVC
+          string(REPLACE ";" "\;" vmgcv_arg_langs "${vmgcv_arg_LANGUAGES}")
+          list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${vmgcv_arg_langs}")
+          unset(langs)
+        endif()
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
         vcpkg_cmake_get_vars(cmake_vars_file)
         z_vcpkg_set_global_property(make_cmake_vars_file "${cmake_vars_file}")
+        unset(vmgcv_arg_langs)
     else()
         z_vcpkg_get_global_property(cmake_vars_file "make_cmake_vars_file")
     endif()
@@ -216,14 +229,15 @@ function(z_vcpkg_make_prepare_compile_flags)
     endif()
 
     if(arg_COMPILER_FRONTEND STREQUAL "MSVC" AND arg_NO_FLAG_ESCAPING)
-      #Configure normally uses $(CC) $(CPPFLAGS) $(CCFLAGS) $(LDFLAGS) (SOURCE)
-      
-      #so make sure there is a -link option at the end of CC and CXX flags.
-      #It is not added to the begin of LDFLAGS because that could be directly
-      #passed to link.exe which does not know that option
-      #vcpkg_list(APPEND CFLAGS "-link") # <--- does not work. # Requires response files -> https://learn.microsoft.com/en-us/cpp/build/reference/cl-command-files?view=msvc-170
-      #vcpkg_list(APPEND CXXFLAGS "-link")
-      # TODO this also needs MSYS path exclusions. Otherwise options with : will be separated like the PATH variable
+      # Create response file if using cl like to avoid warnings in configure. 
+      list(PREPEND LDFLAGS -link)
+      list(JOIN LDFLAGS " " LDFLAGS)
+      foreach(var IN ITEMS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS)
+          list(JOIN ${var} "\n" string)
+          set(rspfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${var}-${var_suffix}.rsp")
+          file(WRITE "${rspfile}" "${string}")
+          set(${var} "@${rspfile}")
+      endforeach()
     endif()
 
     if(ARFLAGS AND NOT arg_COMPILER_FRONTEND STREQUAL "MSVC")
@@ -252,9 +266,8 @@ function(z_vcpkg_make_prepare_programs out_env)
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
-    z_vcpkg_make_get_cmake_vars()
+    z_vcpkg_make_get_cmake_vars(LANGUAGES "${arg_LANGUAGES}")
 
-    
     macro(z_vcpkg_append_to_configure_environment inoutlist var defaultval)
         # Allows to overwrite settings in custom triplets via the environment on windows
         if(CMAKE_HOST_WIN32 AND DEFINED ENV{${var}})
@@ -434,6 +447,7 @@ function(z_vcpkg_make_prepare_programs out_env)
             message(STATUS "Warning: Tools with embedded space may be handled incorrectly by configure:\n   ${tools}")
         endif()
     endif()
+    #list(APPEND configure_env "MSYS2_ARG_CONV_EXCL='-LIBPATH:*;-OPT:*;-machine:*;-D*;LINK;_LINK_;CL;_CL_'")
     list(JOIN configure_env " " configure_env)
     set("${out_env}" "${configure_env}" PARENT_SCOPE)
 endfunction()
@@ -446,16 +460,7 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
-    if(DEFINED arg_LANGUAGES)
-        # What a nice trick to get more output from vcpkg_cmake_get_vars if required
-        # But what will it return for ASM on windows? TODO: Needs actual testing
-        # list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=C\;CXX\;ASM") ASM compiler will point to CL with MSVC
-        string(REPLACE ";" "\;" langs "${arg_LANGUAGES}")
-        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${langs}")
-        unset(langs)
-    endif()
-    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
-    z_vcpkg_make_get_cmake_vars()
+    z_vcpkg_make_get_cmake_vars(LANGUAGES ${arg_LANGUAGES})
 
     # ==== LIBS
     # TODO: Figure out what to do with other Languages like Fortran
