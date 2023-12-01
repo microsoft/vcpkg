@@ -1,13 +1,14 @@
 diff --git a/extras/Build/CMake/JUCEModuleSupport.cmake b/extras/Build/CMake/JUCEModuleSupport.cmake
-index e18dd5e08..096bea42c 100644
+index e18dd5e08..1ef1351df 100644
 --- a/extras/Build/CMake/JUCEModuleSupport.cmake
 +++ b/extras/Build/CMake/JUCEModuleSupport.cmake
-@@ -542,6 +542,15 @@ function(juce_add_module module_path)
+@@ -542,6 +542,16 @@ function(juce_add_module module_path)
          target_link_libraries(${module_name} INTERFACE oboe)
      endif()
 
 +    if(${module_name} STREQUAL "juce_graphics")
-+        if((CMAKE_SYSTEM_NAME STREQUAL "Linux") OR (CMAKE_SYSTEM_NAME MATCHES ".*BSD"))
++        if((DEFINED JUCE_USE_FREETYPE) AND JUCE_USE_FREETYPE AND
++           ((CMAKE_SYSTEM_NAME STREQUAL "Linux") OR (CMAKE_SYSTEM_NAME MATCHES ".*BSD")))
 +            find_package(Freetype)
 +            if(TARGET Freetype::Freetype)
 +                target_link_libraries(${module_name} INTERFACE Freetype::Freetype)
@@ -19,7 +20,7 @@ index e18dd5e08..096bea42c 100644
          set(platform_supports_gl3 0)
 
 diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
-index 163f203cc..08a98d68f 100644
+index 163f203cc..56f44565d 100644
 --- a/extras/Build/juceaide/CMakeLists.txt
 +++ b/extras/Build/juceaide/CMakeLists.txt
 @@ -35,6 +35,7 @@ if(JUCE_BUILD_HELPER_TOOLS)
@@ -30,5 +31,15 @@ index 163f203cc..08a98d68f 100644
          # This is a temporary workaround to allow builds to complete on Xcode 15.
          # Add -Wl,-ld_classic to the OTHER_LDFLAGS build setting if you need to
          # deploy to older versions of macOS.
+@@ -110,7 +111,8 @@ else()
+             "-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}"
+             "-DCMAKE_BUILD_TYPE=Debug"
+             "-DJUCE_BUILD_HELPER_TOOLS=ON"
+-            "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
++            "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
++            "-DJUCE_USE_FREETYPE=${JUCE_USE_FREETYPE}"
+             ${extra_compiler_flag_arguments}
+         WORKING_DIRECTORY "${JUCE_SOURCE_DIR}"
+         OUTPUT_VARIABLE command_output
 --
 2.34.1
