@@ -9249,8 +9249,8 @@
       "port-version": 0
     },
     "xtensor": {
-      "baseline": "0.24.6",
-      "port-version": 1
+      "baseline": "0.24.7",
+      "port-version": 0
     },
     "xtensor-blas": {
       "baseline": "0.20.0",
