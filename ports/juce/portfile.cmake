@@ -4,7 +4,9 @@ vcpkg_from_github(
   REF "${VERSION}"
   SHA512 e8519ca4ee55f126e14d7c927e2f36e7c30117a34da84f2b4e730afcea4a864b07455ad3f89d751fa47c8c155548b0c3150a667f1a9d199e582eadd146b6c697
   HEAD_REF master
-  PATCHES 0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch
+  PATCHES
+  "0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch"
+  "0002-build-link-Freetype-for-juce_graphics.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -32,35 +34,38 @@ On Ubuntu derivatives:
     message("juce with opengl feature requires the following packages via the system package manager:
   libglu1-mesa-dev mesa-common-dev
 On Ubuntu derivatives:
-  sudo apt install libglu1-mesa-dev mesa-common-dev")
+  sudo apt install libglu1-mesa-dev mesa-common-dev
+")
   endif()
 
   if(${JUCE_PLUGINHOST_LADSPA})
     message("juce with ladspa feature requires the following packages via the system package manager:
   ladspa-sdk
 On Ubuntu derivatives:
-  sudo apt install ladspa-sdk")
+  sudo apt install ladspa-sdk
+")
   endif()
 
   if(JUCE_USE_XCURSOR)
     message("juce with xcursor feature requires the following packages via the system package manager:
   libxcursor-dev
 On Ubuntu derivatives:
-  sudo apt install libxcursor-dev")
+  sudo apt install libxcursor-dev
+")
   endif()
 
   if(JUCE_WEB_BROWSER)
     message("juce with web-browser feature requires the following packages via the system package manager:
   libwebkit2gtk-4.0-dev
 On Ubuntu derivatives:
-  sudo apt install libwebkit2gtk-4.0-dev")
+  sudo apt install libwebkit2gtk-4.0-dev
+")
   endif()
 endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-  -DJUCE_BUILD_EXTRAS=${JUCE_BUILD_EXTRAS}
   -DJUCE_ENABLE_MODULE_SOURCE_GROUPS=ON
   ${FEATURE_OPTIONS}
   MAYBE_UNUSED_VARIABLES
