@@ -6,7 +6,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
   "0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch"
-  "0002-build-link-Freetype-for-juce_graphics.patch"
+  "0002-build-fix-the-freetype-path-for-juce_graphics.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

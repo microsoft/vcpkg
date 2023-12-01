@@ -1,51 +1,52 @@
-From 800a4ad417a0bc7efd2d9595b4d6bed1f2d4e728 Mon Sep 17 00:00:00 2001
-From: Amin Yahyaabadi <aminyahyaabadi74@gmail.com>
-Date: Fri, 1 Dec 2023 03:29:57 -0800
-Subject: [PATCH] build: link Freetype for juce_graphics
-
----
- extras/Build/CMake/JUCEModuleSupport.cmake | 9 +++++++++
- extras/Build/juceaide/CMakeLists.txt       | 7 +++++++
- 2 files changed, 16 insertions(+)
-
 diff --git a/extras/Build/CMake/JUCEModuleSupport.cmake b/extras/Build/CMake/JUCEModuleSupport.cmake
-index e18dd5e08..1c6d24cd4 100644
+index e18dd5e08..d0d56c3b4 100644
 --- a/extras/Build/CMake/JUCEModuleSupport.cmake
 +++ b/extras/Build/CMake/JUCEModuleSupport.cmake
-@@ -542,6 +542,15 @@ function(juce_add_module module_path)
+@@ -542,6 +542,21 @@ function(juce_add_module module_path)
          target_link_libraries(${module_name} INTERFACE oboe)
      endif()
- 
-+    if((${module_name} STREQUAL "juce_graphics"))
+
++    if(${module_name} STREQUAL "juce_graphics")
 +        if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 +            find_package(Freetype)
 +            if(TARGET Freetype::Freetype)
 +                target_link_libraries(${module_name} INTERFACE Freetype::Freetype)
++            endif()
++            find_path(FREETYPE_ft2build "ft2build.h"
++                HINTS "${FREETYPE_INCLUDE_DIRS}" "${FREETYPE_INCLUDE_DIR}"
++                      "${FREETYPE_INCLUDE_DIR_freetype2}" "${FREETYPE_INCLUDE_DIR_ft2build}")
++            if(FREETYPE_ft2build)
++                target_include_directories(${module_name} INTERFACE "${FREETYPE_ft2build}")
 +            endif()
 +        endif()
 +    endif()
 +
      if((${module_name} STREQUAL "juce_opengl") AND (CMAKE_SYSTEM_NAME STREQUAL "Android"))
          set(platform_supports_gl3 0)
- 
+
 diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
-index 163f203cc..321666de3 100644
+index 163f203cc..84e89e83a 100644
 --- a/extras/Build/juceaide/CMakeLists.txt
 +++ b/extras/Build/juceaide/CMakeLists.txt
-@@ -148,6 +148,13 @@ else()
+@@ -148,6 +148,19 @@ else()
      set(JUCE_TOOL_INSTALL_DIR "bin/JUCE-${JUCE_VERSION}" CACHE STRING
          "The location, relative to the install prefix, where juceaide will be installed")
- 
+
 +    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 +        find_package(Freetype)
 +        if(TARGET Freetype::Freetype)
 +            target_link_libraries(juceaide INTERFACE Freetype::Freetype)
 +        endif()
++        find_path(FREETYPE_ft2build "ft2build.h"
++            HINTS "${FREETYPE_INCLUDE_DIRS}" "${FREETYPE_INCLUDE_DIR}"
++                  "${FREETYPE_INCLUDE_DIR_freetype2}" "${FREETYPE_INCLUDE_DIR_ft2build}")
++        if(FREETYPE_ft2build)
++            target_include_directories(juceaide INTERFACE "${FREETYPE_ft2build}")
++        endif()
 +    endif()
 +
      install(PROGRAMS "${imported_location}" DESTINATION "${JUCE_TOOL_INSTALL_DIR}")
- 
-     get_filename_component(binary_name "${imported_location}" NAME)
--- 
-2.34.1
 
+     get_filename_component(binary_name "${imported_location}" NAME)
+--
+2.34.1
