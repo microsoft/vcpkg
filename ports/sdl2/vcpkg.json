@@ -8,8 +8,8 @@
   "dependencies": [
     {
       "name": "dbus",
-      "platform": "linux",
-      "default-features": false
+      "default-features": false,
+      "platform": "linux"
     },
     {
       "name": "vcpkg-cmake",
