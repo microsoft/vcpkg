@@ -32,6 +32,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         iconv            GDAL_USE_ICONV
         jpeg             GDAL_USE_JPEG
         core             GDAL_USE_JSONC
+        kea              GDAL_USE_KEA
         lerc             GDAL_USE_LERC
         libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
@@ -86,6 +87,7 @@ vcpkg_cmake_configure(
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
         -DOGR_BUILD_OPTIONAL_DRIVERS=ON
+        -DFIND_PACKAGE2_KEA_ENABLED=OFF
         -DGDAL_CHECK_PACKAGE_MySQL_NAMES=unofficial-libmariadb
         -DGDAL_CHECK_PACKAGE_MySQL_TARGETS=unofficial::libmariadb
         -DMYSQL_LIBRARIES=unofficial::libmariadb
