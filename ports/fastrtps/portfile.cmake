@@ -9,6 +9,10 @@ vcpkg_from_github(
         disable-symlink.patch
         fix-xtime.patch
         fix_thread.patch #https://github.com/eProsima/Fast-DDS/pull/3904
+        # https://github.com/eProsima/Fast-DDS/pull/3983
+        # Could remove after 2.6.6/2.10.2/2.11.2, other minor versions not applied
+        # Could remove after 2.13 released, or any newer mijor versions
+        fix-mac-address.patch
 )
 
 vcpkg_cmake_configure(
