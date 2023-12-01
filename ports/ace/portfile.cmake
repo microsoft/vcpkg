@@ -294,6 +294,7 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   get_filename_component(WORKING_DIR "${WORKSPACE}" DIRECTORY)
   set(ENV{PWD} "${WORKING_DIR}")
 
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   message(STATUS "Building ${TARGET_TRIPLET}-dbg")
   vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
@@ -344,7 +345,9 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
       LOGNAME realclean-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
-
+endif()
+  
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   message(STATUS "Building ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
     COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
@@ -377,6 +380,8 @@ elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
   endif()
   message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
+endif()
+  
   # Restore `PWD` environment variable
   set($ENV{PWD} _prev_env)
 
