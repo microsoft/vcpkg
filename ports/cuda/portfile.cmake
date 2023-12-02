@@ -178,6 +178,7 @@ foreach(comp IN LISTS components libs util tools)
             PATTERN "tests" EXCLUDE
             PATTERN "wine" EXCLUDE
             PATTERN "firmware" EXCLUDE
+            PATTERN "include/cub/" EXCLUDE # cub has its own port
         )
         # Need a duplicate since nvcc won't magically add new unknown search paths for stuff
         file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cuda"
