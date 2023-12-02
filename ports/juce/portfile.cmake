@@ -8,6 +8,7 @@ vcpkg_from_github(
   "0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch"
   "0002-build-linux-find_packages.patch"
   "0003-build-forward-vcpkg-toolchain.patch"
+  "0004-build-install-paths.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
