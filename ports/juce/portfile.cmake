@@ -8,7 +8,7 @@ vcpkg_from_github(
   "0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch"
   "0002-build-linux-find_packages.patch"
   "0003-build-forward-vcpkg-toolchain.patch"
-  "0004-build-install-paths.patch"
+  "0004-install-paths.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -108,7 +108,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/JUCE-${VERSION}")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
@@ -117,7 +116,7 @@ file(GLOB JUCE_TOOLS "${CURRENT_PACKAGES_DIR}/bin/JUCE-${VERSION}/*")
 foreach(JUCE_TOOL_PATH IN LISTS JUCE_TOOLS)
   get_filename_component(JUCE_TOOL "${JUCE_TOOL_PATH}" NAME_WLE)
   get_filename_component(JUCE_TOOL_DIR "${JUCE_TOOL_PATH}" DIRECTORY)
-  vcpkg_copy_tools(TOOL_NAMES ${JUCE_TOOL} SEARCH_DIR "${JUCE_TOOL_DIR}" AUTO_CLEAN)
+  vcpkg_copy_tools(TOOL_NAMES ${JUCE_TOOL} SEARCH_DIR "${JUCE_TOOL_DIR}")
 endforeach()
 
 # Copy extras tools
@@ -145,10 +144,6 @@ file(REMOVE_RECURSE
 # Remove duplicate debug files
 file(REMOVE_RECURSE
 "${CURRENT_PACKAGES_DIR}/debug/"
-)
-# Remove empty directories
-file(REMOVE_RECURSE
-"${CURRENT_PACKAGES_DIR}/lib"
 )
 
 # Copy license
