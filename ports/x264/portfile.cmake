@@ -34,6 +34,7 @@ elseif(NOT "$ENV{AS}" STREQUAL "")
     # Accept setting from triplet
 elseif(VCPKG_TARGET_ARCHITECTURE IN_LIST nasm_archs)
     vcpkg_find_acquire_program(NASM)
+    vcpkg_insert_program_into_path("${NASM}")
     set(ENV{AS} "${NASM}")
 elseif(VCPKG_TARGET_ARCHITECTURE IN_LIST gaspp_archs AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_HOST_IS_WINDOWS)
     vcpkg_find_acquire_program(GASPREPROCESSOR)
