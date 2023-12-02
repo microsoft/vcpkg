@@ -6,7 +6,7 @@ function(vcpkg_make_configure) #
 # z_vcpkg_is_autoconf
 # z_vcpkg_is_automake
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;COPY_SOURCE;NO_WRAPPERS;NO_CPP;NO_CONFIGURE_TRIPLET;ADD_BIN_TO_PATH;NO_CONFIGURE_CACHE;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING"
+        "AUTOCONFIG;COPY_SOURCE;NO_WRAPPERS;NO_CPP;NO_CONFIGURE_TRIPLET;ADD_BIN_TO_PATH;NO_CONFIGURE_CACHE;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
         "SOURCE_PATH;CONFIGURE_SUBPATH;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;POST_CONFIGURE_CMAKE_COMMANDS;ADDITIONAL_MSYS_PACKAGES;RUN_SCRIPTS;LANGUAGES"
     )
@@ -47,6 +47,11 @@ function(vcpkg_make_configure) #
     if(arg_NO_MSVC_FLAG_ESCAPING)
       set(escaping NO_FLAG_ESCAPING)
     endif()
+
+    if(arg_USE_RESPONSE_FILES)
+      set(escaping USE_RESPONSE_FILES)
+    endif()
+
     z_vcpkg_set_global_property(make_prepare_flags_opts "${prepare_flags_opts}")
     z_vcpkg_make_prepare_flags(${prepare_flags_opts} ${escaping} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
 

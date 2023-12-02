@@ -17,6 +17,7 @@ vcpkg_make_configure(
     AUTOCONFIG
     NO_WRAPPERS
     NO_MSVC_FLAG_ESCAPING
+    USE_RESPONSE_FILES
     OPTIONS ${opts}
 )
 

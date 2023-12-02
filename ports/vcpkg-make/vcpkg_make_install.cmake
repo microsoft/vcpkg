@@ -4,7 +4,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 function(vcpkg_make_install)
 # Replacement for vcpkg_(install|build)_make
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "ADD_BIN_TO_PATH;DISABLE_PARALLEL;NO_DESTDIR;NO_MSVC_FLAG_ESCAPING"
+        "ADD_BIN_TO_PATH;DISABLE_PARALLEL;NO_DESTDIR;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
         "LOGFILE_ROOT;SUBPATH;MAKEFILE;TARGETS"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
     )
@@ -60,6 +60,9 @@ function(vcpkg_make_install)
     z_vcpkg_get_global_property(prepare_flags_opts "make_prepare_flags_opts")
     if(arg_NO_MSVC_FLAG_ESCAPING)
       list(APPEND prepare_flags_opts NO_FLAG_ESCAPING)
+    endif()
+    if(arg_USE_RESPONSE_FILES)
+      set(escaping USE_RESPONSE_FILES)
     endif()
     z_vcpkg_make_prepare_flags(${prepare_flags_opts})
 

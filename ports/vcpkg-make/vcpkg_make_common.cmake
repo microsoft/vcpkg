@@ -82,7 +82,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_compile_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "NO_CPP;NO_FLAG_ESCAPING;USES_WRAPPERS" 
+        "NO_CPP;NO_FLAG_ESCAPING;USES_WRAPPERS;USE_RESPONSE_FILES" 
         "COMPILER_FRONTEND;CONFIG;FLAGS_OUT"
         "LANGUAGES"
     )
@@ -228,10 +228,12 @@ function(z_vcpkg_make_prepare_compile_flags)
         vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib")
     endif()
 
-    if(arg_COMPILER_FRONTEND STREQUAL "MSVC" AND arg_NO_FLAG_ESCAPING)
-      # Create response file if using cl like to avoid warnings in configure. 
-      list(PREPEND LDFLAGS -link)
-      list(JOIN LDFLAGS " " LDFLAGS)
+    if(arg_USE_RESPONSE_FILES)
+      if(arg_COMPILER_FRONTEND STREQUAL "MSVC")
+        # If LDFLAGS are passed to cl instead of link they need to be on a single line after -link
+        list(PREPEND LDFLAGS -link)
+        list(JOIN LDFLAGS " " LDFLAGS)
+      endif()
       foreach(var IN ITEMS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS)
           list(JOIN ${var} "\n" string)
           set(rspfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${var}-${var_suffix}.rsp")
@@ -454,7 +456,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_flags) # Hmm change name?
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "NO_CPP;NO_WRAPPERS;NO_FLAG_ESCAPING" 
+        "NO_CPP;NO_WRAPPERS;NO_FLAG_ESCAPING;USE_RESPONSE_FILES" 
         "LIBS_OUT;FRONTEND_VARIANT_OUT;C_COMPILER_NAME"
         "LANGUAGES"
     )
@@ -545,6 +547,10 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
 
     if(arg_NO_FLAG_ESCAPING)
         list(APPEND flags_opts NO_FLAG_ESCAPING)
+    endif()
+
+    if(arg_USE_RESPONSE_FILES)
+        list(APPEND flags_opts USE_RESPONSE_FILES)
     endif()
 
     z_vcpkg_make_prepare_compile_flags(
