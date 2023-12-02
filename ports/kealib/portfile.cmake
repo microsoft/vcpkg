@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 82399f1332ff2aeb6342732e9e5c897c813109fd18e77cfc8d866f06adf4faa7f080f1f3c0a3b777fb3a679912dacf4851b7ad09a338d6087dd1d26eb2d1689f
     HEAD_REF master
     PATCHES
+        kealib-target.diff
         no-kea-config-script.diff
 )
 
