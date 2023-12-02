@@ -163,23 +163,23 @@ foreach(comp IN LISTS components libs util tools)
     )
 
     if("${comp}" IN_LIST components OR "${comp}" IN_LIST libs)
-        file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}"
-            PATTERN "*docs*" EXCLUDE
-            PATTERN "*samples*" EXCLUDE
-            PATTERN "*example*" EXCLUDE
-            PATTERN "src/*" EXCLUDE
-            PATTERN "LICENSE" EXCLUDE
-            PATTERN "kernel" EXCLUDE
-            PATTERN "kernel-open" EXCLUDE
-            PATTERN "lib32" EXCLUDE
-            PATTERN "man" EXCLUDE
-            PATTERN "sbin" EXCLUDE
-            PATTERN "systemd" EXCLUDE
-            PATTERN "tests" EXCLUDE
-            PATTERN "wine" EXCLUDE
-            PATTERN "firmware" EXCLUDE
-            PATTERN "include/cub/" EXCLUDE # cub has its own port
-        )
+        #file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}"
+        #    PATTERN "*docs*" EXCLUDE
+        #    PATTERN "*samples*" EXCLUDE
+        #    PATTERN "*example*" EXCLUDE
+        #    PATTERN "src/*" EXCLUDE
+        #    PATTERN "LICENSE" EXCLUDE
+        #    PATTERN "kernel" EXCLUDE
+        #    PATTERN "kernel-open" EXCLUDE
+        #    PATTERN "lib32" EXCLUDE
+        #    PATTERN "man" EXCLUDE
+        #    PATTERN "sbin" EXCLUDE
+        #    PATTERN "systemd" EXCLUDE
+        #    PATTERN "tests" EXCLUDE
+        #    PATTERN "wine" EXCLUDE
+        #    PATTERN "firmware" EXCLUDE
+        #    PATTERN "include/cub/" EXCLUDE # cub has its own port
+        #)
         # Need a duplicate since nvcc won't magically add new unknown search paths for stuff
         file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cuda"
             PATTERN "*docs*" EXCLUDE
@@ -205,17 +205,17 @@ if(cuda_updating)
     message(FATAL_ERROR "New hashes obtained!")
 endif()
 
-file(COPY "${CURRENT_PACKAGES_DIR}/lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
+file(COPY "${CURRENT_PACKAGES_DIR}/tools/cuda/lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cub/cub-header-search.cmake" "lib/cmake/cub" "share/cub")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/thrust/thrust-header-search.cmake" "lib/cmake/thrust" "share/thrust")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/libcudacxx/libcudacxx-header-search.cmake" "../../../" "../../")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake/")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/Win32")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/x64/" "${CURRENT_PACKAGES_DIR}/lib-tmp/")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib-tmp" "${CURRENT_PACKAGES_DIR}/lib")
+#    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/Win32")
+#    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/x64/" "${CURRENT_PACKAGES_DIR}/lib-tmp/")
+#    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+#    file(RENAME "${CURRENT_PACKAGES_DIR}/lib-tmp" "${CURRENT_PACKAGES_DIR}/lib")
 endif()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/pkg-config")
@@ -265,3 +265,5 @@ vcpkg_fixup_pkgconfig()
 
 set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
