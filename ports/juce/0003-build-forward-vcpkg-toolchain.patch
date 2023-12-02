@@ -1,0 +1,14 @@
+diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
+index 163f203cc..38cd6b294 100644
+--- a/extras/Build/juceaide/CMakeLists.txt
++++ b/extras/Build/juceaide/CMakeLists.txt
+@@ -111,6 +111,7 @@ else()
+             "-DCMAKE_BUILD_TYPE=Debug"
+             "-DJUCE_BUILD_HELPER_TOOLS=ON"
+             "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
++            "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
+             ${extra_compiler_flag_arguments}
+         WORKING_DIRECTORY "${JUCE_SOURCE_DIR}"
+         OUTPUT_VARIABLE command_output
+--
+2.34.1
