@@ -112,26 +112,20 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 # Copy tools
-set(JUCE_TOOLS "juceaide" "juce_lv2_helper" "juce_vst3_helper")
-foreach(JUCE_TOOL IN LISTS JUCE_TOOLS)
-  vcpkg_copy_tools(
-    TOOL_NAMES ${JUCE_TOOL}
-    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin/JUCE-${VERSION}" AUTO_CLEAN
-  )
+file(GLOB JUCE_TOOLS "${CURRENT_PACKAGES_DIR}/bin/JUCE-${VERSION}/*")
+foreach(JUCE_TOOL_PATH IN LISTS JUCE_TOOLS)
+  get_filename_component(JUCE_TOOL "${JUCE_TOOL_PATH}" NAME_WLE)
+  get_filename_component(JUCE_TOOL_DIR "${JUCE_TOOL_PATH}" DIRECTORY)
+  vcpkg_copy_tools(TOOL_NAMES ${JUCE_TOOL} SEARCH_DIR "${JUCE_TOOL_DIR}" AUTO_CLEAN)
 endforeach()
 
 # Copy extras tools
 if(JUCE_BUILD_EXTRAS)
-  set(JUCE_EXTRA_BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/extras")
-  file(GLOB JUCE_EXTRA_TOOLS "${JUCE_EXTRA_BUILD_DIR}/*")
-  foreach(JUCE_EXTRA_TOOL IN LISTS JUCE_EXTRA_TOOLS)
-    if(NOT IS_DIRECTORY "${JUCE_EXTRA_BUILD_DIR}/${JUCE_EXTRA_TOOL}/${JUCE_EXTRA_TOOL}_artefacts/Release")
-      continue()
-    endif()
-    vcpkg_copy_tools(
-      TOOL_NAMES ${JUCE_EXTRA_TOOL}
-      SEARCH_DIR "${JUCE_EXTRA_BUILD_DIR}/${JUCE_EXTRA_TOOL}/${JUCE_EXTRA_TOOL}_artefacts/Release"
-    )
+  file(GLOB JUCE_EXTRA_TOOLS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/extras/*/*_artefacts/Release/*")
+  foreach(JUCE_EXTRA_TOOL_PATH IN LISTS JUCE_EXTRA_TOOLS)
+    get_filename_component(JUCE_EXTRA_TOOL "${JUCE_EXTRA_TOOL_PATH}" NAME_WLE)
+    get_filename_component(JUCE_EXTRA_TOOL_DIR "${JUCE_EXTRA_TOOL_PATH}" DIRECTORY)
+    vcpkg_copy_tools(TOOL_NAMES ${JUCE_EXTRA_TOOL} SEARCH_DIR "${JUCE_EXTRA_TOOL_DIR}")
   endforeach()
 endif()
 
