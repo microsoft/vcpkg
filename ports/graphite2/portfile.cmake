@@ -7,9 +7,12 @@ vcpkg_from_github(
     PATCHES disable-tests.patch
 )
 
+vcpkg_find_acquire_program(PYTHON3)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DPYTHON_EXECUTABLE=${PYTHON3}
         -DDISABLE_TESTS=ON
 )
 
@@ -22,6 +25,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libgraphite2.la" "${CURRENT_PACKAGES_DIR}/debug/lib/libgraphite2.la")
 
 file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 vcpkg_fixup_pkgconfig()
