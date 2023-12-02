@@ -1,4 +1,4 @@
-juce provides the following core CMake targets:
+juce provides the following common CMake targets:
 
     find_package(JUCE CONFIG REQUIRED)
     target_link_libraries(main PRIVATE
@@ -10,7 +10,7 @@ juce provides the following core CMake targets:
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
 
-See the documentation and License for details regarding other targets:
+See the Juce CMake API documentation and the License for details on how to create targets. Here are other available targets:
 
         juce::juce_graphics
         juce::juce_gui_basics
