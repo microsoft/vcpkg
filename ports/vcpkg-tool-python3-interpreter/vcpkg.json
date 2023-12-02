@@ -1,0 +1,10 @@
+{
+  "name": "vcpkg-tool-python3-interpreter",
+  "version": "3",
+  "description": "Python 3",
+  "homepage": "https://www.python.org/",
+  "supports": "native",
+  "dependencies": [
+    "vcpkg-find-acquire-tool"
+  ]
+}

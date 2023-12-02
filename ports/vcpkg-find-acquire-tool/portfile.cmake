@@ -3,7 +3,6 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${VCPKG_ROOT_DIR}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/vcpkg_find_acquire_meson.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/meson-intl.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg_find_acquire_tool.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )

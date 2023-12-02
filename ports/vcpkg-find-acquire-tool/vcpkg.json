@@ -1,0 +1,6 @@
+{
+  "name": "vcpkg-find-acquire-tool",
+  "version-date": "2023-11-29",
+  "description": "CMake helper functions to find or download tools.",
+  "supports": "native"
+}

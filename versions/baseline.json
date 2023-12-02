@@ -6598,7 +6598,7 @@
     },
     "pkgconf": {
       "baseline": "1.8.0",
-      "port-version": 5
+      "port-version": 6
     },
     "plasma-wayland-protocols": {
       "baseline": "1.8.0",
@@ -8804,6 +8804,10 @@
       "baseline": "2023-03-02",
       "port-version": 0
     },
+    "vcpkg-find-acquire-tool": {
+      "baseline": "2023-11-29",
+      "port-version": 0
+    },
     "vcpkg-get-python-packages": {
       "baseline": "2023-07-28",
       "port-version": 0
@@ -8846,7 +8850,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "0.63",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-mozbuild": {
       "baseline": "4.0.2",
@@ -8863,6 +8867,10 @@
     "vcpkg-tool-python2": {
       "baseline": "2.7.18",
       "port-version": 1
+    },
+    "vcpkg-tool-python3-interpreter": {
+      "baseline": "3",
+      "port-version": 0
     },
     "vectorclass": {
       "baseline": "2.02.00",
@@ -9286,7 +9294,7 @@
     },
     "yasm": {
       "baseline": "1.3.0",
-      "port-version": 5
+      "port-version": 6
     },
     "yasm-tool": {
       "baseline": "2021-12-14",

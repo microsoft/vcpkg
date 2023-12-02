@@ -6,6 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_find_acquire_meson(MESON)
+set(MESON "${MESON}" CACHE STRING "The path to meson" FORCE)
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     NO_PKG_CONFIG
