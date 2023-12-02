@@ -1,0 +1,40 @@
+diff --git a/extras/Build/CMake/JUCEModuleSupport.cmake b/extras/Build/CMake/JUCEModuleSupport.cmake
+index e18dd5e08..9ca3f0561 100644
+--- a/extras/Build/CMake/JUCEModuleSupport.cmake
++++ b/extras/Build/CMake/JUCEModuleSupport.cmake
+@@ -353,6 +353,33 @@ function(_juce_create_pkgconfig_target name)
+         return()
+     endif()
+
++    # The package that can be found via find_package instead of pkg-config
++    if("${name}" STREQUAL "freetyp2")
++        find_package(Freetype)
++        if(TARGET Freetype::Freetype)
++            add_library(juce::pkgconfig_${name} ALIAS Freetype::Freetype)
++            return()
++        endif()
++    elseif("${name}" STREQUAL "libcurl")
++        find_package(CURL)
++        if(TARGET CURL::libcurl)
++            add_library(juce::pkgconfig_${name} ALIAS CURL::libcurl)
++            return()
++        endif()
++    elseif("${name}" STREQUAL "alsa")
++        find_package(ALSA)
++        if(TARGET ALSA::ALSA)
++            add_library(juce::pkgconfig_${name} ALIAS ALSA::ALSA)
++            return()
++        endif()
++    elseif("${name}" STREQUAL "gl")
++        find_package(OpenGL)
++        if(TARGET OpenGL::GL)
++            add_library(juce::pkgconfig_${name} ALIAS OpenGL::GL)
++            return()
++        endif()
++    endif()
++
+     find_package(PkgConfig REQUIRED)
+     pkg_check_modules(${name} ${ARGN})
+
+--
+2.34.1

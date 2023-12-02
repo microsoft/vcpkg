@@ -6,7 +6,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
   "0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch"
-  "0002-build-freetype-linkage-linux.patch"
+  "0002-build-linux-find_packages.patch"
   "0003-build-forward-vcpkg-toolchain.patch"
 )
 
@@ -52,6 +52,30 @@ On Ubuntu derivatives:
   libxcursor-dev
 On Ubuntu derivatives:
   sudo apt install libxcursor-dev
+")
+  endif()
+
+  if(JUCE_USE_XINERAMA)
+    message("juce with xinerama feature requires the following packages via the system package manager:
+  libxinerama-dev
+On Ubuntu derivatives:
+  sudo apt install libxinerama-dev
+")
+  endif()
+
+  if(JUCE_USE_XRANDR)
+    message("juce with xrandr feature requires the following packages via the system package manager:
+  libxrandr-dev
+On Ubuntu derivatives:
+  sudo apt install libxrandr-dev
+")
+  endif()
+
+  if(JUCE_USE_XRENDER)
+    message("juce with xrender feature requires the following packages via the system package manager:
+  libxrender-dev
+On Ubuntu derivatives:
+  sudo apt install libxrender-dev
 ")
   endif()
 
