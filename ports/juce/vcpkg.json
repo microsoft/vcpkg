@@ -53,7 +53,10 @@
     "jack": {
       "description": "Enable JACK audio support",
       "dependencies": [
-        "jack2"
+        {
+          "name": "jack2",
+          "platform": "linux"
+        }
       ]
     },
     "ladspa": {
