@@ -8,7 +8,7 @@ else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
-set(ext ".tar.gz")
+set(ext ".tar.xz")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(platform windows)
     set(ext ".zip")
@@ -18,7 +18,7 @@ else()
 endif()
 
 set(${PORT}-windows-x86_64_HASH 182de592b37fc38dfe51512165301779e3bd2a5fe0262b4784ac98a3a08fd0aee807a4f11f54701e2c951e8d4a7e8574582b6bf2755b9aca534b7a8a1359e40d)
-set(${PORT}-linux-x86_64_HASH 0)
+set(${PORT}-linux-x86_64_HASH 86cabe1e0ac33f9be93e263bfe0cc281688e711d5812cf64dc8c4b6f6fc167afa965121ede94d85383c88cce280b373d41299cd220a1f01421b976e04091105f)
 
 vcpkg_download_distfile(
     ${PORT}
@@ -57,7 +57,9 @@ else()
 endif()
 
 if(NOT VCPKG_BUILD_TYPE)
-    file(COPY "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin")
+      file(COPY "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
     file(COPY "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
 
