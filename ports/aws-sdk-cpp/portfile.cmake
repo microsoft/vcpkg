@@ -4,11 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
     REF "${VERSION}"
-    SHA512 b1a07939dd40f635fdc5b5947c3d679e6a2482b5017a3b26801639785fa1cb3e88414dd216fe64d3fb984d812ff3e8c4103e9b4355d531e533b78f1fa2a7cb01
+    SHA512 03d21fd2b12116a43aa8163f69d5707d259c6330ddee80a5fef3b344d3797bab72e56ade7fd6669c2532798337a922e2439e0c57d1e76d2b2e8470909c4d996d
     PATCHES
         patch-relocatable-rpath.patch
         fix-aws-root.patch
         lock-curl-http-and-tls-settings.patch
+        fix-awsmigrationhub-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -29,8 +30,6 @@ else()
     set(rpath "\$ORIGIN")
 endif()
 
-set(BUILD_ONLY core)
-include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -39,7 +38,7 @@ vcpkg_cmake_configure(
         "-DENABLE_UNITY_BUILD=ON"
         "-DENABLE_TESTING=OFF"
         "-DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}"
-        "-DBUILD_ONLY=${BUILD_ONLY}"
+        "-DBUILD_ONLY=${FEATURES}"
         "-DBUILD_DEPS=OFF"
         "-DBUILD_SHARED_LIBS=OFF"
         "-DAWS_SDK_WARNINGS_ARE_ERRORS=OFF"
@@ -48,7 +47,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-foreach(TARGET IN LISTS BUILD_ONLY)
+foreach(TARGET IN LISTS FEATURES)
     vcpkg_cmake_config_fixup(PACKAGE_NAME "aws-cpp-sdk-${TARGET}" CONFIG_PATH "lib/cmake/aws-cpp-sdk-${TARGET}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endforeach()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "AWSSDK" CONFIG_PATH "lib/cmake/AWSSDK")
@@ -98,4 +97,4 @@ endif()
 
 configure_file("${CURRENT_PORT_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

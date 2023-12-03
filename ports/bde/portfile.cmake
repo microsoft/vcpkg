@@ -11,8 +11,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH TOOLS_PATH
     REPO "bloomberg/bde-tools"
     REF "${BDE_TOOLS_VERSION}"
-    SHA512 3c39da8d1ea40459e36e11ada93cc2821ae1b16a831f93cccab463996394a400cc08bb1654642eae1aa5187f139d7fb80c4729e464051eee182133eb8a74158d
-    HEAD_REF main
+    SHA512 e59560810acfe562d85a13585d908decce17ec76c89bd61f43dac56cddfdf6c56269566da75730f8eda14b5fc046d2ebce959b24110a428e8eac0e358d2597c2
+    HEAD_REF 3.123.0.0
 )
 
 message(STATUS "Configure bde-tools-v${BDE_TOOLS_VERSION}")
@@ -24,8 +24,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "bloomberg/bde"
     REF "${VERSION}"
-    SHA512 810b4a06a08739dcd990751dd543aa7dc58355f9d64a7c96ef0cf45c81501946434db42ad5bcf5d16110d5a463586b587ce09a446136e824298f39a8a871b490
-    HEAD_REF main
+    SHA512 f1c3c5ddec7ff1d301ca6f8ab00e6be42ab6a5fa3c889639e7797df74f68425d57d8b71978098331c9247820c7c831edeaf4427ae64c890d81f704343b1bb112
+    HEAD_REF 3.123.0.0
 )
 
 vcpkg_cmake_configure(
@@ -49,12 +49,16 @@ vcpkg_cmake_build()
 # Install release
 vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/)
+list(APPEND SUBPACKAGES "ryu" "inteldfp" "pcre2" "s_baltst" "bsl" "bdl" "bal")
+include(GNUInstallDirs) # needed for CMAKE_INSTALL_LIBDIR
+foreach(subpackage IN LISTS SUBPACKAGES)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME ${subpackage} CONFIG_PATH /${CMAKE_INSTALL_LIBDIR}/cmake/${subpackage} DO_NOT_DELETE_PARENT_CONFIG_PATH)
+endforeach()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${CMAKE_INSTALL_LIBDIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/${CMAKE_INSTALL_LIBDIR}/cmake")
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE
      DESTINATION ${CURRENT_PACKAGES_DIR}/share/bde
      RENAME copyright
 )
-
 vcpkg_fixup_pkgconfig()

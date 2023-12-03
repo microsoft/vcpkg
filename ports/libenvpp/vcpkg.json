@@ -1,6 +1,6 @@
 {
   "name": "libenvpp",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "description": "A modern C++ library for type-safe environment variable parsing ",
   "homepage": "https://github.com/ph3at/libenvpp",
   "license": "Apache-2.0",

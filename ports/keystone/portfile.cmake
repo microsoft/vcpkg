@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_find_acquire_program(PYTHON2)
+vcpkg_find_acquire_program(PYTHON3)
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" KEYSTONE_BUILD_STATIC_RUNTIME)
 
@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DKEYSTONE_BUILD_STATIC_RUNTIME=${KEYSTONE_BUILD_STATIC_RUNTIME}
-        -DPYTHON_EXECUTABLE=${PYTHON2}
+        -DPYTHON_EXECUTABLE=${PYTHON3}
 
         # Add support for only a subset of architectures
         #-DLLVM_TARGETS_TO_BUILD="AArch64;X86"

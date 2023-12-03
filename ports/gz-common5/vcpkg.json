@@ -1,6 +1,7 @@
 {
   "name": "gz-common5",
   "version": "5.4.1",
+  "port-version": 1,
   "description": "Common libraries for robotics applications",
   "homepage": "https://ignitionrobotics.org/libs/common",
   "license": "Apache-2.0",
@@ -22,7 +23,12 @@
     },
     {
       "name": "libuuid",
-      "platform": "!windows & !uwp & !osx"
+      "platform": "!windows & !osx"
+    },
+    {
+      "name": "pkgconf",
+      "host": true,
+      "default-features": false
     },
     "tinyxml2"
   ]

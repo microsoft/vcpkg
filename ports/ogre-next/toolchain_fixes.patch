@@ -1,37 +1,21 @@
 diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
-index f3a62f2..b53df6f 100644
 --- a/CMake/CMakeLists.txt
 +++ b/CMake/CMakeLists.txt
-@@ -13,10 +13,12 @@
+@@ -13,8 +13,10 @@
  # directory, but can also be used for custom projects.
  #############################################################
  
 -if(WIN32 OR APPLE)
 -	set(OGRE_CMAKE_DIR "CMake")
 -else()
--	set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
+-  set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/${OGRE_NEXT_PREFIX}/cmake")
 +if(NOT DEFINED OGRE_CMAKE_DIR)
 +  if(WIN32 OR APPLE)
 +    set(OGRE_CMAKE_DIR "CMake")
 +  else()
-+    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/OGRE/cmake")
++    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/${OGRE_NEXT_PREFIX}/cmake")
 +  endif()
  endif()
- 
- set(INST_FILES
-diff --git a/CMake/Packages/FindFreeImage.cmake b/CMake/Packages/FindFreeImage.cmake
-index 7c89ec5..d8314f0 100644
---- a/CMake/Packages/FindFreeImage.cmake
-+++ b/CMake/Packages/FindFreeImage.cmake
-@@ -43,7 +43,7 @@ find_path(FreeImage_INCLUDE_DIR NAMES FreeImage.h HINTS ${FreeImage_INC_SEARCH_P
- find_library(FreeImage_LIBRARY_REL NAMES ${FreeImage_LIBRARY_NAMES} HINTS ${FreeImage_LIB_SEARCH_PATH} ${FreeImage_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Release RelWithDebInfo MinSizeRel)
- find_library(FreeImage_LIBRARY_DBG NAMES ${FreeImage_LIBRARY_NAMES_DBG} HINTS ${FreeImage_LIB_SEARCH_PATH} ${FreeImage_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Debug)
- 
--make_library_set(FreeImage_LIBRARY)
-+make_library_set(FreeImage)
- 
- findpkg_finish(FreeImage)
- 
 diff --git a/CMake/Packages/FindGLSLOptimizer.cmake b/CMake/Packages/FindGLSLOptimizer.cmake
 index dd4b179..6f158fc 100644
 --- a/CMake/Packages/FindGLSLOptimizer.cmake
@@ -120,54 +104,6 @@ index 6b6d7fa..3667b8b 100644
 +make_library_set(POCO_XML)
  findpkg_finish(POCO_XML)
  
-diff --git a/CMake/Packages/FindTBB.cmake b/CMake/Packages/FindTBB.cmake
-index 4200aa0..35e4ea3 100644
---- a/CMake/Packages/FindTBB.cmake
-+++ b/CMake/Packages/FindTBB.cmake
-@@ -104,7 +104,7 @@ findpkg_framework(TBB)
- find_path(TBB_INCLUDE_DIR NAMES tbb/tbb.h HINTS ${TBB_INC_SEARCH_PATH} ${TBB_PKGC_INCLUDE_DIRS})
- find_library(TBB_LIBRARY_REL NAMES ${TBB_LIBRARY_NAMES} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
- find_library(TBB_LIBRARY_DBG NAMES ${TBB_LIBRARY_NAMES_DBG} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
--make_library_set(TBB_LIBRARY)
-+make_library_set(TBB)
- 
- findpkg_finish(TBB)
- 
-@@ -120,7 +120,7 @@ get_debug_names(TBB_MALLOC_LIBRARY_NAMES)
- find_path(TBB_MALLOC_INCLUDE_DIR NAMES tbb/tbb.h HINTS ${TBB_INCLUDE_DIR} ${TBB_INC_SEARCH_PATH} ${TBB_PKGC_INCLUDE_DIRS} )
- find_library(TBB_MALLOC_LIBRARY_REL NAMES ${TBB_MALLOC_LIBRARY_NAMES} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS} )
- find_library(TBB_MALLOC_LIBRARY_DBG NAMES ${TBB_MALLOC_LIBRARY_NAMES_DBG} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS} )
--make_library_set(TBB_MALLOC_LIBRARY)
-+make_library_set(TBB_MALLOC)
- findpkg_finish(TBB_MALLOC)
- 
- # Look for TBB's malloc proxy package
-@@ -130,5 +130,5 @@ get_debug_names(TBB_MALLOC_PROXY_LIBRARY_NAMES)
- find_path(TBB_MALLOC_PROXY_INCLUDE_DIR NAMES tbb/tbbmalloc_proxy.h HINTS ${TBB_INCLUDE_DIR} ${TBB_INC_SEARCH_PATH} ${TBB_PKGC_INCLUDE_DIRS})
- find_library(TBB_MALLOC_PROXY_LIBRARY_REL NAMES ${TBB_MALLOC_PROXY_LIBRARY_NAMES} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
- find_library(TBB_MALLOC_PROXY_LIBRARY_DBG NAMES ${TBB_MALLOC_PROXY_LIBRARY_NAMES_DBG} HINTS ${TBB_LIB_SEARCH_PATH} ${TBB_PKGC_LIBRARY_DIRS})
--make_library_set(TBB_MALLOC_PROXY_LIBRARY)
-+make_library_set(TBB_MALLOC_PROXY)
- findpkg_finish(TBB_MALLOC_PROXY)
-diff --git a/CMake/Packages/FindZZip.cmake b/CMake/Packages/FindZZip.cmake
-index c112071..214d9e5 100644
---- a/CMake/Packages/FindZZip.cmake
-+++ b/CMake/Packages/FindZZip.cmake
-@@ -39,12 +39,12 @@ use_pkgconfig(ZZip_PKGC zziplib)
- 
- findpkg_framework(ZZip)
- 
--find_path(ZZip_INCLUDE_DIR NAMES zzip/zzip.h HINTS ${ZZip_INC_SEARCH_PATH} ${ZZip_PKGC_INCLUDE_DIRS})
-+find_path(ZZip_INCLUDE_DIRS NAMES zzip/zzip.h HINTS ${ZZip_INC_SEARCH_PATH} ${ZZip_PKGC_INCLUDE_DIRS})
- 
- find_library(ZZip_LIBRARY_REL NAMES ${ZZip_LIBRARY_NAMES} HINTS ${ZZip_LIB_SEARCH_PATH} ${ZZip_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Release RelWithDebInfo MinSizeRel)
- find_library(ZZip_LIBRARY_DBG NAMES ${ZZip_LIBRARY_NAMES_DBG} HINTS ${ZZip_LIB_SEARCH_PATH} ${ZZip_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Debug)
- 
--make_library_set(ZZip_LIBRARY)
-+make_library_set(ZZip)
- 
- findpkg_finish(ZZip)
- 
 diff --git a/CMake/Utils/FindPkgMacros.cmake b/CMake/Utils/FindPkgMacros.cmake
 index 53111e0..8dffbbc 100644
 --- a/CMake/Utils/FindPkgMacros.cmake
@@ -217,15 +153,23 @@ index 48af55b..b18ac57 100644
      string(REGEX REPLACE "(\r?\n)+$" "" CMAKE_OSX_SYSROOT "${CMAKE_OSX_SYSROOT}")
    else()
 diff --git a/OgreMain/CMakeLists.txt b/OgreMain/CMakeLists.txt
-index 0424ebb..b019269 100644
 --- a/OgreMain/CMakeLists.txt
 +++ b/OgreMain/CMakeLists.txt
-@@ -434,8 +434,6 @@ if (APPLE)
-     set_target_properties(OgreMain PROPERTIES
+@@ -438,7 +438,5 @@ if (APPLE)
+     set_target_properties(${OGRE_NEXT}Main PROPERTIES
          LINK_FLAGS "-framework IOKit -framework Cocoa -framework Carbon -framework OpenGL -framework CoreVideo"
      )
 -
 -    set(OGRE_OSX_BUILD_CONFIGURATION "$(PLATFORM_NAME)/$(CONFIGURATION)")
    
-   	add_custom_command(TARGET OgreMain POST_BUILD
- 		COMMAND mkdir ARGS -p ${OGRE_BINARY_DIR}/lib/${OGRE_OSX_BUILD_CONFIGURATION}/Ogre.framework/Headers/Threading
+ 	add_custom_command(TARGET ${OGRE_NEXT}Main POST_BUILD
+diff --git a/RenderSystems/Direct3D11/CMakeLists.txt b/RenderSystems/Direct3D11/CMakeLists.txt
+--- a/RenderSystems/Direct3D11/CMakeLists.txt
++++ b/RenderSystems/Direct3D11/CMakeLists.txt
+@@ -60,5 +60,5 @@
+   target_link_libraries(RenderSystem_Direct3D11 ${AMDAGS_LIBRARIES})
+ endif()
+ 
+ ogre_config_plugin(RenderSystem_Direct3D11)
+-install(FILES ${HEADER_FILES} DESTINATION include/OGRE/RenderSystems/Direct3D11)
++install(FILES ${HEADER_FILES} DESTINATION include/${OGRE_NEXT_PREFIX}/RenderSystems/Direct3D11)

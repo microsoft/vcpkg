@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 388c00d2f883b41d4ec127bcb871607429c136bfb99daf87f491e9f1e7d456e1fac403db9f9dec7611e729dfd2f913fa414ed3d0020d92c284c8f3ba1eeb80cb
+    SHA512 722d95d7591b5ce6a7e8a3b6ac8999df278dbcfc286a532f56bcbc4a3881e75b02c7e3cd4b296e67bc19d1165020acdcca198bf4bcc92aea5611760037fcc57f
     HEAD_REF master
     PATCHES
         DontInstallSystemRuntimeLibs.patch
@@ -57,6 +57,7 @@ vcpkg_cmake_configure(
         # Can be overriden in custom triplet file
         -DWITH_ALSA=OFF
         -DWITH_CAIRO=OFF
+        -DWITH_LIBSYSTEMD=OFF
     MAYBE_UNUSED_VARIABLES
         MSVC_RUNTIME
 )
