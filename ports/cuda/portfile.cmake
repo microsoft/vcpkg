@@ -1,5 +1,9 @@
 set(base_url "https://developer.download.nvidia.com/compute/cuda/redist")
 
+if(VCPKG_TARGET_IS_WINDOWS)
+  set(VCPKG_CRT_LINKAGE "static")
+endif()
+
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(target x86_64)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_TARGET_IS_LINUX)
@@ -280,5 +284,6 @@ vcpkg_fixup_pkgconfig()
 set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
+set(VCPKG_POLICY_ONLY_RELEASE_CRT enabled)
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
