@@ -163,10 +163,14 @@ foreach(comp IN LISTS components libs util tools)
     )
 
     if("${comp}" IN_LIST components OR "${comp}" IN_LIST libs)
-        #file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}"
+        file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}"
+             PATTERN "/bin/*.dll" INCLUDE
+             PATTERN "/lib/*.lib" INCLUDE
+             PATTERN "/lib/*.a"   INCLUDE
+             PATTERN "/lib/*.so"  INCLUDE
         #    PATTERN "*docs*" EXCLUDE
         #    PATTERN "*samples*" EXCLUDE
-        #    PATTERN "*example*" EXCLUDE
+        #  #  PATTERN "*example*" EXCLUDE
         #    PATTERN "src/*" EXCLUDE
         #    PATTERN "LICENSE" EXCLUDE
         #    PATTERN "kernel" EXCLUDE
@@ -179,7 +183,7 @@ foreach(comp IN LISTS components libs util tools)
         #    PATTERN "wine" EXCLUDE
         #    PATTERN "firmware" EXCLUDE
         #    PATTERN "include/cub/" EXCLUDE # cub has its own port
-        #)
+        )
         # Need a duplicate since nvcc won't magically add new unknown search paths for stuff
         file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cuda"
             PATTERN "*docs*" EXCLUDE
@@ -205,27 +209,30 @@ if(cuda_updating)
     message(FATAL_ERROR "New hashes obtained!")
 endif()
 
-file(COPY "${CURRENT_PACKAGES_DIR}/tools/cuda/lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cub/cub-header-search.cmake" "lib/cmake/cub" "share/cub")
+file(COPY "${CURRENT_PACKAGES_DIR}/tools/cuda/lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/"
+    PATTERN "/share/cub/" EXCLUDE
+)
+#vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cub/cub-header-search.cmake" "lib/cmake/cub" "share/cub")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/thrust/thrust-header-search.cmake" "lib/cmake/thrust" "share/thrust")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/libcudacxx/libcudacxx-header-search.cmake" "../../../" "../../")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake/")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-#    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/Win32")
-#    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/x64/" "${CURRENT_PACKAGES_DIR}/lib-tmp/")
-#    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-#    file(RENAME "${CURRENT_PACKAGES_DIR}/lib-tmp" "${CURRENT_PACKAGES_DIR}/lib")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/Win32")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/x64/" "${CURRENT_PACKAGES_DIR}/lib-tmp/")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib-tmp" "${CURRENT_PACKAGES_DIR}/lib")
 endif()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/pkg-config")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/pkg-config" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/cuda/pkg-config")
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/pkg-config" "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/cuda/pkg-config")
-  file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
+  file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/share/pkgconfig/*.pc")
   foreach(pc_file IN LISTS pc_files)
     file(READ "${pc_file}" contents)
-    string(REGEX REPLACE "cudaroot=[^\n]+" "cudaroot=\${prefix}" contents "${contents}")
-    string(REGEX REPLACE "/targets/x86_64-linux" "" contents "${contents}")
+    string(REGEX REPLACE "cudaroot=[^\n]+" "cudaroot=\${prefix}/tools/cuda" contents "${contents}")
+    #string(REGEX REPLACE "/targets/x86_64-linux" "" contents "${contents}")
     file(WRITE "${pc_file}" "${contents}")
   endforeach()
 endif()
@@ -233,8 +240,8 @@ endif()
 
 
 if(NOT VCPKG_BUILD_TYPE)
-#    file(COPY "${CURRENT_PACKAGES_DIR}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-#    file(COPY "${CURRENT_PACKAGES_DIR}/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    file(COPY "${CURRENT_PACKAGES_DIR}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(COPY "${CURRENT_PACKAGES_DIR}/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
 
 file(REMOVE_RECURSE 

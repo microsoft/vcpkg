@@ -2,58 +2,27 @@ function(vcpkg_find_cuda)
     cmake_parse_arguments(PARSE_ARGV 0 vfc "" "OUT_CUDA_TOOLKIT_ROOT;OUT_CUDA_VERSION" "")
 
     if(NOT vfc_OUT_CUDA_TOOLKIT_ROOT)
-        message(FATAL_ERROR "vcpkg_find_cuda() requres an OUT_CUDA_TOOLKIT_ROOT argument")
+        message(FATAL_ERROR "vcpkg_find_cuda() requires an OUT_CUDA_TOOLKIT_ROOT argument")
     endif()
 
-    set(CUDA_REQUIRED_VERSION "10.1.0")
+    set(CUDA_REQUIRED_VERSION "11.0.0")
 
     set(CUDA_PATHS
+            ${CURRENT_INSTALLED_DIR}/tools/cuda
             ENV CUDA_PATH
             ENV CUDA_HOME
             ENV CUDA_BIN_PATH
             ENV CUDA_TOOLKIT_ROOT_DIR)
 
-    if (VCPKG_TARGET_IS_WINDOWS)
-        find_program(NVCC
-            NAMES nvcc.exe
-            PATHS
-            ${CUDA_PATHS}
-            PATH_SUFFIXES bin bin64
-            DOC "Toolkit location."
-            NO_DEFAULT_PATH
-        )
-    else()
-        if (VCPKG_TARGET_IS_LINUX)
-            set(platform_base "/usr/local/cuda-")
-        else()
-            set(platform_base "/Developer/NVIDIA/CUDA-")
-        endif()
 
-        file(GLOB possible_paths "${platform_base}*")
-        set(FOUND_PATH )
-        foreach (p ${possible_paths})
-            # Extract version number from end of string
-            string(REGEX MATCH "[0-9][0-9]?\\.[0-9]$" p_version ${p})
-            if (IS_DIRECTORY ${p} AND p_version)
-                if (p_version VERSION_GREATER_EQUAL CUDA_REQUIRED_VERSION)
-                    set(FOUND_PATH ${p})
-                    break()
-                endif()
-            endif()
-        endforeach()
-
-        vcpkg_list(APPEND CUDA_PATHS /usr/bin)
-
-        find_program(NVCC
-            NAMES nvcc
-            PATHS
-            ${CUDA_PATHS}
-            PATHS ${FOUND_PATH}
-            PATH_SUFFIXES bin bin64
-            DOC "Toolkit location."
-            NO_DEFAULT_PATH
-        )
-    endif()
+    find_program(NVCC
+        NAMES nvcc.exe
+        PATHS
+        ${CUDA_PATHS}
+        PATH_SUFFIXES bin bin64
+        DOC "Toolkit location."
+        NO_DEFAULT_PATH
+    )
 
     set(error_code 1)
     if (NVCC)
