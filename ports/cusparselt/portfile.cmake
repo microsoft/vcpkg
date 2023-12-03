@@ -8,6 +8,10 @@ else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+  set(VCPKG_CRT_LINKAGE "static")
+endif()
+
 set(ext ".tar.xz")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(platform windows)
