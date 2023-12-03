@@ -1,42 +1,24 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a3837943..f5c0bf34 100644
+index a3837943..2c34d7fb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -277,7 +277,11 @@ set_target_properties(datachannel PROPERTIES
-        CXX_VISIBILITY_PRESET default)
- target_compile_definitions(datachannel PRIVATE RTC_EXPORTS)
- 
--add_library(datachannel-static STATIC EXCLUDE_FROM_ALL
-+if(DATACHANNEL_STATIC_LINKAGE)
-+       set_target_properties(datachannel PROPERTIES EXCLUDE_FROM_ALL 1)
-+endif()
-+
-+add_library(datachannel-static STATIC
-        ${LIBDATACHANNEL_SOURCES}
-        ${LIBDATACHANNEL_HEADERS}
-        ${LIBDATACHANNEL_IMPL_SOURCES}
-@@ -288,6 +292,10 @@ set_target_properties(datachannel-static PROPERTIES
- target_compile_definitions(datachannel-static PRIVATE RTC_EXPORTS)
- target_compile_definitions(datachannel-static PUBLIC RTC_STATIC)
- 
-+if(NOT DATACHANNEL_STATIC_LINKAGE)
-+       set_target_properties(datachannel-static PROPERTIES EXCLUDE_FROM_ALL 1)
-+endif()
-+
- target_include_directories(datachannel PUBLIC
-     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-     $<INSTALL_INTERFACE:include>)
-@@ -446,11 +454,19 @@ if(WARNINGS_AS_ERRORS)
+@@ -446,11 +446,25 @@ if(WARNINGS_AS_ERRORS)
         endif()
  endif()
  
 +if(DATACHANNEL_STATIC_LINKAGE)
++set_target_properties(datachannel PROPERTIES EXCLUDE_FROM_ALL 1)
++set_target_properties(datachannel-static PROPERTIES EXCLUDE_FROM_ALL 0)
++
 +install(TARGETS datachannel-static EXPORT LibDataChannelTargets
 +       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 +       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +)
 +else()
++set_target_properties(datachannel PROPERTIES EXCLUDE_FROM_ALL 0)
++set_target_properties(datachannel-static PROPERTIES EXCLUDE_FROM_ALL 1)
++
  install(TARGETS datachannel EXPORT LibDataChannelTargets
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
