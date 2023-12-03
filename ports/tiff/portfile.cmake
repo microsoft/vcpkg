@@ -14,6 +14,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cxx     cxx
         jpeg    jpeg
         jpeg    CMAKE_REQUIRE_FIND_PACKAGE_JPEG
+        libdeflate libdeflate
+        libdeflate CMAKE_REQUIRE_FIND_PACKAGE_Deflate
         lzma    lzma
         lzma    CMAKE_REQUIRE_FIND_PACKAGE_liblzma
         tools   tiff-tools
@@ -33,7 +35,6 @@ vcpkg_cmake_configure(
         -Dtiff-docs=OFF
         -Dtiff-contrib=OFF
         -Dtiff-tests=OFF
-        -Dlibdeflate=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
         -Dlerc=OFF
