@@ -164,29 +164,32 @@ foreach(comp IN LISTS components libs util tools)
 
     if("${comp}" IN_LIST components OR "${comp}" IN_LIST libs)
         file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}"
-             PATTERN "/bin/*.dll" 
-             PATTERN "/lib/*.lib" 
-             PATTERN "/lib/*.a"   
-             PATTERN "/lib/*.so"  
-        #    PATTERN "*docs*" EXCLUDE
-        #    PATTERN "*samples*" EXCLUDE
-        #  #  PATTERN "*example*" EXCLUDE
-        #    PATTERN "src/*" EXCLUDE
-        #    PATTERN "LICENSE" EXCLUDE
-        #    PATTERN "kernel" EXCLUDE
-        #    PATTERN "kernel-open" EXCLUDE
-        #    PATTERN "lib32" EXCLUDE
-        #    PATTERN "man" EXCLUDE
-        #    PATTERN "sbin" EXCLUDE
-        #    PATTERN "systemd" EXCLUDE
-        #    PATTERN "tests" EXCLUDE
-        #    PATTERN "wine" EXCLUDE
-        #    PATTERN "firmware" EXCLUDE
-        #    PATTERN "include/cub/" EXCLUDE # cub has its own port
+             PATTERN "/bin/*.dll"
+             PATTERN "/lib/*.lib"
+             PATTERN "/lib/*.a"
+             PATTERN "/lib/*.so"
+             PATTERN "*docs*" EXCLUDE
+             PATTERN "*doc*" EXCLUDE
+             PATTERN "*samples*" EXCLUDE
+             PATTERN "*example*" EXCLUDE
+             PATTERN "src/*" EXCLUDE
+             PATTERN "LICENSE" EXCLUDE
+             PATTERN "kernel" EXCLUDE
+             PATTERN "kernel-open" EXCLUDE
+             PATTERN "lib32" EXCLUDE
+             PATTERN "man" EXCLUDE
+             PATTERN "sbin" EXCLUDE
+             PATTERN "systemd" EXCLUDE
+             PATTERN "tests" EXCLUDE
+             PATTERN "wine" EXCLUDE
+             PATTERN "firmware" EXCLUDE
+             PATTERN "include" EXCLUDE
+             PATTERN "share" EXCLUDE
         )
         # Need a duplicate since nvcc won't magically add new unknown search paths for stuff
         file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cuda"
             PATTERN "*docs*" EXCLUDE
+            PATTERN "*doc*" EXCLUDE
             PATTERN "*samples*" EXCLUDE
             PATTERN "*example*" EXCLUDE
             PATTERN "LICENSE" EXCLUDE
@@ -196,6 +199,7 @@ foreach(comp IN LISTS components libs util tools)
     else()
         file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cuda"
             PATTERN "*docs*" EXCLUDE
+            PATTERN "*doc*" EXCLUDE
             PATTERN "*samples*" EXCLUDE
             PATTERN "*exsample*" EXCLUDE
             PATTERN "LICENSE" EXCLUDE
@@ -214,7 +218,9 @@ file(COPY "${CURRENT_PACKAGES_DIR}/tools/cuda/lib/cmake/" DESTINATION "${CURRENT
 )
 #vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cub/cub-header-search.cmake" "lib/cmake/cub" "share/cub")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/thrust/thrust-header-search.cmake" "lib/cmake/thrust" "share/thrust")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/libcudacxx/libcudacxx-header-search.cmake" "../../../" "../../")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/thrust/thrust-header-search.cmake" "from_install_prefix}" "from_install_prefix}/tools/cuda/")
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/libcudacxx/libcudacxx-header-search.cmake" "../../../" "../../tools/cuda")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake/")
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -245,19 +251,20 @@ if(NOT VCPKG_BUILD_TYPE)
 endif()
 
 file(REMOVE_RECURSE 
-    "${CURRENT_PACKAGES_DIR}/include/cub/cmake"
-    "${CURRENT_PACKAGES_DIR}/include/thrust/cmake"
     "${CURRENT_PACKAGES_DIR}/src"
     "${CURRENT_PACKAGES_DIR}/nvml"
     "${CURRENT_PACKAGES_DIR}/tools/cuda/nvml"
+    "${CURRENT_PACKAGES_DIR}/share/cub"
 )
 
 file(REMOVE_RECURSE 
+    "${CURRENT_PACKAGES_DIR}/include"
     "${CURRENT_PACKAGES_DIR}/tools/cuda/include/cub/cmake"
     "${CURRENT_PACKAGES_DIR}/tools/cuda/include/thrust/cmake"
     "${CURRENT_PACKAGES_DIR}/MANIFEST"
     "${CURRENT_PACKAGES_DIR}/third-party-notices.txt"
     "${CURRENT_PACKAGES_DIR}/README"
+    "${CURRENT_PACKAGES_DIR}/LICENSE"
     "${CURRENT_PACKAGES_DIR}/CHANGELOG"
 )
 
