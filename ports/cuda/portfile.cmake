@@ -164,10 +164,10 @@ foreach(comp IN LISTS components libs util tools)
 
     if("${comp}" IN_LIST components OR "${comp}" IN_LIST libs)
         file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}"
-             PATTERN "/bin/*.dll" INCLUDE
-             PATTERN "/lib/*.lib" INCLUDE
-             PATTERN "/lib/*.a"   INCLUDE
-             PATTERN "/lib/*.so"  INCLUDE
+             PATTERN "/bin/*.dll" 
+             PATTERN "/lib/*.lib" 
+             PATTERN "/lib/*.a"   
+             PATTERN "/lib/*.so"  
         #    PATTERN "*docs*" EXCLUDE
         #    PATTERN "*samples*" EXCLUDE
         #  #  PATTERN "*example*" EXCLUDE
