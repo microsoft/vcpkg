@@ -9,6 +9,12 @@
   "supports": "windows & x64",
   "dependencies": [
     {
+      "name": "glslang",
+      "features": [
+        "tools"
+      ]
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
