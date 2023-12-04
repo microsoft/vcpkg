@@ -4,6 +4,7 @@
   "description": "Vulkan header files and API registry",
   "homepage": "https://github.com/KhronosGroup/Vulkan-Headers",
   "license": null,
+  "supports": "!osx",
   "dependencies": [
     "qt5-base",
     {
@@ -19,6 +20,7 @@
       "host": true
     },
     "vulkan-loader",
-    "vulkan-utility-libraries"
+    "vulkan-utility-libraries",
+    "valijson"
   ]
 }

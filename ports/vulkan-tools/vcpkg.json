@@ -4,6 +4,7 @@
   "description": "Vulkan Development Tools",
   "homepage": "https://github.com/KhronosGroup/Vulkan-Tools",
   "license": "Apache-2.0",
+  "supports": "!osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
