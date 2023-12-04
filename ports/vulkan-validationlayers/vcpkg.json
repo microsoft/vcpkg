@@ -5,6 +5,16 @@
   "homepage": "https://github.com/KhronosGroup/Vulkan-ValidationLayers",
   "license": null,
   "dependencies": [
+    "mimalloc",
+    {
+      "name": "python3",
+      "host": true
+    },
+    "robin-hood-hashing",
+    "spirv-cross",
+    "spirv-headers",
+    "spirv-reflect",
+    "spirv-tools",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,17 +23,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "python3",
-      "host": true
-    },
-    "spirv-cross",
-    "spirv-tools",
-    "spirv-headers",
-    "spirv-reflect",
     "vulkan-headers",
-    "vulkan-utility-libraries",
-    "robin-hood-hashing",
-    "mimalloc"
+    "vulkan-utility-libraries"
   ]
 }

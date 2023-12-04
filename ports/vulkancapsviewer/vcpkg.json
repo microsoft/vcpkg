@@ -5,6 +5,7 @@
   "homepage": "https://github.com/SaschaWillems/VulkanCapsViewer",
   "license": "LGPL-3.0",
   "dependencies": [
+    "qt5-base",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,7 +13,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "qt5-base"
+    }
   ]
 }

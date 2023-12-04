@@ -6,49 +6,49 @@
   "supports": "!uwp & !xbox",
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
-      "host": true
+      "name": "directx-dxc",
+      "platform": "windows"
     },
-    "vulkan-headers",
-    "vulkan-loader",
-    "vulkan-validationlayers",
-    "vulkan-extensionlayer",
-    "vulkan-utility-libraries",
-    "vulkan-profiles",
-    "vulkan-memory-allocator",
-    "glslang",
-    "spirv-cross",
-    "spirv-headers",
-    {
-      "name": "moltenvk",
-      "platform": "osx"
-    },
-    "shaderc",
-    "volk",
     "glm",
-    "sdl2",
-    "robin-hood-hashing",
+    "glslang",
     "jsoncpp",
-    "valijson",
     {
       "name": "mimalloc",
       "platform": "windows"
     },
     {
-      "name": "directx-dxc",
-      "platform": "windows"
-    }
+      "name": "moltenvk",
+      "platform": "osx"
+    },
+    "robin-hood-hashing",
+    "sdl2",
+    "shaderc",
+    "spirv-cross",
+    "spirv-headers",
+    "valijson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "volk",
+    "vulkan-extensionlayer",
+    "vulkan-headers",
+    "vulkan-loader",
+    "vulkan-memory-allocator",
+    "vulkan-profiles",
+    "vulkan-utility-libraries",
+    "vulkan-validationlayers"
   ],
-  "features" : {
-    "tools" : {
+  "features": {
+    "tools": {
       "description": "Build Vulkan related tools",
-      "dependencies" : [
-          "vulkancapsviewer",
-          "vulkantools",
-          "vulkan-tools",
-          "spirv-tools",
-          "spirv-reflect",
-          "gfxreconstruct"
+      "dependencies": [
+        "gfxreconstruct",
+        "spirv-reflect",
+        "spirv-tools",
+        "vulkan-tools",
+        "vulkancapsviewer",
+        "vulkantools"
       ]
     }
   }

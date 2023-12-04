@@ -3,7 +3,8 @@
   "version": "1.2.6",
   "description": "MoltenVK is a Vulkan Portability implementation. It layers a subset of the high-performance, industry-standard Vulkan graphics and compute API over Apple's Metal graphics framework, enabling Vulkan applications to run on macOS, iOS and tvOS.",
   "homepage": "https://github.com/KhronosGroup/MoltenVK",
-  "license": "Apach-2.0",
+  "license": "Apache-2.0",
+  "supports": "osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

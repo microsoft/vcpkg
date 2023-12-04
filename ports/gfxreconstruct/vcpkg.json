@@ -5,6 +5,7 @@
   "homepage": "https://github.com/LunarG/gfxreconstruct",
   "license": "Apache-2.0",
   "dependencies": [
+    "lz4",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -16,7 +17,6 @@
     "vulkan-headers",
     "vulkan-utility-libraries",
     "zlib",
-    "lz4",
     "zstd"
   ]
 }
