@@ -128,6 +128,7 @@ including on using CMake with an IDE.
 Prerequisites for Linux:
 - [Git][getting-started:git]
 - [g++][getting-started:linux-gcc] >= 6
+- Zip
 
 Prerequisites for macOS:
 - [Apple Developer Tools][getting-started:macos-dev-tools]
