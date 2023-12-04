@@ -7,7 +7,7 @@
     "Graphite2 is a rework of the original Graphite engine that is faster, smaller, and uses an API that is better suited to the layout architecture of most text-processing applications."
   ],
   "homepage": "https://github.com/silnrsi/graphite",
-  "license": "LGPL-2.1",
+  "license": "LGPL-2.1 OR MPL-2.0 OR MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
