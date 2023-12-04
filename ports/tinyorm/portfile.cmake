@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO silverqx/TinyORM
-    REF v0.36.5
+    REF "v${VERSION}"
     SHA512 ba3bf73972a6265663122e2c260354cf213dcdcf7bfd1f7a6a7eb43eb11e06fbed581b3f6ce28898eb60a85d0c9bfe45bfaa9596d92b62ca40702ede9856b183
     HEAD_REF main
+    PATCHES
+        suppress-warning-STL4043.patch
 )
 
 vcpkg_check_features(
@@ -27,7 +29,6 @@ vcpkg_cmake_configure(
         -DTINY_PORT:STRING=${PORT}
         -DTINY_VCPKG:BOOL=ON
         -DVERBOSE_CONFIGURE:BOOL=ON
-        -DWARNINGS_AS_ERRORS=FALSE
         ${FEATURE_OPTIONS}
 )
 
@@ -38,3 +39,5 @@ vcpkg_cmake_config_fixup()
 if(TINYORM_TOM_EXAMPLE)
     vcpkg_copy_tools(TOOL_NAMES tom AUTO_CLEAN)
 endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

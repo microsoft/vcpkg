@@ -1,11 +1,11 @@
 {
   "name": "mdl-sdk",
   "version": "2021.1.2",
-  "port-version": 3,
+  "port-version": 4,
   "description": "NVIDIA Material Definition Language SDK",
   "homepage": "https://github.com/NVIDIA/MDL-SDK",
   "license": "BSD-3-Clause",
-  "supports": "!arm & !x86 & !(windows & static)",
+  "supports": "!arm & !x86 & !staticcrt",
   "dependencies": [
     "boost-algorithm",
     "boost-any",
