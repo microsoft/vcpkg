@@ -4,6 +4,7 @@
   "description": "Vulkan Development Tools",
   "homepage": "https://github.com/KhronosGroup/Vulkan-Loader",
   "license": null,
+  "supports": "!android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

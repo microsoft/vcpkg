@@ -16,3 +16,4 @@ vcpkg_cmake_install()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

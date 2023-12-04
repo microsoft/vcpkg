@@ -5,6 +5,7 @@
   "homepage": "https://github.com/KhronosGroup/Vulkan-Headers",
   "license": null,
   "dependencies": [
+    "qt5-base",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,6 +14,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
+    "vulkan-loader",
     "vulkan-utility-libraries"
   ]
 }

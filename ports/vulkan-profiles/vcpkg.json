@@ -6,10 +6,6 @@
   "license": null,
   "dependencies": [
     "jsoncpp",
-    {
-      "name": "python3",
-      "host": true
-    },
     "valijson",
     {
       "name": "vcpkg-cmake",
@@ -17,6 +13,10 @@
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
       "host": true
     },
     "vulkan-headers",

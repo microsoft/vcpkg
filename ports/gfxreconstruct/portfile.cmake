@@ -30,3 +30,4 @@ foreach(file IN LISTS files)
 endforeach()
 
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
