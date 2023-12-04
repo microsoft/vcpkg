@@ -1,0 +1,26 @@
+diff --git a/layer/CMakeLists.txt b/layer/CMakeLists.txt
+index 21ef8beb6b..f3c41f3e5a 100644
+--- a/layer/CMakeLists.txt
++++ b/layer/CMakeLists.txt
+@@ -110,7 +110,7 @@ target_link_libraries(ProfilesLayer PRIVATE
+     Vulkan::LayerSettings
+     Vulkan::Headers
+     Vulkan::UtilityHeaders
+-    jsoncpp_static
++    JsonCpp::JsonCpp
+     valijson
+ )
+ 
+diff --git a/profiles/test/CMakeLists.txt b/profiles/test/CMakeLists.txt
+index a4c7906a44..26e62090d5 100644
+--- a/profiles/test/CMakeLists.txt
++++ b/profiles/test/CMakeLists.txt
+@@ -17,7 +17,7 @@ target_compile_definitions(${TEST_NAME} PRIVATE
+ 	PROFILE_FILES_PATH="${CMAKE_SOURCE_DIR}/profiles/")
+ add_dependencies(${TEST_NAME} VpGenerated)
+ 
+-target_link_libraries(${TEST_NAME} PRIVATE GTest::gtest GTest::gtest_main jsoncpp_static valijson)
++target_link_libraries(${TEST_NAME} PRIVATE GTest::gtest GTest::gtest_main JsonCpp::JsonCpp valijson)
+ add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME} --gtest_catch_exceptions=0)
+ 
+ set_target_properties(${TEST_NAME} PROPERTIES FOLDER "Profiles schema")
