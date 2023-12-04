@@ -1,17 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 074986f..bb5ab3a 100644
+index e758b5d..beda887 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -187,7 +187,7 @@ target_compile_features(geos_cxx_flags INTERFACE cxx_std_11)
+@@ -187,7 +187,8 @@ target_compile_features(geos_cxx_flags INTERFACE cxx_std_11)
  target_compile_options(geos_cxx_flags INTERFACE
  	"$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-ffp-contract=off>"
  	"$<$<CXX_COMPILER_ID:GNU>:-ffp-contract=off>"
--	$<$<CXX_COMPILER_ID:MSVC>:/fp:precise /wd4996>
-+  "$<$<BOOL:${MSVC}>:/fp:precise /wd4996>"
+-	"$<$<CXX_COMPILER_ID:MSVC>:/fp:precise>"
++	"$<$<BOOL:${MSVC}>:/fp:precise>"
++	"$<$<BOOL:${MSVC}>:/wd4996>"
  	)
  
  # Use -ffloat-store for 32-bit builds (needed to make some tests pass)
-@@ -227,10 +227,10 @@ target_compile_definitions(geos_cxx_flags
+@@ -227,10 +228,10 @@ target_compile_definitions(geos_cxx_flags
  
  target_compile_definitions(geos_developer_cxx_flags
    INTERFACE
@@ -26,7 +27,7 @@ index 074986f..bb5ab3a 100644
  
  target_compile_options(geos_developer_cxx_flags
    INTERFACE
-@@ -269,7 +269,7 @@ option(VERSION_MINGW_SHARED_LIBS "Add version suffix to MinGW shared libraries"
+@@ -269,7 +270,7 @@ option(VERSION_MINGW_SHARED_LIBS "Add version suffix to MinGW shared libraries"
  
  if(BUILD_SHARED_LIBS)
    target_compile_definitions(geos
@@ -35,7 +36,7 @@ index 074986f..bb5ab3a 100644
  
    set_target_properties(geos PROPERTIES VERSION ${GEOS_VERSION_NOPATCH})
    set_target_properties(geos PROPERTIES SOVERSION ${GEOS_VERSION_NOPATCH})
-@@ -287,7 +287,7 @@ target_link_libraries(geos_c PRIVATE geos)
+@@ -287,7 +288,7 @@ target_link_libraries(geos_c PRIVATE geos)
  
  if(BUILD_SHARED_LIBS)
    target_compile_definitions(geos_c
