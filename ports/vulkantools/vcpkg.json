@@ -6,6 +6,7 @@
   "license": null,
   "supports": "!osx",
   "dependencies": [
+    "jsoncpp",
     "qt5-base",
     "valijson",
     {
