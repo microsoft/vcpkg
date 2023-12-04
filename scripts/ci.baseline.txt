@@ -1341,4 +1341,4 @@ vcpkg-ci-wxwidgets:x64-windows-static-md=pass
 vcpkg-ci-wxwidgets:x64-windows-static=pass
 vcpkg-ci-wxwidgets:x64-windows=pass
 vcpkg-ci-wxwidgets:x86-windows=pass
-vulkan:x64-windows-static=fail
+vulkan-loader:x64-windows-static=fail
