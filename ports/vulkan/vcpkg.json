@@ -16,10 +16,6 @@
       "name": "mimalloc",
       "platform": "windows"
     },
-    {
-      "name": "moltenvk",
-      "platform": "osx"
-    },
     "robin-hood-hashing",
     "sdl2",
     "shaderc",
