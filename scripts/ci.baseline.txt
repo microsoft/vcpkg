@@ -819,7 +819,6 @@ omplapp:arm-neon-android=fail
 omplapp:arm64-android=fail
 omplapp:x64-android=fail
 onednn:x64-android=fail
-open62541:x64-windows-static-md=fail
 openblas:arm-neon-android=fail
 openblas:arm64-android=fail
 openblas:x64-android=fail
