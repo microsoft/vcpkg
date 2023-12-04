@@ -1194,7 +1194,6 @@ torch-th:x64-android=fail
 torch-th:x64-uwp=fail
 torch-th:x64-windows-static=fail
 treehopper:x64-windows-static=fail
-treehopper:x64-linux=fail
 turbobase64:arm-neon-android=fail
 tvision:arm-neon-android=fail
 tvision:arm64-android=fail
