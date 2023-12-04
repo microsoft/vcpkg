@@ -1,0 +1,36 @@
+{
+  "name": "rmqcpp",
+  "version": "1.0.0",
+  "description": "rmqcpp - A C++ library for RabbitMQ.",
+  "dependencies": [
+    {
+      "name": "bde",
+      "host": true,
+      "version>=": "3.123.0.0"
+    },
+    {
+      "name": "boost-asio",
+      "host": true
+    },
+    {
+      "name": "boost-iostreams",
+      "host": true
+    },
+    {
+      "name": "gtest",
+      "host": true
+    },
+    {
+      "name": "openssl",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

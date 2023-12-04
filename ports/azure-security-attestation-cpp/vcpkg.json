@@ -1,6 +1,7 @@
 {
   "name": "azure-security-attestation-cpp",
   "version-semver": "1.1.0",
+  "port-version": 1,
   "description": [
     "Microsoft Azure Attestation Service SDK for C++",
     "This library provides API access to the Microsoft Azure Attestation service."

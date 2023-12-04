@@ -8,6 +8,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         dll-bindir.diff
+        fix_undefind_func.patch
 )
 
 vcpkg_list(SET options)
@@ -48,6 +49,7 @@ vcpkg_configure_make(
     OPTIONS
         --enable-portable-binary
         --disable-docs
+        --disable-multi-os-directory
         ${options}
 )
 

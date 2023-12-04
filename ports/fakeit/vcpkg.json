@@ -1,6 +1,6 @@
 {
   "name": "fakeit",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "FakeIt is a simple mocking framework for C++. It supports GCC, Clang and MS Visual C++.",
   "homepage": "https://github.com/eranpeer/FakeIt",
   "license": "MIT"

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephane/libmodbus
-    REF v3.1.6
-    SHA512 9eaa395c75e1170e703e01f8c52c6e6e87efe4eaa22adfc3b51153fd5535d545aea35cf68e1aba29720a6c1dd13d9c60b6b08a5c8098dccd13ccfdc6944420a9
+    REF "v${VERSION}"
+    SHA512 6a01da1f8b486e356ff44874f1479d9d121463958a5ed06e60d910328ccc9b2d431b4a1fd72861c5c645c97b5887a076b763ad6a9ae6b18402dd043ec525b1e2
     HEAD_REF master
     PATCHES fix-static-linkage.patch
 )
@@ -26,6 +26,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING.LESSER" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LESSER")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

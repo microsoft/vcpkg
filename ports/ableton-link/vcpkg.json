@@ -1,6 +1,7 @@
 {
   "name": "ableton-link",
   "version": "3.0.6",
+  "port-version": 1,
   "description": "Ableton Link, a technology that synchronizes musical beat, tempo, and phase across multiple applications running on one or more devices.",
   "homepage": "https://www.ableton.com/en/link/",
   "documentation": "http://ableton.github.io/link/",
@@ -19,12 +20,14 @@
   "features": {
     "coretest": {
       "description": "Build LinkCoreTest suite",
+      "supports": "!uwp",
       "dependencies": [
         "catch2"
       ]
     },
     "discoverytest": {
       "description": "Build LinkDiscoveryTest suite",
+      "supports": "!uwp",
       "dependencies": [
         "catch2"
       ]
@@ -39,7 +42,8 @@
       ]
     },
     "hutsilent": {
-      "description": "Build LinkHutSilent command line tool"
+      "description": "Build LinkHutSilent command line tool",
+      "supports": "!uwp"
     }
   }
 }

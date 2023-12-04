@@ -1,6 +1,6 @@
 {
   "name": "hikogui",
-  "version": "0.7.0",
+  "version": "0.8.1",
   "maintainers": "@takev",
   "description": "A portable, low latency, retained-mode GUI framework written in C++.",
   "homepage": "https://github.com/hikogui/hikogui",

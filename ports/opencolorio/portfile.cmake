@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependency.patch
         fix-del-install-file.patch
-        fix-func-param.patch
+        fix-func-param.patch #https://github.com/AcademySoftwareFoundation/OpenColorIO/pull/1806
         fix-pkgconfig.patch
 )
 
@@ -60,11 +60,11 @@ file(REMOVE_RECURSE
 )
 if(OCIO_BUILD_APPS)
     vcpkg_copy_tools(
-        TOOL_NAMES ociowrite ociomakeclf ociochecklut ociocheck ociobakelut
+        TOOL_NAMES ociowrite ociomakeclf ociochecklut ociocheck ociobakelut ocioarchive ocioconvert ociolutimage ocioperf
         AUTO_CLEAN
     )
 endif()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

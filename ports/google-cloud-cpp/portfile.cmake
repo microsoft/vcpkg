@@ -4,13 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
     REF "v${VERSION}"
-    SHA512 c7fd2445339fbb9f66d6863693feff456fa14381e83f3e28456aed2e8102c8d776868afa1a5020874672306f68e911f199b5ce667c61708166925c63877e8c5d
+    SHA512 18c3fc4fabd1fabfbfb33760636e9403f5b5965cde9e2feab38ac76063ba82fd4aa59a895ded7288ff7552e5806714b5428765b673b5eff95080cd1718bd6792
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
 )
 
-vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
+if ("grpc-common" IN_LIST FEATURES)
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
+endif ()
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
@@ -65,7 +67,7 @@ foreach(feature IN LISTS FEATURES)
 endforeach()
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils rest_internal opentelemetry dialogflow_cx dialogflow_es)
+foreach(suffix common compute_protos googleapis grpc_utils iam_v2 logging_type rest_internal rest_protobuf_internal dialogflow_cx dialogflow_es)
     set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
         continue()
