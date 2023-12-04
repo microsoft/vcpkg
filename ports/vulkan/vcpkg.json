@@ -30,7 +30,7 @@
     "vulkan-headers",
     "vulkan-loader",
     "vulkan-memory-allocator",
-    "vulkan-utility-libraries",
+    "vulkan-utility-libraries"
   ],
   "features": {
     "tools": {
