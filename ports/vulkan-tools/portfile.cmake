@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+set(VCPKG_BUILD_TYPE release) # only builds tools
+
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
@@ -18,3 +20,5 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 vcpkg_copy_tools(TOOL_NAMES vkcube vkcubepp vulkaninfo AUTO_CLEAN )
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")

@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+set(VCPKG_BUILD_TYPE release) # only builds tools
+
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
@@ -22,6 +24,8 @@ vcpkg_cmake_install()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_copy_tools(TOOL_NAMES vulkanCapsViewer AUTO_CLEAN )
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
