@@ -7,6 +7,7 @@
   "supports": "!osx",
   "dependencies": [
     "qt5-base",
+    "valijson",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -20,7 +21,6 @@
       "host": true
     },
     "vulkan-loader",
-    "vulkan-utility-libraries",
-    "valijson"
+    "vulkan-utility-libraries"
   ]
 }
