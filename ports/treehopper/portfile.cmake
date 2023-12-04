@@ -21,5 +21,5 @@ vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/C++/API/inc/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/Treehopper/")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")_
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
