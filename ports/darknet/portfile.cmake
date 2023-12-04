@@ -30,7 +30,6 @@ endif()
 
 if ("opencv-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
   list(APPEND FEATURE_OPTIONS -DBUILD_USELIB_TRACK:BOOL=ON)
-  vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES uselib_track)
 else()
   list(APPEND FEATURE_OPTIONS -DBUILD_USELIB_TRACK:BOOL=OFF)
 endif()
@@ -50,7 +49,12 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet uselib)
+
+if ("opencv-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
+  vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet uselib uselib_track)
+else()
+  vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet uselib)
+endif()
 
 file(COPY "${SOURCE_PATH}/cfg" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 file(COPY "${SOURCE_PATH}/data" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
