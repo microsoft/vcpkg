@@ -8,6 +8,7 @@ vcpkg_from_github(
         dcmtk.patch
         windows-patch.patch
         fix-pc-format.patch
+        fix_link_xml2.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
