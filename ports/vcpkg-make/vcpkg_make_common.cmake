@@ -271,8 +271,8 @@ function(z_vcpkg_make_prepare_programs out_env)
     z_vcpkg_make_get_cmake_vars(LANGUAGES "${arg_LANGUAGES}")
 
     macro(z_vcpkg_append_to_configure_environment inoutlist var defaultval)
-        # Allows to overwrite settings in custom triplets via the environment on windows
-        if(CMAKE_HOST_WIN32 AND DEFINED ENV{${var}})
+        # Allows to overwrite settings in custom triplets via the environment
+        if(DEFINED ENV{${var}})
             list(APPEND "${inoutlist}" "${var}='$ENV{${var}}'")
         else()
             list(APPEND "${inoutlist}" "${var}='${defaultval}'")
