@@ -16,6 +16,8 @@
     },
     "fmt",
     "foxi",
+    "fp16",
+    "fxdiv",
     "gemmlowp",
     "gflags",
     "glog",
@@ -31,6 +33,7 @@
       "platform": "windows"
     },
     "protobuf",
+    "pthreadpool",
     {
       "name": "protobuf",
       "host": true
