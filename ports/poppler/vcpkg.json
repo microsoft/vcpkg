@@ -7,9 +7,9 @@
   "supports": "!uwp & !xbox",
   "dependencies": [
     "boost-container",
-    "lcms",
     "boost-move",
     "freetype",
+    "lcms",
     "libiconv",
     "libjpeg-turbo",
     "libpng",
