@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO adah1972/libunibreak
-  REF libunibreak_5_0 # libunibreak_5_0
-  SHA512 909c12cf5df92f0374050fc7a0ef9e91bc1efe6a5dc5a80f4e2c81a507f1228ecaba417c3ee001e11b2422024bea68cc14eb66e08360ae69f830cdaa18764484
+  REF libunibreak_5_1
+  SHA512 c47d6445cab36febb214b31aeb48585a4d3685714588079e84be87019f6e6ffb752e0e0e527232e2d164b1efeeeea64b8b4b21e605ebc60f10fb5a169edc2ed0
   HEAD_REF master
 )
 

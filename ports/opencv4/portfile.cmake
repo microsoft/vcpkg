@@ -68,9 +68,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "gtk"       WITH_GTK
  "halide"    WITH_HALIDE
  "jasper"    WITH_JASPER
+ "openjpeg"  WITH_OPENJPEG
  "jpeg"      WITH_JPEG
  "lapack"    WITH_LAPACK
  "nonfree"   OPENCV_ENABLE_NONFREE
+ "openvino"  WITH_OPENVINO
  "openexr"   WITH_OPENEXR
  "opengl"    WITH_OPENGL
  "ovis"      CMAKE_REQUIRE_FIND_PACKAGE_OGRE
@@ -86,13 +88,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 # Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "python", "qt", "tbb"
 set(BUILD_opencv_dnn OFF)
-set(WITH_OPENVINO OFF)
 if("dnn" IN_LIST FEATURES)
   if(NOT VCPKG_TARGET_IS_ANDROID)
     set(BUILD_opencv_dnn ON)
-    if(NOT VCPKG_TARGET_IS_UWP)
-      set(WITH_OPENVINO ON)
-    endif()
   else()
     message(WARNING "The dnn module cannot be enabled on Android")
   endif()
@@ -401,6 +399,7 @@ vcpkg_cmake_configure(
         -Dade_DIR=${ADE_DIR}
         ###### Disable build 3rd party libs
         -DBUILD_JASPER=OFF
+        -DBUILD_OPENJPEG=OFF
         -DBUILD_JPEG=OFF
         -DBUILD_OPENEXR=OFF
         -DBUILD_PNG=OFF
@@ -453,7 +452,6 @@ vcpkg_cmake_configure(
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_OPENVINO=${WITH_OPENVINO}
         -DWITH_TBB=${WITH_TBB}
-        -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}

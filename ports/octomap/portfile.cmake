@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OctoMap/octomap
-    REF c4a4304895f6cfc31723dc95df252fe7e756a0ef # v1.9.6
-    SHA512 ec321a5355091acbd3d3fda7c858e2078c29195e73461c8a34db2c4614c6b2e38b35a59671f1071f7eb397cac4df78869f14a13af2e68d64e5a2e2d8727846cd
+    REF "v${VERSION}"
+    SHA512 60afeecc36a190f136dcbe33cb9cd6c06c16233988b383b0b010f65f81e6a3630b55902c5b5ad756ac35dee4c4ec26ec5722d6bd9b8e079f70b7d286293c518e
     HEAD_REF master
     PATCHES
       001-fix-exported-targets.patch

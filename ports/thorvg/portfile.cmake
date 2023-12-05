@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
-    REF v0.11.1
-    SHA512 388c3d8bd5099c1e35911dc75ffa6aafc6ea9f1219845ea29dbef91db8c75b2e22b091df4340acc2b44d948cb18fcf8f3a511045ce6ff959a078b350c9a13756
+    REF "v${VERSION}"
+    SHA512 cc73f7e01755141a245eecd1dc8fa6754e21b342e3734f1200e859c2360474fc9931a934eb49968c65b15c537812b81fa1f3f82ac12f9e00e3959748cf1e286f
     HEAD_REF master
-    PATCHES
-        windows-build-option.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -30,6 +28,7 @@ vcpkg_configure_meson(
         -Dbindings=capi
         -Dtests=false
         -Dexamples=false
+        -Dstrip=false
     OPTIONS_DEBUG
         -Dlog=true
         -Dbindir=${CURRENT_PACKAGES_DIR}/debug/bin
@@ -44,5 +43,6 @@ if ("tools" IN_LIST FEATURES)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

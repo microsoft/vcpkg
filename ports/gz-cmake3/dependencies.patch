@@ -120,24 +120,11 @@ diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
 +if (NOT WIN32)
    set(PKG_CONFIG_PATH_ORIGINAL $ENV{PKG_CONFIG_PATH})
 -  foreach (GZ_OGRE2_PROJECT_NAME "OGRE2" "OGRE-Next")
-+  foreach (GZ_OGRE2_PROJECT_NAME "OGRE")
++  foreach (GZ_OGRE2_PROJECT_NAME "OGRE-Next")
      message(STATUS "Looking for OGRE using the name: ${GZ_OGRE2_PROJECT_NAME}")
      if (GZ_OGRE2_PROJECT_NAME STREQUAL "OGRE2")
        set(OGRE2_INSTALL_PATH "OGRE-2.${GzOGRE2_FIND_VERSION_MINOR}")
        # For OGRE 2.3 debs built via OpenRobotics buildfarms, we use OgreNext
-@@ -159,10 +159,10 @@
-         set(OGRE2LIBNAME "Ogre")
-       endif()
-     else()
-       # This matches OGRE2.2 debs built in upstream Ubuntu
--      set(OGRE2_INSTALL_PATH "OGRE-Next")
--      set(OGRE2LIBNAME "OgreNext")
-+      set(OGRE2_INSTALL_PATH "OGRE")
-+      set(OGRE2LIBNAME "Ogre")
-     endif()
- 
-     # Note: OGRE2 installed from debs is named OGRE-2.2 while the version
-     # installed from source does not have the 2.2 suffix
 @@ -172,8 +172,9 @@
      if (${GZ_OGRE2_PROJECT_NAME}_FOUND)
        set(GZ_PKG_NAME ${OGRE2_INSTALL_PATH})
@@ -172,13 +159,13 @@ diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
 +        list(APPEND OGRE2_PATHS "${_rootPath}/lib/")
 +        list(APPEND OGRE2_PATHS "${_rootPath}/lib/manual-link/")
 +      endif()
-+      list(APPEND OGRE2_INC_PATHS "${_rootPath}/include/OGRE")
++      list(APPEND OGRE2_INC_PATHS "${_rootPath}/include/OGRE-Next")
    endforeach()
  
 +  if(CMAKE_BUILD_TYPE MATCHES Debug)
-+    set(OGRE_MAIN_LIB "OgreMain_d")
++    set(OGRE_MAIN_LIB "OgreNextMain_d")
 +  else()
-+    set(OGRE_MAIN_LIB "OgreMain")
++    set(OGRE_MAIN_LIB "OgreNextMain")
 +  endif()
 +
    find_library(OGRE2_LIBRARY
@@ -188,6 +175,19 @@ diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
      NO_DEFAULT_PATH)
  
    find_path(OGRE2_INCLUDE
+@@ -449,10 +461,10 @@
+               ${PATH_HINTS} ${COMPONENT} ${OGRE2_SEARCH_VER}/${COMPONENT})
+ 
+       find_library(${PREFIX}_LIBRARY
+           NAMES
+-              "Ogre${COMPONENT}"
+-              "Ogre${COMPONENT}_d"
++              "OgreNext${COMPONENT}"
++              "OgreNext${COMPONENT}_d"
+           HINTS
+               ${OGRE2_LIBRARY_DIRS}
+           NO_DEFAULT_PATH)
+ 
 @@ -509,8 +521,9 @@
  
    ogre_find_plugin(Plugin_ParticleFX OgreParticleFXPrerequisites.h PlugIns/ParticleFX/include)
@@ -204,7 +204,7 @@ diff --git a/cmake/FindGzOGRE2.cmake b/cmake/FindGzOGRE2.cmake
          foreach (dir ${OGRE2_INCLUDE_DIRS})
            get_filename_component(dir_name "${dir}" NAME)
 -          if ("${dir_name}" STREQUAL "OGRE-${OGRE2_VERSION_MAJOR}.${OGRE2_VERSION_MINOR}")
-+          if ("${dir_name}" STREQUAL "OGRE")
++          if ("${dir_name}" STREQUAL "OGRE-Next")
              set(dir_include "${dir}/Hlms/Common")
              if (EXISTS ${dir_include})
                list(APPEND component_INCLUDE_DIRS ${dir_include})
