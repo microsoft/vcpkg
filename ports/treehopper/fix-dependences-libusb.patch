@@ -13,3 +13,29 @@ index 8537305..c80ffbe 100644
  elseif(WIN32)
      target_link_libraries(treehopper winusb setupapi)
  endif(APPLE)
+diff --git a/C++/API/inc/ConnectionService.h b/C++/API/inc/ConnectionService.h
+index 66d338e..12a0192 100644
+--- a/C++/API/inc/ConnectionService.h
++++ b/C++/API/inc/ConnectionService.h
+@@ -8,7 +8,7 @@
+ #include <CoreFoundation/CFRunLoop.h>
+ #endif
+ #ifdef __linux__
+-#include "libusb-1.0/libusb.h"
++#include "libusb.h"
+ #endif
+ #include <vector>
+ 
+diff --git a/C++/API/inc/LibUsbConnection.h b/C++/API/inc/LibUsbConnection.h
+index b6d5198..e9cd29e 100644
+--- a/C++/API/inc/LibUsbConnection.h
++++ b/C++/API/inc/LibUsbConnection.h
+@@ -6,7 +6,7 @@
+ 
+ #include "Treehopper.h"
+ 
+-#include <libusb-1.0/libusb.h>
++#include <libusb.h>
+ #include "UsbConnection.h"
+ 
+ namespace Treehopper {
