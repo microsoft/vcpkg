@@ -16,7 +16,7 @@ function(vcpkg_find_cuda)
 
 
     find_program(NVCC
-        NAMES nvcc.exe
+        NAMES nvcc${VCPKG_HOST_EXECUTABLE_SUFFIX}
         PATHS
         ${CUDA_PATHS}
         PATH_SUFFIXES bin bin64
