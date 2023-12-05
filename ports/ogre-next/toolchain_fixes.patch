@@ -163,13 +163,3 @@ diff --git a/OgreMain/CMakeLists.txt b/OgreMain/CMakeLists.txt
 -    set(OGRE_OSX_BUILD_CONFIGURATION "$(PLATFORM_NAME)/$(CONFIGURATION)")
    
  	add_custom_command(TARGET ${OGRE_NEXT}Main POST_BUILD
-diff --git a/RenderSystems/Direct3D11/CMakeLists.txt b/RenderSystems/Direct3D11/CMakeLists.txt
---- a/RenderSystems/Direct3D11/CMakeLists.txt
-+++ b/RenderSystems/Direct3D11/CMakeLists.txt
-@@ -60,5 +60,5 @@
-   target_link_libraries(RenderSystem_Direct3D11 ${AMDAGS_LIBRARIES})
- endif()
- 
- ogre_config_plugin(RenderSystem_Direct3D11)
--install(FILES ${HEADER_FILES} DESTINATION include/OGRE/RenderSystems/Direct3D11)
-+install(FILES ${HEADER_FILES} DESTINATION include/${OGRE_NEXT_PREFIX}/RenderSystems/Direct3D11)

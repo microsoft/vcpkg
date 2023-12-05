@@ -3198,7 +3198,7 @@
     },
     "gz-cmake3": {
       "baseline": "3.4.1",
-      "port-version": 4
+      "port-version": 5
     },
     "gz-common5": {
       "baseline": "5.4.1",
@@ -3230,7 +3230,7 @@
     },
     "gz-rendering7": {
       "baseline": "7.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-sensors7": {
       "baseline": "7.3.0",
@@ -6153,7 +6153,7 @@
       "port-version": 2
     },
     "ogre-next": {
-      "baseline": "2.3.2",
+      "baseline": "2.3.3",
       "port-version": 0
     },
     "ois": {
