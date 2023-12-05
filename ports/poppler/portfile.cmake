@@ -8,6 +8,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         export-unofficial-poppler.patch
+        fix-android.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindFontconfig.cmake")
 
