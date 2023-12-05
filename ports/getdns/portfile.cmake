@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
     PATCHES 
         disable-docs.patch
         fix-include.patch
+	fix-libuv-deps.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
