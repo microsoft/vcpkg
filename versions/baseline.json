@@ -3341,8 +3341,8 @@
       "port-version": 0
     },
     "hnswlib": {
-      "baseline": "0.7.0",
-      "port-version": 1
+      "baseline": "0.8.0",
+      "port-version": 0
     },
     "hps": {
       "baseline": "2022-01-18",
