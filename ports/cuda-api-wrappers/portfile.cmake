@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCAW_BUILD_EXAMPLES=OFF
         --trace-expand
+        --debug-find
 )
 
 vcpkg_cmake_install()
