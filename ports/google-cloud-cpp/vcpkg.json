@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.18.0",
+  "version": "2.19.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -564,6 +564,18 @@
     },
     "edgecontainer": {
       "description": "Distributed Cloud Edge Container API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "edgenetwork": {
+      "description": "Distributed Cloud Edge Network API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1228,6 +1240,18 @@
         }
       ]
     },
+    "sql": {
+      "description": "The Google Cloud SQL Admin C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "rest-common"
+          ]
+        }
+      ]
+    },
     "storage": {
       "description": "The Google Cloud Storage C++ client library",
       "dependencies": [
@@ -1291,6 +1315,18 @@
     },
     "tasks": {
       "description": "The Google Cloud Tasks C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "telcoautomation": {
+      "description": "Cloud Telco Automation API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
