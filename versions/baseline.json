@@ -2024,7 +2024,7 @@
       "baseline": "10.1",
       "port-version": 13
     },
-    "cuda-api-wrappers" : {
+    "cuda-api-wrappers": {
       "baseline": "0.6.6",
       "port-version": 0
     },
@@ -6709,8 +6709,8 @@
       "port-version": 5
     },
     "poppler": {
-      "baseline": "23.1.0",
-      "port-version": 4
+      "baseline": "23.11.0",
+      "port-version": 0
     },
     "popsift": {
       "baseline": "0.9",
