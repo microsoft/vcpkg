@@ -1,10 +1,10 @@
 {
   "name": "libde265",
-  "version": "1.0.12",
+  "version": "1.0.14",
   "description": "Open h.265 video codec implementation.",
   "homepage": "https://www.libde265.org/",
   "license": "LGPL-3.0-only",
-  "supports": "!uwp & !xbox & !(arm & windows)",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -14,11 +14,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "sse": {
-      "description": "Enable SSE optimizations",
-      "supports": "x86 | x64"
-    }
-  }
+  ]
 }
