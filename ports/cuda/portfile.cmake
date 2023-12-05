@@ -232,6 +232,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/x64/" "${CURRENT_PACKAGES_DIR}/lib-tmp/")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib-tmp" "${CURRENT_PACKAGES_DIR}/lib")
+elseif(VCPKG_TARGET_IS_LINUX)
+  # Don't really know why this renaming is required. 
+  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/cuda/lib" "${CURRENT_PACKAGES_DIR}/tools/cuda/lib64")
 endif()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/cuda/pkg-config")
