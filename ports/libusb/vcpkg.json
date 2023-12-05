@@ -1,7 +1,7 @@
 {
   "name": "libusb",
   "version": "1.0.26.11791",
-  "port-version": 4,
+  "port-version": 5,
   "description": "a cross-platform library to access USB devices",
   "homepage": "https://github.com/libusb/libusb",
   "license": "LGPL-2.1-or-later",
