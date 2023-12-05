@@ -9,21 +9,11 @@ vcpkg_from_github(
 # head only library
 set(VCPKG_BUILD_TYPE release)
 
-# cuda toolkit check
-vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
-message(STATUS "CUDA_TOOLKIT_ROOT ${CUDA_TOOLKIT_ROOT}")
-
-# nvcc compiler path
-set(CMAKE_CUDA_COMPILER "${CUDA_TOOLKIT_ROOT}/bin/nvcc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-
-set(CUDA_ARCHITECTURES "native")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCAW_BUILD_EXAMPLES=OFF
-        "-DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}"
-        "-DCMAKE_CUDA_COMPILER=${CMAKE_CUDA_COMPILER}"
+        --trace-expand
 )
 
 vcpkg_cmake_install()
