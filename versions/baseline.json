@@ -353,7 +353,7 @@
       "port-version": 0
     },
     "aws-c-auth": {
-      "baseline": "0.7.6",
+      "baseline": "0.7.8",
       "port-version": 0
     },
     "aws-c-cal": {
@@ -361,7 +361,7 @@
       "port-version": 0
     },
     "aws-c-common": {
-      "baseline": "0.9.9",
+      "baseline": "0.9.10",
       "port-version": 0
     },
     "aws-c-compression": {
@@ -377,15 +377,15 @@
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "0.13.35",
+      "baseline": "0.13.36",
       "port-version": 0
     },
     "aws-c-mqtt": {
-      "baseline": "0.9.9",
+      "baseline": "0.9.10",
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "0.3.24",
+      "baseline": "0.4.3",
       "port-version": 0
     },
     "aws-c-sdkutils": {
@@ -397,7 +397,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.24.7",
+      "baseline": "0.24.8",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -405,8 +405,8 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.201",
-      "port-version": 1
+      "baseline": "1.11.215",
+      "port-version": 0
     },
     "azmq": {
       "baseline": "2023-03-23",
@@ -1421,7 +1421,7 @@
       "port-version": 1
     },
     "calceph": {
-      "baseline": "3.5.2",
+      "baseline": "3.5.4",
       "port-version": 0
     },
     "camport3": {
@@ -1789,7 +1789,7 @@
       "port-version": 3
     },
     "copypp": {
-      "baseline": "0.1.0",
+      "baseline": "0.1.1",
       "port-version": 0
     },
     "coroutine": {
@@ -1901,7 +1901,7 @@
       "port-version": 4
     },
     "cpptrace": {
-      "baseline": "0.3.0",
+      "baseline": "0.3.1",
       "port-version": 0
     },
     "cppunit": {
@@ -2024,6 +2024,10 @@
       "baseline": "10.1",
       "port-version": 13
     },
+    "cuda-api-wrappers" : {
+      "baseline": "0.6.6",
+      "port-version": 0
+    },
     "cudnn": {
       "baseline": "7.6.5",
       "port-version": 10
@@ -2038,7 +2042,7 @@
     },
     "curlpp": {
       "baseline": "2018-06-15",
-      "port-version": 8
+      "port-version": 9
     },
     "cute-headers": {
       "baseline": "2019-09-20",
@@ -2142,7 +2146,7 @@
     },
     "dcmtk": {
       "baseline": "3.6.7",
-      "port-version": 5
+      "port-version": 6
     },
     "debug-assert": {
       "baseline": "1.3.3",
@@ -2574,7 +2578,7 @@
     },
     "fastrtps": {
       "baseline": "2.7.0",
-      "port-version": 4
+      "port-version": 5
     },
     "fawdlstty-libfv": {
       "baseline": "0.0.8",
@@ -2977,7 +2981,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "1.8.1",
+      "baseline": "1.8.4",
       "port-version": 0
     },
     "glbinding": {
@@ -3053,7 +3057,7 @@
       "port-version": 5
     },
     "google-cloud-cpp": {
-      "baseline": "2.18.0",
+      "baseline": "2.19.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -3337,8 +3341,8 @@
       "port-version": 0
     },
     "hnswlib": {
-      "baseline": "0.7.0",
-      "port-version": 1
+      "baseline": "0.8.0",
+      "port-version": 0
     },
     "hps": {
       "baseline": "2022-01-18",
@@ -3742,7 +3746,7 @@
     },
     "kealib": {
       "baseline": "1.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "keccak-tiny": {
       "baseline": "2014-09-08",
@@ -4177,8 +4181,8 @@
       "port-version": 0
     },
     "libdatachannel": {
-      "baseline": "0.18.6",
-      "port-version": 2
+      "baseline": "0.19.4",
+      "port-version": 0
     },
     "libdatrie": {
       "baseline": "0.2.13",
@@ -4194,7 +4198,7 @@
     },
     "libdeflate": {
       "baseline": "1.19",
-      "port-version": 0
+      "port-version": 1
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -4966,7 +4970,7 @@
     },
     "libusb": {
       "baseline": "1.0.26.11791",
-      "port-version": 4
+      "port-version": 5
     },
     "libusb-win32": {
       "baseline": "1.2.6.0",
@@ -6246,11 +6250,11 @@
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 11
+      "port-version": 12
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 11
+      "port-version": 12
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6761,8 +6765,8 @@
       "port-version": 2
     },
     "proj": {
-      "baseline": "9.3.0",
-      "port-version": 1
+      "baseline": "9.3.1",
+      "port-version": 0
     },
     "proj4": {
       "baseline": "8.9.9",
@@ -7617,7 +7621,7 @@
       "port-version": 0
     },
     "s2n": {
-      "baseline": "1.3.34",
+      "baseline": "1.3.56",
       "port-version": 0
     },
     "safeint": {
@@ -8590,7 +8594,7 @@
     },
     "treehopper": {
       "baseline": "1.11.3",
-      "port-version": 7
+      "port-version": 8
     },
     "triangle": {
       "baseline": "1.6",
@@ -9245,7 +9249,7 @@
       "port-version": 2
     },
     "xsimd": {
-      "baseline": "11.1.0",
+      "baseline": "12.0.0",
       "port-version": 0
     },
     "xtensor": {
