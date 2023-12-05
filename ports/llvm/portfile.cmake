@@ -14,6 +14,7 @@ vcpkg_from_github(
         0005-remove-numpy.patch
         0006-create-destination-mlir-directory.patch
         0007-fix-compiler-rt-warnings.patch # fixed in upstream
+        0008-add-missing-case.patch # From upstream https://github.com/llvm/llvm-project/pull/72401
 )
 
 vcpkg_check_features(
