@@ -1,4 +1,3 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
@@ -59,7 +58,8 @@ elseif(VCPKG_TARGET_IS_OSX)
     string(APPEND OPTIONS " --target-os=darwin --enable-appkit --enable-avfoundation --enable-coreimage --enable-audiotoolbox --enable-videotoolbox")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
     string(APPEND OPTIONS " --target-os=android")
-else()
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "QNX")
+    string(APPEND OPTIONS " --target-os=qnx")
 endif()
 
 if(VCPKG_TARGET_IS_OSX)

@@ -1,6 +1,6 @@
 {
   "name": "qtgrpc",
-  "version": "6.6.0",
+  "version": "6.6.1",
   "description": "Qt framework based gRPC clients and services.",
   "homepage": "https://www.qt.io/",
   "license": null,

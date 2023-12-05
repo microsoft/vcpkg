@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.8.0",
-  "port-version": 10,
+  "port-version": 11,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -251,7 +251,7 @@
     },
     "openvino": {
       "description": "OpenVINO support for OpenCV DNN",
-      "supports": "!uwp",
+      "supports": "!uwp & !x86",
       "dependencies": [
         {
           "name": "opencv4",
@@ -267,8 +267,7 @@
             "auto",
             "cpu",
             "hetero"
-          ],
-          "platform": "!uwp"
+          ]
         },
         {
           "name": "openvino",
@@ -276,7 +275,7 @@
           "features": [
             "gpu"
           ],
-          "platform": "x64 & !(osx | uwp) & !static"
+          "platform": "x64 & !(osx | uwp)"
         }
       ]
     },
