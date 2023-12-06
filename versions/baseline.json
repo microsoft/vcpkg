@@ -1678,7 +1678,7 @@
     },
     "cnats": {
       "baseline": "3.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cnl": {
       "baseline": "1.1.7",
@@ -1789,7 +1789,7 @@
       "port-version": 3
     },
     "copypp": {
-      "baseline": "0.1.1",
+      "baseline": "0.2.0",
       "port-version": 0
     },
     "coroutine": {
@@ -3106,7 +3106,7 @@
     },
     "graphite2": {
       "baseline": "1.3.14",
-      "port-version": 3
+      "port-version": 4
     },
     "graphqlparser": {
       "baseline": "0.7.0",
@@ -6869,7 +6869,7 @@
       "port-version": 0
     },
     "qcoro": {
-      "baseline": "0.9.0",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "qcustomplot": {
@@ -8205,8 +8205,8 @@
       "port-version": 1
     },
     "stdexec": {
-      "baseline": "2023-03-05",
-      "port-version": 2
+      "baseline": "2023-09-06",
+      "port-version": 3
     },
     "stduuid": {
       "baseline": "1.2.3",
@@ -9137,8 +9137,8 @@
       "port-version": 0
     },
     "x265": {
-      "baseline": "3.4",
-      "port-version": 10
+      "baseline": "3.5",
+      "port-version": 0
     },
     "x86-simd-sort": {
       "baseline": "3.0",
