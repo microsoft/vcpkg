@@ -5,7 +5,6 @@
   "description": "Mature and widely used Unicode and localization library.",
   "homepage": "https://icu.unicode.org/home",
   "license": "ICU",
-  "supports": "!uwp",
   "dependencies": [
     {
       "name": "icu",
@@ -17,7 +16,8 @@
   ],
   "features": {
     "tools": {
-      "description": "Build tools"
+      "description": "Build tools",
+      "supports": "!uwp"
     }
   }
 }
