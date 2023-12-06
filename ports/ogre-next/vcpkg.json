@@ -1,6 +1,6 @@
 {
   "name": "ogre-next",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "Ogre 2.1 & 2.2 - scene-oriented, flexible 3D engine written in C++",
   "homepage": "https://github.com/OGRECave/ogre-next",
   "license": "MIT",
@@ -9,7 +9,10 @@
     "boost-thread",
     "freeimage",
     "freetype",
-    "openvr",
+    {
+      "name": "openvr",
+      "platform": "!osx"
+    },
     "pkgconf",
     "poco",
     "rapidjson",
