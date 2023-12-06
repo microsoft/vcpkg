@@ -1,5 +1,5 @@
 diff --git a/Configurations/unix-Makefile.tmpl b/Configurations/unix-Makefile.tmpl
-index 110ba06..5b6b1c7 100644
+index a48fae5..c82c086 100644
 --- a/Configurations/unix-Makefile.tmpl
 +++ b/Configurations/unix-Makefile.tmpl
 @@ -611,7 +611,7 @@ install_sw: install_dev install_engines install_modules install_runtime
@@ -10,12 +10,12 @@ index 110ba06..5b6b1c7 100644
 +install_docs:
  
  uninstall_docs: uninstall_man_docs uninstall_html_docs
- 	$(RM) -r $(DESTDIR)$(DOCDIR)
+ 	$(RM) -r "$(DESTDIR)$(DOCDIR)"
 diff --git a/Configurations/windows-makefile.tmpl b/Configurations/windows-makefile.tmpl
-index d054431..b5c1c88 100644
+index 9250b98..2b63c85 100644
 --- a/Configurations/windows-makefile.tmpl
 +++ b/Configurations/windows-makefile.tmpl
-@@ -487,7 +487,7 @@ install_sw: install_dev install_engines install_modules install_runtime
+@@ -493,7 +493,7 @@ install_sw: install_dev install_engines install_modules install_runtime
  
  uninstall_sw: uninstall_runtime uninstall_modules uninstall_engines uninstall_dev
  

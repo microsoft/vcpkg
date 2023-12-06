@@ -1,6 +1,6 @@
 {
   "name": "arg-router",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "C++ command line argument parsing and routing.",
   "homepage": "https://github.com/cmannett85/arg_router",
   "documentation": "https://cmannett85.github.io/arg_router/",

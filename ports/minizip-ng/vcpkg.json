@@ -1,7 +1,6 @@
 {
   "name": "minizip-ng",
-  "version": "4.0.0",
-  "port-version": 1,
+  "version": "4.0.2",
   "description": "minizip-ng is a zip manipulation library written in C that is supported on Windows, macOS, and Linux.",
   "homepage": "https://github.com/zlib-ng/minizip-ng",
   "license": "Zlib",
@@ -20,7 +19,6 @@
     "bzip2",
     "lzma",
     "pkcrypt",
-    "signing",
     "wzaes",
     "zlib",
     "zstd"
@@ -46,19 +44,6 @@
     },
     "pkcrypt": {
       "description": "Enables PKWARE traditional encryption"
-    },
-    "signing": {
-      "description": "Enables zip signing support",
-      "dependencies": [
-        {
-          "name": "minizip-ng",
-          "default-features": false,
-          "features": [
-            "openssl"
-          ],
-          "platform": "!windows & !osx"
-        }
-      ]
     },
     "wzaes": {
       "description": "Enables WinZIP AES encryption",

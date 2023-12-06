@@ -1,7 +1,6 @@
 {
   "name": "duktape",
-  "version": "2.5.0",
-  "port-version": 4,
+  "version": "2.7.0",
   "description": "Embeddable Javascript engine with a focus on portability and compact footprint.",
   "homepage": "https://github.com/svaarala/duktape",
   "dependencies": [

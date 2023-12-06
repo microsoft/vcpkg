@@ -7,9 +7,23 @@ set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 
 vcpkg_download_distfile(
     STRING_PATCH
-    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/bfa3e4c7621ddf5826755536eb07284c86db6474.diff
+    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/bfa3e4c7621ddf5826755536eb07284c86db6474.diff?full_index=1
     FILENAME vtk-string-bfa3e4.diff
     SHA512 c5ccb1193e4e61cf78b63802f87ffb09349c5566ad8a4d51418133953f7acd6b4a206f8d41a426a9eb9be3cf1fd95242e6402973252d7979e5a9cb5e5e480d78
+)
+
+vcpkg_download_distfile(
+    MPI4PY_PATCH_1
+    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/c938d30634a284fad026f6ae25c30bc84cadc07e.diff?full_index=1
+    FILENAME vtk-mpi4py-update-part1-c938d3.diff
+    SHA512 5704c1dd124075bd8f37b0734c5cebd48b470902c74bc23774fd4b69025dbc6bfddf48b7c4511520ed07f03bd666a444d6390569f02a0ab68b5d966ddde3a989
+)
+
+vcpkg_download_distfile(
+    MPI4PY_PATCH_2
+    URLS https://gitlab.kitware.com/vtk/vtk/-/commit/53e6ce92ae4591552e7e00344d69803117d56bfe.diff?full_index=1
+    FILENAME vtk-mpi4py-update-part2-53e6ce.diff
+    SHA512 794a25bff6168fda94d920a6837c3a690bd6d79284ec34dcd67666c55de78962cc7b73c0f074ce58ed78198bb149eab6bf59b2822f29cbfa792e2fe667c9327c
 )
 
 # =============================================================================
@@ -38,7 +52,9 @@ vcpkg_from_github(
         vtkioss.patch
         jsoncpp.patch
         iotr.patch
-        ${STRING_PATCH}
+        "${STRING_PATCH}"
+        "${MPI4PY_PATCH_1}"
+        "${MPI4PY_PATCH_2}"
         9690.diff
         missing-include-fixes.patch
 )
@@ -130,7 +146,10 @@ endif()
 if("python" IN_LIST FEATURES)
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        set(python_ver 3.10)
+        file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
+        string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
+        set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
+        set(python_ver "3.${PYTHON_VERSION_MINOR}")
     endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON

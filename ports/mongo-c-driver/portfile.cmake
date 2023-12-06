@@ -6,14 +6,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
     REF "${VERSION}"
-    SHA512 36cd8844b1cc9a935c50afc240523f9aaac7cffa58a5d0f9850848f22ab0f1f5a7202ec9b56b0a7d15f075f665bcecbec63b28d2074d35a7cf25065f9075c15e
+    SHA512 e0f15a8a45ff156136251f1a0e5d0cc2b0253ba9dbf062a6eaef73e02c3b7999d3af31a9eb2ebf2c141e5b2367e356b3ea56b8eb083a5097d88f81bbc4f0be23
     HEAD_REF master
     PATCHES
         disable-dynamic-when-static.patch
-        fix-include-directory.patch # vcpkg legacy decision
         fix-dependencies.patch
+        fix-include-directory.patch
         fix-mingw.patch
-        pkgconfig.patch
 )
 file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")
 
@@ -48,7 +47,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
-        -DENABLE_BSON=SYSTEM
+        -DUSE_SYSTEM_LIBBSON=ON
         -DENABLE_EXAMPLES=OFF
         -DENABLE_SHM_COUNTERS=OFF
         -DENABLE_STATIC=${ENABLE_STATIC}
@@ -56,6 +55,8 @@ vcpkg_cmake_configure(
         -DENABLE_UNINSTALL=OFF
         -DENABLE_ZLIB=SYSTEM
         -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
+    MAYBE_UNUSED_VARIABLES
+        ENABLE_ICU 
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

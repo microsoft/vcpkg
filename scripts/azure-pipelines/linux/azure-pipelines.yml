@@ -32,7 +32,7 @@ jobs:
     value: "x-azurl,$(root-url-ea),$(sas-ea),readwrite"
   - group: vcpkg-binary-caching-credentials
   - name: X_VCPKG_BINARY_SOURCE_STUB
-    value: "x-azblob,$(root-bin-url-ea),$(sas-bin-ea)"
+    value: "x-azblob,$(root-bin-url-wus3),$(sas-bin-wus3)"
 
   steps:
     # Note: /mnt is the Azure machines' temporary disk.

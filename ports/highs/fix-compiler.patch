@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 605a1e275..47233aa10 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,7 @@
+ cmake_minimum_required(VERSION 3.15)
+ 
+ # set preference for clang compiler and intel compiler over gcc and other compilers
++if(0)
+ include(Platform/${CMAKE_SYSTEM_NAME}-Determine-C OPTIONAL)
+ include(Platform/${CMAKE_SYSTEM_NAME}-C OPTIONAL)
+ set(CMAKE_C_COMPILER_NAMES clang icc cc ${CMAKE_C_COMPILER_NAMES})
+@@ -12,6 +13,7 @@ set(CMAKE_C_COMPILER_NAMES clang icc cc ${CMAKE_C_COMPILER_NAMES})
+ include(Platform/${CMAKE_SYSTEM_NAME}-Determine-CXX OPTIONAL)
+ include(Platform/${CMAKE_SYSTEM_NAME}-CXX OPTIONAL)
+ set(CMAKE_CXX_COMPILER_NAMES clang++ icpc c++ ${CMAKE_CXX_COMPILER_NAMES})
++endif()
+ 
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+ 

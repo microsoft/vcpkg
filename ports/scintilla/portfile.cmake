@@ -20,9 +20,9 @@ vcpkg_extract_source_archive(
 )
 
 vcpkg_install_msbuild(
-  SOURCE_PATH ${SOURCE_PATH}
+  SOURCE_PATH "${SOURCE_PATH}"
   PROJECT_SUBPATH Win32/SciLexer.vcxproj
-  LICENSE_SUBPATH License.txt
 )
 
-file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT} FILES_MATCHING PATTERN "*.*")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")
+file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}" FILES_MATCHING PATTERN "*.*")

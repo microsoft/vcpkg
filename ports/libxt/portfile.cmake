@@ -20,10 +20,12 @@ vcpkg_from_gitlab(
     REF edd70bdfbbd16247e3d9564ca51d864f82626eb7 # 1.2.1
     SHA512  c49876253dfd187e7d56a098d3d992157daefa2c25ee732eaae5818ee04513bedd807d2f265085db2e82c0b1821e152a88fb4998c0002f6ac57204543fe18566
     HEAD_REF master
-    PATCHES windows_build.patch
-            globals.patch
-            getcwd.patch
-            ${PATCHES}
+    PATCHES
+        windows_build.patch
+        globals.patch
+        getcwd.patch
+        add-missing-process-h.patch
+        ${PATCHES}
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")

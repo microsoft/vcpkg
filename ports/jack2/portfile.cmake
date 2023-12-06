@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jackaudio/jack2
-    REF v1.9.21
-    SHA512 0e9ce581fca3c5d9ffb1de22b45cae6d94085c6f92ff3554892e25727baf66a2269f10d338d95d991e8380c4be5e0cc1e1453b9f878c7dc2e8a990f3bd458557
+    REF "v${VERSION}"
+    SHA512 d93cb2bcc57b72b6815eed143de1092d14fe22542ae9a1f8480d9ed5f44b59c50f81279d18bdd84ff6276ddd71ca1aa64a1e46d61199a5eda0d873a356194ab4
     HEAD_REF master
 )
 
@@ -22,4 +22,4 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
