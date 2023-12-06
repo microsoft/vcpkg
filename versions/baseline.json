@@ -2024,9 +2024,9 @@
       "baseline": "12.3.1",
       "port-version": 0
     },
-    "cuda-api-wrappers" : {
+    "cuda-api-wrappers": {
       "baseline": "0.6.6",
-      "port-version": 0
+      "port-version": 1
     },
     "cudnn": {
       "baseline": "8.9.6.50",
