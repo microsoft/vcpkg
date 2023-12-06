@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
     REF "v${VERSION}"
-    SHA512 35e483c6123f099167ed8647fae7c6e5512434c24d0afe684180ba6a5114068d5678280a01c8e6cfee0d1e555e1dc2a1606989d46950ce3ef1a3859caeed4dad
+    SHA512 7b872a3c0cbe343014b1ca4618cecaf6ee8d78dec7ef83accfce95cb8eadc6b52116977a41e1f1be5c6149a47bdd9457fadc08d73708aa2a6ab69795fd3de23b
     HEAD_REF master
     PATCHES
         fix-find_expat.patch
@@ -10,13 +10,11 @@ vcpkg_from_github(
         fix-brotli.patch
         fix-expat.patch
         dont-find-python.patch
-        ios.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         xmp     EXIV2_ENABLE_XMP
-        video   EXIV2_ENABLE_VIDEO
         png     EXIV2_ENABLE_PNG
         nls     EXIV2_ENABLE_NLS
         bmff    EXIV2_ENABLE_BMFF
@@ -39,6 +37,7 @@ vcpkg_cmake_configure(
         -DEXIV2_ENABLE_DYNAMIC_RUNTIME=${EXIV2_CRT_DYNAMIC}
         -DEXIV2_ENABLE_WEBREADY=OFF
         -DEXIV2_ENABLE_CURL=OFF
+        -DEXIV2_ENABLE_VIDEO=OFF
         -DEXIV2_TEAM_EXTRA_WARNINGS=OFF
         -DEXIV2_TEAM_WARNINGS_AS_ERRORS=OFF
         -DEXIV2_TEAM_PACKAGING=OFF
@@ -46,7 +45,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/exiv2)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/exiv2)
 vcpkg_fixup_pkgconfig()
 
 configure_file(

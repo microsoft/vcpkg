@@ -11,7 +11,7 @@ vcpkg_add_to_path(${PERL_PATH})
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF 9a83c6a5a55c176adbce740e47d3512edfc9ae71 # v3.5.0
+    REF 6054fae218eda6e53e1e3b4f7ef0fff4877c7bf1 # v3.7.0
     PATCHES
         aom-rename-static.diff
         aom-uninitialized-pointer.diff
@@ -24,6 +24,10 @@ if(VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE
     # UWP + aom's assembler files result in weirdness and build failures
     # Also, disable assembly on ARM and ARM64 Windows to fix compilation issues.
     set(aom_target_cpu "-DAOM_TARGET_CPU=generic")
+endif()
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_TARGET_IS_LINUX)
+  set(aom_target_cpu "-DENABLE_NEON=OFF")
 endif()
 
 vcpkg_cmake_configure(
