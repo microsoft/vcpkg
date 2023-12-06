@@ -8205,8 +8205,8 @@
       "port-version": 1
     },
     "stdexec": {
-      "baseline": "2023-03-05",
-      "port-version": 2
+      "baseline": "2023-09-06",
+      "port-version": 3
     },
     "stduuid": {
       "baseline": "1.2.3",
