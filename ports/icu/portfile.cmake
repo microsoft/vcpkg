@@ -19,6 +19,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         mingw-dll-install.patch
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
         fix-win-build.patch
+        vcpkg-cross-data.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
