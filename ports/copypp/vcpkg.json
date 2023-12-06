@@ -1,6 +1,6 @@
 {
   "name": "copypp",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "support field copy in different c++ struct.",
   "homepage": "https://github.com/i-curve/copypp",
   "license": "MIT",
