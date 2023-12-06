@@ -1702,7 +1702,7 @@
     },
     "coin-or-cbc": {
       "baseline": "2023-02-01",
-      "port-version": 0
+      "port-version": 1
     },
     "coin-or-cgl": {
       "baseline": "2023-02-01",
@@ -3634,7 +3634,7 @@
     },
     "jemalloc": {
       "baseline": "5.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "jinja2cpplight": {
       "baseline": "2018-05-08",
@@ -9126,7 +9126,7 @@
     },
     "x264": {
       "baseline": "0.164.3107",
-      "port-version": 0
+      "port-version": 1
     },
     "x265": {
       "baseline": "3.4",
