@@ -6869,7 +6869,7 @@
       "port-version": 0
     },
     "qcoro": {
-      "baseline": "0.9.0",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "qcustomplot": {
