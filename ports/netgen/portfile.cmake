@@ -38,6 +38,7 @@ vcpkg_cmake_configure(
       -DUSE_NATIVE_ARCH=OFF
       -DUSE_MPI=OFF
       -DUSE_SUPERBUILD=OFF
+      -DSKBUILD=ON
       -DNETGEN_VERSION_GIT=v${VERSION} # this variable is patched in via git-ver.patch
       -DNG_INSTALL_DIR_CMAKE=lib/cmake/netgen
       -DNG_INSTALL_DIR_BIN=bin
@@ -48,11 +49,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH "cmake")
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/netgen")
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/netgen")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -67,5 +65,7 @@ endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/netgen/NetgenConfig.cmake" "${SOURCE_PATH}" "NOT-USABLE")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
