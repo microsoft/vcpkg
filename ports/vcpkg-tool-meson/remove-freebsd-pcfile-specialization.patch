@@ -1,6 +1,6 @@
 --- a/mesonbuild/modules/pkgconfig.py
 +++ b/mesonbuild/modules/pkgconfig.py
-@@ -583,12 +583,8 @@ class PkgConfigModule(ExtensionModule):
+@@ -593,12 +593,8 @@ class PkgConfigModule(ExtensionModule):
          pcfile = filebase + '.pc'
          pkgroot = pkgroot_name = kwargs.get('install_dir', default_install_dir)
          if pkgroot is None:
@@ -14,4 +14,4 @@
 +            pkgroot_name = os.path.join('{libdir}', 'pkgconfig')
          if not isinstance(pkgroot, str):
              raise mesonlib.MesonException('Install_dir must be a string.')
-         self._generate_pkgconfig_file(state, deps, subdirs, name, description, url,
+         relocatable = state.get_option('relocatable', module='pkgconfig')
