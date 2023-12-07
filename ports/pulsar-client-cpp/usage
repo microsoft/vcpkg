@@ -1,0 +1,8 @@
+pulsar-client-cpp provides CMake targets:
+
+  find_package(unofficial-pulsar CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::pulsar::pulsar)
+
+  # When VCPKG_LIBRARY_LINKAGE is static, both static and dynamic libraries will be generated
+  # and the static library will be found. To link the dynamic library, set
+  # PULSAR_FORCE_DYNAMIC_LIBRARY to ON.
