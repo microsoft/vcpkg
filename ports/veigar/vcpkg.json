@@ -5,7 +5,7 @@
   "description": "Cross platform RPC library using shared memory.",
   "homepage": "https://github.com/winsoft666/veigar",
   "license": "GPL-3.0-or-later",
-  "supports": "!uwp",
+  "supports": "windows||linux",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
