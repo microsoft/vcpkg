@@ -28,8 +28,8 @@ vcpkg_configure_make(
         "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
     ADDITIONAL_MSYS_PACKAGES
         DIRECT_PACKAGES
-            "https://mirror.msys2.org/msys/x86_64/msys2-runtime-3.4.10-2-x86_64.pkg.tar.zst"
-            da1fd58e00fb43b17f7191262136fa49829003a8a8bd0d0eee857bdc24c02668363b379a3cdcb098b74872059acd5c3852d95436855e86e094c2e7c26e476716
+            "https://mirror.msys2.org/msys/x86_64/msys2-runtime-3.4.6-1-x86_64.pkg.tar.zst"
+            fbdcf2572d242b14ef3b39f29a6119ee58705bad651c9da48ffd11e80637e8d767d20ed5d562f67d92eecd01f7fc3bc351af9d4f84fb9b321d2a9aff858b3619
 )
 
 vcpkg_install_make()
