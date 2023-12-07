@@ -39,6 +39,11 @@ vcpkg_cmake_configure(
       -DUSE_MPI=OFF
       -DUSE_SUPERBUILD=OFF
       -DNETGEN_VERSION_GIT=v${VERSION} # this variable is patched in via git-ver.patch
+      -DNG_INSTALL_DIR_CMAKE=lib/cmake/netgen
+      -DNG_INSTALL_DIR_BIN=bin
+      -DNG_INSTALL_DIR_LIB=lib
+      -DNG_INSTALL_DIR_INCLUDE=include
+      -DNG_INSTALL_DIR_RES=share/netgen
 )
 
 vcpkg_cmake_install()
