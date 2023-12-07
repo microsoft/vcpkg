@@ -1,8 +1,8 @@
 diff --git a/src/pl/plpython/plpython.h b/src/pl/plpython/plpython.h
-index 3a1f0d56d..6a8a09a20 100644
---- a/src/pl/plpython/plpython.h	
+index 91f6f8d..a1fc6ac 100644
+--- a/src/pl/plpython/plpython.h
 +++ b/src/pl/plpython/plpython.h
-@@ -45,12 +45,10 @@
+@@ -28,12 +28,10 @@
  #if defined(_MSC_VER) && defined(_DEBUG)
  /* Python uses #pragma to bring in a non-default libpython on VC++ if
   * _DEBUG is defined */

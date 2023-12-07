@@ -1,8 +1,8 @@
 diff --git a/configure.ac b/configure.ac
-index 7f97248992..33b6c84fc4 100644
+index d81903d..1271abb 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -891,7 +891,9 @@ AC_SUBST(with_perl)
+@@ -892,7 +892,9 @@ AC_SUBST(with_perl)
  # Optionally build Python modules (PL/Python)
  #
  AC_MSG_CHECKING([whether to build Python modules])
@@ -13,7 +13,7 @@ index 7f97248992..33b6c84fc4 100644
  AC_MSG_RESULT([$with_python])
  AC_SUBST(with_python)
  
-@@ -1214,7 +1216,18 @@ fi
+@@ -1215,7 +1217,18 @@ fi
  
  if test "$with_python" = yes; then
    PGAC_PATH_PYTHON

@@ -1,8 +1,8 @@
 diff --git a/src/include/common/checksum_helper.h b/src/include/common/checksum_helper.h
-index cac7570ea..d0ca1243c 100644
+index a74deef..101345a 100644
 --- a/src/include/common/checksum_helper.h
 +++ b/src/include/common/checksum_helper.h
-@@ -33,7 +28,13 @@
+@@ -28,7 +28,13 @@
   */
  typedef enum pg_checksum_type
  {

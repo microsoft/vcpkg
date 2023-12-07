@@ -1,8 +1,8 @@
 diff --git a/src/Makefile.shlib b/src/Makefile.shlib
-index 551023c..16255d7 100644
+index f94d59d..ecbaddf 100644
 --- a/src/Makefile.shlib
 +++ b/src/Makefile.shlib
-@@ -260,10 +260,14 @@ endif
+@@ -240,10 +240,14 @@ endif
  
  .PHONY: all-lib all-static-lib all-shared-lib
  
@@ -17,7 +17,7 @@ index 551023c..16255d7 100644
  all-lib: lib$(NAME).pc
  endif
  
-@@ -417,9 +421,13 @@ endif # PORTNAME == cygwin || PORTNAME == win32
+@@ -382,9 +386,13 @@ endif # PORTNAME == cygwin || PORTNAME == win32
  ##
  
  .PHONY: install-lib install-lib-static install-lib-shared installdirs-lib
@@ -32,7 +32,7 @@ index 551023c..16255d7 100644
  endif
  
 diff --git a/src/interfaces/libpq/Makefile b/src/interfaces/libpq/Makefile
-index 8abdb09..185461e 100644
+index 0919d8f..e5d64d7 100644
 --- a/src/interfaces/libpq/Makefile
 +++ b/src/interfaces/libpq/Makefile
 @@ -115,6 +115,7 @@ backend_src = $(top_srcdir)/src/backend
@@ -43,14 +43,15 @@ index 8abdb09..185461e 100644
  libpq-refs-stamp: $(shlib)
  ifneq ($(enable_coverage), yes)
  ifeq (,$(filter aix solaris,$(PORTNAME)))
-@@ -124,6 +125,10 @@ ifeq (,$(filter aix solaris,$(PORTNAME)))
+@@ -124,7 +125,10 @@ ifeq (,$(filter aix solaris,$(PORTNAME)))
  endif
  endif
  	touch $@
+-
 +else
 +.PHONY: libpq-refs-stamp
 +libpq-refs-stamp:
 +endif
- 
  # Make dependencies on pg_config_paths.h visible in all builds.
  fe-connect.o: fe-connect.c $(top_builddir)/src/port/pg_config_paths.h
+ fe-misc.o: fe-misc.c $(top_builddir)/src/port/pg_config_paths.h
