@@ -3,34 +3,31 @@ vcpkg_from_git(
     URL "https://git.code.sf.net/p/qwt/git"
     REF "907846e0e981b216349156ee83b13208faae2934"
     FETCH_REF qwt-6.2
+    PATCHES
+        config.patch
+        fix_dll_install.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" QWT_BUILD_DLL)
-else()
-    set(QWT_BUILD_DLL OFF)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" IS_DYNAMIC)
+set(OPTIONS "")
+if(IS_DYNAMIC)
+    set(OPTIONS "QWT_CONFIG+=QwtDll")
 endif()
-
-vcpkg_cmake_configure(
+vcpkg_qmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DBUILD_DLL=${QWT_BUILD_DLL}
-        -DWITH_PLOT=ON
-        -DWITH_OPENGL=ON
-        -DWITH_SVG=ON
-        -DWITH_POLAR=ON
-        -DWITH_WIDGETS=ON
+    QMAKE_OPTIONS
+        ${OPTIONS}
+        "CONFIG-=debug_and_release"
+        "CONFIG+=create_prl"
+        "CONFIG+=link_prl"
 )
-
-vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup()
-
+vcpkg_qmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-qwt-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-qwt")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
