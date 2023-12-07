@@ -21,6 +21,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openni2    BUILD_OPENNI2_DRIVER
 )
 
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(path_suffix "/debug")
+endif()
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    set(path_suffix "")
+endif()
+vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
+vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${path_suffix}/lib/pkgconfig")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -28,6 +37,7 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         ${FEATURE_OPTIONS}
 )
+vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
 
 vcpkg_cmake_install()
 
