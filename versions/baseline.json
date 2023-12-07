@@ -5750,7 +5750,7 @@
     },
     "ms-gsl": {
       "baseline": "4.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ms-quic": {
       "baseline": "1.2.0",
