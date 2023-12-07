@@ -67,8 +67,7 @@
         {
           "name": "darknet",
           "features": [
-            "cuda",
-            "cudnn"
+            "cuda"
           ]
         },
         {
@@ -121,6 +120,12 @@
     "opencv3-cuda": {
       "description": "Build darknet with support for CUDA-enabled OpenCV3",
       "dependencies": [
+        {
+          "name": "darknet",
+          "features": [
+            "cuda"
+          ]
+        },
         {
           "name": "opencv3",
           "features": [
