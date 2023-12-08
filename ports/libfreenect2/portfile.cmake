@@ -21,6 +21,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openni2    BUILD_OPENNI2_DRIVER
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(path_suffix "/debug")
 endif()
@@ -33,6 +35,7 @@ vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${pat
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DENABLE_CUDA=OFF
         -DBUILD_EXAMPLES=OFF
         ${FEATURE_OPTIONS}
