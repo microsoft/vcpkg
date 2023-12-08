@@ -1,5 +1,5 @@
 diff --git a/src/sprtf.c b/src/sprtf.c
-index 3468ac1..284c656 100644
+index 3468ac1..1630405 100644
 --- a/src/sprtf.c
 +++ b/src/sprtf.c
 @@ -387,7 +387,7 @@ static void wprt( PTSTR ps )
@@ -7,7 +7,7 @@ index 3468ac1..284c656 100644
     static char _s_woibuf[1024];
     char * cp = _s_woibuf;
 -   int len = (int)lstrlen(ps);
-+   int len = (int)(strlen(ps)/2);
++   int len = (int)wcslen(ps);
     if(len) {
        int ret = WideCharToMultiByte( CP_ACP, /* UINT CodePage, // code page */
           0, /* DWORD dwFlags,            // performance and mapping flags */
