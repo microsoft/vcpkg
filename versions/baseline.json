@@ -6189,7 +6189,7 @@
       "port-version": 0
     },
     "onnxruntime-gpu": {
-      "baseline": "1.15.1",
+      "baseline": "1.16.3",
       "port-version": 0
     },
     "oof": {
