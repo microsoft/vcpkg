@@ -2310,7 +2310,7 @@
     },
     "dv-processing": {
       "baseline": "1.7.9",
-      "port-version": 0
+      "port-version": 1
     },
     "dx": {
       "baseline": "1.0.1",
@@ -4989,8 +4989,8 @@
       "port-version": 1
     },
     "libuvc": {
-      "baseline": "2020-11-24",
-      "port-version": 4
+      "baseline": "0.0.7",
+      "port-version": 0
     },
     "libvault": {
       "baseline": "0.56.0",
