@@ -3,6 +3,7 @@
   "version": "0.0.7",
   "description": "a cross-platform library for USB video devices",
   "homepage": "https://github.com/libuvc/libuvc",
+  "supports": "linux",
   "dependencies": [
     "libjpeg-turbo",
     "libusb",
