@@ -49,7 +49,7 @@ if("zlib" IN_LIST FEATURES)
     string(APPEND POPPLER_PC_REQUIRES " zlib")
 endif()
 
-if("lcms2" IN_LIST FEATURES)
+if("cms" IN_LIST FEATURES)
     string(APPEND POPPLER_PC_REQUIRES " lcms2")
 endif()
 
