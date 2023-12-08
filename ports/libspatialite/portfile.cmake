@@ -189,9 +189,9 @@ else()
             "--disable-examples"
             "--disable-minizip"
         OPTIONS_DEBUG
-            "LIBS=${PKGCONFIG_LIBS_DEBUG} ${SYSTEM_LIBS}"
+            "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/debug/bin/geos-config"
         OPTIONS_RELEASE
-            "LIBS=${PKGCONFIG_LIBS_RELEASE} ${SYSTEM_LIBS}"
+            "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/bin/geos-config"
     )
 
     # automake adds the basedir of the generated config to `DEFAULT_INCLUDES`,
