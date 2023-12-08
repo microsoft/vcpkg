@@ -1,7 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.17.0",
-  "port-version": 2,
+  "version": "2.19.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -575,6 +574,18 @@
         }
       ]
     },
+    "edgenetwork": {
+      "description": "Distributed Cloud Edge Network API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "eventarc": {
       "description": "Eventarc API C++ Client Library",
       "dependencies": [
@@ -1121,6 +1132,18 @@
         }
       ]
     },
+    "securesourcemanager": {
+      "description": "Secure Source Manager API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "securitycenter": {
       "description": "Security Command Center API C++ Client Library",
       "dependencies": [
@@ -1217,6 +1240,18 @@
         }
       ]
     },
+    "sql": {
+      "description": "The Google Cloud SQL Admin C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "rest-common"
+          ]
+        }
+      ]
+    },
     "storage": {
       "description": "The Google Cloud Storage C++ client library",
       "dependencies": [
@@ -1280,6 +1315,18 @@
     },
     "tasks": {
       "description": "The Google Cloud Tasks C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "telcoautomation": {
+      "description": "Cloud Telco Automation API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

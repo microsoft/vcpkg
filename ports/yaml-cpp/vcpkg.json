@@ -1,6 +1,7 @@
 {
   "name": "yaml-cpp",
   "version-semver": "0.8.0",
+  "port-version": 1,
   "description": "yaml-cpp is a YAML parser and emitter in C++ matching the YAML 1.2 spec.",
   "homepage": "https://github.com/jbeder/yaml-cpp",
   "documentation": "https://codedocs.xyz/jbeder/yaml-cpp/index.html",

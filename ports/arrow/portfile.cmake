@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 9e1f8179e37279a47baa3587c66d8b385362478d998601b5f0a8bb2f360ec8cdb954705f397dac413ac1411e72d4dd740e3785823cc063ca35eb80585d2eedf2
+    SHA512 31d19f0ca80349f63db74bae813256b47907f85725a9bf01ef6f32406e79828ebb4701faedb52696b6a5b3bb89ad4e136485fd5eb35d396dd42147c11d4d2713
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -17,6 +17,7 @@ vcpkg_extract_source_archive(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         acero       ARROW_ACERO
+        compute     ARROW_COMPUTE
         csv         ARROW_CSV
         cuda        ARROW_CUDA
         dataset     ARROW_DATASET

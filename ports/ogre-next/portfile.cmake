@@ -6,14 +6,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre-next
     REF v${VERSION}
-    SHA512 fbc1969244db07d013118fbce12b319e83cdae93a822cb2d90bbd12108ac3ce48d1f5437b4375b3daf5640b9ec6f1764daeef742161a101f77c3e25ccaf4b154
+    SHA512 52ed2d2a3375c0d35f0dc695b986514484ad1d47966c5c18351d3b09913123b2487b9729738c6b8b1219c1a992a8c8509a2303e097a6eb26497e152a14d48830
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
         avoid-name-clashes.patch
         fix-error-c2039.patch
         fix-dependencies.patch
-        fix-pc-file.patch
+        osx.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -32,6 +32,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DOGRE_BUILD_LIBS_AS_FRAMEWORKS=OFF
         -DOGRE_COPY_DEPENDENCIES=OFF
         -DOGRE_BUILD_SAMPLES2=OFF
         -DOGRE_BUILD_TESTS=OFF
@@ -118,5 +119,24 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(VCPKG_TARGET_IS_OSX)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
+        file(GLOB LIBS "${CURRENT_PACKAGES_DIR}/lib/release/*")
+        file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/bin/release/*")
+        file(COPY ${LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/release/" "${CURRENT_PACKAGES_DIR}/bin/release/")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
+        file(GLOB LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/debug/*")
+        file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/debug/bin/debug/*")
+        file(COPY ${LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/debug/" "${CURRENT_PACKAGES_DIR}/debug/bin/debug/")
+    endif() 
+endif()
 
 vcpkg_fixup_pkgconfig()
