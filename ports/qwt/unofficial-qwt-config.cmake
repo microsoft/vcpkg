@@ -1,3 +1,5 @@
+include(CMakeFindDependencyMacro)
+
 if(NOT TARGET unofficial::qwt::qwt)
     find_dependency(Qt6 COMPONENTS Core Gui Widgets Svg OpenGL Concurrent PrintSupport OpenGLWidgets)
 
