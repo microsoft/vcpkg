@@ -21,7 +21,12 @@ if(VCPKG_HOST_IS_LINUX OR VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
     file(RENAME "${LSS_SOURCE_PATH}" "${SOURCE_PATH}/src/third_party/lss")
 endif()
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" "${CMAKE_CURRENT_LIST_DIR}/check_getcontext.cc" DESTINATION "${SOURCE_PATH}")
+file(COPY
+        "${CMAKE_CURRENT_LIST_DIR}/check_getcontext.cc"
+        "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+        "${CMAKE_CURRENT_LIST_DIR}/unofficial-breakpadConfig.cmake"
+    DESTINATION
+    "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -37,14 +42,24 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/client/linux/data" "${CURRENT_PACKAGES_DIR}/include/client/linux/sender")
-
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/breakpad/breakpad-config.cmake" "include(CMakeFindDependencyMacro)
-find_dependency(ZLIB)
-")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/include/client/linux/data"
+    "${CURRENT_PACKAGES_DIR}/include/client/linux/sender")
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES microdump_stackwalk minidump_dump minidump_stackwalk core2md pid2md dump_syms minidump-2-core minidump_upload sym_upload core_handler AUTO_CLEAN)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            microdump_stackwalk
+            minidump_dump
+            minidump_stackwalk
+            core2md
+            pid2md
+            dump_syms
+            minidump-2-core
+            minidump_upload
+            sym_upload
+            core_handler
+        AUTO_CLEAN)
 endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-breakpad)

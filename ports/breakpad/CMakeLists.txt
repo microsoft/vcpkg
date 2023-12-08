@@ -100,9 +100,11 @@ target_include_directories(libbreakpad_client
 )
 list(APPEND TARGETS libbreakpad_client)
 
+set(USED_ZLIB OFF)
 if(INSTALL_TOOLS)
     if(LINUX)
-        find_package(ZLIB)
+        find_package(ZLIB REQUIRED)
+        set(USED_ZLIB ON)
         add_executable(microdump_stackwalk
                 src/processor/microdump_stackwalk.cc)
         target_link_libraries(microdump_stackwalk PRIVATE libbreakpad libbreakpad_client)
@@ -214,7 +216,9 @@ endif()
 
 install(
     EXPORT unofficial-breakpad-targets
-    FILE unofficial-breakpad-config.cmake
+    FILE unofficial-breakpadTargets.cmake
     NAMESPACE unofficial::breakpad::
     DESTINATION share/unofficial-breakpad
 )
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-breakpadConfig.cmake" "${CMAKE_INSTALL_PREFIX}/share/unofficial-breakpad/unofficial-breakpadConfig.cmake" @ONLY)
