@@ -9,7 +9,6 @@
     "boost-container",
     "boost-move",
     "freetype",
-    "lcms",
     "libiconv",
     "libjpeg-turbo",
     "libpng",
@@ -87,12 +86,6 @@
             "cairo"
           ]
         }
-      ]
-    },
-    "lcms2": {
-      "description": "lcms2 for poppler",
-      "dependencies": [
-        "lcms"
       ]
     },
     "private-api": {

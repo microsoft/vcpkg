@@ -27,6 +27,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         qt          ENABLE_QT6
         qt          CMAKE_REQUIRE_FIND_PACKAGE_Qt6
         cms         CMAKE_REQUIRE_FIND_PACKAGE_LCMS2
+        cms         ENABLE_LCMS
 )
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=fontconfig")
