@@ -1,7 +1,7 @@
 {
   "name": "qwt",
-  "version": "6.2.1+20230512",
-  "description": "qt widgets library for technical applications",
+  "version-date": "2023-05-12",
+  "description": "Widgets library for technical applications",
   "homepage": "https://sourceforge.net/projects/qwt",
   "license": null,
   "dependencies": [
@@ -16,10 +16,6 @@
       ]
     },
     "qtsvg",
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
     {
       "name": "vcpkg-qmake",
       "host": true,

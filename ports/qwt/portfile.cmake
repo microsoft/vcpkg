@@ -11,7 +11,7 @@ vcpkg_from_git(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" IS_DYNAMIC)
 set(OPTIONS "")
 if(IS_DYNAMIC)
-    set(OPTIONS "QWT_CONFIG+=QwtDll")
+    list(APPEND OPTIONS "QWT_CONFIG+=QwtDll")
 endif()
 vcpkg_qmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
