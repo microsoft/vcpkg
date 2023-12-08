@@ -47,6 +47,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
+        "-DBUILD_VERSION=${VERSION}"
         -DUSE_SYSTEM_LIBBSON=ON
         -DENABLE_EXAMPLES=OFF
         -DENABLE_SHM_COUNTERS=OFF
