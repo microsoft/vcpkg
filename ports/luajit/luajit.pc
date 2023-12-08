@@ -5,7 +5,7 @@ relver=0
 version=${majver}.${minver}.${relver}-beta3
 abiver=51
 
-prefix=@PREFIX@
+prefix=handled-by-fixup
 multilib=lib
 exec_prefix=${prefix}
 libdir=${exec_prefix}/${multilib}
@@ -21,4 +21,4 @@ URL: https://luajit.org
 Version: ${version}
 Requires:
 Libs: -L${libdir} -l${libname}
-Cflags: -I${includedir} @LJIT_MSVC_PC_CFLAGS@
+Cflags: -I${includedir}
