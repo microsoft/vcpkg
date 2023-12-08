@@ -11,7 +11,7 @@ vcpkg_from_gitlab(
 )
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindFontconfig.cmake")
 
-set(POPPLER_PC_REQUIRES "freetype2 libjpeg libopenjp2 libpng libtiff-4 poppler-vcpkg-iconv lcms2")
+set(POPPLER_PC_REQUIRES "freetype2 libjpeg libopenjp2 libpng libtiff-4 poppler-vcpkg-iconv")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -31,6 +31,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=fontconfig")
     string(APPEND POPPLER_PC_REQUIRES " fontconfig")
+elseif(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=android")
 elseif(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=win32")
 else()
