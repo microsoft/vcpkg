@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fbaffc9..ee41b28 100644
+index fbaffc9..aee6632 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,8 +4,9 @@ project(libuvc
@@ -14,7 +14,7 @@ index fbaffc9..ee41b28 100644
  
  # Xcode and Visual Studio do not using CMAKE_BUILD_TYPE cache variable
  # so we use Release build type only with single configuration generators.
-@@ -39,7 +40,8 @@ set(SOURCES
+@@ -39,10 +40,11 @@ set(SOURCES
    src/misc.c
  )
  
@@ -23,7 +23,11 @@ index fbaffc9..ee41b28 100644
 +pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
  
  # JpegPkg name to differ from shipped with CMake
- find_package(JpegPkg QUIET)
+-find_package(JpegPkg QUIET)
++find_package(JPEG REQUIRED)
+ if(JPEG_FOUND)
+   message(STATUS "Building libuvc with JPEG support.")
+   set(LIBUVC_HAS_JPEG TRUE)
 @@ -116,7 +118,7 @@ foreach(target_name IN LISTS UVC_TARGETS)
    )
    target_link_libraries(${target_name}
@@ -42,23 +46,26 @@ index fbaffc9..ee41b28 100644
    DESTINATION ${CMAKE_INSTALL_CMAKEDIR}
  )
 diff --git a/libuvcConfig.cmake b/libuvcConfig.cmake
-index b9887ea..b89c2ae 100644
+index b9887ea..f904b6d 100644
 --- a/libuvcConfig.cmake
 +++ b/libuvcConfig.cmake
-@@ -1,3 +1,8 @@
-+include(CMakeFindDependencyMacro)
-+find_dependency(Threads)
-+find_package(PkgConfig REQUIRED)
-+pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
+@@ -1,3 +1,5 @@
++
 +
  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
  
  # If find_package called with REQUIRED or QUIET we need to
-@@ -11,7 +16,6 @@ if(${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED)
+@@ -10,8 +12,11 @@ if(${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED)
+   list(APPEND extraArgs REQUIRED)
  endif()
  
- find_package(JpegPkg ${extraArgs})
+-find_package(JpegPkg ${extraArgs})
 -find_package(LibUSB ${extraArgs})
++include(CMakeFindDependencyMacro)
++find_dependency(JPEG ${extraArgs})
++find_dependency(Threads)
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
  include("${CMAKE_CURRENT_LIST_DIR}/libuvcTargets.cmake")
  
  set(libuvc_FOUND TRUE)
