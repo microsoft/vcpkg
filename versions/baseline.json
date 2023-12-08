@@ -7734,35 +7734,35 @@
     },
     "sdl2": {
       "baseline": "2.28.5",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
-      "port-version": 10
+      "port-version": 11
     },
     "sdl2-image": {
       "baseline": "2.6.3",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-mixer": {
       "baseline": "2.6.3",
-      "port-version": 1
+      "port-version": 2
     },
     "sdl2-mixer-ext": {
       "baseline": "2.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-net": {
       "baseline": "2.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "sdl2-ttf": {
       "baseline": "2.20.2",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2pp": {
       "baseline": "0.16.1",
-      "port-version": 7
+      "port-version": 8
     },
     "seacas": {
       "baseline": "2022-11-22",
