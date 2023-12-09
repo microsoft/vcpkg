@@ -1,7 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d2b91f5..35a6e43 100644
+index d2b91f5..c91ec97 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -647,7 +647,7 @@ add_custom_command(
+ 
+ 
+ 
+-if(NOT DISABLE_SHARED)
++if(installing-plugins)
+ 	add_custom_command(
+ 		OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/skin3.cpp
+ 		COMMAND ${PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/bin/cppcms_tmpl_cc 
 @@ -779,6 +779,7 @@ endif()
  #####################################
  # End of tests
