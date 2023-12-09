@@ -18,15 +18,16 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "zlib",
+      "platform": "linux"
     }
   ],
   "features": {
     "tools": {
       "description": "Build breakpad tools",
-      "supports": "linux",
-      "dependencies": [
-        "zlib"
-      ]
+      "supports": "linux"
     }
   }
 }
