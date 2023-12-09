@@ -93,6 +93,14 @@ else()
     endif()
 endif()
 
+set(USED_ZLIB OFF)
+if(LINUX AND NOT CMAKE_SYSTEM_NAME STREQUAL Android)
+    # src/common/linux/dump_symbols.cc wants zlib.h
+    find_package(ZLIB REQUIRED)
+    target_link_libraries(libbreakpad_client PRIVATE ZLIB::ZLIB)
+    set(USED_ZLIB ON)
+endif()
+
 target_include_directories(libbreakpad_client
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
@@ -100,11 +108,8 @@ target_include_directories(libbreakpad_client
 )
 list(APPEND TARGETS libbreakpad_client)
 
-set(USED_ZLIB OFF)
 if(INSTALL_TOOLS)
     if(LINUX)
-        find_package(ZLIB REQUIRED)
-        set(USED_ZLIB ON)
         add_executable(microdump_stackwalk
                 src/processor/microdump_stackwalk.cc)
         target_link_libraries(microdump_stackwalk PRIVATE libbreakpad libbreakpad_client)
@@ -144,16 +149,8 @@ if(INSTALL_TOOLS)
             src/common/dwarf/dwarf2diehandler.cc
             src/common/dwarf/dwarf2reader.cc
             src/common/dwarf/elf_reader.cc
-            src/common/linux/crc32.cc
-            src/common/linux/dump_symbols.cc
-            src/common/linux/elf_symbols_to_module.cc
-            src/common/linux/elfutils.cc
-            src/common/linux/file_id.cc
-            src/common/linux/linux_libc_support.cc
-            src/common/linux/memory_mapped_file.cc
-            src/common/linux/safe_readlink.cc
             src/tools/linux/dump_syms/dump_syms.cc)
-        target_link_libraries(dump_syms PRIVATE libbreakpad_client ZLIB::ZLIB)
+        target_link_libraries(dump_syms PRIVATE libbreakpad_client)
         install(TARGETS dump_syms DESTINATION bin)
 
         add_executable(minidump-2-core
