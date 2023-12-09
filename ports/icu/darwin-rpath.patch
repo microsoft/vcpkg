@@ -1,0 +1,14 @@
+diff --git a/source/config/mh-darwin b/source/config/mh-darwin
+index 7b15709..1a500a3 100644
+--- a/source/config/mh-darwin
++++ b/source/config/mh-darwin
+@@ -33,7 +33,8 @@ SHLIB.cc=	$(CXX) -dynamiclib -dynamic $(CXXFLAGS) $(LDFLAGS) $(LD_SOOPTIONS)
+ ifeq ($(ENABLE_RPATH),YES)
+ LD_SONAME = -Wl,-compatibility_version -Wl,$(SO_TARGET_VERSION_MAJOR) -Wl,-current_version -Wl,$(SO_TARGET_VERSION) -install_name $(libdir)/$(notdir $(MIDDLE_SO_TARGET))
+ else
+-LD_SONAME = -Wl,-compatibility_version -Wl,$(SO_TARGET_VERSION_MAJOR) -Wl,-current_version -Wl,$(SO_TARGET_VERSION) -install_name $(notdir $(MIDDLE_SO_TARGET)) $(PKGDATA_TRAILING_SPACE)
++ID_PREFIX = @rpath
++LD_SONAME = -Wl,-compatibility_version -Wl,$(SO_TARGET_VERSION_MAJOR) -Wl,-current_version -Wl,$(SO_TARGET_VERSION) -install_name $(ID_PREFIX)/$(notdir $(MIDDLE_SO_TARGET))
+ endif
+ 
+ ## Compiler switch to embed a runtime search path
