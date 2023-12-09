@@ -26,8 +26,6 @@ vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
 
 vcpkg_list(SET CONFIGURE_OPTIONS)
-vcpkg_list(SET CONFIGURE_OPTIONS_RELEASE)
-vcpkg_list(SET CONFIGURE_OPTIONS_DEBUG)
 vcpkg_list(SET BUILD_OPTIONS)
 
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
@@ -41,17 +39,6 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND CONFIGURE_OPTIONS --enable-icu-build-win)
-endif()
-
-list(APPEND CONFIGURE_OPTIONS --disable-samples --disable-tests --disable-layoutex)
-
-list(APPEND CONFIGURE_OPTIONS_RELEASE --disable-debug --enable-release)
-list(APPEND CONFIGURE_OPTIONS_DEBUG  --enable-debug --disable-release)
-
-set(CONFIG_TRIPLETS)
-list(APPEND CONFIG_TRIPLETS ${TARGET_TRIPLET}-rel)
-if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-  list(APPEND CONFIG_TRIPLETS ${TARGET_TRIPLET}-dbg)
 endif()
 
 if("tools" IN_LIST FEATURES)
@@ -71,13 +58,21 @@ endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
     PROJECT_SUBPATH source
-    ADDITIONAL_MSYS_PACKAGES autoconf-archive
-    OPTIONS ${CONFIGURE_OPTIONS}
-    OPTIONS_RELEASE ${CONFIGURE_OPTIONS_RELEASE}
-    OPTIONS_DEBUG ${CONFIGURE_OPTIONS_DEBUG}
+    AUTOCONFIG
     DETERMINE_BUILD_TRIPLET
+    ADDITIONAL_MSYS_PACKAGES autoconf-archive
+    OPTIONS
+        ${CONFIGURE_OPTIONS}
+        --disable-samples
+        --disable-tests
+        --disable-layoutex
+    OPTIONS_RELEASE
+        --disable-debug
+        --enable-release
+    OPTIONS_DEBUG
+        --enable-debug
+        --disable-release
 )
 
 if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -104,6 +99,11 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 
     if("tools" IN_LIST FEATURES)
         set(LIBICUTU_RPATH "libicutu")
+    endif()
+
+    set(CONFIG_TRIPLETS "${TARGET_TRIPLET}-rel")
+    if (NOT VCPKG_BUILD_TYPE)
+        list(APPEND CONFIG_TRIPLETS "${TARGET_TRIPLET}-dbg")
     endif()
 
     #31680: Fix @rpath in both debug and release build
