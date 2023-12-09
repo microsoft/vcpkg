@@ -9,15 +9,13 @@ vcpkg_from_github(
         fix_narrowing_error.patch
 )
 
-vcpkg_find_acquire_program(PYTHON2)
-
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DISABLE_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DISABLE_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DPYTHON=${PYTHON2} # Switch to python3 on the next update
+        -DPYTHON=:
         -DUSE_WINDOWS6_API=ON
         -DDISABLE_SHARED=${DISABLE_SHARED}
         -DDISABLE_STATIC=${DISABLE_STATIC}
