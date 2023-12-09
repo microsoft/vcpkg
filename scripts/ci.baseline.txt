@@ -550,8 +550,6 @@ libidn2:arm64-android=fail
 libidn2:x64-android=fail
 # 120 min build time for libjxl arm64-uwp-rel, reason unknown
 libjxl:arm64-uwp=skip
-liblemon:arm64-uwp=fail
-liblemon:x64-uwp=fail
 liblo:arm-neon-android=fail
 liblo:arm64-uwp=fail
 liblo:arm64-android=fail

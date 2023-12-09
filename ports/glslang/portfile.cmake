@@ -4,12 +4,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/glslang
     REF "${VERSION}"
-    SHA512 678df76a6f23b9da93f111fc7e6db57b7f6bf34661b077f9259a0a77d6c023b4d2e3c1cd60b3f9fc15fe69f25cdcb19877e88a50771d3d5275e32574eaefc056
+    SHA512 e16b01925a657750733a2973dc803fc3910a3a169ae276af205de6cb1bf0536fd2dbb63c5fd4fc10f800ba95f71bce673417121ad640cb9c964f291596c80025
     HEAD_REF master
+    PATCHES
+        cmake.patch # Remove on next version (Upstream PR #3406 and #3420).
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        opt ENABLE_OPT
+        opt ALLOW_EXTERNAL_SPIRV_TOOLS
         tools ENABLE_GLSLANG_BINARIES
         rtti ENABLE_RTTI
 )
