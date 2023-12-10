@@ -21,5 +21,6 @@ vcpkg_cmake_install()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
