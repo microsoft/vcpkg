@@ -2,21 +2,17 @@
   "name": "ogre-next",
   "version": "2.3.3",
   "port-version": 1,
-  "description": "Ogre 2.1 & 2.2 - scene-oriented, flexible 3D engine written in C++",
+  "description": "Ogre Next - scene-oriented, flexible 3D engine written in C++",
   "homepage": "https://github.com/OGRECave/ogre-next",
   "license": "MIT",
-  "supports": "!uwp & !xbox",
+  "supports": "!emscripten & !uwp & !xbox",
   "dependencies": [
-    "boost-date-time",
-    "boost-thread",
     "freeimage",
     {
       "name": "freetype",
       "default-features": false
     },
-    "poco",
     "rapidjson",
-    "tbb",
     "tinyxml",
     {
       "name": "vcpkg-cmake",
@@ -36,7 +32,7 @@
     },
     {
       "name": "gl3plus",
-      "platform": "!ios & !osx & !windows"
+      "platform": "!android & !ios & !osx & !windows"
     },
     {
       "name": "metal",
@@ -44,7 +40,7 @@
     },
     {
       "name": "vulkan",
-      "platform": "windows"
+      "platform": "android | windows"
     }
   ],
   "features": {
@@ -54,7 +50,7 @@
     },
     "gl3plus": {
       "description": "OpenGL 3+ render system",
-      "supports": "!(arm & windows)"
+      "supports": "!android & !(arm & windows)"
     },
     "metal": {
       "description": "Metal render system",
@@ -66,6 +62,7 @@
     "vulkan": {
       "description": "Vulkan render system",
       "dependencies": [
+        "glslang",
         "vulkan"
       ]
     }
