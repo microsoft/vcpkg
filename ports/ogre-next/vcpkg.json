@@ -40,7 +40,7 @@
     },
     {
       "name": "vulkan",
-      "platform": "android | windows"
+      "platform": "android"
     }
   ],
   "features": {
