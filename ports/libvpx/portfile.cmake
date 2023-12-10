@@ -13,15 +13,13 @@ vcpkg_from_github(
         0005-fix-arm64-build.patch # Upstream commit: https://github.com/webmproject/libvpx/commit/858a8c611f4c965078485860a6820e2135e6611b
 )
 
-vcpkg_find_acquire_program(PERL)
-
-get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-
 if(CMAKE_HOST_WIN32)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make perl)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-    set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
+    set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH}")
 else()
+    vcpkg_find_acquire_program(PERL)
+    get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
     set(BASH /bin/bash)
     set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
 endif()
