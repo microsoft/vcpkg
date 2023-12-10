@@ -24,6 +24,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE # because it writes the file VERSION_CURRENT in the source directory
     OPTIONS
         "-DBUILD_VERSION=${VERSION}"
         -DENABLE_BSON=ON
