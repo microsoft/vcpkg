@@ -1,7 +1,6 @@
 {
   "name": "discount",
-  "version": "2.2.6",
-  "port-version": 3,
+  "version-string": "3.0.0a",
   "description": "DISCOUNT is a implementation of John Gruber & Aaron Swartz's Markdown markup language.",
   "homepage": "https://github.com/Orc/discount",
   "dependencies": [

@@ -1,6 +1,6 @@
 {
   "name": "libtracepoint-control",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "C++ classes for collecting Linux Tracepoints",
   "homepage": "https://github.com/microsoft/LinuxTracepoints/",
   "license": "MIT",
@@ -8,7 +8,7 @@
   "dependencies": [
     {
       "name": "libtracepoint-decode",
-      "version>=": "1.1.0"
+      "version>=": "1.2.1"
     },
     {
       "name": "vcpkg-cmake",

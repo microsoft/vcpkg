@@ -2,7 +2,7 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
     FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 190a98e9a0ebb802a31b511e95725ed1fec9d750aed6bd87f14f3047d1f1d79458be3fa954fd6eb9af9f481a8deeaae73c95c990f5aa002a4b1166372ed4c4f1
+    SHA512 aa9ed9195951b00ac8221e958ea337fbda82621a862ef8f29dc2ea396a6253ce51c2a0a498dfa4e12642f1836f85f9564f09991979ae85c5ed4368355d857376
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -10,7 +10,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
-        fix-build-race-on-gio.patch # https://gitlab.gnome.org/GNOME/glib/-/merge_requests/3512
 )
 
 if(APPLE)

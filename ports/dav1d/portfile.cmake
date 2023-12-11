@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO videolan/dav1d
     REF "${VERSION}"
-    SHA512 b2f39fdc95c851f136cbe2be40a75770e56ff0109ee55bd084861eb23a8c1dece070dde8a88781c5bb95e241e019e5985d88321560746ecbcb7ab2f22106c0b4
+    SHA512 fce702048b876794d176dffe53d21aaf6a2e9521a306a078debc26a230b5042e7888edd63eb17bd17f06f30ce51901ebf37ea504da25eb911c1b926631cde278
 )
 
 vcpkg_find_acquire_program(NASM)
