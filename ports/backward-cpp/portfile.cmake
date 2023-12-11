@@ -10,7 +10,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME backward-cpp CONFIG_PATH lib/cmake/backward)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/backward)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
