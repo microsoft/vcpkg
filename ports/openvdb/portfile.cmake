@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 f2c90ca8435ecbacefda429341000ecb555385c746a3e0233220cd78540cee2a26cc17df7b560fdfe2dc03f2b2e960a2fa226a85980189c3e018164ccc037bd4
     PATCHES
-        0003-fix-cmake.patch
+        fix_cmake.patch
         fix_nanovdb.patch
 )
 
