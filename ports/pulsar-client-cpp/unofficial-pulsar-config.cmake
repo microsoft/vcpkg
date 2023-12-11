@@ -16,7 +16,6 @@ if (NOT TARGET unofficial::pulsar::pulsar)
         message(FATAL_ERROR "Broken installation of vcpkg port pulsar-client-cpp")
     endif ()
 
-    # Find 3rd party dependencies
     find_package(protobuf CONFIG REQUIRED)
     find_package(CURL CONFIG REQUIRED)
     find_package(zstd CONFIG REQUIRED)
@@ -34,5 +33,5 @@ if (NOT TARGET unofficial::pulsar::pulsar)
         Snappy::snappy
         )
     unset(_pulsar_library)
+    unset(_pulsar_include_dir)
 endif ()
-unset(_pulsar_include_dir)

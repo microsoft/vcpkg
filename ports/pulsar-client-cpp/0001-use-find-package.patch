@@ -124,7 +124,7 @@ index fb4f1b1..84b8b1a 100644
 
  set(LIB_NAME $ENV{PULSAR_LIBRARY_NAME})
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 8bd9749..e5ee8dd 100644
+index 8bd9749..007df90 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
 @@ -27,16 +27,16 @@ set(LIB_AUTOGEN_DIR ${AUTOGEN_DIR}/lib)
@@ -152,16 +152,3 @@ index 8bd9749..e5ee8dd 100644
 
  set(LIBRARY_VERSION $ENV{PULSAR_LIBRARY_VERSION})
  if (NOT LIBRARY_VERSION)
-@@ -70,6 +70,12 @@ if (BUILD_DYNAMIC_LIB)
-         target_include_directories(pulsarShared PRIVATE ${dlfcn-win32_INCLUDE_DIRS})
-         target_link_options(pulsarShared PRIVATE $<$<CONFIG:DEBUG>:/NODEFAULTLIB:MSVCRT>)
-     endif()
-+    if (APPLE)
-+        target_link_libraries(pulsarShared stdc++ "-framework Security"
-+            "-framework CoreFoundation"
-+            "-framework CoreServices"
-+            "-framework SystemConfiguration")
-+    endif ()
- endif()
-
- include(CheckCXXSymbolExists)
