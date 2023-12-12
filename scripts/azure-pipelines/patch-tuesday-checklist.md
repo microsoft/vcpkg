@@ -37,3 +37,4 @@
       this N is the other key. (Jan = 2, Feb = 1, Mar = 2, and so on)
 * [ ] Mint a new macOS base box.  (See instructions in `scripts/azure-pipelines/osx/README.md`)
 * [ ] Deploy the new base box to all hosts.
+* [ ] Update the software on the CTI's machine #12 to match.

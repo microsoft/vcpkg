@@ -53,8 +53,6 @@ apsi:arm-neon-android=fail
 apsi:x64-android=fail
 # Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
 arrayfire:x64-linux=fail
-# Appears to trigger some form of malformed code on XCode 14.3.1
-arrayfire:x64-osx=fail
 # Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
 allegro5:arm64-windows=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
