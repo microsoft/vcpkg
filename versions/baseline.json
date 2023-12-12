@@ -2914,7 +2914,7 @@
     },
     "geos": {
       "baseline": "3.11.3",
-      "port-version": 0
+      "port-version": 1
     },
     "geotrans": {
       "baseline": "3.9",
@@ -4834,7 +4834,7 @@
     },
     "libspatialite": {
       "baseline": "5.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libspnav": {
       "baseline": "0.2.3",
