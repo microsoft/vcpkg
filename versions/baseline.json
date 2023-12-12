@@ -2565,7 +2565,7 @@
       "port-version": 1
     },
     "fastio": {
-      "baseline": "2023-07-06",
+      "baseline": "2023-11-06",
       "port-version": 0
     },
     "fastlz": {
