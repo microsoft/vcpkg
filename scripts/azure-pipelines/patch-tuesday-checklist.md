@@ -34,3 +34,4 @@
       devdiv.visualstudio.com.
 * [ ] Mint a new macOS base box.  (See instructions in `scripts/azure-pipelines/osx/README.md`)
 * [ ] Deploy the new base box to all hosts.
+* [ ] Update the software on the CTI's machine #12 to match.

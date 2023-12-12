@@ -7,6 +7,12 @@ parameters:
     displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
     type: string
     default: 'use default'
+  - name: triplet
+    type: string
+    default: 'x64-osx'
+  - name: jobName
+    type: string
+    default: 'x64_osx'
   - name: poolName
     type: string
   - name: tripletPattern
@@ -15,8 +21,8 @@ parameters:
     default: ''
 
 jobs:
-- job: x64_osx
-  condition: and(succeeded(), contains('^x64-osx$', '${{ parameters.tripletPattern }}'))
+- job: ${{ parameters.jobName }}
+  condition: and(succeeded(), contains('^${{ parameters.triplet }}$', '${{ parameters.tripletPattern }}'))
   pool:
     name: ${{ parameters.poolName }}
   workspace:
@@ -24,9 +30,9 @@ jobs:
   timeoutInMinutes: 2880 # 2 days
   variables:
   - name: WORKING_ROOT
-    value: /Users/vagrant/Data
+    value: /Users/vcpkg/Data
   - name: VCPKG_DOWNLOADS
-    value: /Users/vagrant/Data/downloads
+    value: /Users/vcpkg/Data/downloads
   - group: vcpkg-binary-caching-credentials
   - name: X_VCPKG_BINARY_SOURCE_STUB
     value: "x-azblob,$(root-bin-url),$(sas-bin)" # not in eastasia due to physical location
@@ -43,9 +49,7 @@ jobs:
   - bash: ./bootstrap-vcpkg.sh
     displayName: 'Bootstrap vcpkg'
     condition: eq('use default', '${{ parameters.vcpkgToolSha }}')
-  - bash: |
-      brew install cmake
-      ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
+  - bash: ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
   - task: PowerShell@2
@@ -54,7 +58,7 @@ jobs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
       arguments: >
-        -Triplet "x64-osx"
+        -Triplet ${{ parameters.triplet }}
         -BuildReason "$(Build.Reason)"
         -BinarySourceStub "${{ variables.X_VCPKG_BINARY_SOURCE_STUB }}"
         -WorkingRoot "${{ variables.WORKING_ROOT }}"
@@ -64,23 +68,23 @@ jobs:
     displayName: 'Publish Artifact: failure logs for x64-osx'
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/failure-logs'
-      ArtifactName: 'failure logs for x64-osx${{ variables.Postfix }}'
+      ArtifactName: 'failure logs for ${{ parameters.triplet }}'
     condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
-  - bash: python3 scripts/file_script.py /Users/vagrant/Data/installed/vcpkg/info/
+  - bash: python3 scripts/file_script.py /Users/vcpkg/Data/installed/vcpkg/info/
     displayName: 'Build a file list for all packages'
     condition: always()
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: file lists for x64-osx${{ variables.Postfix }}'
+    displayName: 'Publish Artifact: file lists for ${{ parameters.triplet }}'
     condition: always()
     inputs:
       PathtoPublish: scripts/list_files
-      ArtifactName: 'file lists for x64-osx${{ variables.Postfix }}'
+      ArtifactName: 'file lists for ${{ parameters.triplet }}'
   - task: PublishTestResults@2
     displayName: 'Publish Test Results'
     condition: ne(variables['XML_RESULTS_FILE'], '')
     inputs:
-      testRunTitle: x64-osx
+      testRunTitle: ${{ parameters.triplet }}
       testResultsFormat: xUnit
       testResultsFiles: $(XML_RESULTS_FILE)
-      platform: x64-osx
+      platform: ${{ parameters.triplet }}
       configuration: static
