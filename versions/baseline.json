@@ -8736,6 +8736,10 @@
       "baseline": "0.9.5.0",
       "port-version": 2
     },
+    "utf8-range": {
+      "baseline": "2023-11-09",
+      "port-version": 0
+    },
     "utf8h": {
       "baseline": "2021-11-18",
       "port-version": 1
