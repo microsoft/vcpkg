@@ -6365,8 +6365,8 @@
       "port-version": 0
     },
     "openvdb": {
-      "baseline": "10.0.0",
-      "port-version": 6
+      "baseline": "11.0.0",
+      "port-version": 0
     },
     "openvino": {
       "baseline": "2023.2.0",
