@@ -7309,8 +7309,8 @@
       "port-version": 3
     },
     "qwt": {
-      "baseline": "6.2.0+20220616",
-      "port-version": 1
+      "baseline": "2023-05-12",
+      "port-version": 0
     },
     "qwtw": {
       "baseline": "3.1.0",

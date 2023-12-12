@@ -1,8 +1,7 @@
 {
   "name": "qwt",
-  "version": "6.2.0+20220616",
-  "port-version": 1,
-  "description": "qt widgets library for technical applications",
+  "version-date": "2023-05-12",
+  "description": "Widgets library for technical applications",
   "homepage": "https://sourceforge.net/projects/qwt",
   "license": null,
   "dependencies": [
