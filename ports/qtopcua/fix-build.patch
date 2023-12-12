@@ -25,25 +25,3 @@ index b4fcea410..91958e554 100644
  
  include(FeatureSummary)
  set_package_properties(Open62541 PROPERTIES
-diff --git a/src/opcua/CMakeLists.txt b/src/opcua/CMakeLists.txt
-index d5e3c65df..0d2fa3952 100644
---- a/src/opcua/CMakeLists.txt
-+++ b/src/opcua/CMakeLists.txt
-@@ -84,7 +84,7 @@ qt_internal_add_module(OpcUa
- ## Scopes:
- #####################################################################
- 
--qt_internal_extend_target(OpcUa CONDITION QT_FEATURE_gds AND QT_FEATURE_ssl AND NOT APPLE AND NOT WINRT
-+qt_internal_extend_target(OpcUa CONDITION QT_FEATURE_gds AND QT_FEATURE_openssl AND NOT APPLE AND NOT WINRT
-     SOURCES
-         client/qopcuagdsclient.cpp client/qopcuagdsclient_p.h
-         x509/openssl_symbols.cpp
-@@ -102,7 +102,7 @@ qt_internal_extend_target(OpcUa CONDITION QT_FEATURE_gds AND QT_FEATURE_ssl AND
-         x509/qopcuax509utils.cpp x509/qopcuax509utils_p.h
- )
- 
--if (QT_FEATURE_gds AND QT_FEATURE_ssl)
-+if (QT_FEATURE_gds AND QT_FEATURE_openssl)
-     qt_internal_extend_target(OpcUa
-         LIBRARIES WrapOpenSSL::WrapOpenSSL)
- endif()

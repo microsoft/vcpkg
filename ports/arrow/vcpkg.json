@@ -1,7 +1,7 @@
 {
   "name": "arrow",
   "version": "14.0.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",
@@ -40,6 +40,9 @@
   "features": {
     "acero": {
       "description": "Acero support"
+    },
+    "compute": {
+      "description": "Build all computational kernel functions"
     },
     "csv": {
       "description": "CSV support"

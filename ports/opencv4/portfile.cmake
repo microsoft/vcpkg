@@ -31,6 +31,7 @@ vcpkg_from_github(
       0020-fix-compat-cuda12.2.patch
       0021-static-openvino.patch # https://github.com/opencv/opencv/pull/23963
       "${ARM64_WINDOWS_FIX}"
+      0022-fix-supportqnx.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
