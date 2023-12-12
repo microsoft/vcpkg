@@ -55,7 +55,10 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
-        OPTIONS ${MAKE_OPTIONS}
+        OPTIONS 
+            ${MAKE_OPTIONS}
+            "--enable-examples-build=no"
+            "--enable-tests-build=no"
     )
     vcpkg_install_make()
 endif()
