@@ -1,0 +1,12 @@
+diff --git a/Source/cmake/WebKitCommon.cmake b/Source/cmake/WebKitCommon.cmake
+index 1381d5922b80..fb874bd36764 100644
+--- a/Source/cmake/WebKitCommon.cmake
++++ b/Source/cmake/WebKitCommon.cmake
+@@ -226,7 +226,6 @@ if (NOT HAS_RUN_WEBKIT_COMMON)
+     include(WebKitCompilerFlags)
+     include(WebKitStaticAnalysis)
+     include(WebKitFeatures)
+-    include(WebKitFindPackage)
+ 
+     include(OptionsCommon)
+     include(Options${PORT})
