@@ -44,11 +44,11 @@ set(OPTIONS
     --with-included-gettext
     --without-libintl-prefix
     --disable-dependency-tracking
-    ac_cv_path_GMSGFMT=:
-    ac_cv_path_MSGFMT=:
-    ac_cv_path_MSGMERGE=:
-    ac_cv_path_XGETTEXT=:
-    ac_cv_prog_INTLBISON=:
+    ac_cv_path_GMSGFMT=false
+    ac_cv_path_MSGFMT=false
+    ac_cv_path_MSGMERGE=false
+    ac_cv_path_XGETTEXT=false
+    ac_cv_prog_INTLBISON=false
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS
