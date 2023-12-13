@@ -1,6 +1,6 @@
 {
   "name": "yyjson",
-  "version": "0.6.0",
+  "version": "0.8.0",
   "description": "A high performance JSON library written in ANSI C",
   "homepage": "https://github.com/ibireme/yyjson",
   "license": "MIT",
@@ -31,7 +31,16 @@
       "description": "Build with JSON reader"
     },
     "writer": {
-      "description": "Build with JSON writer"
+      "description": "Build with JSON writer",
+      "dependencies": [
+        {
+          "name": "yyjson",
+          "default-features": false,
+          "features": [
+            "reader"
+          ]
+        }
+      ]
     }
   }
 }

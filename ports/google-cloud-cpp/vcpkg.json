@@ -1,13 +1,13 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.14.0",
+  "version": "2.19.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     "abseil",
-    "grpc",
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -319,8 +319,34 @@
         }
       ]
     },
+    "compute": {
+      "description": "Compute Engine C++ Client Library",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "rest-common"
+          ]
+        }
+      ]
+    },
     "confidentialcomputing": {
       "description": "Confidential Computing API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "config": {
+      "description": "Infrastructure Manager API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -440,8 +466,8 @@
         }
       ]
     },
-    "datastream": {
-      "description": "Datastream API C++ Client Library",
+    "datastore": {
+      "description": "Cloud Datastore API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -452,8 +478,8 @@
         }
       ]
     },
-    "debugger": {
-      "description": "Stackdriver Debugger API C++ Client Library",
+    "datastream": {
+      "description": "Datastream API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -500,6 +526,18 @@
         }
       ]
     },
+    "discoveryengine": {
+      "description": "Discovery Engine API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "dlp": {
       "description": "Cloud Data Loss Prevention (DLP) API C++ Client Library",
       "dependencies": [
@@ -536,8 +574,8 @@
         }
       ]
     },
-    "eventarc": {
-      "description": "Eventarc API C++ Client Library",
+    "edgenetwork": {
+      "description": "Distributed Cloud Edge Network API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -548,18 +586,16 @@
         }
       ]
     },
-    "experimental-opentelemetry": {
-      "description": "OpenTelemetry C++ GCP Exporter Library",
+    "eventarc": {
+      "description": "Eventarc API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
           "default-features": false,
           "features": [
-            "rest-common",
-            "trace"
+            "grpc-common"
           ]
-        },
-        "opentelemetry-cpp"
+        }
       ]
     },
     "experimental-storage-grpc": {
@@ -589,18 +625,6 @@
     },
     "functions": {
       "description": "Cloud Functions API C++ Client Library",
-      "dependencies": [
-        {
-          "name": "google-cloud-cpp",
-          "default-features": false,
-          "features": [
-            "grpc-common"
-          ]
-        }
-      ]
-    },
-    "gameservices": {
-      "description": "Game Services API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -688,18 +712,6 @@
     },
     "ids": {
       "description": "Cloud IDS API C++ Client Library",
-      "dependencies": [
-        {
-          "name": "google-cloud-cpp",
-          "default-features": false,
-          "features": [
-            "grpc-common"
-          ]
-        }
-      ]
-    },
-    "iot": {
-      "description": "Cloud IoT API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -806,6 +818,18 @@
         }
       ]
     },
+    "netapp": {
+      "description": "NetApp API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "networkconnectivity": {
       "description": "Network Connectivity API C++ Client Library",
       "dependencies": [
@@ -854,6 +878,32 @@
         }
       ]
     },
+    "oauth2": {
+      "description": "OAuth2 Access Token Generation Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "rest-common"
+          ]
+        }
+      ]
+    },
+    "opentelemetry": {
+      "description": "OpenTelemetry C++ GCP Exporter Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "rest-common",
+            "trace"
+          ]
+        },
+        "opentelemetry-cpp"
+      ]
+    },
     "optimization": {
       "description": "Cloud Optimization API C++ Client Library",
       "dependencies": [
@@ -892,6 +942,18 @@
     },
     "oslogin": {
       "description": "Cloud OS Login API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "policysimulator": {
+      "description": "Policy Simulator API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1070,6 +1132,18 @@
         }
       ]
     },
+    "securesourcemanager": {
+      "description": "Secure Source Manager API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "securitycenter": {
       "description": "Security Command Center API C++ Client Library",
       "dependencies": [
@@ -1166,6 +1240,18 @@
         }
       ]
     },
+    "sql": {
+      "description": "The Google Cloud SQL Admin C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "rest-common"
+          ]
+        }
+      ]
+    },
     "storage": {
       "description": "The Google Cloud Storage C++ client library",
       "dependencies": [
@@ -1229,6 +1315,18 @@
     },
     "tasks": {
       "description": "The Google Cloud Tasks C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "telcoautomation": {
+      "description": "Cloud Telco Automation API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

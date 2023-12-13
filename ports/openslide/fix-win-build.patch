@@ -1,5 +1,5 @@
 diff --git a/src/openslide-decode-tifflike.c b/src/openslide-decode-tifflike.c
-index 63e0ad5f2..8de1abb38 100644
+index 63e0ad5..8de1abb 100644
 --- a/src/openslide-decode-tifflike.c
 +++ b/src/openslide-decode-tifflike.c
 @@ -348,7 +348,7 @@ static bool populate_item(struct _openslide_tifflike *tl,
@@ -21,7 +21,7 @@ index 63e0ad5f2..8de1abb38 100644
                    "Value count too large");
        goto FAIL;
 diff --git a/src/openslide-features.h b/src/openslide-features.h
-index a5328fbf4..db7593d6f 100644
+index a5328fb..db7593d 100644
 --- a/src/openslide-features.h
 +++ b/src/openslide-features.h
 @@ -22,26 +22,7 @@
@@ -53,7 +53,7 @@ index a5328fbf4..db7593d6f 100644
  // for exporting from shared libraries or DLLs
  #if defined _WIN32
 diff --git a/src/openslide-private.h b/src/openslide-private.h
-index a70bcba4a..e39f288ed 100644
+index a70bcba..e39f288 100644
 --- a/src/openslide-private.h
 +++ b/src/openslide-private.h
 @@ -34,6 +34,11 @@
@@ -80,13 +80,14 @@ index a70bcba4a..e39f288ed 100644
  #define g_ascii_strtod _OPENSLIDE_POISON(_openslide_parse_double_)
  #define sqlite3_open _OPENSLIDE_POISON(_openslide_sqlite_open)
 diff --git a/test/test-common.c b/test/test-common.c
-index 8003128c9..3f369435b 100644
+index 8003128..b7c4bd4 100644
 --- a/test/test-common.c
 +++ b/test/test-common.c
-@@ -22,11 +22,12 @@
+@@ -22,11 +22,13 @@
  #ifdef WIN32
  #define _WIN32_WINNT 0x0600
  #include <windows.h>
++#include <io.h>
 +#else
 +#include <unistd.h>
  #endif
@@ -98,7 +99,7 @@ index 8003128c9..3f369435b 100644
  #include <glib.h>
  
 diff --git a/test/test.c b/test/test.c
-index 50f0651d3..7fb192a57 100644
+index 50f0651..7fb192a 100644
 --- a/test/test.c
 +++ b/test/test.c
 @@ -32,7 +32,7 @@
@@ -111,7 +112,7 @@ index 50f0651d3..7fb192a57 100644
  #include <glib.h>
  #include <cairo.h>
 diff --git a/test/try_open.c b/test/try_open.c
-index dd3a6a2f6..ad9233eb1 100644
+index dd3a6a2..ad9233e 100644
 --- a/test/try_open.c
 +++ b/test/try_open.c
 @@ -24,7 +24,7 @@

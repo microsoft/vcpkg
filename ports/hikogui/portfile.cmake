@@ -1,25 +1,22 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hikogui/hikogui
-    REF v0.7.0
-    SHA512 64555c67e5a44f336a3528d3a894d43e2751a1f4e4e4d9f6618c085ef0be4a502610a36625d95f79298080cb483f7361a758f7c43b4784999b0b5d839baacb28
+    REF v0.8.1
+    SHA512 1a711aeb83d4d84e89ba4895aea321b1e5120fc20e8124237ee575b14955edcfa991965cb80628e7c485a44ba13245ba76781582339f62939a8180a629de996a
     HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DHI_BUILD_TESTS=OFF
-        -DHI_BUILD_EXAMPLES=OFF
+        -DBUILD_TESTING=OFF
+        -DBUILD_EXAMPLES=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
-vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(NO_PREFIX_CORRECTION)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")

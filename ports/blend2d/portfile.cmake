@@ -10,7 +10,6 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLEND2D_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   INVERTED_FEATURES
-    futex      BLEND2D_NO_FUTEX
     jit        BLEND2D_NO_JIT
     logging    BLEND2D_NO_JIT_LOGGING
     tls        BLEND2D_NO_TLS
@@ -36,6 +35,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DBLEND2D_STATIC=${BLEND2D_STATIC}"
+        "-DBLEND2D_NO_FUTEX=OFF"
         ${FEATURE_OPTIONS}
 )
 

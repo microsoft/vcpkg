@@ -1,13 +1,14 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
     FILENAME "postgresql-${VERSION}.tar.bz2"
-    SHA512 cac97edeb40df1e8f2162f401b465751132929d7249495ef001e950645a2db46343bd732e7bd6504a7f795e25aea66724f2f4ab0065e3d9331b36db4b3a3bec6
+    SHA512 c66b72d2d9bc503b9ad19c67384517ae921c494b2916f32157c2528dcbb38aefeb4a8cd5003fd40ba8a19612ea64511d534ff5d99e7a1b266024232f983bcf39
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        unix/installdirs.patch
         unix/fix-configure.patch
         unix/single-linkage.patch
         unix/no-server-tools.patch
@@ -19,6 +20,10 @@ vcpkg_extract_source_archive(
         windows/msbuild.patch
         windows/spin_delay.patch
 )
+
+file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
+string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp "${_py3_include_path}")
+set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
 
 if("client" IN_LIST FEATURES)
     set(HAS_TOOLS TRUE)
@@ -83,7 +88,7 @@ else()
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/Makefile" DESTINATION "${SOURCE_PATH}")
 
     vcpkg_list(SET BUILD_OPTS)
-    foreach(option IN ITEMS icu lz4 nls openssl python readline xml xslt zlib zstd)
+    foreach(option IN ITEMS icu lz4 nls openssl readline xml xslt zlib zstd)
         if(option IN_LIST FEATURES)
             list(APPEND BUILD_OPTS --with-${option})
         else()
@@ -97,6 +102,7 @@ else()
         endif()
     endif()
     if("python" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --with-python=3.${PYTHON_VERSION_MINOR})
         vcpkg_find_acquire_program(PYTHON3)
         list(APPEND BUILD_OPTS "PYTHON=${PYTHON3}")
     endif()

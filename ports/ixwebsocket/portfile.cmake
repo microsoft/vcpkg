@@ -16,17 +16,23 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         sectransp USE_SECURE_TRANSPORT
 )
 
-if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
-    message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
+string(COMPARE NOTEQUAL "${FEATURES}" "core" USE_TLS)
+
+list(REMOVE_ITEM FEATURES "ssl")
+list(LENGTH FEATURES num_features)
+if(num_features GREATER "2")
+    message(FATAL_ERROR "Can not select multiple ssl backends at the same time. Disable default features to disable the default ssl backend.")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DUSE_TLS=1
+        -DUSE_TLS=${USE_TLS}
     MAYBE_UNUSED_VARIABLES
         USE_SECURE_TRANSPORT
+        USE_MBED_TLS
+        USE_OPEN_SSL
 )
 
 vcpkg_cmake_install()

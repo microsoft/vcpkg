@@ -19,10 +19,21 @@ vcpkg_extract_source_archive(SOURCE_PATH
         mingw-dll-install.patch
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
         fix-win-build.patch
+        vcpkg-cross-data.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
+
+vcpkg_list(SET CONFIGURE_OPTIONS)
+vcpkg_list(SET CONFIGURE_OPTIONS_RELEASE)
+vcpkg_list(SET CONFIGURE_OPTIONS_DEBUG)
+vcpkg_list(SET BUILD_OPTIONS)
+
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS --disable-extras)
+    vcpkg_list(APPEND BUILD_OPTIONS "PKGDATA_OPTS=--without-assembly -O ../data/icupkg.inc")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND CONFIGURE_OPTIONS --enable-icu-build-win)
@@ -33,8 +44,11 @@ list(APPEND CONFIGURE_OPTIONS --disable-samples --disable-tests --disable-layout
 list(APPEND CONFIGURE_OPTIONS_RELEASE --disable-debug --enable-release)
 list(APPEND CONFIGURE_OPTIONS_DEBUG  --enable-debug --disable-release)
 
-set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
-set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
+set(CONFIG_TRIPLETS)
+list(APPEND CONFIG_TRIPLETS ${TARGET_TRIPLET}-rel)
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  list(APPEND CONFIG_TRIPLETS ${TARGET_TRIPLET}-dbg)
+endif()
 
 if("tools" IN_LIST FEATURES)
   list(APPEND CONFIGURE_OPTIONS --enable-tools)
@@ -89,7 +103,7 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     endif()
 
     #31680: Fix @rpath in both debug and release build
-    foreach(CONFIG_TRIPLE IN ITEMS ${DEBUG_TRIPLET} ${RELEASE_TRIPLET})
+    foreach(CONFIG_TRIPLE IN LISTS CONFIG_TRIPLETS)
         # add ID_PREFIX to libicudata libicui18n libicuio libicutu libicuuc
         foreach(LIB_NAME IN ITEMS libicudata libicui18n libicuio ${LIBICUTU_RPATH} libicuuc)
             vcpkg_execute_build_process(
@@ -141,7 +155,7 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 
 endif()
 
-vcpkg_install_make()
+vcpkg_install_make(OPTIONS ${BUILD_OPTIONS})
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share"
@@ -178,7 +192,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/tools/icu/debug")
 
 # To cross compile, we need some files at specific positions. So lets copy them
-file(GLOB CROSS_COMPILE_DEFS "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/config/icucross.*")
+file(GLOB CROSS_COMPILE_DEFS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config/icucross.*")
 file(INSTALL ${CROSS_COMPILE_DEFS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/config")
 
 file(GLOB RELEASE_DLLS "${CURRENT_PACKAGES_DIR}/lib/*icu*${ICU_VERSION_MAJOR}.dll")

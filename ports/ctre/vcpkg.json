@@ -1,6 +1,6 @@
 {
   "name": "ctre",
-  "version-semver": "3.7.2",
+  "version": "3.8",
   "description": "A Compile time PCRE (almost) compatible regular expression matcher",
   "homepage": "https://github.com/hanickadot/compile-time-regular-expressions",
   "license": "Apache-2.0",
