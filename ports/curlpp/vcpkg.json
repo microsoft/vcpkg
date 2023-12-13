@@ -1,8 +1,10 @@
 {
   "name": "curlpp",
   "version-date": "2018-06-15",
-  "port-version": 8,
+  "port-version": 9,
   "description": "C++ wrapper around libcURL",
+  "homepage": "https://github.com/jpbarrette/curlpp",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "curl",
