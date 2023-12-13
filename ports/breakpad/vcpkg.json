@@ -1,7 +1,6 @@
 {
   "name": "breakpad",
-  "version-date": "2022-07-12",
-  "port-version": 6,
+  "version-date": "2023-01-27",
   "description": "a set of client and server components which implement a crash-reporting system.",
   "homepage": "https://github.com/google/breakpad",
   "license": "BSD-3-Clause",
@@ -19,6 +18,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "zlib",
+      "platform": "linux"
     }
   ],
   "features": {

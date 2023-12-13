@@ -1,11 +1,16 @@
 {
   "name": "libsystemd",
   "version": "254",
+  "port-version": 1,
   "description": "Libsystemd",
   "homepage": "https://github.com/systemd/systemd",
   "license": "LGPL-2.1+",
   "supports": "linux",
   "dependencies": [
+    {
+      "name": "gperf",
+      "host": true
+    },
     "libcap",
     "liblzma",
     "libmount",
