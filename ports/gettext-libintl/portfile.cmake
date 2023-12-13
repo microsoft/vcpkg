@@ -54,7 +54,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS
         # Avoid unnecessary tests.
         am_cv_func_iconv_works=yes
-        "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
         ## This is required. For some reason these do not get correctly identified for release builds.
         ac_cv_func_wcslen=yes
         ac_cv_func_memmove=yes
