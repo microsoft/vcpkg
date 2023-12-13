@@ -1,4 +1,4 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+set(VCPKG_LIBRARY_LINKAGE dynamic)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
