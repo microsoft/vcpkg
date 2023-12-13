@@ -8858,7 +8858,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "0.63",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-mozbuild": {
       "baseline": "4.0.2",
