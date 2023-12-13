@@ -26,6 +26,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         rel_path.patch
         subdirs.patch
         parallel-gettext-tools.patch
+        config-step-order.patch
 )
 
 set(subdirs "")
@@ -79,6 +80,13 @@ if(subdirs)
         "INTLBISON=${BISON_NAME}"
         "TOOLS_BISON=${BISON_NAME}"
     )
+    if(VCPKG_TARGET_IS_LINUX)
+        # Cannot use gettext-libintl, empty port on linux
+        set(ENV{VCPKG_INTL} intl)
+    else()
+        # Relying on gettext-libintl
+        list(APPEND OPTIONS --with-included-gettext=no)
+    endif()
     if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND OPTIONS
             # Faster, but not for export
@@ -120,9 +128,6 @@ if(subdirs)
                 gt_cv_int_divbyzero_sigfpe=no
             )
         endif()
-    endif()
-    if(NOT VCPKG_TARGET_IS_LINUX)
-        list(APPEND OPTIONS "LIBS=\$LIBS -liconv")
     endif()
 
     file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log")

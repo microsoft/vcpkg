@@ -11,18 +11,15 @@
   "features": {
     "runtime-tools": {
       "description": "Build runtime tools for internationalization of scripts",
-      "supports": "!uwp"
+      "supports": "!uwp",
+      "dependencies": [
+        "libiconv"
+      ]
     },
     "tools": {
       "description": "Build gettext tools",
       "supports": "!uwp",
       "dependencies": [
-        {
-          "name": "gettext",
-          "features": [
-            "runtime-tools"
-          ]
-        },
         "libiconv"
       ]
     }

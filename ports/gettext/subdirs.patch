@@ -7,7 +7,7 @@ index 904bdf5..e751ffc 100755
  
  
 -subdirs="$subdirs gettext-runtime libtextstyle gettext-tools"
-+subdirs="$subdirs $VCPKG_GETTEXT_SUBDIRS $VCPKG_GETTEXT_SUBDIRS"
++subdirs="$subdirs gettext-runtime ${VCPKG_GETTEXT_SUBDIRS/gettext-runtime/}"
  
  
  
@@ -20,7 +20,7 @@ index a287d38..075ddc5 100644
  AUTOMAKE_OPTIONS = 1.5 gnu no-dependencies
  ACLOCAL_AMFLAGS = -I m4
 -SUBDIRS = gnulib-local gettext-runtime libtextstyle gettext-tools
-+SUBDIRS = $(VCPKG_GETTEXT_SUBDIRS) $(VCPKG_GETTEXT_SUBDIRS)
++SUBDIRS = $(VCPKG_GETTEXT_SUBDIRS)
  changelog_etc = \
    gettext-runtime/ChangeLog.0 \
    gettext-runtime/doc/ChangeLog.0 \
