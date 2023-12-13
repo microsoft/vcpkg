@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         disable-cpackd.patch
+        fix-typedef.patch # clang-cl fix.
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
