@@ -7,7 +7,7 @@ index f604628..a7a6d5d 100644
  
  if(USE_SYSTEM_USRSCTP)
 -	find_package(Usrsctp REQUIRED)
-+	find_package(Usrsctp CONFIG REQUIRED)
++	find_package(usrsctp CONFIG REQUIRED)
  else()
  	option(sctp_build_shared_lib OFF)
  	option(sctp_build_programs OFF)
