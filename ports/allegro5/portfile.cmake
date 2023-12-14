@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO liballeg/allegro5
-    REF 5.2.6.0
-    SHA512 d590c1a00d1b314c6946e0f6ad3e3a8b6e6309bada2ec38857186f817147ac99dae8a1c4412abe701af88da5dca3dd8f989a1da66630192643d3c08c0146b603
+    REF ${VERSION}
+    SHA512 2e7833b725718fdf11f1cd5999dc9fafca4b34adda15d3d8cb551c0eb00368d2e1c08b15f8beb766e2f208ffdc3b5e33175e969c7333ad6dc92f269522ac3d32
     HEAD_REF master
     PATCHES
         do-not-copy-pdbs-to-lib.patch
-        export-targets.patch
         msvc-arm64-atomic.patch
 )
 
@@ -64,9 +63,9 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-allegro5 CONFIG_PATH share/unofficial-allegro5)
+vcpkg_cmake_config_fixup(PACKAGE_NAME allegro CONFIG_PATH lib/cmake/allegro)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

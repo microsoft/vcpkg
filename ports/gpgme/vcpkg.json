@@ -1,17 +1,13 @@
 {
   "name": "gpgme",
-  "version": "1.18.0",
+  "version": "1.22.0",
   "description": "A library designed to make access to GnuPG easier for applications",
-  "homepage": "https://gnupg.org/software/gpgme/index.html",
+  "homepage": "https://gnupg.org/software/gpgme/",
   "license": null,
   "supports": "!windows | mingw",
   "dependencies": [
     "libassuan",
-    "libgpg-error",
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
+    "libgpg-error"
   ],
   "default-features": [
     "cpp"
