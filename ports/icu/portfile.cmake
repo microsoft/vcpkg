@@ -19,10 +19,21 @@ vcpkg_extract_source_archive(SOURCE_PATH
         mingw-dll-install.patch
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
         fix-win-build.patch
+        vcpkg-cross-data.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
+
+vcpkg_list(SET CONFIGURE_OPTIONS)
+vcpkg_list(SET CONFIGURE_OPTIONS_RELEASE)
+vcpkg_list(SET CONFIGURE_OPTIONS_DEBUG)
+vcpkg_list(SET BUILD_OPTIONS)
+
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS --disable-extras)
+    vcpkg_list(APPEND BUILD_OPTIONS "PKGDATA_OPTS=--without-assembly -O ../data/icupkg.inc")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND CONFIGURE_OPTIONS --enable-icu-build-win)
@@ -144,7 +155,7 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 
 endif()
 
-vcpkg_install_make()
+vcpkg_install_make(OPTIONS ${BUILD_OPTIONS})
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share"

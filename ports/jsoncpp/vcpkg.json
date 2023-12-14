@@ -1,9 +1,10 @@
 {
   "name": "jsoncpp",
   "version": "1.9.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "jsoncpp is an implementation of a JSON reader and writer in C++. JSON (JavaScript Object Notation) is a lightweight data-interchange format that it is easy to parse and redeable for human.",
   "homepage": "https://github.com/open-source-parsers/jsoncpp",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

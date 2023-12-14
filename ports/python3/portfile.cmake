@@ -3,6 +3,21 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
+if(NOT VCPKG_HOST_IS_WINDOWS)
+    message(WARNING "${PORT} currently requires the following programs from the system package manager:
+    autoconf automake autoconf-archive
+On Debian and Ubuntu derivatives:
+    sudo apt-get install autoconf automake autoconf-archive
+On recent Red Hat and Fedora derivatives:
+    sudo dnf install autoconf automake autoconf-archive
+On Arch Linux and derivatives:
+    sudo pacman -S autoconf automake autoconf-archive
+On Alpine:
+    apk add autoconf automake autoconf-archive
+On macOS:
+    brew install autoconf automake autoconf-archive\n")
+endif()
+
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" PYTHON_VERSION "${VERSION}")
 set(PYTHON_VERSION_MAJOR "${CMAKE_MATCH_1}")
 set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_2}")
