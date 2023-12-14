@@ -2177,7 +2177,7 @@
       "port-version": 0
     },
     "directx-headers": {
-      "baseline": "1.610.2",
+      "baseline": "1.611.0",
       "port-version": 0
     },
     "directxmath": {
