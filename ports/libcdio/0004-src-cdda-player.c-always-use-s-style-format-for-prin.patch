@@ -1,0 +1,49 @@
+From 2adb43c60afc6e98e94d86dad9f93d3df52862b1 Mon Sep 17 00:00:00 2001
+From: Sergei Trofimovich <slyich@gmail.com>
+Date: Mon, 1 Nov 2021 08:00:30 +0000
+Subject: [PATCH] src/cdda-player.c: always use "%s"-style format for
+ printf()-style functions
+
+`ncuses-6.3` added printf-style function attributes and now makes
+it easier to catch cases when user input is used in palce of format
+string when built with CFLAGS=-Werror=format-security:
+
+    cdda-player.c:1032:31:
+      error: format not a string literal and no format arguments [-Werror=format-security]
+     1032 |         mvprintw(i_line++, 0, line);
+          |                               ^~~~
+
+Let's wrap all the missing places with "%s" format.
+---
+ src/cdda-player.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/cdda-player.c b/src/cdda-player.c
+index 69eddee1..8834d606 100644
+--- a/src/cdda-player.c
++++ b/src/cdda-player.c
+@@ -298,7 +298,7 @@ action(const char *psz_action)
+              psz_action);
+   else
+     snprintf(psz_action_line, sizeof(psz_action_line), "%s", "" );
+-  mvprintw(LINE_ACTION, 0, psz_action_line);
++  mvprintw(LINE_ACTION, 0, "%s", psz_action_line);
+   clrtoeol();
+   refresh();
+ }
+@@ -1029,10 +1029,10 @@ display_tracks(void)
+       }
+       if (sub.track == i) {
+         attron(A_STANDOUT);
+-        mvprintw(i_line++, 0, line);
++        mvprintw(i_line++, 0, "%s", line);
+         attroff(A_STANDOUT);
+       } else
+-        mvprintw(i_line++, 0, line);
++        mvprintw(i_line++, 0, "%s", line);
+       clrtoeol();
+     }
+   }
+-- 
+2.39.3 (Apple Git-145)
+

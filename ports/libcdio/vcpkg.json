@@ -1,0 +1,10 @@
+{
+  "name": "libcdio",
+  "version": "2.1.0",
+  "description": "The GNU Compact Disc Input and Control library.",
+  "homepage": "http://savannah.gnu.org/projects/libcdio/",
+  "license": "GPL-3.0-only",
+  "dependencies": [
+    "libiconv"
+  ]
+}
