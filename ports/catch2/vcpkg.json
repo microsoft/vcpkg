@@ -1,7 +1,7 @@
 {
   "name": "catch2",
-  "version-semver": "3.4.0",
-  "description": "A modern, header-only test framework for unit testing.",
+  "version-semver": "3.5.0",
+  "description": "A modern, C++-native, test framework for unit-tests, TDD and BDD.",
   "homepage": "https://github.com/catchorg/Catch2",
   "license": "BSL-1.0",
   "dependencies": [
