@@ -8233,7 +8233,7 @@
       "port-version": 2
     },
     "string-theory": {
-      "baseline": "3.6",
+      "baseline": "3.8",
       "port-version": 0
     },
     "string-view-lite": {
