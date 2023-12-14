@@ -80,6 +80,13 @@ if(subdirs)
         "INTLBISON=${BISON_NAME}"
         "TOOLS_BISON=${BISON_NAME}"
     )
+
+    if("nls" IN_LIST FEATURES)
+        vcpkg_list(APPEND options "--enable-nls")
+    else()
+        vcpkg_list(APPEND options "--disable-nls")
+    endif()
+
     if(VCPKG_TARGET_IS_LINUX)
         # Cannot use gettext-libintl, empty port on linux
         set(ENV{VCPKG_INTL} intl)

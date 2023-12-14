@@ -9,6 +9,9 @@
     "gettext-libintl"
   ],
   "features": {
+    "nls": {
+      "description": "Enable native language support"
+    },
     "runtime-tools": {
       "description": "Build runtime tools for internationalization of scripts",
       "supports": "!uwp",
