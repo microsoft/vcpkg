@@ -116,7 +116,6 @@ truncate -s 500G disk0.img
     $ tar czf vcpkg-osx-<date>-arm64.macvm.tar.gz vcpkg-osx-<date>-arm64.macvm
     $ brew install azcopy
     $ azcopy copy vcpkg-osx-<date>-arm64.macvm.tar.gz "https://vcpkgimageminting.blob.core.windows.net/pvms?<SAS>"
-    $ rm *.tar.gz
     ```
 - [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-YYYY-MM-DD-arm64` based on the current date. Check 'Grant access permission to all pipelines.'
 - [ ] Follow the "Deploying images" steps below for each machine in the fleet.
@@ -162,14 +161,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
 - [ ] In the VM, open a terminal and run the following 3 commands with the {} parts replaced. {pat} is your personal access token, {agent_pool} is the name of the pool you created, and {agent_name} is the unique ID for this particular machine:
     ```sh
     $ cd ~/myagent
-    $ ./config.sh --unattended \
-        --url https://dev.azure.com/vcpkg \
-        --work ~/Data/work \
-        --auth pat --token {pat} \
-        --pool {agent_pool} \
-        --agent {agent_name} \
-        --replace \
-        --acceptTeeEula
+    $ ./config.sh --unattended --url https://dev.azure.com/vcpkg --work ~/Data/work --auth pat --token {pat} --pool {agent_pool} --agent {agent_name} --replace --acceptTeeEula
     $ ./svc.sh install
     ```
 - [ ] Check that the machine shows up in the pool, and log out of the vcpkg user on the host.
@@ -187,6 +179,8 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
 - [ ] Check for software updates in Parallels' UI
 - [ ] Skip if this is the image building machine. Mint a SAS token URI to the box to use from the Azure portal if you don't already have one, and download the VM. (Recommend running this via SSH from domain joined machine due to containing SAS tokens)
     ```sh
+    $ cd ~/Parallels
+    $ rm vcpkg-*.tar.gz
     $ azcopy copy "https://vcpkgimageminting.blob.core.windows.net/pvms/vcpkg-osx-<DATE>-arm64.macvm.tar.gz?<SAS>" vcpkg-osx-<DATE>-arm64.macvm.tar.gz
     $ tar xvf vcpkg-osx-<DATE>-arm64.macvm.tar.gz
     $ rm vcpkg-osx-<DATE>-arm64.macvm.tar.gz
