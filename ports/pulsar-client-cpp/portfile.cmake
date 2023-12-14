@@ -10,14 +10,15 @@ vcpkg_from_github(
       0001-use-find-package.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PULSAR_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIB)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTS=OFF
         -DBUILD_PERF_TOOLS=OFF
-        -DBUILD_STATIC_LIB=${PULSAR_BUILD_STATIC}
+        -DBUILD_DYNAMIC_LIB=ON
+        -DBUILD_STATIC_LIB=${BUILD_STATIC_LIB}
 )
 
 vcpkg_cmake_install()

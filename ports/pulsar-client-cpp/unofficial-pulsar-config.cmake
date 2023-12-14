@@ -16,10 +16,11 @@ if (NOT TARGET unofficial::pulsar::pulsar)
         message(FATAL_ERROR "Broken installation of vcpkg port pulsar-client-cpp")
     endif ()
 
-    find_package(protobuf CONFIG REQUIRED)
-    find_package(CURL CONFIG REQUIRED)
-    find_package(zstd CONFIG REQUIRED)
-    find_package(snappy CONFIG REQUIRED)
+    include(CMakeFindDependencyMacro)
+    find_dependency(protobuf CONFIG)
+    find_dependency(CURL CONFIG)
+    find_dependency(zstd CONFIG)
+    find_dependency(snappy CONFIG)
 
     add_library(unofficial::pulsar::pulsar INTERFACE IMPORTED)
     set_target_properties(unofficial::pulsar::pulsar PROPERTIES
