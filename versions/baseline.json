@@ -3756,6 +3756,10 @@
       "baseline": "20230531",
       "port-version": 0
     },
+    "kerbal": {
+      "baseline": "2023.12.1",
+      "port-version": 0
+    },
     "keystone": {
       "baseline": "0.9.2",
       "port-version": 3
