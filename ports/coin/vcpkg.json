@@ -1,7 +1,7 @@
 {
   "name": "coin",
   "version": "4.0.0",
-  "port-version": 7,
+  "port-version": 8,
   "description": "A high-level 3D visualization library with Open Inventor 2.1 API",
   "homepage": "https://github.com/coin3d/coin",
   "supports": "!(arm | arm64 | uwp)",
