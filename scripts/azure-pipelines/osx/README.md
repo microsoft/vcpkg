@@ -81,18 +81,18 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] Open a terminal and run the following commands to create the VM.
 ```
 prlctl create "vcpkg-osx-<date>-arm64" -o macos --restore-image ~/Downloads/path/to.ipsw
+prlctl set "vcpkg-osx-<date>-arm64" --memsize 12288 --cpus 8 --isolate-vm on --shf-host-defined off
 cd ~/Parallels/vcpkg-osx-<date>-arm64.macvm
-truncate -s 700G disk0.img
+truncate -s 500G disk0.img
 ```
 - [ ] Start the VM in parallels and follow prompts as you would on real hardware.
     * Apple ID: 'Set Up Later' / Skip
     * Account name: vcpkg
     * Account password: vcpkg
-- [ ] Install Parallels Tools
-- [ ] Restart the VM
+- [ ] Set the desktop wallpaper to a fixed color from Settings -> Wallpaper . (This makes the KVM a lot easier to use :) )
 - [ ] Set vcpkg to log in automatically: Settings -> Users & Groups -> Automatically log in as
 - [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/3.232.0/vsts-agent-osx-arm64-3.232.0.tar.gz
-- [ ] Enable remote login in the VM: Settings -> Sharing -> Remote Login
+- [ ] Enable remote login in the VM: Settings -> General -> Sharing -> Remote Login
 - [ ] Get the IP of the guest from Network
 - [ ] Copy setup-box.sh and the xcode installer renamed to 'clt.dmg' to the VM. For example, on the host:
     ```
@@ -100,7 +100,7 @@ truncate -s 700G disk0.img
     $ scp ./setup-box.sh vcpkg@<IP>:/Users/vcpkg/Downloads
     $ scp ./clt.sh vcpkg@<IP>:/Users/vcpkg/Downloads
     ```
-- [ ] Disable remote login in the VM: Settings -> Sharing -> Remote Login
+- [ ] Disable remote login in the VM: Settings -> General -> Sharing -> Remote Login
 - [ ] In the VM, open a terminal, and run:
     ```
     $ cd ~/Downloads
