@@ -1,13 +1,16 @@
 diff --git a/src/mp-unitsConfig.cmake b/src/mp-unitsConfig.cmake
-index 519b180b..dc86e3dd 100644
+index 519b180b..6005e9f8 100644
 --- a/src/mp-unitsConfig.cmake
 +++ b/src/mp-unitsConfig.cmake
-@@ -23,7 +23,7 @@
+@@ -23,9 +23,9 @@
  include(CMakeFindDependencyMacro)
  
  if(MP_UNITS_USE_LIBFMT)
 -    find_dependency(fmt)
-+    find_dependency(fmt CONFIG)
++  find_dependency(fmt CONFIG)
  endif()
  
- find_dependency(gsl-lite)
+-find_dependency(gsl-lite)
++find_dependency(gsl-lite CONFIG)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/mp-unitsTargets.cmake")
