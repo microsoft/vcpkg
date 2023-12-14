@@ -57,6 +57,7 @@
     },
     "aom": {
       "description": "Enable support for the Alliance for Open Media (AOM) AV1 encoder and decoder",
+      "supports": "!windows",
       "dependencies": [
         "aom",
         {
