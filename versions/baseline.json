@@ -8649,8 +8649,8 @@
       "port-version": 3
     },
     "type-safe": {
-      "baseline": "0.2.2",
-      "port-version": 1
+      "baseline": "0.2.3",
+      "port-version": 0
     },
     "uchardet": {
       "baseline": "0.0.8",
