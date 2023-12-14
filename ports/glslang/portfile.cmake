@@ -46,6 +46,11 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/glslang-config.cmake
     "${PACKAGE_PREFIX_DIR}/share/${PORT}/glslang-targets.cmake"
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/glslang/Public/ShaderLang.h" "ifdef GLSLANG_IS_SHARED_LIBRARY" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/glslang/Include/glslang_c_interface.h" "ifdef GLSLANG_IS_SHARED_LIBRARY" "if 1")
+endif()
+
 vcpkg_copy_pdbs()
 
 if (ENABLE_GLSLANG_BINARIES)
