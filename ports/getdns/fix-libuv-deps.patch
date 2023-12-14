@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c5b711e..6bd9ee2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -872,7 +872,7 @@ endif ()
+ 
+ # libuv extension.
+ if (USE_LIBUV)
+-  find_package(Libuv)
++  find_package(libuv CONFIG REQUIRED)
+   if (Libuv_FOUND)
+     # Check for new-style callbacks.
+     try_compile(HAVE_NEW_UV_TIMER_CB
+@@ -894,8 +894,7 @@ if (USE_LIBUV)
+     set_property(TARGET uv_objects PROPERTY C_STANDARD 11)
+     if (ENABLE_STATIC)
+       add_library(getdns_ext_uv STATIC $<TARGET_OBJECTS:uv_objects>)
+-      target_include_directories(getdns_ext_uv PRIVATE Libuv::Libuv)
+-      target_link_libraries(getdns_ext_uv PUBLIC getdns Libuv::Libuv)
++      target_link_libraries(getdns_ext_uv PUBLIC getdns $<IF:$<TARGET_EXISTS:libuv::uv_a>,libuv::uv_a,libuv::uv>)
+       if (Libunbound_FOUND)
+         target_link_libraries(getdns_ext_uv PUBLIC Libunbound::Libunbound)
+       endif ()
+@@ -903,8 +902,7 @@ if (USE_LIBUV)
+     endif ()
+     if (ENABLE_SHARED)
+       add_library(getdns_ext_uv_shared SHARED $<TARGET_OBJECTS:uv_objects>)
+-      target_include_directories(getdns_ext_uv_shared PRIVATE Libuv::Libuv)
+-      target_link_libraries(getdns_ext_uv_shared PUBLIC getdns_shared Libuv::Libuv)
++      target_link_libraries(getdns_ext_uv_shared PUBLIC getdns $<IF:$<TARGET_EXISTS:libuv::uv_a>,libuv::uv_a,libuv::uv>)
+       if (Libunbound_FOUND)
+         target_link_libraries(getdns_ext_uv_shared PUBLIC Libunbound::Libunbound)
+       endif ()
