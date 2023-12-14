@@ -9006,7 +9006,7 @@
     },
     "wavpack": {
       "baseline": "5.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "wayland": {
       "baseline": "1.21.0",
