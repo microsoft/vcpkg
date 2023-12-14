@@ -9,25 +9,6 @@
     "armadillo",
     "cereal",
     "ensmallen",
-    "stb",
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
-  ],
-  "features": {
-    "openmp": {
-      "description": "use OpenMP for parallelization."
-    },
-    "tools": {
-      "description": "Build command-line executables.",
-      "dependencies": [
-        "boost-format"
-      ]
-    }
-  }
+    "stb"
+  ]
 }
