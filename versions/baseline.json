@@ -225,7 +225,7 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "12.4.1",
+      "baseline": "12.6.6",
       "port-version": 0
     },
     "arpack-ng": {
