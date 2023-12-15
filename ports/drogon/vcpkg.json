@@ -98,6 +98,12 @@
         },
         "sqlite3"
       ]
+    },
+    "yaml": {
+      "description": "Support YAML Drogon configuration files",
+      "dependencies": [
+        "yaml-cpp"
+      ]
     }
   }
 }
