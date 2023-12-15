@@ -4,5 +4,5 @@
   "port-version": 2,
   "description": "GNU Unicode text conversion",
   "homepage": "https://www.gnu.org/software/libiconv/",
-  "license": "GPL-3.0-or-later AND LGPL-2.1-or-later"
+  "license": null
 }
