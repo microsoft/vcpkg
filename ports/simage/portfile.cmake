@@ -2,7 +2,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Coin3D/simage
-    REF v1.8.3
+    REF "v${VERSION}"
     SHA512 42981f1dc67f17bc6bfc49ecbf035444b79ab467d5ece4310841856f5ec87d2b4352d5a7cb5713fb14ac5a25928f7d657fb74c93acdcd86b8b0dd89f26a5008a
     HEAD_REF master
     PATCHES requies-all-dependencies.patch
