@@ -3273,8 +3273,8 @@
       "port-version": 1
     },
     "harfbuzz": {
-      "baseline": "8.2.1",
-      "port-version": 3
+      "baseline": "8.3.0",
+      "port-version": 0
     },
     "hash-library": {
       "baseline": "8",
