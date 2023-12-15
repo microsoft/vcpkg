@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 65b748375b798787c8b59f9657151f340920c939c3f079105b9b78f4e3b775125598106c6dfa4feba111a64d30f007003a70110ac767802a7dd1127a25c9fb14
     HEAD_REF master
     PATCHES
-        fix-dependences-libusb.patch
+        fix-dependences.patch
 )
 
 vcpkg_cmake_configure(

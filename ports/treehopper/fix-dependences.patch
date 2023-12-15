@@ -1,15 +1,16 @@
 diff --git a/C++/API/CMakeLists.txt b/C++/API/CMakeLists.txt
-index 8537305..c80ffbe 100644
+index 8537305..db3d29b 100644
 --- a/C++/API/CMakeLists.txt
 +++ b/C++/API/CMakeLists.txt
-@@ -37,7 +37,9 @@ if(APPLE)
+@@ -37,7 +37,10 @@ if(APPLE)
      find_library(IOKIT IOKit)
      target_link_libraries(treehopper pthread ${CORE_FOUNDATION} ${IOKIT})
  elseif(UNIX)
 -    target_link_libraries(treehopper usb-1.0 pthread)
-+    find_package(libusb REQUIRED)
-+    target_include_directories(treehopper PRIVATE ${LIBUSB_INCLUDE_DIRS})
-+    target_link_libraries(treehopper PRIVATE ${LIBUSB_LIBRARIES} pthread)
++    find_package(PkgConfig REQUIRED)
++    pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
++
++    target_link_libraries(treehopper PRIVATE PkgConfig::libusb pthread)
  elseif(WIN32)
      target_link_libraries(treehopper winusb setupapi)
  endif(APPLE)
