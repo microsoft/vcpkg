@@ -6350,7 +6350,7 @@
     },
     "opensubdiv": {
       "baseline": "3.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opentelemetry-cpp": {
       "baseline": "1.12.0",
