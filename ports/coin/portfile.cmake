@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v4.0.2
     SHA512 f913f1b1ec5819d72e054dc94702effe9ee2a28547fc9bebc2f6b2e55d8a67c6cfa05e43239461e806cbead0a7548f82b31d5b86181eed4ffc5c801d3b94aa67
     HEAD_REF master
+    PATCHES
+        remove-default-config.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
