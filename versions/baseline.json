@@ -3334,7 +3334,7 @@
     },
     "hikogui": {
       "baseline": "0.8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "hiredis": {
       "baseline": "1.2.0",
@@ -5343,6 +5343,10 @@
     "luminoengine": {
       "baseline": "0.10.1",
       "port-version": 1
+    },
+    "lunarg-vulkantools": {
+      "baseline": "1.3.268.0",
+      "port-version": 0
     },
     "lunasvg": {
       "baseline": "2.3.8",
@@ -8105,19 +8109,19 @@
       "port-version": 3
     },
     "spirv-cross": {
-      "baseline": "2021-01-15",
-      "port-version": 2
+      "baseline": "1.3.268.0",
+      "port-version": 0
     },
     "spirv-headers": {
-      "baseline": "1.3.246.1",
+      "baseline": "1.3.268.0",
       "port-version": 0
     },
     "spirv-reflect": {
-      "baseline": "1.3.236.0",
+      "baseline": "1.3.268.0",
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "2023.2",
+      "baseline": "1.3.268.0",
       "port-version": 0
     },
     "spout2": {
@@ -8946,7 +8950,7 @@
     },
     "vsgxchange": {
       "baseline": "1.0.5",
-      "port-version": 0
+      "port-version": 1
     },
     "vtk": {
       "baseline": "9.2.0-pv5.11.0",
@@ -8961,23 +8965,39 @@
       "port-version": 2
     },
     "vulkan": {
-      "baseline": "1.1.82.1",
-      "port-version": 6
+      "baseline": "1.3.268.0",
+      "port-version": 0
     },
     "vulkan-headers": {
-      "baseline": "1.3.260",
+      "baseline": "1.3.268.0",
       "port-version": 0
     },
     "vulkan-hpp": {
       "baseline": "deprecated",
       "port-version": 0
     },
+    "vulkan-loader": {
+      "baseline": "1.3.268.0",
+      "port-version": 0
+    },
     "vulkan-memory-allocator": {
       "baseline": "3.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "vulkan-memory-allocator-hpp": {
       "baseline": "3.0.1.1",
+      "port-version": 0
+    },
+    "vulkan-tools": {
+      "baseline": "1.3.268.0",
+      "port-version": 0
+    },
+    "vulkan-utility-libraries": {
+      "baseline": "1.3.268.0",
+      "port-version": 0
+    },
+    "vulkan-validationlayers": {
+      "baseline": "1.3.268.0",
       "port-version": 0
     },
     "vvenc": {
