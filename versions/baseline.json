@@ -3385,8 +3385,8 @@
       "port-version": 0
     },
     "icu": {
-      "baseline": "73.1",
-      "port-version": 2
+      "baseline": "74.1",
+      "port-version": 0
     },
     "ideviceinstaller": {
       "baseline": "2023-07-21",
