@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO foonathan/type_safe
-    REF v0.2.2
-    SHA512 5dbc9e906e066cfc5eb8fd9a308e952e33c7463b5d2abaadd4303ebe8c38a1d8e79865076ad6422f4c56ffa23113b291e3c11d6dd28e73ec3d6fe2e3e7a233a3
+    REF v0.2.3
+    SHA512 2064995421c5b6bad1b336adf71af9ad1dd3d2245411be1f531d3b72db782a9a959f20597c18a1bd8a71fd3e9e87e396b4fe5595a5e99a32e2d814d6a7c6222b
     HEAD_REF main
 )
 

@@ -3,4 +3,4 @@ if(@USED_ZLIB@)
   find_dependency(ZLIB)
 endif()
 
-include("${CMAKE_CURRENT_LIST_DIR}/unofficial-breakpad-targets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-breakpadTargets.cmake")

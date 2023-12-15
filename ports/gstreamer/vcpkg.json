@@ -1,7 +1,7 @@
 {
   "name": "gstreamer",
   "version": "1.22.5",
-  "port-version": 5,
+  "port-version": 6,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
@@ -51,6 +51,20 @@
           "default-features": false,
           "features": [
             "plugins-base"
+          ]
+        }
+      ]
+    },
+    "aom": {
+      "description": "Enable support for the Alliance for Open Media (AOM) AV1 encoder and decoder",
+      "supports": "!windows",
+      "dependencies": [
+        "aom",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
           ]
         }
       ]
