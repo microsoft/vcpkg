@@ -6,8 +6,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LuaJIT/LuaJIT
-    REF d0e88930ddde28ff662503f9f20facf34f7265aa  #2023-01-04
-    SHA512 e4111b2d7eeb05676c62d69da13a380a51d98f082c0be575a414c09ee27ff17d101b5b4a95e1b8a1bad14d55a4d2b305718a11878fbf36e0d3d48e62ba03407f
+    REF 29b0b282f59ac533313199f4f7be79490b7eee51  #2023-12-11
+    SHA512 47cd30427740220fbb541d1f052acf7f265fef3d504cd8c2b8a595243a9392fddb84cd3106c54055da316ab260a26eb59ca93a928bbc6296a875d37969e19de8
     HEAD_REF master
     PATCHES
         msvcbuild.patch
@@ -102,7 +102,9 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man"
 )
 
-vcpkg_copy_tools(TOOL_NAMES luajit AUTO_CLEAN)
+if (NOT VCPKG_TARGET_IS_OSX)
+    vcpkg_copy_tools(TOOL_NAMES luajit AUTO_CLEAN)
+endif()
 
 vcpkg_fixup_pkgconfig()
 
