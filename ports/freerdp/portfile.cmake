@@ -6,8 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         DontInstallSystemRuntimeLibs.patch
-        fix-include-path.patch
-        fix-install-destination.patch
+        install-layout.patch
         keep-dup-libs.patch
         wfreerdp-server-cli.patch
 )
