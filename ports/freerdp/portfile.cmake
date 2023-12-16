@@ -48,18 +48,27 @@ vcpkg_cmake_configure(
         -DWITH_MANPAGES=OFF
         -DWITH_OPENSSL=ON
         -DWITH_SAMPLE=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         "-DMSVC_RUNTIME=${VCPKG_CRT_LINKAGE}"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
-        # Uncontrolled dependencies w.r.t. vcpkg ports
+        # Uncontrolled dependencies w.r.t. vcpkg ports or system libs
         # Can be overriden in custom triplet file
+        -DWITH_AAD=OFF
         -DWITH_ALSA=OFF
         -DWITH_CAIRO=OFF
-        -DWITH_LIBSYSTEMD=OFF
-        -DWITH_PKCS11=OFF
+        -DWITH_CLIENT_SDL=OFF
         -DWITH_CUPS=OFF
-        -DWITH_PROXY_MODULES=OFF
         -DWITH_FUSE=OFF
+        -DWITH_LIBSYSTEMD=OFF
+        -DWITH_OPUS=OFF
+        -DWITH_OSS=OFF
+        -DWITH_PCSC=OFF
+        -DWITH_PKCS11=OFF
+        -DWITH_PROXY_MODULES=OFF
+        -DWITH_PULSE=OFF
+        -DWITH_URIPARSER=OFF
+        -DVCPKG_TRACE_FIND_PACKAGE=ON
     MAYBE_UNUSED_VARIABLES
         MSVC_RUNTIME
 )

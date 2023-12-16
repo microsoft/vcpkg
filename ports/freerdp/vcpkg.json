@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
+    "cjson",
     {
       "name": "glib",
       "platform": "!windows"
