@@ -28,4 +28,13 @@ endif()
 find_file(vulkan_license NAMES LICENSE.txt PATHS ${DETECTED_Vulkan_INCLUDE_DIRS} "${CURRENT_PORT_DIR}" PATH_SUFFIXES "..")
 vcpkg_install_copyright(FILE_LIST "${vulkan_license}")
 
+if(VCPKG_TARGET_IS_ANDROID)
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" [[
+if(NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+    # The loader lib is available from 24.
+    # The utility libraries and validation layers need 26.
+    set(VCPKG_CMAKE_SYSTEM_VERSION 26)
+endif()
+]])
+endif()
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
