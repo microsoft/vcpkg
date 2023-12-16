@@ -56,7 +56,7 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND NOT VCPKG_TARGET_IS_UWP)
 
     set(as clang-cl)
 
-    vcpkg_list(APPEND CONFIGURE_OPTIONS "no-asm" "ASFLAGS=--target=aarch64-win32-msvc")
+    vcpkg_list(APPEND CONFIGURE_OPTIONS "ASFLAGS=--target=aarch64-win32-msvc")
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang")
         string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " --target=aarch64-win32-msvc")
         string(APPEND VCPKG_COMBINED_C_FLAGS_RELEASE " --target=aarch64-win32-msvc")
