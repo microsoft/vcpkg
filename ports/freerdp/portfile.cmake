@@ -5,13 +5,13 @@ vcpkg_from_github(
     SHA512 6c9061674716ca8c83a3913222db4002d893d751b0072a8af10013e09462a9cc847689dc874e30c499ae0d5be73c464f610057744c771fcd678bc43185d0f923
     HEAD_REF master
     PATCHES
+        dependencies.patch
         DontInstallSystemRuntimeLibs.patch
         install-layout.patch
         keep-dup-libs.patch
         windows-linkage.patch
         wfreerdp-server-cli.patch
 )
-file(REMOVE "${SOURCE_PATH}/cmake/FindOpenSSL.cmake")
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
 
 if("x11" IN_LIST FEATURES)
@@ -20,14 +20,14 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        client-mac WITH_CLIENT_MAC
-        ffmpeg  WITH_FFMPEG
-        ffmpeg  WITH_SWSCALE
-        server  WITH_SERVER
-    	urbdrc  CHANNEL_URBDRC
-        wayland WITH_WAYLAND
+        client-mac  WITH_CLIENT_MAC
+        ffmpeg      WITH_FFMPEG
+        ffmpeg      WITH_SWSCALE
+        server      WITH_SERVER
+        urbdrc      CHANNEL_URBDRC
+        wayland     WITH_WAYLAND
         winpr-tools WITH_WINPR_TOOLS
-        x11     WITH_X11
+        x11         WITH_X11
 )
 
 vcpkg_list(SET GENERATOR_OPTION)
@@ -43,18 +43,21 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
+        -DCMAKE_REQUIRE_FIND_PACKAGE_cJSON=ON
+        -DUSE_VERSION_FROM_GIT_TAG=OFF
+        -DWITH_AAD=ON
         -DWITH_CCACHE=OFF
         -DWITH_CLANG_FORMAT=OFF
         -DWITH_MANPAGES=OFF
         -DWITH_OPENSSL=ON
         -DWITH_SAMPLE=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DWITH_UNICODE_BUILTIN=ON
         "-DMSVC_RUNTIME=${VCPKG_CRT_LINKAGE}"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
-        # Uncontrolled dependencies w.r.t. vcpkg ports or system libs
+        # Uncontrolled dependencies w.r.t. vcpkg ports, system libs, or tools
         # Can be overriden in custom triplet file
-        -DWITH_AAD=OFF
+        -DUSE_UNWIND=OFF
         -DWITH_ALSA=OFF
         -DWITH_CAIRO=OFF
         -DWITH_CLIENT_SDL=OFF
@@ -67,7 +70,6 @@ vcpkg_cmake_configure(
         -DWITH_PKCS11=OFF
         -DWITH_PROXY_MODULES=OFF
         -DWITH_PULSE=OFF
-        -DWITH_UNICODE_BUILTIN=ON
         -DWITH_URIPARSER=OFF
         -DVCPKG_TRACE_FIND_PACKAGE=ON
     MAYBE_UNUSED_VARIABLES
