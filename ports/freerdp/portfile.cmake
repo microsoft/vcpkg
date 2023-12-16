@@ -8,7 +8,7 @@ vcpkg_from_github(
         DontInstallSystemRuntimeLibs.patch
         install-layout.patch
         keep-dup-libs.patch
-        rdtk-exports.patch
+        windows-linkage.patch
         wfreerdp-server-cli.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindOpenSSL.cmake")
@@ -82,7 +82,7 @@ vcpkg_list(SET tools)
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND tools wfreerdp)
     if("server" IN_LIST FEATURES)
-        list(APPEND tools sfreerdp-server wfreerdp-server)
+        list(APPEND tools wfreerdp-server)
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
     if("client-mac" IN_LIST FEATURES)
@@ -120,13 +120,24 @@ endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" ".")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_PACKAGES_DIR}/" "")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_PACKAGES_DIR}" "")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # They build static with dllexport, so it must be used with dllexport. Proper fix needs invasive patching.
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/api.h" "#ifdef FREERDP_EXPORTS" "#if 1")
+    if(WITH_SERVER)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rdtk0/rdtk/api.h" "#ifdef RDTK_EXPORTS" "#if 1")
+    endif()
+endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/config"
     "${CURRENT_PACKAGES_DIR}/include/CMakeFiles"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/include/rdtk0/CMakeFiles"
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(GLOB cmakefiles  "${CURRENT_PACKAGES_DIR}/include/*/CMakeFiles")
+if(cmakefiles)
+    file(REMOVE_RECURSE ${cmakefiles})
+endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
