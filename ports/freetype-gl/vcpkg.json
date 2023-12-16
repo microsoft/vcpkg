@@ -6,7 +6,6 @@
   "homepage": "https://github.com/rougier/freetype-gl",
   "dependencies": [
     "freetype",
-    "glew",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -16,7 +15,18 @@
       "host": true
     }
   ],
+  "default-features": [
+    {
+      "name": "glew"
+    }
+  ],
   "features": {
+    "glew": {
+      "description": "Use the GLEW gl loader",
+      "dependencies": [
+        "glew"
+      ]
+    },
     "glad": {
       "description": "Use the GLAD gl loader",
       "dependencies": [
