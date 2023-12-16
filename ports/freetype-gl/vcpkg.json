@@ -1,7 +1,7 @@
 {
   "name": "freetype-gl",
   "version-date": "2022-01-17",
-  "port-version": 2,
+  "port-version": 3,
   "description": "OpenGL text using one vertex buffer, one texture and FreeType",
   "homepage": "https://github.com/rougier/freetype-gl",
   "dependencies": [
@@ -16,21 +16,19 @@
     }
   ],
   "default-features": [
-    {
-      "name": "glew"
-    }
+    "glew"
   ],
   "features": {
-    "glew": {
-      "description": "Use the GLEW gl loader",
-      "dependencies": [
-        "glew"
-      ]
-    },
     "glad": {
       "description": "Use the GLAD gl loader",
       "dependencies": [
         "glad"
+      ]
+    },
+    "glew": {
+      "description": "Use the GLEW gl loader",
+      "dependencies": [
+        "glew"
       ]
     }
   }
