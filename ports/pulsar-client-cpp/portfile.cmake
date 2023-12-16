@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/pulsar-client-cpp
@@ -11,13 +9,17 @@ vcpkg_from_github(
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIB)
+option(BUILD_DYNAMIC_LIB ON)
+if (MSVC AND BUILD_STATIC_LIB)
+    set(BUILD_DYNAMIC_LIB OFF)
+endif ()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTS=OFF
         -DBUILD_PERF_TOOLS=OFF
-        -DBUILD_DYNAMIC_LIB=ON
+        -DBUILD_DYNAMIC_LIB=${BUILD_DYNAMIC_LIB}
         -DBUILD_STATIC_LIB=${BUILD_STATIC_LIB}
 )
 
