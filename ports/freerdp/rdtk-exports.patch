@@ -1,0 +1,14 @@
+diff --git a/rdtk/CMakeLists.txt b/rdtk/CMakeLists.txt
+index 8bf7f9f..f3956d7 100644
+--- a/rdtk/CMakeLists.txt
++++ b/rdtk/CMakeLists.txt
+@@ -81,7 +81,9 @@ include(GNUInstallDirsWrapper)
+ include(CMakePackageConfigHelpers)
+ include (SetFreeRDPCMakeInstallDir)
+ 
++if(BUILD_SHARED_LIBS)
+ add_definitions(-DRDTK_EXPORTS)
++endif()
+ 
+ if (NOT IOS)
+ 	check_include_files(stdbool.h RDTK_HAVE_STDBOOL_H)

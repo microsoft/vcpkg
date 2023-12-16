@@ -8,6 +8,7 @@ vcpkg_from_github(
         DontInstallSystemRuntimeLibs.patch
         install-layout.patch
         keep-dup-libs.patch
+        rdtk-exports.patch
         wfreerdp-server-cli.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindOpenSSL.cmake")
