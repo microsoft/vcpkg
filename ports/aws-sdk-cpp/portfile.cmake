@@ -13,7 +13,7 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
 
-set(EXTRA_ARGS)
+set(EXTRA_ARGS "")
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")
 elseif (VCPKG_TARGET_IS_ANDROID)
@@ -48,9 +48,10 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 foreach(TARGET IN LISTS targets)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "aws-cpp-sdk-${TARGET}" CONFIG_PATH "lib/cmake/aws-cpp-sdk-${TARGET}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    string(TOLOWER "aws-cpp-sdk-${TARGET}" package)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "${package}" CONFIG_PATH "lib/cmake/aws-cpp-sdk-${TARGET}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endforeach()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "AWSSDK" CONFIG_PATH "lib/cmake/AWSSDK")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "awssdk" CONFIG_PATH "lib/cmake/AWSSDK")
 
 vcpkg_copy_pdbs()
 
@@ -80,7 +81,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/nuget"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*.lib)
     if(LIB_FILES)
         file(COPY ${LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
