@@ -79,8 +79,7 @@
       "default-features": false,
       "features": [
         "icu"
-      ],
-      "platform":"!uwp"
+      ]
     }
   ]
 }

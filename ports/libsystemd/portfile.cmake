@@ -7,6 +7,8 @@ vcpkg_from_github(
     pkgconfig.patch
 )
 
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
+
 vcpkg_configure_meson(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS

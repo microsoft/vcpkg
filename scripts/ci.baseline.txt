@@ -1193,17 +1193,6 @@ vowpal-wabbit:x64-android=fail
 vtk-m:arm-neon-android=fail
 vtk-m:arm64-android=fail
 vtk-m:x64-android=fail
-vulkan:arm-neon-android=fail
-vulkan:arm64-android=fail
-vulkan:arm64-windows=fail
-vulkan:x64-android=fail
-vulkan:x64-linux=fail
-vulkan:x64-osx=fail
-vulkan:arm64-osx=fail
-vulkan:x64-windows=fail
-vulkan:x64-windows-static=fail
-vulkan:x64-windows-static-md=fail
-vulkan:x86-windows=fail
 # Conflicts with latest openjpeg port (vxl ships with an old version of openjpeg)
 # conflicts with qt5-location
 vxl:arm-neon-android=skip
@@ -1346,3 +1335,4 @@ vcpkg-ci-wxwidgets:x64-windows-static-md=pass
 vcpkg-ci-wxwidgets:x64-windows-static=pass
 vcpkg-ci-wxwidgets:x64-windows=pass
 vcpkg-ci-wxwidgets:x86-windows=pass
+vulkan-loader:x64-windows-static=fail
