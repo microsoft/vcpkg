@@ -1,11 +1,10 @@
 {
   "name": "mesa",
-  "version": "23.0.1",
-  "port-version": 1,
+  "version": "23.2.1",
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "license": "MIT AND BSL-1.0 AND SGI-B-2.0",
-  "supports": "!(windows & arm) & !staticcrt",
+  "supports": "!(windows & arm) & !staticcrt & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-get-python-packages",

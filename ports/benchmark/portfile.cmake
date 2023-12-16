@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
-    REF v1.8.2
-    SHA512 532f2cee66cf527ef4452a060cfdedba6417e5d8f72225d6bf50adf6422d9a769b0f54f48982b438fa9ced975ac47bcc5e62c3c23ce871b5cfdbcf9cc0d2b829
+    REF "v${VERSION}"
+    SHA512 4e12114251c79a426873cfba6e27270b69fc980cef9a68e9cb3170f8e2e203f77dee19ab1e65cad51cd67e60991d3bbfdd52553f22522ce5e6c611b5aa07602c
     HEAD_REF main
 )
 

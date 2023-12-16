@@ -1,0 +1,22 @@
+diff --git a/src/libusbmuxd.c b/src/libusbmuxd.c
+index c5c8f09..edab706 100644
+--- a/src/libusbmuxd.c
++++ b/src/libusbmuxd.c
+@@ -29,14 +29,10 @@
+ #include <stdio.h>
+ #include <string.h>
+ 
+-#ifdef WIN32
+-  #define USBMUXD_API __declspec( dllexport )
++#if !defined(_WIN32) && !defined(LIBUSBMUXD_STATIC)
++#define USBMUXD_API __attribute__((visibility("default")))
+ #else
+-  #ifdef HAVE_FVISIBILITY
+-    #define USBMUXD_API __attribute__((visibility("default")))
+-  #else
+-    #define USBMUXD_API
+-  #endif
++#define USBMUXD_API
+ #endif
+ 
+ #ifndef EPROTO

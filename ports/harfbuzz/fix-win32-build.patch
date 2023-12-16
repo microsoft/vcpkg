@@ -1,0 +1,26 @@
+diff --git a/src/meson.build b/src/meson.build
+index 87e8962..bdfa797 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -387,6 +387,11 @@ hb_subset_sources = files(
+   'hb-subset.hh',
+ )
+ 
++extra_hb_cpp_args = []
++if cpp.get_argument_syntax() == 'msvc'
++  extra_hb_cpp_args += ['/bigobj']
++endif
++
+ hb_subset_headers = files(
+   'hb-subset.h',
+   'hb-subset-repacker.h'
+@@ -559,8 +564,7 @@ defs_list = [harfbuzz_def]
+ 
+ version = '0.@0@.0'.format(hb_version_int)
+ 
+-extra_hb_cpp_args = []
+-if cpp.get_define('_MSC_FULL_VER') != ''
++if cpp.get_argument_syntax() == 'msvc'
+   if get_option('default_library') != 'static'
+     extra_hb_cpp_args += '-DHB_DLL_EXPORT'
+   endif

@@ -1,12 +1,12 @@
-vcpkg_from_github(
+vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO videolan/x265
-    REF 07295ba7ab551bb9c1580fdaee3200f1b45711b7 #v3.4
-    SHA512 21a4ef8733a9011eec8b336106c835fbe04689e3a1b820acb11205e35d2baba8c786d9d8cf5f395e78277f921857e4eb8622cf2ef3597bce952d374f7fe9ec29
+    REPO multicoreware/x265_git
+    REF "${VERSION}"
+    SHA512 e95e454b438114cf90e32818847afa65b54caf69442a4a39dc92f125a7ec6f99c83ec509549ced3395cd5a77305abef0ecdad38b4a359f82fb17fce6c4c7cc7a
     HEAD_REF master
     PATCHES
         disable-install-pdb.patch
-        fix-pkgconfig-version.patch
+        version.patch
 )
 
 set(ASSEMBLY_OPTIONS "-DENABLE_ASSEMBLY=OFF")
@@ -23,7 +23,7 @@ vcpkg_cmake_configure(
         ${ASSEMBLY_OPTIONS}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_LIBNUMA=OFF
-        -DX265_LATEST_TAG=3.4
+        "-DVERSION=${VERSION}"
     OPTIONS_DEBUG
         -DENABLE_CLI=OFF
     MAYBE_UNUSED_VARIABLES
@@ -64,4 +64,4 @@ foreach(FILE IN LISTS pc_files)
 endforeach()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

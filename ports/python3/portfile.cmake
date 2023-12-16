@@ -3,6 +3,21 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
+if(NOT VCPKG_HOST_IS_WINDOWS)
+    message(WARNING "${PORT} currently requires the following programs from the system package manager:
+    autoconf automake autoconf-archive
+On Debian and Ubuntu derivatives:
+    sudo apt-get install autoconf automake autoconf-archive
+On recent Red Hat and Fedora derivatives:
+    sudo dnf install autoconf automake autoconf-archive
+On Arch Linux and derivatives:
+    sudo pacman -S autoconf automake autoconf-archive
+On Alpine:
+    apk add autoconf automake autoconf-archive
+On macOS:
+    brew install autoconf automake autoconf-archive\n")
+endif()
+
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" PYTHON_VERSION "${VERSION}")
 set(PYTHON_VERSION_MAJOR "${CMAKE_MATCH_1}")
 set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_2}")
@@ -15,9 +30,10 @@ set(PATCHES
     0005-dont-copy-vcruntime.patch
     0008-python.pc.patch
     0010-dont-skip-rpath.patch
-    0012-force-disable-curses.patch
+    0012-force-disable-modules.patch
     0014-fix-get-python-inc-output.patch
     0015-dont-use-WINDOWS-def.patch
+    0018-fix-sysconfig-include.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -56,7 +72,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 de64f0d09bf2c08873bb3d99bb95c0b675895ed05f8ac5f7bc071322c051ad537c61ea9df9b65bb67d74c4e5b3ab8a75f83da101b22046ee41ba4f77cf0bc549
+    SHA512 63c1cc817844584c9ea880be0277ebcc18182c5050f59ebbb8dd42c971979bb2cee0f09af6a1e62a6c8c23143dfa6ff21fc1aba25ef50a425fdea46ff3e35896
     HEAD_REF master
     PATCHES ${PATCHES}
 )

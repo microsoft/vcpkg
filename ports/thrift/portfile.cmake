@@ -12,8 +12,8 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/thrift
-    REF 2a93df80f27739ccabb5b885cb12a8dc7595ecdf #0.16.0
-    SHA512 aed4f60b8a4eca5b4bce26f6f29d1178684d2b4e6de290ab1e696ac78a9f85d941afe5dca99d1d22d640371ad538b930cf445f9f899a2e322f39b0cceec307a3
+    REF "${VERSION}"
+    SHA512 f9bfaf149dde4da1f5353e540b862c2088465115564d981bf02cd89e8c1f84ca53143ca0091b63d24f8f515425d9163af52ec6122245b59810a2b98292a71650
     HEAD_REF master
     PATCHES
       "correct-paths.patch"
@@ -83,7 +83,7 @@ if(COMPILER)
     vcpkg_copy_tools(TOOL_NAMES thrift AUTO_CLEAN)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")

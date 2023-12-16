@@ -4,16 +4,16 @@ if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF dc3e531ff28450bff73fde0163b1d076b6bb5605
-       SHA512 c716d90c57a036f0117eb02814c3ed164db31727f604fb7568e8413dfba73b678e09c6405a2af52e12522cb766fcf585a97a69b33097349b66755e5b9b04fd06
+       REF "v${VERSION}-docking"
+       SHA512 50953097ff809bca0e1cee55268eaa8dad001cf8fae85ae7623f484752d16bdf8e63c04227786361f27e73f7aeda5a8d1f9b0cee83c2aca108ce2712a21b74d9
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v${VERSION}
-    SHA512 69023cbff02287cb6409b08079d21469680222ca985fd1acd658dcf704c615cb2d74668821dc4830bef70be6033640b0528d3a103b70ebeb4b7563576305bf80
+    REF "v${VERSION}"
+    SHA512 f6b33027c7050acc617c728b04b04572a13bf11589d4d2cab566901e94d349a3d91f133f7980049857ee44768d4bad426c9b2e53baf953f2efbf1a7951c3ba8a
     HEAD_REF master
     )
 endif()
@@ -39,6 +39,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
     win32-binding               IMGUI_BUILD_WIN32_BINDING
     freetype                    IMGUI_FREETYPE
+    freetype-lunasvg            IMGUI_FREETYPE_LUNASVG
     wchar32                     IMGUI_USE_WCHAR32
 )
 
@@ -67,6 +68,9 @@ vcpkg_cmake_install()
 
 if ("freetype" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE" "#define IMGUI_ENABLE_FREETYPE")
+endif()
+if ("freetype-lunasvg" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE_LUNASVG" "#define IMGUI_ENABLE_FREETYPE_LUNASVG")
 endif()
 if ("wchar32" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_USE_WCHAR32" "#define IMGUI_USE_WCHAR32")
