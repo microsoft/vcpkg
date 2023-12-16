@@ -1,11 +1,7 @@
-set(VERSION_MAJOR 2)
-set(VERSION_MINOR 38)
-set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v${VERSION_MAJOR}.${VERSION_MINOR}/util-linux-${VERSION}.tar.xz"
+    URLS "https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v${VERSION}/util-linux-${VERSION}.tar.xz"
     FILENAME "util-linux-${VERSION}.tar.xz"
-    SHA512 d0f7888f457592067938e216695871ce6475a45d83a092cc3fd72b8cf8fca145ca5f3a99122f1744ef60b4f773055cf4e178dc6c59cd30837172aee0b5597e8c
+    SHA512 3d59a0f114c06be19ef7f86fca37ba5b9073823d011b3fc37997ddb00124b4505ea32903b78798a64dffbccf0ba645a692678ee845cc65a5b321824448a82a94
 )
 
 vcpkg_extract_source_archive(
