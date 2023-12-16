@@ -1,7 +1,7 @@
 {
   "name": "vsgxchange",
   "version": "1.0.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Utility library for converting 3rd party images, models and fonts formats to/from VulkanSceneGraph.",
   "homepage": "https://github.com/vsg-dev/vsgXchange",
   "license": "MIT",
@@ -14,7 +14,12 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "vsg"
+    "vsg",
+    {
+      "$reason": "Load minimum API version for CI",
+      "name": "vulkan",
+      "platform": "android"
+    }
   ],
   "features": {
     "assimp": {
