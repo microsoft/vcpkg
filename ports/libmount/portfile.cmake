@@ -12,26 +12,39 @@ vcpkg_extract_source_archive(
 
 set(ENV{GTKDOCIZE} true)
 
+vcpkg_list(SET options)
+if("nls" IN_LIST FEATURES)
+    vcpkg_list(APPEND options "--enable-nls")
+else()
+    set(ENV{AUTOPOINT} true) # true, the program
+    vcpkg_list(APPEND options "--disable-nls")
+endif()
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${options}
         --disable-asciidoc
         --disable-all-programs
+        --disable-dependency-tracking
         --enable-libmount
         --enable-libblkid
+        "--mandir=${CURRENT_PACKAGES_DIR}/share/man"
 )
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/sbin" "${CURRENT_PACKAGES_DIR}/debug/sbin")
-endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools") # empty folder
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/bin"
+    "${CURRENT_PACKAGES_DIR}/debug/sbin"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/bin"
+    "${CURRENT_PACKAGES_DIR}/sbin"
+    "${CURRENT_PACKAGES_DIR}/share"
+    "${CURRENT_PACKAGES_DIR}/tools"
+)
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/README.licensing" "${SOURCE_PATH}/COPYING")
