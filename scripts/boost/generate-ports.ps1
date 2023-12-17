@@ -179,7 +179,6 @@ function GeneratePortDependency() {
     }
 }
 
-
 function AddBoostVersionConstraints() {
     param (
         $Dependencies = @()
@@ -436,7 +435,7 @@ foreach ($library in $libraries) {
         & $curl -L "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" --output "$scriptsDir/downloads/$library-boost-$version.tar.gz"
     }
     $hash = & $vcpkg --x-wait-for-lock hash $archive
-    # remove prefix "Waiting to take filesystem lock on <path>/.vcpkg-root... "
+    # Remove prefix "Waiting to take filesystem lock on <path>/.vcpkg-root... "
     if ($hash -is [Object[]]) {
         $hash = $hash[1]
     }
@@ -465,12 +464,12 @@ foreach ($library in $libraries) {
             $_ -match ' *# *include *[<"]boost\/'
         } `
         | ForEach-Object {
-            # extract path from the line
+            # Extract path from the line
             Write-Verbose "${library}: processing line: $_"
             $_ -replace " *# *include *[<`"]boost\/([a-zA-Z0-9\.\-_\/]*)[>`"].*", "`$1"
         }`
         | ForEach-Object {
-            # map the path to the library name
+            # Map the path to the library name
             Write-Verbose "${library}: processing path: $_"
             if ($_ -match "^detail\/winapi\/") { "winapi" }
             elseif ($_ -eq "detail/algorithm.hpp") { "graph" }
@@ -531,11 +530,11 @@ foreach ($library in $libraries) {
             elseif ($_ -eq "utility/enable_if.hpp") { "core" }
             elseif ($_ -eq "utility/explicit_operator_bool.hpp") { "core" }
             elseif ($_ -eq "utility/swap.hpp") { "core" }
-            # extract first directory name or file name from the path
+            # Extract first directory name or file name from the path
             else { $_ -replace "([a-zA-Z0-9\.\-_]*).*", "`$1" }
         } `
         | ForEach-Object {
-            # map directory/file name to the library name
+            # Map directory/file name to the library name
             Write-Verbose "${library}: processing name: $_"
             if ($_ -eq "current_function.hpp") { "assert" }
             elseif ($_ -eq "memory_order.hpp") { "atomic" }
@@ -571,7 +570,7 @@ foreach ($library in $libraries) {
             elseif ($_ -match "aligned_storage.hpp") { "type_traits" }
             elseif ($_ -match "unordered_map.hpp|unordered_set.hpp") { "unordered" }
             elseif ($_ -match "call_traits.hpp|compressed_pair.hpp|operators.hpp|operators_v1.hpp") { "utility" }
-            # by dafault use the name as is, just remove the file extension if available
+            # By dafault use the name as is, just remove the file extension if available
             else { $_ -replace "\.hp?p?", "" }
         } `
         | Where-Object {
@@ -584,7 +583,7 @@ foreach ($library in $libraries) {
 
         $deps = @($usedLibraries | Where-Object { $foundLibraries -contains $_ })
 
-        # remove optional dependencies that are only used for tests or examples
+        # Remove optional dependencies that are only used for tests or examples
         $deps = @($deps | Where-Object {
             -not (
                 ($library -eq 'ublas' -and $_ -eq 'compute') -or # PR #29325
@@ -592,9 +591,8 @@ foreach ($library in $libraries) {
             )
         })
 
-        # add dependency to the config for all libraries except the config library itself
-        if ($library -ne 'config')
-        {
+        # Add dependency to the config for all libraries except the config library itself
+        if ($library -ne 'config') {
             # Note: CMake's built-in finder (FindBoost.cmake) looks for Boost header files (boost/version.h or boost/config.h)
             # and stores the result in the Boost_INCLUDE_DIR variable. The files boost/version.h or boost/config.h are owned by the config library.
             # Without these files, the Boost_INCLUDE_DIR variable will not be set and the Boost version will not be detected.
