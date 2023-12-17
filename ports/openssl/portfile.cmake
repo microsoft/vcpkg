@@ -21,8 +21,10 @@ vcpkg_from_github(
     REF "openssl-${VERSION}"
     SHA512 aaf4f13b7b8020be37837f8084ab7aa3db64e6eb1ecabf04473ed5bd09bcabb8790f0dc1f7604febbbf974702b1fbe41795a7b575e7f88b07cbe094493926a6b
     PATCHES
-        script-prefix.patch
+        asm-comments.patch
+        declspec-align.patch
         qt-msvc.patch
+        script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
         unix/android-cc.patch
