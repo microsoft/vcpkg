@@ -10,8 +10,8 @@ vcpkg_from_github(
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
-    "import config : requires ;"
-    "import ../config/checks/config : requires ;"
+    "import config"
+    "import ../config/checks/config"
 )
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
