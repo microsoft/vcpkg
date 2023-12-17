@@ -2,21 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/pulsar-client-cpp
     REF "v${VERSION}"
-    SHA512 ab257f5e82d3815a232dd73297c6ff032536de3d9e5adec6c53fa0276fc02efb1a84e153278f21881de1d3a786e26c4d4d2aff78c1d3fbf932f4d5b6e8cae9dc
+    SHA512 b1f56ca8d5edb7faaba68eb4e04fcb4e458ccf2c7a5b0fb6d66868c6507081344fb3f0ebb29afe9aef567295a249b09cdeb3fb00285746767bbccef65a0f6e70
     HEAD_REF main
     PATCHES
       0001-use-find-package.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIB)
-
-if (VCPKG_TARGET_IS_WINDOWS AND BUILD_STATIC_LIB)
-    set(BUILD_DYNAMIC_LIB OFF)
-else ()
-    set(BUILD_DYNAMIC_LIB ON)
-endif ()
-message(STATUS "BUILD_DYNAMIC_LIB: ${BUILD_DYNAMIC_LIB}")
-message(STATUS "BUILD_STATIC_LIB: ${BUILD_STATIC_LIB}")
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DYNAMIC_LIB)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -37,6 +30,6 @@ endif()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 
-file(COPY "${CURRENT_PORT_DIR}/unofficial-pulsar-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-pulsar/")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-pulsar-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-pulsar/unofficial-pulsar-config.cmake" @ONLY)
 
 vcpkg_copy_pdbs()
