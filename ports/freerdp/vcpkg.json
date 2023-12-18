@@ -63,7 +63,7 @@
     },
     "wayland": {
       "description": "Enable wayland support",
-      "supports": "!windows & !android & !ios & !osx & !openbsd",
+      "supports": "!android & !ios & !openbsd & !osx & !windows",
       "dependencies": [
         "wayland"
       ]
@@ -74,7 +74,7 @@
     },
     "x11": {
       "description": "Enable X11 support",
-      "supports": "!windows & !android & !ios",
+      "supports": "!android & !ios & !windows",
       "dependencies": [
         "xcb"
       ]
