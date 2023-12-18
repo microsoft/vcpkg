@@ -1,0 +1,76 @@
+diff --git a/gettext-runtime/configure b/gettext-runtime/configure
+index ed6cb37..780cc84 100644
+--- a/gettext-runtime/configure
++++ b/gettext-runtime/configure
+@@ -22346,6 +22346,12 @@ printf "%s\n" "$acl_cv_libdirstems" >&6; }
+ 
+ 
+ 
++### Configuration step reordering
++### Similar to AM_GNU_GETTEXT(external,...), cf. gettext-runtime/m4/gettext.m4
++### Pull iconv lookup before actual GNU gettext lookup.
++for configuration_step in gettext-iconv gettext-main; do
++case "$configuration_step" in
++gettext-main)
+     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for CFPreferencesCopyAppValue" >&5
+ printf %s "checking for CFPreferencesCopyAppValue... " >&6; }
+ if test ${gt_cv_func_CFPreferencesCopyAppValue+y}
+@@ -29535,6 +29541,9 @@ printf "%s\n" "#define HAVE_WEAK_SYMBOLS 1" >>confdefs.h
+ 
+ 
+ 
++### Configuration step reordering
++;;
++gettext-iconv)
+     use_additional=yes
+ 
+   acl_save_prefix="$prefix"
+@@ -30464,6 +30473,10 @@ printf "%s\n" "$gl_cv_next_iconv_h" >&6; }
+        gl_next_as_first_directive=$gl_cv_next_iconv_h
+      fi
+      NEXT_AS_FIRST_DIRECTIVE_ICONV_H=$gl_next_as_first_directive
++### Configuration step reordering
++;;
++esac
++done
+ 
+ 
+ 
+diff --git a/gettext-tools/configure b/gettext-tools/configure
+index b4a4f93..17b05c8 100644
+--- a/gettext-tools/configure
++++ b/gettext-tools/configure
+@@ -25735,6 +25735,12 @@ printf "%s\n" "$acl_cv_libdirstems" >&6; }
+ 
+ 
+ 
++### Configuration step reordering
++### Similar to AM_GNU_GETTEXT(external,...), cf. gettext-runtime/m4/gettext.m4
++### Pull iconv lookup before actual GNU gettext lookup.
++for configuration_step in gettext-iconv gettext-main; do
++case "$configuration_step" in
++gettext-main)
+     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for CFPreferencesCopyAppValue" >&5
+ printf %s "checking for CFPreferencesCopyAppValue... " >&6; }
+ if test ${gt_cv_func_CFPreferencesCopyAppValue+y}
+@@ -37529,6 +37535,9 @@ printf "%s\n" "#define HAVE_WEAK_SYMBOLS 1" >>confdefs.h
+ 
+ 
+ 
++### Configuration step reordering
++;;
++gettext-iconv)
+     use_additional=yes
+ 
+   acl_save_prefix="$prefix"
+@@ -38458,6 +38467,10 @@ printf "%s\n" "$gl_cv_next_iconv_h" >&6; }
+        gl_next_as_first_directive=$gl_cv_next_iconv_h
+      fi
+      NEXT_AS_FIRST_DIRECTIVE_ICONV_H=$gl_next_as_first_directive
++### Configuration step reordering
++;;
++esac
++done
+ 
+ 
+ 
