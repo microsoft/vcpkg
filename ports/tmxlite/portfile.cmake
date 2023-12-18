@@ -21,6 +21,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
 
 set(STATIC_POSTFIX "")
 if(TMXLITE_STATIC_LIB)
