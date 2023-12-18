@@ -4093,7 +4093,7 @@
       "port-version": 0
     },
     "libatomic-ops": {
-      "baseline": "7.8.0",
+      "baseline": "7.8.2",
       "port-version": 0
     },
     "libavif": {
