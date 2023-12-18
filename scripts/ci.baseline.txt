@@ -222,9 +222,6 @@ coroutine:x64-osx=fail
 cpp-ipc:arm-neon-android=fail
 cpp-ipc:arm64-android=fail
 cpp-ipc:x64-android=fail
-cppcms:arm-neon-android=fail
-cppcms:arm64-android=fail
-cppcms:x64-android=fail
 cppgraphqlgen:arm-neon-android=fail
 cppgraphqlgen:arm64-android=fail
 cppgraphqlgen:x64-android=fail
@@ -630,6 +627,9 @@ libtcod:arm64-android=fail
 libtcod:x64-android=fail
 libtomcrypt:arm64-windows=fail
 libtomcrypt:arm64-uwp=fail
+# D:\b\libtorch\src\v1.12.1-e1cb316ec6.clean\aten\src\ATen/cpu/vec/vec_base.h(134): fatal error C1001: Internal compiler error.
+# (compiler file 'D:\a\_work\1\s\src\vctools\Compiler\CxxFE\sl\p1\c\toinil.c', line 910)
+libtorch:x64-windows=fail
 libtorch:x64-osx=fail
 libusb-win32:arm64-uwp=fail
 libusb-win32:x64-uwp=fail
@@ -1335,4 +1335,3 @@ vcpkg-ci-wxwidgets:x64-windows-static-md=pass
 vcpkg-ci-wxwidgets:x64-windows-static=pass
 vcpkg-ci-wxwidgets:x64-windows=pass
 vcpkg-ci-wxwidgets:x86-windows=pass
-vulkan-loader:x64-windows-static=fail
