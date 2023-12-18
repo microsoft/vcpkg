@@ -1,84 +1,47 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fb4f1b1..84b8b1a 100644
+index fb4f1b1..1bcfd47 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -98,11 +98,7 @@ else ()
+@@ -96,6 +96,7 @@ if (APPLE AND NOT LINK_STATIC)
+ else ()
+     set(LATEST_PROTOBUF FALSE)
  endif ()
++set(LATEST_PROTOBUF FALSE)
 
  if (NOT CMAKE_CXX_STANDARD)
--    if (LATEST_PROTOBUF)
--        set(CMAKE_CXX_STANDARD 17)
--    else ()
--        set(CMAKE_CXX_STANDARD 11)
--    endif ()
-+    set(CMAKE_CXX_STANDARD 11)
- endif ()
- set(CMAKE_C_STANDARD 11)
-
-@@ -148,43 +144,21 @@ if (APPLE)
-     set(OPENSSL_ROOT_DIR ${OPENSSL_ROOT_DIR} /usr/local/opt/openssl/ /opt/homebrew/opt/openssl)
- endif ()
- find_package(OpenSSL REQUIRED)
-+set(COMMON_LIBS ${COMMON_LIBS} OpenSSL::SSL OpenSSL::Crypto)
- message("OPENSSL_INCLUDE_DIR: " ${OPENSSL_INCLUDE_DIR})
- message("OPENSSL_LIBRARIES: " ${OPENSSL_LIBRARIES})
-
--if (LATEST_PROTOBUF)
--    # See https://github.com/apache/arrow/issues/35987
--    add_definitions(-DPROTOBUF_USE_DLLS)
--    # Use Config mode to avoid FindProtobuf.cmake does not find the Abseil library
--    find_package(Protobuf REQUIRED CONFIG)
--else ()
+     if (LATEST_PROTOBUF)
+@@ -157,14 +158,15 @@ if (LATEST_PROTOBUF)
+     # Use Config mode to avoid FindProtobuf.cmake does not find the Abseil library
+     find_package(Protobuf REQUIRED CONFIG)
+ else ()
 -    find_package(Protobuf REQUIRED)
--endif ()
-+find_package(protobuf REQUIRED CONFIG)
-+set(COMMON_LIBS ${COMMON_LIBS} protobuf::libprotobuf)
++    find_package(protobuf CONFIG REQUIRED)
++    set(Protobuf_LIBRARIES protobuf::libprotobuf)
+ endif ()
  message("Protobuf_INCLUDE_DIRS: " ${Protobuf_INCLUDE_DIRS})
  message("Protobuf_LIBRARIES: " ${Protobuf_LIBRARIES})
 
--# NOTE: CMake might not find curl and zlib on some platforms like Ubuntu, in this case, find them manually
+ # NOTE: CMake might not find curl and zlib on some platforms like Ubuntu, in this case, find them manually
  set(CURL_NO_CURL_CMAKE ON)
 -find_package(curl QUIET)
--if (NOT CURL_FOUND)
--    find_path(CURL_INCLUDE_DIRS NAMES curl/curl.h)
--    find_library(CURL_LIBRARIES NAMES curl curllib libcurl_imp curllib_static libcurl)
--endif ()
--message("CURL_INCLUDE_DIRS: " ${CURL_INCLUDE_DIRS})
--message("CURL_LIBRARIES: " ${CURL_LIBRARIES})
--if (NOT CURL_INCLUDE_DIRS OR NOT CURL_LIBRARIES)
--    message(FATAL_ERROR "Could not find libcurl")
--endif ()
 +find_package(CURL REQUIRED)
-+set(COMMON_LIBS ${COMMON_LIBS} CURL::libcurl)
+ if (NOT CURL_FOUND)
+     find_path(CURL_INCLUDE_DIRS NAMES curl/curl.h)
+     find_library(CURL_LIBRARIES NAMES curl curllib libcurl_imp curllib_static libcurl)
+@@ -175,7 +177,7 @@ if (NOT CURL_INCLUDE_DIRS OR NOT CURL_LIBRARIES)
+     message(FATAL_ERROR "Could not find libcurl")
+ endif ()
 
 -find_package(zlib QUIET)
--if (NOT ZLIB_FOUND)
--    find_path(ZLIB_INCLUDE_DIRS NAMES zlib.h)
--    find_library(ZLIB_LIBRARIES NAMES z zlib zdll zlib1 zlibstatic)
--endif ()
--message("ZLIB_INCLUDE_DIRS: " ${ZLIB_INCLUDE_DIRS})
--message("ZLIB_LIBRARIES: " ${ZLIB_LIBRARIES})
--if (NOT ZLIB_INCLUDE_DIRS OR NOT ZLIB_LIBRARIES)
--    message(FATAL_ERROR "Could not find zlib")
--endif ()
 +find_package(ZLIB REQUIRED)
-+set(COMMON_LIBS ${COMMON_LIBS} ZLIB::ZLIB)
-
- if (LINK_STATIC AND NOT VCPKG_TRIPLET)
-     find_library(LIB_ZSTD NAMES libzstd.a)
-@@ -227,15 +201,15 @@ elseif (LINK_STATIC AND VCPKG_TRIPLET)
+ if (NOT ZLIB_FOUND)
+     find_path(ZLIB_INCLUDE_DIRS NAMES zlib.h)
+     find_library(ZLIB_LIBRARIES NAMES z zlib zdll zlib1 zlibstatic)
+@@ -226,6 +228,17 @@ elseif (LINK_STATIC AND VCPKG_TRIPLET)
+     if (LIB_SNAPPY)
          message(STATUS "Found Snappy library: ${LIB_SNAPPY}")
      endif ()
- else()
--    if (MSVC AND (${CMAKE_BUILD_TYPE} STREQUAL Debug))
--        find_library(LIB_ZSTD zstdd HINTS "${VCPKG_DEBUG_ROOT}/lib")
--    else ()
--        find_library(LIB_ZSTD zstd)
--    endif ()
--    if (MSVC AND (${CMAKE_BUILD_TYPE} STREQUAL Debug))
--        find_library(LIB_SNAPPY NAMES snappyd HINTS "${VCPKG_DEBUG_ROOT}/lib")
--    else ()
--        find_library(LIB_SNAPPY NAMES snappy libsnappy)
++elseif (1)
 +    find_package(zstd CONFIG REQUIRED)
 +    set(HAS_ZSTD 1)
 +    set(LIB_ZSTD
@@ -88,59 +51,16 @@ index fb4f1b1..84b8b1a 100644
 +    set(LIB_SNAPPY Snappy::snappy)
 +    if (MSVC)
 +        find_package(dlfcn-win32 CONFIG REQUIRED)
-     endif ()
- endif ()
-
-@@ -319,20 +293,10 @@ set(COMMON_LIBS
-   ${Boost_REGEX_LIBRARY}
-   ${Boost_SYSTEM_LIBRARY}
-   ${Boost_DATE_TIME_LIBRARY}
--  ${CURL_LIBRARIES}
--  ${OPENSSL_LIBRARIES}
--  ${ZLIB_LIBRARIES}
-   ${ADDITIONAL_LIBRARIES}
-   ${CMAKE_DL_LIBS}
- )
-
--if (LATEST_PROTOBUF)
--    # Protobuf_LIBRARIES is empty when finding Protobuf in Config mode
--    set(COMMON_LIBS ${COMMON_LIBS} protobuf::libprotobuf)
--else ()
--    set(COMMON_LIBS ${COMMON_LIBS} ${Protobuf_LIBRARIES})
--endif ()
--
- if (MSVC)
-     set(COMMON_LIBS
-         ${COMMON_LIBS}
-@@ -377,10 +341,6 @@ endif ()
-
- add_definitions(-DHAS_SNAPPY=${HAS_SNAPPY})
-
--if(NOT APPLE AND NOT MSVC)
--    set(COMMON_LIBS ${COMMON_LIBS} rt)
--endif ()
--
- link_directories(${PROJECT_BINARY_DIR}/lib)
-
- set(LIB_NAME $ENV{PULSAR_LIBRARY_NAME})
++    endif ()
+ else()
+     if (MSVC AND (${CMAKE_BUILD_TYPE} STREQUAL Debug))
+         find_library(LIB_ZSTD zstdd HINTS "${VCPKG_DEBUG_ROOT}/lib")
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 8bd9749..007df90 100644
+index 8bd9749..551ac0c 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -27,16 +27,16 @@ set(LIB_AUTOGEN_DIR ${AUTOGEN_DIR}/lib)
- file(MAKE_DIRECTORY ${LIB_AUTOGEN_DIR})
- include_directories(${LIB_AUTOGEN_DIR})
-
--# Protobuf generation is only supported natively starting from CMake 3.8
--# Using custom command for now
-+add_library(proto-objects OBJECT "${CMAKE_SOURCE_DIR}/proto/PulsarApi.proto")
-+target_link_libraries(proto-objects PUBLIC protobuf::libprotobuf)
-+target_include_directories(proto-objects PUBLIC "${LIB_AUTOGEN_DIR}")
-+protobuf_generate(
-+    TARGET proto-objects
-+    IMPORT_DIRS "${CMAKE_SOURCE_DIR}/proto"
-+    PROTOC_OUT_DIR "${LIB_AUTOGEN_DIR}")
-+
+@@ -31,12 +31,14 @@ include_directories(${LIB_AUTOGEN_DIR})
+ # Using custom command for now
  set(PROTO_SOURCES ${LIB_AUTOGEN_DIR}/PulsarApi.pb.cc ${LIB_AUTOGEN_DIR}/PulsarApi.pb.h)
  set(PULSAR_SOURCES ${PULSAR_SOURCES} ${PROTO_SOURCES})
 -ADD_CUSTOM_COMMAND(
@@ -149,6 +69,14 @@ index 8bd9749..007df90 100644
 -         DEPENDS
 -         ../proto/PulsarApi.proto
 -         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
++
++add_library(proto-objects OBJECT "${CMAKE_SOURCE_DIR}/proto/PulsarApi.proto")
++target_link_libraries(proto-objects PUBLIC protobuf::libprotobuf)
++target_include_directories(proto-objects PUBLIC "${LIB_AUTOGEN_DIR}")
++protobuf_generate(
++    TARGET proto-objects
++    IMPORT_DIRS "${CMAKE_SOURCE_DIR}/proto"
++    PROTOC_OUT_DIR "${LIB_AUTOGEN_DIR}")
 
  set(LIBRARY_VERSION $ENV{PULSAR_LIBRARY_VERSION})
  if (NOT LIBRARY_VERSION)
