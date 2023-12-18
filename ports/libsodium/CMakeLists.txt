@@ -690,8 +690,8 @@ else ()
         PRIVATE
             ${CMAKE_BINARY_DIR}/sodium/version.h
 
-            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/chacha20poly1305/sodium/aead_chacha20poly1305.c
-            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/xchacha20poly1305/sodium/aead_xchacha20poly1305.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/chacha20poly1305/aead_chacha20poly1305.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/xchacha20poly1305/aead_xchacha20poly1305.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_auth/crypto_auth.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_auth/hmacsha256/auth_hmacsha256.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_auth/hmacsha512/auth_hmacsha512.c
@@ -769,7 +769,7 @@ else ()
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/stream_salsa20.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/stream_salsa20.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/xsalsa20/stream_xsalsa20.c
-            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_verify/sodium/verify.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_verify/verify.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/chacha20_ietf_ext.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/common.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/ed25519_ref10.h
@@ -826,7 +826,6 @@ else ()
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_nsquare.S
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_pack.S
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/ladder.S
-            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/ladder_base.S
     )
 
     if (HAVE_AVX_ASM)
