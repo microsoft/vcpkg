@@ -1693,8 +1693,8 @@
       "port-version": 1
     },
     "coin": {
-      "baseline": "4.0.0",
-      "port-version": 8
+      "baseline": "4.0.2",
+      "port-version": 0
     },
     "coin-or-buildtools": {
       "baseline": "2023-02-02",
