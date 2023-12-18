@@ -1097,6 +1097,7 @@ install(DIRECTORY src/libsodium/include/
     USE_SOURCE_PERMISSIONS
     PATTERN "*.h"
     PATTERN "*.h.in" EXCLUDE
+    PATTERN "*.in" EXCLUDE
     REGEX "private($|/)" EXCLUDE
 )
 
