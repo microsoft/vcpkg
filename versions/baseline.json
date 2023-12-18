@@ -8553,8 +8553,8 @@
       "port-version": 2
     },
     "tmxlite": {
-      "baseline": "1.3.0",
-      "port-version": 1
+      "baseline": "1.4.4",
+      "port-version": 0
     },
     "tmxparser": {
       "baseline": "2019-10-14",
