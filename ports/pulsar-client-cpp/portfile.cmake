@@ -22,6 +22,12 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if (BUILD_STATIC_LIB)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pulsar/defines.h"
+        "#ifdef PULSAR_STATIC"
+        "#if 1")
+endif ()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
