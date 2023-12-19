@@ -1,15 +1,13 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF v3.21.12
-    SHA512 152f8441c325e808b942153c15e82fdb533d5273b50c25c28916ec568ada880f79242bb61ee332ac5fb0d20f21239ed6f8de02ef6256cc574b1fc354d002c6b0
+    REF "v${VERSION}"
+    SHA512 c2212d46c08f5ea7797769bbfb90a853f015da4a1ddb3d36fc4b9cae687b50a7578485e2caf4f6324848475220c1c46e2ce1a7e15adc9fddebbc9907c74e7dcc
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
-        compile_options.patch
+        fix-utf8-range.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -53,39 +51,11 @@ vcpkg_cmake_configure(
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
+        -Dprotobuf_ABSL_PROVIDER=package
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
-
-# It appears that at this point the build hasn't actually finished. There is probably
-# a process spawned by the build, therefore we need to wait a bit.
-
-function(protobuf_try_remove_recurse_wait PATH_TO_REMOVE)
-    file(REMOVE_RECURSE ${PATH_TO_REMOVE})
-    if (EXISTS "${PATH_TO_REMOVE}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 5)
-        file(REMOVE_RECURSE ${PATH_TO_REMOVE})
-    endif()
-endfunction()
-
-protobuf_try_remove_recurse_wait("${CURRENT_PACKAGES_DIR}/debug/include")
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-release.cmake"
-        "\${_IMPORT_PREFIX}/bin/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
-        "\${_IMPORT_PREFIX}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
-    )
-endif()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(READ "${CURRENT_PACKAGES_DIR}/debug/share/protobuf/protobuf-targets-debug.cmake" DEBUG_MODULE)
-    string(REPLACE "\${_IMPORT_PREFIX}" "\${_IMPORT_PREFIX}/debug" DEBUG_MODULE "${DEBUG_MODULE}")
-    string(REPLACE "\${_IMPORT_PREFIX}/debug/bin/protoc${EXECUTABLE_SUFFIX}" "\${_IMPORT_PREFIX}/tools/protobuf/protoc${EXECUTABLE_SUFFIX}" DEBUG_MODULE "${DEBUG_MODULE}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets-debug.cmake" "${DEBUG_MODULE}")
-endif()
-
-protobuf_try_remove_recurse_wait("${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(protobuf_BUILD_PROTOC_BINARIES)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -108,10 +78,7 @@ if(NOT protobuf_BUILD_LIBPROTOC)
     )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    protobuf_try_remove_recurse_wait("${CURRENT_PACKAGES_DIR}/bin")
-    protobuf_try_remove_recurse_wait("${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+vcpkg_cmake_config_fixup()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h"
@@ -127,12 +94,14 @@ function(replace_package_string package)
     set(release_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${package}.pc")
 
     if(EXISTS "${release_file}")
+        vcpkg_replace_string(${release_file} "absl_abseil_dll" "abseil_dll")
         if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             vcpkg_replace_string(${release_file} "-l${package}" "-llib${package}")
         endif()
     endif()
 
     if(EXISTS "${debug_file}")
+        vcpkg_replace_string(${debug_file} "absl_abseil_dll" "abseil_dll")
         if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             vcpkg_replace_string(${debug_file} "-l${package}" "-llib${package}d")
         else()
@@ -154,4 +123,7 @@ if(NOT protobuf_BUILD_PROTOC_BINARIES)
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
