@@ -1,0 +1,1 @@
+list(APPEND B2_OPTIONS cxxstd=20)
