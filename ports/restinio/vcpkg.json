@@ -20,14 +20,18 @@
   "default-features": [
     "standalone-asio"
   ],
-  "features" : {
-    "standalone-asio": {
-      "description": "Use of standalone version of Asio",
-      "dependencies": [ "asio" ]
-    },
+  "features": {
     "boost-asio": {
       "description": "Use of Boost.Asio",
-      "dependencies": [ "boost-asio" ]
+      "dependencies": [
+        "boost-asio"
+      ]
+    },
+    "standalone-asio": {
+      "description": "Use of standalone version of Asio",
+      "dependencies": [
+        "asio"
+      ]
     }
   }
 }
