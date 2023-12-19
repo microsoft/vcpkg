@@ -4,7 +4,7 @@
   "description": "cross platform C++ library for hardware information (CPU, RAM, GPU, ...)",
   "homepage": "https://github.com/lfreist/hwinfo",
   "license": "MIT",
-  "supports": "windows | linux",
+  "supports": "(windows | linux) & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
