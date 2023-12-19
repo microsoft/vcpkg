@@ -1,0 +1,18 @@
+javascriptcore provides CMake targets:
+
+find_package(JavaScriptCore REQUIRED)
+target_link_libraries(main PRIVATE JavaScriptCore)
+
+------
+FindJavaScriptCore.cmake
+------
+set(JavaScriptCore_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed/x64-windows")
+set(JavaScriptCore_INCLUDE_DIRS "${JavaScriptCore_DIR}/include")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(JavaScriptCore_LIBRARY "${JavaScriptCore_DIR}/debug/lib")
+else()
+    set(JavaScriptCore_LIBRARY "${JavaScriptCore_DIR}/lib")
+endif()
+
+set(JavaScriptCore_LIBRARIES "${JavaScriptCore_LIBRARY}/JavaScriptCore.lib")
+set(JavaScriptCore_FOUND TRUE)

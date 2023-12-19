@@ -1,0 +1,13 @@
+diff --git a/Source/cmake/OptionsWin.cmake b/Source/cmake/OptionsWin.cmake
+index 1d8bd1afeb47..bc05cad4f48c 100644
+--- a/Source/cmake/OptionsWin.cmake
++++ b/Source/cmake/OptionsWin.cmake
+@@ -1,7 +1,7 @@
+ set(PORT Win)
+ 
+ # Use Release DLL CRT even for Debug build
+-set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreadedDLL)
++# set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreadedDLL)
+ 
+ if (MSVC)
+     include(OptionsMSVC)
