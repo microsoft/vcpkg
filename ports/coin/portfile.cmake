@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Coin3D/coin
-    REF Coin-4.0.0
-    SHA512 8a0289cab3e02a7417022fe659ec30a2dd705b9bacb254e0269ada9155c76c6aea0285c475cd6e663f5d7f2b49e60244b16baac7188d57e3d7f8ab08d228f21f
+    REF v${VERSION}
+    SHA512 f913f1b1ec5819d72e054dc94702effe9ee2a28547fc9bebc2f6b2e55d8a67c6cfa05e43239461e806cbead0a7548f82b31d5b86181eed4ffc5c801d3b94aa67
     HEAD_REF master
     PATCHES
-        disable-cpackd.patch
-        fix-typedef.patch # clang-cl fix.
+        remove-default-config.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -32,7 +31,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Coin-4.0.0)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Coin-${VERSION})
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
