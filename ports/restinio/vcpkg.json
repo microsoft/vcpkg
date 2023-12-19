@@ -1,11 +1,10 @@
 {
   "name": "restinio",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "A header-only C++14 library that gives you an embedded HTTP/Websocket server targeted primarily for asynchronous processing of HTTP-requests.",
   "homepage": "https://github.com/Stiffstream/restinio",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "asio",
     "expected-lite",
     "fmt",
     "llhttp",
@@ -17,5 +16,18 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "standalone-asio"
+  ],
+  "features" : {
+    "standalone-asio": {
+      "description": "Use of standalone version of Asio",
+      "dependencies": [ "asio" ]
+    },
+    "boost-asio": {
+      "description": "Use of Boost.Asio",
+      "dependencies": [ "boost-asio" ]
+    }
+  }
 }

@@ -2,8 +2,21 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/restinio
     REF "v.${VERSION}"
-    SHA512 de9929d9ed6acf9574482ffa3f865a550e319716c9cfc5a9e2e9f604169206df022d55e0e55174c66f0edc04a4491c028755272067e55ae646ecfccc1573f78f
+    SHA512 b5932a08687ef2d3ae02d0b0b1384b3462706ce207f16126efa8cd3dcea130d823863169dd5088b12b8c69761ccd044b447c2fe04f31ee10d26ff33d088606ee
 )
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "standalone-asio" USE_STANDALONE_ASIO
+        "boost-asio" USE_BOOST_ASIO)
+
+if(USE_STANDALONE_ASIO)
+    set(ASIO_PROPS "-DRESTINIO_ASIO_SOURCE=standalone" "-DRESTINIO_DEP_STANDALONE_ASIO=find")
+endif()
+
+if(USE_BOOST_ASIO)
+    set(ASIO_PROPS "-DRESTINIO_ASIO_SOURCE=boost" "-DRESTINIO_DEP_BOOST_ASIO=find")
+endif()
 
 set(VCPKG_BUILD_TYPE release) # header-only
 vcpkg_cmake_configure(
@@ -14,8 +27,7 @@ vcpkg_cmake_configure(
         -DRESTINIO_SAMPLE=OFF
         -DRESTINIO_BENCHMARK=OFF
         -DRESTINIO_WITH_SOBJECTIZER=OFF
-        -DRESTINIO_ASIO_SOURCE=standalone
-        -DRESTINIO_DEP_STANDALONE_ASIO=find
+        ${ASIO_PROPS}
         -DRESTINIO_DEP_LLHTTP=find
         -DRESTINIO_DEP_FMT=find
         -DRESTINIO_DEP_EXPECTED_LITE=find
