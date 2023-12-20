@@ -1,0 +1,98 @@
+diff --git a/random/random.c b/random/random.c
+index 0a83d00..1b5f3f5 100644
+--- a/random/random.c
++++ b/random/random.c
+@@ -31,7 +31,7 @@
+ #  endif
+ #endif
+ 
+-static int (* psnip_random_secure_generate)(size_t length, psnip_uint8_t data[PSNIP_RANDOM_ARRAY_PARAM(length)]) = NULL;
++static int (* psnip_random_secure_generate)(size_t length, psnip_uint8_t data[ARRAY_LEN]) = NULL;
+ static psnip_once psnip_random_secure_once = PSNIP_ONCE_INIT;
+ 
+ #if defined(__linux)
+@@ -66,7 +66,7 @@ psnip_random__getrandom(void* buf, size_t buflen, unsigned int flags) {
+ #    endif
+ 
+ static int
+-psnip_random_secure_generate_getrandom(size_t length, psnip_uint8_t data[PSNIP_RANDOM_ARRAY_PARAM(length)]) {
++psnip_random_secure_generate_getrandom(size_t length, psnip_uint8_t data[ARRAY_LEN) {
+   size_t bytes_read = 0;
+   int r;
+ 
+@@ -93,7 +93,7 @@ psnip_random_secure_generate_getrandom(size_t length, psnip_uint8_t data[PSNIP_R
+ __attribute__((__target__("rdrnd")))
+ #endif
+ static int
+-psnip_random__rdrand (size_t length, psnip_uint8_t data[PSNIP_RANDOM_ARRAY_PARAM(length)]) {
++psnip_random__rdrand (size_t length, psnip_uint8_t data[ARRAY_LEN]) {
+   size_t remaining = length;
+   unsigned int r;
+ #if defined(PSNIP_CPU_ARCH_X86_64)
+@@ -136,7 +136,7 @@ psnip_random__rdrand (size_t length, psnip_uint8_t data[PSNIP_RANDOM_ARRAY_PARAM
+ static HMODULE psnip_rand_secure__advapi32_dll = NULL;
+ static BOOLEAN (APIENTRY *psnip_rand_secure__RtlGenRandom)(void*, ULONG);
+ 
+-static int psnip_random_secure_generate_RtlGenRandom(size_t length, psnip_uint8_t data[PSNIP_RANDOM_ARRAY_PARAM(length)]) {
++static int psnip_random_secure_generate_RtlGenRandom(size_t length, psnip_uint8_t data[ARRAY_LEN]) {
+   assert(psnip_rand_secure__RtlGenRandom != NULL);
+ 
+   return psnip_rand_secure__RtlGenRandom(data, (ULONG) length) ? 0 : -3;
+@@ -162,7 +162,7 @@ psnip_random_secure_init(void) {
+ 
+ #if !defined(PSNIP_RANDOM_SECURE_FOUND)
+ static int
+-psnip_random_secure_generate_dev_random(size_t length, psnip_uint8_t data[PSNIP_RANDOM_ARRAY_PARAM(length)]) {
++psnip_random_secure_generate_dev_random(size_t length, psnip_uint8_t data[ARRAY_LEN]) {
+   static FILE* dev_random = NULL;
+   size_t bytes_read = 0;
+ 
+@@ -182,7 +182,7 @@ psnip_random_secure_generate_dev_random(size_t length, psnip_uint8_t data[PSNIP_
+ }
+ 
+ static int
+-psnip_random_secure_generate_dev_urandom(size_t length, psnip_uint8_t data[PSNIP_RANDOM_ARRAY_PARAM(length)]) {
++psnip_random_secure_generate_dev_urandom(size_t length, psnip_uint8_t data[ARRAY_LEN]) {
+   static FILE* dev_urandom = NULL;
+   size_t bytes_read = 0;
+ 
+@@ -297,7 +297,7 @@ psnip_random__pcg_from_state(psnip_uint32_t state) {
+ }
+ 
+ static int
+-psnip_random__pgc_generate(psnip_atomic_int32* state, size_t length, psnip_uint8_t data[PSNIP_RANDOM_ARRAY_PARAM(length)]) {
++psnip_random__pgc_generate(psnip_atomic_int32* state, size_t length, psnip_uint8_t data[ARRAY_LEN]) {
+   psnip_int32_t old_state;
+   psnip_uint32_t new_state, v;
+   size_t remaining;
+@@ -369,7 +369,7 @@ psnip_random_fast_init(void) {
+ int
+ psnip_random_bytes(enum PSnipRandomSource source,
+ 		   size_t length,
+-		   psnip_uint8_t data[PSNIP_RANDOM_ARRAY_PARAM(length)]) {
++		   psnip_uint8_t data[ARRAY_LEN]) {
+   switch (source) {
+     case PSNIP_RANDOM_SOURCE_SECURE:
+ #if !defined(PSNIP_RANDOM_SECURE_NO_INIT)
+diff --git a/random/random.h b/random/random.h
+index 4d654cc..bcde053 100644
+--- a/random/random.h
++++ b/random/random.h
+@@ -15,6 +15,8 @@
+ #  define PSNIP_RANDOM_ARRAY_PARAM(expr)
+ #endif
+ 
++#define ARRAY_LEN 4096
++
+ #if defined(__cplusplus)
+ extern "C" {
+ #endif
+@@ -27,7 +29,7 @@ enum PSnipRandomSource {
+ 
+ int            psnip_random_bytes    (enum PSnipRandomSource source,
+ 				      size_t length,
+-				      psnip_uint8_t data[PSNIP_RANDOM_ARRAY_PARAM(length)]);
++				      psnip_uint8_t data[ARRAY_LEN]);
+ psnip_uint32_t psnip_random_get_seed (void);
+ void           psnip_random_set_seed (psnip_uint32_t seed);
+ 
