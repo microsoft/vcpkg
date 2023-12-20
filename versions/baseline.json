@@ -237,8 +237,8 @@
       "port-version": 5
     },
     "arrow": {
-      "baseline": "14.0.1",
-      "port-version": 2
+      "baseline": "14.0.2",
+      "port-version": 0
     },
     "arsenalgear": {
       "baseline": "2.1.0",

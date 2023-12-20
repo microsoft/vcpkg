@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 31d19f0ca80349f63db74bae813256b47907f85725a9bf01ef6f32406e79828ebb4701faedb52696b6a5b3bb89ad4e136485fd5eb35d396dd42147c11d4d2713
+    SHA512 dd6cf6cbb817a48ef5275bb409367e5904526a3c16a17a37ea75101085ea19a71ba6bf936a6f099012e7c528811db1728ef2f14dcb16a1056a22088839280ce0
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
