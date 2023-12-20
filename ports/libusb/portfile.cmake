@@ -43,6 +43,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 else()
     vcpkg_list(SET MAKE_OPTIONS)
     vcpkg_list(SET LIBUSB_LINK_LIBRARIES)
+    if(VCPKG_TARGET_IS_EMSCRIPTEN)
+        vcpkg_list(APPEND MAKE_OPTIONS BUILD_TRIPLET --host=wasm32)
+    endif()
     if("udev" IN_LIST FEATURES)
         vcpkg_list(APPEND MAKE_OPTIONS "--enable-udev")
         vcpkg_list(APPEND LIBUSB_LINK_LIBRARIES udev)
@@ -52,7 +55,10 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
-        OPTIONS ${MAKE_OPTIONS}
+        OPTIONS 
+            ${MAKE_OPTIONS}
+            "--enable-examples-build=no"
+            "--enable-tests-build=no"
     )
     vcpkg_install_make()
 endif()
@@ -60,5 +66,4 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
