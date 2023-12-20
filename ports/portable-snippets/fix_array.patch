@@ -16,7 +16,7 @@ index 0a83d00..1b5f3f5 100644
  
  static int
 -psnip_random_secure_generate_getrandom(size_t length, psnip_uint8_t data[PSNIP_RANDOM_ARRAY_PARAM(length)]) {
-+psnip_random_secure_generate_getrandom(size_t length, psnip_uint8_t data[ARRAY_LEN) {
++psnip_random_secure_generate_getrandom(size_t length, psnip_uint8_t data[ARRAY_LEN]) {
    size_t bytes_read = 0;
    int r;
  
