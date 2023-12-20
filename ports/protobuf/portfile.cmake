@@ -81,9 +81,9 @@ endif()
 vcpkg_cmake_config_fixup()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/google/protobuf/stubs/platform_macros.h"
-        "\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_"
-        "\#ifndef PROTOBUF_USE_DLLS\n\#define PROTOBUF_USE_DLLS\n\#endif // PROTOBUF_USE_DLLS\n\n\#endif  // GOOGLE_PROTOBUF_PLATFORM_MACROS_H_"
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/google/protobuf/port_def.inc"
+        "\#ifdef PROTOBUF_PORT_"
+        "\#ifndef PROTOBUF_USE_DLLS\n\#define PROTOBUF_USE_DLLS\n\#endif // PROTOBUF_USE_DLLS\n\n\#ifdef PROTOBUF_PORT_"
     )
 endif()
 

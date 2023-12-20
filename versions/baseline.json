@@ -4854,7 +4854,7 @@
     },
     "libprotobuf-mutator": {
       "baseline": "1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libproxy": {
       "baseline": "0.4.18",
