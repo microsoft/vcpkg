@@ -22,6 +22,7 @@ vcpkg_from_gitlab(
         srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
         base-must-be-enabled.patch
+        no-downloads.patch
         ${PATCHES}
 )
 
