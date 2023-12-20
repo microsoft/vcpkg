@@ -1,0 +1,17 @@
+diff --git a/src/field_instance.h b/src/field_instance.h
+index 11ccd27..487996b 100644
+--- a/src/field_instance.h
++++ b/src/field_instance.h
+@@ -190,11 +190,7 @@ class ConstFieldInstance {
+     return descriptor_->message_type();
+   }
+ 
+-  bool EnforceUtf8() const {
+-    return descriptor_->type() == protobuf::FieldDescriptor::TYPE_STRING &&
+-           descriptor()->file()->syntax() ==
+-               protobuf::FileDescriptor::SYNTAX_PROTO3;
+-  }
++  bool EnforceUtf8() const { return descriptor_->requires_utf8_validation(); }
+ 
+   const protobuf::FieldDescriptor* descriptor() const { return descriptor_; }
+ 

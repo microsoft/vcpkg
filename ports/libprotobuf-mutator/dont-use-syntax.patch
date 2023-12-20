@@ -1,0 +1,17 @@
+diff --git a/src/mutator.cc b/src/mutator.cc
+index fb5542b..78ef455 100644
+--- a/src/mutator.cc
++++ b/src/mutator.cc
+@@ -87,11 +87,7 @@ bool GetRandomBool(RandomEngine* random, size_t n = 2) {
+ }
+ 
+ bool IsProto3SimpleField(const FieldDescriptor& field) {
+-  assert(field.file()->syntax() == FileDescriptor::SYNTAX_PROTO3 ||
+-         field.file()->syntax() == FileDescriptor::SYNTAX_PROTO2);
+-  return field.file()->syntax() == FileDescriptor::SYNTAX_PROTO3 &&
+-         field.cpp_type() != FieldDescriptor::CPPTYPE_MESSAGE &&
+-         !field.containing_oneof() && !field.is_repeated();
++  return !field.is_repeated() && !field.has_presence();
+ }
+ 
+ struct CreateDefaultField : public FieldFunction<CreateDefaultField> {
