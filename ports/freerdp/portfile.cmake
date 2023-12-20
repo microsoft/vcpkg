@@ -13,6 +13,7 @@ vcpkg_from_github(
         pr-7060-jni-onload.patch
         find-dependency.patch
         export-include.patch
+        openssl-3.patch # Remove in freerdp 3.0.0
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindOpenSSL.cmake")
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")

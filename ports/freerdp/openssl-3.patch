@@ -1,0 +1,15 @@
+diff --git a/include/freerdp/crypto/tls.h b/include/freerdp/crypto/tls.h
+index e273ec3..3cc265e 100644
+--- a/include/freerdp/crypto/tls.h
++++ b/include/freerdp/crypto/tls.h
+@@ -34,6 +34,10 @@
+ 
+ #include <winpr/stream.h>
+ 
++#if defined(OPENSSL_VERSION_MAJOR) && OPENSSL_VERSION_MAJOR >= 3
++	#define tls_free freerdp_tls_free
++#endif
++
+ #define TLS_ALERT_LEVEL_WARNING 1
+ #define TLS_ALERT_LEVEL_FATAL 2
+ 

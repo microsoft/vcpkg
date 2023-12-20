@@ -15,14 +15,14 @@ vcpkg_from_github(
 
 if(CMAKE_HOST_WIN32)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make perl)
-    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH}")
 else()
     vcpkg_find_acquire_program(PERL)
     get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-    set(BASH /bin/bash)
     set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
 endif()
+
+find_program(BASH NAME bash HINTS ${MSYS_ROOT}/usr/bin REQUIRED NO_CACHE)
 
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
