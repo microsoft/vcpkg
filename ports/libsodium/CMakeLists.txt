@@ -905,6 +905,10 @@ else ()
 
     add_library(${PROJECT_NAME}_aesni
         OBJECT
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis128l/aegis128l_aesni.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis128l/aegis128l_aesni.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis256/aegis256_aesni.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis256/aegis256_aesni.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aes256gcm/aesni/aead_aes256gcm_aesni.c
     )
 
