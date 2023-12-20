@@ -6,7 +6,10 @@
   "homepage": "https://treehopper.io",
   "supports": "!staticcrt",
   "dependencies": [
-    "libusb",
+    {
+      "name": "libusb",
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
