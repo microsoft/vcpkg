@@ -4206,7 +4206,7 @@
     },
     "libdisasm": {
       "baseline": "0.23",
-      "port-version": 10
+      "port-version": 11
     },
     "libdivide": {
       "baseline": "5.0",
