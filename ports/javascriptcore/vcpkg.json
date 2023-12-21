@@ -6,16 +6,16 @@
   "supports": "!uwp & windows & x64",
   "dependencies": [
     {
+      "name": "icu",
+      "version>=": "61.2"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "icu",
-      "version>=": "61.2"
     }
   ]
 }
