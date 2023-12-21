@@ -16,7 +16,7 @@ vcpkg_from_github(
         00005-fix-uwp-error.patch
         00009-use-system-upb.patch
         00015-disable-download-archive.patch
-        00016_add_header.patch
+        00016-fix-plugin-targets.patch
 )
 
 if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
