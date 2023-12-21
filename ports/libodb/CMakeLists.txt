@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.0)
-project(libodb VERSION 2.5.0-b.25 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.8)
+project(libodb VERSION 2.5.0 LANGUAGES CXX)
 set(LIBODB_INSTALL_HEADERS ON CACHE BOOL "Install the header files (a debug install)")
 
 file(GLOB_RECURSE libodb_src LIST_DIRECTORIES False
