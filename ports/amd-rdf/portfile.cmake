@@ -13,12 +13,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tests           RDF_BUILD_TESTS
 )
 
+if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL static)
+    set(STATIC ON)
+else()
+    set(STATIC Off)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS} 
         -DRDF_BUILD_INSTALL=ON
-        -DRDF_STATIC=OFF
+        -DRDF_STATIC=${STATIC}
 )
 
 vcpkg_cmake_install()
@@ -26,7 +32,7 @@ vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES rdfg 
@@ -40,29 +46,3 @@ endif()
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-
-# configure file
-
-if (VCPKG_TARGET_IS_LINUX)
-    set(dll_name "amdrdf.so")
-    set(dll_dir  "lib")
-    set(lib_name "amdrdf.so")
-    set(rdf_platform "RDF_PLATFORM_UNIX")
-else()
-    set(dll_name "amdrdf.dll")
-    set(dll_dir  "bin")
-    set(lib_name "amdrdf.lib")
-    set(rdf_platform "RDF_PLATFORM_WINDOWS")
-endif()
-
-if("cxx" IN_LIST FEATURES)
-    set(cxx ON)
-else()
-    set(cxx OFF)
-endif()
-
-
-configure_file("${CMAKE_CURRENT_LIST_DIR}/amd-rdf-config.cmake.in"
-  "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
-  @ONLY)
