@@ -10,7 +10,9 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DNO_OCL=ON
+        -DNO_OCL # disable OpenCL usage
+    MAYBE_UNUSED_VARIABLES
+        NO_OCL
 )
 vcpkg_cmake_install()
 
