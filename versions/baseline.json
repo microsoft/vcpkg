@@ -4597,8 +4597,8 @@
       "port-version": 0
     },
     "libodb": {
-      "baseline": "2.4.0",
-      "port-version": 10
+      "baseline": "2.5.0-b.25",
+      "port-version": 0
     },
     "libodb-boost": {
       "baseline": "2.4.0",
