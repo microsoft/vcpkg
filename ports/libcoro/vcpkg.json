@@ -13,7 +13,6 @@
   ],
   "default-features": [
     "networking",
-    "platform",
     "ssl"
   ],
   "features": {
