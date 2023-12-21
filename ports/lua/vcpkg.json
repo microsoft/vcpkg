@@ -3,7 +3,7 @@
   "version": "5.4.6",
   "port-version": 1,
   "description": "A powerful, fast, lightweight, embeddable scripting language",
-  "homepage": "https://www.lua.org",
+  "homepage": "https://lua.org",
   "license": null,
   "dependencies": [
     {
