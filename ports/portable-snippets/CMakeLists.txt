@@ -5,7 +5,7 @@ project(portable-snippets LANGUAGES C)
 include(GNUInstallDirs)
 
 option(PSNIP_INSTALL_HEADERS "Install header files" ON)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11" ) 
+set(CMAKE_C_STANDARD 11)
 
 # https://stackoverflow.com/questions/7787823/cmake-how-to-get-the-name-of-all-subdirectories-of-a-directory
 function (list_subdir output_variable path)
