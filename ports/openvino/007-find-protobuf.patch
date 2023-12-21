@@ -1,0 +1,13 @@
+diff --git a/cmake/templates/OpenVINOConfig.cmake.in b/cmake/templates/OpenVINOConfig.cmake.in
+index 470be5d17b..8642f7a636 100644
+--- a/cmake/templates/OpenVINOConfig.cmake.in
++++ b/cmake/templates/OpenVINOConfig.cmake.in
+@@ -435,7 +435,7 @@ macro(_ov_find_protobuf_frontend_dependency)
+     set(_OV_ENABLE_SYSTEM_PROTOBUF "@ENABLE_SYSTEM_PROTOBUF@")
+     set(_OV_PROTOBUF_PACKAGE_CONFIG "@protobuf_config@")
+     if(_OV_ENABLE_SYSTEM_PROTOBUF)
+-        _ov_find_dependency(Protobuf @Protobuf_VERSION@ EXACT ${_OV_PROTOBUF_PACKAGE_CONFIG})
++        _ov_find_dependency(Protobuf @Protobuf_VERSION@ ${_OV_PROTOBUF_PACKAGE_CONFIG})
+     endif()
+     unset(_OV_PROTOBUF_PACKAGE_CONFIG)
+     unset(_OV_ENABLE_SYSTEM_PROTOBUF)
