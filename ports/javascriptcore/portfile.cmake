@@ -33,12 +33,6 @@ get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY)
 vcpkg_add_to_path("${GPERF_DIR}")
 message(STATUS "GPERF_DIR: ${GPERF_DIR}")
 
-vcpkg_execute_required_process(
-    COMMAND "${PYTHON3}" "${SOURCE_PATH}/Tools/Scripts/update-webkit-wincairo-libs.py"
-          WORKING_DIRECTORY ${SOURCE_PATH}
-          LOGNAME updatewincairolibs-${TARGET_TRIPLET}
-)
-
 set(ENV{CC} "clang-cl")
 set(ENV{CXX} "clang-cl")
 
@@ -65,31 +59,11 @@ file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin64/JavaScriptCo
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin64/WTF.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin64/WTF.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 
-file(GLOB ICU_DT_DLL "${SOURCE_PATH}/WebKitLibraries/win/bin64/icudt*.dll")
-file(INSTALL "${ICU_DT_DLL}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(GLOB ICU_DT_PDB "${SOURCE_PATH}/WebKitLibraries/win/bin64/icudt*.pdb")
-file(INSTALL "${ICU_DT_PDB}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(GLOB ICU_IN_DLL "${SOURCE_PATH}/WebKitLibraries/win/bin64/icuin*.dll")
-file(INSTALL "${ICU_IN_DLL}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(GLOB ICU_IN_PDB "${SOURCE_PATH}/WebKitLibraries/win/bin64/icuin*.pdb")
-file(INSTALL "${ICU_IN_PDB}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(GLOB ICU_UC_DLL "${SOURCE_PATH}/WebKitLibraries/win/bin64/icuuc*.dll")
-file(INSTALL "${ICU_UC_DLL}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(GLOB ICU_UC_PDB "${SOURCE_PATH}/WebKitLibraries/win/bin64/icuuc*.pdb")
-file(INSTALL "${ICU_UC_PDB}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib64/JavaScriptCore.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin64/JavaScriptCore.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin64/JavaScriptCore.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin64/WTF.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin64/WTF.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-
-file(INSTALL "${ICU_DT_DLL}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${ICU_DT_PDB}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${ICU_IN_DLL}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${ICU_IN_PDB}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${ICU_UC_DLL}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${ICU_UC_PDB}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/JavaScript.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
 file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/JavaScriptCore.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
