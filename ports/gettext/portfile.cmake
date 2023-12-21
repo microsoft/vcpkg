@@ -16,22 +16,17 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
     FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 ccd43a43fab3c90ed99b3e27628c9aeb7186398153b137a4997f8c7ddfd9729b0ba9d15348567e5206af50ac027673d2b8a3415bb3fc65f87ad778f85dc03a05
+    SHA512 ad2fa2f69be996a637e9b51e8941a39e10050060245dcec1fe75c15b68d0ff973043c87b77e4e2830e407e3bdd040b578f8e24fd05bba43adb94eaee34001aa5
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        # shared with port gettext-libintl
-        android.patch
         uwp.patch
-        0003-Fix-win-unicode-paths.patch
-        # unique to port gettext
-        win-gethostname.patch
         rel_path.patch
         subdirs.patch
         parallel-gettext-tools.patch
-        macosx-libs.patch
+        config-step-order.patch
 )
 
 set(subdirs "")
@@ -45,7 +40,8 @@ if(subdirs)
     set(ENV{VCPKG_GETTEXT_SUBDIRS} "${subdirs}")
 
     vcpkg_find_acquire_program(BISON)
-    get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
+    cmake_path(GET BISON FILENAME BISON_NAME)
+    cmake_path(GET BISON PARENT_PATH BISON_PATH)
     vcpkg_add_to_path("${BISON_PATH}")
 
     if(VCPKG_HOST_IS_WINDOWS)
@@ -81,7 +77,23 @@ if(subdirs)
         --without-libncurses-prefix
         --without-libtermcap-prefix
         --without-libxcurses-prefix
+        "INTLBISON=${BISON_NAME}"
+        "TOOLS_BISON=${BISON_NAME}"
     )
+
+    if("nls" IN_LIST FEATURES)
+        vcpkg_list(APPEND options "--enable-nls")
+    else()
+        vcpkg_list(APPEND options "--disable-nls")
+    endif()
+
+    if(VCPKG_TARGET_IS_LINUX)
+        # Cannot use gettext-libintl, empty port on linux
+        set(ENV{VCPKG_INTL} intl)
+    else()
+        # Relying on gettext-libintl
+        list(APPEND OPTIONS --with-included-gettext=no)
+    endif()
     if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND OPTIONS
             # Faster, but not for export
@@ -176,6 +188,7 @@ endif()
 # We want to install these files also for fast "core" builds without "tools".
 # Cf. PACKAGING for the file list.
 file(INSTALL
+    "${SOURCE_PATH}/gettext-runtime/m4/build-to-host.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/gettext.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/iconv.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/intlmacosx.m4"

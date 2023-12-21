@@ -1,10 +1,5 @@
-# This package just verifies that the Vulkan SDK is installed.
-set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-if(DEFINED ENV{VULKAN_SDK})
-    message(STATUS "VULKAN_SDK environment variable: $ENV{VULKAN_SDK}")
-endif()
 
 set(vulkan_result_file "${CURRENT_BUILDTREES_DIR}/vulkan-${TARGET_TRIPLET}.cmake.log")
 vcpkg_cmake_configure(

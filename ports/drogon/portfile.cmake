@@ -27,6 +27,7 @@ vcpkg_check_features(
         postgres LIBPQ_BATCH_MODE
         redis    BUILD_REDIS
         sqlite3  BUILD_SQLITE
+        yaml     BUILD_YAML_CONFIG
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DROGON_SHARED)
@@ -40,7 +41,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
         -DUSE_SUBMODULE=OFF
         "-DDROGON_CTL_TOOL=${DROGON_CTL_TOOL}"
-        ${FEATURE_OPTIONS}        
+        ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_Boost
 )

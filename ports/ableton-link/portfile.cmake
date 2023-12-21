@@ -76,8 +76,8 @@ vcpkg_apply_patches(
         correct_cmake_include_directory.patch
 )
 
-file(INSTALL "${SOURCE_PATH}/AbletonLinkConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
-file(INSTALL "${SOURCE_PATH}/cmake_include/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake_include/")
+file(INSTALL "${SOURCE_PATH}/AbletonLinkConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/abletonlink")
+file(INSTALL "${SOURCE_PATH}/cmake_include/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/abletonlink/cmake_include/")
 file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include" PATTERN "CMakeLists.txt" EXCLUDE)
 
 # Handle copyright
