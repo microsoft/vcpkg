@@ -4,7 +4,6 @@
   "description": "C++20 coroutine library",
   "homepage": "https://github.com/jbaldwin/libcoro",
   "license": "Apache-2.0",
-  "supports": "!(windows & !static)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
