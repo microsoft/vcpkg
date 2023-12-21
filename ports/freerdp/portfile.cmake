@@ -63,6 +63,7 @@ vcpkg_cmake_configure(
         -DWITH_CLIENT_SDL=OFF
         -DWITH_CUPS=OFF
         -DWITH_FUSE=OFF
+        -DWITH_KRB5=OFF
         -DWITH_LIBSYSTEMD=OFF
         -DWITH_OPUS=OFF
         -DWITH_OSS=OFF
