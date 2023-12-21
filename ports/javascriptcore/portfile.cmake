@@ -1,4 +1,4 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
       OUT_SOURCE_PATH SOURCE_PATH
@@ -33,15 +33,11 @@ get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY)
 vcpkg_add_to_path("${GPERF_DIR}")
 message(STATUS "GPERF_DIR: ${GPERF_DIR}")
 
-set(ENV{CC} "clang-cl")
-set(ENV{CXX} "clang-cl")
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
       -DPORT=WinCairo
-      -DWEBKIT_LIBRARIES_DIR=${SOURCE_PATH}/WebKitLibraries/win
 )
 vcpkg_cmake_build(
   TARGET JavaScriptCore
