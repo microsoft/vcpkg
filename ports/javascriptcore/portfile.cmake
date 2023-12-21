@@ -10,6 +10,7 @@ vcpkg_from_github(
         discard_msvc_runtime_hard_code.patch
         remove_webkit_find_package.patch
         make_dependencies_optional_except_for_icu.patch
+        set_icu_root_to_vcpkg.patch
 )
 
 vcpkg_find_acquire_program(RUBY)
