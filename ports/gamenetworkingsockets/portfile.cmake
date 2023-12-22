@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
         -DBUILD_TOOLS=OFF
         -DUSE_CRYPTO=${CRYPTO_BACKEND}
         -DUSE_CRYPTO25519=${CRYPTO_BACKEND}
+        -DCMAKE_CXX_STANDARD=14 # protobuf
 )
 
 vcpkg_cmake_install()

@@ -58,6 +58,7 @@ vcpkg_from_github(
         add-tools-option.patch
         fix-build.patch
         fix-configure.patch
+        protobuf-version.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

@@ -1,0 +1,13 @@
+diff --git a/ThirdParty/protobuf/CMakeLists.txt b/ThirdParty/protobuf/CMakeLists.txt
+index 811dc3721b..acbdf7ff57 100644
+--- a/ThirdParty/protobuf/CMakeLists.txt
++++ b/ThirdParty/protobuf/CMakeLists.txt
+@@ -40,7 +40,7 @@ vtk_module_third_party(
+     STANDARD_INCLUDE_DIRS
+   EXTERNAL
+     PACKAGE Protobuf
+-    VERSION "3.4"
++    VERSION "4"
+     TARGETS protobuf::libprotobuf
+     STANDARD_INCLUDE_DIRS)
+ 
