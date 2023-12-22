@@ -14,7 +14,7 @@
       "features": [
         "vulkan"
       ],
-      "platform": "linux | osx | windows"
+      "platform": "linux | osx | (windows & !uwp)"
     },
     {
       "name": "vcpkg-cmake",

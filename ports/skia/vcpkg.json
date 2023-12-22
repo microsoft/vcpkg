@@ -57,7 +57,7 @@
     },
     {
       "name": "gl",
-      "platform": "!uwp"
+      "platform": "!(windows & arm) & !uwp"
     },
     {
       "name": "harfbuzz",
