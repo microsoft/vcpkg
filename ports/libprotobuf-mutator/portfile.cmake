@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
         -DLIB_PROTO_MUTATOR_TESTING=OFF
         -DLIB_PROTO_MUTATOR_MSVC_STATIC_RUNTIME=${STATIC_RUNTIME}
         -DPKG_CONFIG_PATH=lib/pkgconfig
+        -DCMAKE_CXX_STANDARD=14 # protobuf
 )
 
 vcpkg_cmake_install()

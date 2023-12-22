@@ -18,6 +18,7 @@ vcpkg_cmake_configure(
         -DWITH_THRIFT=ON
         -DWITH_GLOG=ON
         -DDOWNLOAD_GTEST=OFF
+        -DCMAKE_CXX_STANDARD=14 # protobuf
 )
 
 vcpkg_cmake_install()

@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DBUILD_PYTHON=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_STATIC=${ENABLE_STATIC}
+        -DCMAKE_CXX_STANDARD=14 # protobuf
 )
 
 vcpkg_cmake_install()

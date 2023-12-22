@@ -44,6 +44,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_CURL=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=TRUE
         -DINSTALL_TARGETS=shogun-static
+        -DCMAKE_CXX_STANDARD=14 # protobuf
 )
 
 vcpkg_cmake_install()
