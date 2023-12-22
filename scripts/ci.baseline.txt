@@ -990,7 +990,6 @@ rbdl-orb:x64-osx=skip
 rbdl:arm-neon-android=fail
 rbdl:arm64-android=fail
 rbdl:x64-android=fail
-realsense2:arm64-windows=fail
 replxx:arm-neon-android=fail
 replxx:arm64-android=fail
 replxx:x64-android=fail
