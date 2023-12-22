@@ -8602,7 +8602,7 @@
     },
     "treehopper": {
       "baseline": "1.11.3",
-      "port-version": 8
+      "port-version": 9
     },
     "triangle": {
       "baseline": "1.6",
