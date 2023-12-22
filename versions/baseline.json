@@ -7430,7 +7430,7 @@
     },
     "realsense2": {
       "baseline": "2.54.2",
-      "port-version": 1
+      "port-version": 2
     },
     "recast": {
       "baseline": "deprecated",
