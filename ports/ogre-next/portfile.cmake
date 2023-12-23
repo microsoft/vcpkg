@@ -1,4 +1,4 @@
-if(NOT VCPKG_TARGET_IS_WINDOWS)
+if(NOT VCPKG_TARGET_IS_IOS AND NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_WINDOWS)
     message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed on Ubuntu systems via apt-get install libxaw7-dev")
 endif()
 
@@ -11,132 +11,91 @@ vcpkg_from_github(
     PATCHES
         toolchain_fixes.patch
         avoid-name-clashes.patch
-        fix-error-c2039.patch
         fix-dependencies.patch
-        osx.patch
 )
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(OGRE_STATIC ON)
-else()
-    set(OGRE_STATIC OFF)
-endif()
+file(REMOVE
+    "${SOURCE_PATH}/CMake/Packages/FindFreeImage.cmake"
+    "${SOURCE_PATH}/CMake/Packages/FindFreetype.cmake"
+    "${SOURCE_PATH}/CMake/Packages/FindRapidjson.cmake"
+    "${SOURCE_PATH}/CMake/Packages/FindVulkan.cmake"
+    "${SOURCE_PATH}/CMake/Packages/FindZLIB.cmake"
+    "${SOURCE_PATH}/CMake/Packages/FindZZip.cmake"
+)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        d3d11               OGRE_BUILD_RENDERSYSTEM_DirectX11
+        d3d11               CMAKE_REQUIRE_FIND_PACKAGE_DirectX11
+        gl3plus             OGRE_BUILD_RENDERSYSTEM_GL3PLUS
+        gl3plus             CMAKE_REQUIRE_FIND_PACKAGE_OpenGL
+        metal               OGRE_BUILD_RENDERSYSTEM_METAL
         planar-reflections  OGRE_BUILD_COMPONENT_PLANAR_REFLECTIONS
+        vulkan              OGRE_BUILD_RENDERSYSTEM_VULKAN
+        vulkan              CMAKE_REQUIRE_FIND_PACKAGE_Vulkan
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OGRE_STATIC)
+
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DCMAKE_CXX_STANDARD=11
+        -DCMAKE_DISABLE_FIND_PACKAGE_AMDAGS=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_CppUnit=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_GLSLOptimizer=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_HLSL2GLSL=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenVR=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_POCO=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Remotery=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_RenderDoc=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_SDL2=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Softimage=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_TBB=ON
+        -DCMAKE_POLICY_DEFAULT_CMP0072=NEW # Prefer GLVND
+        -DOGRE_ARCHIVE_OUTPUT=lib
+        -DOGRE_LIBRARY_OUTPUT=lib
         -DOGRE_BUILD_LIBS_AS_FRAMEWORKS=OFF
-        -DOGRE_COPY_DEPENDENCIES=OFF
+        -DOGRE_BUILD_MSVC_MP=ON
+        -DOGRE_BUILD_MSVC_ZM=ON
+        -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
+        -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
         -DOGRE_BUILD_SAMPLES2=OFF
         -DOGRE_BUILD_TESTS=OFF
         -DOGRE_BUILD_TOOLS=OFF
-        -DOGRE_BUILD_MSVC_MP=ON
-        -DOGRE_BUILD_MSVC_ZM=ON
+        -DOGRE_COPY_DEPENDENCIES=OFF
         -DOGRE_INSTALL_DEPENDENCIES=OFF
         -DOGRE_INSTALL_DOCS=OFF
         -DOGRE_INSTALL_PDB=OFF
         -DOGRE_INSTALL_SAMPLES=OFF
         -DOGRE_INSTALL_TOOLS=OFF
         -DOGRE_INSTALL_VSPROPS=OFF
+        -DOGRE_SKIP_BOOST_SEARCHING=ON
         -DOGRE_STATIC=${OGRE_STATIC}
-        -DOGRE_CONFIG_THREAD_PROVIDER=std
-        -DOGRE_BUILD_RENDERSYSTEM_D3D11=ON
-        -DOGRE_BUILD_RENDERSYSTEM_GL=ON
-        -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON
-        -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
-        -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
-        -DOGRE_CMAKE_DIR=share/ogre-next
         -DOGRE_USE_NEW_PROJECT_NAME=ON
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_AMDAGS
+        CMAKE_REQUIRE_FIND_PACKAGE_DirectX11
+        OGRE_BUILD_MSVC_MP
+        OGRE_BUILD_MSVC_ZM
+        OGRE_BUILD_RENDERSYSTEM_DirectX11
+        OGRE_COPY_DEPENDENCIES
+        OGRE_INSTALL_DEPENDENCIES
+        OGRE_INSTALL_VSPROPS
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup()
-
-file(GLOB REL_CFGS "${CURRENT_PACKAGES_DIR}/bin/*.cfg")
-if(REL_CFGS)
-  file(COPY ${REL_CFGS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  file(REMOVE ${REL_CFGS})
+if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
+    vcpkg_fixup_pkgconfig()
 endif()
-
-file(GLOB DBG_CFGS "${CURRENT_PACKAGES_DIR}/debug/bin/*.cfg")
-if(DBG_CFGS)
-  file(COPY ${DBG_CFGS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-  file(REMOVE ${DBG_CFGS})
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-#Remove OgreNextMain*.lib from lib/ folder, because autolink would complain, since it defines a main symbol
-#manual-link subfolder is here to the rescue!
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/release/OgreNextMain.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreNextMain.lib")
-        else()
-            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/release/OgreNextMainStatic.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/OgreNextMainStatic.lib")
-        endif()
-        file(GLOB LIBS "${CURRENT_PACKAGES_DIR}/lib/release/*")
-        file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/bin/release/*")
-        file(COPY ${LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-        file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/release/" "${CURRENT_PACKAGES_DIR}/bin/release/")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/debug/OgreNextMain_d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreNextMain_d.lib")
-        else()
-            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/debug/OgreNextMainStatic_d.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/OgreNextMainStatic_d.lib")
-        endif()
-        file(GLOB LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/debug/*")
-        file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/debug/bin/debug/*")
-        file(COPY ${LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-        file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/debug/" "${CURRENT_PACKAGES_DIR}/debug/bin/debug/")
-    endif()
-
-    file(GLOB SHARE_FILES "${CURRENT_PACKAGES_DIR}/share/ogre-next/*.cmake")
-    foreach(SHARE_FILE ${SHARE_FILES})
-        file(READ "${SHARE_FILE}" _contents)
-        string(REPLACE "lib/OgreNextMain" "lib/manual-link/OgreNextMain" _contents "${_contents}")
-        file(WRITE "${SHARE_FILE}" "${_contents}")
-    endforeach()
-endif()
-
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(VCPKG_TARGET_IS_OSX)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/")
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Release")
-        file(GLOB LIBS "${CURRENT_PACKAGES_DIR}/lib/release/*")
-        file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/bin/release/*")
-        file(COPY ${LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-        file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/release/" "${CURRENT_PACKAGES_DIR}/bin/release/")
-    endif()
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "Debug")
-        file(GLOB LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/debug/*")
-        file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/debug/bin/debug/*")
-        file(COPY ${LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-        file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/debug/" "${CURRENT_PACKAGES_DIR}/debug/bin/debug/")
-    endif() 
-endif()
-
-vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
