@@ -1,0 +1,3 @@
+firebird provides CMake targets:
+    find_package(firebird CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE firebird)
