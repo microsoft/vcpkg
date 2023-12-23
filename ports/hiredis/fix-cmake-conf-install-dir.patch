@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index fca0ee8..b67888e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -134,7 +134,7 @@ export(EXPORT hiredis-targets
+@@ -125,7 +127,7 @@ export(EXPORT hiredis-targets
  if(WIN32)
      SET(CMAKE_CONF_INSTALL_DIR share/hiredis)
  else()
@@ -11,7 +11,7 @@ index fca0ee8..b67888e 100644
  endif()
  SET(INCLUDE_INSTALL_DIR include)
  include(CMakePackageConfigHelpers)
-@@ -216,7 +216,7 @@ IF(ENABLE_SSL)
+@@ -200,7 +204,7 @@ IF(ENABLE_SSL)
      if(WIN32)
          SET(CMAKE_CONF_INSTALL_DIR share/hiredis_ssl)
      else()

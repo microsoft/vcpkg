@@ -1,55 +1,22 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3d52d0c..d175f0a 100644
+index b7d6ee8..8cf6c4d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -44,14 +44,13 @@ IF(WIN32)
-     ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -DWIN32_LEAN_AND_MEAN)
- ENDIF()
+@@ -45,6 +45,8 @@ ENDIF()
  
--ADD_LIBRARY(hiredis SHARED ${hiredis_sources})
-+ADD_LIBRARY(hiredis ${hiredis_sources})
- ADD_LIBRARY(hiredis_static STATIC ${hiredis_sources})
-+SET_TARGET_PROPERTIES(hiredis_static PROPERTIES EXCLUDE_FROM_ALL TRUE)
+ ADD_LIBRARY(hiredis ${hiredis_sources})
  ADD_LIBRARY(hiredis::hiredis ALIAS hiredis)
- ADD_LIBRARY(hiredis::hiredis_static ALIAS hiredis_static)
++ADD_LIBRARY(hiredis_static STATIC ${hiredis_sources})
++SET_TARGET_PROPERTIES(hiredis_static PROPERTIES EXCLUDE_FROM_ALL TRUE)
+ set(hiredis_export_name hiredis CACHE STRING "Name of the exported target")
+ set_target_properties(hiredis PROPERTIES EXPORT_NAME ${hiredis_export_name})
  
- IF(NOT MSVC)
--    SET_TARGET_PROPERTIES(hiredis_static
--        PROPERTIES OUTPUT_NAME hiredis)
- ENDIF()
- 
- SET_TARGET_PROPERTIES(hiredis
-@@ -103,7 +102,7 @@ set(CPACK_RPM_PACKAGE_AUTOREQPROV ON)
- 
- include(CPack)
- 
--INSTALL(TARGETS hiredis hiredis_static
-+INSTALL(TARGETS hiredis
-     EXPORT hiredis-targets
-     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -161,13 +160,12 @@ IF(ENABLE_SSL)
-     FIND_PACKAGE(OpenSSL REQUIRED)
-     SET(hiredis_ssl_sources
+@@ -156,6 +158,8 @@ IF(ENABLE_SSL)
          ssl.c)
--    ADD_LIBRARY(hiredis_ssl SHARED
-+    ADD_LIBRARY(hiredis_ssl
-             ${hiredis_ssl_sources})
-     ADD_LIBRARY(hiredis_ssl_static STATIC
-             ${hiredis_ssl_sources})
+     ADD_LIBRARY(hiredis_ssl ${hiredis_ssl_sources})
+     ADD_LIBRARY(hiredis::hiredis_ssl ALIAS hiredis_ssl)
++    ADD_LIBRARY(hiredis_ssl_static STATIC ${hiredis_ssl_sources})
 +    SET_TARGET_PROPERTIES(hiredis_ssl_static PROPERTIES EXCLUDE_FROM_ALL TRUE)
-     IF(NOT MSVC)
--        SET_TARGET_PROPERTIES(hiredis_ssl_static
--            PROPERTIES OUTPUT_NAME hiredis_ssl)
-     ENDIF()
  
-     IF (APPLE)
-@@ -193,7 +191,7 @@ IF(ENABLE_SSL)
-     ENDIF()
-     CONFIGURE_FILE(hiredis_ssl.pc.in hiredis_ssl.pc @ONLY)
- 
--    INSTALL(TARGETS hiredis_ssl hiredis_ssl_static
-+    INSTALL(TARGETS hiredis_ssl
-         EXPORT hiredis_ssl-targets
-         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     IF (APPLE AND BUILD_SHARED_LIBS)
+         SET_PROPERTY(TARGET hiredis_ssl PROPERTY LINK_FLAGS "-Wl,-undefined -Wl,dynamic_lookup")

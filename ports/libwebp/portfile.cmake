@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libwebp
     REF "v${VERSION}"
-    SHA512 96f73ba6caee4e65535721ca80faa976f51930eb6693e4499593e896f15269dfb756defabe7afbefb3bd2ef90afc0c95e3ba49d8020bc18589c34e9e680d955a
+    SHA512 2faa1bee1b73ded2b1460fc50a5973a37eefdc7b88d6a013491ba1c921d61413a653d44a953e8f6a3161ca6183f57ca9fe3be0f0a72b480895a299429a500dcf
     HEAD_REF master
     PATCHES
         0002-cmake-config.patch
-        0007-fix-arm-build.patch
+        0003-simd.patch
         0008-sdl.patch
         0010-fix_build.patch
+        0011-fix-include.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -72,4 +73,4 @@ if(NOT BIN_NAMES STREQUAL "")
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/COPYING ${SOURCE_PATH}/PATENTS)

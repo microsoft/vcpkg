@@ -1,7 +1,7 @@
 {
   "name": "qt5-base",
-  "version": "5.15.10",
-  "port-version": 2,
+  "version": "5.15.11",
+  "port-version": 1,
   "description": "Qt5 Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,

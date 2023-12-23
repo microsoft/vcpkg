@@ -1,7 +1,6 @@
 {
   "name": "boinc",
-  "version": "7.22.2",
-  "port-version": 1,
+  "version": "7.24.1",
   "description": "Open-source software for volunteer computing and grid computing.",
   "homepage": "https://boinc.berkeley.edu/",
   "license": "LGPL-3.0-or-later",

@@ -1,8 +1,13 @@
+string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" _c_ares_version "${VERSION}")
+set(_c_ares_version_major "${CMAKE_MATCH_1}")
+set(_c_ares_version_minor "${CMAKE_MATCH_2}")
+set(_c_ares_version_patch "${CMAKE_MATCH_3}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
-    REF cares-1_19_0
-    SHA512 d6bd7183b9ddf418222357ca61e3ffe0a3e49cbd5d83046bb76146e23bb578b5c7e4a5d89e1c427e7163880323de8ee0962ba75c571102efdf8c0b5742e28f82
+    REF "cares-${_c_ares_version_major}_${_c_ares_version_minor}_${_c_ares_version_patch}"
+    SHA512 73b5ee9d7e5ada6dd95dc32606821ea1307f30552242491e738f673d1ab9de1fdb3360d7a67c66a4a801b0e81ffb7382bfd93dbca836460dae515dd631ec6b91
     HEAD_REF main
     PATCHES
         avoid-docs.patch

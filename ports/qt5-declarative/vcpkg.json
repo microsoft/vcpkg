@@ -1,6 +1,6 @@
 {
   "name": "qt5-declarative",
-  "version": "5.15.10",
+  "version": "5.15.11",
   "description": "Qt5 Declarative (Quick 2) Module. Includes QtQuick, QtQuickParticles, QtQuickWidgets, QtQml, and QtPacketProtocol.",
   "license": null,
   "dependencies": [
@@ -17,7 +17,7 @@
   "features": {
     "d3d12": {
       "description": "Provides a Direct3D 12 backend for the scenegraph.",
-      "supports": "windows"
+      "supports": "windows & !mingw"
     },
     "platform-default-features": {
       "description": "Enable platform-dependent default features",
@@ -27,7 +27,7 @@
           "features": [
             "d3d12"
           ],
-          "platform": "windows"
+          "platform": "windows & !mingw"
         }
       ]
     }

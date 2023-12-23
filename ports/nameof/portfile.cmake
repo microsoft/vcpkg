@@ -1,12 +1,12 @@
-# header-only library
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Neargye/nameof
-    REF v0.10.2
-    SHA512 1ec508378d12eb4a65da1bee8011302f65e78bbcab82aae716afc673665af5283a5aae5f1d0de85c7d6f59bb7268e02fc01b171f50de26bb86dc27c3b46097fa
+    REF "v${VERSION}"
+    SHA512 2b0bad2a3309202bcd6e361c2f2d4a61b474359a6c2df0a8b9e1a6c9e077bbf0c0d18dc5b603ecb4f82cc1f74656aae51e52ece0f7049ac3f75b593f14542b93
     HEAD_REF master
 )
+
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -20,7 +20,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-# Handle copyright
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -1,6 +1,7 @@
 {
   "name": "lunasvg",
-  "version": "2.3.1",
+  "version": "2.3.8",
+  "port-version": 1,
   "description": "lunasvg is a standalone SVG rendering library in C++",
   "homepage": "https://github.com/sammycage/lunasvg",
   "license": "MIT",

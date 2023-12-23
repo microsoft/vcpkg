@@ -6,10 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
     REF "${VERSION}"
-    SHA512 1744106d76eafd0786b99b517707afdd22b7b5cb3dfd7f0af02954539715c981ff0f12d142ee103113ba38dac8476052d6880b81d4c8050de650bf1cee6ba06c
+    SHA512 c04ae68ac4ecf85243c54feb4233e282cd420522588fd4b3eaa87619cb236a575052e3667a806c2f56de06dc013b88926c2dbea4cb4ee02f0119c032598169f2
     PATCHES
         ${tesseract_patch}
         fix_static_link_icu.patch
+        fix-link-include-path.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -28,6 +29,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
         -DLeptonica_DIR=YES
         -DSW_BUILD=OFF
+        -DLEPT_TIFF_RESULT=ON
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_OpenCL
 )
@@ -56,9 +58,6 @@ if("training-tools" IN_LIST FEATURES)
         wordlist2dawg combine_lang_model lstmeval lstmtraining
         set_unicharset_properties unicharset_extractor merge_unicharsets
         )
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        list(APPEND TRAINING_TOOLS text2image)
-    endif()
     vcpkg_copy_tools(TOOL_NAMES ${TRAINING_TOOLS} AUTO_CLEAN)
 endif()
 
@@ -104,4 +103,4 @@ file(GLOB WORDREC_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/wordre
 file(INSTALL ${WORDREC_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/wordrec")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

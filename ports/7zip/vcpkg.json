@@ -1,6 +1,6 @@
 {
   "name": "7zip",
-  "version-string": "22.01",
+  "version-string": "23.01",
   "port-version": 1,
   "description": "Library for archiving file with a high compression ratio.",
   "homepage": "https://www.7-zip.org",

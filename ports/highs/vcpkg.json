@@ -1,6 +1,7 @@
 {
   "name": "highs",
-  "version": "1.5.1",
+  "version": "1.6.0",
+  "port-version": 1,
   "description": "High performance library to solve linear, mixed-integer, and convex quadratic optimization problems.",
   "homepage": "https://highs.dev",
   "license": "MIT",

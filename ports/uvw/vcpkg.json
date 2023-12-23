@@ -1,7 +1,6 @@
 {
   "name": "uvw",
-  "version": "3.0.0",
-  "port-version": 1,
+  "version": "3.2.0",
   "description": "A compilable static library, event based, tiny and easy to use libuv wrapper in modern C++.",
   "homepage": "https://github.com/skypjack/uvw",
   "license": "MIT",

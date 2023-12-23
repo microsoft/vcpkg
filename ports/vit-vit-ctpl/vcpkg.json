@@ -1,0 +1,25 @@
+{
+  "name": "vit-vit-ctpl",
+  "version": "0.0.2",
+  "description": "Modern and efficient C++ Thread Pool Library",
+  "homepage": "https://github.com/vit-vit/ctpl",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "lockfree": {
+      "description": "Depends on Boost Lockfree Queue library",
+      "dependencies": [
+        "boost-lockfree"
+      ]
+    }
+  }
+}
