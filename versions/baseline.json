@@ -2934,7 +2934,7 @@
     },
     "gettext": {
       "baseline": "0.22.4",
-      "port-version": 0
+      "port-version": 1
     },
     "gettext-libintl": {
       "baseline": "0.22.4",
