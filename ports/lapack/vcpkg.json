@@ -11,7 +11,7 @@
     },
     {
       "name": "lapack-reference",
-      "platform": "!((arm & windows) | uwp)"
+      "platform": "!((arm & windows) | uwp | osx)"
     },
     {
       "name": "vcpkg-cmake",
