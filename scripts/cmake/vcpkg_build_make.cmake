@@ -103,9 +103,6 @@ function(vcpkg_build_make)
             endforeach()
             unset(lib_env_vars)
 
-            # VCPKG_ABI_FLAGS isn't standard, but can be useful to reinject these flags into other variables
-            set(ENV{VCPKG_ABI_FLAGS} "${ABIFLAGS_${current_buildtype}}")
-
             if(LINK_ENV_${cmake_buildtype})
                 set(config_link_backup "$ENV{_LINK_}")
                 set(ENV{_LINK_} "${LINK_ENV_${cmake_buildtype}}")
