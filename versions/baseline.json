@@ -2930,7 +2930,7 @@
     },
     "gamenetworkingsockets": {
       "baseline": "1.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "games101-cgl": {
       "baseline": "0.1.0",
@@ -3566,15 +3566,15 @@
     },
     "ignition-transport4": {
       "baseline": "4.0.0",
-      "port-version": 6
+      "port-version": 7
     },
     "ignition-transport8": {
       "baseline": "8.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "ignition-transport9": {
       "baseline": "9.0.0",
-      "port-version": 4
+      "port-version": 5
     },
     "ignition-utils1": {
       "baseline": "1.5.1",
@@ -4806,7 +4806,7 @@
     },
     "libosmscout": {
       "baseline": "1.1.1",
-      "port-version": 4
+      "port-version": 5
     },
     "libp7-baical": {
       "baseline": "replaced",

@@ -1,13 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2eeb011..9014d27 100644
+index 2eeb011..e8ffcc9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -39,7 +39,7 @@ else()
+@@ -39,7 +39,6 @@ else()
    set(PROTOBUF_PURPOSE)
  endif()
  ign_find_package(IgnProtobuf
 -                 VERSION ${REQ_PROTOBUF_VER}
-+                 VERSION 4
                   PKGCONFIG protobuf
                   PKGCONFIG_VER_COMPARISON >=
                   REQUIRED
