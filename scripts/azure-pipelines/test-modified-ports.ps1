@@ -127,6 +127,16 @@ if ($IsWindows)
     rmdir empty
 }
 
+if ($IsLinuxHost)
+{
+    Write-Host "Downloading Android NDK r26b"
+    & "./vcpkg" x-download android-ndk-r26b-linux.zip "--sha512=233e0b34c946a1ba60022809536307613ed956a4d596b3f43dc75e752b9d973f7c07f03a404a72a893629b86d8046664b9020920b3a6c64f68e223c5da109ec5" "--url=https://dl.google.com/android/repository/android-ndk-r26b-linux.zip" @cachingArgs
+    Write-Host "Unpacking"
+    & unzip -q android-ndk-r26b-linux.zip
+    $env:ANDROID_NDK_HOME = Join-Path $Pwd "android-ndk-r26b"
+    $NoParentHashes = $true
+}
+
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
 if ($LASTEXITCODE -ne 0)
 {
