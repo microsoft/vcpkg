@@ -26,6 +26,6 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" [[
 This is a stub package. Copyright and license information
-is provided with those separate packages.
+is provided with Vulkan headers and loader.
 For Android, the loader is provided by the NDK.
 ]])
