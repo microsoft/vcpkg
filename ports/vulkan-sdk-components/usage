@@ -1,4 +1,4 @@
-vulkan-sdk is compatible with built-in CMake targets:
+vulkan-sdk-components is compatible with built-in CMake targets:
 
     # https://cmake.org/cmake/help/latest/module/FindVulkan.html
     find_package(Vulkan REQUIRED)
@@ -7,5 +7,6 @@ vulkan-sdk is compatible with built-in CMake targets:
     # DirectX Shader Compiler
     target_link_libraries(main PRIVATE Vulkan::dxc)
 
-The vulkan-sdk package does not provide direct Visual Studio integration.
-For manual integration, add $(VULKAN_SDK)/include to your include path.
+The vulkan-sdk-components package does not provide direct Visual Studio
+integration. For manual integration, add $(VULKAN_SDK)/include to your
+include path.
