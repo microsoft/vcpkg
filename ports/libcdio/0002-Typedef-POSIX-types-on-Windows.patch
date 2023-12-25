@@ -1,0 +1,29 @@
+From 8bb33b139f2d9af63d496073211b215fed721221 Mon Sep 17 00:00:00 2001
+From: Sandy Carter <bwrsandman@gmail.com>
+Date: Mon, 25 Dec 2023 07:36:31 -0500
+Subject: [PATCH] Typedef POSIX types on Windows
+
+---
+ include/cdio/types.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/include/cdio/types.h b/include/cdio/types.h
+index 98329cbc..383cf1e2 100644
+--- a/include/cdio/types.h
++++ b/include/cdio/types.h
+@@ -55,6 +55,12 @@ typedef uint8_t ubyte;
+ typedef int mode_t;
+ #include <BaseTsd.h>
+ typedef SSIZE_T ssize_t;
++#ifdef _WIN64
++typedef LONGLONG off_t;
++#else
++typedef LONG off_t;
++#endif
++typedef LONGLONG off64_t;
+ #endif
+ 
+   /* default HP/UX macros are broken */
+-- 
+2.39.3 (Apple Git-145)
+
