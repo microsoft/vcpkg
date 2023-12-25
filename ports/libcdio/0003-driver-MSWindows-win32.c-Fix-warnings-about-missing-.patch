@@ -1,0 +1,28 @@
+From d904f45ac5e8d3d6007a2a30cb7087a990df18bc Mon Sep 17 00:00:00 2001
+From: Matt Oliver <protogonoi@gmail.com>
+Date: Sun, 23 Oct 2016 17:45:14 +1100
+Subject: [PATCH 3/5] driver/MSWindows/win32.c: Fix warnings about missing
+ functions.
+
+---
+ lib/driver/MSWindows/win32.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/lib/driver/MSWindows/win32.c b/lib/driver/MSWindows/win32.c
+index 5d5fa28d..9b4ae2dd 100644
+--- a/lib/driver/MSWindows/win32.c
++++ b/lib/driver/MSWindows/win32.c
+@@ -74,9 +74,8 @@
+ 
+ #if defined (_MSC_VER) || defined (_XBOX)
+ #undef IN
+-#else
+-#include "aspi32.h"
+ #endif
++#include "aspi32.h"
+ 
+ #ifdef _XBOX
+ #include "stdint.h"
+-- 
+2.39.3 (Apple Git-145)
+

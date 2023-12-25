@@ -1,0 +1,63 @@
+From 2bd757ee75a61698b2e2909cfda2c6e5d55c38a8 Mon Sep 17 00:00:00 2001
+From: Matthew Oliver <protogonoi@gmail.com>
+Date: Sat, 2 Aug 2014 11:54:35 +1000
+Subject: [PATCH 1/5] Fix compatibility with windows.h.
+
+---
+ lib/driver/MSWindows/aspi32.c      | 1 +
+ lib/driver/MSWindows/win32.c       | 1 +
+ lib/driver/MSWindows/win32_ioctl.c | 1 +
+ lib/driver/image/bincue.c          | 1 +
+ 4 files changed, 4 insertions(+)
+
+diff --git a/lib/driver/MSWindows/aspi32.c b/lib/driver/MSWindows/aspi32.c
+index 20ec8c36..037b5983 100644
+--- a/lib/driver/MSWindows/aspi32.c
++++ b/lib/driver/MSWindows/aspi32.c
+@@ -44,6 +44,7 @@
+ #include <unistd.h>
+ #include <fcntl.h>
+ 
++#undef IN
+ #include <windows.h>
+ #include "win32.h"
+ 
+diff --git a/lib/driver/MSWindows/win32.c b/lib/driver/MSWindows/win32.c
+index 6d931514..5d5fa28d 100644
+--- a/lib/driver/MSWindows/win32.c
++++ b/lib/driver/MSWindows/win32.c
+@@ -59,6 +59,7 @@
+ #include <fcntl.h>
+ #endif
+ 
++#undef IN
+ #include <windows.h>
+ #include <winioctl.h>
+ #include "win32.h"
+diff --git a/lib/driver/MSWindows/win32_ioctl.c b/lib/driver/MSWindows/win32_ioctl.c
+index ea65bae6..f91b0417 100644
+--- a/lib/driver/MSWindows/win32_ioctl.c
++++ b/lib/driver/MSWindows/win32_ioctl.c
+@@ -34,6 +34,7 @@
+ # if defined (__MINGW64_VERSION_MAJOR)
+ #  define _NTSRB_ /* Bad things happen if srb.h gets included */
+ # endif
++# undef IN
+ # include <windows.h>
+ # ifdef HAVE_DDK_SCSI_H
+ #  include <ddk/scsi.h>
+diff --git a/lib/driver/image/bincue.c b/lib/driver/image/bincue.c
+index d329cdc9..74da61a9 100644
+--- a/lib/driver/image/bincue.c
++++ b/lib/driver/image/bincue.c
+@@ -58,6 +58,7 @@
+ #define PRId64 "lld"
+ #endif
+ #ifdef HAVE_WINDOWS_H
++#undef IN
+ #include <windows.h>
+ #endif
+ 
+-- 
+2.39.3 (Apple Git-145)
+

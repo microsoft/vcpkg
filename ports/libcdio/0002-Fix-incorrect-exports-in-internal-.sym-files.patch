@@ -1,0 +1,77 @@
+From 85b71866c50160a1e7b56675d607b57ec433eb97 Mon Sep 17 00:00:00 2001
+From: Matthew Oliver <protogonoi@gmail.com>
+Date: Fri, 3 Oct 2014 18:11:34 +1000
+Subject: [PATCH 2/5] Fix incorrect exports in internal .sym files.
+
+The sym files are now used to generate module exports for VS projects.
+---
+ lib/driver/libcdio.sym     | 4 ++--
+ lib/iso9660/libiso9660.sym | 1 -
+ lib/udf/libudf.sym         | 5 ++---
+ 3 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/lib/driver/libcdio.sym b/lib/driver/libcdio.sym
+index 9143ccf5..2685e49a 100644
+--- a/lib/driver/libcdio.sym
++++ b/lib/driver/libcdio.sym
+@@ -171,7 +171,6 @@ cdio_read_sectors
+ cdio_realpath
+ cdio_set_arg
+ cdio_set_blocksize
+-cdio_set_drive_speed
+ cdio_set_speed
+ cdio_stdio_destroy
+ cdio_stdio_new
+@@ -224,7 +223,7 @@ mmc_get_drive_mmc_cap
+ mmc_get_dvd_struct_physical
+ mmc_get_event_status
+ mmc_get_hwinfo
+-mmc_get_last_lsn
++mmc_get_disc_last_lsn
+ mmc_get_mcn
+ mmc_get_media_changed
+ mmc_get_track_isrc
+@@ -252,6 +251,7 @@ mmc_run_cmd
+ mmc_run_cmd_len
+ mmc_sense_key2str
+ mmc_set_blocksize
++mmc_set_drive_speed
+ mmc_set_speed
+ mmc_start_stop_unit
+ mmc_test_unit_ready
+diff --git a/lib/iso9660/libiso9660.sym b/lib/iso9660/libiso9660.sym
+index e2281eb3..3911296f 100644
+--- a/lib/iso9660/libiso9660.sym
++++ b/lib/iso9660/libiso9660.sym
+@@ -18,7 +18,6 @@ iso9660_dirname_valid_p
+ iso9660_filelist_new
+ iso9660_filelist_free
+ iso9660_find_fs_lsn
+-iso9660_fs_find_lsn
+ iso9660_fs_find_lsn_with_path
+ iso9660_fs_read_pvd
+ iso9660_fs_read_superblock
+diff --git a/lib/udf/libudf.sym b/lib/udf/libudf.sym
+index 5e964693..ccffe111 100644
+--- a/lib/udf/libudf.sym
++++ b/lib/udf/libudf.sym
+@@ -1,9 +1,9 @@
+-debug_ecma_167_enums1
++debug_ecma_167_enum1
+ debug_ecma_167_timezone_enum
+ debug_file_characteristics
+ debug_icbtag_file_type_enum
+ debug_tagid
+-debug_udf_enums1
++debug_udf_enum1
+ debug_udf_time_enum
+ VSD_STD_ID_BEA01
+ VSD_STD_ID_BOOT2
+@@ -27,4 +27,3 @@ udf_is_dir
+ udf_open
+ udf_read_sectors
+ udf_stamp_to_time
+-udf_time_to_stamp
+-- 
+2.39.3 (Apple Git-145)
+

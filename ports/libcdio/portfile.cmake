@@ -8,8 +8,12 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+    0001-Fix-compatibility-with-windows.h.patch
+    0002-Fix-incorrect-exports-in-internal-.sym-files.patch
+    0003-driver-MSWindows-win32.c-Fix-warnings-about-missing-.patch
+    0004-libcdio.sym-Correct-for-changes-in-1.0.0-release.patch
+    0005-Improve-msvc-compilation.patch
     0001-Remove-doc-from-config-and-make.patch
-    0002-Typedef-POSIX-types-on-Windows.patch
     0003-Fix-free-while-still-in-use-in-iso9660.hpp.patch
     0004-src-cdda-player.c-always-use-s-style-format-for-prin.patch
 )

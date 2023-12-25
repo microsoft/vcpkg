@@ -1,0 +1,64 @@
+From e4c53fa66725e92debd2d5bea340332aaf61870e Mon Sep 17 00:00:00 2001
+From: Matt Oliver <protogonoi@gmail.com>
+Date: Sun, 17 Dec 2017 19:18:56 +1100
+Subject: [PATCH 4/5] libcdio.sym: Correct for changes in 1.0.0 release.
+
+---
+ lib/driver/libcdio.sym | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/lib/driver/libcdio.sym b/lib/driver/libcdio.sym
+index 2685e49a..df3522b4 100644
+--- a/lib/driver/libcdio.sym
++++ b/lib/driver/libcdio.sym
+@@ -48,7 +48,6 @@ cdio_get_cdtext
+ cdio_get_cdtext_raw
+ cdio_get_default_device
+ cdio_get_default_device_bincue
+-cdio_get_default_device_bsdi
+ cdio_get_default_device_cdrdao
+ cdio_get_default_device_driver
+ cdio_get_default_device_freebsd
+@@ -59,7 +58,6 @@ cdio_get_default_device_solaris
+ cdio_get_default_device_win32
+ cdio_get_devices
+ cdio_get_devices_bincue
+-cdio_get_devices_bsdi
+ cdio_get_devices_cdrdao
+ cdio_get_devices_freebsd
+ cdio_get_devices_linux
+@@ -101,7 +99,6 @@ cdio_get_track_sec_count
+ cdio_guess_cd_type
+ cdio_have_atapi
+ cdio_have_bincue
+-cdio_have_bsdi
+ cdio_have_cdrdao
+ cdio_have_driver
+ cdio_have_freebsd
+@@ -135,7 +132,6 @@ cdio_msf_to_str
+ cdio_open
+ cdio_open_am
+ cdio_open_am_bincue
+-cdio_open_am_bsdi
+ cdio_open_am_cd
+ cdio_open_am_cdrdao
+ cdio_open_am_freebsd
+@@ -146,7 +142,6 @@ cdio_open_am_osx
+ cdio_open_am_solaris
+ cdio_open_am_win32
+ cdio_open_bincue
+-cdio_open_bsdi
+ cdio_open_cd
+ cdio_open_cdrdao
+ cdio_open_cue
+@@ -235,7 +230,6 @@ mmc_is_disctype_cdrom
+ mmc_is_disctype_dvd
+ mmc_is_disctype_hd_dvd
+ mmc_is_disctype_overwritable
+-mmc_isrc_track_read_subchannel
+ mmc_last_cmd_sense
+ mmc_mode_select_10
+ mmc_mode_sense
+-- 
+2.39.3 (Apple Git-145)
+

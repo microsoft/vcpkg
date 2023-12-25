@@ -1,0 +1,542 @@
+From 6a612f1fc45af81e17ee1c78dbaf215f16783156 Mon Sep 17 00:00:00 2001
+From: Matt Oliver <protogonoi@gmail.com>
+Date: Tue, 9 Oct 2018 19:52:03 +1100
+Subject: [PATCH 5/5] Improve msvc compilation.
+
+---
+ include/cdio/types.h               |  9 ++++-----
+ lib/driver/MSWindows/aspi32.c      | 18 ++++++++++--------
+ lib/driver/MSWindows/aspi32.h      | 14 +++++++-------
+ lib/driver/MSWindows/win32.c       | 26 +++++++++++++++++---------
+ lib/driver/MSWindows/win32.h       | 14 +++++++-------
+ lib/driver/MSWindows/win32_ioctl.c | 20 ++++++++++----------
+ lib/driver/_cdio_generic.c         |  7 ++++---
+ lib/driver/cdio_private.h          | 18 ++++++++++--------
+ lib/driver/image/cdrdao.c          |  2 +-
+ lib/driver/image_common.h          |  5 +++--
+ 10 files changed, 73 insertions(+), 60 deletions(-)
+
+diff --git a/include/cdio/types.h b/include/cdio/types.h
+index fd735786..98329cbc 100644
+--- a/include/cdio/types.h
++++ b/include/cdio/types.h
+@@ -50,12 +50,11 @@ typedef u_int64_t uint64_t;
+ 
+ typedef uint8_t ubyte;
+ 
+-/* MSVC does not define mode_t and ssize_t by default. The way
+-   to compensate for missing UNIX types is to include a custom
+-   unistd.h that defines them. Such a file is provided with
+-   the libcdio source, in the MSVC/missing directory */
++/* MSVC does not define mode_t and ssize_t by default. */
+ #if defined(_MSC_VER)
+-#include <unistd.h>
++typedef int mode_t;
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
+ #endif
+ 
+   /* default HP/UX macros are broken */
+diff --git a/lib/driver/MSWindows/aspi32.c b/lib/driver/MSWindows/aspi32.c
+index 037b5983..726d6204 100644
+--- a/lib/driver/MSWindows/aspi32.c
++++ b/lib/driver/MSWindows/aspi32.c
+@@ -41,7 +41,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <errno.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <fcntl.h>
+ 
+ #undef IN
+@@ -137,7 +139,7 @@ mciSendCommand_aspi(int id, UINT msg, DWORD flags, void *arg)
+   if ( mci_error ) {
+     char error[256];
+ 
+-    mciGetErrorString(mci_error, error, 256);
++    mciGetErrorStringA(mci_error, error, 256);
+     cdio_warn("mciSendCommand() error: %s", error);
+   }
+   return(mci_error == 0);
+@@ -153,7 +155,7 @@ have_aspi( HMODULE *hASPI,
+            long (**lpSendCommand)( void* ) )
+ {
+   /* check if aspi is available */
+-  *hASPI = LoadLibrary( "wnaspi32.dll" );
++  *hASPI = LoadLibraryW( L"wnaspi32.dll" );
+ 
+   if( *hASPI == NULL ) {
+     cdio_warn("Unable to load ASPI DLL");
+@@ -487,7 +489,7 @@ init_aspi (_img_private_t *env)
+ 
+   We return 0 if command completed successfully.
+  */
+-int
++driver_return_code_t
+ run_mmc_cmd_aspi( void *p_user_data, unsigned int i_timeout_ms,
+                   unsigned int i_cdb, const mmc_cdb_t * p_cdb,
+                   cdio_mmc_direction_t e_direction,
+@@ -559,7 +561,7 @@ run_mmc_cmd_aspi( void *p_user_data, unsigned int i_timeout_ms,
+    Reads nblocks sectors from cd device into data starting from lsn.
+    Returns 0 if no error.
+  */
+-static int
++static driver_return_code_t
+ read_sectors_aspi (_img_private_t *p_env, void *data, lsn_t lsn,
+                    int sector_type, unsigned int nblocks)
+ {
+@@ -621,7 +623,7 @@ read_sectors_aspi (_img_private_t *p_env, void *data, lsn_t lsn,
+    Reads an audio device into data starting from lsn.
+    Returns 0 if no error.
+  */
+-int
++driver_return_code_t
+ read_audio_sectors_aspi (_img_private_t *p_env, void *data, lsn_t lsn,
+                          unsigned int i_blocks)
+ {
+@@ -636,7 +638,7 @@ read_audio_sectors_aspi (_img_private_t *p_env, void *data, lsn_t lsn,
+    Reads a single mode2 sector from cd device into data starting
+    from lsn. Returns 0 if no error.
+  */
+-int
++driver_return_code_t
+ read_mode2_sector_aspi (_img_private_t *p_env, void *data, lsn_t lsn,
+                          bool b_form2)
+ {
+@@ -650,7 +652,7 @@ read_mode2_sector_aspi (_img_private_t *p_env, void *data, lsn_t lsn,
+    Reads a single mode2 sector from cd device into data starting
+    from lsn. Returns 0 if no error.
+  */
+-int
++driver_return_code_t
+ read_mode1_sector_aspi (_img_private_t *p_env, void *data, lsn_t lsn,
+                          bool b_form2)
+ {
+@@ -783,7 +785,7 @@ wnaspi32_eject_media (void *user_data) {
+ track_format_t
+ get_track_format_aspi(const _img_private_t *p_env, track_t track_num)
+ {
+-  MCI_OPEN_PARMS op;
++  MCI_OPEN_PARMSA op;
+   MCI_STATUS_PARMS st;
+   DWORD i_flags;
+ 
+diff --git a/lib/driver/MSWindows/aspi32.h b/lib/driver/MSWindows/aspi32.h
+index 9f12c7df..f31af4e2 100644
+--- a/lib/driver/MSWindows/aspi32.h
++++ b/lib/driver/MSWindows/aspi32.h
+@@ -195,20 +195,20 @@ const char *is_cdrom_aspi(const char drive_letter);
+    Reads an audio device using the DeviceIoControl method into data
+    starting from lsn.  Returns 0 if no error.
+  */
+-int read_audio_sectors_aspi (_img_private_t *obj, void *data, lsn_t lsn, 
+-			     unsigned int nblocks);
++driver_return_code_t read_audio_sectors_aspi (_img_private_t *obj,
++    void *data, lsn_t lsn, unsigned int nblocks);
+ /*!
+    Reads a single mode1 sector using the DeviceIoControl method into
+    data starting from lsn. Returns 0 if no error.
+  */
+-int read_mode1_sector_aspi (_img_private_t *env, void *data, 
+-			    lsn_t lsn, bool b_form2);
++driver_return_code_t read_mode1_sector_aspi (_img_private_t *env,
++    void *data, lsn_t lsn, bool b_form2);
+ /*!
+    Reads a single mode2 sector from cd device into data starting
+    from lsn. Returns 0 if no error. 
+  */
+-int read_mode2_sector_aspi (_img_private_t *env, void *data, lsn_t lsn, 
+-			    bool b_form2);
++driver_return_code_t read_mode2_sector_aspi (_img_private_t *env,
++    void *data, lsn_t lsn, bool b_form2);
+ 
+ /*! 
+   Read and cache the CD's Track Table of Contents and track info.
+@@ -231,7 +231,7 @@ bool read_toc_aspi (_img_private_t *env);
+ 
+   Return 0 if command completed successfully.
+  */
+-int run_mmc_cmd_aspi( void *p_user_data, 
++driver_return_code_t run_mmc_cmd_aspi( void *p_user_data,
+ 		      unsigned int i_timeout,
+ 		      unsigned int i_cdb, 
+ 		      const mmc_cdb_t * p_cdb,
+diff --git a/lib/driver/MSWindows/win32.c b/lib/driver/MSWindows/win32.c
+index 9b4ae2dd..a6071144 100644
+--- a/lib/driver/MSWindows/win32.c
++++ b/lib/driver/MSWindows/win32.c
+@@ -72,6 +72,10 @@
+ #include <sys/types.h>
+ #endif
+ 
++#if defined(_MSC_VER)
++#include <io.h>
++#endif
++
+ #if defined (_MSC_VER) || defined (_XBOX)
+ #undef IN
+ #endif
+@@ -82,8 +86,12 @@
+ #include <xtl.h>
+ #define WIN_NT 1
+ #else
++#if defined(_WIN32_WINNT) && (_WIN32_WINNT > 0x0400)
++#define WIN_NT 1
++#else
+ #define WIN_NT               ( GetVersion() < 0x80000000 )
+ #endif
++#endif
+ 
+ /* mingw-w64 defines this to lseek64 when LFS is enabled */
+ #ifdef lseek
+@@ -209,7 +217,7 @@ _cdio_mciSendCommand(int id, UINT msg, DWORD flags, void *arg)
+   if ( mci_error ) {
+     char error[256];
+ 
+-    mciGetErrorString(mci_error, error, 256);
++    mciGetErrorStringA(mci_error, error, 256);
+     cdio_warn("mciSendCommand() error: %s", error);
+   }
+   return(mci_error == 0);
+@@ -291,7 +299,7 @@ is_cdrom_win32(const char drive_letter) {
+ 
+   Return 0 if command completed successfully.
+  */
+-static int
++static driver_return_code_t
+ run_mmc_cmd_win32( void *p_user_data, unsigned int i_timeout_ms,
+ 		   unsigned int i_cdb, const mmc_cdb_t *p_cdb,
+ 		   cdio_mmc_direction_t e_direction,
+@@ -382,7 +390,7 @@ free_win32 (void *p_user_data)
+    Reads an audio device into data starting from lsn.
+    Returns 0 if no error.
+  */
+-static int
++static driver_return_code_t
+ read_audio_sectors (void *p_user_data, void *p_buf, lsn_t i_lsn,
+ 		    unsigned int i_blocks)
+ {
+@@ -421,7 +429,7 @@ read_data_sectors_win32 (void *p_user_data, void *p_buf, lsn_t i_lsn,
+    Reads a single mode1 sector from cd device into data starting from
+    lsn. Returns 0 if no error.
+  */
+-static int
++static driver_return_code_t
+ read_mode1_sector_win32 (void *p_user_data, void *p_buf, lsn_t lsn,
+ 			 bool b_form2)
+ {
+@@ -453,7 +461,7 @@ read_mode1_sector_win32 (void *p_user_data, void *p_buf, lsn_t lsn,
+    from lsn.
+    Returns 0 if no error.
+  */
+-static int
++static driver_return_code_t
+ read_mode1_sectors_win32 (void *p_user_data, void *p_buf, lsn_t lsn,
+ 			  bool b_form2, unsigned int nblocks)
+ {
+@@ -483,7 +491,7 @@ read_mode1_sectors_win32 (void *p_user_data, void *p_buf, lsn_t lsn,
+    Reads a single mode2 sector from cd device into data starting
+    from lsn. Returns 0 if no error.
+  */
+-static int
++static driver_return_code_t
+ read_mode2_sector_win32 (void *p_user_data, void *data, lsn_t lsn,
+ 			 bool b_form2)
+ {
+@@ -523,7 +531,7 @@ read_mode2_sector_win32 (void *p_user_data, void *data, lsn_t lsn,
+    from lsn.
+    Returns 0 if no error.
+  */
+-static int
++static driver_return_code_t
+ read_mode2_sectors_win32 (void *p_user_data, void *data, lsn_t lsn,
+ 			  bool b_form2, unsigned int i_blocks)
+ {
+@@ -554,7 +562,7 @@ get_disc_last_lsn_win32 (void *p_user_data)
+ /*!
+   Set the key "arg" to "value" in source device.
+ */
+-static int
++static driver_return_code_t
+ set_arg_win32 (void *p_user_data, const char key[], const char value[])
+ {
+   _img_private_t *p_env = p_user_data;
+@@ -612,7 +620,7 @@ open_close_media_win32 (const char *psz_win32_drive, DWORD command_flags)
+ #ifdef _XBOX
+   return DRIVER_OP_UNSUPPORTED;
+ #else
+-  MCI_OPEN_PARMS op;
++  MCI_OPEN_PARMSA op;
+   DWORD i_flags;
+   int ret;
+ 
+diff --git a/lib/driver/MSWindows/win32.h b/lib/driver/MSWindows/win32.h
+index fc703b5d..d66225eb 100644
+--- a/lib/driver/MSWindows/win32.h
++++ b/lib/driver/MSWindows/win32.h
+@@ -134,21 +134,21 @@ driver_return_code_t close_tray_win32ioctl (const char *psz_win32_drive);
+    Reads an audio device using the DeviceIoControl method into data
+    starting from lsn.  Returns 0 if no error.
+ */
+-int read_audio_sectors_win32ioctl (_img_private_t *p_obj, void *p_data, lsn_t lsn,
+-				   unsigned int nblocks);
++driver_return_code_t read_audio_sectors_win32ioctl (_img_private_t *p_obj,
++    void *p_data, lsn_t lsn, unsigned int nblocks);
+ /*!
+    Reads a single mode2 sector using the DeviceIoControl method into
+    data starting from lsn. Returns 0 if no error.
+  */
+-int read_mode2_sector_win32ioctl (_img_private_t *p_env, void *p_data,
+-				  lsn_t lsn, bool b_form2);
++driver_return_code_t read_mode2_sector_win32ioctl (_img_private_t *p_env,
++    void *p_data, lsn_t lsn, bool b_form2);
+ 
+ /*!
+    Reads a single mode1 sector using the DeviceIoControl method into
+    data starting from lsn. Returns 0 if no error.
+  */
+-int read_mode1_sector_win32ioctl (_img_private_t *p_env, void *p_data,
+-				  lsn_t lsn, bool b_form2);
++driver_return_code_t read_mode1_sector_win32ioctl (_img_private_t *p_env,
++    void *p_data, lsn_t lsn, bool b_form2);
+ 
+ const char *is_cdrom_win32ioctl (const char drive_letter);
+ 
+@@ -167,7 +167,7 @@ const char *is_cdrom_win32ioctl (const char drive_letter);
+ 
+   Return 0 if command completed successfully.
+  */
+-int run_mmc_cmd_win32ioctl( void *p_user_data,
++driver_return_code_t run_mmc_cmd_win32ioctl( void *p_user_data,
+ 			    unsigned int i_timeout,
+ 			    unsigned int i_cdb,
+ 			    const mmc_cdb_t * p_cdb,
+diff --git a/lib/driver/MSWindows/win32_ioctl.c b/lib/driver/MSWindows/win32_ioctl.c
+index f91b0417..331a7189 100644
+--- a/lib/driver/MSWindows/win32_ioctl.c
++++ b/lib/driver/MSWindows/win32_ioctl.c
+@@ -78,7 +78,7 @@
+ #define windows_error(loglevel,i_err) {                                 \
+   char error_msg[80];                                                   \
+   long int count;                                                       \
+-  count = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,                      \
++  count = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM,                     \
+                         NULL, i_err, MAKELANGID(LANG_NEUTRAL,            \
+                                                 SUBLANG_DEFAULT),        \
+                         error_msg, sizeof(error_msg), NULL);             \
+@@ -377,7 +377,7 @@ close_tray_win32ioctl (const char *psz_win32_drive)
+     dw_access_flags = GENERIC_READ|GENERIC_WRITE;  /* add gen write on W2k/XP */
+   else dw_access_flags = GENERIC_READ;
+ 
+-  h_device_handle = CreateFile( psz_win32_drive,
++  h_device_handle = CreateFileA( psz_win32_drive,
+                                 dw_access_flags,
+                                 FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                 NULL,
+@@ -471,7 +471,7 @@ set_scsi_tuple_win32ioctl(_img_private_t *env)
+   Return DRIVER_OP_SUCCESS if command completed successfully.
+  */
+ #ifdef USE_PASSTHROUGH_DIRECT
+-int
++driver_return_code_t
+ run_mmc_cmd_win32ioctl( void *p_user_data,
+                         unsigned int u_timeout_ms,
+                         unsigned int u_cdb, const mmc_cdb_t * p_cdb,
+@@ -568,7 +568,7 @@ run_mmc_cmd_win32ioctl( void *p_user_data,
+   return rc;
+ }
+ #else
+-int
++driver_return_code_t
+ run_mmc_cmd_win32ioctl( void *p_user_data,
+                         unsigned int u_timeout_ms,
+                         unsigned int u_cdb, const mmc_cdb_t * p_cdb,
+@@ -791,7 +791,7 @@ is_cdrom_win32ioctl(const char c_drive_letter)
+   sz_win32_drive[2]='\\';
+   sz_win32_drive[3]='\0';
+ 
+-  uDriveType = GetDriveType(sz_win32_drive);
++  uDriveType = GetDriveTypeA(sz_win32_drive);
+ 
+   switch(uDriveType) {
+   case DRIVE_CDROM: {
+@@ -839,7 +839,7 @@ read_audio_sectors_win32ioctl (_img_private_t *p_env, void *data, lsn_t lsn,
+    Reads a single raw sector using the DeviceIoControl method into
+    data starting from lsn. Returns 0 if no error.
+  */
+-static int
++static driver_return_code_t
+ read_raw_sector (_img_private_t *p_env, void *p_buf, lsn_t lsn)
+ {
+   mmc_cdb_t cdb = {{0, }};
+@@ -861,7 +861,7 @@ read_raw_sector (_img_private_t *p_env, void *p_buf, lsn_t lsn)
+    Reads a single mode2 sector using the DeviceIoControl method into
+    data starting from lsn. Returns 0 if no error.
+  */
+-int
++driver_return_code_t
+ read_mode2_sector_win32ioctl (_img_private_t *p_env, void *p_data,
+                               lsn_t lsn, bool b_form2)
+ {
+@@ -882,7 +882,7 @@ read_mode2_sector_win32ioctl (_img_private_t *p_env, void *p_data,
+    Reads a single mode2 sector using the DeviceIoControl method into
+    data starting from lsn. Returns 0 if no error.
+  */
+-int
++driver_return_code_t
+ read_mode1_sector_win32ioctl (_img_private_t *env, void *data,
+                               lsn_t lsn, bool b_form2)
+ {
+@@ -962,7 +962,7 @@ init_win32ioctl (_img_private_t *env)
+                                       "\\\\.\\%c:",
+                                       env->gen.source_name[len-2] );
+ 
+-    env->h_device_handle = CreateFile( psz_win32_drive,
++    env->h_device_handle = CreateFileA( psz_win32_drive,
+                                        dw_access_flags,
+                                        FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                        NULL,
+@@ -974,7 +974,7 @@ init_win32ioctl (_img_private_t *env)
+     {
+           /* No good. try toggle write. */
+           dw_access_flags ^= GENERIC_WRITE;
+-          env->h_device_handle = CreateFile( psz_win32_drive,
++          env->h_device_handle = CreateFileA( psz_win32_drive,
+                                              dw_access_flags,
+                                              FILE_SHARE_READ,
+                                              NULL,
+diff --git a/lib/driver/_cdio_generic.c b/lib/driver/_cdio_generic.c
+index 4a7fcadf..194cd973 100644
+--- a/lib/driver/_cdio_generic.c
++++ b/lib/driver/_cdio_generic.c
+@@ -51,15 +51,16 @@
+ #include "_cdio_stdio.h"
+ #include "filemode.h"
+ 
++#if defined(_MSC_VER)
++#include <io.h>
++#endif
++
+ #ifndef PATH_MAX
+ #define PATH_MAX 4096
+ #endif
+ 
+ /* If available and LFS is enabled, try to use lseek64 */
+ #if defined(HAVE_LSEEK64) && defined(_FILE_OFFSET_BITS) && (_FILE_OFFSET_BITS == 64)
+-#if defined(_MSC_VER)
+-#include <io.h>
+-#endif
+ #define CDIO_LSEEK lseek64
+ #else
+ #define CDIO_LSEEK lseek
+diff --git a/lib/driver/cdio_private.h b/lib/driver/cdio_private.h
+index 0480c316..8dff26d4 100644
+--- a/lib/driver/cdio_private.h
++++ b/lib/driver/cdio_private.h
+@@ -370,8 +370,8 @@ extern "C" {
+       Reads a single mode2 sector from cd device into buf starting
+       from lsn. Returns 0 if no error.
+     */
+-    int (*read_audio_sectors) ( void *p_env, void *p_buf, lsn_t i_lsn,
+-                                unsigned int i_blocks );
++    driver_return_code_t (*read_audio_sectors) ( void *p_env, void *p_buf, 
++        lsn_t i_lsn, unsigned int i_blocks );
+ 
+     /*!
+       Read a data sector
+@@ -398,7 +398,7 @@ extern "C" {
+       Reads a single mode2 sector from cd device into buf starting
+       from lsn. Returns 0 if no error.
+     */
+-    int (*read_mode2_sector)
++    driver_return_code_t (*read_mode2_sector)
+          ( void *p_env, void *p_buf, lsn_t i_lsn, bool b_mode2_form2 );
+ 
+     /*!
+@@ -406,7 +406,7 @@ extern "C" {
+       from lsn.
+       Returns 0 if no error.
+     */
+-    int (*read_mode2_sectors)
++    driver_return_code_t (*read_mode2_sectors)
+          ( void *p_env, void *p_buf, lsn_t i_lsn, bool b_mode2_form2,
+            unsigned int i_blocks );
+ 
+@@ -414,7 +414,7 @@ extern "C" {
+       Reads a single mode1 sector from cd device into buf starting
+       from lsn. Returns 0 if no error.
+     */
+-    int (*read_mode1_sector)
++    driver_return_code_t (*read_mode1_sector)
+          ( void *p_env, void *p_buf, lsn_t i_lsn, bool mode1_form2 );
+ 
+     /*!
+@@ -422,7 +422,7 @@ extern "C" {
+       from lsn.
+       Returns 0 if no error.
+     */
+-    int (*read_mode1_sectors)
++    driver_return_code_t (*read_mode1_sectors)
+          ( void *p_env, void *p_buf, lsn_t i_lsn, bool mode1_form2,
+            unsigned int i_blocks );
+ 
+@@ -449,7 +449,8 @@ extern "C" {
+     /*!
+       Set the arg "key" with "value" in the source device.
+     */
+-    int (*set_arg) ( void *p_env, const char key[], const char value[] );
++    driver_return_code_t (*set_arg)
++        ( void *p_env, const char key[], const char value[] );
+ 
+     /*!
+       Set the blocksize for subsequent reads.
+@@ -463,7 +464,8 @@ extern "C" {
+       @return 0 if everything went okay, -1 if we had an error. is -2
+       returned if this is not implemented for the current driver.
+     */
+-    int (*set_speed) ( void *p_env, int i_speed );
++    driver_return_code_t (*set_speed)
++        ( void *p_env, int i_speed );
+ 
+   } cdio_funcs_t;
+ 
+diff --git a/lib/driver/image/cdrdao.c b/lib/driver/image/cdrdao.c
+index 2109fac0..32e0b108 100644
+--- a/lib/driver/image/cdrdao.c
++++ b/lib/driver/image/cdrdao.c
+@@ -1059,7 +1059,7 @@ _read_mode1_sector_cdrdao (void *user_data, void *data, lsn_t lsn,
+    from lsn.
+    Returns 0 if no error.
+  */
+-static int
++static driver_return_code_t
+ _read_mode1_sectors_cdrdao (void *user_data, void *data, lsn_t lsn,
+ 			    bool b_form2, unsigned int nblocks)
+ {
+diff --git a/lib/driver/image_common.h b/lib/driver/image_common.h
+index 91f94d21..8790276e 100644
+--- a/lib/driver/image_common.h
++++ b/lib/driver/image_common.h
+@@ -66,7 +66,7 @@ typedef struct {
+  */
+ void  _free_image (void *p_user_data);
+ 
+-int _eject_media_image(void *p_user_data);
++driver_return_code_t _eject_media_image(void *p_user_data);
+ 
+ /*!
+   Return the value associated with the key "arg".
+@@ -197,6 +197,7 @@ read_data_sectors_image ( void *p_user_data, void *p_buf,
+ 
+   0 is returned if no error was found, and nonzero if there as an error.
+ */
+-int _set_arg_image (void *user_data, const char key[], const char value[]);
++driver_return_code_t
++_set_arg_image (void *user_data, const char key[], const char value[]);
+ 
+ #endif /* CDIO_DRIVER_IMAGE_COMMON_H_ */
+-- 
+2.39.3 (Apple Git-145)
+
