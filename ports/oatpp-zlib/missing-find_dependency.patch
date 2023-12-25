@@ -1,0 +1,14 @@
+diff --git a/cmake/module-config.cmake.in b/cmake/module-config.cmake.in
+index 5cc12b0..71f8f10 100644
+--- a/cmake/module-config.cmake.in
++++ b/cmake/module-config.cmake.in
+@@ -1,5 +1,9 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(oatpp)
++find_dependency(ZLIB)
++
+ if(NOT TARGET oatpp::@OATPP_MODULE_NAME@)
+     include("${CMAKE_CURRENT_LIST_DIR}/@OATPP_MODULE_NAME@Targets.cmake")
+ endif()

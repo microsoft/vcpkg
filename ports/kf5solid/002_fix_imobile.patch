@@ -1,0 +1,61 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 60172b0d..1dfe6e8a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,13 +55,25 @@ set_package_properties(BISON PROPERTIES
+     PURPOSE "Required for the Predicate parser"
+ )
+ 
+-find_package(IMobileDevice)
++find_package(IMobileDevice NAMES unofficial-libimobiledevice)
+ set_package_properties(IMobileDevice PROPERTIES
+                        TYPE OPTIONAL
+                        PURPOSE "Needed to build the iOS device support backend"
+                       )
++if(TARGET unofficial::libimobiledevice::libimobiledevice)
++    set(IMobileDevice_VERSION "1.3.0")
++    set(_imobile_version "0x00000")
++    if (IMobileDevice_VERSION VERSION_GREATER_EQUAL 1.3.0)
++        set(_imobile_version "0x10300")
++    elseif(IMobileDevice_VERSION VERSION_GREATER_EQUAL 1.2.0)
++        set(_imobile_version "0x10200")
++    endif()
++    set_target_properties(unofficial::libimobiledevice::libimobiledevice PROPERTIES
++        INTERFACE_COMPILE_DEFINITIONS "IMOBILEDEVICE_API=${_imobile_version}"
++    )
++endif()
+ 
+-find_package(PList)
++find_package(PList NAMES unofficial-libplist CONFIG)
+ set_package_properties(PList PROPERTIES
+                        TYPE OPTIONAL
+                        PURPOSE "Needed to build the iOS device support backend"
+diff --git a/KF5SolidConfig.cmake.in b/KF5SolidConfig.cmake.in
+index 6fc15eeb..a6250ce6 100644
+--- a/KF5SolidConfig.cmake.in
++++ b/KF5SolidConfig.cmake.in
+@@ -27,6 +27,11 @@ if (NOT @BUILD_SHARED_LIBS@)
+         find_dependency(LibMount)
+     endif()
+ 
++    if ("@IMobileDevice_FOUND@" AND "@PList_FOUND@")
++        find_dependency(unofficial-libimobiledevice)
++        find_dependency(unofficial-libplist)
++    endif()
++
+     if ("@Qt5DBus_FOUND@" OR "@Qt6DBus_FOUND@")
+         find_dependency(Qt@QT_MAJOR_VERSION@DBus @REQUIRED_QT_VERSION@)
+     endif()
+diff --git a/src/solid/devices/backends/imobile/CMakeLists.txt b/src/solid/devices/backends/imobile/CMakeLists.txt
+index e1666447..3f8b982e 100644
+--- a/src/solid/devices/backends/imobile/CMakeLists.txt
++++ b/src/solid/devices/backends/imobile/CMakeLists.txt
+@@ -5,7 +5,7 @@ set(backend_sources
+     imobiledeviceinterface.cpp
+     imobileportablemediaplayer.cpp
+ )
+-set(backend_libs IMobileDevice::IMobileDevice PList::PList)
++set(backend_libs unofficial::libimobiledevice::libimobiledevice unofficial::libplist::libplist)
+ 
+ ecm_qt_declare_logging_category(backend_sources
+     HEADER imobile_debug.h

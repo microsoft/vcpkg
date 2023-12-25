@@ -1,7 +1,7 @@
 {
   "name": "tinyexpr",
-  "version-string": "2020-09-25",
-  "port-version": 1,
+  "version-date": "2020-09-25",
+  "port-version": 2,
   "description": "Tiny recursive descent parser and evaluation engine in C",
   "homepage": "https://codeplea.com/tinyexpr",
   "license": "Zlib",

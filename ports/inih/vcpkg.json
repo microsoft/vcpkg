@@ -1,18 +1,17 @@
 {
   "name": "inih",
-  "version": "56",
+  "version": "57",
   "description": "Simple .INI file parser",
   "homepage": "https://github.com/benhoyt/inih",
   "license": "BSD-3-Clause",
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
+      "name": "vcpkg-tool-meson",
       "host": true
     }
+  ],
+  "default-features": [
+    "cpp"
   ],
   "features": {
     "cpp": {

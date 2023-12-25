@@ -1,0 +1,33 @@
+diff --git a/util/CMakeLists.txt b/util/CMakeLists.txt
+index 7a96ef5..0708d8a 100644
+--- a/util/CMakeLists.txt
++++ b/util/CMakeLists.txt
+@@ -85,7 +85,10 @@ set_target_properties(kenlm_util PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ target_link_libraries(kenlm_util
+   PUBLIC
+   # Boost is required for building binaries and tests
+-  "$<BUILD_INTERFACE:${Boost_LIBRARIES}>"
++  $<BUILD_INTERFACE:Boost::program_options>
++  $<BUILD_INTERFACE:Boost::system>
++  $<BUILD_INTERFACE:Boost::thread>
++  $<BUILD_INTERFACE:Boost::unit_test_framework>
+   PRIVATE
+   Threads::Threads
+   ${RT})
+diff --git a/util/stream/CMakeLists.txt b/util/stream/CMakeLists.txt
+index be2fe00..a7e7df5 100644
+--- a/util/stream/CMakeLists.txt
++++ b/util/stream/CMakeLists.txt
+@@ -35,5 +35,11 @@ if(BUILD_TESTING)
+   )
+ 
+   AddTests(TESTS ${KENLM_BOOST_TESTS_LIST}
+-           LIBRARIES kenlm_util ${Boost_LIBRARIES} Threads::Threads)
++           LIBRARIES
++           kenlm_util
++           Boost::program_options
++           Boost::system
++           Boost::thread
++           Boost::unit_test_framework
++           Threads::Threads)
+ endif()

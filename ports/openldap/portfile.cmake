@@ -12,8 +12,8 @@ if(NOT "${AUTOCONF_VERSION_STR}" STREQUAL "" AND "${AUTOCONF_VERSION_STR}" MATCH
     vcpkg_list(APPEND EXTRA_PATCHES m4.patch)
 endif()
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         openssl.patch

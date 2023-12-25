@@ -18,10 +18,6 @@ function(vcpkg_qmake_configure)
         vcpkg_list(APPEND arg_QMAKE_OPTIONS "CONFIG*=static-runtime")
     endif()
 
-    if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
-        set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} "${VCPKG_OSX_DEPLOYMENT_TARGET}")
-    endif()
-
     set(ENV{PKG_CONFIG} "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     get_filename_component(PKGCONFIG_PATH "${PKGCONFIG}" DIRECTORY)
     vcpkg_add_to_path("${PKGCONFIG_PATH}")
@@ -56,6 +52,25 @@ function(vcpkg_qmake_configure)
     # Setup Build tools
     if(NOT VCPKG_QMAKE_COMMAND) # For users using outside Qt6
         set(VCPKG_QMAKE_COMMAND "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/qmake${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    endif()
+
+    if(VCPKG_TARGET_IS_OSX)
+        # Get Qt version
+        execute_process(
+            COMMAND ${VCPKG_QMAKE_COMMAND} -query QT_VERSION
+            OUTPUT_VARIABLE QT_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+
+        if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
+            vcpkg_list(APPEND arg_QMAKE_OPTIONS "QMAKE_MACOSX_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
+        elseif(${QT_VERSION} VERSION_GREATER_EQUAL 6)
+            # https://doc.qt.io/qt-6/macos.html
+            vcpkg_list(APPEND arg_QMAKE_OPTIONS "QMAKE_MACOSX_DEPLOYMENT_TARGET=10.15")
+        else() # Qt5
+            # https://doc.qt.io/qt-5/macos.html
+            vcpkg_list(APPEND arg_QMAKE_OPTIONS "QMAKE_MACOSX_DEPLOYMENT_TARGET=10.13")
+        endif()
     endif()
 
     set(qmake_build_tools "")

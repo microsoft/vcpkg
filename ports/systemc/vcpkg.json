@@ -1,7 +1,7 @@
 {
   "name": "systemc",
-  "version-string": "2.3.3",
-  "port-version": 7,
+  "version": "2.3.3",
+  "port-version": 8,
   "description": "A set of C++ classes and macros which provide an event-driven simulation kernel in C++",
   "dependencies": [
     {

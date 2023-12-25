@@ -1,0 +1,14 @@
+diff --git a/CMake/Utils/OgreConfigTargets.cmake b/CMake/Utils/OgreConfigTargets.cmake
+index c4e6de8..e92da59 100644
+--- a/CMake/Utils/OgreConfigTargets.cmake
++++ b/CMake/Utils/OgreConfigTargets.cmake
+@@ -56,9 +56,6 @@ elseif (UNIX)
+   set(OGRE_LIB_RELEASE_PATH "")
+   set(OGRE_LIB_RELWDBG_PATH "")
+   set(OGRE_LIB_DEBUG_PATH "")
+-  if(APPLE AND NOT APPLE_IOS)
+-    set(OGRE_RELEASE_PATH "/${PLATFORM_NAME}")
+-  endif()
+   if(APPLE AND APPLE_IOS)
+     set(OGRE_LIB_RELEASE_PATH "/Release")
+   endif(APPLE AND APPLE_IOS)

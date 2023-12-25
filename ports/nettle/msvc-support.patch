@@ -1,0 +1,85 @@
+diff --git a/Makefile.in b/Makefile.in
+index 6e1585b..88c8b05 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -29,8 +29,9 @@ include config.make
+ PRE_CPPFLAGS = -I.
+ EXTRA_CFLAGS = $(CCPIC)
+ 
+-LIBTARGETS = @IF_STATIC@ libnettle.a @IF_HOGWEED@ libhogweed.a
++LIBTARGETS = @IF_STATIC@ @LIBNETTLE_ARCHIVE@ @IF_HOGWEED@ @LIBHOGWEED_ARCHIVE@
+ SHLIBTARGETS = @IF_SHARED@ $(LIBNETTLE_FORLINK) @IF_HOGWEED@ $(LIBHOGWEED_FORLINK)
++MSVC_TARGET = @MSVC_TARGET@
+ 
+ getopt_SOURCES = getopt.c getopt1.c
+ getopt_TARGETS = $(getopt_SOURCES:.c=.$(OBJEXT))
+@@ -279,13 +280,13 @@ nettle_OBJS = $(nettle_SOURCES:.c=.$(OBJEXT)) \
+ hogweed_OBJS = $(hogweed_SOURCES:.c=.$(OBJEXT)) \
+ 	       $(OPT_HOGWEED_OBJS) @IF_MINI_GMP@ mini-gmp.$(OBJEXT)
+ 
+-libnettle.a: $(nettle_OBJS)
++@LIBNETTLE_ARCHIVE@: $(nettle_OBJS)
+ 	-rm -f $@
+ 	$(AR) $(ARFLAGS) $@ $(nettle_OBJS)
+ 	$(RANLIB) $@
+ 	echo nettle > libnettle.stamp
+ 
+-libhogweed.a: $(hogweed_OBJS)
++@LIBHOGWEED_ARCHIVE@: $(hogweed_OBJS)
+ 	-rm -f $@
+ 	$(AR) $(ARFLAGS) $@ $(hogweed_OBJS)
+ 	$(RANLIB) $@
+@@ -491,8 +492,8 @@ install-static: $(LIBTARGETS)
+ 	done
+ 
+ install-dll-nettle:
+-	$(MKDIR_P) $(DESTDIR)$(bindir)
+-	$(INSTALL_DATA) $(LIBNETTLE_FORLINK) $(DESTDIR)$(bindir)/$(LIBNETTLE_FORLINK)
++	$(MKDIR_P) $(DESTDIR)$(libdir)/../bin
++	$(INSTALL_DATA) $(LIBNETTLE_FORLINK) $(DESTDIR)$(libdir)/../bin/$(LIBNETTLE_FORLINK)
+ 
+ install-shared-nettle: $(LIBNETTLE_FORLINK) @IF_DLL@ install-dll-nettle
+ 	$(MKDIR_P) $(DESTDIR)$(libdir)
+@@ -504,8 +505,8 @@ install-shared-nettle: $(LIBNETTLE_FORLINK) @IF_DLL@ install-dll-nettle
+ 		&& $(LN_S) $(LIBNETTLE_FILE) $(LIBNETTLE_FORLINK))
+ 
+ install-dll-hogweed:
+-	$(MKDIR_P) $(DESTDIR)$(bindir)
+-	$(INSTALL_DATA) $(LIBHOGWEED_FORLINK) $(DESTDIR)$(bindir)/$(LIBHOGWEED_FORLINK)
++	$(MKDIR_P) $(DESTDIR)$(libdir)/../bin
++	$(INSTALL_DATA) $(LIBHOGWEED_FORLINK) $(DESTDIR)$(libdir)/../bin/$(LIBHOGWEED_FORLINK)
+ 
+ install-shared-hogweed: $(LIBHOGWEED_FORLINK) @IF_DLL@ install-dll-hogweed
+ 	$(MKDIR_P) $(DESTDIR)$(libdir)
+diff --git a/configure.ac b/configure.ac
+index d50d1f5..2464514 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -877,6 +877,27 @@ case "$host_os" in
+     LIBHOGWEED_LIBS='libnettle.so $(LIBS)'
+     ;;
+ esac
++AC_ARG_VAR(MSVC_TARGET,[Enable msvc and set target architecture])
++case "$MSVC_TARGET" in
++x86|x64|arm|arm64)
++  LIBNETTLE_ARCHIVE='nettle.lib'
++  LIBNETTLE_FORLINK='nettle-$(LIBNETTLE_MAJOR).dll'
++  LIBNETTLE_FILE='nettle.lib'
++  LIBNETTLE_LINK='$(CC) $(CPPFLAGS) -Wl,$(LDFLAGS) -Wl,-DLL -Wl,-IMPLIB:$(LIBNETTLE_FILE) -Wl,-DEF:$(srcdir)/nettle-$(MSVC_TARGET).def'
++  LIBNETTLE_LIBS='$(LIBS)'
++  LIBHOGWEED_FILE='hogweed.lib'
++  LIBHOGWEED_ARCHIVE='hogweed.lib'
++  LIBHOGWEED_FORLINK='hogweed-$(LIBHOGWEED_MAJOR).dll'
++  LIBHOGWEED_LINK='$(CC) $(CPPFLAGS) -Wl,$(LDFLAGS) -Wl,-DLL -Wl,-IMPLIB:$(LIBHOGWEED_FILE) -Wl,-DEF:$(srcdir)/hogweed-$(MSVC_TARGET).def'
++  LIBHOGWEED_LIBS='$(LIBNETTLE_FILE) $(LIBS)'
++  ;;
++*)
++  LIBNETTLE_ARCHIVE='libnettle.a'
++  LIBHOGWEED_ARCHIVE='libhogweed.a'
++  ;;
++esac
++AC_SUBST(LIBNETTLE_ARCHIVE)
++AC_SUBST(LIBHOGWEED_ARCHIVE)
+ 
+ ASM_SYMBOL_PREFIX=''
+ ASM_ELF_STYLE='no'

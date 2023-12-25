@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO etcd-cpp-apiv3/etcd-cpp-apiv3
     REF "v${VERSION}"
-    SHA512 6c0659e25be84ba85d557d16594a52517b735b593039556bfb3e8b354e13f2f2cce07d82cef4cf793ee24ba39b27d763664de78734feb62059e86db021ca1729
+    SHA512 4f059c33b6deec2192adbf4bdeaa230f1a96fddfc68eac1ef17578c7c208e3476ab65cf4e6940d83307df4655942c88fc6988fb2e226c2f30aa75005219133a1
     HEAD_REF master
 )
 
@@ -23,7 +23,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/etcd-cpp-apiv3" RENAME copyright)
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 # Adding usage text
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

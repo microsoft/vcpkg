@@ -1,7 +1,7 @@
 {
   "name": "libgta",
-  "version-string": "1.0.8",
-  "port-version": 4,
+  "version": "1.0.8",
+  "port-version": 5,
   "description": "Libgta is a portable library that implements the Generic Tagged Array (GTA) file format.",
   "homepage": "https://download.savannah.nongnu.org/releases/gta",
   "dependencies": [

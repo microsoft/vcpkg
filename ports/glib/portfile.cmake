@@ -2,7 +2,7 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
     FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 812834ca6d840dd9c15c0689685d8bd96f4acd69a89213f807a75732d1aa5efadbed0e0073f05a56a09beb2d4f0be1b83a4642259682aac84302632da2d62370
+    SHA512 aa9ed9195951b00ac8221e958ea337fbda82621a862ef8f29dc2ea396a6253ce51c2a0a498dfa4e12642f1836f85f9564f09991979ae85c5ed4368355d857376
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -11,6 +11,10 @@ vcpkg_extract_source_archive(SOURCE_PATH
         use-libiconv-on-windows.patch
         libintl.patch
 )
+
+if(APPLE)
+    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_ENABLE_OBJC=1")
+endif()
 
 vcpkg_list(SET OPTIONS)
 if (selinux IN_LIST FEATURES)
@@ -28,8 +32,18 @@ else()
     list(APPEND OPTIONS -Dlibmount=disabled)
 endif()
 
+vcpkg_list(SET ADDITIONAL_BINARIES)
+if(VCPKG_HOST_IS_WINDOWS)
+    # Presence of bash and sh enables installation of auxiliary components.
+    vcpkg_list(APPEND ADDITIONAL_BINARIES "bash = ['${CMAKE_COMMAND}', '-E', 'false']")
+    vcpkg_list(APPEND ADDITIONAL_BINARIES "sh = ['${CMAKE_COMMAND}', '-E', 'false']")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    LANGUAGES C CXX OBJC OBJCXX
+    ADDITIONAL_BINARIES
+        ${ADDITIONAL_BINARIES}
     OPTIONS
         ${OPTIONS}
         -Dgtk_doc=false
@@ -50,9 +64,6 @@ set(GLIB_SCRIPTS
     glib-mkenums
     gtester-report
 )
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    list(REMOVE_ITEM GLIB_SCRIPTS glib-gettextize)
-endif()
 foreach(script IN LISTS GLIB_SCRIPTS)
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")

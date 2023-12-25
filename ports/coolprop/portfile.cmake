@@ -11,59 +11,14 @@ vcpkg_from_github(
         fix-dependency.patch
         fix-install.patch
 )
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "CACHE LIST" "CACHE STRING")
 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path(${PYTHON3_DIR})
-
-file(REMOVE_RECURSE ${SOURCE_PATH}/externals)
-
-# Patch up the file locations
-file(COPY
-    ${CURRENT_INSTALLED_DIR}/include/catch.hpp
-    DESTINATION ${SOURCE_PATH}/externals/Catch/single_include
-)
-
-file(COPY
-    ${CURRENT_INSTALLED_DIR}/include/eigen3/Eigen
-    DESTINATION ${SOURCE_PATH}/externals/Eigen
-)
-file(COPY
-    ${CURRENT_INSTALLED_DIR}/include/eigen3/unsupported/Eigen
-    DESTINATION ${SOURCE_PATH}/externals/Eigen/unsupported
-)
-
-file(COPY
-    ${CURRENT_INSTALLED_DIR}/include/rapidjson
-    DESTINATION ${SOURCE_PATH}/externals/rapidjson/include
-)
-
-file(COPY
-    ${CURRENT_INSTALLED_DIR}/include/IF97.h
-    DESTINATION ${SOURCE_PATH}/externals/IF97
-)
-
-file(COPY
-    ${CURRENT_INSTALLED_DIR}/include/msgpack.hpp
-    ${CURRENT_INSTALLED_DIR}/include/msgpack
-    DESTINATION ${SOURCE_PATH}/externals/msgpack-c/include
-)
-
-file(COPY
-    ${CURRENT_INSTALLED_DIR}/include/fmt
-    DESTINATION ${SOURCE_PATH}/externals/cppformat
-)
-
-file(COPY
-    ${CURRENT_INSTALLED_DIR}/include/REFPROP_lib.h
-    DESTINATION ${SOURCE_PATH}/externals/REFPROP-headers/
-)
-
-# Use a nasty hack to include the correct header
-file(APPEND
-    ${SOURCE_PATH}/externals/msgpack-c/include/fmt/format.h
-    "#include \"fmt/printf.h\""
-)
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals")
+file(COPY "${CURRENT_INSTALLED_DIR}/include/IF97.h" DESTINATION "${SOURCE_PATH}/externals/IF97")
+file(COPY "${CURRENT_INSTALLED_DIR}/include/REFPROP_lib.h" DESTINATION "${SOURCE_PATH}/externals/REFPROP-headers/")
+file(COPY "${CURRENT_INSTALLED_DIR}/include/rapidjson" DESTINATION "${SOURCE_PATH}/externals/rapidjson/include")
+# Fix GCC warning when thread_local is substitude as __thread
+vcpkg_replace_string("${SOURCE_PATH}/externals/rapidjson/include/rapidjson/document.h" "thread_local static " "static thread_local ")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" COOLPROP_SHARED_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" COOLPROP_STATIC_LIBRARY)
@@ -71,17 +26,22 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" COOLPROP_STATIC_LIBRARY
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" COOLPROP_MSVC_DYNAMIC)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" COOLPROP_MSVC_STATIC)
 
+vcpkg_find_acquire_program(PYTHON3)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DCOOLPROP_SHARED_LIBRARY=${COOLPROP_SHARED_LIBRARY}
         -DCOOLPROP_STATIC_LIBRARY=${COOLPROP_STATIC_LIBRARY}
         -DCOOLPROP_MSVC_DYNAMIC=${COOLPROP_MSVC_DYNAMIC}
         -DCOOLPROP_MSVC_STATIC=${COOLPROP_MSVC_STATIC}
+        "-DPYTHON_EXECUTABLE=${PYTHON3}"
     OPTIONS_RELEASE
-        -DCOOLPROP_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
+        "-DCOOLPROP_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
     OPTIONS_DEBUG
-        -DCOOLPROP_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug
+        "-DCOOLPROP_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
 )
 
 vcpkg_cmake_install()

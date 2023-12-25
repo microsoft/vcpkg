@@ -1,7 +1,7 @@
 {
   "name": "pfultz2-linq",
-  "version-string": "2019-05-14",
-  "port-version": 2,
+  "version-date": "2019-05-14",
+  "port-version": 3,
   "description": "Linq for list comprehension in C++",
   "dependencies": [
     "boost-fusion",

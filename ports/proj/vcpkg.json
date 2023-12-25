@@ -1,6 +1,6 @@
 {
   "name": "proj",
-  "version": "9.2.0",
+  "version": "9.3.1",
   "description": "PROJ library for cartographic projections",
   "homepage": "https://proj.org/",
   "license": "MIT",
@@ -13,6 +13,7 @@
     {
       "name": "sqlite3",
       "host": true,
+      "default-features": false,
       "features": [
         "tool"
       ]

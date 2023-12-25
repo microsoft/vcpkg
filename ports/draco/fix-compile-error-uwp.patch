@@ -1,18 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0362420..2b09073 100644
+index a93267d..3a3ccf7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -86,6 +86,10 @@ draco_set_cxx_flags()
+@@ -85,6 +85,9 @@ draco_set_cxx_flags()
  draco_set_exe_linker_flags()
  draco_generate_features_h()
  
 +if (MSVC)
 +  add_compile_options(/wd4996)
 +endif()
-+
  # Draco source file listing variables.
- list(APPEND draco_attributes_sources
-             "${draco_src_root}/attributes/attribute_octahedron_transform.cc"
+ list(
+   APPEND draco_attributes_sources
 diff --git a/src/draco/io/parser_utils.cc b/src/draco/io/parser_utils.cc
 index 378de73..be7e032 100644
 --- a/src/draco/io/parser_utils.cc

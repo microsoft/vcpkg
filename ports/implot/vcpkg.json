@@ -1,7 +1,6 @@
 {
   "name": "implot",
-  "version": "0.14",
-  "port-version": 1,
+  "version": "0.16",
   "description": "Advanced 2D Plotting for Dear ImGui",
   "homepage": "https://github.com/epezent/implot",
   "license": "MIT",

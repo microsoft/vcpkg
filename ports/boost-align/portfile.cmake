@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/align
-    REF boost-1.81.0
-    SHA512 5d13df60dc85e6a0e8c03e1939044e63169d7a963ccfe74e20d6bbfbd3f52a41b43544ea8a9e730c0412061087a5ad7b7742707c0c0f98990cab78abceaff7d0
+    REF boost-1.83.0
+    SHA512 4a8a3b9686a29c2d52bb23f52a256aee8f246b72a832af63082b87a8435aeab076a67c0cd220b1bad9d6a9f0184c59a2495594c7a4eb86916495ee2c8d35e5dc
     HEAD_REF master
 )
 

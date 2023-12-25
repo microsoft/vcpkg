@@ -1,7 +1,7 @@
 {
   "name": "xproperty",
-  "version-string": "0.8.1",
-  "port-version": 2,
+  "version": "0.8.1",
+  "port-version": 3,
   "description": "Traitlets-like C++ properties and implementation of the observer pattern",
   "dependencies": [
     {

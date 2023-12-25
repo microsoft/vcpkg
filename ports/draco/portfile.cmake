@@ -1,33 +1,36 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/draco
-    REF 1.5.3
-    SHA512 8575ea78e0d8025facddbd42453b0251387f4e31eb0854135e050fc26aaf0d28ed30ccc3f93578fdc6cdb50369c2ef735291f1f5fb60238b289e0ee019446e1d
+    REF "${VERSION}"
+    SHA512 d4bc48aeac23aba377d1770a46e6676cb01596a436493385fb0c4ef9ba3f0fae42027232131a3d438250909aff4311353e114925753d045cc585af42660be0b1
     HEAD_REF master
     PATCHES
         fix-compile-error-uwp.patch
         fix-uwperror.patch
+        fix-pkgconfig.patch
         disable-symlinks.patch
+        install-linkage.diff
 )
+
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    set(ENV{EMSCRIPTEN} "${EMSCRIPTEN_ROOT}")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DPYTHON_EXECUTABLE=: # unused with DRACO_JS_GLUE off
+        -DDRACO_JS_GLUE=OFF
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/draco)
 vcpkg_fixup_pkgconfig()
 
 # Install tools and plugins
-vcpkg_copy_tools(
-    TOOL_NAMES
-        draco_encoder
-        draco_decoder
-    AUTO_CLEAN
-)
+if(NOT VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_copy_tools(TOOL_NAMES draco_encoder draco_decoder AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

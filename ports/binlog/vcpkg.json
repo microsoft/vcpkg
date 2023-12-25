@@ -1,6 +1,7 @@
 {
   "name": "binlog",
   "version-date": "2021-04-16",
+  "port-version": 1,
   "description": "Binlog is a high performance C++ log library to produce structured binary logs.",
   "homepage": "http://opensource.morganstanley.com/binlog/",
   "license": "Apache-2.0",

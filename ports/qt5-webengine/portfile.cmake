@@ -49,14 +49,19 @@ set(PATCHES common.pri.patch
             gl.patch
             build_1.patch
             build_2.patch
-            workaround-msvc2022-ice.patch)
+            workaround-msvc2022-missing-include-in-chromium-ui-accessability.patch
+            )
 
 set(OPTIONS)
 if("proprietary-codecs" IN_LIST FEATURES)
     list(APPEND OPTIONS "-webengine-proprietary-codecs")
 endif()
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND OPTIONS "-webengine-system-libwebp" "-webengine-system-ffmpeg" "-webengine-system-icu")
+    list(APPEND OPTIONS "-system-webengine-webp" "-system-webengine-icu")
+    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+    vcpkg_host_path_list(PREPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
+    vcpkg_host_path_list(PREPEND ENV{C_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
+    vcpkg_host_path_list(PREPEND ENV{CPLUS_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
 endif()
 
 qt_submodule_installation(PATCHES ${PATCHES} BUILD_OPTIONS ${OPTIONS})

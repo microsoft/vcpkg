@@ -17,5 +17,5 @@ index 7fdd7ddbd..f189c472c 100644
 +if(TARGET JPEG::JPEG)
 +	set_property(TARGET JPEG::JPEG PROPERTY _qt_no_promote_global TRUE)
 +endif()
- find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core) # special case
- find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS Gui) # special case
+ find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core)
+ find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS Gui)

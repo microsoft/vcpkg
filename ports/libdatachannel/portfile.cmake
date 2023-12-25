@@ -1,4 +1,4 @@
-set(PATCHES 0001-fix-for-vcpkg.patch)
+set(PATCHES fix-for-vcpkg.patch)
 
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND PATCHES uwp-warnings.patch)
@@ -8,11 +8,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
     REF "v${VERSION}"
-    SHA512 ede45221b8fb4ebc2a812f187372bc65da2a495311058e3b486ba7a2a584817ecdef286d956386a8635752786aebd5d0507bd84a84e484b9bf73ecd2dd92f918
+    SHA512 2c8da820ebf6751d696645092ea5e562f7cb303d4f5cec9a8ca8e69b65321e79cc8a645095a4ecea710f5afd54499e71f4cdf261a0a2e32e28aef96a50ace28c
     HEAD_REF master
-    PATCHES
-        ${PATCHES}
+    PATCHES ${PATCHES}
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DATACHANNEL_STATIC_LINKAGE)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -26,10 +27,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DUSE_SYSTEM_SRTP=ON
-        -DUSE_SYSTEM_JUICE=ON
+        -DPREFER_SYSTEM_LIB=ON
         -DNO_EXAMPLES=ON
         -DNO_TESTS=ON
+        -DDATACHANNEL_STATIC_LINKAGE=${DATACHANNEL_STATIC_LINKAGE}
 )
 
 vcpkg_cmake_install()

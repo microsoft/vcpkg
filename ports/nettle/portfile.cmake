@@ -1,11 +1,3 @@
-vcpkg_list(SET extra_patches)
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_list(APPEND extra_patches
-        yasm.patch # the asm changes are a downgrade to an older version
-        libname-windows.patch # libtool rules for lib naming, exports
-    )
-endif()
-
 vcpkg_from_gitlab(
     GITLAB_URL https://git.lysator.liu.se/
     OUT_SOURCE_PATH SOURCE_PATH
@@ -19,51 +11,70 @@ vcpkg_from_gitlab(
         compile.patch
         host-tools.patch
         ccas.patch
-        install-dll.patch
-        ${extra_patches}
+        msvc-support.patch
 )
 
-# Temporarily set to 1 to re-generate the lists of exported symbols.
-# This is needed when the version is bumped.
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+# Maintainer switch: Temporarily set this to 1 to re-generate the lists
+# of exported symbols. This is needed when the version is bumped.
 set(GENERATE_SYMBOLS 0)
 if(GENERATE_SYMBOLS)
-    if(VCPKG_TARGET_IS_MINGW OR NOT VCPKG_TARGET_IS_WINDOWS)
-        set(GENERATE_SYMBOLS 0)
-    else()
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
         vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    else()
+        set(GENERATE_SYMBOLS 0)
     endif()
 endif()
 
 vcpkg_list(SET OPTIONS)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_list(APPEND OPTIONS --disable-static)
-else()
-    vcpkg_list(APPEND OPTIONS --disable-shared)
-endif()
-
 if("tools" IN_LIST FEATURES)
     vcpkg_list(APPEND OPTIONS --enable-tools)
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(ENV{CCAS} "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(asmflag win64)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(asmflag win32)
+# As in gmp
+set(disable_assembly OFF)
+set(ccas "")
+set(asmflags "")
+if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    vcpkg_list(APPEND OPTIONS ac_cv_func_memset=yes)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        string(APPEND asmflags " --target=i686-pc-windows-msvc -m32")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        string(APPEND asmflags " --target=x86_64-pc-windows-msvc")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        string(APPEND asmflags " --target=arm64-pc-windows-msvc")
+    else()
+        set(disable_assembly ON)
     endif()
-    set(ENV{ASMFLAGS} "-Xvc -f ${asmflag} -pgas -rraw")
-    vcpkg_list(APPEND OPTIONS
-        ac_cv_func_memset=yes
-        nettle_cv_asm_type_percent_function=no
-        nettle_cv_asm_align_log=no
-    )
+    if(NOT disable_assembly)
+        vcpkg_find_acquire_program(CLANG)
+        set(ccas "${CLANG}")
+    endif()
 else()
-    vcpkg_list(APPEND OPTIONS "CCAS=") # configure will use CC
+    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+endif()
+
+if(disable_assembly)
+    vcpkg_list(APPEND OPTIONS "--enable-assembler=no")
+elseif(ccas)
+    cmake_path(GET ccas PARENT_PATH ccas_dir)
+    vcpkg_add_to_path("${ccas_dir}")
+    cmake_path(GET ccas FILENAME ccas_command)
+    vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
 endif()
 
 if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    file(GLOB def_files "${CMAKE_CURRENT_LIST_DIR}/*.def")
+    file(COPY ${def_files} DESTINATION "${SOURCE_PATH}")
+    vcpkg_list(APPEND OPTIONS "MSVC_TARGET=${VCPKG_TARGET_ARCHITECTURE}")
+else()
+    vcpkg_list(APPEND OPTIONS "MSVC_TARGET=no")
 endif()
 
 vcpkg_configure_make(
@@ -77,40 +88,8 @@ vcpkg_configure_make(
     OPTIONS_DEBUG
         --disable-tools
 )
-
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        # def files are created by running 'llvm-nm <libname> | findstr /R /C:"[RT] _*nettle_"' on the static build and replacing '00[0-9abcdef]+ [RT]' with spaces
-        # please update the defs if the version is bumped
-        set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
-        configure_file(
-            "${CURRENT_PORT_DIR}/nettle-${VCPKG_TARGET_ARCHITECTURE}.def"
-            "${build_dir}/nettle.def"
-            COPYONLY
-        )
-        configure_file(
-            "${CURRENT_PORT_DIR}/hogweed-${VCPKG_TARGET_ARCHITECTURE}.def"
-            "${build_dir}/hogweed.def"
-            COPYONLY
-        )
-        if(NOT VCPKG_BUILD_TYPE)
-            set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/")
-            configure_file(
-                "${CURRENT_PORT_DIR}/nettle-${VCPKG_TARGET_ARCHITECTURE}.def" 
-                "${build_dir}/nettle.def"
-                COPYONLY
-            )
-            configure_file("${CURRENT_PORT_DIR}/hogweed-${VCPKG_TARGET_ARCHITECTURE}.def" 
-                "${build_dir}/hogweed.def"
-                COPYONLY
-            )
-        endif()
-    endif()
-endif()
 vcpkg_install_make()
-
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_CROSSCOMPILING)
     set(tool_names desdata eccdata) # aes gcm sha twofish?
@@ -120,9 +99,14 @@ if(NOT VCPKG_CROSSCOMPILING)
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
 endif()
 
-vcpkg_fixup_pkgconfig()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYINGv3")
 

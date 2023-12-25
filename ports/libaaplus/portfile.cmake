@@ -7,10 +7,10 @@ vcpkg_download_distfile(
     SHA512 a7abf20feb49df00b95be987809a3dc8df3e9ff706dd5a873ecfdd695af125f858264e092b6b856e83685e9eb46fd46520cf09dfae892c32cbb71f925ba17b86
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE_FILE}
-    REF ${VERSION}
+    SOURCE_BASE ${VERSION}
     NO_REMOVE_ONE_LEVEL
     PATCHES
         fix-cmakelists.patch

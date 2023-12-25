@@ -1,0 +1,13 @@
+diff --git a/cmake/version.cmake b/cmake/version.cmake
+index 9a90622..0fc3521 100644
+--- a/cmake/version.cmake
++++ b/cmake/version.cmake
+@@ -176,7 +176,7 @@ function( create_version_header dest_path target )
+         add_custom_command(
+             OUTPUT ${version_h_output}
+             # On Windows this command has to be invoked by a shell in order to work
+-            COMMAND ${BASH_EXECUTABLE} -c "\"./mkversion\" \"-o\" \"version.h\" \"${dest_path}\""
++            COMMAND "${BASH_EXECUTABLE}" -- ./mkversion -o version.h "${dest_path}"
+             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+             COMMENT "Generate ${version_h_output}"
+             VERBATIM

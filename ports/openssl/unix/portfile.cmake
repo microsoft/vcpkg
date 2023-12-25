@@ -45,7 +45,8 @@ vcpkg_list(SET MAKEFILE_OPTIONS)
 if(VCPKG_TARGET_IS_ANDROID)
     set(ENV{ANDROID_NDK_ROOT} "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}")
     set(OPENSSL_ARCH "android-${VCPKG_DETECTED_CMAKE_ANDROID_ARCH}")
-    if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm" AND NOT VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON)
+    # asm on arm32 NEON is broken, https://github.com/openssl/openssl/pull/21583#issuecomment-1727057735
+    if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm" #[[AND NOT VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON]])
         vcpkg_list(APPEND CONFIGURE_OPTIONS no-asm)
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -87,13 +88,6 @@ elseif(VCPKG_TARGET_IS_MINGW)
         set(OPENSSL_ARCH mingw)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
-    set(INTERPRETER "$ENV{EMSDK}/upstream/emscripten/emconfigure")
-    # We must wrap the build in emmake which does not pass jobserver fds.
-    vcpkg_list(SET MAKEFILE_OPTIONS
-        MAKEFILE "${CMAKE_CURRENT_LIST_DIR}/Makefile.emscripten"
-        DISABLE_PARALLEL
-    )
-    set(ENV{VCPKG_JOBS} "-j${VCPKG_CONCURRENCY}")
     vcpkg_list(APPEND CONFIGURE_OPTIONS
         threads
         no-engine

@@ -35,24 +35,28 @@ macro(z_vcpkg_determine_autotools_target_cpu out_var)
     endif()
 endmacro()
 
+macro(z_vcpkg_set_arch_mac out_var value)
+    # Better match the arch behavior of config.guess
+    # See: https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD
+    if("${value}" MATCHES "^(ARM|arm)64$")
+        set(${out_var} "aarch64")
+    else()
+        set(${out_var} "${value}")
+    endif()
+endmacro()
+
 macro(z_vcpkg_determine_autotools_host_arch_mac out_var)
-    set(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
+    z_vcpkg_set_arch_mac(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
 endmacro()
 
 macro(z_vcpkg_determine_autotools_target_arch_mac out_var)
     list(LENGTH VCPKG_OSX_ARCHITECTURES osx_archs_num)
     if(osx_archs_num EQUAL 0)
-        set(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
+        z_vcpkg_set_arch_mac(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
     elseif(osx_archs_num GREATER_EQUAL 2)
         set(${out_var} "universal")
     else()
-        # Better match the arch behavior of config.guess
-        # See: https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD
-        if(VCPKG_OSX_ARCHITECTURES MATCHES "^(ARM|arm)64$")
-            set(${out_var} "aarch64")
-        else()
-            set(${out_var} "${VCPKG_OSX_ARCHITECTURES}")
-        endif()
+        z_vcpkg_set_arch_mac(${out_var} "${VCPKG_OSX_ARCHITECTURES}")
     endif()
     unset(osx_archs_num)
 endmacro()
@@ -220,7 +224,7 @@ function(vcpkg_configure_make)
 
     # Establish a bash environment as expected by autotools.
     if(CMAKE_HOST_WIN32)
-        list(APPEND msys_require_packages binutils libtool autoconf automake-wrapper automake1.16 m4 which)
+        list(APPEND msys_require_packages autoconf-wrapper automake-wrapper binutils libtool make pkgconf which)
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${msys_require_packages} ${arg_ADDITIONAL_MSYS_PACKAGES})
         set(base_cmd "${MSYS_ROOT}/usr/bin/bash.exe" --noprofile --norc --debug)
         vcpkg_list(SET add_to_env)
@@ -236,9 +240,7 @@ function(vcpkg_configure_make)
         message(DEBUG "path_list:${path_list}") # Just to have --trace-expand output
 
         vcpkg_list(SET find_system_dirs 
-            "${system_root}/system32"
             "${system_root}/System32"
-            "${system_root}/system32/"
             "${system_root}/System32/"
             "${local_app_data}/Microsoft/WindowsApps"
             "${local_app_data}/Microsoft/WindowsApps/"
@@ -249,7 +251,8 @@ function(vcpkg_configure_make)
         set(index 0)
         set(appending TRUE)
         foreach(item IN LISTS path_list)
-            if(item IN_LIST find_system_dirs OR item IN_LIST find_system_dirs_upper)
+            string(TOUPPER "${item}" item_upper)
+            if(item_upper IN_LIST find_system_dirs_upper)
                 set(appending FALSE)
                 break()
             endif()

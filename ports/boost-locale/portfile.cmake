@@ -3,10 +3,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
-    REF boost-1.81.0
-    SHA512 553fe135656dfd4e1dd797396964508a3a9807c9a04233a86e340402eaf1913f8d89eff6e1c3fe9415258d541af877839d2d7b5616f40df892cbbdb2dfcbdb97
+    REF boost-1.83.0
+    SHA512 8d30de6f2a02768716a109b8784f573e6fdd75fe0ba50fabbe1edf6cd65fb0ec92eccf6929102130d464bfbcdc3a677b53f0ac57ab82464a4f0b8cbbd3d644a6
     HEAD_REF master
-    PATCHES fix-dependencies.patch
+    PATCHES
+        0001-fix-build-error-on-MSVC.patch
+        fix-dependencies.patch
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"

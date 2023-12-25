@@ -30,7 +30,7 @@ index b11573a..703458e 100644
      set(FREEIMAGE_DIR "NOT-SPECIFIED" CACHE PATH "Directory that contains the freeimage library and the corresponding headers.")
      #-----------------------------------------------------------------------------------------------
  
-@@ -90,6 +93,35 @@ function(FIND_FREEIMAGE_EXT)
+@@ -90,6 +93,37 @@ function(FIND_FREEIMAGE_EXT)
          endif()
      endif()
  
@@ -55,6 +55,8 @@ index b11573a..703458e 100644
 +            if(NOT _FREEIMAGE_LIB)
 +                get_target_property(_FREEIMAGE_LIB freeimage::FreeImage IMPORTED_IMPLIB_DEBUG)
 +            endif()
++        elseif(WINDOWS)
++            set(_FREEIMAGE_LIB "${_FREEIMAGE_SHARED}")
 +        endif()
 +        
 +        find_file(_FREEIMAGE_HEADER_FILE "FreeImage.h"
@@ -66,3 +68,16 @@ index b11573a..703458e 100644
      # error if dependencies can not be resolved
      if(NOT EXISTS ${_FREEIMAGE_INCLUDE} OR (WINDOWS AND NOT EXISTS ${_FREEIMAGE_LIB}) OR NOT EXISTS ${_FREEIMAGE_SHARED})
          message(STATUS "FREEIMAGE_DIR: ${FREEIMAGE_DIR}")
+diff --git a/src/shaders/plugin/freeimage/CMakeLists.txt b/src/shaders/plugin/freeimage/CMakeLists.txt
+index a28b50e..910141e 100644
+--- a/src/shaders/plugin/freeimage/CMakeLists.txt
++++ b/src/shaders/plugin/freeimage/CMakeLists.txt
+@@ -69,7 +69,7 @@ add_library(mdl::nv_freeimage ALIAS ${PROJECT_NAME})
+ # add dependencies other dependencies
+ target_add_dependencies(TARGET ${PROJECT_NAME} 
+     DEPENDS
+-        freeimage
++        freeimage::FreeImage
+         mdl::base-system-version
+     )
+ 

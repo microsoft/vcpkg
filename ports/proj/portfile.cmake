@@ -2,12 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
     REF "${VERSION}"
-    SHA512 a48980b94b6c68738dd5ab70a1de6aa42f325fd612155623195a14774caadcaceff08035c01696458d3dd706b2277d89ea093949a1855fafa9951c59821cb1cb
+    SHA512 45775e2b2a6b5bc490743c562155521a2ef48c5a8834cc96f88784aea785df10688f8962ae22fcac64d3b2f85378539ef1d3a082243cdc0ca3695ed8b9efa18b
     HEAD_REF master
     PATCHES
         fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
-        remove-doc.patch
+        remove_toolset_restriction.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -54,8 +54,12 @@ if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 endif ()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/share/man"
+)
 
 vcpkg_copy_pdbs()
 

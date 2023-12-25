@@ -1,4 +1,4 @@
-set(DIRECTXTK_TAG feb2023)
+set(DIRECTXTK_TAG oct2023)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF feb2023b
-    SHA512 ada04322589e635a7fc21a3b35e9af676bba060a800b56b2735e7e109801b08daa9f9ef8b6b25762e470a88a9cb0fdab3cb46dcc7b13e0344ded4d507254ea37
+    REF ${DIRECTXTK_TAG}
+    SHA512 3df7f26df2edfbfd8ba8ab2ff8b7f653c1df194145e89fd2bbe7c3f0581d4a11de2845091a6c7d27c2b7800d2b1e8770728fb357e6ab0ce57e714d8fcc0c3453
     HEAD_REF main
 )
 
@@ -18,18 +18,13 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         spectre ENABLE_SPECTRE_MITIGATION
+        tools BUILD_TOOLS
         xaudio2-9 BUILD_XAUDIO_WIN10
         xaudio2-8 BUILD_XAUDIO_WIN8
         xaudio2redist BUILD_XAUDIO_WIN7
 )
 
 set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
-
-if(VCPKG_TARGET_IS_UWP)
-  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
-else()
-  list(APPEND EXTRA_OPTIONS -DBUILD_TOOLS=ON)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -39,40 +34,58 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/directxtk)
 
-if(VCPKG_HOST_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+if("tools" IN_LIST FEATURES)
+
   vcpkg_download_distfile(
     MAKESPRITEFONT_EXE
     URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/MakeSpriteFont.exe"
     FILENAME "makespritefont-${DIRECTXTK_TAG}.exe"
-    SHA512 2cf274cd1c9a4692b84bd3ac9c3266eb3a20b1598b29f8f77893cb5911c3e70c4b0151df54a3fdef93215db22c76854a61b6d3688ac9cd1875611fe34d196da3
-  )
-
-  vcpkg_download_distfile(
-    XWBTOOL_EXE
-    URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/XWBTool.exe"
-    FILENAME "xwbtool-${DIRECTXTK_TAG}.exe"
-    SHA512 ab328e336228ec5e1abe0aa44707203325d743432728a1d8d01990529350fe6dc0f1bc5d58ce961456f6273922169abc1a4a9ca3804dd7f40198a182462c332d
+    SHA512 00a4c94d3f9b6607f652edfbe1ce0cc9c09437f3084e2b252462458e652ff2735bf94f028091739ec66edbf29c1ebeb813af5c9b68644ac02cebf8ab6833d8fa
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
 
-  file(INSTALL
-    ${MAKESPRITEFONT_EXE}
-    ${XWBTOOL_EXE}
-    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
+  file(INSTALL "${MAKESPRITEFONT_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
 
   file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont-${DIRECTXTK_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont.exe")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-${DIRECTXTK_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe")
 
-elseif(NOT VCPKG_TARGET_IS_UWP)
+  if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
 
-  vcpkg_copy_tools(
-        TOOL_NAMES XWBTool
-        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake"
+    vcpkg_download_distfile(
+      XWBTOOL_EXE
+      URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/XWBTool.exe"
+      FILENAME "xwbtool-${DIRECTXTK_TAG}.exe"
+      SHA512 2b60b1dedfe8803914d16c760b546aad82a05404eedff9740f56a1ca8e15d9b77bba3743a3b39adb2092d04afc90106c8a3c2dffc87392cf5dfe6686752c4d3d
     )
 
+    file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
+
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-${DIRECTXTK_TAG}.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe")
+
+  elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+
+    vcpkg_download_distfile(
+      XWBTOOL_EXE
+      URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/XWBTool_arm64.exe"
+      FILENAME "xwbtool-${DIRECTXTK_TAG}-arm64.exe"
+      SHA512 d0ff53fefedeba588ad583f99ab2c2420fe0b30a1efb88e4ce556436f1d5d8d76c69f28be7ca7209660212d017a1a404bcdb43349743a4142a7c3e88937ce1d3
+    )
+
+    file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
+
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-${DIRECTXTK_TAG}-arm64.exe" "${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe")
+
+  else()
+
+    vcpkg_copy_tools(
+          TOOL_NAMES XWBTool
+          SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake"
+      )
+
+  endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

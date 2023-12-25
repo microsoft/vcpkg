@@ -19,10 +19,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 877b4bc4b59126bdaf626b01322c8ac5325945234acd14907e4a23019f1fd38ec17b5fae9ff60aa9b6b0089c29b0e4255a19cd2a1743c3db82a616286c60d3b9
+    SHA512 aaf4f13b7b8020be37837f8084ab7aa3db64e6eb1ecabf04473ed5bd09bcabb8790f0dc1f7604febbbf974702b1fbe41795a7b575e7f88b07cbe094493926a6b
     PATCHES
-        disable-apps.patch
-        disable-install-docs.patch
+        asm-comments.patch
+        declspec-align.patch
+        qt-msvc.patch
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
@@ -35,10 +36,15 @@ vcpkg_from_github(
 vcpkg_list(SET CONFIGURE_OPTIONS
     enable-static-engine
     enable-capieng
-    no-ssl3
-    no-weak-ssl-ciphers
     no-tests
+    no-docs
 )
+
+set(INSTALL_FIPS "")
+if("fips" IN_LIST FEATURES)
+    vcpkg_list(APPEND INSTALL_FIPS install_fips)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-fips)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_list(APPEND CONFIGURE_OPTIONS shared)
@@ -48,6 +54,15 @@ endif()
 
 if(NOT "tools" IN_LIST FEATURES)
     vcpkg_list(APPEND CONFIGURE_OPTIONS no-apps)
+endif()
+
+if("weak-ssl-ciphers" IN_LIST FEATURES)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-weak-ssl-ciphers)
+endif()
+
+if("ssl3" IN_LIST FEATURES)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-ssl3)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-ssl3-method)
 endif()
 
 if(DEFINED OPENSSL_USE_NOPINSHARED)
@@ -66,4 +81,4 @@ else()
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

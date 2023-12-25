@@ -1,6 +1,6 @@
 {
   "name": "rmlui",
-  "version": "5.0",
+  "version": "5.1",
   "maintainers": "Michael R. P. Ragazzon <mikke89@users.noreply.github.com>",
   "description": "RmlUi is the C++ user interface library based on the HTML and CSS standards, designed as a complete solution for any project's interface needs.",
   "homepage": "https://github.com/mikke89/RmlUi",

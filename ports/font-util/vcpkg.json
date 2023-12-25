@@ -1,7 +1,6 @@
 {
   "name": "font-util",
-  "version": "1.3.2",
-  "port-version": 1,
+  "version": "1.4.1",
   "description": "X.Org font package creation/installation utilities",
   "homepage": "https://gitlab.freedesktop.org/xorg/font/util",
   "license": null,

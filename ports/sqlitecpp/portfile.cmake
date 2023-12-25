@@ -1,13 +1,11 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO "SRombauts/SQLiteCpp"
-    REF 3.2.0
+    REF ${VERSION}
     HEAD_REF master
-    SHA512 af57c3e82a8804174c52105ecc14ea7a2d4e293ef13b2fc371f2455890ea54683ed76adf4649e561686a6b4c3368676f5edcc54d9f22c4850be3ba32832d3272
+    SHA512 08a42ef2495b65e8565569842b40882aff91a3bf1887f09b5b2f2950ae4e16ef927809e7ff9870ffcf143bc187bb3eea5c3f2e4881943144e8cb6e1605ba71ce
     PATCHES
-        0001-unofficial-sqlite3-and-sqlcipher.patch
         fix_dependency.patch
+        add_runtime_destination.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -28,7 +26,6 @@ vcpkg_cmake_configure(
         -DSQLITECPP_RUN_CPPCHECK=OFF
         -DSQLITECPP_INTERNAL_SQLITE=OFF
         -DSQLITE_ENABLE_COLUMN_METADATA=ON
-        -DSQLITECPP_INTERNAL_SQLITE=OFF
         -DSQLITECPP_USE_STATIC_RUNTIME=OFF # unconditionally off because vcpkg's toolchains already do the right thing
         # See https://github.com/SRombauts/SQLiteCpp/blob/e74403264ec7093060f4ed0e84bc9208997c8344/CMakeLists.txt#L40-L46
         ${USE_STACK_PROTECTION}

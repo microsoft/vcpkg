@@ -2,7 +2,7 @@ diff --git a/cmake/HPX_AddComponent.cmake b/cmake/HPX_AddComponent.cmake
 index 129a87ced..b45feb3f5 100644
 --- a/cmake/HPX_AddComponent.cmake
 +++ b/cmake/HPX_AddComponent.cmake	
-@@ -303,7 +303,7 @@ function(add_hpx_component name)
+@@ -306,7 +306,7 @@ function(add_hpx_component name)
    hpx_setup_target(
      ${name}_component
      TYPE COMPONENT

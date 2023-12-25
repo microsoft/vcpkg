@@ -1,0 +1,40 @@
+diff --git a/IO/Image/vtkSEPReader.cxx b/IO/Image/vtkSEPReader.cxx
+index 2b15bc249e..cec84d1712 100644
+--- a/IO/Image/vtkSEPReader.cxx
++++ b/IO/Image/vtkSEPReader.cxx
+@@ -34,7 +34,6 @@
+ #include <vtksys/SystemTools.hxx>
+ 
+ #include <algorithm>
+-#include <cstdint>
+ 
+ namespace details
+ {
+diff --git a/IO/Image/vtkSEPReader.h b/IO/Image/vtkSEPReader.h
+index 83d127a41e..bdb33a258b 100644
+--- a/IO/Image/vtkSEPReader.h
++++ b/IO/Image/vtkSEPReader.h
+@@ -25,8 +25,9 @@
+ #include "vtkImageAlgorithm.h"
+ #include "vtkNew.h" // for ivars
+ 
+-#include <array>  // for std::array
+-#include <string> // for std::string
++#include <array>   // for std::array
++#include <cstdint> // for std::uint8_t
++#include <string>  // for std::string
+ 
+ namespace details
+ {
+diff --git a/ThirdParty/libproj/vtklibproj/src/proj_json_streaming_writer.hpp b/ThirdParty/libproj/vtklibproj/src/proj_json_streaming_writer.hpp
+index 6267684218..cf19b83af4 100644
+--- a/ThirdParty/libproj/vtklibproj/src/proj_json_streaming_writer.hpp
++++ b/ThirdParty/libproj/vtklibproj/src/proj_json_streaming_writer.hpp
+@@ -31,6 +31,7 @@
+ 
+ /*! @cond Doxygen_Suppress */
+ 
++#include <cstdint>
+ #include <vector>
+ #include <string>
+ 

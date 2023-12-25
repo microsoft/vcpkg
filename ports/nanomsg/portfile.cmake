@@ -49,7 +49,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "defined(NN_STATIC_LIB)"
         "1 // defined(NN_STATIC_LIB)"
     )
-
+endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string(
         ${CURRENT_PACKAGES_DIR}/share/${PORT}/nanomsg-config.cmake
         "set_and_check(nanomsg_BINDIR \${PACKAGE_PREFIX_DIR}/bin)"

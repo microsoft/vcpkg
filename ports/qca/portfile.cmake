@@ -11,13 +11,15 @@ vcpkg_add_to_path("${PERL_EXE_PATH}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/qca
-    REF v2.3.5
-    SHA512 c83ac69597f22d915479fd4fd1557b89c56ba384321c324f93cf2f1bd32a819cb6d7b008c44e7606fa39c8184043d97c36ee1210d23a6e8ce24c41c8a83e4fb9
+    REF "v${VERSION}"
+    SHA512 de06173aaea32aac19a24510b5dbb4bb79681217eb1e4256de36db9f7158ad485fa450ffba5e13c12a0425866923b54f9b4d6164d0eaf659fdf40e458f5ee017
     PATCHES
         0001-fix-path-for-vcpkg.patch
         0002-fix-build-error.patch
         0003-Define-NOMINMAX-for-botan-plugin-with-MSVC.patch
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/Qca)
@@ -45,10 +47,9 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Importing certstore done")
 
+set(PLUGINS gnupg logger softstore wincrypto)
 if("botan" IN_LIST FEATURES)
-    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN=yes)
-else()
-    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN=no)
+    list(APPEND PLUGINS botan)
 endif()
 
 # Configure and build
@@ -56,13 +57,14 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUSE_RELATIVE_PATHS=ON
+        "-DBUILD_PLUGINS=${PLUGINS}"
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
         -DBUILD_WITH_QT6=ON
         -DQCA_SUFFIX=OFF
         -DQCA_FEATURE_INSTALL_DIR=share/qca/mkspecs/features
         -DOSX_FRAMEWORK=OFF
-        ${QCA_OPTIONS}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     OPTIONS_DEBUG
         -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_DEBUG}
     OPTIONS_RELEASE
@@ -90,4 +92,4 @@ file(REMOVE_RECURSE
 vcpkg_fixup_pkgconfig()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

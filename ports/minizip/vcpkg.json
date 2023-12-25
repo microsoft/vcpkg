@@ -1,10 +1,10 @@
 {
   "name": "minizip",
-  "version-semver": "1.2.13",
-  "description": "Zip compression library",
+  "version": "1.3",
+  "port-version": 1,
+  "description": "Minizip zip file manipulation library",
   "homepage": "https://github.com/madler/zlib",
   "license": "Zlib",
-  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -12,6 +12,10 @@
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
       "host": true
     },
     "zlib"
@@ -22,6 +26,10 @@
       "dependencies": [
         "bzip2"
       ]
+    },
+    "tools": {
+      "description": "Install tools",
+      "supports": "!ios"
     }
   }
 }

@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/logic
-    REF boost-1.81.0
-    SHA512 c21e4be1a61e711810300269fb5d6594efc5d773f92d7796bcc1c1c4e121d41d5f6cc3bdd7ff90afa286bff54890b5f8992c1d27ea589f60a2f7caae43a044bc
+    REF boost-1.83.0
+    SHA512 9361746ed066e1ca04d9005b38aecda63b22e9dd32f5aa89e49743499af21def4e87acad8df229ad10c2125da560c56f648a1510f1a7f2ed8395a40b5cf374e2
     HEAD_REF master
 )
 

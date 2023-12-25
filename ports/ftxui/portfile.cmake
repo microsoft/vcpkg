@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArthurSonzogni/FTXUI
     REF "v${VERSION}"
-    SHA512 989afc109e31fa083f5d953d199dc7f4515daaee7014ec1616b48bc66ff49643bc32e5cdd273016a1d44f6921f6031d1e7e41fc2375cfee44fc719223baaaa7b
+    SHA512 be5ed7f2b3c90a7de874115a131c75c69ad9dd6db4c3bc0cfd7036cfe449b8d16af3df8f1aa1bcb057347bd726837e3f1c42e30a06cf3ad34b50e7bd26ba4883
     HEAD_REF master
 )
 
@@ -20,6 +20,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

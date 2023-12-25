@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/nowide
-    REF boost-1.81.0
-    SHA512 2271e1c030bed4e487dcd0e2d6fc58808db740a0f00412431df3ba81d062e12aba9dbff94fb955b6343ee7d3447c02abe4e8705471355b11a240fd9765cd9a14
+    REF boost-1.83.0
+    SHA512 1cdfc8f6087719206ea9affc6262114bfefc5f0e326d40cf5be9bae613a4ed8ebb378d3e59a2db31fec946c02b038a9ffbf5ff33b24cab4863da47236661b24a
     HEAD_REF master
 )
 
