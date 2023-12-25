@@ -18,15 +18,23 @@ vcpkg_extract_source_archive_ex(
     0004-src-cdda-player.c-always-use-s-style-format-for-prin.patch
 )
 
-vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-)
-vcpkg_install_make()
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_msbuild_install(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH MSVC/libcdio.sln
+    )
+else()
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+    )
+    vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
+endif()
+
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_pkgconfig()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cdio/cdio_config.h" "${CURRENT_BUILDTREES_DIR}" "")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

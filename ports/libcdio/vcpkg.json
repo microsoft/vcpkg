@@ -5,6 +5,14 @@
   "homepage": "http://savannah.gnu.org/projects/libcdio/",
   "license": "GPL-3.0-only",
   "dependencies": [
-    "libiconv"
+    "libiconv",
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "features": [
+        "pkg-config"
+      ],
+      "platform": "windows"
+    }
   ]
 }
