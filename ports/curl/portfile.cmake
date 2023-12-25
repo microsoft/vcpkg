@@ -14,6 +14,7 @@ vcpkg_from_github(
         mbedtls-ws2_32.patch
         export-components.patch
         dependencies.patch
+        cmake-config.patch
         cmake-config-ios.patch
 )
 
