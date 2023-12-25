@@ -1490,7 +1490,7 @@
     },
     "ccfits": {
       "baseline": "2.5",
-      "port-version": 11
+      "port-version": 12
     },
     "cctag": {
       "baseline": "1.0.2",
