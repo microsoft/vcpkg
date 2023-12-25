@@ -826,6 +826,12 @@ function(vcpkg_configure_make)
             set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
         endif()
 
+        if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+            # configure not using all flags to check if compiler works ...
+            set(ENV{CC} "$ENV{CC} $ENV{CPPFLAGS} $ENV{CFLAGS}")
+            set(ENV{CC_FOR_BUILD} "$ENV{CC_FOR_BUILD} $ENV{CPPFLAGS} $ENV{CFLAGS}")
+        endif()
+
         if(LINK_ENV_${current_buildtype})
             set(link_config_backup "$ENV{_LINK_}")
             set(ENV{_LINK_} "${LINK_ENV_${current_buildtype}}")
