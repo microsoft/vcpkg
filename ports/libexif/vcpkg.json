@@ -1,7 +1,7 @@
 {
   "name": "libexif",
   "version": "0.6.24",
-  "port-version": 1,
+  "port-version": 2,
   "description": "a library for parsing, editing, and saving EXIF data",
   "homepage": "https://libexif.github.io/",
   "license": "LGPL-2.1-or-later",
@@ -10,24 +10,10 @@
     {
       "name": "vcpkg-cmake",
       "host": true
+    },
+    {
+        "name": "gettext",
+        "host": true
     }
-  ],
-  "default-features": [
-    "nls"
-  ],
-  "features": {
-    "nls": {
-      "description": "Enable native language support.",
-      "dependencies": [
-        {
-          "name": "gettext",
-          "host": true,
-          "features": [
-            "tools"
-          ]
-        },
-        "gettext-libintl"
-      ]
-    }
-  }
+  ]
 }
