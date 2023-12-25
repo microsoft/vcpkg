@@ -8,12 +8,12 @@
   "supports": "!uwp",
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
+      "name": "gettext",
       "host": true
     },
     {
-        "name": "gettext",
-        "host": true
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }
