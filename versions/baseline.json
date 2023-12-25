@@ -7438,7 +7438,7 @@
     },
     "recastnavigation": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "recycle": {
       "baseline": "6.0.0",
