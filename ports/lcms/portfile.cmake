@@ -23,5 +23,12 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_LINUX)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lcms2.pc" [[Cflags: "-I${includedir}" -pthread]] [[Cflags: "-I${includedir}"]])
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lcms2.pc" [[Cflags: "-I${includedir}" -pthread]] [[Cflags: "-I${includedir}"]])
+    endif()
+endif()
+
 configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-lcms2-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/lcms2/lcms2-config.cmake" @ONLY)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
