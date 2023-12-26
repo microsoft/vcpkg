@@ -15,4 +15,5 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-lcms2-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/lcms2/lcms2-config.cmake" @ONLY)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
