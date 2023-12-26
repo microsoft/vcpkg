@@ -15,12 +15,24 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "ofx2qif"     ENABLE_OFX2QIF
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(path_suffix "/debug")
+endif()
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    set(path_suffix "")
+endif()
+vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
+vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${path_suffix}/lib/pkgconfig")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_OFXCONNECT=OFF # depends on libxml++ ABI 2.6, while vcpkg ships ABI 4.0. See https://libxmlplusplus.github.io/libxmlplusplus/#abi-versions
         ${FEATURE_OPTIONS}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
+vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
@@ -28,7 +40,7 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME LibOFX CONFIG_PATH lib/cmake/libofx)
 vcpkg_copy_pdbs()
 
 vcpkg_replace_string(
-    "${CURRENT_PACKAGES_DIR}/share/${PORT}/LibOFXTargets.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/LibOFX/LibOFXTargets.cmake"
     [[# Create imported target libofx::libofx]]
     [[# Create imported target libofx::libofx 
 find_package(PkgConfig) 
