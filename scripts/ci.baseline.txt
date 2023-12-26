@@ -238,6 +238,10 @@ cserialport:arm64-android=fail
 cserialport:x64-android=fail
 ctbench:x64-osx=fail
 ctbench:arm64-osx=fail
+# Needs android-28 (hidden before NDK r26)
+cyclonedds:arm-neon-android=fail
+cyclonedds:arm64-android=fail
+cyclonedds:x64-android=fail
 czmq:arm-neon-android=fail
 czmq:arm64-android=fail
 czmq:x64-android=fail
