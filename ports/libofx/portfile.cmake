@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 0.10.9
     SHA512 be7b77f77a012fe04121c615b88f674bba11f79b5353b3c4594de395f9f787c3a9b6910693f5ba701421387fc13c13e7977ab73893e18c6a0b6e1292b7d1cfe2
     HEAD_REF master
+    PATCHES
+        fix_link_opensp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

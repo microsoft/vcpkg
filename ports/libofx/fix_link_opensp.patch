@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cd97e84..294279d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,7 +59,8 @@ endif (NOT CMAKE_BUILD_TYPE)
+ include(CTest)
+ 
+ # locate required dependencies
+-find_package(OpenSP)
++find_package(PkgConfig)
++pkg_check_modules(OpenSP REQUIRED IMPORTED_TARGET opensp)
+ set_package_properties(OpenSP PROPERTIES TYPE REQUIRED PURPOSE "The underlying library that the LibOFX builds upon, we cannot build without it!")
+ 
+ # locate optional dependencies
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 856aa11..5106ded 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -47,7 +47,7 @@ set_target_properties(libofx PROPERTIES SOVERSION ${LIBOFX_LIBRARY_SONAME})
+ set_target_properties(libofx PROPERTIES VERSION ${LIBOFX_LIBRARY_VERSION})
+ set_target_properties(libofx PROPERTIES PREFIX "")
+ 
+-target_link_libraries(libofx OpenSP::OpenSP)
++target_link_libraries(libofx PkgConfig::OpenSP)
+ target_include_directories(libofx BEFORE
+         PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/inc> $<INSTALL_INTERFACE:include>
+         PRIVATE ${CMAKE_BINARY_DIR}
