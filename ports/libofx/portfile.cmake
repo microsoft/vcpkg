@@ -27,6 +27,13 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibOFX CONFIG_PATH lib/cmake/libofx)
 vcpkg_copy_pdbs()
 
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/LibOFXTargets.cmake"
+    [[# Create imported target libofx::libofx]]
+    [[# Create imported target libofx::libofx 
+find_package(PkgConfig) 
+pkg_check_modules(OpenSP REQUIRED IMPORTED_TARGET opensp)]])
+
 list(REMOVE_ITEM FEATURES core iconv)
 if(FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ${FEATURES} AUTO_CLEAN)
