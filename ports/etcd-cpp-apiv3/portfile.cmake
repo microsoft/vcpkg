@@ -10,6 +10,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_ETCD_TESTS=OFF
+        -DETCD_W_STRICT=OFF
         "-DCOPYRIGHT_FILES_DIRECTORY=${SOURCE_PATH}/cmake"
 )
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
