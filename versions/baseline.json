@@ -2470,7 +2470,7 @@
     },
     "entityx": {
       "baseline": "1.3.0",
-      "port-version": 5
+      "port-version": 6
     },
     "entt": {
       "baseline": "3.13.0",
