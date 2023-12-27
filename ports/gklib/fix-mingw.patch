@@ -6,7 +6,7 @@ index 122e087..c8a322f 100644
  #endif
    #include <inttypes.h>
    #include <sys/types.h>
-+#ifndef _WIN32 # MinGW
++#ifndef _WIN32 // MinGW
    #include <sys/resource.h>
 +#endif
    #include <sys/time.h>
