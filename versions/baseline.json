@@ -5558,7 +5558,7 @@
     },
     "mecab": {
       "baseline": "2019-09-25",
-      "port-version": 5
+      "port-version": 6
     },
     "memorymodule": {
       "baseline": "2019-12-31",
