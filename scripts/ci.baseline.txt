@@ -492,6 +492,8 @@ json-schema-validator:arm-neon-android=fail
 json-schema-validator:arm64-android=fail
 kfr:x64-android=fail
 kfr:x64-uwp=fail
+# needs android-24
+kubazip:arm-neon-android=fail
 lastools:arm-neon-android=fail
 lastools:arm64-android=fail
 lastools:x64-android=fail
@@ -609,7 +611,7 @@ libqcow:x64-windows=skip
 libqcow:x64-linux=skip
 libqcow:x86-windows=skip
 libqcow:arm64-windows=skip
-# needs ftello
+# needs android-24
 libraw:arm-neon-android=fail
 # Conflicts with openssl
 libressl:arm-neon-android=skip
