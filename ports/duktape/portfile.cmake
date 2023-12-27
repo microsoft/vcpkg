@@ -1,7 +1,7 @@
 vcpkg_download_distfile(
     ARCHIVE
-    URLS https://github.com/svaarala/duktape/releases/download/v2.7.0/duktape-2.7.0.tar.xz
-    FILENAME duktape-2.7.0.tar.xz
+    URLS https://github.com/svaarala/duktape/releases/download/v${VERSION}/duktape-${VERSION}.tar.xz
+    FILENAME duktape-${VERSION}.tar.xz
     SHA512 8ff5465c9c335ea08ebb0d4a06569c991b9dc4661b63e10da6b123b882e7375e82291d6b883c2644902d68071a29ccc880dae8229447cebe710c910b54496c1d
 )
 
@@ -11,8 +11,6 @@ vcpkg_extract_source_archive(
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/duktapeConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(DUK_CONFIG_H_PATH "${SOURCE_PATH}/src/duk_config.h")
@@ -31,11 +29,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup()
-vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-duktape)
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
