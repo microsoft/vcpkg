@@ -4642,7 +4642,7 @@
     },
     "libodb-pgsql": {
       "baseline": "2.4.0",
-      "port-version": 7
+      "port-version": 8
     },
     "libodb-sqlite": {
       "baseline": "2.4.0",
