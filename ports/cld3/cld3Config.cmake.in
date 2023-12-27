@@ -1,0 +1,25 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Protobuf)
+
+# Traditional find module variables (vcpkg polyfill)
+set(cld3_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
+set(cld3_INCLUDE_DIRS "${cld3_INCLUDE_DIR}")
+set(cld3_DIR "${cld3_INCLUDE_DIR}")
+
+get_filename_component(_cld3_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_cld3_root "${_cld3_root}" PATH)
+get_filename_component(_cld3_root "${_cld3_root}" PATH)
+
+add_library(cld3 INTERFACE IMPORTED GLOBAL)
+
+target_include_directories(cld3 INTERFACE ${_cld3_root}/include)
+
+find_library(cld3_LIBRARIES NAMES cld3)
+target_link_libraries(cld3 INTERFACE ${cld3_LIBRARIES})
+
+set_property(TARGET cld3 APPEND PROPERTY IMPORTED_CONFIGURATIONS)
+set(cld3_FOUND TRUE)
+
+unset(_cld3_root)
