@@ -1241,6 +1241,8 @@ wasmedge:arm64-android=fail
 wasmedge:x64-android=fail
 wavpack:arm-neon-android=fail
 wavpack:x64-android=fail
+# 32-bit needs android-24
+wcslib:arm-neon-android=fail
 # Collides with libpcap -> similar headers
 winpcap:x64-windows = skip
 winpcap:x86-windows = skip
