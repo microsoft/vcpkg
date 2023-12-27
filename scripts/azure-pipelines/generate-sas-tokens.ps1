@@ -1,3 +1,7 @@
+Param(
+    [Parameter(Mandatory=$true)]
+    [int]$KeyNumber
+)
 
 function Get-SasToken {
     Param(
@@ -28,13 +32,13 @@ function Get-SasToken {
 
 # Asset Cache:
 # Read, Create, List
-$assetSas = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-asset-cache -StorageAccountName vcpkgassetcacheeastasia -ContainerName cache -Permission rcl
+$assetSas = Get-SasToken -KeyNumber $KeyNumber -ResourceGroupName vcpkg-asset-cache -StorageAccountName vcpkgassetcacheeastasia -ContainerName cache -Permission rcl
 
 # Binary Cache:
 # Read, Create, List, Write
-$binarySas = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycache -ContainerName cache -Permission rclw
-$binaryEASas = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycacheeastasia -ContainerName cache -Permission rclw
-$binaryWUS3as = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycachewus3 -ContainerName cache -Permission rclw
+$binarySas = Get-SasToken -KeyNumber $KeyNumber -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycache -ContainerName cache -Permission rclw
+$binaryEASas = Get-SasToken -KeyNumber $KeyNumber -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycacheeastasia -ContainerName cache -Permission rclw
+$binaryWUS3as = Get-SasToken -KeyNumber $KeyNumber -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycachewus3 -ContainerName cache -Permission rclw
 
 $response = "Asset Cache SAS: Update`n" + `
     "https://dev.azure.com/vcpkg/public/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=6&path=vcpkg-asset-caching-credentials`n" + `

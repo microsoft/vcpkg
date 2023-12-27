@@ -24,11 +24,14 @@ vcpkg_check_features(
         tools   ENABLE_UTILITIES
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 set(VCPKG_BUILD_TYPE release) # no lib binaries
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # writes to include/dv-processing/version.hpp
     OPTIONS
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         ${FEATURE_OPTIONS}
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
