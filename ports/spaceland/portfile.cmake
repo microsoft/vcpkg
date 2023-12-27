@@ -15,10 +15,8 @@ vcpkg_extract_source_archive(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-	OPTIONS
-		-DSL_TEST=OFF
-		-DSL_INSTALL_SLFIND_MODULE=OFF
-	OPTIONS_DEBUG
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=11 # 17 does not allow 'register'
         -DSL_TEST=OFF
         -DSL_INSTALL_SLFIND_MODULE=OFF
 )
