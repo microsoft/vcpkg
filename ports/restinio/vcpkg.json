@@ -5,6 +5,7 @@
   "homepage": "https://github.com/Stiffstream/restinio",
   "license": "BSD-3-Clause",
   "dependencies": [
+    "asio",
     "expected-lite",
     "fmt",
     "llhttp",
@@ -16,22 +17,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "default-features": [
-    "standalone-asio"
-  ],
-  "features": {
-    "boost-asio": {
-      "description": "Use of Boost.Asio",
-      "dependencies": [
-        "boost-asio"
-      ]
-    },
-    "standalone-asio": {
-      "description": "Use of standalone version of Asio",
-      "dependencies": [
-        "asio"
-      ]
-    }
-  }
+  ]
 }
