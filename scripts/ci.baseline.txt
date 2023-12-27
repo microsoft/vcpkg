@@ -534,6 +534,8 @@ libcrafter:x64-android=fail
 libdc1394:arm-neon-android=fail
 libdc1394:x64-android=fail
 libdc1394:arm64-android=fail
+# 32-bit needs android-24
+libflac:arm-neon-android=fail
 # Fails to build due to incompatible delcaration of select in macOS 14.2
 libgo:x64-osx=fail
 libgo:x64-android=fail
@@ -557,6 +559,10 @@ libhdfs3:arm64-osx=fail
 libidn2:arm-neon-android=fail
 libidn2:arm64-android=fail
 libidn2:x64-android=fail
+# needs android-24
+libimobiledevice-glue:arm-neon-android=fail
+libimobiledevice-glue:arm64-android=fail
+libimobiledevice-glue:x64-android=fail
 # 120 min build time for libjxl arm64-uwp-rel, reason unknown
 libjxl:arm64-uwp=skip
 liblo:arm-neon-android=fail
@@ -619,7 +625,7 @@ libqcow:x64-windows=skip
 libqcow:x64-linux=skip
 libqcow:x86-windows=skip
 libqcow:arm64-windows=skip
-# needs android-24
+# 32-bit needs android-24
 libraw:arm-neon-android=fail
 # Conflicts with openssl
 libressl:arm-neon-android=skip
