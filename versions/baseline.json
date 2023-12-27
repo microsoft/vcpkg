@@ -4978,7 +4978,7 @@
     },
     "libudns": {
       "baseline": "0.4",
-      "port-version": 5
+      "port-version": 6
     },
     "libui": {
       "baseline": "2018-11-03",
