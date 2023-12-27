@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fmt-10.patch
+        fix_find_zstd.patch
 )
 
 set(WASMEDGE_CMAKE_OPTIONS "")
