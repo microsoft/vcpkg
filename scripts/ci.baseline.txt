@@ -516,6 +516,10 @@ libcanberra:arm-neon-android=fail
 libcanberra:arm64-android=fail
 libcanberra:x64-android=fail
 libcerf:x64-windows-static-md=fail
+# needs android-24
+libconfuse:arm-neon-android=fail
+libconfuse:arm64-android=fail
+libconfuse:x64-android=fail
 libcoro:arm-neon-android=fail
 libcoro:arm64-android=fail
 libcoro:x64-android=fail
