@@ -20,6 +20,8 @@ file(COPY
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=11 # C++17 does not allow dynamic exception specifications
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
