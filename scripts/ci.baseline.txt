@@ -1198,6 +1198,10 @@ usd:x64-windows-static-md=skip
 usd:x64-linux=skip
 usd:x64-osx=skip
 usd:x86-windows=skip
+# needs android-24
+usrsctp:arm-neon-android=fail
+usrsctp:arm64-android=fail
+usrsctp:x64-android=fail
 # the version of v8 we have in the repo doesn't support VS2022
 v8:x64-android=fail
 v8:x64-windows-static-md=fail
