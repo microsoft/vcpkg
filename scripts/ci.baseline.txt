@@ -508,6 +508,10 @@ libaiff:x64-linux=fail
 libbson:arm-neon-android=fail
 libbson:arm64-android=fail
 libbson:x64-android=fail
+# needs android-28
+libcaer:arm-neon-android=fail
+libcaer:arm64-android=fail
+libcaer:x64-android=fail
 libcanberra:arm-neon-android=fail
 libcanberra:arm64-android=fail
 libcanberra:x64-android=fail
