@@ -22,6 +22,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DCMAKE_CXX_STANDARD=11 # 17 removes std::binary_function
         -DFORCE_STATIC=OFF #already handled by vcpkg
         -DENABLE_PYTHON=OFF # kenlm.lib(bhiksha.cc.obj) : fatal error LNK1000: Internal error during IMAGE::Pass2
         -DCOMPILE_TESTS=OFF
