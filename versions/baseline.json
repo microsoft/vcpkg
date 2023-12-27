@@ -6809,7 +6809,7 @@
       "port-version": 0
     },
     "proxy": {
-      "baseline": "1.1.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "proxygen": {
