@@ -857,6 +857,18 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
         _find_package(gRPC ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
     else()
         _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
+        if(APPLE AND COMMAND _pkgconfig_extract_frameworks AND NOT COMMAND __pkgconfig_extract_frameworks)
+            # Fix wrong cache setup/reuse
+            macro(_pkgconfig_extract_frameworks _prefix)
+                __pkgconfig_extract_frameworks("${_prefix}")
+                if(NOT "${${_prefix}_LIBRARIES}" STREQUAL "$CACHE{${_prefix}_LIBRARIES}")
+                    set(${_prefix}_LIBRARIES "${${_prefix}_LIBRARIES}" CACHE INTERNAL "")
+                endif()
+                if(NOT "${${_prefix}_LDFLAGS_OTHER}" STREQUAL "$CACHE{${_prefix}_LDFLAGS_OTHER}")
+                    set(${_prefix}_LDFLAGS_OTHER "${${_prefix}_LDFLAGS_OTHER}" CACHE INTERNAL "")
+                endif()
+            endmacro()
+        endif()
     endif()
     # Do not use z_vcpkg_find_package_package_name beyond this point since it might have changed!
     # Only variables using z_vcpkg_find_package_backup_id can used correctly below!
