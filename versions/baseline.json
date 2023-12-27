@@ -8038,7 +8038,7 @@
     },
     "smpeg2": {
       "baseline": "2.0.0",
-      "port-version": 10
+      "port-version": 11
     },
     "snap7": {
       "baseline": "1.4.2",
