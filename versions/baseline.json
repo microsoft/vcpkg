@@ -2217,7 +2217,7 @@
       "port-version": 3
     },
     "discordcoreapi": {
-      "baseline": "2.0.4",
+      "baseline": "2.0.5",
       "port-version": 0
     },
     "discount": {
@@ -3701,7 +3701,7 @@
       "port-version": 2
     },
     "jsonifier": {
-      "baseline": "0.9.93",
+      "baseline": "0.9.94",
       "port-version": 0
     },
     "jsonnet": {
