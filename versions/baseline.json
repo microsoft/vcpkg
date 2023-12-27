@@ -2833,8 +2833,8 @@
       "port-version": 2
     },
     "g2o": {
-      "baseline": "20230223_git",
-      "port-version": 0
+      "baseline": "2020-02-07",
+      "port-version": 4
     },
     "g3log": {
       "baseline": "2.3",
