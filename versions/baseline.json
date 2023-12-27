@@ -5034,7 +5034,7 @@
     },
     "libvmdk": {
       "baseline": "20221124",
-      "port-version": 0
+      "port-version": 1
     },
     "libvorbis": {
       "baseline": "1.3.7",
