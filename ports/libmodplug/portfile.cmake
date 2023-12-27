@@ -17,7 +17,11 @@ vcpkg_from_github(
         005-fix-install-paths.patch # https://github.com/Konstanty/libmodplug/pull/61
 )
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=11 # 17 does not allow 'register'
+)
 
 vcpkg_cmake_install()
 
