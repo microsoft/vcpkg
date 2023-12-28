@@ -513,8 +513,8 @@
       "port-version": 2
     },
     "backward-cpp": {
-      "baseline": "1.6",
-      "port-version": 1
+      "baseline": "2023-11-24",
+      "port-version": 0
     },
     "baresip-libre": {
       "baseline": "3.7.0",
