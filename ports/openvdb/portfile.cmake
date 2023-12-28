@@ -1,10 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
-    REF be0e7a78861d2b7d9643f7a0cab04f3ab5951686 # v10.0.0
-    SHA512 92301bf675d700fedb0a2b3c4653158eeda6105e70623e5e4bda15d73391427cf0295a0426204888e2fe062847025542717bff34ceb923e51cffa1721e9d4105
+    REF "v${VERSION}"
+    SHA512 f2c90ca8435ecbacefda429341000ecb555385c746a3e0233220cd78540cee2a26cc17df7b560fdfe2dc03f2b2e960a2fa226a85980189c3e018164ccc037bd4
     PATCHES
-        0003-fix-cmake.patch
+        fix_cmake.patch
         fix_nanovdb.patch
 )
 

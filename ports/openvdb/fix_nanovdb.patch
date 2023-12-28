@@ -1,8 +1,8 @@
 diff --git a/nanovdb/nanovdb/CMakeLists.txt b/nanovdb/nanovdb/CMakeLists.txt
-index d20b4928..257d005a 100644
+index 7bb3ab86..9311ed17 100644
 --- a/nanovdb/nanovdb/CMakeLists.txt
 +++ b/nanovdb/nanovdb/CMakeLists.txt
-@@ -128,7 +128,7 @@ if(NANOVDB_USE_TBB AND NOT TARGET TBB::tbb)
+@@ -127,7 +127,7 @@ if(NANOVDB_USE_TBB AND NOT TARGET TBB::tbb)
  endif()
  
  if(NANOVDB_USE_BLOSC AND NOT TARGET Blosc::blosc)
@@ -11,7 +11,7 @@ index d20b4928..257d005a 100644
  endif()
  
  if(NANOVDB_USE_ZLIB AND NOT TARGET ZLIB::ZLIB)
-@@ -224,7 +224,7 @@ if(NANOVDB_USE_TBB)
+@@ -236,7 +236,7 @@ if(NANOVDB_USE_TBB)
  endif()
  
  if(NANOVDB_USE_BLOSC)
