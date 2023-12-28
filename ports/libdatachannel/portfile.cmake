@@ -12,7 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         ${PATCHES}
-        fix_find_usrsctp.patch
+        fix_dependency.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DATACHANNEL_STATIC_LINKAGE)
