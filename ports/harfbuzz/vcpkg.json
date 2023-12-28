@@ -1,7 +1,7 @@
 {
   "name": "harfbuzz",
   "version": "8.3.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "license": "MIT-Modern-Variant",
@@ -35,6 +35,10 @@
     "coretext": {
       "description": "Enable CoreText shaper backend on macOS",
       "supports": "osx"
+    },
+    "directwrite": {
+      "description": "Enable DirectWrite support on Windows",
+      "supports": "windows"
     },
     "freetype": {
       "description": "Enable FreeType support",
