@@ -10,7 +10,6 @@ vcpkg_from_github(
         fix-boost.patch
         fix-boost-imported-targets.patch
 )
-
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindEigen3.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -23,19 +22,19 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DCMAKE_CXX_STANDARD=11 # 17 removes std::binary_function
-        -DFORCE_STATIC=OFF #already handled by vcpkg
+        -DFORCE_STATIC=OFF  # handled by vcpkg
         -DENABLE_PYTHON=OFF # kenlm.lib(bhiksha.cc.obj) : fatal error LNK1000: Internal error during IMAGE::Pass2
         -DCOMPILE_TESTS=OFF
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT}/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/kenlm/cmake)
 
 set(KENLM_TOOLS count_ngrams filter fragment kenlm_benchmark lmplz phrase_table_vocab query build_binary)
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND KENLM_TOOLS probing_hash_table_benchmark)
-    if ("interpolate" IN_LIST FEATURES)
-        list(APPEND KENLM_TOOLS interpolate)
-    endif()
+endif()
+if ("interpolate" IN_LIST FEATURES)
+    list(APPEND KENLM_TOOLS interpolate)
 endif()
 vcpkg_copy_tools(TOOL_NAMES ${KENLM_TOOLS} AUTO_CLEAN)
 

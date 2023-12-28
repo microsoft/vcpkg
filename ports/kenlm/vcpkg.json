@@ -29,10 +29,7 @@
       "description": "Build interpolation program",
       "supports": "!windows",
       "dependencies": [
-        {
-          "name": "eigen3",
-          "platform": "!windows"
-        }
+        "eigen3"
       ]
     }
   }
