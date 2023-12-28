@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         devendor.patch
+        cmake-config.patch
         fix-boost.patch
 )
 file(REMOVE_RECURSE
