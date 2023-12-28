@@ -9,9 +9,13 @@ vcpkg_from_github(
     SHA512 04b645d09e60b65cb1e5065a1623ad01737f0dd9415cf620288ace0db10b1c424d72f304b34c52fa08684f3fecdaad9db91088134f34ed374cb1eb9d58c635b5
     HEAD_REF master
     PATCHES 
+        devendor.patch
         fix-boost.patch
 )
-file(REMOVE "${SOURCE_PATH}/cmake/modules/FindEigen3.cmake")
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/cmake/modules/FindEigen3.cmake"
+    "${SOURCE_PATH}/util/double-conversion"
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES

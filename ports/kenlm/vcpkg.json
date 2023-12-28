@@ -13,6 +13,7 @@
     "boost-test",
     "boost-thread",
     "bzip2",
+    "double-conversion",
     "liblzma",
     {
       "name": "vcpkg-cmake",
