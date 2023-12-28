@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bshoshany/thread-pool
     REF "v${VERSION}"
-    SHA512 43200acf989adbabc0478d847931d2e46c4ce13de9d28f2e603e6b86d38a7370c0e50bacd36bff5a1a200f33ae6394764adc64ce9a54df5e418d85fb525b4b3f
+    SHA512 a503f6877d8264c79bdffec204551a3bfba50c608dba34bbfb8145dc480715ed3d86d3d70cbe86855d3a739474c4de6e204ab1f95fe9fd3245e93cddd7e345af
     HEAD_REF master
 )
 
