@@ -10,16 +10,10 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}" OPTIONS -DBUILD_TESTS=OFF)
 #vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}" OPTIONS -DBUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release)
+
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-#file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
-#file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
-#configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
-
-#message("Current List Dir: ${CMAKE_CURRENT_LIST_DIR}") # /Users/saad/Documents/vcpkg/ports/nanojsonc
-#message("Source file path: ${CMAKE_CURRENT_LIST_DIR}/usage") # /Users/saad/Documents/vcpkg/ports/nanojsonc/usage
-#message("Destination file path: ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage") # /Users/saad/Documents/vcpkg/packages/nanojsonc_x64-osx/share/nanojsonc/usage
