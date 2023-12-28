@@ -39,11 +39,11 @@ install(EXPORT unofficial-duktapeConfig
 )
 
 include(CMakePackageConfigHelpers)
-write_basic_package_version_file("${PROJECT_BINARY_DIR}/duktapeConfigVersion.cmake"
+write_basic_package_version_file("${PROJECT_BINARY_DIR}/unofficial-duktapeConfigVersion.cmake"
   COMPATIBILITY SameMajorVersion
 )
 
 install(FILES
-  "${PROJECT_BINARY_DIR}/duktapeConfigVersion.cmake"
+  "${PROJECT_BINARY_DIR}/unofficial-duktapeConfigVersion.cmake"
   DESTINATION "share/unofficial-duktape"
 )
