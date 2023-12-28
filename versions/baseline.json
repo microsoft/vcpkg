@@ -3510,7 +3510,7 @@
     },
     "imgui": {
       "baseline": "1.90",
-      "port-version": 2
+      "port-version": 3
     },
     "imgui-node-editor": {
       "baseline": "0.9.3",
