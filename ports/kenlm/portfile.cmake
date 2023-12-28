@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         fix-boost.patch
-        fix-boost-imported-targets.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindEigen3.cmake")
 
