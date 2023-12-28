@@ -4110,7 +4110,7 @@
     },
     "libbson": {
       "baseline": "1.25.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libcaer": {
       "baseline": "3.3.15",
