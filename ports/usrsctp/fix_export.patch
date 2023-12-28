@@ -19,8 +19,8 @@ index aa99cf2..c60b393 100644
 -install(TARGETS usrsctp DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +install(TARGETS usrsctp EXPORT unofficial-usrsctp-config 
 +        ARCHIVE DESTINATION lib
-+		LIBRARY DESTINATION lib
-+		RUNTIME DESTINATION bin)
++        LIBRARY DESTINATION lib
++        RUNTIME DESTINATION bin)
  install(FILES usrsctp.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 +install(EXPORT unofficial-usrsctp-config NAMESPACE unofficial::usrsctp:: DESTINATION share/unofficial-usrsctp)
  
