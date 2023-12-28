@@ -27,10 +27,6 @@ if("uacpp" IN_LIST FEATURES)
     message(WARNING "\nPlease note that you have to install the Unified Automation C++ SDK yourself.\n")
 endif()
 
-if (VCPKG_CROSSCOMPILING AND "ns0idgenerator" IN_LIST FEATURES)
-    message(FATAL_ERROR "Tools qtopcua-defaultnodeidsgenerator does not support cross-building.")
-endif()
-
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS
                         ${FEATURE_OPTIONS}
