@@ -1,21 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index efc2489..ba27aeb 100644
+index 1fe4c76..96be699 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -334,10 +334,7 @@ if (USE_SYSTEM_LIBBSON)
-    # The input variable BSON_ROOT_DIR is respected for backwards compatibility,
-    # but you should use the standard CMAKE_PREFIX_PATH instead.
-    message (STATUS "Searching for libbson CMake packages")
--   find_package (bson-1.0
--      "${PROJECT_VERSION}"
--      HINTS
--      ${BSON_ROOT_DIR})
-+   find_package(bson-1.0 CONFIG REQUIRED)
-
-    if (NOT bson-1.0_FOUND)
-       message (FATAL_ERROR "System libbson not found")
-@@ -349,11 +346,9 @@ if (USE_SYSTEM_LIBBSON)
-
+@@ -347,11 +347,9 @@ if (USE_SYSTEM_LIBBSON)
+ 
     set (USING_SYSTEM_BSON TRUE)
     if (NOT TARGET mongo::bson_shared)
 -           message (FATAL_ERROR "System libbson built without shared library target")
