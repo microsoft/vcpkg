@@ -84,6 +84,14 @@ function(vcpkg_build_make)
             set(working_directory "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_buildtype}/${arg_SUBPATH}")
             message(STATUS "Building ${TARGET_TRIPLET}-${short_buildtype}")
 
+            if("libtool-link-pass-target" IN_LIST VCPKG_BUILD_MAKE_FIXUP)
+                # Pass --target to the linker, e.g. for Android
+                file(GLOB_RECURSE libtool_files "${working_directory}/libtool")
+                foreach(file IN LISTS libtool_files)
+                    vcpkg_replace_string("${file}" [[-xtarget=*|]] [[-xtarget=*|--target=*|]])
+                endforeach()
+            endif()
+
             z_vcpkg_configure_make_process_flags("${cmake_buildtype}")
 
             # Setup environment
