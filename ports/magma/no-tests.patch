@@ -11,7 +11,12 @@ index a4f5b35ef3..eeb0bb0b8f 100644
  target_link_libraries( tester
      magma
      lapacktest
-@@ -731,7 +738,7 @@ foreach( TEST ${testing_all_cpp} )
+@@ -726,11 +726,12 @@ foreach( filename ${testing_all} )
+         list( APPEND testing_all_cpp ${filename} )
+     endif()
+ endforeach()
++set(testing_all_cpp "")
+ foreach( TEST ${testing_all_cpp} )
      string( REGEX REPLACE "\\.(cpp|f90|F90)" "" EXE ${TEST} )
      string( REGEX REPLACE "testing/" "" EXE ${EXE} )
      #message( "${TEST} --> ${EXE}" )
@@ -20,14 +25,6 @@ index a4f5b35ef3..eeb0bb0b8f 100644
      target_link_libraries( ${EXE} tester lapacktest magma )
      list( APPEND testing ${EXE} )
  endforeach()
-@@ -726,6 +726,7 @@ foreach( filename ${testing_all} )
-         list( APPEND testing_all_cpp ${filename} )
-     endif()
- endforeach()
-+set(testing_all_cpp "")
- foreach( TEST ${testing_all_cpp} )
-     string( REGEX REPLACE "\\.(cpp|f90|F90)" "" EXE ${TEST} )
-     string( REGEX REPLACE "testing/" "" EXE ${EXE} )
 @@ -749,6 +750,7 @@ endif()
  
  set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${SPARSE_TEST_DIR}" )
