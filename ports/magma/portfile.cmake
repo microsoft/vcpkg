@@ -34,7 +34,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 
 file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/magma.pc" contents)
