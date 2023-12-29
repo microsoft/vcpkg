@@ -4,7 +4,18 @@
   "description": "A header only library for creating and validating json web tokens in c++",
   "homepage": "https://github.com/Thalhammer/jwt-cpp",
   "license": "MIT",
-  "dependencies": [
-    "picojson"
-  ]
+  "features": {
+    "openssl": {
+      "description": "The openssl will be used for cryptography",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "picojson": {
+      "description": "The picojson trait implementation will be included",
+      "dependencies": [
+        "picojson"
+      ]
+    }
+  }
 }
