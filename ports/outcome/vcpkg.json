@@ -1,7 +1,6 @@
 {
   "name": "outcome",
-  "version": "2.2.4",
-  "port-version": 1,
+  "version": "2.2.7",
   "maintainers": [
     "Niall Douglas <s_github@nedprod.com>",
     "Henrik Gaßmann <henrik@gassmann.onl>"

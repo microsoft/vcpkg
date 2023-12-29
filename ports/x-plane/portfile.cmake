@@ -1,37 +1,30 @@
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://developer.x-plane.com/wp-content/plugins/code-sample-generation/sample_templates/XPSDK303.zip"
-    FILENAME "XPSDK303.zip"
-    SHA512 23a1efc893fdb838ce90307ac2e1bf592b03880e9c7bf7aac51cf0d358816931b56a3d603e266f3c9041620190c689dc4d3b28b288bc39cf6e653db6f2125395
-)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+set(XPSDK_VERSION "401")
+vcpkg_download_distfile(
+    XPLANE_SDK_ZIP
+    URLS "https://developer.x-plane.com/wp-content/plugins/code-sample-generation/sample_templates/XPSDK${XPSDK_VERSION}.zip"
+    FILENAME "XPSDK${XPSDK_VERSION}.zip"
+    SHA512 8e00789befd15f5b1cb4f426ddf9c3f7f021c5fba50b907e8af5fbf09abbc362804b5d1543332855d01e8ae91b9c50a55933e63df6e11e88e58c10ca8f949bf4
+)
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${XPLANE_SDK_ZIP}"
 )
 
-# create lib dir
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
-    file(MAKE_DIRECTORY
-        ${CURRENT_PACKAGES_DIR}/lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib
-    )
-endif()
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-x-plane-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-# copy headers & sources
-file(COPY ${SOURCE_PATH}/CHeaders/Widgets/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${SOURCE_PATH}/CHeaders/Wrappers/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${SOURCE_PATH}/CHeaders/XPLM/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
 
-# copy prebuilt libs
-if(VCPKG_TARGET_IS_WINDOWS)
-    file(COPY ${SOURCE_PATH}/Libraries/Win/XPLM_64.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(COPY ${SOURCE_PATH}/Libraries/Win/XPWidgets_64.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(COPY ${SOURCE_PATH}/Libraries/Win/XPLM_64.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-    file(COPY ${SOURCE_PATH}/Libraries/Win/XPWidgets_64.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-elseif (VCPKG_TARGET_IS_OSX)
-    file(COPY ${SOURCE_PATH}/Libraries/Mac/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(COPY ${SOURCE_PATH}/Libraries/Mac/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-endif()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-x-plane)
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

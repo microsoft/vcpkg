@@ -18,6 +18,7 @@ vcpkg_from_github(
         fix-windows-minmax.patch
         fix-deps.patch
         openssl.patch # from https://github.com/facebook/folly/pull/2016
+        disable-uninitialized-resize-on-new-stl.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
