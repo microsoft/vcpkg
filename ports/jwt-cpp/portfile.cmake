@@ -12,7 +12,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DJWT_BUILD_EXAMPLES=OFF
     )
-vcpkg_cmake_config_fixup()
 vcpkg_cmake_install()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
