@@ -1188,6 +1188,14 @@ vowpal-wabbit:x64-android=fail
 vtk-m:arm-neon-android=fail
 vtk-m:arm64-android=fail
 vtk-m:x64-android=fail
+# Needs android-24 to supply a vulkan loader library
+vulkan:arm-neon-android=fail
+vulkan:arm64-android=fail
+vulkan:x64-android=fail
+# Needs android-26
+vulkan-utility-libraries:arm-neon-android=fail
+vulkan-utility-libraries:arm64-android=fail
+vulkan-utility-libraries:x64-android=fail
 # Conflicts with latest openjpeg port (vxl ships with an old version of openjpeg)
 # conflicts with qt5-location
 vxl:arm-neon-android=skip
