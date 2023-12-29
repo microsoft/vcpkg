@@ -47,8 +47,8 @@ if(NOT VCPKG_BUILD_TYPE)
 endif()
 
 file(REMOVE_RECURSE
-  "${CURRENT_INSTALLED_DIR}/debug/include"
-  "${CURRENT_INSTALLED_DIR}/debug/share"
+  "${CURRENT_PACKAGES_DIR}/debug/include"
+  "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 vcpkg_install_copyright(FILE_LIST "${src_path}/COPYRIGHT")
