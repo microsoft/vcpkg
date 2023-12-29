@@ -82,4 +82,5 @@ if ("tools" IN_LIST FEATURES)
 endif()
 
 vcpkg_copy_pdbs()
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
