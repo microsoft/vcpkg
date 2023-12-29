@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Thalhammer/jwt-cpp
-    REF 4a537e969891dde542ad8b1a4a214955a83be29f # v0.6.0
+    REF 08bcf77a687fb06e34138e9e9fa12a4ecbe12332 # v0.7.0
     SHA512 eeeb6adb7f94b699a020b5622b9dbb6c677d92779b57bfb2298b331a5cf69d9112d0b123f0c2ca235ecd96df6d32fcf44e85e144fa414aeff8fd67e3b87576d2
     HEAD_REF master
 )
