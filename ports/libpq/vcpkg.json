@@ -1,6 +1,7 @@
 {
   "name": "libpq",
-  "version": "15.3",
+  "version": "16.0",
+  "port-version": 1,
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "license": "PostgreSQL",

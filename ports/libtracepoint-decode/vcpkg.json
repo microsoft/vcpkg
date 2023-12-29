@@ -1,7 +1,7 @@
 {
   "name": "libtracepoint-decode",
-  "version": "1.0.0",
-  "description": "Tracepoint decoding classes for C++",
+  "version": "1.2.1",
+  "description": "C++ classes for decoding Linux Tracepoints",
   "homepage": "https://github.com/microsoft/LinuxTracepoints/",
   "license": "MIT",
   "supports": "linux | windows",

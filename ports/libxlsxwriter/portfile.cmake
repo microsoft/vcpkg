@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dependencies.diff
+        fix-zlib-ver-required.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/minizip")
 

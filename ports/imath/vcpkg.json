@@ -1,6 +1,7 @@
 {
   "name": "imath",
-  "version": "3.1.5",
+  "version": "3.1.9",
+  "port-version": 1,
   "description": "Imath is a C++ and Python library of 2D and 3D vector, matrix, and math operations for computer graphics.",
   "homepage": "https://github.com/AcademySoftwareFoundation/Imath",
   "license": "BSD-3-Clause",

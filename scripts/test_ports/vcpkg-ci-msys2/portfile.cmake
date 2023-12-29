@@ -3,10 +3,17 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 set(msys_repo_url    "https://mirror.msys2.org/msys/x86_64")
 set(mingw64_repo_url "https://mirror.msys2.org/mingw/mingw64")
 set(mingw32_repo_url "https://mirror.msys2.org/mingw/mingw32")
+set(clangarm64_repo_url "https://mirror.msys2.org/mingw/clangarm64")
 
 # Ignore these updates (e.g. for known problems)
-vcpkg_list(SET ignored_packages
+vcpkg_list(SET ignored_updates
     https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-ca-certificates-20211016-3-any.pkg.tar.zst
+)
+
+# Known removals that shall not be reported as errors
+# (Packages to be removed from vcpkg scripts ASAP.)
+vcpkg_list(SET known_delisted
+    libcrypt
 )
 
 # Ignore these dependencies (e.g. interactive or effectively optional)
@@ -165,6 +172,8 @@ function(analyze_package_list list_var script)
             set(repo "mingw64")
         elseif(name MATCHES "^mingw-w64-i686")
             set(repo "mingw32")
+        elseif(name MATCHES "^mingw-w64-clang-aarch64")
+            set(repo "clangarm64")
         endif()
 
         file(GLOB files "${${repo}_repo_files}/${name}-*/desc")
@@ -180,7 +189,7 @@ function(analyze_package_list list_var script)
             set(found 1)
             set(current_url "${${repo}_repo_url}/${CMAKE_MATCH_1}")
             # Check the URL
-            if(NOT vcpkg_url STREQUAL current_url AND NOT current_url IN_LIST ignored_packages)
+            if(NOT vcpkg_url STREQUAL current_url AND NOT current_url IN_LIST ignored_updates)
                 get_vcpkg_builddate(vcpkg_builddate "${name}")
                 age_in_days(vcpkg_age "${vcpkg_builddate}")
                 pretty_age(vcpkg_age_pretty "${vcpkg_age}")
@@ -259,7 +268,7 @@ function(analyze_package_list list_var script)
                 endif()
             endif()
         endforeach()
-        if(NOT found)
+        if(NOT found AND NOT name IN_LIST known_delisted)
             vcpkg_list(APPEND vanished "${name}")
             get_vcpkg_builddate(vcpkg_builddate "${name}")
             age_in_days(vcpkg_age "${vcpkg_builddate}")
@@ -305,7 +314,7 @@ endfunction()
 
 message(STATUS "*** Downloading current msys2 package lists")
 string(TIMESTAMP stamp "%Y-%m-%d" UTC)
-foreach(repo IN ITEMS msys mingw32 mingw64)
+foreach(repo IN ITEMS msys mingw32 mingw64 clangarm64)
     string(REPLACE "/" "-" local_file "msys2-${stamp}-${repo}.files")
     set(archive "${DOWNLOADS}/${local_file}")
     vcpkg_download_distfile(repo_files_archive
@@ -330,7 +339,22 @@ set(Z_VCPKG_MSYS_PACKAGES_RESOLVED "" CACHE INTERNAL "")
 vcpkg_find_acquire_program(PKGCONFIG)
 analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_acquire_program(PKGCONFIG).cmake" DIRECT_ONLY)
 
+set(PATH_BAK "$ENV{PATH}")
+set(CMAKE_Fortran_COMPILER "")
 set(Z_VCPKG_MSYS_PACKAGES_RESOLVED "" CACHE INTERNAL "")
 include("${SCRIPTS}/cmake/vcpkg_find_fortran.cmake")
 vcpkg_find_fortran(FORTRAN)
 analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_fortran.cmake" DIRECT_ONLY)
+set(ENV{PATH} "${PATH_BAK}")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    # Don't do this in regular ports.
+    message(STATUS "*** Simulating an x86 target triplet")
+    set(VCPKG_TARGET_ARCHITECTURE "x86")
+    set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "")
+    set(CMAKE_Fortran_COMPILER "")
+    set(Z_VCPKG_MSYS_PACKAGES_RESOLVED "" CACHE INTERNAL "")
+    vcpkg_find_fortran(FORTRAN_x86)
+    analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_fortran.cmake" DIRECT_ONLY)
+    set(VCPKG_TARGET_ARCHITECTURE "x64")
+    set(ENV{PATH} "${PATH_BAK}")
+endif()

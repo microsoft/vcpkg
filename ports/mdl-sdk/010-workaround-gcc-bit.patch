@@ -1,0 +1,13 @@
+diff --git a/include/mi/base/types.h b/include/mi/base/types.h
+index a6faabe..47f836b 100644
+--- a/include/mi/base/types.h
++++ b/include/mi/base/types.h
+@@ -349,7 +349,7 @@ namespace {
+ ///     float  fval( 0.0f );
+ ///     Uint32 uval( binary_cast<Uint32>(fval) );
+ /// \endcode
+-#if (defined(_WIN32) && defined(_HAS_CXX20) && _HAS_CXX20) || (defined(__GNUC__) && (__GNUC__ >= 11 ))
++#if (defined(_WIN32) && defined(_HAS_CXX20) && _HAS_CXX20) || (defined(__GNUC__) && (__GNUC__ >= 12 ))
+ #include <bit>
+ template<class T, class S> constexpr T binary_cast(const S& src) noexcept { return std::bit_cast<T,S>(src); }
+ #else

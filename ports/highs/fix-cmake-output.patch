@@ -1,24 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6c0642877..30fb625a2 100644
+index 605a1e2..148c006 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -184,6 +184,7 @@ if(MSVC)
+@@ -196,6 +196,7 @@ if(MSVC)
              unsigned long y;
              _BitScanReverse(&y, x);
              _BitScanReverse64(&x, y);
 +            __popcnt64(x);
              return 0;
          }"
-         HIGHS_HAVE_BITSCAN_REVERSE)
-@@ -548,9 +549,9 @@ if (PYTHON)
- endif()
+     HIGHS_HAVE_BITSCAN_REVERSE)
+@@ -570,7 +572,6 @@ else(FAST_BUILD)
+   # Add tests in examples/tests
+   add_subdirectory(examples)
  
- # Add tests in examples/tests
--add_subdirectory(examples)
-+#add_subdirectory(examples)
+-  add_subdirectory(app)
  
--add_subdirectory(app)
-+#add_subdirectory(app)
- 
- if (EXP)
+   if(EXP)
      add_executable(doctest)

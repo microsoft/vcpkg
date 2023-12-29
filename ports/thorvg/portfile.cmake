@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
-    REF v0.9.0
-    SHA512 c0294a60f0b2e432bec62e1c44f0cb632420ec5c9390df210c8b8db5507fa8f5946bdc8a7879007e4e54865dc4538f4bf1e26d76f90a324cc5edd5cdf61c0fc0
+    REF "v${VERSION}"
+    SHA512 cc73f7e01755141a245eecd1dc8fa6754e21b342e3734f1200e859c2360474fc9931a934eb49968c65b15c537812b81fa1f3f82ac12f9e00e3959748cf1e286f
     HEAD_REF master
-    PATCHES
-        install-tools.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -15,9 +13,6 @@ else()
 endif()
 
 if ("tools" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "This feature doesn't support Windows platform")
-    endif()
     list(APPEND BUILD_OPTIONS -Dtools=all)
 endif()
 
@@ -33,6 +28,7 @@ vcpkg_configure_meson(
         -Dbindings=capi
         -Dtests=false
         -Dexamples=false
+        -Dstrip=false
     OPTIONS_DEBUG
         -Dlog=true
         -Dbindir=${CURRENT_PACKAGES_DIR}/debug/bin
@@ -47,5 +43,6 @@ if ("tools" IN_LIST FEATURES)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

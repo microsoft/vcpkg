@@ -1,11 +1,10 @@
 {
   "name": "cpp-httplib",
-  "version": "0.12.3",
+  "version": "0.14.1",
   "description": "A single file C++11 header-only HTTP/HTTPS server and client library",
   "homepage": "https://github.com/yhirose/cpp-httplib",
   "license": "MIT",
   "dependencies": [
-    "brotli",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -14,5 +13,28 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "brotli"
+  ],
+  "features": {
+    "brotli": {
+      "description": "Enables brotli compression support using brotli",
+      "dependencies": [
+        "brotli"
+      ]
+    },
+    "openssl": {
+      "description": "Enables HTTPS support using OpenSSL",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "zlib": {
+      "description": "Enables gzip compression support using zlib",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
 }

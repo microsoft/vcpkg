@@ -1,0 +1,34 @@
+diff --git a/3rdpart/CMakeLists.txt b/3rdpart/CMakeLists.txt
+index c90129d..06bde42 100644
+--- a/3rdpart/CMakeLists.txt
++++ b/3rdpart/CMakeLists.txt
+@@ -24,6 +24,7 @@
+ ##############################################################################
+ 
+ # jsoncpp
++if (0)
+ file(GLOB JSONCPP_SRC_LIST
+   ${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp/include/json/*.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp/src/lib_json/*.cpp
+@@ -38,7 +39,8 @@ target_include_directories(jsoncpp
+   PUBLIC
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/jsoncpp/include")
+ 
+-update_cached_list(MK_LINK_LIBRARIES jsoncpp)
++endif()
++update_cached_list(MK_LINK_LIBRARIES JsonCpp::JsonCpp)
+ 
+ ##############################################################################
+ 
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cb85679..c9390bb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -434,6 +434,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ # for assert.h
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdpart)
+ 
++find_package(jsoncpp CONFIG REQUIRED)
+ add_subdirectory(3rdpart)
+ 
+ add_subdirectory(src)

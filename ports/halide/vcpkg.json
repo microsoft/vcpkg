@@ -1,6 +1,6 @@
 {
   "name": "halide",
-  "version": "15.0.0",
+  "version": "16.0.0",
   "port-version": 1,
   "description": "Halide is a programming language designed to make it easier to write high-performance image and array processing code on modern machines.",
   "homepage": "https://github.com/halide/Halide",
@@ -82,12 +82,12 @@
             "target-d3d12compute",
             "target-hexagon",
             "target-metal",
-            "target-mips",
             "target-nvptx",
             "target-opencl",
             "target-opengl-compute",
             "target-powerpc",
             "target-riscv",
+            "target-webassembly",
             "target-x86"
           ]
         }
@@ -135,18 +135,6 @@
     "target-metal": {
       "description": "Include Metal target"
     },
-    "target-mips": {
-      "description": "Include Mips target",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "target-mips"
-          ]
-        }
-      ]
-    },
     "target-nvptx": {
       "description": "Include NVPTX target",
       "dependencies": [
@@ -185,6 +173,18 @@
           "default-features": false,
           "features": [
             "target-riscv"
+          ]
+        }
+      ]
+    },
+    "target-webassembly": {
+      "description": "Include WebAssembly target",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-webassembly"
           ]
         }
       ]

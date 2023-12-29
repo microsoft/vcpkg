@@ -6,58 +6,54 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES
-        omp_test.patch
-        patch_targets.patch
         fftw3_arch_fix.patch
         aligned_malloc.patch
         bigobj.patch
+        fix-openmp.patch
+        install-subtargets.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        openmp ENABLE_OPENMP
+        openmp  ENABLE_OPENMP
+        openmp  CMAKE_REQUIRE_FIND_PACKAGE_OpenMP
         threads ENABLE_THREADS
         threads WITH_COMBINED_THREADS
-        avx2 ENABLE_AVX2
-        avx ENABLE_AVX
-        sse2 ENABLE_SSE2
-        sse ENABLE_SSE
+        avx2    ENABLE_AVX2
+        avx     ENABLE_AVX
+        sse2    ENABLE_SSE2
+        sse     ENABLE_SSE
 )
 
-set(ENABLE_FLOAT_CMAKE fftw3f)
-set(ENABLE_LONG_DOUBLE_CMAKE fftw3l)
-set(ENABLE_DEFAULT_PRECISION_CMAKE fftw3)
+set(package_names  fftw3 fftw3f fftw3l)
+set(fftw3_options  "")
+set(fftw3f_options -DENABLE_FLOAT=ON)
+set(fftw3l_options -DENABLE_LONG_DOUBLE=ON -DENABLE_AVX2=OFF -DENABLE_AVX=OFF -DENABLE_SSE2=OFF)
 
-foreach(PRECISION ENABLE_FLOAT ENABLE_LONG_DOUBLE ENABLE_DEFAULT_PRECISION)
-    if(PRECISION STREQUAL "ENABLE_LONG_DOUBLE")
-        vcpkg_cmake_configure(
+foreach(package_name IN LISTS package_names)
+    message(STATUS "${package_name}...")
+    vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
+        LOGFILE_BASE "config-${package_name}-${TARGET_TRIPLET}"
         OPTIONS 
-            -D${PRECISION}=ON
-            -DENABLE_OPENMP=${ENABLE_OPENMP}
-            -DENABLE_THREADS=${HAVE_THREADS}
-            -DWITH_COMBINED_THREADS=${HAVE_THREADS}
-            -DBUILD_TESTS=OFF
-        )
-    else()
-        vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS 
-            -D${PRECISION}=ON
             ${FEATURE_OPTIONS}
+            ${${package_name}_options} # may override FEATURE_OPTIONS
             -DBUILD_TESTS=OFF
-        )
-    endif()
-
-    vcpkg_cmake_install()
-
+        MAYBE_UNUSED_VARIABLES
+            CMAKE_REQUIRE_FIND_PACKAGE_OpenMP
+    )
+    vcpkg_cmake_build(
+        LOGFILE_BASE "install-${package_name}"
+        TARGET install
+    )
     vcpkg_copy_pdbs()
 
-    vcpkg_cmake_config_fixup(PACKAGE_NAME ${${PRECISION}_CMAKE} CONFIG_PATH lib/cmake)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "${package_name}" CONFIG_PATH "lib/cmake/${package_name}")
 endforeach()
+vcpkg_fixup_pkgconfig()
 
 file(READ "${SOURCE_PATH}/api/fftw3.h" _contents)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -70,6 +66,4 @@ file(WRITE "${SOURCE_PATH}/include/fftw3.h" "${_contents}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

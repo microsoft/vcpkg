@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     GITHUB_HOST https://codeberg.org
     REPO soundtouch/soundtouch
-    REF 2.3.1
-    SHA512 c9d110b06cafb79968c94c4d206360b9ea9673d63eaf1470b097a39acf18b5b9cd53759f2656ff8963c6eee6a36fecdf1ea9aa7dc014fbf8bbee0dcfb8e4e438
+    REF ${VERSION}
+    SHA512 3d4d6314d6fccb3cb899aee36b90799bb9bf7cf1aad9ff2fff6b18c73e68be7e0e00a3f4e31d5dd340c979236f5474b7ef95d51ddb813f353dde920bdef4cb51
     HEAD_REF master
 )
 
@@ -31,5 +31,6 @@ if(SOUNDSTRETCH)
   vcpkg_copy_tools(TOOL_NAMES soundstretch AUTO_CLEAN)
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.TXT")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

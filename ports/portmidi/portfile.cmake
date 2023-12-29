@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "search-for-threads-in-config.patch"
+        "framework_link.patch"
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)

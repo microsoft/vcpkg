@@ -1,5 +1,5 @@
 diff --git a/include/maxminddb.h b/include/maxminddb.h
-index 13b276f..6c70e49 100644
+index 4002ec6..65482c5 100644
 --- a/include/maxminddb.h
 +++ b/include/maxminddb.h
 @@ -24,11 +24,12 @@ extern "C" {
@@ -7,13 +7,13 @@ index 13b276f..6c70e49 100644
  #include <sys/types.h>
  
 +/* libmaxminddb package version from configure */
-+#define PACKAGE_VERSION "1.4.3"
++#define PACKAGE_VERSION "1.7.1"
 +
  #ifdef _WIN32
  #include <winsock2.h>
  #include <ws2tcpip.h>
 -/* libmaxminddb package version from configure */
--#define PACKAGE_VERSION "1.4.3"
+-#define PACKAGE_VERSION "1.7.1"
  
  typedef ADDRESS_FAMILY sa_family_t;
  
