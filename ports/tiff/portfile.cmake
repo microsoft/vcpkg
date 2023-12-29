@@ -45,6 +45,8 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
     MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_GLUT
+        CMAKE_DISABLE_FIND_PACKAGE_OpenGL
         ZSTD_HAVE_DECOMPRESS_STREAM
 )
 
