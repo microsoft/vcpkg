@@ -11,7 +11,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DJWT_BUILD_EXAMPLES=OFF
         -DJWT_CMAKE_FILES_INSTALL_DIR=share/jwt-cpp
-        -DJWT_EXTERNAL_PICOJSON=ON
+        -DJWT_DISABLE_PICOJSON=ON
     )
 vcpkg_cmake_install()
 file(REMOVE_RECURSE 
