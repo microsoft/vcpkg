@@ -372,15 +372,6 @@
         "vtk"
       ]
     },
-    "webp": {
-      "description": "WebP support for opencv",
-      "dependencies": [
-        "libwebp"
-      ]
-    },
-    "world": {
-      "description": "Compile to a single package support for opencv"
-    },
     "vulkan": {
       "description": "Vulkan support for opencv dnn",
       "dependencies": [
@@ -392,6 +383,15 @@
           ]
         }
       ]
+    },
+    "webp": {
+      "description": "WebP support for opencv",
+      "dependencies": [
+        "libwebp"
+      ]
+    },
+    "world": {
+      "description": "Compile to a single package support for opencv"
     }
   }
 }
