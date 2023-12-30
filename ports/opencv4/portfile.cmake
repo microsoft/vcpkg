@@ -85,6 +85,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "webp"      WITH_WEBP
  "world"     BUILD_opencv_world
  "dc1394"    WITH_1394
+ "vulkan"    WITH_VULKAN
 )
 
 # Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "python", "qt", "tbb"
@@ -101,6 +102,11 @@ if("dnn" IN_LIST FEATURES)
     WORKING_DIRECTORY "${SOURCE_PATH}/modules/dnn/misc/tflite"
     LOGNAME flatc-${TARGET_TRIPLET}
   )
+endif()
+
+set(WITH_VULKAN OFF)
+if("vulkan" IN_LIST FEATURES)
+  set(WITH_VULKAN ON)
 endif()
 
 set(WITH_QT OFF)
@@ -442,6 +448,7 @@ vcpkg_cmake_configure(
         ###### customized properties
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
+        -DWITH_VULKAN=${WITH_VULKAN}
         -DWITH_GTK=${WITH_GTK}
         -DWITH_QT=${WITH_QT}
         -DWITH_IPP=${WITH_IPP}
