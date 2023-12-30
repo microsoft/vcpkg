@@ -1,0 +1,21 @@
+diff --git a/cmake/os/Darwin.cmake b/cmake/os/Darwin.cmake
+index 0d18c689..ae0cdfe8 100644
+--- a/cmake/os/Darwin.cmake
++++ b/cmake/os/Darwin.cmake
+@@ -31,13 +31,9 @@ ENDIF()
+ # We require at least XCode 10.0
+ IF(NOT FORCE_UNSUPPORTED_COMPILER)
+   IF(MY_COMPILER_IS_CLANG)
+-    CHECK_C_SOURCE_RUNS("
+-      int main()
+-      {
+-        return (__clang_major__ < 10);
+-      }" HAVE_SUPPORTED_CLANG_VERSION)
+-    IF(NOT HAVE_SUPPORTED_CLANG_VERSION)
+-      MESSAGE(FATAL_ERROR "XCode 10.0 or newer is required!")
++    IF (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 10)
++      MESSAGE(FATAL_ERROR
++        "XCode 10.0 or newer is required! Compiler version was ${CMAKE_CXX_COMPILER_VERSION}")
+     ENDIF()
+   ELSE()
+     MESSAGE(FATAL_ERROR "Unsupported compiler!")
