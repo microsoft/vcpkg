@@ -104,11 +104,6 @@ if("dnn" IN_LIST FEATURES)
   )
 endif()
 
-set(WITH_VULKAN OFF)
-if("vulkan" IN_LIST FEATURES)
-  set(WITH_VULKAN ON)
-endif()
-
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
   set(WITH_QT ${USE_QT_VERSION})
@@ -142,6 +137,11 @@ endif()
 set(WITH_TBB OFF)
 if("tbb" IN_LIST FEATURES)
   set(WITH_TBB ON)
+endif()
+
+set(WITH_VULKAN OFF)
+if("vulkan" IN_LIST FEATURES)
+  set(WITH_VULKAN ON)
 endif()
 
 set(WITH_PYTHON OFF)
@@ -448,10 +448,10 @@ vcpkg_cmake_configure(
         ###### customized properties
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
-        -DWITH_VULKAN=${WITH_VULKAN}
         -DWITH_GTK=${WITH_GTK}
         -DWITH_QT=${WITH_QT}
         -DWITH_IPP=${WITH_IPP}
+        -DWITH_VULKAN=${WITH_VULKAN}
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=${WITH_OPENMP}

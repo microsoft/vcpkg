@@ -382,11 +382,11 @@
       "description": "Compile to a single package support for opencv"
     },
     "vulkan": {
-      "description": "vulkan support for opencv dnn",
+      "description": "Vulkan support for opencv dnn",
       "dependencies": [
-        "vulkan",
         {
           "name": "opencv4",
+          "default-features": false,
           "features": [
             "dnn"
           ]
