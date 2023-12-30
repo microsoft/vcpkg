@@ -384,6 +384,7 @@
     "vulkan": {
       "description": "vulkan support for opencv dnn",
       "dependencies": [
+        "vulkan",
         {
           "name": "opencv4",
           "features": [
