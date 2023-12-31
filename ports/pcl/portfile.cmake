@@ -14,6 +14,7 @@ vcpkg_from_github(
         no-absolute.patch
         devendor-zlib.patch
         fix-clang-cl.patch
+        fix-include.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
