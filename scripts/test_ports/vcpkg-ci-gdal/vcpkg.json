@@ -21,7 +21,8 @@
     {
       "name": "gdal",
       "features": [
-        "cfitsio"
+        "cfitsio",
+        "kea"
       ],
       "platform": "native"
     },

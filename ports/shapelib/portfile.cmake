@@ -1,50 +1,74 @@
-set(SHAPELIB_VERSION 1.5.0)
-set(SHAPELIB_HASH 230939afb33aee042808a32b38ee9dfc7ec1f39432e5a4ebe3fda99c2f87bfbebc91830d4e21691c51aae3f4bb65d7e71e7061472bb08124dcd3402c46800d6c)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.osgeo.org/shapelib/shapelib-${SHAPELIB_VERSION}.zip"
-    FILENAME "shapelib-${SHAPELIB_VERSION}.zip"
-    SHA512 ${SHAPELIB_HASH}
+    URLS "http://download.osgeo.org/shapelib/shapelib-${VERSION}.zip"
+    FILENAME "shapelib-${VERSION}.zip"
+    SHA512 f3f43f2028fe442e020558de2559b24eae9c7a1d0c84cc242f23ea985cf1fb5ff39fbfef7738f9b8ef5df9a5d0b9f3e891a61b3d5fbbe5b224f41a46589723a3
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
-        option-build-test.patch
+    ARCHIVE "${ARCHIVE}"
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        contrib     BUILD_SHAPELIB_CONTRIB
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_TEST=OFF
+        ${options}
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(PACKAGE_NAME shp)
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-if(EXES)
-    file(COPY ${EXES} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shapelib")
-    file(REMOVE ${EXES})
+vcpkg_copy_tools(
+    TOOL_NAMES
+        dbfadd
+        dbfcreate
+        dbfdump
+        shpadd
+        shpcreate
+        shpdump
+        shprewind
+        shptreedump
+    AUTO_CLEAN
+)
+if(BUILD_SHAPELIB_CONTRIB)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            csv2shp
+            dbfcat
+            dbfinfo
+            Shape_PointInPoly
+            shpcat
+            shpcentrd
+            shpdata
+            shpdxf
+            shpfix
+            shpinfo
+            shpsort
+            shpwkb
+        AUTO_CLEAN
+    )
 endif()
 
-file(GLOB DEBUG_EXES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-if(DEBUG_EXES)
-    file(REMOVE ${DEBUG_EXES})
-endif()
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/LICENSE-LGPL" "${SOURCE_PATH}/LICENSE-MIT"
+    # Cf. web/license.html
+    COMMENT [[
+The core portions of the library are made available under two
+possible licenses. The licensee can choose to use the code under
+either the Library GNU Public License described in LICENSE-LGPL
+or under the MIT license described in LICENSE-MIT.
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/shapelib")
-
-vcpkg_copy_pdbs()
+Some auxiliary portions of Shapelib, notably some of the components
+in the contrib directory come under slightly different license restrictions.
+Check the source files that you are actually using for conditions.
+]])
