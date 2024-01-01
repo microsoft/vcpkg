@@ -16,3 +16,5 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg_configure_meson.cmake"
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/meson/version.txt" "${VERSION}") # For vcpkg_find_acquire_program
 
 file(INSTALL "${VCPKG_ROOT_DIR}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+include("${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake")

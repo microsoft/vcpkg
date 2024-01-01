@@ -38,20 +38,22 @@ if(NOT SCRIPT_MESON)
         FILENAME "${download_filename}"
 
     )
-    file(MAKE_DIRECTORY "${path_to_search}/../")
+    file(REMOVE_RECURSE "${path_to_search}-tmp/../")
+    file(MAKE_DIRECTORY "${path_to_search}-tmp/../")
     file(ARCHIVE_EXTRACT INPUT "${archive_path}"
-        DESTINATION "${path_to_search}/../"
+        DESTINATION "${path_to_search}-tmp/../"
         #PATTERNS "**/mesonbuild/*" "**/*.py"
         )
-    file(REMOVE_RECURSE "${path_to_search}/../meson-${ref}/test cases/")
-    file(RENAME "${path_to_search}/../meson-${ref}" "${path_to_search}")
     z_vcpkg_apply_patches(
-        SOURCE_PATH "${path_to_search}"
+        SOURCE_PATH "${path_to_search}-tmp/../meson-${ref}/"
         PATCHES
             "${CMAKE_CURRENT_LIST_DIR}/meson-intl.patch"
             "${CMAKE_CURRENT_LIST_DIR}/adjust-python-dep.patch"
             "${CMAKE_CURRENT_LIST_DIR}/remove-freebsd-pcfile-specialization.patch"
     )
+    file(REMOVE_RECURSE "${path_to_search}-tmp/../meson-${ref}/test cases/")
+    file(RENAME "${path_to_search}-tmp/../meson-${ref}" "${path_to_search}")
+
     vcpkg_replace_string("${DOWNLOADS}/tools/meson-${program_version}/mesonbuild/cmake/toolchain.py" "arg.startswith('/')" "arg.startswith(('/','-'))")
     set(SCRIPT_MESON "${DOWNLOADS}/tools/meson-${program_version}/meson.py")
 endif()
