@@ -91,6 +91,7 @@ $portData = @{
             };
         };
     };
+    "boost-cobalt"           = @{ "supports" = "!ios & !android" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-coroutine2"       = @{ "supports" = "!emscripten" };
