@@ -11,6 +11,7 @@ vcpkg_from_github(
       vcpkg-fix-cgns-link.patch
       cgns-scoped-enum.patch
       downstream-fixes.patch
+      add_filesystem.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -38,19 +39,12 @@ vcpkg_cmake_configure(
       -DUSE_NATIVE_ARCH=OFF
       -DUSE_MPI=OFF
       -DUSE_SUPERBUILD=OFF
-      -DSKBUILD=ON
       -DNETGEN_VERSION_GIT=v${VERSION} # this variable is patched in via git-ver.patch
-      -DNG_INSTALL_DIR_CMAKE=lib/cmake/netgen
-      -DNG_INSTALL_DIR_BIN=bin
-      -DNG_INSTALL_DIR_LIB=lib
-      -DNG_INSTALL_DIR_INCLUDE=include
-      -DNG_INSTALL_DIR_RES=share/netgen
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/netgen")
-
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -63,9 +57,17 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/core/ngcore_api.hpp" "!defined(NGSTATIC_BUILD)" "0")
 endif()
 
+set(config_file "${CURRENT_PACKAGES_DIR}/share/netgen/NetgenConfig.cmake")
+file(READ "${config_file}" contents)
+string(REPLACE "${SOURCE_PATH}" "NOT-USABLE" contents "${contents}")
+string(REGEX REPLACE "\\\$<\\\$<CONFIG:Release>:([^>]+)>" "\\1" contents "${contents}")
+string(REPLACE "\${NETGEN_CMAKE_DIR}/../" "\${NETGEN_CMAKE_DIR}/../../" contents "${contents}")
+if(NOT VCPKG_BUILD_TYPE)
+  string(REPLACE "/lib" "$<$<CONFIG:DEBUG>:/debug>/lib" contents "${contents}")
+endif()
+string(REGEX REPLACE "$<CONFIG:Release>:([^>]+)>" "\\1" contents "${contents}")
+file(WRITE "${config_file}" "${contents}")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/netgen/NetgenConfig.cmake" "${SOURCE_PATH}" "NOT-USABLE")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
-                    "${CURRENT_PACKAGES_DIR}/debug/share"
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
