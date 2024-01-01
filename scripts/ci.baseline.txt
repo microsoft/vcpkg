@@ -933,6 +933,10 @@ qt5-canvas3d:x64-windows=skip
 qt5-canvas3d:x64-windows-static=skip
 qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
+# Missing Android SDK in Docker image, see https://github.com/microsoft/vcpkg/pull/35845
+qtbase:arm64-android=fail
+qtbase:arm-neon-android=fail
+qtbase:x64-android=fail
 # Missing system libraries
 qtwayland:x64-osx=fail
 qtwayland:arm64-osx=fail
