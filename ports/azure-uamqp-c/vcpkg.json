@@ -1,6 +1,6 @@
 {
   "name": "azure-uamqp-c",
-  "version-date": "2023-01-18",
+  "version-date": "2023-08-07",
   "description": "AMQP library for C",
   "homepage": "https://github.com/Azure/azure-uamqp-c",
   "license": "MIT",

@@ -1,0 +1,17 @@
+{
+  "name": "cpp-sort",
+  "version": "1.15.0",
+  "description": "Sorting algorithms & related tools for C++14",
+  "homepage": "https://github.com/Morwenn/cpp-sort/",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

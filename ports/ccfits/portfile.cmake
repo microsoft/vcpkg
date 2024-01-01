@@ -20,9 +20,11 @@ vcpkg_cmake_install()
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/CCfits.dll" "${CURRENT_PACKAGES_DIR}/bin/CCfits.dll")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/CCfits.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/CCfits.dll")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/CCfits.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/CCfits.dll")
+    endif()
 endif()
 
 # Remove duplicate include files
@@ -38,4 +40,4 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/CCfits/CCfits.h
     "#include \"longnam.h\"" "#include \"cfitsio/longnam.h\""
 )
 
-file(INSTALL "${SOURCE_PATH}/License.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")

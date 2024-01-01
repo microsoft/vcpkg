@@ -26,7 +26,7 @@ endif()
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_MinGW)
     vcpkg_cmake_config_fixup(PACKAGE_NAME platform_folders CONFIG_PATH cmake)
 else()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME platform_folders CONFIG_PATH lib/cmake)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME platform_folders CONFIG_PATH lib/cmake/platform_folders)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

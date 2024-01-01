@@ -1,7 +1,7 @@
 {
   "name": "sdl1-mixer",
   "version-date": "2023-03-25",
-  "port-version": 1,
+  "port-version": 2,
   "description": "An audio mixer that supports various file formats for Simple Directmedia Layer.",
   "homepage": "https://www.libsdl.org",
   "license": "Zlib",

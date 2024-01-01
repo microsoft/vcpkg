@@ -1,7 +1,6 @@
 {
   "name": "snappy",
-  "version": "1.1.9",
-  "port-version": 5,
+  "version": "1.1.10",
   "description": "A fast compressor/decompressor.",
   "homepage": "https://github.com/google/snappy",
   "license": null,

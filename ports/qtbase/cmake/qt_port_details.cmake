@@ -7,7 +7,7 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.5.0)
+set(QT_VERSION 6.6.1)
 set(QT_DEV_BRANCH 0)
 
 set(QT_UPDATE_VERSION 0)
@@ -90,6 +90,18 @@ if(QT_VERSION VERSION_GREATER_EQUAL 6.5.0)
              qtquickeffectmaker
              )
 endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.6.0)
+    list(APPEND QT_PORTS
+             ## New in 6.6.0
+             qtgraphs
+             #qtvncserver # only commercial
+             #qtinsighttracker
+             )
+endif()
+#qtinsighttracker
+#qtvncserver
+#qtgraphs
+
 # 1. By default, modules come from the official release
 # 2. These modules are mirrored to github and have tags matching the release
 set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager)
@@ -101,23 +113,31 @@ set(QT_FROM_QT_GIT qtinterfaceframework)
 #set(QT_FROM_QT_GIT ${QT_PORTS})
 #list(POP_FRONT QT_FROM_QT_GIT)
 
-function(qt_get_url_filename qt_port out_url out_filename)
+function(qt_get_url_filename qt_port out_urls out_filename)
     if("${qt_port}" IN_LIST QT_FROM_GITHUB)
-        set(url "https://github.com/qt/${qt_port}/archive/v${QT_VERSION}.tar.gz")
+        set(urls "https://github.com/qt/${qt_port}/archive/v${QT_VERSION}.tar.gz")
         set(filename "qt-${qt_port}-v${QT_VERSION}.tar.gz")
     elseif("${qt_port}" IN_LIST QT_FROM_GITHUB_BRANCH)
-        set(url "https://github.com/qt/${qt_port}/archive/${QT_VERSION}.tar.gz")
+        set(urls "https://github.com/qt/${qt_port}/archive/${QT_VERSION}.tar.gz")
         set(filename "qt-${qt_port}-${QT_VERSION}.tar.gz")
     else()
         string(SUBSTRING "${QT_VERSION}" 0 3 qt_major_minor)
+
         if(NOT QT_DEV_BRANCH)
-            set(url "https://download.qt.io/archive/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+            set(branch_subpath "archive")
         else()
-            set(url "https://download.qt.io/development_releases/qt/${qt_major_minor}/${QT_VERSION}/submodules/${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+            set(branch_subpath "development_releases")
         endif()
+
         set(filename "${qt_port}-everywhere-src-${QT_VERSION}.tar.xz")
+        set(mirrors
+            "https://download.qt.io/"
+            "https://mirrors.ocf.berkeley.edu/qt/"
+        )
+        set(url_subpath "${branch_subpath}/qt/${qt_major_minor}/${QT_VERSION}/submodules/${filename}")
+        list(TRANSFORM mirrors APPEND "${url_subpath}" OUTPUT_VARIABLE urls)
     endif()
-    set(${out_url} "${url}" PARENT_SCOPE)
+    set(${out_urls} ${urls} PARENT_SCOPE)
     set(${out_filename} "${filename}" PARENT_SCOPE)
 endfunction()
 
@@ -145,9 +165,9 @@ if(QT_UPDATE_VERSION)
             string(SUBSTRING "${out}" 0 40 tag_sha)
             string(APPEND msg "set(${qt_port}_REF ${tag_sha})\n")
         else()
-            qt_get_url_filename("${qt_port}" url filename)
+            qt_get_url_filename("${qt_port}" urls filename)
             vcpkg_download_distfile(archive
-                URLS "${url}"
+                URLS ${urls}
                 FILENAME "${filename}"
                 SKIP_SHA512
             )

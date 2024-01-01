@@ -2,8 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO spnda/fastgltf
     REF "v${VERSION}"
-    SHA512 a1456790a44b8d172e19425835d28e5a48994b8494b3f4b197dbab77c049816eead73cfc978e3ef6d41084799f4875b15ef88020357404d278f35189969d69d2
+    SHA512 6cda7e50d7fe01428e0a03d3f590fe7b680bfa4b6fcdbd1c6a118ac01c925099e63b34380b053adc323e2aaaaead42bda450d1eaf66b60af6ad2aafb68828d01
     HEAD_REF main
+    PATCHES find_package.patch
 )
 
 vcpkg_cmake_configure(
@@ -14,5 +15,11 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 vcpkg_copy_pdbs()
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/fastgltf/fastgltfConfig.cmake" contents)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/fastgltf/fastgltfConfig.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(simdjson)
+${contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

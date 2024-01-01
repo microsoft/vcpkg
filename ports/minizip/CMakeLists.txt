@@ -19,7 +19,7 @@ set(HEADERS
   mztools.h
 )
 if(WIN32)
-  list(APPEND SRC iowin32.c)
+  list(APPEND SRC iowin32.c minizip-win32.def)
   list(APPEND HEADERS iowin32.h)
 endif()
 
@@ -41,8 +41,8 @@ else()
   message(STATUS "Building without bzip2 support")
 endif()
 
-if(ANDROID)
-  target_compile_definitions(minizip PRIVATE IOAPI_NO_64)
+if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  target_compile_definitions(minizip PRIVATE -DIOWIN32_USING_WINRT_API)
 endif()
 
 if(NOT DISABLE_INSTALL_TOOLS)

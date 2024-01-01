@@ -1,6 +1,7 @@
 {
   "name": "libxt",
   "version": "1.2.1",
+  "port-version": 1,
   "description": "X Toolkit Intrinsics library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxt",
   "license": null,

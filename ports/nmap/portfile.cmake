@@ -18,9 +18,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
     list(APPEND DEL_PROJS "libpcap" "libpcre" "libssh2" "libz")
     foreach (DEL_PROJ ${DEL_PROJS})
-        file(REMOVE_RECURSE ${SOURCE_PATH}/${DEL_PROJ})
+        file(REMOVE_RECURSE "${SOURCE_PATH}/${DEL_PROJ}")
     endforeach()
-    
+
+  if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/bin/Packet.dll")
+    vcpkg_replace_string("${SOURCE_PATH}/mswin32/pcap-include/pcap/export-defs.h" "#define PCAP_API_DEF	__declspec(dllimport)" "#define PCAP_API_DEF		")
+  else() # editable
+    vcpkg_replace_string("${SOURCE_PATH}/mswin32/pcap-include/pcap/export-defs.h" "#define PCAP_API_DEF		" "#define PCAP_API_DEF	__declspec(dllimport)")
+  endif()
+
     # Clear
     vcpkg_execute_required_process(
         COMMAND "devenv.exe"
@@ -28,7 +34,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
                 /Clean
         WORKING_DIRECTORY ${SOURCE_PATH}/mswin32
     )
-    
     # Uprade
     message(STATUS "Upgrade solution...")
     vcpkg_execute_required_process(
@@ -38,24 +43,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
         WORKING_DIRECTORY ${SOURCE_PATH}/mswin32
         LOGNAME upgrade-Packet-${TARGET_TRIPLET}
     )
-    # Build
-    vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/mswin32/nmap.vcxproj
-    PLATFORM ${MSBUILD_PLATFORM}
-    USE_VCPKG_INTEGRATION
+    file(REMOVE_RECURSE "${SOURCE_PATH}/mswin32/Lib")
+    vcpkg_msbuild_install(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH mswin32/nmap.vcxproj
+        PLATFORM ${MSBUILD_PLATFORM}
+        ADDITIONAL_LIBS Packet.lib wpcap.lib User32.lib Crypt32.lib
     )
-    
-    # Install
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Release)
-        file(INSTALL ${SOURCE_PATH}/mswin32/Release/nmap.exe
-                     ${SOURCE_PATH}/mswin32/Release/nmap.pdb
-                     DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    endif()
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL Debug)
-        file(INSTALL ${SOURCE_PATH}/mswin32/Debug/nmap.exe
-                     ${SOURCE_PATH}/mswin32/Debug/nmap.pdb
-                     DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    endif()
 else()
     set(ENV{LDFLAGS} "$ENV{LDFLAGS} -pthread")
     set(OPTIONS --without-nmap-update --with-openssl=${CURRENT_INSTALLED_DIR} --with-libssh2=${CURRENT_INSTALLED_DIR} --with-libz=${CURRENT_INSTALLED_DIR} --with-libpcre=${CURRENT_INSTALLED_DIR})
@@ -112,9 +106,7 @@ else()
     set(SOURCE_PATH "${source_path_release}")
 endif()
 
-vcpkg_copy_pdbs()
-
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -20,14 +20,14 @@ endif()
 
 # Setup meson:
 set(program MESON)
-set(program_version 1.1.0)
+set(program_version @VERSION@)
 set(program_name meson)
 set(search_names meson meson.py)
-set(ref ae163a3f3e0ccdcbea97c8ad0e78f087925646b9)
+set(ref 110642dd7337347d0278451a1df11efd93d8ed8a)
 set(path_to_search "${DOWNLOADS}/tools/meson-${program_version}")
 set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
 set(download_filename "meson-${ref}.tar.gz")
-set(download_sha512 1bc5be2dc3a26b811bbeaf8f8b8d14900a00975a2e50f2f4b3da4da067114268fd5da76d9365a811d2dcdc8c63bae9adc08f743954ca4e8cf8c49bba36973490)
+set(download_sha512 0)
 
 find_program(SCRIPT_MESON NAMES ${search_names} PATHS "${path_to_search}" NO_DEFAULT_PATH) # NO_DEFAULT_PATH due top patching
 
@@ -50,6 +50,7 @@ if(NOT SCRIPT_MESON)
         PATCHES
             "${CMAKE_CURRENT_LIST_DIR}/meson-intl.patch"
             "${CMAKE_CURRENT_LIST_DIR}/adjust-python-dep.patch"
+            "${CMAKE_CURRENT_LIST_DIR}/remove-freebsd-pcfile-specialization.patch"
     )
     vcpkg_replace_string("${DOWNLOADS}/tools/meson-${program_version}/mesonbuild/cmake/toolchain.py" "arg.startswith('/')" "arg.startswith(('/','-'))")
     set(SCRIPT_MESON "${DOWNLOADS}/tools/meson-${program_version}/meson.py")

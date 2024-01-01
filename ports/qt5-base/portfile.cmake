@@ -46,15 +46,30 @@ endif()
 
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
+                            # CVE fixes from https://download.qt.io/official_releases/qt/5.15/
+                            patches/CVE-2023-24607-qtbase-5.15.diff
+                            patches/CVE-2023-32762-qtbase-5.15.diff
+                            patches/CVE-2023-32763-qtbase-5.15.diff
+                            patches/CVE-2023-33285-qtbase-5.15.diff
+                            patches/CVE-2023-34410-qtbase-5.15.diff
+                            patches/CVE-2023-37369-qtbase-5.15.diff
+                            patches/CVE-2023-38197-qtbase-5.15.diff
+                            patches/CVE-2023-43114-5.15.patch
+                            patches/0001-CVE-2023-51714-qtbase-5.15.diff
+                            patches/0002-CVE-2023-51714-qtbase-5.15.diff
+
                             patches/winmain_pro.patch          #Moves qtmain to manual-link
                             patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
                             patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.
                             patches/gui_configure.patch        #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
                             patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
                             patches/egl.patch                  #Fix egl detection logic.
+                            patches/qtbug_96392.patch          #Backport fix for QTBUG-96392
                             patches/mysql_plugin_include.patch #Fix include path of mysql plugin
                             patches/mysql-configure.patch      #Fix mysql project
                             patches/cocoa.patch                #Fix missing include on macOS Monterrey, https://code.qt.io/cgit/qt/qtbase.git/commit/src/plugins/platforms/cocoa?id=dece6f5840463ae2ddf927d65eb1b3680e34a547
+                            patches/xcode-15.patch             #From https://codereview.qt-project.org/c/qt/qtbase/+/503172
+                            patches/patch-qtbase-memory_resource.diff # From https://bugreports.qt.io/browse/QTBUG-114316
                             #patches/static_opengl.patch       #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static).
                                                                #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the
                                                                #the windows supplied gl.h header and the angle gl.h otherwise.
@@ -260,8 +275,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ${ADDITIONAL_WINDOWS_LIBS}"
         )
     if(WITH_PGSQL_PLUGIN)
-        list(APPEND RELEASE_OPTIONS "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ${ADDITIONAL_WINDOWS_LIBS}")
-        list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${ADDITIONAL_WINDOWS_LIBS}")
+        list(APPEND RELEASE_OPTIONS "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ${ADDITIONAL_WINDOWS_LIBS} -lwldap32")
+        list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${ADDITIONAL_WINDOWS_LIBS} -lwldap32")
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
     list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -xcb -linuxfb)
@@ -282,6 +297,14 @@ elseif(VCPKG_TARGET_IS_LINUX)
         list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_TYPES_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread")
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        # Avoid frameworks for vcpkg
+        list(APPEND CORE_OPTIONS -no-framework)
+        # Such that Qt executables like moc find their libs. The default path is ../Frameworks
+        list(APPEND DEBUG_OPTIONS -R ${CURRENT_INSTALLED_DIR}/debug/lib)
+        list(APPEND RELEASE_OPTIONS -R ${CURRENT_INSTALLED_DIR}/lib)
+    endif()
+
     list(APPEND CORE_OPTIONS -fontconfig)
     if("${VCPKG_TARGET_ARCHITECTURE}" MATCHES "arm64")
         FILE(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)

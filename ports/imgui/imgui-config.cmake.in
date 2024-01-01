@@ -26,4 +26,12 @@ if (@IMGUI_FREETYPE@)
     find_dependency(freetype CONFIG)
 endif()
 
+if (@IMGUI_FREETYPE_LUNASVG@)
+    find_dependency(unofficial-lunasvg CONFIG)
+endif()
+
+if (@IMGUI_BUILD_ALLEGRO5_BINDING@)
+    find_dependency(Allegro CONFIG)
+endif()
+
 include("${CMAKE_CURRENT_LIST_DIR}/imgui-targets.cmake")

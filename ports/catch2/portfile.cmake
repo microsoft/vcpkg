@@ -1,13 +1,12 @@
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
-vcpkg_minimum_required(VERSION 2022-11-10)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
     REF v${VERSION}
-    SHA512 3d0c5666509a19be54ea0c48a3c8e1c4a951a2d991a7c9f7fe6d326661464538f1ab9dc573b1b2647f49fb6bef45bbd866142a4ce0fba38545ad182b8d55f61f
+    SHA512 2ffdc8e7851cacc2ab3062ee2c9531d7d90e9a906da8e0f9b3db4a93967a34d3f25e674b03facd7b63367bc2545e39e00ec30f8e10896967993dd01af9a5af92
     HEAD_REF devel
     PATCHES
         fix-install-path.patch
@@ -24,6 +23,10 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Catch2)
 vcpkg_fixup_pkgconfig()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/catch2-with-main.pc" [["-L${libdir}"]] [["-L${libdir}/manual-link"]])
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/catch2-with-main.pc" [["-L${libdir}"]] [["-L${libdir}/manual-link"]])
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

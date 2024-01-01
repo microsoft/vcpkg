@@ -4,11 +4,10 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
-    REF v2022.03.21.00
-    SHA512 8d2d9430dc3a4ecc23042cd9bcf4eee888824449d05d98baec408aef806b934d643e578d3876169f69966c846aeddbe0aa84416c4e020cba028a49d2fccfe7ab
+    REF "v${VERSION}"
+    SHA512 8730c2ecfeccf221e746df9f8e449d31934fd7e6f7861631d4c38e891cfc7b5ab07ffb48b56048031820f771966d6435bee2996738934bca9324548aeba5b30d
     HEAD_REF master
     PATCHES 
-        0001-fix-compatibility-with-boost-1.79.0.patch
         fix-glog.patch
         0002-fix-dependency.patch
 )
@@ -39,11 +38,16 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/transport/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/util/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/detail/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/debug_thrift_data_difference/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/common/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/core/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/inmemory/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/client/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/framing/parser/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/protocol/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/extensions/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/test"
@@ -51,6 +55,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/frozen/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/gtest/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/visitation/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/test"
@@ -74,4 +79,4 @@ endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftTargets.cmake" "LOCATION_HH=\\\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/thrift/compiler/location.hh\\\"" "")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

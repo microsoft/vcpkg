@@ -1,23 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openzim/libzim
-    REF ${VERSION}
-    SHA512 4554a9237f5167f6f94aad76ef0e847e949c47c6ee2a89bbd6e587da3b3a3e2d0a8b2d03f7a0fbde0e0dc96fb61bf8c115b3ef3cbd7eff5e880f152bee9b29f0
+    REF "${VERSION}"
+    SHA512 55d18535d677d3249c8331ceac1acd4afa650de1f61a0aa3ffc1c98ca2a395bc657c774d01780f1a2c2aedd7d9c5d2e7d9f5e717ed879de84dc6d1be6accfe5e
     HEAD_REF main
     PATCHES
-        0001-build-share-library.patch
+        cross-builds.diff
+        dllexport.diff
+        subdirs.diff
 )
 
 set(EXTRA_OPTIONS "")
 
 if(NOT "xapian" IN_LIST FEATURES)
     list(APPEND EXTRA_OPTIONS "-Dwith_xapian=false")
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    list(APPEND EXTRA_OPTIONS "-Dstatic-linkage=false")
-else()
-    list(APPEND EXTRA_OPTIONS "-Dstatic-linkage=true")
 endif()
 
 vcpkg_configure_meson(
@@ -27,11 +23,15 @@ vcpkg_configure_meson(
       ${EXTRA_OPTIONS}
 )
 
-vcpkg_install_meson(ADD_BIN_TO_PATH)
+vcpkg_install_meson()
 
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/zim/zim.h" "defined(LIBZIM_IMPORT_DLL)" "1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

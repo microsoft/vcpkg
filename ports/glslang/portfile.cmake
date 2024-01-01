@@ -4,13 +4,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/glslang
     REF "${VERSION}"
-    SHA512 1d40518d09579eb925b1e4375c9a581736cdb79aaf60d1ca6117e394386a8d2dc1dafd9a4a30d9381f063c1ea1f65fc0d5d9fcbbefa87a85423f87fd925747b0
+    SHA512 e16b01925a657750733a2973dc803fc3910a3a169ae276af205de6cb1bf0536fd2dbb63c5fd4fc10f800ba95f71bce673417121ad640cb9c964f291596c80025
     HEAD_REF master
+    PATCHES
+        cmake.patch # Remove on next version (Upstream PR #3406 and #3420).
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        opt ENABLE_OPT
+        opt ALLOW_EXTERNAL_SPIRV_TOOLS
         tools ENABLE_GLSLANG_BINARIES
+        rtti ENABLE_RTTI
 )
 
 if (ENABLE_GLSLANG_BINARIES)
@@ -19,7 +24,7 @@ if (ENABLE_GLSLANG_BINARIES)
     vcpkg_add_to_path("${PYTHON_PATH}")
 endif ()
 
-if (WIN32)
+if (VCPKG_TARGET_IS_WINDOWS)
     set(PLATFORM_OPTIONS "-DOVERRIDE_MSVCCRT=OFF")
 endif ()
 
@@ -35,16 +40,21 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/glslang DO_NOT_DELETE_PARENT_CONFIG_PATH)
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/glslang-config.cmake"
-    "${PACKAGE_PREFIX_DIR}/lib/cmake/glslang/glslang-targets.cmake"
-    "${PACKAGE_PREFIX_DIR}/share/${PORT}/glslang-targets.cmake"
+    [[${PACKAGE_PREFIX_DIR}/lib/cmake/glslang/glslang-targets.cmake]]
+    [[${CMAKE_CURRENT_LIST_DIR}/glslang-targets.cmake]]
 )
+file(REMOVE_RECURSE CONFIG_PATH "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/glslang/Public/ShaderLang.h" "ifdef GLSLANG_IS_SHARED_LIBRARY" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/glslang/Include/glslang_c_interface.h" "ifdef GLSLANG_IS_SHARED_LIBRARY" "if 1")
+endif()
 
 vcpkg_copy_pdbs()
 
 if (ENABLE_GLSLANG_BINARIES)
-    vcpkg_copy_tools(TOOL_NAMES glslangValidator spirv-remap AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES glslang glslangValidator spirv-remap AUTO_CLEAN)
 endif ()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

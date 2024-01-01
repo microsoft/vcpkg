@@ -5,11 +5,13 @@
 set(VCPKG_POLICY_CMAKE_HELPER_PORT enabled)
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg_configure_meson.cmake"
-             "${CMAKE_CURRENT_LIST_DIR}/vcpkg_install_meson.cmake"
-             "${CMAKE_CURRENT_LIST_DIR}/meson-intl.patch"
-             "${CMAKE_CURRENT_LIST_DIR}/adjust-python-dep.patch"
-             DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg_configure_meson.cmake"
+          "${CMAKE_CURRENT_LIST_DIR}/vcpkg_install_meson.cmake"
+          "${CMAKE_CURRENT_LIST_DIR}/meson-intl.patch"
+          "${CMAKE_CURRENT_LIST_DIR}/adjust-python-dep.patch"
+          "${CMAKE_CURRENT_LIST_DIR}/remove-freebsd-pcfile-specialization.patch"
+          DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/meson/version.txt" "${VERSION}") # For vcpkg_find_acquire_program
 

@@ -1,0 +1,13 @@
+diff --git a/lib/getline.cc b/lib/getline.cc
+index c57c633..0984a7c 100644
+--- a/lib/getline.cc
++++ b/lib/getline.cc
+@@ -55,7 +55,7 @@ getstr (char **lineptr, size_t *n, FILE *stream, char terminator, size_t offset)
+ 
+   for (;;)
+     {
+-      register int c = getc (stream);
++      int c = getc (stream);
+ 
+       /* We always want at least one char left in the buffer, since we
+          always (unless we get an error while reading the first char)

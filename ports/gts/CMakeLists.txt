@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(gts C)
+project(gts VERSION "${VERSION}" LANGUAGES C)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLIB2 glib-2.0 IMPORTED_TARGET)
@@ -8,17 +8,21 @@ pkg_check_modules(GLIB2 glib-2.0 IMPORTED_TARGET)
 if(WIN32)
     add_definitions(-DNATIVE_WIN32 -D_USE_MATH_DEFINES)
 else()
-    add_definitions(-DHAVE_FPU_CONTROL_H)
+    include(CheckIncludeFile)
+    check_include_file("fpu_control.h" HAVE_FPU_CONTROL_H)
+    if(HAVE_FPU_CONTROL_H)
+        add_definitions(-DHAVE_FPU_CONTROL_H)
+    endif()
 endif()
 
 add_definitions(
     -DGTS_COMPILATION
-    -DGTS_MAJOR_VERSION=0
-    -DGTS_MINOR_VERSION=7
-    -DGTS_MICRO_VERSION=6
+    -DGTS_MAJOR_VERSION=${PROJECT_VERSION_MAJOR}
+    -DGTS_MINOR_VERSION=${PROJECT_VERSION_MINOR}
+    -DGTS_MICRO_VERSION=${PROJECT_VERSION_PATCH}
     -DGTS_INTERFACE_AGE=1
     -DGTS_BINARY_AGE=1
-    -DGTS_VERSION=${GTS_MAJOR_VERSION}.${GTS_MINOR_VERSION}.${GTS_MICRO_VERSION}
+    -DGTS_VERSION=${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
 )
 
 file(GLOB src src/*.c src/gts.def)

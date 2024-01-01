@@ -1,0 +1,58 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 77df76d..bebb8c8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,5 +24,17 @@ include(MiscCheck)
+ add_subdirectory(tensorpipe)
+ 
+ install(EXPORT TensorpipeTargets
+-        DESTINATION share/cmake/Tensorpipe
+-        FILE TensorpipeTargets.cmake)
++        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/unofficial-tensorpipe
++        NAMESPACE unofficial::tensorpipe::
++        FILE unofficial-tensorpipe-targets.cmake)
++
++# Create TensorpipeConfig.cmake for find_package(unofficial-tensorpipe CONFIG)
++include(CMakePackageConfigHelpers)
++get_filename_component(CONFIG_FILE_PATH ${CMAKE_CURRENT_BINARY_DIR}/unofficial-tensorpipe-config.cmake ABSOLUTE)
++configure_package_config_file(
++  cmake/unofficial-tensorpipe-config.cmake.in ${CONFIG_FILE_PATH}
++  INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/unofficial-tensorpipe)
++
++# Install the generated config file
++install(FILES ${CONFIG_FILE_PATH}
++        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/unofficial-tensorpipe)
+diff --git a/cmake/unofficial-tensorpipe-config.cmake.in b/cmake/unofficial-tensorpipe-config.cmake.in
+new file mode 100644
+index 000000000..f2ea8ce47
+--- /dev/null
++++ b/cmake/unofficial-tensorpipe-config.cmake.in
+@@ -0,0 +1,15 @@
++@PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
++
++find_dependency(libuv REQUIRED)
++
++get_filename_component(_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
++file(GLOB CONFIG_FILES "${_DIR}/unofficial-tensorpipe-config-*.cmake")
++foreach(f ${CONFIG_FILES})
++  include(${f})
++endforeach()
++
++# import targets 
++include("${_DIR}/unofficial-tensorpipe-targets.cmake")
++
++check_required_components(@PROJECT_NAME@)
+diff --git a/tensorpipe/python/CMakeLists.txt b/tensorpipe/python/CMakeLists.txt
+index ce494722f..b722381f8 100644
+--- a/tensorpipe/python/CMakeLists.txt
++++ b/tensorpipe/python/CMakeLists.txt
+@@ -14,3 +14,8 @@ endif()
+ set(PYBIND11_CPP_STANDARD -std=c++14)
+ pybind11_add_module(pytensorpipe tensorpipe.cc)
+ target_link_libraries(pytensorpipe PRIVATE tensorpipe)
++
++install(TARGETS pytensorpipe
++        EXPORT TensorpipeTargets
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})

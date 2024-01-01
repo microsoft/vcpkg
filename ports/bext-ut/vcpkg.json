@@ -1,7 +1,7 @@
 {
   "name": "bext-ut",
   "version": "1.1.9",
-  "port-version": 1,
+  "port-version": 2,
   "description": "UT: C++20 μ(micro)/Unit Testing Framework",
   "homepage": "https://boost-ext.github.io/ut/",
   "license": "BSL-1.0",

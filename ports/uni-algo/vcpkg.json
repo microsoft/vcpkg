@@ -1,6 +1,6 @@
 {
   "name": "uni-algo",
-  "version-semver": "0.7.0",
+  "version-semver": "1.0.0",
   "description": "Unicode Algorithms Implementation",
   "homepage": "https://github.com/uni-algo/uni-algo",
   "license": "Unlicense OR MIT",

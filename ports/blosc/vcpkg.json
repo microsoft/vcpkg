@@ -1,6 +1,6 @@
 {
   "name": "blosc",
-  "version": "1.21.3",
+  "version": "1.21.5",
   "description": "A blocking, shuffling and loss-less compression library that can be faster than `memcpy()`",
   "homepage": "https://github.com/Blosc/c-blosc",
   "license": "BSD-3-Clause",

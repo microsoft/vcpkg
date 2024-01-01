@@ -1,15 +1,14 @@
 {
   "name": "yomm2",
-  "version": "1.3.1",
+  "version": "1.4.0",
+  "port-version": 1,
   "description": "YOMM2 is an implementation of open multi-methods.",
   "homepage": "https://github.com/jll63/yomm2",
   "license": "BSL-1.0",
   "dependencies": [
     "boost-dynamic-bitset",
-    "boost-integer",
-    "boost-move",
+    "boost-mp11",
     "boost-preprocessor",
-    "boost-type-traits",
     {
       "name": "vcpkg-cmake",
       "host": true

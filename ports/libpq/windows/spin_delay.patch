@@ -1,0 +1,24 @@
+diff --git a/src/include/storage/s_lock.h b/src/include/storage/s_lock.h
+index 4d3ffc7..658b1a1 100644
+--- a/src/include/storage/s_lock.h
++++ b/src/include/storage/s_lock.h
+@@ -953,12 +953,18 @@ typedef LONG slock_t;
+ /* If using Visual C++ on Win64, inline assembly is unavailable.
+  * Use a _mm_pause intrinsic instead of rep nop.
+  */
+-#if defined(_WIN64)
++#if defined(_M_X64) && !defined(_M_ARM64EC)
+ static __forceinline void
+ spin_delay(void)
+ {
+ 	_mm_pause();
+ }
++#elif defined(_M_ARM) || defined(_M_ARM64) || defined(_M_ARM64EC)
++static __forceinline void
++spin_delay(void)
++{
++	__yield();
++}
+ #else
+ static __forceinline void
+ spin_delay(void)

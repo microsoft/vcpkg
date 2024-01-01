@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
-    REF 47948342be43ddb951e12a53770278be52d479e7  #v2022.10.31.00
-    SHA512 b91fbbe008bbd6ee5e865a585cd51f1a1b69360eba32231f0b585b836e5591ee4cc9ffe1d747a82267f21736056fc97932b35212016e614928c13de7c5a64f55
+    REF "v${VERSION}"
+    SHA512 ff0dfe95640a24568a2950442576fbf4acd9a1dd354b7f7687cb1946cc2f896664e6e54b29ec051eccddb765bab276cb94c9920c724c4b4a5b1fc5f29c26e649
     HEAD_REF master
     PATCHES
         0001-fix-libsodium.patch
@@ -38,4 +38,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/fizz/tool/test" "${CURRENT_PACKAGES_DIR}/include/fizz/util/test")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 f815be4fb20b6001ba5525270765fe239b5468708a7be34b93b60ee0ce63464727d183c9756fbc33bffd199019e1f06a7fddd306ce8388435cea7771070a2ca9
+    SHA512 dd6cf6cbb817a48ef5275bb409367e5904526a3c16a17a37ea75101085ea19a71ba6bf936a6f099012e7c528811db1728ef2f14dcb16a1056a22088839280ce0
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -11,11 +11,13 @@ vcpkg_extract_source_archive(
         msvc-static-name.patch
         utf8proc.patch
         thrift.patch
+        fix-ci-error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         acero       ARROW_ACERO
+        compute     ARROW_COMPUTE
         csv         ARROW_CSV
         cuda        ARROW_CUDA
         dataset     ARROW_DATASET
@@ -79,6 +81,22 @@ if("dataset" IN_LIST FEATURES)
     )
 endif()
 
+if("acero" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME arrowacero
+        CONFIG_PATH lib/cmake/ArrowAcero
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
+if("flight" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME ArrowFlight
+        CONFIG_PATH lib/cmake/ArrowFlight
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
 if("parquet" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
         PACKAGE_NAME parquet
@@ -92,6 +110,19 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_D
 if("parquet" IN_LIST FEATURES)
     file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-parquet" usage-parquet)
     file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-parquet}")
+endif()
+if("dataset" IN_LIST FEATURES)
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-dataset" usage-dataset)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-dataset}")
+endif()
+if("acero" IN_LIST FEATURES)
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-acero" usage-acero)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-acero}")
+endif()
+
+if("flight" IN_LIST FEATURES)
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-flight" usage-flight)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flight}")
 endif()
 
 if("example" IN_LIST FEATURES)
