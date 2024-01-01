@@ -25,6 +25,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 vcpkg_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS  ${OPTIONS}
       -DUSE_PYTHON=OFF
