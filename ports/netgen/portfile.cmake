@@ -41,6 +41,7 @@ vcpkg_cmake_configure(
       -DUSE_MPI=OFF
       -DUSE_SUPERBUILD=OFF
       -DNETGEN_VERSION_GIT=v${VERSION} # this variable is patched in via git-ver.patch
+      -DNG_INSTALL_DIR_CMAKE=cmake
 )
 
 vcpkg_cmake_install()
