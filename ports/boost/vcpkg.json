@@ -69,6 +69,7 @@
     },
     {
       "name": "boost-cobalt",
+      "platform": "!ios & !android",
       "version>=": "1.84.0"
     },
     {
