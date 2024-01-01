@@ -11,6 +11,8 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/json5_parser"
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=11 # Boost v1.84.0 libraries require C++11
 )
 
 vcpkg_cmake_install()
