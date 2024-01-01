@@ -41,16 +41,17 @@ vcpkg_cmake_configure(
       -DUSE_MPI=OFF
       -DUSE_SUPERBUILD=OFF
       -DNETGEN_VERSION_GIT=v${VERSION} # this variable is patched in via git-ver.patch
-      -DNG_INSTALL_DIR_CMAKE=cmake
+      -DNG_INSTALL_DIR_CMAKE=lib/cmake/netgen
       -DNG_INSTALL_DIR_BIN=bin
       -DNG_INSTALL_DIR_LIB=lib
       -DNG_INSTALL_DIR_RES=share
       -DNG_INSTALL_DIR_INCLUDE=include
+      -DSKBUILD=ON
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/netgen)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
