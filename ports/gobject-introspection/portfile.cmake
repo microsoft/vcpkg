@@ -8,12 +8,13 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 b8fba2bd12e93776c55228acf3487bef36ee40b1abdc7f681b827780ac94a8bfa1f59b0c30d60fa5a1fea2f610de78b9e52029f411128067808f17eb6374cdc5
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-g-ir-tool-template.in.patch
         0002-cross-build.patch
+        0003-fix-paths.patch
         python.patch
 )
 
@@ -28,15 +29,12 @@ if(VCPKG_CROSSCOMPILING AND
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
-    ADDITIONAL_NATIVE_BINARIES
-        flex='${FLEX}'
-        bison='${BISON}'
-    ADDITIONAL_CROSS_BINARIES
+    ADDITIONAL_BINARIES
         flex='${FLEX}'
         bison='${BISON}'
         g-ir-annotation-tool='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-annotation-tool'
@@ -52,8 +50,6 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
 set(GI_TOOLS
         g-ir-compiler
         g-ir-generate
@@ -68,15 +64,21 @@ vcpkg_copy_tools(TOOL_NAMES ${GI_TOOLS} AUTO_CLEAN)
 foreach(script IN LISTS GI_SCRIPTS)
     file(READ "${CURRENT_PACKAGES_DIR}/bin/${script}" _contents)
     string(REPLACE "#!/usr/bin/env ${PYTHON3}" "#!/usr/bin/env python3" _contents "${_contents}")
-    string(REPLACE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_INSTALLED_DIR}/lib" _contents "${_contents}")
+    string(REPLACE "datadir = \"${CURRENT_PACKAGES_DIR}/share\"" "raise Exception('could not find right path') " _contents "${_contents}")
+    string(REPLACE "pylibdir = os.path.join('${CURRENT_PACKAGES_DIR}/lib', 'gobject-introspection')" "raise Exception('could not find right path') " _contents "${_contents}")
     file(WRITE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}" "${_contents}")
 
     file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${script}")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")
 endforeach()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB _pyd_lib_files "${CURRENT_PACKAGES_DIR}/lib/gobject-introspection/giscanner/_giscanner.*.lib")
+    file(REMOVE ${_pyd_lib_files})
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 
-set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) # _giscanner.lib
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

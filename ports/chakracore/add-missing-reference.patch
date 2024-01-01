@@ -1,0 +1,15 @@
+diff --git a/lib/SCACore/Chakra.SCACore.vcxproj b/lib/SCACore/Chakra.SCACore.vcxproj
+index 1b13cea..57b066b 100644
+--- a/lib/SCACore/Chakra.SCACore.vcxproj
++++ b/lib/SCACore/Chakra.SCACore.vcxproj
+@@ -60,6 +60,9 @@
+     <ClInclude Include="StreamReader.h" />
+     <ClInclude Include="StreamWriter.h" />
+   </ItemGroup>
++  <ItemGroup>
++    <ProjectReference Include="$(MSBuildThisFileDirectory)../../manifests/CoreManifests.vcxproj" />
++  </ItemGroup>
+   <Import Project="$(BuildConfigPropsPath)Chakra.Build.targets" Condition="exists('$(BuildConfigPropsPath)Chakra.Build.targets')" />
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+ </Project>
+\ No newline at end of file

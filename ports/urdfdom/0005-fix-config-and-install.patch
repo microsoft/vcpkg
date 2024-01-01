@@ -1,101 +1,40 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f0d115d..9acbfbe 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -58,17 +58,18 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}"
- 
- enable_testing()
- 
--add_subdirectory(urdf_parser)
--
- if(WIN32 AND NOT CYGWIN)
-   set(CMAKE_CONFIG_INSTALL_DIR CMake)
- else()
-     set(CMAKE_CONFIG_INSTALL_DIR ${CMAKE_INSTALL_FULL_LIBDIR}/${PROJECT_NAME}/cmake/)
- endif()
- 
-+add_subdirectory(urdf_parser)
-+
- set(PKG_NAME ${PROJECT_NAME})
- set(PKG_LIBRARIES urdfdom_sensor urdfdom_model_state urdfdom_model urdfdom_world)
- set(PKG_DEPENDS urdfdom_headers console_bridge)
-+set(PKG_EXPORTS urdfdom)
- set(cmake_conf_file "cmake/urdfdom-config.cmake")
- configure_file("${CMAKE_CURRENT_SOURCE_DIR}/${cmake_conf_file}.in" "${CMAKE_BINARY_DIR}/${cmake_conf_file}" @ONLY)
- install(FILES ${CMAKE_BINARY_DIR}/${cmake_conf_file}
 diff --git a/cmake/urdfdom-config.cmake.in b/cmake/urdfdom-config.cmake.in
-index fb81b47..8b4ef8f 100644
+index d8eb93d..3e5c42a 100644
 --- a/cmake/urdfdom-config.cmake.in
 +++ b/cmake/urdfdom-config.cmake.in
 @@ -3,8 +3,12 @@ if (@PKG_NAME@_CONFIG_INCLUDED)
  endif()
  set(@PKG_NAME@_CONFIG_INCLUDED TRUE)
  
--set(@PKG_NAME@_INCLUDE_DIRS "@CMAKE_INSTALL_PREFIX@/include" "@TinyXML_INCLUDE_DIRS@")
+-set(@PKG_NAME@_INCLUDE_DIRS "${@PROJECT_NAME@_DIR}/@RELATIVE_PATH_CMAKE_DIR_TO_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@" "@TinyXML_INCLUDE_DIRS@")
 +get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
 +get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
- 
++ 
 +set(@PKG_NAME@_INCLUDE_DIRS "${_IMPORT_PREFIX}/include" "@TinyXML_INCLUDE_DIRS@")
-+
+ 
 +if (0)
  foreach(lib @PKG_LIBRARIES@)
    set(onelib "${lib}-NOTFOUND")
-   find_library(onelib ${lib}
-@@ -25,3 +29,13 @@ foreach(dep @PKG_DEPENDS@)
-   list(APPEND @PKG_NAME@_INCLUDE_DIRS ${${dep}_INCLUDE_DIRS})
-   list(APPEND @PKG_NAME@_LIBRARIES ${${dep}_LIBRARIES})
+   set(onelibd "${lib}-NOTFOUND")
+@@ -29,10 +33,14 @@ foreach(lib @PKG_LIBRARIES@)
+   endif()
+   list(APPEND @PKG_NAME@_TARGETS @PROJECT_NAME@::${lib})
  endforeach()
 +endif()
 +
 +include(CMakeFindDependencyMacro)
 +find_dependency(console_bridge)
-+
-+foreach(exp @PKG_EXPORTS@)
-+  include(${@PROJECT_NAME@_DIR}/${exp}Export.cmake)
-+endforeach()
+ 
+ foreach(dep @PKG_DEPENDS@)
+   if(NOT ${dep}_FOUND)
+-    find_package(${dep})
++    find_dependency(${dep})
+   endif()
+   list(APPEND @PKG_NAME@_INCLUDE_DIRS ${${dep}_INCLUDE_DIRS})
+   list(APPEND @PKG_NAME@_LIBRARIES ${${dep}_LIBRARIES})
+@@ -41,3 +49,5 @@ endforeach()
+ foreach(exp @PKG_EXPORTS@)
+   include(${@PROJECT_NAME@_DIR}/${exp}Export.cmake)
+ endforeach()
 +
 +set(@PKG_NAME@_LIBRARIES urdfdom::urdfdom_model urdfdom::urdfdom_world urdfdom::urdfdom_sensor urdfdom::urdfdom_model_state)
-\ No newline at end of file
-diff --git a/urdf_parser/CMakeLists.txt b/urdf_parser/CMakeLists.txt
-index 731b57a..ebd0586 100644
---- a/urdf_parser/CMakeLists.txt
-+++ b/urdf_parser/CMakeLists.txt
-@@ -39,10 +39,32 @@ if(BUILD_TESTING)
-   add_subdirectory(test)
- endif()
- 
--INSTALL(TARGETS urdfdom_model DESTINATION ${CMAKE_INSTALL_LIBDIR})
--INSTALL(TARGETS urdfdom_world DESTINATION ${CMAKE_INSTALL_LIBDIR})
--INSTALL(TARGETS check_urdf urdf_to_graphiz urdf_mem_test
--  DESTINATION ${CMAKE_INSTALL_BINDIR})
--INSTALL(TARGETS urdfdom_sensor DESTINATION ${CMAKE_INSTALL_LIBDIR})
--INSTALL(TARGETS urdfdom_model_state DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+INSTALL(
-+  TARGETS
-+  check_urdf
-+  urdf_to_graphiz
-+  urdf_mem_test
-+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+)
-+INSTALL(
-+  TARGETS
-+  urdfdom_model
-+  urdfdom_world
-+  urdfdom_sensor
-+  urdfdom_model_state
-+  EXPORT
-+  urdfdom
-+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+)
-+install(
-+  EXPORT urdfdom
-+  DESTINATION ${CMAKE_CONFIG_INSTALL_DIR}
-+  NAMESPACE "${PROJECT_NAME}::"
-+  FILE "urdfdomExport.cmake"
-+)
-+
- INSTALL(DIRECTORY include/urdf_parser DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

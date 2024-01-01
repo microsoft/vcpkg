@@ -9,10 +9,10 @@ index efcffc2..dd9bd16 100644
 -find_package(uv REQUIRED)
 -list(APPEND TP_LINK_LIBRARIES uv::uv)
 +find_package(libuv CONFIG REQUIRED) 
-+if (TARGET uv)
-+list(APPEND TP_LINK_LIBRARIES uv)
++if (TARGET libuv::uv)
++list(APPEND TP_LINK_LIBRARIES libuv::uv)
 +else()
-+list(APPEND TP_LINK_LIBRARIES uv_a)
++list(APPEND TP_LINK_LIBRARIES libuv::uv_a)
 +endif()
  
  ### shm

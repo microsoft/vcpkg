@@ -1,12 +1,15 @@
 {
   "name": "pangolin",
-  "version": "0.6",
+  "version": "0.8",
   "port-version": 2,
   "description": "Lightweight GUI Library",
   "homepage": "https://github.com/stevenlovegrove/Pangolin",
+  "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
+    "eigen3",
     "glew",
+    "palsigslot",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -17,20 +20,13 @@
     }
   ],
   "default-features": [
-    "eigen",
     "ffmpeg",
-    "gui",
     "jpeg",
-    "png",
-    "vars",
-    "video"
+    "png"
   ],
   "features": {
     "eigen": {
-      "description": "Build support for Eigen matrix types",
-      "dependencies": [
-        "eigen3"
-      ]
+      "description": "Unused option left for backwards compatibility with older versions"
     },
     "examples": {
       "description": "Build Examples"
@@ -47,7 +43,7 @@
       ]
     },
     "gui": {
-      "description": "Build support for Pangolin GUI"
+      "description": "Unused option left for backwards compatibility with older versions"
     },
     "jpeg": {
       "description": "Build support for libjpeg image input",
@@ -62,10 +58,7 @@
       ]
     },
     "module": {
-      "description": "Python wrapper for Pangolin",
-      "dependencies": [
-        "python3"
-      ]
+      "description": "Unused option left for backwards compatibility with older versions"
     },
     "openexr": {
       "description": "Build support for libopenexr image input",
@@ -86,9 +79,10 @@
       ]
     },
     "pybind11": {
-      "description": "Build support for Pangolin Interactive Console",
+      "description": "Python wrapper for Pangolin",
       "dependencies": [
-        "pybind11"
+        "pybind11",
+        "python3"
       ]
     },
     "realsense": {
@@ -107,7 +101,13 @@
       ]
     },
     "tools": {
-      "description": "Build Tools"
+      "description": "Build Tools",
+      "dependencies": [
+        {
+          "name": "pangolin",
+          "default-features": false
+        }
+      ]
     },
     "uvc": {
       "description": "Build support for MediaFoundation UVC input",
@@ -116,10 +116,10 @@
       ]
     },
     "vars": {
-      "description": "Build support for Pangolin Vars"
+      "description": "Unused option left for backwards compatibility with older versions"
     },
     "video": {
-      "description": "Build support for Pangolin Video Utilities"
+      "description": "Unused option left for backwards compatibility with older versions"
     },
     "zstd": {
       "description": "Build support for libzstd compression",

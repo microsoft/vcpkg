@@ -1,5 +1,5 @@
 diff --git a/CMake/config.cmake b/CMake/config.cmake
-index 4483900..dfef016 100644
+index 6b9eba8..e465709 100644
 --- a/CMake/config.cmake
 +++ b/CMake/config.cmake
 @@ -171,6 +171,5 @@ if (BUILD_INSTALLER)
@@ -7,24 +7,24 @@ index 4483900..dfef016 100644
  
      install(FILES "${LICENSE_FILE}" "${README_FILE}"
 -            DESTINATION ${RTTR_ADDITIONAL_FILES_INSTALL_DIR}
--            PERMISSIONS OWNER_READ)
+-            PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
 +            DESTINATION ${RTTR_ADDITIONAL_FILES_INSTALL_DIR})
  endif()
 diff --git a/CMake/utility.cmake b/CMake/utility.cmake
-index 7e1f677..a3932ae 100644
+index cd1e835..8e7a0c6 100644
 --- a/CMake/utility.cmake
 +++ b/CMake/utility.cmake
 @@ -165,7 +165,7 @@ function(loadFolder FOLDER _HEADER_FILES _SOURCE_FILES)
      getNameOfDir(CMAKE_CURRENT_SOURCE_DIR DIRNAME)
      if (${shouldInstall})
        if (NOT ${FULL_HEADER_PATH} MATCHES ".*_p.h$") # we don't want to install header files which are marked as private
--        install(FILES ${FULL_HEADER_PATH} DESTINATION "include/${DIRNAME}/${REL_PATH}" PERMISSIONS OWNER_READ)
+-        install(FILES ${FULL_HEADER_PATH} DESTINATION "include/${DIRNAME}/${REL_PATH}" PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
 +        install(FILES ${FULL_HEADER_PATH} DESTINATION "include/${DIRNAME}/${REL_PATH}")
        endif()
      endif()
    endforeach()
 diff --git a/doc/CMakeLists.txt b/doc/CMakeLists.txt
-index bacb280..a92d642 100644
+index de70600..a92d642 100644
 --- a/doc/CMakeLists.txt
 +++ b/doc/CMakeLists.txt
 @@ -132,12 +132,10 @@ set_target_properties(doc PROPERTIES FOLDER "Documentation")
@@ -32,12 +32,12 @@ index bacb280..a92d642 100644
  install(DIRECTORY "${DOXYGEN_OUTPUT_DIRECTORY}/${DOXYGEN_CUSTOM_HTML_DIR}"
          DESTINATION "${DOXYGEN_DOC_INSTALL_DIR}"
 -        PATTERN "*.*"
--        PERMISSIONS OWNER_READ)
+-        PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
 +        PATTERN "*.*")
  
  install(FILES "${DOXYGEN_OUTPUT_DIRECTORY}/${DOXYGEN_INDEX_FILE}"
 -        DESTINATION "${DOXYGEN_DOC_INSTALL_DIR}"
--        PERMISSIONS OWNER_READ)
+-        PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
 +        DESTINATION "${DOXYGEN_DOC_INSTALL_DIR}")
  
  #########################################################################################

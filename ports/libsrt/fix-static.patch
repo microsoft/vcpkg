@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9931589..e5a588e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -931,20 +931,7 @@ endif()
+ 
+ if (srt_libspec_static)
+ 	add_library(${TARGET_srt}_static STATIC ${OBJECT_LIB_SUPPORT} ${VIRTUAL_srt})
+-
+-	# For Windows, leave the name to be "srt_static.lib".
+-	# Windows generates two different library files:
+-	# - a usual static library for static linkage
+-	# - a shared library exposer, which allows pre-resolution and later dynamic
+-	#   linkage when running the executable
+-	# Both having unfortunately the same names created by MSVC compiler.
+-	# It's not the case of Cygwin/MINGW - they are named there libsrt.a and libsrt.dll.a
+-	if (MICROSOFT)
+-		# Keep _static suffix. By unknown reason, the name must still be set explicitly.
+-		set_property(TARGET ${TARGET_srt}_static PROPERTY OUTPUT_NAME ${TARGET_srt}_static)
+-	else()
+-		set_property(TARGET ${TARGET_srt}_static PROPERTY OUTPUT_NAME ${TARGET_srt})
+-	endif()
++	set_property(TARGET ${TARGET_srt}_static PROPERTY OUTPUT_NAME ${TARGET_srt})
+ 
+ 	list (APPEND INSTALL_TARGETS ${TARGET_srt}_static)
+ 	if (ENABLE_ENCRYPTION)

@@ -13,10 +13,10 @@ else()
 endif()
 
 find_package(libuv CONFIG REQUIRED)
-if (TARGET uv)
-    set(LIBUV_LIBRARY uv)
+if (TARGET libuv::uv)
+    set(LIBUV_LIBRARY libuv::uv)
 else()
-    set(LIBUV_LIBRARY uv_a)
+    set(LIBUV_LIBRARY libuv::uv_a)
 endif()
 
 file(GLOB SOURCES src/*.c src/eventing/*.c)
@@ -41,7 +41,7 @@ endif()
 
 if (CMAKE_USE_NETWORK)
     list(APPEND USOCKETS_EXT_INCLUDE_DIR src/internal/networking)
-    list(APPEND USOCKETS_EXT_LIBS Ws2_32)
+    list(APPEND USOCKETS_EXT_LIBS ws2_32)
 endif()
 
 add_library(uSockets ${SOURCES})

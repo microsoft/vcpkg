@@ -1,42 +1,31 @@
-# Due to the complexity involved, this package doesn't install the Vulkan SDK.
-# It instead verifies that Vulkan is installed.
-# Other packages can depend on this package to declare a dependency on Vulkan.
-message(STATUS "Querying VULKAN_SDK Enviroment variable")
-file(TO_CMAKE_PATH "$ENV{VULKAN_SDK}" VULKAN_DIR)
-set(VULKAN_INCLUDE "${VULKAN_DIR}/include/vulkan/")
-set(VULKAN_ERROR_DL "Before continuing, please download and install Vulkan from:\n    https://vulkan.lunarg.com/sdk/home\nIf you have already downloaded it, make sure the VULKAN_SDK environment variable is set to vulkan's installation root.")
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-if(NOT DEFINED ENV{VULKAN_SDK})
-    message(FATAL_ERROR "Could not find Vulkan SDK. ${VULKAN_ERROR_DL}")
-endif()
+set(vulkan_result_file "${CURRENT_BUILDTREES_DIR}/vulkan-${TARGET_TRIPLET}.cmake.log")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}"
+    OPTIONS_RELEASE
+        "-DOUTFILE=${vulkan_result_file}"
+)
 
-message(STATUS "Searching " ${VULKAN_INCLUDE} " for vulkan.h")
-if(NOT EXISTS "${VULKAN_INCLUDE}/vulkan.h")
-    message(FATAL_ERROR "Could not find vulkan.h. ${VULKAN_ERROR_DL}")
-endif()
-message(STATUS "Found vulkan.h")
-
-# Check if the user left the version in the installation directory e.g. c:/vulkanSDK/1.1.82.1/
-if(VULKAN_DIR MATCHES "(([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+))")
-    set(VULKAN_VERSION "${CMAKE_MATCH_1}")
-    set(VULKAN_MAJOR "${CMAKE_MATCH_2}")
-    set(VULKAN_MINOR "${CMAKE_MATCH_3}")
-    set(VULKAN_PATCH "${CMAKE_MATCH_4}")
-    message(STATUS "Found Vulkan SDK version ${VULKAN_VERSION}")
-
-    set(VULKAN_REQUIRED_VERSION "1.1.82.1")
-    if (VULKAN_MAJOR LESS 1 OR VULKAN_MINOR LESS 1 OR VULKAN_PATCH LESS 82)
-        message(FATAL_ERROR "Vulkan ${VULKAN_VERSION} but ${VULKAN_REQUIRED_VERSION} is required. Please download and install a more recent version from:"
-                            "\n    https://vulkan.lunarg.com/sdk/home\n")
-    endif()
-endif()
-
-if (EXISTS ${VULKAN_DIR}/../LICENSE.txt)
-    configure_file(${VULKAN_DIR}/../LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/vulkan/copyright COPYONLY)
-elseif(EXISTS ${VULKAN_DIR}/LICENSE.txt)
-    configure_file(${VULKAN_DIR}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/vulkan/copyright COPYONLY)
+include("${vulkan_result_file}")
+if(DETECTED_Vulkan_FOUND)
+    message(STATUS "Found Vulkan ${DETECTED_Vulkan_VERSION} (${DETECTED_Vulkan_LIBRARIES})")
 else()
-    configure_file(${CURRENT_PORT_DIR}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/vulkan/copyright COPYONLY)
+    set(message "Vulkan wasn't found.")
+    if(VCPKG_TARGET_IS_ANDROID AND DETECTED_ANDROID_NATIVE_API_LEVEL AND DETECTED_ANDROID_NATIVE_API_LEVEL LESS "24")
+        string(APPEND message " Vulkan support from the Android NDK requires API level 24 (found: ${DETECTED_ANDROID_NATIVE_API_LEVEL})")
+    endif()
+    message(FATAL_ERROR "${message}")
 endif()
 
-SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+             "${CMAKE_CURRENT_LIST_DIR}/vulkan-result.cmake.in"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/detect-vulkan"
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" [[
+This is a stub package. Copyright and license information
+is provided with Vulkan headers and loader.
+For Android, the loader is provided by the NDK.
+]])

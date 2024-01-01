@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SanderMertens/flecs
-    REF v2.4.8
-    SHA512 4d4ee41a457f6e13b5913bbc12f66dc9a3bcab3f39ad398da55892bb80649cf416d82255f17bbcef4fee11992028cbb2972d0e9e435435cb58a7b33ec2ebe526
+    REF "v${VERSION}"
+    SHA512 a42c193e46e15a1ab8a27b447d7c71d378d0e7ae9ab71744d00e3b9fd13aecbe79c75938e534ba49e191d279114bc25a9cd293e4f9a97ba8f873dcc1fa9f6d9a
     HEAD_REF master
 )
 
@@ -12,8 +12,8 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" FLECS_SHARED_LIBS)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DFLECS_STATIC_LIBS=${FLECS_STATIC_LIBS}
-        -DFLECS_SHARED_LIBS=${FLECS_SHARED_LIBS}
+        -DFLECS_STATIC=${FLECS_STATIC_LIBS}
+        -DFLECS_SHARED=${FLECS_SHARED_LIBS}
 )
 
 vcpkg_cmake_install()
@@ -31,7 +31,8 @@ endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

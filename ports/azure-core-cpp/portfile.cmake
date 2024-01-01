@@ -1,8 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF azure-core_1.7.0
-    SHA512 dca77d9b64b9ad3a91b63226f3650a531c024adb0a1d313356b78eb9c76d54f092c7c5d6e353058ad4b3c7ce7fd6d62ea95ab69a116e43f53025b379720f7cca
+    REF azure-core_1.10.3
+    SHA512 b3705cf757a14693f65a5ea4a43cc3c5f8377b3156ef24869bd664e9e8b25797fd21107ad543db476335bbb2389687cc1ed8fb8fe1010bb9b5a0eb406f3c0d59
+    PATCHES
+        fix_gcc13.patch
 )
 
 vcpkg_check_features(
@@ -12,11 +14,23 @@ vcpkg_check_features(
         winhttp BUILD_TRANSPORT_WINHTTP
 )
 
+if(EXISTS "${SOURCE_PATH}/sdk/core/azure-core")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/core/_")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/_")
+
+  file(RENAME "${SOURCE_PATH}/sdk/core/azure-core" "${SOURCE_PATH}/sdk/core/_")
+  file(RENAME "${SOURCE_PATH}/sdk/core" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
+endif()
+
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}/sdk/core/azure-core/
+    SOURCE_PATH "${SOURCE_PATH}/_/_/_"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DWARNINGS_AS_ERRORS=OFF
+        -DBUILD_TESTING=OFF
+        -DNO_AUTOMATIC_TRANSPORT_BUILD=ON
 )
 
 vcpkg_cmake_install()

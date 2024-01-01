@@ -4,19 +4,18 @@ set(TARGET_BUILD_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sago007/PlatformFolders
-    REF 4.1.0
-    SHA512 B2C7983399D9EAA8EF95F45E51B7B70626466FC14A0E53C8B497E683D63E40683CC995C75FC9529C7E969BB802CF9C92051B663901326985722AEBF7618C48EB
+    REF 4.2.0
+    SHA512 50a9acd37b8b491e8938190b3b7ed1af2d3cc70bb6e59708dc1928269d5e4b8d52ec02f9330f3d9439099029ac61d193dadbca198e1d561432e02e488e103f7c
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
-        -DBUILD_TESTING=OFF
+        -DPLATFORMFOLDERS_BUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -25,12 +24,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_MinGW)
-	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake/ TARGET_PATH /share/platform_folders)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME platform_folders CONFIG_PATH cmake)
 else()
-	vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ TARGET_PATH /share/)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME platform_folders CONFIG_PATH lib/cmake/platform_folders)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_copy_pdbs()

@@ -1,8 +1,9 @@
 {
   "name": "libzen",
-  "version": "0.4.39",
-  "port-version": 1,
+  "version": "0.4.41",
   "description": "ZenLib is a C++ utility library for easiest cross-platform development",
+  "homepage": "https://github.com/MediaArea/ZenLib",
+  "license": "Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

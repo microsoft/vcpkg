@@ -1,7 +1,6 @@
 {
   "name": "muparser",
-  "version": "2.3.3",
-  "port-version": 2,
+  "version": "2.3.4",
   "description": "Fast math parser library",
   "homepage": "https://github.com/beltoforion/muparser",
   "license": "BSD-2-Clause",

@@ -1,15 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF 6c3301111caa75c76e1b2acb1afb2d71341932ef      #v3.6.1
-    SHA512 2fd56ac20e4249807174a2ae29de1cbca55c8f8f247500845f56fd1fd9ebf48c17b8a25a93156df71df9526c0061415ec7d72a6b46bbaca776047e381a2321a7
+    REF "v${VERSION}"
+    SHA512 07339d54e8e82c0a13c69590e1653a5734fcd06ca3d01b2087a09c3d55e29e5ed4e16c5ef7ca44258f049c7b2de6245315be2c8b043f8db68515750649daafbe
     HEAD_REF master
     PATCHES
         disable-warnings.patch
         fix-buildsystem.patch
         fix-cpu-set.patch
         fix-deps.patch
-        pkgconfig-modules.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -23,10 +22,27 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         lzma    ENABLE_LZMA
         lzma    CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
         lzo     ENABLE_LZO
-        openssl ENABLE_OPENSSL
-        openssl CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL
         zstd    ENABLE_ZSTD
 )
+# Default crypto backend is OpenSSL, but it is ignored for DARWIN
+set(WRAPPER_ENABLE_OPENSSL OFF)
+if(NOT "crypto" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS
+        -DLIBMD_FOUND=FALSE
+        -DENABLE_OPENSSL=OFF
+    )
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND FEATURE_OPTIONS
+        -DENABLE_MBEDTLS=ON
+        -DENABLE_OPENSSL=OFF
+        -DCMAKE_REQUIRE_FIND_PACKAGE_MbedTLS=ON
+    )
+else()
+    set(WRAPPER_ENABLE_OPENSSL ON)
+    list(APPEND FEATURE_OPTIONS
+        -DCMAKE_REQUIRE_FIND_PACKAGE_OpenSSL=ON
+    )
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -48,6 +64,12 @@ vcpkg_cmake_configure(
         -DENABLE_LIBB2=OFF
         -DENABLE_TEST=OFF
         -DENABLE_WERROR=OFF
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_REQUIRE_FIND_PACKAGE_BZip2
+        CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
+        CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
+        CMAKE_REQUIRE_FIND_PACKAGE_lz4
+        ENABLE_LibGCC
 )
 
 vcpkg_cmake_install()
@@ -60,12 +82,8 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRE
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-foreach(header "${CURRENT_PACKAGES_DIR}/include/archive.h" "${CURRENT_PACKAGES_DIR}/include/archive_entry.h")
-    vcpkg_replace_string("${header}" "(!defined LIBARCHIVE_STATIC)" "0")
+foreach(header "include/archive.h" "include/archive_entry.h")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${header}" "(!defined LIBARCHIVE_STATIC)" "0")
 endforeach()
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

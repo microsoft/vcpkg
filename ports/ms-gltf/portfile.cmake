@@ -10,7 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-install.patch
-        fix-apple-filesystem.patch
 )
 
 # note: Test/Sample executables won't be installed
@@ -23,14 +22,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 # note: Platform-native buildsystem will be more helpful to launch/debug the tests/samples.
 # note: The PDB file path is making Ninja fails to install.
 #       For Windows, we rely on /MP. The other platforms should be able to build with PREFER_NINJA.
-set(WINDOWS_USE_MSBUILD)
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(WINDOWS_USE_MSBUILD "WINDOWS_USE_MSBUILD")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    ${WINDOWS_USE_MSBUILD}
+    WINDOWS_USE_MSBUILD
     OPTIONS
         ${FEATURE_OPTIONS}
 )
@@ -42,4 +36,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,6 +1,17 @@
 {
   "name": "sltbench",
-  "version-string": "2.4.0",
+  "version": "2.4.0",
+  "port-version": 3,
   "description": "C++ benchmark tool. Practical, stable and fast performance testing framework.",
-  "homepage": "https://github.com/ivafanas/sltbench"
+  "homepage": "https://github.com/ivafanas/sltbench",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

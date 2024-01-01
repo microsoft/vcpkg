@@ -1,0 +1,11 @@
+diff --git a/src/gpg-error.pc.in b/src/gpg-error.pc.in
+index 970bb6c..a51c9d3 100644
+--- a/src/gpg-error.pc.in
++++ b/src/gpg-error.pc.in
+@@ -11,5 +11,5 @@ Description: GPG Runtime
+ Version: @PACKAGE_VERSION@
+ Cflags: @GPG_ERROR_CONFIG_CFLAGS@
+ Libs: @GPG_ERROR_CONFIG_LIBS@
+-Libs.private: @GPG_ERROR_CONFIG_LIBS_PRIVATE@
++Libs.private: @GPG_ERROR_CONFIG_LIBS_PRIVATE@ @LIBINTL@
+ URL: https://www.gnupg.org/software/libgpg-error/index.html

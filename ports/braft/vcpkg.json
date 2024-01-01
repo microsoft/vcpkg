@@ -1,7 +1,8 @@
 {
   "name": "braft",
   "version-date": "2021-26-04",
-  "description": "Consesus algorithm library",
+  "port-version": 1,
+  "description": "Consensus algorithm library",
   "homepage": "https://github.com/baidu/braft",
   "license": "Apache-2.0",
   "supports": "!windows",

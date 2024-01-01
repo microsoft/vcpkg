@@ -1,29 +1,19 @@
+set(VCPKG_BUILD_TYPE release) # header-only
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nemtrif/utfcpp
-    REF v3.2.1
-    SHA512 5798487f12b1bc55d3e06aed38f7604271ca3402963efcf85d181fd590d8a088d21e961e77698e60dc2cdae8cf4506645903442c45fd328201752d9589180e0d
+    REF "v${VERSION}"
+    SHA512 e02c10c7e9c8c6ee8b8d45bb7521997106be1bf6778d964d4c66a4f025b6ce46df43be12dc74b03639be9f99db8aa4d8c22a65880a057aeb0e76a90bb87c760c
     HEAD_REF master
+    PATCHES fix-include-path.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS
-        -DUTF8_INSTALL=ON
-        -DUTF8_SAMPLES=OFF
-        -DUTF8_TESTS=OFF
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME utf8cpp CONFIG_PATH share/utf8cpp/cmake)
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/utf8cpp)
-else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/utf8cpp TARGET_PATH share/utf8cpp)
-endif()
-
-# Header only
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
-
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

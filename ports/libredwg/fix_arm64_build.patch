@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8906fed..e953b76 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,8 +11,11 @@ if(MSVC)
+   set(redwg libredwg)
+   # Disable some overly strict MSVC warnings.
+   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -wd4244 -wd4800 -wd4805 -wd4101 -D_CRT_NONSTDC_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS")
+-else()
++  else()
+   set(redwg redwg)
++  endif()
++if(MSVC AND CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM64")
++  add_compile_options(/Gy)
+ endif()
+ 
+ if (EXISTS ".version")

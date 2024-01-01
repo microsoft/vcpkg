@@ -1,10 +1,9 @@
 {
   "name": "libevent",
-  "version": "2.1.12",
-  "port-version": 6,
+  "version": "2.1.12+20230128",
   "description": "An event notification library",
   "homepage": "https://github.com/libevent/libevent",
-  "supports": "!uwp",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

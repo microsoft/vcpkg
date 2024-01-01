@@ -1,7 +1,17 @@
 {
   "name": "nameof",
-  "version-string": "0.10.1",
-  "port-version": 1,
+  "version": "0.10.3",
   "description": "Nameof operator for modern C++, simply obtain the name of a variable, type, function, macro, and enum.",
-  "homepage": "https://github.com/Neargye/nameof"
+  "homepage": "https://github.com/Neargye/nameof",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

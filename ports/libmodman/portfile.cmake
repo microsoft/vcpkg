@@ -11,13 +11,13 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 1fecc0fa3637c4aa86d114f5bc991605172d39183fa0f39d8c7858ef5d0d894152025bd426de4dd017a41372d800bf73f53b2328c57b77352a508e12792729fa
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES 
     tests BUILD_TESTING
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-install-path.patch
         fix-undefined-typeid.patch

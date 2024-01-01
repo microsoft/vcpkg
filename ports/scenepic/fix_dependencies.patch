@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a2db3db..a10a942 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -100,13 +100,11 @@ FetchContent_Declare(
+ 
+ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW) 
+ 
+-if(NOT TARGET Eigen3::Eigen)
+-  FetchContent_GetProperties(eigen)
+-  if(NOT eigen_POPULATED)
+-    FetchContent_Populate(eigen)
+-    set( BUILD_TESTING OFF )
+-    add_subdirectory(${eigen_SOURCE_DIR} ${eigen_BINARY_DIR} EXCLUDE_FROM_ALL)
+-  endif()
++find_package(Eigen3 3.4.0 REQUIRED)
++
++if(Eigen3_FOUND)
++  set( BUILD_TESTING OFF )
++  include_directories(${EIGEN3_INCLUDE_DIR})
+   if(NOT TARGET Eigen3::Eigen)
+     add_library(Eigen3::Eigen ALIAS eigen)
+   endif()

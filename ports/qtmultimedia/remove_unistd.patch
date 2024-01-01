@@ -1,19 +1,19 @@
-diff --git a/src/multimedia/platform/gstreamer/audio/qgstreameraudiosink.cpp b/src/multimedia/platform/gstreamer/audio/qgstreameraudiosink.cpp
+diff --git a/src/plugins/multimedia/gstreamer/audio/qgstreameraudiosink.cpp b/src/plugins/multimedia/gstreamer/audio/qgstreameraudiosink.cpp
 index d4806b23a..f985a973b 100644
---- a/src/multimedia/platform/gstreamer/audio/qgstreameraudiosink.cpp
-+++ b/src/multimedia/platform/gstreamer/audio/qgstreameraudiosink.cpp
+--- a/src/plugins/multimedia/gstreamer/audio/qgstreameraudiosink.cpp
++++ b/src/plugins/multimedia/gstreamer/audio/qgstreameraudiosink.cpp
 @@ -45,7 +45,6 @@
  #include "qgstreameraudiosink_p.h"
  #include "qgstreameraudiodevice_p.h"
  #include <sys/types.h>
 -#include <unistd.h>
  
- #include <private/qgstpipeline_p.h>
- #include <private/qgstappsrc_p.h>
-diff --git a/src/multimedia/platform/gstreamer/audio/qgstreameraudiosource.cpp b/src/multimedia/platform/gstreamer/audio/qgstreameraudiosource.cpp
+ #include <qgstpipeline_p.h>
+ #include <qgstappsrc_p.h>
+diff --git a/src/plugins/multimedia/gstreamer/audio/qgstreameraudiosource.cpp b/src/plugins/multimedia/gstreamer/audio/qgstreameraudiosource.cpp
 index 51fc26c42..3b04a77bb 100644
---- a/src/multimedia/platform/gstreamer/audio/qgstreameraudiosource.cpp
-+++ b/src/multimedia/platform/gstreamer/audio/qgstreameraudiosource.cpp
+--- a/src/plugins/multimedia/gstreamer/audio/qgstreameraudiosource.cpp
++++ b/src/plugins/multimedia/gstreamer/audio/qgstreameraudiosource.cpp
 @@ -45,7 +45,6 @@
  #include "qgstreameraudiosource_p.h"
  #include "qgstreameraudiodevice_p.h"

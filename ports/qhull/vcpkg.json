@@ -1,7 +1,7 @@
 {
   "name": "qhull",
   "version": "8.0.2",
-  "port-version": 3,
+  "port-version": 4,
   "description": "computes the convex hull, Delaunay triangulation, Voronoi diagram",
   "homepage": "https://github.com/qhull/qhull",
   "license": null,
@@ -14,5 +14,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Determines whether tools should be built"
+    }
+  }
 }

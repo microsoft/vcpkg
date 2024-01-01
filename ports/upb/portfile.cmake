@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/upb
-    REF  bef53686ec702607971bd3ea4d4fefd80c6cc6e8 # 2022-04-04
-    SHA512 3801625827a5511ab28e047d7111e6f43d522872eef929b61d7a64fdb9fff7a058af45fd55bd409610c07c735f50a2f6f45ad611bb5e4ee86cd656b89f0a8278
+    REF e4635f223e7d36dfbea3b722a4ca4807a7e882e2 # 2022-06-21
+    SHA512 c5d48b1d87be7db65ad1f04f5ab43d694958d0e6892fd79c29993e564a402891fcd24ee9d34a9ca642ad20b80c02d3157675885edb6bd3bbc8cf5f29cc3be32c
     HEAD_REF master
     PATCHES
         0001-make-cmakelists-py.patch

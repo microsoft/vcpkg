@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO injae/serdepp
-    REF v0.1.4
-    SHA512 da84ad82e882c0cada5c9dd3c77afd45aaf7b3b4eb150257b09b9b4854b349fdb2c39be2f6ba40bb39b34262e44609a02afba1ec860625f25a2313f7ac34a055
+    REF v0.1.4.1
+    SHA512 623414807e43d03f1ef1f9b7f02f10148b2745f5487047df3a678f92ccbe0a0f5f7d76cc6e2e88097e2c0e2cf2dde60b4f33dc9c6aaeafc7cd2dc3adfd88959f
     HEAD_REF main
 )
 

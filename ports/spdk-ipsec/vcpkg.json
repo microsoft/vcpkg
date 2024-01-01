@@ -1,7 +1,13 @@
 {
   "name": "spdk-ipsec",
-  "version-string": "20180711",
-  "port-version": 1,
+  "version-date": "2018-07-11",
+  "port-version": 3,
   "description": "SPDK mirror of ipsec. Intel(R) Multi-Buffer Crypto for IPsec Library",
-  "supports": "x64 & linux"
+  "supports": "x64 & linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

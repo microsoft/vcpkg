@@ -1,0 +1,84 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1995170..7ddb018 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -174,25 +174,25 @@ FORCE)
+ 
+ 
+ set(SimTKCOMMON_SHARED_LIBRARY ${SimTKCOMMON_LIBRARY_NAME})
+-set(SimTKCOMMON_STATIC_LIBRARY ${SimTKCOMMON_LIBRARY_NAME}_static)
++set(SimTKCOMMON_STATIC_LIBRARY ${SimTKCOMMON_LIBRARY_NAME})
+ 
+ set(SimTKCOMMON_LIBRARY_NAME_VN ${NS}SimTKcommon${VN})
+ set(SimTKCOMMON_SHARED_LIBRARY_VN ${SimTKCOMMON_LIBRARY_NAME_VN})
+-set(SimTKCOMMON_STATIC_LIBRARY_VN ${SimTKCOMMON_LIBRARY_NAME_VN}_static)
++set(SimTKCOMMON_STATIC_LIBRARY_VN ${SimTKCOMMON_LIBRARY_NAME_VN})
+ 
+ set(SimTKMATH_SHARED_LIBRARY ${SimTKMATH_LIBRARY_NAME})
+-set(SimTKMATH_STATIC_LIBRARY ${SimTKMATH_LIBRARY_NAME}_static)
++set(SimTKMATH_STATIC_LIBRARY ${SimTKMATH_LIBRARY_NAME})
+ 
+ set(SimTKMATH_LIBRARY_NAME_VN ${NS}SimTKmath${VN})
+ set(SimTKMATH_SHARED_LIBRARY_VN ${SimTKMATH_LIBRARY_NAME_VN})
+-set(SimTKMATH_STATIC_LIBRARY_VN ${SimTKMATH_LIBRARY_NAME_VN}_static)
++set(SimTKMATH_STATIC_LIBRARY_VN ${SimTKMATH_LIBRARY_NAME_VN})
+ 
+ set(SimTKSIMBODY_SHARED_LIBRARY ${SimTKSIMBODY_LIBRARY_NAME})
+-set(SimTKSIMBODY_STATIC_LIBRARY ${SimTKSIMBODY_LIBRARY_NAME}_static)
++set(SimTKSIMBODY_STATIC_LIBRARY ${SimTKSIMBODY_LIBRARY_NAME})
+ 
+ set(SimTKSIMBODY_LIBRARY_NAME_VN ${NS}SimTKsimbody${VN})
+ set(SimTKSIMBODY_SHARED_LIBRARY_VN ${SimTKSIMBODY_LIBRARY_NAME_VN})
+-set(SimTKSIMBODY_STATIC_LIBRARY_VN ${SimTKSIMBODY_LIBRARY_NAME_VN}_static)
++set(SimTKSIMBODY_STATIC_LIBRARY_VN ${SimTKSIMBODY_LIBRARY_NAME_VN})
+ 
+ 
+ # Caution: this variable is automatically created by the CMake
+diff --git a/SimTKcommon/CMakeLists.txt b/SimTKcommon/CMakeLists.txt
+index 47839f5..84ad865 100644
+--- a/SimTKcommon/CMakeLists.txt
++++ b/SimTKcommon/CMakeLists.txt
+@@ -86,9 +86,9 @@ endif(NEED_QUOTES)
+ # -DSimTKcommon_EXPORTS defined automatically when Windows DLL build is being done.
+ 
+ set(SHARED_TARGET ${SimTKCOMMON_LIBRARY_NAME})
+-set(STATIC_TARGET ${SimTKCOMMON_LIBRARY_NAME}_static)
++set(STATIC_TARGET ${SimTKCOMMON_LIBRARY_NAME})
+ set(SHARED_TARGET_VN ${SimTKCOMMON_LIBRARY_NAME}${VN})
+-set(STATIC_TARGET_VN ${SimTKCOMMON_LIBRARY_NAME}${VN}_static)
++set(STATIC_TARGET_VN ${SimTKCOMMON_LIBRARY_NAME}${VN})
+ 
+ ## Test against the unversioned libraries if they are being build;
+ ## otherwise against the versioned libraries.
+diff --git a/SimTKmath/CMakeLists.txt b/SimTKmath/CMakeLists.txt
+index f5c82ae..d3ee9bf 100644
+--- a/SimTKmath/CMakeLists.txt
++++ b/SimTKmath/CMakeLists.txt
+@@ -79,9 +79,9 @@ endif(NEED_QUOTES)
+ # -Dsimmath_EXPORTS defined automatically when Windows DLL build is being done.
+ 
+ set(SHARED_TARGET ${SimTKMATH_LIBRARY_NAME})
+-set(STATIC_TARGET ${SimTKMATH_LIBRARY_NAME}_static)
++set(STATIC_TARGET ${SimTKMATH_LIBRARY_NAME})
+ set(SHARED_TARGET_VN ${SimTKMATH_LIBRARY_NAME}${VN})
+-set(STATIC_TARGET_VN ${SimTKMATH_LIBRARY_NAME}${VN}_static)
++set(STATIC_TARGET_VN ${SimTKMATH_LIBRARY_NAME}${VN})
+ 
+ ## Test against the unversioned libraries if they are being built;
+ ## otherwise against the versioned libraries.
+diff --git a/Simbody/CMakeLists.txt b/Simbody/CMakeLists.txt
+index 062c2b9..e320f57 100644
+--- a/Simbody/CMakeLists.txt
++++ b/Simbody/CMakeLists.txt
+@@ -42,9 +42,9 @@ add_definitions(-DSimTK_SIMBODY_LIBRARY_NAME=${SimTKSIMBODY_LIBRARY_NAME}
+ 
+ 
+ set(SHARED_TARGET ${SimTKSIMBODY_LIBRARY_NAME})
+-set(STATIC_TARGET ${SimTKSIMBODY_LIBRARY_NAME}_static)
++set(STATIC_TARGET ${SimTKSIMBODY_LIBRARY_NAME})
+ set(SHARED_TARGET_VN ${SimTKSIMBODY_LIBRARY_NAME}${VN})
+-set(STATIC_TARGET_VN ${SimTKSIMBODY_LIBRARY_NAME}${VN}_static)
++set(STATIC_TARGET_VN ${SimTKSIMBODY_LIBRARY_NAME}${VN})
+ 
+ ## Test against the unversioned libraries if they are being built;
+ ## otherwise against the versioned libraries.

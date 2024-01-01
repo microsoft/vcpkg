@@ -1,0 +1,66 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5e812fb..64c6e97 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -78,8 +78,7 @@ if (ZYAN_SYSTEM_ZYCORE)
+     find_package(Zycore)
+ else ()
+     # Try to initialize the Zycore submodule using Git
+-    if (NOT EXISTS "${ZYAN_ZYCORE_PATH}/CMakeLists.txt" AND 
+-        "${ZYAN_ZYCORE_PATH}" STREQUAL "${CMAKE_CURRENT_LIST_DIR}/dependencies/zycore")
++    if (0)
+         find_package(Git QUIET)
+         if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+             execute_process(
+@@ -89,7 +88,7 @@ else ()
+         endif()
+     endif ()
+ 
+-    if (NOT EXISTS "${ZYAN_ZYCORE_PATH}/CMakeLists.txt")
++    if (0)
+         message(
+             FATAL_ERROR
+             "Can't find zycore submodule. Please make sure to clone the repo recursively.\n"
+@@ -101,7 +100,7 @@ else ()
+         )
+     endif ()
+ 
+-    add_subdirectory(${ZYAN_ZYCORE_PATH} "zycore" EXCLUDE_FROM_ALL)
++    find_package(zycore CONFIG REQUIRED)
+ endif ()
+ 
+ # =============================================================================================== #
+@@ -115,7 +114,7 @@ else ()
+     target_compile_definitions("Zydis" PUBLIC "ZYDIS_STATIC_BUILD")
+ endif ()
+ 
+-target_link_libraries("Zydis" PUBLIC "Zycore")
++target_link_libraries("Zydis" PUBLIC Zycore::Zycore)
+ target_include_directories("Zydis"
+     PUBLIC
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+@@ -383,14 +382,16 @@ if (ZYDIS_BUILD_TOOLS AND NOT ZYAN_NO_LIBC)
+                 target_compile_definitions("ZydisFuzzReEncoding" PRIVATE "ZYDIS_LIBFUZZER")
+             endif ()
+ 
+-            add_executable("ZydisTestEncoderAbsolute"
+-                "tools/ZydisTestEncoderAbsolute.c")
+-            target_link_libraries("ZydisTestEncoderAbsolute" "Zydis")
+-            set_target_properties("ZydisTestEncoderAbsolute" PROPERTIES FOLDER "Tools")
+-            target_compile_definitions("ZydisTestEncoderAbsolute" PRIVATE "_CRT_SECURE_NO_WARNINGS")
+-            zyan_set_common_flags("ZydisTestEncoderAbsolute")
+-            zyan_maybe_enable_wpo("ZydisTestEncoderAbsolute")
+-            _maybe_set_emscripten_cfg("ZydisTestEncoderAbsolute")
++            if (NOT ZYDIS_BUILD_SHARED_LIB)
++                add_executable("ZydisTestEncoderAbsolute"
++                    "tools/ZydisTestEncoderAbsolute.c")
++                target_link_libraries("ZydisTestEncoderAbsolute" "Zydis")
++                set_target_properties("ZydisTestEncoderAbsolute" PROPERTIES FOLDER "Tools")
++                target_compile_definitions("ZydisTestEncoderAbsolute" PRIVATE "_CRT_SECURE_NO_WARNINGS")
++                zyan_set_common_flags("ZydisTestEncoderAbsolute")
++                zyan_maybe_enable_wpo("ZydisTestEncoderAbsolute")
++                _maybe_set_emscripten_cfg("ZydisTestEncoderAbsolute")
++            endif ()
+         endif ()
+ 
+         add_executable("ZydisInfo" "tools/ZydisInfo.c")

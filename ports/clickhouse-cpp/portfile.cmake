@@ -1,18 +1,30 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ClickHouse/clickhouse-cpp
-    REF 1415b5936a2ac2f084850b09057e05fb5798b2f1    #v1.5.0
-    SHA512 222b31b16744af64f0a874ec956568adcecb553e43f8d4a2d16c00d55b31015d917a4dc7bb30d5430a894459b1be5e05b292e2d0918bf6f5609046a60539f80f
+    REF "v${VERSION}"
+    SHA512 2719c034a2dc2de7e992aa17859ea437551bfe89395e6a708a4549ed274f366aee0c0f0bcd90a690c15f5361a8f8198bb4f1d7d986da98c1d632489bcfb8bdd0
     HEAD_REF master
-    PATCHES 
-        fix-error-c2668.patch
-        fix-error-C4996.patch  #fix x64-uwp error:std::uncaught_exception() is deprecated in C++17
+    PATCHES
+        fix-deps-and-build-type.patch
+        fix-timeval.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openssl WITH_OPENSSL
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DWITH_SYSTEM_ABSEIL=ON
+        -DWITH_SYSTEM_LZ4=ON
+        -DWITH_SYSTEM_CITYHASH=ON
 )
 
 vcpkg_cmake_install()
@@ -21,4 +33,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -158,7 +158,7 @@ index 9c1b150..1adbfed 100644
  
  # This "exports" all targets which have been put into the export set
  # "TheiaExport". This means that CMake generates a file with the given
-@@ -319,9 +270,5 @@ configure_file("${CMAKE_SOURCE_DIR}/cmake/TheiaConfigVersion.cmake.in"
+@@ -319,9 +270,4 @@ configure_file("${CMAKE_SOURCE_DIR}/cmake/TheiaConfigVersion.cmake.in"
  # in the public API of Theia and should thus be present in THEIA_INCLUDE_DIRS.
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfig.cmake"
                "${CMAKE_CURRENT_BINARY_DIR}/TheiaConfigVersion.cmake"
@@ -167,7 +167,6 @@ index 9c1b150..1adbfed 100644
 -              "${CMAKE_SOURCE_DIR}/cmake/FindGflags.cmake"
 -	      "${CMAKE_SOURCE_DIR}/cmake/FindOpenImageIO.cmake"
 -              "${CMAKE_SOURCE_DIR}/cmake/FindSuiteSparse.cmake"
-+              "${CMAKE_SOURCE_DIR}/cmake/FindOpenImageIO.cmake"
                DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 diff --git a/cmake/TheiaConfig.cmake.in b/cmake/TheiaConfig.cmake.in
 index a3ea187..7e9d912 100644

@@ -2,33 +2,18 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index ecfbb83..420c578 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -34,13 +34,23 @@ endif()
+@@ -34,13 +34,6 @@ endif()
  # Find Brotli dependencies
  set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
- find_package(BrotliDec)
+-find_package(BrotliDec)
 -if (NOT BROTLIDEC_FOUND)
 -    message(FATAL_ERROR "librotlidec is needed to build woff2.")
 -endif ()
- find_package(BrotliEnc)
+-find_package(BrotliEnc)
 -if (NOT BROTLIENC_FOUND)
 -    message(FATAL_ERROR "librotlienc is needed to build woff2.")
 -endif ()
-+if(BROTLIDEC_FOUND AND BROTLIENC_FOUND)
-+  include_directories("${BROTLIDEC_INCLUDE_DIRS}" "${BROTLIENC_INCLUDE_DIRS}")
-+  set(WOFF2_BROTLIDEC libbrotlidec)
-+  set(WOFF2_BROTLIENC libbrotlienc)
-+  set(WOFF2_BORTLIDEC_LIBRARIES "${BROTLIDEC_LIBRARIES}")
-+  set(WOFF2_BORTLIENC_LIBRARIES "${BROTLIENC_LIBRARIES}")
-+else()
 +  find_package(unofficial-brotli REQUIRED)
-+  if(TARGET unofficial::brotli::brotlidec-static)
-+    set(BROTLI_LINKAGE -static)
-+  endif()
-+  set(WOFF2_BROTLIDEC unofficial::brotli::brotlidec${BROTLI_LINKAGE})
-+  set(WOFF2_BROTLIENC unofficial::brotli::brotlienc${BROTLI_LINKAGE})
-+  set(WOFF2_BORTLIDEC_LIBRARIES unofficial::brotli::brotlidec${BROTLI_LINKAGE} unofficial::brotli::brotlicommon${BROTLI_LINKAGE})
-+  set(WOFF2_BORTLIENC_LIBRARIES unofficial::brotli::brotlienc${BROTLI_LINKAGE} unofficial::brotli::brotlicommon${BROTLI_LINKAGE})
-+endif()
  
  # Set compiler flags
  if (NOT CANONICAL_PREFIXES)
@@ -49,7 +34,7 @@ index ecfbb83..420c578 100644
              src/woff2_dec.cc
              src/woff2_out.cc)
 -target_link_libraries(woff2dec woff2common "${BROTLIDEC_LIBRARIES}")
-+target_link_libraries(woff2dec woff2common ${WOFF2_BORTLIDEC_LIBRARIES})
++target_link_libraries(woff2dec woff2common unofficial::brotli::brotlidec)
  add_executable(woff2_decompress src/woff2_decompress.cc)
  target_link_libraries(woff2_decompress woff2dec)
  
@@ -58,7 +43,7 @@ index ecfbb83..420c578 100644
              src/transform.cc
              src/woff2_enc.cc)
 -target_link_libraries(woff2enc woff2common "${BROTLIENC_LIBRARIES}")
-+target_link_libraries(woff2enc woff2common ${WOFF2_BORTLIENC_LIBRARIES})
++target_link_libraries(woff2enc woff2common unofficial::brotli::brotlienc)
  add_executable(woff2_compress src/woff2_compress.cc)
  target_link_libraries(woff2_compress woff2enc)
  

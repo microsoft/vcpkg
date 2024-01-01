@@ -1,0 +1,10 @@
+diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
+index b437bde..04fe8e8 100644
+--- a/lib/gvc/CMakeLists.txt
++++ b/lib/gvc/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-add_definitions(-DGVC_EXPORTS -DGVLIBDIR="${LIBRARY_INSTALL_DIR}/graphviz")
++add_definitions(-DGVC_EXPORTS -DGVLIBDIR="")
+ 
+ add_library(gvc SHARED
+   # Header files

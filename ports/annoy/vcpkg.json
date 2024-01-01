@@ -1,0 +1,17 @@
+{
+  "name": "annoy",
+  "version": "1.17.2",
+  "description": "Approximate Nearest Neighbors optimized for memory usage and loading/saving to disk",
+  "homepage": "https://github.com/spotify/annoy",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

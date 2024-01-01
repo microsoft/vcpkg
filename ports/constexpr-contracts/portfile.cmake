@@ -8,13 +8,12 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/constexpr-contracts)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib
-                    ${CURRENT_PACKAGES_DIR}/debug)
-file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/constexpr-contracts)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib"
+                    "${CURRENT_PACKAGES_DIR}/debug")
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

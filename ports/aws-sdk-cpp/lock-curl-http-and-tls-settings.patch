@@ -1,0 +1,20 @@
+diff --git a/src/aws-cpp-sdk-core/CMakeLists.txt b/src/aws-cpp-sdk-core/CMakeLists.txt
+index c44546b0e..b66888362 100644
+--- a/src/aws-cpp-sdk-core/CMakeLists.txt
++++ b/src/aws-cpp-sdk-core/CMakeLists.txt
+@@ -113,13 +113,8 @@ if(ENABLE_CURL_CLIENT)
+     int main() {
+     CURL* handle = curl_easy_init();
+     return curl_easy_setopt(handle, CURLOPT_PROXY_SSLCERT, \"client.pem\"); }")
+-    if (CMAKE_CROSSCOMPILING)
+-        check_c_source_compiles("${CHECK_CURL_HAS_H2}" CURL_HAS_H2)
+-        check_c_source_compiles("${CHECK_CURL_HAS_TLS_PROXY}" CURL_HAS_TLS_PROXY)
+-    else()
+-        check_c_source_runs("${CHECK_CURL_HAS_H2}" CURL_HAS_H2)
+-        check_c_source_runs("${CHECK_CURL_HAS_TLS_PROXY}" CURL_HAS_TLS_PROXY)
+-    endif()
++    set(CURL_HAS_H2 OFF)
++    set(CURL_HAS_TLS_PROXY ON)
+ elseif(ENABLE_WINDOWS_CLIENT)
+     # NOTE: HTTP/2 is not supported when using IXML_HTTP_REQUEST_2
+     if(USE_IXML_HTTP_REQUEST_2)

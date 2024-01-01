@@ -1,9 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libevent/libevent
-    REF release-2.1.12-stable
-    SHA512 5d6c6f0072f69a68b190772d4c973ce8f33961912032cdc104ad0854c0950f9d7e28bc274ca9df23897937f0cd8e45d1f214543d80ec271c5a6678814a7f195e
+    REF 4d85d28acdbb83bb60e500e9345bab757b64d6d1
+    SHA512 d03daf8e2277e8b9d67e0028d05566c8972a706e53dcb6593f8f92942ff9ce814970418a10d4c37e68228ec153f8fbc7d764a7ff92e2872277a92039380cbbe9
     PATCHES
+        fix-uwp.patch
         fix-file_path.patch
         fix-LibeventConfig_cmake_in_path.patch
         fix-usage.patch
@@ -27,6 +28,10 @@ else()
     set(LIBEVENT_STATIC_RUNTIME OFF)
 endif()
 
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND FEATURE_OPTIONS -DEVENT__HAVE_AFUNIX_H=0)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
@@ -36,6 +41,7 @@ vcpkg_cmake_configure(
         -DEVENT__DISABLE_TESTS=ON
         -DEVENT__DISABLE_REGRESS=ON
         -DEVENT__DISABLE_SAMPLES=ON
+        -DEVENT__DISABLE_MBEDTLS=ON
 )
 
 vcpkg_cmake_install()

@@ -1,6 +1,6 @@
 {
   "name": "dpdk",
-  "version-string": "22.03",
+  "version-string": "22.07",
   "port-version": 1,
   "description": "A set of libraries and drivers for fast packet processing",
   "homepage": "https://www.dpdk.org/",
@@ -8,6 +8,10 @@
   "license": "BSD-3-Clause",
   "supports": "linux | freebsd",
   "dependencies": [
+    {
+      "name": "libarchive",
+      "default-features": false
+    },
     {
       "name": "numactl",
       "platform": "linux"
@@ -30,10 +34,7 @@
       "description": "Build and install kernel modules"
     },
     "tests": {
-      "description": "Build and install tests",
-      "dependencies": [
-        "libarchive"
-      ]
+      "description": "Build and install tests"
     },
     "trace": {
       "description": "Build with fast path traces enabled"

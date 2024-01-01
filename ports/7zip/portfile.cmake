@@ -1,8 +1,8 @@
-set(7ZIP_VERSION "2200")
+set(7ZIP_VERSION "2301")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.7-zip.org/a/7z${7ZIP_VERSION}-src.7z"
     FILENAME "7z${7ZIP_VERSION}-src.7z"
-    SHA512 ff5bab0ad5c16dee84208b42df27ab1df34499365d934b33f61cd8c79b2a946e8875b1524540c1306381a51d6b24535bbcaf92819bf5331814d6c14cf12d3b07
+    SHA512 45038fc49b0be8e7435939a79ad9f46f360b43b651148a8cde74fafdb8536f51a4be3b1ea91e06203267e5121267f6601f8ae6678feaf18e4b7a4f79a16730e7
 )
 
 vcpkg_extract_source_archive(
@@ -28,3 +28,5 @@ file(
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

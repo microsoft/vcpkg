@@ -1,10 +1,20 @@
 {
   "name": "minio-cpp",
-  "version-date": "2022-01-03",
-  "description": "MinIO C++ Client SDK for Amazon S3 Compatible Cloud Storage",
-  "supports": "!uwp",
+  "version": "0.1.1",
+  "port-version": 1,
+  "description": "The MinIO C++ Client SDK provides simple APIs to access any Amazon S3 compatible object storage",
+  "homepage": "https://github.com/minio/minio-cpp",
+  "license": "Apache-2.0",
+  "supports": "!windows & !uwp",
   "dependencies": [
     "curlpp",
+    {
+      "name": "inih",
+      "features": [
+        "cpp"
+      ]
+    },
+    "nlohmann-json",
     "openssl",
     "pugixml",
     {

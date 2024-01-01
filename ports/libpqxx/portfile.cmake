@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jtv/libpqxx
-    REF 90768b07f7feb55a9bd70cfaacb5543bfd074022 # 7.7.3
-    SHA512 cbb21b148135d9426acd8006bfab872997bae65cfaa7af414083a8d219f099edcc83de7bde5e36016c1f8333f1e4d03fc401a4e741dfd0881afda3e1a20009ff 
+    REF "${VERSION}"
+    SHA512 ce37fdfce2671d97e422ae3339fb5650065111b0635a7293200c56a8755a7dc7de80806816863c606c46b6049e4cb490d24dfb97446ea0014b55907554862fed
     HEAD_REF master
     PATCHES
         fix_build_with_vs2017.patch
@@ -23,6 +23,6 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libpqxx)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 vcpkg_fixup_pkgconfig()

@@ -1,19 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectX-Headers
-    REF v1.602.0
-    SHA512 75d81191e3e0b60bc901f04fcb9cf53f0faae7f0c196a1b04f2b9199c72243d4dddaeacad29d82ca7ccb209b16d07b4f1b71a58368fccad13c4d8421e0c9f0d9
-    HEAD_REF master
+    REF v${VERSION}
+    SHA512 717ed37f6404d67a032f50358a17bcab6c6258eff321287e4a26cef203738d4e5c930a53afc43d8175637634d71dfbb7c25f13eedaa35a4626cb402fa5e56abc
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DDXHEADERS_BUILD_TEST=OFF -DDXHEADERS_BUILD_GOOGLE_TEST=OFF
+    OPTIONS -DDXHEADERS_INSTALL=ON -DDXHEADERS_BUILD_TEST=OFF -DDXHEADERS_BUILD_GOOGLE_TEST=OFF
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/directx-headers/cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

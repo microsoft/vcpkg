@@ -10,15 +10,17 @@ vcpkg_from_github(
         fix-external-dependencies.patch
         fix-external-dependencies2.patch
         eigen-3.4.patch
+        266.diff
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/FindSuiteSparse.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/FindGflags.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/FindGlog.cmake)
-file(REMOVE ${SOURCE_PATH}/cmake/FindEigen.cmake)
+file(REMOVE "${SOURCE_PATH}/cmake/FindSuiteSparse.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindOpenImageIO.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/FindEigen.cmake")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_CXX_STANDARD=14
         -DCMAKE_CXX_EXTENSIONS=OFF
@@ -33,15 +35,15 @@ vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
 # Clean
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/optimo)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/optimo)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/theia/libraries/akaze/cimg/cmake-modules)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/theia/libraries/akaze/cmake)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/theia/libraries/akaze/datasets)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/theia/libraries/spectra/doxygen)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/optimo")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/optimo")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/theia/libraries/akaze/cimg/cmake-modules")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/theia/libraries/akaze/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/theia/libraries/akaze/datasets")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/theia/libraries/spectra/doxygen")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(COPY ${SOURCE_PATH}/data/camera_sensor_database_license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(COPY "${SOURCE_PATH}/data/camera_sensor_database_license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

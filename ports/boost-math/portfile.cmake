@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
-    REF boost-1.79.0
-    SHA512 97d7d11b80c5d583ceed3548f294876180d4ff8e0aab5b39c1dc5249300a124c4ac2d8894b3c4e8bec9f7fa42e3886f679a47b8b86feb7c1d9e8389b767bb499
+    REF boost-1.83.0
+    SHA512 29d1e9fda7daebdeb6824537234aa9818a15f258227af854c0600ef55dea2f46bca116a848ae9f5f445d5f8ba50d7c2b46956a066786bd0375f1f23e1c5a88fd
     HEAD_REF master
     PATCHES 001-remove-checks.patch
 )

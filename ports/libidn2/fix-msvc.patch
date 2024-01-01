@@ -1,0 +1,13 @@
+diff --git a/lib/idn2.h.in b/lib/idn2.h.in
+index 703477e..0c37b2e 100644
+--- a/lib/idn2.h.in
++++ b/lib/idn2.h.in
+@@ -104,8 +104,6 @@ extern "C"
+  */
+ # if GCC_VERSION_AT_LEAST(3,1)
+ #  define G_GNUC_DEPRECATED __attribute__((deprecated))
+-# elif defined(_MSC_VER)
+-#  define G_GNUC_DEPRECATED __declspec(deprecated)
+ # else
+ #  define G_GNUC_DEPRECATED	/* empty */
+ # endif

@@ -1,8 +1,7 @@
 {
   "name": "openssl-uwp",
-  "version-string": "1.1.1h",
-  "port-version": 2,
-  "description": "Deprecated OpenSSL port",
+  "version-string": "deprecated",
+  "description": "Deprecated OpenSSL port. Use port openssl instead.",
   "supports": "uwp",
   "dependencies": [
     "openssl"

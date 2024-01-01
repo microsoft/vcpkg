@@ -1,0 +1,17 @@
+{
+  "name": "etl",
+  "version": "20.38.0",
+  "description": "A C++ template library for embedded applications",
+  "homepage": "https://www.etlcpp.com",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

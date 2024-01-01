@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2d28050..e2a060d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -347,7 +347,10 @@ endif()
+ # Installs the library
+ include(GNUInstallDirs)
+ 
+-install(TARGETS clblast EXPORT CLBlast DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(TARGETS clblast EXPORT CLBlast 
++        ARCHIVE DESTINATION lib
++        LIBRARY DESTINATION lib
++        RUNTIME DESTINATION bin)
+ install(FILES include/clblast_half.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ if(OPENCL)
+   install(FILES include/clblast.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

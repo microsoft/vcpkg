@@ -1,0 +1,147 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3e09f53..61ce7b4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -70,19 +70,19 @@ if(NOT SW_BUILD)
+   endif()
+   find_package(JPEG)
+   if(JPEG_FOUND)
+-    set(libs_private "${libs_private} -ljpeg")
++    set(pkgs_private "${pkgs_private} libjpeg")
+   endif()
+   find_package(PNG)
+   if(PNG_FOUND)
+-    set(libs_private "${libs_private} -lpng")
++    set(pkgs_private "${pkgs_private} libpng")
+   endif()
+   find_package(TIFF)
+   if(TIFF_FOUND)
+-    set(libs_private "${libs_private} -ltiff")
++    set(pkgs_private "${pkgs_private} libtiff-4")
+   endif()
+   find_package(ZLIB)
+   if(ZLIB_FOUND)
+-    set(libs_private "${libs_private} -lz")
++    set(pkgs_private "${pkgs_private} zlib")
+   endif()
+   find_package(PkgConfig QUIET)
+   if(LIBWEBP_SUPPORT)
+@@ -118,30 +118,16 @@ if(NOT SW_BUILD)
+       endif()
+     endif()
+     if(WEBP)
+-      set(libs_private "${libs_private} -lwebp")
++      set(pkgs_private "${pkgs_private} libwebp")
+     endif(WEBP)
+     if(WEBPMUX)
+-      set(libs_private "${libs_private} -lwebpmux")
++      set(pkgs_private "${pkgs_private} libwebpmux")
+     endif(WEBPMUX)
+   endif(LIBWEBP_SUPPORT)
+   if(OPENJPEG_SUPPORT)
+-    find_package(OpenJPEG)
+-    # we need absolute path in some cases on Windows
+-    find_library(JP2K_LIBRARY NAMES openjp2)
+-    if(OpenJPEG_FOUND AND JP2K_LIBRARY)
+-      set(JP2K_FOUND TRUE)
+-      set(JP2K_INCLUDE_DIRS ${OPENJPEG_INCLUDE_DIRS})
+-      get_filename_component(JP2K_HEADER_DIR "${JP2K_INCLUDE_DIRS}" NAME)
+-    else()
+-      if(PKG_CONFIG_FOUND)
+-        pkg_check_modules(JP2K libopenjp2>=2.0 QUIET)
+-      endif(PKG_CONFIG_FOUND)
+-    endif()
+-    if(JP2K_FOUND)
+-      set(JP2K_LIBRARIES ${JP2K_LIBRARY})
+-      set(libs_private "${libs_private} -lopenjp2")
+-      message(STATUS "FOUND OpenJPEG: ${JP2K_LIBRARIES}")
+-    endif()
++    find_package(PkgConfig REQUIRED)
++    pkg_check_modules(JP2K libopenjp2>=2.0 REQUIRED)
++    set(pkgs_private "${pkgs_private} libopenjp2")
+   endif(OPENJPEG_SUPPORT)
+ else() # SW_BUILD=ON
+   find_package(SW REQUIRED)
+@@ -158,8 +144,7 @@ else() # SW_BUILD=ON
+     -DHAVE_LIBWEBP=1
+     -DHAVE_LIBWEBP_ANIM=1
+     -DHAVE_LIBZ=1
+-    -DHAVE_LIBJP2K=1
+-    -DLIBJP2K_HEADER="openjpeg.h")
++    -DHAVE_LIBJP2K=1)
+ endif()
+ 
+ set(libs_private "${libs_private} -lm")
+@@ -299,7 +284,10 @@ get_target_property(leptonica_NAME leptonica NAME)
+ set(leptonica_VERSION ${VERSION_PLAIN})
+ get_target_property(leptonica_OUTPUT_NAME leptonica OUTPUT_NAME)
+ 
+-configure_file(lept.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/lept.pc @ONLY)
++configure_file(lept.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/lept.pc.in @ONLY)
++# to resolve generator expression in OUTPUT_NAME
++file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lept.pc INPUT ${CMAKE_CURRENT_BINARY_DIR}/lept.pc.in)
++
+ configure_file(
+   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/templates/LeptonicaConfig-version.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/LeptonicaConfig-version.cmake @ONLY)
+diff --git a/cmake/Configure.cmake b/cmake/Configure.cmake
+index b75cf19..4941187 100644
+--- a/cmake/Configure.cmake
++++ b/cmake/Configure.cmake
+@@ -96,7 +96,6 @@ endif()
+ 
+ if (JP2K_FOUND)
+     set(HAVE_LIBJP2K 1)
+-    set(LIBJP2K_HEADER <${JP2K_HEADER_DIR}/openjpeg.h>)
+ endif()
+ 
+ if (PNG_FOUND)
+@@ -122,7 +121,6 @@ file(APPEND ${AUTOCONFIG_SRC} "
+ 
+ /* Define to 1 if you have libopenjp2. */
+ #cmakedefine HAVE_LIBJP2K 1
+-#cmakedefine LIBJP2K_HEADER <${JP2K_HEADER_DIR}/openjpeg.h>
+ 
+ /* Define to 1 if you have jpeg. */
+ #cmakedefine HAVE_LIBJPEG 1
+diff --git a/lept.pc.cmake b/lept.pc.cmake
+index 9140d50..3e19307 100644
+--- a/lept.pc.cmake
++++ b/lept.pc.cmake
+@@ -6,6 +6,7 @@ includedir=${prefix}/include
+ Name: @leptonica_NAME@
+ Description: An open source C library for efficient image processing and image analysis operations
+ Version: @leptonica_VERSION@
++Requires.private: @pkgs_private@
+ Libs: -L${libdir} -l@leptonica_OUTPUT_NAME@
+ Libs.private: @libs_private@
+ Cflags: -I${includedir} -I${includedir}/leptonica
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e2c2f15..3d7e852 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -19,13 +19,8 @@ string(REPLACE "-O3" "-O2" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
+ add_library                     (leptonica ${src} ${hdr})
+ set_target_properties           (leptonica PROPERTIES VERSION   6.0.0)
+ set_target_properties           (leptonica PROPERTIES SOVERSION 6)
+-if (WIN32)
+-set_target_properties           (leptonica PROPERTIES OUTPUT_NAME       leptonica-${VERSION_PLAIN})
+-set_target_properties           (leptonica PROPERTIES DEBUG_OUTPUT_NAME leptonica-${VERSION_PLAIN}d)
+-else()
+-set_target_properties           (leptonica PROPERTIES OUTPUT_NAME       leptonica)
+-set_target_properties           (leptonica PROPERTIES DEBUG_OUTPUT_NAME leptonica)
+-endif()
++
++set_target_properties           (leptonica PROPERTIES OUTPUT_NAME leptonica$<$<BOOL:${WIN32}>:-${VERSION_PLAIN}$<$<CONFIG:DEBUG>:d>>)
+ 
+ if (BUILD_SHARED_LIBS)
+     target_compile_definitions  (leptonica PRIVATE -DLIBLEPT_EXPORTS)
+@@ -41,7 +36,7 @@ if (JPEG_LIBRARIES)
+ endif()
+ if (JP2K_FOUND)
+     target_include_directories  (leptonica PUBLIC ${JP2K_INCLUDE_DIRS})
+-    target_link_libraries       (leptonica ${JP2K_LIBRARIES})
++    target_link_libraries       (leptonica ${JP2K_LINK_LIBRARIES})
+ endif()
+ if (PNG_LIBRARIES)
+     target_include_directories  (leptonica PUBLIC ${PNG_INCLUDE_DIRS})

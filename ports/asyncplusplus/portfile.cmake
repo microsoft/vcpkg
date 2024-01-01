@@ -8,23 +8,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/Async++.cmake ${CURRENT_PACKAGES_DIR}/cmake/Async++Targets.cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME async++)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/async++)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/async++/Async++Targets.cmake ${CURRENT_PACKAGES_DIR}/share/async++/Async++.cmake)
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/async++/Async++Config.cmake _contents)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/async++/Async++Config.cmake "include(CMakeFindDependencyMacro)\n${_contents}")
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
-
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/asyncplusplus)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/asyncplusplus/LICENSE ${CURRENT_PACKAGES_DIR}/share/asyncplusplus/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

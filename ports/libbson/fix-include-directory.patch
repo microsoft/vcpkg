@@ -1,13 +1,13 @@
 diff --git a/src/libbson/CMakeLists.txt b/src/libbson/CMakeLists.txt
-index 0197af0..422b051 100644
+index e3eaca4..ef3644b 100644
 --- a/src/libbson/CMakeLists.txt
 +++ b/src/libbson/CMakeLists.txt
-@@ -341,7 +341,7 @@ if (ENABLE_EXAMPLES)
- endif () # ENABLE_EXAMPLES
+@@ -302,7 +302,7 @@ endif () # ENABLE_EXAMPLES
+ # 8888888 888  888  88888P'  "Y888 "Y888888 888 888
  
  set (BSON_HEADER_INSTALL_DIR
 -   "${CMAKE_INSTALL_INCLUDEDIR}/libbson-${BSON_API_VERSION}"
 +   "${CMAKE_INSTALL_INCLUDEDIR}"
  )
- 
- if (MONGOC_ENABLE_STATIC_INSTALL)
+ function(install_export_target target)
+    # Tell pkg-config where the headers are going:

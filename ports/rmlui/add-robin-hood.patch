@@ -1,20 +1,20 @@
 diff --git a/CMake/FileList.cmake b/CMake/FileList.cmake
-index 9c3042c..c3820df 100644
+index cd2918a7..f063a879 100644
 --- a/CMake/FileList.cmake
 +++ b/CMake/FileList.cmake
-@@ -133,7 +133,6 @@ set(Core_PUB_HDR_FILES
+@@ -123,7 +123,6 @@ set(Core_PUB_HDR_FILES
      ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/ComputedValues.h
-     ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Containers/chobo/flat_map.hpp
-     ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Containers/chobo/flat_set.hpp
+     ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Containers/itlib/flat_map.hpp
+     ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Containers/itlib/flat_set.hpp
 -    ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Containers/robin_hood.h
      ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Context.h
      ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/ContextInstancer.h
      ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/ConvolutionFilter.h
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 62432f1..d9287c9 100644
+index 0b552524..190e8c8e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -387,6 +387,8 @@ if( ENABLE_SVG_PLUGIN )
+@@ -427,6 +427,8 @@ if( ENABLE_SVG_PLUGIN )
  	message("-- Can SVG plugin be enabled - yes - lunasvg library found")
  endif()
  
@@ -24,13 +24,13 @@ index 62432f1..d9287c9 100644
  if(NOT BUILD_FRAMEWORK)
  #===================================
 diff --git a/Include/RmlUi/Config/Config.h b/Include/RmlUi/Config/Config.h
-index dc42753..5249e1d 100644
+index 018ab3b1..4bc20613 100644
 --- a/Include/RmlUi/Config/Config.h
 +++ b/Include/RmlUi/Config/Config.h
 @@ -57,7 +57,7 @@
  #else
- #include "../Core/Containers/chobo/flat_map.hpp"
- #include "../Core/Containers/chobo/flat_set.hpp"
+ #include "../Core/Containers/itlib/flat_map.hpp"
+ #include "../Core/Containers/itlib/flat_set.hpp"
 -#include "../Core/Containers/robin_hood.h"
 +#include <robin_hood.h>
  #endif	// RMLUI_NO_THIRDPARTY_CONTAINERS

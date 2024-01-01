@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6d3a4c2..90833e3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,7 +39,6 @@ if(LCM_ENABLE_EXAMPLES)
+ endif()
+ 
+ # Documentation (Main, C/C++, .NET)
+-add_subdirectory(docs)
+ 
+ # Java
+ lcm_option(

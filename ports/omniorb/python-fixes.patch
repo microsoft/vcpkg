@@ -1,0 +1,46 @@
+diff --git a/mk/python.mk b/mk/python.mk
+index 1380018..fb321a5 100644
+--- a/mk/python.mk
++++ b/mk/python.mk
+@@ -4,7 +4,7 @@
+ 
+ PYVERSION := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(".".join(sys.version.split(".")[:2]))')
+ PYPREFIX  := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(sys.exec_prefix.replace("\\","/"))')
+-PYINCDIR  := $(shell $(PYTHON) -c 'import sys, distutils.sysconfig; sys.stdout.write(distutils.sysconfig.get_python_inc().replace("\\","/"))')
++PYINCDIR  := $(includedir)/python$(PYVERSION)
+ 
+ PythonSHAREDLIB_SUFFIX = $(shell $(PYTHON) -c 'import sys, distutils.sysconfig; sys.stdout.write((distutils.sysconfig.get_config_var("SO") or ".so").lstrip("."))')
+ 
+diff --git a/src/tool/omniidl/cxx/idlpython.cc b/src/tool/omniidl/cxx/idlpython.cc
+index 639515105..27ad3ee0e 100644
+--- a/src/tool/omniidl/cxx/idlpython.cc
++++ b/src/tool/omniidl/cxx/idlpython.cc
+@@ -27,8 +27,6 @@
+ 
+ // On Windows, if _DEBUG is defined, some Python versions try to force
+ // use of _d.lib libraries that are not actually present.
+-#undef _DEBUG
+-
+ #include <Python.h>
+ 
+ #include <idlsysdep.h>
+diff --git a/src/tool/omniidl/cxx/dir.mk b/src/tool/omniidl/cxx/dir.mk
+index 84f10ac03..3b5a60b87 100644
+--- a/src/tool/omniidl/cxx/dir.mk
++++ b/src/tool/omniidl/cxx/dir.mk
+@@ -190,13 +190,13 @@ ifdef Win32Platform
+ 
+ DIR_CPPFLAGS += -DMSDOS -DOMNIIDL_EXECUTABLE
+ 
+-PYLIBDIR := $(PYPREFIX)/libs $(PYPREFIX)/lib/x86_win32
++PYLIBDIR := $(libdir)
+ 
+ ifdef MinGW32Build
+ PYLIB     := -lpython$(subst .,,$(PYVERSION))
+ CXXLINKOPTIONS += $(patsubst %,-L%,$(PYLIBDIR))
+ else
+-PYLIB     := python$(subst .,,$(PYVERSION)).lib
++PYLIB     = python$(subst .,,$(PYVERSION)).lib zlib.lib Advapi32.lib
+ CXXLINKOPTIONS += $(patsubst %,-libpath:%,$(PYLIBDIR))
+ endif
+ 

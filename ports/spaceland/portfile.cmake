@@ -6,14 +6,14 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 1391dac1474ddb47d0cf0eb7baeb7db68d6356c2116f732dd57b8a050739523282ded0643cc466640f2b22f25dd6bfced00ede4e041b7ff83754a99ae6725d7d
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES include_functional.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
 	OPTIONS
 		-DSL_TEST=OFF
@@ -23,7 +23,7 @@ vcpkg_configure_cmake(
         -DSL_INSTALL_SLFIND_MODULE=OFF
 )
 
-vcpkg_install_cmake()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_cmake_install()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libical/libical
-    REF v3.0.11
-    SHA512 cdee86c50edc2373ab2024d7d4ae26dd4b9a728dbc13083472c4923c67f61ff3cef7d43edca762c6a11979d2040fc1576a033eaa23a19e58af8f14a7d67fc139
+    REF "v${VERSION}"
+    SHA512 11fbb4aba7503a3264b0efa30ad56aa923d31ec193bdb0b87b92bc88db9019fa670c8c9ee7998caa3a870e706446a58ead475f31bd703f0d2cb7aabf0f6a3aa7
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -23,7 +23,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_DISABLE_FIND_PACKAGE_BDB=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_BerkeleyDB=ON
         -DUSE_BUILTIN_TZDATA=ON
         -DICAL_GLIB=OFF
         -DICAL_BUILD_DOCS=OFF

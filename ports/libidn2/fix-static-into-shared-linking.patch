@@ -1,0 +1,30 @@
+--- a/lib/puny_decode.c
++++ b/lib/puny_decode.c
+@@ -242,12 +242,3 @@
+   /* cannot overflow because out <= old value of *output_length */
+   return punycode_success;
+ }
+-
+-/* Create a compatibility symbol if supported.  Hidden references make
+-   the target symbol hidden, hence the alias.  */
+-#ifdef HAVE_SYMVER_ALIAS_SUPPORT
+-__typeof__ (_idn2_punycode_decode_internal) _idn2_punycode_decode
+-  __attribute__((visibility ("default"),
+-		 alias ("_idn2_punycode_decode_internal")));
+-__asm__ (".symver _idn2_punycode_decode, _idn2_punycode_decode@IDN2_0.0.0");
+-#endif
+--- a/lib/puny_encode.c
++++ b/lib/puny_encode.c
+@@ -243,12 +243,3 @@
+   *output_length = out;
+   return punycode_success;
+ }
+-
+-/* Create a compatibility symbol if supported.  Hidden references make
+-   the target symbol hidden, hence the alias.  */
+-#ifdef HAVE_SYMVER_ALIAS_SUPPORT
+-__typeof__ (_idn2_punycode_encode_internal) _idn2_punycode_encode
+-  __attribute__((visibility ("default"),
+-		 alias ("_idn2_punycode_encode_internal")));
+-__asm__ (".symver _idn2_punycode_encode, _idn2_punycode_encode@IDN2_0.0.0");
+-#endif

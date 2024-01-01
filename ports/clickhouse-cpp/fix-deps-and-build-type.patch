@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aed0d85..b5f36e2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,21 +63,21 @@ PROJECT (CLICKHOUSE-CLIENT)
+     ENDIF ()
+ 
+     IF (WITH_SYSTEM_ABSEIL)
+-        FIND_PACKAGE(absl REQUIRED)
++        FIND_PACKAGE(absl CONFIG REQUIRED)
+     ELSE ()
+         INCLUDE_DIRECTORIES (contrib/absl)
+         SUBDIRS (contrib/absl/absl)
+     ENDIF ()
+ 
+     IF (WITH_SYSTEM_LZ4)
+-        FIND_PACKAGE(lz4 REQUIRED)
++        FIND_PACKAGE(lz4 CONFIG REQUIRED)
+     ELSE ()
+         INCLUDE_DIRECTORIES (contrib/lz4/lz4)
+         SUBDIRS (contrib/lz4/lz4)
+     ENDIF ()
+ 
+     IF (WITH_SYSTEM_CITYHASH)
+-        FIND_PACKAGE(cityhash REQUIRED)
++        FIND_PACKAGE(cityhash CONFIG REQUIRED)
+     ELSE ()
+         INCLUDE_DIRECTORIES (contrib/cityhash/cityhash)
+         SUBDIRS (contrib/cityhash/cityhash)
+diff --git a/clickhouse/CMakeLists.txt b/clickhouse/CMakeLists.txt
+index 67663ec..e67ba81 100644
+--- a/clickhouse/CMakeLists.txt
++++ b/clickhouse/CMakeLists.txt
+@@ -42,7 +42,7 @@ ADD_LIBRARY (clickhouse-cpp-lib ${clickhouse-cpp-lib-src})
+ SET_TARGET_PROPERTIES (clickhouse-cpp-lib PROPERTIES LINKER_LANGUAGE CXX)
+ TARGET_LINK_LIBRARIES (clickhouse-cpp-lib
+     absl::int128
+-    cityhash::cityhash
++    cityhash
+     lz4::lz4
+ )
+ TARGET_INCLUDE_DIRECTORIES (clickhouse-cpp-lib

@@ -1,0 +1,22 @@
+diff --git a/meson.build b/meson.build
+index 1316366ed..daeaf3cb1 100644
+--- a/meson.build
++++ b/meson.build
+@@ -62,7 +62,7 @@ endif
+ # Ensure that MSVC interprets all source code as UTF-8. Only do this when we're
+ # not a subproject, because subprojects are not allowed to call
+ # add_global_arguments().
+-if not meson.is_subproject() and cc.get_id() == 'msvc'
++if not meson.is_subproject() and cc.get_argument_syntax() == 'msvc'
+   add_global_arguments(
+       cc.get_supported_arguments(['/utf-8']), # set the input encoding to utf-8
+       language: ['c', 'cpp'])
+@@ -316,7 +316,7 @@ if get_option('default_library') == 'static'
+     if cc.has_link_argument(link_arg)
+       gstfull_link_args += link_arg
+       link_deps += symbol_map
+-    elif cc.get_id() == 'msvc'
++    elif cc.get_argument_syntax() == 'msvc'
+       warning('FIXME: Provide a def file to publish the public symbols')
+     else
+       warning('FIXME: Linker does not support the supplied version script (' + symbol_map + '), please disable the "gst-full-version-script" option')

@@ -1,0 +1,14 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Ybalrid/kissnet
+    REF adbfe52d5147b206dd68c83da15b6e5805fe28dd # 2023-02-04
+    SHA512 404eec875f64884ef6256775a63c989cf691c9a3fc5fef77a68713a63a7a1554a78d26ba063c613c9de328e92d6c685a53fff77e89b6bc42056962e282134e84
+    HEAD_REF master
+)
+
+# Install the header-only library
+file(INSTALL "${SOURCE_PATH}/kissnet.hpp"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

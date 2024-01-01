@@ -10,12 +10,17 @@ include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
         allow_outside_prefix.patch
-        clang-cl_source_location.patch
         config_install.patch
         fix_cmake_build.patch
+        fix_cmake_build_type.patch
         harfbuzz.patch
         fix_egl.patch
-        clang-cl_QGADGET_fix.diff # Upstream is still figuring out if this is a compiler bug or not.
+        fix_egl_2.patch
+        installed_dir.patch
+        GLIB2-static.patch # alternative is to force pkg-config
+        clang-cl_source_location.patch
+        clang-cl_QGADGET_fix.diff
+        fix-host-aliasing.patch
         )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -28,6 +33,13 @@ list(APPEND ${PORT}_PATCHES
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
     message(FATAL_ERROR "${PORT} requires feature doubleconversion on windows!" )
+endif()
+
+if(VCPKG_TARGET_IS_LINUX)
+    message(WARNING "qtbase currently requires packages from the system package manager. "
+    "They can be installed on Ubuntu systems via sudo apt-get install " 
+    "'^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev "
+    "libxkbcommon-x11-dev.")
 endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
@@ -107,6 +119,11 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_LTTngUST:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON)
+list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapBacktrace:BOOL=ON)
+#list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapAtomic:BOOL=ON) # Cannot be disabled on x64 platforms
+#list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapRt:BOOL=ON) # Cannot be disabled on osx
+list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
+list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
 
 # Network features:
  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_NET_OPTIONS
@@ -128,6 +145,7 @@ endif()
 
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libproxy:BOOL=ON)
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON)
+list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapResolv:BOOL=ON)
 
 # Gui features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
@@ -137,7 +155,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "fontconfig"          FEATURE_fontconfig # NOT WINDOWS
     "jpeg"                FEATURE_jpeg
     "png"                 FEATURE_png
-    #"opengl"              INPUT_opengl=something
+    "opengl"              FEATURE_opengl
     "xlib"                FEATURE_xlib
     "xkb"                 FEATURE_xkbcommon
     "xcb"                 FEATURE_xcb
@@ -145,8 +163,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xkbcommon-x11"       FEATURE_xkbcommon_x11
     "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
     "xrender"             FEATURE_xcb_native_painting # experimental
-    #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_Vulkan
-    #"egl"                 CMAKE_REQUIRE_FIND_PACKAGE_EGL
+    "gles2"               FEATURE_opengles2
+    #Cannot be required since Qt will look in CONFIG mode first but is controlled via CMAKE_DISABLE_FIND_PACKAGE_Vulkan below
+    #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_WrapVulkanHeaders 
+    "egl"                 FEATURE_egl
     #"fontconfig"          CMAKE_REQUIRE_FIND_PACKAGE_Fontconfig
     #"harfbuzz"            CMAKE_REQUIRE_FIND_PACKAGE_WrapSystemHarfbuzz
     #"jpeg"                CMAKE_REQUIRE_FIND_PACKAGE_JPEG
@@ -159,7 +179,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     #"xrender"             CMAKE_REQUIRE_FIND_PACKAGE_XRender
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
+    "opengl"              CMAKE_DISABLE_FIND_PACKAGE_WrapOpenGL
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
+    "gles2"               CMAKE_DISABLE_FIND_PACKAGE_GLESv2
     "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
     #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
@@ -174,6 +196,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     # There are more X features but I am unsure how to safely disable them! Most of them seem to be found automaticall with find_package(X11)
      )
 
+if( "gles2" IN_LIST FEATURES)
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_opengl='es2')
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_desktop=OFF)
+endif()
+
+if(NOT "opengl" IN_LIST FEATURES AND NOT "gles2" IN_LIST FEATURES)
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_opengl='no')
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_desktop=OFF)
+    list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengl_dynamic=OFF)
+endif()
+
 if("xcb" IN_LIST FEATURES)
     list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xcb=yes)
 else()
@@ -184,7 +217,11 @@ if("xkb" IN_LIST FEATURES)
 else()
     list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xkbcommon=no)
 endif()
-list(APPEND FEATURE_GUI_OPTIONS )
+
+# Disable GLES3
+list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles3:BOOL=OFF)
+list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles31:BOOL=OFF)
+list(APPEND FEATURE_GUI_OPTIONS -DFEATURE_opengles32:BOOL=OFF)
 
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_ATSPI2:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_DirectFB:BOOL=ON)
@@ -192,26 +229,26 @@ list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libdrm:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_gbm:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libinput:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Mtdev:BOOL=ON)
-list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GLESv2:BOOL=ON) # only used if INPUT_opengl is correctly set
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Tslib:BOOL=ON)
 # sql-drivers features:
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     FEATURES
     "sql-sqlite"          FEATURE_system_sqlite
+    "sql-odbc"            FEATURE_sql_odbc
+    "sql-mysql"           FEATURE_sql_mysql
+    "sql-oci"             FEATURE_sql_oci
     #"sql-psql"            CMAKE_REQUIRE_FIND_PACKAGE_PostgreSQL
     #"sql-sqlite"          CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
     INVERTED_FEATURES
     "sql-psql"            CMAKE_DISABLE_FIND_PACKAGE_PostgreSQL
     "sql-sqlite"          CMAKE_DISABLE_FIND_PACKAGE_SQLite3
-    # "sql-db2"             FEATURE_sql-db2
-    # "sql-ibase"           FEATURE_sql-ibase
-    # "sql-mysql"           FEATURE_sql-mysql
-    # "sql-oci"             FEATURE_sql-oci
-    # "sql-odbc"            FEATURE_sql-odbc
+    "sql-odbc"            CMAKE_DISABLE_FIND_PACKAGE_ODBC
+    "sql-mysql"           CMAKE_DISABLE_FIND_PACKAGE_MySQL
+    "sql-oci"             CMAKE_DISABLE_FIND_PACKAGE_Oracle
     )
 
-set(DB_LIST DB2 MySQL Oracle ODBC)
+set(DB_LIST DB2 Interbase Mimer)
 foreach(_db IN LISTS DB_LIST)
     list(APPEND FEATURE_SQLDRIVERS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${_db}:BOOL=ON)
 endforeach()
@@ -221,12 +258,12 @@ endforeach()
     # )
 list(APPEND FEATURE_PRINTSUPPORT_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_CUPS:BOOL=ON)
 
-# widgets features:
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
-    # "gtk3"             FEATURE_gtk3
-    # There are a lot of additional features here to deactivate parts of widgets.
-    # )
-list(APPEND FEATURE_WIDGETS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GTK3:BOOL=ON)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
+    FEATURES
+    "gtk3"              FEATURE_gtk3
+    INVERTED_FEATURES
+    "gtk3"              CMAKE_DISABLE_FIND_PACKAGE_GTK3
+)
 
 set(TOOL_NAMES
         androiddeployqt
@@ -245,7 +282,12 @@ set(TOOL_NAMES
         qtpaths
         qtpaths6
         windeployqt
+        windeployqt6
         macdeployqt
+        macdeployqt6
+        androiddeployqt6
+        syncqt
+        tracepointgen
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -281,16 +323,19 @@ file(COPY
         "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     )
 
+file(CONFIGURE OUTPUT "${CURRENT_PACKAGES_DIR}/share/${PORT}/port_status.cmake" CONTENT "set(qtbase_with_icu ${FEATURE_icu})\n")
+
 set(other_files qt-cmake
-                 qt-cmake-private
-                 qt-cmake-standalone-test
-                 qt-configure-module
-                 qt-internal-configure-tests
+                qt-cmake-private
+                qt-cmake-standalone-test
+                qt-configure-module
+                qt-internal-configure-tests
+                qt-cmake-create
                  )
 if(CMAKE_HOST_WIN32)
-    set(script_suffix .bat)
+    set(script_suffix ".bat")
 else()
-    set(script_suffix)
+    set(script_suffix "")
 endif()
 list(TRANSFORM other_files APPEND "${script_suffix}")
 
@@ -302,6 +347,7 @@ list(APPEND other_files
                 target_qt.conf
                 qt-cmake-private-install.cmake
                 qt-testrunner.py
+                sanitizer-testrunner.py
                 )
 
 foreach(_config debug release)
@@ -327,6 +373,7 @@ foreach(_config debug release)
                 string(REPLACE "../share/" "../../../share/" _contents "${_contents}")
             endif()
             string(REGEX REPLACE "set cmake_path=[^\n]+\n" "set cmake_path=cmake\n" _contents "${_contents}")
+            string(REGEX REPLACE "original_cmake_path=[^\n]+\n" "original_cmake_path=does-not-exist\n" _contents "${_contents}")
             file(WRITE "${target_file}" "${_contents}")
         endif()
     endforeach()
@@ -340,6 +387,7 @@ string(REGEX REPLACE "set\\\(__qt_chainload_toolchain_file [^\\\n]+\\\n" "set(__
 string(REGEX REPLACE "set\\\(VCPKG_CHAINLOAD_TOOLCHAIN_FILE [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(__qt_initial_c_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(__qt_initial_cxx_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
+string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${vcpkg_installed_dir}/${HOST_TRIPLET}" toolchain_contents "${toolchain_contents}")
 file(WRITE "${qttoolchain}" "${toolchain_contents}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
@@ -406,6 +454,12 @@ string(REPLACE [[set(QT6_HOST_INFO_LIBEXECDIR "bin")]] [[set(QT6_HOST_INFO_LIBEX
 string(REPLACE [[set(QT6_HOST_INFO_BINDIR "bin")]] [[set(QT6_HOST_INFO_BINDIR "tools/Qt6/bin")]] _contents "${_contents}")
 file(WRITE "${hostinfofile}" "${_contents}")
 
+if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake"
+                         "PACKAGE_PREFIX_DIR}/bin/syncqt"
+                         "PACKAGE_PREFIX_DIR}/tools/Qt6/bin/syncqt")
+endif()
+
 set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsTargets-debug.cmake")
 if(EXISTS "${configfile}")
     file(READ "${configfile}" _contents)
@@ -424,3 +478,21 @@ if(EXISTS "${configfile}")
     file(WRITE "${configfile}" "${_contents}")
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake" "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}")
+endif()
+
+function(remove_original_cmake_path file)
+    file(READ "${file}" _contents)
+    string(REGEX REPLACE "original_cmake_path=[^\n]*" "original_cmake_path=''" _contents "${_contents}")
+    file(WRITE "${file}" "${_contents}")
+endfunction()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    foreach(file "qt-cmake" "qt-cmake-private")
+        remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${file}")
+        if(NOT VCPKG_BUILD_TYPE)
+            remove_original_cmake_path("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/${file}")
+        endif()
+    endforeach()
+endif()

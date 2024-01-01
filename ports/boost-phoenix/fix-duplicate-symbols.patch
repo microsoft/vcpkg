@@ -1,0 +1,13 @@
+diff --git a/include/boost/phoenix/stl/tuple.hpp b/include/boost/phoenix/stl/tuple.hpp
+index a83014a..9d49487 100644
+--- a/include/boost/phoenix/stl/tuple.hpp
++++ b/include/boost/phoenix/stl/tuple.hpp
+@@ -110,7 +110,7 @@ namespace boost { namespace phoenix {
+     namespace placeholders {
+         #define BOOST_PP_LOCAL_LIMITS (1, BOOST_PHOENIX_ARG_LIMIT)
+         #define BOOST_PP_LOCAL_MACRO(N)                                                \
+-            auto uarg##N =                                                             \
++            const auto uarg##N =                                                             \
+             boost::phoenix::get_<(N)-1>(boost::phoenix::placeholders::arg1);
+         #include BOOST_PP_LOCAL_ITERATE()
+     }

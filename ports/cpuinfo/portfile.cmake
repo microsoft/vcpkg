@@ -6,11 +6,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/cpuinfo
-    REF b40bae27785787b6dd70788986fd96434cf90ae2
-    SHA512 dbbe4f3e1d5ae74ffc8ba2cba0ab745a23f4993788f4947825ef5125dd1cbed3e13e0c98e020e6fcfa9879f54f06d7cba4de73ec29f77649b6a27b4ab82c8f1c
+    REF 5e63739504f0f8e18e941bd63b2d6d42536c7d90
+    SHA512 6a61f4574661a55771c2ec31bb0919a51d0bd8c770477b254a5c14dc5323716af275c7fe3abc5aa96720d7cc929559ca66f614265d3940e076b8db2fa15c8e36
     HEAD_REF master
-    PATCHES
-        check-for-x86-correctly.patch # https://github.com/pytorch/cpuinfo/pull/93
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -52,8 +50,12 @@ vcpkg_fixup_pkgconfig() # pkg_check_modules(libcpuinfo)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if("tools" IN_LIST FEATURES)
+    set(additional_tools "")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cpuid-dump${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        list(APPEND additional_tools "cpuid-dump")
+    endif()
     vcpkg_copy_tools(
-        TOOL_NAMES cache-info cpuid-dump cpu-info isa-info
+        TOOL_NAMES cache-info cpu-info isa-info ${additional_tools}
         AUTO_CLEAN
     )
 endif()

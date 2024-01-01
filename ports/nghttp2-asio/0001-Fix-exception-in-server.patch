@@ -1,0 +1,45 @@
+From b4745aa3d87916c7d3da33c00da400b22a0539b5 Mon Sep 17 00:00:00 2001
+From: m8mble <m8mble@vivaldi.net>
+Date: Fri, 20 Jan 2023 16:36:30 +0100
+Subject: [PATCH 1/1] Fix exception in server
+
+It can happen that a connection handler calls writefun when the
+connection is already destroyed. This causes bad_weak_ptr exceptions
+thrown from the server.
+
+Fix this issue by skipping the respective do_write invocations.
+
+Signed-off-by: m8mble <m8mble@vivaldi.net>
+---
+ lib/asio_server_connection.h | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/lib/asio_server_connection.h b/lib/asio_server_connection.h
+index a948965..94ed59f 100644
+--- a/lib/asio_server_connection.h
++++ b/lib/asio_server_connection.h
+@@ -88,9 +88,20 @@ public:
+   void start() {
+     boost::system::error_code ec;
+ 
++    auto make_writefun = [original_self = this->shared_from_this()] {
++        return [weak = std::weak_ptr<connection>{original_self}]() {
++            auto self = weak.lock();
++            // If connection already got destroyed, the socket is already closed in particular.
++            // Therefore we can simply ignore further calls to write.
++            if (self) {
++                self->do_write();
++            }
++        };
++    };
++
+     handler_ = std::make_shared<http2_handler>(
+         GET_IO_SERVICE(socket_), socket_.lowest_layer().remote_endpoint(ec),
+-        [this]() { do_write(); }, mux_);
++        make_writefun(), mux_);
+     if (handler_->start() != 0) {
+       stop();
+       return;
+-- 
+2.39.1
+

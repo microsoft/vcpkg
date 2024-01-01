@@ -1,0 +1,15 @@
+{
+  "name": "libice",
+  "version": "1.0.10",
+  "port-version": 1,
+  "description": "Inter-Client Exchange Library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libice",
+  "license": "MIT-open-group",
+  "dependencies": [
+    "bzip2",
+    "libx11",
+    "xorg-macros",
+    "xproto",
+    "xtrans"
+  ]
+}

@@ -1,0 +1,60 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ee08591..c8c6b61 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -185,12 +185,14 @@ if(NOT USE_SYSTEM_MARISA)
+   message(STATUS "Use bundled marisa library.")
+   add_subdirectory(deps/marisa-0.2.6)
+ else()
+-  find_library(LIBMARISA NAMES marisa)
+-  if (LIBMARISA)
+-    message(STATUS "libmarisa found: ${LIBMARISA}")
+-  else()
+-    message(FATAL_ERROR "libmarisa not found.")
+-  endif()
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(marisa REQUIRED IMPORTED_TARGET marisa)
++  # find_library(LIBMARISA NAMES marisa)
++  # if (LIBMARISA)
++    # message(STATUS "libmarisa found: ${LIBMARISA}")
++  # else()
++    # message(FATAL_ERROR "libmarisa not found.")
++  # endif()
+ endif()
+ 
+ ######## Subdirectories
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c0a0b10..91b4037 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -114,7 +114,7 @@ configure_file(
+ add_library(libopencc ${LIBOPENCC_SOURCES} ${LIBOPENCC_HEADERS})
+ set_target_properties(libopencc PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ source_group(libopencc FILES ${LIBOPENCC_SOURCES} ${LIBOPENCC_HEADERS})
+-target_link_libraries(libopencc marisa)
++target_link_libraries(libopencc PkgConfig::marisa)
+ 
+ GENERATE_EXPORT_HEADER(
+   libopencc
+@@ -137,6 +137,21 @@ set_target_properties(
+       ${OPENCC_VERSION_MAJOR}.${OPENCC_VERSION_MINOR}
+ )
+ 
++if(USE_SYSTEM_RAPIDJSON)
++  find_package(RapidJSON CONFIG REQUIRED)
++  target_link_libraries(libopencc rapidjson)
++endif()
++
++if(USE_SYSTEM_TCLAP)
++  find_path(TCLAP_INCLUDE_DIRS "tclap/Arg.h")
++  target_include_directories(libopencc PUBLIC ${TCLAP_INCLUDE_DIRS})
++endif()
++
++if(USE_SYSTEM_DARTS)
++  find_path(DARTS_INCLUDE_DIRS "darts.h")
++  target_include_directories(libopencc PUBLIC ${DARTS_INCLUDE_DIRS})
++endif()
++
+ # Installation
+ 
+ install(

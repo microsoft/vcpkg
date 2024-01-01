@@ -1,0 +1,39 @@
+diff --git a/subprojects/gstreamer/gst/parse/meson.build b/subprojects/gstreamer/gst/parse/meson.build
+index b79a07c..891f907 100644
+--- a/subprojects/gstreamer/gst/parse/meson.build
++++ b/subprojects/gstreamer/gst/parse/meson.build
+@@ -16,7 +16,7 @@ else
+ endif
+ 
+ flex_cdata.set('FLEX', flex.full_path())
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   flex_cdata.set('FLEX_ARGS', '--nounistd')
+ else
+   flex_cdata.set('FLEX_ARGS', '')
+diff --git a/subprojects/gstreamer/meson.build b/subprojects/gstreamer/meson.build
+index 941bedc..cd37a40 100644
+--- a/subprojects/gstreamer/meson.build
++++ b/subprojects/gstreamer/meson.build
+@@ -47,7 +47,7 @@ endif
+ 
+ cdata = configuration_data()
+ 
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   msvc_args = [
+       # Ignore several spurious warnings for things gstreamer does very commonly
+       # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
+@@ -347,8 +347,10 @@ static __uint128_t v2 = 10;
+ static __uint128_t u;
+ u = v1 / v2;
+ }'''
+-if cc.compiles(uint128_t_src, name : '__uint128_t available')
+-  cdata.set('HAVE_UINT128_T', 1)
++if cc.get_argument_syntax() != 'msvc'
++    if cc.compiles(uint128_t_src, name : '__uint128_t available')
++      cdata.set('HAVE_UINT128_T', 1)
++    endif
+ endif
+ 
+ # All supported platforms have long long now

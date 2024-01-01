@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/azmq
-    REF 6bb101eecb357ad9735ebc36e276b7526652d42d # commit on 2019-05-01 
-    SHA512 18812fd73c3c57aca8b17c2df0af01afb7864253d6ac6ce042e01ef04e81dd454438c9d01f5bb0fd7a4a445082a2eb3dd334ca1e05dafbe4ba602cad95ce7134
+    REF 2c1adac46bced4eb74ed9be7c74563bb113eaacf
+    SHA512 4614b9e8f502da067231cf0ce2b645289fd1343b9bc46f1028fecb9dad4bb8a5190d723c3bf888a7c708b7b588b6c72f7e4da637f499389481b6cf80f4999671
     HEAD_REF master
 )
 
