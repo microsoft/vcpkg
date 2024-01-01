@@ -2202,7 +2202,6 @@ freeglut(osx) = fail # fatal error: 'GL/glx.h' file not found
 gdal[netcdf](windows & arm) = feature-fails # gdal_target_link_libraries(): PRIVATE is a mandatory argument. See https://github.com/microsoft/vcpkg/issues/33753
 gdk-pixbuf[introspection](windows & arm) = feature-fails # ERROR: Dependency "gobject-introspection-1.0" not found. See https://github.com/microsoft/vcpkg/issues/33751
 geogram[graphics] = feature-fails # imgui not found. See https://github.com/microsoft/vcpkg/issues/32421
-gettext[runtime-tools](osx) = feature-fails # See https://github.com/microsoft/vcpkg/issues/35778
 ginkgo[openmp](osx) = feature-fails # No openmp on osx
 ginkgo[openmp](windows) = feature-fails # needs openmp 3.0 support but msvc only supports openmp 2.0
 google-cloud-cpp[storagetransfer](osx) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32149
