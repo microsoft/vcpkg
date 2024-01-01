@@ -1702,7 +1702,7 @@
     },
     "coin": {
       "baseline": "4.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "coin-or-buildtools": {
       "baseline": "2023-02-02",
@@ -3698,7 +3698,7 @@
     },
     "json5-parser": {
       "baseline": "1.0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "jsoncons": {
       "baseline": "0.171.0",
@@ -8833,7 +8833,7 @@
       "port-version": 1
     },
     "vcpkg-cmake-get-vars": {
-      "baseline": "2023-03-02",
+      "baseline": "2023-12-31",
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
