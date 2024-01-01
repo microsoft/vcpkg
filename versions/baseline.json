@@ -3182,7 +3182,7 @@
     },
     "gtsam": {
       "baseline": "4.2a9",
-      "port-version": 0
+      "port-version": 1
     },
     "guetzli": {
       "baseline": "2020-09-14",
@@ -3762,7 +3762,7 @@
     },
     "kenlm": {
       "baseline": "20230531",
-      "port-version": 0
+      "port-version": 1
     },
     "kerbal": {
       "baseline": "2023.12.1",
@@ -7310,7 +7310,7 @@
     },
     "quickfast": {
       "baseline": "1.5",
-      "port-version": 3
+      "port-version": 4
     },
     "quickfix": {
       "baseline": "1.15.1",
