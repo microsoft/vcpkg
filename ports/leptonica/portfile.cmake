@@ -1,13 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DanBloomberg/leptonica
-    REF b667978e86c4bf74f7fdd75f833127d2de327550 # 1.83.1
-    SHA512 fe4ea74aea024a4e522a5f985e51c5b110b5b4a3b3086e6fa7204129caf09b842f85041c386ee9bf2e878034ac2ebd2506396063771b677e931296ec6d76490b
+    REF ${VERSION}
+    SHA512 f4b2eebfa991e6a49432e13de86d57d8efe427216a757a47e6ed00babbb74c141f271b5a70aafbad9e4dedbdec0cb6245e6c0fb56e3c68c01b437022a05a9af2
     HEAD_REF master
-    PATCHES
-        fix-build-and-pkgconfig.patch # See https://github.com/DanBloomberg/leptonica/pull/664 and https://github.com/DanBloomberg/leptonica/pull/662
-        private.patch # See https://github.com/DanBloomberg/leptonica/pull/666
-        webp.patch # See https://github.com/DanBloomberg/leptonica/pull/667
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -34,4 +30,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/leptonica-license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/leptonica-license.txt")

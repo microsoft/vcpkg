@@ -4029,7 +4029,7 @@
       "port-version": 1
     },
     "leptonica": {
-      "baseline": "1.83.1",
+      "baseline": "1.84.0",
       "port-version": 0
     },
     "lerc": {
