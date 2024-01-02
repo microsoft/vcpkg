@@ -31,7 +31,7 @@ if(VCPKG_CROSSCOMPILING)
 endif()
 
 set(runtime_dll "ON")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(runtime_dll "OFF")
 endif()
 
