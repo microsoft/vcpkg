@@ -23,10 +23,6 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_DIR "${PERL}" DIRECTORY)
 vcpkg_add_to_path("${PERL_DIR}")
 
-vcpkg_find_acquire_program(GPERF)
-get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY)
-vcpkg_add_to_path("${GPERF_DIR}")
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
