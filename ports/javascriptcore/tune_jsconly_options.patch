@@ -1,7 +1,16 @@
 diff --git a/Source/cmake/OptionsWin.cmake b/Source/cmake/OptionsWin.cmake
-index 1d8bd1afeb47..b80446bad63b 100644
+index 1d358332016d..446c1a75dba1 100644
 --- a/Source/cmake/OptionsWin.cmake
 +++ b/Source/cmake/OptionsWin.cmake
+@@ -1,7 +1,7 @@
+ set(PORT Win)
+ 
+ # Use Release DLL CRT even for Debug build
+-set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreadedDLL)
++# set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreadedDLL)
+ 
+ if (MSVC)
+     include(OptionsMSVC)
 @@ -25,8 +25,12 @@ add_definitions(-DNOCRYPT)
  # unless _WINSOCKAPI_ is defined before <windows.h> is included
  add_definitions(-D_WINSOCKAPI_=)
@@ -16,14 +25,20 @@ index 1d8bd1afeb47..b80446bad63b 100644
  
  if (NOT WEBKIT_LIBRARIES_DIR)
      if (DEFINED ENV{WEBKIT_LIBRARIES})
-@@ -74,16 +78,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+@@ -74,16 +78,22 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
  
  set(CMAKE_DISABLE_PRECOMPILE_HEADERS OFF)
  
--find_package(Cairo 1.18.0 REQUIRED)
+-find_package(Cairo 1.15.12 REQUIRED)
 -find_package(CURL 7.87.0 REQUIRED)
 +find_package(Cairo 1.18.0)
 +find_package(CURL 7.87.0)
++if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++  set(ICU_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug")
++else()
++  set(ICU_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
++endif()
++set(ICU_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
  find_package(ICU 61.2 REQUIRED COMPONENTS data i18n uc)
 -find_package(JPEG 1.5.2 REQUIRED)
 -find_package(LibXml2 2.9.7 REQUIRED)
@@ -42,7 +57,7 @@ index 1d8bd1afeb47..b80446bad63b 100644
  
  # Optional packages
  find_package(LCMS2)
-@@ -181,7 +185,7 @@ WEBKIT_OPTION_DEFAULT_PORT_VALUE(ENABLE_FTPDIR PRIVATE OFF)
+@@ -191,7 +201,7 @@ WEBKIT_OPTION_DEFAULT_PORT_VALUE(ENABLE_NETSCAPE_PLUGIN_API PRIVATE OFF)
  
  WEBKIT_OPTION_END()
  
@@ -51,7 +66,7 @@ index 1d8bd1afeb47..b80446bad63b 100644
  
  SET_AND_EXPOSE_TO_BUILD(USE_ANGLE ON)
  SET_AND_EXPOSE_TO_BUILD(USE_CAIRO ON)
-@@ -207,11 +211,11 @@ WEBKIT_CHECK_HAVE_SYMBOL(USE_BORINGSSL OPENSSL_IS_BORINGSSL openssl/ssl.h)
+@@ -218,11 +228,11 @@ WEBKIT_CHECK_HAVE_SYMBOL(USE_BORINGSSL OPENSSL_IS_BORINGSSL openssl/ssl.h)
  cmake_pop_check_state()
  
  if (ENABLE_XSLT)

@@ -7,10 +7,8 @@ vcpkg_from_github(
       SHA512 aea5feb085f9adaa6efbbb840b2bdbc677c69c82c53c611ef9b527ae4ea2490a983dfdc55eb8aa471ab9975b748ea51d2cf9f2c853454904018ab8bb0ec77ad0
       HEAD_REF main
       PATCHES
-        discard_msvc_runtime_hard_code.patch
         remove_webkit_find_package.patch
-        make_dependencies_optional_except_for_icu.patch
-        set_icu_root_to_vcpkg.patch
+        tune_jsconly_options.patch
 )
 
 vcpkg_find_acquire_program(RUBY)
@@ -38,6 +36,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
       -DPORT=WinCairo
+      -DENABLE_TOOLS=OFF
 )
 vcpkg_cmake_build(
   TARGET JavaScriptCore
