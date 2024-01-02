@@ -1,0 +1,52 @@
+diff --git a/cmake/FindWrapVulkanHeaders.cmake b/cmake/FindWrapVulkanHeaders.cmake
+index 92510ae0..72a7a7ed 100644
+--- a/cmake/FindWrapVulkanHeaders.cmake
++++ b/cmake/FindWrapVulkanHeaders.cmake
+@@ -29,45 +29,8 @@ if(Vulkan_INCLUDE_DIR)
+ 
+     # Also propagate MoltenVK include directory on Apple platforms if found.
+     if(APPLE)
+-        # Check for the LunarG Vulkan SDK folder structure.
+-        set(__qt_molten_vk_include_path "${Vulkan_INCLUDE_DIR}/../../MoltenVK/include")
+-        get_filename_component(
+-            __qt_molten_vk_include_path
+-            "${__qt_molten_vk_include_path}" ABSOLUTE)
+-        if(EXISTS "${__qt_molten_vk_include_path}")
+-            target_include_directories(WrapVulkanHeaders::WrapVulkanHeaders INTERFACE
+-                ${__qt_molten_vk_include_path})
+-        endif()
+-
+-        # Check for homebrew molten-vk folder structure
+-        set(__qt_molten_vk_homebrew_include_path "${Vulkan_INCLUDE_DIR}/../../include")
+-        get_filename_component(
+-            __qt_molten_vk_homebrew_include_path
+-            "${__qt_molten_vk_homebrew_include_path}" ABSOLUTE)
+-        if(EXISTS "${__qt_molten_vk_homebrew_include_path}")
+-            target_include_directories(WrapVulkanHeaders::WrapVulkanHeaders INTERFACE
+-                ${__qt_molten_vk_homebrew_include_path})
+-        endif()
+-
+-        # Check for homebrew vulkan-headers folder structure
+-        # If instead of molten-vk folder, CMAKE_PREFIX_PATH points to Homebrew's
+-        # vulkan-headers installation, then we will not be able to find molten-vk
+-        # headers. If we assume that user has installed the molten-vk formula as
+-        # well, then we might have a chance to pick it up like this.
+-        if(Vulkan_INCLUDE_DIR MATCHES "/homebrew/Cellar/")
+-            set(__qt_standalone_molten_vk_homebrew_include_path
+-                    "${Vulkan_INCLUDE_DIR}/../../../../opt/molten-vk/include")
+-        else()
+-            set(__qt_standalone_molten_vk_homebrew_include_path
+-                    "${Vulkan_INCLUDE_DIR}/../../molten-vk/include")
+-        endif()
+-        get_filename_component(
+-            __qt_standalone_molten_vk_homebrew_include_path
+-            "${__qt_standalone_molten_vk_homebrew_include_path}" ABSOLUTE)
+-        if(EXISTS "${__qt_standalone_molten_vk_homebrew_include_path}")
+-            target_include_directories(WrapVulkanHeaders::WrapVulkanHeaders INTERFACE
+-                ${__qt_standalone_molten_vk_homebrew_include_path})
+-        endif()
++        find_path(MoltenVK_INCLUDE MoltenVK/mvk_vulkan.h REQUIRED)
++        target_include_directories(WrapVulkanHeaders::WrapVulkanHeaders INTERFACE ${MoltenVK_INCLUDE})
+     endif()
+ endif()
+ 

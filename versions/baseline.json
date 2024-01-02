@@ -5664,6 +5664,10 @@
       "baseline": "2020-09-26",
       "port-version": 2
     },
+    "moltenvk": {
+      "baseline": "1.2.6",
+      "port-version": 0
+    },
     "mongo-c-driver": {
       "baseline": "1.25.1",
       "port-version": 1
@@ -6930,7 +6934,7 @@
     },
     "qt3d": {
       "baseline": "6.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5": {
       "baseline": "5.15.12",
@@ -6950,7 +6954,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.12",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -7118,7 +7122,7 @@
     },
     "qtbase": {
       "baseline": "6.6.1",
-      "port-version": 3
+      "port-version": 4
     },
     "qtcharts": {
       "baseline": "6.6.1",

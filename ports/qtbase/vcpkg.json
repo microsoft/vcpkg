@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.6.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -416,6 +416,10 @@
     "vulkan": {
       "description": "Enable Vulkan support",
       "dependencies": [
+        {
+          "name": "moltenvk",
+          "platform": "osx"
+        },
         "vulkan"
       ]
     },
