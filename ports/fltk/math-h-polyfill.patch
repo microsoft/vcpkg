@@ -1,5 +1,5 @@
 diff --git a/FL/math.h b/FL/math.h
-index b574000..216a2ad 100644
+index b574000..bbfa480 100644
 --- a/FL/math.h
 +++ b/FL/math.h
 @@ -47,7 +47,7 @@
