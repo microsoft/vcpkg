@@ -3554,7 +3554,7 @@
     },
     "javascriptcore": {
       "baseline": "6.0",
-      "port-version": 4
+      "port-version": 5
     },
     "jbig2dec": {
       "baseline": "0.20",
