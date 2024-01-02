@@ -7,7 +7,7 @@ index 904bdf5..e751ffc 100755
  
  
 -subdirs="$subdirs gettext-runtime libtextstyle gettext-tools"
-+subdirs="$subdirs $VCPKG_GETTEXT_SUBDIRS"
++subdirs="$subdirs gettext-runtime ${VCPKG_GETTEXT_SUBDIRS/gettext-runtime/}"
  
  
  
@@ -47,9 +47,9 @@ index a7594ed..296f3b7 100644
             || { { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" = "yes"; } \
 -                && test "$PACKAGE" != gettext-runtime \
 +                && test "$PACKAGE" != pristine-gettext-runtime \
-                 && test "$PACKAGE" != gettext-tools; }; then
+                 && test "$PACKAGE" != gettext-tools \
+                 && test "$PACKAGE" != libintl; }; then
            gt_use_preinstalled_gnugettext=yes
-         else
 diff --git a/gettext-runtime/libasprintf/configure b/gettext-runtime/libasprintf/configure
 --- a/gettext-runtime/libasprintf/configure
 +++ b/gettext-runtime/libasprintf/configure
@@ -70,8 +70,8 @@ index 59e81a8..107856d 100644
  top_srcdir = @top_srcdir@
  AUTOMAKE_OPTIONS = 1.5 gnu no-dependencies
  ACLOCAL_AMFLAGS = -I m4 -I ../gettext-runtime/m4 -I ../m4 -I gnulib-m4 -I libgrep/gnulib-m4 -I libgettextpo/gnulib-m4
--SUBDIRS = intl gnulib-lib libgrep src libgettextpo po its projects styles emacs misc man m4 tests system-tests gnulib-tests examples doc
-+SUBDIRS = intl gnulib-lib libgrep src              po its projects styles       misc
+-SUBDIRS = gnulib-lib libgrep src libgettextpo po its projects styles emacs misc man m4 tests system-tests gnulib-tests examples doc
++SUBDIRS = gnulib-lib libgrep src              po its projects styles       misc
  
  # Allow users to use "gnulib-tool --update".
  
@@ -83,11 +83,11 @@ index 056a830..9abca7e 100644
                                          if { eval "gt_val=\$$gt_func_gnugettext_libc"; test "$gt_val" = "yes"; } \
             || { { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" = "yes"; } \
                  && test "$PACKAGE" != gettext-runtime \
--                && test "$PACKAGE" != gettext-tools; }; then
-+                && test "$PACKAGE" != pristine-gettext-tools; }; then
+-                && test "$PACKAGE" != gettext-tools \
++                && test "$PACKAGE" != pristine-gettext-tools \
+                 && test "$PACKAGE" != libintl; }; then
            gt_use_preinstalled_gnugettext=yes
          else
-                     LIBINTL=
 diff --git a/gettext-tools/examples/configure b/gettext-tools/examples/configure
 --- a/gettext-tools/examples/configure
 +++ b/gettext-tools/examples/configure
@@ -100,6 +100,18 @@ index ff1c212..0c0dbcd 100644
  ## -------------------- ##
  ## M4sh Initialization. ##
  ## -------------------- ##
+diff --git a/gettext-tools/src/Makefile.in b/gettext-tools/src/Makefile.in
+--- a/gettext-tools/src/Makefile.in
++++ b/gettext-tools/src/Makefile.in
+index ff1c212..0c0dbcd 100644
+@@ -4381,6 +4381,7 @@
+ 	$(AM_V_GEN)$(msgfilter_LINK) $(msgfilter_OBJECTS) $(msgfilter_LDADD) $(LIBS)
+ ../../gettext-runtime/intl/$(am__dirstamp):
+ 	@$(MKDIR_P) ../../gettext-runtime/intl
++	@$(MAKE) -C ../../gettext-runtime/intl libgnuintl.h
+ 	@: > ../../gettext-runtime/intl/$(am__dirstamp)
+ ../../gettext-runtime/intl/msgfmt-hash-string.$(OBJEXT):  \
+ 	../../gettext-runtime/intl/$(am__dirstamp)
 diff --git a/libtextstyle/Makefile.in b/libtextstyle/Makefile.in
 index ff1c212..0c0dbcd 100644
 --- a/libtextstyle/Makefile.in

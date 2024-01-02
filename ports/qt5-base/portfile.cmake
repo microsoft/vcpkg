@@ -55,6 +55,8 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/CVE-2023-37369-qtbase-5.15.diff
                             patches/CVE-2023-38197-qtbase-5.15.diff
                             patches/CVE-2023-43114-5.15.patch
+                            patches/0001-CVE-2023-51714-qtbase-5.15.diff
+                            patches/0002-CVE-2023-51714-qtbase-5.15.diff
 
                             patches/winmain_pro.patch          #Moves qtmain to manual-link
                             patches/windows_prf.patch          #fixes the qtmain dependency due to the above move

@@ -2,11 +2,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/stdexec
-    REF 6247237ca9e061401f90a8d320bfe33a61d69a31
-    SHA512 485a8c5a5cd7de9a8875aff769d2c07fb0c7d01d552a0d53c215115384baa23b50524fdb093e5b9c7b8652f463e591df31c7cc45594f7e287664fe1106f1cd3c
+    REF 6b9f3501dced0e39611f93ff795da83d24364f30
+    SHA512 d9a88b5095234c114cc45cef352662677b9f832065f3eec9c0f371547a5627672c3cf85ca19de702b2cd78ba5c1653b5e8156abe2f52d1e27ba014929b9336f2
     HEAD_REF main
-    PATCHES
-        fix-include-location.patch # From https://github.com/NVIDIA/stdexec/pull/803
 )
 
 vcpkg_from_github(

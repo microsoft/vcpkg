@@ -250,7 +250,7 @@
     },
     "openvino": {
       "description": "OpenVINO support for OpenCV DNN",
-      "supports": "!uwp",
+      "supports": "!uwp & !x86",
       "dependencies": [
         {
           "name": "opencv4",
@@ -266,8 +266,7 @@
             "auto",
             "cpu",
             "hetero"
-          ],
-          "platform": "!uwp"
+          ]
         },
         {
           "name": "openvino",
@@ -275,7 +274,7 @@
           "features": [
             "gpu"
           ],
-          "platform": "x64 & !(osx | uwp) & !static"
+          "platform": "x64 & !(osx | uwp)"
         }
       ]
     },

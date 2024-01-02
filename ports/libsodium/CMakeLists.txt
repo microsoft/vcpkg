@@ -689,9 +689,21 @@ else ()
     target_sources(${PROJECT_NAME}
         PRIVATE
             ${CMAKE_BINARY_DIR}/sodium/version.h
-
-            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/chacha20poly1305/sodium/aead_chacha20poly1305.c
-            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/xchacha20poly1305/sodium/aead_xchacha20poly1305.c
+            
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis128l/aead_aegis128l.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis128l/aegis128l_common.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis128l/aegis128l_soft.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis128l/aegis128l_soft.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis128l/implementations.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis256/aead_aegis256.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis256/aegis256_common.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis256/aegis256_soft.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis256/aegis256_soft.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis256/implementations.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aes256gcm/aead_aes256gcm.c
+            
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/chacha20poly1305/aead_chacha20poly1305.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/xchacha20poly1305/aead_xchacha20poly1305.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_auth/crypto_auth.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_auth/hmacsha256/auth_hmacsha256.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_auth/hmacsha512/auth_hmacsha512.c
@@ -705,6 +717,7 @@ else ()
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/hsalsa20/ref2/core_hsalsa20_ref2.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/hsalsa20/core_hsalsa20.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/salsa/ref/core_salsa_ref.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/softaes/softaes.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/crypto_generichash.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/generichash_blake2.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2.h
@@ -721,6 +734,8 @@ else ()
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_hash/sha512/cp/hash_sha512_cp.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_kdf/blake2b/kdf_blake2b.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_kdf/crypto_kdf.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_kdf/hkdf/kdf_hkdf_sha256.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_kdf/hkdf/kdf_hkdf_sha512.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_kx/crypto_kx.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/crypto_onetimeauth.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/poly1305/onetimeauth_poly1305.c
@@ -769,13 +784,15 @@ else ()
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/stream_salsa20.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/stream_salsa20.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/xsalsa20/stream_xsalsa20.c
-            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_verify/sodium/verify.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_verify/verify.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/asm_cet.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/chacha20_ietf_ext.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/common.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/ed25519_ref10.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/implementations.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/mutex.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/sse2_64_32.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/softaes.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/randombytes/randombytes.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/sodium/codecs.c
             ${PROJECT_SOURCE_DIR}/src/libsodium/sodium/core.c
@@ -826,7 +843,6 @@ else ()
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_nsquare.S
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_pack.S
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/ladder.S
-            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/ladder_base.S
     )
 
     if (HAVE_AVX_ASM)
@@ -889,6 +905,10 @@ else ()
 
     add_library(${PROJECT_NAME}_aesni
         OBJECT
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis128l/aegis128l_aesni.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis128l/aegis128l_aesni.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis256/aegis256_aesni.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis256/aegis256_aesni.h
             ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aes256gcm/aesni/aead_aes256gcm_aesni.c
     )
 
@@ -1097,6 +1117,7 @@ install(DIRECTORY src/libsodium/include/
     USE_SOURCE_PERMISSIONS
     PATTERN "*.h"
     PATTERN "*.h.in" EXCLUDE
+    PATTERN "*.in" EXCLUDE
     REGEX "private($|/)" EXCLUDE
 )
 

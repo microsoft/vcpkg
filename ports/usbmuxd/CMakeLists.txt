@@ -28,19 +28,19 @@ endif()
 
 find_package(unofficial-libimobiledevice CONFIG REQUIRED)
 find_package(unofficial-libimobiledevice-glue CONFIG REQUIRED)
-find_package(libusb CONFIG REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
 find_path(DIRENT_INCLUDE_DIR dirent.h REQUIRED)
 
 add_executable(usbmuxd ${USBMUXD_SOURCE})
 target_include_directories(usbmuxd PRIVATE
-    ${LIBUSB_INCLUDE_DIRS}
     ${DIRENT_INCLUDE_DIR}
 )
 target_compile_definitions(usbmuxd PRIVATE ${DEFINITIONS})
 target_link_libraries(usbmuxd PRIVATE
     unofficial::libimobiledevice::libimobiledevice
     unofficial::libimobiledevice-glue::libimobiledevice-glue
-    ${LIBUSB_LIBRARIES}
+    PkgConfig::libusb
 )
 if(WIN32)
     find_package(PThreads4W REQUIRED)
