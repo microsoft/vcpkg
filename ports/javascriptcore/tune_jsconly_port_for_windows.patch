@@ -1,0 +1,55 @@
+diff --git a/Source/cmake/OptionsJSCOnly.cmake b/Source/cmake/OptionsJSCOnly.cmake
+index e892b4274b19..6310368a232f 100644
+--- a/Source/cmake/OptionsJSCOnly.cmake
++++ b/Source/cmake/OptionsJSCOnly.cmake
+@@ -1,4 +1,8 @@
+-find_package(Threads REQUIRED)
++if (NOT WIN32)
++    find_package(Threads REQUIRED)
++else ()
++    set(PORT Win)
++endif ()
+ 
+ if (MSVC)
+     include(OptionsMSVC)
+@@ -56,11 +60,8 @@ endif ()
+ 
+ # FIXME: JSCOnly on WIN32 seems to only work with fully static build
+ # https://bugs.webkit.org/show_bug.cgi?id=172862
+-if (NOT ENABLE_STATIC_JSC AND NOT WIN32)
+-    set(JavaScriptCore_LIBRARY_TYPE SHARED)
+-    set(bmalloc_LIBRARY_TYPE OBJECT)
+-    set(WTF_LIBRARY_TYPE OBJECT)
+-endif ()
++set(JavaScriptCore_LIBRARY_TYPE SHARED)
++set(WTF_LIBRARY_TYPE SHARED)
+ 
+ if (WIN32)
+     add_definitions(-DNOMINMAX)
+@@ -94,17 +95,25 @@ if (WIN32)
+     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+ endif ()
+ 
+-string(TOLOWER ${EVENT_LOOP_TYPE} LOWERCASE_EVENT_LOOP_TYPE)
+ if (LOWERCASE_EVENT_LOOP_TYPE STREQUAL "glib")
+     find_package(GLIB 2.36 REQUIRED COMPONENTS gio gio-unix gobject)
+     SET_AND_EXPOSE_TO_BUILD(USE_GLIB 1)
+     SET_AND_EXPOSE_TO_BUILD(USE_GLIB_EVENT_LOOP 1)
+     SET_AND_EXPOSE_TO_BUILD(WTF_DEFAULT_EVENT_LOOP 0)
++elseif (WIN32)
++    SET_AND_EXPOSE_TO_BUILD(USE_GENERIC_EVENT_LOOP 0)
++    SET_AND_EXPOSE_TO_BUILD(WTF_DEFAULT_EVENT_LOOP 1)
+ else ()
+     SET_AND_EXPOSE_TO_BUILD(USE_GENERIC_EVENT_LOOP 1)
+     SET_AND_EXPOSE_TO_BUILD(WTF_DEFAULT_EVENT_LOOP 0)
+ endif ()
+ 
++if (CMAKE_BUILD_TYPE STREQUAL "Debug")
++    set(ICU_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug")
++else ()
++    set(ICU_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
++endif ()
++set(ICU_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
+ find_package(ICU 61.2 REQUIRED COMPONENTS data i18n uc)
+ if (APPLE)
+     add_definitions(-DU_DISABLE_RENAMING=1)

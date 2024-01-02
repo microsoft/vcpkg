@@ -8,35 +8,30 @@ vcpkg_from_github(
       HEAD_REF main
       PATCHES
         remove_webkit_find_package.patch
-        tune_jsconly_options.patch
+        tune_jsconly_port_for_windows.patch
 )
 
 vcpkg_find_acquire_program(RUBY)
 get_filename_component(RUBY_PATH "${RUBY}" DIRECTORY)
 vcpkg_add_to_path("${RUBY_PATH}")
-message(STATUS "RUBY_PATH: ${RUBY_PATH}")
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
-message(STATUS "PYTHON3_DIR: ${PYTHON3_DIR}")
 
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_DIR "${PERL}" DIRECTORY)
 vcpkg_add_to_path("${PERL_DIR}")
-message(STATUS "PERL_DIR: ${PERL_DIR}")
 
 vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY)
 vcpkg_add_to_path("${GPERF_DIR}")
-message(STATUS "GPERF_DIR: ${GPERF_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-      -DPORT=WinCairo
-      -DENABLE_TOOLS=OFF
+      -DPORT=JSCOnly
 )
 vcpkg_cmake_build(
   TARGET JavaScriptCore
