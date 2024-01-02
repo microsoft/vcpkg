@@ -2181,11 +2181,11 @@
       "port-version": 0
     },
     "directxmath": {
-      "baseline": "2022-12-12",
+      "baseline": "2023-12-31",
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2023-10-28",
+      "baseline": "2023-12-31",
       "port-version": 0
     },
     "directxsdk": {
@@ -2193,15 +2193,15 @@
       "port-version": 7
     },
     "directxtex": {
-      "baseline": "2023-10-28",
+      "baseline": "2023-12-31",
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2023-10-28",
+      "baseline": "2023-12-31",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2023-10-28",
+      "baseline": "2023-12-31",
       "port-version": 0
     },
     "dirent": {
@@ -6270,7 +6270,7 @@
     },
     "openexr": {
       "baseline": "3.1.8",
-      "port-version": 0
+      "port-version": 1
     },
     "openfbx": {
       "baseline": "2022-07-18",
@@ -8777,7 +8777,7 @@
       "port-version": 2
     },
     "uvatlas": {
-      "baseline": "2023-10-31",
+      "baseline": "2023-12-31",
       "port-version": 0
     },
     "uvw": {
