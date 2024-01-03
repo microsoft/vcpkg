@@ -32,6 +32,9 @@ ENV APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
   libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev \
   libxcb-cursor-dev libxkbcommon-x11-dev"
 
+# qtwayland
+ENV APT_PACKAGES="$APT_PACKAGES libwayland-dev"
+
 ## PowerShell
 ENV APT_PACKAGES="$APT_PACKAGES powershell"
 
