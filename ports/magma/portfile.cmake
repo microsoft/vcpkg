@@ -37,12 +37,12 @@ vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
 file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/magma.pc" contents)
-string(REGEX REPLACE "Cflags: [^\n]+" "" contents "${contents}")
+string(REGEX REPLACE "Cflags: [^\n]+" "Cflags: -I\${includedir}" contents "${contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/magma.pc" "${contents}")
 
 if(NOT VCPKG_BUILD_TYPE)
   file(READ "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/magma.pc" contents)
-  string(REGEX REPLACE "Cflags: [^\n]+" "" contents "${contents}")
+  string(REGEX REPLACE "Cflags: [^\n]+" "Cflags: -I\${includedir}" contents "${contents}")
   file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/magma.pc" "${contents}")
 endif()
 
