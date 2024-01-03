@@ -5,6 +5,7 @@
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
   "dependencies": [
+    "openjpeg",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -17,8 +18,7 @@
       "name": "vcpkg-get-python-packages",
       "host": true
     },
-    "zlib",
-    "openjpeg"
+    "zlib"
   ],
   "default-features": [
     "default-features"
