@@ -9,6 +9,7 @@ vcpkg_from_github(
       PATCHES
         remove_webkit_find_package.patch
         tune_jsconly_port_for_windows.patch
+        tune_wtf.patch
 )
 
 vcpkg_find_acquire_program(RUBY)

@@ -1,0 +1,47 @@
+diff --git a/Source/WTF/wtf/PlatformJSCOnly.cmake b/Source/WTF/wtf/PlatformJSCOnly.cmake
+index 50ea0dd0fe91..adac065469db 100644
+--- a/Source/WTF/wtf/PlatformJSCOnly.cmake
++++ b/Source/WTF/wtf/PlatformJSCOnly.cmake
+@@ -1,3 +1,15 @@
++if (WTF_CPU_X86_64)
++    if (MSVC)
++        add_custom_command(
++            OUTPUT ${WTF_DERIVED_SOURCES_DIR}/AsmStubsMSVC64.obj
++            MAIN_DEPENDENCY ${WTF_DIR}/wtf/win/AsmStubsMSVC64.asm
++            COMMAND ml64 -nologo -c -Fo ${WTF_DERIVED_SOURCES_DIR}/AsmStubsMSVC64.obj ${WTF_DIR}/wtf/win/AsmStubsMSVC64.asm
++            VERBATIM)
++
++        list(APPEND WTF_SOURCES ${WTF_DERIVED_SOURCES_DIR}/AsmStubsMSVC64.obj)
++    endif ()
++endif ()
++
+ list(APPEND WTF_SOURCES
+     generic/WorkQueueGeneric.cpp
+ )
+@@ -16,6 +28,8 @@ if (WIN32)
+         win/OSAllocatorWin.cpp
+         win/PathWalker.cpp
+         win/ThreadingWin.cpp
++        win/Win32Handle.cpp
++        win/RunLoopWin.cpp
+     )
+     list(APPEND WTF_PUBLIC_HEADERS
+         text/win/WCharStringExtras.h
+@@ -154,12 +168,14 @@ if (LOWERCASE_EVENT_LOOP_TYPE STREQUAL "glib")
+         ${GLIB_GOBJECT_LIBRARIES}
+         ${GLIB_LIBRARIES}
+     )
+-else ()
++elseif (LOWERCASE_EVENT_LOOP_TYPE STREQUAL "generic")
+     list(APPEND WTF_SOURCES
+         generic/RunLoopGeneric.cpp
+     )
+ endif ()
+ 
+-list(APPEND WTF_LIBRARIES
++if (NOT WTF_DEFAULT_EVENT_LOOP)
++    list(APPEND WTF_LIBRARIES
+     Threads::Threads
+-)
++    )
++endif ()
