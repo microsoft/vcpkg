@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5d2f89f..58cd9d3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,15 +32,6 @@
+ 
+ cmake_minimum_required(VERSION 3.9)
+ 
+-set(CMAKE_DISABLE_SOURCE_CHANGES ON)
+-set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+-
+-set(CMAKE_CXX_STANDARD 17)
+-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+-set(CMAKE_CXX_EXTENSIONS OFF)
+-
+-set(CMAKE_BUILD_TYPE_INIT "Release")
+-
+ project(flip LANGUAGES CXX)
+ 
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+--- a/cpp/CPP/CMakeLists.txt
++++ b/cpp/CPP/CMakeLists.txt
+@@ -48,6 +48,10 @@ target_link_libraries(${PROJECT_NAME}
+   PUBLIC
+     unofficial::tinyexr::tinyexr
+ )
++target_compile_features(${PROJECT_NAME}
++  PUBLIC
++    cxx_std_17
++)
+ install(TARGETS ${PROJECT_NAME} EXPORT unofficial-flip-targets)
+ install(FILES
+     "../common/commandline.h"
+@@ -83,6 +87,10 @@ if(FLIP_BUILD_TOOLS)
+     PRIVATE
+       unofficial::tinyexr::tinyexr
+   )
++  target_compile_features(flip_cli
++    PRIVATE
++      cxx_std_17
++  )
+   install(TARGETS flip_cli EXPORT unofficial-flip-targets)
+   set_property(TARGET flip_cli PROPERTY EXPORT_NAME "cli")
+   set_property(TARGET flip_cli PROPERTY OUTPUT_NAME "flip")

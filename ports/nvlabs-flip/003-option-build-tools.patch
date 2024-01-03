@@ -1,0 +1,56 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 12faf51..5d2f89f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -47,7 +47,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+ include(GNUInstallDirs)
+ 
+ option(FLIP_ENABLE_CUDA "Include CUDA version of flip" OFF)
+-option(FLIP_LIBRARY OFF)
++option(FLIP_BUILD_TOOLS "Build command-line tools" OFF)
+ 
+ add_subdirectory(cpp/CPP)
+ if (FLIP_ENABLE_CUDA)
+diff --git a/cpp/CPP/CMakeLists.txt b/cpp/CPP/CMakeLists.txt
+index bddeeb7..4101fbf 100644
+--- a/cpp/CPP/CMakeLists.txt
++++ b/cpp/CPP/CMakeLists.txt
+@@ -33,12 +33,7 @@
+ find_package(Stb REQUIRED)
+ find_package(tinyexr CONFIG REQUIRED)
+ 
+-if (FLIP_LIBRARY)
+-  add_library(${PROJECT_NAME} ../common/FLIP.cpp)
+-else()
+-  add_executable(${PROJECT_NAME} ../common/FLIP.cpp)
+-endif()
+-
++add_library(${PROJECT_NAME} ../common/FLIP.cpp)
+ target_include_directories(${PROJECT_NAME}
+ PRIVATE
+   ${CMAKE_CURRENT_LIST_DIR}
+@@ -72,3 +67,23 @@ install(FILES
+   DESTINATION
+     "${CMAKE_INSTALL_INCLUDEDIR}/flip/CPP"
+ )
++
++if(FLIP_BUILD_TOOLS)
++  add_executable(flip_cli ../common/FLIP.cpp)
++  target_include_directories(flip_cli
++    PRIVATE
++      ${CMAKE_CURRENT_LIST_DIR}
++      ${CMAKE_CURRENT_LIST_DIR}/../common
++  )
++  target_include_directories(flip_cli
++    PRIVATE
++      ${Stb_INCLUDE_DIR}
++  )
++  target_link_libraries(flip_cli
++    PRIVATE
++      unofficial::tinyexr::tinyexr
++  )
++  install(TARGETS flip_cli EXPORT unofficial-flip-targets)
++  set_property(TARGET flip_cli PROPERTY EXPORT_NAME "cli")
++  set_property(TARGET flip_cli PROPERTY OUTPUT_NAME "flip")
++endif()
+\ No newline at end of file

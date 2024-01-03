@@ -1,0 +1,27 @@
+diff --git a/cpp/CPP/CMakeLists.txt b/cpp/CPP/CMakeLists.txt
+index f3868bf..ab8e1b0 100644
+--- a/cpp/CPP/CMakeLists.txt
++++ b/cpp/CPP/CMakeLists.txt
+@@ -30,6 +30,9 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ #################################################################################
+ 
++find_package(Stb REQUIRED)
++find_package(tinyexr CONFIG REQUIRED)
++
+ if (FLIP_LIBRARY)
+   add_library(${PROJECT_NAME} ../common/FLIP.cpp)
+ else()
+@@ -41,4 +44,12 @@ PRIVATE
+   ${CMAKE_CURRENT_LIST_DIR}
+   ${CMAKE_CURRENT_LIST_DIR}/../common
+ )
++target_include_directories(${PROJECT_NAME}
++  PUBLIC
++    ${Stb_INCLUDE_DIR}
++)
++target_link_libraries(${PROJECT_NAME}
++  PUBLIC
++    unofficial::tinyexr::tinyexr
++)
+ install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

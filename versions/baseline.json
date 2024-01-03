@@ -6068,6 +6068,10 @@
       "baseline": "5.1.4",
       "port-version": 0
     },
+    "nvlabs-flip": {
+      "baseline": "2023-11-08",
+      "port-version": 1
+    },
     "nvtt": {
       "baseline": "2.1.2",
       "port-version": 8
