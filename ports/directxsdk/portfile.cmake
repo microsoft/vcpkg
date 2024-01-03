@@ -33,6 +33,8 @@ set(HEADERS
     ${INC_DIR}/D3DX11async.h
     ${INC_DIR}/D3DX11core.h
     ${INC_DIR}/D3DX11tex.h
+    ${INC_DIR}/d3d9.h
+    ${INC_DIR}/d3d9types.h
     ${INC_DIR}/d3dx9.h
     ${INC_DIR}/d3dx9anim.h
     ${INC_DIR}/d3dx9core.h
@@ -70,6 +72,7 @@ set(RELEASE_LIBS
     ${LIB_DIR}/d3dx9.lib
 )
 set(OTHER_LIBS
+    ${LIB_DIR}/d3d9.lib
     ${LIB_DIR}/d3dxof.lib
     ${LIB_DIR}/DxErr.lib
 )

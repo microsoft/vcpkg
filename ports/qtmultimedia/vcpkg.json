@@ -1,6 +1,7 @@
 {
   "name": "qtmultimedia",
   "version": "6.6.1",
+  "port-version": 1,
   "description": "Qt Multimedia",
   "homepage": "https://www.qt.io/",
   "license": null,
