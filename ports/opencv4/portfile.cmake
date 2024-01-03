@@ -1,17 +1,10 @@
 set(USE_QT_VERSION "6")
 
-# https://github.com/opencv/opencv/pull/24043
-vcpkg_download_distfile(ARM64_WINDOWS_FIX
-  URLS https://github.com/opencv/opencv/commit/e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch?full_index=1
-  SHA512 8ae2544e4a7ece19efe21261acc183f91202ac5352c1ac42fb86bf33d698352eff1b8962422b092240f4e8c7a691e9aa5ef20d6070adcd37e92bb94c6010ce56
-  FILENAME opencv4-e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 48738c3e7460a361274357aef1dd427082ccd59f749d6317d92a414b3741ce6116ea15ed4fedd2d47a25e456c705f3ba114357558646097bfc0e6dba9b3b865c
+    SHA512 1598ae59849e7805b3cbec5260bb501006f26edff452343b366b9262a0f48a6e09f4b2e760209cb677f2a64a7b22f4e70bc6195c104bcea74cc9fe04031d0292
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -23,14 +16,9 @@ vcpkg_from_github(
       0008-devendor-quirc.patch
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
-      0011-remove-python2.patch
       0012-fix-zlib.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
-      0019-missing-include.patch
-      0020-fix-compat-cuda12.2.patch
-      0021-static-openvino.patch # https://github.com/opencv/opencv/pull/23963
-      "${ARM64_WINDOWS_FIX}"
       0022-fix-supportqnx.patch
 )
 # Disallow accidental build of vendored copies
