@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
 	-DBUILD_TESTING=OFF
 	)
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH bin/sfcgal-config)
 vcpkg_fixup_pkgconfig()
