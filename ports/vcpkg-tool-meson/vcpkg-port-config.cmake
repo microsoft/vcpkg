@@ -18,13 +18,16 @@ else()
     message(STATUS "Found Python version '${python_ver} at ${PYTHON3}'")
 endif()
 
+set(meson_path_hash @MESON_PATH_HASH@)
+string(SUBSTRING "${meson_path_hash}" 0 6 meson_short_hash)
+
 # Setup meson:
 set(program MESON)
 set(program_version @VERSION@)
 set(program_name meson)
 set(search_names meson meson.py)
 set(ref 110642dd7337347d0278451a1df11efd93d8ed8a)
-set(path_to_search "${DOWNLOADS}/tools/meson-${program_version}")
+set(path_to_search "${DOWNLOADS}/tools/meson-${program_version}-${meson_short_hash}")
 set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
 set(download_filename "meson-${ref}.tar.gz")
 set(download_sha512 4b84dd946160bc2e773a2478a3b7de2eba9f38b8650453242c7655aa12dde393c4bf1eee4d3d9986dd9c22d96d913de916f43a36cda61f0399c622ca6afe248f)
@@ -47,15 +50,14 @@ if(NOT SCRIPT_MESON)
     z_vcpkg_apply_patches(
         SOURCE_PATH "${path_to_search}-tmp/../meson-${ref}/"
         PATCHES
+            "${CMAKE_CURRENT_LIST_DIR}/adjust-args.patch"
             "${CMAKE_CURRENT_LIST_DIR}/meson-intl.patch"
             "${CMAKE_CURRENT_LIST_DIR}/adjust-python-dep.patch"
             "${CMAKE_CURRENT_LIST_DIR}/remove-freebsd-pcfile-specialization.patch"
     )
-    file(REMOVE_RECURSE "${path_to_search}-tmp/../meson-${ref}/test cases/")
-    file(RENAME "${path_to_search}-tmp/../meson-${ref}" "${path_to_search}")
-
-    vcpkg_replace_string("${DOWNLOADS}/tools/meson-${program_version}/mesonbuild/cmake/toolchain.py" "arg.startswith('/')" "arg.startswith(('/','-'))")
-    set(SCRIPT_MESON "${DOWNLOADS}/tools/meson-${program_version}/meson.py")
+    file(COPY "${path_to_search}-tmp/../meson-${ref}/meson.py" "${path_to_search}-tmp/../meson-${ref}/mesonbuild" DESTINATION "${path_to_search}")
+    file(REMOVE_RECURSE "${path_to_search}-tmp/../meson-${ref}")
+    set(SCRIPT_MESON "${path_to_search}/meson.py")
 endif()
 
 message(STATUS "Using meson: ${SCRIPT_MESON}")
