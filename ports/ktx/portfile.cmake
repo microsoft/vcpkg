@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/KTX-Software
     REF "v${VERSION}"
-    SHA512 9ef0100a402321b00faa822eb2a50fd0d1e17fa703edacdbacf9231484d911cc254aed1fa517988537dc5b7059921a793edaeb92e8b2965d25672cd9a2589a0f
+    SHA512 5a89f8986464705ec36ac1becaddd0ff335e4c3c235468aaef0e963fcfeda4c0d669a086b91e61c16a3ae9e1fa5bf456dccf12cc65720e1a22e7cc0f30552541
     HEAD_REF master
     PATCHES
         0001-Use-vcpkg-zstd.patch
         0002-Fix-versioning.patch
         0003-mkversion.patch
         0004-quirks.patch
+        0005_no_unix2dos.patch
 )
 file(REMOVE "${SOURCE_PATH}/other_include/zstd_errors.h")
 
