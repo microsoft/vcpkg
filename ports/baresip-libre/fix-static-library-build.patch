@@ -1,4 +1,4 @@
-diff -Naur -X /Users/alfredh/git/priv/exclude re-3.8.0-orig/CMakeLists.txt re-3.8.0/CMakeLists.txt
+diff -Naur --exclude='*.rej' re-3.8.0-orig/CMakeLists.txt re-3.8.0/CMakeLists.txt
 --- re-3.8.0-orig/CMakeLists.txt	2023-12-27 13:33:04.000000000 +0100
 +++ re-3.8.0/CMakeLists.txt	2023-12-29 19:07:35.000000000 +0100
 @@ -99,7 +99,7 @@
@@ -93,7 +93,7 @@ diff -Naur -X /Users/alfredh/git/priv/exclude re-3.8.0-orig/CMakeLists.txt re-3.
    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libre
    COMPONENT Development
  )
-diff -Naur -X /Users/alfredh/git/priv/exclude re-3.8.0-orig/cmake/libre-config.cmake re-3.8.0/cmake/libre-config.cmake
+diff -Naur --exclude='*.rej' re-3.8.0-orig/cmake/libre-config.cmake re-3.8.0/cmake/libre-config.cmake
 --- re-3.8.0-orig/cmake/libre-config.cmake	2023-12-27 13:33:04.000000000 +0100
 +++ re-3.8.0/cmake/libre-config.cmake	2023-12-29 19:05:37.000000000 +0100
 @@ -1 +1,23 @@
@@ -121,7 +121,7 @@ diff -Naur -X /Users/alfredh/git/priv/exclude re-3.8.0-orig/cmake/libre-config.c
 +        set_target_properties(libre::libre PROPERTIES INTERFACE_LINK_LIBRARIES libre::re)
 +    endif()
 +endif()
-diff -Naur -X /Users/alfredh/git/priv/exclude re-3.8.0-orig/packaging/libre.pc.in re-3.8.0/packaging/libre.pc.in
+diff -Naur --exclude='*.rej' re-3.8.0-orig/packaging/libre.pc.in re-3.8.0/packaging/libre.pc.in
 --- re-3.8.0-orig/packaging/libre.pc.in	2023-12-27 13:33:04.000000000 +0100
 +++ re-3.8.0/packaging/libre.pc.in	2023-12-29 19:05:37.000000000 +0100
 @@ -7,6 +7,7 @@
