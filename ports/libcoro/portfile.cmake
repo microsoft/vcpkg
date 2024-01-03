@@ -11,6 +11,8 @@ vcpkg_from_github(
     PATCHES
         0001-allow-shared-lib.patch
         0002-disable-git-config.patch
+        0003-fix-pkgconfig-includedir.patch
+        0004-fix-pkgconfig-on-windows.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

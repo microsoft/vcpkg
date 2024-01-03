@@ -1,0 +1,10 @@
+diff --git a/libcoro.pc.in b/libcoro.pc.in
+--- a/libcoro.pc.in
++++ b/libcoro.pc.in
+@@ -1,5 +1,5 @@
+ prefix="@CMAKE_INSTALL_PREFIX@"
+ libdir="${prefix}/lib"
+-includedir="@CMAKE_INSTALL_INCLUDEDIR@"
++includedir="${prefix}/include"
+ 
+ Name: @PROJECT_NAME@
