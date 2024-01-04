@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.8.0",
-  "port-version": 13,
+  "port-version": 14,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -370,6 +370,18 @@
           ]
         },
         "vtk"
+      ]
+    },
+    "vulkan": {
+      "description": "Vulkan support for opencv dnn",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dnn"
+          ]
+        }
       ]
     },
     "webp": {
