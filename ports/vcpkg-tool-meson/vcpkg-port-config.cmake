@@ -26,11 +26,11 @@ set(program MESON)
 set(program_version @VERSION@)
 set(program_name meson)
 set(search_names meson meson.py)
-set(ref 84e437179da05db10aa2457322c54f4ec8be61f1)
+set(ref 0266440992769d39266e600a310871fbbb276fdd)
 set(path_to_search "${DOWNLOADS}/tools/meson-${program_version}-${meson_short_hash}")
 set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
 set(download_filename "meson-${ref}.tar.gz")
-set(download_sha512 5f75af79bd6e05461a7e426487c77b5600bc94eed3184a26d4deed1ef960e28b889208e1b039e67606b8290321e0b5184227a476a25dd72a4f99c41ecfb37b8c)
+set(download_sha512 6b8e83480f6659056af5323faa0bca9d848f8371b547951a801fd43dd585daaea65f3cace53d97e0dafbc7b8f1c2541d734b4366a9990ab83bb8a5fe9c99cbd2)
 
 find_program(SCRIPT_MESON NAMES ${search_names} PATHS "${path_to_search}" NO_DEFAULT_PATH) # NO_DEFAULT_PATH due top patching
 
