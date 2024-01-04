@@ -12,12 +12,10 @@ index 38e3d5f..6427980 100644
              self.paths.get('platinclude')])
  
          self.compile_args += ['-I' + path for path in inc_paths if path]
-@@ -279,9 +279,9 @@ class PythonSystemDependency(SystemDependency, _PythonDependencyBase):
+@@ -279,7 +279,7 @@ class PythonSystemDependency(SystemDependency, _PythonDependencyBase):
                      else:
                          libpath = Path(f'python{vernum}.dll')
                  else:
-                     if limited_api:
-                         vernum = vernum[0]
 -                    libpath = Path('libs') / f'python{vernum}.lib'
 +                    libpath = Path('libs') / f'..' / f'..' / f'..' / f'lib' / f'python{vernum}.lib'
                      # For a debug build, pyconfig.h may force linking with
