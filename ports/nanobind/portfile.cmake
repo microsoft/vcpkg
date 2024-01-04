@@ -28,6 +28,7 @@ vcpkg_from_github(
     PATCHES
         "${INSTALL_RULES}"
         "${MINIMIZE_CMAKE_DEPENDENCIES}"
+        find_dependency_python.patch
 )
 
 vcpkg_cmake_configure(
