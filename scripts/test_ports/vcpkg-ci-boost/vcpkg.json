@@ -9,7 +9,7 @@
       "features": [
         "mpi"
       ],
-      "platform":"!(arm & windows)"
+      "platform": "!staticcrt & !(arm & windows) & !uwp"
     },
     {
       "name": "boost-asio",
@@ -24,7 +24,7 @@
       "features": [
         "numa"
       ],
-      "platform":"!uwp & !arm & !emscripten"
+      "platform": "!uwp & !arm & !emscripten"
     },
     {
       "name": "boost-locale",
@@ -32,7 +32,7 @@
       "features": [
         "icu"
       ],
-      "platform":"!uwp"
+      "platform": "!uwp"
     },
     {
       "name": "boost-mpi",
@@ -40,11 +40,11 @@
       "features": [
         "python3"
       ],
-      "platform": "!static & !(arm & windows)"
+      "platform": "!staticcrt & !static & !uwp & !(arm & windows)"
     },
     {
-      "name":"boost-odeint",
-      "default-features":false
+      "name": "boost-odeint",
+      "default-features": false
     },
     {
       "name": "boost-odeint",
@@ -52,15 +52,7 @@
       "features": [
         "mpi"
       ],
-      "platform": "!(arm & windows)"
-    },
-    {
-      "name": "boost-python",
-      "default-features":false,
-      "features":[
-        "python2"
-      ],
-      "platform":"!(arm & windows)"
+      "platform": "!staticcrt & !uwp & !(windows & arm)"
     },
     {
       "name": "boost-python",
@@ -68,11 +60,15 @@
       "features": [
         "python3"
       ],
-      "platform":"!uwp"
+      "platform": "!emscripten & !ios & !android & !uwp"
     },
     {
-      "name":"boost-regex",
-      "default-features":false
+      "name": "boost-python",
+      "default-features": false,
+      "features": [
+        "python2"
+      ],
+      "platform": "!android & !emscripten & !ios & !(arm & osx) & !(arm & windows) & !uwp"
     },
     {
       "name": "boost-regex",
