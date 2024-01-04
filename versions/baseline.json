@@ -3754,7 +3754,7 @@
     },
     "kenlm": {
       "baseline": "20230531",
-      "port-version": 0
+      "port-version": 1
     },
     "kerbal": {
       "baseline": "2023.12.1",
