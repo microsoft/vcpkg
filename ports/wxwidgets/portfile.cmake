@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-pcre2.patch
         gtk3-link-libraries.patch
         sdl2.patch
+        fix-glegl.patch
 )
 
 vcpkg_check_features(
