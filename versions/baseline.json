@@ -4186,7 +4186,7 @@
     },
     "libdatachannel": {
       "baseline": "0.19.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libdatrie": {
       "baseline": "0.2.13",
@@ -8746,7 +8746,7 @@
     },
     "usrsctp": {
       "baseline": "0.9.5.0",
-      "port-version": 2
+      "port-version": 3
     },
     "utf8-range": {
       "baseline": "2023-11-09",
