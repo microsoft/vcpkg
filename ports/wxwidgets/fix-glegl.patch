@@ -1,20 +1,36 @@
 diff --git a/src/unix/glegl.cpp b/src/unix/glegl.cpp
-index 9e1b6b7..5e971a4 100644
+index 9e1b6b7..7407a9f 100644
 --- a/src/unix/glegl.cpp
 +++ b/src/unix/glegl.cpp
-@@ -801,6 +801,7 @@ void wxGLCanvasEGL::FreeDefaultConfig()
+@@ -43,8 +43,9 @@
  
- bool wxGLCanvasEGL::SwapBuffers()
- {
-+#ifdef GDK_WINDOWING_WAYLAND
-     // Before doing anything else, ensure that eglSwapBuffers() doesn't block:
-     // under Wayland we don't want it to because we use the surface callback to
-     // know when we should draw anyhow and with X11 it blocks for up to a
-@@ -827,6 +828,7 @@ bool wxGLCanvasEGL::SwapBuffers()
-                        this, eglGetError());
-         }
-     }
-+#endif // GDK_WINDOWING_WAYLAND
+ static const char* TRACE_EGL = "glegl";
  
-     GdkWindow* const window = GTKGetDrawingWindow();
- #ifdef GDK_WINDOWING_X11
+-#ifdef GDK_WINDOWING_WAYLAND
+-
++// We can't add a member variable to wxGLCanvasEGL in 3.2 branch, so emulate it
++// by encoding the corresponding boolean value via the presence of "this"
++// pointer in the given hash set.
+ #include "wx/hashset.h"
+ 
+ namespace
+@@ -58,8 +59,6 @@ wxGLCanvasSet gs_alreadySetSwapInterval;
+ 
+ } // anonymous namespace
+ 
+-#endif // GDK_WINDOWING_WAYLAND
+-
+ // ----------------------------------------------------------------------------
+ // wxGLContextAttrs: OpenGL rendering context attributes
+ // ----------------------------------------------------------------------------
+@@ -633,9 +632,9 @@ wxGLCanvasEGL::~wxGLCanvasEGL()
+     DestroyWaylandSubsurface();
+     g_clear_pointer(&m_wlEGLWindow, wl_egl_window_destroy);
+     g_clear_pointer(&m_wlSurface, wl_surface_destroy);
++#endif
+ 
+     gs_alreadySetSwapInterval.erase(this);
+-#endif
+ }
+ 
+ void wxGLCanvasEGL::CreateWaylandSubsurface()
