@@ -1,4 +1,3 @@
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/KhronosGroup/MoltenVK/releases/download/v${VERSION}/MoltenVK-macos.tar"
     FILENAME "MoltenVK-macos.tar"
