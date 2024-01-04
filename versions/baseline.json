@@ -517,7 +517,7 @@
       "port-version": 0
     },
     "baresip-libre": {
-      "baseline": "3.7.0",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "basisu": {
