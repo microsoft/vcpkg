@@ -1,6 +1,12 @@
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
 # This test does not support cross-compilation due to nanobind's usage of the
 # Python interpreter to figure out Python module suffix.
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+if(VCPKG_CROSSCOMPILING)
+    message(WARNING "Skipping vcpkg-ci-nanobind because it is not expected to work when cross-compiling")
+    return()
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wjakob/nanobind_example
