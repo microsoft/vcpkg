@@ -25,7 +25,6 @@ vcpkg_cmake_configure(
         -DFORCE_STATIC=OFF #already handled by vcpkg
         -DENABLE_PYTHON=OFF # kenlm.lib(bhiksha.cc.obj) : fatal error LNK1000: Internal error during IMAGE::Pass2
         -DCOMPILE_TESTS=OFF
-        -DCMAKE_CXX_STANDARD=11 # Boost v1.84.0 libraries require C++11
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT}/cmake)
