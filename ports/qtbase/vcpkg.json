@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.6.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -62,7 +62,10 @@
     "icu",
     "jpeg",
     "network",
-    "opengl",
+    {
+      "name": "opengl",
+      "platform": "!ios"
+    },
     "openssl",
     "pcre2",
     "png",
@@ -224,7 +227,10 @@
     "gui": {
       "description": "Qt Gui",
       "dependencies": [
-        "opengl",
+        {
+          "name": "opengl",
+          "platform": "!ios"
+        },
         {
           "name": "qtbase",
           "default-features": false,
