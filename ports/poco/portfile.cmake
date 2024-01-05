@@ -13,6 +13,7 @@ vcpkg_from_github(
         0004-fix-feature-sqlite3.patch
         0005-fix-error-c3861.patch
         0007-find-pcre2.patch
+        0008-install-sql-parser.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre2.h")
@@ -76,7 +77,6 @@ vcpkg_cmake_configure(
         -DPOCO_DISABLE_INTERNAL_OPENSSL=ON
         -DENABLE_APACHECONNECTOR=OFF
         -DENABLE_DATA_MYSQL=${POCO_USE_MYSQL}
-        -DPOCO_DATA_NO_SQL_PARSER=ON
     MAYBE_UNUSED_VARIABLES # these are only used when if(MSVC)
         POCO_DISABLE_INTERNAL_OPENSSL
         POCO_MT
