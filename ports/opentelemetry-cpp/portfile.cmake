@@ -11,8 +11,8 @@ vcpkg_from_github(
     PATCHES
         # Missing find_dependency for Abseil
         add-missing-find-dependency.patch
-	# Fix problems from removing NOMINMAX on Windows. Fixed in 1.14.0
-	fix-nominmax-problems.patch
+        # Fix problems from removing NOMINMAX on Windows. Fixed in 1.14.0
+        fix-nominmax-problems.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -41,7 +41,7 @@ if(WITH_OTLP_GRPC)
     # Create empty .git directory to prevent opentelemetry from cloning it during build time
     file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/opentelemetry-proto/.git")
     list(APPEND FEATURE_OPTIONS -DCMAKE_CXX_STANDARD=14)
-    list(APPEND FEATURE_OPTIONS -DgRPC_CPP_PLUGIN_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/grpc/grpc_cpp_plugin${VCPKG_HOST_EXECUTABLE_SUFFIX})
+    list(APPEND FEATURE_OPTIONS "-DgRPC_CPP_PLUGIN_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/grpc/grpc_cpp_plugin${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
 vcpkg_cmake_configure(
@@ -60,7 +60,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
