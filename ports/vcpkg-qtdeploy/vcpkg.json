@@ -1,0 +1,7 @@
+{
+  "name": "vcpkg-qtdeploy",
+  "version-date": "2024-01-01",
+  "description": "A vcpkg script to deploy Qt5 plugin DLLs",
+  "license": "MIT",
+  "supports": "windows"
+}

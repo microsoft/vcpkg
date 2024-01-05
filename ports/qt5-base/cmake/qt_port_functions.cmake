@@ -10,5 +10,6 @@ include(qt_fix_prl)
 include(qt_download_submodule)
 include(qt_build_submodule)
 include(qt_install_copyright)
+include(qt_install_runtime_for_tools)
 
 include(qt_submodule_installation)

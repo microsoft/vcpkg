@@ -1,0 +1,6 @@
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+file(INSTALL "${CURRENT_PORT_DIR}/qtdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/plugins")
+if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL "${CURRENT_PORT_DIR}/qtdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins")
+endif()
+vcpkg_install_copyright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")

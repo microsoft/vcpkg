@@ -115,7 +115,6 @@ function resolve([string]$targetBinary) {
         $targetItemFilePath = Join-Path $targetBinaryDir $_
         if (Test-Path $installedItemFilePath) {
             deployBinary $baseTargetBinaryDir $installedDir "$_"
-            if (Test-Path function:\deployPluginsIfQt) { deployPluginsIfQt $baseTargetBinaryDir (Join-Path $g_install_root 'plugins') "$_" }
             if (Test-Path function:\deployOpenNI2) { deployOpenNI2 $targetBinaryDir "$g_install_root" "$_" }
             if (Test-Path function:\deployPluginsIfMagnum) {
                 if ($g_is_debug) {
@@ -133,6 +132,7 @@ function resolve([string]$targetBinary) {
             Write-Verbose "  ${_}: $installedItemFilePath not found"
         }
     }
+    if (Test-Path function:\deployPluginsIfQt) { deployPluginsIfQt $baseTargetBinaryDir (Join-Path $g_install_root 'plugins') (Split-Path $targetBinaryPath -leaf) }
     Write-Verbose "Done Resolving $targetBinary."
 }
 

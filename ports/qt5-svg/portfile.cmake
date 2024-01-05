@@ -3,4 +3,7 @@ qt_submodule_installation(
     PATCHES
         "CVE-2023-32573-qtsvg-5.15.diff" # CVE fix from https://download.qt.io/official_releases/qt/5.15/
         "static_svg_link_fix.patch"
+    RUNTIME_FOR_TOOLS
+        Qt5Gui  # plugins
+        Qt5Svg  # for qt5-declarative
 )
