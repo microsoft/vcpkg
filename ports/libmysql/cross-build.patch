@@ -1,5 +1,26 @@
+diff --git a/cmake/os/Darwin.cmake b/cmake/os/Darwin.cmake
+index 725b9bd..289bb3d 100644
+--- a/cmake/os/Darwin.cmake
++++ b/cmake/os/Darwin.cmake
+@@ -31,13 +31,9 @@ ENDIF()
+ # We require at least XCode 10.0
+ IF(NOT FORCE_UNSUPPORTED_COMPILER)
+   IF(MY_COMPILER_IS_CLANG)
+-    CHECK_C_SOURCE_RUNS("
+-      int main()
+-      {
+-        return (__clang_major__ < 10);
+-      }" HAVE_SUPPORTED_CLANG_VERSION)
+-    IF(NOT HAVE_SUPPORTED_CLANG_VERSION)
+-      MESSAGE(FATAL_ERROR "XCode 10.0 or newer is required!")
++    IF (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 10)
++      MESSAGE(FATAL_ERROR
++        "XCode 10.0 or newer is required! Compiler version was ${CMAKE_CXX_COMPILER_VERSION}")
+     ENDIF()
+   ELSE()
+     MESSAGE(FATAL_ERROR "Unsupported compiler!")
 diff --git a/libmysql/CMakeLists.txt b/libmysql/CMakeLists.txt
-index 8e224532..2b63413b 100644
+index 8e22453..2b63413 100644
 --- a/libmysql/CMakeLists.txt
 +++ b/libmysql/CMakeLists.txt
 @@ -259,6 +259,7 @@ ELSEIF(FREEBSD)
@@ -27,7 +48,7 @@ index 8e224532..2b63413b 100644
    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/libmysql_api_test.out
    )
 diff --git a/scripts/CMakeLists.txt b/scripts/CMakeLists.txt
-index 8e933877..d971acbf 100644
+index 8e93387..d971acb 100644
 --- a/scripts/CMakeLists.txt
 +++ b/scripts/CMakeLists.txt
 @@ -69,7 +69,6 @@ ADD_CUSTOM_COMMAND(
@@ -39,7 +60,7 @@ index 8e933877..d971acbf 100644
  )
  
 diff --git a/scripts/sys_schema/CMakeLists.txt b/scripts/sys_schema/CMakeLists.txt
-index aaba3575..a0e52652 100644
+index aaba357..a0e5265 100644
 --- a/scripts/sys_schema/CMakeLists.txt
 +++ b/scripts/sys_schema/CMakeLists.txt
 @@ -221,7 +221,6 @@ MY_ADD_CUSTOM_TARGET(sql_commands
@@ -51,7 +72,7 @@ index aaba3575..a0e52652 100644
    COMMENT "Generating Sys Schema C code"
  )
 diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
-index 28cde40e..be916cbc 100644
+index 28cde40..be916cb 100644
 --- a/share/CMakeLists.txt
 +++ b/share/CMakeLists.txt
 @@ -47,8 +47,12 @@ SET(dirs
@@ -70,7 +91,7 @@ index 28cde40e..be916cbc 100644
      COMPONENT Server
      )
 diff --git a/strings/CMakeLists.txt b/strings/CMakeLists.txt
-index 665b35da..88f0743b 100644
+index 665b35d..88f0743 100644
 --- a/strings/CMakeLists.txt
 +++ b/strings/CMakeLists.txt
 @@ -69,6 +69,13 @@ SET(ZH_HANS_SRC_FILE ${CMAKE_SOURCE_DIR}/strings/lang_data/zh_hans.txt)
@@ -97,7 +118,7 @@ index 665b35da..88f0743b 100644
  SET_SOURCE_FILES_PROPERTIES(
    ${JA_HANS_DST_FILE} ${ZH_HANS_DST_FILE}
 diff --git a/utilities/CMakeLists.txt b/utilities/CMakeLists.txt
-index da34524c..dc397dae 100644
+index da34524..dc397da 100644
 --- a/utilities/CMakeLists.txt
 +++ b/utilities/CMakeLists.txt
 @@ -39,6 +39,21 @@ MYSQL_ADD_EXECUTABLE(comp_client_err
