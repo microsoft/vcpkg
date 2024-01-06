@@ -46,6 +46,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-
         session             SQLITE_ENABLE_PREUPDATE_HOOK
         omit-load-extension SQLITE_OMIT_LOAD_EXTENSION
         geopoly             SQLITE_ENABLE_GEOPOLY
+        soundex             SQLITE_SOUNDEX
     INVERTED_FEATURES
         json1               SQLITE_OMIT_JSON
 )
