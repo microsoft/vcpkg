@@ -2,8 +2,8 @@
   "name": "libvhdi",
   "version": "20231127",
   "description": "Library and tools to access the Virtual Hard Disk (VHD) image format ",
-  "license": "LGPLv3+",
   "homepage": "https://github.com/libyal/libvhdi",
+  "license": "LGPL-3.0-or-later",
   "supports": "!uwp",
   "dependencies": [
     "gettext",
