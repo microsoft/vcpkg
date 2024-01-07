@@ -15,6 +15,12 @@ vcpkg_extract_source_archive(
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
+vcpkg_replace_string(
+    "${SOURCE_PATH}/common/config.h.in"
+    "#undef"
+    "#cmakedefine01"
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
