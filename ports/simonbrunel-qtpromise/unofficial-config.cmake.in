@@ -1,6 +1,5 @@
 
 set(@PORT@_VERSION "@VERSION@")
-set(@PORT@_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/@PORT@" CACHE INTERNAL "")
 
 if(TARGET unofficial-@PORT@)
     set(unofficial-@PORT@_FOUND TRUE)
@@ -14,7 +13,7 @@ find_dependency(Qt@USE_QT_VERSION@ REQUIRED COMPONENTS Core)
 add_library(unofficial-@PORT@ INTERFACE)
 
 target_link_libraries(unofficial-@PORT@ INTERFACE Qt::Core)
-target_include_directories(unofficial-@PORT@ INTERFACE "${@PORT@_DIR}/include")
+target_include_directories(unofficial-@PORT@ INTERFACE "${CMAKE_CURRENT_LIST_DIR}/../../include/@PORT@/include")
 
 set(unofficial-@PORT@_FOUND TRUE)
 
