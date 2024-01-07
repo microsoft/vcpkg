@@ -59,14 +59,12 @@ else()
 
     if(NOT "${VCPKG_BUILD_TYPE}" STREQUAL "release")
         set(INTEL_IPSEC_CONFIGURATION "DEBUG")
-        file(INSTALL "${DEBUG_LIB}/libIPSec_MB${LIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
         set(INTEL_IPSEC_LOCATION "debug/lib/libIPSec_MB${LIB_SUFFIX}")
         configure_file("${CMAKE_CURRENT_LIST_DIR}/intel-ipsec-targets.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/intel-ipsec-targets-debug.cmake" @ONLY)
     endif()
 
     set(INTEL_IPSEC_CONFIGURATION "RELEASE")
-    
-    file(INSTALL "${RELEASE_LIB}/libIPSec_MB${LIB_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+
     set(INTEL_IPSEC_LOCATION "lib/libIPSec_MB${LIB_SUFFIX}")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/intel-ipsec-targets.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/intel-ipsec-targets-release.cmake" @ONLY)
 endif()
