@@ -10,18 +10,21 @@
   "dependencies": [
     "boost-locale",
     "curl",
-    "gettext",
+    {
+      "name": "gettext",
+      "host": true
+    },
     "gettext-libintl",
     "glib",
     "gtest",
     "jsoncpp",
     {
       "name": "libsecret",
-      "platform": "linux & x64"
+      "platform": "linux"
     },
     {
       "name": "libuuid",
-      "platform": "linux & x64"
+      "platform": "linux"
     },
     "maddy",
     "openssl",
