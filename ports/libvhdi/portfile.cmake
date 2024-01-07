@@ -15,7 +15,7 @@ vcpkg_extract_source_archive(
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH "msvscpp/libvhdi.sln"
+        PROJECT_SUBPATH "msvscpp/libvhdi/libvhdi.vcproj"
     )
 else()
     vcpkg_configure_make(

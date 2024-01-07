@@ -5,6 +5,7 @@
   "homepage": "https://github.com/libyal/libvhdi",
   "supports": "!uwp",
   "dependencies": [
+    "gettext",
     {
       "name": "gettext",
       "host": true
