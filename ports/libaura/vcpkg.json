@@ -1,21 +1,13 @@
 {
   "name": "libaura",
   "version": "2024.1.2",
+  "maintainers": "Nicholas Logozzo nlogozzo225@gmail.com",
+  "description": "A cross-platform base for native Nickvision applications.",
   "homepage": "https://github.com/NickvisionApps/libaura",
   "documentation": "https://github.com/NickvisionApps/libaura/tree/main/docs",
-  "description": "A cross-platform base for native Nickvision applications.",
   "license": "GPL-3.0",
   "supports": "(windows & x64) | (linux & x64)",
-  "maintainers": "Nicholas Logozzo nlogozzo225@gmail.com",
   "dependencies": [
-    {
-        "name": "vcpkg-cmake",
-        "host": true
-    },
-    {
-        "name": "vcpkg-cmake-config",
-        "host": true
-    },
     "boost-locale",
     "curl",
     "gettext",
@@ -24,14 +16,22 @@
     "gtest",
     "jsoncpp",
     {
-        "name": "libsecret",
-        "platform": "linux & x64"
+      "name": "libsecret",
+      "platform": "linux & x64"
     },
     {
-        "name": "libuuid",
-        "platform": "linux & x64"
+      "name": "libuuid",
+      "platform": "linux & x64"
     },
     "maddy",
-    "openssl"
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
