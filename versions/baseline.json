@@ -2597,7 +2597,7 @@
       "port-version": 0
     },
     "fbthrift": {
-      "baseline": "2023.10.02.00",
+      "baseline": "2024.01.01.00",
       "port-version": 0
     },
     "fcl": {
@@ -2641,7 +2641,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2023.10.02.00",
+      "baseline": "2024.01.01.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2721,12 +2721,12 @@
       "port-version": 2
     },
     "fmt": {
-      "baseline": "10.2.0",
+      "baseline": "10.2.1",
       "port-version": 0
     },
     "folly": {
-      "baseline": "2023.10.02.00",
-      "port-version": 1
+      "baseline": "2024.01.01.00",
+      "port-version": 0
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -2790,7 +2790,7 @@
     },
     "freetype": {
       "baseline": "2.12.1",
-      "port-version": 4
+      "port-version": 5
     },
     "freetype-gl": {
       "baseline": "2022-01-17",
@@ -3065,8 +3065,8 @@
       "port-version": 6
     },
     "google-cloud-cpp": {
-      "baseline": "2.19.0",
-      "port-version": 1
+      "baseline": "2.20.0",
+      "port-version": 0
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -3990,7 +3990,7 @@
     },
     "lapack-reference": {
       "baseline": "3.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "lastools": {
       "baseline": "2.0.2+20230206",
@@ -4002,7 +4002,7 @@
     },
     "launch-darkly-server": {
       "baseline": "2.8.6",
-      "port-version": 1
+      "port-version": 2
     },
     "lazy-importer": {
       "baseline": "2023-08-03",
@@ -4161,7 +4161,7 @@
       "port-version": 0
     },
     "libcoro": {
-      "baseline": "0.9",
+      "baseline": "0.10",
       "port-version": 0
     },
     "libcorrect": {
@@ -4582,7 +4582,7 @@
     },
     "libmysql": {
       "baseline": "8.0.34",
-      "port-version": 0
+      "port-version": 1
     },
     "libnice": {
       "baseline": "0.1.21",
@@ -5833,7 +5833,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2023.10.02.00",
+      "baseline": "2024.01.01.00",
       "port-version": 0
     },
     "mygui": {
@@ -6350,7 +6350,7 @@
     },
     "openssl": {
       "baseline": "3.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -6369,8 +6369,8 @@
       "port-version": 1
     },
     "opentelemetry-cpp": {
-      "baseline": "1.12.0",
-      "port-version": 1
+      "baseline": "1.13.0",
+      "port-version": 0
     },
     "opentelemetry-fluentd": {
       "baseline": "2.0.0",
@@ -6825,7 +6825,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2023.10.02.00",
+      "baseline": "2024.01.01.00",
       "port-version": 0
     },
     "psimd": {
@@ -6958,7 +6958,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.12",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -7126,7 +7126,7 @@
     },
     "qtbase": {
       "baseline": "6.6.1",
-      "port-version": 4
+      "port-version": 5
     },
     "qtcharts": {
       "baseline": "6.6.1",
@@ -7590,7 +7590,7 @@
     },
     "rsocket": {
       "baseline": "2021.08.30.00",
-      "port-version": 2
+      "port-version": 3
     },
     "rtabmap": {
       "baseline": "0.21.0",
@@ -9033,7 +9033,7 @@
       "port-version": 5
     },
     "wangle": {
-      "baseline": "2023.10.02.00",
+      "baseline": "2024.01.01.00",
       "port-version": 0
     },
     "wasmedge": {
@@ -9173,7 +9173,7 @@
       "port-version": 0
     },
     "wxwidgets": {
-      "baseline": "3.2.3",
+      "baseline": "3.2.4",
       "port-version": 0
     },
     "wyhash": {
