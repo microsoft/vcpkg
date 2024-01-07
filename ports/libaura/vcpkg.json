@@ -16,7 +16,6 @@
     },
     "gettext-libintl",
     "glib",
-    "gtest",
     "jsoncpp",
     {
       "name": "libsecret",
