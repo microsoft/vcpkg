@@ -9,6 +9,8 @@ vcpkg_from_github(
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 file(COPY "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 file(COPY "${SOURCE_PATH}/src" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+
+set(USE_QT_VERSION "6")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake" @ONLY)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
