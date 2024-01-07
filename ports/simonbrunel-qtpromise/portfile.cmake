@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-set(USE_QT_VERSION "6")
+set(USE_QT_VERSION "6") # for Qt5, replace this number with 5, and replace the dependency on port qtbase in vcpkg.json with port qt5-base
 configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake" @ONLY)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
