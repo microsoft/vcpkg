@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
+include(CheckIncludeFile)
+
 project(libvhdi C)
 
 find_package(ZLIB REQUIRED)
@@ -24,6 +26,8 @@ add_compile_definitions(HAVE_LOCAL_LIBFDATA)
 add_compile_definitions(HAVE_LOCAL_LIBFVALUE)
 add_compile_definitions(HAVE_LOCAL_LIBFGUID)
 add_compile_definitions(ZLIB_DLL)
+
+check_include_files(linux/fs.h HAVE_LINUX_FS_H)
 
 if(UNIX)
     configure_file(common/config.h.in common/config.h)
