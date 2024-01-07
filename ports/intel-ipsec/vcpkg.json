@@ -1,6 +1,13 @@
 {
   "name": "intel-ipsec",
-  "version": "1.1",
+  "version": "1.5",
   "description": "Intel(R) Multi-Buffer Crypto for IPsec Library",
-  "supports": "x64 & (windows | linux) & !uwp"
+  "license": "BSD-3-Clause",
+  "supports": "x64 & (windows | linux) & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

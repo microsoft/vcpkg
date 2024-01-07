@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f85b6cc4..ffeae5ae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -81,13 +81,10 @@ imb_add_target_doxy()
+ add_subdirectory(lib)
+ 
+ # build perf application
+-add_subdirectory(perf)
+ 
+ # build test applications
+-add_subdirectory(test)
+ 
+ # build example applications
+-add_subdirectory(examples)
+ 
+ #######################################
+ # configure post gen custom targets
