@@ -72,6 +72,7 @@ else()
 endif()
 
 file(INSTALL "${RELEASE_LIB}/intel-ipsec-mb.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/intel-ipsecConfig.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/intel-ipsecConfig.cmake" @ONLY)
 file(REMOVE_RECURSE "${DEBUG_LIB}" "${RELEASE_LIB}")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
