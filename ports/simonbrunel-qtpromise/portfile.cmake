@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         patches/install_headers.patch
+        patches/remove_error_flags.patch
 )
 
 vcpkg_cmake_configure(
