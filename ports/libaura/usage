@@ -1,0 +1,4 @@
+libaura provides CMake targets:
+
+find_package(libaura CONFIG REQUIRED)
+target_link_libraries(main PRIVATE libaura::libaura)
