@@ -1,165 +1,136 @@
 diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
+index 45d5935..cdb097a 100644
 --- a/CMake/CMakeLists.txt
 +++ b/CMake/CMakeLists.txt
-@@ -13,8 +13,10 @@
- # directory, but can also be used for custom projects.
- #############################################################
- 
--if(WIN32 OR APPLE)
--	set(OGRE_CMAKE_DIR "CMake")
--else()
--  set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/${OGRE_NEXT_PREFIX}/cmake")
-+if(NOT DEFINED OGRE_CMAKE_DIR)
-+  if(WIN32 OR APPLE)
-+    set(OGRE_CMAKE_DIR "CMake")
-+  else()
-+    set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/${OGRE_NEXT_PREFIX}/cmake")
-+  endif()
+@@ -18,6 +18,7 @@ if(WIN32 OR APPLE)
+ else()
+   set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/${OGRE_NEXT_PREFIX}/cmake")
  endif()
-diff --git a/CMake/Packages/FindGLSLOptimizer.cmake b/CMake/Packages/FindGLSLOptimizer.cmake
-index dd4b179..6f158fc 100644
---- a/CMake/Packages/FindGLSLOptimizer.cmake
-+++ b/CMake/Packages/FindGLSLOptimizer.cmake
-@@ -38,7 +38,7 @@ findpkg_framework(GLSL_Optimizer)
- find_path(GLSL_Optimizer_INCLUDE_DIR NAMES glsl_optimizer.h HINTS ${GLSL_Optimizer_INC_SEARCH_PATH} ${GLSL_Optimizer_PKGC_INCLUDE_DIRS} PATH_SUFFIXES GLSL_Optimizer)
- find_library(GLSL_Optimizer_LIBRARY_REL NAMES ${GLSL_Optimizer_LIBRARY_NAMES} HINTS ${GLSL_Optimizer_LIB_SEARCH_PATH} ${GLSL_Optimizer_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Release RelWithDebInfo MinSizeRel)
- find_library(GLSL_Optimizer_LIBRARY_DBG NAMES ${GLSL_Optimizer_LIBRARY_NAMES_DBG} HINTS ${GLSL_Optimizer_LIB_SEARCH_PATH} ${GLSL_Optimizer_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Debug)
--make_library_set(GLSL_Optimizer_LIBRARY)
-+make_library_set(GLSL_Optimizer)
++set(OGRE_CMAKE_DIR "share/ogre-next")
  
- findpkg_finish(GLSL_Optimizer)
- add_parent_dir(GLSL_Optimizer_INCLUDE_DIRS GLSL_Optimizer_INCLUDE_DIR)
-diff --git a/CMake/Packages/FindHLSL2GLSL.cmake b/CMake/Packages/FindHLSL2GLSL.cmake
-index 7125895..13a306f 100644
---- a/CMake/Packages/FindHLSL2GLSL.cmake
-+++ b/CMake/Packages/FindHLSL2GLSL.cmake
-@@ -38,7 +38,7 @@ findpkg_framework(HLSL2GLSL)
- find_path(HLSL2GLSL_INCLUDE_DIR NAMES hlsl2glsl.h HINTS ${HLSL2GLSL_INC_SEARCH_PATH} ${HLSL2GLSL_PKGC_INCLUDE_DIRS} PATH_SUFFIXES HLSL2GLSL)
- find_library(HLSL2GLSL_LIBRARY_REL NAMES ${HLSL2GLSL_LIBRARY_NAMES} HINTS ${HLSL2GLSL_LIB_SEARCH_PATH} ${HLSL2GLSL_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Release RelWithDebInfo MinSizeRel)
- find_library(HLSL2GLSL_LIBRARY_DBG NAMES ${HLSL2GLSL_LIBRARY_NAMES_DBG} HINTS ${HLSL2GLSL_LIB_SEARCH_PATH} ${HLSL2GLSL_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" Debug)
--make_library_set(HLSL2GLSL_LIBRARY)
-+make_library_set(HLSL2GLSL)
- 
- findpkg_finish(HLSL2GLSL)
- add_parent_dir(HLSL2GLSL_INCLUDE_DIRS HLSL2GLSL_INCLUDE_DIR)
-diff --git a/CMake/Packages/FindNVAPI.cmake b/CMake/Packages/FindNVAPI.cmake
-index 95c70cd..893ce01 100644
---- a/CMake/Packages/FindNVAPI.cmake
-+++ b/CMake/Packages/FindNVAPI.cmake
-@@ -44,7 +44,7 @@ findpkg_framework(NVAPI)
- find_path(NVAPI_INCLUDE_DIR NAMES nvapi.h HINTS ${NVAPI_FRAMEWORK_INCLUDES} ${NVAPI_INC_SEARCH_PATH} ${NVAPI_PKGC_INCLUDE_DIRS} PATH_SUFFIXES NVAPI)
- find_library(NVAPI_LIBRARY_REL NAMES ${NVAPI_LIBRARY_NAMES} HINTS ${NVAPI_LIB_SEARCH_PATH} ${NVAPI_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" release relwithdebinfo minsizerel)
- find_library(NVAPI_LIBRARY_DBG NAMES ${NVAPI_LIBRARY_NAMES_DBG} HINTS ${NVAPI_LIB_SEARCH_PATH} ${NVAPI_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" debug)
--make_library_set(NVAPI_LIBRARY)
-+make_library_set(NVAPI)
- 
- findpkg_finish(NVAPI)
- add_parent_dir(NVAPI_INCLUDE_DIRS NVAPI_INCLUDE_DIR)
-\ No newline at end of file
-diff --git a/CMake/Packages/FindPOCO.cmake b/CMake/Packages/FindPOCO.cmake
-index 6b6d7fa..3667b8b 100644
---- a/CMake/Packages/FindPOCO.cmake
-+++ b/CMake/Packages/FindPOCO.cmake
-@@ -50,7 +50,7 @@ findpkg_framework(POCO)
- find_path(POCO_INCLUDE_DIR NAMES Poco/Foundation.h HINTS ${POCO_INC_SEARCH_PATH} ${POCO_PKGC_INCLUDE_DIRS} PATH_SUFFIXES Foundation/include)
- find_library(POCO_LIBRARY_REL NAMES ${POCO_LIBRARY_NAMES} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
- find_library(POCO_LIBRARY_DBG NAMES ${POCO_LIBRARY_NAMES_DBG} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
--make_library_set(POCO_LIBRARY)
-+make_library_set(POCO)
- 
- findpkg_finish(POCO)
- 
-@@ -66,7 +66,7 @@ get_debug_names(POCO_Util_LIBRARY_NAMES)
- find_path(POCO_Util_INCLUDE_DIR NAMES Poco/Util/Util.h HINTS ${POCO_INCLUDE_DIR} ${POCO_INC_SEARCH_PATH} ${POCO_PKGC_INCLUDE_DIRS} PATH_SUFFIXES Util/include)
- find_library(POCO_Util_LIBRARY_REL NAMES ${POCO_Util_LIBRARY_NAMES} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
- find_library(POCO_Util_LIBRARY_DBG NAMES ${POCO_Util_LIBRARY_NAMES_DBG} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
--make_library_set(POCO_Util_LIBRARY)
-+make_library_set(POCO_Util)
- findpkg_finish(POCO_Util)
- 
- # Look for Poco's Net package
-@@ -76,7 +76,7 @@ get_debug_names(POCO_Net_LIBRARY_NAMES)
- find_path(POCO_Net_INCLUDE_DIR NAMES Poco/Net/Net.h HINTS ${POCO_INCLUDE_DIR} ${POCO_INC_SEARCH_PATH} ${POCO_PKGC_INCLUDE_DIRS} PATH_SUFFIXES Net/include)
- find_library(POCO_Net_LIBRARY_REL NAMES ${POCO_Net_LIBRARY_NAMES} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
- find_library(POCO_Net_LIBRARY_DBG NAMES ${POCO_Net_LIBRARY_NAMES_DBG} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
--make_library_set(POCO_Net_LIBRARY)
-+make_library_set(POCO_Net)
- findpkg_finish(POCO_Net)
- 
- # Look for Poco's NetSSL package
-@@ -86,7 +86,7 @@ get_debug_names(POCO_NetSSL_LIBRARY_NAMES)
- find_path(POCO_NetSSL_INCLUDE_DIR NAMES Poco/Net/NetSSL.h HINTS ${POCO_INCLUDE_DIR} ${POCO_INC_SEARCH_PATH} ${POCO_PKGC_INCLUDE_DIRS} PATH_SUFFIXES NetSSL/include)
- find_library(POCO_NetSSL_LIBRARY_REL NAMES ${POCO_NetSSL_LIBRARY_NAMES} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
- find_library(POCO_NetSSL_LIBRARY_DBG NAMES ${POCO_NetSSL_LIBRARY_NAMES_DBG} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
--make_library_set(POCO_NetSSL_LIBRARY)
-+make_library_set(POCO_NetSSL)
- findpkg_finish(POCO_NetSSL)
- 
- # Look for Poco's XML package
-@@ -96,6 +96,6 @@ get_debug_names(POCO_XML_LIBRARY_NAMES)
- find_path(POCO_XML_INCLUDE_DIR NAMES Poco/XML/XML.h HINTS ${POCO_INCLUDE_DIR} ${POCO_INC_SEARCH_PATH} ${POCO_PKGC_INCLUDE_DIRS} PATH_SUFFIXES XML/include)
- find_library(POCO_XML_LIBRARY_REL NAMES ${POCO_XML_LIBRARY_NAMES} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
- find_library(POCO_XML_LIBRARY_DBG NAMES ${POCO_XML_LIBRARY_NAMES_DBG} HINTS ${POCO_LIB_SEARCH_PATH} ${POCO_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Linux/i686)
--make_library_set(POCO_XML_LIBRARY)
-+make_library_set(POCO_XML)
- findpkg_finish(POCO_XML)
- 
+ set(INST_FILES
+   Packages/FindRapidjson.cmake
+diff --git a/CMake/ConfigureBuild.cmake b/CMake/ConfigureBuild.cmake
+index 9d3b1b2..11fc345 100644
+--- a/CMake/ConfigureBuild.cmake
++++ b/CMake/ConfigureBuild.cmake
+@@ -284,6 +284,11 @@ if (UNIX)
+     # there is no pkgconfig file for freeimage, so we need to add that lib manually
+     set(OGRE_ADDITIONAL_LIBS "${OGRE_ADDITIONAL_LIBS} -lfreeimage")
+     configure_file(${OGRE_TEMPLATES_DIR}/OGREStatic.pc.in ${OGRE_BINARY_DIR}/pkgconfig/${OGRE_NEXT_PREFIX}.pc @ONLY)
++    if(NOT X11_FOUND)
++      file(READ "${OGRE_BINARY_DIR}/pkgconfig/${OGRE_NEXT_PREFIX}.pc" ogre_pc)
++      string(REPLACE ", x11, xt, xaw7, gl" "" ogre_pc "${ogre_pc}")
++      file(WRITE "${OGRE_BINARY_DIR}/pkgconfig/${OGRE_NEXT_PREFIX}.pc" "${ogre_pc}")
++    endif()
+   else ()
+     configure_file(${OGRE_TEMPLATES_DIR}/OGRE.pc.in ${OGRE_BINARY_DIR}/pkgconfig/${OGRE_NEXT_PREFIX}.pc @ONLY)
+   endif ()
 diff --git a/CMake/Utils/FindPkgMacros.cmake b/CMake/Utils/FindPkgMacros.cmake
-index 53111e0..8dffbbc 100644
+index 53111e0..e0f6716 100644
 --- a/CMake/Utils/FindPkgMacros.cmake
 +++ b/CMake/Utils/FindPkgMacros.cmake
-@@ -79,15 +79,21 @@ endmacro (use_pkgconfig)
- 
- # Couple a set of release AND debug libraries (or frameworks)
+@@ -81,6 +81,12 @@ endmacro (use_pkgconfig)
  macro(make_library_set PREFIX)
--  if (${PREFIX}_FWK)
--    set(${PREFIX} ${${PREFIX}_FWK})
--  elseif (${PREFIX}_REL AND ${PREFIX}_DBG)
--    set(${PREFIX} optimized ${${PREFIX}_REL} debug ${${PREFIX}_DBG})
--  elseif (${PREFIX}_REL)
--    set(${PREFIX} ${${PREFIX}_REL})
--  elseif (${PREFIX}_DBG)
--    set(${PREFIX} ${${PREFIX}_DBG})
--  endif ()
-+  include(${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
-+  set(PREFIX_LIB "${PREFIX}_LIBRARY")
-+  if (${PREFIX_LIB}_FWK)
-+    set(${PREFIX_LIB} ${${PREFIX_LIB}_FWK})
-+  elseif (${PREFIX_LIB}_REL AND ${PREFIX_LIB}_DBG)
-+    set(${PREFIX_LIB}_RELEASE ${${PREFIX_LIB}_REL} CACHE STRING "")
-+    set(${PREFIX_LIB}_DEBUG ${${PREFIX_LIB}_DBG} CACHE STRING "")
-+    select_library_configurations(${PREFIX})
-+  elseif (${PREFIX_LIB}_REL)
-+    set(${PREFIX_LIB} ${${PREFIX_LIB}_REL})
-+    set(${PREFIX_LIB}_RELEASE ${${PREFIX_LIB}_REL})
-+  elseif (${PREFIX_LIB}_DBG)
-+    set(${PREFIX_LIB} ${${PREFIX_LIB}_DBG})
-+    set(${PREFIX_LIB}_DEBUG ${${PREFIX_LIB}_DBG})
-+  endif()
- endmacro(make_library_set)
+   if (${PREFIX}_FWK)
+     set(${PREFIX} ${${PREFIX}_FWK})
++  elseif (${PREFIX}_REL OR ${PREFIX}_DBG)
++    include("${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake")
++    set(${PREFIX}_RELEASE "${${PREFIX}_REL}")
++    set(${PREFIX}_DEBUG "${${PREFIX}_DBG}")
++    string(REPLACE "_LIBRARY" "" PREFIX_BASENAME "${PREFIX}")
++    select_library_configurations(${PREFIX_BASENAME})
+   elseif (${PREFIX}_REL AND ${PREFIX}_DBG)
+     set(${PREFIX} optimized ${${PREFIX}_REL} debug ${${PREFIX}_DBG})
+   elseif (${PREFIX}_REL)
+diff --git a/CMake/Utils/OgreConfigTargets.cmake b/CMake/Utils/OgreConfigTargets.cmake
+index d8e0208..1fdb63c 100644
+--- a/CMake/Utils/OgreConfigTargets.cmake
++++ b/CMake/Utils/OgreConfigTargets.cmake
+@@ -41,7 +41,7 @@ if (NOT OGRE_RUNTIME_OUTPUT)
+   set(OGRE_RUNTIME_OUTPUT ${OGRE_BINARY_DIR}/bin)
+ endif ()
  
- # Generate debug names from given release names
+-if (WIN32)
++if (0)
+   set(OGRE_RELEASE_PATH "/Release")
+   set(OGRE_RELWDBG_PATH "/RelWithDebInfo")
+   set(OGRE_MINSIZE_PATH "/MinSizeRel")
+@@ -52,7 +52,7 @@ if (WIN32)
+   set(OGRE_LIB_DEBUG_PATH "/Debug")
+   set(OGRE_PLUGIN_PATH "/opt")
+   set(OGRE_SAMPLE_PATH "/opt/samples")
+-elseif (UNIX)
++elseif (1)
+   set(OGRE_RELEASE_PATH "")
+   set(OGRE_RELWDBG_PATH "")
+   set(OGRE_MINSIZE_PATH "")
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 48af55b..b18ac57 100644
+index 2786e35..7a92a7b 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -282,7 +282,7 @@ if (OGRE_BUILD_PLATFORM_APPLE_IOS)
- 
-   # Set build variables
-   set(XCODE_ATTRIBUTE_SDKROOT iphoneos)
--  if(CMAKE_GENERATOR STREQUAL "Unix Makefiles")
-+  if(1)
+@@ -299,7 +299,6 @@ if (OGRE_BUILD_PLATFORM_APPLE_IOS)
      execute_process(COMMAND xcodebuild -version -sdk "${XCODE_ATTRIBUTE_SDKROOT}" Path | head -n 1 OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
      string(REGEX REPLACE "(\r?\n)+$" "" CMAKE_OSX_SYSROOT "${CMAKE_OSX_SYSROOT}")
    else()
+-    set(CMAKE_OSX_SYSROOT iphoneos)
+   endif()
+ 
+   set(CMAKE_EXE_LINKER_FLAGS "-framework Foundation -framework CoreGraphics -framework QuartzCore -framework UIKit")
+@@ -364,7 +363,6 @@ elseif (APPLE AND NOT OGRE_BUILD_PLATFORM_APPLE_IOS)
+     execute_process(COMMAND xcodebuild -version -sdk "${XCODE_ATTRIBUTE_SDKROOT}" Path | head -n 1 OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+     string(REGEX REPLACE "(\r?\n)+$" "" CMAKE_OSX_SYSROOT "${CMAKE_OSX_SYSROOT}")
+   else()
+-    set(CMAKE_OSX_SYSROOT macosx)
+   endif()
+ 
+   set( CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES )
 diff --git a/OgreMain/CMakeLists.txt b/OgreMain/CMakeLists.txt
+index b698b84..75fef2c 100644
 --- a/OgreMain/CMakeLists.txt
 +++ b/OgreMain/CMakeLists.txt
-@@ -438,7 +438,5 @@ if (APPLE)
-     set_target_properties(${OGRE_NEXT}Main PROPERTIES
+@@ -439,7 +439,7 @@ if (APPLE)
          LINK_FLAGS "-framework IOKit -framework Cocoa -framework Carbon -framework OpenGL -framework CoreVideo"
      )
--
+ 
 -    set(OGRE_OSX_BUILD_CONFIGURATION "$(PLATFORM_NAME)/$(CONFIGURATION)")
++    set(OGRE_OSX_BUILD_CONFIGURATION ".")
    
  	add_custom_command(TARGET ${OGRE_NEXT}Main POST_BUILD
+ 		COMMAND mkdir ARGS -p ${OGRE_BINARY_DIR}/lib/${OGRE_OSX_BUILD_CONFIGURATION}/Ogre.framework/Headers/Threading
+@@ -494,6 +494,9 @@ use_precompiled_header(${OGRE_NEXT}Main
+ )
+ 
+ # install ${OGRE_NEXT}Main
++if(MSVC)
++  set(OGRE_LIB_DIRECTORY lib/manual-link)
++endif()
+ ogre_config_lib(${OGRE_NEXT}Main TRUE)
+ foreach(HEADER_FILE ${HEADER_FILES})
+ 	string(REGEX REPLACE "((${CMAKE_CURRENT_SOURCE_DIR}|${OGRE_BINARY_DIR})/)?(include|src)/" "" RELATIVE_HEADER_FILE ${HEADER_FILE})
+diff --git a/OgreMain/include/OgrePlatform.h b/OgreMain/include/OgrePlatform.h
+index 6754c4e..6b1879d 100644
+--- a/OgreMain/include/OgrePlatform.h
++++ b/OgreMain/include/OgrePlatform.h
+@@ -504,7 +504,7 @@ THE SOFTWARE.
+ 
+     // Define whether or not Ogre compiled with NEON support.
+     #if OGRE_DOUBLE_PRECISION == 0 && OGRE_CPU == OGRE_CPU_ARM && \
+-        ( defined(__aarch64__) || defined(__ARM_NEON__) || defined(_WIN32_WINNT_WIN8) && _WIN32_WINNT >= _WIN32_WINNT_WIN8 )
++        ( defined(__aarch64__) || defined(__ARM_NEON__) || defined(_M_ARM64) || defined(_WIN32_WINNT_WIN8) && _WIN32_WINNT >= _WIN32_WINNT_WIN8 )
+         #define __OGRE_HAVE_NEON  1
+     #endif
+ #endif
+diff --git a/OgreMain/include/OgreString.h b/OgreMain/include/OgreString.h
+index 8693c57..b4179ea 100644
+--- a/OgreMain/include/OgreString.h
++++ b/OgreMain/include/OgreString.h
+@@ -222,7 +222,7 @@ namespace Ogre {
+ #   endif
+ #elif OGRE_COMPILER == OGRE_COMPILER_MSVC && OGRE_COMP_VER >= 1600 && OGRE_COMP_VER < 1910 && !defined(STLPORT) // VC++ 10.0
+     typedef ::std::tr1::hash< _StringBase > _StringHash;
+-#elif !defined( _STLP_HASH_FUN_H )
++#elif 0
+     typedef stdext::hash_compare< _StringBase, std::less< _StringBase > > _StringHash;
+ #else
+     typedef std::hash< _StringBase > _StringHash;
