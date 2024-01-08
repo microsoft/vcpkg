@@ -63,6 +63,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         ${COMMON_OPTIONS}
         ${OPENBLAS_EXTRA_OPTIONS}
+        -DONLY_CBLAS=1
 )
 
 vcpkg_cmake_install()
