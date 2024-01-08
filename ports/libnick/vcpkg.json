@@ -1,19 +1,15 @@
 {
-  "name": "libaura",
-  "version": "2024.1.2",
+  "name": "libnick",
+  "version": "2024.1.3",
   "maintainers": "Nicholas Logozzo nlogozzo225@gmail.com",
   "description": "A cross-platform base for native Nickvision applications.",
-  "homepage": "https://github.com/NickvisionApps/libaura",
-  "documentation": "https://github.com/NickvisionApps/libaura/tree/main/docs",
+  "homepage": "https://github.com/NickvisionApps/libnick",
+  "documentation": "https://github.com/NickvisionApps/libnick/tree/main/docs",
   "license": "GPL-3.0",
   "supports": "(windows & x64) | (linux & x64)",
   "dependencies": [
     "boost-locale",
     "curl",
-    {
-      "name": "gettext",
-      "host": true
-    },
     "gettext-libintl",
     {
       "name": "glib",
