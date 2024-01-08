@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDAB/KDDockWidgets
-    REF 9990300006854afa4b4fa796912da067e770046a 
-    SHA512 2207b3c021957d9be8652cad24c0b5e37b07fa02ffeeeb7dab57feaeade7973b580b853d6b69db15015b62cc1397459e27d032131292baaeb17a0633e287fa3c 
+    REF "v${VERSION}" 
+    SHA512 4dccf24e901ab58d645478bc62ff9e72224dc11c3f39c53f5be5b188ece1bf8c682d50a42ece7a38400adfeb6147336795fcb86e903fd0957949c83f852c9b53 
     HEAD_REF master
-    PATCHES
-        fix_find_package.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KD_STATIC)
@@ -24,7 +22,6 @@ vcpkg_cmake_configure(
         ${_qarg_OPTIONS}
         -DKDDockWidgets_QT6=ON
         -DKDDockWidgets_STATIC=${KD_STATIC}
-        -DKDDockWidgets_QTQUICK=OFF
         -DKDDockWidgets_PYTHON_BINDINGS=OFF
         -DKDDockWidgets_EXAMPLES=OFF
 )
@@ -39,4 +36,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

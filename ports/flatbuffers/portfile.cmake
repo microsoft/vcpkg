@@ -25,6 +25,8 @@ vcpkg_cmake_configure(
         -DFLATBUFFERS_BUILD_TESTS=OFF
         -DFLATBUFFERS_BUILD_GRPCTEST=OFF
         ${options}
+    OPTIONS_DEBUG
+        -DFLATBUFFERS_BUILD_FLATC=OFF
 )
 
 vcpkg_cmake_install()
@@ -40,8 +42,8 @@ else()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/flatbuffers/pch")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -250,7 +250,7 @@ else
     cp "$buildDir/vcpkg" "$vcpkgRootDir/"
 fi
 
-"$vcpkgRootDir/vcpkg" version
+"$vcpkgRootDir/vcpkg" version --disable-metrics
 
 # Apply the disable-metrics marker file.
 if [ "$vcpkgDisableMetrics" = "ON" ]; then

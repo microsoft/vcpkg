@@ -9,7 +9,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 
 如需获取有关可用命令的简短描述，请在编译 vcpkg 后执行 `vcpkg help` 或执行 `vcpkg help [command]` 来获取具体的帮助信息。
 
-* GitHub: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
+* GitHub: 端口位于 [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)，程序位于 [https://github.com/microsoft/vcpkg-tool](https://github.com/microsoft/vcpkg-tool)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/)， #vcpkg 频道
 * Discord: [\#include \<C++\>](https://www.includecpp.org)， #🌏vcpkg 频道
 * 文档: [Documentation](https://learn.microsoft.com/vcpkg)
@@ -28,7 +28,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
     - [Visual Studio CMake 工程中使用 vcpkg](#visual-studio-cmake-工程中使用-vcpkg)
     - [CLion 中使用 vcpkg](#clion-中使用-vcpkg)
     - [将 vcpkg 作为一个子模块](#将-vcpkg-作为一个子模块)
-- [Tab补全/自动补全](#tab补全自动补全)
+- [Tab补全/自动补全](#tab-补全自动补全)
 - [示例](#示例)
 - [贡献](#贡献)
 - [开源协议](#开源协议)
@@ -48,11 +48,7 @@ vcpkg 团队和贡献者可以在这里看到它，
 并可能将这个库添加到 vcpkg。
 
 安装并运行 vcpkg 后，
-您可能希望将 [TAB 补全](#tab补全自动补全) 添加到您的 Shell 中。
-
-最后，如果您对 vcpkg 的未来感兴趣，请查看 [清单][getting-started:manifest-spec]！
-这是一项实验性功能，可能会出现错误。
-因此，请尝试一下并[打开所有问题][contributing:submit-issue]!
+您可能希望将 [TAB 补全](#tab-补全自动补全) 添加到您的 Shell 中。
 
 ## 快速开始: Windows
 
@@ -114,8 +110,6 @@ vcpkg 团队和贡献者可以在这里看到它，
 
 在 CMake 中，您仍需通过 `find_package` 来使用 vcpkg 中已安装的库。
 请查阅 [CMake 章节](#在-cmake-中使用-vcpkg) 获取更多信息，其中包含了在 IDE 中使用 CMake 的内容。
-
-对于其他工具 (包括 Visual Studio Code)，请查阅 [集成指南][getting-started:integration]。
 
 ## 快速开始: Unix
 
@@ -267,7 +261,7 @@ $ ./vcpkg integrate bash # 或 zsh
 
 然后重新启动控制台。
 
-## 示例
+# 示例
 
 请查看 [文档](https://learn.microsoft.com/vcpkg) 获取具体示例，
 其包含 [安装并使用包](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages)，
@@ -279,7 +273,7 @@ $ ./vcpkg integrate bash # 或 zsh
 
 观看 4 分钟 [demo 视频](https://www.youtube.com/watch?v=y41WFKbQFTw)。
 
-## 贡献
+# 贡献
 
 Vcpkg是一个开源项目，并通过您的贡献不断发展。
 下面是一些您可以贡献的方式:
@@ -306,7 +300,7 @@ vcpkg会将库的协议文件放置在 `installed/<triplet>/share/<port>/copyrig
 
 大多数vcpkg中的库采用其官方发布的构建工具来构建它们，并从其官方渠道下载源码及构建工具。
 若您的环境包含防火墙或反病毒程序，为了避免构建失败，请考虑在禁用防火墙与反病毒程序的环境中构建它们一次，
-再将它们生成的二进制缓存共享给原始环境中使用。
+再将它们生成的[二进制缓存](https://learn.microsoft.com/vcpkg/users/assetcaching)共享给原始环境中使用。
 
 # 数据收集
 

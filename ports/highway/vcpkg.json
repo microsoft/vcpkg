@@ -1,6 +1,6 @@
 {
   "name": "highway",
-  "version": "1.0.4",
+  "version": "1.0.7",
   "description": "Performance-portable, length-agnostic SIMD with runtime dispatch",
   "homepage": "https://github.com/google/highway",
   "license": "Apache-2.0",

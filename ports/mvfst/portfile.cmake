@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO facebookincubator/mvfst
-    REF aeee9b372827cea28697755ea1f68bfc5288548a #2023-05-18
-    SHA512 feece3f05537b58270507d9423cc95fe577532997b857586aa49c2000516f3297c487696b659a35f194f0e970b8e84ff0c1a7446d4af7b400a2183704df995a2
+    REPO facebook/mvfst
+    REF "v${VERSION}"
+    SHA512 6bcc4df79b42bafb06ee69f253733dd5136ef329b8009fc5677f62c3476d205f5f0cdcca242d0bde15914bf487a37aeeab1adb4ad555d2edd5e6b3935e84dd37
     HEAD_REF main
-    PATCHES
-        fix_format.patch
 )
 
 vcpkg_cmake_configure(

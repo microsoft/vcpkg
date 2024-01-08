@@ -97,7 +97,7 @@ index b2d9f5d57d..4efb826a05 100644
 -    <ClCompile>
 +    <ClCompile Condition="false">
        <AdditionalIncludeDirectories>$(PySourcePath)Modules\expat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PYEXPAT_EXPORTS;HAVE_EXPAT_H;XML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PYEXPAT_EXPORTS;XML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
      </ClCompile>
    </ItemDefinitionGroup>
 -  <ItemGroup>

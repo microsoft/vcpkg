@@ -141,6 +141,7 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     # Some upstream projects don't respect STANDARD_LIBRARIES_INIT and rely on default libs instead.
     set(_vcpkg_common_lflags "/MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG /MANIFESTUAC:NO /SUBSYSTEM:WINDOWS,10.0 /DEFAULTLIB:${_vcpkg_default_lib}")
 
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS " ${_vcpkg_common_lflags} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
     string(APPEND CMAKE_SHARED_LINKER_FLAGS " ${_vcpkg_common_lflags} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
     string(APPEND CMAKE_EXE_LINKER_FLAGS " ${_vcpkg_common_lflags} ${VCPKG_LINKER_FLAGS} ${_vcpkg_nodefaultlib}")
 
@@ -149,9 +150,11 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
     unset(_vcpkg_default_lib)
     unset(_vcpkg_common_lflags)
 
+    set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
     set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
     string(APPEND CMAKE_STATIC_LINKER_FLAGS_DEBUG_INIT " /nologo ")
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS_DEBUG_INIT " /nologo ")
     string(APPEND CMAKE_SHARED_LINKER_FLAGS_DEBUG_INIT " /nologo ")
     string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG_INIT " /nologo ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_DEBUG} ")
 endif()

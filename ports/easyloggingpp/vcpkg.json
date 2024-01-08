@@ -1,9 +1,9 @@
 {
   "name": "easyloggingpp",
-  "version": "9.97.0",
-  "port-version": 3,
+  "version": "9.97.1",
   "description": "Easylogging++ is a single header efficient logging library for C++ applications.",
-  "homepage": "https://github.com/amrayn/easyloggingpp",
+  "homepage": "https://github.com/abumq/easyloggingpp",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

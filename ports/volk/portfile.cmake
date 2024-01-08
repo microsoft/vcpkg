@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/volk
-    REF 97e029bea37ae8ef443a1de684207127717de606
-    SHA512 a50b2c90499688b66bfa88a7cde438aa78dd27a43a6fe375f348b2587e321540306d0c383272091b7f78a64a8415cfe9e908d0dfc949562dfee8e0e3b4380acc
+    REF "${VERSION}"
+    SHA512 a273ecbd68ade7677bd4cc2cf32d0f728ac959ad48c506beff413dc7e6b11b1d5f74ee1d213a71f1452980b291d6ef41ad8e3a4a0c4e6839e9918594d1f98715
     HEAD_REF master
 )
 
@@ -21,4 +21,5 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/volk)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

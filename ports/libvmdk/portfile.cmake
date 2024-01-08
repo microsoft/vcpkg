@@ -1,16 +1,15 @@
-set(LIB_VERSION 20200926)
-set(LIB_FILENAME libvmdk-alpha-${LIB_VERSION}.tar.gz)
+set(LIB_FILENAME libvmdk-alpha-${VERSION}.tar.gz)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/libyal/libvmdk/releases/download/${LIB_VERSION}/${LIB_FILENAME}"
+    URLS "https://github.com/libyal/libvmdk/releases/download/${VERSION}/${LIB_FILENAME}"
     FILENAME "${LIB_FILENAME}"
-    SHA512 e70c42580dc58ad0a6459fe461504a8ef128f8d5df9d500f84f316e627232606f22eb4906fc1debc3e75e71daa6a07951af80822695de13d5e466adda4cfd5e0
+    SHA512 7d7ea415d7c2cb1077d591d53ab3c37a7ab6e01dc9525159a70588e6f55e56bbef4d3f49f6e1c01ff0b1ddcede5ec2beb05aca7f12e5212843761e14f6459bcb
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    SOURCE_BASE "${LIB_VERSION}"
+    SOURCE_BASE "${VERSION}"
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

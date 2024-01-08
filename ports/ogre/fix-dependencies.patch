@@ -133,7 +133,7 @@ index 0c74ce2..a302b1c 100644
  if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
 +  find_package(imgui CONFIG REQUIRED)
 +elseif(0)
-   set(IMGUI_DIR "${PROJECT_BINARY_DIR}/imgui-1.87" CACHE PATH "")
+   set(IMGUI_DIR "${PROJECT_BINARY_DIR}/imgui-1.89.7" CACHE PATH "")
    if(NOT EXISTS ${IMGUI_DIR})
      message(STATUS "Downloading imgui")
 @@ -63,6 +65,8 @@ elseif(UNIX)
@@ -200,7 +200,7 @@ index 663a1c3..e1452cb 100644
          stbi_convert_iphone_png_to_rgb(1);
          stbi_set_unpremultiply_on_load(1);
  
--        LogManager::getSingleton().logMessage("stb_image - v2.27 - public domain image loader");
+-        LogManager::getSingleton().logMessage("stb_image - v2.28 - public domain image loader");
 +        LogManager::getSingleton().logMessage("stb_image - public domain image loader");
          
          // Register codecs
@@ -213,7 +213,7 @@ index 2fce0dd0b..631735fb2 100644
      if (key == ImGuiKey_None)
          return io.WantCaptureKeyboard;
  
--    io.AddKeyEvent(key, arg.type == OgreBites::KEYDOWN);
+-    io.AddKeyEvent(ImGuiKey(key), arg.type == OgreBites::KEYDOWN);
 +    io.AddKeyEvent(static_cast<ImGuiKey>(key), arg.type == OgreBites::KEYDOWN);
      return io.WantCaptureKeyboard;
  }

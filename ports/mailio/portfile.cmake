@@ -1,9 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO karastojko/mailio
-    REF 8a3b92361d244dbb1af722d1ad6dcaf321907936 # version_0-23-0
-    SHA512 81fc656ef5cb0cd79b792e795975292a84982b873289bd008f001b6225e0f6829e492551b1b844b5099c6f1b0dbabc222e1ecbb72f3f268803b5f76923c22d8f
+    REF "${VERSION}"
+    SHA512 e1eee9f5b80dab16017af475b8c13f8278fa3d73e1c446e507dc122cb3df5b984b41c04d753e36cf848dd15029524f95cf48e050cee265c8933b0be1ea500a5d
     HEAD_REF master
+    PATCHES fix-library-type-and-remove-boost-test-deps.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -31,4 +32,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -240,9 +240,7 @@ function(vcpkg_configure_make)
         message(DEBUG "path_list:${path_list}") # Just to have --trace-expand output
 
         vcpkg_list(SET find_system_dirs 
-            "${system_root}/system32"
             "${system_root}/System32"
-            "${system_root}/system32/"
             "${system_root}/System32/"
             "${local_app_data}/Microsoft/WindowsApps"
             "${local_app_data}/Microsoft/WindowsApps/"
@@ -253,7 +251,8 @@ function(vcpkg_configure_make)
         set(index 0)
         set(appending TRUE)
         foreach(item IN LISTS path_list)
-            if(item IN_LIST find_system_dirs OR item IN_LIST find_system_dirs_upper)
+            string(TOUPPER "${item}" item_upper)
+            if(item_upper IN_LIST find_system_dirs_upper)
                 set(appending FALSE)
                 break()
             endif()
