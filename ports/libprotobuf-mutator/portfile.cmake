@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         dont-use-syntax.patch
         switch-to-requires_utf8_validation.patch
+        protobuf-cmake.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
@@ -18,9 +19,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLIB_PROTO_MUTATOR_TESTING=OFF
-        -DLIB_PROTO_MUTATOR_MSVC_STATIC_RUNTIME=${STATIC_RUNTIME}
         -DPKG_CONFIG_PATH=lib/pkgconfig
-        -DCMAKE_CXX_STANDARD=14 # protobuf
+    MAYBE_UNUSED_VARIABLES
+        -DLIB_PROTO_MUTATOR_MSVC_STATIC_RUNTIME=${STATIC_RUNTIME}
 )
 
 vcpkg_cmake_install()

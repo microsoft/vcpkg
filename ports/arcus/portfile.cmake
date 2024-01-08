@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ultimaker/libArcus
-    REF 617f6f71572090f73cb44592b12f49567b539e5b #v4.10.0
-    SHA512 cf0954d8b10d9f94165aa5c086d0e58c2925464f9fbe4252535c36d7e6bb12b767d89efb816c9e642f9cd7f0ec0d66d61ca21c5121a05340499d38d5d851f73b
-    HEAD_REF master
+    REF ${VERSION}
+    SHA512 91a6ca7b8511f33cd152190e6e4c91ac0b82544972686256d09dee6eb5689a3b63de2033fb94676bd2834bc64b942abbaa448e0844b1fa680f9d396eaeff004c
+    HEAD_REF main
     PATCHES
         0001-fix-protobuf-deprecated.patch
 )
@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
         -DBUILD_PYTHON=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_STATIC=${ENABLE_STATIC}
-        -DCMAKE_CXX_STANDARD=14 # protobuf
 )
 
 vcpkg_cmake_install()
@@ -27,4 +26,4 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME Arcus CONFIG_PATH lib/cmake/Arcus)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,3 +1,12 @@
+From af3bb18749db3559dc4968dd85319d05168d4b5e Mon Sep 17 00:00:00 2001
+From: Vitaly Buka <vitalybuka@google.com>
+Date: Wed, 7 Dec 2022 15:21:20 -0800
+Subject: [PATCH] Don't use syntax()
+
+---
+ src/mutator.cc | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
 diff --git a/src/mutator.cc b/src/mutator.cc
 index fb5542b..78ef455 100644
 --- a/src/mutator.cc
