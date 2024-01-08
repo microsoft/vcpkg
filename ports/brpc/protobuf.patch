@@ -1,0 +1,235 @@
+diff --git a/src/brpc/esp_message.h b/src/brpc/esp_message.h
+index 279f7b6a..5beb01a4 100644
+--- a/src/brpc/esp_message.h
++++ b/src/brpc/esp_message.h
+@@ -72,7 +72,7 @@ public:
+             ::google::protobuf::io::CodedOutputStream* output) const PB_310_OVERRIDE;
+     ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+             ::google::protobuf::uint8* output) const PB_310_OVERRIDE;
+-    int GetCachedSize() const override { return ByteSize(); }
++    int GetCachedSize() const { return ByteSize(); }
+ 
+ protected:
+     ::google::protobuf::Metadata GetMetadata() const override;
+diff --git a/src/brpc/global.cpp b/src/brpc/global.cpp
+index fbd669e7..c97043c0 100644
+--- a/src/brpc/global.cpp
++++ b/src/brpc/global.cpp
+@@ -292,25 +292,6 @@ static void* GlobalUpdate(void*) {
+     return NULL;
+ }
+ 
+-static void BaiduStreamingLogHandler(google::protobuf::LogLevel level,
+-                                     const char* filename, int line,
+-                                     const std::string& message) {
+-    switch (level) {
+-    case google::protobuf::LOGLEVEL_INFO:
+-        LOG(INFO) << filename << ':' << line << ' ' << message;
+-        return;
+-    case google::protobuf::LOGLEVEL_WARNING:
+-        LOG(WARNING) << filename << ':' << line << ' ' << message;
+-        return;
+-    case google::protobuf::LOGLEVEL_ERROR:
+-        LOG(ERROR) << filename << ':' << line << ' ' << message;
+-        return;
+-    case google::protobuf::LOGLEVEL_FATAL:
+-        LOG(FATAL) << filename << ':' << line << ' ' << message;
+-        return;
+-    }
+-    CHECK(false) << filename << ':' << line << ' ' << message;
+-}
+ 
+ static void GlobalInitializeOrDieImpl() {
+     //////////////////////////////////////////////////////////////////
+@@ -327,7 +308,6 @@ static void GlobalInitializeOrDieImpl() {
+     }
+ 
+     // Make GOOGLE_LOG print to comlog device
+-    SetLogHandler(&BaiduStreamingLogHandler);
+ 
+     // Setting the variable here does not work, the profiler probably check
+     // the variable before main() for only once.
+diff --git a/src/brpc/memcache.h b/src/brpc/memcache.h
+index c6fd2b95..59d1d743 100644
+--- a/src/brpc/memcache.h
++++ b/src/brpc/memcache.h
+@@ -107,7 +107,7 @@ public:
+     void SerializeWithCachedSizes(
+         ::google::protobuf::io::CodedOutputStream* output) const PB_310_OVERRIDE;
+     ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const PB_310_OVERRIDE;
+-    int GetCachedSize() const override { return _cached_size_; }
++    int GetCachedSize() const { return _cached_size_; }
+     
+     static const ::google::protobuf::Descriptor* descriptor();
+ 
+@@ -125,7 +125,7 @@ private:
+ 
+     void SharedCtor();
+     void SharedDtor();
+-    void SetCachedSize(int size) const override;
++    void SetCachedSize(int size) const;
+ 
+     int _pipelined_count;
+     butil::IOBuf _buf;
+@@ -220,7 +220,7 @@ public:
+     void SerializeWithCachedSizes(
+         ::google::protobuf::io::CodedOutputStream* output) const PB_310_OVERRIDE;
+     ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const PB_310_OVERRIDE;
+-    int GetCachedSize() const override { return _cached_size_; }
++    int GetCachedSize() const { return _cached_size_; }
+ 
+     static const ::google::protobuf::Descriptor* descriptor();
+ 
+@@ -233,7 +233,7 @@ private:
+ 
+     void SharedCtor();
+     void SharedDtor();
+-    void SetCachedSize(int size) const override;
++    void SetCachedSize(int size) const;
+ 
+     std::string _err;
+     butil::IOBuf _buf;
+diff --git a/src/brpc/nshead_message.h b/src/brpc/nshead_message.h
+index 11cc1c60..73d0b45f 100644
+--- a/src/brpc/nshead_message.h
++++ b/src/brpc/nshead_message.h
+@@ -67,7 +67,7 @@ public:
+     void SerializeWithCachedSizes(
+         ::google::protobuf::io::CodedOutputStream* output) const PB_310_OVERRIDE;
+     ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const PB_310_OVERRIDE;
+-    int GetCachedSize() const override { return ByteSize(); }
++    int GetCachedSize() const { return ByteSize(); }
+ 
+ protected:
+     ::google::protobuf::Metadata GetMetadata() const override;
+diff --git a/src/brpc/protocol.cpp b/src/brpc/protocol.cpp
+index 5f39939d..e03f5970 100644
+--- a/src/brpc/protocol.cpp
++++ b/src/brpc/protocol.cpp
+@@ -18,10 +18,8 @@
+ 
+ // Since kDefaultTotalBytesLimit is private, we need some hacks to get the limit.
+ // Works for pb 2.4, 2.6, 3.0
+-#define private public
+ #include <google/protobuf/io/coded_stream.h>
+-const int PB_TOTAL_BYETS_LIMITS_RAW =
+-    google::protobuf::io::CodedInputStream::kDefaultTotalBytesLimit;
++const int PB_TOTAL_BYETS_LIMITS_RAW = INT_MAX;
+ const uint64_t PB_TOTAL_BYETS_LIMITS =
+     PB_TOTAL_BYETS_LIMITS_RAW < 0 ? (uint64_t)-1LL : PB_TOTAL_BYETS_LIMITS_RAW;
+ #undef private
+diff --git a/src/brpc/redis.h b/src/brpc/redis.h
+index d02e8941..6ceca2d0 100644
+--- a/src/brpc/redis.h
++++ b/src/brpc/redis.h
+@@ -125,7 +125,7 @@ public:
+     void SerializeWithCachedSizes(
+         ::google::protobuf::io::CodedOutputStream* output) const PB_310_OVERRIDE;
+     ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const PB_310_OVERRIDE;
+-    int GetCachedSize() const override { return _cached_size_; }
++    int GetCachedSize() const { return _cached_size_; }
+ 
+     static const ::google::protobuf::Descriptor* descriptor();
+     
+@@ -137,7 +137,7 @@ protected:
+ private:
+     void SharedCtor();
+     void SharedDtor();
+-    void SetCachedSize(int size) const override;
++    void SetCachedSize(int size) const;
+     bool AddCommandWithArgs(const char* fmt, ...);
+ 
+     int _ncommand;    // # of valid commands
+@@ -198,7 +198,7 @@ public:
+     void SerializeWithCachedSizes(
+         ::google::protobuf::io::CodedOutputStream* output) const PB_310_OVERRIDE;
+     ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const PB_310_OVERRIDE;
+-    int GetCachedSize() const override { return _cached_size_; }
++    int GetCachedSize() const { return _cached_size_; }
+ 
+     static const ::google::protobuf::Descriptor* descriptor();
+ 
+@@ -208,7 +208,7 @@ protected:
+ private:
+     void SharedCtor();
+     void SharedDtor();
+-    void SetCachedSize(int size) const override;
++    void SetCachedSize(int size) const;
+ 
+     RedisReply _first_reply;
+     RedisReply* _other_replies;
+diff --git a/src/brpc/serialized_request.h b/src/brpc/serialized_request.h
+index 0fbf76ba..0aa3d91e 100644
+--- a/src/brpc/serialized_request.h
++++ b/src/brpc/serialized_request.h
+@@ -53,7 +53,7 @@ public:
+     void Clear() override;
+     bool IsInitialized() const override;
+     int ByteSize() const;
+-    int GetCachedSize() const override { return (int)_serialized.size(); }
++    int GetCachedSize() const { return (int)_serialized.size(); }
+     butil::IOBuf& serialized_data() { return _serialized; }
+     const butil::IOBuf& serialized_data() const { return _serialized; }
+ 
+@@ -71,7 +71,7 @@ private:
+     void MergeFrom(const SerializedRequest& from);
+     void SharedCtor();
+     void SharedDtor();
+-    void SetCachedSize(int size) const override;
++    void SetCachedSize(int size) const;
+   
+ private:
+     butil::IOBuf _serialized;
+diff --git a/src/brpc/thrift_message.cpp b/src/brpc/thrift_message.cpp
+index ed3d7557..7b9d210a 100644
+--- a/src/brpc/thrift_message.cpp
++++ b/src/brpc/thrift_message.cpp
+@@ -22,7 +22,6 @@
+ #include <algorithm>
+ #include "butil/logging.h"
+ 
+-#include <google/protobuf/stubs/once.h>
+ #include <google/protobuf/io/coded_stream.h>
+ #include <google/protobuf/descriptor.h>
+ #include <google/protobuf/reflection_ops.h>
+diff --git a/src/brpc/thrift_message.h b/src/brpc/thrift_message.h
+index 53041c85..471bafb5 100644
+--- a/src/brpc/thrift_message.h
++++ b/src/brpc/thrift_message.h
+@@ -101,7 +101,7 @@ public:
+     void SerializeWithCachedSizes(
+         ::google::protobuf::io::CodedOutputStream* output) const PB_310_OVERRIDE;
+     ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const PB_310_OVERRIDE;
+-    int GetCachedSize() const override { return ByteSize(); }
++    int GetCachedSize() const { return ByteSize(); }
+ 
+ protected:
+     ::google::protobuf::Metadata GetMetadata() const override;
+diff --git a/src/json2pb/json_to_pb.cpp b/src/json2pb/json_to_pb.cpp
+index 6a6f46cc..e7676c72 100644
+--- a/src/json2pb/json_to_pb.cpp
++++ b/src/json2pb/json_to_pb.cpp
+@@ -534,7 +534,7 @@ bool JsonValueToProtoMessage(const BUTIL_RAPIDJSON_NAMESPACE::Value& json_value,
+     for (int i = 0; i < descriptor->extension_range_count(); ++i) {
+         const google::protobuf::Descriptor::ExtensionRange*
+             ext_range = descriptor->extension_range(i);
+-        for (int tag_number = ext_range->start; tag_number < ext_range->end;
++        for (int tag_number = ext_range->start_; tag_number < ext_range->end_;
+              ++tag_number) {
+             const google::protobuf::FieldDescriptor* field =
+                 reflection->FindKnownExtensionByNumber(tag_number);
+diff --git a/src/json2pb/pb_to_json.cpp b/src/json2pb/pb_to_json.cpp
+index c6ce183a..e6e4c23e 100644
+--- a/src/json2pb/pb_to_json.cpp
++++ b/src/json2pb/pb_to_json.cpp
+@@ -75,8 +75,8 @@ bool PbToJsonConverter::Convert(const google::protobuf::Message& message, Handle
+     for (int i = 0; i < ext_range_count; ++i) {
+         const google::protobuf::Descriptor::ExtensionRange*
+             ext_range = descriptor->extension_range(i);
+-        for (int tag_number = ext_range->start;
+-             tag_number < ext_range->end; ++tag_number) {
++        for (int tag_number = ext_range->start_;
++             tag_number < ext_range->end_; ++tag_number) {
+             const google::protobuf::FieldDescriptor* field =
+                     reflection->FindKnownExtensionByNumber(tag_number);
+             if (field) {
