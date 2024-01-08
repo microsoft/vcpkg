@@ -728,13 +728,17 @@ mp3lame:arm-neon-android=fail
 mp3lame:arm64-android=fail
 mp3lame:x64-android=fail
 mpir:x64-android=fail
-# these ports require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
+# ms-gltf and ms-quic require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
 ms-gdkx:x64-windows=fail
 ms-gdkx:x64-windows-static=fail
 ms-gdkx:x64-windows-static-md=fail
 ms-gltf:arm-neon-android=fail
 ms-gltf:arm64-android=fail
 ms-gltf:x64-android=fail
+# ms-ifc-sdk requires a very recent compiler (C++23)
+ms-ifc-sdk:arm-neon-android=fail
+ms-ifc-sdk:arm64-android=fail
+ms-ifc-sdk:x64-android=fail
 ms-quic:arm64-uwp=fail
 ms-quic:arm64-windows=fail
 ms-quic:x64-uwp=fail

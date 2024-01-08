@@ -372,6 +372,18 @@
         "vtk"
       ]
     },
+    "vulkan": {
+      "description": "Vulkan support for opencv dnn",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "dnn"
+          ]
+        }
+      ]
+    },
     "webp": {
       "description": "WebP support for opencv",
       "dependencies": [

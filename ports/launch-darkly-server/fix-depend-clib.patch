@@ -1,0 +1,13 @@
+diff --git a/src/evaluate.c b/src/evaluate.c
+index f702419..e80fa6c 100644
+--- a/src/evaluate.c
++++ b/src/evaluate.c
+@@ -1246,7 +1246,7 @@ LDi_bucketUser(
+             char        digest[21], encoded[17];
+             const float longScale = 1152921504606846975.0;
+ 
+-            SHA1(digest, raw, strlen(raw));
++            SHA1_CLIBS(digest, raw, strlen(raw));
+ 
+             /* encodes to hex, and shortens, 16 characters in hex 8 bytes */
+             status = hexify(
