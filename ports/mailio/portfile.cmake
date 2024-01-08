@@ -6,12 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        testsuite MAILIO_BUILD_TESTS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMAILIO_BUILD_DOCUMENTATION=OFF
         -DMAILIO_BUILD_EXAMPLES=OFF
         -DMAILIO_BUILD_TESTS=OFF
+        ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(

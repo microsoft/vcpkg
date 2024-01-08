@@ -21,5 +21,12 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features":
+  {
+    "testsuite":
+    {
+      "description": "Mailio test suite."
+    }
+  }
 }
