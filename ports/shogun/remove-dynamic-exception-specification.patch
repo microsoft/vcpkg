@@ -1,0 +1,538 @@
+From 4433bb170bc3755f6eedf9526880b7075472d771 Mon Sep 17 00:00:00 2001
+From: Viktor Gal <viktor.gal@maeth.com>
+Date: Wed, 23 Jan 2019 14:37:07 +0100
+Subject: [PATCH] remove dynamic exception specification
+
+---
+ src/shogun/base/SGObject.cpp                           |  8 ++++----
+ src/shogun/base/SGObject.h                             |  8 ++++----
+ src/shogun/base/class_list.h                           |  2 +-
+ src/shogun/distributions/LinearHMM.cpp                 |  2 +-
+ src/shogun/distributions/LinearHMM.h                   |  2 +-
+ src/shogun/features/Alphabet.cpp                       |  2 +-
+ src/shogun/features/Alphabet.h                         |  2 +-
+ src/shogun/features/Features.h                         |  2 +-
+ src/shogun/kernel/CircularKernel.cpp                   |  2 +-
+ src/shogun/kernel/CircularKernel.h                     |  2 +-
+ src/shogun/kernel/DirectorKernel.h                     | 10 +++++-----
+ src/shogun/kernel/ExponentialKernel.cpp                |  2 +-
+ src/shogun/kernel/ExponentialKernel.h                  |  2 +-
+ src/shogun/kernel/GaussianKernel.cpp                   |  2 +-
+ src/shogun/kernel/GaussianKernel.h                     |  2 +-
+ src/shogun/kernel/InverseMultiQuadricKernel.cpp        |  2 +-
+ src/shogun/kernel/InverseMultiQuadricKernel.h          |  2 +-
+ src/shogun/kernel/Kernel.cpp                           |  6 +++---
+ src/shogun/kernel/Kernel.h                             |  6 +++---
+ .../string/WeightedDegreePositionStringKernel.cpp      |  2 +-
+ .../kernel/string/WeightedDegreePositionStringKernel.h |  4 ++--
+ src/shogun/lib/DynamicArray.h                          |  4 ++--
+ src/shogun/lib/DynamicObjectArray.h                    |  4 ++--
+ src/shogun/lib/List.h                                  |  4 ++--
+ src/shogun/lib/memory.cpp                              |  4 ++--
+ src/shogun/lib/memory.h                                |  4 ++--
+ 26 files changed, 46 insertions(+), 46 deletions(-)
+
+diff --git a/src/shogun/base/SGObject.cpp b/src/shogun/base/SGObject.cpp
+index b429ce3551b..f6c1cd43e81 100644
+--- a/src/shogun/base/SGObject.cpp
++++ b/src/shogun/base/SGObject.cpp
+@@ -485,22 +485,22 @@ bool CSGObject::load_serializable(CSerializableFile* file,
+ 	return true;
+ }
+ 
+-void CSGObject::load_serializable_pre() throw (ShogunException)
++void CSGObject::load_serializable_pre() noexcept(false)
+ {
+ 	m_load_pre_called = true;
+ }
+ 
+-void CSGObject::load_serializable_post() throw (ShogunException)
++void CSGObject::load_serializable_post() noexcept(false)
+ {
+ 	m_load_post_called = true;
+ }
+ 
+-void CSGObject::save_serializable_pre() throw (ShogunException)
++void CSGObject::save_serializable_pre() noexcept(false)
+ {
+ 	m_save_pre_called = true;
+ }
+ 
+-void CSGObject::save_serializable_post() throw (ShogunException)
++void CSGObject::save_serializable_post() noexcept(false)
+ {
+ 	m_save_post_called = true;
+ }
+diff --git a/src/shogun/base/SGObject.h b/src/shogun/base/SGObject.h
+index 3eafdb4dc55..7bd4f6a0e17 100644
+--- a/src/shogun/base/SGObject.h
++++ b/src/shogun/base/SGObject.h
+@@ -723,7 +723,7 @@ class CSGObject
+ 	 *
+ 	 *  @exception ShogunException will be thrown if an error occurs.
+ 	 */
+-	virtual void load_serializable_pre() throw (ShogunException);
++	virtual void load_serializable_pre() noexcept(false);
+ 
+ 	/** Can (optionally) be overridden to post-initialize some member
+ 	 *  variables which are not PARAMETER::ADD'ed.  Make sure that at
+@@ -732,7 +732,7 @@ class CSGObject
+ 	 *
+ 	 *  @exception ShogunException will be thrown if an error occurs.
+ 	 */
+-	virtual void load_serializable_post() throw (ShogunException);
++	virtual void load_serializable_post() noexcept(false);
+ 
+ 	/** Can (optionally) be overridden to pre-initialize some member
+ 	 *  variables which are not PARAMETER::ADD'ed.  Make sure that at
+@@ -741,7 +741,7 @@ class CSGObject
+ 	 *
+ 	 *  @exception ShogunException will be thrown if an error occurs.
+ 	 */
+-	virtual void save_serializable_pre() throw (ShogunException);
++	virtual void save_serializable_pre() noexcept(false);
+ 
+ 	/** Can (optionally) be overridden to post-initialize some member
+ 	 *  variables which are not PARAMETER::ADD'ed.  Make sure that at
+@@ -750,7 +750,7 @@ class CSGObject
+ 	 *
+ 	 *  @exception ShogunException will be thrown if an error occurs.
+ 	 */
+-	virtual void save_serializable_post() throw (ShogunException);
++	virtual void save_serializable_post() noexcept(false);
+ 
+ 	/** Registers a class parameter which is identified by a tag.
+ 	 * This enables the parameter to be modified by put() and retrieved by
+diff --git a/src/shogun/base/class_list.h b/src/shogun/base/class_list.h
+index fa8dbe76ca8..72b06838da0 100644
+--- a/src/shogun/base/class_list.h
++++ b/src/shogun/base/class_list.h
+@@ -41,7 +41,7 @@ namespace shogun {
+ 	template <class T>
+ 	T* create_object(
+ 	    const char* name,
+-	    EPrimitiveType pt = PT_NOT_GENERIC) throw(ShogunException)
++	    EPrimitiveType pt = PT_NOT_GENERIC) noexcept(false)
+ 	{
+ 		auto* object = create(name, pt);
+ 		if (!object)
+diff --git a/src/shogun/distributions/LinearHMM.cpp b/src/shogun/distributions/LinearHMM.cpp
+index 72d7d8c61e0..a005e22c804 100644
+--- a/src/shogun/distributions/LinearHMM.cpp
++++ b/src/shogun/distributions/LinearHMM.cpp
+@@ -294,7 +294,7 @@ bool CLinearHMM::set_log_transition_probs(const SGVector<float64_t> probs)
+ 	return true;
+ }
+ 
+-void CLinearHMM::load_serializable_post() throw (ShogunException)
++void CLinearHMM::load_serializable_post() noexcept(false)
+ {
+ 	CSGObject::load_serializable_post();
+ 
+diff --git a/src/shogun/distributions/LinearHMM.h b/src/shogun/distributions/LinearHMM.h
+index 6a29cc9a537..32f9f4782ea 100644
+--- a/src/shogun/distributions/LinearHMM.h
++++ b/src/shogun/distributions/LinearHMM.h
+@@ -212,7 +212,7 @@ class CLinearHMM : public CDistribution
+ 		virtual const char* get_name() const { return "LinearHMM"; }
+ 
+ 	protected:
+-		virtual void load_serializable_post() throw (ShogunException);
++		virtual void load_serializable_post() noexcept(false);
+ 
+ 	private:
+ 		void init();
+diff --git a/src/shogun/features/Alphabet.cpp b/src/shogun/features/Alphabet.cpp
+index 490a880cd32..303e17aac9a 100644
+--- a/src/shogun/features/Alphabet.cpp
++++ b/src/shogun/features/Alphabet.cpp
+@@ -740,7 +740,7 @@ void CAlphabet::init()
+ 			"Histogram."); */
+ }
+ 
+-void CAlphabet::load_serializable_post() throw (ShogunException)
++void CAlphabet::load_serializable_post() noexcept(false)
+ {
+ 	CSGObject::load_serializable_post();
+ 
+diff --git a/src/shogun/features/Alphabet.h b/src/shogun/features/Alphabet.h
+index 7af0f28d0dd..52bf2573391 100644
+--- a/src/shogun/features/Alphabet.h
++++ b/src/shogun/features/Alphabet.h
+@@ -344,7 +344,7 @@ class CAlphabet : public CSGObject
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void load_serializable_post() throw (ShogunException);
++		virtual void load_serializable_post() noexcept(false);
+ 
+ 	protected:
+ 		/** alphabet */
+diff --git a/src/shogun/features/Features.h b/src/shogun/features/Features.h
+index 88fb2a8acad..6a0e527051a 100644
+--- a/src/shogun/features/Features.h
++++ b/src/shogun/features/Features.h
+@@ -329,7 +329,7 @@ class CFeatures : public CSGObject
+ 
+ 		/** Throws an error, as features are immutable */
+ 		template <typename T>
+-		void put(const Tag<T>& _tag, const T& value) throw(ShogunException)
++		void put(const Tag<T>& _tag, const T& value) noexcept(false)
+ 		{
+ 			SG_ERROR(
+ 				"Cannot put %s::%s, features are immutable.\n", get_name(),
+diff --git a/src/shogun/kernel/CircularKernel.cpp b/src/shogun/kernel/CircularKernel.cpp
+index c34d89d8437..0edb44b1e9b 100644
+--- a/src/shogun/kernel/CircularKernel.cpp
++++ b/src/shogun/kernel/CircularKernel.cpp
+@@ -50,7 +50,7 @@ bool CCircularKernel::init(CFeatures* l, CFeatures* r)
+ 	return init_normalizer();
+ }
+ 
+-void CCircularKernel::load_serializable_post() throw (ShogunException)
++void CCircularKernel::load_serializable_post() noexcept(false)
+ {
+ 	CKernel::load_serializable_post();
+ }
+diff --git a/src/shogun/kernel/CircularKernel.h b/src/shogun/kernel/CircularKernel.h
+index 0fdc8dd940c..2c6b157a9b9 100644
+--- a/src/shogun/kernel/CircularKernel.h
++++ b/src/shogun/kernel/CircularKernel.h
+@@ -109,7 +109,7 @@ class CCircularKernel: public CKernel
+ 	 *  @exception ShogunException Will be thrown if an error
+ 	 *                             occurres.
+ 	 */
+-	virtual void load_serializable_post() throw (ShogunException);
++	virtual void load_serializable_post() noexcept(false);
+ 
+ 	/**
+ 	 * compute kernel function for features a and b
+diff --git a/src/shogun/kernel/DirectorKernel.h b/src/shogun/kernel/DirectorKernel.h
+index 4b946d3d0ab..3b03265a520 100644
+--- a/src/shogun/kernel/DirectorKernel.h
++++ b/src/shogun/kernel/DirectorKernel.h
+@@ -1,7 +1,7 @@
+ /*
+  * This software is distributed under BSD 3-clause license (see LICENSE file).
+  *
+- * Authors: Soeren Sonnenburg, Evgeniy Andreev, Pan Deng, Bjoern Esser, 
++ * Authors: Soeren Sonnenburg, Evgeniy Andreev, Pan Deng, Bjoern Esser,
+  *          Sergey Lisitsyn
+  */
+ 
+@@ -344,7 +344,7 @@ IGNORE_IN_CLASSLIST class CDirectorKernel: public CKernel
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void load_serializable_pre() throw (ShogunException)
++		virtual void load_serializable_pre() noexcept(false)
+ 		{
+ 			CKernel::load_serializable_pre();
+ 		}
+@@ -357,7 +357,7 @@ IGNORE_IN_CLASSLIST class CDirectorKernel: public CKernel
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void load_serializable_post() throw (ShogunException)
++		virtual void load_serializable_post() noexcept(false)
+ 		{
+ 			CKernel::load_serializable_post();
+ 		}
+@@ -370,7 +370,7 @@ IGNORE_IN_CLASSLIST class CDirectorKernel: public CKernel
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void save_serializable_pre() throw (ShogunException)
++		virtual void save_serializable_pre() noexcept(false)
+ 		{
+ 			CKernel::save_serializable_pre();
+ 		}
+@@ -383,7 +383,7 @@ IGNORE_IN_CLASSLIST class CDirectorKernel: public CKernel
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void save_serializable_post() throw (ShogunException)
++		virtual void save_serializable_post() noexcept(false)
+ 		{
+ 			CKernel::save_serializable_post();
+ 		}
+diff --git a/src/shogun/kernel/ExponentialKernel.cpp b/src/shogun/kernel/ExponentialKernel.cpp
+index 5edcb0edbc8..167a36c4837 100644
+--- a/src/shogun/kernel/ExponentialKernel.cpp
++++ b/src/shogun/kernel/ExponentialKernel.cpp
+@@ -54,7 +54,7 @@ float64_t CExponentialKernel::compute(int32_t idx_a, int32_t idx_b)
+ 	return exp(-dist/m_width);
+ }
+ 
+-void CExponentialKernel::load_serializable_post() throw (ShogunException)
++void CExponentialKernel::load_serializable_post() noexcept(false)
+ {
+ 	CKernel::load_serializable_post();
+ }
+diff --git a/src/shogun/kernel/ExponentialKernel.h b/src/shogun/kernel/ExponentialKernel.h
+index afcf7deca43..e1ea75101b0 100644
+--- a/src/shogun/kernel/ExponentialKernel.h
++++ b/src/shogun/kernel/ExponentialKernel.h
+@@ -101,7 +101,7 @@ class CExponentialKernel: public CDotKernel
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void load_serializable_post() throw (ShogunException);
++		virtual void load_serializable_post() noexcept(false);
+ 
+ 	private:
+ 		void init();
+diff --git a/src/shogun/kernel/GaussianKernel.cpp b/src/shogun/kernel/GaussianKernel.cpp
+index 9665204c326..4e38fe8f517 100644
+--- a/src/shogun/kernel/GaussianKernel.cpp
++++ b/src/shogun/kernel/GaussianKernel.cpp
+@@ -120,7 +120,7 @@ float64_t CGaussianKernel::compute(int32_t idx_a, int32_t idx_b)
+ 	return std::exp(-result);
+ }
+ 
+-void CGaussianKernel::load_serializable_post() throw (ShogunException)
++void CGaussianKernel::load_serializable_post() noexcept(false)
+ {
+ 	CKernel::load_serializable_post();
+ 	if (lhs && rhs)
+diff --git a/src/shogun/kernel/GaussianKernel.h b/src/shogun/kernel/GaussianKernel.h
+index 575225614b3..7a24c178fd4 100644
+--- a/src/shogun/kernel/GaussianKernel.h
++++ b/src/shogun/kernel/GaussianKernel.h
+@@ -149,7 +149,7 @@ class CGaussianKernel: public CShiftInvariantKernel
+ 	 *
+ 	 *  @exception ShogunException Will be thrown if an error occurres.
+ 	 */
+-	virtual void load_serializable_post() throw (ShogunException);
++	virtual void load_serializable_post() noexcept(false);
+ 
+ 	/** compute the distance between features a and b
+ 	 * idx_{a,b} denote the index of the feature vectors
+diff --git a/src/shogun/kernel/InverseMultiQuadricKernel.cpp b/src/shogun/kernel/InverseMultiQuadricKernel.cpp
+index 1c0347e99ac..331b8f7e561 100644
+--- a/src/shogun/kernel/InverseMultiQuadricKernel.cpp
++++ b/src/shogun/kernel/InverseMultiQuadricKernel.cpp
+@@ -42,7 +42,7 @@ bool CInverseMultiQuadricKernel::init(CFeatures* l, CFeatures* r)
+ 	return init_normalizer();
+ }
+ 
+-void CInverseMultiQuadricKernel::load_serializable_post() throw (ShogunException)
++void CInverseMultiQuadricKernel::load_serializable_post() noexcept(false)
+ {
+ 	CKernel::load_serializable_post();
+ }
+diff --git a/src/shogun/kernel/InverseMultiQuadricKernel.h b/src/shogun/kernel/InverseMultiQuadricKernel.h
+index 20664ca12ef..bc8d5ca71d6 100644
+--- a/src/shogun/kernel/InverseMultiQuadricKernel.h
++++ b/src/shogun/kernel/InverseMultiQuadricKernel.h
+@@ -111,7 +111,7 @@ class CInverseMultiQuadricKernel: public CKernel
+ 	 *  @exception ShogunException Will be thrown if an error
+ 	 *                             occurres.
+ 	 */
+-	virtual void load_serializable_post() throw (ShogunException);
++	virtual void load_serializable_post() noexcept(false);
+ 
+ private:
+ 
+diff --git a/src/shogun/kernel/Kernel.cpp b/src/shogun/kernel/Kernel.cpp
+index 2af62ab1996..303a39db6d0 100644
+--- a/src/shogun/kernel/Kernel.cpp
++++ b/src/shogun/kernel/Kernel.cpp
+@@ -885,14 +885,14 @@ bool CKernel::init_optimization_svm(CSVM * svm)
+ 	return ret;
+ }
+ 
+-void CKernel::load_serializable_post() throw (ShogunException)
++void CKernel::load_serializable_post() noexcept(false)
+ {
+ 	CSGObject::load_serializable_post();
+ 	if (lhs_equals_rhs)
+ 		rhs=lhs;
+ }
+ 
+-void CKernel::save_serializable_pre() throw (ShogunException)
++void CKernel::save_serializable_pre() noexcept(false)
+ {
+ 	CSGObject::save_serializable_pre();
+ 
+@@ -900,7 +900,7 @@ void CKernel::save_serializable_pre() throw (ShogunException)
+ 		rhs=NULL;
+ }
+ 
+-void CKernel::save_serializable_post() throw (ShogunException)
++void CKernel::save_serializable_post() noexcept(false)
+ {
+ 	CSGObject::save_serializable_post();
+ 
+diff --git a/src/shogun/kernel/Kernel.h b/src/shogun/kernel/Kernel.h
+index f4b8c372d84..412c14c165b 100644
+--- a/src/shogun/kernel/Kernel.h
++++ b/src/shogun/kernel/Kernel.h
+@@ -942,7 +942,7 @@ class CKernel : public CSGObject
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void load_serializable_post() throw (ShogunException);
++		virtual void load_serializable_post() noexcept(false);
+ 
+ 		/** Can (optionally) be overridden to pre-initialize some member
+ 		 *  variables which are not PARAMETER::ADD'ed.  Make sure that at
+@@ -952,7 +952,7 @@ class CKernel : public CSGObject
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void save_serializable_pre() throw (ShogunException);
++		virtual void save_serializable_pre() noexcept(false);
+ 
+ 		/** Can (optionally) be overridden to post-initialize some member
+ 		 *  variables which are not PARAMETER::ADD'ed.  Make sure that at
+@@ -962,7 +962,7 @@ class CKernel : public CSGObject
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void save_serializable_post() throw (ShogunException);
++		virtual void save_serializable_post() noexcept(false);
+ 
+ 		/** Separate the function of parameter registration
+ 		 *	This can be the first stage of a *general* framework for
+diff --git a/src/shogun/kernel/string/WeightedDegreePositionStringKernel.cpp b/src/shogun/kernel/string/WeightedDegreePositionStringKernel.cpp
+index ac7be7b47f7..6c943696552 100644
+--- a/src/shogun/kernel/string/WeightedDegreePositionStringKernel.cpp
++++ b/src/shogun/kernel/string/WeightedDegreePositionStringKernel.cpp
+@@ -1864,7 +1864,7 @@ void CWeightedDegreePositionStringKernel::cleanup_POIM2()
+ 	m_poim_result_len=0 ;
+ }
+ 
+-void CWeightedDegreePositionStringKernel::load_serializable_post() throw (ShogunException)
++void CWeightedDegreePositionStringKernel::load_serializable_post() noexcept(false)
+ {
+ 	CKernel::load_serializable_post();
+ 
+diff --git a/src/shogun/kernel/string/WeightedDegreePositionStringKernel.h b/src/shogun/kernel/string/WeightedDegreePositionStringKernel.h
+index 16a7f254074..d9c0947542a 100644
+--- a/src/shogun/kernel/string/WeightedDegreePositionStringKernel.h
++++ b/src/shogun/kernel/string/WeightedDegreePositionStringKernel.h
+@@ -1,7 +1,7 @@
+ /*
+  * This software is distributed under BSD 3-clause license (see LICENSE file).
+  *
+- * Authors: Soeren Sonnenburg, Sergey Lisitsyn, Patrick Pletscher, Yuyu Zhang, 
++ * Authors: Soeren Sonnenburg, Sergey Lisitsyn, Patrick Pletscher, Yuyu Zhang,
+  *          Bjoern Esser
+  */
+ 
+@@ -685,7 +685,7 @@ class CWeightedDegreePositionStringKernel: public CStringKernel<char>
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void load_serializable_post() throw (ShogunException);
++		virtual void load_serializable_post() noexcept(false);
+ 
+ 	private:
+ 		/** Do basic initialisations like default settings
+diff --git a/src/shogun/lib/DynamicArray.h b/src/shogun/lib/DynamicArray.h
+index e8f8f9388ab..0ef8db7f288 100644
+--- a/src/shogun/lib/DynamicArray.h
++++ b/src/shogun/lib/DynamicArray.h
+@@ -581,7 +581,7 @@ template <class T> class CDynamicArray :public CSGObject
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void load_serializable_pre() throw (ShogunException)
++		virtual void load_serializable_pre() noexcept(false)
+ 		{
+ 			CSGObject::load_serializable_pre();
+ 
+@@ -596,7 +596,7 @@ template <class T> class CDynamicArray :public CSGObject
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void save_serializable_pre() throw (ShogunException)
++		virtual void save_serializable_pre() noexcept(false)
+ 		{
+ 			CSGObject::save_serializable_pre();
+ 			m_array.resize_array(m_array.get_num_elements(), true);
+diff --git a/src/shogun/lib/DynamicObjectArray.h b/src/shogun/lib/DynamicObjectArray.h
+index 450f83430ae..6940ecb6866 100644
+--- a/src/shogun/lib/DynamicObjectArray.h
++++ b/src/shogun/lib/DynamicObjectArray.h
+@@ -443,7 +443,7 @@ class CDynamicObjectArray : public CSGObject
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void load_serializable_pre() throw (ShogunException)
++		virtual void load_serializable_pre() noexcept(false)
+ 		{
+ 			CSGObject::load_serializable_pre();
+ 
+@@ -458,7 +458,7 @@ class CDynamicObjectArray : public CSGObject
+ 		 *  @exception ShogunException Will be thrown if an error
+ 		 *                             occurres.
+ 		 */
+-		virtual void save_serializable_pre() throw (ShogunException)
++		virtual void save_serializable_pre() noexcept(false)
+ 		{
+ 			CSGObject::save_serializable_pre();
+ 
+diff --git a/src/shogun/lib/List.h b/src/shogun/lib/List.h
+index ea0f12cdd97..18d6b77d9e4 100644
+--- a/src/shogun/lib/List.h
++++ b/src/shogun/lib/List.h
+@@ -1,7 +1,7 @@
+ /*
+  * This software is distributed under BSD 3-clause license (see LICENSE file).
+  *
+- * Authors: Soeren Sonnenburg, Heiko Strathmann, Jacob Walker, Yuyu Zhang, 
++ * Authors: Soeren Sonnenburg, Heiko Strathmann, Jacob Walker, Yuyu Zhang,
+  *          Evan Shelhamer, Soumyajit De
+  */
+ 
+@@ -536,7 +536,7 @@ class CList : public CSGObject
+ 			return NULL;
+ 		}
+ 
+-		virtual void load_serializable_post() throw (ShogunException)
++		virtual void load_serializable_post() noexcept(false)
+ 		{
+ 			CSGObject::load_serializable_post();
+ 
+diff --git a/src/shogun/lib/memory.cpp b/src/shogun/lib/memory.cpp
+index 5ffc90938f9..e06c20699f5 100644
+--- a/src/shogun/lib/memory.cpp
++++ b/src/shogun/lib/memory.cpp
+@@ -117,7 +117,7 @@ void* operator new(size_t size)
+ 	return p;
+ }
+ 
+-void operator delete(void *p) throw()
++void operator delete(void *p) noexcept
+ {
+ #ifdef TRACE_MEMORY_ALLOCS
+ 	if (sg_mallocs)
+@@ -136,7 +136,7 @@ void* operator new[](size_t size)
+ 	return ::operator new(size);
+ }
+ 
+-void operator delete[](void *p) throw()
++void operator delete[](void *p) noexcept
+ {
+ 	::operator delete(p);
+ }
+diff --git a/src/shogun/lib/memory.h b/src/shogun/lib/memory.h
+index fcf33e62473..21db532e8e2 100644
+--- a/src/shogun/lib/memory.h
++++ b/src/shogun/lib/memory.h
+@@ -36,11 +36,11 @@ SG_FORCED_INLINE void* sg_memcpy(InputIt dest, OutputIt src, size_t count)
+ 
+ /* overload new() / delete */
+ void* operator new(size_t size);
+-void operator delete(void *p) throw();
++void operator delete(void *p) noexcept;
+ 
+ /* overload new[] / delete[] */
+ void* operator new[](size_t size);
+-void operator delete[](void *p) throw();
++void operator delete[](void *p) noexcept;
+ 
+ #ifdef HAVE_ALIGNED_MALLOC
+ #ifdef HAVE_ALIGNED_NEW

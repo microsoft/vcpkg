@@ -1,13 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/incubator-brpc
+    REPO apache/brpc
     REF "${VERSION}"
-    SHA512 da0004b7b50cc48da018627c9361ae62b006bb7cd2af53a5cfa1601aab7ad31174d37778a42809bdf2e0f2021a860dcbb02e2c3c938eae6c02808267c3b85025
+    SHA512 1b4815ea5f09af43a36bbd0a5fe1d59862abd0e23b870b8db59888b73bc15db448d0c6cdf817eb4c9daa582cde825477273251dbd63ce1cd1fdf6b3a93746e97
     HEAD_REF master
     PATCHES
         fix-build.patch
-        fix-boost-ptr.patch
         fix-glog.patch
+        protobuf.patch
 )
 
 vcpkg_cmake_configure(
@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
         -DWITH_THRIFT=ON
         -DWITH_GLOG=ON
         -DDOWNLOAD_GTEST=OFF
-        -DCMAKE_CXX_STANDARD=14 # protobuf
 )
 
 vcpkg_cmake_install()

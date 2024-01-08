@@ -1,8 +1,8 @@
 diff --git a/src/shogun/mathematics/lapack.h b/src/shogun/mathematics/lapack.h
-index 6ba466f..f5de479 100644
+index 5f895d085..b7c20ed40 100644
 --- a/src/shogun/mathematics/lapack.h
 +++ b/src/shogun/mathematics/lapack.h
-@@ -38,7 +38,7 @@ extern "C" {
+@@ -26,7 +26,7 @@ extern "C" {
  #include <vecLib/cblas.h>
  #endif
  #else
