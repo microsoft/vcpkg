@@ -32,7 +32,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
+set(BLAS_OPTIONS "")
 if(VCPKG_TARGET_IS_OSX)
+    set(BLAS_OPTIONS "-DONLY_CBLAS=1")
     if("dynamic-arch" IN_LIST FEATURES)
         set(conf_opts GENERATOR "Unix Makefiles")
     endif()
@@ -63,7 +65,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         ${COMMON_OPTIONS}
         ${OPENBLAS_EXTRA_OPTIONS}
-        -DONLY_CBLAS=1
+        ${BLAS_OPTIONS}
 )
 
 vcpkg_cmake_install()
