@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fb23b7d9..67670d7d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -156,7 +156,7 @@ elseif(NOT MSVC)
+ endif()
+ 
+ if(WITH_STACK_PROTECTOR)
+-  if(NOT MSVC)
++  if(NOT MSVC AND NOT EMSCRIPTEN)
+     check_c_compiler_flag("-fstack-protector-strong" HAVE_STACK_PROTECTOR_FLAG)
+   endif()
+ endif()
