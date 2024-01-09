@@ -1,6 +1,6 @@
 {
   "name": "glslang",
-  "version": "13.0.0",
+  "version": "13.1.1",
   "port-version": 1,
   "description": "Khronos-reference front end for GLSL/ESSL, partial front end for HLSL, and a SPIR-V generator.",
   "homepage": "https://github.com/KhronosGroup/glslang",
@@ -16,6 +16,12 @@
     }
   ],
   "features": {
+    "opt": {
+      "description": "Build with spirv-opt capability",
+      "dependencies": [
+        "spirv-tools"
+      ]
+    },
     "rtti": {
       "description": "Build with dynamic typeinfo"
     },

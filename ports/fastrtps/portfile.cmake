@@ -1,3 +1,13 @@
+# https://github.com/eProsima/Fast-DDS/pull/3983
+# Could remove after 2.6.6/2.10.2/2.11.2, other minor versions not applied
+# Could remove after 2.13 released, or any newer mijor versions
+vcpkg_download_distfile(
+    PR_3983_PATCH
+    URLS https://github.com/eProsima/Fast-DDS/commit/2601e95429f5676c47c25200e995fb93157e7815.patch?full_index=1
+    SHA512 440ee6a918d7085b6520613fad1482a9b833ee259e64c8919bdeb43277f3685362e6314380bafc6c51dad46fd16a9b415343e9db28f157d13f76b9af0cb21e8d
+    FILENAME fastrtps-2601e95429f5676c47c25200e995fb93157e7815.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-DDS
@@ -9,6 +19,7 @@ vcpkg_from_github(
         disable-symlink.patch
         fix-xtime.patch
         fix_thread.patch #https://github.com/eProsima/Fast-DDS/pull/3904
+        "${PR_3983_PATCH}"
 )
 
 vcpkg_cmake_configure(
