@@ -1,7 +1,6 @@
 {
   "name": "azure-c-shared-utility",
-  "version-date": "2023-01-18",
-  "port-version": 1,
+  "version-date": "2023-08-07",
   "description": "Azure C SDKs common code",
   "homepage": "https://github.com/Azure/azure-c-shared-utility",
   "license": "MIT",

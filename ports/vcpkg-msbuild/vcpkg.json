@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-msbuild",
-  "version-date": "2023-06-22",
+  "version-date": "2023-08-08",
   "documentation": "https://vcpkg.io/en/docs/README.html",
   "license": "MIT",
   "supports": "native & windows",

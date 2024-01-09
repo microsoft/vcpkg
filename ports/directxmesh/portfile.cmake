@@ -1,4 +1,4 @@
-set(DIRECTXMESH_TAG jun2023)
+set(DIRECTXMESH_TAG dec2023)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
     REF ${DIRECTXMESH_TAG}
-    SHA512 01fd1fc43dd51c203b31b8f668a4ece731bad980c97b65481fdd86e2b458556fb46b7709444c1741568b3c5633b766c51cb3211e21f348f12278ad8b10044e7c
+    SHA512 25442ec60040f2f232079b4a62a4460c8de11a881e36f5bdaeadbe98678d360141e8eca8162169941c03884cc2a05c3e20cf7fd2aef6518f6a647b7382d6d271
     HEAD_REF main
 )
 
@@ -18,16 +18,19 @@ vcpkg_check_features(
         tools BUILD_TOOLS
 )
 
+set(EXTRA_OPTIONS -DBUILD_TESTING=OFF)
+
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS} -DBUILD_TESTING=OFF
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/directxmesh)
 
 if("tools" IN_LIST FEATURES)
@@ -40,7 +43,7 @@ if("tools" IN_LIST FEATURES)
       MESHCONVERT_EXE
       URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert.exe"
       FILENAME "meshconvert-${DIRECTXMESH_TAG}.exe"
-      SHA512 0fca478527c9975776a6a52c0ada08aa4f8bfa169bac9d204295abd6a1a9357c703ae69eabade9c33bab46c25a7342bfc53910ce8ae3cc6a166f807b0e8a8e02
+      SHA512 db2d32ec44993547881e2f14ee3403aa6133758d250ffc54b7cec9c1f15be46e5a5d847eb1cff60081bdfeaaa1e6be129475f40502c0a8c5ba2d58e5baa71691
     )
 
     file(INSTALL
@@ -55,7 +58,7 @@ if("tools" IN_LIST FEATURES)
       MESHCONVERT_EXE
       URLS "https://github.com/Microsoft/DirectXMesh/releases/download/${DIRECTXMESH_TAG}/meshconvert_arm64.exe"
       FILENAME "meshconvert-${DIRECTXMESH_TAG}-arm64.exe"
-      SHA512 92515ec4f3acf0f6cf66e3e20ac709c2b525632d042569272e9208917560f22c15fbbb8066ae44573fcf9c4246daa673c06316641e9585efa873aa06e5efd681
+      SHA512 deaa61a1f24bf1ffff817a7b72b125d2402b97ca15713411eb3a5b0af0b5f2b25407be87d2fd60fb4670744656230d221183510167a1696685d2def9fa9c1532
     )
 
     file(INSTALL

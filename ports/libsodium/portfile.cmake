@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jedisct1/libsodium
-    REF 1.0.18
-    SHA512 727fe50a5fb1df86ec5d807770f408a52609cbeb8510b4f4183b2a35a537905719bdb6348afcb103ff00ce946a8094ac9559b6e3e5b2ccc2a2d0c08f75577eeb
+    REF ${VERSION}
+    SHA512 6094d7bf191ea3be85f2ddab76b71f1b9c69c786493db5b84d3c5d5a0237003377ddf6a8687a962ea651fe4a9369cf5ee1676ba0bae82690f5f7ef31a698efa9
     HEAD_REF master
 )
 
@@ -26,6 +26,7 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME unofficial-sodium
 )
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -40,4 +41,4 @@ configure_file(
     @ONLY
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

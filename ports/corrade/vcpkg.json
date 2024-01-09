@@ -1,17 +1,14 @@
 {
   "name": "corrade",
   "version-string": "2020.06",
-  "port-version": 5,
+  "port-version": 8,
   "description": "C++11/C++14 multiplatform utility library.",
   "homepage": "https://magnum.graphics/corrade/",
   "dependencies": [
     {
       "name": "corrade",
       "host": true,
-      "default-features": false,
-      "features": [
-        "utility"
-      ]
+      "default-features": false
     },
     {
       "name": "vcpkg-cmake",
@@ -29,11 +26,25 @@
     "utility"
   ],
   "features": {
+    "dynamic-pluginmanager": {
+      "description": "PluginManager library with dynamic plugin support",
+      "supports": "!ios & !uwp & !android",
+      "dependencies": [
+        {
+          "name": "corrade",
+          "default-features": false,
+          "features": [
+            "pluginmanager"
+          ]
+        }
+      ]
+    },
     "interconnect": {
       "description": "Interconnect library",
       "dependencies": [
         {
           "name": "corrade",
+          "default-features": false,
           "features": [
             "utility"
           ]
@@ -45,7 +56,12 @@
       "dependencies": [
         {
           "name": "corrade",
+          "default-features": false,
           "features": [
+            {
+              "name": "dynamic-pluginmanager",
+              "platform": "!ios & !uwp & !android"
+            },
             "utility"
           ]
         }
@@ -56,6 +72,7 @@
       "dependencies": [
         {
           "name": "corrade",
+          "default-features": false,
           "features": [
             "utility"
           ]

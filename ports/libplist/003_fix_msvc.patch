@@ -1,0 +1,106 @@
+diff --git a/src/bplist.c b/src/bplist.c
+index 953c2c77..d7b4777a 100644
+--- a/src/bplist.c
++++ b/src/bplist.c
+@@ -87,6 +87,28 @@ union plist_uint_ptr
+     uint64_t *u64ptr;
+ };
+ 
++#ifdef _MSC_VER
++uint64_t get_unaligned_64(uint64_t *ptr)
++{
++	uint64_t temp;
++	memcpy(&temp, ptr, sizeof(temp));
++	return temp;
++}
++
++uint32_t get_unaligned_32(uint32_t *ptr)
++{
++	uint32_t temp;
++	memcpy(&temp, ptr, sizeof(temp));
++	return temp;
++}
++
++uint16_t get_unaligned_16(uint16_t *ptr)
++{
++	uint16_t temp;
++	memcpy(&temp, ptr, sizeof(temp));
++	return temp;
++}
++#else
+ #define get_unaligned(ptr)			  \
+   ({                                              \
+     struct __attribute__((packed)) {		  \
+@@ -94,6 +116,7 @@ union plist_uint_ptr
+     } *__p = (void *) (ptr);			  \
+     __p->__v;					  \
+   })
++#endif
+ 
+ 
+ #ifndef bswap16
+@@ -148,10 +171,23 @@ union plist_uint_ptr
+ #define beNtoh(x,n) be64toh((x) << ((8-(n)) << 3))
+ #endif
+ 
++#ifdef _MSC_VER
++uint64_t UINT_TO_HOST(void* x, uint8_t n)
++{
++		union plist_uint_ptr __up;
++		__up.src = (n > 8) ? (char *)x + (n - 8) : x;
++		return (n >= 8 ? be64toh( get_unaligned_64(__up.u64ptr) ) :
++		(n == 4 ? be32toh( get_unaligned_32(__up.u32ptr) ) :
++		(n == 2 ? be16toh( get_unaligned_16(__up.u16ptr) ) :
++                (n == 1 ? *__up.u8ptr :
++		beNtoh( get_unaligned_64(__up.u64ptr), n)
++		))));
++}
++#else
+ #define UINT_TO_HOST(x, n) \
+ 	({ \
+ 		union plist_uint_ptr __up; \
+-		__up.src = ((n) > 8) ? (x) + ((n) - 8) : (x); \
++		__up.src = ((n) > 8) ? ((char *)x) + ((n) - 8) : (x); \
+ 		((n) >= 8 ? be64toh( get_unaligned(__up.u64ptr) ) : \
+ 		((n) == 4 ? be32toh( get_unaligned(__up.u32ptr) ) : \
+ 		((n) == 2 ? be16toh( get_unaligned(__up.u16ptr) ) : \
+@@ -159,6 +195,7 @@ union plist_uint_ptr
+ 		beNtoh( get_unaligned(__up.u64ptr), n) \
+ 		)))); \
+ 	})
++#endif
+ 
+ #define get_needed_bytes(x) \
+ 		( ((uint64_t)(x)) < (1ULL << 8) ? 1 : \
+@@ -277,11 +314,19 @@ static plist_t parse_real_node(const char **bnode, uint8_t size)
+     switch (size)
+     {
+     case sizeof(uint32_t):
++#ifdef _MSC_VER
++        *(uint32_t*)buf = float_bswap32(get_unaligned_32((uint32_t*)*bnode));
++#else
+         *(uint32_t*)buf = float_bswap32(get_unaligned((uint32_t*)*bnode));
++#endif
+         data->realval = *(float *) buf;
+         break;
+     case sizeof(uint64_t):
++#ifdef _MSC_VER
++        *(uint64_t*)buf = float_bswap64(get_unaligned_64((uint64_t*)*bnode));
++#else
+         *(uint64_t*)buf = float_bswap64(get_unaligned((uint64_t*)*bnode));
++#endif
+         data->realval = *(double *) buf;
+         break;
+     default:
+@@ -343,7 +388,11 @@ static char *plist_utf16be_to_utf8(uint16_t *unistr, long len, long *items_read,
+ 	}
+ 
+ 	while (i < len) {
++#if _MSC_VER
++		wc = be16toh(get_unaligned_16(unistr + i));
++#else
+ 		wc = be16toh(get_unaligned(unistr + i));
++#endif
+ 		i++;
+ 		if (wc >= 0xD800 && wc <= 0xDBFF) {
+ 			if (!read_lead_surrogate) {

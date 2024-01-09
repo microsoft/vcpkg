@@ -1,6 +1,6 @@
 {
   "name": "ezc3d",
-  "version": "1.4.7",
+  "version": "1.5.0",
   "description": "C3D reader/writer",
   "homepage": "https://github.com/pyomeca/ezc3d",
   "license": "MIT",

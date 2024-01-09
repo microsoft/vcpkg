@@ -3,12 +3,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO benhoyt/inih
-    REF 5e1d9e2625842dddb3f9c086a50f22e4f45dfc2b # r56
-    SHA512 477a66643f6636a5826a1206c6588a12827e24a4a2609e11f0695888998e2bfcba8bdb2240c561404ee675bf4c72e85d7d008a1fbddb142c0d263b413de8d358
+    REF r57
+    SHA512 9f758df876df54ed7e228fd82044f184eefbe47e806cd1e6d62e1b0ea28e2c08e67fa743042d73b4baef0b882480e6afe2e72878b175822eb2bdbb6d89c0e411
     HEAD_REF master
 )
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,21 +14,31 @@ vcpkg_check_features(
         cpp with_INIReader
 )
 
-vcpkg_cmake_configure(
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(INIH_CONFIG_DEBUG ON)
+else()
+    set(INIH_CONFIG_DEBUG OFF)
+endif()
+
+# Install unofficial CMake package
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-inihConfig.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-inih/unofficial-inihConfig.cmake" @ONLY)
+
+# meson build
+string(REPLACE "OFF" "false" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
+string(REPLACE "ON" "true" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
+
+vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
+        "${FEATURE_OPTIONS}"
+        "-Dcpp_std=c++11"
 )
 
-vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-inih)
+vcpkg_install_meson()
+vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" [=[
-inih provides CMake targets:
-    find_package(unofficial-inih CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::inih::inih)
-]=])
+vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
-                    "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)

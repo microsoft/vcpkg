@@ -6,23 +6,27 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
     REF "${VERSION}"
-    SHA512 36cd8844b1cc9a935c50afc240523f9aaac7cffa58a5d0f9850848f22ab0f1f5a7202ec9b56b0a7d15f075f665bcecbec63b28d2074d35a7cf25065f9075c15e
+    SHA512 77569b9816eb9bfcc6fe2f3cfab69845410aa2e7c6a5db987957eef74cff5cfd51006373bbc8539ecf385adf8c9c067df5a151bdf9b5f7ee71cdf5c9c64040a8
     HEAD_REF master
     PATCHES
-        disable-dynamic-when-static.patch
         fix-include-directory.patch # vcpkg legacy decision
 )
 file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")
 
 # Cannot use string(COMPARE EQUAL ...)
 set(ENABLE_STATIC OFF)
+set(ENABLE_SHARED OFF)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(ENABLE_STATIC ON)
+else()
+    set(ENABLE_SHARED ON)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE # because it writes the file VERSION_CURRENT in the source directory
     OPTIONS
+        "-DBUILD_VERSION=${VERSION}"
         -DENABLE_BSON=ON
         -DENABLE_EXAMPLES=OFF
         -DENABLE_ICU=OFF
@@ -32,10 +36,15 @@ vcpkg_cmake_configure(
         -DENABLE_SRV=OFF
         -DENABLE_SSL=OFF
         -DENABLE_STATIC=${ENABLE_STATIC}
+        -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_TESTS=OFF
         -DENABLE_UNINSTALL=OFF
         -DENABLE_ZLIB=SYSTEM
         -DENABLE_ZSTD=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
+    MAYBE_UNUSED_VARIABLES
+        ENABLE_ICU
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

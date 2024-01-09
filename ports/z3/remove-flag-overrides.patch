@@ -4,9 +4,9 @@ index 477410ba8..fcca03917 100644
 +++ b/CMakeLists.txt
 @@ -1,7 +1,6 @@
  # Enforce some CMake policies
- cmake_minimum_required(VERSION 3.4)
+ cmake_minimum_required(VERSION 3.16)
 
 -set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_compiler_flags_overrides.cmake")
- project(Z3 VERSION 4.12.2.0 LANGUAGES CXX)
+ project(Z3 VERSION 4.12.4.0 LANGUAGES CXX)
 
  ################################################################################

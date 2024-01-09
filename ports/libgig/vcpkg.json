@@ -1,0 +1,31 @@
+{
+  "name": "libgig",
+  "version": "4.3.0",
+  "description": "C++ library for loading Gigasampler files and DLS Level 1/2 files",
+  "homepage": "https://www.linuxsampler.org/libgig/",
+  "supports": "windows & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tests": {
+      "description": "Build test cases",
+      "dependencies": [
+        "cppunit"
+      ]
+    },
+    "tools": {
+      "description": "Build extra tools",
+      "dependencies": [
+        "libsndfile"
+      ]
+    }
+  }
+}

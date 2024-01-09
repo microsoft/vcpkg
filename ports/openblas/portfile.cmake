@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF 394a9fbafe9010b76a2615c562204277a956eb52 # v0.3.23
-    SHA512 d79ae7ba4f9146f0bcacdef9b9cf4cd287e5eb2e3891f7deb4b3992b742a557ca094ac2f258420a16cfe6bbda7ca82addf415aecd7ced425a02374847c0b6013
+    REF "v${VERSION}"
+    SHA512 69bcf8082575b01ce1734fc9d33454314964a7e81ff29a7c1a764af3083ac0dc24289fd72bbe22c9583398bda7b658d6e4ab1d5036e43412745f0be3c2185b3c
     HEAD_REF develop
     PATCHES
         uwp.patch
@@ -68,7 +68,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/OpenBLAS)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenBLAS)
 
 if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES getarch AUTO_CLEAN)

@@ -1,0 +1,12 @@
+diff --git a/ntcore/ntcore-config.cmake.in b/ntcore/ntcore-config.cmake.in
+index 17006a583..0a85f8b09 100644
+--- a/ntcore/ntcore-config.cmake.in
++++ b/ntcore/ntcore-config.cmake.in
+@@ -1,6 +1,7 @@
+ include(CMakeFindDependencyMacro)
+ @FILENAME_DEP_REPLACE@
+ @WPIUTIL_DEP_REPLACE@
++@WPINET_DEP_REPLACE@
+ 
+ @FILENAME_DEP_REPLACE@
+ include(${SELF_DIR}/ntcore.cmake)
