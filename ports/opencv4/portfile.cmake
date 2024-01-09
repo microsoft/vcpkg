@@ -159,6 +159,7 @@ if("cuda" IN_LIST FEATURES)
     FILENAME "opencv-cache/nvidia_optical_flow/a73cd48b18dcc0cc8933b30796074191-edb50da3cf849840d680249aa6dbef248ebce2ca.zip"
     SHA512 12d655ac9fcfc6df0186daa62f7185dadd489f0eeea25567d78c2b47a9840dcce2bd03a3e9b3b42f125dbaf3150f52590ea7597dc1dc8acee852dc0aed56651e
   )
+    list(APPEND ADDITIONAL_BUILD_FLAGS "-DENABLE_CUDA_FIRST_CLASS_LANGUAGE=ON")
 endif()
 
 # Build image quality module when building with 'contrib' feature and not UWP.
@@ -500,7 +501,6 @@ find_dependency(Threads)")
   endif()
   if("cuda" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
-    list(APPEND ADDITIONAL_BUILD_FLAGS "-DENABLE_CUDA_FIRST_CLASS_LANGUAGE=ON")
   endif()
   if(BUILD_opencv_quality AND "contrib" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "
