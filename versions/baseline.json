@@ -4117,7 +4117,7 @@
       "port-version": 4
     },
     "libbson": {
-      "baseline": "1.25.2",
+      "baseline": "1.25.4",
       "port-version": 0
     },
     "libcaer": {
@@ -5665,7 +5665,7 @@
       "port-version": 2
     },
     "mongo-c-driver": {
-      "baseline": "1.25.2",
+      "baseline": "1.25.4",
       "port-version": 0
     },
     "mongo-cxx-driver": {
