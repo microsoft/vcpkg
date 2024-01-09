@@ -9,7 +9,7 @@ vcpkg_from_github(
     SHA512 a80e20917edb752ac5eb42534beaa0122a383037f83a554ee00ce37ae690be68521eaa282b4a5802a5440b61038bcd5414356e16a2ce729ba1193d0738a6ce1c
     HEAD_REF master
     PATCHES
-        #disable-dynamic-when-static.patch
+        disable-dynamic-when-static.patch
         fix-dependencies.patch
         fix-include-directory.patch
         fix-mingw.patch
