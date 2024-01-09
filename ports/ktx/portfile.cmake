@@ -9,8 +9,23 @@ vcpkg_from_github(
         0002-Fix-versioning.patch
         0003-mkversion.patch
         0004-quirks.patch
+        0005_no_unix2dos.patch
 )
 file(REMOVE "${SOURCE_PATH}/other_include/zstd_errors.h")
+
+vcpkg_list(SET OPTIONS)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_acquire_msys(MSYS_ROOT
+        PACKAGES
+            bash
+        DIRECT_PACKAGES
+            # Required for "getopt"
+            "https://repo.msys2.org/msys/x86_64/util-linux-2.35.2-3-x86_64.pkg.tar.zst"
+            da26540881cd5734072717133307e5d1a27a60468d3656885507833b80f24088c5382eaa0234b30bdd9e8484a6638b4514623f5327f10b19eed36f12158e8edb
+    )
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+    vcpkg_list(APPEND OPTIONS "-DBASH_EXECUTABLE=${MSYS_ROOT}/usr/bin/bash.exe")
+endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
 
@@ -28,6 +43,7 @@ vcpkg_cmake_configure(
         -DKTX_FEATURE_LOADTEST_APPS=OFF
         -DKTX_FEATURE_STATIC_LIBRARY=${ENABLE_STATIC}
         ${FEATURE_OPTIONS}
+        ${OPTIONS}
         # Do not regenerate headers (needs more dependencies)
         -DCMAKE_DISABLE_FIND_PACKAGE_Vulkan=1
     DISABLE_PARALLEL_CONFIGURE

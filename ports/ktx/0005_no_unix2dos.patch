@@ -1,0 +1,30 @@
+diff --git a/cmake/mkvk.cmake b/cmake/mkvk.cmake
+index dee06ec..614abce 100644
+--- a/cmake/mkvk.cmake
++++ b/cmake/mkvk.cmake
+@@ -47,9 +47,6 @@ if(CMAKE_HOST_WIN32)
+     add_custom_command(OUTPUT ${mkvkformatfiles_output}
+         COMMAND ${CMAKE_COMMAND} -E make_directory lib
+         COMMAND "${BASH_EXECUTABLE}" -c "Vulkan_INCLUDE_DIR=\"${Vulkan_INCLUDE_DIR}\" lib/mkvkformatfiles lib"
+-        COMMAND "${BASH_EXECUTABLE}" -c "unix2dos ${PROJECT_SOURCE_DIR}/lib/vkformat_enum.h"
+-        COMMAND "${BASH_EXECUTABLE}" -c "unix2dos ${PROJECT_SOURCE_DIR}/lib/vkformat_check.c"
+-        COMMAND "${BASH_EXECUTABLE}" -c "unix2dos ${PROJECT_SOURCE_DIR}/lib/vkformat_str.c"
+         DEPENDS ${mkvkformatfiles_input}
+         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+         COMMENT "Generating VkFormat-related source files"
+@@ -81,7 +78,6 @@ if(CMAKE_HOST_WIN32)
+         OUTPUT ${makevkswitch_output}
+         COMMAND ${CMAKE_COMMAND} -E make_directory lib/dfdutils
+         COMMAND "${PERL_EXECUTABLE}" lib/dfdutils/makevk2dfd.pl lib/vkformat_enum.h lib/dfdutils/vk2dfd.inl
+-        COMMAND "${BASH_EXECUTABLE}" -c "unix2dos ${PROJECT_SOURCE_DIR}/lib/dfdutils/vk2dfd.inl"
+         DEPENDS ${makevkswitch_input}
+         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+         COMMENT "Generating VkFormat/DFD switch body"
+@@ -116,7 +112,6 @@ if(CMAKE_HOST_WIN32)
+         OUTPUT ${makedfd2vk_output}
+         COMMAND ${CMAKE_COMMAND} -E make_directory lib/dfdutils
+         COMMAND "${PERL_EXECUTABLE}" lib/dfdutils/makedfd2vk.pl lib/vkformat_enum.h lib/dfdutils/dfd2vk.inl
+-        COMMAND "${BASH_EXECUTABLE}" -c "unix2dos ${PROJECT_SOURCE_DIR}/lib/dfdutils/dfd2vk.inl"
+         DEPENDS ${makedfd2vk_input}
+         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+         COMMENT "Generating DFD/VkFormat switch body"
