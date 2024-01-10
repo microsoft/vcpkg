@@ -6,7 +6,6 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 0fc69bb09b74b892317c64d11822e29311e016566b60fc217efb20aec713e29dc02400839497cfcf5e837fcee9efa3536452997fa76bbc23464fad92a5a89bef
     HEAD_REF main
-    PATCHES fix-lib-to-share.patch
 )
 
 vcpkg_cmake_configure(
@@ -21,9 +20,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/maxminddb PACKAGE_NAME maxminddb)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
