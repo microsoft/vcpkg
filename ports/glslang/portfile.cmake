@@ -22,17 +22,12 @@ if (ENABLE_GLSLANG_BINARIES)
     vcpkg_add_to_path("${PYTHON_PATH}")
 endif ()
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    set(PLATFORM_OPTIONS "-DOVERRIDE_MSVCCRT=OFF")
-endif ()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXTERNAL=OFF
         -DGLSLANG_TESTS=OFF
         ${FEATURE_OPTIONS}
-        ${PLATFORM_OPTIONS}
 )
 
 vcpkg_cmake_install()
