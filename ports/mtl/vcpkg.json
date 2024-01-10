@@ -1,8 +1,10 @@
 {
   "name": "mtl",
-  "version": "1.0.0",
+  "version-string": "1.0.0",
+  "port-version": 0,
   "description": "Copyright Tonitaga. C++ Matrix Template Library for fundamental types, supports C++11 - C++23 standard",
   "homepage": "https://github.com/tonitaga/Matrix-Template-Library-CPP",
+  "license": "MIT",
   "dependencies": [
     
   ]
