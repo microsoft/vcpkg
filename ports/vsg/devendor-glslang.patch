@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6e7ec437..db4d30f1 100644
+index 883b103a..0144e914 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -37,9 +37,11 @@ find_package(Vulkan ${Vulkan_MIN_VERSION} REQUIRED)
@@ -16,10 +16,10 @@ index 6e7ec437..db4d30f1 100644
  
          if (Git_FOUND)
 diff --git a/src/vsg/CMakeLists.txt b/src/vsg/CMakeLists.txt
-index 3d9625e4..96285e99 100644
+index 188cfbe2..54311c70 100644
 --- a/src/vsg/CMakeLists.txt
 +++ b/src/vsg/CMakeLists.txt
-@@ -227,14 +227,24 @@ set(SOURCES
+@@ -226,14 +226,23 @@ set(SOURCES
      utils/LoadPagedLOD.cpp
  )
  
@@ -39,14 +39,13 @@ index 3d9625e4..96285e99 100644
 +        glslang::MachineIndependent
 +        glslang::GenericCodeGen
 +        glslang::glslang-default-resource-limits
-+        glslang::OGLCompiler
 +        glslang::SPVRemapper
 +        glslang::SPIRV
 +	PUBLIC
          Vulkan::Vulkan
          Threads::Threads
  )
-@@ -365,9 +375,6 @@ target_include_directories(vsg
+@@ -374,9 +383,6 @@ target_include_directories(vsg
      PUBLIC
          $<BUILD_INTERFACE:${VSG_SOURCE_DIR}/include>
          $<BUILD_INTERFACE:${VSG_BINARY_DIR}/include>

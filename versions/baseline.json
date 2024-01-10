@@ -8966,7 +8966,7 @@
     },
     "vsg": {
       "baseline": "1.0.9",
-      "port-version": 0
+      "port-version": 1
     },
     "vsgxchange": {
       "baseline": "1.0.5",
