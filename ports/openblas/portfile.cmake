@@ -39,6 +39,10 @@ if(VCPKG_TARGET_IS_OSX)
     endif()
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
+endif()
+
 set(OPENBLAS_EXTRA_OPTIONS)
 # for UWP version, must build non uwp first for helper
 # binaries.
