@@ -7857,7 +7857,7 @@
       "port-version": 0
     },
     "shaderc": {
-      "baseline": "2023.7",
+      "baseline": "2023.8",
       "port-version": 0
     },
     "shaderwriter": {
