@@ -3669,7 +3669,7 @@
       "port-version": 3
     },
     "json-dto": {
-      "baseline": "0.3.1",
+      "baseline": "0.3.2",
       "port-version": 0
     },
     "json-rpc-cxx": {
