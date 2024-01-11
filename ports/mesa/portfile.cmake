@@ -38,12 +38,6 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     endif()
 endif()
 
-# For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more. 
-list(APPEND MESA_OPTIONS -Dzstd=enabled)
-list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
-list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
-list(APPEND MESA_OPTIONS -Dcpp_rtti=true)
-
 if("offscreen" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dosmesa=true)
 else()
@@ -99,9 +93,13 @@ endif()
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
+        -Dbuild-tests=false
+        -Dcpp_rtti=true
         -Degl-lib-suffix=_mesa
         -Dgles-lib-suffix=_mesa
-        -Dbuild-tests=false
+        -Dshared-llvm=disabled
+        -Dvalgrind=disabled
+        -Dzstd=enabled
         ${MESA_OPTIONS}
     ADDITIONAL_BINARIES
         python=['${PYTHON3}','-I']
