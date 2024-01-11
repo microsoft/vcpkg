@@ -745,10 +745,6 @@ mecab:x86-windows        = skip
 memorymodule:arm-neon-android=fail
 memorymodule:arm64-android=fail
 memorymodule:x64-android=fail
-# Missing dependent libraries.
-mesa:x64-linux=fail
-mesa:x64-osx=fail
-mesa:arm64-osx=fail
 mfx-dispatch:arm-neon-android=fail
 mfx-dispatch:arm64-android=fail
 mfx-dispatch:x64-android=fail

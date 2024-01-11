@@ -1,0 +1,47 @@
+diff --git a/meson.build b/meson.build
+index 8963b31..524e6ec 100644
+--- a/meson.build
++++ b/meson.build
+@@ -126,7 +126,7 @@ pre_args += '-DHAVE_OPENGL_ES_2=@0@'.format(with_gles2 ? '1' : '0')
+ 
+ with_any_opengl = with_opengl or with_gles1 or with_gles2
+ # Only build shared_glapi if at least one OpenGL API is enabled
+-with_shared_glapi = with_shared_glapi and with_any_opengl
++with_shared_glapi = with_shared_glapi and (with_any_opengl or get_option('egl').enabled())
+ 
+ system_has_kms_drm = ['openbsd', 'netbsd', 'freebsd', 'gnu/kfreebsd', 'dragonfly', 'linux', 'sunos', 'android', 'managarm'].contains(host_machine.system())
+ 
+@@ -172,7 +172,17 @@ elif gallium_drivers.contains('all')
+    ]
+ endif
+ 
++if not get_option('llvm').enabled() and get_option('gallium-drivers').contains('auto')
++  drivers_without_llvm = []
++  foreach driver : gallium_drivers
++    if not ['radeonsi'].contains(driver)
++      drivers_without_llvm += driver
++    endif
++  endforeach
++  gallium_drivers = drivers_without_llvm
++endif
+ with_gallium_radeonsi = gallium_drivers.contains('radeonsi')
++with_gallium_radeonsi = with_gallium_radeonsi and get_option('llvm').enabled()
+ with_gallium_r300 = gallium_drivers.contains('r300')
+ with_gallium_r600 = gallium_drivers.contains('r600')
+ with_gallium_nouveau = gallium_drivers.contains('nouveau')
+@@ -237,6 +247,15 @@ elif _vulkan_drivers.contains('all')
+                       'nouveau-experimental']
+ endif
+ 
++if not get_option('llvm').enabled()
++  drivers_without_llvm = []
++  foreach driver : _vulkan_drivers
++    if not ['swrast'].contains(driver)
++      drivers_without_llvm += driver
++    endif
++  endforeach
++  _vulkan_drivers = drivers_without_llvm
++endif
+ with_intel_vk = _vulkan_drivers.contains('intel')
+ with_intel_hasvk = _vulkan_drivers.contains('intel_hasvk')
+ with_amd_vk = _vulkan_drivers.contains('amd')

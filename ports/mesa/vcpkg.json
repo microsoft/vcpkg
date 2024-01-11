@@ -8,6 +8,10 @@
   "supports": "!(windows & arm) & !staticcrt & !uwp",
   "dependencies": [
     {
+      "name": "elfutils",
+      "platform": "!(android | ios | osx | windows)"
+    },
+    {
       "name": "vcpkg-get-python-packages",
       "host": true
     },
@@ -30,15 +34,9 @@
   "features": {
     "egl": {
       "description": "Build support for EGL platform",
+      "supports": "!ios & !osx",
       "dependencies": [
-        "egl-registry",
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
-            "opengl"
-          ]
-        }
+        "egl-registry"
       ]
     },
     "gles1": {
@@ -54,7 +52,7 @@
       ]
     },
     "llvm": {
-      "description": "Build with llvmpipe",
+      "description": "Build with LLVM",
       "dependencies": [
         {
           "name": "llvm",
@@ -84,6 +82,14 @@
           "name": "llvm",
           "default-features": false,
           "features": [
+            "target-amdgpu"
+          ],
+          "platform": "!arm"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
             "target-x86"
           ],
           "platform": "x64 | x86"
@@ -106,6 +112,25 @@
       "description": "Build support for OpenGL (all versions)",
       "dependencies": [
         "opengl-registry"
+      ]
+    },
+    "vulkan": {
+      "description": "Build support for Vulkan",
+      "dependencies": [
+        {
+          "name": "glslang",
+          "default-features": false,
+          "features": [
+            "tools"
+          ],
+          "platform": "arm | x64 | x86"
+        }
+      ]
+    },
+    "wayland": {
+      "description": "Build support for Wayland",
+      "dependencies": [
+        "wayland-protocols"
       ]
     }
   }

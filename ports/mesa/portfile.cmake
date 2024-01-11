@@ -10,6 +10,7 @@ vcpkg_from_gitlab(
     REF mesa-${VERSION}
     SHA512 202b2b20ffe7d357570a0d0bf0b53dc246b3e903738e8c8a000c5f61109ab5233d62de217444f49fd62927f8c418d929e5a2a5a800d1e39e334d50eb090e850c
     PATCHES
+        dependencies.diff
         python.diff
         winflex-race.diff
 )
@@ -83,6 +84,12 @@ else()
 endif()
 list(APPEND MESA_OPTIONS -Dshared-glapi=${shared_glapi})
 
+if(NOT "vulkan" IN_LIST FEATURES) # EGL feature only works on Linux
+    list(APPEND MESA_OPTIONS -Dvulkan-drivers=[])
+elseif(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/glslang")
+    vcpkg_list(APPEND MESA_ADDITIONAL_BINARIES "glslangValidator = '${CURRENT_HOST_INSTALLED_DIR}/tools/glslang/glslangValidator${VCPKG_HOST_EXECUTABLE_SUFFIX}'")
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dplatforms=['windows'])
     list(APPEND MESA_OPTIONS -Dmicrosoft-clc=disabled)
@@ -90,6 +97,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
         set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
     endif()
+elseif(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND MESA_OPTIONS -Dplatforms=['android'])
+elseif("wayland" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dplatforms=['x11','wayland'])
+else()
+    list(APPEND MESA_OPTIONS -Dplatforms=['x11'])
 endif()
 
 vcpkg_configure_meson(
@@ -98,14 +111,17 @@ vcpkg_configure_meson(
         -Dbuild-tests=false
         -Dcpp_rtti=true
         -Degl-lib-suffix=_mesa
+        -Dexpat=disabled
         -Dgles-lib-suffix=_mesa
-        -Dshared-llvm=disabled
+        -Dlibunwind=disabled
+        -Dshared-llvm=disabled  # disable autodetection - fails; llvm is ONLY_STATIC_LIBRARY
         -Dvalgrind=disabled
         -Dzstd=enabled
         ${MESA_OPTIONS}
     ADDITIONAL_BINARIES
         python=['${PYTHON3}','-I']
         python3=['${PYTHON3}','-I']
+        ${MESA_ADDITIONAL_BINARIES}
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
