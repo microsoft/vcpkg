@@ -19,30 +19,14 @@
     "zstd"
   ],
   "default-features": [
-    "default-features"
+    "gles1",
+    "gles2",
+    {
+      "name": "llvm",
+      "platform": "x64"
+    }
   ],
   "features": {
-    "default-features": {
-      "description": "Platform dependent default features",
-      "dependencies": [
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
-            "gles1",
-            "gles2"
-          ]
-        },
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
-            "llvm"
-          ],
-          "platform": "x64"
-        }
-      ]
-    },
     "egl": {
       "description": "Build support for EGL platform",
       "dependencies": [
