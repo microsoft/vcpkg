@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-pdb-find.patch
         fix-install-prefix-path.patch
         install-include-dir.patch
+        fix-link-freeimage.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
