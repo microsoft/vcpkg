@@ -7,10 +7,16 @@ vcpkg_from_github(
         fix-runtime-destination.patch
 )
 
+set(ENABLE_OPENSSL OFF)
+if ("openssl" IN_LIST FEATURES)
+    set(ENABLE_OPENSSL ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
+        -DENABLE_OPENSSL=${ENABLE_OPENSSL}
         -DTEST_APPS=OFF
 )
 

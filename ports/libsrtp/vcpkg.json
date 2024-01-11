@@ -12,6 +12,9 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+   "features": {
+    "openssl": { "description": "Enable OpenSSL support", "dependencies": ["openssl"]}
+   }
   ]
 }
