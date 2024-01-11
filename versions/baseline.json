@@ -5674,7 +5674,7 @@
     },
     "mongo-c-driver": {
       "baseline": "1.25.4",
-      "port-version": 0
+      "port-version": 1
     },
     "mongo-cxx-driver": {
       "baseline": "3.9.0",
