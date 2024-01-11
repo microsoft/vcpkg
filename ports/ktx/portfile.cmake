@@ -48,7 +48,8 @@ vcpkg_cmake_configure(
         # Do not regenerate headers (needs more dependencies)
         -DCMAKE_DISABLE_FIND_PACKAGE_Vulkan=1
     DISABLE_PARALLEL_CONFIGURE
-         CMAKE_DISABLE_FIND_PACKAGE_Vulkan
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_Vulkan
 )
 
 vcpkg_cmake_install()
