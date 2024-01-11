@@ -15,6 +15,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSKIP_BUILD_TEST=ON
+        -DCMAKE_CXX_STANDARD=20
 )
 
 vcpkg_cmake_install()
