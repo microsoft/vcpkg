@@ -4,21 +4,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO maxmind/libmaxminddb
     REF "${VERSION}"
-    SHA512 0a5caa267712310ef5de4c33e008d02dff76f8a9672e370719cd1d3e0f8de1146b9120991f5c2e34ed81a4ee011510dcc4b30051f6e23a6fd0634f50d35252ec
-    HEAD_REF master
-    PATCHES fix-linux-build.patch
+    SHA512 0fc69bb09b74b892317c64d11822e29311e016566b60fc217efb20aec713e29dc02400839497cfcf5e837fcee9efa3536452997fa76bbc23464fad92a5a89bef
+    HEAD_REF main
 )
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
+        -DCMAKE_SHARED_LIBRARY_PREFIX=lib
+        -DCMAKE_STATIC_LIBRARY_PREFIX=lib
     OPTIONS_DEBUG
-        -DDISABLE_INSTALL_HEADERS=ON
+        -DCMAKE_DEBUG_POSTFIX=d
 )
-
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
+vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/maxminddb PACKAGE_NAME maxminddb)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
