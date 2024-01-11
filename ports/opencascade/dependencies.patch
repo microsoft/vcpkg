@@ -110,3 +110,15 @@ index 8c7a2df1..8499e1af 100644
  #include <tbb/scalable_allocator.h>
  using namespace tbb;
  #else
+diff --git a/src/Image/Image_AlienPixMap.cxx b/src/Image/Image_AlienPixMap.cxx
+index f869e8f..538d5b9 100644
+--- a/src/Image/Image_AlienPixMap.cxx
++++ b/src/Image/Image_AlienPixMap.cxx
+@@ -21,7 +21,6 @@
+   #include <FreeImage.h>
+ 
+   #ifdef _MSC_VER
+-    #pragma comment( lib, "FreeImage.lib" )
+   #endif
+ #elif defined(HAVE_WINCODEC)
+   #include <wincodec.h>
