@@ -10,7 +10,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 2c8da820ebf6751d696645092ea5e562f7cb303d4f5cec9a8ca8e69b65321e79cc8a645095a4ecea710f5afd54499e71f4cdf261a0a2e32e28aef96a50ace28c
     HEAD_REF master
-    PATCHES ${PATCHES}
+    PATCHES 
+        ${PATCHES}
+        fix_dependency.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DATACHANNEL_STATIC_LINKAGE)
@@ -44,6 +46,8 @@ include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(OpenSSL)
 find_dependency(LibJuice)
+find_dependency(plog CONFIG)
+find_dependency(libSRTP CONFIG)
 ${DATACHANNEL_CONFIG}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
