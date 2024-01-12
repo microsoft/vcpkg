@@ -6742,7 +6742,7 @@
     },
     "popsift": {
       "baseline": "0.9",
-      "port-version": 5
+      "port-version": 6
     },
     "portable-file-dialogs": {
       "baseline": "0.1.0",

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9735bc2..ded64e7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -138,6 +138,9 @@ if(MSVC)
+       set(PopSift_MVSC_LINKER "${PopSift_MVSC_LINKER}d")
+   endif()
+   list(APPEND CUDA_NVCC_FLAGS   -Xcompiler ${PopSift_MVSC_LINKER})
++  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.40.33503.95")
++    list(APPEND CUDA_NVCC_FLAGS "-allow-unsupported-compiler")
++  endif()
+ endif()
+ 
+ # default stream per-thread implies that each host thread has one non-synchronizing 0-stream
