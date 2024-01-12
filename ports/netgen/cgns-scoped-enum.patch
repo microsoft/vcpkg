@@ -1,194 +1,46 @@
 diff --git a/libsrc/interface/rw_cgns.cpp b/libsrc/interface/rw_cgns.cpp
-index ad0869a..de5e2fb 100644
---- a/libsrc/interface/rw_cgns.cpp	
+index 096fbfdca..edf199cfd 100644
+--- a/libsrc/interface/rw_cgns.cpp
 +++ b/libsrc/interface/rw_cgns.cpp
-@@ -10,33 +10,33 @@ namespace netgen::cg
+@@ -6,6 +6,37 @@
+ 
+ #include <cgnslib.h>
+ 
++//vcpkg builds cgns with scoped enumes. So the associcated types and values need to be correctly scoped.
++#define ElementType_t CGNS_ENUMT(ElementType_t)
++#define GridLocation_t CGNS_ENUMT(GridLocation_t)
++#define PointSetType_t CGNS_ENUMT(PointSetType_t)
++#define DataType_t CGNS_ENUMT(DataType_t)
++#define ZoneType_t CGNS_ENUMT(ZoneType_t)
++#define Unstructured CGNS_ENUMV(Unstructured)
++#define RealDouble CGNS_ENUMV(RealDouble)
++#define MIXED CGNS_ENUMV(MIXED)
++#define EdgeCenter CGNS_ENUMV(EdgeCenter)
++#define KFaceCenter CGNS_ENUMV(KFaceCenter)
++#define JFaceCenter CGNS_ENUMV(JFaceCenter)
++#define IFaceCenter CGNS_ENUMV(IFaceCenter)
++#define FaceCenter CGNS_ENUMV(FaceCenter)
++#define CellCenter CGNS_ENUMV(CellCenter)
++#define Vertex CGNS_ENUMV(Vertex)
++#define BAR_2 CGNS_ENUMV(BAR_2)
++#define BAR_3 CGNS_ENUMV(BAR_3)
++#define TRI_3 CGNS_ENUMV(TRI_3)
++#define TRI_6 CGNS_ENUMV(TRI_6)
++#define QUAD_4 CGNS_ENUMV(QUAD_4)
++#define QUAD_8 CGNS_ENUMV(QUAD_8)
++#define TETRA_4 CGNS_ENUMV(TETRA_4)
++#define TETRA_10 CGNS_ENUMV(TETRA_10)
++#define PYRA_5 CGNS_ENUMV(PYRA_5)
++#define PYRA_13 CGNS_ENUMV(PYRA_13)
++#define HEXA_8 CGNS_ENUMV(HEXA_8)
++#define HEXA_20 CGNS_ENUMV(HEXA_20)
++#define PENTA_6 CGNS_ENUMV(PENTA_6)
++#define PENTA_15 CGNS_ENUMV(PENTA_15)
++
+ namespace netgen::cg
  {
    typedef ngcore::ClosedHashTable<ngcore::INT<3,size_t>, size_t> PointTable;
- 
--  int getDim(ElementType_t type)
-+  int getDim(CGNS_ENUMT(ElementType_t) type)
-     {
-       switch(type)
-         {
--          case BAR_2:
--          case BAR_3:
-+          case CGNS_ENUMV(BAR_2):
-+          case CGNS_ENUMV(BAR_3):
-               return 1;
--          case TRI_3:
--          case TRI_6:
--          case QUAD_4:
--          case QUAD_8:
-+          case CGNS_ENUMV(TRI_3):
-+          case CGNS_ENUMV(TRI_6):
-+          case CGNS_ENUMV(QUAD_4):
-+          case CGNS_ENUMV(QUAD_8):
-               return 2;
--          case TETRA_4:
--          case TETRA_10:
--          case PYRA_5:
--          case PYRA_13:
--          case HEXA_8:
--          case HEXA_20:
--          case PENTA_6:
--          case PENTA_15:
-+          case CGNS_ENUMV(TETRA_4):
-+          case CGNS_ENUMV(TETRA_10):
-+          case CGNS_ENUMV(PYRA_5):
-+          case CGNS_ENUMV(PYRA_13):
-+          case CGNS_ENUMV(HEXA_8):
-+          case CGNS_ENUMV(HEXA_20):
-+          case CGNS_ENUMV(PENTA_6):
-+          case CGNS_ENUMV(PENTA_15):
-               return 3;
-           default:
-               throw Exception("Read CGNS: unknown element type " + string(cg_ElementTypeName(type)));
-         }
-     }
- 
--  Segment ReadCGNSElement1D( ElementType_t type, FlatArray<cgsize_t> verts )
-+  Segment ReadCGNSElement1D( CGNS_ENUMT(ElementType_t) type, FlatArray<cgsize_t> verts )
-     {
-       int np;
-       cg_npe(type, &np);
-@@ -47,7 +47,7 @@ namespace netgen::cg
-       return s;
-     }
- 
--  Element2d ReadCGNSElement2D( ElementType_t type, FlatArray<cgsize_t> verts )
-+  Element2d ReadCGNSElement2D( CGNS_ENUMT(ElementType_t) type, FlatArray<cgsize_t> verts )
-     {
- //       static constexpr int map_tri3[]  = {0,2,1};
-       static constexpr int map_tri6[]  = {0,2,1,3,5,4}; // untested
-@@ -57,16 +57,16 @@ namespace netgen::cg
-       const int * map = nullptr;
-       switch(type)
-         {
--          case TRI_3:
-+          case CGNS_ENUMV(TRI_3):
- //               map = map_tri3;
-               break;
--          case QUAD_4:
-+          case CGNS_ENUMV(QUAD_4):
- //               map = map_quad4;
-               break;
--          case TRI_6:
-+          case CGNS_ENUMV(TRI_6):
-               map = map_tri6;
-               break;
--          case QUAD_8:
-+          case CGNS_ENUMV(QUAD_8):
-               map = map_quad8;
-               break;
-           default:
-@@ -82,7 +82,7 @@ namespace netgen::cg
-       return el;
-     }
- 
--  Element ReadCGNSElement3D( ElementType_t type, FlatArray<cgsize_t> verts )
-+  Element ReadCGNSElement3D( CGNS_ENUMT(ElementType_t) type, FlatArray<cgsize_t> verts )
-     {
-       static constexpr int map_tet4[]   = {0,2,1,3};
-       static constexpr int map_prism6[] = {0,2,1,3,5,4};
-@@ -94,19 +94,19 @@ namespace netgen::cg
-       const int * map = nullptr;
-       switch(type)
-         {
--          case TETRA_4:
-+          case CGNS_ENUMV(TETRA_4):
-               map = map_tet4; break;
--          case PYRA_5:
-+          case CGNS_ENUMV(PYRA_5):
-               map = map_pyra5; break;
--          case PENTA_6:
-+          case CGNS_ENUMV(PENTA_6):
-               map = map_prism6; break;
--          case HEXA_8:
-+          case CGNS_ENUMV(HEXA_8):
-               map = map_hexa8; break;
-               // TODO: Second order elements
--          case TETRA_10:
--          case PYRA_13:
--          case HEXA_20:
--          case PENTA_15:
-+          case CGNS_ENUMV(TETRA_10):
-+          case CGNS_ENUMV(PYRA_13):
-+          case CGNS_ENUMV(HEXA_20):
-+          case CGNS_ENUMV(PENTA_15):
-           default:
-               throw Exception("Read CGNS: unknown element type " + string(cg_ElementTypeName(type)));
-         }
-@@ -119,7 +119,7 @@ namespace netgen::cg
- 
-   void WriteCGNSElement( const Segment & el, Array<cgsize_t> & verts )
-     {
--      verts.Append(BAR_2);
-+      verts.Append(CGNS_ENUMV(BAR_2));
-       verts.Append(el[0]);
-       verts.Append(el[1]);
-     }
-@@ -129,23 +129,23 @@ namespace netgen::cg
-       static constexpr int map_tri6[]  = {0,2,1,3,5,4}; // untested
-       static constexpr int map_quad8[] = {0,3,2,1,4,7,6,5}; // untested
- 
--      ElementType_t type;
-+      CGNS_ENUMT(ElementType_t) type;
- 
-       const int * map = nullptr;
-       switch(el.GetType())
-         {
-           case TRIG:
--              type = TRI_3;
-+              type = CGNS_ENUMV(TRI_3);
-               break;
-           case QUAD:
--              type = QUAD_4;
-+              type = CGNS_ENUMV(QUAD_4);
-               break;
-           case TRIG6:
--              type = TRI_6;
-+              type = CGNS_ENUMV(TRI_6);
-               map = map_tri6;
-               break;
-           case QUAD8:
--              type = QUAD_8;
-+              type = CGNS_ENUMV(QUAD_8);
-               map = map_quad8;
-               break;
-               // TODO: Second order elements
-@@ -166,25 +166,25 @@ namespace netgen::cg
-       static constexpr int map_pyra5[]  = {0,3,2,1,4};
-       static constexpr int map_hexa8[]  = {0,3,2,1,4,7,6,5};
- 
--      ElementType_t type;
-+      CGNS_ENUMT(ElementType_t) type;
- 
-       const int * map = nullptr;
-       switch(el.GetType())
-         {
-           case TET:
-               map = map_tet4;
--              type = TETRA_4;
-+              type = CGNS_ENUMV(TETRA_4);
-               break;
-           case PYRAMID:
--              type = PYRA_5;
-+              type = CGNS_ENUMV(PYRA_5);
-               map = map_pyra5;
-               break;
-           case PRISM:
--              type = PENTA_6;
-+              type = CGNS_ENUMV(PENTA_6);
-               map = map_prism6;
-               break;
-           case HEX:
--              type = HEXA_8;
-+              type = CGNS_ENUMV(HEXA_8);
-               map = map_hexa8;
-               break;
-               // TODO: Second order elements
-@@ -215,7 +215,7 @@ namespace netgen::cg
+@@ -215,7 +246,7 @@ namespace netgen::cg
      if(codim==2) name += mesh.GetCD2Name(index);
  
      int ne = 0;
@@ -197,86 +49,8 @@ index ad0869a..de5e2fb 100644
  
      if(dim==3)
        for(const auto el : mesh.VolumeElements())
-@@ -248,9 +248,9 @@ namespace netgen::cg
-     // int start = 1;
-     // int end = ne;
- #if CGNS_VERSION < 3400
--    cg_section_write(fn,base,zone, name.c_str(), MIXED, ne_before+1, ne_before+ne, 0, &data[0], &section);
-+    cg_section_write(fn,base,zone, name.c_str(), CGNS_ENUMV(MIXED), ne_before+1, ne_before+ne, 0, &data[0], &section);
- #else
--    cg_poly_section_write(fn,base,zone, name.c_str(), MIXED, ne_before+1, ne_before+ne, 0, &data[0], nullptr, &section);
-+    cg_poly_section_write(fn,base,zone, name.c_str(), CGNS_ENUMV(MIXED), ne_before+1, ne_before+ne, 0, &data[0], nullptr, &section);
- #endif
- 
-     return ne;
-@@ -258,35 +258,35 @@ namespace netgen::cg
- 
-   // maps cgns node type to ngsolve node type
-   // enum NODE_TYPE { NT_VERTEX = 0, NT_EDGE = 1, NT_FACE = 2, NT_CELL = 3, NT_ELEMENT = 4, NT_FACET = 5 };
--  int getNodeType( GridLocation_t location )
-+  int getNodeType( CGNS_ENUMT(GridLocation_t) location )
-     {
-       switch(location)
-         {
--          case Vertex:
-+          case CGNS_ENUMV(Vertex):
-               return 0;
--          case CellCenter:
-+          case CGNS_ENUMV(CellCenter):
-               return 3;
--          case FaceCenter:
-+          case CGNS_ENUMV(FaceCenter):
-               return 2;
--          case EdgeCenter:
-+          case CGNS_ENUMV(EdgeCenter):
-               return 1;
-           default:
-               throw Exception("Read CGNS: unknown grid location " + string(cg_GridLocationName(location)));
-         }
-     }
- 
--  GridLocation_t getCGNodeType( int node_type )
-+  CGNS_ENUMT(GridLocation_t) getCGNodeType( int node_type )
-   {
-     switch(node_type)
-     {
-       case 0:
--        return Vertex;
-+        return CGNS_ENUMV(Vertex);
-       case 1:
--        return EdgeCenter;
-+        return CGNS_ENUMV(EdgeCenter);
-       case 2:
--        return FaceCenter;
-+        return CGNS_ENUMV(FaceCenter);
-       case 3:
--        return CellCenter;
-+        return CGNS_ENUMV(CellCenter);
-       default:
-         throw Exception("Write CGNS: unknown node type " + ToString(node_type));
-     }
-@@ -297,12 +297,12 @@ namespace netgen::cg
-     {
-       int fn, base, zone, solution;
-       string name;
--      GridLocation_t location; // solution is defined on either cells, faces, edges or vertices
--      PointSetType_t  point_type;
-+      CGNS_ENUMT(GridLocation_t) location; // solution is defined on either cells, faces, edges or vertices
-+      CGNS_ENUMT(PointSetType_t)  point_type;
-       cgsize_t n_points;
- 
-       Array<string> field_names;
--      Array<DataType_t> field_datatypes;
-+      Array<CGNS_ENUMT(DataType_t)> field_datatypes;
- 
-       Solution() = default;
- 
-@@ -330,10 +330,10 @@ namespace netgen::cg
- 
-   struct Zone
-     {
--      ZoneType_t zone_type;
-+      CGNS_ENUMT(ZoneType_t) zone_type;
+@@ -333,7 +364,7 @@ namespace netgen::cg
+       ZoneType_t zone_type;
        int fn, base, zone;
        int first_index_1d, first_index_2d, first_index_3d;
 -      int nv=0, ne_1d=0, ne_2d=0, ne_3d=0;
@@ -284,81 +58,7 @@ index ad0869a..de5e2fb 100644
  
        Array<string> names_1d, names_2d, names_3d;
  
-@@ -371,17 +371,17 @@ namespace netgen::cg
-                     {
-                       switch(sol.location)
-                         {
--                          case Vertex:
-+                          case CGNS_ENUMV(Vertex):
-                               size = nv;
-                               break;
--                          case CellCenter:
-+                          case CGNS_ENUMV(CellCenter):
-                               size = (meshdim == 3 ? ne_3d : ne_2d);
-                               break;
--                          case FaceCenter:
--                          case IFaceCenter:
--                          case JFaceCenter:
--                          case KFaceCenter:
--                          case EdgeCenter:
-+                          case CGNS_ENUMV(FaceCenter):
-+                          case CGNS_ENUMV(IFaceCenter):
-+                          case CGNS_ENUMV(JFaceCenter):
-+                          case CGNS_ENUMV(KFaceCenter):
-+                          case CGNS_ENUMV(EdgeCenter):
-                           default:
-                               throw Exception("Read CGNS: unknown grid location " + string(cg_GridLocationName(sol.location)));
-                         }
-@@ -390,7 +390,7 @@ namespace netgen::cg
-                   auto values = Array<double>(size);
- 
-                   cgsize_t imin = 1UL;
--                  cg_field_read(fn, base, zone, sol.solution, sol.field_names[fi].c_str(), RealDouble, &imin, &size, &values[0]);
-+                  cg_field_read(fn, base, zone, sol.solution, sol.field_names[fi].c_str(), CGNS_ENUMV(RealDouble), &imin, &size, &values[0]);
-                   sol_names.push_back(sol.field_names[fi]);
-                   sol_values.emplace_back(std::move(values));
-                   sol_locations.push_back(getNodeType(sol.location));
-@@ -408,9 +408,9 @@ namespace netgen::cg
- 
-           Array<double> x(nv), y(nv), z(nv);
-           cgsize_t imin=1;
--          cg_coord_read(fn,base,zone, "CoordinateX", RealDouble, &imin, &nv, &x[0]);
--          cg_coord_read(fn,base,zone, "CoordinateY", RealDouble, &imin, &nv, &y[0]);
--          cg_coord_read(fn,base,zone, "CoordinateZ", RealDouble, &imin, &nv, &z[0]);
-+          cg_coord_read(fn,base,zone, "CoordinateX", CGNS_ENUMV(RealDouble), &imin, &nv, &x[0]);
-+          cg_coord_read(fn,base,zone, "CoordinateY", CGNS_ENUMV(RealDouble), &imin, &nv, &y[0]);
-+          cg_coord_read(fn,base,zone, "CoordinateZ", CGNS_ENUMV(RealDouble), &imin, &nv, &z[0]);
- 
-           Array<cgsize_t> point_map(nv);
- 
-@@ -442,7 +442,7 @@ namespace netgen::cg
-             {
-               RegionTimer rtsection(tsection);
-               char sec_name[100];
--              ElementType_t type;
-+              CGNS_ENUMT(ElementType_t) type;
-               cgsize_t start, end;
-               int nbndry, parent_flag;
- 
-@@ -456,7 +456,7 @@ namespace netgen::cg
-                       c = '_';
- 
- 
--              if(type==MIXED)
-+              if(type==CGNS_ENUMV(MIXED))
-                 {
-                   bool have_1d_elements = false;
-                   bool have_2d_elements = false;
-@@ -475,7 +475,7 @@ namespace netgen::cg
-                   size_t vi = 0;
-                   while(vi<nv)
-                     {
--                      auto type = static_cast<ElementType_t>(vertices[vi++]);
-+                      auto type = static_cast<CGNS_ENUMT(ElementType_t)>(vertices[vi++]);
-                       int dim = getDim(type);
- 
-                       int np;
-@@ -643,7 +643,7 @@ namespace netgen
+@@ -643,7 +674,7 @@ namespace netgen
        int n_vertices = 0;
        for (auto zi : Range(1, nzones+1))
        {
@@ -367,41 +67,3 @@ index ad0869a..de5e2fb 100644
          char name[100];
          cg_zone_read(fn,base,zi, name, size);
          n_vertices += size[0];
-@@ -653,9 +653,9 @@ namespace netgen
- 
-       for (auto zi : Range(1, nzones+1))
-         {
--          ZoneType_t zone_type;
-+          CGNS_ENUMT(ZoneType_t) zone_type;
-           cg_zone_type(fn, base, zi, &zone_type);
--          if(zone_type != Unstructured )
-+          if(zone_type != CGNS_ENUMV(Unstructured) )
-             {
-               PrintMessage(2, "skipping zone with type ", cg_ZoneTypeName(zone_type) );
-               continue;
-@@ -742,12 +742,12 @@ namespace netgen
-       }
- 
-       cgsize_t isize[3] = { nv, ne, 0 };
--      cg_zone_write(fn,base, "mesh", isize, Unstructured, &zone);
-+      cg_zone_write(fn,base, "mesh", isize, CGNS_ENUMV(Unstructured), &zone);
- 
-       int coord;
--      cg_coord_write(fn,base,zone, RealDouble, "CoordinateX", &x[0], &coord);
--      cg_coord_write(fn,base,zone, RealDouble, "CoordinateY", &y[0], &coord);
--      cg_coord_write(fn,base,zone, RealDouble, "CoordinateZ", &z[0], &coord);
-+      cg_coord_write(fn,base,zone, CGNS_ENUMV(RealDouble), "CoordinateX", &x[0], &coord);
-+      cg_coord_write(fn,base,zone, CGNS_ENUMV(RealDouble), "CoordinateY", &y[0], &coord);
-+      cg_coord_write(fn,base,zone, CGNS_ENUMV(RealDouble), "CoordinateZ", &z[0], &coord);
- 
-       int imax3 = 0;
-       for(const auto & el : mesh.VolumeElements())
-@@ -802,7 +802,7 @@ namespace netgen
- 
- 
-         cg_sol_write(fn, base, zone, name.c_str(), cg::getCGNodeType(locations[i]), &section);
--        cg_field_write(fn, base, zone, section, RealDouble, fields[i].c_str(), &values[i][0], &field);
-+        cg_field_write(fn, base, zone, section, CGNS_ENUMV(RealDouble), fields[i].c_str(), &values[i][0], &field);
-       }
- 
-       cg_close(fn);
