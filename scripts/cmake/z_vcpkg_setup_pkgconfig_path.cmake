@@ -23,11 +23,14 @@ function(z_vcpkg_setup_pkgconfig_path)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
 
     foreach(base_dir IN LISTS arg_BASE_DIRS)
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${base_dir}/share/pkgconfig/")
+        if(base_dir STREQUAL "${CURRENT_INSTALLED_DIR}/debug")
+            set(base_dir "${CURRENT_INSTALLED_DIR}")
+        endif()
+        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${base_dir}/share/pkgconfig")
     endforeach()
 
     foreach(base_dir IN LISTS arg_BASE_DIRS)
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${base_dir}/lib/pkgconfig/")
+        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${base_dir}/lib/pkgconfig")
     endforeach()
 endfunction()
 
