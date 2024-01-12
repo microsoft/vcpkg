@@ -1,6 +1,6 @@
 {
   "name": "sentry-native",
-  "version": "0.6.7",
+  "version": "0.7.0",
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
   "license": "MIT",
@@ -27,6 +27,12 @@
         "Cf. https://github.com/getsentry/sentry-native#compile-time-options"
       ],
       "dependencies": [
+        {
+          "$comment": "pkgcong is used by the breakpad backend.",
+          "name": "pkgconf",
+          "host": true,
+          "platform": "!android & !ios"
+        },
         {
           "$comment": "zlib is used by the crashpad backend.",
           "name": "zlib",
