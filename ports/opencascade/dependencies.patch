@@ -99,3 +99,15 @@ index e391ddf..9cc3d49 100644
  if(OpenCASCADE_ALREADY_INCLUDED)
    return()
  endif()
+diff --git a/src/Image/Image_AlienPixMap.cxx b/src/Image/Image_AlienPixMap.cxx
+index f869e8f..538d5b9 100644
+--- a/src/Image/Image_AlienPixMap.cxx
++++ b/src/Image/Image_AlienPixMap.cxx
+@@ -21,7 +21,6 @@
+   #include <FreeImage.h>
+
+   #ifdef _MSC_VER
+-    #pragma comment( lib, "FreeImage.lib" )
+   #endif
+ #elif defined(HAVE_WINCODEC)
+   #include <wincodec.h>
