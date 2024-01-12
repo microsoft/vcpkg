@@ -1,8 +1,6 @@
 function(z_vcpkg_fixup_rpath_in_dir)
     vcpkg_find_acquire_program(PATCHELF)
 
-    find_program(READELF NAMES readelf REQUIRED) # Readelf is part of binutils and basically required since it contains ld/ranlib/ar/as
-
     # We need to iterate trough everything because we
     # can't predict where an elf file will be located
     file(GLOB root_entries LIST_DIRECTORIES TRUE "${CURRENT_PACKAGES_DIR}/*")
@@ -23,9 +21,9 @@ function(z_vcpkg_fixup_rpath_in_dir)
         endif()
 
         file(GLOB_RECURSE elf_files LIST_DIRECTORIES FALSE "${folder}/*")
-        list(FILTER elf_files EXCLUDE REGEX "\\\.(cpp|cc|cxx|c|hpp|h|hxx|inc|json|toml|yaml|man|m4|ac|am|in|log|txt|pyi?|pyc|pyx|pxd|pc|cmake||f77|f90|f03|fi|f|cu|mod|ini|whl|cat|csv|rst|md|npy|npz|template|build)$")
+        list(FILTER elf_files EXCLUDE REGEX "\\\.(cpp|cc|cxx|c|hpp|h|hh|hxx|inc|json|toml|yaml|man|m4|ac|am|in|log|txt|pyi?|pyc|pyx|pxd|pc|cmake|f77|f90|f03|fi|f|cu|mod|ini|whl|cat|csv|rst|md|npy|npz|template|build)$")
         list(FILTER elf_files EXCLUDE REGEX "/(copyright|LICENSE|METADATA)$")
-        message(STATUS "${elf_files}")
+
         foreach(elf_file IN LISTS elf_files)
             if(IS_SYMLINK "${elf_file}")
                 continue()
@@ -45,7 +43,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
 
             # If this fails, the file is not an elf
             execute_process(
-                COMMAND "${READELF}" -d "${elf_file}"
+                COMMAND "${PATCHELF}" --print-rpath "${elf_file}"
                 OUTPUT_VARIABLE readelf_output
                 ERROR_VARIABLE read_rpath_error
             )
@@ -54,15 +52,13 @@ function(z_vcpkg_fixup_rpath_in_dir)
             endif()
 
             set(rpath_norm "")
-
-            string(REGEX MATCH "R.*PATH[^[]+\\[([^]]+)\\]" found_rpath "${readelf_output}")
-
             if(NOT found_rpath STREQUAL "")
-                set(org_rpath "${CMAKE_MATCH_1}")
+                set(org_rpath "${readelf_output}")
                 message(STATUS "Adjusting original rpath of: '${org_rpath}'")
                 cmake_path(CONVERT "${org_rpath}" TO_CMAKE_PATH_LIST rpath_norm)
                 list(TRANSFORM rpath_norm REPLACE "${elf_file_dir}" "\$ORIGIN")
-                list(TRANSFORM rpath_norm REPLACE "/lib/pkgconfig/../.." "") # Remove unnecessary up/down
+                # Remove unnecessary up/down ; don't use normalize $ORIGIN/../ will be removed otherwise
+                list(TRANSFORM rpath_norm REPLACE "/lib/pkgconfig/../.." "")
                 list(TRANSFORM rpath_norm REPLACE "${current_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}")
                 list(TRANSFORM rpath_norm REPLACE "${current_installed_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}")
                 list(REMOVE_ITEM rpath_norm "\$ORIGIN")
@@ -84,7 +80,6 @@ function(z_vcpkg_fixup_rpath_in_dir)
             )
 
             message(STATUS "Fixed rpath in: '${elf_file}' ('${new_rpath}')")
-
         endforeach()
     endforeach()
 endfunction()
