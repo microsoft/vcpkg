@@ -2,4 +2,3 @@ The package mtl provides CMake targets:
 
     find_package(mtl REQUIRED)
     target_link_libraries(${PROJECT_NAME} PRIVATE mtl::mtl)
-    
