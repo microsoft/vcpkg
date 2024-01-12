@@ -1,8 +1,8 @@
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
-index 0a6afeb..2a67ee3 100644
+index 78038b1..ee87808 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -2,6 +2,23 @@
+@@ -6,6 +6,26 @@
  
  include(CMakeFindDependencyMacro)
  
@@ -22,15 +22,18 @@ index 0a6afeb..2a67ee3 100644
 +if(@USE_WEBP@)
 +    find_dependency(WebP CONFIG)
 +endif()
++if(@USE_LIBRAW@)
++    find_dependency(libraw CONFIG)
++endif()
 +
  # add here all the find_dependency() whenever switching to config based dependencies
  if (NOT @OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH@ AND NOT OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH)
      if (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 3.0)
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index 3ca046b..dad053c 100644
+index 0d84877..6995e80 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -174,14 +174,19 @@ endif ()
+@@ -176,14 +176,24 @@ endif ()
  checked_find_package (Freetype
                     DEFINITIONS  -DUSE_FREETYPE=1 )
  
@@ -46,13 +49,18 @@ index 3ca046b..dad053c 100644
      set (OpenColorIO_FOUND 0)
  endif ()
 -checked_find_package (OpenCV 3.0
++if(USE_OPENCOLORIO AND TARGET Imath::Imath AND OIIO_USING_IMATH STREQUAL "2")
++    message(FATAL_ERROR
++        "OpenColorIO and OpenEXR use incompatible versions of Imath. "
++        "You cannot use openimageio[opencolorio] for this configuration.")
++endif()
 +set(OPENCV_INCLUDES "")
 +set(OPENCV_LIBRARIES opencv_core)
 +checked_find_package (OpenCV CONFIG
                     DEFINITIONS  -DUSE_OPENCV=1)
  
  # Intel TBB
-@@ -191,14 +196,18 @@ checked_find_package (TBB 2017
+@@ -193,25 +203,31 @@ checked_find_package (TBB 2017
                        PREFER_CONFIG)
  
  checked_find_package (DCMTK VERSION_MIN 3.6.1)  # For DICOM images
@@ -73,7 +81,22 @@ index 3ca046b..dad053c 100644
                        RECOMMEND_MIN 1.7
                        RECOMMEND_MIN_REASON "for AVIF support")
  if (APPLE AND LIBHEIF_VERSION VERSION_GREATER_EQUAL 1.10 AND LIBHEIF_VERSION VERSION_LESS 1.11)
-@@ -219,9 +228,8 @@ if (LibRaw_FOUND AND LibRaw_VERSION VERSION_LESS 0.20 AND CMAKE_CXX_STANDARD VER
+     message (WARNING "Libheif 1.10 on Apple is known to be broken, disabling libheif support")
+     set (Libheif_FOUND 0)
+ endif ()
+-
+-checked_find_package (LibRaw
++set(LibRaw_INCLUDE_DIR "")
++set(LibRaw_r_LIBRARIES libraw::raw_r)
++checked_find_package (libraw CONFIG
+                       RECOMMEND_MIN 0.18
+                       RECOMMEND_MIN_REASON "for ACES support and better camera metadata"
+                       PRINT LibRaw_r_LIBRARIES)
++set(LibRaw_FOUND "${libraw_FOUND}")
+ if (LibRaw_FOUND AND LibRaw_VERSION VERSION_LESS 0.20 AND CMAKE_CXX_STANDARD VERSION_GREATER_EQUAL 17)
+     message (STATUS "${ColorYellow}WARNING When building for C++17, LibRaw should be 0.20 or higher (found ${LibRaw_VERSION}). You may get errors, depending on the compiler.${ColorReset}")
+     # Currently, we issue the above warning and let them take their chances.
+@@ -221,9 +237,8 @@ if (LibRaw_FOUND AND LibRaw_VERSION VERSION_LESS 0.20 AND CMAKE_CXX_STANDARD VER
      # set (LIBRAW_FOUND 0)
  endif ()
  
@@ -85,7 +108,7 @@ index 3ca046b..dad053c 100644
  # Note: Recent OpenJPEG versions have exported cmake configs, but we don't
  # find them reliable at all, so we stick to our FindOpenJPEG.cmake module.
  
-@@ -238,6 +246,8 @@ if (NOT Ptex_FOUND OR NOT Ptex_VERSION)
+@@ -240,6 +255,8 @@ if (NOT Ptex_FOUND OR NOT Ptex_VERSION)
      checked_find_package (Ptex)
  endif ()
  

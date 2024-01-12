@@ -8,10 +8,8 @@ vcpkg_from_github(
         fix-dependencies.patch
         fix-static-ffmpeg.patch
         fix-openexr-dll.patch
-        imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
-        fix-depend-libraw.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -68,6 +66,7 @@ vcpkg_cmake_configure(
         "-DREQUIRED_DEPS=fmt;JPEG;PNG;Robinmap"
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
+        ENABLE_IV
 )
 
 vcpkg_cmake_install()
