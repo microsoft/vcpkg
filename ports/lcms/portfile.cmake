@@ -1,8 +1,3 @@
-set(SHARED_PATCHES )
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    list(APPEND SHARED_PATCHES shared.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mm2/Little-CMS
@@ -11,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-builderror.patch # Upstream commit: https://github.com/mm2/Little-CMS/commit/f7b3c637c20508655f8b49935a4b556d52937b69
-        "${SHARED_PATCHES}" #Issue https://github.com/microsoft/vcpkg/issues/1665
+        shared.patch #Issue https://github.com/microsoft/vcpkg/issues/1665
 )
 
 vcpkg_configure_meson(
