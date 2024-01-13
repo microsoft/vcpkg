@@ -22,6 +22,12 @@ if (NOT TARGET unofficial::pulsar::pulsar)
         message(STATUS "Found _pulsar_debug_dll: ${_pulsar_debug_dll}")
     endif ()
 
+    # When CMAKE_BUILD_TYPE is not specified, debug libraries will be found for dependencies except ZLIB.
+    # So set it with Debug here to link debug ZLIB library by default.
+    if (NOT CMAKE_BUILD_TYPE)
+        set(CMAKE_BUILD_TYPE Debug)
+    endif ()
+
     include(CMakeFindDependencyMacro)
     find_dependency(OpenSSL)
     find_dependency(ZLIB)
@@ -36,12 +42,12 @@ if (NOT TARGET unofficial::pulsar::pulsar)
     if (_pulsar_release_dll)
         add_library(unofficial::pulsar::pulsar SHARED IMPORTED)
         set_target_properties(unofficial::pulsar::pulsar PROPERTIES
-            IMPORTED_CONFIGURATIONS "Release"
+            IMPORTED_CONFIGURATIONS "RELEASE"
             IMPORTED_IMPLIB_RELEASE "${_pulsar_library_release}"
             IMPORTED_LOCATION_RELEASE "${_pulsar_release_dll}")
         if (_pulsar_debug_dll)
             set_target_properties(unofficial::pulsar::pulsar PROPERTIES
-                IMPORTED_CONFIGURATIONS "Release;DEBUG"
+                IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
                 IMPORTED_IMPLIB_DEBUG "${_pulsar_library_debug}"
                 IMPORTED_LOCATION_DEBUG "${_pulsar_debug_dll}")
             unset(_pulsar_debug_dll CACHE)
@@ -50,20 +56,13 @@ if (NOT TARGET unofficial::pulsar::pulsar)
     else ()
         add_library(unofficial::pulsar::pulsar UNKNOWN IMPORTED)
         set_target_properties(unofficial::pulsar::pulsar PROPERTIES
+            IMPORTED_CONFIGURATIONS "RELEASE"
             IMPORTED_LOCATION_RELEASE "${_pulsar_library_release}")
         if (_pulsar_library_debug)
             set_target_properties(unofficial::pulsar::pulsar PROPERTIES
+                IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
                 IMPORTED_LOCATION_DEBUG "${_pulsar_library_debug}")
             unset(_pulsar_library_debug CACHE)
-        endif ()
-        if (NOT MSVC)
-            if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-                set_target_properties(unofficial::pulsar::pulsar PROPERTIES
-                    IMPORTED_LOCATION "${_pulsar_library_debug}")
-            else ()
-                set_target_properties(unofficial::pulsar::pulsar PROPERTIES
-                    IMPORTED_LOCATION "${_pulsar_library_release}")
-            endif ()
         endif ()
     endif ()
     set_target_properties(unofficial::pulsar::pulsar PROPERTIES
