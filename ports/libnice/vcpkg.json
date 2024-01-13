@@ -16,7 +16,7 @@
     {
       "name": "vcpkg-tool-meson",
       "host": true
-    }
+    },
     "openssl"
   ]
 }
