@@ -13,10 +13,10 @@
       "host": true,
       "default-features": false
     },
+    "openssl",
     {
       "name": "vcpkg-tool-meson",
       "host": true
-    },
-    "openssl"
+    }
   ]
 }
