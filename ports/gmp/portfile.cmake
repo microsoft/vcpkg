@@ -60,9 +60,8 @@ if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
-vcpkg_make_configure(
+vcpkg_autotools_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
     LANGUAGES ${languages}
     OPTIONS
         ${OPTIONS}

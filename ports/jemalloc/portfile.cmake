@@ -12,10 +12,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(opts "ac_cv_search_log=none required" "--without-private-namespace")
 endif()
 
-vcpkg_make_configure(
+vcpkg_autotools_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    NO_WRAPPERS
+    DISABLE_MSVC_WRAPPERS
     NO_MSVC_FLAG_ESCAPING
     USE_RESPONSE_FILES
     OPTIONS ${opts}

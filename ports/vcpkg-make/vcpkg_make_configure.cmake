@@ -6,14 +6,12 @@ function(vcpkg_make_configure) #
 # z_vcpkg_is_autoconf
 # z_vcpkg_is_automake
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTOCONFIG;COPY_SOURCE;NO_WRAPPERS;NO_CPP;NO_CONFIGURE_TRIPLET;ADD_BIN_TO_PATH;NO_CONFIGURE_CACHE;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
-        "SOURCE_PATH;CONFIGURE_SUBPATH;BUILD_TRIPLET"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;POST_CONFIGURE_CMAKE_COMMANDS;ADDITIONAL_MSYS_PACKAGES;RUN_SCRIPTS;LANGUAGES"
+        "COPY_SOURCE;DISABLE_MSVC_WRAPPERS;NO_CPPFLAGS;ADD_BIN_TO_PATH;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
+        "SOURCE_PATH;SHELL"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;POST_CONFIGURE_CMAKE_COMMANDS;LANGUAGES"
     )
 
     z_vcpkg_unparsed_args(FATAL_ERROR)
-    z_vcpkg_conflicting_args(arg_BUILD_TRIPLET arg_NO_CONFIGURE_TRIPLET)
-    z_vcpkg_conflicting_args(arg_NO_CONFIGURE_CACHE arg_NO_DEFAULT_OPTIONS) # NO_DEFAULT_OPTIONS implies NO_CONFIGURE_CACHE
 
     # Can be set in the triplet to append options for configure
     if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS)
@@ -26,18 +24,18 @@ function(vcpkg_make_configure) #
         list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG})
     endif()
 
-    set(src_dir "${arg_SOURCE_PATH}/${arg_CONFIGURE_SUBPATH}")
+    set(src_dir "${arg_SOURCE_PATH}")
 
     z_vcpkg_warn_path_with_spaces()
 
     set(prepare_flags_opts "")
-    if(arg_NO_WRAPPERS)
-        list(APPEND prepare_flags_opts "NO_WRAPPERS")
+    if(arg_DISABLE_MSVC_WRAPPERS)
+        list(APPEND prepare_flags_opts "DISABLE_MSVC_WRAPPERS")
     else()
         
     endif()
-    if(arg_NO_CPP)
-        list(APPEND prepare_flags_opts "NO_CPP")
+    if(arg_NO_CPPFLAGS)
+        list(APPEND prepare_flags_opts "NO_CPPFLAGS")
     endif()
     if(DEFINED arg_LANGUAGES)
         list(APPEND prepare_flags_opts "LANGUAGES" "${arg_LANGUAGES}")
@@ -58,36 +56,19 @@ function(vcpkg_make_configure) #
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
     endif()
-    if(NOT DEFINED arg_BUILD_TRIPLET AND NOT arg_NO_CONFIGURE_TRIPLET)
+    if(NOT DEFINED arg_BUILD_TRIPLET)
         z_vcpkg_make_get_configure_triplets(arg_BUILD_TRIPLET COMPILER_NAME ccname)
     endif()
 
-    if(NOT arg_NO_WRAPPERS AND "${frontend}" STREQUAL "MSVC" )
+    if(NOT arg_DISABLE_MSVC_WRAPPERS AND "${frontend}" STREQUAL "MSVC" )
         # Lets assume that wrappers are only required for MSVC like frontends.
         vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/wrappers")
     endif()
 
-    vcpkg_make_get_shell(shell_cmd ADDITIONAL_PACKAGES ${arg_ADDITIONAL_MSYS_PACKAGES})
-
-    if(arg_AUTOCONFIG)
-        vcpkg_run_autoreconf("${shell_cmd}" "${src_dir}")
+    if(NOT arg_SHELL)
+      vcpkg_make_get_shell(arg_SHELL)
     endif()
-
-    if(arg_RUN_SCRIPTS)
-        message(STATUS "Running scripts for ${TARGET_TRIPLET} ${arg_RUN_SCRIPT}")
-        set(run_index 0)
-        foreach(script IN LISTS arg_RUN_SCRIPTS)
-            message(STATUS "Running script:'${script}'")
-            vcpkg_run_bash(
-                BASH "${shell_cmd}"
-                COMMAND ${script}
-                WORKING_DIRECTORY "${src_dir}"
-                LOGNAME "run-script-${run_index}-${TARGET_TRIPLET}"
-            )
-            math(EXPR run_index "${run_index}+1")
-        endforeach()
-        message(STATUS "Finished running scripts for ${TARGET_TRIPLET}")
-    endif()
+    set(shell_cmd "${arg_SHELL}")
 
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
@@ -121,9 +102,7 @@ function(vcpkg_make_configure) #
         set(opts_cache "")
         if(NOT arg_NO_DEFAULT_OPTIONS)
           z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}") # TODO: figure out outmake
-          if(NOT arg_NO_CONFIGURE_CACHE)
-              z_vcpkg_make_prepare_configure_cache(opts_cache CONFIG "${configup}" WORKING_DIRECTORY "${target_dir}")
-          endif()
+          z_vcpkg_make_prepare_configure_cache(opts_cache CONFIG "${configup}" WORKING_DIRECTORY "${target_dir}")
           vcpkg_list(APPEND arg_OPTIONS ${opts})
         endif()
 
@@ -135,7 +114,7 @@ function(vcpkg_make_configure) #
             cmake_language(CALL ${cmd} ${configup})
         endforeach()
 
-        vcpkg_make_run_configure(BASH 
+        vcpkg_make_run_configure(SHELL
                                     "${shell_cmd}"
                                  CONFIG  #configure_env
                                     "${configup}"
@@ -164,9 +143,5 @@ function(vcpkg_make_configure) #
         INCLUDE LIB LIBPATH _CL_ _LINK_
     )
 
-    # Export matching make program for vcpkg_build_make (cache variable) # TODO: Why is this required?
-    #if(CMAKE_HOST_WIN32 AND MSYS_ROOT) # This is no longer required. the normal windows triplet clean the environment and paths 
-    #    find_program(Z_VCPKG_MAKE make PATHS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
-    #endif()
     find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
 endfunction()

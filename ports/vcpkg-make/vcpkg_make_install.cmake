@@ -5,7 +5,7 @@ function(vcpkg_make_install)
 # Replacement for vcpkg_(install|build)_make
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ADD_BIN_TO_PATH;DISABLE_PARALLEL;NO_DESTDIR;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
-        "LOGFILE_ROOT;SUBPATH;MAKEFILE;TARGETS"
+        "LOGFILE_ROOT;SUBPATH;MAKEFILE;TARGETS;SHELL"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
@@ -33,14 +33,17 @@ function(vcpkg_make_install)
         list(APPEND arg_OPTIONS_DEBUG ${VCPKG_MAKE_OPTIONS_DEBUG})
     endif()
 
-
     if(WIN32)
         set(Z_VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
     else()
         string(REPLACE " " "\ " Z_VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
     endif()
 
-    vcpkg_make_get_shell(shell_cmd)
+    if(NOT arg_SHELL)
+      vcpkg_make_get_shell(arg_SHELL)
+    endif()
+    set(shell_cmd "${arg_SHELL}")
+
     find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
     set(make_command "${Z_VCPKG_MAKE}")
 
@@ -53,8 +56,6 @@ function(vcpkg_make_install)
     endif()
 
     vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH CPPFLAGS CFLAGS CXXFLAGS RCFLAGS PATH)
-
-
 
     z_vcpkg_make_set_common_vars()
     z_vcpkg_get_global_property(prepare_flags_opts "make_prepare_flags_opts")
@@ -99,18 +100,18 @@ function(vcpkg_make_install)
             vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j 1 ${extra_opts} -f ${arg_MAKEFILE} ${target} ${destdir_opt})
             message(STATUS "Making target '${target}' for ${TARGET_TRIPLET}-${short_buildtype}")
             if (arg_DISABLE_PARALLEL)
-                vcpkg_run_bash_as_build(
+                vcpkg_run_shell_as_build(
                     WORKING_DIRECTORY "${working_directory}"
                     LOGNAME "${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}"
-                    BASH ${shell_cmd}
+                    SHELL ${shell_cmd}
                     #COMMAND ${configure_env} ${no_parallel_make_cmd_line}
                     NO_PARALLEL_COMMAND ${configure_env} ${no_parallel_make_cmd_line}
                 )
             else()
-                vcpkg_run_bash_as_build(
+                vcpkg_run_shell_as_build(
                     WORKING_DIRECTORY "${working_directory}"
                     LOGNAME "${arg_LOGFILE_ROOT}-${target}-${TARGET_TRIPLET}-${short_buildtype}"
-                    BASH ${shell_cmd}
+                    SHELL ${shell_cmd}
                     COMMAND ${configure_env} ${no_parallel_make_cmd_line}
                     NO_PARALLEL_COMMAND ${configure_env} ${no_parallel_make_cmd_line}
                 )

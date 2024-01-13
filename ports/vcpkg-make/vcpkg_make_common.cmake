@@ -23,9 +23,6 @@ macro(z_vcpkg_make_get_cmake_vars)
     z_vcpkg_get_global_property(has_cmake_vars_file "make_cmake_vars_file" SET)
     if(NOT has_cmake_vars_file)
         if(vmgcv_arg_LANGUAGES)
-          # What a nice trick to get more output from vcpkg_cmake_get_vars if required
-          # But what will it return for ASM on windows? TODO: Needs actual testing
-          # list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=C\;CXX\;ASM") ASM compiler will point to CL with MSVC
           string(REPLACE ";" "\;" vmgcv_arg_langs "${vmgcv_arg_LANGUAGES}")
           list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${vmgcv_arg_langs}")
           unset(langs)
@@ -82,7 +79,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_compile_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "NO_CPP;NO_FLAG_ESCAPING;USES_WRAPPERS;USE_RESPONSE_FILES" 
+        "NO_CPPFLAGS;NO_FLAG_ESCAPING;USES_WRAPPERS;USE_RESPONSE_FILES" 
         "COMPILER_FRONTEND;CONFIG;FLAGS_OUT"
         "LANGUAGES"
     )
@@ -138,7 +135,7 @@ function(z_vcpkg_make_prepare_compile_flags)
     endforeach()
 
     # Filter common CPPFLAGS out of CFLAGS and CXXFLAGS
-    if(NOT arg_NO_CPP)
+    if(NOT arg_NO_CPPFLAGS)
         set(CPPFLAGS "")
         set(pattern "")
         foreach(arg IN LISTS CXXFLAGS)
@@ -262,7 +259,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_programs out_env)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        "NO_CPP;NO_WRAPPERS" 
+        "NO_CPPFLAGS;NO_WRAPPERS" 
         "CONFIG"
         "LANGUAGES"
     )
@@ -456,7 +453,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_flags) # Hmm change name?
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "NO_CPP;NO_WRAPPERS;NO_FLAG_ESCAPING;USE_RESPONSE_FILES" 
+        "NO_CPPFLAGS;DISABLE_MSVC_WRAPPERS;NO_FLAG_ESCAPING;USE_RESPONSE_FILES" 
         "LIBS_OUT;FRONTEND_VARIANT_OUT;C_COMPILER_NAME"
         "LANGUAGES"
     )
@@ -537,11 +534,11 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
     if(DEFINED arg_LANGUAGES)
         set(flags_opts "LANGUAGES;${arg_LANGUAGES}")
     endif()
-    if(arg_NO_CPP)
-        list(APPEND flags_opts NO_CPP)
+    if(arg_NO_CPPFLAGS)
+        list(APPEND flags_opts NO_CPPFLAGS)
     endif()
 
-    if(NOT arg_NO_WRAPPERS)
+    if(NOT arg_DISABLE_MSVC_WRAPPERS)
         list(APPEND flags_opts USES_WRAPPERS)
     endif()
 
