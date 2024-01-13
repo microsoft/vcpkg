@@ -259,7 +259,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_programs out_env)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        "NO_CPPFLAGS;NO_WRAPPERS" 
+        "NO_CPPFLAGS;DISABLE_MSVC_WRAPPERS"
         "CONFIG"
         "LANGUAGES"
     )
@@ -286,23 +286,23 @@ function(z_vcpkg_make_prepare_programs out_env)
         list(TRANSFORM progs PREPEND "VCPKG_DETECTED_CMAKE_")
         foreach(prog IN LISTS progs)
             set(filepath "${${prog}}")
-            if(filepath MATCHES " ") 
+            if(filepath MATCHES " ")
                 # CHECK: Uncertain if the compile wrappers work with absolute paths containing C:\\ 
                 cmake_path(GET filepath FILENAME ${prog})
                 vcpkg_insert_program_into_path("${filepath}")
             endif()
         endforeach()
         ### 
-        if (NOT arg_NO_WRAPPERS)
+        if (NOT arg_DISABLE_MSVC_WRAPPERS)
             z_vcpkg_append_to_configure_environment(configure_env CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-            z_vcpkg_append_to_configure_environment(configure_env CXX "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")        
+            z_vcpkg_append_to_configure_environment(configure_env CXX "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
             if(NOT arg_BUILD_TRIPLET MATCHES "--host") # TODO: Check if this generates problems with the new triplet approach
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
             else()
-                # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated. 
+                # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated.
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
@@ -352,7 +352,7 @@ function(z_vcpkg_make_prepare_programs out_env)
             list(APPEND arg_OPTIONS ac_cv_prog_ac_ct_STRIP=:)
         endif()
         if(VCPKG_DETECTED_CMAKE_NM) # If required set the ENV variable NM in the portfile correctly
-            z_vcpkg_append_to_configure_environment(configure_env NM "${VCPKG_DETECTED_CMAKE_NM}") 
+            z_vcpkg_append_to_configure_environment(configure_env NM "${VCPKG_DETECTED_CMAKE_NM}")
         else()
             # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm 
             # and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
@@ -477,16 +477,16 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
     if(VCPKG_TARGET_IS_UWP)
         set(x_vcpkg_transform_libs OFF)
         # Avoid libtool choke: "Warning: linker path does not have real file for library -lWindowsApp."
-        # The problem with the choke is that libtool always falls back to built a static library even if a dynamic was requested. 
-        # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows. 
-        # It even does unix/dos-short/unix transformation with the path to get rid of spaces. 
+        # The problem with the choke is that libtool always falls back to built a static library even if a dynamic was requested.
+        # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows.
+        # It even does unix/dos-short/unix transformation with the path to get rid of spaces.
     endif()
     if(x_vcpkg_transform_libs)
         list(TRANSFORM all_libs_list REPLACE "[.](dll[.]lib|lib|a|so)$" "")
         if(VCPKG_TARGET_IS_WINDOWS)
             list(REMOVE_ITEM all_libs_list "uuid")
         endif()
-        
+
         list(TRANSFORM all_libs_list REPLACE "^([^-].*)" "-l\\1")
         if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
             # libtool must be told explicitly that there is no dynamic linkage for uuid.
@@ -552,7 +552,7 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
 
     z_vcpkg_make_prepare_compile_flags(
         CONFIG RELEASE
-        COMPILER_FRONTEND "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" 
+        COMPILER_FRONTEND "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}"
         FLAGS_OUT release_flags_list
         ${flags_opts}
     )
@@ -560,7 +560,7 @@ function(z_vcpkg_make_prepare_flags) # Hmm change name?
         list(APPEND all_buildtypes DEBUG)
         z_vcpkg_make_prepare_compile_flags(
             CONFIG DEBUG 
-            COMPILER_FRONTEND "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" 
+            COMPILER_FRONTEND "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}"
             FLAGS_OUT debug_flags_list
             ${flags_opts}
         )
