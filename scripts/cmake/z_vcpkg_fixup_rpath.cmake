@@ -52,6 +52,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
             endif()
 
             set(rpath_norm "")
+            string(REPLACE "\n" "" readelf_output "${readelf_output}")
             if(NOT found_rpath STREQUAL "")
                 set(org_rpath "${readelf_output}")
                 message(STATUS "Adjusting original rpath of: '${org_rpath}'")
@@ -71,6 +72,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 list(PREPEND rpath_norm "\$ORIGIN/${relative_to_lib}")
             endif()
             list(PREPEND rpath_norm "\$ORIGIN") # Make ORIGIN the first entry
+            list(TRANSFORM rpath_norm REPLACE "/$" "")
             cmake_path(CONVERT "${rpath_norm}" TO_NATIVE_PATH_LIST new_rpath)
 
             execute_process(
