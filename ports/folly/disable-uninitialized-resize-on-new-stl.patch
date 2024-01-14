@@ -1,0 +1,40 @@
+diff --git a/folly/memory/UninitializedMemoryHacks.h b/folly/memory/UninitializedMemoryHacks.h
+index bd31c88..9f640a8 100644
+--- a/folly/memory/UninitializedMemoryHacks.h
++++ b/folly/memory/UninitializedMemoryHacks.h
+@@ -101,6 +101,9 @@ template <
+         typename std::enable_if<std::is_trivially_destructible<T>::value>::type>
+ inline void resizeWithoutInitialization(
+     std::basic_string<T>& s, std::size_t n) {
++#if defined(_MSVC_STL_UPDATE) && _MSVC_STL_UPDATE >= 202206L
++    s.resize(n);
++#else
+   if (n <= s.size()) {
+     s.resize(n);
+   } else {
+@@ -111,6 +114,7 @@ inline void resizeWithoutInitialization(
+     }
+     detail::unsafeStringSetLargerSize(s, n);
+   }
++#endif // STL workaround
+ }
+ 
+ /**
+@@ -244,6 +248,8 @@ struct MakeUnsafeStringSetLargerSize {
+ #elif defined(_MSC_VER)
+ // MSVC
+ 
++#if defined(_MSVC_STL_UPDATE) && _MSVC_STL_UPDATE >= 202206L
++#else
+ template <typename Tag, typename T, typename A, A Ptr_Eos>
+ struct MakeUnsafeStringSetLargerSize {
+   friend void unsafeStringSetLargerSizeImpl(
+@@ -262,7 +268,7 @@ struct MakeUnsafeStringSetLargerSize {
+       void (std::basic_string<TYPE>::*)(std::size_t),           \
+       &std::basic_string<TYPE>::_Eos>;                          \
+   FOLLY_DECLARE_STRING_RESIZE_WITHOUT_INIT_IMPL(TYPE)
+-
++#endif // workaround
+ #else
+ #warning \
+     "No implementation for resizeWithoutInitialization of std::basic_string"

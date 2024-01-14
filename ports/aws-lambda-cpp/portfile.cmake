@@ -1,18 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-lambda-cpp
-    REF 8bcd8a201f9da613581a2748ca737ab09adbdae5 # v0.2.7
-    SHA512 c59310dd839622cfc9ac2a1df5a492e9a6d629b671ed929813dbe51dfe76d4a4e381e78b11b206b66c2bee131a1544c3c8dfc4644981b708b589492763c7ed59
+    REF "${VERSION}"
+    SHA512 c8dddadac3dddb69188d97781040c7af389f6954923b50bac8ff25554c478f9685601d47348bb96343f7f4d20762618f8bbbf74b740ace3d02963c5ef3272ac5
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
@@ -23,4 +23,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/aws-lambda-runtime")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/aws-lambda-runtime")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

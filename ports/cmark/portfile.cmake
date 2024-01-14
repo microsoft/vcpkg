@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commonmark/cmark
-    REF 977b128291c0cf6c5053cdcf2ac72e627f09c105    #0.30.1
-    SHA512 ff8139fbb45549d6bea70e11c35ae1d8cf6108d0141688cc2b878afa6247147e0c15ac885e6ed8fa2263534dc79e88e398b30d3d3ae800f13dcdd878114adac8
+    REF "${VERSION}"
+    SHA512 27383bfef95ae1390c26aff0dd2cbca33704e7d20116bf29da4695d2c9a4146b86daba0da1e91bdb9eab95671702f885e832b3d31d51601731f1dc630df5237b
     HEAD_REF master
     PATCHES
         add-feature-tools.patch
@@ -10,10 +10,6 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CMARK_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CMARK_SHARED)
-
-if ("tools" IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
-    message(FATAL_ERROR "${PORT} does no support to build tools on UWP")
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES

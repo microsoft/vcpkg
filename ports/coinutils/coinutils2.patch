@@ -1,0 +1,15 @@
+diff --git a/configure.ac b/configure.ac
+index 8787a1c0b..504019b78 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -96,8 +96,8 @@ AC_COINUTILS_MEMPOOL(4096,no)
+ # Collect information required to use component libraries.
+ 
+ AC_COIN_CHK_LAPACK(CoinUtilsLib)
+-AC_COIN_CHK_PKG(Glpk,[CoinUtilsLib CoinUtilsTest],[coinglpk])
+-AC_COIN_CHK_PKG(ASL,[CoinUtilsLib],[coinasl])
++AC_COIN_CHK_PKG(Glpk,[CoinUtilsLib CoinUtilsTest],[glpk])
++AC_COIN_CHK_PKG(ASL,[CoinUtilsLib],[asl])
+ AC_COIN_CHK_PKG(Sample,[],[coindatasample],[],dataonly)
+ AC_COIN_CHK_PKG(Netlib,[],[coindatanetlib],[],dataonly)
+ 

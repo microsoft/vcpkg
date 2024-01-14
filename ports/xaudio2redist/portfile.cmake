@@ -4,7 +4,7 @@ set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.XAudio2.Redist/${VERSION}"
     FILENAME "xaudio2redist.${VERSION}.zip"
-    SHA512 03aab03f793648a0b1467916a05b22891c32ce44166f85a184746a949338cdeff7104479b88920570e6beeb04395e03669a3ee569c3f2523f3dbc01a368e86b7
+    SHA512 5eae9c94710ba6e51045e6f9dbe381bdfe76184a4272f561976582e8f585ef8343df9f6eaa2d391bfda06796000bc13ccb0f5bf112d7f2c7865f75ab0e89ab56
 )
 
 vcpkg_extract_source_archive(

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jlblancoc/nanoflann
-    REF v1.4.2
-    SHA512 2a400725940868473d376635f67aac4402046d771ecceec547442dd653f0a00e38e340e4ac0a98620ddf3927845df18b6cfd644982f073d26c7864bed2de96ca
+    REF "v${VERSION}"
+    SHA512 bc4cdb285708f605ac202af41a66140d49b0fb54a96ce19642ab18e22ee0ffea6374ad1de08988ad4cef6aae8a65aad2a824b95b1c03fc0d762ccc783732b2ee
     HEAD_REF master
 )
 
@@ -19,5 +19,12 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+file(READ "${CURRENT_PACKAGES_DIR}/share/nanoflann/nanoflannConfig.cmake" _contents)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/nanoflann/nanoflannConfig.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+${_contents}")
+
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+

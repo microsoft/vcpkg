@@ -1,9 +1,11 @@
+# header-only library
+
 # Github config
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO JustWhit3/ptc-print
-    REF v1.4.0
-    SHA512 17218b096bc616a448d5c257b29f3e6c5a263cb56ff0361fb4be19206daf687c012cad9c6fb551aec1d16024eb563962cd15fccff0b7c3ab71cce23dc0846a95
+    REF v1.4.1
+    SHA512 45f3008cb848f464ac0355660e7cdbd40db60338a4db5e35d29285c8c1afc0556c8dea6ac0e6939837916ec138dd8e385709d1fa89651d3404418cf3e7948fd9
     HEAD_REF master
 )
 
@@ -16,7 +18,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Move cmake configs
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ptcprint)
+vcpkg_cmake_config_fixup(PACKAGE_NAME ptcprint CONFIG_PATH lib/cmake/ptcprint)
 
 # Remove duplicate files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -25,4 +27,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug")
 
 # Install license
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ptc-print" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

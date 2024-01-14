@@ -23,9 +23,13 @@ if(BUILD_PYTHON)
     list(APPEND Caffe2_DEPENDENCY_LIBS pybind11::pybind11)
 endif()
 
+#Caffe2 depends on FP16 library for half-precision conversions
 find_path(FP16_INCLUDE_DIRS "fp16.h" REQUIRED)
+# PSIMD is required by FP16
 find_path(PSIMD_INCLUDE_DIRS "psimd.h" REQUIRED)
-find_path(FXDIV_INCLUDE_DIRS "fxdiv.h" REQUIRED)
+if(USE_NNPACK OR USE_QNNPACK OR USE_PYTORCH_QNNPACK OR USE_XNNPACK)
+    find_path(FXDIV_INCLUDE_DIRS "fxdiv.h" REQUIRED)
+endif()
 
 find_library(FOXI_LOADER_LIBPATH NAMES foxi_loader REQUIRED)
 list(APPEND Caffe2_DEPENDENCY_LIBS ${FOXI_LOADER_LIBPATH})
@@ -35,19 +39,21 @@ find_package(gemmlowp CONFIG REQUIRED) # gemmlowp::gemmlowp
 find_package(gflags CONFIG REQUIRED) # gflags::gflags
 find_package(glog CONFIG REQUIRED) # glog::glog
 find_package(cpuinfo CONFIG REQUIRED) # cpuinfo::clog cpuinfo::cpuinfo
-find_package(unofficial-pthreadpool CONFIG REQUIRED) # unofficial::pthreadpool
-list(APPEND Caffe2_DEPENDENCY_LIBS
-  gemmlowp::gemmlowp gflags::gflags glog::glog
-  cpuinfo::clog cpuinfo::cpuinfo unofficial::pthreadpool
-)
+list(APPEND Caffe2_DEPENDENCY_LIBS gemmlowp::gemmlowp gflags::gflags glog::glog cpuinfo::clog cpuinfo::cpuinfo)
+
+# Only add a dependency on pthreadpool if we are on a mobile build or are building any of the libraries in the {Q/X}NNPACK family.
+if(INTERN_BUILD_MOBILE OR USE_NNPACK OR USE_QNNPACK OR USE_PYTORCH_QNNPACK OR USE_XNNPACK)
+    find_package(unofficial-pthreadpool CONFIG REQUIRED) # unofficial::pthreadpool
+    list(APPEND Caffe2_DEPENDENCY_LIBS unofficial::pthreadpool)
+    set(USE_PTHREADPOOL 1)
+    set(USE_INTERNAL_PTHREADPOOL_IMPL 0)
+    add_compile_definitions(USE_PTHREADPOOL)
+endif()
+
 link_directories(
   $<$<CONFIG:Debug>:${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib>
   $<$<CONFIG:Release>:${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib>
 )
-
-set(USE_PTHREADPOOL 1)
-set(USE_INTERNAL_PTHREADPOOL_IMPL 0)
-add_compile_definitions(USE_PTHREADPOOL)
 
 find_package(fmt CONFIG REQUIRED) # fmt::fmt-header-only
 list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
@@ -160,7 +166,7 @@ endif()
  
 if(USE_ZSTD)
   find_package(zstd CONFIG REQUIRED) # zstd::libzstd_static
-  list(APPEND Caffe2_DEPENDENCY_LIBS zstd::libzstd_static)
+  list(APPEND Caffe2_DEPENDENCY_LIBS $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
 endif()
 
 if(USE_SYSTEM_ONNX)

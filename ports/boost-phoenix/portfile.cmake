@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/phoenix
-    REF boost-1.81.0
-    SHA512 11bd2fc20c5cc89649ab37cd3502413827a84f80de5df606de783a001a25fd8d8647ca1f5c458f32609eb48c8c93723475ea1552ceccd5658a96a6890a936310
+    REF boost-1.83.0
+    SHA512 3535e5ca3b5045eab728b7e3b66d5ebc30f55847ea424c09b6efa291a69f3588972f772ba0a67a990c9880f526cb91ebd4e4998be7406a4d786fc88d121d58d6
     HEAD_REF master
     PATCHES fix-duplicate-symbols.patch
 )

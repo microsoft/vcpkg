@@ -2,21 +2,25 @@ function(vcpkg_msbuild_install)
     cmake_parse_arguments(
         PARSE_ARGV 0
         "arg"
-        "SKIP_CLEAN"
-        "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;TARGET;LANGUAGE"
-        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;DEPENDENT_PKGCONFIG;ADDITIONAL_LIBS_DEBUG;ADDITIONAL_LIBS_RELEASE"
+        "CLEAN;NO_TOOLCHAIN_PROPS;NO_INSTALL;ADD_BIN_TO_PATH"
+        "SOURCE_PATH;PROJECT_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;TARGET"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;DEPENDENT_PKGCONFIG;ADDITIONAL_LIBS;ADDITIONAL_LIBS_DEBUG;ADDITIONAL_LIBS_RELEASE"
     )
 
-    if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(WARNING "vcpkg_install_msbuild was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    if(VCPKG_CROSSCOMPILING)
+        set(arg_ADD_BIN_TO_PATH OFF)
     endif()
 
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
     if(NOT DEFINED arg_RELEASE_CONFIGURATION)
         set(arg_RELEASE_CONFIGURATION Release)
     endif()
     if(NOT DEFINED arg_DEBUG_CONFIGURATION)
         set(arg_DEBUG_CONFIGURATION Debug)
     endif()
+
     if(NOT DEFINED arg_PLATFORM)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
             set(arg_PLATFORM x64)
@@ -37,20 +41,48 @@ function(vcpkg_msbuild_install)
     if(NOT DEFINED arg_TARGET)
         set(arg_TARGET Rebuild)
     endif()
+    if(DEFINED arg_ADDITIONAL_LIBS)
+        list(APPEND arg_ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS})
+        list(APPEND arg_ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS})
+    endif()
+
+    vcpkg_get_windows_sdk(arg_TARGET_PLATFORM_VERSION)
+
+    if(NOT arg_NO_TOOLCHAIN_PROPS)
+        file(RELATIVE_PATH project_root "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}" "${arg_SOURCE_PATH}") # required by z_vcpkg_msbuild_create_props
+        z_vcpkg_msbuild_create_props(OUTPUT_PROPS props_file
+                                     OUTPUT_TARGETS target_file
+                                     RELEASE_CONFIGURATION "${arg_RELEASE_CONFIGURATION}"
+                                     DEBUG_CONFIGURATION "${arg_DEBUG_CONFIGURATION}"
+                                     DEPENDENT_PKGCONFIG ${arg_DEPENDENT_PKGCONFIG}
+                                     ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS_DEBUG}
+                                     ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS_RELEASE})
+        list(APPEND arg_OPTIONS
+            "/p:ForceImportAfterCppProps=${props_file}"
+            "/p:ForceImportAfterCppTargets=${target_file}"
+        )
+    endif()
+
 
     list(APPEND arg_OPTIONS
         "/t:${arg_TARGET}"
-        "/p:Platform=${arg_PLATFORM}"
-        "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
-        "/p:VCPkgLocalAppDataDisabled=true"
-        "/p:UseIntelMKL=No"
-        "/p:VcpkgTriplet=${TARGET_TRIPLET}"
-        "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
-        "/p:VcpkgManifestInstall=false"
         "/p:UseMultiToolTask=true"
         "/p:MultiProcMaxCount=${VCPKG_CONCURRENCY}"
         "/p:EnforceProcessCountAcrossBuilds=true"
         "/m:${VCPKG_CONCURRENCY}"
+        "-maxCpuCount:${VCPKG_CONCURRENCY}"
+        # other Properties 
+        "/p:Platform=${arg_PLATFORM}"
+        "/p:PlatformTarget=${TRIPLET_SYSTEM_ARCH}"
+        "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
+        "/p:WindowsTargetPlatformVersion=${arg_TARGET_PLATFORM_VERSION}"
+        # vcpkg properties
+        "/p:VcpkgApplocalDeps=false"
+        "/p:VcpkgManifestInstall=false"
+        "/p:VcpkgManifestEnabled=false"
+        "/p:VcpkgEnabled=false"
+        "/p:VcpkgTriplet=${TARGET_TRIPLET}"
+        "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -59,86 +91,89 @@ function(vcpkg_msbuild_install)
         list(APPEND arg_OPTIONS "/p:WholeProgramOptimization=false")
     endif()
 
-    vcpkg_msbuild_create_props(OUTPUT_PROPS props_file 
-                               LANGUAGE ${arg_LANGUAGE}
-                               RELEASE_CONFIGURATION "${arg_RELEASE_CONFIGURATION}"
-                               DEBUG_CONFIGURATION "${arg_DEBUG_CONFIGURATION}"
-                               DEPENDENT_PKGCONFIG ${arg_DEPENDENT_PKGCONFIG}
-                               ADDITIONAL_LIBS_DEBUG ${arg_ADDITIONAL_LIBS_DEBUG}
-                               ADDITIONAL_LIBS_RELEASE ${arg_ADDITIONAL_LIBS_RELEASE})
-
-    set(source_path_suffix "")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${arg_PROJECT_SUBPATH} for Release")
-        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        file(COPY "${arg_SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-        set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${source_path_suffix}")
-        vcpkg_msbuild_inject_props(INJECT_PROPS "${props_file}" PROJECT_TO_INJECT "${source_copy_path}/${arg_PROJECT_SUBPATH}")
+        if(arg_ADD_BIN_TO_PATH)
+            vcpkg_backup_env_variables(VARS PATH)
+            if("${build_type}" STREQUAL "debug")
+                vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
+            else()
+                vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
+            endif()
+        endif()
+        set(working_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+        file(REMOVE_RECURSE "${working_dir}")
+        file(MAKE_DIRECTORY "${working_dir}")
+        file(COPY "${arg_SOURCE_PATH}/" DESTINATION "${working_dir}")
         vcpkg_execute_required_process(
-            COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
+            COMMAND msbuild "${working_dir}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_RELEASE}
-            WORKING_DIRECTORY "${source_copy_path}"
+            WORKING_DIRECTORY "${working_dir}"
             LOGNAME "build-${TARGET_TRIPLET}-rel"
         )
-        file(GLOB_RECURSE libs "${source_copy_path}/*.lib")
-        file(GLOB_RECURSE dlls "${source_copy_path}/*.dll")
-        file(GLOB_RECURSE exes "${source_copy_path}/*.exe")
-        if(NOT libs STREQUAL "")
-            file(COPY ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        if(NOT arg_NO_INSTALL)
+            file(GLOB_RECURSE libs "${working_dir}/*.lib")
+            file(GLOB_RECURSE dlls "${working_dir}/*.dll")
+            file(GLOB_RECURSE exes "${working_dir}/*.exe")
+            if(NOT libs STREQUAL "")
+                file(COPY ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+            endif()
+            if(NOT dlls STREQUAL "")
+                file(COPY ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+            endif()
+            if(NOT exes STREQUAL "")
+                file(COPY ${exes} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+                vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+            endif()
         endif()
-        if(NOT dlls STREQUAL "")
-            file(COPY ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        endif()
-        if(NOT exes STREQUAL "")
-            file(COPY ${exes} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-            vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        if(arg_ADD_BIN_TO_PATH)
+            vcpkg_restore_env_variables(VARS PATH)
         endif()
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         message(STATUS "Building ${arg_PROJECT_SUBPATH} for Debug")
-        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        file(COPY "${arg_SOURCE_PATH}/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-        set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${source_path_suffix}")
-        vcpkg_msbuild_inject_props(INJECT_PROPS "${props_file}" PROJECT_TO_INJECT "${source_copy_path}/${arg_PROJECT_SUBPATH}")
+        if(arg_ADD_BIN_TO_PATH)
+            vcpkg_backup_env_variables(VARS PATH)
+            if("${build_type}" STREQUAL "debug")
+                vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
+            else()
+                vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
+            endif()
+        endif()
+        set(working_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        file(REMOVE_RECURSE "${working_dir}")
+        file(MAKE_DIRECTORY "${working_dir}")
+        file(COPY "${arg_SOURCE_PATH}/" DESTINATION "${working_dir}")
         vcpkg_execute_required_process(
-            COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
+            COMMAND msbuild "${working_dir}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_DEBUG}
-            WORKING_DIRECTORY "${source_copy_path}"
+            WORKING_DIRECTORY "${working_dir}"
             LOGNAME "build-${TARGET_TRIPLET}-dbg"
         )
-        file(GLOB_RECURSE libs "${source_copy_path}/*.lib")
-        file(GLOB_RECURSE dlls "${source_copy_path}/*.dll")
-        if(NOT libs STREQUAL "")
-            file(COPY ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        if(NOT arg_NO_INSTALL)
+            file(GLOB_RECURSE libs "${working_dir}/*.lib")
+            file(GLOB_RECURSE dlls "${working_dir}/*.dll")
+            if(NOT libs STREQUAL "")
+                file(COPY ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+            endif()
+            if(NOT dlls STREQUAL "")
+                file(COPY ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+            endif()
         endif()
-        if(NOT dlls STREQUAL "")
-            file(COPY ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        if(arg_ADD_BIN_TO_PATH)
+            vcpkg_restore_env_variables(VARS PATH)
         endif()
     endif()
 
     vcpkg_copy_pdbs()
 
-    if(NOT arg_SKIP_CLEAN)
+    if(arg_CLEAN)
         vcpkg_clean_msbuild()
     endif()
 
-    if(DEFINED arg_INCLUDES_SUBPATH)
-        file(COPY "${arg_SOURCE_PATH}/${arg_INCLUDES_SUBPATH}/"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/include/"
-        )
-    endif()
-
-    if(DEFINED arg_LICENSE_SUBPATH)
-        file(INSTALL "${arg_SOURCE_PATH}/${arg_LICENSE_SUBPATH}"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-            RENAME copyright
-        )
-    endif()
 endfunction()

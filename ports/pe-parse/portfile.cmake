@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         arm64-windows-fix.patch
-        disable_internal_flags.patch
+        no-werror.patch
 )
 
 vcpkg_cmake_configure(

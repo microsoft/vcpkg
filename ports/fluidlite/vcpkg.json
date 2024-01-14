@@ -1,7 +1,6 @@
 {
   "name": "fluidlite",
-  "version-date": "2020-08-27",
-  "port-version": 3,
+  "version-date": "2023-04-18",
   "description": "FluidLite is a very light version of FluidSynth designed to be hardware, platform and external dependency independant.",
   "homepage": "https://github.com/divideconcept/FluidLite",
   "license": "LGPL-2.1-or-later",
@@ -9,6 +8,21 @@
     {
       "name": "vcpkg-cmake",
       "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "sf3"
+  ],
+  "features": {
+    "sf3": {
+      "description": "Enable SF3 files (ogg/vorbis compressed samples)",
+      "dependencies": [
+        "libvorbis"
+      ]
+    }
+  }
 }

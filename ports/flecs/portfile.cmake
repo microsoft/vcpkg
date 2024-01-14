@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SanderMertens/flecs
-    REF v3.1.0
-    SHA512 422458818e4696359a2e0a3cf52b6d47b4fcfe792b483903cba9d0aad2beee574d1040b0d6286e158145226c8bb9ad897dd74cb87c9e3def0d89cb33e218b20d
+    REF "v${VERSION}"
+    SHA512 a42c193e46e15a1ab8a27b447d7c71d378d0e7ae9ab71744d00e3b9fd13aecbe79c75938e534ba49e191d279114bc25a9cd293e4f9a97ba8f873dcc1fa9f6d9a
     HEAD_REF master
 )
 
@@ -31,7 +31,8 @@ endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

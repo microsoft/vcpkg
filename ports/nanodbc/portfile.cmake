@@ -1,8 +1,6 @@
 # Only static libraries are supported.
 # See https://github.com/nanodbc/nanodbc/issues/13
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW) # According to the CMakeLists.txt
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,15 +12,9 @@ vcpkg_from_github(
         rename-version.patch
         add-missing-include.patch
         find-unixodbc.patch
-        fix_clang-cl.patch
+        no-werror.patch
 )
-file(REMOVE "${SOURCE_PATH}/VERSION")
-
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        "boost" NANODBC_ENABLE_BOOST
-        "unicode" NANODBC_ENABLE_UNICODE)
+file(RENAME "${SOURCE_PATH}/VERSION" "${SOURCE_PATH}/VERSION.txt")
 
 if(DEFINED NANODBC_ODBC_VERSION)
     set(NANODBC_ODBC_VERSION -DNANODBC_ODBC_VERSION=${NANODBC_ODBC_VERSION})
@@ -33,6 +25,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DNANODBC_DISABLE_EXAMPLES=ON
         -DNANODBC_DISABLE_TESTS=ON
+        -DNANODBC_ENABLE_UNICODE=OFF
         ${NANODBC_ODBC_VERSION}
 )
 

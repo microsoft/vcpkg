@@ -4,10 +4,10 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 c525b2ab6aff9ef9254971ae7d57f3549a36a36875765c48f947d52532814a2a004de1232389d4fe824a8c8ab84277b08427308573476e1da9b7db83db802f6f
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF 1.5
+    SOURCE_BASE 1.5
     PATCHES
         libusb-fix.patch
         libconfuse-fix.patch

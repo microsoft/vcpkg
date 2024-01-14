@@ -1,11 +1,9 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 # header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uNetworking/uWebSockets
     REF "v${VERSION}"
-    SHA512 c560723aed1cdbf176a24afc5a7b07bc6fa462e713b282a466eb4d53e4127948a565750c8eae29b8b7f90f7276f69185a0597bcee2479f17b8852c5a09d2fc58
+    SHA512 0e63808b9f01237b6a4e21d54360565d6f3992cf61fdffd0354680cdf309a0e19666d269d42eec4a05fe5670910f048d6e09c6031468bf4f87072d61f47b113c
     HEAD_REF master
 )
 

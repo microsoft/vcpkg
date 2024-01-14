@@ -1,6 +1,7 @@
 {
   "name": "qtbase",
-  "version": "6.4.2",
+  "version": "6.6.1",
+  "port-version": 5,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -61,7 +62,10 @@
     "icu",
     "jpeg",
     "network",
-    "opengl",
+    {
+      "name": "opengl",
+      "platform": "!ios"
+    },
     "openssl",
     "pcre2",
     "png",
@@ -103,7 +107,16 @@
       ]
     },
     "dbus": {
-      "description": "Qt D-Bus"
+      "description": "Qt D-Bus",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        }
+      ]
     },
     "default-features": {
       "description": "Platform-dependent default features",
@@ -166,8 +179,8 @@
       ]
     },
     "framework": {
-      "$platform": "osx",
-      "description": "MAC framework build"
+      "description": "MAC framework build",
+      "supports": "osx & !static"
     },
     "freetype": {
       "description": "Supports the FreeType 2 font engine (and its supported font formats).",
@@ -180,7 +193,7 @@
     },
     "gles2": {
       "description": "OpenGL ES 2.0",
-      "supports": "!windows",
+      "supports": "!windows & !osx",
       "dependencies": [
         {
           "name": "qtbase",
@@ -197,16 +210,41 @@
         "glib"
       ]
     },
+    "gtk3": {
+      "description": "GTK3 platform theme plugin",
+      "supports": "linux",
+      "dependencies": [
+        "gtk3",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "glib"
+          ]
+        }
+      ]
+    },
     "gui": {
       "description": "Qt Gui",
       "dependencies": [
-        "opengl",
+        {
+          "name": "opengl",
+          "platform": "!ios"
+        },
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
             "freetype"
           ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ],
+          "platform": "osx"
         },
         {
           "name": "qtbase",
@@ -382,7 +420,10 @@
       "description": "Thread support; provides QThread and related classes."
     },
     "vulkan": {
-      "description": "Enable Vulkan support"
+      "description": "Enable Vulkan support",
+      "dependencies": [
+        "vulkan"
+      ]
     },
     "widgets": {
       "description": "Qt Widgets",

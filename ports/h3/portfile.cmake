@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uber/h3
-    REF 26a6409156ba8539b2b332f799486572f1f8bab2 #v3.6.3
-    SHA512 ee3450a5720951254fcdd9bb3acc4b33ed4a58c214e1ed8a091791674b57f0a48de76f0483b31b0b2ad9c316af6a5fcb0c3b72428b8f6380d6b6f717aaed73d7
+    REF v4.1.0
+    SHA512 4f640cbe8061acdacf71e517c0f90f0f89b06bbdb265cb53f2b96c9fa91ba5488f726e9d9f0547615fb9355a7fe602fad237015d0d71aaf2551066690c0b5942
     HEAD_REF master
 )
 
@@ -12,8 +12,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_BENCHMARKS=OFF
+        -DBUILD_FUZZERS=OFF
         -DBUILD_FILTERS=OFF
         -DBUILD_GENERATORS=OFF
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()

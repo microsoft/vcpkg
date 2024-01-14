@@ -6,12 +6,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tronkko/dirent
-    REF 1.23.2
-    SHA512 e7a991445ee9ca8f1118753df559d28beb283b3c0d25edcfb23dd5322f2bdfeadffe802d0c908bb6d4dfc17bf5ec38bdecfa717319fb4e26682bee0ba0d14c5c
+    REF "${VERSION}"
+    SHA512 bdfc5cd41034719a7bcb3b04ad1c821b73e8ab37768b831362bdd36dceb2bab832ecb56ed6e99db145d38b15e295c0971496320b0482cb339dc973a9870bb72d
     HEAD_REF master
 )
 file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/dirent RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 vcpkg_copy_pdbs()
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)

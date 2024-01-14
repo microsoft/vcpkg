@@ -1,0 +1,128 @@
+diff --git a/cmake/igl/modules/copyleft/cgal.cmake b/cmake/igl/modules/copyleft/cgal.cmake
+index f6abe8c..7ee7d84 100644
+--- a/cmake/igl/modules/copyleft/cgal.cmake
++++ b/cmake/igl/modules/copyleft/cgal.cmake
+@@ -14,13 +14,12 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.cpp")
+ igl_target_sources(igl_copyleft_cgal ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(cgal)
++find_package(CGAL CONFIG REQUIRED COMPONENTS Core)
+ igl_include(copyleft core)
+ target_link_libraries(igl_copyleft_cgal ${IGL_SCOPE}
+     igl::core
+     igl_copyleft::core
+     CGAL::CGAL
+-    CGAL::CGAL_Core
+ )
+ 
+ # 5. Unit tests
+diff --git a/cmake/igl/modules/core.cmake b/cmake/igl/modules/core.cmake
+index 2aefcd6..137d30b 100644
+--- a/cmake/igl/modules/core.cmake
++++ b/cmake/igl/modules/core.cmake
+@@ -20,7 +20,7 @@ igl_target_sources(igl_core ${INC_FILES} ${SRC_FILES})
+ igl_install(igl_core ${INC_FILES} ${SRC_FILES})
+ 
+ # 5. Dependencies
+-include(eigen)
++find_package(Eigen3 CONFIG REQUIRED)
+ find_package(Threads REQUIRED)
+ target_link_libraries(igl_core ${IGL_SCOPE}
+     Eigen3::Eigen
+diff --git a/cmake/igl/modules/embree.cmake b/cmake/igl/modules/embree.cmake
+index 6f22319..de85066 100644
+--- a/cmake/igl/modules/embree.cmake
++++ b/cmake/igl/modules/embree.cmake
+@@ -14,10 +14,10 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/embree/*.cpp")
+ igl_target_sources(igl_embree ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(embree)
++find_package(embree 3 CONFIG REQUIRED)
+ target_link_libraries(igl_embree ${IGL_SCOPE}
+     igl::core
+-    embree::embree
++    $<TARGET_NAME:embree>
+ )
+ 
+ # 5. Unit tests
+diff --git a/cmake/igl/modules/glfw.cmake b/cmake/igl/modules/glfw.cmake
+index 79c2126..6d06775 100644
+--- a/cmake/igl/modules/glfw.cmake
++++ b/cmake/igl/modules/glfw.cmake
+@@ -14,12 +14,12 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/*.cpp")
+ igl_target_sources(igl_glfw ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(glfw)
++find_package(glfw3 CONFIG REQUIRED)
+ igl_include(opengl)
+ target_link_libraries(igl_glfw ${IGL_SCOPE}
+     igl::core
+     igl::opengl
+-    glfw::glfw
++    $<TARGET_NAME:glfw>
+ )
+ 
+ # 5. Unit tests
+diff --git a/cmake/igl/modules/imgui.cmake b/cmake/igl/modules/imgui.cmake
+index d7ffb9d..f331854 100644
+--- a/cmake/igl/modules/imgui.cmake
++++ b/cmake/igl/modules/imgui.cmake
+@@ -14,14 +14,12 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/imgui/*.cpp")
+ igl_target_sources(igl_imgui ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(imgui)
+-include(imguizmo)
+-include(libigl_imgui_fonts)
++find_package(imgui CONFIG REQUIRED)
++find_package(imguizmo CONFIG REQUIRED)
+ igl_include(glfw)
+ target_link_libraries(igl_imgui ${IGL_SCOPE}
+     igl::core
+     igl::glfw
+     imgui::imgui
+     imguizmo::imguizmo
+-    igl::imgui_fonts
+ )
+diff --git a/cmake/igl/modules/opengl.cmake b/cmake/igl/modules/opengl.cmake
+index 4580c03..dfadb38 100644
+--- a/cmake/igl/modules/opengl.cmake
++++ b/cmake/igl/modules/opengl.cmake
+@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/*.cpp")
+ igl_target_sources(igl_opengl ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(glad)
++find_package(glad CONFIG REQUIRED)
+ find_package(OpenGL REQUIRED OPTIONAL_COMPONENTS OpenGL)
+ target_link_libraries(igl_opengl ${IGL_SCOPE}
+     igl::core
+diff --git a/cmake/igl/modules/xml.cmake b/cmake/igl/modules/xml.cmake
+index 3763b77..31ab979 100644
+--- a/cmake/igl/modules/xml.cmake
++++ b/cmake/igl/modules/xml.cmake
+@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/xml/*.cpp")
+ igl_target_sources(igl_xml ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(tinyxml2)
++find_package(tinyxml2 CONFIG REQUIRED)
+ target_link_libraries(igl_xml ${IGL_SCOPE}
+     igl::core
+     tinyxml2::tinyxml2
+diff --git a/cmake/recipes/external/comiso.cmake b/cmake/recipes/external/comiso.cmake
+index d2879cb..5a0bd58 100644
+--- a/cmake/recipes/external/comiso.cmake
++++ b/cmake/recipes/external/comiso.cmake
+@@ -11,7 +11,7 @@ FetchContent_Declare(
+     GIT_TAG 536440e714f412e7ef6c0b96b90ba37b1531bb39
+ )
+ 
+-include(eigen)
++find_package(Eigen3 CONFIG REQUIRED)
+ 
+ FetchContent_MakeAvailable(comiso)
+ 

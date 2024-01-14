@@ -4,32 +4,30 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 038a3ac9d160a8cf86a8a88c34367e154ef26ede289c93349332b7bc449a5199b51ea3611cebf3a2416ae23b9e45ecf8f9c6b24ea6d16a5519b796d3c7e272d4
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
 )
 
-set(OPTIONS "")
-if(VCPKG_TARGET_IS_OSX)
-    list(APPEND OPTIONS "--disable-Bsymbolic")
-endif()
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+configure_file("${SOURCE_PATH}/config.h.win32" "${SOURCE_PATH}/src/config.h" COPYONLY)
+file(READ "${SOURCE_PATH}/src/libcroco.symbols" SYMBOLS)
+string(REGEX REPLACE ";[^\n]*\n" "" DEF "EXPORTS\n${SYMBOLS}")
+file(WRITE "${SOURCE_PATH}/src/libcroco.def" "${DEF}")
 
-vcpkg_configure_make(
-    USE_WRAPPERS
+vcpkg_find_acquire_program(PKGCONFIG)
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${OPTIONS}
+        "-DVERSION=${VERSION}"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
-
-vcpkg_install_make()
-
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" 
-                    "${CURRENT_PACKAGES_DIR}/libcroco/bin/croco-0.6-config"
-                    "${CURRENT_PACKAGES_DIR}/libcroco/debug/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libcroco" RENAME copyright)
-
-vcpkg_copy_pdbs()
+file(COPY "${CURRENT_PORT_DIR}/unofficial-libcroco-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-libcroco")
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

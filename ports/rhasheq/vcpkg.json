@@ -1,9 +1,9 @@
 {
   "name": "rhasheq",
-  "version": "0.0.1",
+  "version-date": "2023-06-17",
   "description": "Simple header-only librhash wrapper for verifying hashes from a file to a given `const char *`.",
+  "homepage": "https://github.com/offscale/rhasheq",
   "license": "0BSD",
-  "supports": "!uwp",
   "dependencies": [
     "c89stringutils",
     "rhash",

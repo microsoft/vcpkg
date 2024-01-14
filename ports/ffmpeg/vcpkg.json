@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg",
-  "version": "5.0.2",
+  "version": "6.1",
   "port-version": 2,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
@@ -34,6 +34,7 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "aom",
             "avcodec",
             "avdevice",
             "avfilter",
@@ -44,6 +45,7 @@
             "lzma",
             "mp3lame",
             "openjpeg",
+            "openmpt",
             "opus",
             "snappy",
             "soxr",
@@ -150,17 +152,9 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "aom"
+            "amf"
           ],
-          "platform": "!(windows & arm & !uwp)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "dav1d"
-          ],
-          "platform": "!(uwp | arm | x86 | osx)"
+          "platform": "!osx & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -182,17 +176,17 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "tesseract"
+            "dav1d"
           ],
-          "platform": "!(windows & arm) & !static & !uwp"
+          "platform": "!(uwp | (windows & x86 & !static))"
         },
         {
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "amf"
+            "tesseract"
           ],
-          "platform": "linux | (!osx & !uwp & !(arm & windows))"
+          "platform": "!(windows & arm) & !static & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -345,7 +339,6 @@
     },
     "dav1d": {
       "description": "AV1 decoding via libdav1d",
-      "supports": "!osx",
       "dependencies": [
         "dav1d"
       ]
@@ -640,6 +633,13 @@
     "vpx": {
       "description": "VP8 and VP9 de/encoding via libvpx",
       "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec"
+          ]
+        },
         "libvpx"
       ]
     },

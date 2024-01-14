@@ -1,8 +1,64 @@
+diff --git a/IO/MotionFX/vtkMotionFXCFGGrammar.h b/IO/MotionFX/vtkMotionFXCFGGrammar.h
+index dba137386..4cb03e054 100644
+--- a/IO/MotionFX/vtkMotionFXCFGGrammar.h
++++ b/IO/MotionFX/vtkMotionFXCFGGrammar.h
+@@ -23,7 +23,7 @@
+ 
+ // for debugging
+ // clang-format off
+-#include VTK_PEGTL(pegtl/contrib/tracer.hpp)
++#include VTK_PEGTL(pegtl/contrib/trace.hpp)
+ // clang-format on
+ 
+ namespace MotionFX
+diff --git a/IO/MotionFX/vtkMotionFXCFGReader.cxx b/IO/MotionFX/vtkMotionFXCFGReader.cxx
+index 338aa736e..374e54b94 100644
+--- a/IO/MotionFX/vtkMotionFXCFGReader.cxx
++++ b/IO/MotionFX/vtkMotionFXCFGReader.cxx
+@@ -1213,7 +1213,7 @@ bool PositionFileMotion::read_position_file(const std::string& rootDir) const
+     }
+     return true;
+   }
+-  catch (const tao::pegtl::input_error& e)
++  catch (const tao::pegtl::parse_error& e)
+   {
+     vtkGenericWarningMacro("PositionFileMotion::read_position_file failed: " << e.what());
+   }
+@@ -1232,7 +1232,7 @@ bool UniversalTransformMotion::read_universaltransform_file(const std::string& r
+       in, numbers, this->transforms);
+     return true;
+   }
+-  catch (const tao::pegtl::input_error& e)
++  catch (const tao::pegtl::parse_error& e)
+   {
+     vtkGenericWarningMacro(
+       "UniversalTransformMotion::read_universaltransform_file failed: " << e.what());
+@@ -1267,7 +1267,7 @@ public:
+       if (getenv("MOTIONFX_DEBUG_GRAMMAR") != nullptr)
+       {
+         tao::pegtl::read_input<> in2(filename);
+-        tao::pegtl::parse<MotionFX::CFG::Grammar, tao::pegtl::nothing, tao::pegtl::tracer>(in2);
++        tao::pegtl::complete_trace<MotionFX::CFG::Grammar>(in2);
+       }
+       return false;
+     }
+diff --git a/ThirdParty/pegtl/CMakeLists.txt b/ThirdParty/pegtl/CMakeLists.txt
+index 9bbd4c828..0cdb1f53d 100644
+--- a/ThirdParty/pegtl/CMakeLists.txt
++++ b/ThirdParty/pegtl/CMakeLists.txt
+@@ -5,7 +5,6 @@ vtk_module_third_party(
+     VERSION       "2.8.3"
+   EXTERNAL
+     PACKAGE PEGTL
+-    VERSION 2.0.0
+     TARGETS PEGTL::PEGTL
+     STANDARD_INCLUDE_DIRS)
+ 
 diff --git a/CMake/FindPEGTL.cmake b/CMake/FindPEGTL.cmake
 index 73eee02f7..22d8bc159 100644
 --- a/CMake/FindPEGTL.cmake	
 +++ b/CMake/FindPEGTL.cmake
-@@ -19,31 +19,42 @@
+@@ -19,31 +19,43 @@
  # Copyright (c) 2009 Benoit Jacob <jacob.benoit.1@gmail.com>
  # Redistribution and use is allowed according to the terms of the 2-clause BSD license.
  
@@ -12,12 +68,13 @@ index 73eee02f7..22d8bc159 100644
 -  DOC "Path to PEGTL headers")
 -mark_as_advanced(PEGTL_INCLUDE_DIR)
 +message(STATUS "Searching for PEGTL")
-+find_package(PEGTL CONFIG NAMES PEGTL-2)
++find_package(PEGTL CONFIG REQUIRED)
 +if(TARGET taocpp::pegtl)
 +    message(STATUS "Searching for PEGTL - found target taocpp::pegtl")
 +    set_target_properties(taocpp::pegtl PROPERTIES IMPORTED_GLOBAL TRUE)
 +    if(NOT TARGET PEGTL::PEGTL)
-+    add_library(PEGTL::PEGTL ALIAS taocpp::pegtl)
++       add_library(PEGTL::PEGTL IMPORTED INTERFACE)
++       target_link_libraries(PEGTL::PEGTL INTERFACE taocpp::pegtl)
 +    endif()
 +else()
 +    find_path(PEGTL_INCLUDE_DIR

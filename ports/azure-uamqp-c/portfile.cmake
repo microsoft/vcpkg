@@ -1,22 +1,12 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if("public-preview" IN_LIST FEATURES)
-    vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO Azure/azure-uamqp-c
-        REF 065ffdeeb47313ddbbc2a8e84ad52ab033e2e8d2
-        SHA512 bade6fae2d5479b7690632dbcc58bda5dd871eb0aa63d6a56cb35e81630121b5148309cd3414e6339c1218ec59fc12ac318b4964d295b579f7a0cacf5593b7ba
-        HEAD_REF master
-    )
-else()
-    vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO Azure/azure-uamqp-c
-        REF 117c8378b80fdafec639dafb6693b7c044281abc
-        SHA512 6726cfb3ecb42d42957b5df94d0b173b566fdd6961814e2b10882e32ae26387a36b05d77c59efbb008b7ed37e276c35128ab4e4adf0739cbf37f5f234626481a
-        HEAD_REF master
-    )
-endif()
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Azure/azure-uamqp-c
+    REF efd1b1b8b1e85d471ebd3aa1be062fb1cc6a10a1
+    SHA512 1303183cf1830be0cd52ccb67eebe2055343979d788f8c7eddde30343cc2c334035a1f4767bf404b1432277f7a4846317e14fb0da3a05114e8befb91562fa8f3
+    HEAD_REF master
+)
 
 file(COPY ${CURRENT_INSTALLED_DIR}/share/azure-c-shared-utility/azure_iot_build_rules.cmake DESTINATION ${SOURCE_PATH}/deps/azure-c-shared-utility/configs/)
 

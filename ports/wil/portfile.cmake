@@ -2,10 +2,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/wil
-    REF 5f4caba4e7a9017816e47becdd918fcc872039ba
-    SHA512 46b0ceb0d2681c76ead9e6626557facf82622b6c22376d26225016d116f6d5b1528401635022f79c2dde97177264442be849ab7c0cbac4a43c0d46e0e3e9e6e5
+    REF v1.0.231028.1
+    SHA512 c9bbf3ab64ed63f57fc50954b03fa57c24e5399c79d6a53803e66741874bf582646ac886c8adeac09c881a71980ec0624529c06d9c89e8846e17d79cb3f3cc83
     HEAD_REF master
 )
+
+# WIL is header-only, so we don't need to build it in both modes
+set(VCPKG_BUILD_TYPE release)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

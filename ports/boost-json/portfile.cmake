@@ -3,12 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.81.0
-    SHA512 8ff7a7c68444faeb19c5ceaf82bbb35720645dd7fae5f14b0da83deb1d21ee3fc3dc353fb3144625b0062cf058411d8f58011e4da6e75850208831829342bbfb
+    REF boost-1.83.0
+    SHA512 0640a922507c416d171eff1b60c291e9644dba97770a3277c85233982d8c1022e64cbab88e9cdff7ce0f371965c214dc6da36f9cd7b134d1f5e8dc8deabb31f9
     HEAD_REF master
+    PATCHES
+        0001-Fix-use-of-intrinsics-on-windows-ARM-platforms.patch
+        0002-Replace-_M_ARM64-with-_M_ARM-for-32-bit-path.patch
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" 
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile"
     "import ../../config/checks/config"
     "import ../config/checks/config"
 )

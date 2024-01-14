@@ -15,16 +15,17 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
 endif()
 
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
-	set(ADDITIONAL_OPTIONS "-DPLATFORM=Web")
+    set(ADDITIONAL_OPTIONS "-DPLATFORM=Web")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF 387c06000618ef0aa3b15c5e46d1c525ba194c50 #v4.2.0
-    SHA512 df7640dcf2979128586c7b671da4f17b628bed8a4526f252469d2d25aee2c9b16695087c8766c10bfdf26a89ff1a8f7ff6005baa7c0dbf77dadc8a0c469e1217
+    REF "${VERSION}"
+    SHA512 5956bc1646b99baac6eb1652c4d72e96af874337158672155ba144f131de8a4fd19291a58335a92fcaaa2fc818682f93ff4230af0f815efb8b49f7d2a162e9b0
     HEAD_REF master
-    PATCHES ${patches}
+    PATCHES
+        ${patches}
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
@@ -59,6 +60,10 @@ vcpkg_cmake_configure(
         -DENABLE_ASAN=OFF
         -DENABLE_UBSAN=OFF
         -DENABLE_MSAN=OFF
+    MAYBE_UNUSED_VARIABLES
+        SHARED
+        STATIC
+        SUPPORT_HIGH_DPI
 )
 
 vcpkg_cmake_install()
@@ -81,4 +86,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
