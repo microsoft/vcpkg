@@ -2,11 +2,16 @@ if(PORT STREQUAL "tbb")
     set(VCPKG_C_FLAGS "-mrtm")
     set(VCPKG_CXX_FLAGS "-mrtm")
 endif()
+#if(PORT STREQUAL "tesseract")
+#    set(VCPKG_C_FLAGS "-mavx2")
+#    set(VCPKG_CXX_FLAGS "-mavx2")
+#endif()
 if(PORT MATCHES "^(re2)$")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
+
 # Note: All gn ports still use cl unless we figure out to pass it a toolchain somehow. 
-if(PORT MATCHES "^(arrow|akali|arb|cello|chakracore|flint|folly|glog|zydis|graphicsmagick|freerdp|gtk|irrlicht|libde265|llfio|mongo-c-driver|tcl|nvtt)$")
+if(PORT MATCHES "^(arrow|akali|arb|cello|chakracore|flint|folly|glog|zydis|graphicsmagick|freerdp|gtk|irrlicht|libde265|llfio|mongo-c-driver|tcl|nvtt|tesseract)$")
     # akali -> typedef private void (T::*POnTimer)(void); -> error
     # arb -> probably related to flint!
     # cello -> redefines throw();
@@ -30,14 +35,7 @@ if(PORT MATCHES "^(arrow|akali|arb|cello|chakracore|flint|folly|glog|zydis|graph
     unset(VCPKG_VS_CMAKE_GENERATOR)
     set(ENV{PATH} "${LLVM_PATH_BACKUP}")
 endif()
-if(PORT MATCHES "^itk$" AND "rtk" IN_LIST FEATURES)
-    # itk/rtk needs an update to correctly support cuda with clang-cl
-    message(STATUS "Falling back to cl!")
-    unset(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-    unset(VCPKG_PLATFORM_TOOLSET)
-    unset(VCPKG_VS_CMAKE_GENERATOR)
-    set(ENV{PATH} "${LLVM_PATH_BACKUP}")
-endif()
+
 if(PORT MATCHES "^gettext$" AND "tools" IN_LIST FEATURES) # uses /EXTRACT unsupported by llvm-lib
     list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DCMAKE_AR=llvm-ar.exe")
     set(ENV{AR} "llvm-ar.exe")
@@ -45,4 +43,13 @@ endif()
 
 if(CMAKE_PARENT_LIST_FILE MATCHES "-lto(\\\.|-)" AND NOT PORT MATCHES "(benchmark|gtest|pkgconf|^qt[a-z]+)")
     list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_USE_LTO:BOOL=TRUE")
+endif()
+
+if(PORT MATCHES "(icu)" AND CMAKE_PARENT_LIST_FILE MATCHES "-san(\\\.|-)")
+  set(ENV{_LINK_} "-include:__asan_seh_interceptor clang_rt.asan_dynamic-x86_64.lib -wholearchive:clang_rt.asan_dynamic_runtime_thunk-x86_64.lib")
+endif()
+
+if(PORT MATCHES "(qtconnectivity|qtsensors|qtspeech)")
+  string(APPEND VCPKG_CXX_FLAGS " -std:c++20") # cppwinrt uses Coroutines which is only supported with c++20 using clang
+  string(APPEND VCPKG_C_FLAGS "")
 endif()

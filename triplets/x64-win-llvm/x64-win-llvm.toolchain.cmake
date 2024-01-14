@@ -18,21 +18,29 @@ function(get_vcpkg_triplet_variables)
 endfunction()
 
 get_vcpkg_triplet_variables()
+
+set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "Embedded")
+
 # Set C standard.
 set(CMAKE_C_STANDARD 11 CACHE STRING "")
 set(CMAKE_C_STANDARD_REQUIRED ON CACHE STRING "")
 set(CMAKE_C_EXTENSIONS ON CACHE STRING "")
-set(std_c_flags "-std:c11 -D__STDC__=1") #/Zc:__STDC__
+set(std_c_flags "-std:c11 -D__STDC__=1 -Wno-implicit-function-declaration") #/Zc:__STDC__
+# -Wno-implicit-function-declaration because a lot of libraries don't #include <io.h> 
+# for read/open/access and clang 16 made that an error instead of a warning.
 
 # Set C++ standard.
-#set(CMAKE_CXX_STANDARD 14 CACHE STRING "")
+#set(CMAKE_CXX_STANDARD 17 CACHE STRING "")
 #set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE STRING "")
 #set(CMAKE_CXX_EXTENSIONS OFF CACHE STRING "")
 # set(std_cxx_flags "/permissive- -std:c++20 /Zc:__cplusplus")
-#set(std_cxx_flags "/permissive- -std:c++14 /Zc:__cplusplus")
+#set(std_cxx_flags "/permissive- -std:c++17 /Zc:__cplusplus -Wno-register")
 
 # Set Windows definitions:
-set(windows_defs "/DWIN32 /D_WIN64")
+set(windows_defs "/DWIN32")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+  string(APPEND windows_defs " /D_WIN64")
+endif()
 string(APPEND windows_defs " /D_WIN32_WINNT=0x0A00 /DWINVER=0x0A00") # tweak for targeted windows
 string(APPEND windows_defs " /D_CRT_SECURE_NO_DEPRECATE /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_DEPRECATE")
 string(APPEND windows_defs " /D_ATL_SECURE_NO_DEPRECATE /D_SCL_SECURE_NO_WARNINGS")
@@ -44,11 +52,14 @@ set(ignore_werror "/WX-")
 cmake_language(DEFER CALL add_compile_options "/WX-") # make sure the flag is added at the end!
 
 # general architecture flags
-set(arch_flags "-mcrc32 -msse4.2")
+# set(arch_flags "-mcrc32 -msse4.2 -maes -mpclmul")
 # -mcrc32 for libpq
 # -mrtm for tbb (will break qtdeclarative since it cannot run the executables in CI)
 # -msse4.2 for everything which normally cl can use. (Otherwise strict sse2 only.)
-
+# -maes -mpclmul mbedtls
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+  string(APPEND arch_flags " -m32 --target=i686-pc-windows-msvc")
+endif()
 # /Za unknown
 
 # Set runtime library.
@@ -74,6 +85,9 @@ set(CMAKE_CL_NOLOGO "/nologo" CACHE STRING "")
 find_program(CLANG-CL_EXECUTBALE NAMES "clang-cl" "clang-cl.exe" PATHS ENV LLVMInstallDir PATH_SUFFIXES "bin" NO_DEFAULT_PATH)
 find_program(CLANG-CL_EXECUTBALE NAMES "clang-cl" "clang-cl.exe" PATHS ENV LLVMInstallDir PATH_SUFFIXES "bin" )
 
+find_program(CLANG_EXECUTBALE NAMES "clang" "clang.exe" PATHS ENV LLVMInstallDir PATH_SUFFIXES "bin" NO_DEFAULT_PATH)
+find_program(CLANG_EXECUTBALE NAMES "clang" "clang.exe" PATHS ENV LLVMInstallDir PATH_SUFFIXES "bin")
+
 if(NOT CLANG-CL_EXECUTBALE)
   message(SEND_ERROR "clang-cl was not found!") # Not a FATAL_ERROR due to being a toolchain!
 endif()
@@ -94,14 +108,48 @@ set(CMAKE_ASM_MASM_COMPILER "ml64.exe" CACHE STRING "")
 set(CMAKE_RC_COMPILER "rc.exe" CACHE STRING "")
 set(CMAKE_MT "mt.exe" CACHE STRING "")
 
+#set(CMAKE_USER_MAKE_RULES_OVERRIDE_CUDA "${CMAKE_CURRENT_LIST_DIR}/Platform/Windows-Clang-CUDA.cmake")
+#set(CMAKE_CUDA_COMPILER "${CLANG_EXECUTBALE}")
+#set(CMAKE_CUDA_HOST_COMPILER "${CLANG_EXECUTBALE}")
+#https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
+#set(CMAKE_CUDA_ARCHITECTURES 60 )
+#set(_CMAKE_CUDA_WHOLE_FLAG "-c")
+#set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -D_WIN32 -DNDEBUG -O2 --no-cuda-version-check") # --cuda-gpu-arch=sm_60" --cuda-path=${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/cuda")
+#string(APPEND CMAKE_CUDA_FLAGS " -Xcompiler -fuse-ld=lld-link -Xcompiler -std=c++17") #-cl-version v143 #  -use-local-env
+#set(CMAKE_CUDA_COMPILER_TOOLKIT_ROOT "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/cuda")
+#set(CUDAToolkit_ROOT "${CUDATOOLKIT_ROOT}")
+    #set(CMAKE_CUDA_DEVICE_LINKER "${CMAKE_CUDA_COMPILER_TOOLKIT_ROOT}/bin/nvlink${CMAKE_EXECUTABLE_SUFFIX}")
+    #set(CMAKE_CUDA_FATBINARY "${CMAKE_CUDA_COMPILER_TOOLKIT_ROOT}/bin/fatbinary${CMAKE_EXECUTABLE_SUFFIX}")
+
+### CUDA section nvcc
+
+if(NOT CUDA_C_COMPILER)
+  # Due to nvcc error   : 'cudafe++' died with status 0xC0000409 |  clang-cl cannot currently be used to compile cu files.
+  # The CUDA frontend probably has problems parsing preprocessed files from clang-cl
+  find_program(CL_COMPILER NAMES cl)
+  set(CUDA_C_COMPILER "${CL_COMPILER}")
+endif()
+
+string(APPEND CMAKE_CUDA_FLAGS " --keep --use-local-env --allow-unsupported-compiler -ccbin \"${CUDA_C_COMPILER}\"")
+set(CUDA_HOST_COMPILER "${CUDA_C_COMPILER}")
+set(CMAKE_CUDA_HOST_COMPILER "${CUDA_C_COMPILER}")
+### CUDA section clang (requires cmake changes)
+
+#set(CMAKE_USER_MAKE_RULES_OVERRIDE_CUDA "${CMAKE_CURRENT_LIST_DIR}/Platform/Windows-Clang-CUDA.cmake")
+#set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -D_WIN32 -DNDEBUG -O2 --no-cuda-version-check") # --cuda-gpu-arch=sm_60" --cuda-path=${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/cuda")
+
+###
+
+
+
 # Set compiler flags.
 #set(CLANG_FLAGS "/clang:-fasm -fmacro-backtrace-limit=0") #/clang:-fopenmp-simd -openmp
 
-set(CLANG_C_LTO_FLAGS "")
-set(CLANG_CXX_LTO_FLAGS "")
+set(CLANG_C_LTO_FLAGS "-fuse-ld=lld-link")
+set(CLANG_CXX_LTO_FLAGS "-fuse-ld=lld-link")
 if(VCPKG_USE_LTO)
-  set(CLANG_C_LTO_FLAGS "-flto -fuse-ld=lld")
-  set(CLANG_CXX_LTO_FLAGS "-flto -fuse-ld=lld -fwhole-program-vtables")
+  set(CLANG_C_LTO_FLAGS "-flto -fuse-ld=lld-link")
+  set(CLANG_CXX_LTO_FLAGS "-flto -fuse-ld=lld-link -fwhole-program-vtables")
 endif()
 
 #https://devblogs.microsoft.com/cppblog/asan-for-windows-x64-and-debug-build-support/
@@ -112,28 +160,32 @@ set(sanitizer_libs_exe "")
 set(sanitizer_libs_dll "")
 message(STATUS "VCPKG_USE_COMPILER_FOR_LINKAGE:${VCPKG_USE_COMPILER_FOR_LINKAGE}")
 if(VCPKG_USE_SANITIZERS)
-    set(sanitizers "undefined,alignment,null")
+    set(sanitizers "alignment,null")
     if(VCPKG_USE_LTO)
       string(APPEND sanitizers ",cfi")
     else()
       string(APPEND sanitizers ",address") # lld-link: error: /alternatename: conflicts: __sanitizer_on_print=__sanitizer_on_print__def
     endif()
-    string(APPEND CLANG_FLAGS_RELEASE "-fsanitize=${sanitizers} -fsanitize-stats /Oy-")
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+      string(APPEND sanitizers ",undefined")
+    endif()
+    string(APPEND CLANG_FLAGS_RELEASE "-fsanitize=${sanitizers} /Oy- /GF-")
     if(NOT DEFINED ENV{LLVMToolsVersion})
       file(GLOB clang_ver_path LIST_DIRECTORIES true "${LLVM_BIN_DIR}/../lib/clang/*")
     else()
       set(clang_ver_path "${LLVM_BIN_DIR}/../lib/clang/$ENV{LLVMToolsVersion}")
     endif()
-    set(ENV{PATH} "$ENV{PATH};${clang_ver_path}/lib/windows")
+    #set(ENV{PATH} "$ENV{PATH};${clang_ver_path}/lib/windows")
+    
     if(NOT VCPKG_USE_COMPILER_FOR_LINKAGE)
-      set(ENV{LINK} "$ENV{LINK} /LIBPATH:\"${clang_ver_path}/lib/windows\"")
+      #set(ENV{LINK} "$ENV{LINK} /LIBPATH:\"${clang_ver_path}/lib/windows\"")
       #set(sanitizer_path "/LIBPATH:\\\\\"${clang_ver_path}/lib/windows\\\\\"" )
-      set(sanitizer_libs "clang_rt.ubsan_standalone-x86_64.lib clang_rt.ubsan_standalone_cxx-x86_64.lib")
       if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        set(sanitizer_libs_exe "clang_rt.asan_dynamic-x86_64.lib clang_rt.asan_dynamic_runtime_thunk-x86_64.lib")
+        set(sanitizer_libs_exe "-include:__asan_seh_interceptor clang_rt.asan_dynamic-x86_64.lib clang_rt.asan_dynamic_runtime_thunk-x86_64.lib /wholearchive:clang_rt.asan_dynamic_runtime_thunk-x86_64.lib")
         set(sanitizer_libs_dll "${sanitizer_libs_exe}")
       else()
-        set(sanitizer_libs_exe "/wholearchive:clang_rt.asan-x86_64.lib /wholearchive:clang_rt.asan_cxx-x86_64.lib")
+        set(sanitizer_libs "clang_rt.ubsan_standalone-x86_64.lib clang_rt.ubsan_standalone_cxx-x86_64.lib")
+        set(sanitizer_libs_exe "${sanitizer_libs} /wholearchive:clang_rt.asan-x86_64.lib /wholearchive:clang_rt.asan_cxx-x86_64.lib")
         set(sanitizer_libs_dll "clang_rt.asan_dll_thunk-x86_64.lib")
       endif()
       unset(clang_ver_path)
@@ -143,9 +195,9 @@ endif()
 
 set(CMAKE_C_FLAGS "${CMAKE_CL_NOLOGO} ${windows_defs} ${arch_flags} ${VCPKG_C_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG} ${std_c_flags} ${ignore_werror}" CACHE STRING "")
 set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /GS /RTC1 /FC ${VCPKG_C_FLAGS_DEBUG} ${VCPKG_CRT_FLAG}d ${VCPKG_DBG_FLAG} /D_DEBUG" CACHE STRING "")
-set(CMAKE_C_FLAGS_RELEASE "${CLANG_FLAGS_RELEASE} /O2 /Oi ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
-set(CMAKE_C_FLAGS_MINSIZEREL "${CLANG_FLAGS_RELEASE} /O1 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} /DNDEBUG" CACHE STRING "")
-set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CLANG_FLAGS_RELEASE} /O2 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
+set(CMAKE_C_FLAGS_RELEASE "/O2 /Oi ${CLANG_FLAGS_RELEASE} ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
+set(CMAKE_C_FLAGS_MINSIZEREL "/O1 /Oi /Ob1 /GS- ${CLANG_FLAGS_RELEASE} ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} /DNDEBUG" CACHE STRING "")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "/O2 /Oi /Ob1 /GS- ${CLANG_FLAGS_RELEASE} ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CL_NOLOGO} /EHsc /GR ${windows_defs} ${arch_flags} ${VCPKG_CXX_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG} ${std_cxx_flags} ${ignore_werror}" CACHE STRING "")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /FC ${VCPKG_CXX_FLAGS_DEBUG}" CACHE STRING "")
