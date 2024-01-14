@@ -15,8 +15,8 @@
       "host": true
     }
   ],
-  "features" : {
-  "mpi": {
+  "features": {
+    "mpi": {
       "description": "Enable MPI",
       "dependencies": [
         "mpi"

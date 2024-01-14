@@ -20,12 +20,14 @@
     }
   ],
   "features": {
-    "boost" : {
-      "description" : "Use Boost for Unicode string convertions ",
-      "dependencies": [ "boost-locale"]
+    "boost": {
+      "description": "Use Boost for Unicode string convertions ",
+      "dependencies": [
+        "boost-locale"
+      ]
     },
     "unicode": {
-      "description" : "Enable Unicode support"
+      "description": "Enable Unicode support"
     }
   }
 }

@@ -7,6 +7,7 @@
   "license": null,
   "supports": "!x86 & !uwp & !(arm & windows)",
   "dependencies": [
+    "diy",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -14,8 +15,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "diy"
+    }
   ],
   "features": {
     "cuda": {
@@ -30,12 +30,14 @@
     "mpi": {
       "description": "Use the MPI controller.",
       "dependencies": [
-        "mpi",
         {
           "name": "diy",
           "default-features": false,
-          "features" : [ "mpi"]
-        }
+          "features": [
+            "mpi"
+          ]
+        },
+        "mpi"
       ]
     },
     "omp": {

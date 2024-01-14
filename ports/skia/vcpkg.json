@@ -29,15 +29,15 @@
       "host": true
     },
     {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
       "name": "vcpkg-gn",
       "host": true
     },
     {
       "name": "vcpkg-pkgconfig-get-modules",
-      "host": true
-    },
-      {
-      "name": "vcpkg-cmake-get-vars",
       "host": true
     },
     {

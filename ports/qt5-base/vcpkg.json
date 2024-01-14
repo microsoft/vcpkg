@@ -33,15 +33,15 @@
       "host": true
     },
     {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     },
     "zlib",
-    "zstd",
-    {
-      "name": "vcpkg-cmake-get-vars",
-      "host": true
-    }
+    "zstd"
   ],
   "features": {
     "icu": {
