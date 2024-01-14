@@ -1,7 +1,7 @@
 {
   "name": "qt5-canvas3d",
-  "version-string": "0",
-  "port-version": 1,
+  "version": "0",
+  "port-version": 2,
   "description": "Qt5 Canvas 3d Module;",
   "dependencies": [
     {

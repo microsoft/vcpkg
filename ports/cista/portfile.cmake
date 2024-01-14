@@ -1,12 +1,12 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO felixguendling/cista
     REF "v${VERSION}"
-    SHA512 303d622416e72f771b6fa2b1c7b7ca4cfed3091d89409c96262571162754c9d6d99b62a930c137e01fd8c74a8f46b76ac3a1d86387c918414e26c8a2a8ffd930
+    SHA512 bf5c5f527eb2b63775fd9f2e99f60a0ed19bd9805f38bf3e55f4995e01ecaf31c95dcd555520e12b3a1b9d039f702b9c9a4fdec74b9547136e336b5adf78689d
     HEAD_REF master
 )
+
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -18,9 +18,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cista)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug"
-    "${CURRENT_PACKAGES_DIR}/lib"
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

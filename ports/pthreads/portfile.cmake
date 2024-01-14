@@ -17,8 +17,6 @@ else()
   list(APPEND PATCH_FILES use-mt.patch)
 endif()
 
-list(APPEND PATCH_FILES fix-pthread_getname_np.patch fix-install.patch)
-
 vcpkg_from_sourceforge(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO pthreads4w
@@ -27,6 +25,9 @@ vcpkg_from_sourceforge(
   PATCHES
     fix-arm-macro.patch
     fix-arm64-version_rc.patch # https://sourceforge.net/p/pthreads4w/code/merge-requests/6/
+    fix-pthread_getname_np.patch
+    fix-install.patch
+    whitespace_in_path.patch
     ${PATCH_FILES}
 )
 

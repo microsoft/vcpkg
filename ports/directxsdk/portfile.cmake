@@ -10,8 +10,8 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 24e1e9bda319b780124b865f4640822cfc44e4d18fbdcc8456d48fe54081652ce4ddb63d3bd8596351057cbae50fc824b8297e99f0f7c97547153162562ba73f
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
 )
 
@@ -33,6 +33,8 @@ set(HEADERS
     ${INC_DIR}/D3DX11async.h
     ${INC_DIR}/D3DX11core.h
     ${INC_DIR}/D3DX11tex.h
+    ${INC_DIR}/d3d9.h
+    ${INC_DIR}/d3d9types.h
     ${INC_DIR}/d3dx9.h
     ${INC_DIR}/d3dx9anim.h
     ${INC_DIR}/d3dx9core.h
@@ -70,6 +72,7 @@ set(RELEASE_LIBS
     ${LIB_DIR}/d3dx9.lib
 )
 set(OTHER_LIBS
+    ${LIB_DIR}/d3d9.lib
     ${LIB_DIR}/d3dxof.lib
     ${LIB_DIR}/DxErr.lib
 )

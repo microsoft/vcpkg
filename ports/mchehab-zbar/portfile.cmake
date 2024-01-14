@@ -16,11 +16,17 @@ if("nls" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-nls")
 else()
     vcpkg_list(APPEND options "--disable-nls")
+    set(ENV{AUTOPOINT} true) # true, the program
+    # Simulate the relevant effects of (interactive) `gettextize`.
+    file(TOUCH "${SOURCE_PATH}/po/Makefile.in.in")
+    file(GLOB_RECURSE m4_files "${CURRENT_HOST_INSTALLED_DIR}/share/gettext/aclocal/*.m4")
+    file(INSTALL ${m4_files} DESTINATION "${SOURCE_PATH}/config")
 endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
+    ADD_BIN_TO_PATH # checking for working iconv
     OPTIONS
         ${options}
         --without-dbus

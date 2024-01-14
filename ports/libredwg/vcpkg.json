@@ -1,0 +1,25 @@
+{
+  "name": "libredwg",
+  "version": "0.12.5.5178",
+  "port-version": 1,
+  "description": "GNU LibreDWG is a free C library to handle DWG files. It aims to be a free replacement for the OpenDWG libraries. DWG is the native file format of AutoCAD.",
+  "homepage": "https://www.gnu.org/software/libredwg/",
+  "license": "GPL-3.0",
+  "supports": "!xbox",
+  "dependencies": [
+    "jsmn",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build dwg/dxf manipulation command-line tools"
+    }
+  }
+}

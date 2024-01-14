@@ -4,6 +4,7 @@ constant BOOST_JAMROOT_MODULE : $(__name__) ;
 
 import boostcpp ;
 import feature ;
+import configure ;
 
 boostcpp.set-version $(BOOST_VERSION) ;
 
@@ -100,10 +101,36 @@ if "@PORT@" != "boost-filesystem"
 
 if "@PORT@" != "boost-atomic"
 {
+    lib synchronization ;
+    explicit synchronization ;
+
+    exe has_synchronization_lib : "@CURRENT_INSTALLED_DIR@/share/boost-atomic/has_synchronization_lib.cpp" : <library>synchronization ;
+    explicit has_synchronization_lib ;
+
+    rule check-synchronization-lib ( properties * )
+    {
+        local result ;
+
+        if <target-os>windows in $(properties)
+        {
+            if [ configure.builds has_synchronization_lib : $(properties) : "has synchronization.lib" ]
+            {
+                result += <library>synchronization ;
+            }
+            else
+            {
+                result += <define>BOOST_ATOMIC_NO_SYNCHRONIZATION_LIB ;
+            }
+        }
+
+        return $(result) ;
+    }
     use-project /boost/atomic : . ;
 
-    lib boost_atomic : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_atomic@BOOST_LIB_RELEASE_SUFFIX@" <variant>release ;
-    lib boost_atomic : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_atomic@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug ;
+    lib boost_atomic : : <file>"@CURRENT_INSTALLED_DIR@/lib/@BOOST_LIB_PREFIX@boost_atomic@BOOST_LIB_RELEASE_SUFFIX@" <variant>release : : usage-requirements
+      <conditional>@check-synchronization-lib ;
+    lib boost_atomic : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/@BOOST_LIB_PREFIX@boost_atomic@BOOST_LIB_DEBUG_SUFFIX@" <variant>debug : : usage-requirements
+      <conditional>@check-synchronization-lib ;
     explicit boost_atomic ;
 }
 

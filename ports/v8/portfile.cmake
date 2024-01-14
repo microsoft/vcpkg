@@ -171,7 +171,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PREFIX ${CURRENT_PACKAGES_DIR})
     configure_file("${CURRENT_PORT_DIR}/v8.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8.pc" @ONLY)
     configure_file("${CURRENT_PORT_DIR}/v8_libbase.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libbase.pc" @ONLY)
-    configure_file("${CURRENT_PORT_DIR}/v8_libplatform.pc.in" "{CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libplatform.pc" @ONLY)
+    configure_file("${CURRENT_PORT_DIR}/v8_libplatform.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libplatform.pc" @ONLY)
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/snapshot_blob.bin" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 
     set(PREFIX ${CURRENT_PACKAGES_DIR}/debug)

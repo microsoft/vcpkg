@@ -154,28 +154,6 @@ index cd0f9d3ca..083a5ea2d 100644
  {
  public:
      GstBaseSink parent;
-diff --git a/src/plugins/multimedia/gstreamer/common/qgstutils_p.h b/src/plugins/multimedia/gstreamer/common/qgstutils_p.h
-index 809505868..02daf1474 100644
---- a/src/plugins/multimedia/gstreamer/common/qgstutils_p.h
-+++ b/src/plugins/multimedia/gstreamer/common/qgstutils_p.h
-@@ -35,14 +35,14 @@ class QImage;
- class QVideoFrameFormat;
- 
- namespace QGstUtils {
--    Q_MULTIMEDIA_EXPORT QAudioFormat audioFormatForSample(GstSample *sample);
-+     QAudioFormat audioFormatForSample(GstSample *sample);
-     QAudioFormat audioFormatForCaps(QGstCaps caps);
--    Q_MULTIMEDIA_EXPORT QGstMutableCaps capsForAudioFormat(const QAudioFormat &format);
-+     QGstMutableCaps capsForAudioFormat(const QAudioFormat &format);
- 
-     void setFrameTimeStamps(QVideoFrame *frame, GstBuffer *buffer);
- }
- 
--Q_MULTIMEDIA_EXPORT GList *qt_gst_video_sinks();
-+ GList *qt_gst_video_sinks();
- 
- QT_END_NAMESPACE
- 
 diff --git a/src/plugins/multimedia/gstreamer/common/qgstvideobuffer_p.h b/src/plugins/multimedia/gstreamer/common/qgstvideobuffer_p.h
 index c534dddba..7309db5e5 100644
 --- a/src/plugins/multimedia/gstreamer/common/qgstvideobuffer_p.h

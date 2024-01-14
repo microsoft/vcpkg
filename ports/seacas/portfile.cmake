@@ -8,17 +8,23 @@ vcpkg_from_github(
             fix-ioss-includes.patch
             deps-and-shared.patch
             fix-mpi.patch
+            fix-headers.patch
+            fix-fmt-10.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake/tribits/common_tpls/find_modules/FindHDF5.cmake")
 
-if(NOT VCPKG_TARGET_IS_OSX)
-    set(MPI_FEATURES mpi TPL_ENABLE_ParMETIS)
+if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
+    message(WARNING "${HDF5_WITH_PARALLEL} Enabling MPI in seacas.")
+    list(APPEND FEATURES "mpi")
+elseif(NOT VCPKG_TARGET_IS_OSX)
+    set(PARMETIS_FEATURES mpi TPL_ENABLE_ParMETIS)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         mpi     TPL_ENABLE_MPI
         # mpi     TPL_ENABLE_Pnetcdf # missing Pnetcdf port
-        ${MPI_FEATURES}
+        ${PARMETIS_FEATURES}
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)

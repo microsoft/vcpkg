@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt	(revision f2adef31d778cfe90b8a5bb377425f825ebf92f0)
 +++ b/CMakeLists.txt	(date 1675009099302)
 @@ -337,9 +337,9 @@
-  # set extra warning flags
+ # set extra warning flags
  if(AWS_WARNINGS_ARE_ERRORS)
      if(MSVC)
 -        target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX /wd4068)

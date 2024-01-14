@@ -1,11 +1,11 @@
 {
   "name": "embree3",
   "version": "3.13.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "High Performance Ray Tracing Kernels.",
   "homepage": "https://github.com/embree/embree",
   "license": "Apache-2.0",
-  "supports": "!arm",
+  "supports": "!arm | osx",
   "dependencies": [
     "tbb",
     {
@@ -18,10 +18,7 @@
     }
   ],
   "default-features": [
-    "avx",
-    "avx2",
-    "sse2",
-    "sse42"
+    "default-features"
   ],
   "features": {
     "avx": {
@@ -32,6 +29,22 @@
     },
     "avx512": {
       "description": "Enables AVX512 ISA."
+    },
+    "default-features": {
+      "description": "Enables all default features.",
+      "dependencies": [
+        {
+          "name": "embree3",
+          "default-features": false,
+          "features": [
+            "avx",
+            "avx2",
+            "sse2",
+            "sse42"
+          ],
+          "platform": "x64 | x86"
+        }
+      ]
     },
     "sse2": {
       "description": "Enables SSE2 ISA."

@@ -8,8 +8,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF d8ed9cd2869c74b00fa6f1a7603301183f5c2249 #v2022.10.31.00
-    SHA512 55040dadb8a847f0d04c37a2dce920bb456a59decebc90920831998df9671feb33daf1f4235115adcce5eb9c469b97b9d96fa7a67a5914c434ebc1efc04f4770
+    REF "v${VERSION}"
+    SHA512 c563aa64efa3098235db5f6354cdbc96d829f8bfc24e24464e0cae65279d00f1bba722c7060c2e76c89723ef66ef94225a02d6fb65e24fa6125adb619fc1d74b
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
@@ -17,6 +17,8 @@ vcpkg_from_github(
         boost-1.70.patch
         fix-windows-minmax.patch
         fix-deps.patch
+        openssl.patch # from https://github.com/facebook/folly/pull/2016
+        disable-uninitialized-resize-on-new-stl.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
@@ -41,6 +43,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "zlib"       CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
+        "liburing"   WITH_liburing
     INVERTED_FEATURES
         "bzip2"      CMAKE_DISABLE_FIND_PACKAGE_BZip2
         "lzma"       CMAKE_DISABLE_FIND_PACKAGE_LibLZMA
@@ -51,7 +54,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
         -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
@@ -62,6 +65,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         LIBAIO_FOUND
+        MSVC_USE_STATIC_RUNTIME
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -85,6 +89,6 @@ FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_fixup_pkgconfig()

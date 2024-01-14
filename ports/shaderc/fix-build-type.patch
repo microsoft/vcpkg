@@ -1,5 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b2e92ef..cf0832b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -152,6 +152,8 @@ function(define_pkg_config_file NAME LIBS)
+   endif()
+ endfunction()
+ 
++if(BUILD_SHARED_LIBS)
+ define_pkg_config_file(shaderc -lshaderc_shared)
++else()
+ define_pkg_config_file(shaderc_static "-lshaderc ${EXTRA_STATIC_PKGCONFIG_LIBS} -lshaderc_util")
+-define_pkg_config_file(shaderc_combined -lshaderc_combined)
++endif()
 diff --git a/libshaderc/CMakeLists.txt b/libshaderc/CMakeLists.txt
-index 3ada419..f3277f0 100644
+index 2cced9e..e0eea6c 100644
 --- a/libshaderc/CMakeLists.txt
 +++ b/libshaderc/CMakeLists.txt
 @@ -24,13 +24,16 @@ set(SHADERC_SOURCES
@@ -33,11 +47,11 @@ index 3ada419..f3277f0 100644
        ${CMAKE_INSTALL_INCLUDEDIR}/shaderc)
  
 -  install(TARGETS shaderc shaderc_shared
-+  install(TARGETS ${shaderc_install_target}
++  install(TARGETS ${shaderc_install_target} shaderc_util
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-@@ -68,8 +73,11 @@ set(SHADERC_LIBS
+     BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR}
+@@ -69,8 +74,11 @@ set(SHADERC_LIBS
    SPIRV-Tools
  )
  
@@ -49,7 +63,7 @@ index 3ada419..f3277f0 100644
  
  shaderc_add_tests(
    TEST_PREFIX shaderc
-@@ -93,6 +101,7 @@ shaderc_add_tests(
+@@ -94,6 +102,7 @@ shaderc_add_tests(
      shaderc_cpp
      shaderc_private)
  
@@ -57,7 +71,7 @@ index 3ada419..f3277f0 100644
  shaderc_combine_static_lib(shaderc_combined shaderc)
  
  if(SHADERC_ENABLE_INSTALL)
-@@ -121,6 +130,7 @@ shaderc_add_tests(
+@@ -122,6 +131,7 @@ shaderc_add_tests(
    TEST_NAMES
      shaderc
      shaderc_cpp)

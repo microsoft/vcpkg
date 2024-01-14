@@ -1,0 +1,32 @@
+From 42cf79c0292d655eec41c486710bf610063bdfd8 Mon Sep 17 00:00:00 2001
+From: Sean Farrell <sean.farrell@rioki.org>
+Date: Thu, 23 Feb 2023 14:17:52 +0100
+Subject: [PATCH] Fix relative includes.
+
+---
+ include/litehtml.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/include/litehtml.h b/include/litehtml.h
+index 98a24e0..d20addd 100644
+--- a/include/litehtml.h
++++ b/include/litehtml.h
+@@ -1,10 +1,10 @@
+ #ifndef LITEHTML_H
+ #define LITEHTML_H
+ 
+-#include <litehtml/html.h>
+-#include <litehtml/document.h>
+-#include <litehtml/html_tag.h>
+-#include <litehtml/stylesheet.h>
+-#include <litehtml/element.h>
++#include "html.h"
++#include "document.h"
++#include "html_tag.h"
++#include "stylesheet.h"
++#include "element.h"
+ 
+ #endif  // LITEHTML_H
+-- 
+2.33.0.windows.2
+

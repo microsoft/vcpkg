@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO ornladios/ADIOS2 
+    REPO ornladios/ADIOS2
     REF 473fe8c7d1a13c0746910361aa45ee1b96f57bfb
     SHA512 ef8af30419cf57183b52ce9cb29613a381b06e16848a6d22d83c751c43b8485e504be90cead1381adcc92bb8d4912611083cd6d0b73d161b33f779231a041e6c
     HEAD_REF master
+    PATCHES
+        zfp-version.patch # Backport zfp 1.0 support to v2.8.3 (https://github.com/ornladios/ADIOS2/pull/3312), included upstream in v2.9.0 when released.
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -11,10 +13,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         mpi     ADIOS2_USE_MPI
         cuda    ADIOS2_USE_CUDA
         python  ADIOS2_USE_Python # requires numpy / mpi4py; so not exposed in the manifest yet
+        zfp     ADIOS2_USE_ZFP
 )
 
 set(disabled_options "")
-list(APPEND disabled_options ZFP SZ LIBPRESSIO MGARD DAOS DataMan DataSpaces MHS SST BP5 IME Fortran SysVShMem Profiling)
+list(APPEND disabled_options SZ LIBPRESSIO MGARD DAOS DataMan DataSpaces MHS SST BP5 IME Fortran SysVShMem Profiling)
 list(TRANSFORM disabled_options PREPEND "-DADIOS2_USE_")
 list(TRANSFORM disabled_options APPEND  ":BOOL=OFF")
 set(enabled_options "")

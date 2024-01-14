@@ -12,6 +12,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+        -DUSE_SYSTEM_BACKWARDCPP=ON
 )
 
 vcpkg_cmake_install()

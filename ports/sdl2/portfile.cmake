@@ -1,12 +1,12 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
-    REF release-${VERSION}
-    SHA512 af50ae4dd86ee5827b27e4789c3bb071ea8e3e31e5e8d6cf7d66eef5ae9f3b9683f4adc92b5a30e15513ff6e2773f5978cdbd6484e1e259b1153303ae123539f
+    REF "release-${VERSION}"
+    SHA512 d3cf7d356b79184dd211c9fbbfcb2a83d1acb68ee549ab82be109cd899039f18f0dbf3aedbf0800793c3a68580688014863b5d9bf79bcd366ff0e88252955e3c
     HEAD_REF main
     PATCHES
         deps.patch
+        alsa-dep-fix.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -15,11 +15,15 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        vulkan   SDL_VULKAN
-        x11      SDL_X11
-        wayland  SDL_WAYLAND
-        samplerate SDL_LIBSAMPLERATE
+        alsa     SDL_ALSA
+        alsa     CMAKE_REQUIRE_FIND_PACKAGE_ALSA
         ibus     SDL_IBUS
+        samplerate SDL_LIBSAMPLERATE
+        vulkan   SDL_VULKAN
+        wayland  SDL_WAYLAND
+        x11      SDL_X11
+    INVERTED_FEATURES
+        alsa     CMAKE_DISABLE_FIND_PACKAGE_ALSA
 )
 
 if ("x11" IN_LIST FEATURES)
@@ -47,9 +51,11 @@ vcpkg_cmake_configure(
         -DSDL_TEST=OFF
         -DSDL_INSTALL_CMAKEDIR="cmake"
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
         -DSDL_LIBSAMPLERATE_SHARED=OFF
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
+        PKG_CONFIG_USE_CMAKE_PREFIX_PATH
 )
 
 vcpkg_cmake_install()

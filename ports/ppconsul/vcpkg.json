@@ -1,7 +1,7 @@
 {
   "name": "ppconsul",
-  "version-string": "0.5",
-  "port-version": 3,
+  "version": "0.5",
+  "port-version": 5,
   "description": "A C++ client library for Consul. Consul is a distributed tool for discovering and configuring services in your infrastructure.",
   "homepage": "https://github.com/oliora/ppconsul",
   "dependencies": [
@@ -15,6 +15,14 @@
         "openssl"
       ]
     },
-    "json11"
+    "json11",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

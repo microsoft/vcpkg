@@ -22,6 +22,7 @@ list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE VCPKG_TARGET_
                                                  VCPKG_PLATFORM_TOOLSET)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>" CACHE STRING "")
+set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "")
 
 set(CMAKE_SYSTEM_NAME WindowsStore CACHE STRING "")
 
@@ -39,12 +40,14 @@ if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
     set(CMAKE_SYSTEM_VERSION "${VCPKG_CMAKE_SYSTEM_VERSION}" CACHE STRING "" FORCE)
 endif()
 
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-    set(CMAKE_CROSSCOMPILING ON CACHE STRING "")
+set(CMAKE_CROSSCOMPILING ON CACHE STRING "")
 
-    if(NOT DEFINED CMAKE_SYSTEM_VERSION)
-        set(CMAKE_SYSTEM_VERSION "${CMAKE_HOST_SYSTEM_VERSION}" CACHE STRING "")
-    endif()
+if(NOT DEFINED CMAKE_SYSTEM_VERSION)
+    set(CMAKE_SYSTEM_VERSION "${CMAKE_HOST_SYSTEM_VERSION}" CACHE STRING "")
+endif()
+
+if(NOT (DEFINED VCPKG_MSVC_CXX_WINRT_EXTENSIONS))
+    set(VCPKG_MSVC_CXX_WINRT_EXTENSIONS ON)
 endif()
 
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -61,14 +64,23 @@ if (NOT VCPKG_SET_CHARSET_FLAG OR VCPKG_PLATFORM_TOOLSET MATCHES "v120")
     set(CHARSET_FLAG)
 endif()
 
+set(MP_BUILD_FLAG "")
+if(NOT (CMAKE_CXX_COMPILER MATCHES "clang-cl.exe"))
+    set(MP_BUILD_FLAG "/MP ")
+endif()
+
+
 set(_vcpkg_cpp_flags "/DWIN32 /D_WINDOWS /D_UNICODE /DUNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB__" ) # VS adds /D "_WINDLL" for DLLs;
-set(_vcpkg_common_flags "/nologo /Z7 /MP /GS /Gd /Gm- /W3 /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc")
+set(_vcpkg_common_flags "/nologo /Z7 ${MP_BUILD_FLAG}/GS /Gd /Gm- /W3 /WX- /Zc:wchar_t /Zc:inline /Zc:forScope /fp:precise /Oy- /EHsc")
 #/ZW:nostdlib -> ZW is added by CMake # VS also normally adds /sdl but not cmake MSBUILD
 set(_vcpkg_winmd_flag "")
 file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" _vcpkg_vctools)
-set(ENV{_CL_} "/FU\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\" $ENV{_CL_}")
-# CMake has problems to correctly pass this in the compiler test so probably need special care in get_cmake_vars
-#set(_vcpkg_winmd_flag "/FU\\\\\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\\\\\"") # VS normally passes /ZW for Apps
+if(VCPKG_MSVC_CXX_WINRT_EXTENSIONS)
+    file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" _vcpkg_vctools)
+    set(ENV{_CL_} "/FU\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\" $ENV{_CL_}")
+    # CMake has problems to correctly pass this in the compiler test so probably need special care in get_cmake_vars
+    #set(_vcpkg_winmd_flag "/FU\\\\\"${_vcpkg_vctools}/lib/x86/store/references/platform.winmd\\\\\"") # VS normally passes /ZW for Apps
+endif()
 
 set(CMAKE_CXX_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${CHARSET_FLAG} ${VCPKG_CXX_FLAGS}" CACHE STRING "")
 set(CMAKE_C_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${CHARSET_FLAG} ${VCPKG_C_FLAGS}" CACHE STRING "")
@@ -87,16 +99,23 @@ set(CMAKE_C_FLAGS_RELEASE "${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${
 
 string(APPEND CMAKE_STATIC_LINKER_FLAGS_RELEASE_INIT " /nologo ") # VS adds /LTCG
 
-if(CMAKE_GENERATOR MATCHES "Ninja")
-    set(additional_exe_flags "/WINMD") # VS Generator chokes on this in the compiler detection
+if(VCPKG_MSVC_CXX_WINRT_EXTENSIONS)
+  set(additional_dll_flags "/WINMD:NO ")
+  if(CMAKE_GENERATOR MATCHES "Ninja")
+      set(additional_exe_flags "/WINMD ") # VS Generator chokes on this in the compiler detection
+  endif()
 endif()
-string(APPEND CMAKE_SHARED_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG /WINMD:NO /APPCONTAINER /SUBSYSTEM:CONSOLE /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS}")
-# VS adds /DEBUG:FULL /TLBID:1.    WindowsApp.lib is in CMAKE_C|CXX_STANDARD_LIBRARIES
-string(APPEND CMAKE_EXE_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG ${additional_exe_flags} /APPCONTAINER /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS}")
 
+string(APPEND CMAKE_MODULE_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG ${additional_dll_flags}/APPCONTAINER /SUBSYSTEM:CONSOLE /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS}")
+string(APPEND CMAKE_SHARED_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG ${additional_dll_flags}/APPCONTAINER /SUBSYSTEM:CONSOLE /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS}")
+# VS adds /DEBUG:FULL /TLBID:1.    WindowsApp.lib is in CMAKE_C|CXX_STANDARD_LIBRARIES
+string(APPEND CMAKE_EXE_LINKER_FLAGS " /MANIFEST:NO /NXCOMPAT /DYNAMICBASE /DEBUG ${additional_exe_flags}/APPCONTAINER /MANIFESTUAC:NO ${VCPKG_LINKER_FLAGS}")
+
+set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "") # VS uses /LTCG:incremental
 set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "") # VS uses /LTCG:incremental
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
 string(APPEND CMAKE_STATIC_LINKER_FLAGS_DEBUG_INIT " /nologo ")
+string(APPEND CMAKE_MODULE_LINKER_FLAGS_DEBUG_INIT " /nologo ")
 string(APPEND CMAKE_SHARED_LINKER_FLAGS_DEBUG_INIT " /nologo ")
-string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG_INIT " /nologo ${VCPKG_LINKER_FLAGS_DEBUG} ")
+string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG_INIT " /nologo ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_DEBUG} ")
 endif()

@@ -1,11 +1,11 @@
 # All components of BitSerializer is "header only" except CSV archive
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_bitbucket(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO Pavel_Kisliak/BitSerializer
-    REF 0.50
-    SHA512 d223e4487251e375b2f5d8b1dca9a3db3f5661c3eb308b12f019864e49d58fb0b7d45a45c3e7e232ba1d023adb1f9a3a287255099b205f57c6cade04167119d6
+    REPO PavelKisliak/BitSerializer
+    REF v0.65
+    SHA512 fa49c6409b691c8e67fd2bf6ba740367334283bbfe3d984256420da3f9b439b56a04e718844466875b4cc01380d4d3a4ff3f3a6b347d3fd391895551eb8c8f91
     HEAD_REF master
 )
 

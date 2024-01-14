@@ -1,10 +1,11 @@
 {
   "name": "libalkimia",
   "version": "8.1.70",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Common functionality for finance applications.",
   "homepage": "https://community.kde.org/Alkimia/libalkimia",
   "license": "LGPL-2.1-or-later",
+  "supports": "!xbox",
   "dependencies": [
     "ecm",
     {

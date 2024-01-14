@@ -1,0 +1,85 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7a29fef..08ed974 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -225,6 +225,9 @@ ELSEIF (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+ 	# Don't define _XOPEN_SOURCE on FreeBSD, it actually reduces visibility instead of increasing it
+ ELSEIF (WIN32)
+ 	LIST (APPEND SYSFLAGS -DWIN32_LEAN_AND_MEAN -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_WIN32_WINNT=0x0600)
++	IF (CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
++		LIST (APPEND SYSFLAGS -DWINRT)
++	ENDIF ()
+ ENDIF ()
+ ADD_DEFINITIONS(${SYSFLAGS})
+ 
+diff --git a/src/lib/ares__addrinfo_localhost.c b/src/lib/ares__addrinfo_localhost.c
+index 7940ecd..aacfa52 100644
+--- a/src/lib/ares__addrinfo_localhost.c
++++ b/src/lib/ares__addrinfo_localhost.c
+@@ -131,7 +131,7 @@ static int ares__system_loopback_addrs(int aftype,
+                                        unsigned short port,
+                                        struct ares_addrinfo_node **nodes)
+ {
+-#if defined(_WIN32) && defined(_WIN32_WINNT) && _WIN32_WINNT >= 0x0600 && !defined(__WATCOMC__)
++#if defined(_WIN32) && defined(_WIN32_WINNT) && _WIN32_WINNT >= 0x0600 && !defined(__WATCOMC__) && !defined(WINRT)
+   PMIB_UNICASTIPADDRESS_TABLE table;
+   unsigned int i;
+   int status;
+diff --git a/src/lib/ares_getaddrinfo.c b/src/lib/ares_getaddrinfo.c
+index bc9f19b..1bb0e15 100644
+--- a/src/lib/ares_getaddrinfo.c
++++ b/src/lib/ares_getaddrinfo.c
+@@ -467,8 +467,10 @@ static int file_lookup(struct host_query *hquery)
+               RegCloseKey(hkeyHosts);
+             }
+         }
++#ifndef WINRT
+       else if (platform == WIN_9X)
+         GetWindowsDirectoryA(PATH_HOSTS, MAX_PATH);
++#endif
+       else
+         return ARES_ENOTFOUND;
+ 
+diff --git a/src/lib/ares_gethostbyaddr.c b/src/lib/ares_gethostbyaddr.c
+index c62d230..6d47328 100644
+--- a/src/lib/ares_gethostbyaddr.c
++++ b/src/lib/ares_gethostbyaddr.c
+@@ -194,8 +194,10 @@ static int file_lookup(struct ares_addr *addr, struct hostent **host)
+       RegCloseKey(hkeyHosts);
+     }
+   }
++#ifndef WINRT
+   else if (platform == WIN_9X)
+     GetWindowsDirectoryA(PATH_HOSTS, MAX_PATH);
++#endif
+   else
+     return ARES_ENOTFOUND;
+ 
+diff --git a/src/lib/ares_gethostbyname.c b/src/lib/ares_gethostbyname.c
+index 8c71cc6..3954244 100644
+--- a/src/lib/ares_gethostbyname.c
++++ b/src/lib/ares_gethostbyname.c
+@@ -278,8 +278,10 @@ static int file_lookup(const char *name, int family, struct hostent **host)
+       RegCloseKey(hkeyHosts);
+     }
+   }
++#ifndef WINRT
+   else if (platform == WIN_9X)
+     GetWindowsDirectoryA(PATH_HOSTS, MAX_PATH);
++#endif
+   else
+     return ARES_ENOTFOUND;
+ 
+diff --git a/src/lib/ares_init.c b/src/lib/ares_init.c
+index 3f9cec6..63143e0 100644
+--- a/src/lib/ares_init.c
++++ b/src/lib/ares_init.c
+@@ -745,7 +745,7 @@ static ULONG getBestRouteMetric(IF_LUID * const luid, /* Can't be const :( */
+                                 const ULONG interfaceMetric)
+ {
+   /* On this interface, get the best route to that destination. */
+-#if defined(__WATCOMC__)
++#if defined(__WATCOMC__) || defined(WINRT)
+   /* OpenWatcom's builtin Windows SDK does not have a definition for
+    * MIB_IPFORWARD_ROW2, and also does not allow the usage of SOCKADDR_INET
+    * as a variable. Let's work around this by returning the worst possible

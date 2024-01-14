@@ -8,20 +8,19 @@ vcpkg_from_github(
 
 
 file(COPY
-${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
- ${CMAKE_CURRENT_LIST_DIR}/fastfeat.def
-DESTINATION ${SOURCE_PATH}
+"${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+"${CMAKE_CURRENT_LIST_DIR}/fastfeat.def"
+DESTINATION "${SOURCE_PATH}"
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/fastfeat RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/fastfeat" RENAME copyright)

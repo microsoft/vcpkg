@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PJK/libcbor
-    REF v0.9.0
-    SHA512 710239f69d770212a82e933e59df1aba0fb3ec516ef6666a366f30a950565a52981b0d46ca7e0eea739f5785d79cc21fc19acd857a4a0b135f4f6aa3ef5fd3b0
+    REF "v${VERSION}"
+    SHA512 23c6177443778d4b4833ec7ed0d0e639a0d4863372e3a38d772fdce2673eae6d5cb2a31a2a021d1a699082ea53494977c907fd0e94149b97cb23a4b6d039228a
     HEAD_REF master
 )
 
@@ -27,4 +27,4 @@ vcpkg_fixup_pkgconfig()
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/LibCborConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

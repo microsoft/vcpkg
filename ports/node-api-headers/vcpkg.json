@@ -1,0 +1,20 @@
+{
+  "name": "node-api-headers",
+  "version": "1.1.0",
+  "description": "NodeJS API for writing modules in C++",
+  "homepage": "https://nodejs.org/api/addons.html",
+  "license": "MIT",
+  "supports": "(windows & !arm & !uwp) | linux | osx",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true,
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}

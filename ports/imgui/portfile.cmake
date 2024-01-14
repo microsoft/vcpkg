@@ -1,20 +1,19 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-vcpkg_minimum_required(VERSION 2022-11-10)
 
 if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF 192196711a7d0d7c2d60454d42654cf090498a74
-       SHA512 66d8c299773347e69273f21ec5b0b038551ed9e3c88398568549c406e53624c7f87dffc2fb724f4b57bd4f6a9225f0dcdec6518cdbd7bae894ab128cf80cd138
+       REF "v${VERSION}-docking"
+       SHA512 50953097ff809bca0e1cee55268eaa8dad001cf8fae85ae7623f484752d16bdf8e63c04227786361f27e73f7aeda5a8d1f9b0cee83c2aca108ce2712a21b74d9
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v${VERSION}
-    SHA512 04b262921ff8987eb174f3326e6ce2b5e2cbdb89606d3d654cb9d0fa899a086ae354c0c9c4c0a65884bf4fcdfff5716cef5cb2815a5df3f6f855dc38e428eb02
+    REF "v${VERSION}"
+    SHA512 f6b33027c7050acc617c728b04b04572a13bf11589d4d2cab566901e94d349a3d91f133f7980049857ee44768d4bad426c9b2e53baf953f2efbf1a7951c3ba8a
     HEAD_REF master
     )
 endif()
@@ -25,6 +24,7 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES 
     allegro5-binding            IMGUI_BUILD_ALLEGRO5_BINDING
+    android-binding             IMGUI_BUILD_ANDROID_BINDING
     dx9-binding                 IMGUI_BUILD_DX9_BINDING
     dx10-binding                IMGUI_BUILD_DX10_BINDING
     dx11-binding                IMGUI_BUILD_DX11_BINDING
@@ -40,6 +40,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
     win32-binding               IMGUI_BUILD_WIN32_BINDING
     freetype                    IMGUI_FREETYPE
+    freetype-lunasvg            IMGUI_FREETYPE_LUNASVG
     wchar32                     IMGUI_USE_WCHAR32
 )
 
@@ -68,6 +69,9 @@ vcpkg_cmake_install()
 
 if ("freetype" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE" "#define IMGUI_ENABLE_FREETYPE")
+endif()
+if ("freetype-lunasvg" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE_LUNASVG" "#define IMGUI_ENABLE_FREETYPE_LUNASVG")
 endif()
 if ("wchar32" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_USE_WCHAR32" "#define IMGUI_USE_WCHAR32")

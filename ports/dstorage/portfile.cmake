@@ -1,10 +1,11 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+# Set VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY instead of using `vcpkg_check_linkage` because
+# these DLLs don't link with a CRT.
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.DirectStorage/${VERSION}"
     FILENAME "directstorage.${VERSION}.zip"
-    SHA512 2c2cf6486220f99e7447c1a4406cea6fcaea69edccf790df6887acfde9a684e102547016adadd1ca23f17f8f02bfbd39095892ed63fba3e806bfa44ca9fe0fe6
+    SHA512 f24f681edf0c5e047573c68ca85ab62e0ffefaf87867d45231d779e9bc8e9525891b56314cc30e58eaef20132335f011f32aba22654d2e7caf23338aeb29c6ce
 )
 
 vcpkg_extract_source_archive(
@@ -24,6 +25,7 @@ file(COPY "${PACKAGE_PATH}/native/bin/${VCPKG_TARGET_ARCHITECTURE}/dstoragecore.
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug")
 file(COPY "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
 
-file(INSTALL "${PACKAGE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${PACKAGE_PATH}/LICENSE.txt")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/dstorage-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" COPYONLY)

@@ -1,17 +1,22 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/zstd
     REF "v${VERSION}"
-    SHA512 e107508a41fca50845cc2494e64adaba93efb95a2fa486fc962510a8ba4b2180d93067cae9870f119e88e5e8b28a046bc2240b0b23cdd8933d1fb1a6a9668c1e
+    SHA512 356994e0d8188ce97590bf86b602eb50cbcb2f951594afb9c2d6e03cc68f966862505afc4a50e76efd55e4cfb11dbc9b15c7837b7827a961a1311ef72cd23505
     HEAD_REF dev
     PATCHES
-        install_pkgpc.patch
         no-static-suffix.patch
+        fix-emscripten-and-clang-cl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZSTD_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZSTD_BUILD_SHARED)
+
+if("tools" IN_LIST FEATURES)
+   set(ZSTD_BUILD_PROGRAMS 1)
+else()
+   set(ZSTD_BUILD_PROGRAMS 0)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/build/cmake"
@@ -19,10 +24,13 @@ vcpkg_cmake_configure(
         -DZSTD_BUILD_SHARED=${ZSTD_BUILD_SHARED}
         -DZSTD_BUILD_STATIC=${ZSTD_BUILD_STATIC}
         -DZSTD_LEGACY_SUPPORT=1
-        -DZSTD_BUILD_PROGRAMS=0
         -DZSTD_BUILD_TESTS=0
         -DZSTD_BUILD_CONTRIB=0
         -DZSTD_MULTITHREAD_SUPPORT=1
+    OPTIONS_RELEASE
+        -DZSTD_BUILD_PROGRAMS=${ZSTD_BUILD_PROGRAMS}
+    OPTIONS_DEBUG
+        -DZSTD_BUILD_PROGRAMS=OFF
 )
 
 vcpkg_cmake_install()
@@ -44,6 +52,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     foreach(HEADER IN ITEMS zdict.h zstd.h zstd_errors.h)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${HEADER}" "defined(ZSTD_DLL_IMPORT) && (ZSTD_DLL_IMPORT==1)" "1" )
     endforeach()
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND ZSTD_BUILD_PROGRAMS)
+    vcpkg_copy_tools(TOOL_NAMES zstd AUTO_CLEAN)
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

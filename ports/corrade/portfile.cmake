@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-vs2019.patch
         build-corrade-rc-always.patch
+        clang-16.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -19,7 +20,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
     string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
 
     # Final feature is empty, ignore it
-    if(_feature)
+    if(_feature AND NOT "${_feature}" STREQUAL "dynamic-pluginmanager")
         list(APPEND _COMPONENTS ${_feature} WITH_${_FEATURE})
     endif()
 endforeach()
@@ -33,9 +34,8 @@ if(VCPKG_CROSSCOMPILING)
     )
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         ${FEATURE_OPTIONS}
         "${corrade_rc_param}"
@@ -43,22 +43,21 @@ vcpkg_configure_cmake(
         -DBUILD_STATIC=${BUILD_STATIC}
     MAYBE_UNUSED_VARIABLES
         CORRADE_RC_EXECUTABLE
+        UTILITY_USE_ANSI_COLORS
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Debug includes and share are the same as release
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # corrade-rc is not built when CMAKE_CROSSCOMPILING
-if("utility" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES "corrade-rc" AUTO_CLEAN)
-endif()
+vcpkg_copy_tools(TOOL_NAMES "corrade-rc" AUTO_CLEAN)
 
 # Ensure no empty folders are left behind
-if(NOT FEATURES)
-    # No features, no binaries (only Corrade.h).
+if(FEATURES STREQUAL "core")
+    # No features, no libs (only Corrade.h).
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/lib"

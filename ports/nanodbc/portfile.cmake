@@ -12,6 +12,7 @@ vcpkg_from_github(
         rename-version.patch
         add-missing-include.patch
         find-unixodbc.patch
+        no-werror.patch
 )
 file(RENAME "${SOURCE_PATH}/VERSION" "${SOURCE_PATH}/VERSION.txt")
 
