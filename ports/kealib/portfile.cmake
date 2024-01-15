@@ -2,9 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ubarsc/kealib
     REF "kealib-${VERSION}"
-    SHA512 82399f1332ff2aeb6342732e9e5c897c813109fd18e77cfc8d866f06adf4faa7f080f1f3c0a3b777fb3a679912dacf4851b7ad09a338d6087dd1d26eb2d1689f
+    SHA512 ccaaf9d5031eac32bf1a0e6b9e9efb4f5245fc730d33bd9931efb1a6f529990c6da8ddd400ec0d58ee527675057b74c81393d263c9b182ac5f9a8796273b001f
     HEAD_REF master
-    PATCHES hdf5_include.patch
+    PATCHES
+        no-kea-config-script.diff
 )
 
 vcpkg_cmake_configure(
@@ -16,13 +17,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
-endif()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libkea)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libkea PACKAGE_NAME libkea DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Kealib)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

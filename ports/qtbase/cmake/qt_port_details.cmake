@@ -7,7 +7,7 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.6.0)
+set(QT_VERSION 6.6.1)
 set(QT_DEV_BRANCH 0)
 
 set(QT_UPDATE_VERSION 0)
@@ -90,6 +90,18 @@ if(QT_VERSION VERSION_GREATER_EQUAL 6.5.0)
              qtquickeffectmaker
              )
 endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.6.0)
+    list(APPEND QT_PORTS
+             ## New in 6.6.0
+             qtgraphs
+             #qtvncserver # only commercial
+             #qtinsighttracker
+             )
+endif()
+#qtinsighttracker
+#qtvncserver
+#qtgraphs
+
 # 1. By default, modules come from the official release
 # 2. These modules are mirrored to github and have tags matching the release
 set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager)

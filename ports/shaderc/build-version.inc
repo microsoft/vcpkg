@@ -1,1 +1,1 @@
-"shaderc v2021.1-dev unknown hash, 2021-06-21\n"
+"shaderc v2023.7 v2023.7\n"

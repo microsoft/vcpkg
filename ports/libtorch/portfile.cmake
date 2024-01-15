@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 afeb551904ebd9b5901ae623a98eadbb3045115247cedf8006a940742cfad04e5ce24cfaf363336a9ed88d7ce6a4ac53dbb6a5c690aef6efdf20477c3a22c7ca
     HEAD_REF master
     PATCHES
+        missing_include.patch
         pytorch-pr-85958.patch # https://github.com/pytorch/pytorch/pull/85958
         fix-cmake.patch
         fix-fbgemm-include.patch
