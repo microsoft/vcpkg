@@ -13,8 +13,7 @@
   ],
   "features": {
     "tools": {
-      "description": "Build tools",
-      "supports": "!windows"
+      "description": "Build tools"
     }
   }
 }
