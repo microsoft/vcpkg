@@ -38,6 +38,7 @@ vcpkg_from_github(
         "${LIBPNG_APNG_PATCH_PATH}"
         cmake.patch
         fix-export-targets.patch
+        libm.patch
         pkgconfig.patch
         fix-msa-support-for-mips.patch
 )
