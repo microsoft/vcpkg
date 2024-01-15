@@ -13,7 +13,6 @@ vcpkg_from_github(
         0004-fix-feature-sqlite3.patch
         0005-fix-error-c3861.patch
         0007-find-pcre2.patch
-        0008-install-sql-parser.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre2.h")
@@ -110,6 +109,19 @@ endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
     file(COPY "${SOURCE_PATH}/Data/SQLite/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
+
+# Copy include files of sql-parser
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src")
+
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/parser/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/parser")
+
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/sql/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/sql")
+
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/util/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/util")
 
 if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
