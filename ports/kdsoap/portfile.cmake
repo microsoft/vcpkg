@@ -1,14 +1,12 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/KDAB/KDSoap/releases/download/kdsoap-${VERSION}/kdsoap-${VERSION}.tar.gz"
     FILENAME "kdsoap-${VERSION}.tar.gz"
-    SHA512 12224f664dcae7ceb7395a7c3de48a208ae81c10f6fba4d0db233613472c6b9cdbea6375297c27b58fe7338d7db27a4447844f4e8f40a24ec1b4dd3fa38d20bb
+    SHA512 6ed5cd6a0d02a9faf6881facbd28391c553b3671512153ecd058ab53bfbe9d3f0afa3704d580e66010ddf6a3de7e578a632339f8c1ae7529c28f9d5fd7d1eb5f
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES
-        Ensure-KDSoapConfig-finds-Qt-first.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KDSoap_STATIC)
@@ -34,4 +32,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
