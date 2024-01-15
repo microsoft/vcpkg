@@ -23,5 +23,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-vcpkg_fixup_pkgconfig()
