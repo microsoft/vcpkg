@@ -46,6 +46,7 @@ vcpkg_from_github(
         001-fix-uwp.patch
         002-fix-builder-error.patch
         003-fix-mingw.patch
+        004-enable-winappsdk.patch
 )
 
 # Generate angle_commit.h
@@ -149,6 +150,13 @@ checkout_in_path(
     "https://chromium.googlesource.com/chromium/src/third_party/zlib"
     "${ANGLE_THIRDPARTY_ZLIB_COMMIT}"
 )
+
+if (WINDOWS_APP_SDK)
+    include(${CURRENT_INSTALLED_DIR}/share/windowsappsdk/windowsappsdk.cmake)
+    windowsappsdk_copy(
+        DEST "${SOURCE_PATH}/third_party/WindowsAppSDK"
+    )
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

@@ -26,6 +26,9 @@ list(APPEND ANGLE_DEFINITIONS
 )
 
 list(APPEND ANGLEGLESv2_LIBRARIES dxguid dxgi)
+if (angle_is_winappsdk)
+    list(APPEND ANGLEGLESv2_LIBRARIES WindowsApp)
+endif()
 
 if(NOT angle_is_winuwp) # vcpkg EDIT: Exclude DirectX 9 on UWP
     # DirectX 9 support should be optional but ANGLE will not compile without it
