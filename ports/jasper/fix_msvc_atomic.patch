@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8d2e9f9..9394263 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -221,6 +221,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
+ # no C11 support is available.
+ #set(CMAKE_C_STANDARD 99) # This should work but is not recommended.
+ set(CMAKE_C_STANDARD 11)
++if(MSVC)
++    add_compile_options("/experimental:c11atomics")
++endif()
+ 
+ # Enable extensions so that POSIX support is visible (e.g., ssize_t) without
+ # having to manually define _POSIX_C_SOURCE.

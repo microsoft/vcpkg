@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES
         no_stdc_check.patch
         fix-library-name.patch
-        fix_atomic.patch
+        fix_msvc_atomic.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
