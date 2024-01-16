@@ -47,7 +47,6 @@ find_dependency(Threads)
 find_dependency(OpenSSL)
 find_dependency(LibJuice)
 find_dependency(plog CONFIG)
-find_dependency(libSRTP CONFIG)
 ${DATACHANNEL_CONFIG}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
