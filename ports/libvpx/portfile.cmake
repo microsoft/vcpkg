@@ -11,6 +11,7 @@ vcpkg_from_github(
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
         0005-fix-arm64-build.patch # Upstream commit: https://github.com/webmproject/libvpx/commit/858a8c611f4c965078485860a6820e2135e6611b
+        0006-fix-diff-detection.patch #From https://github.com/freebsd/freebsd-ports/blob/c6c496b829623bb3f93647d953dde6a6a7142979/multimedia/libvpx/files/patch-configure
 )
 
 if(CMAKE_HOST_WIN32)

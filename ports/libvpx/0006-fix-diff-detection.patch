@@ -1,0 +1,11 @@
+--- configure.old	2024-01-17 06:40:18.170468000 +0900
++++ configure	2024-01-17 06:42:52.441297000 +0900
+@@ -191,7 +191,7 @@
+     [ -f "${source_path}/${t}.mk" ] && enable_feature ${t}
+ done
+ 
+-if ! diff --version >/dev/null; then
++if ! hash diff 2>/dev/null; then
+   die "diff missing: Try installing diffutils via your package manager."
+ fi
+ 
