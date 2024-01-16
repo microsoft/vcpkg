@@ -5022,7 +5022,7 @@
     },
     "libvpx": {
       "baseline": "1.13.1",
-      "port-version": 2
+      "port-version": 3
     },
     "libwandio": {
       "baseline": "4.2.1",
