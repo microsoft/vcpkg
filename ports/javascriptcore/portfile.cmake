@@ -10,6 +10,7 @@ vcpkg_from_github(
         remove_webkit_find_package.patch
         tune_jsconly_port_for_windows.patch
         tune_wtf.patch
+        modify_install_rules.patch
 )
 
 vcpkg_find_acquire_program(RUBY)
@@ -26,13 +27,12 @@ vcpkg_add_to_path("${PERL_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
       -DPORT=JSCOnly
 )
-vcpkg_cmake_build(
-  TARGET JavaScriptCore
-)
+
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
 vcpkg_install_copyright(
   FILE_LIST 
@@ -40,27 +40,5 @@ vcpkg_install_copyright(
     "${SOURCE_PATH}/Source/WebCore/LICENSE-LGPL-2.1"
 )
 
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib64/JavaScriptCore.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin64/JavaScriptCore.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin64/JavaScriptCore.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin64/WTF.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin64/WTF.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib64/JavaScriptCore.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin64/JavaScriptCore.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin64/JavaScriptCore.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin64/WTF.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin64/WTF.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-
-file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/JavaScript.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
-file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/JavaScriptCore.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
-file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/JSBase.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
-file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/JSContextRef.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
-file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/JSObjectRef.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
-file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/JSStringRef.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
-file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/JSStringRefBSTR.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
-file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/JSTypedArray.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
-file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/JSValueRef.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
-file(INSTALL "${SOURCE_PATH}/Source/JavaScriptCore/API/WebKitAvailability.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/JavaScriptCore")
-
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
