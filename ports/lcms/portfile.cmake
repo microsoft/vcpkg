@@ -18,7 +18,7 @@ vcpkg_configure_meson(
 )
 
 vcpkg_install_meson()
-message(FATAL_ERROR "test")
+
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
