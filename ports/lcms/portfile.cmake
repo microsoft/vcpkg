@@ -1,6 +1,5 @@
-set(SHARED_PATCHES )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    list(APPEND SHARED_PATCHES shared.patch)
+    set(SHARED_LIBRARY_PATCH "fix-shared-library.patch")
 endif()
 
 vcpkg_from_github(
@@ -11,7 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-builderror.patch # Upstream commit: https://github.com/mm2/Little-CMS/commit/f7b3c637c20508655f8b49935a4b556d52937b69
-        ${SHARED_PATCHES} #Issue https://github.com/microsoft/vcpkg/issues/1665
+        ${SHARED_LIBRARY_PATCH} #Issue https://github.com/microsoft/vcpkg/issues/1665
 )
 
 vcpkg_configure_meson(
@@ -19,7 +18,7 @@ vcpkg_configure_meson(
 )
 
 vcpkg_install_meson()
-
+message(FATAL_ERROR "test")
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
