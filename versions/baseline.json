@@ -6750,7 +6750,7 @@
     },
     "portable-snippets": {
       "baseline": "2019-09-20",
-      "port-version": 3
+      "port-version": 4
     },
     "portaudio": {
       "baseline": "19.7",
