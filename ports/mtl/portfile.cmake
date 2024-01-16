@@ -3,9 +3,9 @@ set(VCPKG_BUILD_TYPE release) # Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tonitaga/Matrix-Template-Library-CPP
-    REF 14079103842f542938f8988ed41189cf9e36c0ff
-    SHA512 4d178071fff39b6d4d8d1169407a2fd5647088d28abf6727d2b6fd2b16f0f453bfce4c85b885abe70d293e4347b94cd654243ab20bb11824e59e67365305be90
-    HEAD_REF vcpkg
+    REF a4dd0f6583ca41ba203930edfecfad00cb94c82e
+    SHA512 f43780eb4c02de3661fd26f079f0fe300e5321fbd81f689592ce943089f6ef3ef28f1bfe606e576969cbde221d543e2b7307f95434c2a38da94359127b9cdd03
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
