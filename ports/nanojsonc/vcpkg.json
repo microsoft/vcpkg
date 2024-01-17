@@ -1,7 +1,7 @@
 {
   "name": "nanojsonc",
   "version": "1.0.0",
-  "maintainers": ["Saad Shams"],
+  "maintainers": "Saad Shams",
   "description": "Event-Driven JSON Parser for C",
   "homepage": "https://github.com/open-source-patterns/nanojsonc",
   "license": "BSD-3-Clause",
