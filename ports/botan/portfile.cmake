@@ -9,6 +9,7 @@ vcpkg_from_github(
         pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
+        fix_android.patch
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
