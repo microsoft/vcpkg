@@ -5369,7 +5369,7 @@
       "port-version": 1
     },
     "lzav": {
-      "baseline": "3.6",
+      "baseline": "3.10",
       "port-version": 0
     },
     "lzfse": {
