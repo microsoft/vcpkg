@@ -22,7 +22,10 @@ vcpkg_check_features(
 
 set(PLATFORM_OPTIONS "")
 if(VCPKG_TARGET_IS_MINGW)
-    set(PLATFORM_OPTIONS -DCMAKE_SYSTEM_VERSION=6.0 -DZMQ_HAVE_IPC=0)
+    list(APPEND PLATFORM_OPTIONS "-DCMAKE_SYSTEM_VERSION=6.0" "-DZMQ_HAVE_IPC=0")
+endif()
+if(BUILD_SHARED)
+    list(APPEND PLATFORM_OPTIONS "-DWITH_PERF_TOOL=OFF")
 endif()
 
 vcpkg_cmake_configure(
@@ -31,7 +34,6 @@ vcpkg_cmake_configure(
         -DZMQ_BUILD_TESTS=OFF
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_SHARED=${BUILD_SHARED}
-        -DWITH_PERF_TOOL=OFF
         -DWITH_DOCS=OFF
         -DWITH_NSS=OFF
         -DWITH_LIBBSD=OFF
