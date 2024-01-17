@@ -461,8 +461,8 @@
       "port-version": 0
     },
     "azure-security-keyvault-certificates-cpp": {
-      "baseline": "4.2.0",
-      "port-version": 1
+      "baseline": "4.2.1",
+      "port-version": 0
     },
     "azure-security-keyvault-keys-cpp": {
       "baseline": "4.4.0",
