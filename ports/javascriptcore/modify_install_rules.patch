@@ -12,7 +12,7 @@ index aa99898dc4f1..17db4640001e 100644
  
  # Remove this cmake_policy() after upgrading cmake_minimum_required() to 3.20.
 diff --git a/Source/JavaScriptCore/CMakeLists.txt b/Source/JavaScriptCore/CMakeLists.txt
-index a64c09b5d470..a9e113328474 100644
+index a64c09b5d470..80c45bd91c17 100644
 --- a/Source/JavaScriptCore/CMakeLists.txt
 +++ b/Source/JavaScriptCore/CMakeLists.txt
 @@ -1490,6 +1490,13 @@ WEBKIT_COPY_FILES(JavaScriptCore_CopyHeaders
@@ -46,16 +46,9 @@ index a64c09b5d470..a9e113328474 100644
  
  # Force staging of shared scripts, even if they aren't directly used to build JavaScriptCore.
  
-diff --git a/Source/WTF/wtf/CMakeLists.txt b/Source/WTF/wtf/CMakeLists.txt
-index 8f2d15a89150..7d7e652b863a 100644
---- a/Source/WTF/wtf/CMakeLists.txt
-+++ b/Source/WTF/wtf/CMakeLists.txt
-@@ -652,3 +652,8 @@ WEBKIT_COPY_FILES(WTF_CopyPreferences
-     DESTINATION ${WTF_SCRIPTS_DIR}
-     FILES ${WTF_PREFERENCES}
- )
-+
-+install(
-+    TARGETS WTF
-+    RUNTIME DESTINATION ${LIBEXEC_INSTALL_DIR}
-+)
+@@ -1565,4 +1578,4 @@ if (CMAKE_GENERATOR MATCHES "Visual Studio")
+     add_dependencies(JavaScriptCoreSharedScripts JSCBuiltins)
+ endif ()
+ 
+-add_subdirectory(shell)
++# add_subdirectory(shell)
