@@ -1,13 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DCMTK/dcmtk
-    REF a137f1aff4e1df3fbefe53ee8b160973c74c96dd # DCMTK-3.6.7
-    SHA512 dd41b38ef5d02ac2bf4071e1c27814e03357bc6a51eef59daf47a86d024d7fcbaaa1a71df8600fb8180f8b6537d45d6bf48a00730c1fa9d147778f36ff3e425a
+    REF 59f75a8b50e50ae1bb1ff12098040c6327500740 # DCMTK-3.6.8
+    SHA512 2719e2163d57339a81f079c8c28d4e9e3ee6b1b85bc3db5b94a2279e3dd9881ab619d432d64984e6371569866d7aa4f01bf8b41841b773bcd60bbb8ad2118cac
     HEAD_REF master
     PATCHES
         dcmtk.patch
-        windows-patch.patch
-        fix-pc-format.patch
         fix_link_xml2.patch
 )
 
@@ -40,6 +38,8 @@ vcpkg_cmake_configure(
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
         -DBUILD_APPS=OFF
+    MAYBE_UNUSED_VARIABLES
+        -DDCMTK_USE_FIND_PACKAGE_WIN_DEFAULT=ON
 )
 
 vcpkg_cmake_install()
@@ -107,9 +107,12 @@ if ("tools" IN_LIST FEATURES)
         findscu
         getscu
         img2dcm
+        mkcsmapper
+        mkesdb
         mkreport
         movescu
         msgserv
+        oficonv_tests
         ofstd_tests
         pdf2dcm
         stl2dcm
@@ -130,12 +133,12 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DCMTK_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DCM_DICT_DEFAULT_PATH \"${CURRENT_PACKAGES_DIR}/share/dcmtk/dicom.dic:${CURRENT_PACKAGES_DIR}/share/dcmtk/private.dic\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_CONFIGURATION_DIR \"${CURRENT_PACKAGES_DIR}/etc/dcmtk/\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_SUPPORT_DATA_DIR \"${CURRENT_PACKAGES_DIR}/share/dcmtk/\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DCM_DICT_DEFAULT_PATH \"${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/dicom.dic:${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/private.dic\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_CONFIGURATION_DIR \"${CURRENT_PACKAGES_DIR}/etc/dcmtk-${VERSION}/\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h" "#define DEFAULT_SUPPORT_DATA_DIR \"${CURRENT_PACKAGES_DIR}/share/dcmtk-${VERSION}/\"" "")
 
 vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
