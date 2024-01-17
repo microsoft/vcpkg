@@ -5876,6 +5876,10 @@
       "baseline": "2019-09-23",
       "port-version": 5
     },
+    "nanojsonc": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "nanomsg": {
       "baseline": "1.2.0",
       "port-version": 1
