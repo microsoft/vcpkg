@@ -1,5 +1,5 @@
 diff --git a/Source/cmake/OptionsJSCOnly.cmake b/Source/cmake/OptionsJSCOnly.cmake
-index e892b4274b19..b9f2b0179914 100644
+index e892b4274b19..c35b74ab3bb4 100644
 --- a/Source/cmake/OptionsJSCOnly.cmake
 +++ b/Source/cmake/OptionsJSCOnly.cmake
 @@ -1,4 +1,6 @@
@@ -24,7 +24,16 @@ index e892b4274b19..b9f2b0179914 100644
  
  if (WIN32)
      add_definitions(-DNOMINMAX)
-@@ -94,17 +93,25 @@ if (WIN32)
+@@ -75,7 +74,7 @@ if (WIN32)
+         endif ()
+     endif ()
+ 
+-    set(CMAKE_PREFIX_PATH ${WEBKIT_LIBRARIES_DIR})
++    list(APPEND CMAKE_PREFIX_PATH ${WEBKIT_LIBRARIES_DIR})
+ 
+     if (WTF_CPU_X86_64)
+         set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB32_PATHS OFF)
+@@ -94,12 +93,14 @@ if (WIN32)
      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
  endif ()
  
@@ -40,14 +49,3 @@ index e892b4274b19..b9f2b0179914 100644
  else ()
      SET_AND_EXPOSE_TO_BUILD(USE_GENERIC_EVENT_LOOP 1)
      SET_AND_EXPOSE_TO_BUILD(WTF_DEFAULT_EVENT_LOOP 0)
- endif ()
- 
-+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-+    set(ICU_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug")
-+else ()
-+    set(ICU_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
-+endif ()
-+set(ICU_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
- find_package(ICU 61.2 REQUIRED COMPONENTS data i18n uc)
- if (APPLE)
-     add_definitions(-DU_DISABLE_RENAMING=1)
