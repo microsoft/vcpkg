@@ -1,6 +1,4 @@
 fakeit provides CMake targets:
 
-  # this is heuristically generated, and may not be correct
   find_package(FakeIt CONFIG REQUIRED)
-  # note: 7 additional targets are not displayed.
   target_link_libraries(main PRIVATE FakeIt::FakeIt-boost FakeIt::FakeIt-catch FakeIt::FakeIt-cute FakeIt::FakeIt-doctest FakeIt::FakeIt-gtest FakeIt::FakeIt-mettle FakeIt::FakeIt-mstest FakeIt::FakeIt-nunit FakeIt::FakeIt-qtest FakeIt::FakeIt-standalone FakeIt::FakeIt-tpunit)
