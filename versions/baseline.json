@@ -5400,6 +5400,10 @@
       "baseline": "2019-09-02",
       "port-version": 3
     },
+    "magma": {
+      "baseline": "2.7.2",
+      "port-version": 0
+    },
     "magnum": {
       "baseline": "2020.06",
       "port-version": 17
