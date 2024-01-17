@@ -8,6 +8,7 @@ vcpkg_from_github(
         findPCRE.patch
         FixStrictPrototypes.patch # required with clang-15
         removeWarningAsError.patch
+        fix-depend-clib.patch
 )
 
 
@@ -37,6 +38,8 @@ vcpkg_from_github(
     REF fa1d96ec293d2968791603548125e3274bd6b472
     SHA512 fd7dfbed4ac10e2c482da1cd460dabf0a53965e6fa17fab97156becb8214e435ee3605b2748705141380e254de7c32ab42da5e42cd6e4494f7ecaafb3b9e19f0
     HEAD_REF master
+    PATCHES
+        fix-confilct-with-openssl.patch
 )
 
 vcpkg_from_github(

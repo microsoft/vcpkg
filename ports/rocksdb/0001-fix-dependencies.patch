@@ -3,7 +3,7 @@
  2 files changed, 23 insertions(+), 21 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4e30f6631..b428c811b 100644
+index 23a4014bc..045f5a36d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -87,7 +87,7 @@ endif()
@@ -79,7 +79,7 @@ index 4e30f6631..b428c811b 100644
  endif()
  
  # Stall notifications eat some performance from inserts
-@@ -1195,8 +1194,6 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
+@@ -1202,8 +1201,6 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
      endforeach()
    endforeach()
  
@@ -120,4 +120,3 @@ index 0bd14be11..a420d8bfe 100644
  endif()
  
  find_dependency(Threads)
- 

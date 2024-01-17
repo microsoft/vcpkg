@@ -1,0 +1,17 @@
+diff --git a/meson.build b/meson.build
+index df015cb..93cf7e9 100644
+--- a/meson.build
++++ b/meson.build
+@@ -105,12 +105,6 @@ subprojects = [
+   ['gst-plugins-rs', { 'option': get_option('rs'), 'build-hotdoc': true, 'match_gst_version': false}],
+ ]
+ 
+-if build_system == 'windows'
+-  subproject('win-flex-bison-binaries')
+-  subproject('win-nasm')
+-elif build_system == 'darwin'
+-  subproject('macos-bison-binary')
+-endif
+ 
+ orc_option = get_option('orc')
+ # There is a check below to keep this in sync with subprojects/gst-plugins-base/meson.build

@@ -17,6 +17,13 @@ if (NOT MSVC)
     add_compile_options(-DSOCKLEN_T=socklen_t)
 endif()
 
+if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+   add_compile_options(-DBSD=1)
+   add_compile_options(-DHAVE_SOCKADDR_LEN=1)
+   add_compile_options(-DTIME_BASE=int)
+   add_compile_options(-DNEED_XLOCALE_H=1)
+endif()
+
 file(GLOB BASIC_USAGE_ENVIRONMENT_SRCS BasicUsageEnvironment/*.c BasicUsageEnvironment/*.cpp)
 add_library(BasicUsageEnvironment ${BASIC_USAGE_ENVIRONMENT_SRCS})
 
