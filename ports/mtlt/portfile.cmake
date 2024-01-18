@@ -2,9 +2,9 @@ set(VCPKG_BUILD_TYPE release) # Header-only library
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO tonitaga/Matrix-Template-Library-CPP
-    REF a4dd0f6583ca41ba203930edfecfad00cb94c82e
-    SHA512 f43780eb4c02de3661fd26f079f0fe300e5321fbd81f689592ce943089f6ef3ef28f1bfe606e576969cbde221d543e2b7307f95434c2a38da94359127b9cdd03
+    REPO tonitaga/MTLT
+    REF 8e30e6636b06ad008082e22f37e0d79873142e1b
+    SHA512 2addaa4f84037a14431b20734fe5ca1ea11c4d9d1a0ddf82a16b9efaacbbac3873038bd16f93ba94288559585ae76d12884166931c91a214a3e3ed0cecea6b3b
     HEAD_REF main
 )
 
@@ -13,7 +13,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "mtl" CONFIG_PATH "lib/cmake/mtl")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "mtlt" CONFIG_PATH "lib/cmake/mtlt")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
