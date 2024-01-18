@@ -1,12 +1,12 @@
 {
   "name": "libtorch",
-  "version": "1.12.1",
-  "port-version": 5,
+  "version": "2.1.2",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
+    "blas",
     "cpuinfo",
     "eigen3",
     "flatbuffers",
@@ -16,26 +16,25 @@
     },
     "fmt",
     "foxi",
+    "foxi",
     "fp16",
     "gemmlowp",
     "gflags",
     "glog",
+    "lapack",
     "lmdb",
-    {
-      "name": "mpi",
-      "platform": "linux"
-    },
+    "magma",
+    "mimalloc",
     "onnx",
     "onnx-optimizer",
-    {
-      "name": "openblas",
-      "platform": "windows"
-    },
+    "opencl",
+    "pocketfft",
     "protobuf",
     {
       "name": "protobuf",
       "host": true
     },
+    "pthreadpool",
     "sleef",
     {
       "name": "vcpkg-cmake",
@@ -51,9 +50,20 @@
     }
   ],
   "default-features": [
-    "xnnpack"
+    "fftw3",
+    "opencv",
+    "xnnpack",
+    "zstd"
   ],
   "features": {
+    "cuda": {
+      "description": "Build with CUDA GPU backend",
+      "dependencies": [
+        "cuda",
+        "cudnn",
+        "cusparselt"
+      ]
+    },
     "dist": {
       "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
       "dependencies": [
@@ -66,7 +76,7 @@
           "platform": "windows | osx"
         },
         {
-          "name": "openmpi",
+          "name": "mpi",
           "platform": "linux | osx"
         },
         {
@@ -75,11 +85,23 @@
         }
       ]
     },
+    "fftw3": {
+      "description": "Build with fftw3",
+      "dependencies": [
+        "fftw3"
+      ]
+    },
     "leveldb": {
       "description": "Build with LevelDB",
       "dependencies": [
         "leveldb",
         "snappy"
+      ]
+    },
+    "llvm": {
+      "description": "Build with LLVM",
+      "dependencies": [
+        "llvm"
       ]
     },
     "nnpack": {
@@ -95,17 +117,12 @@
         "opencv"
       ]
     },
-    "tbb": {
-      "description": "Build with Intel TBB",
-      "dependencies": [
-        "tbb"
-      ]
-    },
     "vulkan": {
       "description": "Build with Vulkan GPU backend",
-      "supports": "!windows",
       "dependencies": [
-        "vulkan"
+        "vulkan",
+        "vulkan-loader",
+        "vulkan-memory-allocator"
       ]
     },
     "xnnpack": {
