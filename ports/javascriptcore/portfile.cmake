@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 vcpkg_from_github(
       OUT_SOURCE_PATH SOURCE_PATH
       REPO webkit/webkit
@@ -25,10 +23,18 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_DIR "${PERL}" DIRECTORY)
 vcpkg_add_to_path("${PERL_DIR}")
 
+message(STATUS "VCPKG_LIBRARY_LINKAGE=${VCPKG_LIBRARY_LINKAGE}")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  set(ENABLE_STATIC_JSC ON)
+else()
+  set(ENABLE_STATIC_JSC ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
       -DPORT=JSCOnly
+      -DENABLE_STATIC_JSC=${ENABLE_STATIC_JSC}
 )
 
 vcpkg_cmake_install()

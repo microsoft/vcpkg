@@ -1,5 +1,5 @@
 diff --git a/Source/cmake/OptionsJSCOnly.cmake b/Source/cmake/OptionsJSCOnly.cmake
-index e892b4274b19..c35b74ab3bb4 100644
+index ff391d7e0849..e05f2a3adeef 100644
 --- a/Source/cmake/OptionsJSCOnly.cmake
 +++ b/Source/cmake/OptionsJSCOnly.cmake
 @@ -1,4 +1,6 @@
@@ -10,7 +10,7 @@ index e892b4274b19..c35b74ab3bb4 100644
  
  if (MSVC)
      include(OptionsMSVC)
-@@ -56,11 +58,8 @@ endif ()
+@@ -55,10 +57,15 @@ endif ()
  
  # FIXME: JSCOnly on WIN32 seems to only work with fully static build
  # https://bugs.webkit.org/show_bug.cgi?id=172862
@@ -18,13 +18,19 @@ index e892b4274b19..c35b74ab3bb4 100644
 -    set(JavaScriptCore_LIBRARY_TYPE SHARED)
 -    set(bmalloc_LIBRARY_TYPE OBJECT)
 -    set(WTF_LIBRARY_TYPE OBJECT)
--endif ()
-+set(JavaScriptCore_LIBRARY_TYPE SHARED)
-+set(WTF_LIBRARY_TYPE STATIC)
++if (NOT ENABLE_STATIC_JSC)
++    if (NOT WIN32)
++      set(JavaScriptCore_LIBRARY_TYPE SHARED)
++      set(bmalloc_LIBRARY_TYPE OBJECT)
++      set(WTF_LIBRARY_TYPE OBJECT)
++    else ()
++      set(JavaScriptCore_LIBRARY_TYPE SHARED)
++      set(WTF_LIBRARY_TYPE SHARED)
++    endif ()
+ endif ()
  
  if (WIN32)
-     add_definitions(-DNOMINMAX)
-@@ -75,7 +74,7 @@ if (WIN32)
+@@ -74,7 +81,7 @@ if (WIN32)
          endif ()
      endif ()
  
@@ -33,19 +39,15 @@ index e892b4274b19..c35b74ab3bb4 100644
  
      if (WTF_CPU_X86_64)
          set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB32_PATHS OFF)
-@@ -94,12 +93,14 @@ if (WIN32)
-     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+@@ -94,7 +101,10 @@ if (WIN32)
  endif ()
  
--string(TOLOWER ${EVENT_LOOP_TYPE} LOWERCASE_EVENT_LOOP_TYPE)
- if (LOWERCASE_EVENT_LOOP_TYPE STREQUAL "glib")
+ string(TOLOWER ${EVENT_LOOP_TYPE} LOWERCASE_EVENT_LOOP_TYPE)
+-if (LOWERCASE_EVENT_LOOP_TYPE STREQUAL "glib")
++if (WIN32)
++    SET_AND_EXPOSE_TO_BUILD(USE_GENERIC_EVENT_LOOP 0)
++    SET_AND_EXPOSE_TO_BUILD(WTF_DEFAULT_EVENT_LOOP 1)
++elseif (LOWERCASE_EVENT_LOOP_TYPE STREQUAL "glib")
      find_package(GLIB 2.36 REQUIRED COMPONENTS gio gio-unix gobject)
      SET_AND_EXPOSE_TO_BUILD(USE_GLIB 1)
      SET_AND_EXPOSE_TO_BUILD(USE_GLIB_EVENT_LOOP 1)
-     SET_AND_EXPOSE_TO_BUILD(WTF_DEFAULT_EVENT_LOOP 0)
-+elseif (WIN32)
-+    SET_AND_EXPOSE_TO_BUILD(USE_GENERIC_EVENT_LOOP 0)
-+    SET_AND_EXPOSE_TO_BUILD(WTF_DEFAULT_EVENT_LOOP 1)
- else ()
-     SET_AND_EXPOSE_TO_BUILD(USE_GENERIC_EVENT_LOOP 1)
-     SET_AND_EXPOSE_TO_BUILD(WTF_DEFAULT_EVENT_LOOP 0)
