@@ -1,0 +1,69 @@
+diff --git a/libsrc/interface/rw_cgns.cpp b/libsrc/interface/rw_cgns.cpp
+index 096fbfdca..edf199cfd 100644
+--- a/libsrc/interface/rw_cgns.cpp
++++ b/libsrc/interface/rw_cgns.cpp
+@@ -6,6 +6,37 @@
+ 
+ #include <cgnslib.h>
+ 
++//vcpkg builds cgns with scoped enumes. So the associcated types and values need to be correctly scoped.
++#define ElementType_t CGNS_ENUMT(ElementType_t)
++#define GridLocation_t CGNS_ENUMT(GridLocation_t)
++#define PointSetType_t CGNS_ENUMT(PointSetType_t)
++#define DataType_t CGNS_ENUMT(DataType_t)
++#define ZoneType_t CGNS_ENUMT(ZoneType_t)
++#define Unstructured CGNS_ENUMV(Unstructured)
++#define RealDouble CGNS_ENUMV(RealDouble)
++#define MIXED CGNS_ENUMV(MIXED)
++#define EdgeCenter CGNS_ENUMV(EdgeCenter)
++#define KFaceCenter CGNS_ENUMV(KFaceCenter)
++#define JFaceCenter CGNS_ENUMV(JFaceCenter)
++#define IFaceCenter CGNS_ENUMV(IFaceCenter)
++#define FaceCenter CGNS_ENUMV(FaceCenter)
++#define CellCenter CGNS_ENUMV(CellCenter)
++#define Vertex CGNS_ENUMV(Vertex)
++#define BAR_2 CGNS_ENUMV(BAR_2)
++#define BAR_3 CGNS_ENUMV(BAR_3)
++#define TRI_3 CGNS_ENUMV(TRI_3)
++#define TRI_6 CGNS_ENUMV(TRI_6)
++#define QUAD_4 CGNS_ENUMV(QUAD_4)
++#define QUAD_8 CGNS_ENUMV(QUAD_8)
++#define TETRA_4 CGNS_ENUMV(TETRA_4)
++#define TETRA_10 CGNS_ENUMV(TETRA_10)
++#define PYRA_5 CGNS_ENUMV(PYRA_5)
++#define PYRA_13 CGNS_ENUMV(PYRA_13)
++#define HEXA_8 CGNS_ENUMV(HEXA_8)
++#define HEXA_20 CGNS_ENUMV(HEXA_20)
++#define PENTA_6 CGNS_ENUMV(PENTA_6)
++#define PENTA_15 CGNS_ENUMV(PENTA_15)
++
+ namespace netgen::cg
+ {
+   typedef ngcore::ClosedHashTable<ngcore::INT<3,size_t>, size_t> PointTable;
+@@ -215,7 +246,7 @@ namespace netgen::cg
+     if(codim==2) name += mesh.GetCD2Name(index);
+ 
+     int ne = 0;
+-    Array<int> data;
++    Array<cgsize_t> data;
+ 
+     if(dim==3)
+       for(const auto el : mesh.VolumeElements())
+@@ -333,7 +364,7 @@ namespace netgen::cg
+       ZoneType_t zone_type;
+       int fn, base, zone;
+       int first_index_1d, first_index_2d, first_index_3d;
+-      int nv=0, ne_1d=0, ne_2d=0, ne_3d=0;
++      cgsize_t nv=0, ne_1d=0, ne_2d=0, ne_3d=0;
+ 
+       Array<string> names_1d, names_2d, names_3d;
+ 
+@@ -643,7 +674,7 @@ namespace netgen
+       int n_vertices = 0;
+       for (auto zi : Range(1, nzones+1))
+       {
+-        int size[3];
++        cgsize_t size[3];
+         char name[100];
+         cg_zone_read(fn,base,zi, name, size);
+         n_vertices += size[0];

@@ -238,7 +238,7 @@
     },
     "arrow": {
       "baseline": "14.0.2",
-      "port-version": 0
+      "port-version": 2
     },
     "arsenalgear": {
       "baseline": "2.1.0",
@@ -373,7 +373,7 @@
       "port-version": 0
     },
     "aws-c-http": {
-      "baseline": "0.7.14",
+      "baseline": "0.8.0",
       "port-version": 0
     },
     "aws-c-io": {
@@ -457,20 +457,20 @@
       "port-version": 1
     },
     "azure-security-keyvault-administration-cpp": {
-      "baseline": "4.0.0-beta.3",
-      "port-version": 1
+      "baseline": "4.0.0-beta.4",
+      "port-version": 0
     },
     "azure-security-keyvault-certificates-cpp": {
-      "baseline": "4.2.0",
-      "port-version": 1
+      "baseline": "4.2.1",
+      "port-version": 0
     },
     "azure-security-keyvault-keys-cpp": {
-      "baseline": "4.4.0",
-      "port-version": 1
+      "baseline": "4.4.1",
+      "port-version": 0
     },
     "azure-security-keyvault-secrets-cpp": {
-      "baseline": "4.2.0",
-      "port-version": 1
+      "baseline": "4.2.1",
+      "port-version": 0
     },
     "azure-storage-blobs-cpp": {
       "baseline": "12.10.0",
@@ -1461,7 +1461,7 @@
       "port-version": 2
     },
     "catch2": {
-      "baseline": "3.5.1",
+      "baseline": "3.5.2",
       "port-version": 0
     },
     "cccapstone": {
@@ -2025,7 +2025,7 @@
       "port-version": 13
     },
     "cuda-api-wrappers": {
-      "baseline": "0.6.6",
+      "baseline": "0.6.7",
       "port-version": 0
     },
     "cudnn": {
@@ -2038,7 +2038,7 @@
     },
     "curl": {
       "baseline": "8.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -2145,8 +2145,8 @@
       "port-version": 2
     },
     "dcmtk": {
-      "baseline": "3.6.7",
-      "port-version": 6
+      "baseline": "3.6.8",
+      "port-version": 0
     },
     "debug-assert": {
       "baseline": "1.3.3",
@@ -2453,7 +2453,7 @@
       "port-version": 5
     },
     "entt": {
-      "baseline": "3.12.2",
+      "baseline": "3.13.0",
       "port-version": 0
     },
     "epsilon": {
@@ -3189,7 +3189,7 @@
       "port-version": 0
     },
     "gul14": {
-      "baseline": "2.9.2",
+      "baseline": "2.10.0",
       "port-version": 0
     },
     "gumbo": {
@@ -3630,7 +3630,7 @@
     },
     "jasper": {
       "baseline": "4.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "jbig2dec": {
       "baseline": "0.20",
@@ -3693,7 +3693,7 @@
       "port-version": 5
     },
     "jsoncons": {
-      "baseline": "0.171.0",
+      "baseline": "0.173.2",
       "port-version": 0
     },
     "jsoncpp": {
@@ -4193,8 +4193,8 @@
       "port-version": 0
     },
     "libdatachannel": {
-      "baseline": "0.19.4",
-      "port-version": 2
+      "baseline": "0.19.5",
+      "port-version": 1
     },
     "libdatrie": {
       "baseline": "0.2.13",
@@ -4241,7 +4241,7 @@
       "port-version": 4
     },
     "libe57format": {
-      "baseline": "3.0.0",
+      "baseline": "3.0.1",
       "port-version": 0
     },
     "libebur128": {
@@ -4593,7 +4593,7 @@
       "port-version": 3
     },
     "libnick": {
-      "baseline": "2024.1.4",
+      "baseline": "2024.1.5",
       "port-version": 0
     },
     "libnoise": {
@@ -5400,6 +5400,10 @@
       "baseline": "2019-09-02",
       "port-version": 3
     },
+    "magma": {
+      "baseline": "2.7.2",
+      "port-version": 0
+    },
     "magnum": {
       "baseline": "2020.06",
       "port-version": 17
@@ -5876,6 +5880,10 @@
       "baseline": "2019-09-23",
       "port-version": 5
     },
+    "nanojsonc": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "nanomsg": {
       "baseline": "1.2.0",
       "port-version": 1
@@ -5947,6 +5955,10 @@
     "netcdf-cxx4": {
       "baseline": "4.3.1",
       "port-version": 5
+    },
+    "netgen": {
+      "baseline": "6.2.2307",
+      "port-version": 0
     },
     "nethost": {
       "baseline": "8.0.0",
@@ -6237,8 +6249,8 @@
       "port-version": 0
     },
     "opencascade": {
-      "baseline": "7.7.2",
-      "port-version": 3
+      "baseline": "7.8.0",
+      "port-version": 0
     },
     "opencc": {
       "baseline": "1.1.6",
@@ -6274,11 +6286,11 @@
     },
     "opencv3": {
       "baseline": "3.4.18",
-      "port-version": 12
+      "port-version": 13
     },
     "opencv4": {
       "baseline": "4.8.0",
-      "port-version": 14
+      "port-version": 15
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6750,7 +6762,7 @@
     },
     "portable-snippets": {
       "baseline": "2019-09-20",
-      "port-version": 3
+      "port-version": 4
     },
     "portaudio": {
       "baseline": "19.7",
@@ -6829,7 +6841,7 @@
       "port-version": 0
     },
     "proxy": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "proxygen": {
@@ -6874,7 +6886,7 @@
     },
     "pulsar-client-cpp": {
       "baseline": "3.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "pulzed-mini": {
       "baseline": "0.9.14",
@@ -7661,7 +7673,7 @@
       "port-version": 0
     },
     "sail": {
-      "baseline": "0.9.0",
+      "baseline": "0.9.1",
       "port-version": 0
     },
     "sajson": {
@@ -8113,7 +8125,7 @@
       "port-version": 3
     },
     "spdlog": {
-      "baseline": "1.12.0",
+      "baseline": "1.13.0",
       "port-version": 0
     },
     "spectra": {
@@ -8433,7 +8445,7 @@
       "port-version": 0
     },
     "thorvg": {
-      "baseline": "0.11.3",
+      "baseline": "0.12.1",
       "port-version": 0
     },
     "threadpool": {
@@ -9405,8 +9417,8 @@
       "port-version": 4
     },
     "zeromq": {
-      "baseline": "2023-06-20",
-      "port-version": 1
+      "baseline": "4.3.5",
+      "port-version": 0
     },
     "zfp": {
       "baseline": "1.0.0",
