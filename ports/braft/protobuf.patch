@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a851c00..1b6f6a9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,8 +22,8 @@ endif()
+ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+ 
+ include(FindThreads)
++find_package(protobuf CONFIG REQUIRED)
+ include(FindProtobuf)
+-
+ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+     # require at least gcc 4.8
+     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index ff435a2..59b10ae 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -10,7 +10,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ include_directories(${CMAKE_SOURCE_DIR}/src)
+ 
+ add_library(OBJ_LIB OBJECT ${SOURCES})
+-
++target_link_libraries(OBJ_LIB PUBLIC protobuf::libprotobuf)
+ set_property(TARGET ${OBJ_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
+ if (BUILD_SHARED_LIBS)
+ add_library(braft-shared SHARED $<TARGET_OBJECTS:OBJ_LIB>)

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fb4f1b1..1bcfd47 100644
+index fb4f1b1..fc5bc4b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -96,6 +96,7 @@ if (APPLE AND NOT LINK_STATIC)
@@ -7,20 +7,29 @@ index fb4f1b1..1bcfd47 100644
      set(LATEST_PROTOBUF FALSE)
  endif ()
 +set(LATEST_PROTOBUF FALSE)
-
+ 
  if (NOT CMAKE_CXX_STANDARD)
      if (LATEST_PROTOBUF)
-@@ -157,14 +158,15 @@ if (LATEST_PROTOBUF)
+@@ -115,7 +116,6 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+     # ?? Don't have this to test with
+ else() # GCC or Clang are mostly compatible:
+     # Turn on warnings and enable warnings-as-errors:
+-    add_compile_options(-Wall -Wformat-security -Wvla -Werror) 
+     # Turn off certain warnings that are too much pain for too little gain:
+     add_compile_options(-Wno-sign-compare -Wno-deprecated-declarations -Wno-error=cpp)
+     if (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR APPLE)
+@@ -157,14 +157,16 @@ if (LATEST_PROTOBUF)
      # Use Config mode to avoid FindProtobuf.cmake does not find the Abseil library
      find_package(Protobuf REQUIRED CONFIG)
  else ()
 -    find_package(Protobuf REQUIRED)
 +    find_package(protobuf CONFIG REQUIRED)
 +    set(Protobuf_LIBRARIES protobuf::libprotobuf)
++    set(PROTOC_PATH protobuf::protoc)
  endif ()
  message("Protobuf_INCLUDE_DIRS: " ${Protobuf_INCLUDE_DIRS})
  message("Protobuf_LIBRARIES: " ${Protobuf_LIBRARIES})
-
+ 
  # NOTE: CMake might not find curl and zlib on some platforms like Ubuntu, in this case, find them manually
  set(CURL_NO_CURL_CMAKE ON)
 -find_package(curl QUIET)
@@ -31,7 +40,7 @@ index fb4f1b1..1bcfd47 100644
 @@ -175,7 +177,7 @@ if (NOT CURL_INCLUDE_DIRS OR NOT CURL_LIBRARIES)
      message(FATAL_ERROR "Could not find libcurl")
  endif ()
-
+ 
 -find_package(zlib QUIET)
 +find_package(ZLIB REQUIRED)
  if (NOT ZLIB_FOUND)
@@ -56,27 +65,14 @@ index fb4f1b1..1bcfd47 100644
      if (MSVC AND (${CMAKE_BUILD_TYPE} STREQUAL Debug))
          find_library(LIB_ZSTD zstdd HINTS "${VCPKG_DEBUG_ROOT}/lib")
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 8bd9749..551ac0c 100644
+index 8bd9749..3157ddd 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -31,12 +31,14 @@ include_directories(${LIB_AUTOGEN_DIR})
- # Using custom command for now
- set(PROTO_SOURCES ${LIB_AUTOGEN_DIR}/PulsarApi.pb.cc ${LIB_AUTOGEN_DIR}/PulsarApi.pb.h)
- set(PULSAR_SOURCES ${PULSAR_SOURCES} ${PROTO_SOURCES})
--ADD_CUSTOM_COMMAND(
--         OUTPUT ${PROTO_SOURCES}
--         COMMAND ${PROTOC_PATH} -I ../proto ../proto/PulsarApi.proto --cpp_out=${LIB_AUTOGEN_DIR}
--         DEPENDS
--         ../proto/PulsarApi.proto
--         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-+
-+add_library(proto-objects OBJECT "${CMAKE_SOURCE_DIR}/proto/PulsarApi.proto")
-+target_link_libraries(proto-objects PUBLIC protobuf::libprotobuf)
-+target_include_directories(proto-objects PUBLIC "${LIB_AUTOGEN_DIR}")
-+protobuf_generate(
-+    TARGET proto-objects
-+    IMPORT_DIRS "${CMAKE_SOURCE_DIR}/proto"
-+    PROTOC_OUT_DIR "${LIB_AUTOGEN_DIR}")
-
- set(LIBRARY_VERSION $ENV{PULSAR_LIBRARY_VERSION})
- if (NOT LIBRARY_VERSION)
+@@ -60,6 +60,7 @@ set(LIB_NAME_SHARED ${LIB_NAME})
+ # this is the "object library" target: compiles the sources only once
+ add_library(PULSAR_OBJECT_LIB OBJECT ${PULSAR_SOURCES})
+ set_property(TARGET PULSAR_OBJECT_LIB PROPERTY POSITION_INDEPENDENT_CODE 1)
++target_link_libraries(PULSAR_OBJECT_LIB PUBLIC ${Protobuf_LIBRARIES})
+ 
+ if (BUILD_DYNAMIC_LIB)
+     add_library(pulsarShared SHARED $<TARGET_OBJECTS:PULSAR_OBJECT_LIB>)
