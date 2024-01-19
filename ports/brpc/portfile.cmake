@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/incubator-brpc
     REF "${VERSION}"
-    SHA512 2c69a1eaaca26da494c1a10d4f6c67ca53c5cfe43243457263e4966101a77207dee5f29b7372895230978c729254b156b7e4223a41d8e909919fbdac6badc75c
+    SHA512 da0004b7b50cc48da018627c9361ae62b006bb7cd2af53a5cfa1601aab7ad31174d37778a42809bdf2e0f2021a860dcbb02e2c3c938eae6c02808267c3b85025
     HEAD_REF master
     PATCHES
         fix-build.patch

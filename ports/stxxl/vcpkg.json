@@ -1,8 +1,9 @@
 {
   "name": "stxxl",
   "version-date": "2018-11-15",
-  "port-version": 6,
+  "port-version": 7,
   "description": "Standard Template Library for Extra Large Data Sets",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

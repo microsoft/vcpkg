@@ -2,10 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO asmaloney/libE57Format
     REF "v${VERSION}"
-    SHA512 5458e35b319f41290594daefe5de18476ff1c4ed94712d881ed907b72a9c7a470e4d091d68cc1d6115838843e682ed158fc8c7a9fa68eef6c2cf421cda361f7e
+    SHA512 8a788411a7f02c76c6befe96f09f4ac91c87fc0506a543fb64af4d68330c84d84229560128b1ccb64a0463d2529bc5d486b4af81e534710382e189ef9f1f98cd
     HEAD_REF master
     PATCHES
-        prevent_warning_as_errors.diff # see https://github.com/asmaloney/libE57Format/issues/232
+        prevent_warning_as_errors.diff # see https://github.com/asmaloney/libE57Format/issues/256
 )
 
 vcpkg_cmake_configure(
