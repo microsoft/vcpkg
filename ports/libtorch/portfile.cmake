@@ -13,6 +13,7 @@ vcpkg_from_github(
         clang-cl.patch
         cuda-adjustments.patch
         fix-api-export.patch
+        fix-onnx-case.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
