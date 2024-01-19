@@ -5816,6 +5816,10 @@
       "baseline": "1.0.2",
       "port-version": 5
     },
+    "mtlt": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "mujoco": {
       "baseline": "2.3.2",
       "port-version": 1
