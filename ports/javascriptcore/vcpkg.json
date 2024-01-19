@@ -3,7 +3,8 @@
   "version": "2023-09-15",
   "description": "JavaScriptCore is the built-in JavaScript engine for WebKit, which implements ECMAScript as in ECMA-262 specification.",
   "homepage": "https://webkit.org/",
-  "supports": "!uwp",
+  "license": null,
+  "supports": "!uwp & windows",
   "dependencies": [
     "icu",
     {
