@@ -35,6 +35,7 @@ vcpkg_cmake_configure(
     OPTIONS
       -DPORT=JSCOnly
       -DENABLE_STATIC_JSC=${ENABLE_STATIC_JSC}
+      -DUSE_APPLE_ICU=OFF
 )
 
 vcpkg_cmake_install()
