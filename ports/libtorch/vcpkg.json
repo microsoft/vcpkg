@@ -64,7 +64,6 @@
       "dependencies": [
         "cuda",
         "cudnn",
-        "cusparselt",
         "magma"
       ]
     },
