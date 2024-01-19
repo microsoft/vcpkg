@@ -15,6 +15,8 @@ vcpkg_from_github(
         fix-api-export.patch
         fix-onnx-case.patch
         fxdiv.patch
+        protoc.patch
+        fix-sleef.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
@@ -173,6 +175,7 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_NCCL=ON
         -DUSE_SYSTEM_LIBS=ON
         -DUSE_SYSTEM_FXDIV=ON
+        -DUSE_SYSTEM_SLEEF=ON
         -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
         ${BLAS_OPTIONS}
