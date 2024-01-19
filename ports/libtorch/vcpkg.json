@@ -23,7 +23,6 @@
     "glog",
     "lapack",
     "lmdb",
-    "magma",
     "mimalloc",
     "onnx",
     "onnx-optimizer",
@@ -50,6 +49,10 @@
     }
   ],
   "default-features": [
+    {
+      "name": "cuda",
+      "platform": "windows"
+    },
     "fftw3",
     "opencv",
     "xnnpack",
@@ -61,7 +64,8 @@
       "dependencies": [
         "cuda",
         "cudnn",
-        "cusparselt"
+        "cusparselt",
+        "magma"
       ]
     },
     "dist": {
@@ -72,12 +76,16 @@
           "platform": "linux"
         },
         {
-          "name": "libuv",
-          "platform": "windows | osx"
+          "name": "libtorch",
+          "default-features": false,
+          "features": [
+            "mpi"
+          ],
+          "platform": "linux"
         },
         {
-          "name": "mpi",
-          "platform": "linux | osx"
+          "name": "libuv",
+          "platform": "windows | osx"
         },
         {
           "name": "tensorpipe",
@@ -102,6 +110,12 @@
       "description": "Build with LLVM",
       "dependencies": [
         "llvm"
+      ]
+    },
+    "mpi": {
+      "description": "Build with MPI",
+      "dependencies": [
+        "mpi"
       ]
     },
     "nnpack": {

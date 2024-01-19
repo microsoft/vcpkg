@@ -12,7 +12,6 @@ vcpkg_from_github(
         fix-build.patch
         clang-cl.patch
         cuda-adjustments.patch
-        pytorch-pr-85958.patch
         fix-api-export.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
@@ -97,11 +96,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda    USE_NVRTC
     cuda    AT_CUDA_ENABLED
     cuda    AT_CUDNN_ENABLED
+    cuda    USE_MAGMA
     vulkan  USE_VULKAN
     #vulkan  USE_VULKAN_SHADERC_RUNTIME
     vulkan  USE_VULKAN_RELAXED_PRECISION
     rocm    USE_ROCM  # This is an alternative to cuda not a feature! (Not in vcpkg.json!) -> disabled
     llvm    USE_LLVM
+    mpi     USE_MPI
     nnpack  USE_NNPACK  # todo: check use of `DISABLE_NNPACK_AND_FAMILY`
     nnpack  AT_NNPACK_ENABLED
     xnnpack USE_XNNPACK
@@ -169,7 +170,6 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_GLOO=ON
         -DUSE_SYSTEM_NCCL=ON
         -DUSE_SYSTEM_LIBS=ON
-        #-DUSE_MPI=${VCPKG_TARGET_IS_LINUX} # This should be a feature instead
         -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
         ${BLAS_OPTIONS}
@@ -181,7 +181,6 @@ vcpkg_cmake_configure(
         -DAT_MKLDNN_ENABLED=OFF
         -DUSE_OPENCL=ON
         -DUSE_NUMPY=ON
-        -DUSE_MAGMA=ON
         -DUSE_KINETO=OFF #
     OPTIONS_RELEASE
       -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python311.lib
