@@ -1,9 +1,10 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO podofo/podofo
     REF "${VERSION}"
-    SHA512 cbbd183cd940345f9b077b7da140414c27badc70fdf754e2f3c6f0e51c25072de46d7fe312b014c0eab359bd03e9dca0283260db00f079c5014e268d5c5ef5c9
+    SHA512 80fa86ff7f256a69b963451ef741e49c56447084b26481e52d1a079940102b5d51d9ff1c43952bba22bae61d95c8c44eacc08f55cd18999aec6c563f615b2cf5
+    PATCHES
+        fix-interface-include.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -26,6 +27,8 @@ vcpkg_cmake_configure(
         -DPODOFO_BUILD_LIB_ONLY=1
         -DPODOFO_BUILD_STATIC=${PODOFO_BUILD_STATIC}
         -DCMAKE_DISABLE_FIND_PACKAGE_Libidn=ON
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_FOUND # Fix the warning of static build.
 )
 
 vcpkg_cmake_install()

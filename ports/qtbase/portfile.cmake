@@ -12,6 +12,7 @@ set(${PORT}_PATCHES
         allow_outside_prefix.patch
         config_install.patch
         fix_cmake_build.patch
+        fix_cmake_build_type.patch
         harfbuzz.patch
         fix_egl.patch
         fix_egl_2.patch
@@ -19,6 +20,7 @@ set(${PORT}_PATCHES
         GLIB2-static.patch # alternative is to force pkg-config
         clang-cl_source_location.patch
         clang-cl_QGADGET_fix.diff
+        fix-host-aliasing.patch
         )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -37,7 +39,7 @@ if(VCPKG_TARGET_IS_LINUX)
     message(WARNING "qtbase currently requires packages from the system package manager. "
     "They can be installed on Ubuntu systems via sudo apt-get install " 
     "'^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev "
-    "libxkbcommon-x11-dev.")
+    "libxkbcommon-x11-dev libegl1-mesa-dev.")
 endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
@@ -117,6 +119,11 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_LTTngUST:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON)
+list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapBacktrace:BOOL=ON)
+#list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapAtomic:BOOL=ON) # Cannot be disabled on x64 platforms
+#list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapRt:BOOL=ON) # Cannot be disabled on osx
+list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
+list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
 
 # Network features:
  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_NET_OPTIONS
@@ -138,6 +145,7 @@ endif()
 
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libproxy:BOOL=ON)
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON)
+list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapResolv:BOOL=ON)
 
 # Gui features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
@@ -156,7 +164,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
     "xrender"             FEATURE_xcb_native_painting # experimental
     "gles2"               FEATURE_opengles2
-    #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_Vulkan
+    #Cannot be required since Qt will look in CONFIG mode first but is controlled via CMAKE_DISABLE_FIND_PACKAGE_Vulkan below
+    #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_WrapVulkanHeaders 
     "egl"                 FEATURE_egl
     #"fontconfig"          CMAKE_REQUIRE_FIND_PACKAGE_Fontconfig
     #"harfbuzz"            CMAKE_REQUIRE_FIND_PACKAGE_WrapSystemHarfbuzz
@@ -239,7 +248,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     "sql-oci"             CMAKE_DISABLE_FIND_PACKAGE_Oracle
     )
 
-set(DB_LIST DB2 Interbase)
+set(DB_LIST DB2 Interbase Mimer)
 foreach(_db IN LISTS DB_LIST)
     list(APPEND FEATURE_SQLDRIVERS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${_db}:BOOL=ON)
 endforeach()
@@ -249,12 +258,12 @@ endforeach()
     # )
 list(APPEND FEATURE_PRINTSUPPORT_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_CUPS:BOOL=ON)
 
-# widgets features:
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
-    # "gtk3"             FEATURE_gtk3
-    # There are a lot of additional features here to deactivate parts of widgets.
-    # )
-list(APPEND FEATURE_WIDGETS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GTK3:BOOL=ON)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
+    FEATURES
+    "gtk3"              FEATURE_gtk3
+    INVERTED_FEATURES
+    "gtk3"              CMAKE_DISABLE_FIND_PACKAGE_GTK3
+)
 
 set(TOOL_NAMES
         androiddeployqt
@@ -317,15 +326,16 @@ file(COPY
 file(CONFIGURE OUTPUT "${CURRENT_PACKAGES_DIR}/share/${PORT}/port_status.cmake" CONTENT "set(qtbase_with_icu ${FEATURE_icu})\n")
 
 set(other_files qt-cmake
-                 qt-cmake-private
-                 qt-cmake-standalone-test
-                 qt-configure-module
-                 qt-internal-configure-tests
+                qt-cmake-private
+                qt-cmake-standalone-test
+                qt-configure-module
+                qt-internal-configure-tests
+                qt-cmake-create
                  )
 if(CMAKE_HOST_WIN32)
-    set(script_suffix .bat)
+    set(script_suffix ".bat")
 else()
-    set(script_suffix)
+    set(script_suffix "")
 endif()
 list(TRANSFORM other_files APPEND "${script_suffix}")
 
@@ -363,6 +373,7 @@ foreach(_config debug release)
                 string(REPLACE "../share/" "../../../share/" _contents "${_contents}")
             endif()
             string(REGEX REPLACE "set cmake_path=[^\n]+\n" "set cmake_path=cmake\n" _contents "${_contents}")
+            string(REGEX REPLACE "original_cmake_path=[^\n]+\n" "original_cmake_path=does-not-exist\n" _contents "${_contents}")
             file(WRITE "${target_file}" "${_contents}")
         endif()
     endforeach()

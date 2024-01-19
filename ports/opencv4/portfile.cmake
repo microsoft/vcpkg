@@ -29,7 +29,9 @@ vcpkg_from_github(
       0017-fix-flatbuffers.patch
       0019-missing-include.patch
       0020-fix-compat-cuda12.2.patch
+      0021-static-openvino.patch # https://github.com/opencv/opencv/pull/23963
       "${ARM64_WINDOWS_FIX}"
+      0022-fix-supportqnx.patch
 )
 # Disallow accidental build of vendored copies
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
@@ -67,9 +69,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "gtk"       WITH_GTK
  "halide"    WITH_HALIDE
  "jasper"    WITH_JASPER
+ "openjpeg"  WITH_OPENJPEG
  "jpeg"      WITH_JPEG
  "lapack"    WITH_LAPACK
  "nonfree"   OPENCV_ENABLE_NONFREE
+ "openvino"  WITH_OPENVINO
  "openexr"   WITH_OPENEXR
  "opengl"    WITH_OPENGL
  "ovis"      CMAKE_REQUIRE_FIND_PACKAGE_OGRE
@@ -81,6 +85,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "webp"      WITH_WEBP
  "world"     BUILD_opencv_world
  "dc1394"    WITH_1394
+ "vulkan"    WITH_VULKAN
 )
 
 # Cannot use vcpkg_check_features() for "dnn", "gtk", ipp", "openmp", "ovis", "python", "qt", "tbb"
@@ -132,6 +137,11 @@ endif()
 set(WITH_TBB OFF)
 if("tbb" IN_LIST FEATURES)
   set(WITH_TBB ON)
+endif()
+
+set(WITH_VULKAN OFF)
+if("vulkan" IN_LIST FEATURES)
+  set(WITH_VULKAN ON)
 endif()
 
 set(WITH_PYTHON OFF)
@@ -396,6 +406,7 @@ vcpkg_cmake_configure(
         -Dade_DIR=${ADE_DIR}
         ###### Disable build 3rd party libs
         -DBUILD_JASPER=OFF
+        -DBUILD_OPENJPEG=OFF
         -DBUILD_JPEG=OFF
         -DBUILD_OPENEXR=OFF
         -DBUILD_PNG=OFF
@@ -440,14 +451,15 @@ vcpkg_cmake_configure(
         -DWITH_GTK=${WITH_GTK}
         -DWITH_QT=${WITH_QT}
         -DWITH_IPP=${WITH_IPP}
+        -DWITH_VULKAN=${WITH_VULKAN}
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=${WITH_OPENMP}
         -DWITH_PROTOBUF=${BUILD_opencv_dnn}
         -DWITH_PYTHON=${WITH_PYTHON}
         -DWITH_OPENCLAMDBLAS=OFF
+        -DWITH_OPENVINO=${WITH_OPENVINO}
         -DWITH_TBB=${WITH_TBB}
-        -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
@@ -478,7 +490,7 @@ endif()
 
   file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
   set(DEPS_STRING "include(CMakeFindDependencyMacro)
-if(${BUILD_opencv_dnn})
+if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target libprotobuf is already defined
   find_dependency(Protobuf CONFIG REQUIRED)
   if(TARGET protobuf::libprotobuf)
     add_library (libprotobuf INTERFACE IMPORTED)
@@ -526,8 +538,14 @@ find_dependency(Tesseract)")
   if("lapack" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
   endif()
+  if(WITH_OPENVINO)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
+  endif()
   if("openexr" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
+  endif()
+  if("openjpeg" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenJPEG)")
   endif()
   if(WITH_OPENMP)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")

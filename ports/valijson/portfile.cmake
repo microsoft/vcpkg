@@ -1,24 +1,23 @@
-#header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tristanpenman/valijson
-    REF v0.6
-    SHA512 a493d17159e479be7fe29d45c610c7d4fdd2c2f9ba897923129734fb07257dbb41fddde4c4263dbf0aa5c7101cd1555568a048beba2f60d2b32e625dd9690749
+    REF v${VERSION}
+    SHA512 a1f9aabfcd150a36ed16c5642027a9c524ec044dd1eb636a81a75f2226b7b665cc3d2f4cd375786be8fc9dadf2c6938df17d6e6fa13f27c621fe2ca35e0d13ee
     HEAD_REF master
-    PATCHES fix-picojson.patch
-            fix-optional.patch
 )
 
-# Copy the header files
-file(GLOB HEADER_FILES ${SOURCE_PATH}/include/valijson/*)
-file(COPY ${HEADER_FILES}
-     DESTINATION ${CURRENT_PACKAGES_DIR}/include/valijson
-     REGEX "\.(gitattributes|gitignore)$" EXCLUDE)
+set(VCPKG_BUILD_TYPE release) # headers only
 
-file(COPY ${SOURCE_PATH}/include/compat/optional.hpp
-     DESTINATION ${CURRENT_PACKAGES_DIR}/include/valijson/compat)
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    -Dvalijson_BUILD_TESTS:BOOL=OFF
+)
+vcpkg_cmake_install()
 
-# Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/LICENSE
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/valijson)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/valijson/LICENSE ${CURRENT_PACKAGES_DIR}/share/valijson/copyright)
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/valijson")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")

@@ -22,6 +22,7 @@ vcpkg_from_gitlab(
         srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
         base-must-be-enabled.patch
+        no-downloads.patch
         ${PATCHES}
 )
 
@@ -80,6 +81,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
         plugins-bad     bad
         aes             gst-plugins-bad:aes
+        aom             gst-plugins-bad:aom
         assrender       gst-plugins-bad:assrender
         bzip2-bad       gst-plugins-bad:bz2
         chromaprint     gst-plugins-bad:chromaprint
@@ -94,6 +96,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libde265        gst-plugins-bad:libde265
         microdns        gst-plugins-bad:microdns
         modplug         gst-plugins-bad:modplug
+        nvcodec         gst-plugins-bad:nvcodec
         openal          gst-plugins-bad:openal
         openh264        gst-plugins-bad:openh264
         openjpeg        gst-plugins-bad:openjpeg
@@ -213,7 +216,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-ugly:mpeg2dec=disabled # libmpeg2 not found
         -Dgst-plugins-ugly:sidplay=disabled
         # gst-plugins-bad
-        -Dgst-plugins-bad:aom=disabled # Error during plugin build
         -Dgst-plugins-bad:avtp=disabled
         -Dgst-plugins-bad:androidmedia=auto
         -Dgst-plugins-bad:applemedia=auto
@@ -249,7 +251,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:msdk=disabled
         -Dgst-plugins-bad:musepack=disabled
         -Dgst-plugins-bad:neon=disabled
-        -Dgst-plugins-bad:nvcodec=disabled
         -Dgst-plugins-bad:onnx=disabled # libonnxruntime not found
         -Dgst-plugins-bad:openaptx=disabled
         -Dgst-plugins-bad:opencv=disabled # opencv not found

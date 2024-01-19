@@ -1,9 +1,7 @@
-set(LPEG_VER 1.0.2)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.inf.puc-rio.br/~roberto/lpeg/lpeg-${LPEG_VER}.tar.gz"
-    FILENAME "lpeg-${LPEG_VER}.tar.gz"
-    SHA512 110527ddf9f8e5e8a80ef0ae8847c8ba8cd2597dba3bfe2865cba9af60daafbb885f21e74231952f5ab793d021e050b482066a821c6954d52090a5eae77e9814
+    URLS "https://www.inf.puc-rio.br/~roberto/lpeg/lpeg-${VERSION}.tar.gz"
+    FILENAME "lpeg-${VERSION}.tar.gz"
+    SHA512 01b2a4ceb2d110e143603bc63c84a59736ea735dd0ed9866286ba115d41be48d09c9ff21c8e2327974d2296944f6508d50a5c3a18f26ac1d81b8b2fc41f61222
 )
 
 vcpkg_extract_source_archive(

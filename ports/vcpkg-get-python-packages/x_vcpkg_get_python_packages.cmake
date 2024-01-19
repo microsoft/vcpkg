@@ -91,7 +91,7 @@ function(x_vcpkg_get_python_packages)
 
     set(ENV{PYTHONNOUSERSITE} "1")
     message(STATUS "Setting up python virtual environmnent...")
-    vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" -m "${python_venv}" ${python_venv_options} "${venv_path}"
+    vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" -I -m "${python_venv}" ${python_venv_options} "${venv_path}"
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                    LOGNAME "venv-setup-${TARGET_TRIPLET}")
     vcpkg_add_to_path(PREPEND "${venv_path}${python_sub_path}")
@@ -101,13 +101,13 @@ function(x_vcpkg_get_python_packages)
     unset(ENV{PYTHONPATH})
     if(DEFINED arg_REQUIREMENTS_FILE)
         message(STATUS "Installing requirements from: ${arg_REQUIREMENTS_FILE}")
-        vcpkg_execute_required_process(COMMAND "${${arg_OUT_PYTHON_VAR}}" -m pip install -r ${arg_REQUIREMENTS_FILE}
+        vcpkg_execute_required_process(COMMAND "${${arg_OUT_PYTHON_VAR}}" -I -m pip install -r ${arg_REQUIREMENTS_FILE}
                                        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                        LOGNAME "pip-install-requirements-file-${TARGET_TRIPLET}")
     endif()
     if(DEFINED arg_PACKAGES)
         message(STATUS "Installing python packages: ${arg_PACKAGES}")
-        vcpkg_execute_required_process(COMMAND "${${arg_OUT_PYTHON_VAR}}" -m pip install ${arg_PACKAGES}
+        vcpkg_execute_required_process(COMMAND "${${arg_OUT_PYTHON_VAR}}" -I -m pip install ${arg_PACKAGES}
                                        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                        LOGNAME "pip-install-packages-${TARGET_TRIPLET}")
     endif()

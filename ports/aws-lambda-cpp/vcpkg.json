@@ -1,7 +1,6 @@
 {
   "name": "aws-lambda-cpp",
-  "version": "0.2.8",
-  "port-version": 1,
+  "version": "0.2.9",
   "description": "C++ Runtime for AWS Lambda.",
   "license": "Apache-2.0",
   "supports": "linux",
