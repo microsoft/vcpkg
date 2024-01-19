@@ -14,7 +14,7 @@ index d18523352..1f53945cf 100644
 -  add_library(fxdiv STATIC "${FXDIV_HDR}")
 -  set_property(TARGET fxdiv PROPERTY LINKER_LANGUAGE C)
 +  add_library(fxdiv INTERFACE IMPORTED)
-+  target_include_directories(fxdiv PRIVATE "${FXDIV_HDR}")
++  target_include_directories(fxdiv INTERFACE "${FXDIV_HDR}")
  endif()
  target_link_libraries(pytorch_qnnpack PRIVATE fxdiv)
  
@@ -32,14 +32,13 @@ index f7a595e1b..fb315c435 100644
      set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
      add_subdirectory(
        "${FXDIV_SOURCE_DIR}"
--      "${CMAKE_BINARY_DIR}/FXdiv")
-+      "${CMAKE_BINARY_DIR}/FXdiv
+       "${CMAKE_BINARY_DIR}/FXdiv")
 +  elseif(NOT TARGET fxdiv AND USE_SYSTEM_FXDIV)
 +    find_path(FXDIV_HDR fxdiv.h PATH_SUFFIXES include)
 +    if(NOT FXDIV_HDR)
 +      message(FATAL_ERROR "Cannot find fxdiv")
 +    endif()
 +    add_library(fxdiv INTERFACE IMPORTED)
-+    target_include_directories(fxdiv PRIVATE "${FXDIV_HDR}")
++    target_include_directories(fxdiv INTERFACE "${FXDIV_HDR}")
    endif()
  endif()
