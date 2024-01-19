@@ -14,6 +14,7 @@ vcpkg_from_github(
         cuda-adjustments.patch
         fix-api-export.patch
         fix-onnx-case.patch
+        fxdiv.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
@@ -192,6 +193,7 @@ vcpkg_cmake_configure(
         USE_NUMA
         USE_SYSTEM_BIND11
         MKLDNN_CPU_RUNTIME
+        PYTHON_LIBRARY
 )
 
 vcpkg_cmake_install()
