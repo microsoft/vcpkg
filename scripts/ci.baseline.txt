@@ -679,6 +679,7 @@ log4cpp:x64-linux=fail # dynamic exception specifications
 loguru:arm-neon-android=fail
 loguru:arm64-android=fail
 loguru:x64-android=fail
+magma:x64-linux=fail
 mchehab-zbar:arm-neon-android=fail
 mchehab-zbar:arm64-android=fail
 mchehab-zbar:x64-android=fail
