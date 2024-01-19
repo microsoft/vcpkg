@@ -141,6 +141,10 @@
     "xnnpack": {
       "description": "Build with XNNPack",
       "dependencies": [
+        {
+          "name": "fxdiv",
+          "platform": "!windows"
+        },
         "xnnpack"
       ]
     },

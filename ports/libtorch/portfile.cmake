@@ -171,6 +171,7 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_GLOO=ON
         -DUSE_SYSTEM_NCCL=ON
         -DUSE_SYSTEM_LIBS=ON
+        -DUSE_SYSTEM_FXDIV=ON
         -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
         ${BLAS_OPTIONS}
