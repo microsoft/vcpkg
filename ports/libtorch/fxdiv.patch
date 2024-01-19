@@ -22,7 +22,7 @@ diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
 index f7a595e1b..fb315c435 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
-@@ -108,7 +108,7 @@ endif()
+@@ -108,11 +108,18 @@ endif()
  # addressed yet.
  
  if(NOT MSVC AND USE_XNNPACK)
@@ -31,3 +31,15 @@ index f7a595e1b..fb315c435 100644
      set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
      set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
      add_subdirectory(
+       "${FXDIV_SOURCE_DIR}"
+-      "${CMAKE_BINARY_DIR}/FXdiv")
++      "${CMAKE_BINARY_DIR}/FXdiv
++  elseif(NOT TARGET fxdiv AND USE_SYSTEM_FXDIV)
++    find_path(FXDIV_HDR fxdiv.h PATH_SUFFIXES include)
++    if(NOT FXDIV_HDR)
++      message(FATAL_ERROR "Cannot find fxdiv")
++    endif()
++    add_library(fxdiv INTERFACE IMPORTED)
++    target_include_directories(fxdiv PRIVATE "${FXDIV_HDR}")
+   endif()
+ endif()
