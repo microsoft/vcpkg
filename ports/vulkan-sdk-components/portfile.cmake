@@ -1,6 +1,6 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-set(components COMPONENTS glslang)
+set(components COMPONENTS "")
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND components dxc)
 endif()
