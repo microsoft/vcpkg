@@ -12,6 +12,7 @@ vcpkg_from_github(
       cgns-scoped-enum.patch
       downstream-fixes.patch
       add_filesystem.patch
+      occ-78.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
