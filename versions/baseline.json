@@ -30,7 +30,7 @@
     },
     "acl": {
       "baseline": "2.3.1",
-      "port-version": 1
+      "port-version": 2
     },
     "activemq-cpp": {
       "baseline": "3.9.5",
