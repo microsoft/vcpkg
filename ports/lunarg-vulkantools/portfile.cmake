@@ -29,9 +29,5 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 vcpkg_copy_tools(TOOL_NAMES vkvia vkconfig AUTO_CLEAN )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-endif()
-
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-
