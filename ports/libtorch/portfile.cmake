@@ -17,6 +17,7 @@ vcpkg_from_github(
         fxdiv.patch
         protoc.patch
         fix-sleef.patch
+        fix-glog.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
