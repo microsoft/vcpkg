@@ -11,7 +11,6 @@ vcpkg_extract_source_archive(
     PATCHES build.patch
 )
 
-
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/python3") # port ask python distutils for info.
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/omniorb/bin")
 set(ENV{PYTHONPATH} "${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE};${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
@@ -57,6 +56,15 @@ vcpkg_configure_make(
   OPTIONS
     --with-omniorb=${CURRENT_INSTALLED_DIR}/tools/omniorb
 )
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+  vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/mk/vcpkg.mk" "replace-with-per-config-text" "NoDebugBuild=1")
+  if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/mk/vcpkg.mk" "replace-with-per-config-text" "NoReleaseBuild=1\nBuildDebugBinary=1")
+    #vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tool/omniidl/cxx/dir.mk" "python$(subst .,,$(PYVERSION)).lib" "python$(subst .,,$(PYVERSION))_d.lib")
+    #vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tool/omniidl/cxx/dir.mk" "zlib.lib" "zlibd.lib")
+  endif()
+endif()
 
 vcpkg_install_make(
   MAKEFILE "GNUMakefile"

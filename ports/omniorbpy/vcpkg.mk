@@ -17,6 +17,7 @@ else
 WRAPPER_FPATH = $(HOSTBINDIR)
 endif
 
+@build_info@
 
 #
 # Standard "unix" programs.  Anything here not provided by the GNU-WIN32/OpenNT/UWIN
