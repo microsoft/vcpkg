@@ -6,7 +6,9 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-set(VCPKG_BUILD_TYPE release) # only builds tools
+if(NOT VCPKG_TARGET_IS_ANDROID)
+    set(VCPKG_BUILD_TYPE release) # only builds tools
+endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
