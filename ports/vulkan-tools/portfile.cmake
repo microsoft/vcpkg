@@ -17,7 +17,11 @@ vcpkg_cmake_install()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
-vcpkg_copy_tools(TOOL_NAMES vkcube vkcubepp vulkaninfo AUTO_CLEAN )
+set(tools vulkaninfo)
+if(NOT VCPKG_TARGET_IS_ANDROID)
+    list(APPEND tools vkcube vkcubepp)
+endif()
+vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
