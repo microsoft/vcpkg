@@ -4,7 +4,7 @@
   "description": "Vulkan header files and API registry",
   "homepage": "https://github.com/KhronosGroup/Vulkan-Headers",
   "license": null,
-  "supports": "!osx",
+  "supports": "!osx & !staticcrt",
   "dependencies": [
     "jsoncpp",
     "qt5-base",
