@@ -3,7 +3,7 @@
   "version": "2.7.0",
   "description": "A library that provides an embeddable, persistent key-value store for fast storage",
   "homepage": "https://github.com/speedb-io/speedb",
-  "license": "GPL-2.0-only OR Apache-2.0",
+  "license": "Apache-2.0",
   "supports": "!uwp & !(arm & !arm64 & android)",
   "dependencies": [
     {
