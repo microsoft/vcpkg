@@ -1,0 +1,50 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bdad70e..edb65c4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,14 +2,21 @@ cmake_minimum_required(VERSION 3.17)
+ set(ASIOCHAN_VERSION 0.4.3)
+ project(AsioChan VERSION "${ASIOCHAN_VERSION}")
+ 
++include(CMakePackageConfigHelpers)
+ include(CheckCXXCompilerFlag)
++include(CMakeDependentOption)
++include(GNUInstallDirs)
++include(FetchContent)
+ 
+ option(ASIOCHAN_USE_STANDALONE_ASIO "Use standalone ASIO instead of Boost.ASIO" OFF)
+ 
+ add_library(asiochan INTERFACE)
+ add_library(asiochan::asiochan ALIAS asiochan)
+ target_compile_features(asiochan INTERFACE cxx_std_20)
+-target_include_directories(asiochan INTERFACE include)
++target_include_directories(asiochan INTERFACE
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++  $<INSTALL_INTERFACE:include>
++)
+ 
+ set(COROUTINES_FLAG -fcoroutines)
+ check_cxx_compiler_flag("${COROUTINES_FLAG}" COMPILER_HAS_COROUTINES_FLAG)
+@@ -21,6 +28,22 @@ if (ASIOCHAN_USE_STANDALONE_ASIO)
+   target_compile_definitions(asiochan INTERFACE ASIOCHAN_USE_STANDALONE_ASIO)
+ endif()
+ 
++export(TARGETS asiochan
++  FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/asiochan-targets.cmake"
++)
++
++install(TARGETS asiochan EXPORT asiochan)
++
++install(EXPORT asiochan
++  NAMESPACE asiochan::
++  FILE asiochan-targets.cmake
++  DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/asiochan"
++)
++
++install(DIRECTORY include/asiochan
++  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++)
++
+ # Building the tests and examples requires Conan packages
+ set(CONAN_BUILD_INFO_PATH "${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake")
+ if (EXISTS "${CONAN_BUILD_INFO_PATH}")
