@@ -91,10 +91,13 @@ vcpkg_configure_make(
   COPY_SOURCE
   OPTIONS
     ${OPTIONS}
+  OPTIONS_RELEASE
+    am_cv_python_pyexecdir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/lib/python3.11/site-packages
+    am_cv_python_pythondir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/lib/python3.11/site-packages
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-  vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel//mk/platforms/vcpkg.mk" "replace-with-per-config-text" "NoDebugBuild=1")
+  vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/mk/platforms/vcpkg.mk" "replace-with-per-config-text" "NoDebugBuild=1")
   if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/mk/platforms/vcpkg.mk" "replace-with-per-config-text" "NoReleaseBuild=1\nBuildDebugBinary=1\ndebug=1")
     vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tool/omniidl/cxx/dir.mk" "python$(subst .,,$(PYVERSION)).lib" "python$(subst .,,$(PYVERSION))_d.lib")
@@ -218,4 +221,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(COPY "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/omniorb/bin")
+file(COPY "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/omniorb/lib")
