@@ -207,9 +207,10 @@ endif()
 if(NOT VCPKG_TARGET_IS_WINDOWS)
   set(omniidl "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/omniidl")
   file(READ "${omniidl}" contents)
-  string(REGEX REPLACE "#![^\n]" "#!/usr/bin/env python3" contents "${contents}")
+  string(REGEX REPLACE "#![^\n]+" "#!/usr/bin/env python3" contents "${contents}")
   string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}" "\"os.path.dirname(__file__)+\"/../../.." contents "${contents}")
-  string(REGEX REPLACE "\"\"os" "os" contents "${contents}")
+  string(REPLACE "\"\"os" "os" contents "${contents}")+
+  string(REPLACE "\"os" "\"+os" contents "${contents}")
   file(WRITE "${omniidl}" "${contents}")
 endif()
 
