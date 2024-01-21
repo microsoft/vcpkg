@@ -5,6 +5,7 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "omniORBpy-${VERSION}.tar.bz2"
     SHA512 473db7085267ba9d014ec768e6fdd8fce04aa6e30ca3d9bd5f97a2eb504e12b78e3d4fde2d7bc5dc3df5a3ca062a9a8426689554bec707fa4732657a594ade38
 )
+
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
@@ -13,7 +14,7 @@ vcpkg_extract_source_archive(
 
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/python3") # port ask python distutils for info.
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/omniorb/bin")
-set(ENV{PYTHONPATH} ";${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE};${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}/..;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
+set(ENV{PYTHONPATH} ";${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}/..${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/omniorb/idl/omniORB/" DESTINATION "${SOURCE_PATH}/idl")
 
@@ -67,7 +68,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 
 vcpkg_install_make(
-  MAKEFILE "GNUMakefile"
+  MAKEFILE "GNUmakefile"
   ADD_BIN_TO_PATH
 )
 
