@@ -12,7 +12,7 @@ vcpkg_extract_source_archive(
     PATCHES build.patch
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/bin/scripts/makeminors.py" "/usr/bin/env python" "/usr/bin/env python3")
+vcpkg_replace_string("${SOURCE_PATH}/bin/scripts/makeminors.py" "/usr/bin/env python" "/usr/bin/env python3.11")
 
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/python3") # port ask python distutils for info.
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/omniorb/bin")
