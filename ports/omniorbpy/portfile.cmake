@@ -18,11 +18,12 @@ vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/python3") # port 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/omniorb/bin")
 
 #set(ENV{PYTHONHOME} "${CURRENT_HOST_INSTALLED_DIR}")
-#set(ENV{PYTHONPATH} "${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}/..${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
+
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/omniorb/idl/omniORB/" DESTINATION "${SOURCE_PATH}/idl")
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+  set(ENV{PYTHONPATH} "${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}/..${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
   set(z_vcpkg_org_linkage "${VCPKG_LIBRARY_LINKAGE}") 
   # convoluted build system; shared builds requires 
   # static library to create def file for symbol export
@@ -50,6 +51,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
           endif()
       endif()
   endforeach()
+  if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/lib/msvcstub.lib" AND NOT EXISTS "${CURRENT_INSTALLED_DIR}/lib/omniORB430_rt.lib")
+    # Linkage needs to know if omniorb was build statically or not.
+    string(APPEND build_info "vcpkg_static_build=1\n")
+  endif()
   configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg.mk" "${SOURCE_PATH}/mk/vcpkg.mk" @ONLY NEWLINE_STYLE UNIX)
 endif()
 
@@ -106,4 +111,3 @@ file(REMOVE_RECURSE
       "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/omniidl_be/__init__.py"
       "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/omniidl_be/__pycache__"
     )
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")

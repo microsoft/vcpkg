@@ -132,6 +132,7 @@ DLLPattern = $(LibNoDebugPattern)
 LibSearchPattern = $(LibNoDebugSearchPattern)
 #DLLSearchPattern = $(DLLNoDebugSearchPattern)
 DLLSearchPattern = $(LibNoDebugSearchPattern)
+LibPyPattern = %.lib
 
 else
 
@@ -141,6 +142,7 @@ DLLPattern = $(LibDebugPattern)
 LibSearchPattern = $(LibDebugSearchPattern)
 #DLLSearchPattern = $(DLLDebugSearchPattern)
 DLLSearchPattern = $(LibDebugSearchPattern)
+LibPyPattern = %_d.lib
 
 endif
 
@@ -601,7 +603,13 @@ OMNIORB_IDL = $(OMNIORB_IDL_ONLY) $(OMNIORB_IDL_ANY_FLAGS)
 OMNIORB_CPPFLAGS = -D__OMNIORB4__ -I$(CORBA_STUB_DIR) $(OMNITHREAD_CPPFLAGS)
 OMNIORB_IDL_OUTPUTDIR_PATTERN = -C%
 
-#msvc_work_around_stub = $(patsubst %,$(LibPattern),msvcstub) 
+ifndef vcpkg_static_build
+msvc_work_around_stub = $(patsubst %,$(LibPattern),msvcstub)
+else
+# A bit of hacky to pack everything into PYLIB for static builds but it works.
+PYLIB     := $(patsubst %,$(LibPyPattern),python311) $(patsubst %,$(LibPattern),omniORB4) $(patsubst %,$(LibPattern),COS4) $(patsubst %,$(LibPattern),COSDynamic4) $(patsubst %,$(LibPattern),omniDynamic4) $(OMNITHREAD_LIB) Advapi32.lib
+msvc_work_around_stub := $(omnidynamic_dll_name) $(OMNITHREAD_LIB_DEPEND) $(PYLIB)
+endif
 
 OMNIORB_LIB = $(omniorb_dll_name) \
 		$(omnidynamic_dll_name) \
