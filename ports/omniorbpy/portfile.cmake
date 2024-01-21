@@ -13,7 +13,7 @@ vcpkg_extract_source_archive(
 
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/python3") # port ask python distutils for info.
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/omniorb/bin")
-set(ENV{PYTHONPATH} "${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE};${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
+set(ENV{PYTHONPATH} ";${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE};${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}/..;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/omniorb/idl/omniORB/" DESTINATION "${SOURCE_PATH}/idl")
 
