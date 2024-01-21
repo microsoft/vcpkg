@@ -39,6 +39,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp "${_py3_include_path}")
     set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
     list(APPEND OPTIONS "PYTHON=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}")
+    set(ENV{PYTHON} "PYTHON=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}")
 endif()
 
 vcpkg_find_acquire_program(FLEX)
@@ -92,11 +93,11 @@ vcpkg_configure_make(
   OPTIONS
     ${OPTIONS}
   OPTIONS_DEBUG
-    am_cv_python_pyexecdir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/debug/lib/python3.11/site-packages
-    am_cv_python_pythondir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/debug/lib/python3.11/site-packages
+    am_cv_python_pyexecdir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/debug/${PYTHON3_SITE}
+    am_cv_python_pythondir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/debug/${PYTHON3_SITE}
   OPTIONS_RELEASE
-    am_cv_python_pyexecdir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/lib/python3.11/site-packages
-    am_cv_python_pythondir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/lib/python3.11/site-packages
+    am_cv_python_pyexecdir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}
+    am_cv_python_pythondir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

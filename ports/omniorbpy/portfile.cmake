@@ -60,6 +60,13 @@ vcpkg_configure_make(
   COPY_SOURCE
   OPTIONS
     --with-omniorb=${CURRENT_INSTALLED_DIR}/tools/omniorb
+  OPTIONS_DEBUG
+    am_cv_python_pyexecdir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/debug/${PYTHON3_SITE}
+    am_cv_python_pythondir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/debug/${PYTHON3_SITE}
+  OPTIONS_RELEASE
+    am_cv_python_pyexecdir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}
+    am_cv_python_pythondir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}
+    
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -94,8 +101,9 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LIB") # Lib is LGPL
 
 file(REMOVE_RECURSE 
       "${CURRENT_PACKAGES_DIR}/debug/share"
-      "${CURRENT_PACKAGES_DIR}/debug/tools/python3/lib/site-packages/omniidl_be/__init__.py"
-      "${CURRENT_PACKAGES_DIR}/debug/tools/python3/lib/site-packages/omniidl_be/__pycache__"
-      "${CURRENT_PACKAGES_DIR}/tools/python3/lib/site-packages/omniidl_be/__init__.py"
-      "${CURRENT_PACKAGES_DIR}/tools/python3/lib/site-packages/omniidl_be/__pycache__"
+      "${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}/omniidl_be/__init__.py"
+      "${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}/omniidl_be/__pycache__"
+      "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/omniidl_be/__init__.py"
+      "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/omniidl_be/__pycache__"
     )
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
