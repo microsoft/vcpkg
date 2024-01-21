@@ -127,16 +127,20 @@ DLLDebugSearchPattern = %_rtd.lib
 ifndef BuildDebugBinary
 
 LibPattern = $(LibNoDebugPattern)
-DLLPattern = $(DLLNoDebugPattern)
+#DLLPattern = $(DLLNoDebugPattern)
+DLLPattern = $(LibNoDebugPattern)
 LibSearchPattern = $(LibNoDebugSearchPattern)
-DLLSearchPattern = $(DLLNoDebugSearchPattern)
+#DLLSearchPattern = $(DLLNoDebugSearchPattern)
+DLLSearchPattern = $(LibNoDebugSearchPattern)
 
 else
 
 LibPattern = $(LibDebugPattern)
-DLLPattern = $(DLLDebugPattern)
+#DLLPattern = $(DLLDebugPattern)
+DLLPattern = $(LibDebugPattern)
 LibSearchPattern = $(LibDebugSearchPattern)
-DLLSearchPattern = $(DLLDebugSearchPattern)
+#DLLSearchPattern = $(DLLDebugSearchPattern)
+DLLSearchPattern = $(LibDebugSearchPattern)
 
 endif
 
@@ -216,8 +220,8 @@ BuildSharedLibrary = 1
 endif
 
 SharedLibraryFullNameTemplate = $(SharedLibraryLibNameTemplate).lib
-SharedLibraryLibNameTemplate  = $$1$$2$$3$$4_rt$${extrasuffix:-}
-SharedLibraryShortLibName = $$1$$2_rt$${extrasuffix:-}.lib
+SharedLibraryLibNameTemplate  = $$1$$2$$3$$4$${extrasuffix:-}
+SharedLibraryShortLibName = $$1$$2$${extrasuffix:-}.lib
 SharedLibraryDllNameTemplate  = $$1$$2$$3$$4$(compiler_version_suffix)_rt$${extrasuffix:-}
 SharedLibraryExportSymbolFileNameTemplate = $$1$$2$${extrasuffix:-}.def
 SharedLibraryVersionStringTemplate = $$3.$$4
@@ -523,29 +527,29 @@ OMNIPY_MICRO = $(word 3,$(subst ., ,$(OMNIPY_VERSION)))
 ##
 
 
-OMNIORB_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniORB.$(OMNIORB_VERSION)))
-OMNIORB_DEBUG_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniORB.$(OMNIORB_VERSION)))
+OMNIORB_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniORB.$(OMNIORB_MAJOR_VERSION)))
+OMNIORB_DEBUG_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniORB.$(OMNIORB_MAJOR_VERSION)))
 
-OMNIORB_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniDynamic.$(OMNIORB_VERSION)))
-OMNIORB_DEBUG_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniDynamic.$(OMNIORB_VERSION)))
+OMNIORB_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniDynamic.$(OMNIORB_MAJOR_VERSION)))
+OMNIORB_DEBUG_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniDynamic.$(OMNIORB_MAJOR_VERSION)))
 
-OMNIORB_CODESETS_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniCodeSets.$(OMNIORB_VERSION)))
-OMNIORB_DEBUG_CODESETS_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniCodeSets.$(OMNIORB_VERSION)))
+OMNIORB_CODESETS_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniCodeSets.$(OMNIORB_MAJOR_VERSION)))
+OMNIORB_DEBUG_CODESETS_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniCodeSets.$(OMNIORB_MAJOR_VERSION)))
 
-OMNIORB_CONNECTIONS_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniConnectionMgmt.$(OMNIORB_VERSION)))
-OMNIORB_DEBUG_CONNECTIONS_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniConnectionMgmt.$(OMNIORB_VERSION)))
+OMNIORB_CONNECTIONS_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniConnectionMgmt.$(OMNIORB_MAJOR_VERSION)))
+OMNIORB_DEBUG_CONNECTIONS_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniConnectionMgmt.$(OMNIORB_MAJOR_VERSION)))
 
-OMNIORB_ZIOP_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniZIOP.$(OMNIORB_VERSION)))
-OMNIORB_DEBUG_ZIOP_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniZIOP.$(OMNIORB_VERSION)))
+OMNIORB_ZIOP_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniZIOP.$(OMNIORB_MAJOR_VERSION)))
+OMNIORB_DEBUG_ZIOP_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniZIOP.$(OMNIORB_MAJOR_VERSION)))
 
-OMNIORB_ZIOP_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniZIOPDynamic.$(OMNIORB_VERSION)))
-OMNIORB_DEBUG_ZIOP_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniZIOPDynamic.$(OMNIORB_VERSION)))
+OMNIORB_ZIOP_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,omniZIOPDynamic.$(OMNIORB_MAJOR_VERSION)))
+OMNIORB_DEBUG_ZIOP_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,omniZIOPDynamic.$(OMNIORB_MAJOR_VERSION)))
 
-OMNIORB_COS_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,COS.$(OMNIORB_VERSION)))
-OMNIORB_DEBUG_COS_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,COS.$(OMNIORB_VERSION)))
+OMNIORB_COS_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,COS.$(OMNIORB_MAJOR_VERSION)))
+OMNIORB_DEBUG_COS_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,COS.$(OMNIORB_MAJOR_VERSION)))
 
-OMNIORB_COS_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,COSDynamic.$(OMNIORB_VERSION)))
-OMNIORB_DEBUG_COS_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,COSDynamic.$(OMNIORB_VERSION)))
+OMNIORB_COS_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryFullName) $(subst ., ,COSDynamic.$(OMNIORB_MAJOR_VERSION)))
+OMNIORB_DEBUG_COS_DYNAMIC_DLL_NAME = $(shell $(SharedLibraryDebugFullName) $(subst ., ,COSDynamic.$(OMNIORB_MAJOR_VERSION)))
 
 
 ifndef BuildDebugBinary
@@ -597,7 +601,7 @@ OMNIORB_IDL = $(OMNIORB_IDL_ONLY) $(OMNIORB_IDL_ANY_FLAGS)
 OMNIORB_CPPFLAGS = -D__OMNIORB4__ -I$(CORBA_STUB_DIR) $(OMNITHREAD_CPPFLAGS)
 OMNIORB_IDL_OUTPUTDIR_PATTERN = -C%
 
-msvc_work_around_stub = $(patsubst %,$(LibPattern),msvcstub) 
+#msvc_work_around_stub = $(patsubst %,$(LibPattern),msvcstub) 
 
 OMNIORB_LIB = $(omniorb_dll_name) \
 		$(omnidynamic_dll_name) \
@@ -668,8 +672,8 @@ ThreadSystem = NT
 #ThreadSystem = NTPosix
 #OMNITHREAD_CPPFLAGS= -D__POSIX_NT__
 
-OMNITHREAD_LIB = $(patsubst %,$(DLLSearchPattern),omnithread$(OMNITHREAD_MAJOR_VERSION)$(OMNITHREAD_MINOR_VERSION))
-lib_depend := $(patsubst %,$(DLLPattern),omnithread$(OMNITHREAD_MAJOR_VERSION)$(OMNITHREAD_MINOR_VERSION))
+OMNITHREAD_LIB = $(patsubst %,$(DLLSearchPattern),omnithread)
+lib_depend := $(patsubst %,$(DLLPattern),omnithread)
 OMNITHREAD_LIB_DEPEND := $(GENERATE_LIB_DEPEND)
 
 OMNITHREAD_PLATFORM_LIB =
@@ -681,16 +685,16 @@ OMNIORB_SSL_MAJOR_VERSION = $(word 1,$(subst ., ,$(OMNIORB_SSL_VERSION)))
 OMNIORB_SSL_MINOR_VERSION = $(word 2,$(subst ., ,$(OMNIORB_SSL_VERSION)))
 OMNIORB_SSL_MICRO_VERSION = $(word 3,$(subst ., ,$(OMNIORB_SSL_VERSION)))
 
-OMNIORB_SSL_LIB = $(patsubst %,$(DLLSearchPattern),omnisslTP$(OMNIORB_SSL_MAJOR_VERSION)$(OMNIORB_SSL_MINOR_VERSION)$(OMNIORB_SSL_MICRO_VERSION))
+OMNIORB_SSL_LIB = $(patsubst %,$(DLLSearchPattern),omnisslTP$(OMNIORB_SSL_MAJOR_VERSION))
 
-lib_depend := $(patsubst %,$(DLLPattern),omnisslTP$(OMNIORB_SSL_MAJOR_VERSION)$(OMNIORB_SSL_MINOR_VERSION)$(OMNIORB_SSL_MICRO_VERSION))
+lib_depend := $(patsubst %,$(DLLPattern),omnisslTP$(OMNIORB_SSL_MAJOR_VERSION))
 OMNIORB_SSL_LIB_DEPEND := $(GENERATE_LIB_DEPEND)
 
 
 # omniORB HTTP transport
-OMNIORB_HTTP_LIB = $(patsubst %,$(DLLSearchPattern),omnihttpTP$(OMNIORB_MAJOR_VERSION)$(OMNIORB_MINOR_VERSION)$(OMNIORB_MICRO_VERSION))
+OMNIORB_HTTP_LIB = $(patsubst %,$(DLLSearchPattern),omnihttpTP$(OMNIORB_MAJOR_VERSION))
 
-lib_depend := $(patsubst %,$(DLLPattern),omnihttpTP$(OMNIORB_MAJOR_VERSION)$(OMNIORB_MINOR_VERSION)$(OMNIORB_MICRO_VERSION))
+lib_depend := $(patsubst %,$(DLLPattern),omnihttpTP$(OMNIORB_MAJOR_VERSION))
 OMNIORB_HTTP_LIB_DEPEND := $(GENERATE_LIB_DEPEND)
 OMNIORB_HTTP_LIB += $(OMNIORB_SSL_LIB)
 
@@ -698,9 +702,9 @@ OMNIORB_HTTP_LIB += $(OMNIORB_SSL_LIB)
 # omniORB HTTP crypto library -- enabled if OpenSSL is configured
 EnableHTTPCrypto = 1
 
-OMNIORB_HTTP_CRYPTO_LIB = $(patsubst %,$(DLLSearchPattern),omnihttpCrypto$(OMNIORB_MAJOR_VERSION)$(OMNIORB_MINOR_VERSION)$(OMNIORB_MICRO_VERSION))
+OMNIORB_HTTP_CRYPTO_LIB = $(patsubst %,$(DLLSearchPattern),omnihttpCrypto$(OMNIORB_MAJOR_VERSION))
 
-lib_depend := $(patsubst %,$(DLLPattern),omnihttpCrypto$(OMNIORB_MAJOR_VERSION)$(OMNIORB_MINOR_VERSION)$(OMNIORB_MICRO_VERSION))
+lib_depend := $(patsubst %,$(DLLPattern),omnihttpCrypto$(OMNIORB_MAJOR_VERSION))
 OMNIORB_HTTP_CRYPTO_LIB_DEPEND := $(GENERATE_LIB_DEPEND)
 OMNIORB_HTTP_CRYPTO_LIB += $(OMNIORB_HTTP_LIB)
 

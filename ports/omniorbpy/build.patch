@@ -63,7 +63,7 @@ index f52447b43..d7bcd9aa1 100644
  LibPattern = lib%.a
  LibSuffixPattern = %.a
 -LibSearchPattern = -l%
-+LibSearchPattern = -abcl%
++LibSearchPattern = -l%
  BinPattern = %
  TclScriptPattern = %
 -
@@ -80,19 +80,20 @@ index f52447b43..d7bcd9aa1 100644
  
  #
  # Stuff to generate statically-linked libraries.
-@@ -512,6 +533,15 @@ OMNIORB_LIB_NODYN_DEPEND += $(OMNITHREAD_LIB_DEPEND)
+@@ -512,6 +533,16 @@ OMNIORB_LIB_NODYN_DEPEND += $(OMNITHREAD_LIB_DEPEND)
  
  OMNITHREAD_LIB = $(patsubst %,$(LibSearchPattern),omnithread)
  
 +OMNICOS_LIB = $(patsubst %,$(LibSearchPattern),COS$(OMNIORB_MAJOR_VERSION))
 +OMNICOSDYNAMIC_LIB = $(patsubst %,$(LibSearchPattern),COSDynamic$(OMNIORB_MAJOR_VERSION))
++OMNIDYNAMIC_LIB = $(patsubst %,$(LibSearchPattern),omniDynamic$(OMNIORB_MAJOR_VERSION))
 +
-+OMNIORB_LIB += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) omniDynamic$(OMNIORB_MAJOR_VERSION).lib
-+OMNIORB_LIB_DEPEND += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) omniDynamic$(OMNIORB_MAJOR_VERSION).lib
-+OMNIORB_LIB_NODYN_DEPEND += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) omniDynamic$(OMNIORB_MAJOR_VERSION).lib
++OMNIORB_LIB += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) $(OMNIDYNAMIC_LIB)
++OMNIORB_LIB_DEPEND += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) $(OMNIDYNAMIC_LIB)
++OMNIORB_LIB_NODYN_DEPEND += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) $(OMNIDYNAMIC_LIB)
 +
 +
-+OMNIORB_DLL_NAME += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) omniDynamic$(OMNIORB_MAJOR_VERSION).lib
++OMNIORB_DLL_NAME += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) $(OMNIDYNAMIC_LIB)
  
  # CodeSets library
  OMNIORB_CODESETS_LIB = $(patsubst %,$(LibSearchPattern),omniCodeSets$(OMNIORB_MAJOR_VERSION))
