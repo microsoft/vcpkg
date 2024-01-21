@@ -14,9 +14,11 @@ vcpkg_extract_source_archive(
 
 vcpkg_replace_string("${SOURCE_PATH}/bin/scripts/makeminors.py" "/usr/bin/env python" "/usr/bin/env python3.11")
 
-vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/python3") # port ask python distutils for info.
-vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/omniorb/bin")
-set(ENV{PYTHONPATH} ";${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}/..${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/python3") # port ask python distutils for info.
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/omniorb/bin")
+
+#set(ENV{PYTHONHOME} "${CURRENT_HOST_INSTALLED_DIR}")
+#set(ENV{PYTHONPATH} "${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_HOST_INSTALLED_DIR}/${PYTHON3_SITE}/..${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/python${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/python")
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/omniorb/idl/omniORB/" DESTINATION "${SOURCE_PATH}/idl")
 
