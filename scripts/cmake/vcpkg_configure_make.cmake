@@ -768,11 +768,7 @@ function(vcpkg_configure_make)
         endif()
 
         # Setup PKG_CONFIG_PATH
-        if ("${current_buildtype}" STREQUAL "DEBUG")
-            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
-        else()
-            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
-        endif()
+        z_vcpkg_setup_pkgconfig_path(CONFIG "${current_buildtype}")
 
         # Setup environment
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")
