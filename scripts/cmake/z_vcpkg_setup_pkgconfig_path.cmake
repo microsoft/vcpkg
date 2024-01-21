@@ -22,18 +22,21 @@ function(z_vcpkg_setup_pkgconfig_path)
 
     set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
 
-    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
-    if(arg_CONFIG STREQUAL "RELEASE")
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
-        # search order is lib, debug/lib, share, external
-    elseif(arg_CONFIG STREQUAL "DEBUG")
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
-        # search order is debug/lib, lib, share, external
-    else()
-        message(FATAL_ERROR "CONFIG must be either RELEASE or DEBUG.")
-    endif()
+    foreach(prefix IN ITEMS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
+        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/share/pkgconfig")
+        if(arg_CONFIG STREQUAL "RELEASE")
+            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/debug/lib/pkgconfig")
+            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/lib/pkgconfig")
+            # search order is lib, debug/lib, share, external
+        elseif(arg_CONFIG STREQUAL "DEBUG")
+            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/lib/pkgconfig")
+            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/debug/lib/pkgconfig")
+            # search order is debug/lib, lib, share, external
+        else()
+            message(FATAL_ERROR "CONFIG must be either RELEASE or DEBUG.")
+        endif()
+    endforeach()
+    # total search order is current packages dir, current installed dir, external
 endfunction()
 
 function(z_vcpkg_restore_pkgconfig_path)

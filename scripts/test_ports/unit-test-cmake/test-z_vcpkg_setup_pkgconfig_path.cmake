@@ -8,10 +8,14 @@ set(ENV{PKG_CONFIG} "/a/pkgconf")
 set(ENV{PKG_CONFIG_PATH} "1")
 set(saved_path "$ENV{PATH}")
 
+block(SCOPE_FOR VARIABLES)
+
+set(CURRENT_PACKAGES_DIR "P")
+set(CURRENT_INSTALLED_DIR "I")
+
 z_vcpkg_setup_pkgconfig_path(CONFIG RELEASE)
 unit_test_check_variable_equal([[]] ENV{PKG_CONFIG} [[/a/pkgconf]])
-unit_test_check_variable_not_equal([[]] ENV{PKG_CONFIG_PATH} "1")
-unit_test_match([[]] ENV{PKG_CONFIG_PATH} "lib.pkgconfig.*debug.lib.pkgconfig.*share.pkgconfig.1\$")
+unit_test_match([[]] ENV{PKG_CONFIG_PATH} "^P.lib.pkgconfig.P.debug.lib.pkgconfig.P.share.pkgconfig.I.lib.pkgconfig.I.debug.lib.pkgconfig.I.share.pkgconfig.1\$")
 
 z_vcpkg_restore_pkgconfig_path()
 unit_test_check_variable_equal([[]] ENV{PKG_CONFIG} [[/a/pkgconf]])
@@ -20,7 +24,7 @@ unit_test_check_variable_equal([[]] ENV{PKG_CONFIG_PATH} "1")
 z_vcpkg_setup_pkgconfig_path(CONFIG DEBUG)
 unit_test_check_variable_equal([[]] ENV{PKG_CONFIG} [[/a/pkgconf]])
 unit_test_check_variable_not_equal([[]] ENV{PKG_CONFIG_PATH} "1")
-unit_test_match([[]] ENV{PKG_CONFIG_PATH} "debug.lib.pkgconfig.*debug.lib.pkgconfig.*share.pkgconfig.1\$")
+unit_test_match([[]] ENV{PKG_CONFIG_PATH} "^P.debug.lib.pkgconfig.P.lib.pkgconfig.P.share.pkgconfig.I.debug.lib.pkgconfig.I.lib.pkgconfig.I.share.pkgconfig.1\$")
 
 z_vcpkg_restore_pkgconfig_path()
 unit_test_check_variable_equal([[]] ENV{PKG_CONFIG} [[/a/pkgconf]])
@@ -33,3 +37,5 @@ unit_test_check_variable_not_equal([[]] ENV{PATH} "${saved_path}")
 
 unit_test_ensure_fatal_error([[ z_vcpkg_setup_pkgconfig_path() ]])
 unit_test_ensure_fatal_error([[ z_vcpkg_setup_pkgconfig_path(CONFIG unknown) ]])
+
+endblock()
