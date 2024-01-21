@@ -91,6 +91,9 @@ vcpkg_configure_make(
   COPY_SOURCE
   OPTIONS
     ${OPTIONS}
+  OPTIONS_DEBUG
+    am_cv_python_pyexecdir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/debug/lib/python3.11/site-packages
+    am_cv_python_pythondir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/debug/lib/python3.11/site-packages
   OPTIONS_RELEASE
     am_cv_python_pyexecdir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/lib/python3.11/site-packages
     am_cv_python_pythondir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/lib/python3.11/site-packages
