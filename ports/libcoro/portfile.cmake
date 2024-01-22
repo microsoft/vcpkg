@@ -1,19 +1,25 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jbaldwin/libcoro
     REF "v${VERSION}"
-    SHA512 9554fcaf721188e2475933fb8fe6b35f879479af9acb8b011545d66e588a98811f69100a4392e62c3c8bf05e8177760778c44ed4357d40d0a6349833a93fb8e8
+    SHA512 88d5954591493ad2942fa68ead65b67fa9ac26bcc260b3156844244968dd8477d62a3559a9d3b7b1175bf813e5f23ca2d288a72baeb3ebd774e756d3c06bfee8
     HEAD_REF master
     PATCHES
         0001-allow-shared-lib.patch
         0002-disable-git-config.patch
+        0003-fix-pkgconfig-includedir.patch
+        0004-fix-pkgconfig-on-windows.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         networking   LIBCORO_FEATURE_NETWORKING
+        platform     LIBCORO_FEATURE_PLATFORM
         ssl          LIBCORO_FEATURE_SSL
-        threading    LIBCORO_FEATURE_THREADING
 )
 
 vcpkg_cmake_configure(

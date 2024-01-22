@@ -1,15 +1,15 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 fb6be83b0292bb28319061721fe10ea16776a942b381780a8d4bece9b86e3525a0f533e3572e54c6498b08c4dc421a746bff8f0302f3ea0d810e266811331a65
+    SHA512 13f40635fc92b00b9392aa8ed96b5825f0cc8147d51337e2c225e0f29d0428732293190aa5fb2a7d2c5e7d57db748ae0fbed4536dee8af00e8d6fd405e784e1d
     HEAD_REF master
     PATCHES
         embed-debug-info.patch
         pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
+        fix_android.patch
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
@@ -53,7 +53,9 @@ if("zlib" IN_LIST FEATURES)
     x_vcpkg_pkgconfig_get_modules(LIBS PREFIX "ZLIB" MODULES "zlib" ${pkgconfig_syntax})
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_list(APPEND configure_arguments --cpu=wasm)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     vcpkg_list(APPEND configure_arguments --cpu=x86)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     vcpkg_list(APPEND configure_arguments --cpu=x86_64)
@@ -109,11 +111,17 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_copy_tools(TOOL_NAMES botan-cli AUTO_CLEAN)
     vcpkg_copy_pdbs()
 else()
-    if(VCPKG_TARGET_IS_MINGW)
+    if(VCPKG_TARGET_IS_ANDROID)
+        vcpkg_list(APPEND configure_arguments --os=android)
+    elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+        vcpkg_list(APPEND configure_arguments --os=emscripten)
+    elseif(VCPKG_TARGET_IS_MINGW)
         vcpkg_list(APPEND configure_arguments --os=mingw)
     endif()
 
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if(VCPKG_TARGET_IS_EMSCRIPTEN)
+        vcpkg_list(APPEND configure_arguments --cc=emcc)
+    elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         vcpkg_list(APPEND configure_arguments --cc=gcc)
     elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         vcpkg_list(APPEND configure_arguments --cc=clang)
@@ -141,7 +149,9 @@ else()
             "ZLIB_LIBS_RELEASE=${ZLIB_LIBS_RELEASE}"
             "ZLIB_LIBS_DEBUG=${ZLIB_LIBS_DEBUG}"
     )
-    vcpkg_copy_tools(TOOL_NAMES botan AUTO_CLEAN)
+    if(NOT VCPKG_TARGET_IS_EMSCRIPTEN)
+        vcpkg_copy_tools(TOOL_NAMES botan AUTO_CLEAN)
+    endif()
 endif()
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-3/botan" "${CURRENT_PACKAGES_DIR}/include/botan")

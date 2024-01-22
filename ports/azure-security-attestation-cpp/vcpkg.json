@@ -1,7 +1,11 @@
 {
+  "$comment": [
+    "NOTE: All changes made to this file will get overwritten by the next port release.",
+    "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
+  ],
   "name": "azure-security-attestation-cpp",
   "version-semver": "1.1.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": [
     "Microsoft Azure Attestation Service SDK for C++",
     "This library provides API access to the Microsoft Azure Attestation service."

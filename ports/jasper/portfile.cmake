@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         no_stdc_check.patch
         fix-library-name.patch
+        check-for-atomics-support.patch # https://github.com/jasper-software/jasper/pull/370
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
