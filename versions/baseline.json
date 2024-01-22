@@ -2125,7 +2125,7 @@
       "port-version": 1
     },
     "daw-header-libraries": {
-      "baseline": "2.97.0",
+      "baseline": "2.98.5",
       "port-version": 0
     },
     "daw-json-link": {
@@ -2294,7 +2294,7 @@
     },
     "drogon": {
       "baseline": "1.9.2",
-      "port-version": 0 
+      "port-version": 0
     },
     "dstorage": {
       "baseline": "1.2.2",
