@@ -1641,7 +1641,7 @@
       "port-version": 0
     },
     "clickhouse-cpp": {
-      "baseline": "2.4.0",
+      "baseline": "2.5.1",
       "port-version": 0
     },
     "clipboardxx": {
