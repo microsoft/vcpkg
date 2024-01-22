@@ -25,13 +25,11 @@ function(z_vcpkg_setup_pkgconfig_path)
     foreach(prefix IN ITEMS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
         vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/share/pkgconfig")
         if(arg_CONFIG STREQUAL "RELEASE")
-            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/debug/lib/pkgconfig")
             vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/lib/pkgconfig")
-            # search order is lib, debug/lib, share, external
+            # search order is lib, share, external
         elseif(arg_CONFIG STREQUAL "DEBUG")
-            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/lib/pkgconfig")
             vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/debug/lib/pkgconfig")
-            # search order is debug/lib, lib, share, external
+            # search order is debug/lib, share, external
         else()
             message(FATAL_ERROR "CONFIG must be either RELEASE or DEBUG.")
         endif()
