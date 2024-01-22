@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         000-fix-deps.patch
+        001-uwp.patch
 )
 
 vcpkg_cmake_configure(
