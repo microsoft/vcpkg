@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0653da5..1265f3d 100644
+index 9a56491..d7ca937 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -265,7 +265,6 @@ set(KTX_MAIN_SRC
+@@ -345,7 +345,6 @@ set(KTX_MAIN_SRC
      lib/basisu/transcoder/basisu_transcoder.cpp
      lib/basisu/transcoder/basisu_transcoder.h
      lib/basisu/transcoder/basisu.h
@@ -10,15 +10,15 @@ index 0653da5..1265f3d 100644
      lib/checkheader.c
      lib/dfdutils/createdfd.c
      lib/dfdutils/colourspaces.c
-@@ -448,7 +447,6 @@ macro(common_libktx_settings target enable_write library_type)
+@@ -532,7 +531,6 @@ macro(common_libktx_settings target enable_write library_type)
          $<INSTALL_INTERFACE:lib/basisu/transcoder>
  
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/basisu/zstd>
 -        $<INSTALL_INTERFACE:lib/basisu/zstd>
  
-         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/other_include>
-         $<INSTALL_INTERFACE:other_include>
-@@ -538,6 +536,11 @@ macro(common_libktx_settings target enable_write library_type)
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/utils>
+         $<INSTALL_INTERFACE:utils>
+@@ -627,6 +625,11 @@ macro(common_libktx_settings target enable_write library_type)
          target_compile_definitions(${target} PUBLIC KTX_FEATURE_KTX2)
      endif()
  
@@ -46,19 +46,20 @@ index 6386ba2..537bf4f 100644
  
  include("${CMAKE_CURRENT_LIST_DIR}/KtxTargets.cmake")
 diff --git a/lib/basisu/CMakeLists.txt b/lib/basisu/CMakeLists.txt
-index 492233a..2663169 100644
+index 492233a..152ceb5 100644
 --- a/lib/basisu/CMakeLists.txt
 +++ b/lib/basisu/CMakeLists.txt
-@@ -146,7 +146,7 @@ set(BASISU_SRC_LIST ${COMMON_SRC_LIST}
+@@ -145,9 +145,6 @@ set(BASISU_SRC_LIST ${COMMON_SRC_LIST}
+ 	transcoder/basisu_transcoder.cpp
  	)
  
- if (ZSTD)
+-if (ZSTD)
 -	set(BASISU_SRC_LIST ${BASISU_SRC_LIST} zstd/zstd.c)
-+    set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
- endif()
+-endif()
  
  if (APPLE)
-@@ -165,6 +165,10 @@ else()
+    set(BIN_DIRECTORY "bin_osx")
+@@ -165,6 +162,10 @@ else()
  	target_compile_definitions(basisu PRIVATE BASISD_SUPPORT_KTX2_ZSTD=0)
  endif()
  
@@ -70,54 +71,52 @@ index 492233a..2663169 100644
  	# For Non-Windows builds, let cmake try and find the system OpenCL headers/libs for us.
  	if (OPENCL_FOUND)
 diff --git a/lib/basisu/webgl/encoder/CMakeLists.txt b/lib/basisu/webgl/encoder/CMakeLists.txt
-index 588d91b..edd7457 100644
+index 588d91b..a337b13 100644
 --- a/lib/basisu/webgl/encoder/CMakeLists.txt
 +++ b/lib/basisu/webgl/encoder/CMakeLists.txt
-@@ -34,9 +34,7 @@ if (EMSCRIPTEN)
+@@ -34,9 +34,6 @@ if (EMSCRIPTEN)
    )
  
    if (KTX2_ZSTANDARD)
 -  	set(SRC_LIST ${SRC_LIST}
 -		../../zstd/zstd.c
 -	)
-+  	set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
  	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=1)
    else()
    	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=0)
-@@ -56,6 +54,10 @@ if (EMSCRIPTEN)
+@@ -55,6 +52,10 @@ if (EMSCRIPTEN)
+   target_compile_options(basis_encoder.js PRIVATE -fno-strict-aliasing -O3)
    
    target_include_directories(basis_encoder.js PRIVATE ../../transcoder)
- 
++  
 +  if(ZSTD_LIBRARIES)
 +      target_link_libraries(basis_encoder.js ${ZSTD_LIBRARIES})
 +  endif()
-+
+ 
    set_target_properties(basis_encoder.js PROPERTIES
        OUTPUT_NAME "basis_encoder"
-       SUFFIX ".js"
 diff --git a/lib/basisu/webgl/transcoder/CMakeLists.txt b/lib/basisu/webgl/transcoder/CMakeLists.txt
-index 372653d..3c9ed0c 100644
+index 372653d..5ebc3cf 100644
 --- a/lib/basisu/webgl/transcoder/CMakeLists.txt
 +++ b/lib/basisu/webgl/transcoder/CMakeLists.txt
-@@ -28,9 +28,7 @@ if (EMSCRIPTEN)
+@@ -28,9 +28,6 @@ if (EMSCRIPTEN)
    endif()
    
    if (KTX2_ZSTANDARD)
 - 	set(SRC_LIST ${SRC_LIST}
 -		../../zstd/zstddeclib.c
 -	)
-+ 	set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
  	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=1)
    else()
    	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=0)
-@@ -45,6 +43,10 @@ if (EMSCRIPTEN)
+@@ -44,6 +41,10 @@ if (EMSCRIPTEN)
+   target_compile_definitions(basis_transcoder.js PRIVATE NDEBUG BASISD_SUPPORT_UASTC=1 BASISD_SUPPORT_BC7=1 BASISD_SUPPORT_ATC=0 BASISD_SUPPORT_ASTC_HIGHER_OPAQUE_QUALITY=0 BASISD_SUPPORT_PVRTC2=0 BASISD_SUPPORT_FXT1=0 BASISD_SUPPORT_ETC2_EAC_RG11=0 BASISU_SUPPORT_ENCODING=0 ${KTX2_DEFINITION} ${ZSTD_DEFINITION} )
    target_compile_options(basis_transcoder.js PRIVATE -O3 -fno-strict-aliasing)
    target_include_directories(basis_transcoder.js PRIVATE ../../transcoder)
- 
++  
 +  if(ZSTD_LIBRARIES)
 +      target_link_libraries(basis_transcoder.js ${ZSTD_LIBRARIES})
 +  endif()
-+
+ 
    set_target_properties(basis_transcoder.js PROPERTIES
        OUTPUT_NAME "basis_transcoder"
-       SUFFIX ".js"

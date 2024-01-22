@@ -50,6 +50,7 @@ vcpkg_cmake_configure(
         -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
         -DBOND_SKIP_GBC_TESTS=TRUE
         -DBOND_FIND_RAPIDJSON=TRUE
+        -DBOND_SKIP_CORE_TESTS=TRUE
         -DBOND_STACK_OPTIONS=--allow-different-user
         ${FEATURE_OPTIONS}
 )
