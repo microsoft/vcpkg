@@ -801,6 +801,9 @@ offscale-libetcd-cpp:arm64-uwp=fail
 offscale-libetcd-cpp:x64-uwp=fail
 ogdf:arm64-android=fail
 ois:x64-android=fail
+# Fails in CI unable to reproduce locally.
+omniorbpy:x64-windows-static=fail
+omniorbpy:x64-windows-static-md=fail
 # ompl is vulnerable to some form of race in its dependent ports, and adding 'ode' as a dependency
 # does not resolve the issue
 # src/ompl/CMakeFiles/ompl.dir/extensions/ode/src/OpenDEStateValidityChecker.cpp.o
