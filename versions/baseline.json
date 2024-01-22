@@ -6210,7 +6210,11 @@
     },
     "omniorb": {
       "baseline": "4.3.0",
-      "port-version": 2
+      "port-version": 3
+    },
+    "omniorbpy": {
+      "baseline": "4.3.0",
+      "port-version": 0
     },
     "ompl": {
       "baseline": "1.5.1",
