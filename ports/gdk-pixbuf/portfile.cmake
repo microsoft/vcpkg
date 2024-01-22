@@ -1,4 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,6 +9,7 @@ vcpkg_from_gitlab(
         fix_build_error_windows.patch
         loaders-cache.patch
         use-libtiff-4-pkgconfig.patch
+        fix-static-deps.patch
 )
 
 if("introspection" IN_LIST FEATURES)
