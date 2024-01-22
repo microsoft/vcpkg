@@ -2129,7 +2129,7 @@
       "port-version": 0
     },
     "daw-json-link": {
-      "baseline": "3.20.1",
+      "baseline": "3.23.0",
       "port-version": 0
     },
     "daw-utf-range": {
@@ -2294,7 +2294,7 @@
     },
     "drogon": {
       "baseline": "1.9.2",
-      "port-version": 0 
+      "port-version": 0
     },
     "dstorage": {
       "baseline": "1.2.2",
