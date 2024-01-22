@@ -1,21 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bombela/backward-cpp
-    REF "v${VERSION}"
-    SHA512 db0256a54819952ff1d92e05d6ab81fe979d4826ebb6651b6b08c30e7a0091879dfeff33d81f9599462152ce68e61e2c8c42bf039129bc6b28d1e68b1eab039b
+    REF 51f0700452cf71c57d43c2d028277b24cde32502 # 2023-11-24
+    SHA512 8831be0a1c0a2f2d2625c5e2065202445520e0f7591cdbf998c60f2c892880d1527f304f9361b057c831f84621be636e12fea018297c9a17d858ecc6c36c9ffb
     HEAD_REF master
-    PATCHES
-        include-dir.diff
 )
-
-set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME backward CONFIG_PATH lib/backward)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/backward)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

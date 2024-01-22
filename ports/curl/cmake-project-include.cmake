@@ -1,3 +1,8 @@
+if(ANDROID AND ANDROID_NATIVE_API_LEVEL LESS 24)
+    # https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
+    set(HAVE_FILE_OFFSET_BITS FALSE CACHE INTERNAL "")
+endif()
+
 # Process the libs and targets in the variable named by `input`
 # into a flat list of libs in the variable named by `output`.
 # Simplify -framework elements.

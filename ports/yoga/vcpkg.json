@@ -1,6 +1,6 @@
 {
   "name": "yoga",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Yoga is a cross-platform layout engine which implements Flexbox",
   "homepage": "https://github.com/facebook/yoga",
   "license": "MIT",

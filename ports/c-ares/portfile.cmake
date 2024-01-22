@@ -7,11 +7,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
     REF "cares-${_c_ares_version_major}_${_c_ares_version_minor}_${_c_ares_version_patch}"
-    SHA512 73b5ee9d7e5ada6dd95dc32606821ea1307f30552242491e738f673d1ab9de1fdb3360d7a67c66a4a801b0e81ffb7382bfd93dbca836460dae515dd631ec6b91
+    SHA512 a99ca6066490ef31b37f6be12f9fa1d7599c3736c04c8df50a4a0d2e489c99c1c776028fcfec4e6029c8aa5845f3bede364cceb39cd95b2689305d23277bdd8d
     HEAD_REF main
     PATCHES
         avoid-docs.patch
-        fix-uwp.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)

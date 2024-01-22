@@ -9,6 +9,8 @@ vcpkg_from_github(
     REF ${LIBXDIFF_REF}
     SHA512 ${LIBXDIFF_SHA512}
     HEAD_REF master
+    PATCHES
+        fix-usage-error.patch
 )
 
 vcpkg_cmake_configure(
@@ -35,7 +37,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
     endif()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 vcpkg_copy_pdbs()
 

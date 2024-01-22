@@ -24,12 +24,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tms320c64x"  CAPSTONE_TMS320C64X_SUPPORT
         "x86"         CAPSTONE_X86_SUPPORT
         "xcore"       CAPSTONE_XCORE_SUPPORT
+        "mos65xx"     CAPSTONE_MOS65XX_SUPPORT
+        "tricore"     CAPSTONE_TRICORE_SUPPORT
+        "wasm"        CAPSTONE_WASM_SUPPORT
+        "bpf"         CAPSTONE_BPF_SUPPORT
+        "riscv"       CAPSTONE_RISCV_SUPPORT
         "diet"        CAPSTONE_BUILD_DIET
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCAPSTONE_ARCHITECTURE_DEFAULT=OFF
         -DCAPSTONE_BUILD_TESTS=OFF
         -DCAPSTONE_BUILD_CSTOOL=OFF
         -DCAPSTONE_BUILD_STATIC_RUNTIME=${STATIC_CRT}
