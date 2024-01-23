@@ -4382,7 +4382,7 @@
     },
     "libgwenhywfar": {
       "baseline": "5.6.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libgxps": {
       "baseline": "0.3.2",
