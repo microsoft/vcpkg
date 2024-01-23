@@ -21,7 +21,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zipkin WITH_ZIPKIN
         prometheus WITH_PROMETHEUS
         elasticsearch WITH_ELASTICSEARCH
-        jaeger WITH_JAEGER
         otlp-http WITH_OTLP_HTTP
         otlp-grpc WITH_OTLP_GRPC
 )
@@ -55,7 +54,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         WITH_OTLP_GRPC
-        WITH_JAEGER
         WITH_LOGS_PREVIEW
 )
 
