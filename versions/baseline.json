@@ -2294,7 +2294,7 @@
     },
     "drogon": {
       "baseline": "1.9.2",
-      "port-version": 0 
+      "port-version": 0
     },
     "dstorage": {
       "baseline": "1.2.2",
@@ -8429,7 +8429,7 @@
       "port-version": 0
     },
     "tesseract": {
-      "baseline": "5.3.3",
+      "baseline": "5.3.4",
       "port-version": 0
     },
     "tfhe": {
