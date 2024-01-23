@@ -870,8 +870,6 @@ openscap:arm64-osx=fail
 openscap:x64-windows-static-md=fail
 openscap:x64-windows-static=fail
 opensubdiv:x64-android=fail
-# osx needs bison 3.4 installed
-openturns:x64-osx=fail
 openvpn3:x64-osx=fail
 openvpn3:arm64-osx=fail
 openvr:x64-windows-static=fail

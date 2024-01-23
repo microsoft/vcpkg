@@ -11,10 +11,10 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
-vcpkg_add_to_path("${FLEX_DIR}")
+vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
-vcpkg_add_to_path("${BISON_DIR}")
+vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
