@@ -1,0 +1,14 @@
+diff --git a/include/Ptr.h b/include/Ptr.h
+index c6b2767..5dda0ca 100644
+--- a/include/Ptr.h
++++ b/include/Ptr.h
+@@ -69,7 +69,9 @@ public:
+   const T *operator->() const { return Ptr<T>::pointer(); }
+   const T &operator*() const { return *Ptr<T>::pointer(); }
+   void swap(ConstPtr<T> &p) { Ptr<T>::swap(p); }
++  using
+   Ptr<T>::isNull;
++  using
+   Ptr<T>::clear;
+   Boolean operator==(const Ptr<T> &p) const { return Ptr<T>::operator==(p); }
+   Boolean operator!=(const Ptr<T> &p) const { return Ptr<T>::operator!=(p); }

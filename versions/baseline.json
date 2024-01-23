@@ -4650,7 +4650,7 @@
     },
     "libopensp": {
       "baseline": "1.5.2",
-      "port-version": 2
+      "port-version": 3
     },
     "libopnmidi": {
       "baseline": "1.5.1",
