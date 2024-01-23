@@ -106,7 +106,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     ~/macosvm --disk disk.img,size=500g --aux aux.img -c 8 -r 12g --restore ~/UniversalMac_14.3_23D56_Restore.ipsw ./vm.json
     ~/macosvm -g ./vm.json
     ```
-- [ ] Start the VM in parallels and follow prompts as you would on real hardware.
+- [ ] Follow prompts as you would on real hardware.
     * Apple ID: 'Set Up Later' / Skip
     * Account name: vcpkg
     * Account password: vcpkg
@@ -229,7 +229,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     rm register-guest.sh
     exit
     ```
-- [ ] In the VM's terminal, relaunch the VM in ephemeral mode with:
+- [ ] In the KVM's terminal, relaunch the VM in ephemeral mode with:
     ```sh
     ~/macosvm --ephemeral ./vm.json
     ```
