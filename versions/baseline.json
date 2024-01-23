@@ -5494,7 +5494,7 @@
     },
     "materialx": {
       "baseline": "1.38.8",
-      "port-version": 0
+      "port-version": 1
     },
     "mathc": {
       "baseline": "2019-09-29",
