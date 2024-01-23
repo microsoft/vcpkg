@@ -5,8 +5,8 @@ if [ -z "$1" ]; then
 fi
 export AGENT=`hostname | sed -nr 's/([^.]+).+/\1/p'`
 if [ `uname -m` = 'arm64' ]; then
-export POOL=`echo ~/Parallels/*.macvm | sed -nr 's/\/Users\/vcpkg\/Parallels\/vcpkg-osx-([0-9]{4}-[0-9]{2}-[0-9]{2})-arm64\.macvm/PrOsx-\1-arm64/p'`
-# on arm64, prlctl does not know the IP address, but luckily for us DNS works
+export POOL=`echo ~/Parallels/* | sed -nr 's/\/Users\/vcpkg\/Parallels\/vcpkg-osx-([0-9]{4}-[0-9]{2}-[0-9]{2})-arm64/PrOsx-\1-arm64/p'`
+# on arm64, DNS works
 export SSH_COOKIE=vcpkg@vcpkgs-Virtual-Machine.local
 else
 export POOL=`echo ~/Parallels/*.pvm | sed -nr 's/\/Users\/vcpkg\/Parallels\/vcpkg-osx-([0-9]{4}-[0-9]{2}-[0-9]{2})-amd64\.pvm/PrOsx-\1/p'`
@@ -15,3 +15,6 @@ export GUEST_IP=`prlctl list --full | sed -nr 's/^.*running *([0-9]{1,3}\.[0-9]{
 export SSH_COOKIE=vcpkg@$GUEST_IP
 fi
 ssh $SSH_COOKIE -i ~/Parallels/*/id_guest -o StrictHostKeychecking=no "~/myagent/config.sh --unattended --url https://dev.azure.com/vcpkg --work ~/Data/work --auth pat --token $1 --pool $POOL --agent $AGENT --replace --acceptTeeEula"
+if [ `uname -m` = 'arm64' ]; then
+ssh $SSH_COOKIE -i ~/Parallels/*/id_guest -o StrictHostKeychecking=no "sudo shutdown -h now"
+fi
