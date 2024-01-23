@@ -17,7 +17,7 @@
       "port-version": 2
     },
     "abseil": {
-      "baseline": "20230802.1",
+      "baseline": "20240116.0",
       "port-version": 0
     },
     "absent": {
@@ -2294,7 +2294,7 @@
     },
     "drogon": {
       "baseline": "1.9.2",
-      "port-version": 0 
+      "port-version": 0
     },
     "dstorage": {
       "baseline": "1.2.2",
