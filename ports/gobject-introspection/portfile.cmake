@@ -15,6 +15,8 @@ vcpkg_extract_source_archive(
         0001-g-ir-tool-template.in.patch
         0002-cross-build.patch
         0003-fix-paths.patch
+        python.patch
+        fix-pkgconfig.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
