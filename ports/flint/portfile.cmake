@@ -1,18 +1,14 @@
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.flintlib.org/flint-${VERSION}.zip"
-    FILENAME "flint-${VERSION}.zip"
-    SHA512 3dd9a4e79e08ab6bc434a786c8d4398eba6cb04e57bcb8d01677f4912cddf20ed3a971160a3e2d533d9a07b728678b0733cc8315bcb39a3f13475b6efa240062
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO flintlib/flint
+    REF "v${VERSION}"
+    SHA512 4b5b432b962135cd708a0ce4242343f3226f0fdf73c3f541728ed4540e7ef6cb7812a48b6b46e65a8fcc1f5cae93d8bb59838d24728024cd9aa0f7b8e5c6f98f
+    HEAD_REF main
+    PATCHES fix-cmakelists.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
-        fix-cmakelists.patch
-)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
