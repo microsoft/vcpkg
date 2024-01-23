@@ -1,6 +1,6 @@
 {
   "name": "asiochan",
-  "version": "0.4.3",
+  "version-date": "2022-11-25",
   "description": "C++20 coroutine channels for ASIO",
   "homepage": "https://github.com/MiSo1289/asiochan",
   "license": "MIT"
