@@ -33,6 +33,7 @@ set(PATCHES
     0012-force-disable-modules.patch
     0014-fix-get-python-inc-output.patch
     0015-dont-use-WINDOWS-def.patch
+    0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
 )
 
@@ -375,3 +376,12 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
         replace_dirs_in_config_file("${python_config_file}")
     endif()
 endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/python3/Lib/distutils/command/build_ext.py" "'libs'" "'../../lib'")
+else()
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/python3.${PYTHON_VERSION_MINOR}/distutils/command/build_ext.py" "'libs'" "'../../lib'")
+  file(COPY_FILE "${CURRENT_PACKAGES_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}" "${CURRENT_PACKAGES_DIR}/tools/python3/python3")
+endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/python3/vcpkg-port-config.cmake" @ONLY)

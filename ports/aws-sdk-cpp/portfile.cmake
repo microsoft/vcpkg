@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
     REF "${VERSION}"
-    SHA512 1288e462881fba65462922a7ffe920eb3d72483c349a20ddae0d9e9ac1c0a0cee2959a76a451127bcee680f510023a6466757d11e5a08bf3624f73bb0c204598
+    SHA512 1fab26f6ff3b30d94d168cf41aee60507a50f193359c80bc0c5afb71feb42fa64260699eb15efd6d460be123bb607b6c1c1d6bd0958b7fa56f93835574c3f066
     PATCHES
         patch-relocatable-rpath.patch
         fix-aws-root.patch
