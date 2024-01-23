@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/mysql
-    REF boost-1.83.0
-    SHA512 5d1cc43bb1b6fd62caedc3276d3b2d8734cf7fbc8fe402bc2a89bfa854a9c907089d65f32c8ec9c66a252e3204ea0098beb29443d5a14856473b9ce4fe2915fc
+    REF boost-${VERSION}
+    SHA512 4ca37165c6f7e93432a98044ceee23c7b31ac1c040b738cbc5dc5c84520963cc2678ca21b103e2a1542fb2df9344bb5a3077883f6a3d75509e6ac9a8854096ac
     HEAD_REF master
 )
 
