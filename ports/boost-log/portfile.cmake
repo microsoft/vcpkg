@@ -3,13 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/log
-    REF boost-1.83.0
-    SHA512 35ab1c2b69861ef2c6971c159d13d2f9d4ed463d94a6d000acfdf0d58a358ffb7a371dc5dff047db0d03d588c43f41da2915be16c25e92af4512db6b5d8b8fcc
+    REF boost-${VERSION}
+    SHA512 cacd6cc1eb70da63638cf2769a7f4a8164293acecbfa2b782c9d1dbe83e20fe2c641f9e275358defd9b14598fe20224d6a7eb0d76fdaeb6b572aaa6465804655
     HEAD_REF master
 )
 
 file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
-string(REPLACE "import ../../config/checks/config" "import ../config/checks/config" _contents "${_contents}")
+string(REPLACE "import config : requires" "import ../config/checks/config : requires" _contents "${_contents}")
 string(REPLACE " <conditional>@select-arch-specific-sources" "#<conditional>@select-arch-specific-sources" _contents "${_contents}")
 file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
 vcpkg_replace_string("${SOURCE_PATH}/build/log-arch-config.jam"
