@@ -2294,7 +2294,7 @@
     },
     "drogon": {
       "baseline": "1.9.2",
-      "port-version": 0 
+      "port-version": 0
     },
     "dstorage": {
       "baseline": "1.2.2",
@@ -7854,7 +7854,7 @@
     },
     "sentry-native": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "septag-dmon": {
       "baseline": "2022-02-08",
