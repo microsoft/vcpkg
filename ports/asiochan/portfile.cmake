@@ -6,12 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(GLOB_RECURSE HEADERS LIST_DIRECTORIES false "${SOURCE_PATH}/include/*")
-foreach(ITEM ${HEADERS})
-    get_filename_component(DIR "${ITEM}" DIRECTORY)
-    file(RELATIVE_PATH TARGET_DIR "${SOURCE_PATH}/include" "${DIR}")
-    file(INSTALL "${ITEM}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${TARGET_DIR}" )
-endforeach()
+file(COPY "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
