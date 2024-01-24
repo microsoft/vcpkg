@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        gdal-cmake.patch
         libkml.patch
         target-is-valid.patch
 )

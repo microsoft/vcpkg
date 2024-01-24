@@ -1,0 +1,16 @@
+diff --git a/gdal.cmake b/gdal.cmake
+index 3dc0c63483..10cd2f327a 100644
+--- a/gdal.cmake
++++ b/gdal.cmake
+@@ -615,9 +615,6 @@ target_include_directories(
+ if (MSVC)
+   target_sources(${GDAL_LIB_TARGET_NAME} PRIVATE gcore/Version.rc)
+   source_group("Resource Files" FILES gcore/Version.rc)
+-  if (CMAKE_CL_64)
+-    set_target_properties(${GDAL_LIB_TARGET_NAME} PROPERTIES STATIC_LIBRARY_FLAGS "/machine:x64")
+-  endif ()
+ endif ()
+
+ get_property(_plugins GLOBAL PROPERTY PLUGIN_MODULES)
+
+ 
