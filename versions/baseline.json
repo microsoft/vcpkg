@@ -2542,7 +2542,7 @@
     },
     "fakeit": {
       "baseline": "2.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "fameta-counter": {
       "baseline": "2021-02-13",
