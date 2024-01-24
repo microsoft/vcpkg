@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e1a23a0..385da66 100644
+index f604628..1610166 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -239,7 +239,7 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
@@ -38,12 +38,3 @@ index e1a23a0..385da66 100644
  
  if(WIN32)
  	target_link_libraries(datachannel PUBLIC ws2_32) # winsock2
-@@ -406,7 +406,7 @@ else()
- 	target_compile_definitions(datachannel PRIVATE USE_NICE=0)
- 	target_compile_definitions(datachannel-static PRIVATE USE_NICE=0)
- 	if(USE_SYSTEM_JUICE)
--		find_package(LibJuice REQUIRED)
-+		find_package(LibJuice CONFIG REQUIRED)
- 		target_compile_definitions(datachannel PRIVATE RTC_SYSTEM_JUICE=1)
- 		target_compile_definitions(datachannel-static PRIVATE RTC_SYSTEM_JUICE=1)
- 		target_link_libraries(datachannel PRIVATE LibJuice::LibJuice)
