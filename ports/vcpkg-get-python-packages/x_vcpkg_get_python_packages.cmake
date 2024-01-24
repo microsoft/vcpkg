@@ -90,7 +90,7 @@ function(x_vcpkg_get_python_packages)
     endif()
 
     set(ENV{PYTHONNOUSERSITE} "1")
-    message(STATUS "Setting up python virtual environmnent...")
+    message(STATUS "Setting up python virtual environment...")
     vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" -I -m "${python_venv}" ${python_venv_options} "${venv_path}"
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                    LOGNAME "venv-setup-${TARGET_TRIPLET}")
@@ -111,7 +111,7 @@ function(x_vcpkg_get_python_packages)
                                        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                        LOGNAME "pip-install-packages-${TARGET_TRIPLET}")
     endif()
-    message(STATUS "Setting up python virtual environmnent...finished.")
+    message(STATUS "Setting up python virtual environment... finished.")
     set(${arg_OUT_PYTHON_VAR} "${PYTHON${arg_PYTHON_VERSION}}" PARENT_SCOPE)
     set(${arg_OUT_PYTHON_VAR} "${PYTHON${arg_PYTHON_VERSION}}" CACHE PATH "" FORCE)
 endfunction()
