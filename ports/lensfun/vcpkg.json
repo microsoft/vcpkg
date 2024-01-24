@@ -1,7 +1,7 @@
 {
   "name": "lensfun",
   "version": "0.3.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Provide a open source database of photographic lenses and their characteristics",
   "homepage": "https://lensfun.github.io/",
   "license": null,
