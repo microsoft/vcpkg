@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         dcmtk.patch
         fix_link_xml2.patch
+        dictionary_paths.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -21,10 +22,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tools"   BUILD_APPS
 )
 
+if("external-dict" IN_LIST FEATURES)
+    set(DCMTK_DEFAULT_DICT "external")
+else()
+    set(DCMTK_DEFAULT_DICT "builtin")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        "-DDCMTK_DEFAULT_DICT=${DCMTK_DEFAULT_DICT}" 
         -DDCMTK_WITH_DOXYGEN=OFF
         -DDCMTK_FORCE_FPIC_ON_UNIX=ON
         -DDCMTK_OVERWRITE_WIN32_COMPILER_FLAGS=OFF

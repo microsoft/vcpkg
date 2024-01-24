@@ -1,6 +1,6 @@
 {
   "name": "rocksdb",
-  "version": "8.9.1",
+  "version": "8.10.0",
   "description": "A library that provides an embeddable, persistent key-value store for fast storage",
   "homepage": "https://github.com/facebook/rocksdb",
   "license": "GPL-2.0-only OR Apache-2.0",
