@@ -5392,6 +5392,10 @@
       "baseline": "1.9.4",
       "port-version": 1
     },
+    "lzav": {
+      "baseline": "3.10",
+      "port-version": 0
+    },
     "lzfse": {
       "baseline": "1.0",
       "port-version": 5
