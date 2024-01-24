@@ -19,8 +19,8 @@ index 7cf86f74b..e07fd430a 100644
 +    add_definitions(-fext-numeric-literals)
 +endif()
  
- ### ---[ Create the config.h file
- set(pcl_config_h_in "${CMAKE_CURRENT_SOURCE_DIR}/pcl_config.h.in")
+ # System zlib (for nurbs on surface)
+ option(WITH_SYSTEM_ZLIB "Use system zlib" TRUE)
 -- 
 2.32.0.windows.1
 

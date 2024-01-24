@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6e9f4cc..bf92061 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -430,7 +430,8 @@ endif (USE_MPEG)
+ #######################################################################
+ add_custom_target(ng_generate_version_file
+   ${CMAKE_COMMAND}
+-    -DBDIR=${CMAKE_CURRENT_BINARY_DIR}
++    -DBDIR=${CMAKE_CURRENT_BINARY_DIR}
++    -DNETGEN_VERSION_GIT=${NETGEN_VERSION_GIT}
+     -P ${CMAKE_CURRENT_LIST_DIR}/cmake/generate_version_file.cmake
+     )
+ #######################################################################

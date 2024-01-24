@@ -133,14 +133,14 @@
     <tool name="7zip_msi" os="windows">
         <version>23.01</version>
         <exeRelativePath>Files\7-Zip\7z.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7z2301-x64.msi</url>
+        <url>https://github.com/ip7z/7zip/releases/download/23.01/7z2301-x64.msi</url>
         <sha512>09e3ce970ea8383e8c736a51ebb61e3036e655c81d59bc64c5eecb041abdad2cbce2f400fcf4478e22f56fe40f8d912c639f550a5f990e24abfd4e86cdd3755c</sha512>
         <archiveName>7z2301-x64.msi</archiveName>
     </tool>
     <tool name="7zip" os="windows">
         <version>23.01</version>
         <exeRelativePath>7za.exe</exeRelativePath>
-        <url>https://www.7-zip.org/a/7z2301-extra.7z</url>
+        <url>https://github.com/ip7z/7zip/releases/download/23.01/7z2301-extra.7z</url>
         <sha512>c849c2cb489cf5b6eeb92bfbc27dcb37d0349c36971e1bc7ef32c7cde1b659e19e8b46d734ba90f47affe07fdfd5b4774cbfa0fdf4b681e9f60bb46bba1f7f9b</sha512>
         <archiveName>7z2301-extra.7z</archiveName>
      </tool>

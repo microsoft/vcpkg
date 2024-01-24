@@ -61,51 +61,166 @@ macro(z_vcpkg_determine_autotools_target_arch_mac out_var)
     unset(osx_archs_num)
 endmacro()
 
-macro(z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags flag_suffix)
-    string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
-    string(REGEX MATCHALL "( |^)(-D|-isysroot|--sysroot=|-isystem|-m?[Aa][Rr][Cc][Hh]|--target=|-target) ?[^ ]+" CXXPPFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
-    list(JOIN CXXPPFLAGS_${flag_suffix} "|" CXXREGEX)
-    if(CXXREGEX)
-        list(FILTER CPPFLAGS_${flag_suffix} INCLUDE REGEX "(${CXXREGEX})")
-    else()
-        set(CPPFLAGS_${flag_suffix})
+# Define variables used in both vcpkg_configure_make and vcpkg_build_make:
+# short_name_<CONFIG>:           unique abbreviation for the given build type (rel, dbg)
+# path_suffix_<CONFIG>:          installation path suffix for the given build type ('', /debug)
+# current_installed_dir_escaped: CURRENT_INSTALLED_DIR with escaped space characters
+# current_installed_dir_msys:    CURRENT_INSTALLED_DIR with unprotected spaces, but drive letters transformed for msys
+macro(z_vcpkg_configure_make_common_definitions)
+    set(short_name_RELEASE "rel")
+    set(short_name_DEBUG "dbg")
+
+    set(path_suffix_RELEASE "")
+    set(path_suffix_DEBUG "/debug")
+
+    # Some PATH handling for dealing with spaces....some tools will still fail with that!
+    # In particular, the libtool install command is unable to install correctly to paths with spaces.
+    string(REPLACE " " "\\ " current_installed_dir_escaped "${CURRENT_INSTALLED_DIR}")
+    set(current_installed_dir_msys "${CURRENT_INSTALLED_DIR}")
+    if(CMAKE_HOST_WIN32)
+        string(REGEX REPLACE "^([a-zA-Z]):/" "/\\1/" current_installed_dir_msys "${current_installed_dir_msys}")
     endif()
-    list(JOIN CPPFLAGS_${flag_suffix} "|" CPPREGEX)
-    list(JOIN CPPFLAGS_${flag_suffix} " " CPPFLAGS_${flag_suffix})
-    set(CPPFLAGS_${flag_suffix} "${CPPFLAGS_${flag_suffix}}")
-    if(CPPREGEX)
-        string(REGEX REPLACE "(${CPPREGEX})" "" CFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
-        string(REGEX REPLACE "(${CPPREGEX})" "" CXXFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
-    else()
-        set(CFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${flag_suffix}}")
-        set(CXXFLAGS_${flag_suffix} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${flag_suffix}}")
-    endif()
-    string(REGEX REPLACE " +" " " CPPFLAGS_${flag_suffix} "${CPPFLAGS_${flag_suffix}}")
-    string(REGEX REPLACE " +" " " CFLAGS_${flag_suffix} "${CFLAGS_${flag_suffix}}")
-    string(REGEX REPLACE " +" " " CXXFLAGS_${flag_suffix} "${CXXFLAGS_${flag_suffix}}")
-    string(STRIP "${CPPFLAGS_${flag_suffix}}" CPPFLAGS_${flag_suffix})
-    string(STRIP "${CFLAGS_${flag_suffix}}" CFLAGS_${flag_suffix})
-    string(STRIP "${CXXFLAGS_${flag_suffix}}" CXXFLAGS_${flag_suffix})
-    # libtool tries to filter CFLAGS passed to the link stage via a whitelist.
-    # that approach is flawed since it fails to pass flags unknown to libtool
-    # but required for linking to the link stage (e.g. -fsanitize=<x>).
-    # libtool has an -R option so we need to guard against -RTC by using -Xcompiler
-    # while configuring there might be a lot of unknown compiler option warnings due to that
-    # just ignore them.
-    if(VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" OR VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-      separate_arguments(CFLAGS_LIST NATIVE_COMMAND "${CFLAGS_${flag_suffix}}")
-      list(JOIN CFLAGS_LIST " -Xcompiler " CFLAGS_${var_suffix})
-      string(PREPEND CFLAGS_${var_suffix} "-Xcompiler ")
-    endif()
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" OR VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-      separate_arguments(CXXFLAGS_LIST NATIVE_COMMAND "${CXXFLAGS_${flag_suffix}}")
-      list(JOIN CXXFLAGS_LIST " -Xcompiler " CXXFLAGS_${var_suffix})
-      string(PREPEND CXXFLAGS_${var_suffix} "-Xcompiler ")
-    endif()
-    debug_message("CPPFLAGS_${flag_suffix}: ${CPPFLAGS_${flag_suffix}}")
-    debug_message("CFLAGS_${flag_suffix}: ${CFLAGS_${flag_suffix}}")
-    debug_message("CXXFLAGS_${flag_suffix}: ${CXXFLAGS_${flag_suffix}}")
 endmacro()
+
+# Initializes well-known and auxiliary variables for flags
+# - CPPFLAGS_<CONFIG>: preprocessor flags common to C and CXX
+# - CFLAGS_<CONFIG>
+# - CXXFLAGS_<CONFIG>
+# - LDFLAGS_<CONFIG>
+# - ARFLAGS_<CONFIG>
+# - LINK_ENV_${var_suffix}
+# Prerequisite: VCPKG_DETECTED_CMAKE_... vars loaded
+function(z_vcpkg_configure_make_process_flags var_suffix)
+    # separate_arguments is needed to remove outer quotes from detected cmake variables.
+    # (e.g. Android NDK has "--sysroot=...")
+    separate_arguments(CFLAGS NATIVE_COMMAND "Z_VCM_WRAP ${VCPKG_DETECTED_CMAKE_C_FLAGS_${var_suffix}} Z_VCM_WRAP")
+    separate_arguments(CXXFLAGS NATIVE_COMMAND "Z_VCM_WRAP ${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${var_suffix}} Z_VCM_WRAP")
+    separate_arguments(LDFLAGS NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
+    separate_arguments(ARFLAGS NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
+    foreach(var IN ITEMS CFLAGS CXXFLAGS LDFLAGS ARFLAGS)
+        vcpkg_list(APPEND z_vcm_all_flags ${${var}})
+    endforeach()
+    set(z_vcm_all_flags "${z_vcm_all_flags}" PARENT_SCOPE)
+
+    # Filter common CPPFLAGS out of CFLAGS and CXXFLAGS
+    vcpkg_list(SET CPPFLAGS)
+    vcpkg_list(SET pattern)
+    foreach(arg IN LISTS CXXFLAGS)
+        if(arg STREQUAL "Z_VCM_WRAP")
+            continue()
+        elseif(NOT pattern STREQUAL "")
+            vcpkg_list(APPEND pattern "${arg}")
+        elseif(arg MATCHES "^-(D|isystem).")
+            vcpkg_list(SET pattern "${arg}")
+        elseif(arg MATCHES "^-(D|isystem)\$")
+            vcpkg_list(SET pattern "${arg}")
+            continue()
+        elseif(arg MATCHES "^-(-sysroot|-target|m?[Aa][Rr][Cc][Hh])=.")
+            vcpkg_list(SET pattern "${arg}")
+        elseif(arg MATCHES "^-(isysroot|m32|m64|m?[Aa][Rr][Cc][Hh]|target)\$")
+            vcpkg_list(SET pattern "${arg}")
+            continue()
+        else()
+            continue()
+        endif()
+        string(FIND "${CFLAGS}" ";${pattern};" index)
+        if(NOT index STREQUAL "-1")
+            vcpkg_list(APPEND CPPFLAGS ${pattern})
+            string(REPLACE ";${pattern};" ";" CFLAGS "${CFLAGS}")
+            string(REPLACE ";${pattern};" ";" CXXFLAGS "${CXXFLAGS}")
+        endif()
+        vcpkg_list(SET pattern)
+    endforeach()
+    vcpkg_list(SET pattern)
+    foreach(arg IN LISTS CFLAGS)
+        if(arg STREQUAL "Z_VCM_WRAP")
+            continue()
+        elseif(NOT pattern STREQUAL "")
+            vcpkg_list(APPEND pattern "${arg}")
+        elseif(arg MATCHES "^-(D|isystem)\$")
+            vcpkg_list(SET pattern "${arg}")
+            continue()
+        elseif(arg MATCHES "^-(D|isystem).")
+            vcpkg_list(SET pattern "${arg}")
+        elseif(arg MATCHES "^-(-sysroot|-target|m?[Aa][Rr][Cc][Hh])=.")
+            vcpkg_list(SET pattern "${arg}")
+        elseif(arg MATCHES "^-(isysroot|m32|m64|m?[Aa][Rr][Cc][Hh]|target)\$")
+            vcpkg_list(SET pattern "${arg}")
+            continue()
+        else()
+            continue()
+        endif()
+        string(FIND "${CXXFLAGS}" ";${pattern};" index)
+        if(NOT index STREQUAL "-1")
+            vcpkg_list(APPEND CPPFLAGS ${pattern})
+            string(REPLACE ";${pattern};" ";" CFLAGS "${CFLAGS}")
+            string(REPLACE ";${pattern};" ";" CXXFLAGS "${CXXFLAGS}")
+        endif()
+        vcpkg_list(SET pattern)
+    endforeach()
+
+    # Remove start/end placeholders
+    foreach(list IN ITEMS CFLAGS CXXFLAGS)
+        vcpkg_list(REMOVE_ITEM ${list} "Z_VCM_WRAP")
+    endforeach()
+
+    # libtool tries to filter CFLAGS passed to the link stage via a whitelist.
+    # This approach is flawed since it fails to pass flags unknown to libtool
+    # but required for linking to the link stage (e.g. -fsanitize=<x>).
+    # libtool has an -R option so we need to guard against -RTC by using -Xcompiler.
+    # While configuring there might be a lot of unknown compiler option warnings
+    # due to that; just ignore them.
+    set(compiler_flag_escape "")
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC" OR VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+        set(compiler_flag_escape "-Xcompiler ")
+    endif()
+    if(compiler_flag_escape)
+        list(TRANSFORM CFLAGS PREPEND "${compiler_flag_escape}")
+        list(TRANSFORM CXXFLAGS PREPEND "${compiler_flag_escape}")
+    endif()
+
+    # Could use a future VCPKG_DETECTED_CMAKE_LIBRARY_PATH_FLAG
+    set(library_path_flag "-L")
+    # Could use a future VCPKG_DETECTED_MSVC
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_DETECTED_CMAKE_LINKER MATCHES [[link\.exe$]])
+        set(library_path_flag "-LIBPATH:")
+    endif()
+    set(linker_flag_escape "")
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES [[cl\.exe$]])
+        # Removed by libtool
+        set(linker_flag_escape "-Xlinker ")
+        if(arg_USE_WRAPPERS)
+            # 1st and 3rd are removed by libtool, 2nd by wrapper
+            set(linker_flag_escape "-Xlinker -Xlinker -Xlinker ")
+        endif()
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+            string(STRIP "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}" LINK_ENV)
+        else()
+            string(STRIP "$ENV{_LINK_} ${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}" LINK_ENV)
+        endif()
+    endif()
+    if(linker_flag_escape)
+        list(TRANSFORM LDFLAGS PREPEND "${linker_flag_escape}")
+    endif()
+    if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
+        vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib/manual-link")
+    endif()
+    if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
+        vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib")
+    endif()
+
+    if(ARFLAGS)
+        # ARFLAGS need to know the command for creating an archive (Maybe needs user customization?)
+        # or extract it from CMake via CMAKE_${lang}_ARCHIVE_CREATE ?
+        # or from CMAKE_${lang}_${rule} with rule being one of CREATE_SHARED_MODULE CREATE_SHARED_LIBRARY LINK_EXECUTABLE
+        vcpkg_list(PREPEND ARFLAGS "cr")
+    endif()
+
+    foreach(var IN ITEMS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS ARFLAGS)
+        list(JOIN ${var} " " string)
+        set(${var}_${var_suffix} "${string}" PARENT_SCOPE)
+    endforeach()
+endfunction()
 
 macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
     # Allows to overwrite settings in custom triplets via the environment on windows
@@ -114,10 +229,6 @@ macro(z_vcpkg_append_to_configure_environment inoutstring var defaultval)
     else()
         string(APPEND ${inoutstring} " ${var}='${defaultval}'")
     endif()
-endmacro()
-
-macro(z_convert_to_list input output)
-    string(REGEX MATCHALL "(( +|^ *)[^ ]+)" ${output} "${${input}}")
 endmacro()
 
 function(vcpkg_configure_make)
@@ -140,23 +251,6 @@ function(vcpkg_configure_make)
     debug_message("Including cmake vars from: ${cmake_vars_file}")
     include("${cmake_vars_file}")
 
-    # Remove outer quotes from cmake variables which will be forwarded via makefile/shell variables
-    # substituted into makefile commands (e.g. Android NDK has "--sysroot=...")
-    foreach(var IN ITEMS VCPKG_DETECTED_CMAKE_C_FLAGS_DEBUG
-                         VCPKG_DETECTED_CMAKE_C_FLAGS_RELEASE
-                         VCPKG_DETECTED_CMAKE_CXX_FLAGS_DEBUG
-                         VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE
-                         VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_DEBUG
-                         VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_RELEASE
-                         VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_DEBUG
-                         VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_RELEASE
-                         VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES
-                         VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES
-    )
-        separate_arguments(cmake_list NATIVE_COMMAND "${${var}}")
-        list(JOIN cmake_list " " "${var}")
-    endforeach()
-
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(arg_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
     endif()
@@ -168,7 +262,10 @@ function(vcpkg_configure_make)
     if(EXISTS "${src_dir}/configure" AND EXISTS "${src_dir}/configure.ac" AND arg_AUTOCONFIG) # remove configure; rerun autoconf
         set(requires_autoconfig ON)
         file(REMOVE "${SRC_DIR}/configure") # remove possible outdated configure scripts
-    elseif(EXISTS "${src_dir}/configure" AND NOT arg_SKIP_CONFIGURE) # run normally; no autoconf or autogen required
+    elseif(arg_SKIP_CONFIGURE)
+        # no action requested
+    elseif(EXISTS "${src_dir}/configure")
+        # run normally; no autoconf or autogen required
     elseif(EXISTS "${src_dir}/configure.ac") # Run autoconfig
         set(requires_autoconfig ON)
         set(arg_AUTOCONFIG ON)
@@ -207,17 +304,24 @@ function(vcpkg_configure_make)
     # LDFLAGS -> pass -L flags
     # LIBS -> pass -l flags
 
-    #Used by gcc/linux
+    # Used by gcc/linux
     vcpkg_backup_env_variables(VARS C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH)
 
-    #Used by cl
+    # Used by cl
     vcpkg_backup_env_variables(VARS INCLUDE LIB LIBPATH)
 
-    set(vcm_paths_with_spaces OFF)
-    if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
+    vcpkg_list(SET z_vcm_paths_with_spaces)
+    if(CURRENT_PACKAGES_DIR MATCHES " ")
+        vcpkg_list(APPEND z_vcm_paths_with_spaces "${CURRENT_PACKAGES_DIR}")
+    endif()
+    if(CURRENT_INSTALLED_DIR MATCHES " ")
+        vcpkg_list(APPEND z_vcm_paths_with_spaces "${CURRENT_INSTALLED_DIR}")
+    endif()
+    if(z_vcm_paths_with_spaces)
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
-        message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
-        set(vcm_paths_with_spaces ON)
+        vcpkg_list(APPEND z_vcm_paths_with_spaces "Please move the path to one without whitespaces!")
+        list(JOIN z_vcm_paths_with_spaces "\n   " z_vcm_paths_with_spaces)
+        message(STATUS "Warning: Paths with embedded space may be handled incorrectly by configure:\n   ${z_vcm_paths_with_spaces}")
     endif()
 
     set(configure_env "V=1")
@@ -339,14 +443,13 @@ function(vcpkg_configure_make)
                   VCPKG_DETECTED_CMAKE_LINKER VCPKG_DETECTED_CMAKE_RANLIB VCPKG_DETECTED_CMAKE_OBJDUMP
                   VCPKG_DETECTED_CMAKE_STRIP VCPKG_DETECTED_CMAKE_NM VCPKG_DETECTED_CMAKE_DLLTOOL VCPKG_DETECTED_CMAKE_RC_COMPILER)
         foreach(prog IN LISTS progs)
-            if(${prog})
-                set(path "${${prog}}")
-                unset(prog_found CACHE)
-                get_filename_component(${prog} "${${prog}}" NAME)
-                find_program(prog_found ${${prog}} PATHS ENV PATH NO_DEFAULT_PATH)
-                if(NOT path STREQUAL prog_found)
-                    get_filename_component(path "${path}" DIRECTORY)
-                    vcpkg_add_to_path(PREPEND ${path})
+            set(filepath "${${prog}}")
+            if(filepath MATCHES " ")
+                cmake_path(GET filepath FILENAME ${prog})
+                find_program(z_vcm_prog_found NAMES "${${prog}}" PATHS ENV PATH NO_DEFAULT_PATH NO_CACHE)
+                if(NOT z_vcm_prog_found STREQUAL filepath)
+                    cmake_path(GET filepath PARENT_PATH dir)
+                    vcpkg_add_to_path(PREPEND "${dir}")
                 endif()
             endif()
         endforeach()
@@ -446,14 +549,16 @@ function(vcpkg_configure_make)
             list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
     else()
-        # Because OSX dosn't like CMAKE_C(XX)_COMPILER (cc) in CC/CXX and rather wants to have gcc/g++
+        # OSX dosn't like CMAKE_C(XX)_COMPILER (cc) in CC/CXX and rather wants to have gcc/g++
+        vcpkg_list(SET z_vcm_all_tools)
         function(z_vcpkg_make_set_env envvar cmakevar)
-            set(prog "${VCPKG_DETECTED_CMAKE_${cmakevar}} ${ARGN}")
-            string(STRIP "${prog}" prog)
-            if(DEFINED ENV{${envvar}})
-                return()
-            endif()
-            if(VCPKG_DETECTED_CMAKE_${cmakevar})
+            set(prog "${VCPKG_DETECTED_CMAKE_${cmakevar}}")
+            if(NOT DEFINED ENV{${envvar}} AND NOT prog STREQUAL "")
+                vcpkg_list(APPEND z_vcm_all_tools "${prog}")
+                if(ARGN)
+                    string(APPEND prog " ${ARGN}")
+                endif()
+                set(z_vcm_all_tools "${z_vcm_all_tools}" PARENT_SCOPE)
                 set(ENV{${envvar}} "${prog}")
             endif()
         endfunction()
@@ -480,29 +585,26 @@ function(vcpkg_configure_make)
         unset(z_vcpkg_make_set_env)
     endif()
 
-    # Some PATH handling for dealing with spaces....some tools will still fail with that!
-    # In particular, the libtool install command is unable to install correctly to paths with spaces.
-    # CURRENT_INSTALLED_DIR: Pristine native path (unprotected spaces, Windows drive letters)
-    # z_vcpkg_installed_path:      Native path with escaped space characters
-    # z_vcpkg_prefix_path:         Path with unprotected spaces, but drive letters transformed for mingw/msys
-    string(REPLACE " " "\\ " z_vcpkg_installed_path "${CURRENT_INSTALLED_DIR}")
-    if(CMAKE_HOST_WIN32)
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" z_vcpkg_prefix_path "${CURRENT_INSTALLED_DIR}")
-    else()
-        set(z_vcpkg_prefix_path "${CURRENT_INSTALLED_DIR}")
+    list(FILTER z_vcm_all_tools INCLUDE REGEX " ")
+    if(z_vcm_all_tools)
+        list(REMOVE_DUPLICATES z_vcm_all_tools)
+        list(JOIN z_vcm_all_tools "\n   " tools)
+        message(STATUS "Warning: Tools with embedded space may be handled incorrectly by configure:\n   ${tools}")
     endif()
 
+    z_vcpkg_configure_make_common_definitions()
+
     # Cleanup previous build dirs
-    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-                        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_name_RELEASE}"
+                        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_name_DEBUG}"
                         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 
     # Set configure paths
-    set(arg_OPTIONS_RELEASE ${arg_OPTIONS_RELEASE} "--prefix=${z_vcpkg_prefix_path}")
-    set(arg_OPTIONS_DEBUG ${arg_OPTIONS_DEBUG} "--prefix=${z_vcpkg_prefix_path}/debug")
+    vcpkg_list(APPEND arg_OPTIONS_RELEASE "--prefix=${current_installed_dir_msys}")
+    vcpkg_list(APPEND arg_OPTIONS_DEBUG "--prefix=${current_installed_dir_msys}${path_suffix_DEBUG}")
     if(NOT arg_NO_ADDITIONAL_PATHS)
         # ${prefix} has an extra backslash to prevent early expansion when calling `bash -c configure "..."`.
-        set(arg_OPTIONS_RELEASE ${arg_OPTIONS_RELEASE}
+        vcpkg_list(APPEND arg_OPTIONS_RELEASE
                             # Important: These should all be relative to prefix!
                             "--bindir=\\\${prefix}/tools/${PORT}/bin"
                             "--sbindir=\\\${prefix}/tools/${PORT}/sbin"
@@ -511,10 +613,10 @@ function(vcpkg_configure_make)
                             "--mandir=\\\${prefix}/share/${PORT}"
                             "--docdir=\\\${prefix}/share/${PORT}"
                             "--datarootdir=\\\${prefix}/share/${PORT}")
-        set(arg_OPTIONS_DEBUG ${arg_OPTIONS_DEBUG}
+        vcpkg_list(APPEND arg_OPTIONS_DEBUG
                             # Important: These should all be relative to prefix!
-                            "--bindir=\\\${prefix}/../tools/${PORT}/debug/bin"
-                            "--sbindir=\\\${prefix}/../tools/${PORT}/debug/sbin"
+                            "--bindir=\\\${prefix}/../tools/${PORT}${path_suffix_DEBUG}/bin"
+                            "--sbindir=\\\${prefix}/../tools/${PORT}${path_suffix_DEBUG}/sbin"
                             "--libdir=\\\${prefix}/lib" # On some Linux distributions lib64 is the default
                             "--includedir=\\\${prefix}/../include"
                             "--datarootdir=\\\${prefix}/share/${PORT}")
@@ -572,11 +674,12 @@ function(vcpkg_configure_make)
         endif()
     endif()
 
-    z_convert_to_list(VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES c_libs_list)
-    z_convert_to_list(VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES cxx_libs_list)
-    set(all_libs_list ${c_libs_list} ${cxx_libs_list})
-    list(REMOVE_DUPLICATES all_libs_list)
-    list(TRANSFORM all_libs_list STRIP)
+    # Remove outer quotes from cmake variables which will be forwarded via makefile/shell variables
+    # substituted into makefile commands (e.g. Android NDK has "--sysroot=...")
+    separate_arguments(c_libs_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
+    separate_arguments(cxx_libs_list NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES}")
+    list(REMOVE_ITEM cxx_libs_list ${c_libs_list})
+    set(all_libs_list ${cxx_libs_list} ${c_libs_list})
     #Do lib list transformation from name.lib to -lname if necessary
     set(x_vcpkg_transform_libs ON)
     if(VCPKG_TARGET_IS_UWP)
@@ -586,24 +689,20 @@ function(vcpkg_configure_make)
         # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows. 
         # It even does unix/dos-short/unix transformation with the path to get rid of spaces. 
     endif()
-    set(l_prefix)
     if(x_vcpkg_transform_libs)
-        set(l_prefix "-l")
-        list(TRANSFORM all_libs_list REPLACE "(.dll.lib|.lib|.a|.so)$" "")
+        list(TRANSFORM all_libs_list REPLACE "[.](dll[.]lib|lib|a|so)$" "")
         if(VCPKG_TARGET_IS_WINDOWS)
             list(REMOVE_ITEM all_libs_list "uuid")
         endif()
-        list(TRANSFORM all_libs_list REPLACE "^(${l_prefix})" "")
+        list(TRANSFORM all_libs_list REPLACE "^([^-].*)" "-l\\1")
+        if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            # libtool must be told explicitly that there is no dynamic linkage for uuid.
+            # The "-Wl,..." syntax is understood by libtool and gcc, but no by ld.
+            list(TRANSFORM all_libs_list REPLACE "^-luuid\$" "-Wl,-Bstatic,-luuid,-Bdynamic")
+        endif()
     endif()
-    list(JOIN all_libs_list " ${l_prefix}" all_libs_string)
-    if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        # libtool must be told explicitly that there is no dynamic linkage for uuid.
-        # The "-Wl,..." syntax is understood by libtool and gcc, but no by ld.
-        string(REPLACE " -luuid" " -Wl,-Bstatic,-luuid,-Bdynamic" all_libs_string "${all_libs_string}")
-    endif()
-
-    if(all_libs_string)
-        set(all_libs_string "${l_prefix}${all_libs_string}")
+    if(all_libs_list)
+        list(JOIN all_libs_list " " all_libs_string)
         if(DEFINED ENV{LIBS})
             set(ENV{LIBS} "$ENV{LIBS} ${all_libs_string}")
         else()
@@ -669,76 +768,19 @@ function(vcpkg_configure_make)
         endif()
     endif()
 
-    macro(z_vcpkg_setup_make_linker_flags_vars var_suffix)
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-            set(LINKER_FLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
-        else() # dynamic
-            set(LINKER_FLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
-        endif()
-        set(ARFLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${var_suffix}}")
-        set(LDFLAGS_${var_suffix} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${var_suffix}}")
-        if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES [[cl\.exe$]])
-            if(NOT vcm_paths_with_spaces)
-                string(APPEND LDFLAGS_${var_suffix} " -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link")
-            endif()
-            if(DEFINED ENV{_LINK_})
-                set(LINK_ENV_${var_suffix} "$ENV{_LINK_} ${LINKER_FLAGS_${var_suffix}}")
-            else()
-                set(LINK_ENV_${var_suffix} "${LINKER_FLAGS_${var_suffix}}")
-            endif()
-        else()
-            set(link_required_dirs "")
-            if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
-                set(link_required_dirs "-L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib")
-            endif()
-            if(EXISTS "{CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
-                set(link_required_dirs "${link_required_dirs} -L${z_vcpkg_installed_path}${path_suffix_${var_suffix}}/lib/manual-link")
-            endif()
-            string(STRIP "${link_required_dirs}" link_required_dirs)
-            if(link_required_dirs)
-                string(PREPEND LDFLAGS_${var_suffix} "${link_required_dirs} ")
-                # ARFLAGS doesn't need -L search paths since it just bundles object files
-            endif()
-            if(ARFLAGS_${var_suffix})
-                # ARFLAGS need to know the command for creating an archive (Maybe needs user customization?)
-                # or extract it from CMake via CMAKE_${lang}_ARCHIVE_CREATE ?
-                # or from CMAKE_${lang}_${rule} with rule being one of CREATE_SHARED_MODULE CREATE_SHARED_LIBRARY LINK_EXECUTABLE
-                string(PREPEND ARFLAGS_${var_suffix} "cr ")
-            endif()
-            string(STRIP "${LDFLAGS_${var_suffix}}" LDFLAGS_${var_suffix})
-            string(STRIP "${ARFLAGS_${var_suffix}}" ARFLAGS_${var_suffix})
-            if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_DETECTED_CMAKE_LINKER MATCHES [[link\.exe$]])
-                # Do not touch autotools quirks incoming!
-                # -Xlinker is repeated three times because:
-                # - libtool script eats -Xlinker
-                # - the compile wrapper eats -Xlinker
-                # - passing through both tools requires 3 -Xlinker; two being eaten in the first script.
-                # passing only through one script will keep one -Xlinker (done in configure)
-                # but cl will just ignore those with a warning. (Just like -Xcompiler)
-                separate_arguments(LDFLAGS_LIST NATIVE_COMMAND "${LDFLAGS_${var_suffix}}")
-                list(JOIN LDFLAGS_LIST " -Xlinker -Xlinker -Xlinker " LDFLAGS_${var_suffix})
-                string(PREPEND LDFLAGS_${var_suffix} "-Xlinker -Xlinker -Xlinker ")
-            endif()
-        endif()
-    endmacro()
-
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug" AND NOT arg_NO_DEBUG)
-        set(var_suffix DEBUG)
-        set(path_suffix_${var_suffix} "/debug")
-        set(short_name_${var_suffix} "dbg")
-        list(APPEND all_buildtypes ${var_suffix})
-        z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${var_suffix})
-        z_vcpkg_setup_make_linker_flags_vars(${var_suffix})
-        unset(var_suffix)
+        list(APPEND all_buildtypes DEBUG)
+        z_vcpkg_configure_make_process_flags(DEBUG)
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        set(var_suffix RELEASE)
-        set(path_suffix_${var_suffix} "")
-        set(short_name_${var_suffix} "rel")
-        list(APPEND all_buildtypes ${var_suffix})
-        z_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${var_suffix})
-        z_vcpkg_setup_make_linker_flags_vars(${var_suffix})
-        unset(var_suffix)
+        list(APPEND all_buildtypes RELEASE)
+        z_vcpkg_configure_make_process_flags(RELEASE)
+    endif()
+    list(FILTER z_vcm_all_flags INCLUDE REGEX " ")
+    if(z_vcm_all_flags)
+        list(REMOVE_DUPLICATES z_vcm_all_flags)
+        list(JOIN z_vcm_all_flags "\n   " flags)
+        message(STATUS "Warning: Arguments with embedded space may be handled incorrectly by configure:\n   ${flags}")
     endif()
 
     foreach(var IN ITEMS arg_OPTIONS arg_OPTIONS_RELEASE arg_OPTIONS_DEBUG)
@@ -767,12 +809,7 @@ function(vcpkg_configure_make)
             set(relative_build_path .)
         endif()
 
-        # Setup PKG_CONFIG_PATH
-        if ("${current_buildtype}" STREQUAL "DEBUG")
-            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
-        else()
-            z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
-        endif()
+        z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}")
 
         # Setup environment
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")
@@ -787,13 +824,6 @@ function(vcpkg_configure_make)
         if(ARFLAGS_${current_buildtype} AND NOT (arg_USE_WRAPPERS AND VCPKG_TARGET_IS_WINDOWS))
             # Target windows with wrappers enabled cannot forward ARFLAGS since it breaks the wrapper
             set(ENV{ARFLAGS} "${ARFLAGS_${current_buildtype}}")
-        endif()
-        # https://www.gnu.org/software/libtool/manual/html_node/Link-mode.html
-        # -avoid-version is handled specially by libtool link mode, this flag is not forwarded to linker,
-        # and libtool tries to avoid versioning for shared libraries and no symbolic links are created.
-        if(VCPKG_TARGET_IS_ANDROID)
-            set(ENV{LDFLAGS} "-avoid-version $ENV{LDFLAGS}")
-            set(ENV{LDFLAGS_FOR_BUILD} "-avoid-version $ENV{LDFLAGS_FOR_BUILD}")
         endif()
 
         if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
@@ -866,7 +896,7 @@ function(vcpkg_configure_make)
     # Export matching make program for vcpkg_build_make (cache variable)
     if(CMAKE_HOST_WIN32 AND MSYS_ROOT)
         find_program(Z_VCPKG_MAKE make PATHS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
-    elseif(VCPKG_HOST_IS_OPENBSD)
+    elseif(VCPKG_HOST_IS_FREEBSD OR VCPKG_HOST_IS_OPENBSD)
         find_program(Z_VCPKG_MAKE gmake REQUIRED)
     else()
         find_program(Z_VCPKG_MAKE make REQUIRED)

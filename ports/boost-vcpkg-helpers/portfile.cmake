@@ -1,5 +1,4 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
 vcpkg_download_distfile(LICENSE
     URLS "https://raw.githubusercontent.com/boostorg/boost/boost-${VERSION}/LICENSE_1_0.txt"

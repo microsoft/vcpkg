@@ -23,6 +23,11 @@ if("coretext" IN_LIST FEATURES)
 else()
     list(APPEND FEATURE_OPTIONS -Dcoretext=disabled)
 endif()
+if("directwrite" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Ddirectwrite=enabled) # Enable DirectWrite support on Windows
+else()
+    list(APPEND FEATURE_OPTIONS -Ddirectwrite=disabled)
+endif()
 if("glib" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dglib=enabled) # Enable GLib unicode functions
     list(APPEND FEATURE_OPTIONS -Dgobject=enabled) #Enable GObject bindings
