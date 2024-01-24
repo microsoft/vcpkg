@@ -16,5 +16,21 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    {
+      "name": "python",
+      "platform": "native"
+    }
+  ],
+  "features": {
+    "python": {
+      "description": "Build python module",
+      "supports": "native",
+      "dependencies": [
+        "python3",
+        "vcpkg-get-python-packages"
+      ]
+    }
+  }
 }

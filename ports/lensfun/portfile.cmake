@@ -12,8 +12,23 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LENSFUN_STATIC_LIB)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" LENSFUN_STATIC_CRT)
 
-
 set(LENSFUN_EXTRA_OPTS "")
+if("python" IN_LIST FEATURES)
+    find_file(INITIAL_PYTHON3
+        NAMES "python3${VCPKG_HOST_EXECUTABLE_SUFFIX}" "python${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/python3"
+        NO_DEFAULT_PATH
+        REQUIRED
+    )
+    x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3
+        PYTHON_EXECUTABLE "${INITIAL_PYTHON3}"
+        PYTHON_VERSION "3"
+        PACKAGES setuptools
+    )
+else()
+    set(PYTHON3 "false")
+endif()
+
 if (VCPKG_TARGET_IS_WINDOWS)
     list(APPEND LENSFUN_EXTRA_OPTS -DPLATFORM_WINDOWS=ON)
 endif()
@@ -26,11 +41,11 @@ vcpkg_cmake_configure(
         -DBUILD_WITH_MSVC_STATIC_RUNTIME=${LENSFUN_STATIC_CRT}
         -DBUILD_TESTS=OFF
         -DBUILD_DOC=OFF
-        -DINSTALL_PYTHON_MODULE=ON
         -DINSTALL_HELPER_SCRIPTS=OFF
         -DBUILD_LENSTOOL=OFF
         -DBUILD_FOR_SSE=OFF
         -DBUILD_FOR_SSE2=OFF
+        "-DPYTHON=${PYTHON3}"
 )
 
 vcpkg_cmake_install()
