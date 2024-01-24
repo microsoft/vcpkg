@@ -1,5 +1,3 @@
-#vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lensfun/lensfun
@@ -29,8 +27,12 @@ else()
     set(PYTHON3 "false")
 endif()
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND LENSFUN_EXTRA_OPTS -DPLATFORM_WINDOWS=ON)
+endif()
+
+if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    list(APPEND LENSFUN_EXTRA_OPTS -DBUILD_FOR_SSE=OFF -DBUILD_FOR_SSE2=OFF)
 endif()
 
 vcpkg_cmake_configure(
@@ -41,25 +43,24 @@ vcpkg_cmake_configure(
         -DBUILD_WITH_MSVC_STATIC_RUNTIME=${LENSFUN_STATIC_CRT}
         -DBUILD_TESTS=OFF
         -DBUILD_DOC=OFF
-        -DINSTALL_HELPER_SCRIPTS=OFF
         -DBUILD_LENSTOOL=OFF
-        -DBUILD_FOR_SSE=OFF
-        -DBUILD_FOR_SSE2=OFF
+        -DINSTALL_HELPER_SCRIPTS=OFF
         "-DPYTHON=${PYTHON3}"
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
 vcpkg_fixup_pkgconfig()
-
-if (LENSFUN_STATIC_LIB)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/gpl-3.0.txt" "${SOURCE_PATH}/docs/lgpl-3.0.txt")
+file(READ "${SOURCE_PATH}/README.md" license_comment)
+string(REGEX REPLACE "^.*\n(LICENSE\n)---+\n(.*)" "\\1\\2" license_comment "${license_comment}")
+string(REGEX REPLACE "[^\n]+\n---+.*\$" "" license_comment "${license_comment}")
+vcpkg_install_copyright(
+    COMMENT "${license_comment}"
+    FILE_LIST "${SOURCE_PATH}/docs/gpl-3.0.txt" "${SOURCE_PATH}/docs/lgpl-3.0.txt"
+)
