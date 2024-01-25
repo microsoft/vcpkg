@@ -17,16 +17,10 @@
       "host": true
     }
   ],
-  "default-features": [
-    {
-      "name": "python",
-      "platform": "native"
-    }
-  ],
   "features": {
     "python": {
       "description": "Build python module",
-      "supports": "native",
+      "supports": "native & !windows",
       "dependencies": [
         "python3",
         "vcpkg-get-python-packages"
