@@ -4366,7 +4366,7 @@
     },
     "libgo": {
       "baseline": "3.1",
-      "port-version": 6
+      "port-version": 5
     },
     "libgpg-error": {
       "baseline": "1.47",

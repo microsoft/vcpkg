@@ -9,7 +9,6 @@ vcpkg_from_github(
     PATCHES
         cmake.patch
         Add-target-include-directory.patch
-        select-extern-c.patch
 )
 
 vcpkg_from_github(
