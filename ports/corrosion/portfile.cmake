@@ -14,46 +14,64 @@ if (CARGO STREQUAL "CARGO-NOTFOUND")
     execute_process(COMMAND bash "-c" "curl -sSf https://sh.rustup.rs | sh -s -- -y")
 endif()
 
-include(CMakePackageConfigHelpers)
-
-#configure_package_config_file(
-#	${SOURCE_PATH}/cmake/CorrosionConfig.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/CorrosionConfig.cmake
-#    INSTALL_DESTINATION
-#        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-#)
-
-write_basic_package_version_file(
-    "${CURRENT_PACKAGES_DIR}/share/${PORT}/CorrosionConfigVersion.cmake"
-    VERSION v${VERSION}
-    COMPATIBILITY
-        SameMinorVersion # TODO: Should be SameMajorVersion when 1.0 is released
-    ARCH_INDEPENDENT
+# Redo with the install process and just ignore the warnings?
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-file(INSTALL
-        ${SOURCE_PATH}/cmake/Corrosion.cmake
-     DESTINATION
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-     RENAME
-        CorrosionConfig.cmake
-)
+vcpkg_cmake_install()
 
-file(INSTALL
-        ${SOURCE_PATH}/cmake/CorrosionGenerator.cmake
-        ${SOURCE_PATH}/cmake/FindRust.cmake
-    DESTINATION
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Corrosion)
 
-# These CMake scripts are needed both for the install and as a subdirectory
-file(INSTALL
-        ${SOURCE_PATH}/cmake/Corrosion.cmake
-        ${SOURCE_PATH}/cmake/CorrosionGenerator.cmake
-        ${SOURCE_PATH}/cmake/FindRust.cmake
-    DESTINATION
-	"${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake"
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+#include(CMakePackageConfigHelpers)
+#
+##configure_package_config_file(
+##	${SOURCE_PATH}/cmake/CorrosionConfig.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/CorrosionConfig.cmake
+##    INSTALL_DESTINATION
+##        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+##)
+#
+#write_basic_package_version_file(
+#    "${CURRENT_PACKAGES_DIR}/share/${PORT}/CorrosionConfigVersion.cmake"
+#    VERSION v${VERSION}
+#    COMPATIBILITY
+#        SameMinorVersion # TODO: Should be SameMajorVersion when 1.0 is released
+#    ARCH_INDEPENDENT
+#)
+#
+#file(INSTALL
+#        ${SOURCE_PATH}/cmake/Corrosion.cmake
+#     DESTINATION
+#        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+#     RENAME
+#        CorrosionConfig.cmake
+#)
+#
+#list(APPEND CMAKE_MODULE_PATH "${CURRENT_PACKAGED_DIR}/share/${PORT}/cmake")
+#
+##file(INSTALL
+##        ${SOURCE_PATH}/cmake/CorrosionGenerator.cmake
+##        ${SOURCE_PATH}/cmake/FindRust.cmake
+##    DESTINATION
+##        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+##)
+#
+## These CMake scripts are needed both for the install and as a subdirectory
+#file(INSTALL
+#        ${SOURCE_PATH}/cmake/Corrosion.cmake
+#        ${SOURCE_PATH}/cmake/CorrosionGenerator.cmake
+#        ${SOURCE_PATH}/cmake/FindRust.cmake
+#    DESTINATION
+#	"${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake"
+#)
+#
+#vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+#file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
