@@ -90,8 +90,9 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 set(TOOL_NAMES gtk4-builder-tool
                gtk4-encode-symbolic-svg
                gtk4-query-settings
+               gtk4-rendernode-tool
                gtk4-update-icon-cache
-               gtk4-rendernode-tool)
+               )
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND TOOL_NAMES gtk4-launch)
 endif()
