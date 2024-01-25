@@ -16,11 +16,11 @@ endif()
 
 include(CMakePackageConfigHelpers)
 
-configure_package_config_file(
-	${SOURCE_PATH}/cmake/CorrosionConfig.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/CorrosionConfig.cmake
-    INSTALL_DESTINATION
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-)
+#configure_package_config_file(
+#	${SOURCE_PATH}/cmake/CorrosionConfig.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/CorrosionConfig.cmake
+#    INSTALL_DESTINATION
+#        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+#)
 
 write_basic_package_version_file(
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/CorrosionConfigVersion.cmake"
@@ -32,6 +32,13 @@ write_basic_package_version_file(
 
 file(INSTALL
         ${SOURCE_PATH}/cmake/Corrosion.cmake
+     DESTINATION
+        ${CURRENT_PACKAGES_DIR/share/${PORT}
+     RENAME
+        CorrosionConfig.cmake
+)
+
+file(INSTALL
         ${SOURCE_PATH}/cmake/CorrosionGenerator.cmake
         ${SOURCE_PATH}/cmake/FindRust.cmake
     DESTINATION
