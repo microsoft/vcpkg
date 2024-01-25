@@ -2829,7 +2829,7 @@
       "port-version": 0
     },
     "function2": {
-      "baseline": "4.2.3",
+      "baseline": "4.2.4",
       "port-version": 0
     },
     "functions-framework-cpp": {
