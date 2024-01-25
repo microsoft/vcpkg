@@ -11,7 +11,7 @@ vcpkg_from_github(
         disable-update-version.patch
         fix-build-type.patch
         cmake-config-export.patch
-        tmp_test.patch
+        fix-python.patch # https://github.com/google/shaderc/pull/1389
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/build-version.inc" DESTINATION "${SOURCE_PATH}/glslc/src")
