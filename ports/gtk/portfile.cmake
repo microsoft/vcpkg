@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
     REF ${VERSION}
-    SHA512 f219ddc6f46061f516f99a3845f344269d51d7fc2554773f7d4cee7833c5be26ce809262466d18c2804559834eb595f0d802b6fc80d77b7e8bf046e4c1293d64
+    SHA512 82728b57d1c3d3d385481c5b9a8895faca27a22049bef692ea91c6ee7a76856a7ec6be9038695e6966ab96872b6f62b9c9871a06f206ef2e413891572435b20b
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
@@ -90,7 +90,8 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 set(TOOL_NAMES gtk4-builder-tool
                gtk4-encode-symbolic-svg
                gtk4-query-settings
-               gtk4-update-icon-cache)
+               gtk4-update-icon-cache
+               gtk4-rendernode-tool)
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND TOOL_NAMES gtk4-launch)
 endif()
