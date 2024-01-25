@@ -1,0 +1,16 @@
+The package corrosion provides additional cmake functions:
+
+    find_package(Corrosion CONFIG REQUIRED) 
+    corrosion_import_crate(MANIFEST_PATH <path/to/cargo.toml> ...)
+    corrosion_set_env_vars(<target_name> <key1=value1> [... <keyN=valueN>])
+    corrosion_add_target_rustflags(<target_name> <rustflag> [... <rustflagN>])
+    corrosion_add_target_local_rustflags(target_name rustc_flag ...)
+    corrosion_set_hostbuild(<target_name>)
+    corrosion_set_features(<target_name> [ALL_FEATURES <Bool>] ...)
+    corrosion_set_cargo_flags(<target_name> <flag1> ...])
+    corrosion_set_linker(target_name linker)
+    corrosion_cbindgen(TARGET <imported_target_name> CARGO_PACKAGE ...)
+    corrosion_add_cxxbridge(cxx_target CRATE <imported_tgt_name> FILES lib.rs)
+
+See https://corrosion-rs.github.io/corrosion/introduction.html
+
