@@ -31,7 +31,7 @@
       "supports": "windows"
     },
     "geneva": {
-      "description": "Whether to include the Geneva Exporter in the SDK"
+      "description": "Whether to include the Geneva Exporter from the opentelemetry-cpp-contrib repository"
     },
     "otlp": {
       "description": "Whether to include the OpenTelemetry Protocol in the SDK",
