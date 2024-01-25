@@ -1,0 +1,4 @@
+The package mtlt provides CMake targets:
+
+    find_package(mtlt REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PRIVATE mtlt::mtlt)

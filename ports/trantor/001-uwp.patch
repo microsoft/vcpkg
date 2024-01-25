@@ -1,0 +1,36 @@
+diff --git a/trantor/net/inner/FileBufferNodeWin.cc b/trantor/net/inner/FileBufferNodeWin.cc
+index eb9fcbd..a0b9791 100644
+--- a/trantor/net/inner/FileBufferNodeWin.cc
++++ b/trantor/net/inner/FileBufferNodeWin.cc
+@@ -1,5 +1,11 @@
+ #include <trantor/net/inner/BufferNode.h>
+ #include <windows.h>
++#include <fileapi.h>
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++#define UWP 1
++#else
++#define UWP 0
++#endif
+ 
+ namespace trantor
+ {
+@@ -9,6 +15,11 @@ class FileBufferNode : public BufferNode
+   public:
+     FileBufferNode(const wchar_t *fileName, long long offset, long long length)
+     {
++#if UWP
++        sendHandle_ = CreateFile2(
++            fileName, GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING, nullptr);
++
++#else
+         sendHandle_ = CreateFileW(fileName,
+                                   GENERIC_READ,
+                                   FILE_SHARE_READ,
+@@ -16,6 +27,7 @@ class FileBufferNode : public BufferNode
+                                   OPEN_EXISTING,
+                                   FILE_ATTRIBUTE_NORMAL,
+                                   nullptr);
++#endif
+         if (sendHandle_ == INVALID_HANDLE_VALUE)
+         {
+             LOG_SYSERR << fileName << " open error";

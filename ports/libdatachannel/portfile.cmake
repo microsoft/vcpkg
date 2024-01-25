@@ -8,13 +8,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
     REF "v${VERSION}"
-    SHA512 2c8da820ebf6751d696645092ea5e562f7cb303d4f5cec9a8ca8e69b65321e79cc8a645095a4ecea710f5afd54499e71f4cdf261a0a2e32e28aef96a50ace28c
+    SHA512 63551a9f2ce8de7f7aba13b2114418d3d705a6c190d91eac7cf6deba93ccbe9bda053000feb7ac109d538646c77da62b31686a58f83d752f191cac3a015f2d69
     HEAD_REF master
     PATCHES 
         ${PATCHES}
         fix_dependency.patch
 )
-
+file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindLibJuice.cmake")
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DATACHANNEL_STATIC_LINKAGE)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -47,7 +47,7 @@ find_dependency(Threads)
 find_dependency(OpenSSL)
 find_dependency(LibJuice)
 find_dependency(plog CONFIG)
-find_dependency(libSRTP CONFIG)
+find_dependency(unofficial-usrsctp CONFIG)
 ${DATACHANNEL_CONFIG}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")

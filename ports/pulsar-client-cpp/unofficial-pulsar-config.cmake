@@ -3,14 +3,9 @@ if (NOT TARGET unofficial::pulsar::pulsar)
     get_filename_component(VCPKG_IMPORT_PREFIX "${VCPKG_IMPORT_PREFIX}" PATH)
     get_filename_component(VCPKG_IMPORT_PREFIX "${VCPKG_IMPORT_PREFIX}" PATH)
 
-    find_path(_pulsar_include_dir NAMES "pulsar/Client.h" PATH "${VCPKG_IMPORT_PREFIX}/include")
-    set(_temp_cmake_ignore_path ${CMAKE_IGNORE_PATH})
-    # Without setting CMAKE_IGNORE_PATH, the library under debug/lib/ directory could be found
-    set(CMAKE_IGNORE_PATH "${VCPKG_IMPORT_PREFIX}/debug/lib")
-    find_library(_pulsar_library_release NAMES pulsar pulsar-static PATH "${VCPKG_IMPORT_PREFIX}/lib")
-    set(CMAKE_IGNORE_PATH ${_temp_cmake_ignore_path})
-    unset(_temp_cmake_ignore_path)
-    find_library(_pulsar_library_debug NAMES pulsar pulsar-static PATH "${VCPKG_IMPORT_PREFIX}/debug/lib")
+    find_path(_pulsar_include_dir NAMES "pulsar/Client.h" PATHS "${VCPKG_IMPORT_PREFIX}/include" NO_DEFAULT_PATH)
+    find_library(_pulsar_library_release NAMES pulsar pulsar-static PATHS "${VCPKG_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
+    find_library(_pulsar_library_debug NAMES pulsar pulsar-static PATHS "${VCPKG_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
     message(STATUS "Found _pulsar_library_release: ${_pulsar_library_release}")
     message(STATUS "Found _pulsar_library_debug: ${_pulsar_library_debug}")
     if (NOT _pulsar_include_dir OR NOT _pulsar_library_release)
@@ -27,13 +22,19 @@ if (NOT TARGET unofficial::pulsar::pulsar)
         message(STATUS "Found _pulsar_debug_dll: ${_pulsar_debug_dll}")
     endif ()
 
+    # When CMAKE_BUILD_TYPE is not specified, debug libraries will be found for dependencies except ZLIB.
+    # So set it with Debug here to link debug ZLIB library by default.
+    if (NOT CMAKE_BUILD_TYPE)
+        set(CMAKE_BUILD_TYPE Debug)
+    endif ()
+
     include(CMakeFindDependencyMacro)
     find_dependency(OpenSSL)
     find_dependency(ZLIB)
     find_dependency(protobuf CONFIG)
     find_dependency(CURL CONFIG)
     find_dependency(zstd CONFIG)
-    find_dependency(snappy CONFIG)
+    find_dependency(Snappy CONFIG)
     if (MSVC)
         find_dependency(dlfcn-win32 CONFIG)
     endif ()
@@ -41,12 +42,12 @@ if (NOT TARGET unofficial::pulsar::pulsar)
     if (_pulsar_release_dll)
         add_library(unofficial::pulsar::pulsar SHARED IMPORTED)
         set_target_properties(unofficial::pulsar::pulsar PROPERTIES
-            IMPORTED_CONFIGURATIONS "Release"
+            IMPORTED_CONFIGURATIONS "RELEASE"
             IMPORTED_IMPLIB_RELEASE "${_pulsar_library_release}"
             IMPORTED_LOCATION_RELEASE "${_pulsar_release_dll}")
         if (_pulsar_debug_dll)
             set_target_properties(unofficial::pulsar::pulsar PROPERTIES
-                IMPORTED_CONFIGURATIONS "Release;DEBUG"
+                IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
                 IMPORTED_IMPLIB_DEBUG "${_pulsar_library_debug}"
                 IMPORTED_LOCATION_DEBUG "${_pulsar_debug_dll}")
             unset(_pulsar_debug_dll CACHE)
@@ -55,9 +56,11 @@ if (NOT TARGET unofficial::pulsar::pulsar)
     else ()
         add_library(unofficial::pulsar::pulsar UNKNOWN IMPORTED)
         set_target_properties(unofficial::pulsar::pulsar PROPERTIES
+            IMPORTED_CONFIGURATIONS "RELEASE"
             IMPORTED_LOCATION_RELEASE "${_pulsar_library_release}")
         if (_pulsar_library_debug)
             set_target_properties(unofficial::pulsar::pulsar PROPERTIES
+                IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
                 IMPORTED_LOCATION_DEBUG "${_pulsar_library_debug}")
             unset(_pulsar_library_debug CACHE)
         endif ()
