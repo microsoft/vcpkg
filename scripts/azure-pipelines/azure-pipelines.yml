@@ -5,7 +5,8 @@ variables:
   android-pool: 'PrAnd-1ES-Pool'
   linux-pool: 'PrLin-1ES-Pool'
   windows-pool: 'PrWin-2024-01-11'
-  osx-pool: 'PrOsx-2023-09-11'
+  osx-pool: 'PrOsx-2024-01-18'
+  osx-arm64-pool: 'PrOsx-2024-01-22-arm64'
   linux-docker-image: 'andcontainerregistry.azurecr.io/vcpkg-android:2024-01-11'
 
 parameters:
@@ -77,7 +78,17 @@ jobs:
 
 - template: osx/azure-pipelines.yml
   parameters:
+    triplet: x64-osx
+    jobName: x64_osx
     poolName: $(osx-pool)
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+
+- template: osx/azure-pipelines.yml
+  parameters:
+    triplet: arm64-osx
+    jobName: arm64_osx
+    poolName: $(osx-arm64-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
