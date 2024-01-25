@@ -33,7 +33,7 @@ write_basic_package_version_file(
 file(INSTALL
         ${SOURCE_PATH}/cmake/Corrosion.cmake
      DESTINATION
-        ${CURRENT_PACKAGES_DIR/share/${PORT}
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
      RENAME
         CorrosionConfig.cmake
 )
