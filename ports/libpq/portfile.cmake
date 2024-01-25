@@ -19,6 +19,7 @@ vcpkg_extract_source_archive(
         windows/win_bison_flex.patch
         windows/msbuild.patch
         windows/spin_delay.patch
+	android/unversioned_so.patch
 )
 
 file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
