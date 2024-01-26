@@ -20,7 +20,6 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        client-mac  WITH_CLIENT_MAC
         ffmpeg      WITH_FFMPEG
         ffmpeg      WITH_SWSCALE
         server      WITH_SERVER
@@ -52,6 +51,7 @@ vcpkg_cmake_configure(
         -DWITH_OPENSSL=ON
         -DWITH_SAMPLE=OFF
         -DWITH_UNICODE_BUILTIN=ON
+        -DWITH_CLIENT=OFF
         "-DMSVC_RUNTIME=${VCPKG_CRT_LINKAGE}"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
@@ -83,26 +83,13 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_list(SET tools)
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND tools wfreerdp)
     if("server" IN_LIST FEATURES)
         list(APPEND tools wfreerdp-server)
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
-    if("client-mac" IN_LIST FEATURES)
-        file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/client/Mac/cli/MacFreeRDP.app"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
-        )
-        list(APPEND tools MacFreeRDP)
-    endif()
     if("server" IN_LIST FEATURES)
         list(APPEND tools mfreerdp-server)
     endif()
-endif()
-if("wayland" IN_LIST FEATURES)
-    list(APPEND tools wlfreerdp)
-endif()
-if("x11" IN_LIST FEATURES)
-    list(APPEND tools xfreerdp)
 endif()
 if("winpr-tools" IN_LIST FEATURES)
     list(APPEND tools winpr-hash winpr-makecert)

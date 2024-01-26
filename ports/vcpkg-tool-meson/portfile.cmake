@@ -38,12 +38,16 @@ vcpkg_from_github(
         remove-freebsd-pcfile-specialization.patch
 )
 
-file(INSTALL "${SOURCE_PATH}"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/tools"
-    RENAME "meson"
+vcpkg_execute_required_process(
+    COMMAND "${CMAKE_COMMAND}"
+        "-DSOURCE_PATH=${SOURCE_PATH}"
+        "-DCURRENT_PACKAGES_DIR=${CURRENT_PACKAGES_DIR}"
+        -P "${CURRENT_PORT_DIR}/install.cmake"
+    WORKING_DIRECTORY "${VCPKG_ROOT_DIR}"
+    LOGNAME install
 )
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 z_vcpkg_find_acquire_program_find_internal("${program}"
     INTERPRETER "${interpreter}"

@@ -75,7 +75,7 @@ berkeleydb:arm64-android=fail
 berkeleydb:x64-android=fail
 binlog:arm-neon-android=fail
 blitz:x64-android=fail
-blitz:x64-linux=fail # python2 
+blitz:x64-linux=fail # python2
 blitz:x64-osx=fail
 boinc:arm-neon-android=fail
 boinc:arm64-android=fail
@@ -568,6 +568,9 @@ libmariadb:x64-uwp            = skip
 libmariadb:x64-windows        = skip
 libmariadb:x64-windows-static = skip
 libmariadb:x64-windows-static-md=skip
+libmaxminddb:arm64-android=fail
+libmaxminddb:arm-neon-android=fail
+libmaxminddb:x64-android=fail
 # libmesh installs tons of problematic files that conflict with other ports (boost, eigen, etc)
 libmesh:x64-linux=skip
 libmikmod:arm-neon-android=fail
@@ -660,8 +663,6 @@ live555:arm-neon-android=fail
 live555:arm64-uwp=fail
 live555:arm64-android=fail
 live555:x64-android=fail
-live555:x64-osx=fail
-live555:arm64-osx=fail
 live555:x64-uwp=fail
 llfio:arm-neon-android=fail
 llfio:arm64-android=fail
@@ -678,6 +679,7 @@ log4cpp:x64-linux=fail # dynamic exception specifications
 loguru:arm-neon-android=fail
 loguru:arm64-android=fail
 loguru:x64-android=fail
+magma:x64-linux=fail
 mchehab-zbar:arm-neon-android=fail
 mchehab-zbar:arm64-android=fail
 mchehab-zbar:x64-android=fail
@@ -728,13 +730,17 @@ mp3lame:arm-neon-android=fail
 mp3lame:arm64-android=fail
 mp3lame:x64-android=fail
 mpir:x64-android=fail
-# these ports require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
+# ms-gltf and ms-quic require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
 ms-gdkx:x64-windows=fail
 ms-gdkx:x64-windows-static=fail
 ms-gdkx:x64-windows-static-md=fail
 ms-gltf:arm-neon-android=fail
 ms-gltf:arm64-android=fail
 ms-gltf:x64-android=fail
+# ms-ifc-sdk requires a very recent compiler (C++23)
+ms-ifc-sdk:arm-neon-android=fail
+ms-ifc-sdk:arm64-android=fail
+ms-ifc-sdk:x64-android=fail
 ms-quic:arm64-uwp=fail
 ms-quic:arm64-windows=fail
 ms-quic:x64-uwp=fail
@@ -1144,8 +1150,6 @@ tensorflow-cc:x64-osx=skip
 tensorflow-cc:arm-osx=skip
 
 thorvg:arm-neon-android=fail
-thorvg:arm64-android=fail
-thorvg:x64-android=fail
 tidy-html5:arm64-uwp=fail
 tidy-html5:x64-uwp=fail
 tinycthread:arm-neon-android=fail
@@ -1188,6 +1192,14 @@ vowpal-wabbit:x64-android=fail
 vtk-m:arm-neon-android=fail
 vtk-m:arm64-android=fail
 vtk-m:x64-android=fail
+# Needs android-24 to supply a vulkan loader library
+vulkan:arm-neon-android=fail
+vulkan:arm64-android=fail
+vulkan:x64-android=fail
+# Needs android-26
+vulkan-utility-libraries:arm-neon-android=fail
+vulkan-utility-libraries:arm64-android=fail
+vulkan-utility-libraries:x64-android=fail
 # Conflicts with latest openjpeg port (vxl ships with an old version of openjpeg)
 # conflicts with qt5-location
 vxl:arm-neon-android=skip
@@ -1333,6 +1345,18 @@ vcpkg-ci-paraview:x64-windows-static-md=pass
 vcpkg-ci-paraview:x64-windows-static=pass
 vcpkg-ci-paraview:x64-windows=pass
 vcpkg-ci-paraview:x86-windows=pass
+vcpkg-ci-skia:arm-neon-android=pass
+vcpkg-ci-skia:arm64-android=pass
+vcpkg-ci-skia:arm64-uwp=pass
+vcpkg-ci-skia:arm64-windows=pass
+vcpkg-ci-skia:x64-android=pass
+vcpkg-ci-skia:x64-linux=pass
+vcpkg-ci-skia:x64-osx=pass
+vcpkg-ci-skia:x64-uwp=pass
+vcpkg-ci-skia:x64-windows-static-md=pass
+vcpkg-ci-skia:x64-windows-static=pass
+vcpkg-ci-skia:x64-windows=pass
+vcpkg-ci-skia:x86-windows=pass
 vcpkg-ci-soci:x64-linux=pass
 vcpkg-ci-soci:x64-osx=pass
 vcpkg-ci-soci:x64-windows=pass

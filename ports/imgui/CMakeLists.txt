@@ -36,6 +36,10 @@ if(IMGUI_BUILD_ALLEGRO5_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_allegro5.cpp)
 endif()
 
+if(IMGUI_BUILD_ANDROID_BINDING)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_android.cpp)
+endif()
+
 if(IMGUI_BUILD_DX9_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_dx9.cpp)
 endif()
@@ -156,6 +160,10 @@ if(NOT IMGUI_SKIP_HEADERS)
 
     if(IMGUI_BUILD_ALLEGRO5_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_allegro5.h DESTINATION include)
+    endif()
+
+    if (IMGUI_BUILD_ANDROID_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_android.h DESTINATION include)
     endif()
 
     if(IMGUI_BUILD_DX9_BINDING)

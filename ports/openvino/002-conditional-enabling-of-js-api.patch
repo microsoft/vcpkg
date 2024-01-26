@@ -1,0 +1,45 @@
+diff --git a/cmake/features.cmake b/cmake/features.cmake
+index 6e383edeeb..aadd1db976 100644
+--- a/cmake/features.cmake
++++ b/cmake/features.cmake
+@@ -177,6 +177,9 @@ ov_dependent_option (ENABLE_SYSTEM_SNAPPY "Enables use of system version of Snap
+ ov_dependent_option (ENABLE_PYTHON_PACKAGING "Enables packaging of Python API in APT / YUM" OFF
+     "ENABLE_PYTHON;UNIX" OFF)
+ 
++ov_dependent_option (ENABLE_JS "Enables JS API building" ON
++    "NOT WIN32" OFF)
++
+ ov_option(ENABLE_OPENVINO_DEBUG "Enable output for OPENVINO_DEBUG statements" OFF)
+ 
+ if(NOT BUILD_SHARED_LIBS AND ENABLE_OV_TF_FRONTEND)
+diff --git a/src/bindings/js/CMakeLists.txt b/src/bindings/js/CMakeLists.txt
+index 329a86c2fa..20bf139a54 100644
+--- a/src/bindings/js/CMakeLists.txt
++++ b/src/bindings/js/CMakeLists.txt
+@@ -2,6 +2,10 @@
+ # SPDX-License-Identifier: Apache-2.0
+ #
+ 
++if(NOT ENABLE_JS)
++    return()
++endif()
++
+ project(OpenVINO_JS_API)
+ 
+ add_subdirectory(node)
+diff --git a/src/bindings/js/node/CMakeLists.txt b/src/bindings/js/node/CMakeLists.txt
+index cc8918155f..fffceb5679 100644
+--- a/src/bindings/js/node/CMakeLists.txt
++++ b/src/bindings/js/node/CMakeLists.txt
+@@ -2,10 +2,6 @@
+ # SPDX-License-Identifier: Apache-2.0
+ #
+ 
+-if(WIN32)
+-    return()
+-endif()
+-
+ if(CMAKE_VERSION VERSION_LESS 3.14)
+     message(WARNING "JS API is not available with CMake version less than 3.14, skipping")
+     return()
+

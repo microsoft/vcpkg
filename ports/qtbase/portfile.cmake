@@ -39,7 +39,7 @@ if(VCPKG_TARGET_IS_LINUX)
     message(WARNING "qtbase currently requires packages from the system package manager. "
     "They can be installed on Ubuntu systems via sudo apt-get install " 
     "'^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev "
-    "libxkbcommon-x11-dev.")
+    "libxkbcommon-x11-dev libegl1-mesa-dev.")
 endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:

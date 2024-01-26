@@ -30,6 +30,7 @@ declare_external_from_git(dawn
     LICENSE_FILE LICENSE
     PATCHES
         dawn-dedup-native-proc-gen.patch
+        add-cstdlib.patch
 )
 declare_external_from_git(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
@@ -194,7 +195,8 @@ if("vulkan" IN_LIST FEATURES)
         vulkan-tools
     )
     string(APPEND OPTIONS " skia_use_vulkan=true")
-    file(COPY "${CURRENT_INSTALLED_DIR}/include/vk_mem_alloc.h" DESTINATION "${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include")
+    find_file(vk_mem_alloc_h "vk_mem_alloc.h" PATHS "${CURRENT_INSTALLED_DIR}/include" PATH_SUFFIXES "vma" REQUIRED)
+    file(COPY "${vk_mem_alloc_h}" DESTINATION "${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include")
     # Cf. third_party/vulkanmemoryallocator/GrVulkanMemoryAllocator.h:25
     vcpkg_replace_string("${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include/vk_mem_alloc.h"
         "#include <vulkan/vulkan.h>"

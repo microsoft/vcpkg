@@ -26,11 +26,11 @@ index 4eba08b..2c0ff6d 100644
  								}
 +                               			else if (event->mask & IN_MOVED_FROM)
 +                               			{
-+                               			    parsed_information.emplace_back(T{ changed_file }, Event::renamed_old);
++                               			    parsed_information.emplace_back(StringType{ changed_file }, Event::renamed_old);
 +                               			}
 +                               			else if (event->mask & IN_MOVED_TO)
 +                               			{
-+                               			    parsed_information.emplace_back(T{ changed_file }, Event::renamed_new);
++                               			    parsed_information.emplace_back(StringType{ changed_file }, Event::renamed_new);
 +                               			}
  							}
  						}
