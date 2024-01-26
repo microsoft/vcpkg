@@ -9098,7 +9098,7 @@
     },
     "wasmedge": {
       "baseline": "0.13.5",
-      "port-version": 0
+      "port-version": 1
     },
     "wavelib": {
       "baseline": "2021-11-26",
