@@ -17,16 +17,16 @@ get_filename_component(_cld3_root "${_cld3_root}" PATH)
 find_library(_cld_lib NAMES cld3)
 if (EXISTS "${_cld_lib}")
 
-    add_library(cld3 INTERFACE IMPORTED GLOBAL)
-    add_library(cld3::cld3 ALIAS cld3)
+    add_library(unofficial::cld3 INTERFACE IMPORTED GLOBAL)
+    add_library(cld3::cld3 ALIAS unofficial::cld3)
 
-    target_include_directories(cld3 INTERFACE ${_cld3_root}/include)
+    target_include_directories(unofficial::cld3 INTERFACE ${_cld3_root}/include)
 
     set(cld3_LIBRARIES "${_cld_lib}")
-    target_link_libraries(cld3 INTERFACE ${cld3_LIBRARIES})
-    target_link_libraries(cld3 INTERFACE ${Protobuf_LITE_LIBRARIES})
+    target_link_libraries(unofficial::cld3 INTERFACE ${cld3_LIBRARIES})
+    target_link_libraries(unofficial::cld3 INTERFACE ${Protobuf_LITE_LIBRARIES})
 
-    set_property(TARGET cld3 APPEND PROPERTY IMPORTED_CONFIGURATIONS)
+    set_property(TARGET unofficial::cld3 APPEND PROPERTY IMPORTED_CONFIGURATIONS)
     set(cld3_FOUND TRUE)
 
 else()
