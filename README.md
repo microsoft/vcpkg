@@ -1,3 +1,19 @@
+# Q-Free Maxtime Vcpkg
+
+The Q-Free modifcations to vcpkg for maxtime are based on 2022.03.10.
+* vcpkg 2022.03.10 is last version that supports openssl 1.1.1 and openresty is currently locked to this version of openssl.
+* vcpkg 2022.03.10 uses boost 1.78.0 which is the first version that supports the MSVC 2022 complier. 
+
+```powershell
+> .\clean.ps1
+> powershell.exe .\build-vcpkg.ps1
+> powershell.exe .\build-openresty.ps1
+# After running this script right click all the files in the vcpkg subdir
+# use 7-zip/nanazip to add the files to vcpkg.zip
+# rename to vcpkg-<ver>.zip
+# upload to Amazon S3 intelight/vcpkg
+```
+
 # Vcpkg: Overview
 
 [中文总览](README_zh_CN.md)
