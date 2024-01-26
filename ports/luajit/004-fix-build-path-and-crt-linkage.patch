@@ -1,11 +1,11 @@
 diff --git a/src/msvcbuild.bat b/src/msvcbuild.bat
-index 42e3652..6a889e1 100644
+index d323d8d..6e61150 100644
 --- a/src/msvcbuild.bat
 +++ b/src/msvcbuild.bat
-@@ -14,17 +14,18 @@
- @if not defined INCLUDE goto :FAIL
- 
+@@ -15,19 +15,20 @@
  @setlocal
+ @rem Add more debug flags here, e.g. DEBUGCFLAGS=/DLUA_USE_APICHECK
+ @set DEBUGCFLAGS=
 -@set LJCOMPILE=cl /nologo /c /O2 /W3 /D_CRT_SECURE_NO_DEPRECATE /D_CRT_STDIO_INLINE=__declspec(dllexport)__inline
 +@set SOURCEDIR=%1
 +@set LJCOMPILE=cl /nologo /c /O2 /W3 /D_CRT_SECURE_NO_DEPRECATE /D_CRT_STDIO_INLINE=__declspec(dllexport)__inline /I%SOURCEDIR%
@@ -15,22 +15,37 @@ index 42e3652..6a889e1 100644
 -@set DASMDIR=..\dynasm
 +@set DASMDIR=%SOURCEDIR%\..\dynasm
  @set DASM=%DASMDIR%\dynasm.lua
+-@set DASC=vm_x64.dasc
++@set DASC=%SOURCEDIR%\vm_x64.dasc
  @set LJDLLNAME=lua51.dll
  @set LJLIBNAME=lua51.lib
--@set ALL_LIB=lib_base.c lib_math.c lib_bit.c lib_string.c lib_table.c lib_io.c lib_os.c lib_package.c lib_debug.c lib_jit.c lib_ffi.c
-+@set ALL_LIB=%SOURCEDIR%\lib_base.c %SOURCEDIR%\lib_math.c %SOURCEDIR%\lib_bit.c %SOURCEDIR%\lib_string.c %SOURCEDIR%\lib_table.c %SOURCEDIR%\lib_io.c %SOURCEDIR%\lib_os.c %SOURCEDIR%\lib_package.c %SOURCEDIR%\lib_debug.c %SOURCEDIR%\lib_jit.c %SOURCEDIR%\lib_ffi.c
+ @set BUILDTYPE=release
+-@set ALL_LIB=lib_base.c lib_math.c lib_bit.c lib_string.c lib_table.c lib_io.c lib_os.c lib_package.c lib_debug.c lib_jit.c lib_ffi.c lib_buffer.c
++@set ALL_LIB=%SOURCEDIR%\lib_base.c %SOURCEDIR%\lib_math.c %SOURCEDIR%\lib_bit.c %SOURCEDIR%\lib_string.c %SOURCEDIR%\lib_table.c %SOURCEDIR%\lib_io.c %SOURCEDIR%\lib_os.c %SOURCEDIR%\lib_package.c %SOURCEDIR%\lib_debug.c %SOURCEDIR%\lib_jit.c %SOURCEDIR%\lib_ffi.c %SOURCEDIR%\lib_buffer.c
  
 -%LJCOMPILE% host\minilua.c
 +%LJCOMPILE% %SOURCEDIR%\host\minilua.c /Fdminilua.pdb
  @if errorlevel 1 goto :BAD
  %LJLINK% /out:minilua.exe minilua.obj
  @if errorlevel 1 goto :BAD
-@@ -38,10 +39,10 @@ if exist minilua.exe.manifest^
+@@ -38,20 +39,20 @@ if exist minilua.exe.manifest^
+ @set LJARCH=x64
+ @minilua
+ @if errorlevel 8 goto :X64
+-@set DASC=vm_x86.dasc
++@set DASC=%SOURCEDIR%\vm_x86.dasc
  @set DASMFLAGS=-D WIN -D JIT -D FFI
  @set LJARCH=x86
+ @set LJCOMPILE=%LJCOMPILE% /arch:SSE2
  :X64
--minilua %DASM% -LN %DASMFLAGS% -o host\buildvm_arch.h vm_x86.dasc
-+minilua %DASM% -LN %DASMFLAGS% -o %SOURCEDIR%\host\buildvm_arch.h %SOURCEDIR%\vm_x86.dasc
+ @if "%1" neq "nogc64" goto :GC64
+ @shift
+-@set DASC=vm_x86.dasc
++@set DASC=%SOURCEDIR%\vm_x86.dasc
+ @set LJCOMPILE=%LJCOMPILE% /DLUAJIT_DISABLE_GC64
+ :GC64
+-minilua %DASM% -LN %DASMFLAGS% -o host\buildvm_arch.h %DASC%
++minilua %DASM% -LN %DASMFLAGS% -o %SOURCEDIR%\host\buildvm_arch.h %DASC%
  @if errorlevel 1 goto :BAD
  
 -%LJCOMPILE% /I "." /I %DASMDIR% host\buildvm*.c
@@ -38,7 +53,7 @@ index 42e3652..6a889e1 100644
  @if errorlevel 1 goto :BAD
  %LJLINK% /out:buildvm.exe buildvm*.obj
  @if errorlevel 1 goto :BAD
-@@ -50,39 +51,39 @@ if exist buildvm.exe.manifest^
+@@ -60,41 +61,44 @@ if exist buildvm.exe.manifest^
  
  buildvm -m peobj -o lj_vm.obj
  @if errorlevel 1 goto :BAD
@@ -62,25 +77,30 @@ index 42e3652..6a889e1 100644
  @if errorlevel 1 goto :BAD
  
 -@if "%1" neq "debug" goto :NODEBUG
++@if "%2"=="static" set CRT_LINKAGE=/MT
++@if "%2"=="dynamic" set CRT_LINKAGE=/MD
 +@set LJLINK=%LJLINK% /debug
-+@if "%2" neq "debug" goto :NODEBUG
++@if "%3" neq "debug" goto :NODEBUG
  @shift
- @set LJCOMPILE=%LJCOMPILE% /Zi
--@set LJLINK=%LJLINK% /debug
+ @set BUILDTYPE=debug
+ @set LJCOMPILE=%LJCOMPILE% /Zi %DEBUGCFLAGS%
+-@set LJLINK=%LJLINK% /opt:ref /opt:icf /incremental:no
++@set CRT_LINKAGE=%CRT_LINKAGE%d
  :NODEBUG
+ @set LJLINK=%LJLINK% /%BUILDTYPE%
 -@if "%1"=="amalg" goto :AMALGDLL
 -@if "%1"=="static" goto :STATIC
 -%LJCOMPILE% /MD /DLUA_BUILD_AS_DLL lj_*.c lib_*.c
-+@if "%2"=="amalg" goto :AMALGDLL
-+@if "%2"=="static" goto :STATIC
-+%LJCOMPILE% /MD /DLUA_BUILD_AS_DLL %SOURCEDIR%\lj_*.c %SOURCEDIR%\lib_*.c /Fdlua51.pdb
++@if "%3"=="amalg" goto :AMALGDLL
++@if "%3"=="static" goto :STATIC
++%LJCOMPILE% %CRT_LINKAGE% /DLUA_BUILD_AS_DLL %SOURCEDIR%\lj_*.c %SOURCEDIR%\lib_*.c /Fdlua51.pdb
  @if errorlevel 1 goto :BAD
  %LJLINK% /DLL /out:%LJDLLNAME% lj_*.obj lib_*.obj
  @if errorlevel 1 goto :BAD
  @goto :MTDLL
  :STATIC
 -%LJCOMPILE% lj_*.c lib_*.c
-+%LJCOMPILE% %SOURCEDIR%\lj_*.c %SOURCEDIR%\lib_*.c  /Fdlua51.pdb
++%LJCOMPILE% %CRT_LINKAGE% %SOURCEDIR%\lj_*.c %SOURCEDIR%\lib_*.c  /Fdlua51.pdb
  @if errorlevel 1 goto :BAD
  %LJLIB% /OUT:%LJLIBNAME% lj_*.obj lib_*.obj
  @if errorlevel 1 goto :BAD
@@ -91,16 +111,16 @@ index 42e3652..6a889e1 100644
  @if errorlevel 1 goto :BAD
  %LJLINK% /DLL /out:%LJDLLNAME% ljamalg.obj lj_vm.obj
  @if errorlevel 1 goto :BAD
-@@ -90,7 +91,7 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
+@@ -102,7 +106,7 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
  if exist %LJDLLNAME%.manifest^
    %LJMT% -manifest %LJDLLNAME%.manifest -outputresource:%LJDLLNAME%;2
  
 -%LJCOMPILE% luajit.c
-+%LJCOMPILE% %SOURCEDIR%\luajit.c  /Fdluajit.pdb
++%LJCOMPILE% %CRT_LINKAGE% %SOURCEDIR%\luajit.c  /Fdluajit.pdb
  @if errorlevel 1 goto :BAD
  %LJLINK% /out:luajit.exe luajit.obj %LJLIBNAME%
  @if errorlevel 1 goto :BAD
-@@ -98,8 +99,8 @@ if exist luajit.exe.manifest^
+@@ -110,8 +114,8 @@ if exist luajit.exe.manifest^
    %LJMT% -manifest luajit.exe.manifest -outputresource:luajit.exe
  
  @del *.obj *.manifest minilua.exe buildvm.exe
@@ -111,9 +131,9 @@ index 42e3652..6a889e1 100644
  @echo.
  @echo === Successfully built LuaJIT for Windows/%LJARCH% ===
  
-@@ -112,4 +113,5 @@ if exist luajit.exe.manifest^
+@@ -124,4 +128,5 @@ if exist luajit.exe.manifest^
  @goto :END
  :FAIL
- @echo You must open a "Visual Studio .NET Command Prompt" to run this script
+ @echo You must open a "Visual Studio Command Prompt" to run this script
 +exit 1
  :END
