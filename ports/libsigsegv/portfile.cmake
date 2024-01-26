@@ -11,13 +11,33 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
 )
 
-if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+if (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}")
-    vcpkg_install_make()
-    vcpkg_fixup_pkgconfig()
-
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+else ()
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+        OPTIONS
+#            --host=x86_64-w64-mingw32 --prefix=/usr/local/msvc64
+#            CC="$HOME/msvc/compile cl -nologo"
+#            CFLAGS="-MD"
+#            CXX="$HOME/msvc/compile cl -nologo"
+#            CXXFLAGS="-MD"
+#            CPPFLAGS="-D_WIN32_WINNT=$win32_target -I/usr/local/msvc64/include"
+#            LDFLAGS="-L/usr/local/msvc64/lib"
+#            LD="link"
+#            NM="dumpbin -symbols"
+#            STRIP=":"
+#            AR="$HOME/msvc/ar-lib lib"
+#            RANLIB=":"
+             ${options}
+    )
 endif()
+
+vcpkg_install_make()
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
