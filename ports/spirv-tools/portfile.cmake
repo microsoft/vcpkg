@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Tools
     REF "vulkan-sdk-${VERSION}"
-    SHA512 317ce91ae229efddb98028840fbb6c9000c6a09aace2f04c2f59fdeb3a73b8fdb75048bf5a2189135a734a30b1ead57dc7dc5fcfd70a7267d17c743238a19899
+    SHA512 f17692509ecfbd753a853eaa01d559c06b06fa15b287971da814044418da71a94813606acfe536fa519e8aeba92bdfc80971acb749dab6e7cc395773c4f05693
     PATCHES
         cmake-config-dir.diff
         spirv-tools-shared.diff
