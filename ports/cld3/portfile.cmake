@@ -10,6 +10,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
       fix-build.patch
+      unofficial-export.patch
 )
 
 vcpkg_cmake_configure(
@@ -19,7 +20,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
 file(GLOB PUBLIC_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/*.h")
