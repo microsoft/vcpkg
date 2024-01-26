@@ -7,6 +7,8 @@ vcpkg_from_github(
         fix-file_path.patch
         fix-LibeventConfig_cmake_in_path.patch
         fix-usage.patch
+        Revert-Link-with-iphlpapi-only-on-windows.patch
+        Revert-Parse-IPv6-scope-IDs.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

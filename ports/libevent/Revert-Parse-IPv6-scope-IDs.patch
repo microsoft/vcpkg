@@ -1,0 +1,262 @@
+From 2459286da5908118805ef6c583202dc6dcc1c04d Mon Sep 17 00:00:00 2001
+From: Doug Crawford <doug.crawford@intelight-its.com>
+Date: Mon, 24 Jan 2022 22:28:50 -0700
+Subject: [PATCH] Revert "Parse IPv6 scope IDs."
+
+This reverts commit f602211fa1a2ba487d8b7a631a204b307af67aa9.
+---
+ CMakeLists.txt        | 12 ---------
+ Makefile.am           |  4 +--
+ evutil.c              | 50 ++----------------------------------
+ include/event2/util.h |  6 -----
+ test/regress_util.c   | 60 -------------------------------------------
+ 5 files changed, 4 insertions(+), 128 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 676727f1..d16b695b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -974,18 +974,6 @@ add_event_library(event SOURCES ${SRC_CORE} ${SRC_EXTRA})
+ 
+ set(WIN32_GETOPT)
+ if (WIN32)
+-    set(_TMPLIBS)
+-    if (${EVENT_LIBRARY_STATIC})
+-        list(APPEND _TMPLIBS event_core_static event_static)
+-    endif()
+-    if (${EVENT_LIBRARY_SHARED})
+-        list(APPEND _TMPLIBS event_core_shared event_shared)
+-    endif()
+-    foreach(lib ${_TMPLIBS})
+-        target_link_libraries(${lib} iphlpapi)
+-    endforeach()
+-    unset(_TMPLIBS)
+-
+     list(APPEND WIN32_GETOPT
+          WIN32-Code/getopt.c
+          WIN32-Code/getopt_long.c)
+diff --git a/Makefile.am b/Makefile.am
+index 38724713..e7ff5487 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -264,11 +264,11 @@ AM_LDFLAGS = $(LIBEVENT_LDFLAGS)
+ GENERIC_LDFLAGS = -version-info $(VERSION_INFO) $(RELEASE) $(NO_UNDEFINED) $(AM_LDFLAGS)
+ 
+ libevent_la_SOURCES = $(CORE_SRC) $(EXTRAS_SRC)
+-libevent_la_LIBADD = @LTLIBOBJS@ $(SYS_LIBS) -liphlpapi
++libevent_la_LIBADD = @LTLIBOBJS@ $(SYS_LIBS)
+ libevent_la_LDFLAGS = $(GENERIC_LDFLAGS)
+ 
+ libevent_core_la_SOURCES = $(CORE_SRC)
+-libevent_core_la_LIBADD = @LTLIBOBJS@ $(SYS_LIBS) -liphlpapi
++libevent_core_la_LIBADD = @LTLIBOBJS@ $(SYS_LIBS)
+ libevent_core_la_LDFLAGS = $(GENERIC_LDFLAGS)
+ 
+ if PTHREADS
+diff --git a/evutil.c b/evutil.c
+index 9817f086..0cdfb49a 100644
+--- a/evutil.c
++++ b/evutil.c
+@@ -41,7 +41,6 @@
+ /* For structs needed by GetAdaptersAddresses */
+ #define _WIN32_WINNT 0x0501
+ #include <iphlpapi.h>
+-#include <netioapi.h>
+ #endif
+ 
+ #include <sys/types.h>
+@@ -75,9 +74,6 @@
+ #endif
+ #include <time.h>
+ #include <sys/stat.h>
+-#ifndef _WIN32
+-#include <net/if.h>
+-#endif
+ #ifdef EVENT__HAVE_IFADDRS_H
+ #include <ifaddrs.h>
+ #endif
+@@ -994,7 +990,6 @@ evutil_getaddrinfo_common_(const char *nodename, const char *servname,
+     struct evutil_addrinfo *hints, struct evutil_addrinfo **res, int *portnum)
+ {
+ 	int port = 0;
+-	unsigned int if_index;
+ 	const char *pname;
+ 
+ 	if (nodename == NULL && servname == NULL)
+@@ -1068,12 +1063,10 @@ evutil_getaddrinfo_common_(const char *nodename, const char *servname,
+ 	if (hints->ai_family == PF_INET6 || hints->ai_family == PF_UNSPEC) {
+ 		struct sockaddr_in6 sin6;
+ 		memset(&sin6, 0, sizeof(sin6));
+-		if (1 == evutil_inet_pton_scope(
+-			AF_INET6, nodename, &sin6.sin6_addr, &if_index)) {
++		if (1==evutil_inet_pton(AF_INET6, nodename, &sin6.sin6_addr)) {
+ 			/* Got an ipv6 address. */
+ 			sin6.sin6_family = AF_INET6;
+ 			sin6.sin6_port = htons(port);
+-			sin6.sin6_scope_id = if_index;
+ 			*res = evutil_new_addrinfo_((struct sockaddr*)&sin6,
+ 			    sizeof(sin6), hints);
+ 			if (!*res)
+@@ -1988,41 +1981,6 @@ evutil_inet_ntop(int af, const void *src, char *dst, size_t len)
+ #endif
+ }
+ 
+-int
+-evutil_inet_pton_scope(int af, const char *src, void *dst, unsigned *indexp)
+-{
+-	int r;
+-	unsigned if_index;
+-	char *check, *cp, *tmp_src;
+-
+-	*indexp = 0; /* Reasonable default */
+-
+-	/* Bail out if not IPv6 */
+-	if (af != AF_INET6)
+-		return evutil_inet_pton(af, src, dst);
+-
+-	cp = strchr(src, '%');
+-
+-	/* Bail out if no zone ID */
+-	if (cp == NULL)
+-		return evutil_inet_pton(af, src, dst);
+-
+-	if_index = if_nametoindex(cp + 1);
+-	if (if_index == 0) {
+-		/* Could be numeric */
+-		if_index = strtoul(cp + 1, &check, 10);
+-		if (check[0] != '\0')
+-			return 0;
+-	}
+-	*indexp = if_index;
+-	tmp_src = mm_strdup(src);
+-	cp = strchr(tmp_src, '%');
+-	*cp = '\0';
+-	r = evutil_inet_pton(af, tmp_src, dst);
+-	free(tmp_src);
+-	return r;
+-}
+-
+ int
+ evutil_inet_pton(int af, const char *src, void *dst)
+ {
+@@ -2139,7 +2097,6 @@ int
+ evutil_parse_sockaddr_port(const char *ip_as_string, struct sockaddr *out, int *outlen)
+ {
+ 	int port;
+-	unsigned int if_index;
+ 	char buf[128];
+ 	const char *cp, *addr_part, *port_part;
+ 	int is_ipv6;
+@@ -2209,13 +2166,10 @@ evutil_parse_sockaddr_port(const char *ip_as_string, struct sockaddr *out, int *
+ #endif
+ 		sin6.sin6_family = AF_INET6;
+ 		sin6.sin6_port = htons(port);
+-		if (1 != evutil_inet_pton_scope(
+-			AF_INET6, addr_part, &sin6.sin6_addr, &if_index)) {
++		if (1 != evutil_inet_pton(AF_INET6, addr_part, &sin6.sin6_addr))
+ 			return -1;
+-		}
+ 		if ((int)sizeof(sin6) > *outlen)
+ 			return -1;
+-		sin6.sin6_scope_id = if_index;
+ 		memset(out, 0, *outlen);
+ 		memcpy(out, &sin6, sizeof(sin6));
+ 		*outlen = sizeof(sin6);
+diff --git a/include/event2/util.h b/include/event2/util.h
+index 02aa7ba9..e6df6289 100644
+--- a/include/event2/util.h
++++ b/include/event2/util.h
+@@ -612,12 +612,6 @@ int evutil_vsnprintf(char *buf, size_t buflen, const char *format, va_list ap)
+ /** Replacement for inet_ntop for platforms which lack it. */
+ EVENT2_EXPORT_SYMBOL
+ const char *evutil_inet_ntop(int af, const void *src, char *dst, size_t len);
+-/** Variation of inet_pton that also parses IPv6 scopes. Public for
+-    unit tests. No reason to call this directly.
+- */
+-EVENT2_EXPORT_SYMBOL
+-int evutil_inet_pton_scope(int af, const char *src, void *dst,
+-	unsigned *indexp);
+ /** Replacement for inet_pton for platforms which lack it. */
+ EVENT2_EXPORT_SYMBOL
+ int evutil_inet_pton(int af, const char *src, void *dst);
+diff --git a/test/regress_util.c b/test/regress_util.c
+index 45caa270..126014b7 100644
+--- a/test/regress_util.c
++++ b/test/regress_util.c
+@@ -211,65 +211,6 @@ regress_ipv6_parse(void *ptr)
+ #endif
+ }
+ 
+-static struct ipv6_entry_scope {
+-	const char *addr;
+-	ev_uint32_t res[4];
+-	unsigned scope;
+-	enum entry_status status;
+-} ipv6_entries_scope[] = {
+-	{ "2001:DB8::", { 0x20010db8, 0, 0 }, 0, NORMAL },
+-	{ "2001:DB8::%0", { 0x20010db8, 0, 0, 0 }, 0, NORMAL },
+-	{ "2001:DB8::%1", { 0x20010db8, 0, 0, 0 }, 1, NORMAL },
+-	{ "foobar.", { 0, 0, 0, 0 }, 0, BAD },
+-	{ "2001:DB8::%does-not-exist", { 0, 0, 0, 0 }, 0, BAD },
+-	{ NULL, { 0, 0, 0, 0,  }, 0, BAD },
+-};
+-static void
+-regress_ipv6_parse_scope(void *ptr)
+-{
+-#ifdef AF_INET6
+-	int i, j;
+-	unsigned if_scope;
+-
+-	for (i = 0; ipv6_entries_scope[i].addr; ++i) {
+-		struct ipv6_entry_scope *ent = &ipv6_entries_scope[i];
+-		struct in6_addr in6;
+-		int r;
+-		r = evutil_inet_pton_scope(AF_INET6, ent->addr, &in6,
+-			&if_scope);
+-		if (r == 0) {
+-			if (ent->status != BAD)
+-				TT_FAIL(("%s did not parse, but it's a good address!",
+-					ent->addr));
+-			continue;
+-		}
+-		if (ent->status == BAD) {
+-			TT_FAIL(("%s parsed, but we expected an error", ent->addr));
+-			continue;
+-		}
+-		for (j = 0; j < 4; ++j) {
+-			/* Can't use s6_addr32 here; some don't have it. */
+-			ev_uint32_t u =
+-			    ((ev_uint32_t)in6.s6_addr[j*4  ] << 24) |
+-			    ((ev_uint32_t)in6.s6_addr[j*4+1] << 16) |
+-			    ((ev_uint32_t)in6.s6_addr[j*4+2] << 8) |
+-			    ((ev_uint32_t)in6.s6_addr[j*4+3]);
+-			if (u != ent->res[j]) {
+-				TT_FAIL(("%s did not parse as expected.", ent->addr));
+-				continue;
+-			}
+-		}
+-		if (if_scope != ent->scope) {
+-			TT_FAIL(("%s did not parse as expected.", ent->addr));
+-			continue;
+-		}
+-	}
+-#else
+-	TT_BLATHER(("Skipping IPv6 address parsing."));
+-#endif
+-}
+-
+-
+ static struct sa_port_ent {
+ 	const char *parse;
+ 	int safamily;
+@@ -1643,7 +1584,6 @@ end:
+ struct testcase_t util_testcases[] = {
+ 	{ "ipv4_parse", regress_ipv4_parse, 0, NULL, NULL },
+ 	{ "ipv6_parse", regress_ipv6_parse, 0, NULL, NULL },
+-	{ "ipv6_parse_scope", regress_ipv6_parse_scope, 0, NULL, NULL },
+ 	{ "sockaddr_port_parse", regress_sockaddr_port_parse, 0, NULL, NULL },
+ 	{ "sockaddr_port_format", regress_sockaddr_port_format, 0, NULL, NULL },
+ 	{ "sockaddr_predicates", test_evutil_sockaddr_predicates, 0,NULL,NULL },
+-- 
+2.25.1
+
