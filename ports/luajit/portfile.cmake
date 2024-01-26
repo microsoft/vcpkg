@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO LuaJIT/LuaJIT
-    REF 633f265f67f322cbe2c5fd11d3e46d968ac220f7  #2022-08-11
-    SHA512 0a1d79ab7d2de6894bcff33309e015fdba0ea67cf0425d75b9301a30006039e81b527178dbb3485e1adea177ffe062e6fcef74307f8e725678e70562d57d1a5b
+    REPO openresty/luajit2
+    REF v2.1-20230119
+    SHA512 161f6b9715c718f48cbc1d0dd9a1286b7ae17d2245035db33efb1c9da51c6a3e0b6032057d2a91a7302afcb81bcc43515ff3648701d0b8abe483e032bd281669
     HEAD_REF master
     PATCHES
         003-do-not-set-macosx-deployment-target.patch
