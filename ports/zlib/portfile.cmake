@@ -7,9 +7,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-Prevent-invalid-inclusions-when-HAVE_-is-set-to-0.patch
-        0002-skip-building-examples.patch
-        0003-build-static-or-shared-not-both.patch
-        0004-android-and-mingw-fixes.patch
+        0002-build-static-or-shared-not-both.patch
+        0003-android-and-mingw-fixes.patch
 )
 
 # This is generated during the cmake build
@@ -19,6 +18,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSKIP_INSTALL_FILES=ON
+        -DZLIB_BUILD_EXAMPLES=OFF
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
