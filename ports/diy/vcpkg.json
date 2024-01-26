@@ -1,0 +1,26 @@
+{
+  "name": "diy",
+  "version-date": "2022-07-20",
+  "description": "DIY is a block-parallel library for implementing scalable algorithms that can execute both in-core and out-of-core.",
+  "homepage": "https://github.com/diatomic/diy",
+  "license": null,
+  "supports": "!x86 & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "mpi": {
+      "description": "Enable MPI",
+      "dependencies": [
+        "mpi"
+      ]
+    }
+  }
+}

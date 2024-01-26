@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7e50fa6b8..5ec032950 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -58,10 +58,7 @@ set (diy_include_thirdparty_directories "")
+ set (diy_libraries "")
+ 
+ # Debugging
+-if                          (${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR
+-                             ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+-    list (APPEND diy_definitions "-DDEBUG")
+-endif                       ()
++list (APPEND diy_definitions "$<$<CONFIG:DEBUG>:DEBUG>")
+ 
+ # Logging
+ if                          (log)
+@@ -248,7 +245,7 @@ include(CMakePackageConfigHelpers)
+ configure_package_config_file(
+     "${PROJECT_SOURCE_DIR}/cmake/diy-config.cmake.in"
+     "${PROJECT_BINARY_DIR}/diy-config.cmake"
+-    INSTALL_DESTINATION ".")
++    INSTALL_DESTINATION "share/diy")
+ 
+ # install targets
+ if (NOT DEFINED diy_install_only_libraries) # defined by parent project if building for binary distribution
+@@ -266,7 +263,6 @@ install(TARGETS ${diy_targets} EXPORT ${diy_export_name}
+ 
+ if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR) # Only generate these files when diy is the main project
+-  export(EXPORT ${diy_export_name} NAMESPACE DIY:: FILE "${PROJECT_BINARY_DIR}/diy-targets.cmake")
+-  install(EXPORT ${diy_export_name} NAMESPACE DIY:: DESTINATION "." FILE diy-targets.cmake)
++  install(EXPORT ${diy_export_name} NAMESPACE DIY:: DESTINATION "share/diy" FILE diy-targets.cmake)
+-  install(FILES "${PROJECT_BINARY_DIR}/diy-config.cmake" DESTINATION ".")
++  install(FILES "${PROJECT_BINARY_DIR}/diy-config.cmake" DESTINATION "share/diy")
+ endif()
+ 

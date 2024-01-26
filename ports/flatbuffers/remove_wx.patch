@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ce9502af9..85687ceb4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -305,11 +305,11 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
+ # MSVC **MUST** come before the Clang check, as clang-cl is flagged by CMake as "MSVC", but it still textually 
+ # matches as Clang in its Compiler Id :)
+ # Note: in CMake >= 3.14 we can check CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU" or "MSVC" to differentiate...
+-elseif(MSVC)
++elseif(MSVC OR CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+   # Visual Studio pedantic build settings
+   # warning C4512: assignment operator could not be generated
+   # warning C4316: object allocated on the heap may not be aligned
+-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX /wd4512 /wd4316")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /wd4512 /wd4316")
+ 
+   if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_CRT_SECURE_NO_WARNINGS")

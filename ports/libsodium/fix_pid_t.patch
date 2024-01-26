@@ -1,0 +1,15 @@
+diff --git a/src/libsodium/randombytes/internal/randombytes_internal_random.c b/src/libsodium/randombytes/internal/randombytes_internal_random.c
+index f0794f80a..2379cdb1f 100644
+--- a/src/libsodium/randombytes/internal/randombytes_internal_random.c
++++ b/src/libsodium/randombytes/internal/randombytes_internal_random.c
+@@ -61,6 +61,10 @@
+ #ifdef _WIN32
+ # include <windows.h>
+ # include <sys/timeb.h>
++# ifdef _MSC_VER
++#  include <process.h>
++   typedef int pid_t;
++# endif
+ # define RtlGenRandom SystemFunction036
+ # if defined(__cplusplus)
+ extern "C"

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 467f4b797..717c3a0f3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -104,7 +104,9 @@ check_function_exists("strftime" HAVE_STRFTIME)
+ 
+ include(CheckTypeSize)
+ 
++if(NOT MSVC)
+ check_type_size("__uint128_t" __UINT128_T)
++endif()
+ check_type_size("long long" SIZEOF_LONG_LONG)
+ check_type_size("long" SIZEOF_LONG)
+ check_type_size("time_t" SIZEOF_TIME_T)

@@ -1,0 +1,19 @@
+diff --git a/build/make/gen_msvs_vcxproj.sh b/build/make/gen_msvs_vcxproj.sh
+index 74d7d4622..c4ff85aad 100644
+--- a/build/make/gen_msvs_vcxproj.sh
++++ b/build/make/gen_msvs_vcxproj.sh
+@@ -107,8 +107,12 @@ generate_filter() {
+                     # Separate file names with Condition?
+                     tag_content ObjectFileName "\$(IntDir)$objf"
+                     # Check for AVX and turn it on to avoid warnings.
+-                    if [[ $f =~ avx.?\.c$ ]]; then
+-                        tag_content AdditionalOptions "/arch:AVX"
++                    if [[ $f =~ avx512.?\.c$ ]]; then
++                        tag_content AdditionalOptions "$(AdditionalOptions) /arch:AVX512"
++                    elif [[ $f =~ avx2.?\.c$ ]]; then
++                        tag_content AdditionalOptions "$(AdditionalOptions) /arch:AVX2"
++                    elif [[ $f =~ avx.?\.c$ ]]; then
++                        tag_content AdditionalOptions "$(AdditionalOptions) /arch:AVX"
+                     fi
+                     close_tag ClCompile
+                 elif [ "$pat" == "h" ] ; then

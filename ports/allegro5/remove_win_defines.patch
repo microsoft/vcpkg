@@ -1,0 +1,119 @@
+diff --git a/src/win/wclipboard.c b/src/win/wclipboard.c
+index 08cc57bd7..a2db3c1e7 100644
+--- a/src/win/wclipboard.c
++++ b/src/win/wclipboard.c
+@@ -15,11 +15,12 @@
+  *      See readme.txt for copyright information.
+  */
+ 
+-
+-#define _WIN32_WINNT 0x0501
+-#ifndef WINVER
+-#define WINVER 0x0501
+-#endif
++//#ifndef _WIN32_WINNT
++//#define _WIN32_WINNT 0x0501
++//#endif
++//#ifndef WINVER
++//#define WINVER 0x0501
++//#endif
+ 
+ #include <windows.h>
+ #include <windowsx.h>
+diff --git a/src/win/whapall.c b/src/win/whapall.c
+index 265f2ea21..47d9300ca 100644
+--- a/src/win/whapall.c
++++ b/src/win/whapall.c
+@@ -21,7 +21,7 @@
+ #define DIRECTINPUT_VERSION 0x0800
+ 
+ /* For waitable timers */
+-#define _WIN32_WINNT 0x0501
++//#define _WIN32_WINNT 0x0501
+ 
+ #include "allegro5/allegro.h"
+ #include "allegro5/haptic.h"
+diff --git a/src/win/whaptic.cpp b/src/win/whaptic.cpp
+index 8fb1c0e9e..f7a2c3d07 100644
+--- a/src/win/whaptic.cpp
++++ b/src/win/whaptic.cpp
+@@ -22,7 +22,7 @@
+ #define DIRECTINPUT_VERSION 0x0800
+ 
+ /* For waitable timers */
+-#define _WIN32_WINNT 0x0501
++//#define _WIN32_WINNT 0x0501
+ 
+ #include "allegro5/allegro.h"
+ #include "allegro5/internal/aintern.h"
+diff --git a/src/win/whapxi.c b/src/win/whapxi.c
+index 299327216..a1c7873c7 100644
+--- a/src/win/whapxi.c
++++ b/src/win/whapxi.c
+@@ -21,7 +21,7 @@
+ #define DIRECTINPUT_VERSION 0x0800
+ 
+ /* For waitable timers */
+-#define _WIN32_WINNT 0x0501
++//#define _WIN32_WINNT 0x0501
+ 
+ #include "allegro5/allegro.h"
+ #include "allegro5/haptic.h"
+diff --git a/src/win/wjoyall.c b/src/win/wjoyall.c
+index 8475d99f0..75a1a57a5 100644
+--- a/src/win/wjoyall.c
++++ b/src/win/wjoyall.c
+@@ -43,7 +43,7 @@
+ #define ALLEGRO_NO_COMPATIBILITY
+ 
+ /* For waitable timers */
+-#define _WIN32_WINNT 0x0501
++//#define _WIN32_WINNT 0x0501
+ 
+ #include "allegro5/allegro.h"
+ #include "allegro5/internal/aintern.h"
+diff --git a/src/win/wjoydxnu.cpp b/src/win/wjoydxnu.cpp
+index 47b63d723..e954b4d3c 100644
+--- a/src/win/wjoydxnu.cpp
++++ b/src/win/wjoydxnu.cpp
+@@ -57,7 +57,7 @@
+ #define DIRECTINPUT_VERSION 0x0800
+ 
+ /* For waitable timers */
+-#define _WIN32_WINNT 0x0501
++//#define _WIN32_WINNT 0x0501
+ 
+ #include "allegro5/allegro.h"
+ #include "allegro5/internal/aintern.h"
+diff --git a/src/win/wjoyxi.c b/src/win/wjoyxi.c
+index 1dc49d135..24fe0b368 100644
+--- a/src/win/wjoyxi.c
++++ b/src/win/wjoyxi.c
+@@ -20,7 +20,7 @@
+ #define ALLEGRO_NO_COMPATIBILITY
+ 
+ /* For waitable timers */
+-#define _WIN32_WINNT 0x0501
++//#define _WIN32_WINNT 0x0501
+ 
+ #include "allegro5/allegro.h"
+ #include "allegro5/internal/aintern.h"
+diff --git a/src/win/wwindow.c b/src/win/wwindow.c
+index e8cf55e26..e06302e44 100644
+--- a/src/win/wwindow.c
++++ b/src/win/wwindow.c
+@@ -15,10 +15,10 @@
+  */
+ 
+ /* Raw input */
+-#define _WIN32_WINNT 0x0501
+-#ifndef WINVER
+-#define WINVER 0x0501
+-#endif
++//#define _WIN32_WINNT 0x0501
++//#ifndef WINVER
++//#define WINVER 0x0501
++//#endif
+ 
+ #include <windows.h>
+ #include <windowsx.h>

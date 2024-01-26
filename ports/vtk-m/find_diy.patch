@@ -1,0 +1,13 @@
+diff --git a/CMake/VTKmConfig.cmake.in b/CMake/VTKmConfig.cmake.in
+index 05b81592c..4b427c855 100644
+--- a/CMake/VTKmConfig.cmake.in	
++++ b/CMake/VTKmConfig.cmake.in
+@@ -91,6 +91,8 @@ endif()
+ 
+ # Load the library exports, but only if not compiling VTK-m itself
+ set_and_check(VTKm_CONFIG_DIR "@PACKAGE_VTKm_INSTALL_CONFIG_DIR@")
++include(CMakeFindDependencyMacro)
++find_dependency(diy)
+ set(VTKM_FROM_INSTALL_DIR FALSE)
+ if(NOT "${CMAKE_BINARY_DIR}" STREQUAL "@VTKm_BINARY_DIR@")
+   set(VTKM_FROM_INSTALL_DIR TRUE)

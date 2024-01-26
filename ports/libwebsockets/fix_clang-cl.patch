@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2715e878d..5d9fa68e7 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -689,7 +689,7 @@ CHECK_C_SOURCE_COMPILES("#include <stdint.h>
+ 	}" LWS_HAS_INTPTR_T)
+ 
+ if ((CMAKE_C_COMPILER_ID MATCHES "Clang") OR
+-    (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
++    (CMAKE_CXX_COMPILER_ID MATCHES "Clang") AND NOT MSVC)
+ 	set(COMPILER_IS_CLANG ON)
+ endif()
+ 
+@@ -840,7 +840,7 @@ if (MSVC)
+ 	# Turn off pointless microsoft security warnings.
+ 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
+ 	# Fail the build if any warnings
+-	add_compile_options(/W3 /WX /wd4142 /wd4267 /wd4996)
++	add_compile_options(/W3 /wd4142 /wd4267 /wd4996)
+ endif(MSVC)
+ 
+ if (MINGW)

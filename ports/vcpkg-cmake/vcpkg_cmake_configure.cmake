@@ -79,11 +79,6 @@ function(vcpkg_cmake_configure)
         if(DEFINED VCPKG_PLATFORM_TOOLSET)
             vcpkg_list(APPEND arg_OPTIONS "-T${VCPKG_PLATFORM_TOOLSET}")
         endif()
-        if(NOT generator)
-            message(FATAL_ERROR "Unable to determine appropriate Visual Studio generator for triplet ${TARGET_TRIPLET}:
-    ENV{VisualStudioVersion} : $ENV{VisualStudioVersion}
-    VCPKG_TARGET_ARCHITECTURE: ${VCPKG_TARGET_ARCHITECTURE}")
-        endif()
     elseif(DEFINED arg_GENERATOR)
         set(generator "${arg_GENERATOR}")
     elseif(ninja_host)
@@ -198,8 +193,6 @@ function(vcpkg_cmake_configure)
         endif()
     endforeach()
 
-    vcpkg_list(PREPEND arg_OPTIONS "-DFETCHCONTENT_FULLY_DISCONNECTED=ON")
-
     # Allow overrides / additional configuration variables from triplets
     if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
         vcpkg_list(APPEND arg_OPTIONS ${VCPKG_CMAKE_CONFIGURE_OPTIONS})
@@ -253,9 +246,7 @@ function(vcpkg_cmake_configure)
             COMMAND "${NINJA}" -v
             WORKING_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGFILE_BASE}"
-            SAVE_LOG_FILES
-                "../../${TARGET_TRIPLET}-dbg/CMakeCache.txt" ALIAS "dbg-CMakeCache.txt.log"
-                "../CMakeCache.txt" ALIAS "rel-CMakeCache.txt.log"
+            SAVE_LOG_FILES ../../${TARGET_TRIPLET}-dbg/CMakeCache.txt ../CMakeCache.txt
         )
         
         vcpkg_list(APPEND config_logs

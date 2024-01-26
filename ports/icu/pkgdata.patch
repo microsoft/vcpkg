@@ -1,0 +1,13 @@
+diff --git a/source/tools/pkgdata/pkgdata.cpp b/source/tools/pkgdata/pkgdata.cpp
+index 8de99cb9c..cbd1486fc 100644
+--- a/source/tools/pkgdata/pkgdata.cpp
++++ b/source/tools/pkgdata/pkgdata.cpp
+@@ -1800,7 +1800,7 @@ static int32_t pkg_createWithoutAssemblyCode(UPKGOptions *o, const char *targetD
+ #endif
+ 
+ #ifdef WINDOWS_WITH_MSVC
+-#define LINK_CMD "link.exe /nologo /release /out:"
++#define LINK_CMD "link.exe /nologo /out:"
+ #define LINK_FLAGS "/NXCOMPAT /DYNAMICBASE /DLL /NOENTRY /MANIFEST:NO /implib:"
+ 
+ #define LINK_EXTRA_UWP_FLAGS "/APPCONTAINER "

@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 839fc5e0f35b1c38a01cfd7a94e83de81e8a6b55
     SHA512 efb6b19691e23c95cf6abd59607bce299b0c02a12ce6be105a35ad8509ab564b8dac8d6363f048e547d199e117d2bdd0e4ef3046d3c411f669c0a453a0b75627
     HEAD_REF master
+    PATCHES 
+        fix_clang-cl_include.patch
 )
 
 vcpkg_find_acquire_program(PYTHON2)

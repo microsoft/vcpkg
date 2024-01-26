@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f6bb6147c..f0fb5c948 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -69,7 +69,7 @@ if (NOT MSVC)
+         -grecord-gcc-switches
+         -march=westmere)
+ else ()
+-    set(BDDISASM_COMMON_COMPILE_OPTIONS /W4 /WX)
++    set(BDDISASM_COMMON_COMPILE_OPTIONS /W4)
+ endif ()
+ 
+ set(BDDISASM_PUBLIC_HEADERS
+@@ -170,7 +170,7 @@ target_include_directories(bddisasm PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOU
+ target_link_libraries(bdshemu PUBLIC bddisasm)
+ 
+ target_compile_options(bdshemu PRIVATE ${BDDISASM_COMMON_COMPILE_OPTIONS})
+-if (NOT MSVC)
++if (NOT "CMAKE_C_COMPILER_ID" STREQUAL "MSVC")
+     target_compile_options(bdshemu PRIVATE -maes)
+ endif ()
+ 

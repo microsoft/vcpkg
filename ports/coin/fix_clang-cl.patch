@@ -1,0 +1,13 @@
+diff --git a/include/Inventor/elements/SoGLLazyElement.h b/include/Inventor/elements/SoGLLazyElement.h
+index 403711f6e..a7ee06bf1 100644
+--- a/include/Inventor/elements/SoGLLazyElement.h
++++ b/include/Inventor/elements/SoGLLazyElement.h
+@@ -74,7 +74,7 @@ public:
+ 
+   void reset(SoState* state, uint32_t bitmask) const;
+ 
+-  typedef struct COIN_DLL_API {
++  COIN_DLL_API typedef struct {
+     uint32_t cachebitmask;
+     uint32_t diffuse;
+     SbColor ambient;

@@ -1,0 +1,45 @@
+diff --git a/ThirdParty/diy2/CMakeLists.txt b/ThirdParty/diy2/CMakeLists.txt
+index 3224fc0f01cb0c5f152c186e47b6979625d78717..8c4f38a7ed337ae457756add8686f83d35f6de86 100644
+--- a/ThirdParty/diy2/CMakeLists.txt
++++ b/ThirdParty/diy2/CMakeLists.txt
+@@ -1,8 +1,14 @@
+-vtk_module_third_party_internal(
+-  HEADER_ONLY
+-  LICENSE_FILES "vtkdiy2/LICENSE.txt"
+-                "vtkdiy2/LEGAL.txt"
+-  VERSION       "3.5.0")
++vtk_module_third_party(
++  INTERNAL
++    HEADER_ONLY
++    LICENSE_FILES "vtkdiy2/LICENSE.txt"
++                  "vtkdiy2/LEGAL.txt"
++    VERSION       "3.5.0"
++    STANDARD_INCLUDE_DIRS
++  EXTERNAL
++    PACKAGE diy CONFIG_MODE
++    TARGETS DIY::diy
++    STANDARD_INCLUDE_DIRS)
+ 
+ if (TARGET VTK::mpi)
+   vtk_module_link(VTK::diy2
+diff --git a/ThirdParty/diy2/vtk_diy2.h.in b/ThirdParty/diy2/vtk_diy2.h.in
+index 17f6564e3212552f33ff09ae4623af18c5797b46..6c92809eb45d71b7b3f8752b082d44cd268fb93b 100644
+--- a/ThirdParty/diy2/vtk_diy2.h.in
++++ b/ThirdParty/diy2/vtk_diy2.h.in
+@@ -16,12 +16,14 @@
+ #define vtk_diy2_h
+ 
+ /* Use the diy2 library configured for VTK.  */
+-#cmakedefine01 VTK_MODULE_USE_EXTERNAL_vtkdiy2
++#cmakedefine01 VTK_MODULE_USE_EXTERNAL_VTK_diy2
+ 
+ /* enable/disable DIY MPI */
++#ifndef DIY_NO_MPI
+ #cmakedefine DIY_NO_MPI
++#endif
+ 
+-#if VTK_MODULE_USE_EXTERNAL_vtkdiy2
++#if VTK_MODULE_USE_EXTERNAL_VTK_diy2
+ #  define VTK_DIY2(header) <header>
+ #else
+ #  define VTK_DIY2(header) <vtkdiy2/include/header>

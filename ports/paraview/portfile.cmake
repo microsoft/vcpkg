@@ -48,6 +48,7 @@ vcpkg_from_gitlab(
     SHA512 002c2c934ef7e64c89b1567f406db1ebb90532817062e7016c248ba8ae85a88f1a35bc3963a9577ec08ba742a0e7fb91022c29aaaa0bddf0a1d585074341733e
     PATCHES 
         ${VisItPatches}
+        fix-clang-cl.patch
 )
 #VTK_MODULE_USE_EXTERNAL_ParaView_protobuf
 #NVPipe?

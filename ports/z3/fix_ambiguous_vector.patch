@@ -1,0 +1,19 @@
+diff --git a/src/util/vector.h b/src/util/vector.h
+index 1cb25a8c4..d47c1d7ab 100644
+--- a/src/util/vector.h
++++ b/src/util/vector.h
+@@ -736,10 +736,10 @@ public:
+ template<typename T, typename SZ = unsigned>
+ class svector : public vector<T, false, SZ> {
+ public:
+-    svector():vector<T, false, SZ>() {}
+-    svector(SZ s):vector<T, false, SZ>(s) {}
+-    svector(SZ s, T const & elem):vector<T, false, SZ>(s, elem) {}
+-    svector(SZ s, T const * data):vector<T, false, SZ>(s, data) {}
++    svector() : ::vector<T, false, SZ>() {}
++    svector(SZ s): ::vector<T, false, SZ>(s) {}
++    svector(SZ s, T const & elem): ::vector<T, false, SZ>(s, elem) {}
++    svector(SZ s, T const * data): ::vector<T, false, SZ>(s, data) {}
+ };
+ 
+ 

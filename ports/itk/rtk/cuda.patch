@@ -1,0 +1,17 @@
+diff --git a/cmake/FindCUDA_wrap.cmake b/cmake/FindCUDA_wrap.cmake
+index 158504827..b70ada8ef 100644
+--- a/cmake/FindCUDA_wrap.cmake
++++ b/cmake/FindCUDA_wrap.cmake
+@@ -56,6 +56,12 @@ elseif("${CUDA_VERSION}" VERSION_LESS 9.0)
+      -gencode arch=compute_35,code=sm_35
+      -gencode arch=compute_35,code=compute_35
+      )
++elseif("${CUDA_VERSION}" VERSION_GREATER 9.0)
++ set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}
++     -gencode arch=compute_50,code=sm_50
++     -gencode arch=compute_60,code=sm_60
++     -gencode arch=compute_61,code=compute_61
++     )
+ else()
+  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}
+      -gencode arch=compute_30,code=sm_30

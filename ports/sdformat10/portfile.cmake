@@ -12,9 +12,9 @@ vcpkg_from_github(
 
 # Ruby is required by the sdformat build process
 vcpkg_find_acquire_program(RUBY)
-get_filename_component(RUBY_PATH ${RUBY} DIRECTORY)
+get_filename_component(RUBY_PATH "${RUBY}" DIRECTORY)
 set(_path $ENV{PATH})
-vcpkg_add_to_path(${RUBY_PATH})
+vcpkg_add_to_path("${RUBY_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -27,7 +27,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 # Restore original path
-set(ENV{PATH} ${_path})
+set(ENV{PATH} "${_path}")
 
 # Fix cmake targets and pkg-config file location
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/sdformat10")
@@ -39,4 +39,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

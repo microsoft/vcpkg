@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c38f206cc..332e9a3f8 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -659,7 +659,7 @@ if(APPLE)
+ endif()
+ 
+ if(MSVC)
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W3 /WX /w44996 /wd4090") # Compiler warnings, error on warning
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W3 /w44996 /wd4090") # Compiler warnings, error on warning
+ 
+   if(UA_MSVC_FORCE_STATIC_CRT AND NOT BUILD_SHARED_LIBS)
+     set(CompilerFlags CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS
