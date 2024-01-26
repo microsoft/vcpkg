@@ -8,6 +8,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-library-install-path.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
