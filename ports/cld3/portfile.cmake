@@ -31,7 +31,7 @@ file(INSTALL ${HEADERS_SCRIPT_SPAN_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/i
 file(GLOB HEADERS_PROTO_FILES LIST_DIRECTORIES false "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cld_3/protos/*.h")
 file(INSTALL ${HEADERS_PROTO_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/cld_3/protos")
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/cld3Config.cmake.in"
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}/cld3Config.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-cld3Config.cmake.in"
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}/unofficial-cld3Config.cmake" @ONLY)
 		
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
