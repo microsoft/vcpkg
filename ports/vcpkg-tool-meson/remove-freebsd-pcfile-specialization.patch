@@ -1,13 +1,19 @@
 diff --git a/mesonbuild/modules/pkgconfig.py b/mesonbuild/modules/pkgconfig.py
-index dc7eded..7abf690 100644
+index dc7eded..b4a5e41 100644
 --- a/mesonbuild/modules/pkgconfig.py
 +++ b/mesonbuild/modules/pkgconfig.py
-@@ -593,7 +593,7 @@ class PkgConfigModule(ExtensionModule):
+@@ -593,12 +593,8 @@ class PkgConfigModule(ExtensionModule):
          pcfile = filebase + '.pc'
          pkgroot = pkgroot_name = kwargs.get('install_dir', default_install_dir)
          if pkgroot is None:
 -            if mesonlib.is_freebsd():
-+            if False:
-                 pkgroot = os.path.join(state.environment.coredata.get_option(mesonlib.OptionKey('prefix')), 'libdata', 'pkgconfig')
-                 pkgroot_name = os.path.join('{prefix}', 'libdata', 'pkgconfig')
-             else:
+-                pkgroot = os.path.join(state.environment.coredata.get_option(mesonlib.OptionKey('prefix')), 'libdata', 'pkgconfig')
+-                pkgroot_name = os.path.join('{prefix}', 'libdata', 'pkgconfig')
+-            else:
+-                pkgroot = os.path.join(state.environment.coredata.get_option(mesonlib.OptionKey('libdir')), 'pkgconfig')
+-                pkgroot_name = os.path.join('{libdir}', 'pkgconfig')
++            pkgroot = os.path.join(state.environment.coredata.get_option(mesonlib.OptionKey('libdir')), 'pkgconfig')
++            pkgroot_name = os.path.join('{libdir}', 'pkgconfig')
+         if not isinstance(pkgroot, str):
+             raise mesonlib.MesonException('Install_dir must be a string.')
+         relocatable = state.get_option('relocatable', module='pkgconfig')
