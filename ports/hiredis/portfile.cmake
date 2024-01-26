@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-timeval.patch
         fix-include-path.patch
         fix-ssize_t.patch
+        fix-libevent-callback.patch
         ${HIREDIS_PATCHES}
 )
 

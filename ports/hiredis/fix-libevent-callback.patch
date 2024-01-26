@@ -1,0 +1,25 @@
+From 91747cb5e6a67257d775f036d08690f12bcf150d Mon Sep 17 00:00:00 2001
+From: Doug Crawford <dcrawford1@users.noreply.github.com>
+Date: Wed, 24 Jan 2024 17:20:08 -0700
+Subject: [PATCH] fix-libevent-callback
+
+---
+ adapters/libevent.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/adapters/libevent.h b/adapters/libevent.h
+index 9150979..73bb8ed 100644
+--- a/adapters/libevent.h
++++ b/adapters/libevent.h
+@@ -50,7 +50,7 @@ static void redisLibeventDestroy(redisLibeventEvents *e) {
+     hi_free(e);
+ }
+ 
+-static void redisLibeventHandler(int fd, short event, void *arg) {
++static void redisLibeventHandler(evutil_socket_t fd, short event, void *arg) {
+     ((void)fd);
+     redisLibeventEvents *e = (redisLibeventEvents*)arg;
+     e->state |= REDIS_LIBEVENT_ENTERED;
+-- 
+2.39.2.windows.1
+
