@@ -1,0 +1,43 @@
+From 6e20b2e953c9afed84b628fa41b7457ff49a758c Mon Sep 17 00:00:00 2001
+From: Doug Crawford <doug.crawford@intelight-its.com>
+Date: Mon, 8 Jun 2020 21:41:06 -0700
+Subject: [PATCH] fix link with vcpkg static openssl
+
+---
+ luaossl-20190731-0.rockspec | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/luaossl-20190731-0.rockspec b/luaossl-20190731-0.rockspec
+index 2acbddb..99ac076 100644
+--- a/luaossl-20190731-0.rockspec
++++ b/luaossl-20190731-0.rockspec
+@@ -29,10 +29,10 @@ external_dependencies = {
+ 	platforms = {
+ 		windows = {
+ 			OPENSSL = {
+-				library = "libeay32"
++				library = "libcrypto"
+ 			};
+ 			CRYPTO = {
+-				library = "ssleay32"
++				library = "libssl"
+ 			};
+ 		}
+ 	};
+@@ -123,9 +123,11 @@ build = {
+ 			modules = {
+ 				["_openssl"] = {
+ 					libraries = {
+-						"libeay32";
+-						"ssleay32";
++						"libcrypto";
++						"libssl";
+ 						"ws2_32";
++						"Crypt32";
++						"User32";
+ 						"advapi32";
+ 						"kernel32";
+ 					};
+-- 
+2.26.0.windows.1
+

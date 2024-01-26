@@ -1,0 +1,60 @@
+From fd0d7716a0bd0bce5e1127666e320f35073a356a Mon Sep 17 00:00:00 2001
+From: Doug Crawford <doug.crawford@intelight-its.com>
+Date: Thu, 28 Feb 2019 00:03:12 +0000
+Subject: [PATCH] replace luacrypto with luaossl
+
+---
+ luajwt-1.3-4.rockspec        | 2 +-
+ luajwt/luajwt-1.3-4.rockspec | 2 +-
+ luajwt/luajwt.lua            | 8 ++++----
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/luajwt-1.3-4.rockspec b/luajwt-1.3-4.rockspec
+index d6e0855..dc04137 100644
+--- a/luajwt-1.3-4.rockspec
++++ b/luajwt-1.3-4.rockspec
+@@ -15,7 +15,7 @@ description = {
+ 
+ dependencies = {
+ 	"lua >= 5.1",
+-	"luacrypto >= 0.3.2-1",
++	"luaossl",
+ 	"lua-cjson >= 2.1.0",
+ 	"lbase64 >= 20120807-3"
+ }
+diff --git a/luajwt/luajwt-1.3-4.rockspec b/luajwt/luajwt-1.3-4.rockspec
+index d6e0855..dc04137 100644
+--- a/luajwt/luajwt-1.3-4.rockspec
++++ b/luajwt/luajwt-1.3-4.rockspec
+@@ -15,7 +15,7 @@ description = {
+ 
+ dependencies = {
+ 	"lua >= 5.1",
+-	"luacrypto >= 0.3.2-1",
++	"luaossl",
+ 	"lua-cjson >= 2.1.0",
+ 	"lbase64 >= 20120807-3"
+ }
+diff --git a/luajwt/luajwt.lua b/luajwt/luajwt.lua
+index 841c605..3e1100b 100644
+--- a/luajwt/luajwt.lua
++++ b/luajwt/luajwt.lua
+@@ -1,11 +1,11 @@
+ local cjson  = require 'cjson'
+ local base64 = require 'base64'
+-local crypto = require 'crypto'
++local hmac = require 'openssl.hmac'
+ 
+ local alg_sign = {
+-	['HS256'] = function(data, key) return crypto.hmac.digest('sha256', data, key, true) end,
+-	['HS384'] = function(data, key) return crypto.hmac.digest('sha384', data, key, true) end,
+-	['HS512'] = function(data, key) return crypto.hmac.digest('sha512', data, key, true) end,
++	['HS256'] = function(data, key) return hmac.new(key, 'sha256'):final(data) end,
++	['HS384'] = function(data, key) return hmac.new(key, 'sha384'):final(data) end,
++	['HS512'] = function(data, key) return hmac.new(key, 'sha512'):final(data) end,
+ }
+ 
+ local alg_verify = {
+-- 
+2.7.4
+

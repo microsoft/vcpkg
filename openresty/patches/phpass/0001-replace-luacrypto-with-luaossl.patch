@@ -1,0 +1,75 @@
+From 060667db6627fb6acc72daa7bf5ae1bbfdbd132e Mon Sep 17 00:00:00 2001
+From: Doug Crawford <doug.crawford@intelight-its.com>
+Date: Thu, 28 Feb 2019 16:06:07 +0000
+Subject: [PATCH] replace luacrypto with luaossl
+
+---
+ lua-phpass/phpass-1.0-1.rockspec | 2 +-
+ lua-phpass/phpass-dev-1.rockspec | 2 +-
+ lua-phpass/src/phpass.lua        | 7 +++----
+ phpass-1.0-1.rockspec            | 2 +-
+ 4 files changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/lua-phpass/phpass-1.0-1.rockspec b/lua-phpass/phpass-1.0-1.rockspec
+index 65b22af..de12719 100644
+--- a/lua-phpass/phpass-1.0-1.rockspec
++++ b/lua-phpass/phpass-1.0-1.rockspec
+@@ -10,7 +10,7 @@ description = {
+    license = "MIT"
+ }
+ dependencies = {
+-   "lua >= 5.1", "luacrypto"
++   "lua >= 5.1", "luaossl"
+ }
+ build = {
+    type = "builtin",
+diff --git a/lua-phpass/phpass-dev-1.rockspec b/lua-phpass/phpass-dev-1.rockspec
+index b07120f..3de647f 100644
+--- a/lua-phpass/phpass-dev-1.rockspec
++++ b/lua-phpass/phpass-dev-1.rockspec
+@@ -10,7 +10,7 @@ description = {
+ }
+ dependencies = {
+     "lua >= 5.1",
+-    "luacrypto",
++    "luaossl",
+ }
+ build = {
+     type = "builtin",
+diff --git a/lua-phpass/src/phpass.lua b/lua-phpass/src/phpass.lua
+index d757c48..ac7f024 100644
+--- a/lua-phpass/src/phpass.lua
++++ b/lua-phpass/src/phpass.lua
+@@ -51,13 +51,12 @@ local function startsWith(str, prefix)
+ end
+ 
+ local function md5(data)
+-    local md5object = require("crypto").digest.new('md5')
+-    local raw = true
+-    return md5object:final(data, raw)
++    local md5object = require("openssl.digest").new('md5')
++    return md5object:final(data)
+ end
+ 
+ local function randomBytes(number)
+-    return require("crypto").rand.bytes(number)
++    return require("openssl.rand").bytes(number)
+ end
+ 
+ local function cryptPrivate(pw, setting)
+diff --git a/phpass-1.0-1.rockspec b/phpass-1.0-1.rockspec
+index 65b22af..de12719 100644
+--- a/phpass-1.0-1.rockspec
++++ b/phpass-1.0-1.rockspec
+@@ -10,7 +10,7 @@ description = {
+    license = "MIT"
+ }
+ dependencies = {
+-   "lua >= 5.1", "luacrypto"
++   "lua >= 5.1", "luaossl"
+ }
+ build = {
+    type = "builtin",
+-- 
+2.26.0.windows.1
+
