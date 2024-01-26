@@ -7,7 +7,7 @@ index dc7eded..7abf690 100644
          pkgroot = pkgroot_name = kwargs.get('install_dir', default_install_dir)
          if pkgroot is None:
 -            if mesonlib.is_freebsd():
-+            if 0:
++            if False:
                  pkgroot = os.path.join(state.environment.coredata.get_option(mesonlib.OptionKey('prefix')), 'libdata', 'pkgconfig')
                  pkgroot_name = os.path.join('{prefix}', 'libdata', 'pkgconfig')
              else:
