@@ -172,6 +172,10 @@
       "baseline": "1.6.3",
       "port-version": 0
     },
+    "apriltag": {
+      "baseline": "3.2.0",
+      "port-version": 0
+    },
     "apsi": {
       "baseline": "0.11.0",
       "port-version": 0
@@ -1628,6 +1632,10 @@
       "baseline": "1.6.1",
       "port-version": 0
     },
+    "cld3": {
+      "baseline": "3.0.14",
+      "port-version": 0
+    },
     "clfft": {
       "baseline": "2.12.2",
       "port-version": 6
@@ -1675,10 +1683,6 @@
     "cmark": {
       "baseline": "0.30.3",
       "port-version": 0
-    },
-    "cmcstl2": {
-      "baseline": "2019-07-20",
-      "port-version": 3
     },
     "cminpack": {
       "baseline": "1.3.8",
@@ -2833,7 +2837,7 @@
       "port-version": 0
     },
     "function2": {
-      "baseline": "4.2.3",
+      "baseline": "4.2.4",
       "port-version": 0
     },
     "functions-framework-cpp": {
@@ -2997,7 +3001,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "1.9.9",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "glbinding": {
@@ -4046,7 +4050,7 @@
     },
     "lensfun": {
       "baseline": "0.3.4",
-      "port-version": 1
+      "port-version": 2
     },
     "leptonica": {
       "baseline": "1.83.1",
@@ -4390,7 +4394,7 @@
     },
     "libgwenhywfar": {
       "baseline": "5.6.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libgxps": {
       "baseline": "0.3.2",
@@ -4658,7 +4662,7 @@
     },
     "libopensp": {
       "baseline": "1.5.2",
-      "port-version": 2
+      "port-version": 3
     },
     "libopnmidi": {
       "baseline": "1.5.1",
@@ -4718,7 +4722,7 @@
     },
     "libpq": {
       "baseline": "16.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libpqxx": {
       "baseline": "7.8.1",
@@ -6414,11 +6418,11 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.13.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opentelemetry-fluentd": {
       "baseline": "2.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -6426,7 +6430,7 @@
     },
     "openturns": {
       "baseline": "1.20",
-      "port-version": 0
+      "port-version": 1
     },
     "openvdb": {
       "baseline": "11.0.0",
@@ -9093,8 +9097,8 @@
       "port-version": 0
     },
     "wasmedge": {
-      "baseline": "0.12.1",
-      "port-version": 1
+      "baseline": "0.13.5",
+      "port-version": 0
     },
     "wavelib": {
       "baseline": "2021-11-26",
@@ -9433,7 +9437,7 @@
       "port-version": 0
     },
     "z3": {
-      "baseline": "4.12.4",
+      "baseline": "4.12.5",
       "port-version": 0
     },
     "z4kn4fein-semver": {
@@ -9542,7 +9546,7 @@
     },
     "zydis": {
       "baseline": "4.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "zyre": {
       "baseline": "2019-07-07",
