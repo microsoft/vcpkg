@@ -46,7 +46,8 @@
     "otlp-http": {
       "description": "Whether to include the OpenTelemetry Protocol over HTTP in the SDK",
       "dependencies": [
-        "curl"
+        "curl",
+        "protobuf"
       ]
     },
     "prometheus": {
