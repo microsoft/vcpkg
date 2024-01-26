@@ -1634,7 +1634,7 @@
     },
     "cld3": {
       "baseline": "3.0.14",
-      "port-version": 0
+      "port-version": 1
     },
     "clfft": {
       "baseline": "2.12.2",
