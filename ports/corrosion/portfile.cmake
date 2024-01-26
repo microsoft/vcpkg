@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO corrosion-rs/corrosion
     REF "v${VERSION}"
-    SHA512 d807d93c2ca57f084a7518422bc927638a5839e4418e7844c04dbc8e4059525f85b76f3100dc6714684a23f75a3c6a0a0fbc3d83855f4e0412be80108c52121e
+    SHA512 9ad1a8645fee3a3f03b0daec8699275f7f3f2251c0efde4af97e20f1c55972151401e0593a6a7cb65ad36b69d4c0d8b45c9a35375111c5ac38c108df5e0522b5
     HEAD_REF master
 )
 
@@ -29,49 +29,4 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-#include(CMakePackageConfigHelpers)
-#
-##configure_package_config_file(
-##	${SOURCE_PATH}/cmake/CorrosionConfig.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/CorrosionConfig.cmake
-##    INSTALL_DESTINATION
-##        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-##)
-#
-#write_basic_package_version_file(
-#    "${CURRENT_PACKAGES_DIR}/share/${PORT}/CorrosionConfigVersion.cmake"
-#    VERSION v${VERSION}
-#    COMPATIBILITY
-#        SameMinorVersion # TODO: Should be SameMajorVersion when 1.0 is released
-#    ARCH_INDEPENDENT
-#)
-#
-#file(INSTALL
-#        ${SOURCE_PATH}/cmake/Corrosion.cmake
-#     DESTINATION
-#        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-#     RENAME
-#        CorrosionConfig.cmake
-#)
-#
-#list(APPEND CMAKE_MODULE_PATH "${CURRENT_PACKAGED_DIR}/share/${PORT}/cmake")
-#
-##file(INSTALL
-##        ${SOURCE_PATH}/cmake/CorrosionGenerator.cmake
-##        ${SOURCE_PATH}/cmake/FindRust.cmake
-##    DESTINATION
-##        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-##)
-#
-## These CMake scripts are needed both for the install and as a subdirectory
-#file(INSTALL
-#        ${SOURCE_PATH}/cmake/Corrosion.cmake
-#        ${SOURCE_PATH}/cmake/CorrosionGenerator.cmake
-#        ${SOURCE_PATH}/cmake/FindRust.cmake
-#    DESTINATION
-#	"${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake"
-#)
-#
-#vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-#file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
