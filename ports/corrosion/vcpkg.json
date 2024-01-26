@@ -1,6 +1,6 @@
 {
   "name": "corrosion",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Marrying Rust and CMake - Easy Rust and C/C++ Integration!",
   "homepage": "https://github.com/corrosion-rs/corrosion",
   "documentation": "https://corrosion-rs.github.io/corrosion",
