@@ -1,6 +1,7 @@
 {
   "name": "status-code",
   "version-date": "2023-11-06",
+  "port-version": 1,
   "maintainers": [
     "Niall Douglas <s_github@nedprod.com>",
     "Henrik Gaßmann <henrik@gassmann.onl>"

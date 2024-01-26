@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-source-parsers/jsoncpp
-    REF 1.9.5
+    REF "${VERSION}"
     SHA512 1d06e044759b1e1a4cc4960189dd7e001a0a4389d7239a6d59295af995a553518e4e0337b4b4b817e70da5d9731a4c98655af90791b6287870b5ff8d73ad8873
     HEAD_REF master
 )
@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
         -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
         -DJSONCPP_WITH_TESTS=OFF
         -DJSONCPP_WITH_EXAMPLE=OFF
+        -DBUILD_OBJECT_LIBS=OFF
 )
 
 vcpkg_cmake_install()
@@ -28,7 +29,6 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/jsoncpp)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
-
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 vcpkg_fixup_pkgconfig()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

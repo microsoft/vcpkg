@@ -1,6 +1,6 @@
 {
   "name": "gul14",
-  "version": "2.9.2",
+  "version": "2.10.0",
   "description": [
     "General Utility Library for C++14.",
     "GUL14 contains often-used utility functions and types that form the foundation for other libraries and programs.",

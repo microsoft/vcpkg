@@ -1,0 +1,140 @@
+diff --git a/src/3rdparty/chromium/third_party/webrtc/rtc_base/checks.h b/src/3rdparty/chromium/third_party/webrtc/rtc_base/checks.h
+index 459c6a5..4bc8da8 100644
+--- a/src/3rdparty/chromium/third_party/webrtc/rtc_base/checks.h
++++ b/src/3rdparty/chromium/third_party/webrtc/rtc_base/checks.h
+@@ -224,76 +224,27 @@ ToStringVal MakeVal(const T& x) {
+ template <typename... Ts>
+ class LogStreamer;
+ 
+-// Base case: Before the first << argument.
+-template <>
+-class LogStreamer<> final {
+- public:
+-  template <typename U,
+-            typename V = decltype(MakeVal(std::declval<U>())),
+-            absl::enable_if_t<std::is_arithmetic<U>::value ||
+-                              std::is_enum<U>::value>* = nullptr>
+-  RTC_FORCE_INLINE LogStreamer<V> operator<<(U arg) const {
+-    return LogStreamer<V>(MakeVal(arg), this);
+-  }
+-
+-  template <typename U,
+-            typename V = decltype(MakeVal(std::declval<U>())),
+-            absl::enable_if_t<!std::is_arithmetic<U>::value &&
+-                              !std::is_enum<U>::value>* = nullptr>
+-  RTC_FORCE_INLINE LogStreamer<V> operator<<(const U& arg) const {
+-    return LogStreamer<V>(MakeVal(arg), this);
+-  }
+-
+-#if RTC_CHECK_MSG_ENABLED
+-  template <typename... Us>
+-  RTC_NORETURN RTC_FORCE_INLINE static void Call(const char* file,
+-                                                 const int line,
+-                                                 const char* message,
+-                                                 const Us&... args) {
+-    static constexpr CheckArgType t[] = {Us::Type()..., CheckArgType::kEnd};
+-    FatalLog(file, line, message, t, args.GetVal()...);
+-  }
+-
+-  template <typename... Us>
+-  RTC_NORETURN RTC_FORCE_INLINE static void CallCheckOp(const char* file,
+-                                                        const int line,
+-                                                        const char* message,
+-                                                        const Us&... args) {
+-    static constexpr CheckArgType t[] = {CheckArgType::kCheckOp, Us::Type()...,
+-                                         CheckArgType::kEnd};
+-    FatalLog(file, line, message, t, args.GetVal()...);
+-  }
+-#else
+-  template <typename... Us>
+-  RTC_NORETURN RTC_FORCE_INLINE static void Call(const char* file,
+-                                                 const int line) {
+-    FatalLog(file, line);
+-  }
+-#endif
+-};
+ 
+ // Inductive case: We've already seen at least one << argument. The most recent
+ // one had type `T`, and the earlier ones had types `Ts`.
+ template <typename T, typename... Ts>
+ class LogStreamer<T, Ts...> final {
+  public:
+-  RTC_FORCE_INLINE LogStreamer(T arg, const LogStreamer<Ts...>* prior)
++  RTC_FORCE_INLINE LogStreamer(T arg, const LogStreamer<Ts...> * const prior)
+       : arg_(arg), prior_(prior) {}
+ 
+   template <typename U,
+-            typename V = decltype(MakeVal(std::declval<U>())),
+             absl::enable_if_t<std::is_arithmetic<U>::value ||
+                               std::is_enum<U>::value>* = nullptr>
+-  RTC_FORCE_INLINE LogStreamer<V, T, Ts...> operator<<(U arg) const {
+-    return LogStreamer<V, T, Ts...>(MakeVal(arg), this);
++  RTC_FORCE_INLINE auto operator<<(U arg) const {
++    return LogStreamer<decltype(MakeVal(arg)), T, Ts...>(MakeVal(arg), this);
+   }
+ 
+   template <typename U,
+-            typename V = decltype(MakeVal(std::declval<U>())),
+             absl::enable_if_t<!std::is_arithmetic<U>::value &&
+                               !std::is_enum<U>::value>* = nullptr>
+-  RTC_FORCE_INLINE LogStreamer<V, T, Ts...> operator<<(const U& arg) const {
+-    return LogStreamer<V, T, Ts...>(MakeVal(arg), this);
++  RTC_FORCE_INLINE auto operator<<(const U& arg) const {
++    return LogStreamer<decltype(MakeVal(arg)), T, Ts...>(MakeVal(arg), this);
+   }
+ 
+ #if RTC_CHECK_MSG_ENABLED
+@@ -328,6 +279,53 @@ class LogStreamer<T, Ts...> final {
+   const LogStreamer<Ts...>* prior_;
+ };
+ 
++
++// Base case: Before the first << argument.
++template <>
++class LogStreamer<> final {
++ public:
++  template <typename U,
++            absl::enable_if_t<std::is_arithmetic<U>::value ||
++                              std::is_enum<U>::value>* = nullptr>
++  RTC_FORCE_INLINE auto operator<<(U arg) const {
++    return LogStreamer<decltype(MakeVal(arg))>(MakeVal(arg), this);
++  }
++
++  template <typename U,
++            absl::enable_if_t<!std::is_arithmetic<U>::value &&
++                              !std::is_enum<U>::value>* = nullptr>
++  RTC_FORCE_INLINE auto operator<<(const U& arg) const {
++    return LogStreamer<decltype(MakeVal(arg))>(MakeVal(arg), this);
++  }
++
++#if RTC_CHECK_MSG_ENABLED
++  template <typename... Us>
++  RTC_NORETURN RTC_FORCE_INLINE static void Call(const char* file,
++                                                 const int line,
++                                                 const char* message,
++                                                 const Us&... args) {
++    static constexpr CheckArgType t[] = {Us::Type()..., CheckArgType::kEnd};
++    FatalLog(file, line, message, t, args.GetVal()...);
++  }
++
++  template <typename... Us>
++  RTC_NORETURN RTC_FORCE_INLINE static void CallCheckOp(const char* file,
++                                                        const int line,
++                                                        const char* message,
++                                                        const Us&... args) {
++    static constexpr CheckArgType t[] = {CheckArgType::kCheckOp, Us::Type()...,
++                                         CheckArgType::kEnd};
++    FatalLog(file, line, message, t, args.GetVal()...);
++  }
++#else
++  template <typename... Us>
++  RTC_NORETURN RTC_FORCE_INLINE static void Call(const char* file,
++                                                 const int line) {
++    FatalLog(file, line);
++  }
++#endif
++};
++
+ template <bool isCheckOp>
+ class FatalLogCall final {
+  public:

@@ -1,13 +1,16 @@
 {
   "name": "libraw",
   "version": "0.21.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "raw image decoder library",
   "homepage": "https://www.libraw.org",
   "license": "LGPL-2.1-only OR CDDL-1.0",
   "supports": "!uwp & !xbox",
   "dependencies": [
-    "jasper",
+    {
+      "name": "jasper",
+      "default-features": false
+    },
     "lcms",
     {
       "name": "vcpkg-cmake",

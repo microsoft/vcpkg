@@ -1,11 +1,13 @@
 {
   "name": "freerdp",
-  "version": "2.11.2",
+  "version": "3.0.0",
+  "port-version": 1,
   "description": "A free implementation of the Remote Desktop Protocol (RDP)",
   "homepage": "https://github.com/FreeRDP/FreeRDP",
   "license": "Apache-2.0",
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
+    "cjson",
     {
       "name": "glib",
       "platform": "!windows"
@@ -19,16 +21,9 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "zlib",
-      "platform": "!windows"
-    }
+    "zlib"
   ],
   "features": {
-    "client-mac": {
-      "description": "Build native mac client. Requires XCode.",
-      "supports": "osx"
-    },
     "ffmpeg": {
       "description": "Enable image scaling, video and audio with ffmpeg",
       "supports": "!windows",
@@ -46,7 +41,16 @@
     },
     "server": {
       "description": "Build server components",
-      "supports": "!android & !ios & !uwp"
+      "supports": "!android & !ios & !uwp",
+      "dependencies": [
+        {
+          "name": "freerdp",
+          "default-features": false,
+          "features": [
+            "winpr-tools"
+          ]
+        }
+      ]
     },
     "urbdrc": {
       "description": "USB redirection channel support",
@@ -56,7 +60,7 @@
     },
     "wayland": {
       "description": "Enable wayland support",
-      "supports": "!windows & !android & !ios & !osx & !openbsd",
+      "supports": "!android & !ios & !openbsd & !osx & !windows",
       "dependencies": [
         "wayland"
       ]
@@ -67,7 +71,7 @@
     },
     "x11": {
       "description": "Enable X11 support",
-      "supports": "!windows & !android & !ios",
+      "supports": "!android & !ios & !windows & !osx",
       "dependencies": [
         "xcb"
       ]

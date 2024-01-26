@@ -79,12 +79,12 @@ function(boost_modular_build)
     if(_jamfile)
         file(READ "${_jamfile}" _contents)
         string(REGEX REPLACE
-            "\.\./\.\./([^/ ]+)/build//(boost_[^/ ]+)"
+            "\.\./\.\./([^/ ]+)/build//(boost_[^/ \n\r]+)"
             "/boost/\\1//\\2"
             _contents
             "${_contents}"
         )
-        string(REGEX REPLACE "/boost//([^/ ]+)" "/boost/\\1//boost_\\1" _contents "${_contents}")
+        string(REGEX REPLACE "/boost//([^/ \n\r]+)" "/boost/\\1//boost_\\1" _contents "${_contents}")
         file(WRITE "${_jamfile}" "${_contents}")
     endif()
 
