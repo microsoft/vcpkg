@@ -1,0 +1,3 @@
+Source: lua-intf
+Version: 1.0
+Description: lua-intf is a binding between C++11 and Lua language
