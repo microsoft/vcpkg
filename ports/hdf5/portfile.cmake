@@ -5,11 +5,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
     REF "${hdf5_ref}"
-    SHA512 9b44993bcdc1493a22da61c77a1bd962c0088ff8e7fb75c00568617386cfc296a73bbdae79c05847109bf1984e95660bbe459f8a96950f6cf71002800eed23f8
+    SHA512 3bbf39f94f7370989e27d17f083c11b9f58fefb75d79aa88bc91d51df022efb00c63579286fdaf2e025e2e880beb33ababd706d8303f84e19b1e0274256d0a03
     HEAD_REF develop
     PATCHES
         hdf5_config.patch
-        szip.patch
         pkgconfig-requires.patch
 )
 
@@ -104,8 +103,8 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" ${contents})
 
 set(HDF5_TOOLS "")
 if("tools" IN_LIST FEATURES)
-    list(APPEND HDF5_TOOLS h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
-        h5format_convert h5jam h5unjam h5mkgrp h5repack h5repart h5watch h5import h5delete
+    list(APPEND HDF5_TOOLS h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5debug
+        h5jam h5unjam h5mkgrp h5repack h5repart h5import
     )
 
     if("parallel" IN_LIST FEATURES)
@@ -124,17 +123,10 @@ if("tools" IN_LIST FEATURES)
     endif()
 
     if("parallel" IN_LIST FEATURES)
-        list(APPEND HDF5_TOOLS h5perf )
         if(NOT VCPKG_TARGET_IS_WINDOWS)
             list(APPEND HDF5_TOOLS h5pcc)
         endif()
-    else()
-        list(APPEND HDF5_TOOLS h5perf_serial)
     endif()
-endif()
-
-if ("utils" IN_LIST FEATURES)
-    list(APPEND HDF5_TOOLS mirror_server mirror_server_stop)
 endif()
 
 if(HDF5_TOOLS)
