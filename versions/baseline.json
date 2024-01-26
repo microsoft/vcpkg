@@ -4377,8 +4377,8 @@
       "port-version": 0
     },
     "libgpiod": {
-      "baseline": "2.0.2",
-      "port-version": 1
+      "baseline": "2.1",
+      "port-version": 0
     },
     "libgpod": {
       "baseline": "2019-08-29",
