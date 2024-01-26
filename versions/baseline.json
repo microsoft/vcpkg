@@ -1801,7 +1801,7 @@
       "port-version": 8
     },
     "corrosion": {
-      "baseline": "0.4.7",
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "cpp-async": {
