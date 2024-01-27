@@ -110,4 +110,5 @@ file(REMOVE_RECURSE
       "${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}/omniidl_be/__pycache__"
       "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/omniidl_be/__init__.py"
       "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/omniidl_be/__pycache__"
+      "${CURRENT_PACKAGES_DIR}/debug/tools"
     )

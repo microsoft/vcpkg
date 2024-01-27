@@ -229,6 +229,7 @@ else()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(COPY "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/omniorb/lib")
