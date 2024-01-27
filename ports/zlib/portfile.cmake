@@ -49,7 +49,5 @@ else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/zconf.h" "ifdef ZLIB_DLL" "if 1")
 endif()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/zlib.h" "#define ZLIB_VERSION \"1.3\"" "#define ZLIB_VERSION \"1.3.0\"")
-
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
