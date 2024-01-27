@@ -172,6 +172,10 @@
       "baseline": "1.6.3",
       "port-version": 0
     },
+    "apriltag": {
+      "baseline": "3.2.0",
+      "port-version": 0
+    },
     "apsi": {
       "baseline": "0.11.0",
       "port-version": 0
@@ -998,7 +1002,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.84.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-move": {
       "baseline": "1.84.0",
@@ -1627,6 +1631,10 @@
     "clblast": {
       "baseline": "1.6.1",
       "port-version": 0
+    },
+    "cld3": {
+      "baseline": "3.0.14",
+      "port-version": 1
     },
     "clfft": {
       "baseline": "2.12.2",
@@ -3021,8 +3029,8 @@
       "port-version": 1
     },
     "glm": {
-      "baseline": "0.9.9.8",
-      "port-version": 2
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "globjects": {
       "baseline": "1.1.0",
@@ -3053,7 +3061,7 @@
       "port-version": 6
     },
     "gmmlib": {
-      "baseline": "22.3.12",
+      "baseline": "22.3.17",
       "port-version": 0
     },
     "gmp": {
@@ -3333,8 +3341,8 @@
       "port-version": 0
     },
     "highfive": {
-      "baseline": "2.7.1",
-      "port-version": 1
+      "baseline": "2.9.0",
+      "port-version": 0
     },
     "highs": {
       "baseline": "1.6.0",
@@ -3377,7 +3385,7 @@
       "port-version": 0
     },
     "hwloc": {
-      "baseline": "2.9.3",
+      "baseline": "2.10.0",
       "port-version": 0
     },
     "hyperscan": {
@@ -3689,7 +3697,7 @@
       "port-version": 0
     },
     "json-schema-validator": {
-      "baseline": "2.2.0",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "json-spirit": {
@@ -4117,7 +4125,7 @@
       "port-version": 0
     },
     "libavif": {
-      "baseline": "1.0.1",
+      "baseline": "1.0.3",
       "port-version": 0
     },
     "libb2": {
@@ -4261,7 +4269,7 @@
       "port-version": 2
     },
     "libenvpp": {
-      "baseline": "1.3.0",
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "libepoxy": {
@@ -4369,8 +4377,8 @@
       "port-version": 0
     },
     "libgpiod": {
-      "baseline": "2.0.2",
-      "port-version": 1
+      "baseline": "2.1",
+      "port-version": 0
     },
     "libgpod": {
       "baseline": "2019-08-29",
@@ -4465,7 +4473,7 @@
       "port-version": 0
     },
     "libjuice": {
-      "baseline": "1.3.1",
+      "baseline": "1.3.4",
       "port-version": 0
     },
     "libjxl": {
@@ -5617,7 +5625,7 @@
       "port-version": 4
     },
     "miniaudio": {
-      "baseline": "0.11.19",
+      "baseline": "0.11.21",
       "port-version": 0
     },
     "minifb": {
@@ -6009,7 +6017,7 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "nifly": {
@@ -6410,11 +6418,11 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.13.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opentelemetry-fluentd": {
       "baseline": "2.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -6846,7 +6854,7 @@
     },
     "protobuf": {
       "baseline": "3.21.12",
-      "port-version": 0
+      "port-version": 1
     },
     "protobuf-c": {
       "baseline": "1.4.1",
@@ -7170,7 +7178,7 @@
     },
     "qtbase": {
       "baseline": "6.6.1",
-      "port-version": 6
+      "port-version": 7
     },
     "qtcharts": {
       "baseline": "6.6.1",
@@ -9357,7 +9365,7 @@
       "port-version": 0
     },
     "xtensor": {
-      "baseline": "0.24.7",
+      "baseline": "0.25.0",
       "port-version": 0
     },
     "xtensor-blas": {
