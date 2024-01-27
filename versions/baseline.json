@@ -6265,8 +6265,8 @@
       "port-version": 0
     },
     "open62541": {
-      "baseline": "1.3.8",
-      "port-version": 2
+      "baseline": "1.3.9",
+      "port-version": 0
     },
     "open62541pp": {
       "baseline": "0.11.0",
