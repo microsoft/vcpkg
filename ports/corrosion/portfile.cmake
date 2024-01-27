@@ -6,17 +6,14 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 274baca57f7d599b304b75a73067fae9eb488eec10925fade7e195d494a192760b116a3bdf289e0cb7c291b29684909d5fd1c9404c6d37203c883cd511849bbb
     HEAD_REF master
+    PATCHES
+        "vcpkg-install.patch"
 )
 
-find_program(CARGO cargo PATHS "$ENV{HOME}/.cargo/bin/")
-if (CARGO STREQUAL "CARGO-NOTFOUND")
-    message("Could not find cargo, trying to install via https://rustup.rs/.")
-    execute_process(COMMAND bash "-c" "curl -sSf https://sh.rustup.rs | sh -s -- -y")
-endif()
-
-# Redo with the install process and just ignore the warnings?
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCORROSION_VCPKG_INSTALL=ON
 )
 
 vcpkg_cmake_install()
@@ -29,4 +26,3 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-

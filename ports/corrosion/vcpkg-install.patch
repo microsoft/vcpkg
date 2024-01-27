@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9bf3786..b74c8aa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -64,13 +64,21 @@ if (_CORROSION_TOP_LEVEL)
+     enable_language(C)
+ endif()
+ 
++option(
++   CORROSION_VCPKG_INSTALL
++   "Whether or not Corrosion is being installed with Vcpkg"
++   OFF
++)
++
+ # This little bit self-hosts the Corrosion toolchain to build the generator
+ # tool.
+ #
+ # It is strongly encouraged to install Corrosion separately and use
+ # `find_package(Corrosion REQUIRED)` instead if that works with your workflow.
+-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+-include(Corrosion)
++if (NOT CORROSION_VCPKG_INSTALL)
++    list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
++    include(Corrosion)
++endif()
+ 
+ # Testing
+ if (CORROSION_BUILD_TESTS)
