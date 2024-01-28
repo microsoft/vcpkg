@@ -5529,7 +5529,7 @@
       "port-version": 2
     },
     "mbedtls": {
-      "baseline": "2.28.5",
+      "baseline": "2.28.7",
       "port-version": 0
     },
     "mchehab-zbar": {
