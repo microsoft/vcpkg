@@ -7469,7 +7469,7 @@
       "port-version": 0
     },
     "reactiveplusplus": {
-      "baseline": "0.2.3",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "readerwriterqueue": {
