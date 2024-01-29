@@ -111,6 +111,9 @@
           "platform": "!uwp"
         }
       ]
+    },
+    "winpplx": {
+      "description": "Usage of Winpplx for CPPREST_PPLX_IMPL"
     }
   }
 }

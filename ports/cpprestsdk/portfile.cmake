@@ -18,6 +18,11 @@ if(NOT VCPKG_TARGET_IS_UWP)
         -DWEBSOCKETPP_CONFIG_VERSION=${WEBSOCKETPP_PATH})
 endif()
 
+if ("winpplx" IN_LIST FEATURES)
+    list(APPEND OPTIONS
+        -DCPPREST_PPLX_IMPL="winpplx")
+endif()
+
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
