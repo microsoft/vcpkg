@@ -6689,7 +6689,7 @@
       "port-version": 1
     },
     "plf-colony": {
-      "baseline": "7.3.1",
+      "baseline": "7.41",
       "port-version": 0
     },
     "plf-hive": {
