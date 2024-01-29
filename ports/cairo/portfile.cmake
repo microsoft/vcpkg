@@ -7,11 +7,10 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     REPO cairo/cairo
     REF "${VERSION}"
-    SHA512 e12f4b05326c1ac7d930e18d95398dc9c65f3af9745d7fd301ef1663dd378feeb43acc47de17fd082d0acf96e9fc60310557c24e3fe8af06d17931590c7759c6
+    SHA512 2ef3b948b354a9be5c3afe2bbf47f559a00a6114c67ef50ce19d54a1d4232218311f2277e271faad4df598e19e03492ba97af934ede9411494618ebe46f9eee9
     PATCHES
         cairo_static_fix.patch
         disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
-        mingw-dllexport.patch
         fix-static-missing-lib-msimg32.patch
         ${PATCHES}
 )
