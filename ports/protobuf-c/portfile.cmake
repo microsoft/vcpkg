@@ -22,6 +22,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/protobuf-c)
 vcpkg_copy_pdbs()
 
 if("tools" IN_LIST FEATURES)
