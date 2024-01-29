@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a9c69d5..f2852c8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,7 +19,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+ endif()
+ 
+ # Only do these if this is the main project, and not if it is included through add_subdirectory
+-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
++if(0)
+     # Testing only available if this is the main app
+     # Note this needs to be done in the main CMakeLists
+     # since it calls enable_testing, which must be in the
