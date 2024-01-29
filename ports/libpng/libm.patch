@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 958b1d6..21c8941 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -84,6 +84,12 @@ endif()
+ 
+ if(UNIX AND NOT APPLE AND NOT BEOS AND NOT HAIKU AND NOT EMSCRIPTEN)
+   find_library(M_LIBRARY m)
++  if(NOT M_LIBRARY)
++    find_library(M_LIBRARY m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES} NO_DEFAULT_PATH)
++    if(M_LIBRARY)
++      set(M_LIBRARY m)
++    endif()
++  endif()
+   if(NOT M_LIBRARY)
+     set(M_LIBRARY "")
+   endif()

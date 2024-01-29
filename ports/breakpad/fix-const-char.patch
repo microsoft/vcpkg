@@ -1,0 +1,14 @@
+diff --git a/src/processor/disassembler_objdump.cc b/src/processor/disassembler_objdump.cc
+index dfe10d58..26be029c 100644
+--- a/src/processor/disassembler_objdump.cc
++++ b/src/processor/disassembler_objdump.cc
+@@ -85,7 +85,7 @@ ScopedTmpFile::~ScopedTmpFile() {
+ }
+ 
+ bool ScopedTmpFile::Create() {
+-  fd_ = mkstemp(path_.data());
++  fd_ = mkstemp(const_cast<char*>(path_.data()));
+   if (fd_ < 0) {
+     unlink(path_.c_str());
+     fd_ = 0;
+

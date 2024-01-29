@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Headers
-    REF "sdk-${VERSION}"
-    SHA512 436c6ce11d918091ce4a5ef2821f51af811c9a289e220b4a2b0bb4417b1f9f3b1f56a6366cfdf56848a9b1fb612ee3ba31d35c3d73d3d24de964ee05f96a7bbc
+    REF "vulkan-sdk-${VERSION}"
+    SHA512 c9d448a74006a5fdf59993e6d6a9c617bab4c5df23c333b7ada386e4ca25caaae28fc83f71963ce8468646113d83d6e7b17c26c46c3b6485c8df91f142755977
     HEAD_REF master
 )
 

@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 ae0238b2741c673927f80b3d0765fbb0eb2ddb8699441564e67dd7bb6a429b45e4eac57f9c4e93ecea7a4525f28c05e6f3097828c40d5af6a66dda83d2245242
+    SHA512 d834bb1cc891db4e04bdd684a0ac94ef1669c6040ed2e7e248714e00f6ff75dcd6d16c6e99b1084a2279c3b384e9ecfde1e7ed557a0564288fb4a8377f221964
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
+        target-is-valid.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -32,6 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         iconv            GDAL_USE_ICONV
         jpeg             GDAL_USE_JPEG
         core             GDAL_USE_JSONC
+        kea              GDAL_USE_KEA
         lerc             GDAL_USE_LERC
         libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
@@ -86,6 +88,7 @@ vcpkg_cmake_configure(
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
         -DOGR_BUILD_OPTIONAL_DRIVERS=ON
+        -DFIND_PACKAGE2_KEA_ENABLED=OFF
         -DGDAL_CHECK_PACKAGE_MySQL_NAMES=unofficial-libmariadb
         -DGDAL_CHECK_PACKAGE_MySQL_TARGETS=unofficial::libmariadb
         -DMYSQL_LIBRARIES=unofficial::libmariadb

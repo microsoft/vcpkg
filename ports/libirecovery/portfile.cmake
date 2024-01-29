@@ -50,6 +50,10 @@ file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-c
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake"
 "include(CMakeFindDependencyMacro)
 find_dependency(unofficial-libimobiledevice-glue CONFIG)
+if(NOT WIN32 AND NOT APPLE)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
+endif()
 ${cmake_config}
 ")
 

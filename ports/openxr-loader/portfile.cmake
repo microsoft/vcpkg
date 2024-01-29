@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK
-    REF release-1.0.22
-    SHA512 fe3c393c2d11981b42355acd8dbc337727120bcd0ff595abac1975c4ce5f68bb74a9a1b4c959e64e9a847ae5d504100d31979ffd7d9702c55b2dbd889de17d3e
+    REF "release-${VERSION}"
+    SHA512 6efc7596e707f95366dbcdbac9bd7d0c20735a2175b4edf56a9e8a112cf0ab8b664069fe942313164a37119032ddbf5671bc88ab5f276005dd36e4a4dabba1c7
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
@@ -12,8 +12,8 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH SDK_SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK-Source
-    REF release-1.0.22
-    SHA512 92802d57a45ca1d697d3cea1b3f5619af4ba36156cb28c2c39b2295a74ebc45907caf371c916c54ec3be44a2f3ae447ffc1cd62f54b7b24f7a081408328c7651
+    REF "release-${VERSION}"
+    SHA512 04bdb0f16078209b5edd175a3396f70e1ceb8cfa382c65b8fda388e565480e3844daf68e0d987e72ed8c21d3148af0b41a2170911ec1660565887e0e5ae6d2bf
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
@@ -23,11 +23,11 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH HPP_SOURCE_PATH
     REPO KhronosGroup/OpenXR-hpp
-    REF release-1.0.21
-    SHA512 cda111f20392a64d5f4de6bd71f1fe7fe39d688bb2376c6b1841763459e32fd6d03b9552804b5ee464ba84cd4c05cfdaa1a6e8a8e5da3eae6b94c7797c65cb36
+    REF 63db9919822f8af6f7bf7416ba6a015d4617202e
+    SHA512 9e768f485d1631f8e74f35f028a64e2d64e33d362c53ae1c54427a10786e3befdd24089927319aa1a4b4c3e010247bd6cb3394bcee460c467c637ab6bc7bec90
     HEAD_REF master
     PATCHES
-        002-fix-hpp-gen.patch
+        python3_8_compatibility.patch
 )
 
 # Weird behavior inside the OpenXR loader.  On Windows they force shared libraries to use static crt, and
@@ -57,16 +57,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Generate the OpenXR C++ bindings 
+# Generate the OpenXR C++ bindings
 set(ENV{OPENXR_REPO} "${SDK_SOURCE_PATH}")
-file(STRINGS "${HPP_SOURCE_PATH}/headers.txt" HEADER_LIST REGEX "^openxr.*")
-foreach(HEADER ${HEADER_LIST})
-    vcpkg_execute_required_process(
-        COMMAND ${PYTHON3} "${HPP_SOURCE_PATH}/scripts/hpp_genxr.py" -registry "${SDK_SOURCE_PATH}/specification/registry/xr.xml" -o "${CURRENT_PACKAGES_DIR}/include/openxr" ${HEADER}
-        WORKING_DIRECTORY "${HPP_SOURCE_PATH}"
-        LOGNAME openxrhpp
-    )
-endforeach()
+vcpkg_execute_required_process(
+    COMMAND ${PYTHON3} "${HPP_SOURCE_PATH}/scripts/hpp_genxr.py" -quiet  -registry "${SDK_SOURCE_PATH}/specification/registry/xr.xml" -o "${CURRENT_PACKAGES_DIR}/include/openxr"
+    WORKING_DIRECTORY "${HPP_SOURCE_PATH}"
+    LOGNAME "openxr-hpp"
+)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(PACKAGE_NAME OpenXR CONFIG_PATH cmake)

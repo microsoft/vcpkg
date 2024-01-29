@@ -9,6 +9,10 @@ set(QT_IS_LATEST ON)
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
+        # CVE fixes from https://download.qt.io/official_releases/qt/6.6/
+        patches/0001-CVE-2023-51714-qtbase-6.6.diff
+        patches/0002-CVE-2023-51714-qtbase-6.6.diff
+
         allow_outside_prefix.patch
         config_install.patch
         fix_cmake_build.patch
@@ -39,7 +43,7 @@ if(VCPKG_TARGET_IS_LINUX)
     message(WARNING "qtbase currently requires packages from the system package manager. "
     "They can be installed on Ubuntu systems via sudo apt-get install " 
     "'^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev "
-    "libxkbcommon-x11-dev.")
+    "libxkbcommon-x11-dev libegl1-mesa-dev.")
 endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
@@ -258,12 +262,12 @@ endforeach()
     # )
 list(APPEND FEATURE_PRINTSUPPORT_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_CUPS:BOOL=ON)
 
-# widgets features:
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
-    # "gtk3"             FEATURE_gtk3
-    # There are a lot of additional features here to deactivate parts of widgets.
-    # )
-list(APPEND FEATURE_WIDGETS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GTK3:BOOL=ON)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
+    FEATURES
+    "gtk3"              FEATURE_gtk3
+    INVERTED_FEATURES
+    "gtk3"              CMAKE_DISABLE_FIND_PACKAGE_GTK3
+)
 
 set(TOOL_NAMES
         androiddeployqt
