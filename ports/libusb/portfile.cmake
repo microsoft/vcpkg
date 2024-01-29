@@ -1,5 +1,5 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoreconf libudev-dev")
+    message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoconf libudev-dev")
 endif()
 
 set(VERSION 1.0.26)
@@ -55,7 +55,10 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
-        OPTIONS ${MAKE_OPTIONS}
+        OPTIONS 
+            ${MAKE_OPTIONS}
+            "--enable-examples-build=no"
+            "--enable-tests-build=no"
     )
     vcpkg_install_make()
 endif()
@@ -63,5 +66,4 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

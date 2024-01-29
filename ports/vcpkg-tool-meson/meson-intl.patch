@@ -1,7 +1,5 @@
-diff --git a/tools/meson/mesonbuild/dependencies/misc.py b/tools/meson/mesonbuild/dependencies/misc.py
-index 537af1f89..43d7febf2 100644
---- a/tools/meson/mesonbuild/dependencies/misc.py
-+++ b/tools/meson/mesonbuild/dependencies/misc.py
+--- a/mesonbuild/dependencies/misc.py
++++ b/mesonbuild/dependencies/misc.py
 @@ -610,7 +610,8 @@ iconv_factory = DependencyFactory(
  
  intl_factory = DependencyFactory(

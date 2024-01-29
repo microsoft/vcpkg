@@ -1,4 +1,3 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexif/libexif
@@ -13,7 +12,6 @@ vcpkg_list(SET options)
 if("nls" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-nls")
 else()
-    set(ENV{AUTOPOINT} true) # true, the program
     vcpkg_list(APPEND options "--disable-nls")
 endif()
 

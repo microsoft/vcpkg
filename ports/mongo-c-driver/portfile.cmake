@@ -1,12 +1,9 @@
 # This port needs to be updated at the same time as libbson
-
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
     REF "${VERSION}"
-    SHA512 e0f15a8a45ff156136251f1a0e5d0cc2b0253ba9dbf062a6eaef73e02c3b7999d3af31a9eb2ebf2c141e5b2367e356b3ea56b8eb083a5097d88f81bbc4f0be23
+    SHA512 a80e20917edb752ac5eb42534beaa0122a383037f83a554ee00ce37ae690be68521eaa282b4a5802a5440b61038bcd5414356e16a2ce729ba1193d0738a6ce1c
     HEAD_REF master
     PATCHES
         disable-dynamic-when-static.patch
@@ -45,6 +42,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${OPTIONS}
         "-DBUILD_VERSION=${VERSION}"
@@ -56,6 +54,8 @@ vcpkg_cmake_configure(
         -DENABLE_UNINSTALL=OFF
         -DENABLE_ZLIB=SYSTEM
         -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
     MAYBE_UNUSED_VARIABLES
         ENABLE_ICU 
 )

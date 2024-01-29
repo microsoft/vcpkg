@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glfw/glfw
-    REF 7482de6071d21db77a7236155da44c172a7f6c9e     #v3.3.8
-    SHA512 ec45b620338cf36a8dbdf7aaf54d7c3a49a1be4ae1a1ef95f1531094fec670870713969bbc23476769d374c7a71d93f6540ab64c46fb5f66f4402bb2d15c7d87
+    REF ${VERSION}
+    SHA512 9fcccd650990fa88fcb6383afa90bc6c2eca7f4a4a3d4fc58fa5bd6b7995c32989bb29d2753f438984043b294244b82ba9f094426e12f3d4da4547e73bb62e3f
     HEAD_REF master
-    PATCHES
-        fix_win32_dllname.pacth #https://github.com/glfw/glfw/pull/2386
 )
 
 if(VCPKG_TARGET_IS_LINUX)

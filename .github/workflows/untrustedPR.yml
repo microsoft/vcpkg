@@ -96,7 +96,7 @@ jobs:
             
             if (deprecated_function.length > 0) {
               var deprecated_output = '';
-              deprecated_output += "You have modified or added at least one portfile where deprecated functions are used.\n"
+              deprecated_output += "**You have modified or added at least one portfile where deprecated functions are used**\n"
               deprecated_output += "If you feel able to do so, please consider migrating them to the new functions.\n";
               core.warning(deprecated_output);
 

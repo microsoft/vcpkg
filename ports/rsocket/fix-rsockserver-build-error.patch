@@ -64,7 +64,7 @@ index 72d212c..79a09f1 100644
                    }
                  } catch (const std::exception& ex) {
 -                  value.emplaceException(std::current_exception(), ex);
-+                  value.emplaceException(folly::exception_wrapper::from_catch_ref_t{}, std::current_exception(), ex);
++                  value.emplaceException(std::current_exception());
                  } catch (...) {
                    value.emplaceException(std::current_exception());
                  }
@@ -77,7 +77,7 @@ index 9dff78b..bccd70d 100644
      } catch (const std::exception& ex) {
        subscriber.onError(
 -          folly::exception_wrapper(std::current_exception(), ex));
-+          folly::exception_wrapper(folly::exception_wrapper::from_catch_ref_t{}, std::current_exception(), ex));
++          folly::exception_wrapper(std::current_exception()));
      } catch (...) {
        subscriber.onError(std::runtime_error(
            "Flowable::fromGenerator() threw from Subscriber:onNext()"));
@@ -90,7 +90,7 @@ index 314ba7f..fe63504 100644
          }
        } catch (const std::exception& exn) {
 -        folly::exception_wrapper ew{std::current_exception(), exn};
-+        folly::exception_wrapper ew{folly::exception_wrapper::from_catch_ref_t{}, std::current_exception(), exn};
++        folly::exception_wrapper ew{std::current_exception()};
          this->terminateErr(std::move(ew));
        }
      }
@@ -99,7 +99,7 @@ index 314ba7f..fe63504 100644
        } catch (const std::exception& exn) {
          this->terminateErr(
 -            folly::exception_wrapper{std::current_exception(), exn});
-+            folly::exception_wrapper{folly::exception_wrapper::from_catch_ref_t{}, std::current_exception(), exn});
++            folly::exception_wrapper{std::current_exception()});
        }
      }
  
@@ -108,7 +108,7 @@ index 314ba7f..fe63504 100644
          mappedStream = flowable_->function_(std::move(value));
        } catch (const std::exception& exn) {
 -        folly::exception_wrapper ew{std::current_exception(), exn};
-+        folly::exception_wrapper ew{folly::exception_wrapper::from_catch_ref_t{}, std::current_exception(), exn};
++        folly::exception_wrapper ew{std::current_exception()};
          {
            std::lock_guard<std::mutex> g(onErrorExGuard_);
            onErrorEx_ = ew;
@@ -121,7 +121,7 @@ index d1dc3b5..582f9c4 100644
      } catch (const std::exception& exn) {
        this->cancel();
 -      auto ew = folly::exception_wrapper{std::current_exception(), exn};
-+      auto ew = folly::exception_wrapper{folly::exception_wrapper::from_catch_ref_t{}, std::current_exception(), exn};
++      auto ew = folly::exception_wrapper{std::current_exception()};
        LOG(ERROR) << "'next' method should not throw: " << ew.what();
        onErrorImpl(ew);
        return;
@@ -134,7 +134,7 @@ index 451c6bd..0e60b48 100644
          this->observerOnNext(observable_->function_(std::move(value)));
        } catch (const std::exception& exn) {
 -        folly::exception_wrapper ew{std::current_exception(), exn};
-+        folly::exception_wrapper ew{folly::exception_wrapper::from_catch_ref_t{}, std::current_exception(), exn};
++        folly::exception_wrapper ew{std::current_exception()};
          this->terminateErr(std::move(ew));
        }
      }
@@ -147,7 +147,7 @@ index 0b3e739..4defd64 100644
          this->observerOnSuccess(map_operator->function_(std::move(value)));
        } catch (const std::exception& exn) {
 -        folly::exception_wrapper ew{std::current_exception(), exn};
-+        folly::exception_wrapper ew{folly::exception_wrapper::from_catch_ref_t{}, std::current_exception(), exn};
++        folly::exception_wrapper ew{std::current_exception()};
          this->observerOnError(std::move(ew));
        }
      }

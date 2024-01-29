@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.19.0",
+  "version": "2.20.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -285,6 +285,18 @@
     },
     "cloudbuild": {
       "description": "Cloud Build API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "cloudquotas": {
+      "description": "Cloud Quotas API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1247,6 +1259,7 @@
           "name": "google-cloud-cpp",
           "default-features": false,
           "features": [
+            "grpc-common",
             "rest-common"
           ]
         }
