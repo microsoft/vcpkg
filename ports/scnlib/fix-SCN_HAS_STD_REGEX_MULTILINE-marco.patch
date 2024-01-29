@@ -1,0 +1,13 @@
+diff --git a/include/scn/detail/pp_detect.h b/include/scn/detail/pp_detect.h
+index 50da1a7..e3cd57d 100644
+--- a/include/scn/detail/pp_detect.h
++++ b/include/scn/detail/pp_detect.h
+@@ -523,7 +523,7 @@
+ #endif
+ 
+ // Detect std::regex_constants::multiline
+-#if SCN_STDLIB_LIBCPP || SCN_STDLIB_GLIBCXX >= 11
++#if SCN_STDLIB_LIBCPP || SCN_STDLIB_GLIBCXX > 11 ||(SCN_STDLIB_GLIBCXX == 11&&SCN_GCC_COMPAT_MINOR >=4)
+ #define SCN_HAS_STD_REGEX_MULTILINE 1
+ #else
+ #define SCN_HAS_STD_REGEX_MULTILINE 0
