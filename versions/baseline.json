@@ -1718,7 +1718,7 @@
     },
     "coin-or-cbc": {
       "baseline": "2023-02-01",
-      "port-version": 0
+      "port-version": 1
     },
     "coin-or-cgl": {
       "baseline": "2023-02-01",
@@ -3066,7 +3066,7 @@
     },
     "gmp": {
       "baseline": "6.2.1",
-      "port-version": 21
+      "port-version": 22
     },
     "gmsh": {
       "baseline": "4.11.1",
@@ -3662,7 +3662,7 @@
     },
     "jemalloc": {
       "baseline": "5.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "jinja2cpplight": {
       "baseline": "2018-05-08",
@@ -4142,7 +4142,7 @@
     },
     "libbson": {
       "baseline": "1.25.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libcaer": {
       "baseline": "3.3.15",
@@ -8897,7 +8897,7 @@
       "port-version": 1
     },
     "vcpkg-cmake-get-vars": {
-      "baseline": "2023-12-31",
+      "baseline": "2024-01-30",
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
@@ -8911,6 +8911,10 @@
     "vcpkg-gn": {
       "baseline": "2021-11-16",
       "port-version": 3
+    },
+    "vcpkg-make": {
+      "baseline": "2023-05-15",
+      "port-version": 0
     },
     "vcpkg-msbuild": {
       "baseline": "2023-08-08",
@@ -9246,7 +9250,7 @@
     },
     "x264": {
       "baseline": "0.164.3107",
-      "port-version": 0
+      "port-version": 1
     },
     "x265": {
       "baseline": "3.5",
