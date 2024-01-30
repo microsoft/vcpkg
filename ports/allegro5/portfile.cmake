@@ -13,10 +13,8 @@ if(VCPKG_TARGET_IS_ANDROID AND NOT ENV{ANDROID_HOME})
     message(FATAL_ERROR "${PORT} requires environment variable ANDROID_HOME to be set." )
 endif()
 
-if(NOT ENV{PKG_CONFIG})
-    vcpkg_find_acquire_program(PKGCONFIG)
-    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
-endif()
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" VCPKG_BUILD_SHARED_LIBS)
 
