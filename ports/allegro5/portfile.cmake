@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO liballeg/allegro5
     REF ${VERSION}
-    SHA512 2e7833b725718fdf11f1cd5999dc9fafca4b34adda15d3d8cb551c0eb00368d2e1c08b15f8beb766e2f208ffdc3b5e33175e969c7333ad6dc92f269522ac3d32
+    SHA512 5466e547a20bf22d606a385eeb9facc57b43c7f64689c724f82a572d4730dc62b2860829435b739a716ebca85fdc01c071f3e630048cdfd4799157e61fe815e9
     HEAD_REF master
     PATCHES
         do-not-copy-pdbs-to-lib.patch
