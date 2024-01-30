@@ -3665,7 +3665,7 @@
       "port-version": 1
     },
     "jhasse-poly2tri": {
-      "baseline": "2022-08-11",
+      "baseline": "2023-12-27",
       "port-version": 0
     },
     "jinja2cpplight": {

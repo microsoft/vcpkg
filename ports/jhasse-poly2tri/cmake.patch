@@ -1,7 +1,17 @@
-diff --color -ur a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt	2022-05-20 15:46:44.000000000 +0200
-+++ b/CMakeLists.txt	2022-08-11 21:02:57.015193082 +0200
-@@ -3,13 +3,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1a237b9..d3fa222 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,15 +1,33 @@
+ cmake_minimum_required(VERSION 3.12)
+ 
++if(POLICY CMP0063)
++  cmake_policy(SET CMP0063 NEW)
++endif()
++
++set(CMAKE_CXX_VISIBILITY_PRESET hidden)
++set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
++
  project(poly2tri LANGUAGES CXX)
  set(CMAKE_CXX_STANDARD 14)
  
@@ -27,12 +37,12 @@ diff --color -ur a/CMakeLists.txt b/CMakeLists.txt
  
  get_target_property(poly2tri_target_type poly2tri TYPE)
  if(poly2tri_target_type STREQUAL SHARED_LIBRARY)
-@@ -26,3 +37,19 @@
+@@ -26,3 +44,19 @@ endif()
  if(P2T_BUILD_TESTBED)
      add_subdirectory(testbed)
  endif()
 +
-+install(FILES ${HEADERS} DESTINATION "${INSTALL_INCLUDE_DIR}")
++install(DIRECTORY poly2tri DESTINATION "${INSTALL_INCLUDE_DIR}" FILES_MATCHING PATTERN "*.h")
 +
 +install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets
 +  RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
