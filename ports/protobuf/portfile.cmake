@@ -36,10 +36,12 @@ endif()
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/csharp"
     "${SOURCE_PATH}/java"
+    "${SOURCE_PATH}/lua"
     "${SOURCE_PATH}/objectivec"
     "${SOURCE_PATH}/php"
     "${SOURCE_PATH}/python"
     "${SOURCE_PATH}/ruby"
+    "${SOURCE_PATH}/rust"
 )
 
 vcpkg_cmake_configure(
