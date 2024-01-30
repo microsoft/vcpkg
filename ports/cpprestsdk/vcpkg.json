@@ -114,7 +114,8 @@
       ]
     },
     "winpplx": {
-      "description": "Usage of Winpplx for CPPREST_PPLX_IMPL"
+      "description": "Usage of Winpplx for CPPREST_PPLX_IMPL",
+      "supports": "windows"
     }
   }
 }
