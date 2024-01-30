@@ -9253,7 +9253,7 @@
       "port-version": 0
     },
     "x86-simd-sort": {
-      "baseline": "3.0",
+      "baseline": "4.0",
       "port-version": 0
     },
     "xapian": {
