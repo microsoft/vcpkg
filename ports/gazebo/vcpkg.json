@@ -1,7 +1,7 @@
 {
   "name": "gazebo",
   "version-date": "2022-01-20",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Open source robotics simulator.",
   "homepage": "http://gazebosim.org",
   "license": "Apache-2.0",
@@ -21,6 +21,7 @@
     "ccd",
     {
       "name": "hdf5",
+      "default-features": false,
       "features": [
         "cpp"
       ]
@@ -30,10 +31,9 @@
     "ignition-math6",
     "ignition-msgs5",
     "ignition-transport8",
-    "ogre",
     {
-      "name": "pkgconf",
-      "host": true
+      "name": "ogre",
+      "default-features": false
     },
     "protobuf",
     "qwt",

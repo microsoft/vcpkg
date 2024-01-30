@@ -30,14 +30,20 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         graphviz  NO_GRAPHVIZ_FEATURE
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUSE_EXTERNAL_TINY_PROCESS_LIBRARY=ON
-        "-DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF  # Not enabled by default, but to be sure
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+        -DVCPKG_TRACE_FIND_PACKAGE=ON
 )
+
+message(FATAL_ERROR "aborting")
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/gazebo")
@@ -63,5 +69,5 @@ endforeach()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
