@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1a237b9..d3fa222 100644
+index 1a237b9..374e7e9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,15 +1,33 @@
+@@ -1,15 +1,32 @@
  cmake_minimum_required(VERSION 3.12)
  
 +if(POLICY CMP0063)
@@ -28,7 +28,6 @@ index 1a237b9..d3fa222 100644
 +
  add_library(poly2tri ${SOURCES} ${HEADERS})
 -target_include_directories(poly2tri INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${${PROJECT_NAME}_HEADERS}")
 +target_include_directories(${PROJECT_NAME} PUBLIC
 +    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/poly2tri>
 +    $<INSTALL_INTERFACE:include>
@@ -37,19 +36,17 @@ index 1a237b9..d3fa222 100644
  
  get_target_property(poly2tri_target_type poly2tri TYPE)
  if(poly2tri_target_type STREQUAL SHARED_LIBRARY)
-@@ -26,3 +44,19 @@ endif()
+@@ -26,3 +43,17 @@ endif()
  if(P2T_BUILD_TESTBED)
      add_subdirectory(testbed)
  endif()
 +
-+install(DIRECTORY poly2tri DESTINATION "${INSTALL_INCLUDE_DIR}" FILES_MATCHING PATTERN "*.h")
++install(DIRECTORY poly2tri DESTINATION include FILES_MATCHING PATTERN "*.h")
 +
 +install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets
 +  RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
 +  LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
 +  ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
-+  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}"
-+  COMPONENT dev
 +)
 +
 +install (EXPORT ${PROJECT_NAME}Targets
