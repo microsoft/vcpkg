@@ -1,0 +1,12 @@
+{
+  "name": "libdmx",
+  "version": "1.1.4",
+  "description": "X Window System DMX (Distributed Multihead X) extension library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libdmx",
+  "license": "MIT",
+  "dependencies": [
+    "libxext",
+    "xorg-macros",
+    "xproto"
+  ]
+}

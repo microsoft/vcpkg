@@ -1,0 +1,13 @@
+diff --git a/widgets/glut.cpp b/widgets/glut.cpp
+index eca65db..6a4641d 100644
+--- a/widgets/glut.cpp
++++ b/widgets/glut.cpp
+@@ -27,7 +27,7 @@
+ 	#if defined(_MSC_VER) || defined(__BORLANDC__)
+ 		#include <windows.h>
+ 		#include <GL/gl.h>
+-		#include "glut.h"
++		#include <GL/glut.h>
+ 	#else
+ 		#include <GL/gl.h>
+ 		#include <GL/glut.h>

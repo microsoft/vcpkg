@@ -1,30 +1,26 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(HIREDIS_PATCHES support-static.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO redis/hiredis
-    REF v1.0.2
-    SHA512 86497a1c21869bbe535378885eee6dbd594ef96325966511a3513f81e501af0f5ac7fed864f3230372f3ac7a23c05bad477fa5aa90b9747c9fb1408028174f9b
+    REF "v${VERSION}"
+    SHA512 f8984abb29c09e7e6b56e656616c5155f36c53da4161a2d4c85688486411cadcdf20aa1adb9bda208c500b401c750871be1c8d58ba9df5328634d00e9d1b6589
     HEAD_REF master
     PATCHES
-        fix-feature-example.patch
         fix-timeval.patch
-        fix-include-path.patch
         fix-ssize_t.patch
-        ${HIREDIS_PATCHES}
+        support-static.patch
+        fix-cmake-conf-install-dir.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ssl     ENABLE_SSL
-        example ENABLE_EXAMPLES
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
+      -DDISABLE_TESTS=ON
+      -DBUILD_SHARED_LIBS=OFF
 )
 
 vcpkg_cmake_install()

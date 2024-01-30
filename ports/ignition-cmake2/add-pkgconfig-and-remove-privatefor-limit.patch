@@ -2,16 +2,16 @@ diff --git a/cmake/IgnUtils.cmake b/cmake/IgnUtils.cmake
 index bc6dbdc..1e8adbb 100644
 --- a/cmake/IgnUtils.cmake
 +++ b/cmake/IgnUtils.cmake
-@@ -138,7 +138,7 @@ macro(ign_find_package PACKAGE_NAME)
+@@ -142,7 +142,7 @@ macro(ign_find_package PACKAGE_NAME)
    #------------------------------------
    # Define the expected arguments
-   set(options REQUIRED PRIVATE EXACT QUIET BUILD_ONLY PKGCONFIG_IGNORE)
+   set(options REQUIRED PRIVATE EXACT QUIET CONFIG BUILD_ONLY PKGCONFIG_IGNORE)
 -  set(oneValueArgs VERSION PRETTY PURPOSE EXTRA_ARGS PKGCONFIG PKGCONFIG_LIB PKGCONFIG_VER_COMPARISON)
 +  set(oneValueArgs VERSION PRETTY PURPOSE EXTRA_ARGS PKGCONFIG PKGCONFIG_LIB PKGCONFIG_VER_COMPARISON BY_PKGCONFIG)
    set(multiValueArgs REQUIRED_BY PRIVATE_FOR COMPONENTS OPTIONAL_COMPONENTS)
  
    #------------------------------------
-@@ -183,9 +183,15 @@ macro(ign_find_package PACKAGE_NAME)
+@@ -191,9 +191,15 @@ macro(ign_find_package PACKAGE_NAME)
    endif()
  
  
@@ -27,7 +27,7 @@ index bc6dbdc..1e8adbb 100644
  
    if(${PACKAGE_NAME}_FOUND)
  
-@@ -300,17 +306,11 @@ macro(ign_find_package PACKAGE_NAME)
+@@ -319,17 +325,11 @@ macro(ign_find_package PACKAGE_NAME)
      endif()
  
      if(ign_find_package_REQUIRED_BY)

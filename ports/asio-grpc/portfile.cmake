@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tradias/asio-grpc
-    REF v2.0.0
-    SHA512 3ae5e52c790b4c5eec819eecfe5687321d629213de57475a62dd80efc1db367685d4eb976f4387e25c4e891169d34c0ecd56f5d011866f84b40fe3a19ea4809d
+    REF "v${VERSION}"
+    SHA512 bb5358c6d64e1e7afaa644dda76a22a0a8b724ecfb9e2ac26a5fb2d4d506df10f09f8866d71713daf79ea0cd808eacecc027a3e925376ed1c1ca544f95656a8a
     HEAD_REF master
 )
 
@@ -25,4 +25,4 @@ vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

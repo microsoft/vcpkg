@@ -1,16 +1,12 @@
-set(GTK_VERSION 4.6.2)
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
-    REF  aec7ca82007dbe07faee6be084d20758ebac2b91 #v4.6.2
-    SHA512 05ebba53e71a997b4dc04bc018f420f62d569cb66a2f3e713bd2b48abd7c0051f67939e42c812388bd0565d12a3f82b45731a086d3ab0e75d16eee200a3be95f
+    REF ${VERSION}
+    SHA512 f219ddc6f46061f516f99a3845f344269d51d7fc2554773f7d4cee7833c5be26ce809262466d18c2804559834eb595f0d802b6fc80d77b7e8bf046e4c1293d64
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
-        0002-windows-build.patch
-        0004-macos-build.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -36,17 +32,29 @@ list(APPEND OPTIONS -Dbroadway-backend=false) #Enable the broadway (HTML5) gdk b
 list(APPEND OPTIONS -Dwin32-backend=${win32}) #Enable the Windows gdk backend (only when building on Windows)
 list(APPEND OPTIONS -Dmacos-backend=${osx}) #Enable the macOS gdk backend (only when building on macOS)
 
+if("introspection" IN_LIST FEATURES)
+    list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
+    list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
+else()
+    list(APPEND OPTIONS -Dintrospection=disabled)
+endif()
+
+if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
+else()
+    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${OPTIONS}
         -Ddemos=false
+        -Dbuild-testsuite=false
         -Dbuild-examples=false
         -Dbuild-tests=false
-        -Dinstall-tests=false
         -Dgtk_doc=false
         -Dman-pages=false
-        -Dintrospection=disabled
         -Dmedia-ffmpeg=disabled     # Build the ffmpeg media backend
         -Dmedia-gstreamer=disabled  # Build the gstreamer media backend
         -Dprint-cups=disabled       # Build the cups print backend
@@ -55,61 +63,29 @@ vcpkg_configure_meson(
         -Dsysprof=disabled          # include tracing support for sysprof
         -Dtracker=disabled          # Enable Tracker3 filechooser search
         -Dcolord=disabled           # Build colord support for the CUPS printing backend
-    ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-                               glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-                               gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
-                               glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-                               sassc='${CURRENT_HOST_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-    ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-                               glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-                               gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
-                               glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-                               sassc='${CURRENT_HOST_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        -Df16c=disabled             # Enable F16C fast paths (requires F16C)
+    OPTIONS_DEBUG
+        ${OPTIONS_DEBUG}
+    OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
+    ADDITIONAL_BINARIES
+        glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+        glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
+        glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        sassc='${CURRENT_HOST_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+        g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
 )
 
-vcpkg_install_meson()
-
-# If somebody finds out how to access and forward env variables to
-# the meson install script be my guest. Nevertheless the script still
-# needs manual execution in the crosscompiling case.
-vcpkg_find_acquire_program(PYTHON3)
-foreach(_config release debug)
-    if(_config STREQUAL "release")
-        set(_short rel)
-        set(_path_suffix)
-    else()
-        set(_short dbg)
-        set(_path_suffix /debug)
-    endif()
-    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib")
-        continue()
-    endif()
-    message(STATUS "Running post install script: ${TARGET_TRIPLET}-${_short}")
-
-    set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}${_path_suffix}/lib/pkgconfig/")
-    set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/media")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/immodules")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/printbackends")
-    vcpkg_execute_required_process(
-        COMMAND "${PYTHON3}" "${SOURCE_PATH}/build-aux/meson/post-install.py" 4.0 4.0.0 "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib" "${CURRENT_PACKAGES_DIR}${_path_suffix}/share" "${CURRENT_PACKAGES_DIR}${_path_suffix}/bin"
-        WORKING_DIRECTORY ${SOURCE_PATH}
-        LOGNAME post-install-${TARGET_TRIPLET}-${_short}
-    )
-    unset(ENV{PKG_CONFIG_PATH})
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0")
-    #file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/bin/gtk-4.0")
-    #file(RENAME "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/" "${CURRENT_PACKAGES_DIR}${_path_suffix}/bin/gtk-4.0")
-    message(STATUS "Post install ${TARGET_TRIPLET}-${_short} done")
-endforeach()
+vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 set(TOOL_NAMES gtk4-builder-tool
                gtk4-encode-symbolic-svg

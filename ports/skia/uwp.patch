@@ -1,0 +1,13 @@
+diff --git a/src/utils/win/SkWGL_win.cpp b/src/utils/win/SkWGL_win.cpp
+index 9dacf0c..3365a31 100644
+--- a/src/utils/win/SkWGL_win.cpp
++++ b/src/utils/win/SkWGL_win.cpp
+@@ -6,7 +6,7 @@
+  */
+ 
+ #include "include/core/SkTypes.h"
+-#if defined(SK_BUILD_FOR_WIN) && !defined(_M_ARM64) && !defined(WINUWP)
++#if defined(SK_BUILD_FOR_WIN) && !defined(_M_ARM64) && !defined(SK_WINUWP)
+ 
+ #include "src/utils/win/SkWGL.h"
+ 

@@ -1,133 +1,81 @@
+diff --git a/config/meson.build b/config/meson.build
+index 7134e80..a77f533 100644
+--- a/config/meson.build
++++ b/config/meson.build
+@@ -57,7 +57,9 @@ eal_pmd_path = join_paths(get_option('prefix'), driver_install_path)
+ # driver .so files often depend upon the bus drivers for their connect bus,
+ # e.g. ixgbe depends on librte_bus_pci. This means that the bus drivers need
+ # to be in the library path, so symlink the drivers from the main lib directory.
+-if not is_windows
++if get_option('default_library') == 'static'
++    # skip
++elif not is_windows
+     meson.add_install_script('../buildtools/symlink-drivers-solibs.sh',
+             get_option('libdir'), pmd_subdir_opt)
+ elif meson.version().version_compare('>=0.55.0')
 diff --git a/drivers/meson.build b/drivers/meson.build
-index 1d8123b00c..2de654692d 100644
+index 1d8123b..36ab3c0 100644
 --- a/drivers/meson.build
 +++ b/drivers/meson.build
-@@ -126,14 +126,15 @@ foreach subpath:subdirs
-                 if not build
-                     break
-                 endif
--                if not is_variable('shared_rte_' + d)
-+                if get_option('default_library') == 'static' and is_variable('static_rte_' + d)
-+                    static_deps += [get_variable('static_rte_' + d)]
-+                elif get_option('default_library') == 'shared' and is_variable('shared_rte_' + d)
-+                    shared_deps += [get_variable('shared_rte_' + d)]
-+                else
-                     build = false
-                     reason = 'missing internal dependency, "@0@"'.format(d)
-                     message('Disabling @1@ [@2@]: missing internal dependency "@0@"'
-                             .format(d, name, 'drivers/' + drv_path))
--                else
--                    shared_deps += [get_variable('shared_rte_' + d)]
--                    static_deps += [get_variable('static_rte_' + d)]
-                 endif
-             endforeach
-         endif
-@@ -158,6 +159,7 @@ foreach subpath:subdirs
+@@ -180,7 +180,7 @@ foreach subpath:subdirs
+                 include_directories: includes,
+                 dependencies: static_deps,
+                 c_args: cflags,
+-                install: true)
++                install: get_option('default_library') == 'static')
  
-         install_headers(headers)
- 
-+        if get_option('default_library') == 'static'
-         # generate pmdinfo sources by building a temporary
-         # lib and then running pmdinfogen on the contents of
-         # that lib. The final lib reuses the object files and
-@@ -220,6 +222,13 @@ foreach subpath:subdirs
+         # now build the shared driver
+         version_map = '@0@/@1@/version.map'.format(meson.current_source_dir(), drv_path)
+@@ -220,6 +220,7 @@ foreach subpath:subdirs
              endif
          endif
  
-+        static_dep = declare_dependency(
-+                include_directories: includes,
-+                dependencies: static_deps)
-+        dpdk_drivers += static_lib
-+        set_variable('static_@0@'.format(lib_name), static_dep)
-+
-+        else
++      if get_option('default_library') == 'shared'
          shared_lib = shared_library(lib_name, sources,
                  objects: objs,
                  include_directories: includes,
-@@ -237,14 +246,10 @@ foreach subpath:subdirs
+@@ -237,9 +238,13 @@ foreach subpath:subdirs
          shared_dep = declare_dependency(link_with: shared_lib,
                  include_directories: includes,
                  dependencies: shared_deps)
--        static_dep = declare_dependency(
--                include_directories: includes,
--                dependencies: static_deps)
-+        set_variable('shared_@0@'.format(lib_name), shared_dep)
++      endif
+         static_dep = declare_dependency(
+                 include_directories: includes,
+                 dependencies: static_deps)
++      if get_option('default_library') == 'static'
++        shared_dep = static_dep
++      endif
  
--        dpdk_drivers += static_lib
-+        endif
+         dpdk_drivers += static_lib
  
--        set_variable('shared_@0@'.format(lib_name), shared_dep)
--        set_variable('static_@0@'.format(lib_name), static_dep)
-         dependency_name = ''.join(lib_name.split('rte_'))
-         if developer_mode
-             message('drivers/@0@: Defining dependency "@1@"'.format(
-diff --git a/drivers/net/octeontx/base/meson.build b/drivers/net/octeontx/base/meson.build
-index 8e5e8c1b55..39593cd8a6 100644
---- a/drivers/net/octeontx/base/meson.build
-+++ b/drivers/net/octeontx/base/meson.build
-@@ -10,7 +10,7 @@ sources = [
- depends = ['ethdev', 'mempool_octeontx']
- static_objs = []
- foreach d: depends
--    if not is_variable('shared_rte_' + d)
-+    if get_option('default_library') == 'shared' and not is_variable('shared_rte_' + d)
-         subdir_done()
-     endif
-     static_objs += get_variable('static_rte_' + d)
 diff --git a/lib/meson.build b/lib/meson.build
-index 24adbe44c9..e614ec57af 100644
+index 24adbe4..eef6e93 100644
 --- a/lib/meson.build
 +++ b/lib/meson.build
-@@ -146,14 +146,15 @@ foreach l:libraries
-         if not build
-             break
-         endif
--        if not is_variable('shared_rte_' + d)
-+        if get_option('default_library') == 'static'
-+            static_deps += [get_variable('static_rte_' + d)]
-+        elif is_variable('shared_rte_' + d)
-+            shared_deps += [get_variable('shared_rte_' + d)]
-+        else
-             build = false
-             reason = 'missing internal dependency, "@0@"'.format(d)
-             message('Disabling @1@ [@2@]: missing internal dependency "@0@"'
-                     .format(d, name, 'lib/' + l))
--        else
--            shared_deps += [get_variable('shared_rte_' + d)]
--            static_deps += [get_variable('static_rte_' + d)]
-         endif
-     endforeach
- 
-@@ -185,6 +186,7 @@ foreach l:libraries
-     endif
-     cflags += '-DRTE_LOG_DEFAULT_LOGTYPE=lib.' + l
- 
-+    if get_option('default_library') == 'static'
-     # first build static lib
-     static_lib = static_library(libname,
-             sources,
-@@ -246,6 +248,10 @@ foreach l:libraries
+@@ -192,7 +192,7 @@ foreach l:libraries
+             c_args: cflags,
+             dependencies: static_deps,
+             include_directories: includes,
+-            install: true)
++            install: get_option('default_library') == 'static')
+     static_dep = declare_dependency(
+             include_directories: includes,
+             dependencies: static_deps)
+@@ -246,6 +246,7 @@ foreach l:libraries
                  output: name + '.sym_chk')
      endif
  
-+    dpdk_static_libraries = [static_lib] + dpdk_static_libraries
-+    set_variable('static_rte_' + name, static_dep)
-+
-+    else
++  if get_option('default_library') == 'shared'
      shared_lib = shared_library(libname,
              sources,
              objects: objs,
-@@ -262,10 +268,10 @@ foreach l:libraries
+@@ -262,6 +263,9 @@ foreach l:libraries
              dependencies: shared_deps)
  
      dpdk_libraries = [shared_lib] + dpdk_libraries
--    dpdk_static_libraries = [static_lib] + dpdk_static_libraries
--
++  else
++    shared_dep = static_dep
++  endif
+     dpdk_static_libraries = [static_lib] + dpdk_static_libraries
+ 
      set_variable('shared_rte_' + name, shared_dep)
--    set_variable('static_rte_' + name, static_dep)
-+
-+    endif
-+
-     if developer_mode
-         message('lib/@0@: Defining dependency "@1@"'.format(l, name))
-     endif

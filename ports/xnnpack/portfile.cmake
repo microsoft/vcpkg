@@ -5,15 +5,16 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/XNNPACK
-    REF 5223fd1922d9d965ddb07865d1d13293069fab65 # 2021-05-17
-    SHA512 5c1eb9171a046c683d5a96ae70b6dab36c415c981e8f29857d16ad67afa22681f0fe6f7623527200fd954403d50b036bb2892ba44e397d639860b9ec4873e7c6
+    REF ae108ef49aa5623b896fc93d4298c49d1750d9ba # 2022-02-17
+    SHA512 597354c8c5b786ba24a8c9759409fee7b090ec497547919da4c5786a571b5ef237d1da204b7fd553217089792acb5e40ea1e6d26e3a638aa32df1e63c14d1c91
     HEAD_REF master
     PATCHES
         use-packages.patch
+        use-c-cpp-11.patch
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DXNNPACK_USE_SYSTEM_LIBS=ON
         -DXNNPACK_ENABLE_ASSEMBLY=ON
@@ -26,8 +27,8 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/bin
-                    ${CURRENT_PACKAGES_DIR}/debug/share
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/bin"
+                    "${CURRENT_PACKAGES_DIR}/debug/share"
 )

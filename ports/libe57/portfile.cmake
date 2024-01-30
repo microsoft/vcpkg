@@ -16,7 +16,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/libe57")
+if(NOT VCPKG_BUILD_TYPE)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/libe57")
+endif()
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()

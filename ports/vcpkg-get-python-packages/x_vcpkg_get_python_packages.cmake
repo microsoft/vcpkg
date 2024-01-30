@@ -18,6 +18,10 @@ function(x_vcpkg_get_python_packages)
         endif()
     endif()
 
+    if(arg_PYTHON_VERSION STREQUAL "3")
+        set(PYTHON_VERSION_MINOR 11)
+    endif()
+
     if(NOT DEFINED arg_OUT_PYTHON_VAR)
         set(arg_OUT_PYTHON_VAR "PYTHON${arg_PYTHON_VERSION}")
     endif()
@@ -32,9 +36,6 @@ function(x_vcpkg_get_python_packages)
     get_filename_component(python_dir "${arg_PYTHON_EXECUTABLE}" DIRECTORY)
     set(ENV{PYTHONNOUSERSITE} "1")
     if("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})" AND CMAKE_HOST_WIN32) # inside vcpkg and windows host.
-        #if(NOT EXISTS "${python_dir}/python310._pth" AND PYTHON_EXECUTABLE MATCHES "python3")
-        #    file(COPY "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-get-python-packages/python310._pth" DESTINATION "${python_dir}")
-        #endif()
         if(NOT EXISTS "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
             if(NOT EXISTS "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
                 if(arg_PYTHON_VERSION STREQUAL 3)
@@ -75,7 +76,7 @@ function(x_vcpkg_get_python_packages)
         set(python_sub_path /Scripts)
         set(python_venv virtualenv)
         if(arg_PYTHON_VERSION STREQUAL 3)
-            file(COPY "${python_dir}/python310.zip" DESTINATION "${venv_path}/Scripts")
+            file(COPY "${python_dir}/python3${PYTHON_VERSION_MINOR}.zip" DESTINATION "${venv_path}/Scripts")
         endif()
         set(python_venv_options "--app-data" "${venv_path}/data")
     else()
@@ -90,7 +91,7 @@ function(x_vcpkg_get_python_packages)
 
     set(ENV{PYTHONNOUSERSITE} "1")
     message(STATUS "Setting up python virtual environmnent...")
-    vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" -m "${python_venv}" ${python_venv_options} "${venv_path}"
+    vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" -I -m "${python_venv}" ${python_venv_options} "${venv_path}"
                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                    LOGNAME "venv-setup-${TARGET_TRIPLET}")
     vcpkg_add_to_path(PREPEND "${venv_path}${python_sub_path}")
@@ -100,13 +101,13 @@ function(x_vcpkg_get_python_packages)
     unset(ENV{PYTHONPATH})
     if(DEFINED arg_REQUIREMENTS_FILE)
         message(STATUS "Installing requirements from: ${arg_REQUIREMENTS_FILE}")
-        vcpkg_execute_required_process(COMMAND "${${arg_OUT_PYTHON_VAR}}" -m pip install -r ${arg_REQUIREMENTS_FILE}
+        vcpkg_execute_required_process(COMMAND "${${arg_OUT_PYTHON_VAR}}" -I -m pip install -r ${arg_REQUIREMENTS_FILE}
                                        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                        LOGNAME "pip-install-requirements-file-${TARGET_TRIPLET}")
     endif()
     if(DEFINED arg_PACKAGES)
         message(STATUS "Installing python packages: ${arg_PACKAGES}")
-        vcpkg_execute_required_process(COMMAND "${${arg_OUT_PYTHON_VAR}}" -m pip install ${arg_PACKAGES}
+        vcpkg_execute_required_process(COMMAND "${${arg_OUT_PYTHON_VAR}}" -I -m pip install ${arg_PACKAGES}
                                        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
                                        LOGNAME "pip-install-packages-${TARGET_TRIPLET}")
     endif()

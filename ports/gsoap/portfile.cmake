@@ -11,50 +11,41 @@ vcpkg_from_sourceforge(
 
 set(BUILD_ARCH "Win32")
 
-# Handle binary files and includes
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/gsoap ${CURRENT_PACKAGES_DIR}/debug/tools)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/gsoap" "${CURRENT_PACKAGES_DIR}/debug/tools")
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_build_msbuild(
-        USE_VCPKG_INTEGRATION
-        PROJECT_PATH ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/soapcpp2.sln
+     vcpkg_msbuild_install(
+        PROJECT_PATH "${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/soapcpp2.sln"
         PLATFORM ${BUILD_ARCH}
         TARGET Build
     )
-    vcpkg_build_msbuild(
-        USE_VCPKG_INTEGRATION
-        PROJECT_PATH ${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/wsdl2h.sln
+     vcpkg_msbuild_install(
+        PROJECT_PATH "${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/wsdl2h.sln"
         PLATFORM ${BUILD_ARCH}
         TARGET Build
     )
-
-    file(COPY ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/release/soapcpp2.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gsoap/)
-    file(COPY ${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/release/wsdl2h.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gsoap/)
-    file(COPY ${SOURCE_PATH}/gsoap/VisualStudio2005/soapcpp2/debug/soapcpp2.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/gsoap/)
-    file(COPY ${SOURCE_PATH}/gsoap/VisualStudio2005/wsdl2h/debug/wsdl2h.exe DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/gsoap/)
 else()
     message(FATAL_ERROR "Sorry but gsoap only can be build in Windows temporary")
 endif()
 
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${SOURCE_PATH}/gsoap/stdsoap2.h ${SOURCE_PATH}/gsoap/stdsoap2.c ${SOURCE_PATH}/gsoap/stdsoap2.cpp ${SOURCE_PATH}/gsoap/dom.c ${SOURCE_PATH}/gsoap/dom.cpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
 
-# Handle import files
-file(COPY ${SOURCE_PATH}/gsoap/import DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY
+    "${SOURCE_PATH}/gsoap/stdsoap2.h"
+    "${SOURCE_PATH}/gsoap/stdsoap2.c"
+    "${SOURCE_PATH}/gsoap/stdsoap2.cpp"
+    "${SOURCE_PATH}/gsoap/dom.c"
+    "${SOURCE_PATH}/gsoap/dom.cpp"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+)
 
-# Handle custom files
-file(COPY ${SOURCE_PATH}/gsoap/custom DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${SOURCE_PATH}/gsoap/import" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(COPY "${SOURCE_PATH}/gsoap/custom" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(COPY "${SOURCE_PATH}/gsoap/plugin" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-# Handle plugin files
-file(COPY ${SOURCE_PATH}/gsoap/plugin DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-# Cleanup surplus empty directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/gsoap/plugin/.deps")
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/INSTALL.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME install)
-file(INSTALL ${SOURCE_PATH}/README.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME readme)
-
-vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+file(INSTALL "${SOURCE_PATH}/INSTALL.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME install)
+file(INSTALL "${SOURCE_PATH}/README.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME readme)

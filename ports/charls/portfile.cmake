@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO team-charls/charls
-    REF 662d4f2a0238357ccc4d89cd14b1fa67d2597ff1 #v2.3.4
-    SHA512 f022d025ae1d5ff624982ceb61ee88c5a42ee958afcff39fbc3e698030092b6667c3a685b66b7fd16ab7c3d3af1d44b773f761e2eefd7f026432b80176b6894b
+    REF "${VERSION}"
+    SHA512 4f1b587f008956ab6fb9d2473c37a7b1a842633113245be7f8bb29b8c64304a6d580a29fcfca97ba1ac75adedbaf89e29adc4ac9e4117e1af1aa5949dbd34df9
     HEAD_REF master
 )
 
@@ -18,7 +18,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/charls)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 
 vcpkg_copy_pdbs()
 

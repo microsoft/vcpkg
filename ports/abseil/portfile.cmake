@@ -5,16 +5,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 215105818dfde3174fe799600bb0f3cae233d0bf #LTS 20211102, Patch 1
-    SHA512 75d234eac76be8790cf09e3e1144e4b4cf5cacb61e46961a9e4a35b37d0fa85243afdd5de5f47a006ef96af6fc91ecc0c233297c4c32258c08d46304b3361330
+    REF "${VERSION}"
+    SHA512 14390380655c41483a98487e3b012110dd8d1743fdd68d8cde7e0d7c2730312d564b15726d8c9d2fff237d2fce3983bbbb5213f59612c7c6feaeb402dff9609f
     HEAD_REF master
-    PATCHES
-        # in C++17 mode, use std::any, std::optional, std::string_view, std::variant
-        # instead of the library replacement types
-        # in C++11 mode, force use of library replacement types, otherwise the automatic
-        # detection can cause ABI issues depending on which compiler options
-        # are enabled for consuming user code
-	    fix-cxx-standard.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -22,10 +15,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cxx17 ABSL_USE_CXX17
 )
 
+# With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
+# compiled with C++14 or C++17, and modifies the installed `absl/base/options.h`
+# header accordingly. This works even if CMAKE_CXX_STANDARD is not set. Abseil
+# uses the compiler default behavior to update `absl/base/options.h` as needed.
+if (ABSL_USE_CXX17)
+    set(ABSL_USE_CXX17_OPTION "-DCMAKE_CXX_STANDARD=17")
+endif ()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS -DABSL_PROPAGATE_CXX_STD=ON ${ABSL_USE_CXX17_OPTION}
 )
 
 vcpkg_cmake_install()
@@ -40,16 +41,16 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/include/absl/time/internal/cctz/testdata"
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/absl/base/config.h"
-        "#elif defined(ABSL_CONSUME_DLL)" "#elif 1"
-    )
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/absl/base/internal/thread_identity.h"
-        "&& !defined(ABSL_CONSUME_DLL)" "&& 0"
-    )
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/absl/container/internal/hashtablez_sampler.h"
-        "!defined(ABSL_CONSUME_DLL)" "0"
-    )
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(GLOB_RECURSE headers "${CURRENT_PACKAGES_DIR}/include/absl/*.h")
+    foreach(header IN LISTS ${headers})
+        vcpkg_replace_string("${header}"
+            "!defined(ABSL_CONSUME_DLL)" "0"
+        )
+        vcpkg_replace_string("${header}"
+            "defined(ABSL_CONSUME_DLL)" "1"
+        )
+    endforeach()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

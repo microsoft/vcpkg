@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8d241c5..4a3d31e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,11 +14,6 @@ option(nanopb_BUILD_RUNTIME "Build the headers and libraries needed at runtime"
+ option(nanopb_BUILD_GENERATOR "Build the protoc plugin for code generation" ON)
+ option(nanopb_MSVC_STATIC_RUNTIME "Link static runtime libraries" ON)
+ 
+-find_program(nanopb_PROTOC_PATH protoc HINTS generator-bin generator)
+-if(NOT EXISTS ${nanopb_PROTOC_PATH})
+-    message(FATAL_ERROR "protoc compiler not found")
+-endif()
+-
+ if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
+     set(CMAKE_DEBUG_POSTFIX "d")
+ endif()
+@@ -39,7 +34,6 @@ if(NOT DEFINED CMAKE_INSTALL_CMAKEDIR)
+     set(CMAKE_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/nanopb")
+ endif()
+ 
+-find_package(Python REQUIRED COMPONENTS Interpreter)
+ execute_process(
+     COMMAND ${Python_EXECUTABLE} -c
+         "import os.path, sys, sysconfig; print(os.path.relpath(sysconfig.get_path('purelib'), start=sys.prefix))"
+@@ -49,7 +43,9 @@ execute_process(
+ 
+ if(nanopb_BUILD_GENERATOR)
+     set(generator_protos nanopb)
+-
++    if(NOT DEFINED nanopb_PROTOC_PATH)
++        message(FATAL_ERROR "nanopb_PROTOC_PATH not defined")
++    endif()
+     foreach(generator_proto IN LISTS generator_protos)
+         string(REGEX REPLACE "([^;]+)" "${PROJECT_SOURCE_DIR}/generator/proto/\\1.proto" generator_proto_file "${generator_proto}")
+         string(REGEX REPLACE "([^;]+)" "\\1_pb2.py" generator_proto_py_file "${generator_proto}")
+diff --git a/pb.h b/pb.h
+index 5b3e1ef..693262b 100644
+--- a/pb.h
++++ b/pb.h
+@@ -170,6 +170,9 @@ extern "C" {
+ #    if defined(__ICCARM__)
+        /* IAR has static_assert keyword but no _Static_assert */
+ #      define PB_STATIC_ASSERT(COND,MSG) static_assert(COND,#MSG);
++#    elif defined(_MSC_VER)
++       /* MSVC has static_assert keyword but no _Static_assert */
++#      define PB_STATIC_ASSERT(COND,MSG) static_assert(COND,#MSG);
+ #    elif defined(PB_C99_STATIC_ASSERT)
+        /* Classic negative-size-array static assert mechanism */
+ #      define PB_STATIC_ASSERT(COND,MSG) typedef char PB_STATIC_ASSERT_MSG(MSG, __LINE__, __COUNTER__)[(COND)?1:-1];

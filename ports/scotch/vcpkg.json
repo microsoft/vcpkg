@@ -1,0 +1,22 @@
+{
+  "name": "scotch",
+  "version": "7.0.3",
+  "description": "Scotch: a software package for graph and mesh/hypergraph partitioning, graph clustering, and sparse matrix ordering",
+  "homepage": "https://gitlab.inria.fr/scotch/scotch",
+  "license": null,
+  "supports": "!arm & !uwp & !android & !osx",
+  "dependencies": [
+    "bzip2",
+    "liblzma",
+    "pthread",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

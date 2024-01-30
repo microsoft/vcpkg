@@ -1,0 +1,11 @@
+The package gmp can be imported via CMake FindPkgConfig module:
+
+    #  gmp
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(gmp REQUIRED IMPORTED_TARGET gmp)
+    target_link_libraries(main PkgConfig::gmp)
+
+    # gmpxx
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(gmpxx REQUIRED IMPORTED_TARGET gmpxx)
+    target_link_libraries(main PkgConfig::gmpxx)

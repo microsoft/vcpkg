@@ -1,6 +1,6 @@
 {
   "name": "proxygen",
-  "version-string": "2022.07.11.00",
+  "version-string": "2024.01.01.00",
   "description": "It comprises the core C++ HTTP abstractions used at Facebook.",
   "homepage": "https://github.com/facebook/proxygen",
   "license": "BSD-3-Clause",
@@ -16,10 +16,12 @@
     "boost-thread",
     "fizz",
     "folly",
+    "gflags",
     {
       "name": "gperf",
       "host": true
     },
+    "mvfst",
     "openssl",
     {
       "name": "vcpkg-cmake",

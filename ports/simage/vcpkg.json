@@ -1,7 +1,6 @@
 {
   "name": "simage",
-  "version-semver": "1.8.2",
-  "port-version": 1,
+  "version-semver": "1.8.3",
   "description": "Image file format library abstraction layer",
   "homepage": "https://github.com/coin3d/simage",
   "license": "ISC",
@@ -96,10 +95,12 @@
       ]
     },
     "avienc": {
-      "description": "Use Video for Windows for AVI encoding"
+      "description": "Use Video for Windows for AVI encoding",
+      "supports": "windows"
     },
     "gdiplus": {
-      "description": "Use GDI+ on Windows to load/save images"
+      "description": "Use GDI+ on Windows to load/save images",
+      "supports": "windows"
     },
     "giflib": {
       "description": "Enable support for GIF images",

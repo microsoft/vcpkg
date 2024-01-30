@@ -56,6 +56,7 @@ if(WITH_DEPENDENCIES)
 endif()
 
 if(WIN32)
+    target_compile_definitions(aubio PRIVATE -DHAVE_WIN_HACKS=1)
     target_link_libraries(aubio PUBLIC ws2_32)
 endif()
 

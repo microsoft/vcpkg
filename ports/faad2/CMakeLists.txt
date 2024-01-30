@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.7.2)
-project (faad VERSION 2.9.1)
+project (faad VERSION 2.10.1)
 
 option(FAAD_BUILD_BINARIES "Build faad2 binaries" OFF)
 
@@ -28,6 +28,7 @@ if (FAAD_BUILD_BINARIES)
         "${CMAKE_SOURCE_DIR}/frontend/unicode_support.c"
     )
     target_link_libraries(faad_decoder PRIVATE faad shell32)
+    install(TARGETS faad_decoder DESTINATION "bin")
 endif ()
 
 install(

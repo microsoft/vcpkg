@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libjuice
-    REF 89bc87dd526849dc786ad6e986ad70efc4e37382 #v1.0.3
-    SHA512 5ea1e327d53d40482f27e1709a1669472a8b213208431396ea2c89829db82a989e17af03e655138dd5f2c4610d6ae862fbab66525cb7a61d13d6486fb7fd87ab
+    REF "v${VERSION}"
+    SHA512 0c690940fab9c29c52955ee96c254c086f4170c8e59a26b767b9ffc288db9ecc7195136f958b9773903201e2719279bca63c7f64b6bb89bf8a41b6dd1da4eb63
     HEAD_REF master
     PATCHES
         fix-for-vcpkg.patch
@@ -24,7 +24,13 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME LibJuice CONFIG_PATH lib/cmake/LibJuice)
+vcpkg_cmake_config_fixup(PACKAGE_NAME libjuice CONFIG_PATH lib/cmake/LibJuice)
 vcpkg_fixup_pkgconfig()
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/libjuice/LibJuiceConfig.cmake" DATACHANNEL_CONFIG)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/libjuice/LibJuiceConfig.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+${DATACHANNEL_CONFIG}")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

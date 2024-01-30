@@ -3,14 +3,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
-    REF boost-1.79.0
-    SHA512 2f036406e8343895b3749bd7769b1dadb48d7552862898842b43eccf51c62153f4683c46cef91fd97228d6022e60a9bdb0726a00bcc74f519e0539b3a69dc0bf
+    REF boost-${VERSION}
+    SHA512 515450eef186277ec60c29230e31ba600aafde6157bd815ebfe262037c61e31263a44f007bb71a8372a824161a817afff9b89ba538b4f7a2b69a030623cf5217
     HEAD_REF master
-    PATCHES
-        0001-Fix-boost-ICU-support.patch
-        allow-force-finding-iconv.patch
+    PATCHES fix-dependencies.patch
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
+    "import config : requires"
+    "import ../config/checks/config : requires"
+)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"

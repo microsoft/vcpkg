@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 14ed67d..57673c1 100644
+index 1c75e5a..9a6c575 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -126,7 +126,7 @@ set(
+@@ -148,7 +148,7 @@ set(
  )
  
  # install header files
@@ -10,4 +10,4 @@ index 14ed67d..57673c1 100644
 +install(FILES ${haru_HDRS} DESTINATION include/)
  
  # install various files
- install(FILES README.md CHANGES INSTALL DESTINATION .)
+ install(FILES README.md CHANGES INSTALL DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/libharu)

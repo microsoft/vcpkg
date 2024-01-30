@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fpagliughi/sockpp
-    REF 999ad87296e34d5a8e4edf15d985315d0d84eda7
-    SHA512 159b9288f45d5f5144a002f35caf520e55a66c2d45cdb1fe325021f100db0770601e973b86ec5b032e5bea1542203b30eba3e6be20e03c78f0504b62da1900b3
+    REF "v${VERSION}"
+    SHA512 e675bd9e094108c222128f65f64519d550f5dcc36ec217c57277d2d3bfadd4410d06278cfe2858e24d36fdcc0cced8d87d05c61abb94848d073182c29860b61a
     HEAD_REF master
 )
 
@@ -22,9 +22,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(INSTALL "${CURRENT_PORT_DIR}/sockppConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

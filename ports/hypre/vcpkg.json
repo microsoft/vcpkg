@@ -1,6 +1,7 @@
 {
   "name": "hypre",
-  "version": "2.23.0",
+  "version": "2.29.0",
+  "port-version": 1,
   "description": "Parallel solvers for sparse linear systems featuring multigrid methods",
   "homepage": "https://computation.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods",
   "dependencies": [

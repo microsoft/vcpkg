@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1500844..810914e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -263,7 +263,7 @@ if(MSVC)
+     # ";" argument separator is problematic. Can't use a GenEx `$<IF:`
+     # because `/W4;/WX` is returned as a single string.
+     add_compile_options( /W4;$<$<BOOL:${KTX_WERROR}>:/WX> )
+-    add_compile_options( $<IF:$<CONFIG:Debug>,/Gz,/O2> )
++    add_compile_options( $<IF:$<CONFIG:Debug>,,/O2> )
+     # Enable UTF-8 support
+     add_compile_options( $<$<C_COMPILER_ID:MSVC>:/utf-8> )
+     add_compile_options( $<$<CXX_COMPILER_ID:MSVC>:/utf-8> )
+@@ -946,6 +946,7 @@ if(EMSCRIPTEN)
+ endif()
+ 
+ add_library( objUtil STATIC
++    EXCLUDE_FROM_ALL
+     utils/argparser.cpp
+     utils/argparser.h
+     utils/ktxapp.h

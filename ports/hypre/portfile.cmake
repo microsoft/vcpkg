@@ -5,17 +5,16 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hypre-space/hypre
-    REF v2.23.0
-    SHA512 bed8426d093e2290ab443f49deffad96a64e1b3844a4236bc59af19523b16ea8bf2318db21e42ab2b8a4dd529246ba1d9a4eb0cb3bd943633569d03e6311f67f
+    REF "v${VERSION}"
+    SHA512 fe92d09b56107845e3a4b7f0e7bbba5f319a7ebdaaecab3e6b89fae1fe2a79a9dd712806823ea518f5960f0eaa1088f6b82ebac63d3940478d36690f3adec4f2
     HEAD_REF master
-    PATCHES
-        fix-dll-install-destination.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" HYPRE_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
+    DISABLE_PARALLEL_CONFIGURE # See 'Autogenerate csr_spgemm_device_numer$ files'
     OPTIONS
         -DHYPRE_SHARED=${HYPRE_SHARED}
         -DHYPRE_ENABLE_HYPRE_BLAS=OFF

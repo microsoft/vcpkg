@@ -1,60 +1,88 @@
-# Be sure to update both of these versions together.
-set(SQLITE_VERSION 3390100)
-set(PKGCONFIG_VERSION 3.39.1)
-set(SQLITE_HASH e36f30839e0884d021f05f1220a6cf8956156bb00f1f661dcdbe1771ddeb7836e8348034c5e993194a5f28167affda2add6922b6aff4921854bbe566b2254a84)
+string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)[.]([0-9]+)" "\\1,0\\2,0\\3,0\\4," SQLITE_VERSION "${VERSION}.0")
+string(REGEX REPLACE "^([0-9]+),0*([0-9][0-9]),0*([0-9][0-9]),0*([0-9][0-9])," "\\1\\2\\3\\4" SQLITE_VERSION "${SQLITE_VERSION}")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2022/sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    SHA512 ${SQLITE_HASH}
+    URLS "https://sqlite.org/2024/sqlite-autoconf-${SQLITE_VERSION}.tar.gz"
+    FILENAME "sqlite-autoconf-${SQLITE_VERSION}.zip"
+    SHA512 40ae9ba1dea234aacfecf44a6b1c0713c24348d8d475503c11f1d92ed2fffb54a765bbd0669f39aa09d20f42cbcfac4dedcf7e64f4421b8762eebfc66399aa9a
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${SQLITE_VERSION}
-    PATCHES fix-arm-uwp.patch
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-arm-uwp.patch
+        add-config-include.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/sqlite3.pc.in" DESTINATION "${SOURCE_PATH}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(SQLITE_API "__declspec(dllimport)")
+    else()
+        set(SQLITE_API "__attribute__((visibility(\"default\")))")
+    endif()
+else()
+    set(SQLITE_API "")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fts3                ENABLE_FTS3
-        fts4                ENABLE_FTS4
-        fts5                ENABLE_FTS5
-        memsys3             ENABLE_MEMSYS3
-        memsys5             ENABLE_MEMSYS5
-        math                ENABLE_MATH_FUNCTION
-        limit               ENABLE_LIMIT
-        rtree               ENABLE_RTREE
-        session             ENABLE_SESSION
-        omit-load-extension ENABLE_OMIT_LOAD_EXT
-        geopoly             WITH_GEOPOLY
-        json1               WITH_JSON1
+        fts5                SQLITE_ENABLE_FTS5
+        math                SQLITE_ENABLE_MATH_FUNCTIONS
         zlib                WITH_ZLIB
-        INVERTED_FEATURES
+    INVERTED_FEATURES
         tool                SQLITE3_SKIP_TOOLS
 )
+vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-effects
+    FEATURES
+        dbstat              SQLITE_ENABLE_DBSTAT_VTAB
+        fts3                SQLITE_ENABLE_FTS3
+        fts4                SQLITE_ENABLE_FTS4
+        memsys3             SQLITE_ENABLE_MEMSYS3
+        memsys5             SQLITE_ENABLE_MEMSYS5
+        limit               SQLITE_ENABLE_UPDATE_DELETE_LIMIT
+        rtree               SQLITE_ENABLE_RTREE
+        session             SQLITE_ENABLE_SESSION
+        session             SQLITE_ENABLE_PREUPDATE_HOOK
+        omit-load-extension SQLITE_OMIT_LOAD_EXTENSION
+        geopoly             SQLITE_ENABLE_GEOPOLY
+        soundex             SQLITE_SOUNDEX
+    INVERTED_FEATURES
+        json1               SQLITE_OMIT_JSON
+)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(SQLITE_OS_WIN "1")
+    if(VCPKG_TARGET_IS_UWP)
+        set(SQLITE_OS_WINRT "1")
+    endif()
+else()
+    set(SQLITE_OS_UNIX "1")
+endif()
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/sqlite3.pc.in" DESTINATION "${SOURCE_PATH}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/sqlite3-vcpkg-config.h.in" "${SOURCE_PATH}/sqlite3-vcpkg-config.h" @ONLY)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPKGCONFIG_VERSION=${PKGCONFIG_VERSION}
+        -DPKGCONFIG_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DSQLITE3_SKIP_TOOLS=ON
+    MAYBE_UNUSED_VARIABLES
+        SQLITE_ENABLE_FTS5
+        SQLITE_ENABLE_MATH_FUNCTIONS
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT} CONFIG_PATH share/unofficial-${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(NOT SQLITE3_SKIP_TOOLS AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/sqlite3-bin${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/sqlite3-bin${VCPKG_HOST_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/sqlite3${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+if("tool" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES sqlite3 DESTINATION "${CURRENT_PACKAGES_DIR}/tools" AUTO_CLEAN)
 endif()
 
 configure_file(
@@ -64,9 +92,7 @@ configure_file(
 )
 
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sqlite3.h" "# define SQLITE_API\n" "# define SQLITE_API __declspec(dllimport)\n")
-endif()
-
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

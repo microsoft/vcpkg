@@ -1,11 +1,19 @@
 {
   "name": "discreture",
-  "version-string": "2020-01-29",
-  "port-version": 1,
+  "version-date": "2020-01-29",
+  "port-version": 3,
   "description": "A modern C++ library for efficiently and easily iterating through common combinatorial objects, such as combinations, permutations, partitions and more.",
   "homepage": "https://github.com/mraggi/discreture",
   "dependencies": [
     "boost-container",
-    "boost-iterator"
+    "boost-iterator",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

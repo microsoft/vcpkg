@@ -1,7 +1,17 @@
 {
   "name": "hayai",
-  "version-string": "2019-08-10",
-  "port-version": 1,
+  "version-date": "2019-08-10",
+  "port-version": 3,
   "description": "C++ benchmarking framework",
-  "homepage": "https://github.com/nickbruun/hayai"
+  "homepage": "https://github.com/nickbruun/hayai",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

@@ -1,0 +1,25 @@
+{
+  "name": "openslide",
+  "version": "3.4.1",
+  "port-version": 3,
+  "description": "OpenSlide is a C library for reading whole slide image files (also known as virtual slides). It provides a consistent and simple API for reading files from multiple vendors.",
+  "homepage": "https://openslide.org/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "native & !(windows & static) & !xbox & !osx",
+  "dependencies": [
+    "cairo",
+    "gdk-pixbuf",
+    "glib",
+    "libjpeg-turbo",
+    "libpng",
+    "libxml2",
+    "openjpeg",
+    "sqlite3",
+    "tiff",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    "zlib"
+  ]
+}

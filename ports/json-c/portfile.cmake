@@ -6,10 +6,13 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES pkgconfig.patch
             fix-clang-cl.patch
+            fix-build-with-clang.patch #https://github.com/json-c/json-c/pull/783 Remove in next version
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()

@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 75830b44..9c9e7ba8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -281,8 +281,13 @@ if(ENABLE_SPIRV_TOOLS_INSTALL)
+   endif()
+ 
+   macro(spvtools_generate_config_file TARGET)
++    set(sgcf_find_extra "")
++    if(NOT "${TARGET}" STREQUAL "SPIRV-Tools-opt")
++      set(sgcf_find_extra "find_dependency(SPIRV-Tools-opt)\n")
++    endif()
+     file(WRITE ${CMAKE_BINARY_DIR}/${TARGET}Config.cmake
+       "include(CMakeFindDependencyMacro)\n"
++      ${sgcf_find_extra}
+       "find_dependency(${SPIRV_TOOLS})\n"
+       "include(\${CMAKE_CURRENT_LIST_DIR}/${TARGET}Targets.cmake)\n"
+       "set(${TARGET}_LIBRARIES ${TARGET})\n"

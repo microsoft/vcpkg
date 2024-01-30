@@ -1,0 +1,20 @@
+diff --git a/Config.cmake/mergestaticlibs.cmake b/Config.cmake/mergestaticlibs.cmake
+index 858a026..67eccb7 100644
+--- a/Config.cmake/mergestaticlibs.cmake
++++ b/Config.cmake/mergestaticlibs.cmake
+@@ -21,6 +21,15 @@ function(merge_static_libs outlib )
+ 	file(WRITE ${dummyfile} "const char * dummy = \"${dummyfile}\";")
+ 	
+ 	add_library(${outlib} STATIC ${dummyfile})
++	foreach(lib IN LISTS libs)
++		target_sources(${outlib} PRIVATE "$<TARGET_OBJECTS:${lib}>")
++		get_target_property(link_libs ${lib} INTERFACE_LINK_LIBRARIES)
++		if(link_libs)
++			list(REMOVE_ITEM link_libs ${libs})
++			target_link_libraries(${outlib} ${link_libs})
++		endif()
++	endforeach()
++	return()
+ 
+ 	if("${CMAKE_CFG_INTDIR}" STREQUAL ".")
+ 		set(multiconfig FALSE)

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxslt
-    REF v1.1.35
-    SHA512 1ab264a8d3996d74a89a22e4062950ef968b9252736e0b5f975e6f45d63a6484993fe383b85831cef0e4b9c9c90f9b2b3d5432c15ee9381dbaeb2fa681ab9b46
+    REF v1.1.37
+    SHA512 4e7a57cbe02ceea34404213a88bdbb63a756edfab63063ce3979b670816ae3f6fb3637a49508204e6e46b936628e0a3b8b77e9201530a1184225bd68da403b25
     HEAD_REF master
     PATCHES
         python3.patch
@@ -10,7 +10,6 @@ vcpkg_from_github(
         libexslt-pkgconfig.patch
         fix-gcrypt-deps.patch
         skip-install-docs.patch
-        extern_export.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -62,12 +61,19 @@ vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-set(not_static 1)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(not_static 0)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h" "ifdef LIBXSLT_STATIC" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h" "ifdef LIBEXSLT_STATIC" "if 1")
 endif()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxslt/xsltexports.h" "!defined(LIBXSLT_STATIC)" "${not_static}")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h" "!defined(LIBEXSLT_STATIC)" "${not_static}")
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libxslt.pc" " -lxslt" " -llibxslt")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libexslt.pc" " -lexslt" " -llibexslt")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libxslt.pc" " -lxslt" " -llibxslt")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libexslt.pc" " -lexslt" " -llibexslt")
+        endif()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

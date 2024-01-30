@@ -1,0 +1,14 @@
+diff --git a/configure b/configure
+index 2829d79..697a504 100755
+--- a/configure
++++ b/configure
+@@ -4221,9 +4221,6 @@
+ if disabled autodetect; then
+ 
+-    # Unless iconv is explicitely disabled by the user, we still want to probe
+-    # for the iconv from the libc.
+-    disabled iconv || enable libc_iconv
+ 
+     disable_weak $EXTERNAL_AUTODETECT_LIBRARY_LIST
+     disable_weak $HWACCEL_AUTODETECT_LIBRARY_LIST
+ fi

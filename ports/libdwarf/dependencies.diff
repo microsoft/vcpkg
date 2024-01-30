@@ -1,0 +1,46 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9e9b75f..fd5fbe3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -195,6 +195,20 @@ check_c_source_compiles([=[
+   }]=] HAVE_STDAFX_H)
+ #message(STATUS "Checking have windows stdafx.h... ${HAVE_STDAFX_H}")
+ 
++find_package(ZLIB REQUIRED)
++add_library(z ALIAS ZLIB::ZLIB)
++set(HAVE_ZLIB 1)
++set(HAVE_ZLIB_H 1)
++
++find_package(zstd CONFIG REQUIRED)
++if(TARGET zstd::libzstd_shared)
++  add_library(zstd ALIAS zstd::libzstd_shared)
++else()
++  add_library(zstd ALIAS zstd::libzstd_static)
++endif()
++set(HAVE_ZSTD 1)
++set(HAVE_ZSTD_H 1)
++
+ set(CMAKE_REQUIRED_LIBRARIES z)
+ check_c_source_compiles( [=[
+   #include "zlib.h"
+diff --git a/src/lib/libdwarf/cmake/libdwarf-config.cmake b/src/lib/libdwarf/cmake/libdwarf-config.cmake
+index 604c563..5362360 100644
+--- a/src/lib/libdwarf/cmake/libdwarf-config.cmake
++++ b/src/lib/libdwarf/cmake/libdwarf-config.cmake
+@@ -1,3 +1,6 @@
++include(CMakeFindDependencyMacro)
++find_dependency(ZLIB)
++find_dependency(zstd CONFIG)
+ if (NOT TARGET libdwarf::libdwarf)
+     include(${CMAKE_CURRENT_LIST_DIR}/libdwarf-targets.cmake)
+ endif()
+diff --git a/src/lib/libdwarf/libdwarf.pc.cmake b/src/lib/libdwarf/libdwarf.pc.cmake
+index 6b18c77..5c97ce9 100644
+--- a/src/lib/libdwarf/libdwarf.pc.cmake
++++ b/src/lib/libdwarf/libdwarf.pc.cmake
+@@ -9,4 +9,5 @@ Description: DWARF debug symbols library
+ Version: @PACKAGE_VERSION@
+ Libs: -L${libdir} -ldwarf
+ Cflags: -I${includedir}
++Requires.private: zlib libzstd
+ 

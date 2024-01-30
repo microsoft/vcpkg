@@ -1,0 +1,8 @@
+{
+  "name": "task-thread-pool",
+  "version": "1.0.7",
+  "description": "Fast and lightweight thread pool for C++11 and newer.",
+  "homepage": "https://github.com/alugowski/task-thread-pool",
+  "documentation": "https://github.com/alugowski/task-thread-pool/blob/main/README.md",
+  "license": "BSD-2-Clause OR MIT OR BSL-1.0"
+}

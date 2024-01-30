@@ -1,6 +1,0 @@
-The package googleapis is compatible with built-in CMake targets:
-
-    find_package(googleapis CONFIG REQUIRED)
-
-    # Then link against the proto libraries that you want to use, for example:
-    target_link_libraries(main PRIVATE googleapis-c++::bigtable_protos gRPC::grpc gRPC::grpc++)

@@ -1,0 +1,4 @@
+libdwarf provides CMake targets:
+
+  find_package(libdwarf CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:libdwarf::dwarf-static>,libdwarf::dwarf-static,libdwarf::dwarf-shared>)

@@ -1,5 +1,3 @@
-set(VERSION 3.100)
-
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lame/lame
@@ -9,6 +7,7 @@ vcpkg_from_sourceforge(
     PATCHES
         00001-msvc-upgrade-solution-up-to-vc11.patch
         remove_lame_init_old_from_symbol_list.patch # deprecated https://github.com/zlargon/lame/blob/master/include/lame.h#L169
+        add-macos-universal-config.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -53,7 +52,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         file(WRITE "${SOURCE_PATH}/vc_solution/${machine}_${vcxproj}" "${vcxproj_con}")
     endforeach()
 
-    vcpkg_install_msbuild(
+     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "vc_solution/${machine}_vc11_lame.sln"
         TARGET "lame"
@@ -97,7 +96,7 @@ else()
     endif()
 
     if(NOT VCPKG_TARGET_IS_MINGW)
-        string(APPEND OPTIONS --with-pic=yes)
+        list(APPEND OPTIONS --with-pic=yes)
     endif()
 
     vcpkg_configure_make(
@@ -118,4 +117,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc" "${CURRENT_PACKA
 file(COPY "${SOURCE_PATH}/include/lame.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/lame")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/mp3lame-config.cmake" @ONLY)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

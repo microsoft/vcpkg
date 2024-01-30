@@ -7,5 +7,5 @@ The package geotrans provides CMake targets:
 The geotrans library depends on being able to read it's model data so you'll need to
 set an environment variable to let geotrans know where the models are installed:
 
-export MSPCCS_DATA=@CURRENT_INSTALLED_DIR@/share/@PORT@/data
+export MSPCCS_DATA=<path_to_vcpkg_installed>/share/@PORT@/data
 

@@ -1,12 +1,11 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO JonathanSalwan/Triton
-  REF 243026c9c1e07a5ca834c4aaf628d1079f6a85ea
-  SHA512 9e46c500203647de545286b78a7d4ae6da1796b8eed30fe7346ae6e51865ef70de1adb858c402c3687c471ad654cc6aefdff8893196f5ef7b45e4cee6dd9c577
+  REF a61651ce331ac53ec09e1d8fef5eab744e98c9de
+  SHA512 b53befe232e986409789533ac39b371b5701d9b9b72ee47c6486408c57f72800d2192b0f65bd0cc751147fbea2f8c0ef5b6375c913bd1d57393236a619f319c9
+  HEAD_REF master
   PATCHES
-    001-fix-dependency-z3.patch
-    002-fix-capstone-5.patch
-    003-fix-python.patch
+    fix_bin_path.patch
 )
 
 string(COMPARE NOTEQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DYNAMICLIB)
@@ -31,7 +30,6 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DZ3_INTERFACE=ON
-        -DTRITON_BOOST_INTERFACE=OFF
         -DBUILD_SHARED_LIBS=${DYNAMICLIB}
         -DMSVC_STATIC=${STATICCRT}
         -DBUILD_EXAMPLES=OFF

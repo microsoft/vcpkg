@@ -1,4 +1,4 @@
-set(PATCHES 0001-fix-for-vcpkg.patch)
+set(PATCHES fix-for-vcpkg.patch)
 
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND PATCHES uwp-warnings.patch)
@@ -7,12 +7,15 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
-    REF f8ac6955e3cd673ac23a2172cd7dc42fc013b7b3 #v0.17.9
-    SHA512 3a8e3a47032a1fad770639c1bac266388c87046432cd44b391f146820cf3d3a871834e104deb9fb6fa901d6f82eba8aea0baa0b0eeb7cfb24808c408b020407b
+    REF "v${VERSION}"
+    SHA512 63551a9f2ce8de7f7aba13b2114418d3d705a6c190d91eac7cf6deba93ccbe9bda053000feb7ac109d538646c77da62b31686a58f83d752f191cac3a015f2d69
     HEAD_REF master
-    PATCHES
+    PATCHES 
         ${PATCHES}
+        fix_dependency.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindLibJuice.cmake")
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DATACHANNEL_STATIC_LINKAGE)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -26,10 +29,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DUSE_SYSTEM_SRTP=ON
-        -DUSE_SYSTEM_JUICE=ON
+        -DPREFER_SYSTEM_LIB=ON
         -DNO_EXAMPLES=ON
         -DNO_TESTS=ON
+        -DDATACHANNEL_STATIC_LINKAGE=${DATACHANNEL_STATIC_LINKAGE}
 )
 
 vcpkg_cmake_install()
@@ -43,8 +46,10 @@ include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(OpenSSL)
 find_dependency(LibJuice)
+find_dependency(plog CONFIG)
+find_dependency(unofficial-usrsctp CONFIG)
 ${DATACHANNEL_CONFIG}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

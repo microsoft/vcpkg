@@ -13,5 +13,5 @@ index 6dc6501..d36a049 100644
  install(DIRECTORY doc/ DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/libxslt COMPONENT documentation PATTERN Makefile.* EXCLUDE)
 +endif()
  
- if(LIBXSLT_WITH_CRYPTO)
+ if(LIBXSLT_WITH_CRYPTO AND NOT WIN32)
  	install(FILES FindGcrypt.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libxslt-${PROJECT_VERSION} COMPONENT development)

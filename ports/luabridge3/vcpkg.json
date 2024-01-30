@@ -1,0 +1,7 @@
+{
+  "name": "luabridge3",
+  "version": "3.0-rc3",
+  "description": "A lightweight, dependency-free, suitable for game development library for binding Lua to C++17",
+  "homepage": "https://github.com/kunitoki/LuaBridge3",
+  "license": "MIT"
+}

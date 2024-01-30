@@ -1,12 +1,27 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolfssl
-    REF v5.4.0-stable
-    SHA512 e43560f83f6c62d78b10c4df7db21f02386f22b893688b98d2f3432e3b3946a4e80960c7402404a8c0486c87b1dde5b7a3827f9d4d3be13f87f370dfc1179c78
+    REF v5.6.6-stable
+    SHA512 d664ab1cd84d7c33d1b34eb934843292b7ffc07b922b4c483b45deeeeda5c425b673640e3049f731bfff364bd7e7c0c14e236afce36622a7d03242d3be0c7382
     HEAD_REF master
     PATCHES
-      wolfssl_pr5401.diff
     )
+
+if ("dtls" IN_LIST FEATURES)
+    set(ENABLE_DTLS yes)
+else()
+    set(ENABLE_DTLS no)
+endif()
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+foreach(config RELEASE DEBUG)
+  string(APPEND VCPKG_COMBINED_C_FLAGS_${config} " -DWOLFSSL_ALT_CERT_CHAINS -DWOLFSSL_DES_ECB -DWOLFSSL_CUSTOM_OID -DHAVE_OID_ENCODING -DWOLFSSL_CERT_GEN -DWOLFSSL_ASN_TEMPLATE -DWOLFSSL_KEY_GEN -DHAVE_PKCS7 -DHAVE_AES_KEYWRAP -DWOLFSSL_AES_DIRECT -DHAVE_X963_KDF")
+  if ("secret-callback" IN_LIST FEATURES)
+      string(APPEND VCPKG_COMBINED_C_FLAGS_${config} " -DHAVE_SECRET_CALLBACK")
+  endif()
+endforeach()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -22,8 +37,13 @@ vcpkg_cmake_configure(
       -DWOLFSSL_OCSPSTAPLING_V2=yes
       -DWOLFSSL_CRL=yes
       -DWOLFSSL_DES3=yes
-      -DCMAKE_C_FLAGS='-DWOLFSSL_ALT_CERT_CHAINS\ -DWOLFSSL_DES_ECB'
+      -DWOLFSSL_DTLS=${ENABLE_DTLS}
+      -DWOLFSSL_DTLS13=${ENABLE_DTLS}
+      -DWOLFSSL_DTLS_CID=${ENABLE_DTLS}
+    OPTIONS_RELEASE
+      -DCMAKE_C_FLAGS=${VCPKG_COMBINED_C_FLAGS_RELEASE}
     OPTIONS_DEBUG
+      -DCMAKE_C_FLAGS=${VCPKG_COMBINED_C_FLAGS_DEBUG}
       -DWOLFSSL_DEBUG=yes)
 
 vcpkg_cmake_install()

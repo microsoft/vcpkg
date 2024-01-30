@@ -1,15 +1,29 @@
-message(WARNING "EVE requires a C++ 20 compliant compiler. GCC-11 and clang-12 are known to work.")
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
+string(REGEX REPLACE "^(v[0-9]+)[.]([0-9])[.]([0-9]+)\$" "\\1.0\\2.\\3" git_ref "v${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jfalcou/eve
-    REF v2022.03.0
-    SHA512 9ca2cb69a179bf05046696ba83a1cea4e558a0a883ca1d664effc2564e07123f631fc3885256d0dede09c8ec10b23a3feca0ec19ed9c73000cf698384ab4663d
+    REF "${git_ref}"
+    SHA512 20b55996465fa5016d43cee95541510b6470b2358635b0e269965d3fb43731e83b92bc2df0502fcdfadd31de47f877f22b1c6ae84638f1f3db92c70315cc1b29
     HEAD_REF main
 )
+
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 
 vcpkg_cmake_install()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/eve" RENAME copyright)
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/eve-${VERSION}")
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/share/eve/eve-config.cmake")
+    message(FATAL_ERROR "CMake config is missing")
+endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/lib"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

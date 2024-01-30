@@ -1,5 +1,5 @@
 include_guard(GLOBAL)
-include("${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_gn_real_path.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_gn_fixup_path.cmake")
 
 function(z_vcpkg_gn_configure_generate)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;CONFIG;ARGS" "")
@@ -9,7 +9,7 @@ function(z_vcpkg_gn_configure_generate)
 
     message(STATUS "Generating build (${arg_CONFIG})...")
     vcpkg_execute_required_process(
-        COMMAND "${VCPKG_GN}" gen "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}" "${arg_ARGS}"
+        COMMAND "${GN}" gen "${CURRENT_BUILDTREES_DIR}/${arg_CONFIG}" "${arg_ARGS}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         LOGNAME "generate-${arg_CONFIG}"
     )
@@ -25,9 +25,9 @@ function(vcpkg_gn_configure)
         message(FATAL_ERROR "SOURCE_PATH must be specified.")
     endif()
 
-    vcpkg_find_acquire_program(PYTHON2)
-    get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-    vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
     vcpkg_find_acquire_program(GN)
 
@@ -46,4 +46,6 @@ function(vcpkg_gn_configure)
             ARGS "--args=${arg_OPTIONS} ${arg_OPTIONS_RELEASE}"
         )
     endif()
+
+    z_vcpkg_gn_fixup_path()
 endfunction()

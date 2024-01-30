@@ -1,0 +1,13 @@
+diff --git a/include/xapian/version_h.cc b/include/xapian/version_h.cc
+index b36ae4d..c61e31a 100644
+--- a/include/xapian/version_h.cc
++++ b/include/xapian/version_h.cc
+@@ -75,7 +75,7 @@ const char * dummy[] = {
+ "#endif",
+ "#endif",
+ "",
+-#elif defined _MSC_VER
++#elif 0
+ // When building the library with MSVC, generate preprocessor code to check
+ // that the same setting of _DEBUG is used for building applications as was
+ // used for building the library.

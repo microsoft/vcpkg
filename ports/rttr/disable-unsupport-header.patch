@@ -1,0 +1,13 @@
+diff --git a/src/rttr/detail/misc/flat_map.h b/src/rttr/detail/misc/flat_map.h
+index 767c97b..ba97cc7 100644
+--- a/src/rttr/detail/misc/flat_map.h
++++ b/src/rttr/detail/misc/flat_map.h
+@@ -36,7 +36,7 @@
+ #include <utility>
+ #include <functional>
+ #include <algorithm>
+-#include <ciso646> // _LIBCPP_VERSION
++//#include <ciso646> // _LIBCPP_VERSION
+ 
+ namespace rttr
+ {

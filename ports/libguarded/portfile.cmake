@@ -1,11 +1,25 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO copperspice/cs_libguarded
-    REF 1f159aa866a50f5d2952de41d8a99821b8ec37df
-    SHA512 91380262e65ec7b8990c500c60b8d141960be24b69e01a4661c2e8fbfdb8e315c9a4509c2c65a74bc60a8fe690d6dbc8f2b39757d13da5068c95283a19d4c6c4
+    REF 9c1e82f42f228345f3b024bed5d08be643c00f8a
+    SHA512 ab690489151f5f8451c63c8a78a89a586950f88d19b6df685d979db9442f36b68db402ae5a6749e75b17ac3e1c06447d2d4803d43f9d373031cc05d9b25770e9
     HEAD_REF master
+    PATCHES
+        fix-install.patch
 )
 
-File(COPY ${SOURCE_PATH}/src/libguarded DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+set(VCPKG_BUILD_TYPE release) # header-only port
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTS=OFF
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME CsLibGuarded CONFIG_PATH lib/cmake/CsLibGuarded)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

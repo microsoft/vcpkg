@@ -1,7 +1,7 @@
 {
   "name": "clamav",
   "version-semver": "0.103.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "ClamAV is an open-source anti-virus toolkit.",
   "homepage": "https://www.clamav.net",
   "supports": "!uwp & !static",
@@ -13,6 +13,14 @@
     "openssl",
     "pcre2",
     "pthreads",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ]
 }

@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGNS/CGNS
-    REF ec538ac11dbaff510464a831ef094b0d6bf7216c # v4.3.0
-    SHA512 3c04829ff99c0f4f1cd705f0807fda0a65f970c7eecd23ec624cf09fb6fa2a566c63fc94d46c1d0754910bbff8f98c3723e4f32ef66c3e7e41930313454fa10b
+    REF "v${VERSION}"
+    SHA512 86c16d40b524519362645c553c91bade9bb7e4bffde7bf4de96a7f471ae3779a15781efa91efa059b2af0b127f08a560d2e903df6b45e1c79eaec6061db226e9
     HEAD_REF develop
     PATCHES
         hdf5.patch
@@ -36,6 +36,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${CGNS_BUILD_OPTS}
+        -DCGNS_ENABLE_SCOPING:BOOL=ON
 )
 
 vcpkg_cmake_install()
@@ -56,10 +57,12 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
+set(TOOLS "cgnsupdate")
+if("hdf5" IN_LIST FEATURES)
+    list(APPEND TOOLS "adf2hdf" "hdf2adf")
+endif()
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(TOOLS "adf2hdf.bat" "hdf2adf.bat" "cgnsupdate.bat")
-elseif(VCPKG_TARGET_IS_LINUX)
-    set(TOOLS "adf2hdf" "hdf2adf" "cgnsupdate")
+    list(TRANSFORM TOOLS APPEND ".bat")
 endif()
 
 foreach(TOOL ${TOOLS})
@@ -78,6 +81,10 @@ endif()
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs" "${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h")
 file(INSTALL "${CURRENT_PORT_DIR}/cgnsconfig.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include") # the include is all that is needed
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cgnslib.h" "defined(USE_DLL)" "1")
+endif()
 
 # Handle copyright
 configure_file("${SOURCE_PATH}/license.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)

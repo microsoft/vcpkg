@@ -1,0 +1,36 @@
+diff --git a/extras/Build/CMake/JUCEModuleSupport.cmake b/extras/Build/CMake/JUCEModuleSupport.cmake
+index e18dd5e08..45cc9245f 100644
+--- a/extras/Build/CMake/JUCEModuleSupport.cmake
++++ b/extras/Build/CMake/JUCEModuleSupport.cmake
+@@ -353,6 +353,29 @@ function(_juce_create_pkgconfig_target name)
+         return()
+     endif()
+
++    # The package that can be found via find_package instead of pkg-config
++    if("${name}" STREQUAL "freetype2")
++        find_package(Freetype REQUIRED)
++        add_library(juce::pkgconfig_${name} INTERFACE)
++        target_link_libraries(juce::pkgconfig_${name} INTERFACE Freetype::Freetype)
++        return()
++    elseif("${name}" STREQUAL "libcurl")
++        find_package(CURL REQUIRED)
++        add_library(juce::pkgconfig_${name} INTERFACE)
++        target_link_libraries(juce::pkgconfig_${name} INTERFACE CURL::libcurl)
++        return()
++    elseif("${name}" STREQUAL "alsa")
++        find_package(ALSA REQUIRED)
++        add_library(juce::pkgconfig_${name} INTERFACE)
++        target_link_libraries(juce::pkgconfig_${name} INTERFACE ALSA::ALSA)
++        return()
++    elseif("${name}" STREQUAL "gl")
++        find_package(OpenGL REQUIRED)
++        add_library(juce::pkgconfig_${name} INTERFACE)
++        target_link_libraries(juce::pkgconfig_${name} INTERFACE OpenGL::GL)
++        return()
++    endif()
++
+     find_package(PkgConfig REQUIRED)
+     pkg_check_modules(${name} ${ARGN})
+
+--
+2.34.1

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index db346d3..6ad72d3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -439,6 +439,9 @@ if(WIN32)
+ endif()
+ 
+ add_definitions(-DFREERDP_EXPORTS)
++if(NOT BUILD_SHARED_LIBS)
++	add_definitions(-DRDTK_EXPORTS)
++endif()
+ 
+ # Mac OS X
+ if(APPLE)

@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3515d77..556fb78 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -138,9 +138,9 @@ endif()
+ # Adds our cmake folder to the search path for find_package
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+ if(HTTPLIB_REQUIRE_BROTLI)
+-	find_package(Brotli COMPONENTS encoder decoder common REQUIRED)
++	find_package(unofficial-brotli CONFIG REQUIRED)
+ elseif(HTTPLIB_USE_BROTLI_IF_AVAILABLE)
+-	find_package(Brotli COMPONENTS encoder decoder common QUIET)
++	find_package(unofficial-brotli CONFIG QUIET)
+ endif()
+ # Just setting this variable here for people building in-tree
+ if(Brotli_FOUND)
+@@ -223,9 +223,9 @@ target_link_libraries(${PROJECT_NAME} ${_INTERFACE_OR_PUBLIC}
+ 		# Needed for API from MacOS Security framework
+ 		"$<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>,$<BOOL:${HTTPLIB_USE_CERTS_FROM_MACOSX_KEYCHAIN}>>:-framework CoreFoundation -framework Security>"
+ 		# Can't put multiple targets in a single generator expression or it bugs out.
+-		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::common>
+-		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::encoder>
+-		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::decoder>
++		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlicommon>
++		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlienc>
++		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:unofficial::brotli::brotlidec>
+ 		$<$<BOOL:${HTTPLIB_IS_USING_ZLIB}>:ZLIB::ZLIB>
+ 		$<$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>:OpenSSL::SSL>
+ 		$<$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>:OpenSSL::Crypto>
+@@ -283,9 +283,6 @@ if(HTTPLIB_INSTALL)
+ 	install(FILES
+ 		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+ 		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+-		# Install it so it can be used later by the httplibConfig.cmake file.
+-		# Put it in the same dir as our config file instead of a global path so we don't potentially stomp on other packages.
+-		"${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindBrotli.cmake"
+ 		DESTINATION ${_TARGET_INSTALL_CMAKEDIR}
+ 	)
+ 

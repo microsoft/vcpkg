@@ -1,16 +1,12 @@
-set(JPEGXL_VERSION 0.6.1)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjxl/libjxl
-    REF "v${JPEGXL_VERSION}"
-    SHA512 302935d722160b0b288ac63301f9e95caf82eccf6ad76c4f4da6316a0314ee3562115932b1ceacb0d02708de0a07788992d3478cae73af0b90193f5769f9fb52
+    REF "v${VERSION}"
+    SHA512 769f102c46755d11a705ce47ae9e2ef49627ae708f416693bf1293aeeb713934baf4466e45b9c70b04ec1fc8b4a00d5ca7688c8ca03f0a91c9a15252c522a887
     HEAD_REF main
     PATCHES
-        fix-install-directories.patch
         fix-dependencies.patch
-        fix-link-flags.patch
-        disable-jxl_extras.patch
+        trim-shared-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -24,44 +20,31 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if(VCPKG_TARGET_IS_UWP)
-    string(APPEND VCPKG_C_FLAGS " -D_CRT_SECURE_NO_WARNINGS /wd4146")
-    string(APPEND VCPKG_CXX_FLAGS " -D_CRT_SECURE_NO_WARNINGS /wd4146")
-
-    # Temporary workaround for #9390
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        list(APPEND FEATURE_OPTIONS -DCMAKE_SYSTEM_PROCESSOR=x86)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        list(APPEND FEATURE_OPTIONS -DCMAKE_SYSTEM_PROCESSOR=AMD64)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        list(APPEND FEATURE_OPTIONS -DCMAKE_SYSTEM_PROCESSOR=ARM)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        list(APPEND FEATURE_OPTIONS -DCMAKE_SYSTEM_PROCESSOR=ARM64)
-    else()
-        message(FATAL_ERROR "Unsupported uwp VCPKG_TARGET_ARCHITECTURE \"${VCPKG_TARGET_ARCHITECTURE}\"")
-    endif()
-    # Workaround for vcpkg-cmake bug, proper fix in #21857
-    set(_TARGETTING_UWP 1)
+    string(APPEND VCPKG_C_FLAGS " /wd4146")
+    string(APPEND VCPKG_CXX_FLAGS " /wd4146")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DJPEGXL_VERSION=${JPEGXL_VERSION}"
-        -DJPEGXL_FORCE_SYSTEM_HWY=ON
         -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
+        -DJPEGXL_FORCE_SYSTEM_HWY=ON
+        -DJPEGXL_FORCE_SYSTEM_LCMS2=ON
         ${FEATURE_OPTIONS}
-        -DJPEGXL_ENABLE_FUZZERS=OFF
-        -DJPEGXL_ENABLE_MANPAGES=OFF
         -DJPEGXL_ENABLE_BENCHMARK=OFF
+        -DJPEGXL_ENABLE_DOXYGEN=OFF
         -DJPEGXL_ENABLE_EXAMPLES=OFF
+        -DJPEGXL_ENABLE_FUZZERS=OFF
         -DJPEGXL_ENABLE_JNI=OFF
-        -DJPEGXL_ENABLE_SJPEG=OFF
+        -DJPEGXL_ENABLE_MANPAGES=OFF
         -DJPEGXL_ENABLE_OPENEXR=OFF
         -DJPEGXL_ENABLE_PLUGINS=OFF
+        -DJPEGXL_ENABLE_SJPEG=OFF
         -DJPEGXL_ENABLE_SKCMS=OFF
         -DJPEGXL_ENABLE_TCMALLOC=OFF
         -DBUILD_TESTING=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
+        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_GIF
         CMAKE_DISABLE_FIND_PACKAGE_JPEG
@@ -74,44 +57,9 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if(JPEGXL_ENABLE_TOOLS)
-    vcpkg_copy_tools(TOOL_NAMES cjxl djxl AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES cjxl djxl cjpeg_hdr jxlinfo AUTO_CLEAN)
 endif()
 
-# libjxl always builds static and dynamic libraries, so we delete the variant that we don't need
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        file(REMOVE_RECURSE
-            "${CURRENT_PACKAGES_DIR}/bin"
-            "${CURRENT_PACKAGES_DIR}/debug/bin"
-        )
-        set(FILES_TO_REMOVE
-            "${CURRENT_PACKAGES_DIR}/lib/jxl.lib"
-            "${CURRENT_PACKAGES_DIR}/lib/jxl_threads.lib"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/jxl.lib"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/jxl_threads.lib"
-        )
-    else()
-        file(GLOB FILES_TO_REMOVE
-            "${CURRENT_PACKAGES_DIR}/lib/*.so*"
-            "${CURRENT_PACKAGES_DIR}/lib/*.dylib*"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/*.so*"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/*.dylib*"
-        )
-    endif()
-else()
-    if(VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB FILES_TO_REMOVE
-            "${CURRENT_PACKAGES_DIR}/lib/*-static.lib"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/*-static.lib"
-        )
-    else()
-        file(GLOB FILES_TO_REMOVE
-            "${CURRENT_PACKAGES_DIR}/lib/*.a"
-            "${CURRENT_PACKAGES_DIR}/debug/lib/*.a"
-        )
-    endif()
-endif()
-file(REMOVE ${FILES_TO_REMOVE})
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

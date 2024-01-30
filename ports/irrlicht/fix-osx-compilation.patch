@@ -1,28 +1,13 @@
 diff --git a/source/Irrlicht/CImageLoaderJPG.cpp b/source/Irrlicht/CImageLoaderJPG.cpp
-index 66144326c..4ea224c24 100644
+index 404bd53..71684d8 100644
 --- a/source/Irrlicht/CImageLoaderJPG.cpp
 +++ b/source/Irrlicht/CImageLoaderJPG.cpp
 @@ -68,7 +68,7 @@ void CImageLoaderJPG::init_source (j_decompress_ptr cinfo)
  boolean CImageLoaderJPG::fill_input_buffer (j_decompress_ptr cinfo)
  {
-        // DO NOTHING
--       return 1;
-+       return TRUE;
+ 	// DO NOTHING
+-	return 1;
++	return TRUE;
  }
-
-
-diff --git a/source/Irrlicht/MacOSX/CIrrDeviceMacOSX.mm b/source/Irrlicht/MacOSX/CIrrDeviceMacOSX.mm
-index 53029eb45..e75b707e1 100644
---- a/source/Irrlicht/MacOSX/CIrrDeviceMacOSX.mm
-+++ b/source/Irrlicht/MacOSX/CIrrDeviceMacOSX.mm
-@@ -495,8 +495,8 @@ long GetDictionaryLong(CFDictionaryRef theDict, const void* key)
-                if(!CreationParams.WindowId) //load menus if standalone application
-                {
-                        [[NSAutoreleasePool alloc] init];
--                       [NSApplication sharedApplication];
--                       [NSApp setDelegate:(id<NSFileManagerDelegate>)[[[AppDelegate alloc] initWithDevice:this] autorelease]];
-+                       [[NSApplication sharedApplication] activateIgnoringOtherApps];
-+                       [NSApp setDelegate:(id<NSApplicationDelegate>)[[[AppDelegate alloc] initWithDevice:this] autorelease]];
-                        [NSBundle loadNibNamed:@"MainMenu" owner:[NSApp delegate]];
-                        [NSApp finishLaunching];
-                }
+ 
+ 

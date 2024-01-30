@@ -1,0 +1,17 @@
+{
+  "name": "kerbal",
+  "version": "2023.12.1",
+  "description": "Kerbal C++ Template Library",
+  "homepage": "https://github.com/WentsingNee/Kerbal",
+  "license": "LGPL-3.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
