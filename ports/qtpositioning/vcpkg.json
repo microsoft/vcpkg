@@ -1,6 +1,7 @@
 {
   "name": "qtpositioning",
   "version": "6.6.1",
+  "port-version": 1,
   "description": "Qt Positioning",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -12,7 +13,8 @@
     },
     {
       "name": "qtserialport",
-      "default-features": false
+      "default-features": false,
+      "platform": "!ios"
     }
   ],
   "features": {

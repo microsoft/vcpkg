@@ -54,9 +54,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS
         # Avoid unnecessary tests.
         am_cv_func_iconv_works=yes
-        ## This is required. For some reason these do not get correctly identified for release builds.
+        # This is required. For some reason these do not get correctly identified for release builds.
         ac_cv_func_wcslen=yes
         ac_cv_func_memmove=yes
+        # May trigger debugger window in debug builds, even in unattended builds.
+        # Cf. https://github.com/microsoft/vcpkg/issues/35974
+        gl_cv_func_printf_directive_n=no
     )
     if(NOT VCPKG_TARGET_IS_MINGW)
         list(APPEND OPTIONS

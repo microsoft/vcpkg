@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4ec5461..eca26c6 100755
+index 22d9115..da6edaf 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -212,7 +212,7 @@ endif(HAVE_SPDLOG)
+@@ -220,7 +220,7 @@ endif(HAVE_SPDLOG)
  
  set(HAVE_C-ARES NO)
  if (BUILD_C-ARES)
@@ -11,10 +11,10 @@ index 4ec5461..eca26c6 100755
      if(c-ares_FOUND)
        message(STATUS "c-ares found!")
        set(HAVE_C-ARES TRUE)
-@@ -220,7 +220,7 @@ if (BUILD_C-ARES)
- endif ()
- 
- if(HAVE_C-ARES)
+@@ -231,7 +231,7 @@ if(HAVE_C-ARES)
+   if (NOT BUILD_SHARED_LIBS)
+     target_compile_definitions(${PROJECT_NAME} PRIVATE CARES_STATICLIB)
+   endif ()
 -  target_link_libraries(${PROJECT_NAME} PRIVATE c-ares_lib)
 +  target_link_libraries(${PROJECT_NAME} PRIVATE c-ares::cares)
    set(TRANTOR_SOURCES
