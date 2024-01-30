@@ -134,6 +134,7 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
  FEATURES
     "openssl"             FEATURE_openssl
     "brotli"              FEATURE_brotli
+    "securetransport"     FEATURE_securetransport
     #"brotli"              CMAKE_REQUIRE_FIND_PACKAGE_WrapBrotli
     #"openssl"             CMAKE_REQUIRE_FIND_PACKAGE_WrapOpenSSL
  INVERTED_FEATURES
