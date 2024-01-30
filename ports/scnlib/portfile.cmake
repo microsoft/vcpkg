@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-SCN_HAS_STD_REGEX_MULTILINE-marco.patch
+        fix-android-float_reader.patch
 )
 
 vcpkg_cmake_configure(
