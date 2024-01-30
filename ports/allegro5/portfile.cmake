@@ -25,6 +25,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
         direct3d    WANT_D3D
         opengl      WANT_OPENGL
 )
+if(NOT WANT_OPENGL)
+    list(APPEND options -DWANT_X11=OFF)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
