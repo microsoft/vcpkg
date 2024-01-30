@@ -627,10 +627,6 @@ libtcod:arm64-android=fail
 libtcod:x64-android=fail
 libtomcrypt:arm64-windows=fail
 libtomcrypt:arm64-uwp=fail
-# D:\b\libtorch\src\v1.12.1-e1cb316ec6.clean\aten\src\ATen/cpu/vec/vec_base.h(134): fatal error C1001: Internal compiler error.
-# (compiler file 'D:\a\_work\1\s\src\vctools\Compiler\CxxFE\sl\p1\c\toinil.c', line 910)
-libtorch:x64-windows=fail
-libtorch:x64-osx=fail
 libusb-win32:arm64-uwp=fail
 libusb-win32:x64-uwp=fail
 #Skip detection to avoid upstream remove older releases
