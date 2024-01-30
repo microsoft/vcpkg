@@ -18,6 +18,10 @@ vcpkg_from_gitlab(
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako)
 
+message(STATUS "PYTHON3:${PYTHON3}")
+
+set(PYTHON3 "${PYTHON3}" CACHE STRING "" FORCE)
+
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
@@ -103,6 +107,8 @@ vcpkg_configure_meson(
         #-D egl-lib-suffix=_mesa
         -Dbuild-tests=false
         ${MESA_OPTIONS}
+    ADDITIONAL_BINARIES
+      pytho=['${PYTHON3}','-I']
     )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
