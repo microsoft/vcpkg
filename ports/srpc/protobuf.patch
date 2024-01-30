@@ -16,7 +16,7 @@ index 6c1aafc..97854a6 100644
  		message("Workflow third_party FOUND. Use for source code dependencies.")
  		set(WORKFLOW_INSTALLED 0)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 3b47ee6..cb63b5e 100644
+index 3b47ee6..15c8009 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -16,7 +16,7 @@ set(protobuf_MODULE_COMPATIBLE ON CACHE BOOL "")
@@ -47,7 +47,15 @@ index 3b47ee6..cb63b5e 100644
  
  	target_compile_definitions(
  		${PROJECT_NAME} PRIVATE
-@@ -143,8 +144,10 @@ else ()
+@@ -118,7 +119,6 @@ if (WIN32)
+ else ()
+ 	set(STATIC_LIB_NAME ${PROJECT_NAME}-static)
+ 	set(SHARED_LIB_NAME ${PROJECT_NAME}-shared)
+-	get_filename_component(Protobuf_LIB_DIR ${Protobuf_LIBRARY} DIRECTORY)
+ 	link_directories(${OPENSSL_LINK_DIR} ${WORKFLOW_LIB_DIR} ${Protobuf_LIB_DIR})
+ 
+ 	add_library(
+@@ -143,8 +143,10 @@ else ()
  		$<TARGET_OBJECTS:http>
  	)
  
