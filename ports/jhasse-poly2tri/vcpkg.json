@@ -1,5 +1,5 @@
 {
-  "name": "poly2tri",
+  "name": "jhasse-poly2tri",
   "version-date": "2022-08-11",
   "description": "Sweep-line algorithm for constrained Delaunay triangulation",
   "homepage": "https://github.com/jhasse/poly2tri",

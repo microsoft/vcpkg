@@ -274,7 +274,7 @@
     },
     "assimp": {
       "baseline": "5.3.1",
-      "port-version": 3
+      "port-version": 4
     },
     "async-mqtt": {
       "baseline": "4.0.0",
@@ -3664,6 +3664,10 @@
       "baseline": "5.3.0",
       "port-version": 1
     },
+    "jhasse-poly2tri": {
+      "baseline": "2022-08-11",
+      "port-version": 0
+    },
     "jinja2cpplight": {
       "baseline": "2018-05-08",
       "port-version": 3
@@ -6760,10 +6764,6 @@
       "baseline": "2021-09-26",
       "port-version": 0
     },
-    "poly2tri": {
-      "baseline": "2020-07-21",
-      "port-version": 3
-    },
     "polyclipping": {
       "baseline": "6.4.2",
       "port-version": 12
@@ -7266,7 +7266,7 @@
     },
     "qtpositioning": {
       "baseline": "6.6.1",
-      "port-version": 1
+      "port-version": 2
     },
     "qtquick3d": {
       "baseline": "6.6.1",
