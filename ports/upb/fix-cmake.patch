@@ -1,5 +1,5 @@
 diff --git a/upb/cmake/CMakeLists.txt b/upb/cmake/CMakeLists.txt
-index 3ebe25780..83549dedb 100644
+index 3ebe25780..a97340124 100644
 --- a/upb/cmake/CMakeLists.txt
 +++ b/upb/cmake/CMakeLists.txt
 @@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.10...3.24)
@@ -54,7 +54,7 @@ index 3ebe25780..83549dedb 100644
  
  add_library(generated_code_support__only_for_generated_code_do_not_use__i_give_permission_to_break_me INTERFACE
      
-@@ -124,3 +128,147 @@ target_link_libraries(generated_reflection_support__only_for_generated_code_do_n
+@@ -124,3 +128,145 @@ target_link_libraries(generated_reflection_support__only_for_generated_code_do_n
    reflection_internal)
  
  
@@ -118,7 +118,7 @@ index 3ebe25780..83549dedb 100644
 +target_link_libraries(upb PRIVATE utf8_range::utf8_range)
 +
 +if (VCPKG_UPB_BUILD_CODEGEN)
-+  add_library(common
++  add_library(common OBJECT
 +    ../util/def_to_proto.c
 +    ../../upb_generator/common.cc
 +    ../../upb_generator/file_layout.cc
@@ -200,5 +200,3 @@ index 3ebe25780..83549dedb 100644
 +    PATTERN "*.inc"
 +  )
 +endforeach()
-+
-+

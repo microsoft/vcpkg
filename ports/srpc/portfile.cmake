@@ -8,9 +8,15 @@ vcpkg_from_github(
         protobuf.patch
 )
 
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" SRPC_BUILD_STATIC_RUNTIME)
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        -DSRPC_BUILD_STATIC_RUNTIME=${SRPC_BUILD_STATIC_RUNTIME}
+    MAYBE_UNUSED_VARIABLES
+        SRPC_BUILD_STATIC_RUNTIME
 )
 
 vcpkg_cmake_install()
