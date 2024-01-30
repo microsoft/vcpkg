@@ -1140,8 +1140,6 @@ tensorflow-cc:x64-osx=skip
 tensorflow-cc:arm-osx=skip
 
 thorvg:arm-neon-android=fail
-tidy-html5:arm64-uwp=fail
-tidy-html5:x64-uwp=fail
 tinycthread:arm-neon-android=fail
 tinycthread:arm64-android=fail
 tinycthread:x64-android=fail
