@@ -1,18 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
-    REF v0.9.0-rc3
-    SHA512 5de94277d57b862d4ab99266c2608cd37d7ca9eb89ef753ddddf47e4cebffab54b2cfb9c28d0c3bb7721f0d24c1310377c4b42adab477568e6965bd7ebc55b17
+    REF "v${VERSION}"
+    SHA512 c8cface60031c5e84b99eaedb216f9e3af0354d24f5db7d6d0ec1f97d593ae46cb13c86bc244b6b8673cddfecf829a8b7738fdde8620472c12e95a5b61495133
     HEAD_REF master
-    PATCHES
-        avif.patch
-        webp.patch
 )
 
 # Enable selected codecs
 set(ONLY_CODECS "")
 
-foreach(CODEC avif bmp gif ico jpeg jpeg2000 pcx png psd qoi tga tiff wal webp xbm)
+foreach(CODEC avif bmp gif ico jpeg jpeg2000 jpegxl pcx png psd qoi svg tga tiff wal webp xbm)
     if (${CODEC} IN_LIST FEATURES)
         list(APPEND ONLY_CODECS ${CODEC})
     endif()
@@ -20,14 +17,20 @@ endforeach()
 
 list(JOIN ONLY_CODECS "\;" ONLY_CODECS_ESCAPED)
 
+# Enable OpenMP
+if ("openmp" IN_LIST FEATURES)
+    set(SAIL_ENABLE_OPENMP ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBUILD_TESTING=OFF
         -DSAIL_COMBINE_CODECS=ON
+        -DSAIL_ENABLE_OPENMP=${SAIL_ENABLE_OPENMP}
         -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
-        -DSAIL_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
@@ -52,7 +55,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
 # Fix pkg-config files
 vcpkg_fixup_pkgconfig()
 
-# Unused because SAIL_COMBINE_CODECS is On
+# Unused because SAIL_COMBINE_CODECS is ON
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail/sail-common/config.h" "#define SAIL_CODECS_PATH \"${CURRENT_PACKAGES_DIR}/lib/sail/codecs\"" "")
 
 # Handle usage

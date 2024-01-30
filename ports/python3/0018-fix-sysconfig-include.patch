@@ -1,0 +1,27 @@
+diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
+index ebe371182..e351df7da 100644
+--- a/Lib/sysconfig.py
++++ b/Lib/sysconfig.py
+@@ -30,9 +30,9 @@
+         'purelib': '{base}/lib/python{py_version_short}/site-packages',
+         'platlib': '{platbase}/{platlibdir}/python{py_version_short}/site-packages',
+         'include':
+-            '{installed_base}/include/python{py_version_short}{abiflags}',
++            '{installed_base}/../../include/python{py_version_short}{abiflags}',
+         'platinclude':
+-            '{installed_platbase}/include/python{py_version_short}{abiflags}',
++            '{installed_platbase}/../../include/python{py_version_short}{abiflags}',
+         'scripts': '{base}/bin',
+         'data': '{base}',
+         },
+@@ -51,8 +51,8 @@
+         'platstdlib': '{base}/Lib',
+         'purelib': '{base}/Lib/site-packages',
+         'platlib': '{base}/Lib/site-packages',
+-        'include': '{installed_base}/Include',
+-        'platinclude': '{installed_base}/Include',
++        'include': '{installed_base}/../../include/python{py_version_short}{abiflags}',
++        'platinclude': '{installed_base}/../../include/python{py_version_short}{abiflags}',
+         'scripts': '{base}/Scripts',
+         'data': '{base}',
+         },

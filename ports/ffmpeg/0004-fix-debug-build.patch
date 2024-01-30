@@ -1,8 +1,8 @@
 diff --git a/configure b/configure
-index bd2de34..fba948a 100755
+index 3243e23021..6d3f31fc95 100644
 --- a/configure
 +++ b/configure
-@@ -3993,6 +3993,9 @@ for opt do
+@@ -4284,6 +4284,9 @@ for opt do
          --libfuzzer=*)
              libfuzzer_path="$optval"
          ;;
@@ -12,7 +12,7 @@ index bd2de34..fba948a 100755
          *)
              optname="${opt%%=*}"
              optname="${optname#--}"
-@@ -6464,8 +6464,12 @@
+@@ -6630,7 +6633,11 @@ fi
  
  enabled  zlib && { check_pkg_config zlib zlib "zlib.h" zlibVersion ||
                     check_lib zlib   zlib.h      zlibVersion    -lz; }
@@ -25,8 +25,7 @@ index bd2de34..fba948a 100755
  enabled  lzma && check_lib lzma   lzma.h lzma_version_number -llzma
  
  enabled zlib && test_exec $zlib_extralibs <<EOF && enable zlib_gzip
- #include <zlib.h>
-@@ -6350,7 +6350,11 @@ enabled librubberband     && require_pkg_config librubberband "rubberband >= 1.8
+@@ -6793,7 +6800,11 @@ enabled libshaderc        && require_pkg_config spirv_compiler "shaderc >= 2019.
  enabled libshine          && require_pkg_config libshine shine shine/layer3.h shine_encode_buffer
  enabled libsmbclient      && { check_pkg_config libsmbclient smbclient libsmbclient.h smbc_init ||
                                 require libsmbclient libsmbclient.h smbc_init -lsmbclient; }
@@ -37,5 +36,5 @@ index bd2de34..fba948a 100755
 +    enabled libsnappy     && require libsnappy snappy-c.h snappy_compress -lsnappy -lstdc++
 +fi
  enabled libsoxr           && require libsoxr soxr.h soxr_create -lsoxr
- enabled libssh            && require_pkg_config libssh libssh libssh/sftp.h sftp_init
+ enabled libssh            && require_pkg_config libssh "libssh >= 0.6.0" libssh/sftp.h sftp_init
  enabled libspeex          && require_pkg_config libspeex speex speex/speex.h speex_decoder_init

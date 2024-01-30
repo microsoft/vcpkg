@@ -1,0 +1,28 @@
+diff --git a/include/ffi_common.h b/include/ffi_common.h
+index 2bd31b0..c53a794 100644
+--- a/include/ffi_common.h
++++ b/include/ffi_common.h
+@@ -128,6 +128,10 @@ void *ffi_data_to_code_pointer (void *data) FFI_HIDDEN;
+    static trampoline. */
+ int ffi_tramp_is_present (void *closure) FFI_HIDDEN;
+ 
++/* Return a file descriptor of a temporary zero-sized file in a
++   writable and executable filesystem. */
++int open_temp_exec_file(void) FFI_HIDDEN;
++
+ /* Extended cif, used in callback from assembly routine */
+ typedef struct
+ {
+diff --git a/src/tramp.c b/src/tramp.c
+index b9d273a..90efb07 100644
+--- a/src/tramp.c
++++ b/src/tramp.c
+@@ -39,6 +39,8 @@
+ #ifdef __linux__
+ #define _GNU_SOURCE 1
+ #endif
++#include <ffi.h>
++#include <ffi_common.h>
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <stdlib.h>

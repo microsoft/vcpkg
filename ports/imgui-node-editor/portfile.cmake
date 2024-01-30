@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thedmd/imgui-node-editor
     REF v${VERSION}
-    SHA512 7dbc34a7af1554a7e683e0b55d18fc08cf5832bf5d6a57a30820e7ef98a6fbb5a65a7287f6250d3b6f47b89ac0499f51fbe19d9c11850e26f74e3b0e806abb1b
+    SHA512 83573b6ed776095837373bc95be1c1f5b85e9c5fae2145647f9cb6fdc17d3889edce716ac9e27c1bbde56f00803a66db98ca856910e6e0ce8714d3c5ce3f7c3f
     HEAD_REF master
 )
 

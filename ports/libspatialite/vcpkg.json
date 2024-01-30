@@ -1,14 +1,16 @@
 {
   "name": "libspatialite",
   "version": "5.1.0",
+  "port-version": 1,
   "description": "SpatiaLite is an open source library intended to extend the SQLite core to support fully fledged Spatial SQL capabilities.",
-  "homepage": "https://www.gaia-gis.it/gaia-sins/libspatialite-sources",
+  "homepage": "https://www.gaia-gis.it/fossil/libspatialite/index",
   "license": null,
   "dependencies": [
     "geos",
     "libiconv",
     {
       "name": "libxml2",
+      "default-features": false,
       "features": [
         "http"
       ]
@@ -28,8 +30,7 @@
     "zlib"
   ],
   "default-features": [
-    "freexl",
-    "geocallbacks"
+    "freexl"
   ],
   "features": {
     "freexl": {
@@ -40,9 +41,6 @@
     },
     "gcp": {
       "description": "Ground control points support. This feature reduces the license options to GPLv2+."
-    },
-    "geocallbacks": {
-      "description": "Geometry callbacks support."
     },
     "rttopo": {
       "description": "RTTOPO support. This feature reduces the license options to GPLv2+.",

@@ -3,12 +3,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.83.0
-    SHA512 0640a922507c416d171eff1b60c291e9644dba97770a3277c85233982d8c1022e64cbab88e9cdff7ce0f371965c214dc6da36f9cd7b134d1f5e8dc8deabb31f9
+    REF boost-${VERSION}
+    SHA512 a463a99822c595d041ef16e5d831907d11cef02595826e9e7a6c6ab314573faf69f54ae65924fb10b414222ca26efc45066b097617f7a4b8b8b8e82cc97bb086
     HEAD_REF master
-    PATCHES
-        0001-Fix-use-of-intrinsics-on-windows-ARM-platforms.patch
-        0002-Replace-_M_ARM64-with-_M_ARM-for-32-bit-path.patch
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile"
@@ -17,9 +14,6 @@ vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile"
 )
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(
-    SOURCE_PATH ${SOURCE_PATH}
-    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
-)
+boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

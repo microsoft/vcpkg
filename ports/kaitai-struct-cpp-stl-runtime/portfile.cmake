@@ -1,10 +1,8 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kaitai-io/kaitai_struct_cpp_stl_runtime
-    REF 0.10
-    SHA512 27a0975edffe40a68784a3f5c639937fe70f634d97b7f3aae7d47db31ab4a81442c0707db562ac0775cf28012dc4172af52cc97bd02f2edecf713c57038f5b6d
+    REF ${VERSION}
+    SHA512 53b26627e281a12b6c1d217e8b439aba7dabf6fc55d3edc27e70f7757851f060f4039db3a16c48c5c60a715671b855b51e527f154df7d94547943f865c9d4b9a
     HEAD_REF master
 )
 
@@ -17,6 +15,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS    
         -DSTRING_ENCODING_TYPE=${STRING_ENCODING_TYPE}
+        -DBUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()

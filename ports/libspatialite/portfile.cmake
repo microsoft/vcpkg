@@ -19,7 +19,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS unused
     FEATURES
         freexl          ENABLE_FREEXL
         gcp             ENABLE_GCP
-        geocallbacks    ENABLE_GEOCALLBACKS
         rttopo          ENABLE_RTTOPO
 )
 
@@ -38,9 +37,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
     if(ENABLE_GCP)
         string(APPEND CL_FLAGS " /DENABLE_GCP")
-    endif()
-    if(NOT ENABLE_GEOCALLBACKS)
-        string(APPEND CL_FLAGS " /DOMIT_GEOCALLBACKS")
     endif()
     if(ENABLE_RTTOPO)
         string(APPEND CL_FLAGS " /DENABLE_RTTOPO")
@@ -184,10 +180,10 @@ else()
             ${TARGET_ALIAS}
             ${FREEXL_OPTION}
             ${GCP_OPTION}
-            ${GEOCALLBACKS_OPTION}
             ${RTTOPO_OPTION}
             "--disable-examples"
             "--disable-minizip"
+            "cross_compiling=yes" # avoid conftest rpath trouble
         OPTIONS_DEBUG
             "LIBS=${PKGCONFIG_LIBS_DEBUG} ${SYSTEM_LIBS}"
         OPTIONS_RELEASE

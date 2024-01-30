@@ -1,14 +1,9 @@
-set(7ZIP_VERSION "2301")
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.7-zip.org/a/7z${7ZIP_VERSION}-src.7z"
-    FILENAME "7z${7ZIP_VERSION}-src.7z"
-    SHA512 45038fc49b0be8e7435939a79ad9f46f360b43b651148a8cde74fafdb8536f51a4be3b1ea91e06203267e5121267f6601f8ae6678feaf18e4b7a4f79a16730e7
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-    NO_REMOVE_ONE_LEVEL
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ip7z/7zip
+    REF "${VERSION}"
+    SHA512 7c2fb18261ce9185d29b690ccb7694d7926abe3af0619dbe42b7ab43b400ee71c1eb79c31f892aea2fbdb55036225f31ee393287cce91afd17f20cff8f6cb949
+    HEAD_REF main
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
@@ -23,10 +18,6 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup()
 
-file(
-    INSTALL "${SOURCE_PATH}/DOC/License.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/DOC/License.txt")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

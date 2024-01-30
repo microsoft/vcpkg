@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO log4cplus/log4cplus
-    REF REL_2_1_0
-    SHA512 fd26ae73e898af6896046e5e567bfc664bc8e81568c8cdbe5ff6316054b875af7fa946f7b1f011a96b0d3b53dc3f7f9411cbc2ffa07b674777cb0def2743ede8
+    REF REL_2_1_1
+    SHA512 ddc63ad574aed7d13980308c1f4d3a31a7fa9c7d4a14de923f9b3a851492d17f64f34166b6be77fc8584c0e98cd1f34ed3d9ba268e7456fd1ff3b7d8125dbe3a
     HEAD_REF master
 )
 
@@ -42,11 +42,16 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/log4cplus)
-
 vcpkg_copy_pdbs()
+
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/log4cplus.pc" "-llog4cplus" "-llog4cplusD")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/ChangeLog"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/README.md")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

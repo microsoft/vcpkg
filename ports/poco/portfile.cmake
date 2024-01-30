@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF 1211613642269b7d53bea58b02de7fcd25ece3b9 # poco-1.12.4-release
-    SHA512 bf390f7c8d7c4f0d7602afa434a933b429274944d12560159761b0f984316c76abfdb49ad422c869e02d88041058a04d66e7b5ae05142819a4f583870cc00f44
-    HEAD_REF master
+    REF "poco-1.13.0-release"
+    SHA512 5e557b4c93dd5eacd7c43af9c89646c49e65217db9d9e0fc016b3f643aca993d70e58a85ec7e63743221eb2b29d36ce9f8a3bfbf4db489d8ff24e20127f450ea
+    HEAD_REF devel
     PATCHES
         # Fix embedded copy of pcre in static linking mode
         0001-static-pcre.patch
@@ -86,7 +86,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # Move apps to the tools folder
-vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec arc AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec poco-arc AUTO_CLEAN)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -110,6 +110,19 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
     file(COPY "${SOURCE_PATH}/Data/SQLite/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
 
+# Copy include files of sql-parser
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src")
+
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/parser/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/parser")
+
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/sql/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/sql")
+
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/util/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/util")
+
 if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else()
@@ -120,4 +133,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

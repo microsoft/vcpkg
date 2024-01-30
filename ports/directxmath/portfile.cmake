@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMath
-    REF dec2022
-    SHA512 61da5464e4a6b0e405307496b0b925fc52e3f7acd3841527c5f8e86d5188865767dd44d4277f034c46b0088d1ee52da72f747c5965cd37411600418b605d4702
+    REF dec2023
+    SHA512 ddb5fdb4ef2d524990b0eba254e8395e0c3278a49c37889eef97c977b9d72c4983305c7e2a5b732e05ee54819e0d4aea134a1419f713dda4da386d1bad2d3580
     HEAD_REF main
 )
 
@@ -11,6 +11,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/DirectXMath.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
+
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/directxmath)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -28,4 +32,5 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
