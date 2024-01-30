@@ -17,10 +17,6 @@ vcpkg_from_gitlab(
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako)
-
-message(STATUS "PYTHON3:${PYTHON3}")
-set(PYTHON3 "${PYTHON3}" CACHE STRING "" FORCE)
-
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
