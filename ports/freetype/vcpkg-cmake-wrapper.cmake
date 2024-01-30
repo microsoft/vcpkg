@@ -2,60 +2,38 @@ cmake_policy(PUSH)
 cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0054 NEW)
 
-# CMake comes with FindFreetype module which conflicts with Freetype 2.13.x's and onwards freetype-config.cmake
-# which now defines the same target. To fix this, we stop the FindFreetype.cmake module from running, and just
-# use the configs settings instead.
-list(REMOVE_ITEM ARGS NO_MODULE CONFIG MODULE)
-_find_package(${ARGS} NAMES freetype)
+list(REMOVE_ITEM ARGS "NO_MODULE" "CONFIG" "MODULE")
+_find_package(${ARGS} CONFIG)
 
-if(NOT TARGET Freetype::Freetype)
-    message( FATAL_ERROR "The freetype vcpkg-cmake-wrapper.cmake assumes the existence of the"
-            "'Freetype::Freetype' target, which should be exposed in freetype-config.cmake through freetype-targets.cmake" )
+if(Freetype_FOUND)
+    include("${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake")
+
+    get_target_property(_freetype_include_dirs freetype INTERFACE_INCLUDE_DIRECTORIES)
+
+    if (CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        get_target_property(_freetype_location_debug freetype IMPORTED_IMPLIB_DEBUG)
+        get_target_property(_freetype_location_release freetype IMPORTED_IMPLIB_RELEASE)
+    endif()
+    if(NOT _freetype_location_debug AND NOT _freetype_location_release)
+        get_target_property(_freetype_location_debug freetype IMPORTED_LOCATION_DEBUG)
+        get_target_property(_freetype_location_release freetype IMPORTED_LOCATION_RELEASE)
+    endif()
+
+    set(FREETYPE_FOUND TRUE)
+
+    set(FREETYPE_INCLUDE_DIRS "${_freetype_include_dirs}")
+    set(FREETYPE_INCLUDE_DIR_ft2build "${_freetype_include_dirs}")
+    set(FREETYPE_INCLUDE_DIR_freetype2 "${_freetype_include_dirs}")
+    set(FREETYPE_LIBRARY_DEBUG "${_freetype_location_debug}" CACHE INTERNAL "vcpkg")
+    set(FREETYPE_LIBRARY_RELEASE "${_freetype_location_release}" CACHE INTERNAL "vcpkg")
+    select_library_configurations(FREETYPE)
+    set(FREETYPE_LIBRARIES ${FREETYPE_LIBRARY})
+    set(FREETYPE_VERSION_STRING "${Freetype_VERSION}")
+
+    unset(_freetype_include_dirs)
+    unset(_freetype_location_debug)
+    unset(_freetype_location_release)
 endif()
-if(NOT TARGET freetype)
-    message( FATAL_ERROR "The freetype vcpkg-cmake-wrapper.cmake assumes the existence of the"
-            "'freetype' target, which should be exposed in freetype-config.cmake through freetype-targets.cmake" )
-endif()
-# we need to make sure that targets that previously depended on the module definition of Freetype still have access
-# to the exposed result variables needed here:
-# https://cmake.org/cmake/help/latest/module/FindFreetype.html#result-variables
-# Those variables are:
-#     FREETYPE_FOUND
-#     FREETYPE_INCLUDE_DIRS
-#     Don't know if these need to actually be exposed, they are merely mentioned in the above link.
-#         FREETYPE_INCLUDE_DIR_ft2build
-#         FREETYPE_INCLUDE_DIR_freetype2
-#     FREETYPE_LIBRARIES
-#     FREETYPE_VERSION_STRING
-set(FREETYPE_FOUND TRUE)
-
-# Not trying to get LINK_LIBRARIES because only interface is exposed on the INTERFACE as of this update.  In future updates
-# we may need to add changes here as Freetype continually adds changes to it's CMake distribution strategy (22/01/2024)
-get_target_property(TEMP_VCPKG_FREETYPE_CONFIG_TARGET_INTERFACE_LINK_LIBRARIES Freetype::Freetype INTERFACE_LINK_LIBRARIES)
-set(FREETYPE_LIBRARIES "")
-list(APPEND FREETYPE_LIBRARIES ${TEMP_VCPKG_FREETYPE_CONFIG_TARGET_INTERFACE_LINK_LIBRARIES})
-unset(TEMP_VCPKG_FREETYPE_CONFIG_TARGET_INTERFACE_LINK_LIBRARIES)
-
-
-
-# Not trying to get INCLUDE_DIRECTORIES because only INTERFACE is exposed on the target as of this update.  In future updates
-# we may need to add changes here as Freetype continually adds changes to it's CMake distribution strategy (22/01/2024)
-# Note for whatever reason we can't get the interface include directories from the Freetype::Freetype target...
-get_target_property(TEMP_VCPKG_FREETYPE_CONFIG_TARGET_INTERFACE_INCLUDE_DIRECTORIES freetype INTERFACE_INCLUDE_DIRECTORIES)
-set(FREETYPE_INCLUDE_DIRS "")
-list(APPEND FREETYPE_INCLUDE_DIRS ${TEMP_VCPKG_FREETYPE_CONFIG_TARGET_INTERFACE_INCLUDE_DIRECTORIES})
-
-# Don't think we need these targets exposed, but they are mentioned in https://cmake.org/cmake/help/latest/module/FindFreetype.html#result-variables
-# so exposing them anyway.  In practice INTERFACE_INCLUDE_DIRECTORIES ends up just being the base install include
-# directory, and FREETYPE_INCLUDE_DIR_ft2build and FREETYPE_INCLUDE_DIR_freetype2 end up being the same thing
-set(FREETYPE_INCLUDE_DIR_ft2build ${TEMP_VCPKG_FREETYPE_CONFIG_TARGET_INTERFACE_INCLUDE_DIRECTORIES})
-set(FREETYPE_INCLUDE_DIR_freetype2 ${TEMP_VCPKG_FREETYPE_CONFIG_TARGET_INTERFACE_INCLUDE_DIRECTORIES})
-unset(TEMP_VCPKG_FREETYPE_CONFIG_TARGET_INTERFACE_INCLUDE_DIRECTORIES)
-
-
-# Version is not set on Freetype::Freetype or freetype, we have to get it from this variable.
-set(FREETYPE_VERSION_STRING ${Freetype_VERSION})
-
 
 if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     if("@FT_REQUIRE_ZLIB@")
