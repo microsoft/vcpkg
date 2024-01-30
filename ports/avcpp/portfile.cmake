@@ -26,7 +26,6 @@ vcpkg_cmake_configure(
         "-DAV_ENABLE_SHARED=${AVCPP_ENABLE_SHARED}"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DAV_BUILD_EXAMPLES=OFF
-        -DBUILD_TESTING=OFF
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
