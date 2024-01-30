@@ -1109,8 +1109,8 @@
         }
       ]
     },
-    "run": {
-      "description": "Cloud Run Admin API C++ Client Library",
+    "rpc": {
+      "description": "RPC API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1121,8 +1121,8 @@
         }
       ]
     },
-    "rpc": {
-      "description": "RPC API C++ Client Library",
+    "run": {
+      "description": "Cloud Run Admin API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
