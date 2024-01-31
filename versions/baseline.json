@@ -525,7 +525,7 @@
       "port-version": 0
     },
     "baresip-libre": {
-      "baseline": "3.8.0",
+      "baseline": "3.9.0",
       "port-version": 0
     },
     "basisu": {
