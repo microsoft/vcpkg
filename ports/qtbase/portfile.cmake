@@ -9,6 +9,10 @@ set(QT_IS_LATEST ON)
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
+        # CVE fixes from https://download.qt.io/official_releases/qt/6.6/
+        patches/0001-CVE-2023-51714-qtbase-6.6.diff
+        patches/0002-CVE-2023-51714-qtbase-6.6.diff
+
         allow_outside_prefix.patch
         config_install.patch
         fix_cmake_build.patch
@@ -130,6 +134,7 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
  FEATURES
     "openssl"             FEATURE_openssl
     "brotli"              FEATURE_brotli
+    "securetransport"     FEATURE_securetransport
     #"brotli"              CMAKE_REQUIRE_FIND_PACKAGE_WrapBrotli
     #"openssl"             CMAKE_REQUIRE_FIND_PACKAGE_WrapOpenSSL
  INVERTED_FEATURES

@@ -1,6 +1,7 @@
 {
   "name": "cld3",
   "version": "3.0.14",
+  "port-version": 1,
   "description": "Compact Language Detector v3",
   "homepage": "https://github.com/google/cld3",
   "license": "Apache-2.0",
@@ -8,6 +9,10 @@
     "protobuf",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]
