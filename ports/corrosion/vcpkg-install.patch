@@ -7,9 +7,9 @@ index 9bf3786..b74c8aa 100644
  endif()
  
 +option(
-+   CORROSION_VCPKG_INSTALL
-+   "Whether or not Corrosion is being installed with Vcpkg"
-+   OFF
++   INCLUDE_CORROSION
++   "Optionally include Corrosion during the CMake Process."
++   ON
 +)
 +
  # This little bit self-hosts the Corrosion toolchain to build the generator
@@ -19,7 +19,7 @@ index 9bf3786..b74c8aa 100644
  # `find_package(Corrosion REQUIRED)` instead if that works with your workflow.
 -list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 -include(Corrosion)
-+if (NOT CORROSION_VCPKG_INSTALL)
++if (NOT INCLUDE_CORROSION)
 +    list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 +    include(Corrosion)
 +endif()
