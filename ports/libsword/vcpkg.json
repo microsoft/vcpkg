@@ -1,0 +1,22 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+    "name": "libsword",
+    "version": "1.9.0",
+    "homepage": "https://www.crosswire.org/sword/",
+    "description": "The SWORD Project is an open source, cross-platform (Linux, Windows, Solaris, MacOSX etc.) API/library for Bible software with a constantly growing list of front-ends (GUI, textmode, web-based, etc.) and a library of over 200 text modules.",
+    "license": "GPL-2.0-only",
+    "dependencies": [
+        {
+            "name": "vcpkg-msbuild",
+            "host": true
+        },
+        "curl",
+        "zlib",
+        "bzip2",
+        "liblzma",
+        "libssh2",
+        "openssl",
+        "boost",
+        "icu"
+    ]
+}
