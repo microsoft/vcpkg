@@ -1,17 +1,26 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a851c00..1b6f6a9 100644
+index a851c00..9d6415b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -22,8 +22,8 @@ endif()
+@@ -22,7 +22,7 @@ endif()
  set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
  
  include(FindThreads)
+-include(FindProtobuf)
 +find_package(protobuf CONFIG REQUIRED)
- include(FindProtobuf)
--
+ 
  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
      # require at least gcc 4.8
-     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
+@@ -73,7 +73,8 @@ if ((NOT BRPC_INCLUDE_PATH) OR (NOT BRPC_LIB))
+     message(FATAL_ERROR "Fail to find brpc")
+ endif()
+ 
+-if (NOT PROTOBUF_PROTOC_EXECUTABLE)
++set(PROTOBUF_LIBRARY protobuf::libprotobuf)
++if (0)
+     get_filename_component(PROTO_LIB_DIR ${PROTOBUF_LIBRARY} DIRECTORY)
+     set (PROTOBUF_PROTOC_EXECUTABLE "${PROTO_LIB_DIR}/../bin/protoc")
+ endif()
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index ff435a2..59b10ae 100644
 --- a/src/CMakeLists.txt
