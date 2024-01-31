@@ -8901,7 +8901,7 @@
       "port-version": 0
     },
     "vcpkg-get-python-packages": {
-      "baseline": "2024-01-02",
+      "baseline": "2024-01-24",
       "port-version": 0
     },
     "vcpkg-gfortran": {
