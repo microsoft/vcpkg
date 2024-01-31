@@ -7693,7 +7693,7 @@
       "port-version": 9
     },
     "s2geometry": {
-      "baseline": "0.10.0",
+      "baseline": "0.11.0",
       "port-version": 0
     },
     "s2n": {
