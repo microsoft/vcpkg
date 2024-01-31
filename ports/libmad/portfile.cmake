@@ -2,14 +2,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-vcpkg_download_distfile(
-    ARCHIVE
-    URLS "https://codeberg.org/tenacityteam/libmad/archive/${VERSION}.tar.gz"
-    FILENAME "tenacityteam-libmad-${VERSION}.tar.gz"
-    SHA512 e56b84e112e3a95cd4fde7be1ce94c4a277275da3cc69ca051113162a84158ac9a1fe9c3f2de186202de5eca5c112aacb87533206288a084cf5ba048e6d95c22
+vcpkg_from_git(
+    OUT_SOURCE_PATH SOURCE_PATH
+    URL "https://codeberg.org/tenacityteam/libmad/"
+    REF ee7c3cdd4361b7f7c7da52fa3ba9f76cc35230a9
 )
-
-vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
