@@ -27,7 +27,7 @@ vcpkg_add_to_path("${PERL_DIR}")
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   set(ENABLE_STATIC_JSC ON)
 else()
-  set(ENABLE_STATIC_JSC ON)
+  set(ENABLE_STATIC_JSC OFF)
 endif()
 
 vcpkg_cmake_configure(
