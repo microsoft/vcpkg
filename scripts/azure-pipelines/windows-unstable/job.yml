@@ -8,7 +8,7 @@ jobs:
     name: $(unstable-pool)
   workspace:
     clean: resources
-  timeoutInMinutes: 2880 # 2 days
+  timeoutInMinutes: 3600 # 2.5 days
   variables:
   - name: WORKING_ROOT
     value: D:\
