@@ -1,6 +1,7 @@
 {
   "name": "libmad",
   "version": "0.16.4",
+  "port-version": 1,
   "description": "high-quality MPEG audio decoder",
   "homepage": "http://codeberg.org/tenacityteam/libmad",
   "dependencies": [
