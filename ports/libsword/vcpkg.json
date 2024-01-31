@@ -5,6 +5,7 @@
   "description": "The SWORD Project is an open source, cross-platform (Linux, Windows, Solaris, MacOSX etc.) API/library for Bible software with a constantly growing list of front-ends (GUI, textmode, web-based, etc.) and a library of over 200 text modules.",
   "homepage": "https://www.crosswire.org/sword/",
   "license": "GPL-2.0-only",
+  "supports": "x86",
   "dependencies": [
     "boost",
     "bzip2",
