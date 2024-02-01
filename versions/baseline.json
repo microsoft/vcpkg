@@ -5482,7 +5482,7 @@
     },
     "mapnik": {
       "baseline": "2023-06-12",
-      "port-version": 2
+      "port-version": 3
     },
     "marble": {
       "baseline": "22.04.0",
