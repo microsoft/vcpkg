@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "opentelemetry-cpp",
   "version-semver": "1.13.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": [
     "OpenTelemetry is a collection of tools, APIs, and SDKs.",
     "You use it to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) for analysis in order to understand your software's performance and behavior."
@@ -33,19 +33,6 @@
     "geneva": {
       "description": "Whether to include the Geneva Exporter from the opentelemetry-cpp-contrib repository"
     },
-    "otlp": {
-      "description": "Whether to include the OpenTelemetry Protocol in the SDK",
-      "dependencies": [
-        {
-          "name": "opentelemetry-cpp",
-          "default-features": false,
-          "features": [
-            "otlp-grpc",
-            "otlp-http"
-          ]
-        }
-      ]
-    },
     "otlp-grpc": {
       "description": "Whether to include the OTLP gRPC exporter in the SDK",
       "dependencies": [
@@ -53,13 +40,6 @@
         {
           "name": "grpc",
           "host": true
-        },
-        {
-          "name": "opentelemetry-cpp",
-          "default-features": false,
-          "features": [
-            "otlp"
-          ]
         }
       ]
     },
@@ -67,13 +47,7 @@
       "description": "Whether to include the OpenTelemetry Protocol over HTTP in the SDK",
       "dependencies": [
         "curl",
-        {
-          "name": "opentelemetry-cpp",
-          "default-features": false,
-          "features": [
-            "otlp"
-          ]
-        }
+        "protobuf"
       ]
     },
     "prometheus": {

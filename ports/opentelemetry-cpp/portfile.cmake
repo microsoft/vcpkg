@@ -27,7 +27,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
-if(WITH_OTLP_GRPC)
+if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
     set(OTEL_PROTO_VERSION "1.0.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
@@ -69,7 +69,6 @@ vcpkg_cmake_configure(
         -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH="${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}"
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
-        WITH_OTLP_GRPC
         WITH_GENEVA
 )
 

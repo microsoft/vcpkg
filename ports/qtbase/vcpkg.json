@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.6.1",
-  "port-version": 7,
+  "port-version": 8,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -66,9 +66,16 @@
       "name": "opengl",
       "platform": "!ios"
     },
-    "openssl",
+    {
+      "name": "openssl",
+      "platform": "!ios"
+    },
     "pcre2",
     "png",
+    {
+      "name": "securetransport",
+      "platform": "ios"
+    },
     "sql",
     "sql-psql",
     "sql-sqlite",
@@ -335,6 +342,10 @@
           ]
         }
       ]
+    },
+    "securetransport": {
+      "description": "Enable Secure Transport",
+      "supports": "ios | osx"
     },
     "sql": {
       "description": "Qt Sql",
