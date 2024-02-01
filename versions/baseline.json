@@ -7930,7 +7930,7 @@
     },
     "shiftmedia-libgpg-error": {
       "baseline": "1.45",
-      "port-version": 0
+      "port-version": 1
     },
     "shiva": {
       "baseline": "1.0",
