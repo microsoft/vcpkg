@@ -4,9 +4,9 @@ endif()
 
 vcpkg_download_distfile(
     ARCHIVE
-    URLS "https://codeberg.org/tenacityteam/libmad/archive/${VERSION}.tar.gz"
+    URLS "https://codeberg.org/tenacityteam/libmad/releases/download/${VERSION}/libmad-${VERSION}.tar.gz"
     FILENAME "tenacityteam-libmad-${VERSION}.tar.gz"
-    SHA512 6752c199096f999ed478dea712eb669913eec182eec8a56bf4871e77e6c38798d13146febf646007427f43f86aea8d40b9ec2b72928ac3132066ebddcaa0cfde
+    SHA512 5b0a826408395e8b6b8a33953401355d6c2f1b33ec5085530b4ac8a538c39ffa903ce2e6845e9dcad73936933078959960b2f3fbba11ae091fda5bc5ee310df5
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")

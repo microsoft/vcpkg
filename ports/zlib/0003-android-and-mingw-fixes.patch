@@ -1,8 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6fa5575..7c345db 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -56,7 +56,7 @@ endif()
+@@ -58,7 +58,7 @@ endif()
  #
  check_include_file(unistd.h Z_HAVE_UNISTD_H)
  
@@ -11,7 +10,7 @@ index 6fa5575..7c345db 100644
      set(CMAKE_DEBUG_POSTFIX "d")
      add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
      add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
-@@ -133,7 +133,7 @@ file(READ ${CMAKE_CURRENT_SOURCE_DIR}/zlib.h _zlib_h_contents)
+@@ -135,7 +135,7 @@ file(READ ${CMAKE_CURRENT_SOURCE_DIR}/zlib.h _zlib_h_contents)
  string(REGEX REPLACE ".*#define[ \t]+ZLIB_VERSION[ \t]+\"([-0-9A-Za-z.]+)\".*"
      "\\1" ZLIB_FULL_VERSION ${_zlib_h_contents})
  
@@ -20,7 +19,7 @@ index 6fa5575..7c345db 100644
      # This gets us DLL resource information when compiling on MinGW.
      if(NOT CMAKE_RC_COMPILER)
          set(CMAKE_RC_COMPILER windres.exe)
-@@ -149,7 +149,7 @@ if(MINGW)
+@@ -151,7 +151,7 @@ if(MINGW)
      if(BUILD_SHARED_LIBS)
      set(ZLIB_DLL_SRCS ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj)
      endif()
@@ -28,4 +27,4 @@ index 6fa5575..7c345db 100644
 +endif(MINGW AND NOT ANDROID)
  
  add_library(zlib ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
- if (BUILD_SHARED_LIBS)
+ target_include_directories(zlib PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
