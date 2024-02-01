@@ -6918,7 +6918,7 @@
     },
     "pulsar-client-cpp": {
       "baseline": "3.4.2",
-      "port-version": 1
+      "port-version": 2
     },
     "pulzed-mini": {
       "baseline": "0.9.14",
