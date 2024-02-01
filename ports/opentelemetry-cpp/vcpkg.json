@@ -32,19 +32,6 @@
     "geneva": {
       "description": "Whether to include the Geneva Exporter from the opentelemetry-cpp-contrib repository"
     },
-    "otlp": {
-      "description": "Whether to include the OpenTelemetry Protocol in the SDK",
-      "dependencies": [
-        {
-          "name": "opentelemetry-cpp",
-          "default-features": false,
-          "features": [
-            "otlp-grpc",
-            "otlp-http"
-          ]
-        }
-      ]
-    },
     "otlp-grpc": {
       "description": "Whether to include the OTLP gRPC exporter in the SDK",
       "dependencies": [
@@ -52,13 +39,6 @@
         {
           "name": "grpc",
           "host": true
-        },
-        {
-          "name": "opentelemetry-cpp",
-          "default-features": false,
-          "features": [
-            "otlp"
-          ]
         }
       ]
     },
@@ -66,13 +46,7 @@
       "description": "Whether to include the OpenTelemetry Protocol over HTTP in the SDK",
       "dependencies": [
         "curl",
-        {
-          "name": "opentelemetry-cpp",
-          "default-features": false,
-          "features": [
-            "otlp"
-          ]
-        }
+        "protobuf"
       ]
     },
     "prometheus": {
