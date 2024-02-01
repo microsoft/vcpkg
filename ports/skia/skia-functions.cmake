@@ -319,7 +319,7 @@ function(skia_gn_install_build_type)
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         LOGNAME "desc-${arg_LABEL}"
     )
-    
+
     # build
     set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
     vcpkg_build_ninja(TARGETS ${arg_TARGETS})
