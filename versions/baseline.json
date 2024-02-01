@@ -8052,6 +8052,10 @@
       "baseline": "0",
       "port-version": 2
     },
+    "snitch": {
+      "baseline": "1.2.4",
+      "port-version": 0
+    },
     "snowhouse": {
       "baseline": "5.0.0",
       "port-version": 2
