@@ -1,36 +1,22 @@
 diff --git a/Source/cmake/OptionsJSCOnly.cmake b/Source/cmake/OptionsJSCOnly.cmake
-index ff391d7e0849..e05f2a3adeef 100644
+index 31e353ded188..218c34c24338 100644
 --- a/Source/cmake/OptionsJSCOnly.cmake
 +++ b/Source/cmake/OptionsJSCOnly.cmake
-@@ -1,4 +1,6 @@
--find_package(Threads REQUIRED)
-+if (NOT WIN32)
-+    find_package(Threads REQUIRED)
-+endif ()
+@@ -41,12 +41,7 @@ set(ENABLE_WEBKIT_LEGACY OFF)
+ set(ENABLE_WEBKIT OFF)
+ set(ENABLE_WEBINSPECTORUI OFF)
+ set(ENABLE_WEBGL OFF)
+-
+-if (WIN32)
+-    set(ENABLE_API_TESTS OFF)
+-else ()
+-    set(ENABLE_API_TESTS ON)
+-endif ()
++set(ENABLE_API_TESTS OFF)
  
- if (MSVC)
-     include(OptionsMSVC)
-@@ -55,10 +57,15 @@ endif ()
- 
- # FIXME: JSCOnly on WIN32 seems to only work with fully static build
- # https://bugs.webkit.org/show_bug.cgi?id=172862
--if (NOT ENABLE_STATIC_JSC AND NOT WIN32)
--    set(JavaScriptCore_LIBRARY_TYPE SHARED)
--    set(bmalloc_LIBRARY_TYPE OBJECT)
--    set(WTF_LIBRARY_TYPE OBJECT)
-+if (NOT ENABLE_STATIC_JSC)
-+    if (NOT WIN32)
-+      set(JavaScriptCore_LIBRARY_TYPE SHARED)
-+      set(bmalloc_LIBRARY_TYPE OBJECT)
-+      set(WTF_LIBRARY_TYPE OBJECT)
-+    else ()
-+      set(JavaScriptCore_LIBRARY_TYPE SHARED)
-+      set(WTF_LIBRARY_TYPE SHARED)
-+    endif ()
- endif ()
- 
- if (WIN32)
-@@ -74,7 +81,7 @@ if (WIN32)
+ if (WTF_CPU_ARM OR WTF_CPU_MIPS)
+     SET_AND_EXPOSE_TO_BUILD(USE_CAPSTONE TRUE)
+@@ -71,7 +66,7 @@ if (WIN32)
          endif ()
      endif ()
  
@@ -39,15 +25,3 @@ index ff391d7e0849..e05f2a3adeef 100644
  
      if (WTF_CPU_X86_64)
          set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB32_PATHS OFF)
-@@ -94,7 +101,10 @@ if (WIN32)
- endif ()
- 
- string(TOLOWER ${EVENT_LOOP_TYPE} LOWERCASE_EVENT_LOOP_TYPE)
--if (LOWERCASE_EVENT_LOOP_TYPE STREQUAL "glib")
-+if (WIN32)
-+    SET_AND_EXPOSE_TO_BUILD(USE_GENERIC_EVENT_LOOP 0)
-+    SET_AND_EXPOSE_TO_BUILD(WTF_DEFAULT_EVENT_LOOP 1)
-+elseif (LOWERCASE_EVENT_LOOP_TYPE STREQUAL "glib")
-     find_package(GLIB 2.36 REQUIRED COMPONENTS gio gio-unix gobject)
-     SET_AND_EXPOSE_TO_BUILD(USE_GLIB 1)
-     SET_AND_EXPOSE_TO_BUILD(USE_GLIB_EVENT_LOOP 1)

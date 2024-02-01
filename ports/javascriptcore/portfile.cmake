@@ -1,15 +1,13 @@
 vcpkg_from_github(
       OUT_SOURCE_PATH SOURCE_PATH
       REPO webkit/webkit
-      REF WebKit-7616.1.27.211.1
-      SHA512 aea5feb085f9adaa6efbbb840b2bdbc677c69c82c53c611ef9b527ae4ea2490a983dfdc55eb8aa471ab9975b748ea51d2cf9f2c853454904018ab8bb0ec77ad0
+      REF a07d3e4e2067578a818215d89f5742b5e9707389
+      SHA512 f7cfe2e1489e4151311811b9d8f5ee1a9850099d5035e646260fd313816d8d3407517d81b8cb851323d08dcb0915b6cfa783636b91130516e5c4942527d10821
       HEAD_REF main
       PATCHES
         remove_webkit_find_package.patch
         tune_jsconly_port_for_windows.patch
-        tune_wtf.patch
         modify_install_rules.patch
-        disable_api_tests.patch
 )
 
 vcpkg_find_acquire_program(RUBY)

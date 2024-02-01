@@ -1,8 +1,8 @@
 diff --git a/Source/cmake/WebKitCommon.cmake b/Source/cmake/WebKitCommon.cmake
-index d85ee1813b4b..1670ea855ebf 100644
+index f20a8d06d914..16c7846511ef 100644
 --- a/Source/cmake/WebKitCommon.cmake
 +++ b/Source/cmake/WebKitCommon.cmake
-@@ -222,7 +222,7 @@ if (NOT HAS_RUN_WEBKIT_COMMON)
+@@ -231,7 +231,7 @@ if (NOT HAS_RUN_WEBKIT_COMMON)
      include(WebKitCompilerFlags)
      include(WebKitStaticAnalysis)
      include(WebKitFeatures)

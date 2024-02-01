@@ -12,12 +12,16 @@ index aa99898dc4f1..17db4640001e 100644
  
  # Remove this cmake_policy() after upgrading cmake_minimum_required() to 3.20.
 diff --git a/Source/JavaScriptCore/CMakeLists.txt b/Source/JavaScriptCore/CMakeLists.txt
-index a64c09b5d470..80c45bd91c17 100644
+index 5fbb9a3bc110..cab1c6927b41 100644
 --- a/Source/JavaScriptCore/CMakeLists.txt
 +++ b/Source/JavaScriptCore/CMakeLists.txt
-@@ -1490,6 +1490,13 @@ WEBKIT_COPY_FILES(JavaScriptCore_CopyHeaders
-     FLATTENED
- )
+@@ -1569,10 +1569,22 @@ if (NOT "${PORT}" STREQUAL "Mac")
+     if (${JavaScriptCore_LIBRARY_TYPE} STREQUAL "SHARED")
+         WEBKIT_POPULATE_LIBRARY_VERSION(JAVASCRIPTCORE)
+         set_target_properties(JavaScriptCore PROPERTIES VERSION ${JAVASCRIPTCORE_VERSION} SOVERSION ${JAVASCRIPTCORE_VERSION_MAJOR})
+-        install(TARGETS JavaScriptCore DESTINATION "${LIB_INSTALL_DIR}")
+     endif ()
+ endif ()
  
 +target_sources(JavaScriptCore PUBLIC
 +    FILE_SET install_headers
@@ -25,30 +29,13 @@ index a64c09b5d470..80c45bd91c17 100644
 +    BASE_DIRS API
 +    FILES ${JavaScriptCore_PUBLIC_FRAMEWORK_HEADERS}
 +)
-+
- WEBKIT_COPY_FILES(JavaScriptCore_CopyPrivateHeaders
-     DESTINATION ${JavaScriptCore_PRIVATE_FRAMEWORK_HEADERS_DIR}/JavaScriptCore
-     FILES ${JavaScriptCore_PRIVATE_FRAMEWORK_HEADERS}
-@@ -1548,9 +1555,15 @@ if (NOT "${PORT}" STREQUAL "Mac")
-     if (${JavaScriptCore_LIBRARY_TYPE} STREQUAL "SHARED")
-         WEBKIT_POPULATE_LIBRARY_VERSION(JAVASCRIPTCORE)
-         set_target_properties(JavaScriptCore PROPERTIES VERSION ${JAVASCRIPTCORE_VERSION} SOVERSION ${JAVASCRIPTCORE_VERSION_MAJOR})
--        install(TARGETS JavaScriptCore DESTINATION "${LIB_INSTALL_DIR}")
-     endif ()
- endif ()
-+install(
-+          TARGETS JavaScriptCore
-+          ARCHIVE DESTINATION "${LIB_INSTALL_DIR}"
-+          LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
-+          RUNTIME DESTINATION "${LIBEXEC_INSTALL_DIR}"
-+          FILE_SET install_headers DESTINATION "${CMAKE_INSTALL_PREFIX}/include/JavaScriptCore"
++install(TARGETS JavaScriptCore
++    ARCHIVE DESTINATION "${LIB_INSTALL_DIR}"
++    LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
++    RUNTIME DESTINATION "${LIBEXEC_INSTALL_DIR}"
++    FILE_SET install_headers DESTINATION "${CMAKE_INSTALL_PREFIX}/include/JavaScriptCore"
 +)
- 
++
  # Force staging of shared scripts, even if they aren't directly used to build JavaScriptCore.
  
-@@ -1565,4 +1578,4 @@ if (CMAKE_GENERATOR MATCHES "Visual Studio")
-     add_dependencies(JavaScriptCoreSharedScripts JSCBuiltins)
- endif ()
- 
--add_subdirectory(shell)
-+# add_subdirectory(shell)
+ add_custom_target(JavaScriptCoreSharedScripts DEPENDS ${JavaScriptCore_SCRIPTS})
