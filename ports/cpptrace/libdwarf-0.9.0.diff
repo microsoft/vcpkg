@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 418afae..4e94083 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -350,7 +350,7 @@ if(CPPTRACE_GET_SYMBOLS_WITH_LIBDWARF)
+   if(CPPTRACE_CONAN)
+     target_link_libraries(${target_name} PRIVATE libdwarf::libdwarf)
+   elseif(CPPTRACE_VCPKG)
+-    target_link_libraries(${target_name} PRIVATE $<IF:$<TARGET_EXISTS:libdwarf::dwarf-static>,libdwarf::dwarf-static,libdwarf::dwarf-shared>)
++    target_link_libraries(${target_name} PRIVATE libdwarf::dwarf)
+   else()
+     target_link_libraries(${target_name} PRIVATE libdwarf::dwarf-static)
+   endif()

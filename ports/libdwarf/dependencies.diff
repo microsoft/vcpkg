@@ -8,9 +8,9 @@ index f444af27..d021d919 100644
  
 +find_package(zstd CONFIG REQUIRED)
 +if(TARGET zstd::libzstd_shared)
-+  add_library(ZSTD::ZSTD ALIAS zstd::libzstd_shared)
++  set(ZSTD_LIB zstd::libzstd_shared)
 +else()
-+  add_library(ZSTD::ZSTD ALIAS zstd::libzstd_static)
++  set(ZSTD_LIB zstd::libzstd_static)
 +endif()
 +
  message(STATUS "CMAKE_SIZEOF_VOID_P ... " ${CMAKE_SIZEOF_VOID_P} )
