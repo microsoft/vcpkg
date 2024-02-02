@@ -14,7 +14,7 @@ index 704da4de8..e8cfb765c 100644
  
 -find_package(Protobuf REQUIRED)
 +include(CMakeFindDependencyMacro)
-+find_dependency(Protobuf CONFIG)
++find_dependency(protobuf CONFIG)
 +
 +# Ensure transitive dependencies are present for static builds
 +if(NOT eCAL_IS_SHARED)
