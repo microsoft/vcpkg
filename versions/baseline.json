@@ -6378,7 +6378,7 @@
     },
     "openmesh": {
       "baseline": "9.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openmpi": {
       "baseline": "4.1.6",
