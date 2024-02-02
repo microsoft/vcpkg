@@ -168,8 +168,7 @@
             "mlir"
           ]
         },
-        "pybind11",
-        "python3"
+        "pybind11"
       ]
     },
     "enable-rtti": {
@@ -294,7 +293,8 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "tools"
+            "tools",
+            "utils"
           ]
         }
       ]
