@@ -1,6 +1,7 @@
 {
   "name": "google-cloud-cpp",
   "version": "2.20.0",
+  "port-version": 1,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -1098,6 +1099,18 @@
     },
     "retail": {
       "description": "Retail API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "rpc": {
+      "description": "RPC API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
