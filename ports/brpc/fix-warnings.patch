@@ -1,0 +1,46 @@
+diff --git a/src/brpc/policy/thrift_protocol.cpp b/src/brpc/policy/thrift_protocol.cpp
+index d53ec5e9..afbb3a44 100755
+--- a/src/brpc/policy/thrift_protocol.cpp
++++ b/src/brpc/policy/thrift_protocol.cpp
+@@ -82,7 +82,7 @@ ReadThriftMessageBegin(butil::IOBuf* body,
+     size_t k = body->copy_to(version_and_len_buf, sizeof(version_and_len_buf));
+     if (k != sizeof(version_and_len_buf) ) {
+         return butil::Status(-1, "Fail to copy %" PRIu64 " bytes from body",
+-                             sizeof(version_and_len_buf));
++                             (uint64_t)sizeof(version_and_len_buf));
+     }
+     *mtype = (apache::thrift::protocol::TMessageType)
+         (ntohl(version_and_len_buf[0]) & 0x000000FF);
+@@ -95,7 +95,7 @@ ReadThriftMessageBegin(butil::IOBuf* body,
+     char buf[sizeof(version_and_len_buf) + method_name_length + 4];
+     k = body->cutn(buf, sizeof(buf));
+     if (k != sizeof(buf)) {
+-        return butil::Status(-1, "Fail to cut %" PRIu64 " bytes", sizeof(buf));
++        return butil::Status(-1, "Fail to cut %" PRIu64 " bytes", (uint64_t)sizeof(buf));
+     }
+     method_name->assign(buf + sizeof(version_and_len_buf), method_name_length);
+     // suppress strict-aliasing warning
+@@ -163,6 +163,7 @@ bool ReadThriftStruct(const butil::IOBuf& body,
+         }
+ 
+         xfer += iprot.readStructEnd();
++        (void)xfer;
+         iprot.getTransport()->readEnd();
+     } catch (std::exception& e) {
+         LOG(WARNING) << "Catched thrift exception: " << e.what();
+@@ -321,6 +322,7 @@ void ThriftClosure::DoRun() {
+         xfer += oprot.writeFieldEnd();
+         xfer += oprot.writeFieldStop();
+         xfer += oprot.writeStructEnd();
++        (void)xfer;
+ 
+         oprot.writeMessageEnd();
+         oprot.getTransport()->writeEnd();
+@@ -709,6 +711,7 @@ void SerializeThriftRequest(butil::IOBuf* request_buf, Controller* cntl,
+         xfer += oprot.writeFieldEnd();
+         xfer += oprot.writeFieldStop();
+         xfer += oprot.writeStructEnd();
++        (void)xfer;
+ 
+         oprot.writeMessageEnd();
+         oprot.getTransport()->writeEnd();

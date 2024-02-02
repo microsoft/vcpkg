@@ -1670,7 +1670,7 @@
     },
     "cld3": {
       "baseline": "3.0.14",
-      "port-version": 2
+      "port-version": 3
     },
     "clfft": {
       "baseline": "2.12.2",
@@ -2446,7 +2446,7 @@
     },
     "ecal": {
       "baseline": "5.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ecm": {
       "baseline": "5.98.0",

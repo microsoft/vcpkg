@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-build.patch
         fix-glog.patch
         protobuf.patch
+        fix-warnings.patch
 )
 
 vcpkg_cmake_configure(
