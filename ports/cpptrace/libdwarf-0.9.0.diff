@@ -11,3 +11,29 @@ index 418afae..4e94083 100644
    else()
      target_link_libraries(${target_name} PRIVATE libdwarf::dwarf-static)
    endif()
+diff --git a/src/symbols/symbols_with_libdwarf.cpp b/src/symbols/symbols_with_libdwarf.cpp
+index a13c1bd..1e33f9d 100644
+--- a/src/symbols/symbols_with_libdwarf.cpp
++++ b/src/symbols/symbols_with_libdwarf.cpp
+@@ -20,7 +20,7 @@
+ #include <unordered_map>
+ #include <vector>
+
+-#ifdef CPPTRACE_USE_EXTERNAL_LIBDWARF
++#if 0
+ #include <libdwarf/libdwarf.h>
+ #include <libdwarf/dwarf.h>
+ #else
+diff --git a/src/utils/dwarf.hpp b/src/utils/dwarf.hpp
+index 61a8ea5..2210de3 100644
+--- a/src/utils/dwarf.hpp
++++ b/src/utils/dwarf.hpp
+@@ -9,7 +9,7 @@
+ #include <stdexcept>
+ #include <type_traits>
+
+-#ifdef CPPTRACE_USE_EXTERNAL_LIBDWARF
++#if 0
+ #include <libdwarf/libdwarf.h>
+ #include <libdwarf/dwarf.h>
+ #else

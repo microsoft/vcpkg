@@ -1,18 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f444af27..d021d919 100644
+index 70839abd..04b0f86f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -189,6 +189,13 @@ if (ZLIB_FOUND AND ZSTD_FOUND )
-   set(HAVE_ZSTD_H TRUE)
- endif()
+@@ -196,6 +196,12 @@ if (ENABLE_DECOMPRESSION)
+     set(HAVE_ZSTD TRUE)
+     set(HAVE_ZSTD_H TRUE)
+   endif()
++  find_package(zstd CONFIG REQUIRED)
++  if(TARGET zstd::libzstd_shared)
++    set(ZSTD_LIB zstd::libzstd_shared)
++  else()
++    set(ZSTD_LIB zstd::libzstd_static)
++  endif()
+ endif ()
  
-+find_package(zstd CONFIG REQUIRED)
-+if(TARGET zstd::libzstd_shared)
-+  set(ZSTD_LIB zstd::libzstd_shared)
-+else()
-+  set(ZSTD_LIB zstd::libzstd_static)
-+endif()
-+
  message(STATUS "CMAKE_SIZEOF_VOID_P ... " ${CMAKE_SIZEOF_VOID_P} )
  
  #  DW_FWALLXX are gnu C++ options.

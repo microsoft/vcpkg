@@ -1,0 +1,13 @@
+diff --git a/src/lib/libdwarf/CMakeLists.txt b/src/lib/libdwarf/CMakeLists.txt
+index 7500c9f4..ae367cc1 100644
+--- a/src/lib/libdwarf/CMakeLists.txt
++++ b/src/lib/libdwarf/CMakeLists.txt
+@@ -105,7 +105,7 @@ target_include_directories(dwarf PUBLIC
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+   )
+ if(ZLIB_FOUND AND ZSTD_FOUND)
+-  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ZSTD::ZSTD ) 
++  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ${ZSTD_LIB} ) 
+ endif()
+ set_target_properties(dwarf PROPERTIES PUBLIC_HEADER "libdwarf.h;dwarf.h")
+ 
