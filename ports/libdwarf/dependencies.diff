@@ -16,6 +16,20 @@ index f444af27..d021d919 100644
  message(STATUS "CMAKE_SIZEOF_VOID_P ... " ${CMAKE_SIZEOF_VOID_P} )
  
  #  DW_FWALLXX are gnu C++ options.
+diff --git a/src/lib/libdwarf/CMakeLists.txt b/src/lib/libdwarf/CMakeLists.txt
+index 4ad5c4fb..ccc1c312 100644
+--- a/src/lib/libdwarf/CMakeLists.txt
++++ b/src/lib/libdwarf/CMakeLists.txt
+@@ -108,7 +108,7 @@ target_include_directories(dwarf PUBLIC
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+   )
+ if(ZLIB_FOUND AND ZSTD_FOUND)
+-  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ZSTD::ZSTD ) 
++  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ${ZSTD_LIB} ) 
+ endif()
+ 
+ set(SUFFIX $<$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>:64>)
+
 diff --git a/src/lib/libdwarf/cmake/libdwarf-config.cmake b/src/lib/libdwarf/cmake/libdwarf-config.cmake
 index 604c563c..53623603 100644
 --- a/src/lib/libdwarf/cmake/libdwarf-config.cmake

@@ -12,15 +12,11 @@ index 6d2c328b..bc105813 100644
  endif()
  set(LIBDIR lib${SUFFIX})
 diff --git a/src/lib/libdwarf/CMakeLists.txt b/src/lib/libdwarf/CMakeLists.txt
-index 4ad5c4fb..a3d3f429 100644
+index ccc1c312..98ab2879 100644
 --- a/src/lib/libdwarf/CMakeLists.txt
 +++ b/src/lib/libdwarf/CMakeLists.txt
-@@ -108,10 +108,9 @@ target_include_directories(dwarf PUBLIC
-     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-   )
- if(ZLIB_FOUND AND ZSTD_FOUND)
--  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ZSTD::ZSTD ) 
-+  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ${ZSTD_LIB} ) 
+@@ -111,7 +111,6 @@ if(ZLIB_FOUND AND ZSTD_FOUND)
+   target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ${ZSTD_LIB} ) 
  endif()
  
 -set(SUFFIX $<$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>:64>)
