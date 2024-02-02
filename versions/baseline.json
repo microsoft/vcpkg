@@ -9234,7 +9234,7 @@
     },
     "wxwidgets": {
       "baseline": "3.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "wyhash": {
       "baseline": "2023-01-25",
