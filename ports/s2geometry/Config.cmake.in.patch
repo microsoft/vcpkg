@@ -1,9 +1,11 @@
 diff --git a/Config.cmake.in b/Config.cmake.in
-new file mode 100644
-index 0000000..42bcf00
---- /dev/null
+index 939d933..b8b0e33 100644
+--- a/Config.cmake.in
 +++ b/Config.cmake.in
-@@ -0,0 +1,3 @@
-+@PACKAGE_INIT@
+@@ -1,3 +1,6 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(absl CONFIG)
 +
-+include ( "${CMAKE_CURRENT_LIST_DIR}/unofficial-s2Targets.cmake" )
+ include("${CMAKE_CURRENT_LIST_DIR}/s2Targets.cmake")
