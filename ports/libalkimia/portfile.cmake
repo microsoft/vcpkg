@@ -1,12 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/alkimia
-    REF 595186bee8409f30e5db091fffa245fc53ad92e8
-    SHA512 509082e22bc0a2ce0586e1167df14fd42ac85321315c1ee2914f60e695d1e2e8beae4fc93d16d0053edb520fc391a3dbe30777638285b295e761ad70512688ca
+    REF 8f21e4f5154f6d390609174783705ccc0559dc59
+    SHA512 c03ac5b52c858dbc6c71a4c5c3908057dba0c6094e33441f93490f2b1e7bd3b516d141b9ef3c50b11fc8002c129280b274721e38972cd76c7092a2f555a13975
     HEAD_REF master
-    PATCHES
-        fix_explicit_shared_lib.diff
-        dll_names.diff                  # https://invent.kde.org/office/alkimia/-/commit/0ff901025a747ab31ab7efba9f8899b06774f60a
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
