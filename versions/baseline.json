@@ -4898,7 +4898,7 @@
     },
     "libsrtp": {
       "baseline": "2.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libssh": {
       "baseline": "0.10.5",
