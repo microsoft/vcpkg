@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davea42/libdwarf-code
     REF "v${VERSION}"
-    SHA512 3117c69cc77d5a1189aeb1ea7e74d917dedfb84e9e9e98e3df7fec930f8183d12f55bb12e4871ed3746cdb19a29aba924bc73d6334b23bbb6413a1f4be67d499
+    SHA512 757ac42f76d5e9a90e6fab33f3af0ed53497264e2802b838df485d34ada480e5a6c5cec7d974e34b4404a2e49dbb86a979403d0ff28a5227d6550a1ced6b343b
     HEAD_REF main
     PATCHES
         dependencies.diff
