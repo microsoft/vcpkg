@@ -18,7 +18,7 @@ vcpkg_list(SET known_delisted
 
 # Ignore these dependencies (e.g. interactive or effectively optional)
 vcpkg_list(SET ignored_dependencies
-    autoconf2.13 autoconf2.69
+    autoconf2.13 autoconf2.69 autoconf2.71
     automake1.11 automake1.12 automake1.13 automake1.14 automake1.15
     db
     gdbm
