@@ -11,6 +11,11 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-library-install-path.patch
         fix-pkgconfig.patch
+
+        # This patch is a combination of these two:
+        # https://gitlab.vci.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/commit/1d4a866282ace376c8e3ba05c21ce3bcc6643040
+        # https://gitlab.vci.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/commit/a7f30b6f70447932444f5b518840ca26e9461fa9
+        restore-c++11-compatibility.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

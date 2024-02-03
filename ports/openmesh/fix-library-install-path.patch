@@ -37,7 +37,7 @@ index 7a5269c..e3f87ff 100644
      FILE(GLOB files_install_libs "${CMAKE_BINARY_DIR}/Build/lib/*.lib" )
      FILE(GLOB files_install_dlls "${CMAKE_BINARY_DIR}/Build/*.dll" )
      INSTALL(FILES ${files_install_libs} DESTINATION lib )
-@@ -240,7 +240,7 @@ target_include_directories(OpenMeshCore PUBLIC
+@@ -240,7 +240,8 @@ target_include_directories(OpenMeshCore PUBLIC
  endif ()
  
  install(TARGETS OpenMeshCore EXPORT OpenMeshConfig
@@ -47,6 +47,7 @@ index 7a5269c..e3f87ff 100644
 +  ARCHIVE DESTINATION lib
 +  LIBRARY DESTINATION lib
 +  RUNTIME DESTINATION bin)
++  target_compile_features(OpenMeshCore PUBLIC cxx_std_11)
  
 diff --git a/src/OpenMesh/Tools/CMakeLists.txt b/src/OpenMesh/Tools/CMakeLists.txt
 index 0170e2b..e40dfa1 100644
