@@ -364,9 +364,9 @@ function(z_vcpkg_fixup_install_name_rpath_in_dir)
       list(FILTER dep_install_names EXCLUDE REGEX "^/System/Library/.*(dylib|so)$")
 
       # Iterate over the filtered dependencies and fix their install names
-      foreach(dep_install_name IN LISTS dep_install_names)
-        string(REGEX MATCH "[^/]+(.dylib|.so)" dep_install_name "${dep_install_name}")
-        message(DEBUG "dep_install_name: ${dep_install_name}")
+      foreach(orig_dep_install_name IN LISTS dep_install_names)
+        string(REGEX MATCH "[^/]+(.dylib|.so)" dep_install_name "${orig_dep_install_name}")
+	message(DEBUG "dep_install_name: ${dep_install_name} (${orig_dep_install_name})")
                 
         if(type EQUAL 2)
           file(GLOB_RECURSE dep_files LIST_DIRECTORIES FALSE "${CURRENT_PACKAGES_DIR}/lib/${dep_install_name}")
@@ -386,7 +386,7 @@ function(z_vcpkg_fixup_install_name_rpath_in_dir)
           message(DEBUG "${dep_install_name} match with ${dep_file} of install name ${id_name}")
 
           execute_process(
-            COMMAND "${install_name_tool_cmd}" -change "${dep_install_name}" "${id_name}" "${file}"
+            COMMAND "${install_name_tool_cmd}" -change "${orig_dep_install_name}" "${id_name}" "${file}"
             OUTPUT_VARIABLE change_dep_install_name_ov
             RESULT_VARIABLE change_dep_install_name_rv
           )
