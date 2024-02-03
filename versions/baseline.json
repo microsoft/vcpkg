@@ -13,8 +13,8 @@
       "port-version": 2
     },
     "ableton-link": {
-      "baseline": "3.0.6",
-      "port-version": 2
+      "baseline": "3.1.0",
+      "port-version": 0
     },
     "abseil": {
       "baseline": "20230802.1",
