@@ -3706,7 +3706,7 @@
     },
     "json-schema-validator": {
       "baseline": "2.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "json-spirit": {
       "baseline": "4.1.0",
