@@ -230,23 +230,15 @@ function(z_vcpkg_fixup_install_name_rpath_in_dir)
     install_name_tool_cmd
     NAMES install_name_tool
     DOC "Absolute path of install_name_tool cmd"
+    REQUIRED
   )
-
-  if(NOT install_name_tool_cmd)
-    message(WARNING " install_name_tool not found!")
-    return()
-  endif()
 
   find_program(
     otool_cmd
     NAMES otool
     DOC "Absolute path of otool cmd"
+    REQUIRED
   )
-
-  if(NOT otool_cmd)
-    message(WARNING "otool not found!")
-    return()
-  endif()
 
   message(DEBUG "Start fix install name and rpath for Mach-O files")
 
@@ -331,7 +323,7 @@ function(z_vcpkg_fixup_install_name_rpath_in_dir)
         )
   
         if(NOT set_install_name_rv EQUAL 0)
-          message(WARNING "Failed, install_name_tool -id ${id_name} ${file}, \n${set_install_name_ov}")
+          message(FATAL_ERROR "Failed, install_name_tool -id ${id_name} ${file}, \n${set_install_name_ov}")
           continue()
         endif()
       endif()
@@ -346,7 +338,7 @@ function(z_vcpkg_fixup_install_name_rpath_in_dir)
       )
 
       if(NOT set_rpath_rv EQUAL 0)
-        message(WARNING "Failed, install_name_tool -add_rpath ${rpath} ${file}, \n${set_rpath_ov}")
+        message(FATAL_ERROR "Failed, install_name_tool -add_rpath ${rpath} ${file}, \n${set_rpath_ov}")
         continue()
       endif()
 
@@ -400,7 +392,7 @@ function(z_vcpkg_fixup_install_name_rpath_in_dir)
           )
           
           if(NOT change_dep_install_name_rv EQUAL 0)
-            message(WARNING "Failed, install_name_tool -change ${dep_install_name} ${id_name} ${file}, \n${change_dep_install_name_ov}")
+            message(FATAL_ERROR "Failed, install_name_tool -change ${dep_install_name} ${id_name} ${file}, \n${change_dep_install_name_ov}")
             continue()
           else()
             message(DEBUG "Fix ${file}: ${dep_install_name} to ${id_name}")
