@@ -157,7 +157,7 @@ endfunction()
 function(vcpkg_acquire_msys out_msys_root)
     cmake_parse_arguments(PARSE_ARGV 1 "arg"
         "NO_DEFAULT_PACKAGES;Z_ALL_PACKAGES"
-        ""
+        "Z_DECLARE_EXTRA_PACKAGES_COMMAND"
         "PACKAGES;DIRECT_PACKAGES"
     )
 
@@ -166,6 +166,9 @@ function(vcpkg_acquire_msys out_msys_root)
     endif()
 
     z_vcpkg_acquire_msys_declare_all_packages()
+    if(NOT "${arg_Z_DECLARE_EXTRA_PACKAGES_COMMAND}" STREQUAL "")
+        cmake_language(CALL "${arg_Z_DECLARE_EXTRA_PACKAGES_COMMAND}")
+    endif()
     set(requested "${arg_PACKAGES}")
     if(arg_Z_ALL_PACKAGES)
         set(requested "${Z_VCPKG_MSYS_PACKAGES_AVAILABLE}")
@@ -507,6 +510,7 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
     z_vcpkg_acquire_msys_declare_package(
         URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gcc-libgfortran-13.2.0-3-any.pkg.tar.zst"
         SHA512 da0902979b2fd1a556d639587caeb24a756bdab29f6179fdb2deac3463bb7c150f13db6b944da2a7ade69d496199b7e8bd22ec1515beb26fab1a01e3b4e6c2bd
+        PROVIDES mingw-w64-x86_64-fc-libs
         DEPS mingw-w64-x86_64-gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
