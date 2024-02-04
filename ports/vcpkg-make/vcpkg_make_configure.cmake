@@ -6,7 +6,7 @@ function(vcpkg_make_configure) #
 # z_vcpkg_is_autoconf
 # z_vcpkg_is_automake
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "COPY_SOURCE;DISABLE_MSVC_WRAPPERS;NO_CPPFLAGS;ADD_BIN_TO_PATH;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
+        "AUTOCONFIG;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;NO_CPPFLAGS;ADD_BIN_TO_PATH;NO_DEFAULT_OPTIONS;NO_MSVC_FLAG_ESCAPING;USE_RESPONSE_FILES"
         "SOURCE_PATH;SHELL"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;POST_CONFIGURE_CMAKE_COMMANDS;LANGUAGES"
     )
@@ -69,6 +69,10 @@ function(vcpkg_make_configure) #
       vcpkg_make_get_shell(arg_SHELL)
     endif()
     set(shell_cmd "${arg_SHELL}")
+
+    if(arg_AUTOCONFIG)
+      vcpkg_run_autoreconf("${shell_cmd}" "${src_dir}")
+    endif()
 
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
