@@ -565,7 +565,7 @@
       "port-version": 1
     },
     "bento4": {
-      "baseline": "1.6.0-640",
+      "baseline": "1.6.0-641",
       "port-version": 0
     },
     "berkeleydb": {
