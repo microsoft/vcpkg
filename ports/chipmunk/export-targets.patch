@@ -3,8 +3,8 @@ index 34882d1..d47c303 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -31,7 +31,9 @@ if(BUILD_SHARED)
-          # need to explicitly link to the math library because the CMake/Android toolchains may not do it automatically
-          target_link_libraries(chipmunk m)
+ 	  # need to explicitly link to the math library because the CMake/Android toolchains may not do it automatically
+ 	  target_link_libraries(chipmunk m)
    endif(ANDROID OR UNIX)
 -  install(TARGETS chipmunk RUNTIME DESTINATION ${BIN_INSTALL_DIR}
 +  target_include_directories(chipmunk INTERFACE $<INSTALL_INTERFACE:include>)
@@ -27,7 +27,7 @@ index 34882d1..d47c303 100644
 +                                    ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
    endif(INSTALL_STATIC)
  endif(BUILD_STATIC)
-
+ 
 @@ -57,3 +62,9 @@ if(BUILD_SHARED OR INSTALL_STATIC)
    install(FILES ${chipmunk_public_header} DESTINATION include/chipmunk)
    install(FILES ${chipmunk_constraint_header} DESTINATION include/chipmunk/constraints)
