@@ -1,15 +1,15 @@
 {
   "name": "assimp",
   "version": "5.3.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": "The Open Asset import library",
   "homepage": "https://github.com/assimp/assimp",
   "license": "BSD-3-Clause",
   "dependencies": [
     "draco",
+    "jhasse-poly2tri",
     "kubazip",
     "minizip",
-    "poly2tri",
     "polyclipping",
     "pugixml",
     "rapidjson",

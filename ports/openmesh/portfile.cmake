@@ -8,6 +8,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-library-install-path.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -28,7 +30,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/OpenMesh/cmake)
+vcpkg_cmake_config_fixup(PACKAGE_NAME OpenMesh CONFIG_PATH "share/OpenMesh/cmake")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libdata/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
@@ -55,6 +57,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   endif()
 endif()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/OpenMesh/vcpkg-cmake-wrapper.cmake" @ONLY)
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
