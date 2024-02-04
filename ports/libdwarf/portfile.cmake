@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
         dependencies.diff
         msvc-runtime.diff
-        zstd-link.diff
         off_t.diff
 )
 
@@ -28,7 +27,7 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_tools(TOOL_NAMES dwarfdump AUTO_CLEAN)
 
 if(BUILD_SHARED)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libdwarf/libdwarf.h" "ifndef LIBDWARF_STATIC" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libdwarf.h" "ifndef LIBDWARF_STATIC" "if 1")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
