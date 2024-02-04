@@ -40,7 +40,7 @@
       "dependencies": [
         {
           "$package": "Boost",
-          "name":"boost",
+          "name": "boost",
           "platform": "!uwp"
         },
         {
@@ -158,6 +158,7 @@
           "name": "tiff",
           "default-features": false,
           "features": [
+            "libdeflate",
             "zstd"
           ]
         },

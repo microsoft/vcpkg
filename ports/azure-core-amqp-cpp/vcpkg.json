@@ -1,7 +1,10 @@
 {
-  "$comment": "NOTE: All changes made to this file will get overwritten by the next port release. Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp.",
+  "$comment": [
+    "NOTE: All changes made to this file will get overwritten by the next port release.",
+    "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
+  ],
   "name": "azure-core-amqp-cpp",
-  "version-semver": "1.0.0-beta.5",
+  "version-semver": "1.0.0-beta.6",
   "description": [
     "Microsoft Azure AMQP SDK for C++",
     "This library provides AMQP functionality to Azure SDK services."
