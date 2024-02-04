@@ -3,7 +3,7 @@ string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" MAJOR_MINOR "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
-    REF client_release/${MAJOR_MINOR}/${VERSION}
+    REF "client_release/${MAJOR_MINOR}/${VERSION}"
     SHA512 d66664df49b83fb71e8f06e6f9ca0aee720ec04b1fb95b08426ee9af365403605624ba6dc1f78f3fba3f966d365b610ed24ceffdc54b071509f4f0bf959e027c
     HEAD_REF master
 )
