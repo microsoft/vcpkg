@@ -1,4 +1,0 @@
-The package chipmunk provides CMake targets:
-
-  find_package(unofficial-chipmunk CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:unofficial::chipmunk::chipmunk>,unofficial::chipmunk::chipmunk,unofficial::chipmunk::chipmunk_static>)
