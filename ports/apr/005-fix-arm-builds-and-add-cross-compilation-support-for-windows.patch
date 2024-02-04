@@ -1,0 +1,671 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d8813ed56..4db3ed66c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,7 +17,7 @@
+ 
+ # CMAKE_MINIMUM_REQUIRED should be the first directive in the file:
+ # https://cmake.org/cmake/help/latest/command/cmake_minimum_required.html
+-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
++CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
+ 
+ PROJECT(APR C)
+ 
+@@ -25,9 +25,22 @@ OPTION(APR_INSTALL_PRIVATE_H  "Install selected private .h files (for httpd)"  O
+ OPTION(APR_HAVE_IPV6        "IPv6 support"                 ON)
+ OPTION(INSTALL_PDB          "Install .pdb files (if generated)"  ON)
+ OPTION(APR_BUILD_TESTAPR    "Build the test suite"         OFF)
++OPTION(APR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER "Custom apr_escape_test_char.h header switch for cross-compiling" OFF)
++OPTION(APR_CUSTOM_CHAR_TEST_GEN_BIN "Custom gen_test_char bin switch for cross-compiling" OFF)
++IF (NOT DEFINED APR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER_PATH)
++  SET(APR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER_PATH "${PROJECT_SOURCE_DIR}/apr_escape_test_char/need_enhanced_escapes/apr_escape_test_char.h")
++ENDIF()
++IF (NOT DEFINED APR_CUSTOM_CHAR_TEST_GEN_BIN_PATH)
++  SET(APR_CUSTOM_CHAR_TEST_GEN_BIN_PATH "${PROJECT_BINARY_DIR}/gen_test_char.exe")
++ENDIF ()
+ SET(MIN_WINDOWS_VER             "Vista" 
+     CACHE STRING "Minimum Windows version")
+ 
++file(TO_CMAKE_PATH "${APR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER_PATH}" APR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER_CMAKE_PATH)
++file(TO_NATIVE_PATH "${APR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER_PATH}" APR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER_PATH)
++file(TO_CMAKE_PATH "${APR_CUSTOM_CHAR_TEST_GEN_BIN_PATH}" APR_CUSTOM_CHAR_TEST_GEN_BIN_CMAKE_PATH)
++file(TO_NATIVE_PATH "${APR_CUSTOM_CHAR_TEST_GEN_BIN_PATH}" APR_CUSTOM_CHAR_TEST_GEN_BIN_PATH)
++
+ if (NOT BUILD_SHARED_LIBS)
+   set(TEST_STATIC_LIBS ON)
+ else ()
+@@ -60,20 +73,35 @@ ELSE()
+   SET(win32_winnt_str ${MIN_WINDOWS_VER})
+ ENDIF()
+ 
+-CONFIGURE_FILE(include/apr.hwc
+-               ${PROJECT_BINARY_DIR}/apr.h)
++CONFIGURE_FILE("include/apr.hwc"
++               "${PROJECT_BINARY_DIR}/apr.h")
+ 
+-ADD_EXECUTABLE(gen_test_char tools/gen_test_char.c)
+ 
+-ADD_CUSTOM_COMMAND(
+-  COMMENT "Generating character tables, apr_escape_test_char.h, for current locale"
+-  DEPENDS gen_test_char
+-  COMMAND $<TARGET_FILE:gen_test_char> > ${PROJECT_BINARY_DIR}/apr_escape_test_char.h
+-  OUTPUT ${PROJECT_BINARY_DIR}/apr_escape_test_char.h
+-)
++IF (APR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER)
++  CONFIGURE_FILE(${APR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER_PATH} "${PROJECT_BINARY_DIR}/apr_escape_test_char.h" COPYONLY)
++
++ELSE()
++  IF (APR_CUSTOM_CHAR_TEST_GEN_BIN)
++    CONFIGURE_FILE(${APR_CUSTOM_CHAR_TEST_GEN_BIN_PATH} "${PROJECT_BINARY_DIR}/gen_test_char.exe" COPYONLY)
++    set(gen_test_char_depends "${PROJECT_BINARY_DIR}/gen_test_char.exe")
++    set(gen_test_char_command "${gen_test_char_depends}")
++  ELSE()
++    ADD_EXECUTABLE(gen_test_char "tools/gen_test_char.c")
++    set(gen_test_char_depends "gen_test_char")
++    set(gen_test_char_command "$<TARGET_FILE:gen_test_char>")
++  ENDIF()
++
++  ADD_CUSTOM_COMMAND(
++    COMMENT "Generating character tables, apr_escape_test_char.h, for Windows locale"
++    DEPENDS ${gen_test_char_depends}
++    COMMAND ${gen_test_char_command} "--need-enhanced-escapes" > "${PROJECT_BINARY_DIR}/apr_escape_test_char.h"
++    OUTPUT "${PROJECT_BINARY_DIR}/apr_escape_test_char.h"
++  )
++ENDIF ()
++
+ ADD_CUSTOM_TARGET(
+   test_char_header ALL
+-  DEPENDS ${PROJECT_BINARY_DIR}/apr_escape_test_char.h
++  DEPENDS "${PROJECT_BINARY_DIR}/apr_escape_test_char.h"
+ )
+ 
+ # Generated .h files are stored in PROJECT_BINARY_DIR, not the
+@@ -84,142 +112,144 @@ ADD_CUSTOM_TARGET(
+ #         you've generated apr.h before using a different build
+ 
+ SET(APR_INCLUDE_DIRECTORIES
+-  ${PROJECT_BINARY_DIR}
+-  ${CMAKE_CURRENT_SOURCE_DIR}/include
+-  ${CMAKE_CURRENT_SOURCE_DIR}/include/arch/win32
+-  ${CMAKE_CURRENT_SOURCE_DIR}/include/arch/unix
+-  ${CMAKE_CURRENT_SOURCE_DIR}/include/private
++  "${PROJECT_BINARY_DIR}"
++  "${CMAKE_CURRENT_SOURCE_DIR}/include"
++  "${CMAKE_CURRENT_SOURCE_DIR}/include/arch/win32"
++  "${CMAKE_CURRENT_SOURCE_DIR}/include/arch/unix"
++  "${CMAKE_CURRENT_SOURCE_DIR}/include/private"
+ )
+ 
+ SET(APR_SYSTEM_LIBS
+   ws2_32
+   rpcrt4
++  advapi32
++  shell32
+ )
+ 
+ INCLUDE_DIRECTORIES(${APR_INCLUDE_DIRECTORIES})
+ 
+ SET(APR_PUBLIC_HEADERS_STATIC
+-  include/apr_allocator.h
+-  include/apr_atomic.h
+-  include/apr_cstr.h
+-  include/apr_dso.h
+-  include/apr_env.h
+-  include/apr_errno.h
+-  include/apr_escape.h
+-  include/apr_file_info.h
+-  include/apr_file_io.h
+-  include/apr_fnmatch.h
+-  include/apr_general.h
+-  include/apr_getopt.h
+-  include/apr_global_mutex.h
+-  include/apr_hash.h
+-  include/apr_inherit.h
+-  include/apr_lib.h
+-  include/apr_mmap.h
+-  include/apr_network_io.h
+-  include/apr_perms_set.h
+-  include/apr_poll.h
+-  include/apr_pools.h
+-  include/apr_portable.h
+-  include/apr_proc_mutex.h
+-  include/apr_random.h
+-  include/apr_ring.h
+-  include/apr_shm.h
+-  include/apr_signal.h
+-  include/apr_skiplist.h
+-  include/apr_strings.h
+-  include/apr_support.h
+-  include/apr_tables.h
+-  include/apr_thread_cond.h
+-  include/apr_thread_mutex.h
+-  include/apr_thread_proc.h
+-  include/apr_thread_rwlock.h
+-  include/apr_time.h
+-  include/apr_user.h
+-  include/apr_version.h
+-  include/apr_want.h
++  "include/apr_allocator.h"
++  "include/apr_atomic.h"
++  "include/apr_cstr.h"
++  "include/apr_dso.h"
++  "include/apr_env.h"
++  "include/apr_errno.h"
++  "include/apr_escape.h"
++  "include/apr_file_info.h"
++  "include/apr_file_io.h"
++  "include/apr_fnmatch.h"
++  "include/apr_general.h"
++  "include/apr_getopt.h"
++  "include/apr_global_mutex.h"
++  "include/apr_hash.h"
++  "include/apr_inherit.h"
++  "include/apr_lib.h"
++  "include/apr_mmap.h"
++  "include/apr_network_io.h"
++  "include/apr_perms_set.h"
++  "include/apr_poll.h"
++  "include/apr_pools.h"
++  "include/apr_portable.h"
++  "include/apr_proc_mutex.h"
++  "include/apr_random.h"
++  "include/apr_ring.h"
++  "include/apr_shm.h"
++  "include/apr_signal.h"
++  "include/apr_skiplist.h"
++  "include/apr_strings.h"
++  "include/apr_support.h"
++  "include/apr_tables.h"
++  "include/apr_thread_cond.h"
++  "include/apr_thread_mutex.h"
++  "include/apr_thread_proc.h"
++  "include/apr_thread_rwlock.h"
++  "include/apr_time.h"
++  "include/apr_user.h"
++  "include/apr_version.h"
++  "include/apr_want.h"
+ )
+ SET(APR_PUBLIC_HEADERS_GENERATED
+-  ${PROJECT_BINARY_DIR}/apr.h
++  "${PROJECT_BINARY_DIR}/apr.h"
+ )
+ 
+ SET(APR_SOURCES
+-  atomic/win32/apr_atomic.c
+-  atomic/win32/apr_atomic64.c
+-  dso/win32/dso.c
+-  encoding/apr_encode.c
+-  encoding/apr_escape.c
+-  file_io/unix/copy.c
+-  file_io/unix/fileacc.c
+-  file_io/unix/filepath_util.c
+-  file_io/unix/fullrw.c
+-  file_io/unix/mktemp.c
+-  file_io/unix/tempdir.c
+-  file_io/win32/buffer.c
+-  file_io/win32/dir.c
+-  file_io/win32/filedup.c
+-  file_io/win32/filepath.c
+-  file_io/win32/filestat.c
+-  file_io/win32/filesys.c
+-  file_io/win32/flock.c
+-  file_io/win32/open.c
+-  file_io/win32/pipe.c
+-  file_io/win32/readwrite.c
+-  file_io/win32/seek.c
+-  locks/win32/proc_mutex.c
+-  locks/win32/thread_cond.c
+-  locks/win32/thread_mutex.c
+-  locks/win32/thread_rwlock.c
+-  memory/unix/apr_pools.c
+-  misc/unix/errorcodes.c
+-  misc/unix/getopt.c
+-  misc/unix/otherchild.c
+-  misc/unix/version.c
+-  misc/win32/charset.c
+-  misc/win32/env.c
+-  misc/win32/internal.c
+-  misc/win32/misc.c
+-  misc/win32/rand.c
+-  misc/win32/start.c
+-  misc/win32/utf8.c
+-  mmap/unix/common.c
+-  mmap/win32/mmap.c
+-  network_io/unix/inet_ntop.c
+-  network_io/unix/inet_pton.c
+-  network_io/unix/multicast.c
+-  network_io/unix/sockaddr.c
+-  network_io/unix/socket_util.c
+-  network_io/win32/sendrecv.c
+-  network_io/win32/sockets.c
+-  network_io/win32/sockopt.c
+-  passwd/apr_getpass.c
+-  poll/unix/poll.c
+-  poll/unix/pollcb.c
+-  poll/unix/pollset.c
+-  poll/unix/select.c
+-  poll/unix/wakeup.c
+-  random/unix/apr_random.c
+-  random/unix/sha2.c
+-  random/unix/sha2_glue.c
+-  shmem/win32/shm.c
+-  strings/apr_cpystrn.c
+-  strings/apr_cstr.c
+-  strings/apr_fnmatch.c
+-  strings/apr_snprintf.c
+-  strings/apr_strings.c
+-  strings/apr_strnatcmp.c
+-  strings/apr_strtok.c
+-  tables/apr_hash.c
+-  tables/apr_skiplist.c
+-  tables/apr_tables.c
+-  threadproc/win32/proc.c
+-  threadproc/win32/signals.c
+-  threadproc/win32/thread.c
+-  threadproc/win32/threadpriv.c
+-  time/win32/time.c
+-  time/win32/timestr.c
+-  user/win32/groupinfo.c
+-  user/win32/userinfo.c
++  "atomic/win32/apr_atomic.c"
++  "atomic/win32/apr_atomic64.c"
++  "dso/win32/dso.c"
++  "encoding/apr_encode.c"
++  "encoding/apr_escape.c"
++  "file_io/unix/copy.c"
++  "file_io/unix/fileacc.c"
++  "file_io/unix/filepath_util.c"
++  "file_io/unix/fullrw.c"
++  "file_io/unix/mktemp.c"
++  "file_io/unix/tempdir.c"
++  "file_io/win32/buffer.c"
++  "file_io/win32/dir.c"
++  "file_io/win32/filedup.c"
++  "file_io/win32/filepath.c"
++  "file_io/win32/filestat.c"
++  "file_io/win32/filesys.c"
++  "file_io/win32/flock.c"
++  "file_io/win32/open.c"
++  "file_io/win32/pipe.c"
++  "file_io/win32/readwrite.c"
++  "file_io/win32/seek.c"
++  "locks/win32/proc_mutex.c"
++  "locks/win32/thread_cond.c"
++  "locks/win32/thread_mutex.c"
++  "locks/win32/thread_rwlock.c"
++  "memory/unix/apr_pools.c"
++  "misc/unix/errorcodes.c"
++  "misc/unix/getopt.c"
++  "misc/unix/otherchild.c"
++  "misc/unix/version.c"
++  "misc/win32/charset.c"
++  "misc/win32/env.c"
++  "misc/win32/internal.c"
++  "misc/win32/misc.c"
++  "misc/win32/rand.c"
++  "misc/win32/start.c"
++  "misc/win32/utf8.c"
++  "mmap/unix/common.c"
++  "mmap/win32/mmap.c"
++  "network_io/unix/inet_ntop.c"
++  "network_io/unix/inet_pton.c"
++  "network_io/unix/multicast.c"
++  "network_io/unix/sockaddr.c"
++  "network_io/unix/socket_util.c"
++  "network_io/win32/sendrecv.c"
++  "network_io/win32/sockets.c"
++  "network_io/win32/sockopt.c"
++  "passwd/apr_getpass.c"
++  "poll/unix/poll.c"
++  "poll/unix/pollcb.c"
++  "poll/unix/pollset.c"
++  "poll/unix/select.c"
++  "poll/unix/wakeup.c"
++  "random/unix/apr_random.c"
++  "random/unix/sha2.c"
++  "random/unix/sha2_glue.c"
++  "shmem/win32/shm.c"
++  "strings/apr_cpystrn.c"
++  "strings/apr_cstr.c"
++  "strings/apr_fnmatch.c"
++  "strings/apr_snprintf.c"
++  "strings/apr_strings.c"
++  "strings/apr_strnatcmp.c"
++  "strings/apr_strtok.c"
++  "tables/apr_hash.c"
++  "tables/apr_skiplist.c"
++  "tables/apr_tables.c"
++  "threadproc/win32/proc.c"
++  "threadproc/win32/signals.c"
++  "threadproc/win32/thread.c"
++  "threadproc/win32/threadpriv.c"
++  "time/win32/time.c"
++  "time/win32/timestr.c"
++  "user/win32/groupinfo.c"
++  "user/win32/userinfo.c"
+ )
+ 
+ SET(APR_TEST_SUITES
+@@ -277,7 +307,7 @@ SET(install_bin_pdb)
+ IF(BUILD_SHARED_LIBS)
+ ADD_LIBRARY(libapr-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libapr.rc)
+ SET(install_targets ${install_targets} libapr-1)
+-SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/libapr-1.pdb)
++SET(install_bin_pdb ${install_bin_pdb} "${PROJECT_BINARY_DIR}/libapr-1.pdb")
+ TARGET_LINK_LIBRARIES(libapr-1 ${APR_SYSTEM_LIBS})
+ # FIXME: Figure out how to use atomics. Disabling for now with "USE_ATOMICS_GENERIC".
+ SET_TARGET_PROPERTIES(libapr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_EXPORT;WINNT;USE_ATOMICS_GENERIC")
+@@ -295,12 +325,12 @@ ENDIF()
+ 
+ # libaprapp-1 and aprapp-1 are static
+ IF(BUILD_SHARED_LIBS)
+-ADD_LIBRARY(libaprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
++ADD_LIBRARY(libaprapp-1 STATIC "misc/win32/apr_app.c" "misc/win32/internal.c" ${APR_PUBLIC_HEADERS_GENERATED})
+ SET(install_targets ${install_targets} libaprapp-1)
+ SET_TARGET_PROPERTIES(libaprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_APP;WINNT")
+ TARGET_INCLUDE_DIRECTORIES(libaprapp-1 INTERFACE $<INSTALL_INTERFACE:include>)
+ ELSE()
+-ADD_LIBRARY(aprapp-1 STATIC misc/win32/apr_app.c misc/win32/internal.c ${APR_PUBLIC_HEADERS_GENERATED})
++ADD_LIBRARY(aprapp-1 STATIC "misc/win32/apr_app.c" "misc/win32/internal.c" ${APR_PUBLIC_HEADERS_GENERATED})
+ SET(install_targets ${install_targets} aprapp-1)
+ SET_TARGET_PROPERTIES(aprapp-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;APR_APP;WINNT")
+ TARGET_INCLUDE_DIRECTORIES(aprapp-1 INTERFACE $<INSTALL_INTERFACE:include>)
+@@ -313,13 +343,13 @@ IF(APR_BUILD_TESTAPR)
+ 
+   # copy data files to build directory so that we can run programs from there
+   EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E make_directory 
+-                  ${PROJECT_BINARY_DIR}/data)
++                  "${PROJECT_BINARY_DIR}/data")
+   EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+-                  ${PROJECT_SOURCE_DIR}/test/data/file_datafile.txt
+-                  ${PROJECT_BINARY_DIR}/data/file_datafile.txt)
++                  "${PROJECT_SOURCE_DIR}/test/data/file_datafile.txt"
++                  "${PROJECT_BINARY_DIR}/data/file_datafile.txt")
+   EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy_if_different
+-                  ${PROJECT_SOURCE_DIR}/test/data/mmap_datafile.txt
+-                  ${PROJECT_BINARY_DIR}/data/mmap_datafile.txt)
++                  "${PROJECT_SOURCE_DIR}/test/data/mmap_datafile.txt"
++                  "${PROJECT_BINARY_DIR}/data/mmap_datafile.txt")
+ 
+   IF(TEST_STATIC_LIBS)
+     SET(whichapr    apr-1)
+@@ -331,7 +361,7 @@ IF(APR_BUILD_TESTAPR)
+     SET(apiflag)
+   ENDIF()
+ 
+-  ADD_EXECUTABLE(testapp test/testapp.c)
++  ADD_EXECUTABLE(testapp "test/testapp.c")
+   TARGET_LINK_LIBRARIES(testapp ${whichapr} ${whichaprapp} ${APR_SYSTEM_LIBS})
+ 
+   if (APR_MSVC_COMPILER)
+@@ -346,12 +376,12 @@ IF(APR_BUILD_TESTAPR)
+   ADD_TEST(NAME testapp COMMAND testapp)
+ 
+   SET (APR_TEST_SOURCES
+-    test/abts.c
+-    test/testutil.c
++    "test/abts.c"
++    "test/testutil.c"
+     )
+ 
+   FOREACH(testsuite ${APR_TEST_SUITES})
+-    LIST(APPEND APR_TEST_SOURCES test/${testsuite}.c)
++    LIST(APPEND APR_TEST_SOURCES "test/${testsuite}.c")
+   ENDFOREACH()
+ 
+   ADD_EXECUTABLE(testall ${APR_TEST_SOURCES})
+@@ -365,7 +395,7 @@ IF(APR_BUILD_TESTAPR)
+     ADD_TEST(NAME ${test} COMMAND testall -v ${test})
+   ENDFOREACH()
+ 
+-  ADD_LIBRARY(mod_test MODULE test/mod_test.c test/mod_test_exports_win32.def)
++  ADD_LIBRARY(mod_test MODULE "test/mod_test.c" "test/mod_test_exports_win32.def")
+   TARGET_LINK_LIBRARIES(mod_test ${whichapr} ${APR_SYSTEM_LIBS})
+   # nasty work-around for difficulties adding more than one additional flag
+   # (they get joined in a bad way behind the scenes)
+@@ -376,20 +406,20 @@ IF(APR_BUILD_TESTAPR)
+   # Build all the single-source executable files with no special build
+   # requirements.
+   SET(single_source_programs
+-    test/echod.c
+-    test/sendfile.c
+-    test/sockperf.c
+-    test/testlockperf.c
+-    test/testmutexscope.c
+-    test/globalmutexchild.c
+-    test/occhild.c
+-    test/proc_child.c
+-    test/readchild.c
+-    test/sockchild.c
+-    test/testshmproducer.c
+-    test/testshmconsumer.c
+-    test/tryread.c
+-    test/internal/testucs.c
++    "test/echod.c"
++    "test/sendfile.c"
++    "test/sockperf.c"
++    "test/testlockperf.c"
++    "test/testmutexscope.c"
++    "test/globalmutexchild.c"
++    "test/occhild.c"
++    "test/proc_child.c"
++    "test/readchild.c"
++    "test/sockchild.c"
++    "test/testshmproducer.c"
++    "test/testshmconsumer.c"
++    "test/tryread.c"
++    "test/internal/testucs.c"
+   )
+ 
+   FOREACH(sourcefile ${single_source_programs})
+@@ -434,7 +464,7 @@ INSTALL(TARGETS ${install_targets} EXPORT unofficial-apr-config
+ 
+ INSTALL(EXPORT unofficial-apr-config
+     NAMESPACE unofficial::apr::
+-    DESTINATION share/unofficial-apr
++    DESTINATION "share/unofficial-apr"
+     FILE unofficial-apr-config.cmake
+ )
+ 
+@@ -448,13 +478,13 @@ INSTALL(FILES ${APR_PUBLIC_HEADERS_STATIC} ${APR_PUBLIC_HEADERS_GENERATED} DESTI
+ IF(APR_INSTALL_PRIVATE_H)
+   # Kludges for unexpected dependencies of httpd 2.x, not installed by default
+   SET(APR_PRIVATE_H_FOR_HTTPD
+-    include/arch/win32/apr_arch_file_io.h
+-    include/arch/win32/apr_arch_misc.h
+-    include/arch/win32/apr_arch_utf8.h
+-    include/arch/win32/apr_private.h
++    "include/arch/win32/apr_arch_file_io.h"
++    "include/arch/win32/apr_arch_misc.h"
++    "include/arch/win32/apr_arch_utf8.h"
++    "include/arch/win32/apr_private.h"
+     )
+-  INSTALL(FILES ${APR_PRIVATE_H_FOR_HTTPD} DESTINATION include/arch/win32)
+-  INSTALL(FILES include/arch/apr_private_common.h DESTINATION include/arch)
++  INSTALL(FILES ${APR_PRIVATE_H_FOR_HTTPD} DESTINATION "include/arch/win32")
++  INSTALL(FILES "include/arch/apr_private_common.h" DESTINATION "include/arch")
+ ENDIF()
+ 
+ STRING(TOUPPER "${CMAKE_BUILD_TYPE}" buildtype)
+@@ -463,18 +493,23 @@ MESSAGE(STATUS "")
+ MESSAGE(STATUS "APR configuration summary:")
+ MESSAGE(STATUS "")
+ 
+-MESSAGE(STATUS "  Build type ...................... : ${CMAKE_BUILD_TYPE}")
+-if (APR_MSVC_COMPILER)
+-  MESSAGE(STATUS "  Install .pdb (if available)...... : ${INSTALL_PDB}")
+-endif()
+-MESSAGE(STATUS "  Install prefix .................. : ${CMAKE_INSTALL_PREFIX}")
+-MESSAGE(STATUS "  C compiler ...................... : ${CMAKE_C_COMPILER}")
+-MESSAGE(STATUS "  IPv6 ............................ : ${APR_HAVE_IPV6}")
+-MESSAGE(STATUS "  Minimum Windows version ......... : ${MIN_WINDOWS_VER}")
+-MESSAGE(STATUS "  Build test suite ................ : ${APR_BUILD_TESTAPR}")
++MESSAGE(STATUS "  Build type .......................... : ${CMAKE_BUILD_TYPE}")
++IF (APR_MSVC_COMPILER)
++  MESSAGE(STATUS "  Install .pdb (if available).......... : ${INSTALL_PDB}")
++ENDIF()
++MESSAGE(STATUS "  Install prefix ...................... : ${CMAKE_INSTALL_PREFIX}")
++MESSAGE(STATUS "  C compiler .......................... : ${CMAKE_C_COMPILER}")
++MESSAGE(STATUS "  IPv6 ................................ : ${APR_HAVE_IPV6}")
++MESSAGE(STATUS "  Minimum Windows version ............. : ${MIN_WINDOWS_VER}")
++MESSAGE(STATUS "  Build test suite .................... : ${APR_BUILD_TESTAPR}")
+ IF(TEST_STATIC_LIBS)
+-MESSAGE(STATUS "    (testing static libraries)")
++  MESSAGE(STATUS "    (testing static libraries)")
+ ELSE()
+-MESSAGE(STATUS "    (testing dynamic libraries)")
++  MESSAGE(STATUS "    (testing dynamic libraries)")
+ ENDIF()
+-MESSAGE(STATUS "  Install private .h for httpd .... : ${APR_INSTALL_PRIVATE_H}")
++IF (APR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER)
++  MESSAGE(STATUS "  Custom apr_escape_test_char.h path .. : ${APR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER_CMAKE_PATH}")
++ELSEIF (APR_CUSTOM_CHAR_TEST_GEN_BIN)
++  MESSAGE(STATUS "  Custom gen_test_char path ........... : ${APR_CUSTOM_CHAR_TEST_GEN_BIN_CMAKE_PATH}")
++ENDIF ()
++MESSAGE(STATUS "  Install private .h for httpd ........ : ${APR_INSTALL_PRIVATE_H}")
+diff --git a/apr_escape_test_char/need_enhanced_escapes/apr_escape_test_char.h b/apr_escape_test_char/need_enhanced_escapes/apr_escape_test_char.h
+new file mode 100644
+index 000000000..fb54b1f38
+--- /dev/null
++++ b/apr_escape_test_char/need_enhanced_escapes/apr_escape_test_char.h
+@@ -0,0 +1,25 @@
++/* this file is automatically generated by gen_test_char, do not edit. "make include/private/apr_escape_test_char.h" to regenerate. */
++#define T_ESCAPE_SHELL_CMD     (1)
++#define T_ESCAPE_PATH_SEGMENT  (2)
++#define T_OS_ESCAPE_PATH       (4)
++#define T_ESCAPE_ECHO          (8)
++#define T_ESCAPE_URLENCODED    (16)
++#define T_ESCAPE_XML           (32)
++#define T_ESCAPE_LDAP_DN       (64)
++#define T_ESCAPE_LDAP_FILTER   (128)
++
++static const unsigned char test_char_table[256] = {
++    224,222,222,222,222,222,222,222,222,222,223,222,222,223,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,6,16,127,22,17,23,49,17,
++    145,145,129,80,80,0,0,18,0,0,0,0,0,0,0,0,0,0,16,87,
++    119,16,119,23,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
++    0,0,0,0,0,0,0,0,0,0,0,23,223,23,23,0,23,0,0,0,
++    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
++    0,0,0,23,23,23,17,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222 
++};
+diff --git a/apr_escape_test_char/no_enhanced_escapes/apr_escape_test_char.h b/apr_escape_test_char/no_enhanced_escapes/apr_escape_test_char.h
+new file mode 100644
+index 000000000..4508913be
+--- /dev/null
++++ b/apr_escape_test_char/no_enhanced_escapes/apr_escape_test_char.h
+@@ -0,0 +1,25 @@
++/* this file is automatically generated by gen_test_char, do not edit. "make include/private/apr_escape_test_char.h" to regenerate. */
++#define T_ESCAPE_SHELL_CMD     (1)
++#define T_ESCAPE_PATH_SEGMENT  (2)
++#define T_OS_ESCAPE_PATH       (4)
++#define T_ESCAPE_ECHO          (8)
++#define T_ESCAPE_URLENCODED    (16)
++#define T_ESCAPE_XML           (32)
++#define T_ESCAPE_LDAP_DN       (64)
++#define T_ESCAPE_LDAP_FILTER   (128)
++
++static const unsigned char test_char_table[256] = {
++    224,222,222,222,222,222,222,222,222,222,223,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,6,16,127,22,17,22,49,17,
++    145,145,129,80,80,0,0,18,0,0,0,0,0,0,0,0,0,0,16,87,
++    119,16,119,23,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
++    0,0,0,0,0,0,0,0,0,0,0,23,223,23,23,0,23,0,0,0,
++    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
++    0,0,0,23,23,23,17,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,
++    222,222,222,222,222,222,222,222,222,222,222,222,222,222,222,222 
++};
+diff --git a/tools/gen_test_char.c b/tools/gen_test_char.c
+index c48d2cbe7..043fc4201 100644
+--- a/tools/gen_test_char.c
++++ b/tools/gen_test_char.c
+@@ -22,6 +22,8 @@
+ #include <string.h>
+ #include <stdio.h>
+ #include <ctype.h>
++#include <stdbool.h>
++
+ 
+ /* A bunch of functions in util.c scan strings looking for certain characters.
+  * To make that more efficient we encode a lookup table.
+@@ -40,6 +42,26 @@ int main(int argc, char *argv[])
+     unsigned c;
+     unsigned char flags;
+ 
++    bool need_enhanced_escapes =
++#ifdef NEED_ENHANCED_ESCAPES
++        true;
++#else
++        false;
++#endif
++
++    // Can be overriden for cross-compiling.
++    if (argc > 1) {
++        // Windows/OS2.
++        if (strcmp(argv[1], "--need-enhanced-escapes") == 0) {
++            need_enhanced_escapes = true;
++        }
++
++        // Everything else.
++        else if (strcmp(argv[1], "--no-enhanced-escapes") == 0) {
++            need_enhanced_escapes = false;
++        }
++    }
++
+     printf("/* this file is automatically generated by gen_test_char, "
+            "do not edit. \"make include/private/apr_escape_test_char.h\" to regenerate. */\n"
+            "#define T_ESCAPE_SHELL_CMD     (%u)\n"
+@@ -67,25 +89,25 @@ int main(int argc, char *argv[])
+             printf("\n    ");
+ 
+         /* escape_shell_cmd */
+-#ifdef NEED_ENHANCED_ESCAPES
+-        /* Win32/OS2 have many of the same vulnerable characters
+-         * as Unix sh, plus the carriage return and percent char.
+-         * The proper escaping of these characters varies from unix
+-         * since Win32/OS2 use carets or doubled-double quotes,
+-         * and neither lf nor cr can be escaped.  We escape unix
+-         * specific as well, to assure that cross-compiled unix
+-         * applications behave similiarly when invoked on win32/os2.
+-         *
+-         * Rem please keep in-sync with apr's list in win32/filesys.c
+-         */
+-        if (c && strchr("&;`'\"|*?~<>^()[]{}$\\\n\r%", c)) {
+-            flags |= T_ESCAPE_SHELL_CMD;
++        if (need_enhanced_escapes) {
++            /* Win32/OS2 have many of the same vulnerable characters
++            * as Unix sh, plus the carriage return and percent char.
++            * The proper escaping of these characters varies from unix
++            * since Win32/OS2 use carets or doubled-double quotes,
++            * and neither lf nor cr can be escaped.  We escape unix
++            * specific as well, to assure that cross-compiled unix
++            * applications behave similarly when invoked on win32/os2.
++            *
++            * Rem please keep in-sync with apr's list in win32/filesys.c
++            */
++            if (c && strchr("&;`'\"|*?~<>^()[]{}$\\\n\r%", c)) {
++                flags |= T_ESCAPE_SHELL_CMD;
++            }
++        } else {
++            if (c && strchr("&;`'\"|*?~<>^()[]{}$\\\n", c)) {
++                flags |= T_ESCAPE_SHELL_CMD;
++            }
+         }
+-#else
+-        if (c && strchr("&;`'\"|*?~<>^()[]{}$\\\n", c)) {
+-            flags |= T_ESCAPE_SHELL_CMD;
+-        }
+-#endif
+ 
+         if (!isalnum(c) && !strchr("$-_.+!*'(),:@&=~", c)) {
+             flags |= T_ESCAPE_PATH_SEGMENT;

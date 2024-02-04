@@ -1,0 +1,232 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8eaad7e0b..d8813ed56 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,10 +25,23 @@ OPTION(APR_INSTALL_PRIVATE_H  "Install selected private .h files (for httpd)"  O
+ OPTION(APR_HAVE_IPV6        "IPv6 support"                 ON)
+ OPTION(INSTALL_PDB          "Install .pdb files (if generated)"  ON)
+ OPTION(APR_BUILD_TESTAPR    "Build the test suite"         OFF)
+-OPTION(TEST_STATIC_LIBS     "Test programs use APR static libraries instead of shared libraries?" OFF)
+ SET(MIN_WINDOWS_VER             "Vista" 
+     CACHE STRING "Minimum Windows version")
+ 
++if (NOT BUILD_SHARED_LIBS)
++  set(TEST_STATIC_LIBS ON)
++else ()
++  set(TEST_STATIC_LIBS OFF)
++endif()
++
++
++if (("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC") OR ("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" AND DEFINED CMAKE_C_SIMULATE_ID AND "${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC"))
++  set(APR_MSVC_COMPILER ON)
++else ()
++  # Assuming MinGW.
++  set(APR_MSVC_COMPILER OFF)
++endif()
++
+ # create 1-or-0 representation of feature tests for apr.h
+ 
+ SET(apr_have_ipv6_10 0)
+@@ -266,14 +279,16 @@ ADD_LIBRARY(libapr-1 SHARED ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED} libap
+ SET(install_targets ${install_targets} libapr-1)
+ SET(install_bin_pdb ${install_bin_pdb} ${PROJECT_BINARY_DIR}/libapr-1.pdb)
+ TARGET_LINK_LIBRARIES(libapr-1 ${APR_SYSTEM_LIBS})
+-SET_TARGET_PROPERTIES(libapr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_EXPORT;WINNT")
++# FIXME: Figure out how to use atomics. Disabling for now with "USE_ATOMICS_GENERIC".
++SET_TARGET_PROPERTIES(libapr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_EXPORT;WINNT;USE_ATOMICS_GENERIC")
+ ADD_DEPENDENCIES(libapr-1 test_char_header)
+ TARGET_INCLUDE_DIRECTORIES(libapr-1 INTERFACE $<INSTALL_INTERFACE:include>)
+ ELSE()
+ ADD_LIBRARY(apr-1 STATIC ${APR_SOURCES} ${APR_PUBLIC_HEADERS_GENERATED})
+ SET(install_targets ${install_targets} apr-1)
+ TARGET_LINK_LIBRARIES(apr-1 ${APR_SYSTEM_LIBS})
+-SET_TARGET_PROPERTIES(apr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;WINNT")
++# FIXME: Figure out how to use atomics. Disabling for now with "USE_ATOMICS_GENERIC".
++SET_TARGET_PROPERTIES(apr-1 PROPERTIES COMPILE_DEFINITIONS "APR_DECLARE_STATIC;WINNT;USE_ATOMICS_GENERIC")
+ ADD_DEPENDENCIES(apr-1 test_char_header)
+ TARGET_INCLUDE_DIRECTORIES(apr-1 INTERFACE $<INSTALL_INTERFACE:include>)
+ ENDIF()
+@@ -318,7 +333,13 @@ IF(APR_BUILD_TESTAPR)
+ 
+   ADD_EXECUTABLE(testapp test/testapp.c)
+   TARGET_LINK_LIBRARIES(testapp ${whichapr} ${whichaprapp} ${APR_SYSTEM_LIBS})
+-  SET_TARGET_PROPERTIES(testapp PROPERTIES LINK_FLAGS /entry:wmainCRTStartup)
++
++  if (APR_MSVC_COMPILER)
++    SET_TARGET_PROPERTIES(testapp PROPERTIES LINK_FLAGS /entry:wmainCRTStartup)
++  else()
++    SET_TARGET_PROPERTIES(testapp PROPERTIES LINK_FLAGS -municode)
++  endif()
++
+   IF(apiflag)
+     SET_TARGET_PROPERTIES(testapp PROPERTIES COMPILE_FLAGS ${apiflag})
+   ENDIF()
+@@ -344,14 +365,10 @@ IF(APR_BUILD_TESTAPR)
+     ADD_TEST(NAME ${test} COMMAND testall -v ${test})
+   ENDFOREACH()
+ 
+-  ADD_LIBRARY(mod_test MODULE test/mod_test.c)
++  ADD_LIBRARY(mod_test MODULE test/mod_test.c test/mod_test_exports_win32.def)
+   TARGET_LINK_LIBRARIES(mod_test ${whichapr} ${APR_SYSTEM_LIBS})
+-  SET_PROPERTY(TARGET mod_test APPEND PROPERTY LINK_FLAGS /export:print_hello)
+   # nasty work-around for difficulties adding more than one additional flag
+   # (they get joined in a bad way behind the scenes)
+-  GET_PROPERTY(link_flags TARGET mod_test PROPERTY LINK_FLAGS)
+-  SET(link_flags "${link_flags} /export:count_reps")
+-  SET_TARGET_PROPERTIES(mod_test PROPERTIES LINK_FLAGS ${link_flags})
+   IF(apiflag)
+     SET_TARGET_PROPERTIES(mod_test PROPERTIES COMPILE_FLAGS ${apiflag})
+   ENDIF()
+@@ -421,7 +438,7 @@ INSTALL(EXPORT unofficial-apr-config
+     FILE unofficial-apr-config.cmake
+ )
+ 
+-IF(INSTALL_PDB)
++IF(INSTALL_PDB AND APR_MSVC_COMPILER)
+   INSTALL(FILES ${install_bin_pdb}
+           DESTINATION bin
+           CONFIGURATIONS RelWithDebInfo Debug)
+@@ -447,7 +464,9 @@ MESSAGE(STATUS "APR configuration summary:")
+ MESSAGE(STATUS "")
+ 
+ MESSAGE(STATUS "  Build type ...................... : ${CMAKE_BUILD_TYPE}")
+-MESSAGE(STATUS "  Install .pdb (if available)...... : ${INSTALL_PDB}")
++if (APR_MSVC_COMPILER)
++  MESSAGE(STATUS "  Install .pdb (if available)...... : ${INSTALL_PDB}")
++endif()
+ MESSAGE(STATUS "  Install prefix .................. : ${CMAKE_INSTALL_PREFIX}")
+ MESSAGE(STATUS "  C compiler ...................... : ${CMAKE_C_COMPILER}")
+ MESSAGE(STATUS "  IPv6 ............................ : ${APR_HAVE_IPV6}")
+diff --git a/test/mod_test_exports_win32.def b/test/mod_test_exports_win32.def
+new file mode 100644
+index 000000000..66b12235f
+--- /dev/null
++++ b/test/mod_test_exports_win32.def
+@@ -0,0 +1,3 @@
++EXPORTS
++    print_hello
++    count_reps
+diff --git a/test/testdso.c b/test/testdso.c
+index 0d9f27bb2..dee551c01 100644
+--- a/test/testdso.c
++++ b/test/testdso.c
+@@ -34,7 +34,11 @@
+ #elif defined(BEOS) || defined(__MVS__)
+ # define MOD_NAME "mod_test.so"
+ #elif defined(WIN32)
++#if !defined(_MSC_VER)
++#define MOD_NAME TESTBINPATH "libmod_test.dll"
++#else
+ # define MOD_NAME TESTBINPATH "mod_test.dll"
++#endif
+ #elif defined(DARWIN)
+ # define MOD_NAME ".libs/mod_test.so" 
+ # define LIB_NAME ".libs/libmod_test.dylib" 
+diff --git a/test/testshm.c b/test/testshm.c
+index 12b6f3542..3acc6dc1f 100644
+--- a/test/testshm.c
++++ b/test/testshm.c
+@@ -205,6 +205,29 @@ static void test_named(abts_case *tc, void *data)
+ 
+ }
+ 
++// On Windows, even after deleting the file, the mapped memory need to be released as well,
++// so test remove/delete would fail creating a new file. Instead, we attach to existing one
++// if creating fails.
++static apr_status_t create_or_attach(abts_case *tc, apr_shm_t **shm)
++{
++    apr_status_t rv = APR_SUCCESS;
++
++    rv = apr_shm_create(shm, SHARED_SIZE, SHARED_FILENAME, p);
++    if (rv != APR_SUCCESS) {
++        if (rv == APR_EEXIST) {
++            rv = apr_shm_attach(shm, SHARED_FILENAME, p);
++            if (rv != APR_SUCCESS) {
++                APR_ASSERT_SUCCESS(tc, "Error attaching to existing shared memory block", rv);
++                return rv;
++            }
++        } else {
++            APR_ASSERT_SUCCESS(tc, "Error allocating shared memory block", rv);
++            return rv;
++        }
++    }
++    return rv;
++}
++
+ static void test_named_remove(abts_case *tc, void *data)
+ {
+     apr_status_t rv;
+@@ -212,8 +235,7 @@ static void test_named_remove(abts_case *tc, void *data)
+ 
+     apr_shm_remove(SHARED_FILENAME, p);
+ 
+-    rv = apr_shm_create(&shm, SHARED_SIZE, SHARED_FILENAME, p);
+-    APR_ASSERT_SUCCESS(tc, "Error allocating shared memory block", rv);
++    rv = create_or_attach(tc, &shm);
+     if (rv != APR_SUCCESS) {
+         return;
+     }
+@@ -224,17 +246,15 @@ static void test_named_remove(abts_case *tc, void *data)
+     /* On platforms which acknowledge the removal of the shared resource,
+      * ensure another of the same name may be created after removal;
+      */
+-    if (rv == APR_SUCCESS)
+-    {
+-      rv = apr_shm_create(&shm2, SHARED_SIZE, SHARED_FILENAME, p);
+-      APR_ASSERT_SUCCESS(tc, "Error allocating shared memory block", rv);
+-      if (rv != APR_SUCCESS) {
+-          return;
+-      }
+-      ABTS_PTR_NOTNULL(tc, shm2);
+-
+-      rv = apr_shm_destroy(shm2);
+-      APR_ASSERT_SUCCESS(tc, "Error destroying shared memory block", rv);
++    if (rv == APR_SUCCESS) {
++        rv = create_or_attach(tc, &shm2);
++        if (rv != APR_SUCCESS) {
++            return;
++        }
++        ABTS_PTR_NOTNULL(tc, shm2);
++
++        rv = apr_shm_destroy(shm2);
++        APR_ASSERT_SUCCESS(tc, "Error destroying shared memory block", rv);
+     }
+ 
+     rv = apr_shm_destroy(shm);
+@@ -252,8 +272,7 @@ static void test_named_delete(abts_case *tc, void *data)
+ 
+     apr_shm_remove(SHARED_FILENAME, p);
+ 
+-    rv = apr_shm_create(&shm, SHARED_SIZE, SHARED_FILENAME, p);
+-    APR_ASSERT_SUCCESS(tc, "Error allocating shared memory block", rv);
++    rv = create_or_attach(tc, &shm);
+     if (rv != APR_SUCCESS) {
+         return;
+     }
+@@ -264,17 +283,15 @@ static void test_named_delete(abts_case *tc, void *data)
+     /* On platforms which acknowledge the removal of the shared resource,
+      * ensure another of the same name may be created after removal;
+      */
+-    if (rv == APR_SUCCESS)
+-    {
+-      rv = apr_shm_create(&shm2, SHARED_SIZE, SHARED_FILENAME, p);
+-      APR_ASSERT_SUCCESS(tc, "Error allocating shared memory block", rv);
+-      if (rv != APR_SUCCESS) {
+-          return;
+-      }
+-      ABTS_PTR_NOTNULL(tc, shm2);
+-
+-      rv = apr_shm_destroy(shm2);
+-      APR_ASSERT_SUCCESS(tc, "Error destroying shared memory block", rv);
++    if (rv == APR_SUCCESS) {
++        rv = create_or_attach(tc, &shm2);
++        if (rv != APR_SUCCESS) {
++            return;
++        }
++        ABTS_PTR_NOTNULL(tc, shm2);
++
++        rv = apr_shm_destroy(shm2);
++        APR_ASSERT_SUCCESS(tc, "Error destroying shared memory block", rv);
+     }
+ 
+     rv = apr_shm_destroy(shm);

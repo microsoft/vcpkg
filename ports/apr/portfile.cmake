@@ -10,8 +10,11 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        fix-configcmake.patch
-        unglue.patch
+        001-fix-configcmake.patch
+        002-unglue.patch
+        003-mingw-support.patch
+        004-fix-tests.patch
+        005-fix-arm-builds-and-add-cross-compilation-support-for-windows.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -26,6 +29,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
             -DINSTALL_PDB=OFF
             -DMIN_WINDOWS_VER=Windows7
             -DAPR_HAVE_IPV6=ON
+            -DAPR_CUSTOM_APR_ESCAPE_TEST_CHAR_HEADER=ON
             ${FEATURE_OPTIONS}
     )
 

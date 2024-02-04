@@ -1,0 +1,182 @@
+diff --git a/file_io/win32/filestat.c b/file_io/win32/filestat.c
+index 5ddee7f29..d35d19b24 100644
+--- a/file_io/win32/filestat.c
++++ b/file_io/win32/filestat.c
+@@ -15,7 +15,25 @@
+  */
+ 
+ #include "apr.h"
++
++#if !defined(_MSC_VER)
++
++// MinGW
++#if defined(COM_NO_WINDOWS_H)
++#include <aclapi.h>
++#else
++#define COM_NO_WINDOWS_H
++#include <aclapi.h>
++#undef COM_NO_WINDOWS_H
++#endif
++
++#else
++
++// MSVC
+ #include <aclapi.h>
++
++#endif
++
+ #include "apr_private.h"
+ #include "apr_arch_file_io.h"
+ #include "apr_file_io.h"
+diff --git a/include/arch/win32/apr_arch_file_io.h b/include/arch/win32/apr_arch_file_io.h
+index 9fb8df19a..175f96ad9 100644
+--- a/include/arch/win32/apr_arch_file_io.h
++++ b/include/arch/win32/apr_arch_file_io.h
+@@ -87,7 +87,7 @@ void *res_name_from_filename(const char *file, int global, apr_pool_t *pool);
+ #define APR_FILE_BUFSIZE APR_FILE_DEFAULT_BUFSIZE
+ 
+ /* obscure ommissions from msvc's sys/stat.h */
+-#ifdef _MSC_VER
++#ifdef WIN32
+ #define S_IFIFO        _S_IFIFO /* pipe */
+ #define S_IFBLK        0060000  /* Block Special */
+ #define S_IFLNK        0120000  /* Symbolic Link */
+diff --git a/include/arch/win32/apr_arch_misc.h b/include/arch/win32/apr_arch_misc.h
+index 4dbe899c4..9bcc16c3b 100644
+--- a/include/arch/win32/apr_arch_misc.h
++++ b/include/arch/win32/apr_arch_misc.h
+@@ -47,8 +47,18 @@
+ #include <tlhelp32.h>
+ #endif
+ 
+-#if defined(HAVE_IF_INDEXTONAME) && defined(_MSC_VER)
+-#include <Iphlpapi.h>
++#if defined(HAVE_IF_INDEXTONAME) && defined(WIN32)
++#define NETIOAPI_API_ WINAPI
++#define IF_MAX_STRING_SIZE 256
++#define NDIS_IF_MAX_STRING_SIZE IF_MAX_STRING_SIZE
++#define IF_NAMESIZE NDIS_IF_MAX_STRING_SIZE
++typedef ULONG NET_IFINDEX;
++NET_IFINDEX NETIOAPI_API_ if_nametoindex(PCSTR InterfaceName);
++PCHAR NETIOAPI_API_ if_indextoname(NET_IFINDEX InterfaceIndex, PCHAR InterfaceName);
++
++// FIXME: Including the below header in MinGW seems to be problematic, so we declared the required
++//        defs/functions/types manually.
++// #include <Iphlpapi.h>
+ #endif
+ 
+ struct apr_other_child_rec_t {
+@@ -149,7 +159,7 @@ apr_status_t apr_get_oslevel(apr_oslevel_e *);
+ #define ELSE_WIN_OS_IS_ANSI
+ #endif /* WINNT */
+ 
+-#if defined(_MSC_VER) && !defined(_WIN32_WCE)
++#if defined(WIN32) && !defined(_WIN32_WCE)
+ #include "crtdbg.h"
+ 
+ static APR_INLINE void* apr_malloc_dbg(size_t size, const char* filename,
+@@ -178,7 +188,7 @@ static APR_INLINE void* apr_realloc_dbg(void* userData, size_t newSize,
+     return realloc(userData, newSize);
+ }
+ 
+-#endif  /* ! _MSC_VER */
++#endif  /* ! WIN32 */
+ 
+ typedef enum {
+     DLL_WINBASEAPI = 0,    /* kernel32 From WinBase.h       */
+diff --git a/include/arch/win32/apr_arch_networkio.h b/include/arch/win32/apr_arch_networkio.h
+index 04be55595..4546a8701 100644
+--- a/include/arch/win32/apr_arch_networkio.h
++++ b/include/arch/win32/apr_arch_networkio.h
+@@ -64,7 +64,7 @@ typedef struct _WSABUF {
+ } WSABUF, FAR * LPWSABUF;
+ #endif
+ #else
+-#ifdef _MSC_VER
++#ifdef WIN32
+ #define HAVE_STRUCT_IPMREQ
+ #endif
+ #endif
+diff --git a/include/arch/win32/apr_private.h b/include/arch/win32/apr_private.h
+index c631ad439..a36878c5f 100644
+--- a/include/arch/win32/apr_private.h
++++ b/include/arch/win32/apr_private.h
+@@ -45,16 +45,28 @@
+  */
+ #ifndef _WIN32_WCE
+ #define HAVE_ACLAPI 1
++#if !defined(_MSC_VER)
++// MinGW
++#ifdef COM_NO_WINDOWS_H
++#include <accctrl.h>
++#else // COM_NO_WINDOWS_H
++#define COM_NO_WINDOWS_H
++#include <accctrl.h>
++#undef COM_NO_WINDOWS_H
++#endif // COM_NO_WINDOWS_H
++#else // !defined(_MSC_VER)
++// MSVC
+ #ifdef __wtypes_h__
+ #include <accctrl.h>
+-#else
++#else // __wtypes_h__
+ #define __wtypes_h__
+ #include <accctrl.h>
+ #undef __wtypes_h__
+-#endif
+-#else
++#endif // __wtypes_h__
++#endif // !defined(_MSC_VER)
++#else // _WIN32_WCE
+ #define HAVE_ACLAPI 0
+-#endif
++#endif // _WIN32_WCE
+ 
+ #if APR_HAVE_SYS_TYPES_H
+ #include <sys/types.h>
+@@ -144,8 +156,8 @@ APR_DECLARE_DATA int errno;
+ #define HAVE_IF_NAMETOINDEX 1
+ #endif
+ 
+-/* MSVC 7.0 introduced _strtoi64 */
+-#if _MSC_VER >= 1300 && _INTEGRAL_MAX_BITS >= 64 && !defined(_WIN32_WCE)
++#if (_MSC_VER >= 1300 && _INTEGRAL_MAX_BITS >= 64 && !defined(_WIN32_WCE)) /* MSVC 7.0 introduced _strtoi64 */ || \
++    (!defined(_MSC_VER) && defined(WIN32)) /* Not sure about MinGW version requirement */
+ #define APR_INT64_STRFN	      _strtoi64
+ #endif
+ 
+diff --git a/network_io/unix/sockaddr.c b/network_io/unix/sockaddr.c
+index a31867dc4..9f8f81f75 100644
+--- a/network_io/unix/sockaddr.c
++++ b/network_io/unix/sockaddr.c
+@@ -29,7 +29,7 @@
+ #include <net/if.h>
+ #endif
+ 
+-#if defined(HAVE_IF_INDEXTONAME) && defined(_MSC_VER)
++#if defined(HAVE_IF_INDEXTONAME) && defined(WIN32)
+ #include "arch/win32/apr_arch_misc.h"
+ #endif
+ 
+diff --git a/test/testutil.c b/test/testutil.c
+index 2986cd5a2..0bc9a14be 100644
+--- a/test/testutil.c
++++ b/test/testutil.c
+@@ -16,7 +16,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+-#if defined(_MSC_VER)
++#if defined(WIN32)
+ #include <crtdbg.h>
+ #endif
+ 
+@@ -45,7 +45,7 @@ void initialize(void) {
+     
+     apr_pool_create(&p, NULL);
+ 
+-#if _MSC_VER >= 1400
++#if (_MSC_VER >= 1400) || (!defined(_MSC_VER) && defined(WIN32))
+     /* In release mode: Redirect abort() errors to stderr */
+     _set_error_mode(_OUT_TO_STDERR);
+ 
