@@ -12,24 +12,18 @@ vcpkg_extract_source_archive(
     SOURCE_BASE "${VERSION}"
 )
 
-if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_msbuild_install(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH "msvscpp/libvhdi.sln"
-    )
-else()
-    vcpkg_configure_make(
-        SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
-        COPY_SOURCE
-    )
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-    vcpkg_install_make()
-    vcpkg_fixup_pkgconfig()
-endif()
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libvhdi)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(
     FILE_LIST "${SOURCE_PATH}/COPYING"
