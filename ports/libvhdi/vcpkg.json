@@ -5,14 +5,15 @@
   "homepage": "https://github.com/libyal/libvhdi",
   "supports": "!uwp",
   "dependencies": [
+    "gettext",
     {
-      "name": "gettext",
+      "name": "vcpkg-cmake",
       "host": true
     },
     {
-      "name": "vcpkg-msbuild",
-      "host": true,
-      "platform": "windows"
-    }
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
   ]
 }
