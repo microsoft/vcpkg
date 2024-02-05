@@ -27,7 +27,7 @@ jobs:
     name: ${{ parameters.poolName }}
   workspace:
     clean: resources
-  timeoutInMinutes: 2880 # 2 days
+  timeoutInMinutes: 4320 # 3 days
   variables:
   - name: WORKING_ROOT
     value: /Users/vcpkg/Data
