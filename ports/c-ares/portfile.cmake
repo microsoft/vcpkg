@@ -36,7 +36,7 @@ vcpkg_fixup_pkgconfig()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/include/ares.h"
-        "#ifdef CARES_STATICLIB" "#if 1"
+        "#  ifdef CARES_STATICLIB" "#if 1"
     )
 endif()
 
