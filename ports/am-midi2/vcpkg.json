@@ -1,17 +1,17 @@
 {
   "name": "am-midi2",
   "version": "0.6",
-  "homepage": "https://github.com/midi2-dev/AM_MIDI2.0Lib",
   "description": "General purpose Midi 2 library for bytestream conversions and midi-ci",
+  "homepage": "https://github.com/midi2-dev/AM_MIDI2.0Lib",
   "license": "MIT",
   "dependencies": [
     {
-      "name" : "vcpkg-cmake",
-      "host" : true
+      "name": "vcpkg-cmake",
+      "host": true
     },
     {
-      "name" : "vcpkg-cmake-config",
-      "host" : true
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ],
   "features": {
