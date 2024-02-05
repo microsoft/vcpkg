@@ -36,6 +36,14 @@
     "boost-utility",
     "boost-uuid",
     {
+      "name": "dbus",
+      "platform": "linux"
+    },
+    {
+      "name": "libusb",
+      "platform": "linux"
+    },
+    {
       "name": "openssl",
       "platform": "!windows"
     },
