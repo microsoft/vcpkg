@@ -5286,7 +5286,7 @@
     },
     "llvm": {
       "baseline": "17.0.2",
-      "port-version": 2
+      "port-version": 3
     },
     "lmdb": {
       "baseline": "0.9.31",
