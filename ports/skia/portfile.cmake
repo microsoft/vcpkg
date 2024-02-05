@@ -29,8 +29,8 @@ declare_external_from_git(dawn
     REF "5b45794c2c24c3fa40dc480af92c5284a95423ef"
     LICENSE_FILE LICENSE
     PATCHES
-        dawn-dedup-native-proc-gen.patch
-        add-cstdlib.patch
+        # dawn-dedup-native-proc-gen.patch
+        # add-cstdlib.patch
 )
 declare_external_from_git(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
@@ -213,6 +213,10 @@ if("direct3d" IN_LIST FEATURES)
         d3d12allocator
     )
     string(APPEND OPTIONS " skia_use_direct3d=true")
+endif()
+
+if("graphite" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_enable_graphite=true")
 endif()
 
 if("dawn" IN_LIST FEATURES)

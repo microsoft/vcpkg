@@ -68,10 +68,20 @@
     }
   ],
   "features": {
+    "graphite": {
+      "description": "enables graphite"
+    },
     "dawn": {
       "description": "dawn support for skia",
       "dependencies": [
-        "vulkan-headers"
+        "vulkan-headers",
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "graphite"
+          ]
+        }
       ]
     },
     "direct3d": {
