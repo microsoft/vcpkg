@@ -1,0 +1,39 @@
+diff --git a/cmake/Configure.cmake b/cmake/Configure.cmake
+index da41b1b..a2d163a 100644
+--- a/cmake/Configure.cmake
++++ b/cmake/Configure.cmake
+@@ -94,7 +94,7 @@ if (JPEG_FOUND)
+     set(HAVE_LIBJPEG 1)
+ endif()
+ 
+-if (OPENJPEG_SUPPORT)
++if (OpenJPEG_FOUND)
+     set(HAVE_LIBJP2K 1)
+ endif()
+ 
+@@ -106,7 +106,7 @@ if (TIFF_FOUND)
+     set(HAVE_LIBTIFF 1)
+ endif()
+ 
+-if (LIBWEBP_SUPPORT)
++if (WebP_FOUND)
+     set(HAVE_LIBWEBP 1)
+     set(HAVE_LIBWEBP_ANIM 1)
+ endif()
+diff --git a/cmake/templates/LeptonicaConfig.cmake.in b/cmake/templates/LeptonicaConfig.cmake.in
+index cee3a0f..8602931 100644
+--- a/cmake/templates/LeptonicaConfig.cmake.in
++++ b/cmake/templates/LeptonicaConfig.cmake.in
+@@ -21,10 +21,10 @@
+ # ===================================================================================
+ 
+ include(CMakeFindDependencyMacro)
+-if (@OPENJPEG_SUPPORT@)
++if (@ENABLE_OPENJPEG@)
+     find_dependency(OpenJPEG CONFIG)
+ endif()
+-if (@LIBWEBP_SUPPORT@)
++if (@ENABLE_WEBP@)
+     find_dependency(WebP @MINIMUM_WEBPMUX_VERSION@ CONFIG)
+ endif()
+ 
