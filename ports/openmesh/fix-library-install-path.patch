@@ -1,0 +1,31 @@
+diff --git a/src/OpenMesh/Core/CMakeLists.txt b/src/OpenMesh/Core/CMakeLists.txt
+index 7a5269c..e3f87ff 100644
+--- a/src/OpenMesh/Core/CMakeLists.txt
++++ b/src/OpenMesh/Core/CMakeLists.txt
+@@ -146,7 +146,7 @@ target_include_directories(OpenMeshCore PUBLIC
+   $<INSTALL_INTERFACE:include>)
+ 
+ install(TARGETS OpenMeshCore EXPORT OpenMeshConfig
+-  ARCHIVE DESTINATION ${VCI_PROJECT_LIBDIR}
+-  LIBRARY DESTINATION ${VCI_PROJECT_LIBDIR}
+-  RUNTIME DESTINATION ${VCI_PROJECT_BINDIR})
++  ARCHIVE DESTINATION lib
++  LIBRARY DESTINATION lib
++  RUNTIME DESTINATION bin)
+ 
+diff --git a/src/OpenMesh/Tools/CMakeLists.txt b/src/OpenMesh/Tools/CMakeLists.txt
+index 0170e2b..e40dfa1 100644
+--- a/src/OpenMesh/Tools/CMakeLists.txt
++++ b/src/OpenMesh/Tools/CMakeLists.txt
+@@ -126,7 +126,8 @@ target_include_directories(OpenMeshTools PUBLIC
+   $<INSTALL_INTERFACE:include>)
+ 
+ install(TARGETS OpenMeshTools EXPORT OpenMeshConfig
+-  ARCHIVE DESTINATION ${VCI_PROJECT_LIBDIR}
+-  LIBRARY DESTINATION ${VCI_PROJECT_LIBDIR}
+-  RUNTIME DESTINATION ${VCI_PROJECT_BINDIR})
++  ARCHIVE DESTINATION lib
++  LIBRARY DESTINATION lib
++  RUNTIME DESTINATION bin
++)
+ 

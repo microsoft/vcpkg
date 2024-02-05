@@ -1,6 +1,6 @@
 {
   "name": "vulkan-utility-libraries",
-  "version": "1.3.268.0",
+  "version": "1.3.275.0",
   "port-version": 1,
   "description": "Utility libraries for Vulkan developers",
   "homepage": "https://github.com/KhronosGroup/Vulkan-Utility-Libraries",

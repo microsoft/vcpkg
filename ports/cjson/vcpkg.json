@@ -1,6 +1,6 @@
 {
   "name": "cjson",
-  "version": "1.7.16",
+  "version": "1.7.17",
   "description": "Ultralightweight JSON parser in ANSI C",
   "homepage": "https://github.com/DaveGamble/cJSON",
   "license": "MIT",

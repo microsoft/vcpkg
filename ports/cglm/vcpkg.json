@@ -1,7 +1,6 @@
 {
   "name": "cglm",
-  "version-semver": "0.9.1",
-  "port-version": 1,
+  "version-semver": "0.9.2",
   "description": "Highly Optimized Graphics Math (glm) for C",
   "homepage": "https://github.com/recp/cglm",
   "license": "MIT",
