@@ -1621,7 +1621,7 @@
       "port-version": 4
     },
     "clap-cleveraudio": {
-      "baseline": "1.1.10",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "clapack": {
