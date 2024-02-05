@@ -177,10 +177,8 @@ if(WIN32) # TODO: MINGW, MSYS
     target_include_directories(
         libtcmalloc_minimal
         PUBLIC
-            $<BUILD_INTERFACE:
-                ${CMAKE_CURRENT_LIST_DIR}/src
-                ${CMAKE_CURRENT_LIST_DIR}/src/windows
-            >
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src/windows>
     )
 
     install(FILES ${deprecated_public_headers}
@@ -192,10 +190,17 @@ if(WIN32) # TODO: MINGW, MSYS
     )
 
     install(TARGETS libtcmalloc_minimal
+        EXPORT  unofficial-libtcmalloc_minimal-targets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+    install(
+        EXPORT unofficial-libtcmalloc_minimal-targets
+        NAMESPACE  unofficial::
+        FILE unofficial-libtcmalloc_minimal-config.cmake
+        DESTINATION share/unofficial-libtcmalloc_minimal
     )
 
     if(GPERFTOOLS_BUILD_TOOLS)

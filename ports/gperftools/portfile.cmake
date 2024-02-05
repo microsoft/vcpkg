@@ -35,6 +35,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_copy_pdbs()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         file(GLOB gperf_public_headers "${CURRENT_PACKAGES_DIR}/include/gperftools/*.h")
