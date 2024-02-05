@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8096487..f7aa8ff 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -243,7 +243,7 @@ endif()
+ # ---- Generate Build Info Headers ----
+ 
+ # used in export header generated below
+-if(NOT CPPTRACE_BUILD_SHARED)
++if(build_type STREQUAL "STATIC")
+   target_compile_definitions(${target_name} PUBLIC CPPTRACE_STATIC_DEFINE)
+ endif()
+ 
