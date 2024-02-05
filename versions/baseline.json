@@ -7813,8 +7813,8 @@
       "port-version": 6
     },
     "sdl2": {
-      "baseline": "2.28.5",
-      "port-version": 1
+      "baseline": "2.30.0",
+      "port-version": 0
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
