@@ -1,3 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 58c70f4..93b983d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -358,7 +358,7 @@ configure_file(lept.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/lept.pc.in @ONLY)
+ # to resolve generator expression in OUTPUT_NAME
+ file(
+   GENERATE
+-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lept_$<CONFIG>.pc
++  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lept.pc
+   INPUT ${CMAKE_CURRENT_BINARY_DIR}/lept.pc.in)
+ 
+ configure_file(
+@@ -368,7 +368,7 @@ configure_file(
+   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/templates/LeptonicaConfig.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/LeptonicaConfig.cmake @ONLY)
+ 
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/lept_$<CONFIG>.pc
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/lept.pc
+         DESTINATION lib/pkgconfig)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/LeptonicaConfig.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/LeptonicaConfig-version.cmake
 diff --git a/cmake/Configure.cmake b/cmake/Configure.cmake
 index da41b1b..a2d163a 100644
 --- a/cmake/Configure.cmake

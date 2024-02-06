@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 968a88d2074717e6f379d2f9b8f7f0d5193fe9b8856051e09e2b31c939689b196a4a9b2cde595ce76ff8ae2784680ef5e68c40709c051d3d23738e862968016f
     HEAD_REF master
     PATCHES
-        fix-config-cmake.patch
+        fix-pc-and-config.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
