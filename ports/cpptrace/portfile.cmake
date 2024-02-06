@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
       buildtype.patch
+      libdwarf-0.9.0.patch
 )
 
 vcpkg_cmake_configure(
