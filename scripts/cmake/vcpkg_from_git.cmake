@@ -132,7 +132,7 @@ function(vcpkg_from_git)
 
         if(error_code)
             if(VCPKG_USE_HEAD_VERSION)
-                message(FATAL_ERROR "Unable to determine the commit SHA of the HEAD version to use to use after \
+                message(FATAL_ERROR "Unable to determine the commit SHA of the HEAD version to use after \
 fetching ${ref_to_fetch} from the git repository. (git rev-parse ${expected_rev_parse} failed)")
             elseif(DEFINED arg_FETCH_REF)
                 message(FATAL_ERROR "After fetching ${ref_to_fetch}, the target ref ${expected_rev_parse} appears \
