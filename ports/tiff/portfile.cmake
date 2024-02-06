@@ -7,7 +7,6 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         FindCMath.patch
-        Findlzma.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

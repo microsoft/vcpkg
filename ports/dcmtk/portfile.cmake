@@ -8,7 +8,7 @@ vcpkg_from_github(
         dcmtk.patch
         fix_link_xml2.patch
         dictionary_paths.patch
-        fix_func_redef.patch
+        fix_link_tiff.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
