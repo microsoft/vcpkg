@@ -1,11 +1,11 @@
 set(LIB_NAME libmspack)
-set(LIB_VERSION 0.10.1alpha)
+set(LIB_VERSION 0.11alpha)
 set(LIB_FILENAME ${LIB_NAME}-${LIB_VERSION}.tar.gz)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.cabextract.org.uk/libmspack/${LIB_FILENAME}"
     FILENAME "${LIB_FILENAME}"
-    SHA512 a7b5f7caa49190c5021f3e768b92f2e51cc0ce685c9ab6ed6fb36de885c73231b58d47a8a3b5c5aa5c9ac56c25c500eb683d84dbf11f09f97f6cb4fff5adc245
+    SHA512 40c487e5b4e2f63a6cada26d29db51f605e8c29525a1cb088566d02cf2b1cc9dba263f80e2101d7f8e9d69cf7684a15bcaf791fb4891ad013a56afc7256dfa62
 )
 
 vcpkg_extract_source_archive(

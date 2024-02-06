@@ -1,10 +1,11 @@
 {
   "name": "dav1d",
-  "version": "1.2.1",
+  "version": "1.3.0",
+  "port-version": 1,
   "description": "dav1d is a new open-source AV1 decoder developed by the VideoLAN and FFmpeg communities and sponsored by the Alliance for Open Media.",
   "homepage": "https://code.videolan.org/videolan/dav1d",
   "license": "BSD-2-Clause",
-  "supports": "!(uwp | (windows & x86 & !static))",
+  "supports": "!(windows & x86 & !static)",
   "dependencies": [
     {
       "name": "vcpkg-tool-meson",

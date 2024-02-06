@@ -1,7 +1,6 @@
 {
   "name": "avisynthplus",
-  "version": "3.7.2",
-  "port-version": 2,
+  "version": "3.7.3",
   "description": "An improved version of the AviSynth frameserver, with improved features and developer friendliness",
   "homepage": "https://avs-plus.net/",
   "license": "GPL-2.0",

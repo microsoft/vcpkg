@@ -1,0 +1,3 @@
+- [ ] Update `provision-image.sh` to add the new apt package.
+- [ ] Update `managed-image.json` to add the new apt package to the very long line of packages.
+- [ ] Update the managed image named CPP_GITHUB\PrLin-1ES\PrLin-1ESImage by copying the contents of `managed-image.json` to the Settings\Image text box.

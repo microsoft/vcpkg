@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         0003-add-Wno-error-implicit-funciton-declaration-to-cmake.patch
         0004-pkg-config.patch
         0005-fix-link2019-error.patch
+        0006-fix-uwp.patch
 )
 
 vcpkg_check_features(

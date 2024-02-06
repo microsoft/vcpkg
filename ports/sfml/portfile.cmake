@@ -2,10 +2,9 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO SFML/SFML
     REF "${VERSION}"
     HEAD_REF master
-    SHA512 aac734e8b0e16936c0238ec792c922923545ec6cf06576bc70004fa1920cd05b4c5e56fbc8a77b650bbe6e202adc39df1d30509dbce95778d04338917a38a87a
+    SHA512 b376d3b00277ed60d107fe1268c210749b3aafcee618a8f924b181a9b476e92b9cb9baddecf70a8913b5910c471d53ea0260a876ad7b2db2b98b944d9f508714
     PATCHES
         fix-dependencies.patch
-        fix-osx.patch
 )
 
 # The embedded FindFreetype doesn't properly handle debug libraries

@@ -14,6 +14,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cxx     cxx
         jpeg    jpeg
         jpeg    CMAKE_REQUIRE_FIND_PACKAGE_JPEG
+        libdeflate libdeflate
+        libdeflate CMAKE_REQUIRE_FIND_PACKAGE_Deflate
         lzma    lzma
         lzma    CMAKE_REQUIRE_FIND_PACKAGE_liblzma
         tools   tiff-tools
@@ -33,7 +35,6 @@ vcpkg_cmake_configure(
         -Dtiff-docs=OFF
         -Dtiff-contrib=OFF
         -Dtiff-tests=OFF
-        -Dlibdeflate=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
         -Dlerc=OFF
@@ -44,6 +45,8 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
     MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_GLUT
+        CMAKE_DISABLE_FIND_PACKAGE_OpenGL
         ZSTD_HAVE_DECOMPRESS_STREAM
 )
 
@@ -69,22 +72,9 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRE
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES
-        fax2ps
-        fax2tiff
-        pal2rgb
-        ppm2tiff
-        raw2tiff
-        tiff2bw
-        tiff2pdf
-        tiff2ps
-        tiff2rgba
-        tiffcmp
         tiffcp
-        tiffcrop
-        tiffdither
         tiffdump
         tiffinfo
-        tiffmedian
         tiffset
         tiffsplit
         AUTO_CLEAN
@@ -92,4 +82,5 @@ if ("tools" IN_LIST FEATURES)
 endif()
 
 vcpkg_copy_pdbs()
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
