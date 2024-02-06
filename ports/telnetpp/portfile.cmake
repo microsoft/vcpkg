@@ -27,5 +27,10 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/telnetpp)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/telnetpp/version.hpp.in")
+file(REMOVE 
+    "${CURRENT_PACKAGES_DIR}/include/telnetpp/version.hpp.in" 
+    "${CURRENT_PACKAGES_DIR}/share/telnetpp/telnetpp-targets.cmake" 
+    "${CURRENT_PACKAGES_DIR}/share/telnetpp/telnetpp-targets-debug.cmake" 
+    "${CURRENT_PACKAGES_DIR}/share/telnetpp/telnetpp-targets-release.cmake"
+)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
