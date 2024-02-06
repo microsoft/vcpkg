@@ -1926,7 +1926,7 @@
     },
     "cpptrace": {
       "baseline": "0.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "cppunit": {
       "baseline": "1.15.1",
@@ -4265,7 +4265,7 @@
       "port-version": 3
     },
     "libdwarf": {
-      "baseline": "0.8.0",
+      "baseline": "0.9.1",
       "port-version": 0
     },
     "libe57": {
