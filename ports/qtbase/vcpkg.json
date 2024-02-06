@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.6.1",
-  "port-version": 8,
+  "port-version": 9,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -207,6 +207,19 @@
           "default-features": false,
           "features": [
             "gui"
+          ]
+        }
+      ]
+    },
+    "gles3": {
+      "description": "OpenGL ES 3.0",
+      "supports": "!windows & !osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gles2"
           ]
         }
       ]

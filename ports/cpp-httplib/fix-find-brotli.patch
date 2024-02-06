@@ -38,3 +38,16 @@ index 73de511..940b6ab 100644
  		DESTINATION ${_TARGET_INSTALL_CMAKEDIR}
  	)
  
+diff --git a/httplibConfig.cmake.in b/httplibConfig.cmake.in
+index 93dff32..8c6bc11 100644
+--- a/httplibConfig.cmake.in
++++ b/httplibConfig.cmake.in
+@@ -32,7 +32,7 @@ if(@HTTPLIB_IS_USING_BROTLI@)
+ 	# Note that the FindBrotli.cmake file is installed in the same dir as this file.
+ 	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+ 	set(BROTLI_USE_STATIC_LIBS @BROTLI_USE_STATIC_LIBS@)
+-	find_dependency(Brotli COMPONENTS common encoder decoder)
++	find_dependency(unofficial-brotli COMPONENTS common encoder decoder)
+ endif()
+ 
+ # Mildly useful for end-users

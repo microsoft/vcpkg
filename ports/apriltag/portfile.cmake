@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AprilRobotics/apriltag
     REF v${VERSION}
-    SHA512 0b09b530ed03dce0bdc3c4e08b17d98f1303ab1d45870843354bf1a5bdf6c7efc6089e2bdf40a370d17a8191b7ce2c46fefa2dd2d49a959591351e00e186f33e
+    SHA512 45965f2f888475ea5aecdada0d41a5495f6f0c545d5219c96d82aea009e310a17308df858d4ba40ff191cfe15801dfe16298f20efcc5c117695dd0fa8d3a3fd7
     HEAD_REF master
     PATCHES
         fix-config.patch
