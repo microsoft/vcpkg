@@ -42,3 +42,24 @@ jobs:
               await github.rest.issues.createComment({...issue_query, body}); 
               // Close the issue? 
             }
+
+            // Issue text is: Copy issue body from .../issue_body.md
+            reg = /^Copy issue body from .*issue_body.md$/;
+            if (reg.test(issue.data.body)){
+              await github.rest.issues.removeAllLabels(issue_query);
+              await github.rest.issues.setLabels({...issue_query, labels: ["requires:more-information"]});
+              let body = "Please see #30604 for how to report a build failure."
+              await github.rest.issues.createComment({...issue_query, body});
+              await github.rest.issues.update({...issue_query, state: "closed"});
+            }
+
+            // pkg-config/ not found issues like #36011
+            reg = /CMake Error at scripts\/cmake\/vcpkg_find_acquire_program.*\r\n(.*Please install it via your package manager:[\s\S]+)Call Stack/;
+            match = issue.data.body.match(reg)
+            if (match){
+              await github.rest.issues.removeAllLabels(issue_query);
+              await github.rest.issues.setLabels({...issue_query, labels: ["category:question"]});
+              let body = "From the log:\n```\n" + match[1] + "```\n"
+              await github.rest.issues.createComment({...issue_query, body});
+              await github.rest.issues.update({...issue_query, state: "closed"});
+            }
