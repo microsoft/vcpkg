@@ -13,8 +13,8 @@
       "port-version": 2
     },
     "ableton-link": {
-      "baseline": "3.0.6",
-      "port-version": 2
+      "baseline": "3.1.0",
+      "port-version": 0
     },
     "abseil": {
       "baseline": "20230802.1",
@@ -37,7 +37,7 @@
       "port-version": 15
     },
     "ada-url": {
-      "baseline": "2.7.4",
+      "baseline": "2.7.6",
       "port-version": 0
     },
     "ade": {
@@ -153,7 +153,7 @@
       "port-version": 2
     },
     "aom": {
-      "baseline": "3.7.0",
+      "baseline": "3.8.1",
       "port-version": 0
     },
     "apache-datasketches": {
@@ -173,7 +173,7 @@
       "port-version": 0
     },
     "apriltag": {
-      "baseline": "3.2.0",
+      "baseline": "3.3.0",
       "port-version": 0
     },
     "apsi": {
@@ -260,6 +260,10 @@
       "baseline": "2.9.2",
       "port-version": 0
     },
+    "asiochan": {
+      "baseline": "2022-11-25",
+      "port-version": 0
+    },
     "asiosdk": {
       "baseline": "2.3.3",
       "port-version": 7
@@ -329,7 +333,7 @@
       "port-version": 1
     },
     "audiofile": {
-      "baseline": "1.1.0",
+      "baseline": "1.1.1",
       "port-version": 0
     },
     "aurora": {
@@ -361,7 +365,7 @@
       "port-version": 0
     },
     "aws-c-auth": {
-      "baseline": "0.7.11",
+      "baseline": "0.7.14",
       "port-version": 0
     },
     "aws-c-cal": {
@@ -385,7 +389,7 @@
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "0.14.1",
+      "baseline": "0.14.3",
       "port-version": 0
     },
     "aws-c-mqtt": {
@@ -393,11 +397,11 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "0.4.9",
+      "baseline": "0.5.0",
       "port-version": 0
     },
     "aws-c-sdkutils": {
-      "baseline": "0.1.13",
+      "baseline": "0.1.14",
       "port-version": 0
     },
     "aws-checksums": {
@@ -413,7 +417,7 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.245",
+      "baseline": "1.11.255",
       "port-version": 0
     },
     "azmq": {
@@ -425,11 +429,11 @@
       "port-version": 0
     },
     "azure-core-amqp-cpp": {
-      "baseline": "1.0.0-beta.6",
+      "baseline": "1.0.0-beta.7",
       "port-version": 0
     },
     "azure-core-cpp": {
-      "baseline": "1.11.0",
+      "baseline": "1.11.1",
       "port-version": 0
     },
     "azure-core-tracing-opentelemetry-cpp": {
@@ -545,11 +549,11 @@
       "port-version": 0
     },
     "bde": {
-      "baseline": "3.123.0.0",
+      "baseline": "3.124.0.0",
       "port-version": 0
     },
     "bdwgc": {
-      "baseline": "8.2.4",
+      "baseline": "8.2.6",
       "port-version": 0
     },
     "beast": {
@@ -565,7 +569,7 @@
       "port-version": 1
     },
     "bento4": {
-      "baseline": "1.6.0-640",
+      "baseline": "1.6.0-641",
       "port-version": 0
     },
     "berkeleydb": {
@@ -685,7 +689,7 @@
       "port-version": 0
     },
     "boinc": {
-      "baseline": "7.24.1",
+      "baseline": "7.24.3",
       "port-version": 0
     },
     "bond": {
@@ -1401,7 +1405,7 @@
       "port-version": 5
     },
     "c-ares": {
-      "baseline": "1.25.0",
+      "baseline": "1.26.0",
       "port-version": 0
     },
     "c-dbg-macro": {
@@ -1441,7 +1445,7 @@
       "port-version": 1
     },
     "calceph": {
-      "baseline": "3.5.4",
+      "baseline": "3.5.5",
       "port-version": 0
     },
     "camport3": {
@@ -1453,7 +1457,7 @@
       "port-version": 0
     },
     "capnproto": {
-      "baseline": "1.0.1",
+      "baseline": "1.0.2",
       "port-version": 0
     },
     "capstone": {
@@ -1530,7 +1534,7 @@
     },
     "cgal": {
       "baseline": "5.6",
-      "port-version": 0
+      "port-version": 1
     },
     "cgicc": {
       "baseline": "3.2.19",
@@ -1829,8 +1833,8 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.15.1",
-      "port-version": 1
+      "baseline": "0.15.2",
+      "port-version": 0
     },
     "cpp-ipc": {
       "baseline": "1.3.0",
@@ -1922,7 +1926,7 @@
     },
     "cpptrace": {
       "baseline": "0.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "cppunit": {
       "baseline": "1.15.1",
@@ -2477,7 +2481,7 @@
       "port-version": 5
     },
     "entt": {
-      "baseline": "3.13.0",
+      "baseline": "3.13.1",
       "port-version": 0
     },
     "epsilon": {
@@ -3025,7 +3029,7 @@
       "port-version": 2
     },
     "glib": {
-      "baseline": "2.78.1",
+      "baseline": "2.78.4",
       "port-version": 0
     },
     "glibmm": {
@@ -3505,7 +3509,7 @@
       "port-version": 0
     },
     "igraph": {
-      "baseline": "0.10.8",
+      "baseline": "0.10.9",
       "port-version": 0
     },
     "iir1": {
@@ -3706,7 +3710,7 @@
     },
     "json-schema-validator": {
       "baseline": "2.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "json-spirit": {
       "baseline": "4.1.0",
@@ -4261,7 +4265,7 @@
       "port-version": 3
     },
     "libdwarf": {
-      "baseline": "0.8.0",
+      "baseline": "0.9.1",
       "port-version": 0
     },
     "libe57": {
@@ -4621,7 +4625,7 @@
       "port-version": 3
     },
     "libnick": {
-      "baseline": "2024.2.0",
+      "baseline": "2024.2.1",
       "port-version": 0
     },
     "libnoise": {
@@ -5286,7 +5290,7 @@
     },
     "llvm": {
       "baseline": "17.0.2",
-      "port-version": 2
+      "port-version": 3
     },
     "lmdb": {
       "baseline": "0.9.31",
@@ -5669,8 +5673,8 @@
       "port-version": 0
     },
     "minizip": {
-      "baseline": "1.3",
-      "port-version": 1
+      "baseline": "1.3.1",
+      "port-version": 0
     },
     "minizip-ng": {
       "baseline": "4.0.4",
@@ -7697,7 +7701,7 @@
       "port-version": 9
     },
     "s2geometry": {
-      "baseline": "0.11.0",
+      "baseline": "0.11.1",
       "port-version": 0
     },
     "s2n": {
@@ -7813,8 +7817,8 @@
       "port-version": 6
     },
     "sdl2": {
-      "baseline": "2.28.5",
-      "port-version": 1
+      "baseline": "2.30.0",
+      "port-version": 0
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -8561,7 +8565,7 @@
       "port-version": 0
     },
     "tinygltf": {
-      "baseline": "2.8.19",
+      "baseline": "2.8.20",
       "port-version": 0
     },
     "tinynpy": {
