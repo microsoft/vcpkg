@@ -1,0 +1,26 @@
+diff --git a/dcmjpeg/libijg12/jpeglib12.h b/dcmjpeg/libijg12/jpeglib12.h
+index d7cf442..e215b07 100644
+--- a/dcmjpeg/libijg12/jpeglib12.h
++++ b/dcmjpeg/libijg12/jpeglib12.h
+@@ -953,7 +953,7 @@ typedef JMETHOD(boolean, jpeg_marker_parser_method, (j_decompress_ptr cinfo));
+ #define jpeg_read_coefficients         jpeg12_read_coefficients
+ #define jpeg_read_header               jpeg12_read_header
+ #define jpeg_read_raw_data             jpeg12_read_raw_data
+-#define jpeg_read_scanlines            jpeg12_read_scanlines
++#define jpeg_read_scanlines            jpeg12dmk_read_scanlines
+ #define jpeg_resync_to_restart         jpeg12_resync_to_restart
+ #define jpeg_save_markers              jpeg12_save_markers
+ #define jpeg_set_colorspace            jpeg12_set_colorspace
+diff --git a/dcmjpeg/libijg16/jpeglib16.h b/dcmjpeg/libijg16/jpeglib16.h
+index 7546e7e..b0d8bd1 100644
+--- a/dcmjpeg/libijg16/jpeglib16.h
++++ b/dcmjpeg/libijg16/jpeglib16.h
+@@ -957,7 +957,7 @@ typedef JMETHOD(boolean, jpeg_marker_parser_method, (j_decompress_ptr cinfo));
+ #define jpeg_read_coefficients         jpeg16_read_coefficients
+ #define jpeg_read_header               jpeg16_read_header
+ #define jpeg_read_raw_data             jpeg16_read_raw_data
+-#define jpeg_read_scanlines            jpeg16_read_scanlines
++#define jpeg_read_scanlines            jpeg16dmk_read_scanlines
+ #define jpeg_resync_to_restart         jpeg16_resync_to_restart
+ #define jpeg_save_markers              jpeg16_save_markers
+ #define jpeg_set_colorspace            jpeg16_set_colorspace
