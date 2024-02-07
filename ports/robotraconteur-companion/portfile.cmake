@@ -22,7 +22,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/RobotRaconteurCompanion" TARGET_PATH "share/RobotRaconteurCompanion")
+vcpkg_cmake_config_fixup(
+    CONFIG_PATH "lib/cmake/RobotRaconteurCompanion"
+    TARGET_PATH "share/RobotRaconteurCompanion"
+)
 
 vcpkg_copy_pdbs()
 
