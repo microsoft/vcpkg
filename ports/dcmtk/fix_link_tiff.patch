@@ -7,7 +7,7 @@ index 955ea71..9968352 100644
          include_directories(${TIFF_INCLUDE_DIR} ${JPEG_INCLUDE_DIR})
        endif()
 -      set(LIBTIFF_LIBS ${TIFF_LIBRARY} ${TIFF_EXTRA_LIBS_STATIC} ${JPEG_LIBRARY})
-+      set(LIBTIFF_LIBS TIFF::TIFF ${TIFF_EXTRA_LIBS_STATIC})
++      set(LIBTIFF_LIBS ${TIFF_LIBRARIES})
      endif()
    endif()
  
