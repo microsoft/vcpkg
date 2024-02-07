@@ -14,6 +14,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" HYPRE_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
+    DISABLE_PARALLEL_CONFIGURE # See 'Autogenerate csr_spgemm_device_numer$ files'
     OPTIONS
         -DHYPRE_SHARED=${HYPRE_SHARED}
         -DHYPRE_ENABLE_HYPRE_BLAS=OFF

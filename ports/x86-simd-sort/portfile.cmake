@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/x86-simd-sort
-    REF 7d7591cf5927e83e4a1e7c4b6f2c4dc91a97889f
-    SHA512 6b71f25e0ec1adcd81a6ce3ecf60316a841c48d9b438ae2afde9b2a17a90d13047cb1d7bce7dcecf15718f4fb299adad7875b022b57f90965f5e7a25e16e6721
+    REF "v${VERSION}"
+    SHA512 2e95f026515f5616a43dfdb8d2b6a0e6da3027b74bb8e21db5f7db6710cb7bf290ab147a117093fd7bfba66de6c4c0fcfde16fbe8278bd4966031662bff34ba8
     HEAD_REF master
 )
 

@@ -1,13 +1,16 @@
 {
   "name": "sdl2-mixer",
   "version": "2.6.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Multi-channel audio mixer library for SDL.",
   "homepage": "https://github.com/libsdl-org/SDL_mixer",
   "license": "Zlib",
   "dependencies": [
     "libvorbis",
-    "sdl2",
+    {
+      "name": "sdl2",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

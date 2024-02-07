@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
     REF "${VERSION}"
-    SHA512 63de900870e9bec23d42e9458e0e9b1579a9e2dc7b0f404eae1b0dd406898b6d6841c5e2f498710b3828f212705437da3a2fe94813a6c3a842945100a05ae368
+    SHA512 1d34541c4e310634df7cde51cb18b3bc741579b7e513085f4d1a5c2248c55daa24f9b21f0383434c91b357c13ef4f24fed18b204680e5caad2965722f67563c6
     PATCHES
         patch-relocatable-rpath.patch
         fix-aws-root.patch
@@ -13,7 +13,7 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
 
-set(EXTRA_ARGS)
+set(EXTRA_ARGS "")
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")
 elseif (VCPKG_TARGET_IS_ANDROID)
@@ -29,8 +29,7 @@ else()
     set(rpath "\$ORIGIN")
 endif()
 
-set(BUILD_ONLY core)
-include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
+string(REPLACE "awsmigrationhub" "AWSMigrationHub" targets "${FEATURES}")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -39,7 +38,7 @@ vcpkg_cmake_configure(
         "-DENABLE_UNITY_BUILD=ON"
         "-DENABLE_TESTING=OFF"
         "-DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}"
-        "-DBUILD_ONLY=${BUILD_ONLY}"
+        "-DBUILD_ONLY=${targets}"
         "-DBUILD_DEPS=OFF"
         "-DBUILD_SHARED_LIBS=OFF"
         "-DAWS_SDK_WARNINGS_ARE_ERRORS=OFF"
@@ -48,10 +47,11 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-foreach(TARGET IN LISTS BUILD_ONLY)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "aws-cpp-sdk-${TARGET}" CONFIG_PATH "lib/cmake/aws-cpp-sdk-${TARGET}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+foreach(TARGET IN LISTS targets)
+    string(TOLOWER "aws-cpp-sdk-${TARGET}" package)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "${package}" CONFIG_PATH "lib/cmake/aws-cpp-sdk-${TARGET}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endforeach()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "AWSSDK" CONFIG_PATH "lib/cmake/AWSSDK")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "awssdk" CONFIG_PATH "lib/cmake/AWSSDK")
 
 vcpkg_copy_pdbs()
 
@@ -81,7 +81,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/nuget"
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*.lib)
     if(LIB_FILES)
         file(COPY ${LIB_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
@@ -98,4 +98,4 @@ endif()
 
 configure_file("${CURRENT_PORT_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

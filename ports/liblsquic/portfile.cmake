@@ -6,8 +6,8 @@ endif()
 
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO litespeedtech/lsquic
-    REF v3.1.1
-    SHA512 b4675be355703fea12f4b7d24812b93e739b2dbef04e3d8108b6fbe45dd16c129c9e04e58cdcfdf2a4448ee2edea68565dbd2445a76515bbdc8d9980f4210bee
+    REF v${VERSION}
+    SHA512 40d742779bfa2dc6fdaf0ee8e9349498d373dcffcc6dd27867c18d87309a288ea6811d693043b5d98364d816b818b49445214497475844201241193c0f37b349
     HEAD_REF master
     PATCHES 
         disable-asan.patch
@@ -17,9 +17,9 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
 # Submodules
 vcpkg_from_github(OUT_SOURCE_PATH LSQPACK_SOURCE_PATH
     REPO litespeedtech/ls-qpack
-    REF v2.3.0
+    REF v2.5.3
     HEAD_REF master
-    SHA512 7f5a9dd15bcd32c1bfafbecc5cea4da30f50a852c02d2bd140a2baaafd80ccb822c1701b0d20699af6367e9c712f4fe019741507c44156e9897d25162de0b8b4
+    SHA512 f90502c763abc84532f33d1b8f952aea7869e4e0c5f6bd344532ddd51c4a180958de4086d88b9ec96673a059c806eec9e70007651d4d4e1a73395919dee47ce0
 )
 if(NOT EXISTS "${SOURCE_PATH}/src/ls-hpack/CMakeLists.txt")
     file(REMOVE_RECURSE "${SOURCE_PATH}/src/liblsquic/ls-qpack")
@@ -28,9 +28,9 @@ endif()
 
 vcpkg_from_github(OUT_SOURCE_PATH LSHPACK_SOURCE_PATH
     REPO litespeedtech/ls-hpack
-    REF v2.3.0
+    REF v2.3.2
     HEAD_REF master
-    SHA512 45866b18042125cbbd008eed2935a938a42e1682030aa52ff4a324ddbad7bf9bd483161352cc8988bae668e132ee8b4b043ddc09d9e0316a66aaefd927ae2d76
+    SHA512 45d6c8296e8eee511e6a083f89460d5333fc9a49bc078dac55fdec6c46db199de9f150379f02e054571f954a5e3c79af3864dbc53dc57d10a8d2ed26a92d4278
 )
 if(NOT EXISTS "${SOURCE_PATH}/src/lshpack/CMakeLists.txt")
     file(REMOVE_RECURSE "${SOURCE_PATH}/src/lshpack")

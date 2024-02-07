@@ -1,9 +1,11 @@
 {
   "name": "yara",
   "version": "4.3.2",
+  "port-version": 1,
   "description": "The pattern matching swiss knife",
   "homepage": "https://github.com/VirusTotal/yara",
   "license": "BSD-3-Clause",
+  "supports": "!uwp",
   "dependencies": [
     "openssl",
     {

@@ -30,7 +30,7 @@ index b11573a..703458e 100644
      set(FREEIMAGE_DIR "NOT-SPECIFIED" CACHE PATH "Directory that contains the freeimage library and the corresponding headers.")
      #-----------------------------------------------------------------------------------------------
  
-@@ -90,6 +93,35 @@ function(FIND_FREEIMAGE_EXT)
+@@ -90,6 +93,37 @@ function(FIND_FREEIMAGE_EXT)
          endif()
      endif()
  
@@ -55,6 +55,8 @@ index b11573a..703458e 100644
 +            if(NOT _FREEIMAGE_LIB)
 +                get_target_property(_FREEIMAGE_LIB freeimage::FreeImage IMPORTED_IMPLIB_DEBUG)
 +            endif()
++        elseif(WINDOWS)
++            set(_FREEIMAGE_LIB "${_FREEIMAGE_SHARED}")
 +        endif()
 +        
 +        find_file(_FREEIMAGE_HEADER_FILE "FreeImage.h"

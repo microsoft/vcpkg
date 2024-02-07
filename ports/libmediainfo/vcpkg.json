@@ -1,6 +1,6 @@
 {
   "name": "libmediainfo",
-  "version": "23.4",
+  "version": "23.10",
   "description": "Get most relevant technical and tag data from video and audio files",
   "homepage": "https://github.com/MediaArea/MediaInfoLib",
   "dependencies": [

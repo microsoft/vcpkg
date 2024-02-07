@@ -1,5 +1,5 @@
 diff --git a/src/tools/msvc/Install.pm b/src/tools/msvc/Install.pm
-index 8de79c6..3bc677d 100644
+index 05548d7..097db91 100644
 --- a/src/tools/msvc/Install.pm
 +++ b/src/tools/msvc/Install.pm
 @@ -53,6 +53,11 @@ sub Install
@@ -83,7 +83,7 @@ index 8de79c6..3bc677d 100644
  		  || croak "Could not copy $pf.pdb\n";
  		print ".";
  	}
-@@ -482,7 +506,7 @@ sub CopySubdirFiles
+@@ -453,7 +477,7 @@ sub CopySubdirFiles
  		foreach my $f (split /\s+/, $flist)
  		{
  			lcopy("$subdir/$module/$f.control",
@@ -92,7 +92,7 @@ index 8de79c6..3bc677d 100644
  			  || croak("Could not copy file $f.control in contrib $module");
  			print '.';
  		}
-@@ -500,7 +524,7 @@ sub CopySubdirFiles
+@@ -471,7 +495,7 @@ sub CopySubdirFiles
  		foreach my $f (split /\s+/, $flist)
  		{
  			lcopy("$subdir/$module/$f",
@@ -101,7 +101,7 @@ index 8de79c6..3bc677d 100644
  			  || croak("Could not copy file $f in contrib $module");
  			print '.';
  		}
-@@ -515,7 +539,7 @@ sub CopySubdirFiles
+@@ -486,7 +510,7 @@ sub CopySubdirFiles
  		foreach my $f (split /\s+/, $flist)
  		{
  			lcopy("$subdir/$module/$f",
@@ -110,7 +110,7 @@ index 8de79c6..3bc677d 100644
  			  || croak("Could not copy file $f in $subdir $module");
  			print '.';
  		}
-@@ -578,7 +602,7 @@ sub CopySubdirFiles
+@@ -549,7 +573,7 @@ sub CopySubdirFiles
  		  if ($module eq 'spi');
  		foreach my $f (split /\s+/, $flist)
  		{
@@ -119,7 +119,7 @@ index 8de79c6..3bc677d 100644
  			  || croak("Could not copy file $f in contrib $module");
  			print '.';
  		}
-@@ -708,7 +732,7 @@ sub GenerateNLSFiles
+@@ -675,7 +699,7 @@ sub GenerateNLSFiles
  	my $majorver = shift;
  
  	print "Installing NLS files...";
@@ -128,7 +128,7 @@ index 8de79c6..3bc677d 100644
  	my @flist;
  	File::Find::find(
  		{
-@@ -730,12 +754,12 @@ sub GenerateNLSFiles
+@@ -697,12 +721,12 @@ sub GenerateNLSFiles
  			next unless /([^\/]+)\.po/;
  			$lang = $1;
  
@@ -146,35 +146,36 @@ index 8de79c6..3bc677d 100644
  			system(@args) && croak("Could not run msgfmt on $dir\\$_");
  			print ".";
 diff --git a/src/tools/msvc/MSBuildProject.pm b/src/tools/msvc/MSBuildProject.pm
-index f24d9e5..356cc31 100644
+index 62fec1f..ecb1b86 100644
 --- a/src/tools/msvc/MSBuildProject.pm
 +++ b/src/tools/msvc/MSBuildProject.pm
-@@ -81,13 +81,14 @@ EOF
+@@ -80,14 +80,14 @@ EOF
+ 	print $f <<EOF;
    </PropertyGroup>
  EOF
- 
-+	my $maybe_dll = $self->{solution}->{options}->{VCPKG_CRT_LINKAGE} eq 'dynamic' ? "DLL" : '';
+-
++    my $maybe_dll = $self->{solution}->{options}->{VCPKG_CRT_LINKAGE} eq 'dynamic' ? "DLL" : '';
  	$self->WriteItemDefinitionGroup(
  		$f, 'Debug',
  		{
- 			defs    => "_DEBUG;DEBUG=1",
- 			opt     => 'Disabled',
+ 			defs => "_DEBUG;DEBUG=1",
+ 			opt => 'Disabled',
  			strpool => 'false',
 -			runtime => 'MultiThreadedDebugDLL'
 +			runtime => 'MultiThreadedDebug' . $maybe_dll
  		});
  	$self->WriteItemDefinitionGroup(
  		$f,
-@@ -96,7 +97,7 @@ EOF
- 			defs    => "",
- 			opt     => 'Full',
+@@ -96,7 +96,7 @@ EOF
+ 			defs => "",
+ 			opt => 'Full',
  			strpool => 'true',
 -			runtime => 'MultiThreadedDLL'
 +			runtime => 'MultiThreaded' . $maybe_dll
  		});
  	return;
  }
-@@ -266,6 +267,8 @@ sub WriteConfigurationPropertyGroup
+@@ -266,6 +266,8 @@ sub WriteConfigurationPropertyGroup
  	  ($self->{type} eq "exe")
  	  ? 'Application'
  	  : ($self->{type} eq "dll" ? 'DynamicLibrary' : 'StaticLibrary');
@@ -183,7 +184,7 @@ index f24d9e5..356cc31 100644
  
  	print $f <<EOF;
    <PropertyGroup Condition="'\$(Configuration)|\$(Platform)'=='$cfgname|$self->{platform}'" Label="Configuration">
-@@ -311,7 +314,9 @@ sub WriteItemDefinitionGroup
+@@ -311,7 +313,9 @@ sub WriteItemDefinitionGroup
  	my $libs = $self->GetAdditionalLinkerDependencies($cfgname, ';');
  
  	my $targetmachine =
@@ -191,42 +192,33 @@ index f24d9e5..356cc31 100644
 +	  'Machine' . uc($self->{platform});
 +	$targetmachine =~ s/WIN32/X86/;
 +	my $randomizebase = ($self->{platform} =~ /^ARM/) ? 'true' : 'false';
+ 	my $arch = $self->{platform} eq 'Win32' ? 'x86' : 'x86_64';
  
  	my $includes = join ';', @{ $self->{includes} }, "";
- 
-@@ -347,7 +352,7 @@ sub WriteItemDefinitionGroup
-       <ProgramDatabaseFile>.\\$cfgname\\$self->{name}\\$self->{name}.pdb</ProgramDatabaseFile>
-       <GenerateMapFile>false</GenerateMapFile>
-       <MapFileName>.\\$cfgname\\$self->{name}\\$self->{name}.map</MapFileName>
--      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-+      <RandomizedBaseAddress>$randomizebase</RandomizedBaseAddress>
-       <!-- Permit links to MinGW-built, 32-bit DLLs (default before VS2012). -->
-       <ImageHasSafeExceptionHandlers/>
-       <SubSystem>Console</SubSystem>
 diff --git a/src/tools/msvc/Mkvcbuild.pm b/src/tools/msvc/Mkvcbuild.pm
-index ef0a33c..dd68424 100644
+index 9e05eb9..8ac0a5d 100644
 --- a/src/tools/msvc/Mkvcbuild.pm
 +++ b/src/tools/msvc/Mkvcbuild.pm
-@@ -114,8 +114,10 @@ sub mkvcbuild
+@@ -125,8 +125,10 @@ sub mkvcbuild
  
  	if ($vsVersion >= '9.00')
  	{
-+		if ($solution->{platform} !~ /^ARM/) {
++        if ($solution->{platform} !~ /^ARM/) {
  		push(@pgportfiles, 'pg_crc32c_sse42_choose.c');
  		push(@pgportfiles, 'pg_crc32c_sse42.c');
-+		}
++        }
  		push(@pgportfiles, 'pg_crc32c_sb8.c');
  	}
  	else
-@@ -196,6 +198,7 @@ sub mkvcbuild
+@@ -208,6 +210,7 @@ sub mkvcbuild
  		'syncrep_gram.y');
  	$postgres->AddFiles('src/backend/utils/adt', 'jsonpath_scan.l',
  		'jsonpath_gram.y');
-+	($config->{VCPKG_LIBRARY_LINKAGE} eq 'dynamic') &&
++    ($config->{VCPKG_LIBRARY_LINKAGE} eq 'dynamic') &&
  	$postgres->AddDefine('BUILDING_DLL');
  	$postgres->AddLibrary('secur32.lib');
  	$postgres->AddLibrary('ws2_32.lib');
-@@ -240,12 +243,13 @@ sub mkvcbuild
+@@ -252,12 +255,13 @@ sub mkvcbuild
  		$pltcl->AddIncludeDir($solution->{options}->{tcl} . '/include');
  		$pltcl->AddReference($postgres);
  
@@ -242,17 +234,17 @@ index ef0a33c..dd68424 100644
  				$found = 1;
  				last;
  			}
-@@ -500,8 +504,7 @@ sub mkvcbuild
+@@ -512,8 +516,7 @@ sub mkvcbuild
  		  . "print(str(sys.version_info[0])+str(sys.version_info[1]))";
  		my $prefixcmd =
  		  qq("$solution->{options}->{python}\\python" -c "$pythonprog");
 -		my $pyout = `$prefixcmd`;
 -		die "Could not query for python version!\n" if $?;
-+		my $pyout = "$solution->{options}->{python}\n$solution->{options}->{python_version}";
++        my $pyout = "$solution->{options}->{python}\n$solution->{options}->{python_version}";
  		my ($pyprefix, $pyver) = split(/\r?\n/, $pyout);
  
  		# Sometimes (always?) if python is not present, the execution
-@@ -517,8 +520,8 @@ sub mkvcbuild
+@@ -529,8 +532,8 @@ sub mkvcbuild
  
  		my $plpython = $solution->AddProject('plpython' . $pymajorver,
  			'dll', 'PLs', 'src/pl/plpython');
@@ -264,7 +256,7 @@ index ef0a33c..dd68424 100644
  
  		# Add transform modules dependent on plpython
 diff --git a/src/tools/msvc/Project.pm b/src/tools/msvc/Project.pm
-index 570bab5..2d51abe 100644
+index 0507ad0..48caab9 100644
 --- a/src/tools/msvc/Project.pm
 +++ b/src/tools/msvc/Project.pm
 @@ -167,6 +167,11 @@ sub AddReference
@@ -280,7 +272,7 @@ index 570bab5..2d51abe 100644
  	return;
  }
 diff --git a/src/tools/msvc/Solution.pm b/src/tools/msvc/Solution.pm
-index d30e8fc..231275b 100644
+index b6d31c3..27d89fc 100644
 --- a/src/tools/msvc/Solution.pm
 +++ b/src/tools/msvc/Solution.pm
 @@ -63,6 +63,11 @@ sub DeterminePlatform
@@ -308,22 +300,22 @@ index d30e8fc..231275b 100644
 @@ -148,7 +156,7 @@ sub GetOpenSSLVersion
  sub GenerateFiles
  {
- 	my $self          = shift;
--	my $bits          = $self->{platform} eq 'Win32' ? 32 : 64;
+ 	my $self = shift;
+-	my $bits = $self->{platform} eq 'Win32' ? 32 : 64;
 +	my $bits          = $self->{platform} =~ /64/ ? 64 : 32;
  	my $ac_init_found = 0;
  	my $package_name;
  	my $package_version;
-@@ -502,7 +510,7 @@ sub GenerateFiles
- 		USE_PAM                    => undef,
- 		USE_SLICING_BY_8_CRC32C    => undef,
- 		USE_SSE42_CRC32C           => undef,
+@@ -440,7 +448,7 @@ sub GenerateFiles
+ 		USE_PAM => undef,
+ 		USE_SLICING_BY_8_CRC32C => undef,
+ 		USE_SSE42_CRC32C => undef,
 -		USE_SSE42_CRC32C_WITH_RUNTIME_CHECK => 1,
 +		USE_SSE42_CRC32C_WITH_RUNTIME_CHECK => $self->{platform} =~ /^ARM/ ? undef : 1,
- 		USE_SYSTEMD                         => undef,
- 		USE_SYSV_SEMAPHORES                 => undef,
- 		USE_SYSV_SHARED_MEMORY              => undef,
-@@ -760,14 +768,14 @@ sub GenerateFiles
+ 		USE_SYSTEMD => undef,
+ 		USE_SYSV_SEMAPHORES => undef,
+ 		USE_SYSV_SHARED_MEMORY => undef,
+@@ -725,14 +733,14 @@ sub GenerateFiles
  		  || confess "Could not open pg_config_paths.h";
  		print $o <<EOF;
  #define PGBINDIR "/bin"
@@ -340,7 +332,7 @@ index d30e8fc..231275b 100644
  #define DOCDIR "/doc"
  #define HTMLDIR "/doc"
  #define MANDIR "/man"
-@@ -952,11 +960,15 @@ sub AddProject
+@@ -957,11 +965,15 @@ sub AddProject
  	if ($self->{options}->{zlib})
  	{
  		$proj->AddIncludeDir($self->{options}->{zlib} . '\include');
@@ -357,7 +349,7 @@ index d30e8fc..231275b 100644
  		my ($digit1, $digit2, $digit3) = $self->GetOpenSSLVersion();
  
  		# Starting at version 1.1.0 the OpenSSL installers have
-@@ -1027,7 +1039,7 @@ sub AddProject
+@@ -1032,7 +1044,7 @@ sub AddProject
  	if ($self->{options}->{nls})
  	{
  		$proj->AddIncludeDir($self->{options}->{nls} . '\include');
@@ -366,7 +358,7 @@ index d30e8fc..231275b 100644
  	}
  	if ($self->{options}->{gss})
  	{
-@@ -1060,6 +1072,10 @@ sub AddProject
+@@ -1065,6 +1077,10 @@ sub AddProject
  	if ($self->{options}->{icu})
  	{
  		$proj->AddIncludeDir($self->{options}->{icu} . '\include');
@@ -377,7 +369,7 @@ index d30e8fc..231275b 100644
  		if ($self->{platform} eq 'Win32')
  		{
  			$proj->AddLibrary($self->{options}->{icu} . '\lib\icuin.lib');
-@@ -1077,22 +1093,22 @@ sub AddProject
+@@ -1082,22 +1098,22 @@ sub AddProject
  	{
  		$proj->AddIncludeDir($self->{options}->{xml} . '\include');
  		$proj->AddIncludeDir($self->{options}->{xml} . '\include\libxml2');
@@ -405,24 +397,15 @@ index d30e8fc..231275b 100644
  	if ($self->{options}->{uuid})
  	{
 diff --git a/src/tools/msvc/gendef.pl b/src/tools/msvc/gendef.pl
-index b8c514a..1fb7619 100644
+index cf83d7d..2d9a4ec 100644
 --- a/src/tools/msvc/gendef.pl
 +++ b/src/tools/msvc/gendef.pl
 @@ -122,7 +122,7 @@ sub writedef
  
  		# Strip the leading underscore for win32, but not x64
  		$f =~ s/^_//
--		  unless ($platform eq "x64");
-+		  if ($platform eq "Win32");
+-		  unless ($arch eq "x86_64");
++		  if ($arch eq "Win32");
  
  		# Emit just the name if it's a function symbol, or emit the name
  		# decorated with the DATA option for variables.
-@@ -150,7 +150,7 @@ sub usage
- usage()
-   unless scalar(@ARGV) == 2
-   && ( ($ARGV[0] =~ /\\([^\\]+$)/)
--	&& ($ARGV[1] eq 'Win32' || $ARGV[1] eq 'x64'));
-+	&& ($ARGV[1] ne ''));
- my $defname  = uc $1;
- my $deffile  = "$ARGV[0]/$defname.def";
- my $platform = $ARGV[1];

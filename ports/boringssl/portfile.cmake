@@ -26,11 +26,15 @@ vcpkg_from_github(
     0003-fix-shared-symbol-visibility.patch
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+  # the FindOpenSSL.cmake script differentiates debug and release binaries using this suffix.
+  set(CMAKE_CONFIGURE_OPTIONS_DEBUG "-DCMAKE_DEBUG_POSTFIX=d")
+endif()
+
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS_DEBUG
-    # the FindOpenSSL.cmake script differentiates debug and release binaries using this suffix.
-    -DCMAKE_DEBUG_POSTFIX=d
+    ${CMAKE_CONFIGURE_OPTIONS_DEBUG}
 )
 
 vcpkg_cmake_install()
