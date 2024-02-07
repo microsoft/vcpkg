@@ -6,7 +6,6 @@
   "license": "Zlib",
   "dependencies": [
     "libvorbis",
-    "wavpack",
     {
       "name": "sdl2",
       "default-features": false
@@ -18,7 +17,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "wavpack"
   ],
   "features": {
     "fluidsynth": {
