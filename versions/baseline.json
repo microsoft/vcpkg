@@ -2077,7 +2077,7 @@
       "port-version": 2
     },
     "cwalk": {
-      "baseline": "1.2.7",
+      "baseline": "1.2.9",
       "port-version": 0
     },
     "cxxgraph": {
