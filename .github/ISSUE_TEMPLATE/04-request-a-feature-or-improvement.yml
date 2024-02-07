@@ -1,5 +1,5 @@
 name: Request a feature or improvement
-description: Suggest an improvement to vcpkg
+description: Suggest an improvement to vcpkg.
 title: ''
 labels: ["category:vcpkg-feature"]
 body:

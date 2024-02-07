@@ -21,13 +21,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zipkin WITH_ZIPKIN
         prometheus WITH_PROMETHEUS
         elasticsearch WITH_ELASTICSEARCH
-        jaeger WITH_JAEGER
         otlp-http WITH_OTLP_HTTP
         otlp-grpc WITH_OTLP_GRPC
+        geneva WITH_GENEVA
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
-if(WITH_OTLP_GRPC)
+if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
     set(OTEL_PROTO_VERSION "1.0.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
@@ -44,19 +44,32 @@ if(WITH_OTLP_GRPC)
     list(APPEND FEATURE_OPTIONS "-DgRPC_CPP_PLUGIN_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/grpc/grpc_cpp_plugin${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
+set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
+if(WITH_GENEVA)
+# Geneva exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, so they should be ported as a feature under opentelemetry-cpp.
+# TODO: merge the opentelemetry-fluentd port to opentelemery-cpp port.
+    vcpkg_from_github(
+        OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
+        REPO open-telemetry/opentelemetry-cpp-contrib
+        REF 26e5ed48d81bb03fde52848ab394605dde0fb1a8
+        HEAD_REF main
+        SHA512 f483dc96a884450fbb17fdaf0b5514ba44546f1742c2f80f552fcb442e08fbfe399441594e95ffd2c644c20907baef83d52c326dd6d3d5eb70cf29d30b2c5a0e
+    )
+    set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "")
+    list(APPEND OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
         -DWITH_EXAMPLES=OFF
-        -DWITH_LOGS_PREVIEW=ON
         -DOPENTELEMETRY_INSTALL=ON
         -DWITH_ABSEIL=ON
+        -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH="${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}"
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
-        WITH_OTLP_GRPC
-        WITH_JAEGER
-        WITH_LOGS_PREVIEW
+        WITH_GENEVA
 )
 
 vcpkg_cmake_install()

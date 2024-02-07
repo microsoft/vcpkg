@@ -1,4 +1,3 @@
-
 if(@VCPKG_TARGET_IS_WINDOWS@)
     list(APPEND B2_OPTIONS
         abi=ms

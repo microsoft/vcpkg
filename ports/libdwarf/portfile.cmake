@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davea42/libdwarf-code
     REF "v${VERSION}"
-    SHA512 3117c69cc77d5a1189aeb1ea7e74d917dedfb84e9e9e98e3df7fec930f8183d12f55bb12e4871ed3746cdb19a29aba924bc73d6334b23bbb6413a1f4be67d499
+    SHA512 8e1addaf2b970db792c4488fa416b712c7b48dfe501bbfd5c40a7eaf71f07377abaa70f682982d11de9cf9573d8fd8dc5fd16c020eb9b68b5be558139a0799a1
     HEAD_REF main
     PATCHES
         dependencies.diff
         msvc-runtime.diff
-        no-suffix.diff
         off_t.diff
 )
 
@@ -28,10 +27,9 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_tools(TOOL_NAMES dwarfdump AUTO_CLEAN)
 
 if(BUILD_SHARED)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libdwarf/libdwarf.h" "ifndef LIBDWARF_STATIC" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libdwarf.h" "ifndef LIBDWARF_STATIC" "if 1")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
