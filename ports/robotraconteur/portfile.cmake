@@ -1,5 +1,9 @@
-if(VCPKG_TARGET_IS_LINUX)  
-    MESSAGE(FATAL_ERROR "libbluetooth-dev 。。。 library not found.\nTry: 'sudo yum install libbluetooth-dev ' (or sudo apt-get install libbluetooth-dev。。。)")  
+if(VCPKG_TARGET_IS_LINUX)
+	find_package(PkgConfig)
+	pkg_check_modules(LIBBLUETOOTH REQUIRED bluez)
+	if (NOT LIBBLUETOOTH_FOUND)
+    	MESSAGE(FATAL_ERROR "libbluetooth-dev library not found.\nTry: 'sudo yum install libbluetooth-dev ' (or sudo apt-get install libbluetooth-dev)")  
+	endif()
 endif()
 
 vcpkg_from_github(
