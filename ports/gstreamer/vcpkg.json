@@ -37,6 +37,37 @@
         "openssl"
       ]
     },
+    "alsa": {
+      "description": "Enable support for ALSA (Advanced Linux Sound Architecture)",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "alsa",
+          "platform": "linux"
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        }
+      ]
+    },
+    "aom": {
+      "description": "Enable support for the Alliance for Open Media (AOM) AV1 encoder and decoder",
+      "supports": "!windows",
+      "dependencies": [
+        "aom",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        }
+      ]
+    },
     "asio": {
       "description": "Enable support for the Steinberg Audio Streaming Input Output (ASIO) library (Windows only)",
       "dependencies": [
@@ -162,6 +193,20 @@
         "libxml2"
       ]
     },
+    "dc1394": {
+      "description": "Enable support for the libdc1394 IIDC camera source",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        },
+        "libdc1394"
+      ]
+    },
     "dtls": {
       "description": "Enable support for the DTLS encoder and decoder",
       "dependencies": [
@@ -214,6 +259,23 @@
           ]
         },
         "libflac"
+      ]
+    },
+    "fluidsynth": {
+      "description": "Enable support for the Fluidsynth MIDI decoder",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "fluidsynth",
+          "platform": "!windows"
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        }
       ]
     },
     "gdk-pixbuf": {
@@ -701,6 +763,36 @@
           ]
         },
         "wildmidi"
+      ]
+    },
+    "x11-bad": {
+      "description": "Enable support for X11 in bad plugins",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        },
+        "libxkbcommon",
+        "xcb"
+      ]
+    },
+    "x11-base": {
+      "description": "Enable support for X11 in base plugins",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-good"
+          ]
+        },
+        "libx11",
+        "libxext"
       ]
     },
     "x264": {
