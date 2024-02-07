@@ -1,6 +1,6 @@
 {
   "name": "numactl",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "description": "NUMA support for Linux",
   "homepage": "https://github.com/numactl/numactl",
   "supports": "linux"
