@@ -124,7 +124,10 @@
     "harfbuzz": {
       "description": "Harfbuzz support",
       "dependencies": [
-        "harfbuzz"
+        {
+          "name": "harfbuzz",
+          "default-features": false
+        }
       ]
     },
     "icu": {
