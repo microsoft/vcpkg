@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_LINUX)  
+    MESSAGE(FATAL_ERROR "libbluetooth-dev 。。。 library not found.\nTry: 'sudo yum install libbluetooth-dev ' (or sudo apt-get install libbluetooth-dev。。。)")  
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
 	REPO robotraconteur/robotraconteur

@@ -4,7 +4,7 @@
   "description": "The Robot Raconteur communication framework core library",
   "homepage": "http://robotraconteur.com",
   "license": "Apache-2.0",
-  "supports": "(windows & (x86 | x64)) | (osx & (x64 | arm64))",
+  "supports": "(windows & (x86 | x64)) | (linux & (x86 | x64 | arm64)) | (osx & (x64 | arm64))",
   "dependencies": [
     "boost-algorithm",
     "boost-array",
@@ -35,6 +35,14 @@
     "boost-unordered",
     "boost-utility",
     "boost-uuid",
+    {
+      "name": "dbus",
+      "platform": "linux"
+    },
+    {
+      "name": "libusb",
+      "platform": "linux"
+    },
     {
       "name": "openssl",
       "platform": "!windows"
