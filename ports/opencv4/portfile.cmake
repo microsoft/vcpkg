@@ -308,9 +308,9 @@ if(WITH_IPP)
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/1224f78da6684df04397ac0f40c961ed37f79ccb/ippicv/ippicv_2021.8_win_ia32_20230330_general.zip"
-        FILENAME "opencv-cache/ippicv/57fd4648cfe64eae9e2ad9d50173a553-ippicv_2021.8_win_ia32_20230330_general.zip"
-        SHA512 c2942f0bdc51e0d0ee0695c62d4e366c5b87d95acaac38c5df19c2c647849cc544c5689a569134baaf64a260aa4984db51fc094ddd995afef3bd0c1d3f265465
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_win_ia32_20230919_general.zip"
+        FILENAME "opencv-cache/ippicv/8ff93c69415ab0835cc1e94dc5660f5d-ippicv_2021.10.0_win_ia32_20230919_general.zip"
+        SHA512 BD63E8EDF52E561154953217D26CA64CC500B529E55B8E3ABB927D69766FFF979FED2B16D51E453F75E61679D3569ABBC5C1BBB2652A93F3F178FBF27354D624
       )
     else()
       message(WARNING "This target architecture is not supported IPPICV")
