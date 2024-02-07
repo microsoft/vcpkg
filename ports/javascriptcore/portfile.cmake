@@ -1,8 +1,8 @@
 vcpkg_from_github(
       OUT_SOURCE_PATH SOURCE_PATH
       REPO webkit/webkit
-      REF a07d3e4e2067578a818215d89f5742b5e9707389
-      SHA512 f7cfe2e1489e4151311811b9d8f5ee1a9850099d5035e646260fd313816d8d3407517d81b8cb851323d08dcb0915b6cfa783636b91130516e5c4942527d10821
+      REF 60339678878a0cc06b7ba3b5c5bc574d59f821a1
+      SHA512 7fbd81c3aca23ee105f64d5f8f63e00fcbaadde544377047ba58da670adb774752ed6e1fb6bff1aade8e579fecf22cbe5bd547eef82645675c05386c9ad771c5
       HEAD_REF main
       PATCHES
         remove_webkit_find_package.patch
@@ -34,6 +34,7 @@ vcpkg_cmake_configure(
       -DPORT=JSCOnly
       -DENABLE_STATIC_JSC=${ENABLE_STATIC_JSC}
       -DUSE_APPLE_ICU=OFF
+      -DENABLE_TOOLS=OFF
 )
 
 vcpkg_cmake_install()
