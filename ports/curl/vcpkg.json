@@ -81,16 +81,17 @@
     "non-http": {
       "description": "Enables protocols beyond HTTP/HTTPS/HTTP2"
     },
-    "openssl": {
-      "description": "SSL support (OpenSSL)",
-      "dependencies": [
-        "openssl"
-      ]
-    },
+    
     "openldap": {
       "description": "Openldap support",
       "dependencies": [
         "openldap"
+      ]
+    },
+    "openssl": {
+      "description": "SSL support (OpenSSL)",
+      "dependencies": [
+        "openssl"
       ]
     },
     "schannel": {
