@@ -1,15 +1,9 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES
-        plugin-base-disable-no-unused.patch
-    )
-endif()
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 0d69896d0a83452320df0d0f56c710df1365a259cd3f48dc7cd4df18d45b27caea7174aafa15ae5eb8637ccdef192c1047185b369b7232db4eaacbc57ffaaa22
+    SHA512 388534eda96269981dd5231ca6c718c303be99a4f0db9eb2339e14c02499fd46f7359c000db57df199c88c26e1a18a2618e9e65ac48a4e67c554c86aa269ee9f
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
@@ -18,12 +12,9 @@ vcpkg_from_gitlab(
         fix-clang-cl-good.patch
         fix-clang-cl-bad.patch
         fix-clang-cl-ugly.patch
-        gstreamer-disable-no-unused.patch
         srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
-        base-must-be-enabled.patch
         no-downloads.patch
-        ${PATCHES}
 )
 
 vcpkg_find_acquire_program(FLEX)
