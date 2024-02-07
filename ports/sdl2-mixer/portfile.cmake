@@ -2,11 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_mixer
     REF "release-${VERSION}"
-    SHA512 74c2b449e8a9928679d42e25bd7a5967e41fe9d51732f26197c6bbe1db9170be784125b7f268476050017f3dc970497e09a0409d50731026a18355375d0369ce
+    SHA512 e4c9a4418725ce019bb62216c8fd484cf04b34e2099af633d4c84e0e558fe6ba1921e791c5dde319266ffe3a1237f887871c819a249a8df7e9440c36fce181da
     PATCHES 
-        fix-pkg-prefix.patch 
-        fix-pkgconfig.patch 
-        fix-deps-targets.patch
+        fix-pkg-prefix.patch
 )
 
 vcpkg_check_features(
@@ -21,6 +19,8 @@ vcpkg_check_features(
         mpg123 SDL2MIXER_MP3
         mpg123 SDL2MIXER_MP3_MPG123
         opusfile SDL2MIXER_OPUS
+    MAYBE_UNUSED_VARIABLES    
+        SDL2MIXER_MP3_DRMP3
 )
 
 if("fluidsynth" IN_LIST FEATURES)
