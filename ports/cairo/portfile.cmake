@@ -13,6 +13,7 @@ vcpkg_from_gitlab(
         disable-atomic-ops-check.patch # See https://gitlab.freedesktop.org/cairo/cairo/-/issues/554
         fix-static-missing-lib-msimg32.patch
         ${PATCHES}
+        fix-alloca-undefine.patch # Upstream PR: https://gitlab.freedesktop.org/cairo/cairo/-/merge_requests/520
 )
 
 if("fontconfig" IN_LIST FEATURES)
