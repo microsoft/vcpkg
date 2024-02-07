@@ -2417,7 +2417,7 @@
       "port-version": 0
     },
     "edflib": {
-      "baseline": "1.24",
+      "baseline": "1.25",
       "port-version": 0
     },
     "edlib": {
