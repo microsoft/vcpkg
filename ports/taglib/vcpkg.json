@@ -5,6 +5,7 @@
   "homepage": "https://taglib.org/",
   "license": "LGPL-2.1-only OR MPL-1.1",
   "dependencies": [
+    "utfcpp",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,7 +14,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "utfcpp",
     "zlib"
   ]
 }
