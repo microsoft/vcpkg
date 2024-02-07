@@ -88,6 +88,12 @@
         "openssl"
       ]
     },
+    "openldap": {
+      "description": "Openldap support",
+      "dependencies": [
+        "openldap"
+      ]
+    },
     "schannel": {
       "description": "SSL support (Secure Channel)",
       "supports": "windows & !uwp",
