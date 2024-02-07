@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taglib/taglib
-    REF v1.13.1
-    SHA512 986231ee62caa975afead7e94630d58acaac25a38bc33d4493d51bd635d79336e81bba60586d7355ebc0670e31f28d32da3ecceaf33292e4bc240c64bf00f35b
+    REF v2.0
+    SHA512 099d02b2eab033f5702a8cb03e70752d7523c6f8c2f3eebdd0bcd939eafbdca3f2a6c82452983904b5822cfa45f2707ed866c3419508df9d43bf5c0b3a476f6c
     HEAD_REF master
 )
 
@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/taglib)
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/taglib.pc")
 if(EXISTS "${pcfile}")
