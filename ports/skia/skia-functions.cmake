@@ -333,6 +333,10 @@ function(skia_gn_install_build_type)
 
     list(TRANSFORM arg_TARGETS PREPEND "//")
     file(READ "${CURRENT_BUILDTREES_DIR}/desc-${arg_LABEL}-out.log" desc)
+    string(REGEX REPLACE "^([^{]+)\n{\n" "{\n" desc "${desc}")
+    if(NOT "${CMAKE_MATCH_1}" STREQUAL "")
+        message(STATUS "${CMAKE_MATCH_1}")
+    endif()
     expand_gn_targets(arg_TARGETS desc "${arg_SOURCE_PATH}")
 
     string(TOUPPER "${arg_BUILD_TYPE}" cmake_build_type)
