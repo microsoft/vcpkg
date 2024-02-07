@@ -82,7 +82,6 @@
     "non-http": {
       "description": "Enables protocols beyond HTTP/HTTPS/HTTP2"
     },
-    
     "openldap": {
       "description": "Openldap support",
       "dependencies": [
