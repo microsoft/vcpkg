@@ -1010,7 +1010,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.84.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-move": {
       "baseline": "1.84.0",
@@ -1617,11 +1617,11 @@
       "port-version": 0
     },
     "clamav": {
-      "baseline": "0.103.0",
-      "port-version": 4
+      "baseline": "0.103.11",
+      "port-version": 0
     },
     "clap-cleveraudio": {
-      "baseline": "1.1.10",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "clapack": {
@@ -1849,7 +1849,7 @@
       "port-version": 9
     },
     "cpp-peglib": {
-      "baseline": "1.8.5",
+      "baseline": "1.8.6",
       "port-version": 0
     },
     "cpp-redis": {
@@ -3697,8 +3697,8 @@
       "port-version": 2
     },
     "json-c": {
-      "baseline": "2022-06-26",
-      "port-version": 3
+      "baseline": "2023-08-12",
+      "port-version": 0
     },
     "json-dto": {
       "baseline": "0.3.3",
@@ -3725,7 +3725,7 @@
       "port-version": 6
     },
     "jsoncons": {
-      "baseline": "0.173.2",
+      "baseline": "0.173.4",
       "port-version": 0
     },
     "jsoncpp": {
@@ -4109,8 +4109,8 @@
       "port-version": 9
     },
     "libalkimia": {
-      "baseline": "8.1.70",
-      "port-version": 2
+      "baseline": "8.1.72",
+      "port-version": 0
     },
     "libao": {
       "baseline": "1.2.2",
@@ -6381,8 +6381,8 @@
       "port-version": 3
     },
     "openmesh": {
-      "baseline": "9.0",
-      "port-version": 2
+      "baseline": "10.0",
+      "port-version": 0
     },
     "openmpi": {
       "baseline": "4.1.6",
@@ -6409,8 +6409,8 @@
       "port-version": 3
     },
     "openssl": {
-      "baseline": "3.2.0",
-      "port-version": 2
+      "baseline": "3.2.1",
+      "port-version": 0
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -8130,7 +8130,7 @@
     },
     "soxr": {
       "baseline": "0.1.3",
-      "port-version": 7
+      "port-version": 8
     },
     "spaceland": {
       "baseline": "7.8.2",
