@@ -2089,12 +2089,12 @@
       "port-version": 0
     },
     "cyclonedds": {
-      "baseline": "0.10.3",
+      "baseline": "0.10.4",
       "port-version": 0
     },
     "cyclonedds-cxx": {
-      "baseline": "0.10.2",
-      "port-version": 1
+      "baseline": "0.10.4",
+      "port-version": 0
     },
     "czmq": {
       "baseline": "4.2.1",
