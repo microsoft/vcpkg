@@ -4,7 +4,7 @@
   "description": "JavaScriptCore is the built-in JavaScript engine for WebKit, which implements ECMAScript as in ECMA-262 specification.",
   "homepage": "https://webkit.org/",
   "license": null,
-  "supports": "(!uwp | windows | linux | osx) & x64",
+  "supports": "!uwp & windows & x64",
   "dependencies": [
     "icu",
     {
