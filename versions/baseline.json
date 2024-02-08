@@ -4748,6 +4748,10 @@
       "baseline": "2024-02-11",
       "port-version": 0
     },
+    "libobjc2": {
+      "baseline": "2.2",
+      "port-version": 0
+    },
     "libodb": {
       "baseline": "2.4.0",
       "port-version": 12
