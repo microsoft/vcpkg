@@ -23,7 +23,10 @@ vcpkg_copy_tools(TOOL_NAMES RobotRaconteurGen AUTO_CLEAN)
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/robotraconteur)
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/RobotRaconteur")
+vcpkg_cmake_config_fixup(
+	PACKAGE_NAME RobotRaconteur
+	CONFIG_PATH "lib/cmake/RobotRaconteur"
+)
 
 vcpkg_copy_pdbs()
 
