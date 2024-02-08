@@ -17,7 +17,11 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_tools(TOOL_NAMES faad_cli AUTO_CLEAN)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES faad_cli AUTO_CLEAN)
+else()
+    vcpkg_copy_tools(TOOL_NAMES faad AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
