@@ -65,6 +65,13 @@
         }
       ]
     },
+    "fontconfig": {
+      "description": "Use fontconfig",
+      "supports": "!windows, mingw",
+      "dependencies": [
+        "fontconfig"
+      ]
+    },
     "glib": {
       "description": "glib for poppler",
       "dependencies": [
