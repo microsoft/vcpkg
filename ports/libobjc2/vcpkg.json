@@ -1,0 +1,26 @@
+{
+  "name": "libobjc2",
+  "version": "2.2",
+  "description": "Objective-C runtime library intended for use with Clang.",
+  "homepage": "https://github.com/gnustep/libobjc2",
+  "license": "MIT",
+  "supports": "!static & !arm & !x86 & !uwp",
+  "dependencies": [
+    {
+      "name": "robin-map",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ]
+}
