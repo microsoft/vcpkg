@@ -18,7 +18,7 @@ endfunction()
 function(vcpkg_from_gitlab)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;GITLAB_URL;REPO;REF;SHA512;HEAD_REF;FILE_DISAMBIGUATOR"
+        "OUT_SOURCE_PATH;GITLAB_URL;REPO;REF;SHA512;HEAD_REF;FILE_DISAMBIGUATOR;AUTHORIZATION_TOKEN"
         "PATCHES")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -45,7 +45,7 @@ function(vcpkg_from_gitlab)
 
     set(headers_param "")
     if(DEFINED arg_AUTHORIZATION_TOKEN)
-        set(headers_param "HEADERS" "Authorization: token ${arg_AUTHORIZATION_TOKEN}")
+        set(headers_param "HEADERS" "PRIVATE-TOKEN: ${arg_AUTHORIZATION_TOKEN}")
     endif()
 
     if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)

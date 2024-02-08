@@ -1,4 +1,4 @@
-set(CALCEPH_HASH 4e0b702494c9fc05f6a192671bccdc0f8002b5706cba4bd7ff50d9e8754203b4a78e3759ccc3003809123584c9bca1434411e111357852dbc58e4d1903c1879e)
+set(CALCEPH_HASH bbb60179b36f3ea9f05daa43e7950494d058137cf5a92e6c7b9742048dc0767490b7b42d2d2db7329f5ca96ffc4f2f32443abacb1073e29af78e58935b8b3edc)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-${VERSION}.tar.gz"

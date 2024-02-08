@@ -1,8 +1,11 @@
-vcpkg_from_git(
-    OUT_SOURCE_PATH SOURCE_PATH
-    URL git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
-    FETCH_REF "v${VERSION}"
-    REF ae275c375477f207912113e5cf190fada78f3f90 # v2.0.1
+vcpkg_download_distfile(ARCHIVE
+    URLS https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/libgpiod-9068bb08dc3bf183eee6de2577ad266fe6b8f434.tar.gz
+    FILENAME libgpiod-${VERSION}.tar.gz
+    SHA512 3c569471007d12d94cb74377187dfe8b979de08f3747dca6348a4212ffb6d5f699af1d1135c25c70bcd17d533b09499fd0f1b3c5deac7d0a2d1bbf31092033c3
+)
+
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 893e3ea..2eef641 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -128,12 +128,11 @@ install(TARGETS libgig EXPORT libgig-config
+ 	ARCHIVE DESTINATION lib
+ 	RUNTIME DESTINATION bin
+ 	PUBLIC_HEADER DESTINATION include/libgig)
+-install(EXPORT libgig-config NAMESPACE libgig:: DESTINATION share/libgig)
+ 
+-install(TARGETS libakai EXPORT libakai-config
++install(TARGETS libakai EXPORT libgig-config
+ 	LIBRARY DESTINATION lib
+ 	ARCHIVE DESTINATION lib
+ 	RUNTIME DESTINATION bin
+ 	PUBLIC_HEADER DESTINATION include/libgig)
+-install(EXPORT libakai-config NAMESPACE libgig:: DESTINATION share/libgig)
++install(EXPORT libgig-config NAMESPACE libgig:: DESTINATION share/libgig)
+ 

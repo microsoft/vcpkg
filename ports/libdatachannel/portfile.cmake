@@ -8,14 +8,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
     REF "v${VERSION}"
-    SHA512 bcf58026612e2ae670911945f9f74660b513cbd38c9bae13e7b8acd41e545b5760ab4713c67b956e0bb8c0449491a5ab8e3f8d05e2468ff6540fc99e2540a105
+    SHA512 63551a9f2ce8de7f7aba13b2114418d3d705a6c190d91eac7cf6deba93ccbe9bda053000feb7ac109d538646c77da62b31686a58f83d752f191cac3a015f2d69
     HEAD_REF master
-    PATCHES
+    PATCHES 
         ${PATCHES}
+        fix_dependency.patch
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindLibJuice.cmake")
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DATACHANNEL_STATIC_LINKAGE)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -29,12 +29,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DUSE_SYSTEM_SRTP=ON
-        -DUSE_SYSTEM_JUICE=ON
+        -DPREFER_SYSTEM_LIB=ON
         -DNO_EXAMPLES=ON
         -DNO_TESTS=ON
-        -DBUILD_STATIC_LIBS=${BUILD_STATIC}
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED}
+        -DDATACHANNEL_STATIC_LINKAGE=${DATACHANNEL_STATIC_LINKAGE}
 )
 
 vcpkg_cmake_install()
@@ -48,6 +46,8 @@ include(CMakeFindDependencyMacro)
 find_dependency(Threads)
 find_dependency(OpenSSL)
 find_dependency(LibJuice)
+find_dependency(plog CONFIG)
+find_dependency(unofficial-usrsctp CONFIG)
 ${DATACHANNEL_CONFIG}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
