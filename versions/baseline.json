@@ -3994,7 +3994,7 @@
     },
     "ktx": {
       "baseline": "4.3.0-beta1",
-      "port-version": 0
+      "port-version": 1
     },
     "kubazip": {
       "baseline": "0.2.6",

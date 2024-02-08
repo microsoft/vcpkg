@@ -9,6 +9,7 @@ vcpkg_from_github(
         0002-Fix-versioning.patch
         0003-mkversion.patch
         0004-quirks.patch
+        0005-no-vendored-libs.patch
 )
 file(REMOVE "${SOURCE_PATH}/other_include/zstd_errors.h")
 
