@@ -4,7 +4,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO poppler/poppler
     REF "poppler-${POPPLER_VERSION}"
-    SHA512 964a7e535b14a6860b1ba70bda82177bc804442e8d99e43dfd3dbed50381b7b1114d66ec6c32194ef86ee83fd8dbf07d82f5bec4ec97e082269acfd22f9af252
+    SHA512 3f1cb23f9f89cae24c05618c31e0d6414cfe48cffa6b59fc2a0b0fbe79df2715584e170785d2fdd1e5592af7bda4b3a9e3070e8452a17db86d484dcd6b00138d
     HEAD_REF master
     PATCHES
         export-unofficial-poppler.patch
