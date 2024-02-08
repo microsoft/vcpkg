@@ -1,3 +1,25 @@
+diff --git a/app/app_pb/CMakeLists.txt b/app/app_pb/CMakeLists.txt
+index edd036188..f2bc221d2 100644
+--- a/app/app_pb/CMakeLists.txt
++++ b/app/app_pb/CMakeLists.txt
+@@ -18,7 +18,7 @@
+ 
+ project(app_pb)
+ 
+-find_package(Protobuf REQUIRED)
++find_package(protobuf CONFIG REQUIRED)
+ 
+ set(ProtoFiles
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/app/pb/mma/mma.proto
+@@ -68,7 +68,7 @@ target_compile_options(${PROJECT_NAME}
+ 
+ set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
+ 
+-target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
++target_link_libraries(${PROJECT_NAME} PUBLIC protobuf::libprotobuf)
+ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14) 
+ 
+ ecal_install_library(${PROJECT_NAME})
 diff --git a/contrib/ecalproto/CMakeLists.txt b/contrib/ecalproto/CMakeLists.txt
 index 58df32705..a0d05c09c 100644
 --- a/contrib/ecalproto/CMakeLists.txt
