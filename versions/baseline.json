@@ -93,7 +93,7 @@
       "port-version": 0
     },
     "alsa": {
-      "baseline": "1.2.10",
+      "baseline": "1.2.11",
       "port-version": 0
     },
     "amd-adl-sdk": {
@@ -465,7 +465,7 @@
       "port-version": 1
     },
     "azure-messaging-eventhubs-cpp": {
-      "baseline": "1.0.0-beta.5",
+      "baseline": "1.0.0-beta.6",
       "port-version": 0
     },
     "azure-security-attestation-cpp": {
@@ -1537,8 +1537,8 @@
       "port-version": 1
     },
     "cgicc": {
-      "baseline": "3.2.19",
-      "port-version": 7
+      "baseline": "3.2.20",
+      "port-version": 0
     },
     "cglm": {
       "baseline": "0.9.2",
@@ -1653,7 +1653,7 @@
       "port-version": 0
     },
     "cli11": {
-      "baseline": "2.3.2",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "clickhouse-cpp": {
@@ -1833,7 +1833,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.15.2",
+      "baseline": "0.15.3",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -1869,7 +1869,7 @@
       "port-version": 0
     },
     "cppad": {
-      "baseline": "20230000.0",
+      "baseline": "20240000.2",
       "port-version": 0
     },
     "cppcms": {
@@ -2077,7 +2077,7 @@
       "port-version": 2
     },
     "cwalk": {
-      "baseline": "1.2.7",
+      "baseline": "1.2.9",
       "port-version": 0
     },
     "cxxgraph": {
@@ -2089,12 +2089,12 @@
       "port-version": 0
     },
     "cyclonedds": {
-      "baseline": "0.10.3",
+      "baseline": "0.10.4",
       "port-version": 0
     },
     "cyclonedds-cxx": {
-      "baseline": "0.10.2",
-      "port-version": 1
+      "baseline": "0.10.4",
+      "port-version": 0
     },
     "czmq": {
       "baseline": "4.2.1",
@@ -2174,7 +2174,7 @@
     },
     "dcmtk": {
       "baseline": "3.6.8",
-      "port-version": 1
+      "port-version": 2
     },
     "debug-assert": {
       "baseline": "1.3.3",
@@ -2297,8 +2297,8 @@
       "port-version": 0
     },
     "draco": {
-      "baseline": "1.5.6",
-      "port-version": 1
+      "baseline": "1.5.7",
+      "port-version": 0
     },
     "drlibs": {
       "baseline": "2023-08-16",
@@ -2417,7 +2417,7 @@
       "port-version": 0
     },
     "edflib": {
-      "baseline": "1.24",
+      "baseline": "1.25",
       "port-version": 0
     },
     "edlib": {
@@ -2705,7 +2705,7 @@
       "port-version": 0
     },
     "flecs": {
-      "baseline": "3.2.10",
+      "baseline": "3.2.11",
       "port-version": 0
     },
     "flint": {
@@ -3054,7 +3054,7 @@
     },
     "glpk": {
       "baseline": "5.0",
-      "port-version": 2
+      "port-version": 3
     },
     "glslang": {
       "baseline": "13.1.1",
@@ -3330,6 +3330,10 @@
     },
     "hedley": {
       "baseline": "15",
+      "port-version": 0
+    },
+    "hello-imgui": {
+      "baseline": "1.4.2",
       "port-version": 0
     },
     "hexl": {
@@ -3990,7 +3994,7 @@
     },
     "ktx": {
       "baseline": "4.3.0-beta1",
-      "port-version": 0
+      "port-version": 1
     },
     "kubazip": {
       "baseline": "0.2.6",
@@ -4785,7 +4789,7 @@
       "port-version": 1
     },
     "libremidi": {
-      "baseline": "4.2.4",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "libressl": {
@@ -6810,7 +6814,7 @@
     },
     "portmidi": {
       "baseline": "2.0.4",
-      "port-version": 2
+      "port-version": 3
     },
     "portsmf": {
       "baseline": "239",
@@ -7829,8 +7833,8 @@
       "port-version": 1
     },
     "sdl2-mixer": {
-      "baseline": "2.6.3",
-      "port-version": 2
+      "baseline": "2.8.0",
+      "port-version": 0
     },
     "sdl2-mixer-ext": {
       "baseline": "2.6.0",
