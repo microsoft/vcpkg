@@ -33,11 +33,11 @@
     "zlib"
   ],
   "features": {
-    "python" : {
+    "python": {
       "description": "Build python bindings",
       "dependencies": [
-        "python3",
-        "pybind11"
+        "pybind11",
+        "python3"
       ]
     }
   }
