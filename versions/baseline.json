@@ -93,7 +93,7 @@
       "port-version": 0
     },
     "alsa": {
-      "baseline": "1.2.10",
+      "baseline": "1.2.11",
       "port-version": 0
     },
     "amd-adl-sdk": {
@@ -4785,7 +4785,7 @@
       "port-version": 1
     },
     "libremidi": {
-      "baseline": "4.2.4",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "libressl": {
