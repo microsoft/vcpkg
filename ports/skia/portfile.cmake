@@ -10,7 +10,11 @@ vcpkg_from_github(
         disable-dev-test.patch
         skia-include-string.patch
         bentleyottmann-build.patch
+        vulkan-headers.patch
 )
+
+# De-vendor
+file(REMOVE_RECURSE "${SOURCE_PATH}/include/third_party/vulkan")
 
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
@@ -71,11 +75,6 @@ declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
     REF "3e6bdd0f99655b1bc6a54aa73e5bfaaa4252198b"
     LICENSE_FILE LICENSE
-)
-declare_external_from_git(vulkan-tools
-    URL "https://github.com/KhronosGroup/Vulkan-Tools"
-    REF "7c6d640a5ca3ab73c1f42d22312f672b54babfaf"
-    LICENSE_FILE LICENSE.txt
 )
 declare_external_from_git(wuffs
     URL "https://github.com/google/wuffs-mirror-release-c.git"
@@ -193,16 +192,8 @@ endif()
 if("vulkan" IN_LIST FEATURES)
     list(APPEND required_externals
         vulkan_headers
-        vulkan-tools
     )
-    string(APPEND OPTIONS " skia_use_vulkan=true")
-    find_file(vk_mem_alloc_h "vk_mem_alloc.h" PATHS "${CURRENT_INSTALLED_DIR}/include" PATH_SUFFIXES "vma" REQUIRED)
-    file(COPY "${vk_mem_alloc_h}" DESTINATION "${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include")
-    # Cf. third_party/vulkanmemoryallocator/GrVulkanMemoryAllocator.h:25
-    vcpkg_replace_string("${SOURCE_PATH}/third_party/externals/vulkanmemoryallocator/include/vk_mem_alloc.h"
-        "#include <vulkan/vulkan.h>"
-        "#ifndef VULKAN_H_\n    #include <vulkan/vulkan.h>\n#endif"
-    )
+    string(APPEND OPTIONS " skia_use_vulkan=true skia_vulkan_memory_allocator_dir=\"${CURRENT_INSTALLED_DIR}\"")
 endif()
 
 if("direct3d" IN_LIST FEATURES)
@@ -242,13 +233,14 @@ They can be installed on Debian based systems via
         markupsafe
         vulkan_headers
 ## Remove
-        vulkan-tools
         abseil-cpp
 ## REMOVE ^
         dawn
     )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/externals/opengl-registry")
+    file(INSTALL "${CURRENT_INSTALLED_DIR}/share/opengl/" DESTINATION "${SOURCE_PATH}/third_party/externals/opengl-registry/xml")
     # cf. external dawn/src/dawn/native/BUILD.gn
-    string(APPEND OPTIONS " skia_use_dawn=true dawn_use_angle=false dawn_use_swiftshader=false")
+    string(APPEND OPTIONS " skia_use_dawn=true dawn_use_swiftshader=false")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         string(APPEND OPTIONS " dawn_complete_static_libs=true")
     endif()

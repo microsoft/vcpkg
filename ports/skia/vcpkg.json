@@ -71,14 +71,17 @@
     "dawn": {
       "description": "dawn support for skia",
       "dependencies": [
+        "egl-registry",
+        "opengl-registry",
         {
           "name": "skia",
           "default-features": false,
           "features": [
-            "graphite"
+            "graphite",
+            "vulkan"
           ]
         },
-        "vulkan-headers"
+        "vulkan-utility-libraries"
       ]
     },
     "direct3d": {
@@ -119,7 +122,16 @@
       ]
     },
     "graphite": {
-      "description": "enables graphite"
+      "description": "Graphite support",
+      "dependencies": [
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ]
+        }
+      ]
     },
     "harfbuzz": {
       "description": "Harfbuzz support",
