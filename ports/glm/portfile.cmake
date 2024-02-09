@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 62e22002a6369a54e1f0ee2885a65f2780af7d2a446573e5387b81518f5dc7e8076053837cb99ae850a0166ce8b0f077bed009e8986d9884d01c456ce467553f
     HEAD_REF master
+    PATCHES
+        "disable-werror.patch" # https://github.com/g-truc/glm/commit/7b53739128fe99b170011ab8c2733b7f56d93116
 )
 
 vcpkg_cmake_configure(
