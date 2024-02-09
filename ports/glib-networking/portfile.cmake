@@ -1,4 +1,3 @@
-set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -29,25 +28,12 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-# file(GLOB_RECURSE MY_DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
-# file(COPY ${MY_DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-# file(GLOB_RECURSE MY_DEBUG_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
-# file(COPY ${MY_DEBUG_DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-# vcpkg_copy_pdbs()
-# file(GLOB_RECURSE MY_LIBS "${CURRENT_PACKAGES_DIR}/lib/*.lib")
-# file(COPY ${MY_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-# file(GLOB_RECURSE MY_DEBUG_LIBS "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib")
-# file(COPY ${MY_DEBUG_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-# file(COPY "${CURRENT_PACKAGES_DIR}/lib/gio/modules/giomodule.cache" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-# file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/gio/modules/giomodule.cache" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/gio")
-# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gio")
-# vcpkg_copy_tools(TOOL_NAMES glib-pacrunner SEARCH_DIR ${CURRENT_PACKAGES_DIR}/libexec AUTO_CLEAN)
-# vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+#make vcpkg post-build happy
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/placeholder.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/glib-networking")
 file(COPY "${CURRENT_PACKAGES_DIR}/lib/gio/modules" DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/${PORT}")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/gio")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/gio/modules" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gio")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
