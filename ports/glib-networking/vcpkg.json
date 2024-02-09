@@ -14,7 +14,7 @@
   ],
   "default-features": [
     {
-      "name": "libgnutls",
+      "name": "gnutls",
       "platform": "!windows | mingw"
     },
     {
