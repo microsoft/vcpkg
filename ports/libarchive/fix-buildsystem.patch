@@ -87,3 +87,24 @@ index b2634da6..0d846877 100644
    #
    # On Windows platform, It's better that we install PDF documents
    # on one's computer.
+diff --git a/libarchive/CMakeLists.txt b/libarchive/CMakeLists.txt
+index f7fdfb68a..98d287e8c 100644
+--- a/libarchive/CMakeLists.txt
++++ b/libarchive/CMakeLists.txt
+@@ -267,11 +267,12 @@ IF(ENABLE_INSTALL)
+             RUNTIME DESTINATION bin
+             LIBRARY DESTINATION lib
+             ARCHIVE DESTINATION lib)
++  ELSE()
++    INSTALL(TARGETS archive_static
++            RUNTIME DESTINATION bin
++            LIBRARY DESTINATION lib
++            ARCHIVE DESTINATION lib)
+   ENDIF(BUILD_SHARED_LIBS)
+-  INSTALL(TARGETS archive_static
+-          RUNTIME DESTINATION bin
+-          LIBRARY DESTINATION lib
+-          ARCHIVE DESTINATION lib)
+   INSTALL_MAN(${libarchive_MANS})
+   INSTALL(FILES ${include_HEADERS} DESTINATION include)
+ ENDIF()
