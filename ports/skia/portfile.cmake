@@ -10,6 +10,7 @@ vcpkg_from_github(
         disable-dev-test.patch
         skia-include-string.patch
         bentleyottmann-build.patch
+        graphite.patch
         vulkan-headers.patch
 )
 
