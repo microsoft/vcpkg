@@ -30,9 +30,11 @@ vcpkg_fixup_pkgconfig()
 
 #make vcpkg post-build happy
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/placeholder.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/glib-networking")
-file(COPY "${CURRENT_PACKAGES_DIR}/lib/gio/modules" DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/${PORT}")
+file(GLOB MODULE_FILES "${CURRENT_PACKAGES_DIR}/lib/gio/modules/*")
+file(COPY ${MODULE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/gio/modules" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}")
+file(GLOB MODULE_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/gio/modules/*")
+file(COPY ${MODULE_DEBUG_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
