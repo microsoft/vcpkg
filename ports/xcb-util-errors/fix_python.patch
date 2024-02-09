@@ -18,3 +18,14 @@ index 94d7d57fe..022d4003e 100644
      parseFile(input_file)
  
  assert xproto != None
+diff --git a//Makefile.am b//Makefile.am
+index bdf4a3071..de897ac57 100644
+--- a//Makefile.am
++++ b//Makefile.am
+@@ -37,5 +37,5 @@ tests_test_LDADD = libxcb-errors.la $(XCB_LIBS)
+ CLEANFILES = src/extensions.c
+ 
+ src/extensions.c: src/extensions.py
+-	$(AM_V_GEN)$(PYTHON) $(srcdir)/src/extensions.py $@.tmp ${XCBPROTO_XCBINCLUDEDIR}/*.xml && \
++	$(AM_V_GEN)$(PYTHON) $(srcdir)/src/extensions.py $@.tmp '${XCBPROTO_XCBINCLUDEDIR}/*.xml' && \
+ 	mv $@.tmp $@
