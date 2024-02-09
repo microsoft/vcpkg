@@ -28,6 +28,8 @@ if("fluidsynth" IN_LIST FEATURES)
     list(APPEND EXTRA_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -43,6 +45,7 @@ vcpkg_cmake_configure(
         -DSDL2MIXER_MIDI_NATIVE=OFF
         -DSDL2MIXER_MIDI_TIMIDITY=OFF
         -DSDL2MIXER_MP3_DRMP3=OFF
+        -DSDL2MIXER_MOD_XMP_SHARED=${BUILD_SHARED}
 )
 
 vcpkg_cmake_install()

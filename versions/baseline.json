@@ -2061,8 +2061,8 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.5.0",
-      "port-version": 1
+      "baseline": "8.6.0",
+      "port-version": 0
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -2541,7 +2541,7 @@
       "port-version": 0
     },
     "faad2": {
-      "baseline": "2.10.1",
+      "baseline": "2.11.1",
       "port-version": 0
     },
     "fadbad": {
@@ -3038,7 +3038,7 @@
     },
     "glm": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "globjects": {
       "baseline": "1.1.0",
@@ -4074,7 +4074,7 @@
     },
     "lerc": {
       "baseline": "4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "lest": {
       "baseline": "1.35.1",
@@ -6001,8 +6001,8 @@
       "port-version": 5
     },
     "netgen": {
-      "baseline": "6.2.2307",
-      "port-version": 1
+      "baseline": "6.2.2401",
+      "port-version": 0
     },
     "nethost": {
       "baseline": "8.0.0",
@@ -6369,8 +6369,8 @@
       "port-version": 4
     },
     "openimageio": {
-      "baseline": "2.4.14.0",
-      "port-version": 3
+      "baseline": "2.5.8.0",
+      "port-version": 0
     },
     "openjpeg": {
       "baseline": "2.5.0",
@@ -6793,7 +6793,7 @@
       "port-version": 5
     },
     "poppler": {
-      "baseline": "23.11.0",
+      "baseline": "24.2.0",
       "port-version": 0
     },
     "popsift": {
@@ -7834,7 +7834,7 @@
     },
     "sdl2-mixer": {
       "baseline": "2.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-mixer-ext": {
       "baseline": "2.6.0",
@@ -8510,7 +8510,7 @@
     },
     "tiff": {
       "baseline": "4.6.0",
-      "port-version": 2
+      "port-version": 3
     },
     "tinkerforge": {
       "baseline": "2.1.25",
@@ -8869,7 +8869,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "20.57.0",
+      "baseline": "20.59.0",
       "port-version": 0
     },
     "v-hacd": {
@@ -9250,7 +9250,7 @@
     },
     "wxwidgets": {
       "baseline": "3.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "wyhash": {
       "baseline": "2023-01-25",
