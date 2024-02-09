@@ -6001,8 +6001,8 @@
       "port-version": 5
     },
     "netgen": {
-      "baseline": "6.2.2307",
-      "port-version": 1
+      "baseline": "6.2.2401",
+      "port-version": 0
     },
     "nethost": {
       "baseline": "8.0.0",
