@@ -18,9 +18,9 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+#if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+#    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+#endif()
 
 vcpkg_copy_tools(TOOL_NAMES psl AUTO_CLEAN)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
