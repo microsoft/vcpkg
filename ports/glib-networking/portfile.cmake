@@ -26,7 +26,6 @@ vcpkg_configure_meson(
 )
 
 vcpkg_install_meson()
-vcpkg_fixup_pkgconfig()
 
 #make vcpkg post-build happy
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/placeholder.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/glib-networking")
