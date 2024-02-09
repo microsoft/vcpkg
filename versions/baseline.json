@@ -9298,7 +9298,7 @@
     },
     "xcb-proto": {
       "baseline": "1.14.1",
-      "port-version": 1
+      "port-version": 2
     },
     "xcb-render-util": {
       "baseline": "0.3.10",
@@ -9310,7 +9310,7 @@
     },
     "xcb-util-errors": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "xcb-util-m4": {
       "baseline": "2022-01-24",
