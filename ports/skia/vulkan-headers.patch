@@ -32,3 +32,19 @@ index ca4bcf1..8a52200 100644
  #else
  // For google3 builds we don't set SKIA_IMPLEMENTATION so we need to make sure that the vulkan
  // headers stay up to date for our needs
+diff --git a/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h b/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h
+index 487ea7c..9662c8c 100644
+--- a/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h
++++ b/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h
+@@ -39,7 +39,11 @@
+ // VMA outside of Skia, the client should instead tell Skia not to use VMA.
+ // Then they should wrap their own instance of VMA into an implementation of
+ // Skia's VulkanMemoryAllocator interface, and pass that object into context creation.
++#ifdef _WIN32
++#include "vma/vk_mem_alloc.h"  // NO_G3_REWRITE
++#else
+ #include "vk_mem_alloc.h"  // NO_G3_REWRITE
++#endif
+ #ifdef GR_NEEDED_TO_DEFINE_VULKAN_H
+ #undef VULKAN_H_
+ #endif
