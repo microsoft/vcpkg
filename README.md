@@ -5,6 +5,7 @@
 [한국어](README_ko_KR.md)
 [Français](README_fr.md)
 [Tiếng Việt](README_vn.md)
+[Türkçe](README_tr.md)
 
 Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS.
 This tool and ecosystem are constantly evolving, and we always appreciate contributions!
