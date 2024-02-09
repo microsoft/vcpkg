@@ -9,6 +9,8 @@ vcpkg_from_gitlab(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        gnutls gnutls
+        openssl openssl
         libproxy libproxy
         environment-proxy environment_proxy
 )
@@ -19,8 +21,6 @@ string(REPLACE "ON" "enabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -Dgnutls=disabled # I can't install it on centos 7 with vcpkg, so always openssl instead.
-        -Dopenssl=enabled
         ${FEATURE_OPTIONS}
         -Dgnome_proxy=disabled
 )
