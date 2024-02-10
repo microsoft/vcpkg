@@ -257,7 +257,7 @@
       "port-version": 0
     },
     "asio-grpc": {
-      "baseline": "2.9.2",
+      "baseline": "2.9.3",
       "port-version": 0
     },
     "asiochan": {
