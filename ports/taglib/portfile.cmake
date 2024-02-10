@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taglib/taglib
-    REF v2.0
+    REF "v${VERSION}"
     SHA512 099d02b2eab033f5702a8cb03e70752d7523c6f8c2f3eebdd0bcd939eafbdca3f2a6c82452983904b5822cfa45f2707ed866c3419508df9d43bf5c0b3a476f6c
     HEAD_REF master
 )
@@ -48,4 +48,3 @@ vcpkg_copy_pdbs()
 file(COPY "${SOURCE_PATH}/COPYING.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/taglib")
 file(COPY "${SOURCE_PATH}/COPYING.MPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/taglib")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/taglib/COPYING.LGPL" "${CURRENT_PACKAGES_DIR}/share/taglib/copyright")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

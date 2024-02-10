@@ -1,6 +1,6 @@
 {
   "name": "taglib",
-  "version-semver": "2.0.0",
+  "version": "2.0",
   "description": "TagLib Audio Meta-Data Library",
   "homepage": "https://taglib.org/",
   "license": "LGPL-2.1-only OR MPL-1.1",
