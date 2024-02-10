@@ -2305,7 +2305,7 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.9.2",
+      "baseline": "1.9.3",
       "port-version": 0
     },
     "dstorage": {
@@ -3661,8 +3661,8 @@
       "port-version": 1
     },
     "jasper": {
-      "baseline": "4.1.0",
-      "port-version": 1
+      "baseline": "4.2.0",
+      "port-version": 0
     },
     "jbig2dec": {
       "baseline": "0.20",
@@ -5046,6 +5046,10 @@
     },
     "libvault": {
       "baseline": "0.56.0",
+      "port-version": 0
+    },
+    "libvhdi": {
+      "baseline": "20231127",
       "port-version": 0
     },
     "libvmdk": {
@@ -7620,6 +7624,14 @@
       "baseline": "1.2.1",
       "port-version": 0
     },
+    "robotraconteur": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "robotraconteur-companion": {
+      "baseline": "0.3.1",
+      "port-version": 0
+    },
     "rocksdb": {
       "baseline": "8.10.0",
       "port-version": 0
@@ -8669,7 +8681,7 @@
       "port-version": 0
     },
     "trantor": {
-      "baseline": "1.5.16",
+      "baseline": "1.5.17",
       "port-version": 0
     },
     "tre": {
