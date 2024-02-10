@@ -15,12 +15,12 @@ vcpkg_configure_meson(
         -Dtests=false
         -Ddoc_tests=false
     ADDITIONAL_BINARIES
-        "gio-querymodules = '${VCPKG_ROOT_DIR}/packages/glib_${TARGET_TRIPLET}/tools/glib/gio-querymodules${CMAKE_EXECUTABLE_SUFFIX}'"
-        "glib-compile-schemas = '${VCPKG_ROOT_DIR}/packages/glib_${TARGET_TRIPLET}/tools/glib/glib-compile-schemas${CMAKE_EXECUTABLE_SUFFIX}'"
-        "glib-compile-resources = '${VCPKG_ROOT_DIR}/packages/glib_${TARGET_TRIPLET}/tools/glib/glib-compile-resources${CMAKE_EXECUTABLE_SUFFIX}'"
-        "gdbus-codegen = '${VCPKG_ROOT_DIR}/packages/glib_${TARGET_TRIPLET}/tools/glib/gdbus-codegen'"
-        "glib-genmarshal = '${VCPKG_ROOT_DIR}/packages/glib_${TARGET_TRIPLET}/tools/glib/glib-genmarshal'"
-        "glib-mkenums = '${VCPKG_ROOT_DIR}/packages/glib_${TARGET_TRIPLET}/tools/glib/glib-mkenums'"
+        "gio-querymodules = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gio-querymodules${CMAKE_EXECUTABLE_SUFFIX}'"
+        "glib-compile-schemas = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${CMAKE_EXECUTABLE_SUFFIX}'"
+        "glib-compile-resources = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${CMAKE_EXECUTABLE_SUFFIX}'"
+        "gdbus-codegen = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'"
+        "glib-genmarshal = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'"
+        "glib-mkenums = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
 )
 
 vcpkg_install_meson()
