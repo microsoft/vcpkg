@@ -1,3 +1,65 @@
+function(z_vcpkg_calculate_corrected_rpath)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg"
+      ""
+      "ELF_FILE_DIR;ORG_RPATH;OUT_NEW_RPATH_VAR"
+      "")
+
+    set(elf_file_dir "${arg_ELF_FILE_DIR}")
+    set(org_rpath "${arg_ORG_RPATH}")
+
+    set(current_prefix "${CURRENT_PACKAGES_DIR}")
+    set(current_installed_prefix "${CURRENT_INSTALLED_DIR}")
+    if(elf_file_dir MATCHES "debug/")
+        set(current_prefix "${CURRENT_PACKAGES_DIR}/debug")
+        set(current_installed_prefix "${CURRENT_INSTALLED_DIR}/debug")
+    endif()
+
+    # compute path relative to lib
+    file(RELATIVE_PATH relative_to_lib "${elf_file_dir}" "${current_prefix}/lib")
+    # compute path relative to prefix
+    file(RELATIVE_PATH relative_to_prefix "${elf_file_dir}" "${current_prefix}")
+
+    set(rpath_norm "")
+    if(NOT org_rpath STREQUAL "")
+        cmake_path(CONVERT "${org_rpath}" TO_CMAKE_PATH_LIST rpath_norm)
+        list(TRANSFORM rpath_norm REPLACE "${elf_file_dir}" "\$ORIGIN")
+        # Remove unnecessary up/down ; don't use normalize $ORIGIN/../ will be removed otherwise
+        list(TRANSFORM rpath_norm REPLACE "/lib/pkgconfig/../.." "")
+        # lib relative corrections
+        list(TRANSFORM rpath_norm REPLACE "${current_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}/")
+        list(TRANSFORM rpath_norm REPLACE "${current_installed_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}/")
+        list(TRANSFORM rpath_norm REPLACE "${current_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}/")
+        list(TRANSFORM rpath_norm REPLACE "${current_installed_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}/")
+        # prefix relativ
+        list(TRANSFORM rpath_norm REPLACE "${current_prefix}" "\$ORIGIN/${relative_to_prefix}/")
+        list(TRANSFORM rpath_norm REPLACE "${current_installed_prefix}" "\$ORIGIN/${relative_to_prefix}/")
+        list(TRANSFORM rpath_norm REPLACE "${current_prefix}" "\$ORIGIN/${relative_to_prefix}/")
+        list(TRANSFORM rpath_norm REPLACE "${current_installed_prefix}" "\$ORIGIN/${relative_to_prefix}/")
+
+        # Path normalization
+        list(TRANSFORM rpath_norm REPLACE "/+" "/")
+        list(TRANSFORM rpath_norm REPLACE "/^" "")
+
+        # duplication removal
+        list(REMOVE_ITEM rpath_norm "\$ORIGIN")
+        list(REMOVE_ITEM rpath_norm "\$ORIGIN/${relative_to_lib}")
+        list(REMOVE_DUPLICATES rpath_norm)
+
+        if(NOT X_VCPKG_RPATH_KEEP_SYSTEM_PATHS)
+          list(FILTER rpath_norm INCLUDE REGEX "\\\$ORIGIN.+") # Only keep paths relativ to ORIGIN
+        endif()
+    endif()
+
+    if(NOT relative_to_lib STREQUAL "")
+        list(PREPEND rpath_norm "\$ORIGIN/${relative_to_lib}")
+    endif()
+    list(PREPEND rpath_norm "\$ORIGIN") # Make ORIGIN the first entry
+    list(TRANSFORM rpath_norm REPLACE "/$" "")
+    cmake_path(CONVERT "${rpath_norm}" TO_NATIVE_PATH_LIST new_rpath)
+
+    set("${arg_OUT_NEW_RPATH_VAR}" "${new_rpath}" PARENT_SCOPE)
+endfunction()
+
 function(z_vcpkg_fixup_rpath_in_dir)
     vcpkg_find_acquire_program(PATCHELF)
 
@@ -29,51 +91,24 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 continue()
             endif()
 
-            get_filename_component(elf_file_dir "${elf_file}" DIRECTORY)
-
-            set(current_prefix "${CURRENT_PACKAGES_DIR}")
-            set(current_installed_prefix "${CURRENT_INSTALLED_DIR}")
-            if(elf_file_dir MATCHES "debug/")
-                set(current_prefix "${CURRENT_PACKAGES_DIR}/debug")
-                set(current_installed_prefix "${CURRENT_INSTALLED_DIR}/debug")
-            endif()
-
-            # compute path relative to lib
-            file(RELATIVE_PATH relative_to_lib "${elf_file_dir}" "${current_prefix}/lib")
-
             # If this fails, the file is not an elf
             execute_process(
                 COMMAND "${PATCHELF}" --print-rpath "${elf_file}"
                 OUTPUT_VARIABLE readelf_output
                 ERROR_VARIABLE read_rpath_error
             )
-            if(NOT "${read_rpath_error}" STREQUAL "")
+            string(REPLACE "\n" "" readelf_output "${readelf_output}")
+            if(NOT "${read_rpath_error}" STREQUAL "" OR "${readelf_output}" STREQUAL "")
                 continue()
             endif()
 
-            set(rpath_norm "")
-            string(REPLACE "\n" "" readelf_output "${readelf_output}")
-            if(NOT found_rpath STREQUAL "")
-                set(org_rpath "${readelf_output}")
-                message(STATUS "Adjusting original rpath of: '${org_rpath}'")
-                cmake_path(CONVERT "${org_rpath}" TO_CMAKE_PATH_LIST rpath_norm)
-                list(TRANSFORM rpath_norm REPLACE "${elf_file_dir}" "\$ORIGIN")
-                # Remove unnecessary up/down ; don't use normalize $ORIGIN/../ will be removed otherwise
-                list(TRANSFORM rpath_norm REPLACE "/lib/pkgconfig/../.." "")
-                list(TRANSFORM rpath_norm REPLACE "${current_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}")
-                list(TRANSFORM rpath_norm REPLACE "${current_installed_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}")
-                list(REMOVE_ITEM rpath_norm "\$ORIGIN")
-                list(REMOVE_ITEM rpath_norm "\$ORIGIN/${relative_to_lib}")
-                list(REMOVE_DUPLICATES rpath_norm)
-                list(FILTER rpath_norm INCLUDE REGEX "\\\$ORIGIN.+") # Only keep paths relativ to ORIGIN
-            endif()
+            get_filename_component(elf_file_dir "${elf_file}" DIRECTORY)
 
-            if(NOT relative_to_lib STREQUAL "")
-                list(PREPEND rpath_norm "\$ORIGIN/${relative_to_lib}")
-            endif()
-            list(PREPEND rpath_norm "\$ORIGIN") # Make ORIGIN the first entry
-            list(TRANSFORM rpath_norm REPLACE "/$" "")
-            cmake_path(CONVERT "${rpath_norm}" TO_NATIVE_PATH_LIST new_rpath)
+            Z_vcpkg_calculate_corrected_rpath(
+              ELF_FILE_DIR "${elf_file_dir}"
+              ORG_RPATH "${readelf_output}"
+              OUT_NEW_RPATH_VAR new_rpath
+            )
 
             execute_process(
                 COMMAND "${PATCHELF}" --set-rpath "${new_rpath}" "${elf_file}"
@@ -81,9 +116,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 ERROR_VARIABLE set_rpath_error
             )
 
-            message(STATUS "Fixed rpath in: '${elf_file}' ('${new_rpath}')")
+            message(STATUS "Adjusted RPATH of '${elf_file}' ( From '${org_rpath}' -> To '${new_rpath}')")
         endforeach()
     endforeach()
 endfunction()
-
-z_vcpkg_fixup_rpath_in_dir()
