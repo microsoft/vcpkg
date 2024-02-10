@@ -8,6 +8,10 @@
   "dependencies": [
     "glib",
     {
+      "name": "glib",
+      "host": true
+    },
+    {
       "name": "vcpkg-tool-meson",
       "host": true
     }
