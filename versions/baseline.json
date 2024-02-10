@@ -5048,6 +5048,10 @@
       "baseline": "0.56.0",
       "port-version": 0
     },
+    "libvhdi": {
+      "baseline": "20231127",
+      "port-version": 0
+    },
     "libvmdk": {
       "baseline": "20221124",
       "port-version": 0
