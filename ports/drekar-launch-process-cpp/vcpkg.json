@@ -4,7 +4,7 @@
   "description": "Companion library for drekar-launch for C++",
   "homepage": "https://github.com/johnwason/drekar-launch-process-cpp",
   "license": "Apache-2.0",
-  "supports": "windows | linux | osx",
+  "supports": "(windows & (x86 | x64)) | linux | osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
