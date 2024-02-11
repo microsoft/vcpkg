@@ -4,9 +4,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 5c35b92fabfed4cf9087d9345db1bd9558f31e6293f86b79d4d43a6aa106f7e28d3d2123c473ffe31ac1e37c2183b343d51a40372cd446412eb488a113bfe1cb
     HEAD_REF main
-    PATCHES
-      buildtype.patch
-      libdwarf-0.9.0.patch
 )
 
 vcpkg_cmake_configure(
