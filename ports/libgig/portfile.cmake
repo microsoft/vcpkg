@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.linuxsampler.org/packages/libgig-4.4.0.tar.bz2"
     FILENAME "libgig-4.4.0.tar.bz2"
-    SHA512 683c09b1d17acf69020c631452b7dfb25ac54c3701db5e97471d4e7973e9a06267667bf19bfe4eb00d2964223e8446f248d93b4cf29c062dec2588758b4dfba2
+    SHA512 0a3dcea4b13915a928bcd6b900142915eeaa308d3d66ee67b223fd74e0e7a4c9b078776eab791f24422ad2a091d603a48dd84711b4f621571965ec59b7326318
 )
 
 vcpkg_extract_source_archive(
