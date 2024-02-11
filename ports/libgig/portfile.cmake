@@ -2,6 +2,9 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://download.linuxsampler.org/packages/libgig-4.4.0.tar.bz2"
     FILENAME "libgig-4.4.0.tar.bz2"
     SHA512 0a3dcea4b13915a928bcd6b900142915eeaa308d3d66ee67b223fd74e0e7a4c9b078776eab791f24422ad2a091d603a48dd84711b4f621571965ec59b7326318
+    PATCHES
+        fix-cpp20-msvc.diff
+        fix-ssize_t-again.diff
 )
 
 vcpkg_extract_source_archive(

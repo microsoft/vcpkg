@@ -1,0 +1,16 @@
+diff --git a/src/gig.h b/src/gig.h
+index 173e4f5..b9d117a 100644
+--- a/src/gig.h
++++ b/src/gig.h
+@@ -44,6 +44,11 @@
+ # warning No RTTI available!
+ #endif
+ 
++#ifdef _MSC_VER
++#include <BaseTsd.h>
++using ssize_t = SSIZE_T;
++#endif
++
+ #if WORDS_BIGENDIAN
+ # define LIST_TYPE_3PRG	0x33707267
+ # define LIST_TYPE_3EWL	0x3365776C
