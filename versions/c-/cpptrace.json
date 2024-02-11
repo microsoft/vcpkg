@@ -2,7 +2,7 @@
   "versions": [
     {
       "git-tree": "3af335e410cb9b857ed7dcbb1619d27413747f58",
-      "version": "0.4.0-rc2",
+      "version": "0.4.0",
       "port-version": 0
     },
     {
