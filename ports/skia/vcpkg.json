@@ -1,7 +1,7 @@
 {
   "name": "skia",
   "version": "0.38.2",
-  "port-version": 4,
+  "port-version": 5,
   "description": [
     "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
     "It serves as the graphics engine for Google Chrome and Chrome OS, Android, Mozilla Firefox and Firefox OS, and many other products.",
@@ -128,6 +128,9 @@
     "metal": {
       "description": "Metal support for skia",
       "supports": "ios, osx"
+    },
+    "rtti": {
+      "description": "Build with dynamic typeinfo"
     },
     "vulkan": {
       "description": "Vulkan support for skia",

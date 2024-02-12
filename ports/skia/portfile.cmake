@@ -189,6 +189,10 @@ if("metal" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_use_metal=true")
 endif()
 
+if("rtti" IN_LIST FEATURES)
+    string(APPEND EXTRA_CXX_FLAGS " -frtti")
+endif()
+
 if("vulkan" IN_LIST FEATURES)
     list(APPEND required_externals
         vulkan_headers
@@ -276,12 +280,12 @@ else()
 endif()
 
 string_to_gn_list(SKIA_C_FLAGS_DBG "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
-string_to_gn_list(SKIA_CXX_FLAGS_DBG "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
+string_to_gn_list(SKIA_CXX_FLAGS_DBG "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}${EXTRA_CXX_FLAGS}")
 string(APPEND OPTIONS_DBG " \
     extra_cflags_c=${SKIA_C_FLAGS_DBG} \
     extra_cflags_cc=${SKIA_CXX_FLAGS_DBG}")
 string_to_gn_list(SKIA_C_FLAGS_REL "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
-string_to_gn_list(SKIA_CXX_FLAGS_REL "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
+string_to_gn_list(SKIA_CXX_FLAGS_REL "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}${EXTRA_CXX_FLAGS}")
 string(APPEND OPTIONS_REL " \
     extra_cflags_c=${SKIA_C_FLAGS_REL} \
     extra_cflags_cc=${SKIA_CXX_FLAGS_REL}")
