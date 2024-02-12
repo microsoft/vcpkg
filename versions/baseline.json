@@ -309,8 +309,8 @@
       "port-version": 8
     },
     "atkmm": {
-      "baseline": "2.36.1",
-      "port-version": 2
+      "baseline": "2.36.3",
+      "port-version": 0
     },
     "atl": {
       "baseline": "0",
