@@ -36,7 +36,7 @@ jobs:
     value: /mnt/vcpkg-ci/downloads
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
-    value: "x-azurl,$(root-url-ea),$(sas-ea),readwrite"
+    value: "x-azurl,$(root-url-wus3),$(sas-wus3),readwrite"
   - group: vcpkg-binary-caching-credentials
   - name: X_VCPKG_BINARY_SOURCE_STUB
     value: "x-azblob,$(root-bin-url-wus3),$(sas-bin-wus3)"
@@ -92,7 +92,7 @@ jobs:
         --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
         --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs \
         --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci \
-        --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-ea),$(sas-ea),readwrite" \
+        --env X_VCPKG_ASSET_SOURCES="x-azurl,$(root-url-wus3),$(sas-wus3),readwrite" \
         ${{ parameters.dockerImage }} \
         pwsh \
          -File /vcpkg/scripts/azure-pipelines/test-modified-ports.ps1 \
