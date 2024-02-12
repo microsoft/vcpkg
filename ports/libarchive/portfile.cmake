@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
     REF "v${VERSION}"
-    SHA512 07339d54e8e82c0a13c69590e1653a5734fcd06ca3d01b2087a09c3d55e29e5ed4e16c5ef7ca44258f049c7b2de6245315be2c8b043f8db68515750649daafbe
+    SHA512 86a4e325879cde826df068d1154ccf031bbca7a0afa3f2afc57fa41322af245ec477db9fb38fff298c9e269261de1a2ece7849ae1a3512e0ebeb8414167372c0
     HEAD_REF master
     PATCHES
         disable-warnings.patch
@@ -51,6 +51,7 @@ vcpkg_cmake_configure(
         -DENABLE_ZLIB=ON
         -DENABLE_PCREPOSIX=OFF
         -DPOSIX_REGEX_LIB=NONE
+        -DENABLE_MBEDTLS=OFF
         -DENABLE_NETTLE=OFF
         -DENABLE_EXPAT=OFF
         -DENABLE_LibGCC=OFF
@@ -80,7 +81,11 @@ vcpkg_copy_pdbs()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE
+      "${CURRENT_PACKAGES_DIR}/debug/include"
+      "${CURRENT_PACKAGES_DIR}/debug/share"
+      "${CURRENT_PACKAGES_DIR}/share/man"
+)
 
 foreach(header "include/archive.h" "include/archive_entry.h")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${header}" "(!defined LIBARCHIVE_STATIC)" "0")
