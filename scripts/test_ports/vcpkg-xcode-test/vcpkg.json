@@ -1,0 +1,10 @@
+{
+  "name": "vcpkg-xcode-test",
+  "version-string": "0",
+  "description": "Test port vcpkg-xcode",
+  "license": "MIT",
+  "supports": "osx",
+  "dependencies": [
+    "vcpkg-xcode"
+  ]
+}
