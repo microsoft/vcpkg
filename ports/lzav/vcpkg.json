@@ -1,6 +1,6 @@
 {
   "name": "lzav",
-  "version": "3.10",
+  "version": "3.13",
   "description": "Fast In-Memory Data Compression Algorithm (inline C/C++)",
   "homepage": "https://github.com/avaneev/lzav",
   "license": "MIT"

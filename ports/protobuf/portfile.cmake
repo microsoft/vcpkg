@@ -33,6 +33,17 @@ if (VCPKG_DOWNLOAD_MODE)
     vcpkg_find_acquire_program(PKGCONFIG)
 endif()
 
+# Delete language backends we aren't targeting to reduce false positives in automated dependency
+# detectors like Dependabot.
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/csharp"
+    "${SOURCE_PATH}/java"
+    "${SOURCE_PATH}/objectivec"
+    "${SOURCE_PATH}/php"
+    "${SOURCE_PATH}/python"
+    "${SOURCE_PATH}/ruby"
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
