@@ -1,3 +1,9 @@
+vcpkg_download_distfile(PR_22011_PATH
+    URLS "https://patch-diff.githubusercontent.com/raw/openvinotoolkit/openvino/pull/22011.diff"
+    FILENAME "openvino-pr-22011.patch"
+    SHA512 d0bd6f536f109f9d5a7231c50e2b2a0573b4920d351aa61e3f1bb9f98ee4cb77e65024a281ef28c2ac7e968c5f707c4cc26136ce27cf4e3ad6fed197c6798803
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
@@ -8,8 +14,7 @@ vcpkg_from_github(
         001-disable-tools.patch
         # https://github.com/openvinotoolkit/openvino/pull/22139
         002-conditional-enabling-of-js-api.patch
-        # https://github.com/KhronosGroup/OpenCL-CLHPP/blob/v2023.12.14/include/CL/opencl.hpp#L2342-L2344
-        003-opencl.patch
+        ${PR_22011_PATH}
     HEAD_REF master)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
