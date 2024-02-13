@@ -3517,7 +3517,7 @@
       "port-version": 0
     },
     "igraph": {
-      "baseline": "0.10.9",
+      "baseline": "0.10.10",
       "port-version": 0
     },
     "iir1": {
