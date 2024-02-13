@@ -25,10 +25,10 @@ Param(
   [string]$ImageName
 )
 
-$Location = 'eastasia'
+$Location = 'westus3'
 $Prefix = 'PrWin-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D32a_v4'
+$VMSize = 'Standard_D32ads_v5'
 $LiveVMPrefix = 'BUILD'
 $ErrorActionPreference = 'Stop'
 
@@ -50,10 +50,11 @@ $Vmss = New-AzVmssConfig `
   -SkuName $VMSize `
   -SkuTier 'Standard' `
   -Overprovision $false `
-  -UpgradePolicyMode Manual `
+  -UpgradePolicyMode Automatic `
   -EvictionPolicy Delete `
   -Priority Spot `
-  -MaxPrice -1
+  -MaxPrice -1 `
+  -SecurityType Standard
 
 $NicName = $ResourceGroupName + 'NIC'
 New-AzNetworkInterface `
@@ -86,7 +87,7 @@ $Vmss = Set-AzVmssStorageProfile `
 
 $Vmss = Set-AzVmssBootDiagnostic `
   -VirtualMachineScaleSet $Vmss `
-  -Enabled $true
+  -Enabled $false
 
 New-AzVmss `
   -ResourceGroupName $ResourceGroupName `

@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jasper-software/jasper
     REF "version-${VERSION}"
-    SHA512 940841f4094987526ee23aed84f2b028b0f4d58cd2be91dcf737102018d8da111870959ad64710b14ae1ca4ca8361fc900ff6ecee31f0f23ef435bf7f0935462
+    SHA512 31da8f49cec3ba2a3bb9ba40fa54fe64c97d1e564631c980619f0b3ffca36814adc6c2cb8dc1ead774a15546f308e7a33990821538d1e7b6c885b14ed4e1f711
     HEAD_REF master
     PATCHES
         no_stdc_check.patch
         fix-library-name.patch
-        check-for-atomics-support.patch # https://github.com/jasper-software/jasper/pull/370
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
