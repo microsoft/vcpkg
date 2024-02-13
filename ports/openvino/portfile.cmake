@@ -8,6 +8,8 @@ vcpkg_from_github(
         001-disable-tools.patch
         # https://github.com/openvinotoolkit/openvino/pull/22139
         002-conditional-enabling-of-js-api.patch
+        # https://github.com/KhronosGroup/OpenCL-CLHPP/blob/v2023.12.14/include/CL/opencl.hpp#L2342-L2344
+        003-opencl.patch
     HEAD_REF master)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
