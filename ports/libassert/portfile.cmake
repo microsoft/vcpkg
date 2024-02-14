@@ -23,6 +23,7 @@ vcpkg_cmake_config_fixup(
     PACKAGE_NAME libassert
     CONFIG_PATH lib/cmake/assert
 )
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/assert/third_party")
