@@ -26,7 +26,8 @@ vcpkg_cmake_config_fixup(
 vcpkg_copy_pdbs()
 
 file(APPEND "${CURRENT_PACKAGES_DIR}/share/assert/assert-config.cmake" "include(CMakeFindDependencyMacro)
-find_dependency(magic_enum REQUIRED)")
+find_dependency(magic_enum)
+find_dependency(cpptrace)")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/assert/third_party")
