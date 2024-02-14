@@ -33,9 +33,6 @@ declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
     REF "5b45794c2c24c3fa40dc480af92c5284a95423ef"
     LICENSE_FILE LICENSE
-    PATCHES
-        # dawn-dedup-native-proc-gen.patch
-        # add-cstdlib.patch
 )
 declare_external_from_git(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
