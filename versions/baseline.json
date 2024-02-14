@@ -654,7 +654,7 @@
     },
     "blake3": {
       "baseline": "1.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "blas": {
       "baseline": "2023-03-25",
