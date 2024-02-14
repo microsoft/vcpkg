@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 8e1addaf2b970db792c4488fa416b712c7b48dfe501bbfd5c40a7eaf71f07377abaa70f682982d11de9cf9573d8fd8dc5fd16c020eb9b68b5be558139a0799a1
     HEAD_REF main
     PATCHES
+        include-dir.diff
         dependencies.diff
         msvc-runtime.diff
         off_t.diff
@@ -29,7 +30,7 @@ vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES dwarfdump AUTO_CLEAN)
 
 if(BUILD_SHARED)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libdwarf.h" "ifndef LIBDWARF_STATIC" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libdwarf/libdwarf.h" "ifndef LIBDWARF_STATIC" "if 1")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

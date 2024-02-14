@@ -23,7 +23,7 @@ index 7500c9f4..faf1bd7a 100644
 --- a/src/lib/libdwarf/CMakeLists.txt
 +++ b/src/lib/libdwarf/CMakeLists.txt
 @@ -105,7 +105,7 @@ target_include_directories(dwarf PUBLIC
-     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libdwarf>
    )
  if(ZLIB_FOUND AND ZSTD_FOUND)
 -  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ZSTD::ZSTD ) 
