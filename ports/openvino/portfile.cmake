@@ -1,7 +1,7 @@
 vcpkg_download_distfile(PR_22011_PATH
-    URLS "https://patch-diff.githubusercontent.com/raw/openvinotoolkit/openvino/pull/22011.diff?full_index=1"
+    URLS "https://github.com/openvinotoolkit/openvino/pull/22011.diff?full_index=1"
     FILENAME "openvino-pr-22011.patch"
-    SHA512 d0bd6f536f109f9d5a7231c50e2b2a0573b4920d351aa61e3f1bb9f98ee4cb77e65024a281ef28c2ac7e968c5f707c4cc26136ce27cf4e3ad6fed197c6798803
+    SHA512 f25de88db953a825d0a9a2f8e78664aba44eda2fecfed28ba52045c82aa5f586e42deb51cf23c47553e20c64942510500caca6e904d27ab0782270cd3047e953
 )
 
 vcpkg_from_github(
