@@ -20,10 +20,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME libassert
+    PACKAGE_NAME assert
     CONFIG_PATH lib/cmake/assert
 )
 vcpkg_copy_pdbs()
+
+file(APPEND "${CURRENT_PACKAGES_DIR}/share/assert/assert-config.cmake" "include(CMakeFindDependencyMacro)
+find_dependency(magic_enum REQUIRED)")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/assert/third_party")
