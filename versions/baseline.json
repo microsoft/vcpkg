@@ -8614,7 +8614,7 @@
     },
     "tinyutf8": {
       "baseline": "4.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "tinyxml": {
       "baseline": "2.6.2",
