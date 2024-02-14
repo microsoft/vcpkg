@@ -18,12 +18,14 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_NON_SHARED=${BUILD_NON_SHARED}
         -DBUILD_SHARED=${BUILD_SHARED}
+    OPTIONS_DEBUG
+        -DBUILD_DWARFDUMP=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libdwarf")
 vcpkg_fixup_pkgconfig()
-
+vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES dwarfdump AUTO_CLEAN)
 
 if(BUILD_SHARED)
