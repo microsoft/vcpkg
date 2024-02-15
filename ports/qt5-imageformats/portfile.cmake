@@ -46,4 +46,10 @@ else()
     list(APPEND CORE_OPTIONS -no-webp)
 endif()
 
-qt_submodule_installation(BUILD_OPTIONS ${CORE_OPTIONS} BUILD_OPTIONS_RELEASE ${OPT_REL} BUILD_OPTIONS_DEBUG ${OPT_DBG})
+qt_submodule_installation(
+    BUILD_OPTIONS ${CORE_OPTIONS}
+    BUILD_OPTIONS_RELEASE ${OPT_REL}
+    BUILD_OPTIONS_DEBUG ${OPT_DBG}
+    RUNTIME_FOR_TOOLS
+        Qt5Gui
+)

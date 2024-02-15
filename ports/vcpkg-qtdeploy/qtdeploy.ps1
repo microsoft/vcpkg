@@ -18,6 +18,14 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
             New-Item "$targetBinaryDir\plugins\$pluginSubdirName" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
             Get-ChildItem "$QtPluginsDir\$pluginSubdirName\*.dll" | % {
                 deployBinary "$targetBinaryDir\plugins\$pluginSubdirName" "$QtPluginsDir\$pluginSubdirName" $_.Name
+            }
+        }
+        # Don't merge with previous block:
+        # A first call to deployPlugins may handle plugins and DLLs from CURRENT_PACKAGES_DIR.
+        # A second call to deployPlugins will resolve DLLs from CURRENT_INSTALLED_DIR.
+        if (Test-Path "$targetBinaryDir\plugins\$pluginSubdirName") {
+            Write-Verbose "  Resolving plugins directory '$pluginSubdirName'"
+            Get-ChildItem "$targetBinaryDir\plugins\$pluginSubdirName\*.dll" | % {
                 resolve "$targetBinaryDir\plugins\$pluginSubdirName\$($_.Name)"
             }
         } else {
@@ -56,6 +64,15 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
         }
     } elseif ($targetBinaryName -match "Qt5Sqld?.dll") {
         deployPlugins "sqldrivers"
+    } elseif ($targetBinaryName -match "Qt5Testd?.dll") {
+        Write-Verbose "  Deploying platforms for tests"
+        New-Item "$targetBinaryDir\plugins\platforms" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
+        Get-ChildItem "$QtPluginsDir\platforms\qminimal*.dll" | % {
+            deployBinary "$targetBinaryDir\plugins\platforms" "$QtPluginsDir\platforms" $_.Name
+        }
+        Get-ChildItem "$QtPluginsDir\platforms\qoffscreen*.dll" | % {
+            deployBinary "$targetBinaryDir\plugins\platforms" "$QtPluginsDir\platforms" $_.Name
+        }
     } elseif ($targetBinaryName -match "Qt5Multimediad?.dll") {
         deployPlugins "audio"
         deployPlugins "mediaservice"
@@ -69,7 +86,7 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
                 cp -r "$binDir\..\qml" $targetBinaryDir
             } elseif (Test-Path "$binDir\..\..\qml") {
                 cp -r "$binDir\..\..\qml" $targetBinaryDir
-            } else {
+            } elseif (Test-Path "$binDir\Qt5Qmld?.dll") {
                 throw "FAILED"
             }
         }
