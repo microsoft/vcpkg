@@ -286,7 +286,7 @@
     },
     "async-simple": {
       "baseline": "1.3",
-      "port-version": 0
+      "port-version": 1
     },
     "asynch": {
       "baseline": "2019-09-21",
