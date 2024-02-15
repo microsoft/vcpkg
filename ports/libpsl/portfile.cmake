@@ -6,7 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/public_suffix_list.dat" DESTINATION "${SOURCE_PATH}/list")
+vcpkg_download_distfile(
+    PUBLIC_SUFFIX_LIST_DAT 
+    URLS https://raw.githubusercontent.com/publicsuffix/list/5db9b65997e3c9230ac4353b01994c2ae9667cb9/public_suffix_list.dat
+    FILENAME libpsl_public_suffix_list.dat
+    SHA512 08ae73cb028ce9d57ad5ce09afd76a5b379fa18e1370f6a1d094f4242ce66b0f4bf005b05e796c287ab8074aca7f30d023e430f64d3563fa93adbb2371bda220
+)
+file(COPY "${PUBLIC_SUFFIX_LIST_DAT}" DESTINATION "${SOURCE_PATH}/list")
+file(RENAME "${SOURCE_PATH}/list/libpsl_public_suffix_list.dat" "${SOURCE_PATH}/list/public_suffix_list.dat")
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
