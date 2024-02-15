@@ -649,7 +649,7 @@
       ]
     },
     "soup": {
-      "description": "Enable support for the VP8 and VP9 codecs",
+      "description": "Enable support for the soup plugin",
       "dependencies": [
         {
           "name": "gstreamer",
