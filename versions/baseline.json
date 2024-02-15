@@ -7685,7 +7685,7 @@
       "port-version": 4
     },
     "rtmfp-cpp": {
-      "baseline": "1.4.0-20230213.18168ec",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "rtmidi": {
