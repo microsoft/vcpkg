@@ -15,9 +15,17 @@ vcpkg_download_distfile(
 file(COPY "${PUBLIC_SUFFIX_LIST_DAT}" DESTINATION "${SOURCE_PATH}/list")
 file(RENAME "${SOURCE_PATH}/list/libpsl_public_suffix_list.dat" "${SOURCE_PATH}/list/public_suffix_list.dat")
 
+vcpkg_list(SET OPTIONS)
+if(libidn2 IN_LIST FEATURES)
+    list(APPEND OPTIONS -Druntime=libidn2)
+else()
+    list(APPEND OPTIONS -Druntime=auto)
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${OPTIONS}
         -Ddocs=false
         -Dtests=false
 )

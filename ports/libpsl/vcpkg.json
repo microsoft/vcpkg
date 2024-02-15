@@ -11,5 +11,20 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    {
+      "name": "libidn2",
+      "platform": "!windows"
+    }
+  ],
+  "features": {
+    "libidn2": {
+      "description": "choose libidn2 as runtime",
+      "supports": "!windows",
+      "dependencies": [
+        "libidn2"
+      ]
+    }
+  }
 }
