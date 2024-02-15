@@ -4,6 +4,16 @@ endif()
 
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
+macro(z_vcpkg_acquire_msys_declare_package)
+    set(msys_args "${ARGV}")
+    string(REPLACE "autoconf2.72-2.72-1-any.pkg.tar.zst" "autoconf2.71-2.71-3-any.pkg.tar.zst" msys_args "${msys_args}")
+    string(REPLACE "c8dc3e317dc4befc5f2848ac339a74f9dc8f021767aadb3d2c50b13869e0ef49fb48c62a0a1df5176a15a4f10196fcd2307efb83ff143ba1d20301882ba8dd1e" "dd312c428b2e19afd00899eb53ea4255794dea4c19d1d6dea2419cb6a54209ea2130d48abbc20af12196b9f628143436f736fbf889809c2c2291be0c69c0e306" msys_args "${msys_args}")
+    string(REPLACE "autoconf2.72" "autoconf2.71" msys_args "${msys_args}")
+    string(REPLACE "automake-wrapper-20221207-2-any.pkg.tar.zst" "automake-wrapper-20221207-1-any.pkg.tar.zst" msys_args "${msys_args}")
+    string(REPLACE "4351c607edcf00df055b1310a790e41a63c575fbd80a6888d3693b88cad31d4628f9b96f849e319089893c826cf4473d9b31206d7ccb4cea15fd05b6b0ccb582" "22a65f75d1f19788cab93ecf70cb653fcedf67c18285ccbd2bb74ed1303dae8b09e9cfff40e8733920e75d8c4754d59481fa0c5b07d0c28803809448b011f45f" msys_args "${msys_args}")
+    _z_vcpkg_acquire_msys_declare_package(${msys_args})
+endmacro()
+
 vcpkg_download_distfile(
     ARCHIVE
     URLS
