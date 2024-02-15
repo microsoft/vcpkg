@@ -1,7 +1,6 @@
 {
   "name": "libpsl",
   "version": "0.21.5",
-  "port-version": 1,
   "description": "C library for the Public Suffix List",
   "homepage": "rockdaboot.github.io/libpsl",
   "license": "MIT",
@@ -14,11 +13,22 @@
   ],
   "default-features": [
     {
+      "name": "libicu",
+      "platform": "windows"
+    },
+    {
       "name": "libidn2",
       "platform": "!windows"
     }
   ],
   "features": {
+    "libicu": {
+      "description": "choose libicu as runtime",
+      "supports": "windows",
+      "dependencies": [
+        "icu"
+      ]
+    },
     "libidn2": {
       "description": "choose libidn2 as runtime",
       "supports": "!windows",

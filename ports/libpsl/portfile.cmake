@@ -15,17 +15,21 @@ vcpkg_download_distfile(
 file(COPY "${PUBLIC_SUFFIX_LIST_DAT}" DESTINATION "${SOURCE_PATH}/list")
 file(RENAME "${SOURCE_PATH}/list/libpsl_public_suffix_list.dat" "${SOURCE_PATH}/list/public_suffix_list.dat")
 
-vcpkg_list(SET OPTIONS)
+vcpkg_list(SET RUNTIME_OPTIONS)
 if(libidn2 IN_LIST FEATURES)
-    list(APPEND OPTIONS -Druntime=libidn2)
-else()
-    list(APPEND OPTIONS -Druntime=auto)
+    list(APPEND RUNTIME_OPTIONS -Druntime=libidn2)
+endif()
+if(libicu IN_LIST FEATURES)
+    list(APPEND RUNTIME_OPTIONS -Druntime=libicu)
+endif()
+if(RUNTIME_OPTIONS STREQUAL "")
+    message(FATAL_ERROR "At least one of libidn2 and libicu should be selected.")
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${OPTIONS}
+        ${RUNTIME_OPTIONS}
         -Ddocs=false
         -Dtests=false
 )

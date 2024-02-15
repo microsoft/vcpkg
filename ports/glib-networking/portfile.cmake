@@ -1,3 +1,4 @@
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,16 +8,30 @@ vcpkg_from_gitlab(
     HEAD_REF main
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        gnutls gnutls
-        openssl openssl
-        libproxy libproxy
-        environment-proxy environment_proxy
-)
+vcpkg_list(SET FEATURE_OPTIONS)
+if (gnutls IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dgnutls=enabled)
+else()
+    list(APPEND FEATURE_OPTIONS -Dgnutls=disabled)
+endif()
 
-string(REPLACE "OFF" "disabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
-string(REPLACE "ON" "enabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
+if (openssl IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dopenssl=enabled)
+else()
+    list(APPEND FEATURE_OPTIONS -Dopenssl=disabled)
+endif()
+
+if (libproxy IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dlibproxy=enabled)
+else()
+    list(APPEND FEATURE_OPTIONS -Dlibproxy=disabled)
+endif()
+
+if (environment-proxy IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Denvironment_proxy=enabled)
+else()
+    list(APPEND FEATURE_OPTIONS -Denvironment_proxy=disabled)
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -29,8 +44,6 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson()
 
-#make vcpkg post-build happy
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/placeholder.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/glib-networking")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/gio/modules/pkgconfig")
 file(GLOB MODULE_FILES "${CURRENT_PACKAGES_DIR}/lib/gio/modules/*")
 file(COPY ${MODULE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/${PORT}")
