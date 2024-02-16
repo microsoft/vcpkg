@@ -35,10 +35,10 @@ jobs:
     value: /Users/vcpkg/Data/downloads
   - group: vcpkg-binary-caching-credentials
   - name: X_VCPKG_BINARY_SOURCE_STUB
-    value: "x-azblob,$(root-bin-url),$(sas-bin)" # not in eastasia due to physical location
+    value: "x-azblob,$(root-bin-url-wus3),$(sas-bin-wus3)"
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
-    value: "x-azurl,$(root-url-ea),$(sas-ea),readwrite"
+    value: "x-azurl,$(root-url-wus3),$(sas-wus3),readwrite"
 
   steps:
   - bash: |

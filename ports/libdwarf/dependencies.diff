@@ -1,32 +1,33 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 70839abd..04b0f86f 100644
+index 70839abd..cb3b5d8f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -196,6 +196,12 @@ if (ENABLE_DECOMPRESSION)
-     set(HAVE_ZSTD TRUE)
-     set(HAVE_ZSTD_H TRUE)
-   endif()
+@@ -184,12 +184,9 @@ endif()
+ 
+ if (ENABLE_DECOMPRESSION)
+   # Zlib and ZSTD need to be found otherwise disable it
+-  if(NOT TARGET ZLIB::ZLIB)
+-    find_package(ZLIB)
+-  endif()
+-  if(NOT TARGET ZSTD::ZSTD)
+-    find_package(ZSTD)
+-  endif()
++  find_package(ZLIB REQUIRED)
 +  find_package(zstd CONFIG REQUIRED)
-+  if(TARGET zstd::libzstd_shared)
-+    set(ZSTD_LIB zstd::libzstd_shared)
-+  else()
-+    set(ZSTD_LIB zstd::libzstd_static)
-+  endif()
- endif ()
- 
- message(STATUS "CMAKE_SIZEOF_VOID_P ... " ${CMAKE_SIZEOF_VOID_P} )
- 
- #  DW_FWALLXX are gnu C++ options.
++  set(ZSTD_FOUND TRUE)
+   if (ZLIB_FOUND AND ZSTD_FOUND )
+     set(HAVE_ZLIB TRUE)
+     set(HAVE_ZLIB_H TRUE)
 diff --git a/src/lib/libdwarf/CMakeLists.txt b/src/lib/libdwarf/CMakeLists.txt
-index 7500c9f4..ae367cc1 100644
+index 7500c9f4..faf1bd7a 100644
 --- a/src/lib/libdwarf/CMakeLists.txt
 +++ b/src/lib/libdwarf/CMakeLists.txt
 @@ -105,7 +105,7 @@ target_include_directories(dwarf PUBLIC
-     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libdwarf>
    )
  if(ZLIB_FOUND AND ZSTD_FOUND)
 -  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ZSTD::ZSTD ) 
-+  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ${ZSTD_LIB} ) 
++  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static> ) 
  endif()
  set_target_properties(dwarf PROPERTIES PUBLIC_HEADER "libdwarf.h;dwarf.h")
  
