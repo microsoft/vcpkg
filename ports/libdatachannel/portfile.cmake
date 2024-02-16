@@ -14,7 +14,7 @@ vcpkg_from_github(
         ${PATCHES}
         fix_dependency.patch
 )
-
+file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindLibJuice.cmake")
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DATACHANNEL_STATIC_LINKAGE)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
