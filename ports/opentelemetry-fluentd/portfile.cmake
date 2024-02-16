@@ -1,3 +1,6 @@
+# Upon the next update, we plan to remove the standalone opentelemetry-fluentd port and incorporate it into opentelemetry-cpp as a feature. 
+# This is to avoid introducing a new pattern for managing exporters in the opentelemetry port.
+
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()

@@ -1,12 +1,14 @@
 {
   "name": "libassert",
   "version": "1.2.2",
+  "port-version": 1,
   "description": "The most over-engineered and overpowered C++ assertion library.",
   "homepage": "https://github.com/jeremy-rifkin/libassert",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
     "cpptrace",
+    "magic-enum",
     {
       "name": "vcpkg-cmake",
       "host": true
