@@ -8857,8 +8857,8 @@
       "port-version": 1
     },
     "utf8proc": {
-      "baseline": "2.7.0",
-      "port-version": 1
+      "baseline": "2.9.0",
+      "port-version": 0
     },
     "utfcpp": {
       "baseline": "4.0.5",
