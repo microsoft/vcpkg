@@ -7254,7 +7254,7 @@
     },
     "qtkeychain-qt6": {
       "baseline": "0.14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qtlanguageserver": {
       "baseline": "6.6.1",
