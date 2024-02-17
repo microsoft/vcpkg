@@ -45,7 +45,6 @@ endif()
 set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
 if(WITH_GENEVA)
 # Geneva exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, so they should be ported as a feature under opentelemetry-cpp.
-# TODO: merge the opentelemetry-fluentd port to opentelemery-cpp port.
     vcpkg_from_github(
         OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
         REPO open-telemetry/opentelemetry-cpp-contrib
