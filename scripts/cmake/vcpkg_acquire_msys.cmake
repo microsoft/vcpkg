@@ -264,14 +264,14 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
 
     # msys subsystem
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/autoconf-wrapper-20221207-2-any.pkg.tar.zst"
-        SHA512 a4034378a142321d4cc7299a73e65f01c158524c4f3a5a86109da111eb3aecba3e944d848b99b8a90b783e7bdf410e75e7331e8f14961ceca5764659da92f2e5
+        URL "https://mirror.msys2.org/msys/x86_64/autoconf-wrapper-20221207-1-any.pkg.tar.zst"
+        SHA512 601ceb483ddf49d744ed7e365317d64777752e35010a1087082452afd42d8d29fc5331cb3fa4654eb09eec85416c8c5b70fed91a45acfaa667f06f80e6d42f30
         PROVIDES autoconf
-        DEPS autoconf2.72 bash sed
+        DEPS autoconf2.71 bash sed
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/autoconf2.72-2.72-1-any.pkg.tar.zst"
-        SHA512 c8dc3e317dc4befc5f2848ac339a74f9dc8f021767aadb3d2c50b13869e0ef49fb48c62a0a1df5176a15a4f10196fcd2307efb83ff143ba1d20301882ba8dd1e
+        URL "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst"
+        SHA512 dd312c428b2e19afd00899eb53ea4255794dea4c19d1d6dea2419cb6a54209ea2130d48abbc20af12196b9f628143436f736fbf889809c2c2291be0c69c0e306
         DEPS awk bash diffutils m4 perl sed
     )
     z_vcpkg_acquire_msys_declare_package(
