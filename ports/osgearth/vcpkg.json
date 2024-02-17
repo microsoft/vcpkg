@@ -1,13 +1,14 @@
 {
   "name": "osgearth",
-  "version": "3.3",
-  "port-version": 4,
+  "version": "3.4",
+  "port-version": 1,
   "description": "osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2021 Pelican Mapping.",
   "homepage": "https://github.com/gwaldron/osgearth",
   "license": "LGPL-3.0-or-later",
-  "supports": "!(x86 | wasm32)",
+  "supports": "!(arm | x86 | wasm32 | xbox)",
   "dependencies": [
     "basisu",
+    "blosc",
     "cfitsio",
     "draco",
     "geos",
@@ -54,7 +55,7 @@
           "features": [
             "blend2d"
           ],
-          "platform": "!arm & !uwp & !wasm32"
+          "platform": "!(arm & windows) & !uwp & !wasm32"
         }
       ]
     },

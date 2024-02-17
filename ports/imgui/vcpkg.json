@@ -1,6 +1,6 @@
 {
   "name": "imgui",
-  "version": "1.89.2",
+  "version": "1.90.2",
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -20,6 +20,10 @@
       "dependencies": [
         "allegro5"
       ]
+    },
+    "android-binding": {
+      "description": "Make available Android native app support",
+      "supports": "android"
     },
     "docking-experimental": {
       "description": "Build with docking support"
@@ -46,10 +50,25 @@
         "freetype"
       ]
     },
+    "freetype-lunasvg": {
+      "description": "Add support to render OpenType SVG fonts using LunaSVG",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "freetype"
+          ]
+        },
+        "lunasvg"
+      ]
+    },
     "glfw-binding": {
       "description": "Make available GLFW binding",
       "dependencies": [
-        "glfw3"
+        {
+          "name": "glfw3",
+          "platform": "!emscripten"
+        }
       ]
     },
     "glut-binding": {
@@ -66,7 +85,8 @@
       "supports": "osx"
     },
     "opengl2-binding": {
-      "description": "Make available OpenGL (legacy) binding"
+      "description": "Make available OpenGL (legacy) binding",
+      "supports": "!uwp"
     },
     "opengl3-binding": {
       "description": "Make available OpenGL3/ES/ES2 (modern) binding"
@@ -98,7 +118,7 @@
     },
     "win32-binding": {
       "description": "Make available Win32 binding",
-      "supports": "windows"
+      "supports": "windows & !uwp"
     }
   }
 }

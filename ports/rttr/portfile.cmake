@@ -1,14 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rttrorg/rttr
-    REF v0.9.6
-    SHA512 5c94f037b319568d351ee6d25f1404adce00b40598dce4a331789d5357c059e50aae3894f90e60d37307b7e96f4672ae09d3798bbe47f796ef2044f1ac6f9e50
+    REF 7edbd580cfad509a3253c733e70144e36f02ecd4 
+    SHA512 17432728037bc0f8e346c6bd01298c6ee3a4714c83505b2cf1bc23305acea5cc55925e7fc28a8cf182b6ba26abdc9d40ea2f5b168615c030d5ebeec9a8961636
     HEAD_REF master
     PATCHES
         fix-directory-output.patch
         Fix-depends.patch
         remove-owner-read-perms.patch
-        253.patch # https://github.com/rttrorg/rttr/pull/253/
+        disable-unsupport-header.patch
 )
 
 if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static" AND "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
@@ -47,7 +47,7 @@ else()
     vcpkg_cmake_config_fixup(CONFIG_PATH share/rttr/cmake)
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"

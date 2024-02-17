@@ -3,8 +3,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO machinezone/IXWebSocket
-    REF v11.4.3
-    SHA512 6db4f05b3a73aa5f6efdb6d4692d9f9665b14c3a6e4837ff6b2719d9261aa660166fd4ddf99ca8e6804202d6f71c399fe1c223932493ea8db0a73752cb5b8e97
+    REF "v${VERSION}"
+    SHA512 698ad96f25f53bf48906201826008bad46c657f8043d3653988716ddd9fb5dfeb52cebc002b3af76b91d0561155607a5f38bbc2c808aa67f438432207da82a35
+    PATCHES
+        fix-C2065-of-errorMsg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -14,17 +16,23 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         sectransp USE_SECURE_TRANSPORT
 )
 
-if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
-    message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
+string(COMPARE NOTEQUAL "${FEATURES}" "core" USE_TLS)
+
+list(REMOVE_ITEM FEATURES "ssl")
+list(LENGTH FEATURES num_features)
+if(num_features GREATER "2")
+    message(FATAL_ERROR "Can not select multiple ssl backends at the same time. Disable default features to disable the default ssl backend.")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DUSE_TLS=1
+        -DUSE_TLS=${USE_TLS}
     MAYBE_UNUSED_VARIABLES
         USE_SECURE_TRANSPORT
+        USE_MBED_TLS
+        USE_OPEN_SSL
 )
 
 vcpkg_cmake_install()
@@ -33,4 +41,4 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

@@ -1,8 +1,9 @@
 --- meson.build.orig	2022-03-19 03:40:07.000000000 +0900
 +++ meson.build	2022-03-29 21:32:41.000000000 +0900
-@@ -100,6 +100,13 @@
- # Autotools compatibility
- add_project_arguments('-DHAVE_CONFIG_H', language: 'c')
+@@ -96,6 +96,13 @@
+ endif
+
+ add_project_arguments('-D_GNU_SOURCE', language: 'c')
  
 +if host_machine.system() == 'windows'
 +  lib_default = get_option('default_library')

@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version": "6.4.2",
+  "version": "6.6.1",
   "description": "Qt",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -52,6 +52,8 @@
       "platform": "linux"
     },
     "qtdoc",
+    "qtgraphs",
+    "qtgrpc",
     {
       "name": "qtimageformats",
       "default-features": false,
@@ -182,10 +184,7 @@
     },
     {
       "name": "qtwebview",
-      "default-features": false,
-      "features": [
-        "qml"
-      ]
+      "default-features": false
     },
     {
       "name": "qtwebview",
@@ -209,13 +208,6 @@
             "qml"
           ],
           "platform": "windows"
-        },
-        {
-          "name": "qtbase",
-          "features": [
-            "gles2"
-          ],
-          "platform": "linux"
         },
         {
           "name": "qtwayland",

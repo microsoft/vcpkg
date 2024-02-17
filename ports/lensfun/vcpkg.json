@@ -1,0 +1,30 @@
+{
+  "name": "lensfun",
+  "version": "0.3.4",
+  "port-version": 2,
+  "description": "Provide a open source database of photographic lenses and their characteristics",
+  "homepage": "https://lensfun.github.io/",
+  "license": null,
+  "supports": "!arm",
+  "dependencies": [
+    "glib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "python": {
+      "description": "Build python module",
+      "supports": "native & !windows",
+      "dependencies": [
+        "python3",
+        "vcpkg-get-python-packages"
+      ]
+    }
+  }
+}

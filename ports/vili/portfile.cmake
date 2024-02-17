@@ -4,7 +4,7 @@ vcpkg_from_github(
     REPO "ViliOrg/Vili"
     REF "6e97dde7ef7cfe95ef715640524210b6477ecfa1"
     SHA512 "a3c198df442a870f4075136d7eeb4f5241728cdd737ee002f7040e8f3c74e7216a0ebe0aab95ce4dc6e56ba84d3f43f4af2b9ec1116efb13d2b6f3977fcb1f33"
-    HEAF_REF "master"
+    HEAD_REF "master"
 )
 
 vcpkg_cmake_configure(

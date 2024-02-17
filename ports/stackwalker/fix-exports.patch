@@ -1,0 +1,28 @@
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index 82f0206a2..8160fd789 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -79,12 +79,13 @@ add_library(${TARGET_StackWalker} STATIC
+     Main/StackWalker/StackWalker.cpp)
+ target_include_directories(${TARGET_StackWalker} PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/Main/StackWalker>
++    $<INSTALL_INTERFACE:include>
+     )
+
+-install(TARGETS "${TARGET_StackWalker}"
+-    ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
++install(TARGETS "${TARGET_StackWalker}" EXPORT stackwalker-config
++    ARCHIVE  DESTINATION lib
++    LIBRARY  DESTINATION lib
++    RUNTIME  DESTINATION bin
+     )
+
+ install(FILES "${CMAKE_SOURCE_DIR}/Main/StackWalker/StackWalker.h"
+@@ -114,3 +115,5 @@ else()
+
+     add_test(NAME ${TARGET_StackWalker_tests} COMMAND ${TARGET_StackWalker_tests})
+ endif()
++
++install(EXPORT stackwalker-config NAMESPACE unofficial::stackwalker:: DESTINATION share/stackwalker)

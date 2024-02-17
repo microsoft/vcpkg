@@ -1,0 +1,28 @@
+diff --git a/Release/CMakeLists.txt b/Release/CMakeLists.txt
+index b8f3809..3857cfc 100644
+--- a/Release/CMakeLists.txt
++++ b/Release/CMakeLists.txt
+@@ -187,7 +187,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+   set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /profile /OPT:REF /OPT:ICF")
+ 
+   if (WINDOWS_STORE OR WINDOWS_PHONE)
+-    add_compile_options(/ZW)
++    # add_compile_options(/ZW)
+   else()
+     if (NOT (MSVC_VERSION LESS 1920))
+       add_compile_options(/permissive-)
+diff --git a/Release/src/CMakeLists.txt b/Release/src/CMakeLists.txt
+index 128f6d6..098d33f 100644
+--- a/Release/src/CMakeLists.txt
++++ b/Release/src/CMakeLists.txt
+@@ -47,6 +47,10 @@ target_include_directories(cpprest
+     pch
+ )
+ 
++if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC" AND (WINDOWS_STORE OR WINDOWS_PHONE))
++    target_compile_options(cpprest PUBLIC /ZW)
++endif()
++
+ ## Sub-components
+ # Websockets component
+ if(CPPREST_WEBSOCKETS_IMPL STREQUAL "none")

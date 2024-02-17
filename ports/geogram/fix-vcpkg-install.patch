@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8713b2f..0e034fa 100644
+index 1fd796c..05bd735 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -51,7 +51,7 @@ set(VORPALINE_VERSION_MINOR 7)
- set(VORPALINE_VERSION_PATCH 6)
- set(VORPALINE_VERSION ${VORPALINE_VERSION_MAJOR}.${VORPALINE_VERSION_MINOR}.${VORPALINE_VERSION_PATCH})
+@@ -53,7 +53,7 @@ endif()
+ include(cmake/geogram.cmake)
+ 
  
 -set(VORPALINE_INCLUDE_SUBPATH geogram${VORPALINE_VERSION_MAJOR})
 +set(VORPALINE_INCLUDE_SUBPATH ./)
  
  # Determine the current Build-OS (Build-platform without the compiler info)
  string(REGEX REPLACE "-[^-]+$" "" VORPALINE_OS ${VORPALINE_PLATFORM})
-@@ -116,6 +116,7 @@ endif()
+@@ -115,6 +115,7 @@ endif()
  add_subdirectory(src/lib/third_party)
  
  if(GEOGRAM_WITH_GRAPHICS)
@@ -19,7 +19,7 @@ index 8713b2f..0e034fa 100644
    add_subdirectory(src/lib/geogram_gfx)
  endif()
  
-@@ -146,7 +147,44 @@ file(REMOVE ${CMAKE_BINARY_DIR}/doc/LICENSE.txt)
+@@ -145,7 +146,44 @@ file(REMOVE ${CMAKE_BINARY_DIR}/doc/LICENSE.txt)
  
  # FindGeogram.cmake
  
@@ -66,10 +66,19 @@ index 8713b2f..0e034fa 100644
  # Configure CPack
  
 diff --git a/src/lib/geogram/CMakeLists.txt b/src/lib/geogram/CMakeLists.txt
-index 49cb2ba..8985137 100644
+index ed2dca0..30f87b7 100644
 --- a/src/lib/geogram/CMakeLists.txt
 +++ b/src/lib/geogram/CMakeLists.txt
-@@ -61,8 +61,19 @@ if(WIN32)
+@@ -45,7 +45,7 @@ target_include_directories(geogram PRIVATE
+ # path for targets that depend on geogram.
+ # See: https://cmake.org/cmake/help/v3.3/command/target_include_directories.html
+ # https://stackoverflow.com/questions/26243169/cmake-target-include-directories-meaning-of-scope
+-target_include_directories(geogram PUBLIC ${PROJECT_SOURCE_DIR}/src/lib)
++target_include_directories(geogram PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/lib>)
+ 
+ if(ANDROID)
+   target_include_directories(geogram PRIVATE
+@@ -72,8 +72,19 @@ if(WIN32)
      target_link_libraries(geogram psapi)
  endif()
  
@@ -91,10 +100,10 @@ index 49cb2ba..8985137 100644
  # Install include files for the standard devkit
  install(
 diff --git a/src/lib/geogram_gfx/CMakeLists.txt b/src/lib/geogram_gfx/CMakeLists.txt
-index b155975..ad66440 100644
+index a6f8372..195b1e2 100644
 --- a/src/lib/geogram_gfx/CMakeLists.txt
 +++ b/src/lib/geogram_gfx/CMakeLists.txt
-@@ -47,14 +47,21 @@ if(VORPALINE_BUILD_DYNAMIC)
+@@ -52,14 +52,21 @@ if(VORPALINE_BUILD_DYNAMIC)
  endif()
  
  # Install the library
@@ -118,7 +127,7 @@ index b155975..ad66440 100644
  )
  
  # Install include files for the full devkit
-@@ -62,7 +69,7 @@ install(
+@@ -67,7 +74,7 @@ install(
      DIRECTORY .
      DESTINATION include/${VORPALINE_INCLUDE_SUBPATH}/geogram_gfx
      COMPONENT devkit-full
@@ -128,38 +137,36 @@ index b155975..ad66440 100644
  
  install(
 diff --git a/src/lib/third_party/numerics/CMakeLists.txt b/src/lib/third_party/numerics/CMakeLists.txt
-index 8fd39b0..46d5cc6 100644
+index 5faf2fa..33c9bdd 100644
 --- a/src/lib/third_party/numerics/CMakeLists.txt
 +++ b/src/lib/third_party/numerics/CMakeLists.txt
-@@ -10,17 +10,19 @@ endif()
+@@ -14,10 +14,11 @@ endif()
  
  include_directories(${GEOGRAM_SOURCE_DIR}/src/lib/third_party/numerics/INCLUDE)
  
--aux_source_directories(SOURCES "Source Files" .)
 +set(LAPACK_lapack_WORKS TRUE)
 +find_package(BLAS REQUIRED)
 +find_package(LAPACK REQUIRED)
-+ aux_source_directories(SOURCES "Source Files" .)
+ aux_source_directories(SOURCES "Source Files" .)
  aux_source_directories(SOURCES "Source Files\\LIBF2C" LIBF2C)
 -aux_source_directories(SOURCES "Source Files\\CBLAS" CBLAS)
 -aux_source_directories(SOURCES "Source Files\\CLAPACK" CLAPACK)
  aux_source_directories(SOURCES "Source Files\\SUPERLU" SUPERLU)
  aux_source_directories(SOURCES "Source Files\\ARPACK" ARPACK)
  aux_source_directories(SOURCES "Source Files\\ARPACK_UTIL" ARPACK_UTIL)
+@@ -28,6 +29,7 @@ list(REMOVE_ITEM SOURCES "LIBF2C/system_.c")
  
  add_library(geogram_num_3rdparty ${SOURCES})
  
--if(UNIX)
 +target_link_libraries(geogram_num_3rdparty ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
-+ if(UNIX)
+ if(UNIX)
      target_link_libraries(geogram_num_3rdparty m)
  endif()
- 
-diff --git a/src/lib/third_party/numerics/LIBF2C/getarg_.c b/src/lib/third_party/numerics/LIBF2C/getarg_.c
-index 2b69a1e..a504538 100644
---- a/src/lib/third_party/numerics/LIBF2C/getarg_.c
-+++ b/src/lib/third_party/numerics/LIBF2C/getarg_.c
-@@ -17,20 +17,20 @@ VOID getarg_(n, s, ls) ftnint *n; char *s; ftnlen ls;
+diff --git a/src/lib/third_party/numerics/LIBF2C/libf2c_getarg_.c b/src/lib/third_party/numerics/LIBF2C/libf2c_getarg_.c
+index 2b69a1e..a4b4c55 100644
+--- a/src/lib/third_party/numerics/LIBF2C/libf2c_getarg_.c
++++ b/src/lib/third_party/numerics/LIBF2C/libf2c_getarg_.c
+@@ -17,20 +17,21 @@ VOID getarg_(n, s, ls) ftnint *n; char *s; ftnlen ls;
  void getarg_(ftnint *n, char *s, ftnlen ls)
  #endif
  {
@@ -182,21 +189,22 @@ index 2b69a1e..a504538 100644
 -		*s++ = ' ';
 -	}
 +	// if(*n>=0 && *n<xargc)
-+	// 	t = xargv[*n];
++		// t = xargv[*n];
 +	// else
-+	// 	t = "";
++		// t = "";
 +	// for(i = 0; i<ls && *t!='\0' ; ++i)
-+	// 	*s++ = *t++;
++		// *s++ = *t++;
 +	// for( ; i<ls ; ++i)
-+	// 	*s++ = ' ';
++		// *s++ = ' ';
++	// }
 +}
  #ifdef __cplusplus
  }
  #endif
-diff --git a/src/lib/third_party/numerics/LIBF2C/iargc_.c b/src/lib/third_party/numerics/LIBF2C/iargc_.c
+diff --git a/src/lib/third_party/numerics/LIBF2C/libf2c_iargc_.c b/src/lib/third_party/numerics/LIBF2C/libf2c_iargc_.c
 index 2f29da0..48dfd9f 100644
---- a/src/lib/third_party/numerics/LIBF2C/iargc_.c
-+++ b/src/lib/third_party/numerics/LIBF2C/iargc_.c
+--- a/src/lib/third_party/numerics/LIBF2C/libf2c_iargc_.c
++++ b/src/lib/third_party/numerics/LIBF2C/libf2c_iargc_.c
 @@ -9,8 +9,9 @@ ftnint iargc_()
  ftnint iargc_(void)
  #endif

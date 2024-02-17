@@ -4,17 +4,19 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbus/dbus
-    REF ed866a94889e13c83dc873d8b5f86a907f908456 #1.15.2
-    SHA512  eca9bfabfa6e8a3bf82ecc3c36dbd038c2450aded539a6d405a2709e876ccbf5002391802f6d538a5bbc16723f0d51f059f03cb6d226b400bc032b3bbe59cf10
+    REF "dbus-${VERSION}"
+    SHA512 8e476b408514e6540c36beb84e8025827c22cda8958b6eb74d22b99c64765eb3cd5a6502aea546e3e5f0534039857b37edee89c659acef40e7cab0939947d4af
     HEAD_REF master
     PATCHES 
         cmake.dep.patch
         pkgconfig.patch
         getpeereid.patch # missing check from configure.ac
+        libsystemd.patch
 ) 
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
+        systemd ENABLE_SYSTEMD
         x11     DBUS_BUILD_X11
         x11     CMAKE_REQUIRE_FIND_PACKAGE_X11
 )
@@ -30,12 +32,12 @@ vcpkg_cmake_configure(
         -DDBUS_INSTALL_SYSTEM_LIBS=OFF
         #-DDBUS_SERVICE=ON
         -DDBUS_WITH_GLIB=OFF
-        -DENABLE_SYSTEMD=ON
         -DTHREADS_PREFER_PTHREAD_FLAG=ON
         -DXSLTPROC_EXECUTABLE=FALSE
         "-DCMAKE_INSTALL_SYSCONFDIR=${CURRENT_PACKAGES_DIR}/etc/${PORT}"
         "-DWITH_SYSTEMD_SYSTEMUNITDIR=lib/systemd/system"
         "-DWITH_SYSTEMD_USERUNITDIR=lib/systemd/user"
+        ${options}
     OPTIONS_RELEASE
         -DDBUS_DISABLE_ASSERT=OFF
         -DDBUS_ENABLE_STATS=OFF

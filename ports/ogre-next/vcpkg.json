@@ -1,19 +1,18 @@
 {
   "name": "ogre-next",
-  "version": "2.3.1",
-  "description": "Ogre 2.1 & 2.2 - scene-oriented, flexible 3D engine written in C++",
+  "version": "2.3.3",
+  "port-version": 2,
+  "description": "Ogre Next - scene-oriented, flexible 3D engine written in C++",
   "homepage": "https://github.com/OGRECave/ogre-next",
   "license": "MIT",
+  "supports": "!emscripten & !uwp & !xbox",
   "dependencies": [
-    "boost-date-time",
-    "boost-thread",
     "freeimage",
-    "freetype",
-    "openvr",
-    "poco",
+    {
+      "name": "freetype",
+      "default-features": false
+    },
     "rapidjson",
-    "sdl2",
-    "tbb",
     "tinyxml",
     {
       "name": "vcpkg-cmake",
@@ -26,20 +25,46 @@
     "zlib",
     "zziplib"
   ],
+  "default-features": [
+    {
+      "name": "d3d11",
+      "platform": "windows"
+    },
+    {
+      "name": "gl3plus",
+      "platform": "!android & !ios & !osx & !windows"
+    },
+    {
+      "name": "metal",
+      "platform": "ios | osx"
+    },
+    {
+      "name": "vulkan",
+      "platform": "android"
+    }
+  ],
   "features": {
-    "csharp": {
-      "description": "Build csharp bindings"
+    "d3d11": {
+      "description": "Direct3D 11 render system",
+      "supports": "windows"
     },
-    "d3d9": {
-      "description": "Build Direct3D9 RenderSystem"
+    "gl3plus": {
+      "description": "OpenGL 3+ render system",
+      "supports": "!android & !(arm & windows)"
     },
-    "java": {
-      "description": "Build Java (JNI) bindings"
+    "metal": {
+      "description": "Metal render system",
+      "supports": "osx | ios"
     },
-    "python": {
-      "description": "Build Python bindings",
+    "planar-reflections": {
+      "description": "Component to use planar reflections, can be used by both HlmsPbs and HlmsUnlit"
+    },
+    "vulkan": {
+      "description": "Vulkan render system",
+      "supports": "!osx",
       "dependencies": [
-        "python3"
+        "glslang",
+        "vulkan"
       ]
     }
   }

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hanickadot/compile-time-regular-expressions
-    REF v3.7.1
-    SHA512 7acf038e0277cea9470520dd469a266a1cbe1f03046b7ee1d25766f04f45f1a9d2ca40f50a2de084ee321626ceda4ee6de039b50386757138cf5a4c5aea5c9f3
+    REF "v${VERSION}"
+    SHA512 bc476728dbf7b099ad8fa547f586510f2994fb05d7c1d1334efd8bd49c041909d172097a447fde7ebb5b7588b462339c4aefc7a50d2b75945bc328773f964720
     HEAD_REF main
 )
 

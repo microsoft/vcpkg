@@ -10,4 +10,4 @@ index 3825e2a19..0a79b49bd 100644
 +            PXR_BUILD_LOCATION=../lib/usd
              PXR_PLUGIN_BUILD_LOCATION=../plugin/usd
              ${pxrInstallLocation}
-             ${pythonModulesEnabled}
+             ${apiPrivate}

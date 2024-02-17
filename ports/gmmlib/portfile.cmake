@@ -7,8 +7,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/gmmlib
-    REF intel-gmmlib-21.3.2
-    SHA512 155f7077f3135ff812b9fe759e56fecd595f1c5dde9a377df31a9acedcfeea9d93751badba68077c00929a21cb87e1bd69b8fe3961ac61765fabbc5d6d89e6be
+    REF "intel-gmmlib-${VERSION}"
+    SHA512 073cb2e9ec025ae32e2f33f51547083cd8425b0c7297e361b037c71b55a8d2322cd36ac7cabbf8c7a325f80f1cc97947c0aa8aa833dc5fbae5abe28e9c04451a
     HEAD_REF master
 )
 

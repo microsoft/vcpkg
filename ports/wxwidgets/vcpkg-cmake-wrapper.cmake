@@ -55,6 +55,14 @@ if(DEFINED _vcpkg_wxwidgets_backup_crosscompiling)
     unset(_vcpkg_wxwidgets_backup_crosscompiling)
 endif()
 
+if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static" AND NOT "wx::core" IN_LIST wxWidgets_LIBRARIES)
+    find_package(NanoSVG CONFIG QUIET)
+    list(APPEND wxWidgets_LIBRARIES
+        NanoSVG::nanosvg NanoSVG::nanosvgrast
+        )
+endif()
+
+
 if(WIN32 AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static" AND NOT "wx::core" IN_LIST wxWidgets_LIBRARIES)
     find_package(EXPAT QUIET)
     find_package(JPEG QUIET)

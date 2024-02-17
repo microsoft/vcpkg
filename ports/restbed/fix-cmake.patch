@@ -1,4 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e6095da..6bf8d81 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -57,7 +57,11 @@ find_package( asio REQUIRED )
@@ -14,7 +15,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  endif ( )
  
  include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${ssl_INCLUDE} )
-@@ -76,12 +76,13 @@ endif ( )
+@@ -76,12 +80,14 @@ endif ( )
  #
  file( GLOB_RECURSE MANIFEST "${SOURCE_DIR}/*.cpp" )
  
@@ -25,14 +26,16 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  set_property( TARGET ${STATIC_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
  set_target_properties( ${STATIC_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
 -	
++target_include_directories(${STATIC_LIBRARY_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
 +else ( )
  set( SHARED_LIBRARY_NAME "${PROJECT_NAME}-shared" )
  add_library( ${SHARED_LIBRARY_NAME} SHARED ${MANIFEST} )
  set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
-@@ -93,13 +94,20 @@ else ( )
+@@ -93,14 +99,22 @@ else ( )
  	set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
  endif ( )	
  set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR} VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} )
++target_include_directories(${SHARED_LIBRARY_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
 +endif ( )
  
  if ( BUILD_SSL )
@@ -46,18 +49,38 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
      target_link_libraries( ${SHARED_LIBRARY_NAME} )
 +else ( )
      target_link_libraries( ${STATIC_LIBRARY_NAME} ${CMAKE_DL_LIBS} )
-+endif ( )
  endif ( )
++endif ( )
  
  if ( BUILD_TESTS )
-@@ -119,5 +127,8 @@ file( GLOB ARTIFACTS "${SOURCE_DIR}/*.hpp" )
+     find_package( catch REQUIRED )
+@@ -119,5 +133,26 @@ file( GLOB ARTIFACTS "${SOURCE_DIR}/*.hpp" )
  
  install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "${CMAKE_INSTALL_PREFIX}/include" )
  install( FILES ${ARTIFACTS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/corvusoft/${PROJECT_NAME}" )
-+if ( NOT BUILD_SHARED_LIBS )
 -install( TARGETS ${STATIC_LIBRARY_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
-+install( TARGETS ${STATIC_LIBRARY_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
-+else ( )
 -install( TARGETS ${SHARED_LIBRARY_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
-+install( TARGETS ${SHARED_LIBRARY_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
++if ( NOT BUILD_SHARED_LIBS )
++install( TARGETS ${STATIC_LIBRARY_NAME} EXPORT unofficial-restbed-target RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
++else ( )
++install( TARGETS ${SHARED_LIBRARY_NAME} EXPORT unofficial-restbed-target RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
 +endif ( )
++
++install( EXPORT unofficial-restbed-target FILE unofficial-restbed-target.cmake NAMESPACE unofficial::restbed:: DESTINATION share/unofficial-restbed)
++
++file( WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-restbed-config.cmake.in"
++[[include(CMakeFindDependencyMacro)
++if (@BUILD_SSL@)
++    find_dependency(OpenSSL)
++endif()
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-restbed-target.cmake")
++if("@BUILD_SHARED_LIBS@")
++    add_library(unofficial::restbed::restbed ALIAS unofficial::restbed::restbed-shared)
++else()
++    add_library(unofficial::restbed::restbed ALIAS unofficial::restbed::restbed-static)
++endif()
++]])
++
++configure_file( "${CMAKE_CURRENT_BINARY_DIR}/unofficial-restbed-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-restbed-config.cmake" @ONLY)
++install( FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-restbed-config.cmake" DESTINATION share/unofficial-restbed)
+\ No newline at end of file

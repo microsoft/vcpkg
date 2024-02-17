@@ -1,0 +1,78 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e3eb444..74b4938 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,6 +4,9 @@
+ cmake_minimum_required(VERSION 3.1)
+ project(EASTL CXX)
+ 
++include(GNUInstallDirs)
++include(CMakePackageConfigHelpers)
++
+ #-------------------------------------------------------------------------------------------
+ # Options
+ #-------------------------------------------------------------------------------------------
+@@ -11,6 +14,8 @@ option(EASTL_BUILD_BENCHMARK "Enable generation of build files for benchmark" OF
+ option(EASTL_BUILD_TESTS "Enable generation of build files for tests" OFF)
+ option(EASTL_STD_ITERATOR_CATEGORY_ENABLED "Enable compatibility with std:: iterator categories" OFF)
+ 
++find_package(EABase CONFIG REQUIRED)
++
+ #-------------------------------------------------------------------------------------------
+ # Compiler Flags
+ #-------------------------------------------------------------------------------------------
+@@ -54,7 +59,10 @@ endif()
+ #-------------------------------------------------------------------------------------------
+ # Include dirs
+ #-------------------------------------------------------------------------------------------
+-target_include_directories(EASTL PUBLIC include)
++target_include_directories(EASTL PUBLIC
++        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
++        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++    )
+ 
+ #-------------------------------------------------------------------------------------------
+ # Dependencies
+@@ -63,7 +71,41 @@ if (NOT TARGET EABase)
+     add_subdirectory(test/packages/EABase)
+ endif()
+ 
+-target_link_libraries(EASTL EABase)
++target_link_libraries(EASTL PUBLIC EABase)
++
++# create and install an export set for eabase target as EABase::EABase
++set(EASTL_CMAKE_CONFIG_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/EASTL")
++
++configure_package_config_file(
++    EASTLConfig.cmake.in
++    ${CMAKE_CURRENT_BINARY_DIR}/EASTLConfig.cmake
++    INSTALL_DESTINATION ${EASTL_CMAKE_CONFIG_DESTINATION}
++)
++
++# create and install an export set for Terra target as Terra
++install(
++    TARGETS EASTL EXPORT EASTLTargets
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}
++)
++
++
++install(EXPORT EASTLTargets DESTINATION ${EASTL_CMAKE_CONFIG_DESTINATION})
++
++write_basic_package_version_file(
++  "${CMAKE_CURRENT_BINARY_DIR}/EASTLConfigVersion.cmake"
++  VERSION 3.16.05
++  COMPATIBILITY SameMajorVersion
++)
++
++install(TARGETS EASTL LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++install(DIRECTORY "include/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++
++install(
++    FILES
++        "${CMAKE_CURRENT_BINARY_DIR}/EASTLConfig.cmake"
++        "${CMAKE_CURRENT_BINARY_DIR}/EASTLConfigVersion.cmake"
++    DESTINATION ${EASTL_CMAKE_CONFIG_DESTINATION}
++)
+ 
+ #-------------------------------------------------------------------------------------------
+ # Installation

@@ -1,6 +1,6 @@
 {
   "name": "kissnet",
-  "version-date": "2022-10-18",
+  "version-date": "2023-02-04",
   "description": "Keep It Simple Stupid NETwork - C++17 wrapping of your OS's native socket API",
   "homepage": "https://github.com/Ybalrid/kissnet",
   "license": "MIT",

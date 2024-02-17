@@ -1,0 +1,26 @@
+diff --git a/exporters/fluentd/src/log/recordable.cc b/exporters/fluentd/src/log/recordable.cc
+index 5af84d8..1b124eb 100644
+--- a/exporters/fluentd/src/log/recordable.cc
++++ b/exporters/fluentd/src/log/recordable.cc
+@@ -1,6 +1,9 @@
+ /// Copyright The OpenTelemetry Authors
+ // SPDX-License-Identifier: Apache-2.0
+ 
++#include "opentelemetry/logs/severity.h"
++#include "opentelemetry/trace/span_id.h"
++#include "opentelemetry/trace/trace_id.h"
+ #include "opentelemetry/exporters/fluentd/log/recordable.h"
+ #include "opentelemetry/exporters/fluentd/common/fluentd_common.h"
+ #include "opentelemetry/exporters/fluentd/common/fluentd_logging.h"
+diff --git a/exporters/fluentd/src/trace/recordable.cc b/exporters/fluentd/src/trace/recordable.cc
+index 5c0a5ed..c24aa0c 100644
+--- a/exporters/fluentd/src/trace/recordable.cc
++++ b/exporters/fluentd/src/trace/recordable.cc
+@@ -4,6 +4,7 @@
+ #include "opentelemetry/exporters/fluentd/trace/recordable.h"
+ #include "opentelemetry/exporters/fluentd/common/fluentd_common.h"
+ #include "opentelemetry/exporters/fluentd/common/fluentd_logging.h"
++#include "opentelemetry/sdk/resource/resource.h"
+ 
+ #include <map>
+ #include <string>

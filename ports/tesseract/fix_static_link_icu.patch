@@ -1,0 +1,13 @@
+diff --git a/src/training/CMakeLists.txt b/src/training/CMakeLists.txt
+index 429ed04..9878fa5 100644
+--- a/src/training/CMakeLists.txt
++++ b/src/training/CMakeLists.txt
+@@ -72,7 +72,7 @@ if(NOT SW_BUILD)
+   if(PKG_CONFIG_FOUND)
+     pkg_check_modules(ICU REQUIRED IMPORTED_TARGET icu-uc icu-i18n)
+   else()
+-    find_package(ICU 52.1 COMPONENTS uc i18n)
++    find_package(ICU 72.1 COMPONENTS uc i18n dt)
+   endif()
+   if(ICU_FOUND)
+     message(">> ICU_FOUND ${ICU_FOUND} ${ICU_VERSION} ${ICU_LIBRARIES} ${ICU_INCLUDE_DIRS}")

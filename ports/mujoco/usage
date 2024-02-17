@@ -1,0 +1,4 @@
+mujoco provides CMake targets:
+
+    find_package(mujoco CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE mujoco::mujoco)

@@ -1,0 +1,75 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 112b36b..30e466a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -69,7 +69,10 @@ endif()
+ find_package(fmt REQUIRED)
+ find_package(folly REQUIRED)
+ find_package(wangle REQUIRED)
+-find_package(mvfst REQUIRED)
++find_package(fmt CONFIG REQUIRED)
++find_package(folly CONFIG REQUIRED)
++find_package(wangle CONFIG REQUIRED)
++find_package(mvfst CONFIG REQUIRED)
+ find_package(zstd CONFIG REQUIRED)
+ find_package(ZLIB REQUIRED)
+ find_package(OpenSSL REQUIRED)
+@@ -124,27 +127,8 @@ SET(GFLAG_DEPENDENCIES "")
+ SET(PROXYGEN_EXTRA_LINK_LIBRARIES "")
+ SET(PROXYGEN_EXTRA_INCLUDE_DIRECTORIES "")
+ 
+-find_package(gflags CONFIG QUIET)
+-if (gflags_FOUND)
+-  message("module path: ${CMAKE_MODULE_PATH}")
+-  message(STATUS "Found gflags from package config")
+-  if (TARGET gflags-shared)
+-    list(APPEND GFLAG_DEPENDENCIES gflags-shared)
+-  elseif (TARGET gflags)
+-    list(APPEND GFLAG_DEPENDENCIES gflags)
+-  else()
+-    message(FATAL_ERROR
+-            "Unable to determine the target name for the GFlags package.")
+-  endif()
+-  list(APPEND CMAKE_REQUIRED_LIBRARIES ${GFLAGS_LIBRARIES})
+-  list(APPEND CMAKE_REQUIRED_INCLUDES ${GFLAGS_INCLUDE_DIR})
+-else()
+-  find_package(Gflags REQUIRED MODULE)
+-  list(APPEND PROXYGEN_EXTRA_LINK_LIBRARIES ${LIBGFLAGS_LIBRARY})
+-  list(APPEND PROXYGEN_EXTRA_INCLUDE_DIRECTORIES ${LIBGFLAGS_INCLUDE_DIR})
+-  list(APPEND CMAKE_REQUIRED_LIBRARIES ${LIBGFLAGS_LIBRARY})
+-  list(APPEND CMAKE_REQUIRED_INCLUDES ${LIBGFLAGS_INCLUDE_DIR})
+-endif()
++find_package(gflags CONFIG REQUIRED)
++list(APPEND CMAKE_REQUIRED_LIBRARIES gflags::gflags)
+ 
+ include(ProxygenTest)
+ 
+diff --git a/cmake/proxygen-config.cmake.in b/cmake/proxygen-config.cmake.in
+index c79875d..0e002b9 100644
+--- a/cmake/proxygen-config.cmake.in
++++ b/cmake/proxygen-config.cmake.in
+@@ -17,17 +17,18 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(fmt)
+-find_dependency(folly)
+-find_dependency(wangle)
+-find_dependency(mvfst)
+-find_dependency(Fizz)
++find_dependency(fmt CONFIG)
++find_dependency(folly CONFIG)
++find_dependency(wangle CONFIG)
++find_dependency(mvfst CONFIG)
++find_dependency(fizz CONFIG)
++find_dependency(gflags CONFIG)
+ # For now, anything that depends on Proxygen has to copy its FindZstd.cmake
+ # and issue a `find_package(Zstd)`.  Uncommenting this won't work because
+ # this Zstd module exposes a library called `zstd`.  The right fix is
+ # discussed on D24686032.
+ #
+-# find_dependency(Zstd)
++find_dependency(zstd CONFIG)
+ find_dependency(ZLIB)
+ find_dependency(OpenSSL)
+ find_dependency(Threads)

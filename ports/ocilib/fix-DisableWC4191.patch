@@ -1,7 +1,7 @@
-diff --git a/proj/dll/ocilib_dll_vs2019.vcxproj b/proj/dll/ocilib_dll_vs2019.vcxproj
-index 2d5b3bf..35e4684 100644
---- a/proj/dll/ocilib_dll_vs2019.vcxproj
-+++ b/proj/dll/ocilib_dll_vs2019.vcxproj
+diff --git a/proj/dll/ocilib_dll.vcxproj b/proj/dll/ocilib_dll.vcxproj
+index 1caf1d3..b7d36ea 100644
+--- a/proj/dll/ocilib_dll.vcxproj
++++ b/proj/dll/ocilib_dll.vcxproj
 @@ -116,7 +116,7 @@
        <PrecompiledHeader>
        </PrecompiledHeader>

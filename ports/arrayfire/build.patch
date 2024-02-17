@@ -218,3 +218,50 @@ index d618ff2..9f51739 100644
        )
  
      set_target_properties(opencl_sort_by_key_${SBK_TYPE}
+diff --git a/src/backend/opencl/CMakeLists.txt b/src/backend/opencl/CMakeLists.txt
+index b543433..9b5923b 100644
+--- a/src/backend/opencl/CMakeLists.txt
++++ b/src/backend/opencl/CMakeLists.txt
+@@ -432,12 +432,9 @@ if(AF_OPENCL_BLAS_LIBRARY STREQUAL "clBLAS")
+     PRIVATE
+       clBLAS::clBLAS)
+ elseif(AF_OPENCL_BLAS_LIBRARY STREQUAL "CLBlast")
+-  include(build_CLBlast)
++  find_package(CLBlast CONFIG REQUIRED)
+   target_compile_definitions(afopencl PRIVATE USE_CLBLAST)
+-  target_link_libraries(afopencl
+-    PRIVATE
+-      CLBlast)
+-    add_dependencies(afopencl CLBlast-ext)
++  target_link_libraries(afopencl PRIVATE clblast)
+ endif()
+
+
+diff --git a/src/backend/opencl/homography.cpp b/src/backend/opencl/homography.cpp
+index 3b598b0..2815923 100644
+--- a/src/backend/opencl/homography.cpp
++++ b/src/backend/opencl/homography.cpp
+@@ -39,7 +39,7 @@ int homography(Array<T> &bestH, const Array<float> &x_src,
+             ::std::min(iter, static_cast<unsigned>(
+                                  log(1.f - LMEDSConfidence) /
+                                  log(1.f - pow(1.f - LMEDSOutlierRatio, 4.f))));
+-        err = createValueArray<float>(af::dim4(nsamples, iter), FLT_MAX);
++        err = createValueArray<float>(af::dim4(nsamples, iter), std::numeric_limits<float>::max());
+     } else {
+         // Avoid passing "null" cl_mem object to kernels
+         err = createEmptyArray<float>(af::dim4(1));
+diff --git a/src/backend/opencl/kernel/homography.hpp b/src/backend/opencl/kernel/homography.hpp
+index b84e599..90d0c80 100644
+--- a/src/backend/opencl/kernel/homography.hpp
++++ b/src/backend/opencl/kernel/homography.hpp
+@@ -39,7 +39,9 @@ std::array<Kernel, 5> getHomographyKernels(const af_homography_type htype) {
+     };
+     options.emplace_back(getTypeBuildDefinition<T>());
+     options.emplace_back(DefineKeyValue(
+-        EPS, (std::is_same<T, double>::value ? DBL_EPSILON : FLT_EPSILON)));
++        EPS, (std::is_same<T, double>::value
++                                 ? std::numeric_limits<double>::epsilon()
++                                 : std::numeric_limits<float>::epsilon())));
+     if (htype == AF_HOMOGRAPHY_RANSAC) {
+         options.emplace_back(DefineKey(RANSAC));
+     }

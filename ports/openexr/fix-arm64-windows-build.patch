@@ -1,0 +1,13 @@
+diff --git a/src/lib/OpenEXRCore/internal_dwa_simd.h b/src/lib/OpenEXRCore/internal_dwa_simd.h
+index 7b53501ac..ca69c9848 100644
+--- a/src/lib/OpenEXRCore/internal_dwa_simd.h
++++ b/src/lib/OpenEXRCore/internal_dwa_simd.h
+@@ -18,7 +18,7 @@
+ // aligned. Unaligned pointers may risk seg-faulting.
+ //
+ 
+-#if defined __SSE2__ || (_MSC_VER >= 1300 && !_M_CEE_PURE)
++#if defined __SSE2__ || (_MSC_VER >= 1300 && (_M_IX86 || _M_X64) && !_M_CEE_PURE)
+ #    define IMF_HAVE_SSE2 1
+ #    include <emmintrin.h>
+ #    include <mmintrin.h>

@@ -1,12 +1,16 @@
+string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" _c_ares_version "${VERSION}")
+set(_c_ares_version_major "${CMAKE_MATCH_1}")
+set(_c_ares_version_minor "${CMAKE_MATCH_2}")
+set(_c_ares_version_patch "${CMAKE_MATCH_3}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
-    REF cares-1_18_1
-    SHA512 9f5f9d5a22a4643aef8701c4abfd4b28e0bded2479bab462d2dfc63a8f84348f02d3cfbd7c85cc1e06a154a3e4206721cb6669c7c61538ecdcd44268e4ce073e
+    REF "cares-${_c_ares_version_major}_${_c_ares_version_minor}_${_c_ares_version_patch}"
+    SHA512 1ff8d35cc0e022a0478149ca80a0a1f80b2c8d04e108b6cb9912ecc8c391017b6443129b9b52c2cf82b21ef338de0c80d89c92c6d7f95fe1f9c42575ed1a3919
     HEAD_REF main
     PATCHES
         avoid-docs.patch
-        guard-imported-lib.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -32,7 +36,7 @@ vcpkg_fixup_pkgconfig()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/include/ares.h"
-        "#ifdef CARES_STATICLIB" "#if 1"
+        "#  ifdef CARES_STATICLIB" "#if 1"
     )
 endif()
 

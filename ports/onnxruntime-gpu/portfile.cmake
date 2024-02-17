@@ -1,19 +1,30 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/microsoft/onnxruntime/releases/download/v${VERSION}/onnxruntime-win-x64-gpu-${VERSION}.zip"
     FILENAME "onnxruntime-win-x64-gpu-${VERSION}.zip"
-    SHA512 eea4d95189da1dc0358673d09d66b6c2880cb66333d76d6c6d54cacc87ac04a7a52f4aa911da02c40bc86718e584d130e492d7a0499ed0daa323194c05d41960
+    SHA512 7ab350a2ede0fc8c716cf083e16a9303acbcc855982e53900f8843773ec32fd20a7396f0bde82bb29f382012b1d05dea41708797f112d9096c8b5048fc5eb7d8
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
-    REF ${VERSION}
 )
+
+# Download repo for experimental features
+vcpkg_from_github(
+    OUT_SOURCE_PATH REPO_PATH
+    REPO microsoft/onnxruntime
+    REF v${VERSION}
+    SHA512 f2fec4ded88da6bf67ae7d0aa3082736cb3b8ba29e723b5a516d7632b68ce02aed461f24d3e82cbab20757729e0ab45d736bd986c9b7395f2879b16a091c12a1
+)
+
+file(COPY
+        ${REPO_PATH}/include/onnxruntime/core/session/experimental_onnxruntime_cxx_api.h 
+        ${REPO_PATH}/include/onnxruntime/core/session/experimental_onnxruntime_cxx_inline.h
+        DESTINATION ${CURRENT_PACKAGES_DIR}/include
+    )
 
 file(MAKE_DIRECTORY
         ${CURRENT_PACKAGES_DIR}/include
@@ -88,4 +99,4 @@ file(COPY ${SOURCE_PATH}/onnxruntime-win-x64-gpu-${VERSION}/lib/onnxruntime_prov
 file(COPY ${SOURCE_PATH}/onnxruntime-win-x64-gpu-${VERSION}/lib/onnxruntime_providers_cuda.dll
     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 # # Handle copyright
-file(INSTALL ${SOURCE_PATH}/onnxruntime-win-x64-gpu-${VERSION}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/onnxruntime-win-x64-gpu-${VERSION}/LICENSE")

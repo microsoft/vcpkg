@@ -1,3 +1,8 @@
+if(ANDROID AND ANDROID_NATIVE_API_LEVEL LESS 24)
+    # https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
+    set(HAVE_FILE_OFFSET_BITS FALSE CACHE INTERNAL "")
+endif()
+
 # Process the libs and targets in the variable named by `input`
 # into a flat list of libs in the variable named by `output`.
 # Simplify -framework elements.
@@ -13,6 +18,7 @@ function(vcpkg_curl_flatten input output)
     list(REMOVE_AT input_libs 0)
     while(input_libs)
         list(POP_BACK input_libs lib)
+        string(REGEX REPLACE "^.<LINK_ONLY:(.*)>\$" "\\1" lib "${lib}")
         if(TARGET "${lib}")
             set(import_lib "")
             set(import_location "")
@@ -68,13 +74,6 @@ function(vcpkg_curl_flatten input output)
     endwhile()
     set("${output}" "${output_libs}" PARENT_SCOPE)
 endfunction()
-
-if(CURL_USE_LIBSSH2)
-    find_package(Libssh2 CONFIG REQUIRED)
-    set(LIBSSH2_FOUND TRUE)
-    get_target_property(LIBSSH2_INCLUDE_DIR Libssh2::libssh2 INTERFACE_INCLUDE_DIRECTORIES)
-    set(LIBSSH2_LIBRARY Libssh2::libssh2)
-endif()
 
 if(USE_LIBIDN2)
     find_package(PkgConfig REQUIRED)

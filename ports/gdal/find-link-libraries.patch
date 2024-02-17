@@ -58,7 +58,7 @@ index 3807ec0..8059eb4 100644
    endif()
  endif()
 +if(PC_Poppler_FOUND)
-+    set(Poppler_INCLUDE_DIR "${PC_Poppler_INCLUDE_DIRS}" CACHE STRING "")
++    find_path(Poppler_INCLUDE_DIR NAMES Object.h PATHS ${PC_Poppler_INCLUDE_DIRS} NO_DEFAULT_PATH)
 +    set(Poppler_LIBRARY "${PC_Poppler_LIBRARIES}" CACHE STRING "")
 +    if(NOT TARGET Poppler::Poppler)
 +        add_library(Poppler::Poppler INTERFACE IMPORTED)

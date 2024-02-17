@@ -1,6 +1,12 @@
 {
   "name": "fastfeat",
   "version-string": "391d5e9",
-  "port-version": 2,
-  "description": "FAST feature detectors in C"
+  "port-version": 4,
+  "description": "FAST feature detectors in C",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

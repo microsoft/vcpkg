@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BYVoid/OpenCC
-    REF ver.1.1.4
-    SHA512 ab8e7e6a0cc71106cf09eb32899fa8620b946a406f042d75a2444096e0b383cb1993d6c2d12cd7862e71854da4cd5893442bce51df84c32ed09fdfb4a2846f46
+    REF "ver.${VERSION}"
+    SHA512 bfc40bdf1348e6a265b3304ab1e8acee2f4b6ac9c377ff3d8c996435a92dee98c3758503186b4fd424653faf44db339f8a90300e3290c59942ccf04b1bbb2a30
     HEAD_REF master
     PATCHES 
         fix-dependencies.patch
@@ -20,6 +20,8 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_RAPIDJSON=ON
         -DUSE_SYSTEM_TCLAP=ON
         -DUSE_SYSTEM_DARTS=ON
+        -DUSE_SYSTEM_MARISA=ON
+        -DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf
 )
 
 vcpkg_cmake_install(

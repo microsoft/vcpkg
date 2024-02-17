@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fead70c..f05ae92 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -68,6 +68,7 @@ IF (USE_PTHREADS)
+     FIND_PACKAGE(pthreads REQUIRED)
+     INCLUDE_DIRECTORIES(${PTHREADS_INCLUDE_DIR})
+     ADD_DEFINITIONS(-D_REENTRANT)
++    set(PTHREADS_LIBRARY PThreads4W::PThreads4W)
+ ENDIF()
+ 
+ # Math library (not available in MSVC or MINGW)
+diff --git a/fitsio2.h b/fitsio2.h
+index 1adb17b..19f8511 100644
+--- a/fitsio2.h
++++ b/fitsio2.h
+@@ -26,7 +26,7 @@ extern int Fitsio_Pthread_Status;
+ #define FFUNLOCK1(lockname) (Fitsio_Pthread_Status = pthread_mutex_unlock(&lockname))
+ #define FFLOCK   FFLOCK1(Fitsio_Lock)
+ #define FFUNLOCK FFUNLOCK1(Fitsio_Lock)
+-#define ffstrtok(str, tok, save) strtok_r(str, tok, save)
++#define ffstrtok(str, tok, save) strtok_s(str, tok, save)
+ 
+ #else
+ #define FFLOCK

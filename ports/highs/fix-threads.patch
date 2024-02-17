@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index fc24e57..fe0edfe 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -573,7 +573,7 @@ else()
+       $<BUILD_INTERFACE:${HIGHS_SOURCE_DIR}/extern/zstr>
+     )
+     target_link_libraries(highs ZLIB::ZLIB)
+-    set(CONF_DEPENDENCIES "include(CMakeFindDependencyMacro)\nfind_dependency(ZLIB)")
++    set(CONF_DEPENDENCIES "include(CMakeFindDependencyMacro)\nfind_dependency(ZLIB)\nfind_dependency(Threads)")
+   endif()
+ 
+   # # on UNIX system the 'lib' prefix is automatically added

@@ -1,15 +1,15 @@
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO DragonJoker/RenderGraph
-    REF 13a196fc91df174290c88b2d3ddca93974abd004
+    REF v${VERSION}
     HEAD_REF master
-    SHA512 cd3b2ce33d799488ce5beacad37ef36bcbe8e597e39f5656e1e54c7c1c634b77e1ce43b64ea6598beb942d78afb1a4ca286bcc7052dac0ba62385fe274ae4393
+    SHA512 34b8991d65a792367ba1f95738297993fae0320558bc94b2f271270081acafe6c6a4463097bf9c6e69e69379fdf63651667ed62945d0c3b5f95109c6b3b89074
 )
 
 vcpkg_from_github(OUT_SOURCE_PATH CMAKE_SOURCE_PATH
     REPO DragonJoker/CMakeUtils
-    REF 9fbaae40ccdc92f86989dc6875f362e7943b6a94
+    REF 4e0292ed50d76dab5fc8c81840ae0e021dc60c2a
     HEAD_REF master
-    SHA512 dada8ac1f9676c60f1ff5a09a9f788eb8d85eaca450407e4bf0100fbec87228f99cf66cb23de9c9358dda72c426655814cbd1ea90360ca0c63e7660c15aff22b
+    SHA512 c79c6a5ef2e059b56d4de20cc73e74386bf8b6acea2f6b76fd9949a6a2760f82302c90419e4a753f50c30d01cc4f3a039e04b585f5c0d4461cce3464d9fb9c95
 )
 
 get_filename_component(SRC_PATH "${CMAKE_SOURCE_PATH}" DIRECTORY)
@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
         -DVULKAN_HEADERS_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include
 )
 
+vcpkg_copy_pdbs()
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/RenderGraph)
 

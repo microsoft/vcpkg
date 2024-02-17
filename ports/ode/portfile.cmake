@@ -2,7 +2,7 @@ vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO odedevs/ode
     REF ${VERSION}
-    SHA512 3ea6245f622c5ca616cc4ae5e9877526c16d9174262fe107867a98b0976284d530ad71a97e5feac1fbfcc780bcd056330f47d3c9eb2bcc66e0696e17d54b93b1
+    SHA512 d253bc06bca85ed5af95e92acc57b5a9c4382393365c4a0c852a5872a4061ce1bff875a9121624276a60d74e919fb976c2a2b37864203f6c3bcd2def8af953c6
     HEAD_REF master
     PATCHES
 )
@@ -21,8 +21,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/ode-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/..")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/ode-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/ode-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    endif()
 endif()
+
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

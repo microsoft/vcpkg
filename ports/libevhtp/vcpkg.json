@@ -1,17 +1,31 @@
 {
   "name": "libevhtp",
   "version": "1.2.18",
-  "port-version": 3,
+  "port-version": 5,
   "description": "Libevhtp was created as a replacement API for Libevent's current HTTP API.",
   "homepage": "https://github.com/criticalstack/libevhtp",
   "supports": "!windows",
   "dependencies": [
-    "libevent"
+    "libevent",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "openssl": {
       "description": "Support SSL for libevhtp",
       "dependencies": [
+        {
+          "name": "libevent",
+          "features": [
+            "openssl"
+          ]
+        },
         "openssl"
       ]
     },

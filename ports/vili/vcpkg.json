@@ -1,6 +1,7 @@
 {
   "name": "vili",
   "version": "1.0.0+20221123",
+  "port-version": 1,
   "maintainers": "Sygmei",
   "description": "A nice and readable data format !",
   "homepage": "https://github.com/ViliOrg/Vili",

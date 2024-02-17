@@ -14,8 +14,8 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME    "jpegsr9e.zip"
     SHA512      db7a2fb44e5cc20d61956c46334948af034c07cdcc0d6e41d9bd4f6611c0fbed8943d0a05029ba1bfb9d993f4acd0df5e95d0bc1cfb5a889b86a55b6b75fdf64
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
 )
 

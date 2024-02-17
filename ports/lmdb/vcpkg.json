@@ -1,11 +1,9 @@
 {
   "name": "lmdb",
-  "version": "0.9.29",
-  "port-version": 2,
+  "version": "0.9.31",
   "description": "LMDB is an extraordinarily fast, memory-efficient database",
   "homepage": "https://github.com/LMDB/lmdb",
-  "license": null,
-  "supports": "!(arm & windows)",
+  "license": "OLDAP-2.8",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -15,5 +13,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools",
+      "supports": "!uwp",
+      "dependencies": [
+        "getopt"
+      ]
+    }
+  }
 }

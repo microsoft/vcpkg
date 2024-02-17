@@ -1,7 +1,7 @@
 {
   "name": "magnum-integration",
   "version-string": "2020.06",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Integrations for magnum, C++11/C++14 graphics middleware for games and data visualization",
   "homepage": "https://magnum.graphics/",
   "license": null,

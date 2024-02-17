@@ -10,7 +10,9 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure (
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DBUILD_TESTS=off
+    OPTIONS
+        -DGRANTLEE_BUILD_WITH_QT6=ON
+        -DBUILD_TESTS=OFF
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" [[set( PLUGIN_INSTALL_DIR ${LIB_INSTALL_DIR}/grantlee/${Grantlee5_MAJOR_MINOR_VERSION_STRING} )]] [[set( PLUGIN_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/bin)]])

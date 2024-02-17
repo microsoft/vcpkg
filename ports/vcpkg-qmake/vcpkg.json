@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-qmake",
-  "version-date": "2022-11-16",
+  "version-date": "2023-03-22",
   "documentation": "https://vcpkg.io/en/docs/README.html",
   "license": "MIT",
   "supports": "native",

@@ -1,5 +1,5 @@
 diff --git a/vowpalwabbit/CMakeLists.txt b/vowpalwabbit/CMakeLists.txt
-index 39893dae2..cb247c808 100644
+index 6d41aa4a8..378e5084c 100644
 --- a/vowpalwabbit/CMakeLists.txt
 +++ b/vowpalwabbit/CMakeLists.txt
 @@ -1,9 +1,9 @@
@@ -11,15 +11,15 @@ index 39893dae2..cb247c808 100644
  endif()
 -add_subdirectory(cli)
 +#add_subdirectory(cli)
+ add_subdirectory(cache_parser)
  add_subdirectory(common)
  add_subdirectory(config)
- add_subdirectory(core)
-@@ -14,7 +14,7 @@ add_subdirectory(explore)
- add_subdirectory(io)
+@@ -16,7 +16,7 @@ add_subdirectory(io)
+ add_subdirectory(json_parser)
  add_subdirectory(model_merger)
  add_subdirectory(slim)
 -add_subdirectory(spanning_tree_bin)
 +#add_subdirectory(spanning_tree_bin)
  add_subdirectory(spanning_tree)
+ add_subdirectory(text_parser)
  if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-   add_subdirectory(test_common)

@@ -1,6 +1,6 @@
 {
   "name": "libassuan",
-  "version": "2.5.5",
+  "version": "2.5.6",
   "description": "A library implementing the so-called Assuan protocol",
   "homepage": "https://gnupg.org/software/libassuan/index.html",
   "license": "LGPL-2.1-or-later",

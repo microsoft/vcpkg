@@ -1,6 +1,6 @@
 {
   "name": "rsm-binary-io",
-  "version-semver": "2.0.5",
+  "version-semver": "2.0.6",
   "description": "A binary i/o library for C++, without the agonizing pain",
   "homepage": "https://github.com/Ryan-rsm-McKenzie/binary_io",
   "documentation": "https://ryan-rsm-mckenzie.github.io/binary_io/",

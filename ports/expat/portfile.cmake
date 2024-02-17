@@ -1,11 +1,10 @@
-vcpkg_minimum_required(VERSION 2022-10-12)
 string(REPLACE "." "_" REF "R_${VERSION}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
     REF "${REF}"
-    SHA512 779f0d0f3f2d8b33db0fd044864ab5ab1a40f20501f792fe90ad0d18de536c4765c3749f120e21fec11a0e6c89af1dc576d1fe261c871ca44a594f7b61fd1d9e
+    SHA512 773703165d51170485503e54be47d56cbf19cb7383cb3daf5e5b5d7e2671ec7a9f2f9b4d26c85edd07c36eba9f7e7d02c1d7d178481695abdc35e3a69a67c07e
     HEAD_REF master
 )
 

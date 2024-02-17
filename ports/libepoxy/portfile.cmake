@@ -16,11 +16,16 @@ vcpkg_from_github(
 
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
     set(OPTIONS -Dglx=no -Degl=no -Dx11=false)
+elseif(VCPKG_TARGET_IS_ANDROID)
+    set(OPTIONS -Dglx=no -Degl=yes -Dx11=false)
 else()
     set(OPTIONS -Dglx=yes -Degl=yes -Dx11=true)
 endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -Dc_std=c99)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        list(APPEND OPTIONS "-Dc_args=-DEPOXY_PUBLIC=extern")
+    endif()
 endif()
 
 vcpkg_configure_meson(
@@ -33,6 +38,13 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/epoxy/common.h" "# if defined(_MSC_VER)" "# if defined(_WIN32)")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/epoxy/common.h" "__declspec(dllimport)" "")
+    endif()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig")

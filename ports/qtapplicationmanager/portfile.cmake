@@ -2,7 +2,6 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
-        bump-cmake-version.patch
         wrapper-fixes.patch
         stack-walker-arm64.patch
     )
@@ -30,6 +29,7 @@ qt_cmake_configure(${_opt}
                         -DINPUT_libyaml=system
                         -DFEATURE_am_system_libyaml=ON
                         -DFEATURE_am_system_libarchive=ON
+                        --trace-expand
                    OPTIONS_DEBUG
                    OPTIONS_RELEASE)
 

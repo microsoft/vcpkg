@@ -37,25 +37,29 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
                 )
 endif()
 
-set(PIXMAN_VERSION "${VERSION}")
+if(VCPKG_TARGET_IS_OSX)
+    # https://github.com/microsoft/vcpkg/issues/29168
+    list(APPEND OPTIONS -Da64-neon=disabled)
+endif()
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.cairographics.org/releases/pixman-${PIXMAN_VERSION}.tar.gz"
-    FILENAME "pixman-${PIXMAN_VERSION}.tar.gz"
-    SHA512 0a4e327aef89c25f8cb474fbd01de834fd2a1b13fdf7db11ab72072082e45881cd16060673b59d02054b1711ae69c6e2395f6ae9214225ee7153939efcd2fa5d
-)
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_gitlab(
+    OUT_SOURCE_PATH SOURCE_PATH
+    GITLAB_URL https://gitlab.freedesktop.org
+    REPO pixman/pixman
+    REF  91b8526c1eeb2b45c21f091e890cb74cf6989ff6 # 0.43.2
+    SHA512 cd4ea905a2287ae1ec25720ac90a72b2812dfeb6a5a82e3bbfcfeba91461229cde61b8bc6a5dfe5711f6b2937b3d3d4ade2b0c9a0290880c7d0cc4859344b542
     PATCHES
         no-host-cpu-checks.patch
         fix_clang-cl.patch
         missing_intrin_include.patch
 )
+
 # Meson install wrongly pkgconfig file!
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${OPTIONS}
+        -Ddemos=disabled
+        -Dgtk=disabled
         -Dlibpng=enabled
         -Dtests=disabled
 )
@@ -67,3 +71,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME readme.txt)

@@ -1,7 +1,7 @@
 {
   "name": "kf5solid",
   "version": "5.98.0",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Desktop hardware abstraction",
   "homepage": "https://api.kde.org/frameworks/solid/html/index.html",
   "dependencies": [
@@ -18,26 +18,24 @@
     }
   ],
   "default-features": [
-    "platform-default-features"
+    {
+      "name": "libmount",
+      "platform": "linux"
+    }
   ],
   "features": {
+    "imobile": {
+      "description": "Used by the imobile backend",
+      "dependencies": [
+        "libimobiledevice",
+        "libplist"
+      ]
+    },
     "libmount": {
       "description": "Used by the UDisks backend on Linux",
       "supports": "linux",
       "dependencies": [
         "libmount"
-      ]
-    },
-    "platform-default-features": {
-      "description": "Enable platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "kf5solid",
-          "features": [
-            "libmount"
-          ],
-          "platform": "linux"
-        }
       ]
     }
   }

@@ -1,7 +1,7 @@
 {
   "name": "pthread",
-  "version-string": "3.0.0",
-  "port-version": 1,
+  "version": "3.0.0",
+  "port-version": 2,
   "description": "empty package, linking to other port",
   "dependencies": [
     "pthreads"

@@ -1,0 +1,31 @@
+diff --git a/Source/FreeImage/PluginRAW.cpp b/Source/FreeImage/PluginRAW.cpp
+index c7f8758a..a57fd5f1 100644
+--- a/Source/FreeImage/PluginRAW.cpp
++++ b/Source/FreeImage/PluginRAW.cpp
+@@ -46,6 +46,14 @@ private:
+ 	long _eof;
+ 	INT64 _fsize;
+ 
++	// Minimal change to make version 3.18.0 of FreeImage compile with
++	// LibRaw 0.20 and later versions.
++	// Once the port of FreeImage has been updated to a version greater
++	// than 3.18.0, this patch should be removed as it will not be needed.
++#if LIBRAW_COMPILE_CHECK_VERSION_NOTLESS(0, 20)
++	LibRaw_abstract_datastream * const substream = nullptr;
++#endif
++
+ public:
+ 	LibRaw_freeimage_datastream(FreeImageIO *io, fi_handle handle) : _io(io), _handle(handle) {
+ 		long start_pos = io->tell_proc(handle);
+@@ -694,7 +702,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
+ 		// --------------------------------------------
+ 
+ 		// (-s [0..N-1]) Select one raw image from input file
++#if LIBRAW_COMPILE_CHECK_VERSION_NOTLESS(0, 20)
++		RawProcessor->imgdata.rawparams.shot_select = 0;
++#else
+ 		RawProcessor->imgdata.params.shot_select = 0;
++#endif
+ 		// (-w) Use camera white balance, if possible (otherwise, fallback to auto_wb)
+ 		RawProcessor->imgdata.params.use_camera_wb = 1;
+ 		// (-M) Use any color matrix from the camera metadata. This option only affects Olympus, Leaf, and Phase One cameras.

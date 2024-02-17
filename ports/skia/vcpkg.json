@@ -1,6 +1,6 @@
 {
   "name": "skia",
-  "version": "0.36.0",
+  "version": "0.38.2",
   "port-version": 4,
   "description": [
     "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
@@ -9,7 +9,7 @@
   ],
   "homepage": "https://skia.org",
   "license": null,
-  "supports": "!(windows & arm & !arm64)",
+  "supports": "!(windows & arm32) & !mingw",
   "dependencies": [
     "expat",
     "libjpeg-turbo",
@@ -21,7 +21,15 @@
       "platform": "windows & !arm64 & !uwp"
     },
     {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-gn",
       "host": true
     },
     {
@@ -35,49 +43,36 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    {
+      "name": "direct3d",
+      "platform": "uwp"
+    },
+    {
+      "name": "fontconfig",
+      "platform": "linux"
+    },
+    {
+      "name": "freetype",
+      "platform": "!(windows | osx | ios)"
+    },
+    {
+      "name": "gl",
+      "platform": "!(windows & arm) & !uwp"
+    },
+    {
+      "name": "harfbuzz",
+      "platform": "!uwp"
+    },
+    {
+      "name": "icu",
+      "platform": "!uwp & !(windows & !static)"
+    }
   ],
   "features": {
     "dawn": {
-      "description": "dawn support for skia"
-    },
-    "default-features": {
-      "description": "Default feature configuration",
+      "description": "dawn support for skia",
       "dependencies": [
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "direct3d"
-          ],
-          "platform": "uwp"
-        },
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "fontconfig"
-          ],
-          "platform": "linux"
-        },
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "gl",
-            "harfbuzz",
-            "icu"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "skia",
-          "default-features": false,
-          "features": [
-            "freetype"
-          ],
-          "platform": "!(windows | osx | ios)"
-        }
+        "vulkan-headers"
       ]
     },
     "direct3d": {
@@ -101,6 +96,10 @@
       "description": "Freetype support",
       "dependencies": [
         {
+          "name": "dlfcn-win32",
+          "platform": "windows"
+        },
+        {
           "name": "freetype",
           "default-features": false
         }
@@ -120,7 +119,8 @@
       ]
     },
     "icu": {
-      "description": "Use icu",
+      "description": "Use icu.",
+      "supports": "!(windows & !static)",
       "dependencies": [
         "icu"
       ]
@@ -132,7 +132,8 @@
     "vulkan": {
       "description": "Vulkan support for skia",
       "dependencies": [
-        "vulkan"
+        "vulkan-headers",
+        "vulkan-memory-allocator"
       ]
     }
   }

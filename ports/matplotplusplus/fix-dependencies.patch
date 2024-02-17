@@ -1,8 +1,81 @@
+diff --git a/Matplot++Config.cmake.in b/Matplot++Config.cmake.in
+index fc9ceca..1601015 100644
+--- a/Matplot++Config.cmake.in
++++ b/Matplot++Config.cmake.in
+@@ -1,4 +1,5 @@
+ @PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
+ 
+ # How this Matplot++ installation was built
+ set(MATPLOT_BUILT_SHARED "@MATPLOTPP_BUILD_SHARED_LIBS@")
+@@ -10,12 +11,44 @@ if (NOT CMAKE_CXX_COMPILER_ID STREQUAL MATPLOT_BUILT_CXX_COMPILER_ID)
+     message(WARNING "This installation of Matplot++ was built with ${MATPLOT_BUILT_CXX_COMPILER_ID}.")
+ endif()
+ 
++if ("@MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND@")
++  find_dependency(glad CONFIG)
++  find_dependency(glfw3 CONFIG)
++endif()
++find_dependency(nodesoup CONFIG )
++if ("@WITH_JPEG@")
++find_dependency(JPEG)
++endif()
++
++if ("@WITH_TIFF@")
++find_dependency(TIFF)
++endif()
++
++if ("@WITH_ZLIB@")
++find_dependency(ZLIB)
++find_dependency(libpng CONFIG)
++endif()
++
++if ("@WITH_LAPACK@")
++find_dependency(LAPACK)
++endif()
++
++if ("@WITH_BLAS@")
++find_dependency(BLAS)
++endif()
++
++if ("@WITH_FFTW3@")
++find_dependency(FFTW3 CONFIG)
++endif()
++
++if ("@WITH_OPENCV@")
++find_dependency(OpenCV CONFIG)
++endif()
++
+ # Find dependencies
+ if(NOT ${MATPLOT_BUILT_SHARED})
+-    include(CMakeFindDependencyMacro)
+     list(APPEND CMAKE_MODULE_PATH ${MATPLOT_CONFIG_INSTALL_DIR})
+     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+-    find_dependency(Filesystem COMPONENTS Experimental Final)
+     list(POP_BACK CMAKE_MODULE_PATH)
+ endif()
+ 
 diff --git a/source/3rd_party/CMakeLists.txt b/source/3rd_party/CMakeLists.txt
-index ab58bbd..f9fed7e 100644
+index b5656e1..7ff4046 100644
 --- a/source/3rd_party/CMakeLists.txt
 +++ b/source/3rd_party/CMakeLists.txt
-@@ -67,57 +67,69 @@ find_package(PkgConfig)
+@@ -1,6 +1,7 @@
+ #######################################################
+ ### NodeSoup                                        ###
+ #######################################################
++if(0)
+ if(WITH_SYSTEM_NODESOUP)
+   find_path(NODESOUP_INCLUDE_DIR nodesoup.hpp REQUIRED)
+   find_library(NODESOUP_LIB nodesoup REQUIRED)
+@@ -47,6 +48,7 @@ if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
+       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/Matplot++)
+ endif()
+ 
++endif()
+ 
+ #######################################################
+ ### CImg                                            ###
+@@ -69,57 +71,69 @@ find_package(PkgConfig)
  #            Lots of optional packages are not a good idea in general.
  #            It makes the library much less "packagable" (https://youtu.be/sBP17HQAQjk)
  #            and much more difficult to make sure it works on multiple OSs
@@ -94,3 +167,66 @@ index ab58bbd..f9fed7e 100644
    endif()
  else()
    message("No CMAKE_MODULE_PATH path for OpenCV configured")
+diff --git a/source/matplot/CMakeLists.txt b/source/matplot/CMakeLists.txt
+index fe9ad53..b06ed7e 100644
+--- a/source/matplot/CMakeLists.txt
++++ b/source/matplot/CMakeLists.txt
+@@ -1,5 +1,4 @@
+ if(NOT MINGW)
+-find_package(Filesystem REQUIRED COMPONENTS Experimental Final)
+ endif()
+ 
+ #######################################################
+@@ -102,12 +101,13 @@ target_include_directories(matplot
+            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+ 
+ # Dependencies
++find_package(nodesoup CONFIG REQUIRED)
+ if(NOT MINGW)
+-target_link_libraries_system(matplot
+-  PRIVATE cimg nodesoup std::filesystem)
++target_link_libraries(matplot
++  PRIVATE cimg nodesoup::nodesoup)
+ else()
+-target_link_libraries_system(matplot
+-  PRIVATE cimg nodesoup)
++target_link_libraries(matplot
++  PRIVATE cimg nodesoup::nodesoup)
+ endif()
+ 
+ # Required compiler features required
+@@ -134,7 +134,6 @@ maybe_target_pedantic_warnings(matplot)
+ # Use experimental filesystem if std::filesystem is not available yet
+ if(NOT MINGW)
+     if (CXX_FILESYSTEM_IS_EXPERIMENTAL)
+-      target_compile_definitions(matplot PRIVATE CXX_FILESYSTEM_IS_EXPERIMENTAL)
+     endif()
+ endif()
+ # Some hack to not depend on FILE* internals
+@@ -217,7 +216,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+     find_package(OpenGL REQUIRED)
+ 
+     # https://github.com/Dav1dde/glad
+-    find_package(GLAD QUIET)
++    find_package(GLAD NAMES glad CONFIG REQUIRED)
+     if (NOT GLAD_FOUND AND NOT TARGET glad)
+         # Use CPM only if not found, to avoid ODR violations
+         # find_package(GLAD REQUIRE) would suffice if it worked well
+@@ -233,7 +232,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+     endif ()
+ 
+     # https://github.com/glfw/glfw
+-    find_package(glfw3 QUIET)
++    find_package(GLFW3 NAMES glfw3 CONFIG REQUIRED)
+     if (NOT GLFW3_FOUND AND NOT TARGET glfw)
+         # Use CPM only if not found, to avoid ODR violations
+         # find_package(glfw3 REQUIRE) would suffice if it worked well
+@@ -247,7 +246,7 @@ if (MATPLOTPP_BUILD_EXPERIMENTAL_OPENGL_BACKEND)
+             backend/opengl.h
+             backend/opengl.cpp
+             )
+-    target_link_libraries(matplot_opengl PUBLIC matplot glad glfw ${CMAKE_DL_LIBS})
++    target_link_libraries(matplot_opengl PUBLIC matplot glad::glad glfw ${CMAKE_DL_LIBS})
+ 
+     list(APPEND TARGETS matplot_opengl)
+ endif()

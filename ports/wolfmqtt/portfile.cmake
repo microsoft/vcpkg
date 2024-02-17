@@ -1,10 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolfmqtt
-    REF v1.14.1
-    SHA512 ea7657e1c5045996c24bf479fc0c2db7d7d3f588e998d4d236f9d5d43564f80a1fa8ec0710bf87d7b785ffb29d96d539e5b7e7bea5574f0c3843dc00062dbb11
+    REF v1.16.0
+    SHA512 30d28a37b26adacae589b9cfee9a2cd8697fa1e84ac867d08123dab5434bb19152adb0d94224656d2c1f01833d76bcd7ff63b63da4dbce0873b352e93b6e6b12
     HEAD_REF master
     PATCHES
+      cmake-patch.diff
     )
 
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
