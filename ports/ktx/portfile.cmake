@@ -81,5 +81,6 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
 
 if(VCPKG_TARGET_IS_IOS)
     file(COPY "${CURRENT_PACKAGES_DIR}/lib/ktx.framework/Headers"
-         DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+         DESTINATION "${CURRENT_PACKAGES_DIR}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/Headers" "${CURRENT_PACKAGES_DIR}/include")
 endif()
