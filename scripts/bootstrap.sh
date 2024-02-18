@@ -98,23 +98,14 @@ if [ -e /etc/alpine-release ]; then
     if [ "$ARCH" = "x86_64" ]; then
         vcpkgUseMuslC="ON"
     fi
-    if [ -z ${$CXX+x} ]; then
-        CXX=g++
-    fi
-    if [ -z ${CC+x} ]; then
-        CC=gcc
-    fi
+    CC=${CC:=gcc}
+    CXX=${CXX:=g++}
 fi
 
 if [ "$UNAME" = "OpenBSD" ]; then
     vcpkgUseSystem="ON"
-
-    if [ -z ${$CXX+x} ]; then
-        CXX=clang++
-    fi
-    if [ -z ${CC+x} ]; then
-        CC=clang
-    fi
+    CC=${CC:=clang}
+    CXX=${CXX:=clang++}
 fi
 
 if [ "$vcpkgUseSystem" = "ON" ]; then
