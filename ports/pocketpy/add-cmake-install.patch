@@ -1,0 +1,64 @@
+diff --git a/3rd/cjson/CMakeLists.txt b/3rd/cjson/CMakeLists.txt
+index 7f9279c..2d1515d 100644
+--- a/3rd/cjson/CMakeLists.txt
++++ b/3rd/cjson/CMakeLists.txt
+@@ -6,7 +6,7 @@ set(CMAKE_C_STANDARD 11)
+ set(CMAKE_CXX_STANDARD 17)
+ 
+ include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
+-include_directories(${CMAKE_CURRENT_LIST_DIR}/../pocketpy/include)
++include_directories(${CMAKE_CURRENT_LIST_DIR}/../../include)
+ 
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a42c503..b060c46 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -28,8 +28,6 @@ else()
+     endif()
+ endif()
+ 
+-include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
+-
+ aux_source_directory(${CMAKE_CURRENT_LIST_DIR}/src POCKETPY_SRC)
+ 
+ option(PK_USE_CJSON "" OFF)
+@@ -72,6 +70,36 @@ else()
+     target_link_libraries(${PROJECT_EXE_NAME} ${CMAKE_DL_LIBS})
+ endif()
+ 
++target_include_directories(${PROJECT_NAME} PUBLIC 
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
++    $<INSTALL_INTERFACE:include>
++)
++
+ if(PK_USE_CJSON)
+-    target_link_libraries(${PROJECT_NAME} cjson)
++    target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:cjson>)
++endif()
++
++option(PK_INSTALL "Generate the install target" ON)
++if (PK_INSTALL)
++    install(
++        TARGETS ${PROJECT_NAME}
++        EXPORT ${PROJECT_NAME}_target
++        ARCHIVE DESTINATION lib
++        LIBRARY DESTINATION lib
++        RUNTIME DESTINATION bin
++    )
++
++    install(
++        DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ 
++        DESTINATION include 
++        FILES_MATCHING PATTERN "*.h"
++        PATTERN "typings" EXCLUDE
++    )
++    
++    # generate config.cmake
++    install(
++        EXPORT ${PROJECT_NAME}_target
++        FILE ${PROJECT_NAME}-config.cmake
++        DESTINATION "share/${PROJECT_NAME}"
++    )
+ endif()
