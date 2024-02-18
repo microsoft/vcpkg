@@ -47,8 +47,6 @@ vcpkg_cmake_configure(
         -DKTX_FEATURE_STATIC_LIBRARY=${ENABLE_STATIC}
         ${FEATURE_OPTIONS}
         ${OPTIONS}
-        # Do not regenerate headers (needs more dependencies)
-        -DCMAKE_DISABLE_FIND_PACKAGE_Vulkan=1
     DISABLE_PARALLEL_CONFIGURE
 )
 
