@@ -1,12 +1,29 @@
+macro(z_vcpkg_find_acquire_pkgconfig_msys_declare_packages)
+    z_vcpkg_acquire_msys_declare_package(
+        URL "https://mirror.msys2.org/mingw/clangarm64/mingw-w64-clang-aarch64-pkgconf-1~2.1.0-1-any.pkg.tar.zst"
+        SHA512 d988b6a9d3704d63d0dfa21f5388b3de8b74d84533491e2facc2ce4e67e8efac611ebf4df422e90476ec2624fe766da441ad7b0fe0a3ee99ff9fd3ae84b18292
+        PROVIDES mingw-w64-clang-aarch64-pkg-config
+    )
+    z_vcpkg_acquire_msys_declare_package(
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-pkgconf-1~2.1.0-1-any.pkg.tar.zst"
+        SHA512 1567ba9fc947b3a1a983f5a23dcc0982950190cd92d7527684ba219253c5fa4b340b315f25ee695be1cdf6bfbb2cc5c3bdf7a5758b1d66b761748b5aad9afe39
+        PROVIDES mingw-w64-x86_64-pkg-config
+    )
+    z_vcpkg_acquire_msys_declare_package(
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-pkgconf-1~2.1.0-1-any.pkg.tar.zst"
+        SHA512 55626f0b7a6c950da75c4f7579b94859027f127c075042ab1f65b5387659eceb9e4c73dd3b79f54227772bd39a5759fbe10aa024cd38c8ac76677d0aec8458c1
+        PROVIDES mingw-w64-i686-pkg-config
+    )
+endmacro()
+
 set(program_name pkg-config)
-if(DEFINED ENV{PKG_CONFIG})
+if(DEFINED "ENV{PKG_CONFIG}")
     debug_message(STATUS "PKG_CONFIG found in ENV! Using $ENV{PKG_CONFIG}")
     set(PKGCONFIG "$ENV{PKG_CONFIG}" CACHE INTERNAL "")
     set(PKGCONFIG "${PKGCONFIG}" PARENT_SCOPE)
     return()
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD")
     # As of 6.8, the OpenBSD specific pkg-config doesn't support {pcfiledir}
-    set(supported_on_unix ON)
     set(rename_binary_to "pkg-config")
     set(program_version 0.29.2.1)
     set(raw_executable ON)
@@ -17,21 +34,32 @@ elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD")
     set(version_command --version)
 elseif(CMAKE_HOST_WIN32)
     if(NOT EXISTS "${PKGCONFIG}")
-        set(program_version 1.8.0)
-        if("$ENV{PROCESSOR_ARCHITECTURE}" STREQUAL "ARM64")
+        set(program_version 2.1.0)
+        if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
+            set(host_arch "$ENV{PROCESSOR_ARCHITEW6432}")
+        else()
+            set(host_arch "$ENV{PROCESSOR_ARCHITECTURE}")
+        endif()
+
+        if("${host_arch}" STREQUAL "ARM64")
             vcpkg_acquire_msys(PKGCONFIG_ROOT
                 NO_DEFAULT_PACKAGES
-                DIRECT_PACKAGES
-                    "https://mirror.msys2.org/mingw/clangarm64/mingw-w64-clang-aarch64-pkgconf-1~1.8.0-2-any.pkg.tar.zst"
-                    f682bbeb4588a169a26d3c9c1ce258c0022954fa11a64e05cd803bcbb8c4e2442022c0c6bc7e54d3324359c80ea67904187d4cb3b682914f5f14a03251daae7c
+                Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_acquire_pkgconfig_msys_declare_packages"
+                PACKAGES mingw-w64-clang-aarch64-pkgconf
             )
             set("${program}" "${PKGCONFIG_ROOT}/clangarm64/bin/pkg-config.exe" CACHE INTERNAL "")
+        elseif("${host_arch}" MATCHES "64")
+            vcpkg_acquire_msys(PKGCONFIG_ROOT
+                NO_DEFAULT_PACKAGES
+                Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_acquire_pkgconfig_msys_declare_packages"
+                PACKAGES mingw-w64-x86_64-pkgconf
+            )
+            set("${program}" "${PKGCONFIG_ROOT}/mingw64/bin/pkg-config.exe" CACHE INTERNAL "")
         else()
             vcpkg_acquire_msys(PKGCONFIG_ROOT
                 NO_DEFAULT_PACKAGES
-                DIRECT_PACKAGES
-                    "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-pkgconf-1~1.8.0-2-any.pkg.tar.zst"
-                    e5217d9c55ede4c15706b4873761cc6e987eabc1308120a3e8406571ae2993907f3776f2b2bba18d7aaec80ef97227696058cedc1b67a773530dc1e6077b95e6
+                Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_acquire_pkgconfig_msys_declare_packages"
+                PACKAGES mingw-w64-i686-pkgconf
             )
             set("${program}" "${PKGCONFIG_ROOT}/mingw32/bin/pkg-config.exe" CACHE INTERNAL "")
         endif()
@@ -42,4 +70,7 @@ else()
     set(brew_package_name pkg-config)
     set(apt_package_name pkg-config)
     set(paths_to_search "/bin" "/usr/bin" "/usr/local/bin")
+    if(VCPKG_HOST_IS_OSX)
+        vcpkg_list(PREPEND paths_to_search "/opt/homebrew/bin")
+    endif()
 endif()

@@ -2,29 +2,17 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 60172b0d..1dfe6e8a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -55,18 +55,33 @@ set_package_properties(BISON PROPERTIES
+@@ -55,13 +55,25 @@ set_package_properties(BISON PROPERTIES
      PURPOSE "Required for the Predicate parser"
  )
  
 -find_package(IMobileDevice)
--set_package_properties(IMobileDevice PROPERTIES
-+find_package(unofficial-libimobiledevice CONFIG)
-+set_package_properties(unofficial-libimobiledevice PROPERTIES
++find_package(IMobileDevice NAMES unofficial-libimobiledevice)
+ set_package_properties(IMobileDevice PROPERTIES
                         TYPE OPTIONAL
                         PURPOSE "Needed to build the iOS device support backend"
                        )
- 
--find_package(PList)
--set_package_properties(PList PROPERTIES
-+find_package(unofficial-libplist CONFIG)
-+set_package_properties(unofficial-libplist PROPERTIES
-                        TYPE OPTIONAL
-                        PURPOSE "Needed to build the iOS device support backend"
-                       )
- 
-+set(HAVE_IMOBILE OFF)
-+if(TARGET unofficial::libimobiledevice::libimobiledevice AND TARGET unofficial::libplist::libplist)
-+    set(HAVE_IMOBILE ON)
++if(TARGET unofficial::libimobiledevice::libimobiledevice)
 +    set(IMobileDevice_VERSION "1.3.0")
 +    set(_imobile_version "0x00000")
 +    if (IMobileDevice_VERSION VERSION_GREATER_EQUAL 1.3.0)
@@ -36,19 +24,12 @@ index 60172b0d..1dfe6e8a 100644
 +        INTERFACE_COMPILE_DEFINITIONS "IMOBILEDEVICE_API=${_imobile_version}"
 +    )
 +endif()
-+
- # Used by the UDisks backend on Linux
- find_package(LibMount)
- set_package_properties(LibMount PROPERTIES
-@@ -138,7 +153,7 @@ elseif (NOT ANDROID)
-     endif()
- endif()
  
--if(IMobileDevice_FOUND AND PList_FOUND)
-+if(HAVE_IMOBILE)
-     add_device_backend(imobile)
- endif()
- 
+-find_package(PList)
++find_package(PList NAMES unofficial-libplist CONFIG)
+ set_package_properties(PList PROPERTIES
+                        TYPE OPTIONAL
+                        PURPOSE "Needed to build the iOS device support backend"
 diff --git a/KF5SolidConfig.cmake.in b/KF5SolidConfig.cmake.in
 index 6fc15eeb..a6250ce6 100644
 --- a/KF5SolidConfig.cmake.in
@@ -57,7 +38,7 @@ index 6fc15eeb..a6250ce6 100644
          find_dependency(LibMount)
      endif()
  
-+    if (@HAVE_IMOBILE@)
++    if ("@IMobileDevice_FOUND@" AND "@PList_FOUND@")
 +        find_dependency(unofficial-libimobiledevice)
 +        find_dependency(unofficial-libplist)
 +    endif()

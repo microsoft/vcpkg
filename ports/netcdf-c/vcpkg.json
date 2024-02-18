@@ -1,7 +1,7 @@
 {
   "name": "netcdf-c",
   "version": "4.8.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": "A set of self-describing, machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.",
   "homepage": "https://github.com/Unidata/netcdf-c",
   "dependencies": [
@@ -16,9 +16,12 @@
   ],
   "default-features": [
     "dap",
+    {
+      "name": "hdf5",
+      "platform": "!uwp & !(arm64 & windows)"
+    },
     "nczarr",
-    "netcdf-4",
-    "platform-default-features"
+    "netcdf-4"
   ],
   "features": {
     "dap": {
@@ -57,6 +60,10 @@
       "description": "Build with NCZarr cloud storage access support",
       "dependencies": [
         {
+          "name": "curl",
+          "default-features": false
+        },
+        {
           "name": "netcdf-c",
           "default-features": false,
           "features": [
@@ -83,20 +90,6 @@
     },
     "netcdf-4": {
       "description": "Build with netCDF-4 support"
-    },
-    "platform-default-features": {
-      "$comment": "Break vcpkg CI cascade.",
-      "description": "Enable platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "netcdf-c",
-          "default-features": false,
-          "features": [
-            "hdf5"
-          ],
-          "platform": "!uwp & !(arm64 & windows)"
-        }
-      ]
     },
     "tools": {
       "description": "Build utilities"

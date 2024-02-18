@@ -8,6 +8,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         dll-bindir.diff
+        fix_undefind_func.patch
 )
 
 vcpkg_list(SET options)

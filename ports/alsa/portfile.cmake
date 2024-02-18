@@ -15,7 +15,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alsa-project/alsa-lib
     REF "v${VERSION}"
-    SHA512 34ebeb64fd43432df779bfd6de08fb26cfd59d75586100cab7308d1ecf60d722cf137f1209426a288bdbaa27c31e963ce09690272b8d85653989a935a6fc50af
+    SHA512 da9277007dd3b197fcafb748ced4ace89fdb1ab5eafae7596e91935ee9fb410be54fa76aabe86cdd83227e48cd073a7df319e90bdf06fa2da7c97470c085645d
     HEAD_REF master
     PATCHES
         "fix-plugin-dir.patch"

@@ -1,19 +1,20 @@
 diff --git a/cmake/ConfigureChecks.cmake b/cmake/ConfigureChecks.cmake
-index 7bc789f0e..ec476d9ed 100644
---- a/cmake/ConfigureChecks.cmake	
+index b7f3702..e2336ba 100644
+--- a/cmake/ConfigureChecks.cmake
 +++ b/cmake/ConfigureChecks.cmake
-@@ -44,5 +44,6 @@ check_include_file(sys/inotify.h DBUS_BUS_ENABLE_INOTIFY)
- 
+@@ -51,6 +51,7 @@ check_symbol_exists(closefrom    "unistd.h"         HAVE_CLOSEFROM)          #
+ check_symbol_exists(environ      "unistd.h"                  HAVE_DECL_ENVIRON)
+ check_symbol_exists(fstatfs      "sys/vfs.h"                 HAVE_FSTATFS)
  check_symbol_exists(getgrouplist "grp.h"            HAVE_GETGROUPLIST)       #  dbus-sysdeps.c
 +check_symbol_exists(getpeereid   "sys/types.h;unistd.h" HAVE_GETPEEREID)     #  dbus-sysdeps.c,
  check_symbol_exists(getpeerucred "ucred.h"          HAVE_GETPEERUCRED)       #  dbus-sysdeps.c, dbus-sysdeps-win.c
- check_symbol_exists(nanosleep    "time.h"           HAVE_NANOSLEEP)          #  dbus-sysdeps.c
  check_symbol_exists(getpwnam_r   "errno.h;pwd.h"    HAVE_GETPWNAM_R)         #  dbus-sysdeps-util-unix.c
+ check_symbol_exists(getrandom    "sys/random.h"             HAVE_GETRANDOM)
 diff --git a/cmake/config.h.cmake b/cmake/config.h.cmake
-index cbffcfa91..1f055ddb9 100644
---- a/cmake/config.h.cmake	
+index 77fc19c..2f25643 100644
+--- a/cmake/config.h.cmake
 +++ b/cmake/config.h.cmake
-@@ -169,6 +169,9 @@
+@@ -140,6 +140,9 @@
  /* Define to 1 if you have getgrouplist */
  #cmakedefine   HAVE_GETGROUPLIST 1
  

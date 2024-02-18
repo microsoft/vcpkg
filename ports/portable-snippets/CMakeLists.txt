@@ -62,6 +62,10 @@ foreach (subdir ${subdirs})
     else ()
         add_library(${module} STATIC ${entries})
 
+        if (MSVC)
+            target_compile_definitions(${module} PUBLIC __STDC_NO_THREADS__=1)
+        endif ()
+
         set_target_properties(
             ${module}
             PROPERTIES

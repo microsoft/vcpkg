@@ -1,6 +1,6 @@
 {
   "name": "ptc-print",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "port-version": 1,
   "description": "A single-header library for custom printing to the output stream.",
   "homepage": "https://github.com/JustWhit3/ptc-print",

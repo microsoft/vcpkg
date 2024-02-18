@@ -1,18 +1,20 @@
 {
   "name": "qtpositioning",
-  "version": "6.5.2",
+  "version": "6.6.1",
+  "port-version": 2,
   "description": "Qt Positioning",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
-    "poly2tri",
+    "jhasse-poly2tri",
     {
       "name": "qtbase",
       "default-features": false
     },
     {
       "name": "qtserialport",
-      "default-features": false
+      "default-features": false,
+      "platform": "!ios"
     }
   ],
   "features": {

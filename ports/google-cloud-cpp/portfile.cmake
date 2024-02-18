@@ -4,13 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
     REF "v${VERSION}"
-    SHA512 225202a8e799f630f0b07c392bf305c28e21b99ef8dc5a670238a6d08e0e2816cd8ca1c43d7b252bcf5d289f875e64c16413085f63663265169807fd59977e43
+    SHA512 f02e26964a4049791bf4ce9580e738f245fb8380f9a1ccf3bd193296a4877aece72e8507efbbcabf7ef7072a810f6632c399748d804e33f3cc769ef49e334a88
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
 )
 
-vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
+if ("grpc-common" IN_LIST FEATURES)
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
+endif ()
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
@@ -51,28 +53,27 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-foreach(feature IN LISTS FEATURES)
-    set(config_path "lib/cmake/google_cloud_cpp_${feature}")
-    # Most features get their own package in `google-cloud-cpp`.
-    # The exceptions are captured by this `if()` command, basically
-    # things like `core` and `experimental-storage-grpc` are skipped.
+
+function (google_cloud_cpp_cmake_config_fixup library)
+    set(config_path "lib/cmake/google_cloud_cpp_${library}")
+    # If the library exists and is installed, tell vcpkg about it.
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
-        continue()
+        return()
     endif()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "google_cloud_cpp_${feature}"
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "google_cloud_cpp_${library}"
                              CONFIG_PATH "${config_path}"
                              DO_NOT_DELETE_PARENT_CONFIG_PATH)
+endfunction ()
+
+foreach(feature IN LISTS GOOGLE_CLOUD_CPP_ENABLE)
+    google_cloud_cpp_cmake_config_fixup(${feature})
+    google_cloud_cpp_cmake_config_fixup(${feature}_mocks)
 endforeach()
+
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils rest_internal opentelemetry dialogflow_cx dialogflow_es)
-    set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
-    if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
-        continue()
-    endif()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "google_cloud_cpp_${suffix}"
-                             CONFIG_PATH "${config_path}"
-                             DO_NOT_DELETE_PARENT_CONFIG_PATH)
+foreach(feature common compute_protos googleapis grpc_utils iam_v2 logging_type rest_internal rest_protobuf_internal)
+    google_cloud_cpp_cmake_config_fixup(${feature})
 endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"

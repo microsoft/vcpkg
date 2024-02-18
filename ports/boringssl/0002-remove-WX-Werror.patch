@@ -1,24 +1,23 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 83ff477..3008c2a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -117,7 +117,7 @@ endif()
- if(CMAKE_COMPILER_IS_GNUCXX OR CLANG)
+@@ -140,7 +140,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CLANG)
    # Note clang-cl is odd and sets both CLANG and MSVC. We base our configuration
    # primarily on our normal Clang one.
--  set(C_CXX_FLAGS "-Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wvla")
-+  set(C_CXX_FLAGS "-Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wvla")
+   # TODO(bbe) took out -Wmissing-field-initializers for pki - fix and put back or disable only for pki
+-  set(C_CXX_FLAGS "-Werror -Wformat=2 -Wsign-compare -Wwrite-strings -Wvla -Wshadow -Wtype-limits")
++  set(C_CXX_FLAGS "-Wformat=2 -Wsign-compare -Wwrite-strings -Wvla -Wshadow -Wtype-limits")
    if(MSVC)
      # clang-cl sets different default warnings than clang. It also treats -Wall
      # as -Weverything, to match MSVC. Instead -W3 is the alias for -Wall.
-@@ -238,8 +238,8 @@ elseif(MSVC)
+@@ -211,8 +211,8 @@ elseif(MSVC)
+       )
+   string(REPLACE "C" " -wd" MSVC_DISABLED_WARNINGS_STR
                              ${MSVC_DISABLED_WARNINGS_LIST})
-   string(REPLACE "C" " -w4" MSVC_LEVEL4_WARNINGS_STR
-                             ${MSVC_LEVEL4_WARNINGS_LIST})
--  set(CMAKE_C_FLAGS   "-utf-8 -Wall -WX ${MSVC_DISABLED_WARNINGS_STR} ${MSVC_LEVEL4_WARNINGS_STR}")
--  set(CMAKE_CXX_FLAGS "-utf-8 -Wall -WX ${MSVC_DISABLED_WARNINGS_STR} ${MSVC_LEVEL4_WARNINGS_STR}")
-+  set(CMAKE_C_FLAGS   "-utf-8 -Wall ${MSVC_DISABLED_WARNINGS_STR} ${MSVC_LEVEL4_WARNINGS_STR}")
-+  set(CMAKE_CXX_FLAGS "-utf-8 -Wall ${MSVC_DISABLED_WARNINGS_STR} ${MSVC_LEVEL4_WARNINGS_STR}")
+-  set(CMAKE_C_FLAGS   "-utf-8 -W4 -WX ${MSVC_DISABLED_WARNINGS_STR}")
+-  set(CMAKE_CXX_FLAGS "-utf-8 -W4 -WX ${MSVC_DISABLED_WARNINGS_STR}")
++  set(CMAKE_C_FLAGS   "-utf-8 -W4 ${MSVC_DISABLED_WARNINGS_STR}")
++  set(CMAKE_CXX_FLAGS "-utf-8 -W4 ${MSVC_DISABLED_WARNINGS_STR}")
  endif()
  
  if(WIN32)

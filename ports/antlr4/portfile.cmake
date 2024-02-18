@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO antlr/antlr4
     HEAD_REF dev
     REF "${VERSION}"
-    SHA512 947ecca28712aa4dd98d7b7e0753e91881e55642f7951ca65a576b94db87440767a1b93d08e82db69ad527ee28bf89f0b2f9c0aaa604a999a7e48c163764ee12
+    SHA512 79ac3cdfc8f2368c647d06aec85d87507629a75527205ff2cbf7d9802989b0c6e6a8fac76148ad101f539c9ef922e431e22ba489f899f847ccc3d3d889bb2b70
     PATCHES
         set-export-macro-define-as-private.patch
 )

@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -80,13 +80,17 @@
+ set(GZ_TOOLS_VER 2)
+ 
+ #--------------------------------------
+ # Find QT
++set(qt_pkgconfig "Qt5Core Qt5Quick Qt5QuickControls2 Qt5Widgets")
++if (WIN32)
++set(qt_pkgconfig "")
++endif()
+ gz_find_package (Qt5
+   COMPONENTS
+     Core
+     Quick
+     QuickControls2
+     Widgets
+   REQUIRED
+-  PKGCONFIG "Qt5Core Qt5Quick Qt5QuickControls2 Qt5Widgets"
++  PKGCONFIG ${qt_pkgconfig}
+ )

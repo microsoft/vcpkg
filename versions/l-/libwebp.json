@@ -76,21 +76,6 @@
       "port-version": 1
     },
     {
-      "git-tree": "a05e0de81085231df86f6902aba1e0a364e2ca7b",
-      "version-string": "1.1.0",
-      "port-version": 0
-    },
-    {
-      "git-tree": "5066566c98bc1913b678347c4cbae0a6aff4cf2d",
-      "version-string": "1.0.3-1",
-      "port-version": 0
-    },
-    {
-      "git-tree": "6ff3a23b154fad821db2d8236bf9d0382f0229cf",
-      "version-string": "1.0.3",
-      "port-version": 0
-    },
-    {
       "git-tree": "256b8e8b5d64cb6f66da47f1a361e5538d341023",
       "version-string": "1.0.2-8",
       "port-version": 0

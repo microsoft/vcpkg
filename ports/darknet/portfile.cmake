@@ -4,7 +4,8 @@ vcpkg_from_github(
   REF 8a0bf84c19e38214219dbd3345f04ce778426c57
   SHA512 6253d5b498f4f6eba7fc539d5a4b4e163139f4841623f11d84760bcf1ffabe6519f85e98e3d4aeac6846313fea3b98451407134b6b6f5b91137c62d1647109d9
   HEAD_REF master
-  PATCHES fix-dependence-getopt.patch
+  PATCHES 
+    fix-dependence-getopt.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -33,7 +34,8 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Modules")
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   DISABLE_PARALLEL_CONFIGURE
-  OPTIONS ${FEATURE_OPTIONS}
+  OPTIONS 
+    ${FEATURE_OPTIONS}
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
     -DENABLE_OPENCV:BOOL=${ENABLE_OPENCV}
@@ -59,4 +61,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/scripts/download_weights.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/scripts")
 message(STATUS "To download weight files, please go to ${CURRENT_INSTALLED_DIR}/tools/${PORT}/scripts and run ./download_weights.ps1")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

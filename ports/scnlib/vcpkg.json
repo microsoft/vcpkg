@@ -1,7 +1,6 @@
 {
   "name": "scnlib",
-  "version": "1.0",
-  "port-version": 1,
+  "version": "1.1.2",
   "description": "scnlib is a modern C++ library for replacing scanf and std::istream",
   "homepage": "https://scnlib.dev/",
   "dependencies": [

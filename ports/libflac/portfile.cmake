@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/flac
     REF "${VERSION}"
-    SHA512 1b4992024dffe83916f0da8726f73bf932a52d8c3346c35ab1ee81b82d68ff01faa8c477aa29d7099a09611664dee723db5be3087f709218c33e564f77810013
+    SHA512 3571467a1d557bc03eade2ae9bb1a72fd94a89222e6ad9563078d646aac0b65ed1c3d829fb45dd3a6cdca806f7ba3b6393f0ce6571b43651959acaa1c2106396
     HEAD_REF master
     PATCHES
-        uwp-library-console.patch
         fix-compile-options.patch
 )
 

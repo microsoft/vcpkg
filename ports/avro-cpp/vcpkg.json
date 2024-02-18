@@ -1,7 +1,6 @@
 {
   "name": "avro-cpp",
-  "version-date": "2022-11-07",
-  "port-version": 1,
+  "version": "1.11.3",
   "description": "Apache Avro is a data serialization system",
   "homepage": "https://github.com/apache/avro",
   "license": "Apache-2.0",

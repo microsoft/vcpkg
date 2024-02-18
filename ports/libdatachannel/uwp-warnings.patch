@@ -1,17 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c8e2f1e..1dfcd62 100644
+index 2c34d7fb..1bedd212 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -471,6 +471,12 @@ if(WARNINGS_AS_ERRORS)
- 	endif()
+@@ -446,6 +446,9 @@ if(WARNINGS_AS_ERRORS)
+        endif()
  endif()
  
-+if(BUILD_SHARED_LIBS)
-+    target_compile_options(datachannel PRIVATE /wd4996)
-+elseif(BUILD_STATIC_LIBS)
-+    target_compile_options(datachannel-static PRIVATE /wd4996)
-+endif()
++target_compile_options(datachannel PRIVATE /wd4996)
++target_compile_options(datachannel-static PRIVATE /wd4996)
 +
- if(BUILD_SHARED_LIBS)
- install(TARGETS datachannel EXPORT LibDataChannelTargets
- 	RUNTIME DESTINATION bin
+ if(DATACHANNEL_STATIC_LINKAGE)
+ set_target_properties(datachannel PROPERTIES EXCLUDE_FROM_ALL 1)
+ set_target_properties(datachannel-static PROPERTIES EXCLUDE_FROM_ALL 0)

@@ -20,8 +20,8 @@ index 6b9a46d..5156865 100644
  	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) \
            $(LDFLAGS_FOR_BUILD) -I. -I$(srcdir) -o $@ $(srcdir)/mkheader.c
  
--assuan.h: assuan.h.in mkheader $(parts_of_assuan_h)
--	./mkheader $(host_os) $(srcdir)/assuan.h.in \
-+assuan.h: assuan.h.in $(HOST_TOOLS_PREFIX)/mkheader $(parts_of_assuan_h)
-+	$(HOST_TOOLS_PREFIX)/mkheader $(host_os) $(srcdir)/assuan.h.in \
+-assuan.h: assuan.h.in mkheader$(EXEEXT_FOR_BUILD) $(parts_of_assuan_h)
+-	./mkheader$(EXEEXT_FOR_BUILD) $(host_os) $(srcdir)/assuan.h.in \
++assuan.h: assuan.h.in $(HOST_TOOLS_PREFIX)/mkheader$(EXEEXT_FOR_BUILD) $(parts_of_assuan_h)
++	$(HOST_TOOLS_PREFIX)/mkheader$(EXEEXT_FOR_BUILD) $(host_os) $(srcdir)/assuan.h.in \
                     $(PACKAGE_VERSION) $(VERSION_NUMBER) >$@

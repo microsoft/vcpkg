@@ -1,7 +1,6 @@
 {
   "name": "easyloggingpp",
-  "version": "9.97.0",
-  "port-version": 4,
+  "version": "9.97.1",
   "description": "Easylogging++ is a single header efficient logging library for C++ applications.",
   "homepage": "https://github.com/abumq/easyloggingpp",
   "license": "MIT",

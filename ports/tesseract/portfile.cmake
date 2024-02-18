@@ -6,11 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
     REF "${VERSION}"
-    SHA512 92db2a513f00b931a0207cc705020bee9fea4ff7fa93c57a6f446b5777713864cce19121b316ef8b78b6bd625ee7e6fd473352515f98c4a2187569cbd0a9713a
+    SHA512 a81c98c3754a71093df7b51390ccd43d05f661352b4cb564e403b96d81909664c2ecbf2eb6f37614c4639e6dadbf2329b926d09271dbbdaa302f2d7b6b0d628a
     PATCHES
         ${tesseract_patch}
         fix_static_link_icu.patch
-        fix-aarch64-mfpu-not-available.patch
+        fix-link-include-path.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

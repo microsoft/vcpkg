@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AOMediaCodec/libavif
     REF "v${VERSION}"
-    SHA512 4a9e2711fccddf35c477db6e2fa2f76c0648aafaa98b4e3f34df62c0fbd02ddcd57762f1f8149822da4f1bc3757ee75ec1d9ced5e56a54dbe9d0b43265aacd4c
+    SHA512 b713f35fd3e54e105e16f46012becdada86f522b4ed8ab7097a93fd437524b4f2c997c42d6f06828f93b53253b1d90302417afdb0bd8e09d176f64f19c7a0faa
     HEAD_REF master
     PATCHES
         disable-source-utf8.patch
-        fix-compiler-warnings.patch
         find-dependency.patch # from https://github.com/AOMediaCodec/libavif/pull/1339
 )
 

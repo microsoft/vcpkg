@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF "${curl_version}"
-    SHA512 f4a6a629e42bf635f5fd01e25b6b8c750cd5db20f63d7f2bada4de08851deb4b58135019da8b76028db7f32475d11ae8a53486fb6927a6257a889468da604ce4
+    SHA512 ee9f6c3b5468ab547fc20822c18756a625f9f741e3d40958548a56b607f567f4ed782b8cce2d900c442e0da51faa8cb1fefa5d9f2d1581c79805a5b8fd4ec098
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -14,7 +14,7 @@ vcpkg_from_github(
         mbedtls-ws2_32.patch
         export-components.patch
         dependencies.patch
-        cmake-config.patch # https://github.com/curl/curl/pull/11913
+        cmake-config.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
