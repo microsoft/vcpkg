@@ -32,12 +32,10 @@ function Get-SasToken {
 
 # Asset Cache:
 # Read, Create, List
-$assetSas = Get-SasToken -KeyNumber $KeyNumber -ResourceGroupName vcpkg-asset-cache -StorageAccountName vcpkgassetcacheeastasia -ContainerName cache -Permission rcl
+$assetWus3Sas = Get-SasToken -KeyNumber $KeyNumber -ResourceGroupName vcpkg-asset-cache -StorageAccountName vcpkgassetcachewus3 -ContainerName cache -Permission rcl
 
 # Binary Cache:
 # Read, Create, List, Write
-$binarySas = Get-SasToken -KeyNumber $KeyNumber -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycache -ContainerName cache -Permission rclw
-$binaryEASas = Get-SasToken -KeyNumber $KeyNumber -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycacheeastasia -ContainerName cache -Permission rclw
 $binaryWUS3as = Get-SasToken -KeyNumber $KeyNumber -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycachewus3 -ContainerName cache -Permission rclw
 
 $response = "Asset Cache SAS: Update`n" + `
@@ -45,16 +43,12 @@ $response = "Asset Cache SAS: Update`n" + `
     "and`n" + `
     "https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=355&path=vcpkg-asset-caching-credentials`n" + `
     "`n" + `
-    "token:`n" + `
-    "$assetSas`n" + `
+    "wus3 token:`n" + `
+    "$assetWus3Sas`n" + `
     "`n" + `
     "Binary Cache SAS: Update`n" + `
     "https://dev.azure.com/vcpkg/public/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=8&path=vcpkg-binary-caching-credentials`n" + `
     "`n" + `
-    "sas-bin:`n" + `
-    "$binarySas`n" + `
-    "sas-bin-ea:`n" + `
-    "$binaryEASas`n" + `
     "sas-bin-wus3:`n" + `
     "$binaryWUS3as`n"
 

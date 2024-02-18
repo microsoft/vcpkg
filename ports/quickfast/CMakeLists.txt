@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 project(quickfast CXX)
 
+set(CMAKE_CXX_STANDARD 11) # Boost v1.84.0 libraries require C++11
+
 option(BUILD_SHARED_LIBS "Build shared instead of static library" ON)
 
 find_package(Boost REQUIRED COMPONENTS thread)

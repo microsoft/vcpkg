@@ -13,16 +13,16 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        sodium          WITH_LIBSODIUM
-        draft           ENABLE_DRAFTS
-        websockets      ENABLE_WS
+        sodium            WITH_LIBSODIUM
+        draft             ENABLE_DRAFTS
+        websockets        ENABLE_WS
         websockets-secure WITH_TLS
-        curve           ENABLE_CURVE
+        curve             ENABLE_CURVE
 )
 
 set(PLATFORM_OPTIONS "")
 if(VCPKG_TARGET_IS_MINGW)
-    set(PLATFORM_OPTIONS -DCMAKE_SYSTEM_VERSION=6.0 -DZMQ_HAVE_IPC=0)
+    list(APPEND PLATFORM_OPTIONS "-DCMAKE_SYSTEM_VERSION=6.0" "-DZMQ_HAVE_IPC=0")
 endif()
 
 vcpkg_cmake_configure(
@@ -42,9 +42,9 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         "-DCMAKE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
     MAYBE_UNUSED_VARIABLES
-        USE_PERF_TOOLS
         CMAKE_REQUIRE_FIND_PACKAGE_GnuTLS
         WITH_LIBBSD
+        WITH_PERF_TOOL
         WITH_TLS
 )
 
