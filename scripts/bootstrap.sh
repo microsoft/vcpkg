@@ -98,22 +98,18 @@ if [ -e /etc/alpine-release ]; then
     if [ "$ARCH" = "x86_64" ]; then
         vcpkgUseMuslC="ON"
     fi
-    CC=${CC:=gcc}
-    CXX=${CXX:=g++}
 fi
 
 if [ "$UNAME" = "OpenBSD" ]; then
     vcpkgUseSystem="ON"
-    CC=${CC:=clang}
-    CXX=${CXX:=clang++}
 fi
 
 if [ "$vcpkgUseSystem" = "ON" ]; then
     vcpkgCheckRepoTool cmake
     vcpkgCheckRepoTool ninja
     vcpkgCheckRepoTool git
-    vcpkgCheckRepoTool ${CC}
-    vcpkgCheckRepoTool ${CXX}
+    vcpkgCheckRepoTool ${CC:-cc}
+    vcpkgCheckRepoTool ${CXX:-c++}
 fi
 
 vcpkgCheckEqualFileHash()
