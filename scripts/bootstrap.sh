@@ -108,8 +108,6 @@ if [ "$vcpkgUseSystem" = "ON" ]; then
     vcpkgCheckRepoTool cmake
     vcpkgCheckRepoTool ninja
     vcpkgCheckRepoTool git
-    vcpkgCheckRepoTool ${CC:-cc}
-    vcpkgCheckRepoTool ${CXX:-c++}
 fi
 
 vcpkgCheckEqualFileHash()
