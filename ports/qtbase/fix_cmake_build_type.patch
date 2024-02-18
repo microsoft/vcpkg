@@ -16,7 +16,7 @@ index 21c40f2..c212148 100644
      # See also qt_internal_force_set_cmake_build_type_conditionally which is used
      # to set the build type when building other repos or tests.
      if("${CMAKE_BUILD_TYPE}" STREQUAL "${CMAKE_BUILD_TYPE_INIT}"
-+    AND NOT DEFINED CACHE{CMAKE_BUILD_TYPE}
++        AND NOT DEFINED CACHE{CMAKE_BUILD_TYPE}
          AND NOT __qt_auto_detect_cmake_build_type_before_project_call
          AND NOT __qt_build_internals_cmake_build_type
          AND NOT CMAKE_CONFIGURATION_TYPES)
