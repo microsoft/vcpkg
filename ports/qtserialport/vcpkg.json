@@ -1,7 +1,7 @@
 {
   "name": "qtserialport",
   "version": "6.6.2",
-    "description": "Qt Serial Port support",
+  "description": "Qt Serial Port support",
   "homepage": "https://www.qt.io/",
   "license": null,
   "supports": "!ios",
