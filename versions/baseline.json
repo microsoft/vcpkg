@@ -9060,6 +9060,10 @@
       "baseline": "2024-02-22",
       "port-version": 0
     },
+    "vcpkg-libyal-vstools": {
+      "baseline": "2023-12-18",
+      "port-version": 0
+    },
     "vcpkg-msbuild": {
       "baseline": "2023-08-08",
       "port-version": 0
