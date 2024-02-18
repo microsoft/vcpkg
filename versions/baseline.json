@@ -4757,8 +4757,8 @@
       "port-version": 3
     },
     "libqcow": {
-      "baseline": "20221124",
-      "port-version": 1
+      "baseline": "20231125",
+      "port-version": 0
     },
     "libqglviewer": {
       "baseline": "2.9.1",

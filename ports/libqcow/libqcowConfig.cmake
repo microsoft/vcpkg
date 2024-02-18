@@ -1,0 +1,7 @@
+message(WARNING "'find_package(libqcow CONFIG)' is deprecated. Please use 'find_package(unofficial-libqcow CONFIG)' instead.")
+if(NOT TARGET libqcow::libqcow)
+    include(CMakeFindDependencyMacro)
+    find_dependency(unofficial-libqcow)
+    set(no_heuristics "add_library")
+    cmake_language(CALL ${no_heuristics} libqcow::libqcow ALIAS unofficial::libqcow::libqcow)
+endif()
