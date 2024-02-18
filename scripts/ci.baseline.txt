@@ -999,6 +999,9 @@ rest-rpc:arm64-windows=skip
 rest-rpc:x64-linux=skip
 rest-rpc:x64-osx=skip
 rest-rpc:arm64-osx=skip
+# Missing system libraries
+robotraconteur:x64-linux=fail
+robotraconteur-companion:x64-linux=fail
 rpclib:arm64-windows=fail
 rpclib:arm64-uwp=fail
 rpclib:x64-uwp=fail

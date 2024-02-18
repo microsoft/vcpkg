@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
@@ -14,6 +12,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBENCHMARK_ENABLE_TESTING=OFF
+        -DBENCHMARK_INSTALL_DOCS=OFF
         -Werror=old-style-cast
 )
 

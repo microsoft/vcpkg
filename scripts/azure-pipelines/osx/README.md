@@ -47,7 +47,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] Install MacOS like you would on real hardware.
     * Apple ID: 'Set Up Later' / Skip
     * Account name: vcpkg
-    * Account password: vcpkg
+    * A very similar password :)
 - [ ] Install Parallels Tools
 - [ ] Restart the VM
 - [ ] Change the desktop background to a solid color
@@ -109,7 +109,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] Follow prompts as you would on real hardware.
     * Apple ID: 'Set Up Later' / Skip
     * Account name: vcpkg
-    * Account password: vcpkg
+    * A very similar password
     * No location services
     * Yes send crash reports
 - [ ] Set the desktop wallpaper to a fixed color from Settings -> Wallpaper . (This makes the KVM a lot easier to use :) )
