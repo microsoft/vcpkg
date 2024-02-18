@@ -78,3 +78,8 @@ endif()
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 file(COPY ${LICENSE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSES")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+
+if(VCPKG_TARGET_IS_IOS)
+    file(COPY "${CURRENT_PACKAGES_DIR}/lib/ktx.framework/Headers"
+         DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+endif()
