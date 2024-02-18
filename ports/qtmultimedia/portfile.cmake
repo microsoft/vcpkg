@@ -4,7 +4,6 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES
                     remove_unistd.patch
                     remove_export_macro.patch
-                    static_find_modules.patch
                     fix_avfoundation_target.patch
 )
 
