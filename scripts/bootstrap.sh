@@ -191,27 +191,6 @@ fi
 if [ "$vcpkgDownloadTool" = "ON" ]; then
     vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
 else
-    if [ "x$CXX" = "x" ]; then
-        if which g++-12 >/dev/null 2>&1; then
-            CXX=g++-12
-        elif which g++-11 >/dev/null 2>&1; then
-            CXX=g++-11
-        elif which g++-10 >/dev/null 2>&1; then
-            CXX=g++-10
-        elif which g++-9 >/dev/null 2>&1; then
-            CXX=g++-9
-        elif which g++-8 >/dev/null 2>&1; then
-            CXX=g++-8
-        elif which g++-7 >/dev/null 2>&1; then
-            CXX=g++-7
-        elif which g++-6 >/dev/null 2>&1; then
-            CXX=g++-6
-        elif which g++ >/dev/null 2>&1; then
-            CXX=g++
-        fi
-        # If we can't find g++, allow CMake to do the look-up
-    fi
-
     vcpkgToolReleaseTarball="$VCPKG_TOOL_RELEASE_TAG.tar.gz"
     vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
     baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
@@ -237,7 +216,7 @@ else
         cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
     fi
 
-    (cd "$buildDir" && CXX="$CXX" eval cmake "$srcDir" $cmakeConfigOptions) || exit 1
+    (cd "$buildDir" && cmake "$srcDir" $cmakeConfigOptions) || exit 1
     (cd "$buildDir" && cmake --build .) || exit 1
 
     rm -rf "$vcpkgRootDir/vcpkg"
