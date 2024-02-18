@@ -104,10 +104,10 @@ if [ "$UNAME" = "OpenBSD" ]; then
     vcpkgUseSystem="ON"
 
     if [ -z ${$CXX+x} ]; then
-        CXX=/usr/bin/clang++
+        CXX=clang++
     fi
     if [ -z ${CC+x} ]; then
-        CC=/usr/bin/clang
+        CC=clang
     fi
 fi
 
