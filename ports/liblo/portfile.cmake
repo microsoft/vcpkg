@@ -18,7 +18,7 @@ vcpkg_cmake_install()
 # Install needed files into package directory
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/liblo)
 
-vcpkg_copy_tools(TOOL_NAMES oscsend oscdump AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES oscsend oscdump oscsendfile AUTO_CLEAN)
 
 # Remove unnecessary files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
