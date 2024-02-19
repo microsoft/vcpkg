@@ -8373,7 +8373,7 @@
       "port-version": 2
     },
     "sundials": {
-      "baseline": "6.2.0",
+      "baseline": "6.7.0",
       "port-version": 0
     },
     "superlu": {

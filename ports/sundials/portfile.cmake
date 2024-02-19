@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LLNL/sundials
-    REF e2f29c34f324829302037a1492db480be8828084
-    SHA512 9af9a5d7a44de1f2afbc35d8e2ec3d35a2d15f1b708be7a90bf849a0d0576fda6c73fae6b8954025805ac1ca25468558c02dcc2fd86b5767699518988817d4d8
+    REF aaeab8d907c6b7dfca86041401fdc1448f35f826
+    SHA512 0cb81fdb86e748414798e97de63493fdd23fc922050c9f7fe8886e70ecf61c0fced22f68eaed066753543f5072dfb7ac2d8081b9c0c5a6deb2e932bf27b06d99
     HEAD_REF master
     PATCHES
         install-dlls-in-bin.patch
@@ -11,12 +11,58 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SUN_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SUN_BUILD_SHARED)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        arkode      BUILD_ARKODE  
+        cvode       BUILD_CVODE
+        cvodes      BUILD_CVODES
+        ida         BUILD_IDA
+        idas        BUILD_IDAS
+        kinsol      BUILD_KINSOL
+        cuda        ENABLE_CUDA
+        ginkgo      ENABLE_GINKGO
+        hypre       ENABLE_HYPRE
+        klu         ENABLE_KLU
+        lapack      ENABLE_LAPACK
+        magma       ENABLE_MAGMA
+        mpi         ENABLE_MPI
+        openmp      ENABLE_OPENMP
+)
+
+vcpkg_list(SET OPTIONS)
+
+if(ENABLE_GINKGO)
+    vcpkg_list(SET SUNDIALS_GINKGO_BACKENDS "REF")
+    if(ENABLE_OPENMP)
+        vcpkg_list(APPEND SUNDIALS_GINKGO_BACKENDS "OMP")
+    endif()
+    if(ENABLE_CUDA)
+        vcpkg_list(APPEND SUNDIALS_GINKGO_BACKENDS "CUDA")
+    endif()
+    vcpkg_list(APPEND OPTIONS "-DSUNDIALS_GINKGO_BACKENDS=${SUNDIALS_GINKGO_BACKENDS}")
+endif()
+
+# SUNDIALS requires a Fortran compiler to automatically detect name mangling in
+# Fortran external symbols. This is a configuration check and Fortran is not
+# otherwise used. If a Fortran compiler is unavailable (typically on Windows),
+# just assume the standard convention to disable the check.
+if(ENABLE_LAPACK AND NOT CMAKE_Fortran_COMPILER_LOADED)
+    vcpkg_list(APPEND OPTIONS
+        "-DSUNDIALS_F77_FUNC_CASE=LOWER"
+        "-DSUNDIALS_F77_FUNC_UNDERSCORES=ONE"
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -D_BUILD_EXAMPLES=OFF
         -DBUILD_STATIC_LIBS=${SUN_BUILD_STATIC}
         -DBUILD_SHARED_LIBS=${SUN_BUILD_SHARED}
+        "-DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
+        ${FEATURE_OPTIONS}
+        ${OPTIONS}
 )
 
 vcpkg_cmake_install()

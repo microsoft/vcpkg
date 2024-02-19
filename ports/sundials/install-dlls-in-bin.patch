@@ -1,6 +1,6 @@
 --- a/cmake/macros/SundialsAddLibrary.cmake
 +++ b/cmake/macros/SundialsAddLibrary.cmake
-@@ -323,7 +323,7 @@
+@@ -363,7 +363,7 @@
          set_target_properties(${_actual_target_name} PROPERTIES ${_properties})
        endif()
  

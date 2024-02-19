@@ -1,9 +1,14 @@
 {
   "name": "sundials",
-  "version-semver": "6.2.0",
+  "version-semver": "6.7.0",
   "description": "SUNDIALS (SUite of Nonlinear and DIfferential/ALgebraic equation Solvers)",
   "homepage": "https://computation.llnl.gov/projects/sundials",
   "dependencies": [
+    {
+      "name": "pkgconf",
+      "host": true,
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,5 +17,114 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "arkode",
+    "cvode",
+    "cvodes",
+    "ida",
+    "idas",
+    "kinsol"
+  ],
+  "features": {
+    "arkode": {
+      "description": "Build ARKODE library"
+    },
+    "cuda": {
+      "description": "CUDA support for SUNDIALS",
+      "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "cvode": {
+      "description": "Build CVODE library"
+    },
+    "cvodes": {
+      "description": "Build CVODES library"
+    },
+    "ginkgo": {
+      "description": "Ginkgo support for SUNDIALS",
+      "dependencies": [
+        {
+          "name": "ginkgo",
+          "default-features": false
+        }
+      ]
+    },
+    "hypre": {
+      "description": "Hypre support for SUNDIALS",
+      "dependencies": [
+        {
+          "name": "hypre",
+          "default-features": false
+        },
+        {
+          "name": "sundials",
+          "default-features": false,
+          "features": [
+            "lapack",
+            "mpi"
+          ]
+        }
+      ]
+    },
+    "ida": {
+      "description": "Build IDA library"
+    },
+    "idas": {
+      "description": "Build IDAS library"
+    },
+    "kinsol": {
+      "description": "Build KINSOL library"
+    },
+    "klu": {
+      "description": "KLU (SuiteSparse) support for SUNDIALS",
+      "dependencies": [
+        {
+          "name": "suitesparse",
+          "default-features": false
+        },
+        {
+          "name": "sundials",
+          "default-features": false,
+          "features": [
+            "lapack"
+          ]
+        }
+      ]
+    },
+    "lapack": {
+      "description": "LAPACK support for SUNDIALS",
+      "dependencies": [
+        "lapack"
+      ]
+    },
+    "magma": {
+      "description": "MAGMA support for SUNDIALS",
+      "dependencies": [
+        {
+          "name": "magma",
+          "default-features": false
+        },
+        {
+          "name": "sundials",
+          "default-features": false,
+          "features": [
+            "cuda",
+            "lapack"
+          ]
+        }
+      ]
+    },
+    "mpi": {
+      "description": "MPI support for SUNDIALS",
+      "dependencies": [
+        "mpi"
+      ]
+    },
+    "openmp": {
+      "description": "OpenMP support for SUNDIALS"
+    }
+  }
 }
