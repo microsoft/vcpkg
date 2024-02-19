@@ -4053,7 +4053,7 @@
       "port-version": 6
     },
     "lcms": {
-      "baseline": "2.14",
+      "baseline": "2.16",
       "port-version": 0
     },
     "leaf": {
@@ -6377,8 +6377,8 @@
       "port-version": 4
     },
     "openimageio": {
-      "baseline": "2.5.8.0",
-      "port-version": 0
+      "baseline": "2.4.14.0",
+      "port-version": 4
     },
     "openjpeg": {
       "baseline": "2.5.0",
