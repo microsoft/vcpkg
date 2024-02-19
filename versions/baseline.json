@@ -2913,7 +2913,7 @@
       "port-version": 0
     },
     "gdal": {
-      "baseline": "3.8.3",
+      "baseline": "3.8.4",
       "port-version": 0
     },
     "gdcm": {
