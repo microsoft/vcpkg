@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookexperimental/libunifex
     REF "v${VERSION}"
-    SHA512 91a02d50e45c0458e25bd51c50fb6e98a668298733a3e66e8eb5353b0a5ea78a3656fe83b873e0ea50b26c6a7de572a663160b458c0fb1272ffa8bfd7715d1cc
+    SHA512 9625a248b9ed43f7ac8e3da054020e7c5c71d3da253cfa587ee62eb8a1d4cfee794758b7d28896e4038c1924b204c92be7230c20cf525684e2c304ceaa4a6321
     HEAD_REF main
     PATCHES
         fix-compile-error.patch

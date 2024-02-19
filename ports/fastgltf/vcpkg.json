@@ -1,8 +1,8 @@
 {
   "name": "fastgltf",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "port-version": 1,
-  "description": "Blazing fast C++17 glTF 2.0 loader powered by SIMD",
+  "description": "A modern C++17 glTF 2.0 library focused on speed, correctness, and usability",
   "homepage": "https://github.com/spnda/fastgltf",
   "license": "MIT",
   "dependencies": [

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AOMediaCodec/libavif
     REF "v${VERSION}"
-    SHA512 f7c35e40f9214314afeae69d5da6ab345e6dbd025e737a920ea4270452cdf7ff7010d7af5cc18d27e93b217114eb6b613cd349703d0e1bb7814dbeb84a9fd70f
+    SHA512 b713f35fd3e54e105e16f46012becdada86f522b4ed8ab7097a93fd437524b4f2c997c42d6f06828f93b53253b1d90302417afdb0bd8e09d176f64f19c7a0faa
     HEAD_REF master
     PATCHES
         disable-source-utf8.patch

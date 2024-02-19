@@ -37,10 +37,10 @@
     </tool>
     <tool name="git" os="windows">
         <version>2.7.4</version>
-        <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>
-        <url>https://github.com/git-for-windows/git/releases/download/v2.41.0.windows.1/PortableGit-2.41.0-32-bit.7z.exe</url>
-        <sha512>e483a890e77b427c20785e7528279338c7d99651e0afbf704bf2ff3cde23d0895c07e961603d133d5d78aea2308a2994e532974de41674e4f334423b1b47bd0e</sha512>
-        <archiveName>PortableGit-2.41.0-32-bit.7z.exe</archiveName>
+        <exeRelativePath>mingw64\bin\git.exe</exeRelativePath>
+        <url>https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe</url>
+        <sha512>02ec40f55a6de18f305530e9415b6ce0a597359ebb9a58cf727ac84eceb0003b0f437941b76872b6568157a333c8e6e8d865a36faf874fd5f04774deb6a9387a</sha512>
+        <archiveName>PortableGit-2.43.0-32-bit.7z.exe</archiveName>
     </tool>
     <tool name="git" os="linux">
         <version>2.7.4</version>
@@ -82,10 +82,10 @@
         <archiveName>gsutil_4.65.tar.gz</archiveName>
     </tool>
     <tool name="vswhere" os="windows">
-        <version>2.8.4</version>
+        <version>3.1.7</version>
         <exeRelativePath>vswhere.exe</exeRelativePath>
-        <url>https://github.com/Microsoft/vswhere/releases/download/2.8.4/vswhere.exe</url>
-        <sha512>1a98beebd1bb6929cbe98b86a3b77fb1ae4508b86cdcb64696b20c3a3336a2b5c8518e19a21092f1c98a46202c048dba819dc52bef122485ac34b888b77e59b2</sha512>
+        <url>https://github.com/microsoft/vswhere/releases/download/3.1.7/vswhere.exe</url>
+        <sha512>40c534eb27f079c15c9782f53f82c12dabfede4d3d85f0edf8a855c2b0d5e12921a96506b37c210beab3c33220f8ff098447ad054e82d8c2603964975fc12076</sha512>
     </tool>
     <tool name="nuget" os="windows">
         <version>6.2.1</version>
@@ -145,11 +145,11 @@
         <archiveName>7z2301-extra.7z</archiveName>
      </tool>
     <tool name="aria2" os="windows">
-        <version>1.35.0</version>
-        <exeRelativePath>aria2-1.35.0-win-32bit-build1\aria2c.exe</exeRelativePath>
-        <url>https://github.com/aria2/aria2/releases/download/release-1.35.0/aria2-1.35.0-win-32bit-build1.zip</url>
-        <sha512>933537cad820b1cecf43a9eeca7e1b241dd7b1c902ee942441a166f2c38845f16046321efbdfa2f83c7e9fc50c7ecc5da6fd00e0c6e2124c07d3b783aa5092a4</sha512>
-        <archiveName>aria2-1.35.0-win-32bit-build1.zip</archiveName>
+        <version>1.37.0</version>
+        <exeRelativePath>aria2-1.37.0-win-64bit-build1\aria2c.exe</exeRelativePath>
+        <url>https://github.com/aria2/aria2/releases/download/release-1.37.0/aria2-1.37.0-win-64bit-build1.zip</url>
+        <sha512>6d78405da9cf5639dbe8174787002161b8124d73880fb57cc8c0a3a63982f84e46df4e626990c58f23452965ad925f0d37cb9147e99b25c3d7ca0ea49602f34d</sha512>
+        <archiveName>aria2-1.37.0-win-64bit-build1.zip</archiveName>
     </tool>
     <tool name="aria2" os="osx">
         <version>1.35.0</version>
@@ -180,11 +180,11 @@
         <archiveName>ninja-mac-1.11.1.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.2.11</version>
+        <version>7.2.16</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.11/PowerShell-7.2.11-win-x86.zip</url>
-        <sha512>e9581122101ad161ad628a6feb63e61d3ef8f064a3f325465e8a1a4a6cfc1affbc9bf63146efae0aa65ff9ea5c93018af2c413dc0940f0d162edef805659ec84</sha512>
-        <archiveName>PowerShell-7.2.11-win-x86.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.2.16/PowerShell-7.2.16-win-x64.zip</url>
+        <sha512>de246b7719337ff0c16ef46cf1df2e0fb5e39f7d2754cb28422cf455df276be6e35e9efa9d2bac81c383df1d2d97c9281a24e86ec84af7c395b7671149111ca9</sha512>
+        <archiveName>PowerShell-7.2.16-win-x64.zip</archiveName>
     </tool>
     <tool name="node" os="windows">
         <version>16.15.1</version>
