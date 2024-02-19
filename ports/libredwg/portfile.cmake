@@ -8,7 +8,6 @@ vcpkg_from_github(
     fix_install.patch
     fix_dependency.patch
     fix_arm64_build.patch
-    remove-wx.patch
 )
 
 # If generate dwg manipulation tools
@@ -37,6 +36,7 @@ vcpkg_cmake_configure(
   OPTIONS
     ${FEATURE_OPTIONS}
     -DBUILD_TESTING=OFF
+    -DDISABLE_WERROR=ON
 )
 
 vcpkg_cmake_install()
