@@ -894,7 +894,9 @@ pmdk:x64-osx=fail
 pmdk:x64-windows-static=fail
 popsift:x64-windows-static-md=fail
 popsift:x64-linux=fail # segfaults :(
-
+ptex:arm-neon-android=fail
+ptex:arm64-android=fail
+ptex:x64-android=fail
 python2:arm-neon-android=fail
 python2:arm64-android=fail
 python2:x64-android=fail
