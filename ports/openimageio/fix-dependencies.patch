@@ -1,8 +1,7 @@
-diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
-index 0a6afeb..2a67ee3 100644
+diff -u -r a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -2,6 +2,23 @@
+@@ -6,6 +6,23 @@
  
  include(CMakeFindDependencyMacro)
  
@@ -26,11 +25,10 @@ index 0a6afeb..2a67ee3 100644
  # add here all the find_dependency() whenever switching to config based dependencies
  if (NOT @OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH@ AND NOT OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH)
      if (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 3.0)
-diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index 3ca046b..dad053c 100644
+diff -u -r a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -174,14 +174,19 @@ endif ()
+@@ -177,10 +177,13 @@
  checked_find_package (Freetype
                     DEFINITIONS  -DUSE_FREETYPE=1 )
  
@@ -42,9 +40,13 @@ index 3ca046b..dad053c 100644
                        # PREFER_CONFIG
                        )
 +set(OPENCOLORIO_FOUND "${OpenColorIO_FOUND}")
- if (NOT OpenColorIO_FOUND)
+ if (OpenColorIO_FOUND)
+     option (OIIO_DISABLE_BUILTIN_OCIO_CONFIGS
+            "For deveoper debugging/testing ONLY! Disable OCIO 2.2 builtin configs." OFF)
+@@ -191,7 +194,9 @@
      set (OpenColorIO_FOUND 0)
  endif ()
+ 
 -checked_find_package (OpenCV 3.0
 +set(OPENCV_INCLUDES "")
 +set(OPENCV_LIBRARIES opencv_core)
@@ -52,7 +54,7 @@ index 3ca046b..dad053c 100644
                     DEFINITIONS  -DUSE_OPENCV=1)
  
  # Intel TBB
-@@ -191,14 +196,18 @@ checked_find_package (TBB 2017
+@@ -201,14 +206,18 @@
                        PREFER_CONFIG)
  
  checked_find_package (DCMTK VERSION_MIN 3.6.1)  # For DICOM images
@@ -73,7 +75,7 @@ index 3ca046b..dad053c 100644
                        RECOMMEND_MIN 1.7
                        RECOMMEND_MIN_REASON "for AVIF support")
  if (APPLE AND LIBHEIF_VERSION VERSION_GREATER_EQUAL 1.10 AND LIBHEIF_VERSION VERSION_LESS 1.11)
-@@ -219,9 +228,8 @@ if (LibRaw_FOUND AND LibRaw_VERSION VERSION_LESS 0.20 AND CMAKE_CXX_STANDARD VER
+@@ -228,9 +237,8 @@
      # set (LIBRAW_FOUND 0)
  endif ()
  
@@ -85,12 +87,12 @@ index 3ca046b..dad053c 100644
  # Note: Recent OpenJPEG versions have exported cmake configs, but we don't
  # find them reliable at all, so we stick to our FindOpenJPEG.cmake module.
  
-@@ -238,6 +246,8 @@ if (NOT Ptex_FOUND OR NOT Ptex_VERSION)
+@@ -251,6 +259,8 @@
      checked_find_package (Ptex)
  endif ()
  
 +set(WEBP_INCLUDES "")
 +set(WEBP_LIBRARIES WebP::webp WebP::webpdemux)
  checked_find_package (WebP)
- 
- option (USE_R3DSDK "Enable R3DSDK (RED camera) support" OFF)
+ # Note: When WebP 1.1 (released late 2019) is our minimum, we can use their
+ # exported configs and remove our FindWebP.cmake module.

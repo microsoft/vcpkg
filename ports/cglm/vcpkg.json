@@ -1,10 +1,10 @@
 {
   "name": "cglm",
   "version-semver": "0.9.2",
+  "port-version": 1,
   "description": "Highly Optimized Graphics Math (glm) for C",
   "homepage": "https://github.com/recp/cglm",
   "license": "MIT",
-  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

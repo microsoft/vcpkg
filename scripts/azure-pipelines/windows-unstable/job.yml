@@ -16,7 +16,7 @@ jobs:
     value: D:\downloads
   - group: vcpkg-asset-caching-credentials
   - name: X_VCPKG_ASSET_SOURCES
-    value: "x-azurl,$(root-url),$(sas),readwrite"
+    value: "x-azurl,$(root-url-wus3),$(sas-wus3),readwrite"
 
   steps:
   - task: DownloadBuildArtifacts@0
