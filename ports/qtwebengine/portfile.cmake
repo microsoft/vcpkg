@@ -3,7 +3,6 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
       "clang-cl.patch"
-      "msvc-template.patch"
 )
 
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
