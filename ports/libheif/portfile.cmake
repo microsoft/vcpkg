@@ -7,13 +7,27 @@ vcpkg_from_github(
     PATCHES
         gdk-pixbuf.patch
 )
+set(OPTIONS 
+	"-DWITH_EXAMPLES=OFF"
+	"-DWITH_DAV1D=OFF"
+	"-DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON"
+	)
+	
+if("libde265" IN_LIST FEATURES)
+list(APPEND OPTIONS "-DWITH_LIBDE265=ON")
+else()
+list(APPEND OPTIONS "-DWITH_LIBDE265=OFF")
+endif()
+
+if("x265" IN_LIST FEATURES)
+list(APPEND OPTIONS "-DWITH_X265=ON")
+else()
+list(APPEND OPTIONS "-DWITH_X265=OFF")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DWITH_EXAMPLES=OFF
-        -DWITH_DAV1D=OFF
-        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+    OPTIONS ${OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
