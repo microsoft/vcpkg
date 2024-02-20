@@ -41,9 +41,14 @@ vcpkg_add_to_path("${ccas_dir}")
 cmake_path(GET ccas FILENAME ccas_command)
 vcpkg_list(APPEND options "CCAS=${ccas_command}${ccas_options}")
 
+set(configure_triplets DETERMINE_BUILD_TRIPLET)
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    set(configure_triplets BUILD_TRIPLET "--host=wasm32-unknown-emscripten --build=\$(\$SHELL \"${SOURCE_PATH}/config.guess\")")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
-    DETERMINE_BUILD_TRIPLET
+    ${configure_triplets}
     USE_WRAPPERS
     OPTIONS
         --enable-portable-binary
