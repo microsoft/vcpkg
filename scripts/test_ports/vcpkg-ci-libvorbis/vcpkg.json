@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libvorbis",
+    "version-string": "ci",
+    "dependencies": [
+        "libvorbis",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

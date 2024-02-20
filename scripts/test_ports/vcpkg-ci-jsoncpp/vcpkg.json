@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-jsoncpp",
+    "version-string": "ci",
+    "dependencies": [
+        "jsoncpp",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

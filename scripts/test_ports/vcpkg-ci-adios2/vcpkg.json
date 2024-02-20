@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-adios2",
+    "version-string": "ci",
+    "dependencies": [
+        "adios2",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

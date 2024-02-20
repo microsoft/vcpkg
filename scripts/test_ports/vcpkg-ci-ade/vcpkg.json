@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-ade",
+    "version-string": "ci",
+    "dependencies": [
+        "ade",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

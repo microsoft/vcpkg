@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-imath",
+    "version-string": "ci",
+    "dependencies": [
+        "imath",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.10)
+project(test)
+set(CMAKE_CXX_STANDARD 11)
+add_executable(main main.cpp)
+find_package(PhysFS REQUIRED)
+target_include_directories(main PRIVATE ${PHYSFS_INCLUDE_DIR})
+target_link_libraries(main PRIVATE ${PHYSFS_LIBRARY})

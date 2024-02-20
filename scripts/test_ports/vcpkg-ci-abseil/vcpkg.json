@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-abseil",
+    "version-string": "ci",
+    "dependencies": [
+        "abseil",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

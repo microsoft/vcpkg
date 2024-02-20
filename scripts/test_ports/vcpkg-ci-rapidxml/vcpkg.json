@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-rapidxml",
+    "version-string": "ci",
+    "dependencies": [
+        "rapidxml",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

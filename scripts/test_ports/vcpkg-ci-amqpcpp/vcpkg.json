@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-amqpcpp",
+    "version-string": "ci",
+    "dependencies": [
+        "amqpcpp",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-physfs",
+    "version-string": "ci",
+    "dependencies": [
+        "physfs",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

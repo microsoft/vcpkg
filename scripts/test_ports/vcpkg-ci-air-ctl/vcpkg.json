@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-air-ctl",
+    "version-string": "ci",
+    "dependencies": [
+        "air-ctl",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

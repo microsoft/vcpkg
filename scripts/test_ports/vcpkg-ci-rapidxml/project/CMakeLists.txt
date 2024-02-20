@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.10)
+project(test)
+set(CMAKE_CXX_STANDARD 11)
+add_executable(main main.cpp)
+find_path(RAPIDXML_INCLUDE_DIRS "rapidxml/rapidxml.hpp")
+target_include_directories(main PRIVATE ${RAPIDXML_INCLUDE_DIRS})

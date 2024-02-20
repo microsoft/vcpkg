@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-brotli",
+    "version-string": "ci",
+    "dependencies": [
+        "brotli",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

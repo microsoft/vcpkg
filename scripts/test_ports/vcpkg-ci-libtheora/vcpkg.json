@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libtheora",
+    "version-string": "ci",
+    "dependencies": [
+        "libtheora",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

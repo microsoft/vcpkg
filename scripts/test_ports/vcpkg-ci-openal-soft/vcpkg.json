@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-openal-soft",
+    "version-string": "ci",
+    "dependencies": [
+        "openal-soft",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

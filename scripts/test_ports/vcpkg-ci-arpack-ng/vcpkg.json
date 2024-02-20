@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-arpack-ng",
+    "version-string": "ci",
+    "dependencies": [
+        "arpack-ng",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

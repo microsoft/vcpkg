@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-arcus",
+    "version-string": "ci",
+    "dependencies": [
+        "arcus",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-pcre2",
+    "version-string": "ci",
+    "dependencies": [
+        "pcre2",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

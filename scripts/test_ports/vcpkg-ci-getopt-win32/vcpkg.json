@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-getopt-win32",
+    "version-string": "ci",
+    "dependencies": [
+        "getopt-win32",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

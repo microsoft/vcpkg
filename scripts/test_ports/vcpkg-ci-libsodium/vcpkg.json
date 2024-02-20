@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libsodium",
+    "version-string": "ci",
+    "dependencies": [
+        "libsodium",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

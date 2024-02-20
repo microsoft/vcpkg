@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-asio",
+    "version-string": "ci",
+    "dependencies": [
+        "asio",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

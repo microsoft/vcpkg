@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-apr",
+    "version-string": "ci",
+    "dependencies": [
+        "apr",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

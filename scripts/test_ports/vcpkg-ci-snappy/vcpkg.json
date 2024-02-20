@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-snappy",
+    "version-string": "ci",
+    "dependencies": [
+        "snappy",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

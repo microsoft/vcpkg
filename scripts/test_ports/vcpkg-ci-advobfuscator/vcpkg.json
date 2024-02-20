@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-advobfuscator",
+    "version-string": "ci",
+    "dependencies": [
+        "advobfuscator",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

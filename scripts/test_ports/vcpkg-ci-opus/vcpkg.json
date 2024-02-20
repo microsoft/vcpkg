@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-opus",
+    "version-string": "ci",
+    "dependencies": [
+        "opus",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

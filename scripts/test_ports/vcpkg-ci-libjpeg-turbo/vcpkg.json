@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libjpeg-turbo",
+    "version-string": "ci",
+    "dependencies": [
+        "libjpeg-turbo",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

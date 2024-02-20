@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libpng",
+    "version-string": "ci",
+    "dependencies": [
+        "libpng",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-absent",
+    "version-string": "ci",
+    "dependencies": [
+        "absent",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-argumentum",
+    "version-string": "ci",
+    "dependencies": [
+        "argumentum",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

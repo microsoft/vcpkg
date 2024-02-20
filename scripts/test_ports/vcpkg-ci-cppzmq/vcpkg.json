@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-cppzmq",
+    "version-string": "ci",
+    "dependencies": [
+        "cppzmq",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

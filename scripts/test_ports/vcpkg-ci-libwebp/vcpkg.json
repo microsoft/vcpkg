@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libwebp",
+    "version-string": "ci",
+    "dependencies": [
+        "libwebp",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

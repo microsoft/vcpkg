@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-glad",
+    "version-string": "ci",
+    "dependencies": [
+        "glad",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

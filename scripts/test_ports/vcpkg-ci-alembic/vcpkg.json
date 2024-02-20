@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-alembic",
+    "version-string": "ci",
+    "dependencies": [
+        "alembic",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

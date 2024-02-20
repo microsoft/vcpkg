@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-log4cplus",
+    "version-string": "ci",
+    "dependencies": [
+        "log4cplus",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

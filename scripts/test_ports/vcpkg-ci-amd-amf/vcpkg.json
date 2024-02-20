@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-amd-amf",
+    "version-string": "ci",
+    "dependencies": [
+        "amd-amf",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

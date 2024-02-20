@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-hdf5",
+    "version-string": "ci",
+    "dependencies": [
+        "hdf5",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

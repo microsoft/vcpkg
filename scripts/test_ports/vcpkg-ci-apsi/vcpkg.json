@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-apsi",
+    "version-string": "ci",
+    "dependencies": [
+        "apsi",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

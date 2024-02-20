@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-allegro5",
+    "version-string": "ci",
+    "dependencies": [
+        "allegro5",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-zeromq",
+    "version-string": "ci",
+    "dependencies": [
+        "zeromq",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

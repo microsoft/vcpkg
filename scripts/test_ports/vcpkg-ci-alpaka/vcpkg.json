@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-alpaka",
+    "version-string": "ci",
+    "dependencies": [
+        "alpaka",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

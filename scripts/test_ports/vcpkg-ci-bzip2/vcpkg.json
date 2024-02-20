@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-bzip2",
+    "version-string": "ci",
+    "dependencies": [
+        "bzip2",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

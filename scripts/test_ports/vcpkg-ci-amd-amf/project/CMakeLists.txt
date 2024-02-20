@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.10)
+project(test)
+set(CMAKE_CXX_STANDARD 11)
+add_executable(main main.cpp)
+find_path(AMD_AMF_INCLUDE_DIRS "AMF/components/Ambisonic2SRenderer.h")
+target_include_directories(main PRIVATE ${AMD_AMF_INCLUDE_DIRS})

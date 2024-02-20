@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libflac",
+    "version-string": "ci",
+    "dependencies": [
+        "libflac",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

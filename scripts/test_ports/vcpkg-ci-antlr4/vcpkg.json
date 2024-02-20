@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-antlr4",
+    "version-string": "ci",
+    "dependencies": [
+        "antlr4",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

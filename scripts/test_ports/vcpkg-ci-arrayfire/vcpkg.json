@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-arrayfire",
+    "version-string": "ci",
+    "dependencies": [
+        "arrayfire",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

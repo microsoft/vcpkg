@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-egl-registry",
+    "version-string": "ci",
+    "dependencies": [
+        "egl-registry",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-opengl-registry",
+    "version-string": "ci",
+    "dependencies": [
+        "opengl-registry",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

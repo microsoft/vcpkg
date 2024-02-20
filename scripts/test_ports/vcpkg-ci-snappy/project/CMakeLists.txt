@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.10)
+project(test)
+set(CMAKE_CXX_STANDARD 11)
+add_executable(main main.cpp)
+find_package(Snappy CONFIG REQUIRED)
+target_link_libraries(main PRIVATE Snappy::snappy)
+Optimizations based on hardware support are disabled by default.
+if("${PORT}" STREQUAL "snappy")
+list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS -DSNAPPY_HAVE_SSSE3=ON -DSNAPPY_HAVE_BMI2=ON)
+endif()
