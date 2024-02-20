@@ -12,9 +12,10 @@ vcpkg_extract_source_archive(
 
 vcpkg_list(SET options)
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(extra_cflags "-DFFI_BUILDING")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         string(APPEND extra_cflags " -DFFI_BUILDING_DLL")
+    else()
+        string(APPEND extra_cflags " -DFFI_STATIC_BUILD")
     endif()
     vcpkg_list(APPEND options "CFLAGS=\${CFLAGS} ${extra_cflags}")
 endif()
@@ -62,7 +63,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ffi.h" "!defined FFI_BUILDING" "0")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ffi.h" "defined(FFI_STATIC_BUILD)" "1")
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
