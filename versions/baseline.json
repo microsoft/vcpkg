@@ -4261,7 +4261,7 @@
       "port-version": 1
     },
     "libdjinterop": {
-      "baseline": "0.20.1",
+      "baseline": "0.20.2",
       "port-version": 0
     },
     "libdmx": {
