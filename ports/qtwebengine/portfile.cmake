@@ -116,8 +116,8 @@ vcpkg_cmake_install(ADD_BIN_TO_PATH)
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(rename "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.exe" "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/debug/QtWebEngineProcessd.exe")
-    file(rename "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.pdb" "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/debug/QtWebEngineProcessd.pdb")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.exe" "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/debug/QtWebEngineProcessd.exe")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.pdb" "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/debug/QtWebEngineProcessd.pdb")
 endif()
 
 qt_install_copyright("${SOURCE_PATH}")
