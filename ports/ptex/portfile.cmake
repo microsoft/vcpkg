@@ -34,24 +34,6 @@ foreach(HEADER PtexHalf.h Ptexture.h)
     file(WRITE "${CURRENT_PACKAGES_DIR}/include/${HEADER}" "${PTEX_HEADER}")
 endforeach()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/ptex-config.cmake"
-"include(CMakeFindDependencyMacro)"
-[[include(CMakeFindDependencyMacro)
-if(NOT TARGET Ptex::Ptex)
-    add_library(Ptex::Ptex INTERFACE IMPORTED)
-    target_link_libraries(Ptex::Ptex INTERFACE Ptex::Ptex_dynamic)
-endif()]])
-else()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/ptex-config.cmake"
-"include(CMakeFindDependencyMacro)"
-[[include(CMakeFindDependencyMacro)
-if(NOT TARGET Ptex::Ptex)
-    add_library(Ptex::Ptex INTERFACE IMPORTED)
-    target_link_libraries(Ptex::Ptex INTERFACE Ptex::Ptex_static)
-endif()]])
-endif()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
