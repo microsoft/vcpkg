@@ -9330,7 +9330,7 @@
     },
     "xcb-util-errors": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "xcb-util-m4": {
       "baseline": "2022-01-24",

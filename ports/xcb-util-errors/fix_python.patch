@@ -1,5 +1,5 @@
 diff --git a/src/extensions.py b/src/extensions.py
-index 94d7d57fe..022d4003e 100644
+index 94d7d57..40ce0f9 100644
 --- a/src/extensions.py
 +++ b/src/extensions.py
 @@ -1,5 +1,6 @@
@@ -9,12 +9,17 @@ index 94d7d57fe..022d4003e 100644
  from xml.etree.cElementTree import parse
  
  class Module(object):
-@@ -83,7 +84,7 @@ def parseFile(filename):
+@@ -83,7 +84,12 @@ def parseFile(filename):
  
  # Parse the xml file
  output_file = sys.argv[1]
 -for input_file in sys.argv[2:]:
-+for input_file in glob.glob(sys.argv[2]):
++
++file_list = sys.argv[2]
++if file_list.startswith('/'):
++    file_list = file_list[1:]
++    
++for input_file in glob.glob(file_list):
      parseFile(input_file)
  
  assert xproto != None
