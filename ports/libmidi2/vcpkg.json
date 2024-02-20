@@ -1,5 +1,5 @@
 {
-  "name": "am-midi2",
+  "name": "libmidi2",
   "version": "0.6",
   "description": "General purpose Midi 2 library for bytestream conversions and midi-ci",
   "homepage": "https://github.com/midi2-dev/AM_MIDI2.0Lib",
