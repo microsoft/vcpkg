@@ -4,13 +4,11 @@ vcpkg_from_github(
     REF c1a51bca21e8535ce77a9daf256f2e74c1a7e80f # 0.32
     SHA512 baf7f11b5e03b01e1f01e6ff8984bc0cf1bb8f70df0dfe8d5f472dd06185997a93cf60e8fae0c54430c0c8f444084e926d41ca4e5291a191ebe4d8564d1854ad
     HEAD_REF master
-    PATCHES 
-        patch-msvc-static.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cmake"
-    OPTIONS -DTHREADING=1
+    OPTIONS -DTHREADING=1 -DWITH_STATIC=TRUE
 )
 
 vcpkg_cmake_install()
