@@ -11,6 +11,7 @@
       "name": "gdk-pixbuf",
       "platform": "!windows"
     },
+    "libde265",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -21,18 +22,12 @@
     }
   ],
   "default-features": [
-    "libde265",
-    "x265"
+    "hevc"
   ],
   "features": {
-    "libde265": {
-      "description": "HEVC decoding via libde265",
-      "dependencies": [
-        "libde265"
-      ]
-    },
-    "x265": {
+    "hevc": {
       "description": "HEVC encoding via x265",
+      "license": "GPL-2.0-or-later",
       "dependencies": [
         "x265"
       ]
