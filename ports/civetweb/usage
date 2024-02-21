@@ -1,0 +1,4 @@
+civetweb provides CMake targets:
+
+  find_package(civetweb CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE civetweb::civetweb)

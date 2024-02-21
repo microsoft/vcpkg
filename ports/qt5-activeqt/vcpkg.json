@@ -1,6 +1,6 @@
 {
   "name": "qt5-activeqt",
-  "version": "5.15.11",
+  "version": "5.15.12",
   "description": "Qt5 ActiveQt Module - ActiveX components",
   "license": null,
   "supports": "windows",

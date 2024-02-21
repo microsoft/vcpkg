@@ -1,7 +1,6 @@
 {
   "name": "arrow",
-  "version": "13.0.0",
-  "port-version": 1,
+  "version": "15.0.0",
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",
@@ -41,6 +40,9 @@
     "acero": {
       "description": "Acero support"
     },
+    "compute": {
+      "description": "Build all computational kernel functions"
+    },
     "csv": {
       "description": "CSV support"
     },
@@ -66,6 +68,18 @@
         "c-ares",
         "grpc",
         "protobuf"
+      ]
+    },
+    "flightsql": {
+      "description": "FlightSQL support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "flight"
+          ]
+        }
       ]
     },
     "gcs": {

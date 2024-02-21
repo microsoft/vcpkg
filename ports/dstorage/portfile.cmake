@@ -5,7 +5,7 @@ set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.DirectStorage/${VERSION}"
     FILENAME "directstorage.${VERSION}.zip"
-    SHA512 5be6219888c89c5f590709d1528b3e6854eabd7b733af5c8f665aa9d7e987fa3bac34472362f845eb902b88d2d6e8afbbcead15e892d72678861a14b0bc13c41
+    SHA512 f24f681edf0c5e047573c68ca85ab62e0ffefaf87867d45231d779e9bc8e9525891b56314cc30e58eaef20132335f011f32aba22654d2e7caf23338aeb29c6ce
 )
 
 vcpkg_extract_source_archive(
@@ -25,6 +25,7 @@ file(COPY "${PACKAGE_PATH}/native/bin/${VCPKG_TARGET_ARCHITECTURE}/dstoragecore.
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug")
 file(COPY "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
 
-file(INSTALL "${PACKAGE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${PACKAGE_PATH}/LICENSE.txt")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/dstorage-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" COPYONLY)

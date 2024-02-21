@@ -1,0 +1,59 @@
+diff --git a/client/FreeRDP-ClientConfig.cmake.in b/client/FreeRDP-ClientConfig.cmake.in
+index 35b74c1..a4e48c9 100644
+--- a/client/FreeRDP-ClientConfig.cmake.in
++++ b/client/FreeRDP-ClientConfig.cmake.in
+@@ -1,6 +1,7 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(WinPR @FREERDP_VERSION@)
+ find_dependency(FreeRDP @FREERDP_VERSION@)
++find_dependency(ZLIB)
+ 
+ @PACKAGE_INIT@
+ 
+diff --git a/cmake/FindFeature.cmake b/cmake/FindFeature.cmake
+index bd25fd4..dd180a3 100644
+--- a/cmake/FindFeature.cmake
++++ b/cmake/FindFeature.cmake
+@@ -15,7 +15,7 @@ macro(find_feature _feature _type _purpose _description)
+ 			set(_feature_default "ON")
+ 			message(STATUS "Finding ${_type_lower} feature ${_feature} for ${_purpose} (${_description})")
+ 			find_package(${_feature} REQUIRED)
+-		elseif(${_type} STREQUAL "RECOMMENDED")
++		elseif(0)
+ 			if(NOT ${WITH_${_feature_upper}})
+ 				set(_feature_default "OFF")
+ 				message(STATUS "Skipping ${_type_lower} feature ${_feature} for ${_purpose} (${_description})")
+@@ -29,7 +29,7 @@ macro(find_feature _feature _type _purpose _description)
+ 					message(STATUS "Not detected ${_type_lower} feature ${_feature} for ${_purpose} (${_description}), feature disabled")
+ 				endif()
+ 			endif()
+-		elseif(${_type} STREQUAL "OPTIONAL")
++		elseif(1)
+ 			if(${WITH_${_feature_upper}})
+ 				set(_feature_default "ON")
+ 				message(STATUS "Finding ${_type_lower} feature ${_feature} for ${_purpose} (${_description})")
+diff --git a/libfreerdp/FreeRDPConfig.cmake.in b/libfreerdp/FreeRDPConfig.cmake.in
+index 21ecd59..2613a59 100644
+--- a/libfreerdp/FreeRDPConfig.cmake.in
++++ b/libfreerdp/FreeRDPConfig.cmake.in
+@@ -1,5 +1,7 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(WinPR @FREERDP_VERSION@)
++find_dependency(cJSON)
++find_dependency(ZLIB)
+ 
+ @PACKAGE_INIT@
+ 
+diff --git a/libfreerdp/freerdp.pc.in b/libfreerdp/freerdp.pc.in
+index 21ea0c7..71b8e18 100644
+--- a/libfreerdp/freerdp.pc.in
++++ b/libfreerdp/freerdp.pc.in
+@@ -14,7 +14,7 @@ Description: FreeRDP: A Remote Desktop Protocol Implementation
+ URL: http://www.freerdp.com/
+ Version: @FREERDP_VERSION@
+ Requires: 
+-Requires.private: winpr@FREERDP_API_VERSION@
++Requires.private: winpr@FREERDP_API_VERSION@ libcjson zlib
+ Libs: -L${libdir} ${libs}
+ Libs.private: -ldl -lpthread
+ Cflags: -I${includedir}

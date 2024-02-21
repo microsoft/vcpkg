@@ -7,4 +7,4 @@ For example, under Windows, execute COLMAP as:
 The package colmap provides CMake integration:
 
     find_package(COLMAP REQUIRED)
-    target_link_libraries(main ${COLMAP_LIBRARIES})
+    target_link_libraries(main colmap::colmap)

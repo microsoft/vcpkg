@@ -18,6 +18,8 @@ Connect-AzContainerRegistry -Name $registry.Name
 $imageName = "vcpkg-android"
 Push-Location $PSScriptRoot
 try {
+    docker builder prune -f --filter "until=24h"
+
     docker build . -t $imageName
     
     $remote = [string]::Format('andcontainerregistry.azurecr.io/{0}:{1}', $imageName, $Date)

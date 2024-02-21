@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/so5extra
     REF "v.${VERSION}"
-    SHA512 7dc632158e244ed82ec4220c022c8172cbb29fbf2176ed0899a17d655bcf047080dbaf8b35e6db666e071141bb59db140d2363eeb0e63b163988a507053c3075
+    SHA512 ec9de55671ecd0d49fce3e677e11776306ec9ea993b06d67eaa3e5505ea171085c35aedea3cf29e03958b2c73f438c5ccd95539c75b63fd89c50d6367ccda1fe
 )
 
 vcpkg_cmake_configure(

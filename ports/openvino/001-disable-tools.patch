@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3182d12693..db70cca198 100644
+index e4d31492a4..38c009b3cb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -134,7 +134,7 @@ if (ENABLE_TESTS OR ENABLE_TEMPLATE)
- endif()
+@@ -151,7 +151,7 @@ endif()
+ 
  include(cmake/extra_modules.cmake)
  add_subdirectory(docs)
 -add_subdirectory(tools)

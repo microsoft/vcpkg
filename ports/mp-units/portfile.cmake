@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mpusz/units
     REF "v${VERSION}"
-    SHA512 994922a391ed5c1d0e023545beeb0bbeb8ec067be408f715d553e509d9106cdb5b27cfbaa69f0ca1a27cdf9532edacaff7d2cabaafd54b1713f9c8add93bc389
+    SHA512 d23589ba6e5e18e3477a9bab9fe25cffed5e8777862b4811e4335e294f86d129a48c7e001d57cec0739ddd1f0a936e42d06f2b4782b1bd8b8bb15f86f8d32d53
     PATCHES
       config.patch
 )

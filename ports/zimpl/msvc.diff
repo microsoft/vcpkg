@@ -1,0 +1,48 @@
+diff --git a/zimpl/CMakeLists.txt b/zimpl/CMakeLists.txt
+index 7cf9d85..85d33a7 100644
+--- a/zimpl/CMakeLists.txt
++++ b/zimpl/CMakeLists.txt
+@@ -4,7 +4,7 @@ project(ZIMPL
+     VERSION 3.5.3
+     LANGUAGES C)
+ 
+-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT WIN32)
+     # if changing these flags, also update GCCWARN/GXXWARN in make/make.project
+     set(ADD_C_FLAGS -Wall -Wextra -Wno-unknown-pragmas -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wmissing-noreturn -Wmissing-declarations -fno-omit-frame-pointer)
+ 
+@@ -112,7 +112,6 @@ if(MSVC)
+     )
+ 
+     foreach(variable ${variables})
+-       string(REGEX REPLACE "/M[T,D][ d]" "" ${variable} "${${variable}}")
+        # message("${variable} = ${${variable}}")
+     endforeach()
+ endif()
+@@ -128,9 +127,11 @@ if(ZLIB_FOUND)
+     include_directories(${ZLIB_INCLUDE_DIRS})
+ else()
+     add_definitions(-DWITHOUT_ZLIB)
++endif()
+ 
+-    # look for pcre if ZLIB could not be found
+-    find_package(PCRE)
++if(WIN32)
++    find_package(PCRE NAMES pcre2 REQUIRED)
++    set(PCRE_LIBRARIES "$<TARGET_NAME:PCRE2::POSIX>")
+     if(PCRE_FOUND)
+         add_definitions(-DWITH_PCRE)
+         add_definitions(-DPCRE2_STATIC)
+diff --git a/zimpl/zimpl-config.cmake.in b/zimpl/zimpl-config.cmake.in
+index b653f0c..946f6f2 100644
+--- a/zimpl/zimpl-config.cmake.in
++++ b/zimpl/zimpl-config.cmake.in
+@@ -1,3 +1,8 @@
++if(WIN32)
++  include(CMakeFindDependencyMacro)
++  find_dependency(pcre2)
++endif()
++
+ if(NOT TARGET libzimpl)
+   include("${CMAKE_CURRENT_LIST_DIR}/zimpl-targets.cmake")
+ endif()

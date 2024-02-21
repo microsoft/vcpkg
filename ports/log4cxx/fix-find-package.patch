@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 61c0479..3bd3327 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -60,7 +60,7 @@ find_package(APR-Util REQUIRED)
+ find_package( Threads REQUIRED )
+ 
+ # Find expat for XML parsing
+-find_package(EXPAT REQUIRED)
++find_package(expat CONFIG REQUIRED)
+ if(TARGET EXPAT::EXPAT)
+   set(EXPAT_LIBRARIES EXPAT::EXPAT)
+ elseif(TARGET expat::expat)
