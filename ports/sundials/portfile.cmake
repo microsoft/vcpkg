@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         install-dlls-in-bin.patch
+        remove-mpi-include.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SUN_BUILD_STATIC)
@@ -27,9 +28,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         magma       ENABLE_MAGMA
         mpi         ENABLE_MPI
         openmp      ENABLE_OPENMP
+        test        _BUILD_EXAMPLES
 )
 
 vcpkg_list(SET OPTIONS)
+
+# Only enable the standard test suite.
+if(_BUILD_EXAMPLES)
+    vcpkg_list(APPEND OPTIONS
+        -DEXAMPLES_ENABLE_C=Off
+        -DEXAMPLES_ENABLE_CXX=Off
+        -DEXAMPLES_ENABLE_CUDA=Off
+    )
+endif()
 
 if(ENABLE_GINKGO)
     vcpkg_list(SET SUNDIALS_GINKGO_BACKENDS "REF")
@@ -40,6 +51,11 @@ if(ENABLE_GINKGO)
         vcpkg_list(APPEND SUNDIALS_GINKGO_BACKENDS "CUDA")
     endif()
     vcpkg_list(APPEND OPTIONS "-DSUNDIALS_GINKGO_BACKENDS=${SUNDIALS_GINKGO_BACKENDS}")
+endif()
+
+# MAGMA requires 32-bit sunindextype.
+if(ENABLE_MAGMA) 
+    vcpkg_list(APPEND OPTIONS "-DSUNDIALS_INDEX_SIZE=32")
 endif()
 
 # SUNDIALS requires a Fortran compiler to automatically detect name mangling in
@@ -56,10 +72,8 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -D_BUILD_EXAMPLES=OFF
         -DBUILD_STATIC_LIBS=${SUN_BUILD_STATIC}
         -DBUILD_SHARED_LIBS=${SUN_BUILD_SHARED}
-        "-DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         ${FEATURE_OPTIONS}
         ${OPTIONS}
