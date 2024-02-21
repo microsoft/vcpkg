@@ -6441,8 +6441,8 @@
       "port-version": 1
     },
     "opentelemetry-cpp": {
-      "baseline": "1.13.0",
-      "port-version": 4
+      "baseline": "1.14.0",
+      "port-version": 0
     },
     "opentelemetry-fluentd": {
       "baseline": "2.0.0",
