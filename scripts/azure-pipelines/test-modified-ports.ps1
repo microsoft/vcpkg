@@ -108,7 +108,7 @@ if ($IsLinuxHost) {
     $env:HOME = '/home/agent'
     $executableExtension = [string]::Empty
 }
-elseif ($Triplet -eq 'x64-osx') {
+elseif ($Triplet -eq 'x64-osx' -or $Triplet -eq 'arm64-osx') {
     $executableExtension = [string]::Empty
 }
 else {

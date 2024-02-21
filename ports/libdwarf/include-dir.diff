@@ -1,0 +1,31 @@
+diff --git a/src/lib/libdwarf/CMakeLists.txt b/src/lib/libdwarf/CMakeLists.txt
+index 7500c9f4..78bb1a1a 100644
+--- a/src/lib/libdwarf/CMakeLists.txt
++++ b/src/lib/libdwarf/CMakeLists.txt
+@@ -102,7 +102,7 @@ msvc_posix(dwarf)
+ target_compile_definitions(dwarf PUBLIC ${DEFS})
+ target_include_directories(dwarf PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libdwarf>
+   )
+ if(ZLIB_FOUND AND ZSTD_FOUND)
+   target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ZSTD::ZSTD ) 
+@@ -113,7 +113,7 @@ install(TARGETS dwarf
+         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/libdwarf"
+         )
+ 
+ configure_file(libdwarf.pc.cmake libdwarf.pc @ONLY)
+@@ -125,7 +125,7 @@ configure_file(libdwarf.pc.cmake libdwarf.pc @ONLY)
+ install(TARGETS dwarf EXPORT libdwarfTargets
+         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/libdwarf")
+ install(EXPORT libdwarfTargets
+         FILE libdwarf-targets.cmake
+         NAMESPACE libdwarf::

@@ -1,0 +1,17 @@
+{
+  "name": "jhasse-poly2tri",
+  "version-date": "2023-12-27",
+  "description": "Sweep-line algorithm for constrained Delaunay triangulation",
+  "homepage": "https://github.com/jhasse/poly2tri",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
