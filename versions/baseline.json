@@ -5733,7 +5733,7 @@
       "port-version": 0
     },
     "mongoose": {
-      "baseline": "7.12",
+      "baseline": "7.13",
       "port-version": 0
     },
     "monkeys-audio": {
