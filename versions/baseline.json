@@ -2445,7 +2445,7 @@
       "port-version": 0
     },
     "egl-registry": {
-      "baseline": "2022-09-20",
+      "baseline": "2024-01-25",
       "port-version": 0
     },
     "eigen3": {
@@ -6365,7 +6365,7 @@
       "port-version": 3
     },
     "opengl-registry": {
-      "baseline": "2022-09-29",
+      "baseline": "2024-02-10",
       "port-version": 1
     },
     "openh264": {
