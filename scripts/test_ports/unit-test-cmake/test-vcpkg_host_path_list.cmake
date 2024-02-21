@@ -4,8 +4,8 @@ unit_test_ensure_fatal_error([[vcpkg_host_path_list(PREPEND CACHE{var})]])
 unit_test_ensure_fatal_error([[vcpkg_host_path_list(APPEND CACHE{var} c d)]])
 unit_test_ensure_fatal_error([[vcpkg_host_path_list(PREPEND CACHE{var} c d)]])
 
-# regular variable, HOST_PATH_SEPARATOR = ';'
-set(VCPKG_HOST_PATH_SEPARATOR ";")
+# regular variable
+if(VCPKG_HOST_PATH_SEPARATOR STREQUAL ";")
 
 unit_test_ensure_fatal_error([[vcpkg_host_path_list(APPEND var "a;b")]])
 unit_test_ensure_fatal_error([[vcpkg_host_path_list(PREPEND var "a;b")]])
@@ -73,8 +73,8 @@ unit_test_check_variable_equal(
     var ""
 )
 
-# regular variable, HOST_PATH_SEPARATOR = ':'
-set(VCPKG_HOST_PATH_SEPARATOR ":")
+endif(VCPKG_HOST_PATH_SEPARATOR STREQUAL ";")
+if(VCPKG_HOST_PATH_SEPARATOR STREQUAL ":")
 
 unit_test_ensure_fatal_error([[vcpkg_host_path_list(APPEND var "a:b")]])
 unit_test_ensure_fatal_error([[vcpkg_host_path_list(PREPEND var "a:b")]])
@@ -142,8 +142,10 @@ unit_test_check_variable_equal(
     ENV{var} ""
 )
 
-# environment ENV{var}iable, HOST_PATH_SEPARATOR = ';'
-set(VCPKG_HOST_PATH_SEPARATOR ";")
+endif(VCPKG_HOST_PATH_SEPARATOR STREQUAL ":")
+
+# environment ENV{var}iable
+if(VCPKG_HOST_PATH_SEPARATOR STREQUAL ";")
 
 unit_test_ensure_fatal_error([[vcpkg_host_path_list(APPEND ENV{ENV{var}} "a;b")]])
 unit_test_ensure_fatal_error([[vcpkg_host_path_list(PREPEND ENV{ENV{var}} "a;b")]])
@@ -211,8 +213,8 @@ unit_test_check_variable_equal(
     ENV{ENV{var}} ""
 )
 
-# regular ENV{var}iable, HOST_PATH_SEPARATOR = ':'
-set(VCPKG_HOST_PATH_SEPARATOR ":")
+endif(VCPKG_HOST_PATH_SEPARATOR STREQUAL ";")
+if(VCPKG_HOST_PATH_SEPARATOR STREQUAL ":")
 
 unit_test_ensure_fatal_error([[vcpkg_host_path_list(APPEND ENV{var} "a:b")]])
 unit_test_ensure_fatal_error([[vcpkg_host_path_list(PREPEND ENV{var} "a:b")]])
@@ -279,3 +281,49 @@ unit_test_check_variable_equal(
     [[vcpkg_host_path_list(PREPEND ENV{var})]]
     ENV{var} ""
 )
+
+endif(VCPKG_HOST_PATH_SEPARATOR STREQUAL ":")
+
+# REMOVE_DUPLICATES
+if(VCPKG_HOST_PATH_SEPARATOR STREQUAL ";")
+
+set(var "a;b;c;c:c")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a;b;c;c:c"
+)
+
+set(var "a;b;c;b")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a;b;c"
+)
+
+set(var "a;b;a;d")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a;b;d"
+)
+
+endif(VCPKG_HOST_PATH_SEPARATOR STREQUAL ";")
+if(VCPKG_HOST_PATH_SEPARATOR STREQUAL ":")
+
+set(var "a:b:c:c;c")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a:b:c:c;c"
+)
+
+set(var "a:b:c:b")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a:b:c"
+)
+
+set(var "a:b:a:d")
+unit_test_check_variable_equal(
+    [[vcpkg_host_path_list(REMOVE_DUPLICATES var)]]
+    var "a:b:d"
+)
+
+endif(VCPKG_HOST_PATH_SEPARATOR STREQUAL ":")

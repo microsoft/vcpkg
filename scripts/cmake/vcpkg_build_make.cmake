@@ -122,6 +122,7 @@ function(vcpkg_build_make)
                 set(env_backup_path "$ENV{PATH}")
                 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${path_suffix}/bin")
             endif()
+            vcpkg_host_path_list(REMOVE_DUPLICATES ENV{PATH})
 
             vcpkg_list(SET make_cmd_line ${make_command} ${make_opts})
             vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${no_parallel_make_opts})
