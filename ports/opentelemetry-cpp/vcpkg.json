@@ -34,7 +34,9 @@
       "dependencies": [
         {
           "name": "opentelemetry-cpp",
-          "features": ["etw"],
+          "features": [
+            "etw"
+          ],
           "platform": "windows"
         }
       ]
