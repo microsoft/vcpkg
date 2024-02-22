@@ -1,0 +1,8 @@
+{
+  "name": "openfx",
+  "version-string": "1.4.0",
+  "maintainers": "Behnam Binesh BehnamBih@gmail.com",
+  "description": "OpenFX - An open-source plugin API for visual effects",
+  "homepage": "https://github.com/AcademySoftwareFoundation/openfx",
+  "license": "MIT"
+}
