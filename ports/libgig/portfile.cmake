@@ -1,6 +1,6 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.linuxsampler.org/packages/libgig-4.4.1.tar.bz2"
-    FILENAME "libgig-4.4.1.tar.bz2"
+    URLS "https://download.linuxsampler.org/packages/libgig-${VERSION}.tar.bz2"
+    FILENAME "libgig-${VERSION}.bz2"
     SHA512 0
 )
 
