@@ -11,7 +11,9 @@
     "fmt",
     {
       "name": "folly",
-      "features": ["liburing"]
+      "features": [
+        "liburing"
+      ]
     },
     "gflags",
     "glog",
