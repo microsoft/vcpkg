@@ -25,10 +25,10 @@ Param(
   [string]$ImageName
 )
 
-$Location = 'eastasia'
+$Location = 'westus3'
 $Prefix = 'PrWin-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D32a_v4'
+$VMSize = 'Standard_D32ads_v5'
 $LiveVMPrefix = 'BUILD'
 $ErrorActionPreference = 'Stop'
 
@@ -50,10 +50,11 @@ $Vmss = New-AzVmssConfig `
   -SkuName $VMSize `
   -SkuTier 'Standard' `
   -Overprovision $false `
-  -UpgradePolicyMode Manual `
+  -UpgradePolicyMode Automatic `
   -EvictionPolicy Delete `
   -Priority Spot `
-  -MaxPrice -1
+  -MaxPrice -1 `
+  -SecurityType Standard
 
 $NicName = $ResourceGroupName + 'NIC'
 New-AzNetworkInterface `
@@ -86,12 +87,19 @@ $Vmss = Set-AzVmssStorageProfile `
 
 $Vmss = Set-AzVmssBootDiagnostic `
   -VirtualMachineScaleSet $Vmss `
-  -Enabled $true
+  -Enabled $false
 
-New-AzVmss `
+$VmssCreated = New-AzVmss `
   -ResourceGroupName $ResourceGroupName `
   -Name $VmssName `
   -VirtualMachineScaleSet $Vmss
+
+# Grant 'Virtual Machine Contributor' (RoleDefinitionId 9980e02c-c2be-4d73-94e8-173b1dc7cf3c) to
+# 'dev-azure-com-vcpkg-scale-set-management' (ObjectId e4fe677f-f905-4f3c-b5c3-d8a2d6812a5b)
+New-AzRoleAssignment `
+  -Scope $VmssCreated.Id `
+  -RoleDefinitionId '9980e02c-c2be-4d73-94e8-173b1dc7cf3c' `
+  -ObjectId 'e4fe677f-f905-4f3c-b5c3-d8a2d6812a5b'
 
 Write-Host "Location: $Location"
 Write-Host "Resource group name: $ResourceGroupName"
