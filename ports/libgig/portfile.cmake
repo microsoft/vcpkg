@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.linuxsampler.org/packages/libgig-${VERSION}.tar.bz2"
     FILENAME "libgig-${VERSION}.bz2"
-    SHA512 0
+    SHA512 7844d31acba4bd2f2a499511c3f45ec0a883336193a1422d6d0cd1a8d0c2e97f9f89230176969e5a80b483890914d424eb778338afd583197fdea8bee3c08627
 )
 
 vcpkg_extract_source_archive(
