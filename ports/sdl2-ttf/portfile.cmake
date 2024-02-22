@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  libsdl-org/SDL_ttf
     REF "release-${VERSION}"
-    SHA512 ea059fce879f8ddb3b36f8364d65ef922c389db67383d8a5c42c0ebf8a407d55adce42620b4d04caa0b297847362cc733a9d3d9acb843897a535c875fd0c471f
+    SHA512 2e5dd54633c92329195370953ccf396dd4a12be30f432f46dc1c7023b3c871b8a99f5d2ca5b066ebc41fab02a070976911caeab18b08e6e4c5ab5cc3ad17be23
     HEAD_REF main
-    PATCHES
-        fix-pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -35,4 +33,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/licenses")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
