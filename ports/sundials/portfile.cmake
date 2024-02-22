@@ -27,6 +27,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         lapack      ENABLE_LAPACK
         magma       ENABLE_MAGMA
         mpi         ENABLE_MPI
+        mpi         SUNDIALS_LOGGING_ENABLE_MPI
         openmp      ENABLE_OPENMP
         test        _BUILD_EXAMPLES
 )
@@ -76,9 +77,12 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_STATIC_LIBS=${SUN_BUILD_STATIC}
         -DBUILD_SHARED_LIBS=${SUN_BUILD_SHARED}
+        "-DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         ${FEATURE_OPTIONS}
         ${OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
 )
 
 vcpkg_cmake_install()

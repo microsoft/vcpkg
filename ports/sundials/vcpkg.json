@@ -5,6 +5,11 @@
   "homepage": "https://computation.llnl.gov/projects/sundials",
   "dependencies": [
     {
+      "name": "pkgconf",
+      "host": true,
+      "default-features": false
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
