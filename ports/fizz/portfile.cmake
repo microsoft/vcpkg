@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
     REF "v${VERSION}"
-    SHA512 e940aacb6dd08163f292a6e3e07e5782ccaa7658c638791a75604ba4a05da6a827a383d1727e56c85823da99a678a60ae67207f64b64c274786ad85793fd04bb
+    SHA512 f3bb6c4262fc0c588f51460750353769e618487bef3b77cad61d0af221ad8864920dac370c70f41fb4de063cf2b55aecdd8811cbddde96c2a63c0bf4d09f0fc0
     HEAD_REF master
     PATCHES
         0001-fix-libsodium.patch

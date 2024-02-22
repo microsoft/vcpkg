@@ -9,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 c563aa64efa3098235db5f6354cdbc96d829f8bfc24e24464e0cae65279d00f1bba722c7060c2e76c89723ef66ef94225a02d6fb65e24fa6125adb619fc1d74b
+    SHA512 405036409c46a51a065278adae3cd876a9dfdeafa6e31000b55fcbb7bd30099380ebd9cc642fb523bf455449d5db41e6a63c8946ab83bbdfed0c989786cd7358
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
