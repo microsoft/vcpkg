@@ -28,6 +28,6 @@
     "zlib"
   ],
   "overrides": [
-    { "name": "folly", "version": "2024.01.01.00" }
+    { "name": "folly", "version-string": "2024.01.01.00" }
   ]
 }
