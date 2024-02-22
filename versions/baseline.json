@@ -8720,6 +8720,10 @@
       "baseline": "45",
       "port-version": 0
     },
+    "try-catcher": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "tsl-hopscotch-map": {
       "baseline": "2.3.0",
       "port-version": 3
