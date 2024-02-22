@@ -26,5 +26,8 @@
       "host": true
     },
     "zlib"
+  ],
+  "overrides": [
+    { "name": "folly", "version": "2024.01.01.00" }
   ]
 }
