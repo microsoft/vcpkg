@@ -7,21 +7,19 @@ vcpkg_from_github(
     PATCHES
         gdk-pixbuf.patch
 )
-set(OPTIONS 
-	"-DWITH_EXAMPLES=OFF"
-	"-DWITH_DAV1D=OFF"
-	"-DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON"
-	)
-	
-if("hevc" IN_LIST FEATURES)
-list(APPEND OPTIONS "-DWITH_X265=ON")
-else()
-list(APPEND OPTIONS "-DWITH_X265=OFF")
-endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+	FEATURES
+		hevc    WITH_X265
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${OPTIONS}
+    OPTIONS
+        -DWITH_EXAMPLES=OFF
+        -DWITH_DAV1D=OFF
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+        ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
