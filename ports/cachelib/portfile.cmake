@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 28aa7644e240c8aeb8f19a3db6fb0de150a28a4bed4ffeb59a45522dcad60a1e1ee7818b8ef8f46a45f523ca5db93608de7d42fadfd0c006b8ec6abad58c5f0f
     HEAD_REF master
     PATCHES
-        fix-build.patch
+        fix-build.patc
 )
 
 FIND_PATH(NUMA_INCLUDE_DIR NAME numa.h
