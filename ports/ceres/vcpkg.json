@@ -20,9 +20,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "schur"
-  ],
   "features": {
     "cuda": {
       "description": "Support for CUDA based dense solvers",
