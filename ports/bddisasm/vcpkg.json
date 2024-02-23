@@ -6,6 +6,7 @@
   "homepage": "https://github.com/bitdefender/bddisasm",
   "documentation": "https://bddisasm.readthedocs.io/en/latest/",
   "license": "Apache-2.0",
+  "supports": "!osx & !android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
