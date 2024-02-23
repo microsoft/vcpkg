@@ -9201,7 +9201,7 @@
       "port-version": 0
     },
     "winreg": {
-      "baseline": "6.1.1",
+      "baseline": "6.2.0",
       "port-version": 0
     },
     "winsock2": {
