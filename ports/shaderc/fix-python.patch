@@ -1,3 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 75660ca..fa1ee84 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -99,14 +99,14 @@ endif ()
+ 
+ if (SHADERC_ENABLE_COPYRIGHT_CHECK)
+   add_custom_target(check-copyright ALL
+-    ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/utils/add_copyright.py
++    ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/utils/add_copyright.py
+     --check
+     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+     COMMENT "Check copyright")
+ endif()
+ 
+ add_custom_target(add-copyright
+-  ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/utils/add_copyright.py
++  ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/utils/add_copyright.py
+   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+   COMMENT "Add copyright")
+ 
 diff --git a/utils/add_copyright.py b/utils/add_copyright.py
 index ab3c5f1..7ea0897 100755
 --- a/utils/add_copyright.py
