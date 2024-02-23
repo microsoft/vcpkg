@@ -430,6 +430,7 @@ hexl:x64-android=fail
 highs:arm-neon-android=fail
 highs:arm64-android=fail
 highs:x64-android=fail
+hpx:x64-windows-static=fail
 hwloc:arm-neon-android=fail
 hwloc:arm64-android=fail
 hwloc:x64-android=fail
