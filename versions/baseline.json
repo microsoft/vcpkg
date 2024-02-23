@@ -7757,7 +7757,7 @@
       "port-version": 0
     },
     "scnlib": {
-      "baseline": "2.0.0",
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "scope-guard": {
