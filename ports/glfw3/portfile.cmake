@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glfw/glfw
     REF ${VERSION}
-    SHA512 f9e756f5bd76f6838754608869c86524f79e98dffaf467730a400a8db440c56b9127a6d158099f48fb8a0f6c62f76b2ff4960bd0ec4f34a325ee12aab06c38e4
+    SHA512 39ad7a4521267fbebc35d2ff0c389a56236ead5fa4bdff33db113bd302f70f5f2869ff4e6db1979512e1542813292dff5a482e94dfce231750f0746c301ae9ed
     HEAD_REF master
 )
 
@@ -34,7 +34,7 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    wayland         GLFW_USE_WAYLAND
+    wayland         GLFW_BUILD_WAYLAND
 )
 
 vcpkg_cmake_configure(
