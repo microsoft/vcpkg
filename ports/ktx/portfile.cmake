@@ -10,6 +10,7 @@ vcpkg_from_github(
         0003-mkversion.patch
         0004-quirks.patch
         0005-no-vendored-libs.patch
+        0006-fix-ios-install.patch
 )
 file(REMOVE "${SOURCE_PATH}/other_include/zstd_errors.h")
 
@@ -78,9 +79,3 @@ endif()
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 file(COPY ${LICENSE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSES")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
-
-if(VCPKG_TARGET_IS_IOS)
-    file(COPY "${CURRENT_PACKAGES_DIR}/lib/ktx.framework/Headers"
-         DESTINATION "${CURRENT_PACKAGES_DIR}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/Headers" "${CURRENT_PACKAGES_DIR}/include")
-endif()
