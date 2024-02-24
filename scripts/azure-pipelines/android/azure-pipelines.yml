@@ -46,7 +46,7 @@ jobs:
   - bash: |
       curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
       az login --identity
-      az acr login --name AndContainerRegistry
+      az acr login --name vcpkgandroidwus3
     displayName: 'Set up managed identity'
   - bash: |
       sudo mkdir /home/agent -m=777
