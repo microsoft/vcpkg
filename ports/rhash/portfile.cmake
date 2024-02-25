@@ -8,16 +8,10 @@ vcpkg_from_github(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/librhash")
 
-# cf. configure: RHASH_XVERSION = $(printf "0x%02x%02x%02x%02x" "$_v1" "$_v2" "$_v3" 0)
-if(NOT VERSION MATCHES [[^([0-9]+)[.]([0-9]+)[.]([0-9]+)$]])
-    message(FATAL_ERROR "Cannot derive RHASH_XVERSION from '${VERSION}'")
-endif()
-MATH(EXPR RHASH_XVERSION "((${CMAKE_MATCH_1} * 256 + ${CMAKE_MATCH_2}) * 256 + ${CMAKE_MATCH_3}) * 256" OUTPUT_FORMAT HEXADECIMAL)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/librhash"
     OPTIONS
-        -DRHASH_XVERSION=${RHASH_XVERSION}
+        -DRHASH_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DRHASH_SKIP_HEADERS=ON
 )
@@ -25,6 +19,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-rhash)
+vcpkg_fixup_pkgconfig()
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rhash.h" "# define RHASH_API" "# define RHASH_API __declspec(dllimport)")
