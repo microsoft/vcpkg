@@ -5,11 +5,14 @@ file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/Makefile RHASH_SOURCES REGEX "^SOURCES 
 string(REPLACE "SOURCES = " "" RHASH_SOURCES "${RHASH_SOURCES}")
 string(REPLACE " " ";" RHASH_SOURCES "${RHASH_SOURCES}")
 
-set(RHASH_XVERSION "undefined" CACHE STRING "")
-add_definitions(-DRHASH_XVERSION=${RHASH_XVERSION})
-
 add_library(rhash ${RHASH_SOURCES})
-set_target_properties(rhash PROPERTIES COMPILE_DEFINITIONS "IN_RHASH" DEFINE_SYMBOL "RHASH_EXPORTS")
+
+set(RHASH_XVERSION "undefined" CACHE STRING "")
+target_compile_definitions(rhash PRIVATE RHASH_XVERSION=${RHASH_XVERSION})
+
+if(WIN32 AND BUILD_SHARED_LIBS)
+    target_compile_definitions(rhash PRIVATE RHASH_EXPORTS)
+endif()
 
 target_include_directories(rhash INTERFACE $<INSTALL_INTERFACE:include>)
 
