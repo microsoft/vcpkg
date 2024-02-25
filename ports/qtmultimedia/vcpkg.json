@@ -20,8 +20,7 @@
     }
   ],
   "default-features": [
-    "ffmpeg",
-    "widgets"
+    "ffmpeg"
   ],
   "features": {
     "ffmpeg": {
