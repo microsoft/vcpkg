@@ -159,6 +159,7 @@ vcpkgExtractTar()
 }
 
 # Determine what we are going to do to bootstrap:
+# X_VCPKG_TOOL_PATH set -> copy vcpkg over
 # MacOS -> Download vcpkg-macos
 # Linux
 #   useMuslC -> download vcpkg-muslc
@@ -166,62 +167,77 @@ vcpkgExtractTar()
 # Otherwise
 #   Download and build from source
 
-# Read the vcpkg-tool config file to determine what release to download
-. "$vcpkgRootDir/scripts/vcpkg-tool-metadata.txt"
-
-vcpkgDownloadTool="ON"
-if [ "$UNAME" = "Darwin" ]; then
-    echo "Downloading vcpkg-macos..."
-    vcpkgToolReleaseSha=$VCPKG_MACOS_SHA
-    vcpkgToolName="vcpkg-macos"
-elif [ "$vcpkgUseMuslC" = "ON" ]; then
-    echo "Downloading vcpkg-muslc..."
-    vcpkgToolReleaseSha=$VCPKG_MUSLC_SHA
-    vcpkgToolName="vcpkg-muslc"
-elif [ "$ARCH" = "x86_64" ]; then
-    echo "Downloading vcpkg-glibc..."
-    vcpkgToolReleaseSha=$VCPKG_GLIBC_SHA
-    vcpkgToolName="vcpkg-glibc"
-else
-    echo "Unable to determine a binary release of vcpkg; attempting to build from source."
-    vcpkgDownloadTool="OFF"
-    vcpkgToolReleaseSha=$VCPKG_TOOL_SOURCE_SHA
-fi
-
-# Do the download or build.
-if [ "$vcpkgDownloadTool" = "ON" ]; then
-    vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
-else
-    vcpkgToolReleaseTarball="$VCPKG_TOOL_RELEASE_TAG.tar.gz"
-    vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
-    baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
-    buildDir="$baseBuildDir/build"
-    tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
-    srcBaseDir="$baseBuildDir/src"
-    srcDir="$srcBaseDir/vcpkg-tool-$VCPKG_TOOL_RELEASE_TAG"
-
-    if [ -e "$tarballPath" ]; then
-        vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
-    else
-        echo "Downloading vcpkg tool sources"
-        vcpkgDownloadFile "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+# Check whether X_VCPKG_TOOL_PATH is set; and if so, just copy over
+if [ -n "$X_VCPKG_TOOL_PATH" ]; then
+    if [ ! -d "$X_VCPKG_TOOL_PATH" ]; then
+        echo "X_VCPKG_TOOL_PATH was set to '$X_VCPKG_TOOL_PATH', but that was not a directory."
+        exit 1
     fi
-
-    echo "Building vcpkg-tool..."
-    rm -rf "$baseBuildDir"
-    mkdir -p "$buildDir"
-    vcpkgExtractTar "$tarballPath" "$srcBaseDir"
-    cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DVCPKG_DEVELOPMENT_WARNINGS=OFF"
-
-    if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
-        cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
+    if [ ! -f "$X_VCPKG_TOOL_PATH/vcpkg" ]; then
+        echo "X_VCPKG_TOOL_PATH was set but does not contain a file named 'vcpkg'."
+        exit 1
     fi
-
-    (cd "$buildDir" && cmake "$srcDir" $cmakeConfigOptions) || exit 1
-    (cd "$buildDir" && cmake --build .) || exit 1
-
+    echo "Copying vcpkg from $X_VCPKG_TOOL_PATH..."
     rm -rf "$vcpkgRootDir/vcpkg"
-    cp "$buildDir/vcpkg" "$vcpkgRootDir/"
+    cp "$X_VCPKG_TOOL_PATH/vcpkg" "$vcpkgRootDir/"
+else
+    # Read the vcpkg-tool config file to determine what release to download
+    . "$vcpkgRootDir/scripts/vcpkg-tool-metadata.txt"
+
+    vcpkgDownloadTool="ON"
+    if [ "$UNAME" = "Darwin" ]; then
+        echo "Downloading vcpkg-macos..."
+        vcpkgToolReleaseSha=$VCPKG_MACOS_SHA
+        vcpkgToolName="vcpkg-macos"
+    elif [ "$vcpkgUseMuslC" = "ON" ]; then
+        echo "Downloading vcpkg-muslc..."
+        vcpkgToolReleaseSha=$VCPKG_MUSLC_SHA
+        vcpkgToolName="vcpkg-muslc"
+    elif [ "$ARCH" = "x86_64" ]; then
+        echo "Downloading vcpkg-glibc..."
+        vcpkgToolReleaseSha=$VCPKG_GLIBC_SHA
+        vcpkgToolName="vcpkg-glibc"
+    else
+        echo "Unable to determine a binary release of vcpkg; attempting to build from source."
+        vcpkgDownloadTool="OFF"
+        vcpkgToolReleaseSha=$VCPKG_TOOL_SOURCE_SHA
+    fi
+
+    # Do the download or build.
+    if [ "$vcpkgDownloadTool" = "ON" ]; then
+        vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
+    else
+        vcpkgToolReleaseTarball="$VCPKG_TOOL_RELEASE_TAG.tar.gz"
+        vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
+        baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
+        buildDir="$baseBuildDir/build"
+        tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
+        srcBaseDir="$baseBuildDir/src"
+        srcDir="$srcBaseDir/vcpkg-tool-$VCPKG_TOOL_RELEASE_TAG"
+
+        if [ -e "$tarballPath" ]; then
+            vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+        else
+            echo "Downloading vcpkg tool sources"
+            vcpkgDownloadFile "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+        fi
+
+        echo "Building vcpkg-tool..."
+        rm -rf "$baseBuildDir"
+        mkdir -p "$buildDir"
+        vcpkgExtractTar "$tarballPath" "$srcBaseDir"
+        cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DVCPKG_DEVELOPMENT_WARNINGS=OFF"
+
+        if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
+            cmakeConfigOptions=" $cmakeConfigOptions '-DCMAKE_JOB_POOL_COMPILE:STRING=compile' '-DCMAKE_JOB_POOL_LINK:STRING=link' '-DCMAKE_JOB_POOLS:STRING=compile=$VCPKG_MAX_CONCURRENCY;link=$VCPKG_MAX_CONCURRENCY' "
+        fi
+
+        (cd "$buildDir" && cmake "$srcDir" $cmakeConfigOptions) || exit 1
+        (cd "$buildDir" && cmake --build .) || exit 1
+
+        rm -rf "$vcpkgRootDir/vcpkg"
+        cp "$buildDir/vcpkg" "$vcpkgRootDir/"
+    fi
 fi
 
 "$vcpkgRootDir/vcpkg" version --disable-metrics
