@@ -12,12 +12,11 @@ vcpkg_extract_source_archive(
 
 vcpkg_list(SET options)
 if(VCPKG_TARGET_IS_WINDOWS)
+    set(linkage_flag "-DFFI_STATIC_BUILD")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        string(APPEND extra_cflags " -DFFI_BUILDING_DLL")
-    else()
-        string(APPEND extra_cflags " -DFFI_STATIC_BUILD")
+        set(linkage_flag "-DFFI_BUILDING_DLL")
     endif()
-    vcpkg_list(APPEND options "CFLAGS=\${CFLAGS} ${extra_cflags}")
+    vcpkg_list(APPEND options "CFLAGS=\${CFLAGS} ${linkage_flag}")
 endif()
 
 set(ccas_options "")
