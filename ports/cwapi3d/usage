@@ -1,0 +1,4 @@
+The package cwapi3d provides CMake targets:
+
+    find_package(CwAPI3D CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE CwAPI3D::CwAPI3D)

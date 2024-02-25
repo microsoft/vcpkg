@@ -1,6 +1,6 @@
 {
   "name": "directxmath",
-  "version-date": "2023-12-31",
+  "version-date": "2024-02-14",
   "description": "DirectXMath SIMD C++ math library",
   "homepage": "https://github.com/Microsoft/DirectXMath",
   "documentation": "https://docs.microsoft.com/windows/win32/dxmath/directxmath-portal",
