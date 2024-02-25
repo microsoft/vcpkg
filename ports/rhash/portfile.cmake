@@ -1,4 +1,3 @@
-set(RHASH_XVERSION 1.4.2)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rhash/RHash
@@ -9,8 +8,16 @@ vcpkg_from_github(
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/librhash")
 
+# cf. configure: RHASH_XVERSION = $(printf "0x%02x%02x%02x%02x" "$_v1" "$_v2" "$_v3" 0)
+if(NOT VERSION MATCHES [[^([0-9]+)[.]([0-9]+)[.]([0-9]+)$]])
+    message(FATAL_ERROR "Cannot derive RHASH_XVERSION from '${VERSION}'")
+endif()
+MATH(EXPR RHASH_XVERSION "((${CMAKE_MATCH_1} * 256 + ${CMAKE_MATCH_2}) * 256 + ${CMAKE_MATCH_3}) * 256" OUTPUT_FORMAT HEXADECIMAL)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/librhash"
+    OPTIONS
+        -DRHASH_XVERSION=${RHASH_XVERSION}
     OPTIONS_DEBUG
         -DRHASH_SKIP_HEADERS=ON
 )
