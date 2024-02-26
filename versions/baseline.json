@@ -6365,7 +6365,7 @@
       "port-version": 0
     },
     "openfx": {
-      "baseline": "1.4.0",
+      "baseline": "2015-10-01",
       "port-version": 0
     },
     "opengl": {
