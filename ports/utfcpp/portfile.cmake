@@ -4,9 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nemtrif/utfcpp
     REF "v${VERSION}"
-    SHA512 e02c10c7e9c8c6ee8b8d45bb7521997106be1bf6778d964d4c66a4f025b6ce46df43be12dc74b03639be9f99db8aa4d8c22a65880a057aeb0e76a90bb87c760c
+    SHA512 49ca33bfb2ee44515f555184b51191f7b706a228fb84ddc62e1e6b59c7d69a5ff836f38694daad0012a0f651b6199451974fe44ebe80081df00cf8c2759e3249
     HEAD_REF master
-    PATCHES fix-include-path.patch
 )
 
 vcpkg_cmake_configure(

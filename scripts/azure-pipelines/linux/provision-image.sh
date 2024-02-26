@@ -59,7 +59,7 @@ APT_PACKAGES="$APT_PACKAGES libxcb-res0-dev"
 APT_PACKAGES="$APT_PACKAGES libxcb-keysyms1-dev libxcb-xkb-dev libxcb-record0-dev"
 
 ## required by mesa
-APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
+APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako libxcb-dri3-dev"
 
 ## required by some packages to install additional python packages
 APT_PACKAGES="$APT_PACKAGES python3-pip python3-venv"
@@ -91,7 +91,7 @@ APT_PACKAGES="$APT_PACKAGES haskell-stack"
 ## required by boringssl
 APT_PACKAGES="$APT_PACKAGES golang-go"
 
-## required by libdecor
+## required by libdecor and mesa
 APT_PACKAGES="$APT_PACKAGES wayland-protocols"
 
 ## CUDA
