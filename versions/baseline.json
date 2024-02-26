@@ -6897,7 +6897,7 @@
       "port-version": 0
     },
     "proxy": {
-      "baseline": "2.1.2",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "proxygen": {
