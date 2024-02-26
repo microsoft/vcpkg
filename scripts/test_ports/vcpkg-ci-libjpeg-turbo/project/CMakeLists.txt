@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 3.10)
-project(test)
-set(CMAKE_CXX_STANDARD 11)
-add_executable(main main.cpp)
-find_package(libjpeg-turbo CONFIG REQUIRED)
-target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:libjpeg-turbo::turbojpeg>,libjpeg-turbo::turbojpeg,libjpeg-turbo::turbojpeg-static>)

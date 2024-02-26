@@ -1,8 +1,0 @@
-cmake_minimum_required(VERSION 3.10)
-project(test)
-set(CMAKE_CXX_STANDARD 11)
-add_executable(main main.cpp)
-find_package(Argtable3 CONFIG REQUIRED)
-find_path(Argtable3_INCLUDE_DIRS "argtable3.h")
-target_include_directories(main PRIVATE ${Argtable3_INCLUDE_DIRS})
-target_link_libraries(main PRIVATE argtable3::argtable3)

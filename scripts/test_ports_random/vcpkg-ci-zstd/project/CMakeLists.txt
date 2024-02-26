@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 3.10)
-project(test)
-set(CMAKE_CXX_STANDARD 11)
-add_executable(main main.cpp)
-find_package(zstd CONFIG REQUIRED)
-target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)

@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 3.10)
-project(test)
-set(CMAKE_CXX_STANDARD 11)
-add_executable(main main.cpp)
-find_path(AIXLOG_INCLUDE_DIRS "aixlog.hpp")
-target_include_directories(main PRIVATE ${AIXLOG_INCLUDE_DIRS})

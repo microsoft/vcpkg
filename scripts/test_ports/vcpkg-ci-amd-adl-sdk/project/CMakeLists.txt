@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 3.10)
-project(test)
-set(CMAKE_CXX_STANDARD 11)
-add_executable(main main.cpp)
-find_path(AMD_ADL_SDK_INCLUDE_DIRS "adl_defines.h")
-target_include_directories(main PRIVATE ${AMD_ADL_SDK_INCLUDE_DIRS})
