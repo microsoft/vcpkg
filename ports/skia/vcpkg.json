@@ -1,7 +1,6 @@
 {
   "name": "skia",
-  "version": "0.38.2",
-  "port-version": 4,
+  "version": "122",
   "description": [
     "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
     "It serves as the graphics engine for Google Chrome and Chrome OS, Android, Mozilla Firefox and Firefox OS, and many other products.",
@@ -61,7 +60,7 @@
     },
     {
       "name": "harfbuzz",
-      "platform": "!uwp"
+      "platform": "!uwp & !(windows & !static)"
     },
     {
       "name": "icu",
@@ -72,7 +71,17 @@
     "dawn": {
       "description": "dawn support for skia",
       "dependencies": [
-        "vulkan-headers"
+        "egl-registry",
+        "opengl-registry",
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "graphite",
+            "vulkan"
+          ]
+        },
+        "vulkan-utility-libraries"
       ]
     },
     "direct3d": {
@@ -112,10 +121,25 @@
         "opengl-registry"
       ]
     },
+    "graphite": {
+      "description": "Graphite support",
+      "dependencies": [
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ]
+        }
+      ]
+    },
     "harfbuzz": {
       "description": "Harfbuzz support",
       "dependencies": [
-        "harfbuzz"
+        {
+          "name": "harfbuzz",
+          "default-features": false
+        }
       ]
     },
     "icu": {
