@@ -38,7 +38,7 @@
       "features": [
         "harfbuzz"
       ],
-      "platform": "windows & !static"
+      "platform": "windows"
     },
     {
       "name": "skia",
