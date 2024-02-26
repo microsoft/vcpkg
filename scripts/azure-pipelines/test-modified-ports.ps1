@@ -79,6 +79,7 @@ $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
     "--x-packages-root=$packagesRoot",
+    "--overlay-ports=scripts/test_ports",
     "--overlay-ports=scripts/test_ports_random"
 )
 $cachingArgs = @()
@@ -157,8 +158,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
         $parentHashes = @("--parent-hashes=$parentHashesFile")
         # The vcpkg.cmake toolchain file is not part of ABI hashing,
         # but changes must trigger at least some testing.
-        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports_random/cmake"
-        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports_random/cmake-user"
+        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
+        Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
         & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
     }
     else
@@ -171,8 +172,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 
 # The vcpkg.cmake toolchain file is not part of ABI hashing,
 # but changes must trigger at least some testing.
-Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports_random/cmake"
-Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports_random/cmake-user"
+Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
+Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
 & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
