@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-azure-core-cpp",
+    "version-string": "ci",
+    "dependencies": [
+        "azure-core-cpp",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

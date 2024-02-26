@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-aws-checksums",
+    "version-string": "ci",
+    "dependencies": [
+        "aws-checksums",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

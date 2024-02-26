@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-cwalk",
+    "version-string": "ci",
+    "dependencies": [
+        "cwalk",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

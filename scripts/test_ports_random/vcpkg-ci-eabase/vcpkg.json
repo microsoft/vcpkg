@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-eabase",
+    "version-string": "ci",
+    "dependencies": [
+        "eabase",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

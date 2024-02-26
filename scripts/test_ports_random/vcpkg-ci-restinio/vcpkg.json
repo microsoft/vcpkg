@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-restinio",
+    "version-string": "ci",
+    "dependencies": [
+        "restinio",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

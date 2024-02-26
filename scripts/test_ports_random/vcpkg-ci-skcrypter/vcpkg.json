@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-skcrypter",
+    "version-string": "ci",
+    "dependencies": [
+        "skcrypter",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

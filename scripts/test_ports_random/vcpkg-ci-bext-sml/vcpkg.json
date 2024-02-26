@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-bext-sml",
+    "version-string": "ci",
+    "dependencies": [
+        "bext-sml",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

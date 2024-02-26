@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-qtdatavis3d",
+    "version-string": "ci",
+    "dependencies": [
+        "qtdatavis3d",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

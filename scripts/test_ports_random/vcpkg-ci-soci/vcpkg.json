@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-soci",
+    "version-string": "ci",
+    "dependencies": [
+        "soci",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-miniaudio",
+    "version-string": "ci",
+    "dependencies": [
+        "miniaudio",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

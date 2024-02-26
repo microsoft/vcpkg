@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-blitz",
+    "version-string": "ci",
+    "dependencies": [
+        "blitz",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

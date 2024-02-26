@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-openimageio",
+    "version-string": "ci",
+    "dependencies": [
+        "openimageio",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

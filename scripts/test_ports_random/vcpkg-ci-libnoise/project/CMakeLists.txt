@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.10)
+project(test)
+set(CMAKE_CXX_STANDARD 11)
+add_executable(main main.cpp)
+find_package(unofficial-noise CONFIG REQUIRED)
+target_link_libraries(main PRIVATE unofficial::noise::noise)
+find_package(unofficial-noiseutils CONFIG REQUIRED)
+target_link_libraries(main PRIVATE unofficial::noiseutils::noiseutils)

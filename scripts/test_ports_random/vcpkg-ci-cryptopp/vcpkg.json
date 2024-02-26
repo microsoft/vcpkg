@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-cryptopp",
+    "version-string": "ci",
+    "dependencies": [
+        "cryptopp",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-uwebsockets",
+    "version-string": "ci",
+    "dependencies": [
+        "uwebsockets",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

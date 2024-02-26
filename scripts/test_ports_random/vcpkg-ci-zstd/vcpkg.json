@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-zstd",
+    "version-string": "ci",
+    "dependencies": [
+        "zstd",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

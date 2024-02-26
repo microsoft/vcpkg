@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-check",
+    "version-string": "ci",
+    "dependencies": [
+        "check",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-paraview",
+    "version-string": "ci",
+    "dependencies": [
+        "paraview",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

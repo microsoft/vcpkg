@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libeventheader-tracepoint",
+    "version-string": "ci",
+    "dependencies": [
+        "libeventheader-tracepoint",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

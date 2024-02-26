@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-pagmo2",
+    "version-string": "ci",
+    "dependencies": [
+        "pagmo2",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

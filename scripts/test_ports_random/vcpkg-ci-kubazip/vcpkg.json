@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-kubazip",
+    "version-string": "ci",
+    "dependencies": [
+        "kubazip",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

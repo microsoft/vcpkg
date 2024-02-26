@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-gli",
+    "version-string": "ci",
+    "dependencies": [
+        "gli",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

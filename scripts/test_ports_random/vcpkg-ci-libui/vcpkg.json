@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libui",
+    "version-string": "ci",
+    "dependencies": [
+        "libui",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

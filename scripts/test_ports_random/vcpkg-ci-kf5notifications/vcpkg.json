@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-kf5notifications",
+    "version-string": "ci",
+    "dependencies": [
+        "kf5notifications",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

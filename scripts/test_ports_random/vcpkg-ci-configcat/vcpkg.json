@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-configcat",
+    "version-string": "ci",
+    "dependencies": [
+        "configcat",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

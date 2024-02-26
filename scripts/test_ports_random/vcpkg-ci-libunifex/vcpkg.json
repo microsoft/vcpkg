@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libunifex",
+    "version-string": "ci",
+    "dependencies": [
+        "libunifex",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

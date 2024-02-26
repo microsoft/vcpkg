@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-mpark-variant",
+    "version-string": "ci",
+    "dependencies": [
+        "mpark-variant",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

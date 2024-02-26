@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-webview2",
+    "version-string": "ci",
+    "dependencies": [
+        "webview2",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

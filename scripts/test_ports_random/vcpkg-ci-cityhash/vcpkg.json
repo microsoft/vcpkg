@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-cityhash",
+    "version-string": "ci",
+    "dependencies": [
+        "cityhash",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

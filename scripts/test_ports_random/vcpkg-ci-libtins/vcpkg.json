@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libtins",
+    "version-string": "ci",
+    "dependencies": [
+        "libtins",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

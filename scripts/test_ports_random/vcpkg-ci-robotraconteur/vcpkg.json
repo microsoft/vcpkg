@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-robotraconteur",
+    "version-string": "ci",
+    "dependencies": [
+        "robotraconteur",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

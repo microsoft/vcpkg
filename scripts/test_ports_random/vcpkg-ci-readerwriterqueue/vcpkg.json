@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-readerwriterqueue",
+    "version-string": "ci",
+    "dependencies": [
+        "readerwriterqueue",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

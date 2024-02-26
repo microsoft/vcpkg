@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-ceres",
+    "version-string": "ci",
+    "dependencies": [
+        "ceres",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

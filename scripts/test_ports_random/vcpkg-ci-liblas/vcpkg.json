@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-liblas",
+    "version-string": "ci",
+    "dependencies": [
+        "liblas",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-cpuid",
+    "version-string": "ci",
+    "dependencies": [
+        "cpuid",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-irrlicht",
+    "version-string": "ci",
+    "dependencies": [
+        "irrlicht",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

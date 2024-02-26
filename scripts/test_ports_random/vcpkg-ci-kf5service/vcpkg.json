@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-kf5service",
+    "version-string": "ci",
+    "dependencies": [
+        "kf5service",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

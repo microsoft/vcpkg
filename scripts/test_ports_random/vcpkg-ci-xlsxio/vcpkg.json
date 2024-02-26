@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-xlsxio",
+    "version-string": "ci",
+    "dependencies": [
+        "xlsxio",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

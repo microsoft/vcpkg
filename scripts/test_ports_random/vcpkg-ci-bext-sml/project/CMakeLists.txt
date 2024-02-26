@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.10)
+project(test)
+set(CMAKE_CXX_STANDARD 11)
+add_executable(main main.cpp)
+find_path(BEXT_SML_INCLUDE_DIRS "boost/sml.hpp")
+target_include_directories(main PRIVATE ${BEXT_SML_INCLUDE_DIRS})
