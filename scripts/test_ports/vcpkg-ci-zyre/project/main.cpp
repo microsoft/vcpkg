@@ -1,5 +1,5 @@
 // auto-generated
-#include <zre_msg.h>
+#include <zyre.h>
 int main()
  {
     return 0;

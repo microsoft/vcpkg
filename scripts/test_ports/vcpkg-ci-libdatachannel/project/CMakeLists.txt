@@ -4,8 +4,3 @@ set(CMAKE_CXX_STANDARD 11)
 add_executable(main main.cpp)
 find_package(LibDataChannel CONFIG REQUIRED)
 target_link_libraries(main PRIVATE LibDataChannel::LibDataChannel)
-The package libdatrie can be used via CMake:
-find_path(LIBDATRIE_INCLUDE_DIR datrie/trie.h)
-find_library(LIBDATRIE_LIBRARY NAMES datrie)
-target_include_directories(main PRIVATE "${LIBDATRIE_INCLUDE_DIR}")
-target_link_libraries(main PRIVATE "${LIBDATRIE_LIBRARY}")

@@ -1,5 +1,5 @@
 // auto-generated
-#include <vlfeat/aib.h>
+#include <aib.h>
 int main()
  {
     return 0;

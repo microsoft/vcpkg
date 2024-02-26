@@ -1,5 +1,5 @@
 // auto-generated
-#include <kubazip/zip/zip.h>
+#include <zip/zip.h>
 int main()
  {
     return 0;

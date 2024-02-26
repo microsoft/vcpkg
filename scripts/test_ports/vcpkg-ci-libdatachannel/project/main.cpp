@@ -1,5 +1,5 @@
 // auto-generated
-#include <rtc/aacrtppacketizer.hpp>
+#include <rtc/channel.hpp>
 int main()
  {
     return 0;

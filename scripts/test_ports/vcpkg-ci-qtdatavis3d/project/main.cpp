@@ -1,5 +1,5 @@
 // auto-generated
-#include <Qt6/QtDataVisualization/6.6.1/QtDataVisualization/private/abstract3dcontroller_p.h>
+#include <q3dobject.h>
 int main()
  {
     return 0;

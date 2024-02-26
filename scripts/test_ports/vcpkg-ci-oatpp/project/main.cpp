@@ -1,5 +1,5 @@
 // auto-generated
-#include <oatpp-1.3.0/oatpp/oatpp-test/Checker.hpp>
+#include <oatpp/codegen/ApiController_define.hpp>
 int main()
  {
     return 0;

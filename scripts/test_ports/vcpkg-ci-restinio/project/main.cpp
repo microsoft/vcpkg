@@ -1,5 +1,5 @@
 // auto-generated
-#include <restinio/all.hpp>
+#include <restinio/buffers.hpp>
 int main()
  {
     return 0;

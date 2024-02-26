@@ -1,5 +1,5 @@
 // auto-generated
-#include <nlopt.f>
+#include <nlopt.h>
 int main()
  {
     return 0;

@@ -1,5 +1,5 @@
 // auto-generated
-#include <libcpuid/libcpuid.h>
+#include <libcpuid.h>
 int main()
  {
     return 0;

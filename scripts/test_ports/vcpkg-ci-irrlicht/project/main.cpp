@@ -1,5 +1,5 @@
 // auto-generated
-#include <irrlicht/CDynamicMeshBuffer.h>
+#include <CDynamicMeshBuffer.h>
 int main()
  {
     return 0;
