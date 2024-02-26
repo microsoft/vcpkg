@@ -36,6 +36,14 @@
       "name": "skia",
       "default-features": false,
       "features": [
+        "harfbuzz"
+      ],
+      "platform": "windows & !static"
+    },
+    {
+      "name": "skia",
+      "default-features": false,
+      "features": [
         "vulkan"
       ],
       "platform": "linux | osx | (windows & !uwp)"
