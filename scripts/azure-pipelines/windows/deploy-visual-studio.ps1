@@ -5,7 +5,7 @@
 
 # REPLACE WITH UTILITY-PREFIX.ps1
 
-$VisualStudioBootstrapperUrl = 'https://aka.ms/vs/17/release/vs_enterprise.exe'
+$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/03aef663-a3da-4cdd-ac33-9ff2935267ba/d08ca31938fde015b2fec26b18149cfd21a99b69309ac2726c00658d67e7ed4c/vs_Enterprise.exe'
 $Workloads = @(
   'Microsoft.VisualStudio.Workload.NativeDesktop',
   'Microsoft.VisualStudio.Workload.Universal',
