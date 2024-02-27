@@ -18,6 +18,8 @@ vcpkg_check_features(
         libmodplug SDL2MIXER_MOD_MODPLUG
         mpg123 SDL2MIXER_MP3
         mpg123 SDL2MIXER_MP3_MPG123
+        wavpack SDL2MIXER_WAVPACK
+        wavpack SDL2MIXER_WAVPACK_DSD
         opusfile SDL2MIXER_OPUS
     MAYBE_UNUSED_VARIABLES    
         SDL2MIXER_MP3_DRMP3
