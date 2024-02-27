@@ -26,8 +26,12 @@ function Get-SasToken {
     $ctx = New-AzStorageContext -StorageAccountName $StorageAccountName -StorageAccountKey $key.Value
     $start = Get-Date -AsUTC
     $end = $start.AddDays(90)
-    $token = New-AzStorageContainerSASToken -Name $ContainerName -Permission $Permission -StartTime $start -ExpiryTime $end -Context $ctx
-    return $token.Substring(1)
+    $token = New-AzStorageContainerSASToken -Name $ContainerName -Permission $Permission -StartTime $start -ExpiryTime $end -Context $ctx -Protocol HttpsOnly
+    if ($token.StartsWith('?')) {
+        $token = $token.Substring(1)
+    }
+
+    return $token
 }
 
 # Asset Cache:
