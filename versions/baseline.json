@@ -7701,7 +7701,7 @@
       "port-version": 1
     },
     "sdbusplus": {
-      "baseline": "2023-09-14",
+      "baseline": "2024-02-26",
       "port-version": 0
     },
     "sdformat10": {
