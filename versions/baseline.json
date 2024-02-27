@@ -4377,7 +4377,7 @@
       "port-version": 3
     },
     "libgig": {
-      "baseline": "4.3.0",
+      "baseline": "4.4.1",
       "port-version": 0
     },
     "libgit2": {
