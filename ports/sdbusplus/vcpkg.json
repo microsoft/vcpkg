@@ -1,6 +1,6 @@
 {
   "name": "sdbusplus",
-  "version-date": "2023-09-14",
+  "version-date": "2024-02-26",
   "description": "The sdbusplus library builds on top of the sd-bus library to create a modern C++ API for D-Bus.",
   "homepage": "https://github.com/openbmc/sdbusplus",
   "license": "Apache-2.0",
