@@ -3029,7 +3029,7 @@
       "port-version": 3
     },
     "glfw3": {
-      "baseline": "3.3.9",
+      "baseline": "3.4",
       "port-version": 0
     },
     "gli": {
