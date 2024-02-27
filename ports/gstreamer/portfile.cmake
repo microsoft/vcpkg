@@ -94,6 +94,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libde265        gst-plugins-bad:libde265
         microdns        gst-plugins-bad:microdns
         modplug         gst-plugins-bad:modplug
+        nvcodec         gst-plugins-bad:nvcodec
         openal          gst-plugins-bad:openal
         openh264        gst-plugins-bad:openh264
         openjpeg        gst-plugins-bad:openjpeg
@@ -249,7 +250,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:msdk=disabled
         -Dgst-plugins-bad:musepack=disabled
         -Dgst-plugins-bad:neon=disabled
-        -Dgst-plugins-bad:nvcodec=disabled
         -Dgst-plugins-bad:onnx=disabled # libonnxruntime not found
         -Dgst-plugins-bad:openaptx=disabled
         -Dgst-plugins-bad:opencv=disabled # opencv not found

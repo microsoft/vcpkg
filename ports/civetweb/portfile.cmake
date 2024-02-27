@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO civetweb/civetweb
@@ -9,7 +7,9 @@ vcpkg_from_github(
     PATCHES
         disable_warnings.patch # cl will simply ignore the other invalid options. 
         fix-fseeko.patch
+        pkgconfig.patch
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/third_party")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -31,22 +31,23 @@ vcpkg_cmake_configure(
         -DCIVETWEB_ENABLE_SSL_DYNAMIC_LOADING=OFF
         -DCIVETWEB_ENABLE_WEBSOCKETS=ON
         -DCIVETWEB_ALLOW_WARNINGS=ON
+        "-DVERSION=${VERSION}"
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
-
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/civetweb)
+vcpkg_fixup_pkgconfig()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/civetweb.h" "defined(CIVETWEB_DLL_IMPORTS)" 1)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/CivetServer.h" "defined(CIVETWEB_CXX_DLL_IMPORTS)" 1)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/civetweb.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/civetweb.pc")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/civetweb-cpp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/civetweb-cpp.pc")
-vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_copy_pdbs()
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

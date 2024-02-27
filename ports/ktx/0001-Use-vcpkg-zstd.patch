@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bc679fd1..c726fa71 100644
+index 0653da5..1265f3d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -185,7 +185,6 @@ set(KTX_MAIN_SRC
+@@ -265,7 +265,6 @@ set(KTX_MAIN_SRC
      lib/basisu/transcoder/basisu_transcoder.cpp
      lib/basisu/transcoder/basisu_transcoder.h
      lib/basisu/transcoder/basisu.h
@@ -10,7 +10,7 @@ index bc679fd1..c726fa71 100644
      lib/checkheader.c
      lib/dfdutils/createdfd.c
      lib/dfdutils/colourspaces.c
-@@ -304,7 +303,6 @@ macro(commom_lib_settings lib write)
+@@ -448,7 +447,6 @@ macro(common_libktx_settings target enable_write library_type)
          $<INSTALL_INTERFACE:lib/basisu/transcoder>
  
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/basisu/zstd>
@@ -18,19 +18,20 @@ index bc679fd1..c726fa71 100644
  
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/other_include>
          $<INSTALL_INTERFACE:other_include>
-@@ -390,6 +388,10 @@ macro(commom_lib_settings lib write)
-         target_compile_definitions(${lib} PUBLIC KTX_FEATURE_KTX2)
+@@ -538,6 +536,11 @@ macro(common_libktx_settings target enable_write library_type)
+         target_compile_definitions(${target} PUBLIC KTX_FEATURE_KTX2)
      endif()
  
 +    # Use vcpkg zstd
 +    find_package(zstd CONFIG REQUIRED)
-+    target_link_libraries(${lib} PRIVATE $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
++    set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
++    target_link_libraries(${target} PRIVATE ${ZSTD_LIBRARIES})
 +
      if(WIN32)
-         # By wrapping in generator expression we force multi configuration
-         # generators (like Visual Studio) to take the exact path and not
+         if(MINGW)
+             # Check if the Threads package is provided; if using Mingw it MIGHT be
 diff --git a/cmake/KtxConfig.cmake b/cmake/KtxConfig.cmake
-index 6386ba2f..537bf4f2 100644
+index 6386ba2..537bf4f 100644
 --- a/cmake/KtxConfig.cmake
 +++ b/cmake/KtxConfig.cmake
 @@ -1,7 +1,8 @@
@@ -45,7 +46,7 @@ index 6386ba2f..537bf4f2 100644
  
  include("${CMAKE_CURRENT_LIST_DIR}/KtxTargets.cmake")
 diff --git a/lib/basisu/CMakeLists.txt b/lib/basisu/CMakeLists.txt
-index 492233ae..8786d16c 100644
+index 492233a..2663169 100644
 --- a/lib/basisu/CMakeLists.txt
 +++ b/lib/basisu/CMakeLists.txt
 @@ -146,7 +146,7 @@ set(BASISU_SRC_LIST ${COMMON_SRC_LIST}
@@ -53,7 +54,7 @@ index 492233ae..8786d16c 100644
  
  if (ZSTD)
 -	set(BASISU_SRC_LIST ${BASISU_SRC_LIST} zstd/zstd.c)
-+	set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
++    set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
  endif()
  
  if (APPLE)
@@ -69,7 +70,7 @@ index 492233ae..8786d16c 100644
  	# For Non-Windows builds, let cmake try and find the system OpenCL headers/libs for us.
  	if (OPENCL_FOUND)
 diff --git a/lib/basisu/webgl/encoder/CMakeLists.txt b/lib/basisu/webgl/encoder/CMakeLists.txt
-index 588d91b4..0b380129 100644
+index 588d91b..edd7457 100644
 --- a/lib/basisu/webgl/encoder/CMakeLists.txt
 +++ b/lib/basisu/webgl/encoder/CMakeLists.txt
 @@ -34,9 +34,7 @@ if (EMSCRIPTEN)
@@ -79,7 +80,7 @@ index 588d91b4..0b380129 100644
 -  	set(SRC_LIST ${SRC_LIST}
 -		../../zstd/zstd.c
 -	)
-+    set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
++  	set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
  	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=1)
    else()
    	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=0)
@@ -95,7 +96,7 @@ index 588d91b4..0b380129 100644
        OUTPUT_NAME "basis_encoder"
        SUFFIX ".js"
 diff --git a/lib/basisu/webgl/transcoder/CMakeLists.txt b/lib/basisu/webgl/transcoder/CMakeLists.txt
-index 372653de..f75e3a35 100644
+index 372653d..3c9ed0c 100644
 --- a/lib/basisu/webgl/transcoder/CMakeLists.txt
 +++ b/lib/basisu/webgl/transcoder/CMakeLists.txt
 @@ -28,9 +28,7 @@ if (EMSCRIPTEN)
@@ -105,7 +106,7 @@ index 372653de..f75e3a35 100644
 - 	set(SRC_LIST ${SRC_LIST}
 -		../../zstd/zstddeclib.c
 -	)
-+    set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
++ 	set(ZSTD_LIBRARIES "$<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>")
  	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=1)
    else()
    	set(ZSTD_DEFINITION BASISD_SUPPORT_KTX2_ZSTD=0)

@@ -1,0 +1,136 @@
+diff -Naur --exclude='*.rej' re-3.4.0-orig/CMakeLists.txt re-3.4.0/CMakeLists.txt
+--- re-3.4.0-orig/CMakeLists.txt	2023-08-09 09:53:10.000000000 +0200
++++ re-3.4.0/CMakeLists.txt	2023-10-04 08:48:23.000000000 +0200
+@@ -93,7 +93,7 @@
+ endif()
+ 
+ set(re_DIR ${CMAKE_CURRENT_LIST_DIR}/cmake)
+-find_package(re CONFIG REQUIRED)
++include("${CMAKE_CURRENT_LIST_DIR}/cmake/re-config.cmake")
+ 
+ list(APPEND RE_DEFINITIONS
+   -DRE_VERSION="${PROJECT_VERSION_FULL}"
+@@ -694,7 +694,7 @@
+ if(LIBRE_BUILD_STATIC)
+   list(APPEND RE_INSTALL_TARGETS re)
+   add_library(re STATIC $<TARGET_OBJECTS:re-objs>)
+-  target_link_libraries(re PUBLIC ${LINKLIBS})
++  target_link_libraries(re PRIVATE ${LINKLIBS})
+   target_include_directories(re PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+   )
+@@ -702,6 +702,9 @@
+ 
+   if(MSVC)
+     set_target_properties(re PROPERTIES OUTPUT_NAME "re-static")
++    if(NOT LIBRE_BUILD_SHARED)
++      set(PC_LIBNAME "re-static")
++    endif()
+   endif()
+ endif()
+ 
+@@ -714,6 +717,28 @@
+   add_subdirectory(packaging)
+ endif()
+ 
++if(NOT PC_LIBNAME)
++  set(PC_LIBNAME "re")
++endif()
++set(PC_REQUIRES "")
++set(PC_LINKLIBS "")
++foreach(item IN LISTS LINKLIBS)
++  if(item STREQUAL "Threads::Threads")
++    list(APPEND PC_LINKLIBS ${CMAKE_THREADS_LIBS_INIT})
++  elseif(item STREQUAL "OpenSSL::Crypto")
++    list(APPEND PC_REQUIRES "libcrypto")
++  elseif(item STREQUAL "OpenSSL::SSL")
++    list(APPEND PC_REQUIRES "libssl")
++  elseif(item STREQUAL "ZLIB::ZLIB")
++    list(APPEND PC_REQUIRES "zlib")
++  elseif(item MATCHES "^-|/")
++    list(APPEND PC_LINKLIBS "${item}")
++  else()
++    list(APPEND PC_LINKLIBS "-l${item}")
++  endif()
++endforeach()
++list(JOIN PC_LINKLIBS " " PC_LINKLIBS)
++list(JOIN PC_REQUIRES " " PC_REQUIRES)
+ configure_file(packaging/libre.pc.in libre.pc @ONLY)
+ 
+ 
+@@ -725,6 +750,9 @@
+ 
+ install(TARGETS ${RE_INSTALL_TARGETS}
+   EXPORT libre
++  RUNTIME
++    DESTINATION ${CMAKE_INSTALL_BINDIR}
++    COMPONENT Libraries
+   LIBRARY
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     COMPONENT Libraries
+@@ -743,7 +771,9 @@
+ 
+ install(EXPORT libre
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libre
++  FILE libre-targets.cmake
+   NAMESPACE libre::
++  COMPONENT Development
+ )
+ 
+ if(LIBRE_BUILD_SHARED)
+@@ -755,12 +785,8 @@
+   )
+ endif()
+ 
+-install(FILES cmake/re-config.cmake
+-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/re
+-  COMPONENT Development
+-)
+-
+-install(FILES cmake/libre-config.cmake
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/libre-config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/cmake/libre-config.cmake" @ONLY)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cmake/libre-config.cmake"
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libre
+   COMPONENT Development
+ )
+diff -Naur --exclude='*.rej' re-3.4.0-orig/cmake/libre-config.cmake re-3.4.0/cmake/libre-config.cmake
+--- re-3.4.0-orig/cmake/libre-config.cmake	2023-08-09 09:53:10.000000000 +0200
++++ re-3.4.0/cmake/libre-config.cmake	2023-10-03 10:01:11.000000000 +0200
+@@ -1 +1,23 @@
+-include("${CMAKE_CURRENT_LIST_DIR}/libre.cmake")
++if("@LIBRE_BUILD_STATIC@")
++    include(CMakeFindDependencyMacro)
++    find_dependency(Threads)
++    if("@USE_OPENSSL@")
++        find_dependency(OpenSSL)
++    endif()
++    if("@ZLIB_FOUND@")
++        find_dependency(ZLIB)
++    endif()
++endif()
++
++include("${CMAKE_CURRENT_LIST_DIR}/libre-targets.cmake")
++
++# convenience target libre::libre for uniform usage
++if(NOT TARGET libre::libre)
++    if(TARGET libre::re_shared AND (BUILD_SHARED_LIBS OR NOT TARGET libre::re))
++        add_library(libre::libre INTERFACE IMPORTED)
++        set_target_properties(libre::libre PROPERTIES INTERFACE_LINK_LIBRARIES libre::re_shared)
++    elseif(TARGET libre::re AND (NOT BUILD_SHARED_LIBS OR NOT TARGET libre::re_shared))
++        add_library(libre::libre INTERFACE IMPORTED)
++        set_target_properties(libre::libre PROPERTIES INTERFACE_LINK_LIBRARIES libre::re)
++    endif()
++endif()
+diff -Naur --exclude='*.rej' re-3.4.0-orig/packaging/libre.pc.in re-3.4.0/packaging/libre.pc.in
+--- re-3.4.0-orig/packaging/libre.pc.in	2023-08-09 09:53:10.000000000 +0200
++++ re-3.4.0/packaging/libre.pc.in	2023-10-03 10:01:11.000000000 +0200
+@@ -7,6 +7,7 @@
+ Description: @CMAKE_PROJECT_DESCRIPTION@
+ Version: @PROJECT_VERSION@
+ URL: @CMAKE_PROJECT_HOMEPAGE_URL@
+-Libs: -L${libdir} -lre
+-Libs.private: -L${libdir} -lre -ldl -lssl -lcrypto -lz -lpthread
++Libs: -L${libdir} -l@PC_LIBNAME@
++Libs.private: @PC_LINKLIBS@
++Requires.private: @PC_REQUIRES@
+ Cflags: -I${includedir}

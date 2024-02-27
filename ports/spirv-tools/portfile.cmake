@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Tools
-    REF v2022.4
-    SHA512 d93e97e168c50f545cc42418603ffc5fa6299bb3cc30d927444e4de0d955abc5dd481c9662a59cd49fc379da6bcc6df6fb747947e3dc144cee9b489aff7c4785
+    REF "v${VERSION}"
+    SHA512 988f5e31508e3f19c1dd9d9a013c8e9ff89eba86207a769d7d804f9ee0201c794f412a874c860167b2c040b2c5e1fb1c835ae3684c70feaac86e47f90c1a5010
     PATCHES
         cmake-config-dir.diff
         spirv-tools-shared.diff

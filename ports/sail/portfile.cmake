@@ -1,18 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
-    REF v0.9.0-rc3
-    SHA512 5de94277d57b862d4ab99266c2608cd37d7ca9eb89ef753ddddf47e4cebffab54b2cfb9c28d0c3bb7721f0d24c1310377c4b42adab477568e6965bd7ebc55b17
+    REF "v${VERSION}"
+    SHA512 9d2e783a597bea5923db4eb822985488a24c5337376384f69bedeb2952d23e84005639c0e1aa243b81b40e87e428da470895ce30418fc31e0f1b60bc71b17d09
     HEAD_REF master
-    PATCHES
-        avif.patch
-        webp.patch
 )
 
 # Enable selected codecs
 set(ONLY_CODECS "")
 
-foreach(CODEC avif bmp gif ico jpeg jpeg2000 pcx png psd qoi tga tiff wal webp xbm)
+foreach(CODEC avif bmp gif ico jpeg jpeg2000 jpegxl pcx png psd qoi tga tiff wal webp xbm)
     if (${CODEC} IN_LIST FEATURES)
         list(APPEND ONLY_CODECS ${CODEC})
     endif()
@@ -23,11 +20,11 @@ list(JOIN ONLY_CODECS "\;" ONLY_CODECS_ESCAPED)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBUILD_TESTING=OFF
         -DSAIL_COMBINE_CODECS=ON
         -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
-        -DSAIL_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
@@ -52,7 +49,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
 # Fix pkg-config files
 vcpkg_fixup_pkgconfig()
 
-# Unused because SAIL_COMBINE_CODECS is On
+# Unused because SAIL_COMBINE_CODECS is ON
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail/sail-common/config.h" "#define SAIL_CODECS_PATH \"${CURRENT_PACKAGES_DIR}/lib/sail/codecs\"" "")
 
 # Handle usage

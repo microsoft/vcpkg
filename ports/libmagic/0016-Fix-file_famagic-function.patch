@@ -2,13 +2,13 @@ diff --git a/src/fsmagic.c b/src/fsmagic.c
 index 7244841..2c553c1 100644
 --- a/src/fsmagic.c
 +++ b/src/fsmagic.c
-@@ -66,7 +66,7 @@ FILE_RCSID("@(#)$File: fsmagic.c,v 1.81 2019/07/16 13:30:32 christos Exp $")
+@@ -66,7 +66,7 @@ # define major(dev)  (((dev) >> 8) & 0xff)
  # define minor(dev)  ((dev) & 0xff)
  #endif
  #undef HAVE_MAJOR
 -#if S_IFLNK != 0
 +#if S_IFLNK != 0 && ! defined(_WIN32)
- private int
+ file_private int
  bad_link(struct magic_set *ms, int err, char *buf)
  {
 @@ -108,7 +108,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)

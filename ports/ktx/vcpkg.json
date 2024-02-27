@@ -1,6 +1,6 @@
 {
   "name": "ktx",
-  "version-semver": "4.1.0",
+  "version-semver": "4.3.0-alpha3",
   "description": [
     "The Khronos KTX library and tools.",
     "Functions for writing and reading KTX files, and instantiating OpenGL®, OpenGL ES™️ and Vulkan® textures from them."

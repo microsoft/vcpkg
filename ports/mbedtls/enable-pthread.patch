@@ -1,16 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8833246..f68ab02 100644
+index b001bb7..a5e0479 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -28,6 +28,7 @@ set(MBEDTLS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -44,6 +44,7 @@ set(MBEDTLS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
  
- option(USE_PKCS11_HELPER_LIBRARY "Build mbed TLS with the pkcs11-helper library." OFF)
- option(ENABLE_ZLIB_SUPPORT "Build mbed TLS with zlib library." OFF)
-+option(ENABLE_PTHREAD "Build mbed TLS with pthread" OFF)
+ option(USE_PKCS11_HELPER_LIBRARY "Build Mbed TLS with the pkcs11-helper library." OFF)
+ option(ENABLE_ZLIB_SUPPORT "Build Mbed TLS with zlib library." OFF)
++option(ENABLE_PTHREAD "Build Mbed TLS with pthread" OFF)
  
- option(ENABLE_PROGRAMS "Build mbed TLS programs." ON)
+ option(ENABLE_PROGRAMS "Build Mbed TLS programs." ON)
  
-@@ -231,6 +232,8 @@ else()
+@@ -263,6 +264,8 @@ else()
      set(LIB_INSTALL_DIR lib)
  endif()
  
@@ -19,7 +19,7 @@ index 8833246..f68ab02 100644
  if(ENABLE_ZLIB_SUPPORT)
      find_package(ZLIB)
  
-@@ -239,6 +242,17 @@ if(ENABLE_ZLIB_SUPPORT)
+@@ -271,6 +274,17 @@ if(ENABLE_ZLIB_SUPPORT)
      endif(ZLIB_FOUND)
  endif(ENABLE_ZLIB_SUPPORT)
  
@@ -38,11 +38,11 @@ index 8833246..f68ab02 100644
  
  add_subdirectory(3rdparty)
 diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
-index 62c0f62..7923202 100644
+index 11b417b..5ca44c3 100644
 --- a/include/CMakeLists.txt
 +++ b/include/CMakeLists.txt
 @@ -1,10 +1,14 @@
- option(INSTALL_MBEDTLS_HEADERS "Install mbed TLS headers." ON)
+ option(INSTALL_MBEDTLS_HEADERS "Install Mbed TLS headers." ON)
  
 +configure_file(mbedtls/config_threading.h.in mbedtls/config_threading.h)
 +
@@ -58,7 +58,7 @@ index 62c0f62..7923202 100644
          DESTINATION include/mbedtls
          PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 diff --git a/include/mbedtls/config.h b/include/mbedtls/config.h
-index 1e6e052..51c20da 100644
+index 7b1f38a..5f29ba5 100644
 --- a/include/mbedtls/config.h
 +++ b/include/mbedtls/config.h
 @@ -24,6 +24,8 @@
@@ -84,10 +84,10 @@ index 0000000..9d5d42e
 +#endif
 \ No newline at end of file
 diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
-index 33e2cfc..4b99331 100644
+index 8d88101..2ba764c 100644
 --- a/library/CMakeLists.txt
 +++ b/library/CMakeLists.txt
-@@ -137,7 +137,11 @@ if(ENABLE_ZLIB_SUPPORT)
+@@ -149,7 +149,11 @@ if(ENABLE_ZLIB_SUPPORT)
  endif(ENABLE_ZLIB_SUPPORT)
  
  if(LINK_WITH_PTHREAD)

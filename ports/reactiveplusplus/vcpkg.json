@@ -1,6 +1,6 @@
 {
   "name": "reactiveplusplus",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "ReactivePlusPlus is reactive programming library for C++ language",
   "homepage": "https://github.com/victimsnino/ReactivePlusPlus",
   "license": "BSL-1.0",

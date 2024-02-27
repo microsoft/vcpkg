@@ -29,6 +29,7 @@ vcpkg_from_github(
       0017-fix-flatbuffers.patch
       0019-missing-include.patch
       0020-fix-compat-cuda12.2.patch
+      0021-static-openvino.patch # https://github.com/opencv/opencv/pull/23963
       "${ARM64_WINDOWS_FIX}"
 )
 # Disallow accidental build of vendored copies
@@ -67,9 +68,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "gtk"       WITH_GTK
  "halide"    WITH_HALIDE
  "jasper"    WITH_JASPER
+ "openjpeg"  WITH_OPENJPEG
  "jpeg"      WITH_JPEG
  "lapack"    WITH_LAPACK
  "nonfree"   OPENCV_ENABLE_NONFREE
+ "openvino"  WITH_OPENVINO
  "openexr"   WITH_OPENEXR
  "opengl"    WITH_OPENGL
  "ovis"      CMAKE_REQUIRE_FIND_PACKAGE_OGRE
@@ -396,6 +399,7 @@ vcpkg_cmake_configure(
         -Dade_DIR=${ADE_DIR}
         ###### Disable build 3rd party libs
         -DBUILD_JASPER=OFF
+        -DBUILD_OPENJPEG=OFF
         -DBUILD_JPEG=OFF
         -DBUILD_OPENEXR=OFF
         -DBUILD_PNG=OFF
@@ -446,8 +450,8 @@ vcpkg_cmake_configure(
         -DWITH_PROTOBUF=${BUILD_opencv_dnn}
         -DWITH_PYTHON=${WITH_PYTHON}
         -DWITH_OPENCLAMDBLAS=OFF
+        -DWITH_OPENVINO=${WITH_OPENVINO}
         -DWITH_TBB=${WITH_TBB}
-        -DWITH_OPENJPEG=OFF
         -DWITH_CPUFEATURES=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
@@ -525,6 +529,9 @@ find_dependency(Tesseract)")
   endif()
   if("lapack" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
+  endif()
+  if(WITH_OPENVINO)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
   endif()
   if("openexr" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")

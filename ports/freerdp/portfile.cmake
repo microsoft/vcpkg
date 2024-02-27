@@ -57,6 +57,7 @@ vcpkg_cmake_configure(
         # Can be overriden in custom triplet file
         -DWITH_ALSA=OFF
         -DWITH_CAIRO=OFF
+        -DWITH_LIBSYSTEMD=OFF
     MAYBE_UNUSED_VARIABLES
         MSVC_RUNTIME
 )

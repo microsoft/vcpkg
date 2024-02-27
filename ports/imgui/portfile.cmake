@@ -4,16 +4,16 @@ if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF a1b60fc1f5589d498ab1080c2572da725fcbd0e3
-       SHA512 ac6117f6adf9418af3a2db5392f1316be50a94c38e78cd1eadc0e0a71dfbb5536507aaf4d9d3b3468b5a30ebf143b806e2774f274e2098e1217ed93080fe81c7
+       REF "v${VERSION}-docking"
+       SHA512 50953097ff809bca0e1cee55268eaa8dad001cf8fae85ae7623f484752d16bdf8e63c04227786361f27e73f7aeda5a8d1f9b0cee83c2aca108ce2712a21b74d9
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v${VERSION}
-    SHA512 42021b06b611b58222b09fab8db2c34e992c3dc4fbaa175e09833c66c90d04b4a4e7def16a732535335c0ac5ff014d235835511a5d9a76d32b4395b302146919
+    REF "v${VERSION}"
+    SHA512 f6b33027c7050acc617c728b04b04572a13bf11589d4d2cab566901e94d349a3d91f133f7980049857ee44768d4bad426c9b2e53baf953f2efbf1a7951c3ba8a
     HEAD_REF master
     )
 endif()

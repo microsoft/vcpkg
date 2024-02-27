@@ -1,13 +1,14 @@
 {
   "name": "restinio",
-  "version": "0.6.19",
+  "version": "0.7.0",
   "description": "A header-only C++14 library that gives you an embedded HTTP/Websocket server targeted primarily for asynchronous processing of HTTP-requests.",
   "homepage": "https://github.com/Stiffstream/restinio",
   "license": "BSD-3-Clause",
   "dependencies": [
     "asio",
+    "expected-lite",
     "fmt",
-    "http-parser",
+    "llhttp",
     {
       "name": "vcpkg-cmake",
       "host": true

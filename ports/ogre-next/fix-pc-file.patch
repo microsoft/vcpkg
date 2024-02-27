@@ -1,0 +1,21 @@
+diff --git a/CMake/Templates/OGREStatic.pc.in b/CMake/Templates/OGREStatic.pc.in
+--- a/CMake/Templates/OGREStatic.pc.in
++++ b/CMake/Templates/OGREStatic.pc.in
+@@ -1,13 +1,13 @@
+ prefix=@OGRE_PREFIX_PATH@
+ exec_prefix=${prefix}
+ libdir=${prefix}/@OGRE_LIB_DIRECTORY@
+ includedir=${prefix}/include
+-plugindir=${libdir}/OGRE
++plugindir=${libdir}/@OGRE_NEXT_PREFIX@
+ 
+-Name: OGRE (static lib)
++Name: @OGRE_NEXT_PREFIX@ (static lib)
+ Description: Object-Oriented Graphics Rendering Engine
+ Version: @OGRE_VERSION@
+ URL: http://www.ogre3d.org
+ Requires: freetype2, zziplib, x11, xt, xaw7, gl
+-Libs: -L${libdir} -L${plugindir} -lOgreMain@OGRE_LIB_SUFFIX@ @OGRE_ADDITIONAL_LIBS@
+-Cflags: -I${includedir} -I${includedir}/OGRE @OGRE_CFLAGS@
++Libs: -L${libdir} -L${plugindir} -l@OGRE_NEXT@Main@OGRE_LIB_SUFFIX@ @OGRE_ADDITIONAL_LIBS@
++Cflags: -I${includedir} -I${includedir}/@OGRE_NEXT_PREFIX@ @OGRE_CFLAGS@

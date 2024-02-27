@@ -4,7 +4,7 @@ string(REGEX REPLACE "^([0-9]+),0*([0-9][0-9]),0*([0-9][0-9]),0*([0-9][0-9])," "
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2023/sqlite-amalgamation-${SQLITE_VERSION}.zip"
     FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    SHA512 f17810f3b68b7f77a174503a863385a17bac0e9c819b9813cb75597cbd229ae8ad0b545410fc320669f377e79ab8412bbff8863f197d0f804c3a05b573df57e9
+    SHA512 5ef0e65ee92a088187376fa82ccb182dffa35391dd4dbcb3fafeb0a6f1602ced1e212753837079a9cad007d73d3f5b8a67ca1a6596eba6cf0c695052fa307392
 )
 
 vcpkg_extract_source_archive(
@@ -70,6 +70,9 @@ vcpkg_cmake_configure(
         -DPKGCONFIG_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DSQLITE3_SKIP_TOOLS=ON
+    MAYBE_UNUSED_VARIABLES
+        SQLITE_ENABLE_FTS5
+        SQLITE_ENABLE_MATH_FUNCTIONS
 )
 
 vcpkg_cmake_install()

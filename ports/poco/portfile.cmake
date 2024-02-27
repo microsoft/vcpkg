@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF 1211613642269b7d53bea58b02de7fcd25ece3b9 # poco-1.12.4-release
-    SHA512 bf390f7c8d7c4f0d7602afa434a933b429274944d12560159761b0f984316c76abfdb49ad422c869e02d88041058a04d66e7b5ae05142819a4f583870cc00f44
+    REF "poco-1.12.5p1-release"
+    SHA512 9cf885f67d87b86d3d5337aa2a3247a5828e071bba04304dfb79f7e00d94cd245e5def5191400a5753eebe0611b7f120c470cb0e0ab9b120f1d8b5f202d7d3d7
     HEAD_REF master
     PATCHES
         # Fix embedded copy of pcre in static linking mode
@@ -120,4 +120,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

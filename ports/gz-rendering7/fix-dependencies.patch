@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -65,12 +65,12 @@
+ 
+ if (APPLE)
+   gz_find_package(OpenGL
+     REQUIRED_BY ogre ogre2
+-    PKGCONFIG gl)
++    PKGCONFIG opengl)
+ else()
+   gz_find_package(OpenGL REQUIRED
+     COMPONENTS OpenGL
+     OPTIONAL_COMPONENTS EGL
+     REQUIRED_BY ogre ogre2
+-    PKGCONFIG gl)
++    PKGCONFIG opengl)
+ endif()
+@@ -81,5 +81,6 @@
+ 
+ #--------------------------------------
+ # Find OGRE
++if(0)
+ list(APPEND gz_ogre_components "RTShaderSystem" "Terrain" "Overlay" "Paging")
+ 
+@@ -97,5 +98,6 @@
+                       "The software might compile and even work but support from upstream"
+                       "could be reduced to accepting patches for newer versions")
+   endif()
+ endif()
++endif()
+ 
+diff --git a/ogre2/src/terrain/Terra/CMakeLists.txt b/ogre2/src/terrain/Terra/CMakeLists.txt
+--- a/ogre2/src/terrain/Terra/CMakeLists.txt
++++ b/ogre2/src/terrain/Terra/CMakeLists.txt
+@@ -34,8 +34,10 @@
+     # we must add this one manually for this to build correctly
+     ${OGRE2_INCLUDE}/Hlms/Pbs
+     ${OGRE2_INCLUDE}/Hlms/Common
+   PUBLIC
+-    ${CMAKE_CURRENT_LIST_DIR}/include
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>  
++    $<INSTALL_INTERFACE:include>
+ )
+ 
+ target_link_libraries(${PROJECT_NAME} PRIVATE GzOGRE2::GzOGRE2)
++install(TARGETS ${PROJECT_NAME} EXPORT gz-rendering7-ogre2)

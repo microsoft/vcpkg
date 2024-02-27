@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Headers
-    REF sdk-1.3.231.1
-    SHA512 d2c47127fd81430383e8656917f76933b713ca6cb93b2a9c16c9e0b125e2f62f8c497cab3a4fcc2a711decd911ec5d15f1eb0270add05442aff6672e08c890d7
+    REF "sdk-${VERSION}"
+    SHA512 436c6ce11d918091ce4a5ef2821f51af811c9a289e220b4a2b0bb4417b1f9f3b1f56a6366cfdf56848a9b1fb612ee3ba31d35c3d73d3d24de964ee05f96a7bbc
     HEAD_REF master
 )
 
@@ -17,5 +17,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_fixup_pkgconfig()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

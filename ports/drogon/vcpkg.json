@@ -1,7 +1,6 @@
 {
   "name": "drogon",
-  "version": "1.8.7",
-  "port-version": 1,
+  "version-semver": "1.9.1",
   "description": "A C++14/17 based HTTP web application framework running on Linux/macOS/Unix/Windows",
   "homepage": "https://github.com/an-tao/drogon",
   "documentation": "https://drogon.docsforge.com/master/overview/",

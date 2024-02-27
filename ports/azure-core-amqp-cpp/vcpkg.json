@@ -1,6 +1,7 @@
 {
+  "$comment": "NOTE: All changes made to this file will get overwritten by the next port release. Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp.",
   "name": "azure-core-amqp-cpp",
-  "version-semver": "1.0.0-beta.4",
+  "version-semver": "1.0.0-beta.5",
   "description": [
     "Microsoft Azure AMQP SDK for C++",
     "This library provides AMQP functionality to Azure SDK services."
@@ -9,12 +10,14 @@
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
+    "azure-c-shared-utility",
     {
       "name": "azure-core-cpp",
       "default-features": false,
       "version>=": "1.10.0"
     },
-    "azure-uamqp-c",
+    "azure-macro-utils-c",
+    "umock-c",
     {
       "name": "vcpkg-cmake",
       "host": true
