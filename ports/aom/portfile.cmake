@@ -11,7 +11,7 @@ vcpkg_add_to_path(${PERL_PATH})
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF 6054fae218eda6e53e1e3b4f7ef0fff4877c7bf1 # v3.7.0
+    REF bb6430482199eaefbeaaa396600935082bc43f66
     PATCHES
         aom-rename-static.diff
         aom-uninitialized-pointer.diff
