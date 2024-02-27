@@ -4737,8 +4737,8 @@
       "port-version": 1
     },
     "libpng": {
-      "baseline": "1.6.40",
-      "port-version": 1
+      "baseline": "1.6.43",
+      "port-version": 0
     },
     "libpopt": {
       "baseline": "1.16",
