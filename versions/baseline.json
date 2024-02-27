@@ -4464,6 +4464,10 @@
       "baseline": "1.6.6",
       "port-version": 0
     },
+    "libid3tag": {
+      "baseline": "0.16.3",
+      "port-version": 0
+    },
     "libideviceactivation": {
       "baseline": "2023-05-01",
       "port-version": 1
