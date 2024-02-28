@@ -2,9 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_image
     REF "release-${VERSION}"
-    SHA512 ffd0f838525e17a43d03ea5d4a094b0c79b2627bdbfb4589645abfb606c594773d60184de31bda45999421da75a69f1987ed696b255991212e498161102972b1
+    SHA512 1ec6e7d08bbcd28bba6c972b2e4a11a1da841abef3ffb3d29669b0f5eb0839f39044b0b334c0707274dd51192e081f25bdab97c6710d632422c4ed0274a30f18
     HEAD_REF main
-    PATCHES fix-pkgconfig.patch fix-findwebp.patch
+    PATCHES 
+        fix-findwebp.patch
 )
 
 vcpkg_check_features(
