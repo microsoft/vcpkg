@@ -30,7 +30,7 @@ set(LIBLZF_SHARE_DIR share/liblzf)
 install(EXPORT unofficial-liblzf-targets
     FILE unofficial-liblzf-targets.cmake
     NAMESPACE unofficial::liblzf::
-    DESTINATION ${LIBLZF_SHARE_DIR})
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/unofficial-liblzf-config-version.cmake"
@@ -39,12 +39,6 @@ write_basic_package_version_file(
 )
 install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/unofficial-liblzf-config-version.cmake"
-    DESTINATION ${LIBLZF_SHARE_DIR}
-)
-export(EXPORT unofficial-liblzf-targets
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-liblzf-targets.cmake"
-    NAMESPACE unofficial::liblzf::)
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake/unofficial-liblzf-targets.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-liblzf-targets.cmake"
     DESTINATION ${LIBLZF_SHARE_DIR}
 )
