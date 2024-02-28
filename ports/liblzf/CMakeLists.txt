@@ -9,9 +9,7 @@ add_library(liblzf
     lzf_d.c
     liblzf.def
 )
-if(NOT WIN32)
-  set_target_properties(liblzf PROPERTIES OUTPUT_NAME lzf)
-endif()
+set_target_properties(liblzf PROPERTIES OUTPUT_NAME lzf)
 
 ## Install ##
 
