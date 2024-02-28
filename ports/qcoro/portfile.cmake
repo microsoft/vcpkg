@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO danvratil/qcoro
     REF "v${VERSION}"
-    SHA512 f708e1a82861c39434d6934172246c3280864e933b333b56c0471f1a629f9da65554d1508af4291ac2257ad8df2040655394ae5525d728710de5bd83cef8fbee
+    SHA512 de2e55256d3c9d35fec3ef6dc78128801b70a5e5b8ff0f3a6f235dac17f349ea44207a7c9f35375215dbeea04cb67c3412d505d0a8a95f2b926775f804a02649
     HEAD_REF main
-    PATCHES 0001-qt6-deprecated-qwebsocket-error.patch
 )
 
 vcpkg_check_features(

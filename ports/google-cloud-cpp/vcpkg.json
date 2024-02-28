@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.18.0",
+  "version": "2.21.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -295,6 +295,18 @@
         }
       ]
     },
+    "cloudquotas": {
+      "description": "Cloud Quotas API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "commerce": {
       "description": "Cloud Commerce C++ Client Library",
       "dependencies": [
@@ -564,6 +576,18 @@
     },
     "edgecontainer": {
       "description": "Distributed Cloud Edge Container API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "edgenetwork": {
+      "description": "Distributed Cloud Edge Network API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1084,6 +1108,18 @@
         }
       ]
     },
+    "rpc": {
+      "description": "RPC API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "run": {
       "description": "Cloud Run Admin API C++ Client Library",
       "dependencies": [
@@ -1168,6 +1204,18 @@
         }
       ]
     },
+    "servicehealth": {
+      "description": "Personalized Service Health API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "servicemanagement": {
       "description": "Service Management API C++ Client Library",
       "dependencies": [
@@ -1224,6 +1272,19 @@
           "default-features": false,
           "features": [
             "grpc-common"
+          ]
+        }
+      ]
+    },
+    "sql": {
+      "description": "The Google Cloud SQL Admin C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "rest-common"
           ]
         }
       ]
@@ -1291,6 +1352,18 @@
     },
     "tasks": {
       "description": "The Google Cloud Tasks C++ client library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "telcoautomation": {
+      "description": "Cloud Telco Automation API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",

@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 db23c751aa1bfc9f9f80c4dc900e86fb19579251d3577ef5bd06f9ddf76ba8c74aa404b5477ced5649d011e2111ca8df38d5acc87de6723f7e50f3bb22c9ee8f
+    SHA512 764490362968b05c0edc1c73c3b51b9a517689f95f0e3e3af141da8ef81614111859bbbf2a1571f047acfbd6ba50a16320ba15ed238cbd73732a960c718d5d50
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
+        target-is-valid.patch
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -32,6 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         iconv            GDAL_USE_ICONV
         jpeg             GDAL_USE_JPEG
         core             GDAL_USE_JSONC
+        kea              GDAL_USE_KEA
         lerc             GDAL_USE_LERC
         libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
@@ -86,6 +88,7 @@ vcpkg_cmake_configure(
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
         -DOGR_BUILD_OPTIONAL_DRIVERS=ON
+        -DFIND_PACKAGE2_KEA_ENABLED=OFF
         -DGDAL_CHECK_PACKAGE_MySQL_NAMES=unofficial-libmariadb
         -DGDAL_CHECK_PACKAGE_MySQL_TARGETS=unofficial::libmariadb
         -DMYSQL_LIBRARIES=unofficial::libmariadb
@@ -115,34 +118,33 @@ list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
 if (BUILD_APPS)
     vcpkg_copy_tools(
         TOOL_NAMES
-            gdalinfo
-            gdalbuildvrt
-            gdaladdo
-            gdal_grid
-            gdal_translate
-            gdal_rasterize
-            gdalsrsinfo
-            gdalenhance
-            gdalmanage
-            gdaltransform
-            gdaltindex
-            gdaldem
-            gdal_create
-            gdal_viewshed
-            nearblack
-            ogrlineref
-            ogrtindex
-            gdalwarp
             gdal_contour
+            gdal_create
+            gdal_footprint
+            gdal_grid
+            gdal_rasterize
+            gdal_translate
+            gdal_viewshed
+            gdaladdo
+            gdalbuildvrt
+            gdaldem
+            gdalenhance
+            gdalinfo
             gdallocationinfo
-            ogrinfo
-            ogr2ogr
-            ogrlineref
-            nearblack
+            gdalmanage
             gdalmdiminfo
             gdalmdimtranslate
+            gdalsrsinfo
+            gdaltindex
+            gdaltransform
+            gdalwarp
             gnmanalyse
             gnmmanage
+            nearblack
+            ogr2ogr
+            ogrinfo
+            ogrlineref
+            ogrtindex
             sozip
         AUTO_CLEAN
     )

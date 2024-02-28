@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(breakpad CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_definitions(
@@ -93,6 +93,14 @@ else()
     endif()
 endif()
 
+set(USED_ZLIB OFF)
+if(LINUX AND NOT CMAKE_SYSTEM_NAME STREQUAL Android)
+    # src/common/linux/dump_symbols.cc wants zlib.h
+    find_package(ZLIB REQUIRED)
+    target_link_libraries(libbreakpad_client PRIVATE ZLIB::ZLIB)
+    set(USED_ZLIB ON)
+endif()
+
 target_include_directories(libbreakpad_client
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
@@ -141,14 +149,6 @@ if(INSTALL_TOOLS)
             src/common/dwarf/dwarf2diehandler.cc
             src/common/dwarf/dwarf2reader.cc
             src/common/dwarf/elf_reader.cc
-            src/common/linux/crc32.cc
-            src/common/linux/dump_symbols.cc
-            src/common/linux/elf_symbols_to_module.cc
-            src/common/linux/elfutils.cc
-            src/common/linux/file_id.cc
-            src/common/linux/linux_libc_support.cc
-            src/common/linux/memory_mapped_file.cc
-            src/common/linux/safe_readlink.cc
             src/tools/linux/dump_syms/dump_syms.cc)
         target_link_libraries(dump_syms PRIVATE libbreakpad_client)
         install(TARGETS dump_syms DESTINATION bin)
@@ -213,7 +213,9 @@ endif()
 
 install(
     EXPORT unofficial-breakpad-targets
-    FILE unofficial-breakpad-config.cmake
+    FILE unofficial-breakpadTargets.cmake
     NAMESPACE unofficial::breakpad::
     DESTINATION share/unofficial-breakpad
 )
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-breakpadConfig.cmake" "${CMAKE_INSTALL_PREFIX}/share/unofficial-breakpad/unofficial-breakpadConfig.cmake" @ONLY)

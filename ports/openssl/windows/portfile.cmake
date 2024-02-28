@@ -1,7 +1,3 @@
-vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
-vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
-
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
@@ -48,22 +44,23 @@ if (VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang" OR VCPKG_LIBRARY_LINKAGE 
     set(OPENSSL_BUILD_MAKES_PDBS OFF)
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND NOT VCPKG_TARGET_IS_UWP)
+cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_C_COMPILER NORMALIZE cc)
+if(OPENSSL_ARCH MATCHES "CLANG")
     vcpkg_find_acquire_program(CLANG)
-    set(clang "${CLANG}")
-    cmake_path(GET clang PARENT_PATH clang_path)
+    cmake_path(GET CLANG PARENT_PATH clang_path)
     vcpkg_add_to_path("${clang_path}")
-
-    set(as clang-cl)
-
-    vcpkg_list(APPEND CONFIGURE_OPTIONS "ASFLAGS=--target=aarch64-win32-msvc")
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang")
         string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " --target=aarch64-win32-msvc")
         string(APPEND VCPKG_COMBINED_C_FLAGS_RELEASE " --target=aarch64-win32-msvc")
     endif()
+endif()
+if(OPENSSL_ARCH MATCHES "CLANGASM")
+    vcpkg_list(APPEND CONFIGURE_OPTIONS "ASFLAGS=--target=aarch64-win32-msvc")
 else()
+    vcpkg_find_acquire_program(NASM)
     cmake_path(NATIVE_PATH NASM NORMALIZE as)
-    cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_C_COMPILER NORMALIZE cc)
+    cmake_path(GET NASM PARENT_PATH nasm_path)
+    vcpkg_add_to_path("${nasm_path}") # Needed by Configure
 endif()
 
 cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_AR NORMALIZE ar)

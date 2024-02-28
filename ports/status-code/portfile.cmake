@@ -13,6 +13,7 @@ set(VCPKG_BUILD_TYPE release)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBUILD_TESTING=OFF
         -Dstatus-code_IS_DEPENDENCY=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
     MAYBE_UNUSED_VARIABLES
