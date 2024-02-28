@@ -7,6 +7,7 @@ project(liblzf LANGUAGES C VERSION 3.6)
 add_library(liblzf
     lzf_c.c
     lzf_d.c
+    liblzf.def
 )
 set_target_properties(liblzf PROPERTIES OUTPUT_NAME lzf)
 
@@ -22,8 +23,6 @@ endif()
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
   target_compile_options(liblzf PRIVATE "-funroll-all-loops")
 endif()
-
-set_target_properties(liblzf PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 ## Install ##
 
