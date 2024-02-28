@@ -33,9 +33,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 if(VCPKG_TARGET_IS_OSX)
+    list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
     if("dynamic-arch" IN_LIST FEATURES)
         set(conf_opts GENERATOR "Unix Makefiles")
     endif()
+endif()
+
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
 endif()
 
 set(OPENBLAS_EXTRA_OPTIONS)

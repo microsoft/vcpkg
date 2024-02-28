@@ -292,12 +292,8 @@ fastrtps:arm64-android=fail
 fastrtps:x64-android=fail
 fastrtps:x64-windows-static-md=fail
 fastrtps:x64-windows-static=fail
-fdk-aac:arm-neon-android=fail
-fdk-aac:arm64-android=fail
-fdk-aac:x64-android=fail
 flashlight-cpu:x64-linux=fail
 flashlight-cuda:x64-linux=fail
-
 flint:arm-neon-android=fail
 flint:arm64-android=fail
 flint:x64-android=fail
