@@ -12,8 +12,6 @@ vcpkg_from_github(
   HEAD_REF
   master)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 vcpkg_cmake_configure(
   SOURCE_PATH
   "${SOURCE_PATH}"
