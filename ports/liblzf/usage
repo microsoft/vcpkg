@@ -1,6 +1,4 @@
 liblzf provides CMake targets:
 
     find_package(unofficial-liblzf REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::libmagic::libmagic)
-
-The magic.mgc file can be accessed from the unofficial-libmagic_DICTIONARY variable.
+    target_link_libraries(main PRIVATE unofficial::liblzf::liblzf)
