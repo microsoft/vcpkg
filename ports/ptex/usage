@@ -1,0 +1,4 @@
+Ptex provides CMake targets:
+
+    find_package(ptex CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:Ptex::Ptex_dynamic>,Ptex::Ptex_dynamic,Ptex::Ptex_static>)
