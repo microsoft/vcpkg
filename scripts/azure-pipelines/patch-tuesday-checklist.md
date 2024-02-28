@@ -10,6 +10,10 @@
       (Most often PowerShell needs to be updated)
 * [ ] Check for any other software for the Windows images we wish to update and make the edits to do
       so in `scripts/azure-pipelines/windows`
+* [ ] Check for any updates possible to `vcpkgTools.xml`. Note that PowerShell currently uses the
+    7.2.x series due to customer reported problems on older Windows with 7.3.x and later.
+* [ ] Update the first line of android/Dockerfile with the current 'focal' image according to
+    https://hub.docker.com/_/ubuntu
 * [ ] Run android/create-docker-image.ps1
 * [ ] Update azure-pipelines.yml to point to the new linux docker image from Azure Container Registry
 * [ ] Run windows/create-image.ps1
@@ -24,10 +28,8 @@
 * [ ] Look at that and compare with recent build and resolve anything that's not an existing baseline issue.
 * [ ] Merge the PR.
 * [ ] Update the managed image for compiler testing and delete unused images.
-     * CPP_GITHUB\vcpkg-image-minting\PrWinEA
+     * CPP_GITHUB\vcpkg-image-minting\PrWinWus3
      * Standard HDD LRS
-         * East Asia, 1 Replica
-         * West US 2, 1 Replica
          * West US 3, 1 Replica
 * [ ] After the last build finishes on the previous pool, delete it in the Azure Devops *Organization* UI and its Resource Group. ( https://dev.azure.com/vcpkg/_settings/agentpools ?)
 * [ ] Run `generate-sas-tokens.ps1 -KeyNumber N`, where N is whether the month is even

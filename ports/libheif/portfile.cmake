@@ -8,12 +8,18 @@ vcpkg_from_github(
         gdk-pixbuf.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+	FEATURES
+		hevc    WITH_X265
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DWITH_EXAMPLES=OFF
         -DWITH_DAV1D=OFF
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+        ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
