@@ -4313,7 +4313,7 @@
       "port-version": 0
     },
     "libeventheader-tracepoint": {
-      "baseline": "1.3.0",
+      "baseline": "1.3.2",
       "port-version": 0
     },
     "libevhtp": {
@@ -4985,11 +4985,11 @@
       "port-version": 0
     },
     "libtracepoint": {
-      "baseline": "1.3.0",
+      "baseline": "1.3.2",
       "port-version": 0
     },
     "libtracepoint-control": {
-      "baseline": "1.3.0",
+      "baseline": "1.3.2",
       "port-version": 0
     },
     "libtracepoint-decode": {
