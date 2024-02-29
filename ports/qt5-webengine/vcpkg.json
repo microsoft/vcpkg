@@ -1,6 +1,7 @@
 {
   "name": "qt5-webengine",
   "version": "5.15.12",
+  "port-version": 1,
   "description": "Qt5 webengine Module;",
   "license": null,
   "supports": "!static",
@@ -10,8 +11,16 @@
       "platform": "windows"
     },
     {
+      "name": "dbus",
+      "platform": "!windows"
+    },
+    {
       "name": "ffmpeg",
       "default-features": false,
+      "platform": "!windows"
+    },
+    {
+      "name": "icu",
       "platform": "!windows"
     },
     {
