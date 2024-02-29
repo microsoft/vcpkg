@@ -2873,8 +2873,8 @@
       "port-version": 4
     },
     "g3log": {
-      "baseline": "2.3",
-      "port-version": 1
+      "baseline": "2.4",
+      "port-version": 0
     },
     "gainput": {
       "baseline": "1.0.0",
