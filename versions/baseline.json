@@ -597,8 +597,8 @@
       "port-version": 0
     },
     "bext-ut": {
-      "baseline": "1.1.9",
-      "port-version": 2
+      "baseline": "2.0.1",
+      "port-version": 0
     },
     "bext-wintls": {
       "baseline": "0.9.7",
