@@ -33,8 +33,6 @@ file(COPY
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/docopt")
 
 # Handle copyright
-file(INSTALL
-    "${SOURCE_PATH}/LICENSE-MIT"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/docopt" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE-MIT" "${SOURCE_PATH}/LICENSE-Boost-1.0")
 
 vcpkg_copy_pdbs()
