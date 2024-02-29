@@ -6294,7 +6294,7 @@
     },
     "ogre-next": {
       "baseline": "2.3.3",
-      "port-version": 2
+      "port-version": 3
     },
     "ois": {
       "baseline": "1.5.1",
@@ -9649,8 +9649,8 @@
       "port-version": 5
     },
     "zziplib": {
-      "baseline": "0.13.72",
-      "port-version": 3
+      "baseline": "0.13.73",
+      "port-version": 0
     }
   }
 }
