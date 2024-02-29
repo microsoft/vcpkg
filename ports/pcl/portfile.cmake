@@ -62,6 +62,7 @@ vcpkg_cmake_configure(
         -DWITH_QHULL=ON
         -DWITH_RSSDK=OFF
         -DWITH_RSSDK2=OFF
+        -DUA_MSVC_FORCE_STATIC_CRT=OFF
         # FEATURES
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
