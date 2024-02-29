@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gknowles/dimcli
-    REF v7.2.0
+    REF "v${VERSION}"
     SHA512 2d475e80e91e10244fd4c7ffeefb1f9fc84a786e2e7885d42295850e7c2dddc6572ad09a610b65e19639da9adca6ac6b6b3e6038cfed803fc2c59ae3818b4281
     HEAD_REF master
 )
