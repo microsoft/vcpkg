@@ -21,8 +21,8 @@ index 1c24694..9f92a4f 100644
  BUILT_SOURCES += fac_table.h
  
  gen-fac$(EXEEXT_FOR_BUILD): gen-fac$(U_FOR_BUILD).c bootstrap.c
-@@ -354,12 +358,12 @@ DISTCLEANFILES += gen-fac$(EXEEXT_FOR_BUILD)
- EXTRA_DIST += gen-fac.c
+@@ -364,12 +368,12 @@ DISTCLEANFILES += gen-sieve$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-sieve.c
  
  
 -fib_table.h: gen-fib$(EXEEXT_FOR_BUILD)
