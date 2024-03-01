@@ -39,7 +39,7 @@ index 30f7baf1..7bcdb123 100644
  
  #ADD_SUBDIRECTORY(tests)
  
-+find_package(protobuf CONFIG REQUIRED)
++find_package(Protobuf CONFIG REQUIRED)
  
  SET(cdk_sources
    session.cc
@@ -61,7 +61,7 @@ index cfc81daf..d7b50546 100644
  # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
  
 -find_dependency(Protobuf)
-+find_package(protobuf CONFIG REQUIRED)
++find_package(Protobuf CONFIG REQUIRED)
 +include(DepFindProtobuf)
  find_dependency(Compression)
  

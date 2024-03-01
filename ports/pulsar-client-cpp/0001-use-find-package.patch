@@ -23,7 +23,7 @@ index fb4f1b1..fc5bc4b 100644
      find_package(Protobuf REQUIRED CONFIG)
  else ()
 -    find_package(Protobuf REQUIRED)
-+    find_package(protobuf CONFIG REQUIRED)
++    find_package(Protobuf CONFIG REQUIRED)
 +    set(Protobuf_LIBRARIES protobuf::libprotobuf)
 +    set(PROTOC_PATH protobuf::protoc)
  endif ()

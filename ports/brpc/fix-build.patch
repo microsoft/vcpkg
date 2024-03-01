@@ -7,7 +7,7 @@ index 71838043..82b742d8 100644
  endif()
  
 -find_package(Protobuf REQUIRED)
-+find_package(protobuf CONFIG REQUIRED)
++find_package(Protobuf CONFIG REQUIRED)
 +get_target_property(PROTOBUF_INCLUDE_DIR protobuf::libprotobuf INTERFACE_INCLUDE_DIRECTORIES)
 +set(PROTOBUF_LIBRARIES protobuf::libprotobuf)
  find_package(Threads REQUIRED)
@@ -185,7 +185,7 @@ index 1b4b2332..b2251a4d 100644
 +find_dependency(Threads)
 +find_dependency(ZLIB)
 +find_dependency(gflags CONFIG)
-+find_dependency(protobuf CONFIG)
++find_dependency(Protobuf CONFIG)
 +find_dependency(leveldb CONFIG)
 +find_dependency(Thrift CONFIG)
 +find_dependency(glog CONFIG)
