@@ -1334,7 +1334,7 @@
     },
     "braft": {
       "baseline": "2021-26-04",
-      "port-version": 3
+      "port-version": 4
     },
     "breakpad": {
       "baseline": "2023-01-27",
@@ -1350,7 +1350,7 @@
     },
     "brpc": {
       "baseline": "1.6.1",
-      "port-version": 1
+      "port-version": 2
     },
     "brunocodutra-metal": {
       "baseline": "2.1.4",
