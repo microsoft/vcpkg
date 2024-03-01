@@ -40,6 +40,10 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibDataChannel CONFIG_PATH lib/cmake/LibDataChannel)
 vcpkg_fixup_pkgconfig()
 
+if(srtp IN_LIST FEATURES)
+    set(FIND_DEP_SRTP "find_dependency(libSRTP CONFIG)")
+endif()
+
 file(READ "${CURRENT_PACKAGES_DIR}/share/LibDataChannel/LibDataChannelConfig.cmake" DATACHANNEL_CONFIG)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/LibDataChannel/LibDataChannelConfig.cmake" "
 include(CMakeFindDependencyMacro)
@@ -48,7 +52,9 @@ find_dependency(OpenSSL)
 find_dependency(LibJuice)
 find_dependency(plog CONFIG)
 find_dependency(unofficial-usrsctp CONFIG)
+${FIND_DEP_SRTP}
 ${DATACHANNEL_CONFIG}")
+
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
