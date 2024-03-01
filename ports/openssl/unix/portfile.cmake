@@ -88,6 +88,7 @@ elseif(VCPKG_TARGET_IS_MINGW)
         set(OPENSSL_ARCH mingw)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    set(OPENSSL_ARCH linux-x32)
     vcpkg_list(APPEND CONFIGURE_OPTIONS
         threads
         no-engine
