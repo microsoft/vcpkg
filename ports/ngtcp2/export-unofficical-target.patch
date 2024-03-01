@@ -1,5 +1,5 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index f822c8e..591a588 100644
+index 18b4cd39..31376f85 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
 @@ -69,8 +69,9 @@ set(ngtcp2_SOURCES
@@ -22,17 +22,16 @@ index f822c8e..591a588 100644
      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
      RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
-@@ -102,10 +104,18 @@ if(HAVE_CUNIT OR ENABLE_STATIC_LIB)
-   target_compile_definitions(ngtcp2_static PUBLIC "-DNGTCP2_STATICLIB")
-   target_include_directories(ngtcp2_static PUBLIC ${ngtcp2_INCLUDE_DIRS})
-   if(ENABLE_STATIC_LIB)
-+    add_library(ngtcp2 INTERFACE)
-+    target_link_libraries(ngtcp2 INTERFACE ngtcp2_static)
-     install(TARGETS ngtcp2_static
-+      ngtcp2
-+      EXPORT unofficial-ngtcp2-config
-       DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-   endif()
+@@ -101,9 +103,17 @@ set_target_properties(ngtcp2_static PROPERTIES
+ target_compile_definitions(ngtcp2_static PUBLIC "-DNGTCP2_STATICLIB")
+ target_include_directories(ngtcp2_static PUBLIC ${ngtcp2_INCLUDE_DIRS})
+ if(ENABLE_STATIC_LIB)
++  add_library(ngtcp2 INTERFACE)
++  target_link_libraries(ngtcp2 INTERFACE ngtcp2_static)
+   install(TARGETS ngtcp2_static
++    ngtcp2
++    EXPORT unofficial-ngtcp2-config
+     DESTINATION "${CMAKE_INSTALL_LIBDIR}")
  endif()
 +install(
 +  EXPORT unofficial-ngtcp2-config
