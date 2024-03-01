@@ -7,7 +7,7 @@ index a851c00..9d6415b 100644
  
  include(FindThreads)
 -include(FindProtobuf)
-+find_package(protobuf CONFIG REQUIRED)
++find_package(Protobuf CONFIG REQUIRED)
  
  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
      # require at least gcc 4.8

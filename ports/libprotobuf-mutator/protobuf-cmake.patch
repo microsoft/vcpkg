@@ -8,7 +8,7 @@ index a8fe9e6..1631a38 100644
  else()
 -  find_package(Protobuf REQUIRED)
 -  include_directories(${PROTOBUF_INCLUDE_DIRS})
-+  find_package(protobuf CONFIG REQUIRED)
++  find_package(Protobuf CONFIG REQUIRED)
    include_directories(${CMAKE_CURRENT_BINARY_DIR})
  endif()
  
@@ -20,7 +20,7 @@ index f62a501..6f905b7 100644
  include(CMakeFindDependencyMacro)
  
 -find_dependency(Protobuf REQUIRED)
-+find_dependency(protobuf CONFIG REQUIRED)
++find_dependency(Protobuf CONFIG REQUIRED)
  
  include("${CMAKE_CURRENT_LIST_DIR}/libprotobuf-mutatorTargets.cmake")
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt

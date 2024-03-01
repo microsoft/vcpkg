@@ -52,7 +52,7 @@ index cf8245b8b..233390a5f 100755
 +find_package(Draco REQUIRED)
 +find_package(BASISU REQUIRED)
 +find_package(GLEW REQUIRED)
-+find_package(protobuf CONFIG REQUIRED)
++find_package(Protobuf CONFIG REQUIRED)
 +find_package(WEBP NAMES WebP CONFIG REQUIRED)
 +set(WEBP_LIBRARY WebP::webp)
 +if(WITH_BLEND2D)
