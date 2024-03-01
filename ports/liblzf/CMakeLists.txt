@@ -10,6 +10,7 @@ add_library(liblzf
     liblzf.def
 )
 set_target_properties(liblzf PROPERTIES OUTPUT_NAME lzf)
+target_include_directories(liblzf INTERFACE $<INSTALL_INTERFACE:include>)
 
 ## Install ##
 
@@ -24,11 +25,12 @@ install(FILES lzf.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 ## Write config ##
 
-set(LIBLZF_SHARE_DIR share/liblzf)
+set(LIBLZF_SHARE_DIR share/unofficial-liblzf)
 install(EXPORT unofficial-liblzf-targets
-    FILE unofficial-liblzf-targets.cmake
+    FILE unofficial-liblzf-config.cmake
     NAMESPACE unofficial::liblzf::
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    DESTINATION ${LIBLZF_SHARE_DIR}
+)
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/unofficial-liblzf-config-version.cmake"
@@ -37,6 +39,5 @@ write_basic_package_version_file(
 )
 install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/unofficial-liblzf-config-version.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-liblzf-targets.cmake"
     DESTINATION ${LIBLZF_SHARE_DIR}
 )

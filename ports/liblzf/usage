@@ -1,4 +1,0 @@
-liblzf provides CMake targets:
-
-    find_package(unofficial-liblzf REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::liblzf::liblzf)
