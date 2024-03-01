@@ -15,7 +15,9 @@ vcpkg_check_features(
     FEATURES
         dx11 BUILD_DX11
         dx12 BUILD_DX12
+        jpeg ENABLE_LIBJPEG_SUPPORT
         openexr ENABLE_OPENEXR_SUPPORT
+        png ENABLE_LIBPNG_SUPPORT
         spectre ENABLE_SPECTRE_MITIGATION
         tools BUILD_TOOLS
 )

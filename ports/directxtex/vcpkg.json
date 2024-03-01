@@ -41,11 +41,25 @@
         }
       ]
     },
+    "jpeg": {
+      "description": "Add the JPEG auxiliary functions",
+      "dependencies": [
+        "libjpeg-turbo"
+      ],
+      "supports":"linux"
+    },
     "openexr": {
       "description": "Enable OpenEXR support",
       "dependencies": [
         "openexr"
       ]
+    },
+    "png": {
+      "description": "Add the PNG auxiliary functions",
+      "dependencies": [
+        "libpng"
+      ],
+      "supports":"linux"
     },
     "spectre": {
       "description": "Build Spectre-mitigated library"
