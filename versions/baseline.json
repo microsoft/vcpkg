@@ -3057,8 +3057,8 @@
       "port-version": 6
     },
     "glog": {
-      "baseline": "0.6.0",
-      "port-version": 3
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "gloo": {
       "baseline": "20201203",
