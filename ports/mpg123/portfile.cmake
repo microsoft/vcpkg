@@ -8,6 +8,7 @@ vcpkg_from_sourceforge(
         fix-checktypesize.patch
         fix-modulejack.patch
         fix-m1-build.patch
+        fix-modules-cmake-cflags.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

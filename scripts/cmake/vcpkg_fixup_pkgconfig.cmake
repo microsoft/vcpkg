@@ -3,6 +3,10 @@ function(z_vcpkg_fixup_pkgconfig_process_data arg_variable arg_config arg_prefix
     # to use LF instead of CRLF. This allows to use simpler regex matches.
     string(REPLACE "\r\n" "\n" contents "\n${${arg_variable}}\n")
 
+    # We use ${pcfiledir} for relocatable pc files, and on windows,
+    # pkgconf initializes ${pc_sysrootdir} to invalid '/'.
+    string(REPLACE [[${pc_sysrootdir}]] "" contents "${contents}")
+
     string(REPLACE "${CURRENT_PACKAGES_DIR}" [[${prefix}]] contents "${contents}")
     string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${prefix}]] contents "${contents}")
     if(VCPKG_HOST_IS_WINDOWS)

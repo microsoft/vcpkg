@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v2.3
     SHA512 e688ddac1bff108e8315bf94cb61483b72b0d16f601e4e1eeb0fd5c064aefe5a573eee66e8903401aa4c2be71ea9f10dd6c9a9cdf8379f5bb6073248a21a83ff
     HEAD_REF master
+    PATCHES
+        fix_vs177.patch #https://github.com/google/cctz/pull/273
 )
 
 vcpkg_cmake_configure(
