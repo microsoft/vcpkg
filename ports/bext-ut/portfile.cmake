@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
         -DINCLUDE_INSTALL_DIR=include
         -DBOOST_UT_DISABLE_MODULE=ON
 )
-
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
