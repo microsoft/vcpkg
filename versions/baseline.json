@@ -2277,8 +2277,8 @@
       "port-version": 0
     },
     "docopt": {
-      "baseline": "2018-11-01",
-      "port-version": 3
+      "baseline": "2022-03-15",
+      "port-version": 0
     },
     "doctest": {
       "baseline": "2.4.11",
@@ -2581,7 +2581,7 @@
       "port-version": 2
     },
     "fast-float": {
-      "baseline": "6.0.0",
+      "baseline": "6.1.0",
       "port-version": 0
     },
     "fastcdr": {
@@ -2642,7 +2642,7 @@
     },
     "ffmpeg": {
       "baseline": "6.1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "ffnvcodec": {
       "baseline": "11.1.5.3",
@@ -2789,7 +2789,7 @@
       "port-version": 2
     },
     "fplus": {
-      "baseline": "0.2.22",
+      "baseline": "0.2.23",
       "port-version": 0
     },
     "freealut": {
@@ -2837,7 +2837,7 @@
       "port-version": 0
     },
     "frugally-deep": {
-      "baseline": "0.15.30",
+      "baseline": "0.15.31",
       "port-version": 0
     },
     "fruit": {
@@ -2873,8 +2873,8 @@
       "port-version": 4
     },
     "g3log": {
-      "baseline": "2.3",
-      "port-version": 1
+      "baseline": "2.4",
+      "port-version": 0
     },
     "gainput": {
       "baseline": "1.0.0",
@@ -2993,8 +2993,8 @@
       "port-version": 3
     },
     "giflib": {
-      "baseline": "5.2.1",
-      "port-version": 3
+      "baseline": "5.2.2",
+      "port-version": 0
     },
     "ginkgo": {
       "baseline": "1.7.0",
@@ -3017,7 +3017,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "2.1.4",
+      "baseline": "2.1.7",
       "port-version": 0
     },
     "glbinding": {
@@ -3040,13 +3040,17 @@
       "baseline": "2.78.4",
       "port-version": 0
     },
+    "glib-networking": {
+      "baseline": "2.78.0",
+      "port-version": 0
+    },
     "glibmm": {
       "baseline": "2.78.1",
       "port-version": 0
     },
     "glm": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "globjects": {
       "baseline": "1.1.0",
@@ -3058,7 +3062,7 @@
     },
     "gloo": {
       "baseline": "20201203",
-      "port-version": 2
+      "port-version": 3
     },
     "glpk": {
       "baseline": "5.0",
@@ -3085,7 +3089,7 @@
       "port-version": 21
     },
     "gmsh": {
-      "baseline": "4.11.1",
+      "baseline": "4.12.2",
       "port-version": 0
     },
     "gobject-introspection": {
@@ -3182,7 +3186,7 @@
     },
     "gstreamer": {
       "baseline": "1.22.5",
-      "port-version": 7
+      "port-version": 8
     },
     "gtest": {
       "baseline": "1.14.0",
@@ -4001,8 +4005,8 @@
       "port-version": 0
     },
     "ktx": {
-      "baseline": "4.3.0-beta1",
-      "port-version": 1
+      "baseline": "4.3.1",
+      "port-version": 0
     },
     "kubazip": {
       "baseline": "0.2.6",
@@ -4641,7 +4645,7 @@
       "port-version": 3
     },
     "libnick": {
-      "baseline": "2024.2.7",
+      "baseline": "2024.2.8",
       "port-version": 0
     },
     "libnoise": {
@@ -4750,10 +4754,10 @@
     },
     "libpq": {
       "baseline": "16.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libpqxx": {
-      "baseline": "7.8.1",
+      "baseline": "7.9.0",
       "port-version": 0
     },
     "libprotobuf-mutator": {
@@ -4763,6 +4767,10 @@
     "libproxy": {
       "baseline": "0.4.18",
       "port-version": 3
+    },
+    "libpsl": {
+      "baseline": "0.21.5",
+      "port-version": 0
     },
     "libqcow": {
       "baseline": "20221124",
@@ -4891,6 +4899,10 @@
     "libsoundio": {
       "baseline": "2.0.0",
       "port-version": 7
+    },
+    "libsoup": {
+      "baseline": "3.4.4",
+      "port-version": 0
     },
     "libspatialindex": {
       "baseline": "1.9.3",
@@ -5033,8 +5045,8 @@
       "port-version": 0
     },
     "libusb": {
-      "baseline": "1.0.26.11791",
-      "port-version": 7
+      "baseline": "1.0.27",
+      "port-version": 0
     },
     "libusb-win32": {
       "baseline": "1.2.6.0",
@@ -6010,7 +6022,7 @@
     },
     "netcdf-c": {
       "baseline": "4.8.1",
-      "port-version": 4
+      "port-version": 5
     },
     "netcdf-cxx4": {
       "baseline": "4.3.1",
@@ -6449,8 +6461,8 @@
       "port-version": 1
     },
     "opentelemetry-cpp": {
-      "baseline": "1.14.0",
-      "port-version": 2
+      "baseline": "1.14.2",
+      "port-version": 0
     },
     "opentelemetry-fluentd": {
       "baseline": "2.0.0",
@@ -7166,7 +7178,7 @@
     },
     "qt5-webengine": {
       "baseline": "5.15.12",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-webglplugin": {
       "baseline": "5.15.12",
@@ -7590,7 +7602,7 @@
     },
     "rhash": {
       "baseline": "1.4.4",
-      "port-version": 0
+      "port-version": 1
     },
     "rhasheq": {
       "baseline": "2023-06-17",
@@ -8728,6 +8740,10 @@
       "baseline": "45",
       "port-version": 0
     },
+    "try-catcher": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "tsl-hopscotch-map": {
       "baseline": "2.3.0",
       "port-version": 3
@@ -8781,7 +8797,7 @@
       "port-version": 1
     },
     "uni-algo": {
-      "baseline": "1.0.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "unicorn": {
@@ -9006,6 +9022,10 @@
     },
     "veigar": {
       "baseline": "1.0",
+      "port-version": 0
+    },
+    "velodyne-decoder": {
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "verdict": {

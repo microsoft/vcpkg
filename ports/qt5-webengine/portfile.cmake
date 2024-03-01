@@ -50,6 +50,8 @@ set(PATCHES common.pri.patch
             build_1.patch
             build_2.patch
             workaround-msvc2022-missing-include-in-chromium-ui-accessability.patch
+            0001-Fix-building-with-ICU-68.patch
+            0001-Support-ICU-74-in-LazyTextBreakIterator.patch
             )
 
 set(OPTIONS)
