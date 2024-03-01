@@ -2277,8 +2277,8 @@
       "port-version": 0
     },
     "docopt": {
-      "baseline": "2018-11-01",
-      "port-version": 3
+      "baseline": "2022-03-15",
+      "port-version": 0
     },
     "doctest": {
       "baseline": "2.4.11",
