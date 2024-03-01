@@ -10,6 +10,9 @@ vcpkg_from_github(
         keep-dup-libs.patch
         windows-linkage.patch
         wfreerdp-server-cli.patch
+        wf-rdpsnd.patch
+        msvc-arm64.patch
+        mingw-tp.patch
 )
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
 file(WRITE "${SOURCE_PATH}/CMakeCPack.cmake" "")
