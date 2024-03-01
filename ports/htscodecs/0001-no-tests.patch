@@ -1,0 +1,24 @@
+diff --git a/Makefile.am b/Makefile.am
+index c073421..98ccdbd 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -32,7 +32,7 @@
+ AUTOMAKE_OPTIONS = foreign no-dependencies
+ ACLOCAL_AMFLAGS = -I m4
+ 
+-SUBDIRS = htscodecs . tests
++SUBDIRS = htscodecs .
+ 
+ nobase_include_HEADERS = \
+ 	htscodecs/arith_dynamic.h \
+diff --git a/configure.ac b/configure.ac
+index 7e60be6..92888c8 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -206,5 +206,5 @@ AC_CHECK_HEADER(zlib.h)
+ dnl Checks for library functions.
+ AX_SEARCH_LIBS_REV([pthread_join], [thr pthread])
+ 
+-AC_CONFIG_FILES([Makefile htscodecs/Makefile tests/Makefile])
++AC_CONFIG_FILES([Makefile htscodecs/Makefile])
+ AC_OUTPUT
