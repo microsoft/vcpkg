@@ -1,0 +1,13 @@
+diff --git a/src/repo_write.c b/src/repo_write.c
+index a73eebff..9e0622e3 100644
+--- a/src/repo_write.c
++++ b/src/repo_write.c
+@@ -188,7 +188,7 @@ write_compressed_blob(Repodata *data, void *blob, int len)
+ 	  write_u8(data, clen);
+ 	  write_blob(data, cpage, clen);
+ 	}
+-      blob += chunk;
++      blob = (char*) blob + chunk;
+       len -= chunk;
+     }
+ }

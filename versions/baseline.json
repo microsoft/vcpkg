@@ -4892,6 +4892,10 @@
       "baseline": "1.0.19",
       "port-version": 1
     },
+    "libsolv": {
+      "baseline": "0.7.24",
+      "port-version": 0
+    },
     "libsonic": {
       "baseline": "0.2.0",
       "port-version": 0
