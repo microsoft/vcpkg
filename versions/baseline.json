@@ -1925,7 +1925,7 @@
       "port-version": 4
     },
     "cpptrace": {
-      "baseline": "0.4.0",
+      "baseline": "0.4.1",
       "port-version": 0
     },
     "cppunit": {
@@ -4142,7 +4142,7 @@
     },
     "libassert": {
       "baseline": "1.2.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libassuan": {
       "baseline": "2.5.6",
