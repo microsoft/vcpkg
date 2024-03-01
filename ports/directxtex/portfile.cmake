@@ -20,6 +20,8 @@ vcpkg_check_features(
         png ENABLE_LIBPNG_SUPPORT
         spectre ENABLE_SPECTRE_MITIGATION
         tools BUILD_TOOLS
+        xboxone BUILD_XBOX_EXTS_XBOXONE
+        xboxseriesx BUILD_XBOX_EXTS_SCARLETT
 )
 
 set(EXTRA_OPTIONS -DBUILD_SAMPLE=OFF)
@@ -30,6 +32,10 @@ endif()
 
 if(VCPKG_TARGET_IS_MINGW AND ("dx11" IN_LIST FEATURES))
     message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
+endif()
+
+if(("xboxone" IN_LIST FEATURES) AND ("xboxseriesx" IN_LIST FEATURES))
+    message(FATAL_ERROR "${PORT} can only support one of Xbox One or Xbox Series X|S at a time.")
 endif()
 
 if (VCPKG_HOST_IS_LINUX)

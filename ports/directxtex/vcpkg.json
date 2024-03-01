@@ -67,6 +67,20 @@
     "tools": {
       "description": "texture command-line tools",
       "supports": "windows & !uwp & !xbox"
+    },
+    "xboxone": {
+      "description": "Adds Xbox One specific extensions to the library",
+      "dependencies": [
+        "ms-gdkx"
+      ],
+      "supports": "windows & x64 & !uwp & !xbox"
+    },
+    "xboxseriesx": {
+      "description": "Adds Xbox Series X|S specific extensions to the library",
+      "dependencies": [
+        "ms-gdkx"
+      ],
+      "supports": "windows & x64 & !uwp & !xbox"
     }
   }
 }
