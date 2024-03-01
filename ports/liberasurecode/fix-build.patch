@@ -1,0 +1,23 @@
+diff --git a/Makefile.am b/Makefile.am
+index 6135f2a..e00f58a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,5 +1,5 @@
+ # Top-level liberasurecode automake configuration
+-SUBDIRS = src test doc
++SUBDIRS = src
+ 
+ EXTRA_DIST = autogen.sh get_flags_from_cpuid.c
+ 
+diff --git a/erasurecode.pc.in b/erasurecode.pc.in
+index 148c382..403ab30 100644
+--- a/erasurecode.pc.in
++++ b/erasurecode.pc.in
+@@ -11,5 +11,6 @@ Version: @LIBERASURECODE_VERSION@
+ Requires:
+ Conflicts:
+ Libs: -L${libdir} -lerasurecode -ldl
+-Libs.private: @ERASURECODE_STATIC_LIBS@ -lz
++Libs.private: -lXorcode -lnullcode -lerasurecode_rs_vand
++Requires: zlib
+ Cflags: -I${includedir}/ -I${includedir}/liberasurecode
