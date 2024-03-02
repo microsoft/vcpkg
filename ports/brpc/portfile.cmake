@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-build.patch
         fix-boost-ptr.patch
+        fix-glog.patch
 )
 
 vcpkg_cmake_configure(

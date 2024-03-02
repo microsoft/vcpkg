@@ -1350,7 +1350,7 @@
     },
     "brpc": {
       "baseline": "1.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "brunocodutra-metal": {
       "baseline": "2.1.4",
@@ -2522,7 +2522,7 @@
     },
     "evpp": {
       "baseline": "0.7.0",
-      "port-version": 7
+      "port-version": 8
     },
     "exiv2": {
       "baseline": "0.28.1",
@@ -2754,7 +2754,7 @@
     },
     "folly": {
       "baseline": "2024.01.01.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -4990,7 +4990,7 @@
     },
     "libtorch": {
       "baseline": "2.1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libtorrent": {
       "baseline": "2.0.10",
