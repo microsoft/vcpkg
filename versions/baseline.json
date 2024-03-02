@@ -8426,7 +8426,7 @@
     },
     "taglib": {
       "baseline": "2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "talib": {
       "baseline": "0.4.0",
