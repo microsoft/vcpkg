@@ -10,6 +10,9 @@ vcpkg_from_github(
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
+    OPTIONS
+        "--disable-werror"
 )
 
 vcpkg_install_make()
