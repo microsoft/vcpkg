@@ -1,0 +1,75 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bffe127..12faf51 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,3 +53,33 @@ add_subdirectory(cpp/CPP)
+ if (FLIP_ENABLE_CUDA)
+   add_subdirectory(cpp/CUDA)
+ endif()
++
++include(CMakePackageConfigHelpers)
++
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-flip-config.cmake.in" [=[@PACKAGE_INIT@
++    include(CMakeFindDependencyMacro)
++
++    find_dependency(tinyexr CONFIG REQUIRED)
++
++    include("${CMAKE_CURRENT_LIST_DIR}/unofficial-flip-targets.cmake")
++    check_required_components("@PROJECT_NAME@")
++]=])
++
++configure_package_config_file(
++    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-flip-config.cmake.in"
++    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-flip-config.cmake"
++    INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/unofficial-flip
++)
++
++install(
++    EXPORT      unofficial-flip-targets
++    NAMESPACE   "unofficial::flip::"
++    DESTINATION "${CMAKE_INSTALL_DATADIR}/unofficial-flip"
++)
++
++install(
++    FILES
++        "${CMAKE_CURRENT_BINARY_DIR}/unofficial-flip-config.cmake"
++    DESTINATION
++        "${CMAKE_INSTALL_DATADIR}/unofficial-flip"
++)
+\ No newline at end of file
+diff --git a/cpp/CPP/CMakeLists.txt b/cpp/CPP/CMakeLists.txt
+index ab8e1b0..bddeeb7 100644
+--- a/cpp/CPP/CMakeLists.txt
++++ b/cpp/CPP/CMakeLists.txt
+@@ -46,10 +46,29 @@ PRIVATE
+ )
+ target_include_directories(${PROJECT_NAME}
+   PUBLIC
+-    ${Stb_INCLUDE_DIR}
++    $<BUILD_INTERFACE:${Stb_INCLUDE_DIR}>
++    $<INSTALL_INTERFACE:include>
+ )
+ target_link_libraries(${PROJECT_NAME}
+   PUBLIC
+     unofficial::tinyexr::tinyexr
+ )
+-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++install(TARGETS ${PROJECT_NAME} EXPORT unofficial-flip-targets)
++install(FILES
++    "../common/commandline.h"
++    "../common/filename.h"
++    "../common/mapMagma.h"
++    "../common/mapViridis.h"
++    "../common/pooling.h"
++    "../common/sharedflip.h"
++  DESTINATION
++    "${CMAKE_INSTALL_INCLUDEDIR}/flip/common"
++)
++install(FILES
++    "color.h"
++    "FLIP.h"
++    "image.h"
++    "tensor.h"
++  DESTINATION
++    "${CMAKE_INSTALL_INCLUDEDIR}/flip/CPP"
++)
