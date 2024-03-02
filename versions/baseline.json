@@ -7022,7 +7022,7 @@
     },
     "qt": {
       "baseline": "6.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qt-advanced-docking-system": {
       "baseline": "4.2.1",
