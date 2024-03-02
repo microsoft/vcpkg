@@ -1,12 +1,13 @@
 diff --git a/folly/experimental/symbolizer/Elf.cpp b/folly/experimental/symbolizer/Elf.cpp
-index 6a7f74f..3556dfc 100644
+index 6a7f74f..6546fe0 100644
 --- a/folly/experimental/symbolizer/Elf.cpp
 +++ b/folly/experimental/symbolizer/Elf.cpp
-@@ -19,6 +19,7 @@
- #include <fcntl.h>
- #include <sys/stat.h>
- #include <sys/types.h>
+@@ -49,6 +49,8 @@
+ #define FOLLY_ELF_NATIVE_CLASS __WORDSIZE
+ #endif // __ELF_NATIVE_CLASS
+ 
 +#include <unistd.h>
- #include <cstring>
- #include <string>
++
+ namespace folly {
+ namespace symbolizer {
  
