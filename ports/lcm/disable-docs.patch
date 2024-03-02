@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6d3a4c2..90833e3 100644
+index 926ffac..6903617 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -39,7 +39,6 @@ if(LCM_ENABLE_EXAMPLES)
+@@ -45,7 +45,6 @@ if(LCM_ENABLE_PYTHON)
  endif()
  
  # Documentation (Main, C/C++, .NET)

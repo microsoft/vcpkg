@@ -1,8 +1,8 @@
 diff --git a/cmake/FindGLib2.cmake b/cmake/FindGLib2.cmake
-index 2f1a8be45..db823b953 100644
+index 1b4c5ae..400229e 100644
 --- a/cmake/FindGLib2.cmake
 +++ b/cmake/FindGLib2.cmake
-@@ -14,7 +14,7 @@ function(_glib2_find_include VAR HEADER)
+@@ -18,7 +18,7 @@ function(_glib2_find_include VAR HEADER)
  
    find_path(GLIB2_${VAR}_INCLUDE_DIR ${HEADER}
      PATHS ${_paths}
@@ -11,7 +11,7 @@ index 2f1a8be45..db823b953 100644
    )
    mark_as_advanced(GLIB2_${VAR}_INCLUDE_DIR)
  endfunction()
-@@ -108,6 +108,16 @@ foreach(_glib2_component ${GLib2_FIND_COMPONENTS})
+@@ -115,6 +115,16 @@ foreach(_glib2_component ${GLib2_FIND_COMPONENTS})
  
  endforeach()
  

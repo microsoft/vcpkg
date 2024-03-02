@@ -1,22 +1,23 @@
 diff --git a/lcm/windows/WinPorting.cpp b/lcm/windows/WinPorting.cpp
-index e22acd6..b9c7e69 100644
+index 46a685b..8ea523c 100644
 --- a/lcm/windows/WinPorting.cpp
 +++ b/lcm/windows/WinPorting.cpp
-@@ -1,8 +1,8 @@
- 
+@@ -2,9 +2,9 @@
  #define _WIN32_WINNT 0x0501
+ #include "WinPorting.h"
+ 
 -#include <Mswsock.h>
  #include <stdio.h>
  #include <winsock2.h>
 +#include <Mswsock.h>
  
- #include "WinPorting.h"
+ #include <cstdint>
  
 diff --git a/lcmgen/emit_go.c b/lcmgen/emit_go.c
-index c520044..b5be56a 100644
+index 6cd0890..2ce2a05 100644
 --- a/lcmgen/emit_go.c
 +++ b/lcmgen/emit_go.c
-@@ -6,8 +6,13 @@
+@@ -6,7 +6,11 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
@@ -26,7 +27,5 @@ index c520044..b5be56a 100644
  #include <unistd.h>
 +#endif
  #ifdef WIN32
-+#define F_OK 0
+ #define F_OK 0                /* Test for existence.  */
  #define __STDC_FORMAT_MACROS  // Enable integer types
- #endif
- 
