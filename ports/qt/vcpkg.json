@@ -85,7 +85,7 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
-        "ffmpeg"
+        "gstreamer"
       ],
       "platform": "!windows"
     },
