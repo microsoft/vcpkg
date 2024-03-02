@@ -1,7 +1,7 @@
 {
   "name": "libmad",
   "version": "0.16.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "high-quality MPEG audio decoder",
   "homepage": "http://codeberg.org/tenacityteam/libmad",
   "dependencies": [
@@ -13,5 +13,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "aso": {
+      "description": "Enable CPU architecture-specific optimizations (x86, ARM and MIPS only)",
+      "supports": "x86 | x64 | arm"
+    }
+  }
 }
