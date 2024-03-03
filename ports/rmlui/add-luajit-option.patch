@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9a18c4de..0d1f1da9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -156,11 +156,17 @@ if(NOT IOS)
+ endif(NOT IOS)
+ 
+ option(BUILD_LUA_BINDINGS "Build Lua bindings" OFF)
++option(BUILD_LUAJIT_BINDINGS "Build Lua(JIT) bindings" OFF)
+ 
+ if (BUILD_LUA_BINDINGS)
+ 	option(BUILD_LUA_BINDINGS_FOR_LUAJIT "Build Lua bindings using luajit" OFF)
+ endif()
+ 
++if (BUILD_LUAJIT_BINDINGS)
++	set(BUILD_LUA_BINDINGS ON CACHE BOOL "Build Lua bindings")
++	set(BUILD_LUA_BINDINGS_FOR_LUAJIT ON CACHE BOOL "Build Lua bindings using luajit")
++endif ()
++
+ if(APPLE)
+ 	option(BUILD_FRAMEWORK "Build Framework bundle for OSX" OFF)
+ endif()

@@ -6,13 +6,13 @@ vcpkg_from_github(
 	HEAD_REF master
 	PATCHES
 		add-robin-hood.patch
+		add-luajit-option.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 	FEATURES 
 		lua             BUILD_LUA_BINDINGS
-		luajit          BUILD_LUA_BINDINGS
-		luajit          BUILD_LUA_BINDINGS_FOR_LUAJIT
+		luajit          BUILD_LUAJIT_BINDINGS
 	INVERTED_FEATURES
 		freetype        NO_FONT_INTERFACE_DEFAULT
 )
