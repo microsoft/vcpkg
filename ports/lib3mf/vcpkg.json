@@ -1,0 +1,13 @@
+{
+  "name": "lib3mf",
+  "version": "2.3.0",
+  "homepage": "https://github.com/3MFConsortium/lib3mf",
+  "description": "lib3mf is an implementation of the 3D Manufacturing Format file standard",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
