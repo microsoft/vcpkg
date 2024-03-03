@@ -35,6 +35,12 @@
       "dependencies": [
         "lua"
       ]
+    },
+    "luajit": {
+      "description": "Build Lua(JIT) bindings",
+      "dependencies": [
+        "luajit"
+      ]
     }
   }
 }

@@ -11,6 +11,8 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 	FEATURES 
 		lua             BUILD_LUA_BINDINGS
+		luajit          BUILD_LUA_BINDINGS
+		luajit          BUILD_LUA_BINDINGS_FOR_LUAJIT
 	INVERTED_FEATURES
 		freetype        NO_FONT_INTERFACE_DEFAULT
 )
