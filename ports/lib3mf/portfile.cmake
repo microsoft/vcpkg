@@ -13,6 +13,12 @@ vcpkg_execute_required_process(
     LOGNAME git-clone
 )
 
+vcpkg_execute_required_process(
+    COMMAND git --version
+    WORKING_DIRECTORY ${SOURCE_PATH}
+    LOGNAME git-version
+)
+
 # Checkout the specific commit
 vcpkg_execute_required_process(
     COMMAND git checkout 0b212ba3de1fb2abf44e1a345fe3d4496c2f3622
@@ -35,7 +41,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/")
 
 foreach(_file IN ITEMS ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lib3mf.pc ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lib3mf.pc)
     file(READ "${_file}" _contents)
