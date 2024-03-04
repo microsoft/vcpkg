@@ -1,0 +1,30 @@
+get_filename_component(_vcpkg_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_vcpkg_root "${_vcpkg_root}" PATH)
+get_filename_component(_vcpkg_root "${_vcpkg_root}" PATH)
+
+
+add_library(AMD::RDF SHARED IMPORTED)
+
+if(@cxx@)
+    set(_interface_lang "CXX")
+    set_property(TARGET AMD::RDF APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS RDF_CXX_BINDINGS=1)
+else()
+    set(_interface_lang "C")
+endif()
+
+set_property(TARGET AMD::RDF APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS @rdf_platform@=1)
+
+set_target_properties(AMD::RDF PROPERTIES
+    IMPORTED_LOCATION_RELEASE            "${_vcpkg_root}/@dll_dir@/@dll_name@"
+    IMPORTED_LOCATION_DEBUG              "${_vcpkg_root}/@dll_dir@/@dll_name"
+    IMPORTED_IMPLIB_RELEASE              "${_vcpkg_root}/lib/@lib_name@"
+    IMPORTED_IMPLIB_DEBUG                "${_vcpkg_root}/lib/@lib_name@"
+    IMPORTED_SONAME_RELEASE              "@lib_name@"
+    IMPORTED_SONAME_DEBUG                "@lib_name@"
+    INTERFACE_INCLUDE_DIRECTORIES        "${_vcpkg_root}/include"
+    IMPORTED_CONFIGURATIONS              "Debug;Release"
+    IMPORTED_LINK_INTERFACE_LANGUAGES    "${_interface_lang}")
+
+
+unset(_vcpkg_root)
+unset(_interface_lang)
