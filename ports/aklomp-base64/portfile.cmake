@@ -19,4 +19,9 @@ vcpkg_cmake_config_fixup(
 	CONFIG_PATH "lib/cmake/base64"
 )
 
+vcpkg_copy_tools(
+	TOOL_NAMES base64
+	AUTO_CLEAN
+)
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
