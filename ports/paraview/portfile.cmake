@@ -56,6 +56,7 @@ vcpkg_from_github(
     PATCHES
         ${ext_vtk_patch_copy}
         add-tools-option.patch
+        fix-build.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
