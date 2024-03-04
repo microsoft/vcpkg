@@ -94,6 +94,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelDIY2
         "paraview"    VTK_MODULE_ENABLE_VTK_cli11
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersOpenTURNS
+        "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelVerdict
         "paraview"    VTK_MODULE_ENABLE_VTK_IOOMF
         "paraview"    VTK_MODULE_ENABLE_VTK_IOPIO
         "mpi"         VTK_GROUP_ENABLE_MPI
@@ -209,6 +210,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        --trace-expand
         ${FEATURE_OPTIONS}
         ${VTK_FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
