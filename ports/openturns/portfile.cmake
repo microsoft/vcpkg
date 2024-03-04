@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
       link-gmp.patch
       reorder-mpc.patch
+      fix-dep.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
