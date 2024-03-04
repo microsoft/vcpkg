@@ -12,8 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-fix-vcxproj-vcpkg.patch
-        003-fix-imgui-path.patch
-        005-fix-imgui-path-legacy.patch
+        002-use-internal-imgui.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

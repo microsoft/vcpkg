@@ -1,7 +1,7 @@
 {
   "name": "zstd",
   "version": "1.5.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Zstandard - Fast real-time compression algorithm",
   "homepage": "https://facebook.github.io/zstd/",
   "license": "BSD-3-Clause OR GPL-2.0-only",
@@ -18,7 +18,7 @@
   "features": {
     "tools": {
       "description": "Build zstd binary",
-      "supports": "!uwp"
+      "supports": "!uwp & static"
     }
   }
 }

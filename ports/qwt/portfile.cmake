@@ -1,17 +1,17 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://git.code.sf.net/p/qwt/git"
-    REF "06d6822b595b70c9fd567a4fe0d835759bf271fe"
+    REF "907846e0e981b216349156ee83b13208faae2934"
     FETCH_REF qwt-6.2
-    PATCHES 
+    PATCHES
         config.patch
         fix_dll_install.patch
 )
 
-string(COMPARE EQUAL  "${VCPKG_LIBRARY_LINKAGE}" "dynamic" IS_DYNAMIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" IS_DYNAMIC)
 set(OPTIONS "")
 if(IS_DYNAMIC)
-    set(OPTIONS "QWT_CONFIG+=QwtDll")
+    list(APPEND OPTIONS "QWT_CONFIG+=QwtDll")
 endif()
 vcpkg_qmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -28,5 +28,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-qwt-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-qwt")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

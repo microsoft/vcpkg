@@ -1,13 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO docopt/docopt.cpp
-    REF 7476f8e56b4650aaeafb4e1cda2e5d8f01fddd97
-    SHA512 6765e8a3a834ad75bd87effee5ac7e174482039d26015346b95d7d64e4e0097cc3f1f2e6fd9e3e5970bf4c5719095c0a3e5edfac18217913dc88fbe569d37ae8
+    REF 400e6dd8e59196c914dcc2c56caf7dae7efa5eb3
+    SHA512 a9ef466ba40127f636bc20beb7508c4da2dc32c0c37acb5729644f31d4910d9c0253f311457f39ed57605775e72f3370aff4e5ef88e60a49d190bc4760c40ea3
     HEAD_REF master
-    PATCHES
-        001-fix-unresolved-symbol.patch
-        002-fix-install-path.patch
-        install-one-flavor.patch
 )
 
 vcpkg_cmake_configure(
@@ -21,6 +17,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/docopt)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
@@ -36,8 +33,6 @@ file(COPY
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/docopt")
 
 # Handle copyright
-file(INSTALL
-    "${SOURCE_PATH}/LICENSE-MIT"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/docopt" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE-MIT" "${SOURCE_PATH}/LICENSE-Boost-1.0")
 
 vcpkg_copy_pdbs()

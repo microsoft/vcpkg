@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FFmpeg/nv-codec-headers
-    REF n${VERSION}
-    SHA512 c08b7b3d08ef6e95819268067e09c588e5064d4c2320554f868579e96dc841e1eab217c03ef44e246aabdfa8b5e8e267cd5f0726f9c959f45fb27cb79af7c454
+    REF "n${VERSION}"
+    SHA512 386e4e1e0606a5ebd95c0ca60a2cdbadd1e24ac64df65f707dd00ee1fc822f56535637eaf4a375dd25f2f91fb00ffabb95953a1bab9fc101d1c522e2954f37c0
     HEAD_REF master
 )
 

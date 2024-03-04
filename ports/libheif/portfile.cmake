@@ -2,10 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif 
     REF "v${VERSION}"
-    SHA512 1b88197c23f19f1f877e19242a47f6e1e6dcfe60a92c0a58b64ca555cc39111c14fe592ef9d287ca383da2fc33fd5e41f21e0e0bc20b9cc668bd6b99b26aadc8
+    SHA512 e8f7a9d8d7af1947e9ca43e8387fc082551c884bb66fef7484c82748f3b81524efa7a2988f31d059a85a10539ff42bd3125b0f066f7b8b652bd9450737b2bc89
     HEAD_REF master
     PATCHES
         gdk-pixbuf.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+	FEATURES
+		hevc    WITH_X265
 )
 
 vcpkg_cmake_configure(
@@ -14,6 +19,7 @@ vcpkg_cmake_configure(
         -DWITH_EXAMPLES=OFF
         -DWITH_DAV1D=OFF
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+        ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

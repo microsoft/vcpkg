@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/ncnn
-    REF 20221128
-    SHA512 589e52b63eabfac1f8e47acc34bef6a87ce365851a5c4d551665c321938a2d8e622ab211babac38771695b9f4443516577ba1634409a55c2436498a7d28d8218
+    REF "${VERSION}"
+    SHA512 31bc3c2f461a00241fb8f69ca6ea8cc590af6618856b1b84a048bde924e4b474fd883ad5d54dbfbdd1e5b59015889e15ffc4fbafccb3e42e052a02071f2017b1
     HEAD_REF master
+    PATCHES
+        fix_uwp.patch #https://github.com/Tencent/ncnn/pull/5328
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
@@ -26,4 +28,4 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

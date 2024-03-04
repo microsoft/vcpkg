@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 6b87c805907a2f7c98f40e987fb6ebf769f8519f5d8a8b7393bed62a41cee1118bb32d2bc4d23fd464973e237077d08771ff85f72073caa57799d71bd098038f
+    SHA512 8399d66a757297d646e0d9ce363cfc88a8f7b06d69582857093f13a0a398fc027ea68bf1a97f039320f3fe512c96b4e3ed084295da12359e7574ba460336ce10
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -40,7 +40,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libheif     USE_LIBHEIF
         pybind11    USE_PYTHON
         tools       OIIO_BUILD_TOOLS
-        tools       USE_QT
+        viewer      ENABLE_IV
 )
 
 vcpkg_cmake_configure(
@@ -75,7 +75,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
-        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool iv
+        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool
+        AUTO_CLEAN
+    )
+endif()
+
+if("viewer" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES iv
         AUTO_CLEAN
     )
 endif()

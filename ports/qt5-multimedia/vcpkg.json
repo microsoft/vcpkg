@@ -1,7 +1,6 @@
 {
   "name": "qt5-multimedia",
-  "version": "5.15.11",
-  "port-version": 1,
+  "version": "5.15.12",
   "description": "Qt5 Multimedia Module - Classes and widgets for audio, video, radio and camera functionality",
   "license": null,
   "dependencies": [

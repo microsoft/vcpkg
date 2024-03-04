@@ -1,7 +1,6 @@
 {
   "name": "winsparkle",
-  "version": "0.7.0",
-  "port-version": 2,
+  "version": "0.8.1",
   "description": "WinSparkle is an easy-to-use software update library for Windows developers.",
   "homepage": "https://winsparkle.org",
   "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "qt5-serialbus",
-  "version": "5.15.11",
+  "version": "5.15.12",
   "description": "Qt5 Serialbus Module;",
   "license": null,
   "dependencies": [

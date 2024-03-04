@@ -1,7 +1,7 @@
 {
+  "$comment": "NOTE: All changes made to this file will get overwritten by the next port release. Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp.",
   "name": "azure-identity-cpp",
-  "version-semver": "1.5.1",
-  "port-version": 1,
+  "version-semver": "1.6.0",
   "description": [
     "Microsoft Azure Identity SDK for C++",
     "This library provides common authentication-related abstractions for Azure SDK."
@@ -14,7 +14,10 @@
       "default-features": false,
       "version>=": "1.9.0"
     },
-    "openssl",
+    {
+      "name": "openssl",
+      "platform": "!windows & !uwp"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -22,6 +25,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "wil",
+      "platform": "windows & !uwp"
     }
   ]
 }

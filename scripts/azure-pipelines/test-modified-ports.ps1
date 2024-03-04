@@ -71,10 +71,9 @@ if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
     $BinarySourceStub = "files,$ArchivesRoot"
 }
 
-$env:VCPKG_DOWNLOADS = Join-Path $WorkingRoot 'downloads'
-$buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
+$buildtreesRoot = Join-Path $WorkingRoot 'b'
 $installRoot = Join-Path $WorkingRoot 'installed'
-$packagesRoot = Join-Path $WorkingRoot 'packages'
+$packagesRoot = Join-Path $WorkingRoot 'p'
 
 $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
@@ -109,7 +108,7 @@ if ($IsLinuxHost) {
     $env:HOME = '/home/agent'
     $executableExtension = [string]::Empty
 }
-elseif ($Triplet -eq 'x64-osx') {
+elseif ($Triplet -eq 'x64-osx' -or $Triplet -eq 'arm64-osx') {
     $executableExtension = [string]::Empty
 }
 else {

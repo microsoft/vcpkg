@@ -11,17 +11,6 @@ index 47d8769..46a5c9b 100644
        set(FFMPEG_DEFINITIONS  ${FFMPEG_DEFINITIONS}  ${${_component}_DEFINITIONS})
  
        list(APPEND FFMPEG_INCLUDE_DIRS ${${_component}_INCLUDE_DIRS})
-@@ -240,8 +240,8 @@ endfunction()
-         set_target_properties(FFmpeg::${_lowerComponent} PROPERTIES
-             INTERFACE_COMPILE_OPTIONS "${${_component}_DEFINITIONS}"
-             INTERFACE_INCLUDE_DIRECTORIES ${${_component}_INCLUDE_DIRS}
--            INTERFACE_LINK_LIBRARIES "${${_component}_LIBRARIES}"
--            INTERFACE_LINK_DIRECTORIES "${${_component}_LIBRARY_DIRS}"
-+            IMPORTED_LOCATION "${${_component}_LIBRARY}"
-+            #INTERFACE_LINK_DIRECTORIES "${${_component}_LIBRARY_DIRS}"
-         )
-         if(__ffmpeg_is_static)
-             __ffmpeg_internal_set_dependencies(${_lowerComponent})
 @@ -250,6 +250,9 @@ endfunction()
          if (UNIX AND NOT APPLE)
            target_link_options(FFmpeg::${_lowerComponent} INTERFACE  "-Wl,--exclude-libs=lib${_lowerComponent}")

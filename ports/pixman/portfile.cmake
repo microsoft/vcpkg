@@ -46,8 +46,8 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.freedesktop.org
     REPO pixman/pixman
-    REF  37216a32839f59e8dcaa4c3951b3fcfc3f07852c # 0.42.2
-    SHA512 b010b2c698ebc95f8a8566c915ccfb81a82c08f0ccda8b11ddff4818eae4b51b103021d5bae9f3d3bd20bf494433f5fcc6b76188226fe336919b0b347cdcb828
+    REF  91b8526c1eeb2b45c21f091e890cb74cf6989ff6 # 0.43.2
+    SHA512 cd4ea905a2287ae1ec25720ac90a72b2812dfeb6a5a82e3bbfcfeba91461229cde61b8bc6a5dfe5711f6b2937b3d3d4ade2b0c9a0290880c7d0cc4859344b542
     PATCHES
         no-host-cpu-checks.patch
         fix_clang-cl.patch
@@ -58,6 +58,8 @@ vcpkg_from_gitlab(
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${OPTIONS}
+        -Ddemos=disabled
+        -Dgtk=disabled
         -Dlibpng=enabled
         -Dtests=disabled
 )
@@ -69,3 +71,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME readme.txt)
