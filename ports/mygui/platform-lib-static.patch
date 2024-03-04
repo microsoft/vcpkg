@@ -1,0 +1,91 @@
+diff --git a/Platforms/DirectX/DirectXPlatform/CMakeLists.txt b/Platforms/DirectX/DirectXPlatform/CMakeLists.txt
+index 169a2afe4..2ea45af2b 100644
+--- a/Platforms/DirectX/DirectXPlatform/CMakeLists.txt
++++ b/Platforms/DirectX/DirectXPlatform/CMakeLists.txt
+@@ -9,7 +9,7 @@ include_directories(
+ 
+ include(${PROJECTNAME}.list)
+ 
+-add_library(${PROJECTNAME} ${HEADER_FILES} ${SOURCE_FILES})
++add_library(${PROJECTNAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
+ 
+ add_dependencies(${PROJECTNAME} MyGUIEngine)
+ 
+diff --git a/Platforms/DirectX11/DirectX11Platform/CMakeLists.txt b/Platforms/DirectX11/DirectX11Platform/CMakeLists.txt
+index 251fcdbe3..16d4f33a5 100644
+--- a/Platforms/DirectX11/DirectX11Platform/CMakeLists.txt
++++ b/Platforms/DirectX11/DirectX11Platform/CMakeLists.txt
+@@ -9,7 +9,7 @@ include_directories(
+ 
+ include(${PROJECTNAME}.list)
+ 
+-add_library(${PROJECTNAME} ${HEADER_FILES} ${SOURCE_FILES})
++add_library(${PROJECTNAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
+ 
+ add_dependencies(${PROJECTNAME} MyGUIEngine)
+ 
+diff --git a/Platforms/Dummy/DummyPlatform/CMakeLists.txt b/Platforms/Dummy/DummyPlatform/CMakeLists.txt
+index 1055694f2..625391132 100644
+--- a/Platforms/Dummy/DummyPlatform/CMakeLists.txt
++++ b/Platforms/Dummy/DummyPlatform/CMakeLists.txt
+@@ -8,7 +8,7 @@ include_directories(
+ 
+ include(${PROJECTNAME}.list)
+ 
+-add_library(${PROJECTNAME} ${HEADER_FILES} ${SOURCE_FILES})
++add_library(${PROJECTNAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
+ 
+ add_dependencies(${PROJECTNAME} MyGUIEngine)
+ 
+diff --git a/Platforms/Ogre/OgrePlatform/CMakeLists.txt b/Platforms/Ogre/OgrePlatform/CMakeLists.txt
+index a151abcf8..23f8a2373 100644
+--- a/Platforms/Ogre/OgrePlatform/CMakeLists.txt
++++ b/Platforms/Ogre/OgrePlatform/CMakeLists.txt
+@@ -8,7 +8,7 @@ include_directories(
+ 
+ include(${PROJECTNAME}.list)
+ 
+-add_library(${PROJECTNAME} ${HEADER_FILES} ${SOURCE_FILES})
++add_library(${PROJECTNAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
+ 
+ add_dependencies(${PROJECTNAME} MyGUIEngine)
+ 
+diff --git a/Platforms/OpenGL/OpenGLPlatform/CMakeLists.txt b/Platforms/OpenGL/OpenGLPlatform/CMakeLists.txt
+index 0d58d3d71..78eaf0267 100644
+--- a/Platforms/OpenGL/OpenGLPlatform/CMakeLists.txt
++++ b/Platforms/OpenGL/OpenGLPlatform/CMakeLists.txt
+@@ -19,7 +19,7 @@ if (NOT MYGUI_USE_SYSTEM_GLEW)
+ endif ()
+ add_definitions(-DGL_GLEXT_PROTOTYPES)
+ 
+-add_library(${PROJECTNAME} ${HEADER_FILES} ${SOURCE_FILES})
++add_library(${PROJECTNAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
+ 
+ add_dependencies(${PROJECTNAME} MyGUIEngine)
+ 
+diff --git a/Platforms/OpenGL3/OpenGL3Platform/CMakeLists.txt b/Platforms/OpenGL3/OpenGL3Platform/CMakeLists.txt
+index 27d96da3e..4dcee1601 100644
+--- a/Platforms/OpenGL3/OpenGL3Platform/CMakeLists.txt
++++ b/Platforms/OpenGL3/OpenGL3Platform/CMakeLists.txt
+@@ -19,7 +19,7 @@ if (NOT MYGUI_USE_SYSTEM_GLEW)
+ endif ()
+ add_definitions(-DGL_GLEXT_PROTOTYPES)
+ 
+-add_library(${PROJECTNAME} ${HEADER_FILES} ${SOURCE_FILES})
++add_library(${PROJECTNAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
+ 
+ add_dependencies(${PROJECTNAME} MyGUIEngine)
+ 
+diff --git a/Platforms/OpenGLES/OpenGLESPlatform/CMakeLists.txt b/Platforms/OpenGLES/OpenGLESPlatform/CMakeLists.txt
+index bd6d9657b..ad31fc158 100644
+--- a/Platforms/OpenGLES/OpenGLESPlatform/CMakeLists.txt
++++ b/Platforms/OpenGLES/OpenGLESPlatform/CMakeLists.txt
+@@ -9,7 +9,7 @@ include_directories(
+ 
+ include(${PROJECTNAME}.list)
+ add_definitions(-DGL_GLEXT_PROTOTYPES)
+-add_library(${PROJECTNAME} ${HEADER_FILES} ${SOURCE_FILES})
++add_library(${PROJECTNAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
+ 
+ add_dependencies(${PROJECTNAME} MyGUIEngine)
+ 
