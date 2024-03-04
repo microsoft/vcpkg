@@ -61,8 +61,6 @@ function(z_vcpkg_calculate_corrected_rpath)
 endfunction()
 
 function(z_vcpkg_fixup_rpath_in_dir)
-    vcpkg_find_acquire_program(PATCHELF)
-
     # We need to iterate trough everything because we
     # can't predict where an elf file will be located
     file(GLOB root_entries LIST_DIRECTORIES TRUE "${CURRENT_PACKAGES_DIR}/*")
@@ -91,6 +89,8 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 continue()
             endif()
 
+            vcpkg_find_acquire_program(PATCHELF) # Note that this relies on vcpkg_find_acquire_program short
+                                                 # circuiting after the first run
             # If this fails, the file is not an elf
             execute_process(
                 COMMAND "${PATCHELF}" --print-rpath "${elf_file}"
