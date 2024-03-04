@@ -29,6 +29,9 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 endblock()
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/eigen3/Eigen3Config.cmake" "if (NOT TARGET eigen)" "if (NOT TARGET Eigen3::Eigen)")
+
+
 if(NOT VCPKG_BUILD_TYPE)
     file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/eigen3.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 endif()
