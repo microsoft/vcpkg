@@ -1,0 +1,27 @@
+diff --git a/lib/cmake/windows-mingw.cmake b/lib/cmake/windows-mingw.cmake
+index 3e34dbbb..ea0b025c 100644
+--- a/lib/cmake/windows-mingw.cmake
++++ b/lib/cmake/windows-mingw.cmake
+@@ -122,7 +122,7 @@ install(FILES
+   ${IMB_HDR}
+   ${SRC_DEF_FILE}
+   DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_NAME})
+-if(BUILD_SHARED_LIBS)
++if(0)
+   install(FILES
+     $<TARGET_FILE_DIR:${LIB}>/lib${LIB}.dll
+     DESTINATION $ENV{WINDIR}/system32)
+diff --git a/lib/cmake/windows.cmake b/lib/cmake/windows.cmake
+index f4760f52..70128a8e 100644
+--- a/lib/cmake/windows.cmake
++++ b/lib/cmake/windows.cmake
+@@ -116,9 +116,6 @@ if(BUILD_SHARED_LIBS)
+     $<TARGET_FILE_DIR:${LIB}>/${LIB}.exp
+     $<TARGET_FILE_DIR:${LIB}>/${LIB}.pdb
+     DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_NAME})
+-  install(FILES
+-    $<TARGET_FILE_DIR:${LIB}>/${LIB}.dll
+-    DESTINATION $ENV{WINDIR}/system32)
+ endif()
+ 
+ 

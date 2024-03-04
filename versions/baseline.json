@@ -3609,7 +3609,7 @@
       "port-version": 0
     },
     "intel-ipsec": {
-      "baseline": "1.1",
+      "baseline": "1.5",
       "port-version": 0
     },
     "intel-mkl": {
