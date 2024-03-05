@@ -1,12 +1,8 @@
-# This port needs to be updated at the same time as mongo-c-driver
-
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
     REF "${VERSION}"
-    SHA512 e0f15a8a45ff156136251f1a0e5d0cc2b0253ba9dbf062a6eaef73e02c3b7999d3af31a9eb2ebf2c141e5b2367e356b3ea56b8eb083a5097d88f81bbc4f0be23
+    SHA512 3ad7ad67284b8900432c8df6b00a96bb8ee265a0d8bdf689d7ab48a0949fd14f69deff30c6db86d39f9a1729e4884d8e91eb2d21dfc5172a3edb3d950df432fd
     HEAD_REF master
     PATCHES
         fix-include-directory.patch # vcpkg legacy decision
@@ -24,6 +20,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE # because it writes the file VERSION_CURRENT in the source directory
     OPTIONS
         "-DBUILD_VERSION=${VERSION}"
         -DENABLE_BSON=ON
@@ -40,6 +37,8 @@ vcpkg_cmake_configure(
         -DENABLE_UNINSTALL=OFF
         -DENABLE_ZLIB=SYSTEM
         -DENABLE_ZSTD=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python3=ON
     MAYBE_UNUSED_VARIABLES
         ENABLE_ICU
 )

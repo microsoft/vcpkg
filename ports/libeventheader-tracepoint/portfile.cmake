@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "microsoft/LinuxTracepoints"
     REF "v${VERSION}"
-    SHA512 3ef4881b66c8990afe3aab844f4e5b9dcc98b67f954027ffe60f2b868a0501f04d6bb0747021b4ffff2e984987028d641975215b7ab32d0fd710171385f0f030
+    SHA512 d2126bb8e89c952630e22d66f0c9f2be7e46debd8f8dbc27f3a886af77cf4c1d9c3efcf3b7cae886feacfb9fe142355b26a3fb468c9b3582d65eb16f4dc6c288
     HEAD_REF main)
 
 vcpkg_cmake_configure(

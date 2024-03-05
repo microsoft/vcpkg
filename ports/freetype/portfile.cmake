@@ -1,17 +1,14 @@
-set(FT_VERSION 2.12.1)
-
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO freetype/freetype2
-    REF ${FT_VERSION}
-    FILENAME freetype-${FT_VERSION}.tar.xz
-    SHA512 6482de1748dc2cc01e033d21a3b492dadb1f039d13d9179685fdcf985e24d7f587cbca4c27ed8a7fdb7d9ad59612642ac5f4db062443154753295363f45c052f
+    REF "${VERSION}"
+    FILENAME freetype-${VERSION}.tar.xz
+    SHA512 a5917edaa45cb9f75786f8a4f9d12fdf07529247e09dfdb6c0cf7feb08f7588bb24f7b5b11425fb47f8fd62fcb426e731c944658f6d5a59ce4458ad5b0a50194
     PATCHES
         0003-Fix-UWP.patch
         brotli-static.patch
         bzip2.patch
         fix-exports.patch
-        error-strings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -73,6 +70,14 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+  set(dll_linkage 1)
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(dll_linkage 0)
+  endif()
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freetype/config/public-macros.h" "#elif defined( DLL_IMPORT )" "#elif ${dll_linkage}")
+endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)

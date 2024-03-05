@@ -1,0 +1,50 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9924a74..08e3cbe 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.1)
++cmake_minimum_required(VERSION 3.5)
+ project(apriltag VERSION 3.3.0 LANGUAGES C CXX)
+ 
+ if(POLICY CMP0077)
+@@ -39,6 +39,9 @@ endif()
+ aux_source_directory(common COMMON_SRC)
+ set(APRILTAG_SRCS apriltag.c apriltag_pose.c apriltag_quad_thresh.c)
+ 
++if (MSVC)
++  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++endif()
+ # Library
+ file(GLOB TAG_FILES ${CMAKE_CURRENT_SOURCE_DIR}/tag*.c)
+ add_library(${PROJECT_NAME} ${APRILTAG_SRCS} ${COMMON_SRC} ${TAG_FILES})
+@@ -98,6 +101,7 @@ write_basic_package_version_file("${version_config}" COMPATIBILITY SameMajorVers
+ install(TARGETS ${PROJECT_NAME} EXPORT ${targets_export_name}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         )
+ 
+ install(EXPORT ${targets_export_name}
+@@ -120,7 +124,7 @@ install(FILES "${PROJECT_BINARY_DIR}/apriltag.pc" DESTINATION "${CMAKE_INSTALL_L
+ 
+ # Python wrapper
+ include(CMakeDependentOption)
+-cmake_dependent_option(BUILD_PYTHON_WRAPPER "Builds Python wrapper" ON BUILD_SHARED_LIBS OFF)
++option(BUILD_PYTHON_WRAPPER "Builds Python wrapper" OFF)
+ 
+ if(BUILD_PYTHON_WRAPPER)
+     SET(Python_ADDITIONAL_VERSIONS 3)
+@@ -158,6 +162,7 @@ string(STRIP ${PY_DEST} PY_DEST)
+ install(FILES ${PROJECT_BINARY_DIR}/apriltag${PY_EXT_SUFFIX} DESTINATION ${PY_DEST})
+ endif (NOT Python3_NOT_FOUND AND NOT Numpy_NOT_FOUND AND PYTHONLIBS_FOUND AND BUILD_PYTHON_WRAPPER)
+ 
++if(0)
+ # Examples
+ # apriltag_demo
+ add_executable(apriltag_demo example/apriltag_demo.c)
+@@ -177,3 +182,4 @@ endif(OpenCV_FOUND)
+ 
+ # install example programs
+ install(TARGETS apriltag_demo RUNTIME DESTINATION bin)
++endif()

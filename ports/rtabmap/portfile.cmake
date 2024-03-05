@@ -3,11 +3,10 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
-    REF 0.21.0
-    SHA512 47fa00e760cd9089d42dc27cc0120f2dc2ad4b32b6a05e87fb5320fd6fe3971e68958984714895640989543be9252fd0fb96ccebf0d00d70afbad224022a7a53
+    REF 0.21.4
+    SHA512 dedc1ed54560db4d61ca4595d5d90b963da8f3865e9caa58df5b6a1f74b7dfaa59f264c1b71a73f7e0bb3e7791d0cec67eeca8bd52416094f3c87c110b7b8549
     HEAD_REF master
     PATCHES
-        fix_autouic.patch
         fix_link.patch
 )
 
