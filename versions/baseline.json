@@ -4553,8 +4553,8 @@
       "port-version": 1
     },
     "liblo": {
-      "baseline": "0.31",
-      "port-version": 4
+      "baseline": "0.32",
+      "port-version": 0
     },
     "liblrc": {
       "baseline": "1.0.0",
