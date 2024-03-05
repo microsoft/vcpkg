@@ -2201,7 +2201,7 @@
       "port-version": 11
     },
     "dimcli": {
-      "baseline": "7.1.0",
+      "baseline": "7.2.0",
       "port-version": 0
     },
     "directx-dxc": {
