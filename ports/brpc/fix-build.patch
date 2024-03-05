@@ -1,8 +1,30 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 71838043..82b742d8 100644
+index 71838043..1ecb9aeb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -153,11 +153,15 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+@@ -83,8 +83,11 @@ configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/src/butil
+ 
+ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+ 
+-find_package(GFLAGS REQUIRED)
++set(GFLAGS_USE_TARGET_NAMESPACE ON)
++find_package(gflags CONFIG REQUIRED)
++set(GFLAGS_LIBRARY gflags::gflags)
+ 
++if(0)
+ execute_process(
+     COMMAND bash -c "grep \"namespace [_A-Za-z0-9]\\+ {\" ${GFLAGS_INCLUDE_PATH}/gflags/gflags_declare.h | head -1 | awk '{print $2}' | tr -d '\n'"
+     OUTPUT_VARIABLE GFLAGS_NS
+@@ -95,6 +98,8 @@ if(${GFLAGS_NS} STREQUAL "GFLAGS_NAMESPACE")
+         OUTPUT_VARIABLE GFLAGS_NS
+     )
+ endif()
++endif()
++set(GFLAGS_NS "google")
+ 
+ include_directories(
+     ${PROJECT_SOURCE_DIR}/src
+@@ -153,11 +158,15 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
      endif()
  endif()
  
@@ -20,7 +42,7 @@ index 71838043..82b742d8 100644
  if ((NOT LEVELDB_INCLUDE_PATH) OR (NOT LEVELDB_LIB))
      message(FATAL_ERROR "Fail to find leveldb")
  endif()
-@@ -172,8 +176,9 @@ if(WITH_SNAPPY)
+@@ -172,8 +181,9 @@ if(WITH_SNAPPY)
  endif()
  
  if(WITH_GLOG)
@@ -32,7 +54,7 @@ index 71838043..82b742d8 100644
      if((NOT GLOG_INCLUDE_PATH) OR (NOT GLOG_LIB))
          message(FATAL_ERROR "Fail to find glog")
      endif()
-@@ -200,7 +205,7 @@ if(WITH_RDMA)
+@@ -200,7 +210,7 @@ if(WITH_RDMA)
      endif()
  endif()
  
@@ -41,7 +63,7 @@ index 71838043..82b742d8 100644
  if(NOT PROTOC_LIB)
      message(FATAL_ERROR "Fail to find protoc lib")
  endif()
-@@ -211,7 +216,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+@@ -211,7 +221,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
          )
  endif()
  
@@ -50,7 +72,7 @@ index 71838043..82b742d8 100644
  
  include_directories(
          ${GFLAGS_INCLUDE_PATH}
-@@ -226,10 +231,11 @@ set(DYNAMIC_LIB
+@@ -226,10 +236,11 @@ set(DYNAMIC_LIB
      ${LEVELDB_LIB}
      ${PROTOC_LIB}
      ${CMAKE_THREAD_LIBS_INIT}
@@ -64,7 +86,7 @@ index 71838043..82b742d8 100644
  
  if(WITH_MESALINK)
      list(APPEND DYNAMIC_LIB ${MESALINK_LIB})
-@@ -462,6 +468,7 @@ compile_proto(PROTO_HDRS PROTO_SRCS ${PROJECT_BINARY_DIR}
+@@ -462,6 +473,7 @@ compile_proto(PROTO_HDRS PROTO_SRCS ${PROJECT_BINARY_DIR}
                                      ${PROJECT_SOURCE_DIR}/src
                                      "${PROTO_FILES}")
  add_library(PROTO_LIB OBJECT ${PROTO_SRCS} ${PROTO_HDRS})
@@ -72,23 +94,8 @@ index 71838043..82b742d8 100644
  
  set(SOURCES
      ${BVAR_SOURCES}
-diff --git a/cmake/FindGFLAGS.cmake b/cmake/FindGFLAGS.cmake
-index dfad5fd8..8423d55a 100644
---- a/cmake/FindGFLAGS.cmake
-+++ b/cmake/FindGFLAGS.cmake
-@@ -24,7 +24,9 @@ if (GFLAGS_STATIC)
-     set(CMAKE_FIND_LIBRARY_SUFFIXES .a ${CMAKE_FIND_LIBRARY_SUFFIXES})
-   endif (WIN32)
- endif (GFLAGS_STATIC)
--find_library(GFLAGS_LIBRARY NAMES gflags libgflags)
-+find_package(gflags CONFIG REQUIRED)
-+set(GFLAGS_LIBRARY gflags::gflags)
-+get_target_property(GFLAGS_INCLUDE_PATH gflags::gflags INTERFACE_INCLUDE_DIRECTORIES)
- if(GFLAGS_INCLUDE_PATH AND GFLAGS_LIBRARY)
-   set(GFLAGS_FOUND TRUE)
- endif(GFLAGS_INCLUDE_PATH AND GFLAGS_LIBRARY)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 1b4b2332..b2251a4d 100644
+index 1b4b2332..79accff2 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -24,13 +24,16 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
