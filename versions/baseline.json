@@ -4350,7 +4350,7 @@
     },
     "libflac": {
       "baseline": "1.4.3",
-      "port-version": 1
+      "port-version": 2
     },
     "libfontenc": {
       "baseline": "1.1.4",
