@@ -1334,7 +1334,7 @@
     },
     "braft": {
       "baseline": "2021-26-04",
-      "port-version": 1
+      "port-version": 2
     },
     "breakpad": {
       "baseline": "2023-01-27",
@@ -1350,7 +1350,7 @@
     },
     "brpc": {
       "baseline": "1.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "brunocodutra-metal": {
       "baseline": "2.1.4",
@@ -1426,7 +1426,7 @@
     },
     "cachelib": {
       "baseline": "2023.05.08.00",
-      "port-version": 0
+      "port-version": 1
     },
     "caf": {
       "baseline": "0.19.3",
@@ -2526,7 +2526,7 @@
     },
     "evpp": {
       "baseline": "0.7.0",
-      "port-version": 7
+      "port-version": 8
     },
     "exiv2": {
       "baseline": "0.28.1",
@@ -2758,7 +2758,7 @@
     },
     "folly": {
       "baseline": "2024.01.01.00",
-      "port-version": 0
+      "port-version": 1
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -3061,8 +3061,8 @@
       "port-version": 6
     },
     "glog": {
-      "baseline": "0.6.0",
-      "port-version": 3
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "gloo": {
       "baseline": "20201203",
@@ -5002,7 +5002,7 @@
     },
     "libtorch": {
       "baseline": "2.1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libtorrent": {
       "baseline": "2.0.10",
