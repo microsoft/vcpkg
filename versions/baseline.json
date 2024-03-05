@@ -4352,6 +4352,10 @@
       "baseline": "1.1.4",
       "port-version": 0
     },
+    "libfork": {
+      "baseline": "3.7.1",
+      "port-version": 0
+    },
     "libfort": {
       "baseline": "0.4.2",
       "port-version": 1
