@@ -33,6 +33,7 @@ vcpkg_from_github(
         iotr.patch
         fast-float.patch
         fix-exprtk.patch # just for dbow2 and theia
+        devendor_exodusII.patch
 )
 
 # =============================================================================
@@ -157,6 +158,7 @@ endif()
 if ("paraview" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_WebCore=YES
+        -DVTK_MODULE_ENABLE_VTK_WebPython=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
     )
 endif()
@@ -314,8 +316,9 @@ foreach(TOOL_NAME IN LISTS VTK_TOOLS)
 endforeach()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
-                        "${CURRENT_PACKAGES_DIR}/debug/bin")
+# vendored "token" library can be only build as a shared library
+#    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
+#                        "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
