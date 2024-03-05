@@ -85,14 +85,6 @@
           ]
         },
         {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "winldap"
-          ],
-          "platform": "windows"
-        },
-        {
           "name": "openldap",
           "platform": "!windows"
         }
@@ -195,14 +187,13 @@
       "supports": "windows"
     },
     "winldap": {
-      "description": "Use Windows LDAP implementation",
-      "supports": "windows & !uwp",
+      "description": "Obsolete. Use feature 'ldap' instead.",
       "dependencies": [
         {
           "name": "curl",
           "default-features": false,
           "features": [
-            "non-http"
+            "ldap"
           ]
         }
       ]

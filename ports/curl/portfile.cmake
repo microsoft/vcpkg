@@ -33,10 +33,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
-        winldap     USE_WIN32_LDAP
         websockets  ENABLE_WEBSOCKETS
         zstd        CURL_ZSTD
     INVERTED_FEATURES
+        ldap        CURL_DISABLE_LDAP
+        ldap        CURL_DISABLE_LDAPS
         non-http    HTTP_ONLY
 )
 
@@ -48,10 +49,6 @@ endif()
 
 if("sectransp" IN_LIST FEATURES)
     list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
-endif()
-
-if(NOT FEATURES MATCHES "ldap")
-    list(APPEND OPTIONS -DCURL_DISABLE_LDAP=ON -DCURL_DISABLE_LDAPS=ON)
 endif()
 
 # UWP targets
