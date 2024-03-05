@@ -4381,7 +4381,7 @@
       "port-version": 4
     },
     "libgcrypt": {
-      "baseline": "1.10.2",
+      "baseline": "1.10.3",
       "port-version": 0
     },
     "libgd": {
