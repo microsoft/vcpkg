@@ -4308,6 +4308,10 @@
       "baseline": "1.5.10",
       "port-version": 2
     },
+    "liberasurecode": {
+      "baseline": "1.6.3",
+      "port-version": 0
+    },
     "libev": {
       "baseline": "4.33",
       "port-version": 2
