@@ -4560,6 +4560,10 @@
       "baseline": "3.3.2",
       "port-version": 0
     },
+    "liblzf": {
+      "baseline": "3.6",
+      "port-version": 0
+    },
     "liblzma": {
       "baseline": "5.4.4",
       "port-version": 0
