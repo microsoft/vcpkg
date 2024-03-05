@@ -32,6 +32,7 @@ vcpkg_from_github(
         jsoncpp.patch
         iotr.patch
         fast-float.patch
+        fix-exprtk.patch # just for dbow2 and theia
 )
 
 # =============================================================================
