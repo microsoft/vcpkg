@@ -6792,6 +6792,10 @@
       "baseline": "2023-09-25",
       "port-version": 0
     },
+    "pocketpy": {
+      "baseline": "1.4.2",
+      "port-version": 0
+    },
     "poco": {
       "baseline": "1.13.0",
       "port-version": 0
