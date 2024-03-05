@@ -4574,7 +4574,7 @@
     },
     "libmad": {
       "baseline": "0.16.4",
-      "port-version": 1
+      "port-version": 2
     },
     "libmagic": {
       "baseline": "5.45",
