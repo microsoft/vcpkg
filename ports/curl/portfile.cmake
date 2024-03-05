@@ -38,7 +38,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zstd        CURL_ZSTD
     INVERTED_FEATURES
         non-http    HTTP_ONLY
-        winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
 )
 
 set(OPTIONS "")
@@ -49,6 +48,10 @@ endif()
 
 if("sectransp" IN_LIST FEATURES)
     list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
+endif()
+
+if(NOT FEATURES MATCHES "ldap")
+    list(APPEND OPTIONS -DCURL_DISABLE_LDAP=ON -DCURL_DISABLE_LDAPS=ON)
 endif()
 
 # UWP targets

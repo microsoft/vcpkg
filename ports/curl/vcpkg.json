@@ -73,6 +73,31 @@
         "libidn2"
       ]
     },
+    "ldap": {
+      "description": "LDAP support",
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "non-http"
+          ]
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "winldap"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "openldap",
+          "platform": "!windows"
+        }
+      ]
+    },
     "mbedtls": {
       "description": "SSL support (mbedTLS)",
       "dependencies": [
@@ -170,7 +195,7 @@
       "supports": "windows"
     },
     "winldap": {
-      "description": "LDAP support (WinLDAP). This feature does not include LDAPS support.",
+      "description": "Use Windows LDAP implementation",
       "supports": "windows & !uwp",
       "dependencies": [
         {
