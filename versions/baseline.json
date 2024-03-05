@@ -3553,8 +3553,8 @@
       "port-version": 0
     },
     "imath": {
-      "baseline": "3.1.9",
-      "port-version": 1
+      "baseline": "3.1.11",
+      "port-version": 0
     },
     "imgui": {
       "baseline": "1.90.2",
