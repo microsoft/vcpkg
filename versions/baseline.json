@@ -3429,7 +3429,7 @@
       "port-version": 1
     },
     "iceoryx": {
-      "baseline": "2.0.3",
+      "baseline": "2.0.5",
       "port-version": 0
     },
     "icu": {
