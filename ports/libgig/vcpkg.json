@@ -1,8 +1,9 @@
 {
   "name": "libgig",
-  "version": "4.3.0",
+  "version": "4.4.1",
   "description": "C++ library for loading Gigasampler files and DLS Level 1/2 files",
   "homepage": "https://www.linuxsampler.org/libgig/",
+  "license": "GPL-2.0-or-later",
   "supports": "windows & !uwp",
   "dependencies": [
     {

@@ -1,0 +1,42 @@
+diff --git a/src/cpu.cpp b/src/cpu.cpp
+index e56cd67..3ca1189 100644
+--- a/src/cpu.cpp
++++ b/src/cpu.cpp
+@@ -184,6 +184,13 @@ static int g_cpu_is_arm_a53_a55;
+ #endif // defined __ANDROID__ || defined __linux__
+ 
+ #if defined _WIN32
++#if WINAPI_FAMILY == WINAPI_FAMILY_APP
++static int detectisa(const void* /*some_inst*/)
++{
++    // uwp does not support seh  :(
++    return 0;
++}
++#else  // WINAPI_FAMILY == WINAPI_FAMILY_APP
+ static int g_sigill_caught = 0;
+ static jmp_buf g_jmpbuf;
+ 
+@@ -213,6 +220,7 @@ static int detectisa(const void* some_inst)
+ 
+     return g_sigill_caught ? 0 : 1;
+ }
++#endif // WINAPI_FAMILY == WINAPI_FAMILY_APP
+ 
+ #if defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64)
+ #ifdef _MSC_VER
+@@ -1966,12 +1974,12 @@ static void initialize_global_cpu_info()
+ 
+ #if defined _WIN32
+ #if __arm__
+-    g_cpu_support_arm_neon = detectisa(some_neon);
++    g_cpu_support_arm_neon = 1; // all modern windows arm devices have neon
+     g_cpu_support_arm_vfpv4 = detectisa(some_vfpv4);
+ #if __aarch64__
+     g_cpu_support_arm_cpuid = detectisa(some_cpuid);
+-    g_cpu_support_arm_asimdhp = detectisa(some_asimdhp);
+-    g_cpu_support_arm_asimddp = detectisa(some_asimddp);
++    g_cpu_support_arm_asimdhp = detectisa(some_asimdhp) || IsProcessorFeaturePresent(43); // dp implies hp
++    g_cpu_support_arm_asimddp = detectisa(some_asimddp) || IsProcessorFeaturePresent(43); // 43 is PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE
+     g_cpu_support_arm_asimdfhm = detectisa(some_asimdfhm);
+     g_cpu_support_arm_bf16 = detectisa(some_bf16);
+     g_cpu_support_arm_i8mm = detectisa(some_i8mm);

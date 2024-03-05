@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
-    REF "poco-1.12.5p1-release"
-    SHA512 9cf885f67d87b86d3d5337aa2a3247a5828e071bba04304dfb79f7e00d94cd245e5def5191400a5753eebe0611b7f120c470cb0e0ab9b120f1d8b5f202d7d3d7
-    HEAD_REF master
+    REF "poco-1.13.0-release"
+    SHA512 5e557b4c93dd5eacd7c43af9c89646c49e65217db9d9e0fc016b3f643aca993d70e58a85ec7e63743221eb2b29d36ce9f8a3bfbf4db489d8ff24e20127f450ea
+    HEAD_REF devel
     PATCHES
         # Fix embedded copy of pcre in static linking mode
         0001-static-pcre.patch
@@ -86,7 +86,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # Move apps to the tools folder
-vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec arc AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec poco-arc AUTO_CLEAN)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -109,6 +109,19 @@ endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
     file(COPY "${SOURCE_PATH}/Data/SQLite/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 endif()
+
+# Copy include files of sql-parser
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src")
+
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/parser/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/parser")
+
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/sql/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/sql")
+
+file(GLOB HEADERS "${SOURCE_PATH}/Data/src/sql-parser/src/util/*.h")
+file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/Poco/Data/sql-parser/src/util")
 
 if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_cmake_config_fixup(CONFIG_PATH cmake)

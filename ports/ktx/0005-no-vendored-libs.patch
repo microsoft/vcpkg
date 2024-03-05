@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d7ca937..ffcbe95 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1059,10 +1059,10 @@ endif()
+ # except for building the ktx library.
+ if((KTX_FEATURE_TOOLS OR KTX_FEATURE_TESTS) AND NOT TARGET fmt::fmt)
+     set(FMT_SYSTEM_HEADERS ON)
+-    add_subdirectory(other_projects/fmt)
++    find_package(fmt CONFIG REQUIRED)
+ endif()
+ if(KTX_FEATURE_TOOLS AND NOT TARGET cxxopts::cxxopts)
+-    add_subdirectory(other_projects/cxxopts)
++    find_package(cxxopts CONFIG REQUIRED)
+ endif()
+ 
+ # Tools

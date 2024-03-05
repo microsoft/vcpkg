@@ -1,7 +1,10 @@
 {
+  "$comment": [
+    "NOTE: All changes made to this file will get overwritten by the next port release.",
+    "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
+  ],
   "name": "azure-security-keyvault-secrets-cpp",
-  "version-semver": "4.2.0",
-  "port-version": 1,
+  "version-semver": "4.2.1",
   "description": [
     "Microsoft Azure Key Vault Secrets SDK for C++",
     "This library provides Azure Key Vault Secrets SDK."
