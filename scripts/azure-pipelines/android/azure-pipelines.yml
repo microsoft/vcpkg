@@ -11,8 +11,6 @@ parameters:
     type: string
   - name: jobName
     type: string
-  - name: poolName
-    type: string
   - name: dockerImage
     type: string
   - name: tripletPattern
@@ -24,7 +22,8 @@ jobs:
 - job: ${{ parameters.jobName }}
   condition: and(succeeded(), contains('^${{ parameters.triplet }}$', '${{ parameters.tripletPattern }}'))
   pool:
-    name: ${{ parameters.poolName }}
+    name: 'PrAnd-1ES-Pool'
+    image: 'vcpkg-mariner-docker-gen1'
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day

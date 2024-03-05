@@ -4,6 +4,10 @@
 #
 # This script is to set up the machine for the Docker host.
 
+# This script is no longer used by official vcpkg testing due to an internal compliance effort
+# requiring use of CBL-Mariner. It's still intended to be more or less identical to how the lab
+# actually works though; everything meaningful is inside the Docker image; see Dockerfile
+
 export DEBIAN_FRONTEND=noninteractive
 
 ## Docker
