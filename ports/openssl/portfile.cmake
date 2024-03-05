@@ -19,11 +19,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 aaf4f13b7b8020be37837f8084ab7aa3db64e6eb1ecabf04473ed5bd09bcabb8790f0dc1f7604febbbf974702b1fbe41795a7b575e7f88b07cbe094493926a6b
+    SHA512 3eed5903f37ac728522cbb0ea0081f1d5a62d9420366d487f838dc22c31813c58584838400bd3d09518608e1e71bafcb1ff83713d351e4876da6625d5543fef6
     PATCHES
-        asm-comments.patch
-        declspec-align.patch
-        qt-msvc.patch
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
@@ -31,7 +28,6 @@ vcpkg_from_github(
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
         unix/no-static-libs-for-shared.patch
-        unix/disable-quicserver.patch
 )
 
 vcpkg_list(SET CONFIGURE_OPTIONS

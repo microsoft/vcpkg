@@ -1,6 +1,7 @@
 {
   "name": "libflac",
   "version": "1.4.3",
+  "port-version": 1,
   "description": "Library for manipulating FLAC files",
   "homepage": "https://xiph.org/flac/",
   "license": "BSD-3-Clause",
@@ -19,6 +20,10 @@
     "asm": {
       "description": "Use any assembly optimization routines",
       "supports": "x86"
+    },
+    "stack-protector": {
+      "description": "Build with stack smashing protection",
+      "supports": "!emscripten"
     }
   }
 }

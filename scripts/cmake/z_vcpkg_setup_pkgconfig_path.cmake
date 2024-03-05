@@ -1,8 +1,8 @@
 function(z_vcpkg_setup_pkgconfig_path)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "" "BASE_DIRS")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "CONFIG" "")
 
-    if(NOT DEFINED arg_BASE_DIRS OR "${arg_BASE_DIRS}" STREQUAL "")
-        message(FATAL_ERROR "BASE_DIRS is required.")
+    if("${arg_CONFIG}" STREQUAL "")
+        message(FATAL_ERROR "CONFIG is required.")
     endif()
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -22,13 +22,19 @@ function(z_vcpkg_setup_pkgconfig_path)
 
     set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
 
-    foreach(base_dir IN LISTS arg_BASE_DIRS)
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${base_dir}/share/pkgconfig/")
+    foreach(prefix IN ITEMS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
+        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/share/pkgconfig")
+        if(arg_CONFIG STREQUAL "RELEASE")
+            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/lib/pkgconfig")
+            # search order is lib, share, external
+        elseif(arg_CONFIG STREQUAL "DEBUG")
+            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/debug/lib/pkgconfig")
+            # search order is debug/lib, share, external
+        else()
+            message(FATAL_ERROR "CONFIG must be either RELEASE or DEBUG.")
+        endif()
     endforeach()
-
-    foreach(base_dir IN LISTS arg_BASE_DIRS)
-        vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${base_dir}/lib/pkgconfig/")
-    endforeach()
+    # total search order is current packages dir, current installed dir, external
 endfunction()
 
 function(z_vcpkg_restore_pkgconfig_path)
