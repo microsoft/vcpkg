@@ -18,6 +18,9 @@ for OPTION; do
     --prefix=*|--openssldir=*|--libdir=*|--cross-compile-prefix=*|--debug,*)
         OUT_OPTIONS+=("${OPTION}")
         ;;
+    -D__ANDROID_API__=*)
+        OUT_OPTIONS+=("${OPTION}")
+        ;;
     -*|*=*)
         ;;
     *,yes)
