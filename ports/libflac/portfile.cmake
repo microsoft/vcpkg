@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-compile-options.patch
+        fix-wasm.patch
 )
 
 if("asm" IN_LIST FEATURES)
