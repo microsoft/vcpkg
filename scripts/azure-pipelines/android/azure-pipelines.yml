@@ -25,7 +25,6 @@ jobs:
     name: 'PrAnd-1ES-Pool'
     demands:
     - ImageOverride -equals vcpkg-mariner-docker-gen1
-    - ImageVersionOverride -equals 3.0.0
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
