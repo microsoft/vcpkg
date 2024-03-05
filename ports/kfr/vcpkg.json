@@ -30,9 +30,6 @@
     },
     "dft": {
       "description": "Enable DFT and related algorithms."
-    },
-    "dft-np": {
-      "description": "Enable non-power of 2 DFT."
     }
   }
 }

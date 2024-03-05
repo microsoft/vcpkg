@@ -13,7 +13,6 @@ vcpkg_check_features(
     FEATURES
         capi KFR_ENABLE_CAPI_BUILD
         dft KFR_ENABLE_DFT
-        dft-np KFR_ENABLE_DFT_NP
 )
 
 vcpkg_cmake_configure(
