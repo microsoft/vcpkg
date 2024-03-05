@@ -8,7 +8,8 @@ vcpkg_from_github(
         fix-static-build8.patch
         export-targets.patch
         dependencies.patch
-        protobuf.patch
+        protobuf-cmake.patch
+        protobuf-source.patch
 )
 
 vcpkg_check_features(
@@ -32,7 +33,9 @@ vcpkg_cmake_configure(
         "-DWITH_LZ4=${CURRENT_INSTALLED_DIR}"
         "-DWITH_ZLIB=${CURRENT_INSTALLED_DIR}"
         "-DWITH_ZSTD=${CURRENT_INSTALLED_DIR}"
-        "-DWITH_PROTOBUF=${CURRENT_INSTALLED_DIR}"
+        "-DProtobuf_DIR=${CURRENT_INSTALLED_DIR}/share/protobuf" # Without these Windows is not able to find protobuf
+        "-Dabsl_DIR=${CURRENT_INSTALLED_DIR}/share/absl"
+        "-Dutf8_range_DIR=${CURRENT_INSTALLED_DIR}/share/utf8_range"
         -DBUILD_STATIC=${BUILD_STATIC}
         -DSTATIC_MSVCRT=${STATIC_MSVCRT}
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
