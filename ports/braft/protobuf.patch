@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a851c00..9d6415b 100644
+index 28c1026..65af3ae 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -22,7 +22,7 @@ endif()
@@ -11,7 +11,7 @@ index a851c00..9d6415b 100644
  
  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
      # require at least gcc 4.8
-@@ -73,7 +73,8 @@ if ((NOT BRPC_INCLUDE_PATH) OR (NOT BRPC_LIB))
+@@ -69,7 +69,8 @@ if ((NOT BRPC_INCLUDE_PATH) OR (NOT BRPC_LIB))
      message(FATAL_ERROR "Fail to find brpc")
  endif()
  
@@ -21,16 +21,3 @@ index a851c00..9d6415b 100644
      get_filename_component(PROTO_LIB_DIR ${PROTOBUF_LIBRARY} DIRECTORY)
      set (PROTOBUF_PROTOC_EXECUTABLE "${PROTO_LIB_DIR}/../bin/protoc")
  endif()
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index ff435a2..59b10ae 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -10,7 +10,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
- include_directories(${CMAKE_SOURCE_DIR}/src)
- 
- add_library(OBJ_LIB OBJECT ${SOURCES})
--
-+target_link_libraries(OBJ_LIB PUBLIC protobuf::libprotobuf)
- set_property(TARGET ${OBJ_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
- if (BUILD_SHARED_LIBS)
- add_library(braft-shared SHARED $<TARGET_OBJECTS:OBJ_LIB>)

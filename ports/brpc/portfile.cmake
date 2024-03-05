@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build.patch
-        fix-glog.patch
         protobuf.patch
         fix-warnings.patch
 )
