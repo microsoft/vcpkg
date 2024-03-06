@@ -316,14 +316,13 @@ foreach(TOOL_NAME IN LISTS VTK_TOOLS)
     _vtk_move_release_tool("${TOOL_NAME}")
 endforeach()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  if(VCPKG_TARGET_IS_WINDOWS)
-    # vendored "token" library can be only build as a shared library
-    set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-  else()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
-                        "${CURRENT_PACKAGES_DIR}/debug/bin")
-  endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/vtktoken-9.3.dll" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  # vendored "token" library can be only build as a shared library
+  set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/bin"
+    "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
