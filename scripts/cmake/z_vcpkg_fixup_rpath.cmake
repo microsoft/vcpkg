@@ -70,6 +70,12 @@ function(z_vcpkg_fixup_rpath_in_dir)
     list(JOIN folders_to_skip "|" folders_to_skip_regex)
     set(folders_to_skip_regex "^(${folders_to_skip_regex})$")
 
+    # In download mode, we don't know if we're going to need PATCHELF, so be pessimistic and fetch
+    # it so it ends up in the downloads directory.
+    if(VCPKG_DOWNLOAD_MODE)
+        vcpkg_find_acquire_program(PATCHELF)
+    endif()
+
     foreach(folder IN LISTS root_entries)
         if(NOT IS_DIRECTORY "${folder}")
             continue()
