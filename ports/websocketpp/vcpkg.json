@@ -1,7 +1,7 @@
 {
   "name": "websocketpp",
   "version": "0.8.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Library that implements RFC6455 The WebSocket Protocol",
   "homepage": "https://github.com/zaphoyd/websocketpp",
   "documentation": "http://docs.websocketpp.org/",

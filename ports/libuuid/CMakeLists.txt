@@ -19,6 +19,7 @@ add_library(uuid STATIC
     uuid_time.c
 )
 target_compile_options(uuid PRIVATE -include "${CMAKE_CURRENT_BINARY_DIR}/config.h")
+target_include_directories(uuid PUBLIC "$<INSTALL_INTERFACE:include>")
 
 add_executable(test_uuid test_uuid.c)
 target_link_libraries(test_uuid uuid)

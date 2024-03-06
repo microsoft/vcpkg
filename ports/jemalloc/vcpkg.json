@@ -1,7 +1,8 @@
 {
   "name": "jemalloc",
-  "version-string": "4.3.1",
-  "port-version": 5,
+  "version": "5.3.0",
+  "port-version": 1,
   "description": "jemalloc is a general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support",
-  "homepage": "https://github.com/jemalloc/jemalloc-cmake"
+  "homepage": "https://jemalloc.net/",
+  "license": "BSD-2-Clause"
 }

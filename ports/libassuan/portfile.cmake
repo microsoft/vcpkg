@@ -1,29 +1,55 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO gpg/libassuan
-    REF libassuan-2.5.3
-    SHA512 5ec896eca6d9d7bec83aa400c8e2dc6f2b09c013050efb2125e2f2a4bd00f179723254483637ca4b7bc30bba951fc985e7ba7db98081606bb106caa7a2622dbe
-    HEAD_REF master
+vcpkg_download_distfile(tarball
+    URLS
+        "https://gnupg.org/ftp/gcrypt/libassuan/libassuan-${VERSION}.tar.bz2"
+        "https://mirrors.dotsrc.org/gcrypt/libassuan/libassuan-${VERSION}.tar.bz2"
+        "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/libassuan/libassuan-${VERSION}.tar.bz2"
+    FILENAME "libassuan-${VERSION}.tar.bz2"
+    SHA512 dcca942d222a2c226a7e34ba7988ee0c3c55bd6032166eb472caf2053db89aeeea7a40e93d8c2887c7ee73c5f838e8b0725e8cfb595accc1606646559362f7ee
+)
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${tarball}"
     PATCHES
-        fix-pkgconfig.patch
-        fix-flags.patch
+        cross-tools.patch
 )
 
+if(VCPKG_CROSSCOMPILING)
+    set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+endif()
+
 vcpkg_configure_make(
-    AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTOCONFIG
     OPTIONS
         --disable-doc
-        --disable-silent-rules
-        --with-libgpg-error-prefix=${CURRENT_INSTALLED_DIR}/tools/libgpg-error
+        "GPG_ERROR_CONFIG=no"
+    OPTIONS_RELEASE
+        "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"
+    OPTIONS_DEBUG
+        "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config"
 )
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libassuan/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/libassuan/debug/bin/libassuan-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
+set(install_prefix "${CURRENT_INSTALLED_DIR}")
+if(VCPKG_HOST_IS_WINDOWS)
+    string(REGEX REPLACE "^([a-zA-Z]):/" "/\\1/" install_prefix "${install_prefix}")
+endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/libassuan-config" "${install_prefix}" "`dirname $0`/../../..")
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/libassuan-config" "${install_prefix}" "`dirname $0`/../../../..")
+endif()
+
+if(NOT VCPKG_CROSSCOMPILING)
+    file(INSTALL
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/mkheader${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
+        USE_SOURCE_PERMISSIONS
+    )
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

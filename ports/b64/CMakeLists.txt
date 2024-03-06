@@ -18,18 +18,23 @@ if (BUILD_SHARED_LIBS)
     target_compile_definitions(b64 PRIVATE LIBB64_EXPORTS=1)
 endif()
 
-target_include_directories(b64 PRIVATE include ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(b64
+    PRIVATE include ${CMAKE_CURRENT_BINARY_DIR}
+    INTERFACE $<INSTALL_INTERFACE:include>
+)
 
 set_property(TARGET b64 
             PROPERTY PUBLIC_HEADER ${HEADER_FILES})
 
 install(TARGETS b64
-	EXPORT b64-targets
+	EXPORT unofficial-b64-config
     LIBRARY DESTINATION lib
     PUBLIC_HEADER DESTINATION include/b64
 )
 
-install(EXPORT b64-targets 
-	FILE b64-targets.cmake
-	DESTINATION lib/cmake/b64)
+install(EXPORT unofficial-b64-config
+    FILE unofficial-b64-config.cmake
+    NAMESPACE unofficial::b64::
+    DESTINATION share/unofficial-b64
+)
 

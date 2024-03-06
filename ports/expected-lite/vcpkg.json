@@ -1,8 +1,9 @@
 {
   "name": "expected-lite",
-  "version": "0.5.0",
+  "version": "0.6.3",
   "description": "Expected objects in C++11 and later in a single-file header-only library",
   "homepage": "https://github.com/martinmoene/expected-lite",
+  "license": "BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

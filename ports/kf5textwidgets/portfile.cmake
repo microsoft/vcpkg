@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ktextwidgets
-    REF v5.89.0
-    SHA512 5f57e20bc2e865499b4ef5c701baa17f492c5cd48b89f3add4e9fec29664a87ad6e69496c4e91f3a1192fbc4d244758a753ee250731a79b464f6af63f9abbde0
+    REF v5.98.0
+    SHA512 d25167cf173daa55075ee0586b8db5c478fcc567d2b9466a7c833ffe8cfae21db936df8cbcfc06a82314568b4574b5826bc50bc24087a02bab56fb43fcdcd461
     HEAD_REF master
 )
 
@@ -27,4 +27,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSES/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+

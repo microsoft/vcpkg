@@ -1,4 +1,4 @@
 The package unixodbc is compatible with built-in CMake targets:
 
-    FIND_PACKAGE(unixodbc REQUIRED)
-    TARGET_LINK_LIBRARIES(main PRIVATE UNIX::odbc) for linkage
+    find_package(unixodbc REQUIRED)
+    target_link_libraries(main PRIVATE UNIX::odbc)

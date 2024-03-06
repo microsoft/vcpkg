@@ -1,0 +1,25 @@
+diff --git a/gettext-tools/src/Makefile.in b/gettext-tools/src/Makefile.in
+index 5d60b99..d86232d 100644
+--- a/gettext-tools/src/Makefile.in
++++ b/gettext-tools/src/Makefile.in
+@@ -3625,7 +3625,10 @@ USEJAVA_no = 0
+ 
+ # Version information according to Woe32 conventions.
+ @WOE32_TRUE@WOE32_LDADD = gettext.res
+-all: $(BUILT_SOURCES)
++@USE_INSTALLED_LIBTEXTSTYLE_FALSE@all: textstyle.h
++all:
++	$(MAKE) $(AM_MAKEFLAGS) all-parallel
++all-parallel: $(BUILT_SOURCES)
+ 	$(MAKE) $(AM_MAKEFLAGS) all-am
+ 
+ .SUFFIXES:
+@@ -5045,7 +5048,7 @@ uninstall-tcl:
+ # namely those which build textstyle.h, po-gram-gen.c, cldr-plural.c.
+ # See <https://lists.gnu.org/archive/html/bug-make/2019-05/msg00011.html>.
+ # So, turn off parallel execution in this Makefile.
+-.NOTPARALLEL:
++# .NOTPARALLEL:
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.

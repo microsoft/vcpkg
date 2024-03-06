@@ -1,23 +1,22 @@
-# header-only library
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xsimd
-    REF 8.0.3
-    SHA512 4c93eea5c5ba7c72f718d7d404b9630850e0805d2698d472b964e4de765678801b369ce1da5e53372f28944f5f647a7ac162995f92535a820c6f4fc9defa7e5f
+    REF "${VERSION}"
+    SHA512 6b8ec8d3ab7ca850dbcf9f97707b72dc443a17693eb040c187802c161c85a65029ccb1690219a33c4018afcd303a2f93eb69facbf8178e286cd9fc36ec63f0c1
     HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    xcomplex ENABLE_XTL_COMPLEX
+    FEATURES
+        xcomplex ENABLE_XTL_COMPLEX
 )
+
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DENABLE_FALLBACK=OFF
         -DBUILD_TESTS=OFF
-        -DDOWNLOAD_GTEST=OFF
         ${FEATURE_OPTIONS}
 )
 
@@ -25,6 +24,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -1,12 +1,22 @@
 {
   "name": "nrf-ble-driver",
-  "version-string": "4.1.2",
+  "version": "4.1.4",
   "port-version": 1,
   "description": "BLE driver is a library for Bluetooth Low Energy communication using Nordic Semiconductor development kits.",
+  "homepage": "https://github.com/NordicSemiconductor/pc-ble-driver",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
   "dependencies": [
     "asio",
-    "catch2",
     "cli11",
-    "spdlog"
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

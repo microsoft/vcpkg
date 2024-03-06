@@ -3,13 +3,14 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO malaterre/GDCM
-    REF c0824c0ae66e9f9e3c8bddba8b65238c1c28481d # v3.0.7
-    SHA512 1889f18f7164e1395e2cf5fe29b6ccd615f9a31433d1a7bda19cac472b20bc52018ef45bd9d9ca72ecb248c9fd5d895b94bfd111157693f70e0b90cf7b582edd
+    REF "v${VERSION}"
+    SHA512 f4fd81db731b60eebd7d67b8a7f2aa67f44d788f4c0a3f2cef9490fd4f0f1ae9caea1a9a8727619edab6aeda815ae6ace5266b1428b9bea81b7c984deb78bbac
     HEAD_REF master
     PATCHES
         use-openjpeg-config.patch
         fix-share-path.patch
         Fix-Cmake_DIR.patch
+        fix-dependence-getopt.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindOpenJPEG.cmake")
@@ -18,6 +19,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(VCPKG_BUILD_SHARED_LIBS ON)
 else()
   set(VCPKG_BUILD_SHARED_LIBS OFF)
+endif()
+
+set(USE_VCPKG_GETOPT OFF)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+   set(USE_VCPKG_GETOPT ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -30,6 +36,9 @@ vcpkg_cmake_configure(
         -DGDCM_USE_SYSTEM_ZLIB=ON
         -DGDCM_USE_SYSTEM_OPENJPEG=ON
         -DGDCM_BUILD_TESTING=OFF
+        -DUSE_VCPKG_GETOPT=${USE_VCPKG_GETOPT}
+    MAYBE_UNUSED_VARIABLES
+        USE_VCPKG_GETOPT
 )
 
 vcpkg_cmake_install()
@@ -59,4 +68,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")

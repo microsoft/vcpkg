@@ -3,9 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dmlc/dmlc-core
-    REF d3fd7c5e9b9c280d3081ada3fb62705547c00bf1
-    SHA512 6887d52ddd00949866c27bea3c860abb8a7ecf61feeac79d67d260635e9c3e490b6f0538cbc0ccc1f03e90ab4094bfc0fcb938adb3fb5afe9fea813d47cc7430
-    HEAD_REF master
+    REF dfd9365264a060a5096734b7d892e1858b6d2722
+    SHA512 0dc2ecd3c981d88de27bf5184f7b380261335c474934d0db59028adfe75f6b3ee2da5b831135acfaad7943acb3eaa7007c0faf0f14e63b39865354898f64fcea
+    HEAD_REF main
+    PATCHES
+        cxx-fix.patch # from https://github.com/dmlc/dmlc-core/pull/676
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -19,20 +21,19 @@ else()
    set(DMLC_FORCE_SHARED_CRT OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
        -DDMLC_FORCE_SHARED_CRT=${DMLC_FORCE_SHARED_CRT}
        -DUSE_OPENMP=${ENABLE_OPENMP}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/dmlc)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/dmlc)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

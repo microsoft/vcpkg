@@ -1,0 +1,98 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 146bc5f..8d6ae23 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 2.8)
++cmake_minimum_required(VERSION 3.22)
+ project(ParMETIS C)
+ 
+ 
+@@ -24,20 +24,16 @@ include(./conf/gkbuild.cmake)
+ # i.e., the -I equivalent
+ include_directories(include)
+ include_directories(${MPI_INCLUDE_PATH})
+-include_directories(${GKLIB_PATH}/include)
+-include_directories(${METIS_PATH}/include)
+-include_directories(${CMAKE_INSTALL_PREFIX}/include)
+-
+-# List of paths that the compiler will search for library files.
+-# i.e., the -L equivalent
+-link_directories(${GKLIB_PATH}/lib)
+-link_directories(${METIS_PATH}/lib)
+-link_directories(${CMAKE_INSTALL_PREFIX}/lib)
+-
+ # List of directories that cmake will look for CMakeLists.txt
+-add_subdirectory(include)
+ add_subdirectory(libparmetis)
+-add_subdirectory(programs)
+ 
+ # This is for testing during development and is not being distributed
+ #add_subdirectory(test)
++
++install(EXPORT parmetisTargets FILE "parmetisTargets.cmake" DESTINATION "share/parmetis")
++file(WRITE "${CMAKE_INSTALL_PREFIX}/share/parmetis/parmetisConfig.cmake" [=[
++include(CMakeFindDependencyMacro)
++find_dependency(GKlib CONFIG)
++find_dependency(metis CONFIG)
++include("${CMAKE_CURRENT_LIST_DIR}/parmetisTargets.cmake")
++]=])
+diff --git a/conf/gkbuild.cmake b/conf/gkbuild.cmake
+index afcafdd..3040b09 100644
+--- a/conf/gkbuild.cmake
++++ b/conf/gkbuild.cmake
+@@ -15,7 +15,6 @@ option(GKRAND "enable GKRAND support" OFF)
+ 
+ # Add compiler flags.
+ if(MSVC)
+-  set(GK_COPTS "/Ox")
+   set(GK_COPTIONS "-DWIN32 -DMSC -D_CRT_SECURE_NO_DEPRECATE -DUSE_GKREGEX")
+ elseif(MINGW)
+   set(GK_COPTS "-DUSE_GKREGEX")
+@@ -33,7 +32,7 @@ if(CMAKE_COMPILER_IS_GNUCC)
+       set(GK_COPTIONS "${GK_COPTIONS} -fPIC")
+   endif(NOT MINGW)
+ # GCC warnings.
+-  set(GK_COPTIONS "${GK_COPTIONS} -Werror -Wall -pedantic -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unknown-pragmas -Wno-unused-label")
++  set(GK_COPTIONS "${GK_COPTIONS} -Wall -pedantic -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unknown-pragmas -Wno-unused-label")
+ elseif(${CMAKE_C_COMPILER_ID} MATCHES "Sun")
+ # Sun insists on -xc99.
+   set(GK_COPTIONS "${GK_COPTIONS} -xc99")
+@@ -64,7 +63,7 @@ endif(OPENMP)
+ if(GDB)
+   set(GK_COPTS "${GK_COPTS} -g")
+   set(GK_COPTIONS "${GK_COPTIONS} -Werror")
+-else()
++elseif(0)
+   set(GK_COPTS "-O3")
+ endif(GDB)
+ 
+@@ -135,4 +134,3 @@ endif()
+ 
+ # Finally set the official C flags.
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GK_COPTIONS} ${GK_COPTS}")
+-
+diff --git a/libparmetis/CMakeLists.txt b/libparmetis/CMakeLists.txt
+index e8c3213..dcdf64e 100644
+--- a/libparmetis/CMakeLists.txt
++++ b/libparmetis/CMakeLists.txt
+@@ -4,10 +4,14 @@ include_directories(.)
+ # Find sources.
+ file(GLOB parmetis_sources *.c)
+ 
++find_package(GKlib CONFIG REQUIRED)
++find_package(metis CONFIG REQUIRED)
++find_package(MPI REQUIRED)
++
+ # Create libparmetis
+ add_library(parmetis ${ParMETIS_LIBRARY_TYPE} ${parmetis_sources})
+-
+-install(TARGETS parmetis
+-  LIBRARY DESTINATION lib
+-  RUNTIME DESTINATION lib
+-  ARCHIVE DESTINATION lib)
++target_link_libraries(parmetis PRIVATE GKlib metis ${MPI_C_LIBRARIES})
++target_include_directories(parmetis PUBLIC ${MPI_C_INCLUDE_DIRS})
++target_include_directories(parmetis PRIVATE "../include")
++install(FILES "../include/parmetis.h" DESTINATION "include")
++install(TARGETS parmetis EXPORT parmetisTargets INCLUDES DESTINATION include)

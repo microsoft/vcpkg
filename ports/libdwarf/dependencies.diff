@@ -1,0 +1,55 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 70839abd..cb3b5d8f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -184,12 +184,9 @@ endif()
+ 
+ if (ENABLE_DECOMPRESSION)
+   # Zlib and ZSTD need to be found otherwise disable it
+-  if(NOT TARGET ZLIB::ZLIB)
+-    find_package(ZLIB)
+-  endif()
+-  if(NOT TARGET ZSTD::ZSTD)
+-    find_package(ZSTD)
+-  endif()
++  find_package(ZLIB REQUIRED)
++  find_package(zstd CONFIG REQUIRED)
++  set(ZSTD_FOUND TRUE)
+   if (ZLIB_FOUND AND ZSTD_FOUND )
+     set(HAVE_ZLIB TRUE)
+     set(HAVE_ZLIB_H TRUE)
+diff --git a/src/lib/libdwarf/CMakeLists.txt b/src/lib/libdwarf/CMakeLists.txt
+index 7500c9f4..faf1bd7a 100644
+--- a/src/lib/libdwarf/CMakeLists.txt
++++ b/src/lib/libdwarf/CMakeLists.txt
+@@ -105,7 +105,7 @@ target_include_directories(dwarf PUBLIC
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libdwarf>
+   )
+ if(ZLIB_FOUND AND ZSTD_FOUND)
+-  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB ZSTD::ZSTD ) 
++  target_link_libraries(dwarf PRIVATE  ZLIB::ZLIB $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static> ) 
+ endif()
+ set_target_properties(dwarf PROPERTIES PUBLIC_HEADER "libdwarf.h;dwarf.h")
+ 
+
+diff --git a/src/lib/libdwarf/cmake/libdwarf-config.cmake b/src/lib/libdwarf/cmake/libdwarf-config.cmake
+index 604c563c..53623603 100644
+--- a/src/lib/libdwarf/cmake/libdwarf-config.cmake
++++ b/src/lib/libdwarf/cmake/libdwarf-config.cmake
+@@ -1,3 +1,6 @@
++include(CMakeFindDependencyMacro)
++find_dependency(ZLIB)
++find_dependency(zstd CONFIG)
+ if (NOT TARGET libdwarf::libdwarf)
+     include(${CMAKE_CURRENT_LIST_DIR}/libdwarf-targets.cmake)
+ endif()
+diff --git a/src/lib/libdwarf/libdwarf.pc.cmake b/src/lib/libdwarf/libdwarf.pc.cmake
+index 6b18c77c..8862d5b4 100644
+--- a/src/lib/libdwarf/libdwarf.pc.cmake
++++ b/src/lib/libdwarf/libdwarf.pc.cmake
+@@ -9,4 +9,4 @@ Description: DWARF debug symbols library
+ Version: @PACKAGE_VERSION@
+ Libs: -L${libdir} -ldwarf
+ Cflags: -I${includedir}
+-
++Requires.private: zlib libzstd

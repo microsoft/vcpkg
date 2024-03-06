@@ -1,0 +1,15 @@
+{
+  "name": "libxrandr",
+  "version": "1.5.2",
+  "description": "Xlib Resize, Rotate and Reflection (RandR) extension library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxrandr",
+  "license": null,
+  "dependencies": [
+    "bzip2",
+    "libx11",
+    "libxext",
+    "libxrender",
+    "xorg-macros",
+    "xproto"
+  ]
+}

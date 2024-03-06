@@ -1,29 +1,29 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
-vcpkg_from_github(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO  finetjul/gts
-    REF c4da61ae075f355d9ecc9f2d4767acf777f54c2b #0.7.6
-    SHA512 e53d11213c26cbda08ae62e6388aee0a14d2884de72268ad25d10a23e77baa53a2b1151c5cc7643b059ded82b8edf0da79144c3108949fdc515168cac13ffca9
-    HEAD_REF master
+    REPO gts/gts
+    REF 0.7.6
+    FILENAME gts-0.7.6.tar.gz
+    SHA512 645123b72dba3d04dad3c5d936d7e55947826be0fb25e84595368919b720deccddceb7c3b30865a5a40f2458254c2af793b7c014e6719cf07e7f8e6ff30890f8
     PATCHES
-        fix-M_PI-in-windows.patch
-        support-unix.patch
-        fix-pkgconfig.patch
-        glib2.patch
+        fix-dllexport.patch
 )
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/predicates_init.h" DESTINATION "${SOURCE_PATH}/src")
+
 vcpkg_find_acquire_program(PKGCONFIG)
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        "-DVERSION=${VERSION}"
 )
 
-vcpkg_install_cmake()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
+vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -10,7 +10,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
 find_package(Iconv REQUIRED)
 
-find_library(IDN_LIBRARY NAMES libidn2)
+pkg_check_modules(IDN2 libidn2 IMPORTED_TARGET)
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
@@ -46,7 +46,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE . ./util)
-target_link_libraries(${PROJECT_NAME} PRIVATE Iconv::Iconv ZLIB::ZLIB ${IDN_LIBRARY})
+target_link_libraries(${PROJECT_NAME} PRIVATE Iconv::Iconv ZLIB::ZLIB PkgConfig::IDN2)
 target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::GLIB2)
 target_link_libraries(${PROJECT_NAME} PRIVATE Ws2_32.lib)
 

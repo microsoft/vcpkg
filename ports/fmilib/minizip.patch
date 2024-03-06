@@ -1,0 +1,52 @@
+diff --git a/ThirdParty/Minizip/minizip/miniunz.c b/ThirdParty/Minizip/minizip/miniunz.c
+index 1931161..d7a8be1 100644
+--- a/ThirdParty/Minizip/minizip/miniunz.c
++++ b/ThirdParty/Minizip/minizip/miniunz.c
+@@ -45,6 +45,7 @@
+ #include <time.h>
+ #include <errno.h>
+ #include <fcntl.h>
++#include <sys/stat.h>
+ #include <stdarg.h>
+ 
+ #ifdef _WIN32
+@@ -107,7 +108,7 @@ void change_file_date(filename,dosdate,tmu_date)
+   SetFileTime(hFile,&ftm,&ftLastAcc,&ftm);
+   CloseHandle(hFile);
+ #else
+-#ifdef unix || __APPLE__
++#if defined(unix) || defined(__APPLE__)
+   struct utimbuf ut;
+   struct tm newdate;
+   newdate.tm_sec = tmu_date.tm_sec;
+@@ -137,7 +138,7 @@ int mymkdir(dirname)
+     int ret=0;
+ #ifdef _WIN32
+     ret = _mkdir(dirname);
+-#elif unix
++#elif 1
+     ret = mkdir (dirname,0775);
+ #elif __APPLE__
+     ret = mkdir (dirname,0775);
+diff --git a/ThirdParty/Minizip/minizip/minizip.c b/ThirdParty/Minizip/minizip/minizip.c
+index e22f80d..548b6ca 100644
+--- a/ThirdParty/Minizip/minizip/minizip.c
++++ b/ThirdParty/Minizip/minizip/minizip.c
+@@ -101,7 +101,7 @@ uLong filetime(f, tmzip, dt)
+   return ret;
+ }
+ #else
+-#ifdef unix || __APPLE__
++#if defined(unix) || defined(__APPLE__)
+ uLong filetime(f, tmzip, dt)
+     char *f;               /* name of file to get info on */
+     tm_zip *tmzip;         /* return value: access, modific. and creation times */
+@@ -453,7 +453,7 @@ int minizip(argc,argv)
+                      }
+                      if( lastslash != NULL )
+                      {
+-                         savefilenameinzip = lastslash+1; // base filename follows last slash.
++                         savefilenameinzip = lastslash+1;
+                      }
+                  }
+ 

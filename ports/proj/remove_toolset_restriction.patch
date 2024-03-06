@@ -1,0 +1,19 @@
+diff --git a/cmake/project-config-version.cmake.in b/cmake/project-config-version.cmake.in
+index d9807b2c5..7ffe39364 100644
+--- a/cmake/project-config-version.cmake.in
++++ b/cmake/project-config-version.cmake.in
+@@ -28,14 +28,6 @@ elseif (NOT (APPLE OR (NOT DEFINED CMAKE_SIZEOF_VOID_P) OR
+   # since a multi-architecture library is built for that platform).
+   set (REASON "sizeof(*void) = @CMAKE_SIZEOF_VOID_P@")
+   set (PACKAGE_VERSION_UNSUITABLE TRUE)
+-elseif (MSVC AND NOT (
+-    # toolset version must be at least as great as @PROJECT_NAME@'s
+-    MSVC_TOOLSET_VERSION GREATER_EQUAL @MSVC_TOOLSET_VERSION@
+-    # and major versions must match
+-    AND MSVC_TOOLSET_MAJOR EQUAL @MSVC_TOOLSET_MAJOR@ ))
+-  # Reject if there's a mismatch in MSVC compiler versions
+-  set (REASON "MSVC_TOOLSET_VERSION = @MSVC_TOOLSET_VERSION@")
+-  set (PACKAGE_VERSION_UNSUITABLE TRUE)
+ elseif (PACKAGE_FIND_VERSION)
+   if (PACKAGE_FIND_VERSION VERSION_EQUAL PACKAGE_VERSION)
+     set (PACKAGE_VERSION_EXACT TRUE)

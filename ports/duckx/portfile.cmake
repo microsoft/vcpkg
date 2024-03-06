@@ -7,6 +7,7 @@ vcpkg_from_github(
     REPO amiremohamadi/DuckX
     REF v1.2.2
     SHA512 3f1e626973b4638adaffcc0a20f59791f3a70abda1d2d09fddca9312014cef86d097f24873e74ef58c775b27c71a637e44f340da01a301b00ef334600bd412d6
+    PATCHES fix_dependencies.patch
 )
 
 vcpkg_cmake_configure(

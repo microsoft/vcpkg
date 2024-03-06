@@ -1,0 +1,14 @@
+diff --git a/src/brpc/policy/thrift_protocol.cpp b/src/brpc/policy/thrift_protocol.cpp
+index 9871c01..269cfe1 100644
+--- a/src/brpc/policy/thrift_protocol.cpp
++++ b/src/brpc/policy/thrift_protocol.cpp
+@@ -45,8 +45,7 @@
+  #if defined(_THRIFT_STDCXX_H_)
+  # define THRIFT_STDCXX apache::thrift::stdcxx
+  #else
+- # define THRIFT_STDCXX boost
+- # include <boost/make_shared.hpp>
++ # define THRIFT_STDCXX std
+  #endif
+ #endif
+ 

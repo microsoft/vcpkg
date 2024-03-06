@@ -17,7 +17,7 @@ set(BZ2_SOURCES
 add_library(bz2 ${BZ2_SOURCES})
 set_target_properties(bz2 PROPERTIES
     DEBUG_POSTFIX d
-    VERSION 1.0.6
+    VERSION "${BZ2_VERSION}"
     SOVERSION 1.0)
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(bz2 PRIVATE -DBZ_BUILD_DLL)

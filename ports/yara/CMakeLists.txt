@@ -7,9 +7,6 @@ endif()
 
 
 find_package(OpenSSL REQUIRED)
-find_path(JANSSON_INCLUDE_DIR NAMES jansson.h)
-find_library(JANSSON_LIBRARY NAMES jansson)
-
 
 include_directories(
   .
@@ -53,16 +50,19 @@ set(
   libyara/mem.c
   libyara/modules.c
   libyara/modules/console/console.c
-  libyara/modules/cuckoo/cuckoo.c
-  libyara/modules/dotnet/dotnet.c
-  libyara/modules/elf/elf.c
   libyara/modules/hash/hash.c
   libyara/modules/math/math.c
   libyara/modules/macho/macho.c
   libyara/modules/pe/pe.c
   libyara/modules/pe/pe_utils.c
+  libyara/modules/pe/authenticode-parser/authenticode.c
+  libyara/modules/pe/authenticode-parser/certificate.c
+  libyara/modules/pe/authenticode-parser/helper.c
+  libyara/modules/pe/authenticode-parser/countersignature.c
+  libyara/modules/pe/authenticode-parser/structs.c
   libyara/modules/tests/tests.c
   libyara/modules/time/time.c
+  libyara/modules/string/string.c  
   libyara/notebook.c
   libyara/object.c
   libyara/parser.c
@@ -80,6 +80,12 @@ set(
   libyara/stream.c
   libyara/strutils.c
   libyara/threading.c
+  
+  # Module elf request new library tlshc(https://github.com/avast/tlshc), the related upstream PR: https://github.com/VirusTotal/yara/pull/1624.
+  # libyara/modules/elf/elf.c
+  # libyara/tlshc/tlsh.c
+  # libyara/tlshc/tlsh_impl.c
+  # libyara/tlshc/tlsh_util.c
 )
 
 set(
@@ -95,7 +101,6 @@ set( yarac_sources
   cli/yarac.c
 )
 
-
 find_package(Threads REQUIRED)
 
 set(
@@ -103,10 +108,9 @@ set(
   OpenSSL::SSL
   OpenSSL::Crypto 
   Threads::Threads
-  ${JANSSON_LIBRARY}
 )
 
-IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 list(APPEND libyara_dependencies Crypt32.lib Ws2_32.lib)
 endif()
 if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
@@ -117,15 +121,25 @@ set(
   libyara_definitions
   -DHAVE_LIBCRYPTO
   -D${PROC_PLATFORM_INTERFACE}
-  -DCUCKOO_MODULE
   -DHASH_MODULE
-  -DDOTNET_MODULE
 )
+
+if(CUCKOO_MODULE)
+  list(APPEND libyara_definitions -DCUCKOO_MODULE)
+  list(APPEND libyara_sources libyara/modules/cuckoo/cuckoo.c)
+  find_package(jansson CONFIG REQUIRED)
+  list(APPEND libyara_dependencies jansson::jansson)
+endif()
+
+if(DOTNET_MODULE)
+  list(APPEND libyara_definitions -DDOTNET_MODULE)
+  list(APPEND libyara_sources libyara/modules/dotnet/dotnet.c libyara/simple_str.c)
+endif()
 
 add_library(libyara ${libyara_sources})
 target_link_libraries(libyara PRIVATE ${libyara_dependencies})
 target_compile_definitions(libyara PRIVATE ${libyara_definitions})
-
+target_include_directories(libyara INTERFACE $<INSTALL_INTERFACE:include>)
 
 add_executable(yara  ${yara_sources})
 add_executable(yarac  ${yarac_sources})
@@ -134,11 +148,26 @@ target_link_libraries(yarac PRIVATE libyara ${libyara_dependencies})
 target_link_libraries(yara PRIVATE libyara ${libyara_dependencies})
 
 install(
-  TARGETS libyara
-  RUNTIME DESTINATION bin
+  TARGETS libyara EXPORT unofficial-libyaraTargets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
+
+install(EXPORT unofficial-libyaraTargets
+    NAMESPACE unofficial::libyara::
+    DESTINATION share/unofficial-libyara
+)
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libyara-config.cmake.in"
+[[include(CMakeFindDependencyMacro)
+find_dependency(OpenSSL)
+find_dependency(Threads)
+if(@CUCKOO_MODULE@)
+  find_dependency(jansson CONFIG)
+endif()
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-libyaraTargets.cmake")
+]])
+configure_file("${CMAKE_CURRENT_BINARY_DIR}/unofficial-libyara-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libyara-config.cmake" @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libyara-config.cmake DESTINATION share/unofficial-libyara)
 
 if(NOT DISABLE_INSTALL_TOOLS)
   install (

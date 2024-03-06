@@ -1,9 +1,10 @@
 {
   "name": "lz4",
-  "version": "1.9.3",
-  "port-version": 3,
+  "version": "1.9.4",
+  "port-version": 1,
   "description": "Lossless compression algorithm, providing compression speed at 400 MB/s per core.",
   "homepage": "https://github.com/lz4/lz4",
+  "license": "BSD-2-Clause AND GPL-2.0-only",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

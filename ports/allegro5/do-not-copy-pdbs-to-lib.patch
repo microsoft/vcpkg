@@ -8,6 +8,6 @@ index 86c194f..74edef8 100644
              )
 -    if(MSVC AND BUILD_SHARED_LIBS)
 +    if(0)
-         install(FILES ${CMAKE_BINARY_DIR}/lib/${filename}.pdb
+         install(FILES ${CMAKE_BINARY_DIR}/lib/\${CMAKE_INSTALL_CONFIG_NAME}/${filename}.pdb
              DESTINATION lib
              CONFIGURATIONS Debug RelWithDebInfo

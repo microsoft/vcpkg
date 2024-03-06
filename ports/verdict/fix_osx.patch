@@ -1,0 +1,125 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c41d98f70..83f7ca27a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,7 +53,7 @@ configure_file(
+ add_library(verdict ${verdict_SOURCES})
+ target_include_directories(verdict PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:include>)
+-
++target_compile_features(verdict PUBLIC cxx_std_11)
+ 
+ # Setting the VERSION and SOVERSION of a library will include
+ # version information either in the library, or in the library
+diff --git a/V_HexMetric.cpp b/V_HexMetric.cpp
+index 6ba32fa86..5fd976321 100644
+--- a/V_HexMetric.cpp
++++ b/V_HexMetric.cpp
+@@ -2974,10 +2974,10 @@ double hex_distortion(int num_nodes, const double coordinates[][3])
+   double weight[maxTotalNumberGaussPoints];
+ 
+   // create an object of GaussIntegration
+-  GaussIntegration gint{};
+-  gint.initialize(number_of_gauss_points, num_nodes, number_dimension);
+-  gint.calculate_shape_function_3d_hex();
+-  gint.get_shape_func(shape_function[0], dndy1[0], dndy2[0], dndy3[0], weight);
++  GaussIntegration gaussint;
++  gaussint.initialize(number_of_gauss_points, num_nodes, number_dimension);
++  gaussint.calculate_shape_function_3d_hex();
++  gaussint.get_shape_func(shape_function[0], dndy1[0], dndy2[0], dndy3[0], weight);
+ 
+   VerdictVector xxi, xet, xze, xin;
+ 
+@@ -3014,7 +3014,7 @@ double hex_distortion(int num_nodes, const double coordinates[][3])
+   double dndy2_at_node[maxNumberNodes][maxNumberNodes];
+   double dndy3_at_node[maxNumberNodes][maxNumberNodes];
+ 
+-  gint.calculate_derivative_at_nodes_3d(dndy1_at_node, dndy2_at_node, dndy3_at_node);
++  gaussint.calculate_derivative_at_nodes_3d(dndy1_at_node, dndy2_at_node, dndy3_at_node);
+   int node_id;
+   for (node_id = 0; node_id < num_nodes; node_id++)
+   {
+diff --git a/V_QuadMetric.cpp b/V_QuadMetric.cpp
+index 0c7c508e0..8e8a2537e 100644
+--- a/V_QuadMetric.cpp
++++ b/V_QuadMetric.cpp
+@@ -1329,10 +1329,10 @@ double quad_distortion(int num_nodes, const double coordinates[][3])
+     double weight[maxTotalNumberGaussPoints];
+ 
+     // create an object of GaussIntegration
+-    GaussIntegration gint{};
+-    gint.initialize(number_of_gauss_points, num_nodes);
+-    gint.calculate_shape_function_2d_quad();
+-    gint.get_shape_func(shape_function[0], dndy1[0], dndy2[0], weight);
++    GaussIntegration gaussint;
++    gaussint.initialize(number_of_gauss_points, num_nodes);
++    gaussint.calculate_shape_function_2d_quad();
++    gaussint.get_shape_func(shape_function[0], dndy1[0], dndy2[0], weight);
+ 
+     // calculate element area
+     int ife, ja;
+@@ -1355,7 +1355,7 @@ double quad_distortion(int num_nodes, const double coordinates[][3])
+     double dndy1_at_node[maxNumberNodes][maxNumberNodes];
+     double dndy2_at_node[maxNumberNodes][maxNumberNodes];
+ 
+-    gint.calculate_derivative_at_nodes(dndy1_at_node, dndy2_at_node);
++    gaussint.calculate_derivative_at_nodes(dndy1_at_node, dndy2_at_node);
+ 
+     VerdictVector normal_at_nodes[9];
+ 
+diff --git a/V_TetMetric.cpp b/V_TetMetric.cpp
+index feb026968..dc956edb0 100644
+--- a/V_TetMetric.cpp
++++ b/V_TetMetric.cpp
+@@ -1354,10 +1354,10 @@ double tet_distortion(int num_nodes, const double coordinates[][3])
+   double weight[maxTotalNumberGaussPoints];
+ 
+   // create an object of GaussIntegration for tet
+-  GaussIntegration gint{};
+-  gint.initialize(number_of_gauss_points, num_nodes, number_dims, is_tri);
+-  gint.calculate_shape_function_3d_tet();
+-  gint.get_shape_func(shape_function[0], dndy1[0], dndy2[0], dndy3[0], weight);
++  GaussIntegration gaussint;
++  gaussint.initialize(number_of_gauss_points, num_nodes, number_dims, is_tri);
++  gaussint.calculate_shape_function_3d_tet();
++  gaussint.get_shape_func(shape_function[0], dndy1[0], dndy2[0], dndy3[0], weight);
+ 
+   // vector xxi is the derivative vector of coordinates w.r.t local xi coordinate in the
+   // computation space
+@@ -1402,7 +1402,7 @@ double tet_distortion(int num_nodes, const double coordinates[][3])
+   double dndy2_at_node[maxNumberNodes][maxNumberNodes];
+   double dndy3_at_node[maxNumberNodes][maxNumberNodes];
+ 
+-  gint.calculate_derivative_at_nodes_3d_tet(dndy1_at_node, dndy2_at_node, dndy3_at_node);
++  gaussint.calculate_derivative_at_nodes_3d_tet(dndy1_at_node, dndy2_at_node, dndy3_at_node);
+   int node_id;
+   for (node_id = 0; node_id < num_nodes; node_id++)
+   {
+diff --git a/V_TriMetric.cpp b/V_TriMetric.cpp
+index 2fb5c37e8..71c16bea7 100644
+--- a/V_TriMetric.cpp
++++ b/V_TriMetric.cpp
+@@ -664,10 +664,10 @@ double tri_distortion(int num_nodes, const double coordinates[][3])
+   // create an object of GaussIntegration
+   int number_dims = 2;
+   int is_tri = 1;
+-  GaussIntegration gint{};
+-  gint.initialize(number_of_gauss_points, num_nodes, number_dims, is_tri);
+-  gint.calculate_shape_function_2d_tri();
+-  gint.get_shape_func(shape_function[0], dndy1[0], dndy2[0], weight);
++  GaussIntegration gaussint;
++  gaussint.initialize(number_of_gauss_points, num_nodes, number_dims, is_tri);
++  gaussint.calculate_shape_function_2d_tri();
++  gaussint.get_shape_func(shape_function[0], dndy1[0], dndy2[0], weight);
+ 
+   // calculate element area
+   int ife, ja;
+@@ -691,7 +691,7 @@ double tri_distortion(int num_nodes, const double coordinates[][3])
+   double dndy1_at_node[maxNumberNodes][maxNumberNodes];
+   double dndy2_at_node[maxNumberNodes][maxNumberNodes];
+ 
+-  gint.calculate_derivative_at_nodes_2d_tri(dndy1_at_node, dndy2_at_node);
++  gaussint.calculate_derivative_at_nodes_2d_tri(dndy1_at_node, dndy2_at_node);
+ 
+   VerdictVector normal_at_nodes[7];
+ 

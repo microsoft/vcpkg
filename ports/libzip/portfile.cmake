@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nih-at/libzip
-    REF v1.8.0
-    SHA512 f7a78ff6d964a485b8fe3dfb7a61afae69984e67367e6de78c3cb10f15a0904800a1aeca9d33b63bc24ca926fff98638914343a35e7c3a4c3ec8b7594fc25fc1
+    REF "v${VERSION}"
+    SHA512 1b0bffe579de5d2c52b23075f5351a5670e9f7a364c14a876ca3c490a85c0c9b1ebd9a97e729c5c7e71d496a3a0a8f28505bfadd7d8423954d3547a9a8f63841
     HEAD_REF master
     PATCHES
         fix-dependency.patch
+        use-requires.patch
 )
 
 vcpkg_check_features(
@@ -45,4 +46,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/libzip" "${CURRENT_PACKAGES_DIR
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Copy copright information
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

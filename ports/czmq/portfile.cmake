@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/czmq
-    REF v4.2.1
+    REF "v${VERSION}"
     SHA512 65a21f7bd5935b119e1b24ce3b2ce8462031ab7c9a4ba587bb99fe618c9f8cb672cfa202993ddd79e0fb0f154ada06560b79a1b4f762fcce8f88f2f450ecee01
     HEAD_REF master
     PATCHES
@@ -40,6 +40,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCZMQ_BUILD_SHARED=${BUILD_SHARED}
         -DCZMQ_BUILD_STATIC=${BUILD_STATIC}
+        -DCZMQ_WITH_SYSTEMD=OFF
         -DBUILD_TESTING=OFF
         ${FEATURE_OPTIONS}
 )
@@ -62,13 +63,15 @@ file(COPY
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
-if ("tool" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES zmakecert)
-endif()
-
-vcpkg_clean_executables_in_bin(FILE_NAMES zmakecert)
+vcpkg_copy_tools(TOOL_NAMES zmakecert AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+# Remove headers with "common" names that conflict with other packages which aren't intended to be installed
+# See https://github.com/zeromq/czmq/issues/2197
+foreach(FILE readme.txt sha1.h sha1.inc_c slre.h slre.inc_c zgossip_engine.inc zgossip_msg.h zhash_primes.inc zsock_option.inc)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/include/${FILE}")
+endforeach()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/czmq_library.h
@@ -78,4 +81,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

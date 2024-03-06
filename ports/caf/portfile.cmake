@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO actor-framework/actor-framework
-    REF c2be26e7f9e3e84ef14730590fc4e7b25fb9d29a # 0.18.5
-    SHA512 e8d1e9417ea71c4f92f51f4f7dbb7bcc9d0468623d2202be9b4ed4411406a3b6f6fc903309b74bb130e7cf1c7a0ec349d8bc2ac8f216a28216d1c808c1bde039
+    REF "${VERSION}"
+    SHA512 97766b5b0a4db96b03be77c1ffd2198cc5536c09e2a06bb6fcff023ee78692f2c23ad213dc9698d6abfe950c61c4a2565bbfdfe871652cef816829e83d16ceab
     HEAD_REF master
     PATCHES
         fix_dependency.patch
+        fix_cxx17.patch
 )
 
 vcpkg_cmake_configure(

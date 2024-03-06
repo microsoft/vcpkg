@@ -1,6 +1,6 @@
 {
   "name": "libkeyfinder",
-  "version": "2.2.6",
+  "version": "2.2.8",
   "description": "Musical key detection for digital audio",
   "homepage": "https://github.com/mixxxdj/libkeyfinder",
   "license": "GPL-3.0-or-later",
@@ -14,13 +14,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "test": {
-      "description": "Build tests",
-      "dependencies": [
-        "catch2"
-      ]
-    }
-  }
+  ]
 }

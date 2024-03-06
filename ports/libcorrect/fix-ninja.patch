@@ -1,0 +1,54 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2e8e07e..1e8355d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -31,8 +31,6 @@ else()
+ endif()
+ endif(MSVC)
+ 
+-find_library(FEC fec)
+-CHECK_LIBRARY_EXISTS(FEC dotprod "" HAVE_LIBFEC)
+ 
+ if(NOT CMAKE_CROSSCOMPILING)
+   # Check if host machine can compile with SSE 4.1 intrinsic
+@@ -72,12 +70,13 @@ if(HAVE_SSE)
+ else()
+   set(correct_obj_files $<TARGET_OBJECTS:correct-reed-solomon> $<TARGET_OBJECTS:correct-convolutional>)
+ endif()
+-add_library(correct SHARED ${correct_obj_files})
+-add_library(correct_static ${correct_obj_files})
+-set_target_properties(correct_static PROPERTIES OUTPUT_NAME "correct")
++if (BUILD_SHARED_LIBS)
++  add_library(correct SHARED ${correct_obj_files})
++else()
++  add_library(correct ${correct_obj_files})
++endif()
+ if(HAVE_SSE)
+   target_compile_definitions(correct PUBLIC HAVE_SSE=1)
+-  target_compile_definitions(correct_static PUBLIC HAVE_SSE=1)
+ endif()
+ 
+ add_subdirectory(util)
+@@ -85,18 +84,8 @@ add_subdirectory(tests)
+ add_subdirectory(tools)
+ # add_subdirectory(benchmarks)
+ 
+-install(TARGETS correct correct_static
+-        DESTINATION lib)
++install(TARGETS correct
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib)
+ install(FILES ${INSTALL_HEADERS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include")
+-
+-add_library(fec_shim_static EXCLUDE_FROM_ALL src/fec_shim.c ${correct_obj_files})
+-set_target_properties(fec_shim_static PROPERTIES OUTPUT_NAME "fec")
+-add_library(fec_shim_shared SHARED EXCLUDE_FROM_ALL src/fec_shim.c ${correct_obj_files})
+-set_target_properties(fec_shim_shared PROPERTIES OUTPUT_NAME "fec")
+-add_custom_target(fec-shim-h COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/include/fec_shim.h ${PROJECT_BINARY_DIR}/include/fec.h)
+-add_custom_target(shim DEPENDS fec_shim_static fec_shim_shared fec-shim-h)
+-
+-install(TARGETS fec_shim_static fec_shim_shared
+-        DESTINATION lib
+-        OPTIONAL)
+-install(FILES ${PROJECT_BINARY_DIR}/include/fec.h DESTINATION "${CMAKE_INSTALL_PREFIX}/include" OPTIONAL)

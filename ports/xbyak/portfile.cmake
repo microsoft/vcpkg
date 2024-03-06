@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO herumi/xbyak
-    REF v6.00
-    SHA512 8bea95ddb44be39312083173cd4401039bd402c4732d97f9ff63174f6db29793f80dc1f1589d64bd96b4b13af819133897cd9843523662d13d57158c3837a778
+    REF "v${VERSION}"
+    SHA512 1af11bea9e75b9b2842197e52d21283fc5ea7ea3ae1034a3e4584e6ca7b364a60589675a0b171d4ff205029730948b91d353f13d11d52c07f1befedc106971b2
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/xbyak")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug"

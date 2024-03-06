@@ -1,0 +1,28 @@
+From 9f67d7026d3dee8fc6a0af614d97f9365cee2872 Mon Sep 17 00:00:00 2001
+From: Gabriele_Frau <gabriele.frau@sipalinformatica.it>
+Date: Wed, 17 Oct 2018 14:35:54 +0200
+Subject: [PATCH] Fix #62
+
+<Windows.h> includes macro definitions named max and min, wrap the call to max and min with parentheses, which prevent the macro expansion
+---
+ cppcodec/detail/stream_codec.hpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cppcodec/detail/stream_codec.hpp b/cppcodec/detail/stream_codec.hpp
+index d4204bc..4d8d054 100644
+--- a/cppcodec/detail/stream_codec.hpp
++++ b/cppcodec/detail/stream_codec.hpp
+@@ -187,8 +187,8 @@ template <typename T>
+ static CPPCODEC_ALWAYS_INLINE constexpr size_t num_possible_values()
+ {
+     return static_cast<size_t>(
+-            static_cast<intmax_t>(std::numeric_limits<T>::max())
+-                    - static_cast<intmax_t>(std::numeric_limits<T>::min()) + 1);
++            static_cast<intmax_t>((std::numeric_limits<T>::max)())
++                    - static_cast<intmax_t>((std::numeric_limits<T>::min)()) + 1);
+ }
+ 
+ template <typename CodecVariant, alphabet_index_t InvalidIdx, size_t I>
+-- 
+2.32.0.windows.1
+

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/cppzmq
-    REF v4.8.1
-    SHA512 02F9B77F67DD46557705511195EB3F4F4E52381256BC9687F36D3E69DB6A628C19CFFF02209B6E6B53822A60781AB0850EB064D8F020E059FC1ACA4D191B66DB
+    REF "v${VERSION}"
+    SHA512 4a4f3c2a270b9b21591b08a81f2ab6a72693af213c115f2c0aa5b737fd0363d09dba92437f48268ff982e6c27d6830f79244599bd9198e3402c6cca566cea27a
     HEAD_REF master
 )
 
@@ -20,8 +20,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/cppzmq)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/share/${PORT}/libzmq-pkg-config")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

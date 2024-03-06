@@ -20,11 +20,19 @@ endif()
 add_library(ovpncli client/ovpncli.cpp)
 target_link_libraries(ovpncli PRIVATE Iphlpapi.lib Wininet.lib Setupapi.lib Cfgmgr32.lib Rpcrt4.lib Fwpuclnt.lib Wtsapi32.lib ${MBEDTLS_LIB} ${MBEDCRYPTO_LIB} ${MBEDX509_LIB})
 
+target_include_directories(ovpncli PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
+
 install(
     TARGETS ovpncli
+    EXPORT unofficial-openvpnConfig
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
+)
+
+INSTALL(EXPORT unofficial-openvpnConfig
+    NAMESPACE unofficial::openvpn3::
+    DESTINATION share/unofficial-openvpn
 )
 
 if(BUILD_TOOL)

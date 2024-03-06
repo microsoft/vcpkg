@@ -1,62 +1,9 @@
-#[===[.md:
-# vcpkg_download_distfile
-
-Download and cache a file needed for this port.
-
-This helper should always be used instead of CMake's built-in `file(DOWNLOAD)` command.
-
-## Usage
-```cmake
-vcpkg_download_distfile(
-    <OUT_VARIABLE>
-    URLS <http://mainUrl> <http://mirror1>...
-    FILENAME <output.zip>
-    SHA512 <5981de...>
-    [ALWAYS_REDOWNLOAD]
-)
-```
-## Parameters
-### OUT_VARIABLE
-This variable will be set to the full path to the downloaded file. This can then immediately be passed in to [`vcpkg_extract_source_archive`](vcpkg_extract_source_archive.md) for sources.
-
-### URLS
-A list of URLs to be consulted. They will be tried in order until one of the downloaded files successfully matches the SHA512 given.
-
-### FILENAME
-The local name for the file. Files are shared between ports, so the file may need to be renamed to make it clearly attributed to this port and avoid conflicts.
-
-### SHA512
-The expected hash for the file.
-
-If this doesn't match the downloaded version, the build will be terminated with a message describing the mismatch.
-
-### QUIET
-Suppress output on cache hit
-
-### SKIP_SHA512
-Skip SHA512 hash check for file.
-
-This switch is only valid when building with the `--head` command line flag.
-
-### ALWAYS_REDOWNLOAD
-Avoid caching; this is a REST call or otherwise unstable.
-
-Requires `SKIP_SHA512`.
-
-### HEADERS
-A list of headers to append to the download request. This can be used for authentication during a download.
-
-Headers should be specified as "<header-name>: <header-value>".
-
-## Notes
-The helper [`vcpkg_from_github`](vcpkg_from_github.md) should be used for downloading from GitHub projects.
-
-## Examples
-
-* [apr](https://github.com/Microsoft/vcpkg/blob/master/ports/apr/portfile.cmake)
-* [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
-* [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
-#]===]
+function(z_vcpkg_check_hash result file_path sha512)
+    file(SHA512 "${file_path}" file_hash)
+    string(TOLOWER "${sha512}" sha512_lower)
+    string(COMPARE EQUAL "${file_hash}" "${sha512_lower}" hash_match)
+    set("${result}" "${hash_match}" PARENT_SCOPE)
+endfunction()
 
 function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 skip_sha512)
     if(_VCPKG_INTERNAL_NO_HASH_CHECK)
@@ -68,9 +15,10 @@ function(z_vcpkg_download_distfile_test_hash file_path kind error_advice sha512 
         return()
     endif()
 
-    file(SHA512 "${file_path}" file_hash)
-    string(TOLOWER "${sha512}" sha512_lower)
-    if(NOT "${file_hash}" STREQUAL "${sha512_lower}")
+    set(hash_match OFF)
+    z_vcpkg_check_hash(hash_match "${file_path}" "${sha512}")
+
+    if(NOT hash_match)
         message(FATAL_ERROR
             "\nFile does not have expected hash:\n"
             "        File path: [ ${file_path} ]\n"
@@ -84,7 +32,7 @@ function(z_vcpkg_download_distfile_show_proxy_and_fail error_code)
     message(FATAL_ERROR
         "    \n"
         "    Failed to download file with error: ${error_code}\n"  
-        "    If you use a proxy, please check your proxy setting. Possible causes are:\n"
+        "    If you are using a proxy, please check your proxy setting. Possible causes are:\n"
         "    \n"
         "    1. You are actually using an HTTP proxy, but setting HTTPS_PROXY variable\n"
         "       to `https://address:port`. This is not correct, because `https://` prefix\n"
@@ -92,19 +40,16 @@ function(z_vcpkg_download_distfile_show_proxy_and_fail error_code)
         "       , etc..) is an HTTP proxy. Try setting `http://address:port` to both\n"
         "       HTTP_PROXY and HTTPS_PROXY instead.\n"
         "    \n"
-        "    2. You are using Fiddler. Currently a bug (https://github.com/microsoft/vcpkg/issues/17752)\n"
-        "       will set HTTPS_PROXY to `https://fiddler_address:port` which lead to problem 1 above.\n"
-        "       Workaround is open Windows 10 Settings App, and search for Proxy Configuration page,\n"
-        "       Change `http=address:port;https=address:port` to `address`, and fill the port number.\n"
+        "    2. If you are using Windows, vcpkg will automatically use your Windows IE Proxy Settings\n"
+        "       set by your proxy software. See https://github.com/microsoft/vcpkg-tool/pull/77\n"
+        "       The value set by your proxy might be wrong, or have same `https://` prefix issue.\n"
         "    \n"
         "    3. Your proxy's remote server is out of service.\n"
         "    \n"
-        "    In future vcpkg releases, if you are using Windows, you no longer need to set\n"
-        "    HTTP(S)_PROXY environment variables. Vcpkg will simply apply Windows IE Proxy\n"
-        "    Settings set by your proxy software. See (https://github.com/microsoft/vcpkg-tool/pull/49)\n"
-        "    and (https://github.com/microsoft/vcpkg-tool/pull/77)\n"
-        "    \n"
-        "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
+        "    If you've tried directly download the link, and believe this is not a temporary\n"
+        "    download server failure, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n"
+        "    to report this upstream download server failure.\n"
+        "    \n")
 endfunction()
 
 function(z_vcpkg_download_distfile_via_aria)
@@ -211,6 +156,22 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
     endif()
 
     set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
+
+    if(EXISTS "${downloaded_file_path}" AND NOT arg_SKIP_SHA512)
+        set(hash_match OFF)
+        z_vcpkg_check_hash(hash_match "${downloaded_file_path}" "${arg_SHA512}")
+        
+        if(NOT hash_match)
+            get_filename_component(filename_component "${arg_FILENAME}" NAME_WE)
+            get_filename_component(extension_component "${arg_FILENAME}" EXT)
+            get_filename_component(directory_component "${arg_FILENAME}" DIRECTORY)
+
+            string(SUBSTRING "${arg_SHA512}" 0 8 hash)
+            set(arg_FILENAME "${directory_component}${filename_component}-${hash}${extension_component}")
+            set(downloaded_file_path "${DOWNLOADS}/${arg_FILENAME}")
+        endif()
+    endif()
+
     set(download_file_path_part "${DOWNLOADS}/temp/${arg_FILENAME}")
 
     # Works around issue #3399
@@ -220,7 +181,7 @@ If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
 
     # check if file with same name already exists in downloads
-    if(EXISTS "${downloaded_file_path}")
+    if(EXISTS "${downloaded_file_path}" AND NOT arg_ALWAYS_REDOWNLOAD)
         set(advice_message "The cached file SHA512 doesn't match. The file may have been corrupted.")
         if(_VCPKG_NO_DOWNLOADS)
             string(APPEND advice_message " Downloads are disabled please provide a valid file at path ${downloaded_file_path} and retry.")

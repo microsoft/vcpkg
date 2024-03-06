@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4110ae5..a86b207 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -109,7 +109,7 @@ if(MSVC)
+     add_compile_options($<$<COMPILE_LANGUAGE:C>:/wd4267>)
+ 
+     # handle msvcrt setting being passed in CMAKE_C_FLAGS
+-    if(DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
++    if(NOT CMAKE_MSVC_RUNTIME_LIBRARY)
+         # do not support other methods of setting this (it would be more conformant, tho)
+         message(FATAL_ERROR "please set msvcrt via CMAKE_C_FLAGS")
+     endif()
+@@ -1431,7 +1431,7 @@ if(UNICORN_BUILD_TESTS)
+ endif()
+ 
+ 
+-if(UNICORN_INSTALL AND NOT MSVC)
++if(UNICORN_INSTALL)
+     include("GNUInstallDirs")
+     file(GLOB UNICORN_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/unicorn/*.h)
+     if (BUILD_SHARED_LIBS)

@@ -12,24 +12,23 @@ if("zlib" IN_LIST FEATURES)
     set(USE_ZLIB ON)
 endif()
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
   DISABLE_PARALLEL_CONFIGURE
-  PREFER_NINJA
   OPTIONS
-    -DGSL_INCLUDE_PATH=${CURRENT_INSTALLED_DIR}/include
+    "-DGSL_INCLUDE_PATH=${CURRENT_INSTALLED_DIR}/include"
     -DTELNETPP_WITH_ZLIB=${USE_ZLIB}
     -DTELNETPP_WITH_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/telnetpp)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/telnetpp)
 
 vcpkg_copy_pdbs()
 
 # Remove duplicate header files and CMake input file
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/telnetpp/version.hpp.in)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/telnetpp/version.hpp.in")
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/telnetpp RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

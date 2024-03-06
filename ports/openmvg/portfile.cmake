@@ -16,6 +16,8 @@ vcpkg_from_github(
         build_fixes.patch
         0001-eigen_3.4.0.patch
         0002-eigen-3.4.patch
+        no-absolute-paths.patch
+        fix-coinutils.patch
 )
 
 set(OpenMVG_USE_OPENMP OFF)
@@ -46,9 +48,10 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/ceres-solver
 file(REMOVE_RECURSE ${SOURCE_PATH}/src/cmakeFindModules/FindEigen.cmake
                     ${SOURCE_PATH}/src/cmakeFindModules/FindLemon.cmake
                     ${SOURCE_PATH}/src/cmakeFindModules/FindFlann.cmake
-                    ${SOURCE_PATH}/src/cmakeFindModules/FindCoinUtils.cmake
-                    ${SOURCE_PATH}/src/cmakeFindModules/FindClp.cmake
-                    ${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake)
+                    #${SOURCE_PATH}/src/cmakeFindModules/FindCoinUtils.cmake
+                    #${SOURCE_PATH}/src/cmakeFindModules/FindClp.cmake
+                    #${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake
+                    )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
@@ -68,6 +71,9 @@ vcpkg_cmake_configure(
         -DOpenMVG_USE_INTERNAL_CERES=OFF
         -DOpenMVG_USE_INTERNAL_FLANN=OFF
         -DOpenMVG_USE_INTERNAL_LEMON=OFF
+        "-DCOINUTILS_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
+        "-DCLP_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
+        "-DOSI_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
 )
 
 vcpkg_cmake_install()

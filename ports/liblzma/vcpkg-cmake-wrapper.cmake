@@ -13,7 +13,7 @@ if(NOT "CONFIG" IN_LIST ARGS AND NOT "NO_MODULE" IN_LIST ARGS AND NOT CMAKE_DISA
     if(CMAKE_VERSION VERSION_LESS 3.16)
         # Older versions of FindLibLZMA.cmake need a single lib in LIBLZMA_LIBRARY.
         set(z_vcpkg_liblzma_fixup_needed 1)
-        set(LIBLZMA_LIBRARY "${LIBLZMA_LIBRARY_RELEASE}")
+        set(LIBLZMA_LIBRARY "${LIBLZMA_LIBRARY_RELEASE}" CACHE INTERNAL "")
     elseif(NOT TARGET LibLZMA::LibLZMA)
         set(z_vcpkg_liblzma_fixup_needed 1)
     endif()

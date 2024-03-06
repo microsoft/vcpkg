@@ -1,7 +1,7 @@
 {
   "name": "mmx",
-  "version-string": "2019-09-29",
-  "port-version": 1,
+  "version-date": "2022-03-27",
   "description": "Single header libraries for C/C++",
-  "homepage": "https://github.com/vurtun/mmx"
+  "homepage": "https://github.com/vurtun/mmx",
+  "license": null
 }

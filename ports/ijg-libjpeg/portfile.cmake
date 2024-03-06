@@ -10,42 +10,41 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS        "http://www.ijg.org/files/jpegsr9d.zip"
-    FILENAME    "jpegsr9d.zip"
-    SHA512      441a783c945fd549693dbe3932d8d35e1ea00d8464870646760ed84a636facb4d7afe0ca3ab988e7281a71e41c2e96be618b8c6a898f116517e639720bba82a3
+    URLS        "http://www.ijg.org/files/jpegsr9e.zip"
+    FILENAME    "jpegsr9e.zip"
+    SHA512      db7a2fb44e5cc20d61956c46334948af034c07cdcc0d6e41d9bd4f6611c0fbed8943d0a05029ba1bfb9d993f4acd0df5e95d0bc1cfb5a889b86a55b6b75fdf64
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
 )
 
 # Replace some #define in jconfig.txt to #cmakedefine so the CMakeLists.txt can run `configure_file` command.
 # See https://github.com/LuaDist/libjpeg
-vcpkg_replace_string(${SOURCE_PATH}/jconfig.txt
+vcpkg_replace_string("${SOURCE_PATH}/jconfig.txt"
     "#define HAVE_STDDEF_H"
     "#cmakedefine HAVE_STDDEF_H"
 )
-vcpkg_replace_string(${SOURCE_PATH}/jconfig.txt
+vcpkg_replace_string("${SOURCE_PATH}/jconfig.txt"
     "#define HAVE_STDLIB_H"
     "#cmakedefine HAVE_STDLIB_H"
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXECUTABLES=OFF # supports [tools] feature to enable this option?
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # There is no LICENSE file, but README containes some legal text.
-file(INSTALL ${SOURCE_PATH}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/README" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

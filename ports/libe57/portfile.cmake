@@ -1,5 +1,5 @@
 set(VERSION 1.1.332)
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/E57RefImpl_src-${VERSION})
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/E57RefImpl_src-${VERSION}")
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -13,11 +13,12 @@ vcpkg_from_sourceforge(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/share/libe57)
+if(NOT VCPKG_BUILD_TYPE)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/libe57")
+endif()
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
@@ -28,5 +29,7 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/e57refimpl/CHANGES.TXT")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/e57refimpl/README.TXT")

@@ -1,10 +1,19 @@
 {
   "name": "rttr",
-  "version-string": "0.9.6",
-  "port-version": 3,
+  "version": "0.9.6+20210811",
   "description": "an easy and intuitive way to use reflection in C++",
   "homepage": "https://github.com/rttrorg/rttr",
+  "license": "MIT",
+  "supports": "(static & staticcrt) | (!static & staticcrt) | (!static & !staticcrt)",
   "dependencies": [
-    "rapidjson"
+    "rapidjson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

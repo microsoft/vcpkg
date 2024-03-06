@@ -1,16 +1,12 @@
-set(EMBREE3_VERSION 3.12.2)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO embree/embree
-    REF v${EMBREE3_VERSION}
-    SHA512 a63b483a92f4653e07a21ed3b545d86003295e0aacd8ec7a40ee72bad7bb70c6ea019af511e78c5c598336b162d53e296e9c87150c0adce6463b058e7a5394d4
+    REF v${VERSION}
+    SHA512 13ae19b1750197fb4887ba601c75d1b54b3c388224672b6561dd922bc9b9747139cf46ce554727e3afa13dcf152ce4d703935cb9105ced792b011f2d05fa3e95
     HEAD_REF master
     PATCHES
-        fix-path.patch
-        fix-static-usage.patch
-        cmake_policy.patch
-        fix-targets-file-not-found.patch
+        no-runtime-install.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)
@@ -47,25 +43,40 @@ Only set feature avx automaticlly.
     endif()
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_replace_string("${SOURCE_PATH}/common/cmake/installTBB.cmake" "IF (EMBREE_STATIC_LIB)" "IF (0)")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DEMBREE_ISPC_SUPPORT=OFF
         -DEMBREE_TUTORIALS=OFF
         -DEMBREE_STATIC_RUNTIME=${EMBREE_STATIC_RUNTIME}
         -DEMBREE_STATIC_LIB=${EMBREE_STATIC_LIB}
+        -DEMBREE_INSTALL_DEPENDENCIES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/embree TARGET_PATH share/embree)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/embree-${VERSION} PACKAGE_NAME embree)
+set(config_file "${CURRENT_PACKAGES_DIR}/share/embree/embree-config.cmake")
+# Fix details in config.
+file(READ "${config_file}" contents)
+string(REPLACE "SET(EMBREE_BUILD_TYPE Release)" "" contents "${contents}")
+string(REPLACE "/../../../" "/../../" contents "${contents}")
+string(REPLACE "FIND_PACKAGE" "include(CMakeFindDependencyMacro)\n  find_dependency" contents "${contents}")
+string(REPLACE "REQUIRED" "COMPONENTS" contents "${contents}")
+string(REPLACE "/lib/cmake/embree-${VERSION}" "/share/embree" contents "${contents}")
+
+if(NOT VCPKG_BUILD_TYPE)
+    string(REPLACE "/lib/embree3.lib" "$<$<CONFIG:DEBUG>:/debug>/lib/embree3.lib" contents "${contents}")
+endif()
+file(WRITE "${config_file}" "${contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 if(APPLE)

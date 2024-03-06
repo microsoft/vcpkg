@@ -1,8 +1,9 @@
 {
   "name": "@PORT@",
-  "version-string": "",
+  "version": "",
   "homepage": "",
   "description": "",
+  "license": "",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -11,11 +12,10 @@
   ],
 
   "default-features": [],
-  "features": [
-    {
-      "name": "",
+  "features": {
+    "example-feature": {
       "description": "",
       "dependencies": []
     }
-  ]
+  }
 }

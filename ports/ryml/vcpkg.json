@@ -1,9 +1,9 @@
 {
   "name": "ryml",
-  "version-date": "2021-07-24",
-  "port-version": 1,
+  "version": "0.5.0",
   "description": "Rapid YAML library",
   "homepage": "https://github.com/biojppm/rapidyaml",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "c4core",

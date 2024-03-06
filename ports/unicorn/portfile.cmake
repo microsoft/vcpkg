@@ -1,7 +1,3 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "WindowsStore not supported")
-endif()
-
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     message(FATAL_ERROR "unicorn can currently only be built with /MT or /MTd (static CRT linkage)")
 endif()
@@ -12,45 +8,25 @@ set(VCPKG_CRT_LINKAGE "static")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO unicorn-engine/unicorn
-    REF 52f90cda023abaca510d59f021c88629270ad6c0 # v1.0.3
-    SHA512 bb47e7d680b122e38bd9390f44a3f7e3c3e314ea3ac86dbab3e755b7bcc2db5daca3a4432276a874f59675f811f7785d68ec0d39696c955d3718d6a720adf70b
+    REF "${VERSION}.post1"
+    SHA512 8694d6bc92e3424a8ad050316413d53e56e0f55e7cad7517fb3e98e670a0f1768b060ead8f195da13607cec89a964364f05a8b9d0dc074f4ac5e51026f8343ad
     HEAD_REF master
+    PATCHES
+        fix-build.patch
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(UNICORN_PLATFORM "Win32")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(UNICORN_PLATFORM "x64")
-else()
-    message(FATAL_ERROR "Unsupported architecture")
-endif()
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DUNICORN_BUILD_TESTS=OFF
+    )
 
-vcpkg_build_msbuild(
-    PROJECT_PATH "${SOURCE_PATH}/msvc/unicorn.sln"
-    PLATFORM "${UNICORN_PLATFORM}"
-)
+vcpkg_cmake_install()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Release/unicorn.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Release/unicorn.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Debug/unicorn.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Debug/unicorn.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-else()
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Release/unicorn_static.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${SOURCE_PATH}/msvc/${UNICORN_PLATFORM}/Debug/unicorn_static.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-endif()
+vcpkg_fixup_pkgconfig()
 
-file(
-    INSTALL "${SOURCE_PATH}/msvc/distro/include/unicorn"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-    RENAME "unicorn"
-)
-file(
-    INSTALL "${SOURCE_PATH}/COPYING"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unicorn"
-    RENAME "copyright"
-)
-file(
-    INSTALL "${SOURCE_PATH}/COPYING_GLIB"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unicorn"
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+# Handle copyright
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

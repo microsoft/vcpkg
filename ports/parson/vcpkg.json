@@ -1,6 +1,17 @@
 {
   "name": "parson",
-  "version-string": "2020-09-14",
-  "port-version": 1,
-  "description": "a lighweight json library written in C"
+  "version-date": "2022-11-13",
+  "description": "a lightweight json library written in C",
+  "homepage": "https://github.com/kgabis/parson",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

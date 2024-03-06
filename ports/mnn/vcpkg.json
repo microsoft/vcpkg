@@ -1,7 +1,7 @@
 {
   "name": "mnn",
   "version": "1.1.0",
-  "port-version": 2,
+  "port-version": 5,
   "description": "MNN is a blazing fast, lightweight deep learning framework, battle-tested by business-critical use cases in Alibaba",
   "homepage": "https://www.mnn.zone/",
   "license": "Apache-2.0",
@@ -13,24 +13,54 @@
       "host": true
     },
     "rapidjson",
-    "stb"
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ],
   "features": {
     "cuda": {
       "description": "Enable CUDA API backend",
       "dependencies": [
         "cuda",
-        "cudnn"
+        "cudnn",
+        {
+          "name": "mnn",
+          "features": [
+            "gpu"
+          ]
+        }
       ]
     },
+    "gpu": {
+      "description": "Enable MNN Gpu Debug"
+    },
     "metal": {
-      "description": "Enable Metal API backend for Apple platforms"
+      "description": "Enable Metal API backend for Apple platforms",
+      "dependencies": [
+        {
+          "name": "mnn",
+          "features": [
+            "gpu"
+          ]
+        }
+      ]
     },
     "opencl": {
       "description": "Enable OpenCL API backend",
       "dependencies": [
+        {
+          "name": "mnn",
+          "features": [
+            "system"
+          ]
+        },
         "opencl"
       ]
+    },
+    "system": {
+      "description": "For opencl and vulkan, use system lib or use dlopen"
     },
     "test": {
       "description": "Build MNN test programs"
@@ -44,6 +74,13 @@
     "vulkan": {
       "description": "Enable Vulkan API backend",
       "dependencies": [
+        {
+          "name": "mnn",
+          "features": [
+            "gpu",
+            "system"
+          ]
+        },
         "vulkan"
       ]
     }

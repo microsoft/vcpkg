@@ -16,12 +16,13 @@ else()
     list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=no)
 endif()
 
-set(TOOL_NAMES balsam balsamui meshdebug shadergen instancer)
+set(TOOL_NAMES balsam balsamui meshdebug shadergen instancer materialeditor shapegen)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
                         ${FEATURE_OPTIONS}
+                        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )

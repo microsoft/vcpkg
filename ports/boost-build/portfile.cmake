@@ -4,17 +4,18 @@ if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME 
     return()
 endif()
 
-set(BOOST_VERSION 1.78.0)
+set(BOOST_VERSION ${VERSION})
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
-    REF boost-${BOOST_VERSION}
-    SHA512 867966e3d254c0e996786587fb64ad1bda6f96546e5302c15231b17d66537798770bbd9e89f800d445a1f0a4d3be06dff8aed42dfd3a77b563d0f5d715e79324
+    REF boost-${VERSION}
+    SHA512 61540a3b2b7b6167ed8286daed4b4fde515ae9e0de81d17ef688d7972a0a6325b15afbe4e9a73ec883a81d5b86998d612cadbdc79abaf1b087a74e4e6b7cc2b5
     HEAD_REF master
     PATCHES
-        0001-don-t-skip-install-targets.patch
         0002-fix-get-version.patch
+        0003-fix-emscripten.patch
+        0004-workaround-MSVC-codegen-bug-in-17.5-on-ARM64.patch
 )
 
 vcpkg_download_distfile(ARCHIVE
@@ -26,7 +27,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_download_distfile(BOOSTCPP_ARCHIVE
     URLS "https://raw.githubusercontent.com/boostorg/boost/boost-${BOOST_VERSION}/boostcpp.jam"
     FILENAME "boost-${BOOST_VERSION}-boostcpp.jam"
-    SHA512 0daa0dd315f7e426e7b9ada9cc4dad03da2eb257456e551de3fb3b2a8244f0117ed41d9d1ff77b5a3eee7a3c5fb466d345b9bb2af46004fc630209043d4862e3
+    SHA512 32feae4e13418f68702b18964b17e706255429dd881a098355a0b644da11a97c42aa7eeffa5cc4e30aa8a370dde2097aecc62175fb37cd5cf9766e7fc6303da7
 )
 
 # https://github.com/boostorg/boost/pull/206

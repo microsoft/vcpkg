@@ -1,17 +1,8 @@
-From 902ab5bf91937188d3ebf0aece81a704729e5580 Mon Sep 17 00:00:00 2001
-From: Nicole Mazzuca <mazzucan@outlook.com>
-Date: Tue, 22 Sep 2020 15:42:53 -0700
-Subject: [PATCH 3/5] add find_package libwebsockets
-
----
- CMakeLists.txt | 1 +
- 1 file changed, 1 insertion(+)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1a92fe3..3c78b2c 100644
+index 2775a3da..ef7ce14a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -45,6 +45,7 @@ endif (WITH_TLS)
+@@ -55,6 +55,7 @@ endif (WITH_UNIX_SOCKETS AND NOT WIN32)
  
  option(WITH_SOCKS "Include SOCKS5 support?" ON)
  if (WITH_SOCKS)
@@ -19,6 +10,3 @@ index 1a92fe3..3c78b2c 100644
  	add_definitions("-DWITH_SOCKS")
  endif (WITH_SOCKS)
  
--- 
-2.24.3 (Apple Git-128)
-

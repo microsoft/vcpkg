@@ -1,0 +1,89 @@
+diff --git a/zbar/symbol.c b/zbar/symbol.c
+index 27dbc87..1059a72 100644
+--- a/zbar/symbol.c
++++ b/zbar/symbol.c
+@@ -100,40 +100,29 @@ const char *zbar_get_orientation_name (zbar_orientation_t orient)
+ 
+ int _zbar_get_symbol_hash (zbar_symbol_type_t sym)
+ {
+-    static const signed char hash[ZBAR_CODE128 + 1] = {
+-        [0 ... ZBAR_CODE128] = -1,
+-
+-        /* [ZBAR_FOO] = 0, is empty */
+-        [ZBAR_SQCODE]      = 1,
+-        [ZBAR_CODE128]     = 2,
+-        [ZBAR_EAN13]       = 3,
+-        [ZBAR_UPCA]        = 4,
+-        [ZBAR_EAN8]        = 5,
+-        [ZBAR_UPCE]        = 6,
+-        [ZBAR_ISBN13]      = 7,
+-        [ZBAR_ISBN10]      = 8,
+-        [ZBAR_CODE39]      = 9,
+-        [ZBAR_I25]         = 10,
+-        [ZBAR_PDF417]      = 11,
+-        [ZBAR_QRCODE]      = 12,
+-        [ZBAR_DATABAR]     = 13,
+-        [ZBAR_DATABAR_EXP] = 14,
+-        [ZBAR_CODE93]      = 15,
+-        [ZBAR_EAN2]        = 16,
+-        [ZBAR_EAN5]        = 17,
+-        [ZBAR_COMPOSITE]   = 18,
+-        [ZBAR_CODABAR]     = 19,
+-
+-        /* Please update NUM_SYMS accordingly */
+-    };
+-    int h;
+-
+-    assert (sym >= ZBAR_PARTIAL && sym <= ZBAR_CODE128);
+-
+-    h = hash[sym];
+-    assert (h >= 0 && h < NUM_SYMS);
+-
+-    return h;
++	switch(sym)
++	{
++		default: return -1;
++		case ZBAR_SQCODE:      return 1;
++		case ZBAR_CODE128:     return 2;
++		case ZBAR_EAN13:       return 3;
++		case ZBAR_UPCA:        return 4;
++		case ZBAR_EAN8:        return 5;
++		case ZBAR_UPCE:        return 6;
++		case ZBAR_ISBN13:      return 7;
++		case ZBAR_ISBN10:      return 8;
++		case ZBAR_CODE39:      return 9;
++		case ZBAR_I25:         return 10;
++		case ZBAR_PDF417:      return 11;
++		case ZBAR_QRCODE:      return 12;
++		case ZBAR_DATABAR:     return 13;
++		case ZBAR_DATABAR_EXP: return 14;
++		case ZBAR_CODE93:      return 15;
++		case ZBAR_EAN2:        return 16;
++		case ZBAR_EAN5:        return 17;
++		case ZBAR_COMPOSITE:   return 18;
++		case ZBAR_CODABAR:     return 19;
++	}
+ }
+ 
+ void _zbar_symbol_free (zbar_symbol_t *sym)
+diff --git a/zbar/window/win.c b/zbar/window/win.c
+index b949f65..7edcfa2 100644
+--- a/zbar/window/win.c
++++ b/zbar/window/win.c
+@@ -194,7 +194,7 @@ int _zbar_window_draw_polygon (zbar_window_t *w,
+     win_set_rgb(hdc, rgb);
+ 
+     point_t org = w->scaled_offset;
+-    POINT gdipts[npts + 1];
++    POINT* gdipts = malloc((npts + 1) * sizeof(POINT));
+     int i;
+     for(i = 0; i < npts; i++) {
+         point_t p = window_scale_pt(w, pts[i]);
+@@ -204,6 +204,7 @@ int _zbar_window_draw_polygon (zbar_window_t *w,
+     gdipts[npts] = gdipts[0];
+ 
+     Polyline(hdc, gdipts, npts + 1);
++    free(gdipts);
+     return(0);
+ }
+ 

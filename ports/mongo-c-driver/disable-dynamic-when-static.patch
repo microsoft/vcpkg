@@ -1,0 +1,38 @@
+diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
+index c36dff1..525e065 100644
+--- a/src/libmongoc/CMakeLists.txt
++++ b/src/libmongoc/CMakeLists.txt
+@@ -812,7 +812,7 @@ if (MONGOC_ENABLE_STATIC_BUILD)
+    set_target_properties (mcd_rpc PROPERTIES OUTPUT_NAME "mcd-rpc")
+ endif ()
+ 
+-if (ENABLE_SHARED)
++if (NOT MONGOC_ENABLE_STATIC_BUILD)
+    add_library (mongoc_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+    if(WIN32)
+       # Add resource-definition script for Windows shared library (.dll).
+@@ -1253,7 +1253,7 @@ if (MONGOC_ENABLE_STATIC_INSTALL)
+    list (APPEND TARGETS_TO_INSTALL mongoc_static)
+ endif ()
+ 
+-if (ENABLE_SHARED)
++if (NOT MONGOC_ENABLE_STATIC_BUILD)
+    list (APPEND TARGETS_TO_INSTALL mongoc_shared)
+ endif ()
+ 
+@@ -1308,6 +1308,7 @@ endif()
+ set_property(TARGET ${TARGETS_TO_INSTALL} APPEND PROPERTY pkg_config_INCLUDE_DIRECTORIES "${MONGOC_HEADER_INSTALL_DIR}")
+ 
+ # Deprecated alias for libmongoc-1.0.pc, see CDRIVER-2086.
++if(NOT MONGOC_ENABLE_STATIC_INSTALL)
+ if (MONGOC_ENABLE_SSL)
+    configure_file (
+       ${CMAKE_CURRENT_SOURCE_DIR}/src/libmongoc-ssl-1.0.pc.in
+@@ -1318,6 +1319,7 @@ if (MONGOC_ENABLE_SSL)
+       DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+    )
+ endif ()
++endif ()
+ 
+ include (CMakePackageConfigHelpers)
+ 

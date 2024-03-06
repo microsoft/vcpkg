@@ -1,6 +1,17 @@
 {
   "name": "solid3",
-  "version-string": "3.5.8",
-  "port-version": 1,
-  "description": "Software Library for Interference Detection"
+  "version": "3.5.8",
+  "port-version": 2,
+  "description": "Software Library for Interference Detection",
+  "license": "GPL-2.0-only OR QPL-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

@@ -3,15 +3,14 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Reflect
-    REF sdk-1.3.204.1
-    SHA512 af0bfcb7a8565cbd981034900760d304792e9dfb0a166b712e3506475fdeff282e0ba0f02d82d671ee05e7ed0792815eba654b66af0739404bf38c9e12ebf4f5
+    REF "vulkan-sdk-${VERSION}"
+    SHA512 9bfcc88d541a4e96b22408b9c37be223ffe7010eb54c3f3c9091872311b34e52000ce31d165d3914bfabf7f9c1d5f0fa85fac9038271296a4fceb6d1a6b99030
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS -DSPIRV_REFLECT_STATIC_LIB=ON
 )
 
 vcpkg_cmake_install()
@@ -19,4 +18,8 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/spirv-reflect" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+vcpkg_copy_tools(TOOL_NAMES spirv-reflect-pp spirv-reflect AUTO_CLEAN)

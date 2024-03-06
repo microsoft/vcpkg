@@ -2,8 +2,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ryan-rsm-McKenzie/binary_io
-    REF 2.0.4
-    SHA512 a2025be9db79e2d89ab28fdda98cfe88ae6a7f0f0a7e3b6d9f99a1bf8a7b4d89e8a34db21a9bdf11784c7f01fb27a6b083c8af81743919e04efb0736c151bb7e
+    REF 2.0.6
+    SHA512 055290ee81e93aa8a8cda567eea848c76a830d78afb1c40bc3ba0e23b41bf80364fc8621ddaf8d48678acc4b5b7fd1ba2075e2bd23995655131954f580bdd4ae
     HEAD_REF main
 )
 

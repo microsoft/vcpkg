@@ -1,0 +1,36 @@
+{
+  "name": "cyclonedds-cxx",
+  "version": "0.10.4",
+  "description": "C++ binding for Eclipse Cyclone DDS",
+  "homepage": "https://cyclonedds.io",
+  "license": "EPL-2.0",
+  "dependencies": [
+    {
+      "name": "cyclonedds",
+      "default-features": false
+    },
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "idllib": {
+      "description": "Build IDL preprocessor lib",
+      "dependencies": [
+        {
+          "name": "cyclonedds",
+          "default-features": false,
+          "features": [
+            "idlc"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -5,17 +5,13 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 set(program MESON)
-set(program_version 0.60.2)
+set(program_version 0.63.0)
 set(program_name meson)
 set(search_names meson meson.py)
 set(interpreter PYTHON3)
 set(apt_package_name "meson")
 set(brew_package_name "meson")
-set(ref 5e9b709ad0b34d8ac920dff057a5361080c0889b)
 set(paths_to_search "${CURRENT_PACKAGES_DIR}/tools/meson")
-set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
-set(download_filename "meson-${ref}.tar.gz")
-set(download_sha512 5fb89c6b81f75825b6f300039db6dae9d907c81403a8ebe30c7426729d5cb3179e30b9b84d6ed756c2aa39ca34ea681afa0c5cd78835a94c43d5ab25e625abd0)
 set(supported_on_unix ON)
 set(version_command --version)
 set(extra_search_args EXACT_VERSION_MATCH)
@@ -32,25 +28,26 @@ vcpkg_find_acquire_program(PYTHON3)
 #    VERSION_COMMAND ${version_command}
 # )
 
-if(NOT "${program}")
-    vcpkg_download_distfile(archive_path
-        URLS ${download_urls}
-        SHA512 "${download_sha512}"
-        FILENAME "${download_filename}"
-    )
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
-    vcpkg_execute_in_download_mode(
-                        COMMAND "${CMAKE_COMMAND}" -E tar xzf "${archive_path}"
-                        WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools"
-                    )
-    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/meson-${ref}" "${CURRENT_PACKAGES_DIR}/tools/meson")
-    z_vcpkg_apply_patches(
-        SOURCE_PATH "${CURRENT_PACKAGES_DIR}"
-        PATCHES meson-intl.patch
-                fix_linker_detection.patch
-    )
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/meson/test cases")
-endif()
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mesonbuild/meson
+    REF bb91cea0d66d8d036063dedec1f194d663399cdf
+    SHA512 e5888eb35dd4ab5fc0a16143cfbb5a7849f6d705e211a80baf0a8b753e2cf877a4587860a79cad129ec5f3474c12a73558ffe66439b1633d80b8044eceaff2da
+    PATCHES
+        meson-intl.patch
+        remove-freebsd-pcfile-specialization.patch
+)
+
+vcpkg_execute_required_process(
+    COMMAND "${CMAKE_COMMAND}"
+        "-DSOURCE_PATH=${SOURCE_PATH}"
+        "-DCURRENT_PACKAGES_DIR=${CURRENT_PACKAGES_DIR}"
+        -P "${CURRENT_PORT_DIR}/install.cmake"
+    WORKING_DIRECTORY "${VCPKG_ROOT_DIR}"
+    LOGNAME install
+)
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 z_vcpkg_find_acquire_program_find_internal("${program}"
     INTERPRETER "${interpreter}"

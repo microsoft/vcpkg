@@ -1,14 +1,17 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
+string(REPLACE "." "_" release_tag "xmlsec_${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lsh123/xmlsec
-    REF e628e70040cb0d81a561462472806aeaac1d1bc7 #xmlsec-1_2_33
-    SHA512 2d4485941d354160f7fabd84394c61eef9dcea8be572d78bf7da7370880747f86ff76127fa000f8b0de06f462abef17d653270dee680fa35d96cc8200fb4d1a6
+    REF "${release_tag}"
+    SHA512 c7b867edc23cb6cf08228f9737fc50e3bd08ac7baedc43e26d3cfd113ea54256ff357335b23aea7b5e49cd24809c3de9da1c9314eb5ab90727aa821530b72ef8
     HEAD_REF master
     PATCHES 
         pkgconfig_fixes.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -16,9 +19,20 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-xmlsec)
 vcpkg_fixup_pkgconfig()
-
-file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+  vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/xmlsec/xmlsec.h"
+    "ifdef XMLSEC_NO_SIZE_T"
+    "if 1 //ifdef XMLSEC_NO_SIZE_T"
+  )
+endif()
+
+# unofficial legacy usage
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/xmlsec-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

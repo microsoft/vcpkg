@@ -1,11 +1,12 @@
 {
   "name": "qtbase",
-  "version": "6.2.4",
+  "version": "6.6.1",
+  "port-version": 10,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
+  "supports": "!uwp",
   "dependencies": [
-    "freetype",
     {
       "name": "libb2",
       "platform": "!windows"
@@ -21,8 +22,15 @@
       "default-features": false,
       "features": [
         "doubleconversion"
+      ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "thread"
       ],
-      "platform": "windows"
+      "platform": "osx"
     },
     {
       "name": "qtbase",
@@ -54,13 +62,25 @@
     "icu",
     "jpeg",
     "network",
-    "openssl",
+    {
+      "name": "opengl",
+      "platform": "!ios"
+    },
+    {
+      "name": "openssl",
+      "platform": "!ios"
+    },
     "pcre2",
     "png",
+    {
+      "name": "securetransport",
+      "platform": "ios"
+    },
     "sql",
     "sql-psql",
     "sql-sqlite",
     "testlib",
+    "thread",
     "widgets",
     "zstd"
   ],
@@ -82,10 +102,28 @@
       ]
     },
     "concurrent": {
-      "description": "Provides a high-level multi-threading API. Qt Concurrent"
+      "description": "Provides a high-level multi-threading API. Qt Concurrent",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        }
+      ]
     },
     "dbus": {
-      "description": "Qt D-Bus"
+      "description": "Qt D-Bus",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        }
+      ]
     },
     "default-features": {
       "description": "Platform-dependent default features",
@@ -109,6 +147,15 @@
             "xrender"
           ],
           "platform": "linux"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "egl",
+            "gles2"
+          ],
+          "platform": "android"
         }
       ]
     },
@@ -120,8 +167,9 @@
     },
     "egl": {
       "description": "EGL",
+      "supports": "linux",
       "dependencies": [
-        "egl-registry"
+        "egl"
       ]
     },
     "fontconfig": {
@@ -138,8 +186,8 @@
       ]
     },
     "framework": {
-      "$platform": "osx",
-      "description": "MAC framework build"
+      "description": "MAC framework build",
+      "supports": "osx & !static"
     },
     "freetype": {
       "description": "Supports the FreeType 2 font engine (and its supported font formats).",
@@ -150,21 +198,81 @@
         }
       ]
     },
+    "gles2": {
+      "description": "OpenGL ES 2.0",
+      "supports": "!windows & !osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
+    "gles3": {
+      "description": "OpenGL ES 3.0",
+      "supports": "!windows & !osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gles2"
+          ]
+        }
+      ]
+    },
     "glib": {
       "description": "GLib",
       "dependencies": [
         "glib"
       ]
     },
+    "gtk3": {
+      "description": "GTK3 platform theme plugin",
+      "supports": "linux",
+      "dependencies": [
+        "gtk3",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "glib"
+          ]
+        }
+      ]
+    },
     "gui": {
       "description": "Qt Gui",
       "dependencies": [
+        {
+          "name": "opengl",
+          "platform": "!ios"
+        },
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
             "freetype"
           ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ],
+          "platform": "osx"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ],
+          "platform": "windows"
         }
       ]
     },
@@ -203,6 +311,19 @@
     "network": {
       "description": "Qt Network"
     },
+    "opengl": {
+      "description": "OpenGL",
+      "dependencies": [
+        "opengl",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
     "openssl": {
       "description": "Enable OpenSSL",
       "dependencies": [
@@ -235,6 +356,10 @@
         }
       ]
     },
+    "securetransport": {
+      "description": "Enable Secure Transport",
+      "supports": "ios | osx"
+    },
     "sql": {
       "description": "Qt Sql",
       "dependencies": [
@@ -243,6 +368,45 @@
           "default-features": false,
           "features": [
             "concurrent"
+          ]
+        }
+      ]
+    },
+    "sql-mysql": {
+      "description": "Enable SQL Driver MySQL",
+      "dependencies": [
+        "libmysql",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
+    "sql-oci": {
+      "description": "Enable SQL Driver Oracle OCI",
+      "dependencies": [
+        "ocilib",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
+    "sql-odbc": {
+      "description": "Enable SQL Driver odbc",
+      "supports": "windows",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sql"
           ]
         }
       ]
@@ -276,8 +440,14 @@
     "testlib": {
       "description": "Qt Testlib"
     },
+    "thread": {
+      "description": "Thread support; provides QThread and related classes."
+    },
     "vulkan": {
-      "description": "Enable Vulkan support"
+      "description": "Enable Vulkan support",
+      "dependencies": [
+        "vulkan"
+      ]
     },
     "widgets": {
       "description": "Qt Widgets",

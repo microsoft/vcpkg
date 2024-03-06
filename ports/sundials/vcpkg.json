@@ -1,6 +1,6 @@
 {
   "name": "sundials",
-  "version-semver": "5.8.0",
+  "version-semver": "6.2.0",
   "description": "SUNDIALS (SUite of Nonlinear and DIfferential/ALgebraic equation Solvers)",
   "homepage": "https://computation.llnl.gov/projects/sundials",
   "dependencies": [

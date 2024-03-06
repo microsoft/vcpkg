@@ -1,3 +1,6 @@
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/isal/copyright")
+    message(FATAL_ERROR "'${PORT}' conflicts with 'isal'. Please remove isal:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
 
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH

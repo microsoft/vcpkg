@@ -1,10 +1,9 @@
-set(SIMAGE_VERSION 1.8.1)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Coin3D/simage
-    REF 72bdc2fddb171ab08325ced9c4e04b27bbd2da6c #v1.8.1
-    SHA512 8e0d4b246318e9a08d9a17e0550fae4e3902e5d14ff9d7e43569624d1ceb9308c1cbc2401cedc4bff4da8b136fc57fc6b11c6800f1db15914b13186b0d5dc8f1
+    REF "v${VERSION}"
+    SHA512 42981f1dc67f17bc6bfc49ecbf035444b79ab467d5ece4310841856f5ec87d2b4352d5a7cb5713fb14ac5a25928f7d657fb74c93acdcd86b8b0dd89f26a5008a
     HEAD_REF master
     PATCHES requies-all-dependencies.patch
 )
@@ -30,13 +29,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 # Depends on the platform
 if(VCPKG_TARGET_IS_WINDOWS AND "gdiplus" IN_LIST FEATURES)
     message(WARNING "Feature 'gdiplus' will disable feature 'zlib', 'giflib', 'jpeg', 'png' and 'tiff' automaticly.")
-elseif ((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
-         AND ("gdiplus" IN_LIST FEATURES OR "avienc" IN_LIST FEATURES))
-    message(FATAL_ERROR "Feature 'avienc' and 'gdiplus' only support Windows.")
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
         -DSIMAGE_BUILD_SHARED_LIBS:BOOL=${SIMAGE_BUILD_SHARED_LIBS}
         -DSIMAGE_USE_STATIC_LIBS:BOOL=${SIMAGE_USE_STATIC_LIBS}
@@ -61,7 +57,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/simage-${SIMAGE_VERSION})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/simage-${VERSION})
 
 if (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
     vcpkg_copy_tools(TOOL_NAMES simage-config AUTO_CLEAN)

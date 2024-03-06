@@ -6,14 +6,13 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-  SOURCE_PATH ${CMAKE_CURRENT_LIST_DIR}
-  PREFER_NINJA
+vcpkg_cmake_configure(
+  SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}"
   OPTIONS -DSOURCE_PATH=${SOURCE_PATH}
   OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

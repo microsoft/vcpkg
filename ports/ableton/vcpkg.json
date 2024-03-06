@@ -1,0 +1,12 @@
+{
+  "name": "ableton",
+  "version": "3.0.6",
+  "port-version": 2,
+  "description": "Meta-package for transitioning to abletonlink port.",
+  "homepage": "https://www.ableton.com/en/link/",
+  "documentation": "http://ableton.github.io/link/",
+  "license": "GPL-2.0-or-later",
+  "dependencies": [
+    "ableton-link"
+  ]
+}

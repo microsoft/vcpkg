@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REF d5141c04785678535c7792eddc21f146186e639f # 5.0.0-rc2
     REPO "capstone-engine/capstone"
-    SHA512 de9cf7da9fc3e502165b28b998b472791c8d5366e1a1a1fabd6bb8856a6fae80bf7d1fc4d268572d69c3526161bb0509a598ad4d94207e25a62aff6a5f9e9404
+    REF "${VERSION}"
+    SHA512 350aba77ce2d96b5c25764913591ba80e4497177ae0a8b2c820c6755ee8310848fbfc54e7ccac27fafc2dbc6778118ad92c53d1b5cb601d4fa146dec7d7e11e5
     HEAD_REF next
     PATCHES
         001-silence-windows-crt-secure-warnings.patch
@@ -18,24 +18,24 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "m680x"       CAPSTONE_M680X_SUPPORT
         "m68k"        CAPSTONE_M68K_SUPPORT
         "mips"        CAPSTONE_MIPS_SUPPORT
-        "osxkernel"   CAPSTONE_OSXKERNEL_SUPPORT
         "ppc"         CAPSTONE_PPC_SUPPORT
         "sparc"       CAPSTONE_SPARC_SUPPORT
         "sysz"        CAPSTONE_SYSZ_SUPPORT
         "tms320c64x"  CAPSTONE_TMS320C64X_SUPPORT
         "x86"         CAPSTONE_X86_SUPPORT
-        "x86-reduce"  CAPSTONE_X86_REDUCE
         "xcore"       CAPSTONE_XCORE_SUPPORT
+        "mos65xx"     CAPSTONE_MOS65XX_SUPPORT
+        "tricore"     CAPSTONE_TRICORE_SUPPORT
+        "wasm"        CAPSTONE_WASM_SUPPORT
+        "bpf"         CAPSTONE_BPF_SUPPORT
+        "riscv"       CAPSTONE_RISCV_SUPPORT
         "diet"        CAPSTONE_BUILD_DIET
 )
-
-if ("osxkernel" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
-    message(FATAL_ERROR "Feature 'osxkernel' only supported in OSX")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCAPSTONE_ARCHITECTURE_DEFAULT=OFF
         -DCAPSTONE_BUILD_TESTS=OFF
         -DCAPSTONE_BUILD_CSTOOL=OFF
         -DCAPSTONE_BUILD_STATIC_RUNTIME=${STATIC_CRT}

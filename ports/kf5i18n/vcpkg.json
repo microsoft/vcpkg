@@ -1,6 +1,7 @@
 {
   "name": "kf5i18n",
-  "version": "5.89.0",
+  "version": "5.98.0",
+  "port-version": 1,
   "description": "Advanced internationalization framework",
   "homepage": "https://api.kde.org/frameworks/ki18n/html/index.html",
   "dependencies": [

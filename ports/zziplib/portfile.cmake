@@ -5,10 +5,16 @@ vcpkg_from_github(
     SHA512 4bb089e74813c6fac9657cd96e44e4a6469bf86aba3980d885c4573e8db45e74fd07bbdfcec9f36297c72227c8c0b2c37dab1bc4326cef8529960e482fe501c8
     PATCHES
         no-release-postfix.patch
+        export-targets.patch
 )
 
 string(COMPARE EQUAL VCPKG_CRT_LINKAGE "static" MSVC_STATIC_RUNTIME)
 string(COMPARE EQUAL VCPKG_LIBRARY_LINKAGE "static" BUILD_STATIC_LIBS)
+
+# on Windows hosts, the UnixCommands are not available; disable options that use them
+if(VCPKG_HOST_IS_WINDOWS)
+    set(ZZIPLIB_OPTIONS "-DZZIP_COMPAT=OFF;-DZZIP_PKGCONFIG=OFF")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -23,8 +29,11 @@ vcpkg_cmake_configure(
         -DZZIPBINS=OFF
         -DZZIPTEST=OFF
         -DZZIPDOCS=OFF
+        ${ZZIPLIB_OPTIONS}
 )
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-zziplib)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

@@ -19,7 +19,7 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-b64)
 
 vcpkg_copy_pdbs()
 

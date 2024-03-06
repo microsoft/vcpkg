@@ -75,12 +75,12 @@ index 3272649..6b6bf32 100644
 --- a/src/benchmark.h
 +++ b/src/benchmark.h
 @@ -21,7 +21,9 @@
+ #ifndef BENCHMARK_H
  # define BENCHMARK_H
  
- #include <config.h>
 +#ifndef _MSC_VER
- #include <sys/time.h>
+ # include <sys/time.h>
 +#endif
- #include <time.h>
- #include <signal.h>
- #if defined _WIN32
+ # include <time.h>
+ # include <signal.h>
+ # if defined _WIN32

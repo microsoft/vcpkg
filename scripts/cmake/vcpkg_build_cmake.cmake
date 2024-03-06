@@ -1,38 +1,3 @@
-# DEPRECATED BY ports/vcpkg-cmake/vcpkg_cmake_build
-#[===[.md:
-# vcpkg_build_cmake
-
-Build a cmake project.
-
-## Usage:
-```cmake
-vcpkg_build_cmake([DISABLE_PARALLEL] [TARGET <target>])
-```
-
-## Parameters:
-### DISABLE_PARALLEL
-The underlying buildsystem will be instructed to not parallelize
-
-### TARGET
-The target passed to the cmake build command (`cmake --build . --target <target>`). If not specified, no target will
-be passed.
-
-### ADD_BIN_TO_PATH
-Adds the appropriate Release and Debug `bin` directories to the path during the build such that executables can run against the in-tree DLLs.
-
-## Notes:
-This command should be preceded by a call to [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
-You can use the alias [`vcpkg_install_cmake()`](vcpkg_configure_cmake.md) function if your CMake script supports the
-"install" target
-
-## Examples:
-
-* [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
-* [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
-* [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
-* [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
-#]===]
-
 function(vcpkg_build_cmake)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "DISABLE_PARALLEL;ADD_BIN_TO_PATH"
@@ -64,6 +29,13 @@ function(vcpkg_build_cmake)
         vcpkg_list(SET parallel_param "/m")
     elseif("${Z_VCPKG_CMAKE_GENERATOR}" STREQUAL "NMake Makefiles")
         # No options are currently added for nmake builds
+    elseif(Z_VCPKG_CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+        vcpkg_list(SET build_param "VERBOSE=1")
+        vcpkg_list(SET parallel_param "-j${VCPKG_CONCURRENCY}")
+        vcpkg_list(SET no_parallel_param "")
+    elseif(Z_VCPKG_CMAKE_GENERATOR STREQUAL "Xcode")
+        vcpkg_list(SET parallel_param -jobs "${VCPKG_CONCURRENCY}")
+        vcpkg_list(SET no_parallel_param -jobs 1)
     else()
         message(FATAL_ERROR "Unrecognized GENERATOR setting from vcpkg_configure_cmake(). Valid generators are: Ninja, Visual Studio, and NMake Makefiles")
     endif()

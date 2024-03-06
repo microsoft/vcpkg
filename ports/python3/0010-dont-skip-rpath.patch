@@ -1,0 +1,31 @@
+From f7439eae9b2f8d91b6689efbf01292a044f3a3fe Mon Sep 17 00:00:00 2001
+From: Osyotr <Osyotr@users.noreply.github.com>
+Date: Thu, 4 Aug 2022 23:49:06 +0300
+Subject: [PATCH 10/11] dont skip rpath
+
+---
+ configure.ac | 6 ++++++
+ 1 file changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 61b3266..4c2cfb4 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -49,6 +49,14 @@  [$1]
+ [RESTORE_ENV]
+ )dnl
+ 
++if test "$ac_sys_system" != "Darwin"; then
++AS_VAR_IF([GNULD], [yes], [
++  LDFLAGS="-Wl,--enable-new-dtags,-rpath,$vcpkg_rpath"
++], [
++  LDFLAGS="-Wl,-rpath,$vcpkg_rpath"
++])
++fi
++
+ dnl PY_CHECK_FUNC(FUNCTION, [INCLUDES], [AC_DEFINE-VAR])
+ AC_DEFUN([PY_CHECK_FUNC],
+ [ AS_VAR_PUSHDEF([py_var], [ac_cv_func_$1])
+-- 
+2.37.3.windows.1
+

@@ -1,0 +1,32 @@
+diff --git a/gk_arch.h b/gk_arch.h
+index 122e087..c8a322f 100644
+--- a/gk_arch.h
++++ b/gk_arch.h
+@@ -42,7 +42,9 @@
+ #endif
+   #include <inttypes.h>
+   #include <sys/types.h>
++#ifndef _WIN32 # MinGW
+   #include <sys/resource.h>
++#endif
+   #include <sys/time.h>
+   #include <unistd.h>
+ #endif
+diff --git a/gk_getopt.h b/gk_getopt.h
+index 4bb8611..cc416ab 100644
+--- a/gk_getopt.h
++++ b/gk_getopt.h
+@@ -52,10 +52,10 @@ struct gk_option {
+ 
+ 
+ /* Function prototypes */
+-extern int gk_getopt(int __argc, char **__argv, char *__shortopts);
+-extern int gk_getopt_long(int __argc, char **__argv, char *__shortopts,
++extern int gk_getopt(int argc, char ** argv, char *__shortopts);
++extern int gk_getopt_long(int argc, char ** argv, char *__shortopts,
+               struct gk_option *__longopts, int *__longind);
+-extern int gk_getopt_long_only (int __argc, char **__argv,
++extern int gk_getopt_long_only (int argc, char ** argv,
+               char *__shortopts, struct gk_option *__longopts, int *__longind);
+ 
+ 
