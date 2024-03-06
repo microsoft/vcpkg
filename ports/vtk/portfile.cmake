@@ -317,6 +317,7 @@ foreach(TOOL_NAME IN LISTS VTK_TOOLS)
 endforeach()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 # vendored "token" library can be only build as a shared library
 #    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
 #                        "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -329,15 +330,6 @@ vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/vtk")
 
 ## Files Modules needed by ParaView
 if("paraview" IN_LIST FEATURES)
-    ## TODO: Check if this works without it now
-    #set(VTK_CMAKE_NEEDED vtkCompilerChecks vtkCompilerPlatformFlags vtkCompilerExtraFlags vtkInitializeBuildType
-    #                     vtkSupportMacros vtkVersion FindPythonModules vtkModuleDebugging vtkExternalData)
-    #foreach(module ${VTK_CMAKE_NEEDED})
-    #    file(INSTALL "${SOURCE_PATH}/CMake/${module}.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
-    #endforeach()
-
-    ## Check List on UPDATE !! (TODO)
-    #file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
     file(INSTALL "${SOURCE_PATH}/Rendering/ParallelLIC/vtkMPIPixelView.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
 endif()
 
