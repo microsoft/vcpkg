@@ -1,0 +1,53 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fc9a268..9877d37 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -123,7 +123,6 @@ if(SFML_OS_ANDROID)
+     endif()
+ 
+     # install everything in $NDK/sources/ because this path is appended by the NDK (convenient)
+-    set(CMAKE_INSTALL_PREFIX ${CMAKE_ANDROID_NDK}/sources/third_party/sfml)
+ 
+     # we install libs in a subdirectory named after the ABI
+     set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_LIBDIR}/${CMAKE_ANDROID_ARCH_ABI}")
+@@ -316,13 +315,13 @@ endif()
+ # setup the install rules
+ if(NOT SFML_BUILD_FRAMEWORKS)
+     install(DIRECTORY include
+-            DESTINATION .
++            DESTINATION "include"
+             COMPONENT devel
+             FILES_MATCHING PATTERN "*.hpp" PATTERN "*.inl")
+ 
+     if(SFML_GENERATE_PDB)
+         install(DIRECTORY ${PROJECT_BINARY_DIR}/lib
+-                DESTINATION .
++                DESTINATION lib
+                 COMPONENT devel
+                 FILES_MATCHING PATTERN "*.pdb")
+     endif()
+@@ -522,7 +521,6 @@ elseif(SFML_OS_ANDROID)
+     endif()
+ 
+     # install Android.mk so the NDK knows how to set up SFML
+-    install(FILES src/SFML/Android.mk DESTINATION .)
+ 
+ endif()
+ 
+diff --git a/src/SFML/Audio/CMakeLists.txt b/src/SFML/Audio/CMakeLists.txt
+index d27dc6d..16ba6db 100644
+--- a/src/SFML/Audio/CMakeLists.txt
++++ b/src/SFML/Audio/CMakeLists.txt
+@@ -81,7 +81,11 @@ sfml_add_library(sfml-audio
+                  SOURCES ${SRC} ${CODECS_SRC})
+ 
+ # setup dependencies
+-target_link_libraries(sfml-audio PRIVATE OpenAL)
++if(SFML_OS_ANDROID)
++    target_link_libraries(sfml-audio PRIVATE OpenAL android log)
++else()
++    target_link_libraries(sfml-audio PRIVATE OpenAL)
++endif()
+ 
+ # minimp3 sources
+ target_include_directories(sfml-audio SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/minimp3")
