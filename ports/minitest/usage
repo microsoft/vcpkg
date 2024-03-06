@@ -1,0 +1,4 @@
+minitest provides CMake targets:
+
+    find_package(minitest CONFIG REQUIRED)
+    minitest_discover_tests(target)

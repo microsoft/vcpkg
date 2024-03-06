@@ -5676,6 +5676,10 @@
       "baseline": "2.3.6",
       "port-version": 1
     },
+    "minitest": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "minitrace": {
       "baseline": "2023-04-23",
       "port-version": 0
