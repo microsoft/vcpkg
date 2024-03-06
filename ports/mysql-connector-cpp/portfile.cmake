@@ -33,9 +33,10 @@ vcpkg_cmake_configure(
         "-DWITH_LZ4=${CURRENT_INSTALLED_DIR}"
         "-DWITH_ZLIB=${CURRENT_INSTALLED_DIR}"
         "-DWITH_ZSTD=${CURRENT_INSTALLED_DIR}"
-        "-DProtobuf_DIR=${CURRENT_INSTALLED_DIR}/share/protobuf" # Without these Windows is not able to find protobuf
+        "-DProtobuf_DIR=${CURRENT_INSTALLED_DIR}/share/protobuf" # Without these Windows is unable to find protobuf
         "-Dabsl_DIR=${CURRENT_INSTALLED_DIR}/share/absl"
         "-Dutf8_range_DIR=${CURRENT_INSTALLED_DIR}/share/utf8_range"
+        "-DProtobuf_PROTOC_EXECUTABLE=${CURRENT_INSTALLED_DIR}/tools/protobuf/protoc"
         -DBUILD_STATIC=${BUILD_STATIC}
         -DSTATIC_MSVCRT=${STATIC_MSVCRT}
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
