@@ -43,7 +43,6 @@ function(z_vcpkg_calculate_corrected_rpath)
         # duplication removal
         list(REMOVE_ITEM rpath_norm "\$ORIGIN")
         list(REMOVE_ITEM rpath_norm "\$ORIGIN/${relative_to_lib}")
-        list(REMOVE_DUPLICATES rpath_norm)
 
         if(NOT X_VCPKG_RPATH_KEEP_SYSTEM_PATHS)
           list(FILTER rpath_norm INCLUDE REGEX "\\\$ORIGIN.+") # Only keep paths relativ to ORIGIN
@@ -55,6 +54,7 @@ function(z_vcpkg_calculate_corrected_rpath)
     endif()
     list(PREPEND rpath_norm "\$ORIGIN") # Make ORIGIN the first entry
     list(TRANSFORM rpath_norm REPLACE "/$" "")
+    list(REMOVE_DUPLICATES rpath_norm)
     cmake_path(CONVERT "${rpath_norm}" TO_NATIVE_PATH_LIST new_rpath)
 
     set("${arg_OUT_NEW_RPATH_VAR}" "${new_rpath}" PARENT_SCOPE)
