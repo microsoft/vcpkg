@@ -4522,7 +4522,7 @@
     },
     "libjxl": {
       "baseline": "0.8.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libkeyfinder": {
       "baseline": "2.2.8",
