@@ -57,6 +57,7 @@ vcpkg_from_github(
         "${MPI4PY_PATCH_2}"
         9690.diff
         missing-include-fixes.patch
+        remove-prefix-changes.patch
 )
 
 # =============================================================================
