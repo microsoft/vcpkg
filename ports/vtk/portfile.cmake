@@ -35,6 +35,7 @@ vcpkg_from_github(
         fix-exprtk.patch # just for dbow2 and theia
         devendor_exodusII.patch
         ot-dep.patch
+        remove-prefix-changes.patch
 )
 
 # =============================================================================
