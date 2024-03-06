@@ -104,7 +104,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 ERROR_VARIABLE read_rpath_error
             )
             string(REPLACE "\n" "" readelf_output "${readelf_output}")
-            if(NOT "${read_rpath_error}" STREQUAL "" OR "${readelf_output}" STREQUAL "")
+            if(NOT "${read_rpath_error}" STREQUAL "")
                 continue()
             endif()
 
@@ -122,8 +122,12 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 ERROR_VARIABLE set_rpath_error
             )
 
-            message(STATUS "Adjusted RPATH of '${elf_file}' (From '${org_rpath}' -> To '${new_rpath}')")
+            if(NOT "${set_rpath_error}" STREQUAL "")
+                message(WARNING "Couldn't adjust RPATH of '${elf_file}': ${set_rpath_error}")
+                continue()
+            endif()
 
+            message(STATUS "Adjusted RPATH of '${elf_file}' (From '${org_rpath}' -> To '${new_rpath}')")
         endforeach()
     endforeach()
 endfunction()

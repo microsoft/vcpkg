@@ -171,7 +171,8 @@ if(CMD STREQUAL "BUILD")
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")
     if(DEFINED PORT)
-        if(VCPKG_FIXUP_ELF_RPATH OR VCPKG_TARGET_IS_LINUX)
+        # Always fixup RPATH on linux unless explicitly disabled.
+        if(VCPKG_FIXUP_ELF_RPATH OR (VCPKG_TARGET_IS_LINUX AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
             z_vcpkg_fixup_rpath_in_dir()
         endif()
         include("${SCRIPTS}/build_info.cmake")
