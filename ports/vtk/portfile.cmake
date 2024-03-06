@@ -317,10 +317,13 @@ foreach(TOOL_NAME IN LISTS VTK_TOOLS)
 endforeach()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-# vendored "token" library can be only build as a shared library
-#    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
-#                        "${CURRENT_PACKAGES_DIR}/debug/bin")
+  if(VCPKG_TARGET_IS_WINDOWS)
+    # vendored "token" library can be only build as a shared library
+    set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+  else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
+                        "${CURRENT_PACKAGES_DIR}/debug/bin")
+  endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
