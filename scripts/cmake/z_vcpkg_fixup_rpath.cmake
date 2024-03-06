@@ -127,7 +127,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 continue()
             endif()
 
-            message(STATUS "Adjusted RPATH of '${elf_file}' (From '${org_rpath}' -> To '${new_rpath}')")
+            message(STATUS "Adjusted RPATH of '${elf_file}' (From '${readelf_output}' -> To '${new_rpath}')")
         endforeach()
     endforeach()
 endfunction()

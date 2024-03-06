@@ -23,6 +23,9 @@ unset(CMAKE_TWEAK_VERSION)
 
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Location to stored scripts")
 list(APPEND CMAKE_MODULE_PATH "${SCRIPTS}/cmake")
+
+# Increment this number if we intentionally need to invalidate all binary caches due a change in
+# the following scripts: 1
 include("${SCRIPTS}/cmake/execute_process.cmake")
 include("${SCRIPTS}/cmake/vcpkg_acquire_msys.cmake")
 include("${SCRIPTS}/cmake/vcpkg_add_to_path.cmake")
