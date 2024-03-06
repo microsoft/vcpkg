@@ -1,6 +1,7 @@
 {
   "name": "poppler",
   "version": "24.2.0",
+  "port-version": 1,
   "description": "A PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
   "license": "GPL-2.0-or-later",

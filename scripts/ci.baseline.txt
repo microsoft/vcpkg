@@ -259,11 +259,6 @@ dcmtk:arm-neon-android=fail
 dcmtk:arm64-android=fail
 dcmtk:x64-android=fail
 dcmtk:x64-uwp=fail
-# VS2019 version 16.9.4's project system changes where PDBs are placed in a way that breaks the
-# upstream build script of this port.
-# See https://developercommunity.visualstudio.com/t/Toolset-169-regression-vcxproj-producin/1356639
-dimcli:x64-windows-static-md=fail
-dimcli:x64-windows-static=fail
 # legacy directxsdk which conflicts with dxsdk-d3dx
 directxsdk:x86-windows=skip
 directxsdk:x64-windows=skip

@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.21.0",
+  "version": "2.22.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -1170,6 +1170,18 @@
     },
     "securitycenter": {
       "description": "Security Command Center API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "securitycentermanagement": {
+      "description": "Security Center Management API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
