@@ -425,7 +425,7 @@
       "port-version": 0
     },
     "azure-c-shared-utility": {
-      "baseline": "2023-08-07",
+      "baseline": "2024-03-04",
       "port-version": 0
     },
     "azure-core-amqp-cpp": {
@@ -449,7 +449,7 @@
       "port-version": 0
     },
     "azure-iot-sdk-c": {
-      "baseline": "2023-08-07",
+      "baseline": "2024-03-04",
       "port-version": 0
     },
     "azure-kinect-sensor-sdk": {
@@ -513,15 +513,15 @@
       "port-version": 0
     },
     "azure-uamqp-c": {
-      "baseline": "2023-08-07",
+      "baseline": "2024-03-04",
       "port-version": 0
     },
     "azure-uhttp-c": {
-      "baseline": "2023-08-07",
+      "baseline": "2024-03-04",
       "port-version": 0
     },
     "azure-umqtt-c": {
-      "baseline": "2023-08-03",
+      "baseline": "2024-03-04",
       "port-version": 0
     },
     "b64": {
