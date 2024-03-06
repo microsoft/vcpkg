@@ -67,7 +67,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man"
 )
 
-set(TOOLS xz xzdec)
+set(TOOLS xz xzdec lzmadec lzmainfo)
 foreach(_tool IN LISTS TOOLS)
     if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
         list(REMOVE_ITEM TOOLS ${_tool})
