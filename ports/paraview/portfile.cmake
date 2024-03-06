@@ -132,7 +132,10 @@ vcpkg_cmake_configure(
         -DPARAVIEW_USE_QTHELP:BOOL=OFF
         # A little bit of help in finding the boost headers
         "-DBoost_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
-
+        # Hack: (need upstream fix)
+        -DPARAVIEW_ENABLE_GDAL=ON
+        -DPARAVIEW_ENABLE_MOTIONFX=ON
+  
         # Workarounds for CMake issues
         -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
         -DWORDS_BIGENDIAN=0     ## Tests fails in VisItCommon.cmake for some unknown reason this is just a workaround since most systems are little endian. 
