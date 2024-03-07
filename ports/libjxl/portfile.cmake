@@ -2,12 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjxl/libjxl
     REF "v${VERSION}"
-    SHA512 769f102c46755d11a705ce47ae9e2ef49627ae708f416693bf1293aeeb713934baf4466e45b9c70b04ec1fc8b4a00d5ca7688c8ca03f0a91c9a15252c522a887
+    SHA512 54dc043dbed4e4bda1a591a07549f31fde17b67c5d754b1676616f3d8ffb82debafa3ed69041fd6523c907550543b11a3788d5cd3f1ca18e3ee2888760795ae3
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
-        trim-shared-build.patch
-        fix_static_suffix.patch #https://github.com/libjxl/libjxl/pull/2754
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
