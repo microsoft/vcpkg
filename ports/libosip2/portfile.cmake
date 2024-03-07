@@ -1,9 +1,7 @@
-set(LIBOSIP2_VER "5.2.0")
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/osip/libosip2-${LIBOSIP2_VER}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/osip/libosip2-${LIBOSIP2_VER}.tar.gz"
-    FILENAME "libosip2-${LIBOSIP2_VER}.tar.gz"
-    SHA512 cc714ab5669c466ee8f0de78cf74a8b7633f3089bf104c9c1474326840db3d791270159456f9deb877af2df346b04493e8f796b2bb7d2be134f6c08b25a29f83
+    URLS "https://ftp.gnu.org/gnu/osip/libosip2-${VERSION}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/osip/libosip2-${VERSION}.tar.gz"
+    FILENAME "libosip2-${VERSION}.tar.gz"
+    SHA512 cd9db7a736cca90c6862b84c4941ef025f5affab8af9bbc02ce0dd3310a2c555e0922c1bfa72d8ac08791fa1441bbcc30b627d52ca8b51f3471573a10ac82a00
 )
 
 set(PATCHES)

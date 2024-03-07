@@ -5,8 +5,9 @@ vcpkg_from_github(
     SHA512 36fe453b6e732f6bed554d1c1c5cd4668aec63593d6de11f12b659c7b9cbc059ac9aaacc6cea483b3257d522f1b07e13c299914d08b1f8aeb0bb2cde42ba47cf
     HEAD_REF master
     PATCHES
-        "create_package.patch"
-        "include_algorithm_for_std_min.patch"
+        create_package.patch
+        include_algorithm_for_std_min.patch
+        cxx-linkage-pkgconfig.patch
 )
 
 vcpkg_cmake_configure(

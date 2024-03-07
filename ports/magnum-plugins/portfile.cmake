@@ -53,10 +53,14 @@ endif()
 # Head only features
 set(ALL_SUPPORTED_FEATURES ${ALL_FEATURES})
 if(NOT VCPKG_USE_HEAD_VERSION)
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES cgltfimporter glslangshaderconverter
-        ktximageconverter ktximporter openexrimageconverter openexrimporter
-        spirvtoolsshaderconverter stbdxtimageconverter)
-    message(WARNING "Features cgltfimporter, glslangshaderconverter, ktximageconverter, ktximporter, openexrimageconverter, openexrimporter, spirvtoolsshaderconverter and stbdxtimageconverter are not available when building non-head version.")
+    set(head_only cgltfimporter glslangshaderconverter ktximageconverter ktximporter openexrimageconverter openexrimporter spirvtoolsshaderconverter stbdxtimageconverter)
+    foreach(_feature ${head_only})
+        if("${_feature}" IN_LIST FEATURES)
+            list(JOIN head_only ", " features_list)
+            message(FATAL_ERROR "Features ${features_list} are not avaliable when building non-head version.")
+        endif()
+    endforeach()
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES ${head_only})
 endif()
 
 set(_COMPONENTS "")
@@ -128,8 +132,14 @@ else()
     # We delete the import libraries here to avoid the auto-magic linking
     # for plugins which are loaded at runtime.
     if(WIN32)
+        set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d")
+        file(GLOB maybe_empty "${CURRENT_PACKAGES_DIR}/lib/*")
+        if(maybe_empty STREQUAL "")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/")
+        endif()
     endif()
 endif()
 

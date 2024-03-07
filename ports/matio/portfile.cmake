@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tbeu/matio
-    REF b07ee6c1512ab788f91e71910d07fc3ea954f812 # v1.5.24
-    SHA512 b9a1abe88565bb01db9aa826248b63927e8576d4e9b72665dee53cc29e0baf6c7af232f298fb6a22b3b96d820cb692ff29f98e2d0d751edc22a5f1ee884fc2df
+    REF "v${VERSION}"
+    SHA512 b0ff73b7d39b68c87f371e397ed8f46040f1334e8d81d2b462f62bf7d14c6566e4f5a0c55955696cbbc035ff7b41e5811ce7429476ae48c1465f48f77b4dc6b2
     HEAD_REF master
     PATCHES fix-dependencies.patch
 )

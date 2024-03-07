@@ -1,9 +1,10 @@
 {
   "name": "liblemon",
   "version-date": "2019-06-13",
-  "port-version": 8,
+  "port-version": 9,
   "description": "Library for Efficient Modeling and Optimization in Networks",
   "homepage": "https://lemon.cs.elte.hu/trac/lemon",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

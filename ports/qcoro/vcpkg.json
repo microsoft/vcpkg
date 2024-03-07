@@ -1,6 +1,6 @@
 {
   "name": "qcoro",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Coroutine support for Qt",
   "homepage": "https://www.github.com/danvratil/qcoro",
   "documentation": "https://qcoro.dvratil.cz",

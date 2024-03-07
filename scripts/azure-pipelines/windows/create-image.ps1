@@ -14,12 +14,12 @@ at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6
 or are running from Azure Cloud Shell.
 #>
 
-$Location = 'eastasia'
+$Location = 'westus3'
 $Prefix = 'Win-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D8a_v4'
+$VMSize = 'Standard_D8ads_v5'
 $ProtoVMName = 'PROTOTYPE'
-$WindowsServerSku = '2022-datacenter'
+$WindowsServerSku = '2022-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 $CudnnBaseUrl = 'https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-windows-x86_64-8.8.1.3_cuda12-archive.zip'
 
@@ -62,7 +62,7 @@ $Nic = New-AzNetworkInterface `
   -Location $Location `
   -Subnet $VirtualNetwork.Subnets[0]
 
-$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -Priority 'Spot' -MaxPrice -1
+$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -SecurityType Standard
 $VM = Set-AzVMOperatingSystem `
   -VM $VM `
   -Windows `
@@ -71,6 +71,7 @@ $VM = Set-AzVMOperatingSystem `
   -ProvisionVMAgent
 
 $VM = Add-AzVMNetworkInterface -VM $VM -Id $Nic.Id
+$VM = Set-AzVMOSDisk -VM $VM -StorageAccountType 'Premium_LRS' -CreateOption 'FromImage'
 $VM = Set-AzVMSourceImage `
   -VM $VM `
   -PublisherName 'MicrosoftWindowsServer' `
@@ -253,7 +254,7 @@ Set-AzVM `
   -Generalized
 
 $VM = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
-$ImageConfig = New-AzImageConfig -Location $Location -SourceVirtualMachineId $VM.ID
+$ImageConfig = New-AzImageConfig -Location $Location -SourceVirtualMachineId $VM.ID -HyperVGeneration V2
 $ImageName = Find-ImageName -ResourceGroupName 'vcpkg-image-minting' -Prefix $Prefix
 New-AzImage -Image $ImageConfig -ImageName $ImageName -ResourceGroupName 'vcpkg-image-minting'
 

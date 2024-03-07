@@ -1,9 +1,8 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n${VERSION}
-    SHA512 da1b836c8f51cf69f95db750d5da5191a71d534fa7b0f019d6d6454f8dd6db5598789576b4fe5ad983dcd0197b9a7e8f9d43f10707b6d40ac31425da23da35b2
+    REF "n${VERSION}"
+    SHA512 a84209fe36a2a0262ebc34b727e7600b12d4739991a95599d7b4df533791b12e2e43586ccc6ff26aab2f935a3049866204e322ec0c5e49e378fc175ded34e183
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -20,7 +19,6 @@ vcpkg_from_github(
         0015-Fix-xml2-detection.patch
         0020-fix-aarch64-libswscale.patch
         0022-fix-iconv.patch
-        0024-fix-gcc13-binutils.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -58,9 +56,12 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-dxva2 --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_OSX)
     string(APPEND OPTIONS " --target-os=darwin --enable-appkit --enable-avfoundation --enable-coreimage --enable-audiotoolbox --enable-videotoolbox")
+elseif(VCPKG_TARGET_IS_IOS)
+    string(APPEND OPTIONS " --enable-avfoundation --enable-coreimage --enable-videotoolbox")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
-    string(APPEND OPTIONS " --target-os=android")
-else()
+    string(APPEND OPTIONS " --target-os=android --enable-jni --enable-mediacodec")
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "QNX")
+    string(APPEND OPTIONS " --target-os=qnx")
 endif()
 
 if(VCPKG_TARGET_IS_OSX)
@@ -398,6 +399,8 @@ else()
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
         string(APPEND OPTIONS " --enable-schannel")
     elseif(VCPKG_TARGET_IS_OSX)
+        string(APPEND OPTIONS " --enable-securetransport")
+    elseif(VCPKG_TARGET_IS_IOS)
         string(APPEND OPTIONS " --enable-securetransport")
     endif()
 endif()

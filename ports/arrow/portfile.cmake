@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 9e1f8179e37279a47baa3587c66d8b385362478d998601b5f0a8bb2f360ec8cdb954705f397dac413ac1411e72d4dd740e3785823cc063ca35eb80585d2eedf2
+    SHA512 d5dccaa0907b0e6f2a460e32ae75091942dcb70b51db4aefe2767ee8d99882694607b723a9c06898dda3938d8eb498258d7f9aad11054665b6ea9c2fbaeafa74
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -17,11 +17,13 @@ vcpkg_extract_source_archive(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         acero       ARROW_ACERO
+        compute     ARROW_COMPUTE
         csv         ARROW_CSV
         cuda        ARROW_CUDA
         dataset     ARROW_DATASET
         filesystem  ARROW_FILESYSTEM
         flight      ARROW_FLIGHT
+        flightsql   ARROW_FLIGHT_SQL
         gcs         ARROW_GCS
         jemalloc    ARROW_JEMALLOC
         json        ARROW_JSON
@@ -96,6 +98,14 @@ if("flight" IN_LIST FEATURES)
     )
 endif()
 
+if("flightsql" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME ArrowFlightSql
+        CONFIG_PATH lib/cmake/ArrowFlightSql
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
 if("parquet" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
         PACKAGE_NAME parquet
@@ -124,6 +134,11 @@ if("flight" IN_LIST FEATURES)
     file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flight}")
 endif()
 
+if("flightsql" IN_LIST FEATURES)
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-flightsql" usage-flightsql)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flightsql}")
+endif()
+
 if("example" IN_LIST FEATURES)
     file(INSTALL "${SOURCE_PATH}/cpp/examples/minimal_build/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/example")
 endif()
@@ -132,4 +147,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/NOTICE.txt")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

@@ -15,5 +15,4 @@ else() # Old behavior
     set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
     set(download_filename "meson-${ref}.tar.gz")
     set(download_sha512 18a012a45274dbb4582e99fd69d920f38831e788d9860f9553c64847bedb1c2010ae0b5c0ef4a4350c03f5e0f95aaa0395378e1208109b59640c1a70b1e202d2)
-    set(supported_on_unix ON)
 endif()

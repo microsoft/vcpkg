@@ -1,5 +1,5 @@
 vcpkg_from_github(
-    REPO c4dm/vamp-plugin-sdk
+    REPO vamp-plugins/vamp-plugin-sdk
     REF vamp-plugin-sdk-v2.10
     SHA512 67a71e5396eab5ce9503e9111b4cfc16fc9755cf6ae2d8dfc99ed29fd91e75eaf0de9a9c55ce8f7751f04c235eb86430856eff18f02adde54f1850a87c917ef0
     OUT_SOURCE_PATH SOURCE_PATH

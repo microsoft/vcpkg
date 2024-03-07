@@ -1,7 +1,7 @@
 {
   "name": "dbus",
   "version": "1.15.8",
-  "port-version": 1,
+  "port-version": 2,
   "description": "D-Bus specification and reference implementation, including libdbus and dbus-daemon",
   "homepage": "https://gitlab.freedesktop.org/dbus/dbus",
   "license": "AFL-2.1 OR GPL-2.0-or-later",
@@ -17,7 +17,23 @@
       "host": true
     }
   ],
+  "default-features": [
+    {
+      "name": "systemd",
+      "platform": "linux"
+    }
+  ],
   "features": {
+    "systemd": {
+      "description": "Build with systemd at_console support",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "libsystemd",
+          "platform": "linux"
+        }
+      ]
+    },
     "x11": {
       "description": "Build with X11 autolaunch support",
       "dependencies": [

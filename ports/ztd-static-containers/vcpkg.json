@@ -1,6 +1,7 @@
 {
   "name": "ztd-static-containers",
   "version-date": "2022-12-12",
+  "port-version": 1,
   "description": "Containers of fixed capacity",
   "homepage": "https://github.com/soasis/static_containers",
   "license": "CC0-1.0",
@@ -12,6 +13,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "ztd-idk"
   ]
 }

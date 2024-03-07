@@ -1,6 +1,7 @@
 {
   "name": "sdbus-cpp",
   "version": "1.3.0",
+  "port-version": 1,
   "description": "High-level C++ D-Bus library for Linux designed to provide easy-to-use yet powerful API in modern C++",
   "homepage": "https://github.com/Kistler-Group/sdbus-cpp",
   "license": "LGPL-2.1",

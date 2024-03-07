@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DOPENEXR_INSTALL_EXAMPLES=OFF
         -DBUILD_DOCS=OFF
+        -DOPENEXR_INSTALL_PKG_CONFIG=ON
     OPTIONS_DEBUG
         -DOPENEXR_BUILD_TOOLS=OFF
         -DOPENEXR_INSTALL_TOOLS=OFF
@@ -28,6 +29,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenEXR)
+
 vcpkg_fixup_pkgconfig()
 
 if(OPENEXR_INSTALL_TOOLS)
@@ -43,4 +45,4 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

@@ -418,11 +418,7 @@ function(vcpkg_configure_meson)
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}")
         #setting up PKGCONFIG
         if(NOT arg_NO_PKG_CONFIG)
-            if ("${buildtype}" STREQUAL "DEBUG")
-                z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
-            else()
-                z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
-            endif()
+            z_vcpkg_setup_pkgconfig_path(CONFIG "${buildtype}")
         endif()
 
         z_vcpkg_meson_setup_variables(${buildtype})

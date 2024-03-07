@@ -1,30 +1,30 @@
 diff --git a/libfreerdp/CMakeLists.txt b/libfreerdp/CMakeLists.txt
-index 10a0921..7e9a63d 100644
+index 2ce9c42..bbd202a 100644
 --- a/libfreerdp/CMakeLists.txt
 +++ b/libfreerdp/CMakeLists.txt
-@@ -363,7 +363,6 @@ endif()
- # /primitives
+@@ -415,7 +415,6 @@ endif()
+ list(APPEND LIBFREERDP_PUB_LIBS winpr)
  
  list(REMOVE_DUPLICATES LIBFREERDP_DEFINITIONS)
 -list(REMOVE_DUPLICATES LIBFREERDP_LIBS)
+ list(REMOVE_DUPLICATES LIBFREERDP_PUB_LIBS)
  list(REMOVE_DUPLICATES LIBFREERDP_INCLUDES)
  include_directories(${LIBFREERDP_INCLUDES})
- 
 diff --git a/winpr/libwinpr/CMakeLists.txt b/winpr/libwinpr/CMakeLists.txt
-index da23a1b..2616439 100644
+index 4be2015..f1266f3 100644
 --- a/winpr/libwinpr/CMakeLists.txt
 +++ b/winpr/libwinpr/CMakeLists.txt
-@@ -113,8 +113,6 @@ endforeach()
- 
- set(MODULE_NAME winpr)
- list(REMOVE_DUPLICATES WINPR_DEFINITIONS)
+@@ -157,8 +157,6 @@ list(REMOVE_DUPLICATES WINPR_DEFINITIONS)
+ list(REMOVE_DUPLICATES WINPR_COMPILE_OPTIONS)
+ list(REMOVE_DUPLICATES WINPR_LINK_OPTIONS)
+ list(REMOVE_DUPLICATES WINPR_LINK_DIRS)
 -list(REMOVE_DUPLICATES WINPR_LIBS_PRIVATE)
 -list(REMOVE_DUPLICATES WINPR_LIBS_PUBLIC)
  list(REMOVE_DUPLICATES WINPR_INCLUDES)
- include_directories(${WINPR_INCLUDES})
  
+ # On windows create dll version information.
 diff --git a/winpr/tools/CMakeLists.txt b/winpr/tools/CMakeLists.txt
-index b89a954..13f4c13 100644
+index e995172..90c4e58 100644
 --- a/winpr/tools/CMakeLists.txt
 +++ b/winpr/tools/CMakeLists.txt
 @@ -82,7 +82,6 @@ add_subdirectory(makecert)
