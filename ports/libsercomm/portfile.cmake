@@ -24,10 +24,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Fix CMake files
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sercomm)
-
-vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(
+	PACKAGE_NAME sercomm
+	CONFIG_PATH lib/cmake/sercomm
+)
 
 # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
