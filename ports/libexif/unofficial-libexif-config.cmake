@@ -7,8 +7,8 @@ if(NOT TARGET unofficial::libexif::libexif)
     set_target_properties(unofficial::libexif::libexif PROPERTIES
       INTERFACE_INCLUDE_DIRECTORIES "${z_vcpkg_libexif_root}/include"
     )
-    find_library(Z_VCPKG_LIBEXIF_LIBRARY_RELEASE NAMES libexif PATHS "${z_vcpkg_LIBEXIF_root }/lib" NO_DEFAULT_PATH REQUIRED)
-    find_library(Z_VCPKG_LIBEXIF_LIBRARY_DEBUG NAMES libexif PATHS "${z_vcpkg_LIBEXIF_root }/debug/lib" NO_DEFAULT_PATH)
+    find_library(Z_VCPKG_LIBEXIF_LIBRARY_RELEASE NAMES libexif PATHS "${z_vcpkg_LIBEXIF_root}/lib" NO_DEFAULT_PATH REQUIRED)
+    find_library(Z_VCPKG_LIBEXIF_LIBRARY_DEBUG NAMES libexif PATHS "${z_vcpkg_LIBEXIF_root}/debug/lib" NO_DEFAULT_PATH)
     
     if(EXISTS "${Z_VCPKG_LIBEXIF_LIBRARY_RELEASE}")
         set_property(TARGET unofficial::libexif::libexif APPEND PROPERTY IMPORTED_CONFIGURATIONS "Release")
