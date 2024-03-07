@@ -13,6 +13,11 @@ mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
 apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub
 add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
 
+## NVIDIA
+wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2204/x86_64/nvidia-machine-learning-repo-ubuntu2204_1.0.0-1_amd64.deb
+dpkg -i nvidia-machine-learning-repo-ubuntu2204_1.0.0-1_amd64.deb
+rm -f nvidia-machine-learning-repo-ubuntu2204_1.0.0-1_amd64.deb
+
 ## PowerShell
 wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
