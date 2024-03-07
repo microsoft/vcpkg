@@ -1,7 +1,6 @@
 {
   "name": "libadwaita",
-  "version": "1.3.2",
-  "port-version": 1,
+  "version": "1.4.4",
   "description": "Building blocks for modern GNOME applications",
   "homepage": "https://gnome.pages.gitlab.gnome.org/libadwaita",
   "license": "LGPL-2.1-or-later",
