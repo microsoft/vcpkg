@@ -696,7 +696,7 @@ minitest:x64-linux=fail
 # The following platforms are not tested.
 minitest:arm64-android=skip
 minitest:arm64-uwp=skip
-minitest:arm64_osx=skip
+minitest:arm64-osx=skip
 minitest:arm-neon-android=skip
 minitest:x64-android=skip
 minitest:x64-osx=skip
