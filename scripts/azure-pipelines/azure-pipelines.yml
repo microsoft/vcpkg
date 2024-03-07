@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  android-pool: 'PrAnd-1ES-Pool'
   linux-pool: 'PrLin-1ES-Pool'
   windows-pool: 'PrWin-2024-02-16'
   osx-pool: 'PrOsx-2024-01-18'
@@ -102,7 +101,6 @@ jobs:
   parameters:
     triplet: arm-neon-android
     jobName: arm_neon_android
-    poolName: $(android-pool)
     dockerImage: $(linux-docker-image)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
@@ -111,7 +109,6 @@ jobs:
   parameters:
     triplet: x64-android
     jobName: x64_android
-    poolName: $(android-pool)
     dockerImage: $(linux-docker-image)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
@@ -120,7 +117,6 @@ jobs:
   parameters:
     triplet: arm64-android
     jobName: arm64_android
-    poolName: $(android-pool)
     dockerImage: $(linux-docker-image)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
