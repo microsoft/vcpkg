@@ -36,6 +36,7 @@ string(APPEND VCPKG_CXX_FLAGS_DEBUG " ${PC_BLAS_LAPACK_CFLAGS_DEBUG}")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        --trace-expand
         -DBUILD_META_EXAMPLES=OFF
         -DBUILD_EXAMPLES=OFF
         -DUSE_SVMLIGHT=OFF
