@@ -15,6 +15,7 @@
       "default-features": false,
       "platform": "!windows"
     },
+    "lapack",
     "liblzma",
     "libxml2",
     "lzo",
