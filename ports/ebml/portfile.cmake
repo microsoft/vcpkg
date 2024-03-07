@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Matroska-Org/libebml
-    REF release-1.4.4
+    REF "release-${VERSION}"
     SHA512 4a7926f56de211b8431105e37045a13d5e0576151326c87bc3168821c10342acee2aa6447438296f1d56893b3ebbc60851cb0c310f5561127612f0cd2477743f
     HEAD_REF master
 )
