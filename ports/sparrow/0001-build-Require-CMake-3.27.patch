@@ -1,0 +1,28 @@
+From 2d898dee9392a9c0735434e3ae2d0feccf15657e Mon Sep 17 00:00:00 2001
+From: Julien Jerphanion <git@jjerphan.xyz>
+Date: Thu, 14 Mar 2024 10:19:49 +0100
+Subject: [PATCH] build: Require CMake 3.27
+
+Current version of CMake used by vcpkg.
+
+Signed-off-by: Julien Jerphanion <git@jjerphan.xyz>
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9c2b91b..869aac8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,7 +12,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-cmake_minimum_required(VERSION 3.28)
++cmake_minimum_required(VERSION 3.27)
+ 
+ # This is better specified per target, but cmake keeps ignoring these language version
+ # specification when building this project by itself, in particular the gnu extensions,
+-- 
+2.44.0
+

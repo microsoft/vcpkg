@@ -8200,6 +8200,10 @@
       "baseline": "0.10.3",
       "port-version": 0
     },
+    "sparrow": {
+      "baseline": "0.0.1",
+      "port-version": 0
+    },
     "sparsehash": {
       "baseline": "2.0.4",
       "port-version": 2
