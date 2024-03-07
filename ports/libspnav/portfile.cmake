@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeSpacenav/libspnav
-    REF libspnav-0.2.3 # v0.2.3 seems to be outdated. libspnav-0.2.3 is the same as 0.2.3 on their sourceforge
-    SHA512 6c06344813ddf7e2bc7981932b4a901334de2b91d8c3abb23828869070dc73ed1c19c5bf7ff9338cc673c8f0dc7394608652afd0cdae093149c0a24460f0a8fb
+    REF "v${VERSION}"
+    SHA512 94770d9449dd02ade041d3589bcae7664fa990c4a4feca7b2b1e6542b65aa7073305595310b9e639f10716cf15aaad913e57496fb79bdd4dba5bf703ec8299ab
     HEAD_REF master
 )
 
