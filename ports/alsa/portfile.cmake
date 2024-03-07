@@ -19,6 +19,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "fix-plugin-dir.patch"
+        "fix-linux-dynamic.patch" # https://github.com/alsa-project/alsa-lib/commit/2a736a0d2543f206fd2653aaae8a08a4c42eb917
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

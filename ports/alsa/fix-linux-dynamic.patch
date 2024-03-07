@@ -1,0 +1,32 @@
+From 2a736a0d2543f206fd2653aaae8a08a4c42eb917 Mon Sep 17 00:00:00 2001
+From: Jan Palus <jpalus@fastmail.com>
+Date: Tue, 30 Jan 2024 14:24:25 +0100
+Subject: [PATCH] topology: correct version script path
+
+contrary to libasound, version script for libatopology is a regular
+source file. while it's often the case that $(builddir) and $(srcdir)
+point to the same directory, they don't always have to. therefore path
+needs to point explicitly to $(srcdir) for Versions script in topology
+
+Closes: https://github.com/alsa-project/alsa-lib/pull/383
+Fixes: GH-382
+Fixes: dc7da761f3a2 ("topology: separate Versions linker script")
+Signed-off-by: Jan Palus <jpalus@fastmail.com>
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+---
+ src/topology/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/topology/Makefile.am b/src/topology/Makefile.am
+index 04299588..e0b78373 100644
+--- a/src/topology/Makefile.am
++++ b/src/topology/Makefile.am
+@@ -2,7 +2,7 @@ EXTRA_DIST = Versions
+ COMPATNUM=@LIBTOOL_VERSION_INFO@
+ 
+ if VERSIONED_SYMBOLS
+-VSYMS = -Wl,--version-script=Versions
++VSYMS = -Wl,--version-script=$(srcdir)/Versions
+ else
+ VSYMS =
+ endif
