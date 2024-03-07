@@ -117,10 +117,21 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PARAVIEW_BUILD_SHARED_LIBS)
 
+set(forced_enabled_by_optional_dep "")
+file(READ "${CURRENT_INSTALLED_DIR}/share/vtk/VTK-vtk-module-properties.cmake" contents)
+# Looking in the installed tree here does not create a problem since VTK is always build before paraview
+# We just need to know which optional paraview to enable depending on how VTK was build due to target checks for optionals
+if(contents MATCHES "VTK::IOGDAL")
+  list(APPEND forced_enabled_by_optional_dep -DPARAVIEW_ENABLE_GDAL=ON)
+endif()
+if(contents MATCHES "VTK::IOMotionFX")
+  list(APPEND forced_enabled_by_optional_dep -DPARAVIEW_ENABLE_MOTIONFX=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
      OPTIONS
-        --trace-expand
+        #--trace-expand
         ${FEATURE_OPTIONS}
         -DPARAVIEW_USE_FORTRAN=OFF
         -DPARAVIEW_BUILD_SHARED_LIBS=${PARAVIEW_BUILD_SHARED_LIBS}
@@ -133,9 +144,8 @@ vcpkg_cmake_configure(
         -DPARAVIEW_USE_QTHELP:BOOL=OFF
         # A little bit of help in finding the boost headers
         "-DBoost_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
-        # Hack: (need upstream fix)
-        -DPARAVIEW_ENABLE_GDAL=ON
-        -DPARAVIEW_ENABLE_MOTIONFX=ON
+        # Hack: (need upstream fix to not link optionals if the vtk target exists)
+        ${forced_enabled_by_optional_dep}
   
         # Workarounds for CMake issues
         -DHAVE_SYS_TYPES_H=0    ## For some strange reason the test first succeeds and then fails the second time around
