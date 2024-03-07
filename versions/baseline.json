@@ -4853,8 +4853,8 @@
       "port-version": 1
     },
     "libsass": {
-      "baseline": "3.6.5",
-      "port-version": 1
+      "baseline": "3.6.6",
+      "port-version": 0
     },
     "libsbml": {
       "baseline": "5.20.2",
