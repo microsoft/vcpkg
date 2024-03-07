@@ -7,8 +7,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libsm
-    REF a52c79544fcd6b5e2242b9122dfaa34be07aebb2 # 1.2.3
-    SHA512  379e450d90e61d80d4fea8449a582b3eee3968bef137022053cb3bd51fa2815d8fccc43ff11e3b593c4a67ad64e93209c25111a20ac88e38c1f663cd274f5d56
+    REF "libSM-${VERSION}"
+    SHA512 329bee06d11f18975fb0702e86703244e33112727ef587ab0b3b5a52a99508f8a3ce203b4f3a47d5e4559323b905f6b1f9a818c9fb614a4b498499f6539b1b82
     HEAD_REF master
     PATCHES windows.patch
             missing-include.patch # avoids: warning C4013: '_getpid' undefined; assuming extern returning int
