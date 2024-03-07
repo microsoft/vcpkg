@@ -2270,7 +2270,7 @@
     },
     "dlib": {
       "baseline": "19.24",
-      "port-version": 3
+      "port-version": 4
     },
     "dlpack": {
       "baseline": "0.8",
