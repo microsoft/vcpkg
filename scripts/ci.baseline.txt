@@ -692,14 +692,14 @@ minifb:x64-android=fail
 minio-cpp:arm-neon-android=fail
 miniply:arm-neon-android=fail
 
-minitest::x64-linux=fail
+minitest:x64-linux=fail
 # minitest doesn't support the following platforms
-minitest::arm64-android=skip
-minitest::arm-neon-android=skip
-minitest::arm64-uwp=skip
-minitest::x64-android=skip
-minitest::x64-osx=skip
-minitest::x64-uwp=skip
+minitest:arm64-android=skip
+minitest:arm-neon-android=skip
+minitest:arm64-uwp=skip
+minitest:x64-android=skip
+minitest:x64-osx=skip
+minitest:x64-uwp=skip
 
 # Conflicts with signalrclient
 microsoft-signalr:arm64-windows=skip
