@@ -12,6 +12,7 @@ vcpkg_from_github(
         eigen-3.4.patch
         fix-dirent.patch
         fix-ASSERT-not-found.patch
+        remove_cmake_flags.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
