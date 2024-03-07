@@ -6098,7 +6098,7 @@
     },
     "nlopt": {
       "baseline": "2.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "nmap": {
       "baseline": "7.70",
