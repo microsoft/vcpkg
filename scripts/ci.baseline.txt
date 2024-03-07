@@ -845,6 +845,10 @@ openmpi:arm-neon-android=fail
 openmpi:arm64-android=fail
 openmpi:x64-android=fail
 openmvg:x64-linux=fail
+# Incorrect boost linkage; Might also need a wrapper for boost to correctly link e.g. zstd
+# Only release builds break due to building openmvs tools
+openmvs:x64-windows-static=fail
+openmvs:x64-windows-static-md=fail
 openscap:arm-neon-android=fail
 openscap:arm64-android=fail
 openscap:x64-android=fail
@@ -1320,9 +1324,16 @@ vcpkg-ci-openimageio:x64-windows-static-md=pass
 vcpkg-ci-openimageio:x64-osx=pass
 vcpkg-ci-openimageio:x64-linux=pass
 vcpkg-ci-paraview:x64-linux=pass
-vcpkg-ci-paraview:x64-osx=pass
-vcpkg-ci-paraview:x64-windows-static-md=pass
-vcpkg-ci-paraview:x64-windows-static=pass
+# dlib wrong lapack linkage since #24327 is still not merged
+vtk:x64-osx=fail
+vtk:arm64-osx=fail
+# vcpkg-ci-paraview:x64-osx=pass
+# vcpkg-ci-paraview:arm64-osx=pass
+# Running out of disk space according to logs
+paraview:x64-windows-static-md=fail
+paraview:x64-windows-static=fail
+# vcpkg-ci-paraview:x64-windows-static-md=pass
+# vcpkg-ci-paraview:x64-windows-static=pass
 vcpkg-ci-paraview:x64-windows=pass
 vcpkg-ci-paraview:x86-windows=pass
 vcpkg-ci-skia:arm-neon-android=pass
