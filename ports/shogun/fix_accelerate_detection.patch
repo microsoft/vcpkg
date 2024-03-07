@@ -8,7 +8,7 @@ index fe3d6db9c2..882a1f4218 100644
    # find out the type of Lapack/BLAS implementation we are dealing with
 -  IF("${LAPACK_LIBRARIES}" MATCHES ".*/Accelerate.framework$")
 +  message(STATUS "LAPACK_LIBRARIES:${LAPACK_LIBRARIES}")
-+  IF("${LAPACK_LIBRARIES}" MATCHES ".*/Accelerate.framework$")
++  IF("${LAPACK_LIBRARIES}" MATCHES ".*/Accelerate.framework(;|$)")
      # Accelerate.framework we found for LaPack/BLAS
      SET(HAVE_MVEC 1)
      SET(HAVE_CATLAS 1)
