@@ -43,10 +43,10 @@
     },
     "jpeg": {
       "description": "Add the JPEG auxiliary functions",
+      "supports": "linux",
       "dependencies": [
         "libjpeg-turbo"
-      ],
-      "supports":"linux"
+      ]
     },
     "openexr": {
       "description": "Enable OpenEXR support",
@@ -56,10 +56,10 @@
     },
     "png": {
       "description": "Add the PNG auxiliary functions",
+      "supports": "linux",
       "dependencies": [
         "libpng"
-      ],
-      "supports":"linux"
+      ]
     },
     "spectre": {
       "description": "Build Spectre-mitigated library"
@@ -70,17 +70,17 @@
     },
     "xboxone": {
       "description": "Adds Xbox One specific extensions to the library",
+      "supports": "windows & x64 & !uwp & !xbox",
       "dependencies": [
         "ms-gdkx"
-      ],
-      "supports": "windows & x64 & !uwp & !xbox"
+      ]
     },
     "xboxseriesx": {
       "description": "Adds Xbox Series X|S specific extensions to the library",
+      "supports": "windows & x64 & !uwp & !xbox",
       "dependencies": [
         "ms-gdkx"
-      ],
-      "supports": "windows & x64 & !uwp & !xbox"
+      ]
     }
   }
 }
