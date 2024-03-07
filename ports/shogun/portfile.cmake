@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-dirent.patch
         fix-ASSERT-not-found.patch
         remove_cmake_flags.patch
+        fix_accelerate_detection.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
