@@ -32,11 +32,14 @@ string(APPEND VCPKG_CXX_FLAGS_RELEASE " ${PC_BLAS_LAPACK_CFLAGS_RELEASE}")
 string(APPEND VCPKG_C_FLAGS_DEBUG " ${PC_BLAS_LAPACK_CFLAGS_DEBUG}")
 string(APPEND VCPKG_CXX_FLAGS_DEBUG " ${PC_BLAS_LAPACK_CFLAGS_DEBUG}")
 
+if(VCPKG_TARGET_IS_OSX)
+  # Eigen3 and accelerate disagree on prototypes for lapack generating compiler errors
+  set(extra_opts -DENABLE_EIGEN_LAPACK=OFF)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        --trace-expand
         -DBUILD_META_EXAMPLES=OFF
         -DBUILD_EXAMPLES=OFF
         -DUSE_SVMLIGHT=OFF
@@ -59,6 +62,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_CURL=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=TRUE
         -DINSTALL_TARGETS=shogun-static
+        ${extra_opts}
 )
 
 vcpkg_cmake_install()
