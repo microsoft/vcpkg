@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.6.1",
-  "port-version": 10,
+  "port-version": 11,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -87,6 +87,10 @@
   "features": {
     "appstore-compliant": {
       "description": "Disable code that is not allowed in platform app stores. This is on by default for platforms which require distribution through an app store by default, in particular Android, iOS, tvOS, and watchOS."
+    },
+    "asyncify": {
+      "description": "Use Emscripten's asyncify",
+      "supports": "emscripten"
     },
     "brotli": {
       "description": "Support for downloading and decompressing resources compressed with Brotli through QNetworkAccessManager.",
