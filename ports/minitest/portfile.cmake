@@ -6,10 +6,20 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(WIN32)
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_TESTS=OFF
 )
+else()
+# use g++13 on linux
+vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DBUILD_TESTS=OFF
+        -DCMAKE_CXX_COMPILER=g++-13
+        -DCMAKE_C_COMPILER=gcc-13
+)
+endif()
 
 vcpkg_cmake_install()
 
