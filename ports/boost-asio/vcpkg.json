@@ -89,16 +89,5 @@
       "name": "boost-utility",
       "version>=": "1.82.0"
     }
-  ],
-  "features": {
-    "ssl": {
-      "description": "Build with SSL support",
-      "dependencies": [
-        {
-          "name": "openssl",
-          "platform": "!emscripten"
-        }
-      ]
-    }
-  }
+  ]
 }
