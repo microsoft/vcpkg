@@ -5045,7 +5045,7 @@
       "port-version": 3
     },
     "libunibreak": {
-      "baseline": "5.1",
+      "baseline": "6.1",
       "port-version": 0
     },
     "libunifex": {
