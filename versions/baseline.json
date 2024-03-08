@@ -6501,8 +6501,8 @@
       "port-version": 0
     },
     "openvino": {
-      "baseline": "2023.3.0",
-      "port-version": 1
+      "baseline": "2024.0.0",
+      "port-version": 0
     },
     "openvpn3": {
       "baseline": "3.7.0",
