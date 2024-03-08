@@ -5829,8 +5829,8 @@
       "port-version": 0
     },
     "mpg123": {
-      "baseline": "1.31.3",
-      "port-version": 4
+      "baseline": "1.32.5",
+      "port-version": 0
     },
     "mpi": {
       "baseline": "1",
