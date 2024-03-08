@@ -5,7 +5,7 @@ set(MA_VERSION 1008)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://monkeysaudio.com/files/MAC_${MA_VERSION}_SDK.zip"
     FILENAME "MAC_${MA_VERSION}_SDK.zip"
-    SHA512 0c96b6fa8da9d412679e8c9b43e98d475a650899694a9d085c3b0272775cf229bb09c7c4f24a18ab7ee5516d2d34f7acd59e4216aca8fe08ed04f75e33e29322
+    SHA512 28b214ec72d6ead4be082bd85e8f5a108c922e589a4391404f87a2a8165265960241083fc7fa0a8626b473cd12b2281fdcd74b4ea361b109d1c80d5611fc26c2
 )
 
 vcpkg_extract_source_archive(
