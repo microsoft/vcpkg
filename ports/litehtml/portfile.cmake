@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO litehtml/litehtml
-    REF v0.6
-    SHA512 b774ed96e53780865e789875f571f96ebce1cd2ff0c05a06ae68a67aec44375cc282c07f77fc87131d422aceddba32bbf3e8e498c870883d8e042adb30834c39
+    REF "v${VERSION}"
+    SHA512 2a156671b770a6a20ab00184d9869af779248dd1fb898930b3b479ee88d8b7d84f51fdbd689ae4124530ab70c8697b6641cf06b220631ce4fec4622e63845ea3
     PATCHES 
       use-vcpkg-gumbo.patch
       fix-relative-includes.patch
