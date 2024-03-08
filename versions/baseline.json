@@ -5613,8 +5613,8 @@
       "port-version": 0
     },
     "mdnsresponder": {
-      "baseline": "1557.140.5.0.1",
-      "port-version": 1
+      "baseline": "2200.80.16",
+      "port-version": 0
     },
     "mdspan": {
       "baseline": "0.6.0",
