@@ -5,8 +5,6 @@ message(STATUS "\nPlease use the following command when you need to remove all b
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/boost/vcpkg-cmake-wrapper.cmake" @ONLY)
 
-
-
 vcpkg_download_distfile(LICENSE
     URLS "https://raw.githubusercontent.com/boostorg/boost/boost-${VERSION}/LICENSE_1_0.txt"
     FILENAME "boost_LICENSE_1_0.txt"
@@ -15,9 +13,14 @@ vcpkg_download_distfile(LICENSE
 
 file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/boost-modular-headers.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/boost-modular-build.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+    "${CMAKE_CURRENT_LIST_DIR}/Jamroot.jam.in"
+    "${CMAKE_CURRENT_LIST_DIR}/nothing.bat"
+    "${CMAKE_CURRENT_LIST_DIR}/user-config.jam.in"
     "${CMAKE_CURRENT_LIST_DIR}/usage"
     "${LICENSE}"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost-build"
 )
 
 vcpkg_install_copyright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")
