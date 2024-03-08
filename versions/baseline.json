@@ -5717,7 +5717,7 @@
       "port-version": 0
     },
     "miniupnpc": {
-      "baseline": "2.2.5",
+      "baseline": "2.2.6",
       "port-version": 0
     },
     "miniz": {
