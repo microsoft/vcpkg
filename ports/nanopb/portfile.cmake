@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanopb/nanopb
-    REF 0.4.7
-    SHA512 7fb46dad8a432898c8f9e7faa90a55276670dea3b13f15b68010fe126d7f6251ef5715d0dfe5bce66582e80cfdc5d4b1e7f5947e96a058fa7181f0a45da20860
+    REF "${VERSION}"
+    SHA512 635577498dfbfb46fd64b8ec83b2a4a9b03b57c665f3c9f67d35c272810c0330b0e9011d7c0e43623e9da74d6ee3a4c1f012878e2bff7e1a7e57fb7c0857ad42
     HEAD_REF master
     PATCHES 
         fix-cmakelist-and-pb-header.patch
