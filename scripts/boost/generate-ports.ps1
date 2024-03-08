@@ -603,6 +603,7 @@ foreach ($library in $libraries) {
         }
 
         $deps = @($deps | ForEach-Object { GeneratePortDependency $_ })
+        $deps += @("boost-uninstall")
 
         $needsBuild = $false
         if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "function_types") {

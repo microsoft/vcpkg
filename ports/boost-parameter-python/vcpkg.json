@@ -28,6 +28,10 @@
       "name": "boost-python",
       "platform": "!uwp & !emscripten & !ios & !android",
       "version>=": "1.84.0"
+    },
+    {
+      "name": "boost-uninstall",
+      "version>=": "1.84.0"
     }
   ]
 }

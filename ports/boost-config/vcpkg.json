@@ -5,5 +5,11 @@
   "port-version": 1,
   "description": "Boost config module",
   "homepage": "https://github.com/boostorg/config",
-  "license": "BSL-1.0"
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "boost-uninstall",
+      "version>=": "1.84.0"
+    }
+  ]
 }

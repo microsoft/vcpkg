@@ -65,6 +65,10 @@
       "version>=": "1.84.0"
     },
     {
+      "name": "boost-uninstall",
+      "version>=": "1.84.0"
+    },
+    {
       "name": "boost-vmd",
       "version>=": "1.84.0"
     },
