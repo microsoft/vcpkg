@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "simdutf",
-  "version-semver": "3.2.16",
+  "version-semver": "4.0.9",
   "description": "Unicode validation and transcoding at billions of characters per second",
   "homepage": "https://github.com/simdutf/simdutf",
   "dependencies": [
