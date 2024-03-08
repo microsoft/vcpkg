@@ -13,3 +13,5 @@ boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
 )
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
