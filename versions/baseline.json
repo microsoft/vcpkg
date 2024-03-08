@@ -5317,8 +5317,8 @@
       "port-version": 0
     },
     "litehtml": {
-      "baseline": "0.6.0",
-      "port-version": 2
+      "baseline": "0.9",
+      "port-version": 0
     },
     "live555": {
       "baseline": "2023-11-30",
