@@ -4089,8 +4089,8 @@
       "port-version": 0
     },
     "lerc": {
-      "baseline": "4.0",
-      "port-version": 2
+      "baseline": "4.0.4",
+      "port-version": 0
     },
     "lest": {
       "baseline": "1.35.1",
