@@ -4874,7 +4874,7 @@
     },
     "libsercomm": {
       "baseline": "1.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libsigcpp": {
       "baseline": "3.6.0",
