@@ -10,7 +10,7 @@ add_library(liblzf
     liblzf.def
 )
 set_target_properties(liblzf PROPERTIES OUTPUT_NAME lzf)
-target_include_directories(liblzf INTERFACE $<INSTALL_INTERFACE:include>)
+target_include_directories(liblzf INTERFACE $<INSTALL_INTERFACE:include/liblzf>)
 
 ## Install ##
 
