@@ -645,7 +645,9 @@ if ($updateServicePorts) {
     GeneratePortManifest `
         -PortName "boost-uninstall" `
         -Description "Internal vcpkg port used to uninstall Boost" `
-        -License "MIT"
+        -License "MIT" `
+        -Dependencies @{ name = "vcpkg-cmake"; host = $True },
+                @{ name = "vcpkg-cmake-get-vars"; host = $True }
 
     # Generate manifest files for boost-build
     GeneratePortManifest `
