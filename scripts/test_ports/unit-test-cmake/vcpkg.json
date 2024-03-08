@@ -4,6 +4,13 @@
   "description": "Ensures that the CMake scripts are unit tested.",
   "license": "MIT",
   "supports": "x64",
+  "dependencies": [
+    {
+      "name": "libxcrypt",
+      "host": true,
+      "platform": "android | linux"
+    }
+  ],
   "default-features": [
     "backup-restore-env-vars",
     "fixup-pkgconfig",
