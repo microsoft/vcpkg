@@ -198,9 +198,9 @@ if(WIN32) # TODO: MINGW, MSYS
     )
     install(
         EXPORT unofficial-libtcmalloc_minimal-targets
-        NAMESPACE  unofficial::
-        FILE unofficial-libtcmalloc_minimal-config.cmake
-        DESTINATION share/unofficial-libtcmalloc_minimal
+        NAMESPACE  unofficial::gperftools::
+        FILE unofficial-gperftools-config.cmake
+        DESTINATION share/unofficial-gperftools
     )
 
     if(GPERFTOOLS_BUILD_TOOLS)

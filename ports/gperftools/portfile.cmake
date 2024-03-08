@@ -33,9 +33,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_install()
 
     vcpkg_copy_pdbs()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-${PORT}")
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         file(GLOB gperf_public_headers "${CURRENT_PACKAGES_DIR}/include/gperftools/*.h")
