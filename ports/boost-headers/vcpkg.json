@@ -9,14 +9,6 @@
     {
       "name": "boost-cmake",
       "version>=": "1.84.0"
-    },
-    {
-      "name": "boost-config",
-      "version>=": "1.84.0"
-    },
-    {
-      "name": "boost-headers",
-      "version>=": "1.84.0"
     }
   ]
 }
