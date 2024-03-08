@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ultimaker/libArcus
-    REF 617f6f71572090f73cb44592b12f49567b539e5b #v4.10.0
-    SHA512 cf0954d8b10d9f94165aa5c086d0e58c2925464f9fbe4252535c36d7e6bb12b767d89efb816c9e642f9cd7f0ec0d66d61ca21c5121a05340499d38d5d851f73b
+    REF "${VERSION}"
+    SHA512 8106bbcd595921d56e39bf694fbee43c6146a9c661edf9fb1fe271bbcf199a202e399cfbda5b83711c9daad1c55d8242ba23ce4fb52c416ddd862fb6de2bcab3
     HEAD_REF master
     PATCHES
         0001-fix-protobuf-deprecated.patch
