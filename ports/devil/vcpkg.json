@@ -1,9 +1,10 @@
 {
   "name": "devil",
   "version": "1.8.0",
-  "port-version": 10,
+  "port-version": 11,
   "description": "A full featured cross-platform image library",
   "homepage": "https://github.com/DentonW/DevIL",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

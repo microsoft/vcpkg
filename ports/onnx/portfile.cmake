@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/onnx
     REF "v${VERSION}"
-    SHA512 325859f591dece43a083a0945aefe3427bfdb68a98ef5922343bf7ed959528947e7664d6c8e3e3d35c390d6c20ef22d07c672e5311f80c72c199931be6c256c3
+    SHA512 b46a4ab70af88053318eba45251c1f71528f15e45a33042877570e8d857febd3ec66e2e811fcda2105a4f17b84c9a1c6a0aaa22756c3287321b3ea29e83127fd
     PATCHES
         fix-cmakelists.patch
         fix-dependency-protobuf.patch
@@ -73,6 +73,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/onnx/bin"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/controlflow"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/generator"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/image"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/logical"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/math"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/nn"
@@ -82,6 +83,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/reduction"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/rnn"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/sequence"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/text"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/traditionalml"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/training"
     "${CURRENT_PACKAGES_DIR}/include/onnx/examples"

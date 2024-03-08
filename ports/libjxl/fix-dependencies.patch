@@ -2,20 +2,15 @@ diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
 index 8ee9864..b8a22a5 100644
 --- a/third_party/CMakeLists.txt
 +++ b/third_party/CMakeLists.txt
-@@ -47,7 +47,16 @@ endif()
+@@ -47,7 +47,11 @@ endif()
  # brotli
  if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/brotli/c/include/brotli/decode.h" OR
      JPEGXL_FORCE_SYSTEM_BROTLI)
 -  find_package(Brotli)
 +  find_package(Brotli NAMES unofficial-brotli REQUIRED)
 +  foreach(brlib IN ITEMS brotlienc brotlidec brotlicommon)
-+    if(TARGET unofficial::brotli::${brlib})
 +      add_library(${brlib} ALIAS unofficial::brotli::${brlib})
 +      add_library(${brlib}-static ALIAS unofficial::brotli::${brlib})
-+    else()
-+      add_library(${brlib} ALIAS unofficial::brotli::${brlib}-static)
-+      add_library(${brlib}-static ALIAS unofficial::brotli::${brlib}-static)
-+    endif()
 +  endforeach()
    if (NOT Brotli_FOUND)
      message(FATAL_ERROR

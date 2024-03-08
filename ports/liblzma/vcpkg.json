@@ -1,6 +1,6 @@
 {
   "name": "liblzma",
-  "version": "5.4.3",
+  "version": "5.4.4",
   "description": "Compression library with an API similar to that of zlib.",
   "homepage": "https://tukaani.org/xz/",
   "license": null,

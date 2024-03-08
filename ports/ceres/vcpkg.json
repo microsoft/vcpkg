@@ -1,7 +1,7 @@
 {
   "name": "ceres",
   "version": "2.1.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "non-linear optimization package",
   "homepage": "https://github.com/ceres-solver/ceres-solver",
   "license": "Apache-2.0",
@@ -47,6 +47,9 @@
       "dependencies": [
         "lapack"
       ]
+    },
+    "schur": {
+      "description": "Enable fixed-size Schur specializations in Ceres"
     },
     "suitesparse": {
       "description": "SuiteSparse support for Ceres",

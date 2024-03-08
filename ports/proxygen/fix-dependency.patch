@@ -1,27 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6bf0f17..343ec2b 100644
+index 112b36b..30e466a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -66,13 +66,13 @@ endif()
- #
- # IMPORTANT: If you change this, make the analogous update in:
- #   cmake/proxygen-config.cmake.in
--find_package(fmt REQUIRED)
--find_package(folly REQUIRED)
--find_package(wangle REQUIRED)
+@@ -69,7 +69,10 @@ endif()
+ find_package(fmt REQUIRED)
+ find_package(folly REQUIRED)
+ find_package(wangle REQUIRED)
+-find_package(mvfst REQUIRED)
 +find_package(fmt CONFIG REQUIRED)
 +find_package(folly CONFIG REQUIRED)
 +find_package(wangle CONFIG REQUIRED)
- if (BUILD_QUIC)
--  find_package(mvfst REQUIRED)
-+  find_package(mvfst CONFIG REQUIRED)
- else()
-- find_package(Fizz REQUIRED)
-+  find_package(fizz CONFIG REQUIRED)
- endif()
++find_package(mvfst CONFIG REQUIRED)
  find_package(zstd CONFIG REQUIRED)
  find_package(ZLIB REQUIRED)
-@@ -128,27 +128,8 @@ SET(GFLAG_DEPENDENCIES "")
+ find_package(OpenSSL REQUIRED)
+@@ -124,27 +127,8 @@ SET(GFLAG_DEPENDENCIES "")
  SET(PROXYGEN_EXTRA_LINK_LIBRARIES "")
  SET(PROXYGEN_EXTRA_INCLUDE_DIRECTORIES "")
  
@@ -52,24 +45,22 @@ index 6bf0f17..343ec2b 100644
  include(ProxygenTest)
  
 diff --git a/cmake/proxygen-config.cmake.in b/cmake/proxygen-config.cmake.in
-index 8c1426d..f8b89a4 100644
+index c79875d..0e002b9 100644
 --- a/cmake/proxygen-config.cmake.in
 +++ b/cmake/proxygen-config.cmake.in
-@@ -17,19 +17,20 @@
+@@ -17,17 +17,18 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
 -find_dependency(fmt)
 -find_dependency(folly)
 -find_dependency(wangle)
+-find_dependency(mvfst)
+-find_dependency(Fizz)
 +find_dependency(fmt CONFIG)
 +find_dependency(folly CONFIG)
 +find_dependency(wangle CONFIG)
- if ("@BUILD_QUIC@")
--  find_dependency(mvfst)
-+  find_dependency(mvfst CONFIG)
- endif()
--find_dependency(Fizz)
++find_dependency(mvfst CONFIG)
 +find_dependency(fizz CONFIG)
 +find_dependency(gflags CONFIG)
  # For now, anything that depends on Proxygen has to copy its FindZstd.cmake

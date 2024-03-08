@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
     REF "v${VERSION}"
-    SHA512 e73f62a87d20b676cac66ce82ac93308b688ed2ac18ebdb6884bae1ae66868e1033e33908e797f86a1906f91b975e8607a02e8932db8550a677f6b41373b7934
+    SHA512 076aac35428589c5b3524a46bd939a3a3a7da44b1c866b5f71487678b27b6e48b4da034029f1630881d7713a9252e905411a04b8016c9ec56a608b6de23365ac
     HEAD_REF master
 )
 
@@ -16,13 +16,7 @@ vcpkg_check_features(
         llvm WITH_LLVM
 )
 
-if(integer-class-boostmp IN_LIST FEATURES)
-    set(INTEGER_CLASS boostmp)
-
-    if(integer-class-flint IN_LIST FEATURES)
-        message(WARNING "Both boostmp and flint are given for integer class, will use boostmp only.")
-    endif()
-elseif(integer-class-flint IN_LIST FEATURES)
+if(integer-class-flint IN_LIST FEATURES)
     set(INTEGER_CLASS flint)
 endif()
 
@@ -31,8 +25,6 @@ if(VCPKG_TARGET_IS_UWP)
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE")
 endif()
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MSVC_USE_MT)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -40,10 +32,10 @@ vcpkg_cmake_configure(
         -DBUILD_BENCHMARKS=no
         -DBUILD_TESTS=no
         -DMSVC_WARNING_LEVEL=3
-        -DMSVC_USE_MT=${MSVC_USE_MT}
+        -DMSVC_USE_MT=no
         -DWITH_SYMENGINE_RCP=yes
         -DWITH_SYMENGINE_TEUCHOS=no
-        -DINTEGER_CLASS=${INTEGER_CLASS}
+        -DWITH_SYMENGINE_THREAD_SAFE=yes
         ${FEATURE_OPTIONS}
 )
 
@@ -66,4 +58,4 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/symengine/SymEngineConfig.cm
     [[${SYMENGINE_CMAKE_DIR}/../../include]]
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

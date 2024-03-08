@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/proxygen
     REF "v${VERSION}"
-    SHA512 b08110c4bb4d83a80786aa517edc88d2d9233934705a5deb3da70542251c737113500a11a4cd55d72928635be7c2833e806d1c5391892269a0dd1fe8d4e80187
+    SHA512 9a7081e0dafc93f1610a20ad2026111667711336efa46b9208873b539251f5b00d95597acde53818664aa6ea1fcda0dbd3417222af2fa23dc2f6b4c2bb079124
     HEAD_REF master
     PATCHES
         remove-register.patch
@@ -29,4 +29,8 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

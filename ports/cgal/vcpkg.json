@@ -1,6 +1,6 @@
 {
   "name": "cgal",
-  "version": "5.5.2",
+  "version": "5.6",
   "port-version": 1,
   "description": "The Computational Geometry Algorithms Library (CGAL) is a C++ library that aims to provide easy access to efficient and reliable algorithms in computational geometry.",
   "homepage": "https://github.com/CGAL/cgal",
@@ -65,6 +65,7 @@
     "qt": {
       "description": "Qt GUI support for CGAL",
       "dependencies": [
+        "boost-format",
         "eigen3",
         "qt5-3d",
         {

@@ -15,7 +15,11 @@ vcpkg_from_github(
         fix-clang-detection.patch
 )
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DWARNINGS_AS_ERRORS=FALSE
+)
+
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mfl)

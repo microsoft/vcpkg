@@ -14,9 +14,9 @@ string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" USD_VERSION "${VERSION}"
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO PixarAnimationStudios/USD
+    REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
-    SHA512 fd3e7a90f837a5d016d94be34747b2c1daed3f01f252e4b1aa5cb195f32acaecca9373b8f5c7be9c235148f04b0afa47da9462b357ef1dd1e11cf20a7225ae66
+    SHA512 6669191c3497e244c958949b62a749958ab01e8e1edc7b3476d59c31395e147acf6f4ba7aae069c5ceab7fe2eb321e81e4e5f66beb72814be36e0fec98d3d034
     HEAD_REF master
     PATCHES
         fix_build-location.patch

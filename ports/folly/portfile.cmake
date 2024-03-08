@@ -9,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 8be640c0b87c85929aa0af2e147ef9556e24f777d80dc7d06019b7edc9b5738635ad3db9dea94f99f1a9eb7eb48e91d78a42d08bcb19b98a279fb805da41bf82
+    SHA512 c563aa64efa3098235db5f6354cdbc96d829f8bfc24e24464e0cae65279d00f1bba722c7060c2e76c89723ef66ef94225a02d6fb65e24fa6125adb619fc1d74b
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
@@ -18,6 +18,8 @@ vcpkg_from_github(
         fix-windows-minmax.patch
         fix-deps.patch
         openssl.patch # from https://github.com/facebook/folly/pull/2016
+        disable-uninitialized-resize-on-new-stl.patch
+        fix-unistd-include.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")

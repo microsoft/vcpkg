@@ -1,0 +1,48 @@
+diff --git a/src/Makefile.global.in b/src/Makefile.global.in
+index 5dacc4d..a9a797e 100644
+--- a/src/Makefile.global.in
++++ b/src/Makefile.global.in
+@@ -100,14 +100,14 @@ datarootdir := @datarootdir@
+ 
+ bindir := @bindir@
+ 
+-datadir := @datadir@
++datadir := @datadir@/postgresql
+ ifeq "$(findstring pgsql, $(datadir))" ""
+ ifeq "$(findstring postgres, $(datadir))" ""
+ override datadir := $(datadir)/postgresql
+ endif
+ endif
+ 
+-sysconfdir := @sysconfdir@
++sysconfdir := @sysconfdir@/postgresql
+ ifeq "$(findstring pgsql, $(sysconfdir))" ""
+ ifeq "$(findstring postgres, $(sysconfdir))" ""
+ override sysconfdir := $(sysconfdir)/postgresql
+@@ -116,7 +116,7 @@ endif
+ 
+ libdir := @libdir@
+ 
+-pkglibdir = $(libdir)
++pkglibdir = $(libdir)/postgresql
+ ifeq "$(findstring pgsql, $(pkglibdir))" ""
+ ifeq "$(findstring postgres, $(pkglibdir))" ""
+ override pkglibdir := $(pkglibdir)/postgresql
+@@ -125,7 +125,7 @@ endif
+ 
+ includedir := @includedir@
+ 
+-pkgincludedir = $(includedir)
++pkgincludedir = $(includedir)/postgresql
+ ifeq "$(findstring pgsql, $(pkgincludedir))" ""
+ ifeq "$(findstring postgres, $(pkgincludedir))" ""
+ override pkgincludedir := $(pkgincludedir)/postgresql
+@@ -134,7 +134,7 @@ endif
+ 
+ mandir := @mandir@
+ 
+-docdir := @docdir@
++docdir := @docdir@/postgresql
+ ifeq "$(findstring pgsql, $(docdir))" ""
+ ifeq "$(findstring postgres, $(docdir))" ""
+ override docdir := $(docdir)/postgresql

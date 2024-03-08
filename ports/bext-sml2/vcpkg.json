@@ -1,0 +1,7 @@
+{
+  "name": "bext-sml2",
+  "version-date": "2024-02-02",
+  "description": "Your scalable C++20 one header only State Machine Library with no dependencies",
+  "homepage": "https://github.com/boost-ext/sml2",
+  "license": "BSL-1.0"
+}

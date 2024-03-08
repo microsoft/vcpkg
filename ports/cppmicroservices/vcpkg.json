@@ -1,9 +1,10 @@
 {
   "name": "cppmicroservices",
-  "version": "3.6.0",
+  "version": "3.7.6",
   "port-version": 1,
   "description": "An OSGi-like C++ dynamic module system and service registry",
   "homepage": "https://github.com/CppMicroServices/CppMicroServices",
+  "license": "Apache-2.0",
   "dependencies": [
     "gtest",
     {

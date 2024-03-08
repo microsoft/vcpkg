@@ -1,0 +1,38 @@
+diff --git a/include/sdf/config.hh.in b/include/sdf/config.hh.in
+index d1b3db53..9a9ce91d 100644
+--- a/include/sdf/config.hh.in
++++ b/include/sdf/config.hh.in
+@@ -48,5 +48,3 @@ 
+ #cmakedefine SDFORMAT_DISABLE_CONSOLE_LOGFILE 1
+ 
+-#define SDF_SHARE_PATH "${CMAKE_INSTALL_FULL_DATAROOTDIR}/"
+-#define SDF_VERSION_PATH "${CMAKE_INSTALL_FULL_DATAROOTDIR}/sdformat${SDF_MAJOR_VERSION}/${SDF_PKG_VERSION}"
+ 
+diff --git a/src/SDF.cc b/src/SDF.cc
+index 20dcd4c6..802cbde3 100644
+--- a/src/SDF.cc
++++ b/src/SDF.cc
+@@ -97,22 +97,6 @@ std::string findFile(const std::string &_filename, bool _searchLocalPath,
+     filename = filename.substr(idx + sep.length());
+   }
+ 
+-  // Next check the install path.
+-  std::string path = sdf::filesystem::append(SDF_SHARE_PATH, filename);
+-  if (sdf::filesystem::exists(path))
+-  {
+-    return path;
+-  }
+-
+-  // Next check the versioned install path.
+-  path = sdf::filesystem::append(SDF_SHARE_PATH,
+-                                 "sdformat" SDF_MAJOR_VERSION_STR,
+-                                 sdf::SDF::Version(), filename);
+-  if (sdf::filesystem::exists(path))
+-  {
+-    return path;
+-  }
+-
+   // Next check to see if the given file exists.
+-   path = filename;
++   std::string path = filename;
+   if (sdf::filesystem::exists(path))

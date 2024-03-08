@@ -1,12 +1,20 @@
 {
   "name": "symengine",
-  "version": "0.10.1",
+  "version": "0.11.1",
   "description": "SymEngine is a fast symbolic manipulation library",
   "homepage": "https://github.com/symengine/symengine",
   "license": "BSD-3-Clause",
+  "supports": "!uwp",
   "dependencies": [
     "boost-math",
     "boost-random",
+    {
+      "name": "symengine",
+      "default-features": false,
+      "features": [
+        "integer-class-flint"
+      ]
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -17,7 +25,9 @@
     }
   ],
   "default-features": [
-    "integer-class-boostmp"
+    "arb",
+    "llvm",
+    "mpfr"
   ],
   "features": {
     "arb": {
@@ -32,17 +42,10 @@
         "flint"
       ]
     },
-    "integer-class-boostmp": {
-      "description": "Use Boost.multiprecision integer class",
-      "dependencies": [
-        "boost-multiprecision"
-      ]
-    },
     "integer-class-flint": {
       "description": "Use flint integer class",
       "dependencies": [
-        "flint",
-        "gmp"
+        "flint"
       ]
     },
     "llvm": {

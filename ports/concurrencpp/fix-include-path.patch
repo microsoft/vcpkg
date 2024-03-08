@@ -10,11 +10,3 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
  install(
    TARGETS concurrencpp
-@@ -126,7 +126,6 @@ install(
-           COMPONENT concurrencpp_Development
-   INCLUDES
-   DESTINATION "${concurrencpp_include_directory}"
--  COMPONENT concurrencpp_Development
-   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-           COMPONENT concurrencpp_Runtime
-           NAMELINK_COMPONENT concurrencpp_Development

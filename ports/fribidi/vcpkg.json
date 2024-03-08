@@ -1,7 +1,8 @@
 {
   "name": "fribidi",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "GNU FriBidi is an implementation of the Unicode Bidirectional Algorithm (bidi)",
+  "license": "LGPL-2.1-or-later",
   "supports": "!uwp",
   "dependencies": [
     {

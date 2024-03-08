@@ -10,12 +10,13 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-g-ir-tool-template.in.patch
         0002-cross-build.patch
         0003-fix-paths.patch
         python.patch
+        fix-pkgconfig.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
@@ -29,7 +30,7 @@ if(VCPKG_CROSSCOMPILING AND
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
@@ -49,8 +50,6 @@ vcpkg_install_meson(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
-
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 set(GI_TOOLS
         g-ir-compiler
@@ -74,8 +73,13 @@ foreach(script IN LISTS GI_SCRIPTS)
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")
 endforeach()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB _pyd_lib_files "${CURRENT_PACKAGES_DIR}/lib/gobject-introspection/giscanner/_giscanner.*.lib")
+    file(REMOVE ${_pyd_lib_files})
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 
-set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) # _giscanner.lib
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

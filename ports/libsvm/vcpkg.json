@@ -1,6 +1,6 @@
 {
   "name": "libsvm",
-  "version": "3.25",
+  "version": "3.32",
   "description": "A library for Support Vector Machines.",
   "homepage": "https://www.csie.ntu.edu.tw/~cjlin/libsvm/",
   "dependencies": [
@@ -15,7 +15,8 @@
   ],
   "features": {
     "tools": {
-      "description": "build libsvm CLI tools."
+      "description": "build libsvm CLI tools.",
+      "supports": "!uwp"
     }
   }
 }

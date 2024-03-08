@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/proxy
-    REF release/1.1.1
-    SHA512 47fd051cc4b774e02bf390ac6f6319ecf16f8ee063348557a93806e4fd3019229fb0157fb3f12143a90d994675615c05c8a8cf99dde5789f65c43b5ff74a7afa
+    REF ${VERSION}
+    SHA512 31ccca739eacd3bde8f5db4c4e6350bb37790681186dd6f2d2d8ee3fc1d4e2b42beab2b8c893793cb3ea6128deaf812f8cb658a74a2df5abc1af1eea95972509
     HEAD_REF main
 )
 

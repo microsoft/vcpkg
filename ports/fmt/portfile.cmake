@@ -2,11 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
     REF "${VERSION}"
-    SHA512 6188508d74ca1ed75bf6441b152c07ca83971d3104b37f33784a7b55dfcc614d6243e77e0a14220018586fdb86207cc033eece834e7acd5e0907ed4c97403f3b
+    SHA512 27df90c681ec37e55625062a79e3b83589b6d7e94eff37a3b412bb8c1473f757a8adb727603acc9185c3490628269216843b7d7bd5a3cb37f0029da5d1495ffa
     HEAD_REF master
     PATCHES
+        fix-visibility.patch
         fix-write-batch.patch
-        fix-format-conflict.patch
 )
 
 vcpkg_cmake_configure(
@@ -35,4 +35,4 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.rst")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

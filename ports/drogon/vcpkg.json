@@ -1,6 +1,6 @@
 {
   "name": "drogon",
-  "version": "1.8.4",
+  "version-semver": "1.9.3",
   "description": "A C++14/17 based HTTP web application framework running on Linux/macOS/Unix/Windows",
   "homepage": "https://github.com/an-tao/drogon",
   "documentation": "https://drogon.docsforge.com/master/overview/",
@@ -26,7 +26,17 @@
   ],
   "features": {
     "ctl": {
-      "description": "Build drogon_ctl tool."
+      "description": "Build drogon_ctl tool.",
+      "dependencies": [
+        {
+          "name": "drogon",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "ctl"
+          ]
+        }
+      ]
     },
     "mysql": {
       "description": "Support reading and writing from/to MySQL databases.",
@@ -87,6 +97,12 @@
           ]
         },
         "sqlite3"
+      ]
+    },
+    "yaml": {
+      "description": "Support YAML Drogon configuration files",
+      "dependencies": [
+        "yaml-cpp"
       ]
     }
   }

@@ -14,7 +14,7 @@ vcpkg_extract_source_archive(
         mingw-lib-names.patch
 )
 
-if (VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
+if (VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
     # when cross-compiling, try_run will not work.
     # LFS "large file support" is keyed on 
     # 1) 64-bit off_t (https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/64bitPorting/transition/transition.html table 2-1)
@@ -22,6 +22,8 @@ if (VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
     set(extra_opts 
         -DTEST_LFS_WORKS_RUN=TRUE
         -DTEST_LFS_WORKS_RUN__TRYRUN_OUTPUT=""
+        -DHAVE_DEFAULT_SOURCE_RUN=0
+        -DHAVE_DEFAULT_SOURCE_RUN__TRYRUN_OUTPUT=""
     )
 endif()
 

@@ -3,12 +3,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/stacktrace
-    REF boost-1.82.0
-    SHA512 18e01cce338e67f9474ff7ca6732e749216e57fc7d5cbf5f78a5e6b7d6c16e70ee0b92a74986c744c6ee9dd2a34c16fc7b6ac918c783b60835e834fac5749707
+    REF boost-${VERSION}
+    SHA512 aa5c7ffd3ecc7d737399159aaa1dd675fe0da5621d4229a268c0413196e4f9172c151c8cc211df238d801dc6f7ac47efc8a453462c62c81c5c739b5c4b6c111f
     HEAD_REF master
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
+    "import ../../config/checks/config"
+    "import ../config/checks/config"
+)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 set(FEATURE_OPTIONS "")
+include("${CMAKE_CURRENT_LIST_DIR}/features.cmake")
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}

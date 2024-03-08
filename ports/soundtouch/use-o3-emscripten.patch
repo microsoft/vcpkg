@@ -1,0 +1,34 @@
+From 405c4586d4556982fd5bbddf1c70bc4815465c51 Mon Sep 17 00:00:00 2001
+Date: Sat, 2 Mar 2024 23:02:06 +0100
+Subject: [PATCH] Use -O3 instead of -Ofast when targeting Emscripten (WASM)
+
+---
+ CMakeLists.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 14f23e8..dabcb9c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,11 +3,16 @@ project(SoundTouch VERSION 2.3.2 LANGUAGES CXX)
+ 
+ include(GNUInstallDirs)
+ 
++set(COMPILE_OPTIONS)
++
+ if(MSVC)
+   set(COMPILE_DEFINITIONS /O2 /fp:fast)
+-  set(COMPILE_OPTIONS )
+ else()
+-  set(COMPILE_OPTIONS -Ofast)
++  if(EMSCRIPTEN)
++    list(APPEND COMPILE_OPTIONS -O3)
++  else()
++    list(APPEND COMPILE_OPTIONS -Ofast)
++  endif()
+ endif()
+ 
+ #####################
+-- 
+2.43.0
+

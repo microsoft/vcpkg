@@ -1,7 +1,7 @@
 {
   "name": "v8",
   "version": "9.1.269.39",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Google Chrome's JavaScript engine",
   "homepage": "https://v8.dev",
   "license": "BSD-3-Clause",

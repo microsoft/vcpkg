@@ -14,12 +14,4 @@ index e4a65c43e..b20f3856a 100644
        elseif(dep STREQUAL "Threads::Threads")
  
          string(APPEND CONFIG_FILE_CONTENTS "set(THREADS_PREFER_PTHREAD_FLAG ON)\n")
-@@ -330,7 +330,7 @@ function(boost_install_target)
- 
-         string(APPEND CONFIG_FILE_CONTENTS "find_dependency(LibLZMA)\n")
- 
--      elseif(dep STREQUAL "zstd::libzstd_shared" OR dep STREQUAL "zstd::libzstd_static")
-+      elseif(dep MATCHES "zstd::libzstd_(shared|static)" OR dep MATCHES "zstd::libzstd_(shared|static)")
- 
-         string(APPEND CONFIG_FILE_CONTENTS "find_dependency(zstd)\n")
- 
+

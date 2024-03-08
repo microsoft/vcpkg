@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "microsoft/LinuxTracepoints"
-    REF 3173fa8180eb5bb7167a686c8c18baf8ef0bf31b
-    SHA512 9bd2e16da96e37df58e4281d1341051eb90574cb29d380f04f90bba7507dc9b3037ded91206d5e1808b53734fc0fc1fd06c4a220b0f34d0078ac168e6c639462
+    REF "v${VERSION}"
+    SHA512 d2126bb8e89c952630e22d66f0c9f2be7e46debd8f8dbc27f3a886af77cf4c1d9c3efcf3b7cae886feacfb9fe142355b26a3fb468c9b3582d65eb16f4dc6c288
     HEAD_REF main)
 
 vcpkg_cmake_configure(

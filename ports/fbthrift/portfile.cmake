@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 b9f7bb7037cbc24ba18928cfad8673fd321ec095dec5fa6ca5b6c51b468873bbefde4326d39faa916747f4273b5a4003d60c0f6f755bfce095f9d3e8946bcb46
+    SHA512 9138917c622eb1254043520708d49391196412ef5a4c309e82c25eacfcc680a41b3a0b81cde9c777a1893015da5751bac1a627633ef917f9e94b39771a981a07
     HEAD_REF master
     PATCHES 
         fix-glog.patch
@@ -38,11 +38,16 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/transport/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/util/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/detail/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/debug_thrift_data_difference/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/common/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/http2/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/core/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/inmemory/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/client/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/framing/parser/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/protocol/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/extensions/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/security/test"
@@ -74,4 +79,4 @@ endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftTargets.cmake" "LOCATION_HH=\\\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/thrift/compiler/location.hh\\\"" "")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

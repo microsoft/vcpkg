@@ -1,0 +1,100 @@
+diff --git a/c++/src/CMakeLists.txt b/c++/src/CMakeLists.txt
+index 972f2fc03..5b39554c8 100644
+--- a/c++/src/CMakeLists.txt
++++ b/c++/src/CMakeLists.txt
+@@ -210,8 +210,16 @@ add_library (orc STATIC ${SOURCE_FILES})
+ 
++include(GNUInstallDirs)
++
++target_include_directories(orc
++  PUBLIC
++  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++  )
++
+ target_link_libraries (orc
+-  orc::protobuf
+-  orc::zlib
+-  orc::snappy
+-  orc::lz4
+-  orc::zstd
++  PRIVATE
++  protobuf::libprotobuf
++  ZLIB::ZLIB
++  Snappy::snappy
++  lz4::lz4
++  $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
+   ${LIBHDFSPP_LIBRARIES}
+@@ -219,2 +227,9 @@ target_link_libraries (orc
+ 
+-install(TARGETS orc DESTINATION lib)
++install(TARGETS orc EXPORT unofficial-orc)
++
++install(
++    EXPORT unofficial-orc
++    FILE unofficial-orc-config.cmake
++    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-orc"
++    NAMESPACE unofficial::orc::
++)
+diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
+index 47c1a65ba..8570b6069 100644
+--- a/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cmake_modules/ThirdpartyToolchain.cmake
+@@ -73,2 +73,4 @@ endif ()
+ 
++find_package(Snappy CONFIG REQUIRED)
++if (0)
+ if (NOT "${SNAPPY_HOME}" STREQUAL "")
+@@ -113,2 +115,3 @@ if (SNAPPY_VENDORED)
+ endif ()
++endif ()
+ 
+@@ -117,2 +120,4 @@ endif ()
+ 
++find_package(ZLIB REQUIRED)
++if (0)
+ if (NOT "${ZLIB_HOME}" STREQUAL "")
+@@ -165,2 +170,3 @@ if (ZLIB_VENDORED)
+ endif ()
++endif ()
+ 
+@@ -169,2 +175,4 @@ endif ()
+ 
++find_package(zstd CONFIG REQUIRED)
++if (0)
+ if (NOT "${ZSTD_HOME}" STREQUAL "")
+@@ -224,2 +232,3 @@ if (ZSTD_VENDORED)
+ endif ()
++endif ()
+ 
+@@ -228,2 +237,4 @@ endif ()
+ 
++find_package(lz4 CONFIG REQUIRED)
++if (0)
+ if (NOT "${LZ4_HOME}" STREQUAL "")
+@@ -276,2 +287,3 @@ if (LZ4_VENDORED)
+ endif ()
++endif ()
+ 
+@@ -280,3 +292,3 @@ endif ()
+ 
+-if (WIN32)
++if (WIN32 AND TEST_VALGRIND_MEMCHECK)
+   SET(CURRENT_TZDATA_FILE "")
+@@ -383,2 +395,4 @@ endif ()
+ 
++find_package(Protobuf CONFIG REQUIRED)
++if (0)
+ if (NOT "${PROTOBUF_HOME}" STREQUAL "")
+@@ -454,2 +468,3 @@ if (PROTOBUF_VENDORED)
+ endif ()
++endif ()
+ 
+diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
+index 3863c408e..b71ab5eae 100644
+--- a/tools/src/CMakeLists.txt
++++ b/tools/src/CMakeLists.txt
+@@ -72,3 +72,3 @@ target_link_libraries (orc-metadata
+   orc
+-  orc::protobuf
++  protobuf::libprotobuf
+   ${CMAKE_THREAD_LIBS_INIT}

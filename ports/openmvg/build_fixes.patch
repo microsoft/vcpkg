@@ -639,3 +639,18 @@ index 8a69c2344..1ed9a21fe 100644
          FIND_LIBRARY(OSICLP_LIBRARY NAMES OsiClp)
  
          # locate Clp libraries
+
+diff --git a/src/openMVG/matching/metric_simd.hpp b/src/openMVG/matching/metric_simd.hpp
+index 7e09f6ed..916c84e0 100644
+--- a/src/openMVG/matching/metric_simd.hpp
++++ b/src/openMVG/matching/metric_simd.hpp
+@@ -17,7 +17,9 @@
+ #include <numeric>
+
+ #include <cstdint>
++#if defined(__amd64__) || defined(__i386__)
+ #include <immintrin.h>
++#endif
+
+ namespace openMVG {
+ namespace matching {

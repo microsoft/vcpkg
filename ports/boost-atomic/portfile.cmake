@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/atomic
-    REF boost-1.82.0
-    SHA512 d14db6e1fc5d1d23f564a2117784b94951a6d4daffd48c505d13c2c697f84eb0f05b843a66b79dd9fc7a2cb764d6b015fed897e5f92dcb9546567ded111b7e8a
+    REF boost-${VERSION}
+    SHA512 1d1a484a070d25724f084287e321a56a191373bf5387158a0e055d870056d0ad04d37596008c19a52469d823a7c4721fb682fc1870e583effa5061cea6571097
     HEAD_REF master
 )
 
@@ -13,3 +13,5 @@ boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
 )
+# has_synchronization_lib.cpp is used in boost-modular-build-helper/Jamroot.jam.in
+file(COPY "${SOURCE_PATH}/config/has_synchronization_lib.cpp" DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost-atomic")

@@ -2,39 +2,19 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 458a328..b8c2fc6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -56,7 +56,7 @@ IF(ASSIMP_HUNTER_ENABLED)
-   add_definitions(-DASSIMP_USE_HUNTER)
- ENDIF()
- 
--PROJECT(Assimp VERSION 5.2.4)
-+PROJECT(Assimp VERSION 5.2.5)
- 
- # All supported options ###############################################
- 
-@@ -273,18 +273,18 @@ IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT MINGW)
- ELSEIF(MSVC)
-   # enable multi-core compilation with MSVC
-   IF(CMAKE_CXX_COMPILER_ID MATCHES "Clang" ) # clang-cl
--    ADD_COMPILE_OPTIONS(/bigobj /W4 /WX )
-+    ADD_COMPILE_OPTIONS(/bigobj )
-   ELSE() # msvc
--    ADD_COMPILE_OPTIONS(/MP /bigobj /W4 /WX)
-+    ADD_COMPILE_OPTIONS(/MP /bigobj )
+@@ -291,9 +291,9 @@ IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT MINGW)
    ENDIF()
-   # disable "elements of array '' will be default initialized" warning on MSVC2013
-   IF(MSVC12)
-     ADD_COMPILE_OPTIONS(/wd4351)	
-   ENDIF()
-   ADD_COMPILE_OPTIONS(/wd4244) #supress warning for double to float conversion if Double precission is activated
+   # supress warning for double to float conversion if Double precission is activated
+   ADD_COMPILE_OPTIONS(/wd4244) 
 -  SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /D_DEBUG /Zi /Od")
--  SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
+-  SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 -  SET(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG:FULL /PDBALTPATH:%_PDB% /OPT:REF /OPT:ICF")
 +  # SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /D_DEBUG /Zi /Od")
-+  # SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
++  # SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 +  # SET(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG:FULL /PDBALTPATH:%_PDB% /OPT:REF /OPT:ICF")
  ELSEIF (CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
    IF(NOT ASSIMP_HUNTER_ENABLED)
-     SET(CMAKE_CXX_STANDARD 17)
+     SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
 @@ -418,7 +418,7 @@ ENDIF()
  
  set(GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
@@ -100,10 +80,10 @@ index 6551dcb..0796448 100644
 +find_dependency(pugixml CONFIG)
 +if(NOT @BUILD_SHARED_LIBS@)
 +    find_dependency(kubazip CONFIG)
-+    find_dependency(minizip CONFIG)
++    find_dependency(unofficial-minizip CONFIG)
 +    #find_dependency(openddlparser CONFIG)
 +    find_dependency(poly2tri CONFIG)
-+    #find_dependency(polyclipping  CONFIG)
++    find_dependency(polyclipping CONFIG)
 +    find_dependency(RapidJSON CONFIG)
 +    find_dependency(Stb MODULE)
 +    find_dependency(utf8cpp CONFIG)
@@ -130,28 +110,30 @@ diff --git a/code/AssetLib/Blender/BlenderTessellator.h b/code/AssetLib/Blender/
 index 0d0ba32..c3703c4 100644
 --- a/code/AssetLib/Blender/BlenderTessellator.h
 +++ b/code/AssetLib/Blender/BlenderTessellator.h
-@@ -147,7 +147,7 @@ namespace Assimp
- #ifdef ASSIMP_USE_HUNTER
- #  include <poly2tri/poly2tri.h>
- #else
--#  include "../contrib/poly2tri/poly2tri/poly2tri.h"
-+#  include <poly2tri/poly2tri.h>
- #endif
+@@ -143,7 +143,7 @@ namespace Assimp
+ 
+ #if ASSIMP_BLEND_WITH_POLY_2_TRI
+ 
+-#include "contrib/poly2tri/poly2tri/poly2tri.h"
++#include <poly2tri/poly2tri.h>
  
  namespace Assimp
+ {
 diff --git a/code/AssetLib/IFC/IFCGeometry.cpp b/code/AssetLib/IFC/IFCGeometry.cpp
 index ef59542..17e00cd 100644
 --- a/code/AssetLib/IFC/IFCGeometry.cpp
 +++ b/code/AssetLib/IFC/IFCGeometry.cpp
-@@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- #  include <poly2tri/poly2tri.h>
- #  include <polyclipping/clipper.hpp>
- #else
--#  include "../contrib/poly2tri/poly2tri/poly2tri.h"
-+#  include <poly2tri/poly2tri.h>
- #  include "../contrib/clipper/clipper.hpp"
- #endif
+@@ -45,8 +45,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include "IFCUtil.h"
+ #include "Common/PolyTools.h"
+ #include "PostProcessing/ProcessHelper.h"
+-#include "contrib/poly2tri/poly2tri/poly2tri.h"
+-#include "contrib/clipper/clipper.hpp"
++#include <poly2tri/poly2tri.h>
++#include <polyclipping/clipper.hpp>
  
+ #include <iterator>
+ #include <memory>
 diff --git a/code/AssetLib/IFC/IFCLoader.cpp b/code/AssetLib/IFC/IFCLoader.cpp
 index 0c20686..e6b20a3 100644
 --- a/code/AssetLib/IFC/IFCLoader.cpp
@@ -169,15 +151,17 @@ diff --git a/code/AssetLib/IFC/IFCOpenings.cpp b/code/AssetLib/IFC/IFCOpenings.c
 index 3c4a0b3..3fab616 100644
 --- a/code/AssetLib/IFC/IFCOpenings.cpp
 +++ b/code/AssetLib/IFC/IFCOpenings.cpp
-@@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- #  include <poly2tri/poly2tri.h>
- #  include <polyclipping/clipper.hpp>
- #else
--#  include "../contrib/poly2tri/poly2tri/poly2tri.h"
-+#  include <poly2tri/poly2tri.h>
- #  include "../contrib/clipper/clipper.hpp"
- #endif
+@@ -47,7 +47,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include "IFCUtil.h"
+ #include "Common/PolyTools.h"
+ #include "PostProcessing/ProcessHelper.h"
+-#include "contrib/poly2tri/poly2tri/poly2tri.h"
+-#include "contrib/clipper/clipper.hpp"
++#include <poly2tri/poly2tri.h>
++#include <polyclipping/clipper.hpp>
  
+ #include <deque>
+ #include <forward_list>
 diff --git a/code/AssetLib/MMD/MMDPmxParser.cpp b/code/AssetLib/MMD/MMDPmxParser.cpp
 index ca37ba1..2ce7bdd 100644
 --- a/code/AssetLib/MMD/MMDPmxParser.cpp
@@ -187,7 +171,7 @@ index ca37ba1..2ce7bdd 100644
  #  include <utf8.h>
  #else
 -#  include "../contrib/utf8cpp/source/utf8.h"
-+#  include <utf8.h>
++#  include <utf8cpp/utf8.h>
  #endif
  #include <assimp/Exceptional.h>
  
@@ -200,7 +184,7 @@ index 7b66afa..5adbe1d 100644
  #include <utf8.h>
  #else
 -#include "../contrib/utf8cpp/source/utf8.h"
-+#include <utf8.h>
++#include <utf8cpp/utf8.h>
  #endif
  #include <assimp/importerdesc.h>
  #include <assimp/scene.h>
@@ -213,7 +197,7 @@ index d4456e6..812f29b 100644
  #  include <utf8.h>
  #else
 -#  include <contrib/utf8cpp/source/utf8.h>
-+#  include <utf8.h>
++#  include <utf8cpp/utf8.h>
  #endif
  
  #include <memory>
@@ -232,7 +216,7 @@ index 5339454..45e07c0 100644
    find_package(pugixml CONFIG REQUIRED)
  ELSE()
    SET( Pugixml_SRCS
-@@ -910,15 +910,15 @@ ELSE()
+@@ -919,30 +919,30 @@ ELSE()
  ENDIF()
  
  # utf8
@@ -246,31 +230,46 @@ index 5339454..45e07c0 100644
  ENDIF()
  
  # polyclipping
--IF(ASSIMP_HUNTER_ENABLED)
-+IF(0)
-   hunter_add_package(polyclipping)
-   find_package(polyclipping CONFIG REQUIRED)
- ELSE()
-@@ -930,8 +930,8 @@ ELSE()
- ENDIF()
+-#IF(ASSIMP_HUNTER_ENABLED)
++IF(1)
+ #  hunter_add_package(polyclipping)
+-#  find_package(polyclipping CONFIG REQUIRED)
+-#ELSE()
++  find_package(polyclipping CONFIG REQUIRED)
++ELSE()
+   SET( Clipper_SRCS
+     ../contrib/clipper/clipper.hpp
+     ../contrib/clipper/clipper.cpp
+   )
+   SOURCE_GROUP( Contrib\\Clipper FILES ${Clipper_SRCS})
+-#ENDIF()
++ENDIF()
  
  # poly2tri
--IF(ASSIMP_HUNTER_ENABLED)
--  hunter_add_package(poly2tri)
+-#IF(ASSIMP_HUNTER_ENABLED)
 +IF(1)
-+  #hunter_add_package(poly2tri)
-   find_package(poly2tri CONFIG REQUIRED)
- ELSE()
+ #  hunter_add_package(poly2tri)
+-#  find_package(poly2tri CONFIG REQUIRED)
+-#ELSE()
++  find_package(poly2tri CONFIG REQUIRED)
++ELSE()
    SET( Poly2Tri_SRCS
-@@ -951,8 +951,8 @@ ELSE()
- ENDIF()
+     ../contrib/poly2tri/poly2tri/common/shapes.cc
+     ../contrib/poly2tri/poly2tri/common/shapes.h
+@@ -957,11 +957,11 @@ ELSE()
+     ../contrib/poly2tri/poly2tri/sweep/sweep_context.h
+   )
+   SOURCE_GROUP( Contrib\\Poly2Tri FILES ${Poly2Tri_SRCS})
+-#ENDIF()
++ENDIF()
  
  # minizip/unzip
 -IF(ASSIMP_HUNTER_ENABLED)
 -  hunter_add_package(minizip)
 +IF(1)
 +  #hunter_add_package(minizip)
-   find_package(minizip CONFIG REQUIRED)
+-  find_package(minizip CONFIG REQUIRED)
++  find_package(unofficial-minizip CONFIG REQUIRED)
  ELSE()
    SET( unzip_SRCS
 @@ -969,9 +969,9 @@ ENDIF()
@@ -377,19 +376,22 @@ index 5339454..45e07c0 100644
 +IF(1)
    TARGET_LINK_LIBRARIES(assimp
 -      PUBLIC
--      polyclipping::polyclipping
+-      #polyclipping::polyclipping
 -      openddlparser::openddl_parser
 +      PRIVATE
-+      #polyclipping::polyclipping
++      polyclipping::polyclipping
 +      #openddlparser::openddl_parser
 +      ${OPENDDL_PARSER_LIBRARIES}
-       poly2tri::poly2tri
-       minizip::minizip
+-      #poly2tri::poly2tri
++      poly2tri::poly2tri
+-      minizip::minizip
++      unofficial::minizip::minizip
 -      ZLIB::zlib
 -      RapidJSON::rapidjson
 +      ZLIB::ZLIB
 +      rapidjson
-       utf8cpp
+-      utf8cpp
++      utf8cpp::utf8cpp
 +      PUBLIC
        pugixml
 -      stb::stb
@@ -463,8 +465,8 @@ index 5339454..45e07c0 100644
  
  # Add RT-extension library for glTF importer with Open3DGC-compression.
  IF (RT_FOUND AND ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC)
--  TARGET_LINK_LIBRARIES(assimp ${RT_LIBRARY})
-+  TARGET_LINK_LIBRARIES(assimp PRIVATE ${RT_LIBRARY})
+-  TARGET_LINK_LIBRARIES(assimp rt)
++  TARGET_LINK_LIBRARIES(assimp PRIVATE rt)
  ENDIF ()
  
  
@@ -472,8 +474,17 @@ diff --git a/code/Common/StbCommon.h b/code/Common/StbCommon.h
 index 1265d25..18f4564 100644
 --- a/code/Common/StbCommon.h
 +++ b/code/Common/StbCommon.h
-@@ -48,7 +48,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- #pragma GCC diagnostic ignored "-Wunused-function"
+@@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #pragma clang diagnostic ignored "-Wunused-function"
+ #endif
+ 
+-#ifndef STB_USE_HUNTER
++#if 0
+ /*  Use prefixed names for the symbols from stb_image as it is a very commonly embedded library.
+     Including vanilla stb_image symbols causes duplicate symbol problems if assimp is linked
+     statically together with another library or executable that also embeds stb_image.
+@@ -111,7 +111,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #define stbi_zlib_decode_noheader_malloc assimp_stbi_zlib_decode_noheader_malloc
  #endif
  
 -#include "stb/stb_image.h"
@@ -490,7 +501,7 @@ index 383300e..03fdd9a 100644
  #include <utf8.h>
  #else
 -#include "../contrib/utf8cpp/source/utf8.h"
-+#include <utf8.h>
++#include <utf8cpp/utf8.h>
  #endif
  
  // ------------------------------------------------------------------------------------------------

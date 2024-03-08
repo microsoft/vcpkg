@@ -1,7 +1,6 @@
 {
   "name": "imgui-sfml",
-  "version": "2.5",
-  "port-version": 3,
+  "version": "2.6",
   "description": "ImGui binding for use with SFML",
   "homepage": "https://github.com/eliasdaler/imgui-sfml",
   "license": "MIT",

@@ -3,19 +3,23 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v${VERSION}
-    SHA512 d8515906b81e5bb8babe76bdbcba9462eeb9906e7099772d47d871483fa26fbc86943c41c1a916003c0bce767d15ebbbf870699ef75f2fdbcb61f9879d8b4017
+    REF "v${VERSION}"
+    SHA512 5e77e08a5321f5cf794cb9e4cc4745e069a7dbc161414dac309f1bb5ea52d0adae086b13aed7195a7725a59cbc92206dd391aeef86dbf44bec7a8bee266c8881
     HEAD_REF main
     PATCHES
         support_absl_cxx17.patch
 )
 
-vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
+if ("grpc-common" IN_LIST FEATURES)
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
+endif ()
 
 set(GOOGLE_CLOUD_CPP_ENABLE "${FEATURES}")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "core")
-# This feature does not exist, but allows us to simplify the vcpkg.json file.
+# This feature does not exist, but allows us to simplify the vcpkg.json
+# file.
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "grpc-common")
+list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "rest-common")
 list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "googleapis")
 # google-cloud-cpp uses dialogflow_cx and dialogflow_es. Underscores
 # are invalid in `vcpkg` features, we use dashes (`-`) as a separator
@@ -49,28 +53,27 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-foreach(feature IN LISTS FEATURES)
-    set(config_path "lib/cmake/google_cloud_cpp_${feature}")
-    # Most features get their own package in `google-cloud-cpp`.
-    # The exceptions are captured by this `if()` command, basically
-    # things like `core` and `experimental-storage-grpc` are skipped.
+
+function (google_cloud_cpp_cmake_config_fixup library)
+    set(config_path "lib/cmake/google_cloud_cpp_${library}")
+    # If the library exists and is installed, tell vcpkg about it.
     if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
-        continue()
+        return()
     endif()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "google_cloud_cpp_${feature}"
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "google_cloud_cpp_${library}"
                              CONFIG_PATH "${config_path}"
                              DO_NOT_DELETE_PARENT_CONFIG_PATH)
+endfunction ()
+
+foreach(feature IN LISTS GOOGLE_CLOUD_CPP_ENABLE)
+    google_cloud_cpp_cmake_config_fixup(${feature})
+    google_cloud_cpp_cmake_config_fixup(${feature}_mocks)
 endforeach()
+
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(suffix common googleapis grpc_utils rest_internal dialogflow_cx dialogflow_es)
-    set(config_path "lib/cmake/google_cloud_cpp_${suffix}")
-    if(NOT IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config_path}")
-        continue()
-    endif()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "google_cloud_cpp_${suffix}"
-                             CONFIG_PATH "${config_path}"
-                             DO_NOT_DELETE_PARENT_CONFIG_PATH)
+foreach(feature common compute_protos googleapis grpc_utils iam_v2 logging_type rest_internal rest_protobuf_internal)
+    google_cloud_cpp_cmake_config_fixup(${feature})
 endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"

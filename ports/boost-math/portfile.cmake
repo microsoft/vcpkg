@@ -3,11 +3,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
-    REF boost-1.82.0
-    SHA512 2788b5cc1ca359544d81c5942465703b11a6c243234adfb4e87a355ebdfdfbd52f99bfab2355b49438bbc0ed4d96d26ac924abd14464519d35099f91bb5129db
+    REF boost-${VERSION}
+    SHA512 5f5aec5c7c2de137fc8b69e33a3f0aa6c18b63292a66508cb68c86d3c1c27455f73432218e90cbd47e919e0be84a6d25af39aa1c4b9a223c013a948c029b7251
     HEAD_REF master
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
+    "import ../../config/checks/config"
+    "import ../config/checks/config"
+)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 set(FEATURE_OPTIONS "")
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF 394a9fbafe9010b76a2615c562204277a956eb52 # v0.3.23
-    SHA512 d79ae7ba4f9146f0bcacdef9b9cf4cd287e5eb2e3891f7deb4b3992b742a557ca094ac2f258420a16cfe6bbda7ca82addf415aecd7ced425a02374847c0b6013
+    REF "v${VERSION}"
+    SHA512 01d3a536fbfa62f276fd6b1ad0e218fb3d91f41545fc83ddc74979fa26372d8389f0baa20334badfe0adacd77bd944c50a47ac920577373fcc1d495553084373
     HEAD_REF develop
     PATCHES
         uwp.patch
@@ -33,9 +33,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 if(VCPKG_TARGET_IS_OSX)
+    list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
     if("dynamic-arch" IN_LIST FEATURES)
         set(conf_opts GENERATOR "Unix Makefiles")
     endif()
+endif()
+
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
 endif()
 
 set(OPENBLAS_EXTRA_OPTIONS)
@@ -68,7 +73,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/OpenBLAS)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenBLAS)
 
 if (EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES getarch AUTO_CLEAN)

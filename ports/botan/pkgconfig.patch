@@ -1,5 +1,5 @@
 diff --git a/src/build-data/botan.pc.in b/src/build-data/botan.pc.in
-index 7139436..81214fe 100644
+index c18b522..a5722c9 100644
 --- a/src/build-data/botan.pc.in
 +++ b/src/build-data/botan.pc.in
 @@ -1,7 +1,7 @@
@@ -11,4 +11,4 @@ index 7139436..81214fe 100644
 +includedir=${prefix}/include
  
  Name: Botan
- Description: Crypto and TLS for C++11
+ Description: Crypto and TLS for Modern C++

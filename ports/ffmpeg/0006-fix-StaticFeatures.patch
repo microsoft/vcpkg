@@ -1,8 +1,8 @@
 diff --git a/configure b/configure
-index 3bdcfc6..00b2f13 100644
+index 6d3f31fc95..f5f4a769cc 100644
 --- a/configure
 +++ b/configure
-@@ -6351,7 +6351,8 @@ if enabled libmfx; then
+@@ -6761,7 +6761,8 @@ if enabled libmfx; then
  fi
  
  enabled libmodplug        && require_pkg_config libmodplug libmodplug libmodplug/modplug.h ModPlug_Load
@@ -12,16 +12,16 @@ index 3bdcfc6..00b2f13 100644
  enabled libmysofa         && { check_pkg_config libmysofa libmysofa mysofa.h mysofa_neighborhood_init_withstepdefine ||
                                 require libmysofa mysofa.h mysofa_neighborhood_init_withstepdefine -lmysofa $zlib_extralibs; }
  enabled libnpp            && { check_lib libnpp npp.h nppGetLibVersion -lnppig -lnppicc -lnppc -lnppidei -lnppif ||
-@@ -6392,7 +6393,7 @@ if enabled debug_configure; then
+@@ -6805,7 +6806,7 @@ if enabled debug_configure; then
  else
      enabled libsnappy     && require libsnappy snappy-c.h snappy_compress -lsnappy -lstdc++
  fi
 -enabled libsoxr           && require libsoxr soxr.h soxr_create -lsoxr
 +enabled libsoxr           && require libsoxr soxr.h soxr_create -lsoxr -lm
- enabled libssh            && require_pkg_config libssh libssh libssh/sftp.h sftp_init
+ enabled libssh            && require_pkg_config libssh "libssh >= 0.6.0" libssh/sftp.h sftp_init
  enabled libspeex          && require_pkg_config libspeex speex speex/speex.h speex_decoder_init
  enabled libsrt            && require_pkg_config libsrt "srt >= 1.3.0" srt/srt.h srt_socket
-@@ -6460,6 +6461,8 @@ enabled openal            && { { for al_extralibs in "${OPENAL_LIBS}" "-lopenal"
+@@ -6888,6 +6889,8 @@ enabled openal            && { check_pkg_config openal "openal >= 1.1" "AL/al.h"
  enabled opencl            && { check_pkg_config opencl OpenCL CL/cl.h clEnqueueNDRangeKernel ||
                                 check_lib opencl OpenCL/cl.h clEnqueueNDRangeKernel -Wl,-framework,OpenCL ||
                                 check_lib opencl CL/cl.h clEnqueueNDRangeKernel -lOpenCL ||
@@ -30,7 +30,7 @@ index 3bdcfc6..00b2f13 100644
                                 die "ERROR: opencl not found"; } &&
                               { test_cpp_condition "OpenCL/cl.h" "defined(CL_VERSION_1_2)" ||
                                 test_cpp_condition "CL/cl.h" "defined(CL_VERSION_1_2)" ||
-@@ -6479,6 +6482,7 @@ enabled openssl           && { check_pkg_config openssl openssl openssl/ssl.h OP
+@@ -6914,6 +6917,7 @@ enabled openssl           && { { check_pkg_config openssl "openssl >= 3.0.0" ope
                                 check_lib openssl openssl/ssl.h SSL_library_init -lssl -lcrypto ||
                                 check_lib openssl openssl/ssl.h SSL_library_init -lssl32 -leay32 ||
                                 check_lib openssl openssl/ssl.h SSL_library_init -lssl -lcrypto -lws2_32 -lgdi32 ||
@@ -38,7 +38,7 @@ index 3bdcfc6..00b2f13 100644
                                 die "ERROR: openssl not found"; }
  enabled pocketsphinx      && require_pkg_config pocketsphinx pocketsphinx pocketsphinx/pocketsphinx.h ps_init
  enabled rkmpp             && { require_pkg_config rkmpp rockchip_mpp  rockchip/rk_mpi.h mpp_create &&
-@@ -6707,7 +6711,7 @@ enabled amf &&
+@@ -7215,7 +7219,7 @@ enabled amf &&
  if enabled libc_iconv; then
      check_func_headers iconv.h iconv
  elif enabled iconv; then

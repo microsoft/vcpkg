@@ -3,12 +3,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/asio
-    REF boost-1.82.0
-    SHA512 d54fd77ca7996da138b10408df1eae28bbcae0c6475467cc19837bf6f6624c38ad7f9e1eec87ceae27f516583b204fdbaeb04daad7cc28e6aeec02ab5f188731
+    REF boost-${VERSION}
+    SHA512 88d1d8d1bbea29149d9747ab9ccb99a7bfbd928f8ed1aff90adb6382fcefd32dc9687e6832f8ac21ddf918f0608623aa123d7943aa5f697a6b946fe2311e05f6
     HEAD_REF master
-    PATCHES
-        fix_coro_compile_error_msvc.patch
-        windows_alloca_header.patch
+    PATCHES windows_alloca_header.patch
 )
 
 set(FEATURE_OPTIONS "")

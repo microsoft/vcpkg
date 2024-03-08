@@ -18,7 +18,7 @@ você pode executar `vcpkg help`, ou `vcpkg help [command]` para obter ajuda esp
 * GitHub: pacote completo em [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg), programa em [https://github.com/microsoft/vcpkg-tool](https://github.com/microsoft/vcpkg-tool)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
 * Discord: [\#include \<C++\>](https://www.includecpp.org), the #🌏vcpkg channel
-* Documentos: [Documentation](docs/README.md)
+* Documentos: [Documentation](https://learn.microsoft.com/vcpkg)
 
 # Índice
 
@@ -255,8 +255,8 @@ set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems
 
 Isso ainda permitirá que as pessoas não usem o vcpkg, passando o `CMAKE_TOOLCHAIN_FILE` diretamente, mas tornará a etapa de configuração-construção um pouco mais fácil.
 
-[getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/buildsystems/integration.md
+[getting-started:using-a-package]: https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages
+[getting-started:integration]: https://learn.microsoft.com/en-us/vcpkg/users/buildsystems/msbuild-integration
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools
@@ -264,7 +264,7 @@ Isso ainda permitirá que as pessoas não usem o vcpkg, passando o `CMAKE_TOOLCH
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
-[getting-started:manifest-spec]: docs/specifications/manifests.md
+[getting-started:manifest-spec]: https://learn.microsoft.com/en-us/vcpkg/users/manifests
 
 # Tab-Completion/Auto-Completion
 
@@ -284,10 +284,10 @@ dependendo do shell que você usa, reinicie o console.
 
 # Exemplos
 
-Consulte a [documentação](docs/README.md) para orientações específicas,
-incluindo [instalando e usando um pacote](docs/examples/installing-and-using-packages.md),
-[adicionando um novo pacote de um arquivo zip](docs/examples/packaging-zipfiles.md),
-e [adicionando um novo pacote de um repositório GitHub](docs/examples/packaging-github-repos.md).
+Consulte a [documentação](https://learn.microsoft.com/vcpkg) para orientações específicas,
+incluindo [instalando e usando um pacote](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages),
+[adicionando um novo pacote de um arquivo zip](https://learn.microsoft.com/vcpkg/examples/packaging-zipfiles),
+e [adicionando um novo pacote de um repositório GitHub](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos).
 
 Nossos documentos agora também estão disponíveis online em nosso site <https://vcpkg.io/>. Nós realmente apreciamos todo e qualquer feedback! Você pode enviar um problema em <https://github.com/vcpkg/vcpkg.github.io/issues>.
 
@@ -320,7 +320,7 @@ pelos desenvolvedores originais dessas bibliotecas e baixar o código-fonte e cr
 locais de distribuição oficiais. Para uso atrás de um firewall, o acesso específico necessário dependerá
 em quais portas estão sendo instaladas. Se você precisar instalar em um ambiente "air gap", considere
 instalando uma vez em um ambiente sem "air gap", preenchendo um
-[cache de ativos](docs/users/assetcaching.md) compartilhado com o ambiente "air gapped".
+[cache de ativos](https://learn.microsoft.com/vcpkg/users/assetcaching) compartilhado com o ambiente "air gapped".
 
 # Telemetria
 

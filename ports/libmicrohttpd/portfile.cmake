@@ -3,12 +3,13 @@ vcpkg_download_distfile(ARCHIVE
         "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${VERSION}.tar.gz"
         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${VERSION}.tar.gz"
     FILENAME "libmicrohttpd-${VERSION}.tar.gz"
-    SHA512 001025c023dd94c4a0cf017ed575e65a577b5ce595e7e450346bfb75def77eaa8a4cfbeffb9f4b912e34165c2cfca147c02c895e067a4f6c5a321a12035758a5
+    SHA512 c99b8b93cae5feee8debcc5667ee3ff043412a84b30696fe852e6c138f3c890bb43c8fcd7199f1d2f809d522fef159e83b607c743d6cf3401a57050fbdf9b5c1
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES remove_pdb_install.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -18,7 +19,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(CFG_SUFFIX "static")
     endif()
 
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH w32/VS-Any-Version/libmicrohttpd.vcxproj
         RELEASE_CONFIGURATION "Release-${CFG_SUFFIX}"

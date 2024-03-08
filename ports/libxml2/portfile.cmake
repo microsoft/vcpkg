@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
-    REF f507d167f1755b7eaea09fb1a44d29aab828b6d1
-    SHA512 2ac3dcab31111f608a3fe33dde492c9653ad2bd49a792373acdd03d2787e1a4ef70eeb7a3d47cf67eefd43aee2ab75ec50b36cdcd124445ca206de924abb6021
+    REF "v${VERSION}"
+    SHA512 289d8e30a894a3efde78e06d1cedadc1491f4abdc2c0b653bb5410be48338aacec29e0ca23e1f1cac2725fd4e2114a8d20dcdaa80cf7f5b34302342d6f5efe10
     HEAD_REF master
     PATCHES
         disable-docs.patch
@@ -19,6 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "lzma" LIBXML2_WITH_LZMA
         "zlib" LIBXML2_WITH_ZLIB
         "tools" LIBXML2_WITH_PROGRAMS
+        "icu"  LIBXML2_WITH_ICU
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -30,7 +31,6 @@ vcpkg_cmake_configure(
         -DLIBXML2_WITH_CATALOG=ON
         -DLIBXML2_WITH_DEBUG=ON
         -DLIBXML2_WITH_ISO8859X=ON
-        -DLIBXML2_WITH_ICU=OFF # Culprit of linkage issues? Solving this is probably another PR
         -DLIBXML2_WITH_MEM_DEBUG=OFF
         -DLIBXML2_WITH_MODULES=ON
         -DLIBXML2_WITH_OUTPUT=ON
@@ -39,7 +39,6 @@ vcpkg_cmake_configure(
         -DLIBXML2_WITH_PYTHON=OFF
         -DLIBXML2_WITH_READER=ON
         -DLIBXML2_WITH_REGEXPS=ON
-        -DLIBXML2_WITH_RUN_DEBUG=OFF
         -DLIBXML2_WITH_SAX1=ON
         -DLIBXML2_WITH_SCHEMAS=ON
         -DLIBXML2_WITH_SCHEMATRON=ON
@@ -87,4 +86,4 @@ file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/usage"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
-file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright")
