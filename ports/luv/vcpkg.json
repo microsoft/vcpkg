@@ -1,7 +1,6 @@
 {
   "name": "luv",
-  "version-semver": "1.44.2",
-  "port-version": 1,
+  "version-semver": "1.48.0-2",
   "description": "Bare libuv bindings for lua",
   "homepage": "https://github.com/luvit/luv",
   "license": "Apache-2.0",
@@ -9,7 +8,7 @@
   "dependencies": [
     {
       "name": "libuv",
-      "version>=": "1.44.2"
+      "version>=": "1.48.0-2"
     },
     "lua-compat53",
     "luajit",

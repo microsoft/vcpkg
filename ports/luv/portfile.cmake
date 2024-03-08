@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO luvit/luv
-    REF 1f255a7d87cef4a7eb10bd13bbd1e213980e8da2  #v1.44.2
-    SHA512 e9ee9ee6ca8f810c375f3310a119b518da8d15f6e3093aaa6069217f4e3d29a45426cc5e2233b6a8d90876867d9097c938a5b961fb6e46479c62145297f5bb82
+    REF "${VERSION}"
+    SHA512 605caf39b88938832849d9ac982001a3a720ce0b9044462e2f7038c2ba694cc9c5ad73622f8b6623e9afa821edd7361438e913f1a37908a965a6c118fc7b835d
     HEAD_REF master
     PATCHES fix-find-libuv.patch
             fix-find-luajit.patch
