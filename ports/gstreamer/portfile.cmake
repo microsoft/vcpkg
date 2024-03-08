@@ -373,9 +373,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
     set(PREFIX "${CMAKE_SHARED_LIBRARY_PREFIX}")
     set(SUFFIX "${CMAKE_SHARED_LIBRARY_SUFFIX}")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
-                "${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
-    )
+    # ${PREFIX}gstreamer-full-1.0${SUFFIX} is required by tools
+    # file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
+    #             "${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}"
+    # )
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gstconfig.h" "!defined(GST_STATIC_COMPILATION)" "0")
 endif()
 
