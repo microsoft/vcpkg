@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF b0a749c8e7a8294b68581ce4feac0e55045eb00b # v4.3.2
-    SHA512 48c1d59cfdbe6cc043a51e950a614273bd2f9bbfd0ab8436e4ba30bf119cfdbc3e691c02608e8c169356ec79ca96472340d98d17659b66ee60bb998f3695d3c4
+    REF "v${VERSION}"
+    SHA512 2ffd248ddf283369725097ca7410f947fe0389c360b329c76f0754afab4ba87c20a0687c5e7b8bd991b157f9d20c6faa3049757b3398e66d08662c3aa7ff9658
     HEAD_REF master
     PATCHES
         fix-dependency-libuv.patch
