@@ -4369,7 +4369,7 @@
       "port-version": 1
     },
     "libfs": {
-      "baseline": "1.0.8",
+      "baseline": "1.0.9",
       "port-version": 0
     },
     "libftdi": {
