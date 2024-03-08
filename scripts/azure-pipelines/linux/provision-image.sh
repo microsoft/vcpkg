@@ -94,6 +94,9 @@ APT_PACKAGES="$APT_PACKAGES golang-go"
 ## required by libdecor and mesa
 APT_PACKAGES="$APT_PACKAGES wayland-protocols"
 
+## required by robotraconteur
+APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
+
 ## CUDA
 APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-1 cuda-libraries-dev-12-1 cuda-driver-dev-12-1 \
   cuda-cudart-dev-12-1 libcublas-12-1 libcurand-dev-12-1 cuda-nvml-dev-12-1 libcudnn8-dev libnccl2 \
