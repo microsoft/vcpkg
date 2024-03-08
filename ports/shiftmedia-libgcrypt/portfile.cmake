@@ -1,10 +1,8 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ShiftMediaProject/libgcrypt
     REF libgcrypt-${VERSION}
-    SHA512 9b09c9e598c2f3916d45374d40e1bbc4f69f65c1c64bae2f979d7cfde85d8ca5668624e1193a4e38afea3056a4f84477695bbf61454e8c194bc06119ab8da621
+    SHA512 957f2138d174cd39b3809aabbc6873292c56e596892a2273a77301038473cbcd4c69aa5d3d0ebb98a34cf3a2c30ac3212af16b34a304f81d72f11df18c3601f9
     HEAD_REF master
 )
 
