@@ -1,18 +1,16 @@
-set(HEALPIX_VER 3.50)
-set(HEALPIX_PACK_NAME  ${HEALPIX_VER}_2018Dec10)
+set(HEALPIX_PACK_NAME  ${VERSION}_2022Jul28)
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO healpix
-    REF Healpix_${HEALPIX_VER}
-    FILENAME "Healpix_${HEALPIX_PACK_NAME}.tar.gz"
-    SHA512 29fe680d757bd94651bf029654257cb67286643aad510df4c2f0b06245174411376ec1beca64feebfac14a6fc0194525170635842916d79dcaddeddd9ac6f6c7
-    PATCHES fix-dependency.patch
+    REF Healpix_${VERSION}
+    FILENAME "Healpix_${HEALPIX_PACK_NAME}.zip"
+    SHA512 f77674658edb0f800ca882ab10436efe9c3e0db89d760e9418cfd373383b9f96054fa3f1a6993689698f7b89fd24b03ea3a53d083ad8d5e79de91095c1f16499
 )
 
 vcpkg_configure_make(
     AUTOCONFIG
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH src/cxx
     COPY_SOURCE
     OPTIONS
@@ -21,7 +19,6 @@ vcpkg_configure_make(
 )
 
 vcpkg_build_make(BUILD_TARGET compile_all)
-#vcpkg_fixup_pkgconfig()
 
 # Install manually because healpix has no install target
 set(OBJ_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/auto")
@@ -41,4 +38,4 @@ if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
