@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF boost-${VERSION}
     SHA512 1d1a484a070d25724f084287e321a56a191373bf5387158a0e055d870056d0ad04d37596008c19a52469d823a7c4721fb682fc1870e583effa5061cea6571097
     HEAD_REF master
+    PATCHES
+      fix-include.patch
 )
 
 set(FEATURE_OPTIONS "")
@@ -13,5 +15,3 @@ boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
 )
-# has_synchronization_lib.cpp is used in boost-modular-build-helper/Jamroot.jam.in
-file(COPY "${SOURCE_PATH}/config/has_synchronization_lib.cpp" DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost-atomic")

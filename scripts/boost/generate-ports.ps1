@@ -617,7 +617,7 @@ if ($updateServicePorts) {
         -PortName "boost-cmake" `
         -Description "Boost cmake files" `
         -License "BSL-1.0" `
-        -Dependencies @("boost-uninstall")
+        -Dependencies @("boost-uninstall", @{ name = "vcpkg-cmake"; host = $True }, @{ name = "vcpkg-cmake-config"; host = $True })
 
 
     # Generate manifest files for boost-build

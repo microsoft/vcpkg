@@ -57,6 +57,7 @@
     {
       "name": "boost-variant2",
       "version>=": "1.84.0"
-    }
+    },
+    "openssl"
   ]
 }

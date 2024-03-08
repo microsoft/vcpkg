@@ -18,7 +18,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
       "vcpkg-build.diff"
-      "avoid-recursive-find.diff"
 )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in" "${SOURCE_PATH_CMAKE}/CMakeLists.txt" @ONLY)

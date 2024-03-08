@@ -8,6 +8,14 @@
     {
       "name": "boost-uninstall",
       "version>=": "1.84.0"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ]
 }

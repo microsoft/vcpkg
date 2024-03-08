@@ -6,7 +6,6 @@ vcpkg_from_github(
     REF boost-${VERSION}
     SHA512 6c43726760060e0eb06558fc4fa09c4104f1051016e2a6bfc53d60c124030d3d3732c839b5482c2172be47414e550e6ebd6ad0849cab56d6ca9d2d75763811a0
     HEAD_REF master
-    PATCHES cmake.patch
 )
 
 set(FEATURE_OPTIONS "")

@@ -15,6 +15,10 @@
       "version>=": "1.84.0"
     },
     {
+      "name": "boost-compute",
+      "version>=": "1.84.0"
+    },
+    {
       "name": "boost-config",
       "version>=": "1.84.0"
     },
