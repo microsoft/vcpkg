@@ -9521,7 +9521,7 @@
       "port-version": 0
     },
     "z3": {
-      "baseline": "4.12.6",
+      "baseline": "4.13.0",
       "port-version": 0
     },
     "z4kn4fein-semver": {
