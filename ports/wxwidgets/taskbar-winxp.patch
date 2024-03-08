@@ -1,0 +1,20 @@
+--- a/src/msw/taskbar.cpp	2024-03-06 14:24:31.872935600 +0000
++++ b/src/msw/taskbar.cpp	2024-03-06 14:26:44.602376200 +0000
+@@ -258,13 +258,16 @@
+     wxUnusedVar(icon); // It's only unused if not supported actually.
+ 
+     // User specified icon is only supported since Vista
++#if _WIN32_WINNT >= 0x0600
+     if ( icon.IsOk() && wxPlatformInfo::Get().CheckOSVersion(6, 0) )
+     {
+         m_balloonIcon = icon.GetIconFor(m_win);
+         notifyData.hBalloonIcon = GetHiconOf(m_balloonIcon);
+         notifyData.dwInfoFlags |= NIIF_USER | NIIF_LARGE_ICON;
+     }
+-    else if ( flags & wxICON_INFORMATION )
++    else
++#endif
++        if ( flags & wxICON_INFORMATION )
+         notifyData.dwInfoFlags |= NIIF_INFO;
+     else if ( flags & wxICON_WARNING )
+         notifyData.dwInfoFlags |= NIIF_WARNING;
