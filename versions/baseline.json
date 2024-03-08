@@ -5445,8 +5445,8 @@
       "port-version": 0
     },
     "lunasvg": {
-      "baseline": "2.3.8",
-      "port-version": 1
+      "baseline": "2.3.9",
+      "port-version": 0
     },
     "luv": {
       "baseline": "1.44.2",
