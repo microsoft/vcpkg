@@ -1,6 +1,6 @@
 {
   "name": "minitest",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A C++ unit testing framework that helps write tests alongside the code being tested.",
   "homepage": "https://github.com/Atliac/minitest",
   "license": "MIT",
