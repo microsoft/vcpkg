@@ -25,9 +25,9 @@ else {
 $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 0
+$defaultPortVersion = 1
 $portVersions = @{
-    'boost-modular-build-helper' = 2;
+    'boost-uninstall' = 1;
 }
 
 function Get-PortVersion {
@@ -368,7 +368,7 @@ function GeneratePort() {
     }
 
     $portfileLines += @(
-        "include(`${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)"
+        "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-headers.cmake)"
         "boost_modular_headers(SOURCE_PATH `${SOURCE_PATH})"
     )
 
@@ -603,13 +603,11 @@ foreach ($library in $libraries) {
         }
 
         $deps = @($deps | ForEach-Object { GeneratePortDependency $_ })
-        $deps += @("boost-vcpkg-helpers")
 
         $needsBuild = $false
         if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "function_types") {
             $deps += @(
                 @{ name = "boost-build"; host = $True },
-                @{ name = "boost-modular-build-helper"; host = $True },
                 @{ name = "vcpkg-cmake"; host = $True }
             )
             $needsBuild = $true
@@ -647,20 +645,6 @@ if ($updateServicePorts) {
         -PortName "boost-uninstall" `
         -Description "Internal vcpkg port used to uninstall Boost" `
         -License "MIT"
-
-    # Generate manifest files for boost-vcpkg-helpers
-    GeneratePortManifest `
-        -PortName "boost-vcpkg-helpers" `
-        -Description "Internal vcpkg port used to modularize Boost" `
-        -License "MIT" `
-        -Dependencies @("boost-uninstall")
-
-    # Generate manifest files for boost-modular-build-helper
-    GeneratePortManifest `
-        -PortName "boost-modular-build-helper" `
-        -Description "Internal vcpkg port used to build Boost libraries" `
-        -License "MIT" `
-        -Dependencies @("boost-uninstall", @{ name = "vcpkg-cmake"; host = $True }, @{ name = "vcpkg-cmake-get-vars"; host = $True })
 
     # Generate manifest files for boost-build
     GeneratePortManifest `

@@ -9,5 +9,5 @@ vcpkg_from_github(
     PATCHES windows_alloca_header.patch
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
+include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
