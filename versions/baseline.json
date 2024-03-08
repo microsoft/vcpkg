@@ -262,7 +262,7 @@
     },
     "asiochan": {
       "baseline": "2022-11-25",
-      "port-version": 0
+      "port-version": 1
     },
     "asiosdk": {
       "baseline": "2.3.3",
