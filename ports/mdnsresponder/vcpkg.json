@@ -1,7 +1,6 @@
 {
   "name": "mdnsresponder",
-  "version": "1557.140.5.0.1",
-  "port-version": 1,
+  "version": "2200.80.16",
   "description": "The mDNSResponder project is a component of Bonjour, Apple's ease-of-use IP networking initiative.",
   "homepage": "https://github.com/apple-oss-distributions/mDNSResponder",
   "license": "Apache-2.0",

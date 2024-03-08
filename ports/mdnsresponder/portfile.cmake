@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apple-oss-distributions/mDNSResponder
-    REF f783506af3836b39b83fc14115bc2728a49db4b2 #mDNSResponder-1557.140.5.0.1
-    SHA512 f5954d3f8ef40790e14d17de4cd861fc7df6900e54affefb8282f080a0bfc8b4ac9d238f2faaea6bb3849b342836e45f3b2cb9361402f89fcdce3c627a2b9b4d
+    REF "mDNSResponder-${VERSION}"
+    SHA512 883ecf0a700568555be0d59adbf979a783b1fd84ddd846246acbb63df83774efd87d25d655e74fb8e57832513bd7ae7ed8571b5a5ba4f679fc74cf16b1d24544
     HEAD_REF main
 )
 
