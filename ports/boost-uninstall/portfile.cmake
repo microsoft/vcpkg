@@ -20,4 +20,4 @@ file(INSTALL
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
-vcpkg_install_coypright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")
