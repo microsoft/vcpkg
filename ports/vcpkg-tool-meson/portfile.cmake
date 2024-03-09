@@ -31,8 +31,8 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesonbuild/meson
-    REF bb91cea0d66d8d036063dedec1f194d663399cdf
-    SHA512 e5888eb35dd4ab5fc0a16143cfbb5a7849f6d705e211a80baf0a8b753e2cf877a4587860a79cad129ec5f3474c12a73558ffe66439b1633d80b8044eceaff2da
+    REF "${VERSION}"
+    SHA512 b44c28bb8d5ca955b74d64c13b845adfeed814afd92d15ecc8cedb0674932063972644b7fba3a1e60aa76ff2ecea8ab40108a8210ff3698900215342096f35d2
     PATCHES
         meson-intl.patch
         remove-freebsd-pcfile-specialization.patch
