@@ -17,3 +17,5 @@ include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmak
 boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+
+message(FATAL_ERROR)
