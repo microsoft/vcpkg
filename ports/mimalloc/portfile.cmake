@@ -14,6 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         asm         MI_SEE_ASM
         secure      MI_SECURE
         override    MI_OVERRIDE
+        cxx         MI_USE_CXX
 )
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MI_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MI_BUILD_SHARED)
@@ -25,7 +26,6 @@ vcpkg_cmake_configure(
     OPTIONS_RELEASE
         -DMI_DEBUG_FULL=OFF
     OPTIONS
-        -DMI_USE_CXX=ON
         -DMI_BUILD_TESTS=OFF
         -DMI_BUILD_OBJECT=OFF
         ${FEATURE_OPTIONS}

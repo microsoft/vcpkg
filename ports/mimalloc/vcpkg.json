@@ -25,6 +25,9 @@
     },
     "secure": {
       "description": "Use security mitigations (like guard pages and randomization)"
+    },
+    "cxx": {
+      "description": "Use the C++ compiler to compile the library (instead of the C compiler)"
     }
   }
 }
