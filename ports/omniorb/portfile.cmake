@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://netcologne.dl.sourceforge.net/project/omniorb/omniORB/omniORB-4.3.0/omniORB-4.3.0.tar.bz2"
+    URLS "https://netcologne.dl.sourceforge.net/project/omniorb/omniORB/omniORB-${VERSION}/omniORB-${VERSION}.tar.bz2"
     FILENAME "omniORB-${VERSION}.tar.bz2"
-    SHA512 b081c1acbea3c7bee619a288fec209a0705b7d436f8e5fd4743675046356ef271a8c75882334fcbde4ff77d15f54d2da55f6cfcd117b01e42919d04fd29bfe2f
+    SHA512 a17744259042e65bd18172036d85f413d49f473a5ea6ce8ce616a3d33bb4509c4b526df78dd302a304512d163b27e4b4274b0bac9ccbaa29b08e417075d77b6b
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
