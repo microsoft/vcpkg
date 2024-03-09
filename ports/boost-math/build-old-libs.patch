@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 7e7790271c..cd08a77e4a 100644
 --- a/CMakeLists.txt	
 +++ b/CMakeLists.txt
-@@ -41,6 +41,98 @@ else()
+@@ -41,6 +41,104 @@ else()
  
  endif()
  
@@ -92,6 +92,12 @@ index 7e7790271c..cd08a77e4a 100644
 +     target_compile_definitions(boost_math_tr1${type} PRIVATE "BOOST_SYMBOL_EXPORT=__declspec(dllexport)" BOOST_ALL_NO_LIB)
 +     target_compile_definitions(boost_math_c99${type} PRIVATE "BOOST_SYMBOL_EXPORT=__declspec(dllexport)" BOOST_ALL_NO_LIB)
 +    endif()
++  endif()
++  target_compile_features(boost_math_tr1${type} PUBLIC cxx_std_11)
++  target_compile_features(boost_math_c99${type} PUBLIC cxx_std_11)
++  if(DARWIN)
++    target_compile_definitions(boost_math_tr1${type} PRIVATE _DARWIN_C_SOURCE)
++    target_compile_definitions(boost_math_c99${type} PRIVATE _DARWIN_C_SOURCE)
 +  endif()
 +  boost_install_target(TARGET boost_math_tr1${type} VERSION ${BOOST_SUPERPROJECT_VERSION})
 +  boost_install_target(TARGET boost_math_c99${type} VERSION ${BOOST_SUPERPROJECT_VERSION})
