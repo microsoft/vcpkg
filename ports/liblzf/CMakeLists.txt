@@ -11,6 +11,9 @@ add_library(liblzf
 )
 set_target_properties(liblzf PROPERTIES OUTPUT_NAME lzf)
 target_include_directories(liblzf INTERFACE $<INSTALL_INTERFACE:include>)
+if(MINGW)
+    target_compile_definitions(liblzf PRIVATE "_int64=long long")
+endif()
 
 ## Install ##
 
