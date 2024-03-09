@@ -2649,7 +2649,7 @@
       "port-version": 2
     },
     "ffnvcodec": {
-      "baseline": "11.1.5.3",
+      "baseline": "12.1.14.0",
       "port-version": 0
     },
     "fftw3": {
