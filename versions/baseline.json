@@ -4606,7 +4606,7 @@
     },
     "libmicrohttpd": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libmikmod": {
       "baseline": "3.3.11.1",
@@ -5066,7 +5066,7 @@
     },
     "libusb": {
       "baseline": "1.0.27",
-      "port-version": 0
+      "port-version": 1
     },
     "libusb-win32": {
       "baseline": "1.2.6.0",
@@ -5106,7 +5106,7 @@
     },
     "libvpx": {
       "baseline": "1.13.1",
-      "port-version": 2
+      "port-version": 3
     },
     "libwandio": {
       "baseline": "4.2.1",
@@ -5810,7 +5810,7 @@
     },
     "mp3lame": {
       "baseline": "3.100",
-      "port-version": 11
+      "port-version": 12
     },
     "mpark-patterns": {
       "baseline": "2019-10-03",
@@ -7870,7 +7870,7 @@
     },
     "sdl1": {
       "baseline": "1.2.15",
-      "port-version": 19
+      "port-version": 20
     },
     "sdl1-mixer": {
       "baseline": "2023-03-25",
