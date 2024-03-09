@@ -20,6 +20,7 @@ vcpkg_from_github(
       "vcpkg-build.diff"
       "fix-mpi.diff"
       "no-prefix.diff"
+      "zstd.diff"
 )
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in" "${SOURCE_PATH_CMAKE}/CMakeLists.txt" @ONLY)
