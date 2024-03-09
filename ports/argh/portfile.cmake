@@ -25,6 +25,6 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
 endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH "${CONFIG_PATH}")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/lib")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
