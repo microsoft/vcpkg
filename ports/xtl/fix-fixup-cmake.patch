@@ -34,3 +34,16 @@ index 2429881..a816142 100644
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
 -        DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig/")
 +        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig/")
+diff --git a/xtlConfig.cmake.in b/xtlConfig.cmake.in
+index 936eef1..ef392c6 100644
+--- a/xtlConfig.cmake.in
++++ b/xtlConfig.cmake.in
+@@ -13,6 +13,8 @@
+ #   xtl_INCLUDE_DIRS - the directory containing xtl headers
+ #   xtl_LIBRARY - empty
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(nlohmann_json)
+ @PACKAGE_INIT@
+ 
+ if(NOT TARGET @PROJECT_NAME@)

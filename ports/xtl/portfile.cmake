@@ -24,6 +24,4 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/xtl)
 vcpkg_fixup_pkgconfig()
 
-file(APPEND "${CURRENT_PACKAGES_DIR}/share/xtl/xtlConfig.cmake" "include(CMakeFindDependencyMacro)\nfind_dependency(nlohmann_json)\n")
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
