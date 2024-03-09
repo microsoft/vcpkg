@@ -42,8 +42,6 @@ vcpkg_configure_make(
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb-proto.pc" "\${pc_sysrootdir}" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xcb-proto.pc" "\${pc_sysrootdir}" "")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
