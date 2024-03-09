@@ -21,7 +21,6 @@
     },
     {
       "name": "boost-context",
-      "platform": "!uwp & !emscripten",
       "version>=": "1.84.0"
     },
     {

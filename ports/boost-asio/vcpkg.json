@@ -29,7 +29,6 @@
     },
     {
       "name": "boost-coroutine",
-      "platform": "!(arm & windows) & !uwp & !emscripten",
       "version>=": "1.84.0"
     },
     {

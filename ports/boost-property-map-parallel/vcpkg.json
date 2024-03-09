@@ -32,7 +32,6 @@
     },
     {
       "name": "boost-mpi",
-      "platform": "!uwp",
       "version>=": "1.84.0"
     },
     {
