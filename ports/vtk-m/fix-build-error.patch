@@ -1,0 +1,13 @@
+diff --git a/CMake/VTKmDeviceAdapters.cmake b/CMake/VTKmDeviceAdapters.cmake
+index c745604..954f95d 100644
+--- a/CMake/VTKmDeviceAdapters.cmake
++++ b/CMake/VTKmDeviceAdapters.cmake
+@@ -56,7 +56,7 @@ if(VTKm_ENABLE_TBB AND NOT TARGET vtkm::tbb)
+ endif()
+ 
+ if(VTKm_ENABLE_OPENMP AND NOT TARGET vtkm::openmp)
+-  find_package(OpenMP 4.0 REQUIRED COMPONENTS CXX QUIET)
++  find_package(OpenMP REQUIRED COMPONENTS CXX QUIET)
+ 
+   add_library(vtkm::openmp INTERFACE IMPORTED GLOBAL)
+   target_link_libraries(vtkm::openmp INTERFACE OpenMP::OpenMP_CXX)
