@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF boost-${VERSION}
     SHA512 dfee5b07fbf7cf1c41a55c5bd95d1f52edefb821c3f3d37bc8ffe6ee0c9605660d524f340dcd2568b3d7ac932d252a26a45e76a82efa02daa0ce27bd3c03ea46
     HEAD_REF master
+    PATCHES
+      marmasm.patch
 )
 
 set(FEATURE_OPTIONS "")
