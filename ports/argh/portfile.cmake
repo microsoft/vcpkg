@@ -18,7 +18,12 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+
+set(CONFIG_PATH lib/cmake/argh)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
+    set(CONFIG_PATH cmake)
+endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH "${CONFIG_PATH}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
