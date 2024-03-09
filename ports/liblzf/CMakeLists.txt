@@ -1,6 +1,6 @@
 # Based on http://cvs.schmorp.de/liblzf/Makefile.in?view=markup
 cmake_minimum_required(VERSION 3.15)
-project(liblzf LANGUAGES C VERSION 3.6)
+project(liblzf LANGUAGES C)
 
 ## Build ##
 

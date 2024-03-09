@@ -4570,7 +4570,7 @@
     },
     "liblzf": {
       "baseline": "3.6",
-      "port-version": 0
+      "port-version": 1
     },
     "liblzma": {
       "baseline": "5.4.4",
