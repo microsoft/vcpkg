@@ -1,0 +1,11 @@
+boost-regex|system -> no lib ?
+
+boost-math -> no old libs; boost-math missing the old tr1 and c99 libs.
+
+boost-atomic -> failing due to not finding boost-predef
+
+# NEeds fixes in generate
+boost-cmake -> fix refs and sha
+boost-ublas -> needs boost-compute
+boost-mysql -> requires openssl
+boost-odeint -> requires boost-mpi
