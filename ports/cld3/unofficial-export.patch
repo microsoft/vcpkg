@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2fa3908..d776dd1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,7 +21,6 @@ my_protobuf_generate_cpp(cld_3/protos PROTO_SRCS PROTO_HDRS src/feature_extracto
+ message(STATUS "PROTO_HDRS= ${PROTO_HDRS}")
+ 
+ add_definitions(-fPIC) # Position Independant Code
+-add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+ add_definitions(-std=c++11) # Needed for std::to_string(), ...
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${Protobuf_INCLUDE_DIRS}) # needed to include generated pb headers
+@@ -58,6 +57,7 @@ add_library(${PROJECT_NAME}
+ 	src/script_span/fixunicodevalue.cc
+ 	)
+ 
++if (0) # Disable unit tests
+ # unit tests exec:
+ add_executable(language_identifier_main src/language_identifier_main.cc)
+ target_link_libraries(language_identifier_main cld3 ${Protobuf_LITE_LIBRARIES})
+@@ -67,3 +67,24 @@ target_link_libraries(getonescriptspan_test cld3 ${Protobuf_LITE_LIBRARIES})
+ 
+ add_executable(language_identifier_features_test src/language_identifier_features_test.cc)
+ target_link_libraries(language_identifier_features_test cld3 ${Protobuf_LITE_LIBRARIES})
++endif()
++
++if (MSVC)
++	add_compile_definitions(COMPILER_MSVC)
++endif()
++
++target_link_libraries(${PROJECT_NAME} PUBLIC protobuf::libprotobuf-lite)
++
++target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
++
++install(TARGETS ${PROJECT_NAME}
++    EXPORT unofficial-cld3-targets
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++)
++
++install(EXPORT unofficial-cld3-targets
++	NAMESPACE unofficial::cld3::
++    DESTINATION share/unofficial-cld3
++)

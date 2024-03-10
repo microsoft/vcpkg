@@ -14,9 +14,12 @@ vcpkg_from_github(
         fix_dup_symbols.patch
         cross-build.patch
 )
+
 file(GLOB third_party "${SOURCE_PATH}/extra/*" "${SOURCE_PATH}/include/boost_1_70_0")
 list(REMOVE_ITEM third_party "${SOURCE_PATH}/extra/libedit")
-file(REMOVE_RECURSE ${third_party})
+if (third_party)
+    file(REMOVE_RECURSE ${third_party})
+endif()
 
 #Skip the version check for Visual Studio
 set(FORCE_UNSUPPORTED_COMPILER "")

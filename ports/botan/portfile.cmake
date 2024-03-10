@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 fb6be83b0292bb28319061721fe10ea16776a942b381780a8d4bece9b86e3525a0f533e3572e54c6498b08c4dc421a746bff8f0302f3ea0d810e266811331a65
+    SHA512 13f40635fc92b00b9392aa8ed96b5825f0cc8147d51337e2c225e0f29d0428732293190aa5fb2a7d2c5e7d57db748ae0fbed4536dee8af00e8d6fd405e784e1d
     HEAD_REF master
     PATCHES
         embed-debug-info.patch
         pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
+        fix_android.patch
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 

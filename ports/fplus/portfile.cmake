@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Dobiasd/FunctionalPlus
     REF "v${VERSION}"
-    SHA512 0e3478400c1acc2fc34642784f8bb3eb0f79bc4c157a38fb39c9f05d8e4c47cc6c9da765f76350fd593517c3a2db2515161f6f3d6ff770f2ace2da2a99bb493d
+    SHA512 025216c9b054b581d2be2c6bf3a9ebf906cce436875d3f7246fdd85f06fe0f29ece9b4dbe3f25228cd329cce36e95aa73fc406fb1bbdd0ee1a6bc30bf95ecf76
     HEAD_REF master
 )
 

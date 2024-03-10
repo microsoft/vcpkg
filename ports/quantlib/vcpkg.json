@@ -1,6 +1,6 @@
 {
   "name": "quantlib",
-  "version": "1.32",
+  "version": "1.33",
   "description": "The QuantLib C++ library",
   "homepage": "https://www.quantlib.org/",
   "license": "BSD-3-Clause",
@@ -10,6 +10,7 @@
     "boost-algorithm",
     "boost-any",
     "boost-assert",
+    "boost-bimap",
     "boost-bind",
     "boost-config",
     "boost-core",
