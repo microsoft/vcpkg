@@ -15,20 +15,6 @@
     }
   ],
   "features": {
-    "nls": {
-      "description": "Enable native language support",
-      "supports": "!windows | mingw",
-      "dependencies": [
-        "gettext",
-        {
-          "name": "gettext",
-          "host": true,
-          "features": [
-            "tools"
-          ]
-        }
-      ]
-    },
     "tools": {
       "description": "Build tools",
       "supports": "!windows, mingw"
