@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
         -DCREATE_LZMA_SYMLINKS=OFF
         -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=   # using flags from (vcpkg) toolchain
     MAYBE_UNUSED_VARIABLES
+        ENABLE_NLS
         CMAKE_MSVC_DEBUG_INFORMATION_FORMAT
         CREATE_XZ_SYMLINKS
         CREATE_LZMA_SYMLINKS
