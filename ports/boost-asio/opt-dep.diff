@@ -16,11 +16,11 @@ index 2ad3c1de2f..c918c7707d 100644
  )
  
 +if(NOT TARGET Boost::context)
-+  target_compile_definitions(boost_asio INTERFACE $<$<TARGET_NAME:Boost::context>:BOOST_ASIO_DISABLE_BOOST_CONTEXT_FIBER>)
++  target_compile_definitions(boost_asio INTERFACE $<$<NOT:$<TARGET_EXISTS:Boost::context>>:BOOST_ASIO_DISABLE_BOOST_CONTEXT_FIBER>)
 +endif()
 +
 +if(NOT TARGET Boost::coroutine)
-+  target_compile_definitions(boost_asio INTERFACE $<$<TARGET_NAME:Boost::coroutine>:BOOST_ASIO_DISABLE_BOOST_COROUTINE>)
++  target_compile_definitions(boost_asio INTERFACE $<$<NOT:$<TARGET_EXISTS:Boost::coroutine>>:BOOST_ASIO_DISABLE_BOOST_COROUTINE>)
 +endif()
 +
  target_compile_features(boost_asio INTERFACE cxx_std_11)
