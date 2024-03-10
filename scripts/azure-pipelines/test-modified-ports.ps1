@@ -147,6 +147,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
         }
     }
 
+    $libraries = "qtwebengine[core,default-features,geolocation,spellchecker,webchannel] llvm[bolt,clang,compiler-rt,core,default-targets,enable-abi-breaking-checks,enable-bindings,enable-eh,enable-rtti,enable-terminfo,enable-zlib,enable-zstd,libclc,lld,lldb,openmp,polly,target-x86,tools,utils] paraview[core,mpi,python,tools,vtkm] opencv4[ade,contrib,core,cuda,cudnn,default-features,dnn,eigen,ffmpeg,freetype,gdcm,gstreamer,ipp,jasper,jpeg,lapack,nonfree,openexr,opengl,openmp,ovis,png,python,qt,quirc,sfm,tbb,tiff,vtk,webp] libtorch[core,cuda,fftw3,opencv,xnnpack,zstd] vtk[atlmfc,core,gdal,mpi,opengl,openvr,paraview,python,qt,utf8,vtkm] openvino[auto,auto-batch,core,cpu,gpu,hetero,ir,onnx,paddle,pytorch,tensorflow,tensorflow-lite] tensorflow tensorflow-cc"
+
     Write-Host "Comparing with HEAD~1"
     & git revert -n -m 1 HEAD | Out-Null
     $parentBaseline = Get-Content "$PSScriptRoot/../ci.baseline.txt" -Raw
@@ -159,7 +161,8 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
         # but changes must trigger at least some testing.
         Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
         Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-        & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
+        & "./vcpkg$executableExtension" install "$libraries"
+        # & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --dry-run "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs --no-binarycaching "--output-hashes=$parentHashesFile"
     }
     else
     {
@@ -173,7 +176,9 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 # but changes must trigger at least some testing.
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake"
 Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cmake-user"
-& "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
+
+& "./vcpkg$executableExtension" install "$libraries"
+# & "./vcpkg$executableExtension" ci "--triplet=$Triplet" --failure-logs=$failureLogs --x-xunit=$xunitFile "--ci-baseline=$PSScriptRoot/../ci.baseline.txt" @commonArgs @cachingArgs @parentHashes @skipFailuresArg
 
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
