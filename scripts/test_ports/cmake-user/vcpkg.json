@@ -1,6 +1,6 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-11-12",
+  "version-date": "2023-12-18",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "license": "MIT",
   "default-features": [
@@ -92,8 +92,7 @@
         },
         {
           "$package": "ICU",
-          "name": "icu",
-          "platform": "!uwp"
+          "name": "icu"
         },
         {
           "$package": "LAPACK",
