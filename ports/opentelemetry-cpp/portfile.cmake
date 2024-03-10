@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 db8394d8e0a6fe0d8dd0dd32c64c7b697a6bae57ca4d0334604c41edfe49ee23b203ac40c93f9a736e42305d30ce614f2a5092dce988c1630186b82f4fa4db78
+    SHA512 97635bbaf6dd567c201451dfaf7815b2052fe50d9bccc97aade86cfa4a92651374d167296a5453031b2681dc302806a289bca011a9e79ddc381a17d6118971d7
     HEAD_REF main
     PATCHES
         # Missing find_dependency for Abseil
@@ -48,9 +48,9 @@ if(WITH_GENEVA)
     vcpkg_from_github(
         OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
         REPO open-telemetry/opentelemetry-cpp-contrib
-        REF 3f1b0ef547a304635aa1357af5990b4291c9f074
+        REF 68885bee3b160ee7a032872c8fa6ecf68a7f4edc
         HEAD_REF main
-        SHA512 00887a901663b1917f49eb0ddd59135a1c9904b420c982e958a52c9fdea0f389a80dde8500218aa4ce19666c3d0c1293f76a4493c0b1b7d473554dad10a67330
+        SHA512 5e7de7820e47327448f5f2cbfd5f21c1c66342579c369587ba2401497c55b7e8ebb1aec1e5e0eb1291b64a31bdd725fb6554436b7b95c0dbe777c669ff058ab6
     )
 
     set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")

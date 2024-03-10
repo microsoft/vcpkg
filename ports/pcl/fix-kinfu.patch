@@ -1,0 +1,380 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4a1ba09..69f667b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -423,6 +423,12 @@ if(WITH_OPENGL)
+   include("${PCL_SOURCE_DIR}/cmake/pcl_find_gl.cmake")
+ endif()
+ 
++# GLEW
++option(WITH_GLEW "Support for GLEW" TRUE)
++if(WITH_GLEW)
++  find_package(GLEW QUIET)
++endif()
++
+ # Boost (required)
+ include("${PCL_SOURCE_DIR}/cmake/pcl_find_boost.cmake")
+ if (NOT APPLE AND NOT WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+diff --git a/cmake/pcl_options.cmake b/cmake/pcl_options.cmake
+index e4ca977..7955f11 100644
+--- a/cmake/pcl_options.cmake
++++ b/cmake/pcl_options.cmake
+@@ -88,8 +88,6 @@ mark_as_advanced(CMAKE_MSVC_CODE_LINK_OPTIMIZATION)
+ # Project folders
+ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+ 
+-option(BUILD_tools "Useful PCL-based command line tools" ON)
+-
+ option(WITH_DOCS "Build doxygen documentation" OFF)
+ 
+ # set index size
+diff --git a/common/CMakeLists.txt b/common/CMakeLists.txt
+index fe0ad8f..518a98d 100644
+--- a/common/CMakeLists.txt
++++ b/common/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME common)
+ set(SUBSYS_DESC "Point cloud common library")
+ set(SUBSYS_DEPS)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} EXT_DEPS eigen3 boost)
+ 
+diff --git a/cuda/CMakeLists.txt b/cuda/CMakeLists.txt
+index c327f95..ed1c888 100644
+--- a/cuda/CMakeLists.txt
++++ b/cuda/CMakeLists.txt
+@@ -2,7 +2,7 @@ set(SUBSYS_NAME cuda)
+ set(SUBSYS_DESC "Point cloud CUDA libraries")
+ set(SUBSYS_DEPS)
+ 
+-option(BUILD_CUDA "Build the CUDA-related subsystems" ${DEFAULT})
++option(BUILD_CUDA "Build the CUDA-related subsystems" OFF)
+ 
+ if(NOT (BUILD_CUDA AND CUDA_FOUND))
+   return()
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index d89aa99..62c02de 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -2,9 +2,7 @@ set(SUBSYS_NAME examples)
+ set(SUBSYS_DESC "PCL examples")
+ set(SUBSYS_DEPS common io features search kdtree octree filters keypoints segmentation sample_consensus outofcore stereo geometry surface)
+ 
+-set(DEFAULT FALSE)
+-set(REASON "Code examples are disabled by default.")
+-PCL_SUBSYS_OPTION(build ${SUBSYS_NAME} ${SUBSYS_DESC} ${DEFAULT} ${REASON})
++PCL_SUBSYS_OPTION(build ${SUBSYS_NAME} ${SUBSYS_DESC} OFF)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS})
+ 
+ if(NOT build)
+diff --git a/features/CMakeLists.txt b/features/CMakeLists.txt
+index b5f902a..cdf17fd 100644
+--- a/features/CMakeLists.txt
++++ b/features/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME features)
+ set(SUBSYS_DESC "Point cloud features library")
+ set(SUBSYS_DEPS common search kdtree octree filters 2d)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} OPT_DEPS OpenMP)
+ 
+diff --git a/filters/CMakeLists.txt b/filters/CMakeLists.txt
+index f454188..a485505 100644
+--- a/filters/CMakeLists.txt
++++ b/filters/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME filters)
+ set(SUBSYS_DESC "Point cloud filters library")
+ set(SUBSYS_DEPS common sample_consensus search kdtree octree)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} OPT_DEPS OpenMP)
+ 
+diff --git a/geometry/CMakeLists.txt b/geometry/CMakeLists.txt
+index cafc32e..0ec3e6f 100644
+--- a/geometry/CMakeLists.txt
++++ b/geometry/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME geometry)
+ set(SUBSYS_DESC "Point cloud geometry library")
+ set(SUBSYS_DEPS common)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS})
+ 
+diff --git a/gpu/CMakeLists.txt b/gpu/CMakeLists.txt
+index 45daad5..a126cef 100644
+--- a/gpu/CMakeLists.txt
++++ b/gpu/CMakeLists.txt
+@@ -2,7 +2,7 @@ set(SUBSYS_NAME gpu)
+ set(SUBSYS_DESC "Point cloud GPU libraries")
+ set(SUBSYS_DEPS)
+ 
+-option(BUILD_GPU "Build the GPU-related subsystems" ${DEFAULT})
++option(BUILD_GPU "Build the GPU-related subsystems" OFF)
+ 
+ if(NOT (BUILD_GPU AND CUDA_FOUND))
+   return()
+diff --git a/gpu/kinfu/tools/CMakeLists.txt b/gpu/kinfu/tools/CMakeLists.txt
+index e1593b3..2477f86 100644
+--- a/gpu/kinfu/tools/CMakeLists.txt
++++ b/gpu/kinfu/tools/CMakeLists.txt
+@@ -2,7 +2,7 @@ set(SUBSUBSYS_NAME tools)
+ set(SUBSUBSYS_DESC "Kinfu tools")
+ set(SUBSUBSYS_DEPS gpu_kinfu visualization)
+ set(SUBSUBSYS_OPT_DEPS opencv)
+-set(EXT_DEPS openni)
++set(EXT_DEPS glew openni)
+ set(DEFAULT TRUE)
+ set(REASON "")
+ 
+diff --git a/gpu/kinfu_large_scale/CMakeLists.txt b/gpu/kinfu_large_scale/CMakeLists.txt
+index 0488fcb..9fb9432 100644
+--- a/gpu/kinfu_large_scale/CMakeLists.txt
++++ b/gpu/kinfu_large_scale/CMakeLists.txt
+@@ -2,6 +2,8 @@ set(SUBSYS_NAME gpu_kinfu_large_scale)
+ set(SUBSYS_PATH gpu/kinfu_large_scale)
+ set(SUBSYS_DESC "Kinect Fusion implementation, with volume shifting")
+ set(SUBSYS_DEPS common io gpu_containers gpu_utils geometry search octree filters kdtree features surface)
++set(EXT_DEPS vtk) # Uses saveRgbPNGFile from png_io, which requires VTK to be present
++
+ if(${CUDA_VERSION_STRING} VERSION_GREATER_EQUAL "12.0")
+   set(DEFAULT FALSE)
+   set(REASON "Kinfu_large_scale uses textures which was removed in CUDA 12")
+@@ -11,7 +13,7 @@ endif()
+ 
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ${DEFAULT} "${REASON}")
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS})
+-PCL_SET_SUBSYS_INCLUDE_DIR("${SUBSYS_NAME}" "${SUBSYS_PATH}")
++PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} EXT_DEPS ${EXT_DEPS})
+ mark_as_advanced("BUILD_${SUBSYS_NAME}")
+ 
+ if(NOT build)
+diff --git a/gpu/kinfu_large_scale/tools/CMakeLists.txt b/gpu/kinfu_large_scale/tools/CMakeLists.txt
+index d8d6547..017a190 100644
+--- a/gpu/kinfu_large_scale/tools/CMakeLists.txt
++++ b/gpu/kinfu_large_scale/tools/CMakeLists.txt
+@@ -2,7 +2,7 @@ set(SUBSUBSYS_NAME tools)
+ set(SUBSUBSYS_DESC "Kinfu large scale tools")
+ set(SUBSUBSYS_DEPS gpu_kinfu_large_scale visualization)
+ set(SUBSUBSYS_OPT_DEPS )
+-set(EXT_DEPS openni openni2)
++set(EXT_DEPS glew openni openni2)
+ set(DEFAULT TRUE)
+ set(REASON "")
+ 
+diff --git a/io/CMakeLists.txt b/io/CMakeLists.txt
+index 7fc86b2..0e4ef22 100644
+--- a/io/CMakeLists.txt
++++ b/io/CMakeLists.txt
+@@ -3,7 +3,6 @@ set(SUBSYS_DESC "Point cloud IO library")
+ set(SUBSYS_DEPS common octree)
+ set(SUBSYS_EXT_DEPS boost eigen3)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ if(WIN32)
+   PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} OPT_DEPS openni openni2 ensenso davidSDK dssdk rssdk rssdk2 pcap png vtk OpenMP EXT_DEPS ${SUBSYS_EXT_DEPS})
+diff --git a/kdtree/CMakeLists.txt b/kdtree/CMakeLists.txt
+index d9c94bb..e015aa3 100644
+--- a/kdtree/CMakeLists.txt
++++ b/kdtree/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME kdtree)
+ set(SUBSYS_DESC "Point cloud kd-tree library")
+ set(SUBSYS_DEPS common)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} EXT_DEPS flann)
+ 
+diff --git a/keypoints/CMakeLists.txt b/keypoints/CMakeLists.txt
+index 480e022..de9189a 100644
+--- a/keypoints/CMakeLists.txt
++++ b/keypoints/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME keypoints)
+ set(SUBSYS_DESC "Point cloud keypoints library")
+ set(SUBSYS_DEPS common search kdtree octree features filters)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} OPT_DEPS OpenMP)
+ 
+diff --git a/ml/CMakeLists.txt b/ml/CMakeLists.txt
+index 98209be..a67a583 100644
+--- a/ml/CMakeLists.txt
++++ b/ml/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME ml)
+ set(SUBSYS_DESC "Point cloud machine learning library")
+ set(SUBSYS_DEPS common)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS})
+ 
+diff --git a/octree/CMakeLists.txt b/octree/CMakeLists.txt
+index b5c5843..5f5a431 100644
+--- a/octree/CMakeLists.txt
++++ b/octree/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME octree)
+ set(SUBSYS_DESC "Point cloud octree library")
+ set(SUBSYS_DEPS common)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS})
+ 
+diff --git a/people/CMakeLists.txt b/people/CMakeLists.txt
+index dca32d6..73780f0 100644
+--- a/people/CMakeLists.txt
++++ b/people/CMakeLists.txt
+@@ -1,19 +1,10 @@
+ set(SUBSYS_NAME people)
+ set(SUBSYS_DESC "Point cloud people library")
+ set(SUBSYS_DEPS common kdtree search sample_consensus filters io visualization geometry segmentation octree)
++set(EXT_DEPS vtk)
+ 
+-if(NOT VTK_FOUND)
+-  set(DEFAULT FALSE)
+-  set(REASON "VTK was not found.")
+-else()
+-  set(DEFAULT TRUE)
+-  set(REASON)
+-  include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
+-endif()
+-
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+-PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS})
++PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} EXT_DEPS ${EXT_DEPS})
+ 
+ PCL_ADD_DOC("${SUBSYS_NAME}")
+ 
+diff --git a/recognition/CMakeLists.txt b/recognition/CMakeLists.txt
+index 84158dc..0cbd455 100644
+--- a/recognition/CMakeLists.txt
++++ b/recognition/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME recognition)
+ set(SUBSYS_DESC "Point cloud recognition library")
+ set(SUBSYS_DEPS common io search kdtree octree features filters registration sample_consensus ml)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS})
+ 
+diff --git a/sample_consensus/CMakeLists.txt b/sample_consensus/CMakeLists.txt
+index 8552bee..6565215 100644
+--- a/sample_consensus/CMakeLists.txt
++++ b/sample_consensus/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME sample_consensus)
+ set(SUBSYS_DESC "Point cloud sample consensus library")
+ set(SUBSYS_DEPS common search)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS})
+ 
+diff --git a/search/CMakeLists.txt b/search/CMakeLists.txt
+index 0b93e52..e0296cd 100644
+--- a/search/CMakeLists.txt
++++ b/search/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME search)
+ set(SUBSYS_DESC "Point cloud generic search library")
+ set(SUBSYS_DEPS common kdtree octree)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} EXT_DEPS flann)
+ 
+diff --git a/segmentation/CMakeLists.txt b/segmentation/CMakeLists.txt
+index f6cdf29..cb31b7b 100644
+--- a/segmentation/CMakeLists.txt
++++ b/segmentation/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME segmentation)
+ set(SUBSYS_DESC "Point cloud segmentation library")
+ set(SUBSYS_DEPS common geometry search sample_consensus kdtree octree features filters ml)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} OPT_DEPS OpenMP)
+ 
+diff --git a/simulation/CMakeLists.txt b/simulation/CMakeLists.txt
+index 22bb820..1002f5d 100644
+--- a/simulation/CMakeLists.txt
++++ b/simulation/CMakeLists.txt
+@@ -2,11 +2,6 @@ set(SUBSYS_NAME simulation)
+ set(SUBSYS_DESC "Point Cloud Library Simulation")
+ set(SUBSYS_DEPS common io surface kdtree features search octree visualization filters geometry)
+ 
+-set(build FALSE)
+-find_package(OpenGL)
+-
+-find_package(GLEW)
+-
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" OFF)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} EXT_DEPS opengl glew)
+ 
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index a4151e9..3362164 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -2,10 +2,8 @@ set(SUBSYS_NAME tools)
+ set(SUBSYS_DESC "Useful PCL-based command line tools")
+ set(SUBSYS_DEPS io)
+ set(SUBSYS_OPT_DEPS filters sample_consensus segmentation search kdtree features surface octree registration recognition geometry keypoints ml visualization vtk)
+-set(DEFAULT ON)
+-set(REASON "")
+ 
+-PCL_SUBSYS_OPTION(build ${SUBSYS_NAME} ${SUBSYS_DESC} ${DEFAULT} ${REASON})
++PCL_SUBSYS_OPTION(build ${SUBSYS_NAME} ${SUBSYS_DESC} ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} OPT_DEPS ${SUBSYS_OPT_DEPS})
+ 
+ if(NOT build)
+diff --git a/tracking/CMakeLists.txt b/tracking/CMakeLists.txt
+index 985e4ce..78109d9 100644
+--- a/tracking/CMakeLists.txt
++++ b/tracking/CMakeLists.txt
+@@ -2,7 +2,6 @@ set(SUBSYS_NAME tracking)
+ set(SUBSYS_DESC "Point cloud tracking library")
+ set(SUBSYS_DEPS common search kdtree filters octree)
+ 
+-set(build TRUE)
+ PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} OPT_DEPS OpenMP)
+ 
+diff --git a/visualization/CMakeLists.txt b/visualization/CMakeLists.txt
+index 9c4e000..8cfd987 100644
+--- a/visualization/CMakeLists.txt
++++ b/visualization/CMakeLists.txt
+@@ -2,16 +2,7 @@ set(SUBSYS_NAME visualization)
+ set(SUBSYS_DESC "Point cloud visualization library")
+ set(SUBSYS_DEPS common io kdtree geometry search octree)
+ 
+-if(NOT VTK_FOUND)
+-  set(DEFAULT FALSE)
+-  set(REASON "VTK was not found.")
+-else()
+-  set(DEFAULT TRUE)
+-  set(REASON)
+-  include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
+-endif()
+-
+-PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ${DEFAULT} "${REASON}")
++PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
+ PCL_SUBSYS_DEPEND(build NAME ${SUBSYS_NAME} DEPS ${SUBSYS_DEPS} EXT_DEPS vtk OPT_DEPS openni openni2 ensenso davidSDK dssdk rssdk)
+ 
+ if(ANDROID)
+@@ -147,6 +138,12 @@ endif()
+ set(LIB_NAME "pcl_${SUBSYS_NAME}")
+ PCL_ADD_LIBRARY(${LIB_NAME} COMPONENT ${SUBSYS_NAME} SOURCES ${srcs} ${incs} ${common_incs} ${impl_incs} ${common_impl_incs} ${vtk_incs})
+ 
++target_include_directories(${LIB_NAME} PUBLIC
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++  $<INSTALL_INTERFACE:include>  
++)
++
++
+ # apple workaround (continued)
+ if(APPLE)
+   target_link_libraries("${LIB_NAME}" "-framework Cocoa")

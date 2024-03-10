@@ -1,20 +1,11 @@
-vcpkg_download_distfile(PR_22011_PATH
-    URLS "https://github.com/openvinotoolkit/openvino/pull/22011.diff?full_index=1"
-    FILENAME "openvino-pr-22011.patch"
-    SHA512 f25de88db953a825d0a9a2f8e78664aba44eda2fecfed28ba52045c82aa5f586e42deb51cf23c47553e20c64942510500caca6e904d27ab0782270cd3047e953
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 d31428a02e6869e367c00a714c5599cf84fc9839376dfc4511d2abdb4aac991fc58331318102cdc248f568ca8df0bdc7f65a6744ef2dfa52d85a60a1ec77aae9
+    SHA512 89c60aa8c73d91003f9fdd4e8f93213b98164ecdcd4a4264ba93352473666a290d1dd55b61cf9c5d62b0cef429f989bb31f5d4bfa67cf6d97dfc2abca45d4186
     PATCHES
         # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
         001-disable-tools.patch
-        # https://github.com/openvinotoolkit/openvino/pull/22139
-        002-conditional-enabling-of-js-api.patch
-        ${PR_22011_PATH}
     HEAD_REF master)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -48,8 +39,8 @@ if(ENABLE_INTEL_GPU)
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO oneapi-src/oneDNN
-            REF cb77937ffcf5e83b5d1cf2940c94e8b508d8f7b4
-            SHA512 30ede7480c5563753256b6c30360c72a63489d5225ab683601ad8c4654bedf17879ae36cdf4be6423707116eca71adbd92790bb643234c7a3b99dc6e4cfdf200
+            REF 494af5f9921bdae98f1a0e2955fa7d76ff386c4f
+            SHA512 30c555cbe1e2f4f536ccedc920a962751ba05e2c49e38948e5da83f9b89e14eebda7450edabe51865beeebdf6b6da5fe4673c30d1db67c803f474e9093759b1f
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
     endif()
@@ -63,16 +54,16 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF cb3060bbf4694e46a1359a3d4dfe70500818f72d
-        SHA512 48d28273ffdfb82ad1dc6b152c812fa09ffcac387c7851e5b1393aa473ce51f9bf114d2bd462cf2003f4897907de32ab68cd2f414459c588b3155b545f3099a4
+        REF f82148befdbdc9576ec721c9d500155ee4de8060
+        SHA512 d4270b27ee274a5aa065ae5812db3c6ca9c898d72059eb5146f040a3ee354c8f114e45247ac37cab9fb2beee0f09eea2d0947d4f06ecbc7121b14011d3e1ce6d
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/mlas
-        REF 7a35e48a723944972088627be1a8b60841e8f6a5
-        SHA512 3094355e4d062457e6ec0b535b7dabbee5cf7257d05f7807b34a162614c96e8a6567d3fed8e955d70a69a15f26004e79a397e4d586ea81ed7b76a65dcd96a2a8
+        REF d1bc25ec4660cddd87804fcf03b2411b5dfb2e94
+        SHA512 8d6dd319924135b7b22940d623305bf200b812ae64cde79000709de4fad429fbd43794301ef16e6f10ed7132777b7a73e9f30ecae7c030aea80d57d7c0ce4500
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/mlas")
 
