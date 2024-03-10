@@ -11,11 +11,11 @@
       "version>=": "1.84.0"
     },
     {
-      "name": "boost-concept-check",
+      "name": "boost-compute",
       "version>=": "1.84.0"
     },
     {
-      "name": "boost-compute",
+      "name": "boost-concept-check",
       "version>=": "1.84.0"
     },
     {

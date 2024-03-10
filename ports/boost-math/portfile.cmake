@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF boost-${VERSION}
     SHA512 5f5aec5c7c2de137fc8b69e33a3f0aa6c18b63292a66508cb68c86d3c1c27455f73432218e90cbd47e919e0be84a6d25af39aa1c4b9a223c013a948c029b7251
     HEAD_REF master
-    PATCHES build-old-libs.patch
+    PATCHES 
+      "build-old-libs.patch"
+      "opt-random.diff"
 )
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")

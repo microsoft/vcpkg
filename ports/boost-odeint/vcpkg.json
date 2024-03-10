@@ -55,10 +55,6 @@
       "version>=": "1.84.0"
     },
     {
-      "name": "boost-mpi",
-      "version>=": "1.84.0"
-    },
-    {
       "name": "boost-mpl",
       "version>=": "1.84.0"
     },

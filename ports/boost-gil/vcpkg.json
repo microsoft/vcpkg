@@ -31,10 +31,6 @@
       "version>=": "1.84.0"
     },
     {
-      "name": "boost-filesystem",
-      "version>=": "1.84.0"
-    },
-    {
       "name": "boost-headers",
       "version>=": "1.84.0"
     },
