@@ -1,6 +1,7 @@
 {
   "name": "libredwg",
   "version": "0.13.3",
+  "port-version": 1,
   "description": "GNU LibreDWG is a free C library to handle DWG files. It aims to be a free replacement for the OpenDWG libraries. DWG is the native file format of AutoCAD.",
   "homepage": "https://www.gnu.org/software/libredwg/",
   "license": "GPL-3.0",

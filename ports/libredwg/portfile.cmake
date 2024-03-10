@@ -17,19 +17,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # libredwg will read the version
-file(WRITE "${SOURCE_PATH}/.version" ${VERSION})
+file(WRITE "${SOURCE_PATH}/.version" "${VERSION}")
 
 # Fix https://github.com/LibreDWG/libredwg/issues/652#issuecomment-1454035167
-if(APPLE)
-  vcpkg_replace_string("${SOURCE_PATH}/src/common.h"
+vcpkg_replace_string("${SOURCE_PATH}/src/common.h"
     [[defined(COMMON_TEST_C)]]
-    [[1]]
-  )
-  vcpkg_replace_string("${SOURCE_PATH}/src/common.c"
+    [[(defined COMMON_TEST_C || defined __APPLE__)]]
+)
+vcpkg_replace_string("${SOURCE_PATH}/src/common.c"
     [[defined(COMMON_TEST_C)]]
-    [[1]]
-  )
-endif()
+    [[(defined COMMON_TEST_C || defined __APPLE__)]]
+)
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -47,7 +45,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libredwg CONFIG_PATH share/unof
 
 if("tools" IN_LIST FEATURES)
   vcpkg_copy_tools(TOOL_NAMES dwg2dxf dwg2SVG dwgbmp dwggrep dwglayers dwgread dwgrewrite dwgwrite dxf2dwg AUTO_CLEAN)
-  vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/libredwg")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")

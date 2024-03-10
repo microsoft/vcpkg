@@ -862,7 +862,7 @@
     },
     "boost-fiber": {
       "baseline": "1.84.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-filesystem": {
       "baseline": "1.84.0",
@@ -954,7 +954,7 @@
     },
     "boost-iostreams": {
       "baseline": "1.84.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-iterator": {
       "baseline": "1.84.0",
@@ -1050,7 +1050,7 @@
     },
     "boost-nowide": {
       "baseline": "1.84.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-numeric-conversion": {
       "baseline": "1.84.0",
@@ -1162,7 +1162,7 @@
     },
     "boost-regex": {
       "baseline": "1.84.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-safe-numerics": {
       "baseline": "1.84.0",
@@ -1222,7 +1222,7 @@
     },
     "boost-thread": {
       "baseline": "1.84.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-throw-exception": {
       "baseline": "1.84.0",
@@ -3042,7 +3042,7 @@
     },
     "glib": {
       "baseline": "2.78.4",
-      "port-version": 0
+      "port-version": 1
     },
     "glib-networking": {
       "baseline": "2.78.0",
@@ -3218,7 +3218,7 @@
     },
     "gtsam": {
       "baseline": "4.2a9",
-      "port-version": 1
+      "port-version": 2
     },
     "guetzli": {
       "baseline": "2020-09-14",
@@ -4826,7 +4826,7 @@
     },
     "libredwg": {
       "baseline": "0.13.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libremidi": {
       "baseline": "4.3.0",
