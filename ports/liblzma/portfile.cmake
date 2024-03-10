@@ -14,6 +14,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools BUILD_TOOLS
+        nls ENABLE_NLS
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
@@ -28,7 +29,6 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DCREATE_XZ_SYMLINKS=OFF
         -DCREATE_LZMA_SYMLINKS=OFF
-        -DENABLE_NLS=OFF # avoid issues with installing language specific man files
         -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=   # using flags from (vcpkg) toolchain
     MAYBE_UNUSED_VARIABLES
         CMAKE_MSVC_DEBUG_INFORMATION_FORMAT
