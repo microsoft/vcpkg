@@ -2973,12 +2973,12 @@
       "port-version": 0
     },
     "gettext": {
-      "baseline": "0.22.4",
-      "port-version": 2
+      "baseline": "0.22.5",
+      "port-version": 0
     },
     "gettext-libintl": {
-      "baseline": "0.22.4",
-      "port-version": 1
+      "baseline": "0.22.5",
+      "port-version": 0
     },
     "gettimeofday": {
       "baseline": "2017-10-14",
