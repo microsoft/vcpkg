@@ -211,6 +211,7 @@
     },
     {
       "name": "boost-graph",
+      "platform": "!uwp",
       "version>=": "1.84.0"
     },
     {
