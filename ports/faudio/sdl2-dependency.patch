@@ -1,0 +1,61 @@
+commit 12308ff56ed463c65a58bc3ee47b4a7c16dbce29
+Author: Kai Pastor <dg0yt@darc.de>
+Date:   Sun Mar 10 18:30:19 2024 +0000
+
+    build: fix dependency on SDL2
+    
+    This is a followup on 81d5a24 (build: fix building with MSVC,
+    2024-03-07) and 68a555e (build: fix __attribute__((aligned(x))) on
+    gcc/clang, 2024-03-09) for the purposes of creating a vcpkg FAudio port.
+    
+    Add a `Requires.private: sdl2` to the pkgconf file for the SDL2
+    dependency when not using PLATFORM_WIN32.
+    
+    Add the SDL2 dependency to the generated cmake config file when not
+    using PLATFORM_WIN32 as well.
+    
+    Signed-off-by: Rafael Kitover <rkitover@gmail.com>
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a71a494..17f3aac 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -298,6 +298,11 @@ install(
+ include(cmake/JoinPaths.cmake)
+ join_paths(FAUDIO_PKGCONF_LIBDIR "\${prefix}" "${CMAKE_INSTALL_LIBDIR}")
+ join_paths(FAUDIO_PKGCONF_INCLUDEDIR "\${prefix}" "${CMAKE_INSTALL_INCLUDEDIR}")
++
++if(NOT PLATFORM_WIN32)
++	set(PC_REQUIRES_PRIVATE "Requires.private: sdl2")
++endif()
++
+ configure_file(
+ 	"${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}.pc.in"
+ 	${PROJECT_BINARY_DIR}/generated/${PROJECT_NAME}.pc
+diff --git a/cmake/FAudio.pc.in b/cmake/FAudio.pc.in
+index 3907ccb..6d96dbe 100644
+--- a/cmake/FAudio.pc.in
++++ b/cmake/FAudio.pc.in
+@@ -7,6 +7,7 @@ Name: @PROJECT_NAME@
+ URL: https://github.com/FNA-XNA/FAudio
+ Description: Accuracy-focused XAudio reimplementation for open platforms
+ Version: @LIB_VERSION@
++@PC_REQUIRES_PRIVATE@
+ 
+ Libs: -L${libdir} -l@PROJECT_NAME@
+ Cflags: -I${includedir} @PLATFORM_CFLAGS@
+diff --git a/cmake/config.cmake.in b/cmake/config.cmake.in
+index 8bb8c0e..09585d7 100644
+--- a/cmake/config.cmake.in
++++ b/cmake/config.cmake.in
+@@ -1,5 +1,10 @@
+ @PACKAGE_INIT@
+ 
++if(NOT "@PLATFORM_WIN32@")
++	include(CMakeFindDependencyMacro)
++	find_dependency(SDL2 CONFIG)
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@CMAKE_PROJECT_NAME@-targets.cmake")
+ check_required_components("@CMAKE_PROJECT_NAME@")
+ 

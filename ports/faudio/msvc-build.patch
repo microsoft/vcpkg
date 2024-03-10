@@ -1,0 +1,85 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a741caa..a71a494 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -104,7 +104,7 @@ add_library(FAudio
+ )
+ 
+ if(PLATFORM_WIN32)
+-	target_link_libraries(FAudio PRIVATE -ldxguid -luuid -lwinmm -lole32 -ladvapi32 -luser32 -lmfplat -lmfreadwrite -lmfuuid -lpropsys)
++	target_link_libraries(FAudio PRIVATE dxguid uuid winmm ole32 advapi32 user32 mfplat mfreadwrite mfuuid propsys)
+ 	target_compile_definitions(FAudio PUBLIC FAUDIO_WIN32_PLATFORM)
+ 	target_compile_definitions(FAudio PRIVATE HAVE_WMADEC=1)
+ 	set(PLATFORM_CFLAGS "-DFAUDIO_WIN32_PLATFORM")
+diff --git a/src/FAudio_internal.h b/src/FAudio_internal.h
+index 0d35951..20538b8 100644
+--- a/src/FAudio_internal.h
++++ b/src/FAudio_internal.h
+@@ -37,8 +37,8 @@
+ #include <assert.h>
+ #include <inttypes.h>
+ 
+-#include <windef.h>
+-#include <winbase.h>
++#define WIN32_LEAN_AND_MEAN
++#include <windows.h>
+ 
+ #define FAudio_malloc malloc
+ #define FAudio_realloc realloc
+@@ -210,6 +210,15 @@ extern void FAudio_Log(char const *msg);
+ #define restrict
+ #endif
+ 
++/* Alignment macro for gcc/clang/msvc */
++#if defined(__GNUC__) || defined(__clang__)
++#define ALIGN(type, boundary) type __attribute_((aligned(boundary)))
++#elif defined(_MSC_VER)
++#define ALIGN(type, boundary) __declspec(align(boundary)) type
++#else
++#define ALIGN(type, boundary) type
++#endif
++
+ /* Threading Types */
+ 
+ typedef void* FAudioThread;
+diff --git a/src/FAudio_internal_simd.c b/src/FAudio_internal_simd.c
+index b21d49a..296b2cc 100644
+--- a/src/FAudio_internal_simd.c
++++ b/src/FAudio_internal_simd.c
+@@ -903,7 +903,7 @@ void FAudio_INTERNAL_ResampleMono_NEON(
+ 	cur_frac = vdupq_n_s32(
+ 		(uint32_t) (cur_scalar & FIXED_FRACTION_MASK) - DOUBLE_TO_FIXED(0.5)
+ 	);
+-	int32_t __attribute__((aligned(16))) data[4] =
++	ALIGN(int32_t, 16) data[4] =
+ 	{
+ 		0,
+ 		(uint32_t) (resampleStep & FIXED_FRACTION_MASK),
+@@ -1077,7 +1077,7 @@ void FAudio_INTERNAL_ResampleStereo_NEON(
+ 	cur_frac = vdupq_n_s32(
+ 		(uint32_t) (cur_scalar & FIXED_FRACTION_MASK) - DOUBLE_TO_FIXED(0.5)
+ 	);
+-	int32_t __attribute__((aligned(16))) data[4] =
++	ALIGN(int32_t, 16) data[4] =
+ 	{
+ 		0,
+ 		0,
+diff --git a/src/FAudio_platform_win32.c b/src/FAudio_platform_win32.c
+index 08ad24f..cd07e5d 100644
+--- a/src/FAudio_platform_win32.c
++++ b/src/FAudio_platform_win32.c
+@@ -43,6 +43,14 @@
+ #include <mmdeviceapi.h>
+ 
+ DEFINE_GUID(CLSID_CWMADecMediaObject, 0x2eeb4adf, 0x4578, 0x4d10, 0xbc, 0xa7, 0xbb, 0x95, 0x5f, 0x56, 0x32, 0x0a);
++
++#ifdef _MSC_VER
++DEFINE_GUID(IID_IAudioClient,         0x1CB9AD4C, 0xDBFA, 0x4c32, 0xB1, 0x78, 0xC2, 0xF5, 0x68, 0xA7, 0x03, 0xB2);
++DEFINE_GUID(IID_IAudioRenderClient,   0xF294ACFC, 0x3146, 0x4483, 0xA7, 0xBF, 0xAD, 0xDC, 0xA7, 0xC2, 0x60, 0xE2);
++DEFINE_GUID(IID_IMMDeviceEnumerator,  0xA95664D2, 0x9614, 0x4F35, 0xA7, 0x46, 0xDE, 0x8D, 0xB6, 0x36, 0x17, 0xE6);
++DEFINE_GUID(CLSID_MMDeviceEnumerator, 0xBCDE0395, 0xE52F, 0x467C, 0x8E, 0x3D, 0xC4, 0x57, 0x92, 0x91, 0x69, 0x2E);
++#endif
++
+ DEFINE_MEDIATYPE_GUID(MFAudioFormat_XMAudio2, FAUDIO_FORMAT_XMAUDIO2);
+ 
+ static CRITICAL_SECTION faudio_cs = { NULL, -1, 0, 0, 0, 0 };
