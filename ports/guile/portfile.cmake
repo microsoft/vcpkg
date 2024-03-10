@@ -6,6 +6,8 @@ vcpkg_download_distfile(GUILE_ARCHIVE
 
 vcpkg_extract_source_archive(GUILE_SOURCES ARCHIVE ${GUILE_ARCHIVE})
 
+vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
+
 vcpkg_configure_make(
     SOURCE_PATH "${GUILE_SOURCES}"
     ADD_BIN_TO_PATH

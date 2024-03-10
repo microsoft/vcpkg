@@ -16,6 +16,10 @@
       ]
     },
     "gmp",
+    {
+      "name": "gperf",
+      "host": true
+    },
     "libffi",
     "libunistring"
   ]
