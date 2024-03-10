@@ -16,7 +16,7 @@ index c0c1bfef94..3c879b8958 100644
  )
  
 +if(NOT TARGET Boost::filesystem)
-+  target_compile_definitions(boost_asio INTERFACE $<$<NOT:$<TARGET_EXISTS:Boost::filesystem>>:BOOST_PROCESS_USE_STD_FS>)
++  target_compile_definitions(boost_process INTERFACE $<$<NOT:$<TARGET_EXISTS:Boost::filesystem>>:BOOST_PROCESS_USE_STD_FS>)
 +endif()
 +
  if(BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
