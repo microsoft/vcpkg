@@ -1,0 +1,30 @@
+diff --git a/include/BoostInstall.cmake b/include/BoostInstall.cmake
+index 71392c89d6..90c85ab980 100644
+--- a/include/BoostInstall.cmake	
++++ b/include/BoostInstall.cmake
+@@ -152,8 +152,23 @@ function(__boost_install_set_output_name LIB TYPE VERSION)
+     # Arch and model
+     math(EXPR bits ${CMAKE_SIZEOF_VOID_P}*8)
+ 
+-    string(APPEND name_debug "-x${bits}") # x86 only for now
+-    string(APPEND name_release "-x${bits}")
++    # This selection is copied FindBoost
++    set(_boost_ARCHITECTURE_TAG "")
++    if(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "IA64")
++      string(APPEND _boost_ARCHITECTURE_TAG "i")
++    elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "X86"
++              OR CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "x64")
++      string(APPEND _boost_ARCHITECTURE_TAG "x")
++    elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID MATCHES "^ARM")
++      string(APPEND _boost_ARCHITECTURE_TAG "a")
++    elseif(CMAKE_CXX_COMPILER_ARCHITECTURE_ID STREQUAL "MIPS")
++      string(APPEND _boost_ARCHITECTURE_TAG "m")
++    else()
++      message(WARNING "Unknown architecture")
++    endif()
++
++    string(APPEND name_debug "-${_boost_ARCHITECTURE_TAG}${bits}")
++    string(APPEND name_release "-${_boost_ARCHITECTURE_TAG}${bits}")
+ 
+   endif()
+ 
