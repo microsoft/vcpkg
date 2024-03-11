@@ -3073,8 +3073,8 @@
       "port-version": 3
     },
     "glslang": {
-      "baseline": "13.1.1",
-      "port-version": 1
+      "baseline": "14.0.0",
+      "port-version": 0
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -7981,7 +7981,7 @@
       "port-version": 0
     },
     "shaderc": {
-      "baseline": "2023.7",
+      "baseline": "2023.8",
       "port-version": 0
     },
     "shaderwriter": {
@@ -9102,7 +9102,7 @@
     },
     "vsg": {
       "baseline": "1.0.9",
-      "port-version": 0
+      "port-version": 1
     },
     "vsgimgui": {
       "baseline": "0.1.0",
@@ -9150,7 +9150,7 @@
     },
     "vulkan-sdk-components": {
       "baseline": "1.3.275.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vulkan-tools": {
       "baseline": "1.3.275.0",
