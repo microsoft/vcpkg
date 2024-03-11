@@ -54,14 +54,6 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "rest-http-device"
-          ],
-          "platform": "!windows"
-        },
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
             "fontconfig"
           ],
           "platform": "!android & !ios & !uwp"
@@ -168,20 +160,6 @@
           "name": "tiff",
           "default-features": false
         }
-      ]
-    },
-    "rest-http-device": {
-      "description": "Build RestHttpDevice plugin",
-      "supports": "!windows",
-      "dependencies": [
-        "boost-array",
-        "boost-asio",
-        "boost-bind",
-        "boost-core",
-        "boost-lexical-cast",
-        "boost-logic",
-        "boost-smart-ptr",
-        "boost-tuple"
       ]
     },
     "sdl1": {

@@ -66,9 +66,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openexr     BUILD_OSG_PLUGIN_EXR
         openexr     CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
         rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
+        rest-http-device CMAKE_REQUIRE_FIND_PACKAGE_Boost
         sdl1        BUILD_OSG_PLUGIN_SDL
     INVERTED_FEATURES
         sdl1        CMAKE_DISABLE_FIND_PACKAGE_SDL # for apps and examples
+        rest-http-device CMAKE_DISABLE_FIND_PACKAGE_Boost
 )
 
 # The package osg can be configured to use different OpenGL profiles via a custom triplet file:
@@ -117,7 +119,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_GLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Inventor=ON
         -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
-        -DCMAKE_REQUIRE_FIND_PACKAGE_Boost=ON
         ${OPTIONS}
     OPTIONS_DEBUG
         -DBUILD_OSG_APPLICATIONS=OFF
