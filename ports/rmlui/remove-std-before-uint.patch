@@ -1,0 +1,130 @@
+diff --git a/Backends/RmlUi_Backend_GLFW_VK.cpp b/Backends/RmlUi_Backend_GLFW_VK.cpp
+index c1cf80f..7d45299 100644
+--- a/Backends/RmlUi_Backend_GLFW_VK.cpp
++++ b/Backends/RmlUi_Backend_GLFW_VK.cpp
+@@ -35,7 +35,7 @@
+ #include <RmlUi/Core/Core.h>
+ #include <RmlUi/Core/FileInterface.h>
+ #include <GLFW/glfw3.h>
+-#include <cstdint>
++#include <stdint.h>
+ #include <thread>
+ 
+ static void SetupCallbacks(GLFWwindow* window);
+diff --git a/Include/RmlUi/Core/Types.h b/Include/RmlUi/Core/Types.h
+index 28e5ad7..39a5e8a 100644
+--- a/Include/RmlUi/Core/Types.h
++++ b/Include/RmlUi/Core/Types.h
+@@ -32,6 +32,7 @@
+ #include "../Config/Config.h"
+ 
+ #include <cstdlib>
++#include <stdint.h>
+ #include <memory>
+ 
+ #include "Traits.h"
+diff --git a/Samples/basic/bitmapfont/src/FontEngineBitmap.cpp b/Samples/basic/bitmapfont/src/FontEngineBitmap.cpp
+index bcc6f13..da487b0 100644
+--- a/Samples/basic/bitmapfont/src/FontEngineBitmap.cpp
++++ b/Samples/basic/bitmapfont/src/FontEngineBitmap.cpp
+@@ -219,7 +219,7 @@ int FontFaceBitmap::GenerateString(const String& string, const Vector2f& string_
+ 
+ int FontFaceBitmap::GetKerning(Character left, Character right) const
+ {
+-	std::uint64_t key = (((std::uint64_t)left << 32) | (std::uint64_t)right);
++	uint64_t key = (((uint64_t)left << 32) | (uint64_t)right);
+ 
+ 	auto it = kerning.find(key);
+ 	if (it != kerning.end())
+@@ -291,13 +291,13 @@ void FontParserBitmap::HandleElementStart(const String& name, const Rml::XMLAttr
+ 	}
+ 	else if (name == "kerning")
+ 	{
+-		std::uint64_t first = (std::uint64_t)Get(attributes, "first", 0);
+-		std::uint64_t second = (std::uint64_t)Get(attributes, "second", 0);
++		uint64_t first = (uint64_t)Get(attributes, "first", 0);
++		uint64_t second = (uint64_t)Get(attributes, "second", 0);
+ 		int amount = Get(attributes, "amount", 0);
+ 
+ 		if (first != 0 && second != 0 && amount != 0)
+ 		{
+-			std::uint64_t key = ((first << 32) | second);
++			uint64_t key = ((first << 32) | second);
+ 			kerning[key] = amount;
+ 		}
+ 	}
+diff --git a/Samples/basic/bitmapfont/src/FontEngineBitmap.h b/Samples/basic/bitmapfont/src/FontEngineBitmap.h
+index f9fef43..41256c9 100644
+--- a/Samples/basic/bitmapfont/src/FontEngineBitmap.h
++++ b/Samples/basic/bitmapfont/src/FontEngineBitmap.h
+@@ -29,7 +29,6 @@
+ #ifndef FONTENGINEBITMAP_H
+ #define FONTENGINEBITMAP_H
+ 
+-#include <cstdint>
+ #include <RmlUi/Core/Types.h>
+ #include "FontEngineInterfaceBitmap.h"
+ 
+@@ -63,7 +62,7 @@ struct FontMetrics {
+ using FontGlyphs = Rml::UnorderedMap<Character, BitmapGlyph>;
+ 
+ // Mapping of combined (left, right) character to kerning in pixels.
+-using FontKerning = Rml::UnorderedMap<std::uint64_t, int>;
++using FontKerning = Rml::UnorderedMap<uint64_t, int>;
+ 
+ 
+ class FontFaceBitmap {
+diff --git a/Source/Core/ElementStyle.h b/Source/Core/ElementStyle.h
+index a89eb7e..8f62fb7 100644
+--- a/Source/Core/ElementStyle.h
++++ b/Source/Core/ElementStyle.h
+@@ -40,7 +40,7 @@ class ElementDefinition;
+ class PropertiesIterator;
+ enum class RelativeTarget;
+ 
+-enum class PseudoClassState : std::uint8_t { Clear = 0, Set = 1, Override = 2 };
++enum class PseudoClassState : uint8_t { Clear = 0, Set = 1, Override = 2 };
+ using PseudoClassMap = SmallUnorderedMap< String, PseudoClassState >;
+ 
+ 
+diff --git a/Source/Core/FontEngineDefault/FontFaceHandleDefault.h b/Source/Core/FontEngineDefault/FontFaceHandleDefault.h
+index 4e6c4d7..5e92d7b 100644
+--- a/Source/Core/FontEngineDefault/FontFaceHandleDefault.h
++++ b/Source/Core/FontEngineDefault/FontFaceHandleDefault.h
+@@ -143,8 +143,8 @@ private:
+ 	FontLayerCache layer_cache;
+ 
+ 	// Pre-cache kerning pairs for some ascii subset of all characters.
+-	using AsciiPair = std::uint16_t;
+-	using KerningIntType = std::int16_t;
++	using AsciiPair = uint16_t;
++	using KerningIntType = int16_t;
+ 	using KerningPairs = UnorderedMap< AsciiPair, KerningIntType >;
+ 	KerningPairs kerning_pair_cache;
+ 
+diff --git a/Source/Core/LayoutFlex.cpp b/Source/Core/LayoutFlex.cpp
+index b51aa93..074376d 100644
+--- a/Source/Core/LayoutFlex.cpp
++++ b/Source/Core/LayoutFlex.cpp
+@@ -110,7 +110,7 @@ struct FlexItem {
+ 	float hypothetical_main_size; // Outer size
+ 
+ 	// Used for resolving flexible length
+-	enum class Violation : std::uint8_t { None = 0, Min, Max };
++	enum class Violation : uint8_t { None = 0, Min, Max };
+ 	bool frozen;
+ 	Violation violation;
+ 	float target_main_size; // Outer size
+diff --git a/Source/Lottie/ElementLottie.cpp b/Source/Lottie/ElementLottie.cpp
+index 91f4a0e..b5e36a4 100644
+--- a/Source/Lottie/ElementLottie.cpp
++++ b/Source/Lottie/ElementLottie.cpp
+@@ -228,7 +228,7 @@ void ElementLottie::UpdateTexture()
+ 
+ 		byte* p_data = new byte[total_bytes];
+ 
+-		rlottie::Surface surface(reinterpret_cast<std::uint32_t*>(p_data), render_dimensions.x, render_dimensions.y, bytes_per_line);
++		rlottie::Surface surface(reinterpret_cast<uint32_t*>(p_data), render_dimensions.x, render_dimensions.y, bytes_per_line);
+ 		animation->renderSync(next_frame, surface);
+ 
+ 		// Swizzle the channel order from rlottie's BGRA to RmlUi's RGBA, and change pre-multiplied to post-multiplied alpha.
