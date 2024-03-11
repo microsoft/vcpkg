@@ -12,7 +12,7 @@ index 2b32f8b..2c3a0ec 100644
  set(CORRELATION_VECTOR_VERSION_MAJOR 1)
  set(CORRELATION_VECTOR_VERSION_MINOR 0)
 diff --git a/CorrelationVector/src/CMakeLists.txt b/CorrelationVector/src/CMakeLists.txt
-index 00baa66..08f3fc9 100644
+index 00baa66..23241fd 100644
 --- a/CorrelationVector/src/CMakeLists.txt
 +++ b/CorrelationVector/src/CMakeLists.txt
 @@ -15,16 +15,9 @@ else()
@@ -35,3 +35,19 @@ index 00baa66..08f3fc9 100644
      endif()
  endif()
  
+@@ -81,12 +74,12 @@ if(CORRELATION_VECTOR_INSTALL)
+ 
+     install(
+         FILES "${CMAKE_CURRENT_BINARY_DIR}/correlation_vector-config.cmake"
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/${CORRELATION_VECTOR_EXPORT_DIR}
++        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${CORRELATION_VECTOR_EXPORT_DIR}"
+     )
+     install(
+         EXPORT correlation_vector-targets
+         FILE correlation_vector-targets.cmake
+         NAMESPACE microsoft::
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/${CORRELATION_VECTOR_EXPORT_DIR}
++        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${CORRELATION_VECTOR_EXPORT_DIR}"
+     )
+ endif()
+\ No newline at end of file
