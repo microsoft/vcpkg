@@ -5337,7 +5337,7 @@
       "port-version": 0
     },
     "llhttp": {
-      "baseline": "9.1.3",
+      "baseline": "9.2.0",
       "port-version": 0
     },
     "llvm": {
