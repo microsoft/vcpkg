@@ -9,7 +9,7 @@ if(VCPKG_TARGET_IS_LINUX)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
-    "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
+    "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
     "mpi"          PARAVIEW_USE_MPI             #untested
     "vtkm"         PARAVIEW_USE_VTKM
@@ -36,8 +36,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND VisItPatches removedoublesymbols.patch)
 endif()
 
-#The following two dependencies should probably be their own port 
-#but require additional patching in paraview to make it work. 
+#The following two dependencies should probably be their own port
+#but require additional patching in paraview to make it work.
 
 #Get VisItBridge Plugin
 vcpkg_from_gitlab(
@@ -46,7 +46,7 @@ vcpkg_from_gitlab(
     REPO paraview/visitbridge
     REF df098f4148a96d62c388861c1d476039e02224ae
     SHA512 002c2c934ef7e64c89b1567f406db1ebb90532817062e7016c248ba8ae85a88f1a35bc3963a9577ec08ba742a0e7fb91022c29aaaa0bddf0a1d585074341733e
-    PATCHES 
+    PATCHES
         ${VisItPatches}
 )
 #VTK_MODULE_USE_EXTERNAL_ParaView_protobuf
@@ -98,6 +98,7 @@ vcpkg_cmake_configure(
         -DVTK_MODULE_ENABLE_ParaView_qttesting=YES
         -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION:BOOL=OFF
         -DPARAVIEW_USE_QTHELP:BOOL=OFF
+        -DPARAVIEW_ENABLE_EXAMPLES=OFF
         # A little bit of help in finding the boost headers
         "-DBoost_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
 
@@ -107,6 +108,8 @@ vcpkg_cmake_configure(
         ${ADDITIONAL_OPTIONS}
 
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
+    OPTIONS_DEBUG
+        -DPARAVIEW_BUILD_TOOLS=OFF
 )
 if(CMAKE_HOST_UNIX)
     # ParaView runs Qt tools so LD_LIBRARY_PATH must be set correctly for them to find *.so files
@@ -129,7 +132,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/paraview-${VERSION_MAJOR_MINOR}/vtkCPConfig.h")
 
 set(TOOLVER pv${VERSION_MAJOR_MINOR})
-set(TOOLS   paraview
+
+if(tools IN_LIST FEATURE_OPTIONS)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            paraview
             pvbatch
             pvdataserver
             pvpython
@@ -137,57 +144,27 @@ set(TOOLS   paraview
             pvserver
             smTestDriver
             vtkProcessXML
-            vtkWrapClientServer)
-
-foreach(tool ${TOOLS})
-    # Remove debug tools
-    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    if(EXISTS ${filename})
-        file(REMOVE "${filename}")
-    endif()
-    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}-${TOOLVER}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    if(EXISTS ${filename})
-        file(REMOVE "${filename}")
-    endif()
-    set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${tool}-${TOOLVER}d${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    if(EXISTS ${filename})
-        file(REMOVE "${filename}")
-    endif()
-    
-    # Move release tools
-    set(filename ${CURRENT_PACKAGES_DIR}/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    if(EXISTS ${filename})
-        file(INSTALL "${filename}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-        file(REMOVE "${filename}")
-    endif()
-    set(filename ${CURRENT_PACKAGES_DIR}/bin/${tool}-${TOOLVER}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    if(EXISTS ${filename})
-        file(INSTALL "${filename}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-        file(REMOVE "${filename}")
-    endif()
-endforeach()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-# # Handle copyright
-file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME Copyright.txt) # Which one is the correct one?
-file(INSTALL "${SOURCE_PATH}/License_v1.2.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+            vtkWrapClientServer
+        AUTO_CLEAN
+    )
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     macro(move_bin_to_lib name)
-        if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/${name})
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${name}")
             file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${name}" "${CURRENT_PACKAGES_DIR}/lib/${name}")
         endif()
-        if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/${name})
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${name}")
             file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/${name}" "${CURRENT_PACKAGES_DIR}/debug/lib/${name}")
         endif()
     endmacro()
-    
-    set(to_move Lib paraview-${VERSION_MAJOR_MINOR} paraview-config)
+
+    set(to_move Lib "paraview-${VERSION_MAJOR_MINOR}" paraview-config)
     foreach(name ${to_move})
         move_bin_to_lib(${name})
     endforeach()
 
-    file(GLOB_RECURSE cmake_files ${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake)
+    file(GLOB_RECURSE cmake_files "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake")
     foreach(cmake_file ${cmake_files})
         file(READ "${cmake_file}" _contents)
         STRING(REPLACE "bin/" "lib/" _contents "${_contents}")
@@ -199,9 +176,11 @@ endif()
 
 file(GLOB cmake_files "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake")
 foreach(file IN LISTS cmake_files)
-    vcpkg_replace_string("${file}" "pv5.11d.exe" "pv5.11.exe")
+    vcpkg_replace_string("${file}" "pv${VERSION_MAJOR_MINOR}d.exe" "pv${VERSION_MAJOR_MINOR}.exe")
 endforeach() 
- 
+
 # The plugins also work without these files
 file(REMOVE "${CURRENT_PACKAGES_DIR}/Applications/paraview.app/Contents/Resources/paraview.conf")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/Applications/paraview.app/Contents/Resources/paraview.conf")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt" "${SOURCE_PATH}/License_v1.2.txt")
