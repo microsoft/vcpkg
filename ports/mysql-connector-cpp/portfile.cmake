@@ -31,7 +31,6 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DWITH_SSL=${CURRENT_INSTALLED_DIR}"
         "-DWITH_LZ4=${CURRENT_INSTALLED_DIR}"
-        "-DWITH_ZLIB=${CURRENT_INSTALLED_DIR}"
         "-DWITH_ZSTD=${CURRENT_INSTALLED_DIR}"
         "-DProtobuf_DIR=${CURRENT_INSTALLED_DIR}/share/protobuf" # Without these Windows is unable to find protobuf
         "-Dabsl_DIR=${CURRENT_INSTALLED_DIR}/share/absl"
