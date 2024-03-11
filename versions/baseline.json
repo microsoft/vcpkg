@@ -6153,8 +6153,8 @@
       "port-version": 4
     },
     "nss": {
-      "baseline": "3.87",
-      "port-version": 2
+      "baseline": "3.98",
+      "port-version": 0
     },
     "nsync": {
       "baseline": "1.26.0",
