@@ -8,7 +8,7 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cmake"
-    OPTIONS -DTHREADING=1 -DWITH_STATIC=TRUE
+    OPTIONS -DTHREADING=1 -DWITH_STATIC=ON -DWITH_TESTS=OFF
 )
 
 vcpkg_cmake_install()
