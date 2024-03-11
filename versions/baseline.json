@@ -8201,7 +8201,7 @@
       "port-version": 8
     },
     "span-lite": {
-      "baseline": "0.10.3",
+      "baseline": "0.11.0",
       "port-version": 0
     },
     "sparsehash": {
