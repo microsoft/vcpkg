@@ -50,7 +50,7 @@ index 30f7baf1..2a4a9434 100644
  
  add_coverage(cdk)
 diff --git a/cdk/protocol/mysqlx/CMakeLists.txt b/cdk/protocol/mysqlx/CMakeLists.txt
-index cfc81daf..6c6d1fd5 100644
+index 97a4b005..fce915bd 100644
 --- a/cdk/protocol/mysqlx/CMakeLists.txt
 +++ b/cdk/protocol/mysqlx/CMakeLists.txt
 @@ -26,8 +26,9 @@
@@ -65,15 +65,12 @@ index cfc81daf..6c6d1fd5 100644
  
  include(CheckIncludeFile)
  
-@@ -130,9 +131,9 @@ target_include_directories(cdk_proto_mysqlx PRIVATE
- )
- 
+@@ -132,7 +133,7 @@ target_include_directories(cdk_proto_mysqlx PRIVATE
  if(use_full_protobuf)
--  target_link_libraries(cdk_proto_mysqlx PRIVATE ext::protobuf)
-+  target_link_libraries(cdk_proto_mysqlx PUBLIC protobuf::libprotobuf)
+   target_link_libraries(cdk_proto_mysqlx PRIVATE ext::protobuf)
  else()
 -  target_link_libraries(cdk_proto_mysqlx PRIVATE ext::protobuf-lite)
-+  target_link_libraries(cdk_proto_mysqlx PUBLIC protobuf::libprotobuf-lite)
++  target_link_libraries(cdk_proto_mysqlx PRIVATE protobuf::libprotobuf-lite)
  endif()
  
- if (WIN32)
+ target_link_libraries(cdk_proto_mysqlx
