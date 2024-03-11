@@ -5729,7 +5729,7 @@
       "port-version": 0
     },
     "minizip-ng": {
-      "baseline": "4.0.4",
+      "baseline": "4.0.5",
       "port-version": 0
     },
     "mio": {
