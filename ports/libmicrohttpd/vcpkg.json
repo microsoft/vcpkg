@@ -1,7 +1,6 @@
 {
   "name": "libmicrohttpd",
-  "version": "0.9.77",
-  "port-version": 2,
+  "version": "1.0.1",
   "description": "GNU libmicrohttpd is a small C library that is supposed to make it easy to run an HTTP server as part of another application",
   "homepage": "https://www.gnu.org/software/libmicrohttpd/",
   "license": "LGPL-2.1-or-later",

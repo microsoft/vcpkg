@@ -116,18 +116,7 @@ function(z_vcpkg_fixup_pkgconfig_check_files arg_file arg_config)
     set(path_suffix_DEBUG /debug)
     set(path_suffix_RELEASE "")
 
-    if(DEFINED ENV{PKG_CONFIG_PATH})
-        set(backup_env_pkg_config_path "$ENV{PKG_CONFIG_PATH}")
-    else()
-        unset(backup_env_pkg_config_path)
-    endif()
-
-    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH}
-        "${CURRENT_PACKAGES_DIR}${path_suffix_${arg_config}}/lib/pkgconfig"
-        "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
-        "${CURRENT_INSTALLED_DIR}${path_suffix_${arg_config}}/lib/pkgconfig"
-        "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
-    )
+    z_vcpkg_setup_pkgconfig_path(CONFIG "${arg_config}")
 
     # First make sure everything is ok with the package and its deps
     cmake_path(GET arg_file STEM LAST_ONLY package_name)
@@ -149,11 +138,8 @@ function(z_vcpkg_fixup_pkgconfig_check_files arg_file arg_config)
     else()
         debug_message("pkg-config --exists ${package_name} output: ${output}")
     endif()
-    if(DEFINED backup_env_pkg_config_path)
-        set(ENV{PKG_CONFIG_PATH} "${backup_env_pkg_config_path}")
-    else()
-        unset(ENV{PKG_CONFIG_PATH})
-    endif()
+
+    z_vcpkg_restore_pkgconfig_path()
 endfunction()
 
 function(vcpkg_fixup_pkgconfig)

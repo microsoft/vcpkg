@@ -8,6 +8,7 @@ vcpkg_from_github(
         runtime_destination.patch
         magic-enum.patch
         include-dir.patch
+        cpptrace-0.4.1.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)

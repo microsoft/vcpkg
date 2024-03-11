@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         add-missing-reference.patch # https://github.com/chakra-core/ChakraCore/pull/6862
+        avoid_msvc_internal_STRINGIZE.patch
 )
 
 set(BUILDTREE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
