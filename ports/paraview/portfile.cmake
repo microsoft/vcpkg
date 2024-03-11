@@ -133,20 +133,8 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/include/paraview-${VERSION_MAJOR_MINOR}/vtk
 
 set(TOOLVER pv${VERSION_MAJOR_MINOR})
 
-if(tools IN_LIST FEATURE_OPTIONS)
-    vcpkg_copy_tools(
-        TOOL_NAMES
-            paraview
-            pvbatch
-            pvdataserver
-            pvpython
-            pvrenderserver
-            pvserver
-            smTestDriver
-            vtkProcessXML
-            vtkWrapClientServer
-        AUTO_CLEAN
-    )
+if(tools IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES paraview pvbatch pvdataserver pvpython pvrenderserver pvserver smTestDriver vtkProcessXML vtkWrapClientServer AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
