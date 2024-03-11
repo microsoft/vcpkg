@@ -1,7 +1,16 @@
+string(REGEX REPLACE "^([0-9]*)[.].*" "\\1" MAJOR "${VERSION}")
+string(REGEX REPLACE "^.*[.]([0-9]*)" "\\1" MINOR "${VERSION}")
+string(LENGTH "${MINOR}" minor_version_length )
+
+set (padding "")
+if(minor_version_length EQUAL 1)
+    set (padding "0")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MediaArea/MediaInfoLib
-    REF "v${VERSION}"
+    REF "v${MAJOR}.${padding}${MINOR}"
     SHA512 e664153197611647ee5496a0eb2105ac0574522585ecae2c51e35ea018a33a3da230158a4d1159e0abb5935ef953b7f841c6719eecfbba13de3fd9fdf06b8556
     HEAD_REF master
     PATCHES
