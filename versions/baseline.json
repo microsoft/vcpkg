@@ -1998,7 +1998,7 @@
     },
     "cryptopp": {
       "baseline": "8.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cserialport": {
       "baseline": "4.3.0",

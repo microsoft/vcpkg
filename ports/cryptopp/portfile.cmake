@@ -7,6 +7,7 @@ vcpkg_from_github(
   REF "CRYPTOPP_${CRYPTOPP_VERSION}"
   SHA512 3ec33b107ab627a514e1ebbc4b6522ee8552525f36730d9b5feb85e61ba7fc24fd36eb6050e328c6789ff60d47796beaa8eebf7dead787a34395294fae9bb733
   HEAD_REF master
+  PATCHES cryptopp-cmake.patch
 )
 
 vcpkg_from_github(
@@ -24,6 +25,8 @@ file(COPY "${CMAKE_SOURCE_PATH}/test" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_SOURCE_PATH}/cryptopp/cryptoppConfig.cmake" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_SOURCE_PATH}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
+set(CRYPTOPP_USE_PEM_PACK "OFF")
+
 if("pem-pack" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH PEM_PACK_SOURCE_PATH
@@ -33,11 +36,7 @@ if("pem-pack" IN_LIST FEATURES)
         HEAD_REF master
     )
 
-    file(GLOB PEM_PACK_FILES
-        ${PEM_PACK_SOURCE_PATH}/*.h
-        ${PEM_PACK_SOURCE_PATH}/*.cpp
-    )
-    file(INSTALL ${PEM_PACK_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+    set(CRYPTOPP_USE_PEM_PACK "ON")
 endif()
 
 # disable assembly on ARM Windows to fix broken build
@@ -61,9 +60,11 @@ vcpkg_cmake_configure(
         -DBUILD_STATIC=ON
         -DCRYPTOPP_BUILD_TESTING=OFF
         -DCRYPTOPP_BUILD_DOCUMENTATION=OFF
-        -DDISABLE_ASM=${CRYPTOPP_DISABLE_ASM}
+        -DCRYPTOPP_DISABLE_ASM=${CRYPTOPP_DISABLE_ASM}
         -DUSE_INTERMEDIATE_OBJECTS_TARGET=OFF # Not required when we build static only
         -DCMAKE_POLICY_DEFAULT_CMP0063=NEW # Honor "<LANG>_VISIBILITY_PRESET" properties
+        -DCRYPTOPP_USE_PEM_PACK=${CRYPTOPP_USE_PEM_PACK}
+        -Dcryptopp-pem_SOURCE_DIR=${PEM_PACK_SOURCE_PATH} # Usually this would be set when cryptopp-cmake downloads the source, but since we don't, we need to provide it instead
     MAYBE_UNUSED_VARIABLES
         BUILD_STATIC
         USE_INTERMEDIATE_OBJECTS_TARGET

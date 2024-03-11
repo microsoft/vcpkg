@@ -1,0 +1,92 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bb3bfbb..d533ed6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -83,6 +83,11 @@ option(
+     ON
+ )
+ 
++option(
++    CRYPTOPP_USE_PEM_PACK
++    "Include the PEM-Pack in compiliation (https://github.com/noloader/cryptopp-pem)"
++)
++
+ if(CRYPTOPP_INCLUDE_PREFIX)
+     set(CRYPTOPP_INCLUDE_PREFIX
+         ${CRYPTOPP_INCLUDE_PREFIX}
+diff --git a/cmake/GetCryptoppSources.cmake b/cmake/GetCryptoppSources.cmake
+index 809596a..3aaaab4 100644
+--- a/cmake/GetCryptoppSources.cmake
++++ b/cmake/GetCryptoppSources.cmake
+@@ -22,6 +22,11 @@ if(GIT_FOUND)
+         SOURCE_DIR
+         ${CRYPTOPP_INCLUDE_PREFIX}
+     )
++    fetchcontent_declare(
++        cryptopp-pem
++        GIT_REPOSITORY "https://github.com/noloader/cryptopp-pem"
++        QUIET
++    )
+ else()
+     message(STATUS "Downloading crypto++ from URL...")
+     cmake_policy(SET CMP0135 NEW)
+@@ -39,5 +44,13 @@ else()
+         cryptopp
+         URL "${source_location}.zip" QUIET SOURCE_DIR ${CRYPTOPP_INCLUDE_PREFIX}
+     )
++    fetchcontent_declare(
++        cryptopp-pem
++        URL "https://github.com/noloader/cryptopp-pem/archive/refs/heads/master.zip"
++        QUIET
++    )
+ endif()
+ fetchcontent_populate(cryptopp)
++if(CRYPTOPP_USE_PEM_PACK)
++    fetchcontent_populate(cryptopp-pem)
++endif()
+diff --git a/cryptopp/sources.cmake b/cryptopp/sources.cmake
+index 7918f03..b0bf7db 100644
+--- a/cryptopp/sources.cmake
++++ b/cryptopp/sources.cmake
+@@ -182,6 +182,12 @@ set(cryptopp_SOURCES
+     zlib.cpp
+ )
+ 
++set(cryptopp_SOURCES_PEM
++    "${cryptopp-pem_SOURCE_DIR}/pem-com.cpp"
++    "${cryptopp-pem_SOURCE_DIR}/pem-rd.cpp"
++    "${cryptopp-pem_SOURCE_DIR}/pem-wr.cpp"
++)
++
+ # ***** Library headers *****
+ set(cryptopp_HEADERS
+     3way.h
+@@ -374,6 +382,11 @@ set(cryptopp_HEADERS
+     zlib.h
+ )
+ 
++set(cryptopp_HEADERS_PEM
++    "${cryptopp-pem_SOURCE_DIR}/pem.h"
++    "${cryptopp-pem_SOURCE_DIR}/pem-com.h"
++)
++
+ # ***** Test sources *****
+ set(cryptopp_SOURCES_TEST
+     # adhoc.cpp
+@@ -448,3 +462,16 @@ if(ANDROID)
+         ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c
+     )
+ endif()
++
++if(CRYPTOPP_USE_PEM_PACK)
++    list(
++        APPEND
++        cryptopp_SOURCES
++        ${cryptopp_SOURCES_PEM}
++    )
++    list(
++        APPEND
++        cryptopp_HEADERS
++        ${cryptopp_HEADERS_PEM}
++    )
++endif()
