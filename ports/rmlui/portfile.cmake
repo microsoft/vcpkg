@@ -1,10 +1,10 @@
 vcpkg_from_github(
-	OUT_SOURCE_PATH SOURCE_PATH
-	REPO mikke89/RmlUi
-	REF ${VERSION}
-	SHA512 06bf1a24c6ff3f164ef1af80186d5f974e6a5467f6f0d50ec33bb14516e4899321fe7a5b9c4912def908a53711bf302bc782cf78117e0930862f5d1ad07dec18
-	HEAD_REF master
-	PATCHES
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mikke89/RmlUi
+    REF ${VERSION}
+    SHA512 06bf1a24c6ff3f164ef1af80186d5f974e6a5467f6f0d50ec33bb14516e4899321fe7a5b9c4912def908a53711bf302bc782cf78117e0930862f5d1ad07dec18
+    HEAD_REF master
+    PATCHES
         add-robin-hood.patch
         remove-std-before-uint.patch
 )
