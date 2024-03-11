@@ -2205,11 +2205,11 @@
       "port-version": 0
     },
     "directx-dxc": {
-      "baseline": "2023-08-14",
+      "baseline": "2024-03-07",
       "port-version": 0
     },
     "directx-headers": {
-      "baseline": "1.611.0",
+      "baseline": "1.613.0",
       "port-version": 0
     },
     "directxmath": {
