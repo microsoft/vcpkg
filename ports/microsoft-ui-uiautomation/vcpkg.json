@@ -7,15 +7,15 @@
     "dependencies": [
         {
             "name": "boost",
-            "version": "1.75.0"
+            "version>=": "1.75.0"
         },
         {
             "name": "cpprestsdk",
-            "version": "2.10.18"
+            "version>=": "2.10.18"
         },
         {
             "name": "gsl",
-            "version": "3.1.0"
+            "version>=": "3.1.0"
         }
     ]
 }
