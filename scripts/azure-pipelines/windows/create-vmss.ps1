@@ -26,8 +26,7 @@ Param(
 )
 
 $Location = 'westus3'
-$Prefix = 'PrWin-'
-$Prefix += (Get-Date -Format 'yyyy-MM-dd')
+$Prefix = 'PrWin-2024-02-17'
 $VMSize = 'Standard_D32ads_v5'
 $LiveVMPrefix = 'BUILD'
 $ErrorActionPreference = 'Stop'
@@ -80,8 +79,7 @@ $Vmss = Set-AzVmssOsProfile `
 $Vmss = Set-AzVmssStorageProfile `
   -VirtualMachineScaleSet $Vmss `
   -OsDiskCreateOption 'FromImage' `
-  -OsDiskCaching ReadOnly `
-  -DiffDiskSetting Local `
+  -OsDiskCaching ReadWrite `
   -ImageReferenceId $Image.Id
 
 $Vmss = Set-AzVmssBootDiagnostic `
