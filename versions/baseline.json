@@ -2620,6 +2620,10 @@
       "baseline": "2.7.0",
       "port-version": 5
     },
+    "faudio": {
+      "baseline": "24.03",
+      "port-version": 0
+    },
     "fawdlstty-libfv": {
       "baseline": "0.0.8",
       "port-version": 0
