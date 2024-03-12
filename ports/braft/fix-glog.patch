@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a851c00..28c1026 100644
+index 090a02e..fbe0ac3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -55,12 +55,8 @@ if ((NOT GFLAGS_INCLUDE_PATH) OR (NOT GFLAGS_LIB))
@@ -18,7 +18,7 @@ index a851c00..28c1026 100644
  
  if(LEVELDB_WITH_SNAPPY)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7cddd79..bc1ac69 100644
+index 70d73df..a3d3046 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -11,6 +11,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
@@ -29,9 +29,9 @@ index 7cddd79..bc1ac69 100644
  set_property(TARGET ${OBJ_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
  if (BUILD_SHARED_LIBS)
  add_library(braft-shared SHARED $<TARGET_OBJECTS:OBJ_LIB>)
-@@ -49,6 +50,7 @@ endif()
- file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-braft-config.cmake"
+@@ -50,6 +51,7 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-braft-config.cmake"
  [[include(CMakeFindDependencyMacro)
+ find_dependency(ZLIB)
  find_dependency(gflags CONFIG)
 +find_dependency(glog CONFIG)
  find_dependency(Protobuf CONFIG)
