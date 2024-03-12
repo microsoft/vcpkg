@@ -1,7 +1,6 @@
 {
   "name": "vcpkg-tool-meson",
-  "version": "0.63",
-  "port-version": 2,
+  "version": "1.3.2",
   "description": "Meson build system",
   "homepage": "https://github.com/mesonbuild/meson",
   "license": "Apache-2.0",

@@ -1,6 +1,7 @@
 {
   "name": "sqlite3",
   "version": "3.45.1",
+  "port-version": 1,
   "description": "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.",
   "homepage": "https://sqlite.org/",
   "license": "blessing",
@@ -56,6 +57,9 @@
     },
     "session": {
       "description": "Enable the SESSION extension"
+    },
+    "snapshot": {
+      "description": "Enable the snapshot function"
     },
     "soundex": {
       "description": "Enable the SOUNDEX scalar function"

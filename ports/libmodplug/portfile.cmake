@@ -17,7 +17,16 @@ vcpkg_from_github(
         005-fix-install-paths.patch # https://github.com/Konstanty/libmodplug/pull/61
 )
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+set(EXTRA_OPTIONS)
+
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    list(APPEND EXTRA_OPTIONS "-DCMAKE_CXX_STANDARD=11")
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${EXTRA_OPTIONS}
+)
 
 vcpkg_cmake_install()
 

@@ -1,17 +1,20 @@
 --- a/mesonbuild/modules/pkgconfig.py
 +++ b/mesonbuild/modules/pkgconfig.py
-@@ -583,12 +583,8 @@ class PkgConfigModule(ExtensionModule):
+@@ -702,15 +702,8 @@ class PkgConfigModule(ExtensionModule):
          pcfile = filebase + '.pc'
-         pkgroot = pkgroot_name = kwargs.get('install_dir', default_install_dir)
+         pkgroot = pkgroot_name = kwargs['install_dir'] or default_install_dir
          if pkgroot is None:
--            if mesonlib.is_freebsd():
--                pkgroot = os.path.join(state.environment.coredata.get_option(mesonlib.OptionKey('prefix')), 'libdata', 'pkgconfig')
--                pkgroot_name = os.path.join('{prefix}', 'libdata', 'pkgconfig')
--            else:
--                pkgroot = os.path.join(state.environment.coredata.get_option(mesonlib.OptionKey('libdir')), 'pkgconfig')
--                pkgroot_name = os.path.join('{libdir}', 'pkgconfig')
+-             if mesonlib.is_freebsd():
+-                 pkgroot = os.path.join(_as_str(state.environment.coredata.get_option(mesonlib.OptionKey('prefix'))), 'libdata', 'pkgconfig')
+-                 pkgroot_name = os.path.join('{prefix}', 'libdata', 'pkgconfig')
+-             elif mesonlib.is_haiku():
+-                 pkgroot = os.path.join(_as_str(state.environment.coredata.get_option(mesonlib.OptionKey('prefix'))), 'develop', 'lib', 'pkgconfig')
+-                 pkgroot_name = os.path.join('{prefix}', 'develop', 'lib', 'pkgconfig')
+-             else:
+-                 pkgroot = os.path.join(_as_str(state.environment.coredata.get_option(mesonlib.OptionKey('libdir'))), 'pkgconfig')
+-                 pkgroot_name = os.path.join('{libdir}', 'pkgconfig')
 +            pkgroot = os.path.join(state.environment.coredata.get_option(mesonlib.OptionKey('libdir')), 'pkgconfig')
 +            pkgroot_name = os.path.join('{libdir}', 'pkgconfig')
-         if not isinstance(pkgroot, str):
-             raise mesonlib.MesonException('Install_dir must be a string.')
+         relocatable = state.get_option('relocatable', module='pkgconfig')
          self._generate_pkgconfig_file(state, deps, subdirs, name, description, url,
+                                       version, pcfile, conflicts, variables,
