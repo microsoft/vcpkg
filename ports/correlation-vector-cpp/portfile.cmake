@@ -8,9 +8,6 @@ vcpkg_from_github(
         "correlation-vector.patch"
 )
 
-set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
-
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
@@ -24,9 +21,7 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}
 # Remove duplicated include files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Remove lib dir if empty due to configuration
-file(GLOB LIBDIR_FILES "${CURRENT_PACKAGES_DIR}/lib/*")
-list(LENGTH LIBDIR_FILES LIBDIR_FILES_LEN)
-if(LIBDIR_FILES_LEN EQUAL 0)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+# Remove bin dir if empty due to configuration. It is getting created when building in static linkage
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
