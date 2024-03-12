@@ -1,0 +1,26 @@
+diff --git a/winpr/libwinpr/pool/pool.c b/winpr/libwinpr/pool/pool.c
+index 6c66b42..784f75a 100644
+--- a/winpr/libwinpr/pool/pool.c
++++ b/winpr/libwinpr/pool/pool.c
+@@ -1,3 +1,8 @@
++#ifdef __MINGW32__
++#define _TP_CALLBACK_INSTANCE S_TP_CALLBACK_INSTANCE
++#define _TP_POOL S_TP_POOL
++#define _TP_WORK S_TP_WORK
++#endif
+ /**
+  * WinPR: Windows Portable Runtime
+  * Thread Pool API (Pool)
+diff --git a/winpr/libwinpr/pool/work.c b/winpr/libwinpr/pool/work.c
+index e83f417..423b998 100644
+--- a/winpr/libwinpr/pool/work.c
++++ b/winpr/libwinpr/pool/work.c
+@@ -1,3 +1,8 @@
++#ifdef __MINGW32__
++#define _TP_CALLBACK_INSTANCE S_TP_CALLBACK_INSTANCE
++#define _TP_POOL S_TP_POOL
++#define _TP_WORK S_TP_WORK
++#endif
+ /**
+  * WinPR: Windows Portable Runtime
+  * Thread Pool API (Work)
