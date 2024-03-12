@@ -4,7 +4,7 @@
 variables:
   android-pool: 'PrAnd-1ES-Pool'
   linux-pool: 'PrLin-1ES-Pool'
-  windows-pool: 'PrWin-2024-02-16'
+  windows-pool: 'PrWin-2024-02-17'
   osx-pool: 'PrOsx-2024-01-18'
   osx-arm64-pool: 'PrOsx-2024-01-22-arm64'
   linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-02-14'
@@ -17,7 +17,7 @@ parameters:
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring'
     type: string
-    default: '-'
+    default: 'x64-windows'
 
 jobs:
 - template: windows/azure-pipelines.yml
