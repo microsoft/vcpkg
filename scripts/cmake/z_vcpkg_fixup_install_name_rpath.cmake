@@ -407,3 +407,5 @@ function(z_vcpkg_fixup_install_name_rpath_in_dir)
     endforeach()
   endforeach()
 endfunction()
+
+z_vcpkg_fixup_install_name_rpath_in_dir()
