@@ -8,6 +8,7 @@
   "license": null,
   "supports": "windows & !uwp & !xbox",
   "dependencies": [
+    "directx-headers",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -15,9 +16,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "directx-headers"
     }
   ]
 }
