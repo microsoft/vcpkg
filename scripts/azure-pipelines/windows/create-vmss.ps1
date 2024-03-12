@@ -52,7 +52,8 @@ $Vmss = New-AzVmssConfig `
   -EvictionPolicy Delete `
   -Priority Spot `
   -MaxPrice -1 `
-  -SecurityType Standard
+  -SecurityType Standard `
+  -OrchestrationMode Uniform
 
 $NicName = $ResourceGroupName + 'NIC'
 New-AzNetworkInterface `
