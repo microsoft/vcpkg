@@ -106,6 +106,7 @@ function(vcpkg_find_acquire_program program)
     set(download_urls "")
     set(download_filename "")
     set(download_sha512 "")
+    set(download_patches "")
     set(rename_binary_to "")
     set(tool_subdirectory "")
     set(interpreter "")
@@ -171,12 +172,14 @@ function(vcpkg_find_acquire_program program)
                 URLS ${download_urls}
                 SHA512 "${download_sha512}"
                 FILENAME "${download_filename}"
+                PATCHES ${download_patches}
             )
         else()
             vcpkg_download_sourceforge(archive_path
                 ${sourceforge_args}
                 SHA512 "${download_sha512}"
                 FILENAME "${download_filename}"
+                PATCHES ${download_patches}
             )
         endif()
         if(raw_executable)
