@@ -22,7 +22,7 @@ index 6b389d5..0c0bb72 100644
  include("${CMAKE_CURRENT_LIST_DIR}/correlation_vector-targets.cmake")
 \ No newline at end of file
 diff --git a/CorrelationVector/src/CMakeLists.txt b/CorrelationVector/src/CMakeLists.txt
-index 00baa66..23241fd 100644
+index 00baa66..cc98572 100644
 --- a/CorrelationVector/src/CMakeLists.txt
 +++ b/CorrelationVector/src/CMakeLists.txt
 @@ -15,16 +15,9 @@ else()
@@ -55,8 +55,9 @@ index 00baa66..23241fd 100644
      install(
          EXPORT correlation_vector-targets
          FILE correlation_vector-targets.cmake
-         NAMESPACE microsoft::
+-        NAMESPACE microsoft::
 -        DESTINATION ${CMAKE_INSTALL_LIBDIR}/${CORRELATION_VECTOR_EXPORT_DIR}
++        NAMESPACE unofficial::microsoft::
 +        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${CORRELATION_VECTOR_EXPORT_DIR}"
      )
  endif()
