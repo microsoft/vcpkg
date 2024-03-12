@@ -36,6 +36,7 @@ vcpkg_from_github(
         devendor_exodusII.patch
         ot-dep.patch
         remove-prefix-changes.patch
+        10945.diff
 )
 
 # =============================================================================

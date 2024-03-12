@@ -7,7 +7,7 @@ index 2886e7ed71..cb8a875725 100644
    foreach (_exprtk_version_line IN LISTS _exprtk_version_header)
      if ("${ExprTk_VERSION}" STREQUAL "")
 -      string(REGEX MATCH "version = \"(2\.7[0-9.]+)\".*$" _exprtk_version_match "${_exprtk_version_line}")
-+      string(REGEX MATCH [[version = "(2.7[0-9.]+)".*$]] _exprtk_version_match "${_exprtk_version_line}")
++      string(REGEX MATCH [[version = "(2\.7[0-9.]+)".*$]] _exprtk_version_match "${_exprtk_version_line}")
        set(ExprTk_VERSION "${CMAKE_MATCH_1}")
      else ()
        string(REGEX MATCH "\"([0-9.]+)\".*$" _exprtk_version_match "${_exprtk_version_line}")
