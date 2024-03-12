@@ -1,0 +1,13 @@
+diff --git a/winpr/include/winpr/intrin.h b/winpr/include/winpr/intrin.h
+index 066f45f..0e61d4d 100644
+--- a/winpr/include/winpr/intrin.h
++++ b/winpr/include/winpr/intrin.h
+@@ -22,7 +22,7 @@
+ #ifndef WINPR_INTRIN_H
+ #define WINPR_INTRIN_H
+ 
+-#if !defined(_WIN32) || defined(__MINGW32__)
++#if !defined(_WIN32) || defined(__MINGW32__) || defined(_M_ARM64)
+ 
+ /**
+  * __lzcnt16, __lzcnt, __lzcnt64:
