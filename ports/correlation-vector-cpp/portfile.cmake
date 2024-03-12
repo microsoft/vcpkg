@@ -14,7 +14,7 @@ set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(PACKAGE_NAME correlation_vector CONFIG_PATH lib/cmake/correlation_vector)
+vcpkg_cmake_config_fixup(PACKAGE_NAME correlation_vector CONFIG_PATH lib/correlation_vector)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
