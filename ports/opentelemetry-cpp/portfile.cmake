@@ -6,13 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 38a3796a5f4c28fd54cc2a5475b3a024e2e73594acbc635fccc6358bf4d93ae897fc0ce55a93d27736a08622869ccc9fe9a9ee62e3884adadb3f135c27d378ec
+    SHA512 97635bbaf6dd567c201451dfaf7815b2052fe50d9bccc97aade86cfa4a92651374d167296a5453031b2681dc302806a289bca011a9e79ddc381a17d6118971d7
     HEAD_REF main
     PATCHES
         # Missing find_dependency for Abseil
         add-missing-find-dependency.patch
-        # Fix problems from removing NOMINMAX on Windows. Fixed in 1.14.0
-        fix-nominmax-problems.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,12 +25,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
-if(WITH_OTLP_GRPC)
-    set(OTEL_PROTO_VERSION "1.0.0")
+if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
+    set(OTEL_PROTO_VERSION "1.1.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
         FILENAME "opentelemetry-proto-${OTEL_PROTO_VERSION}.tar.gz"
-        SHA512 74de78304a91fe72cfcdbd87fcb19c0d6338c161d6624ce09eac0527b1b43b8a5d8790ae055e1d3d44319eaa070a506f47e740f888c91d724a0aef8b509688f0
+        SHA512 cd20991efb2d7f1bc8650fd0e124be707922b0717e429b6212390cd2c0d0afdb403c9aece196f07ae81ebed948863f4ec75c08ffbb3968795a0010d5cb34dc1b
     )
 
     vcpkg_extract_source_archive(src ARCHIVE "${ARCHIVE}")
@@ -47,16 +45,20 @@ endif()
 set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
 if(WITH_GENEVA)
 # Geneva exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, so they should be ported as a feature under opentelemetry-cpp.
-# TODO: merge the opentelemetry-fluentd port to opentelemery-cpp port.
     vcpkg_from_github(
         OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
         REPO open-telemetry/opentelemetry-cpp-contrib
-        REF bf3e3833498d45865f85423764f0d98372fe5646
+        REF 68885bee3b160ee7a032872c8fa6ecf68a7f4edc
         HEAD_REF main
-        SHA512 d8468997f8d2545d3bb230fd6c8072d70f6842020e9b6ac9cd7725d4c9e728f307618943c96af9cf9116ea2952c1e225e5dd3d4cf829644ad4f1f4c74dd14a0c
+        SHA512 5e7de7820e47327448f5f2cbfd5f21c1c66342579c369587ba2401497c55b7e8ebb1aec1e5e0eb1291b64a31bdd725fb6554436b7b95c0dbe777c669ff058ab6
     )
-    set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "")
-    list(APPEND OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
+
+    set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/geneva-trace")
+    else()
+        set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/fluentd")
+    endif()
 endif()
 
 vcpkg_cmake_configure(
@@ -66,10 +68,9 @@ vcpkg_cmake_configure(
         -DWITH_EXAMPLES=OFF
         -DOPENTELEMETRY_INSTALL=ON
         -DWITH_ABSEIL=ON
-        -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH="${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}"
+        -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH=${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
-        WITH_OTLP_GRPC
         WITH_GENEVA
 )
 

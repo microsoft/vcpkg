@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg",
-  "version": "6.1",
+  "version": "6.1.1",
   "port-version": 2,
   "description": [
     "a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
@@ -510,7 +510,7 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "nonfree"
+            "version3"
           ]
         },
         "openssl"

@@ -1,8 +1,8 @@
 {
   "name": "docopt",
-  "version-date": "2018-11-01",
-  "port-version": 3,
+  "version-date": "2022-03-15",
   "description": "Command line arguments parser that will make you smile (C++11 port).",
+  "license": "MIT OR BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

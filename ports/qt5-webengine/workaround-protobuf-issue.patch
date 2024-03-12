@@ -1,0 +1,17 @@
+diff --git a/src/core/core_chromium.pri b/src/core/core_chromium.pri
+index a846f2fbc..102ec9ace 100644
+--- a/src/core/core_chromium.pri
++++ b/src/core/core_chromium.pri
+@@ -32,6 +32,12 @@ isUniversal() {
+ # whenever we are cross compiling.
+ qtConfig(webengine-embedded-build): DEFINES += QTWEBENGINE_EMBEDDED_SWITCHES
+ 
++# Prepend Chromium's protobuf include directory to the include paths
++# to ensure we see same protobuf version as chromium.
++# See https://github.com/microsoft/vcpkg/issues/12150
++CHROMIUM_SRC_DIR = $$QTWEBENGINE_ROOT/$$getChromiumSrcDir()
++INCLUDEPATH = $$CHROMIUM_SRC_DIR/third_party/protobuf/src $$INCLUDEPATH
++
+ INCLUDEPATH += $$PWD $$PWD/api
+ 
+ clang_cl {

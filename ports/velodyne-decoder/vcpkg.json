@@ -1,0 +1,22 @@
+{
+  "name": "velodyne-decoder",
+  "version": "3.0.0",
+  "description": "A decoder library for raw Velodyne data and telemetry info",
+  "homepage": "https://github.com/valgur/velodyne_decoder",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "ms-gsl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "yaml-cpp",
+      "version>=": "0.7"
+    }
+  ]
+}
