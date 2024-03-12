@@ -1,7 +1,6 @@
 {
   "name": "gettext",
-  "version": "0.22.4",
-  "port-version": 2,
+  "version": "0.22.5",
   "description": "A GNU framework to help produce multi-lingual messages.",
   "homepage": "https://www.gnu.org/software/gettext/",
   "license": "GPL-3.0-only",

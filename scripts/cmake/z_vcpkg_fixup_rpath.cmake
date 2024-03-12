@@ -43,7 +43,6 @@ function(z_vcpkg_calculate_corrected_rpath)
         # duplication removal
         list(REMOVE_ITEM rpath_norm "\$ORIGIN")
         list(REMOVE_ITEM rpath_norm "\$ORIGIN/${relative_to_lib}")
-        list(REMOVE_DUPLICATES rpath_norm)
 
         if(NOT X_VCPKG_RPATH_KEEP_SYSTEM_PATHS)
           list(FILTER rpath_norm INCLUDE REGEX "\\\$ORIGIN.+") # Only keep paths relativ to ORIGIN
@@ -55,14 +54,13 @@ function(z_vcpkg_calculate_corrected_rpath)
     endif()
     list(PREPEND rpath_norm "\$ORIGIN") # Make ORIGIN the first entry
     list(TRANSFORM rpath_norm REPLACE "/$" "")
+    list(REMOVE_DUPLICATES rpath_norm)
     cmake_path(CONVERT "${rpath_norm}" TO_NATIVE_PATH_LIST new_rpath)
 
     set("${arg_OUT_NEW_RPATH_VAR}" "${new_rpath}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_fixup_rpath_in_dir)
-    vcpkg_find_acquire_program(PATCHELF)
-
     # We need to iterate trough everything because we
     # can't predict where an elf file will be located
     file(GLOB root_entries LIST_DIRECTORIES TRUE "${CURRENT_PACKAGES_DIR}/*")
@@ -71,6 +69,12 @@ function(z_vcpkg_fixup_rpath_in_dir)
     list(APPEND folders_to_skip "include")
     list(JOIN folders_to_skip "|" folders_to_skip_regex)
     set(folders_to_skip_regex "^(${folders_to_skip_regex})$")
+
+    # In download mode, we don't know if we're going to need PATCHELF, so be pessimistic and fetch
+    # it so it ends up in the downloads directory.
+    if(VCPKG_DOWNLOAD_MODE)
+        vcpkg_find_acquire_program(PATCHELF)
+    endif()
 
     foreach(folder IN LISTS root_entries)
         if(NOT IS_DIRECTORY "${folder}")
@@ -91,6 +95,8 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 continue()
             endif()
 
+            vcpkg_find_acquire_program(PATCHELF) # Note that this relies on vcpkg_find_acquire_program short
+                                                 # circuiting after the first run
             # If this fails, the file is not an elf
             execute_process(
                 COMMAND "${PATCHELF}" --print-rpath "${elf_file}"
@@ -98,7 +104,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 ERROR_VARIABLE read_rpath_error
             )
             string(REPLACE "\n" "" readelf_output "${readelf_output}")
-            if(NOT "${read_rpath_error}" STREQUAL "" OR "${readelf_output}" STREQUAL "")
+            if(NOT "${read_rpath_error}" STREQUAL "")
                 continue()
             endif()
 
@@ -116,8 +122,12 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 ERROR_VARIABLE set_rpath_error
             )
 
-            message(STATUS "Adjusted RPATH of '${elf_file}' (From '${org_rpath}' -> To '${new_rpath}')")
+            if(NOT "${set_rpath_error}" STREQUAL "")
+                message(WARNING "Couldn't adjust RPATH of '${elf_file}': ${set_rpath_error}")
+                continue()
+            endif()
 
+            message(STATUS "Adjusted RPATH of '${elf_file}' (From '${readelf_output}' -> To '${new_rpath}')")
         endforeach()
     endforeach()
 endfunction()

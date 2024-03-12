@@ -11,8 +11,6 @@ parameters:
     type: string
   - name: jobName
     type: string
-  - name: poolName
-    type: string
   - name: dockerImage
     type: string
   - name: tripletPattern
@@ -24,7 +22,9 @@ jobs:
 - job: ${{ parameters.jobName }}
   condition: and(succeeded(), contains('^${{ parameters.triplet }}$', '${{ parameters.tripletPattern }}'))
   pool:
-    name: ${{ parameters.poolName }}
+    name: 'PrAnd-1ES-Pool'
+    demands:
+    - ImageOverride -equals vcpkg-mariner-docker-gen1
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
@@ -44,7 +44,6 @@ jobs:
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
-      curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
       az login --identity
       az acr login --name vcpkgandroidwus3
     displayName: 'Set up managed identity'
@@ -57,6 +56,15 @@ jobs:
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
       exit 0
     displayName: 'Create working directories'
+  - bash: |
+      CONTAINERS=$(docker ps -a -q)
+      if [ -n "$CONTAINERS" ]; then
+        docker rm -f $CONTAINERS
+      fi
+    displayName: 'Stop and remove all docker containers'
+  - bash: |
+      docker pull ${{ parameters.dockerImage }}
+    displayName: 'Pull Docker Container'
   - bash: |
       docker run --rm \
       --mount type=bind,source=$(Build.Repository.LocalPath),target=/vcpkg \
@@ -71,15 +79,6 @@ jobs:
       ./scripts/azure-pipelines/bootstrap-from-source.sh ${{ parameters.vcpkgToolSha }}
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
-  - bash: |
-      CONTAINERS=$(docker ps -a -q)
-      if [ -n "$CONTAINERS" ]; then
-        docker rm -f $CONTAINERS
-      fi
-    displayName: 'Stop and remove all docker containers'
-  - bash: |
-      docker pull ${{ parameters.dockerImage }}
-    displayName: 'Pull Docker Container'
   - task: Bash@3
     inputs:
       targetType: inline

@@ -1,10 +1,12 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+string(REGEX REPLACE "^([0-9]*)[.].*" "\\1" MAJOR "${VERSION}")
+string(REGEX REPLACE "^.*[.]([0-9]*)" "\\1" MINOR "${VERSION}")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO adah1972/libunibreak
-  REF libunibreak_5_1
-  SHA512 c47d6445cab36febb214b31aeb48585a4d3685714588079e84be87019f6e6ffb752e0e0e527232e2d164b1efeeeea64b8b4b21e605ebc60f10fb5a169edc2ed0
+  REF "libunibreak_${MAJOR}_${MINOR}"
+  SHA512 a85333d59c78b67b1c05d33ab99c069ba493780d6a98ad5ab00e33235c454b8b33515cac4e815de35533f235be7cf5473550b3a6389f7581ba2f6216d42d38e1
   HEAD_REF master
 )
 
