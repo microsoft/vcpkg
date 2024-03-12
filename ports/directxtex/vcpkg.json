@@ -1,6 +1,6 @@
 {
   "name": "directxtex",
-  "version-date": "2024-02-21",
+  "version-date": "2024-03-06",
   "description": "DirectXTex texture processing library",
   "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",
@@ -41,10 +41,24 @@
         }
       ]
     },
+    "jpeg": {
+      "description": "Add the JPEG auxiliary functions",
+      "supports": "linux",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
     "openexr": {
       "description": "Enable OpenEXR support",
       "dependencies": [
         "openexr"
+      ]
+    },
+    "png": {
+      "description": "Add the PNG auxiliary functions",
+      "supports": "linux",
+      "dependencies": [
+        "libpng"
       ]
     },
     "spectre": {
@@ -53,6 +67,13 @@
     "tools": {
       "description": "texture command-line tools",
       "supports": "windows & !uwp & !xbox"
+    },
+    "xbox": {
+      "description": "Adds Xbox specific extensions to the library",
+      "supports": "windows & x64 & !uwp & !xbox",
+      "dependencies": [
+        "ms-gdkx"
+      ]
     }
   }
 }
