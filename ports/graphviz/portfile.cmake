@@ -6,7 +6,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphviz/graphviz
     REF "${VERSION}"
-    SHA512 1edcf6aa232d38d1861a344c1a4a88aac51fd4656d667783ca1608ac694025199595a72a293c4eee2f7c7326ce54f22b787a5b7f4c44946f2de6096bd8f0e79d
+    SHA512 6b0cffaf4bde7df260894b1b9d74e8a1d5aec11736511a86d99bc369e3f8db99f7050ae917cf1a066cc7d87695a57ef5b9c19521d211fee48c8a0c41ad0f4aac
     HEAD_REF main
     PATCHES
         disable-pragma-lib.patch
@@ -14,13 +14,8 @@ vcpkg_from_gitlab(
         no-absolute-paths.patch
         select-plugins.patch
         static-linkage.patch
+        webp-install.patch
 )
-
-if(VCPKG_TARGET_IS_OSX)
-    message("${PORT} currently requires the following libraries from the system package manager:\n    libtool\n\nThey can be installed with brew install libtool")
-elseif(VCPKG_TARGET_IS_LINUX)
-    message("${PORT} currently requires the following libraries from the system package manager:\n    libtool\n\nThey can be install with `apt-get install libtool` on Ubuntu systems or `dnf install libtool-ltdl-devel` on Fedora systems")
-endif()
 
 vcpkg_list(SET OPTIONS)
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -72,6 +67,24 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB headers "${CURRENT_PACKAGES_DIR}/include/graphviz/*.h")
+    foreach(file IN LISTS headers)
+        vcpkg_replace_string("${file}" "#ifdef GVDLL" "#if 1")
+    endforeach()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        # static libs built with dllexport must be used with dllexport
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/cdt.h" "#ifdef EXPORT_CDT" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/cgraph.h" "#ifdef EXPORT_CGRAPH" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/gvc.h" "#ifdef GVC_EXPORTS" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/gvplugin_loadimage.h" "#ifdef GVC_EXPORTS" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/pack.h" "#ifdef GVC_EXPORTS" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/pathgeom.h" "#ifdef PATHPLAN_EXPORTS" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/pathplan.h" "#ifdef PATHPLAN_EXPORTS" "#if 1")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/graphviz/xdot.h" "#ifdef EXPORT_XDOT" "#if 1")
+    endif()
+endif()
+
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
@@ -95,7 +108,6 @@ vcpkg_copy_tools(
         diffimg
         dijkstra
         dot
-        dot_builtins
         edgepaint
         fdp
         gc
