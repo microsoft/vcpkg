@@ -4593,7 +4593,7 @@
       "port-version": 0
     },
     "libmediainfo": {
-      "baseline": "23.10",
+      "baseline": "24.1",
       "port-version": 0
     },
     "libmesh": {
