@@ -10,7 +10,6 @@ vcpkg_from_github(
     PATCHES
         hdf5_config.patch
         szip.patch
-        pkgconfig-requires.patch
 )
 
 set(ALLOW_UNSUPPORTED OFF)
