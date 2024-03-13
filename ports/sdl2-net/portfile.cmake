@@ -24,8 +24,6 @@ endif()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_pkgconfig()
-
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/debug/include"
