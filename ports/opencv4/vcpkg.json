@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.8.0",
-  "port-version": 15,
+  "port-version": 16,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -301,7 +301,8 @@
     "python": {
       "description": "Python wrapper support for opencv",
       "dependencies": [
-        "python3"
+        "python3",
+        "numpy"
       ]
     },
     "qt": {
