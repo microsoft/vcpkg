@@ -1,0 +1,17 @@
+{
+  "name": "py-packaging",
+  "version": "23.1",
+  "port-version": 1,
+  "description": "Core utilities for Python packages",
+  "homepage": "https://packaging.pypa.io/",
+  "license": "MIT",
+  "dependencies": [
+    "py-flit-core",
+    "py-gpep517",
+    "python3",
+    {
+      "name": "vcpkg-python-scripts",
+      "host": true
+    }
+  ]
+}

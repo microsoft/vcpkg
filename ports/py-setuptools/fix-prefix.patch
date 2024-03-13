@@ -1,0 +1,63 @@
+diff --git a/setuptools/_distutils/command/build_ext.py b/setuptools/_distutils/command/build_ext.py
+index fbeec342c0..ff28ab2df4 100644
+--- a/setuptools/_distutils/command/build_ext.py	
++++ b/setuptools/_distutils/command/build_ext.py
+@@ -186,6 +186,14 @@ class build_ext(Command):
+         elif isinstance(self.rpath, str):
+             self.rpath = self.rpath.split(os.pathsep)
+ 
++        prefix = os.path.normpath(sys.prefix)
++        vcpkg_prefix = os.path.dirname(os.path.dirname(prefix)) # Add debug compile?
++
++        if self.debug:
++            self.library_dirs.append(os.path.join(vcpkg_prefix, 'debug', 'lib'))
++        else:
++            self.library_dirs.append(os.path.join(vcpkg_prefix, 'lib'))
++
+         # for extensions under windows use different directories
+         # for Release and Debug builds.
+         # also Python's library directory must be appended to library_dirs
+@@ -193,9 +201,9 @@ class build_ext(Command):
+             # the 'libs' directory is for binary installs - we assume that
+             # must be the *native* platform.  But we don't really support
+             # cross-compiling via a binary install anyway, so we let it go.
+-            self.library_dirs.append(os.path.join(sys.exec_prefix, 'libs'))
+-            if sys.base_exec_prefix != sys.prefix:  # Issue 16116
+-                self.library_dirs.append(os.path.join(sys.base_exec_prefix, 'libs'))
++            # self.library_dirs.append(os.path.join(sys.exec_prefix, 'libs'))
++            # if sys.base_exec_prefix != sys.prefix:  # Issue 16116
++            #    self.library_dirs.append(os.path.join(sys.base_exec_prefix, 'libs'))
+             if self.debug:
+                 self.build_temp = os.path.join(self.build_temp, "Debug")
+             else:
+diff --git a/setuptools/_distutils/sysconfig.py b/setuptools/_distutils/sysconfig.py
+index a40a7231b3..7194f440b4 100644
+--- a/setuptools/_distutils/sysconfig.py	
++++ b/setuptools/_distutils/sysconfig.py
+@@ -190,19 +190,22 @@ def _get_python_inc_from_config(plat_specific, spec_prefix):
+ def _get_python_inc_posix_prefix(prefix):
+     implementation = 'pypy' if IS_PYPY else 'python'
+     python_dir = implementation + get_python_version() + build_flags
+-    return os.path.join(prefix, "include", python_dir)
++    vcpkg_prefix = os.path.dirname(os.path.dirname(prefix))
++    return os.path.join(vcpkg_prefix, "include", python_dir)
+ 
+ 
+ def _get_python_inc_nt(prefix, spec_prefix, plat_specific):
++    vcpkg_prefix = os.path.dirname(os.path.dirname(prefix))
++    python_dir = 'python' + get_python_version()
+     if python_build:
+         # Include both the include and PC dir to ensure we can find
+         # pyconfig.h
+         return (
+-            os.path.join(prefix, "include")
++            os.path.join(vcpkg_prefix, "include", python_dir)
+             + os.path.pathsep
+-            + os.path.join(prefix, "PC")
++            + os.path.join(vcpkg_prefix, "PC")
+         )
+-    return os.path.join(prefix, "include")
++    return os.path.join(vcpkg_prefix, "include", python_dir)
+ 
+ 
+ # allow this behavior to be monkey-patched. Ref pypa/distutils#2.

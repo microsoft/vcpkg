@@ -1,0 +1,15 @@
+{
+  "name": "py-cython",
+  "version": "3.0.5",
+  "description": "Cython is a Python compiler that makes writing C extensions for Python as easy as Python itself. Cython is based on Pyrex, but supports more cutting edge functionality and optimizations.",
+  "homepage": "https://cython.org/",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "py-setuptools",
+    "python3",
+    {
+      "name": "vcpkg-python-scripts",
+      "host": true
+    }
+  ]
+}
