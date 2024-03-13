@@ -9062,7 +9062,7 @@
     },
     "velodyne-decoder": {
       "baseline": "3.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "verdict": {
       "baseline": "1.4.0",
