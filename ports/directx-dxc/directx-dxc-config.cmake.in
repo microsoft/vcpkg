@@ -6,8 +6,8 @@ get_filename_component(_dxc_root "${_dxc_root}" PATH)
 set(_dxc_exe "${_dxc_root}/@tool_path@")
 if (EXISTS "${_dxc_exe}")
 
-   add_library(Microsoft::DXC SHARED IMPORTED)
-   set_target_properties(Microsoft::DXC PROPERTIES
+   add_library(Microsoft::DirectXShaderCompiler SHARED IMPORTED)
+   set_target_properties(Microsoft::DirectXShaderCompiler PROPERTIES
       IMPORTED_LOCATION_RELEASE            "${_dxc_root}/@dll_dir@/@dll_name_dxc@"
       IMPORTED_LOCATION_DEBUG              "${_dxc_root}/@dll_dir@/@dll_name_dxc@"
       IMPORTED_IMPLIB_RELEASE              "${_dxc_root}/lib/@lib_name@"
@@ -30,12 +30,10 @@ if (EXISTS "${_dxc_exe}")
       IMPORTED_CONFIGURATIONS              "Debug;Release"
       IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
 
-   add_library(Microsoft::DirectXShaderCompiler INTERFACE IMPORTED)
-   set_target_properties(Microsoft::DirectXShaderCompiler PROPERTIES
-      INTERFACE_LINK_LIBRARIES "Microsoft::DXC;Microsoft::DXIL")
+   target_link_libraries(Microsoft::DirectXShaderCompiler INTERFACE Microsoft::DXIL)
 
-    set(directx-dxc_FOUND TRUE)
-    set(DIRECTX_DXC_TOOL ${_dxc_exe})
+   set(directx-dxc_FOUND TRUE)
+   set(DIRECTX_DXC_TOOL ${_dxc_exe})
 
 else()
 
