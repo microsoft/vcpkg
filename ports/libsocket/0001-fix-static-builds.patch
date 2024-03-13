@@ -1,0 +1,20 @@
+diff --git a/C++/CMakeLists.txt b/C++/CMakeLists.txt
+--- a/C++/CMakeLists.txt
++++ b/C++/CMakeLists.txt
+@@ -38,11 +38,11 @@ INSTALL(TARGETS socket++ DESTINATION ${LIB_DIR})
+ ENDIF()
+ 
+ IF(BUILD_STATIC_LIBS)
+-ADD_LIBRARY(socket++_int STATIC $<TARGET_OBJECTS:socket++_o>)
++ADD_LIBRARY(socket++ STATIC $<TARGET_OBJECTS:socket++_o>)
+ 
+-SET_TARGET_PROPERTIES(socket++_int PROPERTIES OUTPUT_NAME socket++)
++SET_TARGET_PROPERTIES(socket++ PROPERTIES OUTPUT_NAME socket++)
+ 
+-TARGET_LINK_LIBRARIES(socket++_int socket_int)
++TARGET_LINK_LIBRARIES(socket++ socket_int)
+ 
+-INSTALL(TARGETS socket++_int DESTINATION ${LIB_DIR})
++INSTALL(TARGETS socket++ DESTINATION ${LIB_DIR})
+ ENDIF()
+
