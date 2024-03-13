@@ -57,6 +57,11 @@ if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
                     -DONLY_SHARED_LIBS=ON)
 endif()
 
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND FEATURE_OPTIONS
+                    -DHDF_NO_IOEO_TEST=ON)  
+endif()
+		
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
