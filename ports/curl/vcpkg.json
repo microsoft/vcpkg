@@ -17,8 +17,9 @@
     "zlib"
   ],
   "default-features": [
+    "ca-native",
     "non-http",
-    "ssl"
+    "openssl"
   ],
   "features": {
     "brotli": {
@@ -33,6 +34,9 @@
         "c-ares"
       ]
     },
+    "ca-native": {
+      "description": "Use standard certificate store of operating system"
+    },
     "http2": {
       "description": "HTTP2 support",
       "dependencies": [
@@ -40,7 +44,7 @@
           "name": "curl",
           "default-features": false,
           "features": [
-            "ssl"
+            "openssl"
           ]
         },
         "nghttp2"
@@ -48,7 +52,6 @@
     },
     "http3": {
       "description": "HTTP3 support",
-      "supports": "(uwp | !windows) & !(osx | ios) & !mingw",
       "dependencies": [
         {
           "name": "curl",
@@ -141,35 +144,6 @@
           ]
         },
         "libssh2"
-      ]
-    },
-    "ssl": {
-      "description": "Default SSL backend",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "sectransp"
-          ],
-          "platform": "osx | ios"
-        },
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "schannel"
-          ],
-          "platform": "(windows & !uwp) | mingw"
-        },
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "openssl"
-          ],
-          "platform": "(uwp | !windows) & !(osx | ios) & !mingw"
-        }
       ]
     },
     "sspi": {

@@ -15,7 +15,8 @@ vcpkg_from_github(
         export-components.patch
         dependencies.patch
         cmake-config.patch
-        openssl_quic.patch        
+        openssl_quic.patch
+        use_ca_native.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -38,6 +39,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         winldap     USE_WIN32_LDAP
         websockets  ENABLE_WEBSOCKETS
         zstd        CURL_ZSTD
+        ca-native   CURL_USE_CA_NATIVE
     INVERTED_FEATURES
         non-http    HTTP_ONLY
         winldap     CURL_DISABLE_LDAP # Only WinLDAP support ATM
