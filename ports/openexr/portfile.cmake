@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 6e0a6fdcfae57c6e8b060d9aeed57140d96d39bffe5e40edd6ea5beb06e569323833d07906316ffca05f48e8409d0ea4174e2cd84d554404a4ee432e07d7b5e6
     HEAD_REF main
+    PATCHES
+        fix-cmake-package.patch # https://github.com/AcademySoftwareFoundation/openexr/pull/1674
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
