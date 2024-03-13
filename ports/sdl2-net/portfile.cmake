@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-uwp.patch
-        fix-pc-file.patch
 )
 
 vcpkg_cmake_configure(
@@ -26,10 +25,6 @@ endif()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/SDL2_net.pc" "-lSDL2_net" "-lSDL2_netd")
-endif()
 
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/share"
