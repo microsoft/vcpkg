@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4d64d1af..5574f6bc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -143,6 +143,8 @@ endif()
+ # build examples flag
+ set(BUILD_EXAMPLES 1 CACHE BOOL "Build examples or not")
+ 
++set(USE_SANITIZERS 1 CACHE BOOL "Build with google sanitizers or not")
++
+ # set flags for MacOSX
+ if (APPLE)
+     set(CMAKE_MACOSX_RPATH ON)
+@@ -258,11 +260,17 @@ elseif (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+         SET(STR_OP_OVERFLOW_OFF "")
+     endif()
+ 
+-    set(BASE_RELEASE_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic -Wextra -Wconversion -fms-extensions -fno-strict-aliasing -fvisibility=hidden ${STR_OP_OVERFLOW_OFF} -D__USE_POSIX=1 -D_POSIX_C_SOURCE=200809L")
+-    set(BASE_DEBUG_FLAGS "${CMAKE_C_FLAGS} -g -Wall -pedantic -Wextra -Wconversion -fms-extensions -fno-strict-aliasing -fvisibility=hidden -fsanitize=address -fsanitize=leak -fsanitize=undefined ${STR_OP_OVERFLOW_ON} -D__USE_POSIX=1 -D_POSIX_C_SOURCE=200809L")
+-	set(C99_FLAGS "-std=c99" )
+-    set(BASE_RELEASE_LINK_FLAGS "")
+-    set(BASE_DEBUG_LINK_FLAGS "-fsanitize=address -fsanitize=leak -fsanitize=undefined")
++    SET(BASE_RELEASE_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic -Wextra -Wconversion -fms-extensions -fno-strict-aliasing -fvisibility=hidden ${STR_OP_OVERFLOW_OFF} -D__USE_POSIX=1 -D_POSIX_C_SOURCE=200809L")
++    SET(BASE_DEBUG_FLAGS "${CMAKE_C_FLAGS} -g -Wall -pedantic -Wextra -Wconversion -fms-extensions -fno-strict-aliasing -fvisibility=hidden ${STR_OP_OVERFLOW_ON} -D__USE_POSIX=1 -D_POSIX_C_SOURCE=200809L")
++	SET(C99_FLAGS "-std=c99" )
++    SET(BASE_RELEASE_LINK_FLAGS "")
++    SET(BASE_DEBUG_LINK_FLAGS "")
++
++    if(USE_SANITIZERS)
++        SET(SANITIZERS_FLAGS " -fsanitize=address -fsanitize=leak -fsanitize=undefined")
++        STRING(APPEND BASE_DEBUG_FLAGS ${SANITIZERS_FLAGS})
++        STRING(APPEND BASE_DEBUG_LINK_FLAGS ${SANITIZERS_FLAGS})
++    endif()
+ 
+     # check to see if we are building 32-bit or 64-bit
+     if(BUILD_32_BIT)

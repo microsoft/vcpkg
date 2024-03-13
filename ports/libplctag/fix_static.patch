@@ -1,0 +1,25 @@
+diff --git a/src/lib/libplctag.h b/src/lib/libplctag.h
+index a06144d..6c60a08 100644
+--- a/src/lib/libplctag.h
++++ b/src/lib/libplctag.h
+@@ -40,14 +40,17 @@ extern "C" {
+ #endif
+ 
+ 
+-#if  defined(_WIN32) || defined(WIN32) || defined(WIN64) || defined(_WIN64)
++#if  (defined(_WIN32) || defined(WIN32) || defined(WIN64) || defined(_WIN64)) && \
++     defined(_MSC_VER)
+     #ifdef __cplusplus
+         #define C_FUNC extern "C"
+     #else
+         #define C_FUNC
+     #endif
+ 
+-    #ifdef LIBPLCTAGDLL_EXPORTS
++    #ifdef LIBPLCTAG_STATIC
++        #define LIB_EXPORT extern
++    #elif defined(LIBPLCTAGDLL_EXPORTS)
+         #define LIB_EXPORT __declspec(dllexport)
+     #else
+         #define LIB_EXPORT __declspec(dllimport)
+

@@ -4760,6 +4760,10 @@
       "baseline": "8.13.31",
       "port-version": 0
     },
+    "libplctag": {
+      "baseline": "2.5.5",
+      "port-version": 0
+    },
     "libplist": {
       "baseline": "2023-06-15",
       "port-version": 1
