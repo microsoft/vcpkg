@@ -2212,6 +2212,10 @@
       "baseline": "1.613.0",
       "port-version": 0
     },
+    "directx12-agility": {
+      "baseline": "1.613.0",
+      "port-version": 0
+    },
     "directxmath": {
       "baseline": "2024-02-14",
       "port-version": 1
