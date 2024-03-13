@@ -97,6 +97,10 @@ boringssl:x64-windows=skip
 boringssl:x64-windows-static=skip
 boringssl:x64-windows-static-md=skip
 boringssl:x86-windows=skip
+# Broken with NDK r25 and fixed in NDK r26
+botan:arm-neon-android=fail
+botan:arm64-android=fail
+botan:x64-android=fail
 brpc:x64-android=fail
 buck-yeh-bux:x64-android=fail
 c4core:arm-neon-android=fail
