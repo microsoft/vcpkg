@@ -4304,6 +4304,10 @@
       "baseline": "1.2.6",
       "port-version": 2
     },
+    "libfuse": {
+      "baseline": "3.16.2",
+      "port-version": 0
+    },
     "libenvpp": {
       "baseline": "1.4.0",
       "port-version": 0
