@@ -1,34 +1,5 @@
 set(ENV{SETUPTOOLS_SCM_PRETEND_VERSION} "${VERSION}")
 
-function(vcpkg_adjust_dll_searchpath)
-  if(NOT VCPKG_TARGET_IS_WINDOWS)
-    return()
-  endif()
-  cmake_parse_arguments(
-    PARSE_ARGV 0
-    "arg"
-    ""
-    "FILEPATH"
-    "")
-  if(NOT "${arg_FILEPATH}" MATCHES "\\\.py$")
-    message(FATAL_ERROR "Only files ending with '.py' allowed!")
-  endif()
-  file(READ "${arg_FILEPATH}" contents)
-  string(PREPEND contents 
-[[
-import os
-import sys
-from pathlib import Path
-
-vcpkg_bin_path = Path(sys.prefix + '/../../bin')
-if os.name == 'nt' and vcpkg_bin_path.is_dir():
-  os.add_dll_directory(vcpkg_bin_path)
-]]
-)
-  file(WRITE "${arg_FILEPATH}" "${contents}")
-endfunction()
-
-
 function(vcpkg_from_pythonhosted)
   cmake_parse_arguments(
     PARSE_ARGV 0

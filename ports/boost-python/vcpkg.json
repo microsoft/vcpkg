@@ -108,19 +108,13 @@
     {
       "name": "vcpkg-cmake",
       "host": true
-    }
+    },
+    "numpy"
   ],
   "default-features": [
     "python3"
   ],
   "features": {
-    "python2": {
-      "description": "Build with Python2 support",
-      "supports": "!(arm & windows)",
-      "dependencies": [
-        "python2"
-      ]
-    },
     "python3": {
       "description": "Build with Python3 support",
       "dependencies": [

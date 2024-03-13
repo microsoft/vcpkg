@@ -97,11 +97,4 @@ Name: numpy\n\
 Version: ${VERSION}"
 )
 
-vcpkg_adjust_dll_searchpath(FILEPATH "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/numpy/__init__.py") 
-# so LAPACK/BLAS DLLs can be found by the module
-# Other options would be:
-# - copy all dlls into the python executable folder (dll ownership problem)
-# - patch python to add the dll search path itself (conda like approach)
-# - copy dlls into the module (means a lot of duplicated dlls)
-
-vcpkg_python_test_import(MODULE "numpy") # Test
+vcpkg_python_test_import(MODULE "numpy")
