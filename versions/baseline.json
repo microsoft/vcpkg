@@ -2590,7 +2590,7 @@
     },
     "fast-float": {
       "baseline": "6.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "fastcdr": {
       "baseline": "1.1.0",
