@@ -49,12 +49,12 @@ $Vmss = New-AzVmssConfig `
   -SkuCapacity 0 `
   -SkuName $VMSize `
   -SkuTier 'Standard' `
-  -Overprovision $false `
-  -UpgradePolicyMode Automatic `
+  -UpgradePolicyMode Manual `
   -EvictionPolicy Delete `
   -Priority Spot `
   -MaxPrice -1 `
-  -SecurityType Standard
+  -SecurityType Standard `
+  -OrchestrationMode Uniform
 
 $NicName = $ResourceGroupName + 'NIC'
 New-AzNetworkInterface `

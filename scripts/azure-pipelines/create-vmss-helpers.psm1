@@ -233,6 +233,20 @@ function Create-LockedDownNetwork {
     [string]$Location
   )
 
+  $publicIp = New-AzPublicIpAddress `
+    -Name "$ResourceGroupName-ip" `
+    -ResourceGroupName $ResourceGroupName `
+    -Location $Location `
+    -Sku 'Standard' `
+    -AllocationMethod 'Static'
+
+  $natGateway = New-AzNatGateway `
+    -Name "$ResourceGroupName-nat" `
+    -ResourceGroupName $ResourceGroupName `
+    -Location $Location `
+    -Sku 'Standard' `
+    -PublicIpAddress $publicIp
+
   $allFirewallRules = @()
 
   $allFirewallRules += New-AzNetworkSecurityRuleConfig `
@@ -307,7 +321,8 @@ function Create-LockedDownNetwork {
     -Name $SubnetName `
     -AddressPrefix "10.0.0.0/16" `
     -NetworkSecurityGroup $NetworkSecurityGroup `
-    -ServiceEndpoint "Microsoft.Storage"
+    -ServiceEndpoint "Microsoft.Storage" `
+    -NatGateway $natGateway
 
   $VirtualNetworkName = $ResourceGroupName + 'Network'
   $VirtualNetwork = New-AzVirtualNetwork `
