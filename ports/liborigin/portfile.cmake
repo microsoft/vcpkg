@@ -4,6 +4,8 @@ vcpkg_from_sourceforge(
     REF liborigin/3.0
     FILENAME liborigin-${VERSION}.tar.gz
     SHA512 9fb5ae6d8aa8fb54e659482f8f5dc581b8d0ace2ebca7bb9f092b7ec753049d497491eb47ad89b12c8ddf7e19dc47f76e76c51ace789366370bd056d99e091ee
+    PATCHES
+        fix-installing-import-library-with-MSVC.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -20,11 +22,6 @@ vcpkg_cmake_build()
 vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()
-
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/origin.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/origin.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
