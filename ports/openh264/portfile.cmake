@@ -1,10 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cisco/openh264
-    REF f15f940425eebf24ce66984db2445733cf500b7b
-    SHA512 361003296e9cef2956aeff76ae4df7a949a585710facd84a92c1b4164c5a4522d6615fcc485ebc2e50be8a13feb942b870efdd28837307467081cb1eba1f17d2
-    PATCHES
-        0001-respect-default-library-option.patch  # https://github.com/cisco/openh264/pull/3351
+    REF "v${VERSION}"
+    SHA512 fd59c767794cdfb934d692d5929e4500d78606cbf1e403bc7c7dce048cc07e40daa0794357adb856d29479427a53460c76338e156b6bbeaa36139afcd603c8e1
 )
 
 if((VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))
@@ -19,8 +17,15 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     endforeach(GAS_PATH)
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+get_filename_component(PKGCONFIG_PATH "${PKGCONFIG}" DIRECTORY)
+vcpkg_add_to_path("${PKGCONFIG_PATH}")
+
+set(ENV{PKGCONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS -Dtests=disabled
 )
 
@@ -28,8 +33,4 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
