@@ -1,7 +1,8 @@
 {
   "name": "qt5-networkauth",
   "version": "5.15.13",
-  "description": "Qt5 Network Authorization Module",
+  "port-version": 1,
+  "description": "Qt Network Authorization provides a set of APIs that enable Qt applications to obtain limited access to online accounts and HTTP services without exposing users' passwords.",
   "license": null,
   "dependencies": [
     {

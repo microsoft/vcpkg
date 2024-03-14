@@ -1,7 +1,8 @@
 {
   "name": "qtquickeffectmaker",
   "version": "6.6.1",
-  "description": "Qt Quick Effect Maker (QQEM) for creating and editing custom shader effects.",
+  "port-version": 1,
+  "description": "Qt Quick Effect Maker is a tool for creating shader effects for Qt Quick with high productivity and performance.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "supports": "native",
