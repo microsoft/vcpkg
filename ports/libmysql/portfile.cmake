@@ -15,6 +15,11 @@ vcpkg_from_github(
         cross-build.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        host-tools FORCE_CMAKE_CROSSCOMPILING
+)
+
 file(GLOB third_party "${SOURCE_PATH}/extra/*" "${SOURCE_PATH}/include/boost_1_70_0")
 list(REMOVE_ITEM third_party "${SOURCE_PATH}/extra/libedit")
 if (third_party)
@@ -49,6 +54,11 @@ if(VCPKG_CROSSCOMPILING)
             -DHAVE_SETNS=0
         )
     endif()
+endif()
+if ("-DFORCE_CMAKE_CROSSCOMPILING=ON" IN_LIST FEATURE_OPTIONS)
+    list(APPEND cross_options
+        -DCMAKE_CROSSCOMPILING=OFF
+    )
 endif()
 
 vcpkg_cmake_configure(

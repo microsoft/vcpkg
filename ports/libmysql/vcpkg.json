@@ -1,7 +1,7 @@
 {
   "name": "libmysql",
   "version": "8.0.34",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A MySQL client library for C development",
   "homepage": "https://github.com/mysql/mysql-server",
   "license": "GPL-2.0-or-later",
@@ -12,10 +12,6 @@
     "boost-geometry",
     "boost-graph",
     "boost-optional",
-    {
-      "name": "libmysql",
-      "host": true
-    },
     "lz4",
     {
       "name": "ncurses",
@@ -33,5 +29,19 @@
     },
     "zlib",
     "zstd"
-  ]
+  ],
+  "default-features": [
+    "host-tools"
+  ],
+  "features": {
+    "host-tools": {
+      "description": "Build CLI tools",
+      "dependencies": [
+        {
+          "name": "libmysql",
+          "host": true
+        }
+      ]
+    }
+  }
 }
