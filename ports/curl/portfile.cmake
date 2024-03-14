@@ -15,12 +15,14 @@ vcpkg_from_github(
         export-components.patch
         dependencies.patch
         cmake-config.patch
+        openssl_quic.patch        
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
         http2       USE_NGHTTP2
+        http3       USE_OPENSSL_QUIC
         wolfssl     CURL_USE_WOLFSSL
         openssl     CURL_USE_OPENSSL
         mbedtls     CURL_USE_MBEDTLS
