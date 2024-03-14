@@ -14,6 +14,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "0013-Check-for-backslash-in-argv-0-on-Windows.patch"
         "0015-MSYS2-Remove-ioctl-call.patch"
         "0016-Fix-file_famagic-function.patch"
+        "0017-Change-bzlib-name-to-match-CMake-output.patch"
     )
 endif()
 
