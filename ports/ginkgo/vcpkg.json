@@ -1,6 +1,7 @@
 {
   "name": "ginkgo",
   "version-semver": "1.7.0",
+  "port-version": 1,
   "description": "Ginkgo is a high-performance linear algebra library for manycore systems, with a focus on sparse solution of linear systems.",
   "homepage": "https://github.com/ginkgo-project/ginkgo",
   "license": "BSD-3-Clause",
