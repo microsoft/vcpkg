@@ -6773,7 +6773,7 @@
       "port-version": 2
     },
     "plf-queue": {
-      "baseline": "2.0.2",
+      "baseline": "2023-11-26",
       "port-version": 0
     },
     "plf-stack": {
