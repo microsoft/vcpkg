@@ -48,21 +48,20 @@ set(util
 )
 
 set(tools
-        cuobjdump 
-        cupti 
+        cuobjdump
+        cupti
         cuxxfilt # has some extra API
         nvcc
         nvdisasm
         nvprof
         #nvprune
-        
         #nvvp
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND util 
+    #list(APPEND util
         #nsight_vse
-    )
+    #)
 endif()
 
 if(VCPKG_TARGET_IS_LINUX)
@@ -162,11 +161,16 @@ foreach(comp IN LISTS components libs util tools)
         comp-src
         ARCHIVE ${${comp}}
         SOURCE_BASE "${comp}"
-        #BASE_DIRECTORY "CUDA"
         WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools"
     )
 
+    # The following code copies the extracted archives verbatim to tools/cuda.
+    # The layout should match what CUDA normally installs minus stuff irrelevant
+    # for vcpkg (examples/docs etc.). The layout needs to match due to implicit
+    # search dirs of nvcc expecting stuff to in a defined layout.
+
     if("${comp}" IN_LIST components OR "${comp}" IN_LIST libs)
+        # Also copy lb/dll/so files into lib/bin
         file(COPY "${comp-src}/" DESTINATION "${CURRENT_PACKAGES_DIR}"
              PATTERN "/bin/*.dll"
              PATTERN "/lib/*.lib"
@@ -233,7 +237,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib-tmp" "${CURRENT_PACKAGES_DIR}/lib")
 elseif(VCPKG_TARGET_IS_LINUX)
-  # Don't really know why this renaming is required. 
+  # Don't really know why this renaming is required.
   file(RENAME "${CURRENT_PACKAGES_DIR}/tools/cuda/lib" "${CURRENT_PACKAGES_DIR}/tools/cuda/lib64")
 endif()
 
@@ -284,9 +288,8 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg_find_cuda.cmake" "${CURRENT_PACK
 
 vcpkg_fixup_pkgconfig()
 
-set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
 set(VCPKG_POLICY_ONLY_RELEASE_CRT enabled)
 
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) # includes are located in a subfolder of tools/cuda
