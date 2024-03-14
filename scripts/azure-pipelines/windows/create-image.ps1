@@ -17,14 +17,14 @@ or are running from Azure Cloud Shell.
 $Location = 'westus3'
 $Prefix = 'Win-'
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
+$GalleryImageVersion = $Prefix.Replace('-','.')
 $VMSize = 'Standard_D8ads_v5'
 $ProtoVMName = 'PROTOTYPE'
 $WindowsServerSku = '2022-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
-$CudnnBaseUrl = 'https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-windows-x86_64-8.8.1.3_cuda12-archive.zip'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 18
+$TotalProgress = 19
 $CurrentProgress = 1
 
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
@@ -62,7 +62,7 @@ $Nic = New-AzNetworkInterface `
   -Location $Location `
   -Subnet $VirtualNetwork.Subnets[0]
 
-$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -SecurityType Standard
+$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -SecurityType TrustedLaunch -IdentityType SystemAssigned
 $VM = Set-AzVMOperatingSystem `
   -VM $VM `
   -Windows `
@@ -80,10 +80,24 @@ $VM = Set-AzVMSourceImage `
   -Version latest
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
-New-AzVm `
+$VMCreated = New-AzVm `
   -ResourceGroupName $ResourceGroupName `
   -Location $Location `
   -VM $VM
+
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Granting permissions to use vcpkg-image-minting storage account' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+$VcpkgImageMintingAccount = Get-AzStorageAccount -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkgimageminting'
+
+# Grant 'Storage Blob Data Reader' (RoleDefinitionId 2a2b9908-6ea1-4ae2-8e65-a410df84e7d1) to the VM
+New-AzRoleAssignment `
+  -Scope $VMCreated.ID `
+  -RoleDefinitionId '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1' `
+  -ObjectId $VcpkgImageMintingAccount.ID
 
 ####################################################################################################
 Write-Progress `
@@ -119,8 +133,7 @@ Write-Host "deploy-psexec.ps1 output: $($DeployPsExecResult.value.Message)"
 function Invoke-ScriptWithPrefix {
   param(
     [string]$ScriptName,
-    [switch]$AddAdminPw,
-    [string]$CudnnUrl
+    [switch]$AddAdminPw
   )
 
   Write-Progress `
@@ -136,10 +149,6 @@ function Invoke-ScriptWithPrefix {
     $script = Get-Content "$PSScriptRoot\$ScriptName" -Encoding utf8NoBOM -Raw
     if ($AddAdminPw) {
       $script = $script.Replace('# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1', $DropToAdminUserPrefix)
-    }
-
-    if (-Not ([string]::IsNullOrWhiteSpace($CudnnUrl))) {
-      $script = $script.Replace('# REPLACE WITH $CudnnUrl', "`$CudnnUrl = '$CudnnUrl'")
     }
 
     $script = $script.Replace('# REPLACE WITH UTILITY-PREFIX.ps1', $UtilityPrefixContent);
@@ -163,6 +172,9 @@ function Invoke-ScriptWithPrefix {
   }
 }
 
+Invoke-ScriptWithPrefix -ScriptName 'deploy-azcopy.ps1'
+
+####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-windows-sdks.ps1' -AddAdminPw
 
 ####################################################################################################
@@ -172,27 +184,7 @@ Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1' -AddAdminPw
 Invoke-ScriptWithPrefix -ScriptName 'deploy-mpi.ps1' -AddAdminPw
 
 ####################################################################################################
-$StorageAccountKeys = Get-AzStorageAccountKey `
-  -ResourceGroupName 'vcpkg-image-minting' `
-  -Name 'vcpkgimageminting'
-
-$StorageContext = New-AzStorageContext `
-  -StorageAccountName 'vcpkgimageminting' `
-  -StorageAccountKey $StorageAccountKeys[0].Value
-
-$StartTime = [DateTime]::Now
-$ExpiryTime = $StartTime.AddDays(1)
-
-$SetupSasToken = New-AzStorageAccountSASToken `
-  -Service Blob `
-  -Permission "r" `
-  -Context $StorageContext `
-  -StartTime $StartTime `
-  -ExpiryTime $ExpiryTime `
-  -ResourceType Object `
-  -Protocol HttpsOnly
-
-Invoke-ScriptWithPrefix -ScriptName 'deploy-cuda.ps1' -AddAdminPw -CudnnUrl ($CudnnBaseUrl + $SetupSasToken)
+Invoke-ScriptWithPrefix -ScriptName 'deploy-cuda.ps1' -AddAdminPw
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-inteloneapi.ps1' -AddAdminPw
@@ -253,10 +245,16 @@ Set-AzVM `
   -Name $ProtoVMName `
   -Generalized
 
-$VM = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
-$ImageConfig = New-AzImageConfig -Location $Location -SourceVirtualMachineId $VM.ID -HyperVGeneration V2
-$ImageName = Find-ImageName -ResourceGroupName 'vcpkg-image-minting' -Prefix $Prefix
-New-AzImage -Image $ImageConfig -ImageName $ImageName -ResourceGroupName 'vcpkg-image-minting'
+New-AzGalleryImageVersion `
+  -ResourceGroupName 'vcpkg-image-minting' `
+  -GalleryName 'vcpkg_gallery_wus3' `
+  -GalleryImageDefinitionName 'PrWinWus3' `
+  -Name $GalleryImageVersion `
+  -Location $Location `
+  -SourceImageId $VMCreated.ID `
+  -ReplicaCount 1 `
+  -StorageAccountType 'Premium_LRS' `
+  -PublishingProfileExcludeFromLatest
 
 ####################################################################################################
 Write-Progress `
@@ -265,6 +263,11 @@ Write-Progress `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 Remove-AzResourceGroup $ResourceGroupName -Force
+
+Remove-AzRoleAssignment `
+  -Scope $VMCreated.ID `
+  -RoleDefinitionId '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1' `
+  -ObjectId $VcpkgImageMintingAccount.ID
 
 ####################################################################################################
 Write-Progress -Activity $ProgressActivity -Completed

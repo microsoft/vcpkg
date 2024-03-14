@@ -15,14 +15,14 @@ This script assumes you have installed Azure tools into PowerShell by following 
 at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6.1
 or are running from Azure Cloud Shell.
 
-.PARAMETER ImageName
-The name of the image to deploy into the scale set.
+.PARAMETER ImageVersion
+The version of the image to deploy into the scale set.
 #>
 
 [CmdLetBinding()]
 Param(
   [parameter(Mandatory=$true)]
-  [string]$ImageName
+  [string]$ImageVersion
 )
 
 $Location = 'westus3'
@@ -36,7 +36,11 @@ Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
 
 $ResourceGroupName = Find-ResourceGroupName $Prefix
 $AdminPW = New-Password
-$Image = Get-AzImage -ResourceGroupName 'vcpkg-image-minting' -ImageName $ImageName
+$GalleryImageVersion = Get-AzGalleryImageVersion `
+  -ResourceGroupName 'vcpkg-image-minting' `
+  -GalleryName 'vcpkg_gallery_wus3' `
+  -GalleryImageDefinitionName 'PrWinWus3' `
+  -Name $ImageVersion
 
 New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
@@ -53,8 +57,9 @@ $Vmss = New-AzVmssConfig `
   -EvictionPolicy Delete `
   -Priority Spot `
   -MaxPrice -1 `
-  -SecurityType Standard `
-  -OrchestrationMode Uniform
+  -SecurityType TrustedLaunch `
+  -OrchestrationMode Uniform `
+  -IdentityType SystemAssigned
 
 $NicName = $ResourceGroupName + 'NIC'
 New-AzNetworkInterface `
@@ -83,7 +88,7 @@ $Vmss = Set-AzVmssStorageProfile `
   -OsDiskCreateOption 'FromImage' `
   -OsDiskCaching ReadOnly `
   -DiffDiskSetting Local `
-  -ImageReferenceId $Image.Id
+  -SharedImageGalleryId $GalleryImageVersion.ID
 
 $Vmss = Set-AzVmssBootDiagnostic `
   -VirtualMachineScaleSet $Vmss `
