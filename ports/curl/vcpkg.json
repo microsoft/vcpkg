@@ -107,12 +107,6 @@
         }
       ]
     },
-    "mbedtls": {
-      "description": "SSL support (mbedTLS)",
-      "dependencies": [
-        "mbedtls"
-      ]
-    },
     "non-http": {
       "description": "Enables protocols beyond HTTP/HTTPS/HTTP2"
     },
@@ -121,23 +115,6 @@
       "dependencies": [
         "openssl"
       ]
-    },
-    "schannel": {
-      "description": "SSL support (Secure Channel)",
-      "supports": "windows & !uwp",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "sspi"
-          ]
-        }
-      ]
-    },
-    "sectransp": {
-      "description": "SSL support (sectransp)",
-      "supports": "osx | ios"
     },
     "ssh": {
       "description": "SSH support via libssh2",
@@ -184,25 +161,6 @@
             "ldap"
           ]
         }
-      ]
-    },
-    "winssl": {
-      "description": "Legacy name for schannel",
-      "supports": "windows & !uwp",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "schannel"
-          ]
-        }
-      ]
-    },
-    "wolfssl": {
-      "description": "SSL support (wolfSSL)",
-      "dependencies": [
-        "wolfssl"
       ]
     },
     "zstd": {
