@@ -229,6 +229,7 @@
     "python": {
       "description": "Python wrapper support for opencv",
       "dependencies": [
+        "numpy",
         {
           "name": "opencv3",
           "default-features": false,
@@ -236,8 +237,7 @@
             "flann"
           ]
         },
-        "python3",
-        "numpy"
+        "python3"
       ]
     },
     "qt": {

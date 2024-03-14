@@ -2,7 +2,7 @@ include_guard(GLOBAL)
 
 include("${CMAKE_CURRENT_LIST_DIR}/../python3/vcpkg-port-config.cmake")
 
-set(VCPKG_PYTHON3_BASEDIR "${CURRENT_INSTALLED_DIR}/tools/python3")
+set(VCPKG_PYTHON3_BASEDIR "${CURRENT_HOST_INSTALLED_DIR}/tools/python3")
 set(VCPKG_PYTHON3_SCRIPTS "tools/python3")
 if(VCPKG_TARGET_IS_WINODWS)
   string(APPEND VCPKG_PYTHON3_SCRIPTS "/Scripts")

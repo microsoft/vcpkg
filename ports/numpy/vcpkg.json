@@ -7,14 +7,21 @@
   "dependencies": [
     "blas",
     "lapack",
-    "python3",
-    "py-cython",
     {
-      "name": "vcpkg-tool-meson",
+      "name": "py-cython",
+      "host": true
+    },
+    "python3",
+    {
+      "name": "python3",
       "host": true
     },
     {
       "name": "vcpkg-python-scripts",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
       "host": true
     }
   ]
