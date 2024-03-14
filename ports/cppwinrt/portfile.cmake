@@ -2,7 +2,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Windows.CppWinRT/${VERSION}"
     FILENAME "cppwinrt.${VERSION}.zip"
-    SHA512 6ce0764c3558d94b0ec72daa6d6d139df3942d33f51d1f3a670b888fbba2b556e35df831fa9eea42d4fc9a0a1f0ca94abef1c4013dcc9b51053bffe2af4dfd85
+    SHA512 c6c38b81640d7d96d3ca76c321289d6f92eec9bb593a11824640c7dc3651dc69cce1e85ca0324396b4a4d55f790f2c16f835da261e7821137de1eb491b52ffc8
 )
 
 vcpkg_extract_source_archive(
@@ -43,7 +43,8 @@ file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
 file(WRITE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/cppwinrt.rsp" "${args}")
 
 #--- Generate headers
-message(STATUS "Generating headers for Windows SDK $ENV{WindowsSDKVersion}")
+string(REGEX MATCH "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" SDKVersion $ENV{WindowsSDKVersion})
+message(STATUS "Generating headers for Windows SDK ${SDKVersion}")
 vcpkg_execute_required_process(
     COMMAND "${CPPWINRT_TOOL}"
         "@${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/cppwinrt.rsp"
@@ -54,16 +55,18 @@ vcpkg_execute_required_process(
 )
 
 set(CPPWINRT_LIB "${src}/build/native/lib/${CPPWINRT_ARCH}/cppwinrt_fast_forwarder.lib")
-file(COPY "${CPPWINRT_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-if(NOT VCPKG_BUILD_TYPE)
-    file(COPY "${CPPWINRT_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+file(INSTALL "${CPPWINRT_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL "${CPPWINRT_LIB}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
-file(COPY
-    "${CPPWINRT_TOOL}"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cppwinrt")
-file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/cppwinrt-config.cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/usage"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/cppwinrt")
+file(INSTALL "${CPPWINRT_TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/cppwinrt")
 
-configure_file("${src}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+set(tool_path "tools/cppwinrt/cppwinrt.exe")
+set(lib_name "cppwinrt_fast_forwarder.lib")
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/cppwinrt-config.cmake.in"
+  "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
+  @ONLY)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${src}/LICENSE")

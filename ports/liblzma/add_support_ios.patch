@@ -1,20 +1,26 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 52439b3..0b5e371 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -574,6 +574,7 @@ if(HAVE_GETOPT_LONG)
+@@ -1555,6 +1555,7 @@ if(HAVE_DECODERS AND (NOT MSVC OR MSVC_VERSION GREATER_EQUAL 1900))
  
-     install(TARGETS xzdec
+         install(TARGETS "${XZDEC}"
+                 RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++                BUNDLE  DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                         COMPONENT "${XZDEC}_Runtime")
+     endforeach()
+ 
+@@ -1618,6 +1619,7 @@ if(HAVE_DECODERS AND (NOT MSVC OR MSVC_VERSION GREATER_EQUAL 1900))
+ 
+     install(TARGETS lzmainfo
              RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 +            BUNDLE  DESTINATION "${CMAKE_INSTALL_BINDIR}"
-                     COMPONENT xzdec)
+                     COMPONENT lzmainfo_Runtime)
  
      if(UNIX)
-@@ -701,6 +702,7 @@ if(NOT MSVC AND HAVE_GETOPT_LONG)
- 
+@@ -1827,6 +1829,7 @@ if(NOT MSVC OR MSVC_VERSION GREATER_EQUAL 1900)
+     # builds because the generated cmake_install.cmake executes serially.
      install(TARGETS xz
              RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 +            BUNDLE  DESTINATION "${CMAKE_INSTALL_BINDIR}"
-                     COMPONENT xz)
+                     COMPONENT xz_Runtime)
  
      if(UNIX)

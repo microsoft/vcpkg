@@ -1,4 +1,4 @@
-set(DIRECTXTEX_TAG feb2024)
+set(DIRECTXTEX_TAG mar2024)
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
     REF ${DIRECTXTEX_TAG}
-    SHA512 d82e722746409fccb831cdb85c28403b5e3bb9b60bdc6f80366096998265e009c13868bba9cf187ee10a09df3d6a1426777a1f181d733b61dfe0dffe72b56601
+    SHA512 313e66597a101675c9c32032577421ae574229d27defe718a94690446e9c562507209b5912ac48c6dc4d84124b059c9c061e094f44b0b9dbc90ede50d8a2c230
     HEAD_REF main
     )
 
@@ -15,7 +15,9 @@ vcpkg_check_features(
     FEATURES
         dx11 BUILD_DX11
         dx12 BUILD_DX12
+        jpeg ENABLE_LIBJPEG_SUPPORT
         openexr ENABLE_OPENEXR_SUPPORT
+        png ENABLE_LIBPNG_SUPPORT
         spectre ENABLE_SPECTRE_MITIGATION
         tools BUILD_TOOLS
 )
@@ -27,7 +29,19 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT (VCPKG_TARGET_IS_XBOX OR VCPKG_TARGET_IS_MING
 endif()
 
 if(VCPKG_TARGET_IS_MINGW AND ("dx11" IN_LIST FEATURES))
-    message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
+  message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
+endif()
+
+if("xbox" IN_LIST FEATURES)
+  if((NOT (DEFINED DIRECTXTEX_XBOX_CONSOLE_TARGET)) OR (DIRECTXTEX_XBOX_CONSOLE_TARGET STREQUAL "scarlett"))
+    list(APPEND FEATURE_OPTIONS "-DBUILD_XBOX_EXTS_SCARLETT=ON")
+    message(NOTICE "Building ${PORT} with Xbox Series X|S extensions")
+  elseif(DIRECTXTEX_XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+    list(APPEND FEATURE_OPTIONS "-DBUILD_XBOX_EXTS_XBOXONE=ON")
+    message(NOTICE "Building ${PORT} with Xbox One extensions")
+  else()
+    message(FATAL_ERROR "The triplet variable DIRECTXTEX_XBOX_CONSOLE_TARGET should be set to 'xboxone' or 'scarlett'.")
+  endif()
 endif()
 
 if (VCPKG_HOST_IS_LINUX)
@@ -47,7 +61,7 @@ if("tools" IN_LIST FEATURES)
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
 
-  if((VCPKG_TARGET_ARCHITECTURE STREQUAL x64) AND (NOT ("openexr" IN_LIST FEATURES)))
+  if((VCPKG_TARGET_ARCHITECTURE STREQUAL x64) AND (NOT (("openexr" IN_LIST FEATURES) OR ("xbox" IN_LIST FEATURES))))
 
     vcpkg_download_distfile(
       TEXASSEMBLE_EXE

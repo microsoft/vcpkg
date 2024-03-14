@@ -1,6 +1,7 @@
 {
   "name": "curl",
   "version": "8.6.0",
+  "port-version": 1,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -70,6 +71,23 @@
       "description": "idn2 support (libidn2)",
       "dependencies": [
         "libidn2"
+      ]
+    },
+    "ldap": {
+      "description": "LDAP support",
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "non-http"
+          ]
+        },
+        {
+          "name": "openldap",
+          "platform": "!windows"
+        }
       ]
     },
     "mbedtls": {
@@ -169,14 +187,13 @@
       "supports": "windows"
     },
     "winldap": {
-      "description": "LDAP support (WinLDAP). This feature does not include LDAPS support.",
-      "supports": "windows & !uwp",
+      "description": "Obsolete. Use feature 'ldap' instead.",
       "dependencies": [
         {
           "name": "curl",
           "default-features": false,
           "features": [
-            "non-http"
+            "ldap"
           ]
         }
       ]

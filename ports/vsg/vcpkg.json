@@ -1,6 +1,7 @@
 {
   "name": "vsg",
   "version": "1.0.9",
+  "port-version": 1,
   "description": "A modern, cross platform, high performance scene graph library built upon Vulkan.",
   "homepage": "http://www.vulkanscenegraph.org/",
   "license": "MIT",

@@ -1,0 +1,14 @@
+diff --git a/server/Windows/wf_rdpsnd.c b/server/Windows/wf_rdpsnd.c
+index b313c35..cb961e5 100644
+--- a/server/Windows/wf_rdpsnd.c
++++ b/server/Windows/wf_rdpsnd.c
+@@ -49,7 +49,8 @@ static void wf_peer_rdpsnd_activated(RdpsndServerContext* context)
+ 	wfi->agreed_format = NULL;
+ 	WLog_DBG(TAG, "Client supports the following %d formats:", context->num_client_formats);
+ 
+-	for (size_t i = 0; i < context->num_client_formats; i++)
++	size_t i = 0;
++	for (; i < context->num_client_formats; i++)
+ 	{
+ 		// TODO: improve the way we agree on a format
+ 		for (size_t j = 0; j < context->num_server_formats; j++)
