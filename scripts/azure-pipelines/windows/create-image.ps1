@@ -80,10 +80,12 @@ $VM = Set-AzVMSourceImage `
   -Version latest
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
-$VMCreated = New-AzVm `
+New-AzVm `
   -ResourceGroupName $ResourceGroupName `
   -Location $Location `
   -VM $VM
+
+$VMCreated = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
 
 ####################################################################################################
 Write-Progress `
@@ -95,9 +97,9 @@ $VcpkgImageMintingAccount = Get-AzStorageAccount -ResourceGroupName 'vcpkg-image
 
 # Grant 'Storage Blob Data Reader' (RoleDefinitionId 2a2b9908-6ea1-4ae2-8e65-a410df84e7d1) to the VM
 New-AzRoleAssignment `
-  -Scope $VMCreated.ID `
+  -Scope $VcpkgImageMintingAccount.ID `
   -RoleDefinitionId '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1' `
-  -ObjectId $VcpkgImageMintingAccount.ID
+  -ObjectId  $VMCreated.Identity.PrincipalId
 
 ####################################################################################################
 Write-Progress `
@@ -262,12 +264,11 @@ Write-Progress `
   -Status 'Deleting unused temporary resources' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-Remove-AzResourceGroup $ResourceGroupName -Force
-
 Remove-AzRoleAssignment `
-  -Scope $VMCreated.ID `
+  -Scope $VcpkgImageMintingAccount.ID `
   -RoleDefinitionId '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1' `
-  -ObjectId $VcpkgImageMintingAccount.ID
+  -ObjectId  $VMCreated.Identity.PrincipalId
+Remove-AzResourceGroup $ResourceGroupName -Force
 
 ####################################################################################################
 Write-Progress -Activity $ProgressActivity -Completed
