@@ -20,6 +20,7 @@ vcpkg_from_github(
         fix-glog.patch
         fix-msvc-ICE.patch
         fix-calculate-minloglevel.patch
+        fix_build_static.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 
@@ -211,7 +212,7 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/torch/TorchConfig.cmake" "/.
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/caffe2/Caffe2Config.cmake" "/../../../" "/../../")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/caffe2/Caffe2Config.cmake"
   "set(Caffe2_MAIN_LIBS torch_library)"
-  "set(Caffe2_MAIN_LIBS torch_library)\nfind_dependency(Eigen3)")
+  "set(Caffe2_MAIN_LIBS torch_library)\ninclude(CMakeFindDependencyMacro)\nfind_dependency(Eigen3)")
 
 
 

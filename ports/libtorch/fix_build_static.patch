@@ -1,0 +1,18 @@
+diff --git a/cmake/MiscCheck.cmake b/cmake/MiscCheck.cmake
+index 71d7386..0ac8c7a 100644
+--- a/cmake/MiscCheck.cmake
++++ b/cmake/MiscCheck.cmake
+@@ -96,10 +96,10 @@ endif()
+ # -table. We need this to get symbols when generating backtrace at
+ # -runtime.
+ if(NOT MSVC)
+-  check_cxx_compiler_flag("-rdynamic" COMPILER_SUPPORTS_RDYNAMIC)
++  check_cxx_compiler_flag("-rstatic" COMPILER_SUPPORTS_RDYNAMIC)
+   if(${COMPILER_SUPPORTS_RDYNAMIC})
+-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -rdynamic")
+-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rdynamic")
++    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -rstatic")
++    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rstatic")
+   endif()
+ endif()
+ 
