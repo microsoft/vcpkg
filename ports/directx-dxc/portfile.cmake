@@ -46,10 +46,13 @@ if (VCPKG_TARGET_IS_LINUX)
     "${PACKAGE_PATH}/lib/libdxcompiler.so"
     "${PACKAGE_PATH}/lib/libdxil.so"
     DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  file(INSTALL
-    "${PACKAGE_PATH}/lib/libdxcompiler.so"
-    "${PACKAGE_PATH}/lib/libdxil.so"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+
+  if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL
+      "${PACKAGE_PATH}/lib/libdxcompiler.so"
+      "${PACKAGE_PATH}/lib/libdxil.so"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  endif()
 
   file(INSTALL
     "${PACKAGE_PATH}/bin/dxc"
@@ -78,16 +81,21 @@ else()
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
   file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  endif()
 
   file(INSTALL
     "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
     "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
     DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-  file(INSTALL
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+
+  if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL
+      "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
+      "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+  endif()
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
 
