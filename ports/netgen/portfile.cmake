@@ -82,7 +82,7 @@ if(NOT VCPKG_BUILD_TYPE)
 endif()
 string(REGEX REPLACE "$<CONFIG:Release>:([^>]+)>" "\\1" contents "${contents}")
 file(WRITE "${config_file}" "${contents}")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/netgen/NetgenConfig.cmake" "${SOURCE_PATH}" "NOT-USABLE")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/netgen/NetgenConfig.cmake" "${SOURCE_PATH}" "NOT-USABLE" IGNORE_UNCHANGED)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

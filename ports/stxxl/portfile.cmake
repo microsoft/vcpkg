@@ -46,6 +46,7 @@ vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/stxxl-config.cmake"
     "\${STXXL_CMAKE_DIR}/../include"
     "\${STXXL_CMAKE_DIR}/../../include"
+    IGNORE_UNCHANGED
 )
 
 if(CMAKE_HOST_WIN32)

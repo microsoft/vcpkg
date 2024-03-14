@@ -91,7 +91,7 @@ foreach(file IN LISTS pc_files)
         vcpkg_replace_string("${file}" " -lhdf5" " -llibhdf5")
     endif()
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_replace_string("${file}" "/msmpi.lib\"" "/msmpi\"")
+        vcpkg_replace_string("${file}" "/msmpi.lib\"" "/msmpi\"" IGNORE_UNCHANGED)
     endif()
 endforeach()
 

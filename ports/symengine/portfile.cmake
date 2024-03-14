@@ -56,6 +56,7 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/symengine/SymEngineConfig.cm
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/symengine/SymEngineConfig.cmake"
     [[${SYMENGINE_CMAKE_DIR}/../../../include]]
     [[${SYMENGINE_CMAKE_DIR}/../../include]]
+    IGNORE_UNCHANGED
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

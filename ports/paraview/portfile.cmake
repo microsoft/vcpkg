@@ -200,7 +200,7 @@ endif()
 
 file(GLOB cmake_files "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake")
 foreach(file IN LISTS cmake_files)
-    vcpkg_replace_string("${file}" "pv5.11d.exe" "pv5.11.exe")
+    vcpkg_replace_string("${file}" "pv5.11d.exe" "pv5.11.exe" IGNORE_UNCHANGED)
 endforeach() 
  
 # The plugins also work without these files

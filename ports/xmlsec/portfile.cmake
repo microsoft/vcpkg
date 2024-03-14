@@ -28,6 +28,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     "${CURRENT_PACKAGES_DIR}/include/xmlsec/xmlsec.h"
     "ifdef XMLSEC_NO_SIZE_T"
     "if 1 //ifdef XMLSEC_NO_SIZE_T"
+    IGNORE_UNCHANGED
   )
 endif()
 

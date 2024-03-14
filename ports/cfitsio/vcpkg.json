@@ -1,7 +1,7 @@
 {
   "name": "cfitsio",
   "version": "3.49",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Library of C and Fortran subroutines for reading and writing data files in FITS (Flexible Image Transport System) data format",
   "homepage": "https://heasarc.gsfc.nasa.gov/fitsio/",
   "dependencies": [

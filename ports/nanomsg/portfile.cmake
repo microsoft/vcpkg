@@ -55,6 +55,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_PACKAGES_DIR}/share/${PORT}/nanomsg-config.cmake
         "set_and_check(nanomsg_BINDIR \${VCPKG_IMPORT_PREFIX}/bin)"
         ""
+        IGNORE_UNCHANGED
     )
 endif()
 
