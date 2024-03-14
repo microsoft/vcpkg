@@ -1,5 +1,5 @@
 diff --git a/CMake/vtkModule.cmake b/CMake/vtkModule.cmake
-index d8282ff98f79548e66a1794c7daf9cd253f0a9e5..e3c164fe841b7a6007ea02b7365549ce53ca10da 100644
+index d8282ff98f79548e66a1794c7daf9cd253f0a9e5..7163c690b069c3176a9c921d7799b105bb4b1825 100644
 --- a/CMake/vtkModule.cmake
 +++ b/CMake/vtkModule.cmake
 @@ -129,6 +129,73 @@ function (_vtk_module_split_module_name name prefix)
@@ -125,6 +125,19 @@ index d8282ff98f79548e66a1794c7daf9cd253f0a9e5..e3c164fe841b7a6007ea02b7365549ce
      endforeach ()
  
      if (_vtk_module_warnings)
+@@ -5135,6 +5210,12 @@ while (_vtk_module_find_package_components_to_check)
+   list(APPEND _vtk_module_find_package_components_checked
+     \"\${_vtk_module_component}\")
+ 
++  # Any 'components' with `::` are not from our package and must have been
++  # provided/satisfied elsewhere.
++  if (_vtk_module_find_package_components MATCHES \"::\")
++    continue ()
++  endif ()
++
+   list(APPEND _vtk_module_find_package_components
+     \"\${_vtk_module_component}\")
+   if (\${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED_\${_vtk_module_component})
 diff --git a/CMake/vtkModuleTesting.cmake b/CMake/vtkModuleTesting.cmake
 index 4d91c569e63e1d7c7747fa25da30903645cb9b84..55ebd2651e9c329b05d8b12a9cfad6ea87e74b26 100644
 --- a/CMake/vtkModuleTesting.cmake
@@ -156,3 +169,27 @@ index 0000000000000000000000000000000000000000..2ce1e98d95dc247a8912dc1b976f5925
 +## better-optional-deps-checks
 +
 +Optional dependencies now have better logic for detecting the usability of external optional dependencies.
+diff --git a/Testing/External/CMakeLists.txt b/Testing/External/CMakeLists.txt
+index 8d2de9844d979c3298b8fe337f428dbe12b86191..510620f7616f9152f4dfb8f364579a1c3bf1bcdb 100644
+--- a/Testing/External/CMakeLists.txt
++++ b/Testing/External/CMakeLists.txt
+@@ -53,6 +53,7 @@ vtk_module_scan(
+ 
+ # Input information for test build files.
+ option(VTK_USE_LARGE_DATA "Enable tests requiring \"large\" data" OFF)
++set(_vtk_build_PACKAGE "VTK")
+ set(_vtk_build_TEST_DATA_TARGET "VTKData")
+ set(_vtk_build_TEST_INPUT_DATA_DIRECTORY "${VTK_TOP_DIR}/Testing")
+ set(_vtk_build_TEST_OUTPUT_DATA_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/ExternalData/Testing")
+diff --git a/Testing/ExternalWheel/CMakeLists.txt b/Testing/ExternalWheel/CMakeLists.txt
+index 518380d5370a9b0b61e0d0f48ae751a81b595098..c9c984578b682f1a6a605b3546e826b63f9c88ea 100644
+--- a/Testing/ExternalWheel/CMakeLists.txt
++++ b/Testing/ExternalWheel/CMakeLists.txt
+@@ -82,6 +82,7 @@ endforeach ()
+ 
+ # Input information for test build files.
+ option(VTK_USE_LARGE_DATA "Enable tests requiring \"large\" data" OFF)
++set(_vtk_build_PACKAGE "VTK")
+ set(_vtk_build_TEST_DATA_TARGET "VTKData")
+ set(_vtk_build_TEST_INPUT_DATA_DIRECTORY "${VTK_TOP_DIR}/Testing")
+ set(_vtk_build_TEST_OUTPUT_DATA_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/ExternalData/Testing")
