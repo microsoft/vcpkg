@@ -418,7 +418,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.11.255",
-      "port-version": 0
+      "port-version": 1
     },
     "azmq": {
       "baseline": "2023-03-23",
@@ -434,7 +434,7 @@
     },
     "azure-core-cpp": {
       "baseline": "1.11.2",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-core-tracing-opentelemetry-cpp": {
       "baseline": "1.0.0-beta.4",
@@ -1786,7 +1786,7 @@
     },
     "configcat": {
       "baseline": "3.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "console-bridge": {
       "baseline": "1.0.2",
@@ -1950,7 +1950,7 @@
     },
     "cpr": {
       "baseline": "1.10.5",
-      "port-version": 2
+      "port-version": 3
     },
     "cpu-features": {
       "baseline": "0.9.0",
@@ -3110,7 +3110,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.22.0",
-      "port-version": 0
+      "port-version": 1
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -4308,10 +4308,6 @@
       "baseline": "1.2.6",
       "port-version": 2
     },
-    "libfuse": {
-      "baseline": "3.16.2",
-      "port-version": 0
-    },
     "libenvpp": {
       "baseline": "1.4.0",
       "port-version": 0
@@ -4391,6 +4387,10 @@
     "libftdi1": {
       "baseline": "1.5",
       "port-version": 4
+    },
+    "libfuse": {
+      "baseline": "3.16.2",
+      "port-version": 0
     },
     "libgcrypt": {
       "baseline": "1.10.2",
