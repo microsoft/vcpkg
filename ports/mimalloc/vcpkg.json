@@ -20,9 +20,6 @@
     "asm": {
       "description": "Generate assembly files"
     },
-    "cxx": {
-      "description": "Use the C++ compiler to compile the library (instead of the C compiler)"
-    },
     "override": {
       "description": "Override the standard malloc interface"
     },
