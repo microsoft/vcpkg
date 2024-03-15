@@ -15,39 +15,29 @@ or are running from Azure Cloud Shell.
 #>
 
 $Location = 'westus3'
-$Prefix = 'Win-'
-$Prefix += (Get-Date -Format 'yyyy-MM-dd')
-$GalleryImageVersion = $Prefix.Replace('-','.')
+$DatePrefixComponent = Get-Date -Format 'yyyy-MM-dd'
+$Prefix = "Win-$DatePrefixComponent"
+$GalleryImageVersion = $DatePrefixComponent.Replace('-','.')
 $VMSize = 'Standard_D8ads_v5'
 $ProtoVMName = 'PROTOTYPE'
 $WindowsServerSku = '2022-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 19
+$TotalProgress = 17
 $CurrentProgress = 1
 
-Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
+# Assigning this to another variable helps when running the commands in this script manually for
+# debugging
+$Root = $PSScriptRoot
 
-####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Creating resource group' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+Import-Module "$Root/../create-vmss-helpers.psm1" -DisableNameChecking -Force
 
-$ResourceGroupName = Find-ResourceGroupName $Prefix
 $AdminPW = New-Password
-New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 $AdminPWSecure = ConvertTo-SecureString $AdminPW -AsPlainText -Force
 $Credential = New-Object System.Management.Automation.PSCredential ("AdminUser", $AdminPWSecure)
 
-####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Creating virtual network' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
-
-$VirtualNetwork = Create-LockedDownNetwork -ResourceGroupName $ResourceGroupName -Location $Location
+$VirtualNetwork = Get-AzVirtualNetwork -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkg-image-mintingNetwork'
 
 ####################################################################################################
 Write-Progress `
@@ -55,12 +45,13 @@ Write-Progress `
   -Status 'Creating prototype VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-$NicName = $ResourceGroupName + 'NIC'
+$NicName = $Prefix + 'NIC'
 $Nic = New-AzNetworkInterface `
   -Name $NicName `
-  -ResourceGroupName $ResourceGroupName `
+  -ResourceGroupName 'vcpkg-image-minting' `
   -Location $Location `
-  -Subnet $VirtualNetwork.Subnets[0]
+  -Subnet $VirtualNetwork.Subnets[0] `
+  -EnableAcceleratedNetworking
 
 $VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -SecurityType TrustedLaunch -IdentityType SystemAssigned
 $VM = Set-AzVMOperatingSystem `
@@ -81,11 +72,12 @@ $VM = Set-AzVMSourceImage `
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
 New-AzVm `
-  -ResourceGroupName $ResourceGroupName `
+  -ResourceGroupName 'vcpkg-image-minting' `
   -Location $Location `
   -VM $VM
 
-$VMCreated = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+$VMCreated = Get-AzVM -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
+$VMCreatedOsDisk = $VMCreated.StorageProfile.OsDisk.Name
 
 ####################################################################################################
 Write-Progress `
@@ -108,10 +100,10 @@ Write-Progress `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 $ProvisionImageResult = Invoke-AzVMRunCommandWithRetries `
-  -ResourceGroupName $ResourceGroupName `
+  -ResourceGroupName 'vcpkg-image-minting' `
   -VMName $ProtoVMName `
   -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$PSScriptRoot\deploy-tlssettings.ps1"
+  -ScriptPath "$Root\deploy-tlssettings.ps1"
 
 Write-Host "deploy-tlssettings.ps1 output: $($ProvisionImageResult.value.Message)"
 Write-Host 'Waiting 1 minute for VM to reboot...'
@@ -124,10 +116,10 @@ Write-Progress `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 $DeployPsExecResult = Invoke-AzVMRunCommandWithRetries `
-  -ResourceGroupName $ResourceGroupName `
+  -ResourceGroupName 'vcpkg-image-minting' `
   -VMName $ProtoVMName `
   -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$PSScriptRoot\deploy-psexec.ps1"
+  -ScriptPath "$Root\deploy-psexec.ps1"
 
 Write-Host "deploy-psexec.ps1 output: $($DeployPsExecResult.value.Message)"
 
@@ -143,12 +135,12 @@ function Invoke-ScriptWithPrefix {
     -Status "Running provisioning script $ScriptName in VM" `
     -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-  $DropToAdminUserPrefix = Get-Content "$PSScriptRoot\drop-to-admin-user-prefix.ps1" -Encoding utf8NoBOM -Raw
-  $UtilityPrefixContent = Get-Content "$PSScriptRoot\utility-prefix.ps1" -Encoding utf8NoBOM -Raw
+  $DropToAdminUserPrefix = Get-Content "$Root\drop-to-admin-user-prefix.ps1" -Encoding utf8NoBOM -Raw
+  $UtilityPrefixContent = Get-Content "$Root\utility-prefix.ps1" -Encoding utf8NoBOM -Raw
 
-  $tempScriptFilename = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName() + ".txt"
+  $tempScriptFilename = "$env:TEMP\temp-script.txt"
   try {
-    $script = Get-Content "$PSScriptRoot\$ScriptName" -Encoding utf8NoBOM -Raw
+    $script = Get-Content "$Root\$ScriptName" -Encoding utf8NoBOM -Raw
     if ($AddAdminPw) {
       $script = $script.Replace('# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1', $DropToAdminUserPrefix)
     }
@@ -162,7 +154,7 @@ function Invoke-ScriptWithPrefix {
     }
 
     $InvokeResult = Invoke-AzVMRunCommandWithRetries `
-      -ResourceGroupName $ResourceGroupName `
+      -ResourceGroupName 'vcpkg-image-minting' `
       -VMName $ProtoVMName `
       -CommandId 'RunPowerShellScript' `
       -ScriptPath $tempScriptFilename `
@@ -201,13 +193,13 @@ Write-Progress `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 $ProvisionImageResult = Invoke-AzVMRunCommandWithRetries `
-  -ResourceGroupName $ResourceGroupName `
+  -ResourceGroupName 'vcpkg-image-minting' `
   -VMName $ProtoVMName `
   -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$PSScriptRoot\deploy-settings.txt"
+  -ScriptPath "$Root\deploy-settings.txt"
 
 Write-Host "deploy-settings.txt output: $($ProvisionImageResult.value.Message)"
-Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+Restart-AzVM -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
 
 ####################################################################################################
 Write-Progress `
@@ -216,10 +208,10 @@ Write-Progress `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 $SysprepResult = Invoke-AzVMRunCommandWithRetries `
-  -ResourceGroupName $ResourceGroupName `
+  -ResourceGroupName 'vcpkg-image-minting' `
   -VMName $ProtoVMName `
   -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$PSScriptRoot\sysprep.ps1"
+  -ScriptPath "$Root\sysprep.ps1"
 
 Write-Host "sysprep.ps1 output: $($SysprepResult.value.Message)"
 
@@ -229,7 +221,7 @@ Write-Progress `
   -Status 'Waiting for VM to shut down' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-Wait-Shutdown -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+Wait-Shutdown -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
 
 ####################################################################################################
 Write-Progress `
@@ -238,19 +230,19 @@ Write-Progress `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 Stop-AzVM `
-  -ResourceGroupName $ResourceGroupName `
+  -ResourceGroupName 'vcpkg-image-minting' `
   -Name $ProtoVMName `
   -Force
 
 Set-AzVM `
-  -ResourceGroupName $ResourceGroupName `
+  -ResourceGroupName 'vcpkg-image-minting' `
   -Name $ProtoVMName `
   -Generalized
 
 New-AzGalleryImageVersion `
   -ResourceGroupName 'vcpkg-image-minting' `
   -GalleryName 'vcpkg_gallery_wus3' `
-  -GalleryImageDefinitionName 'PrWinWus3' `
+  -GalleryImageDefinitionName 'PrWinWus3-TrustedLaunch' `
   -Name $GalleryImageVersion `
   -Location $Location `
   -SourceImageId $VMCreated.ID `
@@ -268,7 +260,10 @@ Remove-AzRoleAssignment `
   -Scope $VcpkgImageMintingAccount.ID `
   -RoleDefinitionId '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1' `
   -ObjectId  $VMCreated.Identity.PrincipalId
-Remove-AzResourceGroup $ResourceGroupName -Force
+
+Remove-AzVM -Id $VMCreated.ID -Force
+Remove-AzDisk -ResourceGroupName 'vcpkg-image-minting' -Name $VMCreatedOsDisk -Force
+Remove-AzNetworkInterface -ResourceGroupName 'vcpkg-image-minting' -Name $NicName -Force
 
 ####################################################################################################
 Write-Progress -Activity $ProgressActivity -Completed
