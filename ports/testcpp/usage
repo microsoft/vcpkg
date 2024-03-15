@@ -1,0 +1,17 @@
+Assuming the library is installed, all you have to do to use it is add
+ TestCPP to call to target_link_libraries in CMake:
+ 
+ # Assuming you have a separate test executable
+ add_executable (
+    <your_test_exec_target>
+    # ... source files
+ )
+ 
+ # Then link the library to your test executable
+ target_link_libraries(<your_test_exec_target> TestCPP)
+
+In a Makefile or other custom build system, you simply need to add
+ -lTestCPP or equivalent to the linker options.
+
+Please see the project README for how to use it to write and run tests,
+ and for other ways to install and use the project.
