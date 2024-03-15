@@ -40,6 +40,7 @@ cmake_path(GET SCRIPT_MESON PARENT_PATH MESON_DIR)
 file(COPY "${SOURCE_PATH_MESON_NUMPY}/mesonbuild/modules/features" DESTINATION "${MESON_DIR}/mesonbuild/modules")
 
 file(COPY "${SOURCE_PATH_SIMD}/" DESTINATION "${SOURCE_PATH}/numpy/core/src/npysort/x86-simd-sort")
+set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH_SVML
