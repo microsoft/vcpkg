@@ -2326,7 +2326,7 @@
     },
     "dstorage": {
       "baseline": "1.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "dtl": {
       "baseline": "1.20",
