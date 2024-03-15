@@ -1,11 +1,7 @@
-set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-
 set(DIRECTX_DXC_TAG v1.8.2403)
 set(DIRECTX_DXC_VERSION 2024_03_07)
 
-if (NOT VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-   message(STATUS "Note: ${PORT} always requires dynamic library linkage at runtime.")
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if (VCPKG_TARGET_IS_LINUX)
     vcpkg_download_distfile(ARCHIVE
@@ -56,13 +52,13 @@ if (VCPKG_TARGET_IS_LINUX)
 
   file(INSTALL
     "${PACKAGE_PATH}/bin/dxc"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
 
   set(dll_name_dxc "libdxcompiler.so")
   set(dll_name_dxil "libdxil.so")
   set(dll_dir  "lib")
   set(lib_name "libdxcompiler.so")
-  set(tool_path "bin/dxc")
+  set(tool_path "tools/${PORT}/dxc")
 else()
   # VCPKG_TARGET_IS_WINDOWS
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -109,14 +105,14 @@ else()
   set(dll_name_dxil "dxil.dll")
   set(dll_dir  "bin")
   set(lib_name "dxcompiler.lib")
-  set(tool_path "tools/directx-dxc/dxc.exe")
+  set(tool_path "tools/${PORT}/dxc.exe")
 endif()
+
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/directx-dxc-config.cmake.in"
   "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
   @ONLY)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${LICENSE_TXT}")
