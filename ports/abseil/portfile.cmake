@@ -10,10 +10,23 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cxx17 ABSL_USE_CXX17
+)
+
+# With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
+# compiled with C++14 or C++17, and modifies the installed `absl/base/options.h`
+# header accordingly. This works even if CMAKE_CXX_STANDARD is not set. Abseil
+# uses the compiler default behavior to update `absl/base/options.h` as needed.
+if (ABSL_USE_CXX17)
+    set(ABSL_USE_CXX17_OPTION "-DCMAKE_CXX_STANDARD=17")
+endif ()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    OPTIONS -DABSL_PROPAGATE_CXX_STD=ON
+    OPTIONS -DABSL_PROPAGATE_CXX_STD=ON ${ABSL_USE_CXX17_OPTION}
 )
 
 vcpkg_cmake_install()
