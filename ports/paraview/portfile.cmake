@@ -120,7 +120,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PARAVIEW_BUILD_SHARED_
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
      OPTIONS
-        #--trace-expand
+        --trace-expand
         ${FEATURE_OPTIONS}
         -DPARAVIEW_USE_FORTRAN=OFF
         -DPARAVIEW_BUILD_SHARED_LIBS=${PARAVIEW_BUILD_SHARED_LIBS}
