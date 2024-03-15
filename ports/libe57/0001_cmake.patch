@@ -21,7 +21,7 @@ diff -Naur a/CMakeLists.txt b/CMakeLists.txt
      set(XERCES_ROOT CACHE PATH "Location of the xerces library")
      message(FATAL_ERROR
  "Unable to find xerces library.
- Please set the the XERCES_ROOT to point to the root of the xerces directory."
+ Please set the XERCES_ROOT to point to the root of the xerces directory."
  )
 -endif (NOT Xerces_FOUND)
 +endif (NOT XercesC_FOUND)

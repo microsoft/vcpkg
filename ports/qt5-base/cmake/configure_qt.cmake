@@ -157,7 +157,7 @@ function(configure_qt)
                 -hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}/bin 
                 #-hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5/bin 
                 # Qt VS Plugin requires a /bin subfolder with the executables in the root dir. But to use the wizard a correctly setup lib folder is also required
-                # So with the vcpkg layout there is no way to make it work unless all dll are are copied to tools/qt5/bin and all libs to tools/qt5/lib
+                # So with the vcpkg layout there is no way to make it work unless all dll are copied to tools/qt5/bin and all libs to tools/qt5/lib
                 -archdatadir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
                 -datadir ${CURRENT_INSTALLED_DIR}${_path_suffix}/share/qt5${_path_suffix_${_buildname}}
                 -plugindir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/plugins
