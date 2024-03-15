@@ -88,7 +88,6 @@ jobs:
     triplet: x64-osx
     jobName: x64_osx
     poolName: $(osx-pool)
-    poolImageVersion: $(windows-image-version)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
