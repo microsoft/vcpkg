@@ -3441,7 +3441,7 @@
       "port-version": 0
     },
     "icu": {
-      "baseline": "74.1",
+      "baseline": "74.2",
       "port-version": 1
     },
     "ideviceinstaller": {
