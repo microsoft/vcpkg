@@ -56,13 +56,13 @@ if (VCPKG_TARGET_IS_LINUX)
 
   file(INSTALL
     "${PACKAGE_PATH}/bin/dxc"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
 
   set(dll_name_dxc "libdxcompiler.so")
   set(dll_name_dxil "libdxil.so")
   set(dll_dir  "lib")
   set(lib_name "libdxcompiler.so")
-  set(tool_path "bin/dxc")
+  set(tool_path "tools/${PORT}/dxc")
 else()
   # VCPKG_TARGET_IS_WINDOWS
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -109,7 +109,7 @@ else()
   set(dll_name_dxil "dxil.dll")
   set(dll_dir  "bin")
   set(lib_name "dxcompiler.lib")
-  set(tool_path "tools/directx-dxc/dxc.exe")
+  set(tool_path "tools/${PORT}/dxc.exe")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/directx-dxc-config.cmake.in"
