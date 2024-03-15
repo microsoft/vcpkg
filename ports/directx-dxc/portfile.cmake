@@ -108,6 +108,8 @@ else()
   set(tool_path "tools/${PORT}/dxc.exe")
 endif()
 
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+
 configure_file("${CMAKE_CURRENT_LIST_DIR}/directx-dxc-config.cmake.in"
   "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
   @ONLY)
