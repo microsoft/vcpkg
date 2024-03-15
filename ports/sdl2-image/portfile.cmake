@@ -40,7 +40,7 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/SDL2_image.pc" "-lSDL2_image" "-lSDL2_imaged")
 endif()
 

@@ -56,7 +56,7 @@ vcpkg_cmake_config_fixup(
 )
 vcpkg_fixup_pkgconfig()
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/SDL2_mixer.pc" "-lSDL2_mixer" "-lSDL2_mixerd")
 endif()
 
