@@ -3,7 +3,8 @@
 #
 variables:
   linux-pool: 'PrLin-1ES-Pool'
-  windows-pool: 'PrWin-2024-02-16'
+  windows-pool: 'PrWin-1ES'
+  windows-image-version: '2024.03.14'
   osx-pool: 'PrOsx-2024-01-18'
   osx-arm64-pool: 'PrOsx-2024-01-22-arm64'
   linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-02-14'
@@ -24,6 +25,7 @@ jobs:
     triplet: x86-windows
     jobName: x86_windows
     poolName: $(windows-pool)
+    poolImageVersion: $(windows-image-version)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
@@ -32,6 +34,7 @@ jobs:
     triplet: x64-windows
     jobName: x64_windows
     poolName: $(windows-pool)
+    poolImageVersion: $(windows-image-version)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
@@ -40,6 +43,7 @@ jobs:
     triplet: x64-windows-static
     jobName: x64_windows_static
     poolName: $(windows-pool)
+    poolImageVersion: $(windows-image-version)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
@@ -48,6 +52,7 @@ jobs:
     triplet: x64-windows-static-md
     jobName: x64_windows_static_md
     poolName: $(windows-pool)
+    poolImageVersion: $(windows-image-version)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
@@ -56,6 +61,7 @@ jobs:
     triplet: x64-uwp
     jobName: x64_uwp
     poolName: $(windows-pool)
+    poolImageVersion: $(windows-image-version)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
@@ -64,6 +70,7 @@ jobs:
     triplet: arm64-windows
     jobName: arm64_windows
     poolName: $(windows-pool)
+    poolImageVersion: $(windows-image-version)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
@@ -72,6 +79,7 @@ jobs:
     triplet: arm64-uwp
     jobName: arm64_uwp
     poolName: $(windows-pool)
+    poolImageVersion: $(windows-image-version)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
@@ -80,6 +88,7 @@ jobs:
     triplet: x64-osx
     jobName: x64_osx
     poolName: $(osx-pool)
+    poolImageVersion: $(windows-image-version)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
