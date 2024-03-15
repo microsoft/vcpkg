@@ -5,7 +5,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
 	REPO robotraconteur/robotraconteur
-	REF v1.1.0
+	REF "v${VERSION}"
 	SHA512 8717c2b61555882a553e9b77becb79be0f69d4ebf3d167c90961457a5e0cacef2814b8411c1f0bfbb93fede3168ca0096457c0c4ad32476985bd2e90b8976839
 	HEAD_REF master
 )
