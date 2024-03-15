@@ -1,5 +1,27 @@
-Assuming the library is installed, all you have to do to use it is add
- TestCPP to call to target_link_libraries in CMake:
+The easiest way to use TestCPP from vcpkg is to use the find_package
+ function in CMake after adding it as a dependency to your package's
+ vcpkg manifest.
+Use the package name to add it to your manifest:
+
+ {
+     ...
+     "dependencies": [
+        ...
+        testcpp
+     ]
+ }
+
+Add it to your CMake project like this:
+
+ find_package(TestCPP CONFIG REQUIRED)
+
+Then in target_link_libraries add the library through its alias:
+
+ target_link_libraries(yourTarget PRIVATE cpptesting::TestCPP)
+
+Otherwise, you can include it into your build in a more traditional way.
+Given the library is installed into your system's package repository,
+ to use TestCPP, add TestCPP to call to target_link_libraries in CMake:
  
  # Assuming you have a separate test executable
  add_executable (
@@ -11,7 +33,8 @@ Assuming the library is installed, all you have to do to use it is add
  target_link_libraries(<your_test_exec_target> TestCPP)
 
 In a Makefile or other custom build system, you simply need to add
- -lTestCPP or equivalent to the linker options.
+ -lTestCPP or equivalent to the linker options given it is installed
+ into your system's package repository, for example if you downloaded
+ the sources from GitHub, then built and installed it.
 
-Please see the project README for how to use it to write and run tests,
- and for other ways to install and use the project.
+Please see the project README for how to use it to write and run tests.

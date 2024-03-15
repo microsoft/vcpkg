@@ -1,8 +1,8 @@
 {
   "name": "testcpp",
   "version": "0.1-beta.1",
-  "description": "A simple C++ test framework with no dependencies other than C++11 STL.",
   "homepage": "https://github.com/eljonny/TestCPP",
+  "description": "A simple C++ test framework with no dependencies other than C++11 STL.",
   "license": "Unlicense",
   "dependencies": [
     {
