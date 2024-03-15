@@ -267,5 +267,5 @@ Remove-AzNetworkInterface -ResourceGroupName 'vcpkg-image-minting' -Name $NicNam
 
 ####################################################################################################
 Write-Progress -Activity $ProgressActivity -Completed
-Write-Host "Generated Image:  $ImageName"
+Write-Host "Generated Image:  $GalleryImageVersion"
 Write-Host 'Finished!'
