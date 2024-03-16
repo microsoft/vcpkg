@@ -9,7 +9,7 @@
    endif()
  
 -  install(TARGETS mimalloc EXPORT mimalloc DESTINATION ${mi_install_libdir} LIBRARY)
-+  install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION ${mi_install_libdir} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${mi_install_libdir} NAMELINK_SKIP)
++  install(TARGETS mimalloc EXPORT mimalloc ARCHIVE DESTINATION ${mi_install_libdir} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${mi_install_libdir})
    install(EXPORT mimalloc DESTINATION ${mi_install_cmakedir})
  endif()
  

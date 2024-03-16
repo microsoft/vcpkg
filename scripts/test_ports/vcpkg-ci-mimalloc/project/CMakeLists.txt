@@ -10,7 +10,7 @@ set(CMAKE_FIND_DEBUG_MODE 1)
 find_package(mimalloc CONFIG REQUIRED)
 
 find_file(mimalloc_h NAMES mimalloc.h PATHS "${MIMALLOC_INCLUDE_DIR}" NO_DEFAULT_PATH REQUIRED)
-find_library(mimalloc_lib NAMES mimalloc mimalloc-debug PATHS "${MIMALLOC_LIBRARY_DIR}" NO_DEFAULT_PATH REQUIRED)
+find_library(mimalloc_lib NAMES mimalloc mimalloc-debug mimalloc-secure mimalloc-secure-debug PATHS "${MIMALLOC_LIBRARY_DIR}" NO_DEFAULT_PATH REQUIRED)
 
 add_executable(main-cmake main.c)
 if(BUILD_SHARED_LIBS)
