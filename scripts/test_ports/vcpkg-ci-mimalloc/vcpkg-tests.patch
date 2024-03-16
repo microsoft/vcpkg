@@ -1,7 +1,13 @@
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index e76ffa6..2c7f5c1 100644
+index e76ffa6..a925a37 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.0)
++cmake_minimum_required(VERSION 3.5)
+ project(mimalloc-test C CXX)
+ 
+ set(CMAKE_C_STANDARD 11)
 @@ -19,21 +19,30 @@ endif()
  find_package(mimalloc 2.0 REQUIRED NO_SYSTEM_ENVIRONMENT_PATH)
  message(STATUS "Found mimalloc installed at: ${MIMALLOC_LIBRARY_DIR} (${MIMALLOC_VERSION_DIR})")
@@ -44,3 +50,16 @@ index e76ffa6..2c7f5c1 100644
  
  
  ## test memory errors
+diff --git a/test/main-override.cpp b/test/main-override.cpp
+index c1607b6..9e9824c 100644
+--- a/test/main-override.cpp
++++ b/test/main-override.cpp
+@@ -19,7 +19,7 @@
+ #endif
+ 
+ #ifdef _WIN32
+-#include <Windows.h>
++#include <windows.h>
+ static void msleep(unsigned long msecs) { Sleep(msecs); }
+ #else
+ #include <unistd.h>

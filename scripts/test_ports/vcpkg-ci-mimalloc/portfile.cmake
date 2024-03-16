@@ -16,7 +16,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/test"
     OPTIONS
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
-        "-DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON"
         "-DVCPKG_TESTS=${CURRENT_PORT_DIR}/vcpkg-tests.cmake"
 )
 vcpkg_cmake_install(ADD_BIN_TO_PATH)

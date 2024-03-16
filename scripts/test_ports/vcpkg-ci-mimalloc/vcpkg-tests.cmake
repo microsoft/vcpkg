@@ -5,7 +5,17 @@ find_package(PkgConfig REQUIRED)
 message(STATUS "MIMALLOC_INCLUDE_DIR: ${MIMALLOC_INCLUDE_DIR}")
 message(STATUS "MIMALLOC_LIBRARY_DIR: ${MIMALLOC_LIBRARY_DIR}")
 find_file(mimalloc_h NAMES mimalloc.h PATHS "${MIMALLOC_INCLUDE_DIR}" NO_DEFAULT_PATH REQUIRED)
-find_library(mimalloc_lib NAMES mimalloc mimalloc-debug mimalloc-secure mimalloc-secure-debug PATHS "${MIMALLOC_LIBRARY_DIR}" NO_DEFAULT_PATH REQUIRED)
+set(names
+    mimalloc
+    mimalloc-secure
+    mimalloc-static
+    mimalloc-static-secure
+    mimalloc-debug
+    mimalloc-secure-debug
+    mimalloc-static-debug
+    mimalloc-static-secure-debug
+)
+find_library(mimalloc_lib NAMES ${names} PATHS "${MIMALLOC_LIBRARY_DIR}" NO_DEFAULT_PATH REQUIRED)
 
 # pkgconfig
 
