@@ -55,6 +55,7 @@ vcpkg_cmake_configure(
         -Dwith_gvedit=OFF
         -Dwith_smyrna=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_ANN=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_DevIL=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_CAIRO=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_EXPAT=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_GD=ON

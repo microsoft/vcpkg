@@ -1,19 +1,11 @@
 string(REPLACE "." "_" REF "R_${VERSION}")
 
-vcpkg_download_distfile(CVE-2024-28757
-    URLS "https://github.com/libexpat/libexpat/commit/5026213864ba1a11ef03ba2e8111af8654e9404d.diff?full_index=1"
-    FILENAME libexpat-CVE-2024-28757.patch
-    SHA512 0d697b26116c89dd72d946ad04eb8f02ace970a435bbd67ba31841a13309d6a43e2cfa2dea8f6e7d53b478a508f7642dd9ff8c8f367d0d0205e982041f62f849
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
     REF "${REF}"
-    SHA512 cf6c64fc0ca55dd172ca8a6ca10d1fb2c915d0f941b0068f42cb90488022dea73e04119c49a1bd4ab9a5d425ddc132ae5f22260ff6d2e25204637a1169e7bd4f
+    SHA512 49b6be12bd6284106920abc61d86d441cba126615fc4019744fc56dc5e7c5efc72b02c09e5c7b491882a633c1c45dc4a03e92a96372ab62bcd70755f6878c6b6
     HEAD_REF master
-    PATCHES
-        ${CVE-2024-28757}
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" EXPAT_LINKAGE)

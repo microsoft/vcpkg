@@ -1,0 +1,21 @@
+diff --git a/cmake/OpenEXRConfig.cmake.in b/cmake/OpenEXRConfig.cmake.in
+index fbb98c0a..37073a69 100644
+--- a/cmake/OpenEXRConfig.cmake.in
++++ b/cmake/OpenEXRConfig.cmake.in
+@@ -8,11 +8,12 @@ include(CMakeFindDependencyMacro)
+ set(openexr_needthreads @OPENEXR_ENABLE_THREADING@)
+ if (openexr_needthreads)
+   set(THREADS_PREFER_PTHREAD_FLAG ON)
+-  find_dependency(Threads REQUIRED)
++  find_dependency(Threads)
+ endif()
+ unset(openexr_needthreads)
+ 
+-find_dependency(Imath REQUIRED)
++find_dependency(Imath)
++find_dependency(libdeflate)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+ check_required_components("@PROJECT_NAME@")
+
+
