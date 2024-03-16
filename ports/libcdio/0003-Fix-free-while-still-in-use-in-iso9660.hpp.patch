@@ -1,0 +1,31 @@
+From 471cd834e2ae094c5cdca17c9048869ea569e4d1 Mon Sep 17 00:00:00 2001
+From: Thomas Schmitt <scdbackup@gmx.net>
+Date: Mon, 18 May 2020 19:12:20 +0100
+Subject: Fix free while still in use in iso9660.hpp
+
+C++ method IFS::readdir() freed the iso9660_stat_t objects which it handed out to its caller.
+---
+ include/cdio++/iso9660.hpp | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+(limited to 'include/cdio++/iso9660.hpp')
+
+diff --git a/include/cdio++/iso9660.hpp b/include/cdio++/iso9660.hpp
+index dd87664..9bcefd6 100644
+--- a/include/cdio++/iso9660.hpp
++++ b/include/cdio++/iso9660.hpp
+@@ -384,7 +384,10 @@ public:
+             (iso9660_stat_t *) _cdio_list_node_data (p_entnode);
+           stat_vector.push_back(new ISO9660::Stat(p_statbuf));
+         }
+-	iso9660_filelist_free(p_stat_list);
++	/* explicitely not iso9660_filelist_free(p_stat_list) because the
++	   p_statbuf objects live on in stat_vector.
++	 */
++	_cdio_list_free(p_stat_list, false, (CdioDataFree_t) NULL);
+         return true;
+       } else {
+         return false;
+-- 
+cgit v1.1
+
