@@ -6781,7 +6781,7 @@
       "port-version": 2
     },
     "plf-queue": {
-      "baseline": "2023-11-26",
+      "baseline": "2.2",
       "port-version": 0
     },
     "plf-stack": {
