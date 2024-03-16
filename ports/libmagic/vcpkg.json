@@ -30,8 +30,8 @@
         "bzip2"
       ]
     },
-    "liblzma": {
-      "description": "Enable liblzma support",
+    "lzma": {
+      "description": "Enable lzma support",
       "dependencies": [
         "liblzma"
       ]

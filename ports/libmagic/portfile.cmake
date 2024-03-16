@@ -46,7 +46,7 @@ endmacro()
 
 enable_feature("bzip2" "bzlib")
 enable_feature("zlib" "zlib")
-enable_feature("liblzma" "xzlib")
+enable_feature("lzma" "xzlib")
 enable_feature("zstd" "zstdlib")
 
 vcpkg_configure_make(
