@@ -6,8 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
-set(BUILD_SHARED NOT BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dyanmic" BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -19,7 +18,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME assert
+    PACKAGE_NAME libassert
     CONFIG_PATH lib/cmake/libassert
 )
 vcpkg_copy_pdbs()
