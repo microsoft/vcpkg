@@ -19,6 +19,10 @@ if(POPT_USE_CONFIG)
   include(CheckIncludeFile)
   include(CheckFunctionExists)
 
+  if(ANDROID AND ANDROID_NATIVE_API_LEVEL LESS "28")
+    set(HAVE_GLOB_H FALSE CACHE INTERNAL "")
+  endif()
+
   check_include_file(float.h HAVE_FLOAT_H)
   check_include_file(fnmatch.h HAVE_FNMATCH_H)
   check_include_file(glob.h HAVE_GLOB_H)

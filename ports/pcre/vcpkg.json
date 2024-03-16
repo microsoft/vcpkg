@@ -1,7 +1,7 @@
 {
   "name": "pcre",
   "version": "8.45",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Perl Compatible Regular Expressions",
   "homepage": "https://www.pcre.org/",
   "license": null,
