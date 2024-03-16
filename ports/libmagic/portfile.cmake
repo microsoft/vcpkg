@@ -32,23 +32,28 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS")
 endif()
 
-set(CONFIG_OPTIONS)
+set(FEATURE_OPTIONS)
 
-foreach(feature zlib bzlib xzlib zstdlib)
+macro(enable_feature feature switch)
     if("${feature}" IN_LIST FEATURES)
-        list(APPEND CONFIG_OPTIONS "--enable-${feature}")
+        list(APPEND FEATURE_OPTIONS "--enable-${switch}")
         set(has_${feature} 1)
     else()
-        list(APPEND CONFIG_OPTIONS "--disable-${feature}")
+        list(APPEND FEATURE_OPTIONS "--disable-${switch}")
         set(has_${feature} 0)
     endif()
-endforeach()
+endmacro()
+
+enable_feature("bzip2" "bzlib")
+enable_feature("zlib" "zlib")
+enable_feature("liblzma" "xzlib")
+enable_feature("zstd" "zstdlib")
 
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${CONFIG_OPTIONS}
+        ${FEATURE_OPTIONS}
         "--disable-lzlib"
         "--disable-libseccomp"
 )

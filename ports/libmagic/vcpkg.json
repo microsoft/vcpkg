@@ -24,14 +24,14 @@
     }
   ],
   "features": {
-    "bzlib": {
-      "description": "Enable Bzip2 support",
+    "bzip2": {
+      "description": "Enable bzip2 support",
       "dependencies": [
         "bzip2"
       ]
     },
-    "xzlib": {
-      "description": "Enable liblzma/xz support",
+    "liblzma": {
+      "description": "Enable liblzma support",
       "dependencies": [
         "liblzma"
       ]
@@ -42,8 +42,8 @@
         "zlib"
       ]
     },
-    "zstdlib": {
-      "description": "Enable zstdlib support",
+    "zstd": {
+      "description": "Enable zstd support",
       "dependencies": [
         "zstd"
       ]
