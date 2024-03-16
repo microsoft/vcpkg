@@ -6377,8 +6377,8 @@
       "port-version": 1
     },
     "opencsg": {
-      "baseline": "1.4.2",
-      "port-version": 4
+      "baseline": "1.6.0",
+      "port-version": 0
     },
     "openctm": {
       "baseline": "1.0.3",
