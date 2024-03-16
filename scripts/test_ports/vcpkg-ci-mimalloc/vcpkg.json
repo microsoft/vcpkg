@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-mimalloc",
+  "version-string": "ci",
+  "description": "Validates mimalloc",
+  "dependencies": [
+    "mimalloc",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
