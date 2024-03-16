@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 71838043..1ecb9aeb 100644
+index 71838043..14a70953 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -83,8 +83,11 @@ configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/src/butil
@@ -54,7 +54,7 @@ index 71838043..1ecb9aeb 100644
      if((NOT GLOG_INCLUDE_PATH) OR (NOT GLOG_LIB))
          message(FATAL_ERROR "Fail to find glog")
      endif()
-@@ -200,7 +210,7 @@ if(WITH_RDMA)
+@@ -200,18 +210,15 @@ if(WITH_RDMA)
      endif()
  endif()
  
@@ -63,8 +63,11 @@ index 71838043..1ecb9aeb 100644
  if(NOT PROTOC_LIB)
      message(FATAL_ERROR "Fail to find protoc lib")
  endif()
-@@ -211,7 +221,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-         )
+ 
+ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+-    set(OPENSSL_ROOT_DIR
+-        "/usr/local/opt/openssl"    # Homebrew installed OpenSSL
+-        )
  endif()
  
 -find_package(OpenSSL)
@@ -72,7 +75,7 @@ index 71838043..1ecb9aeb 100644
  
  include_directories(
          ${GFLAGS_INCLUDE_PATH}
-@@ -226,10 +236,11 @@ set(DYNAMIC_LIB
+@@ -226,10 +233,11 @@ set(DYNAMIC_LIB
      ${LEVELDB_LIB}
      ${PROTOC_LIB}
      ${CMAKE_THREAD_LIBS_INIT}
@@ -86,7 +89,7 @@ index 71838043..1ecb9aeb 100644
  
  if(WITH_MESALINK)
      list(APPEND DYNAMIC_LIB ${MESALINK_LIB})
-@@ -462,6 +473,7 @@ compile_proto(PROTO_HDRS PROTO_SRCS ${PROJECT_BINARY_DIR}
+@@ -462,6 +470,7 @@ compile_proto(PROTO_HDRS PROTO_SRCS ${PROJECT_BINARY_DIR}
                                      ${PROJECT_SOURCE_DIR}/src
                                      "${PROTO_FILES}")
  add_library(PROTO_LIB OBJECT ${PROTO_SRCS} ${PROTO_HDRS})

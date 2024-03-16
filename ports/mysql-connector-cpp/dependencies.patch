@@ -1,25 +1,26 @@
 diff --git a/cdk/cmake/DepFindCompression.cmake b/cdk/cmake/DepFindCompression.cmake
-index f9fe519f..b02d29f6 100644
+index f9fe519f..0f893da8 100644
 --- a/cdk/cmake/DepFindCompression.cmake
 +++ b/cdk/cmake/DepFindCompression.cmake
-@@ -48,10 +48,8 @@ message(STATUS "Setting up compression libraries.")
+@@ -48,7 +48,12 @@ message(STATUS "Setting up compression libraries.")
  #######
  # ZLIB
  #
 -add_ext(zlib zlib.h z ext_zlib)
--if(NOT ZLIB_FOUND)
--  message(FATAL_ERROR "Can't build without zlib support")
--endif()
-+find_package(ZLIB REQUIRED)
-+add_library(ext::z ALIAS ZLIB::ZLIB)
- 
- 
- #######
++if (WIN32)
++  set(ZLIB_NAME zlib)
++else()
++  set(ZLIB_NAME z)
++endif()
++add_ext(zlib zlib.h ${ZLIB_NAME} ext_zlib)
+ if(NOT ZLIB_FOUND)
+   message(FATAL_ERROR "Can't build without zlib support")
+ endif()
 diff --git a/cdk/cmake/dependency.cmake b/cdk/cmake/dependency.cmake
-index ecafe537..f0b5bab1 100644
+index e928e711..30d34fef 100644
 --- a/cdk/cmake/dependency.cmake
 +++ b/cdk/cmake/dependency.cmake
-@@ -287,10 +287,18 @@ endif()
+@@ -286,10 +286,18 @@ endif()
  function(add_ext_lib EXT target name)
    # Search for the library
    if(DEFINED ${EXT}_ROOT_DIR)
@@ -42,7 +43,7 @@ index ecafe537..f0b5bab1 100644
    elseif(DEFINED ${EXT}_LIB_DIR)
      set(suffix
        PATHS ${${EXT}_LIB_DIR}
-@@ -327,9 +335,10 @@ endfunction(add_ext_lib)
+@@ -326,9 +334,10 @@ endfunction(add_ext_lib)
  #
  function(add_ext_exec EXT target name)
    # Search for the library
@@ -54,6 +55,25 @@ index ecafe537..f0b5bab1 100644
        NO_DEFAULT_PATH
      )
  
+diff --git a/cdk/protocol/mysqlx/CMakeLists.txt b/cdk/protocol/mysqlx/CMakeLists.txt
+index 97a4b005..cfc81daf 100644
+--- a/cdk/protocol/mysqlx/CMakeLists.txt
++++ b/cdk/protocol/mysqlx/CMakeLists.txt
+@@ -135,8 +135,13 @@ else()
+   target_link_libraries(cdk_proto_mysqlx PRIVATE ext::protobuf-lite)
+ endif()
+ 
++if (WIN32)
++  set(EXT_ZLIB_NAME ext::zlib)
++else()
++  set(EXT_ZLIB_NAME ext::z)
++endif()
+ target_link_libraries(cdk_proto_mysqlx
+-  PRIVATE cdk_foundation ext::z ext::lz4 ext::zstd
++  PRIVATE cdk_foundation ${EXT_ZLIB_NAME} ext::lz4 ext::zstd
+ )
+ 
+ ADD_COVERAGE(cdk_proto_mysqlx)
 diff --git a/jdbc/cmake/DepFindMySQL.cmake b/jdbc/cmake/DepFindMySQL.cmake
 index 7977381a..d7f4e58b 100644
 --- a/jdbc/cmake/DepFindMySQL.cmake
