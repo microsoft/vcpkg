@@ -1,6 +1,6 @@
 {
   "name": "qt5-mqtt",
-  "version": "5.15.12",
+  "version": "5.15.13",
   "description": "Qt5 MQTT module.",
   "license": null,
   "dependencies": [
