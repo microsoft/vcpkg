@@ -9358,7 +9358,7 @@
     },
     "xaudio2redist": {
       "baseline": "1.2.11",
-      "port-version": 1
+      "port-version": 2
     },
     "xbitmaps": {
       "baseline": "1.1.2",
