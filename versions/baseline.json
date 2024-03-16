@@ -7902,11 +7902,11 @@
     },
     "sdl2-image": {
       "baseline": "2.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-mixer": {
       "baseline": "2.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "sdl2-mixer-ext": {
       "baseline": "2.6.0",
@@ -7918,7 +7918,7 @@
     },
     "sdl2-ttf": {
       "baseline": "2.22.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2pp": {
       "baseline": "0.16.1",
