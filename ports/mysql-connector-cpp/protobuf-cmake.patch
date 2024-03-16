@@ -50,7 +50,7 @@ index 30f7baf1..2a4a9434 100644
  
  add_coverage(cdk)
 diff --git a/cdk/protocol/mysqlx/CMakeLists.txt b/cdk/protocol/mysqlx/CMakeLists.txt
-index 97a4b005..fce915bd 100644
+index cfc81daf..6c484575 100644
 --- a/cdk/protocol/mysqlx/CMakeLists.txt
 +++ b/cdk/protocol/mysqlx/CMakeLists.txt
 @@ -26,8 +26,9 @@
@@ -59,9 +59,9 @@ index 97a4b005..fce915bd 100644
  
 -find_dependency(Protobuf)
 -find_dependency(Compression)
++include(DepFindCompression)
 +find_package(Protobuf CONFIG REQUIRED)
 +include(DepFindProtobuf)
-+include(DepFindCompression)
  
  include(CheckIncludeFile)
  
@@ -73,4 +73,4 @@ index 97a4b005..fce915bd 100644
 +  target_link_libraries(cdk_proto_mysqlx PRIVATE protobuf::libprotobuf-lite)
  endif()
  
- target_link_libraries(cdk_proto_mysqlx
+ if (WIN32)
