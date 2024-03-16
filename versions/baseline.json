@@ -8053,7 +8053,7 @@
       "port-version": 0
     },
     "simde": {
-      "baseline": "0.7.6",
+      "baseline": "0.8.0",
       "port-version": 0
     },
     "simdjson": {
