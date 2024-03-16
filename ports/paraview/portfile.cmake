@@ -112,7 +112,7 @@ if("python" IN_LIST FEATURES)
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
         -DPARAVIEW_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}
-        -DVTK_MODULE_ENABLE_ParaView_PythonCatalyst=YES
+        -DVTK_MODULE_ENABLE_ParaView_PythonCatalyst:STRING=YES
         )
 endif()
 
@@ -141,7 +141,6 @@ vcpkg_cmake_configure(
         ${ADDITIONAL_OPTIONS}
 
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Graphviz=ON
 )
 if(CMAKE_HOST_UNIX)
     # ParaView runs Qt tools so LD_LIBRARY_PATH must be set correctly for them to find *.so files
