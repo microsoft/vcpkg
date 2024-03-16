@@ -9,18 +9,18 @@ vcpkg_from_github(
   SHA512 c3650ffbf5855aaf04d03930f01c6efd76e1f2b2d47365348721f16531a14653ae5b3aff8fefa8e5fa1c769fdf1a9b441a88bc687f97f8c579b84f17c6984c9e
   HEAD_REF master
   PATCHES
-      fix-build.patch
+      unofficial-export.patch
 )
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS ${FEATURE_OPTIONS}
-    -DINSTALL_LIB_DIR:STRING=lib
 )
 
 vcpkg_cmake_install()
-vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-cld3Config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-cld3")
+vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-cld3 PACKAGE_NAME unofficial-cld3)
 
 file(GLOB PUBLIC_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/*.h")
 file(INSTALL ${PUBLIC_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/cld3")
@@ -31,7 +31,4 @@ file(INSTALL ${HEADERS_SCRIPT_SPAN_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/i
 file(GLOB HEADERS_PROTO_FILES LIST_DIRECTORIES false "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cld_3/protos/*.h")
 file(INSTALL ${HEADERS_PROTO_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/cld_3/protos")
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/cld3Config.cmake.in"
-        "${CURRENT_PACKAGES_DIR}/share/${PORT}/cld3Config.cmake" @ONLY)
-		
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

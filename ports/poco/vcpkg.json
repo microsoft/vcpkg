@@ -1,6 +1,6 @@
 {
   "name": "poco",
-  "version": "1.13.0",
+  "version": "1.13.2",
   "description": "Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.",
   "homepage": "https://github.com/pocoproject/poco",
   "license": "BSL-1.0",

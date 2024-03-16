@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO capnproto/capnproto
-    REF v1.0.1
-    SHA512 189d8c483bded3889e903e3998d32d022b5a7bf45d519dc551dc9b2d7909a45a8816a09f4a817aa0fbb14c86c32b838a0c26457c2e89c33ec0eb93bbb93391c0
+    REF "v${VERSION}"
+    SHA512 56551ecad52cf06e5dd52401e6d848eae41126c6ba2bb31a9ec1c82e1b47e0e6171d69db923c118c614aec0d396ddf35724081cccef3a605c39d0b5379a2c03e
     HEAD_REF master
     PATCHES
         disable-C-20-co-routines.patch

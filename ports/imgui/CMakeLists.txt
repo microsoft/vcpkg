@@ -31,7 +31,7 @@ target_sources(
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
 
 if(IMGUI_BUILD_ALLEGRO5_BINDING)
-    find_package(allegro CONFIG REQUIRED)
+    find_package(Allegro CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME} PRIVATE Allegro::allegro Allegro::allegro_ttf Allegro::allegro_font Allegro::allegro_main)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_allegro5.cpp)
 endif()

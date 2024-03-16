@@ -1,7 +1,6 @@
 {
   "name": "kfr",
-  "version-semver": "5.0.1",
-  "port-version": 1,
+  "version-semver": "6.0.2",
   "description": "Fast, modern C++ DSP framework.",
   "homepage": "https://www.kfr.dev/",
   "license": "GPL-2.0",
@@ -9,6 +8,10 @@
   "dependencies": [
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],
@@ -27,9 +30,6 @@
     },
     "dft": {
       "description": "Enable DFT and related algorithms."
-    },
-    "dft-np": {
-      "description": "Enable non-power of 2 DFT."
     }
   }
 }

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 03c82fb..cce8694 100644
+index 84a507f..d400e3b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -99,7 +99,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang")
@@ -20,46 +20,7 @@ index 03c82fb..cce8694 100644
    target_include_directories(re PUBLIC
      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
    )
-@@ -656,6 +656,9 @@ if(LIBRE_BUILD_STATIC)
- 
-   if(MSVC)
-     set_target_properties(re PROPERTIES OUTPUT_NAME "re-static")
-+    if(NOT LIBRE_BUILD_SHARED)
-+      set(PC_LIBNAME "re-static")
-+    endif()
-   endif()
- endif()
- 
-@@ -668,6 +671,28 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-   add_subdirectory(packaging)
- endif()
- 
-+if(NOT PC_LIBNAME)
-+  set(PC_LIBNAME "re")
-+endif()
-+set(PC_REQUIRES "")
-+set(PC_LINKLIBS "")
-+foreach(item IN LISTS LINKLIBS)
-+  if(item STREQUAL "Threads::Threads")
-+    list(APPEND PC_LINKLIBS ${CMAKE_THREADS_LIBS_INIT})
-+  elseif(item STREQUAL "OpenSSL::Crypto")
-+    list(APPEND PC_REQUIRES "libcrypto")
-+  elseif(item STREQUAL "OpenSSL::SSL")
-+    list(APPEND PC_REQUIRES "libssl")
-+  elseif(item STREQUAL "ZLIB::ZLIB")
-+    list(APPEND PC_REQUIRES "zlib")
-+  elseif(item MATCHES "^-|/")
-+    list(APPEND PC_LINKLIBS "${item}")
-+  else()
-+    list(APPEND PC_LINKLIBS "-l${item}")
-+  endif()
-+endforeach()
-+list(JOIN PC_LINKLIBS " " PC_LINKLIBS)
-+list(JOIN PC_REQUIRES " " PC_REQUIRES)
- configure_file(packaging/libre.pc.in libre.pc @ONLY)
- 
- 
-@@ -679,6 +704,9 @@ configure_file(packaging/libre.pc.in libre.pc @ONLY)
+@@ -704,6 +704,9 @@ configure_file(packaging/libre.pc.in libre.pc @ONLY)
  
  install(TARGETS ${RE_INSTALL_TARGETS}
    EXPORT libre
@@ -69,7 +30,7 @@ index 03c82fb..cce8694 100644
    LIBRARY
      DESTINATION ${CMAKE_INSTALL_LIBDIR}
      COMPONENT Libraries
-@@ -697,7 +725,9 @@ install(FILES ${HEADERS}
+@@ -722,7 +725,9 @@ install(FILES ${HEADERS}
  
  install(EXPORT libre
    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libre
@@ -79,7 +40,7 @@ index 03c82fb..cce8694 100644
  )
  
  if(LIBRE_BUILD_SHARED)
-@@ -709,12 +739,8 @@ if(LIBRE_BUILD_SHARED)
+@@ -734,12 +739,8 @@ if(LIBRE_BUILD_SHARED)
    )
  endif()
  
@@ -123,17 +84,3 @@ index 0965b84..e8548a0 100644
 +        set_target_properties(libre::libre PROPERTIES INTERFACE_LINK_LIBRARIES libre::re)
 +    endif()
 +endif()
-diff --git a/packaging/libre.pc.in b/packaging/libre.pc.in
-index 5817066..2df8f6c 100644
---- a/packaging/libre.pc.in
-+++ b/packaging/libre.pc.in
-@@ -7,6 +7,7 @@ Name: libre
- Description: @CMAKE_PROJECT_DESCRIPTION@
- Version: @PROJECT_VERSION@
- URL: @CMAKE_PROJECT_HOMEPAGE_URL@
--Libs: -L${libdir} -lre
--Libs.private: -L${libdir} -lre -ldl -lssl -lcrypto -lz -lpthread
-+Libs: -L${libdir} -l@PC_LIBNAME@
-+Libs.private: @PC_LINKLIBS@
-+Requires.private: @PC_REQUIRES@
- Cflags: -I${includedir}

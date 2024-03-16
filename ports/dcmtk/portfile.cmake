@@ -8,7 +8,16 @@ vcpkg_from_github(
         dcmtk.patch
         fix_link_xml2.patch
         dictionary_paths.patch
+        fix_link_tiff.patch
 )
+
+# Prefix all exported API symbols of vendored libjpeg with "dcmtk_"
+file(GLOB src_files "${SOURCE_PATH}/dcmjpeg/libijg*/*.c" "${SOURCE_PATH}/dcmjpeg/libijg*/*.h")
+foreach(file_path ${src_files})
+    file(READ "${file_path}" file_string)
+    string(REGEX REPLACE "(#define[ \t\r\n]+[A-Za-z0-9_]*[ \t\r\n]+)(j[a-z]+[0-9]+_)" "\\1dcmtk_\\2" file_string "${file_string}")
+    file(WRITE "${file_path}" "${file_string}")
+endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES

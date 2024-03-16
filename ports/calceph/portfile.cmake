@@ -1,4 +1,4 @@
-set(CALCEPH_HASH 387a96a1007c8182ae5867415ccbfb1f65f10e11980efa69ffa06ba29dddb18e2bd208a52b3a3f7d8f23ccd2878bb6ccddd86a0e021a10ee32ee7a93e0e15c95)
+set(CALCEPH_HASH bbb60179b36f3ea9f05daa43e7950494d058137cf5a92e6c7b9742048dc0767490b7b42d2d2db7329f5ca96ffc4f2f32443abacb1073e29af78e58935b8b3edc)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-${VERSION}.tar.gz"
@@ -13,7 +13,6 @@ vcpkg_extract_source_archive(
 
 if (VCPKG_TARGET_IS_WINDOWS)
 
-    file(COPY "${SOURCE_PATH}/pythonapi/src/calcephpy.pyx.in" DESTINATION "${SOURCE_PATH}/pythonapi/src/calcephpy.pyx.vc")
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
