@@ -44,3 +44,15 @@ index d53ec5e9..afbb3a44 100755
  
          oprot.writeMessageEnd();
          oprot.getTransport()->writeEnd();
+diff --git a/src/butil/iobuf.cpp b/src/butil/iobuf.cpp
+index b585c92c..a355e4cb 100644
+--- a/src/butil/iobuf.cpp
++++ b/src/butil/iobuf.cpp
+@@ -142,7 +142,6 @@ inline iov_function get_pwritev_func() {
+ 
+ #else   // ARCH_CPU_X86_64
+ 
+-#warning "We don't check if the kernel supports SYS_preadv or SYS_pwritev on non-X86_64, use implementation on pread/pwrite directly."
+ 
+ inline iov_function get_preadv_func() {
+     return user_preadv;
