@@ -3412,6 +3412,10 @@
       "baseline": "15",
       "port-version": 0
     },
+    "heimdal": {
+      "baseline": "7.8.0",
+      "port-version": 0
+    },
     "hello-imgui": {
       "baseline": "1.4.2",
       "port-version": 1
