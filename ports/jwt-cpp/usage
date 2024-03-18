@@ -1,0 +1,4 @@
+The package jwt-cpp provides CMake targets:
+
+    find_package(jwt-cpp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE jwt-cpp::jwt-cpp)

@@ -1,13 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Thalhammer/jwt-cpp
-    REF "v${VERSION}"
-    SHA512 b6fdb93e3f2f065a2eb45fe16cb076a932b8d4bfad2251bd66d2be40d8afaf5c27a9cf17aaea61d8bfa3f5ff9ed3b45f90962dc14d72704ac5b9d717c12cc79f
+    REF 08bcf77a687fb06e34138e9e9fa12a4ecbe12332 # v0.7.0
+    SHA512 06611120ed0b8fd63051e08e688b9a882f329b8cd10b9d02cbaa4a06d7ef8a924cc4cee64465de954fcde37de105f650cae2b4e4604dc92f6307c930daf346e1
     HEAD_REF master
 )
 
-# Copy the header files
-file(GLOB HEADER_FILES ${SOURCE_PATH}/include/jwt-cpp/*)
-file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/jwt-cpp)
-
+vcpkg_cmake_configure(
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DJWT_BUILD_EXAMPLES=OFF
+        -DJWT_CMAKE_FILES_INSTALL_DIR=share/jwt-cpp
+        -DJWT_DISABLE_PICOJSON=ON
+    )
+vcpkg_cmake_install()
+file(REMOVE_RECURSE 
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -5,6 +5,27 @@
   "homepage": "https://github.com/Thalhammer/jwt-cpp",
   "license": "MIT",
   "dependencies": [
-    "picojson"
-  ]
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "openssl": {
+      "description": "The openssl will be used for cryptography",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "picojson": {
+      "description": "The picojson trait implementation will be included",
+      "dependencies": [
+        "picojson"
+      ]
+    }
+  }
 }
