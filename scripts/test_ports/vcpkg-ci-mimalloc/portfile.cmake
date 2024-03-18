@@ -25,4 +25,3 @@ vcpkg_copy_tools(TOOL_NAMES pkgconfig-override-cxx AUTO_CLEAN)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-message(FATAL_ERROR Stop.)

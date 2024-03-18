@@ -5,12 +5,6 @@
   "dependencies": [
     "mimalloc",
     {
-      "name": "mimalloc",
-      "features": [
-        "secure"
-      ]
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     }
