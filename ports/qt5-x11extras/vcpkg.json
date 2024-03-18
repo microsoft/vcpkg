@@ -1,7 +1,8 @@
 {
   "name": "qt5-x11extras",
   "version": "5.15.13",
-  "description": "Qt5 x11extras Module;",
+  "port-version": 1,
+  "description": "Qt X11 Extras enables the Qt programmer to write applications for the Linux/X11 platform.",
   "license": null,
   "supports": "!windows",
   "dependencies": [

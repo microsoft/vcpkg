@@ -2,17 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 6779d5d4098e0abf65c3c2a2321644a9c78bf7fb3cf0a692be7c88c7f04040c2fb54d63029a2771ead0453f3af17b64dd44136d387eb4a2a4586ccfb72a37c08
+    SHA512 aa96ad2bf30dbe09849ecfb64ec6e60ba4fd3bc2d144c7d576b1e59476ef45d9d744da37806b1c00e3a0413390b35c6d3d4401b89c07c5663122280eca39e501
     HEAD_REF master
     PATCHES
         dependencies.patch
         install-layout.patch
         keep-dup-libs.patch
         windows-linkage.patch
-        wfreerdp-server-cli.patch
-        wf-rdpsnd.patch
-        msvc-arm64.patch
-        mingw-tp.patch
 )
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
 file(WRITE "${SOURCE_PATH}/CMakeCPack.cmake" "")
