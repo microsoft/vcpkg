@@ -2821,7 +2821,7 @@
       "port-version": 7
     },
     "freerdp": {
-      "baseline": "3.3.0",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "freetds": {
@@ -3791,10 +3791,6 @@
     "kcp": {
       "baseline": "1.7",
       "port-version": 0
-    },
-    "kd-soap": {
-      "baseline": "2.1.1",
-      "port-version": 1
     },
     "kdalgorithms": {
       "baseline": "1.2",
@@ -5352,6 +5348,10 @@
       "baseline": "9.2.0",
       "port-version": 0
     },
+    "llnl-units": {
+      "baseline": "0.9.1",
+      "port-version": 0
+    },
     "llvm": {
       "baseline": "17.0.2",
       "port-version": 3
@@ -5781,7 +5781,7 @@
       "port-version": 0
     },
     "mongo-cxx-driver": {
-      "baseline": "3.9.0",
+      "baseline": "3.10.1",
       "port-version": 0
     },
     "mongoose": {
@@ -6377,8 +6377,8 @@
       "port-version": 1
     },
     "opencsg": {
-      "baseline": "1.4.2",
-      "port-version": 4
+      "baseline": "1.6.0",
+      "port-version": 0
     },
     "openctm": {
       "baseline": "1.0.3",
@@ -6495,10 +6495,6 @@
     "opentelemetry-cpp": {
       "baseline": "1.14.2",
       "port-version": 0
-    },
-    "opentelemetry-fluentd": {
-      "baseline": "2.0.0",
-      "port-version": 2
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -6779,6 +6775,10 @@
     "plf-nanotimer": {
       "baseline": "2019-08-10",
       "port-version": 2
+    },
+    "plf-queue": {
+      "baseline": "2.2",
+      "port-version": 0
     },
     "plf-stack": {
       "baseline": "2019-08-10",
@@ -7902,11 +7902,11 @@
     },
     "sdl2-image": {
       "baseline": "2.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-mixer": {
       "baseline": "2.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "sdl2-mixer-ext": {
       "baseline": "2.6.0",
@@ -7918,7 +7918,7 @@
     },
     "sdl2-ttf": {
       "baseline": "2.22.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2pp": {
       "baseline": "0.16.1",
@@ -8053,7 +8053,7 @@
       "port-version": 0
     },
     "simde": {
-      "baseline": "0.7.6",
+      "baseline": "0.8.0",
       "port-version": 0
     },
     "simdjson": {
@@ -8093,7 +8093,7 @@
       "port-version": 0
     },
     "skia": {
-      "baseline": "122",
+      "baseline": "123",
       "port-version": 0
     },
     "skyr-url": {
@@ -8550,7 +8550,7 @@
     },
     "theia": {
       "baseline": "0.8",
-      "port-version": 9
+      "port-version": 10
     },
     "think-cell-range": {
       "baseline": "2023.1",
@@ -9062,7 +9062,7 @@
     },
     "velodyne-decoder": {
       "baseline": "3.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "verdict": {
       "baseline": "1.4.0",
@@ -9358,7 +9358,7 @@
     },
     "xaudio2redist": {
       "baseline": "1.2.11",
-      "port-version": 1
+      "port-version": 2
     },
     "xbitmaps": {
       "baseline": "1.1.2",
@@ -9425,8 +9425,8 @@
       "port-version": 0
     },
     "xmlsec": {
-      "baseline": "1.3.1",
-      "port-version": 2
+      "baseline": "1.3.3",
+      "port-version": 0
     },
     "xnnpack": {
       "baseline": "2022-12-22",
