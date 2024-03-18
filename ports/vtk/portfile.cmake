@@ -37,6 +37,7 @@ vcpkg_from_github(
         ot-dep.patch
         remove-prefix-changes.patch
         10945.diff
+        10972.diff
 )
 
 # =============================================================================
