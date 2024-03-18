@@ -809,7 +809,8 @@ function(vcpkg_configure_make)
             set(relative_build_path .)
         endif()
 
-        z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}")
+        # Setup PKG_CONFIG_PATH
+        z_vcpkg_setup_pkgconfig_path(CONFIG "${current_buildtype}")
 
         # Setup environment
         set(ENV{CPPFLAGS} "${CPPFLAGS_${current_buildtype}}")

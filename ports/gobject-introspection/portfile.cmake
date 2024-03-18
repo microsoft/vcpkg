@@ -23,10 +23,13 @@ vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 
 set(OPTIONS_DEBUG -Dbuild_introspection_data=false)
-set(OPTIONS_RELEASE -Dbuild_introspection_data=true)
-if(VCPKG_CROSSCOMPILING AND
-   NOT (CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86"))
+if(VCPKG_CROSSCOMPILING)
     list(APPEND OPTIONS_RELEASE -Dgi_cross_use_prebuilt_gi=true)
+    list(APPEND OPTIONS_RELEASE -Dbuild_introspection_data=false)
+    # g-ir-scanner is not correctly setup for the cross build and
+    # fails to correctly link against x86 libs (uses x64 instead)
+else()
+    list(APPEND OPTIONS_RELEASE -Dbuild_introspection_data=true)
 endif()
 
 vcpkg_configure_meson(
@@ -41,6 +44,7 @@ vcpkg_configure_meson(
         g-ir-annotation-tool='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-annotation-tool'
         g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
         g-ir-scanner='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-scanner'
+        python='${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${VCPKG_HOST_EXECUTABLE_SUFFIX}'
 )
 
 vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
