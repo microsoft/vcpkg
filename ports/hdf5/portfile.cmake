@@ -5,12 +5,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
     REF "${hdf5_ref}"
-    SHA512 9b44993bcdc1493a22da61c77a1bd962c0088ff8e7fb75c00568617386cfc296a73bbdae79c05847109bf1984e95660bbe459f8a96950f6cf71002800eed23f8
+    SHA512 4c74d2a1499a5f8bfcc1bf32b5901e413ccf46714a5ccdb4e190f51479c96a0d05ce47aae700945a45dc69f3bb0f3891c02bb522abd29cf16e8cb3a2fea8013c
     HEAD_REF develop
     PATCHES
         hdf5_config.patch
         szip.patch
         pkgconfig-requires.patch
+        fix_arm_build.patch #https://github.com/HDFGroup/hdf5/pull/3683 https://github.com/HDFGroup/hdf5/pull/4160
 )
 
 set(ALLOW_UNSUPPORTED OFF)
@@ -167,4 +168,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/H5public.h" "#define H5public_H" "#define H5public_H\n#ifndef H5_BUILT_AS_DYNAMIC_LIB\n#define H5_BUILT_AS_DYNAMIC_LIB\n#endif\n")
 endif()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/data/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+vcpkg_install_copyright(FILE_LIST "${CURRENT_PACKAGES_DIR}/share/${PORT}/data/COPYING")
