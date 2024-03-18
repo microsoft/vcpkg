@@ -7,13 +7,12 @@ vcpkg_from_github(
     PATCHES
         "correlation-vector.patch"
 )
-vcpkg_find_acquire_program(PKGCONFIG)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}" OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME correlation_vector CONFIG_PATH lib/correlation_vector)

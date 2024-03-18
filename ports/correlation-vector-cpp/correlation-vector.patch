@@ -24,16 +24,27 @@ index 6b389d5..9c4fb5a 100644
 +
  include("${CMAKE_CURRENT_LIST_DIR}/correlation_vector-targets.cmake")
 \ No newline at end of file
-diff --git a/CorrelationVector/include/correlation_vector/guid.h b/CorrelationVector/include/correlation_vector/guid.h
-index 3886b54..bd7dfb1 100644
---- a/CorrelationVector/include/correlation_vector/guid.h
-+++ b/CorrelationVector/include/correlation_vector/guid.h
-@@ -11,7 +11,7 @@
- #if defined(GUID_WINDOWS)
- #include "Objbase.h"
- #elif defined(GUID_LIBUUID)
--#include <uuid/uuid.h>
-+#include <uuid.h>
+diff --git a/CorrelationVector/src/CMakeLists.txt b/CorrelationVector/src/CMakeLists.txt
+index 00baa66..08f3fc9 100644
+--- a/CorrelationVector/src/CMakeLists.txt
++++ b/CorrelationVector/src/CMakeLists.txt
+@@ -15,16 +15,9 @@ else()
+     if (WIN32)
+         target_compile_definitions(${TARGETNAME} PUBLIC GUID_WINDOWS)
+     elseif (UNIX)
+-        # apt-get install pkg-config uuid-dev
+-        find_package(PkgConfig REQUIRED)
+-        # TODO: move to FindUUID module
+-        pkg_check_modules(UUID uuid)
+-        if (UUID_FOUND)
+-            message("Found and using uuid.")
+-            target_include_directories(${TARGETNAME} PUBLIC ${UUID_INCLUDE_DIRS})
+-            target_link_libraries(${TARGETNAME} PRIVATE ${UUID_LIBRARIES})
+-            target_compile_definitions(${TARGETNAME} PUBLIC GUID_LIBUUID)
+-        endif()
++        find_package(unofficial-libuuid REQUIRED)
++        target_compile_definitions(${TARGETNAME} PUBLIC GUID_LIBUUID)
++        target_link_libraries(${TARGETNAME} PRIVATE unofficial::UUID::uuid)
+     endif()
+ endif()
  
- #elif defined(GUID_BOOST)
- #include <boost/uuid/uuid.hpp>
