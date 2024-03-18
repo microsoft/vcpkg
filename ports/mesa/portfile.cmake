@@ -100,6 +100,7 @@ endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS 
         -Dgles-lib-suffix=_mesa
         #-D egl-lib-suffix=_mesa
