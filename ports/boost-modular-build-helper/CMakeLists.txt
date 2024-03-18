@@ -14,8 +14,6 @@ if(NOT DEFINED B2_OPTIONS)
     set(B2_OPTIONS "")
 endif()
 
-# Remove duplicates from B2_OPTIONS since VCPKG_CHAINLOAD_TOOLCHAIN_FILE may be loaded multiple times in some cases.
-list(REMOVE_DUPLICATES B2_OPTIONS)
 
 include("${VCPKG_CMAKE_VARS_FILE}")
 
@@ -252,6 +250,9 @@ if(NOT python_versions STREQUAL "")
         list(APPEND B2_OPTIONS "python-debugging=on")
     endif()
 endif()
+
+# Remove duplicates from B2_OPTIONS since VCPKG_CHAINLOAD_TOOLCHAIN_FILE may be loaded multiple times in some cases.
+list(REMOVE_DUPLICATES B2_OPTIONS)
 
 if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
     string(APPEND USER_CONFIG_EXTRA_LINES
