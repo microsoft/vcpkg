@@ -10,8 +10,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wjakob/nanobind_example
-    REF cc116d7c87d2e19c9c8146464c6ae7ed17620eec
-    SHA512 cdb0eb09b1c03c0dea291daf876a85f9d5641f57747786cd2289d0aa4c8e3f34bd2809c351b3231fb80a358615086ee0e687ce23999a9ae012f75b000bdeef10
+    REF 4b5c9bd484dec77e085a188dcefc536aed69aae9
+    SHA512 ec7eeb25b5c5ee2e8bbcc48e78719dc6e5211cf54794dd3c370ad3e8d685fbc8b79435890da3b9481656169efaa87b77e3ea55ce864efd670dd9ea0600dee77d
     HEAD_REF master
 )
 
