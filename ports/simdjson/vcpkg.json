@@ -1,7 +1,6 @@
 {
   "name": "simdjson",
-  "version": "3.6.2",
-  "port-version": 1,
+  "version": "3.8.0",
   "description": "An extremely fast JSON library that can parse gigabytes of JSON per second",
   "homepage": "https://simdjson.org/",
   "license": "Apache-2.0",
