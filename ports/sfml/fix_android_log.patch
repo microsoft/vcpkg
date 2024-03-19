@@ -35,19 +35,16 @@ index fc9a268..9877d37 100644
  endif()
  
 diff --git a/src/SFML/Audio/CMakeLists.txt b/src/SFML/Audio/CMakeLists.txt
-index d27dc6d..16ba6db 100644
+index d27dc6d..f8883a1 100644
 --- a/src/SFML/Audio/CMakeLists.txt
 +++ b/src/SFML/Audio/CMakeLists.txt
-@@ -81,7 +81,11 @@ sfml_add_library(sfml-audio
-                  SOURCES ${SRC} ${CODECS_SRC})
- 
+@@ -82,6 +82,9 @@ sfml_add_library(sfml-audio
+
  # setup dependencies
--target_link_libraries(sfml-audio PRIVATE OpenAL)
+ target_link_libraries(sfml-audio PRIVATE OpenAL)
 +if(SFML_OS_ANDROID)
-+    target_link_libraries(sfml-audio PRIVATE OpenAL android log)
-+else()
-+    target_link_libraries(sfml-audio PRIVATE OpenAL)
++    target_link_libraries(sfml-audio PRIVATE android log)
 +endif()
- 
+
  # minimp3 sources
  target_include_directories(sfml-audio SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/minimp3")
