@@ -9,6 +9,7 @@ vcpkg_from_github(
       glog_disable_debug_postfix.patch
       fix_crosscompile_symbolize.patch
       fix_cplusplus_macro.patch
+      fix_find_unwind.patch
 )
 
 vcpkg_check_features(
@@ -40,5 +41,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${PORT}/export.h" "#ifdef GLOG_STATIC_DEFINE" "#if 0")
 endif()
-    
+
+if("unwind" IN_LIST FEATURES)
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

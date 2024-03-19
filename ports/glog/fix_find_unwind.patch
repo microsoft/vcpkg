@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bf6600e..ad0e67a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -83,7 +83,9 @@ if (WITH_GFLAGS)
+ endif (WITH_GFLAGS)
+ 
+ find_package (Threads REQUIRED)
++if(WITH_UNWIND)
+ find_package (Unwind)
++endif()
+ 
+ if (Unwind_FOUND)
+   cmake_push_check_state (RESET)
