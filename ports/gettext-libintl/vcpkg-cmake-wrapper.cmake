@@ -10,5 +10,8 @@ if(Intl_FOUND AND Intl_LIBRARIES)
     find_package(Iconv) # Since CMake 3.11
     if(Iconv_FOUND AND NOT Iconv_IS_BUILT_IN)
         list(APPEND Intl_LIBRARIES ${Iconv_LIBRARIES})
+        if(TARGET Intl::Intl) # Since CMake 3.20
+            set_property(TARGET Intl::Intl APPEND PROPERTY INTERFACE_LINK_LIBRARIES $<LINK_ONLY:Iconv::Iconv>)
+        endif()
     endif()
 endif()

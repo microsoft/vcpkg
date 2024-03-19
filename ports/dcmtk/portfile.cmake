@@ -7,7 +7,17 @@ vcpkg_from_github(
     PATCHES
         dcmtk.patch
         fix_link_xml2.patch
+        dictionary_paths.patch
+        fix_link_tiff.patch
 )
+
+# Prefix all exported API symbols of vendored libjpeg with "dcmtk_"
+file(GLOB src_files "${SOURCE_PATH}/dcmjpeg/libijg*/*.c" "${SOURCE_PATH}/dcmjpeg/libijg*/*.h")
+foreach(file_path ${src_files})
+    file(READ "${file_path}" file_string)
+    string(REGEX REPLACE "(#define[ \t\r\n]+[A-Za-z0-9_]*[ \t\r\n]+)(j[a-z]+[0-9]+_)" "\\1dcmtk_\\2" file_string "${file_string}")
+    file(WRITE "${file_path}" "${file_string}")
+endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -21,10 +31,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tools"   BUILD_APPS
 )
 
+if("external-dict" IN_LIST FEATURES)
+    set(DCMTK_DEFAULT_DICT "external")
+else()
+    set(DCMTK_DEFAULT_DICT "builtin")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        "-DDCMTK_DEFAULT_DICT=${DCMTK_DEFAULT_DICT}" 
         -DDCMTK_WITH_DOXYGEN=OFF
         -DDCMTK_FORCE_FPIC_ON_UNIX=ON
         -DDCMTK_OVERWRITE_WIN32_COMPILER_FLAGS=OFF

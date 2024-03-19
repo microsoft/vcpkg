@@ -19,6 +19,7 @@ vcpkg_from_github(
         00012-fix-use-cxx17.patch
         00014-pkgconfig-upbdefs.patch
         00015-disable-download-archive.patch
+        00016_add_header.patch
 )
 
 if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)

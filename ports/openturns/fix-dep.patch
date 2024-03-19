@@ -1,0 +1,23 @@
+diff --git a/lib/OpenTURNSConfig.cmake.in b/lib/OpenTURNSConfig.cmake.in
+index 1247591893..c12e423892 100644
+--- a/lib/OpenTURNSConfig.cmake.in
++++ b/lib/OpenTURNSConfig.cmake.in
+@@ -74,6 +74,17 @@ if ("1" STREQUAL "@HMAT_FOUND@")
+   find_package (HMAT REQUIRED NO_MODULE PATHS ${HMAT_DIR} NO_DEFAULT_PATH)
+ endif ()
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(Eigen3 CONFIG)
++find_dependency(TBB CONFIG)
++find_dependency(Spectra)
++find_dependency(NLopt)
++find_dependency(dlib)
++find_dependency(HDF5)
++find_dependency(Ceres CONFIG)
++find_dependency(Pagmo CONFIG)
++find_dependency(CMinpack CONFIG)
++
+ # Our library dependencies (contains definitions for IMPORTED targets)
+ include("${CMAKE_CURRENT_LIST_DIR}/OpenTURNS-Targets.cmake")
+ 
+

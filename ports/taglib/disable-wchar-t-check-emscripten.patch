@@ -1,0 +1,30 @@
+From 477e4cee4389b4b692734b7dc1669d9cfae62f61 Mon Sep 17 00:00:00 2001
+Date: Sat, 2 Mar 2024 23:38:50 +0100
+Subject: [PATCH] Disable wchar_t check when targeting Emscripten
+
+---
+ ConfigureChecks.cmake | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/ConfigureChecks.cmake b/ConfigureChecks.cmake
+index 7d2ff95..2dc1891 100644
+--- a/ConfigureChecks.cmake
++++ b/ConfigureChecks.cmake
+@@ -19,9 +19,11 @@ if(NOT ${SIZEOF_LONGLONG} EQUAL 8)
+   message(FATAL_ERROR "TagLib requires that long long is 64-bit wide.")
+ endif()
+ 
+-check_type_size("wchar_t" SIZEOF_WCHAR_T)
+-if(${SIZEOF_WCHAR_T} LESS 2)
+-  message(FATAL_ERROR "TagLib requires that wchar_t is sufficient to store a UTF-16 char.")
++if(NOT EMSCRIPTEN)
++  check_type_size("wchar_t" SIZEOF_WCHAR_T)
++  if(${SIZEOF_WCHAR_T} LESS 2)
++    message(FATAL_ERROR "TagLib requires that wchar_t is sufficient to store a UTF-16 char.")
++  endif()
+ endif()
+ 
+ check_type_size("float" SIZEOF_FLOAT)
+-- 
+2.43.0
+

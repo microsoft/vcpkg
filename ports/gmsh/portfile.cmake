@@ -1,9 +1,11 @@
+string(REPLACE "." "_" UNDERSCORES_VERSION "${VERSION}")
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.onelab.info
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gmsh/gmsh
-    REF gmsh_4_11_1
-    SHA512 4c10a41659ee4f70ba5091f9ae1c4c3ee285ccf217c3de1157a0d6d694e6f1df9a6b1329b2b24029dd52f945dd7605e477302bdb358106a8d97e903eaba425dc
+    REF "${PORT}_${UNDERSCORES_VERSION}"
+    SHA512 65fbfd9bf30f1334c66345edb35e2a1cc9630c8d390d13f17dd0f0329066637d10fef652ff75114fa8d85046fe0871d60395612467c975bcaa10182454c2ad5e
     HEAD_REF master
     PATCHES fix-install.patch
 )

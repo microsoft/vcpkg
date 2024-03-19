@@ -107,6 +107,7 @@ vcpkg_cmake_configure(
         ${ADDITIONAL_OPTIONS}
 
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Graphviz=ON
 )
 if(CMAKE_HOST_UNIX)
     # ParaView runs Qt tools so LD_LIBRARY_PATH must be set correctly for them to find *.so files
