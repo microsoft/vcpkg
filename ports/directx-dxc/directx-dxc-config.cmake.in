@@ -11,8 +11,6 @@ set_target_properties(Microsoft::DirectXShaderCompiler PROPERTIES
    IMPORTED_SONAME                      "@lib_name@"
    INTERFACE_INCLUDE_DIRECTORIES        "${_dxc_root}/include/directx-dxc"
    INTERFACE_LINK_LIBRARIES             "Microsoft::DXIL"
-   MAP_IMPORTED_CONFIG_MINSIZEREL       ""
-   MAP_IMPORTED_CONFIG_RELWITHDEBINFO   ""   
    IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
 
 add_library(Microsoft::DXIL SHARED IMPORTED)
@@ -21,8 +19,6 @@ set_target_properties(Microsoft::DXIL PROPERTIES
    IMPORTED_IMPLIB                      "${_dxc_root}/lib/@lib_name@"
    IMPORTED_SONAME                      "@lib_name@"
    INTERFACE_INCLUDE_DIRECTORIES        "${_dxc_root}/include/directx-dxc"
-   MAP_IMPORTED_CONFIG_MINSIZEREL       ""
-   MAP_IMPORTED_CONFIG_RELWITHDEBINFO   ""   
    IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
 
 unset(_dxc_root)
