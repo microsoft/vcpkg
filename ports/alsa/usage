@@ -1,5 +1,4 @@
+alsa is compatible with built-in CMake targets:
 
-CMake provides the module target:
-
-    find_package("ALSA" MODULE REQUIRED)
-    target_link_libraries("main" PRIVATE "ALSA::ALSA")
+    find_package(ALSA REQUIRED)
+    target_link_libraries(main PRIVATE ALSA::ALSA) # since CMake 3.12

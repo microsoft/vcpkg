@@ -1,7 +1,6 @@
 {
   "name": "optional-lite",
-  "version": "3.5.0",
-  "port-version": 1,
+  "version": "3.6.0",
   "description": "A C++17-like optional, a nullable object for C++98, C++11 and later in a single-file header-only library",
   "homepage": "https://github.com/martinmoene/optional-lite",
   "dependencies": [
