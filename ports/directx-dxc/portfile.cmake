@@ -1,7 +1,11 @@
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+
 set(DIRECTX_DXC_TAG v1.8.2403)
 set(DIRECTX_DXC_VERSION 2024_03_07)
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+if (NOT VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+   message(STATUS "Note: ${PORT} always requires dynamic library linkage at runtime.")
+endif()
 
 if (VCPKG_TARGET_IS_LINUX)
     vcpkg_download_distfile(ARCHIVE
