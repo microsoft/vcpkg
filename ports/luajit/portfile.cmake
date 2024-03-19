@@ -102,7 +102,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man"
 )
 
-if (NOT VCPKG_TARGET_IS_OSX)
+if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_copy_tools(TOOL_NAMES luajit AUTO_CLEAN)
 endif()
 
