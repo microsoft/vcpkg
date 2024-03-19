@@ -11,6 +11,12 @@ vcpkg_from_github(
     PATCHES
         vcpkg-tests.patch
 )
+# Ensure that the test uses the installed mimalloc only
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/bin"
+    "${SOURCE_PATH}/include"
+    "${SOURCE_PATH}/src"
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/test"
