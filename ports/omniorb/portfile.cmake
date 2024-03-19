@@ -39,6 +39,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp "${_py3_include_path}")
     set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
     list(APPEND OPTIONS "PYTHON=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}")
+    set(ENV{PYTHON} "PYTHON=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}")
 endif()
 
 vcpkg_find_acquire_program(FLEX)
@@ -91,12 +92,18 @@ vcpkg_configure_make(
   COPY_SOURCE
   OPTIONS
     ${OPTIONS}
+  OPTIONS_DEBUG
+    am_cv_python_pyexecdir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/debug/${PYTHON3_SITE}
+    am_cv_python_pythondir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/debug/${PYTHON3_SITE}
+  OPTIONS_RELEASE
+    am_cv_python_pyexecdir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}
+    am_cv_python_pythondir=\\\${PREFIX}${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-  vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel//mk/platforms/vcpkg.mk" "replace-with-per-config-text" "NoDebugBuild=1")
+  vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/mk/platforms/vcpkg.mk" "replace-with-per-config-text" "NoDebugBuild=1")
   if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/mk/platforms/vcpkg.mk" "replace-with-per-config-text" "NoReleaseBuild=1\nBuildDebugBinary=1")
+    vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/mk/platforms/vcpkg.mk" "replace-with-per-config-text" "NoReleaseBuild=1\nBuildDebugBinary=1\ndebug=1")
     vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tool/omniidl/cxx/dir.mk" "python$(subst .,,$(PYVERSION)).lib" "python$(subst .,,$(PYVERSION))_d.lib")
     vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tool/omniidl/cxx/dir.mk" "zlib.lib" "zlibd.lib")
   endif()
@@ -199,7 +206,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/omniidl" "${CURRENT_INSTALLED_DIR}" "\"os.path.dirname(__file__)+\"/../../../")
+  set(omniidl "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/omniidl")
+  file(READ "${omniidl}" contents)
+  string(REGEX REPLACE "#![^\n]+" "#!/usr/bin/env python3.11" contents "${contents}")
+  string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}" "\"os.path.dirname(__file__)+\"/../../.." contents "${contents}")
+  string(REPLACE "\"\"os" "os" contents "${contents}")
+  string(REPLACE "\"os" "\"+os" contents "${contents}")
+  file(WRITE "${omniidl}" "${contents}")
 endif()
 
 set(del_files "")
@@ -216,4 +229,7 @@ else()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(COPY "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/omniorb/lib")

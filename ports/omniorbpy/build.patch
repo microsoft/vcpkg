@@ -1,0 +1,550 @@
+diff --git a/configure.ac b/configure.ac
+index cffdba1c5..cf4dc263e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -124,6 +124,7 @@ case "$host" in
+   *-*-openbsd*)  plat_name="OpenBSD";  plat_def="__openbsd__";  os_v="3";;
+   *-*-sco*)      plat_name="OSR5";     plat_def="__osr5__";     os_v="5";;
+   *-*-gnu*)      plat_name="GNU";      plat_def="__hurd__" ;    os_v="0";;
++  *-*-mingw*)    plat_name="Win32Platform";      plat_def="__WIN32__" ;    os_v="4";;
+ esac
+ 
+ AC_SUBST(PLATFORM_NAME, $plat_name)
+diff --git a/mk/beforeauto.mk.in b/mk/beforeauto.mk.in
+index f52447b43..d7bcd9aa1 100644
+--- a/mk/beforeauto.mk.in
++++ b/mk/beforeauto.mk.in
+@@ -4,7 +4,16 @@
+ #
+ # Based upon beforedir.mk and platform makefiles
+ 
+-platform         = autoconf
++#
++# Platform, processor and compiler
++#
++
++@PLATFORM_NAME@ = 1
++@PROCESSOR_NAME@ = 1
++@COMPILER_NAME@ = 1
++
++
++# platform         = autoconf
+ OMNIORB_ROOT     = @OMNIORB_ROOT@
+ DATADIR          = @datadir@
+ MAKEFILE_INC_DIR = $(BASE_OMNI_TREE)/$(CURRENT)/
+@@ -44,6 +53,8 @@ endif
+ 
+ prefix        	 := @prefix@
+ exec_prefix   	 := @exec_prefix@
++includedir    	 := @includedir@
++libdir         	 := @libdir@
+ INSTALLTARGET 	 := 1
+ INSTALLINCDIR 	 := $(DESTDIR)@includedir@
+ INSTALLBINDIR 	 := $(DESTDIR)@bindir@
+@@ -326,8 +337,8 @@ GENERATED_CXX_HDRS += $(CORBA_STUB_HDRS)
+ # later if necessary.
+ #
+ 
+-UnixPlatform = 1
+-ThreadSystem = Posix
++# UnixPlatform = 1
++# ThreadSystem = Posix
+ 
+ #
+ # General rules for cleaning.
+@@ -347,15 +358,25 @@ endef
+ #
+ # Patterns for various file types
+ #
++ifndef Win32Platform
+ LibPathPattern    = -L%
+ LibNoDebugPattern = lib%.a
+ LibDebugPattern = lib%.a
+ LibPattern = lib%.a
+ LibSuffixPattern = %.a
+-LibSearchPattern = -l%
++LibSearchPattern = -l%
+ BinPattern = %
+ TclScriptPattern = %
+-
++else
++LibPathPattern = -libpath:%
++LibNoDebugPattern = %.lib
++LibDebugPattern = %d.lib
++LibPattern = %.lib
++LibSuffixPattern = %.lib
++LibSearchPattern = %.lib
++BinPattern = %.exe
++TclScriptPattern = %
++endif
+ 
+ #
+ # Stuff to generate statically-linked libraries.
+@@ -512,6 +533,16 @@ OMNIORB_LIB_NODYN_DEPEND += $(OMNITHREAD_LIB_DEPEND)
+ 
+ OMNITHREAD_LIB = $(patsubst %,$(LibSearchPattern),omnithread)
+ 
++OMNICOS_LIB = $(patsubst %,$(LibSearchPattern),COS$(OMNIORB_MAJOR_VERSION))
++OMNICOSDYNAMIC_LIB = $(patsubst %,$(LibSearchPattern),COSDynamic$(OMNIORB_MAJOR_VERSION))
++OMNIDYNAMIC_LIB = $(patsubst %,$(LibSearchPattern),omniDynamic$(OMNIORB_MAJOR_VERSION))
++
++OMNIORB_LIB += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) $(OMNIDYNAMIC_LIB)
++OMNIORB_LIB_DEPEND += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) $(OMNIDYNAMIC_LIB)
++OMNIORB_LIB_NODYN_DEPEND += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) $(OMNIDYNAMIC_LIB)
++
++
++OMNIORB_DLL_NAME += $(OMNICOS_LIB) $(OMNICOSDYNAMIC_LIB) $(OMNIDYNAMIC_LIB)
+ 
+ # CodeSets library
+ OMNIORB_CODESETS_LIB = $(patsubst %,$(LibSearchPattern),omniCodeSets$(OMNIORB_MAJOR_VERSION))
+@@ -615,7 +645,7 @@ define MakeCXXSharedLibrary
+  soname=$(SharedLibrarySoNameTemplate); \
+  set -x; \
+  $(RM) $@; \
+- $(CXX) @LDFLAGS@ $(SharedLibraryPlatformLinkFlagsTemplate) -o $@ \
++ $(CXX) @LDFLAGS@ $(SharedLibraryPlatformLinkFlagsTemplate) -Fo $@ \
+  $(IMPORT_LIBRARY_FLAGS) $(filter-out $(LibSuffixPattern),$^) $$extralibs;
+ endef
+ 
+@@ -676,28 +706,28 @@ endef
+ # to compile the source for the library.
+ 
+ static/%.o: %.cc
+-	$(CXX) -c $(CXXFLAGS) -o $@ $<
++	$(CXX) -c $(CXXFLAGS) -Fo $@ $<
+ 
+ shared/%.o: %.cc
+-	$(CXX) -c $(SHAREDLIB_CPPFLAGS) $(CXXFLAGS)  -o $@ $<
++	$(CXX) -c $(SHAREDLIB_CPPFLAGS) $(CXXFLAGS)  -Fo $@ $<
+ 
+ static/%.o: %.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
++	$(CC) -c $(CFLAGS) -Fo $@ $<
+ 
+ SHAREDLIB_CFLAGS = $(SHAREDLIB_CPPFLAGS)
+ 
+ shared/%.o: %.c
+-	$(CC) -c $(SHAREDLIB_CFLAGS) $(CFLAGS)  -o $@ $<
++	$(CC) -c $(SHAREDLIB_CFLAGS) $(CFLAGS)  -Fo $@ $<
+ 
+ #
+ # Replacements for implicit rules
+ #
+ 
+ %.o: %.c
+-	$(CC) -c $(CFLAGS) -o $@ $<
++	$(CC) -c $(CFLAGS) -Fo $@ $<
+ 
+ %.o: %.cc
+-	$(CXX) -c $(CXXFLAGS) -o $@ $<
++	$(CXX) -c $(CXXFLAGS) -Fo $@ $<
+ 
+ 
+ ###########################################################################
+@@ -727,15 +757,6 @@ RMDIRHIER	= $(RM) -rf
+ CXXMAKEDEPEND   = $(OMKDEPEND) -D__cplusplus
+ CMAKEDEPEND     = $(OMKDEPEND)
+ 
+-
+-#
+-# Platform, processor and compiler
+-#
+-
+-@PLATFORM_NAME@ = 1
+-@PROCESSOR_NAME@ = 1
+-@COMPILER_NAME@ = 1
+-
+ #
+ # File locations
+ #
+@@ -756,7 +777,7 @@ OPEN_SSL_CPPFLAGS = @OPEN_SSL_CPPFLAGS@
+ #
+ 
+ ifeq (@ENABLE_STATIC@,no)
+-NoStaticLibrary = 1
++  NoStaticLibrary = 1
+ endif
+ 
+ #
+@@ -927,7 +948,7 @@ define StaticLinkLibrary
+ (set -x; \
+  $(RM) $@; \
+  $(CXX) -c +inst_close $^; \
+- $(AR) $@ $^; \
++ $(AR) -out $@ $^; \
+  $(RANLIB) $@; \
+ )
+ endef
+@@ -1276,3 +1297,7 @@ endif
+ 
+ lib_depend := $(patsubst %,$(LibPattern),omnithread)
+ OMNITHREAD_LIB_DEPEND := $(GENERATE_LIB_DEPEND)
++
++ifdef Win32Platform
++include $(TOP)/mk/vcpkg.mk
++endif
+\ No newline at end of file
+diff --git a/mk/python.mk b/mk/python.mk
+index 138001831..6c53712ab 100644
+--- a/mk/python.mk
++++ b/mk/python.mk
+@@ -4,7 +4,7 @@
+ 
+ PYVERSION := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(".".join(sys.version.split(".")[:2]))')
+ PYPREFIX  := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(sys.exec_prefix.replace("\\","/"))')
+-PYINCDIR  := $(shell $(PYTHON) -c 'import sys, distutils.sysconfig; sys.stdout.write(distutils.sysconfig.get_python_inc().replace("\\","/"))')
++PYINCDIR  := $(includedir)/python3.11
+ 
+ PythonSHAREDLIB_SUFFIX = $(shell $(PYTHON) -c 'import sys, distutils.sysconfig; sys.stdout.write((distutils.sysconfig.get_config_var("SO") or ".so").lstrip("."))')
+ 
+diff --git a/modules/codesets/dir.mk b/modules/codesets/dir.mk
+index 584311356..986f8cbb1 100644
+--- a/modules/codesets/dir.mk
++++ b/modules/codesets/dir.mk
+@@ -8,8 +8,8 @@ CXXSRCS = pyCodeSets.cc
+ OBJS =    pyCodeSets.o
+ 
+ 
+-DIR_CPPFLAGS += $(patsubst %,-I%/include,$(OMNIORB_ROOT))
+-DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(OMNIORB_ROOT))
++DIR_CPPFLAGS += $(patsubst %,-I%/,$(includedir))
++DIR_CPPFLAGS += $(patsubst %,-I%/omniORB4/internal,$(includedir))
+ DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(IMPORT_TREES))
+ DIR_CPPFLAGS += -I../include
+ 
+@@ -85,17 +85,18 @@ ifdef Win32Platform
+ PYPREFIX1 := "$(shell $(PYTHON) -c 'import sys,string; sys.stdout.write(sys.prefix.lower())')"
+ PYPREFIX  := $(subst program files,progra~1,$(subst \,/,$(PYPREFIX1)))
+ PYVERSION := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(".".join(sys.version.split(".")[:2]))')
+-PYINCDIR  := $(PYPREFIX)/include
++PYINCDIR  := $(includedir)/python3.11
+ PYLIBDIR  := $(PYPREFIX)/libs
+-PYLIB     := python$(subst .,,$(PYVERSION)).lib
++# PYLIB     := python$(subst .,,$(PYVERSION)).lib
+ 
+ DIR_CPPFLAGS += -I$(PYINCDIR) -I$(PYINCDIR)/python$(PYVERSION) \
+                 -DPYTHON_INCLUDE="<Python.h>" -DPYTHON_THREAD_INC="<pythread.h>"
+ 
+-PYLIBPATH = $(patsubst %,-libpath:%,$(PYLIBDIR))
++PYLIBPATH = $(patsubst %,-libpath:%,$(libdir))
+ 
+ implib = _omnicodesets.lib
+ lib = $(patsubst %.lib,%.pyd,$(implib))
++IMPORT_LIBRARY_FLAGS := $(patsubst -L%,-libpath:%,$(IMPORT_LIBRARY_FLAGS))
+ 
+ all:: $(lib)
+ 
+@@ -103,8 +104,8 @@ $(lib): $(OBJS)
+ 	(set -x; \
+ 	 $(RM) $@; \
+ 	 libs="$(OMNIORB_CODESETS_LIB) $(PYLIB)"; \
+-	 $(CXXLINK) -out:$@ -DLL $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
+-         $(MANIFESTTOOL) /outputresource:"$@;#2" /manifest $@.manifest; \
++	 $(CXXLINK) -out:$@ -DLL -manifest $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
++         $(MANIFESTTOOL) -outputresource:"$@;#2" -manifest $@.manifest; \
+ 	)
+ 
+ export:: $(lib)
+@@ -303,7 +304,7 @@ endif
+ ifdef NextStep
+ 
+ PYPREFIX = $(shell $(PYTHON) -c "import sys;print sys.exec_prefix")
+-CXXOPTIONS += -I$(PYPREFIX)/include
++CXXOPTIONS += -I$(includedir)/python3.11
+ CXXLINKOPTIONS += -nostdlib -r
+ SO = .so
+ libname = _omnicodesetsmodule$(SO)
+diff --git a/modules/connections/dir.mk b/modules/connections/dir.mk
+index f00e6e330..2d8830013 100644
+--- a/modules/connections/dir.mk
++++ b/modules/connections/dir.mk
+@@ -8,8 +8,8 @@ CXXSRCS = pyConnectionMgmt.cc
+ OBJS =    pyConnectionMgmt.o
+ 
+ DIR_CPPFLAGS += -I$(BASE_OMNI_TREE)/$(CURRENT)/../../include -I$(TOP)/include
+-DIR_CPPFLAGS += $(patsubst %,-I%/include,$(OMNIORB_ROOT))
+-DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(OMNIORB_ROOT))
++DIR_CPPFLAGS += $(patsubst %,-I%/,$(includedir))
++DIR_CPPFLAGS += $(patsubst %,-I%/omniORB4/internal,$(includedir))
+ DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(IMPORT_TREES))
+ 
+ 
+@@ -92,9 +92,9 @@ ifdef Win32Platform
+ PYPREFIX1 := "$(shell $(PYTHON) -c 'import sys,string; sys.stdout.write(sys.prefix.lower())')"
+ PYPREFIX  := $(subst program files,progra~1,$(subst \,/,$(PYPREFIX1)))
+ PYVERSION := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(".".join(sys.version.split(".")[:2]))')
+-PYINCDIR  := $(PYPREFIX)/include
++PYINCDIR  := $(includedir)/python3.11
+ PYLIBDIR  := $(PYPREFIX)/libs
+-PYLIB     := python$(subst .,,$(PYVERSION)).lib
++# PYLIB     := python$(subst .,,$(PYVERSION)).lib
+ 
+ DIR_CPPFLAGS += -I$(PYINCDIR) -I$(PYINCDIR)/python$(PYVERSION) \
+                 -DPYTHON_INCLUDE="<Python.h>" -DPYTHON_THREAD_INC="<pythread.h>"
+@@ -110,8 +110,8 @@ $(lib): $(OBJS)
+ 	(set -x; \
+ 	 $(RM) $@; \
+ 	 libs="$(OMNIORB_CONNECTIONS_LIB) $(OMNIORB_LIB_NODYN) $(PYLIB)"; \
+-	 $(CXXLINK) -out:$@ -DLL $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
+-         $(MANIFESTTOOL) /outputresource:"$@;#2" /manifest $@.manifest; \
++	 $(CXXLINK) -out:$@ -DLL -manifest $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
++         $(MANIFESTTOOL) -outputresource:"$@;#2" -manifest $@.manifest; \
+ 	)
+ 
+ export:: $(lib)
+@@ -310,7 +310,7 @@ endif
+ ifdef NextStep
+ 
+ PYPREFIX = $(shell $(PYTHON) -c "import sys;print sys.exec_prefix")
+-CXXOPTIONS += -I$(PYPREFIX)/include
++CXXOPTIONS += -I$(includedir)/python3.11
+ CXXLINKOPTIONS += -nostdlib -r
+ SO = .so
+ libname = _omniConnMgmtmodule$(SO)
+diff --git a/modules/dir.mk b/modules/dir.mk
+index aa41b3068..ac0098107 100644
+--- a/modules/dir.mk
++++ b/modules/dir.mk
+@@ -46,8 +46,8 @@ OBJS =    omnipy.o \
+           cxxAPI.o
+ 
+ DIR_CPPFLAGS += -I$(BASE_OMNI_TREE)/$(CURRENT)/../include -I$(TOP)/include
+-DIR_CPPFLAGS += $(patsubst %,-I%/include,$(OMNIORB_ROOT))
+-DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(OMNIORB_ROOT))
++DIR_CPPFLAGS += $(patsubst %,-I%/,$(includedir))
++DIR_CPPFLAGS += $(patsubst %,-I%/omniORB4/internal,$(includedir))
+ DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(IMPORT_TREES))
+ 
+ 
+@@ -136,9 +136,9 @@ ifdef Win32Platform
+ PYPREFIX1 := "$(shell $(PYTHON) -c 'import sys,string; sys.stdout.write(sys.prefix.lower())')"
+ PYPREFIX  := $(subst program files,progra~1,$(subst \,/,$(PYPREFIX1)))
+ PYVERSION := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(".".join(sys.version.split(".")[:2]))')
+-PYINCDIR  := $(PYPREFIX)/include
++PYINCDIR  := $(includedir)/python3.11
+ PYLIBDIR  := $(PYPREFIX)/libs
+-PYLIB     := python$(subst .,,$(PYVERSION)).lib
++# PYLIB     := python$(subst .,,$(PYVERSION)).lib
+ 
+ DIR_CPPFLAGS += -I$(PYINCDIR) -I$(PYINCDIR)/python$(PYVERSION) \
+                 -DPYTHON_INCLUDE="<Python.h>" -DPYTHON_THREAD_INC="<pythread.h>"
+@@ -147,6 +147,7 @@ PYLIBPATH = $(patsubst %,-libpath:%,$(PYLIBDIR))
+ 
+ implib = _omnipy.lib
+ lib = $(patsubst %.lib,%.pyd,$(implib))
++IMPORT_LIBRARY_FLAGS := $(patsubst -L%,-libpath:%,$(IMPORT_LIBRARY_FLAGS))
+ 
+ all:: $(lib)
+ 
+@@ -154,8 +155,8 @@ $(lib): $(OBJS)
+ 	(set -x; \
+ 	 $(RM) $@; \
+ 	 libs="$(OMNIORB_LIB_NODYN) $(PYLIB)"; \
+-	 $(CXXLINK) -out:$@ -DLL $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
+-         $(MANIFESTTOOL) /outputresource:"$@;#2" /manifest $@.manifest; \
++	 $(CXXLINK) -out:$@ -DLL -manifest $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
++         $(MANIFESTTOOL) -outputresource:"$@;#2" -manifest $@.manifest; \
+ 	)
+ 
+ export:: $(lib)
+@@ -354,7 +355,7 @@ endif
+ ifdef NextStep
+ 
+ PYPREFIX = $(shell $(PYTHON) -c "import sys;print sys.exec_prefix")
+-CXXOPTIONS += -I$(PYPREFIX)/include
++CXXOPTIONS += -I$(includedir)/python3.11
+ CXXLINKOPTIONS += -nostdlib -r
+ SO = .so
+ libname = _omnipymodule$(SO)
+diff --git a/modules/httpCrypto/dir.mk b/modules/httpCrypto/dir.mk
+index 686de6ed7..967b51dac 100644
+--- a/modules/httpCrypto/dir.mk
++++ b/modules/httpCrypto/dir.mk
+@@ -7,8 +7,8 @@ CXXSRCS = pyhttpCrypto.cc
+ 
+ OBJS =    pyhttpCrypto.o
+ 
+-DIR_CPPFLAGS += $(patsubst %,-I%/include,$(OMNIORB_ROOT))
+-DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(OMNIORB_ROOT))
++DIR_CPPFLAGS += $(patsubst %,-I%/,$(includedir))
++DIR_CPPFLAGS += $(patsubst %,-I%/omniORB4/internal,$(includedir))
+ DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(IMPORT_TREES))
+ DIR_CPPFLAGS += -I../../include
+ DIR_CPPFLAGS += $(OPEN_SSL_CPPFLAGS)
+@@ -86,9 +86,9 @@ ifdef Win32Platform
+ PYPREFIX1 := "$(shell $(PYTHON) -c 'import sys,string; sys.stdout.write(sys.prefix.lower())')"
+ PYPREFIX  := $(subst program files,progra~1,$(subst \,/,$(PYPREFIX1)))
+ PYVERSION := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(".".join(sys.version.split(".")[:2]))')
+-PYINCDIR  := $(PYPREFIX)/include
++PYINCDIR  := $(includedir)/python3.11
+ PYLIBDIR  := $(PYPREFIX)/libs
+-PYLIB     := python$(subst .,,$(PYVERSION)).lib
++# PYLIB     := python$(subst .,,$(PYVERSION)).lib
+ 
+ DIR_CPPFLAGS += -I$(PYINCDIR) -I$(PYINCDIR)/python$(PYVERSION) \
+                 -DPYTHON_INCLUDE="<Python.h>" -DPYTHON_THREAD_INC="<pythread.h>"
+@@ -104,8 +104,8 @@ $(lib): $(OBJS)
+ 	(set -x; \
+ 	 $(RM) $@; \
+ 	 libs="$(OMNIORB_HTTP_CRYPTO_LIB) $(OMNIORB_LIB_NODYN) $(PYLIB)"; \
+-	 $(CXXLINK) -out:$@ -DLL $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
+-         $(MANIFESTTOOL) /outputresource:"$@;#2" /manifest $@.manifest; \
++	 $(CXXLINK) -out:$@ -DLL -manifest $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
++         $(MANIFESTTOOL) -outputresource:"$@;#2" -manifest $@.manifest; \
+ 	)
+ 
+ export:: $(lib)
+diff --git a/modules/httpTP/dir.mk b/modules/httpTP/dir.mk
+index 28f670228..5904ab352 100644
+--- a/modules/httpTP/dir.mk
++++ b/modules/httpTP/dir.mk
+@@ -7,8 +7,8 @@ CXXSRCS = pyhttpTP.cc
+ 
+ OBJS =    pyhttpTP.o
+ 
+-DIR_CPPFLAGS += $(patsubst %,-I%/include,$(OMNIORB_ROOT))
+-DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(OMNIORB_ROOT))
++DIR_CPPFLAGS += $(patsubst %,-I%/,$(includedir))
++DIR_CPPFLAGS += $(patsubst %,-I%/omniORB4/internal,$(includedir))
+ DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(IMPORT_TREES))
+ DIR_CPPFLAGS += -I../../include
+ DIR_CPPFLAGS += $(OPEN_SSL_CPPFLAGS)
+@@ -86,9 +86,9 @@ ifdef Win32Platform
+ PYPREFIX1 := "$(shell $(PYTHON) -c 'import sys,string; sys.stdout.write(sys.prefix.lower())')"
+ PYPREFIX  := $(subst program files,progra~1,$(subst \,/,$(PYPREFIX1)))
+ PYVERSION := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(".".join(sys.version.split(".")[:2]))')
+-PYINCDIR  := $(PYPREFIX)/include
++PYINCDIR  := $(includedir)/python3.11
+ PYLIBDIR  := $(PYPREFIX)/libs
+-PYLIB     := python$(subst .,,$(PYVERSION)).lib
++# PYLIB     := python$(subst .,,$(PYVERSION)).lib
+ 
+ DIR_CPPFLAGS += -I$(PYINCDIR) -I$(PYINCDIR)/python$(PYVERSION) \
+                 -DPYTHON_INCLUDE="<Python.h>" -DPYTHON_THREAD_INC="<pythread.h>"
+@@ -104,8 +104,8 @@ $(lib): $(OBJS)
+ 	(set -x; \
+ 	 $(RM) $@; \
+ 	 libs="$(OMNIORB_HTTP_LIB) $(OMNIORB_SSL_LIB) $(OMNIORB_LIB_NODYN) $(PYLIB)"; \
+-	 $(CXXLINK) -out:$@ -DLL $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
+-         $(MANIFESTTOOL) /outputresource:"$@;#2" /manifest $@.manifest; \
++	 $(CXXLINK) -out:$@ -manifest -DLL $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
++         $(MANIFESTTOOL) -outputresource:"$@;#2" -manifest $@.manifest; \
+ 	)
+ 
+ export:: $(lib)
+diff --git a/modules/sslTP/dir.mk b/modules/sslTP/dir.mk
+index 9195005b2..93e33fd5a 100644
+--- a/modules/sslTP/dir.mk
++++ b/modules/sslTP/dir.mk
+@@ -7,8 +7,8 @@ CXXSRCS = pysslTP.cc
+ 
+ OBJS =    pysslTP.o
+ 
+-DIR_CPPFLAGS += $(patsubst %,-I%/include,$(OMNIORB_ROOT))
+-DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(OMNIORB_ROOT))
++DIR_CPPFLAGS += $(patsubst %,-I%/,$(includedir))
++DIR_CPPFLAGS += $(patsubst %,-I%/omniORB4/internal,$(includedir))
+ DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(IMPORT_TREES))
+ DIR_CPPFLAGS += -I../../include
+ DIR_CPPFLAGS += $(OPEN_SSL_CPPFLAGS)
+@@ -86,9 +86,9 @@ ifdef Win32Platform
+ PYPREFIX1 := "$(shell $(PYTHON) -c 'import sys,string; sys.stdout.write(sys.prefix.lower())')"
+ PYPREFIX  := $(subst program files,progra~1,$(subst \,/,$(PYPREFIX1)))
+ PYVERSION := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(".".join(sys.version.split(".")[:2]))')
+-PYINCDIR  := $(PYPREFIX)/include
++PYINCDIR  := $(includedir)/python3.11
+ PYLIBDIR  := $(PYPREFIX)/libs
+-PYLIB     := python$(subst .,,$(PYVERSION)).lib
++# PYLIB     := python$(subst .,,$(PYVERSION)).lib
+ 
+ DIR_CPPFLAGS += -I$(PYINCDIR) -I$(PYINCDIR)/python$(PYVERSION) \
+                 -DPYTHON_INCLUDE="<Python.h>" -DPYTHON_THREAD_INC="<pythread.h>"
+@@ -97,6 +97,8 @@ PYLIBPATH = $(patsubst %,-libpath:%,$(PYLIBDIR))
+ 
+ implib = _omnisslTP.lib
+ lib = $(patsubst %.lib,%.pyd,$(implib))
++IMPORT_LIBRARY_FLAGS = $(patsubst -L%,-libpath:%,$(IMPORT_LIBRARY_FLAGS))
++
+ 
+ all:: $(lib)
+ 
+@@ -104,8 +106,8 @@ $(lib): $(OBJS)
+ 	(set -x; \
+ 	 $(RM) $@; \
+ 	 libs="$(OMNIORB_SSL_LIB) $(OMNIORB_LIB_NODYN) $(PYLIB)"; \
+-	 $(CXXLINK) -out:$@ -DLL $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
+-         $(MANIFESTTOOL) /outputresource:"$@;#2" /manifest $@.manifest; \
++	 $(CXXLINK) -out:$@ -DLL -manifest $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
++         $(MANIFESTTOOL) -outputresource:"$@;#2" -manifest $@.manifest; \
+ 	)
+ 
+ export:: $(lib)
+@@ -304,7 +306,7 @@ endif
+ ifdef NextStep
+ 
+ PYPREFIX = $(shell $(PYTHON) -c "import sys;print sys.exec_prefix")
+-CXXOPTIONS += -I$(PYPREFIX)/include
++CXXOPTIONS += -I$(includedir)/python3.11
+ CXXLINKOPTIONS += -nostdlib -r
+ SO = .so
+ libname = _omnisslTPmodule$(SO)
+diff --git a/modules/ziop/dir.mk b/modules/ziop/dir.mk
+index e9ce31aa0..f32196090 100644
+--- a/modules/ziop/dir.mk
++++ b/modules/ziop/dir.mk
+@@ -7,8 +7,8 @@ CXXSRCS = pyZIOP.cc
+ OBJS =    pyZIOP.o
+ 
+ DIR_CPPFLAGS += -I$(BASE_OMNI_TREE)/$(CURRENT)/../../include -I$(TOP)/include
+-DIR_CPPFLAGS += $(patsubst %,-I%/include,$(OMNIORB_ROOT))
+-DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(OMNIORB_ROOT))
++DIR_CPPFLAGS += $(patsubst %,-I%/,$(includedir))
++DIR_CPPFLAGS += $(patsubst %,-I%/omniORB4/internal,$(includedir))
+ DIR_CPPFLAGS += $(patsubst %,-I%/include/omniORB4/internal,$(IMPORT_TREES))
+ 
+ 
+@@ -91,9 +91,9 @@ ifdef Win32Platform
+ PYPREFIX1 := "$(shell $(PYTHON) -c 'import sys,string; sys.stdout.write(sys.prefix.lower())')"
+ PYPREFIX  := $(subst program files,progra~1,$(subst \,/,$(PYPREFIX1)))
+ PYVERSION := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(".".join(sys.version.split(".")[:2]))')
+-PYINCDIR  := $(PYPREFIX)/include
++PYINCDIR  := $(includedir)/python3.11
+ PYLIBDIR  := $(PYPREFIX)/libs
+-PYLIB     := python$(subst .,,$(PYVERSION)).lib
++# PYLIB     := python$(subst .,,$(PYVERSION)).lib
+ 
+ DIR_CPPFLAGS += -I$(PYINCDIR) -I$(PYINCDIR)/python$(PYVERSION) \
+                 -DPYTHON_INCLUDE="<Python.h>" -DPYTHON_THREAD_INC="<pythread.h>"
+@@ -109,8 +109,8 @@ $(lib): $(OBJS)
+ 	(set -x; \
+ 	 $(RM) $@; \
+ 	 libs="$(OMNIORB_ZIOP_LIB) $(OMNIORB_LIB_NODYN) $(PYLIB)"; \
+-	 $(CXXLINK) -out:$@ -DLL $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
+-         $(MANIFESTTOOL) /outputresource:"$@;#2" /manifest $@.manifest; \
++	 $(CXXLINK) -out:$@ -DLL -manifest $(CXXLINKOPTIONS) $(IMPORT_LIBRARY_FLAGS) $(PYLIBPATH) $(OBJS) $$libs; \
++         $(MANIFESTTOOL) -outputresource:"$@;#2" -manifest $@.manifest; \
+ 	)
+ 
+ export:: $(lib)
+@@ -309,7 +309,7 @@ endif
+ ifdef NextStep
+ 
+ PYPREFIX = $(shell $(PYTHON) -c "import sys;print sys.exec_prefix")
+-CXXOPTIONS += -I$(PYPREFIX)/include
++CXXOPTIONS += -I$(includedir)/python3.11
+ CXXLINKOPTIONS += -nostdlib -r
+ SO = .so
+ libname = _omniZIOPmodule$(SO)
+diff --git a/python3/omniORB/dir.mk b/python3/omniORB/dir.mk
+index 17db2495f..c6b9b0cb3 100644
+--- a/python3/omniORB/dir.mk
++++ b/python3/omniORB/dir.mk
+@@ -60,7 +60,7 @@ ziop_idl.py: ziop.idl
+         -I$(DATADIR)/idl/omniORB \
+         -bpython -nf -Wbno_package -Wbmodules=omniORB $^
+ 
+-minorfile := $(shell file="$(INCDIR)/omniORB4/minorCode.h"; \
++minorfile := $(shell file="$(includedir)/omniORB4/minorCode.h"; \
+                dirs="$(IMPORT_TREES)"; \
+                $(FindFileInDirs); \
+                echo "$$fullfile")
