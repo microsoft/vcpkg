@@ -1,7 +1,11 @@
 if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
 set(_VCPKG_WINDOWS_TOOLCHAIN 1)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>" CACHE STRING "")
-set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "")
+
+# Default CMake setting sets both Debug and RelWithDebInfo configs to ProgramDatabase, which causes issues as this adds
+# 'Zi' to the command line which conflicts with 'Z7' set in CMAKE_CXX_FLAGS_DEBUG. Set the value such that ProgramDatabase
+# applies only to RelWithDebInfo, not Debug
+set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:RelWithDebInfo>:ProgramDatabase>")
 
 set(CMAKE_SYSTEM_NAME WindowsStore CACHE STRING "")
 
