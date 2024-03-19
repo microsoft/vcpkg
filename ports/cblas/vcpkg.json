@@ -1,8 +1,8 @@
 {
   "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
-  "name": "blas",
-  "version-date": "2023-04-14",
-  "description": "Metapackage for packages which provide BLAS",
+  "name": "cblas",
+  "version-date": "2024-03-19",
+  "description": "Metapackage for packages which provide CBLAS",
   "license": null,
   "dependencies": [
     {
