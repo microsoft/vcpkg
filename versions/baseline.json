@@ -1824,6 +1824,10 @@
       "baseline": "2020.06",
       "port-version": 8
     },
+    "correlation-vector-cpp": {
+      "baseline": "1.0",
+      "port-version": 0
+    },
     "cpp-async": {
       "baseline": "1.1.0",
       "port-version": 0
