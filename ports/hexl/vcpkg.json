@@ -1,6 +1,6 @@
 {
   "name": "hexl",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Intel® HEXL is an open-source library which provides efficient implementations of integer arithmetic on Galois fields.",
   "homepage": "https://github.com/intel/hexl",
   "license": "Apache-2.0",

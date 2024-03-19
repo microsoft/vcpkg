@@ -2,17 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 6c9061674716ca8c83a3913222db4002d893d751b0072a8af10013e09462a9cc847689dc874e30c499ae0d5be73c464f610057744c771fcd678bc43185d0f923
+    SHA512 aa96ad2bf30dbe09849ecfb64ec6e60ba4fd3bc2d144c7d576b1e59476ef45d9d744da37806b1c00e3a0413390b35c6d3d4401b89c07c5663122280eca39e501
     HEAD_REF master
     PATCHES
         dependencies.patch
-        DontInstallSystemRuntimeLibs.patch
         install-layout.patch
         keep-dup-libs.patch
         windows-linkage.patch
-        wfreerdp-server-cli.patch
 )
 file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
+file(WRITE "${SOURCE_PATH}/CMakeCPack.cmake" "")
 
 if("x11" IN_LIST FEATURES)
     message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n    libxfixes-dev\n")

@@ -1,7 +1,8 @@
 {
   "name": "qtquick3dphysics",
   "version": "6.6.1",
-  "description": "Physics engine integration for Qt Quick 3D",
+  "port-version": 1,
+  "description": "Qt Quick 3D Physics provides a high-level API for physics simulation.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [

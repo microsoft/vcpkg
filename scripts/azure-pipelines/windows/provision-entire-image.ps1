@@ -4,6 +4,7 @@
 . "$PSScriptRoot\utility-prefix.ps1"
 
 . "$PSScriptRoot\deploy-tlssettings.ps1" -RebootIfRequired 0
+. "$PSScriptRoot\deploy-azcopy.ps1"
 . "$PSScriptRoot\deploy-windows-sdks.ps1"
 . "$PSScriptRoot\deploy-visual-studio.ps1"
 . "$PSScriptRoot\deploy-mpi.ps1"
