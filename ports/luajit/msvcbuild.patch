@@ -1,12 +1,16 @@
 diff --git a/src/msvcbuild.bat b/src/msvcbuild.bat
-index 77785ee..4c6e5b1 100644
+index 77785ee..9dbc0d6 100644
 --- a/src/msvcbuild.bat
 +++ b/src/msvcbuild.bat
-@@ -97,10 +97,9 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
- @set LJDYNBUILD=/MDd /DLUA_BUILD_AS_DLL
+@@ -94,13 +94,13 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
+ @shift
+ @set BUILDTYPE=debug
+ @set LJCOMPILE=%LJCOMPILE% /Zi %DEBUGCFLAGS%
+-@set LJDYNBUILD=/MDd /DLUA_BUILD_AS_DLL
++@set LJDYNBUILD=/DLUA_BUILD_AS_DLL
  @set LJLINK=%LJLINK% /opt:ref /opt:icf /incremental:no
  :NODEBUG
--@set LJLINK=%LJLINK% /%BUILDTYPE%
+ @set LJLINK=%LJLINK% /%BUILDTYPE%
  @if "%1"=="amalg" goto :AMALGDLL
  @if "%1"=="static" goto :STATIC
 -%LJCOMPILE% %LJDYNBUILD% lj_*.c lib_*.c
@@ -14,16 +18,16 @@ index 77785ee..4c6e5b1 100644
  @if errorlevel 1 goto :BAD
  %LJLINK% /DLL /out:%LJDLLNAME% lj_*.obj lib_*.obj
  @if errorlevel 1 goto :BAD
-@@ -120,7 +119,7 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
- if exist %LJDLLNAME%.manifest^
-   %LJMT% -manifest %LJDLLNAME%.manifest -outputresource:%LJDLLNAME%;2
- 
--%LJCOMPILE% luajit.c
-+%LJCOMPILE% luajit.c /Fdluajit.pdb
+@@ -112,7 +112,7 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
  @if errorlevel 1 goto :BAD
- %LJLINK% /out:luajit.exe luajit.obj %LJLIBNAME%
+ @goto :MTDLL
+ :AMALGDLL
+-%LJCOMPILE% %LJDYNBUILD% ljamalg.c
++%LJCOMPILE% %LJDYNBUILD% ljamalg.c /Fdluajit.pdb
  @if errorlevel 1 goto :BAD
-@@ -148,4 +147,5 @@ if exist luajit.exe.manifest^
+ %LJLINK% /DLL /out:%LJDLLNAME% ljamalg.obj lj_vm.obj
+ @if errorlevel 1 goto :BAD
+@@ -148,4 +148,5 @@ if exist luajit.exe.manifest^
  @goto :END
  :FAIL
  @echo You must open a "Visual Studio Command Prompt" to run this script
