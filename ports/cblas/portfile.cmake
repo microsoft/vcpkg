@@ -1,0 +1,20 @@
+SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
+# OpenBLAS
+if(VCPKG_TARGET_IS_OSX)
+    set(BLA_VENDOR Apple)
+    set(requires "")
+    set(libs "-framework Accelerate")
+    set(cflags "-framework Accelerate")
+elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(BLA_VENDOR Generic)
+    set(requires "cblas-reference")
+else()
+    set(BLA_VENDOR OpenBLAS)
+    set(requires openblas)
+endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/cblas.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cblas.pc" @ONLY)
+if(NOT VCPKG_BUILD_TYPE)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/cblas.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cblas.pc" @ONLY)
+endif()
