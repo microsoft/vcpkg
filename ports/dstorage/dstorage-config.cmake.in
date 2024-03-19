@@ -8,8 +8,6 @@ set_target_properties(Microsoft::DirectStorage PROPERTIES
    IMPORTED_IMPLIB                      "${_dstorage_root}/lib/@lib_name@"
    INTERFACE_INCLUDE_DIRECTORIES        "${_dstorage_root}/include"
    INTERFACE_LINK_LIBRARIES             "Microsoft::DirectStorageCore"
-   MAP_IMPORTED_CONFIG_MINSIZEREL       ""
-   MAP_IMPORTED_CONFIG_RELWITHDEBINFO   ""
    IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
 
 add_library(Microsoft::DirectStorageCore SHARED IMPORTED)
@@ -17,8 +15,6 @@ set_target_properties(Microsoft::DirectStorageCore PROPERTIES
    IMPORTED_LOCATION                    "${_dstorage_root}/bin/dstoragecore.dll"
    IMPORTED_IMPLIB                      "${_dstorage_root}/lib/@lib_name@"
    INTERFACE_INCLUDE_DIRECTORIES        "${_dstorage_root}/include"
-   MAP_IMPORTED_CONFIG_MINSIZEREL       ""
-   MAP_IMPORTED_CONFIG_RELWITHDEBINFO   ""
    IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
 
 unset(_dstorage_root)
