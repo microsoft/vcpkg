@@ -11,9 +11,26 @@ vcpkg_download_distfile(
 
 vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        aso ASO
+)
+
+set(EXTRA_OPTIONS)
+
+# Avoid architecture-specific assembly when targeting WASM.  The upstream
+# CMakeLists incorrectly recognizes the CPU as an Intel/64-bit CPU, therefore
+# we have to override these flags:
+# https://codeberg.org/tenacityteam/libmad/src/commit/84ba587793d61caadf6d1f6c0d94c3e165874a50/CMakeLists.txt
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    list(APPEND EXTRA_OPTIONS "-DFPM_64BIT=OFF -DFPM_INTEL=OFF -DFPM_DEFAULT=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
+        ${EXTRA_OPTIONS}
         -DEXAMPLE=OFF
 )
 

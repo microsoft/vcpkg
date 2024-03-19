@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KjellKod/g3log
     REF "${VERSION}"
-    SHA512 cf88bd604a82dd4cd2d2677bbda6f495f4357157d693125cd0df45f84b1976fc6b9dba9eddb5e9ae105e4fc15665ae37c86e9c02aba93d4bb7ba668c88bfddb9
+    SHA512 f48c5bb30d734fc218a5bfb19a406101c89deaee4a2f76b21c7105215a29f558efc2759ee1c1664f62cb37e2d8ae0666f99fdce9b863221e4a9efc9814cdf30c
     HEAD_REF master
 )
 

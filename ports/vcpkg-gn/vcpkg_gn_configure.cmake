@@ -1,5 +1,4 @@
 include_guard(GLOBAL)
-include("${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_gn_fixup_path.cmake")
 
 function(z_vcpkg_gn_configure_generate)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;CONFIG;ARGS" "")
@@ -46,6 +45,4 @@ function(vcpkg_gn_configure)
             ARGS "--args=${arg_OPTIONS} ${arg_OPTIONS_RELEASE}"
         )
     endif()
-
-    z_vcpkg_gn_fixup_path()
 endfunction()

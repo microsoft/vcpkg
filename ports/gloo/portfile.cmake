@@ -4,6 +4,8 @@ vcpkg_from_github(
   REF 1da21174054eaabbbd189b7f657ea24842d821e2
   SHA512 ebd8369e413aee739a3928f8e6738c15708f009e0cd5a3763b8cadbe6f6d0a9d758585a7a2b0f7dd6d39a12882ff2f9497ab2d4edcebd4eb2a7237ab857f317e
   HEAD_REF master
+  PATCHES
+      fix-array.patch #https://github.com/facebookincubator/gloo/issues/332
   )
 
 # Determine which backend to build via specified feature
