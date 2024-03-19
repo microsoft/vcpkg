@@ -5,15 +5,5 @@
       "version": "1.1.1",
       "port-version": 0
     },
-    {
-      "git-tree": "4573b0588075fdbe22dfe92bdb86ccc9858e29ce",
-      "version": "1.1.0",
-      "port-version": 0
-    },
-    {
-      "git-tree": "f7722204ec6f48bcf046bd1d2ee9295a896a51a2",
-      "version": "1.0.0",
-      "port-version": 0
-    }
   ]
 }

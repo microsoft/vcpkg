@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Atliac/minitest
-    REF v1.1.1
+    REF "v${VERSION}"
     SHA512 210156a727a07898e5f059f252d3e332a4837d1f2b0f457281594e1b7767a4d3d61ebd2a5137eac944dcae3fc29f191c5f3502ac366318cc8b242295464c8e0f
     HEAD_REF master
 )
