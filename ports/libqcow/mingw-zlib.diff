@@ -1,0 +1,94 @@
+diff --git a/configure b/configure
+index 1a6c34a..b5ed0e8 100755
+--- a/configure
++++ b/configure
+@@ -50049,7 +50049,7 @@ See \`config.log' for more details" "$LINENO" 5; }
+ fi
+ 
+ else $as_nop
+-        if test "x$cross_compiling" != "xyes" && test "x$PKGCONFIG" != "x"
++        if test "x$cross_compiling" != "" && test "x$PKGCONFIG" != "x"
+ then :
+ 
+ pkg_failed=no
+@@ -50155,7 +50155,7 @@ then :
+   printf %s "(cached) " >&6
+ else $as_nop
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lz  $LIBS"
++LIBS="$ac_cv_zlib_LIBADD $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -50187,7 +50187,7 @@ if test "x$ac_cv_lib_z_zlibVersion" = xyes
+ then :
+   printf "%s\n" "#define HAVE_LIBZ 1" >>confdefs.h
+ 
+-  LIBS="-lz $LIBS"
++  LIBS="$ac_cv_zlib_LIBADD $LIBS"
+ 
+ else $as_nop
+   ac_cv_zlib=no
+@@ -50274,7 +50274,7 @@ then :
+   printf %s "(cached) " >&6
+ else $as_nop
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lz  $LIBS"
++LIBS="$ac_cv_zlib_LIBADD $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -50317,7 +50317,7 @@ then :
+   printf %s "(cached) " >&6
+ else $as_nop
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lz  $LIBS"
++LIBS="$ac_cv_zlib_LIBADD $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -50360,7 +50360,7 @@ then :
+   printf %s "(cached) " >&6
+ else $as_nop
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lz  $LIBS"
++LIBS="$ac_cv_zlib_LIBADD $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -50405,7 +50405,7 @@ then :
+   printf %s "(cached) " >&6
+ else $as_nop
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lz  $LIBS"
++LIBS="$ac_cv_zlib_LIBADD $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -50447,7 +50447,7 @@ then :
+   printf %s "(cached) " >&6
+ else $as_nop
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lz  $LIBS"
++LIBS="$ac_cv_zlib_LIBADD $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -50489,7 +50489,7 @@ then :
+   printf %s "(cached) " >&6
+ else $as_nop
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lz  $LIBS"
++LIBS="$ac_cv_zlib_LIBADD $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -50531,7 +50531,7 @@ then :
+   printf %s "(cached) " >&6
+ else $as_nop
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lz  $LIBS"
++LIBS="$ac_cv_zlib_LIBADD $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
