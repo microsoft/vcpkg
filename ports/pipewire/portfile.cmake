@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pipewire/pipewire
-    REF ${VERSION}
-    SHA512 140d02242b1c76e4ced9bccaf306e7881103aa7081778b0e734a3eab12f3dae8c2824cca83d5e01c05817808c41da8280a4bf5a025448cff4ff9376219ae8050
+    REF "${VERSION}"
+    SHA512 3884a64ce4d467665d34ee39e84ab394e4fe7c24bc006efe1f6ba78649e9fe3693c65f2173a4b0bf0979786309a5b12bc8b90aab3f6cbc223db596c44d00f4cc
     HEAD_REF master # branch name
 )
 

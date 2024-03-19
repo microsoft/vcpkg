@@ -1,7 +1,7 @@
 {
   "name": "mapnik",
   "version-date": "2023-06-12",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "license": "LGPL-2.1-only",
@@ -124,7 +124,10 @@
       ]
     },
     "input-raster": {
-      "description": "RASTER input plugin"
+      "description": "RASTER input plugin",
+      "dependencies": [
+        "boost-format"
+      ]
     },
     "input-shape": {
       "description": "SHAPE input plugin"

@@ -1,0 +1,15 @@
+diff --git a/extras/AudioPluginHost/CMakeLists.txt b/extras/AudioPluginHost/CMakeLists.txt
+index 852796383..37a5306c9 100644
+--- a/extras/AudioPluginHost/CMakeLists.txt
++++ b/extras/AudioPluginHost/CMakeLists.txt
+@@ -51,7 +51,7 @@ target_compile_definitions(AudioPluginHost PRIVATE
+     JUCE_CONTENT_SHARING=1
+     JUCE_DIRECTSOUND=1
+     JUCE_DISABLE_CAUTIOUS_PARAMETER_ID_CHECKING=1
+-    JUCE_PLUGINHOST_LADSPA=1
++    JUCE_PLUGINHOST_LADSPA=${JUCE_PLUGINHOST_LADSPA}
+     JUCE_PLUGINHOST_LV2=1
+     JUCE_PLUGINHOST_VST3=1
+     JUCE_PLUGINHOST_VST=0
+--
+2.34.1

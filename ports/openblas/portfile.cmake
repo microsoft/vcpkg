@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO xianyi/OpenBLAS
+    REPO OpenMathLib/OpenBLAS
     REF "v${VERSION}"
-    SHA512 69bcf8082575b01ce1734fc9d33454314964a7e81ff29a7c1a764af3083ac0dc24289fd72bbe22c9583398bda7b658d6e4ab1d5036e43412745f0be3c2185b3c
+    SHA512 01d3a536fbfa62f276fd6b1ad0e218fb3d91f41545fc83ddc74979fa26372d8389f0baa20334badfe0adacd77bd944c50a47ac920577373fcc1d495553084373
     HEAD_REF develop
     PATCHES
         uwp.patch
@@ -16,7 +16,7 @@ find_program(GIT NAMES git git.cmd)
 get_filename_component(GIT_EXE_PATH "${GIT}" DIRECTORY)
 set(SED_EXE_PATH "${GIT_EXE_PATH}/../usr/bin")
 
-# openblas require perl to generate .def for exports
+# openblas requires perl to generate .def for exports
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
 set(PATH_BACKUP "$ENV{PATH}")
@@ -33,14 +33,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 if(VCPKG_TARGET_IS_OSX)
+    list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
     if("dynamic-arch" IN_LIST FEATURES)
         set(conf_opts GENERATOR "Unix Makefiles")
     endif()
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND COMMON_OPTIONS -DONLY_CBLAS=1)
+endif()
+
 set(OPENBLAS_EXTRA_OPTIONS)
-# for UWP version, must build non uwp first for helper
-# binaries.
+# For UWP version, must build non-UWP first for helper binaries
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPENBLAS_EXTRA_OPTIONS "-DBLASHELPER_BINARY_DIR=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
 elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
@@ -48,7 +52,7 @@ elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
     string(APPEND VCPKG_CXX_FLAGS " -DNEEDBUNDERSCORE")
     list(APPEND OPENBLAS_EXTRA_OPTIONS
                 -DNOFORTRAN=ON
-                -DBU=_  #required for all blas functions to append extra _ using NAME
+                -DBU=_  # Required for all BLAS functions to append extra _ using NAME
     )
 endif()
 
@@ -94,11 +98,12 @@ if(EXISTS "${pcfile}")
     #file(CREATE_LINK "${pcfile}" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" COPY_ON_ERROR)
 endif()
 vcpkg_fixup_pkgconfig()
-#maybe we need also to write a wrapper inside share/blas to search implicitly for openblas, whenever we feel it's ready for its own -config.cmake file
+# Maybe we need also to write a wrapper inside share/blas to search implicitly for openblas,
+# whenever we feel it's ready for its own -config.cmake file.
 
-# openblas do not make the config file , so I manually made this
-# but I think in most case, libraries will not include these files, they define their own used function prototypes
-# this is only to quite vcpkg
+# openblas does not have a config file, so I manually made this.
+# But I think in most cases, libraries will not include these files, they define their own used function prototypes.
+# This is only to quite vcpkg.
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/openblas_common.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_replace_string(

@@ -1,3 +1,7 @@
+Param(
+    [Parameter(Mandatory=$true)]
+    [int]$KeyNumber
+)
 
 function Get-SasToken {
     Param(
@@ -22,35 +26,33 @@ function Get-SasToken {
     $ctx = New-AzStorageContext -StorageAccountName $StorageAccountName -StorageAccountKey $key.Value
     $start = Get-Date -AsUTC
     $end = $start.AddDays(90)
-    $token = New-AzStorageContainerSASToken -Name $ContainerName -Permission $Permission -StartTime $start -ExpiryTime $end -Context $ctx
-    return $token.Substring(1)
+    $token = New-AzStorageContainerSASToken -Name $ContainerName -Permission $Permission -StartTime $start -ExpiryTime $end -Context $ctx -Protocol HttpsOnly
+    if ($token.StartsWith('?')) {
+        $token = $token.Substring(1)
+    }
+
+    return $token
 }
 
 # Asset Cache:
 # Read, Create, List
-$assetSas = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-asset-cache -StorageAccountName vcpkgassetcacheeastasia -ContainerName cache -Permission rcl
+$assetWus3Sas = Get-SasToken -KeyNumber $KeyNumber -ResourceGroupName vcpkg-asset-cache -StorageAccountName vcpkgassetcachewus3 -ContainerName cache -Permission rcl
 
 # Binary Cache:
 # Read, Create, List, Write
-$binarySas = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycache -ContainerName cache -Permission rclw
-$binaryEASas = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycacheeastasia -ContainerName cache -Permission rclw
-$binaryWUS3as = Get-SasToken -KeyNumber 1 -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycachewus3 -ContainerName cache -Permission rclw
+$binaryWUS3as = Get-SasToken -KeyNumber $KeyNumber -ResourceGroupName vcpkg-binary-cache -StorageAccountName vcpkgbinarycachewus3 -ContainerName cache -Permission rclw
 
 $response = "Asset Cache SAS: Update`n" + `
     "https://dev.azure.com/vcpkg/public/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=6&path=vcpkg-asset-caching-credentials`n" + `
     "and`n" + `
     "https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=355&path=vcpkg-asset-caching-credentials`n" + `
     "`n" + `
-    "token:`n" + `
-    "$assetSas`n" + `
+    "wus3 token:`n" + `
+    "$assetWus3Sas`n" + `
     "`n" + `
     "Binary Cache SAS: Update`n" + `
     "https://dev.azure.com/vcpkg/public/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=8&path=vcpkg-binary-caching-credentials`n" + `
     "`n" + `
-    "sas-bin:`n" + `
-    "$binarySas`n" + `
-    "sas-bin-ea:`n" + `
-    "$binaryEASas`n" + `
     "sas-bin-wus3:`n" + `
     "$binaryWUS3as`n"
 

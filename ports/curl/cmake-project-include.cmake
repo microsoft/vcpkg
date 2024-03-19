@@ -1,3 +1,8 @@
+if(ANDROID AND ANDROID_NATIVE_API_LEVEL LESS 24)
+    # https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
+    set(HAVE_FILE_OFFSET_BITS FALSE CACHE INTERNAL "")
+endif()
+
 # Process the libs and targets in the variable named by `input`
 # into a flat list of libs in the variable named by `output`.
 # Simplify -framework elements.
@@ -62,6 +67,8 @@ function(vcpkg_curl_flatten input output)
             set(lib -l${CMAKE_MATCH_1})
         elseif(lib MATCHES ".*/${CMAKE_STATIC_LIBRARY_PREFIX}([^/]*)${CMAKE_STATIC_LIBRARY_SUFFIX}")
             set(lib -l${CMAKE_MATCH_1})
+        elseif(lib MATCHES ".*/${CMAKE_SHARED_LIBRARY_PREFIX}([^/]*)${CMAKE_SHARED_LIBRARY_SUFFIX}")
+            set(lib -l${CMAKE_MATCH_1})
         endif()
         if(NOT "${lib}" IN_LIST output_libs)
             list(PREPEND output_libs "${lib}")
@@ -73,4 +80,15 @@ endfunction()
 if(USE_LIBIDN2)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(LIBIDN2 REQUIRED libidn2)
+endif()
+
+if(NOT CURL_DISABLE_LDAP AND NOT WIN32)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LDAP REQUIRED ldap)
+    set(HAVE_LIBLDAP 1)
+    set(CMAKE_LDAP_INCLUDE_DIR "${LDAP_INCLUDE_DIRS}")
+    set(CMAKE_LDAP_LIB "${LDAP_LINK_LIBRARIES}" CACHE STRING "")
+    pkg_check_modules(LBER REQUIRED lber)
+    set(HAVE_LIBLBER 1)
+    set(CMAKE_LBER_LIB "${LBER_LINK_LIBRARIES}" CACHE STRING "")
 endif()

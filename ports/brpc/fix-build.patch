@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4ac815d6..dbb9b7ee 100644
+index f364cd13..f4add26d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -66,7 +66,8 @@ endif()
@@ -91,7 +91,7 @@ index dfad5fd8..8423d55a 100644
    set(GFLAGS_FOUND TRUE)
  endif(GFLAGS_INCLUDE_PATH AND GFLAGS_LIBRARY)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index fbcc7cc5..95037a0d 100644
+index fbcc7cc5..868270ea 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -31,16 +31,24 @@ add_dependencies(SOURCES_LIB PROTO_LIB)
@@ -121,7 +121,7 @@ index fbcc7cc5..95037a0d 100644
  # for protoc-gen-mcpack
  set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/output/bin)
      
-@@ -49,35 +57,62 @@ set(protoc_gen_mcpack_SOURCES
+@@ -49,35 +57,63 @@ set(protoc_gen_mcpack_SOURCES
   )
      
  add_executable(protoc-gen-mcpack ${protoc_gen_mcpack_SOURCES})
@@ -131,7 +131,7 @@ index fbcc7cc5..95037a0d 100644
      add_library(brpc-shared SHARED $<TARGET_OBJECTS:BUTIL_LIB> 
                                     $<TARGET_OBJECTS:SOURCES_LIB>
                                     $<TARGET_OBJECTS:PROTO_LIB>)
--    target_link_libraries(brpc-shared ${DYNAMIC_LIB})
+     target_link_libraries(brpc-shared ${DYNAMIC_LIB})
 +    target_include_directories(brpc-shared PUBLIC $<INSTALL_INTERFACE:include>)
      if(BRPC_WITH_GLOG)
          target_link_libraries(brpc-shared ${GLOG_LIB})
