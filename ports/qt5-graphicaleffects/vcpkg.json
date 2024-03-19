@@ -1,7 +1,8 @@
 {
   "name": "qt5-graphicaleffects",
   "version": "5.15.13",
-  "description": "Qt5 GraphicalEffects Module.",
+  "port-version": 1,
+  "description": "The Qt Graphical Effects module provides a set of QML types for adding visually impressive and configurable effects to user interfaces.",
   "license": null,
   "dependencies": [
     {
