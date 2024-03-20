@@ -103,20 +103,25 @@ file(COPY "${ICET_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/IceT/vtk
 if("python" IN_LIST FEATURES)
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
+        file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
         string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
         set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
         set(python_ver "3.${PYTHON_VERSION_MINOR}")
     endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
         -DPARAVIEW_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}
         -DVTK_MODULE_ENABLE_ParaView_PythonCatalyst:STRING=YES
         )
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PARAVIEW_BUILD_SHARED_LIBS)
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  # Hitting pdb size limits when building paraview so increase it
+  string(APPEND VCPKG_LINKER_FLAGS " /PDBPAGESIZE:8192")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
