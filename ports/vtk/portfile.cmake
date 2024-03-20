@@ -132,7 +132,7 @@ endif()
 if("python" IN_LIST FEATURES)
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
+        file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
         string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
         set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
         set(python_ver "3.${PYTHON_VERSION_MINOR}")
@@ -140,7 +140,7 @@ if("python" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
         -DVTK_MODULE_ENABLE_VTK_Python=YES
         -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES # TODO: recheck
         -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES
@@ -217,7 +217,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        --trace-expand
         ${FEATURE_OPTIONS}
         ${VTK_FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
@@ -373,3 +372,5 @@ endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtk/VTK-vtk-module-properties.cmake" "_vtk_module_import_prefix}/lib/vtk-9.3/hierarchy" "_vtk_module_import_prefix}$<$<CONFIG:Debug>:/debug>/lib/vtk-9.3/hierarchy")
