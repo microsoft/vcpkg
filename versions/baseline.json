@@ -5320,10 +5320,6 @@
       "baseline": "2.2",
       "port-version": 0
     },
-    "linenoise-ng": {
-      "baseline": "4754bee2d8eb3",
-      "port-version": 3
-    },
     "linmath": {
       "baseline": "2022-07-30",
       "port-version": 0
@@ -6174,7 +6170,7 @@
     },
     "nss": {
       "baseline": "3.98",
-      "port-version": 0
+      "port-version": 1
     },
     "nsync": {
       "baseline": "1.26.0",
@@ -7914,7 +7910,7 @@
     },
     "sdl2-mixer": {
       "baseline": "2.8.0",
-      "port-version": 2
+      "port-version": 3
     },
     "sdl2-mixer-ext": {
       "baseline": "2.6.0",
@@ -8058,7 +8054,7 @@
     },
     "simd": {
       "baseline": "5.3.128",
-      "port-version": 0
+      "port-version": 1
     },
     "simde": {
       "baseline": "0.8.0",
