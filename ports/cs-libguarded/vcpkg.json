@@ -14,7 +14,8 @@
       "host": true
     },
     {
-      "name": "catch2"
+      "name": "catch2",
+      "host": true
     }
   ]
 }
