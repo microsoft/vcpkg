@@ -59,7 +59,7 @@ APT_PACKAGES="$APT_PACKAGES libxcb-res0-dev"
 APT_PACKAGES="$APT_PACKAGES libxcb-keysyms1-dev libxcb-xkb-dev libxcb-record0-dev"
 
 ## required by mesa
-APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako libxcb-dri3-dev libxcb-present-dev"
+APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako libxcb-dri3-dev libxcb-present-dev python3-packaging"
 
 ## required by some packages to install additional python packages
 APT_PACKAGES="$APT_PACKAGES python3-pip python3-venv python3-jinja2"
