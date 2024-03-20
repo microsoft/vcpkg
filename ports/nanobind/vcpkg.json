@@ -5,6 +5,7 @@
   "homepage": "https://nanobind.readthedocs.io/en/latest/",
   "license": "BSD-3-Clause",
   "dependencies": [
+    "python3",
     "robin-map",
     {
       "name": "vcpkg-cmake",
