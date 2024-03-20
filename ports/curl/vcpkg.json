@@ -17,6 +17,7 @@
     "zlib"
   ],
   "default-features": [
+    "ca-native",
     "non-http",
     "openssl"
   ],
@@ -32,6 +33,9 @@
       "dependencies": [
         "c-ares"
       ]
+    },
+    "ca-native": {
+      "description": "Use standard certificate store of operating system"
     },
     "http2": {
       "description": "HTTP2 support",

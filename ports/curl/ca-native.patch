@@ -1,0 +1,69 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 656aa7c740facf..c4bea84462679a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -399,6 +399,11 @@ cmake_dependent_option(CURL_USE_BEARSSL "Enable BearSSL for SSL/TLS" OFF CURL_EN
+ cmake_dependent_option(CURL_USE_WOLFSSL "Enable wolfSSL for SSL/TLS" OFF CURL_ENABLE_SSL OFF)
+ cmake_dependent_option(CURL_USE_GNUTLS "Enable GnuTLS for SSL/TLS" OFF CURL_ENABLE_SSL OFF)
+ 
++option(CURL_USE_CA_NATIVE "Use standard certificate store of operating system" OFF)
++if(CURL_USE_CA_NATIVE)
++  set(USE_CA_NATIVE ON)
++endif()
++
+ set(openssl_default ON)
+ if(WIN32 OR CURL_USE_SECTRANSP OR CURL_USE_SCHANNEL OR CURL_USE_MBEDTLS OR CURL_USE_WOLFSSL)
+   set(openssl_default OFF)
+diff --git a/lib/curl_config.h.cmake b/lib/curl_config.h.cmake
+index 0f4db69820ed17..09f1fd14ca9528 100644
+--- a/lib/curl_config.h.cmake
++++ b/lib/curl_config.h.cmake
+@@ -741,6 +741,9 @@ ${SIZEOF_TIME_T_CODE}
+ /* to enable Windows SSL  */
+ #cmakedefine USE_SCHANNEL 1
+ 
++/* Use standard certificate store of operating system */
++#cmakedefine USE_CA_NATIVE 1
++
+ /* enable multiple SSL backends */
+ #cmakedefine CURL_WITH_MULTI_SSL 1
+ 
+diff --git a/lib/setopt.c b/lib/setopt.c
+index 8a5a5d7c33d21d..a7ce186baef681 100644
+--- a/lib/setopt.c
++++ b/lib/setopt.c
+@@ -2370,6 +2370,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option, va_list param)
+     data->set.ssl.no_partialchain = !!(arg & CURLSSLOPT_NO_PARTIALCHAIN);
+     data->set.ssl.revoke_best_effort = !!(arg & CURLSSLOPT_REVOKE_BEST_EFFORT);
+     data->set.ssl.native_ca_store = !!(arg & CURLSSLOPT_NATIVE_CA);
++#ifdef USE_CA_NATIVE
++    data->set.ssl.native_ca_store = true;
++#endif
+     data->set.ssl.auto_client_cert = !!(arg & CURLSSLOPT_AUTO_CLIENT_CERT);
+     /* If a setting is added here it should also be added in dohprobe()
+        which sets its own CURLOPT_SSL_OPTIONS based on these settings. */
+@@ -2385,6 +2388,9 @@ CURLcode Curl_vsetopt(struct Curl_easy *data, CURLoption option, va_list param)
+     data->set.proxy_ssl.revoke_best_effort =
+       !!(arg & CURLSSLOPT_REVOKE_BEST_EFFORT);
+     data->set.proxy_ssl.native_ca_store = !!(arg & CURLSSLOPT_NATIVE_CA);
++#ifdef USE_CA_NATIVE
++    data->set.ssl.native_ca_store = true;
++#endif
+     data->set.proxy_ssl.auto_client_cert =
+       !!(arg & CURLSSLOPT_AUTO_CLIENT_CERT);
+     break;
+diff --git a/src/tool_getparam.c b/src/tool_getparam.c
+index 52bb24959ddd71..1c1cf596820bcf 100644
+--- a/src/tool_getparam.c
++++ b/src/tool_getparam.c
+@@ -2749,7 +2749,9 @@ ParameterError getparameter(const char *flag, /* f or -long-flag */
+     a = NULL;
+ 
+   } while(!longopt && !singleopt && *++parse && !*usedarg && !err);
+-
++#ifdef USE_CA_NATIVE
++  config->native_ca_store = true;
++#endif
+ error:
+   if(nextalloc)
+     free(nextarg);

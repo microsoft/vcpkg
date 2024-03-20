@@ -16,6 +16,7 @@ vcpkg_from_github(
         dependencies.patch
         cmake-config.patch
         openssl_quic.patch
+        ca-native.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -37,6 +38,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         winidn      USE_WIN32_IDN
         websockets  ENABLE_WEBSOCKETS
         zstd        CURL_ZSTD
+        ca-native   CURL_USE_CA_NATIVE
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
