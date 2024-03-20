@@ -381,7 +381,7 @@
       "port-version": 0
     },
     "aws-c-event-stream": {
-      "baseline": "0.4.1",
+      "baseline": "0.4.2",
       "port-version": 0
     },
     "aws-c-http": {
@@ -405,7 +405,7 @@
       "port-version": 0
     },
     "aws-checksums": {
-      "baseline": "0.1.17",
+      "baseline": "0.1.18",
       "port-version": 0
     },
     "aws-crt-cpp": {
