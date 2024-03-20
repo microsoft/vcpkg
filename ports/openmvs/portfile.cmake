@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-build.patch
         no-absolute-paths.patch
+        fix-static-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -32,7 +33,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
-        --trace-expand
         -DOpenMVS_USE_FAST_FLOAT2INT=ON
         -DOpenMVS_USE_FAST_INVSQRT=OFF
         -DOpenMVS_USE_FAST_CBRT=ON
