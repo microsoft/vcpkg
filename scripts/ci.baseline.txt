@@ -1323,12 +1323,12 @@ vcpkg-ci-openimageio:x64-osx=pass
 vcpkg-ci-openimageio:x64-linux=pass
 vcpkg-ci-paraview:x64-linux=pass
 # dlib wrong lapack linkage since #24327 is still not merged
-vtk:x64-osx=fail
-vtk:arm64-osx=fail
+#vtk:x64-osx=fail
+#vtk:arm64-osx=fail
 # vcpkg-ci-paraview:x64-osx=pass
 # vcpkg-ci-paraview:arm64-osx=pass
 # Running out of disk space according to logs
-paraview:x64-windows-static-md=fail
+# paraview:x64-windows-static-md=fail
 paraview:x64-windows-static=fail
 # vcpkg-ci-paraview:x64-windows-static-md=pass
 # vcpkg-ci-paraview:x64-windows-static=pass
