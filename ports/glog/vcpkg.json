@@ -22,7 +22,10 @@
     },
     "unwind": {
       "description": "Enable libunwind support",
-      "supports": "linux"
+      "supports": "linux",
+      "dependencies": [
+        "libunwind"
+      ]
     }
   }
 }

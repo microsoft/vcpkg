@@ -9,7 +9,6 @@ vcpkg_from_github(
       glog_disable_debug_postfix.patch
       fix_crosscompile_symbolize.patch
       fix_cplusplus_macro.patch
-      fix_find_unwind.patch
 )
 
 vcpkg_check_features(
@@ -17,6 +16,8 @@ vcpkg_check_features(
     FEATURES
         unwind          WITH_UNWIND
         customprefix    WITH_CUSTOM_PREFIX
+    INVERTED_FEATURES
+        unwind          CMAKE_DISABLE_FIND_PACKAGE_Unwind
 )
 file(REMOVE "${SOURCE_PATH}/glog-modules.cmake.in")
 
