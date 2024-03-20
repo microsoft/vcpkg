@@ -1,8 +1,8 @@
 diff --git a/src/Makefile b/src/Makefile
-index 224d21e..d796b29 100644
+index 30d64be..b753ea1 100644
 --- a/src/Makefile
 +++ b/src/Makefile
-@@ -315,9 +315,6 @@ ifeq (,$(shell $(TARGET_CC) -o /dev/null -c -x c /dev/null -fno-stack-protector
+@@ -316,9 +316,6 @@ ifeq (,$(shell $(TARGET_CC) -o /dev/null -c -x c /dev/null -fno-stack-protector
    TARGET_XCFLAGS+= -fno-stack-protector
  endif
  ifeq (Darwin,$(TARGET_SYS))

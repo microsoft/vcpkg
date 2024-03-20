@@ -1,5 +1,5 @@
 diff --git a/etc/luajit.pc b/etc/luajit.pc
-index 9643300..3539108 100644
+index 39e1e57..3837d3b 100644
 --- a/etc/luajit.pc
 +++ b/etc/luajit.pc
 @@ -21,5 +21,5 @@ URL: https://luajit.org
