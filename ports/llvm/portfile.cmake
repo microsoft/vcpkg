@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 362ddb94fdd22d05bd11c950f1711eafbd47424f6da0b1b061da012ef1b39dd8f7efeb91b53c036ea0708aa3845893fe39d1fb529ac3b928df738b88717d1aee
+    SHA512 0483c02ee89e83e33e60da5f54c89a6a3c496c6fca8ec7ddf6d2f1bd060dcdf83ef3e728e1ff6ebe9ff7a45429f15c36363eaf760cea0cb5a4b97eb544b61fa9
     HEAD_REF main
     PATCHES
         0001-fix-install-package-dir.patch
@@ -13,8 +13,6 @@ vcpkg_from_github(
         0004-disable-libomp-aliases.patch
         0005-remove-numpy.patch
         0006-create-destination-mlir-directory.patch
-        0007-fix-compiler-rt-warnings.patch # fixed in upstream
-        0008-add-missing-case.patch # From upstream https://github.com/llvm/llvm-project/pull/72401
 )
 
 vcpkg_check_features(
@@ -328,6 +326,19 @@ llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("ParallelSTL" FEATURE_NAME "pstl" DO_NOT_DELETE_PARENT_CONFIG_PATH CONFIG_PATH "lib/cmake/ParallelSTL")
 llvm_cmake_package_config_fixup("llvm")
 
+if("mlir" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "set(MLIR_MAIN_SRC_DIR \"${SOURCE_PATH}/mlir\")" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "\${MLIR_INCLUDE_DIRS}")
+endif()
+
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+
+# Move Clang's runtime libraries from bin/lib to tools/${PORT}/lib
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/lib")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/lib" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib")
+endif()
+
 set(empty_dirs)
 
 if("clang-tools-extra" IN_LIST FEATURES)
@@ -367,33 +378,12 @@ if(empty_dirs)
     endforeach()
 endif()
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/lib")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/lib" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib")
-endif()
-
+# LLVM generates shared libraries in a static build (LLVM-C, libclang, LTO, Remarks, ...)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/include"
         "${CURRENT_PACKAGES_DIR}/debug/share"
         "${CURRENT_PACKAGES_DIR}/debug/tools"
-    )
-endif()
-
-if("mlir" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "set(MLIR_MAIN_SRC_DIR \"${SOURCE_PATH}/mlir\")" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "\${MLIR_INCLUDE_DIRS}")
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    # LLVM still generates a few DLLs in the static build:
-    # * LLVM-C.dll
-    # * libclang.dll
-    # * LTO.dll
-    # * Remarks.dll
-    set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-else()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
-        "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
 endif()
