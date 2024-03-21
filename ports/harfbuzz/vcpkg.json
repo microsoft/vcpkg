@@ -1,7 +1,6 @@
 {
   "name": "harfbuzz",
-  "version": "8.3.0",
-  "port-version": 3,
+  "version": "8.3.1",
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "license": "MIT-Modern-Variant",

@@ -1,7 +1,8 @@
 {
   "name": "qt5",
   "version": "5.15.13",
-  "description": "Qt5 Application Framework",
+  "port-version": 1,
+  "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
