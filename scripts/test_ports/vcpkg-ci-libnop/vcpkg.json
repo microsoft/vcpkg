@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libnop",
+    "version-string": "ci",
+    "dependencies": [
+        "libnop",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

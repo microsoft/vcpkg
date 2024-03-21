@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-directx-dxc",
+    "version-string": "ci",
+    "dependencies": [
+        "directx-dxc",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

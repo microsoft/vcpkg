@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-type-lite",
+    "version-string": "ci",
+    "dependencies": [
+        "type-lite",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

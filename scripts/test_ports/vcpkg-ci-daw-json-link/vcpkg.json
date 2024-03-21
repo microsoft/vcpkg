@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-daw-json-link",
+    "version-string": "ci",
+    "dependencies": [
+        "daw-json-link",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-nano-signal-slot",
+    "version-string": "ci",
+    "dependencies": [
+        "nano-signal-slot",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

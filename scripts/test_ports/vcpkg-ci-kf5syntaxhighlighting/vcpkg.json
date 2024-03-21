@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-kf5syntaxhighlighting",
+    "version-string": "ci",
+    "dependencies": [
+        "kf5syntaxhighlighting",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-tesseract",
+    "version-string": "ci",
+    "dependencies": [
+        "tesseract",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

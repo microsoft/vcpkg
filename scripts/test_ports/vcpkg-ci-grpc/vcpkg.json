@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-grpc",
+    "version-string": "ci",
+    "dependencies": [
+        "grpc",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

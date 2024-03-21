@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-nlopt",
+    "version-string": "ci",
+    "dependencies": [
+        "nlopt",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

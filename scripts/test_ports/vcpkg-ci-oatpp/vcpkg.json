@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-oatpp",
+    "version-string": "ci",
+    "dependencies": [
+        "oatpp",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

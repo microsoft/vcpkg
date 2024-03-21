@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-gl3w",
+    "version-string": "ci",
+    "dependencies": [
+        "gl3w",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

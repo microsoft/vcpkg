@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-magnum-integration",
+    "version-string": "ci",
+    "dependencies": [
+        "magnum-integration",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.10)
+project(test)
+set(CMAKE_CXX_STANDARD 11)
+add_executable(main main.cpp)
+find_package(pe-parse CONFIG REQUIRED)
+target_link_libraries(main PRIVATE pe-parse::pe-parse)

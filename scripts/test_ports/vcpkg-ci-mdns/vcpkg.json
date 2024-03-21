@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-mdns",
+    "version-string": "ci",
+    "dependencies": [
+        "mdns",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

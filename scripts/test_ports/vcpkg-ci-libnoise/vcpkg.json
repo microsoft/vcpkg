@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libnoise",
+    "version-string": "ci",
+    "dependencies": [
+        "libnoise",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

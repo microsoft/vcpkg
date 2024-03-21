@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-minifb",
+    "version-string": "ci",
+    "dependencies": [
+        "minifb",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

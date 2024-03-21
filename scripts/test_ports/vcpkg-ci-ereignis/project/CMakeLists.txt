@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.10)
+project(test)
+add_executable(main main.cpp)
+find_path(EREIGNIS_INCLUDE_DIRS "ereignis/event.hpp")
+target_include_directories(main PRIVATE ${EREIGNIS_INCLUDE_DIRS})

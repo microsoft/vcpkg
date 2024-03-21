@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-imgui",
+    "version-string": "ci",
+    "dependencies": [
+        "imgui",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

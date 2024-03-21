@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-sdl2",
+    "version-string": "ci",
+    "dependencies": [
+        "sdl2",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

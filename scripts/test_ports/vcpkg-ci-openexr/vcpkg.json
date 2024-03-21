@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-openexr",
+    "version-string": "ci",
+    "dependencies": [
+        "openexr",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

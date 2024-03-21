@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-etl",
+    "version-string": "ci",
+    "dependencies": [
+        "etl",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

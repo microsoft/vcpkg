@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-sf2cute",
+    "version-string": "ci",
+    "dependencies": [
+        "sf2cute",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

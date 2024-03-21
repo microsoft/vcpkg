@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-nonius",
+    "version-string": "ci",
+    "dependencies": [
+        "nonius",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-termcolor",
+    "version-string": "ci",
+    "dependencies": [
+        "termcolor",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libprotobuf-mutator",
+    "version-string": "ci",
+    "dependencies": [
+        "libprotobuf-mutator",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

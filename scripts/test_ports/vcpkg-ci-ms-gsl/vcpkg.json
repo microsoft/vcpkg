@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-ms-gsl",
+    "version-string": "ci",
+    "dependencies": [
+        "ms-gsl",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

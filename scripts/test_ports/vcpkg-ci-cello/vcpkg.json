@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-cello",
+    "version-string": "ci",
+    "dependencies": [
+        "cello",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

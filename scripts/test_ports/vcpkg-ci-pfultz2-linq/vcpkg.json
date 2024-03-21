@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-pfultz2-linq",
+    "version-string": "ci",
+    "dependencies": [
+        "pfultz2-linq",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

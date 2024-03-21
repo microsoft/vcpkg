@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-aws-c-io",
+    "version-string": "ci",
+    "dependencies": [
+        "aws-c-io",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

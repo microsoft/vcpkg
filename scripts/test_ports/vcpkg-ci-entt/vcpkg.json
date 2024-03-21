@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-entt",
+    "version-string": "ci",
+    "dependencies": [
+        "entt",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

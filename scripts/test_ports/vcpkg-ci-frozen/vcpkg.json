@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-frozen",
+    "version-string": "ci",
+    "dependencies": [
+        "frozen",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

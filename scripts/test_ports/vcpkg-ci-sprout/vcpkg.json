@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-sprout",
+    "version-string": "ci",
+    "dependencies": [
+        "sprout",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

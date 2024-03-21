@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libdatachannel",
+    "version-string": "ci",
+    "dependencies": [
+        "libdatachannel",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

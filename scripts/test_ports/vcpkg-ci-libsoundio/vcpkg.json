@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libsoundio",
+    "version-string": "ci",
+    "dependencies": [
+        "libsoundio",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

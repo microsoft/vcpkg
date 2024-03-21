@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-ryml",
+    "version-string": "ci",
+    "dependencies": [
+        "ryml",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-fdk-aac",
+    "version-string": "ci",
+    "dependencies": [
+        "fdk-aac",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

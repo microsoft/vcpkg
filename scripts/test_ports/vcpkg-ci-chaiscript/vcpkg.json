@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-chaiscript",
+    "version-string": "ci",
+    "dependencies": [
+        "chaiscript",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-snowhouse",
+    "version-string": "ci",
+    "dependencies": [
+        "snowhouse",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

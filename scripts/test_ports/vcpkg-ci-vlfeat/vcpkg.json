@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-vlfeat",
+    "version-string": "ci",
+    "dependencies": [
+        "vlfeat",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

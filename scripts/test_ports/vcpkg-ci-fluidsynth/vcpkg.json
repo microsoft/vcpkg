@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-fluidsynth",
+    "version-string": "ci",
+    "dependencies": [
+        "fluidsynth",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

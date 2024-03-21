@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-stdexec",
+    "version-string": "ci",
+    "dependencies": [
+        "stdexec",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

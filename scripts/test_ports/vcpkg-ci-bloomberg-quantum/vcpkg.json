@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-bloomberg-quantum",
+    "version-string": "ci",
+    "dependencies": [
+        "bloomberg-quantum",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

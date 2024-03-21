@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-llgi",
+    "version-string": "ci",
+    "dependencies": [
+        "llgi",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

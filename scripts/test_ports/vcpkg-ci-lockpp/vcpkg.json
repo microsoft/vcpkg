@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-lockpp",
+    "version-string": "ci",
+    "dependencies": [
+        "lockpp",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-flecs",
+    "version-string": "ci",
+    "dependencies": [
+        "flecs",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-rsm-mmio",
+    "version-string": "ci",
+    "dependencies": [
+        "rsm-mmio",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

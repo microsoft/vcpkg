@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-bitmagic",
+    "version-string": "ci",
+    "dependencies": [
+        "bitmagic",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-pe-parse",
+    "version-string": "ci",
+    "dependencies": [
+        "pe-parse",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-taocpp-json",
+    "version-string": "ci",
+    "dependencies": [
+        "taocpp-json",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

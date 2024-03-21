@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-matplotplusplus",
+    "version-string": "ci",
+    "dependencies": [
+        "matplotplusplus",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-ctpg",
+    "version-string": "ci",
+    "dependencies": [
+        "ctpg",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

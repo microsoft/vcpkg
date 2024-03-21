@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-ereignis",
+    "version-string": "ci",
+    "dependencies": [
+        "ereignis",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

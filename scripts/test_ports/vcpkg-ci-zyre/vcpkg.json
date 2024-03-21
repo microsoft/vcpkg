@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-zyre",
+    "version-string": "ci",
+    "dependencies": [
+        "zyre",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

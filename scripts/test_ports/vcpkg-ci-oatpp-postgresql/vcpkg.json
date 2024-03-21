@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-oatpp-postgresql",
+    "version-string": "ci",
+    "dependencies": [
+        "oatpp-postgresql",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

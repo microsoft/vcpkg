@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-c4core",
+    "version-string": "ci",
+    "dependencies": [
+        "c4core",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

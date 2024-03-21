@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-libtess2",
+    "version-string": "ci",
+    "dependencies": [
+        "libtess2",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}

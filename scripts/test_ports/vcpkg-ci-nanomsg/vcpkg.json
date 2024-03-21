@@ -1,0 +1,11 @@
+{
+    "name": "vcpkg-ci-nanomsg",
+    "version-string": "ci",
+    "dependencies": [
+        "nanomsg",
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        }
+    ]
+}
