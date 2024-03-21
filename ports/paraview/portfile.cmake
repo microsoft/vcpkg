@@ -58,6 +58,7 @@ vcpkg_from_github(
         add-tools-option.patch
         fix-build.patch
         fix-configure.patch
+        6770.diff
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -119,8 +120,8 @@ endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PARAVIEW_BUILD_SHARED_LIBS)
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  # Hitting pdb size limits when building paraview so increase it
-  string(APPEND VCPKG_LINKER_FLAGS " /PDBPAGESIZE:8192")
+  # Hitting pdb size limits when building debug paraview so increase it
+  string(APPEND VCPKG_LINKER_FLAGS_DEBUG " /PDBPAGESIZE:8192")
 endif()
 
 vcpkg_cmake_configure(
