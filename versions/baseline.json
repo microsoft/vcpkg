@@ -373,19 +373,19 @@
       "port-version": 0
     },
     "aws-c-cal": {
-      "baseline": "0.6.9",
+      "baseline": "0.6.10",
       "port-version": 0
     },
     "aws-c-common": {
-      "baseline": "0.9.12",
+      "baseline": "0.9.14",
       "port-version": 0
     },
     "aws-c-compression": {
-      "baseline": "0.2.17",
+      "baseline": "0.2.18",
       "port-version": 0
     },
     "aws-c-event-stream": {
-      "baseline": "0.4.1",
+      "baseline": "0.4.2",
       "port-version": 0
     },
     "aws-c-http": {
@@ -393,7 +393,7 @@
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "0.14.3",
+      "baseline": "0.14.6",
       "port-version": 0
     },
     "aws-c-mqtt": {
@@ -409,7 +409,7 @@
       "port-version": 0
     },
     "aws-checksums": {
-      "baseline": "0.1.17",
+      "baseline": "0.1.18",
       "port-version": 0
     },
     "aws-crt-cpp": {
@@ -693,7 +693,7 @@
       "port-version": 0
     },
     "boinc": {
-      "baseline": "7.24.3",
+      "baseline": "8.0.0",
       "port-version": 0
     },
     "bond": {
@@ -1014,7 +1014,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.84.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-move": {
       "baseline": "1.84.0",
@@ -1828,6 +1828,10 @@
       "baseline": "2020.06",
       "port-version": 8
     },
+    "correlation-vector-cpp": {
+      "baseline": "1.0",
+      "port-version": 0
+    },
     "cpp-async": {
       "baseline": "1.1.0",
       "port-version": 0
@@ -2210,7 +2214,7 @@
     },
     "directx-dxc": {
       "baseline": "2024-03-07",
-      "port-version": 0
+      "port-version": 1
     },
     "directx-headers": {
       "baseline": "1.613.0",
@@ -5316,10 +5320,6 @@
       "baseline": "2.2",
       "port-version": 0
     },
-    "linenoise-ng": {
-      "baseline": "4754bee2d8eb3",
-      "port-version": 3
-    },
     "linmath": {
       "baseline": "2022-07-30",
       "port-version": 0
@@ -5994,7 +5994,7 @@
     },
     "nanomsg": {
       "baseline": "1.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "nanopb": {
       "baseline": "0.4.7",
@@ -6170,7 +6170,7 @@
     },
     "nss": {
       "baseline": "3.98",
-      "port-version": 0
+      "port-version": 1
     },
     "nsync": {
       "baseline": "1.26.0",
@@ -6293,12 +6293,12 @@
       "port-version": 0
     },
     "ogre": {
-      "baseline": "14.0.1",
-      "port-version": 2
+      "baseline": "14.2.2",
+      "port-version": 0
     },
     "ogre-next": {
       "baseline": "2.3.3",
-      "port-version": 2
+      "port-version": 3
     },
     "ois": {
       "baseline": "1.5.1",
@@ -6326,7 +6326,7 @@
     },
     "onnx": {
       "baseline": "1.15.0",
-      "port-version": 0
+      "port-version": 1
     },
     "onnx-optimizer": {
       "baseline": "0.3.18",
@@ -6478,7 +6478,7 @@
     },
     "openssl": {
       "baseline": "3.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -7697,7 +7697,7 @@
       "port-version": 0
     },
     "rocksdb": {
-      "baseline": "8.11.3",
+      "baseline": "9.0.0",
       "port-version": 0
     },
     "rpclib": {
@@ -7910,7 +7910,7 @@
     },
     "sdl2-mixer": {
       "baseline": "2.8.0",
-      "port-version": 2
+      "port-version": 3
     },
     "sdl2-mixer-ext": {
       "baseline": "2.6.0",
@@ -8054,7 +8054,7 @@
     },
     "simd": {
       "baseline": "5.3.128",
-      "port-version": 0
+      "port-version": 1
     },
     "simde": {
       "baseline": "0.8.0",
@@ -9653,8 +9653,8 @@
       "port-version": 5
     },
     "zziplib": {
-      "baseline": "0.13.72",
-      "port-version": 3
+      "baseline": "0.13.73",
+      "port-version": 0
     }
   }
 }
