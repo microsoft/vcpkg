@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME CsLibGuarded
+    PACKAGE_NAME cslibguarded
     CONFIG_PATH cmake/CsLibGuarded
 )
 

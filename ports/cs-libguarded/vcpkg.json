@@ -12,10 +12,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "catch2",
-      "host": true
     }
   ]
 }
