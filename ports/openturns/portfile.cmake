@@ -64,5 +64,5 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/include/pthread.h"
             "${CURRENT_PACKAGES_DIR}/include/semaphore.h"
             "${CURRENT_PACKAGES_DIR}/include/unistd.h")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
