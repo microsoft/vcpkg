@@ -19,15 +19,15 @@ vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-       "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        "-DVERSION=${VERSION}"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
-
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libcroco)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_copy_pdbs()
+file(COPY "${CURRENT_PORT_DIR}/unofficial-libcroco-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-libcroco")
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

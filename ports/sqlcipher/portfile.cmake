@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sqlcipher/sqlcipher
     REF "v${VERSION}"
-    SHA512 27dcc83c8088ea32a2bbc3d5493d070e29976dc54ccf91d849df67be19cb553761a32b3613e293a07f50128aeb808d54f363ad12a58a47f06a61a1cc4e1eb0cd
+    SHA512 656206cd6f8eaec15a8c409c47c1c2ca7fa3d30f3b124f89ceeff3c0c8772e0b3cc942ef93a18a4ce4dee12b1d9bd94d7e4132cea35707871fe8c08b13f87797
     HEAD_REF master
 )
 
@@ -78,7 +78,8 @@ configure_file(
     @ONLY
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+vcpkg_fixup_pkgconfig()

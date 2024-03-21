@@ -1,0 +1,12 @@
+diff --git a/mesonbuild/cmake/toolchain.py b/mesonbuild/cmake/toolchain.py
+index abf2cf6..477629e 100644
+--- a/mesonbuild/cmake/toolchain.py
++++ b/mesonbuild/cmake/toolchain.py
+@@ -204,6 +204,6 @@ class CMakeToolchain:
+     @staticmethod
+     def is_cmdline_option(compiler: 'Compiler', arg: str) -> bool:
+         if compiler.get_argument_syntax() == 'msvc':
+-            return arg.startswith('/')
++            return arg.startswith(('/','-'))
+         else:
+             return arg.startswith('-')

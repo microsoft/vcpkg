@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jamesdbrock/hffix
-    REF v1.2.1
-    SHA512 81947d5b2fbc2818b6ae7274febece8a813a67afc4a605bd92a1d7cb5df4e19e5df73a1a597c27898134fab1a0cc7c672d2dcba7688bab24184469b0760be06f
+    REF "v${VERSION}"
+    SHA512 a04a22360074f383997756d36ddf520a565e5d200e32e8439ef92f33bcb30ab29e962fc4d85142c1da323ddf9fef2d8b6a023dcbeedf1a5c269889adfcd70fb8
     HEAD_REF master
 )
 

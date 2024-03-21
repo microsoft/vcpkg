@@ -38,16 +38,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH VisualC/SDL1_2017.sln
-        INCLUDES_SUBPATH include
-        LICENSE_SUBPATH COPYING
-        ALLOW_ROOT_INCLUDES
     )
 
     #Take all the fils into include/SDL to sovle conflict with SDL2 port
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/doxyfile")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include.tmp")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/include.tmp" "${CURRENT_PACKAGES_DIR}/include/SDL")
+    file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/SDL")
 
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/SDLmain.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/SDLmain.lib")
@@ -82,6 +76,5 @@ else()
         "${CURRENT_PACKAGES_DIR}/debug/share"
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/man3"
     )
-
-    file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

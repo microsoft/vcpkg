@@ -3,16 +3,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
-    REF boost-1.82.0
-    SHA512 2788b5cc1ca359544d81c5942465703b11a6c243234adfb4e87a355ebdfdfbd52f99bfab2355b49438bbc0ed4d96d26ac924abd14464519d35099f91bb5129db
+    REF boost-${VERSION}
+    SHA512 5f5aec5c7c2de137fc8b69e33a3f0aa6c18b63292a66508cb68c86d3c1c27455f73432218e90cbd47e919e0be84a6d25af39aa1c4b9a223c013a948c029b7251
     HEAD_REF master
-    PATCHES 001-remove-checks.patch
 )
 
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(
-    SOURCE_PATH ${SOURCE_PATH}
-    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
+    "import ../../config/checks/config"
+    "import ../config/checks/config"
 )
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

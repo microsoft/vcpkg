@@ -6,8 +6,8 @@ endif()
 
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION 52bfe183983118c884294c864ee7b3d0dd199de6)
-set(SCITER_SHA d31ef2a07525bf1c91b9f36ee434db6227bead732f5779cb4ee28ab6d92957bfb3d4656a960d3c47e64f3efc207f78be64853a56b1e1a14f56fd3c829b022155)
+set(SCITER_REVISION 6f18e8725a8d14b8ba44b2c0d00ca126f119ed21)
+set(SCITER_SHA 93fdc1046b325ba7bf705665cb09f9adab3c198d4e8cb40febd4ccffe48077760907440c8eb7d7d44e1f619184bc070835c5c3d5aada363eb70528b8259aa74f)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH x64)
@@ -17,11 +17,12 @@ else()
 	message(FATAL_ERROR "Sciter only supports x86/x64")
 endif()
 
-# check out the `https://github.com/c-smile/sciter-js-sdk/archive/${SCITER_REVISION}.tar.gz`
+# check out the `https://gitlab.com/sciter-engine/sciter-js-sdk/-/archive/${SCITER_REVISION}/sciter-js-sdk-${SCITER_REVISION}.tar.gz`
 # hash checksum can be obtained with `curl -L -o tmp.tgz ${URL} && vcpkg hash tmp.tgz`
-vcpkg_from_github(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO c-smile/sciter-js-sdk
+    REPO sciter-engine/sciter-js-sdk
     REF ${SCITER_REVISION}
     SHA512 ${SCITER_SHA}
 )
@@ -40,7 +41,7 @@ set(SCITER_TOOLS ${CURRENT_PACKAGES_DIR}/tools/sciter-js)
 set(TOOL_PERMS FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # license
-file(COPY ${SOURCE_PATH}/logfile.md DESTINATION ${SCITER_SHARE})
+file(COPY ${SOURCE_PATH}/CHANGELOG.md DESTINATION ${SCITER_SHARE})
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${SCITER_SHARE} RENAME copyright)
 
 # tools

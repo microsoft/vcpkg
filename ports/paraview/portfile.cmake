@@ -76,7 +76,10 @@ file(COPY "${ICET_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/IceT/vtk
 if("python" IN_LIST FEATURES)
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        set(python_ver 3.10)
+        file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
+        string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
+        set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
+        set(python_ver "3.${PYTHON_VERSION_MINOR}")
     endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DPython3_FIND_REGISTRY=NEVER
@@ -104,6 +107,7 @@ vcpkg_cmake_configure(
         ${ADDITIONAL_OPTIONS}
 
         #-DPARAVIEW_ENABLE_FFMPEG:BOOL=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Graphviz=ON
 )
 if(CMAKE_HOST_UNIX)
     # ParaView runs Qt tools so LD_LIBRARY_PATH must be set correctly for them to find *.so files
@@ -194,6 +198,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
+file(GLOB cmake_files "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.cmake")
+foreach(file IN LISTS cmake_files)
+    vcpkg_replace_string("${file}" "pv5.11d.exe" "pv5.11.exe")
+endforeach() 
+ 
 # The plugins also work without these files
 file(REMOVE "${CURRENT_PACKAGES_DIR}/Applications/paraview.app/Contents/Resources/paraview.conf")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/Applications/paraview.app/Contents/Resources/paraview.conf")

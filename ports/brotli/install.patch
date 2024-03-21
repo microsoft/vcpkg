@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4ff3401..46492d0 100644
+index 61378cd..d868883 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -185,14 +185,13 @@ endforeach()
+@@ -142,14 +142,13 @@ endif()
  
- foreach(lib IN LISTS BROTLI_SHARED_LIBS BROTLI_STATIC_LIBS)
+ foreach(lib ${BROTLI_LIBRARIES_CORE})
    target_link_libraries(${lib} ${LIBM_LIBRARY})
 -  set_property(TARGET ${lib} APPEND PROPERTY INCLUDE_DIRECTORIES ${BROTLI_INCLUDE_DIRS})
    set_target_properties(${lib} PROPERTIES
@@ -13,12 +13,12 @@ index 4ff3401..46492d0 100644
    if(NOT BROTLI_EMSCRIPTEN)
      set_target_properties(${lib} PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
    endif()
--  set_property(TARGET ${lib} APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${BROTLI_INCLUDE_DIRS}")
+-  set_property(TARGET ${lib} APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${BROTLI_INCLUDE_DIRS}>")
 +  set_property(TARGET ${lib} APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${BROTLI_INCLUDE_DIRS}>" $<INSTALL_INTERFACE:include>)
  endforeach()
  
  if(NOT BROTLI_EMSCRIPTEN)
-@@ -223,27 +222,36 @@ if(NOT BROTLI_EMSCRIPTEN)
+@@ -176,11 +175,14 @@ target_link_libraries(brotli ${BROTLI_LIBRARIES})
  if(NOT BROTLI_BUNDLED_MODE)
    install(
      TARGETS brotli
@@ -28,32 +28,20 @@ index 4ff3401..46492d0 100644
 +    CONFIGURATIONS Release
    )
  
-+  if(BUILD_SHARED_LIBS)
    install(
      TARGETS ${BROTLI_LIBRARIES_CORE}
 +    EXPORT brotli
      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
      RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-   )
--
-+  else()
-   install(
-     TARGETS ${BROTLI_LIBRARIES_CORE_STATIC}
-+    EXPORT brotli
-     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-   )
-+  endif()
- 
+@@ -189,7 +191,10 @@ if(NOT BROTLI_BUNDLED_MODE)
    install(
      DIRECTORY ${BROTLI_INCLUDE_DIRS}/brotli
      DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 +    CONFIGURATIONS Release
    )
 +  
-+  install(EXPORT brotli FILE unofficial-brotli-targets.cmake NAMESPACE unofficial::brotli:: DESTINATION share/unofficial-brotli)
++  install(EXPORT brotli FILE unofficial-brotli-config.cmake NAMESPACE unofficial::brotli:: DESTINATION share/unofficial-brotli)
  endif()  # BROTLI_BUNDLED_MODE
- endif()  # BROTLI_EMSCRIPTEN
  
+ # Tests

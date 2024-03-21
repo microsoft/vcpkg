@@ -1,14 +1,24 @@
 diff --git a/configure.ac b/configure.ac
-index a35395e..3c1b3e2 100644
+index 7f97248992..33b6c84fc4 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1176,7 +1176,19 @@ fi
+@@ -891,7 +891,9 @@ AC_SUBST(with_perl)
+ # Optionally build Python modules (PL/Python)
+ #
+ AC_MSG_CHECKING([whether to build Python modules])
+-PGAC_ARG_BOOL(with, python, no, [build Python modules (PL/Python)])
++PGAC_ARG_OPTARG(with, python, [PYTHON_VERSION], [build Python modules (PL/Python)],
++                [],
++                [python_version=$withval])
+ AC_MSG_RESULT([$with_python])
+ AC_SUBST(with_python)
+ 
+@@ -1214,7 +1216,18 @@ fi
  
  if test "$with_python" = yes; then
    PGAC_PATH_PYTHON
 -  PGAC_CHECK_PYTHON_EMBED_SETUP
 +  python_majorversion=3
-+  python_version=3.10
 +  PKG_CHECK_MODULES(PYTHON_EMBED, python-${python_version}-embed)
 +  python_includespec="${PYTHON_EMBED_CFLAGS}"
 +  python_libdir=[$(echo " ${PYTHON_EMBED_LIBS}" | sed -e 's/\( -L[^ ]*\).*/\1/' -e 's/^.* -L//')]

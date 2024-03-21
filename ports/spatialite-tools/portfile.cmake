@@ -1,11 +1,11 @@
 # Allow empty include directory
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-set(SPATIALITE_TOOLS_VERSION_STR "5.0.1")
+string(REPLACE "-" "" SPATIALITE_TOOLS_VERSION_STR "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/spatialite-tools-${SPATIALITE_TOOLS_VERSION_STR}.tar.gz"
     FILENAME "spatialite-tools-${SPATIALITE_TOOLS_VERSION_STR}.tar.gz"
-    SHA512 dad52f6ed3c66ffd95f3a5c21225cd1b20641523af616f7e8defba8e4e46921da169e5f7bf9c53a355e132b6e74750d6db3fe02c870a3386f850df49c83bb8cd
+    SHA512 cf255c9e04e78e450e20019e3c988b2b0a770c6b7857a5b1c95d0696ee29902e7a85667c1a38dec9aa164fa6d28a444be6365b0444b78015180c1f27fa68ea89
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH

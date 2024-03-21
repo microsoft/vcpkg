@@ -10,9 +10,6 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 89a5109ed17f8069f7a43497f6fec817c58620dbc5fa506e52069b9113c5bc13f69c307affe611281cb727cfa0f8529d07044d41427e350b24468ccc89a87f33
 )
 
-# MSBuild performs in-source builds, so to ensure reliability we must clear them each time
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
-
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(CRT_LINKAGE "MT")
 elseif(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -21,8 +18,10 @@ endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(LIBRARY_LINKAGE "4")
+    set(lib_type StaticLibrary)
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(LIBRARY_LINKAGE "2")
+    set(lib_type DynamicLibrary)
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/packetNtx.patch.in" "${CURRENT_BUILDTREES_DIR}/src/packetNtx.patch" @ONLY)
@@ -30,22 +29,32 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/wpcap.patch.in" "${CURRENT_BUILDTREES_
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     SOURCE_BASE ${WINPCAP_VERSION}
     PATCHES
         "${CURRENT_BUILDTREES_DIR}/src/packetNtx.patch"
         "${CURRENT_BUILDTREES_DIR}/src/wpcap.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/create_lib.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/fix-create-lib-batch.patch"
+        "bison-flex.patch"
 )
 
-file(COPY "${CURRENT_PORT_DIR}/create_bin.bat" DESTINATION "${SOURCE_PATH}")
+file(REMOVE_RECURSE "${SOURCE_PATH}/wpcap/libpcap/rpcapd/win32-pthreads") # avoid copying pthreadVC.lib; TODO: maybe should also use libpcap headers instead of this vendored stuff
+
+vcpkg_replace_string("${SOURCE_PATH}/wpcap/PRJ/wpcap.vcproj" "DebugInformationFormat=\"4\"" "")
+vcpkg_replace_string("${SOURCE_PATH}/wpcap/PRJ/wpcap.vcproj" "DebugInformationFormat=\"3\"" "")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(PLATFORM Win32)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(PLATFORM x64)
 endif()
+
+vcpkg_find_acquire_program(BISON)
+cmake_path(GET BISON PARENT_PATH BISON_DIR)
+vcpkg_add_to_path("${BISON_DIR}")
+
+vcpkg_find_acquire_program(FLEX)
+cmake_path(GET FLEX PARENT_PATH FLEX_DIR)
+vcpkg_add_to_path("${FLEX_DIR}")
 
 vcpkg_execute_required_process(
     COMMAND "devenv.exe"
@@ -55,48 +64,46 @@ vcpkg_execute_required_process(
     LOGNAME upgrade-Packet-${TARGET_TRIPLET}
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    configure_file("${CURRENT_PORT_DIR}/Packet.vcxproj.in" "${SOURCE_PATH}/packetNtx/Dll/Project/Packet.vcxproj" COPYONLY)
-endif()
-
-vcpkg_build_msbuild(
-    PROJECT_PATH "${SOURCE_PATH}/packetNtx/Dll/Project/Packet.sln"
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "packetNtx/Dll/Project/Packet.sln"
     RELEASE_CONFIGURATION "Release"
     DEBUG_CONFIGURATION "Debug"
     PLATFORM ${PLATFORM}
 )
 
-vcpkg_find_acquire_program(BISON)
-vcpkg_find_acquire_program(FLEX)
+message(STATUS "Building Scanner/Parser")
 
 vcpkg_execute_required_process(
-    COMMAND ${SOURCE_PATH}/wpcap/PRJ/build_scanner_parser.bat
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    COMMAND "${SOURCE_PATH}/wpcap/PRJ/build_scanner_parser.bat"
+    WORKING_DIRECTORY "${SOURCE_PATH}/wpcap/PRJ"
     LOGNAME build_scanner_parser-${TARGET_TRIPLET}
 )
+
+message(STATUS "Building wpcap")
 
 vcpkg_execute_required_process(
     COMMAND "devenv.exe"
             "wpcap.sln"
             /Upgrade
-    WORKING_DIRECTORY ${SOURCE_PATH}/wpcap/PRJ
+    WORKING_DIRECTORY "${SOURCE_PATH}/wpcap/PRJ"
     LOGNAME upgrade-wpcap-${TARGET_TRIPLET}
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    configure_file("${CURRENT_PORT_DIR}/wpcap.vcxproj.in" "${SOURCE_PATH}/wpcap/PRJ/wpcap.vcxproj" COPYONLY)
-endif()
+configure_file("${CURRENT_PORT_DIR}/wpcap.vcxproj.in" "${SOURCE_PATH}/wpcap/PRJ/wpcap.vcxproj" @ONLY)
 
-vcpkg_build_msbuild(
-    PROJECT_PATH "${SOURCE_PATH}/wpcap/PRJ/wpcap.sln"
+
+vcpkg_msbuild_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PROJECT_SUBPATH "wpcap/PRJ/wpcap.sln"
     RELEASE_CONFIGURATION "Release - No AirPcap"
     DEBUG_CONFIGURATION "Debug - No AirPcap"
     PLATFORM ${PLATFORM}
 )
 
 vcpkg_execute_required_process(
-    COMMAND ${SOURCE_PATH}/create_include.bat
-    WORKING_DIRECTORY ${SOURCE_PATH}
+    COMMAND "${SOURCE_PATH}/create_include.bat"
+    WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME create_include-${TARGET_TRIPLET}
 )
 
@@ -121,50 +128,6 @@ file(INSTALL
         "${SOURCE_PATH}/WpdPack/Include/pcap/usb.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap/vlan.h"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/pcap")
-
-vcpkg_execute_required_process(
-    COMMAND ${SOURCE_PATH}/create_lib.bat
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME create_lib-${TARGET_TRIPLET}
-)
-
-set(PCAP_LIBRARY_PATH "${SOURCE_PATH}/WpdPack/Lib")
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(PCAP_LIBRARY_PATH "${PCAP_LIBRARY_PATH}/x64")
-endif()
-
-file(INSTALL
-        "${PCAP_LIBRARY_PATH}/Packet.lib"
-        "${PCAP_LIBRARY_PATH}/wpcap.lib"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-
-file(INSTALL
-        "${PCAP_LIBRARY_PATH}/debug/Packet.lib"
-        "${PCAP_LIBRARY_PATH}/debug/wpcap.lib"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_execute_required_process(
-        COMMAND "${SOURCE_PATH}/create_bin.bat"
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME create_bin-${TARGET_TRIPLET}
-    )
-
-    set(PCAP_BINARY_PATH "${SOURCE_PATH}/WpdPack/Bin")
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(PCAP_BINARY_PATH "${PCAP_BINARY_PATH}/x64")
-    endif()
-
-    file(INSTALL
-            "${PCAP_BINARY_PATH}/Packet.dll"
-            "${PCAP_BINARY_PATH}/wpcap.dll"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-
-    file(INSTALL
-            "${PCAP_BINARY_PATH}/Packet.dll"
-            "${PCAP_BINARY_PATH}/wpcap.dll"
-        DESTINATION  "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pcap-stdinc.h" "#define inline __inline" "#ifndef __cplusplus\n#define inline __inline\n#endif")
 

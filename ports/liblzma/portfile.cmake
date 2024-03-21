@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tukaani-project/xz
     REF "v${VERSION}"
-    SHA512 67292be900a713035d2a3dab4c3b6697cf0db37a78faaa5e0d3f5a96909ef9645c15a6030af94fb7f4224c3ad8eacd1a653ba67dfdeb6372165c1c36e0cf16b7
+    SHA512 0aa74e01c019c1d3893cf16f53b300ba4e74c6aa9febabf57ddb49b28615d76862eeb746c54c2085efd37c7e8cc0829014d9b7ad481a76294bc929b3cca91336
     HEAD_REF master
     PATCHES
         fix_config_include.patch
@@ -28,7 +28,10 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DCREATE_XZ_SYMLINKS=OFF
         -DCREATE_LZMA_SYMLINKS=OFF
+        -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=   # using flags from (vcpkg) toolchain
+        -DENABLE_NLS=OFF # nls is not supported by this port, yet
     MAYBE_UNUSED_VARIABLES
+        CMAKE_MSVC_DEBUG_INFORMATION_FORMAT
         CREATE_XZ_SYMLINKS
         CREATE_LZMA_SYMLINKS
 )
@@ -39,7 +42,7 @@ set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
 set(includedir "\${prefix}/include")
 set(PACKAGE_URL https://tukaani.org/xz/)
-set(PACKAGE_VERSION 5.4.3)
+set(PACKAGE_VERSION "${VERSION}")
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(PTHREAD_CFLAGS -pthread)
 endif()
@@ -65,7 +68,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man"
 )
 
-set(TOOLS xz xzdec)
+set(TOOLS xz xzdec lzmadec lzmainfo)
 foreach(_tool IN LISTS TOOLS)
     if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
         list(REMOVE_ITEM TOOLS ${_tool})

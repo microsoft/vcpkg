@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "opentelemetry-cpp",
-  "version-semver": "1.9.1",
+  "version-semver": "1.14.2",
   "description": [
     "OpenTelemetry is a collection of tools, APIs, and SDKs.",
     "You use it to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) for analysis in order to understand your software's performance and behavior."
@@ -10,7 +10,6 @@
   "license": "Apache-2.0",
   "dependencies": [
     "abseil",
-    "curl",
     "nlohmann-json",
     {
       "name": "vcpkg-cmake",
@@ -29,16 +28,16 @@
       "description": "Whether to include the ETW Exporter in the SDK",
       "supports": "windows"
     },
-    "jaeger": {
-      "description": "Whether to include the Jaeger exporter",
+    "geneva": {
+      "description": "Whether to include the Geneva Exporter from the opentelemetry-cpp-contrib repository",
       "dependencies": [
-        "thrift"
-      ]
-    },
-    "otlp": {
-      "description": "Whether to include the OpenTelemetry Protocol in the SDK",
-      "dependencies": [
-        "protobuf"
+        {
+          "name": "opentelemetry-cpp",
+          "features": [
+            "etw"
+          ],
+          "platform": "windows"
+        }
       ]
     },
     "otlp-grpc": {
@@ -48,13 +47,6 @@
         {
           "name": "grpc",
           "host": true
-        },
-        {
-          "name": "opentelemetry-cpp",
-          "default-features": false,
-          "features": [
-            "otlp"
-          ]
         }
       ]
     },
@@ -62,13 +54,7 @@
       "description": "Whether to include the OpenTelemetry Protocol over HTTP in the SDK",
       "dependencies": [
         "curl",
-        {
-          "name": "opentelemetry-cpp",
-          "default-features": false,
-          "features": [
-            "otlp"
-          ]
-        }
+        "protobuf"
       ]
     },
     "prometheus": {
@@ -79,9 +65,6 @@
     },
     "zipkin": {
       "description": "Whether to include the Zipkin exporter in the SDK"
-    },
-    "zpages": {
-      "description": "Whether to include the Zpages Server in the SDK"
     }
   }
 }

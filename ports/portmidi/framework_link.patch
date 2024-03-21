@@ -1,0 +1,49 @@
+From aa375d4fe0bf91ab1edd445baa7912a23a5e6a60 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Daniel=20Sch=C3=BCrmann?= <daschuer@mixxx.org>
+Date: Thu, 27 Jul 2023 08:30:44 +0200
+Subject: [PATCH] Don't use absolut paths to macOS frameworks
+
+This fixes https://github.com/PortMidi/portmidi/issues/56
+---
+ pm_common/CMakeLists.txt | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/pm_common/CMakeLists.txt b/pm_common/CMakeLists.txt
+index 062887b..e474244 100644
+--- a/pm_common/CMakeLists.txt
++++ b/pm_common/CMakeLists.txt
+@@ -81,21 +81,25 @@ endif()
+ # first include the appropriate system-dependent file:
+ if(UNIX AND APPLE)
+   set(Threads::Threads "" PARENT_SCOPE)
+-  find_library(COREAUDIO_LIBRARY CoreAudio REQUIRED)
+-  find_library(COREFOUNDATION_LIBRARY CoreFoundation REQUIRED)
+-  find_library(COREMIDI_LIBRARY CoreMIDI REQUIRED)
+-  find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
+   set(PM_LIB_PRIVATE_SRC 
+       ${PMDIR}/porttime/ptmacosx_mach.c
+       ${PMDIR}/pm_mac/pmmac.c
+       ${PMDIR}/pm_mac/pmmacosxcm.c
+       ${PMDIR}/pm_mac/finddefault.c
+       ${PMDIR}/pm_mac/readbinaryplist.c)
+-  set(PM_NEEDED_LIBS ${CMAKE_THREAD_LIBS_INIT} ${COREAUDIO_LIBRARY}
+-      ${COREFOUNDATION_LIBRARY} ${COREMIDI_LIBRARY} ${CORESERVICES_LIBRARY}
+-      PARENT_SCOPE)
+-  target_link_libraries(portmidi PRIVATE Threads::Threads ${COREAUDIO_LIBRARY}
+-      ${COREFOUNDATION_LIBRARY} ${COREMIDI_LIBRARY} ${CORESERVICES_LIBRARY})
++  set(PM_NEEDED_LIBS
++      ${CMAKE_THREAD_LIBS_INIT}
++      -Wl,-framework,CoreAudio
++      -Wl,-framework,CoreFoundation
++      -Wl,-framework,CoreMidi
++      -Wl,-framework,CoreServices)
++  target_link_libraries(portmidi
++    PRIVATE
++      Threads::Threads
++      -Wl,-framework,CoreAudio
++      -Wl,-framework,CoreFoundation
++      -Wl,-framework,CoreMidi
++      -Wl,-framework,CoreServices)
+   # set to CMake default; is this right?:
+   set_target_properties(portmidi PROPERTIES MACOSX_RPATH ON)
+ elseif(HAIKU)

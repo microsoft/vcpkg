@@ -1,7 +1,31 @@
 cmake_minimum_required(VERSION 3.21)
 
+# Remove CMAKE_ variables from the script call
+foreach(i RANGE 0 "${CMAKE_ARGC}")
+    unset(CMAKE_ARGV${i})
+endforeach()
+unset(CMAKE_ARGN)
+unset(CMAKE_ARGC)
+unset(i)
+# These don't make sense in script context
+unset(CMAKE_BINARY_DIR)
+unset(CMAKE_SOURCE_DIR)
+unset(CMAKE_CURRENT_BINARY_DIR)
+unset(CMAKE_CURRENT_SOURCE_DIR)
+unset(CMAKE_FILES_DIRECTORY)
+# Minimum CMake version is forced within vcpkg
+unset(CMAKE_MINIMUM_REQUIRED_VERSION)
+# CMAKE_VERSION is enough for doing version checks
+unset(CMAKE_MAJOR_VERSION)
+unset(CMAKE_MINOR_VERSION)
+unset(CMAKE_PATCH_VERSION)
+unset(CMAKE_TWEAK_VERSION)
+
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Location to stored scripts")
 list(APPEND CMAKE_MODULE_PATH "${SCRIPTS}/cmake")
+
+# Increment this number if we intentionally need to invalidate all binary caches due a change in
+# the following scripts: 1
 include("${SCRIPTS}/cmake/execute_process.cmake")
 include("${SCRIPTS}/cmake/vcpkg_acquire_msys.cmake")
 include("${SCRIPTS}/cmake/vcpkg_add_to_path.cmake")
@@ -27,9 +51,11 @@ include("${SCRIPTS}/cmake/vcpkg_copy_pdbs.cmake")
 include("${SCRIPTS}/cmake/vcpkg_copy_tool_dependencies.cmake")
 include("${SCRIPTS}/cmake/vcpkg_copy_tools.cmake")
 include("${SCRIPTS}/cmake/vcpkg_download_distfile.cmake")
+include("${SCRIPTS}/cmake/vcpkg_download_sourceforge.cmake")
 include("${SCRIPTS}/cmake/vcpkg_execute_build_process.cmake")
 include("${SCRIPTS}/cmake/vcpkg_execute_required_process.cmake")
 include("${SCRIPTS}/cmake/vcpkg_execute_required_process_repeat.cmake")
+include("${SCRIPTS}/cmake/vcpkg_extract_archive.cmake")
 include("${SCRIPTS}/cmake/vcpkg_extract_source_archive.cmake")
 include("${SCRIPTS}/cmake/vcpkg_extract_source_archive_ex.cmake")
 include("${SCRIPTS}/cmake/vcpkg_fail_port_install.cmake")
@@ -63,6 +89,8 @@ include("${SCRIPTS}/cmake/z_vcpkg_function_arguments.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_get_cmake_vars.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_setup_pkgconfig_path.cmake")
+
+include("${SCRIPTS}/cmake/z_vcpkg_fixup_rpath.cmake")
 
 function(debug_message)
     if(PORT_DEBUG)
@@ -146,8 +174,9 @@ if(CMD STREQUAL "BUILD")
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")
     if(DEFINED PORT)
-        if(VCPKG_FIXUP_ELF_RPATH)
-            include("${SCRIPTS}/cmake/z_vcpkg_fixup_rpath.cmake")
+        # Always fixup RPATH on linux unless explicitly disabled.
+        if(VCPKG_FIXUP_ELF_RPATH OR (VCPKG_TARGET_IS_LINUX AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
+            z_vcpkg_fixup_rpath_in_dir()
         endif()
         include("${SCRIPTS}/build_info.cmake")
     endif()

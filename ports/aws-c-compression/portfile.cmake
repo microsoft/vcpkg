@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-compression
     REF "v${VERSION}"
-    SHA512 6ca0a29ed97f3f83cce9d106d56a1ae7a9034caa63bfb3cdb29bb1ac4906738a940ffb0b85dede821ef0878bba7b2e9f5e627ae0d3acd99b24979e6567e5e6ae
+    SHA512 1f955719fbaa40a7b57b2a6cffac485ce0008fdcbddcea10785456458d16a402b43f8129dd9fd4d057031c3aa83f5e65b9e0b72879e2a56ad23235ab048d0646
     HEAD_REF master
 )
 

@@ -9,7 +9,11 @@ set(USER_CONFIG_TOOLSET_OPTIONS "")
 set(USER_CONFIG_EXTRA_LINES "")
 set(USER_CONFIG_REQUIREMENTS "")
 
-set(B2_OPTIONS "")
+# Avoid forcing initialization of B2_OPTIONS here to allow some users to add custom configuration options to this command via VCPKG_CHAINLOAD_TOOLCHAIN_FILE.
+if(NOT DEFINED B2_OPTIONS)
+    set(B2_OPTIONS "")
+endif()
+
 
 include("${VCPKG_CMAKE_VARS_FILE}")
 
@@ -61,16 +65,26 @@ if(VCPKG_DETECTED_MSVC)
         set(USER_CONFIG_TOOLSET clang-win)
     else()
         set(USER_CONFIG_TOOLSET msvc)
-    endif()
-    if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
-    else()
-        math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
+        if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
+            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
+        elseif(VCPKG_DETECTED_MSVC_VERSION LESS "1910")
+            set(USER_CONFIG_TOOLSET_VERSION "140")
+        elseif(VCPKG_DETECTED_MSVC_VERSION LESS "1920")
+            set(USER_CONFIG_TOOLSET_VERSION "141")
+        elseif(VCPKG_DETECTED_MSVC_VERSION LESS "1930")
+            set(USER_CONFIG_TOOLSET_VERSION "142")
+        elseif(VCPKG_DETECTED_MSVC_VERSION LESS "1950")
+            set(USER_CONFIG_TOOLSET_VERSION "143")
+        else()
+            message(FATAL_ERROR "Unsupported MSVC version: ${VCPKG_DETECTED_MSVC_VERSION}")
+        endif()
     endif()
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
     set(USER_CONFIG_TOOLSET emscripten)
 elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(USER_CONFIG_TOOLSET clang)
+elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "NVHPC")
+    set(USER_CONFIG_TOOLSET pgi)
 else()
     set(USER_CONFIG_TOOLSET gcc)
 endif()
@@ -144,7 +158,7 @@ if(CFLAGS MATCHES "-Zi" OR CXXFLAGS MATCHES "-Zi")
         )
 endif()
 
-if(USER_CONFIG_TOOLSET STREQUAL "msvc")
+if(USER_CONFIG_TOOLSET MATCHES "^(msvc|clang-win)$")
     file(TO_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nothing.bat" NOTHING_BAT)
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <setup>\"${NOTHING_BAT}\"\n"
@@ -171,7 +185,7 @@ if(NOT LDFLAGS STREQUAL "")
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS "    <linkflags>\"${LDFLAGS}\"\n")
 endif()
 
-if(WIN32 AND NOT USER_CONFIG_TOOLSET STREQUAL "msvc")
+if(WIN32 AND NOT USER_CONFIG_TOOLSET MATCHES "^(msvc|clang-win)$")
     # MINGW here causes b2 to not run cygpath
     string(APPEND USER_CONFIG_TOOLSET_OPTIONS
         "    <flavor>mingw\n"
@@ -237,6 +251,9 @@ if(NOT python_versions STREQUAL "")
     endif()
 endif()
 
+# Remove duplicates from B2_OPTIONS since VCPKG_CHAINLOAD_TOOLCHAIN_FILE may be loaded multiple times in some cases.
+list(REMOVE_DUPLICATES B2_OPTIONS)
+
 if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
     string(APPEND USER_CONFIG_EXTRA_LINES
         "using mpi : : <library-path>\"${CURRENT_INSTALLED_DIR}/lib\"\n"
@@ -291,10 +308,10 @@ add_custom_target(boost ALL
         threading=multi
 
         stage
-    WORKING_DIRECTORY ${SOURCE_PATH}/build
+    WORKING_DIRECTORY "${SOURCE_PATH}/build"
 )
 
-set(SUBDIR ${CMAKE_CURRENT_BINARY_DIR}/stage/lib)
+set(SUBDIR "${CMAKE_CURRENT_BINARY_DIR}/stage/lib")
 install(
     CODE "
 file(GLOB LIBS \"${SUBDIR}/*.so.*\" \"${SUBDIR}/*.so\" \"${SUBDIR}/*.a\" \"${SUBDIR}/*.dylib\" \"${SUBDIR}/*.dylib.*\" \"${SUBDIR}/*.lib\")

@@ -26,7 +26,7 @@ function(install_autopoint)
     configure_file("${SOURCE_PATH}/gettext-tools/misc/autopoint.in" "${WORKING_DIR}/autopoint" @ONLY)
 
     # data tarball
-    if(WIN32)
+    if(CMAKE_HOST_WIN32)
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES gzip)
         vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
     endif()

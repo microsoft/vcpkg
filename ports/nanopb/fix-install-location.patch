@@ -1,41 +1,22 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0ce05ea..1e8c4ed 100644
+index 4a3d31e..82611ef 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -34,18 +34,11 @@ if(NOT DEFINED CMAKE_INSTALL_CMAKEDIR)
-     set(CMAKE_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/nanopb")
- endif()
- 
--execute_process(
--    COMMAND ${Python_EXECUTABLE} -c
--        "import os.path, sys, sysconfig; print(os.path.relpath(sysconfig.get_path('purelib'), start=sys.prefix))"
--    OUTPUT_VARIABLE PYTHON_INSTDIR
--    OUTPUT_STRIP_TRAILING_WHITESPACE
--)
--
- if(nanopb_BUILD_GENERATOR)
-     set(generator_protos nanopb)
--    if(NOT DEFINED nanopb_PROTOC_PATH)
--        message(FATAL_ERROR "nanopb_PROTOC_PATH not defined")
--    endif()
-+    if(NOT DEFINED nanopb_PROTOC_PATH)
-+        message(FATAL_ERROR "nanopb_PROTOC_PATH not defined")
-+    endif()
-     foreach(generator_proto IN LISTS generator_protos)
-         string(REGEX REPLACE "([^;]+)" "${PROJECT_SOURCE_DIR}/generator/proto/\\1.proto" generator_proto_file "${generator_proto}")
-         string(REGEX REPLACE "([^;]+)" "\\1_pb2.py" generator_proto_py_file "${generator_proto}")
-@@ -58,12 +51,12 @@ if(nanopb_BUILD_GENERATOR)
+@@ -58,12 +58,15 @@ if(nanopb_BUILD_GENERATOR)
          install(
              FILES ${PROJECT_BINARY_DIR}/${generator_proto_py_file}
                    ${generator_proto_file}
 -            DESTINATION ${PYTHON_INSTDIR}/proto/
-+            DESTINATION ${CMAKE_INSTALL_DATADIR}/proto/
++            DESTINATION ${CMAKE_INSTALL_BINDIR}/proto/
          )
      endforeach()
  
      install( FILES generator/proto/_utils.py
 -             DESTINATION ${PYTHON_INSTDIR}/proto/ )
-+             DESTINATION ${CMAKE_INSTALL_DATADIR}/proto/ )
++             DESTINATION ${CMAKE_INSTALL_BINDIR}/proto/ )
++
++    install( FILES generator/proto/__init__.py
++             DESTINATION ${CMAKE_INSTALL_BINDIR}/proto/ )
  endif()
  
  if(WIN32)

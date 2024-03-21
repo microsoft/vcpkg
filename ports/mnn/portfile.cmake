@@ -17,19 +17,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     test        MNN_BUILD_TEST
     test        MNN_BUILD_BENCHMARK
     cuda        MNN_CUDA
-    cuda        MNN_GPU_TRACE
     vulkan      MNN_VULKAN
-    vulkan      MNN_GPU_TRACE
-    vulkan      MNN_USE_SYSTEM_LIB
     opencl      MNN_OPENCL
-    opencl      MNN_USE_SYSTEM_LIB
     metal       MNN_METAL
-    metal       MNN_GPU_TRACE
     tools       MNN_BUILD_TOOLS
     tools       MNN_BUILD_QUANTOOLS
     tools       MNN_BUILD_TRAIN
     tools       MNN_EVALUATION
     tools       MNN_BUILD_CONVERTER
+    gpu         MNN_GPU_TRACE
+    system      MNN_USE_SYSTEM_LIB
 )
 
 # 'cuda' feature in Windows failes with Ninja because of parallel PDB access. Make it optional

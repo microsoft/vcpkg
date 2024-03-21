@@ -1,7 +1,7 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 19,
+  "port-version": 23,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
   "homepage": "https://www.openscenegraph.com/",
   "license": null,
@@ -54,14 +54,6 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "rest-http-device"
-          ],
-          "platform": "!windows"
-        },
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
             "fontconfig"
           ],
           "platform": "!android & !ios & !uwp"
@@ -90,7 +82,8 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "freetype"
+            "freetype",
+            "plugins"
           ]
         },
         "sdl2"
@@ -134,7 +127,7 @@
       "description": "Set to ON to generate CPack configuration files and packaging targets"
     },
     "plugins": {
-      "description": "Build most OSG Plugins",
+      "description": "Build most OSG plugins",
       "dependencies": [
         {
           "name": "curl",
@@ -169,20 +162,6 @@
         }
       ]
     },
-    "rest-http-device": {
-      "description": "Build RestHttpDevice plugin",
-      "supports": "!windows",
-      "dependencies": [
-        "boost-array",
-        "boost-asio",
-        "boost-bind",
-        "boost-core",
-        "boost-lexical-cast",
-        "boost-logic",
-        "boost-smart-ptr",
-        "boost-tuple"
-      ]
-    },
     "sdl1": {
       "description": "Build SDL 1 plugin, and enable SDL 1 app features",
       "dependencies": [
@@ -206,7 +185,8 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "freetype"
+            "freetype",
+            "plugins"
           ]
         }
       ]

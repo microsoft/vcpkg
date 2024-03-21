@@ -7,14 +7,15 @@ vcpkg_from_github(
     PATCHES
       link-gmp.patch
       reorder-mpc.patch
+      fix-dep.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
-vcpkg_add_to_path("${FLEX_DIR}")
+vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
-vcpkg_add_to_path("${BISON_DIR}")
+vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -51,6 +52,11 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/OpenTURNSConfig.cmake" "/lib/cmake/" "/share/")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/OpenTURNSConfig.cmake" "/lib" "$<$<CONFIG:DEBUG>:/debug>/lib")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openturns/OTdebug.h" "#ifndef OT_STATIC" "#if 0")
+else()
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openturns/OTdebug.h" "#ifndef OT_STATIC" "#if 1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

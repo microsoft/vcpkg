@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/xerces-c
     REF "v${VERSION}"
-    SHA512 0da61e000e871c045fb6e546cabba244eb6470a7a972c1d1b817ba5ce91c0d1d12dfb3ff1479d8b57ab06c49deefd1c16c36dc2541055e41a1cdb15dbd769fcf
+    SHA512 55bf16456408af7c5aa420a55b27555889fc102a24e86aecb918c165acc80bbc344420687061e020fe223ea04dd78bef929ceedc4b3e24727787f12b8d79b610
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -16,6 +16,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS options
     FEATURES
         icu     CMAKE_REQUIRE_FIND_PACKAGE_ICU
+        network network
     INVERTED_FEATURES
         icu     CMAKE_DISABLE_FIND_PACKAGE_ICU
 )
@@ -47,6 +48,8 @@ vcpkg_cmake_configure(
         -DDISABLE_SAMPLES=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_CURL=ON
         ${options}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_CURL
 )
 
 vcpkg_cmake_install()

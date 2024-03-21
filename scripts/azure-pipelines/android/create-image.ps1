@@ -1,1 +1,0 @@
-& "$PSScriptRoot/../linux/create-image.ps1" -Prefix "And-" -ProvisionScript "$PSScriptRoot/provision-image.sh"

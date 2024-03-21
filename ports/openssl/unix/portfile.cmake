@@ -6,7 +6,7 @@ openssl requires Linux kernel headers from the system package manager.
 ]])
 endif()
 
-if(CMAKE_HOST_WIN32)
+if(VCPKG_HOST_IS_WINDOWS)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make perl)
     set(MAKE "${MSYS_ROOT}/usr/bin/make.exe")
     set(PERL "${MSYS_ROOT}/usr/bin/perl.exe")
@@ -45,7 +45,8 @@ vcpkg_list(SET MAKEFILE_OPTIONS)
 if(VCPKG_TARGET_IS_ANDROID)
     set(ENV{ANDROID_NDK_ROOT} "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}")
     set(OPENSSL_ARCH "android-${VCPKG_DETECTED_CMAKE_ANDROID_ARCH}")
-    if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm" AND NOT VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON)
+    # asm on arm32 NEON is broken, https://github.com/openssl/openssl/pull/21583#issuecomment-1727057735
+    if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm" #[[AND NOT VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON]])
         vcpkg_list(APPEND CONFIGURE_OPTIONS no-asm)
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -87,6 +88,7 @@ elseif(VCPKG_TARGET_IS_MINGW)
         set(OPENSSL_ARCH mingw)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    set(OPENSSL_ARCH linux-x32)
     vcpkg_list(APPEND CONFIGURE_OPTIONS
         threads
         no-engine

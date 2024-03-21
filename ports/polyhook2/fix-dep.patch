@@ -1,0 +1,62 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a91480445..c3d432e0b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -211,14 +211,8 @@ endif()
+ 
+ #DisAsm/Zydis
+ if (POLYHOOK_USE_EXTERNAL_ZYDIS)
+-    find_library(ZYDIS_LIBRARY NAMES zydis)
+-    find_library(ZYCORE_LIBRARY NAMES zycore)
+-    find_path(ZYDIS_INCLUDE_DIR NAMES zydis/zydis.h)
+-    find_path(ZYCORE_INCLUDE_DIR NAMES zycore/zycore.h)
+-    target_link_libraries(${PROJECT_NAME} PUBLIC ${ZYDIS_LIBRARY})
+-    target_link_libraries(${PROJECT_NAME} PUBLIC ${ZYCORE_LIBRARY})
+-    target_include_directories(${PROJECT_NAME} PUBLIC ${ZYDIS_INCLUDE_DIR})
+-    target_include_directories(${PROJECT_NAME} PUBLIC ${ZYCORE_INCLUDE_DIR})
++    find_package(zydis REQUIRED)
++    target_link_libraries(${PROJECT_NAME} PUBLIC Zydis::Zydis)
+ else()
+     target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:Zydis>)
+     target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/zydis/include>)
+@@ -231,10 +225,8 @@ install(FILES ${PROJECT_SOURCE_DIR}/polyhook2/ZydisDisassembler.hpp DESTINATION
+ 
+ function(link_asmjit)
+     if (POLYHOOK_USE_EXTERNAL_ASMJIT)
+-        find_library(ASMJIT_LIBRARY NAMES asmjit)
+-        find_path(ASMJIT_INCLUDE_DIR NAMES asmjit/asmjit.h)
+-        target_link_libraries(${PROJECT_NAME} PRIVATE ${ASMJIT_LIBRARY})
+-        target_include_directories(${PROJECT_NAME} PUBLIC ${ASMJIT_INCLUDE_DIR})
++      find_package(asmjit REQUIRED)
++      target_link_libraries(${PROJECT_NAME} PRIVATE asmjit::asmjit)
+     else()
+         target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:asmjit>)
+         target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${ASMJIT_SRC}>")
+@@ -238,10 +238,8 @@ if(POLYHOOK_FEATURE_DETOURS)
+     link_asmjit()
+ 
+     if (POLYHOOK_USE_EXTERNAL_ASMTK)
+-        find_library(ASMTK_LIBRARY NAMES asmtk)
+-        find_path(ASMTK_INCLUDE_DIR NAMES asmtk/asmtk.h)
+-        target_link_libraries(${PROJECT_NAME} PUBLIC ${ASMTK_LIBRARY})
+-        target_include_directories(${PROJECT_NAME} PUBLIC ${ASMTK_INCLUDE_DIR})
++      find_package(asmtk REQUIRED)
++      target_link_libraries(${PROJECT_NAME} PRIVATE asmjit::asmtk)
+     else()
+         target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:asmtk>)
+         target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${ASMTK_SRC}>")
+diff --git a/PolyHook_2-config.cmake.in b/PolyHook_2-config.cmake.in
+index 709f8b5d9..3add035e3 100644
+--- a/PolyHook_2-config.cmake.in
++++ b/PolyHook_2-config.cmake.in
+@@ -10,5 +10,10 @@ set(POLYHOOK_FEATURE_INLINENTD @POLYHOOK_FEATURE_INLINENTD@)
+ set(POLYHOOK_FEATURE_PE @POLYHOOK_FEATURE_PE@)
+ set(POLYHOOK_FEATURE_VIRTUALS @POLYHOOK_FEATURE_VIRTUALS@)
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(Zydis)
++find_dependency(asmjit)
++find_dependency(asmtk)
++
+ get_filename_component(POLYHOOK_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ include("${POLYHOOK_CMAKE_DIR}/PolyHook_2-targets.cmake")

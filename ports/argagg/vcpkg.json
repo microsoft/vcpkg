@@ -1,7 +1,6 @@
 {
   "name": "argagg",
-  "version": "0.4.6",
-  "port-version": 3,
+  "version": "0.4.7",
   "description": "A simple C++11 command line argument parser",
   "dependencies": [
     {

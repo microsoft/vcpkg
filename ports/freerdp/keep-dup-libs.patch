@@ -1,0 +1,37 @@
+diff --git a/libfreerdp/CMakeLists.txt b/libfreerdp/CMakeLists.txt
+index 2ce9c42..bbd202a 100644
+--- a/libfreerdp/CMakeLists.txt
++++ b/libfreerdp/CMakeLists.txt
+@@ -415,7 +415,6 @@ endif()
+ list(APPEND LIBFREERDP_PUB_LIBS winpr)
+ 
+ list(REMOVE_DUPLICATES LIBFREERDP_DEFINITIONS)
+-list(REMOVE_DUPLICATES LIBFREERDP_LIBS)
+ list(REMOVE_DUPLICATES LIBFREERDP_PUB_LIBS)
+ list(REMOVE_DUPLICATES LIBFREERDP_INCLUDES)
+ include_directories(${LIBFREERDP_INCLUDES})
+diff --git a/winpr/libwinpr/CMakeLists.txt b/winpr/libwinpr/CMakeLists.txt
+index 4be2015..f1266f3 100644
+--- a/winpr/libwinpr/CMakeLists.txt
++++ b/winpr/libwinpr/CMakeLists.txt
+@@ -157,8 +157,6 @@ list(REMOVE_DUPLICATES WINPR_DEFINITIONS)
+ list(REMOVE_DUPLICATES WINPR_COMPILE_OPTIONS)
+ list(REMOVE_DUPLICATES WINPR_LINK_OPTIONS)
+ list(REMOVE_DUPLICATES WINPR_LINK_DIRS)
+-list(REMOVE_DUPLICATES WINPR_LIBS_PRIVATE)
+-list(REMOVE_DUPLICATES WINPR_LIBS_PUBLIC)
+ list(REMOVE_DUPLICATES WINPR_INCLUDES)
+ 
+ # On windows create dll version information.
+diff --git a/winpr/tools/CMakeLists.txt b/winpr/tools/CMakeLists.txt
+index e995172..90c4e58 100644
+--- a/winpr/tools/CMakeLists.txt
++++ b/winpr/tools/CMakeLists.txt
+@@ -82,7 +82,6 @@ add_subdirectory(makecert)
+ 
+ set(MODULE_NAME winpr-tools)
+ list(REMOVE_DUPLICATES WINPR_TOOLS_DEFINITIONS)
+-list(REMOVE_DUPLICATES WINPR_TOOLS_LIBS)
+ list(REMOVE_DUPLICATES WINPR_TOOLS_INCLUDES)
+ include_directories(${WINPR_TOOLS_INCLUDES})
+ 

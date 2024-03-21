@@ -3,9 +3,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eliaskosunen/scnlib
-    REF v1.0
-    SHA512 0d34b5a710a472618df5d8202bbd647f488aa0ac2ad593c4a212e42b8aee5c35882f6e0ab7a7241c766ed17c9273d5e6704b012ef7f23a1b329b2a2f28ec60c6
+    REF "v${VERSION}"
+    SHA512 12b9ae26a5ccc600aacad1e2b2287bfc0b6986a260e182c91541876bc5804fe661093ad10d1befda56803afc7a9aa9f0348820dbb5af4fa6fdf048f85b3bcef1
     HEAD_REF master
+    PATCHES fix-SCN_HAS_STD_REGEX_MULTILINE-marco.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,6 +17,8 @@ vcpkg_cmake_configure(
       -DSCN_BENCHMARKS=OFF
       -DSCN_DOCS=OFF
       -DSCN_RANGES=OFF
+      -DSCN_USE_EXTERNAL_SIMDUTF=ON
+      -DSCN_USE_EXTERNAL_FAST_FLOAT=ON
 )
 
 vcpkg_cmake_install()

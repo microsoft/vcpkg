@@ -1,6 +1,7 @@
 {
   "name": "cubeb",
-  "version-date": "2022-07-22",
+  "version-date": "2023-09-26",
+  "port-version": 1,
   "description": "Cross platform audio library",
   "homepage": "https://github.com/mozilla/cubeb",
   "license": "ISC",

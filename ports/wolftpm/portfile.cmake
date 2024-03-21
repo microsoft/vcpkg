@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v2.7.0
     SHA512 1b3e1bbd9f6e35226ff30cc6de7631fb420343a2ae4c8849d1477314a5fe8a95b99800fa17e10a30a9894041142748d654c913a5c4f4dc9eaad3f5157e405276
     HEAD_REF master
+    PATCHES
+      cmake-patch.diff
     )
 
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}

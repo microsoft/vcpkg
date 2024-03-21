@@ -1,6 +1,6 @@
 {
   "name": "polyhook2",
-  "version-date": "2023-05-16",
+  "version-date": "2023-08-11",
   "description": "C++17, x86/x64 Hooking Library v2.0",
   "homepage": "https://github.com/stevemk14ebr/PolyHook_2_0",
   "license": "MIT",
@@ -13,7 +13,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zydis"
   ],
   "default-features": [
     "detours",
@@ -27,8 +28,7 @@
       "description": "Implement detour functionality",
       "dependencies": [
         "asmjit",
-        "asmtk",
-        "zydis"
+        "asmtk"
       ]
     },
     "exception": {

@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ea9fd15..af63d1e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,7 +7,7 @@
+ cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+ 
+ # Include cmake modules
+-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
++# list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+ 
+ include(GenerateExportHeader)
+ 
+diff --git a/source/cppfs/CMakeLists.txt b/source/cppfs/CMakeLists.txt
+index aa37eda..d29176a 100644
+--- a/source/cppfs/CMakeLists.txt
++++ b/source/cppfs/CMakeLists.txt
+@@ -4,9 +4,9 @@
+ #
+ 
+-find_package(LibSSH2)
+-find_package(LibCrypto)
++find_package(LibSSH2 NAMES Libssh2)
+ find_package(ZLIB)
+ find_package(OpenSSL)
++set(LibCrypto_FOUND "${OpenSSL_FOUND}")
+ 
+ if (LibSSH2_FOUND AND LibCrypto_FOUND AND ZLIB_FOUND AND OpenSSL_FOUND)
+     set(SSH_DEPS_MET TRUE)
+@@ -207,10 +207,10 @@ target_link_libraries(${target}
+ if (OPTION_BUILD_SSH_BACKEND)
+     target_link_libraries(${target}
+         PRIVATE
+-        ${OPENSSL_LIBRARIES}
+-        ${LIBSSH2_LIBRARY}
+-        ${LIBCRYPTO_LIBRARY}
+-        ${ZLIB_LIBRARY}
++        OpenSSL::SSL
++        $<IF:$<TARGET_EXISTS:Libssh2::libssh2_shared>,Libssh2::libssh2_shared,Libssh2::libssh2_static>
++        OpenSSL::Crypto
++        ZLIB::ZLIB
+     )
+ 
+     if("${CMAKE_SYSTEM_NAME}" MATCHES "Windows")

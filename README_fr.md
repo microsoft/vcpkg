@@ -14,7 +14,7 @@ Pour une description des commandes disponibles, quand vous avez installé vcpkg,
 * GitHub: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
 * Discord: [\#include \<C++\>](https://www.includecpp.org), le canal #🌏vcpkg
-* Docs: [Documentation](docs/README.md)
+* Docs: [Documentation](https://learn.microsoft.com/vcpkg)
 
 [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
@@ -244,8 +244,8 @@ set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems
 
 Cela permettra toujours aux gens de ne pas utiliser vcpkg, en passant directement le CMAKE_TOOLCHAIN_FILE, mais cela rendra l'étape de configuration-construction légèrement plus facile.
 
-[getting-started:utiliser-un-paquet]: docs/examples/installing-and-using-packages.md
-[getting-started:integration]: docs/users/buildsystems/integration.md
+[getting-started:utiliser-un-paquet]: https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages
+[getting-started:integration]: https://learn.microsoft.com/en-us/vcpkg/users/buildsystems/msbuild-integration
 [getting-started:git]: https://git-scm.com/downloads
 [getting-started:cmake-tools]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 [getting-started:linux-gcc]: #installing-linux-developer-tools
@@ -253,7 +253,7 @@ Cela permettra toujours aux gens de ne pas utiliser vcpkg, en passant directemen
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
-[getting-started:manifest-spec]: docs/specifications/manifests.md
+[getting-started:manifest-spec]: https://learn.microsoft.com/en-us/vcpkg/users/manifests
 
 # Tab-complétion/Auto-complétion
 
@@ -274,9 +274,9 @@ selon le shell que vous utilisez, puis redémarrez la console.
 
 # Exemples
 
-Lisez la [documentation](doc/README.md) pour des instructions plus spécifiques ainsi que [l'installation et l'utilisation des paquets](docs/examples/installing-and-using-packages.md),
-[ajouter un nouveau paquet depuis un fichier zip](docs/examples/packaging-zipfiles.md),
-et [ajouter un nouveau paquet depuis un dépôt GitHub](docs/examples/packaging-github-repos.md).
+Lisez la [documentation](https://learn.microsoft.com/vcpkg) pour des instructions plus spécifiques ainsi que [l'installation et l'utilisation des paquets](https://learn.microsoft.com/vcpkg/examples/installing-and-using-packages),
+[ajouter un nouveau paquet depuis un fichier zip](https://learn.microsoft.com/vcpkg/examples/packaging-zipfiles),
+et [ajouter un nouveau paquet depuis un dépôt GitHub](https://learn.microsoft.com/vcpkg/examples/packaging-github-repos).
 
 La documentation est aussi disponible en ligne sur ReadTheDocs : <https://vcpkg.readthedocs.io/> !
 

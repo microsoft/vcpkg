@@ -3,23 +3,26 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sahlberg/libsmb2
-    REF d8c85a3119a0bd769590e448216130b368cd1099
-    SHA512 d15a040ed6314ad6f7984cfa7b52d9ede9934b2a7ec9827e833f574c25c9f694b5372b3e0950e258a6244b7aaf32b9e59987a75a88681d8031d9837ba94629d5
+    REF 99125c96750e192e2c50176548bf461e4a28f135
+    SHA512 30cdc9bbcdcd384868e5865706b41f683b977ece4056040a29bb3b81ffdf83788ba8a39426132810b8cbbb778ae7db8e5e1be0b7c0a82d8beed75040de708240
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        # TODO: Add a feature to enable gssapi/krb5 support
+        -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(PACKAGE_NAME smb2 CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-#the debug/share folder is generated empty by the provided cmake system
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/smb2")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
