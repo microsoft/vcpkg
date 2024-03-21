@@ -16,7 +16,7 @@ find_program(GIT NAMES git git.cmd)
 get_filename_component(GIT_EXE_PATH "${GIT}" DIRECTORY)
 set(SED_EXE_PATH "${GIT_EXE_PATH}/../usr/bin")
 
-# openblas require perl to generate .def for exports
+# openblas requires perl to generate .def for exports
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
 set(PATH_BACKUP "$ENV{PATH}")
@@ -44,8 +44,7 @@ if(VCPKG_TARGET_IS_ANDROID)
 endif()
 
 set(OPENBLAS_EXTRA_OPTIONS)
-# for UWP version, must build non uwp first for helper
-# binaries.
+# For UWP version, must build non-UWP first for helper binaries
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPENBLAS_EXTRA_OPTIONS "-DBLASHELPER_BINARY_DIR=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
 elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
@@ -53,7 +52,7 @@ elseif(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW))
     string(APPEND VCPKG_CXX_FLAGS " -DNEEDBUNDERSCORE")
     list(APPEND OPENBLAS_EXTRA_OPTIONS
                 -DNOFORTRAN=ON
-                -DBU=_  #required for all blas functions to append extra _ using NAME
+                -DBU=_  # Required for all BLAS functions to append extra _ using NAME
     )
 endif()
 
@@ -99,11 +98,12 @@ if(EXISTS "${pcfile}")
     #file(CREATE_LINK "${pcfile}" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/blas.pc" COPY_ON_ERROR)
 endif()
 vcpkg_fixup_pkgconfig()
-#maybe we need also to write a wrapper inside share/blas to search implicitly for openblas, whenever we feel it's ready for its own -config.cmake file
+# Maybe we need also to write a wrapper inside share/blas to search implicitly for openblas,
+# whenever we feel it's ready for its own -config.cmake file.
 
-# openblas do not make the config file , so I manually made this
-# but I think in most case, libraries will not include these files, they define their own used function prototypes
-# this is only to quite vcpkg
+# openblas does not have a config file, so I manually made this.
+# But I think in most cases, libraries will not include these files, they define their own used function prototypes.
+# This is only to quite vcpkg.
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/openblas_common.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_replace_string(
