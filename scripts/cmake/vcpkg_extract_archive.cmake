@@ -33,7 +33,7 @@ function(vcpkg_extract_archive)
                 /qn "TARGETDIR=${destination_native_path}"
             WORKING_DIRECTORY "${archive_directory}"
         )
-    elseif("${archive_extension}" MATCHES [[\.7z\.exe$]])
+    elseif("${archive_extension}" MATCHES [[\.7z|\.exe$]])
         vcpkg_find_acquire_program(7Z)
         vcpkg_execute_in_download_mode(
             COMMAND ${7Z} x
