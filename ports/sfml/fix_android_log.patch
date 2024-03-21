@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fc9a268..8fd8303 100644
+index fc9a268..e38a3bf 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -123,10 +123,9 @@ if(SFML_OS_ANDROID)
@@ -33,6 +33,13 @@ index fc9a268..8fd8303 100644
                  COMPONENT devel
                  FILES_MATCHING PATTERN "*.pdb")
      endif()
+@@ -522,7 +521,6 @@ elseif(SFML_OS_ANDROID)
+     endif()
+
+     # install Android.mk so the NDK knows how to set up SFML
+-    install(FILES src/SFML/Android.mk DESTINATION .)
+
+ endif()
  
 diff --git a/src/SFML/Audio/CMakeLists.txt b/src/SFML/Audio/CMakeLists.txt
 index d27dc6d..f8883a1 100644

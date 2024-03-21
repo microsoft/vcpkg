@@ -29,9 +29,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-if(NOT VCPKG_TARGET_IS_ANDROID)
-  vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SFML)
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SFML)
 vcpkg_copy_pdbs()
 
 # move sfml-main to manual link dir
