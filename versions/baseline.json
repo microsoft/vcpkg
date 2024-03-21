@@ -8254,7 +8254,7 @@
     },
     "spectra": {
       "baseline": "1.0.1",
-      "port-version": 1
+      "port-version": 0
     },
     "speex": {
       "baseline": "1.2.1",
