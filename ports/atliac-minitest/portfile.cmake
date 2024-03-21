@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Atliac/minitest
     REF "v${VERSION}"
-    SHA512 dcea0865d1778c87f36a32da2aaf8889ca412b4ef779ee2c917e86d9a505f3f811e1f07723951acac5eb99d69250bf9506921cd22db2cd2c71895d49860b76f4
+    SHA512 2647e8e6b58073579ba55c336233fc4af400760b69ba9cfc73a427cd010c7d803dd499a521fe51fca29dbae3157668a475581d0f411505456b85572af69f7dd2
     HEAD_REF master
 )
 
@@ -13,7 +13,7 @@ vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME minitest)
+vcpkg_cmake_config_fixup(PACKAGE_NAME atliac-minitest)
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 
