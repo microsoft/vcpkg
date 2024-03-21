@@ -14,6 +14,7 @@ vcpkg_extract_source_archive(
     PATCHES
         "01-nspr-no-lib-prefix.patch"
         "02-gen-debug-info-for-release.patch"
+        "03-use-debug-crt-for-debug.patch" # See https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.vcprojectengine.runtimelibraryoption
 )
 
 # setup mozbuild for windows
