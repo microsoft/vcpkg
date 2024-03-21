@@ -409,7 +409,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.26.1",
+      "baseline": "0.26.4",
       "port-version": 0
     },
     "aws-lambda-cpp": {
