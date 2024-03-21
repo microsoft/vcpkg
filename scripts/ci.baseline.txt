@@ -696,16 +696,6 @@ minifb:arm64-android=fail
 minifb:x64-android=fail
 minio-cpp:arm-neon-android=fail
 miniply:arm-neon-android=fail
-
-minitest:x64-linux=fail
-minitest:arm64-android=fail
-minitest:arm64-uwp=fail
-minitest:arm64-osx=fail
-minitest:arm-neon-android=fail
-minitest:x64-android=fail
-minitest:x64-osx=fail
-minitest:x64-uwp=fail
-
 # Conflicts with signalrclient
 microsoft-signalr:arm64-windows=skip
 microsoft-signalr:arm64-uwp=skip
