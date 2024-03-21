@@ -1,0 +1,35 @@
+diff --git a/src/ImGuiRenderer.cpp b/src/ImGuiRenderer.cpp
+index 92a4fb3..7eaf527 100644
+--- a/src/ImGuiRenderer.cpp
++++ b/src/ImGuiRenderer.cpp
+@@ -45,7 +45,6 @@ const QHash<int, ImGuiKey> keyMap = {
+     { Qt::Key_X, ImGuiKey_X },
+     { Qt::Key_Y, ImGuiKey_Y },
+     { Qt::Key_Z, ImGuiKey_Z },
+-    { Qt::MiddleButton, ImGuiMouseButton_Middle }
+ };
+ 
+ #ifndef QT_NO_CURSOR
+@@ -81,11 +80,6 @@ void ImGuiRenderer::initialize(WindowWrapper *window) {
+     #endif
+     io.BackendPlatformName = "qtimgui";
+     
+-    // Setup keyboard mapping
+-    for (ImGuiKey key : keyMap.values()) {
+-        io.KeyMap[key] = key;
+-    }
+-    
+     // io.RenderDrawListsFn = [](ImDrawData *drawData) {
+     //    instance()->renderDrawList(drawData);
+     // };
+@@ -432,8 +426,8 @@ void ImGuiRenderer::onKeyPressRelease(QKeyEvent *event)
+     // Translate `Qt::Key` into `ImGuiKey`, and apply 'pressed' state for that key
+     const auto key_it = keyMap.constFind( event->key() );
+     if (key_it != keyMap.constEnd()) { // Qt's key found in keyMap
+-        const int imgui_key = *(key_it);
+-        io.KeysDown[imgui_key] = key_pressed;
++        const auto imgui_key = *(key_it);
++        io.AddKeyEvent(imgui_key, key_pressed);
+     }
+ 
+     if (key_pressed) {
