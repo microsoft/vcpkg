@@ -58,7 +58,6 @@ vcpkg_from_github(
         add-tools-option.patch
         fix-build.patch
         fix-configure.patch
-        6770.diff
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
