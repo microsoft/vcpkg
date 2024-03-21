@@ -1,0 +1,12 @@
+diff --git a/CMakeModules/oe_win32.cmake b/CMakeModules/oe_win32.cmake
+index 1ca36cb7a..134a7ced2 100644
+--- a/CMakeModules/oe_win32.cmake
++++ b/CMakeModules/oe_win32.cmake
+@@ -3,6 +3,7 @@
+ if(WIN32 AND NOT ANDROID)
+     if(MSVC)
+         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
++        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj")		
+         add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+         add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+     endif(MSVC)    

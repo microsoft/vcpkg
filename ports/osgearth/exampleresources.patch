@@ -1,0 +1,13 @@
+diff --git a/src/osgEarth/ExampleResources b/src/osgEarth/ExampleResources
+index 5f31a4717..e89d751a3 100644
+--- a/src/osgEarth/ExampleResources
++++ b/src/osgEarth/ExampleResources
+@@ -203,7 +203,7 @@ namespace osgEarth { namespace Util
+         template<typename FUNC_TYPE>
+         struct Action {
+             FUNC_TYPE func;
+-            bool eat = true;
++            bool eat;
+         };
+ 
+         struct Push {
