@@ -11,6 +11,7 @@ vcpkg_from_github(
 		remove-lerc-gltf.patch
 		export-plugins.patch
 		debug_bigobj.patch
+		exampleresources.patch
 )
 
 if("tools" IN_LIST FEATURES)
