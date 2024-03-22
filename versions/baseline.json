@@ -2366,7 +2366,7 @@
     },
     "dxsdk-d3dx": {
       "baseline": "9.29.952.8",
-      "port-version": 6
+      "port-version": 7
     },
     "dxut": {
       "baseline": "11.31",
