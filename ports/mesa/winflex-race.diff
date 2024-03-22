@@ -1,0 +1,72 @@
+diff --git a/src/compiler/glsl/glcpp/meson.build b/src/compiler/glsl/glcpp/meson.build
+index b3ea48a..944bc27 100644
+--- a/src/compiler/glsl/glcpp/meson.build
++++ b/src/compiler/glsl/glcpp/meson.build
+@@ -42,6 +42,7 @@ glcpp_lex = custom_target(
+   'glcpp-lex.c',
+   input : 'glcpp-lex.l',
+   output : 'glcpp-lex.c',
++  console: true,
+   command : [prog_flex, '-o', '@OUTPUT@', '@INPUT@'],
+ )
+ 
+diff --git a/src/compiler/glsl/meson.build b/src/compiler/glsl/meson.build
+index faded36..0179eb9 100644
+--- a/src/compiler/glsl/meson.build
++++ b/src/compiler/glsl/meson.build
+@@ -53,6 +53,7 @@ glsl_lexer_cpp = custom_target(
+   'glsl_lexer_cpp',
+   input : 'glsl_lexer.ll',
+   output : 'glsl_lexer.cpp',
++  console: true,
+   command : [prog_flex_cpp, '-o', '@OUTPUT@', '@INPUT@'],
+ )
+ 
+diff --git a/src/freedreno/afuc/meson.build b/src/freedreno/afuc/meson.build
+index a226d42..6102119 100644
+--- a/src/freedreno/afuc/meson.build
++++ b/src/freedreno/afuc/meson.build
+@@ -35,6 +35,7 @@ afuc_lexer = custom_target(
+   'lexer.c',
+   input: 'lexer.l',
+   output: 'lexer.c',
++  console: true,
+   command: [
+     prog_flex, '-o', '@OUTPUT@', '@INPUT@'
+   ]
+diff --git a/src/freedreno/ir3/meson.build b/src/freedreno/ir3/meson.build
+index 954b0b8..cb79b62 100644
+--- a/src/freedreno/ir3/meson.build
++++ b/src/freedreno/ir3/meson.build
+@@ -53,6 +53,7 @@ ir3_lexer = custom_target(
+   'ir3_lexer.c',
+   input: 'ir3_lexer.l',
+   output: 'ir3_lexer.c',
++  console: true,
+   command: [
+     prog_flex, '-o', '@OUTPUT@', '@INPUT@'
+   ]
+diff --git a/src/intel/tools/meson.build b/src/intel/tools/meson.build
+index 44fa3f1..5db6619 100644
+--- a/src/intel/tools/meson.build
++++ b/src/intel/tools/meson.build
+@@ -183,6 +183,7 @@ i965_lex_yy_c = custom_target(
+   'i965_lex.yy.c',
+   input : 'i965_lex.l',
+   output : 'i965_lex.yy.c',
++  console: true,
+   command : [prog_flex, '-o', '@OUTPUT@', '@INPUT@']
+ )
+ 
+diff --git a/src/mesa/program/meson.build b/src/mesa/program/meson.build
+index 1b76d32..a43280a 100644
+--- a/src/mesa/program/meson.build
++++ b/src/mesa/program/meson.build
+@@ -29,6 +29,7 @@ mesa_lex = custom_target(
+   'mesa_lex',
+   input : 'program_lexer.l',
+   output : 'lex.yy.c',
++  console: true,
+   command : [prog_flex, '-o', '@OUTPUT@', '@INPUT@'],
+ )
+ 

@@ -9,7 +9,8 @@ vcpkg_from_gitlab(
     REPO mesa/mesa
     REF mesa-${VERSION}
     SHA512 202b2b20ffe7d357570a0d0bf0b53dc246b3e903738e8c8a000c5f61109ab5233d62de217444f49fd62927f8c418d929e5a2a5a800d1e39e334d50eb090e850c
-    HEAD_REF main
+    PATCHES
+        winflex-race.diff
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako)
