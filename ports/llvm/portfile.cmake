@@ -338,21 +338,22 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/lib")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/lib" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/lib")
 endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/lib")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/lib")
+endif()
 
+# Remove empty directories to avoid vcpkg warning
 set(empty_dirs)
-
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/misc/ConfusableTable")
 endif()
-
 if("pstl" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/lib/cmake")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
     endif()
 endif()
-
 if("flang" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/CMakeFiles")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Config")
@@ -362,7 +363,6 @@ if("flang" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/HLFIR/CMakeFiles")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Transforms/CMakeFiles")
 endif()
-
 if(empty_dirs)
     foreach(empty_dir IN LISTS empty_dirs)
         if(NOT EXISTS "${empty_dir}")
@@ -378,12 +378,20 @@ if(empty_dirs)
     endforeach()
 endif()
 
-# LLVM generates shared libraries in a static build (LLVM-C, libclang, LTO, Remarks, ...)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+# Remove debug headers and tools
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin"
-        "${CURRENT_PACKAGES_DIR}/debug/include"
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
         "${CURRENT_PACKAGES_DIR}/debug/share"
         "${CURRENT_PACKAGES_DIR}/debug/tools"
+    )
+endif()
+
+# LLVM generates shared libraries in a static build (LLVM-C.dll, libclang.dll, LTO.dll, Remarks.dll, ...)
+# for the corresponding export targets (used in LLVMExports-<config>.cmake files on the Windows platform)
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
     )
 endif()
