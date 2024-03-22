@@ -2770,7 +2770,7 @@
     },
     "folly": {
       "baseline": "2024.01.01.00",
-      "port-version": 1
+      "port-version": 2
     },
     "font-chef": {
       "baseline": "1.1.0",
