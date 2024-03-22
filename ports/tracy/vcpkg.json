@@ -45,6 +45,9 @@
     "crash-handler": {
       "description": "Enable crash handler"
     },
+    "fibers": {
+      "description": "Enable fibers support"
+    },
     "gui-tools": {
       "description": "Build Tracy GUI tool: `profiler` (aka `Tracy` executable)",
       "supports": "!(windows & x86)",
@@ -71,9 +74,6 @@
     },
     "on-demand": {
       "description": "Enable on-demand profiling"
-    },
-	"fibers": {
-      "description": "Enable fibers support"
     }
   }
 }
