@@ -178,6 +178,18 @@ Copy-Item "scripts/buildsystems/vcpkg.cmake" -Destination "scripts/test_ports/cm
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 
+Get-Childitem –Path "$buildtreesRoot" -Recurse -Depth 1 -File -Include "warnings-$Triplet-*.log" `
+| ForEach-Object {
+    $port = Split-Path -Leaf (Split-Path $_)
+    $warnings = (Get-Content $_) -join "%0D%0A"
+    Write-Host "##vso[task.logissue type=warning]${port}: $warnings"
+}
+
+if ($LASTEXITCODE -ne 0)
+{
+    throw "vcpkg ci failed"
+}
+
 if ($LASTEXITCODE -ne 0)
 {
     throw "vcpkg ci failed"
