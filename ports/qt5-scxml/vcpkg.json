@@ -1,7 +1,8 @@
 {
   "name": "qt5-scxml",
   "version": "5.15.13",
-  "description": "Qt5 SCXML Module - Provides classes and tools for creating state machines from SCXML files and embedding them in applications",
+  "port-version": 1,
+  "description": "The Qt SCXML module provides classes for embedding state machines created from State Chart XML (SCXML) files in Qt applications.",
   "license": null,
   "dependencies": [
     {

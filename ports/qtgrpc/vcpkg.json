@@ -1,7 +1,8 @@
 {
   "name": "qtgrpc",
   "version": "6.6.1",
-  "description": "Qt framework based gRPC clients and services.",
+  "port-version": 1,
+  "description": "The Qt GRPC and Qt Protobuf modules together allow you to define data and messages in proto files, and then use the code generators, which generate client code allowing accessors for fields and gRPC services in the Qt framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [

@@ -1,7 +1,8 @@
 {
   "name": "qt5-purchasing",
   "version": "5.15.13",
-  "description": "Qt5 Purchasing Module - Enables in-app purchase of products in Qt applications.",
+  "port-version": 1,
+  "description": "Qt Purchasing is an add-on library that enables Qt applications to support in-app purchases. It is a cross-platform library that currently supports purchases made to the Mac App Store on OS X, App Store on iOS, and Google Play on Android.",
   "license": null,
   "dependencies": [
     {

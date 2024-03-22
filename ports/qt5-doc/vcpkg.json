@@ -1,7 +1,8 @@
 {
   "name": "qt5-doc",
   "version": "5.15.13",
-  "description": "Qt5 doc Module;",
+  "port-version": 1,
+  "description": "The Qt documentation.",
   "license": null,
   "supports": "linux",
   "dependencies": [
