@@ -17,6 +17,7 @@ vcpkg_from_github(
         00009-use-system-upb.patch
         00015-disable-download-archive.patch
         00016-fix-plugin-targets.patch
+        00017-abseil.patch
 )
 
 if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
