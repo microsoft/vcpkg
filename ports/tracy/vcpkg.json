@@ -71,6 +71,9 @@
     },
     "on-demand": {
       "description": "Enable on-demand profiling"
+    },
+	"fibers": {
+      "description": "Enable fibers support"
     }
   }
 }
