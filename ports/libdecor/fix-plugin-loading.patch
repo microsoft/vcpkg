@@ -1,0 +1,26 @@
+diff --git a/src/libdecor.c b/src/libdecor.c
+index 6fc184c..3fbf29b 100644
+--- a/src/libdecor.c
++++ b/src/libdecor.c
+@@ -1545,7 +1545,20 @@ init_plugins(struct libdecor *context)
+ 
+ 	plugin_dir_env = getenv("LIBDECOR_PLUGIN_DIR");
+ 	if (!plugin_dir_env) {
+-		plugin_dir_env = LIBDECOR_PLUGIN_DIR;
++		Dl_info info;
++		dladdr(&libdecor_new, &info);
++
++		const char *last_slash = NULL;
++		for (const char *it = info.dli_fname; *it++ ;)
++			if (*it == '/')
++				last_slash = it;
++		size_t index = last_slash - info.dli_fname;
++
++		static const char *PLUGIN_DIR = "/libdecor/plugins-1";
++		char *buffer = malloc(sizeof(char) * (index + strlen(PLUGIN_DIR) + 1));
++		strncpy(buffer, info.dli_fname, index);
++		strcpy(buffer + index, PLUGIN_DIR);
++		plugin_dir_env = buffer;
+ 	}
+ 	all_plugin_dirs = strdup(plugin_dir_env);
+ 
