@@ -1,6 +1,7 @@
 {
   "name": "backward-cpp",
   "version-date": "2023-11-24",
+  "port-version": 1,
   "description": "A beautiful stack trace pretty printer for C++",
   "homepage": "https://github.com/bombela/backward-cpp",
   "supports": "!uwp & !(windows & arm)",
