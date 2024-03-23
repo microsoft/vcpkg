@@ -1,0 +1,20 @@
+{
+  "name": "heimdal",
+  "version": "7.8.0",
+  "description": "Heimdal is an implementation of: ASN.1/DER, PKIX, and Kerberos.",
+  "homepage": "https://github.com/heimdal/heimdal",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true,
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}
