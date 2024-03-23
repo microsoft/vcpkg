@@ -9,43 +9,12 @@
 #  NCCL_FOUND
 #  NCCL_INCLUDE_DIRS
 #  NCCL_LIBRARIES
-#
-# Adapted from https://github.com/pytorch/pytorch/blob/master/cmake/Modules/FindNCCL.cmake
-
-set(NCCL_INCLUDE_DIR $ENV{NCCL_INCLUDE_DIR} CACHE PATH "Folder contains NVIDIA NCCL headers")
-set(NCCL_LIB_DIR $ENV{NCCL_LIB_DIR} CACHE PATH "Folder contains NVIDIA NCCL libraries")
-set(_NCCL_VERSION $ENV{NCCL_VERSION} CACHE STRING "Version of NCCL to build with")
-
-list(APPEND NCCL_ROOT $ENV{NCCL_ROOT_DIR} ${CUDA_TOOLKIT_ROOT_DIR})
-# Compatible layer for CMake <3.12. NCCL_ROOT will be accounted in for searching paths and libraries for CMake >=3.12.
-list(APPEND CMAKE_PREFIX_PATH ${NCCL_ROOT})
 
 find_path(NCCL_INCLUDE_DIRS
   NAMES nccl.h
-  HINTS
-  ${NCCL_INCLUDE_DIR}
-  $ENV{CUDNN_ROOT_DIR}
-  $ENV{CUDA_PATH}
-  $ENV{CUDNN_ROOT_DIR}
-  $ENV{CUDA_TOOLKIT_ROOT_DIR}
-  $ENV{NCCL}
-  /usr/include
   PATH_SUFFIXES
   include
 )
-
-if (USE_STATIC_NCCL)
-  MESSAGE(STATUS "USE_STATIC_NCCL is set. Linking with static NCCL library.")
-  SET(NCCL_LIBNAME "nccl_static")
-  if (_NCCL_VERSION)  # Prefer the versioned library if a specific NCCL version is specified
-    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a.${_NCCL_VERSION}" ${CMAKE_FIND_LIBRARY_SUFFIXES})
-  endif()
-else()
-  SET(NCCL_LIBNAME "nccl")
-  if (_NCCL_VERSION)  # Prefer the versioned library if a specific NCCL version is specified
-    set(CMAKE_FIND_LIBRARY_SUFFIXES ".so.${_NCCL_VERSION}" ${CMAKE_FIND_LIBRARY_SUFFIXES})
-  endif()
-endif()
 
 # Read version from header
 if(EXISTS "${NCCL_INCLUDE_DIRS}/nccl.h")
@@ -72,18 +41,9 @@ if(NCCL_HEADER_CONTENTS)
 endif()
 
 find_library(NCCL_LIBRARIES
-  NAMES ${NCCL_LIBNAME}
-  HINTS
-  ${NCCL_LIB_DIR}
-  ${CUDA_TOOLKIT_ROOT}
-  $ENV{CUDA_PATH}
-  $ENV{CUDNN_ROOT_DIR}
-  $ENV{CUDA_TOOLKIT_ROOT_DIR}
-  $ENV{NCCL}
-  /usr/lib/x86_64-linux-gnu/
+  NAMES nccl
   PATH_SUFFIXES
   lib
-  lib64
 )
 
 include(FindPackageHandleStandardArgs)
