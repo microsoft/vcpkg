@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OctoMap/octomap
     REF "v${VERSION}"
-    SHA512 60afeecc36a190f136dcbe33cb9cd6c06c16233988b383b0b010f65f81e6a3630b55902c5b5ad756ac35dee4c4ec26ec5722d6bd9b8e079f70b7d286293c518e
+    SHA512 1cbee4f6b3569587986774447ad9ec4190f597310c4d6865ffa7cd8865ece2492e4a42fa369b633d9d7a9da782560d49deaa62a18601ea4f56396bdf1a6a5f52
     HEAD_REF master
     PATCHES
       001-fix-exported-targets.patch
