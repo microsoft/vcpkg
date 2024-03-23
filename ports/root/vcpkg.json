@@ -1,0 +1,58 @@
+{
+  "name": "root",
+  "version-date": "2023-04-26",
+  "description": "The ROOT system provides a set of OO frameworks with all the functionality needed to handle and analyze large amounts of data in a very efficient way.",
+  "homepage": "https://root.cern/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "windows & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib",
+    "nlohmann-json",
+    "freetype",
+    "liblzma",
+    "pcre",
+    "zstd",
+    "xxhash",
+    "giflib",
+    "tiff",
+    "libjpeg-turbo",
+    "gsl",
+    "glew",
+    "libxml2",
+    "python3",
+    "gtest",
+    "ryml",
+    "ftgl",
+    "libafterimage",
+    {
+        "name": "python3",
+        "host": true
+    },
+    {
+        "name": "pkgconf",
+        "host": true
+    },
+    "gl2ps",
+    {
+        "name": "openssl",
+        "default-features": false
+    },
+    "libpq",
+    "libmysql",
+    "sqlite3",
+    "fftw3",
+    "cfitsio",
+    "lapack",
+    "tbb",
+    "lz4",
+    "curl"
+  ]
+}
