@@ -1,4 +1,4 @@
 minitest provides CMake targets:
 
-    find_package(atliac-minitest CONFIG REQUIRED)
+    find_package(${PORT} CONFIG REQUIRED)
     minitest_discover_tests(target)
