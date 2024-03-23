@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BYVoid/OpenCC
     REF "ver.${VERSION}"
-    SHA512 bfc40bdf1348e6a265b3304ab1e8acee2f4b6ac9c377ff3d8c996435a92dee98c3758503186b4fd424653faf44db339f8a90300e3290c59942ccf04b1bbb2a30
+    SHA512 26e4b12238f853b0fa91f9f0d9af7985bf04a0763185cc3b50b69ba99a2d80091b8c3160176d0d4cd348fbf1a680bfd80dc740dc60c938a256dc2dac8ef49f15
     HEAD_REF master
     PATCHES 
         fix-dependencies.patch
