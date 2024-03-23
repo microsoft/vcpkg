@@ -6465,8 +6465,8 @@
       "port-version": 9
     },
     "openmvs": {
-      "baseline": "2.1.0",
-      "port-version": 2
+      "baseline": "2.2.0",
+      "port-version": 0
     },
     "openni2": {
       "baseline": "2.2.0.33",
