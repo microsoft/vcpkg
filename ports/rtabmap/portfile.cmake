@@ -73,6 +73,8 @@ vcpkg_cmake_configure(
         -DWITH_OPENVINS=OFF
         -DWITH_MADGWICK=OFF
         -DWITH_FASTCV=OFF
+        --trace
+        -DVCPKG_TRACE_FIND_PACKAGE=1
 )
 
 vcpkg_cmake_install()
