@@ -1,0 +1,52 @@
+diff --git a/gtk/gtkmodules.c b/gtk/gtkmodules.c
+index 704e412..6700da9 100644
+--- a/gtk/gtkmodules.c
++++ b/gtk/gtkmodules.c
+@@ -66,6 +66,14 @@ get_module_path (void)
+ 
+   if (exe_prefix)
+     default_dir = g_build_filename (exe_prefix, "lib", "gtk-3.0", NULL);
++  else if (g_file_test (GTK_PLUGIN_DIR, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR))
++    default_dir = g_build_filename (GTK_PLUGIN_DIR, NULL);
++  else if (sizeof(void *) == 8 && g_file_test ("/usr/lib64/gtk-3.0", G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR))
++    default_dir = g_build_filename ("/usr/lib64/gtk-3.0", NULL);
++  else if (sizeof(void *) == 4 && g_file_test ("/usr/lib32/gtk-3.0", G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR))
++    default_dir = g_build_filename ("/usr/lib32/gtk-3.0", NULL);
++  else if (g_file_test ("/usr/lib/gtk-3.0", G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR))
++    default_dir = g_build_filename ("/usr/lib/gtk-3.0", NULL);
+   else
+     default_dir = g_build_filename (_gtk_get_libdir (), "gtk-3.0", NULL);
+ 
+diff --git a/gtk/meson.build b/gtk/meson.build
+index 967bffd..e8adfad 100644
+--- a/gtk/meson.build
++++ b/gtk/meson.build
+@@ -13,6 +13,7 @@ gtk_cargs = [
+   '-DGTK_LOCALEDIR="@0@"'.format(gtk_localedir),
+   '-DGTK_DATADIR="@0@"'.format(gtk_datadir),
+   '-DGTK_SYSCONFDIR="@0@"'.format(gtk_sysconfdir),
++  '-DGTK_PLUGIN_DIR="@0@"'.format(gtk_plugin_dir),
+ ]
+ 
+ # List of sources to build the library from
+diff --git a/meson.build b/meson.build
+index 5ab26a7..873e879 100644
+--- a/meson.build
++++ b/meson.build
+@@ -176,6 +176,7 @@ gtk_libdir = join_paths(gtk_prefix, get_option('libdir'))
+ gtk_datadir = join_paths(gtk_prefix, get_option('datadir'))
+ gtk_localedir = join_paths(gtk_prefix, get_option('localedir'))
+ gtk_sysconfdir = join_paths(gtk_prefix, get_option('sysconfdir'))
++gtk_plugin_dir = get_option('gtk_plugin_dir')
+ gtk_applicationsdir = join_paths(gtk_datadir, 'applications')
+ gtk_schemasdir = join_paths(gtk_datadir, 'glib-2.0/schemas')
+ gtk_appdatadir = join_paths(gtk_datadir, 'metainfo')
+diff --git a/meson_options.txt b/meson_options.txt
+index 94099aa..ee7fa59 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -47,3 +47,4 @@ option('installed_tests', type: 'boolean', value: 'false',
+ # input modules
+ option('builtin_immodules', type: 'string',
+        value: '', description: 'Build specified immodules into GTK so/DLL (comma-separated list), "all", "none" or "backend"')
++option('gtk_plugin_dir', type: 'string', value: '', description: '')
