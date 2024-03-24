@@ -3,10 +3,10 @@
 #
 variables:
   linux-pool: 'PrLin-1ES-Pool'
-  windows-pool: 'PrWin-2024-02-16'
+  windows-pool: 'PrWin-1ES'
   osx-pool: 'PrOsx-2024-01-18'
   osx-arm64-pool: 'PrOsx-2024-01-22-arm64'
-  linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-02-14'
+  linux-docker-image: 'vcpkgandroidwus3.azurecr.io/vcpkg-android:2024-03-14'
 
 parameters:
   - name: vcpkgToolSha

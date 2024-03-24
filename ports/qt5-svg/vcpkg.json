@@ -1,7 +1,8 @@
 {
   "name": "qt5-svg",
   "version": "5.15.13",
-  "description": "Qt5 SVG Module - provides classes for displaying the contents of SVG files",
+  "port-version": 1,
+  "description": "Qt SVG provides classes for rendering and displaying SVG drawings in widgets and on other paint devices.",
   "license": null,
   "dependencies": [
     {
