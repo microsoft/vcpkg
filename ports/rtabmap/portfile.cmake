@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 2b424f5b6458cf0f976e711985708f104b56d11921c9c43c6a837f9d3dc9e9e802308f1aa2b6d0e7e6ddf13623ff1ad2922b5f54254d16ee5811e786d27b9f98
     HEAD_REF master
     PATCHES
+        apple.patch
         fix_link.patch
 )
 
@@ -31,6 +32,8 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DBUILD_TOOLS=OFF
         -DBUILD_APP=OFF
+        --trace
+        -DVCPKG_TRACE_FIND_PACKAGE=1
     OPTIONS_RELEASE
         ${REL_FEATURE_OPTIONS}
     OPTIONS
@@ -73,13 +76,15 @@ vcpkg_cmake_configure(
         -DWITH_OPENVINS=OFF
         -DWITH_MADGWICK=OFF
         -DWITH_FASTCV=OFF
-        --trace
-        -DVCPKG_TRACE_FIND_PACKAGE=1
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME RTABMap CONFIG_PATH CMake)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/rtabmap-0.21)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
