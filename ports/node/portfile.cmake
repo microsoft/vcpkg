@@ -38,40 +38,85 @@ vcpkg_extract_source_archive_ex(
 
 set(TEMP_DIR_TO_INSTALL ${SOURCE_PATH}/opt)
 
-vcpkg_execute_required_process(
-    COMMAND python3 configure.py --ninja --shared --debug --prefix=${TEMP_INSTALLED_TO_DIR}
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME configure-${TARGET_TRIPLET}
-)
+if(VCPKG_TARGET_IS_WINDOWS)
+    #TBD
+    vcpkg_execute_required_process(
+        COMMAND vcbuild.bat x64 dll nobuild
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME configure-${TARGET_TRIPLET}
+    )
+else()
+    vcpkg_execute_required_process(
+        COMMAND python3 configure.py --ninja --shared --debug --prefix=${TEMP_INSTALLED_TO_DIR}
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME configure-${TARGET_TRIPLET}
+    )
+endif()
 if(NOT ${VCPKG_EXECUTE_REQUIRED_PROCESS_RESULT} EQUAL 0)
     message(FATAL_ERROR "configure failed")
 endif()
 
-vcpkg_execute_required_process(
-    COMMAND make -j ${VCPKG_NUM_PROCESSES}
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME build-${TARGET_TRIPLET}
-)
-if(NOT ${VCPKG_EXECUTE_REQUIRED_PROCESS_RESULT} EQUAL 0)
-    message(FATAL_ERROR "build failed")
+if(VCPKG_TARGET_IS_WINDOWS)
+    #TBD
+    vcpkg_execute_required_process(
+        #COMMAND msbuild node.sln /m:2 /t:node /p:Configuration=Debug /p:Platform=x64 /clp:NoItemAndPropertyList;Verbosity=minimal /nologo /p:UseMultiToolTask=True /p:EnforceProcessCountAcrossBuilds=True /p:MultiProcMaxCount=%NUMBER_OF_PROCESSORS% /p:CLToolPath=c:\ccache\ /p:TrackFileAccess=false /p:ForceImportAfterCppProps=${CMAKE_CURRENT_SOURCE_DIR}/props_4_ccache.props            
+        COMMAND msbuild node.sln /t:node /p:Configuration=Debug /p:Platform=x64 /clp:NoItemAndPropertyList;Verbosity=minimal /nologo
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME configure-${TARGET_TRIPLET}
+    )
+    if(NOT ${VCPKG_EXECUTE_REQUIRED_PROCESS_RESULT} EQUAL 0)
+        message(FATAL_ERROR "debug build failed")
+    endif()
+    #TBD
+    vcpkg_execute_required_process(
+        #COMMAND msbuild node.sln /m:2 /t:node /p:Configuration=Release /p:Platform=x64 /clp:NoItemAndPropertyList;Verbosity=minimal /nologo /p:UseMultiToolTask=True /p:EnforceProcessCountAcrossBuilds=True /p:MultiProcMaxCount=%NUMBER_OF_PROCESSORS% /p:CLToolPath=c:\ccache\ /p:TrackFileAccess=false /p:ForceImportAfterCppProps=${CMAKE_CURRENT_SOURCE_DIR}/props_4_ccache.props            
+        COMMAND msbuild node.sln /t:node /p:Configuration=Release /p:Platform=x64 /clp:NoItemAndPropertyList;Verbosity=minimal /nologo
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME configure-${TARGET_TRIPLET}
+    )
+    if(NOT ${VCPKG_EXECUTE_REQUIRED_PROCESS_RESULT} EQUAL 0)
+    message(FATAL_ERROR "release build failed")
+else()
+    vcpkg_execute_required_process(
+        COMMAND make -j ${VCPKG_NUM_PROCESSES}
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME build-${TARGET_TRIPLET}
+    )
+    if(NOT ${VCPKG_EXECUTE_REQUIRED_PROCESS_RESULT} EQUAL 0)
+        message(FATAL_ERROR "build failed")
+    endif()
 endif()
 
-vcpkg_execute_required_process(
-    COMMAND python3 tools/install.py install --dest-dir '' --prefix ${TEMP_DIR_TO_INSTALL}  --build-dir out/Release/
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME install-release-${TARGET_TRIPLET}
-)
-if(NOT ${VCPKG_EXECUTE_REQUIRED_PROCESS_RESULT} EQUAL 0)
-    message(FATAL_ERROR "release install failed")
-endif()
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_execute_required_process(
+        COMMAND python3 tools/install.py install --dest-dir ${TEMP_DIR_TO_INSTALL} --prefix \  --build-dir out/Release/ --headers-only
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME install-release-${TARGET_TRIPLET}
+    )
+    if(NOT ${VCPKG_EXECUTE_REQUIRED_PROCESS_RESULT} EQUAL 0)
+        message(FATAL_ERROR "header install failed")
+    endif()
 
-vcpkg_execute_required_process(
-    COMMAND python3 tools/install.py install --dest-dir '' --prefix ${TEMP_DIR_TO_INSTALL}  --build-dir out/Debug/
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME install-debug--${TARGET_TRIPLET}
-)
-if(NOT ${VCPKG_EXECUTE_REQUIRED_PROCESS_RESULT} EQUAL 0)
-    message(FATAL_ERROR "debug install failed")
+    file(COPY ${SOURCE_PATH}/out/Debug/libnode.lib DESTINATION ${TEMP_DIR_TO_INSTALL}/debug/lib)
+    file(COPY ${SOURCE_PATH}/out/Release/libnode.lib DESTINATION ${TEMP_DIR_TO_INSTALL}/lib)
+else()
+    vcpkg_execute_required_process(
+        COMMAND python3 tools/install.py install --dest-dir '' --prefix ${TEMP_DIR_TO_INSTALL}  --build-dir out/Release/
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME install-release-${TARGET_TRIPLET}
+    )
+    if(NOT ${VCPKG_EXECUTE_REQUIRED_PROCESS_RESULT} EQUAL 0)
+        message(FATAL_ERROR "release install failed")
+    endif()
+
+    vcpkg_execute_required_process(
+        COMMAND python3 tools/install.py install --dest-dir '' --prefix ${TEMP_DIR_TO_INSTALL}  --build-dir out/Debug/
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME install-debug--${TARGET_TRIPLET}
+    )
+    if(NOT ${VCPKG_EXECUTE_REQUIRED_PROCESS_RESULT} EQUAL 0)
+        message(FATAL_ERROR "debug install failed")
+    endif()
 endif()
 
 message("--begin-- copy files from ${SOURCE_PATH}/${TEMP_DIR_TO_INSTALL} to ${CURRENT_PACKAGES_DIR}")
@@ -88,5 +133,5 @@ file(INSTALL ${SOURCE_PATH}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PO
 file(INSTALL ${SOURCE_PATH}/example DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 message("--end-- copy files from ${SOURCE_PATH}/${TEMP_DIR_TO_INSTALL} to ${CURRENT_PACKAGES_DIR}")
 
-# Clean up (TBD)
+# TBD
 # file(REMOVE_RECURSE ${TEMP_DIR_TO_INSTALL})

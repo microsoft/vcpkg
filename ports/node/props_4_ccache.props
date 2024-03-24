@@ -1,0 +1,12 @@
+<Project>
+  <!-- The following will set the needed properties described in Tips above. -->
+  <!-- Creation of a precompiled header will have to be disabled separately. -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <ForcedIncludeFiles />
+      <ObjectFileName>$(IntDir)%(FileName).obj</ObjectFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>

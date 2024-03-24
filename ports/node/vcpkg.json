@@ -8,8 +8,8 @@
     "Ref: https://nodejs.org/api/embedding.html"
   ],
   "homepage": "https://nodejs.org/",
-  "license": "https://github.com/nodejs/node/blob/main/LICENSE",
-  "supports": "linux & x64",
+  "license": "MIT",
+  "supports": "linux & x64", 
   "dependencies": [
     {
       "name": "vcpkg-cmake-config",
