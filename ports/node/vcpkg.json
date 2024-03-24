@@ -1,0 +1,27 @@
+{
+  "name": "node",
+  "version": "21.7.1",
+  "description": [
+    "Node.js® is a free, open-source, cross-platform JavaScript runtime environment that lets developers create servers",
+    "web apps, command line tools and scripts.",
+    "Node.js provides a number of C++ APIs that can be used to execute JavaScript in a Node.js environment from other C++ software.",
+    "Ref: https://nodejs.org/api/embedding.html"
+  ],
+  "homepage": "https://nodejs.org/",
+  "license": "https://github.com/nodejs/node/blob/main/LICENSE",
+  "supports": "linux & x64",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    }    
+  ]
+}
