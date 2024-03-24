@@ -1701,8 +1701,8 @@
       "port-version": 3
     },
     "cnats": {
-      "baseline": "3.7.0",
-      "port-version": 1
+      "baseline": "3.8.0",
+      "port-version": 0
     },
     "cnl": {
       "baseline": "1.1.7",
