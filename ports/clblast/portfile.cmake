@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CNugteren/CLBlast
     REF "${VERSION}"
-    SHA512 3114b2499f13a8b12dc5dfaf3633d4a25c953da63bea3c2f09a99699ee49239c28a1db0033619ef74234af56068f94413aae8c721d1af6114b862670a32cdb8d
+    SHA512 43920c52b134367c2df86e9019cd3bab2811cf3a6bbc3de780724f4e62239ebaf390635d9dfbd887089753ccb751f7e94a9038c4a8aa23ac1a38f39cde5afdcc
     HEAD_REF master
     PATCHES
         fix_install_path.patch
