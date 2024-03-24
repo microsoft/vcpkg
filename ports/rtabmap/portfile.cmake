@@ -3,14 +3,12 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
-    REF 0.21.4
-    SHA512 dedc1ed54560db4d61ca4595d5d90b963da8f3865e9caa58df5b6a1f74b7dfaa59f264c1b71a73f7e0bb3e7791d0cec67eeca8bd52416094f3c87c110b7b8549
+    REF ${VERSION}
+    SHA512 2b424f5b6458cf0f976e711985708f104b56d11921c9c43c6a837f9d3dc9e9e802308f1aa2b6d0e7e6ddf13623ff1ad2922b5f54254d16ee5811e786d27b9f98
     HEAD_REF master
     PATCHES
         fix_link.patch
-        sqlite3.patch
 )
-file(REMOVE "${SOURCE_PATH}/cmake_modules/FindSqlite3.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
