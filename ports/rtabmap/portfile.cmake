@@ -37,7 +37,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
-        -DWITH_ORB_OCTREE=ON
+        -DWITH_ORB_OCTREE=ON   # GPLv3
         -DWITH_TORCH=OFF
         -DWITH_PYTHON=OFF
         -DWITH_PYTHON_THREADING=OFF
