@@ -3,7 +3,7 @@
   "version": "0.21.4.1",
   "description": "Real-Time Appearance-Based Mapping",
   "homepage": "https://introlab.github.io/rtabmap/",
-  "license": "BSD-3-Clause",
+  "license": null,
   "dependencies": [
     "ceres",
     "g2o",

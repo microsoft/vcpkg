@@ -58,7 +58,8 @@ vcpkg_cmake_configure(
         -DWITH_OKVIS=OFF
         -DWITH_OPENCHISEL=OFF
         -DWITH_OPENVINS=OFF
-        -DWITH_ORB_OCTREE=ON
+        -DWITH_ORB_OCTREE=ON   # GPLv3
+        -DWITH_ORB_SLAM=OFF
         -DWITH_PDAL=OFF
         -DWITH_POINTMATCHER=OFF
         -DWITH_PYTHON_THREADING=OFF
@@ -119,4 +120,10 @@ if("tools" IN_LIST FEATURES)
   endif()
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    COMMENT [[
+The RTAB-Map main license is BSD-3-Clause, but some parts of the
+source code are under other licenses possibly including GPL-3.0-only.
+]]
+    FILE_LIST "${SOURCE_PATH}/LICENSE" 
+)
