@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1e65fe25d..64990acab 100755
+index 1e65fe25d..449221449 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -120,50 +120,70 @@ endif()
+@@ -120,21 +120,39 @@ endif()
  
  # required
  find_package(OpenGL REQUIRED)
@@ -53,16 +53,7 @@ index 1e65fe25d..64990acab 100755
  
  if(OSGEARTH_BUILD_CESIUM_NODEKIT)
      find_package(CesiumNative)
- endif()
- 
- if(OSGEARTH_BUILD_TRITON_NODEKIT)
--    find_package(Triton)
-+    find_package(Triton REQUIRED)
- endif()
- 
- if(OSGEARTH_BUILD_SILVERLINING_NODEKIT)
--    find_package(SilverLining)
-+    find_package(SilverLining REQUIRED)
+@@ -149,21 +167,23 @@ if(OSGEARTH_BUILD_SILVERLINING_NODEKIT)
  endif()
  
  if(OSGEARTH_ENABLE_PROFILING)
