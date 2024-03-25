@@ -1,68 +1,123 @@
-cmake_minimum_required(VERSION 3.13)
-project(uSockets C CXX)
+# Unofficial uSockets CMakeLists.txt from Makefile of https://github.com/uNetworking/uSockets/blob/v0.8.8/Makefile
+cmake_minimum_required(VERSION 3.25.1)
+project(uSockets VERSION ${VERSION} LANGUAGES C CXX)
 
-option(INSTALL_HEADERS "Install header files" ON)
+# options
+option(WITH_OPENSSL "enables OpenSSL 1.1+ support"      OFF)
+option(WITH_LIBUV   "builds with libuv as event-loop"   OFF)
 
-if (CMAKE_USE_OPENSSL)
-    find_package(OpenSSL REQUIRED)
-    set(USE_OPENSSL "-DUSE_OPENSSL -DLIBUS_USE_OPENSSL")
-    #set(OPENSSL_LIB "OpenSSL::SSL OpenSSL::Crypto")
-    list(APPEND CMAKE_REQUIRED_INCLUDES ${OPENSSL_INCLUDE_DIR})
+# global variables
+set(uSockets_installable_libs)
+set(uSockets_find_dependency_calls)
+
+# target usockets
+add_library(uSockets)
+list(APPEND uSockets_installable_libs uSockets)
+foreach(dir IN ITEMS "src" "src/eventing" "src/crypto" "src/io_uring")
+    aux_source_directory(${dir} uSockets_sources)
+endforeach()
+list(FILTER uSockets_sources INCLUDE REGEX ".+\\.c$")
+target_sources(uSockets PRIVATE ${uSockets_sources})
+if(WIN32)
+    target_link_libraries(uSockets PRIVATE ws2_32)
+endif(WIN32)
+
+# target coupling options
+add_library(us_target_coupling INTERFACE)
+list(APPEND uSockets_installable_libs us_target_coupling)
+# global include
+target_include_directories(us_target_coupling INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>")
+
+# global std
+target_compile_features(us_target_coupling INTERFACE "c_std_11")
+if(WITH_OPENSSL)
+    target_compile_features(us_target_coupling INTERFACE "cxx_std_17")
 else()
-    set(NOT_USE_OPENSSL "-DLIBUS_NO_SSL")
+    target_compile_features(us_target_coupling INTERFACE "cxx_std_14")
 endif()
 
-find_package(libuv CONFIG REQUIRED)
-if (TARGET libuv::uv)
-    set(LIBUV_LIBRARY libuv::uv)
-else()
-    set(LIBUV_LIBRARY libuv::uv_a)
-endif()
-
-file(GLOB SOURCES src/*.c src/eventing/*.c)
-
-set(USOCKETS_EXT_INCLUDE_DIR )
-set(USOCKETS_EXT_LIBS )
-
-if (CMAKE_USE_OPENSSL)
-    # It requires C++17 or later, see https://github.com/uNetworking/uSockets/blob/0ebdde0601cc82349fc11a7c4bbb6dc5c9f28f42/Makefile#L55
-    set(CMAKE_CXX_STANDARD 17)
+# ssl
+if(WITH_OPENSSL)
+    target_compile_definitions(us_target_coupling INTERFACE "-DLIBUS_USE_OPENSSL")
     find_package(OpenSSL REQUIRED)
-    file(GLOB SSL_SOURCES src/crypto/*.c*)
-    list(APPEND SOURCES ${SSL_SOURCES})
-    list(APPEND USOCKETS_EXT_LIBS OpenSSL::SSL OpenSSL::Crypto)
+    list(APPEND uSockets_find_dependency_calls "OpenSSL")
+    target_link_libraries(us_target_coupling INTERFACE OpenSSL::SSL OpenSSL::Crypto)
+else()
+    target_compile_definitions(us_target_coupling INTERFACE "-DLIBUS_NO_SSL")
 endif()
 
-if (CMAKE_USE_EVENT)
-    file(GLOB SSL_SOURCES src/eventing/*.c)
-    list(APPEND SOURCES ${SSL_SOURCES})
-    list(APPEND USOCKETS_EXT_INCLUDE_DIR src/internal/eventing)
+# event-loop
+if(WITH_LIBUV)
+    target_compile_definitions(us_target_coupling INTERFACE "-DLIBUS_USE_LIBUV")
+    find_package(libuv CONFIG REQUIRED)
+    list(APPEND uSockets_find_dependency_calls "libuv CONFIG")
+    target_link_libraries(us_target_coupling INTERFACE $<IF:$<TARGET_EXISTS:libuv::uv_a>,libuv::uv_a,libuv::uv>)
+else()
+    if(WIN32)
+        message(FATAL_ERROR "Windows should use LIBUV as default event loop")
+    elseif(APPLE OR (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD"))
+        message("Apple or FreeBSD use KQUEUE as default event loop")
+    else()
+        message("Use EPOLL as default event loop")
+    endif()
 endif()
 
-if (CMAKE_USE_NETWORK)
-    list(APPEND USOCKETS_EXT_INCLUDE_DIR src/internal/networking)
-    list(APPEND USOCKETS_EXT_LIBS ws2_32)
+# target crypto
+if(WITH_OPENSSL)
+    add_library(us_target_crypto OBJECT)
+    list(APPEND uSockets_installable_libs us_target_crypto)
+    foreach(dir IN ITEMS "src/crypto")
+        aux_source_directory(${dir} us_target_crypto_sources)
+    endforeach()
+    list(FILTER us_target_crypto_sources INCLUDE REGEX ".+\\.cpp$")
+    target_sources(us_target_crypto PRIVATE ${us_target_crypto_sources})
+    target_link_libraries(us_target_crypto PUBLIC us_target_coupling)
+    target_link_libraries(uSockets PRIVATE us_target_crypto)
 endif()
 
-add_library(uSockets ${SOURCES})
+# target link
+target_link_libraries(uSockets PRIVATE us_target_coupling)
 
-if (${LIBUS_USE_LIBUV})
-  target_compile_definitions(uSockets PRIVATE -DLIBUS_USE_LIBUV)
-endif()
+# install init
+set(PACKAGE_NAME "unofficial-uSockets")
+set(PACKAGE_NAMESPACE "unofficial::uSockets::")
+set(PACKAGE_CONFIG_NAME "${PACKAGE_NAME}Config")
+set(PACKAGE_INSTALL_SHARE "share/${PACKAGE_NAME}")
+set(PACKAGE_INSTALL_INCLUDE "include/${PACKAGE_NAME}")
+set(uSockets_targets_name "uSocketsTargets")
+set(PACKAGE_CONFIG_TEMPLATE_PATH "${CMAKE_CURRENT_BINARY_DIR}/Config.cmake.in")
+file(GLOB PACKAGE_HEADERS "src/*.h")
 
-target_compile_definitions(uSockets PRIVATE ${NOT_USE_OPENSSL} ${USE_OPENSSL})
-target_include_directories(uSockets PUBLIC ${OPENSSL_INCLUDE_DIR} ${USOCKETS_EXT_INCLUDE_DIR} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src")
-target_link_libraries(uSockets PUBLIC ${OPENSSL_LIBRARIES} ${LIBUV_LIBRARY} ${USOCKETS_EXT_LIBS})
+# install headers
+target_include_directories(uSockets PUBLIC "$<INSTALL_INTERFACE:${PACKAGE_INSTALL_INCLUDE}>")
+install(FILES ${PACKAGE_HEADERS} DESTINATION "${PACKAGE_INSTALL_INCLUDE}")
 
-install(TARGETS uSockets
-    RUNTIME DESTINATION bin
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
+# install targets
+install(TARGETS ${uSockets_installable_libs}
+    EXPORT "${uSockets_targets_name}"
 )
 
-if(INSTALL_HEADERS)
-    file(GLOB HEADERS src/*.h)
-    install(FILES ${HEADERS} DESTINATION include)
-    file(GLOB HEADERS src/interfaces/*.h)
-    install(FILES ${HEADERS} DESTINATION include/interfaces)
-endif()
+install(EXPORT "${uSockets_targets_name}"
+    NAMESPACE "${PACKAGE_NAMESPACE}"
+    DESTINATION "${PACKAGE_INSTALL_SHARE}"
+)
+
+# generate configs
+set(PACKAGE_CONFIG_TEMPLATE "@PACKAGE_INIT@\n\n")
+string(APPEND PACKAGE_CONFIG_TEMPLATE "include(CMakeFindDependencyMacro)\n")
+list(REMOVE_DUPLICATES uSockets_find_dependency_calls)
+foreach(dep_call IN LISTS uSockets_find_dependency_calls)
+    string(APPEND PACKAGE_CONFIG_TEMPLATE "find_dependency(${dep_call})\n")
+endforeach()
+string(APPEND PACKAGE_CONFIG_TEMPLATE "\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/${uSockets_targets_name}.cmake\")\n")
+
+file(WRITE "${PACKAGE_CONFIG_TEMPLATE_PATH}" "${PACKAGE_CONFIG_TEMPLATE}")
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file("${PACKAGE_CONFIG_TEMPLATE_PATH}"
+  "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_CONFIG_NAME}.cmake"
+  INSTALL_DESTINATION "${PACKAGE_INSTALL_SHARE}"
+)
+
+# install configs
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_CONFIG_NAME}.cmake" DESTINATION ${PACKAGE_INSTALL_SHARE})

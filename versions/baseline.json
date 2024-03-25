@@ -8925,8 +8925,8 @@
       "port-version": 0
     },
     "usockets": {
-      "baseline": "0.8.6",
-      "port-version": 1
+      "baseline": "0.8.8",
+      "port-version": 0
     },
     "usrsctp": {
       "baseline": "0.9.5.0",
