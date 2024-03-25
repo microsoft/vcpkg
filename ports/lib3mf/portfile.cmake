@@ -8,7 +8,6 @@ vcpkg_from_github(
     REF 23a0a899c940467716456fee3936d756bdf97740 # This is the commit you are interested in.
     SHA512 7dab8804c7ee5b568057e07863da536b9fc2a97f74388096d77ae2a786bf0fcf8a1cac477327ea50d5f4d1aebfad968bb9c24b4f6ab29589777cab32c843bf0f # You need to replace this with the actual SHA-512 hash of the commit.
     TAG v2.3.1 # This is the version you mentioned.
-    SUBMODULES RECURSE
 )
 
 # Custom function to parse .gitmodules and clone submodules
