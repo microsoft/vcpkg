@@ -7,8 +7,8 @@ vcpkg_from_github(
     SHA512 88d1d8d1bbea29149d9747ab9ccb99a7bfbd928f8ed1aff90adb6382fcefd32dc9687e6832f8ac21ddf918f0608623aa123d7943aa5f697a6b946fe2311e05f6
     HEAD_REF master
     PATCHES
-      "windows_alloca_header.patch"
-      "opt-dep.diff"
+        windows_alloca_header.patch
+        opt-dep.diff
 )
 
 set(FEATURE_OPTIONS "")

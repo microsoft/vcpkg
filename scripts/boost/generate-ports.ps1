@@ -91,10 +91,11 @@ $portData = @{
             };
         };
     };
-    "boost-cobalt"           = @{ "supports" = "!osx & !ios & !android" };
+    "boost-cobalt"           = @{ "supports" = "!osx & !ios & !android & !uwp" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-coroutine2"       = @{ "supports" = "!emscripten" };
+    "boost-graph"            = @{ "supports" = "!uwp" };
     "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
     "boost-locale"           = @{
         "dependencies" = @(@{ "name" = "libiconv"; "platform" = "!uwp & !windows & !mingw" });
@@ -117,10 +118,7 @@ $portData = @{
             }
         }
     };
-    "boost-graph-parallel"   = @{
-        "dependencies" = @("mpi");
-        "supports"     = "!uwp";
-    };
+    "boost-mysql"           = @{ "dependencies" = @("openssl"); };
     "boost-odeint"           = @{
         "features" = @{
             "mpi" = @{
@@ -312,14 +310,16 @@ function GeneratePort() {
         "    HEAD_REF master"
     )
     [Array]$patches = Get-Item -Path "$portsDir/$portName/*.patch"
-    if ($null -eq $patches -or $patches.Count -eq 0) {
+    [Array]$diffs = Get-Item -Path "$portsDir/$portName/*.diff"
+    [Array]$allmods = $patches + $diffs
+    if ($null -eq $allmods -or $allmods.Count -eq 0) {
     }
-    elseif ($patches.Count -eq 1) {
-        $portfileLines += @("    PATCHES $($patches.name)")
-    }
+    #elseif ($allmods.Count -eq 1) {
+    #    $portfileLines += @("    PATCHES $($allmods.name)")
+    #}
     else {
         $portfileLines += @("    PATCHES")
-        foreach ($patch in $patches) {
+        foreach ($patch in $allmods) {
             $portfileLines += @("        $($patch.name)")
         }
     }
@@ -562,7 +562,7 @@ foreach ($library in $libraries) {
         # Remove optional dependencies that are only used for tests or examples
         $deps = @($deps | Where-Object {
             -not (
-                ($library -eq 'ublas' -and $_ -eq 'compute') -or # PR #29325
+                # ($library -eq 'ublas' -and $_ -eq 'compute') -or # PR #29325 # Doesnt look optional
                 ($library -eq 'gil' -and $_ -eq 'filesystem') # PR #20575
             )
         })

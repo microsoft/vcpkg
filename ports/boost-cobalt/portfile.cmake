@@ -8,11 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile"
-    "import ../../config/checks/config"
-    "import ../config/checks/config"
-)
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
 set(FEATURE_OPTIONS "")
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"

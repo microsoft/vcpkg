@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 0fa13a3c02b29dfaa6cf16df5e9efedc50bba8f762694c337d6ab9ee00564d2ba7a4326d32c150a187f435c8ddd41895b46311a49b7c9c4e117d47665dcbbd8b
     HEAD_REF master
     PATCHES
-      remove-boost-filesystem-dep.diff # see https://github.com/boostorg/gil/issues/742
+        remove-boost-filesystem-dep.diff
 )
 
 set(FEATURE_OPTIONS "")

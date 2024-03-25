@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 ea48b08fe00b9075af80f6f2614a639fd84b146ecfed229ae2ce23745a6a6d85b4d607ee2b199134848c87562ef8145aba0ff063a862653b3f01512de5717234
     HEAD_REF master
     PATCHES
-      "opt-mpi.diff"
+        opt-mpi.diff
 )
 
 set(FEATURE_OPTIONS "")

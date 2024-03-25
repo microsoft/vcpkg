@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 7173006ac8b305eee2cfea3a88ea56ce85e48cc72eeeed360c115b3d4390e7f112b518a12b0bf6a9e6080bf7b0616b6f2d41c6a624f65a377584123add12908c
     HEAD_REF master
     PATCHES
-      "remove-random.diff"
+        remove-random.diff
 )
 
 set(FEATURE_OPTIONS "")
