@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
         no-etc-symlinks.patch
         libgetopt.patch
         fix-preprocessor-clang-cl.patch
+        fix-disable-atomics.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")

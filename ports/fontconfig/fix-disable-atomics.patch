@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index 2646454..d784fbe 100644
+--- a/meson.build
++++ b/meson.build
+@@ -197,7 +197,7 @@ else
+ endif
+ 
+ if cc.links(files('meson-cc-tests/stdatomic-primitives-test.c'), name: 'stdatomic.h atomics')
+-  conf.set('HAVE_STDATOMIC_PRIMITIVES', 1)
++  conf.set('HAVE_STDATOMIC_PRIMITIVES', 0)
+ endif
+ 
+ if cc.links(files('meson-cc-tests/intel-atomic-primitives-test.c'), name: 'Intel atomics')
