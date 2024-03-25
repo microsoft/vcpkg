@@ -21,10 +21,10 @@ vcpkg_configure_meson(
     OPTIONS
         ${BUILD_OPTIONS}
         # see ${SOURCE_PATH}/meson_options.txt
-        -Dengines=sw
+        -Dengines=['sw']
         -Dloaders=all
         -Dsavers=tvg
-        -Dvector=true
+        -Dvector=true # This assumes AVX
         -Dbindings=capi
         -Dtests=false
         -Dexamples=false

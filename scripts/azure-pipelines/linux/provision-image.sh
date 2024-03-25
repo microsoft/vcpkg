@@ -31,7 +31,7 @@ APT_PACKAGES="git curl zip unzip tar"
 APT_PACKAGES="$APT_PACKAGES at libxt-dev gperf libxaw7-dev cifs-utils \
   build-essential g++ gfortran libx11-dev libxkbcommon-x11-dev libxi-dev \
   libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxxf86vm-dev \
-  libxcursor-dev yasm libnuma1 libnuma-dev libtool-bin \
+  libxcursor-dev yasm libnuma1 libnuma-dev libtool-bin libltdl-dev \
   flex bison libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
   xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full \
   pkg-config meson nasm cmake ninja-build"
@@ -59,10 +59,10 @@ APT_PACKAGES="$APT_PACKAGES libxcb-res0-dev"
 APT_PACKAGES="$APT_PACKAGES libxcb-keysyms1-dev libxcb-xkb-dev libxcb-record0-dev"
 
 ## required by mesa
-APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako libxcb-dri3-dev"
+APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako libxcb-dri3-dev libxcb-present-dev"
 
 ## required by some packages to install additional python packages
-APT_PACKAGES="$APT_PACKAGES python3-pip python3-venv"
+APT_PACKAGES="$APT_PACKAGES python3-pip python3-venv python3-jinja2"
 
 ## required by qtwebengine
 APT_PACKAGES="$APT_PACKAGES nodejs"
@@ -93,6 +93,9 @@ APT_PACKAGES="$APT_PACKAGES golang-go"
 
 ## required by libdecor and mesa
 APT_PACKAGES="$APT_PACKAGES wayland-protocols"
+
+## required by robotraconteur
+APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
 
 ## CUDA
 APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-1 cuda-libraries-dev-12-1 cuda-driver-dev-12-1 \
