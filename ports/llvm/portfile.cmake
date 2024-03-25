@@ -274,6 +274,8 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
+        --debug-find
+        --trace-expand
         -DLLVM_INCLUDE_EXAMPLES=OFF
         -DLLVM_BUILD_EXAMPLES=OFF
         -DLLVM_INCLUDE_TESTS=OFF
