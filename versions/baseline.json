@@ -1505,8 +1505,8 @@
       "port-version": 5
     },
     "cctz": {
-      "baseline": "2.3",
-      "port-version": 7
+      "baseline": "2.4",
+      "port-version": 0
     },
     "cdt": {
       "baseline": "1.4.0",
