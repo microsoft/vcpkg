@@ -14,6 +14,7 @@ vcpkg_from_github(
       add_filesystem.patch
       occ-78.patch
       142.diff
+      fix_warning.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

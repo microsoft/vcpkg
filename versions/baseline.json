@@ -3349,7 +3349,7 @@
       "port-version": 0
     },
     "hdf5": {
-      "baseline": "1.14.2",
+      "baseline": "1.14.3",
       "port-version": 0
     },
     "healpix": {
@@ -6070,7 +6070,7 @@
     },
     "netgen": {
       "baseline": "6.2.2401",
-      "port-version": 0
+      "port-version": 1
     },
     "nethost": {
       "baseline": "8.0.0",
@@ -6509,8 +6509,8 @@
       "port-version": 4
     },
     "openturns": {
-      "baseline": "1.20",
-      "port-version": 2
+      "baseline": "1.22",
+      "port-version": 0
     },
     "openvdb": {
       "baseline": "11.0.0",

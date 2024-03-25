@@ -1,16 +1,16 @@
 diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
-index 141ab44..66b7efa 100644
+index bc10c77..d70599a 100644
 --- a/CMakeFilters.cmake
 +++ b/CMakeFilters.cmake
-@@ -95,6 +95,7 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
+@@ -83,6 +83,7 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
          set (ZLIB_INCLUDE_DIR_GEN ${ZLIB_INCLUDE_DIR})
          set (ZLIB_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIR})
          set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${ZLIB_LIBRARIES})
 +        set (zlib_PC_LIBS_PRIVATE "${ZLIB_LIBRARIES}")
        endif ()
      else ()
-       if (BUILD_ZLIB_WITH_FETCHCONTENT)
-@@ -148,6 +148,7 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
+       if (HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "GIT" OR HDF5_ALLOW_EXTERNAL_SUPPORT MATCHES "TGZ")
+@@ -132,6 +133,7 @@ if (HDF5_ENABLE_SZIP_SUPPORT)
        if (TARGET szip-shared)
          set(SZIP_LIBRARIES szip-shared)
        endif()
@@ -18,8 +18,6 @@ index 141ab44..66b7efa 100644
        if (NOT SZIP_FOUND)
          find_package (SZIP) # Legacy find
        endif ()
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b75fdd2..a2e88fd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -711,5 +711,8 @@ if (H5_HAVE_PARALLEL)

@@ -1,0 +1,12 @@
+diff --git a/libsrc/core/utils.hpp b/libsrc/core/utils.hpp
+index 79d919c..8933568 100644
+--- a/libsrc/core/utils.hpp
++++ b/libsrc/core/utils.hpp
+@@ -74,7 +74,6 @@ namespace ngcore
+ #elif defined(__EMSCRIPTEN__)
+     return std::chrono::high_resolution_clock::now().time_since_epoch().count();
+ #else
+-#warning "Unsupported CPU architecture"
+     return 0;
+ #endif
+   }

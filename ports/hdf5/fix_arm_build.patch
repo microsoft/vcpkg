@@ -1,0 +1,162 @@
+index f36b662..f5b5335 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -901,8 +901,8 @@ if (HDF5_ENABLE_THREADSAFE)
+       message (VERBOSE " **** Allowing unsupported HL and thread-safety options **** ")
+     endif ()
+   endif ()
+-  if (H5_HAVE_IOEO)
+-    message (VERBOSE " **** Win32 threads requires WINVER>=0x600 (Windows Vista/7/8) **** ")
++  if (WIN32)
++    # When Win32 is available, we use those threads
+     set (H5_HAVE_WIN_THREADS 1)
+   else ()
+     if (NOT H5_HAVE_PTHREAD_H)
+diff --git a/config/cmake/ConfigureChecks.cmake b/config/cmake/ConfigureChecks.cmake
+index 3d4c23b..4ea0fdc 100644
+--- a/config/cmake/ConfigureChecks.cmake
++++ b/config/cmake/ConfigureChecks.cmake
+@@ -292,6 +292,12 @@ if (MINGW OR NOT WINDOWS)
+   endif ()
+ endif ()
+ 
++# MinGW and Cygwin
++if (MINGW OR CYGWIN)
++  set (CMAKE_REQUIRED_DEFINITIONS
++    "${CURRENT_TEST_DEFINITIONS} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
++  )
++endif ()
+ #-----------------------------------------------------------------------------
+ #  Check the size in bytes of all the int and float types
+ #-----------------------------------------------------------------------------
+@@ -872,35 +878,46 @@ if (HDF5_BUILD_FORTRAN)
+ endif()
+ 
+ #-----------------------------------------------------------------------------
+-# Macro to determine the various conversion capabilities
++# Macro to determine long double conversion properties
+ #-----------------------------------------------------------------------------
+-macro (H5ConversionTests TEST msg)
++macro (H5ConversionTests TEST def msg)
+   if (NOT DEFINED ${TEST})
+-    TRY_RUN (${TEST}_RUN   ${TEST}_COMPILE
+-        ${CMAKE_BINARY_DIR}
+-        ${HDF_RESOURCES_DIR}/ConversionTests.c
+-        CMAKE_FLAGS -DCOMPILE_DEFINITIONS:STRING=-D${TEST}_TEST
+-        OUTPUT_VARIABLE OUTPUT
+-    )
+-    if (${TEST}_COMPILE)
+-      if (${TEST}_RUN EQUAL "0")
+-        set (${TEST} 1 CACHE INTERNAL ${msg})
+-        message (VERBOSE "${msg}... yes")
++    if (NOT CMAKE_CROSSCOMPILING)
++      # Build and run the test code if not cross-compiling
++      TRY_RUN (${TEST}_RUN   ${TEST}_COMPILE
++          ${CMAKE_BINARY_DIR}
++          ${HDF_RESOURCES_DIR}/ConversionTests.c
++          CMAKE_FLAGS -DCOMPILE_DEFINITIONS:STRING=-D${TEST}_TEST
++          OUTPUT_VARIABLE OUTPUT
++      )
++      if (${TEST}_COMPILE)
++        if (${TEST}_RUN EQUAL "0")
++          set (${TEST} 1 CACHE INTERNAL ${msg})
++          message (VERBOSE "${msg}... yes")
++        else ()
++          set (${TEST} "" CACHE INTERNAL ${msg})
++          message (VERBOSE "${msg}... no")
++          file (APPEND ${CMAKE_BINARY_DIR}/CMakeFiles/CMakeError.log
++                "Test ${TEST} Run failed with the following output and exit code:\n ${OUTPUT}\n"
++          )
++        endif ()
+       else ()
+         set (${TEST} "" CACHE INTERNAL ${msg})
+         message (VERBOSE "${msg}... no")
+         file (APPEND ${CMAKE_BINARY_DIR}/CMakeFiles/CMakeError.log
+-              "Test ${TEST} Run failed with the following output and exit code:\n ${OUTPUT}\n"
++            "Test ${TEST} Compile failed with the following output:\n ${OUTPUT}\n"
+         )
+       endif ()
+     else ()
+-      set (${TEST} "" CACHE INTERNAL ${msg})
+-      message (VERBOSE "${msg}... no")
+-      file (APPEND ${CMAKE_BINARY_DIR}/CMakeFiles/CMakeError.log
+-          "Test ${TEST} Compile failed with the following output:\n ${OUTPUT}\n"
+-      )
++      # Use the default if there's no cache variable and cross-compiling
++      if (${def})
++        message (VERBOSE "${msg}... yes (cross-compile default)")
++        set (${TEST} 1 CACHE INTERNAL ${msg})
++      else ()
++        message (VERBOSE "${msg}... no (cross-compile default)")
++        set (${TEST} "" CACHE INTERNAL ${msg})
++      endif ()
+     endif ()
+-
+   endif ()
+ endmacro ()
+ 
+@@ -917,7 +934,7 @@ endmacro ()
+ # The machine's conversion gets the correct value.  We define the macro and disable
+ # this kind of test until we figure out what algorithm they use.
+ #-----------------------------------------------------------------------------
+-H5ConversionTests (${HDF_PREFIX}_LDOUBLE_TO_LONG_SPECIAL  "Checking IF your system converts long double to (unsigned) long values with special algorithm")
++H5ConversionTests (${HDF_PREFIX}_LDOUBLE_TO_LONG_SPECIAL FALSE "Checking IF your system converts long double to (unsigned) long values with special algorithm")
+ # ----------------------------------------------------------------------
+ # Set the flag to indicate that the machine is using a special algorithm
+ # to convert some values of '(unsigned) long' to 'long double' values.
+@@ -926,7 +943,7 @@ H5ConversionTests (${HDF_PREFIX}_LDOUBLE_TO_LONG_SPECIAL  "Checking IF your syst
+ # ..., 7fffff..., the compiler uses a unknown algorithm.  We define a
+ # macro and skip the test for now until we know about the algorithm.
+ #-----------------------------------------------------------------------------
+-H5ConversionTests (${HDF_PREFIX}_LONG_TO_LDOUBLE_SPECIAL "Checking IF your system can convert (unsigned) long to long double values with special algorithm")
++H5ConversionTests (${HDF_PREFIX}_LONG_TO_LDOUBLE_SPECIAL FALSE "Checking IF your system can convert (unsigned) long to long double values with special algorithm")
+ # ----------------------------------------------------------------------
+ # Set the flag to indicate that the machine can accurately convert
+ # 'long double' to '(unsigned) long long' values.  (This flag should be set for
+@@ -936,7 +953,7 @@ H5ConversionTests (${HDF_PREFIX}_LONG_TO_LDOUBLE_SPECIAL "Checking IF your syste
+ # 0x4351ccf385ebc8a0dfcc... or 0x4351ccf385ebc8a0ffcc... will make the converted
+ # values wildly wrong.  This test detects this wrong behavior and disable the test.
+ #-----------------------------------------------------------------------------
+-H5ConversionTests (${HDF_PREFIX}_LDOUBLE_TO_LLONG_ACCURATE "Checking IF correctly converting long double to (unsigned) long long values")
++H5ConversionTests (${HDF_PREFIX}_LDOUBLE_TO_LLONG_ACCURATE TRUE "Checking IF correctly converting long double to (unsigned) long long values")
+ # ----------------------------------------------------------------------
+ # Set the flag to indicate that the machine can accurately convert
+ # '(unsigned) long long' to 'long double' values.  (This flag should be set for
+@@ -944,9 +961,9 @@ H5ConversionTests (${HDF_PREFIX}_LDOUBLE_TO_LLONG_ACCURATE "Checking IF correctl
+ # 007fff..., 00ffff..., 01ffff..., ..., 7fffff..., the converted values are twice
+ # as big as they should be.
+ #-----------------------------------------------------------------------------
+-H5ConversionTests (${HDF_PREFIX}_LLONG_TO_LDOUBLE_CORRECT "Checking IF correctly converting (unsigned) long long to long double values")
++H5ConversionTests (${HDF_PREFIX}_LLONG_TO_LDOUBLE_CORRECT TRUE "Checking IF correctly converting (unsigned) long long to long double values")
+ # ----------------------------------------------------------------------
+ # Set the flag to indicate that the machine can accurately convert
+ # some long double values
+ #-----------------------------------------------------------------------------
+-H5ConversionTests (${HDF_PREFIX}_DISABLE_SOME_LDOUBLE_CONV "Checking IF the cpu is power9 and cannot correctly converting long double values")
++H5ConversionTests (${HDF_PREFIX}_DISABLE_SOME_LDOUBLE_CONV FALSE "Checking IF the cpu is power9 and cannot correctly converting long double values")
+diff --git a/config/cmake/HDFTests.c b/config/cmake/HDFTests.c
+index 3897390..18f2edb 100644
+--- a/config/cmake/HDFTests.c
++++ b/config/cmake/HDFTests.c
+@@ -197,21 +197,3 @@ int main(void)
+         return 0;
+ }
+ #endif
+-
+-#ifdef HAVE_IOEO
+-
+-#include <windows.h>
+-typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
+-int main ()
+-{
+-    PGNSI pGNSI;
+-
+-    pGNSI = (PGNSI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "InitOnceExecuteOnce");
+-
+-    if (NULL == pGNSI)
+-        return 1;
+-    else
+-        return 0;
+-}
+-
+-#endif /* HAVE_IOEO */
