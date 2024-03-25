@@ -6085,7 +6085,7 @@
       "port-version": 4
     },
     "nghttp2": {
-      "baseline": "1.59.0",
+      "baseline": "1.60.0",
       "port-version": 0
     },
     "nghttp2-asio": {
