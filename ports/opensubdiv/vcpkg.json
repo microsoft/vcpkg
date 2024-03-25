@@ -1,7 +1,6 @@
 {
   "name": "opensubdiv",
-  "version-semver": "3.5.0",
-  "port-version": 1,
+  "version-semver": "3.6.0",
   "description": "An Open-Source subdivision surface library.",
   "homepage": "https://github.com/PixarAnimationStudios/OpenSubdiv",
   "license": "Apache-2.0",

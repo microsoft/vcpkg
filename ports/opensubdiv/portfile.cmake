@@ -1,12 +1,13 @@
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_IOS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
+string(REPLACE "." "_" OpenSubdiv_VERSION "${VERSION}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenSubdiv
-    REF 8ffa2b6566be10209529d7a0d1db02a0796b160c # v3.5.0
-    SHA512 cb48470f044ca4e9fcdfb3ff05d710fd710212d5a2f539f3f90ebb33cc6a6b1530fd9deb7d3eb25b275133dbdf5c1a5d4777b289d13b15006a59db12e8b28398
+    REF "v${OpenSubdiv_VERSION}" # v3.5.0
+    SHA512 a976733a26e2c0f6510f59d4372b1b33f5404a9d536bcbd6ae3a1a0ffd1bba5495df7108bebc854d5c069575772c97c0d00f0f16f79e87611376ba84e9ae7a4b
     HEAD_REF release
     PATCHES
         fix_compile-option.patch
