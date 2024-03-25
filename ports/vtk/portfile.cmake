@@ -141,6 +141,8 @@ if("python" IN_LIST FEATURES)
         -DVTK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
         "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
+        #"-DPython3_INCLUDE_DIRS:PATH=${CURRENT_INSTALLED_DIR}/include"
+        #"-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include"
         -DVTK_MODULE_ENABLE_VTK_Python=YES
         -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES # TODO: recheck
         -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES
