@@ -10,8 +10,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openMVG/openMVG
-    REF d0fe73dd426ae4001631a51272cff71047522df9  # v2.0
-    SHA512 1d5c68971ad63ced46d8b9070bdacc1065b4ba950fe919e11f952a004def87d4d83a474d48aee714c21b12106d7d81187d3670d8a2e6daf2d3c5fceb008a5de3
+    REF "v${VERSION}"
+    SHA512 edc4ecf9846fb7d7bb4db0470742b5d6aea7e141e60fbc30563522381e8cb08d65f2a7158a46e65f61b9c96da02efc80251d1b91264ba9e73496a21d7880d2aa
     PATCHES
         build_fixes.patch
         0001-eigen_3.4.0.patch
