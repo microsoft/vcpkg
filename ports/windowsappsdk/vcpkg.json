@@ -1,0 +1,7 @@
+{
+  "name": "windowsappsdk",
+  "version-semver": "1.3.230724000",
+  "description": "This meta package holds common files for the Windows App SDK but is not installable on its own.",
+  "homepage": "https://github.com/microsoft/windowsappsdk",
+  "license": "MIT"
+}

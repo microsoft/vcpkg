@@ -7,7 +7,7 @@ include(WebKitCommon-minimal)
 set(ANGLE_FRAMEWORK_HEADERS_DIR "${CMAKE_BINARY_DIR}/ANGLE/headers")
 
 set(USE_ANGLE_EGL ON)
-if (NOT WINDOWS_STORE)
+if (NOT WINDOWS_STORE AND NOT WINDOWS_APP_SDK)
     set(USE_OPENGL ON)
 endif()
 
@@ -28,6 +28,8 @@ endif()
 
 if (WINDOWS_STORE)
     set(WINRT_DEFINES -DANGLE_ENABLE_WINDOWS_UWP -DWINAPI_FAMILY=WINAPI_FAMILY_PC_APP)
+elseif (WINDOWS_APP_SDK)
+    set(WINRT_DEFINES -DANGLE_ENABLE_WINDOWS_UWP -DANGLE_ENABLE_WINDOWS_APP_SDK)
 else()
     set(WINRT_DEFINES)
 endif()
@@ -69,6 +71,11 @@ if(NOT BUILD_SHARED_LIBS)
     )
 endif()
 
+if (WINDOWS_APP_SDK)
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third_party/WindowsAppSDK/include)
+    link_directories(${CMAKE_CURRENT_SOURCE_DIR}/third_party/WindowsAppSDK/lib/${VCPKG_TARGET_ARCHITECTURE})
+endif()
+
 find_package(ZLIB REQUIRED)
 
 ##################################################
@@ -94,13 +101,19 @@ if (APPLE)
     endif()
 elseif (WIN32)
     set(is_win TRUE)
-    if (NOT WINDOWS_STORE)
-        set(angle_is_winuwp FALSE)
-    else()
+    if (WINDOWS_STORE)
         set(angle_is_winuwp TRUE)
+        set(angle_is_winappsdk FALSE)
         set(target_os "winuwp")
+    elseif (WINDOWS_APP_SDK)
+        set(angle_is_winuwp TRUE)
+        set(angle_is_winappsdk TRUE)
+        set(target_os "winuwp")
+    else()
+        set(angle_is_winuwp FALSE)
+        set(angle_is_winappsdk FALSE)
     endif()
-    if (NOT angle_is_winuwp)
+    if (NOT angle_is_winuwp AND NOT angle_is_winappsdk)
         set(angle_enable_d3d9 TRUE)
     endif()
     set(angle_enable_d3d11 TRUE)
@@ -211,7 +224,7 @@ if (WIN32)
         "src/libANGLE/renderer/dxgi_support_table.h"
         "src/libANGLE/renderer/dxgi_support_table_autogen.cpp"
     )
-    if (NOT angle_is_winuwp)
+    if (NOT angle_is_winuwp AND NOT angle_is_winappsdk)
         list(APPEND ANGLE_SOURCES
             "src/libANGLE/renderer/d3d_format.cpp"
             "src/libANGLE/renderer/d3d_format.h"
