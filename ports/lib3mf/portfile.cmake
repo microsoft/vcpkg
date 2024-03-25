@@ -1,5 +1,7 @@
 include(vcpkg_execute_required_process)
 
+set(VCPKG_BUILD_TYPE release) 
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/vijaiaeroastro/3mfExamples/releases/download/2.3.1/lib3mf-2.3.1-complete.zip"
     FILENAME "lib3mf-2.3.1.zip"
