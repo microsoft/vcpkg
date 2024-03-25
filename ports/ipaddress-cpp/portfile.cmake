@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vladimirshaleev/ipaddress
-    REF 73c10065b659bddcaffa8ffa1576d1317b0c6c3c # v1.0.1
-    SHA512 4ec7b20f953dfa32c561acdcae141bc2d05195473b68f98df37631b3f2a6d46fb75ede78990078d1cfa7490f922443525e2ad95a2dfca8a248688a09b537a800
+    REF "v${VERSION}"
+    SHA512 dc8d37b5a28c80e6ddf4dfa0ffc6973b2625d20dc61cd56e77e1f2cfdc7d427937b73e2abb0d1d85cdfe54fc199fef4132c20fc01b1e91bab6a988650d6e9a6d
     HEAD_REF main
 )
 
@@ -14,7 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DIPADDRESS_BUILD_DOC=OFF
@@ -24,7 +24,7 @@ vcpkg_cmake_configure(
         -DIPADDRESS_ENABLE_CLANG_TIDY=OFF
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/ipaddress)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
