@@ -5446,11 +5446,11 @@
     },
     "luasec": {
       "baseline": "1.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "luasocket": {
       "baseline": "3.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "luminoengine": {
       "baseline": "0.10.1",
