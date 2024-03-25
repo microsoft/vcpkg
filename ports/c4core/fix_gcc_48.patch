@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1207d1b..f8134a7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -78,6 +78,7 @@ if(C4CORE_WITH_FASTFLOAT)
+ endif()
+ set(C4CORE_AMALGAMATED ${C4CORE_SRC_DIR}/../src_singleheader/c4/c4core_all.hpp)
+ list(TRANSFORM C4CORE_SRC_FILES PREPEND "${C4CORE_SRC_DIR}/" OUTPUT_VARIABLE C4CORE_SRC_FILES_FULL)
++include_directories(${C4CORE_SRC_DIR}/../cmake/compat)
+
+ add_custom_target(c4core-amalgamate
+     python ${CMAKE_CURRENT_LIST_DIR}/tools/amalgamate.py ${C4CORE_AMALGAMATED}
+@@ -106,5 +107,3 @@ c4_install_target(c4core)
+ c4_install_exports()
+
+ c4_add_dev_targets()
+-
+-c4_pack_project(TYPE LIBRARY)

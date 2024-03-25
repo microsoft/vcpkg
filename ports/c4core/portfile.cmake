@@ -7,60 +7,38 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 e96d91daeba30a5caf1772a1fbcdd4011e42e112cd560652d23d61089ef751f88c305abc41b17f45652b44090a3b4e8d853acc1bc32ce8f6f46b3ad410028e9f
     HEAD_REF master
+    PATCHES
+        fix_gcc_48.patch
 )
-
-set(CM_COMMIT_HASH fe41e86552046c3df9ba73a40bf3d755df028c1e)
 
 # Get cmake scripts for c4core
-vcpkg_download_distfile(
-    CMAKE_ARCHIVE
-    URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
-    FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 7292f9856d9c41581f2731e73fdf08880e0f4353b757da38a13ec89b62c5c8cb52b9efc1a9ff77336efa0b6809727c17649e607d8ecacc965a9b2a7a49925237
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH_CMAKE
+    REPO biojppm/cmake
+    REF 95b2410e31ebf28b56a4fffffef52c7d13d657ad
+    SHA512 0aede5089f1db81f976860b20e76f759ddb2c8dceb3b13d3521db65d67b5355083aa370eec245fe7810f3e6702c7ab0e42cae63b0b979c2118c09bf2ae8567ea
+    HEAD_REF master
 )
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH_CMAKE
-    ARCHIVE ${CMAKE_ARCHIVE}
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
-)
-
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
 file(RENAME "${SOURCE_PATH_CMAKE}" "${SOURCE_PATH}/cmake")
 
-set(DB_COMMIT_HASH 78e525c6e74df6d62d782864a52c0d279dcee24f)
-
-vcpkg_download_distfile(
-    DEBUGBREAK_ARCHIVE
-    URLS "https://github.com/biojppm/debugbreak/archive/${DB_COMMIT_HASH}.zip"
-    FILENAME "debugbreak-${DB_COMMIT_HASH}.zip"
-    SHA512 25f3d45b09ce362f736fac0f6d6a6c7f2053fec4975b32b0565288893e4658fd0648a7988c3a5fe0e373e92705d7a3970eaa7cfc053f375ffb75e80772d0df64
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH_DEBUGBREAK
+    REPO biojppm/debugbreak
+    REF 5dcbe41d2bd4712c8014aa7e843723ad7b40fd74
+    SHA512 8c63cbab94c049d6f04a48b9de73f22c50ed1e68eba2b77a0fdcb63952d88b1f7248c59e3f4d519c1211a93f378c0200f62fae5a2596a1decd5df18204d4f488
+    HEAD_REF master
 )
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH_DEBUGBREAK  
-    ARCHIVE ${DEBUGBREAK_ARCHIVE}
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
-)
-
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/c4/ext/debugbreak")
 file(RENAME "${SOURCE_PATH_DEBUGBREAK}" "${SOURCE_PATH}/src/c4/ext/debugbreak")
 
-set(FF_COMMIT_HASH 8159e8bcf63c1b92f5a51fb550f966e56624b209)
-
-vcpkg_download_distfile(
-    FAST_FLOAT_ARCHIVE
-    URLS "https://github.com/biojppm/fast_float/archive/${FF_COMMIT_HASH}.zip"
-    FILENAME "fast_float-${FF_COMMIT_HASH}.zip"
-    SHA512 ae71f74d3bae782f62f037c034bea4e7f45462188c8285971c2959c6b2884d3bb58826681c0989f4290f26fa33237c1b63ceed77ed94f9e97c1cd01b4aa21cd3
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH_FAST_FLOAT
+    REPO fastfloat/fast_float
+    REF 052975dd5f8166d0f9e4a215fa75a349d5985b91
+    SHA512 28c1f88b6afbade3cfae892292957e7e239bf8e887639fc66b7d627fb39e17a3390854fee76af6c19e2bd81fb35f29b0dec8495dc3092b884d3aae9a63867c16
+    HEAD_REF master
 )
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH_FAST_FLOAT 
-    ARCHIVE ${FAST_FLOAT_ARCHIVE}
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
-)
-
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/c4/ext/fast_float")
 file(RENAME "${SOURCE_PATH_FAST_FLOAT}" "${SOURCE_PATH}/src/c4/ext/fast_float")
 
