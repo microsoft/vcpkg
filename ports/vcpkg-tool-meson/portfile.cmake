@@ -2,58 +2,38 @@
 # In the future, it is expected that this port acquires and installs Meson.
 # Currently is used in ports that call vcpkg_find_acquire_program(MESON) in order to force rebuilds.
 
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+set(VCPKG_POLICY_CMAKE_HELPER_PORT enabled)
 
-set(program MESON)
-set(program_version 0.63.0)
-set(program_name meson)
-set(search_names meson meson.py)
-set(interpreter PYTHON3)
-set(apt_package_name "meson")
-set(brew_package_name "meson")
-set(paths_to_search "${CURRENT_PACKAGES_DIR}/tools/meson")
-set(supported_on_unix ON)
-set(version_command --version)
-set(extra_search_args EXACT_VERSION_MATCH)
-
-vcpkg_find_acquire_program(PYTHON3)
-
-# Reenable if no patching of meson is required within vcpkg
-# z_vcpkg_find_acquire_program_find_external("${program}"
-#    ${extra_search_args}
-#    PROGRAM_NAME "${program_name}"
-#    MIN_VERSION "${program_version}"
-#    INTERPRETER "${interpreter}"
-#    NAMES ${search_names}
-#    VERSION_COMMAND ${version_command}
-# )
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO mesonbuild/meson
-    REF bb91cea0d66d8d036063dedec1f194d663399cdf
-    SHA512 e5888eb35dd4ab5fc0a16143cfbb5a7849f6d705e211a80baf0a8b753e2cf877a4587860a79cad129ec5f3474c12a73558ffe66439b1633d80b8044eceaff2da
-    PATCHES
-        meson-intl.patch
-        remove-freebsd-pcfile-specialization.patch
+set(files 
+  vcpkg.json
+  portfile.cmake
+  vcpkg-port-config.cmake
+  vcpkg_configure_meson.cmake
+  vcpkg_install_meson.cmake
+  meson-intl.patch
+  adjust-python-dep.patch
+  adjust-args.patch
+  remove-freebsd-pcfile-specialization.patch
+  meson.template.in
 )
 
-vcpkg_execute_required_process(
-    COMMAND "${CMAKE_COMMAND}"
-        "-DSOURCE_PATH=${SOURCE_PATH}"
-        "-DCURRENT_PACKAGES_DIR=${CURRENT_PACKAGES_DIR}"
-        -P "${CURRENT_PORT_DIR}/install.cmake"
-    WORKING_DIRECTORY "${VCPKG_ROOT_DIR}"
-    LOGNAME install
-)
+set(MESON_PATH_HASH "")
+foreach(to_hash IN LISTS files)
+  file(SHA1 ${CMAKE_CURRENT_LIST_DIR}/${to_hash} to_append)
+  string(APPEND MESON_PATH_HASH "${to_append}")
+endforeach()
+string(SHA512 MESON_PATH_HASH "${MESON_PATH_HASH}")
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg_configure_meson.cmake"
+          "${CMAKE_CURRENT_LIST_DIR}/vcpkg_install_meson.cmake"
+          "${CMAKE_CURRENT_LIST_DIR}/meson-intl.patch"
+          "${CMAKE_CURRENT_LIST_DIR}/adjust-python-dep.patch"
+          "${CMAKE_CURRENT_LIST_DIR}/adjust-args.patch"
+          "${CMAKE_CURRENT_LIST_DIR}/remove-freebsd-pcfile-specialization.patch"
+          "${CMAKE_CURRENT_LIST_DIR}/meson.template.in"
+          DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-z_vcpkg_find_acquire_program_find_internal("${program}"
-    INTERPRETER "${interpreter}"
-    PATHS ${paths_to_search}
-    NAMES ${search_names}
-)
+vcpkg_install_copyright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")
 
-message(STATUS "Using meson: ${MESON}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/meson/version.txt" "${program_version}") # For vcpkg_find_acquire_program
+include("${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake")
