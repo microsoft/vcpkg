@@ -1,7 +1,7 @@
 {
   "name": "llvm",
   "version": "17.0.2",
-  "port-version": 3,
+  "port-version": 4,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0",
@@ -228,9 +228,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "clang",
-            "libcxxabi",
-            "tools"
+            "libunwind"
           ]
         }
       ]
@@ -242,9 +240,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "clang",
-            "libcxx",
-            "tools"
+            "libunwind"
           ]
         }
       ]
