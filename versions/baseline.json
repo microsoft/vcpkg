@@ -7065,8 +7065,8 @@
       "port-version": 1
     },
     "qscintilla": {
-      "baseline": "2.13.4",
-      "port-version": 2
+      "baseline": "2.14.1",
+      "port-version": 0
     },
     "qt": {
       "baseline": "6.6.1",
