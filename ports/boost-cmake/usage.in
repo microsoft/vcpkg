@@ -1,0 +1,11 @@
+The package @PORT@ is compatible with built-in CMake targets of FindBoost.cmake:
+
+    find_package(Boost REQUIRED COMPONENTS @BOOST_PORT_NAME@)
+    target_link_libraries(main PRIVATE Boost::@BOOST_PORT_NAME@)
+
+or the generated cmake configs via:
+
+    find_package(@PORT_UNDERSCORE@ REQUIRED CONFIG)
+    target_link_libraries(main PRIVATE Boost::@BOOST_PORT_NAME@)
+
+If there are problems with the former make sure Boost_NO_BOOST_CMAKE is not set or OFF/FALSE.

@@ -56,7 +56,6 @@ function(boost_configure_and_install)
     SOURCE_PATH "${arg_SOURCE_PATH}"
     OPTIONS
       -DBOOST_INCLUDE_LIBRARIES=${boost_lib_name}
-      #-DBOOST_ENABLE_PYTHON=ON
       #"-DBOOST_INSTALL_CMAKEDIR=lib/cmake"
       -DBOOST_RUNTIME_LINK=${VCPKG_CRT_LINKAGE}
       "-DBOOST_INSTALL_INCLUDE_SUBDIR="
@@ -77,11 +76,11 @@ function(boost_configure_and_install)
   if(NOT PORT MATCHES "boost-(stacktrace|test)") 
     vcpkg_cmake_config_fixup(PACKAGE_NAME boost_${boost_lib_name_config} CONFIG_PATH lib/cmake/boost_${boost_lib_name_config}-${VERSION})
   else()
-    # These ports have no cmake config being named like the port
+    # These ports have no cmake config agreeing with the port name
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
   endif()
 
-  if(headers_only) # TODO fix boost-system
+  if(headers_only)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
   endif()
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
@@ -91,4 +90,12 @@ function(boost_configure_and_install)
     #file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
   endif()
   vcpkg_install_copyright(FILE_LIST "${CURRENT_INSTALLED_DIR}/share/boost-cmake/copyright")
+
+  # Install port specific usage
+  string(REPLACE "-" "_" PORT_UNDERSCORE "${PORT}")
+  string(REPLACE "boost_" "" BOOST_PORT_NAME "${PORT_UNDERSCORE}")
+  if(PORT MATCHES "boost-(ublas|odeint|interval)")
+    string(PREPEND BOOST_PORT_NAME "numeric_")
+  endif()
+  configure_file("${CURRENT_INSTALLED_DIR}/share/boost-cmake/usage.in" "${CURRENT_INSTALLED_DIR}/share/${PORT}/usage")
 endfunction()
