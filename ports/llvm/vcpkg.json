@@ -222,25 +222,35 @@
       "description": "Include OpenCL library."
     },
     "libcxx": {
-      "description": "Include libcxx library.",
+      "description": "Include libcxx library."
+    },
+    "libcxx-bootstrap": {
+      "description": "Configure libcxx library by clang",
       "dependencies": [
         {
           "name": "llvm",
           "default-features": false,
           "features": [
-            "libunwind"
+            "clang",
+            "libunwind",
+            "tools"
           ]
         }
       ]
     },
     "libcxxabi": {
-      "description": "Include libcxxabi library.",
+      "description": "Include libcxxabi library."
+    },
+    "libcxxabi-bootstrap": {
+      "description": "Configure libcxxabi library by clang",
       "dependencies": [
         {
           "name": "llvm",
           "default-features": false,
           "features": [
-            "libunwind"
+            "clang",
+            "libunwind",
+            "tools"
           ]
         }
       ]
