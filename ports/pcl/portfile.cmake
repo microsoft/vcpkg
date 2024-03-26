@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-clang-cl.patch
         fix-pcl-exports.patch
         fix-kinfu.patch
+        io_ply.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
