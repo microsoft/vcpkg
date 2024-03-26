@@ -7057,8 +7057,8 @@
       "port-version": 0
     },
     "qpid-proton": {
-      "baseline": "0.38.0",
-      "port-version": 1
+      "baseline": "0.39.0",
+      "port-version": 0
     },
     "qscintilla": {
       "baseline": "2.13.4",
