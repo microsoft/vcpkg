@@ -1,12 +1,11 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO alanxz/rabbitmq-c
-  REF v0.11.0 
-  SHA512 0c3dbb6e2b862e9f25e3f76df798ea272bbd81de2865950b95adf1f1e5791eb20d7c9d5a76cb7d2fda54bad5f12bdf69cbfa7e9fd1afdede6f9ec729ca2287de
+  REF "v${VERSION}"
+  SHA512 0
   HEAD_REF master
   PATCHES
       fix-uwpwarning.patch
-      fix-link-header-files.patch #Remove this patch in the next version
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
