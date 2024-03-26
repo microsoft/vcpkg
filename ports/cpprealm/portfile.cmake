@@ -25,6 +25,26 @@ vcpkg_from_github(
 file(COPY ${REALM_CORE_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/realm-core)
 file(COPY ${CATCH2_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/realm-core/external/catch)
 
+if (NOT APPLE)
+        vcpkg_from_github(
+                OUT_SOURCE_PATH SHA1_SOURCE_PATH
+                REPO clibs/sha1
+                REF d9ae30f34095107ece9dceb224839f0dc2f9c1c7
+                SHA512 2ed0ad05a6afb34dab4d21fada57369718e3a48113eea3e55e291ecaea36604c428ba9d2b702e9d01a8703eb06aa5d42895b8d197959ca8df18605ec52b1745e
+                HEAD_REF master
+        )
+        file(COPY ${SHA1_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/realm-core/src/external/sha-1)
+
+        vcpkg_from_github(
+                OUT_SOURCE_PATH SHA2_SOURCE_PATH
+                REPO kalven/sha-2
+                REF 0e9aebf34101c6aa89355fd76ac9cd886735dee1
+                SHA512 0546188ad898fdd5b8f038a3e248e4d42c60c52a9d65939475352d5d45ca42444ee6efeb9eeca2deaf026d7b707db1cbe73ac0409700fbbebd01e90a8d02ecd9
+                HEAD_REF master
+        )
+        file(COPY ${SHA2_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/realm-core/src/external/sha-2)
+endif()
+
 set(CPPREALM_CMAKE_OPTIONS -DREALM_CPP_NO_TESTS=ON -DREALM_CORE_SUBMODULE_BUILD=OFF)
 
 if (ANDROID OR WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
