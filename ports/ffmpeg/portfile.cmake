@@ -513,6 +513,10 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libmfx")
 endif()
 
+if ("disable-decoder-truemotion1" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --disable-decoder=truemotion1")
+endif()
+
 set(OPTIONS_CROSS "--enable-cross-compile")
 
 # ffmpeg needs --cross-prefix option to use appropriate tools for cross-compiling.

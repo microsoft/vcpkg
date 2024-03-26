@@ -343,6 +343,9 @@
         "dav1d"
       ]
     },
+    "disable-decoder-truemotion1": {
+      "description": "Disable truemotion1 decoder"
+    },
     "fdk-aac": {
       "description": "AAC de/encoding via libfdk-aac, **including GPL-incompatible patent-encumbered HE-AAC**. If you do not require HE-AAC, use the built-in FFmpeg AAC codec.",
       "dependencies": [
