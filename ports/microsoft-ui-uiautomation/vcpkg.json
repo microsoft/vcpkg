@@ -1,21 +1,18 @@
 {
     "name": "microsoft-ui-uiautomation",
-    "version": "1.0.0",
+    "version-date": "2022-04-26",
     "description": "Microsoft UI Automation library",
-    "homepage": "https://github.com/microsoft/microsoft.ui.uiautomation",
+    "homepage": "https://github.com/microsoft/Microsoft-UI-UIAutomation",
     "license": "MIT",
     "dependencies": [
         {
-            "name": "boost",
-            "version>=": "1.75.0"
+            "name" : "vcpkg-cmake",
+            "host" : true
         },
         {
-            "name": "cpprestsdk",
-            "version>=": "2.10.18"
+            "name" : "vcpkg-cmake-config",
+            "host" : true
         },
-        {
-            "name": "gsl",
-            "version>=": "3.1.0"
-        }
+        "fmt"
     ]
 }
