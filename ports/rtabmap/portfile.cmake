@@ -32,8 +32,7 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DBUILD_TOOLS=OFF
         -DBUILD_APP=OFF
-        --trace
-        -DVCPKG_TRACE_FIND_PACKAGE=1
+        --trace-expand
     OPTIONS_RELEASE
         ${REL_FEATURE_OPTIONS}
     OPTIONS
