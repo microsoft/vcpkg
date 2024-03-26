@@ -653,8 +653,8 @@
       "port-version": 0
     },
     "blake3": {
-      "baseline": "1.5.0",
-      "port-version": 1
+      "baseline": "1.5.1",
+      "port-version": 0
     },
     "blas": {
       "baseline": "2023-03-25",
@@ -674,7 +674,7 @@
     },
     "blitz": {
       "baseline": "2020-03-25",
-      "port-version": 5
+      "port-version": 6
     },
     "bloomberg-quantum": {
       "baseline": "2023-02-03",
@@ -2834,7 +2834,7 @@
     },
     "freetype": {
       "baseline": "2.13.2",
-      "port-version": 0
+      "port-version": 1
     },
     "freetype-gl": {
       "baseline": "2022-01-17",
@@ -4740,6 +4740,10 @@
       "baseline": "3.0.2",
       "port-version": 1
     },
+    "libosdp": {
+      "baseline": "3.0.5",
+      "port-version": 0
+    },
     "libosip2": {
       "baseline": "5.3.1",
       "port-version": 0
@@ -5457,7 +5461,7 @@
       "port-version": 1
     },
     "lunarg-vulkantools": {
-      "baseline": "1.3.275.0",
+      "baseline": "1.3.280.0",
       "port-version": 0
     },
     "lunasvg": {
@@ -6553,7 +6557,7 @@
       "port-version": 1
     },
     "orc": {
-      "baseline": "1.9.2",
+      "baseline": "1.9.3",
       "port-version": 0
     },
     "orocos-kdl": {
@@ -6921,7 +6925,7 @@
       "port-version": 0
     },
     "proj": {
-      "baseline": "9.3.1",
+      "baseline": "9.4.0",
       "port-version": 0
     },
     "proj4": {
@@ -6929,7 +6933,7 @@
       "port-version": 1
     },
     "prometheus-cpp": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.4",
       "port-version": 0
     },
     "promise-cpp": {
@@ -7061,8 +7065,8 @@
       "port-version": 1
     },
     "qscintilla": {
-      "baseline": "2.13.4",
-      "port-version": 2
+      "baseline": "2.14.1",
+      "port-version": 0
     },
     "qt": {
       "baseline": "6.6.1",
@@ -7426,7 +7430,7 @@
     },
     "qtwebengine": {
       "baseline": "6.6.1",
-      "port-version": 4
+      "port-version": 5
     },
     "qtwebsockets": {
       "baseline": "6.6.1",
@@ -7509,11 +7513,11 @@
       "port-version": 0
     },
     "rapidcsv": {
-      "baseline": "8.64",
+      "baseline": "8.80",
       "port-version": 0
     },
     "rapidfuzz": {
-      "baseline": "2.0.0",
+      "baseline": "3.0.2",
       "port-version": 0
     },
     "rapidjson": {
@@ -7738,7 +7742,7 @@
     },
     "rtabmap": {
       "baseline": "0.21.4",
-      "port-version": 0
+      "port-version": 1
     },
     "rtaudio": {
       "baseline": "6.0.1",
@@ -8277,19 +8281,19 @@
       "port-version": 3
     },
     "spirv-cross": {
-      "baseline": "1.3.275.0",
+      "baseline": "1.3.280.0",
       "port-version": 0
     },
     "spirv-headers": {
-      "baseline": "1.3.275.0",
+      "baseline": "1.3.280.0",
       "port-version": 0
     },
     "spirv-reflect": {
-      "baseline": "1.3.275.0",
+      "baseline": "1.3.280.0",
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "1.3.275.0",
+      "baseline": "1.3.280.0",
       "port-version": 0
     },
     "spout2": {
@@ -9094,7 +9098,7 @@
     },
     "vk-bootstrap": {
       "baseline": "1.3.279",
-      "port-version": 0
+      "port-version": 1
     },
     "vkfft": {
       "baseline": "1.2.31",
@@ -9109,7 +9113,7 @@
       "port-version": 1
     },
     "volk": {
-      "baseline": "1.3.275.0",
+      "baseline": "1.3.280.0",
       "port-version": 0
     },
     "vowpal-wabbit": {
@@ -9149,7 +9153,7 @@
       "port-version": 0
     },
     "vulkan-headers": {
-      "baseline": "1.3.275.0",
+      "baseline": "1.3.280.0",
       "port-version": 0
     },
     "vulkan-hpp": {
@@ -9157,7 +9161,7 @@
       "port-version": 0
     },
     "vulkan-loader": {
-      "baseline": "1.3.275.0",
+      "baseline": "1.3.280.0",
       "port-version": 0
     },
     "vulkan-memory-allocator": {
@@ -9169,19 +9173,19 @@
       "port-version": 0
     },
     "vulkan-sdk-components": {
-      "baseline": "1.3.275.0",
-      "port-version": 1
+      "baseline": "1.3.280.0",
+      "port-version": 0
     },
     "vulkan-tools": {
-      "baseline": "1.3.275.0",
+      "baseline": "1.3.280.0",
       "port-version": 0
     },
     "vulkan-utility-libraries": {
-      "baseline": "1.3.275.0",
-      "port-version": 1
+      "baseline": "1.3.280.0",
+      "port-version": 0
     },
     "vulkan-validationlayers": {
-      "baseline": "1.3.275.0",
+      "baseline": "1.3.280.0",
       "port-version": 0
     },
     "vvenc": {
