@@ -4661,7 +4661,7 @@
       "port-version": 0
     },
     "libmupdf": {
-      "baseline": "1.23.11",
+      "baseline": "1.24.0",
       "port-version": 0
     },
     "libmysql": {
