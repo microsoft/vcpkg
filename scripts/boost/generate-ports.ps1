@@ -2,6 +2,8 @@
 param (
     $libraries = @(),
     $version = "1.84.0",
+# 1: boost-cmake/ref_sha.cmake needs manual updating
+# 2: Do not trust this script. Platform expressions in dependencies are blindly applied.
     $portsDir = $null
 )
 
@@ -96,6 +98,7 @@ $portData = @{
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-coroutine2"       = @{ "supports" = "!emscripten" };
     "boost-graph"            = @{ "supports" = "!uwp" };
+    "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
     "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
     "boost-locale"           = @{
         "dependencies" = @(@{ "name" = "libiconv"; "platform" = "!uwp & !windows & !mingw" });
@@ -314,9 +317,6 @@ function GeneratePort() {
     [Array]$allmods = $patches + $diffs
     if ($null -eq $allmods -or $allmods.Count -eq 0) {
     }
-    #elseif ($allmods.Count -eq 1) {
-    #    $portfileLines += @("    PATCHES $($allmods.name)")
-    #}
     else {
         $portfileLines += @("    PATCHES")
         foreach ($patch in $allmods) {
@@ -568,7 +568,7 @@ foreach ($library in $libraries) {
         })
 
         # Add dependency to the config for all libraries except the config library itself
-        if ($library -ne 'config') {
+        if ($library -ne 'config' -and $_ -ne 'headers') {
             # Note: CMake's built-in finder (FindBoost.cmake) looks for Boost header files (boost/version.h or boost/config.h)
             # and stores the result in the Boost_INCLUDE_DIR variable. The files boost/version.h or boost/config.h are owned by the config library.
             # Without these files, the Boost_INCLUDE_DIR variable will not be set and the Boost version will not be detected.
@@ -577,8 +577,13 @@ foreach ($library in $libraries) {
         }
 
         $deps = @($deps | ForEach-Object { GeneratePortDependency $_ })
-        $deps += @("boost-cmake")
-        $deps += @("boost-headers")
+
+        if ($library -ne 'cmake') {
+          $deps += @("boost-cmake")
+          if ($library -ne 'headers') {
+            $deps += @("boost-headers")
+          }
+        }
 
         GeneratePort `
             -Library $library `
