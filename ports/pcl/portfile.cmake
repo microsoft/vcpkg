@@ -11,8 +11,9 @@ vcpkg_from_github(
         install-layout.patch
         install-examples.patch
         fix-clang-cl.patch
-        fix-pcl-exports.patch
-        fix-kinfu.patch
+        gh-5926-exports.patch
+        gh-5947-kinfu.patch
+        gh-5985-inline.patch
         io_ply.patch
 )
 
