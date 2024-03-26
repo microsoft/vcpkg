@@ -6462,7 +6462,7 @@
     },
     "openmvg": {
       "baseline": "2.0",
-      "port-version": 9
+      "port-version": 10
     },
     "openmvs": {
       "baseline": "2.1.0",
