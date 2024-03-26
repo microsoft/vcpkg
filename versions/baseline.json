@@ -6921,7 +6921,7 @@
       "port-version": 0
     },
     "proj": {
-      "baseline": "9.3.1",
+      "baseline": "9.4.0",
       "port-version": 0
     },
     "proj4": {
@@ -7738,7 +7738,7 @@
     },
     "rtabmap": {
       "baseline": "0.21.4",
-      "port-version": 0
+      "port-version": 1
     },
     "rtaudio": {
       "baseline": "6.0.1",
