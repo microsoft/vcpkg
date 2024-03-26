@@ -1,8 +1,8 @@
-diff --git a/cmake/QtBuild.cmake b/cmake/QtBuild.cmake
+diff --git a/cmake/QtBuildPathsHelpers.cmake b/cmake/QtBuildPathsHelpers.cmake
 index bd186c28b..2c1994d2e 100644
---- a/cmake/QtBuild.cmake
-+++ b/cmake/QtBuild.cmake
-@@ -28,11 +28,13 @@ function(qt_configure_process_path name default docstring)
+--- a/cmake/QtBuildPathsHelpers.cmake
++++ b/cmake/QtBuildPathsHelpers.cmake
+@@ -135,11 +135,13 @@ function(qt_configure_process_path name default docstring)
          elseif(rel_path MATCHES "^\.\./")
              # INSTALL_SYSCONFDIR is allowed to be outside the prefix.
              if(NOT name STREQUAL "INSTALL_SYSCONFDIR")

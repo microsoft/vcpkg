@@ -1,7 +1,6 @@
 {
   "name": "qthttpserver",
-  "version": "6.6.1",
-  "port-version": 1,
+  "version": "6.6.3",
   "description": "Qt HTTP Server supports building HTTP server functionality into an application.",
   "homepage": "https://www.qt.io/",
   "license": null,
