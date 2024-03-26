@@ -3,7 +3,7 @@ vcpkg_from_sourceforge(
     REPO mpg123/mpg123
     REF "${VERSION}"
     FILENAME "mpg123-${VERSION}.tar.bz2"
-    SHA512 5dd550e06f5d0d432cac1b7e546215e56378b44588c1a98031498473211e08bc4228de45be41f7ba764f7f6c0eb752a6501235bcc3712c9a8d8852ae3c607d98
+    SHA512 3fbc2fcf5e17bec75e98b34ea9c6135ee5895730f127a9cdeef88060f1d49ce8b89ff6c82bb6645f575914f59e27337d4e8774d4beee6fe7c89e587ddf969502
     PATCHES
         fix-checktypesize.patch
         fix-modulejack.patch
