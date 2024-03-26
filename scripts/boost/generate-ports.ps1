@@ -102,7 +102,6 @@ $portData = @{
     "boost-cobalt"           = @{ "supports" = "!osx & !ios & !android & !uwp" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
-    "boost-coroutine2"       = @{ "supports" = "!emscripten" };
     "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
     "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
     "boost-locale"           = @{
