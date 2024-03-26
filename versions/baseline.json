@@ -4740,6 +4740,10 @@
       "baseline": "3.0.2",
       "port-version": 1
     },
+    "libosdp": {
+      "baseline": "3.0.5",
+      "port-version": 0
+    },
     "libosip2": {
       "baseline": "5.3.1",
       "port-version": 0
