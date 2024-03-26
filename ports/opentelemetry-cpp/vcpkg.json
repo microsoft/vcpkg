@@ -63,6 +63,10 @@
         "prometheus-cpp"
       ]
     },
+    "user-events": {
+      "description": "Whether to include the User Events Exporter from the opentelemetry-cpp-contrib repository",
+      "supports": "linux"
+    },
     "zipkin": {
       "description": "Whether to include the Zipkin exporter in the SDK"
     }
