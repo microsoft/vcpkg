@@ -1,0 +1,5 @@
+macro(vcpkg_set_if_not_defined out_var default)
+    if(NOT DEFINED ${out_var})
+        set(${out_var} ${default})
+    endif()
+endmacro()
