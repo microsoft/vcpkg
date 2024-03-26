@@ -7430,7 +7430,7 @@
     },
     "qtwebengine": {
       "baseline": "6.6.1",
-      "port-version": 4
+      "port-version": 5
     },
     "qtwebsockets": {
       "baseline": "6.6.1",
