@@ -59,7 +59,7 @@ diff --git a/CMake/FindPEGTL.cmake b/CMake/FindPEGTL.cmake
 index 73eee02f7..22d8bc159 100644
 --- a/CMake/FindPEGTL.cmake	
 +++ b/CMake/FindPEGTL.cmake
-@@ -19,31 +19,42 @@
+@@ -19,31 +19,45 @@
  #
  #  PEGTL::PEGTL
  
