@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/pmdk
-    REF 73d8f958e855904dc0776a7d77d0f0d3698a65b1 #v1.12.0
-    SHA512 ffe77796c9028478985ca98e4162a671e3e7f580faa46b31d0dcf8c5e97aa6478044efdf7ad238285044f18f754a20a4e2a1b5992c7b9cffa709884eb62007ab
+    REF "${VERSION}"
+    SHA512 d52319a7ff71d6cc7942b3dace16dd236b57f178cc3d0430afd67805bb73c610ada6aa6b907fdee48f6728f1bcb4e15f3f0b54ceea1eee35dbc47fc8099fc5ba
     HEAD_REF master
     PATCHES "remove_getopt.patch"
 )
