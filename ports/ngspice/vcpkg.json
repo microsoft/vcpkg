@@ -1,17 +1,23 @@
 {
   "name": "ngspice",
-  "version-string": "42",
-  "description": "Runtime polymorphism done right",
-  "homepage": "https://github.com/ldionne/dyno/",
-  "license": "BSL-1.0",
+  "version": "41",
+  "description": "Ngspice is a mixed-level/mixed-signal electronic circuit simulator. It is a successor of the latest stable release of Berkeley SPICE",
+  "homepage": "http://ngspice.sourceforge.net/",
+  "license": "CC-BY-SA-4.0",
+  "supports": "!(linux | osx | arm | uwp)",
   "dependencies": [
     {
-      "name": "ngspice",
-      "host": true
-    },
-    {
-      "name": "ngspice",
-      "host": true
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
     }
-  ]
+  ],
+  "default-features": [
+    "codemodels"
+  ],
+  "features": {
+    "codemodels": {
+      "description": "Adds optional code models for XSPICE, ADMS (verilog integration) and B-/E-/G- sources."
+    }
+  }
 }
