@@ -6813,8 +6813,8 @@
       "port-version": 4
     },
     "pmdk": {
-      "baseline": "1.12.0",
-      "port-version": 2
+      "baseline": "2.0.1",
+      "port-version": 0
     },
     "pmp-library": {
       "baseline": "3.0.0",
