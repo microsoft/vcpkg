@@ -4,6 +4,10 @@ param (
     $version = "1.84.0",
 # 1: boost-cmake/ref_sha.cmake needs manual updating
 # 2: Do not trust this script. Platform expressions in dependencies are blindly applied.
+#    So if you see a configure log with that another boost<lib>Config.cmake is missing
+#    You probably trusted this script too much. Example: boost-graph -> requires boost-random
+#    but will be marked with platform "!uwp" which is wrong. Furthermore boost-graph does not need
+#    supports !uwp since the dep on boost-random is the blocking one.
     $portsDir = $null
 )
 
@@ -97,7 +101,6 @@ $portData = @{
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
     "boost-coroutine2"       = @{ "supports" = "!emscripten" };
-    "boost-graph"            = @{ "supports" = "!uwp" };
     "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
     "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
     "boost-locale"           = @{
@@ -568,7 +571,7 @@ foreach ($library in $libraries) {
         })
 
         # Add dependency to the config for all libraries except the config library itself
-        if ($library -ne 'config' -and $_ -ne 'headers') {
+        if ($library -ne 'config' -and $library -ne 'headers') {
             # Note: CMake's built-in finder (FindBoost.cmake) looks for Boost header files (boost/version.h or boost/config.h)
             # and stores the result in the Boost_INCLUDE_DIR variable. The files boost/version.h or boost/config.h are owned by the config library.
             # Without these files, the Boost_INCLUDE_DIR variable will not be set and the Boost version will not be detected.
