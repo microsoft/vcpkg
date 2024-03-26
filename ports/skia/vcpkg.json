@@ -139,12 +139,18 @@
         {
           "name": "harfbuzz",
           "default-features": false
+        },
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "icu"
+          ]
         }
       ]
     },
     "icu": {
       "description": "Use icu.",
-      "supports": "!(windows & !static)",
       "dependencies": [
         "icu"
       ]

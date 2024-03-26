@@ -120,6 +120,7 @@ function(third_party_from_pkgconfig gn_group)
         endforeach()
     endforeach()
     configure_file("${CMAKE_CURRENT_LIST_DIR}/third-party.gn.in" "${SOURCE_PATH}/${arg_PATH}/BUILD.gn" @ONLY)
+    file(COPY_FILE "${SOURCE_PATH}/${arg_PATH}/BUILD.gn" "${CURRENT_BUILDTREES_DIR}/3rd-party-${gn_group}-BUILD.gn.log")
 endfunction()
 
 # Setup a third-party dependency from vcpkg installed tree
