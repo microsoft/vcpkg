@@ -1,0 +1,6 @@
+libcoro does not directly provide CMake targets.
+CMake targets can be created using PkgConfig though:
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(libcoro REQUIRED IMPORTED_TARGET libcoro)
+    target_link_libraries(main PkgConfig::libcoro)
