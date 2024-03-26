@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 ae3d95be1c5061ace92921b3fcfb0027d23c595b131b0d31f1788adbe0d8f92367bef71736d6c936504bd37eba5fcdae658369f03734e233bf3eab14bca6f9e5
     PATCHES
         fix-vcpkg-install.patch
+        fix_imgui.patch
 )
 
 #third_party: amgcl
@@ -31,12 +32,22 @@ vcpkg_from_github(
     SHA512 b236279d3f0e6e1062703555415236183da31a9e40c49d478954586725f8dc6c0582aef0db7b605cb7967c3bd4a96d2fe8e6601cc56b8a1d53129a25efa7d1f2
 )
 
+#third_party: imgui
+vcpkg_from_github(
+    OUT_SOURCE_PATH IMGUI_SOURCE_PATH
+    REPO ocornut/imgui
+    REF ad44f5831acec714f2af437475406e2f002982a1
+    SHA512 55b96439fa5590e300f3ed5e60003d1c8424ccbd332d07477a9228e607f8ed288fce9cb465a37f88c4f904fbaf766d91ced6a744f756ab694d17a83117758e0a
+)
+
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl"
     "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb"
-	"${SOURCE_PATH}/src/lib/geogram/third_party/rply")
+	"${SOURCE_PATH}/src/lib/geogram/third_party/rply"
+    "${SOURCE_PATH}/src/lib/geogram_gfx/third_party/imgui")
 file(RENAME "${AMGCL_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl")
 file(RENAME "${LIBMESHB_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb")
 file(RENAME "${RPLY_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/rply")
+file(RENAME "${IMGUI_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram_gfx/third_party/imgui")
 
 file(COPY "${CURRENT_PORT_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 
