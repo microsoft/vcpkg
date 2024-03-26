@@ -20,12 +20,15 @@
     }
   ],
   "default-features": [
+    {
+      "name": "gstreamer",
+      "platform": "linux"
+    },
     "widgets"
   ],
   "features": {
     "ffmpeg": {
       "description": "Build with ffmpeg",
-      "supports": "!(windows & static)",
       "dependencies": [
         {
           "name": "ffmpeg",
@@ -42,6 +45,7 @@
     },
     "gstreamer": {
       "description": "Build with gstreamer",
+      "supports": "linux",
       "dependencies": [
         "egl",
         {

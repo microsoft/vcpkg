@@ -77,6 +77,13 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
+        "ffmpeg"
+      ]
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false,
+      "features": [
         "qml",
         "widgets"
       ]
@@ -88,15 +95,6 @@
         "gstreamer"
       ],
       "platform": "!windows"
-    },
-    {
-      "name": "qtmultimedia",
-      "default-features": false,
-      "features": [
-        "ffmpeg",
-        "gstreamer"
-      ],
-      "platform": "windows & !static"
     },
     "qtnetworkauth",
     {

@@ -8,22 +8,6 @@ set(${PORT}_PATCHES
                     fix_avfoundation_target.patch
 )
 
-#Maybe TODO: ALSA + PulseAudio? (Missing Ports) -> check ALSA since it was added
-
-# qt_find_package(ALSA PROVIDED_TARGETS ALSA::ALSA MODULE_NAME multimedia QMAKE_LIB alsa)
-# qt_find_package(AVFoundation PROVIDED_TARGETS AVFoundation::AVFoundation MODULE_NAME multimedia QMAKE_LIB avfoundation)
-# qt_find_package(WrapPulseAudio PROVIDED_TARGETS WrapPulseAudio::WrapPulseAudio MODULE_NAME multimedia QMAKE_LIB pulseaudio)
-# qt_find_package(WMF PROVIDED_TARGETS WMF::WMF MODULE_NAME multimedia QMAKE_LIB wmf)
-
-# qt_configure_add_summary_section(NAME "Qt Multimedia")
-# qt_configure_add_summary_entry(ARGS "alsa")
-# qt_configure_add_summary_entry(ARGS "gstreamer_1_0")
-# qt_configure_add_summary_entry(ARGS "linux_v4l")
-# qt_configure_add_summary_entry(ARGS "pulseaudio")
-# qt_configure_add_summary_entry(ARGS "mmrenderer")
-# qt_configure_add_summary_entry(ARGS "avfoundation")
-# qt_configure_add_summary_entry(ARGS "wmf")
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
@@ -72,10 +56,15 @@ else()
 endif()
 
 # alsa is not ready
-list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
+if(NOT "ffmpeg" IN_LIST FEATURES AND NOT "gstreamer" IN_LIST FEATURES)
+  #list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=ON") # alsa is experimental so don't activate it (also missing the dep on it.)
+  message(FATAL_ERROR "You need to activate at least one backend.")
+else()
+  list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
+endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
-                     CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
+                     CONFIGURE_OPTIONS ${FEATURE_OPTIONS} --trace-expand
                                        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
