@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/qpid-proton
     REF "${VERSION}"
-    SHA512 05c3fded3db1fae0e6a7b9fbe34fe17af41a676a584ee916cbbeb82e957d7da74861524c5db06634326c403fabc82fddf938d018d9383745a6ce0cbc7a9eada3 
+    SHA512 38659682cc86bf0c910e2a707a5b166b3a7d0fb70fd83d6c5ebcaca53b2cd5a478adf36958d2c4c55a2ea6afcb9b457a12006a7967efae6ca2d0663c0febbc58
     HEAD_REF next
     PATCHES
         fix-dependencies.patch
