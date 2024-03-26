@@ -8,10 +8,8 @@ vcpkg_from_github(
         add-gcc-version-check.patch
         fix-check-sse.patch
         fix-numeric-literals-flag.patch
-        pcl_config.patch
-        pcl_utils.patch
+        install-layout.patch
         install-examples.patch
-        no-absolute.patch
         fix-clang-cl.patch
         fix-pcl-exports.patch
         fix-kinfu.patch
