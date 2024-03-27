@@ -40,8 +40,8 @@ endfunction()
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ulfjack/ryu
-        REF v2.0
-        SHA512 88a0cca74a4889e8e579987abdc75a6ac87c1cdae557e5a15c29dbfd65733f9e591d6569e97a9374444918475099087f8056e696a97c9be24e38eb737e2304c2
+        REF "v${VERSION}"
+        SHA512 0
         HEAD_REF master
 )
 
