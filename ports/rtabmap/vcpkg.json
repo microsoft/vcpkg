@@ -4,7 +4,6 @@
   "description": "Real-Time Appearance-Based Mapping",
   "homepage": "https://introlab.github.io/rtabmap/",
   "license": "GPL-3.0-only",
-  "supports": "(windows & !staticcrt & x64) | linux | (osx & x64)",
   "dependencies": [
     "ceres",
     "g2o",
