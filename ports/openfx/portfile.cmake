@@ -4,9 +4,10 @@ vcpkg_from_github(
     REF OFX_Release_1_4_TAG
     SHA512 b20512ea38823167f191b72f1592548df85fbda6cefe47673972874c139641ee91277e78c1e0d57a457b9f864385e6fa0e4a7edcdbf0c7b2eda956c03a3e1e13
     HEAD_REF main
-    PATCHES
-        0001-add-cmake-support-to-version-1.4.patch
 )
+
+file(COPY_FILE ${CMAKE_CURRENT_LIST_DIR}/Openfx.cmake ${SOURCE_PATH}/CMakeLists.txt)
+file(COPY_FILE ${CMAKE_CURRENT_LIST_DIR}/Support.cmake ${SOURCE_PATH}/Support/CMakeLists.txt)
 
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
 vcpkg_cmake_install()
