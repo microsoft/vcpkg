@@ -44,6 +44,10 @@
         {
           "name": "pulseaudio",
           "platform": "linux"
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
         }
       ]
     },
