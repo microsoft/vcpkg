@@ -7673,7 +7673,7 @@
       "port-version": 0
     },
     "rkcommon": {
-      "baseline": "1.10.0",
+      "baseline": "1.13.0",
       "port-version": 0
     },
     "rmlui": {
