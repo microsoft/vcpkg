@@ -5,6 +5,7 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     SHA512 b376d3b00277ed60d107fe1268c210749b3aafcee618a8f924b181a9b476e92b9cb9baddecf70a8913b5910c471d53ea0260a876ad7b2db2b98b944d9f508714
     PATCHES
         fix-dependencies.patch
+        fix_android_log.patch
 )
 
 # The embedded FindFreetype doesn't properly handle debug libraries
@@ -22,6 +23,9 @@ vcpkg_cmake_configure(
         -DSFML_MISC_INSTALL_PREFIX=share/sfml
         -DSFML_GENERATE_PDB=OFF
         -DSFML_WARNINGS_AS_ERRORS=OFF #Remove in the next version
+    MAYBE_UNUSED_VARIABLES
+        SFML_MISC_INSTALL_PREFIX
+        SFML_WARNINGS_AS_ERRORS
 )
 
 vcpkg_cmake_install()
