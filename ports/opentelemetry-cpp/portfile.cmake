@@ -48,9 +48,9 @@ if(WITH_GENEVA)
     vcpkg_from_github(
         OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
         REPO open-telemetry/opentelemetry-cpp-contrib
-        REF 68885bee3b160ee7a032872c8fa6ecf68a7f4edc
+        REF d2e6acbf1d20497b9ad27b4e0e428eea11448176
         HEAD_REF main
-        SHA512 5e7de7820e47327448f5f2cbfd5f21c1c66342579c369587ba2401497c55b7e8ebb1aec1e5e0eb1291b64a31bdd725fb6554436b7b95c0dbe777c669ff058ab6
+        SHA512 c22eb720556782e2c08d7b4432cf7252c5bbfb94d8db55d853e2d93eaeb29e039e8db548e9aa75f402701fc640ec7a17ac726c86f8b34364dd45ce88aaa1eab5
     )
 
     set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
