@@ -18,6 +18,11 @@
         "vtk"
       ]
     },
+    {
+      "name": "rtabmap-res-tool",
+      "host": true,
+      "platform": "!native"
+    },
     "sqlite3",
     {
       "name": "vcpkg-cmake",

@@ -26,6 +26,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         tools       BUILD_TOOLS
 )
 
+if(VCPKG_CROSSCOMPILING)
+    vcpkg_list(APPEND OPTIONS "-DRTABMAP_RES_TOOL=${CURRENT_HOST_INSTALLED_DIR}/tools/rtabmap-res-tool/rtabmap-res_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
