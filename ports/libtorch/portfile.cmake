@@ -20,6 +20,7 @@ vcpkg_from_github(
         fix-glog.patch
         fix-msvc-ICE.patch
         fix-calculate-minloglevel.patch
+        force-cuda-include.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
 

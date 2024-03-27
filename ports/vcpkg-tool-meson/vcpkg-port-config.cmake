@@ -41,22 +41,25 @@ if(NOT SCRIPT_MESON)
         FILENAME "${download_filename}"
 
     )
-    file(REMOVE_RECURSE "${path_to_search}-tmp/../")
-    file(MAKE_DIRECTORY "${path_to_search}-tmp/../")
+    file(REMOVE_RECURSE "${path_to_search}")
+    file(REMOVE_RECURSE "${path_to_search}-tmp")
+    file(MAKE_DIRECTORY "${path_to_search}-tmp")
     file(ARCHIVE_EXTRACT INPUT "${archive_path}"
-        DESTINATION "${path_to_search}-tmp/../"
+        DESTINATION "${path_to_search}-tmp"
         #PATTERNS "**/mesonbuild/*" "**/*.py"
         )
     z_vcpkg_apply_patches(
-        SOURCE_PATH "${path_to_search}-tmp/../meson-${ref}/"
+        SOURCE_PATH "${path_to_search}-tmp/meson-${ref}"
         PATCHES
             "${CMAKE_CURRENT_LIST_DIR}/adjust-args.patch"
             "${CMAKE_CURRENT_LIST_DIR}/meson-intl.patch"
             "${CMAKE_CURRENT_LIST_DIR}/adjust-python-dep.patch"
             "${CMAKE_CURRENT_LIST_DIR}/remove-freebsd-pcfile-specialization.patch"
     )
-    file(COPY "${path_to_search}-tmp/../meson-${ref}/meson.py" "${path_to_search}-tmp/../meson-${ref}/mesonbuild" DESTINATION "${path_to_search}")
-    file(REMOVE_RECURSE "${path_to_search}-tmp/../meson-${ref}")
+    file(MAKE_DIRECTORY "${path_to_search}")
+    file(RENAME "${path_to_search}-tmp/meson-${ref}/meson.py" "${path_to_search}/meson.py")
+    file(RENAME "${path_to_search}-tmp/meson-${ref}/mesonbuild" "${path_to_search}/mesonbuild")
+    file(REMOVE_RECURSE "${path_to_search}-tmp")
     set(SCRIPT_MESON "${path_to_search}/meson.py")
 endif()
 

@@ -31,6 +31,7 @@ endif()
 if("glib" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dglib=enabled) # Enable GLib unicode functions
     list(APPEND FEATURE_OPTIONS -Dgobject=enabled) #Enable GObject bindings
+    list(APPEND FEATURE_OPTIONS -Dchafa=disabled)
 else()
     list(APPEND FEATURE_OPTIONS -Dglib=disabled)
     list(APPEND FEATURE_OPTIONS -Dgobject=disabled)

@@ -46,20 +46,23 @@ if (VCPKG_TARGET_IS_LINUX)
     "${PACKAGE_PATH}/lib/libdxcompiler.so"
     "${PACKAGE_PATH}/lib/libdxil.so"
     DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  file(INSTALL
-    "${PACKAGE_PATH}/lib/libdxcompiler.so"
-    "${PACKAGE_PATH}/lib/libdxil.so"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+
+  if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL
+      "${PACKAGE_PATH}/lib/libdxcompiler.so"
+      "${PACKAGE_PATH}/lib/libdxil.so"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  endif()
 
   file(INSTALL
     "${PACKAGE_PATH}/bin/dxc"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
 
   set(dll_name_dxc "libdxcompiler.so")
   set(dll_name_dxil "libdxil.so")
   set(dll_dir  "lib")
   set(lib_name "libdxcompiler.so")
-  set(tool_path "bin/dxc")
+  set(tool_path "tools/${PORT}/dxc")
 else()
   # VCPKG_TARGET_IS_WINDOWS
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -78,16 +81,21 @@ else()
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
   file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+  endif()
 
   file(INSTALL
     "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
     "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
     DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-  file(INSTALL
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+
+  if(NOT DEFINED VCPKG_BUILD_TYPE)
+    file(INSTALL
+      "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
+      "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
+      DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+  endif()
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
 
@@ -101,14 +109,14 @@ else()
   set(dll_name_dxil "dxil.dll")
   set(dll_dir  "bin")
   set(lib_name "dxcompiler.lib")
-  set(tool_path "tools/directx-dxc/dxc.exe")
+  set(tool_path "tools/${PORT}/dxc.exe")
 endif()
+
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/directx-dxc-config.cmake.in"
   "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
   @ONLY)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${LICENSE_TXT}")

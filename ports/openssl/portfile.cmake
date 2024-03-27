@@ -21,6 +21,7 @@ vcpkg_from_github(
     REF "openssl-${VERSION}"
     SHA512 3eed5903f37ac728522cbb0ea0081f1d5a62d9420366d487f838dc22c31813c58584838400bd3d09518608e1e71bafcb1ff83713d351e4876da6625d5543fef6
     PATCHES
+        command-line-length.patch
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch

@@ -8,7 +8,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_link.patch
+        sqlite3.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake_modules/FindSqlite3.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES

@@ -1,7 +1,6 @@
 {
   "name": "presentmon",
-  "version-semver": "1.7.0",
-  "port-version": 2,
+  "version-semver": "1.10.0",
   "description": "PresentMon is a tool to capture and analyze ETW events related to swap chain presentation on Windows.",
   "supports": "windows & !uwp",
   "dependencies": [

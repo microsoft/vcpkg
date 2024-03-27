@@ -1,0 +1,62 @@
+diff --git a/src/build-data/botan-config.cmake.in b/src/build-data/botan-config.cmake.in
+index 8d14c4e..46e2cbc 100644
+--- a/src/build-data/botan-config.cmake.in
++++ b/src/build-data/botan-config.cmake.in
+@@ -65,21 +65,29 @@ if(DEFINED ${CMAKE_FIND_PACKAGE_NAME}_FOUND AND NOT ${${CMAKE_FIND_PACKAGE_NAME}
+   return()
+ endif()
+ 
+-# botan-config.cmake lives in "${_Botan_PREFIX}/lib/cmake/Botan-X": traverse up to $_Botan_PREFIX
++# botan-config.cmake lives in "${_Botan_PREFIX}/share/botan": traverse up to $_Botan_PREFIX
+ set(_Botan_PREFIX "${CMAKE_CURRENT_LIST_DIR}")
+ get_filename_component(_Botan_PREFIX "${_Botan_PREFIX}" DIRECTORY)
+ get_filename_component(_Botan_PREFIX "${_Botan_PREFIX}" DIRECTORY)
+-get_filename_component(_Botan_PREFIX "${_Botan_PREFIX}" DIRECTORY)
+ 
+ %{if build_static_lib}
+ if(NOT TARGET Botan::Botan-static)
+   add_library(Botan::Botan-static STATIC IMPORTED)
+   set_target_properties(Botan::Botan-static
+     PROPERTIES
+-      IMPORTED_LOCATION                 "${_Botan_PREFIX}/lib/%{static_lib_name}"
+-      INTERFACE_INCLUDE_DIRECTORIES     "${_Botan_PREFIX}/include/botan-%{version_major}"
++      INTERFACE_INCLUDE_DIRECTORIES     "${_Botan_PREFIX}/include"
+       IMPORTED_LINK_INTERFACE_LANGUAGES "CXX"
+       INTERFACE_LINK_OPTIONS            "SHELL:%{cxx_abi_flags}")
++  if(EXISTS "${_Botan_PREFIX}/debug/lib/%{static_lib_name}")
++    set_property(TARGET Botan::Botan-static APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
++    set_target_properties(Botan::Botan-static PROPERTIES
++      IMPORTED_LOCATION_DEBUG "${_Botan_PREFIX}/debug/lib/%{static_lib_name}"
++    )
++  endif()
++  set_property(TARGET Botan::Botan-static APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
++  set_target_properties(Botan::Botan-static PROPERTIES
++    IMPORTED_LOCATION_RELEASE "${_Botan_PREFIX}/lib/%{static_lib_name}"
++    )
+ endif()
+ %{endif}
+ 
+@@ -100,10 +108,20 @@ if(NOT TARGET Botan::Botan)
+   add_library(Botan::Botan SHARED IMPORTED)
+   set_target_properties(Botan::Botan
+     PROPERTIES
+-      IMPORTED_LOCATION             "${_Botan_shared_lib}"
+-      IMPORTED_IMPLIB               "${_Botan_implib}"
+-      INTERFACE_INCLUDE_DIRECTORIES "${_Botan_PREFIX}/include/botan-%{version_major}"
++      INTERFACE_INCLUDE_DIRECTORIES "${_Botan_PREFIX}/include"
+       INTERFACE_LINK_OPTIONS        "SHELL:%{cxx_abi_flags}")
++  if(EXISTS "${_Botan_PREFIX}/debug/lib/%{implib_name}")
++    set_property(TARGET Botan::Botan APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
++    set_target_properties(Botan::Botan PROPERTIES
++      IMPORTED_IMPLIB_DEBUG "${_Botan_PREFIX}/debug/lib/%{implib_name}"
++      IMPORTED_LOCATION_DEBUG "${_Botan_PREFIX}/debug/bin/%{shared_lib_name}"
++    )
++  endif()
++  set_property(TARGET Botan::Botan APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
++  set_target_properties(Botan::Botan PROPERTIES
++    IMPORTED_IMPLIB_RELEASE "${_Botan_PREFIX}/lib/%{implib_name}"
++    IMPORTED_LOCATION_RELEASE "${_Botan_PREFIX}/bin/%{shared_lib_name}"
++    )
+   set_property(TARGET Botan::Botan APPEND PROPERTY IMPORTED_CONFIGURATIONS NOCONFIG)
+   set_target_properties(Botan::Botan
+     PROPERTIES

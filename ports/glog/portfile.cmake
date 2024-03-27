@@ -16,6 +16,8 @@ vcpkg_check_features(
     FEATURES
         unwind          WITH_UNWIND
         customprefix    WITH_CUSTOM_PREFIX
+    INVERTED_FEATURES
+        unwind          CMAKE_DISABLE_FIND_PACKAGE_Unwind
 )
 file(REMOVE "${SOURCE_PATH}/glog-modules.cmake.in")
 
@@ -40,5 +42,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${PORT}/export.h" "#ifdef GLOG_STATIC_DEFINE" "#if 0")
 endif()
-    
+
+if("unwind" IN_LIST FEATURES)
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

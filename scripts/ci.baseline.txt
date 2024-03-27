@@ -97,6 +97,10 @@ boringssl:x64-windows=skip
 boringssl:x64-windows-static=skip
 boringssl:x64-windows-static-md=skip
 boringssl:x86-windows=skip
+# Broken with NDK r25 and fixed in NDK r26
+botan:arm-neon-android=fail
+botan:arm64-android=fail
+botan:x64-android=fail
 brpc:x64-android=fail
 buck-yeh-bux:x64-android=fail
 c4core:arm-neon-android=fail
@@ -262,6 +266,7 @@ dcmtk:x64-uwp=fail
 # legacy directxsdk which conflicts with dxsdk-d3dx
 directxsdk:x86-windows=skip
 directxsdk:x64-windows=skip
+directxsdk:x64-windows-static=skip
 directxsdk:x64-windows-static-md=skip
 discord-rpc:arm64-uwp=fail
 discord-rpc:x64-uwp=fail

@@ -1,7 +1,7 @@
 {
   "name": "blitz",
   "version-date": "2020-03-25",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Blitz++ is a C++ template class library that provides high-performance multidimensional array containers for scientific computing.",
   "homepage": "https://github.com/blitzpp/blitz",
   "supports": "!(arm | arm64 | uwp)",
@@ -12,10 +12,6 @@
     },
     {
       "name": "vcpkg-cmake-config",
-      "host": true
-    },
-    {
-      "name": "vcpkg-tool-python2",
       "host": true
     }
   ]

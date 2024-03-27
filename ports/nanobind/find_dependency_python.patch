@@ -1,0 +1,62 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 919ce1d..25956c7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -107,29 +107,11 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+   add_compile_options(-Wall -Wextra -Wno-unused-local-typedefs)
+ endif()
+ 
+-# ---------------------------------------------------------------------------
+-# Find the Python interpreter and development libraries
+-# ---------------------------------------------------------------------------
+-
+-if (NOT TARGET Python::Module OR NOT TARGET Python::Interpreter)
+-  set(Python_FIND_FRAMEWORK LAST) # Prefer Brew/Conda to Apple framework python
+-
+-  if (CMAKE_VERSION VERSION_LESS 3.18)
+-    set(NB_PYTHON_DEV_MODULE Development)
+-  else()
+-    set(NB_PYTHON_DEV_MODULE Development.Module)
+-  endif()
+-
+-  find_package(Python 3.8
+-    REQUIRED COMPONENTS Interpreter ${NB_PYTHON_DEV_MODULE}
+-    OPTIONAL_COMPONENTS Development.SABIModule)
+-endif()
+-
+ # ---------------------------------------------------------------------------
+ # Include nanobind cmake functionality
+ # ---------------------------------------------------------------------------
+ 
+-find_package(nanobind
++find_package(nanobind REQUIRED
+   PATHS ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+   NO_DEFAULT_PATH)
+ 
+diff --git a/cmake/nanobind-config.cmake b/cmake/nanobind-config.cmake
+index cb6cfb0..a456f3f 100644
+--- a/cmake/nanobind-config.cmake
++++ b/cmake/nanobind-config.cmake
+@@ -1,9 +1,20 @@
+ include_guard(GLOBAL)
+ 
+-if (NOT TARGET Python::Module)
+-  message(FATAL_ERROR "You must invoke 'find_package(Python COMPONENTS Interpreter Development REQUIRED)' prior to including nanobind.")
++# ---------------------------------------------------------------------------
++# Find the Python interpreter and development libraries
++# ---------------------------------------------------------------------------
++if (CMAKE_VERSION VERSION_LESS 3.18)
++  set(NB_PYTHON_DEV_MODULE Development)
++else()
++  set(NB_PYTHON_DEV_MODULE Development.Module)
+ endif()
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(Python 3.8
++  COMPONENTS Interpreter ${NB_PYTHON_DEV_MODULE}
++  OPTIONAL_COMPONENTS Development.SABIModule
++)
++
+ # Determine the right suffix for ordinary and stable ABI extensions.
+ 
+ # We always need to know the extension

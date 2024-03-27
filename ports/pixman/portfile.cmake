@@ -46,8 +46,8 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.freedesktop.org
     REPO pixman/pixman
-    REF  91b8526c1eeb2b45c21f091e890cb74cf6989ff6 # 0.43.2
-    SHA512 cd4ea905a2287ae1ec25720ac90a72b2812dfeb6a5a82e3bbfcfeba91461229cde61b8bc6a5dfe5711f6b2937b3d3d4ade2b0c9a0290880c7d0cc4859344b542
+    REF "pixman-${VERSION}"
+    SHA512 daeb25d91e9cb8d450a6f050cbec1d91e239a03188e993ceb6286605c5ed33d97e08d6f57efaf1d5c6a8a1eedb1ebe6c113849a80d9028d5ea189c54601be424
     PATCHES
         no-host-cpu-checks.patch
         fix_clang-cl.patch

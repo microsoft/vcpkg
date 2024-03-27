@@ -17,8 +17,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxt
-    REF edd70bdfbbd16247e3d9564ca51d864f82626eb7 # 1.2.1
-    SHA512  c49876253dfd187e7d56a098d3d992157daefa2c25ee732eaae5818ee04513bedd807d2f265085db2e82c0b1821e152a88fb4998c0002f6ac57204543fe18566
+    REF "libXt-${VERSION}"
+    SHA512 7cb22be9706bd7d089e84c09a99597f730ca858a9f8134d2741916b28cd4786e236beaad568c8b7ab8cdcfdea1c49140cefac528244bab8c94d48dc4729267e8
     HEAD_REF master
     PATCHES
         windows_build.patch

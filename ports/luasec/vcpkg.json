@@ -1,11 +1,12 @@
 {
   "name": "luasec",
   "version": "1.3.2",
+  "port-version": 1,
   "maintainers": "Stephen Baker <baker.stephen.e@gmail.com>",
   "description": "LuaSec depends on OpenSSL, and integrates with LuaSocket to make it easy to add secure connections to any Lua applications or scripts.",
   "homepage": "https://github.com/brunoos/luasec",
   "license": "MIT",
-  "supports": "!(windows & static)",
+  "supports": "windows & !staticcrt",
   "dependencies": [
     "lua",
     "luasocket",

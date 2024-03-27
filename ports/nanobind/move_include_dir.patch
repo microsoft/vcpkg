@@ -1,0 +1,129 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e8fda9f..b27dc07 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,7 +52,7 @@ if(NB_CREATE_INSTALL_RULES AND NOT CMAKE_SKIP_INSTALL_RULES)
+ 
+   # Normally these would be configurable by the user, but we can't allow that
+   # because the lookup paths are hard-coded in 'cmake/nanobind-config.cmake'
+-  set(NB_INSTALL_INC_DIR "${NB_INSTALL_DATADIR}/include")
++  set(NB_INSTALL_INC_DIR "${NB_INSTALL_DATADIR}/../../include")
+   set(NB_INSTALL_SRC_DIR "${NB_INSTALL_DATADIR}/src")
+   set(NB_INSTALL_EXT_DIR "${NB_INSTALL_DATADIR}/ext")
+   set(NB_INSTALL_MODULE_DIR "${NB_INSTALL_DATADIR}")
+diff --git a/cmake/nanobind-config.cmake b/cmake/nanobind-config.cmake
+index a456f3f..92406dc 100644
+--- a/cmake/nanobind-config.cmake
++++ b/cmake/nanobind-config.cmake
+@@ -113,54 +113,54 @@ function (nanobind_build_library TARGET_NAME)
+ 
+   add_library(${TARGET_NAME} ${TARGET_TYPE}
+     EXCLUDE_FROM_ALL
+-    ${NB_DIR}/include/nanobind/make_iterator.h
+-    ${NB_DIR}/include/nanobind/nanobind.h
+-    ${NB_DIR}/include/nanobind/nb_accessor.h
+-    ${NB_DIR}/include/nanobind/nb_attr.h
+-    ${NB_DIR}/include/nanobind/nb_call.h
+-    ${NB_DIR}/include/nanobind/nb_cast.h
+-    ${NB_DIR}/include/nanobind/nb_class.h
+-    ${NB_DIR}/include/nanobind/nb_defs.h
+-    ${NB_DIR}/include/nanobind/nb_descr.h
+-    ${NB_DIR}/include/nanobind/nb_enums.h
+-    ${NB_DIR}/include/nanobind/nb_error.h
+-    ${NB_DIR}/include/nanobind/nb_func.h
+-    ${NB_DIR}/include/nanobind/nb_lib.h
+-    ${NB_DIR}/include/nanobind/nb_misc.h
+-    ${NB_DIR}/include/nanobind/nb_python.h
+-    ${NB_DIR}/include/nanobind/nb_traits.h
+-    ${NB_DIR}/include/nanobind/nb_tuple.h
+-    ${NB_DIR}/include/nanobind/nb_types.h
+-    ${NB_DIR}/include/nanobind/ndarray.h
+-    ${NB_DIR}/include/nanobind/trampoline.h
+-    ${NB_DIR}/include/nanobind/operators.h
+-    ${NB_DIR}/include/nanobind/stl/array.h
+-    ${NB_DIR}/include/nanobind/stl/bind_map.h
+-    ${NB_DIR}/include/nanobind/stl/bind_vector.h
+-    ${NB_DIR}/include/nanobind/stl/detail
+-    ${NB_DIR}/include/nanobind/stl/detail/nb_array.h
+-    ${NB_DIR}/include/nanobind/stl/detail/nb_dict.h
+-    ${NB_DIR}/include/nanobind/stl/detail/nb_list.h
+-    ${NB_DIR}/include/nanobind/stl/detail/nb_set.h
+-    ${NB_DIR}/include/nanobind/stl/detail/traits.h
+-    ${NB_DIR}/include/nanobind/stl/filesystem.h
+-    ${NB_DIR}/include/nanobind/stl/function.h
+-    ${NB_DIR}/include/nanobind/stl/list.h
+-    ${NB_DIR}/include/nanobind/stl/map.h
+-    ${NB_DIR}/include/nanobind/stl/optional.h
+-    ${NB_DIR}/include/nanobind/stl/pair.h
+-    ${NB_DIR}/include/nanobind/stl/set.h
+-    ${NB_DIR}/include/nanobind/stl/shared_ptr.h
+-    ${NB_DIR}/include/nanobind/stl/string.h
+-    ${NB_DIR}/include/nanobind/stl/string_view.h
+-    ${NB_DIR}/include/nanobind/stl/tuple.h
+-    ${NB_DIR}/include/nanobind/stl/unique_ptr.h
+-    ${NB_DIR}/include/nanobind/stl/unordered_map.h
+-    ${NB_DIR}/include/nanobind/stl/unordered_set.h
+-    ${NB_DIR}/include/nanobind/stl/variant.h
+-    ${NB_DIR}/include/nanobind/stl/vector.h
+-    ${NB_DIR}/include/nanobind/eigen/dense.h
+-    ${NB_DIR}/include/nanobind/eigen/sparse.h
++    ${NB_DIR}/../../include/nanobind/make_iterator.h
++    ${NB_DIR}/../../include/nanobind/nanobind.h
++    ${NB_DIR}/../../include/nanobind/nb_accessor.h
++    ${NB_DIR}/../../include/nanobind/nb_attr.h
++    ${NB_DIR}/../../include/nanobind/nb_call.h
++    ${NB_DIR}/../../include/nanobind/nb_cast.h
++    ${NB_DIR}/../../include/nanobind/nb_class.h
++    ${NB_DIR}/../../include/nanobind/nb_defs.h
++    ${NB_DIR}/../../include/nanobind/nb_descr.h
++    ${NB_DIR}/../../include/nanobind/nb_enums.h
++    ${NB_DIR}/../../include/nanobind/nb_error.h
++    ${NB_DIR}/../../include/nanobind/nb_func.h
++    ${NB_DIR}/../../include/nanobind/nb_lib.h
++    ${NB_DIR}/../../include/nanobind/nb_misc.h
++    ${NB_DIR}/../../include/nanobind/nb_python.h
++    ${NB_DIR}/../../include/nanobind/nb_traits.h
++    ${NB_DIR}/../../include/nanobind/nb_tuple.h
++    ${NB_DIR}/../../include/nanobind/nb_types.h
++    ${NB_DIR}/../../include/nanobind/ndarray.h
++    ${NB_DIR}/../../include/nanobind/trampoline.h
++    ${NB_DIR}/../../include/nanobind/operators.h
++    ${NB_DIR}/../../include/nanobind/stl/array.h
++    ${NB_DIR}/../../include/nanobind/stl/bind_map.h
++    ${NB_DIR}/../../include/nanobind/stl/bind_vector.h
++    ${NB_DIR}/../../include/nanobind/stl/detail
++    ${NB_DIR}/../../include/nanobind/stl/detail/nb_array.h
++    ${NB_DIR}/../../include/nanobind/stl/detail/nb_dict.h
++    ${NB_DIR}/../../include/nanobind/stl/detail/nb_list.h
++    ${NB_DIR}/../../include/nanobind/stl/detail/nb_set.h
++    ${NB_DIR}/../../include/nanobind/stl/detail/traits.h
++    ${NB_DIR}/../../include/nanobind/stl/filesystem.h
++    ${NB_DIR}/../../include/nanobind/stl/function.h
++    ${NB_DIR}/../../include/nanobind/stl/list.h
++    ${NB_DIR}/../../include/nanobind/stl/map.h
++    ${NB_DIR}/../../include/nanobind/stl/optional.h
++    ${NB_DIR}/../../include/nanobind/stl/pair.h
++    ${NB_DIR}/../../include/nanobind/stl/set.h
++    ${NB_DIR}/../../include/nanobind/stl/shared_ptr.h
++    ${NB_DIR}/../../include/nanobind/stl/string.h
++    ${NB_DIR}/../../include/nanobind/stl/string_view.h
++    ${NB_DIR}/../../include/nanobind/stl/tuple.h
++    ${NB_DIR}/../../include/nanobind/stl/unique_ptr.h
++    ${NB_DIR}/../../include/nanobind/stl/unordered_map.h
++    ${NB_DIR}/../../include/nanobind/stl/unordered_set.h
++    ${NB_DIR}/../../include/nanobind/stl/variant.h
++    ${NB_DIR}/../../include/nanobind/stl/vector.h
++    ${NB_DIR}/../../include/nanobind/eigen/dense.h
++    ${NB_DIR}/../../include/nanobind/eigen/sparse.h
+ 
+     ${NB_DIR}/src/buffer.h
+     ${NB_DIR}/src/hash.h
+@@ -230,7 +230,7 @@ function (nanobind_build_library TARGET_NAME)
+ 
+   target_include_directories(${TARGET_NAME} PUBLIC
+     ${Python_INCLUDE_DIRS}
+-    ${NB_DIR}/include)
++    ${NB_DIR}/../../include)
+ 
+   target_compile_features(${TARGET_NAME} PUBLIC cxx_std_17)
+   nanobind_set_visibility(${TARGET_NAME})

@@ -33,6 +33,10 @@ if ("dialogflow-es" IN_LIST FEATURES)
     list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "dialogflow-es")
     list(APPEND GOOGLE_CLOUD_CPP_ENABLE "dialogflow_es")
 endif ()
+if ("experimental-storage-grpc" IN_LIST FEATURES)
+    list(REMOVE_ITEM GOOGLE_CLOUD_CPP_ENABLE "experimental-storage-grpc")
+    list(APPEND GOOGLE_CLOUD_CPP_ENABLE "experimental-storage_grpc")
+endif ()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

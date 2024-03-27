@@ -1,6 +1,7 @@
 {
   "name": "directx-dxc",
   "version-date": "2024-03-07",
+  "port-version": 1,
   "description": "DirectX Shader Compiler (LLVM/Clang)",
   "homepage": "https://github.com/microsoft/DirectXShaderCompiler",
   "documentation": "https://github.com/microsoft/DirectXShaderCompiler/wiki",
@@ -14,6 +15,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "zlib",
+      "platform": "linux & !static"
     }
   ]
 }

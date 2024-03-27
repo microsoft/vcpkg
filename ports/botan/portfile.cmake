@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 13f40635fc92b00b9392aa8ed96b5825f0cc8147d51337e2c225e0f29d0428732293190aa5fb2a7d2c5e7d57db748ae0fbed4536dee8af00e8d6fd405e784e1d
+    SHA512 5b3e22ad14bf0c37d97835c8309d1a5797cfab67b14ebfad9fd69a999ee27fe97d42ecff5e57e598d21575d053c07c30995f8c2d5f3a23433fb59d6bab45e1e7
     HEAD_REF master
     PATCHES
         embed-debug-info.patch
@@ -11,6 +11,7 @@ vcpkg_from_github(
         configure-zlib.patch
         fix_android.patch
         libcxx-winpthread-fixes.patch
+        fix-cmake-usage.patch
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
@@ -175,6 +176,8 @@ else()
         vcpkg_copy_tools(TOOL_NAMES botan AUTO_CLEAN)
     endif()
 endif()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Botan-3.3.0)
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-3/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
 

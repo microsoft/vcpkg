@@ -1,3 +1,7 @@
+if("subpixel-rendering" IN_LIST FEATURES)
+    set(SUBPIXEL_RENDERING_PATCH "subpixel-rendering.patch")
+endif()
+
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO freetype/freetype2
@@ -9,6 +13,7 @@ vcpkg_from_sourceforge(
         brotli-static.patch
         bzip2.patch
         fix-exports.patch
+        ${SUBPIXEL_RENDERING_PATCH}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

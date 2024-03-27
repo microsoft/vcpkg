@@ -6,9 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON2_DIR}")
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
