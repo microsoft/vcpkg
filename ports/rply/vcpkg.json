@@ -4,6 +4,7 @@
   "port-version": 4,
   "description": "ANSI C Library for PLY file format input and output",
   "homepage": "http://w3.impa.br/~diego/software/rply",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
