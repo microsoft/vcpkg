@@ -7785,8 +7785,8 @@
       "port-version": 0
     },
     "ryu": {
-      "baseline": "2.0",
-      "port-version": 9
+      "baseline": "4.30",
+      "port-version": 0
     },
     "s2geometry": {
       "baseline": "0.11.1",
