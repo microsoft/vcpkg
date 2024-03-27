@@ -7006,7 +7006,7 @@
     },
     "pybind11": {
       "baseline": "2.11.1",
-      "port-version": 0
+      "port-version": 1
     },
     "pystring": {
       "baseline": "1.1.4",
