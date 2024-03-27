@@ -4829,8 +4829,8 @@
       "port-version": 0
     },
     "librabbitmq": {
-      "baseline": "0.11.0",
-      "port-version": 2
+      "baseline": "0.14.0",
+      "port-version": 0
     },
     "libraqm": {
       "baseline": "0.10.1",
