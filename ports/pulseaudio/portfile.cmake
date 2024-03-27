@@ -99,6 +99,8 @@ vcpkg_copy_tools(TOOL_NAMES pacat pactl padsp pa-info pamon AUTO_CLEAN)
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
 #define DESKTOPFILEDIR "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/share/applications"
 #define PA_ALSA_DATA_DIR "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/share/pulseaudio/alsa-mixer"
 #define PA_BINARY "/mnt/e/qt6-update/packages/pulseaudio_x64-linux-release/bin/pulseaudio"
