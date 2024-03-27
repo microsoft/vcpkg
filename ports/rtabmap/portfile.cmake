@@ -15,70 +15,63 @@ vcpkg_from_github(
         multi-definition.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
-        gui WITH_QT
-        octomap WITH_OCTOMAP
-        realsense2 WITH_REALSENSE2
-        k4w2 WITH_K4W2
-        openni2 WITH_OPENNI2
-)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS REL_FEATURE_OPTIONS
-    FEATURES
-        tools BUILD_TOOLS
-        tools BUILD_APP
+        gui         WITH_QT
+        k4w2        WITH_K4W2
+        octomap     WITH_OCTOMAP
+        openni2     WITH_OPENNI2
+        realsense2  WITH_REALSENSE2
+        tools       BUILD_APP
+        tools       BUILD_TOOLS
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    OPTIONS_DEBUG
-        -DBUILD_TOOLS=OFF
-        -DBUILD_APP=OFF
-        --trace-expand
-    OPTIONS_RELEASE
-        ${REL_FEATURE_OPTIONS}
     OPTIONS
-        ${FEATURE_OPTIONS}
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
-        -DWITH_ORB_OCTREE=ON   # GPLv3
-        -DWITH_TORCH=OFF
-        -DWITH_PYTHON=OFF
-        -DWITH_PYTHON_THREADING=OFF
-        -DWITH_PDAL=OFF
+        -DWITH_ALICE_VISION=OFF
+        -DWITH_CCCORELIB=OFF
+        -DWITH_CERES=ON
+        -DWITH_CPUTSDF=OFF
+        -DWITH_CVSBA=OFF
+        -DWITH_DC1394=OFF
+        -DWITH_DEPTHAI=OFF
+        -DWITH_DVO=OFF
+        -DWITH_FASTCV=OFF
+        -DWITH_FLYCAPTURE2=OFF
+        -DWITH_FOVIS=OFF
         -DWITH_FREENECT=OFF
         -DWITH_FREENECT2=OFF
-        -DWITH_K4A=OFF
-        -DWITH_DC1394=OFF
         -DWITH_G2O=ON
         -DWITH_GTSAM=OFF
-        -DWITH_CERES=ON
-        -DWITH_VERTIGO=OFF
-        -DWITH_CVSBA=OFF
-        -DWITH_POINTMATCHER=OFF
-        -DWITH_CCCORELIB=OFF
+        -DWITH_K4A=OFF
         -DWITH_LOAM=OFF
-        -DWITH_FLYCAPTURE2=OFF
+        -DWITH_MADGWICK=OFF
+        -DWITH_MSCKF_VIO=OFF
+        -DWITH_MYNTEYE=OFF
+        -DWITH_OKVIS=OFF
+        -DWITH_OPENCHISEL=OFF
+        -DWITH_OPENVINS=OFF
+        -DWITH_ORB_OCTREE=ON   # GPLv3
+        -DWITH_PDAL=OFF
+        -DWITH_POINTMATCHER=OFF
+        -DWITH_PYTHON_THREADING=OFF
+        -DWITH_PYTHON=OFF
+        -DWITH_REALSENSE_SLAM=OFF
+        -DWITH_REALSENSE=OFF
+        -DWITH_TORCH=OFF
+        -DWITH_VERTIGO=OFF
+        -DWITH_VINS=OFF
+        -DWITH_VISO2=OFF
         -DWITH_ZED=OFF
         -DWITH_ZEDOC=OFF
-        -DWITH_REALSENSE=OFF
-        -DWITH_REALSENSE_SLAM=OFF
-        -DWITH_MYNTEYE=OFF
-        -DWITH_DEPTHAI=OFF
-        -DWITH_CPUTSDF=OFF
-        -DWITH_OPENCHISEL=OFF
-        -DWITH_ALICE_VISION=OFF
-        -DWITH_FOVIS=OFF
-        -DWITH_VISO2=OFF
-        -DWITH_DVO=OFF
-        -DWITH_OKVIS=OFF
-        -DWITH_MSCKF_VIO=OFF
-        -DWITH_VINS=OFF
-        -DWITH_OPENVINS=OFF
-        -DWITH_MADGWICK=OFF
-        -DWITH_FASTCV=OFF
+        ${OPTIONS}
+    OPTIONS_DEBUG
+        -DBUILD_APP=OFF
+        -DBUILD_TOOLS=OFF
 )
 
 vcpkg_cmake_install()
