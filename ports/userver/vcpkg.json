@@ -1,0 +1,53 @@
+{
+  "name": "userver",
+  "version": "1.0.0",
+  "description": "The C++ Asynchronous Framework",
+  "homepage": "https://userver.tech/",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "amqpcpp",
+    "boost-context",
+    "boost-core",
+    "boost-coroutine",
+    "boost-coroutine2",
+    "boost-endian",
+    "boost-filesystem",
+    "boost-iostreams",
+    "boost-locale",
+    "boost-lockfree",
+    "boost-multiprecision",
+    "boost-program-options",
+    "boost-uuid",
+    "c-ares",
+    "cctz",
+    "cryptopp",
+    {
+      "name": "curl",
+      "features": [
+        "openssl"
+      ]
+    },
+    "fmt",
+    "http-parser",
+    "libev",
+    "nghttp2",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "yaml-cpp"
+  ],
+  "features": {
+    "mongodb": {
+      "description": "Provide asynchronous driver for MongoDB",
+      "dependencies": [
+        "mongo-cxx-driver"
+      ]
+    }
+  }
+}
