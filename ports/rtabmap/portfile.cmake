@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix_link.patch
         link-keywords.patch
         multi-definition.patch
+        rtabmap-res-tool.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -38,6 +39,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
+        "-DRTABMAP_RES_TOOL=${CURRENT_HOST_INSTALLED_DIR}/tools/rtabmap-res-tool/rtabmap-res_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
         -DWITH_ORB_OCTREE=ON
         -DWITH_TORCH=OFF
         -DWITH_PYTHON=OFF
@@ -86,11 +88,6 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool-0.3.0)  
-endif()
-vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool AUTO_CLEAN)
 
 if("tools" IN_LIST FEATURES)
   vcpkg_copy_tools(
