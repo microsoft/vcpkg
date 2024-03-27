@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix_link.patch
         link-keywords.patch
         multi-definition.patch
+        rtabmap-res-tool.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
@@ -85,10 +86,12 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool-0.3.0)  
+if(NOT VCPKG_CROSSCOMPILING)
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool-0.3.0)  
+    endif()
+    vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool AUTO_CLEAN)
 endif()
-vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool AUTO_CLEAN)
 
 if("tools" IN_LIST FEATURES)
   vcpkg_copy_tools(
@@ -121,6 +124,7 @@ if("tools" IN_LIST FEATURES)
         AUTO_CLEAN
     )
     
+#[[
     # Remove duplicate files that were added by qtdeploy 
     # that would be already deployed by vcpkg_copy_tools
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tmp")
@@ -140,6 +144,7 @@ if("tools" IN_LIST FEATURES)
       file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/plugins")
       file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/translations")
     endif()
+]]
   endif()
 endif()
 
