@@ -45,8 +45,8 @@
       "port-version": 0
     },
     "adios2": {
-      "baseline": "2.8.3",
-      "port-version": 1
+      "baseline": "2.9.2",
+      "port-version": 0
     },
     "advobfuscator": {
       "baseline": "2020-06-26",
