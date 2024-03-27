@@ -6,17 +6,9 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    INVERTED_FEATURES
-        "exceptions"   IPADDRESS_NO_EXCEPTIONS
-        "ipv6-scope"   IPADDRESS_NO_IPV6_SCOPE
-        "overload-std" IPADDRESS_NO_OVERLOAD_STD
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
         -DIPADDRESS_BUILD_DOC=OFF
         -DIPADDRESS_BUILD_TESTS=OFF
         -DIPADDRESS_BUILD_BENCHMARK=OFF

@@ -13,21 +13,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "default-features": [
-    "exceptions",
-    "ipv6-scope",
-    "overload-std"
-  ],
-  "features": {
-    "exceptions": {
-      "description": "Support for throwing and handling exceptions"
-    },
-    "ipv6-scope": {
-      "description": "Support for IPv6 addresses with scope id"
-    },
-    "overload-std": {
-      "description": "Overload std functions such as to_string, hash etc"
-    }
-  }
+  ]
 }
