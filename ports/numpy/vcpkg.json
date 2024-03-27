@@ -1,0 +1,28 @@
+{
+  "name": "numpy",
+  "version": "1.26.1",
+  "description": "The fundamental package for scientific computing with Python.",
+  "homepage": "https://www.numpy.org/",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "blas",
+    "lapack",
+    {
+      "name": "py-cython",
+      "host": true
+    },
+    "python3",
+    {
+      "name": "python3",
+      "host": true
+    },
+    {
+      "name": "vcpkg-python-scripts",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

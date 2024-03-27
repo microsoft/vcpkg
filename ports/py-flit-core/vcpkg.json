@@ -1,0 +1,11 @@
+{
+  "name": "py-flit-core",
+  "version": "3.9.0",
+  "port-version": 1,
+  "description": "Simplified packaging of Python modules",
+  "homepage": "https://flit.pypa.io",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "python3"
+  ]
+}
