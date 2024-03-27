@@ -4,7 +4,7 @@
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
   "name": "azure-security-keyvault-certificates-cpp",
-  "version-semver": "4.2.1",
+  "version-semver": "4.3.0-beta.1",
   "description": [
     "Microsoft Azure Key Vault Certificates SDK for C++",
     "This library provides Azure Key Vault Certificates SDK."

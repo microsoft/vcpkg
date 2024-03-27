@@ -3,19 +3,20 @@
     "NOTE: All changes made to this file will get overwritten by the next port release.",
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
-  "name": "azure-messaging-eventhubs-cpp",
-  "version-semver": "1.0.0-beta.7",
+  "name": "azure-template-cpp",
+  "version-semver": "1.1.0-beta.3644271",
   "description": [
-    "Microsoft Azure Messaging Event Hubs SDK for C++",
-    "This library provides Azure Messaging Event Hubs SDK."
+    "Microsoft Azure Template SDK for C++",
+    "This is a template library meant to illustrate initial client library development process for Azure SDK.",
+    "It is not meant to be published to vcpkg."
   ],
-  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/eventhubs/azure-messaging-eventhubs",
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/template/azure-template",
   "license": "MIT",
   "dependencies": [
     {
-      "name": "azure-core-amqp-cpp",
+      "name": "azure-core-cpp",
       "default-features": false,
-      "version>=": "1.0.0-beta.7"
+      "version>=": "1.3.1"
     },
     {
       "name": "vcpkg-cmake",
