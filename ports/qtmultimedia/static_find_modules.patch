@@ -2,7 +2,28 @@ diff --git a/cmake/FindFFmpeg.cmake b/cmake/FindFFmpeg.cmake
 index 47d8769..46a5c9b 100644
 --- a/cmake/FindFFmpeg.cmake
 +++ b/cmake/FindFFmpeg.cmake
-@@ -316,6 +316,9 @@ endfunction()
+@@ -215,7 +215,7 @@ foreach (_component ${FFmpeg_FIND_COMPONENTS})
+   find_component(${_component} "lib${library}" ${library} "lib${library}/${library}.h")
+ 
+   if (${_component}_FOUND)
+-    list(APPEND FFMPEG_LIBRARIES    ${${_component}_LIBRARY_NAME})
++    list(APPEND FFMPEG_LIBRARIES    ${${_component}_LIBRARY})
+     list(APPEND FFMPEG_DEFINITIONS  ${${_component}_DEFINITIONS})
+     list(APPEND FFMPEG_INCLUDE_DIRS ${${_component}_INCLUDE_DIR})
+     list(APPEND FFMPEG_LIBRARY_DIRS ${${_component}_LIBRARY_DIR})
+@@ -306,16 +306,18 @@ endfunction()
+         set_target_properties(FFmpeg::${_lowerComponent} PROPERTIES
+             INTERFACE_COMPILE_OPTIONS "${${_component}_DEFINITIONS}"
+             INTERFACE_INCLUDE_DIRECTORIES ${${_component}_INCLUDE_DIR}
+-            INTERFACE_LINK_LIBRARIES "${${_component}_LIBRARY_NAME}"
+-            INTERFACE_LINK_DIRECTORIES "${${_component}_LIBRARY_DIR}"
++            INTERFACE_LINK_LIBRARIES "${${_component}_LIBRARY}"
+         )
+         if(NOT ${_component}_SHARED_LIBRARIES)
+           __ffmpeg_internal_set_dependencies(${_lowerComponent})
+         endif()
+-        target_link_libraries(FFmpeg::${_lowerComponent} INTERFACE "${${_component}_LIBRARY_NAME}")
++        target_link_libraries(FFmpeg::${_lowerComponent} INTERFACE "${${_component}_LIBRARY}")
          if (UNIX AND NOT APPLE)
            target_link_options(FFmpeg::${_lowerComponent} INTERFACE  "-Wl,--exclude-libs=lib${_lowerComponent}")
          endif ()
