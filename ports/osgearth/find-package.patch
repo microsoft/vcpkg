@@ -1,23 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cf8245b8b..233390a5f 100755
+index 1e65fe2..5ab0392 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -127,9 +127,9 @@ mark_as_advanced(OSGEARTH_ASSUME_SINGLE_GL_CONTEXT)
- 
- # Mobile/GLES:
- IF (OSGEARTH_USE_GLES)
--    find_package(OpenGLES)
-+    find_package(OpenGLES REQUIRED)
- ELSE ()
--    find_package(OpenGL)
-+    find_package(OpenGL REQUIRED)
- ENDIF (OSGEARTH_USE_GLES)
- 
- 
-@@ -147,35 +147,54 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
- endif()
+@@ -120,21 +120,39 @@ endif()
  
  # required
+ find_package(OpenGL REQUIRED)
 -find_package(OSG REQUIRED)
 +find_package(OSG NAMES unofficial-osg)
 +find_path(OSG_INCLUDE_DIR osg/Version) # For detecting the version and setting the plugin path
@@ -45,6 +33,7 @@ index cf8245b8b..233390a5f 100755
 -find_package(WEBP)
 -find_package(Blend2D)
 -find_package(Blosc)
+-find_package(spdlog)
 +find_package(GEOS CONFIG REQUIRED)
 +set(GEOS_LIBRARY GEOS::geos_c)
 +find_package(SQLITE3 NAMES unofficial-sqlite3 REQUIRED)
@@ -60,10 +49,11 @@ index cf8245b8b..233390a5f 100755
 +    set(BLEND2D_LIBRARY blend2d::blend2d)
 +endif()
 +find_package(BLOSC REQUIRED)
++find_package(spdlog)
  
- if(OSGEARTH_ENABLE_PROFILING)
--    find_package(Tracy)
-+    find_package(Tracy REQUIRED)
+ if(OSGEARTH_BUILD_CESIUM_NODEKIT)
+     find_package(CesiumNative)
+@@ -153,17 +171,19 @@ if(OSGEARTH_ENABLE_PROFILING)
  endif()
  
  if(OSGEARTH_BUILD_ZIP_PLUGIN)
@@ -72,41 +62,25 @@ index cf8245b8b..233390a5f 100755
 +    set(LIBZIP_LIBRARY libzip::zip)
  endif()
  
- if(OSGEARTH_BUILD_TRITON_NODEKIT)
--    find_package(Triton QUIET)
-+    find_package(Triton QUIET REQUIRED)
- endif()
- 
- if(OSGEARTH_BUILD_SILVERLINING_NODEKIT)
--    find_package(SilverLining QUIET)
-+    find_package(SilverLining QUIET REQUIRED)
- endif()
- 
- # Sqlite enables the MBTiles format:
-@@ -221,7 +240,7 @@ SET (PROTOBUF_USE_DLLS FALSE CACHE BOOL "Set this to true if Protobuf is compile
- # Duktape is the JavaScript interpreter
- SET (WITH_EXTERNAL_DUKTAPE FALSE CACHE BOOL "Use bundled or system wide version of Duktape")
- IF (WITH_EXTERNAL_DUKTAPE)
+ set(WITH_EXTERNAL_DUKTAPE FALSE CACHE BOOL "Use external Duktape instead of inlining it")
+ if(WITH_EXTERNAL_DUKTAPE)
 -    find_package(Duktape)
 +    find_package(Duktape REQUIRED)
- ENDIF (WITH_EXTERNAL_DUKTAPE)
+ endif(WITH_EXTERNAL_DUKTAPE)
  
- # Whether to install shaders (glsl files).
-@@ -232,7 +251,8 @@ OPTION(OSGEARTH_INSTALL_SHADERS "Whether to deploy GLSL shaders when doing a Mak
- # TinyXML is an XML parsing library
- SET (WITH_EXTERNAL_TINYXML FALSE CACHE BOOL "Use bundled or system wide version of TinyXML")
- IF (WITH_EXTERNAL_TINYXML)
+ set(WITH_EXTERNAL_TINYXML FALSE CACHE BOOL "Use external TinyXML instead of inlining it")
+ if(WITH_EXTERNAL_TINYXML)
 -    find_package(TinyXML)
 +    find_package(TINYXML NAMES tinyxml REQUIRED)
 +    set(TINYXML_LIBRARY unofficial-tinyxml::unofficial-tinyxml)
- ENDIF (WITH_EXTERNAL_TINYXML)
+ endif(WITH_EXTERNAL_TINYXML)
  
- # postfix settings for various configs
-@@ -307,6 +327,7 @@ IF(OSGEARTH_BUILD_SHARED_LIBS)
-     SET(OSGEARTH_DYNAMIC_OR_STATIC "SHARED")
- ELSE()
-     SET(OSGEARTH_DYNAMIC_OR_STATIC "STATIC")
+ 
+@@ -268,6 +288,7 @@ if(OSGEARTH_BUILD_SHARED_LIBS)
+     set(OSGEARTH_DYNAMIC_OR_STATIC "SHARED")
+ else()
+     set(OSGEARTH_DYNAMIC_OR_STATIC "STATIC")
 +    add_definitions(-DOSGEARTH_LIBRARY_STATIC)
- ENDIF()
+ endif()
  
- 	
+ 

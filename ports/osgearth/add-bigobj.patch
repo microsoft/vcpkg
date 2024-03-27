@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5ab0392..9ade818 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -102,6 +102,10 @@ mark_as_advanced(OSGEARTH_ENABLE_PROFILING)
+ mark_as_advanced(OSGEARTH_ASSUME_SINGLE_GL_CONTEXT)
+ mark_as_advanced(OSGEARTH_INSTALL_SHADERS)
+ 
++# Allow big object
++if(MSVC)
++    add_compile_options(/bigobj)
++endif()
+ 
+ # Dependencies ...........................................................
+ 
