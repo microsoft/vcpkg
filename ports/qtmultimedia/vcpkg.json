@@ -40,6 +40,10 @@
             "swresample",
             "swscale"
           ]
+        },
+        {
+          "name": "pulseaudio",
+          "platform": "linux"
         }
       ]
     },

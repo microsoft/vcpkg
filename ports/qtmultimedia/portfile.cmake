@@ -56,7 +56,7 @@ else()
 endif()
 
 # alsa is not ready
-if(NOT "ffmpeg" IN_LIST FEATURES AND NOT "gstreamer" IN_LIST FEATURES)
+if(NOT "ffmpeg" IN_LIST FEATURES AND NOT "gstreamer" IN_LIST FEATURES AND VCPKG_TARGET_IS_LINUX)
   #list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=ON") # alsa is experimental so don't activate it (also missing the dep on it.)
   message(FATAL_ERROR "You need to activate at least one backend.")
 else()
