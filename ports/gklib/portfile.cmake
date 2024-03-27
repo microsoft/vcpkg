@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         build-fixes.patch
         fix-mingw.patch
+        fix-error-in-clang17.patch
 )
 
 # Delete files that are workarounds for very old copies of msvc.
