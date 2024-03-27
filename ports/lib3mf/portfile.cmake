@@ -1,8 +1,8 @@
 # Pull it from artifacts
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/vijaiaeroastro/3mfExamples/releases/download/2.3.1/lib3mf-2.3.0-cmake-complete.zip"
+    URLS "https://github.com/vijaiaeroastro/3mfExamples/releases/download/2.3.1/lib3mf-2.3.0-vijai-develop.zip"
     FILENAME "lib3mf-2.3.0-vijai-develop.zip"
-    SHA512 8dfb9a9e292f4fa5d6d222c9940408ac267f2ef1a9e35c00412e02a7ba6d8823d66594070d8b4d9c32ff7638d2e0ad0fcba586968c9fa8c017b8a610ce145feb
+    SHA512 a43e1c685e0b72241ae0573becbaca1ac21177b65fa305e0add761c0a0670b6c224041492b7ce1f84e1838bc62e4a89ea94477ea45e0127c8272f1b30698fa48
 )
 
 # Extract it
