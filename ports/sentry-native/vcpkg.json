@@ -61,7 +61,6 @@
     "wer": {
       "description": [
         "Enables the Windows Error Reporting backend.",
-        "This feature does nothing for non-Windows platforms.",
         "Cf.https://github.com/getsentry/sentry-native#compile-time-options"
       ],
       "supports": "windows & !static",
