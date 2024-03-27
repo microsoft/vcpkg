@@ -13,10 +13,7 @@
     },
     {
       "name": "pcl",
-      "default-features": false,
-      "features": [
-        "vtk"
-      ]
+      "default-features": false
     },
     {
       "name": "rtabmap-res-tool",
@@ -47,7 +44,8 @@
           "name": "pcl",
           "default-features": false,
           "features": [
-            "qt"
+            "qt",
+            "visualization"
           ]
         },
         {
@@ -58,6 +56,10 @@
             "opengl",
             "widgets"
           ]
+        },
+        {
+          "name": "vtk",
+          "default-features": false
         }
       ]
     },
