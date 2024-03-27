@@ -1,17 +1,19 @@
 diff --git a/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h b/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
-index 2fc12a2..d9af960 100644
+index 2fc12a2..5219a38 100644
 --- a/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
 +++ b/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
-@@ -39,6 +39,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -39,6 +39,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  #if CV_MAJOR_VERSION >= 4
  #include <opencv2/core/core_c.h>
  
++#include <rtabmap/core/rtabmap_core_export.h>
++
 +namespace {
 +
  // Opencv4 doesn't expose those functions below anymore, we should recopy all of them!
  int cvRodrigues2( const CvMat* src, CvMat* dst, CvMat* jacobian CV_DEFAULT(0))
  {
-@@ -919,6 +921,8 @@ void cvConvertPointsHomogeneous( const CvMat* _src, CvMat* _dst )
+@@ -919,13 +923,17 @@ void cvConvertPointsHomogeneous( const CvMat* _src, CvMat* _dst )
  
  #endif // OpenCV3
  
@@ -20,7 +22,8 @@ index 2fc12a2..d9af960 100644
  namespace rtabmap
  {
  
-@@ -926,6 +930,7 @@ void
+ void
++RTABMAP_CORE_EXPORT
  icvGetRectanglesFisheye( const CvMat* cameraMatrix, const CvMat* distCoeffs,
                   const CvMat* R, const CvMat* newCameraMatrix, CvSize imgSize,
                   cv::Rect_<float>& inner, cv::Rect_<float>& outer )
@@ -28,7 +31,7 @@ index 2fc12a2..d9af960 100644
  {
      const int N = 9;
      int x, y, k;
-@@ -967,12 +972,16 @@ icvGetRectanglesFisheye( const CvMat* cameraMatrix, const CvMat* distCoeffs,
+@@ -967,12 +975,17 @@ icvGetRectanglesFisheye( const CvMat* cameraMatrix, const CvMat* distCoeffs,
      inner = cv::Rect_<float>(iX0, iY0, iX1-iX0, iY1-iY0);
      outer = cv::Rect_<float>(oX0, oY0, oX1-oX0, oY1-oY0);
  }
@@ -36,7 +39,9 @@ index 2fc12a2..d9af960 100644
 +;
 +#endif
  
- void cvStereoRectifyFisheye( const CvMat* _cameraMatrix1, const CvMat* _cameraMatrix2,
+-void cvStereoRectifyFisheye( const CvMat* _cameraMatrix1, const CvMat* _cameraMatrix2,
++void RTABMAP_CORE_EXPORT
++     cvStereoRectifyFisheye( const CvMat* _cameraMatrix1, const CvMat* _cameraMatrix2,
                        const CvMat* _distCoeffs1, const CvMat* _distCoeffs2,
                        CvSize imageSize, const CvMat* matR, const CvMat* matT,
                        CvMat* _R1, CvMat* _R2, CvMat* _P1, CvMat* _P2,
@@ -45,7 +50,7 @@ index 2fc12a2..d9af960 100644
  {
      double _om[3], _t[3] = {0}, _uu[3]={0,0,0}, _r_r[3][3], _pp[3][4];
      double _ww[3], _wr[3][3], _z[3] = {0,0,0}, _ri[3][3], _w3[3];
-@@ -1177,6 +1186,10 @@ void cvStereoRectifyFisheye( const CvMat* _cameraMatrix1, const CvMat* _cameraMa
+@@ -1177,14 +1190,20 @@ void cvStereoRectifyFisheye( const CvMat* _cameraMatrix1, const CvMat* _cameraMa
          cvConvert( &Q, matQ );
      }
  }
@@ -54,9 +59,12 @@ index 2fc12a2..d9af960 100644
 +#endif
 +
  
- void stereoRectifyFisheye( cv::InputArray _cameraMatrix1, cv::InputArray _distCoeffs1,
+-void stereoRectifyFisheye( cv::InputArray _cameraMatrix1, cv::InputArray _distCoeffs1,
++void RTABMAP_CORE_EXPORT
++     stereoRectifyFisheye( cv::InputArray _cameraMatrix1, cv::InputArray _distCoeffs1,
  				cv::InputArray _cameraMatrix2, cv::InputArray _distCoeffs2,
-@@ -1185,6 +1198,7 @@ void stereoRectifyFisheye( cv::InputArray _cameraMatrix1, cv::InputArray _distCo
+ 				cv::Size imageSize, cv::InputArray _Rmat, cv::InputArray _Tmat,
+ 				cv::OutputArray _Rmat1, cv::OutputArray _Rmat2,
  				cv::OutputArray _Pmat1, cv::OutputArray _Pmat2,
  				cv::OutputArray _Qmat, int flags,
  				double alpha, cv::Size newImageSize)
@@ -64,7 +72,7 @@ index 2fc12a2..d9af960 100644
  {
      cv::Mat cameraMatrix1 = _cameraMatrix1.getMat(), cameraMatrix2 = _cameraMatrix2.getMat();
      cv::Mat distCoeffs1 = _distCoeffs1.getMat(), distCoeffs2 = _distCoeffs2.getMat();
-@@ -1238,6 +1252,9 @@ void stereoRectifyFisheye( cv::InputArray _cameraMatrix1, cv::InputArray _distCo
+@@ -1238,6 +1257,9 @@ void stereoRectifyFisheye( cv::InputArray _cameraMatrix1, cv::InputArray _distCo
          CvSize(newImageSize));
  #endif
  }
