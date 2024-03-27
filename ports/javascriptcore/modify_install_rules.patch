@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aa99898dc4f1..17db4640001e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,7 +6,7 @@
+ # latter in particular handles loading a bunch of shared CMake definitions
+ # and loading the cross-compilation settings from CMAKE_TOOLCHAIN_FILE.
+ 
+-cmake_minimum_required(VERSION 3.16)
++cmake_minimum_required(VERSION 3.23)
+ project(WebKit)
+ 
+ # Remove this cmake_policy() after upgrading cmake_minimum_required() to 3.20.
+diff --git a/Source/JavaScriptCore/CMakeLists.txt b/Source/JavaScriptCore/CMakeLists.txt
+index 5fbb9a3bc110..cab1c6927b41 100644
+--- a/Source/JavaScriptCore/CMakeLists.txt
++++ b/Source/JavaScriptCore/CMakeLists.txt
+@@ -1569,10 +1569,22 @@ if (NOT "${PORT}" STREQUAL "Mac")
+     if (${JavaScriptCore_LIBRARY_TYPE} STREQUAL "SHARED")
+         WEBKIT_POPULATE_LIBRARY_VERSION(JAVASCRIPTCORE)
+         set_target_properties(JavaScriptCore PROPERTIES VERSION ${JAVASCRIPTCORE_VERSION} SOVERSION ${JAVASCRIPTCORE_VERSION_MAJOR})
+-        install(TARGETS JavaScriptCore DESTINATION "${LIB_INSTALL_DIR}")
+     endif ()
+ endif ()
+ 
++target_sources(JavaScriptCore PUBLIC
++    FILE_SET install_headers
++    TYPE HEADERS
++    BASE_DIRS API
++    FILES ${JavaScriptCore_PUBLIC_FRAMEWORK_HEADERS}
++)
++install(TARGETS JavaScriptCore
++    ARCHIVE DESTINATION "${LIB_INSTALL_DIR}"
++    LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
++    RUNTIME DESTINATION "${LIBEXEC_INSTALL_DIR}"
++    FILE_SET install_headers DESTINATION "${CMAKE_INSTALL_PREFIX}/include/JavaScriptCore"
++)
++
+ # Force staging of shared scripts, even if they aren't directly used to build JavaScriptCore.
+ 
+ add_custom_target(JavaScriptCoreSharedScripts DEPENDS ${JavaScriptCore_SCRIPTS})
