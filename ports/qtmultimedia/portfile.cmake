@@ -23,7 +23,7 @@ INVERTED_FEATURES
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if("gstreamer" IN_LIST FEATURES AND "ffmpeg" IN_LIST FEATURES)
-        message(FATAL_ERROR "Qt will by default autolink both plugin backends in static builds leading to symbol collisions and a build failure in dependent ports!\n 
+        message(WARNING "Qt will by default autolink both plugin backends in static builds leading to symbol collisions and a build failure in dependent ports!\n 
 As such in static builds only one backend is allowed by default.\n If you plan to manually link the plugins feel free to remove this error in an overlay.")
     endif()
 endif()
