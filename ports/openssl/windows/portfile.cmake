@@ -1,3 +1,8 @@
+# Need cmd to pass quoted CC from nmake to mkbuildinf.pl, GH-37134
+find_program(CMD_EXECUTABLE cmd HINTS ENV PATH NO_DEFAULT_PATH REQUIRED)
+cmake_path(NATIVE_PATH CMD_EXECUTABLE cmd)
+set(ENV{COMSPEC} "${cmd}")
+
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH "${PERL}" DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
