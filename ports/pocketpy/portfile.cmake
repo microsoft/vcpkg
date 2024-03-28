@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocketpy/pocketpy
     REF "v${VERSION}"
-    SHA512 994736b57250d415fbae7c7fcb82c7bed6423fb9eb97ab7fd7d1c3ad584dfa32f85dda31fa1dc49842b900d1bdf73f825a220587342cf8d0b0f85cc06c27a15a
+    SHA512 e0c4b70727d47ae0b26c520528ffadfe63a8986b674f12b91260f42ae25975af4f64dfd71e056e7627d35b10eddcd34b396ca3b01c931f5bb8a4b15431da5426
     HEAD_REF master
 )
 
@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DPK_BUILD_STATIC_LIB=${BUILD_STATIC}
         -DPK_ENABLE_OS=OFF
         -DPK_USE_CJSON=OFF
+        -DPK_INSTALL=ON
 )
 
 vcpkg_cmake_install()
