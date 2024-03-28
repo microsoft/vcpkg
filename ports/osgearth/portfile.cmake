@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
     REF "osgearth-${VERSION}"
-    SHA512 f65c31922bebcbf722474a047dc29c8c1ceec9c037b0704811af2627fc2d0a124b6e95888e7d3b9b0e5acc146a88ebf8669e3f864a75a91751c3a4571d05a630
+    SHA512 6b884aee638e5266825e5f2898a39db61f99a30ebc82eb4415de1a589441b3805152d1963473040855e9fbe4d2642f504e9f365c787e48dc1604f55d939b707e
     HEAD_REF master
     PATCHES
         link-libraries.patch
@@ -10,6 +10,8 @@ vcpkg_from_github(
         remove-tool-debug-suffix.patch
 		remove-lerc-gltf.patch
 		export-plugins.patch
+		debug_bigobj.patch
+		exampleresources.patch
 )
 
 if("tools" IN_LIST FEATURES)
