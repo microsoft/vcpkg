@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
         -Denable_tests=OFF
         -Denable_internal_blaslib=OFF
         -Denable_doc=OFF
+        -Denable_examples=OFF
 )
 
 vcpkg_cmake_install()
