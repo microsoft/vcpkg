@@ -21,7 +21,7 @@ endif()
 _find_package(${ARGS})
 
 if(WIN32)
-  set(PKG_CONFIG_EXECUTABLE "${CMAKE_CURRENT_LIST_DIR}/../../../x64-windows-static-md-release/tools/pkgconf/pkgconf.exe" CACHE STRING "" FORCE)
+  set(PKG_CONFIG_EXECUTABLE "${CMAKE_CURRENT_LIST_DIR}/../../../@_HOST_TRIPLET@/tools/pkgconf/pkgconf.exe" CACHE STRING "" FORCE)
 endif()
 
 if(@WITH_MP3LAME@)
