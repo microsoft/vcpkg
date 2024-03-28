@@ -1,7 +1,6 @@
 {
   "name": "qscintilla",
-  "version": "2.13.4",
-  "port-version": 2,
+  "version": "2.14.1",
   "description": "QScintilla is a port to Qt of the Scintilla editing component. Features syntax highlighting, code-completion and much more (Barebone build without python bindings (missing dependeny PyQt) and without QtDesigner plugin)",
   "homepage": "https://www.riverbankcomputing.com/software/qscintilla",
   "license": "GPL-3.0-or-later",
