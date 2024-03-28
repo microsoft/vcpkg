@@ -1,6 +1,8 @@
-pybind11 provides CMake targets. There are two modes provided; classic, which is built on the old Python
-discovery packages in CMake, or the new FindPython mode, which uses FindPython
-from 3.12+ forward (3.15+ _highly_ recommended).
+pybind11 provides CMake targets.
+There are two modes provided; classic, which is built on the old Python discovery packages in CMake,
+or the new FindPython mode, which uses FindPython from 3.12+ forward (3.15+ _highly_ recommended).
+If you set the minimum or maximum version of CMake to 3.27+, then FindPython is the default (since
+FindPythonInterp/FindPythonLibs has been removed via policy CMP0148).
 
 New FindPython mode:
 
@@ -14,10 +16,21 @@ New FindPython mode:
     Python_add_library(MyModule2 src2.cpp)
     target_link_libraries(MyModule2 pybind11::headers)
     set_target_properties(MyModule2 PROPERTIES
-        INTERPROCEDURAL_OPTIMIZATION ON
-        CXX_VISIBILITY_PRESET ON
-        VISIBILITY_INLINES_HIDDEN ON
-    )
+                                    INTERPROCEDURAL_OPTIMIZATION ON
+                                    CXX_VISIBILITY_PRESET ON
+                                    VISIBILITY_INLINES_HIDDEN ON)
+
+Classic mode:
+
+    find_package(pybind11 CONFIG REQUIRED)
+
+    # Create an extension module
+    add_library(mylib MODULE main.cpp)
+    target_link_libraries(mylib PUBLIC pybind11::module)
+
+    # Or embed the Python interpreter into an executable
+    add_executable(myexe main.cpp)
+    target_link_libraries(myexe PUBLIC pybind11::embed)
 
 For more information see here:
     https://pybind11.readthedocs.io/en/latest/compiling.html#building-with-cmake
