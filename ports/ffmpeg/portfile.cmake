@@ -531,8 +531,10 @@ endif()
 
 if("x265" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx265")
+    set(WITH_X265 ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libx265")
+    set(WITH_X265 OFF)
 endif()
 
 if("xml2" IN_LIST FEATURES)
