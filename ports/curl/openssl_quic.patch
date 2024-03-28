@@ -1,0 +1,53 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -719,9 +719,22 @@
+   include_directories(${MSH3_INCLUDE_DIRS})
+   list(APPEND CURL_LIBS ${MSH3_LIBRARIES})
+ endif()
+ 
+-if(CURL_WITH_MULTI_SSL AND (USE_NGTCP2 OR USE_QUICHE OR USE_MSH3))
++option(USE_OPENSSL_QUIC "Use openssl and nghttp3 libraries for HTTP/3 support" OFF)
++if(USE_OPENSSL_QUIC)
++  if(USE_NGTCP2 OR USE_QUICHE OR USE_MSH3)
++    message(FATAL_ERROR "Only one HTTP/3 backend can be selected!")
++  endif()
++  find_package(OpenSSL 3.2.0 REQUIRED)
++
++  find_package(NGHTTP3 REQUIRED)
++  set(USE_NGHTTP3 ON)
++  include_directories(${NGHTTP3_INCLUDE_DIRS})
++  list(APPEND CURL_LIBS ${NGHTTP3_LIBRARIES})
++endif()
++
++if(CURL_WITH_MULTI_SSL AND (USE_NGTCP2 OR USE_QUICHE OR USE_MSH3 OR USE_OPENSSL_QUIC))
+   message(FATAL_ERROR "MultiSSL cannot be enabled with HTTP/3 and vice versa.")
+ endif()
+ 
+ if(NOT CURL_DISABLE_SRP AND (HAVE_GNUTLS_SRP OR HAVE_OPENSSL_SRP))
+@@ -1541,9 +1554,9 @@
+                           (use_curl_ntlm_core OR USE_WINDOWS_SSPI) AND
+                           NOT CURL_DISABLE_HTTP AND NTLM_WB_ENABLED)
+   _add_if("TLS-SRP"       USE_TLS_SRP)
+   _add_if("HTTP2"         USE_NGHTTP2)
+-  _add_if("HTTP3"         USE_NGTCP2 OR USE_QUICHE)
++  _add_if("HTTP3"         USE_NGTCP2 OR USE_QUICHE OR USE_OPENSSL_QUIC)
+   _add_if("MultiSSL"      CURL_WITH_MULTI_SSL)
+   # TODO wolfSSL only support this from v5.0.0 onwards
+   _add_if("HTTPS-proxy"   SSL_ENABLED AND (USE_OPENSSL OR USE_GNUTLS
+                           OR USE_SCHANNEL OR USE_RUSTLS OR USE_BEARSSL OR
+diff --git a/lib/curl_config.h.cmake b/lib/curl_config.h.cmake
+--- a/lib/curl_config.h.cmake
++++ b/lib/curl_config.h.cmake
+@@ -719,8 +719,11 @@
+ 
+ /* to enable quiche */
+ #cmakedefine USE_QUICHE 1
+ 
++/* to enable openssl + nghttp3 */
++#cmakedefine USE_OPENSSL_QUIC 1
++
+ /* Define to 1 if you have the quiche_conn_set_qlog_fd function. */
+ #cmakedefine HAVE_QUICHE_CONN_SET_QLOG_FD 1
+ 
+ /* to enable msh3 */
