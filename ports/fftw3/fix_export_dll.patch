@@ -1,0 +1,1040 @@
+diff --git a/api/api.h b/api/api.h
+index e3e94dd..4638660 100644
+--- a/api/api.h
++++ b/api/api.h
+@@ -102,13 +102,13 @@ void X(configure_planner)(planner *plnr);
+ 
+ void X(mapflags)(planner *, unsigned);
+ 
+-apiplan *X(mkapiplan)(int sign, unsigned flags, problem *prb);
++IFFTW_EXTERN apiplan *X(mkapiplan)(int sign, unsigned flags, problem *prb);
+ 
+-rdft_kind *X(map_r2r_kind)(int rank, const X(r2r_kind) * kind);
++IFFTW_EXTERN rdft_kind *X(map_r2r_kind)(int rank, const X(r2r_kind) * kind);
+ 
+ typedef void (*planner_hook_t)(void);
+                                                      
+-void X(set_planner_hooks)(planner_hook_t before, planner_hook_t after);
++IFFTW_EXTERN void X(set_planner_hooks)(planner_hook_t before, planner_hook_t after);
+ 
+ #ifdef __cplusplus
+ }  /* extern "C" */
+diff --git a/api/apiplan.c b/api/apiplan.c
+index b8642a9..4fb5237 100644
+--- a/api/apiplan.c
++++ b/api/apiplan.c
+@@ -22,7 +22,7 @@
+ 
+ static planner_hook_t before_planner_hook = 0, after_planner_hook = 0;
+ 
+-void X(set_planner_hooks)(planner_hook_t before, planner_hook_t after)
++IFFTW_EXTERN void X(set_planner_hooks)(planner_hook_t before, planner_hook_t after)
+ {
+      before_planner_hook = before;
+      after_planner_hook = after;
+@@ -83,7 +83,7 @@ static plan *mkplan(planner *plnr, unsigned flags,
+      return pln;
+ }
+ 
+-apiplan *X(mkapiplan)(int sign, unsigned flags, problem *prb)
++IFFTW_EXTERN apiplan *X(mkapiplan)(int sign, unsigned flags, problem *prb)
+ {
+      apiplan *p = 0;
+      plan *pln;
+diff --git a/api/map-r2r-kind.c b/api/map-r2r-kind.c
+index c17c69e..18a2e15 100644
+--- a/api/map-r2r-kind.c
++++ b/api/map-r2r-kind.c
+@@ -21,7 +21,7 @@
+ #include "api/api.h"
+ #include "rdft/rdft.h"
+ 
+-rdft_kind *X(map_r2r_kind)(int rank, const X(r2r_kind) * kind)
++IFFTW_EXTERN rdft_kind *X(map_r2r_kind)(int rank, const X(r2r_kind) * kind)
+ {
+      int i;
+      rdft_kind *k;
+diff --git a/dft/ct.c b/dft/ct.c
+index 1a6fa93..542c4d4 100644
+--- a/dft/ct.c
++++ b/dft/ct.c
+@@ -21,8 +21,8 @@
+ 
+ #include "dft/ct.h"
+ 
+-ct_solver *(*X(mksolver_ct_hook))(size_t, INT, int, 
+-				  ct_mkinferior, ct_force_vrecursion) = 0;
++IFFTW_EXTERN ct_solver *(*X(mksolver_ct_hook))(size_t, INT, int, 
++                                              ct_mkinferior, ct_force_vrecursion) = 0;
+ 
+ typedef struct {
+      plan_dft super;
+@@ -98,7 +98,7 @@ static int applicable0(const ct_solver *ego, const problem *p_, planner *plnr)
+ }
+ 
+ 
+-int X(ct_applicable)(const ct_solver *ego, const problem *p_, planner *plnr)
++IFFTW_EXTERN int X(ct_applicable)(const ct_solver *ego, const problem *p_, planner *plnr)
+ {
+      const problem_dft *p;
+ 
+diff --git a/dft/ct.h b/dft/ct.h
+index 022e29b..6fe8489 100644
+--- a/dft/ct.h
++++ b/dft/ct.h
+@@ -52,10 +52,13 @@ struct ct_solver_s {
+      ct_force_vrecursion force_vrecursionp;
+ };
+ 
+-int X(ct_applicable)(const ct_solver *, const problem *, planner *);
++IFFTW_EXTERN int X(ct_applicable)(const ct_solver *, const problem *, planner *);
+ ct_solver *X(mksolver_ct)(size_t size, INT r, int dec, 
+ 			  ct_mkinferior mkcldw, 
+ 			  ct_force_vrecursion force_vrecursionp);
++#if (defined(FFTW_DLL) || defined(DLL_EXPORT)) && (defined(_WIN32) || defined(__WIN32__))
++  __declspec(dllimport)
++#endif
+ extern ct_solver *(*X(mksolver_ct_hook))(size_t, INT, int, 
+ 					 ct_mkinferior, ct_force_vrecursion);
+ 
+diff --git a/dft/dft.h b/dft/dft.h
+index 740260e..9486845 100644
+--- a/dft/dft.h
++++ b/dft/dft.h
+@@ -38,13 +38,13 @@ typedef struct {
+ } problem_dft;
+ 
+ void X(dft_zerotens)(tensor *sz, R *ri, R *ii);
+-problem *X(mkproblem_dft)(const tensor *sz, const tensor *vecsz,
++IFFTW_EXTERN problem *X(mkproblem_dft)(const tensor *sz, const tensor *vecsz,
+ 				R *ri, R *ii, R *ro, R *io);
+-problem *X(mkproblem_dft_d)(tensor *sz, tensor *vecsz,
++IFFTW_EXTERN problem *X(mkproblem_dft_d)(tensor *sz, tensor *vecsz,
+ 			    R *ri, R *ii, R *ro, R *io);
+ 
+ /* solve.c: */
+-void X(dft_solve)(const plan *ego_, const problem *p_);
++IFFTW_EXTERN void X(dft_solve)(const plan *ego_, const problem *p_);
+ 
+ /* plan.c: */
+ typedef void (*dftapply) (const plan *ego, R *ri, R *ii, R *ro, R *io);
+@@ -54,7 +54,7 @@ typedef struct {
+      dftapply apply;
+ } plan_dft;
+ 
+-plan *X(mkplan_dft)(size_t size, const plan_adt *adt, dftapply apply);
++IFFTW_EXTERN plan *X(mkplan_dft)(size_t size, const plan_adt *adt, dftapply apply);
+ 
+ #define MKPLAN_DFT(type, adt, apply) \
+   (type *)X(mkplan_dft)(sizeof(type), adt, apply)
+diff --git a/dft/plan.c b/dft/plan.c
+index 67ad842..cd1f02f 100644
+--- a/dft/plan.c
++++ b/dft/plan.c
+@@ -21,7 +21,7 @@
+ 
+ #include "dft/dft.h"
+ 
+-plan *X(mkplan_dft)(size_t size, const plan_adt *adt, dftapply apply)
++IFFTW_EXTERN plan *X(mkplan_dft)(size_t size, const plan_adt *adt, dftapply apply)
+ {
+      plan_dft *ego;
+ 
+diff --git a/dft/problem.c b/dft/problem.c
+index 4e9640a..b18853e 100644
+--- a/dft/problem.c
++++ b/dft/problem.c
+@@ -74,8 +74,8 @@ static const problem_adt padt =
+      destroy
+ };
+ 
+-problem *X(mkproblem_dft)(const tensor *sz, const tensor *vecsz,
+-			  R *ri, R *ii, R *ro, R *io)
++IFFTW_EXTERN problem *X(mkproblem_dft)(const tensor *sz, const tensor *vecsz,
++                                      R *ri, R *ii, R *ro, R *io)
+ {
+      problem_dft *ego;
+ 
+@@ -112,8 +112,8 @@ problem *X(mkproblem_dft)(const tensor *sz, const tensor *vecsz,
+ }
+ 
+ /* Same as X(mkproblem_dft), but also destroy input tensors. */
+-problem *X(mkproblem_dft_d)(tensor *sz, tensor *vecsz,
+-			    R *ri, R *ii, R *ro, R *io)
++IFFTW_EXTERN problem *X(mkproblem_dft_d)(tensor *sz, tensor *vecsz,
++                                        R *ri, R *ii, R *ro, R *io)
+ {
+      problem *p = X(mkproblem_dft)(sz, vecsz, ri, ii, ro, io);
+      X(tensor_destroy2)(vecsz, sz);
+diff --git a/dft/solve.c b/dft/solve.c
+index e11c2d4..961b4ec 100644
+--- a/dft/solve.c
++++ b/dft/solve.c
+@@ -22,7 +22,7 @@
+ #include "dft/dft.h"
+ 
+ /* use the apply() operation for DFT problems */
+-void X(dft_solve)(const plan *ego_, const problem *p_)
++IFFTW_EXTERN void X(dft_solve)(const plan *ego_, const problem *p_)
+ {
+      const plan_dft *ego = (const plan_dft *) ego_;
+      const problem_dft *p = (const problem_dft *) p_;
+diff --git a/kernel/buffered.c b/kernel/buffered.c
+index ea27bd3..fb47770 100644
+--- a/kernel/buffered.c
++++ b/kernel/buffered.c
+@@ -62,7 +62,7 @@ INT X(bufdist)(INT n, INT vl)
+ 	  return n + X(modulo)(SKEW - n, SKEWMOD);
+ }
+ 
+-int X(toobig)(INT n)
++IFFTW_EXTERN int X(toobig)(INT n)
+ {
+      return n > MAXBUFSZ;
+ }
+diff --git a/kernel/ifftw.h b/kernel/ifftw.h
+index 0733e75..27529f2 100644
+--- a/kernel/ifftw.h
++++ b/kernel/ifftw.h
+@@ -340,12 +340,12 @@ typedef struct {
+      double other;
+ } opcnt;
+ 
+-void X(ops_zero)(opcnt *dst);
++IFFTW_EXTERN void X(ops_zero)(opcnt *dst);
+ void X(ops_other)(INT o, opcnt *dst);
+-void X(ops_cpy)(const opcnt *src, opcnt *dst);
++IFFTW_EXTERN void X(ops_cpy)(const opcnt *src, opcnt *dst);
+ 
+-void X(ops_add)(const opcnt *a, const opcnt *b, opcnt *dst);
+-void X(ops_add2)(const opcnt *a, opcnt *dst);
++IFFTW_EXTERN void X(ops_add)(const opcnt *a, const opcnt *b, opcnt *dst);
++IFFTW_EXTERN void X(ops_add2)(const opcnt *a, opcnt *dst);
+ 
+ /* dst = m * a + b */
+ void X(ops_madd)(INT m, const opcnt *a, const opcnt *b, opcnt *dst);
+@@ -356,7 +356,7 @@ void X(ops_madd2)(INT m, const opcnt *a, opcnt *dst);
+ 
+ /*-----------------------------------------------------------------------*/
+ /* minmax.c: */
+-INT X(imax)(INT a, INT b);
++IFFTW_EXTERN INT X(imax)(INT a, INT b);
+ INT X(imin)(INT a, INT b);
+ 
+ /*-----------------------------------------------------------------------*/
+@@ -388,10 +388,10 @@ typedef struct {
+ 
+ void X(md5begin)(md5 *p);
+ void X(md5putb)(md5 *p, const void *d_, size_t len);
+-void X(md5puts)(md5 *p, const char *s);
++IFFTW_EXTERN void X(md5puts)(md5 *p, const char *s);
+ void X(md5putc)(md5 *p, unsigned char c);
+-void X(md5int)(md5 *p, int i);
+-void X(md5INT)(md5 *p, INT i);
++IFFTW_EXTERN void X(md5int)(md5 *p, int i);
++IFFTW_EXTERN void X(md5INT)(md5 *p, INT i);
+ void X(md5unsigned)(md5 *p, unsigned i);
+ void X(md5end)(md5 *p);
+ 
+@@ -429,24 +429,24 @@ typedef struct {
+ 
+ typedef enum { INPLACE_IS, INPLACE_OS } inplace_kind;
+ 
+-tensor *X(mktensor)(int rnk);
+-tensor *X(mktensor_0d)(void);
+-tensor *X(mktensor_1d)(INT n, INT is, INT os);
+-tensor *X(mktensor_2d)(INT n0, INT is0, INT os0,
++IFFTW_EXTERN tensor *X(mktensor)(int rnk);
++IFFTW_EXTERN tensor *X(mktensor_0d)(void);
++IFFTW_EXTERN tensor *X(mktensor_1d)(INT n, INT is, INT os);
++IFFTW_EXTERN tensor *X(mktensor_2d)(INT n0, INT is0, INT os0,
+ 		       INT n1, INT is1, INT os1);
+-tensor *X(mktensor_3d)(INT n0, INT is0, INT os0,
++IFFTW_EXTERN tensor *X(mktensor_3d)(INT n0, INT is0, INT os0,
+ 		       INT n1, INT is1, INT os1,
+ 		       INT n2, INT is2, INT os2);
+-tensor *X(mktensor_4d)(INT n0, INT is0, INT os0,
++IFFTW_EXTERN tensor *X(mktensor_4d)(INT n0, INT is0, INT os0,
+ 		       INT n1, INT is1, INT os1,
+ 		       INT n2, INT is2, INT os2,
+ 		       INT n3, INT is3, INT os3);
+-tensor *X(mktensor_5d)(INT n0, INT is0, INT os0,
++IFFTW_EXTERN tensor *X(mktensor_5d)(INT n0, INT is0, INT os0,
+ 		       INT n1, INT is1, INT os1,
+ 		       INT n2, INT is2, INT os2,
+ 		       INT n3, INT is3, INT os3,
+ 		       INT n4, INT is4, INT os4);
+-INT X(tensor_sz)(const tensor *sz);
++IFFTW_EXTERN INT X(tensor_sz)(const tensor *sz);
+ void X(tensor_md5)(md5 *p, const tensor *t);
+ INT X(tensor_max_index)(const tensor *sz);
+ INT X(tensor_min_istride)(const tensor *sz);
+@@ -456,7 +456,7 @@ int X(tensor_inplace_strides)(const tensor *sz);
+ int X(tensor_inplace_strides2)(const tensor *a, const tensor *b);
+ int X(tensor_strides_decrease)(const tensor *sz, const tensor *vecsz,
+                                inplace_kind k);
+-tensor *X(tensor_copy)(const tensor *sz);
++IFFTW_EXTERN tensor *X(tensor_copy)(const tensor *sz);
+ int X(tensor_kosherp)(const tensor *x);
+ 
+ tensor *X(tensor_copy_inplace)(const tensor *sz, inplace_kind k);
+@@ -466,8 +466,8 @@ tensor *X(tensor_compress)(const tensor *sz);
+ tensor *X(tensor_compress_contiguous)(const tensor *sz);
+ tensor *X(tensor_append)(const tensor *a, const tensor *b);
+ void X(tensor_split)(const tensor *sz, tensor **a, int a_rnk, tensor **b);
+-int X(tensor_tornk1)(const tensor *t, INT *n, INT *is, INT *os);
+-void X(tensor_destroy)(tensor *sz);
++IFFTW_EXTERN int X(tensor_tornk1)(const tensor *t, INT *n, INT *is, INT *os);
++IFFTW_EXTERN void X(tensor_destroy)(tensor *sz);
+ void X(tensor_destroy2)(tensor *a, tensor *b);
+ void X(tensor_destroy4)(tensor *a, tensor *b, tensor *c, tensor *d);
+ void X(tensor_print)(const tensor *sz, printer *p);
+@@ -506,7 +506,7 @@ struct problem_s {
+      const problem_adt *adt;
+ };
+ 
+-problem *X(mkproblem)(size_t sz, const problem_adt *adt);
++IFFTW_EXTERN problem *X(mkproblem)(size_t sz, const problem_adt *adt);
+ void X(problem_destroy)(problem *ego);
+ problem *X(mkproblem_unsolvable)(void);
+ 
+@@ -564,7 +564,7 @@ struct plan_s {
+ };
+ 
+ plan *X(mkplan)(size_t size, const plan_adt *adt);
+-void X(plan_destroy_internal)(plan *ego);
++IFFTW_EXTERN void X(plan_destroy_internal)(plan *ego);
+ IFFTW_EXTERN void X(plan_awake)(plan *ego, enum wakefulness wakefulness);
+ void X(plan_null_destroy)(plan *ego);
+ 
+@@ -581,10 +581,10 @@ struct solver_s {
+      int refcnt;
+ };
+ 
+-solver *X(mksolver)(size_t size, const solver_adt *adt);
++IFFTW_EXTERN solver *X(mksolver)(size_t size, const solver_adt *adt);
+ void X(solver_use)(solver *ego);
+ void X(solver_destroy)(solver *ego);
+-void X(solver_register)(planner *plnr, solver *s);
++IFFTW_EXTERN void X(solver_register)(planner *plnr, solver *s);
+ 
+ /* shorthand */
+ #define MKSOLVER(type, adt) (type *)X(mksolver)(sizeof(type), adt)
+@@ -798,8 +798,8 @@ void X(planner_destroy)(planner *ego);
+ 
+ 
+ /* make plan, destroy problem */
+-plan *X(mkplan_d)(planner *ego, problem *p);
+-plan *X(mkplan_f_d)(planner *ego, problem *p, 
++IFFTW_EXTERN plan *X(mkplan_d)(planner *ego, problem *p);
++IFFTW_EXTERN plan *X(mkplan_f_d)(planner *ego, problem *p, 
+ 		    unsigned l_set, unsigned u_set, unsigned u_reset);
+ 
+ /*-----------------------------------------------------------------------*/
+@@ -859,13 +859,13 @@ typedef INT stride;
+ 
+ struct solvtab_s { void (*reg)(planner *); const char *reg_nam; };
+ typedef struct solvtab_s solvtab[];
+-void X(solvtab_exec)(const solvtab tbl, planner *p);
++IFFTW_EXTERN void X(solvtab_exec)(const solvtab tbl, planner *p);
+ #define SOLVTAB(s) { s, STRINGIZE(s) }
+ #define SOLVTAB_END { 0, 0 }
+ 
+ /*-----------------------------------------------------------------------*/
+ /* pickdim.c */
+-int X(pickdim)(int which_dim, const int *buddies, size_t nbuddies,
++IFFTW_EXTERN int X(pickdim)(int which_dim, const int *buddies, size_t nbuddies,
+ 	       const tensor *sz, int oop, int *dp);
+ 
+ /*-----------------------------------------------------------------------*/
+@@ -917,8 +917,8 @@ struct triggen_s {
+      INT n;
+ };
+ 
+-triggen *X(mktriggen)(enum wakefulness wakefulness, INT n);
+-void X(triggen_destroy)(triggen *p);
++IFFTW_EXTERN triggen *X(mktriggen)(enum wakefulness wakefulness, INT n);
++IFFTW_EXTERN void X(triggen_destroy)(triggen *p);
+ 
+ /*-----------------------------------------------------------------------*/
+ /* primes.c: */
+@@ -929,13 +929,13 @@ void X(triggen_destroy)(triggen *p);
+ INT X(safe_mulmod)(INT x, INT y, INT p);
+ INT X(power_mod)(INT n, INT m, INT p);
+ INT X(find_generator)(INT p);
+-INT X(first_divisor)(INT n);
+-int X(is_prime)(INT n);
++IFFTW_EXTERN INT X(first_divisor)(INT n);
++IFFTW_EXTERN int X(is_prime)(INT n);
+ INT X(next_prime)(INT n);
+ int X(factors_into)(INT n, const INT *primes);
+ int X(factors_into_small_primes)(INT n);
+-INT X(choose_radix)(INT r, INT n);
+-INT X(isqrt)(INT n);
++IFFTW_EXTERN INT X(choose_radix)(INT r, INT n);
++IFFTW_EXTERN INT X(isqrt)(INT n);
+ INT X(modulo)(INT a, INT n);
+ 
+ #define GENERIC_MIN_BAD 173 /* min prime for which generic becomes bad */
+@@ -1024,7 +1024,7 @@ INT X(nbuf)(INT n, INT vl, INT maxnbuf);
+ int X(nbuf_redundant)(INT n, INT vl, size_t which, 
+ 		      const INT *maxnbuf, size_t nmaxnbuf);
+ INT X(bufdist)(INT n, INT vl);
+-int X(toobig)(INT n);
++IFFTW_EXTERN int X(toobig)(INT n);
+ int X(ct_uglyp)(INT min_n, INT v, INT n, INT r);
+ 
+ #if HAVE_SIMD
+diff --git a/kernel/md5-1.c b/kernel/md5-1.c
+index e34dddb..09d95f2 100644
+--- a/kernel/md5-1.c
++++ b/kernel/md5-1.c
+@@ -29,7 +29,7 @@ void X(md5putb)(md5 *p, const void *d_, size_t len)
+ 	  X(md5putc)(p, d[i]);
+ }
+ 
+-void X(md5puts)(md5 *p, const char *s)
++IFFTW_EXTERN void X(md5puts)(md5 *p, const char *s)
+ {
+      /* also hash final '\0' */
+      do {
+@@ -37,12 +37,12 @@ void X(md5puts)(md5 *p, const char *s)
+      } while(*s++);
+ }
+ 
+-void X(md5int)(md5 *p, int i)
++IFFTW_EXTERN void X(md5int)(md5 *p, int i)
+ {
+      X(md5putb)(p, &i, sizeof(i));
+ }
+ 
+-void X(md5INT)(md5 *p, INT i)
++IFFTW_EXTERN void X(md5INT)(md5 *p, INT i)
+ {
+      X(md5putb)(p, &i, sizeof(i));
+ }
+diff --git a/kernel/minmax.c b/kernel/minmax.c
+index 2fb6ad1..0ea07e8 100644
+--- a/kernel/minmax.c
++++ b/kernel/minmax.c
+@@ -21,7 +21,7 @@
+ 
+ #include "kernel/ifftw.h"
+ 
+-INT X(imax)(INT a, INT b)
++IFFTW_EXTERN INT X(imax)(INT a, INT b)
+ {
+      return (a > b) ? a : b;
+ }
+diff --git a/kernel/ops.c b/kernel/ops.c
+index a955df4..cbb83ca 100644
+--- a/kernel/ops.c
++++ b/kernel/ops.c
+@@ -21,12 +21,12 @@
+ 
+ #include "kernel/ifftw.h"
+ 
+-void X(ops_zero)(opcnt *dst)
++IFFTW_EXTERN void X(ops_zero)(opcnt *dst)
+ {
+      dst->add = dst->mul = dst->fma = dst->other = 0;
+ }
+ 
+-void X(ops_cpy)(const opcnt *src, opcnt *dst)
++IFFTW_EXTERN void X(ops_cpy)(const opcnt *src, opcnt *dst)
+ {
+      *dst = *src;
+ }
+@@ -45,12 +45,12 @@ void X(ops_madd)(INT m, const opcnt *a, const opcnt *b, opcnt *dst)
+      dst->other = m * a->other + b->other;
+ }
+ 
+-void X(ops_add)(const opcnt *a, const opcnt *b, opcnt *dst)
++IFFTW_EXTERN void X(ops_add)(const opcnt *a, const opcnt *b, opcnt *dst)
+ {
+      X(ops_madd)(1, a, b, dst);
+ }
+ 
+-void X(ops_add2)(const opcnt *a, opcnt *dst)
++IFFTW_EXTERN void X(ops_add2)(const opcnt *a, opcnt *dst)
+ {
+      X(ops_add)(a, dst, dst);
+ }
+diff --git a/kernel/pickdim.c b/kernel/pickdim.c
+index 4ae6c00..3f1a912 100644
+--- a/kernel/pickdim.c
++++ b/kernel/pickdim.c
+@@ -60,8 +60,8 @@ static int really_pickdim(int which_dim, const tensor *sz, int oop, int *dp)
+ 
+ /* Like really_pickdim, but only returns 1 if no previous "buddy"
+    which_dim in the buddies list would give the same dim. */
+-int X(pickdim)(int which_dim, const int *buddies, size_t nbuddies,
+-	       const tensor *sz, int oop, int *dp)
++IFFTW_EXTERN int X(pickdim)(int which_dim, const int *buddies, size_t nbuddies,
++                           const tensor *sz, int oop, int *dp)
+ {
+      size_t i;
+      int d1;
+diff --git a/kernel/plan.c b/kernel/plan.c
+index 1332484..8feb5ae 100644
+--- a/kernel/plan.c
++++ b/kernel/plan.c
+@@ -42,7 +42,7 @@ plan *X(mkplan)(size_t size, const plan_adt *adt)
+ /*
+  * destroy a plan
+  */
+-void X(plan_destroy_internal)(plan *ego)
++IFFTW_EXTERN void X(plan_destroy_internal)(plan *ego)
+ {
+      if (ego) {
+ 	  A(ego->wakefulness == SLEEPY);
+diff --git a/kernel/planner.c b/kernel/planner.c
+index 9c71290..d2656b1 100644
+--- a/kernel/planner.c
++++ b/kernel/planner.c
+@@ -965,7 +965,7 @@ void X(planner_destroy)(planner *ego)
+      X(ifree)(ego); /* dona eis requiem */
+ }
+ 
+-plan *X(mkplan_d)(planner *ego, problem *p)
++IFFTW_EXTERN plan *X(mkplan_d)(planner *ego, problem *p)
+ {
+      plan *pln = ego->adt->mkplan(ego, p);
+      X(problem_destroy)(p);
+@@ -973,8 +973,8 @@ plan *X(mkplan_d)(planner *ego, problem *p)
+ }
+ 
+ /* like X(mkplan_d), but sets/resets flags as well */
+-plan *X(mkplan_f_d)(planner *ego, problem *p, 
+-		    unsigned l_set, unsigned u_set, unsigned u_reset)
++IFFTW_EXTERN plan *X(mkplan_f_d)(planner *ego, problem *p, 
++                                unsigned l_set, unsigned u_set, unsigned u_reset)
+ {
+      flags_t oflags = ego->flags;
+      plan *pln;
+diff --git a/kernel/primes.c b/kernel/primes.c
+index 5c10d56..dc5f606 100644
+--- a/kernel/primes.c
++++ b/kernel/primes.c
+@@ -123,7 +123,7 @@ INT X(find_generator)(INT p)
+ 
+ /* Return first prime divisor of n  (It would be at best slightly faster to
+    search a static table of primes; there are 6542 primes < 2^16.)  */
+-INT X(first_divisor)(INT n)
++IFFTW_EXTERN INT X(first_divisor)(INT n)
+ {
+      INT i;
+      if (n <= 1)
+@@ -136,7 +136,7 @@ INT X(first_divisor)(INT n)
+      return n;
+ }
+ 
+-int X(is_prime)(INT n)
++IFFTW_EXTERN int X(is_prime)(INT n)
+ {
+      return(n > 1 && X(first_divisor)(n) == n);
+ }
+@@ -156,7 +156,7 @@ int X(factors_into)(INT n, const INT *primes)
+ }
+ 
+ /* integer square root.  Return floor(sqrt(N)) */
+-INT X(isqrt)(INT n)
++IFFTW_EXTERN INT X(isqrt)(INT n)
+ {
+      INT guess, iguess;
+ 
+@@ -180,7 +180,7 @@ static INT isqrt_maybe(INT n)
+ }
+ 
+ #define divides(a, b) (((b) % (a)) == 0)
+-INT X(choose_radix)(INT r, INT n)
++IFFTW_EXTERN INT X(choose_radix)(INT r, INT n)
+ {
+      if (r > 0) {
+ 	  if (divides(r, n)) return r;
+diff --git a/kernel/problem.c b/kernel/problem.c
+index aa23d7c..8be68d2 100644
+--- a/kernel/problem.c
++++ b/kernel/problem.c
+@@ -22,7 +22,7 @@
+ #include "kernel/ifftw.h"
+ 
+ /* constructor */
+-problem *X(mkproblem)(size_t sz, const problem_adt *adt)
++IFFTW_EXTERN problem *X(mkproblem)(size_t sz, const problem_adt *adt)
+ {
+      problem *p = (problem *)MALLOC(sz, PROBLEMS);
+ 
+diff --git a/kernel/solver.c b/kernel/solver.c
+index 1d0a3ec..3278833 100644
+--- a/kernel/solver.c
++++ b/kernel/solver.c
+@@ -21,7 +21,7 @@
+ 
+ #include "kernel/ifftw.h"
+ 
+-solver *X(mksolver)(size_t size, const solver_adt *adt)
++IFFTW_EXTERN solver *X(mksolver)(size_t size, const solver_adt *adt)
+ {
+      solver *s = (solver *)MALLOC(size, SOLVERS);
+ 
+@@ -44,7 +44,7 @@ void X(solver_destroy)(solver *ego)
+      }
+ }
+ 
+-void X(solver_register)(planner *plnr, solver *s)
++IFFTW_EXTERN void X(solver_register)(planner *plnr, solver *s)
+ {
+      plnr->adt->register_solver(plnr, s);
+ }
+diff --git a/kernel/solvtab.c b/kernel/solvtab.c
+index 6051cb4..b6cb67b 100644
+--- a/kernel/solvtab.c
++++ b/kernel/solvtab.c
+@@ -21,7 +21,7 @@
+ 
+ #include "kernel/ifftw.h"
+ 
+-void X(solvtab_exec)(const solvtab tbl, planner *p)
++IFFTW_EXTERN void X(solvtab_exec)(const solvtab tbl, planner *p)
+ {
+      for (; tbl->reg_nam; ++tbl) {
+ 	  p->cur_reg_nam = tbl->reg_nam;
+diff --git a/kernel/tensor.c b/kernel/tensor.c
+index 91749ca..2fd5b98 100644
+--- a/kernel/tensor.c
++++ b/kernel/tensor.c
+@@ -21,7 +21,7 @@
+ 
+ #include "kernel/ifftw.h"
+ 
+-tensor *X(mktensor)(int rnk) 
++IFFTW_EXTERN tensor *X(mktensor)(int rnk) 
+ {
+      tensor *x;
+ 
+@@ -51,7 +51,7 @@ tensor *X(mktensor)(int rnk)
+      return x;
+ }
+ 
+-void X(tensor_destroy)(tensor *sz)
++IFFTW_EXTERN void X(tensor_destroy)(tensor *sz)
+ {
+ #if !defined(STRUCT_HACK_C99) && !defined(STRUCT_HACK_KR)
+      X(ifree0)(sz->dims);
+@@ -59,7 +59,7 @@ void X(tensor_destroy)(tensor *sz)
+      X(ifree)(sz);
+ }
+ 
+-INT X(tensor_sz)(const tensor *sz)
++IFFTW_EXTERN INT X(tensor_sz)(const tensor *sz)
+ {
+      int i;
+      INT n = 1;
+@@ -88,7 +88,7 @@ void X(tensor_md5)(md5 *p, const tensor *t)
+ 
+ /* treat a (rank <= 1)-tensor as a rank-1 tensor, extracting
+    appropriate n, is, and os components */
+-int X(tensor_tornk1)(const tensor *t, INT *n, INT *is, INT *os)
++IFFTW_EXTERN int X(tensor_tornk1)(const tensor *t, INT *n, INT *is, INT *os)
+ {
+      A(t->rnk <= 1);
+      if (t->rnk == 1) {
+diff --git a/kernel/tensor1.c b/kernel/tensor1.c
+index 0ab236d..1883de7 100644
+--- a/kernel/tensor1.c
++++ b/kernel/tensor1.c
+@@ -21,12 +21,12 @@
+ 
+ #include "kernel/ifftw.h"
+ 
+-tensor *X(mktensor_0d)(void)
++IFFTW_EXTERN tensor *X(mktensor_0d)(void)
+ {
+      return X(mktensor(0));
+ }
+ 
+-tensor *X(mktensor_1d)(INT n, INT is, INT os)
++IFFTW_EXTERN tensor *X(mktensor_1d)(INT n, INT is, INT os)
+ {
+      tensor *x = X(mktensor)(1);
+      x->dims[0].n = n;
+diff --git a/kernel/tensor2.c b/kernel/tensor2.c
+index 548df23..18f7100 100644
+--- a/kernel/tensor2.c
++++ b/kernel/tensor2.c
+@@ -21,8 +21,8 @@
+ 
+ #include "kernel/ifftw.h"
+ 
+-tensor *X(mktensor_2d)(INT n0, INT is0, INT os0,
+-		       INT n1, INT is1, INT os1)
++IFFTW_EXTERN tensor *X(mktensor_2d)(INT n0, INT is0, INT os0,
++                                   INT n1, INT is1, INT os1)
+ {
+      tensor *x = X(mktensor)(2);
+      x->dims[0].n = n0;
+@@ -35,9 +35,9 @@ tensor *X(mktensor_2d)(INT n0, INT is0, INT os0,
+ }
+ 
+ 
+-tensor *X(mktensor_3d)(INT n0, INT is0, INT os0,
+-		       INT n1, INT is1, INT os1,
+-		       INT n2, INT is2, INT os2)
++IFFTW_EXTERN tensor *X(mktensor_3d)(INT n0, INT is0, INT os0,
++                                   INT n1, INT is1, INT os1,
++                                   INT n2, INT is2, INT os2)
+ {
+      tensor *x = X(mktensor)(3);
+      x->dims[0].n = n0;
+diff --git a/kernel/tensor3.c b/kernel/tensor3.c
+index 3097198..fc89a37 100644
+--- a/kernel/tensor3.c
++++ b/kernel/tensor3.c
+@@ -25,10 +25,10 @@
+    routines, where very complicated transpositions are required.
+    Therefore we split them into a separate source file. */
+ 
+-tensor *X(mktensor_4d)(INT n0, INT is0, INT os0,
+-		       INT n1, INT is1, INT os1,
+-		       INT n2, INT is2, INT os2,
+-		       INT n3, INT is3, INT os3)
++IFFTW_EXTERN tensor *X(mktensor_4d)(INT n0, INT is0, INT os0,
++                                   INT n1, INT is1, INT os1,
++                                   INT n2, INT is2, INT os2,
++                                   INT n3, INT is3, INT os3)
+ {
+      tensor *x = X(mktensor)(4);
+      x->dims[0].n = n0;
+@@ -46,11 +46,11 @@ tensor *X(mktensor_4d)(INT n0, INT is0, INT os0,
+      return x;
+ }
+ 
+-tensor *X(mktensor_5d)(INT n0, INT is0, INT os0,
+-		       INT n1, INT is1, INT os1,
+-		       INT n2, INT is2, INT os2,
+-		       INT n3, INT is3, INT os3,
+-		       INT n4, INT is4, INT os4)
++IFFTW_EXTERN tensor *X(mktensor_5d)(INT n0, INT is0, INT os0,
++                                   INT n1, INT is1, INT os1,
++                                   INT n2, INT is2, INT os2,
++                                   INT n3, INT is3, INT os3,
++                                   INT n4, INT is4, INT os4)
+ {
+      tensor *x = X(mktensor)(5);
+      x->dims[0].n = n0;
+diff --git a/kernel/tensor5.c b/kernel/tensor5.c
+index 9c22e1f..d2977f3 100644
+--- a/kernel/tensor5.c
++++ b/kernel/tensor5.c
+@@ -29,7 +29,7 @@ static void dimcpy(iodim *dst, const iodim *src, int rnk)
+                dst[i] = src[i];
+ }
+ 
+-tensor *X(tensor_copy)(const tensor *sz)
++IFFTW_EXTERN tensor *X(tensor_copy)(const tensor *sz)
+ {
+      tensor *x = X(mktensor)(sz->rnk);
+      dimcpy(x->dims, sz->dims, sz->rnk);
+diff --git a/kernel/trig.c b/kernel/trig.c
+index fedbeb5..3db2297 100644
+--- a/kernel/trig.c
++++ b/kernel/trig.c
+@@ -166,7 +166,7 @@ static void rotate_generic(triggen *p, INT m, R xr, R xi, R *res)
+      res[1] = xi * w[0] + xr * (FFT_SIGN * w[1]);
+ }
+ 
+-triggen *X(mktriggen)(enum wakefulness wakefulness, INT n)
++IFFTW_EXTERN triggen *X(mktriggen)(enum wakefulness wakefulness, INT n)
+ {
+      INT i, n0, n1;
+      triggen *p = (triggen *)MALLOC(sizeof(*p), TWIDDLES);
+@@ -226,7 +226,7 @@ triggen *X(mktriggen)(enum wakefulness wakefulness, INT n)
+      return p;
+ }
+ 
+-void X(triggen_destroy)(triggen *p)
++IFFTW_EXTERN void X(triggen_destroy)(triggen *p)
+ {
+      X(ifree0)(p->W0);
+      X(ifree0)(p->W1);
+diff --git a/rdft/hc2hc.c b/rdft/hc2hc.c
+index 433d983..4627cce 100644
+--- a/rdft/hc2hc.c
++++ b/rdft/hc2hc.c
+@@ -20,7 +20,7 @@
+ 
+ #include "rdft/hc2hc.h"
+ 
+-hc2hc_solver *(*X(mksolver_hc2hc_hook))(size_t, INT, hc2hc_mkinferior) = 0;
++IFFTW_EXTERN hc2hc_solver *(*X(mksolver_hc2hc_hook))(size_t, INT, hc2hc_mkinferior) = 0;
+ 
+ typedef struct {
+      plan_rdft super;
+diff --git a/rdft/hc2hc.h b/rdft/hc2hc.h
+index cf003fc..a613dbc 100644
+--- a/rdft/hc2hc.h
++++ b/rdft/hc2hc.h
+@@ -46,9 +46,12 @@ struct hc2hc_solver_s {
+ };
+ 
+ hc2hc_solver *X(mksolver_hc2hc)(size_t size, INT r, hc2hc_mkinferior mkcldw);
++#if (defined(FFTW_DLL) || defined(DLL_EXPORT)) && (defined(_WIN32) || defined(__WIN32__))
++  __declspec(dllimport)
++#endif
+ extern hc2hc_solver *(*X(mksolver_hc2hc_hook))(size_t, INT, hc2hc_mkinferior);
+ 
+ void X(regsolver_hc2hc_direct)(planner *plnr, khc2hc codelet, 
+ 			       const hc2hc_desc *desc);
+ 
+-int X(hc2hc_applicable)(const hc2hc_solver *, const problem *, planner *);
++IFFTW_EXTERN int X(hc2hc_applicable)(const hc2hc_solver *, const problem *, planner *);
+diff --git a/rdft/plan.c b/rdft/plan.c
+index 9a67818..b8f7973 100644
+--- a/rdft/plan.c
++++ b/rdft/plan.c
+@@ -21,7 +21,7 @@
+ 
+ #include "rdft/rdft.h"
+ 
+-plan *X(mkplan_rdft)(size_t size, const plan_adt *adt, rdftapply apply)
++IFFTW_EXTERN plan *X(mkplan_rdft)(size_t size, const plan_adt *adt, rdftapply apply)
+ {
+      plan_rdft *ego;
+ 
+diff --git a/rdft/plan2.c b/rdft/plan2.c
+index f97c646..8d83d1d 100644
+--- a/rdft/plan2.c
++++ b/rdft/plan2.c
+@@ -21,7 +21,7 @@
+ 
+ #include "rdft/rdft.h"
+ 
+-plan *X(mkplan_rdft2)(size_t size, const plan_adt *adt, rdft2apply apply)
++IFFTW_EXTERN plan *X(mkplan_rdft2)(size_t size, const plan_adt *adt, rdft2apply apply)
+ {
+      plan_rdft2 *ego;
+ 
+diff --git a/rdft/problem.c b/rdft/problem.c
+index a10db03..c5e5c38 100644
+--- a/rdft/problem.c
++++ b/rdft/problem.c
+@@ -132,8 +132,8 @@ static int nontrivial(const iodim *d, rdft_kind kind)
+ 	     || (REODFT_KINDP(kind) && kind != REDFT01 && kind != RODFT01));
+ }
+ 
+-problem *X(mkproblem_rdft)(const tensor *sz, const tensor *vecsz,
+-			   R *I, R *O, const rdft_kind *kind)
++IFFTW_EXTERN problem *X(mkproblem_rdft)(const tensor *sz, const tensor *vecsz,
++                                       R *I, R *O, const rdft_kind *kind)
+ {
+      problem_rdft *ego;
+      int rnk = sz->rnk;
+@@ -207,8 +207,8 @@ problem *X(mkproblem_rdft)(const tensor *sz, const tensor *vecsz,
+ }
+ 
+ /* Same as X(mkproblem_rdft), but also destroy input tensors. */
+-problem *X(mkproblem_rdft_d)(tensor *sz, tensor *vecsz,
+-			     R *I, R *O, const rdft_kind *kind)
++IFFTW_EXTERN problem *X(mkproblem_rdft_d)(tensor *sz, tensor *vecsz,
++                                         R *I, R *O, const rdft_kind *kind)
+ {
+      problem *p = X(mkproblem_rdft)(sz, vecsz, I, O, kind);
+      X(tensor_destroy2)(vecsz, sz);
+@@ -223,15 +223,15 @@ problem *X(mkproblem_rdft_1)(const tensor *sz, const tensor *vecsz,
+      return X(mkproblem_rdft)(sz, vecsz, I, O, &kind);
+ }
+ 
+-problem *X(mkproblem_rdft_1_d)(tensor *sz, tensor *vecsz,
+-			       R *I, R *O, rdft_kind kind)
++IFFTW_EXTERN problem *X(mkproblem_rdft_1_d)(tensor *sz, tensor *vecsz,
++                                           R *I, R *O, rdft_kind kind)
+ {
+      A(sz->rnk <= 1);
+      return X(mkproblem_rdft_d)(sz, vecsz, I, O, &kind);
+ }
+ 
+ /* create a zero-dimensional problem */
+-problem *X(mkproblem_rdft_0_d)(tensor *vecsz, R *I, R *O)
++IFFTW_EXTERN problem *X(mkproblem_rdft_0_d)(tensor *vecsz, R *I, R *O)
+ {
+      return X(mkproblem_rdft_d)(X(mktensor_0d)(), vecsz, I, O, 
+ 				(const rdft_kind *)0);
+diff --git a/rdft/problem2.c b/rdft/problem2.c
+index a144525..596792d 100644
+--- a/rdft/problem2.c
++++ b/rdft/problem2.c
+@@ -142,9 +142,9 @@ static const problem_adt padt =
+      destroy
+ };
+ 
+-problem *X(mkproblem_rdft2)(const tensor *sz, const tensor *vecsz,
+-			    R *r0, R *r1, R *cr, R *ci,
+-			    rdft_kind kind)
++IFFTW_EXTERN problem *X(mkproblem_rdft2)(const tensor *sz, const tensor *vecsz,
++                                        R *r0, R *r1, R *cr, R *ci,
++                                        rdft_kind kind)
+ {
+      problem_rdft2 *ego;
+ 
+@@ -191,8 +191,8 @@ problem *X(mkproblem_rdft2)(const tensor *sz, const tensor *vecsz,
+ }
+ 
+ /* Same as X(mkproblem_rdft2), but also destroy input tensors. */
+-problem *X(mkproblem_rdft2_d)(tensor *sz, tensor *vecsz,
+-			      R *r0, R *r1, R *cr, R *ci, rdft_kind kind)
++IFFTW_EXTERN problem *X(mkproblem_rdft2_d)(tensor *sz, tensor *vecsz,
++                                          R *r0, R *r1, R *cr, R *ci, rdft_kind kind)
+ {
+      problem *p = X(mkproblem_rdft2)(sz, vecsz, r0, r1, cr, ci, kind);
+      X(tensor_destroy2)(vecsz, sz);
+diff --git a/rdft/rdft.h b/rdft/rdft.h
+index 4dff775..8aeacf3 100644
+--- a/rdft/rdft.h
++++ b/rdft/rdft.h
+@@ -44,20 +44,20 @@ typedef struct {
+ } problem_rdft;
+ 
+ void X(rdft_zerotens)(tensor *sz, R *I);
+-problem *X(mkproblem_rdft)(const tensor *sz, const tensor *vecsz,
++IFFTW_EXTERN problem *X(mkproblem_rdft)(const tensor *sz, const tensor *vecsz,
+ 			   R *I, R *O, const rdft_kind *kind);
+-problem *X(mkproblem_rdft_d)(tensor *sz, tensor *vecsz,
++IFFTW_EXTERN problem *X(mkproblem_rdft_d)(tensor *sz, tensor *vecsz,
+ 			     R *I, R *O, const rdft_kind *kind);
+-problem *X(mkproblem_rdft_0_d)(tensor *vecsz, R *I, R *O);
++IFFTW_EXTERN problem *X(mkproblem_rdft_0_d)(tensor *vecsz, R *I, R *O);
+ problem *X(mkproblem_rdft_1)(const tensor *sz, const tensor *vecsz,
+ 			     R *I, R *O, rdft_kind kind);
+-problem *X(mkproblem_rdft_1_d)(tensor *sz, tensor *vecsz,
++IFFTW_EXTERN problem *X(mkproblem_rdft_1_d)(tensor *sz, tensor *vecsz,
+ 			       R *I, R *O, rdft_kind kind);
+ 
+ const char *X(rdft_kind_str)(rdft_kind kind);
+ 
+ /* solve.c: */
+-void X(rdft_solve)(const plan *ego_, const problem *p_);
++IFFTW_EXTERN void X(rdft_solve)(const plan *ego_, const problem *p_);
+ 
+ /* plan.c: */
+ typedef void (*rdftapply) (const plan *ego, R *I, R *O);
+@@ -67,7 +67,7 @@ typedef struct {
+      rdftapply apply;
+ } plan_rdft;
+ 
+-plan *X(mkplan_rdft)(size_t size, const plan_adt *adt, rdftapply apply);
++IFFTW_EXTERN plan *X(mkplan_rdft)(size_t size, const plan_adt *adt, rdftapply apply);
+ 
+ #define MKPLAN_RDFT(type, adt, apply) \
+   (type *)X(mkplan_rdft)(sizeof(type), adt, apply)
+@@ -123,22 +123,22 @@ typedef struct {
+      rdft_kind kind; /* assert(kind < DHT) */
+ } problem_rdft2;
+ 
+-problem *X(mkproblem_rdft2)(const tensor *sz, const tensor *vecsz,
++IFFTW_EXTERN problem *X(mkproblem_rdft2)(const tensor *sz, const tensor *vecsz,
+ 			    R *r0, R *r1, R *cr, R *ci, rdft_kind kind);
+-problem *X(mkproblem_rdft2_d)(tensor *sz, tensor *vecsz,
++IFFTW_EXTERN problem *X(mkproblem_rdft2_d)(tensor *sz, tensor *vecsz,
+ 			      R *r0, R *r1, R *cr, R *ci, rdft_kind kind);
+ problem *X(mkproblem_rdft2_d_3pointers)(tensor *sz, tensor *vecsz,
+ 					R *r, R *cr, R *ci, rdft_kind kind);
+-int X(rdft2_inplace_strides)(const problem_rdft2 *p, int vdim);
++IFFTW_EXTERN int X(rdft2_inplace_strides)(const problem_rdft2 *p, int vdim);
+ INT X(rdft2_tensor_max_index)(const tensor *sz, rdft_kind k);
+-void X(rdft2_strides)(rdft_kind kind, const iodim *d, INT *rs, INT *cs);
++IFFTW_EXTERN void X(rdft2_strides)(rdft_kind kind, const iodim *d, INT *rs, INT *cs);
+ INT X(rdft2_complex_n)(INT real_n, rdft_kind kind);
+ 
+ /* verify.c: */
+ void X(rdft2_verify)(plan *pln, const problem_rdft2 *p, int rounds);
+ 
+ /* solve.c: */
+-void X(rdft2_solve)(const plan *ego_, const problem *p_);
++IFFTW_EXTERN void X(rdft2_solve)(const plan *ego_, const problem *p_);
+ 
+ /* plan.c: */
+ typedef void (*rdft2apply) (const plan *ego, R *r0, R *r1, R *cr, R *ci);
+@@ -148,7 +148,7 @@ typedef struct {
+      rdft2apply apply;
+ } plan_rdft2;
+ 
+-plan *X(mkplan_rdft2)(size_t size, const plan_adt *adt, rdft2apply apply);
++IFFTW_EXTERN plan *X(mkplan_rdft2)(size_t size, const plan_adt *adt, rdft2apply apply);
+ 
+ #define MKPLAN_RDFT2(type, adt, apply) \
+   (type *)X(mkplan_rdft2)(sizeof(type), adt, apply)
+diff --git a/rdft/rdft2-inplace-strides.c b/rdft/rdft2-inplace-strides.c
+index 5d1b4e7..3e815cb 100644
+--- a/rdft/rdft2-inplace-strides.c
++++ b/rdft/rdft2-inplace-strides.c
+@@ -27,7 +27,7 @@
+    because rdft transforms have the unfortunate property of
+    differing input and output sizes.   This routine is not
+    exhaustive; we only return 1 for the most common case.  */
+-int X(rdft2_inplace_strides)(const problem_rdft2 *p, int vdim)
++IFFTW_EXTERN int X(rdft2_inplace_strides)(const problem_rdft2 *p, int vdim)
+ {
+      INT N, Nc;
+      INT rs, cs;
+diff --git a/rdft/rdft2-strides.c b/rdft/rdft2-strides.c
+index 8b86fb7..66babb2 100644
+--- a/rdft/rdft2-strides.c
++++ b/rdft/rdft2-strides.c
+@@ -24,7 +24,7 @@
+    (r,rio/iio) for R2HC and vice-versa for HC2R.  We originally had
+    (is,os) always apply to (r,rio/iio), but this causes other
+    headaches with the tensor functions. */
+-void X(rdft2_strides)(rdft_kind kind, const iodim *d, INT *rs, INT *cs)
++IFFTW_EXTERN void X(rdft2_strides)(rdft_kind kind, const iodim *d, INT *rs, INT *cs)
+ {
+      if (kind == R2HC) {
+ 	  *rs = d->is;
+diff --git a/rdft/solve.c b/rdft/solve.c
+index 4ad52fe..ff30b73 100644
+--- a/rdft/solve.c
++++ b/rdft/solve.c
+@@ -22,7 +22,7 @@
+ #include "rdft/rdft.h"
+ 
+ /* use the apply() operation for RDFT problems */
+-void X(rdft_solve)(const plan *ego_, const problem *p_)
++IFFTW_EXTERN void X(rdft_solve)(const plan *ego_, const problem *p_)
+ {
+      const plan_rdft *ego = (const plan_rdft *) ego_;
+      const problem_rdft *p = (const problem_rdft *) p_;
+diff --git a/rdft/solve2.c b/rdft/solve2.c
+index e1ef840..62894c7 100644
+--- a/rdft/solve2.c
++++ b/rdft/solve2.c
+@@ -22,7 +22,7 @@
+ #include "rdft/rdft.h"
+ 
+ /* use the apply() operation for RDFT2 problems */
+-void X(rdft2_solve)(const plan *ego_, const problem *p_)
++IFFTW_EXTERN void X(rdft2_solve)(const plan *ego_, const problem *p_)
+ {
+      const plan_rdft2 *ego = (const plan_rdft2 *) ego_;
+      const problem_rdft2 *p = (const problem_rdft2 *) p_;
+diff --git a/simd-support/taint.c b/simd-support/taint.c
+index b5da27f..0e130e4 100644
+--- a/simd-support/taint.c
++++ b/simd-support/taint.c
+@@ -24,7 +24,7 @@
+ 
+ #if HAVE_SIMD
+ 
+-R *X(taint)(R *p, INT s)
++IFFTW_EXTERN R *X(taint)(R *p, INT s)
+ {
+      if (((unsigned)s * sizeof(R)) % ALIGNMENT)
+ 	  p = (R *) (PTRINT(p) | TAINT_BIT);
+@@ -35,7 +35,7 @@ R *X(taint)(R *p, INT s)
+ 
+ /* join the taint of two pointers that are supposed to be
+    the same modulo the taint */
+-R *X(join_taint)(R *p1, R *p2)
++IFFTW_EXTERN R *X(join_taint)(R *p1, R *p2)
+ {
+      A(UNTAINT(p1) == UNTAINT(p2));
+      return (R *)(PTRINT(p1) | PTRINT(p2));
