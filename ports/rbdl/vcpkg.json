@@ -1,11 +1,10 @@
 {
   "name": "rbdl",
   "version": "3.3.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Rigid Body Dynamics Library",
   "homepage": "https://github.com/rbdl/rbdl",
   "dependencies": [
-    "boost",
     "eigen3",
     "lua",
     {

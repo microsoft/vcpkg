@@ -6,16 +6,13 @@ vcpkg_from_github(
     REF boost-${VERSION}
     SHA512 1d1a484a070d25724f084287e321a56a191373bf5387158a0e055d870056d0ad04d37596008c19a52469d823a7c4721fb682fc1870e583effa5061cea6571097
     HEAD_REF master
+    PATCHES
+        fix-include.patch
+        
 )
 
-file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
-string(REPLACE "import config : requires" "import ../config/checks/config : requires" _contents "${_contents}")
-string(REPLACE "project.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ]" "project.load [ path.join [ path.make $(here:D) ] ../config/checks/architecture ]" _contents "${_contents}")
-file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
-# has_synchronization_lib.cpp is used in boost-modular-build-helper/Jamroot.jam.in
-file(COPY "${SOURCE_PATH}/config/has_synchronization_lib.cpp" DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost-atomic")
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)
