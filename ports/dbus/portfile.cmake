@@ -83,6 +83,7 @@ else()
     list(APPEND TOOLS cleanup-sockets uuidgen)
 endif()
 list(TRANSFORM TOOLS PREPEND "dbus-" )
+vcpkg_copy_tools(TOOL_NAMES ${TOOLS} SEARCH_DIR ${CURRENT_PACKAGES_DIR}/debug/bin DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
 vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
