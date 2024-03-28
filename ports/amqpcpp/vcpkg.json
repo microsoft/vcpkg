@@ -1,6 +1,6 @@
 {
   "name": "amqpcpp",
-  "version": "4.3.23",
+  "version": "4.3.26",
   "description": "AMQP-CPP is a C++ library for communicating with a RabbitMQ message broker",
   "homepage": "https://github.com/CopernicaMarketingSoftware/AMQP-CPP",
   "license": "Apache-2.0",
