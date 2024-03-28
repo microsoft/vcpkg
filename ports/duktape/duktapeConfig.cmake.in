@@ -7,27 +7,26 @@
 #  DUKTAPE_DEFINITIONS - Compiler switches required for using Duktape
 #
 
-find_package(PkgConfig QUIET)
-pkg_check_modules(PC_DUK QUIET duktape libduktape)
-
-find_path(DUKTAPE_INCLUDE_DIR duktape.h
-    HINTS ${PC_DUK_INCLUDEDIR} ${PC_DUK_INCLUDE_DIRS}
-    PATH_SUFFIXES duktape)
-
-find_library(DUKTAPE_LIBRARY
-    NAMES duktape libduktape
-    HINTS ${PC_DUK_LIBDIR} ${PC_DUK_LIBRARY_DIRS})
-
 include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Duktape
+include(SelectLibraryConfigurations)
+
+find_path(DUKTAPE_INCLUDE_DIR duktape.h PATHS "${CMAKE_CURRENT_LIST_DIR}/../../include" NO_DEFAULT_PATH REQUIRED)
+
+find_library(DUKTAPE_LIBRARY_RELEASE NAMES duktape PATHS "${CMAKE_CURRENT_LIST_DIR}/../../lib" NO_DEFAULT_PATH REQUIRED)
+find_library(DUKTAPE_LIBRARY_DEBUG NAMES duktape PATHS "${CMAKE_CURRENT_LIST_DIR}/../../debug/lib" NO_DEFAULT_PATH)
+select_library_configurations(DUKTAPE)
+
+find_package_handle_standard_args(duktape
     REQUIRED_VARS DUKTAPE_LIBRARY DUKTAPE_INCLUDE_DIR)
 
-if (DUKTAPE_FOUND)
-    set (DUKTAPE_LIBRARIES ${DUKTAPE_LIBRARY})
-    set (DUKTAPE_INCLUDE_DIRS ${DUKTAPE_INCLUDE_DIR} )
+if(DUKTAPE_FOUND)
+    set(DUKTAPE_INCLUDE_DIRS "${DUKTAPE_INCLUDE_DIR}")
+    set(DUKTAPE_LIBRARIES "${DUKTAPE_LIBRARY}")
+    set(DUKTAPE_DEFINITIONS "")
 endif ()
 
-MARK_AS_ADVANCED(
+mark_as_advanced(
     DUKTAPE_INCLUDE_DIR
-    DUKTAPE_LIBRARY
+    DUKTAPE_LIBRARY_RELEASE
+    DUKTAPE_LIBRARY_DEBUG
 )
