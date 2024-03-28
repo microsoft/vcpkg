@@ -2,5 +2,6 @@
     "name": "stringzilla",
     "version-string": "3.7.0",
     "description": "StringZilla is the GodZilla of string libraries, using SIMD and SWAR to accelerate string operations on modern CPUs.",
-    "homepage": "https://github.com/ashvardanian/StringZilla"
+    "homepage": "https://github.com/ashvardanian/StringZilla",
+    "support": "!x86"
   }
