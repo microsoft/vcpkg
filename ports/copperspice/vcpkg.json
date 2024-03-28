@@ -1,0 +1,218 @@
+{
+  "name": "copperspice",
+  "version": "1.9.1",
+  "description": "Set of cross platform C++ libraries (Gui, Network, Multimedia, etc).",
+  "homepage": "https://github.com/copperspice/copperspice",
+  "license": "LGPL-2.1",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "ijg-libjpeg"
+    },
+    {
+      "name": "zlib"
+    },
+    {
+      "name": "sqlite3"
+    },
+    {
+      "name": "catch2"
+    },
+    {
+      "name": "alsa",
+      "platform": "!windows"
+    },
+    {
+      "name": "openssl"
+    },
+    {
+      "name": "cs-libguarded"
+    },
+    {
+      "name": "cs-signal"
+    },
+    {
+      "name": "cs-string"
+    }
+  ],
+  "features": {
+    "gui": {
+      "description": "Dialogs, File Selectors, Fonts, Images, Layouts, Menus, Printing, Styles, Widgets (QCalendar, QCheckBox, QComboBox, QLineEdit, QPushButton, QTabWidget ...)",
+      "dependencies": [
+        {
+          "name": "ijg-libjpeg"
+        }
+      ]
+    },
+    "multimedia": {
+      "description": "Audio, Camera, Video (recording and playback)",
+      "dependencies": [
+        {
+          "name": "copperspice",
+          "features": [
+            "gui",
+            "network",
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "network": {
+      "description": "TCP, HTTP, FTP, IPv6, DNS lookups, SSL, URL support"
+    },
+    "opengl": {
+      "description": "Rendering Context, Graphic Formats, Shader Compiler",
+      "dependencies": [
+        {
+          "name": "opengl"
+        },
+        {
+          "name": "copperspice",
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
+    "script": {
+      "description": "JavaScript engine which can be embedded in your application"
+    },
+    "sql": {
+      "description": "Enable Database support"
+    },
+    "db2": {
+      "description": "Enable IBM DB2 support",
+      "dependencies": [
+        {
+          "name": "copperspice",
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
+    "ibase": {
+      "description": "Enable Borland InterBase support",
+      "dependencies": [
+        {
+          "name": "copperspice",
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
+    "mysql": {
+      "description": "Enable MySQL support",
+      "dependencies": [
+        {
+          "name": "libmysql"
+        },
+        {
+          "name": "copperspice",
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
+    "oci": {
+      "description": "Enable Oracle Call Interface support",
+      "dependencies": [
+        {
+          "name": "ocilib"
+        },
+        {
+          "name": "copperspice",
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
+    "odbc": {
+      "description": "Enable ODBC support",
+      "dependencies": [
+        {
+          "name": "libpq"
+        },
+        {
+          "name": "copperspice",
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
+    "psql": {
+      "description": "Enable PostgreSQL support",
+      "dependencies": [
+        {
+          "name": "libpq"
+        },
+        {
+          "name": "copperspice",
+          "features": [
+            "sql"
+          ]
+        }
+      ]
+    },
+    "svg": {
+      "description": "Render and Disply SVG files",
+      "dependencies": [
+        {
+          "name": "copperspice",
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
+    "vulkan": {
+      "description": "Vulkan Instance, Vulkan Surface, Vulkan Devices",
+      "dependencies": [
+        {
+          "name": "vulkan"
+        },
+        {
+          "name": "copperspice",
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
+    "webkit": {
+      "description": "Web View, Web Page which can be embedded in your application",
+      "dependencies": [
+        {
+          "name": "copperspice",
+          "features": [
+            "gui",
+            "network",
+            "script"
+          ]
+        }
+      ]
+    },
+    "xmlpatterns": {
+      "description": "Schema Validation, XQuery",
+      "dependencies": [
+        {
+          "name": "copperspice",
+          "features": [
+            "network"
+          ]
+        }
+      ]
+    }
+  }
+}
