@@ -1,0 +1,4 @@
+The port uSockets provides CMake targets:
+
+  find_package(unofficial-uSockets CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::uSockets::uSockets)
