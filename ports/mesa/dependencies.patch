@@ -1,0 +1,64 @@
+diff --git a/meson.build b/meson.build
+index 5973298..bc867f6 100644
+--- a/meson.build
++++ b/meson.build
+@@ -119,7 +119,7 @@ pre_args += '-DHAVE_OPENGL_ES_2=@0@'.format(with_gles2 ? '1' : '0')
+ 
+ with_any_opengl = with_opengl or with_gles1 or with_gles2
+ # Only build shared_glapi if at least one OpenGL API is enabled
+-with_shared_glapi = with_shared_glapi and with_any_opengl
++with_shared_glapi = with_shared_glapi and (with_any_opengl or get_option('egl').enabled())
+ 
+ system_has_kms_drm = ['openbsd', 'netbsd', 'freebsd', 'gnu/kfreebsd', 'dragonfly', 'linux', 'sunos', 'android'].contains(host_machine.system())
+ 
+@@ -156,6 +156,15 @@ if gallium_drivers.contains('auto')
+           host_machine.system()))
+   endif
+ endif
++if not get_option('llvm').enabled() and get_option('gallium-drivers').contains('auto')
++  drivers_without_llvm = []
++  foreach driver : gallium_drivers
++    if not ['radeonsi'].contains(driver)
++      drivers_without_llvm += driver
++    endif
++  endforeach
++  gallium_drivers = drivers_without_llvm
++endif
+ with_gallium_radeonsi = gallium_drivers.contains('radeonsi')
+ with_gallium_r300 = gallium_drivers.contains('r300')
+ with_gallium_r600 = gallium_drivers.contains('r600')
+@@ -230,6 +239,15 @@ if _vulkan_drivers.contains('auto')
+           host_machine.system()))
+   endif
+ endif
++if not get_option('llvm').enabled()
++  drivers_without_llvm = []
++  foreach driver : _vulkan_drivers
++    if not ['swrast'].contains(driver)
++      drivers_without_llvm += driver
++    endif
++  endforeach
++  _vulkan_drivers = drivers_without_llvm
++endif
+ 
+ with_intel_vk = _vulkan_drivers.contains('intel')
+ with_intel_hasvk = _vulkan_drivers.contains('intel_hasvk')
+@@ -1514,6 +1532,9 @@ else
+   dep_expat = dependency('expat', fallback : ['expat', 'expat_dep'],
+                          required : with_expat)
+ endif
++if not with_expat.enabled()
++  dep_expat = null_dep
++endif
+ 
+ # TODO: with Meson 1.1.0 this can be replaced with with_expat.enable_if(with_intel_tools)
+ if with_intel_tools and not dep_expat.found()
+@@ -1823,7 +1844,7 @@ if with_glvnd
+   pre_args += '-DUSE_LIBGLVND=1'
+ endif
+ 
+-dep_valgrind = dependency('valgrind', required : get_option('valgrind'))
++dep_valgrind = null_dep
+ if dep_valgrind.found()
+   pre_args += '-DHAVE_VALGRIND'
+ endif

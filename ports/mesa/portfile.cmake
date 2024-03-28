@@ -10,10 +10,12 @@ vcpkg_from_gitlab(
     REF mesa-${VERSION}
     SHA512 96f7602c98d532a269116bd5d3f9cbe87ca4425b309467cc19f83277a0faaa9804edea72dcaeb6f7774cac17790d5d76b58c357ef639cb6064e7480d93b861bf
     FILE_DISAMBIGUATOR 1
-    HEAD_REF master
+    HEAD_REF main
     PATCHES
+        dependencies.patch
         gallium-fix-build-with-llvm-17.patch
         clover-llvm-move-to-modern-pass-manager.patch
+        winflex-race.patch
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako)
@@ -45,14 +47,6 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
 endif()
 
 # For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more. 
-list(APPEND MESA_OPTIONS -Dzstd=enabled)
-list(APPEND MESA_OPTIONS -Dshared-llvm=auto)
-list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
-list(APPEND MESA_OPTIONS -Dlmsensors=disabled)
-list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
-list(APPEND MESA_OPTIONS -Dglvnd=false)
-list(APPEND MESA_OPTIONS -Dglx=disabled)
-list(APPEND MESA_OPTIONS -Dgbm=disabled)
 
 if("offscreen" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dosmesa=true)
@@ -87,7 +81,11 @@ else()
     list(APPEND MESA_OPTIONS -Degl=disabled)
 endif()
 
-list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
+if(NOT "vulkan" IN_LIST FEATURES) # EGL feature only works on Linux
+    list(APPEND MESA_OPTIONS -Dvulkan-drivers=[])
+elseif(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/glslang")
+    vcpkg_list(APPEND MESA_ADDITIONAL_BINARIES "glslangValidator = '${CURRENT_HOST_INSTALLED_DIR}/tools/glslang/glslangValidator${VCPKG_HOST_EXECUTABLE_SUFFIX}'")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dplatforms=['windows'])
@@ -96,6 +94,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
         set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
     endif()
+elseif(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND MESA_OPTIONS -Dplatforms=['android'])
+elseif("wayland" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dplatforms=['x11','wayland'])
+else()
+    list(APPEND MESA_OPTIONS -Dplatforms=['x11'])
 endif()
 
 vcpkg_configure_meson(
@@ -104,11 +108,21 @@ vcpkg_configure_meson(
         -Dgles-lib-suffix=_mesa
         #-D egl-lib-suffix=_mesa
         -Dbuild-tests=false
+        -Dgbm=disabled
+        -Dglvnd=false
+        -Dglx=disabled
+        -Dlibunwind=disabled
+        -Dlmsensors=disabled
+        -Dshared-glapi=enabled  # required for egl and when building two or more of the following APIs - opengl, gles1 gles2
+        -Dshared-llvm=disabled  # disable autodetection - fails; llvm is ONLY_STATIC_LIBRARY
+        -Dvalgrind=disabled
+        -Dzstd=enabled
         ${MESA_OPTIONS}
     ADDITIONAL_BINARIES
-      python=['${PYTHON3}','-I']
-      python3=['${PYTHON3}','-I']
-    )
+        python=['${PYTHON3}','-I']
+        python3=['${PYTHON3}','-I']
+        ${MESA_ADDITIONAL_BINARIES}
+)
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
@@ -131,7 +145,7 @@ if(NOT remaining)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND "opengl" IN_LIST FEATURES)
     # opengl32.lib is already installed by port opengl.
     # Mesa claims to provide a drop-in replacement of opengl32.dll.
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
@@ -142,7 +156,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-if(FEATURES STREQUAL "core")
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
