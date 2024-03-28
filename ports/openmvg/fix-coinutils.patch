@@ -31,17 +31,18 @@ index 5b64ce14c..595fb7dc8 100644
  ELSE()
    MESSAGE(STATUS "You are attempting to build without CoinUtils. "
 diff --git a/src/cmakeFindModules/OpenMVGConfig.cmake.in b/src/cmakeFindModules/OpenMVGConfig.cmake.in
-index d4ae73d1a..87f71cd7d 100644
+index d4ae73d..256c791 100644
 --- a/src/cmakeFindModules/OpenMVGConfig.cmake.in
 +++ b/src/cmakeFindModules/OpenMVGConfig.cmake.in
-@@ -65,6 +65,10 @@ find_dependency(Threads)
- find_dependency(cereal)
+@@ -66,6 +66,11 @@ find_dependency(cereal)
  find_dependency(Ceres)
  find_dependency(vlfeat)
-+if(NOT WIN32)
-+    find_dependency(PkgConfig)
-+    pkg_check_modules(CoinUtils coinutils IMPORTED_TARGET)
-+endif()
- 
+
++find_dependency(PkgConfig)
++pkg_check_modules(CoinUtils coinutils IMPORTED_TARGET)
++pkg_check_modules(clp REQUIRED IMPORTED_TARGET clp)
++pkg_check_modules(osi-clp REQUIRED IMPORTED_TARGET osi-clp)
++pkg_check_modules(osi REQUIRED IMPORTED_TARGET osi)
  # Build the absolute root install directory as a relative path
  get_filename_component(CURRENT_ROOT_INSTALL_DIR
+   ${CMAKE_MODULE_PATH}/../../ ABSOLUTE)
