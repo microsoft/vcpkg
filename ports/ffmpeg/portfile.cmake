@@ -345,8 +345,10 @@ endif()
 
 if("mp3lame" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libmp3lame")
+    set(WITH_MP3LAME ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libmp3lame")
+    set(WITH_MP3LAME OFF)
 endif()
 
 if("modplug" IN_LIST FEATURES)
@@ -883,6 +885,6 @@ else()
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindFFMPEG.cmake" @ONLY)
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${LICENSE_FILE}")
