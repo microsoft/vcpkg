@@ -8,6 +8,8 @@ vcpkg_from_github(
   REF "libunibreak_${MAJOR}_${MINOR}"
   SHA512 a85333d59c78b67b1c05d33ab99c069ba493780d6a98ad5ab00e33235c454b8b33515cac4e815de35533f235be7cf5473550b3a6389f7581ba2f6216d42d38e1
   HEAD_REF master
+  PATCHES
+       fix_export.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -22,4 +24,4 @@ vcpkg_cmake_install()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/libunibreak-config.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/libunibreak-config.cmake" @ONLY)
 
-file(INSTALL ${SOURCE_PATH}/LICENCE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libunibreak RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENCE")
