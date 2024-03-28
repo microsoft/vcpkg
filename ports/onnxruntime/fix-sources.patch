@@ -1,0 +1,37 @@
+diff --git a/onnxruntime/core/optimizer/compute_optimizer/upstream_gather_actors.h b/onnxruntime/core/optimizer/compute_optimizer/upstream_gather_actors.h
+index 0c21be1..3ee6061 100644
+--- a/onnxruntime/core/optimizer/compute_optimizer/upstream_gather_actors.h
++++ b/onnxruntime/core/optimizer/compute_optimizer/upstream_gather_actors.h
+@@ -5,6 +5,8 @@
+ // while so far we mainly validate training during cooking the optimization.
+ #ifdef ENABLE_TRAINING
+ #pragma once
++#include <variant>
++#include <unordered_map>
+ 
+ #include "core/optimizer/compute_optimizer/shared_utils.h"
+ 
+diff --git a/onnxruntime/core/optimizer/compute_optimizer/upstream_transformer_base.h b/onnxruntime/core/optimizer/compute_optimizer/upstream_transformer_base.h
+index 6e22fc7..79c8ac1 100644
+--- a/onnxruntime/core/optimizer/compute_optimizer/upstream_transformer_base.h
++++ b/onnxruntime/core/optimizer/compute_optimizer/upstream_transformer_base.h
+@@ -15,6 +15,7 @@
+ #include <memory>
+ #include <string>
+ #include <vector>
++#include <deque>
+ 
+ namespace onnxruntime::optimizer::compute_optimizer {
+ 
+diff --git a/orttraining/orttraining/core/optimizer/memory_optimizer/transformer_specific.cc b/orttraining/orttraining/core/optimizer/memory_optimizer/transformer_specific.cc
+index 04f2679..9c4de02 100644
+--- a/orttraining/orttraining/core/optimizer/memory_optimizer/transformer_specific.cc
++++ b/orttraining/orttraining/core/optimizer/memory_optimizer/transformer_specific.cc
+@@ -1,6 +1,7 @@
+ // Copyright (c) Microsoft Corporation. All rights reserved.
+ // Licensed under the MIT License.
+ 
++#include <deque>
+ #include <charconv>
+ #include <vector>
+ #include <utility>

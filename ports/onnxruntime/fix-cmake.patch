@@ -1,0 +1,112 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 94d650f..0f82c14 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -572,7 +572,8 @@ get_filename_component(ORTTRAINING_ROOT "${ORTTRAINING_ROOT}" ABSOLUTE)
+ get_filename_component(REPO_ROOT "${REPO_ROOT}" ABSOLUTE)
+ set(ONNXRUNTIME_INCLUDE_DIR ${REPO_ROOT}/include/onnxruntime)
+ 
+-include(external/onnxruntime_external_deps.cmake)
++include(external/onnxruntime_vcpkg_deps.cmake) # see onnxruntime/portfile.cmake
++list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external")
+ 
+ set(ORT_WARNING_FLAGS)
+ if (WIN32)
+@@ -904,7 +905,7 @@ function(onnxruntime_set_compile_flags target_name)
+       target_compile_definitions(${target_name} PRIVATE ORT_NEURAL_SPEED)
+     endif()
+ 
+-    set_target_properties(${target_name} PROPERTIES COMPILE_WARNING_AS_ERROR ON)
++    set_target_properties(${target_name} PROPERTIES COMPILE_WARNING_AS_ERROR OFF)
+     if (onnxruntime_USE_CUDA)
+       # Suppress a "conversion_function_not_usable" warning in gsl/span
+       target_compile_options(${target_name} PRIVATE "$<$<COMPILE_LANGUAGE:CUDA>:SHELL:-Xcudafe \"--diag_suppress=conversion_function_not_usable\">")
+@@ -968,6 +969,7 @@ function(onnxruntime_set_compile_flags target_name)
+       endif()
+       target_compile_definitions(${target_name} PUBLIC -DNSYNC_ATOMIC_CPP11)
+       onnxruntime_add_include_to_target(${target_name} nsync::nsync_cpp)
++      onnxruntime_add_include_to_target(${target_name} Eigen3::Eigen)
+     endif()
+     foreach(ORT_FLAG ${ORT_PROVIDER_FLAGS})
+       target_compile_definitions(${target_name} PRIVATE ${ORT_FLAG})
+@@ -1473,7 +1475,8 @@ if (onnxruntime_USE_DML)
+     message(FATAL_ERROR "The DirectML execution provider is only supported when building for Windows.")
+   endif()
+ 
+-  include(dml)
++  find_path(dml_INCLUDE_DIR NAMES "DirectML.h" REQUIRED)
++  include_directories(BEFORE ${dml_INCLUDE_DIR})
+ endif()
+ 
+ if (onnxruntime_ENABLE_TRAINING_APIS)
+@@ -1736,6 +1739,7 @@ if (WIN32 AND NOT GDK_PLATFORM)
+   endif()
+ endif()
+ 
++include(GNUInstallDirs) # some targets requires this...
+ foreach(target_name ${ONNXRUNTIME_CMAKE_FILES})
+   include(${target_name}.cmake)
+ endforeach()
+diff --git a/cmake/onnxruntime.cmake b/cmake/onnxruntime.cmake
+index c900f4d..8d5fcd6 100644
+--- a/cmake/onnxruntime.cmake
++++ b/cmake/onnxruntime.cmake
+@@ -303,6 +303,9 @@ if(onnxruntime_BUILD_APPLE_FRAMEWORK)
+   # If it's an onnxruntime library, extract .o files to a separate directory for each library to avoid any clashes
+   # with filenames (e.g. utils.o)
+   foreach(_LIB ${onnxruntime_INTERNAL_LIBRARIES} )
++    if(NOT TARGET ${_LIB}) # if we didn't build from source. it may not a target
++      continue()
++    endif()
+     GET_TARGET_PROPERTY(_LIB_TYPE ${_LIB} TYPE)
+     if(_LIB_TYPE STREQUAL "STATIC_LIBRARY")
+       set(CUR_STATIC_LIB_OBJ_DIR ${STATIC_LIB_TEMP_DIR}/$<TARGET_LINKER_FILE_BASE_NAME:${_LIB}>)
+@@ -317,6 +320,9 @@ if(onnxruntime_BUILD_APPLE_FRAMEWORK)
+ 
+   # for external libraries we create a symlink to the .a file
+   foreach(_LIB ${onnxruntime_EXTERNAL_LIBRARIES})
++    if(NOT TARGET ${_LIB}) # if we didn't build from source. it may not a target
++      continue()
++    endif()
+     GET_TARGET_PROPERTY(_LIB_TYPE ${_LIB} TYPE)
+     if(_LIB_TYPE STREQUAL "STATIC_LIBRARY")
+       add_custom_command(TARGET onnxruntime POST_BUILD
+diff --git a/cmake/onnxruntime_mlas.cmake b/cmake/onnxruntime_mlas.cmake
+index 002da7b..6f4e7cc 100644
+--- a/cmake/onnxruntime_mlas.cmake
++++ b/cmake/onnxruntime_mlas.cmake
+@@ -676,7 +676,7 @@ block()
+ endblock()
+ 
+ 
+-if (NOT onnxruntime_ORT_MINIMAL_BUILD)
++if (NOT onnxruntime_ORT_MINIMAL_BUILD AND (NOT CMAKE_SYSTEM_NAME MATCHES iOS)) # Xcode requires Bundle Identifier...
+ 
+   #
+   # Command line tool for quantization and de-quantization of 2-D fp32 tensors
+diff --git a/cmake/onnxruntime_providers_openvino.cmake b/cmake/onnxruntime_providers_openvino.cmake
+index e26f0bf..5b9a02b 100644
+--- a/cmake/onnxruntime_providers_openvino.cmake
++++ b/cmake/onnxruntime_providers_openvino.cmake
+@@ -45,7 +45,7 @@
+   if(NOT MSVC)
+     target_compile_options(onnxruntime_providers_openvino PRIVATE "-Wno-parentheses")
+   endif()
+-  add_dependencies(onnxruntime_providers_openvino onnxruntime_providers_shared ${onnxruntime_EXTERNAL_DEPENDENCIES})
++  add_dependencies(onnxruntime_providers_openvino ${onnxruntime_EXTERNAL_DEPENDENCIES})
+   target_include_directories(onnxruntime_providers_openvino SYSTEM PUBLIC ${ONNXRUNTIME_ROOT} ${CMAKE_CURRENT_BINARY_DIR} ${eigen_INCLUDE_DIRS} ${OpenVINO_INCLUDE_DIR} ${OPENVINO_INCLUDE_DIR_LIST} ${PYTHON_INCLUDE_DIRS} $ENV{OPENCL_INCS} $ENV{OPENCL_INCS}/../../cl_headers/)
+   target_link_libraries(onnxruntime_providers_openvino ${ONNXRUNTIME_PROVIDERS_SHARED} Boost::mp11 ${OPENVINO_LIB_LIST} ${ABSEIL_LIBS})
+ 
+diff --git a/cmake/onnxruntime_providers_xnnpack.cmake b/cmake/onnxruntime_providers_xnnpack.cmake
+index 9c00703..65fb9f1 100644
+--- a/cmake/onnxruntime_providers_xnnpack.cmake
++++ b/cmake/onnxruntime_providers_xnnpack.cmake
+@@ -15,7 +15,7 @@
+   source_group(TREE ${REPO_ROOT} FILES ${onnxruntime_providers_xnnpack_cc_srcs})
+   onnxruntime_add_static_library(onnxruntime_providers_xnnpack ${onnxruntime_providers_xnnpack_cc_srcs})
+   onnxruntime_add_include_to_target(onnxruntime_providers_xnnpack
+-    onnxruntime_common onnxruntime_framework onnx onnx_proto ${PROTOBUF_LIB} XNNPACK pthreadpool
++    onnxruntime_common onnxruntime_framework onnx onnx_proto ${PROTOBUF_LIB} ${XNNPACK_LIBRARY} ${PTHREADPOOL_LIBRARY}
+     flatbuffers::flatbuffers Boost::mp11 safeint_interface
+   )
+ 
