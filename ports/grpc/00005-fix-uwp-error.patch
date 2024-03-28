@@ -1,10 +1,10 @@
 diff --git a/src/core/ext/transport/chttp2/transport/hpack_parser.cc b/src/core/ext/transport/chttp2/transport/hpack_parser.cc
-index b0d3a6465b..5c48f1aa30 100644
+index 31bf464..d1007e4 100644
 --- a/src/core/ext/transport/chttp2/transport/hpack_parser.cc
 +++ b/src/core/ext/transport/chttp2/transport/hpack_parser.cc
-@@ -1037,7 +1037,7 @@ class HPackParser::Parser {
+@@ -689,7 +689,7 @@ class HPackParser::Parser {
+   }
  
-  private:
    void GPR_ATTRIBUTE_NOINLINE LogHeader(const HPackTable::Memento& memento) {
 -    const char* type;
 +    const char* type = nullptr;
@@ -12,7 +12,7 @@ index b0d3a6465b..5c48f1aa30 100644
        case LogInfo::kHeaders:
          type = "HDR";
 diff --git a/src/core/lib/slice/slice.cc b/src/core/lib/slice/slice.cc
-index 898a62823c..6b31cdc082 100644
+index 6180ef1..a8e8110 100644
 --- a/src/core/lib/slice/slice.cc
 +++ b/src/core/lib/slice/slice.cc
 @@ -188,6 +188,7 @@ grpc_slice grpc_slice_from_moved_buffer(grpc_core::UniquePtr<char> p,
@@ -33,10 +33,10 @@ index 898a62823c..6b31cdc082 100644
      slice.refcount = nullptr;
      slice.data.inlined.length = str.size();
 diff --git a/src/core/lib/surface/server.cc b/src/core/lib/surface/server.cc
-index 141b16e345..89d9d6dafd 100644
+index 3dda49d..202caa5 100644
 --- a/src/core/lib/surface/server.cc
 +++ b/src/core/lib/surface/server.cc
-@@ -902,7 +902,7 @@ grpc_call_error Server::QueueRequestedCall(size_t cq_idx, RequestedCall* rc) {
+@@ -1057,7 +1057,7 @@ grpc_call_error Server::QueueRequestedCall(size_t cq_idx, RequestedCall* rc) {
      FailCall(cq_idx, rc, GRPC_ERROR_CREATE("Server Shutdown"));
      return GRPC_CALL_OK;
    }

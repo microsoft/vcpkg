@@ -1,0 +1,28 @@
+diff --git a/cmake/features.cmake b/cmake/features.cmake
+index 8b5563efb..88fcd71a5 100644
+--- a/cmake/features.cmake
++++ b/cmake/features.cmake
+@@ -146,7 +146,7 @@ if (LIBXML2_FOUND AND NOT BUILD_SHARED_LIBS)
+     list(APPEND LIBXML2_LIBRARIES "dl")
+   endif()
+ endif()
+-find_package(Protobuf)
++find_package(Protobuf CONFIG)
+ if (${PROTOBUF_FOUND} AND NOT EXISTS ${PROTOBUF_PROTOC_EXECUTABLE})
+   message(STATUS "Protobuf library found, but protoc compiler is missing")
+   set(PROTOBUF_FOUND FALSE)
+diff --git a/libosmscout-import/CMakeLists.txt b/libosmscout-import/CMakeLists.txt
+index 36fa3585c..404f61aff 100644
+--- a/libosmscout-import/CMakeLists.txt
++++ b/libosmscout-import/CMakeLists.txt
+@@ -146,8 +146,8 @@ endif()
+ 
+ if (PROTOBUF_FOUND)
+ 	target_include_directories(OSMScoutImport PRIVATE ${Protobuf_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
+-	target_link_libraries(OSMScoutImport ${Protobuf_LIBRARIES})
+-	if(WIN32)
++	target_link_libraries(OSMScoutImport protobuf::libprotobuf)
++	if(0)
+ 		target_compile_definitions(OSMScoutImport PRIVATE -DPROTOBUF_USE_DLLS)
+ 	endif()
+ 	target_compile_definitions(OSMScoutImport PRIVATE -DOSMSCOUT_IMPORT_CMAKE_BUILD)

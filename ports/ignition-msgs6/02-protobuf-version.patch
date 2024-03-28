@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 27f747a..a02d312 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -58,7 +58,6 @@ message(STATUS "\n\n-- ====== Finding Dependencies ======")
+ # Find Protobuf
+ set(REQ_PROTOBUF_VER 3)
+ ign_find_package(IgnProtobuf
+-                 VERSION ${REQ_PROTOBUF_VER}
+                  REQUIRED
+                  COMPONENTS all
+                  PRETTY Protobuf)

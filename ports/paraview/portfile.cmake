@@ -30,6 +30,7 @@ vcpkg_from_github(
         python_wrapper.patch
         add-tools-option.patch
         qt6-all.patch
+        protobuf-version.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

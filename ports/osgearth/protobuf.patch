@@ -1,0 +1,74 @@
+diff --git a/CMakeModules/OsgEarthMacroUtils.cmake b/CMakeModules/OsgEarthMacroUtils.cmake
+index ccf209f6a..e961531f8 100644
+--- a/CMakeModules/OsgEarthMacroUtils.cmake
++++ b/CMakeModules/OsgEarthMacroUtils.cmake
+@@ -94,28 +94,28 @@ MACRO(LINK_WITH_VARIABLES TRGTNAME)
+     FOREACH(varname ${ARGN})
+         string(REPLACE "_LIBRARY" "_LIBRARIES" lwv_libraries "${varname}")
+         if(DEFINED ${lwv_libraries})
+-            TARGET_LINK_LIBRARIES(${TRGTNAME} ${${lwv_libraries}})
++            TARGET_LINK_LIBRARIES(${TRGTNAME} PUBLIC ${${lwv_libraries}})
+             continue()
+         endif()
+         IF(${varname}_DEBUG)
+             IF(${varname}_RELEASE)
+-                TARGET_LINK_LIBRARIES(${TRGTNAME} optimized "${${varname}_RELEASE}" debug "${${varname}_DEBUG}")
++                TARGET_LINK_LIBRARIES(${TRGTNAME} PUBLIC optimized "${${varname}_RELEASE}" debug "${${varname}_DEBUG}")
+             ELSE(${varname}_RELEASE)
+-                TARGET_LINK_LIBRARIES(${TRGTNAME} optimized "${${varname}}" debug "${${varname}_DEBUG}")
++                TARGET_LINK_LIBRARIES(${TRGTNAME} PUBLIC optimized "${${varname}}" debug "${${varname}_DEBUG}")
+             ENDIF(${varname}_RELEASE)
+         ELSE(${varname}_DEBUG)
+-            TARGET_LINK_LIBRARIES(${TRGTNAME} ${${varname}} )
++            TARGET_LINK_LIBRARIES(${TRGTNAME} PUBLIC ${${varname}} )
+         ENDIF(${varname}_DEBUG)
+     ENDFOREACH(varname)
+ ENDMACRO(LINK_WITH_VARIABLES TRGTNAME)
+ 
+ MACRO(LINK_INTERNAL TRGTNAME)
+-    TARGET_LINK_LIBRARIES(${TRGTNAME} ${ARGN})
++    TARGET_LINK_LIBRARIES(${TRGTNAME} PUBLIC ${ARGN})
+ ENDMACRO(LINK_INTERNAL TRGTNAME)
+ 
+ MACRO(LINK_EXTERNAL TRGTNAME)
+     FOREACH(LINKLIB ${ARGN})
+-        TARGET_LINK_LIBRARIES(${TRGTNAME} "${LINKLIB}" )
++        TARGET_LINK_LIBRARIES(${TRGTNAME} PUBLIC "${LINKLIB}" )
+     ENDFOREACH(LINKLIB)
+ ENDMACRO(LINK_EXTERNAL TRGTNAME)
+ 
+@@ -179,7 +179,7 @@ MACRO(SETUP_LINK_LIBRARIES)
+     ENDIF(TARGET_LIBRARIES_VARS)
+ 
+     FOREACH(LINKLIB ${TARGET_EXTERNAL_LIBRARIES})
+-            TARGET_LINK_LIBRARIES(${TARGET_TARGETNAME} ${LINKLIB})
++            TARGET_LINK_LIBRARIES(${TARGET_TARGETNAME} PUBLIC ${LINKLIB})
+     ENDFOREACH(LINKLIB)
+ ENDMACRO(SETUP_LINK_LIBRARIES)
+ 
+diff --git a/src/applications/osgearth_viewerIOS/CMakeLists.txt b/src/applications/osgearth_viewerIOS/CMakeLists.txt
+index e66fd25c7..9db76784e 100644
+--- a/src/applications/osgearth_viewerIOS/CMakeLists.txt
++++ b/src/applications/osgearth_viewerIOS/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ MACRO(LINK_OSG_STATIC_PLUGINS)
+     FOREACH(LINKLIB ${OSG_STATIC_PLUGINS})
+         SET(OSG_PLUGINS_PATH "${OSG_DIR}/lib")
+-        TARGET_LINK_LIBRARIES(${TARGET_TARGETNAME} optimized "${OSG_PLUGINS_PATH}/lib${LINKLIB}.a" debug "${OSG_PLUGINS_PATH}/lib${LINKLIB}${CMAKE_DEBUG_POSTFIX}.a")
++        TARGET_LINK_LIBRARIES(${TARGET_TARGETNAME} PUBLIC optimized "${OSG_PLUGINS_PATH}/lib${LINKLIB}.a" debug "${OSG_PLUGINS_PATH}/lib${LINKLIB}${CMAKE_DEBUG_POSTFIX}.a")
+     ENDFOREACH(LINKLIB)
+ ENDMACRO(LINK_OSG_STATIC_PLUGINS)
+ 
+diff --git a/src/osgEarth/CMakeLists.txt b/src/osgEarth/CMakeLists.txt
+index e320eb340..cd711a927 100644
+--- a/src/osgEarth/CMakeLists.txt
++++ b/src/osgEarth/CMakeLists.txt
+@@ -943,7 +943,7 @@ IF(Protobuf_FOUND AND Protobuf_PROTOC_EXECUTABLE)
+     ADD_DEFINITIONS(-DPROTOBUF_USE_DLLS)
+   ENDIF()
+ 
+-  LINK_WITH_VARIABLES(${LIB_NAME} Protobuf_LIBRARIES)
++  TARGET_LINK_LIBRARIES(${LIB_NAME} PUBLIC protobuf::libprotobuf)
+ ENDIF()
+ 
+ # ESRI FileGeodatabase?

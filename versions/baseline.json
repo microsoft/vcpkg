@@ -185,8 +185,8 @@
       "port-version": 2
     },
     "arcus": {
-      "baseline": "4.10.0",
-      "port-version": 2
+      "baseline": "4.13.2",
+      "port-version": 0
     },
     "arg-router": {
       "baseline": "1.4.0",
@@ -1334,7 +1334,7 @@
     },
     "braft": {
       "baseline": "2021-26-04",
-      "port-version": 4
+      "port-version": 5
     },
     "breakpad": {
       "baseline": "2023-01-27",
@@ -1349,8 +1349,8 @@
       "port-version": 1
     },
     "brpc": {
-      "baseline": "1.6.1",
-      "port-version": 3
+      "baseline": "1.7.0",
+      "port-version": 0
     },
     "brunocodutra-metal": {
       "baseline": "2.1.4",
@@ -1642,7 +1642,7 @@
     },
     "cld3": {
       "baseline": "3.0.14",
-      "port-version": 2
+      "port-version": 3
     },
     "clfft": {
       "baseline": "2.12.2",
@@ -2418,7 +2418,7 @@
     },
     "ecal": {
       "baseline": "5.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ecm": {
       "baseline": "5.98.0",
@@ -2902,7 +2902,7 @@
     },
     "gamenetworkingsockets": {
       "baseline": "1.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "games101-cgl": {
       "baseline": "0.1.0",
@@ -3177,8 +3177,8 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.51.1",
-      "port-version": 2
+      "baseline": "1.60.0",
+      "port-version": 0
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -3297,7 +3297,7 @@
       "port-version": 1
     },
     "gz-transport12": {
-      "baseline": "12.2.0",
+      "baseline": "12.2.1",
       "port-version": 0
     },
     "gz-utils2": {
@@ -3506,15 +3506,15 @@
     },
     "ignition-msgs1": {
       "baseline": "1.0.0",
-      "port-version": 6
+      "port-version": 7
     },
     "ignition-msgs5": {
       "baseline": "5.3.0",
-      "port-version": 6
+      "port-version": 7
     },
     "ignition-msgs6": {
       "baseline": "6.0.0",
-      "port-version": 5
+      "port-version": 6
     },
     "ignition-plugin1": {
       "baseline": "1.4.0",
@@ -3526,15 +3526,15 @@
     },
     "ignition-transport4": {
       "baseline": "4.0.0",
-      "port-version": 6
+      "port-version": 7
     },
     "ignition-transport8": {
       "baseline": "8.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "ignition-transport9": {
       "baseline": "9.0.0",
-      "port-version": 4
+      "port-version": 5
     },
     "ignition-utils1": {
       "baseline": "1.5.1",
@@ -4754,7 +4754,7 @@
     },
     "libosmscout": {
       "baseline": "1.1.1",
-      "port-version": 4
+      "port-version": 5
     },
     "libp7-baical": {
       "baseline": "replaced",
@@ -4802,7 +4802,7 @@
     },
     "libprotobuf-mutator": {
       "baseline": "1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libproxy": {
       "baseline": "0.4.18",
@@ -5570,7 +5570,7 @@
     },
     "marble": {
       "baseline": "24.02.0",
-      "port-version": 0
+      "port-version": 1
     },
     "marisa-trie": {
       "baseline": "0.2.6+20200926",
@@ -5962,7 +5962,7 @@
     },
     "mysql-connector-cpp": {
       "baseline": "8.0.32",
-      "port-version": 1
+      "port-version": 2
     },
     "nameof": {
       "baseline": "0.10.4",
@@ -6522,7 +6522,7 @@
     },
     "openvino": {
       "baseline": "2024.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openvpn3": {
       "baseline": "3.7.0",
@@ -6574,7 +6574,7 @@
     },
     "osgearth": {
       "baseline": "3.4",
-      "port-version": 1
+      "port-version": 2
     },
     "osmanip": {
       "baseline": "4.6.1",
@@ -6634,7 +6634,7 @@
     },
     "paraview": {
       "baseline": "5.11.0",
-      "port-version": 5
+      "port-version": 6
     },
     "parmetis": {
       "baseline": "2022-07-27",
@@ -6941,8 +6941,8 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "3.21.12",
-      "port-version": 1
+      "baseline": "3.25.1",
+      "port-version": 0
     },
     "protobuf-c": {
       "baseline": "1.4.1",
@@ -7006,7 +7006,7 @@
     },
     "pulsar-client-cpp": {
       "baseline": "3.4.2",
-      "port-version": 2
+      "port-version": 3
     },
     "pulzed-mini": {
       "baseline": "0.9.14",
@@ -8033,8 +8033,8 @@
       "port-version": 7
     },
     "shogun": {
-      "baseline": "6.1.4",
-      "port-version": 9
+      "baseline": "2023-12-19",
+      "port-version": 0
     },
     "si": {
       "baseline": "2.5.1",
@@ -8353,7 +8353,7 @@
       "port-version": 0
     },
     "srpc": {
-      "baseline": "0.9.3",
+      "baseline": "0.10.1",
       "port-version": 0
     },
     "sse2neon": {
@@ -8881,8 +8881,8 @@
       "port-version": 3
     },
     "upb": {
-      "baseline": "2022-06-21",
-      "port-version": 1
+      "baseline": "3.25.1",
+      "port-version": 0
     },
     "urdfdom": {
       "baseline": "3.1.1",
@@ -8921,7 +8921,7 @@
       "port-version": 3
     },
     "utf8-range": {
-      "baseline": "2023-11-09",
+      "baseline": "3.25.1",
       "port-version": 0
     },
     "utf8h": {

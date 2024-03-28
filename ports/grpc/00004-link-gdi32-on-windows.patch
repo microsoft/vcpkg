@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 25990a5d8a..8a632d2289 100644
+index fce68b9..220f251 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -404,7 +404,7 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/xds)
+@@ -432,7 +432,7 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/xds)
  endif()
  
  if(WIN32)
--  set(_gRPC_BASELIB_LIBRARIES ws2_32 crypt32)
-+  set(_gRPC_BASELIB_LIBRARIES wsock32 ws2_32 crypt32 gdi32)
+-  set(_gRPC_ALLTARGETS_LIBRARIES ${_gRPC_ALLTARGETS_LIBRARIES} ws2_32 crypt32)
++  set(_gRPC_ALLTARGETS_LIBRARIES ${_gRPC_ALLTARGETS_LIBRARIES} wsock32 ws2_32 crypt32 gdi32)
+   set(_gRPC_STATIC_WIN32 STATIC)
  endif()
  
- # Create directory for proto source files
