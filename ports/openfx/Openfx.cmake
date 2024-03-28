@@ -29,9 +29,9 @@ install(
 
 install(
     EXPORT openfx-export
-    FILE openfxTargets.cmake
-    NAMESPACE OpenFx::
-    DESTINATION "lib/cmake/openfx"
+    FILE unofficial-openfxTargets.cmake
+    NAMESPACE unofficial::OpenFx::
+    DESTINATION "lib/cmake/unofficial-openfx"
 )
 
 install(
@@ -48,11 +48,11 @@ install(
 include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/openfxConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-openfxConfigVersion.cmake"
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 install(
-    FILES "${CMAKE_CURRENT_BINARY_DIR}/openfxConfigVersion.cmake"
-    DESTINATION "lib/cmake/openfx"
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-openfxConfigVersion.cmake"
+    DESTINATION "lib/cmake/unofficial-openfx"
 )
