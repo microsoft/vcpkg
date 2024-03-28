@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-static-build8.patch
         export-targets.patch
         dependencies.patch
+        fix-link-vs-static.patch
 )
 
 vcpkg_check_features(

@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3b76d68..1950b72 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -399,6 +399,13 @@ add_subdirectory(devapi)
+ merge_libraries(connector xapi devapi)
+ target_include_directories(connector PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+ 
++if(MSVC AND STATIC_MSVCRT)
++    target_include_directories(connector PUBLIC 
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>    
++    $<INSTALL_INTERFACE:include>
++    $<INSTALL_INTERFACE:include/${VS}>
++)
++endif()
+ 
+ #
+ # Embed rpath information in the connector library.
