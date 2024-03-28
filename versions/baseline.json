@@ -7861,7 +7861,7 @@
       "port-version": 0
     },
     "scotch": {
-      "baseline": "7.0.3",
+      "baseline": "7.0.4",
       "port-version": 0
     },
     "scottt-debugbreak": {
