@@ -20,8 +20,6 @@ endif()
 
 _find_package(${ARGS})
 
-if(ffmpeg_FOUND OR FFMPEG_FOUND)
-
 if(WIN32)
   set(PKG_CONFIG_EXECUTABLE "${CMAKE_CURRENT_LIST_DIR}/../../../@_HOST_TRIPLET@/tools/pkgconf/pkgconf.exe")
 endif()
@@ -241,9 +239,24 @@ if(@WITH_AOM@)
   endif()
 endif()
 
-set(FFMPEG_LIBRARY ${FFMPEG_LIBRARIES})
-
+if(@WITH_X264@)
+  find_package(PkgConfig )
+  pkg_check_modules(x264  IMPORTED_TARGET x264)
+  list(APPEND FFMPEG_LIBRARIES PkgConfig::x264)
+  if(vcpkg_no_avcodec_target AND TARGET FFmpeg::avcodec)
+    target_link_libraries(FFmpeg::avcodec INTERFACE PkgConfig::x264)
+  endif()
 endif()
+
+if(@WITH_AAC@)
+  find_package(fdk-aac CONFIG)
+    list(APPEND FFMPEG_LIBRARIES FDK-AAC::fdk-aac)
+  if(vcpkg_no_avcodec_target AND TARGET FFmpeg::avcodec)
+    target_link_libraries(FFmpeg::avcodec INTERFACE FDK-AAC::fdk-aac)
+  endif()
+endif()
+
+set(FFMPEG_LIBRARY ${FFMPEG_LIBRARIES})
 
 set(CMAKE_MODULE_PATH ${FFMPEG_PREV_MODULE_PATH})
 
