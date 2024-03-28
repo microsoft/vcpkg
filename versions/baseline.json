@@ -316,6 +316,10 @@
       "baseline": "0",
       "port-version": 0
     },
+    "atliac-minitest": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "atlmfc": {
       "baseline": "0",
       "port-version": 3
