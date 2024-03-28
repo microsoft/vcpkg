@@ -7829,8 +7829,8 @@
       "port-version": 0
     },
     "sbp": {
-      "baseline": "3.4.10",
-      "port-version": 1
+      "baseline": "5.0.4",
+      "port-version": 0
     },
     "scenepic": {
       "baseline": "1.1.0",
