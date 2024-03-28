@@ -1,7 +1,7 @@
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO realm/realm-cpp
-        REF v${VERSION}
+        REF "v${VERSION}"
         SHA512 059c5e39e5204e5ebcdd727c74b4001be44040df6804804fbba73455c36a7547fb2d07e035d8b694299b4d35fae29cc42305811f24160447810c6eaa2c6397ad
         HEAD_REF main
 )
@@ -9,9 +9,9 @@ vcpkg_from_github(
 vcpkg_from_github(
         OUT_SOURCE_PATH REALM_CORE_SOURCE_PATH
         REPO realm/realm-core
-        REF v14.4.1
-        SHA512 a7f9098f258a021e15b30d897b8a2986988da0bf34bd3179eadcc1fcaa67532b47f0ebf97c43ecc562f4d77224e4e2ca5924ea3364b480aec4a9fafa9eb478dd
-        HEAD_REF master
+        REF ffb40c857c6d666a8023d8384125c19841aa773d
+        SHA512 7cc3a4ebb8ab77fbf0f349b876122ebdb84c96dfa360cc5d82750064959e4d663f17fdd3d9bde62162087d7aecedd59713fd044a3c791112260bfe97dd74e305
+        HEAD_REF lm/msvc-arm
 )
 
 vcpkg_from_github(
@@ -61,7 +61,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME "cpprealm" CONFIG_PATH "cmake")
-vcpkg_cmake_config_fixup(PACKAGE_NAME "Realm" CONFIG_PATH "share/cmake/Realm")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "realm" CONFIG_PATH "share/cmake/Realm")
 
 file(READ ${CURRENT_PACKAGES_DIR}/debug/include/cpprealm/internal/bridge/bridge_types.hpp DEBUG_TYPE_HEADER_CONTENTS)
 set(REGEX_PATTERN "\\{([^()]*)\\}")
@@ -88,6 +88,8 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/cpprealm/internal/bridge/bridge_types
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/doc"
+    "${CURRENT_PACKAGES_DIR}/doc"
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
