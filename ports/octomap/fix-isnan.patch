@@ -1,0 +1,15 @@
+diff --git a/octomap/src/compare_octrees.cpp b/octomap/src/compare_octrees.cpp
+index c02ceea..affdf4f 100644
+--- a/octomap/src/compare_octrees.cpp
++++ b/octomap/src/compare_octrees.cpp
+@@ -39,10 +39,6 @@
+ #include <list>
+ #include <cmath>
+ 
+-#ifdef _MSC_VER // fix missing isnan for VC++
+-#define isnan(x) _isnan(x)  
+-#endif
+-
+ // on MacOS, isnan is in std (also C++11)
+ using namespace std;
+ 
