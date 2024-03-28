@@ -1,11 +1,11 @@
 {
   "name": "opencv4",
-  "version": "4.8.0",
-  "port-version": 15,
+  "version": "4.9.0",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
   "dependencies": [
+    "openjpeg",
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -1,17 +1,10 @@
 set(USE_QT_VERSION "6")
 
-# https://github.com/opencv/opencv/pull/24043
-vcpkg_download_distfile(ARM64_WINDOWS_FIX
-  URLS https://github.com/opencv/opencv/commit/e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch?full_index=1
-  SHA512 8ae2544e4a7ece19efe21261acc183f91202ac5352c1ac42fb86bf33d698352eff1b8962422b092240f4e8c7a691e9aa5ef20d6070adcd37e92bb94c6010ce56
-  FILENAME opencv4-e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 48738c3e7460a361274357aef1dd427082ccd59f749d6317d92a414b3741ce6116ea15ed4fedd2d47a25e456c705f3ba114357558646097bfc0e6dba9b3b865c
+    SHA512 1598ae59849e7805b3cbec5260bb501006f26edff452343b366b9262a0f48a6e09f4b2e760209cb677f2a64a7b22f4e70bc6195c104bcea74cc9fe04031d0292
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -23,14 +16,9 @@ vcpkg_from_github(
       0008-devendor-quirc.patch
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
-      0011-remove-python2.patch
       0012-fix-zlib.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
-      0019-missing-include.patch
-      0020-fix-compat-cuda12.2.patch
-      0021-static-openvino.patch # https://github.com/opencv/opencv/pull/23963
-      "${ARM64_WINDOWS_FIX}"
       0022-fix-supportqnx.patch
 )
 # Disallow accidental build of vendored copies
@@ -171,6 +159,7 @@ if("cuda" IN_LIST FEATURES)
     FILENAME "opencv-cache/nvidia_optical_flow/a73cd48b18dcc0cc8933b30796074191-edb50da3cf849840d680249aa6dbef248ebce2ca.zip"
     SHA512 12d655ac9fcfc6df0186daa62f7185dadd489f0eeea25567d78c2b47a9840dcce2bd03a3e9b3b42f125dbaf3150f52590ea7597dc1dc8acee852dc0aed56651e
   )
+    list(APPEND ADDITIONAL_BUILD_FLAGS "-DENABLE_CUDA_FIRST_CLASS_LANGUAGE=ON")
 endif()
 
 # Build image quality module when building with 'contrib' feature and not UWP.
@@ -285,9 +274,9 @@ if(WITH_IPP)
   if(VCPKG_TARGET_IS_OSX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/1224f78da6684df04397ac0f40c961ed37f79ccb/ippicv/ippicv_2021.8_mac_intel64_20230330_general.tgz"
-        FILENAME "opencv-cache/ippicv/d2b234a86af1b616958619a4560356d9-ippicv_2021.8_mac_intel64_20230330_general.tgz"
-        SHA512 f74a4b7bda9ec20bbf7fbb764171156bfd0ca4915fd4efd77ff53fc7a64ce8219d82d28d4fef5968fde1b85fd669e63f9514f4700d85c25327ce56fa47c0f007
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+        FILENAME "opencv-cache/ippicv/14f01c5a4780bfae9dde9b0aaf5e56fc-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+        SHA512 E53AA1BF4336A94554BF40C29A74C85F595C0AEC8D9102A158DB7AE075DB048C1FF7F50ED81EDA3AC8E07B1460862970ABC820073A53C0F237E584708C5295DA
     )
     else()
       message(WARNING "This target architecture is not supported IPPICV")
@@ -296,9 +285,9 @@ if(WITH_IPP)
   elseif(VCPKG_TARGET_IS_LINUX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/1224f78da6684df04397ac0f40c961ed37f79ccb/ippicv/ippicv_2021.8_lnx_intel64_20230330_general.tgz"
-        FILENAME "opencv-cache/ippicv/43219bdc7e3805adcbe3a1e2f1f3ef3b-ippicv_2021.8_lnx_intel64_20230330_general.tgz"
-        SHA512 e54085172465a9aa82e454c1055d62be9cb970e99e75343ab7849241f36762021c5b30cf2cff0d92bab2ccec65809c467293bea865e5af3ad82af8f75bf08ea0
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_lnx_intel64_20230919_general.tgz"
+        FILENAME "opencv-cache/ippicv/606a19b207ebedfe42d59fd916cc4850-ippicv_2021.10.0_lnx_intel64_20230919_general.tgz"
+        SHA512 CE4A2FBCF77D435CABECD9B414950DB4BD34F88DDE385E4A9139586A9C6D31F09E32D13D7AE36CA64418D5511777B5BA212C06422FE5AE1508342846613CA26D
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
@@ -313,15 +302,15 @@ if(WITH_IPP)
   elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/1224f78da6684df04397ac0f40c961ed37f79ccb/ippicv/ippicv_2021.8_win_intel64_20230330_general.zip"
-        FILENAME "opencv-cache/ippicv/71e4f58de939f0348ec7fb58ffb17dbf-ippicv_2021.8_win_intel64_20230330_general.zip"
-        SHA512 00233de01a9ad1a8df35fa5b66218ae42b3d0bfca08ed7a14e733d4ea037d01f6932386b6cfc441b159b525c0a31c259414c2f096431ed5cb0fd32dd1d367cde
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_lnx_intel64_20230919_general.tgz"
+        FILENAME "opencv-cache/ippicv/606a19b207ebedfe42d59fd916cc4850-ippicv_2021.10.0_lnx_intel64_20230919_general.tgz"
+        SHA512 CE4A2FBCF77D435CABECD9B414950DB4BD34F88DDE385E4A9139586A9C6D31F09E32D13D7AE36CA64418D5511777B5BA212C06422FE5AE1508342846613CA26D
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/1224f78da6684df04397ac0f40c961ed37f79ccb/ippicv/ippicv_2021.8_win_ia32_20230330_general.zip"
-        FILENAME "opencv-cache/ippicv/57fd4648cfe64eae9e2ad9d50173a553-ippicv_2021.8_win_ia32_20230330_general.zip"
-        SHA512 c2942f0bdc51e0d0ee0695c62d4e366c5b87d95acaac38c5df19c2c647849cc544c5689a569134baaf64a260aa4984db51fc094ddd995afef3bd0c1d3f265465
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.10.0_win_ia32_20230919_general.zip"
+        FILENAME "opencv-cache/ippicv/8ff93c69415ab0835cc1e94dc5660f5d-ippicv_2021.10.0_win_ia32_20230919_general.zip"
+        SHA512 BD63E8EDF52E561154953217D26CA64CC500B529E55B8E3ABB927D69766FFF979FED2B16D51E453F75E61679D3569ABBC5C1BBB2652A93F3F178FBF27354D624
       )
     else()
       message(WARNING "This target architecture is not supported IPPICV")
