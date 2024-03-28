@@ -2,6 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "opentelemetry-cpp",
   "version-semver": "1.14.2",
+  "port-version": 1,
   "description": [
     "OpenTelemetry is a collection of tools, APIs, and SDKs.",
     "You use it to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) for analysis in order to understand your software's performance and behavior."
@@ -62,6 +63,10 @@
       "dependencies": [
         "prometheus-cpp"
       ]
+    },
+    "user-events": {
+      "description": "Whether to include the User Events Exporter from the opentelemetry-cpp-contrib repository",
+      "supports": "linux"
     },
     "zipkin": {
       "description": "Whether to include the Zipkin exporter in the SDK"
