@@ -1,55 +1,64 @@
-cmake_minimum_required(VERSION 3.13)
-
+cmake_minimum_required(VERSION 3.15)
 
 set(duktape_MAJOR_VERSION 2)
 set(duktape_MINOR_VERSION 7)
 set(duktape_PATCH_VERSION 0)
 set(duktape_VERSION ${duktape_MAJOR_VERSION}.${duktape_MINOR_VERSION}.${duktape_PATCH_VERSION})
 
-option(CMAKE_VERBOSE_MAKEFILE "Create verbose makefile" OFF)
-option(BUILD_SHARED_LIBS "Create duktape as a shared library" ON)
-
 project(duktape VERSION ${duktape_VERSION})
+
+include(GNUInstallDirs)
 
 file(GLOB_RECURSE DUKTAPE_SOURCES "${CMAKE_CURRENT_LIST_DIR}/src/*.c")
 file(GLOB_RECURSE DUKTAPE_HEADERS "${CMAKE_CURRENT_LIST_DIR}/src/*.h")
 
 add_library(duktape ${DUKTAPE_SOURCES} ${DUKTAPE_HEADERS})
-target_include_directories(duktape PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src")
-set_target_properties(duktape PROPERTIES PUBLIC_HEADER "${DUKTAPE_HEADERS}")
+target_include_directories(duktape PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 set_target_properties(duktape PROPERTIES VERSION ${duktape_VERSION})
 set_target_properties(duktape PROPERTIES SOVERSION ${duktape_MAJOR_VERSION})
 
-if (BUILD_SHARED_LIBS)
-  target_compile_definitions(duktape PRIVATE -DDUK_F_DLL_BUILD)
-endif ()
+install(TARGETS duktape EXPORT duktape)
 
-install(TARGETS duktape
-        EXPORT duktapeTargets
-        ARCHIVE DESTINATION "lib"
-        LIBRARY DESTINATION "lib"
-        RUNTIME DESTINATION "bin"
-        PUBLIC_HEADER DESTINATION "include"
-        COMPONENT dev
+install(
+    EXPORT duktape
+    NAMESPACE duktape::
+    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/duktape"
+    FILE duktape-targets.cmake
 )
 
-install(EXPORT duktapeTargets
-  FILE duktapeTargets.cmake
-  NAMESPACE duktape::
-  DESTINATION "share/duktape"
+install(
+    FILES ${DUKTAPE_HEADERS}
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
-
-export(PACKAGE duktape)
 
 include(CMakePackageConfigHelpers)
-write_basic_package_version_file("${PROJECT_BINARY_DIR}/duktapeConfigVersion.cmake"
-  COMPATIBILITY SameMajorVersion
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake/duktape-config-version.cmake"
+    COMPATIBILITY SameMajorVersion
+)
+configure_package_config_file(
+    "${CMAKE_CURRENT_LIST_DIR}/duktape-config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake/duktape-config.cmake"
+    INSTALL_DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/duktape"
+)
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake/duktape-config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake/duktape-config-version.cmake"
+    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/duktape"
 )
 
-configure_file(duktapeConfig.cmake.in "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/duktapeConfig.cmake" @ONLY)
-
-install(FILES
-  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/duktapeConfig.cmake"
-  "${PROJECT_BINARY_DIR}/duktapeConfigVersion.cmake"
-  DESTINATION "share/duktape"
+set(prefix "")
+set(LIBDIR "/lib")
+set(VERSION "${duktape_VERSION}")
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/duktape.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/duktape.pc"
+    @ONLY
+)
+install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/duktape.pc"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
 )

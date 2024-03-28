@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/duktape-targets.cmake")
+
+# Keep the old usage for compatibility
+set(DUKTAPE_FOUND TRUE)
+get_target_property(DUKTAPE_INCLUDE_DIRS duktape::duktape INTERFACE_INCLUDE_DIRECTORIES)
+set(DUKTAPE_LIBRARIES duktape::duktape)
