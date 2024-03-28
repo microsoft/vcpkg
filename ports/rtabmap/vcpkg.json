@@ -13,15 +13,11 @@
     },
     {
       "name": "pcl",
-      "default-features": false,
-      "features": [
-        "vtk"
-      ]
+      "default-features": false
     },
     {
       "name": "rtabmap-res-tool",
-      "host": true,
-      "platform": "!native"
+      "host": true
     },
     "sqlite3",
     {
@@ -48,7 +44,8 @@
           "name": "pcl",
           "default-features": false,
           "features": [
-            "qt"
+            "qt",
+            "visualization"
           ]
         },
         {
@@ -59,6 +56,10 @@
             "opengl",
             "widgets"
           ]
+        },
+        {
+          "name": "vtk",
+          "default-features": false
         }
       ]
     },

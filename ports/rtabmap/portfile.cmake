@@ -12,7 +12,7 @@ vcpkg_from_github(
         rtabmap-res-tool.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         gui         WITH_QT
         k4w2        WITH_K4W2
@@ -23,16 +23,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         tools       BUILD_TOOLS
 )
 
-if(VCPKG_CROSSCOMPILING)
-    vcpkg_list(APPEND OPTIONS "-DRTABMAP_RES_TOOL=${CURRENT_HOST_INSTALLED_DIR}/tools/rtabmap-res-tool/rtabmap-res_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
+        -DRTABMAP_QT_VERSION=6
+        "-DRTABMAP_RES_TOOL=${CURRENT_HOST_INSTALLED_DIR}/tools/rtabmap-res-tool/rtabmap-res_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
         -DWITH_ALICE_VISION=OFF
         -DWITH_CCCORELIB=OFF
         -DWITH_CERES=ON
@@ -69,7 +67,7 @@ vcpkg_cmake_configure(
         -DWITH_VISO2=OFF
         -DWITH_ZED=OFF
         -DWITH_ZEDOC=OFF
-        ${OPTIONS}
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DBUILD_APP=OFF
         -DBUILD_TOOLS=OFF
@@ -85,13 +83,6 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if(NOT VCPKG_CROSSCOMPILING)
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool-0.3.0)  
-    endif()
-    vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool AUTO_CLEAN)
-endif()
 
 if("tools" IN_LIST FEATURES)
   vcpkg_copy_tools(
@@ -123,28 +114,8 @@ if("tools" IN_LIST FEATURES)
             rtabmap-rgbd_camera
         AUTO_CLEAN
     )
-    
-#[[
-    # Remove duplicate files that were added by qtdeploy 
-    # that would be already deployed by vcpkg_copy_tools
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tmp")
-    file(GLOB RTABMAP_REL_LIBS "${CURRENT_PACKAGES_DIR}/tmp/rtabmap*")
-    file(COPY ${RTABMAP_REL_LIBS} DESTINATION  "${CURRENT_PACKAGES_DIR}/bin")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tmp")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/translations")
-    #qt.conf
     file(COPY "${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/qt.conf" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "./../../../" "./../../")
-
-    if(NOT VCPKG_BUILD_TYPE)
-      file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/debug/tmp")
-      file(GLOB RTABMAP_DBG_LIBS "${CURRENT_PACKAGES_DIR}/debug/tmp/rtabmap*")
-      file(COPY ${RTABMAP_DBG_LIBS} DESTINATION  "${CURRENT_PACKAGES_DIR}/debug/bin")
-      file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tmp")
-      file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/plugins")
-      file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/translations")
-    endif()
-]]
   endif()
 endif()
 
