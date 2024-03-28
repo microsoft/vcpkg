@@ -8,7 +8,6 @@ vcpkg_from_github(
         fix-static-build8.patch
         export-targets.patch
         dependencies.patch
-        fix-link-vs-static.patch
 )
 
 vcpkg_check_features(
@@ -56,6 +55,10 @@ file(REMOVE
     "${CURRENT_PACKAGES_DIR}/debug/INFO_BIN"
     "${CURRENT_PACKAGES_DIR}/debug/INFO_SRC"
 )
+if(BUILD_STATIC)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/vs14/mysqlcppconn8-static-mt-mt.lib" "${CURRENT_PACKAGES_DIR}/lib/mysqlcppconn8-static-mt-mt.lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/vs14/mysqlcppconn8-static-mt-mt.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/mysqlcppconn8-static-mt-mt.lib")
+endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
