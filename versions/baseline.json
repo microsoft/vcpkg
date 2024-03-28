@@ -6005,8 +6005,8 @@
       "port-version": 1
     },
     "nanopb": {
-      "baseline": "0.4.7",
-      "port-version": 2
+      "baseline": "0.4.8",
+      "port-version": 0
     },
     "nanoprintf": {
       "baseline": "0.3.4",
