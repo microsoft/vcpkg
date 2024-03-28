@@ -47,6 +47,13 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/aom.pc" " -lm" "")
+  if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/aom.pc" " -lm" "")
+  endif()
+endif()
+
 # Move cmake configs
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
