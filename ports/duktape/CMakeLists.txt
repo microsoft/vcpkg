@@ -16,6 +16,7 @@ file(GLOB_RECURSE DUKTAPE_HEADERS "${CMAKE_CURRENT_LIST_DIR}/src/*.h")
 
 add_library(duktape ${DUKTAPE_SOURCES} ${DUKTAPE_HEADERS})
 target_include_directories(duktape PRIVATE "${CMAKE_CURRENT_LIST_DIR}/src")
+target_include_directories(duktape PUBLIC "$<INSTALL_INTERFACE:include>")
 set_target_properties(duktape PROPERTIES PUBLIC_HEADER "${DUKTAPE_HEADERS}")
 set_target_properties(duktape PROPERTIES VERSION ${duktape_VERSION})
 set_target_properties(duktape PROPERTIES SOVERSION ${duktape_MAJOR_VERSION})
@@ -34,22 +35,19 @@ install(TARGETS duktape
 )
 
 install(EXPORT duktapeTargets
-  FILE duktapeTargets.cmake
-  NAMESPACE duktape::
-  DESTINATION "share/duktape"
+  FILE unofficial-duktape-config.cmake
+  NAMESPACE unofficial::duktape::
+  DESTINATION "share/unofficial-duktape"
 )
 
 export(PACKAGE duktape)
 
 include(CMakePackageConfigHelpers)
-write_basic_package_version_file("${PROJECT_BINARY_DIR}/duktapeConfigVersion.cmake"
+write_basic_package_version_file("${PROJECT_BINARY_DIR}/unofficial-duktape-config-version.cmake"
   COMPATIBILITY SameMajorVersion
 )
 
-configure_file(duktapeConfig.cmake.in "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/duktapeConfig.cmake" @ONLY)
-
 install(FILES
-  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/duktapeConfig.cmake"
-  "${PROJECT_BINARY_DIR}/duktapeConfigVersion.cmake"
-  DESTINATION "share/duktape"
+  "${PROJECT_BINARY_DIR}/unofficial-duktape-config-version.cmake"
+  DESTINATION "share/unofficial-duktape"
 )
