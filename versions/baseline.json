@@ -7854,7 +7854,7 @@
     },
     "scnlib": {
       "baseline": "2.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "scope-guard": {
       "baseline": "1.1.0",
@@ -8073,7 +8073,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "4.0.9",
+      "baseline": "5.0.0",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
