@@ -2,22 +2,6 @@
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_configure_meson.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_install_meson.cmake")
 
-# Check required python version
-vcpkg_find_acquire_program(PYTHON3)
-vcpkg_execute_required_process(COMMAND "${PYTHON3}" --version
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-            LOGNAME "python3-version-${TARGET_TRIPLET}")
-
-file(READ "${CURRENT_BUILDTREES_DIR}/python3-version-${TARGET_TRIPLET}-out.log" version_contents)
-string(REGEX MATCH [[[0-9]+\.[0-9]+\.[0-9]+]] python_ver "${version_contents}")
-
-set(min_required 3.7)
-if(python_ver VERSION_LESS "${min_required}")
-    message(FATAL_ERROR "Found Python version '${python_ver} at ${PYTHON3}' is insufficient for meson. meson requires at least version '${min_required}'")
-else()
-    message(STATUS "Found Python version '${python_ver} at ${PYTHON3}'")
-endif()
-
 set(meson_path_hash @MESON_PATH_HASH@)
 string(SUBSTRING "${meson_path_hash}" 0 6 meson_short_hash)
 
@@ -39,7 +23,6 @@ if(NOT SCRIPT_MESON)
         URLS ${download_urls}
         SHA512 "${download_sha512}"
         FILENAME "${download_filename}"
-
     )
     file(REMOVE_RECURSE "${path_to_search}")
     file(REMOVE_RECURSE "${path_to_search}-tmp")
@@ -61,6 +44,22 @@ if(NOT SCRIPT_MESON)
     file(RENAME "${path_to_search}-tmp/meson-${ref}/mesonbuild" "${path_to_search}/mesonbuild")
     file(REMOVE_RECURSE "${path_to_search}-tmp")
     set(SCRIPT_MESON "${path_to_search}/meson.py")
+endif()
+
+# Check required python version
+vcpkg_find_acquire_program(PYTHON3)
+vcpkg_execute_required_process(COMMAND "${PYTHON3}" --version
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+            LOGNAME "python3-version-${TARGET_TRIPLET}")
+
+file(READ "${CURRENT_BUILDTREES_DIR}/python3-version-${TARGET_TRIPLET}-out.log" version_contents)
+string(REGEX MATCH [[[0-9]+\.[0-9]+\.[0-9]+]] python_ver "${version_contents}")
+
+set(min_required 3.7)
+if(python_ver VERSION_LESS "${min_required}")
+    message(FATAL_ERROR "Found Python version '${python_ver} at ${PYTHON3}' is insufficient for meson. meson requires at least version '${min_required}'")
+else()
+    message(STATUS "Found Python version '${python_ver} at ${PYTHON3}'")
 endif()
 
 message(STATUS "Using meson: ${SCRIPT_MESON}")
