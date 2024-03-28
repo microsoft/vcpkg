@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
     REF "${hdf5_ref}"
-    SHA512 32326db41c68147d70a6797c9603274748f60c2d1d8fe6e66850abfd2408f8dd0927ec44db16cde72947e252a9a5418b3bb6d73ce731195ce7b1feb805f2a9c9
+    SHA512 1282da256ca135588c63ff8c60f5e4bacdaf5571f01c0a357384bc45c189bdbb0f5f8e890a0f4d25b584def018546952f3b65c5577e78fb3c77e84ebe84b457c
     HEAD_REF develop
     PATCHES
         hdf5_config.patch
@@ -56,11 +56,6 @@ if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
                     -DONLY_SHARED_LIBS=ON)
 endif()
 
-if(VCPKG_TARGET_IS_MINGW)
-    list(APPEND FEATURE_OPTIONS
-                    -DHDF_NO_IOEO_TEST=ON)  
-endif()
-		
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
