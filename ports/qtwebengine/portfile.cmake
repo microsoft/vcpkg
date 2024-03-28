@@ -3,7 +3,6 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
       "clang-cl.patch"
-      "msvc-template.patch"
 )
 
 set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
@@ -115,6 +114,12 @@ qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.exe" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.exe")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.pdb" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.pdb")
+endif()
 
 qt_install_copyright("${SOURCE_PATH}")
 

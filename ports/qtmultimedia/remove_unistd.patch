@@ -8,7 +8,7 @@ index d4806b23a..f985a973b 100644
  #include <sys/types.h>
 -#include <unistd.h>
  
- #include <qgstpipeline_p.h>
+ #include <qgst_debug_p.h>
  #include <qgstappsrc_p.h>
 diff --git a/src/plugins/multimedia/gstreamer/audio/qgstreameraudiosource.cpp b/src/plugins/multimedia/gstreamer/audio/qgstreameraudiosource.cpp
 index 51fc26c42..3b04a77bb 100644

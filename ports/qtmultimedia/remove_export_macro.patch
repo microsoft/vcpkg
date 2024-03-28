@@ -4,26 +4,31 @@ index a7ce0b5fe..9c66b217d 100644
 +++ b/src/plugins/multimedia/gstreamer/common/qgst_p.h
 @@ -127,7 +127,7 @@ public:
      inline int listSize() const { return gst_value_list_get_size(value); }
-     inline QGValue at(int index) const { return gst_value_list_get_value(value, index); }
+     inline QGValue at(int index) const { return QGValue{ gst_value_list_get_value(value, index) }; }
  
 -    Q_MULTIMEDIA_EXPORT QList<QAudioFormat::SampleFormat> getSampleFormats() const;
-+     QList<QAudioFormat::SampleFormat> getSampleFormats() const;
++    QList<QAudioFormat::SampleFormat> getSampleFormats() const;
  };
  
- class QGstStructure {
-@@ -143,9 +143,9 @@ public:
- 
-     QGValue operator[](const char *name) const { return gst_structure_get_value(structure, name); }
+ namespace QGstPointerImpl {
+@@ -143,11 +143,11 @@ public:
+         return QGValue{ gst_structure_get_value(structure, name) };
+     }
  
 -    Q_MULTIMEDIA_EXPORT QSize resolution() const;
 -    Q_MULTIMEDIA_EXPORT QVideoFrameFormat::PixelFormat pixelFormat() const;
 -    Q_MULTIMEDIA_EXPORT QGRange<float> frameRateRange() const;
-+     QSize resolution() const;
-+     QVideoFrameFormat::PixelFormat pixelFormat() const;
-+     QGRange<float> frameRateRange() const;
+-    Q_MULTIMEDIA_EXPORT QGstreamerMessage getMessage();
+-    Q_MULTIMEDIA_EXPORT std::optional<Fraction> pixelAspectRatio() const;
+-    Q_MULTIMEDIA_EXPORT QSize nativeSize() const;
++    QSize resolution() const;
++    QVideoFrameFormat::PixelFormat pixelFormat() const;
++    QGRange<float> frameRateRange() const;
++    QGstreamerMessage getMessage();
++    std::optional<Fraction> pixelAspectRatio() const;
++    QSize nativeSize() const;
  
-     QByteArray toString() const
-     {
+     QGstStructure copy() const { return gst_structure_copy(structure); }
 diff --git a/src/plugins/multimedia/gstreamer/common/qgstappsrc_p.h b/src/plugins/multimedia/gstreamer/common/qgstappsrc_p.h
 index 0266e0312..ca32cbab4 100644
 --- a/src/plugins/multimedia/gstreamer/common/qgstappsrc_p.h
@@ -94,14 +99,14 @@ index 04bcfc8d8..8190756a9 100644
 --- a/src/plugins/multimedia/gstreamer/common/qgstreamermessage_p.h
 +++ b/src/plugins/multimedia/gstreamer/common/qgstreamermessage_p.h
 @@ -23,7 +23,7 @@ QT_BEGIN_NAMESPACE
- // Required for QDoc workaround
- class QString;
+     static void unref(GstMessage *arg) noexcept { gst_message_unref(arg); }
+ };
  
--class Q_MULTIMEDIA_EXPORT QGstreamerMessage
-+class  QGstreamerMessage
+-class Q_MULTIMEDIA_EXPORT QGstreamerMessage : public QGstPointerImpl::QGstObjectWrapper<GstMessage>
++class QGstreamerMessage : public QGstPointerImpl::QGstObjectWrapper<GstMessage>
  {
- public:
-     QGstreamerMessage() = default;
+     using BaseClass = QGstPointerImpl::QGstObjectWrapper<GstMessage>;
+ 
 diff --git a/src/plugins/multimedia/gstreamer/common/qgstreamervideooutput_p.h b/src/plugins/multimedia/gstreamer/common/qgstreamervideooutput_p.h
 index 74652aa77..36f3226f1 100644
 --- a/src/plugins/multimedia/gstreamer/common/qgstreamervideooutput_p.h
@@ -162,8 +167,8 @@ index c534dddba..7309db5e5 100644
  class QGstreamerVideoSink;
  class QOpenGLContext;
  
--class Q_MULTIMEDIA_EXPORT QGstVideoBuffer : public QAbstractVideoBuffer
-+class  QGstVideoBuffer : public QAbstractVideoBuffer
+-class Q_MULTIMEDIA_EXPORT QGstVideoBuffer final : public QAbstractVideoBuffer
++class  QGstVideoBuffer final : public QAbstractVideoBuffer
  {
  public:
  
