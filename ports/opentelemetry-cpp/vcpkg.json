@@ -66,7 +66,17 @@
     },
     "user-events": {
       "description": "Whether to include the User Events Exporter from the opentelemetry-cpp-contrib repository",
-      "supports": "linux"
+      "supports": "linux",
+      "dependencies": [
+        "libeventheader-tracepoint",
+        "libtracepoint",
+        {
+          "name": "opentelemetry-cpp",
+          "features": [
+            "otlp-grpc"
+          ]
+        }
+      ]
     },
     "zipkin": {
       "description": "Whether to include the Zipkin exporter in the SDK"
