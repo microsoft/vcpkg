@@ -11,15 +11,3 @@ index 6be8199..2ebff62 100644
  find_package(GTest CONFIG REQUIRED)
  find_package(folly CONFIG REQUIRED)
  find_package(fizz CONFIG REQUIRED)
-diff --git a/cachelib/cmake/cachelib-config.cmake.in b/cachelib/cmake/cachelib-config.cmake.in
-index 6e850f5..c653f38 100644
---- a/cachelib/cmake/cachelib-config.cmake.in
-+++ b/cachelib/cmake/cachelib-config.cmake.in
-@@ -30,6 +30,7 @@ set_and_check(CACHELIB_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
- set_and_check(CACHELIB_CMAKE_DIR "@PACKAGE_CMAKE_INSTALL_DIR@")
- 
- find_dependency(Gflags)
-+find_dependency(glog CONFIG)
- find_dependency(folly )
- find_dependency(fizz )
- find_dependency(wangle)
