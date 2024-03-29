@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "Embeddable Javascript engine with a focus on portability and compact footprint.",
   "homepage": "https://github.com/svaarala/duktape",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
