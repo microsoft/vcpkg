@@ -223,7 +223,7 @@ if(@WITH_OPENJPEG@)
 endif()
 
 if(@WITH_SNAPPY@)
-  find_package(snappy CONFIG )
+  find_package(Snappy CONFIG )
   list(APPEND FFMPEG_LIBRARIES Snappy::snappy)
   if(vcpkg_no_avcodec_target AND TARGET FFmpeg::avcodec)
     target_link_libraries(FFmpeg::avcodec INTERFACE Snappy::snappy)
