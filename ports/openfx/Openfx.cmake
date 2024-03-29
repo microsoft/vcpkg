@@ -29,20 +29,14 @@ install(
 
 install(
     EXPORT openfx-export
-    FILE unofficial-openfxTargets.cmake
+    FILE unofficial-openfxConfig.cmake
     NAMESPACE unofficial::OpenFx::
-    DESTINATION "lib/cmake/unofficial-openfx"
+    DESTINATION "share/unofficial-openfx"
 )
 
-install(
-    DIRECTORY ${OFX_HEADERS_DIR}/
-    DESTINATION include
-    FILES_MATCHING PATTERN "*.h"
-)
-install(
-    DIRECTORY ${OFX_SUPPORT_HEADERS_DIR}/
-    DESTINATION include
-    FILES_MATCHING PATTERN "*.h"
+file(GLOB OFX_HEADERS "${OFX_HEADERS_DIR}/*.h" "${OFX_SUPPORT_HEADERS_DIR}/*.h")
+install(FILES ${OFX_HEADERS}
+    DESTINATION include/openfx
 )
 
 include(CMakePackageConfigHelpers)
@@ -54,5 +48,5 @@ write_basic_package_version_file(
 )
 install(
     FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-openfxConfigVersion.cmake"
-    DESTINATION "lib/cmake/unofficial-openfx"
+    DESTINATION "share/unofficial-openfx"
 )

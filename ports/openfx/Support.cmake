@@ -13,9 +13,9 @@ set(OFX_SUPPORT_HEADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "
 target_include_directories(OfxSupport
     PUBLIC
     $<BUILD_INTERFACE:${OFX_SUPPORT_HEADERS_DIR}>
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include/openfx>
 )
 
-target_link_libraries(OfxSupport PUBLIC OpenFx)
+target_link_libraries(OfxSupport INTERFACE OpenFx)
 
 target_compile_features(OfxSupport PUBLIC cxx_std_11)

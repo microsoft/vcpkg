@@ -1,4 +1,4 @@
 The package OpenFX provides CMake targets:
 
-    find_package(OpenFx CONFIG REQUIRED)
+    find_package(unofficial-openfx CONFIG REQUIRED)
     target_link_libraries(main PRIVATE unofficial::OpenFx::OpenFx)

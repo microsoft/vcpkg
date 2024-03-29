@@ -12,10 +12,7 @@ file(COPY_FILE ${CMAKE_CURRENT_LIST_DIR}/Support.cmake ${SOURCE_PATH}/Support/CM
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME openfx
-    CONFIG_PATH lib/cmake/unofficial-openfx
-)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-openfx)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/DocSrc")
