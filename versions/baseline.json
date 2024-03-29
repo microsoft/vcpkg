@@ -2213,8 +2213,8 @@
       "port-version": 0
     },
     "directx-dxc": {
-      "baseline": "2024-03-07",
-      "port-version": 1
+      "baseline": "2024-03-22",
+      "port-version": 0
     },
     "directx-headers": {
       "baseline": "1.613.0",
