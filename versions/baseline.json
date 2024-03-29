@@ -133,11 +133,11 @@
       "port-version": 7
     },
     "ankurvdev-embedresource": {
-      "baseline": "0.0.10",
+      "baseline": "0.0.11",
       "port-version": 0
     },
     "annoy": {
-      "baseline": "1.17.2",
+      "baseline": "1.17.3",
       "port-version": 0
     },
     "antlr4": {
@@ -157,7 +157,7 @@
       "port-version": 0
     },
     "apache-datasketches": {
-      "baseline": "4.1.0",
+      "baseline": "5.0.2",
       "port-version": 0
     },
     "approval-tests-cpp": {
