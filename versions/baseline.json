@@ -8317,7 +8317,7 @@
       "port-version": 0
     },
     "sqlite-modern-cpp": {
-      "baseline": "3.2-6e300997",
+      "baseline": "2023-12-03",
       "port-version": 0
     },
     "sqlite-orm": {
