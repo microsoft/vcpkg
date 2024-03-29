@@ -28,6 +28,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DTHEIA_USE_EXTERNAL_CEREAL=ON
         -DTHEIA_USE_EXTERNAL_FLANN=ON
+        --trace-expand
 )
 
 vcpkg_cmake_install()
