@@ -45,3 +45,12 @@ install(FILES
   "${PROJECT_BINARY_DIR}/unofficial-duktape-config-version.cmake"
   DESTINATION "share/unofficial-duktape"
 )
+
+set(prefix "")
+set(LIBDIR "/lib")
+set(VERSION "${duktape_VERSION}")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/duktape.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/duktape.pc" @ONLY)
+install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/duktape.pc"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+)
