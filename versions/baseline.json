@@ -45,8 +45,8 @@
       "port-version": 0
     },
     "adios2": {
-      "baseline": "2.8.3",
-      "port-version": 1
+      "baseline": "2.9.2",
+      "port-version": 0
     },
     "advobfuscator": {
       "baseline": "2020-06-26",
@@ -77,8 +77,8 @@
       "port-version": 0
     },
     "aliyun-oss-c-sdk": {
-      "baseline": "3.10.0",
-      "port-version": 3
+      "baseline": "3.10.1",
+      "port-version": 0
     },
     "allegro5": {
       "baseline": "5.2.9.1",
@@ -113,7 +113,7 @@
       "port-version": 4
     },
     "amqpcpp": {
-      "baseline": "4.3.23",
+      "baseline": "4.3.26",
       "port-version": 0
     },
     "anari": {
@@ -314,6 +314,10 @@
     },
     "atl": {
       "baseline": "0",
+      "port-version": 0
+    },
+    "atliac-minitest": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "atlmfc": {
@@ -2065,8 +2069,8 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.6.0",
-      "port-version": 1
+      "baseline": "8.7.1",
+      "port-version": 0
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -2209,8 +2213,8 @@
       "port-version": 0
     },
     "directx-dxc": {
-      "baseline": "2024-03-07",
-      "port-version": 1
+      "baseline": "2024-03-22",
+      "port-version": 0
     },
     "directx-headers": {
       "baseline": "1.613.0",
@@ -2886,7 +2890,7 @@
     },
     "g2o": {
       "baseline": "2020-02-07",
-      "port-version": 4
+      "port-version": 5
     },
     "g3log": {
       "baseline": "2.4",
@@ -4829,8 +4833,8 @@
       "port-version": 0
     },
     "librabbitmq": {
-      "baseline": "0.11.0",
-      "port-version": 2
+      "baseline": "0.14.0",
+      "port-version": 0
     },
     "libraqm": {
       "baseline": "0.10.1",
@@ -6005,8 +6009,8 @@
       "port-version": 1
     },
     "nanopb": {
-      "baseline": "0.4.7",
-      "port-version": 2
+      "baseline": "0.4.8",
+      "port-version": 0
     },
     "nanoprintf": {
       "baseline": "0.3.4",
@@ -6486,7 +6490,7 @@
     },
     "openssl": {
       "baseline": "3.2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -6666,7 +6670,7 @@
     },
     "pcl": {
       "baseline": "1.14.0",
-      "port-version": 2
+      "port-version": 3
     },
     "pcre": {
       "baseline": "8.45",
@@ -6837,7 +6841,7 @@
       "port-version": 0
     },
     "pocketpy": {
-      "baseline": "1.4.2",
+      "baseline": "1.4.3",
       "port-version": 0
     },
     "poco": {
@@ -7013,7 +7017,7 @@
       "port-version": 0
     },
     "pybind11": {
-      "baseline": "2.11.1",
+      "baseline": "2.12.0",
       "port-version": 0
     },
     "pystring": {
@@ -7046,7 +7050,7 @@
     },
     "qhull": {
       "baseline": "8.0.2",
-      "port-version": 4
+      "port-version": 5
     },
     "qnnpack": {
       "baseline": "2021-02-26",
@@ -7469,8 +7473,8 @@
       "port-version": 0
     },
     "quirc": {
-      "baseline": "1.1",
-      "port-version": 3
+      "baseline": "1.2",
+      "port-version": 0
     },
     "qwt": {
       "baseline": "2023-05-12",
@@ -7601,7 +7605,7 @@
       "port-version": 0
     },
     "redis-plus-plus": {
-      "baseline": "1.3.10",
+      "baseline": "1.3.12",
       "port-version": 0
     },
     "refl-cpp": {
@@ -7641,7 +7645,7 @@
       "port-version": 0
     },
     "restinio": {
-      "baseline": "0.7.1",
+      "baseline": "0.7.2",
       "port-version": 0
     },
     "rexo": {
@@ -7685,7 +7689,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "2.0.4",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "robin-hood-hashing": {
@@ -7714,7 +7718,7 @@
     },
     "rply": {
       "baseline": "1.1.4",
-      "port-version": 3
+      "port-version": 4
     },
     "rsasynccpp": {
       "baseline": "0.0.7",
@@ -7793,11 +7797,11 @@
       "port-version": 0
     },
     "s2n": {
-      "baseline": "1.3.56",
+      "baseline": "1.4.8",
       "port-version": 0
     },
     "safeint": {
-      "baseline": "3.0.26",
+      "baseline": "3.0.28",
       "port-version": 0
     },
     "sail": {
@@ -7854,7 +7858,7 @@
     },
     "scnlib": {
       "baseline": "2.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "scope-guard": {
       "baseline": "1.1.0",
@@ -7873,8 +7877,8 @@
       "port-version": 3
     },
     "sdbus-cpp": {
-      "baseline": "1.3.0",
-      "port-version": 1
+      "baseline": "1.5.0",
+      "port-version": 0
     },
     "sdformat10": {
       "baseline": "10.0.0",
@@ -7957,12 +7961,12 @@
       "port-version": 6
     },
     "sentencepiece": {
-      "baseline": "0.1.99",
-      "port-version": 1
+      "baseline": "0.2.0",
+      "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.7.0",
-      "port-version": 1
+      "baseline": "0.7.1",
+      "port-version": 0
     },
     "septag-dmon": {
       "baseline": "2022-02-08",
@@ -7997,8 +8001,8 @@
       "port-version": 0
     },
     "sfsexp": {
-      "baseline": "1.3.1",
-      "port-version": 1
+      "baseline": "1.4.1",
+      "port-version": 0
     },
     "shader-slang": {
       "baseline": "2023.5.1",
@@ -8073,7 +8077,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "4.0.9",
+      "baseline": "5.0.0",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
@@ -8089,7 +8093,7 @@
       "port-version": 0
     },
     "simpleini": {
-      "baseline": "4.19",
+      "baseline": "4.22",
       "port-version": 0
     },
     "simsimd": {
@@ -8313,8 +8317,8 @@
       "port-version": 0
     },
     "sqlite-modern-cpp": {
-      "baseline": "3.2-936cd0c8",
-      "port-version": 2
+      "baseline": "2023-12-03",
+      "port-version": 0
     },
     "sqlite-orm": {
       "baseline": "1.8.2",
@@ -8429,7 +8433,7 @@
       "port-version": 3
     },
     "stx": {
-      "baseline": "0.0.3",
+      "baseline": "1.0.5",
       "port-version": 0
     },
     "stxxl": {
@@ -8445,7 +8449,7 @@
       "port-version": 0
     },
     "superlu": {
-      "baseline": "6.0.0",
+      "baseline": "6.0.1",
       "port-version": 0
     },
     "swenson-sort": {
@@ -8453,7 +8457,7 @@
       "port-version": 0
     },
     "symengine": {
-      "baseline": "0.11.1",
+      "baseline": "0.11.2",
       "port-version": 0
     },
     "systemc": {
@@ -9026,7 +9030,7 @@
     },
     "vcpkg-qmake": {
       "baseline": "2023-03-22",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",
@@ -9046,7 +9050,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "1.3.2",
-      "port-version": 1
+      "port-version": 2
     },
     "vcpkg-tool-mozbuild": {
       "baseline": "4.0.2",

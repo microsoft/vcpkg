@@ -62,6 +62,17 @@ avro-c:x64-android=fail
 azure-identity-cpp:arm-neon-android=fail
 azure-identity-cpp:arm64-android=fail
 azure-identity-cpp:x64-android=fail
+
+# C++20 conformant compiler required
+atliac-minitest:x64-linux=fail
+atliac-minitest:arm64-android=fail
+atliac-minitest:arm64-uwp=fail
+atliac-minitest:arm64-osx=fail
+atliac-minitest:arm-neon-android=fail
+atliac-minitest:x64-android=fail
+atliac-minitest:x64-osx=fail
+atliac-minitest:x64-uwp=fail
+
 backward-cpp:arm-neon-android=fail
 backward-cpp:arm64-android=fail
 backward-cpp:x64-android=fail
@@ -998,15 +1009,6 @@ rest-rpc:arm64-osx=skip
 rpclib:arm64-windows=fail
 rpclib:arm64-uwp=fail
 rpclib:x64-uwp=fail
-#The website of rply http://w3.impa.br/~diego/software/rply cannot be accessed
-rply:x86-windows=skip
-rply:x64-windows=skip
-rply:x64-windows-static=skip
-rply:x64-uwp=skip
-rply:arm64-windows=skip
-rply:x64-linux=skip
-rply:x64-osx=skip
-rply:x64-windows-static-md=skip
 salome-medcoupling:x64-linux=fail
 scintilla:arm-neon-android=fail
 scintilla:arm64-android=fail
