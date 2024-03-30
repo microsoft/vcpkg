@@ -8420,6 +8420,10 @@
       "baseline": "1.7.0",
       "port-version": 1
     },
+    "stringzilla": {
+      "baseline": "3.7.0",
+      "port-version": 0
+    },
     "strong-type": {
       "baseline": "14",
       "port-version": 0
