@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-compile-options.patch
-        fix-wasm.patch
 )
 
 if("asm" IN_LIST FEATURES)
@@ -21,9 +20,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         stack-protector WITH_STACK_PROTECTOR
 )
 
+set(EXTRA_OPTIONS "")
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+    set(EXTRA_OPTIONS "-DWITH_STACK_PROTECTOR=OFF")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${EXTRA_OPTIONS}
         ${FEATURE_OPTIONS}
         -DBUILD_PROGRAMS=OFF
         -DBUILD_EXAMPLES=OFF
