@@ -5672,10 +5672,6 @@
       "baseline": "0.1.0-alpha4",
       "port-version": 8
     },
-    "microsoft-ui-uiautomation": {
-      "baseline": "1.0.0",
-      "port-version": 0
-    },
     "mikktspace": {
       "baseline": "2020-10-06",
       "port-version": 3
