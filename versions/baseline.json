@@ -8893,7 +8893,7 @@
       "port-version": 1
     },
     "urdfdom": {
-      "baseline": "3.1.1",
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "urdfdom-headers": {
