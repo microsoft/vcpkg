@@ -8873,8 +8873,8 @@
       "port-version": 5
     },
     "unixodbc": {
-      "baseline": "2.3.11",
-      "port-version": 2
+      "baseline": "2.3.12",
+      "port-version": 0
     },
     "unordered-dense": {
       "baseline": "4.4.0",
