@@ -1,0 +1,13 @@
+diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
+index ae2832b..3c58a12 100644
+--- a/cmake/dependencies.cmake
++++ b/cmake/dependencies.cmake
+@@ -61,7 +61,7 @@ endif ()
+ # we don't want to include tests of dependencies, so we need to do some manual work
+ 
+ if (SCN_USE_EXTERNAL_SIMDUTF)
+-    find_package(simdutf 4.0.0 CONFIG REQUIRED)
++    find_package(simdutf CONFIG REQUIRED)
+ else ()
+     FetchContent_Declare(
+             simdutf

@@ -1,7 +1,6 @@
 {
   "name": "sentry-native",
-  "version": "0.7.0",
-  "port-version": 1,
+  "version": "0.7.1",
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
   "license": "MIT",
@@ -18,7 +17,11 @@
   ],
   "default-features": [
     "backend",
-    "transport"
+    "transport",
+    {
+      "name": "wer",
+      "platform": "windows & !static"
+    }
   ],
   "features": {
     "backend": {
@@ -52,6 +55,21 @@
           "name": "curl",
           "default-features": false,
           "platform": "!windows"
+        }
+      ]
+    },
+    "wer": {
+      "description": [
+        "Enables the Windows Error Reporting backend.",
+        "Cf.https://github.com/getsentry/sentry-native#compile-time-options"
+      ],
+      "supports": "windows & !static",
+      "dependencies": [
+        {
+          "name": "sentry-native",
+          "features": [
+            "backend"
+          ]
         }
       ]
     }
