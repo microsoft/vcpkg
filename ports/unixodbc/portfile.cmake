@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lurcher/unixODBC
-    REF "v${VERSION}"
-    SHA512 0
+    REF "${VERSION}"
+    SHA512 f0c0a995c90ff3abd00a031430e2f2034d45ca96c7fba34adc826a668c4eeb77ee2e1be27b7b1817c706f43df4fa434746362e746a39e779256e006deeb790c7
     HEAD_REF master
 )
 
