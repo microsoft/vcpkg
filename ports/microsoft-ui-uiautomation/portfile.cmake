@@ -13,6 +13,7 @@ vcpkg_msbuild_install(
     OPTIONS
         "/r:True"
 	    "/p:RestorePackagesConfig=True"
+        "/p:Platform=x64"
 )
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
