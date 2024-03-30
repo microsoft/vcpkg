@@ -2354,7 +2354,7 @@
     },
     "duktape": {
       "baseline": "2.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "dumb": {
       "baseline": "2.0.3",
