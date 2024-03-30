@@ -10,6 +10,7 @@ vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             -Dtoml11_BUILD_TEST=OFF
+            -DCMAKE_CXX_STANDARD=11
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/toml11)
