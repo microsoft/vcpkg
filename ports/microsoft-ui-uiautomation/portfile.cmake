@@ -7,14 +7,18 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+if (VCPKG_TARGET_IS_WINDOWS) # Win32:
 vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}/src/UIAutomation/"
     PROJECT_SUBPATH "UIAutomation.sln"
     OPTIONS
         "/r:True"
 	    "/p:RestorePackagesConfig=True"
-        "/p:Platform=Win32"
+        "/p:Platform=x64"
 )
+else()
+    message(FATAL_ERROR "Unsupported system: microsoft-ui-uiautomation is not currently ported to VCPKG in ${VCPKG_CMAKE_SYSTEM_NAME}!")
+endif()
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
