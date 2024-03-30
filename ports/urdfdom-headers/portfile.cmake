@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/urdfdom_headers
-    REF "v${VERSION}"
-    SHA512 0
+    REF "${VERSION}"
+    SHA512 b0eed4da4d1f165ab33812c181000fa58f3d817703a0b8728a9d4b9f888eeed15d095072c16eb5779850e8a88984633345b444396c58bd79bedf7bf3eb6e16bc
     HEAD_REF master
     PATCHES fix-include-path.patch
   )
