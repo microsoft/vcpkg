@@ -14,6 +14,7 @@ vcpkg_msbuild_install(
     OPTIONS
         "/r:True"
 	    "/p:RestorePackagesConfig=True"
+        "/p:Platform=Any CPU"
 )
 else()
     message(FATAL_ERROR "Unsupported system: microsoft-ui-uiautomation is not currently ported to VCPKG in ${VCPKG_CMAKE_SYSTEM_NAME}!")
