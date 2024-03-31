@@ -24,6 +24,8 @@ if(WIN32)
   set(PKG_CONFIG_EXECUTABLE "${CMAKE_CURRENT_LIST_DIR}/../../../@_HOST_TRIPLET@/tools/pkgconf/pkgconf.exe" CACHE STRING "" FORCE)
 endif()
 
+set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH ON) # Required for CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 3.1 which otherwise ignores CMAKE_PREFIX_PATH
+
 if(@WITH_MP3LAME@)
   find_package(mp3lame CONFIG )
   list(APPEND FFMPEG_LIBRARIES mp3lame::mp3lame)
