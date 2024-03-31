@@ -654,6 +654,10 @@ libtomcrypt:arm64-windows=fail
 libtomcrypt:arm64-uwp=fail
 libusb-win32:arm64-uwp=fail
 libusb-win32:x64-uwp=fail
+# needs android-26
+libvhdi:arm-neon-android=fail
+libvhdi:arm64-android=fail
+libvhdi:x64-android=fail
 #Skip detection to avoid upstream remove older releases
 libvmdk:x86-windows=skip
 libvmdk:x64-windows=skip
