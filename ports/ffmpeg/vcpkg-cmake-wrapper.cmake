@@ -189,9 +189,9 @@ endif()
 
 if(@WITH_VORBIS@)
   find_package(Vorbis CONFIG )
-  list(APPEND FFMPEG_LIBRARIES Vorbis::vorbis)
+  list(APPEND FFMPEG_LIBRARIES Vorbis::vorbis Vorbis::vorbisenc)
   if(vcpkg_no_avcodec_target AND TARGET FFmpeg::avcodec)
-    target_link_libraries(FFmpeg::avcodec INTERFACE Vorbis::vorbis)
+    target_link_libraries(FFmpeg::avcodec INTERFACE Vorbis::vorbis Vorbis::vorbisenc)
   endif()
 endif()
 
