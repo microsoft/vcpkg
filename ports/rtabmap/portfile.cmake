@@ -122,25 +122,8 @@ if("tools" IN_LIST FEATURES)
             rtabmap-rgbd_camera
         AUTO_CLEAN
     )
-    
-    # Remove duplicate files that were added by qtdeploy 
-    # that would be already deployed by vcpkg_copy_tools
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tmp")
-    file(GLOB RTABMAP_REL_LIBS "${CURRENT_PACKAGES_DIR}/tmp/rtabmap*")
-    file(COPY ${RTABMAP_REL_LIBS} DESTINATION  "${CURRENT_PACKAGES_DIR}/bin")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tmp")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/translations")
-    #qt.conf
     file(COPY "${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/qt.conf" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "./../../../" "./../../")
-
-    # Debug
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/debug/tmp")
-    file(GLOB RTABMAP_DBG_LIBS "${CURRENT_PACKAGES_DIR}/debug/tmp/rtabmap*")
-    file(COPY ${RTABMAP_DBG_LIBS} DESTINATION  "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tmp")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/plugins")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/translations")
   endif()
 endif()
 
