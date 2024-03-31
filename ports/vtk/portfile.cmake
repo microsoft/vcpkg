@@ -66,7 +66,11 @@ file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake
 file(REMOVE "${SOURCE_PATH}/CMake/FindOGG.cmake")
 vcpkg_replace_string("${SOURCE_PATH}/ThirdParty/ogg/CMakeLists.txt" "OGG" "Ogg")
 vcpkg_replace_string("${SOURCE_PATH}/CMake/vtkInstallCMakePackage.cmake" "FindOGG.cmake\n" "")
+vcpkg_replace_string("${SOURCE_PATH}/CMake/FindTHEORA.cmake" "find_dependency(OGG)" "find_dependency(Ogg CONFIG)")
 vcpkg_replace_string("${SOURCE_PATH}/CMake/FindTHEORA.cmake" "OGG" "Ogg")
+
+
+
 # =============================================================================
 
 if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
@@ -233,6 +237,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        --trace
         ${FEATURE_OPTIONS}
         ${VTK_FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
