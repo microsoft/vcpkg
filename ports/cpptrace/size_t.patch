@@ -1,0 +1,22 @@
+From 40696e8d025933b3efb7da30309e354a77ae57f2 Mon Sep 17 00:00:00 2001
+From: Jeremy <51220084+jeremy-rifkin@users.noreply.github.com>
+Date: Sun, 31 Mar 2024 16:37:29 -0500
+Subject: [PATCH] Handle MSVC warning treated as error
+
+---
+ src/utils/microfmt.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/utils/microfmt.hpp b/src/utils/microfmt.hpp
+index 30c939c..cec2ab9 100644
+--- a/src/utils/microfmt.hpp
++++ b/src/utils/microfmt.hpp
+@@ -84,7 +84,7 @@ namespace microfmt {
+                 // log_2(x) == 63 - clz(x)
+                 // 1 + (63 - clz(value)) / (63 - clz(1 << shift))
+                 // 63 - clz(1 << shift) is the same as shift
+-                auto n_digits = 1 + (63 - clz(value)) / shift;
++                auto n_digits = static_cast<std::size_t>(1 + (63 - clz(value)) / shift);
+                 std::string number;
+                 number.resize(n_digits);
+                 std::size_t i = n_digits - 1;
