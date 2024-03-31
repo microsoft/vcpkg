@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
@@ -7,7 +5,10 @@ vcpkg_from_github(
     SHA512 2b424f5b6458cf0f976e711985708f104b56d11921c9c43c6a837f9d3dc9e9e802308f1aa2b6d0e7e6ddf13623ff1ad2922b5f54254d16ee5811e786d27b9f98
     HEAD_REF master
     PATCHES
+        apple.patch
         fix_link.patch
+        link-keywords.patch
+        multi-definition.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -77,11 +78,18 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME RTABMap CONFIG_PATH CMake)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/rtabmap-0.21)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool-0.3.0)  
+endif()
 vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool AUTO_CLEAN)
 
 if("tools" IN_LIST FEATURES)
