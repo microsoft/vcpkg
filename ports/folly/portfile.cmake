@@ -63,6 +63,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_LibAIO=ON
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
         -DLIBAIO_FOUND=OFF
         -DCMAKE_INSTALL_DIR=share/folly
         ${FEATURE_OPTIONS}
