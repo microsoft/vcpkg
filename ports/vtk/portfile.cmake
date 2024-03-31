@@ -65,6 +65,7 @@ file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindOGG.cmake")
 vcpkg_replace_string("${SOURCE_PATH}/ThirdParty/ogg/CMakeLists.txt" "OGG" "Ogg")
+vcpkg_replace_string("${SOURCE_PATH}/CMake/vtkInstallCMakePackage.cmake" "FindOGG.cmake\n" "")
 # =============================================================================
 
 if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
