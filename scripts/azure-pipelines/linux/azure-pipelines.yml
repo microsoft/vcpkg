@@ -41,6 +41,7 @@ jobs:
       sudo chown `id -u` /home/agent
       sudo mkdir ${{ variables.WORKING_ROOT }} -m=777
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} -m=777
+      sudo dpkg -r libdbus-1-dev
       exit 0
     displayName: 'Create working directories'
   - bash: ./bootstrap-vcpkg.sh
@@ -54,7 +55,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet x64-linux -BuildReason $(Build.Reason) -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -IsLinuxHost'
+      arguments: '-Triplet x64-linux -BuildReason $(Build.Reason)-no-cache -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -IsLinuxHost'
       pwsh: true
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: failure logs for x64-linux'
