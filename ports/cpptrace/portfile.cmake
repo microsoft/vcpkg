@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
       size_t.patch
+      result.patch
 )
 
 vcpkg_cmake_configure(
