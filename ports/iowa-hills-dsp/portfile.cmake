@@ -14,9 +14,4 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# debug/share was not being generated, so the VCPKG_BUILD_TYPE is being set to
-# "release" so that fixup completes successfully.
-set(VCPKG_BUILD_TYPE "release")
-vcpkg_cmake_config_fixup(PACKAGE_NAME iowa_hills_dsp)
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
