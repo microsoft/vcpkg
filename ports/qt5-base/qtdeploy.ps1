@@ -31,16 +31,11 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
             "[Paths]" | Out-File -encoding ascii "$targetBinaryDir\qt.conf"
         }
     } elseif ($targetBinaryName -match "Qt5Guid?.dll") {
-        Write-Verbose "  Deploying platforms"
-        New-Item "$targetBinaryDir\plugins\platforms" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
-        Get-ChildItem "$QtPluginsDir\platforms\qwindows*.dll" | % {
-            deployBinary "$targetBinaryDir\plugins\platforms" "$QtPluginsDir\platforms" $_.Name
-        }
-
         deployPlugins "accessible"
-        deployPlugins "imageformats"
         deployPlugins "iconengines"
+        deployPlugins "imageformats"
         deployPlugins "platforminputcontexts"
+        deployPlugins "platforms"
         deployPlugins "styles"
     } elseif ($targetBinaryName -match "Qt5Networkd?.dll") {
         deployPlugins "bearer"
