@@ -11,19 +11,23 @@ index 47d8769..46a5c9b 100644
      list(APPEND FFMPEG_DEFINITIONS  ${${_component}_DEFINITIONS})
      list(APPEND FFMPEG_INCLUDE_DIRS ${${_component}_INCLUDE_DIR})
      list(APPEND FFMPEG_LIBRARY_DIRS ${${_component}_LIBRARY_DIR})
-@@ -306,16 +306,18 @@ endfunction()
+@@ -306,19 +306,21 @@ endfunction()
+       string(TOLOWER ${_component} _lowerComponent)
+       if (NOT TARGET FFmpeg::${_lowerComponent})
+-        add_library(FFmpeg::${_lowerComponent} INTERFACE IMPORTED)
++        add_library(FFmpeg::${_lowerComponent} INTERFACE IMPORTED)
          set_target_properties(FFmpeg::${_lowerComponent} PROPERTIES
              INTERFACE_COMPILE_OPTIONS "${${_component}_DEFINITIONS}"
              INTERFACE_INCLUDE_DIRECTORIES ${${_component}_INCLUDE_DIR}
 -            INTERFACE_LINK_LIBRARIES "${${_component}_LIBRARY_NAME}"
 -            INTERFACE_LINK_DIRECTORIES "${${_component}_LIBRARY_DIR}"
-+            INTERFACE_LINK_LIBRARIES "${${_component}_LIBRARY}"
++            IMPORTED_LOCATION "${${_component}_LIBRARY}"
          )
          if(NOT ${_component}_SHARED_LIBRARIES)
            __ffmpeg_internal_set_dependencies(${_lowerComponent})
          endif()
 -        target_link_libraries(FFmpeg::${_lowerComponent} INTERFACE "${${_component}_LIBRARY_NAME}")
-+        target_link_libraries(FFmpeg::${_lowerComponent} INTERFACE "${${_component}_LIBRARY}")
++        #target_link_libraries(FFmpeg::${_lowerComponent} INTERFACE "${${_component}_LIBRARY}")
          if (UNIX AND NOT APPLE)
            target_link_options(FFmpeg::${_lowerComponent} INTERFACE  "-Wl,--exclude-libs=lib${_lowerComponent}")
          endif ()
