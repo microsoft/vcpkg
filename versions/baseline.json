@@ -7749,8 +7749,12 @@
       "port-version": 3
     },
     "rtabmap": {
-      "baseline": "0.21.4",
-      "port-version": 1
+      "baseline": "0.21.4.1",
+      "port-version": 0
+    },
+    "rtabmap-res-tool": {
+      "baseline": "0.21.4.1",
+      "port-version": 0
     },
     "rtaudio": {
       "baseline": "6.0.1",
@@ -8685,7 +8689,7 @@
       "port-version": 0
     },
     "tinyspline": {
-      "baseline": "0.4.0",
+      "baseline": "0.6.0",
       "port-version": 0
     },
     "tinythread": {
@@ -8729,12 +8733,12 @@
       "port-version": 1
     },
     "tlx": {
-      "baseline": "0.5.20191212",
-      "port-version": 4
+      "baseline": "0.6.1",
+      "port-version": 0
     },
     "tmx": {
-      "baseline": "1.2.0",
-      "port-version": 2
+      "baseline": "1.4.0",
+      "port-version": 0
     },
     "tmxlite": {
       "baseline": "1.4.4",
@@ -8745,7 +8749,7 @@
       "port-version": 0
     },
     "toml11": {
-      "baseline": "3.7.1",
+      "baseline": "3.8.1",
       "port-version": 0
     },
     "tomlplusplus": {
@@ -8761,7 +8765,7 @@
       "port-version": 2
     },
     "transwarp": {
-      "baseline": "2.2.2",
+      "baseline": "2.2.3",
       "port-version": 0
     },
     "trantor": {
@@ -8797,7 +8801,7 @@
       "port-version": 0
     },
     "trompeloeil": {
-      "baseline": "45",
+      "baseline": "47",
       "port-version": 0
     },
     "try-catcher": {
@@ -8809,8 +8813,8 @@
       "port-version": 3
     },
     "tsl-ordered-map": {
-      "baseline": "1.0.0",
-      "port-version": 3
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "tsl-sparse-map": {
       "baseline": "0.6.2",
