@@ -4,7 +4,7 @@
   "description": "Cross-platform utility library",
   "homepage": "https://github.com/absurdworlds/awlib",
   "license": "LGPL-3.0-or-later",
-  "supports": "!android",
+  "supports": "!uwp & !android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
