@@ -24,7 +24,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH  "${SOURCE_PATH}"
-    OPTIONS -DCCTAG_BUILD_TESTS:BOOL=OFF ${FEATURE_OPTIONS} --trace-expand --debug-find
+    OPTIONS -DCCTAG_BUILD_TESTS:BOOL=OFF ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
