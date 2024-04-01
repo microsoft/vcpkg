@@ -10,7 +10,7 @@ vcpkg_from_github(
 if (VCPKG_TARGET_IS_WINDOWS) # Win32:
 vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}/src/UIAutomation/"
-    PROJECT_SUBPATH "UiaOperationAbstraction\UiaOperationAbstraction.vcxproj"
+    PROJECT_SUBPATH "UiaOperationAbstraction/UiaOperationAbstraction.vcxproj"
     OPTIONS
         "/r:True"
 	    "/p:RestorePackagesConfig=True"
