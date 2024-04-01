@@ -8957,8 +8957,8 @@
       "port-version": 0
     },
     "uthenticode": {
-      "baseline": "1.0.6",
-      "port-version": 2
+      "baseline": "2.0.1",
+      "port-version": 0
     },
     "uvatlas": {
       "baseline": "2024-02-21",
