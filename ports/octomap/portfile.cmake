@@ -5,7 +5,7 @@ vcpkg_from_github(
     REPO OctoMap/octomap
     REF "v${VERSION}"
     SHA512 1cbee4f6b3569587986774447ad9ec4190f597310c4d6865ffa7cd8865ece2492e4a42fa369b633d9d7a9da782560d49deaa62a18601ea4f56396bdf1a6a5f52
-    HEAD_REF master
+    HEAD_REF devel
     PATCHES
       001-fix-exported-targets.patch
       fix-isnan.patch # Remove this patch in the next update
