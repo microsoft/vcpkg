@@ -15,7 +15,7 @@ index 47d8769..46a5c9b 100644
        string(TOLOWER ${_component} _lowerComponent)
        if (NOT TARGET FFmpeg::${_lowerComponent})
 -        add_library(FFmpeg::${_lowerComponent} INTERFACE IMPORTED)
-+        add_library(FFmpeg::${_lowerComponent} IMPORTED)
++        add_library(FFmpeg::${_lowerComponent} UNKNOWN IMPORTED)
          set_target_properties(FFmpeg::${_lowerComponent} PROPERTIES
              INTERFACE_COMPILE_OPTIONS "${${_component}_DEFINITIONS}"
              INTERFACE_INCLUDE_DIRECTORIES ${${_component}_INCLUDE_DIR}
