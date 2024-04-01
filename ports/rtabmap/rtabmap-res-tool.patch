@@ -1,0 +1,11 @@
+diff --git a/utilite/resource_generator/CMakeLists.txt b/utilite/resource_generator/CMakeLists.txt
+index 82f1253..eedab31 100644
+--- a/utilite/resource_generator/CMakeLists.txt
++++ b/utilite/resource_generator/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ 
+-if (CMAKE_CROSSCOMPILING OR ANDROID OR IOS)
++if (RTABMAP_RES_TOOL)
+     # See this page about tools being required in the build:
+     # https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/CrossCompiling#using-executables-in-the-build-created-during-the-build
+ 
