@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
       001-fix-exported-targets.patch
-      fix-isnan.patch
+      fix-isnan.patch # Remove this patch in the next update
 )
 
 vcpkg_cmake_configure(
