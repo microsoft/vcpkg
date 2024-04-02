@@ -1,6 +1,6 @@
 {
   "name": "zlmediakit",
-  "version-date": "2023-08-12",
+  "version-date": "2024-03-30",
   "description": "A high-performance carrier-grade streaming media service framework based on C++11.",
   "homepage": "https://github.com/ZLMediaKit/ZLMediaKit",
   "license": "MIT",
@@ -34,23 +34,14 @@
     "sctp": {
       "description": "Enable SCTP",
       "dependencies": [
-        "usrsctp",
-        {
-          "name": "zlmediakit",
-          "default-features": false,
-          "features": [
-            "webrtc"
-          ]
-        }
+        "usrsctp"
       ]
     },
     "webrtc": {
       "description": "Enable WebRTC",
       "dependencies": [
-        "libsrtp",
         {
-          "name": "zlmediakit",
-          "default-features": false,
+          "name": "libsrtp",
           "features": [
             "openssl"
           ]
