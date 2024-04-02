@@ -20,7 +20,8 @@
       "description": "Build graphics library",
       "supports": "!uwp",
       "dependencies": [
-        "glfw3"
+        "glfw3",
+        "libpng"
       ]
     },
     "hudf": {
