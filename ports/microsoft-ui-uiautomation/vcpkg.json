@@ -4,7 +4,7 @@
   "description": "Microsoft UI Automation library",
   "homepage": "https://github.com/microsoft/Microsoft-UI-UIAutomation",
   "license": "MIT",
-   "supports": "windows",
+  "supports": "windows",
   "dependencies": [
     {
       "name": "vcpkg-msbuild",
