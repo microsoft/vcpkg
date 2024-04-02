@@ -1,6 +1,6 @@
 {
   "name": "pixman",
-  "version": "0.43.2",
+  "version": "0.43.4",
   "description": "Pixman is a low-level software library for pixel manipulation, providing features such as image compositing and trapezoid rasterization.",
   "homepage": "https://www.cairographics.org/releases",
   "license": "MIT",

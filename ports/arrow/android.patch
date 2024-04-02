@@ -1,0 +1,27 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 05c05c6..f2754a5 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -973,7 +973,7 @@ if(WIN32)
+   list(APPEND ARROW_SYSTEM_LINK_LIBS "ws2_32.dll")
+ endif()
+ 
+-if(NOT WIN32 AND NOT APPLE)
++if(NOT WIN32 AND NOT APPLE AND NOT ANDROID)
+   # Pass -lrt on Linux only
+   list(APPEND ARROW_SYSTEM_LINK_LIBS rt)
+ endif()
+diff --git a/cpp/src/arrow/vendored/musl/strptime.c b/cpp/src/arrow/vendored/musl/strptime.c
+index 41912fd..0ea36e9 100644
+--- a/cpp/src/arrow/vendored/musl/strptime.c
++++ b/cpp/src/arrow/vendored/musl/strptime.c
+@@ -18,7 +18,9 @@
+ #undef HAVE_LANGINFO
+ 
+ #ifndef _WIN32
++# if !(defined(__ANDROID__) && __ANDROID_API__ < 26)
+ #define HAVE_LANGINFO 1
++# endif
+ #endif
+ 
+ #ifdef HAVE_LANGINFO

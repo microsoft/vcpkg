@@ -1,0 +1,77 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2e8ffcd..81907b8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -423,7 +423,7 @@ if(SENTRY_BACKEND_CRASHPAD)
+ 	endif()
+ 	add_subdirectory(external/crashpad crashpad_build)
+
+-	if(WIN32)
++	if(WIN32 AND SENTRY_TRANSPORT_CRASHPAD_USE_WER)
+ 		add_dependencies(sentry crashpad::wer)
+ 	endif()
+
+@@ -438,7 +438,9 @@ if(SENTRY_BACKEND_CRASHPAD)
+ 		set_property(TARGET crashpad_snapshot PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ 		set_property(TARGET crashpad_tools PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ 		set_property(TARGET crashpad_util PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
++if(SENTRY_TRANSPORT_CRASHPAD_USE_WER)
+ 		set_property(TARGET crashpad_wer PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
++endif()
+ 		set_property(TARGET crashpad_zlib PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ 		set_property(TARGET mini_chromium PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ 	endif()
+@@ -455,7 +457,9 @@ if(SENTRY_BACKEND_CRASHPAD)
+ 		set_target_properties(crashpad_util PROPERTIES FOLDER ${SENTRY_FOLDER})
+ 		set_target_properties(crashpad_zlib PROPERTIES FOLDER ${SENTRY_FOLDER})
+ 		set_target_properties(mini_chromium PROPERTIES FOLDER ${SENTRY_FOLDER})
++if(SENTRY_TRANSPORT_CRASHPAD_USE_WER)
+ 		set_target_properties(crashpad_wer PROPERTIES FOLDER ${SENTRY_FOLDER})
++endif()
+ 	endif()
+
+ 	target_link_libraries(sentry PRIVATE
+@@ -465,7 +469,7 @@ if(SENTRY_BACKEND_CRASHPAD)
+ 	install(EXPORT crashpad_export NAMESPACE sentry_crashpad:: FILE sentry_crashpad-targets.cmake
+ 		DESTINATION "${CMAKE_INSTALL_CMAKEDIR}"
+ 	)
+-	if(WIN32 AND MSVC)
++	if(WIN32 AND MSVC AND SENTRY_TRANSPORT_CRASHPAD_USE_WER)
+ 		sentry_install(FILES $<TARGET_PDB_FILE:crashpad_handler>
+ 			DESTINATION "${CMAKE_INSTALL_BINDIR}" OPTIONAL)
+ 		sentry_install(FILES $<TARGET_PDB_FILE:crashpad_wer>
+diff --git a/external/crashpad/handler/CMakeLists.txt b/external/crashpad/handler/CMakeLists.txt
+index 55d2e4a..b1c99ae 100644
+--- a/external/crashpad/handler/CMakeLists.txt
++++ b/external/crashpad/handler/CMakeLists.txt
+@@ -123,7 +123,7 @@ if(NOT IOS)
+     )
+ endif()
+
+-if (WIN32)
++if (WIN32 AND SENTRY_TRANSPORT_CRASHPAD_USE_WER)
+     add_library(crashpad_wer SHARED
+         win/wer/crashpad_wer.cc
+         win/wer/crashpad_wer.h
+diff --git a/src/backends/sentry_backend_crashpad.cpp b/src/backends/sentry_backend_crashpad.cpp
+index 711dc57..4c1d473 100644
+--- a/src/backends/sentry_backend_crashpad.cpp
++++ b/src/backends/sentry_backend_crashpad.cpp
+@@ -115,7 +115,7 @@ crashpad_backend_user_consent_changed(sentry_backend_t *backend)
+     data->db->GetSettings()->SetUploadsEnabled(!sentry__should_skip_upload());
+ }
+
+-#ifdef SENTRY_PLATFORM_WINDOWS
++#if defined(SENTRY_PLATFORM_WINDOWS) && defined(SENTRY_TRANSPORT_CRASHPAD_USE_WER)
+ static void
+ crashpad_register_wer_module(
+     const sentry_path_t *absolute_handler_path, const crashpad_state_t *data)
+@@ -413,7 +413,7 @@ crashpad_backend_startup(
+         return 1;
+     }
+
+-#ifdef SENTRY_PLATFORM_WINDOWS
++#if defined(SENTRY_PLATFORM_WINDOWS) && defined(SENTRY_TRANSPORT_CRASHPAD_USE_WER)
+     crashpad_register_wer_module(absolute_handler_path, data);
+ #endif
+

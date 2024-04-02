@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 958b1d6..21c8941 100644
+index dbd31d7..7deb6c2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -84,6 +84,12 @@ endif()
+@@ -109,6 +109,12 @@ elseif(POLICY CMP0074)
+ endif()
  
  if(UNIX AND NOT APPLE AND NOT BEOS AND NOT HAIKU AND NOT EMSCRIPTEN)
-   find_library(M_LIBRARY m)
-+  if(NOT M_LIBRARY)
-+    find_library(M_LIBRARY m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES} NO_DEFAULT_PATH)
-+    if(M_LIBRARY)
-+      set(M_LIBRARY m)
++  block(SCOPE_FOR VARIABLES)
++    if(VCPKG_CRT_LINKAGE STREQUAL "static")
++      list(PREPEND CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX}")
 +    endif()
-+  endif()
-   if(NOT M_LIBRARY)
-     set(M_LIBRARY "")
-   endif()
++    find_library(M_LIBRARY m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
++  endblock()
+   find_library(M_LIBRARY m)
+   if(M_LIBRARY)
+     set(M_LIBRARY m)

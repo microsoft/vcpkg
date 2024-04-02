@@ -1,7 +1,8 @@
 {
   "name": "qttools",
   "version": "6.6.1",
-  "description": "Qt Tools",
+  "port-version": 1,
+  "description": "A collection of tools and utilities that come with the Qt framework to assist developers in the creation, management, and deployment of Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
