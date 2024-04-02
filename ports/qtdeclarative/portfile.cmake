@@ -20,6 +20,7 @@ vcpkg_buildpath_length_warning(44)
         qmldom
         qmltc
         qmlls
+        qmljsrootgen
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
