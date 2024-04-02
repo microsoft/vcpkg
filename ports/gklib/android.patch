@@ -1,8 +1,8 @@
 diff --git a/GKlibSystem.cmake b/GKlibSystem.cmake
-index d83b208..bd94c9d 100644
+index 31a1cf1..848fd05 100644
 --- a/GKlibSystem.cmake
 +++ b/GKlibSystem.cmake
-@@ -98,7 +98,9 @@ endif(GKRAND)
+@@ -113,7 +113,9 @@ endif(GKRAND)
  
  
  # Check for features.

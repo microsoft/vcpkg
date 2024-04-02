@@ -1,11 +1,9 @@
 {
   "name": "rtabmap",
-  "version": "0.21.4",
-  "port-version": 1,
+  "version": "0.21.4.1",
   "description": "Real-Time Appearance-Based Mapping",
   "homepage": "https://introlab.github.io/rtabmap/",
-  "license": "BSD-3-Clause",
-  "supports": "windows & !static",
+  "license": null,
   "dependencies": [
     "ceres",
     "g2o",
@@ -15,10 +13,11 @@
     },
     {
       "name": "pcl",
-      "default-features": false,
-      "features": [
-        "vtk"
-      ]
+      "default-features": false
+    },
+    {
+      "name": "rtabmap-res-tool",
+      "host": true
     },
     "sqlite3",
     {
@@ -45,7 +44,8 @@
           "name": "pcl",
           "default-features": false,
           "features": [
-            "qt"
+            "qt",
+            "visualization"
           ]
         },
         {
@@ -56,6 +56,10 @@
             "opengl",
             "widgets"
           ]
+        },
+        {
+          "name": "vtk",
+          "default-features": false
         }
       ]
     },
