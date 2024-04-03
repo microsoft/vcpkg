@@ -1,8 +1,8 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES fix-taglib-search.patch # Strictly this is only required if qt does not use pkg-config since it forces it to off. 
-                    )
+#set(${PORT}_PATCHES fix-taglib-search.patch # Strictly this is only required if qt does not use pkg-config since it forces it to off. 
+#                    )
 set(TOOL_NAMES 
         ifmedia-simulation-server
         ifvehiclefunctions-simulation-server
