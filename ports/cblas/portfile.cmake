@@ -1,6 +1,6 @@
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-# OpenBLAS
+# This block should be kept in sync with the port 'blas'
 if(VCPKG_TARGET_IS_OSX)
     set(BLA_VENDOR Apple)
     set(requires "")

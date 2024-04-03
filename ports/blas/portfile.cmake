@@ -1,12 +1,14 @@
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-# OpenBLAS
 if(VCPKG_TARGET_IS_OSX)
+    # Use Apple's accelerate framework where available
     set(BLA_VENDOR Apple)
     set(requires "")
     set(libs "-framework Accelerate")
     set(cflags "-framework Accelerate")
 elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # windows-static can't use OpenBLAS because gfortran imposes DLL dependencies,
+    # so we use the blas implementation from lapack-reference
     set(BLA_VENDOR Generic)
     set(requires "blas-reference")
 else()
