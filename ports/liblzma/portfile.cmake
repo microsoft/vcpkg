@@ -1,6 +1,6 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO tukaani-project/xz
+    REPO bminor/xz
     REF "v${VERSION}"
     SHA512 c28461123562564e030f3f733f078bc4c840e87598d9f4b718d4bca639120d8133f969c45d7bdc62f33f081d789ec0f14a1791fb7da18515682bfe3c0c7362e0
     HEAD_REF master
