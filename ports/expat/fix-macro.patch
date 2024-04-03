@@ -1,0 +1,16 @@
+diff --git a/expat/lib/expat_external.h b/expat/lib/expat_external.h
+index 8829f77..8959bb6 100644
+--- a/expat/lib/expat_external.h
++++ b/expat/lib/expat_external.h
+@@ -124,6 +124,11 @@
+ 
+ #define XMLPARSEAPI(type) XMLIMPORT type XMLCALL
+ 
++#    if defined(_MSC_EXTENSIONS) && ! defined(__BEOS__) && ! defined(__CYGWIN__)
++#      define XMLPARSEAPI(type) __declspec(dllimport) type XMLCALL 
++#    endif
++
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
