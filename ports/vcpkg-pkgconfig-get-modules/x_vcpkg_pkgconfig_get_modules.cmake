@@ -1,12 +1,16 @@
 include_guard(GLOBAL)
 
 function(x_vcpkg_pkgconfig_get_modules)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "CFLAGS;LIBS;LIBRARIES;LIBRARIES_DIRS;INCLUDE_DIRS;USE_MSVC_SYNTAX_ON_WINDOWS" "PREFIX" "MODULES")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "CFLAGS;LIBS;LIBRARIES;LIBRARIES_DIR;LIBRARIES_DIRS;INCLUDE_DIRS;USE_MSVC_SYNTAX_ON_WINDOWS" "PREFIX" "MODULES")
     if(NOT DEFINED arg_PREFIX OR arg_PREFIX STREQUAL "")
         message(FATAL_ERROR "x_vcpkg_pkgconfig_get_modules requires parameter PREFIX!")
     endif()
     if(NOT DEFINED arg_MODULES OR arg_MODULES STREQUAL "")
         message(FATAL_ERROR "x_vcpkg_pkgconfig_get_modules requires parameter MODULES!")
+    endif()
+    if(arg_LIBRARIES_DIR)
+        # Legacy. Remove in 2025.
+        message(WARNING "x_vcpkg_pkgconfig_get_modules parameter LIBRARIES_DIR is a no-op. Use LIBRARIES_DIRS instead.")
     endif()
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "extra arguments passed to x_vcpkg_pkgconfig_get_modules: ${arg_UNPARSED_ARGUMENTS}")
