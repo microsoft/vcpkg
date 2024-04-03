@@ -1409,7 +1409,7 @@
       "port-version": 5
     },
     "c-ares": {
-      "baseline": "1.27.0",
+      "baseline": "1.28.0",
       "port-version": 0
     },
     "c-dbg-macro": {
@@ -8766,7 +8766,7 @@
     },
     "trantor": {
       "baseline": "1.5.17",
-      "port-version": 0
+      "port-version": 1
     },
     "tre": {
       "baseline": "0.8.0",
