@@ -26,7 +26,7 @@
     },
     "tools": {
       "description": "Build hunspell tools",
-      "supports": "!windows"
+      "supports": "!windows | mingw"
     }
   }
 }
