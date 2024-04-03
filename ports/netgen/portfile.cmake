@@ -14,6 +14,7 @@ vcpkg_from_github(
       add_filesystem.patch
       occ-78.patch
       142.diff
+      fix-cross-compil.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -29,17 +30,22 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         python   USE_PYTHON
+        cgns     USE_CGNS
+        mpeg     USE_MPEG
+        jpeg     USE_JPEG
+        occ      USE_OCC
 )
+
+if (VCPKG_CROSSCOMPILING)
+  set(MAKERLS_EXECUTABLE ${CURRENT_HOST_INSTALLED_DIR}/bin/makerls${VCPKG_HOST_EXECUTABLE_SUFFIX})
+endif()
 
 vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS  ${OPTIONS}
       ${FEATURE_OPTIONS}
-      -DUSE_JPEG=ON
-      -DUSE_CGNS=ON
-      -DUSE_OCC=ON
-      -DUSE_MPEG=ON
+      -DMAKERLS_EXECUTABLE=${MAKERLS_EXECUTABLE}
       -DUSE_SPDLOG=OFF # will be vendored otherwise
       -DUSE_GUI=OFF
       -DPREFER_SYSTEM_PYBIND11=ON
