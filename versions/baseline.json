@@ -6085,7 +6085,7 @@
       "port-version": 0
     },
     "nethost": {
-      "baseline": "8.0.0",
+      "baseline": "8.0.3",
       "port-version": 0
     },
     "nettle": {
