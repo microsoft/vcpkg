@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 function(x_vcpkg_pkgconfig_get_modules)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "CFLAGS;LIBS;LIBRARIES;LIBRARIES_DIR;INCLUDE_DIRS;USE_MSVC_SYNTAX_ON_WINDOWS" "PREFIX" "MODULES")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "CFLAGS;LIBS;LIBRARIES;LIBRARIES_DIRS;INCLUDE_DIRS;USE_MSVC_SYNTAX_ON_WINDOWS" "PREFIX" "MODULES")
     if(NOT DEFINED arg_PREFIX OR arg_PREFIX STREQUAL "")
         message(FATAL_ERROR "x_vcpkg_pkgconfig_get_modules requires parameter PREFIX!")
     endif()
