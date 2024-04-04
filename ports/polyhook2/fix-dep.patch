@@ -46,17 +46,21 @@ index 65f3c73..586d582 100644
          target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:asmtk>)
          target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${ASMTK_SRC}>")
 diff --git a/polyhook_2-config.cmake.in b/polyhook_2-config.cmake.in
-index 709f8b5..028e0a4 100644
+index 709f8b5..599d1f7 100644
 --- a/polyhook_2-config.cmake.in
 +++ b/polyhook_2-config.cmake.in
-@@ -10,5 +10,10 @@ set(POLYHOOK_FEATURE_INLINENTD @POLYHOOK_FEATURE_INLINENTD@)
+@@ -10,5 +10,14 @@ set(POLYHOOK_FEATURE_INLINENTD @POLYHOOK_FEATURE_INLINENTD@)
  set(POLYHOOK_FEATURE_PE @POLYHOOK_FEATURE_PE@)
  set(POLYHOOK_FEATURE_VIRTUALS @POLYHOOK_FEATURE_VIRTUALS@)
  
 +include(CMakeFindDependencyMacro)
 +find_dependency(Zydis)
-+find_dependency(asmjit)
-+find_dependency(asmtk)
++if(POLYHOOK_FEATURE_DETOURS)
++    find_dependency(asmjit)
++endif()
++if(POLYHOOK_FEATURE_INLINENTD)
++    find_dependency(asmtk)
++endif()
 +
  get_filename_component(POLYHOOK_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
  include("${POLYHOOK_CMAKE_DIR}/PolyHook_2-targets.cmake")

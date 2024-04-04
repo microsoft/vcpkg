@@ -18,16 +18,21 @@
   ],
   "default-features": [
     "detours",
-    "exception",
+    {
+      "name": "exception",
+      "platform": "windows"
+    },
     "inlinentd",
-    "pe",
+    {
+      "name": "pe",
+      "platform": "windows"
+    },
     "virtuals"
   ],
   "features": {
     "detours": {
       "description": "Implement detour functionality",
       "dependencies": [
-        "asmjit",
         "asmtk"
       ]
     },
