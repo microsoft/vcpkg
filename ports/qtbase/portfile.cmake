@@ -507,10 +507,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
         icuin74.dll
         icuuc74.dll
         libcrypto-3-${VCPKG_TARGET_ARCHITECTURE}.dll
+        libcrypto-3.dll # for x86
         pcre2-16.dll
         zlib1.dll
         zstd.dll
   )
   list(TRANSFORM qtbase_owned_dlls PREPEND "${CURRENT_INSTALLED_DIR}/bin/")
+  foreach(dll IN LISTS qtbase_owned_dlls)
+    if(NOT EXISTS "${dll}") # Need to remove non-existant dlls since dependencies could have been build statically
+      list(REMOVE_ITEM qtbase_owned_dlls "${dll}")
+    endif()
+  endforeach()
   file(COPY ${qtbase_owned_dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
 endif()
