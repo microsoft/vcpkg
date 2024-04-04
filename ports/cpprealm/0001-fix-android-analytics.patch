@@ -1,0 +1,29 @@
+diff --git a/realm-core b/realm-core
+index 374dd67..ffb40c8 160000
+--- a/realm-core
++++ b/realm-core
+@@ -1 +1 @@
+-Subproject commit 374dd672af357732dccc135fecc905406fec3223
++Subproject commit ffb40c857c6d666a8023d8384125c19841aa773d-dirty
+diff --git a/src/cpprealm/analytics.cpp b/src/cpprealm/analytics.cpp
+index 3ce8399..af01c3d 100644
+--- a/src/cpprealm/analytics.cpp
++++ b/src/cpprealm/analytics.cpp
+@@ -128,7 +128,7 @@ namespace realm {
+ 
+         return (info.kp_proc.p_flag & P_TRACED) != 0;
+     }
+-#elif __linux__
++#elif __linux__ && !__ANDROID__
+     std::string print_hex(unsigned char *bs, unsigned int len) {
+         std::stringstream ss;
+         for (size_t i = 0; i < len; i++) {
+@@ -219,7 +219,7 @@ namespace realm {
+         return "unknown";
+     }
+     std::string get_host_os_verion() {
+-        return "unknown"
++        return "unknown";
+     }
+     bool debugger_attached() {
+         return false;

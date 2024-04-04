@@ -4,14 +4,16 @@ vcpkg_from_github(
         REF "v${VERSION}"
         SHA512 059c5e39e5204e5ebcdd727c74b4001be44040df6804804fbba73455c36a7547fb2d07e035d8b694299b4d35fae29cc42305811f24160447810c6eaa2c6397ad
         HEAD_REF main
+        PATCHES
+            0001-fix-android-analytics.patch
 )
 
 vcpkg_from_github(
         OUT_SOURCE_PATH REALM_CORE_SOURCE_PATH
         REPO realm/realm-core
-        REF ffb40c857c6d666a8023d8384125c19841aa773d
-        SHA512 7cc3a4ebb8ab77fbf0f349b876122ebdb84c96dfa360cc5d82750064959e4d663f17fdd3d9bde62162087d7aecedd59713fd044a3c791112260bfe97dd74e305
-        HEAD_REF lm/msvc-arm
+        REF caf04acf4cb59607c9adf41f26f37b68f63044d0
+        SHA512 2ce54f8ec0d23b319f053ac590b6c1b888c8641afaf7f0fd648b16805ced98a05c7d6e6876089b9ba70546dd9444d76c8d1005ba5a5e3a591cd2df5f9d869669
+        HEAD_REF master
 )
 
 vcpkg_from_github(
