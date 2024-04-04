@@ -511,6 +511,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         zlib1.dll
         zstd.dll
   )
-  list(TRANSFORM qtbase_owned_dlls PREPEND "${CURRENT_INSTALLED_DIR}/bin/")¶
+  list(TRANSFORM qtbase_owned_dlls PREPEND "${CURRENT_INSTALLED_DIR}/bin/")
   file(COPY ${qtbase_owned_dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
 endif()
