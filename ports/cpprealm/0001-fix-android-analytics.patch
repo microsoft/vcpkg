@@ -1,10 +1,3 @@
-diff --git a/realm-core b/realm-core
-index 374dd67..ffb40c8 160000
---- a/realm-core
-+++ b/realm-core
-@@ -1 +1 @@
--Subproject commit 374dd672af357732dccc135fecc905406fec3223
-+Subproject commit ffb40c857c6d666a8023d8384125c19841aa773d-dirty
 diff --git a/src/cpprealm/analytics.cpp b/src/cpprealm/analytics.cpp
 index 3ce8399..af01c3d 100644
 --- a/src/cpprealm/analytics.cpp
