@@ -5,7 +5,7 @@ set(${PORT}_PATCHES
       "clang-cl.patch"
 )
 
-set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
+set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES

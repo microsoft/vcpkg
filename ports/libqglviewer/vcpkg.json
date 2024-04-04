@@ -7,9 +7,15 @@
   "license": "GPL-2.0-or-later",
   "supports": "!xbox",
   "dependencies": [
+    "opengl",
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "gui",
+        "opengl",
+        "widgets"
+      ]
     },
     {
       "name": "vcpkg-cmake",

@@ -11,6 +11,10 @@
       "features": [
         "network"
       ]
+    },
+    {
+      "name": "qtopcua",
+      "default-features": false
     }
   ],
   "default-features": [
