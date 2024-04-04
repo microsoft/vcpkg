@@ -1,6 +1,6 @@
 {
   "name": "sentry-native",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
   "license": "MIT",
@@ -42,6 +42,15 @@
           "name": "zlib",
           "platform": "!android & !ios"
         }
+      ]
+    },
+    "compression": {
+      "description": [
+        "Enables gzip compression support for the transport.",
+        "Cf.https://github.com/getsentry/sentry-native#compile-time-options"
+      ],
+      "dependencies": [
+        "zlib"
       ]
     },
     "transport": {
