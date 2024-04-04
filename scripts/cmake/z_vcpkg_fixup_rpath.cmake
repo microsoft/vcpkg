@@ -9,7 +9,8 @@ function(z_vcpkg_calculate_corrected_rpath)
 
     set(current_prefix "${CURRENT_PACKAGES_DIR}")
     set(current_installed_prefix "${CURRENT_INSTALLED_DIR}")
-    if(elf_file_dir MATCHES "debug/")
+    file(RELATIVE_PATH relative_from_packages "${CURRENT_PACKAGES_DIR}" "${elf_file_dir}")
+    if("${relative_from_packages}/" MATCHES "^debug/|^(manual-tools|tools)/[^/]*/debug/")
         set(current_prefix "${CURRENT_PACKAGES_DIR}/debug")
         set(current_installed_prefix "${CURRENT_INSTALLED_DIR}/debug")
     endif()
@@ -110,7 +111,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
 
             get_filename_component(elf_file_dir "${elf_file}" DIRECTORY)
 
-            Z_vcpkg_calculate_corrected_rpath(
+            z_vcpkg_calculate_corrected_rpath(
               ELF_FILE_DIR "${elf_file_dir}"
               ORG_RPATH "${readelf_output}"
               OUT_NEW_RPATH_VAR new_rpath
