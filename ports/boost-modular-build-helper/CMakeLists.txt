@@ -9,7 +9,11 @@ set(USER_CONFIG_TOOLSET_OPTIONS "")
 set(USER_CONFIG_EXTRA_LINES "")
 set(USER_CONFIG_REQUIREMENTS "")
 
-set(B2_OPTIONS "")
+# Avoid forcing initialization of B2_OPTIONS here to allow some users to add custom configuration options to this command via VCPKG_CHAINLOAD_TOOLCHAIN_FILE.
+if(NOT DEFINED B2_OPTIONS)
+    set(B2_OPTIONS "")
+endif()
+
 
 include("${VCPKG_CMAKE_VARS_FILE}")
 
@@ -63,8 +67,16 @@ if(VCPKG_DETECTED_MSVC)
         set(USER_CONFIG_TOOLSET msvc)
         if(VCPKG_DETECTED_MSVC_VERSION LESS "1900")
             math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 60")
+        elseif(VCPKG_DETECTED_MSVC_VERSION LESS "1910")
+            set(USER_CONFIG_TOOLSET_VERSION "140")
+        elseif(VCPKG_DETECTED_MSVC_VERSION LESS "1920")
+            set(USER_CONFIG_TOOLSET_VERSION "141")
+        elseif(VCPKG_DETECTED_MSVC_VERSION LESS "1930")
+            set(USER_CONFIG_TOOLSET_VERSION "142")
+        elseif(VCPKG_DETECTED_MSVC_VERSION LESS "1950")
+            set(USER_CONFIG_TOOLSET_VERSION "143")
         else()
-            math(EXPR USER_CONFIG_TOOLSET_VERSION "${VCPKG_DETECTED_MSVC_VERSION} / 10 - 50")
+            message(FATAL_ERROR "Unsupported MSVC version: ${VCPKG_DETECTED_MSVC_VERSION}")
         endif()
     endif()
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
@@ -238,6 +250,9 @@ if(NOT python_versions STREQUAL "")
         list(APPEND B2_OPTIONS "python-debugging=on")
     endif()
 endif()
+
+# Remove duplicates from B2_OPTIONS since VCPKG_CHAINLOAD_TOOLCHAIN_FILE may be loaded multiple times in some cases.
+list(REMOVE_DUPLICATES B2_OPTIONS)
 
 if("${PORT}" STREQUAL "boost-mpi" OR "${PORT}" STREQUAL "boost-graph-parallel")
     string(APPEND USER_CONFIG_EXTRA_LINES

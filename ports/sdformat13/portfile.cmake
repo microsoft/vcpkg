@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gazebosim/sdformat
     REF "sdformat13_${VERSION}"
-    SHA512 adc555527aadaede84d6fde11555bf4872028d9e895fc47c89f4077452fde9a52b233d60d0cbff5a098e261c7810aa2dc38a6275ec9f37ba4d0161af98e2aade
+    SHA512 10c56fab3957fff759c3ff7db401e162c5d353221e3895617182031be41e10a5234607fb7d1afb0ec453f3e1f20ddcc36b8488ed3d1cc2d1d0e915fc3a74ddbd
     HEAD_REF sdf13
     PATCHES
         no-absolute.patch

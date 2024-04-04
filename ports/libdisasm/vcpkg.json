@@ -1,9 +1,10 @@
 {
   "name": "libdisasm",
   "version": "0.23",
-  "port-version": 10,
+  "port-version": 11,
   "description": "x86 Disassembler Library.",
   "homepage": "https://sourceforge.net/projects/bastard",
+  "license": "ClArtistic",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

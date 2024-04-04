@@ -1,8 +1,8 @@
 {
   "name": "qtbase",
   "version": "6.6.1",
-  "port-version": 1,
-  "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
+  "port-version": 11,
+  "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
   "supports": "!uwp",
@@ -62,10 +62,20 @@
     "icu",
     "jpeg",
     "network",
-    "opengl",
-    "openssl",
+    {
+      "name": "opengl",
+      "platform": "!ios"
+    },
+    {
+      "name": "openssl",
+      "platform": "!ios"
+    },
     "pcre2",
     "png",
+    {
+      "name": "securetransport",
+      "platform": "ios"
+    },
     "sql",
     "sql-psql",
     "sql-sqlite",
@@ -104,7 +114,16 @@
       ]
     },
     "dbus": {
-      "description": "Qt D-Bus"
+      "description": "Qt D-Bus",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        }
+      ]
     },
     "default-features": {
       "description": "Platform-dependent default features",
@@ -192,16 +211,46 @@
         }
       ]
     },
+    "gles3": {
+      "description": "OpenGL ES 3.0",
+      "supports": "!windows & !osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gles2"
+          ]
+        }
+      ]
+    },
     "glib": {
       "description": "GLib",
       "dependencies": [
         "glib"
       ]
     },
+    "gtk3": {
+      "description": "GTK3 platform theme plugin",
+      "supports": "linux",
+      "dependencies": [
+        "gtk3",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "glib"
+          ]
+        }
+      ]
+    },
     "gui": {
       "description": "Qt Gui",
       "dependencies": [
-        "opengl",
+        {
+          "name": "opengl",
+          "platform": "!ios"
+        },
         {
           "name": "qtbase",
           "default-features": false,
@@ -306,6 +355,10 @@
           ]
         }
       ]
+    },
+    "securetransport": {
+      "description": "Enable Secure Transport",
+      "supports": "ios | osx"
     },
     "sql": {
       "description": "Qt Sql",

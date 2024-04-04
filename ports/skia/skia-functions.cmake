@@ -109,6 +109,18 @@ function(third_party_from_pkgconfig gn_group)
         if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             list(TRANSFORM ldflags REPLACE "^-l" "")
             list(TRANSFORM ldflags APPEND ".lib")
+            set(libs_with_path "")
+            # At least icu must be newer than in Windows SDK
+            foreach(name IN LISTS ldflags)
+                set(filepath NOTFOUND)
+                find_file(filepath NAMES "${name}" PATHS ${lib_dirs} NO_DEFAULT_PATH NO_CACHE)
+                if(filepath)
+                    list(APPEND libs_with_path "${filepath}")
+                else()
+                    list(APPEND libs_with_path "${name}")
+                endif()
+            endforeach()
+            set(ldflags "${libs_with_path}")
         endif()
         set(GN_OUT_${config} "")
         foreach(item IN ITEMS defines include_dirs lib_dirs ldflags)
@@ -319,7 +331,7 @@ function(skia_gn_install_build_type)
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         LOGNAME "desc-${arg_LABEL}"
     )
-    
+
     # build
     set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
     vcpkg_build_ninja(TARGETS ${arg_TARGETS})
@@ -333,6 +345,10 @@ function(skia_gn_install_build_type)
 
     list(TRANSFORM arg_TARGETS PREPEND "//")
     file(READ "${CURRENT_BUILDTREES_DIR}/desc-${arg_LABEL}-out.log" desc)
+    string(REGEX REPLACE "^([^{]+)\n{\n" "{\n" desc "${desc}")
+    if(NOT "${CMAKE_MATCH_1}" STREQUAL "")
+        message(STATUS "${CMAKE_MATCH_1}")
+    endif()
     expand_gn_targets(arg_TARGETS desc "${arg_SOURCE_PATH}")
 
     string(TOUPPER "${arg_BUILD_TYPE}" cmake_build_type)

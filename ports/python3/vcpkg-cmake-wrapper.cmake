@@ -29,7 +29,7 @@ endif()
 
 if(_PythonFinder_WantLibs)
     find_path(
-        @PythonFinder_PREFIX@_INCLUDE_DIR
+        _@PythonFinder_PREFIX@_INCLUDE_DIR
         NAMES "Python.h"
         PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
         PATH_SUFFIXES "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@"

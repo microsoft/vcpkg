@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Tools
-    REF "v${VERSION}"
-    SHA512 988f5e31508e3f19c1dd9d9a013c8e9ff89eba86207a769d7d804f9ee0201c794f412a874c860167b2c040b2c5e1fb1c835ae3684c70feaac86e47f90c1a5010
+    REF "vulkan-sdk-${VERSION}"
+    SHA512 3ccab3118e0a1d6f20d031cd1f90f2546b618370b90aacc468fc598d523463452f65ed2c89c1de4e2bb8933b9757eb8123363483bcd853e92d41c95ea419e79f
     PATCHES
         cmake-config-dir.diff
         spirv-tools-shared.diff
@@ -56,4 +56,4 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

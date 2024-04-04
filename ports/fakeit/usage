@@ -1,0 +1,9 @@
+The package FakeIt provides CMake targets:
+
+    # Usage for specific framework tests (e.g. boost, catch, gtest, etc.)
+    find_package(FakeIt CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE FakeIt::FakeIt-<framework>)
+
+    # Only specific test framework configuration files are provided upstream.
+    # It does not install its own source header files.
+    # So only the usage of the test framework is provided here.

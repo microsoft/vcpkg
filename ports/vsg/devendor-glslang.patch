@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6e7ec437..db4d30f1 100644
+index 883b103a..105bf015 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -37,9 +37,11 @@ find_package(Vulkan ${Vulkan_MIN_VERSION} REQUIRED)
+@@ -36,10 +36,11 @@ endif()
+ find_package(Vulkan ${Vulkan_MIN_VERSION} REQUIRED)
  
  find_package(Threads REQUIRED)
- 
 +find_package(glslang CONFIG REQUIRED)
-+
+ 
  # Enable/disable shader compilation support that pulls in glslang
  set(VSG_SUPPORTS_ShaderCompiler  1 CACHE STRING "Optional shader compiler support, 0 for off, 1 for enabled." )
 -if (VSG_SUPPORTS_ShaderCompiler)
@@ -16,10 +16,10 @@ index 6e7ec437..db4d30f1 100644
  
          if (Git_FOUND)
 diff --git a/src/vsg/CMakeLists.txt b/src/vsg/CMakeLists.txt
-index 3d9625e4..96285e99 100644
+index 188cfbe2..7a67538d 100644
 --- a/src/vsg/CMakeLists.txt
 +++ b/src/vsg/CMakeLists.txt
-@@ -227,14 +227,24 @@ set(SOURCES
+@@ -226,7 +226,7 @@ set(SOURCES
      utils/LoadPagedLOD.cpp
  )
  
@@ -28,25 +28,18 @@ index 3d9625e4..96285e99 100644
  
      # include glslang source code directly into the VulkanScenegraph library build.
      include(../glslang/build_vars.cmake)
- endif()
- 
- # set up library dependencies
--set(LIBRARIES PUBLIC
-+set(LIBRARIES
-+	PRIVATE
-+        glslang::glslang
-+        glslang::OSDependent
-+        glslang::MachineIndependent
-+        glslang::GenericCodeGen
-+        glslang::glslang-default-resource-limits
-+        glslang::OGLCompiler
-+        glslang::SPVRemapper
-+        glslang::SPIRV
-+	PUBLIC
+@@ -236,6 +236,10 @@ endif()
+ set(LIBRARIES PUBLIC
          Vulkan::Vulkan
          Threads::Threads
++    PRIVATE
++        glslang::glslang
++        glslang::glslang-default-resource-limits
++        glslang::SPIRV
  )
-@@ -365,9 +375,6 @@ target_include_directories(vsg
+ 
+ # Check for std::atomic
+@@ -374,9 +378,6 @@ target_include_directories(vsg
      PUBLIC
          $<BUILD_INTERFACE:${VSG_SOURCE_DIR}/include>
          $<BUILD_INTERFACE:${VSG_BINARY_DIR}/include>

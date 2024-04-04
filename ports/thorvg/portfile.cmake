@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
     REF "v${VERSION}"
-    SHA512 cc73f7e01755141a245eecd1dc8fa6754e21b342e3734f1200e859c2360474fc9931a934eb49968c65b15c537812b81fa1f3f82ac12f9e00e3959748cf1e286f
+    SHA512 c5ea58960e09d5570a409fb963c83101e6858970937b4be9aedbde65f61dc357e7b5c8d36390d2fcce84b6688901bd6e7b1ec888a67f4b4db3eab56125bbedc0
     HEAD_REF master
 )
 
@@ -21,10 +21,10 @@ vcpkg_configure_meson(
     OPTIONS
         ${BUILD_OPTIONS}
         # see ${SOURCE_PATH}/meson_options.txt
-        -Dengines=sw
+        -Dengines=['sw']
         -Dloaders=all
         -Dsavers=tvg
-        -Dvector=true
+        -Dvector=true # This assumes AVX
         -Dbindings=capi
         -Dtests=false
         -Dexamples=false
@@ -39,7 +39,7 @@ vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
 if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES svg2tvg svg2png AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES svg2tvg svg2png lottie2gif AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
