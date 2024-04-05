@@ -1430,7 +1430,7 @@
     },
     "cachelib": {
       "baseline": "2023.05.08.00",
-      "port-version": 1
+      "port-version": 2
     },
     "caf": {
       "baseline": "0.19.3",
@@ -2770,7 +2770,7 @@
     },
     "fmt": {
       "baseline": "10.2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "folly": {
       "baseline": "2024.01.01.00",
@@ -3182,7 +3182,7 @@
     },
     "grpc": {
       "baseline": "1.51.1",
-      "port-version": 2
+      "port-version": 3
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -3754,7 +3754,7 @@
     },
     "json-spirit": {
       "baseline": "4.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "json11": {
       "baseline": "2017-06-20",
@@ -3770,7 +3770,7 @@
     },
     "jsoncpp": {
       "baseline": "1.9.5",
-      "port-version": 3
+      "port-version": 4
     },
     "jsonifier": {
       "baseline": "0.9.94",
@@ -8266,7 +8266,7 @@
     },
     "spdlog": {
       "baseline": "1.13.0",
-      "port-version": 0
+      "port-version": 1
     },
     "spectra": {
       "baseline": "1.0.1",
