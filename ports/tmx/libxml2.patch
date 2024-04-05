@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index abb5e18..30b88c5 100644
+index 1ff0676..043ad1c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -48,7 +48,6 @@ else()
-     message("Zlib not wanted")
+@@ -62,7 +62,6 @@ else()
+     message("zstd not wanted")
  endif()
  
 -include(FindLibXml2)
