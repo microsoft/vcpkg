@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
         -DIPADDRESS_ENABLE_CLANG_TIDY=OFF
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/ipaddress)
+vcpkg_cmake_config_fixup(PACKAGE_NAME ipaddress CONFIG_PATH share/cmake/ipaddress)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
