@@ -29,21 +29,12 @@ function(z_vcpkg_calculate_corrected_rpath)
         # lib relative corrections
         list(TRANSFORM rpath_norm REPLACE "${current_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}/")
         list(TRANSFORM rpath_norm REPLACE "${current_installed_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}/")
-        list(TRANSFORM rpath_norm REPLACE "${current_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}/")
-        list(TRANSFORM rpath_norm REPLACE "${current_installed_prefix}/lib/?" "\$ORIGIN/${relative_to_lib}/")
         # prefix relativ
-        list(TRANSFORM rpath_norm REPLACE "${current_prefix}" "\$ORIGIN/${relative_to_prefix}/")
-        list(TRANSFORM rpath_norm REPLACE "${current_installed_prefix}" "\$ORIGIN/${relative_to_prefix}/")
         list(TRANSFORM rpath_norm REPLACE "${current_prefix}" "\$ORIGIN/${relative_to_prefix}/")
         list(TRANSFORM rpath_norm REPLACE "${current_installed_prefix}" "\$ORIGIN/${relative_to_prefix}/")
 
         # Path normalization
         list(TRANSFORM rpath_norm REPLACE "/+" "/")
-        list(TRANSFORM rpath_norm REPLACE "/^" "")
-
-        # duplication removal
-        list(REMOVE_ITEM rpath_norm "\$ORIGIN")
-        list(REMOVE_ITEM rpath_norm "\$ORIGIN/${relative_to_lib}")
 
         if(NOT X_VCPKG_RPATH_KEEP_SYSTEM_PATHS)
           list(FILTER rpath_norm INCLUDE REGEX "\\\$ORIGIN.+") # Only keep paths relativ to ORIGIN
