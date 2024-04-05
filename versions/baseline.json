@@ -7402,7 +7402,7 @@
     },
     "qtshadertools": {
       "baseline": "6.6.1",
-      "port-version": 1
+      "port-version": 2
     },
     "qtspeech": {
       "baseline": "6.6.1",
