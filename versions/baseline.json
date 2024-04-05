@@ -7246,7 +7246,7 @@
     },
     "qt5-winextras": {
       "baseline": "5.15.13",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-x11extras": {
       "baseline": "5.15.13",
@@ -7414,7 +7414,7 @@
     },
     "qttools": {
       "baseline": "6.6.1",
-      "port-version": 1
+      "port-version": 2
     },
     "qttranslations": {
       "baseline": "6.6.1",
