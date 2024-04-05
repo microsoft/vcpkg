@@ -4,31 +4,28 @@ function(z_vcpkg_calculate_corrected_rpath)
       "ELF_FILE_DIR;ORG_RPATH;OUT_NEW_RPATH_VAR"
       "")
 
-    set(elf_file_dir "${arg_ELF_FILE_DIR}")
-    set(org_rpath "${arg_ORG_RPATH}")
-
     set(current_prefix "${CURRENT_PACKAGES_DIR}")
     set(current_installed_prefix "${CURRENT_INSTALLED_DIR}")
-    file(RELATIVE_PATH relative_from_packages "${CURRENT_PACKAGES_DIR}" "${elf_file_dir}")
+    file(RELATIVE_PATH relative_from_packages "${CURRENT_PACKAGES_DIR}" "${arg_ELF_FILE_DIR}")
     if("${relative_from_packages}/" MATCHES "^debug/|^(manual-tools|tools)/[^/]*/debug/")
         set(current_prefix "${CURRENT_PACKAGES_DIR}/debug")
         set(current_installed_prefix "${CURRENT_INSTALLED_DIR}/debug")
     endif()
 
     # compute path relative to lib
-    file(RELATIVE_PATH relative_to_lib "${elf_file_dir}" "${current_prefix}/lib")
+    file(RELATIVE_PATH relative_to_lib "${arg_ELF_FILE_DIR}" "${current_prefix}/lib")
     # compute path relative to prefix
-    file(RELATIVE_PATH relative_to_prefix "${elf_file_dir}" "${current_prefix}")
+    file(RELATIVE_PATH relative_to_prefix "${arg_ELF_FILE_DIR}" "${current_prefix}")
 
     set(rpath_norm "")
-    if(NOT org_rpath STREQUAL "")
-        cmake_path(CONVERT "${org_rpath}" TO_CMAKE_PATH_LIST rpath_norm)
+    if(NOT "${arg_ORG_RPATH}" STREQUAL "")
+        cmake_path(CONVERT "${arg_ORG_RPATH}" TO_CMAKE_PATH_LIST rpath_norm)
 
         # pattern matching helpers
         list(TRANSFORM rpath_norm PREPEND "::")
         list(TRANSFORM rpath_norm APPEND "/")
 
-        string(REPLACE "::${elf_file_dir}/" "::\$ORIGIN/" rpath_norm "${rpath_norm}")
+        string(REPLACE "::${arg_ELF_FILE_DIR}/" "::\$ORIGIN/" rpath_norm "${rpath_norm}")
         # Remove unnecessary up/down ; don't use normalize $ORIGIN/../ will be removed otherwise
         string(REPLACE "/lib/pkgconfig/../../" "/" rpath_norm "${rpath_norm}")
         # lib relative corrections
