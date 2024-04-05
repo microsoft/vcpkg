@@ -5729,8 +5729,8 @@
       "port-version": 0
     },
     "minio-cpp": {
-      "baseline": "0.1.1",
-      "port-version": 1
+      "baseline": "0.2.0",
+      "port-version": 0
     },
     "miniply": {
       "baseline": "2022-09-15",
