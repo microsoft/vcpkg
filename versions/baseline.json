@@ -7506,7 +7506,7 @@
     },
     "range-v3": {
       "baseline": "0.12.0",
-      "port-version": 1
+      "port-version": 2
     },
     "range-v3-vs2015": {
       "baseline": "20151130-vcpkg5",
