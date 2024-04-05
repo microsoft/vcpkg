@@ -57,6 +57,7 @@ unit_test_check_variable_equal([[
 set(X_VCPKG_RPATH_KEEP_SYSTEM_PATHS 1)
 set(CURRENT_PACKAGES_DIR "/cxx/P")
 set(CURRENT_INSTALLED_DIR "/cxx/I")
+
 unit_test_check_variable_equal([[
     z_vcpkg_calculate_corrected_rpath(OUT_NEW_RPATH_VAR "out" ORG_RPATH "/opt/lib:/usr/local/lib" ELF_FILE_DIR "/cxx/P/lib")
 ]] out [[$ORIGIN:/opt/lib:/usr/local/lib]])
@@ -76,6 +77,7 @@ unit_test_check_variable_equal([[
 set(X_VCPKG_RPATH_KEEP_SYSTEM_PATHS 0)
 set(CURRENT_PACKAGES_DIR "/cxx/P")
 set(CURRENT_INSTALLED_DIR "/cxx/I")
+
 unit_test_check_variable_equal([[
     z_vcpkg_calculate_corrected_rpath(OUT_NEW_RPATH_VAR "out" ORG_RPATH "/opt/lib:/usr/local/lib" ELF_FILE_DIR "/cxx/P/lib")
 ]] out [[$ORIGIN]])
@@ -91,5 +93,29 @@ unit_test_check_variable_equal([[
 unit_test_check_variable_equal([[
     z_vcpkg_calculate_corrected_rpath(OUT_NEW_RPATH_VAR "out" ORG_RPATH "/cxx/I/foo/lib/pkgconfig/../../bar" ELF_FILE_DIR "/cxx/P/lib")
 ]] out [[$ORIGIN:$ORIGIN/../foo/bar]])
+
+# https://github.com/microsoft/vcpkg/issues/37984
+set(CURRENT_PACKAGES_DIR "/c++/P")
+set(CURRENT_INSTALLED_DIR "/c++/I")
+
+unit_test_check_variable_equal([[
+    z_vcpkg_calculate_corrected_rpath(OUT_NEW_RPATH_VAR "out" ORG_RPATH "/c++/I/foo/bar" ELF_FILE_DIR "/c++/P/lib")
+]] out [[$ORIGIN:$ORIGIN/../foo/bar]])
+
+unit_test_check_variable_equal([[
+    z_vcpkg_calculate_corrected_rpath(OUT_NEW_RPATH_VAR "out" ORG_RPATH "/c++/P/foo/bar" ELF_FILE_DIR "/c++/P/lib")
+]] out [[$ORIGIN:$ORIGIN/../foo/bar]])
+
+set(CURRENT_PACKAGES_DIR "/(c)/P")
+set(CURRENT_INSTALLED_DIR "/(c)/I")
+
+unit_test_check_variable_equal([[
+    z_vcpkg_calculate_corrected_rpath(OUT_NEW_RPATH_VAR "out" ORG_RPATH "/(c)/I/foo/bar" ELF_FILE_DIR "/(c)/P/lib")
+]] out [[$ORIGIN:$ORIGIN/../foo/bar]])
+
+unit_test_check_variable_equal([[
+    z_vcpkg_calculate_corrected_rpath(OUT_NEW_RPATH_VAR "out" ORG_RPATH "/(c)/P/foo/bar" ELF_FILE_DIR "/(c)/P/lib")
+]] out [[$ORIGIN:$ORIGIN/../foo/bar]])
+
 
 endblock()
