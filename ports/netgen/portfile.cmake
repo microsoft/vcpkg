@@ -14,7 +14,7 @@ vcpkg_from_github(
       add_filesystem.patch
       occ-78.patch
       142.diff
-      fix-cross-compil.patch
+      cross-build.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -27,6 +27,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   string(APPEND VCPKG_CXX_FLAGS " -DNGSTATIC_BUILD")
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+  list(APPEND OPTIONS "-DMAKERLS_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/makerls${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         python   USE_PYTHON
@@ -36,16 +40,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         occ      USE_OCC
 )
 
-if (VCPKG_CROSSCOMPILING)
-  set(MAKERLS_EXECUTABLE ${CURRENT_HOST_INSTALLED_DIR}/bin/makerls${VCPKG_HOST_EXECUTABLE_SUFFIX})
-endif()
-
 vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS  ${OPTIONS}
       ${FEATURE_OPTIONS}
-      -DMAKERLS_EXECUTABLE=${MAKERLS_EXECUTABLE}
       -DUSE_SPDLOG=OFF # will be vendored otherwise
       -DUSE_GUI=OFF
       -DPREFER_SYSTEM_PYBIND11=ON
@@ -67,6 +66,10 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/netgen)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+if(NOT VCPKG_CROSSCOMPILING)
+  vcpkg_copy_tools(TOOL_NAMES makerls AUTO_CLEAN)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

@@ -41,7 +41,7 @@ diff --git a/rules/CMakeLists.txt b/rules/CMakeLists.txt
 index 2c281ca3..e2982f28 100644
 --- a/rules/CMakeLists.txt
 +++ b/rules/CMakeLists.txt
-@@ -1,14 +1,12 @@
+@@ -1,14 +1,14 @@
  # this file is included from the parent directory (otherwise generated source files are not recognized properly by cmake)
  
  # generate .cpp files containing the string of the .rls meshing rule files
@@ -51,22 +51,14 @@ index 2c281ca3..e2982f28 100644
 -    )
 -  set(rules_command ${CMAKE_BINARY_DIR}/makerls)
 -else(EMSCRIPTEN)
-+if("${MAKERLS_EXECUTABLE}")
++if(MAKERLS_EXECUTABLE)
 +  add_executable(makerls IMPORTED)
 +  set_target_properties(makerls PROPERTIES IMPORTED_LOCATION "${MAKERLS_EXECUTABLE}")
++  set(rules_command makerls)
 +else()
    add_executable(makerls rules/makerlsfile.cpp)
--  set(rules_command makerls)
+   set(rules_command makerls)
 +  install(TARGETS makerls DESTINATION ${NG_INSTALL_DIR} COMPONENT netgen)
  endif()
  
  set(rules
-@@ -29,7 +27,7 @@ foreach(rule ${rules})
-     set(rule_cpp ${CMAKE_CURRENT_BINARY_DIR}/rules/rule_${rule}.cpp)
- 
-     add_custom_command(OUTPUT ${rule_cpp}
--      COMMAND ${rules_command} ${rule_file} ${rule_cpp} ${rule}
-+      COMMAND $<TARGET_FILE:makerls> ${rule_file} ${rule_cpp} ${rule}
-       DEPENDS makerls ${rule_file}
-     )
- endforeach()
