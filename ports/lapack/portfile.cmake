@@ -6,10 +6,12 @@ else()
     set(BLA_STATIC OFF)
 endif()
 
+# See explanation of which lapack implementation is chosen in portfile.cmake in the blas port
+
 set(BLA_VENDOR Generic)
 set(installed_wrapper "${CURRENT_INSTALLED_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake")
 set(installed_module "${CURRENT_INSTALLED_DIR}/share/lapack/FindLAPACK.cmake")
-if(VCPKG_TARGET_IS_OSX)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     # Use Apple's accelerate framework where available
     set(BLA_VENDOR Apple)
     configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" @ONLY)
@@ -20,7 +22,7 @@ if(VCPKG_TARGET_IS_OSX)
         configure_file("${CMAKE_CURRENT_LIST_DIR}/lapack.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc" @ONLY)
     endif()
     unset(installed_module)
-elseif((VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm") OR VCPKG_TARGET_IS_UWP)
+elseif(VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm"))
     configure_file("${CURRENT_INSTALLED_DIR}/share/clapack/wrapper/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" COPYONLY)
     configure_file("${CURRENT_INSTALLED_DIR}/share/clapack/FindLAPACK.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/FindLAPACK.cmake" COPYONLY)
     set(libs "-llapack -llibf2c")
