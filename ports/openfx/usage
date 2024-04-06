@@ -1,4 +1,5 @@
 The package OpenFX provides CMake targets:
 
     find_package(unofficial-openfx CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::OpenFx::OpenFx)
+    target_link_libraries(main PRIVATE unofficial::OpenFx::OpenFx) # to use the C-based API
+    target_link_libraries(main PRIVATE unofficial::OpenFx::OfxSupport) # to use the C++ wrapper
