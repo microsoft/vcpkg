@@ -1,9 +1,9 @@
 diff --git a/configure b/configure
 --- a/configure
 +++ b/configure
-@@ -6730,7 +6730,10 @@
-                              [ "$toolchain" != "msvc" ] ||
+@@ -6730,7 +6730,10 @@                              [ "$toolchain" != "msvc" ] ||
                               require_cpp_condition libx264 x264.h "X264_BUILD >= 158"; } &&
+                              check_cpp_condition libx264_hdr10 x264.h "X264_BUILD >= 163" &&
                               check_cpp_condition libx262 x264.h "X264_MPEG2"
 -enabled libx265           && require_pkg_config libx265 x265 x265.h x265_api_get &&
 +enabled libx265           && { check_pkg_config libx265 x265 x265.h x265_api_get ||

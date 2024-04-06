@@ -3,7 +3,7 @@ index d6c4388..75b96c3 100644
 --- a/configure
 +++ b/configure
 @@ -4378,6 +4378,11 @@ msvc_common_flags(){
-             -march=*)             ;;
+             -mfp16-format=*)      ;;
              -lz)                  echo zlib.lib ;;
              -lx264)               echo libx264.lib ;;
 +            -lx265)               echo libx265.lib ;;

@@ -2,14 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 a84209fe36a2a0262ebc34b727e7600b12d4739991a95599d7b4df533791b12e2e43586ccc6ff26aab2f935a3049866204e322ec0c5e49e378fc175ded34e183
+    SHA512 ac147e52557b71cab0a38c0fee5f710a70d7e99107d1cb881e733c489a6b16f99d2c15e00e359ab48353bd710ead13399ee31840e6c5844a11d042eda71a0aa0
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
-        0002-fix-msvc-link.patch #upstreamed in future version
+        0002-fix-msvc-link.patch
         0003-fix-windowsinclude.patch
         0004-fix-debug-build.patch
-        0005-fix-nasm.patch #upstreamed in future version
+        0005-fix-nasm.patch
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
         0009-Fix-fdk-detection.patch
@@ -93,7 +93,7 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER)
     get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
     set(ENV{CC} "${CC_filename}")
     string(APPEND OPTIONS " --cc=${CC_filename}")
-    #string(APPEND OPTIONS " --host_cc=${CC_filename}") ffmpeg not yet setup for cross builds?
+    string(APPEND OPTIONS " --host_cc=${CC_filename}")
     list(APPEND prog_env "${CC_path}")
 endif()
 
