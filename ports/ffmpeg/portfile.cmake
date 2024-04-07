@@ -19,6 +19,7 @@ vcpkg_from_github(
         0015-Fix-xml2-detection.patch
         0020-fix-aarch64-libswscale.patch
         0022-fix-iconv.patch
+        0024-fix-osx-host-c11.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
