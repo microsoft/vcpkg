@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
     REF "v${VERSION}"
-    SHA512 6162e05a172abc1445857999907701ed829e850d4d06677907d4cff7372304e442e6037fb1700cdbde5ecda1da5bec63145717db163c0154830b28dc339ef9d4
+    SHA512 c5ea58960e09d5570a409fb963c83101e6858970937b4be9aedbde65f61dc357e7b5c8d36390d2fcce84b6688901bd6e7b1ec888a67f4b4db3eab56125bbedc0
     HEAD_REF master
 )
 
@@ -21,10 +21,10 @@ vcpkg_configure_meson(
     OPTIONS
         ${BUILD_OPTIONS}
         # see ${SOURCE_PATH}/meson_options.txt
-        -Dengines=sw
+        -Dengines=['sw']
         -Dloaders=all
         -Dsavers=tvg
-        -Dvector=true
+        -Dvector=true # This assumes AVX
         -Dbindings=capi
         -Dtests=false
         -Dexamples=false

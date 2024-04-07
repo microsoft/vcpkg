@@ -4,7 +4,7 @@ string(REPLACE "." "_" V_URL ${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.mozilla.org/pub/security/nss/releases/NSS_${V_URL}_RTM/src/nss-${VERSION}.tar.gz"
     FILENAME "nss-${VERSION}.tar.gz"
-    SHA512 4ec7b94e537df109638b821f3a7e3b7bf31d89c3739a6e4c85cad4fab876390ae482971d6f66198818400f467661e86f39dc1d2a4a88077fd81e3a0b7ed64110
+    SHA512 8ae032f3cb8eadfe524505d20e430b90ed25af2b4732b2cf286c435b0fcd5701d2f5c48bd2cfb3f9aa0bfdf503c1f3d5394cf34f860f51a1141cc4a7586bba32
 )
 
 vcpkg_extract_source_archive(
@@ -14,6 +14,7 @@ vcpkg_extract_source_archive(
     PATCHES
         "01-nspr-no-lib-prefix.patch"
         "02-gen-debug-info-for-release.patch"
+        "03-use-debug-crt-for-debug.patch" # See https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.vcprojectengine.runtimelibraryoption
 )
 
 # setup mozbuild for windows

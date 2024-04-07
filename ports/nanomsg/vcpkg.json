@@ -1,6 +1,6 @@
 {
   "name": "nanomsg",
-  "version-semver": "1.2.0",
+  "version-semver": "1.2.1",
   "port-version": 1,
   "description": [
     "A simple high-performance implementation of several \"scalability protocols\".",

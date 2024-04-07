@@ -23,6 +23,9 @@ unset(CMAKE_TWEAK_VERSION)
 
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Location to stored scripts")
 list(APPEND CMAKE_MODULE_PATH "${SCRIPTS}/cmake")
+
+# Increment this number if we intentionally need to invalidate all binary caches due a change in
+# the following scripts: 1
 include("${SCRIPTS}/cmake/execute_process.cmake")
 include("${SCRIPTS}/cmake/vcpkg_acquire_msys.cmake")
 include("${SCRIPTS}/cmake/vcpkg_add_to_path.cmake")
@@ -86,6 +89,8 @@ include("${SCRIPTS}/cmake/z_vcpkg_function_arguments.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_get_cmake_vars.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
 include("${SCRIPTS}/cmake/z_vcpkg_setup_pkgconfig_path.cmake")
+
+include("${SCRIPTS}/cmake/z_vcpkg_fixup_rpath.cmake")
 
 function(debug_message)
     if(PORT_DEBUG)
@@ -169,8 +174,9 @@ if(CMD STREQUAL "BUILD")
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")
     if(DEFINED PORT)
-        if(VCPKG_FIXUP_ELF_RPATH)
-            include("${SCRIPTS}/cmake/z_vcpkg_fixup_rpath.cmake")
+        # Always fixup RPATH on linux unless explicitly disabled.
+        if(VCPKG_FIXUP_ELF_RPATH OR (VCPKG_TARGET_IS_LINUX AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
+            z_vcpkg_fixup_rpath_in_dir()
         endif()
         include("${SCRIPTS}/build_info.cmake")
     endif()

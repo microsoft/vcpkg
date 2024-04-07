@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF fcba4eaca6f20d9a5792404cc8ef303aeb8ba5d2
     SHA512 41e5a6d40db10d66182653d56f937f29264bf4f9412dfa651be949caeb055741c9d9ba75a122180892aafe7d45b334d50470284121148c0561e1d49f6ba5e20a
     HEAD_REF master
+    PATCHES
+        csparse.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
