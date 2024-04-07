@@ -146,9 +146,17 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
 [[get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)]]
                 contents "${contents}")
             string(REGEX REPLACE
+[[(get_filename_component\(PACKAGE_\${CMAKE_FIND_PACKAGE_NAME}_COUNTER_[1-9][0-9]*) "\${CMAKE_CURRENT_LIST_DIR}/\.\./(\.\./)*" ABSOLUTE\)]]
+"\\1 \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)" # adapt to https://gitlab.kitware.com/cmake/cmake/-/merge_requests/9390
+                contents "${contents}")
+            string(REGEX REPLACE
 [[get_filename_component\(PACKAGE_PREFIX_DIR "\${CMAKE_CURRENT_LIST_DIR}/\.\.((\\|/)\.\.)*" ABSOLUTE\)]]
 [[get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)]]
                 contents "${contents}") # This is a meson-related workaround, see https://github.com/mesonbuild/meson/issues/6955
+            string(REGEX REPLACE
+[[(get_filename_component\(PACKAGE_\${CMAKE_FIND_PACKAGE_NAME}_COUNTER_[1-9][0-9]*) "\${CMAKE_CURRENT_LIST_DIR}/\.\.((\\|/)\.\.)*" ABSOLUTE\)]]
+"\\1 \"\${CMAKE_CURRENT_LIST_DIR}/../../\" ABSOLUTE)"
+                contents "${contents}")
         endif()
 
         # Merge release and debug configurations of target property INTERFACE_LINK_LIBRARIES.

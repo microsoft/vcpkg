@@ -1,7 +1,6 @@
 {
   "name": "vcpkg-cmake-config",
-  "version-date": "2022-02-06",
-  "port-version": 1,
+  "version-date": "2024-04-07",
   "documentation": "https://vcpkg.io/en/docs/README.html",
   "license": "MIT"
 }
