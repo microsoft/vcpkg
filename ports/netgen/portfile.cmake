@@ -17,6 +17,7 @@ vcpkg_from_github(
       cross-build.patch
 )
 
+set(OPTIONS "")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   list(APPEND OPTIONS 
     "-DNGLIB_LIBRARY_TYPE=STATIC"
@@ -75,27 +76,30 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
+if(USE_OCC)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/nglib.h" "define NGLIB\n" "define NGLIB\n#define OCCGEOMETRY\n")
+endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/nglib.h" "defined(NGSTATIC_BUILD)" "1")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/nglib.h" "define NGLIB" "define NGLIB\n#define OCCGEOMETRY\n#define JPEGLIB\n#define FFMPEG\n")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/core/ngcore_api.hpp" "!defined(NGSTATIC_BUILD)" "0")
 endif()
 
 set(config_file "${CURRENT_PACKAGES_DIR}/share/netgen/NetgenConfig.cmake")
 file(READ "${config_file}" contents)
 string(REPLACE "${SOURCE_PATH}" "NOT-USABLE" contents "${contents}")
-string(REGEX REPLACE "\\\$<\\\$<CONFIG:Release>:([^>]+)>" "\\1" contents "${contents}")
-string(REPLACE "\${NETGEN_CMAKE_DIR}/../" "\${NETGEN_CMAKE_DIR}/../../" contents "${contents}")
+string(REPLACE [[${NETGEN_CMAKE_DIR}/../../..]] [[${NETGEN_CMAKE_DIR}/../..]] contents "${contents}")
+string(REPLACE [[lib/cmake/netgen]] [[share/netgen]] contents "${contents}")
+string(REPLACE [[$<CONFIG:Release>:]] [[$<$<NOT:$<CONFIG:DEBUG>>:]] contents "${contents}")
 if(NOT VCPKG_BUILD_TYPE)
-  string(REPLACE "/lib" "$<$<CONFIG:DEBUG>:/debug>/lib" contents "${contents}")
+  string(REPLACE [[/lib/]] [[$<$<CONFIG:DEBUG>:/debug>/lib/]] contents "${contents}")
+  string(REPLACE [[optimized;${VCPKG_IMPORT_PREFIX}$<$<CONFIG:DEBUG>:/debug>/lib/]] [[optimized;${VCPKG_IMPORT_PREFIX}/lib/]] contents "${contents}")
+  string(REPLACE [[debug;${VCPKG_IMPORT_PREFIX}/debug$<$<CONFIG:DEBUG>:/debug>/lib/]] [[debug;${VCPKG_IMPORT_PREFIX}/debug/lib/]] contents "${contents}")
 endif()
-string(REGEX REPLACE "$<CONFIG:Release>:([^>]+)>" "\\1" contents "${contents}")
 file(WRITE "${config_file}" "${contents}")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/netgen/NetgenConfig.cmake" "${SOURCE_PATH}" "NOT-USABLE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if("python" IN_LIST FEATURES)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/netgen/config.py" "CMAKE_INSTALL_PREFIX[^\n]+" "")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/netgen/config.py" "CMAKE_INSTALL_PREFIX  = \"${CURRENT_PACKAGES_DIR}" "CMAKE_INSTALL_PREFIX_NOT_USABLE = \"")
 endif()
