@@ -1,3 +1,18 @@
+if(NOT VCPKG_HOST_IS_WINDOWS)
+    message(WARNING "${PORT} currently requires the following programs from the system package manager:
+    autoconf-archive
+On Debian and Ubuntu derivatives:
+    sudo apt-get install autoconf-archive
+On recent Red Hat and Fedora derivatives:
+    sudo dnf install autoconf-archive
+On Arch Linux and derivatives:
+    sudo pacman -S autoconf-archive
+On Alpine:
+    apk add autoconf-archive
+On macOS:
+    brew install autoconf-archive\n")
+endif()
+
 string(REGEX MATCH "^[0-9]*" ICU_VERSION_MAJOR "${VERSION}")
 string(REPLACE "." "_" VERSION2 "${VERSION}")
 string(REPLACE "." "-" VERSION3 "${VERSION}")
