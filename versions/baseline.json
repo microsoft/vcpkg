@@ -6482,7 +6482,7 @@
     },
     "openmvs": {
       "baseline": "2.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "openni2": {
       "baseline": "2.2.0.33",
@@ -6645,8 +6645,8 @@
       "port-version": 3
     },
     "paraview": {
-      "baseline": "5.11.0",
-      "port-version": 5
+      "baseline": "5.12.0",
+      "port-version": 0
     },
     "parmetis": {
       "baseline": "2022-07-27",
@@ -9153,16 +9153,16 @@
       "port-version": 1
     },
     "vtk": {
-      "baseline": "9.2.0-pv5.11.0",
-      "port-version": 12
+      "baseline": "9.3.0-pv5.12.0",
+      "port-version": 0
     },
     "vtk-dicom": {
       "baseline": "0.8.14",
       "port-version": 2
     },
     "vtk-m": {
-      "baseline": "1.9.0",
-      "port-version": 2
+      "baseline": "2.1.0",
+      "port-version": 0
     },
     "vulkan": {
       "baseline": "2023-12-17",
