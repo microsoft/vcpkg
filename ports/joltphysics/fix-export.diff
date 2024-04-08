@@ -13,17 +13,6 @@ index 830453f..5c9f155 100644
  	set(CMAKE_CXX_FLAGS_DISTRIBUTION "/GS- /Gy /O2 /Oi /Ot")
  	set(CMAKE_CXX_FLAGS_RELEASEASAN "-fsanitize=address /Od")
  	set(CMAKE_CXX_FLAGS_RELEASEUBSAN "-fsanitize=undefined,implicit-conversion,float-divide-by-zero,local-bounds -fno-sanitize-recover=all")
-@@ -184,8 +184,8 @@ else()
- 
- 	# Set compiler flags for various configurations
- 	if (OVERRIDE_CXX_FLAGS)
--		set(CMAKE_CXX_FLAGS_DEBUG "")
--		set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-+		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
- 	endif()
- 	set(CMAKE_CXX_FLAGS_DISTRIBUTION "${CMAKE_CXX_FLAGS_RELEASE}")
- 	set(CMAKE_CXX_FLAGS_RELEASEASAN "-fsanitize=address")
 @@ -232,7 +232,11 @@ if (XCODE)
  endif()
  
