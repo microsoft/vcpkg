@@ -1,7 +1,7 @@
 {
   "name": "gdk-pixbuf",
   "version": "2.42.10",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Image loading library.",
   "homepage": "https://gitlab.gnome.org/GNOME/gdk-pixbuf",
   "license": "LGPL-2.1-or-later",
@@ -24,12 +24,31 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "jpeg",
+    "png",
+    "tiff"
+  ],
   "features": {
     "introspection": {
       "description": "build with introspection",
       "dependencies": [
         "gobject-introspection"
       ]
+    },
+    "jpeg": {
+      "description": "Enable JPEG loader (requires libjpeg)",
+      "supports": "!windows",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "png": {
+      "description": "Enable PNG loader (requires libpng)"
+    },
+    "tiff": {
+      "description": "Enable TIFF loader (requires libtiff)",
+      "supports": "!windows"
     }
   }
 }
