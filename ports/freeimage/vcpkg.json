@@ -1,7 +1,7 @@
 {
   "name": "freeimage",
   "version": "3.18.0",
-  "port-version": 26,
+  "port-version": 25,
   "description": "Support library for graphics image formats",
   "homepage": "https://sourceforge.net/projects/freeimage/",
   "license": "GPL-2.0-only OR GPL-3.0-only OR FreeImage",
@@ -17,10 +17,7 @@
     },
     "openexr",
     "openjpeg",
-    {
-      "name": "tiff",
-      "default-features": false
-    },
+    "tiff",
     {
       "name": "vcpkg-cmake",
       "host": true
