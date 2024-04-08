@@ -1,0 +1,29 @@
+{
+  "name": "alicevision",
+  "version-semver": "3.2.0",
+  "description": "AliceVision is a Photogrammetric Computer Vision Framework which provides a 3D Reconstruction and Camera Tracking algorithms.",
+  "homepage": "https://alicevision.org/association/#",
+  "license": "MIT",
+  "dependencies": [
+    "boost",
+    "openexr",
+    "openimageio",
+    "expat",
+    "eigen3"
+  ],
+  "features": {
+    "nls": {
+      "description": "Enable native language support",
+      "dependencies": [
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        },
+        "gettext-libintl"
+      ]
+    }
+  }
+}
