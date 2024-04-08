@@ -20,15 +20,15 @@ else()
 endif()
 
 if("png" IN_LIST FEATURES)
-    -Dpng=enabled  # Enable PNG loader (requires libpng)
+    list(APPEND OPTIONS -Dpng=enabled) # Enable PNG loader (requires libpng)
 endif()
 
 if("tiff" IN_LIST FEATURES)
-    -Dtiff=enabled # Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used
+    list(APPEND OPTIONS -Dtiff=enabled) # Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used
 endif()
 
 if("jpeg" IN_LIST FEATURES)
-    -Djpeg=enabled # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
+    list(APPEND OPTIONS -Djpeg=enabled) # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
 endif()
 
 if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
