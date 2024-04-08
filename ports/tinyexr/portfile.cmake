@@ -4,11 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO syoyo/tinyexr
     REF "v${VERSION}"
-    SHA512 c15ac7d21cba70c3247ea49674191097325fcba7bfaeb8163298ded2e3b67f55b1b6486fd90a80f23f950661e96c063a28a70569f40a8938cd41249c34b4bbfe
+    SHA512 583404c77009ec88d75accf006f90ee8972d2205bbae41e460d2cbb9a54d9382735a82eba0657fcc5f4e8b3b0fadd51449cec440529570e75c307eb7f0fcc8fb
     HEAD_REF master
     PATCHES
         fixtargets.patch
-        fix-uwp.patch # https://github.com/syoyo/tinyexr/pull/195
 )
 
 vcpkg_cmake_configure(

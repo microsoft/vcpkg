@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 c8cface60031c5e84b99eaedb216f9e3af0354d24f5db7d6d0ec1f97d593ae46cb13c86bc244b6b8673cddfecf829a8b7738fdde8620472c12e95a5b61495133
     HEAD_REF master
+    PATCHES
+        fix-include-directory.patch
 )
 
 # Enable selected codecs
@@ -56,7 +58,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
 vcpkg_fixup_pkgconfig()
 
 # Unused because SAIL_COMBINE_CODECS is ON
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail/sail-common/config.h" "#define SAIL_CODECS_PATH \"${CURRENT_PACKAGES_DIR}/lib/sail/codecs\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail-common/config.h" "#define SAIL_CODECS_PATH \"${CURRENT_PACKAGES_DIR}/lib/sail/codecs\"" "")
 
 # Handle usage
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
