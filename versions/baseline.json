@@ -4058,7 +4058,7 @@
     },
     "lapack-reference": {
       "baseline": "3.11.0",
-      "port-version": 2
+      "port-version": 3
     },
     "lastools": {
       "baseline": "2.0.2+20230206",
