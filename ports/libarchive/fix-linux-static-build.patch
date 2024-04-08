@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f4784d49..f9e8a190 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -672,6 +672,9 @@ ENDIF(ZSTD_FOUND)
+ MARK_AS_ADVANCED(CLEAR ZSTD_INCLUDE_DIR)
+ MARK_AS_ADVANCED(CLEAR ZSTD_LIBRARY)
+ 
++IF(UNIX AND NOT APPLE)
++  LIST(APPEND ADDITIONAL_LIBS "dl")
++ENDIF(UNIX AND NOT APPLE)
+ 
+ #
+ # Check headers
