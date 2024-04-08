@@ -122,5 +122,12 @@ else()
     _find_package(${ARGS})
 endif()
 
+if(TARGET @PythonFinder_PREFIX@::Python)
+    target_compile_definitions(@PythonFinder_PREFIX@::Python INTERFACE "$<$<CONFIG:Debug>:Py_DEBUG>")
+endif()
+if(TARGET @PythonFinder_PREFIX@::Module)
+    target_compile_definitions(@PythonFinder_PREFIX@::Module INTERFACE "$<$<CONFIG:Debug>:Py_DEBUG>")
+endif()
+
 unset(_PythonFinder_WantInterp)
 unset(_PythonFinder_WantLibs)
