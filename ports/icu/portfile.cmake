@@ -1,4 +1,4 @@
-if(NOT VCPKG_HOST_IS_WINDOWS)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "${PORT} currently requires the following programs from the system package manager:
     autoconf-archive
 On Debian and Ubuntu derivatives:
