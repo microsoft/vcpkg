@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/glslang
     REF "${VERSION}"
-    SHA512 e16b01925a657750733a2973dc803fc3910a3a169ae276af205de6cb1bf0536fd2dbb63c5fd4fc10f800ba95f71bce673417121ad640cb9c964f291596c80025
+    SHA512 45ec1a23a390319b9270761cf8befb832ac8b4bc215b211c41a543553a97e5ccf17c134c34d8fdbed6efe887a9a7c2f0a955d1bfe1add9e04cc3e95b12e1973a
     HEAD_REF master
-    PATCHES
-        cmake.patch # Remove on next version (Upstream PR #3406 and #3420).
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -28,12 +26,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXTERNAL=OFF
-        -DENABLE_CTEST=OFF
-        -DOVERRIDE_MSVCCRT=OFF
-        -DSKIP_GLSLANG_INSTALL=OFF
+        -DGLSLANG_TESTS=OFF
         ${FEATURE_OPTIONS}
-    MAYBE_UNUSED_VARIABLES
-        OVERRIDE_MSVCCRT
 )
 
 vcpkg_cmake_install()

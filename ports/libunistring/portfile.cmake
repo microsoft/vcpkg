@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
         "https://ftp.gnu.org/gnu/libunistring/${LIBUNISTRING_FILENAME}"
         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libunistring/${LIBUNISTRING_FILENAME}"
     FILENAME "${LIBUNISTRING_FILENAME}"
-    SHA512 01a4267bbd301ea5c389b17ee918ae5b7d645da8b2c6c6f0f004ff2dead9f8e50cda2c6047358890a5fceadc8820ffc5154879193b9bb8970f3fb1fea1f411d6
+    SHA512 5fbb5a0a864db73a6d18cdea7b31237da907fff0ef288f3a8db6ebdba8ef61ad8855e5fc780c2bbf632218d8fa59dd119734e5937ca64dc77f53f30f13b80b17
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH

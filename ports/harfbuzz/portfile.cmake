@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 3fe54adbdd457c7dd8186c897436982a43e195a62bc0e830fe2dd06ca2c52511b9a717c659a7e30d235ac964df071e8ba1d9f36ee20496a1a80945d7c63fce86
+    SHA512 c90fc8f67ed6d75536a6a0d83434c51756863e51631f00fa390d124d721b003cba4739777b51ac2e9f107914eb5e2ab3daa00dab257435800bb60ff6d5dd45f6
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
@@ -31,6 +31,7 @@ endif()
 if("glib" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dglib=enabled) # Enable GLib unicode functions
     list(APPEND FEATURE_OPTIONS -Dgobject=enabled) #Enable GObject bindings
+    list(APPEND FEATURE_OPTIONS -Dchafa=disabled)
 else()
     list(APPEND FEATURE_OPTIONS -Dglib=disabled)
     list(APPEND FEATURE_OPTIONS -Dgobject=disabled)
