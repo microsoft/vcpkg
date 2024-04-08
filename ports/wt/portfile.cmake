@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
-    REF ${VERSION}
-    SHA512 70ab7bc79463fb0cf60b5ff07598f58b422cfff8d46fec2e9bb1d8598f5e2785e9f5dad2c6dbc24f7ff0ccf8cdcd8c52a09e647b6e1a9000444a1866f710175d
+    REF "${VERSION}"
+    SHA512 f41efec1e77bd76f6f66ffb4ff38c98cfc590debb194682e3c6eb3f7b4366c30f8e2bbc16f4c33faa45f6f49d28812215538d20f4abc6c4dc3a226ae9b10ac71
     HEAD_REF master
     PATCHES
-        0002-link-glew.patch
+        # 0002-link-glew.patch
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
 )
@@ -93,5 +93,5 @@ file(READ "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" W_CONFIG_H)
 string(REGEX REPLACE "([\r\n])#define RUNDIR[^\r\n]+" "\\1// RUNDIR intentionally unset by vcpkg" W_CONFIG_H "${W_CONFIG_H}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" "${W_CONFIG_H}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 vcpkg_copy_pdbs()
