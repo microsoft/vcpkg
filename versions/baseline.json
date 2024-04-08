@@ -281,7 +281,7 @@
       "port-version": 4
     },
     "async-mqtt": {
-      "baseline": "4.0.0",
+      "baseline": "4.1.0",
       "port-version": 0
     },
     "async-simple": {
@@ -1789,7 +1789,7 @@
       "port-version": 0
     },
     "configcat": {
-      "baseline": "3.2.0",
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "console-bridge": {
@@ -2213,7 +2213,7 @@
       "port-version": 0
     },
     "directx-dxc": {
-      "baseline": "2024-03-22",
+      "baseline": "2024-03-29",
       "port-version": 0
     },
     "directx-headers": {
@@ -2774,7 +2774,7 @@
     },
     "folly": {
       "baseline": "2024.01.01.00",
-      "port-version": 2
+      "port-version": 3
     },
     "font-chef": {
       "baseline": "1.1.0",
@@ -3426,7 +3426,7 @@
     },
     "hunspell": {
       "baseline": "1.7.2",
-      "port-version": 0
+      "port-version": 1
     },
     "hwloc": {
       "baseline": "2.10.0",
@@ -3461,7 +3461,7 @@
       "port-version": 0
     },
     "idyntree": {
-      "baseline": "10.3.0",
+      "baseline": "12.1.0",
       "port-version": 0
     },
     "if97": {
@@ -3725,7 +3725,7 @@
       "port-version": 1
     },
     "joltphysics": {
-      "baseline": "4.0.0",
+      "baseline": "5.0.0",
       "port-version": 0
     },
     "josuttis-jthread": {
@@ -4161,7 +4161,7 @@
       "port-version": 0
     },
     "libassert": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "libassuan": {
@@ -5729,8 +5729,8 @@
       "port-version": 0
     },
     "minio-cpp": {
-      "baseline": "0.1.1",
-      "port-version": 1
+      "baseline": "0.2.0",
+      "port-version": 0
     },
     "miniply": {
       "baseline": "2022-09-15",
@@ -6085,7 +6085,7 @@
       "port-version": 0
     },
     "nethost": {
-      "baseline": "8.0.0",
+      "baseline": "8.0.3",
       "port-version": 0
     },
     "nettle": {
@@ -6965,7 +6965,7 @@
       "port-version": 0
     },
     "proxy": {
-      "baseline": "2.2.1",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "proxygen": {
@@ -7077,7 +7077,7 @@
       "port-version": 1
     },
     "qt-advanced-docking-system": {
-      "baseline": "4.2.1",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "qt3d": {
@@ -7810,7 +7810,7 @@
     },
     "sail": {
       "baseline": "0.9.1",
-      "port-version": 0
+      "port-version": 1
     },
     "sajson": {
       "baseline": "2018-09-21",
@@ -7969,7 +7969,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.7.1",
+      "baseline": "0.7.2",
       "port-version": 0
     },
     "septag-dmon": {
@@ -8081,7 +8081,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "5.0.0",
+      "baseline": "5.2.2",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
@@ -8114,7 +8114,7 @@
     },
     "skia": {
       "baseline": "123",
-      "port-version": 0
+      "port-version": 1
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -8589,8 +8589,8 @@
       "port-version": 0
     },
     "thorvg": {
-      "baseline": "0.12.9",
-      "port-version": 1
+      "baseline": "0.12.10",
+      "port-version": 0
     },
     "threadpool": {
       "baseline": "0.2.5",
@@ -8889,8 +8889,8 @@
       "port-version": 2
     },
     "unrar": {
-      "baseline": "6.1.7",
-      "port-version": 3
+      "baseline": "7.0.7",
+      "port-version": 0
     },
     "upb": {
       "baseline": "2022-06-21",
@@ -8981,7 +8981,7 @@
       "port-version": 6
     },
     "valijson": {
-      "baseline": "1.0.1",
+      "baseline": "1.0.2",
       "port-version": 0
     },
     "value-ptr-lite": {
@@ -9602,7 +9602,7 @@
     },
     "zlmediakit": {
       "baseline": "2024-03-30",
-      "port-version": 0
+      "port-version": 1
     },
     "zoe": {
       "baseline": "3.0",
