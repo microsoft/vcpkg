@@ -1,6 +1,7 @@
 {
   "name": "skia",
   "version": "123",
+  "port-version": 1,
   "description": [
     "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
     "It serves as the graphics engine for Google Chrome and Chrome OS, Android, Mozilla Firefox and Firefox OS, and many other products.",
@@ -60,11 +61,11 @@
     },
     {
       "name": "harfbuzz",
-      "platform": "!uwp & !(windows & !static)"
+      "platform": "!uwp"
     },
     {
       "name": "icu",
-      "platform": "!uwp & !(windows & !static)"
+      "platform": "!uwp"
     }
   ],
   "features": {
@@ -139,12 +140,18 @@
         {
           "name": "harfbuzz",
           "default-features": false
+        },
+        {
+          "name": "skia",
+          "default-features": false,
+          "features": [
+            "icu"
+          ]
         }
       ]
     },
     "icu": {
       "description": "Use icu.",
-      "supports": "!(windows & !static)",
       "dependencies": [
         "icu"
       ]

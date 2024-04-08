@@ -7,11 +7,11 @@
   "dependencies": [
     {
       "name": "clapack",
-      "platform": "(arm & windows) | uwp"
+      "platform": "uwp | (arm & windows)"
     },
     {
       "name": "lapack-reference",
-      "platform": "!((arm & windows) | uwp | osx)"
+      "platform": "!osx & !ios & !uwp & !(arm & windows)"
     },
     {
       "name": "vcpkg-cmake",
