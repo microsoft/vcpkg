@@ -14,9 +14,13 @@ if(WIN32)
 endif()
 
 set(OFX_HEADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "OFX_HEADERS_DIR")
-include_directories(${OFX_HEADERS_DIR})
 
 add_library(OpenFx INTERFACE)
+target_include_directories(OpenFx
+    INTERFACE
+    $<BUILD_INTERFACE:${OFX_HEADERS_DIR}>
+    $<INSTALL_INTERFACE:include/openfx>
+)
 
 add_subdirectory(Support)
 
