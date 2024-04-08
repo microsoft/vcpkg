@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 22d9115..da6edaf 100755
+index 07c61b9..54ad99f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -220,7 +220,7 @@ endif(HAVE_SPDLOG)
@@ -20,6 +20,15 @@ index 22d9115..da6edaf 100755
    set(TRANTOR_SOURCES
        ${TRANTOR_SOURCES}
        trantor/net/inner/AresResolver.cc)
+@@ -366,8 +366,6 @@ install(
+   FILES
+     "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/TrantorConfig.cmake"
+     "${CMAKE_CURRENT_BINARY_DIR}/TrantorConfigVersion.cmake"
+-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/Findc-ares.cmake"
+-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindBotan.cmake"
+   DESTINATION "${INSTALL_TRANTOR_CMAKE_DIR}"
+   COMPONENT dev)
+ 
 diff --git a/cmake/templates/TrantorConfig.cmake.in b/cmake/templates/TrantorConfig.cmake.in
 index 61007bd..c5dd363 100644
 --- a/cmake/templates/TrantorConfig.cmake.in
