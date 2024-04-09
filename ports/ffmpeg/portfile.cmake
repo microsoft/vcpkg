@@ -337,6 +337,12 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libilbc")
 endif()
 
+if("lcms" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-lcms2")
+else()
+    set(OPTIONS "${OPTIONS} --disable-lcms2")
+endif()
+
 if("lzma" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-lzma")
 else()
