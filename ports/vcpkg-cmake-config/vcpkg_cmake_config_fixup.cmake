@@ -142,12 +142,12 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
                 contents "${contents}") # see #1044 for details why this replacement is necessary. See #4782 why it must be a regex.
             string(REGEX REPLACE
-[[get_filename_component\(PACKAGE_PREFIX_DIR "\${CMAKE_CURRENT_LIST_DIR}/\.\./(\.\./)*" ABSOLUTE\)]]
-[[get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)]]
-                contents "${contents}")
+[[get_filename_component\((PACKAGE_PREFIX_DIR|PACKAGE_\${CMAKE_FIND_PACKAGE_NAME}_COUNTER[0-9]+) "\${CMAKE_CURRENT_LIST_DIR}/\.\./(\.\./)*" ABSOLUTE\)]]
+[[get_filename_component(\1 "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)]]
+                contents "${contents}") # https://gitlab.kitware.com/cmake/cmake/-/merge_requests/9390 uses a different package prefix directory variable.
             string(REGEX REPLACE
-[[get_filename_component\(PACKAGE_PREFIX_DIR "\${CMAKE_CURRENT_LIST_DIR}/\.\.((\\|/)\.\.)*" ABSOLUTE\)]]
-[[get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)]]
+[[get_filename_component\((PACKAGE_PREFIX_DIR|PACKAGE_\${CMAKE_FIND_PACKAGE_NAME}_COUNTER_[0-9]+) "\${CMAKE_CURRENT_LIST_DIR}/\.\.((\\|/)\.\.)*" ABSOLUTE\)]]
+[[get_filename_component(\1 "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)]]
                 contents "${contents}") # This is a meson-related workaround, see https://github.com/mesonbuild/meson/issues/6955
         endif()
 
