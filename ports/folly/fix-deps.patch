@@ -2,11 +2,12 @@ diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
 index 1689f9a..e5d3e22 100644
 --- a/CMake/folly-config.cmake.in
 +++ b/CMake/folly-config.cmake.in
-@@ -28,10 +28,35 @@ endif()
+@@ -28,10 +28,30 @@ endif()
  set(FOLLY_LIBRARIES Folly::folly)
  
  # Find folly's dependencies
 -find_dependency(fmt)
++find_dependency(fmt CONFIG)
 +find_dependency(double-conversion CONFIG)
 +find_dependency(glog CONFIG)
 +find_dependency(gflags CONFIG)
@@ -27,12 +28,6 @@ index 1689f9a..e5d3e22 100644
 +if (NOT @CMAKE_DISABLE_FIND_PACKAGE_LZ4@)
 +    find_dependency(lz4 CONFIG)
 +endif()
-+
-+if (@WITH_liburing@)
-+    find_dependency(LibUring)
-+endif()
-+
-+find_dependency(fmt CONFIG)
  
  set(Boost_USE_STATIC_LIBS "@FOLLY_BOOST_LINK_STATIC@")
 -find_dependency(Boost 1.51.0 MODULE
