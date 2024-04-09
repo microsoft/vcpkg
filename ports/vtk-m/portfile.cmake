@@ -53,9 +53,9 @@ list(APPEND OPTIONS -DBUILD_TESTING=OFF)
 vcpkg_from_gitlab(GITLAB_URL "https://gitlab.kitware.com" 
                   OUT_SOURCE_PATH SOURCE_PATH 
                   REPO vtk/vtk-m 
-                  REF a057f62e756efc43095e72c5813aaaf2dea36ebb # v2.1.0 Upgrading will most likly brake the VTK build
+                  REF a057f62e756efc43095e72c5813aaaf2dea36ebb # v2.1.0 Upgrading will most likely break the VTK build
+
                   SHA512 fa08bd597e1918d10e7fed9f6b9667fd53f4a14589580e68691aad3cfb240f7de80fa0c5001712f100911c2262b5af3105b8f21da21b945a88e1204ea82b92a6
-                  FILE_DISAMBIGUATOR 1
                   PATCHES
                     omp.patch
                     fix-build.patch
