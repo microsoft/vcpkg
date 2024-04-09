@@ -1,7 +1,7 @@
 {
   "name": "opencv2",
   "version": "2.4.13.7",
-  "port-version": 19,
+  "port-version": 20,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -133,7 +133,10 @@
     "tiff": {
       "description": "TIFF support for opencv",
       "dependencies": [
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "world": {
