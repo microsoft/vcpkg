@@ -1,7 +1,9 @@
+string(REPLACE "." "_" UNDERSCORE_VERSION "${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openfx
-    REF OFX_Release_1_4_TAG
+    REF "OFX_Release_${UNDERSCORE_VERSION}_TAG"
     SHA512 b20512ea38823167f191b72f1592548df85fbda6cefe47673972874c139641ee91277e78c1e0d57a457b9f864385e6fa0e4a7edcdbf0c7b2eda956c03a3e1e13
     HEAD_REF main
 )
