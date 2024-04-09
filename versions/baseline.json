@@ -437,7 +437,7 @@
       "port-version": 0
     },
     "azure-core-cpp": {
-      "baseline": "1.11.2",
+      "baseline": "1.11.3",
       "port-version": 0
     },
     "azure-core-tracing-opentelemetry-cpp": {
