@@ -445,7 +445,7 @@
       "port-version": 2
     },
     "azure-data-tables-cpp": {
-      "baseline": "1.0.0-beta.1",
+      "baseline": "1.0.0-beta.2",
       "port-version": 0
     },
     "azure-identity-cpp": {
