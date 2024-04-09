@@ -7090,7 +7090,7 @@
     },
     "qt5": {
       "baseline": "5.15.13",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-3d": {
       "baseline": "5.15.13",
