@@ -8677,7 +8677,7 @@
       "port-version": 6
     },
     "tinyobjloader": {
-      "baseline": "2.0.0-rc9",
+      "baseline": "2.0.0rc13",
       "port-version": 0
     },
     "tinyorm": {
