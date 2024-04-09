@@ -18,7 +18,7 @@
     },
     "abseil": {
       "baseline": "20240116.1",
-      "port-version": 0
+      "port-version": 1
     },
     "absent": {
       "baseline": "0.3.1",
@@ -570,7 +570,7 @@
     },
     "benchmark": {
       "baseline": "1.8.3",
-      "port-version": 2
+      "port-version": 3
     },
     "bento4": {
       "baseline": "1.6.0-641",
@@ -1430,7 +1430,7 @@
     },
     "cachelib": {
       "baseline": "2023.05.08.00",
-      "port-version": 1
+      "port-version": 2
     },
     "caf": {
       "baseline": "0.19.3",
@@ -2774,7 +2774,7 @@
     },
     "fmt": {
       "baseline": "10.2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "folly": {
       "baseline": "2024.01.01.00",
@@ -3186,7 +3186,7 @@
     },
     "grpc": {
       "baseline": "1.51.1",
-      "port-version": 2
+      "port-version": 3
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -3214,7 +3214,7 @@
     },
     "gtest": {
       "baseline": "1.14.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gtk": {
       "baseline": "4.10.5",
@@ -3758,7 +3758,7 @@
     },
     "json-spirit": {
       "baseline": "4.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "json11": {
       "baseline": "2017-06-20",
@@ -3774,7 +3774,7 @@
     },
     "jsoncpp": {
       "baseline": "1.9.5",
-      "port-version": 3
+      "port-version": 4
     },
     "jsonifier": {
       "baseline": "0.9.94",
@@ -6950,7 +6950,7 @@
     },
     "protobuf": {
       "baseline": "3.21.12",
-      "port-version": 1
+      "port-version": 2
     },
     "protobuf-c": {
       "baseline": "1.4.1",
@@ -7250,7 +7250,7 @@
     },
     "qt5-winextras": {
       "baseline": "5.15.13",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-x11extras": {
       "baseline": "5.15.13",
@@ -7418,7 +7418,7 @@
     },
     "qttools": {
       "baseline": "6.6.1",
-      "port-version": 1
+      "port-version": 2
     },
     "qttranslations": {
       "baseline": "6.6.1",
@@ -7510,7 +7510,7 @@
     },
     "range-v3": {
       "baseline": "0.12.0",
-      "port-version": 1
+      "port-version": 2
     },
     "range-v3-vs2015": {
       "baseline": "20151130-vcpkg5",
@@ -8270,7 +8270,7 @@
     },
     "spdlog": {
       "baseline": "1.13.0",
-      "port-version": 0
+      "port-version": 1
     },
     "spectra": {
       "baseline": "1.0.1",
