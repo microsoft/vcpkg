@@ -72,6 +72,8 @@ vcpkg_cmake_configure(
         -DWITH_VISO2=OFF
         -DWITH_ZED=OFF
         -DWITH_ZEDOC=OFF
+        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
+        -DVCPKG_TRACE_FIND_PACKAGE=ON
 )
 
 vcpkg_cmake_install()
