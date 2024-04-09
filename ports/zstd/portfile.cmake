@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         no-static-suffix.patch
         fix-emscripten-and-clang-cl.patch
+        fix-windows-rc-compile.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZSTD_BUILD_STATIC)
