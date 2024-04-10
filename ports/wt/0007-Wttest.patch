@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index eb52234..1bb0fa1 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -607,7 +607,7 @@ IF(ENABLE_LIBWTTEST)
+     VERSION ${VERSION_SERIES}.${VERSION_MAJOR}.${VERSION_MINOR}
+     DEBUG_POSTFIX ${DEBUG_LIB_POSTFIX}
+   )
+-ELSE(ENABLE_LIBWTTEST)
++ELSE(NOT ENABLE_LIBWTTEST)
+   MESSAGE("** Not building libwttest")
+ ENDIF(ENABLE_LIBWTTEST)
+ 

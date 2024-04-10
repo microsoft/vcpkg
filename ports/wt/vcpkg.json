@@ -34,16 +34,17 @@
     "boost-tuple",
     "boost-ublas",
     "boost-variant",
-    {
-      "name": "glew",
-      "platform": "!(android | ios)"
-    },
+    "glew",
     {
       "name": "harfbuzz",
       "platform": "!windows"
     },
     "libharu",
     "libpng",
+    {
+      "name": "pango",
+      "platform": "!windows"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -64,10 +65,7 @@
     "graphicsmagick": {
       "description": "WRasterImage support on non-Windows based on GraphicsMagick",
       "dependencies": [
-        {
-          "name": "graphicsmagick",
-          "platform": "!(android | ios)"
-        }
+        "graphicsmagick"
       ]
     },
     "openssl": {
@@ -76,22 +74,10 @@
         "openssl"
       ]
     },
-    "pango": {
-      "description": "For improved font support in the WPdfImage and WRasterImage paint devices.",
-      "dependencies": [
-        {
-          "name": "pango",
-          "platform": "!windows"
-        }
-      ]
-    },
     "postgresql": {
       "description": "Wt::Dbo PostgreSQL backend",
       "dependencies": [
-        {
-          "name": "libpq",
-          "platform": "!(android | ios)"
-        },
+        "libpq",
         {
           "name": "wt",
           "features": [

@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
+        0007-Wttest.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
@@ -49,7 +50,6 @@ vcpkg_cmake_configure(
         -DINSTALL_CONFIG_FILE_PATH="${DOWNLOADS}/wt"
         -DSHARED_LIBS=${SHARED_LIBS}
         -DBOOST_DYNAMIC=${SHARED_LIBS}
-        -DDISABLE_BOOST_AUTOLINK=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
 
@@ -70,12 +70,15 @@ vcpkg_cmake_configure(
         ${WT_PLATFORM_SPECIFIC_OPTIONS}
 
         -DUSE_SYSTEM_SQLITE3=ON
-        -DUSE_SYSTEM_GLEW=ON
 
         -DCMAKE_INSTALL_DIR=share
         # see https://redmine.webtoolkit.eu/issues/9646
         -DWTHTTP_CONFIGURATION=
         -DCONFIGURATION=
+        
+        "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}"
+    MAYBE_UNUSED_VARIABLES
+        USE_SYSTEM_SQLITE3
 
 )
 
