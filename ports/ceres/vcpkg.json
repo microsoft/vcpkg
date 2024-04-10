@@ -19,7 +19,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "mkl"
+    "intel-mkl"
   ],
   "features": {
     "cuda": {
