@@ -18,7 +18,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "mkl"
   ],
   "features": {
     "cuda": {

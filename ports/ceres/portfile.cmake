@@ -53,6 +53,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        --trace-expand
         ${FEATURE_OPTIONS}
         ${TARGET_OPTIONS}
         -DEXPORT_BUILD_DIR=ON
@@ -64,7 +65,7 @@ vcpkg_cmake_configure(
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
         -DLIB_SUFFIX=${LIB_SUFFIX}
 )
-
+message(FATAL_ERROR)
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib${LIB_SUFFIX}/cmake/Ceres")
