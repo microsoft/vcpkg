@@ -20,7 +20,26 @@ target_include_directories(OpenFx
     $<INSTALL_INTERFACE:include/openfx>
 )
 
-add_subdirectory(Support)
+set(OFX_SUPPORT_HEADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Support/include)
+
+add_library(OfxSupport STATIC
+    Support/Library/ofxsCore.cpp
+    Support/Library/ofxsImageEffect.cpp
+    Support/Library/ofxsInteract.cpp
+    Support/Library/ofxsLog.cpp
+    Support/Library/ofxsMultiThread.cpp
+    Support/Library/ofxsParams.cpp
+    Support/Library/ofxsProperty.cpp
+    Support/Library/ofxsPropertyValidation.cpp
+)
+target_include_directories(OfxSupport
+    PUBLIC
+    $<BUILD_INTERFACE:${OFX_HEADERS_DIR}>
+    $<BUILD_INTERFACE:${OFX_SUPPORT_HEADERS_DIR}>
+    $<INSTALL_INTERFACE:include/openfx>
+)
+target_link_libraries(OfxSupport INTERFACE OpenFx)
+target_compile_features(OfxSupport PUBLIC cxx_std_11)
 
 install(
     TARGETS OpenFx OfxSupport

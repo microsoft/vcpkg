@@ -8,8 +8,7 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-file(COPY_FILE ${CMAKE_CURRENT_LIST_DIR}/Openfx.cmake ${SOURCE_PATH}/CMakeLists.txt)
-file(COPY_FILE ${CMAKE_CURRENT_LIST_DIR}/Support.cmake ${SOURCE_PATH}/Support/CMakeLists.txt)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
 vcpkg_cmake_install()
