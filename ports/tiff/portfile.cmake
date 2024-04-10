@@ -38,6 +38,7 @@ vcpkg_cmake_configure(
         -Dtiff-docs=OFF
         -Dtiff-contrib=OFF
         -Dtiff-tests=OFF
+        -Dtiff-install=ON
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
@@ -54,9 +55,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# CMake config wasn't packaged in the past and is not yet usable now,
-# cf. https://gitlab.com/libtiff/libtiff/-/merge_requests/496
-# vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/tiff")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/tiff")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libtiff-4.pc")
