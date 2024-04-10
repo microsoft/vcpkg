@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-output-dirs.patch
+        0002-Fix-32b-compilation.patch
 )
 
 vcpkg_cmake_configure(
