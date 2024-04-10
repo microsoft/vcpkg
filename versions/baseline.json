@@ -7038,7 +7038,7 @@
     },
     "qca": {
       "baseline": "2.3.7",
-      "port-version": 0
+      "port-version": 1
     },
     "qcoro": {
       "baseline": "0.10.0",
