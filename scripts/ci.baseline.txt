@@ -82,7 +82,6 @@ berkeleydb:arm-neon-android=fail
 berkeleydb:arm64-android=fail
 berkeleydb:x64-android=fail
 binlog:arm-neon-android=fail
-blas:arm-neon-android=fail
 blitz:x64-android=fail
 boinc:arm-neon-android=fail
 boinc:arm64-android=fail
