@@ -23,8 +23,8 @@ vcpkg_configure_meson(
         # see ${SOURCE_PATH}/meson_options.txt
         -Dengines=['sw']
         -Dloaders=all
-        -Dsavers=tvg
-        -Dvector=true # This assumes AVX
+        -Dsavers=all
+        -Dvector=false # The reason for setting 'Dvector=false' was that the creator said a false setting was necessary
         -Dbindings=capi
         -Dtests=false
         -Dexamples=false
