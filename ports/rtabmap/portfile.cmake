@@ -30,6 +30,7 @@ vcpkg_cmake_configure(
         -DBUILD_TOOLS=OFF
         -DBUILD_APP=OFF
     OPTIONS
+        --trace-expand
         ${FEATURE_OPTIONS}
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
@@ -74,6 +75,9 @@ vcpkg_cmake_configure(
         -DWITH_ZEDOC=OFF
 )
 
+file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/ninja.build" "${CURRENT_BUILDTREES_DIR}/ninja.build-dbg.log")
+file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ninja.build" "${CURRENT_BUILDTREES_DIR}/ninja.build-rel.log")
+message(FATAL_ERROR)
 vcpkg_cmake_install()
 
 if(VCPKG_TARGET_IS_WINDOWS)
