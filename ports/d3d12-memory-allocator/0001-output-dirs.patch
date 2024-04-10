@@ -7,7 +7,7 @@ index 1f0b9497cb..3243e23021 100644
  endif()
  
 -install(TARGETS D3D12MemoryAllocator DESTINATION "lib")
-+install(TARGETS D3D12MemoryAllocator EXPORT ${PROJECT_NAME}-config
++install(TARGETS D3D12MemoryAllocator EXPORT d3d12-memory-allocator-config
 +    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 +    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 +    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
@@ -25,6 +25,6 @@ index 1f0b9497cb..3243e23021 100644
 +set_target_properties(D3D12MemoryAllocator PROPERTIES PUBLIC_HEADER "${PROJECT_SOURCE_DIR}/include/D3D12MemAlloc.h")
 +
 +install(
-+    EXPORT ${PROJECT_NAME}-config DESTINATION cmake/
++    EXPORT d3d12-memory-allocator-config DESTINATION cmake/
 +    NAMESPACE "unofficial::"
 +)
