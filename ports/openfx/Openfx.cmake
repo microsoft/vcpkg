@@ -2,18 +2,16 @@ cmake_minimum_required(VERSION 3.20)
 
 project(openfx VERSION 1.4.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(WIN32)
-    add_compile_definitions(WINDOWS)
-    add_compile_options(/DNOMINMAX)
-    add_definitions(-DWIN64)
+    add_compile_definitions(WINDOWS NOMINMAX WIN64)
     set(OS_VAR "windows")
     set(OFX_ARCH_NAME "Win64")
 endif()
 
-set(OFX_HEADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "OFX_HEADERS_DIR")
+set(OFX_HEADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_library(OpenFx INTERFACE)
 target_include_directories(OpenFx
@@ -34,7 +32,7 @@ install(
 install(
     EXPORT openfx-export
     FILE unofficial-openfxConfig.cmake
-    NAMESPACE unofficial::OpenFx::
+    NAMESPACE unofficial::openfx::
     DESTINATION "share/unofficial-openfx"
 )
 
