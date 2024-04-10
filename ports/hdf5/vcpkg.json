@@ -39,7 +39,7 @@
     "szip": {
       "description": "Build with szip",
       "dependencies": [
-        "szip"
+        "libaec"
       ]
     },
     "threadsafe": {
