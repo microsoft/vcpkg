@@ -1,0 +1,71 @@
+--- v1.1.3-e529fe1893.clean/cmake/libaec-config.cmake.in.old	2024-03-21 09:51:01.000000000 +0100
++++ v1.1.3-e529fe1893.clean/cmake/libaec-config.cmake.in	2024-04-12 12:30:02.143836200 +0200
+@@ -55,38 +55,42 @@ find_package_handle_standard_args(libaec
+ )
+ 
+ if (libaec_FOUND)
+-  if (libaec_USE_STATIC_LIBS)
+-    add_library(libaec::aec STATIC IMPORTED)
+-  else ()
+-    add_library(libaec::aec SHARED IMPORTED)
+-    target_compile_definitions(libaec::aec INTERFACE LIBAEC_SHARED)
+-    if (MSVC)
+-      set_target_properties(libaec::aec PROPERTIES
+-        IMPORTED_IMPLIB "${libaec_LIBRARY}"
+-      )
++  if(NOT TARGET libaec::aec)
++    if (libaec_USE_STATIC_LIBS)
++      add_library(libaec::aec STATIC IMPORTED)
++    else ()
++      add_library(libaec::aec SHARED IMPORTED)
++      target_compile_definitions(libaec::aec INTERFACE LIBAEC_SHARED)
++      if (MSVC)
++        set_target_properties(libaec::aec PROPERTIES
++          IMPORTED_IMPLIB "${libaec_LIBRARY}"
++        )
++      endif ()
+     endif ()
++    set_target_properties(libaec::aec PROPERTIES
++      IMPORTED_LOCATION "${libaec_LIBRARY}"
++      INTERFACE_INCLUDE_DIRECTORIES "${libaec_INCLUDE_DIR}"
++    )
+   endif ()
+-  set_target_properties(libaec::aec PROPERTIES
+-    IMPORTED_LOCATION "${libaec_LIBRARY}"
+-    INTERFACE_INCLUDE_DIRECTORIES "${libaec_INCLUDE_DIR}"
+-  )
+ 
+   # SZIP
+-  if (libaec_USE_STATIC_LIBS)
+-    add_library(libaec::sz STATIC IMPORTED)
+-  else ()
+-    add_library(libaec::sz SHARED IMPORTED)
+-    target_compile_definitions(libaec::sz INTERFACE LIBAEC_SHARED)
+-    if (MSVC)
+-      set_target_properties(libaec::sz PROPERTIES
+-        IMPORTED_IMPLIB "${SZIP_LIBRARY}"
+-      )
++  if(NOT TARGET libaec::sz)
++    if (libaec_USE_STATIC_LIBS)
++      add_library(libaec::sz STATIC IMPORTED)
++    else ()
++      add_library(libaec::sz SHARED IMPORTED)
++      target_compile_definitions(libaec::sz INTERFACE LIBAEC_SHARED)
++      if (MSVC)
++        set_target_properties(libaec::sz PROPERTIES
++          IMPORTED_IMPLIB "${SZIP_LIBRARY}"
++        )
++      endif ()
+     endif ()
++    set_target_properties(libaec::sz PROPERTIES
++      IMPORTED_LOCATION "${SZIP_LIBRARY}"
++      INTERFACE_INCLUDE_DIRECTORIES "${SZIP_INCLUDE_DIR}"
++    )
+   endif ()
+-  set_target_properties(libaec::sz PROPERTIES
+-    IMPORTED_LOCATION "${SZIP_LIBRARY}"
+-    INTERFACE_INCLUDE_DIRECTORIES "${SZIP_INCLUDE_DIR}"
+-  )
+ 
+   # Set SZIP variables.
+   set(SZIP_FOUND TRUE)
