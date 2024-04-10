@@ -379,7 +379,7 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
+    OPTIONS --trace-expand
         ###### opencv cpu recognition is broken, always using host and not target: here we bypass that
         -DOPENCV_SKIP_SYSTEM_PROCESSOR_DETECTION=TRUE
         -DAARCH64=${TARGET_IS_AARCH64}
@@ -475,7 +475,9 @@ vcpkg_cmake_configure(
         -DBUILD_IPP_IW=${WITH_IPP}
         -DOPENCV_LAPACK_FIND_PACKAGE_ONLY=ON
 )
-
+file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/ninja.build" "${CURRENT_BUILDTREES_DIR}/ninja.build-dbg.log")
+file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ninja.build" "${CURRENT_BUILDTREES_DIR}/ninja.build-rel.log")
+message(FATAL_ERROR)
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
