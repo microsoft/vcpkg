@@ -2,20 +2,21 @@ diff --git a/configure b/configure
 index 1f0b9497cb..3243e23021 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -40,8 +40,11 @@         D3D12MA_IMPORTS
+@@ -40,8 +40,12 @@         D3D12MA_IMPORTS
      )
  endif()
  
 -install(TARGETS D3D12MemoryAllocator DESTINATION "lib")
-+install(TARGETS D3D12MemoryAllocator
-+    RUNTIME DESTINATION "bin"
-+    ARCHIVE DESTINATION "lib"
-+    LIBRARY DESTINATION "lib")
++install(TARGETS D3D12MemoryAllocator EXPORT ${PROJECT_NAME}-config
++    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}")
  install(FILES "${PROJECT_SOURCE_DIR}/include/D3D12MemAlloc.h" DESTINATION "include")
  
  if(D3D12MA_BUILD_SAMPLE)
      if(WIN32)
-@@ -126,3 +129,32 @@     else()
+@@ -126,3 +130,11 @@     else()
          message(STATUS "D3D12Sample application is not supported to Linux")
      endif()
  endif()
@@ -23,38 +24,7 @@ index 1f0b9497cb..3243e23021 100644
 +target_include_directories(D3D12MemoryAllocator PUBLIC $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 +set_target_properties(D3D12MemoryAllocator PROPERTIES PUBLIC_HEADER "${PROJECT_SOURCE_DIR}/include/D3D12MemAlloc.h")
 +
-+install(TARGETS D3D12MemoryAllocator EXPORT D3D12MemoryAllocatorTargets
-+  RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
-+  LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
-+  ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
-+  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}"
-+  COMPONENT dev
-+)
-+
-+install(EXPORT D3D12MemoryAllocatorTargets
-+  FILE D3D12MemoryAllocatorTargets.cmake
-+  NAMESPACE unofficial::D3D12MemoryAllocator::
-+  DESTINATION "share/D3D12MemoryAllocator"
-+)
-+
-+include(CMakePackageConfigHelpers)
-+configure_package_config_file(
-+  ${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-+  ${CMAKE_CURRENT_BINARY_DIR}/D3D12MemoryAllocatorConfig.cmake
-+  INSTALL_DESTINATION "share/D3D12MemoryAllocator"
-+)
-+
 +install(
-+  FILES ${CMAKE_CURRENT_BINARY_DIR}/D3D12MemoryAllocatorConfig.cmake
-+  DESTINATION "share/D3D12MemoryAllocator"
++    EXPORT ${PROJECT_NAME}-config DESTINATION cmake/
++    NAMESPACE "unofficial::"
 +)
-
-diff --git a/src/Config.cmake.in b/src/Config.cmake.in
-new file mode 100644
-index 0000000..2e33c1d
---- /dev/null
-+++ b/src/Config.cmake.in
-@@ -0,0 +1,3 @@
-+@PACKAGE_INIT@
-+
-+include("${CMAKE_CURRENT_LIST_DIR}/D3D12MemoryAllocatorTargets.cmake")
