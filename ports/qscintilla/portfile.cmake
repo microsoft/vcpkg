@@ -51,17 +51,5 @@ vcpkg_copy_pdbs()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-qscintilla-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
 
-if(VCPKG_TARGET_IS_IOS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-qscintilla-config.cmake"
-        "QT_LINK_LIBRARIES"
-        "Qt6::Widgets"
-    )
-else()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-qscintilla-config.cmake"
-        "QT_LINK_LIBRARIES"
-        "Qt6::PrintSupport;Qt6::Widgets"
-    )
-endif()
-
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
