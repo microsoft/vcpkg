@@ -11,7 +11,7 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
-        fix-libraw-static.patch
+        fix-dependency-libraw.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
