@@ -1,5 +1,5 @@
 set(USE_QT_VERSION "6")
-
+set(VCPKG_BUILD_TYPE release)
 # https://github.com/opencv/opencv/pull/24043
 vcpkg_download_distfile(ARM64_WINDOWS_FIX
   URLS https://github.com/opencv/opencv/commit/e5e1a3bfdea96bebda2ad963bc8f6cf17930aef7.patch?full_index=1
