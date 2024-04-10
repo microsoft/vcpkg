@@ -19,7 +19,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 3eed5903f37ac728522cbb0ea0081f1d5a62d9420366d487f838dc22c31813c58584838400bd3d09518608e1e71bafcb1ff83713d351e4876da6625d5543fef6
+    SHA512 42cc11475d8b31706ec151c9aed0178e17b788c6b38636ae1cde363872139ed85f5b9efd0c75012f4d6f15ec8100e1afe5d528e72b88a5d3dea4125c9b0804aa
     PATCHES
         command-line-length.patch
         script-prefix.patch
@@ -77,6 +77,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 else()
     include("${CMAKE_CURRENT_LIST_DIR}/unix/portfile.cmake")
 endif()
+
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/cmake/"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake/" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
