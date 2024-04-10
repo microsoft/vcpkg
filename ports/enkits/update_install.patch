@@ -11,7 +11,7 @@ index 7f8572e..f42ec18 100644
  option( ENKITS_BUILD_C_INTERFACE    "Build C interface" ON )
  option( ENKITS_BUILD_EXAMPLES       "Build example applications" ON )
  option( ENKITS_BUILD_SHARED         "Build shared library" OFF )
-@@ -59,9 +61,17 @@ if( UNIX )
+@@ -59,9 +63,19 @@ if( UNIX )
      target_link_libraries( enkiTS ${CMAKE_THREAD_LIBS_INIT} )
  endif()
  
@@ -22,6 +22,8 @@ index 7f8572e..f42ec18 100644
 +    install(
 +        TARGETS enkiTS
 +        EXPORT enkiTS-config
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +    install(FILES ${ENKITS_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 +    install(

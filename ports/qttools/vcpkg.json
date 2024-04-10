@@ -61,7 +61,7 @@
       ]
     },
     "qdbus": {
-      "description": "Build qdbusviewer",
+      "description": "Build QDBusViewer",
       "dependencies": [
         {
           "name": "qtbase",
@@ -74,7 +74,7 @@
       ]
     },
     "qdoc": {
-      "description": "Build QDoc.",
+      "description": "Build QDoc",
       "dependencies": [
         {
           "name": "llvm",
