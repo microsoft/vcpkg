@@ -1,0 +1,17 @@
+{
+  "name": "symcrypt",
+  "version": "103.4.1",
+  "description": "SymCrypt is the core cryptographic function library currently used by Windows.",
+  "homepage": "https://github.com/microsoft/SymCrypt",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

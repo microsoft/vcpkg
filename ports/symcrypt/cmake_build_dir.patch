@@ -1,0 +1,156 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 636212d..6c87bba 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -9,9 +9,11 @@ if(WIN32)
+     set(CMAKE_SYSTEM_VERSION 10.0.18362)
+ endif()
+ 
++set(SYMCRYPT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
++
+ # Set version number using helper script
+ execute_process(
+-    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/version.py --build-info
++    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/version.py --build-info
+     OUTPUT_VARIABLE SYMCRYPT_VERSION
+     RESULT_VARIABLE SYMCRYPT_VERSION_RESULT
+ )
+@@ -74,7 +76,7 @@ option(
+     ON, but may need to be disabled for specialized targets such as embedded systems."
+     ON)
+ 
+-include(${CMAKE_SOURCE_DIR}/cmake-configs/SymCrypt-Platforms.cmake)
++include(${CMAKE_CURRENT_SOURCE_DIR}/cmake-configs/SymCrypt-Platforms.cmake)
+ 
+ if(NOT DEFINED CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE Debug)
+@@ -112,4 +114,9 @@ configure_file(build/symcrypt.pc.in symcrypt.pc @ONLY)
+ 
+ add_subdirectory(lib)
+ add_subdirectory(modules)
+-add_subdirectory(unittest)
+\ No newline at end of file
++
++option(SYMCRYPT_BUILD_TESTS "Build unit tests" ON)
++
++if(SYMCRYPT_BUILD_TESTS)
++  add_subdirectory(unittest)
++endif()
+\ No newline at end of file
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 4dfcb46..cc4853c 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -153,10 +153,10 @@ function(process_cppasm filepath outformat archdefine)
+         add_custom_command(
+             OUTPUT ${output_asm}
+             COMMAND "${CMAKE_C_COMPILER}" -E -P -x c ${filepath} -o ${output_asm}
+-                -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_SOURCE_DIR}/${rootpath} -I${CMAKE_SOURCE_DIR}/inc
++                -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_SOURCE_DIR}/${rootpath} -I${SYMCRYPT_SOURCE_DIR}/inc
+                 -DSYMCRYPT_${outformatupper} -DSYMCRYPT_CPU_${archdefineupper} ${dbg_definition}
+             MAIN_DEPENDENCY ${filepath}
+-            DEPENDS ${CMAKE_SOURCE_DIR}/inc/C_asm_shared.inc ${filepath} symcryptasm_shared.cppasm
++            DEPENDS ${SYMCRYPT_SOURCE_DIR}/inc/C_asm_shared.inc ${filepath} symcryptasm_shared.cppasm
+             COMMENT "C preprocessing ${filepath} to ${outformat} (${output_asm})"
+             VERBATIM)
+     elseif(outformat STREQUAL masm)
+@@ -164,10 +164,10 @@ function(process_cppasm filepath outformat archdefine)
+         add_custom_command(
+             OUTPUT ${output_asm}
+             COMMAND "${CMAKE_C_COMPILER}" /EP /P /Fi${output_asm} ${filepath}
+-                -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_SOURCE_DIR}/${rootpath} -I${CMAKE_SOURCE_DIR}/inc
++                -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_SOURCE_DIR}/${rootpath} -I${SYMCRYPT_SOURCE_DIR}/inc
+                 -DSYMCRYPT_${outformatupper} -DSYMCRYPT_CPU_${archdefineupper} ${dbg_definition}
+             MAIN_DEPENDENCY ${filepath}
+-            DEPENDS ${CMAKE_SOURCE_DIR}/inc/C_asm_shared.inc ${filepath} symcryptasm_shared.cppasm
++            DEPENDS ${SYMCRYPT_SOURCE_DIR}/inc/C_asm_shared.inc ${filepath} symcryptasm_shared.cppasm
+             COMMENT "C preprocessing ${filepath} to ${outformat} (${output_asm})"
+             VERBATIM)
+     endif()
+@@ -196,9 +196,9 @@ function(process_symcryptasm filepath outformat archdefine callingconvention)
+     add_custom_command(
+         OUTPUT ${output_cppasm}
+         COMMAND ${CMAKE_COMMAND} -E make_directory ${output_directory}
+-        COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/symcryptasm_processor.py ${outformat} ${archdefine} ${callingconvention} ${filepath} ${output_cppasm}
++        COMMAND ${Python3_EXECUTABLE} ${SYMCRYPT_SOURCE_DIR}/scripts/symcryptasm_processor.py ${outformat} ${archdefine} ${callingconvention} ${filepath} ${output_cppasm}
+         MAIN_DEPENDENCY ${filepath}
+-        DEPENDS ${CMAKE_SOURCE_DIR}/scripts/symcryptasm_processor.py
++        DEPENDS ${SYMCRYPT_SOURCE_DIR}/scripts/symcryptasm_processor.py
+         COMMENT "Python preprocessing ${filepath} to ${outformat} (${output_cppasm})"
+         VERBATIM)
+ 
+@@ -398,7 +398,7 @@ if(NOT WIN32)
+     target_link_libraries(symcrypt_linuxusermode symcrypt_common)
+ endif()
+ 
+-include_directories(${CMAKE_SOURCE_DIR}/inc)
++include_directories(${SYMCRYPT_SOURCE_DIR}/inc)
+ 
+ add_library(symcrypt_common STATIC ${SOURCES_COMMON})
+ 
+diff --git a/modules/linux/common/CMakeLists.txt b/modules/linux/common/CMakeLists.txt
+index c09ab65..ef38727 100644
+--- a/modules/linux/common/CMakeLists.txt
++++ b/modules/linux/common/CMakeLists.txt
+@@ -2,7 +2,7 @@ set(SOURCES
+     module.c
+     rng.c)
+ 
+-include_directories(${CMAKE_SOURCE_DIR}/inc)
++include_directories(${SYMCRYPT_SOURCE_DIR}/inc)
+ 
+ add_library(symcrypt_module_linux_common STATIC ${SOURCES})
+ 
+@@ -26,5 +26,5 @@ add_custom_target(jitterentropy_lib ALL
+     env "CFLAGS=${jitter_cflags}"
+     env "LDFLAGS=${jitter_ldflags}"
+     make
+-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdparty/jitterentropy-library
++  WORKING_DIRECTORY ${SYMCRYPT_SOURCE_DIR}/3rdparty/jitterentropy-library
+ )
+\ No newline at end of file
+diff --git a/modules/linux/generic/CMakeLists.txt b/modules/linux/generic/CMakeLists.txt
+index 32f0a68..d8b33b6 100644
+--- a/modules/linux/generic/CMakeLists.txt
++++ b/modules/linux/generic/CMakeLists.txt
+@@ -11,12 +11,12 @@ else()
+     list(APPEND SOURCES ../common/nointegrity.c)
+ endif()
+ 
+-include_directories(${CMAKE_SOURCE_DIR}/inc ../common ${CMAKE_SOURCE_DIR}/3rdparty/jitterentropy-library)
++include_directories(${SYMCRYPT_SOURCE_DIR}/inc ../common ${SYMCRYPT_SOURCE_DIR}/3rdparty/jitterentropy-library)
+ 
+ add_library(symcrypt_generic_linux SHARED ${SOURCES})
+ 
+ # Link jitterentropy and libatomic
+-target_link_libraries(symcrypt_generic_linux ${CMAKE_SOURCE_DIR}/3rdparty/jitterentropy-library/libjitterentropy.a pthread atomic)
++target_link_libraries(symcrypt_generic_linux ${SYMCRYPT_SOURCE_DIR}/3rdparty/jitterentropy-library/libjitterentropy.a pthread atomic)
+ 
+ add_dependencies(symcrypt_generic_linux jitterentropy_lib)
+ 
+diff --git a/modules/linux/oe_full/CMakeLists.txt b/modules/linux/oe_full/CMakeLists.txt
+index fec04e1..c20bac4 100644
+--- a/modules/linux/oe_full/CMakeLists.txt
++++ b/modules/linux/oe_full/CMakeLists.txt
+@@ -3,7 +3,7 @@ set(SOURCES
+     statusindicator.c
+     rng.c)
+ 
+-include_directories(${CMAKE_SOURCE_DIR}/inc ../common)
++include_directories(${SYMCRYPT_SOURCE_DIR}/inc ../common)
+ 
+ add_library(symcrypt_oe SHARED ${SOURCES})
+ 
+diff --git a/unittest/lib/CMakeLists.txt b/unittest/lib/CMakeLists.txt
+index 5fa3885..0c96bde 100644
+--- a/unittest/lib/CMakeLists.txt
++++ b/unittest/lib/CMakeLists.txt
+@@ -84,7 +84,7 @@ elseif(SYMCRYPT_USE_ASM) # Linux
+ endif()
+ 
+ # Need to include an asm file from here.
+-include_directories(${CMAKE_SOURCE_DIR}/lib)
++include_directories(${SYMCRYPT_SOURCE_DIR}/lib)
+ 
+ if(WIN32)
+     # DNDEBUG is required to link with msbignum. This should eventually be removed.
