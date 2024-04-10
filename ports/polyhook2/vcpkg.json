@@ -1,10 +1,10 @@
 {
   "name": "polyhook2",
-  "version-date": "2023-08-11",
+  "version-date": "2024-02-08",
   "description": "C++17, x86/x64 Hooking Library v2.0",
   "homepage": "https://github.com/stevemk14ebr/PolyHook_2_0",
   "license": "MIT",
-  "supports": "!(arm | uwp | linux | osx)",
+  "supports": "(x86 | x64) & !(uwp | osx)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -18,16 +18,21 @@
   ],
   "default-features": [
     "detours",
-    "exception",
+    {
+      "name": "exception",
+      "platform": "windows"
+    },
     "inlinentd",
-    "pe",
+    {
+      "name": "pe",
+      "platform": "windows"
+    },
     "virtuals"
   ],
   "features": {
     "detours": {
       "description": "Implement detour functionality",
       "dependencies": [
-        "asmjit",
         "asmtk"
       ]
     },
