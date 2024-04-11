@@ -5033,8 +5033,8 @@
       "port-version": 0
     },
     "libtorch": {
-      "baseline": "2.1.2",
-      "port-version": 2
+      "baseline": "2.2.2",
+      "port-version": 0
     },
     "libtorrent": {
       "baseline": "2.0.10",
