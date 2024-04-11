@@ -1,9 +1,9 @@
 {
   "name": "soundtouch",
-  "version": "2.3.2",
-  "port-version": 3,
+  "version": "2.3.3",
   "description": "SoundTouch is an open-source audio processing library for changing the Tempo, Pitch and Playback Rates of audio streams or audio files.",
   "homepage": "https://www.surina.net/soundtouch",
+  "license": "LGPL-2.1-only",
   "supports": "!uwp",
   "dependencies": [
     {
@@ -24,7 +24,8 @@
       "description": "Build the soundstretch command line tool"
     },
     "soundtouchdll": {
-      "description": "Build the SoundTouchDLL C wrapper dynamic library"
+      "description": "Build the SoundTouchDLL C wrapper dynamic library",
+      "supports": "!staticcrt"
     }
   }
 }

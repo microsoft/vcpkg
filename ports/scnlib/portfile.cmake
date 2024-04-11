@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 12b9ae26a5ccc600aacad1e2b2287bfc0b6986a260e182c91541876bc5804fe661093ad10d1befda56803afc7a9aa9f0348820dbb5af4fa6fdf048f85b3bcef1
     HEAD_REF master
-    PATCHES fix-SCN_HAS_STD_REGEX_MULTILINE-marco.patch
+    PATCHES
+        fix-SCN_HAS_STD_REGEX_MULTILINE-marco.patch
+        remove-simdutf-dependency-version.patch
 )
 
 vcpkg_cmake_configure(

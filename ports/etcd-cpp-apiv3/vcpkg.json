@@ -1,6 +1,6 @@
 {
   "name": "etcd-cpp-apiv3",
-  "version": "0.15.3",
+  "version": "0.15.4",
   "description": "The etcd-cpp-apiv3 is a C++ API for etcd's v3 client API, i.e., ETCDCTL_API=3.",
   "homepage": "https://github.com/etcd-cpp-apiv3/etcd-cpp-apiv3",
   "license": "BSD-3-Clause",
@@ -9,7 +9,10 @@
     "boost-random",
     "boost-system",
     "boost-thread",
-    "cpprestsdk",
+    {
+      "name": "cpprestsdk",
+      "default-features": false
+    },
     "grpc",
     "openssl",
     "protobuf",

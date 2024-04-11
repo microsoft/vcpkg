@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
     REF "${VERSION_STR}"
-    SHA512 af176cbd105c49949282c16bb6e30f69167bc6c00a50e0ae69aea555815d47ac3c4540c233e596c5add7cb846c2b33d7be267d8e02472286e758b662b4a652ab
+    SHA512 807c1f8732926cfdabcfbdf8d6a0e76b8dba1a1e614afe084a467ffb4cfd80623f5e3afa7e9905b1ac96667c93e01b5f98ceaa8948a576a1093d98df98cc8f81
     HEAD_REF master
     PATCHES
         dependencies.patch
