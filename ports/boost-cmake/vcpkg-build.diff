@@ -11,15 +11,6 @@ index e93f90712..063032e8a 100644
  
    # --with-<library>
    set(BOOST_INCLUDE_LIBRARIES "" CACHE STRING
-@@ -169,7 +169,7 @@ function(__boost_auto_install __boost_lib)
- 
-       get_target_property(__boost_lib_incdir "boost_${__boost_lib_target}" INTERFACE_INCLUDE_DIRECTORIES)
- 
--      if(__boost_lib_incdir STREQUAL "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/${__boost_lib}/include")
-+      if(__boost_lib_incdir STREQUAL "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/${__boost_lib}/include")
- 
-         boost_message(DEBUG "Enabling installation for '${__boost_lib}'")
-         boost_install(TARGETS "boost_${__boost_lib_target}" VERSION "${BOOST_SUPERPROJECT_VERSION}" HEADER_DIRECTORY "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/${__boost_lib}/include")
 @@ -188,6 +188,7 @@ endfunction()
  function(__boost_scan_dependencies lib var)
  
@@ -37,7 +28,7 @@ index e93f90712..063032e8a 100644
          string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
          list(APPEND result ${dep})
  
-@@ -206,16 +207,22 @@ function(__boost_scan_dependencies lib var)
+@@ -206,13 +207,18 @@ function(__boost_scan_dependencies lib var)
  
    endif()
  
@@ -52,54 +43,37 @@ index e93f90712..063032e8a 100644
  
  #
  
--file(GLOB __boost_libraries RELATIVE "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs" "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/*/CMakeLists.txt" "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/numeric/*/CMakeLists.txt")
-+file(GLOB __boost_libraries RELATIVE "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs" "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/*/CMakeLists.txt" "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/numeric/*/CMakeLists.txt")
+ file(GLOB __boost_libraries RELATIVE "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs" "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/*/CMakeLists.txt" "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/numeric/*/CMakeLists.txt")
  
  # Check for mistakes in BOOST_INCLUDE_LIBRARIES
  
-+if(1)
- foreach(__boost_included_lib IN LISTS BOOST_INCLUDE_LIBRARIES)
- 
-   if(NOT "${__boost_included_lib}/CMakeLists.txt" IN_LIST __boost_libraries)
-@@ -225,6 +229,7 @@ foreach(__boost_included_lib IN LISTS BOOST_INCLUDE_LIBRARIES)
-   endif()
- 
- endforeach()
-+endif()
- 
- # Scan for dependencies
- 
-@@ -251,13 +256,14 @@ while(__boost_libs_to_scan)
+@@ -251,13 +256,13 @@ while(__boost_libs_to_scan)
  
    list(REMOVE_DUPLICATES __boost_dependencies)
  
 -  set(__boost_libs_to_scan ${__boost_dependencies})
-+  #set(__boost_libs_to_scan ${__boost_dependencies})
  
    if(__boost_libs_to_scan)
      list(REMOVE_ITEM __boost_libs_to_scan ${__boost_include_libraries})
 +    list(REMOVE_ITEM __boost_libs_to_scan ${__boost_lib})
    endif()
  
--  list(APPEND __boost_include_libraries ${__boost_libs_to_scan})
-+  list(APPEND __boost_include_libraries ${__boost_libs_to_scan})
+   list(APPEND __boost_include_libraries ${__boost_libs_to_scan})
  
  endwhile()
  
-@@ -362,13 +367,15 @@ if(CMAKE_SKIP_INSTALL_RULES)
+@@ -362,13 +367,14 @@ if(CMAKE_SKIP_INSTALL_RULES)
  
  endif()
  
 +if(0)
  set(CONFIG_INSTALL_DIR "${BOOST_INSTALL_CMAKEDIR}/Boost-${BOOST_SUPERPROJECT_VERSION}")
--set(CONFIG_FILE_NAME "${CMAKE_CURRENT_LIST_DIR}/../config/BoostConfig.cmake")
-+set(CONFIG_FILE_NAME "${CMAKE_CURRENT_LIST_DIR}/../config/BoostConfig.cmake") # Already installed by vcpkg
+ set(CONFIG_FILE_NAME "${CMAKE_CURRENT_LIST_DIR}/../config/BoostConfig.cmake")
  
  install(FILES "${CONFIG_FILE_NAME}" DESTINATION "${CONFIG_INSTALL_DIR}")
  
  set(CONFIG_VERSION_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/tmpinst/BoostConfigVersion.cmake")
  
-+
  if(NOT CMAKE_VERSION VERSION_LESS 3.14)
  
    write_basic_package_version_file("${CONFIG_VERSION_FILE_NAME}" COMPATIBILITY SameMajorVersion ARCH_INDEPENDENT)

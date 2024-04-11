@@ -56,7 +56,6 @@ function(boost_configure_and_install)
     SOURCE_PATH "${arg_SOURCE_PATH}"
     OPTIONS
       -DBOOST_INCLUDE_LIBRARIES=${boost_lib_name}
-      #"-DBOOST_INSTALL_CMAKEDIR=lib/cmake"
       -DBOOST_RUNTIME_LINK=${VCPKG_CRT_LINKAGE}
       "-DBOOST_INSTALL_INCLUDE_SUBDIR="
       "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT="
@@ -86,9 +85,6 @@ function(boost_configure_and_install)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                       "${CURRENT_PACKAGES_DIR}/debug/include"
       )
-  if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    #file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
-  endif()
   vcpkg_install_copyright(FILE_LIST "${CURRENT_INSTALLED_DIR}/share/boost-cmake/copyright")
 
   # Install port specific usage
