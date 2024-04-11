@@ -7574,7 +7574,7 @@
     },
     "re2": {
       "baseline": "2024-04-01",
-      "port-version": 0
+      "port-version": 1
     },
     "reactiveplusplus": {
       "baseline": "2.0.0",
