@@ -7070,7 +7070,7 @@
     },
     "qcoro": {
       "baseline": "0.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qcustomplot": {
       "baseline": "2.1.1",
@@ -8118,7 +8118,7 @@
     },
     "simonbrunel-qtpromise": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "simple-fft": {
       "baseline": "2020-06-14",
