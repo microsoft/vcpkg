@@ -7758,7 +7758,7 @@
     },
     "rtabmap": {
       "baseline": "0.21.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "rtabmap-res-tool": {
       "baseline": "0.21.4.1",
