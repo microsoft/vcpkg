@@ -697,7 +697,6 @@ milerius-sfml-imgui:x64-windows-static=fail
 minifb:arm-neon-android=fail
 minifb:arm64-android=fail
 minifb:x64-android=fail
-minio-cpp:arm-neon-android=fail
 miniply:arm-neon-android=fail
 # Conflicts with signalrclient
 microsoft-signalr:arm64-windows=skip

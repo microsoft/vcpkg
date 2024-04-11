@@ -1,0 +1,31 @@
+{
+  "name": "awlib",
+  "version-date": "2024-04-06",
+  "description": "Cross-platform utility library",
+  "homepage": "https://github.com/absurdworlds/awlib",
+  "license": "LGPL-3.0-or-later",
+  "supports": "!uwp & !android",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "graphics": {
+      "description": "Build graphics library",
+      "supports": "!uwp",
+      "dependencies": [
+        "glfw3",
+        "libpng"
+      ]
+    },
+    "hudf": {
+      "description": "Build HuDF support"
+    }
+  }
+}
