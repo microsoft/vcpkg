@@ -12,11 +12,12 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
+    OPTIONS --trace-expand
         -DBUILD_LGPL_SHARED_LIBS=${BUILD_LGPL_SHARED_LIBS}
         -DG2O_BUILD_EXAMPLES=OFF
         -DG2O_BUILD_APPS=OFF
 )
+message(FATAL_ERROR)
 
 vcpkg_cmake_install()
 
