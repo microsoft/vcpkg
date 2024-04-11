@@ -9,6 +9,7 @@ vcpkg_from_github(
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
+file(REMOVE "${SOURCE_PATH}/cmake_modules/FindBLAS.cmake")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
