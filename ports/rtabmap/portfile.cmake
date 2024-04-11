@@ -29,7 +29,7 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DBUILD_TOOLS=OFF
         -DBUILD_APP=OFF
-    OPTIONS
+    OPTIONS --trace-expand
         ${FEATURE_OPTIONS}
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
