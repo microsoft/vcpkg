@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/pytorch
     REF "v${VERSION}"
-    SHA512 a8961d78ad785b13c959a0612563a60e0de17a7c8bb9822ddea9a24072796354d07e81c47b6cc8761b21a6448845b088cf80e1661d9e889b0ed5474d3dc76756
+    SHA512 7990e0f9484038c3458c0bda2c863bf2b19e56edab81fc5938c6e0f08b17558287f853bb67350e8cca8f42bec0f1d4ba0e94e50a145db8da44bdd4bd703d91d0
     HEAD_REF master
     PATCHES
         cmake-fixes.patch
@@ -18,7 +18,6 @@ vcpkg_from_github(
         protoc.patch
         fix-sleef.patch
         fix-glog.patch
-        fix-msvc-ICE.patch
         fix-calculate-minloglevel.patch
         force-cuda-include.patch
 )
@@ -79,15 +78,13 @@ x_vcpkg_get_python_packages(
     PACKAGES typing-extensions pyyaml numpy
     OUT_PYTHON_VAR PYTHON3
 )
-#set(PYTHON3 "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+set(PYTHON3 "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 message(STATUS "Using Python3: ${PYTHON3}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     dist    USE_DISTRIBUTED # MPI, Gloo, TensorPipe
     zstd    USE_ZSTD
-    fftw3   USE_FFTW
-    fftw3   AT_FFTW_ENABLED
     fbgemm  USE_FBGEMM
     opencv  USE_OPENCV
     # These are alternatives !

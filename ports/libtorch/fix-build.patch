@@ -108,19 +108,6 @@ index 17bf16b89a..b90ebbc9eb 100644
          cmake_files = glob.glob("torch/lib/build/*/compile_commands.json")
          all_commands = [entry for f in ninja_files + cmake_files for entry in load(f)]
  
-diff --git a/third_party/nvfuser/csrc/instrumentation.h b/third_party/nvfuser/csrc/instrumentation.h
-index cd57825a24..75e81e9fac 100644
---- a/third_party/nvfuser/csrc/instrumentation.h
-+++ b/third_party/nvfuser/csrc/instrumentation.h
-@@ -2,7 +2,7 @@
- 
- #include <utils.h>
- 
--#include <nvToolsExt.h>
-+#include <nvtx3/nvToolsExt.h>
- 
- // NOLINTNEXTLINE(modernize-deprecated-headers)
- #include <stdio.h>
 diff --git a/tools/setup_helpers/env.py b/tools/setup_helpers/env.py
 index d87e97a2bb..e1bc42e87c 100644
 --- a/tools/setup_helpers/env.py

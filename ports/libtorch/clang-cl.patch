@@ -20,11 +20,11 @@ index 2dd1001..b3f3d60 100644
  
  // Used in ATen for invalid types.  These turn into
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index cf349c2..f7a595e 100644
+index a612595a..8bc329dd 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
-@@ -830,7 +830,7 @@ if(BUILD_CAFFE2 AND NOT MSVC)
-   target_compile_options(torch_cpu PRIVATE "-Wno-sign-compare")
+@@ -837,7 +837,7 @@ if(NOT MSVC)
+   set_source_files_properties(${PROJECT_SOURCE_DIR}/torch/csrc/distributed/c10d/socket.cpp PROPERTIES COMPILE_OPTIONS "-Wno-error=deprecated")
  endif()
  
 -if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND NOT USE_VULKAN AND NOT USE_IOS AND NOT USE_PYTORCH_METAL AND NOT USE_COREML_DELEGATE)

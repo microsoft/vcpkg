@@ -40,19 +40,10 @@ index feebad7cbb..ad407e18cb 100644
  
  if(ANDROID)
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index c3abce52e4..cd27c728ff 100644
+index acc95842..bb4a07a4 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -285,7 +285,7 @@ endif()
- set(AT_FFTW_ENABLED 0)
- set(USE_FFTW OFF)
- if(USE_FFTW OR NOT MKL_FOUND)
--  find_library(LIBFFTW3 fftw3)
-+  find_library(LIBFFTW3 NAMES fftw3 REQUIRED)
-   if(LIBFFTW3)
-     find_path(FFTW3_INCLUDE_DIR NAMES fftw3.h ONLY_CMAKE_FIND_ROOT_PATH)
-     if(FFTW3_INCLUDE_DIR)
-@@ -415,8 +415,8 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
+@@ -399,8 +399,8 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
  
    if(NOT TARGET pthreadpool)
      if(USE_SYSTEM_PTHREADPOOL)
@@ -63,25 +54,25 @@ index c3abce52e4..cd27c728ff 100644
        set_property(TARGET pthreadpool PROPERTY IMPORTED_LOCATION "${PTHREADPOOL_LIBRARY}")
        if(NOT PTHREADPOOL_LIBRARY)
          message(FATAL_ERROR "Cannot find pthreadpool")
-@@ -450,13 +450,15 @@ endif()
- 
- # ---[ Caffe2 uses cpuinfo library in the thread pool
- if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
--  add_library(cpuinfo SHARED IMPORTED)
--  find_library(CPUINFO_LIBRARY cpuinfo)
-+  add_library(cpuinfo UNKNOWN IMPORTED)
+@@ -436,13 +436,15 @@ if(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "^(s390x|ppc64le)$")
+   # ---[ Caffe2 uses cpuinfo library in the thread pool
+   # ---[ But it doesn't support s390x/powerpc and thus not used on s390x/powerpc
+   if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
+-    add_library(cpuinfo SHARED IMPORTED)
+-    find_library(CPUINFO_LIBRARY cpuinfo)
++    add_library(cpuinfo UNKNOWN IMPORTED)
 +  find_library(CPUINFO_LIBRARY NAMES cpuinfo REQUIRED)
 +  find_library(CLOG_LIBRARY NAMES clog REQUIRED)
-   if(NOT CPUINFO_LIBRARY)
-     message(FATAL_ERROR "Cannot find cpuinfo")
-   endif()
-   message("Found cpuinfo: ${CPUINFO_LIBRARY}")
-   set_target_properties(cpuinfo PROPERTIES IMPORTED_LOCATION "${CPUINFO_LIBRARY}")
-+  target_link_libraries(cpuinfo INTERFACE "${CLOG_LIBRARY}")
- elseif(NOT TARGET cpuinfo)
-   if(NOT DEFINED CPUINFO_SOURCE_DIR)
-     set(CPUINFO_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../third_party/cpuinfo" CACHE STRING "cpuinfo source directory")
-@@ -659,8 +661,8 @@ if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)
+     if(NOT CPUINFO_LIBRARY)
+       message(FATAL_ERROR "Cannot find cpuinfo")
+     endif()
+     message("Found cpuinfo: ${CPUINFO_LIBRARY}")
+     set_target_properties(cpuinfo PROPERTIES IMPORTED_LOCATION "${CPUINFO_LIBRARY}")
++    target_link_libraries(cpuinfo INTERFACE "${CLOG_LIBRARY}")
+   elseif(NOT TARGET cpuinfo)
+     if(NOT DEFINED CPUINFO_SOURCE_DIR)
+       set(CPUINFO_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../third_party/cpuinfo" CACHE STRING "cpuinfo source directory")
+@@ -638,8 +640,8 @@ if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)
    include_directories(SYSTEM ${XNNPACK_INCLUDE_DIR})
    list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK)
  elseif(NOT TARGET XNNPACK AND USE_SYSTEM_XNNPACK)
@@ -92,7 +83,7 @@ index c3abce52e4..cd27c728ff 100644
    set_property(TARGET XNNPACK PROPERTY IMPORTED_LOCATION "${XNNPACK_LIBRARY}")
    if(NOT XNNPACK_LIBRARY)
      message(FATAL_ERROR "Cannot find XNNPACK")
-@@ -858,7 +860,7 @@ endif()
+@@ -838,7 +840,7 @@ endif()
  
  # ---[ LMDB
  if(USE_LMDB)
@@ -101,7 +92,7 @@ index c3abce52e4..cd27c728ff 100644
    if(LMDB_FOUND)
      include_directories(SYSTEM ${LMDB_INCLUDE_DIR})
      list(APPEND Caffe2_DEPENDENCY_LIBS ${LMDB_LIBRARIES})
-@@ -1002,8 +1004,9 @@ if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
+@@ -979,8 +981,9 @@ if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
      "${FP16_SOURCE_DIR}"
      "${CONFU_DEPENDENCIES_BINARY_DIR}/FP16")
  elseif(NOT TARGET fp16 AND USE_SYSTEM_FP16)
@@ -113,7 +104,7 @@ index c3abce52e4..cd27c728ff 100644
  endif()
  list(APPEND Caffe2_DEPENDENCY_LIBS fp16)
  
-@@ -1244,8 +1247,8 @@ endif(USE_LLVM)
+@@ -1208,8 +1211,8 @@ endif(USE_LLVM)
  
  # ---[ cuDNN
  if(USE_CUDNN)
@@ -124,7 +115,7 @@ index c3abce52e4..cd27c728ff 100644
  endif()
  
  # ---[ HIP
-@@ -1555,7 +1558,10 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+@@ -1529,7 +1532,10 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
        set_target_properties(onnx_proto PROPERTIES CXX_STANDARD 17)
      endif()
    endif()
@@ -136,7 +127,7 @@ index c3abce52e4..cd27c728ff 100644
  
    add_definitions(-DONNX_NAMESPACE=${ONNX_NAMESPACE})
    if(NOT USE_SYSTEM_ONNX)
-@@ -1573,14 +1579,14 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+@@ -1547,14 +1553,14 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
        target_compile_options(onnx PRIVATE -Wno-deprecated-declarations)
      endif()
    else()
@@ -155,7 +146,7 @@ index c3abce52e4..cd27c728ff 100644
      if(NOT ONNX_PROTO_LIBRARY)
        message(FATAL_ERROR "Cannot find onnx")
      endif()
-@@ -1589,7 +1595,7 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+@@ -1563,7 +1569,7 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
      list(APPEND Caffe2_DEPENDENCY_LIBS onnx_proto onnx)
    endif()
    include_directories(${FOXI_INCLUDE_DIRS})
@@ -164,7 +155,7 @@ index c3abce52e4..cd27c728ff 100644
    # Recover the build shared libs option.
    set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
  endif()
-@@ -1834,8 +1840,8 @@ endif()
+@@ -1796,8 +1802,8 @@ endif()
  #
  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
@@ -175,7 +166,7 @@ index c3abce52e4..cd27c728ff 100644
  # Disable compiler feature checks for `fmt`.
  #
  # CMake compiles a little program to check compiler features. Some of our build
-@@ -1843,7 +1849,6 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
+@@ -1805,7 +1811,6 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
  # CMAKE_CXX_FLAGS in ways that break feature checks. Since we already know
  # `fmt` is compatible with a superset of the compilers that PyTorch is, it
  # shouldn't be too bad to just disable the checks.
@@ -203,11 +194,11 @@ index 2f0adb1b6d..8a817fd6f1 100644
  include(FindPackageHandleStandardArgs)
  find_package_handle_standard_args(LMDB DEFAULT_MSG LMDB_INCLUDE_DIR LMDB_LIBRARIES)
 diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
-index 32f3ba375b..411293794f 100644
+index c7595774..bb47195f 100644
 --- a/cmake/public/cuda.cmake
 +++ b/cmake/public/cuda.cmake
-@@ -67,8 +67,8 @@ if(NOT CMAKE_CUDA_COMPILER_VERSION STREQUAL CUDAToolkit_VERSION OR
-                       "V${CUDAToolkit_VERSION} in '${CUDAToolkit_INCLUDE_DIR}'")
+@@ -66,8 +66,8 @@ if(NOT CMAKE_CUDA_COMPILER_VERSION VERSION_EQUAL CUDAToolkit_VERSION)
+                       "V${CUDAToolkit_VERSION} in '${CUDAToolkit_INCLUDE_DIRS}'")
  endif()
  
 -if(NOT TARGET CUDA::nvToolsExt)

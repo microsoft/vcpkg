@@ -1,7 +1,6 @@
 {
   "name": "libtorch",
-  "version": "2.1.2",
-  "port-version": 2,
+  "version": "2.2.2",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
@@ -54,7 +53,6 @@
       "name": "cuda",
       "platform": "windows & !x86"
     },
-    "fftw3",
     "opencv",
     "xnnpack",
     "zstd"
@@ -91,12 +89,6 @@
           "name": "tensorpipe",
           "platform": "linux | osx"
         }
-      ]
-    },
-    "fftw3": {
-      "description": "Build with fftw3",
-      "dependencies": [
-        "fftw3"
       ]
     },
     "leveldb": {
