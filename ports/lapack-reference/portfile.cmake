@@ -23,6 +23,7 @@ vcpkg_from_github(
     PATCHES
         cmake-config.patch
         lapacke.patch
+        fix_prefix.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -69,7 +70,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME lapack CONFIG_PATH lib/cmake/lapack-${VERSION}) #Should the target path be lapack and not lapack-reference?
+vcpkg_cmake_config_fixup(PACKAGE_NAME ${PORT} CONFIG_PATH lib/cmake/lapack-${VERSION}) #Should the target path be lapack and not lapack-reference?
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc")
 if(EXISTS "${pcfile}")
@@ -129,16 +130,6 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/liblapack.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/liblapack.lib" "${CURRENT_PACKAGES_DIR}/lib/lapack.lib")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/liblapack.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/liblapack.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/lapack.lib")
-    endif()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/lapack/lapack-targets-debug.cmake" [[IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/liblapack${CMAKE_IMPORT_LIBRARY_SUFFIX}"]] [[IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/lapack${CMAKE_IMPORT_LIBRARY_SUFFIX}"]])
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/lapack/lapack-targets-debug.cmake" [[_cmake_import_check_files_for_lapack "${_IMPORT_PREFIX}/debug/lib/liblapack${CMAKE_IMPORT_LIBRARY_SUFFIX}"]] [[_cmake_import_check_files_for_lapack "${_IMPORT_PREFIX}/debug/lib/lapack${CMAKE_IMPORT_LIBRARY_SUFFIX}"]])
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/lapack/lapack-targets-release.cmake" [[IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/lib/liblapack${CMAKE_IMPORT_LIBRARY_SUFFIX}"]] [[IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/lib/lapack${CMAKE_IMPORT_LIBRARY_SUFFIX}"]])
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/lapack/lapack-targets-debug.cmake" [[_cmake_import_check_files_for_lapack "${_IMPORT_PREFIX}/lib/liblapack${CMAKE_IMPORT_LIBRARY_SUFFIX}"]] [[_cmake_import_check_files_for_lapack "${_IMPORT_PREFIX}/lib/lapack${CMAKE_IMPORT_LIBRARY_SUFFIX}"]])
     if(NOT USE_OPTIMIZED_BLAS)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libblas.lib")
             file(RENAME "${CURRENT_PACKAGES_DIR}/lib/libblas.lib" "${CURRENT_PACKAGES_DIR}/lib/blas.lib")
