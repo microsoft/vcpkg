@@ -221,7 +221,13 @@
     "viewer": {
       "description": "Make demo viewer application",
       "dependencies": [
-        "qtbase"
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
       ]
     },
     "webp": {
