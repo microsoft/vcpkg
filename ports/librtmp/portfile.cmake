@@ -1,12 +1,8 @@
-vcpkg_from_github(
+vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mirror/rtmpdump
-    REF c5f04a58fc2aeea6296ca7c44ee4734c18401aa3
-    SHA512 d97ac38672898a96412baa5f03d1e64d512ccefe15ead0a055ca039dc6057e2e620e046c28f4d7468e132b0b5a9eb9bd171250c1afa14da53760a0d7aae3c9e9
+    URL git://git.ffmpeg.org/rtmpdump.git
+    REF 6f6bb1353fc84f4cc37138baa99f586750028a01
     PATCHES
-        dh.patch                #Openssl 1.1.1 patch
-        handshake.patch         #Openssl 1.1.1 patch
-        hashswf.patch           #Openssl 1.1.1 patch
         fix_strncasecmp.patch
         hide_netstackdump.patch
 )
