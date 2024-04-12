@@ -1,7 +1,7 @@
 {
   "name": "shogun",
   "version": "6.1.4",
-  "port-version": 9,
+  "port-version": 10,
   "description": "Unified and efficient Machine Learning",
   "homepage": "https://github.com/shogun-toolbox/shogun",
   "dependencies": [
@@ -10,6 +10,12 @@
     "curl",
     "dirent",
     "eigen3",
+    {
+      "name": "hdf5",
+      "default-features": false,
+      "platform": "!windows"
+    },
+    "lapack",
     "liblzma",
     "libxml2",
     "lzo",
@@ -23,6 +29,10 @@
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     },
     "zlib"
