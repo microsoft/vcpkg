@@ -23,9 +23,6 @@ if(WIN32)
     target_link_libraries(perfetto PRIVATE ws2_32)
 endif(WIN32)
 
-if(MSVC)
-    target_compile_options(perfetto PRIVATE "/permissive-")
-endif(MSVC)
 
 install(TARGETS perfetto
     EXPORT unofficial-perfetto-config
