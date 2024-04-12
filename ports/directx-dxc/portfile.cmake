@@ -1,7 +1,7 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
-set(DIRECTX_DXC_TAG v1.8.2403)
-set(DIRECTX_DXC_VERSION 2024_03_07)
+set(DIRECTX_DXC_TAG v1.8.2403.2)
+set(DIRECTX_DXC_VERSION 2024_03_29)
 
 if (NOT VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
    message(STATUS "Note: ${PORT} always requires dynamic library linkage at runtime.")
@@ -11,13 +11,13 @@ if (VCPKG_TARGET_IS_LINUX)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/${DIRECTX_DXC_TAG}/linux_dxc_${DIRECTX_DXC_VERSION}.x86_64.tar.gz"
         FILENAME "linux_dxc_${DIRECTX_DXC_VERSION}.tar.gz"
-        SHA512 8212b31dd1f10b9896ab7cacc6230a8c1685a7dac8953e6adc85885e6305f39e2eb539119f3716de57c9ff3ebdb70fd746200bd390b341062a1aefae867d796c
+        SHA512 5d62ad6e05ffbffdd46e45ad4cf1aa0cd16ab240798a00a4f9e46ec51a4cdff2aeb19cca8167a20ce384b42a6a6ec34e3fde1a75cc08b5f0ff2dac42edda826b
     )
 else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/${DIRECTX_DXC_TAG}/dxc_${DIRECTX_DXC_VERSION}.zip"
         FILENAME "dxc_${DIRECTX_DXC_VERSION}.zip"
-        SHA512 a0a8ec523d5937f545261dd3ad30d55c222444ba1872a0a8c6f0c869d809537afbc57cb605b7cf156650ca38fc12ec8c1add3ffc18b65dd7fe785afe6a7f85f2
+        SHA512 d8d33aaf9d1399d63237965567d179236edf6b4a003270ecd03fc5e31710995a68df74357a3059eafe03bd8b9e4fcaa5b540adb53e7360db455016164cfac052
     )
 endif()
 
