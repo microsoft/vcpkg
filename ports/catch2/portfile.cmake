@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF devel
     PATCHES
         fix-install-path.patch
+        fix-arm-build.patch
 )
 
 vcpkg_cmake_configure(
