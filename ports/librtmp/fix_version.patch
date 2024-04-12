@@ -1,0 +1,11 @@
+diff --git a/librtmp/rtmp.h b/librtmp/rtmp.h
+index 6d7dd89..4405ade 100644
+--- a/librtmp/rtmp.h
++++ b/librtmp/rtmp.h
+@@ -42,5 +42,5 @@
+ 
+-#define RTMP_LIB_VERSION	0x020300	/* 2.3 */
++#define RTMP_LIB_VERSION	0x020600	/* 2.6 */
+ 
+ #define RTMP_FEATURE_HTTP	0x01
+ #define RTMP_FEATURE_ENC	0x02
