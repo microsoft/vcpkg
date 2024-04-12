@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "supports": "!uwp & !x86",
   "dependencies": [
+    "pthreads",
     {
       "name": "vcpkg-cmake",
       "host": true
