@@ -7094,7 +7094,7 @@
     },
     "qt-advanced-docking-system": {
       "baseline": "4.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qt3d": {
       "baseline": "6.6.1",
