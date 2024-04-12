@@ -23,6 +23,10 @@
       "platform": "!windows"
     },
     {
+      "name": "openssl",
+      "platform": "!windows"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
