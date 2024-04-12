@@ -2121,8 +2121,8 @@
       "port-version": 4
     },
     "d3d12-memory-allocator": {
-      "baseline": "2021-05-05",
-      "port-version": 1
+      "baseline": "2.0.1",
+      "port-version": 0
     },
     "d3dx12": {
       "baseline": "may2021",
@@ -2898,7 +2898,7 @@
     },
     "g2o": {
       "baseline": "2020-02-07",
-      "port-version": 5
+      "port-version": 6
     },
     "g3log": {
       "baseline": "2.4",
@@ -3045,7 +3045,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "2.1.7",
+      "baseline": "2.4.5",
       "port-version": 0
     },
     "glbinding": {
@@ -6444,6 +6444,10 @@
       "baseline": "2022-07-18",
       "port-version": 0
     },
+    "openfx": {
+      "baseline": "1.4",
+      "port-version": 0
+    },
     "opengl": {
       "baseline": "2022-12-04",
       "port-version": 3
@@ -6462,7 +6466,7 @@
     },
     "openimageio": {
       "baseline": "2.5.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openjpeg": {
       "baseline": "2.5.2",
@@ -7046,7 +7050,7 @@
     },
     "qca": {
       "baseline": "2.3.7",
-      "port-version": 0
+      "port-version": 1
     },
     "qcoro": {
       "baseline": "0.10.0",
@@ -7082,7 +7086,7 @@
     },
     "qscintilla": {
       "baseline": "2.14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qt": {
       "baseline": "6.6.1",
@@ -7570,7 +7574,7 @@
     },
     "re2": {
       "baseline": "2024-04-01",
-      "port-version": 0
+      "port-version": 1
     },
     "reactiveplusplus": {
       "baseline": "2.0.0",
@@ -9349,8 +9353,8 @@
       "port-version": 0
     },
     "wt": {
-      "baseline": "4.9.1",
-      "port-version": 2
+      "baseline": "4.10.4",
+      "port-version": 0
     },
     "wtl": {
       "baseline": "10.0.10320",
