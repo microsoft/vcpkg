@@ -7,7 +7,7 @@ list(REMOVE_ITEM ARGS "CONFIG")
 list(REMOVE_ITEM ARGS "MODULE")
 
 if(@USE_OPTIMIZED_BLAS@)
-    _find_package(BLAS)
+    find_package(BLAS)
 endif()
 
 # BLA_VENDOR and BLA_STATIC are documented at:
