@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF v1.6.4
-    SHA512 fd73df91710f19b0d6c3765c37c7f529233196da91cf4d58028a8d3840244f11df44abafabd74a8ed1cbe4826d1afd6ff9f01316d183ace0924c65e7cf0eb8d5
-    HEAD_REF maint/v1.6
+    REF v1.8.0
+    SHA512 e5634267bd9c6a594c9a954d09c657e7b8aadf213609bf7dd83b99863d0d0c7109a5277617dd508abc2da54ea3f12c2af1908d1aeb73c000e94056e2f3653144
+    HEAD_REF main
     PATCHES
         c-standard.diff # for 'inline' in system headers
         cli-include-dirs.diff
@@ -64,7 +64,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS GIT2_FEATURES
-    FEATURES    
+    FEATURES
         ssh     USE_SSH
         tools   BUILD_CLI
 )
