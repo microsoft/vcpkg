@@ -10,8 +10,6 @@ vcpkg_from_github(
         cmake.patch
         eigen-3.4.patch
         fix-ASSERT-not-found.patch
-        remove_cmake_flags.patch
-        fix_accelerate_detection.patch
         fmt.patch
         syntax.patch
 )
