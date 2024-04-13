@@ -119,6 +119,8 @@ function(qt_cmake_configure)
     if(VCPKG_CROSSCOMPILING)
         list(APPEND _qarg_OPTIONS "-DQT_HOST_PATH=${CURRENT_HOST_INSTALLED_DIR}")
         list(APPEND _qarg_OPTIONS "-DQT_HOST_PATH_CMAKE_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share")
+        list(APPEND _qarg_OPTIONS "-DQT_FORCE_BUILD_TOOLS=ON")
+        list(APPEND _qarg_OPTIONS "-DQT_FORCE_FIND_TOOLS=ON")
     endif()
 
     # Disable warning for CMAKE_(REQUIRE|DISABLE)_FIND_PACKAGE_<packagename>
