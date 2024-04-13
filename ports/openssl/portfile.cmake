@@ -21,6 +21,7 @@ vcpkg_from_github(
     REF "openssl-${VERSION}"
     SHA512 42cc11475d8b31706ec151c9aed0178e17b788c6b38636ae1cde363872139ed85f5b9efd0c75012f4d6f15ec8100e1afe5d528e72b88a5d3dea4125c9b0804aa
     PATCHES
+        cmake-config.patch
         command-line-length.patch
         script-prefix.patch
         windows/install-layout.patch
@@ -77,10 +78,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 else()
     include("${CMAKE_CURRENT_LIST_DIR}/unix/portfile.cmake")
 endif()
-
-file(COPY "${CURRENT_PACKAGES_DIR}/lib/cmake/"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake/" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
