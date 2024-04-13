@@ -30,7 +30,7 @@ function(z_vcpkg_calculate_corrected_rpath)
         string(REPLACE "/lib/pkgconfig/../../" "/" rpath_norm "${rpath_norm}")
         # lib relative corrections
         string(REPLACE "::${current_prefix}/lib/" "::\$ORIGIN/${relative_to_lib}/" rpath_norm "${rpath_norm}")
-        string(REPLACE "::${current_installed_prefix}/lib" "::\$ORIGIN/${relative_to_lib}/" rpath_norm "${rpath_norm}")
+        string(REPLACE "::${current_installed_prefix}/lib/" "::\$ORIGIN/${relative_to_lib}/" rpath_norm "${rpath_norm}")
         # prefix relativ
         string(REPLACE "::${current_prefix}/" "::\$ORIGIN/${relative_to_prefix}/" rpath_norm "${rpath_norm}")
         string(REPLACE "::${current_installed_prefix}/" "::\$ORIGIN/${relative_to_prefix}/" rpath_norm "${rpath_norm}")
