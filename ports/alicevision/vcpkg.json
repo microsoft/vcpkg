@@ -4,6 +4,7 @@
   "description": "AliceVision is a Photogrammetric Computer Vision Framework which provides a 3D Reconstruction and Camera Tracking algorithms.",
   "homepage": "https://alicevision.org/association/#",
   "license": "MIT",
+  "supports": "!arm",
   "dependencies": [
     "boost-atomic",
     "boost-container",
