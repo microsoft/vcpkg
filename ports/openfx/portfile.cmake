@@ -1,4 +1,5 @@
 string(REPLACE "." "_" UNDERSCORE_VERSION "${VERSION}")
+string(REPLACE "-davinci-18_x" "" UNDERSCORE_VERSION "${UNDERSCORE_VERSION}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,6 +10,15 @@ vcpkg_from_github(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
+set(DRAW_SUITE_COMMIT_REFERENCE "c0167e114582cdf373507f65f60f8e50e2076434")
+vcpkg_download_distfile(
+    OFX_DRAW_SUITE_H
+    URLS "https://github.com/AcademySoftwareFoundation/openfx/raw/${DRAW_SUITE_COMMIT_REFERENCE}/include/ofxDrawSuite.h"
+    FILENAME "ofxDrawSuite.h"
+    SHA512 9afd8d93ff4816004ac2d89d45255801d0c09ee8f5acb72dbc37048483fa7ca0637fe028554910039de5f60c9450cb5dc5e2d27477c1a0c5595c9bdf09312ec5
+)
+file(COPY ${OFX_DRAW_SUITE_H} DESTINATION ${SOURCE_PATH}/include/)
 
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
 vcpkg_cmake_install()

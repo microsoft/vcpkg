@@ -6445,7 +6445,7 @@
       "port-version": 0
     },
     "openfx": {
-      "baseline": "1.4",
+      "baseline": "1.4-davinci-18.x",
       "port-version": 0
     },
     "opengl": {
