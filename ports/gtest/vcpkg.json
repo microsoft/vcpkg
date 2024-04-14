@@ -1,7 +1,8 @@
 {
   "name": "gtest",
   "version-semver": "1.14.0",
-  "description": "GoogleTest and GoogleMock testing frameworks",
+  "port-version": 1,
+  "description": "Google Testing and Mocking Framework",
   "homepage": "https://github.com/google/googletest",
   "license": "BSD-3-Clause",
   "dependencies": [
