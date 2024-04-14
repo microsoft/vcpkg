@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a91480445..c3d432e0b 100644
+index 65f3c73..586d582 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -211,14 +211,8 @@ endif()
+@@ -209,14 +209,8 @@ endif()
  
  #DisAsm/Zydis
  if (POLYHOOK_USE_EXTERNAL_ZYDIS)
@@ -19,7 +19,7 @@ index a91480445..c3d432e0b 100644
  else()
      target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:Zydis>)
      target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/zydis/include>)
-@@ -231,10 +225,8 @@ install(FILES ${PROJECT_SOURCE_DIR}/polyhook2/ZydisDisassembler.hpp DESTINATION
+@@ -229,10 +223,8 @@ install(FILES ${PROJECT_SOURCE_DIR}/polyhook2/ZydisDisassembler.hpp DESTINATION
  
  function(link_asmjit)
      if (POLYHOOK_USE_EXTERNAL_ASMJIT)
@@ -32,7 +32,7 @@ index a91480445..c3d432e0b 100644
      else()
          target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:asmjit>)
          target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${ASMJIT_SRC}>")
-@@ -238,10 +238,8 @@ if(POLYHOOK_FEATURE_DETOURS)
+@@ -244,10 +236,8 @@ if(POLYHOOK_FEATURE_DETOURS)
      link_asmjit()
  
      if (POLYHOOK_USE_EXTERNAL_ASMTK)
@@ -45,18 +45,22 @@ index a91480445..c3d432e0b 100644
      else()
          target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:asmtk>)
          target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${ASMTK_SRC}>")
-diff --git a/PolyHook_2-config.cmake.in b/PolyHook_2-config.cmake.in
-index 709f8b5d9..3add035e3 100644
---- a/PolyHook_2-config.cmake.in
-+++ b/PolyHook_2-config.cmake.in
-@@ -10,5 +10,10 @@ set(POLYHOOK_FEATURE_INLINENTD @POLYHOOK_FEATURE_INLINENTD@)
+diff --git a/polyhook_2-config.cmake.in b/polyhook_2-config.cmake.in
+index 709f8b5..599d1f7 100644
+--- a/polyhook_2-config.cmake.in
++++ b/polyhook_2-config.cmake.in
+@@ -10,5 +10,14 @@ set(POLYHOOK_FEATURE_INLINENTD @POLYHOOK_FEATURE_INLINENTD@)
  set(POLYHOOK_FEATURE_PE @POLYHOOK_FEATURE_PE@)
  set(POLYHOOK_FEATURE_VIRTUALS @POLYHOOK_FEATURE_VIRTUALS@)
  
 +include(CMakeFindDependencyMacro)
 +find_dependency(Zydis)
-+find_dependency(asmjit)
-+find_dependency(asmtk)
++if(POLYHOOK_FEATURE_DETOURS)
++    find_dependency(asmjit)
++endif()
++if(POLYHOOK_FEATURE_INLINENTD)
++    find_dependency(asmtk)
++endif()
 +
  get_filename_component(POLYHOOK_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
  include("${POLYHOOK_CMAKE_DIR}/PolyHook_2-targets.cmake")
