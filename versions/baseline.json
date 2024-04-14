@@ -2496,6 +2496,10 @@
       "baseline": "3.13.5",
       "port-version": 3
     },
+    "embree4": {
+      "baseline": "4.3.1",
+      "port-version": 0
+    },
     "enet": {
       "baseline": "1.3.17",
       "port-version": 2
