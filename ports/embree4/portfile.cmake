@@ -7,6 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-no-runtime-install.patch
+        002-fix-when-embree3-has-been-installed.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)
@@ -95,52 +96,24 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/embree-${VERSION} PACKAGE_NAME embree)
-
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/embree" "${CURRENT_PACKAGES_DIR}/share/${PORT}/")
-
-# Fix details in config.
 set(config_file "${CURRENT_PACKAGES_DIR}/share/${PORT}/embree-config.cmake")
+# Fix details in config.
 file(READ "${config_file}" contents)
 string(REPLACE "SET(EMBREE_BUILD_TYPE Release)" "" contents "${contents}")
 string(REPLACE "/../../../" "/../../" contents "${contents}")
 string(REPLACE "FIND_PACKAGE" "include(CMakeFindDependencyMacro)\n  find_dependency" contents "${contents}")
 string(REPLACE "REQUIRED" "COMPONENTS" contents "${contents}")
 string(REPLACE "/lib/cmake/embree-${VERSION}" "/share/${PORT}" contents "${contents}")
+string(REPLACE "embree_sse42-targets.cmake" "embree4_sse42-targets.cmake" contents "${contents}")
+string(REPLACE "embree_avx-targets.cmake" "embree4_avx-targets.cmake" contents "${contents}")
+string(REPLACE "embree_avx2-targets.cmake" "embree4_avx2-targets.cmake" contents "${contents}")
+string(REPLACE "embree_avx512-targets.cmake" "embree4_avx512-targets.cmake" contents "${contents}")
+
 if(NOT VCPKG_BUILD_TYPE)
     string(REPLACE "/lib/embree4.lib" "$<$<CONFIG:DEBUG>:/debug>/lib/embree4.lib" contents "${contents}")
 endif()
 file(WRITE "${config_file}" "${contents}")
-
-function(FIX_DETAILS OLD_NAME NEW_NAME)
-    set(config_file "${CURRENT_PACKAGES_DIR}/share/${PORT}/${OLD_NAME}-targets-debug.cmake")
-    if(EXISTS "${config_file}")
-        file(READ "${config_file}" contents)
-        string(REPLACE "/debug/lib/${OLD_NAME}.lib" "/debug/lib/${NEW_NAME}.lib" contents "${contents}")
-        file(WRITE "${config_file}" "${contents}")
-        endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/${OLD_NAME}.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/${OLD_NAME}.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/${NEW_NAME}.lib")
-    endif()
-    set(config_file "${CURRENT_PACKAGES_DIR}/share/${PORT}/${OLD_NAME}-targets-release.cmake")
-    if(EXISTS "${config_file}")
-        file(READ "${config_file}" contents)
-        string(REPLACE "/lib/${OLD_NAME}.lib" "/lib/${NEW_NAME}.lib" contents "${contents}")
-        file(WRITE "${config_file}" "${contents}")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/${OLD_NAME}.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/${OLD_NAME}.lib" "${CURRENT_PACKAGES_DIR}/lib/${NEW_NAME}.lib")
-    endif()
-endfunction()
-
-FIX_DETAILS("embree_avx" "embree4_avx")
-FIX_DETAILS("embree_avx2" "embree4_avx2")
-FIX_DETAILS("embree_avx512" "embree4_avx512")
-FIX_DETAILS("embree_sse42" "embree4_sse42")
-FIX_DETAILS("lexers" "embree4_common_lexers")
-FIX_DETAILS("math" "embree4_common_math")
-FIX_DETAILS("simd" "embree4_common_simd")
-FIX_DETAILS("sys" "embree4_common_sys")
-FIX_DETAILS("tasking" "embree4_common_tasking")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -151,7 +124,8 @@ endif()
 if(APPLE)
     file(REMOVE "${CURRENT_PACKAGES_DIR}/uninstall.command" "${CURRENT_PACKAGES_DIR}/debug/uninstall.command")
 endif()
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/embree4" "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
