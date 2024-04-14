@@ -1,0 +1,13 @@
+diff --git a/common/cmake/package.cmake b/common/cmake/package.cmake
+index 5429436..8c89f5b 100644
+--- a/common/cmake/package.cmake
++++ b/common/cmake/package.cmake
+@@ -90,7 +90,7 @@ ENDIF()
+ # Install MSVC runtime
+ ##############################################################
+ 
+-IF (WIN32)
++IF (0)
+   IF(SYCL_ONEAPI_ICX AND EMBREE_INSTALL_DEPENDENCIES)
+     GET_FILENAME_COMPONENT(DPCPP_COMPILER_DIR ${CMAKE_CXX_COMPILER} PATH)
+     IF (EXISTS "${DPCPP_COMPILER_DIR}/../redist/intel64_win/compiler/libmmd.dll")
