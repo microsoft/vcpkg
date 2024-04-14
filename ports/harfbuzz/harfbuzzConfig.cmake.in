@@ -73,7 +73,6 @@ if ("icu" IN_LIST HARFBUZZ_FEATURES)
     target_link_libraries(harfbuzz INTERFACE ICU::uc)
 endif()
 
-
 add_library(harfbuzz::harfbuzz-subset UNKNOWN IMPORTED)
 
 find_library(HARFBUZZ_SUBSET_LIBRARY_DEBUG 
@@ -99,3 +98,5 @@ else()
         IMPORTED_LOCATION_DEBUG "${HARFBUZZ_SUBSET_LIBRARY_DEBUG}"
     )
 endif()
+
+target_link_libraries(harfbuzz::harfbuzz-subset INTERFACE harfbuzz)
