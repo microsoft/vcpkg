@@ -6698,7 +6698,7 @@
     },
     "pcre2": {
       "baseline": "10.42",
-      "port-version": 2
+      "port-version": 3
     },
     "pdal": {
       "baseline": "2.5.3",
@@ -7762,7 +7762,7 @@
     },
     "rtabmap": {
       "baseline": "0.21.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "rtabmap-res-tool": {
       "baseline": "0.21.4.1",
