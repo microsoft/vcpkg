@@ -1,7 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "openfx",
-  "version": "1.4-davinci-18.x",
+  "version": "1.4",
+  "port-version": 1,
   "maintainers": "Reza Alizadeh Majd <r.a.majd@gmail.com>, Behnam Binesh <BehnamBih@gmail.com>",
   "summary": "OpenFX - An open-source plugin API for visual effects",
   "homepage": "https://github.com/AcademySoftwareFoundation/openfx",
@@ -15,5 +16,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "davinci-18": {
+      "description": "Installs the custom header files shipped with the Davinci Resolve 18.x"
+    }
+  }
 }
