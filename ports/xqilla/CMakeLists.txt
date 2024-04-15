@@ -274,7 +274,7 @@ add_library(xqilla
 ./src/functions/FunctionAbs.cpp
 ./src/functions/FunctionStringToCodepoints.cpp
 ./src/functions/FunctionPower.cpp
-#./src/functions/FunctionSubstringBeforeAfter.cpp
+./src/functions/FunctionSubstringBeforeAfter.cpp
 ./src/functions/FunctionUnordered.cpp
 ./src/functions/FunctionNodeName.cpp
 ./src/functions/FunctionSin.cpp

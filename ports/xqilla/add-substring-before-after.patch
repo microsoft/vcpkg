@@ -1,0 +1,337 @@
+diff --git a/include/xqilla/functions/FunctionSubstringBeforeAfter.hpp b/include/xqilla/functions/FunctionSubstringBeforeAfter.hpp
+new file mode 100644
+index 0000000..4089260
+--- /dev/null
++++ b/include/xqilla/functions/FunctionSubstringBeforeAfter.hpp
+@@ -0,0 +1,68 @@
++/*
++* Copyright (c) 2001, 2008,
++*     DecisionSoft Limited. All rights reserved.
++* Copyright (c) 2004, 2011,
++*     Oracle and/or its affiliates. All rights reserved.
++*
++* Licensed under the Apache License, Version 2.0 (the "License");
++* you may not use this file except in compliance with the License.
++* You may obtain a copy of the License at
++*
++*     http://www.apache.org/licenses/LICENSE-2.0
++*
++* Unless required by applicable law or agreed to in writing, software
++* distributed under the License is distributed on an "AS IS" BASIS,
++* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++* See the License for the specific language governing permissions and
++* limitations under the License.
++*/
++
++/*
++
++Substring function
++
++*/
++
++#ifndef _FUNCTIONSUBSTRINGBEFOREAFTER_HPP
++#define _FUNCTIONSUBSTRINGBEFOREAFTER_HPP
++
++#include <xqilla/framework/XQillaExport.hpp>
++
++#include <xqilla/ast/XQFunction.hpp>
++
++/** substring-before function. */
++class XQILLA_API FunctionSubstringBefore : public XQFunction
++{
++public:
++	static const XMLCh name[];
++	static const unsigned int minArgs;
++	static const unsigned int maxArgs;
++
++	FunctionSubstringBefore(const VectorOfASTNodes &args, XPath2MemoryManager* memMgr);
++
++	/** Returns the all characters from arg1 that appear before the first occurrence of arg2 using the collation arg3 **/
++	Sequence createSequence(DynamicContext* context, int flags = 0) const;
++
++};
++
++/** substring-before function. */
++class XQILLA_API FunctionSubstringAfter : public XQFunction
++{
++public:
++	static const XMLCh name[];
++	static const unsigned int minArgs;
++	static const unsigned int maxArgs;
++
++	FunctionSubstringAfter(const VectorOfASTNodes &args, XPath2MemoryManager* memMgr);
++
++	/** Returns the all characters from arg1 that appear after the first occurrence of arg2 using the collation arg3 **/
++	Sequence createSequence(DynamicContext* context, int flags = 0) const;
++
++};
++
++#endif // _FUNCTIONSUBSTRING_HPP
++
++
++
++
++
+diff --git a/src/functions/FnModule.xq b/src/functions/FnModule.xq
+index b96acdb..95d5ad7 100644
+--- a/src/functions/FnModule.xq
++++ b/src/functions/FnModule.xq
+@@ -42,38 +42,6 @@ declare private function string-join-helper($seq as xs:string*, $join as xs:stri
+   else concat(head($seq), $join, string-join-helper(tail($seq), $join))
+ };
+ 
+-declare function substring-before($arg1 as xs:string?, $arg2 as xs:string?) as xs:string
+-{
+-  substring-before($arg1, $arg2, default-collation())
+-};
+-
+-declare function substring-before($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string)
+-  as xs:string
+-{
+-  let $arg1 := if(empty($arg1)) then "" else $arg1
+-  let $arg2 := if(empty($arg2)) then "" else $arg2
+-  let $arg2len := string-length($arg2)
+-  return
+-    substring($arg1, 1,
+-      string-index-of($arg1, 1, 1 + string-length($arg1) - $arg2len, $arg2, $arg2len, $collation) - 1)
+-};
+-
+-declare function substring-after($arg1 as xs:string?, $arg2 as xs:string?) as xs:string
+-{
+-  substring-after($arg1, $arg2, default-collation())
+-};
+-
+-declare function substring-after($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string)
+-  as xs:string
+-{
+-  let $arg1 := if(empty($arg1)) then "" else $arg1
+-  let $arg2 := if(empty($arg2)) then "" else $arg2
+-  let $arg2len := string-length($arg2)
+-  let $index := string-index-of($arg1, 1, 1 + string-length($arg1) - $arg2len, $arg2, $arg2len, $collation)
+-  return
+-    if($index eq 0) then "" else substring($arg1, $index + $arg2len)
+-};
+-
+ declare private function string-index-of($str as xs:string, $index as xs:decimal, $endindex as xs:decimal,
+   $tofind as xs:string, $tofindlen as xs:decimal, $collation as xs:string) as xs:decimal
+ {
+diff --git a/src/functions/FunctionLookup.cpp b/src/functions/FunctionLookup.cpp
+index 6bab95a..434483a 100644
+--- a/src/functions/FunctionLookup.cpp
++++ b/src/functions/FunctionLookup.cpp
+@@ -279,6 +279,7 @@ const ExternalFunction *FunctionLookup::lookUpGlobalExternalFunction(
+ #include <xqilla/functions/FunctionStringToCodepoints.hpp>
+ #include <xqilla/functions/FunctionCodepointsToString.hpp>
+ #include <xqilla/functions/FunctionSubstring.hpp>
++#include <xqilla/functions/FunctionSubstringBeforeAfter.hpp>
+ #include <xqilla/functions/FunctionTokenize.hpp>
+ #include <xqilla/functions/FunctionTrace.hpp>
+ #include <xqilla/functions/FunctionUnordered.hpp>
+@@ -397,6 +398,11 @@ static void initGlobalTable(FunctionLookup *t, MemoryManager *memMgr)
+   t->insertFunction(new (memMgr) FuncFactoryTemplate<FunctionConcat>(memMgr));
+   //   fn:substring
+   t->insertFunction(new (memMgr) FuncFactoryTemplate<FunctionSubstring>(memMgr));
++  //   fn:substringbefore
++  t->insertFunction(new (memMgr)FuncFactoryTemplate<FunctionSubstringBefore>(memMgr));
++  //   fn:substringafter
++  t->insertFunction(new (memMgr)FuncFactoryTemplate<FunctionSubstringAfter>(memMgr));
++
+   //   fn:string-length
+   t->insertFunction(new (memMgr) FuncFactoryTemplate<FunctionStringLength>(memMgr));
+   //   fn:normalize-space
+diff --git a/src/functions/FunctionSubstringBeforeAfter.cpp b/src/functions/FunctionSubstringBeforeAfter.cpp
+new file mode 100644
+index 0000000..b3cd0e3
+--- /dev/null
++++ b/src/functions/FunctionSubstringBeforeAfter.cpp
+@@ -0,0 +1,156 @@
++/*
++* Copyright (c) 2001, 2008,
++*     DecisionSoft Limited. All rights reserved.
++* Copyright (c) 2004, 2011,
++*     Oracle and/or its affiliates. All rights reserved.
++*
++* Licensed under the Apache License, Version 2.0 (the "License");
++* you may not use this file except in compliance with the License.
++* You may obtain a copy of the License at
++*
++*     http://www.apache.org/licenses/LICENSE-2.0
++*
++* Unless required by applicable law or agreed to in writing, software
++* distributed under the License is distributed on an "AS IS" BASIS,
++* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++* See the License for the specific language governing permissions and
++* limitations under the License.
++*/
++
++#include "../config/xqilla_config.h"
++#include <xqilla/functions/FunctionSubstringBeforeAfter.hpp>
++
++#include <xqilla/context/DynamicContext.hpp>
++#include <xqilla/exceptions/XPath2ErrorException.hpp>
++#include <xqilla/exceptions/FunctionException.hpp>
++
++#include <xqilla/context/Collation.hpp>
++#include <xqilla/context/impl/CodepointCollation.hpp>
++
++const XMLCh FunctionSubstringBefore::name[] = {
++	XERCES_CPP_NAMESPACE_QUALIFIER chLatin_s, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_u, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_b,
++	XERCES_CPP_NAMESPACE_QUALIFIER chLatin_s, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_t, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_r,
++	XERCES_CPP_NAMESPACE_QUALIFIER chLatin_i, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_n, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_g,
++	XERCES_CPP_NAMESPACE_QUALIFIER chDash   , XERCES_CPP_NAMESPACE_QUALIFIER chLatin_b, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_e,
++	XERCES_CPP_NAMESPACE_QUALIFIER chLatin_f, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_o, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_r,
++	XERCES_CPP_NAMESPACE_QUALIFIER chLatin_e,
++	XERCES_CPP_NAMESPACE_QUALIFIER chNull
++};
++const unsigned int FunctionSubstringBefore::minArgs = 2;
++const unsigned int FunctionSubstringBefore::maxArgs = 3;
++
++
++/**
++* fn:substring-before($arg1 as xs:string?, $arg2 as xs:string?) as xs:string) as xs:string
++* fn:substring-before($arg1 as xs:string?, $arg2 as xs:string?, $collation 	 as xs:string) as xs:string
++**/
++
++FunctionSubstringBefore::FunctionSubstringBefore(const VectorOfASTNodes &args, XPath2MemoryManager* memMgr)
++	: XQFunction(name, "($sourceString as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:string", args, memMgr)
++{
++}
++
++Sequence FunctionSubstringBefore::createSequence(DynamicContext* context, int flags) const
++{
++	XPath2MemoryManager* memMgr = context->getMemoryManager();
++
++	Sequence string = getParamNumber(1, context)->toSequence(context);
++	if (string.isEmpty())
++		return Sequence(context->getItemFactory()->createString(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgZeroLenString, context), memMgr);
++
++	ATStringOrDerived::Ptr str = (const ATStringOrDerived::Ptr)string.first();
++
++	Sequence toSearch = getParamNumber(2, context)->toSequence(context);
++	if (toSearch.isEmpty())
++		return Sequence(context->getItemFactory()->createString(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgZeroLenString, context), memMgr);
++
++	ATStringOrDerived::Ptr toSearchStr = (const ATStringOrDerived::Ptr)toSearch.first();
++
++
++	Collation* collation = NULL;
++	if (getNumArgs()>2) 
++	{
++		Sequence collArg = getParamNumber(3, context)->toSequence(context);
++		const XMLCh* collName = collArg.first()->asString(context);
++		try {
++			context->getItemFactory()->createAnyURI(collName, context);
++		}
++		catch (XPath2ErrorException &e) 
++		{
++			XQThrow(FunctionException, X("FunctionSubstringBefore::createSequence"), X("Invalid argument to compare function"));
++		}
++		collation = context->getCollation(collName, this);
++		if (collation == NULL)
++			XQThrow(FunctionException, X("FunctionSubstringBefore::createSequence"), X("Collation object is not available"));
++	}
++	else
++		collation = context->getDefaultCollation(this);
++	if (collation == NULL)
++		collation = context->getCollation(CodepointCollation::getCodepointCollationName(), this);
++
++	return Sequence(((const ATStringOrDerived*)str)->substringBefore(toSearchStr, collation, context), memMgr);
++}
++
++
++const XMLCh FunctionSubstringAfter::name[] = {
++	XERCES_CPP_NAMESPACE_QUALIFIER chLatin_s, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_u, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_b,
++	XERCES_CPP_NAMESPACE_QUALIFIER chLatin_s, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_t, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_r,
++	XERCES_CPP_NAMESPACE_QUALIFIER chLatin_i, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_n, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_g,
++	XERCES_CPP_NAMESPACE_QUALIFIER chDash, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_a, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_f,
++	XERCES_CPP_NAMESPACE_QUALIFIER chLatin_t, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_e, XERCES_CPP_NAMESPACE_QUALIFIER chLatin_r,
++	XERCES_CPP_NAMESPACE_QUALIFIER chNull
++};
++const unsigned int FunctionSubstringAfter::minArgs = 2;
++const unsigned int FunctionSubstringAfter::maxArgs = 3;
++
++
++/**
++* fn:substring-after($arg1 as xs:string?, $arg2 as xs:string?) as xs:string
++* fn:substring-after($arg1 as xs:string?, $arg2 as xs:string?, $collation 	 as xs:string) as xs:string
++**/
++
++FunctionSubstringAfter::FunctionSubstringAfter(const VectorOfASTNodes &args, XPath2MemoryManager* memMgr)
++	: XQFunction(name, "($sourceString as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:string", args, memMgr)
++{
++}
++
++Sequence FunctionSubstringAfter::createSequence(DynamicContext* context, int flags) const
++{
++	XPath2MemoryManager* memMgr = context->getMemoryManager();
++
++	Sequence string = getParamNumber(1, context)->toSequence(context);
++	if (string.isEmpty())
++		return Sequence(context->getItemFactory()->createString(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgZeroLenString, context), memMgr);
++
++	ATStringOrDerived::Ptr str = (const ATStringOrDerived::Ptr)string.first();
++
++	Sequence toSearch = getParamNumber(2, context)->toSequence(context);
++	if (toSearch.isEmpty())
++		return Sequence(context->getItemFactory()->createString(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgZeroLenString, context), memMgr);
++
++	ATStringOrDerived::Ptr toSearchStr = (const ATStringOrDerived::Ptr)toSearch.first();
++
++
++	Collation* collation = NULL;
++	if (getNumArgs()>2)
++	{
++		Sequence collArg = getParamNumber(3, context)->toSequence(context);
++		const XMLCh* collName = collArg.first()->asString(context);
++		try {
++			context->getItemFactory()->createAnyURI(collName, context);
++		}
++		catch (XPath2ErrorException &e)
++		{
++			XQThrow(FunctionException, X("FunctionSubstringAfter::createSequence"), X("Invalid argument to compare function"));
++		}
++		collation = context->getCollation(collName, this);
++		if (collation == NULL)
++			XQThrow(FunctionException, X("FunctionSubstringAfter::createSequence"), X("Collation object is not available"));
++	}
++	else
++		collation = context->getDefaultCollation(this);
++	if (collation == NULL)
++		collation = context->getCollation(CodepointCollation::getCodepointCollationName(), this);
++
++	return Sequence(((const ATStringOrDerived*)str)->substringAfter(toSearchStr, collation, context), memMgr);
++}
+diff --git a/src/xerces/Axis.cpp b/src/xerces/Axis.cpp
+index 675fa1a..72e39f6 100644
+--- a/src/xerces/Axis.cpp
++++ b/src/xerces/Axis.cpp
+@@ -141,12 +141,12 @@ const DOMNode *Axis::getFirstChild(const DOMNode *fNode)
+   if(result == 0) return 0;
+ 
+   // Skip into the contents of entity reference nodes
+-  while(result->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
++  while(result != nullptr && result->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
+     result = result->getFirstChild();
+   }
+ 
+   // Skip any other unused types
+-  while(result->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE) {
++  while(result != nullptr && result->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE) {
+     result = result->getNextSibling();
+   }
+ 
+@@ -162,12 +162,12 @@ const DOMNode *Axis::getLastChild(const DOMNode *fNode)
+   if(result == 0) return 0;
+ 
+   // Skip into the contents of entity reference nodes
+-  while(result->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
++  while(result != nullptr && result->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
+     result = result->getLastChild();
+   }
+ 
+   // Skip any other unused types
+-  while(result->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE) {
++  while(result != nullptr && result->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE) {
+     result = result->getPreviousSibling();
+   }
+ 

@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES "fix-compare.patch"
+    PATCHES "fix-compare.patch" "add-substring-before-after.patch"
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
