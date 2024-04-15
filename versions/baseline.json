@@ -277,8 +277,8 @@
       "port-version": 1
     },
     "assimp": {
-      "baseline": "5.3.1",
-      "port-version": 4
+      "baseline": "5.4.0",
+      "port-version": 0
     },
     "async-mqtt": {
       "baseline": "4.1.0",
@@ -2830,7 +2830,7 @@
     },
     "freeimage": {
       "baseline": "3.18.0",
-      "port-version": 25
+      "port-version": 26
     },
     "freeopcua": {
       "baseline": "20190125",
@@ -7574,7 +7574,7 @@
     },
     "re2": {
       "baseline": "2024-04-01",
-      "port-version": 1
+      "port-version": 2
     },
     "reactiveplusplus": {
       "baseline": "2.0.0",
