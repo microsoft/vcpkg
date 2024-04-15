@@ -94,8 +94,7 @@ jobs:
          -Triplet ${{ replace(parameters.jobName, '_', '-') }} \
          -BuildReason $(Build.Reason) \
          -BinarySourceStub "$(X_VCPKG_BINARY_SOURCE_STUB)" \
-         -WorkingRoot ${{ variables.WORKING_ROOT }} \
-         -IsLinuxHost
+         -WorkingRoot ${{ variables.WORKING_ROOT }}
       failOnStderr: true
     displayName: '*** Test Modified Ports'
   - bash: |

@@ -57,7 +57,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: "-Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub \"$(X_VCPKG_BINARY_SOURCE_STUB)\" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory) -IsLinuxHost"
+      arguments: "-Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub \"$(X_VCPKG_BINARY_SOURCE_STUB)\" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)"
       pwsh: true
   - task: PublishBuildArtifacts@1
     displayName: "Publish Artifact: failure logs for ${{ replace(parameters.jobName, '_', '-') }}"
