@@ -1493,7 +1493,7 @@
       "port-version": 2
     },
     "catch2": {
-      "baseline": "3.5.3",
+      "baseline": "3.5.4",
       "port-version": 0
     },
     "cblas": {
