@@ -6728,6 +6728,10 @@
       "baseline": "2.8.3",
       "port-version": 3
     },
+    "perfetto": {
+      "baseline": "43.1",
+      "port-version": 0
+    },
     "pffft": {
       "baseline": "2021-10-09",
       "port-version": 1
