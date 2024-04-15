@@ -1,8 +1,17 @@
 diff --git a/meson.build b/meson.build
-index 1316366ed..daeaf3cb1 100644
+index db32a57..180ec5b 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -62,7 +62,7 @@ endif
+@@ -58,7 +58,7 @@ endif
+ documented_projects = ''
+ # Make it possible to use msys2 built zlib which fails
+ # when not using the mingw toolchain as it uses unistd.h
+-if not meson.is_subproject() and cc.get_id() == 'msvc'
++if not meson.is_subproject() and cc.get_argument_syntax() == 'msvc'
+   uname = find_program('uname', required: false)
+   if uname.found()
+     ret = run_command(uname, '-o', check: false)
+@@ -78,7 +78,7 @@ endif
  # Ensure that MSVC interprets all source code as UTF-8. Only do this when we're
  # not a subproject, because subprojects are not allowed to call
  # add_global_arguments().
@@ -11,7 +20,7 @@ index 1316366ed..daeaf3cb1 100644
    add_global_arguments(
        cc.get_supported_arguments(['/utf-8']), # set the input encoding to utf-8
        language: ['c', 'cpp'])
-@@ -316,7 +316,7 @@ if get_option('default_library') == 'static'
+@@ -453,7 +453,7 @@ if building_full
      if cc.has_link_argument(link_arg)
        gstfull_link_args += link_arg
        link_deps += symbol_map
@@ -20,3 +29,207 @@ index 1316366ed..daeaf3cb1 100644
        warning('FIXME: Provide a def file to publish the public symbols')
      else
        warning('FIXME: Linker does not support the supplied version script (' + symbol_map + '), please disable the "gst-full-version-script" option')
+diff --git a/subprojects/gst-devtools/meson.build b/subprojects/gst-devtools/meson.build
+index d78f9d2..2c537b5 100644
+--- a/subprojects/gst-devtools/meson.build
++++ b/subprojects/gst-devtools/meson.build
+@@ -38,7 +38,7 @@ endif
+ 
+ cc = meson.get_compiler('c')
+ 
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   msvc_args = [
+       # Ignore several spurious warnings for things gstreamer does very commonly
+       # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
+diff --git a/subprojects/gst-editing-services/meson.build b/subprojects/gst-editing-services/meson.build
+index ba6bf3e..468d69c 100644
+--- a/subprojects/gst-editing-services/meson.build
++++ b/subprojects/gst-editing-services/meson.build
+@@ -44,7 +44,7 @@ cdata = configuration_data()
+ prefix = get_option('prefix')
+ datadir = prefix / get_option('datadir')
+ 
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   msvc_args = [
+       # Ignore several spurious warnings for things gstreamer does very commonly
+       # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
+diff --git a/subprojects/gst-examples/meson.build b/subprojects/gst-examples/meson.build
+index 680364f..0c639c8 100644
+--- a/subprojects/gst-examples/meson.build
++++ b/subprojects/gst-examples/meson.build
+@@ -4,7 +4,7 @@ static_build = get_option('default_library') == 'static'
+ cc = meson.get_compiler('c')
+ m_dep = cc.find_library('m', required : false)
+ 
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   add_project_arguments(
+       cc.get_supported_arguments(['/utf-8']), # set the input encoding to utf-8
+       language : 'c')
+diff --git a/subprojects/gst-libav/meson.build b/subprojects/gst-libav/meson.build
+index e391786..60479e8 100644
+--- a/subprojects/gst-libav/meson.build
++++ b/subprojects/gst-libav/meson.build
+@@ -105,7 +105,7 @@ gstpbutils_dep = dependency('gstreamer-pbutils-1.0', version : gst_req,
+ libm = cc.find_library('m', required : false)
+ 
+ gst_libav_args = ['-DHAVE_CONFIG_H']
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   msvc_args = [
+       # Ignore several spurious warnings for things gstreamer does very commonly
+       # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
+diff --git a/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build b/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build
+index 5abb136..55dd46d 100644
+--- a/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build
++++ b/subprojects/gst-plugins-bad/gst-libs/gst/d3d11/meson.build
+@@ -176,7 +176,7 @@ endif
+ 
+ hlsl_precompiled = []
+ fxc = find_program ('fxc', required : get_option ('d3d11-hlsl-precompile'))
+-if cc.get_id() == 'msvc' and fxc.found()
++if cc.get_argument_syntax() == 'msvc' and fxc.found()
+   subdir('hlsl')
+   extra_comm_args += ['-DHLSL_PRECOMPILED']
+ endif
+diff --git a/subprojects/gst-plugins-bad/meson.build b/subprojects/gst-plugins-bad/meson.build
+index a0eb1db..21b0501 100644
+--- a/subprojects/gst-plugins-bad/meson.build
++++ b/subprojects/gst-plugins-bad/meson.build
+@@ -54,7 +54,7 @@ endif
+ cdata = configuration_data()
+ cdata.set('ENABLE_NLS', 1)
+ 
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   msvc_args = [
+       # Ignore several spurious warnings for things gstreamer does very commonly
+       # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
+diff --git a/subprojects/gst-plugins-bad/sys/d3d11/meson.build b/subprojects/gst-plugins-bad/sys/d3d11/meson.build
+index ff557be..e754f54 100644
+--- a/subprojects/gst-plugins-bad/sys/d3d11/meson.build
++++ b/subprojects/gst-plugins-bad/sys/d3d11/meson.build
+@@ -91,7 +91,7 @@ if d3d11_winapi_app
+   d3d11_sources += ['gstd3d11window_corewindow.cpp',
+                     'gstd3d11window_swapchainpanel.cpp']
+   extra_dep += [runtimeobject_lib]
+-  if cc.get_id() == 'msvc' and get_option('b_sanitize') == 'address'
++  if cc.get_argument_syntax() == 'msvc' and get_option('b_sanitize') == 'address'
+     extra_args += ['/bigobj']
+   endif
+ endif
+@@ -128,7 +128,7 @@ endif
+ 
+ hlsl_precompiled = []
+ fxc = find_program ('fxc', required : get_option ('d3d11-hlsl-precompile'))
+-if cc.get_id() == 'msvc' and fxc.found()
++if cc.get_argument_syntax() == 'msvc' and fxc.found()
+   subdir('hlsl')
+   extra_args += ['-DHLSL_PRECOMPILED']
+ endif
+diff --git a/subprojects/gst-plugins-bad/sys/msdk/meson.build b/subprojects/gst-plugins-bad/sys/msdk/meson.build
+index 51bf953..12d2909 100644
+--- a/subprojects/gst-plugins-bad/sys/msdk/meson.build
++++ b/subprojects/gst-plugins-bad/sys/msdk/meson.build
+@@ -180,7 +180,7 @@ if host_machine.system() == 'windows'
+   endif
+   legacy_stdio_dep = cc.find_library('legacy_stdio_definitions', required: get_option('msdk'))
+   msdk_deps = declare_dependency(dependencies: [gstd3d11_dep, legacy_stdio_dep])
+-  msdk_deps_found = gstd3d11_dep.found() and legacy_stdio_dep.found() and cc.get_id() == 'msvc'
++  msdk_deps_found = gstd3d11_dep.found() and legacy_stdio_dep.found() and cc.get_argument_syntax() == 'msvc'
+ else
+   libdl_dep = cc.find_library('dl', required: get_option('msdk'))
+   libgudev_dep = dependency('gudev-1.0', required: get_option('msdk'), allow_fallback: true)
+diff --git a/subprojects/gst-plugins-bad/sys/qsv/libmfx/meson.build b/subprojects/gst-plugins-bad/sys/qsv/libmfx/meson.build
+index ab75be4..8dcaa61 100644
+--- a/subprojects/gst-plugins-bad/sys/qsv/libmfx/meson.build
++++ b/subprojects/gst-plugins-bad/sys/qsv/libmfx/meson.build
+@@ -55,7 +55,7 @@ else
+ endif
+ 
+ # suppress build warnings
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   libmfx_extra_args += cc.get_supported_arguments([
+     '/wd4189', # local variable is initialized but not referenced
+   ])
+diff --git a/subprojects/gst-plugins-bad/sys/va/meson.build b/subprojects/gst-plugins-bad/sys/va/meson.build
+index 250b961..c397a09 100644
+--- a/subprojects/gst-plugins-bad/sys/va/meson.build
++++ b/subprojects/gst-plugins-bad/sys/va/meson.build
+@@ -67,7 +67,7 @@ else
+ endif
+ 
+ # MSVC does not understand c99
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   c_std_arg = ['c_std=c11']
+ endif
+ 
+diff --git a/subprojects/gst-plugins-base/meson.build b/subprojects/gst-plugins-base/meson.build
+index 16a72e7..e619854 100644
+--- a/subprojects/gst-plugins-base/meson.build
++++ b/subprojects/gst-plugins-base/meson.build
+@@ -51,7 +51,7 @@ gst_libraries = []
+ 
+ cc = meson.get_compiler('c')
+ 
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   msvc_args = [
+       # Ignore several spurious warnings for things gstreamer does very commonly
+       # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
+diff --git a/subprojects/gst-plugins-good/meson.build b/subprojects/gst-plugins-good/meson.build
+index 8ae3651..9aada6f 100644
+--- a/subprojects/gst-plugins-good/meson.build
++++ b/subprojects/gst-plugins-good/meson.build
+@@ -40,7 +40,7 @@ static_build = get_option('default_library') == 'static'
+ cc = meson.get_compiler('c')
+ host_system = host_machine.system()
+ 
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   msvc_args = [
+       # Ignore several spurious warnings for things gstreamer does very commonly
+       # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
+diff --git a/subprojects/gst-plugins-ugly/meson.build b/subprojects/gst-plugins-ugly/meson.build
+index 83a979c..3af879d 100644
+--- a/subprojects/gst-plugins-ugly/meson.build
++++ b/subprojects/gst-plugins-ugly/meson.build
+@@ -38,7 +38,7 @@ if have_cxx
+   cxx = meson.get_compiler('cpp')
+ endif
+ 
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   msvc_args = [
+       # Ignore several spurious warnings for things gstreamer does very commonly
+       # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
+diff --git a/subprojects/gstreamer/gst/parse/meson.build b/subprojects/gstreamer/gst/parse/meson.build
+index b79a07c..891f907 100644
+--- a/subprojects/gstreamer/gst/parse/meson.build
++++ b/subprojects/gstreamer/gst/parse/meson.build
+@@ -16,7 +16,7 @@ else
+ endif
+ 
+ flex_cdata.set('FLEX', flex.full_path())
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   flex_cdata.set('FLEX_ARGS', '--nounistd')
+ else
+   flex_cdata.set('FLEX_ARGS', '')
+diff --git a/subprojects/gstreamer/meson.build b/subprojects/gstreamer/meson.build
+index 540d6d2..87b1d4c 100644
+--- a/subprojects/gstreamer/meson.build
++++ b/subprojects/gstreamer/meson.build
+@@ -48,7 +48,7 @@ endif
+ 
+ cdata = configuration_data()
+ 
+-if cc.get_id() == 'msvc'
++if cc.get_argument_syntax() == 'msvc'
+   msvc_args = [
+       # Ignore several spurious warnings for things gstreamer does very commonly
+       # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it

@@ -1,29 +1,15 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES
-        plugin-base-disable-no-unused.patch
-    )
-endif()
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 0d69896d0a83452320df0d0f56c710df1365a259cd3f48dc7cd4df18d45b27caea7174aafa15ae5eb8637ccdef192c1047185b369b7232db4eaacbc57ffaaa22
+    SHA512 fbd663bf2bf5b7cc0d6adfc9f18743cda6955855465d1a218ed8115bc94aad310fac8ca87036c4907dc57d7d857fb9872bb2237d83d11d57aad443e23d402cc9
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
-        fix-clang-cl-gstreamer.patch
-        fix-clang-cl-base.patch
-        fix-clang-cl-good.patch
-        fix-clang-cl-bad.patch
-        fix-clang-cl-ugly.patch
-        gstreamer-disable-no-unused.patch
         srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
-        base-must-be-enabled.patch
         no-downloads.patch
-        ${PATCHES}
 )
 
 vcpkg_find_acquire_program(FLEX)
@@ -118,6 +104,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 string(REPLACE "OFF" "disabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 string(REPLACE "ON" "enabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND FEATURE_OPTIONS -Dgst-full-target-type=static_library)
+    list(APPEND FEATURE_OPTIONS -Dgst-full-libraries=*)
+    list(APPEND FEATURE_OPTIONS -Dgstreamer:gstreamer-static-full=true)
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     set(PLUGIN_BASE_WINDOW_SYSTEM win32)
     set(PLUGIN_BASE_GL_PLATFORM wgl)
@@ -156,7 +148,6 @@ vcpkg_configure_meson(
         -Dlibnice=disabled
         -Ddevtools=disabled
         -Drtsp_server=disabled
-        -Domx=disabled
         -Dvaapi=disabled
         -Dsharp=disabled
         -Drs=disabled
@@ -176,7 +167,7 @@ vcpkg_configure_meson(
         -Dgstreamer:libdw=disabled
         -Dgstreamer:dbghelp=disabled
         -Dgstreamer:bash-completion=disabled
-        -Dgstreamer:coretracers=disabled
+        -Dgstreamer:coretracers=enabled
         -Dgstreamer:benchmarks=disabled
         -Dgstreamer:gst_debug=true
         # gst-plugins-base
@@ -229,6 +220,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:decklink=disabled
         -Dgst-plugins-bad:directfb=disabled
         -Dgst-plugins-bad:directsound=auto
+        -Dgst-plugins-bad:drm=disabled
         -Dgst-plugins-bad:dts=disabled
         -Dgst-plugins-bad:dvb=auto
         -Dgst-plugins-bad:faac=disabled
@@ -240,7 +232,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:gsm=disabled
         -Dgst-plugins-bad:ipcpipeline=auto
         -Dgst-plugins-bad:iqa=disabled
-        -Dgst-plugins-bad:kate=disabled
         -Dgst-plugins-bad:kms=disabled
         -Dgst-plugins-bad:ladspa=disabled
         -Dgst-plugins-bad:ldac=disabled
@@ -258,6 +249,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:openni2=disabled # libopenni2 not found
         -Dgst-plugins-bad:opensles=disabled
         -Dgst-plugins-bad:qroverlay=disabled
+        -Dgst-plugins-bad:qsv=disabled # dep on gst-libs/va which include header file libdrm/drm_fourcc.h belonging to libdrm which not exist in vcpkg
         -Dgst-plugins-bad:resindvd=disabled
         -Dgst-plugins-bad:rsvg=disabled # librsvg-2.0 not found
         -Dgst-plugins-bad:rtmp=disabled # librtmp not found
@@ -416,5 +408,16 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 vcpkg_fixup_pkgconfig()
+
+
+file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
+foreach(pc_file ${pc_files})
+    vcpkg_replace_string("${pc_file}" "\"-I\${libdir}/gstreamer-1.0/include\"" "")
+endforeach()
+
+file(GLOB pc_files_dbg "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+foreach(pc_file_dbg ${pc_files_dbg})
+    vcpkg_replace_string("${pc_file_dbg}" "\"-I\${libdir}/gstreamer-1.0/include\"" "")
+endforeach()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
