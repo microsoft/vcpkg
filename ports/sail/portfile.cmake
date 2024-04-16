@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
     REF "v${VERSION}"
-    SHA512 691a7ddb9a14a05d5b6cee82489df228869fd208e4635a00b465dde3e30bf2441e3c565cc6dbe3363368dc93c1ba46545d251b3a5c8a2865ffcc87e90d3e8226
+    SHA512 60a5923e0b95ecfeeb3f6dbc21f82da322ed34bdfd732501e90f89f5bbbb6907c8dbb79d8da09889df3f5a1e9d440c292d539c984d06c815058852b26658155e
     HEAD_REF master
     PATCHES
         fix-include-directory.patch
