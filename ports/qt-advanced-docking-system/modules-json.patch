@@ -1,0 +1,16 @@
+--- 4.3.0-1678e4b489.clean/src/CMakeLists.txt.old	2024-04-16 16:38:02.165998200 +0200
++++ 4.3.0-1678e4b489.clean/src/CMakeLists.txt	2024-04-16 16:37:35.949034500 +0200
+@@ -113,6 +113,13 @@ elseif(QT_VERSION_MAJOR STREQUAL "6")
+         CXX_STANDARD_REQUIRED ON)
+ endif()
+ 
++include(QtInstallHelpers)
++include(QtCMakeHelpers)
++include(QtModuleHelpers)
++qt_describe_module(${library_name})
++install(FILES "${CMAKE_BINARY_DIR}/share/Qt6/modules/qt6advanceddocking.json" DESTINATION ${CMAKE_INSTALL_PREFIX}/share/Qt6/modules/ OPTIONAL)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/share/Qt6/modules/qt6advanceddocking.json" DESTINATION ${CMAKE_INSTALL_PREFIX}/share/Qt6/modules/ OPTIONAL)
++
+ include(CMakePackageConfigHelpers)
+ write_basic_package_version_file(
+     "${library_name}ConfigVersion.cmake"
