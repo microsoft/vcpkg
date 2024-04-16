@@ -1,0 +1,13 @@
+--- 0.21.4.1-44dcfeb2ff/corelib/src/CMakeLists.txt.old	2024-04-12 09:59:07.656980900 +0200
++++ 0.21.4.1-44dcfeb2ff/corelib/src/CMakeLists.txt	2024-04-12 09:59:46.701218300 +0200
+@@ -747,8 +747,8 @@ IF(GTSAM_FOUND)
+ 	)
+ 	IF(WIN32)
+ 		#explicitly add metis target on windows (after gtsam target)
+-		SET(LIBRARIES
+-			${LIBRARIES}
++		SET(PUBLIC_LIBRARIES
++			${PUBLIC_LIBRARIES}
+ 			metis
+ 		)
+ 	ENDIF(WIN32)
