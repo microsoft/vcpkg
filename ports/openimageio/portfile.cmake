@@ -43,7 +43,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools       OIIO_BUILD_TOOLS
         viewer      ENABLE_IV
 )
-
+set(VCPKG_CMAKE_SYSTEM_VERSION 24)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
