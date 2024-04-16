@@ -9136,6 +9136,10 @@
       "baseline": "1.2.31",
       "port-version": 0
     },
+    "vladimirshaleev-ipaddress": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "vlfeat": {
       "baseline": "2020-07-10",
       "port-version": 3
