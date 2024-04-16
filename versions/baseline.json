@@ -6729,7 +6729,7 @@
       "port-version": 3
     },
     "perfetto": {
-      "baseline": "43.1",
+      "baseline": "44.0",
       "port-version": 0
     },
     "pffft": {
