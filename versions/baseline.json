@@ -277,8 +277,8 @@
       "port-version": 1
     },
     "assimp": {
-      "baseline": "5.3.1",
-      "port-version": 4
+      "baseline": "5.4.0",
+      "port-version": 0
     },
     "async-mqtt": {
       "baseline": "4.1.0",
@@ -437,11 +437,11 @@
       "port-version": 0
     },
     "azure-core-amqp-cpp": {
-      "baseline": "1.0.0-beta.7",
+      "baseline": "1.0.0-beta.8",
       "port-version": 0
     },
     "azure-core-cpp": {
-      "baseline": "1.11.2",
+      "baseline": "1.11.3",
       "port-version": 0
     },
     "azure-core-tracing-opentelemetry-cpp": {
@@ -449,7 +449,7 @@
       "port-version": 2
     },
     "azure-data-tables-cpp": {
-      "baseline": "1.0.0-beta.1",
+      "baseline": "1.0.0-beta.2",
       "port-version": 0
     },
     "azure-identity-cpp": {
@@ -473,7 +473,7 @@
       "port-version": 1
     },
     "azure-messaging-eventhubs-cpp": {
-      "baseline": "1.0.0-beta.6",
+      "baseline": "1.0.0-beta.7",
       "port-version": 0
     },
     "azure-security-attestation-cpp": {
@@ -1413,7 +1413,7 @@
       "port-version": 5
     },
     "c-ares": {
-      "baseline": "1.28.0",
+      "baseline": "1.28.1",
       "port-version": 0
     },
     "c-dbg-macro": {
@@ -1493,7 +1493,7 @@
       "port-version": 2
     },
     "catch2": {
-      "baseline": "3.5.3",
+      "baseline": "3.5.4",
       "port-version": 0
     },
     "cblas": {
@@ -2078,7 +2078,7 @@
     },
     "curl": {
       "baseline": "8.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "curlpp": {
       "baseline": "2018-06-15",
@@ -2513,7 +2513,7 @@
       "port-version": 5
     },
     "entt": {
-      "baseline": "3.13.1",
+      "baseline": "3.13.2",
       "port-version": 0
     },
     "epsilon": {
@@ -2830,7 +2830,7 @@
     },
     "freeimage": {
       "baseline": "3.18.0",
-      "port-version": 25
+      "port-version": 26
     },
     "freeopcua": {
       "baseline": "20190125",
@@ -2949,7 +2949,7 @@
       "port-version": 0
     },
     "gdcm": {
-      "baseline": "3.0.22",
+      "baseline": "3.0.23",
       "port-version": 0
     },
     "gdcm2": {
@@ -6473,8 +6473,8 @@
       "port-version": 0
     },
     "openldap": {
-      "baseline": "2.5.13",
-      "port-version": 1
+      "baseline": "2.5.17",
+      "port-version": 0
     },
     "openmama": {
       "baseline": "6.3.2",
@@ -6509,8 +6509,8 @@
       "port-version": 3
     },
     "openssl": {
-      "baseline": "3.2.1",
-      "port-version": 2
+      "baseline": "3.3.0",
+      "port-version": 0
     },
     "openssl-unix": {
       "baseline": "deprecated",
@@ -6698,7 +6698,7 @@
     },
     "pcre2": {
       "baseline": "10.42",
-      "port-version": 2
+      "port-version": 3
     },
     "pdal": {
       "baseline": "2.5.3",
@@ -6727,6 +6727,10 @@
     "pegtl-2": {
       "baseline": "2.8.3",
       "port-version": 3
+    },
+    "perfetto": {
+      "baseline": "43.1",
+      "port-version": 0
     },
     "pffft": {
       "baseline": "2021-10-09",
@@ -6977,7 +6981,7 @@
       "port-version": 0
     },
     "proxsuite": {
-      "baseline": "0.5.0",
+      "baseline": "0.6.4",
       "port-version": 0
     },
     "proxy": {
@@ -7574,7 +7578,7 @@
     },
     "re2": {
       "baseline": "2024-04-01",
-      "port-version": 1
+      "port-version": 2
     },
     "reactiveplusplus": {
       "baseline": "2.0.0",
@@ -7762,7 +7766,7 @@
     },
     "rtabmap": {
       "baseline": "0.21.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "rtabmap-res-tool": {
       "baseline": "0.21.4.1",
@@ -8577,7 +8581,7 @@
       "port-version": 5
     },
     "tgbot-cpp": {
-      "baseline": "1.7.2",
+      "baseline": "1.7.3",
       "port-version": 0
     },
     "tgc": {
@@ -9641,8 +9645,8 @@
       "port-version": 0
     },
     "zstd": {
-      "baseline": "1.5.5",
-      "port-version": 2
+      "baseline": "1.5.6",
+      "port-version": 0
     },
     "zstr": {
       "baseline": "1.0.7",
