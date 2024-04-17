@@ -9,7 +9,7 @@ add_library(sratom
     src/sratom.c
 )
 
-target_include_directories(sratom PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(sratom PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_SOURCE_DIR}")
 
 target_link_libraries(sratom PUBLIC lv2::lv2 serd::serd sord::sord)
 
@@ -31,7 +31,7 @@ install(
 )
 
 if(NOT DISABLE_INSTALL_HEADERS)
-    install(DIRECTORY sratom DESTINATION include)
+    install(DIRECTORY include/sratom DESTINATION include)
 endif()
 
 install(

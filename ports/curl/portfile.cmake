@@ -1,9 +1,18 @@
 string(REPLACE "." "_" curl_version "curl-${VERSION}")
+
+# Fix for HTTP compression introduced in 8.7.1; should be fixed the following release
+vcpkg_download_distfile(
+    COMPRESSION_FIX
+    URLS https://github.com/curl/curl/commit/b30d694a027eb771c02a3db0dee0ca03ccab7377.patch?full_index=1
+    FILENAME curl-compression-fix-b30d694a027eb771c02a3db0dee0ca03ccab7377.patch
+    SHA512 2658826a7331adb86cd7cd692dac6c7bf79bbd9c76c11780f33b1143b6d04edfe64223356701343c31209261decffc883ddba061d5370d7872a81f2a18780c33
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF "${curl_version}"
-    SHA512 ee9f6c3b5468ab547fc20822c18756a625f9f741e3d40958548a56b607f567f4ed782b8cce2d900c442e0da51faa8cb1fefa5d9f2d1581c79805a5b8fd4ec098
+    SHA512 38a1f7d7f5c83922cd4e0a858ac803d230d691c8f4df7e5086062c6991da740e626aa86675683282bc8555fc4cb962a08ba1a7ce817d78961d749d6d580fb9fa
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -15,6 +24,7 @@ vcpkg_from_github(
         export-components.patch
         dependencies.patch
         cmake-config.patch
+        "${COMPRESSION_FIX}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
