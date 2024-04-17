@@ -18,8 +18,9 @@ function(z_vcpkg_setup_pkgconfig_path)
 
     vcpkg_find_acquire_program(PKGCONFIG)
     get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
-    vcpkg_add_to_path("${pkgconfig_path}")
-
+    if(NOT "$ENV{PATH}" MATCHES "${pkgconfig_path}")
+      vcpkg_add_to_path("${pkgconfig_path}")
+    endif()
     set(ENV{PKG_CONFIG} "${PKGCONFIG}") # Set via native file?
 
     foreach(prefix IN ITEMS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
