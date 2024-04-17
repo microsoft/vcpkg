@@ -55,8 +55,6 @@ vcpkg_cmake_configure(
         -DINSTALL_HEADERS=OFF
         -DINSTALL_OTHER=OFF
         -DBUILD_APPS=OFF
-    MAYBE_UNUSED_VARIABLES
-        -DDCMTK_USE_FIND_PACKAGE_WIN_DEFAULT=ON
 )
 
 vcpkg_cmake_install()
