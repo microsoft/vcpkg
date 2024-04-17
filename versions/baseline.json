@@ -8318,7 +8318,7 @@
     },
     "spirv-reflect": {
       "baseline": "1.3.280.0",
-      "port-version": 0
+      "port-version": 1
     },
     "spirv-tools": {
       "baseline": "1.3.280.0",
