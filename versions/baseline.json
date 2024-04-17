@@ -4437,7 +4437,7 @@
       "port-version": 0
     },
     "libgnutls": {
-      "baseline": "3.8.3",
+      "baseline": "3.8.5",
       "port-version": 0
     },
     "libgo": {
