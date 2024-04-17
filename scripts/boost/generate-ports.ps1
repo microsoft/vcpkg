@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.84.0",
+    $version = "1.85.0",
     $portsDir = $null
 )
 
@@ -12,22 +12,12 @@ if ($null -eq $portsDir) {
     $portsDir = "$scriptsDir/../../ports"
 }
 
-if ($IsWindows) {
-    $vcpkg = "$scriptsDir/../../vcpkg.exe"
-    $curl = "curl.exe"
-}
-else {
-    $vcpkg = "$scriptsDir/../../vcpkg"
-    $curl = "curl"
-}
-
 # Beta builds contains a text in the version string
 $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
-    'boost-modular-build-helper' = 3;
 }
 
 function Get-PortVersion {
@@ -434,7 +424,7 @@ foreach ($library in $libraries) {
     $archive = "$scriptsDir/downloads/$library-boost-$version.tar.gz"
     if (!(Test-Path $archive)) {
         "Downloading boost/$library..."
-        & $curl -L "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" --output "$scriptsDir/downloads/$library-boost-$version.tar.gz"
+        & Invoke-WebRequest -Uri "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" -OutFile "$scriptsDir/downloads/$library-boost-$version.tar.gz"
     }
     $hash = & $vcpkg --x-wait-for-lock hash $archive
     # Remove prefix "Waiting to take filesystem lock on <path>/.vcpkg-root... "
@@ -460,7 +450,7 @@ foreach ($library in $libraries) {
         | Where-Object { $_ -is [System.IO.FileInfo] } `
         | ForEach-Object {
             Write-Verbose "${library}: processing file: $_"
-            Get-Content -LiteralPath $_
+            Get-Content -LiteralPath $_.FullName
         } `
         | Where-Object {
             $_ -match ' *# *include *[<"]boost\/'
