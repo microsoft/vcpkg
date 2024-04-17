@@ -1,6 +1,7 @@
 {
   "name": "libgit2",
   "version-semver": "1.8.0",
+  "port-version": 1,
   "description": "A C library implementing the Git core methods with a solid API",
   "homepage": "https://github.com/libgit2/libgit2",
   "license": null,
@@ -22,12 +23,21 @@
     "ssl"
   ],
   "features": {
+    "libssh": {
+      "description": "SSH support (libssh2)",
+      "dependencies": [
+        "libssh2"
+      ]
+    },
     "mbedtls": {
       "description": "SSL support (mbedTLS)",
       "supports": "!windows",
       "dependencies": [
         "mbedtls"
       ]
+    },
+    "openssh": {
+      "description": "SSH support (OpenSHH)"
     },
     "openssl": {
       "description": "SSL support (OpenSSL)",
@@ -47,14 +57,24 @@
         "pcre2"
       ]
     },
+    "schannel": {
+      "description": "SSL support (Schannel)",
+      "supports": "windows"
+    },
     "sectransp": {
       "description": "SSL support (sectransp)",
       "supports": "osx"
     },
     "ssh": {
-      "description": "SSH support via libssh2",
+      "description": "Default SSH backend",
       "dependencies": [
-        "libssh2"
+        {
+          "name": "libgit2",
+          "default-features": false,
+          "features": [
+            "libssh2"
+          ]
+        }
       ]
     },
     "ssl": {

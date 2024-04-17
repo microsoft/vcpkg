@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO libgit2/libgit2
     REF v1.8.0
     SHA512 e5634267bd9c6a594c9a954d09c657e7b8aadf213609bf7dd83b99863d0d0c7109a5277617dd508abc2da54ea3f12c2af1908d1aeb73c000e94056e2f3653144
-    HEAD_REF main
+    HEAD_REF master
     PATCHES
         c-standard.diff # for 'inline' in system headers
         cli-include-dirs.diff
@@ -25,6 +25,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 set(REGEX_BACKEND OFF)
 set(USE_HTTPS OFF)
+set(USE_SSH OFF)
 
 function(set_regex_backend VALUE)
     if(REGEX_BACKEND)
@@ -35,9 +36,17 @@ endfunction()
 
 function(set_tls_backend VALUE)
     if(USE_HTTPS)
-        message(FATAL_ERROR "Only one TLS backend (openssl,winhttp,sectransp,mbedtls) is allowed")
+        message(FATAL_ERROR "Only one TLS backend (openssl,winhttp,schannel,sectransp,mbedtls) is allowed")
     endif()
     set(USE_HTTPS ${VALUE} PARENT_SCOPE)
+endfunction()
+
+function(set_ssh_backend VALUE)
+    if(USE_SSH)
+        message(FATAL_ERROR "Only one SSH backend (openssh,libssh2) is allowed")
+        message(FATAL_ERROR "SSH backend already set")
+    endif()
+    set(USE_SSH ${VALUE} PARENT_SCOPE)
 endfunction()
 
 foreach(GIT2_FEATURE ${FEATURES})
@@ -49,10 +58,16 @@ foreach(GIT2_FEATURE ${FEATURES})
         set_tls_backend("OpenSSL")
     elseif(GIT2_FEATURE STREQUAL "winhttp")
         set_tls_backend("WinHTTP")
+    elseif(GIT2_FEATURE STREQUAL "schannel")
+        set_tls_backend("Schannel")
     elseif(GIT2_FEATURE STREQUAL "sectransp")
         set_tls_backend("SecureTransport")
     elseif(GIT2_FEATURE STREQUAL "mbedtls")
         set_tls_backend("mbedTLS")
+    elseif(GIT2_FEATURE STREQUAL "openssh")
+        set_ssh_backend("exec")
+    elseif(GIT2_FEATURE STREQUAL "libssh")
+        set_ssh_backend("libssh2")
     endif()
 endforeach()
 
@@ -65,7 +80,6 @@ vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS GIT2_FEATURES
     FEATURES
-        ssh     USE_SSH
         tools   BUILD_CLI
 )
 
@@ -74,8 +88,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTS=OFF
         -DUSE_HTTP_PARSER=system
-        -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}
+        -DUSE_SSH=${USE_SSH}
         -DSTATIC_CRT=${STATIC_CRT}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON
