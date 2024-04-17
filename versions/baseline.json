@@ -2945,7 +2945,7 @@
       "port-version": 0
     },
     "gdal": {
-      "baseline": "3.8.4",
+      "baseline": "3.8.5",
       "port-version": 0
     },
     "gdcm": {
@@ -4349,11 +4349,11 @@
       "port-version": 0
     },
     "libeventheader-decode": {
-      "baseline": "1.3.0",
+      "baseline": "1.3.3",
       "port-version": 0
     },
     "libeventheader-tracepoint": {
-      "baseline": "1.3.2",
+      "baseline": "1.3.3",
       "port-version": 0
     },
     "libevhtp": {
@@ -5057,15 +5057,15 @@
       "port-version": 0
     },
     "libtracepoint": {
-      "baseline": "1.3.2",
+      "baseline": "1.3.3",
       "port-version": 0
     },
     "libtracepoint-control": {
-      "baseline": "1.3.2",
+      "baseline": "1.3.3",
       "port-version": 0
     },
     "libtracepoint-decode": {
-      "baseline": "1.3.0",
+      "baseline": "1.3.3",
       "port-version": 0
     },
     "libu2f-server": {
@@ -6062,7 +6062,7 @@
     },
     "ncnn": {
       "baseline": "20240102",
-      "port-version": 0
+      "port-version": 1
     },
     "ncurses": {
       "baseline": "6.4",
@@ -6729,7 +6729,7 @@
       "port-version": 3
     },
     "perfetto": {
-      "baseline": "43.1",
+      "baseline": "44.0",
       "port-version": 0
     },
     "pffft": {
@@ -9136,6 +9136,10 @@
       "baseline": "1.2.31",
       "port-version": 0
     },
+    "vladimirshaleev-ipaddress": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "vlfeat": {
       "baseline": "2020-07-10",
       "port-version": 3
@@ -9202,7 +9206,7 @@
     },
     "vulkan-memory-allocator-hpp": {
       "baseline": "3.0.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "vulkan-sdk-components": {
       "baseline": "1.3.280.0",
