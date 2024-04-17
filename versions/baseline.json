@@ -1553,8 +1553,8 @@
       "port-version": 0
     },
     "cglm": {
-      "baseline": "0.9.2",
-      "port-version": 1
+      "baseline": "0.9.4",
+      "port-version": 0
     },
     "cgltf": {
       "baseline": "1.13",
