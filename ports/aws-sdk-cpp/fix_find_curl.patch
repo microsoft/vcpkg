@@ -7,7 +7,7 @@ index acf16c0..3a49fb4 100644
              message(STATUS "  Building Curl as part of AWS SDK")
          else()
 -            include(FindCURL)
-+            find_package(CURL CONFIG REQUIRED)
++            find_package(CURL REQUIRED)
              if(NOT CURL_FOUND)
                  message(FATAL_ERROR "Could not find curl")
 +            else()
