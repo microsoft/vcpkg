@@ -1,7 +1,7 @@
 {
   "name": "qcoro",
   "version": "0.10.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Coroutine support for Qt",
   "homepage": "https://www.github.com/danvratil/qcoro",
   "documentation": "https://qcoro.dvratil.cz",
@@ -59,13 +59,19 @@
     "qml": {
       "description": "Coroutine support for QtQml module",
       "dependencies": [
-        "qtdeclarative"
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
       ]
     },
     "quick": {
       "description": "Coroutine support for QtQuick module",
       "dependencies": [
-        "qtdeclarative"
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
       ]
     },
     "test": {
@@ -83,7 +89,10 @@
     "websockets": {
       "description": "Coroutine support for QtWebSockets module",
       "dependencies": [
-        "qtwebsockets"
+        {
+          "name": "qtwebsockets",
+          "default-features": false
+        }
       ]
     }
   }
