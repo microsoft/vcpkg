@@ -3337,8 +3337,8 @@
       "port-version": 0
     },
     "hareflow": {
-      "baseline": "0.1.0",
-      "port-version": 1
+      "baseline": "0.1.1",
+      "port-version": 0
     },
     "harfbuzz": {
       "baseline": "8.4.0",
