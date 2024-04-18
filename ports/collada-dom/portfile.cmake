@@ -10,6 +10,7 @@ vcpkg_from_github(
         use-vcpkg-minizip.patch
         fix-shared-keyword.patch
         fix-emscripten.patch
+        fix-compatibility-with-boost-1.85.patch
 )
 
 vcpkg_cmake_configure(
