@@ -22,12 +22,6 @@
     "ssl"
   ],
   "features": {
-    "libssh2": {
-      "description": "SSH support (libssh2)",
-      "dependencies": [
-        "libssh2"
-      ]
-    },
     "mbedtls": {
       "description": "SSL support (mbedTLS)",
       "supports": "!windows",
