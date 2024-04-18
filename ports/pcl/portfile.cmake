@@ -15,6 +15,7 @@ vcpkg_from_github(
         gh-5947-kinfu.patch
         gh-5985-inline.patch
         io_ply.patch
+        fix-compatibility-with-boost-1.85.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
