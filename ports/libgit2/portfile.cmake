@@ -59,7 +59,7 @@ foreach(GIT2_FEATURE ${FEATURES})
     elseif(GIT2_FEATURE STREQUAL "openssh")
         set(USE_SSH "exec")
     elseif(GIT2_FEATURE STREQUAL "ssh")
-        set(USE_SSH $<IF:$<BOOL:${USE_SSH}>:${USE_SSH}:ON>)
+        set(USE_SSH "$<IF:$<BOOL:${USE_SSH}>:${USE_SSH}:ON>")
     endif()
 endforeach()
 
