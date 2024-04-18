@@ -3,7 +3,7 @@
  2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/src/http/Server.C b/src/http/Server.C
-index b26a444..200b2ce 100644
+index 1b21529..fe8686d 100644
 --- a/src/http/Server.C
 +++ b/src/http/Server.C
 @@ -331,8 +331,8 @@ std::vector<asio::ip::address> Server::resolveAddress(asio::ip::tcp::resolver &r
@@ -18,14 +18,14 @@ index b26a444..200b2ce 100644
        result.push_back(it->endpoint().address());
      }
 diff --git a/src/web/FileUtils.C b/src/web/FileUtils.C
-index 8d49571..a15f091 100644
+index 122e2a9..7c30d09 100644
 --- a/src/web/FileUtils.C
 +++ b/src/web/FileUtils.C
-@@ -8,6 +8,7 @@
+@@ -7,6 +7,7 @@
+ #include "web/FileUtils.h"
  
- #ifndef WT_HAVE_POSIX_FILEIO
  #include <boost/filesystem/operations.hpp>
 +#include <boost/filesystem/directory.hpp>
- #else //WT_HAVE_POSIX_FILEIO
- #include <sys/types.h>
- #include <sys/stat.h>
+ 
+ #include "web/WebUtils.h"
+ #include "Wt/WException.h"
