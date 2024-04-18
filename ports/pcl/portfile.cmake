@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix-clang-cl.patch
         fix-pcl-exports.patch
         fix-kinfu.patch
+        fix-compatibility-with-boost-1.85.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)

@@ -1,0 +1,15 @@
+ .../include/pcl/recognition/face_detection/face_detector_data_provider.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/recognition/include/pcl/recognition/face_detection/face_detector_data_provider.h b/recognition/include/pcl/recognition/face_detection/face_detector_data_provider.h
+index 7b4a929..69ec949 100644
+--- a/recognition/include/pcl/recognition/face_detection/face_detector_data_provider.h
++++ b/recognition/include/pcl/recognition/face_detection/face_detector_data_provider.h
+@@ -13,6 +13,7 @@
+ 
+ #include <boost/algorithm/string.hpp>
+ #include <boost/filesystem/operations.hpp>
++#include <boost/filesystem/directory.hpp>
+ 
+ #include <fstream>
+ #include <string>
