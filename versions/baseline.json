@@ -6444,6 +6444,10 @@
       "baseline": "2022-07-18",
       "port-version": 0
     },
+    "openfhe": {
+      "baseline": "1.1.4",
+      "port-version": 0
+    },
     "openfx": {
       "baseline": "1.4",
       "port-version": 0

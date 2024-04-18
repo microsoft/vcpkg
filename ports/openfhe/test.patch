@@ -1,0 +1,465 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 94ff745..38bf25f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,6 +15,8 @@ if(CCACHE_PROGRAM)
+     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+ endif()
+ 
++set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
++
+ ### To use gcc/g++ on a Macintosh, you must set the Compilers
+ ### here, not inside the project
+ ##if(APPLE)
+@@ -164,8 +166,8 @@ else()
+     set (NATIVE_OPT "")
+ endif()
+ 
+-set(C_COMPILE_FLAGS "-Wall -Werror -O3 ${NATIVE_OPT} -DOPENFHE_VERSION=${OPENFHE_VERSION}")
+-set(CXX_COMPILE_FLAGS "-Wall -Werror -O3 ${NATIVE_OPT} -DOPENFHE_VERSION=${OPENFHE_VERSION} ${IGNORE_WARNINGS}")
++set(C_COMPILE_FLAGS "${C_COMPILE_FLAGS} ${NATIVE_OPT} -DOPENFHE_VERSION=${OPENFHE_VERSION}")
++set(CXX_COMPILE_FLAGS "${CXX_COMPILE_FLAGS} ${NATIVE_OPT} -DOPENFHE_VERSION=${OPENFHE_VERSION} ${IGNORE_WARNINGS}")
+ 
+ if ( EMSCRIPTEN )
+     set(EMSCRIPTEN_IGNORE_WARNINGS "-Wno-unused-but-set-variable -Wno-unknown-warning-option")
+@@ -181,6 +183,11 @@ endif()
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_COMPILE_FLAGS}")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_COMPILE_FLAGS}")
+ 
++if(MSVC)
++    # Add the /bigobj flag to the MSVC compiler options
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
++endif()
++
+ if(WITH_COVTEST)
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+@@ -287,12 +294,7 @@ elseif( "${NATIVE_SIZE}" EQUAL 64 )
+     if ( EMSCRIPTEN )
+         set( HAVE_INT128 FALSE)
+     endif()
+-    if( ${HAVE_INT64} )
+-        set( NATIVEINT 64 )
+-        message (STATUS "NATIVEINT is set to " ${NATIVEINT})
+-    else()
+-        message(SEND_ERROR "Cannot support NATIVE_SIZE == 64")
+-    endif()
++    set( NATIVEINT 64 )
+ elseif( "${NATIVE_SIZE}" EQUAL 32 )
+     if( ${HAVE_INT64} )
+         set( NATIVEINT 32 )
+@@ -456,8 +458,8 @@ if (WITH_OPENMP)
+ else()  # WITH_OPENMP == OFF
+     find_package (Threads REQUIRED)
+     # Disable unknown #pragma omp warning
+-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unknown-pragmas")
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas")
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+ endif()
+ 
+ #--------------------------------------------------------------------
+@@ -536,8 +538,11 @@ set( THIRDPARTYDIR ${CMAKE_CURRENT_SOURCE_DIR}/third-party )
+ include_directories( ${THIRDPARTYDIR}/include )
+ 
+ ### Handle third-party CEREAL
+-include_directories( ${THIRDPARTYDIR}/cereal/include )
+-install(DIRECTORY ${THIRDPARTYDIR}/cereal/include/ DESTINATION include/openfhe)
++# include_directories( ${THIRDPARTYDIR}/cereal/include )
++# install(DIRECTORY ${THIRDPARTYDIR}/cereal/include/ DESTINATION include/openfhe)
++find_package(cereal CONFIG REQUIRED)
++get_target_property(cereal_INCLUDE_DIRS cereal::cereal INTERFACE_INCLUDE_DIRECTORIES)
++include_directories(${cereal_INCLUDE_DIRS})
+ 
+ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/third-party/google-test/googletest )
+ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/third-party/google-test/googletest/include )
+@@ -648,8 +653,9 @@ set(DEMODATAPATH ${CMAKE_CURRENT_SOURCE_DIR}/demoData)
+ set(BINDEMODATAPATH ${CMAKE_CURRENT_BINARY_DIR}/demoData)
+ 
+ # copies demoData folder from the root of the repo to build/demoData if the folder does not exist
+-add_custom_target(third-party ALL
+-    COMMAND [ ! -d ${BINDEMODATAPATH} ] && cp -R ${DEMODATAPATH} ${BINDEMODATAPATH} && echo "-- Copied demoData files" || echo "-- demoData folder already exists" )
++install(DIRECTORY ${DEMODATAPATH} DESTINATION ${BINDEMODATAPATH})
++# add_custom_target(third-party ALL
++#     COMMAND [ ! -d ${BINDEMODATAPATH} ] && cp -R ${DEMODATAPATH} ${BINDEMODATAPATH} && echo "-- Copied demoData files" || echo "-- demoData folder already exists" )
+ 
+ # when running "make clean", additionally deletes the demoData folder and CMake cache file
+ set(ADDITIONAL_CLEAN_FILES "")
+diff --git a/src/binfhe/lib/rgsw-acc.cpp b/src/binfhe/lib/rgsw-acc.cpp
+index 7c191dd..bc426f9 100644
+--- a/src/binfhe/lib/rgsw-acc.cpp
++++ b/src/binfhe/lib/rgsw-acc.cpp
+@@ -49,6 +49,32 @@
+ #include <memory>
+ #include <vector>
+ 
++#ifdef _MSC_VER
++
++#include <intrin.h>
++int trailing_zeros(uint32_t value) {
++    unsigned long index;
++    if (_BitScanForward(&index, value)) {
++        return index;
++    } else {
++        return 32; // No set bit found
++    }
++}
++int trailing_zeros(uint64_t value) {
++    unsigned long index;
++    if (_BitScanForward64(&index, value)) {
++        return index;
++    } else {
++        return 64; // No set bit found
++    }
++}
++#else
++template <typename T>
++int trailing_zeros(T value) {
++    return __builtin_ctz(value);
++}
++#endif
++
+ namespace lbcrypto {
+ 
+ void RingGSWAccumulator::SignedDigitDecompose(const std::shared_ptr<RingGSWCryptoParams>& params,
+@@ -56,7 +82,7 @@ void RingGSWAccumulator::SignedDigitDecompose(const std::shared_ptr<RingGSWCrypt
+                                               std::vector<NativePoly>& output) const {
+     auto QHalf{params->GetQ().ConvertToInt<BasicInteger>() >> 1};
+     auto Q_int{params->GetQ().ConvertToInt<NativeInteger::SignedNativeInt>()};
+-    auto gBits{static_cast<NativeInteger::SignedNativeInt>(__builtin_ctz(params->GetBaseG()))};
++    auto gBits{static_cast<NativeInteger::SignedNativeInt>(trailing_zeros(params->GetBaseG()))};
+     auto gBitsMaxBits{static_cast<NativeInteger::SignedNativeInt>(NativeInteger::MaxBits() - gBits)};
+     // approximate gadget decomposition is used; the first digit is ignored
+     uint32_t digitsG2{(params->GetDigitsG() - 1) << 1};
+@@ -95,7 +121,7 @@ void RingGSWAccumulator::SignedDigitDecompose(const std::shared_ptr<RingGSWCrypt
+                                               const NativePoly& input, std::vector<NativePoly>& output) const {
+     auto QHalf{params->GetQ().ConvertToInt<BasicInteger>() >> 1};
+     auto Q_int{params->GetQ().ConvertToInt<NativeInteger::SignedNativeInt>()};
+-    auto gBits{static_cast<NativeInteger::SignedNativeInt>(__builtin_ctz(params->GetBaseG()))};
++    auto gBits{static_cast<NativeInteger::SignedNativeInt>(trailing_zeros(params->GetBaseG()))};
+     auto gBitsMaxBits{static_cast<NativeInteger::SignedNativeInt>(NativeInteger::MaxBits() - gBits)};
+     // approximate gadget decomposition is used; the first digit is ignored
+     uint32_t digitsG{params->GetDigitsG() - 1};
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index 09206a5..74f98e2 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -1,6 +1,7 @@
+ #
+ # CMakeLists.txt for CORE library
+ #
++include(GenerateExportHeader)
+ 
+ # all files named *.c or */cpp are compiled to form the library
+ file (GLOB_RECURSE CORE_SRC_FILES CONFIGURE_DEPENDS lib/*.c lib/*.cpp lib/utils/*.cpp)
+@@ -16,8 +17,11 @@ set(CORE_VERSION_MINOR ${OPENFHE_VERSION_MINOR})
+ set(CORE_VERSION_PATCH ${OPENFHE_VERSION_PATCH})
+ set(CORE_VERSION ${CORE_VERSION_MAJOR}.${CORE_VERSION_MINOR}.${CORE_VERSION_PATCH})
+ 
++set(CMAKE_CXX_VISIBILITY_PRESET hidden)
++set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+ add_library(coreobj OBJECT ${CORE_SRC_FILES})
+-add_dependencies(coreobj third-party)
++target_compile_definitions(coreobj PRIVATE coreobj_EXPORTS)
++generate_export_header(coreobj BASE_NAME openfhe)
+ 
+ set_property(TARGET coreobj PROPERTY POSITION_INDEPENDENT_CODE 1)
+ 
+diff --git a/src/core/include/lattice/stdlatticeparms.h b/src/core/include/lattice/stdlatticeparms.h
+index 7d54c5e..1cce286 100644
+--- a/src/core/include/lattice/stdlatticeparms.h
++++ b/src/core/include/lattice/stdlatticeparms.h
+@@ -38,6 +38,8 @@
+ 
+ //  #include "math/math-hal.h"
+ 
++#include "openfhe_export.h"
++
+ #include "utils/inttypes.h"
+ 
+ #include <iosfwd>
+@@ -96,11 +98,11 @@ class StdLatticeParm {
+     // will suffer MAKE SURE that the number of entries in the DistributionType
+     // enum is == the first index, and MAKE SURE that the number of entries in the
+     // SecurityLevel enum is == the second index
+-    static std::map<usint, StdLatticeParm*> byRing[3][6];
+-    static std::map<usint, StdLatticeParm*> byLogQ[3][6];
++    static OPENFHE_EXPORT std::map<usint, StdLatticeParm*> byRing[3][6];
++    static OPENFHE_EXPORT std::map<usint, StdLatticeParm*> byLogQ[3][6];
+ 
+-    static std::vector<StdLatticeParm> StandardLatticeParmSets;
+-    static bool initialized;
++    static OPENFHE_EXPORT std::vector<StdLatticeParm> StandardLatticeParmSets;
++    static OPENFHE_EXPORT bool initialized;
+ 
+ public:
+     StdLatticeParm(DistributionType distType, usint ringDim, SecurityLevel minSecLev, usint maxLogQ)
+diff --git a/src/core/include/math/discretegaussiangenerator.h b/src/core/include/math/discretegaussiangenerator.h
+index 6ecd265..08f0ea3 100644
+--- a/src/core/include/math/discretegaussiangenerator.h
++++ b/src/core/include/math/discretegaussiangenerator.h
+@@ -67,6 +67,7 @@
+ #define LBCRYPTO_INC_MATH_DISCRETEGAUSSIANGENERATOR_H_
+ 
+ #define _USE_MATH_DEFINES  // added for Visual Studio support
++#include <math.h>
+ 
+ #include "math/distributiongenerator.h"
+ 
+diff --git a/src/core/include/math/distributiongenerator.h b/src/core/include/math/distributiongenerator.h
+index 9604570..652c4dc 100644
+--- a/src/core/include/math/distributiongenerator.h
++++ b/src/core/include/math/distributiongenerator.h
+@@ -42,6 +42,8 @@
+ #include "utils/parallel.h"
+ #include "utils/prng/blake2engine.h"
+ 
++#include "openfhe_export.h"
++
+ #include <chrono>
+ #include <memory>
+ // #include <mutex>
+@@ -179,7 +181,7 @@ public:
+ 
+ private:
+     // shared pointer to a thread-specific PRNG engine
+-    static std::shared_ptr<PRNG> m_prng;
++    static OPENFHE_EXPORT std::shared_ptr<PRNG> m_prng;
+ 
+ #if !defined(FIXED_SEED)
+         // avoid contention on m_prng
+diff --git a/src/core/include/math/hal/bigintfxd/ubintfxd.h b/src/core/include/math/hal/bigintfxd/ubintfxd.h
+index b917c4c..fec613f 100644
+--- a/src/core/include/math/hal/bigintfxd/ubintfxd.h
++++ b/src/core/include/math/hal/bigintfxd/ubintfxd.h
+@@ -336,7 +336,7 @@ public:
+    *
+    * @param val
+    */
+-    BigIntegerFixedT(double val) __attribute__((deprecated("Cannot construct from a double")));  // NOLINT
++    BigIntegerFixedT(double val);  // NOLINT
+ 
+     ~BigIntegerFixedT() {}
+ 
+diff --git a/src/core/include/math/hal/bigintntl/ubintntl.h b/src/core/include/math/hal/bigintntl/ubintntl.h
+index f019958..77fd8fa 100644
+--- a/src/core/include/math/hal/bigintntl/ubintntl.h
++++ b/src/core/include/math/hal/bigintntl/ubintntl.h
+@@ -177,7 +177,7 @@ public:
+    *
+    * @param val
+    */
+-    myZZ(double val) __attribute__((deprecated("Cannot construct from a double")));  // NOLINT
++    myZZ(double val);  // NOLINT
+ 
+     // ASSIGNMENT OPERATORS
+ 
+diff --git a/src/core/include/math/hal/intnat/ubintnat.h b/src/core/include/math/hal/intnat/ubintnat.h
+index fb5cd7b..59e9c58 100644
+--- a/src/core/include/math/hal/intnat/ubintnat.h
++++ b/src/core/include/math/hal/intnat/ubintnat.h
+@@ -1919,7 +1919,27 @@ private:
+             uint128_t c{static_cast<uint128_t>(a) * b};
+             res.hi = static_cast<uint64_t>(c >> 64);
+             res.lo = static_cast<uint64_t>(c);
+-#elif defined(__EMSCRIPTEN__)  // web assembly
++#elif defined(__x86_64__)
++            // clang-format off
++            __asm__("mulq %[b]"
++                : [ lo ] "=a"(res.lo), [ hi ] "=d"(res.hi)
++                : [ a ] "%[lo]"(a), [ b ] "rm"(b)
++                : "cc");
++                // clang-format on
++#elif defined(__aarch64__)
++            typeD x;
++            x.hi = 0;
++            x.lo = a;
++            uint64_t y(b);
++            res.lo = x.lo * y;
++            asm("umulh %0, %1, %2\n\t" : "=r"(res.hi) : "r"(x.lo), "r"(y));
++            res.hi += x.hi * y;
++#elif defined(__arm__) || defined(__powerpc__)  // 32 bit processor
++            uint64_t wres(0), wa(a), wb(b);
++            wres   = wa * wb;
++            res.hi = wres >> 32;
++            res.lo = (uint32_t)wres & 0xFFFFFFFF;
++#else
+             uint64_t a1 = a >> 32;
+             uint64_t a2 = (uint32_t)a;
+             uint64_t b1 = b >> 32;
+@@ -1942,28 +1962,6 @@ private:
+             // if there is an overflow in temp, add 2^32
+             if ((temp < p1) || (temp < p2))
+                 res.hi += (uint64_t)1 << 32;
+-#elif defined(__x86_64__)
+-            // clang-format off
+-            __asm__("mulq %[b]"
+-                : [ lo ] "=a"(res.lo), [ hi ] "=d"(res.hi)
+-                : [ a ] "%[lo]"(a), [ b ] "rm"(b)
+-                : "cc");
+-                // clang-format on
+-#elif defined(__aarch64__)
+-            typeD x;
+-            x.hi = 0;
+-            x.lo = a;
+-            uint64_t y(b);
+-            res.lo = x.lo * y;
+-            asm("umulh %0, %1, %2\n\t" : "=r"(res.hi) : "r"(x.lo), "r"(y));
+-            res.hi += x.hi * y;
+-#elif defined(__arm__) || defined(__powerpc__)  // 32 bit processor
+-            uint64_t wres(0), wa(a), wb(b);
+-            wres   = wa * wb;
+-            res.hi = wres >> 32;
+-            res.lo = (uint32_t)wres & 0xFFFFFFFF;
+-#else
+-    #error Architecture not supported for MultD()
+ #endif
+         }
+ 
+diff --git a/src/core/include/math/math-hal.h b/src/core/include/math/math-hal.h
+index 0a1d081..f882e5d 100644
+--- a/src/core/include/math/math-hal.h
++++ b/src/core/include/math/math-hal.h
+@@ -37,9 +37,7 @@
+ #define LBCRYPTO_INC_MATH_HAL_H
+ 
+ // use of MS VC is not permitted because of various incompatibilities
+-#ifdef _MSC_VER
+-    #error "MSVC COMPILER IS NOT SUPPORTED"
+-#endif
++
+ 
+ #include "config_core.h"
+ #include "version.h"
+diff --git a/src/core/include/utils/prng/blake2engine.h b/src/core/include/utils/prng/blake2engine.h
+index 48ff401..43c92b8 100644
+--- a/src/core/include/utils/prng/blake2engine.h
++++ b/src/core/include/utils/prng/blake2engine.h
+@@ -142,8 +142,8 @@ class Blake2Engine {
+   void Generate() {
+     // m_counter is the input to the hash function
+     // m_buffer is the output
+-    if (blake2xb(m_buffer.begin(), m_buffer.size() * sizeof(result_type),
+-                 &m_counter, sizeof(m_counter), m_seed.cbegin(),
++    if (blake2xb(m_buffer.data(), m_buffer.size() * sizeof(result_type),
++                 &m_counter, sizeof(m_counter), m_seed.data(),
+                  m_seed.size() * sizeof(result_type)) != 0) {
+       OPENFHE_THROW("PRNG: blake2xb failed");
+     }
+diff --git a/src/core/lib/math/chebyshev.cpp b/src/core/lib/math/chebyshev.cpp
+index 907cb42..cf4b4d0 100644
+--- a/src/core/lib/math/chebyshev.cpp
++++ b/src/core/lib/math/chebyshev.cpp
+@@ -34,10 +34,11 @@
+   This code provides Chebyshev approximation utilities
+  */
+ 
++#define _USE_MATH_DEFINES
++#include <cmath>
++
+ #include "math/chebyshev.h"
+ #include "utils/exception.h"
+-
+-#include <cmath>
+ #include <cstdint>
+ #include <functional>
+ #include <vector>
+diff --git a/src/core/lib/math/discretegaussiangeneratorgeneric.cpp b/src/core/lib/math/discretegaussiangeneratorgeneric.cpp
+index 5215a9d..09f9a5c 100644
+--- a/src/core/lib/math/discretegaussiangeneratorgeneric.cpp
++++ b/src/core/lib/math/discretegaussiangeneratorgeneric.cpp
+@@ -52,6 +52,9 @@
+ #include <random>
+ #include <vector>
+ 
++#define _USE_MATH_DEFINES // for C
++#include <math.h>
++
+ namespace lbcrypto {
+ 
+ // const double DG_ERROR = 8.27181e-25;
+diff --git a/src/core/lib/utils/get-call-stack.cpp b/src/core/lib/utils/get-call-stack.cpp
+index 28c0490..6665af5 100644
+--- a/src/core/lib/utils/get-call-stack.cpp
++++ b/src/core/lib/utils/get-call-stack.cpp
+@@ -30,7 +30,7 @@
+ //==================================================================================
+ #include "utils/get-call-stack.h"
+ 
+-#if defined(__linux__) && defined(__GNUC__)
++#if defined(__linux__) && defined(__GNUC__) && !defined(__ANDROID__)
+ // clang-format off
+ #include "utils/demangle.h"
+ 
+diff --git a/src/pke/include/cryptocontext.h b/src/pke/include/cryptocontext.h
+index ef5cfeb..c37b524 100644
+--- a/src/pke/include/cryptocontext.h
++++ b/src/pke/include/cryptocontext.h
+@@ -2757,8 +2757,7 @@ public:
+    * @return new evaluation key
+    */
+     EvalKey<Element> ReKeyGen(const PrivateKey<Element> originalPrivateKey,
+-                              const PrivateKey<Element> newPrivateKey) const
+-        __attribute__((deprecated("functionality removed from OpenFHE")));
++                              const PrivateKey<Element> newPrivateKey) const;
+ 
+     /**
+    * ReEncrypt - Proxy Re-Encryption mechanism for OpenFHE
+diff --git a/src/pke/include/encoding/packedencoding.h b/src/pke/include/encoding/packedencoding.h
+index 8a88540..2d25cf4 100644
+--- a/src/pke/include/encoding/packedencoding.h
++++ b/src/pke/include/encoding/packedencoding.h
+@@ -157,8 +157,7 @@ public:
+    * @param m the encoding cyclotomic order.
+    * @params modulus is the plaintext modulus
+    */
+-    static void SetParams(usint m, const PlaintextModulus& modulus)
+-        __attribute__((deprecated("use SetParams(usint m, EncodingParams p)")));
++    static void SetParams(usint m, const PlaintextModulus& modulus);
+ 
+     /**
+    * SetLength of the plaintext to the given size
+diff --git a/src/pke/include/schemebase/base-fhe.h b/src/pke/include/schemebase/base-fhe.h
+index 761620b..252f719 100644
+--- a/src/pke/include/schemebase/base-fhe.h
++++ b/src/pke/include/schemebase/base-fhe.h
+@@ -222,7 +222,7 @@ public:
+    */
+     virtual void EvalCompareSwitchPrecompute(const CryptoContextImpl<Element>& ccCKKS, uint32_t pLWE, double scaleSign,
+                                              bool unit) {
+-        OPENFHE_THROW(not_implemented_error, "EvalCompareSwitchPrecompute is not supported for this scheme");
++        OPENFHE_THROW("EvalCompareSwitchPrecompute is not supported for this scheme");
+     }
+ 
+     /**
+diff --git a/src/pke/lib/cryptocontextfactory.cpp b/src/pke/lib/cryptocontextfactory.cpp
+index 5e1cdb5..19de5a6 100644
+--- a/src/pke/lib/cryptocontextfactory.cpp
++++ b/src/pke/lib/cryptocontextfactory.cpp
+@@ -35,8 +35,6 @@
+ 
+ namespace lbcrypto {
+ 
+-template <>
+-std::vector<CryptoContext<DCRTPoly>> CryptoContextFactory<DCRTPoly>::AllContexts = {};
+ 
+ template <typename Element>
+ CryptoContext<Element> CryptoContextFactory<Element>::FindContext(std::shared_ptr<CryptoParametersBase<Element>> params,
+diff --git a/src/pke/lib/scheme/ckksrns/ckksrns-utils.cpp b/src/pke/lib/scheme/ckksrns/ckksrns-utils.cpp
+index da0eeff..f5addc5 100644
+--- a/src/pke/lib/scheme/ckksrns/ckksrns-utils.cpp
++++ b/src/pke/lib/scheme/ckksrns/ckksrns-utils.cpp
+@@ -28,11 +28,12 @@
+ // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ //==================================================================================
++#define _USE_MATH_DEFINES
++#include <cmath>
+ 
+ #include "scheme/ckksrns/ckksrns-utils.h"
+ #include "utils/exception.h"
+ 
+-#include <cmath>
+ #include <algorithm>
+ #include <functional>
+ #include <vector>
