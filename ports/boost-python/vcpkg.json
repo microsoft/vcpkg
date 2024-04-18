@@ -5,7 +5,6 @@
   "description": "Boost python module",
   "homepage": "https://github.com/boostorg/python",
   "license": "BSL-1.0",
-  "supports": "!uwp & !emscripten & !ios & !android",
   "dependencies": [
     {
       "name": "boost-align",
@@ -116,13 +115,14 @@
   "features": {
     "python2": {
       "description": "Build with Python2 support",
-      "supports": "!(arm & windows)",
+      "supports": "!(arm & osx) & !(arm & windows) & !uwp",
       "dependencies": [
         "python2"
       ]
     },
     "python3": {
       "description": "Build with Python3 support",
+      "supports": "!uwp & !mingw",
       "dependencies": [
         "python3"
       ]

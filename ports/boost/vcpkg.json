@@ -432,7 +432,6 @@
     },
     {
       "name": "boost-python",
-      "platform": "!uwp & !emscripten & !ios & !android",
       "version>=": "1.85.0"
     },
     {

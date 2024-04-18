@@ -105,7 +105,6 @@
           "features": [
             "python3"
           ],
-          "platform": "!uwp & !emscripten & !ios & !android",
           "version>=": "1.85.0"
         },
         "python3"
