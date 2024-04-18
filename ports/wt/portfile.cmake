@@ -8,6 +8,7 @@ vcpkg_from_github(
         0002-link-glew.patch
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
+        fix-compatibility-with-boost-1.85.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
