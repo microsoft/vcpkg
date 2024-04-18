@@ -41,14 +41,6 @@ function(set_tls_backend VALUE)
     set(USE_HTTPS ${VALUE} PARENT_SCOPE)
 endfunction()
 
-function(set_ssh_backend VALUE)
-    if(USE_SSH)
-        message(FATAL_ERROR "Only one SSH backend (openssh,libssh2) is allowed")
-        message(FATAL_ERROR "SSH backend already set")
-    endif()
-    set(USE_SSH ${VALUE} PARENT_SCOPE)
-endfunction()
-
 foreach(GIT2_FEATURE ${FEATURES})
     if(GIT2_FEATURE STREQUAL "pcre")
         set_regex_backend("pcre")
@@ -65,9 +57,9 @@ foreach(GIT2_FEATURE ${FEATURES})
     elseif(GIT2_FEATURE STREQUAL "mbedtls")
         set_tls_backend("mbedTLS")
     elseif(GIT2_FEATURE STREQUAL "openssh")
-        set_ssh_backend("exec")
-    elseif(GIT2_FEATURE STREQUAL "libssh2")
-        set_ssh_backend("libssh2")
+        set(USE_SSH "exec")
+    elseif(GIT2_FEATURE STREQUAL "ssh")
+        set(USE_SSH $<IF:$<BOOL:${USE_SSH}>:${USE_SSH}:ON>)
     endif()
 endforeach()
 
@@ -88,6 +80,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTS=OFF
         -DUSE_HTTP_PARSER=system
+        -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}
         -DUSE_SSH=${USE_SSH}
         -DSTATIC_CRT=${STATIC_CRT}

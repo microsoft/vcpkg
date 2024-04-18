@@ -65,15 +65,9 @@
       "supports": "osx"
     },
     "ssh": {
-      "description": "Default SSH backend",
+      "description": "SSH support via libssh2",
       "dependencies": [
-        {
-          "name": "libgit2",
-          "default-features": false,
-          "features": [
-            "libssh2"
-          ]
-        }
+        "libssh2"
       ]
     },
     "ssl": {
