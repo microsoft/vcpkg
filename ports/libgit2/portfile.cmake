@@ -25,7 +25,6 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 set(REGEX_BACKEND OFF)
 set(USE_HTTPS OFF)
-set(USE_SSH OFF)
 
 function(set_regex_backend VALUE)
     if(REGEX_BACKEND)
@@ -56,15 +55,18 @@ foreach(GIT2_FEATURE ${FEATURES})
         set_tls_backend("SecureTransport")
     elseif(GIT2_FEATURE STREQUAL "mbedtls")
         set_tls_backend("mbedTLS")
-    elseif(GIT2_FEATURE STREQUAL "openssh")
-        set(USE_SSH "exec")
-    elseif(GIT2_FEATURE STREQUAL "ssh")
-        set(USE_SSH "$<IF:$<BOOL:${USE_SSH}>:${USE_SSH}:ON>")
     endif()
 endforeach()
 
 if(NOT REGEX_BACKEND)
     message(FATAL_ERROR "Must choose pcre or pcre2 regex backend")
+endif()
+
+set(USE_SSH OFF)
+if("openssh" IN_LIST "${FEATURES}")
+    set(USE_SHH "exec")
+elseif("ssh" IN_LIST "${FEATURES}")
+    set(USE_SHH "libssh2") # same as `ON`
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
