@@ -20,7 +20,7 @@ index 804b78e..86d9d45 100644
      message(FATAL_ERROR "DNN: TFLite is not supported without enabled 'flatbuffers'. Check build configuration.")
    endif()
 -  list(APPEND libs ocv.3rdparty.flatbuffers)
-+  list(APPEND libs ocv.3rdparty.flatbuffers flatbuffers::flatbuffers)
++  list(APPEND libs flatbuffers::flatbuffers)
    list(APPEND fw_hdrs "${CMAKE_CURRENT_LIST_DIR}/misc/tflite/schema_generated.h")
    list(APPEND fw_inc "${CMAKE_CURRENT_LIST_DIR}/misc/tflite")
 
