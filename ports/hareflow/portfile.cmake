@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO coveooss/hareflow
     REF "v${VERSION}"
     SHA512 96138675a37e381db97d963b339ab2d6472573d0e1d215bb485141d1a92be0c9658db1abb849d6e7849b396e9a877e5f0ed2ce332b68b44b7dda21536733158a
-    HEAD_REF master
+    HEAD_REF main
 )
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
