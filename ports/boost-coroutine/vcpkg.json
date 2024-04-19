@@ -5,7 +5,7 @@
   "description": "Boost coroutine module",
   "homepage": "https://github.com/boostorg/coroutine",
   "license": "BSL-1.0",
-  "supports": "!(arm & windows) & !uwp & !emscripten",
+  "supports": "!uwp & !emscripten & !(arm & windows)",
   "dependencies": [
     {
       "name": "boost-assert",

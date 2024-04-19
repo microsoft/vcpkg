@@ -5,6 +5,7 @@
   "description": "Boost mysql module",
   "homepage": "https://github.com/boostorg/mysql",
   "license": "BSL-1.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "boost-asio",

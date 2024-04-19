@@ -5,6 +5,7 @@
   "description": "Boost odeint module",
   "homepage": "https://github.com/boostorg/odeint",
   "license": "BSL-1.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "boost-assert",

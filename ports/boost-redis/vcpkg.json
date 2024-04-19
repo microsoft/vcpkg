@@ -5,6 +5,7 @@
   "description": "Boost redis module",
   "homepage": "https://github.com/boostorg/redis",
   "license": "BSL-1.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "boost-asio",

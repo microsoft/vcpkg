@@ -28,6 +28,7 @@
     },
     {
       "name": "boost-asio",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -44,7 +45,7 @@
     },
     {
       "name": "boost-beast",
-      "platform": "!emscripten",
+      "platform": "!uwp & !emscripten",
       "version>=": "1.85.0"
     },
     {
@@ -73,7 +74,7 @@
     },
     {
       "name": "boost-cobalt",
-      "platform": "!osx & !ios & !android",
+      "platform": "!uwp & !osx & !ios & !android",
       "version>=": "1.85.0"
     },
     {
@@ -86,6 +87,7 @@
     },
     {
       "name": "boost-compute",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -119,6 +121,7 @@
     },
     {
       "name": "boost-convert",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -127,12 +130,12 @@
     },
     {
       "name": "boost-coroutine",
-      "platform": "!(arm & windows) & !uwp & !emscripten",
+      "platform": "!uwp & !emscripten & !(arm & windows)",
       "version>=": "1.85.0"
     },
     {
       "name": "boost-coroutine2",
-      "platform": "!emscripten",
+      "platform": "!uwp & !emscripten",
       "version>=": "1.85.0"
     },
     {
@@ -153,6 +156,7 @@
     },
     {
       "name": "boost-dll",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -207,6 +211,7 @@
     },
     {
       "name": "boost-geometry",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -215,6 +220,7 @@
     },
     {
       "name": "boost-graph",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -227,6 +233,7 @@
     },
     {
       "name": "boost-histogram",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -310,6 +317,7 @@
     },
     {
       "name": "boost-math",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -342,14 +350,17 @@
     },
     {
       "name": "boost-multiprecision",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
       "name": "boost-mysql",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
       "name": "boost-nowide",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -358,6 +369,7 @@
     },
     {
       "name": "boost-odeint",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -374,7 +386,7 @@
     },
     {
       "name": "boost-parameter-python",
-      "platform": "!emscripten",
+      "platform": "!uwp & !emscripten",
       "version>=": "1.85.0"
     },
     {
@@ -407,7 +419,7 @@
     },
     {
       "name": "boost-process",
-      "platform": "!emscripten",
+      "platform": "!uwp & !emscripten",
       "version>=": "1.85.0"
     },
     {
@@ -458,6 +470,7 @@
     },
     {
       "name": "boost-redis",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -572,6 +585,7 @@
     },
     {
       "name": "boost-units",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -588,6 +602,7 @@
     },
     {
       "name": "boost-uuid",
+      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {

@@ -5,6 +5,7 @@
   "description": "Boost multiprecision module",
   "homepage": "https://github.com/boostorg/multiprecision",
   "license": "BSL-1.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "boost-assert",

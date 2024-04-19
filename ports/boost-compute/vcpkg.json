@@ -5,6 +5,7 @@
   "description": "Boost compute module",
   "homepage": "https://github.com/boostorg/compute",
   "license": "BSL-1.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "boost-algorithm",

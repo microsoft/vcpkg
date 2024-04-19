@@ -5,6 +5,7 @@
   "description": "Boost asio module",
   "homepage": "https://github.com/boostorg/asio",
   "license": "BSL-1.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "boost-align",
@@ -47,10 +48,7 @@
     "ssl": {
       "description": "Build with SSL support",
       "dependencies": [
-        {
-          "name": "openssl",
-          "platform": "!emscripten"
-        }
+        "openssl"
       ]
     }
   }

@@ -5,6 +5,7 @@
   "description": "Boost math module",
   "homepage": "https://github.com/boostorg/math",
   "license": "BSL-1.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "boost-assert",
