@@ -1,0 +1,12 @@
+diff --git a/librtmp/rtmp_sys.h b/librtmp/rtmp_sys.h
+index 5b3eb54e86767a45a91f941014113ca9e62b5b74..5b4c1e98a12b2b2dc3009fee007ac140fd2745f8 100644
+--- a/librtmp/rtmp_sys.h
++++ b/librtmp/rtmp_sys.h
+@@ -43,6 +43,7 @@
+ #define sleep(n)	Sleep(n*1000)
+ #define msleep(n)	Sleep(n)
+ #define SET_RCVTIMEO(tv,s)	int tv = s*1000
++#include <sys/types.h>
+ #else /* !_WIN32 */
+ #include <sys/types.h>
+ #include <sys/socket.h>

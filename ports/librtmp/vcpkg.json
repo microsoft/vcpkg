@@ -1,15 +1,30 @@
 {
   "name": "librtmp",
   "version": "2.6",
+  "port-version": 1,
   "description": "RTMPDump Real-Time Messaging Protocol API",
   "homepage": "https://rtmpdump.mplayerhq.hu",
   "license": "LGPL-2.1",
   "dependencies": [
-    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
     },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
-  ]
+  ],
+  "default-features": [
+    "crypto"
+  ],
+  "features": {
+    "crypto": {
+      "description": "Build librtmp with CRYPTO and SSL support",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
 }
