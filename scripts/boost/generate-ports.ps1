@@ -132,7 +132,7 @@ $portData = @{
             }
         }
     };
-    "boost-parameter-python" = @{ "supports" = "!uwp & !emscripten" };
+    "boost-parameter-python" = @{ "supports" = "!uwp & !emscripten & !ios & !android" };
     "boost-process"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-python"           = @{
         "default-features" = @("python3");

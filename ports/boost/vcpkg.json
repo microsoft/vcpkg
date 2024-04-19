@@ -386,7 +386,7 @@
     },
     {
       "name": "boost-parameter-python",
-      "platform": "!uwp & !emscripten",
+      "platform": "!uwp & !emscripten & !ios & !android",
       "version>=": "1.85.0"
     },
     {

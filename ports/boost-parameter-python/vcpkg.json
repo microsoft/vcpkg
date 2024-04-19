@@ -5,7 +5,7 @@
   "description": "Boost parameter_python module",
   "homepage": "https://github.com/boostorg/parameter_python",
   "license": "BSL-1.0",
-  "supports": "!uwp & !emscripten",
+  "supports": "!uwp & !emscripten & !ios & !android",
   "dependencies": [
     {
       "name": "boost-config",
