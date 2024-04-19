@@ -6944,6 +6944,10 @@
       "baseline": "2023-10-16",
       "port-version": 0
     },
+    "pravila00-enumflag": {
+      "baseline": "2024-04-12",
+      "port-version": 0
+    },
     "pravila00-make-vector": {
       "baseline": "2023-04-10",
       "port-version": 0
