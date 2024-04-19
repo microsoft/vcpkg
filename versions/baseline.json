@@ -6573,7 +6573,7 @@
       "port-version": 0
     },
     "opus": {
-      "baseline": "1.4",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "opusfile": {
