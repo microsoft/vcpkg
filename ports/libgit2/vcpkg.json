@@ -30,7 +30,7 @@
       ]
     },
     "openssh": {
-      "description": "SSH support (OpenSHH)"
+      "description": "SSH support via invoking command-line OpenSSH"
     },
     "openssl": {
       "description": "SSL support (OpenSSL)",

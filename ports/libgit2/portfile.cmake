@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO libgit2/libgit2
     REF v1.8.0
     SHA512 e5634267bd9c6a594c9a954d09c657e7b8aadf213609bf7dd83b99863d0d0c7109a5277617dd508abc2da54ea3f12c2af1908d1aeb73c000e94056e2f3653144
-    HEAD_REF master
+    HEAD_REF main
     PATCHES
         c-standard.diff # for 'inline' in system headers
         cli-include-dirs.diff
