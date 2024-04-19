@@ -1,43 +1,31 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0a5af42..636eef7 100644
+index b785a8e..f214a32 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -647,26 +647,32 @@ if(WEBP_BUILD_EXTRAS)
-                         ${CMAKE_CURRENT_BINARY_DIR}/src ${SDL_INCLUDE_DIR})
+@@ -665,6 +665,10 @@ if(WEBP_BUILD_EXTRAS)
+                         ${CMAKE_CURRENT_BINARY_DIR}/src ${SDL2_INCLUDE_DIRS})
      set(WEBP_HAVE_SDL 1)
      target_compile_definitions(vwebp_sdl PUBLIC WEBP_HAVE_SDL)
 +    target_compile_definitions(vwebp_sdl PRIVATE WEBP_HAVE_JUST_SDL_H)
 +    if(WIN32)
 +        target_link_libraries(vwebp_sdl dxguid winmm)
 +    endif()
-   endif()
- endif()
  
- if(WEBP_BUILD_WEBP_JS)
-   # The default stack size changed from 5MB to 64KB in 3.1.27. See
-   # https://crbug.com/webp/614.
-   if(EMSCRIPTEN_VERSION VERSION_GREATER_EQUAL "3.1.27")
-      # TOTAL_STACK size was renamed to STACK_SIZE in 3.1.27. The old name was
-      # kept for compatibility, but prefer the new one in case it is removed in
-      # the future.
-      set(emscripten_stack_size "-sSTACK_SIZE=5MB")
-   else()
-      set(emscripten_stack_size "-sTOTAL_STACK=5MB")
-   endif()
-   # wasm2js does not support SIMD.
-+  find_package(SDL REQUIRED)
+     set(CMAKE_REQUIRED_INCLUDES "${SDL2_INCLUDE_DIRS}")
+     check_c_source_compiles(
+@@ -699,8 +703,9 @@ if(WEBP_BUILD_WEBP_JS)
    if(NOT WEBP_ENABLE_SIMD)
      # JavaScript version
      add_executable(webp_js ${CMAKE_CURRENT_SOURCE_DIR}/extras/webp_to_sdl.c)
--    target_link_libraries(webp_js webpdecoder SDL)
+-    target_link_libraries(webp_js webpdecoder SDL2)
 +    target_link_libraries(webp_js webpdecoder ${SDL_LIBRARY})
      target_include_directories(webp_js PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 +    target_include_directories(webp_js PRIVATE ${SDL_INCLUDE_DIR})
      set(WEBP_HAVE_SDL 1)
      set_target_properties(
        webp_js
-@@ -675,12 +681,15 @@ if(WEBP_BUILD_WEBP_JS)
-          -sEXPORTED_RUNTIME_METHODS=cwrap")
+@@ -715,12 +720,15 @@ if(WEBP_BUILD_WEBP_JS)
+          -sALLOW_MEMORY_GROWTH")
      set_target_properties(webp_js PROPERTIES OUTPUT_NAME webp)
      target_compile_definitions(webp_js PUBLIC EMSCRIPTEN WEBP_HAVE_SDL)
 +    target_compile_definitions(webp_js PUBLIC EMSCRIPTEN WEBP_HAVE_JUST_SDL_H)
@@ -45,11 +33,11 @@ index 0a5af42..636eef7 100644
  
    # WASM version
    add_executable(webp_wasm ${CMAKE_CURRENT_SOURCE_DIR}/extras/webp_to_sdl.c)
--  target_link_libraries(webp_wasm webpdecoder SDL)
+-  target_link_libraries(webp_wasm webpdecoder SDL2)
 +  target_link_libraries(webp_wasm webpdecoder ${SDL_LIBRARY})
    target_include_directories(webp_wasm PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 +  target_include_directories(webp_wasm PRIVATE ${SDL_INCLUDE_DIR})
 +  target_compile_definitions(webp_wasm PUBLIC EMSCRIPTEN WEBP_HAVE_JUST_SDL_H)
    set_target_properties(
      webp_wasm
-     PROPERTIES LINK_FLAGS "-sWASM=1 ${emscripten_stack_size} \
+     PROPERTIES
