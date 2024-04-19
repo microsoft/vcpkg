@@ -46,7 +46,6 @@
     },
     {
       "name": "boost-filesystem",
-      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {
@@ -116,7 +115,6 @@
     },
     {
       "name": "boost-random",
-      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {

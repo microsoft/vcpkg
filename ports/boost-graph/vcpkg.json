@@ -122,7 +122,6 @@
     },
     {
       "name": "boost-random",
-      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {

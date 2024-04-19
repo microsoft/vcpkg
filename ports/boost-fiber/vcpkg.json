@@ -26,7 +26,6 @@
     },
     {
       "name": "boost-context",
-      "platform": "!uwp & !emscripten",
       "version>=": "1.85.0"
     },
     {
@@ -35,7 +34,6 @@
     },
     {
       "name": "boost-filesystem",
-      "platform": "!uwp",
       "version>=": "1.85.0"
     },
     {

@@ -104,7 +104,7 @@ $portData = @{
             "python3" = @{
                 "description"  = "Build Python3 bindings";
                 "supports"     = "!static";
-                "dependencies" = @(@{ "name" = "boost-python"; "features" = @( "python3" ) }, "python3");
+                "dependencies" = @(@{ "name" = "boost-python"; "features" = @( "python3" ); "platform" = "!uwp & !emscripten & !ios & !android" }, "python3");
             }
         }
     };
@@ -124,15 +124,15 @@ $portData = @{
     "boost-process"          = @{ "supports" = "!emscripten" };
     "boost-python"           = @{
         "default-features" = @("python3");
+        "supports"         = "!uwp & !emscripten & !ios & !android";
         "features"         = @{
             "python2" = @{
                 "description"  = "Build with Python2 support";
-                "supports"     = "!(arm & osx) & !(arm & windows) & !uwp";
+                "supports"     = "!(arm & windows)";
                 "dependencies" = @("python2");
             };
             "python3" = @{
                 "description"  = "Build with Python3 support";
-                "supports"     = "!uwp & !mingw";
                 "dependencies" = @("python3");
             }
         }
@@ -160,10 +160,11 @@ function GeneratePortName() {
 
 function GeneratePortDependency() {
     param (
-        [string]$Library
+        [string]$Library,
+        [bool]$WithPlatform
     )
     $portName = GeneratePortName $Library
-    if ($portData.Contains($portName) -and $portData[$portName].Contains('supports')) {
+    if ($WithPlatform -and $portData.Contains($portName) -and $portData[$portName].Contains('supports')) {
         @{name = $portName; platform = $portData[$portName]['supports'] }
     }
     else {
@@ -592,15 +593,15 @@ foreach ($library in $libraries) {
             $deps = $deps | Select-Object -Unique
         }
 
-        $deps = @($deps | ForEach-Object { GeneratePortDependency $_ })
+        $deps = @($deps | ForEach-Object { GeneratePortDependency -Library $_ -WithPlatform $false})
         $deps += @("boost-vcpkg-helpers")
 
         $needsBuild = $false
         if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "function_types") {
             $deps += @(
-                @{ name = "boost-build"; host = $True },
-                @{ name = "boost-modular-build-helper"; host = $True },
-                @{ name = "vcpkg-cmake"; host = $True }
+                @{ name = "boost-build"; host = $true },
+                @{ name = "boost-modular-build-helper"; host = $true },
+                @{ name = "vcpkg-cmake"; host = $true }
             )
             $needsBuild = $true
         }
@@ -611,7 +612,7 @@ foreach ($library in $libraries) {
             -Dependencies $deps `
             -NeedsBuild $needsBuild
 
-        $boostPortDependencies += @(GeneratePortDependency $library)
+        $boostPortDependencies += @(GeneratePortDependency -Library $library -WithPlatform $true)
     }
     finally {
         Pop-Location
@@ -650,7 +651,7 @@ if ($updateServicePorts) {
         -PortName "boost-modular-build-helper" `
         -Description "Internal vcpkg port used to build Boost libraries" `
         -License "MIT" `
-        -Dependencies @("boost-uninstall", @{ name = "vcpkg-cmake"; host = $True }, @{ name = "vcpkg-cmake-get-vars"; host = $True })
+        -Dependencies @("boost-uninstall", @{ name = "vcpkg-cmake"; host = $true }, @{ name = "vcpkg-cmake-get-vars"; host = $true })
 
     # Generate manifest files for boost-build
     GeneratePortManifest `
