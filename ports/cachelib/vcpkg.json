@@ -11,7 +11,9 @@
     "fmt",
     {
       "name": "folly",
-      "features": ["libaio"]
+      "features": [
+        "libaio"
+      ]
     },
     "gflags",
     "glog",
