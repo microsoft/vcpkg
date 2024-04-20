@@ -1,5 +1,5 @@
 diff --git a/folly/memory/UninitializedMemoryHacks.h b/folly/memory/UninitializedMemoryHacks.h
-index bd31c88..9f640a8 100644
+index daf5eb735..4ef1ca79d 100644
 --- a/folly/memory/UninitializedMemoryHacks.h
 +++ b/folly/memory/UninitializedMemoryHacks.h
 @@ -101,6 +101,9 @@ template <
@@ -16,7 +16,17 @@ index bd31c88..9f640a8 100644
      }
      detail::unsafeStringSetLargerSize(s, n);
    }
-+#endif // STL workaround
++#endif // defined(_MSVC_STL_UPDATE) && _MSVC_STL_UPDATE >= 202206L
  }
  
  /**
+@@ -421,6 +425,9 @@ struct MakeUnsafeVectorSetLargerSize : std::vector<T> {
+ } // namespace folly
+ 
+ #if defined(FOLLY_DECLARE_VECTOR_RESIZE_WITHOUT_INIT)
++#if defined(_MSVC_STL_UPDATE) && _MSVC_STL_UPDATE >= 202206L
++#else
+ FOLLY_DECLARE_VECTOR_RESIZE_WITHOUT_INIT(char)
+ FOLLY_DECLARE_VECTOR_RESIZE_WITHOUT_INIT(unsigned char)
++#endif // defined(_MSVC_STL_UPDATE) && _MSVC_STL_UPDATE >= 202206L
+ #endif
