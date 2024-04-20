@@ -2653,7 +2653,7 @@
       "port-version": 0
     },
     "fbthrift": {
-      "baseline": "2024.01.01.00",
+      "baseline": "2024.04.15.00",
       "port-version": 0
     },
     "fcl": {
@@ -6993,7 +6993,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2024.01.01.00",
+      "baseline": "2024.04.15.00",
       "port-version": 1
     },
     "psimd": {
