@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/ChakraCore
     REF 2af598f04ab508f9231d6e26f0f82f5a57561413
-    SHA512 0
+    SHA512 a42138cb5906d8f6cbdab32fad042f626bacb62450839f66d6b27831fcd5bd93039f68423c82d460cf1147ce82908c04595442f90be3bf67e2066547d0fe0291
     HEAD_REF master
     PATCHES
         add-missing-reference.patch # https://github.com/chakra-core/ChakraCore/pull/6862
