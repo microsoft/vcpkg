@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF "pcl-${VERSION}"
-    SHA512 0ea388d5f4ccdc1e5fcace6a1e1b90843be1a4ed2e1d37cc3c80d8abc0e868324d8f9da80513f1cb3f16738e00586f29cac151ce0d501645514f280aee8b1d7f
+    REF 8412f3955877a27db3a5d613bee6ea77cb08d762 # unreleased
+    SHA512 3b08ba644b35ccf286520c82299db6d825d30e59ab66b86d01ec9a4169557751f5760c2729058de4271fc9bf3af0b58be942d2ed3b469a7eef7ccc3f3d0f03ee
     HEAD_REF master
     PATCHES
         add-gcc-version-check.patch
@@ -11,11 +11,8 @@ vcpkg_from_github(
         install-layout.patch
         install-examples.patch
         fix-clang-cl.patch
-        gh-5926-exports.patch
-        gh-5947-kinfu.patch
         gh-5985-inline.patch
         io_ply.patch
-        fix-compatibility-with-boost-1.85.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
