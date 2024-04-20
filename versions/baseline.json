@@ -2697,7 +2697,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2024.01.01.00",
+      "baseline": "2024.04.15.00",
       "port-version": 0
     },
     "flagpp": {
