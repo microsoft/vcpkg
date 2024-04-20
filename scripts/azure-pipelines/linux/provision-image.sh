@@ -34,7 +34,7 @@ APT_PACKAGES="$APT_PACKAGES at libxt-dev gperf libxaw7-dev cifs-utils \
   libxcursor-dev yasm libnuma1 libnuma-dev libtool-bin libltdl-dev \
   flex bison libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
   xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full \
-  pkg-config meson nasm cmake ninja-build libaio-dev libaio1"
+  pkg-config meson nasm cmake ninja-build"
 
 ## required by qt5-base
 APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
