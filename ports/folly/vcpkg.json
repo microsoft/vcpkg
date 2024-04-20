@@ -50,6 +50,10 @@
         "libsodium"
       ]
     },
+    "libaio": {
+      "description": "Support compile with libaio",
+      "supports": "linux & x64"
+    },
     "liburing": {
       "description": "Support compile with liburing",
       "dependencies": [
