@@ -20,21 +20,3 @@ index bd31c88..9f640a8 100644
  }
  
  /**
-@@ -244,6 +248,8 @@ struct MakeUnsafeStringSetLargerSize {
- #elif defined(_MSC_VER)
- // MSVC
- 
-+#if defined(_MSVC_STL_UPDATE) && _MSVC_STL_UPDATE >= 202206L
-+#else
- template <typename Tag, typename T, typename A, A Ptr_Eos>
- struct MakeUnsafeStringSetLargerSize {
-   friend void unsafeStringSetLargerSizeImpl(
-@@ -262,7 +268,7 @@ struct MakeUnsafeStringSetLargerSize {
-       void (std::basic_string<TYPE>::*)(std::size_t),           \
-       &std::basic_string<TYPE>::_Eos>;                          \
-   FOLLY_DECLARE_STRING_RESIZE_WITHOUT_INIT_IMPL(TYPE)
--
-+#endif // workaround
- #else
- #warning \
-     "No implementation for resizeWithoutInitialization of std::basic_string"
