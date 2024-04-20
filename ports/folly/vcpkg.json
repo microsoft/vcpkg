@@ -44,15 +44,15 @@
         "bzip2"
       ]
     },
+    "libaio": {
+      "description": "Support compile with libaio",
+      "supports": "linux & x64"
+    },
     "libsodium": {
       "description": "Support libsodium for cryto",
       "dependencies": [
         "libsodium"
       ]
-    },
-    "libaio": {
-      "description": "Support compile with libaio",
-      "supports": "linux & x64"
     },
     "liburing": {
       "description": "Support compile with liburing",
