@@ -5,7 +5,7 @@
   "description": "Boost beast module",
   "homepage": "https://github.com/boostorg/beast",
   "license": "BSL-1.0",
-  "supports": "!uwp & !emscripten",
+  "supports": "!uwp & !emscripten & !(arm & windows)",
   "dependencies": [
     {
       "name": "boost-asio",

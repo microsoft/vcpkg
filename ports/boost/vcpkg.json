@@ -28,7 +28,7 @@
     },
     {
       "name": "boost-asio",
-      "platform": "!uwp",
+      "platform": "!uwp & !emscripten & !(arm & windows)",
       "version>=": "1.85.0"
     },
     {
@@ -45,7 +45,7 @@
     },
     {
       "name": "boost-beast",
-      "platform": "!uwp & !emscripten",
+      "platform": "!uwp & !emscripten & !(arm & windows)",
       "version>=": "1.85.0"
     },
     {
@@ -74,7 +74,7 @@
     },
     {
       "name": "boost-cobalt",
-      "platform": "!uwp & !osx & !ios & !android",
+      "platform": "!uwp & !emscripten & !(arm & windows) & !osx & !ios & !android",
       "version>=": "1.85.0"
     },
     {
@@ -173,7 +173,7 @@
     },
     {
       "name": "boost-fiber",
-      "platform": "!uwp & !(arm & windows) & !emscripten",
+      "platform": "!uwp & !emscripten & !(arm & windows)",
       "version>=": "1.85.0"
     },
     {
@@ -308,7 +308,7 @@
     },
     {
       "name": "boost-log",
-      "platform": "!uwp & !emscripten",
+      "platform": "!uwp & !emscripten & !(arm & windows)",
       "version>=": "1.85.0"
     },
     {
@@ -355,7 +355,7 @@
     },
     {
       "name": "boost-mysql",
-      "platform": "!uwp",
+      "platform": "!uwp & !emscripten & !(arm & windows)",
       "version>=": "1.85.0"
     },
     {
@@ -419,7 +419,7 @@
     },
     {
       "name": "boost-process",
-      "platform": "!uwp & !emscripten",
+      "platform": "!uwp & !emscripten & !(arm & windows)",
       "version>=": "1.85.0"
     },
     {
@@ -470,7 +470,7 @@
     },
     {
       "name": "boost-redis",
-      "platform": "!uwp",
+      "platform": "!uwp & !emscripten & !(arm & windows)",
       "version>=": "1.85.0"
     },
     {

@@ -43,7 +43,7 @@ $portData = @{
         }
     };
     "boost-asio"             = @{
-        "supports" = "!uwp";
+        "supports" = "!uwp & !emscripten & !(arm & windows)";
         "features" = @{
             "ssl" = @{
                 "description"  = "Build with SSL support";
@@ -51,10 +51,10 @@ $portData = @{
             }
         }
     };
-    "boost-beast"            = @{ "supports" = "!uwp & !emscripten" };
+    "boost-beast"            = @{ "supports" = "!uwp & !emscripten & !(arm & windows)" };
     "boost-dll"              = @{ "supports" = "!uwp" };
     "boost-fiber"            = @{
-        "supports" = "!uwp & !(arm & windows) & !emscripten";
+        "supports" = "!uwp & !emscripten & !(arm & windows)";
         "features" = @{
             "numa" = @{
                 "description" = "Enable NUMA support";
@@ -85,13 +85,13 @@ $portData = @{
             };
         };
     };
-    "boost-cobalt"           = @{ "supports" = "!uwp & !osx & !ios & !android" };
+    "boost-cobalt"           = @{ "supports" = "!uwp & !emscripten & !(arm & windows) & !osx & !ios & !android" };
     "boost-compute"          = @{ "supports" = "!uwp" };
     "boost-convert"          = @{ "supports" = "!uwp" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!uwp & !emscripten & !(arm & windows)" };
     "boost-coroutine2"       = @{ "supports" = "!uwp & !emscripten" };
-    "boost-log"              = @{ "supports" = "!uwp & !emscripten" };
+    "boost-log"              = @{ "supports" = "!uwp & !emscripten & !(arm & windows)" };
     "boost-locale"           = @{
         "dependencies" = @(@{ "name" = "libiconv"; "platform" = "!uwp & !windows & !mingw" });
         "supports"     = "!uwp";
@@ -115,7 +115,7 @@ $portData = @{
             }
         }
     };
-    "boost-mysql"            = @{ "supports" = "!uwp" };
+    "boost-mysql"            = @{ "supports" = "!uwp & !emscripten & !(arm & windows)" };
     "boost-nowide"           = @{ "supports" = "!uwp" };
     "boost-geometry"         = @{ "supports" = "!uwp"; };
     "boost-graph"            = @{ "supports" = "!uwp"; };
@@ -133,7 +133,7 @@ $portData = @{
         }
     };
     "boost-parameter-python" = @{ "supports" = "!uwp & !emscripten & !ios & !android" };
-    "boost-process"          = @{ "supports" = "!uwp & !emscripten" };
+    "boost-process"          = @{ "supports" = "!uwp & !emscripten & !(arm & windows)" };
     "boost-python"           = @{
         "default-features" = @("python3");
         "supports"         = "!uwp & !emscripten & !ios & !android";
@@ -150,7 +150,7 @@ $portData = @{
         }
     };
     "boost-random"           = @{ "supports" = "!uwp" };
-    "boost-redis"            = @{ "supports" = "!uwp" };
+    "boost-redis"            = @{ "supports" = "!uwp & !emscripten & !(arm & windows)" };
     "boost-regex"            = @{
         "features" = @{
             "icu" = @{

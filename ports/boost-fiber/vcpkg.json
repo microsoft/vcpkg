@@ -5,7 +5,7 @@
   "description": "Boost fiber module",
   "homepage": "https://github.com/boostorg/fiber",
   "license": "BSL-1.0",
-  "supports": "!uwp & !(arm & windows) & !emscripten",
+  "supports": "!uwp & !emscripten & !(arm & windows)",
   "dependencies": [
     {
       "name": "boost-algorithm",

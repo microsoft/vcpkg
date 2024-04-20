@@ -5,7 +5,7 @@
   "description": "Boost process module",
   "homepage": "https://github.com/boostorg/process",
   "license": "BSL-1.0",
-  "supports": "!uwp & !emscripten",
+  "supports": "!uwp & !emscripten & !(arm & windows)",
   "dependencies": [
     {
       "name": "boost-algorithm",
