@@ -9,7 +9,10 @@
     "fbthrift",
     "fizz",
     "fmt",
-    "folly",
+    {
+      "name": "folly",
+      "features": ["libaio"]
+    },
     "gflags",
     "glog",
     "gtest",
