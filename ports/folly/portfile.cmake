@@ -9,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 c563aa64efa3098235db5f6354cdbc96d829f8bfc24e24464e0cae65279d00f1bba722c7060c2e76c89723ef66ef94225a02d6fb65e24fa6125adb619fc1d74b
+    SHA512 a3bf212fcbbb2db85f6212bbc383fb9106d54a692c9c76c23a13c4d0e163195623733382c067734af95b9f70c5d218e2672133df39aa72e3cdab4a009b52f24b
     HEAD_REF main
     PATCHES
         reorder-glog-gflags.patch
@@ -17,7 +17,6 @@ vcpkg_from_github(
         boost-1.70.patch
         fix-windows-minmax.patch
         fix-deps.patch
-        openssl.patch # from https://github.com/facebook/folly/pull/2016
         disable-uninitialized-resize-on-new-stl.patch
         fix-unistd-include.patch
 )
