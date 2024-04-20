@@ -426,7 +426,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.11.285",
-      "port-version": 0
+      "port-version": 1
     },
     "azmq": {
       "baseline": "2023-03-23",
@@ -1561,8 +1561,8 @@
       "port-version": 0
     },
     "cglm": {
-      "baseline": "0.9.2",
-      "port-version": 1
+      "baseline": "0.9.4",
+      "port-version": 0
     },
     "cgltf": {
       "baseline": "1.13",
@@ -2078,7 +2078,7 @@
     },
     "cudnn": {
       "baseline": "7.6.5",
-      "port-version": 10
+      "port-version": 11
     },
     "cunit": {
       "baseline": "2.1.3",
@@ -2966,7 +2966,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.10",
-      "port-version": 3
+      "port-version": 4
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -3345,12 +3345,12 @@
       "port-version": 0
     },
     "hareflow": {
-      "baseline": "0.1.0",
-      "port-version": 1
+      "baseline": "0.1.1",
+      "port-version": 0
     },
     "harfbuzz": {
       "baseline": "8.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hash-library": {
       "baseline": "8",
@@ -3801,7 +3801,7 @@
       "port-version": 0
     },
     "juce": {
-      "baseline": "7.0.11",
+      "baseline": "7.0.12",
       "port-version": 0
     },
     "jwt-cpp": {
@@ -3853,7 +3853,7 @@
       "port-version": 1
     },
     "kerbal": {
-      "baseline": "2024.2.1",
+      "baseline": "2024.4.1",
       "port-version": 0
     },
     "keystone": {
@@ -4085,8 +4085,8 @@
       "port-version": 1
     },
     "laszip": {
-      "baseline": "3.4.3",
-      "port-version": 1
+      "baseline": "3.4.4",
+      "port-version": 0
     },
     "launch-darkly-server": {
       "baseline": "2.8.6",
@@ -4281,8 +4281,8 @@
       "port-version": 0
     },
     "libdatachannel": {
-      "baseline": "0.20.1",
-      "port-version": 1
+      "baseline": "0.20.3",
+      "port-version": 0
     },
     "libdatrie": {
       "baseline": "0.2.13",
@@ -4445,7 +4445,7 @@
       "port-version": 0
     },
     "libgnutls": {
-      "baseline": "3.8.3",
+      "baseline": "3.8.5",
       "port-version": 0
     },
     "libgo": {
@@ -5165,7 +5165,7 @@
       "port-version": 1
     },
     "libwebp": {
-      "baseline": "1.3.2",
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "libwebsockets": {
@@ -6102,15 +6102,15 @@
     },
     "netgen": {
       "baseline": "6.2.2401",
-      "port-version": 0
+      "port-version": 1
     },
     "nethost": {
       "baseline": "8.0.3",
       "port-version": 0
     },
     "nettle": {
-      "baseline": "3.8.1",
-      "port-version": 1
+      "baseline": "3.9.1",
+      "port-version": 0
     },
     "networkdirect-sdk": {
       "baseline": "2.0.1",
@@ -6581,7 +6581,7 @@
       "port-version": 0
     },
     "opus": {
-      "baseline": "1.4",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "opusfile": {
@@ -6705,8 +6705,8 @@
       "port-version": 5
     },
     "pcre2": {
-      "baseline": "10.42",
-      "port-version": 3
+      "baseline": "10.43",
+      "port-version": 0
     },
     "pdal": {
       "baseline": "2.5.3",
@@ -6873,7 +6873,7 @@
       "port-version": 0
     },
     "pocketpy": {
-      "baseline": "1.4.3",
+      "baseline": "1.4.5",
       "port-version": 0
     },
     "poco": {
@@ -6950,6 +6950,10 @@
     },
     "pravila00-enum-string": {
       "baseline": "2023-10-16",
+      "port-version": 0
+    },
+    "pravila00-enumflag": {
+      "baseline": "2024-04-12",
       "port-version": 0
     },
     "pravila00-make-vector": {
@@ -7737,7 +7741,7 @@
       "port-version": 0
     },
     "rocksdb": {
-      "baseline": "9.0.0",
+      "baseline": "9.1.0",
       "port-version": 0
     },
     "rpclib": {
@@ -7837,8 +7841,8 @@
       "port-version": 0
     },
     "sail": {
-      "baseline": "0.9.1",
-      "port-version": 1
+      "baseline": "0.9.4",
+      "port-version": 0
     },
     "sajson": {
       "baseline": "2018-09-21",
@@ -8326,7 +8330,7 @@
     },
     "spirv-reflect": {
       "baseline": "1.3.280.0",
-      "port-version": 0
+      "port-version": 1
     },
     "spirv-tools": {
       "baseline": "1.3.280.0",
@@ -8357,7 +8361,7 @@
       "port-version": 1
     },
     "sqlite3": {
-      "baseline": "3.45.2",
+      "baseline": "3.45.3",
       "port-version": 0
     },
     "sqlitecpp": {
