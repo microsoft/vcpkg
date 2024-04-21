@@ -12,6 +12,10 @@ if(VCPKG_LIBRARY_LINKAGE MATCHES "dynamic")
     set(YOMM2_SHARED ON)
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE MATCHES "static")
+    set(VCPKG_BUILD_TYPE release) # header-only
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
