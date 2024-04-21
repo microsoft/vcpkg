@@ -1,7 +1,8 @@
 {
   "name": "qt5-multimedia",
   "version": "5.15.13",
-  "description": "Qt5 Multimedia Module - Classes and widgets for audio, video, radio and camera functionality",
+  "port-version": 1,
+  "description": "Qt Multimedia is an essential module that provides a rich set of QML types and C++ classes to handle multimedia content. It also provides necessary APIs to access the camera and radio functionality.",
   "license": null,
   "dependencies": [
     {

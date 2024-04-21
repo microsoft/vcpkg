@@ -4,7 +4,7 @@
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
   "name": "azure-messaging-eventhubs-cpp",
-  "version-semver": "1.0.0-beta.6",
+  "version-semver": "1.0.0-beta.7",
   "description": [
     "Microsoft Azure Messaging Event Hubs SDK for C++",
     "This library provides Azure Messaging Event Hubs SDK."
@@ -15,7 +15,7 @@
     {
       "name": "azure-core-amqp-cpp",
       "default-features": false,
-      "version>=": "1.0.0-beta.7"
+      "version>=": "1.0.0-beta.8"
     },
     {
       "name": "vcpkg-cmake",
