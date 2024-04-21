@@ -1522,7 +1522,7 @@
     },
     "cctag": {
       "baseline": "1.0.2",
-      "port-version": 5
+      "port-version": 6
     },
     "cctz": {
       "baseline": "2.4",
@@ -6234,7 +6234,7 @@
     },
     "numcpp": {
       "baseline": "2.12.1",
-      "port-version": 0
+      "port-version": 1
     },
     "nuspell": {
       "baseline": "5.1.4",
