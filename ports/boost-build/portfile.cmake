@@ -10,11 +10,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${VERSION}
-    SHA512 61540a3b2b7b6167ed8286daed4b4fde515ae9e0de81d17ef688d7972a0a6325b15afbe4e9a73ec883a81d5b86998d612cadbdc79abaf1b087a74e4e6b7cc2b5
+    SHA512 17b3dbaa3defb04357e8f0b86a2f18e2e40167fa7691675e7fc751067b7bef121461f77b4cbf81d2e2aeb5bd4a9ae5ece175c2e34ff703661adb4cf25b2a98be
     HEAD_REF master
     PATCHES
         0002-fix-get-version.patch
-        0003-fix-emscripten.patch
         0004-workaround-MSVC-codegen-bug-in-17.5-on-ARM64.patch
 )
 
