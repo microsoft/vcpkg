@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c99d71a267..34fd8445b1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -697,3 +697,6 @@ if(BUILD_HTML_DOCUMENTATION OR BUILD_MAN_DOCUMENTATION)
+ 
+     endif()
+ endif()
++
++message(STATUS "CMAKE_C_IMPLICIT_LINK_LIBRARIES:${CMAKE_C_IMPLICIT_LINK_LIBRARIES}")
++message(STATUS "CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES:${CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES}")
+\ No newline at end of file

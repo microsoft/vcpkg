@@ -23,6 +23,7 @@ vcpkg_from_github(
     PATCHES
         cmake-config.patch
         lapacke.patch
+        print-implicit-libs.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -156,4 +157,29 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRE
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindLAPACK.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+  file(READ "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-out.log" config_log)
+  string(REGEX MATCH "CMAKE_C_IMPLICIT_LINK_LIBRARIES:([^\n]+)" implicit_c_libs "${config_log}")
+  set(implicit_c_libs "${CMAKE_MATCH_1}")
+  list(REVERSE implicit_c_libs)
+  list(REMOVE_DUPLICATES implicit_c_libs)
+  list(REVERSE implicit_c_libs)
+  string(REGEX MATCH "CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES:([^\n]+)" implicit_fortran_libs "${config_log}")
+  set(implicit_fortran_libs "${CMAKE_MATCH_1}")
+  list(REVERSE implicit_fortran_libs)
+  list(REMOVE_DUPLICATES implicit_fortran_libs)
+  list(REVERSE implicit_fortran_libs)
+  list(REMOVE_ITEM implicit_fortran_libs ${implicit_c_libs} quadmath m) # libgfortran already has quadmath and m as a dependency
+  list(JOIN implicit_fortran_libs " -l" implicit_fortran_libs)
+  message(STATUS "implicit_fortran_libs:${implicit_fortran_libs}|implicit_c_libs:${implicit_c_libs}")
+  if(NOT implicit_fortran_libs STREQUAL "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack-reference.pc" "-llapack" "-llapack -l${implicit_fortran_libs}")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack-reference.pc" "-llapack" "-llapack -l${implicit_fortran_libs}")
+    endif()
+  endif()
+endif()
+
