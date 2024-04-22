@@ -6,11 +6,11 @@
   "license": "BSD-3-Clause",
   "dependencies": [
     "abseil",
-    "utf8-range",
     {
       "name": "protobuf",
       "host": true
     },
+    "utf8-range",
     {
       "name": "vcpkg-cmake",
       "host": true
