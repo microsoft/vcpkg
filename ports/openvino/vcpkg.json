@@ -56,10 +56,6 @@
     },
     "hetero",
     "ir",
-    {
-      "name": "npu",
-      "platform": "x64 & !(osx | uwp)"
-    },
     "onnx",
     "paddle",
     "pytorch",
