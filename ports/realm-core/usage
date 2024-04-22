@@ -1,0 +1,4 @@
+realm-core provides CMake targets:
+
+find_package(Realm CONFIG REQUIRED)
+target_link_libraries(main PRIVATE Realm::ObjectStore)
