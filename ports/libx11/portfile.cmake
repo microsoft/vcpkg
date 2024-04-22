@@ -19,6 +19,7 @@ vcpkg_from_gitlab(
             ${PATCHES}
             vcxserver.patch
             add_dl_pc.patch
+            optimize-configure.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
