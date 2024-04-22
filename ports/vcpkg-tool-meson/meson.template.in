@@ -19,6 +19,7 @@ pkg-config= ['@PKGCONFIG@']
 @MESON_ADDITIONAL_BINARIES@
 [properties]
 cmake_toolchain_file  = '@SCRIPTS@/buildsystems/vcpkg.cmake'
+@arg_ADDITIONAL_PROPERTIES@
 [cmake]
 VCPKG_TARGET_TRIPLET = '@TARGET_TRIPLET@'
 VCPKG_HOST_TRIPLET = '@_HOST_TRIPLET@'

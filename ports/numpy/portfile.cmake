@@ -57,6 +57,14 @@ vcpkg_replace_string("${SOURCE_PATH}/meson.build" "py.dependency()" "dependency(
 #debug replacement 
 vcpkg_replace_string("${SOURCE_PATH}/numpy/_build_utils/tempita.py" "import argparse" "import argparse\nprint(sys.executable)")
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+  set(opts 
+      ADDITIONAL_PROPERTIES
+      "longdouble_format = 'IEEE_DOUBLE_LE'"
+  )
+endif()
+
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
@@ -67,9 +75,14 @@ vcpkg_configure_meson(
       cython=['${VCPKG_CYTHON}']
       python3=['${VCPKG_PYTHON3}']
       python=['${VCPKG_PYTHON3}']
+    ${opts}
     )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
+
+#E:\vcpkg_folders\numpy\packages\numpy_arm64-windows-release\tools\python3\Lib\site-packages\numpy\__config__.py
+# "path": r"E:/vcpkg_folders/numpy/installed/x64-windows-release/tools/python3/python.exe", and full paths to compilers
+#"commands": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.39.33519/bin/Hostx64/arm64/cl.exe, -DWIN32, -D_WINDOWS, -W3, -utf-8, -MP, -MD, -O2, -Oi, -Gy, -DNDEBUG, -Z7",
 
 set(subdir "${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}/")
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -78,6 +91,7 @@ endif()
 set(pyfile "${subdir}/numpy/__config__.py")
 file(READ "${pyfile}" contents)
 string(REPLACE "${CURRENT_INSTALLED_DIR}" "$(prefix)" contents "${contents}")
+string(REPLACE "r\"${VCPKG_PYTHON3}\"" "sys.executable" contents "${contents}")
 file(WRITE "${pyfile}" "${contents}")
 
 
