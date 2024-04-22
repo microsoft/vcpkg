@@ -8,7 +8,6 @@
     "boost-dynamic-bitset",
     "boost-mp11",
     "boost-preprocessor",
-    "boost-type-traits",
     {
       "name": "vcpkg-cmake",
       "host": true
