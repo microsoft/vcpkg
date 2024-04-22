@@ -334,11 +334,6 @@ folly:x64-android=fail
 # Needs XQuartz
 freeglut:x64-osx=fail
 freeglut:arm64-osx=fail
-# Needs /bigobj
-freeopcua:arm-neon-android=fail
-freeopcua:arm64-android=fail
-freeopcua:arm64-windows=fail
-freeopcua:x64-android=fail
 fruit:arm-neon-android=fail
 fruit:arm64-android=fail
 fruit:x64-android=fail
