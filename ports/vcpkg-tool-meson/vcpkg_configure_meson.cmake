@@ -330,15 +330,15 @@ function(vcpkg_configure_meson)
     vcpkg_find_acquire_program(MESON)
 
     get_filename_component(CMAKE_PATH "${CMAKE_COMMAND}" DIRECTORY)
-    vcpkg_add_to_path("${CMAKE_PATH}" PREPEND) # Make CMake invokeable for Meson
-
-    vcpkg_find_acquire_program(PYTHON3)
-    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-    vcpkg_add_to_path("${PYTHON3_DIR}")
+    vcpkg_add_to_path("${CMAKE_PATH}") # Make CMake invokeable for Meson
 
     vcpkg_find_acquire_program(NINJA)
     get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
     vcpkg_add_to_path(PREPEND "${NINJA_PATH}") # Prepend to use the correct ninja.
+
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
     set(buildtypes "")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
