@@ -21,14 +21,20 @@ endif()
 
 if("png" IN_LIST FEATURES)
     list(APPEND OPTIONS -Dpng=enabled)
+else()
+    list(APPEND OPTIONS -Dpng=disabled)
 endif()
 
 if("tiff" IN_LIST FEATURES)
     list(APPEND OPTIONS -Dtiff=enabled)
+else()
+    list(APPEND OPTIONS -Dtiff=disabled)
 endif()
 
 if("jpeg" IN_LIST FEATURES)
     list(APPEND OPTIONS -Djpeg=enabled)
+else()
+    list(APPEND OPTIONS -Djpeg=disabled)
 endif()
 
 if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
