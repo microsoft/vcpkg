@@ -115,7 +115,10 @@ $portData = @{
             }
         }
     };
-    "boost-mysql"            = @{ "supports" = "!uwp & !emscripten & !(arm & windows)" };
+    "boost-mysql"            = @{
+        "dependencies" = @("openssl");
+        "supports" = "!uwp & !emscripten & !(arm & windows)"
+    };
     "boost-nowide"           = @{ "supports" = "!uwp" };
     "boost-geometry"         = @{ "supports" = "!uwp"; };
     "boost-graph"            = @{ "supports" = "!uwp"; };
