@@ -8,6 +8,10 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
+    message(FATAL_ERROR "Feature cuda and cuda-redist require x64 triplet.")
+endif()
+
 # set GIT_COMMIT_ID and GIT_COMMIT_DATE
 if(DEFINED VCPKG_HEAD_VERSION)
     set(GIT_COMMIT_ID "${VCPKG_HEAD_VERSION}")
@@ -49,8 +53,6 @@ vcpkg_cmake_configure(
         -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
         -DGIT_COMMIT_DATE=${COLMAP_GIT_COMMIT_DATE}
         -DOPENMP_ENABLED=${OPENMP_ENABLED}
-        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
-        -DVCPKG_TRACE_FIND_PACKAGE=ON
 )
 
 vcpkg_cmake_install()
