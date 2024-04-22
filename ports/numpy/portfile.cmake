@@ -55,7 +55,8 @@ file(COPY "${SOURCE_PATH_SVML}/" DESTINATION "${SOURCE_PATH}/numpy/core/src/umat
 vcpkg_replace_string("${SOURCE_PATH}/meson.build" "py.dependency()" "dependency('python-3.${PYTHON3_VERSION_MINOR}', method : 'pkg-config')")
 
 #debug replacement 
-vcpkg_replace_string("${SOURCE_PATH}/numpy/_build_utils/tempita.py" "import argparse" "import argparse\nprint(sys.executable)")
+vcpkg_replace_string("${SOURCE_PATH}/numpy/_build_utils/tempita.py" "import argparse" "import argparse\nprint(sys.executable)\nimport os\n
+print(os.environ['PATH'])")
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
   set(opts 
@@ -64,7 +65,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTUR
   )
 endif()
 
-
+message(STATUS "PATH is: '$ENV{PATH}'")
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
@@ -77,7 +78,9 @@ vcpkg_configure_meson(
       python=['${VCPKG_PYTHON3}']
     ${opts}
     )
-vcpkg_install_meson()
+message(STATUS "PATH is: '$ENV{PATH}'")
+vcpkg_install_meson
+message(STATUS "PATH is: '$ENV{PATH}'")
 vcpkg_fixup_pkgconfig()
 
 #E:\vcpkg_folders\numpy\packages\numpy_arm64-windows-release\tools\python3\Lib\site-packages\numpy\__config__.py
