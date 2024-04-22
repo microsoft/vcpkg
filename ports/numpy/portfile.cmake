@@ -79,7 +79,7 @@ vcpkg_configure_meson(
     ${opts}
     )
 message(STATUS "PATH is: '$ENV{PATH}'")
-vcpkg_install_meson
+vcpkg_install_meson()
 message(STATUS "PATH is: '$ENV{PATH}'")
 vcpkg_fixup_pkgconfig()
 
