@@ -323,6 +323,7 @@ function(qt_fixup_and_cleanup)
         endif()
     endif()
 
+    vcpkg_fixup_pkgconfig()
 endfunction()
 
 function(qt_install_submodule)
