@@ -1,11 +1,13 @@
-index b14f9d78d..2df82fe32 100644
---- "a/buildtrees\\libx11\\Makefile.am"
-+++ "b/buildtrees\\libx11\\Makefile copy.am"
+diff --git a/Makefile.am b/Makefile.am
+index b14f9d78..2df82fe3 100644
+--- a/Makefile.am
++++ b/Makefile.am
 @@ -4,7 +4,7 @@ else
  ORDER=modules src
  endif
  # Order: nls before specs
 -SUBDIRS=include $(ORDER) nls man specs
 +SUBDIRS=include $(ORDER) nls
-
+ 
  ACLOCAL_AMFLAGS = -I m4
+ 
