@@ -1,14 +1,16 @@
-diff --git a/cmake/find_or_download_package.cmake b/cmake/find_or_download_package.cmake
-index 7e8a282..f550c2d 100644
---- a/cmake/find_or_download_package.cmake
-+++ b/cmake/find_or_download_package.cmake
-@@ -7,6 +7,5 @@
-   set(DEPENDENCY_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/dependencies/${PACKAGE})
-   find_package(
-     ${PACKAGE} QUIET
--     HINTS ${DEPENDENCY_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIX}
-   )
-  if(NOT ${${PACKAGE}_FOUND})
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c50fd44..f550c2e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,7 +15,7 @@
+ # Find Boost dependency
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+ include(cmake/find_or_download_package.cmake)
+-find_or_download_package(Boost INSTALL_WITH_YOMM)
++find_package(Boost REQUIRED)
+ message(STATUS "Using Boost libraries from ${Boost_INCLUDE_DIRS}")
+ 
+ if(NOT ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug") AND (CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index c50fd44..f550c2d 100644
 --- a/CMakeLists.txt
