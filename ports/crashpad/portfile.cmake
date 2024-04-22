@@ -25,8 +25,8 @@ function(checkout_in_path PATH URL REF)
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
 endfunction()
 
-set(PATCH_FILE "fix-stdint.patch")
 # mini_chromium contains the toolchains and build configuration
+set(PATCH_FILE "fix-stdint.patch")
 checkout_in_path(
     "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium"
     "https://chromium.googlesource.com/chromium/mini_chromium"
