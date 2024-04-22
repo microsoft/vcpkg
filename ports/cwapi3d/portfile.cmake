@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cwapi3d/cwapi3dcpp
-    REF 44c2d55fe31b89c76ed69bae72f9cb40acae38d3
-    SHA512 4aaee6c2eb4cb2bfff3617781ca6ee10c8959cb82cbac1d704ec14b684bedf8c1f2b35bbf064a15edc569646e5db7b99ca61553acb5a6ad7a113e1faae7dac5f
+    REF 4e83a5c07f2a4b3c766a9b4a950e98ae1a80b2de
+    SHA512 c5b9872659c6e390dfe39a568e9ee036e52d56f6d19ac87cdda1cfd94ab394fdd2aece37c393c6061d464dc0ab6af32fd2716fbbb5f843210b97356eea2e1b6f
     HEAD_REF main
 )
 
