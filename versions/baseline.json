@@ -2842,7 +2842,7 @@
     },
     "freeopcua": {
       "baseline": "20190125",
-      "port-version": 7
+      "port-version": 8
     },
     "freerdp": {
       "baseline": "3.4.0",
