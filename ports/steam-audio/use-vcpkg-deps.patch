@@ -1,0 +1,24 @@
+diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
+index 0682abf..20e504e 100644
+--- a/core/CMakeLists.txt
++++ b/core/CMakeLists.txt
+@@ -234,7 +234,7 @@ if (STEAMAUDIO_ENABLE_FFTS)
+ endif()
+ 
+ if (NOT FFT_LIBRARY)
+-    find_package(PFFFT REQUIRED)
++    find_package(PFFFT CONFIG REQUIRED)
+     set(FFT_LIBRARY PFFFT)
+ endif()
+ 
+@@ -246,8 +246,8 @@ if (STEAMAUDIO_ENABLE_MKL)
+     endif()
+ endif()
+ 
+-find_package(MySOFA REQUIRED)
+-find_package(FlatBuffers REQUIRED)
++find_package(MySOFA CONFIG REQUIRED)
++find_package(FlatBuffers CONFIG REQUIRED)
+ 
+ if (STEAMAUDIO_ENABLE_EMBREE)
+     find_package(ISPC 1.12 EXACT)
