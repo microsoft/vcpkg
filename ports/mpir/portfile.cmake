@@ -1,6 +1,9 @@
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/gmp.h" OR EXISTS "${CURRENT_INSTALLED_DIR}/include/gmpxx.h")
     message(FATAL_ERROR "Can't build ${PORT} if gmp is installed. Please remove gmp, and try to install ${PORT} again if you need it.")
 endif()
+if(VCPKG_TARGET_IS_LINUX)
+    message(WARNING "${PORT} currently requires texinfo from the system package manager: This can be installed on Ubuntu systems via sudo apt install -y texinfo.")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
