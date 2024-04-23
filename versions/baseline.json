@@ -446,7 +446,7 @@
     },
     "azure-core-tracing-opentelemetry-cpp": {
       "baseline": "1.0.0-beta.4",
-      "port-version": 2
+      "port-version": 3
     },
     "azure-data-tables-cpp": {
       "baseline": "1.0.0-beta.2",
@@ -454,7 +454,7 @@
     },
     "azure-identity-cpp": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-iot-sdk-c": {
       "baseline": "2024-03-04",
@@ -470,7 +470,7 @@
     },
     "azure-messaging-eventhubs-checkpointstore-blob-cpp": {
       "baseline": "1.0.0-beta.1",
-      "port-version": 1
+      "port-version": 2
     },
     "azure-messaging-eventhubs-cpp": {
       "baseline": "1.0.0-beta.7",
@@ -478,31 +478,31 @@
     },
     "azure-security-attestation-cpp": {
       "baseline": "1.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "azure-security-keyvault-administration-cpp": {
       "baseline": "4.0.0-beta.4",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-certificates-cpp": {
       "baseline": "4.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-keys-cpp": {
       "baseline": "4.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-secrets-cpp": {
       "baseline": "4.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-blobs-cpp": {
       "baseline": "12.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-common-cpp": {
       "baseline": "12.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-cpp": {
       "baseline": "7.5.0",
@@ -510,15 +510,15 @@
     },
     "azure-storage-files-datalake-cpp": {
       "baseline": "12.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-files-shares-cpp": {
       "baseline": "12.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-queues-cpp": {
       "baseline": "12.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-uamqp-c": {
       "baseline": "2024-03-04",
