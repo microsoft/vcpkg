@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c092cb0..1a2a603 100644
+index 6e64623..439eb8d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -39,9 +39,9 @@ if(${ADDRESS_SANITIZE} STREQUAL "ON")
@@ -41,7 +41,7 @@ index c092cb0..1a2a603 100644
 +  DESTINATION share/mysofa
  )
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 0de9632..2b6ff27 100644
+index dcaa92a..f5223bb 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -13,6 +13,8 @@ use_c99()
@@ -53,33 +53,160 @@ index 0de9632..2b6ff27 100644
  if(NOT MSVC)
    if(NOT WIN32)
      find_library(MATH m)
-@@ -81,6 +83,8 @@ set(public-headers
+@@ -81,20 +83,22 @@ set(public-headers
      hrtf/mysofa.h
  )
  
 +install(FILES "${public-headers}" DESTINATION include)
 +
  if(BUILD_STATIC_LIBS)
- add_library(mysofa-static STATIC ${libsrc})
- target_include_directories(mysofa-static
-@@ -88,7 +92,7 @@ target_include_directories(mysofa-static
+-add_library(mysofa-static STATIC ${libsrc})
+-target_include_directories(mysofa-static
++add_library(mysofa STATIC ${libsrc})
++target_include_directories(mysofa
+   PUBLIC
    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/hrtf>"
    $<INSTALL_INTERFACE:include/>
  )
 -target_link_libraries(mysofa-static LINK_PRIVATE ${MATH} ${ZLIB_LIBRARIES})
-+target_link_libraries(mysofa-static LINK_PRIVATE ${MATH} ZLIB::ZLIB)
++target_link_libraries(mysofa LINK_PRIVATE ${MATH} ZLIB::ZLIB)
  set_target_properties(
-   mysofa-static
+-  mysofa-static
++  mysofa
    PROPERTIES OUTPUT_NAME mysofa CLEAN_DIRECT_OUTPUT 1 POSITION_INDEPENDENT_CODE
-@@ -120,7 +124,7 @@ if(BUILD_SHARED_LIBS)
+                                                       ${BUILD_SHARED_LIBS})
+-set_target_properties( mysofa-static PROPERTIES PUBLIC_HEADER "${public-headers}" )
+-install(TARGETS mysofa-static
++set_target_properties( mysofa PROPERTIES PUBLIC_HEADER "${public-headers}" )
++install(TARGETS mysofa
+   EXPORT mysofa_exports
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+@@ -103,61 +107,61 @@ install(TARGETS mysofa-static
+   if(UNIX
+      AND CODE_COVERAGE
+      AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+-    target_compile_options(mysofa-static PUBLIC -g -O0 -Wall -fprofile-arcs
++    target_compile_options(mysofa PUBLIC -g -O0 -Wall -fprofile-arcs
+                                                 -ftest-coverage)
+     if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+-      target_link_options(mysofa-static PUBLIC --coverage)
++      target_link_options(mysofa PUBLIC --coverage)
+     else()
+-      target_link_libraries(mysofa-static LINK_PUBLIC gcov --coverage)
++      target_link_libraries(mysofa LINK_PUBLIC gcov --coverage)
+     endif()
+   endif()
+ endif()
+ 
+ if(BUILD_SHARED_LIBS)
+-  add_library(mysofa-shared SHARED ${libsrc})
+-  target_include_directories(mysofa-shared
++  add_library(mysofa SHARED ${libsrc})
++  target_include_directories(mysofa
+     PUBLIC
      "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/hrtf>"
      $<INSTALL_INTERFACE:include/>
    )
 -  target_link_libraries(mysofa-shared PRIVATE ${MATH} ${ZLIB_LIBRARIES})
-+  target_link_libraries(mysofa-shared PRIVATE ${MATH} ZLIB::ZLIB)
-   set_target_properties(mysofa-shared
+-  set_target_properties(mysofa-shared
++  target_link_libraries(mysofa PRIVATE ${MATH} ZLIB::ZLIB)
++  set_target_properties(mysofa
                          PROPERTIES OUTPUT_NAME mysofa CLEAN_DIRECT_OUTPUT 1)
    # Rename the Windows import library (stub) of the DLL to prevent a name clash
+-  # with the mysofa-static library.
+-  set_target_properties(mysofa-shared
+-                        PROPERTIES ARCHIVE_OUTPUT_NAME mysofa_shared)
++  # with the mysofa library.
++  set_target_properties(mysofa
++                        PROPERTIES ARCHIVE_OUTPUT_NAME mysofa)
+ 
+   set_property(
+-    TARGET mysofa-shared
++    TARGET mysofa
+     PROPERTY
+       VERSION
+       "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
+   )
+-  set_property(TARGET mysofa-shared PROPERTY SOVERSION
++  set_property(TARGET mysofa PROPERTY SOVERSION
+                                              ${CPACK_PACKAGE_VERSION_MAJOR})
+-  set_property(TARGET mysofa-shared PROPERTY C_VISIBILITY_PRESET hidden)
+-  generate_export_header(mysofa-shared
++  set_property(TARGET mysofa PROPERTY C_VISIBILITY_PRESET hidden)
++  generate_export_header(mysofa
+     BASE_NAME MYSOFA
+     EXPORT_FILE_NAME mysofa_export.h
+     EXPORT_MACRO_NAME MYSOFA_EXPORT
+-    STATIC_DEFINE MYSOFA_STATIC
++    STATIC_DEFINE mysofa
+   )
+ 
+   if(UNIX
+      AND CODE_COVERAGE
+      AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+-    target_compile_options(mysofa-shared PUBLIC -g -O0 -Wall -fprofile-arcs
++    target_compile_options(mysofa PUBLIC -g -O0 -Wall -fprofile-arcs
+                                                 -ftest-coverage)
+     if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+-      target_link_options(mysofa-shared PUBLIC --coverage)
++      target_link_options(mysofa PUBLIC --coverage)
+     else()
+-      target_link_libraries(mysofa-shared LINK_PUBLIC gcov --coverage)
++      target_link_libraries(mysofa LINK_PUBLIC gcov --coverage)
+     endif()
+   endif()
+ 
+   install(
+-    TARGETS mysofa-shared
++    TARGETS mysofa
+     EXPORT mysofa_exports
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+@@ -165,16 +169,16 @@ if(BUILD_SHARED_LIBS)
+     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+   )
+ else()
+-  generate_export_header(mysofa-static BASE_NAME mysofa EXPORT_FILE_NAME
++  generate_export_header(mysofa BASE_NAME mysofa EXPORT_FILE_NAME
+                          mysofa_export.h)
+ endif()
+ 
+ if(BUILD_TESTS)
+   add_executable(mysofa2json tests/sofa2json.c tests/json.c)
+   if(BUILD_STATIC_LIBS)
+-    target_link_libraries(mysofa2json mysofa-static)
++    target_link_libraries(mysofa2json mysofa)
+   else()
+-    target_link_libraries(mysofa2json mysofa-shared)
++    target_link_libraries(mysofa2json mysofa)
+   endif()
+ 
+   add_executable(
+@@ -193,9 +197,9 @@ if(BUILD_TESTS)
+     tests/json.c
+     tests/user_defined_variable.c)
+   if(BUILD_STATIC_LIBS)
+-    target_link_libraries(external mysofa-static ${CUNIT_LIBRARIES})
++    target_link_libraries(external mysofa ${CUNIT_LIBRARIES})
+   else()
+-    target_link_libraries(external mysofa-shared ${CUNIT_LIBRARIES} m)
++    target_link_libraries(external mysofa ${CUNIT_LIBRARIES} m)
+   endif()
+   add_test(
+     NAME external
+@@ -211,9 +215,9 @@ if(BUILD_TESTS)
+ 
+   add_executable(multithread tests/multithread.c)
+   if(BUILD_STATIC_LIBS)
+-    target_link_libraries(multithread mysofa-static pthread)
++    target_link_libraries(multithread mysofa pthread)
+   else()
+-    target_link_libraries(multithread mysofa-shared pthread m)
++    target_link_libraries(multithread mysofa pthread m)
+   endif()
+   add_test(
+     NAME multithread
 diff --git a/src/hrtf/mysofa.h b/src/hrtf/mysofa.h
 index 206e77b..538f0b6 100644
 --- a/src/hrtf/mysofa.h
