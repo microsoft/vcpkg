@@ -7,7 +7,10 @@
   "supports": "!uwp",
   "dependencies": [
     "abseil",
-    "openssl",
+    {
+      "name": "openssl",
+      "platform": "!windows"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
