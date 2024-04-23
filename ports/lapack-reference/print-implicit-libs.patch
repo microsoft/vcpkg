@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index c99d71a267..34fd8445b1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -697,3 +697,10 @@ if(BUILD_HTML_DOCUMENTATION OR BUILD_MAN_DOCUMENTATION)
+@@ -697,3 +697,11 @@ if(BUILD_HTML_DOCUMENTATION OR BUILD_MAN_DOCUMENTATION)
  
      endif()
  endif()
@@ -11,6 +11,7 @@ index c99d71a267..34fd8445b1 100644
 +message(STATUS "CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES:${CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES}")
 +message(STATUS "CMAKE_C_IMPLICIT_LINK_LIBRARIES:${CMAKE_C_IMPLICIT_LINK_DIRECTORIES}")
 +message(STATUS "CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES:${CMAKE_Fortran_IMPLICIT_LINK_DIRECTORIES}")
-+find_library(GFORTRAN_LIB NAMES gfortran)
++find_library(GFORTRAN_LIB NAMES gfortran PATHS /opt/homebrew/ /usr/local/ /usr/local/lib/gcc PATH_SUFFIXES lib gfortran/lib)
 +message(STATUS "GFORTRAN_LIB:${GFORTRAN_LIB}")
++message(STATUS "CMAKE_Fortran_COMPILER:${CMAKE_Fortran_COMPILER}")
 \ No newline at end of file

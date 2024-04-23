@@ -195,6 +195,9 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
   set(gfortran_lib "${CMAKE_MATCH_1}")
   find_library(GFORTRAN_LIB NAMES gfortran)
 
+  string(REGEX MATCH "CMAKE_Fortran_COMPILER:([^\n]+)" fortran_compiler "${config_log}")
+  set(fortran_compiler "${CMAKE_MATCH_1}")
+
   message(STATUS "gfortran_lib:${gfortran_lib}|GFORTRAN_LIB:${GFORTRAN_LIB}")
   message(STATUS "implicit_fortran_libs:${implicit_fortran_libs}|implicit_c_libs:${implicit_c_libs}")
   message(STATUS "implicit_fortran_dirs:${implicit_fortran_dirs}|implicit_c_dirs:${implicit_c_dirs}")
