@@ -21,6 +21,10 @@
       "name": "flatbuffers"
     },
     {
+      "name": "flatbuffers",
+      "host": true
+    },
+    {
       "name": "libmysofa"
     }
   ]

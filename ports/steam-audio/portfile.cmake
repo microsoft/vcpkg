@@ -25,6 +25,8 @@ vcpkg_cmake_configure(
         -DSTEAMAUDIO_ENABLE_EMBREE=OFF
         -DSTEAMAUDIO_ENABLE_RADEONRAYS=OFF
         -DSTEAMAUDIO_ENABLE_TRUEAUDIONEXT=OFF
+        # So the patched port can find the vcpkg host flatc compiler
+        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
 )
 
 vcpkg_cmake_install()
