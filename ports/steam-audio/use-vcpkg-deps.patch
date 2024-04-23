@@ -23,7 +23,7 @@ index 0682abf..20e504e 100644
  if (STEAMAUDIO_ENABLE_EMBREE)
      find_package(ISPC 1.12 EXACT)
 diff --git a/core/src/core/CMakeLists.txt b/core/src/core/CMakeLists.txt
-index 7c9226f..170dc9b 100644
+index 7c9226f..16df3c3 100644
 --- a/core/src/core/CMakeLists.txt
 +++ b/core/src/core/CMakeLists.txt
 @@ -26,6 +26,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/phonon.rc.in ${CMAKE_CURRENT_BINARY_D
@@ -132,7 +132,7 @@ index 7c9226f..170dc9b 100644
 -    ARCHIVE DESTINATION lib/${IPL_BIN_SUBDIR}
 -    LIBRARY DESTINATION lib/${IPL_BIN_SUBDIR}
 -    RUNTIME DESTINATION lib/${IPL_BIN_SUBDIR}
-+    EXPORT phonon_exports
++    EXPORT steam-audio_exports
 +    ARCHIVE DESTINATION lib
 +    LIBRARY DESTINATION lib
 +    RUNTIME DESTINATION bin
@@ -144,7 +144,7 @@ index 7c9226f..170dc9b 100644
 -        ARCHIVE DESTINATION lib/${IPL_BIN_SUBDIR}
 -        LIBRARY DESTINATION lib/${IPL_BIN_SUBDIR}
 -        RUNTIME DESTINATION lib/${IPL_BIN_SUBDIR}
-+        EXPORT phonon_exports
++        EXPORT steam-audio_exports
 +        ARCHIVE DESTINATION lib
 +        LIBRARY DESTINATION lib
 +        RUNTIME DESTINATION bin
@@ -180,14 +180,14 @@ index 7c9226f..170dc9b 100644
  endif()
 +]]#
 +
-+export(EXPORT phonon_exports
-+  NAMESPACE phonon::
-+  FILE ${CMAKE_CURRENT_BINARY_DIR}/phononTargets.cmake
++export(EXPORT steam-audio_exports
++  NAMESPACE steam-audio::
++  FILE ${CMAKE_CURRENT_BINARY_DIR}/steam-audioTargets.cmake
 +)
 +
-+install(EXPORT phonon_exports
-+  NAMESPACE phonon::
-+  FILE phononTargets.cmake
++install(EXPORT steam-audio_exports
++  NAMESPACE steam-audio::
++  FILE steam-audioTargets.cmake
 +  DESTINATION share/steam-audio
 +)
 +
